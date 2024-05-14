@@ -175,7 +175,7 @@ namespace Mids_Reborn.Core
 
         public IPower? GetPower()
         {
-            return _power ??= DatabaseAPI.GetPowerByFullName("Boosts." + UID + "." + UID);
+            return _power ??= DatabaseAPI.GetPowerByFullName($"Boosts.{UID}.{UID}");
         }
 
         void IEnhancement.SetPower(IPower? power)

@@ -1414,6 +1414,13 @@ namespace Mids_Reborn.Core
             PowersBase = 2
         }
 
+        public enum WordwrapMode
+        {
+            Legacy = 0,
+            New = 1,
+            UseEllipsis = 2
+        }
+
         public static bool MezDurationEnhanceable(eMez mezEnum)
         {
             return mezEnum is eMez.Confused or eMez.Held or eMez.Immobilized or eMez.Placate or eMez.Sleep or eMez.Stunned or eMez.Taunt or eMez.Terrorized or eMez.Untouchable;

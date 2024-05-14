@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Runtime.InteropServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
@@ -15,11 +16,44 @@ namespace Mids_Reborn.Forms
 {
     public partial class frmRotationHelper : Form, IMessageFilter
     {
+        protected struct FxIdentifierShort
+        {
+            public Enums.eEffectType EffectType;
+            public Enums.eEffectType ETModifies;
+            public Enums.eDamage DamageType;
+            public Enums.eToWho ToWho;
+            public bool DisplayPercentage;
+        }
+
         private readonly frmMain myParent;
         private frmTimelineColorRefTable? fTimelineColorRefTable;
         private Stopwatch Stopwatch;
         private Size NormalGraphSize;
         private float GraphZoom;
+
+        private List<Enums.eEffectType> AllowedEffectsCursor = new()
+        {
+            Enums.eEffectType.Absorb,
+            Enums.eEffectType.Regeneration,
+            Enums.eEffectType.Recovery,
+            Enums.eEffectType.HitPoints,
+            Enums.eEffectType.Resistance,
+            Enums.eEffectType.Defense,
+            Enums.eEffectType.ToHit,
+            Enums.eEffectType.Accuracy,
+            Enums.eEffectType.SpeedRunning,
+            Enums.eEffectType.SpeedFlying,
+            Enums.eEffectType.SpeedJumping,
+            Enums.eEffectType.DamageBuff,
+            Enums.eEffectType.ResEffect,
+            Enums.eEffectType.EnduranceDiscount,
+        };
+
+        private List<Enums.eEffectType> AllowedEnhancementEffectsCursor = new()
+        {
+            Enums.eEffectType.RechargeTime,
+            Enums.eEffectType.Heal
+        };
 
         [DllImport("user32.dll")]
         private static extern IntPtr WindowFromPoint(Point pt);
@@ -61,6 +95,11 @@ namespace Mids_Reborn.Forms
 
         private void frmRotationHelper_Load(object sender, EventArgs e)
         {
+            if (MidsContext.Config.RotationHelperLocation is not null)
+            {
+                Location = (Point)MidsContext.Config.RotationHelperLocation;
+            }
+
             SetDataSources();
             UpdateColorTheme();
 
@@ -81,6 +120,11 @@ namespace Mids_Reborn.Forms
             chkCastTimeReal.Checked = ctlCombatTimeline1.UseArcanaTime;
 
             GraphZoom = 100;
+        }
+
+        private void frmRotationHelper_Move(object sender, EventArgs e)
+        {
+            MidsContext.Config.RotationHelperLocation = Location;
         }
 
         public void UpdateData()
@@ -339,6 +383,7 @@ namespace Mids_Reborn.Forms
             {
                 1 => ctlCombatTimeline.ViewProfileType.Healing,
                 2 => ctlCombatTimeline.ViewProfileType.Survival,
+                3 => ctlCombatTimeline.ViewProfileType.Debuff,
                 _ => ctlCombatTimeline.ViewProfileType.Damage
             };
         }
@@ -368,86 +413,6 @@ namespace Mids_Reborn.Forms
         private void chkCastTimeReal_CheckedChanged(object sender, EventArgs e)
         {
             ctlCombatTimeline1.UseArcanaTime = chkCastTimeReal.Checked;
-        }
-
-        private void button1_Click(object sender, EventArgs e)
-        {
-            var powers = new List<string> { "Hasten", "Ionize", "Aim", "Abyssal Gaze", "Dark Blast", "Gloom", "Life Drain", "Hasten", "Ionize", "Aim" };
-            var boosts = new List<string> { "Aim", "Hasten", "Ionize" };
-
-            ctlCombatTimeline1.Powers = new List<ctlCombatTimeline.BuildPowerSlot>();
-            ctlCombatTimeline1.UserBoosts = new List<IPower>();
-
-            foreach (var p in powers)
-            {
-                foreach (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot> item in listBox1.Items)
-                {
-                    if (!item.Key.StartsWith(p))
-                    {
-                        continue;
-                    }
-
-                    ctlCombatTimeline1.Powers.Add(item.Value);
-                    break;
-                }
-            }
-
-            foreach (var b in boosts)
-            {
-                foreach (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot> item in listBox2.Items)
-                {
-                    if (!item.Key.StartsWith(b))
-                    {
-                        continue;
-                    }
-
-                    ctlCombatTimeline1.UserBoosts.Add(item.Value.BasePower);
-                    break;
-                }
-            }
-
-            UpdatePowersText();
-            UpdateBoostsText();
-        }
-
-        private void button2_Click(object sender, EventArgs e)
-        {
-            var powers = new List<string> { "Abyssal Gaze" };
-            var boosts = new List<string> { "Aim", "Hasten", "Ionize" };
-
-            ctlCombatTimeline1.Powers = new List<ctlCombatTimeline.BuildPowerSlot>();
-            ctlCombatTimeline1.UserBoosts = new List<IPower>();
-
-            foreach (var p in powers)
-            {
-                foreach (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot> item in listBox1.Items)
-                {
-                    if (!item.Key.StartsWith(p))
-                    {
-                        continue;
-                    }
-
-                    ctlCombatTimeline1.Powers.Add(item.Value);
-                    break;
-                }
-            }
-
-            foreach (var b in boosts)
-            {
-                foreach (KeyValuePair<string, ctlCombatTimeline.BuildPowerSlot> item in listBox2.Items)
-                {
-                    if (!item.Key.StartsWith(b))
-                    {
-                        continue;
-                    }
-
-                    ctlCombatTimeline1.UserBoosts.Add(item.Value.BasePower);
-                    break;
-                }
-            }
-
-            UpdatePowersText();
-            UpdateBoostsText();
         }
 
         private void btnClearLastPower_Click(object sender, EventArgs e)
@@ -551,6 +516,95 @@ namespace Mids_Reborn.Forms
         private void ctlCombatTimeline1_SetZoom(object sender, Interval? viewInterval)
         {
             timelineCursorZoom1.SetView(viewInterval);
+        }
+
+        private void timelineCursorZoom1_HoveredPosChanged(float? time, int? pixelValue)
+        {
+            if (time == null | pixelValue == null)
+            {
+                return;
+            }
+
+            var currentEffects = new Dictionary<FxIdentifierShort, float>();
+            foreach (var ev in ctlCombatTimeline1.Timeline)
+            {
+                if (ev.PowerSlot.EnhancedPower is null & ev.PowerSlot.BasePower is null)
+                {
+                    continue;
+                }
+
+                var power = ev.PowerSlot.EnhancedPower ?? ev.PowerSlot.BasePower;
+                // Too far in the future
+                if (ev.Time > time)
+                {
+                    continue;
+                }
+
+                foreach (var fx in power.Effects)
+                {
+                    if (fx.EffectType == Enums.eEffectType.Enhancement)
+                    {
+                        if (!AllowedEnhancementEffectsCursor.Contains(fx.ETModifies))
+                        {
+                            continue;
+                        }
+                    }
+                    else
+                    {
+                        if (!AllowedEffectsCursor.Contains(fx.EffectType))
+                        {
+                            continue;
+                        }
+                    }
+
+                    // Too far in the past
+                    if (ev.Time + fx.Duration < time)
+                    {
+                        continue;
+                    }
+
+                    // Extract value/percentage from BuildEffectString() (simple mode)
+                    var fxString = fx.BuildEffectString(true).Trim();
+                    var m = Regex.Match(fxString, @"^([0-9\.,\-\+\%]+)");
+                    var fxValueString = m.Groups[1].Value;
+                    var fxValueF = float.TryParse(fxValueString
+                        .Replace("+", "")
+                        .Replace(",", ".")
+                        .Replace("%", ""), out var fxValue);
+
+                    fxValue = fxValueF ? fxValue : 0;
+                    if (Math.Abs(fxValue) < float.Epsilon)
+                    {
+                        continue;
+                    }
+
+                    var fxKey = new FxIdentifierShort
+                    {
+                        EffectType = fx.EffectType,
+                        ETModifies = fx.ETModifies,
+                        DamageType = fx.DamageType,
+                        ToWho = fx.ToWho,
+                        DisplayPercentage = fxValueString.Contains('%')
+                    };
+
+                    if (!currentEffects.TryAdd(fxKey, fxValue))
+                    {
+                        currentEffects[fxKey] += fxValue;
+                    }
+                }
+            }
+
+            var selfEffects = string.Join("\r\n", currentEffects
+                .Where(e => e.Key.ToWho == Enums.eToWho.Self)
+                .Select(e => $"{e.Value:####0.##}{(e.Key.DisplayPercentage ? "%" : "")} {(e.Key.EffectType == Enums.eEffectType.Enhancement ? $"{e.Key.EffectType}({e.Key.ETModifies})" : $"{e.Key.EffectType}")}{(e.Key.DamageType != Enums.eDamage.None ? $" ({e.Key.DamageType})" : "")} to {e.Key.ToWho}"));
+
+            var targetEffects = string.Join("\r\n", currentEffects
+                .Where(e => e.Key.ToWho == Enums.eToWho.Target)
+                .Select(e => $"{e.Value:####0.##}{(e.Key.DisplayPercentage ? "%" : "")} {(e.Key.EffectType == Enums.eEffectType.Enhancement ? $"{e.Key.EffectType}({e.Key.ETModifies})" : $"{e.Key.EffectType}")}{(e.Key.DamageType != Enums.eDamage.None ? $" ({e.Key.DamageType})" : "")} to {e.Key.ToWho}"));
+
+            var tTip = $"T = {time:####0.##}s{(!string.IsNullOrWhiteSpace(selfEffects) | !string.IsNullOrWhiteSpace(targetEffects)? "\r\n" : "")}{selfEffects}{(!string.IsNullOrWhiteSpace(selfEffects) & !string.IsNullOrWhiteSpace(targetEffects) ? "\r\n============================\r\n" : "")}{targetEffects}";
+
+            toolTip1.SetToolTip(timelineCursorZoom1 == null ? this : timelineCursorZoom1, tTip);
         }
     }
 }

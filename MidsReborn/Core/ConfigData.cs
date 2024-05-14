@@ -93,6 +93,7 @@ namespace Mids_Reborn.Core
             WarnOnOldDbMbd = true;
             DimWindowStyleColors = true;
             CloseEnhSelectPopupByMove = true;
+            PowerListsWordwrapMode = Enums.WordwrapMode.Legacy;
             Mode = Modes.User;
             InitializeComponent();
         }
@@ -161,6 +162,10 @@ namespace Mids_Reborn.Core
         public bool PopupRecipes { get; set; }
         public bool ShoppingListIncludesRecipes { get; set; }
         public bool LongExport { get; set; }
+
+        public Point? RotationHelperLocation { get; set; }
+
+        public Enums.WordwrapMode PowerListsWordwrapMode { get; set; }
 
         internal bool MasterMode
         {

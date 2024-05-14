@@ -31,7 +31,9 @@ namespace Mids_Reborn.Forms
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmRotationHelper));
+            toolTip1 = new ToolTip(components);
             listBox1 = new ListBox();
             label1 = new Label();
             cbViewProfile = new ComboBox();
@@ -57,8 +59,6 @@ namespace Mids_Reborn.Forms
             lblBoosts = new Label();
             chkCastTimeReal = new CheckBox();
             imageButtonEx2 = new Controls.ImageButtonEx();
-            button1 = new Button();
-            button2 = new Button();
             btnClearLastPower = new Button();
             btnColorsRef = new Controls.ImageButtonEx();
             btnAddAllBoosts = new Button();
@@ -78,6 +78,13 @@ namespace Mids_Reborn.Forms
             borderPanel6.SuspendLayout();
             SuspendLayout();
             // 
+            // toolTip1
+            // 
+            toolTip1.AutoPopDelay = 10000;
+            toolTip1.InitialDelay = 500;
+            toolTip1.ReshowDelay = 100;
+            toolTip1.UseAnimation = false;
+            // 
             // listBox1
             // 
             listBox1.FormattingEnabled = true;
@@ -91,7 +98,7 @@ namespace Mids_Reborn.Forms
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             label1.Location = new System.Drawing.Point(12, 20);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(104, 15);
@@ -101,7 +108,7 @@ namespace Mids_Reborn.Forms
             // cbViewProfile
             // 
             cbViewProfile.FormattingEnabled = true;
-            cbViewProfile.Items.AddRange(new object[] { "Damage", "Healing", "Survival" });
+            cbViewProfile.Items.AddRange(new object[] { "Damage", "Healing", "Survival", "Debuff" });
             cbViewProfile.Location = new System.Drawing.Point(444, 52);
             cbViewProfile.Name = "cbViewProfile";
             cbViewProfile.Size = new System.Drawing.Size(248, 23);
@@ -111,7 +118,7 @@ namespace Mids_Reborn.Forms
             // label2
             // 
             label2.AutoSize = true;
-            label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             label2.Location = new System.Drawing.Point(444, 20);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(47, 15);
@@ -121,7 +128,7 @@ namespace Mids_Reborn.Forms
             // label3
             // 
             label3.AutoSize = true;
-            label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label3.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             label3.Location = new System.Drawing.Point(727, 20);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(47, 15);
@@ -142,7 +149,7 @@ namespace Mids_Reborn.Forms
             // 
             progressBarEx1.Border.Style = ButtonBorderStyle.Solid;
             progressBarEx1.Border.Thickness = 1;
-            progressBarEx1.Border.Which = MRBUpdater.Controls.ProgressBarEx.ProgressBorder.BorderToDraw.All;
+            progressBarEx1.Border.Which = MRBUpdater.Controls.ProgressBarEx.ProgressBorder.BorderToDraw.Left | MRBUpdater.Controls.ProgressBarEx.ProgressBorder.BorderToDraw.Top | MRBUpdater.Controls.ProgressBarEx.ProgressBorder.BorderToDraw.Right | MRBUpdater.Controls.ProgressBarEx.ProgressBorder.BorderToDraw.Bottom;
             progressBarEx1.Colors.BackColor = System.Drawing.Color.FromArgb(44, 47, 51);
             progressBarEx1.Colors.BarEndColor = System.Drawing.Color.FromArgb(64, 78, 237);
             progressBarEx1.Colors.BarStartColor = System.Drawing.Color.FromArgb(30, 144, 255);
@@ -158,7 +165,8 @@ namespace Mids_Reborn.Forms
             // 
             imageButtonEx1.BackgroundImageLayout = ImageLayout.None;
             imageButtonEx1.CurrentText = "Close";
-            imageButtonEx1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            imageButtonEx1.DisplayVertically = false;
+            imageButtonEx1.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             imageButtonEx1.ForeColor = System.Drawing.Color.WhiteSmoke;
             imageButtonEx1.Images.Background = MRBResourceLib.Resources.HeroButton;
             imageButtonEx1.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
@@ -182,7 +190,7 @@ namespace Mids_Reborn.Forms
             // label4
             // 
             label4.AutoSize = true;
-            label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point);
+            label4.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic);
             label4.Location = new System.Drawing.Point(12, 642);
             label4.Name = "label4";
             label4.Size = new System.Drawing.Size(172, 15);
@@ -234,7 +242,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblRotation
             // 
-            lblRotation.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            lblRotation.Font = new System.Drawing.Font("Segoe UI", 11F);
             lblRotation.ForeColor = System.Drawing.Color.Goldenrod;
             lblRotation.Location = new System.Drawing.Point(3, 3);
             lblRotation.Name = "lblRotation";
@@ -245,7 +253,7 @@ namespace Mids_Reborn.Forms
             // label5
             // 
             label5.AutoSize = true;
-            label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label5.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             label5.Location = new System.Drawing.Point(12, 417);
             label5.Name = "label5";
             label5.Size = new System.Drawing.Size(58, 15);
@@ -255,7 +263,7 @@ namespace Mids_Reborn.Forms
             // label6
             // 
             label6.AutoSize = true;
-            label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label6.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             label6.Location = new System.Drawing.Point(12, 317);
             label6.Name = "label6";
             label6.Size = new System.Drawing.Size(47, 15);
@@ -332,7 +340,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblBoosts
             // 
-            lblBoosts.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            lblBoosts.Font = new System.Drawing.Font("Segoe UI", 11F);
             lblBoosts.ForeColor = System.Drawing.Color.Chartreuse;
             lblBoosts.Location = new System.Drawing.Point(3, 3);
             lblBoosts.Name = "lblBoosts";
@@ -356,7 +364,8 @@ namespace Mids_Reborn.Forms
             imageButtonEx2.BackgroundImageLayout = ImageLayout.None;
             imageButtonEx2.ButtonType = Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
             imageButtonEx2.CurrentText = "ToggledOff State";
-            imageButtonEx2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            imageButtonEx2.DisplayVertically = false;
+            imageButtonEx2.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             imageButtonEx2.ForeColor = System.Drawing.Color.WhiteSmoke;
             imageButtonEx2.Images.Background = MRBResourceLib.Resources.HeroButton;
             imageButtonEx2.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
@@ -377,26 +386,6 @@ namespace Mids_Reborn.Forms
             imageButtonEx2.UseAlt = false;
             imageButtonEx2.Click += imageButtonEx2_Click;
             // 
-            // button1
-            // 
-            button1.Location = new System.Drawing.Point(857, 504);
-            button1.Name = "button1";
-            button1.Size = new System.Drawing.Size(131, 33);
-            button1.TabIndex = 26;
-            button1.Text = "Test rotation (full)";
-            button1.UseVisualStyleBackColor = true;
-            button1.Click += button1_Click;
-            // 
-            // button2
-            // 
-            button2.Location = new System.Drawing.Point(1002, 504);
-            button2.Name = "button2";
-            button2.Size = new System.Drawing.Size(131, 33);
-            button2.TabIndex = 27;
-            button2.Text = "Test rotation (simple)";
-            button2.UseVisualStyleBackColor = true;
-            button2.Click += button2_Click;
-            // 
             // btnClearLastPower
             // 
             btnClearLastPower.Location = new System.Drawing.Point(150, 261);
@@ -411,7 +400,8 @@ namespace Mids_Reborn.Forms
             // 
             btnColorsRef.BackgroundImageLayout = ImageLayout.None;
             btnColorsRef.CurrentText = "Colors Reference";
-            btnColorsRef.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            btnColorsRef.DisplayVertically = false;
+            btnColorsRef.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             btnColorsRef.ForeColor = System.Drawing.Color.WhiteSmoke;
             btnColorsRef.Images.Background = MRBResourceLib.Resources.HeroButton;
             btnColorsRef.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
@@ -471,12 +461,14 @@ namespace Mids_Reborn.Forms
             timelineCursorZoom1.TextShadowColor = System.Drawing.Color.Black;
             timelineCursorZoom1.TextSize = 10F;
             timelineCursorZoom1.ViewIntervalChanged += timelineCursorZoom1_ViewIntervalChanged;
+            timelineCursorZoom1.HoveredPosChanged += timelineCursorZoom1_HoveredPosChanged;
             // 
             // ibxZoomOut
             // 
             ibxZoomOut.BackgroundImageLayout = ImageLayout.None;
             ibxZoomOut.CurrentText = "-";
-            ibxZoomOut.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            ibxZoomOut.DisplayVertically = false;
+            ibxZoomOut.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
             ibxZoomOut.ForeColor = System.Drawing.Color.WhiteSmoke;
             ibxZoomOut.Images.Background = MRBResourceLib.Resources.HeroButton;
             ibxZoomOut.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
@@ -502,7 +494,8 @@ namespace Mids_Reborn.Forms
             // 
             ibxZoomIn.BackgroundImageLayout = ImageLayout.None;
             ibxZoomIn.CurrentText = "+";
-            ibxZoomIn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            ibxZoomIn.DisplayVertically = false;
+            ibxZoomIn.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F);
             ibxZoomIn.ForeColor = System.Drawing.Color.WhiteSmoke;
             ibxZoomIn.Images.Background = MRBResourceLib.Resources.HeroButton;
             ibxZoomIn.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
@@ -538,7 +531,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblDamage
             // 
-            lblDamage.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblDamage.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             lblDamage.ForeColor = System.Drawing.Color.Firebrick;
             lblDamage.Location = new System.Drawing.Point(3, 3);
             lblDamage.Name = "lblDamage";
@@ -561,7 +554,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblDps
             // 
-            lblDps.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblDps.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             lblDps.ForeColor = System.Drawing.Color.IndianRed;
             lblDps.Location = new System.Drawing.Point(3, 3);
             lblDps.Name = "lblDps";
@@ -584,8 +577,6 @@ namespace Mids_Reborn.Forms
             Controls.Add(btnAddAllBoosts);
             Controls.Add(btnColorsRef);
             Controls.Add(btnClearLastPower);
-            Controls.Add(button2);
-            Controls.Add(button1);
             Controls.Add(imageButtonEx2);
             Controls.Add(chkCastTimeReal);
             Controls.Add(borderPanel3);
@@ -615,6 +606,7 @@ namespace Mids_Reborn.Forms
             StartPosition = FormStartPosition.CenterParent;
             Text = "Rotation Helper (beta)";
             Load += frmRotationHelper_Load;
+            Move += frmRotationHelper_Move;
             borderPanel1.ResumeLayout(false);
             borderPanel2.ResumeLayout(false);
             borderPanel3.ResumeLayout(false);
@@ -652,8 +644,6 @@ namespace Mids_Reborn.Forms
         private Label lblBoosts;
         private CheckBox chkCastTimeReal;
         private Controls.ImageButtonEx imageButtonEx2;
-        private Button button1;
-        private Button button2;
         private Button btnClearLastPower;
         private Controls.ImageButtonEx btnColorsRef;
         private Button btnAddAllBoosts;
@@ -665,5 +655,6 @@ namespace Mids_Reborn.Forms
         private Controls.BorderPanel borderPanel6;
         private Label lblDamage;
         private Label lblDps;
+        private ToolTip toolTip1;
     }
 }

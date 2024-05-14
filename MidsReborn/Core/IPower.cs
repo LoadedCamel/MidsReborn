@@ -321,5 +321,10 @@ namespace Mids_Reborn.Core
         Dictionary<int, string> GetEffectsInSummons();
 
         string GetDifferentAttributesSubPower(int fxIndex);
+
+        bool AppliedPowersOverride { get; set; }
+        bool AbsorbedPetEffects { get; set; }
+        bool AppliedExecutes { get; set; }
+        bool AppliedSubPowers { get; set; }
     }
 }
