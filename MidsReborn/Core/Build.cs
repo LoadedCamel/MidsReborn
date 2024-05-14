@@ -667,39 +667,37 @@ namespace Mids_Reborn.Core
 
             if (TopMostMessageBox($"Really set all placed enhancements to a relative level of {display}?\r\n\r\nNote: Normal and special enhancements cannot go above +3,\r\nInventions cannot go below +0.",
                     "Are you sure?", MessageBoxButtons.YesNo) != DialogResult.Yes)
+            {
                 return false;
+            }
+
             foreach (var power in Powers)
+            {
+                if (power == null)
+                {
+                    continue;
+                }
+
                 foreach (var slot in power.Slots)
                 {
-                    if (slot.Enhancement.Enh <= -1) continue;
+                    if (slot.Enhancement.Enh <= -1)
+                    {
+                        continue;
+                    }
 
                     var enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
-                    if (enhancement.TypeID == Enums.eType.SpecialO || enhancement.TypeID == Enums.eType.Normal)
+                    var relVal = enhancement.TypeID switch
                     {
-                        if (newVal > Enums.eEnhRelative.PlusThree) newVal = Enums.eEnhRelative.PlusThree;
-                    }
-                    else if (enhancement.TypeID == Enums.eType.InventO || enhancement.TypeID == Enums.eType.SetO)
-                    {
-                        if (newVal < Enums.eEnhRelative.Even && newVal != Enums.eEnhRelative.None)
-                            newVal = Enums.eEnhRelative.Even;
-                    }
+                        Enums.eType.SpecialO when newVal > Enums.eEnhRelative.PlusThree => Enums.eEnhRelative.PlusThree,
+                        Enums.eType.Normal when newVal > Enums.eEnhRelative.PlusThree => Enums.eEnhRelative.PlusThree,
+                        Enums.eType.InventO when newVal is < Enums.eEnhRelative.Even and not Enums.eEnhRelative.None => Enums.eEnhRelative.Even,
+                        Enums.eType.SetO when newVal is < Enums.eEnhRelative.Even and not Enums.eEnhRelative.None => Enums.eEnhRelative.Even,
+                        _ => newVal
+                    };
 
-                    /*
-                    if (newVal > Enums.eEnhRelative.PlusThree)
-                    {
-                        int num = enhancement.TypeID == Enums.eType.Normal ? 0 : (enhancement.TypeID != Enums.eType.SpecialO ? 1 : 0);
-                        slot.Enhancement.RelativeLevel = num != 0 ? newVal : Enums.eEnhRelative.PlusThree;
-                    }
-                    else if (newVal < Enums.eEnhRelative.Even)
-                    {
-                        int num = enhancement.TypeID == Enums.eType.Normal ? 0 : (enhancement.TypeID != Enums.eType.SpecialO ? 1 : 0);
-                        slot.Enhancement.RelativeLevel = num != 0 ? Enums.eEnhRelative.Even : newVal;
-                    }
-                    else
-                        slot.Enhancement.RelativeLevel = newVal;
-                    */
-                    slot.Enhancement.RelativeLevel = newVal;
+                    slot.Enhancement.RelativeLevel = relVal;
                 }
+            }
 
             return true;
         }
