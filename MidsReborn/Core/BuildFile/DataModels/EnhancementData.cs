@@ -2,11 +2,9 @@
 
 namespace Mids_Reborn.Core.BuildFile.DataModels
 {
+    [JsonConverter(typeof(EnhancementDataConverter))]
     public class EnhancementData
     {
-        public string Enhancement { get; set; } = "";
-
-        [JsonProperty(DefaultValueHandling = DefaultValueHandling.Ignore)]
         public string Uid { get; set; } = "";
 
         public string Grade { get; set; } = "None";

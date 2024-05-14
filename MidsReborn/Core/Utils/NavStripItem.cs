@@ -1,5 +1,4 @@
 ﻿using System.Drawing;
-using MetaControls;
 using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.Core.Utils
@@ -9,8 +8,15 @@ namespace Mids_Reborn.Core.Utils
         public Page? Page { get; set; }
         public Rectangle Bounds { get; set; }
         public bool IsHighlighted { get; set; }
-        public NavItemState State { get; set; }
         public string? Text => Page?.Title;
+
+        private NavItemState _state;
+
+        public NavItemState State
+        {
+            get => _state;
+            set => _state = Page?.Enabled == false ? NavItemState.Disabled : value;
+        }
 
         public NavStripItem()
         {
@@ -21,13 +27,13 @@ namespace Mids_Reborn.Core.Utils
         public NavStripItem(Page page)
         {
             Page = page;
-            State = NavItemState.Inactive;
+            State = page.Enabled ? NavItemState.Inactive : NavItemState.Disabled;
         }
 
         public NavStripItem(Page page, NavItemState state)
         {
             Page = page;
-            State = state;
+            State = page.Enabled ? state : NavItemState.Disabled;
         }
     }
 }

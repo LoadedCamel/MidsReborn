@@ -78,6 +78,6 @@ namespace Mids_Reborn.Core
 
         string GetSpecialName();
 
-        EnhancementSet GetEnhancementSet();
+        EnhancementSet? GetEnhancementSet();
     }
 }

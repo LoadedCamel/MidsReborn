@@ -51,8 +51,6 @@ namespace Mids_Reborn.Forms
 
         private const string UriScheme = "mrb";
         private frmBusy? _frmBusy;
-        internal Loader? Loader;
-        private bool _exportDiscordInProgress;
         private bool _loading;
         private bool _gfxDrawing;
         private long _popupLastOpenTime;
@@ -65,8 +63,6 @@ namespace Mids_Reborn.Forms
         private bool ProcessedFromCommand { get; set; }
         private FrmEntityDetails? FrmEntityDetails { get; set; }
 
-        private Rectangle _pnlGfxOrigin;
-        private Rectangle _pnlGfxFlowOrigin;
         private Rectangle _formOrigin;
         private readonly BuildManager _buildManager;
 
@@ -113,10 +109,6 @@ namespace Mids_Reborn.Forms
             //disable menus that are no longer hooked up, but probably should be hooked back up
             tsHelp.Visible = false;
             tsHelp.Enabled = false;
-            //ShareToolStripMenuItem.Visible = false;
-            //ShareToolStripMenuItem.Enabled = false;
-            tsShareDiscord.Visible = false;
-            tsShareDiscord.Enabled = false;
             tmrGfx.Tick += tmrGfx_Tick;
             Icon = Resources.MRB_Icon_Concept;
         }
@@ -146,27 +138,6 @@ namespace Mids_Reborn.Forms
             dvAnchored.EntityDetails += dvAnchored_EntityDetails;
 
             Controls.Add(dvAnchored);
-        }
-
-        private void ResizeControl(Rectangle r, Control c)
-        {
-            var xRatio = (float)Width / _formOrigin.Width;
-            var yRatio = (float)Height / _formOrigin.Height;
-
-            var newX = (int)(r.Width * xRatio);
-            var newY = (int)(r.Height * yRatio);
-
-            var newWidth = (int)(r.Width * xRatio);
-            var newHeight = (int)(r.Height * yRatio);
-
-            c.Location = new Point(newX, newY);
-            c.Size = new Size(newWidth, newHeight);
-        }
-
-        private void frmMain_Resize(object? sender, EventArgs e)
-        {
-            ResizeControl(_pnlGfxFlowOrigin, pnlGFXFlow);
-            ResizeControl(_pnlGfxOrigin, pnlGFX);
         }
 
         private async void OnShown(object? sender, EventArgs e)
@@ -272,8 +243,8 @@ namespace Mids_Reborn.Forms
                     await UpdateUtils.CheckForUpdates(this, true);
                     break;
             }
-            
-            Loader?.DisposeControls();
+
+            Shown -= OnShown;
         }
 
         public bool PetWindowFlag { get; set; }
@@ -335,7 +306,6 @@ namespace Mids_Reborn.Forms
             _loading = true;
             try
             {
-                Loader?.SetMessage(@"Initializing...");
                 if (MidsContext.Config.I9.DefaultIOLevel == 27)
                 {
                     MidsContext.Config.I9.DefaultIOLevel = 49;
@@ -350,7 +320,8 @@ namespace Mids_Reborn.Forms
                 NewToon();
                 MidsContext.Character!.AlignmentChanged += CharacterOnAlignmentChanged;
                 PowerModified(true);
-                
+
+
                 var comboData = MidsContext.Config.RelativeScales;
                 if (EnemyRelativeToolStripComboBox.ComboBox != null)
                 {
@@ -413,10 +384,6 @@ namespace Mids_Reborn.Forms
                     }
                 }
 
-                _formOrigin = Bounds;
-                _pnlGfxFlowOrigin = pnlGFXFlow.Bounds;
-                _pnlGfxOrigin = pnlGFX.Bounds;
-
                 tsViewIOLevels.Checked = !MidsContext.Config.I9.HideIOLevels;
                 tsViewRelative.Checked = MidsContext.Config.ShowEnhRel;
                 tsViewSOLevels.Checked = MidsContext.Config.ShowSoLevels;
@@ -472,12 +439,8 @@ namespace Mids_Reborn.Forms
                 UpdateControls(true);
                 setColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns);
                 UpdatePoolsPanelSize();
-                InitializeDv();
+                InitializeDv(); // This is the data view
                 SetEnhCheckModePosition();
-                // if (this.IsInDesignMode())
-                // {
-                //     return;
-                // }
             }
             catch (Exception ex)
             {
@@ -488,19 +451,19 @@ namespace Mids_Reborn.Forms
             }
 
             _loading = false;
-            MidsContext.Config.SaveConfig();
+            //MidsContext.Config.SaveConfig();
         }
 
         private async Task<bool> RunSchemaCommands(string url)
         {
             var returnData = false;
             var code = url.Replace("mrb://", "");
-            var options = new RestClientOptions("https://mids.app")
+            var options = new RestClientOptions("https://api.midsreborn.com")
             {
                 MaxTimeout = -1,
             };
             var client = new RestClient(options);
-            var response = await client.GetJsonAsync<ImportModel>($"build/{code}");
+            var response = await client.GetJsonAsync<SchemaData>($"build/redirect-to-schema/{code}");
             if (response != null)
             {
                returnData = DoLoadFromSchema(response);
@@ -1400,13 +1363,11 @@ namespace Mids_Reborn.Forms
                 EndFlip();
         }
 
-        private bool DoLoadFromSchema(ImportModel response)
+        private bool DoLoadFromSchema(SchemaData response)
         {
-            return false;
-/*
             DataViewLocked = false;
             NewToon(true, true);
-            var ret = response.ImportData != null && CharacterBuildData.LoadImportData(response.ImportData);
+            var ret = response.Data != null && _buildManager.ValidateAndLoadSchemaData(response.Data);
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
             switch (MidsContext.Character?.Archetype?.DisplayName)
@@ -1424,7 +1385,6 @@ namespace Mids_Reborn.Forms
             myDataView?.Clear();
             PowerModified(false);
             return ret;
-*/
         }
 
         private bool LoadCharacterFile(string? fileName)
@@ -1769,10 +1729,12 @@ namespace Mids_Reborn.Forms
             return true;
         }
 
+
         private bool DoSaveAs()
         {
             FloatTop(false);
             string saveFile;
+
             if (!string.IsNullOrWhiteSpace(LastFileName))
             {
                 var fileInfo = new FileInfo(LastFileName);
@@ -1789,29 +1751,26 @@ namespace Mids_Reborn.Forms
             }
 
             DlgSave.FileName = saveFile;
+
             if (DlgSave.ShowDialog() == DialogResult.OK)
             {
                 var buildFile = DlgSave.FileName;
-                if (buildFile.ToLowerInvariant().EndsWith(".mxd"))
+                var extension = Path.GetExtension(buildFile).ToUpperInvariant();
+                switch (extension)
                 {
-                    buildFile = Regex.Replace(buildFile, @"\.[mM][xX][dD]$", ".mbd");
+                    case ".MBD":
+                        if (!_buildManager.SaveToFile(buildFile))
+                        {
+                            return false;
+                        }
+                        break;
+                    case ".MXD":
+                        if (!MainModule.MidsController.Toon.Save(DlgSave.FileName))
+                        {
+                            return false;
+                        }
+                        break;
                 }
-                else if (!buildFile.ToLowerInvariant().EndsWith(".mbd"))
-                {
-                    buildFile += ".mbd";
-                }
-
-                if (!_buildManager.SaveToFile(buildFile))
-                {
-                    return false;
-                }
-
-                FileModified = false;
-                LastFileName = buildFile;
-                MidsContext.Config.LastFileName = buildFile;
-                SetTitleBar();
-                FloatTop(true);
-                
                 return true;
             }
 
@@ -3582,7 +3541,37 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void EnemyRelativeLevel_Changed(object? sender, EventArgs e)
+        private int _originalIndex = -1;
+
+        private void EnemyRelativeLevel_DropDown(object? sender, EventArgs e)
+        {
+            if (EnemyRelativeToolStripComboBox.ComboBox != null)
+            {
+                _originalIndex = EnemyRelativeToolStripComboBox.ComboBox.SelectedIndex;
+            }
+        }
+
+        private void EnemyRelativeLevel_DropDownClosed(object? sender, EventArgs e)
+        {
+            if (EnemyRelativeToolStripComboBox.ComboBox != null && EnemyRelativeToolStripComboBox.ComboBox.SelectedIndex != _originalIndex)
+            {
+                // If selection changed, update the value and refresh
+                MidsContext.Config.ScalingToHit = (float)EnemyRelativeToolStripComboBox.ComboBox.SelectedValue;
+                RefreshInfo();
+            }
+            // Always return focus to the menu bar regardless of whether the selection changed
+            MenuBar.Focus();
+        }
+
+        private void EnemyRelativeLevel_MouseLeave(object? sender, EventArgs e)
+        {
+            if (EnemyRelativeToolStripComboBox.ComboBox != null)
+            {
+                EnemyRelativeToolStripComboBox.ComboBox.DroppedDown = false;
+            }
+        }
+
+        private void EnemyRelativeLevel_SelectionChangeCommitted(object? sender, EventArgs e)
         {
             if (EnemyRelativeToolStripComboBox.ComboBox == null) return;
             MidsContext.Config.ScalingToHit = (float)EnemyRelativeToolStripComboBox.ComboBox.SelectedValue;
@@ -5304,14 +5293,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             MidsContext.Config.Columns = columns;
             drawing.Columns = columns;
             DoResize();
-            //SetFormWidth();
             DoRedraw();
-            pnlGFXFlow.AutoScroll = false;
-            pnlGFXFlow.HorizontalScroll.Enabled = false;
-            pnlGFXFlow.HorizontalScroll.Visible = false;
-            pnlGFXFlow.HorizontalScroll.Maximum = 0;
-            pnlGFXFlow.AutoScroll = true;
-            //PerformAutoScale();
         }
 
         private void SetDamageMenuCheckMarks()
@@ -6134,11 +6116,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
             SupportSites.Patreon();
         }
 
-        private void tsCoinbase_Click(object? sender, EventArgs e)
-        {
-            SupportSites.CoinBase();
-        }
-
         private void tsSupport_Click(object sender, EventArgs e)
         {
             SupportSites.SupportServer();
@@ -6245,32 +6222,49 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
             else
             {
-                using var fe = new ShareMenu();
+                using var fe = new ShareMenu(_buildManager);
                 fe.ShowDialog(this);
             }
         }
 
-        private void tsShareDiscord_Click(object sender, EventArgs e)
+        private void tsShareLegacy_Click(object sender, EventArgs e)
         {
-            try
+            MessageBoxEx message;
+            if (Path.GetExtension(LastFileName)?.ToUpperInvariant() != ".MXD")
             {
-                //new DiscordShare().ShowDialog();
+                if (MidsContext.Character.CurrentBuild.PowersPlaced > 0)
+                {
+                    message = new MessageBoxEx("Share Protection Activated", "You must save the build as an mxd prior to using this function.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
+                    message.ShowDialog(this);
+                }
+                else
+                {
+                    message = new MessageBoxEx("Share Protection Activated", "Your cannot share an otherwise empty build. Please create a build then save it as an mxd prior to using this function.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
+                    message.ShowDialog(this);
+                }
             }
-            catch (Exception ex)
+            else
             {
-                MessageBox.Show($"{ex.Message}\r\n\r\n{ex.StackTrace}", @"Debug Error", MessageBoxButtons.OK);
+                var data = MidsCharacterFileFormat.MxDBuildSaveHyperlink(true, false, false);
+                Clipboard.SetDataObject(data, true);
+                message = new MessageBoxEx("Success","The data-link has been successfully generated and added to your clipboard.", MessageBoxEx.MessageBoxExButtons.Ok);
+                message.ShowDialog(this);
             }
         }
 
         private void tsImportChunk_Click(object? sender, EventArgs e)
         {
-            /*using var importBuild = new ImportCode();
+            var loaded = false;
+            using var importBuild = new ImportCode();
             var result = importBuild.ShowDialog(this);
-            if (result != DialogResult.Continue) return;
-            if (importBuild.Data == null) return;
-            DataViewLocked = false;
-            NewToon(true, true);
-            CharacterBuildData.LoadImportData(importBuild.Data);
+            if (result == DialogResult.OK)
+            {
+                DataViewLocked = false;
+                NewToon(true, true);
+                loaded =_buildManager.ValidateAndLoadImportData(importBuild.ImportClassificationResult);
+            }
+
+            if (!loaded) return;
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
             switch (MidsContext.Character?.Archetype?.DisplayName)
@@ -6286,7 +6280,31 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             myDataView?.Clear();
-            PowerModified(false);*/
+            PowerModified(false);
+        }
+
+        private void tsViewSharedBuilds_Click(object? sender, EventArgs e)
+        {
+            using var vsb = new SharedBuilds();
+            var result = vsb.ShowDialog(this);
+            if (result != DialogResult.Continue || vsb.FetchedData == null) return;
+            _buildManager.ValidateAndLoadSchemaData(vsb.FetchedData.Data, vsb.FetchedData.Id);
+            FileModified = false;
+            if (drawing != null) drawing.Highlight = -1;
+            switch (MidsContext.Character?.Archetype?.DisplayName)
+            {
+                case "Mastermind":
+                    ibPetsEx.Visible = true;
+                    ibPetsEx.Enabled = true;
+                    break;
+                default:
+                    ibPetsEx.Visible = false;
+                    ibPetsEx.Enabled = false;
+                    break;
+            }
+
+            myDataView?.Clear();
+            PowerModified(false);
         }
 
         private void tsFileNew_Click(object sender, EventArgs e)
@@ -6397,7 +6415,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsFileSaveAs_Click(object sender, EventArgs e)
         {
-           //doSaveAs();
            DoSaveAs();
         }
 
@@ -6535,6 +6552,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     }
                     else if (str.Contains("MxDz") || str.Contains("MxDu"))
                     {
+                        Debug.WriteLine("Loading because contains");
                         Stream? mStream = new MemoryStream(new ASCIIEncoding().GetBytes(str));
                         loaded = MainModule.MidsController.Toon.Load("", ref mStream);
                     }
@@ -6680,8 +6698,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsViewBuildComment_Click(object sender, EventArgs e)
         {
+            if (MidsContext.Character.CurrentBuild.PowersPlaced <= 0)
+            {
+                var errorMsg = new MessageBoxEx("Error", "You cannot add a comment/description to an otherwise empty build.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Protected, true);
+                errorMsg.ShowDialog(this);
+                return;
+            }
             using var editor = new frmEditComment();
-            
             editor.ShowDialog(this);
         }
 

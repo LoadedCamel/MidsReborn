@@ -2,9 +2,9 @@
 
 namespace Mids_Reborn.Controls
 {
-    public class pnlGFX : PictureBox
+    public class PanelGfx : PictureBox
     {
-        public pnlGFX()
+        public PanelGfx()
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
         }

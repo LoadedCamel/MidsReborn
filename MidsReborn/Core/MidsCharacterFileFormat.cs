@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -105,109 +106,108 @@ namespace Mids_Reborn.Core
 
         private static bool MxDBuildSaveBuffer(ref byte[] buffer, bool includeAltEnh)
         {
-            MemoryStream memoryStream;
-            BinaryWriter writer;
             try
             {
-                memoryStream = new MemoryStream();
-                writer = new BinaryWriter(memoryStream);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Save Failed!\n" + ex.Message);
-                return false;
-            }
+                using var memoryStream = new MemoryStream();
+                using var binWriter = new BinaryWriter(memoryStream);
 
-            writer.Write(MagicNumber, 0, MagicNumber.Length);
-            writer.Write(ThisVersion);
-            writer.Write(UseQualifiedNames);
-            writer.Write(UseOldSubpowerFields);
-            writer.Write(MidsContext.Character.Archetype.ClassName);
-            writer.Write(MidsContext.Character.Archetype.Origin[MidsContext.Character.Origin]);
-            writer.Write((int) MidsContext.Character.Alignment);
-            writer.Write(MidsContext.Character.Name);
-            writer.Write(MidsContext.Character.Powersets.Length - 1);
-            foreach (var index in MidsContext.Character.Powersets)
-                writer.Write(index != null ? index.FullName : string.Empty);
-
-            writer.Write(MidsContext.Character.CurrentBuild.LastPower + 1);
-            writer.Write(MidsContext.Character.CurrentBuild.Powers.Count - 1);
-            foreach (var power in MidsContext.Character.CurrentBuild.Powers)
-            {
-                if (power.NIDPower < 0)
+                binWriter.Write(MagicNumber, 0, MagicNumber.Length);
+                binWriter.Write(ThisVersion);
+                binWriter.Write(UseQualifiedNames);
+                binWriter.Write(UseOldSubpowerFields);
+                binWriter.Write(MidsContext.Character.Archetype.ClassName);
+                binWriter.Write(MidsContext.Character.Archetype.Origin[MidsContext.Character.Origin]);
+                binWriter.Write((int)MidsContext.Character.Alignment);
+                binWriter.Write(MidsContext.Character.Name);
+                binWriter.Write(MidsContext.Character.Powersets.Length - 1);
+                foreach (var index in MidsContext.Character.Powersets)
                 {
-                    writer.Write(-1);
+                    binWriter.Write(index != null ? index.FullName : string.Empty);
                 }
-                else
+
+                binWriter.Write(MidsContext.Character.CurrentBuild.LastPower + 1);
+                binWriter.Write(MidsContext.Character.CurrentBuild.Powers.Count - 1);
+                foreach (var power in MidsContext.Character.CurrentBuild.Powers)
                 {
-                    writer.Write(DatabaseAPI.Database.Power[power.NIDPower].StaticIndex);
-                    writer.Write(Convert.ToSByte(power.Level));
-                    writer.Write(Convert.ToBoolean(power.StatInclude));
-                    writer.Write(Convert.ToBoolean(power.ProcInclude));
-                    writer.Write(power.VariableValue);
-                    writer.Write(power.InherentSlotsUsed);
-                    writer.Write(Convert.ToSByte(power.SubPowers.Length - 1));
-                    foreach (var index2 in power.SubPowers)
+                    if (power.NIDPower < 0)
                     {
-                        if (index2.nIDPower > -1)
-                            writer.Write(DatabaseAPI.Database.Power[index2.nIDPower].StaticIndex);
-                        else
-                            writer.Write(-1);
-                        writer.Write(index2.StatInclude);
+                        binWriter.Write(-1);
+                    }
+                    else
+                    {
+                        binWriter.Write(DatabaseAPI.Database.Power[power.NIDPower].StaticIndex);
+                        binWriter.Write(Convert.ToSByte(power.Level));
+                        binWriter.Write(Convert.ToBoolean(power.StatInclude));
+                        binWriter.Write(Convert.ToBoolean(power.ProcInclude));
+                        binWriter.Write(power.VariableValue);
+                        binWriter.Write(power.InherentSlotsUsed);
+                        binWriter.Write(Convert.ToSByte(power.SubPowers.Length - 1));
+                        foreach (var index2 in power.SubPowers)
+                        {
+                            if (index2.nIDPower > -1)
+                                binWriter.Write(DatabaseAPI.Database.Power[index2.nIDPower].StaticIndex);
+                            else
+                                binWriter.Write(-1);
+                            binWriter.Write(index2.StatInclude);
+                        }
+                    }
+
+                    binWriter.Write(Convert.ToSByte(power.Slots.Length - 1));
+                    for (var index2 = 0; index2 <= power.Slots.Length - 1; ++index2)
+                    {
+                        binWriter.Write(Convert.ToSByte(power.Slots[index2].Level));
+                        binWriter.Write(Convert.ToBoolean(power.Slots[index2].IsInherent));
+                        var writer = binWriter;
+                        WriteSlotData(ref writer, ref power.Slots[index2].Enhancement);
+                        binWriter.Write(includeAltEnh);
+                        if (includeAltEnh)
+                            WriteSlotData(ref writer, ref power.Slots[index2].FlippedEnhancement);
                     }
                 }
 
-                writer.Write(Convert.ToSByte(power.Slots.Length - 1));
-                for (var index2 = 0; index2 <= power.Slots.Length - 1; ++index2)
-                {
-                    writer.Write(Convert.ToSByte(power.Slots[index2].Level));
-                    writer.Write(Convert.ToBoolean(power.Slots[index2].IsInherent));
-                    WriteSlotData(ref writer, ref power.Slots[index2].Enhancement);
-                    writer.Write(includeAltEnh);
-                    if (includeAltEnh)
-                        WriteSlotData(ref writer, ref power.Slots[index2].FlippedEnhancement);
-                }
+                buffer = memoryStream.ToArray();
+                return true;
             }
-
-            buffer = memoryStream.ToArray();
-            return true;
+            catch (Exception ex)
+            {
+                MessageBox.Show($"Save Failed!\n{ex.Message}");
+                return false;
+            }
         }
 
-        public static string MxDBuildSaveHyperlink(bool useBbCode, bool justLink = false)
+        public static string MxDBuildSaveHyperlink(bool justLink = false, bool useMarkdown = false, bool useBbCode = false)
         {
             var cData = new CompressionData();
             var str1 = MxDBuildSaveStringShared(ref cData, false, false);
             if (string.IsNullOrEmpty(str1)) return string.Empty;
 
-            // this one seems to still work as intended, we may not need to change it
-            var str3 = "https://www.midsreborn.com/builds/download.php" + "?uc=" + cData.SzUncompressed + "&c=" +
-                       cData.SzCompressed + "&a=" + cData.SzEncoded + "&f=HEX&dc=" + str1;
-            return str3.Length <= DataLinkMaxLength
-                ? !justLink ? !useBbCode ? "<a href=\"" + str3 + "\">Click this DataLink to open the build!</a>" :
-                "[url=" + str3 + "]Click this DataLink to open the build![/url]" : str3
-                : "";
+            var hyperlink = $"https://api.midsreborn.com/legacy/download?uc={cData.SzUncompressed}&c={cData.SzCompressed}&a={cData.SzEncoded}&f=HEX&dc={str1}";
+
+            if (hyperlink.Length > DataLinkMaxLength) return string.Empty;
+
+            if (justLink) return hyperlink;
+
+            if (useMarkdown) return $"[-->Click Here To Download This Legacy Build<--]({hyperlink})";
+
+            return useBbCode ? $"[url={hyperlink}]Click this legacy DataLink to open the build![/url]" : $"<a href=\"{hyperlink}\">Click this legacy DataLink to open the build!</a>";
         }
 
-        private static string MxDBuildSaveStringShared(ref CompressionData cData, bool includeAltEnh, bool @break)
+        private static string MxDBuildSaveStringShared(ref CompressionData cData, bool includeAltEnh, bool breakString)
         {
-            var numArray = Array.Empty<byte>();
-            string str;
-            if (!MxDBuildSaveBuffer(ref numArray, includeAltEnh))
+            var buffer = Array.Empty<byte>();
+            if (!MxDBuildSaveBuffer(ref buffer, includeAltEnh))
             {
-                str = string.Empty;
-            }
-            else
-            {
-                var asciiEncoding = new ASCIIEncoding();
-                cData.SzUncompressed = numArray.Length;
-                var iBytes = ModernZlib.CompressChunk(numArray);
-                cData.SzCompressed = iBytes.Length;
-                var bytes = ModernZlib.HexEncodeBytes(iBytes);
-                cData.SzEncoded = bytes.Length;
-                str = @break ? ModernZlib.BreakString(asciiEncoding.GetString(bytes), 67, true) : asciiEncoding.GetString(bytes);
+                return string.Empty;
             }
 
-            return str;
+            cData.SzUncompressed = buffer.Length;
+            var compressedBytes = ModernZlib.CompressChunk(buffer);
+            cData.SzCompressed = compressedBytes.Length;
+            var encodedBytes = ModernZlib.HexEncodeBytes(compressedBytes);
+            cData.SzEncoded = encodedBytes.Length;
+            var resultString = Encoding.ASCII.GetString(encodedBytes);
+
+            return breakString ? ModernZlib.BreakString(resultString, 67, true) : resultString;
         }
 
         public static string MxDGenerateByteString(bool includeAltEnh)
@@ -217,6 +217,88 @@ namespace Mids_Reborn.Core
             if (string.IsNullOrEmpty(saveString)) return string.Empty;
             var separator = string.Empty;
             return $"|{MagicCompressed};{cData.SzUncompressed};{cData.SzCompressed};{cData.SzEncoded};HEX;|{separator}{saveString}{saveString}";
+        }
+
+        public static string MxDBuildSaveString(bool includeAltEnh, bool forumMode)
+        {
+            var cData = new CompressionData();
+            var str1 = MxDBuildSaveStringShared(ref cData, includeAltEnh, true);
+
+            var str4 = "";
+
+            // Save metadata
+            string comment;
+            comment = string.IsNullOrWhiteSpace(MidsContext.Character.Comment) ? "" : MidsContext.Character.Comment.Trim();
+            if (!string.IsNullOrEmpty(comment))
+            {
+                str4 += $"\r\n<comment>{EncodeEntities(comment)}</comment>";
+            }
+
+            var enhObtainedBin = "";
+            var featureUsed = false;
+            foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
+            {
+                if (pe.Power == null)
+                {
+                    continue;
+                }
+
+                for (var j = 0; j < pe.Slots.Length; j++)
+                {
+                    var obtained = pe.Slots[j].Enhancement.Obtained |
+                                   pe.Slots[j].FlippedEnhancement.Obtained;
+
+                    enhObtainedBin += obtained
+                        ? '1'
+                        : '0';
+
+                    if (obtained)
+                    {
+                        featureUsed = true;
+                    }
+                }
+            }
+
+            if (!string.IsNullOrEmpty(enhObtainedBin) & featureUsed)
+            {
+                str4 += $"\r\n<enhobtained>{enhObtainedBin}</enhobtained>";
+            }
+
+            str4 += "\r\n\r\n\r\n";
+
+            if (string.IsNullOrEmpty(str1)) return string.Empty;
+
+            var str3 = "\n";
+            if (forumMode)
+            {
+                var flag1 = MidsContext.Config.Export.FormatCode[MidsContext.Config.ExportTarget].Notes
+                    .IndexOf("HTML", StringComparison.Ordinal) > -1;
+                var flag2 = MidsContext.Config.Export.FormatCode[MidsContext.Config.ExportTarget].Notes
+                    .IndexOf("no <br /> tags", StringComparison.OrdinalIgnoreCase) > -1;
+                if (flag1 && !flag2)
+                {
+                    str1 = str1.Replace("\n", "<br />");
+                    str3 = "<br />";
+                }
+
+                // TODO: review this string for update to Mids Reborn
+                // needs checking the reader to see if changing this will break anything
+                var str5 = "| Copy & Paste this data into Mids Reborn to view the build |" + str3;
+                if (flag1)
+                    str5 = str5.Replace(" ", "&nbsp;");
+                str4 += str5 + "|-------------------------------------------------------------------|" + str3;
+            }
+            else
+            {
+                str4 += "|              Do not modify anything below this line!              |" + str3 +
+                        "|-------------------------------------------------------------------|" + str3;
+            }
+
+            const string str6 = ";HEX";
+            var output = $"|{MagicCompressed};{cData.SzUncompressed};{cData.SzCompressed};{cData.SzEncoded}{str6};|{str3}{str1}{str3}";
+            return str4 + "|" + MagicCompressed + ";" + cData.SzUncompressed + ";" + cData.SzCompressed + ";" +
+                   cData.SzEncoded + str6 + ";|" + str3 + str1 + str3 +
+                   "|-------------------------------------------------------------------|";
         }
 
         private static List<PowerEntry> SortGridPowers(List<PowerEntry> powerList, Enums.eGridType iType)
@@ -287,7 +369,7 @@ namespace Mids_Reborn.Core
             return outList;
         }
 
-        private static bool MxDReadSaveData(ref byte[] buffer, bool silent)
+        internal static bool MxDReadSaveData(ref byte[] buffer, bool silent)
         {
             var formatUsed = Formats.Current;
             InherentPowers = new List<PowerEntry>();
@@ -682,130 +764,97 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static eLoadReturnCode MxDExtractAndLoad(Stream? iStream)
+        public static eLoadReturnCode MxDExtractAndLoad(Stream? inputStream)
         {
-            StreamReader streamReader;
+            if (inputStream is null)
+            {
+                MessageBox.Show("Input stream is null", "ExtractAndLoad Failed");
+                return eLoadReturnCode.Failure;
+            }
+
+            using var streamReader = new StreamReader(inputStream);
+            streamReader.BaseStream.Seek(0L, SeekOrigin.Begin);
+
+            string data;
             try
             {
-                streamReader = new StreamReader(iStream);
-                streamReader.BaseStream.Seek(0L, SeekOrigin.Begin);
+                data = streamReader.ReadToEnd().Replace("||", "|\n|");
             }
             catch (Exception ex)
             {
-                var num = (int) MessageBox.Show("Unable to read data - " + ex.Message, "ExtractAndLoad Failed");
-                return MidsCharacterFileFormat.eLoadReturnCode.Failure;
+                MessageBox.Show($"Unable to read data - {ex.Message}", "ExtractAndLoad Failed");
+                return eLoadReturnCode.Failure;
             }
 
-            string[] strArray1 =
+            var lines = data.Split('\n');
+            string[] headers = { "ABCD", "0", "0", "0" };
+            var header = "";
+            var dataIndex = FindDataIndex();
+
+            if (dataIndex < 0)
             {
-                "ABCD",
-                "0",
-                "0",
-                "0"
-            };
-            var a = "";
-            eLoadReturnCode eLoadReturnCode;
-            try
+                MessageBox.Show("Unable to locate data header - Magic Number not found!", "ExtractAndLoad Failed");
+                return eLoadReturnCode.Failure;
+            }
+
+            if (lines.Length <= dataIndex + 1)
             {
-                var str = streamReader.ReadToEnd().Replace("||", "|\n|");
-                streamReader.Close();
-                var strArray2 = str.Split('\n');
-                var num1 = -1;
-                if (strArray2.Length < 1)
+                MessageBox.Show("Unable to locate data - Nothing beyond header!", "ExtractAndLoad Failed");
+                return eLoadReturnCode.Failure;
+            }
+
+            var payload = string.Join("\n", lines[(dataIndex + 1)..]);
+            var isHex = headers.Length > 4 && string.Equals(headers[4], "HEX", StringComparison.OrdinalIgnoreCase);
+            var bytes =
+                new ASCIIEncoding().GetBytes(isHex
+                    ? ModernZlib.UnbreakHex(payload)
+                    : ModernZlib.UnbreakString(payload, true));
+
+            if (bytes.Length < Convert.ToInt32(headers[3]))
+            {
+                MessageBox.Show("Data chunk was incomplete! Check that the entire chunk was copied to the clipboard.",
+                    "ExtractAndLoad Failed");
+                return eLoadReturnCode.Failure;
+            }
+
+            if (bytes.Length > Convert.ToInt32(headers[3]))
+            {
+                Array.Resize(ref bytes, Convert.ToInt32(headers[3]));
+            }
+
+            bytes = isHex ? ModernZlib.HexDecodeBytes(bytes) : ModernZlib.UuDecodeBytes(bytes);
+
+            if (bytes.Length == 0)
+            {
+                return eLoadReturnCode.Failure;
+            }
+
+            if (header == MagicCompressed)
+            {
+                bytes = ModernZlib.DecompressChunk(bytes, Convert.ToInt32(headers[1]));
+            }
+
+            return MxDReadSaveData(ref bytes, false) ? eLoadReturnCode.Success : eLoadReturnCode.Failure;
+
+            // Local function to find the data index
+            int FindDataIndex()
+            {
+                for (var index = 0; index < lines.Length; ++index)
                 {
-                    var num2 = (int) MessageBox.Show("Unable to locate data header - Zero-Length Input!",
-                        "ExtractAndLoad Failed");
-                    eLoadReturnCode = eLoadReturnCode.Failure;
+                    var line = lines[index];
+                    var startIndex = line.IndexOf(MagicUncompressed, StringComparison.Ordinal);
+                    if (startIndex < 0)
+                        startIndex = line.IndexOf(MagicCompressed, StringComparison.Ordinal);
+                    if (startIndex < 0)
+                        startIndex = line.IndexOf(Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase);
+                    if (startIndex <= -1) continue;
+                    headers = line[startIndex..].Split(';');
+                    header = headers.Length > 0 ? headers[0] : string.Empty;
+                    return index;
                 }
-                else
-                {
-                    for (var index = 0; index < strArray2.Length; ++index)
-                    {
-                        var startIndex = strArray2[index].IndexOf(MagicUncompressed, StringComparison.Ordinal);
-                        if (startIndex < 0)
-                            startIndex = strArray2[index].IndexOf(MagicCompressed, StringComparison.Ordinal);
-                        if (startIndex < 0)
-                            startIndex = strArray2[index].IndexOf(Files.Headers.Save.Compressed,
-                                StringComparison.OrdinalIgnoreCase);
-                        if (startIndex <= -1)
-                            continue;
-                        strArray1 = strArray2[index].Substring(startIndex).Split(';');
-                        a = strArray1.Length > 0 ? strArray1[0] : string.Empty;
-                        num1 = index;
-                        break;
-                    }
 
-                    if (num1 < 0)
-                    {
-                        MessageBox.Show("Unable to locate data header - Magic Number not found!", "ExtractAndLoad Failed");
-                        eLoadReturnCode = eLoadReturnCode.Failure;
-                    }
-                    else if (string.Equals(a, Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase))
-                    {
-                        eLoadReturnCode = eLoadReturnCode.IsOldFormat;
-                    }
-                    else if (num1 + 1 == strArray2.Length)
-                    {
-                        MessageBox.Show("Unable to locate data - Nothing beyond header!", "ExtractAndLoad Failed");
-                        eLoadReturnCode = eLoadReturnCode.Failure;
-                    }
-                    else
-                    {
-                        var iString = string.Empty;
-                        for (var index = num1 + 1; index <= strArray2.Length - 1; ++index)
-                            iString = iString + strArray2[index] + "\n";
-                        var int32_1 = Convert.ToInt32(strArray1[1]);
-                        var int32_2 = Convert.ToInt32(strArray1[2]);
-                        var int32_3 = Convert.ToInt32(strArray1[3]);
-                        var isHex = false;
-                        if (strArray1.Length > 4)
-                            isHex = string.Equals(strArray1[4], "HEX", StringComparison.OrdinalIgnoreCase);
-                        var iBytes =
-                            new ASCIIEncoding().GetBytes(isHex
-                                ? ModernZlib.UnbreakHex(iString)
-                                : ModernZlib.UnbreakString(iString, true));
-                        streamReader.Close();
-                        if (iBytes.Length < int32_3)
-                        {
-                            MessageBox.Show(
-                                "Data chunk was incomplete! Check that the entire chunk was copied to the clipboard.",
-                                "ExtractAndLoad Failed");
-                            eLoadReturnCode = eLoadReturnCode.Failure;
-                        }
-                        else
-                        {
-                            if (iBytes.Length > int32_3)
-                                Array.Resize(ref iBytes, int32_3);
-                            iBytes = isHex ? ModernZlib.HexDecodeBytes(iBytes) : ModernZlib.UuDecodeBytes(iBytes);
-                            if (iBytes.Length == 0)
-                            {
-                                eLoadReturnCode = eLoadReturnCode.Failure;
-                            }
-                            else
-                            {
-                                if (a == MagicCompressed)
-                                {
-                                    Array.Resize(ref iBytes, int32_2);
-                                    var tempByteArray = iBytes; // Pine
-                                    iBytes = ModernZlib.DecompressChunk(tempByteArray, int32_1);
-                                }
-
-                                eLoadReturnCode = iBytes.Length != 0
-                                    ? MxDReadSaveData(ref iBytes, false) ? eLoadReturnCode.Success : eLoadReturnCode.Failure
-                                    : eLoadReturnCode.Failure;
-                            }
-                        }
-                    }
-                }
+                return -1; // Not found
             }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Unable to read data - " + ex.Message, "ExtractAndLoad Failed");
-                streamReader.Close();
-                eLoadReturnCode = eLoadReturnCode.Failure;
-            }
-
-            return eLoadReturnCode;
         }
 
         private static void WriteSlotData(ref BinaryWriter writer, ref I9Slot? slot)

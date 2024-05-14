@@ -4,7 +4,6 @@ using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Newtonsoft.Json.Schema;
 using Newtonsoft.Json.Schema.Generation;
-using Newtonsoft.Json.Serialization;
 
 namespace Mids_Reborn.Core.BuildFile
 {
@@ -24,12 +23,13 @@ namespace Mids_Reborn.Core.BuildFile
             var generator = new JSchemaGenerator
             {
                 DefaultRequired = Required.Default,
-                SchemaIdGenerationHandling = SchemaIdGenerationHandling.TypeName
+                SchemaIdGenerationHandling = SchemaIdGenerationHandling.TypeName,
+                SchemaReferenceHandling = SchemaReferenceHandling.Objects,
             };
             _schema = generator.Generate(typeof(CharacterBuildData));
         }
 
-        public BuildValidationResult Validate(string buildFile)
+        public BuildValidationResult ValidateFile(string buildFile)
         {
             var data = File.ReadAllText(buildFile);
             try
@@ -50,6 +50,29 @@ namespace Mids_Reborn.Core.BuildFile
             catch (JSchemaException)
             {
                 return new BuildValidationResult { Valid = false, Data = data, ErrorMessage = "Invalid JSON Format.\r\nPlease ensure you are using a valid MBD file." };
+            }
+        }
+
+        public BuildValidationResult ValidateData(string data)
+        {
+            try
+            {
+                var details = "Invalid JSON Payload.\r\n";
+                var buildData = JObject.Parse(data);
+                var valid = buildData.IsValid(_schema, out IList<string> errorMessages);
+
+                for (var index = 0; index < errorMessages.Count; index++)
+                {
+                    var message = errorMessages[index];
+                    if (index != errorMessages.Count) details += $"{message}\r\n";
+                    else details += $"{message}";
+                }
+
+                return new BuildValidationResult { Valid = valid, Data = data, ErrorMessage = details };
+            }
+            catch (JSchemaException)
+            {
+                return new BuildValidationResult { Valid = false, Data = data, ErrorMessage = "Invalid JSON Format.\r\nPlease ensure you are using valid MBD data" };
             }
         }
     }

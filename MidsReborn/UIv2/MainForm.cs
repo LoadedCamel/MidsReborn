@@ -53,7 +53,6 @@ namespace Mids_Reborn.UIv2
             WinApi.SetWindowBackdropType(Handle, WinApi.BackdropTypes.MainWindow);
             LoadButtonImages();
             Load += OnLoad;
-            Shown += OnShown;
             Closed += OnClosed;
             InitializeComponent();
             //PowerSelected += OnPowerSelected;
@@ -107,11 +106,6 @@ namespace Mids_Reborn.UIv2
             }
 
             PopulateBaseFields();
-        }
-
-        private void OnShown(object? sender, EventArgs e)
-        {
-            Loader?.DisposeControls();
         }
 
         private void PowerButton_PaintSlot(object sender, PaintEventArgs e)

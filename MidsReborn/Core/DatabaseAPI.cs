@@ -1102,6 +1102,20 @@ namespace Mids_Reborn.Core
             return -1;
         }
 
+        public static int GetEnhancementFromUid(string? uid)
+        {
+            if (string.IsNullOrWhiteSpace(uid)) return -1;
+            var enhancement = Database.Enhancements.FirstOrDefault(x => x.UID.Equals(uid));
+            if (enhancement is null) return -1;
+            return enhancement.StaticIndex;
+        }
+
+        public static string GetEnhancementUid(string? name)
+        {
+            var enhResult = Database.Enhancements.FirstOrDefault(e => e.LongName == name);
+            return enhResult != null ? enhResult.UID : string.Empty;
+        }
+
         public static int GetEnhancementByUIDName(string iName)
         {
             if (string.IsNullOrWhiteSpace(iName))

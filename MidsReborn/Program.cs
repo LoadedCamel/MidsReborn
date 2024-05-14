@@ -21,7 +21,7 @@ namespace Mids_Reborn
             Application.SetCompatibleTextRenderingDefault(false);
             Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
             Fonts.BuildFontCollection();
-            Application.Run(new Loader(args));
+            Application.Run(new MrbAppContext(args));
         }
     }
 }

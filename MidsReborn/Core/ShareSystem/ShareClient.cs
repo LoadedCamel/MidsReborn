@@ -1,10 +1,9 @@
-﻿using Newtonsoft.Json;
+﻿using System;
+using Newtonsoft.Json;
 using RestSharp;
 using System.Threading.Tasks;
-using System.Windows.Forms;
 using Mids_Reborn.Core.ShareSystem.RestModels;
 using RestSharp.Serializers.NewtonsoftJson;
-using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Core.ShareSystem
 {
@@ -14,61 +13,172 @@ namespace Mids_Reborn.Core.ShareSystem
         {
             get
             {
-                var options = new RestClientOptions("https://mids.app") { MaxTimeout = -1, };
+                var options = new RestClientOptions("https://api.midsreborn.com") { MaxTimeout = -1, };
                 var serializerOpt = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
                 return new RestClient(options, configureSerialization: s => s.UseNewtonsoftJson(serializerOpt));
             }
         }
 
-        public static async Task<string?> RequestId()
+        public static async Task<OperationResult<TransactionResult>> SubmitBuild(BuildRecordDto buildDto)
         {
-            var response = await Client.GetJsonAsync<ResponseModel>("build/requestId");
-            if (response != null && response.Status != "Failed") return response.Id;
-            var messageBox = new MessageBoxEx("Failed to obtain a share id.\r\nYou are either not connected to the internet or there may be an issue with the server.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
-            messageBox.ShowDialog(Application.OpenForms["frmMain"]);
-            return null;
+            try
+            {
+                var response = await Client.PostJsonAsync<BuildRecordDto, OperationResult<TransactionResult>>("build/submit", buildDto);
+                switch (response)
+                {
+                    case { IsSuccessful: true }:
+                        return new OperationResult<TransactionResult>
+                        {
+                            IsSuccessful = response.IsSuccessful,
+                            Data = response.Data,
+                            Message = response.Message
+                        };
+                    case { IsSuccessful: false }:
+                        return new OperationResult<TransactionResult>
+                        {
+                            IsSuccessful = response.IsSuccessful,
+                            Message = response.Message ?? "Error connecting to server or malformed response."
+                        };
+                }
+            }
+            catch (Exception e)
+            {
+                return new OperationResult<TransactionResult>
+                {
+                    IsSuccessful = false,
+                    Message = $"Exception occurred: {e.Message}"
+                };
+            }
+
+            return new OperationResult<TransactionResult>
+            {
+                IsSuccessful = false,
+                Message = "Unexpected error occurred."
+            };
         }
 
-        public static async Task<ResponseModel?> Submit(SubmissionModel submission)
+        public static async Task<OperationResult<TransactionResult>> UpdateBuild(BuildRecordDto buildDto, string id)
         {
-            var subResponse = await Client.PostJsonAsync<SubmissionModel, ResponseModel>("build/submit", submission);
-            if (subResponse == null)
+            var request = new RestRequest($"build/update/{id}", Method.Patch);
+            request.AddJsonBody(buildDto);
+
+            try
             {
-                var messageBox = new MessageBoxEx("Failed to submit build data to the server.\r\nYou are either not connected to the internet or there may be an issue with the server.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
-                messageBox.ShowDialog(Application.OpenForms["frmMain"]);
-                return null;
+                var response = await Client.PatchAsync<OperationResult<TransactionResult>>(request);
+                switch (response)
+                {
+                    case { IsSuccessful: true }:
+                        return new OperationResult<TransactionResult>
+                        {
+                            IsSuccessful = response.IsSuccessful,
+                            Data = response.Data,
+                            Message = response.Message
+                        };
+                    case { IsSuccessful: false }:
+                        return new OperationResult<TransactionResult>
+                        {
+                            IsSuccessful = response.IsSuccessful,
+                            Message = response.Message ?? "Error connecting to server or malformed response."
+                        };
+                }
+            }
+            catch (Exception e)
+            {
+                return new OperationResult<TransactionResult>
+                {
+                    IsSuccessful = false,
+                    Message = $"Exception occurred: {e.Message}"
+                };
             }
 
-            if (subResponse.Status != "Failed") return subResponse;
+            return new OperationResult<TransactionResult>
             {
-                var messageBox = new MessageBoxEx($"Failed to submit build data to the server.\r\nReason: {subResponse.ErrorMessage}", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
-                messageBox.ShowDialog(Application.OpenForms["frmMain"]);
-                return null;
-            }
+                IsSuccessful = false,
+                Message = "Unexpected error occurred."
+            };
         }
 
-        public static async Task<ResponseModel?> UpdateBuildPage(UpdateModel update)
+        public static async Task<OperationResult<TransactionResult>> RefreshShare(string id)
         {
-            var updResponse = await Client.PostJsonAsync<UpdateModel, ResponseModel>("build/update-page", update);
-            if (updResponse == null)
+            var request = new RestRequest($"build/{id}/refresh", Method.Patch);
+
+            try
             {
-                var messageBox = new MessageBoxEx("Failed to update page data.\r\nYou are either not connected to the internet or there may be an issue with the server.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
-                messageBox.ShowDialog(Application.OpenForms["frmMain"]);
-                return null;
+                var response = await Client.PatchAsync<OperationResult<TransactionResult>>(request);
+                switch (response)
+                {
+                    case { IsSuccessful: true }:
+                        return new OperationResult<TransactionResult>
+                        {
+                            IsSuccessful = response.IsSuccessful,
+                            Data = response.Data,
+                            Message = response.Message
+                        };
+                    case { IsSuccessful: false }:
+                        return new OperationResult<TransactionResult>
+                        {
+                            IsSuccessful = response.IsSuccessful,
+                            Message = response.Message ?? "Error connecting to server or malformed response."
+                        };
+                }
+            }
+            catch (Exception e)
+            {
+                return new OperationResult<TransactionResult>
+                {
+                    IsSuccessful = false,
+                    Message = $"Exception occurred: {e.Message}"
+                };
             }
 
-            if (updResponse.Status != "Failed") return updResponse;
+            return new OperationResult<TransactionResult>
             {
-                var messageBox = new MessageBoxEx($"Failed to update page data.\r\nReason: {updResponse.ErrorMessage}", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
-                messageBox.ShowDialog(Application.OpenForms["frmMain"]);
-                return null;
-            }
-
+                IsSuccessful = false,
+                Message = "Unexpected error occurred."
+            };
         }
 
-        public static async Task<ImportModel?> GetBuild(string code)
+        public static async Task<OperationResult<FetchResult>> FetchData(string id)
         {
-            var importResponse = await Client.GetJsonAsync<ImportModel>($"build/{code}");
+            try
+            {
+                var response = await Client.GetJsonAsync<OperationResult<FetchResult>>($"build/{id}/fetch");
+                switch (response)
+                {
+                    case { IsSuccessful: true }:
+                        return new OperationResult<FetchResult>
+                        {
+                            IsSuccessful = response.IsSuccessful,
+                            Data = response.Data,
+                            Message = response.Message
+                        };
+                    case { IsSuccessful: false }:
+                        return new OperationResult<FetchResult>
+                        {
+                            IsSuccessful = response.IsSuccessful,
+                            Message = response.Message ?? "Error connecting to server or malformed response."
+                        };
+                }
+            }
+            catch (Exception e)
+            {
+                return new OperationResult<FetchResult>
+                {
+                    IsSuccessful = false,
+                    Message = $"Exception occurred: {e.Message}"
+                };
+            }
+
+            return new OperationResult<FetchResult>
+            {
+                IsSuccessful = false,
+                Message = "Unexpected error occurred."
+            };
+        }
+
+        public static async Task<SchemaData?> GetBuild(string code)
+        {
+            var importResponse = await Client.GetJsonAsync<SchemaData>($"build/{code}");
             return importResponse;
         }
     }

@@ -32,6 +32,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
         /// </summary>
         private void InitializeComponent()
         {
+            components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(ShareMenu));
             formPages1 = new FormPages();
             buildData = new Page();
@@ -67,34 +68,54 @@ namespace Mids_Reborn.Forms.ImportExportItems
             panelColorTitle = new System.Windows.Forms.Panel();
             lbColorTheme = new FilterableListBox();
             label1 = new System.Windows.Forms.Label();
+            linkBased = new Page();
+            btnSaveChanges = new System.Windows.Forms.Button();
+            ibUpdate = new ImageButtonEx();
+            ibSubmit = new ImageButtonEx();
+            label25 = new System.Windows.Forms.Label();
+            statusStrip1 = new System.Windows.Forms.StatusStrip();
+            toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            advGroupBox2 = new AdvGroupBox();
+            txtExpiresOn = new System.Windows.Forms.TextBox();
+            label20 = new System.Windows.Forms.Label();
+            txtSchemaUrl = new System.Windows.Forms.TextBox();
+            label21 = new System.Windows.Forms.Label();
+            txtImageUrl = new System.Windows.Forms.TextBox();
+            label22 = new System.Windows.Forms.Label();
+            txtDownloadUrl = new System.Windows.Forms.TextBox();
+            label23 = new System.Windows.Forms.Label();
+            txtId = new System.Windows.Forms.TextBox();
+            label24 = new System.Windows.Forms.Label();
+            advGroupBox1 = new AdvGroupBox();
+            chkEditDesc = new System.Windows.Forms.CheckBox();
+            chkEditName = new System.Windows.Forms.CheckBox();
+            txtDesc = new System.Windows.Forms.TextBox();
+            label19 = new System.Windows.Forms.Label();
+            txtSec = new System.Windows.Forms.TextBox();
+            label18 = new System.Windows.Forms.Label();
+            txtPri = new System.Windows.Forms.TextBox();
+            label17 = new System.Windows.Forms.Label();
+            txtArchetype = new System.Windows.Forms.TextBox();
+            label16 = new System.Windows.Forms.Label();
+            txtBuildName = new System.Windows.Forms.TextBox();
+            label15 = new System.Windows.Forms.Label();
             infoGraphic = new Page();
             chkUseAltIg = new System.Windows.Forms.CheckBox();
             igCancel = new ImageButtonEx();
             igExport = new ImageButtonEx();
             label13 = new System.Windows.Forms.Label();
             igPictureBox = new System.Windows.Forms.PictureBox();
-            mobileFriendly = new Page();
-            label14 = new System.Windows.Forms.Label();
-            borderPanel1 = new BorderPanel();
-            previewLabel = new System.Windows.Forms.Label();
-            webViewPreview = new Microsoft.Web.WebView2.WinForms.WebView2();
-            cbInclSetBreakdown = new System.Windows.Forms.CheckBox();
-            label9 = new System.Windows.Forms.Label();
-            cbInclSetBonus = new System.Windows.Forms.CheckBox();
-            cbInclIncarnate = new System.Windows.Forms.CheckBox();
-            cbInclAccolade = new System.Windows.Forms.CheckBox();
-            label8 = new System.Windows.Forms.Label();
-            mbfCancel = new ImageButtonEx();
-            mbfExport = new ImageButtonEx();
             navStrip1 = new NavStrip();
+            toolTip1 = new System.Windows.Forms.ToolTip(components);
             formPages1.SuspendLayout();
             buildData.SuspendLayout();
             forumFormats.SuspendLayout();
+            linkBased.SuspendLayout();
+            statusStrip1.SuspendLayout();
+            advGroupBox2.SuspendLayout();
+            advGroupBox1.SuspendLayout();
             infoGraphic.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)igPictureBox).BeginInit();
-            mobileFriendly.SuspendLayout();
-            borderPanel1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)webViewPreview).BeginInit();
             SuspendLayout();
             // 
             // formPages1
@@ -102,15 +123,15 @@ namespace Mids_Reborn.Forms.ImportExportItems
             formPages1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             formPages1.Controls.Add(buildData);
             formPages1.Controls.Add(forumFormats);
+            formPages1.Controls.Add(linkBased);
             formPages1.Controls.Add(infoGraphic);
-            formPages1.Controls.Add(mobileFriendly);
             formPages1.Location = new System.Drawing.Point(12, 62);
             formPages1.Name = "formPages1";
             formPages1.Pages.Add(buildData);
             formPages1.Pages.Add(forumFormats);
+            formPages1.Pages.Add(linkBased);
             formPages1.Pages.Add(infoGraphic);
-            formPages1.Pages.Add(mobileFriendly);
-            formPages1.SelectedIndex = 3;
+            formPages1.SelectedIndex = 2;
             formPages1.Size = new System.Drawing.Size(776, 393);
             formPages1.TabIndex = 45;
             // 
@@ -130,13 +151,14 @@ namespace Mids_Reborn.Forms.ImportExportItems
             buildData.Name = "buildData";
             buildData.Size = new System.Drawing.Size(774, 391);
             buildData.TabIndex = 2;
-            buildData.Title = "Build Data (Chunk)";
+            buildData.Title = "Build (Datachunk)";
             // 
             // bdCancel
             // 
             bdCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             bdCancel.CurrentText = "Close";
-            bdCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            bdCancel.DisplayVertically = false;
+            bdCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             bdCancel.Images.Background = MRBResourceLib.Resources.HeroButton;
             bdCancel.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             bdCancel.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
@@ -160,7 +182,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             bdExport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             bdExport.CurrentText = "Export";
-            bdExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            bdExport.DisplayVertically = false;
+            bdExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             bdExport.Images.Background = MRBResourceLib.Resources.HeroButton;
             bdExport.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             bdExport.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
@@ -182,7 +205,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // label12
             // 
-            label12.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label12.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             label12.Location = new System.Drawing.Point(10, 12);
             label12.Name = "label12";
             label12.Size = new System.Drawing.Size(755, 37);
@@ -192,15 +215,17 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // bdChunkBox
             // 
             bdChunkBox.BackColor = System.Drawing.Color.FromArgb(20, 20, 20);
+            bdChunkBox.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
             bdChunkBox.ForeColor = System.Drawing.Color.WhiteSmoke;
             bdChunkBox.Location = new System.Drawing.Point(10, 52);
             bdChunkBox.Multiline = true;
             bdChunkBox.Name = "bdChunkBox";
             bdChunkBox.ReadOnly = true;
             bdChunkBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
+            bdChunkBox.ShortcutsEnabled = false;
             bdChunkBox.Size = new System.Drawing.Size(746, 271);
             bdChunkBox.TabIndex = 0;
-            bdChunkBox.WordWrap = true;
+            bdChunkBox.WordWrap = false;
             // 
             // forumFormats
             // 
@@ -241,7 +266,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             forumFormats.Name = "forumFormats";
             forumFormats.Size = new System.Drawing.Size(774, 391);
             forumFormats.TabIndex = 1;
-            forumFormats.Title = "Forum Formats (Text)";
+            forumFormats.Title = "Forum Post (Formatted)";
             // 
             // resetThemeBtn
             // 
@@ -286,7 +311,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // label11
             // 
             label11.AutoSize = true;
-            label11.Font = new System.Drawing.Font("Segoe UI Variable Display", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label11.Font = new System.Drawing.Font("Segoe UI Variable Display", 9.75F, System.Drawing.FontStyle.Bold);
             label11.Location = new System.Drawing.Point(291, 274);
             label11.Name = "label11";
             label11.Size = new System.Drawing.Size(85, 17);
@@ -295,7 +320,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // label10
             // 
-            label10.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label10.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             label10.Location = new System.Drawing.Point(10, 12);
             label10.Name = "label10";
             label10.Size = new System.Drawing.Size(755, 52);
@@ -349,7 +374,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // label7
             // 
             label7.AutoSize = true;
-            label7.Font = new System.Drawing.Font("Segoe UI Variable Display", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label7.Font = new System.Drawing.Font("Segoe UI Variable Display", 9.75F, System.Drawing.FontStyle.Bold);
             label7.Location = new System.Drawing.Point(17, 281);
             label7.Name = "label7";
             label7.Size = new System.Drawing.Size(101, 17);
@@ -360,7 +385,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             ffCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             ffCancel.CurrentText = "Close";
-            ffCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            ffCancel.DisplayVertically = false;
+            ffCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             ffCancel.Images.Background = MRBResourceLib.Resources.HeroButton;
             ffCancel.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             ffCancel.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
@@ -384,7 +410,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             ffExport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             ffExport.CurrentText = "Export";
-            ffExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            ffExport.DisplayVertically = false;
+            ffExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             ffExport.Images.Background = MRBResourceLib.Resources.HeroButton;
             ffExport.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             ffExport.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
@@ -418,7 +445,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // label6
             // 
             label6.AutoSize = true;
-            label6.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label6.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Bold);
             label6.Location = new System.Drawing.Point(442, 64);
             label6.Name = "label6";
             label6.Size = new System.Drawing.Size(135, 16);
@@ -551,12 +578,378 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // label1
             // 
             label1.AutoSize = true;
-            label1.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label1.Font = new System.Drawing.Font("Segoe UI Variable Display", 9F, System.Drawing.FontStyle.Bold);
             label1.Location = new System.Drawing.Point(17, 64);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(83, 16);
             label1.TabIndex = 45;
             label1.Text = "Color Theme:";
+            // 
+            // linkBased
+            // 
+            linkBased.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
+            linkBased.Anchor = System.Windows.Forms.AnchorStyles.None;
+            linkBased.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
+            linkBased.BackColor = System.Drawing.Color.FromArgb(44, 47, 51);
+            linkBased.Controls.Add(btnSaveChanges);
+            linkBased.Controls.Add(ibUpdate);
+            linkBased.Controls.Add(ibSubmit);
+            linkBased.Controls.Add(label25);
+            linkBased.Controls.Add(statusStrip1);
+            linkBased.Controls.Add(advGroupBox2);
+            linkBased.Controls.Add(advGroupBox1);
+            linkBased.Dock = System.Windows.Forms.DockStyle.Fill;
+            linkBased.ForeColor = System.Drawing.Color.WhiteSmoke;
+            linkBased.Location = new System.Drawing.Point(0, 0);
+            linkBased.Name = "linkBased";
+            linkBased.Size = new System.Drawing.Size(774, 391);
+            linkBased.TabIndex = 4;
+            linkBased.Title = "Build Links (API)";
+            linkBased.Visible = false;
+            // 
+            // btnSaveChanges
+            // 
+            btnSaveChanges.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            btnSaveChanges.ForeColor = System.Drawing.Color.Black;
+            btnSaveChanges.Location = new System.Drawing.Point(112, 339);
+            btnSaveChanges.Name = "btnSaveChanges";
+            btnSaveChanges.Size = new System.Drawing.Size(101, 22);
+            btnSaveChanges.TabIndex = 12;
+            btnSaveChanges.Text = "Save Changes";
+            btnSaveChanges.TextAlign = System.Drawing.ContentAlignment.TopCenter;
+            btnSaveChanges.UseVisualStyleBackColor = true;
+            btnSaveChanges.Click += btnSaveChanges_Click;
+            // 
+            // ibUpdate
+            // 
+            ibUpdate.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            ibUpdate.CurrentText = "Update";
+            ibUpdate.DisplayVertically = false;
+            ibUpdate.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+            ibUpdate.Images.Background = MRBResourceLib.Resources.HeroButton;
+            ibUpdate.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            ibUpdate.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            ibUpdate.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            ibUpdate.Location = new System.Drawing.Point(311, 207);
+            ibUpdate.Lock = false;
+            ibUpdate.Name = "ibUpdate";
+            ibUpdate.Size = new System.Drawing.Size(133, 35);
+            ibUpdate.TabIndex = 73;
+            ibUpdate.Text = "Update";
+            ibUpdate.TextOutline.Color = System.Drawing.Color.Black;
+            ibUpdate.TextOutline.Width = 3;
+            ibUpdate.ToggleState = ImageButtonEx.States.ToggledOff;
+            ibUpdate.ToggleText.Indeterminate = "Indeterminate State";
+            ibUpdate.ToggleText.ToggledOff = "ToggledOff State";
+            ibUpdate.ToggleText.ToggledOn = "ToggledOn State";
+            ibUpdate.UseAlt = false;
+            ibUpdate.Click += IbUpdateButton_Click;
+            // 
+            // ibSubmit
+            // 
+            ibSubmit.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            ibSubmit.CurrentText = "Submit";
+            ibSubmit.DisplayVertically = false;
+            ibSubmit.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+            ibSubmit.Images.Background = MRBResourceLib.Resources.HeroButton;
+            ibSubmit.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            ibSubmit.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            ibSubmit.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            ibSubmit.Location = new System.Drawing.Point(311, 157);
+            ibSubmit.Lock = false;
+            ibSubmit.Name = "ibSubmit";
+            ibSubmit.Size = new System.Drawing.Size(133, 35);
+            ibSubmit.TabIndex = 72;
+            ibSubmit.Text = "Submit";
+            ibSubmit.TextOutline.Color = System.Drawing.Color.Black;
+            ibSubmit.TextOutline.Width = 3;
+            ibSubmit.ToggleState = ImageButtonEx.States.ToggledOff;
+            ibSubmit.ToggleText.Indeterminate = "Indeterminate State";
+            ibSubmit.ToggleText.ToggledOff = "ToggledOff State";
+            ibSubmit.ToggleText.ToggledOn = "ToggledOn State";
+            ibSubmit.UseAlt = false;
+            ibSubmit.Click += IbSubmitButton_Click;
+            // 
+            // label25
+            // 
+            label25.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
+            label25.Location = new System.Drawing.Point(20, 10);
+            label25.Name = "label25";
+            label25.Size = new System.Drawing.Size(736, 25);
+            label25.TabIndex = 68;
+            label25.Text = "Submits your build to the API for link generation. If successful, links will be provided in the information boxes.";
+            // 
+            // statusStrip1
+            // 
+            statusStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { toolStripStatusLabel1 });
+            statusStrip1.Location = new System.Drawing.Point(0, 369);
+            statusStrip1.Name = "statusStrip1";
+            statusStrip1.Size = new System.Drawing.Size(774, 22);
+            statusStrip1.SizingGrip = false;
+            statusStrip1.TabIndex = 3;
+            // 
+            // toolStripStatusLabel1
+            // 
+            toolStripStatusLabel1.BackColor = System.Drawing.Color.Transparent;
+            toolStripStatusLabel1.BorderStyle = System.Windows.Forms.Border3DStyle.Adjust;
+            toolStripStatusLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
+            toolStripStatusLabel1.ForeColor = System.Drawing.Color.Black;
+            toolStripStatusLabel1.Name = "toolStripStatusLabel1";
+            toolStripStatusLabel1.Size = new System.Drawing.Size(194, 17);
+            toolStripStatusLabel1.Text = "Please submit or update your build.";
+            // 
+            // advGroupBox2
+            // 
+            advGroupBox2.BorderColor = System.Drawing.Color.DodgerBlue;
+            advGroupBox2.Controls.Add(txtExpiresOn);
+            advGroupBox2.Controls.Add(label20);
+            advGroupBox2.Controls.Add(txtSchemaUrl);
+            advGroupBox2.Controls.Add(label21);
+            advGroupBox2.Controls.Add(txtImageUrl);
+            advGroupBox2.Controls.Add(label22);
+            advGroupBox2.Controls.Add(txtDownloadUrl);
+            advGroupBox2.Controls.Add(label23);
+            advGroupBox2.Controls.Add(txtId);
+            advGroupBox2.Controls.Add(label24);
+            advGroupBox2.Location = new System.Drawing.Point(450, 44);
+            advGroupBox2.Name = "advGroupBox2";
+            advGroupBox2.RoundedCorners.Enabled = true;
+            advGroupBox2.RoundedCorners.Radius = 10;
+            advGroupBox2.Size = new System.Drawing.Size(306, 293);
+            advGroupBox2.TabIndex = 2;
+            advGroupBox2.TabStop = false;
+            advGroupBox2.Text = "Links / Info";
+            advGroupBox2.TitleColor = System.Drawing.Color.WhiteSmoke;
+            advGroupBox2.TitleFont = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            // 
+            // txtExpiresOn
+            // 
+            txtExpiresOn.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            txtExpiresOn.Location = new System.Drawing.Point(20, 254);
+            txtExpiresOn.Name = "txtExpiresOn";
+            txtExpiresOn.ReadOnly = true;
+            txtExpiresOn.Size = new System.Drawing.Size(254, 23);
+            txtExpiresOn.TabIndex = 9;
+            // 
+            // label20
+            // 
+            label20.AutoSize = true;
+            label20.Location = new System.Drawing.Point(22, 236);
+            label20.Name = "label20";
+            label20.Size = new System.Drawing.Size(66, 15);
+            label20.TabIndex = 8;
+            label20.Text = "Expires On:";
+            // 
+            // txtSchemaUrl
+            // 
+            txtSchemaUrl.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            txtSchemaUrl.Location = new System.Drawing.Point(20, 201);
+            txtSchemaUrl.Name = "txtSchemaUrl";
+            txtSchemaUrl.ReadOnly = true;
+            txtSchemaUrl.Size = new System.Drawing.Size(254, 23);
+            txtSchemaUrl.TabIndex = 7;
+            // 
+            // label21
+            // 
+            label21.AutoSize = true;
+            label21.Location = new System.Drawing.Point(20, 183);
+            label21.Name = "label21";
+            label21.Size = new System.Drawing.Size(199, 15);
+            label21.TabIndex = 6;
+            label21.Text = "Schema URL (For use in HTML only):";
+            // 
+            // txtImageUrl
+            // 
+            txtImageUrl.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            txtImageUrl.Location = new System.Drawing.Point(20, 151);
+            txtImageUrl.Name = "txtImageUrl";
+            txtImageUrl.ReadOnly = true;
+            txtImageUrl.Size = new System.Drawing.Size(254, 23);
+            txtImageUrl.TabIndex = 5;
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Location = new System.Drawing.Point(20, 133);
+            label22.Name = "label22";
+            label22.Size = new System.Drawing.Size(67, 15);
+            label22.TabIndex = 4;
+            label22.Text = "Image URL:";
+            // 
+            // txtDownloadUrl
+            // 
+            txtDownloadUrl.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            txtDownloadUrl.Location = new System.Drawing.Point(20, 101);
+            txtDownloadUrl.Name = "txtDownloadUrl";
+            txtDownloadUrl.ReadOnly = true;
+            txtDownloadUrl.Size = new System.Drawing.Size(254, 23);
+            txtDownloadUrl.TabIndex = 3;
+            // 
+            // label23
+            // 
+            label23.AutoSize = true;
+            label23.Location = new System.Drawing.Point(20, 83);
+            label23.Name = "label23";
+            label23.Size = new System.Drawing.Size(88, 15);
+            label23.TabIndex = 2;
+            label23.Text = "Download URL:";
+            // 
+            // txtId
+            // 
+            txtId.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            txtId.Location = new System.Drawing.Point(20, 49);
+            txtId.Name = "txtId";
+            txtId.ReadOnly = true;
+            txtId.Size = new System.Drawing.Size(254, 23);
+            txtId.TabIndex = 1;
+            // 
+            // label24
+            // 
+            label24.AutoSize = true;
+            label24.Location = new System.Drawing.Point(20, 31);
+            label24.Name = "label24";
+            label24.Size = new System.Drawing.Size(61, 15);
+            label24.TabIndex = 0;
+            label24.Text = "Unique Id:";
+            // 
+            // advGroupBox1
+            // 
+            advGroupBox1.BorderColor = System.Drawing.Color.DodgerBlue;
+            advGroupBox1.Controls.Add(chkEditDesc);
+            advGroupBox1.Controls.Add(chkEditName);
+            advGroupBox1.Controls.Add(txtDesc);
+            advGroupBox1.Controls.Add(label19);
+            advGroupBox1.Controls.Add(txtSec);
+            advGroupBox1.Controls.Add(label18);
+            advGroupBox1.Controls.Add(txtPri);
+            advGroupBox1.Controls.Add(label17);
+            advGroupBox1.Controls.Add(txtArchetype);
+            advGroupBox1.Controls.Add(label16);
+            advGroupBox1.Controls.Add(txtBuildName);
+            advGroupBox1.Controls.Add(label15);
+            advGroupBox1.Location = new System.Drawing.Point(20, 44);
+            advGroupBox1.Name = "advGroupBox1";
+            advGroupBox1.RoundedCorners.Enabled = true;
+            advGroupBox1.RoundedCorners.Radius = 10;
+            advGroupBox1.Size = new System.Drawing.Size(285, 293);
+            advGroupBox1.TabIndex = 1;
+            advGroupBox1.TabStop = false;
+            advGroupBox1.Text = "Build Details (Review)";
+            advGroupBox1.TitleColor = System.Drawing.Color.WhiteSmoke;
+            advGroupBox1.TitleFont = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            // 
+            // chkEditDesc
+            // 
+            chkEditDesc.AutoSize = true;
+            chkEditDesc.Location = new System.Drawing.Point(256, 248);
+            chkEditDesc.Name = "chkEditDesc";
+            chkEditDesc.Size = new System.Drawing.Size(15, 14);
+            chkEditDesc.TabIndex = 11;
+            chkEditDesc.UseVisualStyleBackColor = true;
+            chkEditDesc.CheckedChanged += chkEditDesc_CheckedChanged;
+            // 
+            // chkEditName
+            // 
+            chkEditName.AutoSize = true;
+            chkEditName.Location = new System.Drawing.Point(256, 53);
+            chkEditName.Name = "chkEditName";
+            chkEditName.Size = new System.Drawing.Size(15, 14);
+            chkEditName.TabIndex = 10;
+            chkEditName.UseVisualStyleBackColor = true;
+            chkEditName.CheckedChanged += chkEditName_CheckedChanged;
+            // 
+            // txtDesc
+            // 
+            txtDesc.Enabled = false;
+            txtDesc.Location = new System.Drawing.Point(20, 227);
+            txtDesc.Multiline = true;
+            txtDesc.Name = "txtDesc";
+            txtDesc.ReadOnly = true;
+            txtDesc.Size = new System.Drawing.Size(226, 57);
+            txtDesc.TabIndex = 9;
+            txtDesc.TextChanged += BuildInfo_Changed;
+            // 
+            // label19
+            // 
+            label19.AutoSize = true;
+            label19.Location = new System.Drawing.Point(20, 209);
+            label19.Name = "label19";
+            label19.Size = new System.Drawing.Size(70, 15);
+            label19.TabIndex = 8;
+            label19.Text = "Description:";
+            // 
+            // txtSec
+            // 
+            txtSec.Enabled = false;
+            txtSec.Location = new System.Drawing.Point(20, 183);
+            txtSec.Name = "txtSec";
+            txtSec.ReadOnly = true;
+            txtSec.Size = new System.Drawing.Size(226, 23);
+            txtSec.TabIndex = 7;
+            // 
+            // label18
+            // 
+            label18.AutoSize = true;
+            label18.Location = new System.Drawing.Point(20, 164);
+            label18.Name = "label18";
+            label18.Size = new System.Drawing.Size(116, 15);
+            label18.TabIndex = 6;
+            label18.Text = "Secondary Powerset:";
+            // 
+            // txtPri
+            // 
+            txtPri.Enabled = false;
+            txtPri.Location = new System.Drawing.Point(20, 138);
+            txtPri.Name = "txtPri";
+            txtPri.ReadOnly = true;
+            txtPri.Size = new System.Drawing.Size(226, 23);
+            txtPri.TabIndex = 5;
+            // 
+            // label17
+            // 
+            label17.AutoSize = true;
+            label17.Location = new System.Drawing.Point(20, 120);
+            label17.Name = "label17";
+            label17.Size = new System.Drawing.Size(102, 15);
+            label17.TabIndex = 4;
+            label17.Text = "Primary Powerset:";
+            // 
+            // txtArchetype
+            // 
+            txtArchetype.Enabled = false;
+            txtArchetype.Location = new System.Drawing.Point(20, 94);
+            txtArchetype.Name = "txtArchetype";
+            txtArchetype.ReadOnly = true;
+            txtArchetype.Size = new System.Drawing.Size(226, 23);
+            txtArchetype.TabIndex = 3;
+            // 
+            // label16
+            // 
+            label16.AutoSize = true;
+            label16.Location = new System.Drawing.Point(20, 75);
+            label16.Name = "label16";
+            label16.Size = new System.Drawing.Size(64, 15);
+            label16.TabIndex = 2;
+            label16.Text = "Archetype:";
+            // 
+            // txtBuildName
+            // 
+            txtBuildName.Enabled = false;
+            txtBuildName.Location = new System.Drawing.Point(20, 49);
+            txtBuildName.Name = "txtBuildName";
+            txtBuildName.ReadOnly = true;
+            txtBuildName.Size = new System.Drawing.Size(226, 23);
+            txtBuildName.TabIndex = 1;
+            txtBuildName.TextChanged += BuildInfo_Changed;
+            // 
+            // label15
+            // 
+            label15.AutoSize = true;
+            label15.Location = new System.Drawing.Point(20, 31);
+            label15.Name = "label15";
+            label15.Size = new System.Drawing.Size(72, 15);
+            label15.TabIndex = 0;
+            label15.Text = "Build Name:";
             // 
             // infoGraphic
             // 
@@ -592,7 +985,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             igCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             igCancel.CurrentText = "Close";
-            igCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            igCancel.DisplayVertically = false;
+            igCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             igCancel.Images.Background = MRBResourceLib.Resources.HeroButton;
             igCancel.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             igCancel.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
@@ -616,7 +1010,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             igExport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             igExport.CurrentText = "Export";
-            igExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            igExport.DisplayVertically = false;
+            igExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
             igExport.Images.Background = MRBResourceLib.Resources.HeroButton;
             igExport.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             igExport.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
@@ -637,7 +1032,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // label13
             // 
-            label13.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label13.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold);
             label13.Location = new System.Drawing.Point(10, 12);
             label13.Name = "label13";
             label13.Size = new System.Drawing.Size(755, 46);
@@ -653,196 +1048,13 @@ namespace Mids_Reborn.Forms.ImportExportItems
             igPictureBox.TabIndex = 1;
             igPictureBox.TabStop = false;
             // 
-            // mobileFriendly
-            // 
-            mobileFriendly.AccessibleRole = System.Windows.Forms.AccessibleRole.None;
-            mobileFriendly.Anchor = System.Windows.Forms.AnchorStyles.None;
-            mobileFriendly.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
-            mobileFriendly.BackColor = System.Drawing.Color.FromArgb(44, 47, 51);
-            mobileFriendly.Controls.Add(label14);
-            mobileFriendly.Controls.Add(borderPanel1);
-            mobileFriendly.Controls.Add(cbInclSetBreakdown);
-            mobileFriendly.Controls.Add(label9);
-            mobileFriendly.Controls.Add(cbInclSetBonus);
-            mobileFriendly.Controls.Add(cbInclIncarnate);
-            mobileFriendly.Controls.Add(cbInclAccolade);
-            mobileFriendly.Controls.Add(label8);
-            mobileFriendly.Controls.Add(mbfCancel);
-            mobileFriendly.Controls.Add(mbfExport);
-            mobileFriendly.Dock = System.Windows.Forms.DockStyle.Fill;
-            mobileFriendly.ForeColor = System.Drawing.Color.WhiteSmoke;
-            mobileFriendly.Location = new System.Drawing.Point(0, 0);
-            mobileFriendly.Name = "mobileFriendly";
-            mobileFriendly.Size = new System.Drawing.Size(774, 391);
-            mobileFriendly.TabIndex = 0;
-            mobileFriendly.Title = "Mobile Friendly (Link)";
-            // 
-            // label14
-            // 
-            label14.AutoSize = true;
-            label14.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            label14.ForeColor = System.Drawing.Color.DimGray;
-            label14.Location = new System.Drawing.Point(3, 370);
-            label14.Name = "label14";
-            label14.Size = new System.Drawing.Size(173, 21);
-            label14.TabIndex = 55;
-            label14.Text = "Experimental Feature";
-            // 
-            // borderPanel1
-            // 
-            borderPanel1.Border.Color = System.Drawing.Color.FromArgb(12, 56, 100);
-            borderPanel1.Border.Style = System.Windows.Forms.ButtonBorderStyle.Inset;
-            borderPanel1.Border.Thickness = 2;
-            borderPanel1.Border.Which = BorderPanel.PanelBorder.BorderToDraw.All;
-            borderPanel1.Controls.Add(previewLabel);
-            borderPanel1.Controls.Add(webViewPreview);
-            borderPanel1.Location = new System.Drawing.Point(199, 61);
-            borderPanel1.Name = "borderPanel1";
-            borderPanel1.Size = new System.Drawing.Size(569, 275);
-            borderPanel1.TabIndex = 54;
-            // 
-            // previewLabel
-            // 
-            previewLabel.AutoSize = true;
-            previewLabel.BackColor = System.Drawing.Color.Firebrick;
-            previewLabel.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            previewLabel.Location = new System.Drawing.Point(15, 15);
-            previewLabel.Name = "previewLabel";
-            previewLabel.Size = new System.Drawing.Size(52, 17);
-            previewLabel.TabIndex = 53;
-            previewLabel.Text = "Preview";
-            previewLabel.TextAlign = System.Drawing.ContentAlignment.TopCenter;
-            previewLabel.Visible = false;
-            // 
-            // webViewPreview
-            // 
-            webViewPreview.AllowExternalDrop = false;
-            webViewPreview.CreationProperties = null;
-            webViewPreview.DefaultBackgroundColor = System.Drawing.Color.FromArgb(44, 47, 51);
-            webViewPreview.Location = new System.Drawing.Point(3, 3);
-            webViewPreview.Name = "webViewPreview";
-            webViewPreview.Size = new System.Drawing.Size(563, 269);
-            webViewPreview.TabIndex = 51;
-            webViewPreview.ZoomFactor = 1D;
-            // 
-            // cbInclSetBreakdown
-            // 
-            cbInclSetBreakdown.AutoSize = true;
-            cbInclSetBreakdown.Location = new System.Drawing.Point(20, 213);
-            cbInclSetBreakdown.Name = "cbInclSetBreakdown";
-            cbInclSetBreakdown.Size = new System.Drawing.Size(146, 19);
-            cbInclSetBreakdown.TabIndex = 52;
-            cbInclSetBreakdown.Text = "Include Set Breakdown";
-            cbInclSetBreakdown.UseVisualStyleBackColor = true;
-            cbInclSetBreakdown.CheckedChanged += cbInclSetBreakdown_CheckedChanged;
-            // 
-            // label9
-            // 
-            label9.Font = new System.Drawing.Font("Segoe UI Semibold", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            label9.Location = new System.Drawing.Point(10, 12);
-            label9.Name = "label9";
-            label9.Size = new System.Drawing.Size(758, 46);
-            label9.TabIndex = 50;
-            label9.Text = resources.GetString("label9.Text");
-            // 
-            // cbInclSetBonus
-            // 
-            cbInclSetBonus.AutoSize = true;
-            cbInclSetBonus.Location = new System.Drawing.Point(20, 188);
-            cbInclSetBonus.Name = "cbInclSetBonus";
-            cbInclSetBonus.Size = new System.Drawing.Size(153, 19);
-            cbInclSetBonus.TabIndex = 49;
-            cbInclSetBonus.Text = "Include Set Bonus Totals";
-            cbInclSetBonus.UseVisualStyleBackColor = true;
-            cbInclSetBonus.CheckedChanged += cbInclSetBonus_CheckedChanged;
-            // 
-            // cbInclIncarnate
-            // 
-            cbInclIncarnate.AutoSize = true;
-            cbInclIncarnate.Location = new System.Drawing.Point(20, 138);
-            cbInclIncarnate.Name = "cbInclIncarnate";
-            cbInclIncarnate.Size = new System.Drawing.Size(122, 19);
-            cbInclIncarnate.TabIndex = 48;
-            cbInclIncarnate.Text = "Include Incarnates";
-            cbInclIncarnate.UseVisualStyleBackColor = true;
-            cbInclIncarnate.CheckedChanged += cbInclIncarnate_CheckedChanged;
-            // 
-            // cbInclAccolade
-            // 
-            cbInclAccolade.AutoSize = true;
-            cbInclAccolade.Location = new System.Drawing.Point(20, 163);
-            cbInclAccolade.Name = "cbInclAccolade";
-            cbInclAccolade.Size = new System.Drawing.Size(122, 19);
-            cbInclAccolade.TabIndex = 47;
-            cbInclAccolade.Text = "Include Accolades";
-            cbInclAccolade.UseVisualStyleBackColor = true;
-            cbInclAccolade.CheckedChanged += cbInclAccolade_CheckedChanged;
-            // 
-            // label8
-            // 
-            label8.AutoSize = true;
-            label8.Font = new System.Drawing.Font("Segoe UI Variable Display", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            label8.Location = new System.Drawing.Point(20, 110);
-            label8.Name = "label8";
-            label8.Size = new System.Drawing.Size(99, 19);
-            label8.TabIndex = 46;
-            label8.Text = "Extra options:";
-            // 
-            // mbfCancel
-            // 
-            mbfCancel.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            mbfCancel.CurrentText = "Close";
-            mbfCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            mbfCancel.Images.Background = MRBResourceLib.Resources.HeroButton;
-            mbfCancel.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
-            mbfCancel.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
-            mbfCancel.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
-            mbfCancel.Location = new System.Drawing.Point(656, 342);
-            mbfCancel.Lock = false;
-            mbfCancel.Name = "mbfCancel";
-            mbfCancel.Size = new System.Drawing.Size(100, 28);
-            mbfCancel.TabIndex = 45;
-            mbfCancel.Text = "Close";
-            mbfCancel.TextOutline.Color = System.Drawing.Color.Black;
-            mbfCancel.TextOutline.Width = 3;
-            mbfCancel.ToggleState = ImageButtonEx.States.ToggledOff;
-            mbfCancel.ToggleText.Indeterminate = "Indeterminate State";
-            mbfCancel.ToggleText.ToggledOff = "ToggledOff State";
-            mbfCancel.ToggleText.ToggledOn = "ToggledOn State";
-            mbfCancel.UseAlt = false;
-            mbfCancel.Click += BtnCancel_Click;
-            // 
-            // mbfExport
-            // 
-            mbfExport.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            mbfExport.CurrentText = "Export";
-            mbfExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            mbfExport.Images.Background = MRBResourceLib.Resources.HeroButton;
-            mbfExport.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
-            mbfExport.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
-            mbfExport.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
-            mbfExport.Location = new System.Drawing.Point(550, 342);
-            mbfExport.Lock = false;
-            mbfExport.Name = "mbfExport";
-            mbfExport.Size = new System.Drawing.Size(100, 28);
-            mbfExport.TabIndex = 44;
-            mbfExport.Text = "Export";
-            mbfExport.TextOutline.Color = System.Drawing.Color.Black;
-            mbfExport.TextOutline.Width = 3;
-            mbfExport.ToggleState = ImageButtonEx.States.ToggledOff;
-            mbfExport.ToggleText.Indeterminate = "Indeterminate State";
-            mbfExport.ToggleText.ToggledOff = "ToggledOff State";
-            mbfExport.ToggleText.ToggledOn = "ToggledOn State";
-            mbfExport.UseAlt = false;
-            mbfExport.Click += btnExport_Click;
-            // 
             // navStrip1
             // 
             navStrip1.ActiveTabColor = System.Drawing.Color.Goldenrod;
             navStrip1.DataSource = formPages1;
             navStrip1.DimmedColor = System.Drawing.Color.FromArgb(21, 61, 93);
             navStrip1.DisabledTabColor = System.Drawing.Color.DarkGray;
-            navStrip1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            navStrip1.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             navStrip1.InactiveTabColor = System.Drawing.Color.FromArgb(30, 85, 130);
             navStrip1.InactiveTabHoverColor = System.Drawing.Color.FromArgb(43, 122, 187);
             navStrip1.Location = new System.Drawing.Point(12, 18);
@@ -851,6 +1063,10 @@ namespace Mids_Reborn.Forms.ImportExportItems
             navStrip1.OutlineColor = System.Drawing.Color.Black;
             navStrip1.Size = new System.Drawing.Size(775, 38);
             navStrip1.TabIndex = 46;
+            // 
+            // toolTip1
+            // 
+            toolTip1.IsBalloon = true;
             // 
             // ShareMenu
             // 
@@ -872,30 +1088,25 @@ namespace Mids_Reborn.Forms.ImportExportItems
             buildData.PerformLayout();
             forumFormats.ResumeLayout(false);
             forumFormats.PerformLayout();
+            linkBased.ResumeLayout(false);
+            linkBased.PerformLayout();
+            statusStrip1.ResumeLayout(false);
+            statusStrip1.PerformLayout();
+            advGroupBox2.ResumeLayout(false);
+            advGroupBox2.PerformLayout();
+            advGroupBox1.ResumeLayout(false);
+            advGroupBox1.PerformLayout();
             infoGraphic.ResumeLayout(false);
             infoGraphic.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)igPictureBox).EndInit();
-            mobileFriendly.ResumeLayout(false);
-            mobileFriendly.PerformLayout();
-            borderPanel1.ResumeLayout(false);
-            borderPanel1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)webViewPreview).EndInit();
             ResumeLayout(false);
         }
 
         #endregion
         private System.Windows.Forms.CheckBox chkOptSetBreakdown;
         private FormPages formPages1;
-        private Page mobileFriendly;
         private Page forumFormats;
         private ctlTotalsTabStrip tabStrip1;
-        private System.Windows.Forms.Label label9;
-        private System.Windows.Forms.CheckBox cbInclSetBonus;
-        private System.Windows.Forms.CheckBox cbInclIncarnate;
-        private System.Windows.Forms.CheckBox cbInclAccolade;
-        private System.Windows.Forms.Label label8;
-        private Controls.ImageButtonEx mbfCancel;
-        private Controls.ImageButtonEx mbfExport;
         private System.Windows.Forms.Label label10;
         private System.Windows.Forms.CheckBox chkCustomThemeDark;
         private System.Windows.Forms.CheckBox chkOptLongFormat;
@@ -924,21 +1135,48 @@ namespace Mids_Reborn.Forms.ImportExportItems
         private System.Windows.Forms.Button resetThemeBtn;
         private System.Windows.Forms.Button remThemeBtn;
         private System.Windows.Forms.Button addThemeBtn;
-        private Microsoft.Web.WebView2.WinForms.WebView2 webViewPreview;
-        private System.Windows.Forms.CheckBox cbInclSetBreakdown;
-        private System.Windows.Forms.Label previewLabel;
         private Page buildData;
         private Page infoGraphic;
         private Controls.ImageButtonEx bdExport;
         private System.Windows.Forms.Label label12;
         private System.Windows.Forms.TextBox bdChunkBox;
         private Controls.ImageButtonEx bdCancel;
-        private Controls.BorderPanel borderPanel1;
         private System.Windows.Forms.Label label13;
         private System.Windows.Forms.PictureBox igPictureBox;
         private Controls.ImageButtonEx igCancel;
         private Controls.ImageButtonEx igExport;
         private System.Windows.Forms.CheckBox chkUseAltIg;
-        private System.Windows.Forms.Label label14;
+        private Page linkBased;
+        private AdvGroupBox advGroupBox1;
+        private System.Windows.Forms.Label label15;
+        private System.Windows.Forms.TextBox txtPri;
+        private System.Windows.Forms.Label label17;
+        private System.Windows.Forms.TextBox txtArchetype;
+        private System.Windows.Forms.Label label16;
+        private System.Windows.Forms.TextBox txtBuildName;
+        private System.Windows.Forms.TextBox txtSec;
+        private System.Windows.Forms.Label label18;
+        private System.Windows.Forms.TextBox txtDesc;
+        private System.Windows.Forms.Label label19;
+        private AdvGroupBox advGroupBox2;
+        private System.Windows.Forms.Label label20;
+        private System.Windows.Forms.TextBox txtSchemaUrl;
+        private System.Windows.Forms.Label label21;
+        private System.Windows.Forms.TextBox txtImageUrl;
+        private System.Windows.Forms.Label label22;
+        private System.Windows.Forms.TextBox txtDownloadUrl;
+        private System.Windows.Forms.Label label23;
+        private System.Windows.Forms.TextBox txtId;
+        private System.Windows.Forms.Label label24;
+        private System.Windows.Forms.TextBox txtExpiresOn;
+        private System.Windows.Forms.StatusStrip statusStrip1;
+        private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.Label label25;
+        private ImageButtonEx ibUpdate;
+        private ImageButtonEx ibSubmit;
+        private System.Windows.Forms.CheckBox chkEditName;
+        private System.Windows.Forms.CheckBox chkEditDesc;
+        private System.Windows.Forms.ToolTip toolTip1;
+        private System.Windows.Forms.Button btnSaveChanges;
     }
 }

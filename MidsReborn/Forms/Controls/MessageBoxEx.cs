@@ -117,9 +117,11 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
+        private bool ShowIgnore { get; set; }
+
         private bool CenterParent { get; set; }
 
-        public MessageBoxEx(string title, string message, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information, bool centerParent = false)
+        public MessageBoxEx(string title, string message, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information, bool centerParent = false, bool showIgnore = false)
         {
             InitializeComponent();
             Title = title;
@@ -127,9 +129,10 @@ namespace Mids_Reborn.Forms.Controls
             Buttons = buttons;
             MessageBoxIcon = icon;
             CenterParent = centerParent;
+            ShowIgnore = showIgnore;
         }
 
-        public MessageBoxEx(string message, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information, bool centerParent = false)
+        public MessageBoxEx(string message, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information, bool centerParent = false, bool showIgnore = false)
         {
             InitializeComponent();
             titleText.Visible = false;
@@ -137,11 +140,14 @@ namespace Mids_Reborn.Forms.Controls
             Buttons = buttons;
             MessageBoxIcon = icon;
             CenterParent = centerParent;
+            ShowIgnore = showIgnore;
         }
 
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
+            chkIgnore.Visible = ShowIgnore;
+            chkIgnore.Enabled = ShowIgnore;
             if (CenterParent && Owner is not null)
             {
                 CenterToParent();
@@ -154,7 +160,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private void BtnOkay_Click(object sender, EventArgs e)
         {
-            DialogResult = btnOkay.DialogResult;
+            DialogResult = chkIgnore.Checked ? DialogResult.Ignore : btnOkay.DialogResult;
             Close();
         }
 
@@ -164,30 +170,36 @@ namespace Mids_Reborn.Forms.Controls
             Close();
         }
 
-        public static DialogResult ShowDialog(string message, string title, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information)
+        private void ManageIgnoreState(bool showIgnore)
         {
-            using var msgBox = new MessageBoxEx(title, message, buttons, icon);
+            chkIgnore.Visible = showIgnore;
+            chkIgnore.Enabled = showIgnore;
+        }
+
+        public static DialogResult ShowDialog(string message, string title, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information, bool showIgnore = false)
+        {
+            using var msgBox = new MessageBoxEx(title, message, buttons, icon, showIgnore: showIgnore);
             return msgBox.ShowDialog();
         }
 
-        public static void Show(string message, string title, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information)
+        public static DialogResult ShowDialog(IWin32Window owner, string message, string title, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information, bool centerToParent = false, bool showIgnore = false)
         {
-            var msgBox = new MessageBoxEx(title, message, buttons, icon)
+            using var msgBox = new MessageBoxEx(title, message, buttons, icon, centerToParent, showIgnore);
+            return msgBox.ShowDialog(owner);
+        }
+
+        public static void Show(string message, string title, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information, bool showIgnore = false)
+        {
+            var msgBox = new MessageBoxEx(title, message, buttons, icon, showIgnore: showIgnore)
             {
                 TopMost = true
             };
             msgBox.Show();
         }
 
-        public static DialogResult ShowDialog(IWin32Window owner, string message, string title, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information)
+        public static void Show(IWin32Window owner, string message, string title, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information, bool centerToParent = false, bool showIgnore = false)
         {
-            using var msgBox = new MessageBoxEx(title, message, buttons, icon);
-            return msgBox.ShowDialog(owner);
-        }
-
-        public static void Show(IWin32Window owner, string message, string title, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information)
-        {
-            var msgBox = new MessageBoxEx(title, message, buttons, icon)
+            var msgBox = new MessageBoxEx(title, message, buttons, icon, centerToParent, showIgnore)
             {
                 TopMost = true
             };

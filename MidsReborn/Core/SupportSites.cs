@@ -26,11 +26,6 @@ namespace Mids_Reborn.Core
             LaunchBrowser("https://github.com/LoadedCamel/MidsReborn");
         }
 
-        public static void CoinBase()
-        {
-            LaunchBrowser("https://commerce.coinbase.com/checkout/804803e4-9b18-4f18-9f6b-413856dda262");
-        }
-
         private static void LaunchBrowser(string iUri)
         {
             try

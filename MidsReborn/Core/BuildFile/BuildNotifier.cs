@@ -1,5 +1,5 @@
-﻿using System.Windows.Forms;
-using Mids_Reborn.Forms.Controls;
+﻿using Mids_Reborn.Forms.Controls;
+using System.Windows.Forms;
 
 namespace Mids_Reborn.Core.BuildFile
 {
@@ -8,7 +8,7 @@ namespace Mids_Reborn.Core.BuildFile
         void ShowError(string message);
         DialogResult ShowErrorDialog(string message, string title);
         void ShowWarning(string message);
-        DialogResult ShowWarningDialog(string message, string title);
+        DialogResult ShowWarningDialog(string message, string title, bool showIgnore = false);
         void ShowInfo(string message);
         DialogResult ShowInfoDialog(string message, string title);
     }
@@ -30,9 +30,9 @@ namespace Mids_Reborn.Core.BuildFile
             MessageBoxEx.Show(message, "Warning", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Warning);
         }
 
-        public DialogResult ShowWarningDialog(string message, string title)
+        public DialogResult ShowWarningDialog(string message, string title, bool showIgnore = false)
         {
-            return MessageBoxEx.ShowDialog(message, title, MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Warning);
+            return MessageBoxEx.ShowDialog(message, title, MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Warning, showIgnore);
         }
 
         public void ShowInfo(string message)

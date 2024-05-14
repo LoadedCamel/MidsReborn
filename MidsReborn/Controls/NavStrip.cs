@@ -143,7 +143,7 @@ namespace Mids_Reborn.Controls
             
             foreach (var page in _dataSource.Pages)
             {
-                if (_pageHash.Contains(page)) continue;
+                if (_pageHash.Contains(page) || !page.Enabled) continue;
                 Items.Add(new NavStripItem(page));
                 _pageHash.Add(page); 
             }
@@ -229,6 +229,7 @@ namespace Mids_Reborn.Controls
             var xLoc = 0;
             foreach (var item in Items)
             {
+                if (item.State == NavItemState.Disabled) continue; 
                 var textSize = TextRenderer.MeasureText(e.Graphics, item.Text, Font);
                 var itemRect = new Rectangle(xLoc, 0, textSize.Width + Padding, Height - 1);
                 item.Bounds = itemRect;
@@ -237,9 +238,6 @@ namespace Mids_Reborn.Controls
                 {
                     case NavItemState.Active:
                         e.Graphics.FillRectangle(activeBrush, itemRect);
-                        break;
-                    case NavItemState.Disabled:
-                        e.Graphics.FillRectangle(disabledBrush, itemRect);
                         break;
                     case NavItemState.Inactive when !item.IsHighlighted:
                         e.Graphics.FillRectangle(inactiveBrush, itemRect);

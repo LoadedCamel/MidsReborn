@@ -985,15 +985,15 @@ namespace Mids_Reborn
             {
                 var enhancement = DatabaseAPI.Database.Enhancements[slotEntry.Enhancement.Enh];
                 var enhancementPower = enhancement.GetPower();
-                if (enhancementPower == null || enhancement.Effect.Any(e => e.Mode != Enums.eEffMode.FX))
+                if (enhancementPower == null || enhancement.Effect.Any(e => e.FX != null && e.Mode != Enums.eEffMode.FX))
                     continue;
 
                 //Debug.WriteLine(enhancementPower.FullName);
                 if (currentPowerEntry.ProcInclude & enhancement.IsProc)
                     continue;
 
-
                 var eSet = enhancement.GetEnhancementSet();
+                if (eSet is null) continue;
                 if (eSet.HasPetSpecial)
                 {
                     var petSpecial = eSet.GetPetSpecialEnhancement();
@@ -3328,6 +3328,39 @@ namespace Mids_Reborn
             }
 
             return flag;
+        }
+
+        public bool Save(string iFileName)
+        {
+            Archetype ??= DatabaseAPI.Database.Classes[0];
+            if (Origin > Archetype.Origin.Length - 1)
+                Origin = Archetype.Origin.Length - 1;
+            var saveText = MidsCharacterFileFormat.MxDBuildSaveString(true, false);
+            if (string.IsNullOrWhiteSpace(saveText))
+            {
+                MessageBox.Show(@"Save failed - save function returned empty data.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            var str2 = new ClsOutput
+            {
+                Plain = true, idFormat = 0
+            }.Build("") + "\r\n\r\n";
+            StreamWriter streamWriter;
+            try
+            {
+                streamWriter = new StreamWriter(iFileName, false);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
+            streamWriter.Write(str2);
+            streamWriter.Write(saveText);
+            streamWriter.Close();
+            return true;
         }
 
         private void SetPower_NID(int index, int nIDPower)

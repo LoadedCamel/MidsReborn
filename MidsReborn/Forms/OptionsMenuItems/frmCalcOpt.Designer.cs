@@ -56,9 +56,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             cPicker = new ColorDialog();
             fbdSave = new FolderBrowserDialog();
             TabPage5 = new TabPage();
-            groupBox10 = new GroupBox();
             chkWarnOldDbVersion = new CheckBox();
-            chkWarnOldAppVersion = new CheckBox();
             groupBox4 = new GroupBox();
             SchemaStatus = new Label();
             btnRepairSchemaAssoc = new Button();
@@ -148,10 +146,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             optEnh = new Label();
             Label4 = new Label();
             TabControl1 = new TabControl();
+            label12 = new Label();
             ((ISupportInitialize)TeamSize).BeginInit();
             ((ISupportInitialize)udIOLevel).BeginInit();
             TabPage5.SuspendLayout();
-            groupBox10.SuspendLayout();
             groupBox4.SuspendLayout();
             groupBox16.SuspendLayout();
             groupBox19.SuspendLayout();
@@ -180,7 +178,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // btnOK
             // 
             btnOK.DialogResult = DialogResult.OK;
-            btnOK.Location = new System.Drawing.Point(504, 399);
+            btnOK.Location = new System.Drawing.Point(400, 399);
             btnOK.Name = "btnOK";
             btnOK.Size = new System.Drawing.Size(75, 28);
             btnOK.TabIndex = 59;
@@ -190,7 +188,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // btnCancel
             // 
             btnCancel.DialogResult = DialogResult.Cancel;
-            btnCancel.Location = new System.Drawing.Point(408, 399);
+            btnCancel.Location = new System.Drawing.Point(305, 399);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(75, 28);
             btnCancel.TabIndex = 60;
@@ -199,9 +197,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // chkColorPrint
             // 
-            chkColorPrint.Location = new System.Drawing.Point(246, 406);
+            chkColorPrint.Location = new System.Drawing.Point(675, 406);
             chkColorPrint.Name = "chkColorPrint";
-            chkColorPrint.Size = new System.Drawing.Size(156, 16);
+            chkColorPrint.Size = new System.Drawing.Size(98, 16);
             chkColorPrint.TabIndex = 2;
             chkColorPrint.Text = "Print in color";
             chkColorPrint.Visible = false;
@@ -374,7 +372,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // TabPage5
             // 
-            TabPage5.Controls.Add(groupBox10);
             TabPage5.Controls.Add(groupBox4);
             TabPage5.Controls.Add(groupBox16);
             TabPage5.Controls.Add(groupBox19);
@@ -386,36 +383,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage5.Text = "Updates & Paths";
             TabPage5.UseVisualStyleBackColor = true;
             // 
-            // groupBox10
-            // 
-            groupBox10.Controls.Add(chkWarnOldDbVersion);
-            groupBox10.Controls.Add(chkWarnOldAppVersion);
-            groupBox10.Location = new System.Drawing.Point(8, 311);
-            groupBox10.Name = "groupBox10";
-            groupBox10.Size = new System.Drawing.Size(761, 53);
-            groupBox10.TabIndex = 74;
-            groupBox10.TabStop = false;
-            groupBox10.Text = "App/database version checks (new build format only)";
-            // 
             // chkWarnOldDbVersion
             // 
             chkWarnOldDbVersion.AutoSize = true;
-            chkWarnOldDbVersion.Location = new System.Drawing.Point(396, 30);
+            chkWarnOldDbVersion.Location = new System.Drawing.Point(131, 405);
             chkWarnOldDbVersion.Name = "chkWarnOldDbVersion";
-            chkWarnOldDbVersion.Size = new System.Drawing.Size(323, 17);
+            chkWarnOldDbVersion.Size = new System.Drawing.Size(61, 17);
             chkWarnOldDbVersion.TabIndex = 1;
-            chkWarnOldDbVersion.Text = "Warn when build was made on an older database version";
+            chkWarnOldDbVersion.Text = "Enable";
             chkWarnOldDbVersion.UseVisualStyleBackColor = true;
-            // 
-            // chkWarnOldAppVersion
-            // 
-            chkWarnOldAppVersion.AutoSize = true;
-            chkWarnOldAppVersion.Location = new System.Drawing.Point(43, 30);
-            chkWarnOldAppVersion.Name = "chkWarnOldAppVersion";
-            chkWarnOldAppVersion.Size = new System.Drawing.Size(296, 17);
-            chkWarnOldAppVersion.TabIndex = 0;
-            chkWarnOldAppVersion.Text = "Warn when build was made on an older app version";
-            chkWarnOldAppVersion.UseVisualStyleBackColor = true;
             // 
             // groupBox4
             // 
@@ -433,7 +409,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // SchemaStatus
             // 
             SchemaStatus.AutoSize = true;
-            SchemaStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            SchemaStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             SchemaStatus.ForeColor = System.Drawing.Color.Goldenrod;
             SchemaStatus.Location = new System.Drawing.Point(252, 54);
             SchemaStatus.Name = "SchemaStatus";
@@ -465,7 +441,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // lblSchemaAssoc
             // 
-            lblSchemaAssoc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblSchemaAssoc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             lblSchemaAssoc.Location = new System.Drawing.Point(196, 54);
             lblSchemaAssoc.Name = "lblSchemaAssoc";
             lblSchemaAssoc.Size = new System.Drawing.Size(50, 14);
@@ -550,7 +526,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // FileAssocStatus
             // 
             FileAssocStatus.AutoSize = true;
-            FileAssocStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            FileAssocStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             FileAssocStatus.ForeColor = System.Drawing.Color.Goldenrod;
             FileAssocStatus.Location = new System.Drawing.Point(252, 54);
             FileAssocStatus.Name = "FileAssocStatus";
@@ -582,7 +558,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // lblFileAssoc
             // 
-            lblFileAssoc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblFileAssoc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             lblFileAssoc.Location = new System.Drawing.Point(196, 54);
             lblFileAssoc.Name = "lblFileAssoc";
             lblFileAssoc.Size = new System.Drawing.Size(50, 14);
@@ -641,7 +617,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // tbUpdDelayDays
             // 
             tbUpdDelayDays.Enabled = false;
-            tbUpdDelayDays.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            tbUpdDelayDays.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             tbUpdDelayDays.Location = new System.Drawing.Point(639, 60);
             tbUpdDelayDays.Name = "tbUpdDelayDays";
             tbUpdDelayDays.Size = new System.Drawing.Size(21, 20);
@@ -677,9 +653,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage1.Controls.Add(cmbAction);
             TabPage1.Controls.Add(GroupBox9);
             TabPage1.Controls.Add(GroupBox7);
-            TabPage1.Location = new System.Drawing.Point(4, 24);
+            TabPage1.Location = new System.Drawing.Point(4, 22);
             TabPage1.Name = "TabPage1";
-            TabPage1.Size = new System.Drawing.Size(777, 365);
+            TabPage1.Size = new System.Drawing.Size(777, 367);
             TabPage1.TabIndex = 6;
             TabPage1.Text = "Drag & Drop";
             TabPage1.UseVisualStyleBackColor = true;
@@ -729,7 +705,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // Label10
             // 
             Label10.AutoSize = true;
-            Label10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            Label10.Font = new System.Drawing.Font("Segoe UI", 9F);
             Label10.Location = new System.Drawing.Point(19, 268);
             Label10.Name = "Label10";
             Label10.Size = new System.Drawing.Size(278, 15);
@@ -792,9 +768,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage2.Controls.Add(GroupBox15);
             TabPage2.Controls.Add(GroupBox8);
             TabPage2.Controls.Add(GroupBox6);
-            TabPage2.Location = new System.Drawing.Point(4, 24);
+            TabPage2.Location = new System.Drawing.Point(4, 22);
             TabPage2.Name = "TabPage2";
-            TabPage2.Size = new System.Drawing.Size(777, 365);
+            TabPage2.Size = new System.Drawing.Size(777, 367);
             TabPage2.TabIndex = 1;
             TabPage2.Text = "Effects & Maths";
             TabPage2.UseVisualStyleBackColor = true;
@@ -1329,7 +1305,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // optEnh
             // 
-            optEnh.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            optEnh.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             optEnh.ForeColor = System.Drawing.SystemColors.ControlText;
             optEnh.Location = new System.Drawing.Point(21, 121);
             optEnh.Name = "optEnh";
@@ -1360,6 +1336,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabControl1.TabIndex = 0;
             TabControl1.SelectedIndexChanged += TabControl1_SelectedIndexChanged;
             // 
+            // label12
+            // 
+            label12.AutoSize = true;
+            label12.Location = new System.Drawing.Point(12, 406);
+            label12.Name = "label12";
+            label12.Size = new System.Drawing.Size(113, 13);
+            label12.TabIndex = 2;
+            label12.Text = "DB Version Warning:";
+            // 
             // frmCalcOpt
             // 
             AcceptButton = btnOK;
@@ -1367,7 +1352,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             BackColor = System.Drawing.SystemColors.Control;
             CancelButton = btnCancel;
             ClientSize = new System.Drawing.Size(785, 434);
+            Controls.Add(label12);
             Controls.Add(chkColorPrint);
+            Controls.Add(chkWarnOldDbVersion);
             Controls.Add(TabControl1);
             Controls.Add(btnCancel);
             Controls.Add(btnOK);
@@ -1383,8 +1370,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             ((ISupportInitialize)TeamSize).EndInit();
             ((ISupportInitialize)udIOLevel).EndInit();
             TabPage5.ResumeLayout(false);
-            groupBox10.ResumeLayout(false);
-            groupBox10.PerformLayout();
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
             groupBox16.ResumeLayout(false);
@@ -1417,6 +1402,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             GroupBox3.ResumeLayout(false);
             TabControl1.ResumeLayout(false);
             ResumeLayout(false);
+            PerformLayout();
         }
         #endregion
         Button btnCancel;
@@ -1520,9 +1506,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private Label label6;
         private Label lblSchemaAssoc;
         private Label FileAssocStatus;
-        private GroupBox groupBox10;
         private CheckBox chkWarnOldDbVersion;
-        private CheckBox chkWarnOldAppVersion;
         private CheckBox chkDimWindowBorders;
         private Label label5;
         private RadioButton rbEnhPopupCloseStyle2;
@@ -1533,5 +1517,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private RadioButton rbUpdStartup;
         private RadioButton rbUpdDisabled;
         private GroupBox GroupBox1;
+        private Label label12;
     }
 }

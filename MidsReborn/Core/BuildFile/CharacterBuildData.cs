@@ -2,9 +2,11 @@
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
+using System.Text;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.BuildFile.DataModels;
+using Mids_Reborn.Core.Utils;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.BuildFile
@@ -15,17 +17,22 @@ namespace Mids_Reborn.Core.BuildFile
         private static CharacterBuildData? _instance;
         private static readonly object InstanceLock = new();
 
-        private static CharacterBuildData? GetInstance()
+        [JsonIgnore]
+        public static CharacterBuildData Instance
         {
-            if (_instance is not null) return _instance;
-            lock (InstanceLock)
+            get
             {
-                _instance = new CharacterBuildData();
+                if (_instance is not null) return _instance;
+                lock (InstanceLock)
+                {
+                    _instance = new CharacterBuildData();
+                }
+                return _instance;
             }
-            return _instance;
         }
 
-        public static CharacterBuildData? Instance => GetInstance();
+        [JsonIgnore]
+        public string? Id { get; set; }
 
         [JsonProperty]
         public MetaData? BuiltWith { get; set; }
@@ -65,31 +72,30 @@ namespace Mids_Reborn.Core.BuildFile
 
         private static List<PowerEntry> InherentPowers { get; set; } = new();
 
-        internal static void UpdateData(Character? characterData)
+        internal void Update(Character? characterData)
         {
             lock (InstanceLock)
             {
-                if (_instance is null) throw new ArgumentNullException(nameof(_instance));
                 if (characterData == null) throw new ArgumentNullException(nameof(characterData));
                 if (characterData.Archetype == null) throw new NullReferenceException(nameof(characterData.Archetype));
                 if (characterData.CurrentBuild == null) throw new ArgumentException(nameof(characterData.CurrentBuild));
-                _instance.BuiltWith = new MetaData(MidsContext.AppName, MidsContext.AppFileVersion,
+                BuiltWith = new MetaData(MidsContext.AppName, MidsContext.AppFileVersion,
                     DatabaseAPI.DatabaseName, DatabaseAPI.Database.Version);
-                _instance.Class = characterData.Archetype.ClassName;
-                _instance.Origin = characterData.Archetype.Origin[characterData.Origin];
-                _instance.Alignment = characterData.Alignment.ToString();
-                _instance.Name = characterData.Name;
-                _instance.Level = characterData.Level.ToString();
-                _instance.Comment = characterData.Comment;
-                _instance.PowerSets = new List<string>();
-                _instance.PowerEntries = new List<PowerData?>();
+                Class = characterData.Archetype.ClassName;
+                Origin = characterData.Archetype.Origin[characterData.Origin];
+                Alignment = characterData.Alignment.ToString();
+                Name = characterData.Name;
+                Level = characterData.Level.ToString();
+                Comment = characterData.Comment;
+                PowerSets = new List<string>();
+                PowerEntries = new List<PowerData?>();
 
                 foreach (var powerSet in characterData.Powersets)
                 {
-                    _instance.PowerSets.Add(powerSet == null ? string.Empty : powerSet.FullName);
+                    PowerSets.Add(powerSet == null ? string.Empty : powerSet.FullName);
                 }
 
-                _instance.LastPower = characterData.CurrentBuild.LastPower + 1;
+                LastPower = characterData.CurrentBuild.LastPower + 1;
 
                 foreach (var powerEntry in characterData.CurrentBuild.Powers)
                 {
@@ -98,7 +104,7 @@ namespace Mids_Reborn.Core.BuildFile
                     var powerData = new PowerData();
                     if (powerEntry.NIDPower < 0)
                     {
-                        _instance.PowerEntries.Add(powerData);
+                        PowerEntries.Add(powerData);
                     }
                     else
                     {
@@ -110,7 +116,7 @@ namespace Mids_Reborn.Core.BuildFile
                         powerData.VariableValue = powerEntry.VariableValue;
                         powerData.InherentSlotsUsed = powerEntry.InherentSlotsUsed;
 
-                        _instance.PowerEntries.Add(powerData);
+                        PowerEntries.Add(powerData);
 
                         foreach (var subPowerEntry in powerEntry.SubPowers)
                         {
@@ -122,7 +128,7 @@ namespace Mids_Reborn.Core.BuildFile
                             }
 
                             subPowerData.StatInclude = subPowerEntry.StatInclude;
-                            _instance.PowerEntries[^1]?.SubPowerEntries.Add(subPowerData);
+                            PowerEntries[^1]?.SubPowerEntries.Add(subPowerData);
                         }
 
                         foreach (var slot in powerEntry.Slots)
@@ -134,7 +140,7 @@ namespace Mids_Reborn.Core.BuildFile
                             };
                             WriteSlotData(ref slotData, slot.Enhancement);
                             WriteAltSlotData(ref slotData, slot.FlippedEnhancement);
-                            _instance.PowerEntries[^1]?.SlotEntries.Add(slotData);
+                            PowerEntries[^1]?.SlotEntries.Add(slotData);
                         }
                     }
                 }
@@ -151,7 +157,6 @@ namespace Mids_Reborn.Core.BuildFile
             {
                 slotData.Enhancement = new EnhancementData
                 {
-                    Enhancement = DatabaseAPI.Database.Enhancements[slot.Enh].LongName,
                     Uid = DatabaseAPI.Database.Enhancements[slot.Enh].UID,
                     Obtained = slot.Obtained
                 };
@@ -179,7 +184,6 @@ namespace Mids_Reborn.Core.BuildFile
             {
                 slotData.FlippedEnhancement = new EnhancementData
                 {
-                    Enhancement = DatabaseAPI.Database.Enhancements[slot.Enh].LongName,
                     Uid = DatabaseAPI.Database.Enhancements[slot.Enh].UID,
                     Obtained = slot.Obtained
                 };
@@ -275,7 +279,7 @@ namespace Mids_Reborn.Core.BuildFile
             MidsContext.Character.Reset(DatabaseAPI.Database.Classes[atNiD], atOrigin);
             MidsContext.Character.Alignment = Enum.Parse<Enums.Alignment>(Alignment);
             MidsContext.Character.Name = Name;
-            MidsContext.Character.Comment = Comment;
+            MidsContext.Character.Comment = Comment ?? string.Empty;
             MidsContext.Character.LoadPowerSetsByName(PowerSets);
             MidsContext.Character.CurrentBuild!.LastPower = LastPower;
 
@@ -357,59 +361,10 @@ namespace Mids_Reborn.Core.BuildFile
                     {
                         var slotEntry = powerEntryData.SlotEntries[slotIndex];
                         var i9Enhancement = new I9Slot();
-                        var enhData = slotEntry.Enhancement;
-                        if (enhData != null)
-                        {
-                            i9Enhancement.IOLevel = enhData.IoLevel;
-                            i9Enhancement.Obtained = enhData.Obtained;
-                            if (!string.IsNullOrWhiteSpace(enhData.Enhancement))
-                            {
-                                var enh = DatabaseAPI.GetEnhancementByName(enhData.Enhancement);
-                                if (enh <= -1)
-                                {
-                                    enh = DatabaseAPI.GetEnhancementByUIDName(enhData.Uid);
-                                }
-                                i9Enhancement.Enh = enh;
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(enhData.Grade))
-                            {
-                                i9Enhancement.Grade = Enum.Parse<Enums.eEnhGrade>(enhData.Grade);
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(enhData.RelativeLevel))
-                            {
-                                i9Enhancement.RelativeLevel = Enum.Parse<Enums.eEnhRelative>(enhData.RelativeLevel);
-                            }
-                        }
+                        LoadEnhancementData(ref i9Enhancement, slotEntry.Enhancement);
 
                         var i9Flipped = new I9Slot();
-                        var flippedEnhData = slotEntry.FlippedEnhancement;
-                        if (flippedEnhData != null)
-                        {
-                            i9Flipped.IOLevel = flippedEnhData.IoLevel;
-                            i9Flipped.Obtained = flippedEnhData.Obtained;
-                            if (!string.IsNullOrWhiteSpace(flippedEnhData.Enhancement))
-                            {
-                                var enh = DatabaseAPI.GetEnhancementByName(flippedEnhData.Enhancement);
-                                if (enh <= -1)
-                                {
-                                    enh = DatabaseAPI.GetEnhancementByUIDName(flippedEnhData.Uid);
-                                }
-                                i9Flipped.Enh = enh;
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(flippedEnhData.Grade))
-                            {
-                                i9Flipped.Grade = Enum.Parse<Enums.eEnhGrade>(flippedEnhData.Grade);
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(flippedEnhData.RelativeLevel))
-                            {
-                                i9Flipped.RelativeLevel =
-                                    Enum.Parse<Enums.eEnhRelative>(flippedEnhData.RelativeLevel);
-                            }
-                        }
+                        LoadEnhancementData(ref i9Flipped, slotEntry.FlippedEnhancement);
 
                         powerEntry.Slots[slotIndex] = new SlotEntry
                         {
@@ -486,160 +441,56 @@ namespace Mids_Reborn.Core.BuildFile
             MidsContext.Character.Lock();
             return true;
         }
-        
-        /*public string GenerateShareData()
+
+        private void LoadEnhancementData(ref I9Slot i9Enhancement, EnhancementData? enhData)
         {
-            UpdateData(MidsContext.Character);
+            if (enhData == null)
+            {
+                return;
+            }
+            var enh = -1; // Default to an invalid index
+            i9Enhancement.IOLevel = enhData.IoLevel;
+            i9Enhancement.Obtained = enhData.Obtained;
+
+            if (!string.IsNullOrEmpty(enhData.Uid))
+            {
+                enh = DatabaseAPI.GetEnhancementByUIDName(enhData.Uid);
+            }
+
+            if (enh >= 0) // Ensure that a valid enhancement was found
+            {
+                i9Enhancement.Enh = enh;
+            
+                if (!string.IsNullOrWhiteSpace(enhData.Grade))
+                {
+                    i9Enhancement.Grade = Enum.Parse<Enums.eEnhGrade>(enhData.Grade);
+                }
+            
+                if (!string.IsNullOrWhiteSpace(enhData.RelativeLevel))
+                {
+                    i9Enhancement.RelativeLevel = Enum.Parse<Enums.eEnhRelative>(enhData.RelativeLevel);
+                }
+            }
+        }
+        
+        public string GenerateChunkData()
+        {
+            Update(MidsContext.Character);
             var serialized = JsonConvert.SerializeObject(this, Formatting.None);
             var iBytes = Encoding.UTF8.GetBytes(serialized);
-            var output = Compression.CompressToBase64(iBytes);
-            
-            return output.OutString;
+            var compressionResult = Compression.CompressToBase64(iBytes);
+            var output = ModernZlib.BreakString(compressionResult.OutString, 67, true);
+
+            return $"|MBD;{compressionResult.UncompressedSize};{compressionResult.CompressedSize};{compressionResult.EncodedSize};BASE64;|\r\n{output}";
         }
 
-        public static string GenerateShareDataFromStream(bool inclFlipped)
+        public string GenerateShareData()
         {
-            using var stream = GenerateBinaryShareStream(inclFlipped);
-            var compressionResult = Compression.ZCompress(stream.ToArray());
-            //var formattedString = Compression.BreakBase64String(compressionResult.OutString, 67, true);
-            return $"|MBD;{compressionResult.UncompressedSize};{compressionResult.CompressedSize};{compressionResult.EncodedSize};HEX;|{string.Empty}\n{compressionResult.OutString}";
+            Update(MidsContext.Character);
+            var serialized = JsonConvert.SerializeObject(this, Formatting.None);
+            var iBytes = Encoding.UTF8.GetBytes(serialized);
+            var compressionResult = Compression.CompressToBase64(iBytes);
+            return compressionResult.OutString;
         }
-
-        private static CompressionResult MxDBuild(MemoryStream stream)
-        {
-            var byteArray = stream.ToArray();
-            var asciiEncoding = new ASCIIEncoding();
-            var compressedBytes = ModernZlib.CompressChunk(byteArray);
-            var hexBytes = ModernZlib.HexEncodeBytes(compressedBytes);
-            var outString = ModernZlib.BreakString(asciiEncoding.GetString(hexBytes), 67, true);
-
-            return new CompressionResult(outString, byteArray.Length, compressedBytes.Length, hexBytes.Length);
-        }
-
-        public static string MxDGenerateString(bool inclFlipped)
-        {
-            using var stream = GenerateBinaryShareStream(inclFlipped);
-            var compressionResult = MxDBuild(stream);
-            var separator = string.Empty;
-            return $"|MxDz;{compressionResult.UncompressedSize};{compressionResult.CompressedSize};{compressionResult.EncodedSize};HEX;|{separator}\n{compressionResult.OutString}";
-        }
-
-        private static MemoryStream GenerateBinaryShareStream(bool inclFlipped = false)
-        {
-            var characterData = MidsContext.Character;
-            if (characterData == null) throw new ArgumentNullException(nameof(characterData), @"Character data cannot be null");
-            if (characterData.Archetype == null) throw new NullReferenceException(nameof(characterData.Archetype));
-            if (characterData.CurrentBuild == null) throw new ArgumentException(nameof(characterData.CurrentBuild));
-            var binStream = new MemoryStream();
-            using var writer = new BinaryWriter(binStream);
-
-            writer.Write(DatabaseAPI.DatabaseName);
-            writer.Write(DatabaseAPI.Database.Version.ToString());
-            writer.Write(characterData.Archetype.ClassName);
-            writer.Write(characterData.Archetype.Origin[characterData.Origin]);
-            writer.Write((int)characterData.Alignment);
-            writer.Write(characterData.Name);
-            writer.Write(characterData.Comment);
-            writer.Write(characterData.Powersets.Length);
-            foreach (var powerSet in characterData.Powersets)
-            {
-                writer.Write(powerSet != null ? powerSet.FullName : string.Empty);
-            }
-            writer.Write(characterData.CurrentBuild.LastPower);
-            writer.Write(characterData.CurrentBuild.Powers.Count);
-            foreach (var powerEntry in characterData.CurrentBuild.Powers)
-            {
-                if (powerEntry is null || powerEntry.NIDPower < 0)
-                {
-                    writer.Write(-1);
-                }
-                else
-                {
-                    writer.Write(DatabaseAPI.Database.Power[powerEntry.NIDPower]!.StaticIndex);
-                    writer.Write(Convert.ToSByte(powerEntry.Level));
-                    writer.Write(powerEntry.StatInclude);
-                    writer.Write(powerEntry.ProcInclude);
-                    writer.Write(powerEntry.VariableValue);
-                    writer.Write(powerEntry.InherentSlotsUsed);
-                    writer.Write(Convert.ToSByte(powerEntry.SubPowers.Length));
-                    foreach (var subPower in powerEntry.SubPowers)
-                    {
-                        if (subPower.nIDPower > -1)
-                        {
-                            writer.Write(DatabaseAPI.Database.Power[powerEntry.NIDPower]!.StaticIndex);
-                        }
-                        else
-                        {
-                            writer.Write(-1);
-                        }
-                        writer.Write(subPower.StatInclude);
-                    }
-                }
-                writer.Write(Convert.ToSByte(powerEntry!.Slots.Length));
-                foreach (var slot in powerEntry.Slots)
-                {
-                    writer.Write(Convert.ToSByte(slot.Level));
-                    writer.Write(slot.IsInherent);
-                    WriteBinarySlotData(writer, slot.Enhancement);
-                    writer.Write(inclFlipped);
-                    if (inclFlipped) WriteBinarySlotData(writer, slot.FlippedEnhancement);
-                }
-            }
-
-            binStream.Position = 0;
-            return binStream;
-        }
-
-        private static void WriteBinarySlotData(BinaryWriter writer, I9Slot slot)
-        {
-            if (slot.Enh < 0)
-            {
-                writer.Write(-1);
-            }
-            else
-            {
-                writer.Write(DatabaseAPI.Database.Enhancements[slot.Enh].StaticIndex);
-                writer.Write(DatabaseAPI.Database.Enhancements[slot.Enh].UID);
-                writer.Write(slot.Obtained);
-                if (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.Normal | DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SpecialO)
-                {
-                    writer.Write(Convert.ToSByte(slot.RelativeLevel));
-                    writer.Write(Convert.ToSByte(slot.Grade));
-                }
-                else if (DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.InventO | DatabaseAPI.Database.Enhancements[slot.Enh].TypeID == Enums.eType.SetO)
-                {
-                    writer.Write(Convert.ToSByte(slot.IOLevel));
-                    writer.Write(Convert.ToSByte(slot.RelativeLevel));
-                }
-            }
-        }*/
-
-        /*private static bool ReadShareData(string data)
-        {
-            if (string.IsNullOrWhiteSpace(data)) return false;
-            if (!Helpers.ValidShareData(data)) return false;
-            var decompressed = Compression.DecompressFromBase64(data);
-            var decodedJson = Encoding.UTF8.GetString(decompressed);
-            try
-            {
-                _instance ??= new CharacterBuildData();
-                _instance = JsonConvert.DeserializeObject<CharacterBuildData>(decodedJson);
-            }
-            catch (Exception ex)
-            {
-                var errorMsg = new MessageBoxEx($"{ex.Message}\r\n{ex.StackTrace}", MessageBoxEx.MessageBoxExButtons.Okay, MessageBoxEx.MessageBoxExIcon.Error, true);
-                errorMsg.ShowDialog(Application.OpenForms["frmMain"]);
-                
-                return false;
-            }
-            
-            return true;
-        }
-
-        public static bool LoadImportData(string data)
-        {
-            var dataRead = ReadShareData(data);
-            return dataRead && LoadBuild();
-        }*/
     }
 }

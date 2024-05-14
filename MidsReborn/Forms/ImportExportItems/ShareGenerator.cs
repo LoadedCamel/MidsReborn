@@ -1,35 +1,22 @@
-﻿using System;
-using System.Drawing;
+﻿using System.Drawing;
 using System.IO;
-using System.Linq;
-using System.Windows.Forms;
+using System.Threading.Tasks;
 using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.BuildFile;
 using Mids_Reborn.Core.ShareSystem;
 using Mids_Reborn.Core.ShareSystem.RestModels;
-using Mids_Reborn.Forms.Controls;
-using Clipboard = System.Windows.Clipboard;
-using DataFormats = System.Windows.DataFormats;
-using DataObject = System.Windows.DataObject;
 
 namespace Mids_Reborn.Forms.ImportExportItems
 {
     internal static class ShareGenerator
     {
+        private static BuildManager BuildManager => BuildManager.Instance;
+
         internal static string GeneratedBuildDataChunk()
         {
-            //var buildData = CharacterBuildData.GenerateShareData();
-            //var chunks = buildData.Chunk(105);
-            //var dataChunk = chunks.Aggregate(string.Empty, (current, chunk) => current + $"{new string(chunk)}\r\n");
-            //return buildData;
-            return string.Empty;
-        }
-
-        internal static string BuildDataFromChunk(string dataChunk)
-        {
-            var chunks = dataChunk.Split(new[] { "\r\n" }, StringSplitOptions.RemoveEmptyEntries);
-            var recompiledData = string.Concat(chunks);
-            return recompiledData;
+            var buildData = BuildManager.GetDataChunk();
+            return buildData;
         }
 
         internal static Image SharedBuildImage(bool useAltGfx = false)
@@ -40,38 +27,31 @@ namespace Mids_Reborn.Forms.ImportExportItems
             return image;
         }
 
-        internal static async void ShareMobileFriendlyBuild(Control control, bool inclIncarnate, bool inclAccolade, bool inclSetBonus, bool inclBreakdown)
+        internal static async Task<OperationResult<TransactionResult>> SubmitOrUpdateBuild(string? id = null)
         {
-            //var buildData = CharacterBuildData.GenerateShareData();
-            /*var imageData = InfoGraphic.GenerateImageData();
+            OperationResult<TransactionResult> response;
 
-            var id = await ShareClient.RequestId();
-            if (id == null)
+            var dto = new BuildRecordDto
             {
-                var messageBox = new MessageBoxEx("Export Result", "Failed to generate the link.\r\nReason: Response id was null.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
-                messageBox.ShowDialog(control);
-                return;
-            }
-            var submission = new SubmissionModel(id, buildData, imageData);
-            var subResponse = await ShareClient.Submit(submission);
-            if (subResponse == null) return;
-            if (subResponse.BuildUrl == null || subResponse.ImageUrl == null || subResponse.Code == null)
+                Name = MidsContext.Character?.Name,
+                Archetype = MidsContext.Character?.Archetype?.DisplayName,
+                Description = MidsContext.Character?.Comment,
+                Primary = MidsContext.Character?.Powersets[0]?.DisplayName,
+                Secondary = MidsContext.Character?.Powersets[1]?.DisplayName,
+                BuildData = BuildManager.GetShareData(),
+                ImageData = InfoGraphic.GenerateImageData()
+            };
+
+            if (id is null)
             {
-                var messageBox = new MessageBoxEx("Export Result", "Failed to generate the link.\r\nReason: Response data was null.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
-                messageBox.ShowDialog(control);
-                return;
+                response = await ShareClient.SubmitBuild(dto);
             }
-            var dataLink = new PageBuilder.DataLink(subResponse.BuildUrl, subResponse.ImageUrl);
-            var builder = new PageBuilder();
-            var pageData = builder.GeneratedPageData(dataLink, inclIncarnate, inclAccolade, inclSetBonus, inclBreakdown);
-            var update = new UpdateModel(subResponse.Code, pageData);
-            var updateResponse = await ShareClient.UpdateBuildPage(update);
-            if (updateResponse == null) return;
-            var dataObject = new DataObject();
-            dataObject.SetData(DataFormats.StringFormat, $"{updateResponse.PageUrl}");
-            Clipboard.SetDataObject(dataObject, true);
-            var msgBox = new MessageBoxEx("Export Result", "The mobile friendly link has been placed in your clipboard.", MessageBoxEx.MessageBoxExButtons.Ok);
-            msgBox.ShowDialog(control);*/
+            else
+            {
+                response = await ShareClient.UpdateBuild(dto, id);
+            }
+
+            return response;
         }
     }
 }

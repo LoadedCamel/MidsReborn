@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Mids_Reborn.Core.Base.Data_Classes;
@@ -399,9 +400,11 @@ namespace Mids_Reborn.Core
             //return $"{Enum.GetName(typeof(Enums.eSubtype), (int) SubTypeID)} Origin";
         }
 
-        public EnhancementSet GetEnhancementSet()
+        public EnhancementSet? GetEnhancementSet()
         {
-            return DatabaseAPI.GetEnhancementSetFromEnhUid(UIDSet) ?? throw new InvalidOperationException();
+            if (string.IsNullOrWhiteSpace(UIDSet)) return null;
+            var data = DatabaseAPI.GetEnhancementSetFromEnhUid(UIDSet);
+            return data;
         }
 
         public static int GranularLevelZb(int iLevel, int iMin, int iMax, int iStep = 5)

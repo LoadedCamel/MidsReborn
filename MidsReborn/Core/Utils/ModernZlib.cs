@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -6,7 +7,7 @@ using ComponentAce.Compression.Libs.zlib;
 
 namespace Mids_Reborn.Core.Utils
 {
-    public class ModernZlib
+    public static class ModernZlib
     {
         // Compression and Decompression using Managed Zlib
         public static byte[] CompressChunk(byte[] inputBytes)

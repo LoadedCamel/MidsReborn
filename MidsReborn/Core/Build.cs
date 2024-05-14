@@ -1379,8 +1379,7 @@ namespace Mids_Reborn.Core
                             skipEffects = true;
                         }
                 
-                        Debug.WriteLine($"{powerInfo.FullName} skip effects? {skipEffects}");
-
+                        
                         if (setCount[power] < 6)
                         {
                             effectList.AddRange(powerInfo.Effects.Select(t => (IEffect)t.Clone()));
