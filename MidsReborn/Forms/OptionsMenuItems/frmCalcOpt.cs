@@ -640,24 +640,6 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             SchemaAssocStatus_Update();
         }
 
-        private void Status_MouseHover(object sender, EventArgs e)
-        {
-            /*var control = sender as Control;
-            var controlName = control?.Name;
-            if (string.IsNullOrWhiteSpace(controlName))
-            {
-                return;
-            }
-
-            switch (controlName)
-            {
-                case "FileAssocStatus":
-                    break;
-                case "SchemaAssocStatus":
-                    break;
-            }*/
-        }
-
         private void rbEnhPopupCloseStyle1_CheckedChanged(object sender, EventArgs e)
         {
             rbEnhPopupCloseStyle2.Checked = !rbEnhPopupCloseStyle1.Checked;

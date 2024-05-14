@@ -1,6 +1,7 @@
 using System;
 using System.ComponentModel;
 using System.Windows.Forms;
+using static Mids_Reborn.Core.Enums;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems
 {
@@ -108,6 +109,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             rbPvP = new RadioButton();
             rbPvE = new RadioButton();
             TabPage3 = new TabPage();
+            cbWordwrapMode = new ComboBox();
+            label13 = new Label();
             chkShowSelfBuffsAny = new CheckBox();
             groupBox18 = new GroupBox();
             chkOldStyle = new CheckBox();
@@ -376,9 +379,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage5.Controls.Add(groupBox16);
             TabPage5.Controls.Add(groupBox19);
             TabPage5.Controls.Add(GroupBox1);
-            TabPage5.Location = new System.Drawing.Point(4, 22);
+            TabPage5.Location = new System.Drawing.Point(4, 24);
             TabPage5.Name = "TabPage5";
-            TabPage5.Size = new System.Drawing.Size(777, 367);
+            TabPage5.Size = new System.Drawing.Size(777, 365);
             TabPage5.TabIndex = 4;
             TabPage5.Text = "Updates & Paths";
             TabPage5.UseVisualStyleBackColor = true;
@@ -417,7 +420,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             SchemaStatus.TabIndex = 71;
             SchemaStatus.Text = "WARNING";
             SchemaStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            SchemaStatus.MouseHover += Status_MouseHover;
             // 
             // btnRepairSchemaAssoc
             // 
@@ -534,7 +536,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             FileAssocStatus.TabIndex = 71;
             FileAssocStatus.Text = "WARNING";
             FileAssocStatus.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            FileAssocStatus.MouseHover += Status_MouseHover;
             // 
             // btnRepairFileAssoc
             // 
@@ -922,6 +923,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // TabPage3
             // 
+            TabPage3.Controls.Add(cbWordwrapMode);
+            TabPage3.Controls.Add(label13);
             TabPage3.Controls.Add(chkShowSelfBuffsAny);
             TabPage3.Controls.Add(groupBox18);
             TabPage3.Controls.Add(chkNoTips);
@@ -937,6 +940,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage3.TabIndex = 2;
             TabPage3.Text = "Enhancements & View";
             TabPage3.UseVisualStyleBackColor = true;
+            // 
+            // cbWordwrapMode
+            // 
+            cbWordwrapMode.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbWordwrapMode.FormattingEnabled = true;
+            cbWordwrapMode.Items.AddRange(new object[] { "Legacy (some words are off view)", "New (goes multiline more often)", "Ellipsis (use '...' to  cut words)" });
+            cbWordwrapMode.Location = new System.Drawing.Point(439, 339);
+            cbWordwrapMode.Name = "cbWordwrapMode";
+            cbWordwrapMode.Size = new System.Drawing.Size(223, 21);
+            cbWordwrapMode.TabIndex = 82;
+            cbWordwrapMode.SelectedIndexChanged += cbWordwrapMode_SelectedIndexChanged;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new System.Drawing.Point(253, 342);
+            label13.Name = "label12";
+            label13.Size = new System.Drawing.Size(165, 13);
+            label13.TabIndex = 81;
+            label13.Text = "Word-wrapping in power lists:";
             // 
             // chkShowSelfBuffsAny
             // 
@@ -1387,6 +1410,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             GroupBox8.ResumeLayout(false);
             GroupBox6.ResumeLayout(false);
             TabPage3.ResumeLayout(false);
+            TabPage3.PerformLayout();
             groupBox18.ResumeLayout(false);
             groupBox18.PerformLayout();
             GroupBox17.ResumeLayout(false);
@@ -1518,5 +1542,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private RadioButton rbUpdDisabled;
         private GroupBox GroupBox1;
         private Label label12;
+        private Label label13;
+        private ComboBox cbWordwrapMode;
     }
 }
