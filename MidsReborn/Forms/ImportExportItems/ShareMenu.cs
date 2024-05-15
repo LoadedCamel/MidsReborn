@@ -22,8 +22,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
         private readonly BuildManager _buildManager;
         private ExpiringCollection? _expiringCollection;
         private bool _isLoading = true;
-        private string? _originalBuildName;
-        private string? _originalDesc;
+        private string _originalBuildName = "";
+        private string _originalDesc = "";
 
         public ShareMenu(BuildManager buildManager)
         {
@@ -98,8 +98,9 @@ namespace Mids_Reborn.Forms.ImportExportItems
             txtPri.Text = MidsContext.Character?.Powersets[0]?.DisplayName;
             txtSec.Text = MidsContext.Character?.Powersets[1]?.DisplayName;
             txtDesc.Text = MidsContext.Character?.Comment;
-            _originalBuildName = txtBuildName.Text;
-            _originalDesc = txtDesc.Text;
+            _originalBuildName = txtBuildName.Text ?? string.Empty;
+            _originalDesc = txtDesc.Text ?? string.Empty;
+            CheckForChanges();
 
             #endregion
 
@@ -1075,6 +1076,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                         ExpiresAt = result.Data.ExpiresAt,
                     };
                     _expiringCollection?.Add(newItem);
+                    ibDiscordCopy.Visible = true;
                 }
                 else
                 {
@@ -1120,11 +1122,26 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     ExpiresAt = txtExpiresOn.Text
                 };
                 _expiringCollection?.Update(newItem);
+                ibDiscordCopy.Visible = true;
             }
             else
             {
                 toolStripStatusLabel1.Text = result.Message;
             }
+        }
+
+        private void ibDiscordCopy_Click(object sender, EventArgs e)
+        {
+            var data = new DataObject();
+            // Set build name string
+            var buildTitle = !string.IsNullOrWhiteSpace(txtBuildName.Text) ? $"### {txtBuildName.Text} a {txtPri.Text}/{txtSec.Text} {txtArchetype.Text}" : $"### {txtPri.Text}/{txtSec.Text} {txtArchetype.Text}";
+
+            // Set clipboard object
+            data.SetData(DataFormats.UnicodeText, $"{buildTitle}\n\ud83d\udce5 [Grab The Build Here]({txtDownloadUrl.Text}) - *(Link expires {txtExpiresOn.Text}\\*)*\n:eye: [Stat Preview Below]({txtImageUrl.Text})");
+            Clipboard.SetDataObject(data, true);
+
+            var message = new MessageBoxEx("Clipboard", "The data has been successfully copied to your clipboard.\r\nYou can now paste it into Discord.", MessageBoxEx.MessageBoxExButtons.Ok);
+            message.ShowDialog(this);
         }
 
         private static void InputBox_Validating(object sender, InputBoxValidatingArgs e)

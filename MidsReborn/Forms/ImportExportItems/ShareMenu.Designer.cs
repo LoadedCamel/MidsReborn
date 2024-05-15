@@ -69,6 +69,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             lbColorTheme = new FilterableListBox();
             label1 = new System.Windows.Forms.Label();
             linkBased = new Page();
+            ibDiscordCopy = new ImageButtonEx();
             btnSaveChanges = new System.Windows.Forms.Button();
             ibUpdate = new ImageButtonEx();
             ibSubmit = new ImageButtonEx();
@@ -591,6 +592,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             linkBased.Anchor = System.Windows.Forms.AnchorStyles.None;
             linkBased.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             linkBased.BackColor = System.Drawing.Color.FromArgb(44, 47, 51);
+            linkBased.Controls.Add(ibDiscordCopy);
             linkBased.Controls.Add(btnSaveChanges);
             linkBased.Controls.Add(ibUpdate);
             linkBased.Controls.Add(ibSubmit);
@@ -607,6 +609,32 @@ namespace Mids_Reborn.Forms.ImportExportItems
             linkBased.Title = "Build Links (API)";
             linkBased.Visible = false;
             // 
+            // ibDiscordCopy
+            // 
+            ibDiscordCopy.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            ibDiscordCopy.CurrentText = "Discord Copy";
+            ibDiscordCopy.DisplayVertically = false;
+            ibDiscordCopy.Font = new System.Drawing.Font("Microsoft Sans Serif", 14.25F, System.Drawing.FontStyle.Bold);
+            ibDiscordCopy.Images.Background = MRBResourceLib.Resources.HeroButton;
+            ibDiscordCopy.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            ibDiscordCopy.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            ibDiscordCopy.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            ibDiscordCopy.Location = new System.Drawing.Point(311, 298);
+            ibDiscordCopy.Lock = false;
+            ibDiscordCopy.Name = "ibDiscordCopy";
+            ibDiscordCopy.Size = new System.Drawing.Size(133, 35);
+            ibDiscordCopy.TabIndex = 74;
+            ibDiscordCopy.Text = "Discord Copy";
+            ibDiscordCopy.TextOutline.Color = System.Drawing.Color.Black;
+            ibDiscordCopy.TextOutline.Width = 3;
+            ibDiscordCopy.ToggleState = ImageButtonEx.States.ToggledOff;
+            ibDiscordCopy.ToggleText.Indeterminate = "Indeterminate State";
+            ibDiscordCopy.ToggleText.ToggledOff = "ToggledOff State";
+            ibDiscordCopy.ToggleText.ToggledOn = "ToggledOn State";
+            ibDiscordCopy.UseAlt = false;
+            ibDiscordCopy.Visible = false;
+            ibDiscordCopy.Click += ibDiscordCopy_Click;
+            // 
             // btnSaveChanges
             // 
             btnSaveChanges.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
@@ -618,6 +646,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             btnSaveChanges.Text = "Save Changes";
             btnSaveChanges.TextAlign = System.Drawing.ContentAlignment.TopCenter;
             btnSaveChanges.UseVisualStyleBackColor = true;
+            btnSaveChanges.Visible = false;
             btnSaveChanges.Click += btnSaveChanges_Click;
             // 
             // ibUpdate
@@ -1178,5 +1207,6 @@ namespace Mids_Reborn.Forms.ImportExportItems
         private System.Windows.Forms.CheckBox chkEditDesc;
         private System.Windows.Forms.ToolTip toolTip1;
         private System.Windows.Forms.Button btnSaveChanges;
+        private ImageButtonEx ibDiscordCopy;
     }
 }

@@ -1,10 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using Mids_Reborn.Core;
 using Mids_Reborn.Core.ShareSystem;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
@@ -94,6 +92,21 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
             await Task.Delay(5000).ContinueWith(x =>
                 toolStripStatusLabel1.Text = @"Select a build or choose an action item from the menu.");
+        }
+
+        private async void discordMarkdownToolStripMenuItem_Click(object sender, EventArgs e)
+        {
+            if (_selectedBuild == null) return;
+            var data = new DataObject();
+            // Set build name string
+            var buildTitle = !string.IsNullOrWhiteSpace(_selectedBuild.Name) ? $"### {_selectedBuild.Name} a {_selectedBuild.Primary}/{_selectedBuild.Secondary} {_selectedBuild.Archetype}" : $"### {_selectedBuild.Primary}/{_selectedBuild.Secondary} {_selectedBuild.Archetype}";
+
+            // Set clipboard object
+            data.SetData(DataFormats.UnicodeText, $"{buildTitle}\n\ud83d\udce5 [Grab The Build Here]({_selectedBuild.DownloadUrl}) - *(Link expires {_selectedBuild.ExpiresAt}\\*)*\n:eye: [Stat Preview Below]({_selectedBuild.ImageUrl})");
+            Clipboard.SetDataObject(data, true);
+
+            var message = new MessageBoxEx("Clipboard", "The data has been successfully copied to your clipboard.\r\nYou can now paste it in Discord.", MessageBoxEx.MessageBoxExButtons.Ok);
+            message.ShowDialog(this);
         }
     }
 }

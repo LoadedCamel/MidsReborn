@@ -58,6 +58,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             refreshSelectedBuildToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             statusStrip1 = new System.Windows.Forms.StatusStrip();
             toolStripStatusLabel1 = new System.Windows.Forms.ToolStripStatusLabel();
+            exportActionsToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            discordMarkdownToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             advGroupBox2.SuspendLayout();
             menuStrip1.SuspendLayout();
             statusStrip1.SuspendLayout();
@@ -281,7 +283,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // menuStrip1
             // 
-            menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { optionsToolStripMenuItem });
+            menuStrip1.Items.AddRange(new System.Windows.Forms.ToolStripItem[] { optionsToolStripMenuItem, exportActionsToolStripMenuItem });
             menuStrip1.Location = new System.Drawing.Point(0, 0);
             menuStrip1.Name = "menuStrip1";
             menuStrip1.Size = new System.Drawing.Size(692, 24);
@@ -292,8 +294,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             optionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { editSelectedBuildToolStripMenuItem, refreshSelectedBuildToolStripMenuItem });
             optionsToolStripMenuItem.Name = "optionsToolStripMenuItem";
-            optionsToolStripMenuItem.Size = new System.Drawing.Size(59, 20);
-            optionsToolStripMenuItem.Text = "Actions";
+            optionsToolStripMenuItem.Size = new System.Drawing.Size(89, 20);
+            optionsToolStripMenuItem.Text = "Build Actions";
             // 
             // editSelectedBuildToolStripMenuItem
             // 
@@ -327,6 +329,20 @@ namespace Mids_Reborn.Forms.ImportExportItems
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             toolStripStatusLabel1.Size = new System.Drawing.Size(297, 17);
             toolStripStatusLabel1.Text = "Select a build or choose an action item from the menu.";
+            // 
+            // exportActionsToolStripMenuItem
+            // 
+            exportActionsToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { discordMarkdownToolStripMenuItem });
+            exportActionsToolStripMenuItem.Name = "exportActionsToolStripMenuItem";
+            exportActionsToolStripMenuItem.Size = new System.Drawing.Size(114, 20);
+            exportActionsToolStripMenuItem.Text = "Clipboard Actions";
+            // 
+            // discordMarkdownToolStripMenuItem
+            // 
+            discordMarkdownToolStripMenuItem.Name = "discordMarkdownToolStripMenuItem";
+            discordMarkdownToolStripMenuItem.Size = new System.Drawing.Size(180, 22);
+            discordMarkdownToolStripMenuItem.Text = "Copy for Discord";
+            discordMarkdownToolStripMenuItem.Click += discordMarkdownToolStripMenuItem_Click;
             // 
             // SharedBuilds
             // 
@@ -384,5 +400,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.StatusStrip statusStrip1;
         private System.Windows.Forms.ToolStripStatusLabel toolStripStatusLabel1;
+        private System.Windows.Forms.ToolStripMenuItem exportActionsToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem discordMarkdownToolStripMenuItem;
     }
 }
