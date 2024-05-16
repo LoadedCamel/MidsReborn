@@ -297,11 +297,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (lstSelected.SelectedIndex <= -1)
                 return;
-            var sEffectArray = new Enums.sEffect[myEnh.Effect.Length - 1 + 1];
+            var sEffectArray = new Enums.sEffect[myEnh.Effect.Length];
             var selectedIndex = lstSelected.SelectedIndex;
             var index1 = 0;
-            var num1 = myEnh.Effect.Length - 1;
-            for (var index2 = 0; index2 <= num1; ++index2)
+            for (var index2 = 0; index2 < myEnh.Effect.Length; index2++)
             {
                 if (index2 == selectedIndex)
                     continue;
@@ -309,9 +308,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 ++index1;
             }
 
-            myEnh.Effect = new Enums.sEffect[myEnh.Effect.Length - 2 + 1];
-            var num2 = myEnh.Effect.Length - 1;
-            for (var index2 = 0; index2 <= num2; ++index2)
+            myEnh.Effect = new Enums.sEffect[myEnh.Effect.Length - 1];
+            for (var index2 = 0; index2 < myEnh.Effect.Length; index2++)
                 myEnh.Effect[index2].Assign(sEffectArray[index2]);
             FillEffectList();
             ListSelectedEffects();
@@ -694,12 +692,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     num1 = MezPicker(subId);
                     if (num1 == subId)
                         return;
-                    var num2 = myEnh.Effect.Length - 1;
-                    for (var index1 = 0; index1 <= num2; ++index1)
+                    for (var index1 = 0; index1 < myEnh.Effect.Length; index1++)
                     {
                         var effect = myEnh.Effect;
-                        var index2 = index1;
-                        if ((effect[index2].Mode == Enums.eEffMode.Enhancement) & (effect[index2].Enhance.SubID == num1))
+                        if (effect[index1].Mode == Enums.eEffMode.Enhancement & effect[index1].Enhance.SubID == num1)
                         {
                             flag = false;
                         }
@@ -724,7 +720,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     effect[index].Mode = Enums.eEffMode.FX;
                     effect[index].Enhance.ID = -1;
                     effect[index].Enhance.SubID = -1;
-                    effect[index].Multiplier = 1f;
+                    effect[index].Multiplier = 1;
                     effect[index].Schedule = Enums.eSchedule.A;
                     effect[index].FX = (IEffect)frmPowerEffect.MyFx.Clone();
                 }
@@ -885,13 +881,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var names2 = Enum.GetNames(eMez.GetType());
             lstSelected.BeginUpdate();
             lstSelected.Items.Clear();
-            var num = myEnh.Effect.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            for (var index = 0; index < myEnh.Effect.Length; index++)
                 if (myEnh.Effect[index].Mode == Enums.eEffMode.Enhancement)
                 {
                     var str = names1[myEnh.Effect[index].Enhance.ID];
                     if (myEnh.Effect[index].Enhance.SubID > -1)
-                        str = str + ":" + names2[myEnh.Effect[index].Enhance.SubID];
+                        str += $":{names2[myEnh.Effect[index].Enhance.SubID]}";
                     lstSelected.Items.Add(str);
                 }
                 else
