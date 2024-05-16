@@ -215,7 +215,7 @@ ul.indent8 li {{
             };
         }
 
-        public string Color(Color color, string text)
+        public string Color(Color color, string? text)
         {
             return $"{Color(color)}{text}{Color()}";
         }

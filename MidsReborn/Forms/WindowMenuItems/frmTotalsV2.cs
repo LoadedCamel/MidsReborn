@@ -839,14 +839,17 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             graphStatusProt.Clear();
             graphStatusRes.Clear();
+            var mezProtections = MidsContext.Character.Totals.Mez
+                .Select(e => e > 0 ? 0 : Math.Abs(e))
+                .ToArray();
             foreach (var m in MezList)
             {
                 // Use Math.Abs() here instead of negative sign to prevent display of "-0"
                 graphStatusProt.AddItemPair($"{m}",
-                    $"{Math.Abs(MidsContext.Character.Totals.Mez[(int) m]):####0.##}",
+                    $"{mezProtections[(int) m]:####0.##}",
                     0,
-                    Math.Abs(MidsContext.Character.Totals.Mez[(int) m]),
-                    $"{Math.Abs(MidsContext.Character.Totals.Mez[(int) m]):####0.##} Status protection to {m}");
+                    mezProtections[(int) m],
+                    $"{mezProtections[(int) m]:####0.##} Status protection to {m}");
 
                 graphStatusRes.AddItemPair($"{m}",
                     $"{MidsContext.Character.Totals.MezRes[(int) m]:####0.##}%",

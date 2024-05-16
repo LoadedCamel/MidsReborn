@@ -2704,6 +2704,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             throw new ArgumentException("Compare failed, object is not a Power Effect class");
         }
 
+        public bool AffectsPetsOnly()
+        {
+            var isSetBonusEffect = Reward.Contains("Set_Bonus");
+            var effectPower = GetPower();
+            var enhSet = DatabaseAPI.GetEnhancementSetByBoostName(effectPower.SetName);
+            var isPetEnh = DatabaseAPI.GetSetTypeByIndex(enhSet.SetType).Name.Contains("Pet");
+            return isSetBonusEffect && isPetEnh;
+        }
 
         public object Clone()
         {

@@ -86,13 +86,14 @@ namespace Mids_Reborn.Core
             TotalsWindowTitleStyle = ETotalsWindowTitleStyle.Generic;
             RtFont.SetDefault();
             Tips = new Tips();
+            Export = new ExportConfig();
             CompOverride = Array.Empty<Enums.CompOverride>();
             TeamMembers = new Dictionary<string, int>();
             ShowSelfBuffsAny = false;
-            WarnOnOldAppMbd = true;
             WarnOnOldDbMbd = true;
             DimWindowStyleColors = true;
             CloseEnhSelectPopupByMove = true;
+            PowerListsWordwrapMode = Enums.WordwrapMode.Legacy;
             Mode = Modes.User;
             InitializeComponent();
         }
@@ -115,6 +116,8 @@ namespace Mids_Reborn.Core
         public int TeamSize { get; set; } = 1;
         public int ExempLow { get; set; } = 50;
         public int ForceLevel { get; set; } = 50;
+        public int ExportScheme { get; set; } = 1;
+        public int ExportTarget { get; set; } = 1;
         public bool DisableDataDamageGraph { get; private set; }
         public bool DisableVillainColors { get; set; }
         public bool IsInitialized { get; set; }
@@ -138,11 +141,14 @@ namespace Mids_Reborn.Core
         public bool DisableAlphaPopup { get; set; }
         public bool DisableRepeatOnMiddleClick { get; set; }
         private static ConfigData? Instance { get; set; } = null;
+        public bool ExportBonusTotals { get; set; }
+        public bool ExportBonusList { get; set; }
         public bool NoToolTips { get; set; }
         public bool DataDamageGraphPercentageOnly { get; private set; }
         public Enums.eVisibleSize DvState { get; set; }
         public Enums.eSuppress Suppression { get; set; }
         public bool UseArcanaTime { get; set; }
+        public ExportConfig Export { get; }
         public ShareConfig ShareConfig { get; set; } = new();
         public bool PrintInColor { get; set; }
         public bool PrintHistory { get; set; }
@@ -155,6 +161,11 @@ namespace Mids_Reborn.Core
         public Tips Tips { get; set; }
         public bool PopupRecipes { get; set; }
         public bool ShoppingListIncludesRecipes { get; set; }
+        public bool LongExport { get; set; }
+
+        public Point? RotationHelperLocation { get; set; }
+
+        public Enums.WordwrapMode PowerListsWordwrapMode { get; set; }
 
         internal bool MasterMode
         {
@@ -172,7 +183,6 @@ namespace Mids_Reborn.Core
         }
         public Modes Mode { get; set; }
         public bool ShrinkFrmSets { get; set; }
-        public bool WarnOnOldAppMbd { get; set; }
         public bool WarnOnOldDbMbd { get; set; }
         public bool DimWindowStyleColors { get; set; }
         public bool CloseEnhSelectPopupByMove { get; set; }

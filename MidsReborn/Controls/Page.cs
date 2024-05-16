@@ -24,9 +24,9 @@ namespace Mids_Reborn.Controls
         [EditorBrowsable(EditorBrowsableState.Advanced)]
         public new string? AccessibleName { get; set; }
 
-        [Browsable(false)]
-        [EditorBrowsable(EditorBrowsableState.Advanced)]
-        public override DockStyle Dock { get; set; }
+        // [Browsable(false)]
+        // [EditorBrowsable(EditorBrowsableState.Advanced)]
+        // public override DockStyle Dock { get; set; }
 
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Advanced)]

@@ -27,7 +27,7 @@ namespace Mids_Reborn.Controls
 
         private Point KnockoutLocation;
 
-        private ImageAttributes myIA;
+        private ImageAttributes? myIA;
 
         private bool pAltState;
 
@@ -102,7 +102,7 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        public ImageAttributes IA
+        public ImageAttributes? IA
         {
             set => myIA = value;
         }
@@ -191,7 +191,7 @@ namespace Mids_Reborn.Controls
             if (bxOut.Bitmap != null) CreateGraphics().DrawImage(bxOut.Bitmap, 0, 0);
         }
 
-        public void SetImages(ImageAttributes ia, Bitmap? imageOff, Bitmap? imageOn)
+        public void SetImages(ImageAttributes? ia, Bitmap? imageOff, Bitmap? imageOn)
         {
             IA = ia;
             ImageOff = imageOff;

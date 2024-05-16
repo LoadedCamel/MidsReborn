@@ -77,5 +77,7 @@ namespace Mids_Reborn.Core
         void StoreTo(BinaryWriter writer);
 
         string GetSpecialName();
+
+        EnhancementSet? GetEnhancementSet();
     }
 }

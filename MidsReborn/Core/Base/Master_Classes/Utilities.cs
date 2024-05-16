@@ -9,22 +9,29 @@ namespace Mids_Reborn.Core.Base.Master_Classes
     {
         public static string FixDP(float iNum)
         {
-            return iNum < 100.0 && iNum > -100.0 ? FixDP(iNum, 2) : FixDP(iNum, 1);
+            return iNum is < 100 and > -100 ? FixDP(iNum, 2) : FixDP(iNum, 1);
         }
 
         public static string FixDP(float iNum, int maxDecimal)
         {
             var format = "0.";
-            if (iNum >= 10.0 || iNum <= -10.0)
+            if (iNum is >= 10 or <= -10)
+            {
                 format = "###0.";
-            for (var index = 0; index < maxDecimal; ++index)
+            }
+
+            for (var index = 0; index < maxDecimal; index++)
+            {
                 format += "#";
+            }
+
             return iNum.ToString(format);
         }
 
         public static TV ProperEnum<T, TV>(dynamic value) where TV : struct
         {
             var converted = Enum.TryParse<TV>(Enum.GetName(typeof(T), (T)value), out var result);
+            
             return converted ? result : new TV();
         }
 
@@ -38,7 +45,9 @@ namespace Mids_Reborn.Core.Base.Master_Classes
                 { @"(MezResist\(Immobilized\).*MezResist\(Held\).*MezResist\(Stunned\).*MezResist\(Sleep\).*MezResist\(Terrorized\).*MezResist\(Confused\))", @"MezResist(All)" },
                 { @"(SpeedJumping.*JumpHeight.*SpeedFlying.*SpeedRunning)", @"Movement Speed" },
                 { @"(Knockback.*\(Mag.-)", @"Knockback Protection (Mag " }, 
-                { @"(Knockback.*Knockup.*protection)", @"Knockback Protection"}
+                { @"(Knockback.*Knockup.*protection)", @"Knockback Protection"},
+                { @"Defense\(Smashing,Lethal,Fire,Cold,Energy,Negative,Toxic,Psionic\)", @"Defense(All)"},
+                { @"Defense\(Smashing,Lethal,Fire,Cold,Energy,Negative,Psionic\)", @"Defense(All)"}
 
             };
 
@@ -50,7 +59,9 @@ namespace Mids_Reborn.Core.Base.Master_Classes
                 { @"(MezResist\(Immobilized\).*MezResist\(Held\).*MezResist\(Stunned\).*MezResist\(Sleep\).*MezResist\(Terrorized\).*MezResist\(Confused\))", @"Status Resistance" },
                 { @"(SpeedJumping.*JumpHeight.*SpeedFlying.*SpeedRunning)", @"Movement Speed" },
                 { @"(Knockback.*\(Mag.-)", @"Knockback Protection (Mag " },
-                { @"(Knockback.*Knockup.*protection)", @"Knockback Protection"}
+                { @"(Knockback.*Knockup.*protection)", @"Knockback Protection"},
+                { @"Defense\(Smashing,Lethal,Fire,Cold,Energy,Negative,Toxic,Psionic\)", @"Defense(All)"},
+                { @"Defense\(Smashing,Lethal,Fire,Cold,Energy,Negative,Psionic\)", @"Defense(All)"}
             };
 
             effectString = collection switch
@@ -59,6 +70,11 @@ namespace Mids_Reborn.Core.Base.Master_Classes
                 2 => matchCollection2.Aggregate(effectString, (current, regMatch) => Regex.Replace(current, regMatch.Key, regMatch.Value)),
                 _ => effectString
             };
+        }
+
+        public static int GetEnhClassById(int id)
+        {
+            return Math.Max(0, DatabaseAPI.Database.EnhancementClasses.TryFindIndex(e => e.ID == id));
         }
     }
 }

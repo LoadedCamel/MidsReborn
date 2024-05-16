@@ -1183,7 +1183,8 @@ namespace Mids_Reborn.Core
             Fire_Attack = 64, // 0x00000040
             Energy_Attack = 128, // 0x00000080
             Negative_Energy_Attack = 256, // 0x00000100
-            Psionic_Attack = 512 // 0x00000200
+            Psionic_Attack = 512, // 0x00000200
+            Toxic_Attack = 1024 // 0x00000400
         }
 
         public enum eVisibleSize
@@ -1413,6 +1414,13 @@ namespace Mids_Reborn.Core
             PowersBase = 2
         }
 
+        public enum WordwrapMode
+        {
+            Legacy = 0,
+            New = 1,
+            UseEllipsis = 2
+        }
+
         public static bool MezDurationEnhanceable(eMez mezEnum)
         {
             return mezEnum is eMez.Confused or eMez.Held or eMez.Immobilized or eMez.Placate or eMez.Sleep or eMez.Stunned or eMez.Taunt or eMez.Terrorized or eMez.Untouchable;
@@ -1549,23 +1557,21 @@ namespace Mids_Reborn.Core
             return array;
         }
 
-        public static bool IsEnumValue(string iStr, object eEnum)
+        public static bool IsEnumValue(string? iStr, object eEnum)
         {
-            bool flag;
             if (iStr == null)
             {
-                flag = false;
-            }
-            else
-            {
-                var names = Enum.GetNames(eEnum.GetType());
-                iStr = iStr.ToUpper();
-                for (var index = 0; index < names.Length; ++index)
-                    names[index] = names[index].ToUpper();
-                flag = Array.IndexOf(names, iStr) > -1;
+                return false;
             }
 
-            return flag;
+            var names = Enum.GetNames(eEnum.GetType());
+            iStr = iStr.ToUpper();
+            for (var index = 0; index < names.Length; index++)
+            {
+                names[index] = names[index].ToUpper();
+            }
+
+            return Array.IndexOf(names, iStr) > -1;
         }
 
         public static string[] StringToArray(string iStr)
@@ -1725,7 +1731,7 @@ namespace Mids_Reborn.Core
             public sTwinID Enhance;
             public eSchedule Schedule;
             public float Multiplier;
-            public IEffect FX;
+            public IEffect? FX;
 
             public void Assign(sEffect effect)
             {

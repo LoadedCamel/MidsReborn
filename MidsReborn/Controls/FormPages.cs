@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel;
+using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Controls.Designer;
 
@@ -92,13 +93,6 @@ namespace Mids_Reborn.Controls
             if (index < 0 || index > Pages.Count - 1) return;
             if (Pages[index].Visible) return;
             SelectedIndex = index;
-            // for (var i = 0; i < Pages.Count - 1; i++)
-            // {
-            //     if (i == index)
-            //     {
-            //         SelectedIndex = i;
-            //     }
-            // }
         }
 
         /// <summary>
@@ -149,11 +143,7 @@ namespace Mids_Reborn.Controls
         protected override void OnCreateControl()
         {
             base.OnCreateControl();
-            foreach (var page in Pages)
-            {
-                page.Size = ClientRectangle.Size;
-                page.Dock = DockStyle.Fill;
-            }
+            ResizePages();
         }
 
         protected override void OnControlRemoved(ControlEventArgs e)
@@ -172,23 +162,27 @@ namespace Mids_Reborn.Controls
 
         private void OnLoad(object? sender, EventArgs e)
         {
-            foreach (var page in Pages)
-            {
-                page.Location = ClientRectangle.Location;
-                page.Size = ClientRectangle.Size;
-                page.Dock = DockStyle.Fill;
-            }
+            ResizePages();
         }
 
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
+            ResizePages();
+        }
+
+        private void ResizePages()
+        {
             foreach (var page in Pages)
             {
-                page.Location = ClientRectangle.Location;
-                page.Size = ClientRectangle.Size;
                 page.Dock = DockStyle.Fill;
             }
+        }
+
+        protected override void OnDockChanged(EventArgs e)
+        {
+            base.OnDockChanged(e);
+            ResizePages();
         }
 
         private void PagesOnListChanged(object? sender, ListChangedEventArgs e)
@@ -197,24 +191,35 @@ namespace Mids_Reborn.Controls
             {
                 case ListChangedType.ItemAdded:
                     var page = Pages[e.NewIndex];
-                    page.Location = ClientRectangle.Location;
-                    page.Size = ClientRectangle.Size;
-                    page.Dock = DockStyle.Fill;
-                    Controls.Add(page);
-                    if (Pages.Count < 2)
+                    SuspendLayout();
+                    try
                     {
-                        SelectedPage = page;
+                        page.Dock = DockStyle.Fill;
+                        Controls.Add(page);
+                        if (Pages.Count < 2)
+                        {
+                            SelectedPage = page;
+                        }
+                    }
+                    finally
+                    {
+                        ResumeLayout();
                     }
                     break;
                 case ListChangedType.ItemDeleted:
                     if (e.NewIndex < Controls.Count && Controls[e.NewIndex] is Page pageToRemove)
                     {
-                        if (SelectedPage == pageToRemove)
+                        SuspendLayout();
+                        try
                         {
-                            SelectedPage = Pages.Count > 0 ? Pages[^1] : null;
-                        }
+                            if (SelectedPage == pageToRemove)
+                            {
+                                SelectedPage = Pages.Count > 0 ? Pages[^1] : null;
+                            }
 
-                        Controls.Remove(pageToRemove);
+                            Controls.Remove(pageToRemove);
+                        }
+                        finally { ResumeLayout(); }
                     }
 
                     break;

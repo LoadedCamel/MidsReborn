@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -159,28 +160,18 @@ namespace Mids_Reborn.Core
             return await cSource.Task;
         }
 
-        public static async Task<List<string?>> LoadArchetypes()
+        public static Task<List<string>> LoadArchetypes()
         {
-            var cSource = new TaskCompletionSource<List<string?>>();
-            var retList = new List<string?>();
-            var baseImages = Images.Where(x => x.IsBase).ToList();
-            var archetypeImages = Images.Where(x => x.Directory == "Archetypes").ToList();
-            var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
+            var baseImage = Images.FirstOrDefault(x => x is { IsBase: true, FileName: "Unknown.png" }).Path ?? string.Empty;
+            var archTypePaths = new HashSet<string>();
+
             foreach (var c in DatabaseAPI.Database.Classes)
             {
-                var path = archetypeImages.FirstOrDefault(i => i.FileName == $"{c?.ClassName}.png").Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    path = unknown;
-                }
-                if (retList.All(p => p != path))
-                {
-                    retList.Add(path);
-                }
+                var path = Images.FirstOrDefault(i => c != null && i.Directory == "Archetypes" && i.FileName == $"{c.ClassName}.png").Path ?? baseImage;
+                archTypePaths.Add(path);
             }
 
-            cSource.TrySetResult(retList);
-            return await cSource.Task;
+            return Task.FromResult(archTypePaths.ToList());
         }
 
         public static List<string> ArchetypeImages
@@ -231,28 +222,18 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static async Task<List<string?>> LoadOrigins()
+        public static Task<List<string>> LoadOrigins()
         {
-            var cSource = new TaskCompletionSource<List<string?>>();
-            var retList = new List<string?>();
-            var baseImages = Images.Where(x => x.IsBase).ToList();
-            var images = Images.Where(x => x.Directory == "Origins").ToList();
-            var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
-            foreach (var o in DatabaseAPI.Database.Origins)
+            var baseImage = Images.FirstOrDefault(x => x is { IsBase: true, FileName: "Unknown.png" }).Path ?? string.Empty;
+            var originPaths = new HashSet<string>();
+
+            foreach (var origin in DatabaseAPI.Database.Origins)
             {
-                var path = images.FirstOrDefault(i => i.FileName == $"{o.Name}.png").Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    path = unknown;
-                }
-                if (retList.All(p => p != path))
-                {
-                    retList.Add(path);
-                }
+                var path = Images.FirstOrDefault(i => i.Directory == "Origins" && i.FileName == $"{origin.Name}.png").Path ?? baseImage;
+                originPaths.Add(path);
             }
 
-            cSource.TrySetResult(retList);
-            return await cSource.Task;
+            return Task.FromResult(originPaths.ToList());
         }
 
         public static async Task LoadEnhancements()
@@ -263,20 +244,18 @@ namespace Mids_Reborn.Core
             await Task.CompletedTask;
         }
 
-        public static async Task<List<string>> LoadPowerSets()
+        public static async Task<List<string?>> LoadPowerSets()
         {
-            var cSource = new TaskCompletionSource<List<string>>();
-            var retList = new List<string>();
+            var cSource = new TaskCompletionSource<List<string?>>();
+            var retList = new List<string?>();
             var baseImages = Images.Where(x => x.IsBase).ToList();
             var powersetImages = Images.Where(x => x.Directory == "Powersets").ToList();
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             if (retList.Any(p => p != unknown))
             {
-                retList.Add(unknown); 
+                if (unknown != null) retList.Add(unknown);
             }
-            retList.AddRange(DatabaseAPI.Database.Powersets
-                .Select(ps => powersetImages.FirstOrDefault(i => i.FileName == $"{ps.ImageName}").Path)
-                .Where(path => !string.IsNullOrWhiteSpace(path)));
+            retList.AddRange(DatabaseAPI.Database.Powersets.Select(ps => powersetImages.FirstOrDefault(i => ps != null && i.FileName == $"{ps.ImageName}").Path).Where(path => !string.IsNullOrWhiteSpace(path)));
 
             cSource.TrySetResult(retList);
 
@@ -300,12 +279,7 @@ namespace Mids_Reborn.Core
                 }
                 retList.Add(path);
             }
-
-            // foreach (var img in enhancementImages)
-            // {
-            //     Debug.WriteLine(img.Path);
-            // }
-
+            
             for (var index = 0; index < retList.Count; index++)
             {
                 DatabaseAPI.Database.EnhancementSets[index].ImageIdx = index;
@@ -889,8 +863,12 @@ namespace Mids_Reborn.Core
             iTarget.SmoothingMode = SmoothingMode.HighQuality;
             iTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             iTarget.PageUnit = GraphicsUnit.Pixel;
+            if (Borders.Bitmap == null) return;
             iTarget.DrawImage(Borders.Bitmap, iTarget.ClipBounds, GetOverlayRectF(Origin.Grade.SetO), GraphicsUnit.Pixel);
-            iTarget.DrawImage(Sets.Bitmap, iTarget.ClipBounds, GetImageRectF(iImageIndex), GraphicsUnit.Pixel);
+            if (Sets.Bitmap != null)
+            {
+                iTarget.DrawImage(Sets.Bitmap, iTarget.ClipBounds, GetImageRectF(iImageIndex), GraphicsUnit.Pixel);
+            }
         }
 
         public static Rectangle GetOverlayRect(Origin.Grade iGrade)

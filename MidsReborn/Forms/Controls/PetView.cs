@@ -1241,7 +1241,7 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     case Enums.eEffectType.Absorb:
                         //Fixes the Absorb display to correctly show the percentage
-                        shortFxEnh.Sum = float.Parse(shortFxEnh.Sum.ToString("P", CultureInfo.InvariantCulture).Replace("%", ""));
+                        shortFxEnh.Sum = float.Parse(shortFxEnh.Sum.ToString("P", CultureInfo.InvariantCulture).Replace("%", ""), CultureInfo.InvariantCulture);
                         break;
                     case Enums.eEffectType.ToHit:
                         //Fixes the ToHit display to correctly show the percentage

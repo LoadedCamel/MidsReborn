@@ -713,6 +713,7 @@ namespace Mids_Reborn.Forms.Controls
             // 
             // enhListing
             // 
+            enhListing.AutoSizeLineHeight = false;
             enhListing.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
             enhListing.Columns = 1;
             enhListing.UseHighlighting = true;
@@ -810,6 +811,7 @@ namespace Mids_Reborn.Forms.Controls
             Controls.Add(pnlTotal);
             Controls.Add(pnlEnh);
             Controls.Add(pnlFX);
+            DoubleBuffered = true;
             Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
             Name = "DataView";
             Size = new System.Drawing.Size(1221, 479);

@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using FastDeepCloner;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
@@ -186,7 +187,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         Graph.ColorFadeEnd = Color.DarkRed;
                         SetGraphValues((b, e) => b.FXGetDamageValue(),
                             (b, e) => e.FXGetDamageValue(),
-                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon,
+                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon | Math.Abs(e.FXGetDamageValue()) >= float.Epsilon,
                             DisplayMode.Damage, "");
                         break;
                     case DisplayMode.DPA:
@@ -195,7 +196,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.DPA;
                         SetGraphValues((b, e) => b.FXGetDamageValue(),
                             (b, e) => e.FXGetDamageValue(),
-                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon,
+                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon | Math.Abs(e.FXGetDamageValue()) >= float.Epsilon,
                             DisplayMode.DPA, "");
                         MidsContext.Config.DamageMath.ReturnValue = returnValue;
                         break;
@@ -205,7 +206,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.DPS;
                         SetGraphValues((b, e) => b.FXGetDamageValue(),
                             (b, e) => e.FXGetDamageValue(),
-                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon,
+                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon | Math.Abs(e.FXGetDamageValue()) >= float.Epsilon,
                             DisplayMode.DPS, "");
                         MidsContext.Config.DamageMath.ReturnValue = returnValue;
                         break;
@@ -215,7 +216,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.Numeric;
                         SetGraphValues((b, e) => b.FXGetDamageValue(),
                             (b, e) => e.FXGetDamageValue(),
-                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon,
+                            (b, e) => Math.Abs(b.FXGetDamageValue()) >= float.Epsilon | Math.Abs(e.FXGetDamageValue()) >= float.Epsilon,
                             DisplayMode.DPE, "");
                         MidsContext.Config.DamageMath.ReturnValue = returnValue;
                         break;
@@ -265,8 +266,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         Graph.ColorFadeEnd = Color.FromArgb(96, 255, 96);
                         SetGraphValues((b, e) => b.GetEffectMagSum(Enums.eEffectType.Heal).Sum,
                             (b, e) => e.GetEffectMagSum(Enums.eEffectType.Heal).Sum,
-                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon,
-                            DisplayMode.Healing); // ???
+                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon | Math.Abs(e.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon,
+                            DisplayMode.Healing);
                         break;
                     case DisplayMode.HPS:
                         Graph.ColorFadeEnd = Color.FromArgb(96, 255, 96);
@@ -300,15 +301,15 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                                 return nEnh;
                             },
-                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon,
-                            DisplayMode.HPS); // ???
+                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon | Math.Abs(e.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon,
+                            DisplayMode.HPS);
                         break;
                     case DisplayMode.HPE:
                         Graph.ColorFadeEnd = Color.FromArgb(96, 255, 96);
                         SetGraphValues((b, e) => b.GetEffectMagSum(Enums.eEffectType.Heal).Sum / (e.EndCost > 0 ? b.EndCost : 1),
                             (b, e) => e.GetEffectMagSum(Enums.eEffectType.Heal).Sum / (e.EndCost > 0 ? e.EndCost : 1),
-                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon,
-                            DisplayMode.HPE); // ???
+                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon | Math.Abs(e.GetEffectMagSum(Enums.eEffectType.Heal).Sum) >= float.Epsilon,
+                            DisplayMode.HPE);
                         break;
                     case DisplayMode.EffectDuration:
                         Graph.ColorFadeEnd = Color.FromArgb(128, 0, 255);
@@ -389,8 +390,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         Graph.ColorFadeEnd = Color.FromArgb(96, 192, 96);
                         SetGraphValues((b, e) => b.GetEffectMagSum(Enums.eEffectType.Regeneration).Sum,
                             (b, e) => e.GetEffectMagSum(Enums.eEffectType.Regeneration).Sum,
-                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Regeneration).Sum) >= float.Epsilon,
-                            DisplayMode.Regeneration, "%/s"); // ???
+                            (b, e) => Math.Abs(b.GetEffectMagSum(Enums.eEffectType.Regeneration).Sum) >= float.Epsilon | Math.Abs(e.GetEffectMagSum(Enums.eEffectType.Regeneration).Sum) >= float.Epsilon,
+                            DisplayMode.Regeneration, "%/s");
                         break;
                 }
             }
@@ -542,7 +543,25 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var powersets = MainModule.MidsController.Toon.Powersets
                 .Where(e => e != null)
                 .ToList();
-            
+
+            // Root Powers
+            var rootPowers = new Dictionary<string, string>();
+            foreach (var p in powers)
+            {
+                var basePower = p.Value.Key;
+                var enhancedPower = p.Value.Value;
+                var rootPowerName = Power.GetRootPowerName(basePower, enhancedPower);
+
+                if (!string.IsNullOrEmpty(rootPowerName))
+                {
+                    rootPowers.Add(rootPowerName, basePower.FullName);
+                }
+            }
+
+            var rootPowersNames = rootPowers
+                .Select(e => e.Key)
+                .ToList();
+
             // Powers from powersets (use build base + enhanced if available)
             var powersetsPowers = new Dictionary<int, KeyValuePair<IPower, IPower>>();
             var k = 0;
@@ -550,10 +569,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 foreach (var p in ps.Powers)
                 {
-                    if (powersDict.ContainsKey(p.FullName))
+                    if (powersDict.TryGetValue(p.FullName, out var idx1))
                     {
-                        var idx = powersDict[p.FullName];
-                        powersetsPowers.Add(k++, new KeyValuePair<IPower, IPower>(powers[idx].Key.Clone(), powers[idx].Value.Clone()));
+                        powersetsPowers.Add(k++, new KeyValuePair<IPower, IPower>(powers[idx1].Key.Clone(), powers[idx1].Value.Clone()));
+                    }
+                    else if (rootPowersNames.Contains(p.FullName))
+                    {
+                        var idx2 = powersDict[rootPowers[p.FullName]];
+                        powersetsPowers.Add(k++, new KeyValuePair<IPower, IPower>(powers[idx2].Key.Clone(), powers[idx2].Value.Clone()));
                     }
                     else
                     {
@@ -570,27 +593,27 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 // Primary/Secondary
                 1 => powersetsPowers
-                    .Where(e => e.Value.Key.GetPowerSet().SetType is Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary)
+                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet().SetType is Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary)
                     .ToDictionary(e => e.Key, e => e.Value),
                 
                 // Primary
                 2 => powersetsPowers
-                    .Where(e => e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Primary)
+                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Primary)
                     .ToDictionary(e => e.Key, e => e.Value),
                 
                 // Secondary
                 3 => powersetsPowers
-                    .Where(e => e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Secondary)
+                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Secondary)
                     .ToDictionary(e => e.Key, e => e.Value),
                 
                 // Epic/Ancillary
                 4 => powersetsPowers
-                    .Where(e => e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Ancillary)
+                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Ancillary)
                     .ToDictionary(e => e.Key, e => e.Value),
                 
                 // Pools
                 5 => powersetsPowers
-                    .Where(e => e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Pool)
+                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Pool)
                     .ToDictionary(e => e.Key, e => e.Value),
                 
                 // Powers taken

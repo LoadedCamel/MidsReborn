@@ -576,7 +576,9 @@ namespace Mids_Reborn.Core
                                      p.DisplayName == iName &&
                                      p.FullName.StartsWith("Inherent") | p.FullName.StartsWith("Temporary_Powers") |
                                      p.FullName.StartsWith("Incarnate") | p.GetPowerSet().nArchetype == iArchetype |
-                                     p.GetPowerSet().nArchetype == -1);
+                                     p.GetPowerSet().nArchetype == -1 &&
+                                     !p.FullName.StartsWith("Incarnate.Ion_Judgement") &&
+                                     !p.FullName.StartsWith("Incarnate.Lore_Pet_"));
         }
 
         public static IPower? GetPowerByDisplayName(string iName, int iArchetype, IList<string> listPowersets)
@@ -586,9 +588,11 @@ namespace Mids_Reborn.Core
                 .FirstOrDefault(p => p != null &&
                                      p.DisplayName == iName &&
                                      p.FullName.StartsWith("Inherent") | p.FullName.StartsWith("Temporary_Powers") |
-                                     p.FullName.StartsWith("Incarnate") |
+                                     p.FullName.StartsWith("Incarnate") | 
                                      (listPowersets.Contains(p.GetPowerSet().FullName) &&
-                                      p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1));
+                                      p.GetPowerSet().nArchetype == iArchetype | p.GetPowerSet().nArchetype == -1) &&
+                                     !p.FullName.StartsWith("Incarnate.Ion_Judgement") &&
+                                     !p.FullName.StartsWith("Incarnate.Lore_Pet_"));
         }
 
 
@@ -1030,6 +1034,11 @@ namespace Mids_Reborn.Core
             return Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(enhUid));
         }
 
+        public static EnhancementSet? GetEnhancementSetByBoostName(string name)
+        {
+            return Database.Enhancements.FirstOrDefault(e => e.UID.Contains(name))?.GetEnhancementSet();
+        }
+
         public static int GetEnhancementByShortName(string iName)
         {
             if (string.IsNullOrWhiteSpace(iName))
@@ -1091,6 +1100,20 @@ namespace Mids_Reborn.Core
             }
 
             return -1;
+        }
+
+        public static int GetEnhancementFromUid(string? uid)
+        {
+            if (string.IsNullOrWhiteSpace(uid)) return -1;
+            var enhancement = Database.Enhancements.FirstOrDefault(x => x.UID.Equals(uid));
+            if (enhancement is null) return -1;
+            return enhancement.StaticIndex;
+        }
+
+        public static string GetEnhancementUid(string? name)
+        {
+            var enhResult = Database.Enhancements.FirstOrDefault(e => e.LongName == name);
+            return enhResult != null ? enhResult.UID : string.Empty;
         }
 
         public static int GetEnhancementByUIDName(string iName)
@@ -2583,8 +2606,8 @@ namespace Mids_Reborn.Core
             catch (Exception ex)
             {
                 var m = new MessageBoxEx("Error loading enhancement Maths",
-                    $"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", MessageBoxEx.MessageBoxButtons.Okay,
-                    MessageBoxEx.MessageBoxIcon.Error);
+                    $"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", MessageBoxEx.MessageBoxExButtons.Ok,
+                    MessageBoxEx.MessageBoxExIcon.Error);
                 m.ShowDialog();
 
                 return false;
@@ -2597,7 +2620,7 @@ namespace Mids_Reborn.Core
                 if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, Files.Headers.VersionComment)))
                 {
                     streamReader.Close();
-                    var m = new MessageBoxEx("Unable to load Enhancement Maths data, version header not found!", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                    var m = new MessageBoxEx("Unable to load Enhancement Maths data, version header not found!", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
                     m.ShowDialog();
 
                     return false;
@@ -2606,7 +2629,7 @@ namespace Mids_Reborn.Core
                 if (!FileIO.IOSeek(streamReader, "EDRT"))
                 {
                     streamReader.Close();
-                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
                     m.ShowDialog();
 
                     return false;
@@ -2632,7 +2655,7 @@ namespace Mids_Reborn.Core
                 if (!FileIO.IOSeek(streamReader, "EGE"))
                 {
                     streamReader.Close();
-                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
                     m.ShowDialog();
 
                     return false;
@@ -2689,7 +2712,7 @@ namespace Mids_Reborn.Core
                 if (!FileIO.IOSeek(streamReader, "LBIOE"))
                 {
                     streamReader.Close();
-                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error);
+                    var m = new MessageBoxEx("Unable to load Maths data, section header not found!", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
                     m.ShowDialog();
 
                     return false;
@@ -2713,8 +2736,8 @@ namespace Mids_Reborn.Core
             catch (Exception ex)
             {
                 var m = new MessageBoxEx("Error loading enhancement Maths",
-                    $"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", MessageBoxEx.MessageBoxButtons.Okay,
-                    MessageBoxEx.MessageBoxIcon.Error);
+                    $"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", MessageBoxEx.MessageBoxExButtons.Ok,
+                    MessageBoxEx.MessageBoxExIcon.Error);
                 m.ShowDialog();
                 streamReader.Close();
                 
@@ -2740,7 +2763,7 @@ namespace Mids_Reborn.Core
                     6 => "IO",
                     _ => "Other"
                 } + $" multipliers in {path}.\r\nFaulty multipliers have been defaulted to 1.",
-                MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
+                MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error, true);
             mbe.ShowDialog();
 
             return false;
@@ -2842,13 +2865,12 @@ namespace Mids_Reborn.Core
 
         private static void UpdateMessage(IMessenger? messenger, string iMessage)
         {
-            messenger.SetMessage(iMessage);
+            messenger?.SetMessage(iMessage);
         }
 
         public static void MatchArchetypeIDs()
-
         {
-            for (var index = 0; index <= Database.Classes.Length - 1; ++index)
+            for (var index = 0; index < Database.Classes.Length; ++index)
             {
                 Database.Classes[index].Idx = index;
                 Array.Sort(Database.Classes[index].Origin);
@@ -2859,7 +2881,6 @@ namespace Mids_Reborn.Core
         }
 
         public static void MatchPowersetIDs()
-
         {
             for (var index1 = 0; index1 < Database.Powersets.Length; index1++)
             {
@@ -2979,7 +3000,6 @@ namespace Mids_Reborn.Core
         }
 
         private static void MatchRequirementId(IPower? power)
-
         {
             if (power.Requires.ClassName.Length > 0)
             {

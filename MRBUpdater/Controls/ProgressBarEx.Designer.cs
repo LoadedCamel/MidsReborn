@@ -1,6 +1,6 @@
 ﻿namespace MRBUpdater.Controls
 {
-    sealed partial class ProgressBarEx
+    partial class ProgressBarEx
     {
         /// <summary> 
         /// Required designer variable.

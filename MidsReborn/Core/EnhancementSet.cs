@@ -146,6 +146,13 @@ namespace Mids_Reborn.Core
             }
         }
 
+        public string GetEnhancementSetRarity()
+        {
+            var enhIdx = Enhancements[0];
+            var recipeIdx = DatabaseAPI.Database.Enhancements[enhIdx].RecipeIDX;
+            return DatabaseAPI.Database.Recipes[recipeIdx].Rarity.ToString();
+        }
+
         public List<IEffect> GetEffectDetailedData(int index, bool special)
         {
             var ret = new List<IEffect>();
@@ -211,6 +218,50 @@ namespace Mids_Reborn.Core
             }
 
             return ret;
+        }
+
+        public IPower? GetLinkedPower(int index, bool special)
+        {
+            IPower? power = null;
+            var bonusItemArray = special ? SpecialBonus : Bonus;
+            if (index < 0 | index > bonusItemArray.Length - 1)
+            {
+                return power;
+            }
+
+            for (var i = 0; i < bonusItemArray[index].Name.Length; i++)
+            {
+                if (bonusItemArray[index].Index[i] < 0) continue;
+                if (bonusItemArray[index].Index[i] > DatabaseAPI.Database.Power.Length - 1) continue;
+
+                power = DatabaseAPI.Database.Power[bonusItemArray[index].Index[i]];
+            }
+
+            return power;
+        }
+
+        public bool HasPetSpecial
+        {
+            get
+            {
+                var isPetSet = DatabaseAPI.GetSetTypeByIndex(SetType).Name.Contains("Pet");
+                var special = GetLinkedPower(Enhancements.Length - 1, true);
+                return isPetSet && special != null;
+            }
+        }
+
+        public IEnhancement? GetPetSpecialEnhancement()
+        {
+            IEnhancement? petSpecial = null;
+            var lastEnh = Enhancements.Length - 1;
+            var isPetSet = DatabaseAPI.GetSetTypeByIndex(SetType).Name.Contains("Pet");
+            var special = GetLinkedPower(lastEnh, true);
+
+            if (isPetSet && special != null)
+            {
+                petSpecial = DatabaseAPI.Database.Enhancements[Enhancements[lastEnh]];
+            }
+            return petSpecial;
         }
 
         public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false, bool bonusSection = false, bool status = false, List<Enums.eEffectType>? effectsFilter = null)
@@ -340,37 +391,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        /*public bool ImportFromCSV(string iCSV)
-        {
-            bool flag;
-            if (iCSV == null)
-            {
-                flag = false;
-            }
-            else if (string.IsNullOrEmpty(iCSV))
-            {
-                flag = false;
-            }
-            else
-            {
-                var array = CSV.ToArray(iCSV);
-                DisplayName = array[1];
-                ShortName = GenerateShortName(DisplayName);
-                Uid = array[0];
-                LevelMin = int.Parse(array[3]) - 1;
-                LevelMax = int.Parse(array[4]) - 1;
-                var str = array[2];
-                for (var index = 0; index < DatabaseAPI.Database.SetTypeStringLong.Length; ++index)
-                    if (str == DatabaseAPI.Database.SetTypeStringLong[index])
-                        SetType = (Enums.eSetType) index;
-                flag = true;
-            }
-
-            return flag;
-        }*/
-
         private static string GenerateShortName(string displayName)
-
         {
             var strArray = displayName.Split(' ');
             var stringBuilder = new StringBuilder();

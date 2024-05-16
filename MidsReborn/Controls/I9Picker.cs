@@ -44,7 +44,7 @@ namespace Mids_Reborn.Controls
         private const int IoMax = 50;
         private Color _cHighlight;
         private Color _cSelected;
-        private clsDrawX? _hDraw;
+        private ClsDrawX? _hDraw;
         private int _headerHeight;
         private Point _hoverCell;
         private string _hoverText;
@@ -235,8 +235,7 @@ namespace Mids_Reborn.Controls
             _myBx.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
         }
 
-        public override Font Font =>
-            new(Fonts.Family("Noto Sans"), base.Font.Size, base.Font.Style, GraphicsUnit.Pixel);
+        public override Font Font => new(Fonts.Family("Noto Sans"), base.Font.Size, base.Font.Style, GraphicsUnit.Pixel);
 
         private void FullDraw(Point? mouseLocation = null)
         {
@@ -421,10 +420,10 @@ namespace Mids_Reborn.Controls
             _myBx.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
             var fontScale = 1f;
             var num2 = checked((int) Math.Round(_myBx.Graphics
-                .MeasureString(_hoverTitle, Font, (int) Math.Round(layoutRectangle.Width * 10f)).Width));
-            if (num2 > layoutRectangle.Width - 10f)
+                .MeasureString(_hoverTitle, Font, (int) Math.Round(layoutRectangle.Width * 10)).Width));
+            if (num2 > layoutRectangle.Width - 10)
             {
-                fontScale = Math.Max(0.5f, (layoutRectangle.Width - 10f) / num2);
+                fontScale = Math.Max(0.5f, (layoutRectangle.Width - 10) / num2);
             }
 
             using var font = new Font(Name, Font.Size * fontScale, FontStyle.Bold, Font.Unit, 0);
@@ -455,7 +454,7 @@ namespace Mids_Reborn.Controls
             {
                 srcRect.X = (int) eType * _nSize;
                 _myBx.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect.X, srcRect.Y, 30, 30,
-                    GraphicsUnit.Pixel, _hDraw.pImageAttributes);
+                    GraphicsUnit.Pixel, _hDraw.PImageAttributes);
 
                 eType = Enums.eType.Normal;
                 rectBounds = GetRectBounds(1, 0);
@@ -578,7 +577,7 @@ namespace Mids_Reborn.Controls
                     return new ImageAttributes();
                 }
 
-                var colorMatrix = new ColorMatrix(clsDrawX.heroMatrix);
+                var colorMatrix = new ColorMatrix(ClsDrawX.HeroMatrix);
                 var r = 0;
                 do
                 {
@@ -751,8 +750,8 @@ namespace Mids_Reborn.Controls
 
                     break;
                 }
-                case Enums.eType.SpecialO when (int) Ui.View.SpecialId > -1:
-                    DrawSelected(4, (int) Ui.View.SpecialId);
+                case Enums.eType.SpecialO when Ui.View.SpecialId > -1:
+                    DrawSelected(4, Ui.View.SpecialId);
                     break;
             }
 
@@ -1086,17 +1085,12 @@ namespace Mids_Reborn.Controls
                     else
                     {
                         Ui.View.RelLevel = Enums.eEnhRelative.Even;
-                        switch (cellXy.X)
+                        Ui.Initial.TabId = cellXy.X switch
                         {
-                            case 2 when Ui.Initial.TabId == Enums.eType.Normal:
-                                Ui.Initial.TabId = Enums.eType.InventO;
-
-                                break;
-                            case 1 when Ui.Initial.TabId == Enums.eType.InventO:
-                                Ui.Initial.TabId = Enums.eType.Normal;
-
-                                break;
-                        }
+                            2 when Ui.Initial.TabId == Enums.eType.Normal => Enums.eType.InventO,
+                            1 when Ui.Initial.TabId == Enums.eType.InventO => Enums.eType.Normal,
+                            _ => Ui.Initial.TabId
+                        };
                     }
 
                     if (cellXy.X == 0)
@@ -1265,7 +1259,7 @@ namespace Mids_Reborn.Controls
 
                             if (uniqueSlotted)
                             {
-                                if (_mySlot.Enh == i9Slot.Enh & _mySlot.RelativeLevel == Ui.View.RelLevel)
+                                if (_mySlot.Enh == i9Slot.Enh & _mySlot.RelativeLevel == Ui.View.RelLevel & _mySlot.IOLevel + 1 == Ui.View.IoLevel)
                                 {
                                     return false;
                                 }
@@ -1628,7 +1622,7 @@ namespace Mids_Reborn.Controls
             return iPowerIdx < 0 ? new List<int>() : DatabaseAPI.Database.Power[iPowerIdx].GetValidEnhancements(iType, iSubType);
         }
 
-        public void SetData(int iPower, ref I9Slot iSlot, ref clsDrawX iDraw, int[] slotted)
+        public void SetData(int iPower, ref I9Slot iSlot, ref ClsDrawX iDraw, int[] slotted)
         {
             TimerReset();
             _levelCapped = false;

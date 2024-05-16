@@ -46,7 +46,7 @@ namespace Mids_Reborn
         // Applies to HC db only.
         protected Dictionary<KeyValuePair<string, string?>, string> OldPowersDict = new()
         {
-            // I27p6
+            {new KeyValuePair<string, string?>("Invisibility", null), "Infiltration"},
             {new KeyValuePair<string, string?>("Psionic Dart", null), "Psionic Darts"},
             {new KeyValuePair<string, string?>("Whirling Axe", null), "Axe Cyclone"},
             {new KeyValuePair<string, string?>("Category 5", null), "Category Five"},
@@ -54,7 +54,6 @@ namespace Mids_Reborn
             {new KeyValuePair<string, string?>("Will Domination", "Corruptor"), "Dominate Will"},
             {new KeyValuePair<string, string?>("Will Domination", "Defender"), "Dominate Will"},
             {new KeyValuePair<string, string?>("Scramble Thoughts", "Blaster"), "Scramble Minds"},
-
             {new KeyValuePair<string, string?>("Afterburner", null), "Evasive Maneuvers"},
             {new KeyValuePair<string, string?>("Quantum Acceleration", "Peacebringer"), "Quantum Maneuvers"},
         };
@@ -269,9 +268,10 @@ namespace Mids_Reborn
 
         // CheckValid, for direct powerset result
         // Since DatabaseAPI.GetPowerByName may return null
+        // Bug: Rebirth DB will add Disintegrating everywhere. Excluding this one as well.
         protected bool CheckValid(IPower? input)
         {
-            return input != null && !ExcludePowers.Any(p => input.FullName.Contains(p));
+            return (DatabaseAPI.DatabaseName != "Rebirth" || input?.DisplayName != "Disintegrating") && input != null && !ExcludePowers.Any(p => input.FullName.Contains(p));
         }
 
         protected string FixPowersetsNames(string powerName)
@@ -343,33 +343,53 @@ namespace Mids_Reborn
 
         public static void FixUndetectedPowersets(ref UniqueList<string> listPowersets)
         {
+            listPowersets.FromList(listPowersets.Select(CheckOldPowersets).ToList());
+
             for (var i = 0; i < listPowersets.Count; i++)
             {
                 if (i == 2) continue;
 
-                if (listPowersets[i] == null || listPowersets[i] == "")
+                if (listPowersets[i] != null && listPowersets[i] != "")
                 {
-                    var setType = i switch
-                    {
-                        0 => Enums.ePowerSetType.Primary,
-                        1 => Enums.ePowerSetType.Secondary,
-                        7 => Enums.ePowerSetType.Ancillary,
-                        _ => Enums.ePowerSetType.Pool
-                    };
-                    var ps1 = DatabaseAPI.Database.Powersets
-                        .First(ps => ps.ATClass == MidsContext.Character.Archetype.DisplayName & ps.SetType == setType);
-
-                    listPowersets[i] = ps1.FullName;
+                    continue;
                 }
+
+                var setType = i switch
+                {
+                    0 => Enums.ePowerSetType.Primary,
+                    1 => Enums.ePowerSetType.Secondary,
+                    7 => Enums.ePowerSetType.Ancillary,
+                    _ => Enums.ePowerSetType.Pool
+                };
+
+                var ps1 = DatabaseAPI.Database.Powersets
+                    .DefaultIfEmpty(new Powerset {FullName = ""})
+                    .FirstOrDefault(ps => ps?.ATClass == MidsContext.Character.Archetype.DisplayName & ps?.SetType == setType);
+
+                if (ps1 == null || ps1.FullName == "")
+                {
+                    continue;
+                }
+                    
+                listPowersets[i] = ps1.FullName;
             }
+        }
+
+        private static string CheckOldPowersets(string ps)
+        {
+            return ps switch
+            {
+                "Aqua Blast" => "Water Blast",
+                _ => ps
+            };
         }
 
         public static void FinalizePowersetsList(ref UniqueList<string> listPowersets)
         {
             listPowersets.FromList(listPowersets.GetRange(0, Math.Min(7, listPowersets.Count)));
-            listPowersets.FromList(listPowersets.Select(e => e.Contains(".")
+            listPowersets.FromList(listPowersets.Select(e => e.Contains('.')
                 ? e
-                : DatabaseAPI.GetPowersetByName(e, MidsContext.Character.Archetype.DisplayName, true).FullName
+                : DatabaseAPI.GetPowersetByName(CheckOldPowersets(e), MidsContext.Character.Archetype.DisplayName, true)?.FullName ?? ""
             ).ToList());
         }
 
@@ -378,7 +398,7 @@ namespace Mids_Reborn
             listPowersets.FromList(
                 listPowers
                     .Where(e => e.Power != null)
-                    .Select(e => e.Power.GetPowerSet()?.FullName)
+                    .Select(e => e.Power?.GetPowerSet()?.FullName ?? "")
                     .Where(e => !string.IsNullOrWhiteSpace(e) && e != "Inherent.Inherent" && e != "Inherent.Fitness" && !trunkPowersets.Contains(e))
                     .Distinct()
                     .ToList()!);
@@ -388,6 +408,22 @@ namespace Mids_Reborn
         {
             listPowersets.FromList(listPowersets
                 .Where(e => !e.StartsWith("Incarnate") & !e.StartsWith("Temporary_Powers"))
+                .ToList());
+        }
+
+        public static void SortPowersets(ref UniqueList<string> listPowersets)
+        {
+            listPowersets.FromList(listPowersets
+                .Select(e => new KeyValuePair<string, int>(e, DatabaseAPI.GetPowersetByFullname(e)?.SetType switch
+                {
+                    Enums.ePowerSetType.Primary => 0,
+                    Enums.ePowerSetType.Secondary => 1,
+                    Enums.ePowerSetType.Pool => 2,
+                    Enums.ePowerSetType.Ancillary => 3,
+                    _ => 4
+                }))
+                .OrderBy(e => e.Value)
+                .Select(e => e.Key)
                 .ToList());
         }
     }
@@ -416,6 +452,12 @@ namespace Mids_Reborn
                 "dominator_control.illusion_control.decoy" => "Dominator_Control.Illusion_Control.Phantom_Army",
                 "blaster_support.tactical_arrow.quickness" => "Blaster_Support.Tactical_Arrow.Gymnastics",
                 "blaster_support.tactical_arrow.gymnastics" => "Blaster_Support.Tactical_Arrow.Oil_Slick_Arrow",
+                "blaster_support.electricity_manipulation.lightning_clap" => "Blaster_Support.Electricity_Manipulation.Lightning_Field",
+                "blaster_support.electricity_manipulation.lightning_field" => "Blaster_Support.Electricity_Manipulation.Lightning_Clap",
+                "teamwork.widow_teamwork.pain_tolerance" => "Teamwork.Widow_Teamwork.NW_Pain_Tolerance",
+                "teamwork.fortunata_teamwork.fate_sealed" => "Teamwork.Fortunata_Teamwork.FRT_Fate_Sealed",
+                "pool.speed.speedphase" => "Inherent.Inherent.Speed_Phase",
+
                 _ => fullName
             };
         }
@@ -432,6 +474,17 @@ namespace Mids_Reborn
                 "epic.sentinel_electricity_mastery" when archetype == "sentinel" => "Epic.Sentinel_Elec_Mastery",
                 "epic.sentinel_leviathan_mastery" when archetype == "sentinel" => "Epic.Sentinel_Lev_Mastery",
                 "epic.sentinel_psionic_mastery" when archetype == "sentinel" => "Epic.Sentinel_Psi_Mastery",
+                "blaster_support.time_manipulation" when archetype == "blaster" => "Blaster_Support.Temporal_Manipulation",
+                "epic.tank_dark_mastery" when archetype is "tanker" or "brute" => "Epic.Dark_Mastery_TankBrute",
+                "epic.blaster_dark_mastery" when archetype == "blaster" => "Epic.Dark_Mastery_Blaster",
+                "epic.controller_dark_mastery" when archetype == "controller" => "Epic.Dark_Mastery_Controller",
+                "epic.dominator_dark_mastery" when archetype == "dominator" => "Epic.Dark_Mastery_Dominator",
+                "epic.mastermind_dark_mastery" when archetype == "mastermind" => "Epic.Dark_Mastery_Mastermind",
+                "epic.defender_ice_mastery" when archetype is "defender" or "corruptor" => "Epic.Ice_Mastery_DefCorr",
+                "epic.scrapper_ice_mastery" when archetype is "scrapper" or "stalker" => "Epic.Ice_Mastery_ScrapStalk",
+                "epic.tank_psionic_mastery" when archetype is "tanker" or "brute" => "Epic.Psionic_Mastery_TankBrute",
+                "epic.melee_psionic_mastery" when archetype is "scrapper" or "stalker" => "Epic.Psionic_Mastery_ScrapStalk",
+
                 _ => fullName
             };
         }
@@ -502,6 +555,7 @@ namespace Mids_Reborn
                     }
 
                     p.Valid = CheckValid(p.pData);
+                    Debug.WriteLine($"Detected power: {p.FullName} [{p.pData?.DisplayName ?? "<null>"}], powerset: {p.Powerset?.FullName ?? "<null>"} [{p.Powerset?.DisplayName ?? "<null>"}], valid: {p.Valid}");
                     p.Level = Convert.ToInt32(m1.Groups[1].Value, null);
                     p.Slots = new List<RawEnhData>();
                     if (p.Valid && CheckValid(p.Powerset))
@@ -950,54 +1004,62 @@ namespace Mids_Reborn
             ["Aegis"] = "Ags",
             ["Armgdn"] = "Arm",
             ["AnWeak"] = "AnlWkn",
+            ["Apoc"] = "Apc",
             ["BasGaze"] = "BslGaz",
             ["CSndmn"] = "CaloftheS",
-            ["C\"ngBlow"] = "ClvBlo",
-            ["C\"ngImp"] = "CrsImp",
-            ["Dct\"dW"] = "DctWnd",
+            ["CtlSpd"] = "CrtSpd",
+            ["C'ngBlow"] = "ClvBlo",
+            ["C'ngImp"] = "CrsImp",
+            ["Dct'dW"] = "DctWnd",
             ["Decim"] = "Dcm",
-            ["Det\"tn"] = "Dtn",
-            ["Dev\"n"] = "Dvs",
+            ["Det'tn"] = "Dtn",
+            ["Dev'n"] = "Dvs",
             ["Efficacy"] = "EffAdp",
-            ["Enf\"dOp"] = "EnfOpr",
+            ["Enf'dOp"] = "EnfOpr",
             ["Erad"] = "Erd",
             ["ExRmnt"] = "ExpRnf",
             ["ExStrk"] = "ExpStr",
             ["ExtrmM"] = "ExtMsr",
             ["FotG"] = "FuroftheG",
             ["FrcFbk"] = "FrcFdb",
-            ["F\"dSmite"] = "FcsSmt",
+            ["F'dSmite"] = "FcsSmt",
             ["GA"] = "GldArm",
             ["GSFC"] = "GssSynFr-",
             ["Hectmb"] = "Hct",
             ["HO:Micro"] = "Micro",
-            ["H\"zdH"] = "HrmHln",
+            ["H'zdH"] = "HrmHln",
             ["ImpSkn"] = "ImpSki",
             ["Insult"] = "TrmIns",
+            ["JavVoll"] = "JvlVll",
             ["KinCrsh"] = "KntCrs",
-            ["KntkC\"bat"] = "KntCmb",
+            ["KntkC'bat"] = "KntCmb",
             ["Krma"] = "Krm",
             ["Ksmt"] = "Ksm",
-            ["LkGmblr"] = "LucoftheG",
+            ["LkGmblr-Rchg+"] = "LucoftheG-Def/Rchg+",
             ["LucoftheG-Rchg+"] = "LucoftheG-Def/Rchg+",
+            ["LkGmblr"] = "LucoftheG",
             ["LgcRps"] = "LthRps",
-            ["Mako"] = "Mk\"Bit",
+            ["Mantic"] = "StnoftheM",
+            ["Mako"] = "Mk'Bit",
             ["Mlais"] = "MlsIll",
             ["Mocking"] = "MckBrt",
             ["MotCorruptor"] = "MlcoftheC",
             ["Mrcl"] = "Mrc",
-            ["M\"Strk"] = "Mlt",
+            ["M'Strk"] = "Mlt",
             ["Numna"] = "NmnCnv",
             ["Oblit"] = "Obl",
+            ["OvForce"] = "OvrFrc",
             ["Panac"] = "Pnc",
             ["Posi"] = "PstBls",
             ["Prv-Heal/EndMod"] = "Prv-Heal/EndRdx",
-            ["P\"ngS\"Fest"] = "PndSlg",
-            ["P\"Shift"] = "PrfShf",
-            ["Rec\"dRet"] = "RctRtc",
+            ["P'ngS'Fest"] = "PndSlg",
+            ["P'Shift"] = "PrfShf",
+            ["Rec'dRet"] = "RctRtc",
             ["RctvArm"] = "RctArm",
             ["RzDz"] = "RzzDzz",
+            ["ShldBrk"] = "ShlBrk",
             ["SMotCorruptor"] = "SprMlcoft",
+            ["SMlcoftheC"] = "SprMlcoft",
             ["SprAvl-Rchg/Knockdown%"] = "SprAvl-Rchg/KDProc",
             ["SprBlsCol-Acc/Dmg/EndRdx/Rchg"] = "SprBlsCol-Dmg/EndRdx/Acc/Rchg",
             ["SprBlsCol-Rchg/Hold%"] = "SprBlsCol-Rchg/HoldProc",
@@ -1006,9 +1068,10 @@ namespace Mids_Reborn
             ["Srng"] = "Srn",
             ["SStalkersG"] = "SprStlGl",
             ["SWotController"] = "SprWiloft",
-            ["S\"fstPrt"] = "StdPrt",
-            ["T\"Death"] = "TchofDth",
-            ["T\"pst"] = "Tmp",
+            ["S'fstPrt"] = "StdPrt",
+            ["T'Death"] = "TchofDth",
+            ["T'pst"] = "Tmp",
+            ["TmpRdns"] = "TmpRdn",
             ["Thundr"] = "Thn",
             ["ULeap"] = "UnbLea",
             ["UndDef"] = "UndDfn",
@@ -1033,7 +1096,7 @@ namespace Mids_Reborn
 
             foreach (var k in OldSetNames)
             {
-                if (sn.IndexOf(k.Key, StringComparison.Ordinal) > -1)
+                if (sn.StartsWith(k.Key))
                 {
                     return sn.Replace(k.Key, k.Value);
                 }
@@ -1170,7 +1233,7 @@ namespace Mids_Reborn
             r = new Regex(@"Level ([0-9]{1,2})\:\t([^\t]+)(\t([^\r\n\t]+))?");
             var rMatches = r.Matches(cnt);
 
-            foreach (Match mt in rMatches) // var mt is of type object?
+            foreach (Match mt in rMatches)
             {
                 p = new RawPowerData
                 {

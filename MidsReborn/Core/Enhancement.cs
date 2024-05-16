@@ -1,5 +1,7 @@
 using System;
+using System.Diagnostics;
 using System.IO;
+using System.Linq;
 using Mids_Reborn.Core.Base.Data_Classes;
 
 namespace Mids_Reborn.Core
@@ -173,7 +175,7 @@ namespace Mids_Reborn.Core
 
         public IPower? GetPower()
         {
-            return _power ??= DatabaseAPI.GetPowerByFullName("Boosts." + UID + "." + UID);
+            return _power ??= DatabaseAPI.GetPowerByFullName($"Boosts.{UID}.{UID}");
         }
 
         void IEnhancement.SetPower(IPower? power)
@@ -246,6 +248,23 @@ namespace Mids_Reborn.Core
                 return false;
             }
         }
+
+        public bool IsPetSpecialEnh
+        {
+            get
+            {
+                var set = GetEnhancementSet();
+                return set.GetPetSpecialEnhancement() == this;
+            }
+        }
+
+        // public IPower? PetSpecialPower
+        // {
+        //     get
+        //     {
+        //         var set
+        //     }
+        // }
 
         public string LongName
         {
@@ -379,6 +398,13 @@ namespace Mids_Reborn.Core
         {
             return DatabaseAPI.GetSpecialEnhByIndex(SubTypeID).ShortName;
             //return $"{Enum.GetName(typeof(Enums.eSubtype), (int) SubTypeID)} Origin";
+        }
+
+        public EnhancementSet? GetEnhancementSet()
+        {
+            if (string.IsNullOrWhiteSpace(UIDSet)) return null;
+            var data = DatabaseAPI.GetEnhancementSetFromEnhUid(UIDSet);
+            return data;
         }
 
         public static int GranularLevelZb(int iLevel, int iMin, int iMax, int iStep = 5)

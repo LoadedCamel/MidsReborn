@@ -11,6 +11,7 @@ namespace Mids_Reborn.Core.Utils
     {
         /// <summary>
         /// Available Fonts are
+        /// DejaVu Sans Mono
         /// Noto Sans
         /// Noto Sans Black
         /// Noto Sans ExtraBold
@@ -28,6 +29,10 @@ namespace Mids_Reborn.Core.Utils
         {
             if (_fontCollection != null) return;
             _fontCollection = new PrivateFontCollection();
+            _fontCollection.AddFontFile(Path.Combine(AppContext.BaseDirectory, "Fonts", "DejaVuSansMono.ttf"));
+            _fontCollection.AddFontFile(Path.Combine(AppContext.BaseDirectory, "Fonts", "DejaVuSansMono-Bold.ttf"));
+            _fontCollection.AddFontFile(Path.Combine(AppContext.BaseDirectory, "Fonts", "DejaVuSansMono-BoldOblique.ttf"));
+            _fontCollection.AddFontFile(Path.Combine(AppContext.BaseDirectory, "Fonts", "DejaVuSansMono-Oblique.ttf"));
             _fontCollection.AddFontFile(Path.Combine(AppContext.BaseDirectory, "Fonts", "NotoSans-Black.ttf"));
             _fontCollection.AddFontFile(Path.Combine(AppContext.BaseDirectory, "Fonts", "NotoSans-BlackItalic.ttf"));
             _fontCollection.AddFontFile(Path.Combine(AppContext.BaseDirectory, "Fonts", "NotoSans-Bold.ttf"));

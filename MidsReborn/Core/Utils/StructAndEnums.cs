@@ -3,6 +3,22 @@ using System.Drawing;
 
 namespace Mids_Reborn.Core.Utils
 {
+    public struct CompressionResult
+    {
+        public readonly string OutString;
+        public readonly int UncompressedSize;
+        public readonly int CompressedSize;
+        public readonly int EncodedSize;
+
+        public CompressionResult(string outString, int uncompressedSize, int compressedSize, int encodedSize)
+        {
+            OutString = outString;
+            UncompressedSize = uncompressedSize;
+            CompressedSize = compressedSize;
+            EncodedSize = encodedSize;
+        }
+    }
+
     public struct TypeGrade
     {
         public int Index { get; set; }

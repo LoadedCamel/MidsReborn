@@ -5,6 +5,7 @@ using System.IO.Compression;
 using System.Threading.Tasks;
 using ICSharpCode.SharpZipLib.Zip;
 using System.Linq;
+using System.Text;
 using System.Threading;
 
 namespace Mids_Reborn.Core.Utils
@@ -64,38 +65,66 @@ namespace Mids_Reborn.Core.Utils
             return outputStream.ToArray();
         }
 
-        public static string CompressToBase64(byte[] sourceBytes)
+        public static CompressionResult CompressToBase64(byte[] sourceBytes)
         {
-            using var stream = new MemoryStream();
-            using (var compressionStream = new BrotliStream(stream, CompressionLevel.SmallestSize))
+            using var uncompressedStream = new MemoryStream(sourceBytes);
+            using var compressedStream = new MemoryStream();
+            using (var compressionStream = new BrotliStream(compressedStream, CompressionLevel.SmallestSize))
             {
                 compressionStream.Write(sourceBytes, 0, sourceBytes.Length);
             }
 
-            return Convert.ToBase64String(stream.ToArray());
+            var compressedBytes = compressedStream.ToArray();
+            var base64String = Convert.ToBase64String(compressedBytes);
+
+            return new CompressionResult(base64String, sourceBytes.Length, compressedBytes.Length, base64String.Length);
         }
 
-        public static byte[] DecompressFromBase64(string base64)
+        public static CompressionResult ZCompress(byte[] sourceBytes)
         {
-            var bytes = Convert.FromBase64String(base64);
-            using var inputStream = new MemoryStream(bytes);
-            using var compressionStream = new BrotliStream(inputStream, CompressionMode.Decompress);
-            using var outputStream = new MemoryStream();
-            compressionStream.CopyTo(outputStream);
-            outputStream.Seek(0, SeekOrigin.Begin);
-            return outputStream.ToArray();
+            var compressedBytes = ModernZlib.CompressChunk(sourceBytes);
+            var hexEncodedBytes = ModernZlib.HexEncodeBytes(compressedBytes);
+            var hexString = Encoding.UTF8.GetString(hexEncodedBytes);
+            var brokenHexString = ModernZlib.BreakString(hexString, 67, true);
+            return new CompressionResult(brokenHexString, sourceBytes.Length, compressedBytes.Length, hexString.Length);
         }
 
-        public static string CompressToBase64Url(byte[] sourceBytes)
+        public static CompressionResult DecompressFromBase64(string base64String)
         {
-            using var stream = new MemoryStream();
-            using (var compressionStream = new BrotliStream(stream, CompressionLevel.SmallestSize))
+            var compressedBytes = Convert.FromBase64String(base64String);
+            using var compressedStream = new MemoryStream(compressedBytes);
+            using var decompressionStream = new BrotliStream(compressedStream, CompressionMode.Decompress);
+            using var decompressedStream = new MemoryStream();
+            decompressionStream.CopyTo(decompressedStream);
+            var decompressedBytes = decompressedStream.ToArray();
+            var outString = Encoding.UTF8.GetString(decompressedBytes);
+            return new CompressionResult(outString, decompressedBytes.Length, compressedBytes.Length, base64String.Length);
+        }
+
+        // public static byte[] DecompressFromBase64(string base64)
+        // {
+        //     var bytes = Convert.FromBase64String(base64);
+        //     using var inputStream = new MemoryStream(bytes);
+        //     using var compressionStream = new BrotliStream(inputStream, CompressionMode.Decompress);
+        //     using var outputStream = new MemoryStream();
+        //     compressionStream.CopyTo(outputStream);
+        //     outputStream.Seek(0, SeekOrigin.Begin);
+        //     return outputStream.ToArray();
+        // }
+
+        public static CompressionResult CompressToBase64Url(byte[] sourceBytes)
+        {
+            using var uncompressedStream = new MemoryStream(sourceBytes);
+            using var compressedStream = new MemoryStream();
+            using (var compressionStream = new BrotliStream(compressedStream, CompressionLevel.SmallestSize))
             {
                 compressionStream.Write(sourceBytes, 0, sourceBytes.Length);
             }
 
-            var bytes = stream.ToArray();
-            return Base64UrlEncoder.Encode(bytes);
+            var compressedBytes = compressedStream.ToArray();
+            var base64String = Base64UrlEncoder.Encode(compressedBytes);
+
+            return new CompressionResult(base64String, sourceBytes.Length, compressedBytes.Length, base64String.Length);
         }
 
         public static byte[] DecompressFromBase64Url(string base64)

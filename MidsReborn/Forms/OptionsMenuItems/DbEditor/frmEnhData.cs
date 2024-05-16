@@ -207,7 +207,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1]);
+            using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1], true);
             if (frmEditPower.ShowDialog() != DialogResult.OK)
             {
                 return;
@@ -747,13 +747,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (integer == Enums.eEnhance.Mez)
             {
                 tSub = MezPicker();
-                var num = myEnh.Effect.Length - 1;
-                for (var index1 = 0; index1 <= num; ++index1)
+                for (var index1 = 0; index1 < myEnh.Effect.Length; index1++)
                 {
                     var effect = myEnh.Effect;
-                    var index2 = index1;
-                    if ((effect[index2].Mode == Enums.eEffMode.Enhancement) & (effect[index2].Enhance.SubID == tSub))
+                    if (effect[index1].Mode == Enums.eEffMode.Enhancement & effect[index1].Enhance.SubID == tSub)
+                    {
                         flag = false;
+                    }
                 }
             }
 

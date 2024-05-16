@@ -7,6 +7,7 @@ using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.BuildFile;
 using Mids_Reborn.Forms;
 
 namespace Mids_Reborn
@@ -106,7 +107,8 @@ namespace Mids_Reborn
                     MessageBox.Show(@"There was an error reading the data. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.Exit();
                 }
-
+                messenger.SetMessage("Loading Build Preferences");
+                BuildPreferences.Load();
                 messenger.SetMessage("Loading Attribute Modifiers...");
                 DatabaseAPI.Database.AttribMods = new Modifiers();
                 if (!DatabaseAPI.Database.AttribMods.Load(path)) { }

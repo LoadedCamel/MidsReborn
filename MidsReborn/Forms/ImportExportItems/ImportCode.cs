@@ -2,13 +2,14 @@
 using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Utils;
+using Mids_Reborn.Forms.Controls;
 using static Mids_Reborn.Core.Utils.WinApi;
 
 namespace Mids_Reborn.Forms.ImportExportItems
 {
     public partial class ImportCode : Form
     {
-        internal string? Data;
+        internal DataClassifier.ClassificationResult ImportClassificationResult { get; private set; }
 
         public ImportCode()
         {
@@ -25,18 +26,19 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
         private void BdImport_Click(object sender, EventArgs e)
         {
-            if (!Helpers.ValidShareData(tbChunkBox.Text))
-            {
-                errorProvider1.Icon = new Icon(SystemIcons.Error, new Size(32, 32));
-                errorProvider1.SetIconAlignment(bdImport, ErrorIconAlignment.BottomRight);
-                errorProvider1.SetIconPadding(bdImport, 5);
-                errorProvider1.SetError(bdImport, "Invalid or incomplete share data detected, double check the data you pasted above.");
-                return;
-            }
+            var chunkData = tbChunkBox.Text;
+            ImportClassificationResult = DataClassifier.ClassifyAndExtractData(chunkData);
 
-            Data = ShareGenerator.BuildDataFromChunk(tbChunkBox.Text);
-            DialogResult = DialogResult.Continue;
-            Close();
+            if (ImportClassificationResult.IsValid)
+            {
+                DialogResult = DialogResult.OK;
+                Close();
+            }
+            else
+            {
+                MessageBoxEx.Show("Invalid chunk data detected! Please double check the data chunk and try again.", "Unable To Process Chunk", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
+                DialogResult = DialogResult.None;
+            }
         }
     }
 }

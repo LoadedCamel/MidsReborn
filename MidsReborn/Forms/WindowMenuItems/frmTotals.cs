@@ -37,9 +37,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         public bool A_GT_B(float a, float b)
         {
-            var num = (double) Math.Abs(a - b);
-            
-            return num is >= 1.0000000116861E-07 and > 0.0;
+            var num = (double)Math.Abs(a - b);
+
+            return num is >= 1.0000000116861E-07 and > 0;
         }
 
         private void FrmTotalsFormClosed(object sender, FormClosedEventArgs e)
@@ -53,7 +53,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 if (Size.Width >= 554)
                 {
-                    Size = new Size(344, 532);
+                    Size = new Size(344, 544);
                 }
 
                 switch (MidsContext.Config.SpeedFormat)
@@ -135,9 +135,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var iStr = "Close";
             var rectangle = new Rectangle();
             ref var local = ref rectangle;
-            var size = _myParent.Drawing.bxPower[2].Size;
+            var size = _myParent.Drawing.BxPower[2].Size;
             var width = size.Width;
-            size = _myParent.Drawing.bxPower[2].Size;
+            size = _myParent.Drawing.BxPower[2].Size;
             var height1 = size.Height;
             local = new Rectangle(0, 0, width, height1);
             var destRect = new Rectangle(0, 0, tab0.Width, tab0.Height);
@@ -149,14 +149,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             extendedBitmap.Graphics.Clear(BackColor);
             extendedBitmap.Graphics.DrawImage(
                 MidsContext.Character.IsHero()
-                    ? _myParent.Drawing.bxPower[2].Bitmap
-                    : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width,
-                rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+                    ? _myParent.Drawing.BxPower[2].Bitmap
+                    : _myParent.Drawing.BxPower[4].Bitmap, destRect, 0, 0, rectangle.Width,
+                rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.PImageAttributes);
 
             var height2 = bFont.GetHeight(e.Graphics) + 2f;
-            var bounds = new RectangleF(0.0f, (float) ((tab0.Height - (double) height2) / 2.0), tab0.Width, height2);
+            var bounds = new RectangleF(0f, (tab0.Height - height2) / 2f, tab0.Width, height2);
             var graphics = extendedBitmap.Graphics;
-            clsDrawX.DrawOutlineText(iStr, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            ClsDrawX.DrawOutlineText(iStr, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -170,13 +170,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void PbTopMostPaint(object sender, PaintEventArgs e)
         {
             if (_myParent?.Drawing == null)
+            {
                 return;
+            }
+
             var index = 2;
             if (_keepOnTop)
+            {
                 index = 3;
-            var iStr = "Keep On top";
-            var rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
-                _myParent.Drawing.bxPower[index].Size.Height);
+            }
+
+            var iStr = "Keep On Top";
+            var rectangle = new Rectangle(0, 0, _myParent.Drawing.BxPower[index].Size.Width,
+                _myParent.Drawing.BxPower[index].Size.Height);
             var destRect = new Rectangle(0, 0, tab0.Width, tab0.Height);
             var stringFormat = new StringFormat();
             var bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
@@ -187,45 +193,23 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             if (index == 3)
             {
                 extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero()
-                        ? _myParent.Drawing.bxPower[3].Bitmap
-                        : _myParent.Drawing.bxPower[5].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
+                        ? _myParent.Drawing.BxPower[3].Bitmap
+                        : _myParent.Drawing.BxPower[5].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel);
             }
             else
             {
                 extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero()
-                        ? _myParent.Drawing.bxPower[2].Bitmap
-                        : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
-                    GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+                        ? _myParent.Drawing.BxPower[2].Bitmap
+                        : _myParent.Drawing.BxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
+                    GraphicsUnit.Pixel, _myParent.Drawing.PImageAttributes);
             }
 
             var height = bFont.GetHeight(e.Graphics) + 2f;
-            var Bounds = new RectangleF(0.0f, (float) ((tab0.Height - (double) height) / 2.0), tab0.Width, height);
+            var Bounds = new RectangleF(0f, (tab0.Height - height) / 2f, tab0.Width, height);
             var graphics = extendedBitmap.Graphics;
-            clsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            ClsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
-        }
-
-        /*private string PM(float iValue, string iFormat, string iSuff)
-        {
-            if (iValue >= 0.0)
-            {
-                if (iValue <= 0.0)
-                    return "+0" + iSuff;
-                else
-                    return "+" + Strings.Format(iValue, iFormat) + iSuff;
-            }
-            else
-                return Strings.Format(iValue, iFormat) + iSuff;
-        }*/
-
-        private string PM(float iValue, string iFormat, string iSuff)
-        {
-            return !(iValue >= 0)
-                ? $"{string.Format(iFormat, iValue)}{iSuff}"
-                : iValue <= 0
-                    ? $"+0{iSuff}"
-                    : $"+{string.Format(iFormat, iValue)}{iSuff}";
         }
 
         private void RbSpeedCheckedChanged(object sender, EventArgs e)
@@ -275,7 +259,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 var g = graphControl;
                 SetFontDataSingle(ref g);
             }
-            
+
             lblDef.Font = graphDef.Font;
             lblMisc.Font = graphDef.Font;
             lblMovement.Font = graphDef.Font;
@@ -424,8 +408,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 index = 3;
             }
 
-            var rectangle = new Rectangle(0, 0, _myParent.Drawing.bxPower[index].Size.Width,
-                _myParent.Drawing.bxPower[index].Size.Height);
+            var rectangle = new Rectangle(0, 0, _myParent.Drawing.BxPower[index].Size.Width,
+                _myParent.Drawing.BxPower[index].Size.Height);
             var destRect = new Rectangle(0, 0, iTab.Width, iTab.Height);
             var stringFormat = new StringFormat();
             var bFont = new Font(Font.FontFamily, Font.Size, FontStyle.Bold, GraphicsUnit.Point);
@@ -436,22 +420,22 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             if (index == 3)
             {
                 extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero()
-                        ? _myParent.Drawing.bxPower[3].Bitmap
-                        : _myParent.Drawing.bxPower[5].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
+                        ? _myParent.Drawing.BxPower[3].Bitmap
+                        : _myParent.Drawing.BxPower[5].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel);
             }
             else
             {
                 extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero()
-                        ? _myParent.Drawing.bxPower[2].Bitmap
-                        : _myParent.Drawing.bxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
-                    GraphicsUnit.Pixel, _myParent.Drawing.pImageAttributes);
+                        ? _myParent.Drawing.BxPower[2].Bitmap
+                        : _myParent.Drawing.BxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
+                    GraphicsUnit.Pixel, _myParent.Drawing.PImageAttributes);
             }
 
             var height = bFont.GetHeight(e.Graphics) + 2f;
-            var bounds = new RectangleF(0.0f, (tab0.Height - height) / 2.0f, tab0.Width, height);
+            var bounds = new RectangleF(0f, (tab0.Height - height) / 2f, tab0.Width, height);
             var graphics = extendedBitmap.Graphics;
-            clsDrawX.DrawOutlineText(iString, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            ClsDrawX.DrawOutlineText(iString, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -495,7 +479,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 {
                     continue;
                 }
-                
+
                 var iTip = $"{displayStats.Defense(dType):##0.##}% {defDmgNames[dType]} defense";
                 graphDef.AddItem($"{defDmgNames[dType]}| {displayStats.Defense(dType):##0.##}%", Math.Max(0, displayStats.Defense(dType)), 0, iTip);
             }
@@ -521,7 +505,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             graphRes.Max = 100f;
             graphRes.Draw();
-            
+
             var drainTip = "";
             var str2 = $"Time to go from 0-100% end: {Utilities.FixDP(displayStats.EnduranceTimeToFull)}s.";
             if (Math.Abs(displayStats.EnduranceRecoveryPercentage(false) - displayStats.EnduranceRecoveryPercentage(true)) > 0.01)
@@ -554,12 +538,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphMaxEnd.Max = 150;
             graphMaxEnd.MarkerValue = 100;
             graphMaxEnd.Draw();
-            
+
             graphDrain.Clear();
             graphDrain.AddItem($"EndUse|{MidsContext.Character.Totals.EndUse:##0.##}/s", MidsContext.Character.Totals.EndUse, MidsContext.Character.Totals.EndUse, drainTip);
             graphDrain.Max = 4;
             graphDrain.Draw();
-            
+
             graphRec.Clear();
             graphRec.AddItem($"EndRec|{displayStats.EnduranceRecoveryPercentage(false):###0}% ({displayStats.EnduranceRecoveryNumeric:##0.##}/s)", Math.Max(0, displayStats.EnduranceRecoveryPercentage(false)), Math.Max(0, displayStats.EnduranceRecoveryPercentage(true)), recTip);
             graphRec.Max = 400;
@@ -586,7 +570,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
 
             graphHP.AddItem($"Max HP|{displayStats.HealthHitpointsPercentage:###0.##}%", Math.Max(0, displayStats.HealthHitpointsPercentage), Math.Max(0, displayStats.HealthHitpointsPercentage), iTip5);
-            graphHP.Max = (float) (MidsContext.Character.Archetype.HPCap / (double) MidsContext.Character.Archetype.Hitpoints * 100);
+            graphHP.Max = (float)(MidsContext.Character.Archetype.HPCap / (double)MidsContext.Character.Archetype.Hitpoints * 100);
             graphHP.MarkerValue = 100f;
             graphHP.Draw();
 
@@ -646,20 +630,20 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             AddGraphMovementItem("Run|", displayStats.MovementRunSpeed, iTip8, speedFormat, rateDisp);
             AddGraphMovementItem("Jump|", displayStats.MovementJumpSpeed, jumpTip, speedFormat, rateDisp);
             graphMovement.AddItem($"Jump Height|{displayStats.MovementJumpHeight(speedFormat):##0.##}{lengthDisp}", displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), displayStats.MovementJumpHeight(Enums.eSpeedMeasure.FeetPerSecond), jmpHtTip);
-            AddGraphMovementItem($"Fly|",displayStats.MovementFlySpeed, fltTip, speedFormat, rateDisp);
+            AddGraphMovementItem("Fly|", displayStats.MovementFlySpeed, fltTip, speedFormat, rateDisp);
             graphMovement.ForcedMax = displayStats.Speed(200f, Enums.eSpeedMeasure.FeetPerSecond);
             graphMovement.Draw();
-            
+
             graphToHit.Clear();
             graphToHit.AddItem($"ToHit|{displayStats.BuffToHit:##0.##}%", Math.Max(0, displayStats.BuffToHit), 0, "This effect increases the accuracy of all your powers.\r\nToHit values are added together before being multiplied by Accuracy");
             graphToHit.Max = 100;
             graphToHit.Draw();
-            
+
             graphAcc.Clear();
             graphAcc.AddItem($"Accuracy|{displayStats.BuffAccuracy:##0.##}%", Math.Max(0, displayStats.BuffAccuracy), 0, "This effect increases the accuracy of all your powers.\r\nAccuracy buffs are usually applied as invention set bonuses.");
             graphAcc.Max = 100;
             graphAcc.Draw();
-            
+
             graphDam.Clear();
             var str7 = "";
             if (A_GT_B(displayStats.BuffDamage(true), displayStats.BuffDamage(false)))
@@ -693,7 +677,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphEndRdx.AddItem($"EndRdx|{displayStats.BuffEndRdx:##0.##}%", displayStats.BuffEndRdx, displayStats.BuffEndRdx, "This effect is applied to powers in addition to endurance reduction enhancements.");
             graphEndRdx.Max = 200;
             graphEndRdx.Draw();
-            
+
             graphStealth.Clear();
             graphStealth.AddItem($"PvE|{MidsContext.Character.Totals.StealthPvE:##0} ft", MidsContext.Character.Totals.StealthPvE, 0.0f, "This is subtracted from a mob's perception to work out if they can see you.");
             graphStealth.AddItem($"PvE|{MidsContext.Character.Totals.StealthPvP:##0} ft", MidsContext.Character.Totals.StealthPvE, 0.0f, "This is subtracted from a player's perception to work out if they can see you.");
@@ -707,7 +691,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphThreat.MarkerValue = MidsContext.Character.Archetype.BaseThreat * 100 + 200;
             graphThreat.Max = 800;
             graphThreat.Draw();
-            
+
             graphElusivity.Clear();
             var sElusivity = MidsContext.Character.Totals.ElusivityMax;
             graphElusivity.AddItem($"Elusivity|{sElusivity * 100:##0.##}%", Math.Max(0, sElusivity * 100), 0, "This effect resists accuracy buffs of enemies attacking you.");
@@ -741,36 +725,38 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var sResMax = 5;
             foreach (var e in eMezArray)
             {
-                var iTip11 = Math.Abs(totals.Mez[(int) e]) < float.Epsilon
-                    ? $"You have no protection from {names3[(int) e]} effects.\r\n{str9}"
-                    : $"You have mag {Math.Abs(totals.Mez[(int) e]):##0.##} protection from {names3[(int) e]} effects.\r\n{str9}";
+                var mezProtection = totals.Mez[(int)e] > 0 ? 0 : Math.Abs(totals.Mez[(int)e]);
+                var iTip11 = mezProtection < float.Epsilon
+                    ? $"You have no protection from {names3[(int)e]} effects.\r\n{str9}"
+                    : $"You have mag {mezProtection:##0.##} protection from {names3[(int)e]} effects.\r\n{str9}";
 
-                graphSProt.AddItem($"{names2[(int) e]}|{Math.Abs(totals.Mez[(int) e]):##0.##}", Math.Abs(totals.Mez[(int) e]), 0, iTip11);
-                var mezResPercent = 100 / (1 + totals.MezRes[(int) e] / 100);
+                graphSProt.AddItem($"{names2[(int)e]}|{mezProtection:##0.##}", mezProtection, 0, iTip11);
+
+                var mezResPercent = 100 / (1 + totals.MezRes[(int)e] / 100);
                 var str11 = "";
                 if (e != Enums.eMez.Knockback & e != Enums.eMez.Knockup & e != Enums.eMez.Repel & e != Enums.eMez.Teleport)
                 {
-                    if (totals.MezRes[(int) e] > sResMax)
+                    if (totals.MezRes[(int)e] > sResMax)
                     {
-                        sResMax = (int) Math.Round(totals.MezRes[(int) e]);
+                        sResMax = (int)Math.Round(totals.MezRes[(int)e]);
                     }
 
-                    str11 = $"\r\n{names3[(int) e]} effects will last {mezResPercent:##0.##}% of their full duration.\r\n{str10}";
+                    str11 = $"\r\n{names3[(int)e]} effects will last {mezResPercent:##0.##}% of their full duration.\r\n{str10}";
                 }
                 else if (e == Enums.eMez.Teleport)
                 {
-                    str11 = $"\r\n{names3[(int) e]} effects will be resisted.\r\n{str10}";
+                    str11 = $"\r\n{names3[(int)e]} effects will be resisted.\r\n{str10}";
                 }
                 else
                 {
-                    str11 = $"\r\n{names3[(int) e]} effects will have {mezResPercent:##0.##}% of their full effect.\r\n{str10}";
+                    str11 = $"\r\n{names3[(int)e]} effects will have {mezResPercent:##0.##}% of their full effect.\r\n{str10}";
                 }
 
-                var iTip12 = Math.Abs(totals.MezRes[(int) e]) < float.Epsilon
-                    ? $"You have no resistance to {names3[(int) e]} effects.\r\n{str10}"
-                    : $"You have {totals.Mez[(int) e]:##0.##}% resistance to {names3[(int) e]} effects.{str11}";
+                var iTip12 = Math.Abs(totals.MezRes[(int)e]) < float.Epsilon
+                    ? $"You have no resistance to {names3[(int)e]} effects.\r\n{str10}"
+                    : $"You have {totals.Mez[(int)e]:##0.##}% resistance to {names3[(int)e]} effects.{str11}";
 
-                graphSRes.AddItem($"{names2[(int) e]}|{totals.MezRes[(int) e]:##0.##}%", totals.MezRes[(int) e], 0, iTip12);
+                graphSRes.AddItem($"{names2[(int)e]}|{totals.MezRes[(int)e]:##0.##}%", totals.MezRes[(int)e], 0, iTip12);
             }
 
             graphSProt.Max = graphSProt.GetMaxValue();
@@ -778,21 +764,21 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             graphSRes.Max = sResMax;
             graphSRes.Draw();
-            
+
             graphSDeb.Clear();
             Enums.eEffectType[] eEffectTypeArray =
             {
                 Enums.eEffectType.Defense, Enums.eEffectType.Endurance, Enums.eEffectType.Recovery, Enums.eEffectType.PerceptionRadius,
-                Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime, Enums.eEffectType.SpeedRunning
+                Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime, Enums.eEffectType.SpeedRunning, Enums.eEffectType.Regeneration
             };
 
             for (var index = 0; index < eEffectTypeArray.Length; index++)
             {
-                var iTip11 = Math.Abs(totals.DebuffRes[(int) eEffectTypeArray[index]]) < 0.001
+                var iTip11 = Math.Abs(totals.DebuffRes[(int)eEffectTypeArray[index]]) < 0.001
                     ? $"You have no resistance to {Enums.GetEffectName(eEffectTypeArray[index])} debuffs."
-                    : $"You have {totals.DebuffRes[(int) eMezArray[index]]:##0.##}% resistance to {Enums.GetEffectName(eEffectTypeArray[index])} debuffs.";
+                    : $"You have {totals.DebuffRes[(int)eMezArray[index]]:##0.##}% resistance to {Enums.GetEffectName(eEffectTypeArray[index])} debuffs.";
 
-                graphSDeb.AddItem($"{Enums.GetEffectName(eEffectTypeArray[index])}|{totals.DebuffRes[(int) eEffectTypeArray[index]]:##0.##}%", totals.DebuffRes[(int) eEffectTypeArray[index]], 0.0f, iTip11);
+                graphSDeb.AddItem($"{Enums.GetEffectName(eEffectTypeArray[index])}|{totals.DebuffRes[(int)eEffectTypeArray[index]]:##0.##}%", totals.DebuffRes[(int)eEffectTypeArray[index]], 0f, iTip11);
             }
 
             graphSDeb.Max = graphSDeb.GetMaxValue() + 1;

@@ -238,9 +238,19 @@ namespace Mids_Reborn.Core
 
         int VirtualStacks { get; set; }
 
+        float CastTimeBase { get; }
+        
+        float ArcanaCastTime { get; }
+
+        bool IsBasePetPower { get; }
+
         bool HasDefEffects();
 
         bool HasResEffects();
+
+        bool HasDamageEffects();
+
+        bool HasDamageBuffEffects();
 
         bool HasAttribModEffects();
 
@@ -279,6 +289,9 @@ namespace Mids_Reborn.Core
             bool fromPopup = false,
             bool ignoreConditions = false);
 
+        string? BuildEffectStringGrouped(int idEffect, bool simple = true, bool noMag = false, bool shortForm = false,
+            bool fromPopup = false, bool ignoreConditions = false);
+
         int[] AbsorbEffects(
             IPower? source,
             float nDuration,
@@ -308,5 +321,10 @@ namespace Mids_Reborn.Core
         Dictionary<int, string> GetEffectsInSummons();
 
         string GetDifferentAttributesSubPower(int fxIndex);
+
+        bool AppliedPowersOverride { get; set; }
+        bool AbsorbedPetEffects { get; set; }
+        bool AppliedExecutes { get; set; }
+        bool AppliedSubPowers { get; set; }
     }
 }

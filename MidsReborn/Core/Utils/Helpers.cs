@@ -7,7 +7,6 @@ using System.Drawing.Imaging;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
-using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Mids_Reborn.Core.Utils
@@ -67,13 +66,6 @@ namespace Mids_Reborn.Core.Utils
             imgAtt.SetWrapMode(WrapMode.TileFlipXY);
             gfx.DrawImage(image, destRect, 0, 0, image.Width, image.Height, GraphicsUnit.Pixel, imgAtt);
             return destImage;
-        }
-
-        public static bool ValidShareData(string? shareData)
-        {
-            if (string.IsNullOrWhiteSpace(shareData)) return false;
-            shareData = shareData.Trim();
-            return shareData.Length % 4 == 0 && Regex.IsMatch(shareData, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None);
         }
 
         internal struct Stat

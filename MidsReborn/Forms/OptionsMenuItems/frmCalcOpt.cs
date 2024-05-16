@@ -333,11 +333,11 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             cbCurrency.SelectedIndex = (int)config.PreferredCurrency;
             chkShowSelfBuffsAny.Checked = config.ShowSelfBuffsAny;
             lblSaveFolder.Text = config.BuildsPath;
-            chkWarnOldAppVersion.Checked = config.WarnOnOldAppMbd;
             chkWarnOldDbVersion.Checked = config.WarnOnOldDbMbd;
             chkDimWindowBorders.Checked = config.DimWindowStyleColors;
             rbEnhPopupCloseStyle1.Checked = config.CloseEnhSelectPopupByMove;
             rbEnhPopupCloseStyle2.Checked = !config.CloseEnhSelectPopupByMove;
+            cbWordwrapMode.SelectedIndex = (int)config.PowerListsWordwrapMode;
             ResumeLayout();
         }
 
@@ -574,7 +574,6 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
                 ++index;
             } while (index <= 19);
             config.PreferredCurrency = (Enums.RewardCurrency)cbCurrency.SelectedIndex;
-            config.WarnOnOldAppMbd = chkWarnOldAppVersion.Checked;
             config.WarnOnOldDbMbd = chkWarnOldDbVersion.Checked;
             config.DimWindowStyleColors = chkDimWindowBorders.Checked;
             config.CloseEnhSelectPopupByMove = rbEnhPopupCloseStyle1.Checked;
@@ -641,22 +640,6 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             SchemaAssocStatus_Update();
         }
 
-        private void Status_MouseHover(object sender, EventArgs e)
-        {
-            var control = sender as Control;
-            var controlName = control?.Name;
-            if (!string.IsNullOrWhiteSpace(controlName))
-            {
-                switch (controlName)
-                {
-                    case "FileAssocStatus":
-                        break;
-                    case "SchemaAssocStatus":
-                        break;
-                }
-            }
-        }
-
         private void rbEnhPopupCloseStyle1_CheckedChanged(object sender, EventArgs e)
         {
             rbEnhPopupCloseStyle2.Checked = !rbEnhPopupCloseStyle1.Checked;
@@ -673,6 +656,21 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             if (!textBox.Text.All(char.IsDigit))
             {
                 textBox.Text = "3";
+            };
+        }
+
+        private void cbWordwrapMode_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (MidsContext.Config == null)
+            {
+                return;
+            }
+
+            MidsContext.Config.PowerListsWordwrapMode = cbWordwrapMode.SelectedIndex switch
+            {
+                1 => Enums.WordwrapMode.New,
+                2 => Enums.WordwrapMode.UseEllipsis,
+                _ => Enums.WordwrapMode.Legacy
             };
         }
     }

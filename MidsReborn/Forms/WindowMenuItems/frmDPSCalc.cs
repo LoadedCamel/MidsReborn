@@ -151,10 +151,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                     var damageData = GetDamageData(powerLocation);
                     lvPower.Items.Add(text).SubItems.AddRange(damageData);
-                    GlobalDamageBuff += float.Parse(damageData[5]) *
+                    GlobalDamageBuff += float.Parse(damageData[5], CultureInfo.InvariantCulture) *
                                         (MidsContext.Character.CurrentBuild.Powers[powerLocation].Power.Effects[index]
                                              .Duration /
-                                         float.Parse(damageData[2]));
+                                         float.Parse(damageData[2], CultureInfo.InvariantCulture));
                     lvPower.Items[^1].Tag = powerLocation;
                     flag = true;
                 }
@@ -174,14 +174,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void frmDPSCalc_FormClosed(object sender, FormClosedEventArgs e)
         {
             StoreLocation();
-            myParent.FloatDPSCalc(false);
+            //myParent.FloatDPSCalc(false);
         }
 
         private void SetIbStyle(ImageButton ib)
         {
-            ib.IA = myParent.Drawing.pImageAttributes;
-            ib.ImageOff = myParent.Drawing.bxPower[MidsContext.Character.IsHero() ? 2 : 4].Bitmap;
-            ib.ImageOn = myParent.Drawing.bxPower[MidsContext.Character.IsHero() ? 3 : 5].Bitmap;
+            ib.IA = myParent.Drawing.PImageAttributes;
+            ib.ImageOff = myParent.Drawing.BxPower[MidsContext.Character.IsHero() ? 2 : 4].Bitmap;
+            ib.ImageOn = myParent.Drawing.BxPower[MidsContext.Character.IsHero() ? 3 : 5].Bitmap;
         }
 
         private void frmDPSCalc_Load(object sender, EventArgs e)
@@ -305,12 +305,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
 
                 GlobalPowerList[^1].Damage =
-                    !(e.Item.SubItems[2].Text != "-") ? 0.0f : float.Parse(e.Item.SubItems[2].Text);
-                GlobalPowerList[^1].Endurance = float.Parse(e.Item.SubItems[5].Text);
-                GlobalPowerList[^1].Recharge = float.Parse(e.Item.SubItems[3].Text);
-                GlobalPowerList[^1].DamageBuff = float.Parse(e.Item.SubItems[6].Text);
-                GlobalPowerList[^1].ResistanceDeBuff = float.Parse(e.Item.SubItems[7].Text);
-                GlobalPowerList[^1].Animation = float.Parse(e.Item.SubItems[4].Text);
+                    !(e.Item.SubItems[2].Text != "-") ? 0.0f : float.Parse(e.Item.SubItems[2].Text, CultureInfo.InvariantCulture);
+                GlobalPowerList[^1].Endurance = float.Parse(e.Item.SubItems[5].Text, CultureInfo.InvariantCulture);
+                GlobalPowerList[^1].Recharge = float.Parse(e.Item.SubItems[3].Text, CultureInfo.InvariantCulture);
+                GlobalPowerList[^1].DamageBuff = float.Parse(e.Item.SubItems[6].Text, CultureInfo.InvariantCulture);
+                GlobalPowerList[^1].ResistanceDeBuff = float.Parse(e.Item.SubItems[7].Text, CultureInfo.InvariantCulture);
+                GlobalPowerList[^1].Animation = float.Parse(e.Item.SubItems[4].Text, CultureInfo.InvariantCulture);
                 GlobalPowerList[^1].RechargeTimer = 0.0f;
             }
 
@@ -453,7 +453,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     array[length].PowerName = lvPower.Items[index].Text;
                     if (lvPower.Items[index].SubItems[1].Text != "-")
                     {
-                        array[length].Damage = float.Parse(lvPower.Items[index].SubItems[2].Text);
+                        array[length].Damage = float.Parse(lvPower.Items[index].SubItems[2].Text, CultureInfo.InvariantCulture);
                         if (!chkDamageBuffs.Checked)
                         {
                             var basePower =
@@ -462,15 +462,15 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                             array[length].Damage += basePower.FXGetDamageValue() * (GlobalDamageBuff / 100f);
                         }
 
-                        array[length].DPA = float.Parse(lvPower.Items[index].SubItems[1].Text);
-                        array[length].HidenDPA = float.Parse(lvPower.Items[index].SubItems[1].Text);
+                        array[length].DPA = float.Parse(lvPower.Items[index].SubItems[1].Text, CultureInfo.InvariantCulture);
+                        array[length].HidenDPA = float.Parse(lvPower.Items[index].SubItems[1].Text, CultureInfo.InvariantCulture);
                     }
 
-                    array[length].Recharge = float.Parse(lvPower.Items[index].SubItems[3].Text);
-                    array[length].Animation = float.Parse(lvPower.Items[index].SubItems[4].Text);
-                    array[length].Endurance = float.Parse(lvPower.Items[index].SubItems[5].Text);
-                    array[length].DamageBuff = float.Parse(lvPower.Items[index].SubItems[6].Text);
-                    array[length].ResistanceDeBuff = float.Parse(lvPower.Items[index].SubItems[7].Text);
+                    array[length].Recharge = float.Parse(lvPower.Items[index].SubItems[3].Text, CultureInfo.InvariantCulture);
+                    array[length].Animation = float.Parse(lvPower.Items[index].SubItems[4].Text, CultureInfo.InvariantCulture);
+                    array[length].Endurance = float.Parse(lvPower.Items[index].SubItems[5].Text, CultureInfo.InvariantCulture);
+                    array[length].DamageBuff = float.Parse(lvPower.Items[index].SubItems[6].Text, CultureInfo.InvariantCulture);
+                    array[length].ResistanceDeBuff = float.Parse(lvPower.Items[index].SubItems[7].Text, CultureInfo.InvariantCulture);
                     array[length].RechargeTimer = -1f;
                     if (array[length].DamageBuff > 0.0 && Math.Abs(array[length].DPA) > float.Epsilon)
                     {

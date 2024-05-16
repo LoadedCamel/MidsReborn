@@ -7,7 +7,7 @@ using System.Windows.Forms;
 
 namespace Mids_Reborn.Forms.Controls
 {
-    internal class BorderPanel : Panel
+    public class BorderPanel : Panel
     {
         [Browsable(false)]
         [EditorBrowsable(EditorBrowsableState.Never)]
@@ -25,7 +25,7 @@ namespace Mids_Reborn.Forms.Controls
         
         public BorderPanel()
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor | ControlStyles.ContainerControl, true);
         }
 
         protected override void OnPaintBackground(PaintEventArgs e)
@@ -90,7 +90,7 @@ namespace Mids_Reborn.Forms.Controls
         }
 
         [TypeConverter(typeof(BorderTypeConverter<PanelBorder>))]
-        internal class PanelBorder : INotifyPropertyChanged
+        public class PanelBorder : INotifyPropertyChanged
         {
             public enum BorderToDraw
             {

@@ -26,7 +26,6 @@ namespace Mids_Reborn.Core
             using var stream = new MemoryStream();
 
             // Disposable Brushes
-            //using var background = new SolidBrush(Color.FromArgb(44, 47, 51));
             using var foreground = new SolidBrush(Color.WhiteSmoke);
 
             // Graphics Setup and Vars
@@ -53,7 +52,7 @@ namespace Mids_Reborn.Core
             
 
             // Outline Brush and Disposable Pen
-            var outline = MidsContext.Character!.IsHero() ? new SolidBrush(Color.DodgerBlue) : new SolidBrush(Color.DarkRed);
+            var outline = MidsContext.Character.IsHero() ? new SolidBrush(Color.DodgerBlue) : new SolidBrush(Color.DarkRed);
             using var pen = new Pen(outline, 4);
 
             // Measure random text w/font for line height.
@@ -164,7 +163,7 @@ namespace Mids_Reborn.Core
         {
             var imgBytes = Generate(useAltBg);
             var compressed = Compression.CompressToBase64(imgBytes);
-            return compressed;
+            return compressed.OutString;
         }
 
         private static SolidBrush BrushFromHex(string hex)

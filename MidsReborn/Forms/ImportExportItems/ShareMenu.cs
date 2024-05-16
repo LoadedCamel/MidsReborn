@@ -7,6 +7,9 @@ using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.BuildFile;
+using Mids_Reborn.Core.ShareSystem;
+using Mids_Reborn.Core.ShareSystem.RestModels;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using static Mids_Reborn.Core.Utils.WinApi;
@@ -15,29 +18,24 @@ namespace Mids_Reborn.Forms.ImportExportItems
 {
     public partial class ShareMenu : Form
     {
-        private readonly ShareConfig _share;
+        private readonly ShareConfig? _share;
+        private readonly BuildManager _buildManager;
+        private ExpiringCollection? _expiringCollection;
         private bool _isLoading = true;
+        private string _originalBuildName = "";
+        private string _originalDesc = "";
 
-        private delegate void PreviewUpdateHandler(bool inclAcc, bool inclInc, bool inclSetBonus, bool inclSetBreakdown);
-        private event PreviewUpdateHandler? PreviewUpdate;
-
-        private readonly Timer _previewTimer;
-        private bool _isLabelVisible = true;
-
-        public ShareMenu()
+        public ShareMenu(BuildManager buildManager)
         {
             SetStyle(ControlStyles.DoubleBuffer, true);
             InitializeComponent();
             Icon = MRBResourceLib.Resources.MRB_Icon_Concept;
-            _share = MidsContext.Config.ShareConfig;
-            _previewTimer = new Timer
-            {
-                Interval = 500
-            };
-            _previewTimer.Tick += Timer_Tick;
+            _share = MidsContext.Config?.ShareConfig;
+            _buildManager = buildManager;
             Load += OnLoad;
-            PreviewUpdate += OnPreviewUpdate;
             formPages1.SelectedIndexChanged += FormPages1OnSelectedIndexChanged;
+            toolTip1.SetToolTip(chkEditName, "Enable editing of Build Name.");
+            toolTip1.SetToolTip(chkEditDesc, "Enable editing of Description.");
         }
 
         private void FormPages1OnSelectedIndexChanged(object? sender, int pageIndex)
@@ -55,19 +53,13 @@ namespace Mids_Reborn.Forms.ImportExportItems
                         {
                             break;
                         }
-                    case 2: // InfoGraphic Page
+                    case 2:
+                        {
+                            break;
+                        }
+                    case 3: // InfoGraphic Page
                         {
                             igPictureBox.Image = ShareGenerator.SharedBuildImage(_share.InfoGraphic.UseAltImage);
-                            break;
-                        }
-                    case { } when pageIndex != 3: // When not the MobileFriendly Page
-                        {
-                            _previewTimer.Stop();
-                            break;
-                        }
-                    case 3 when !_previewTimer.Enabled && previewLabel.Visible: // MobileFriendly Page with conditions
-                        {
-                            _previewTimer.Start();
                             break;
                         }
                 }
@@ -76,32 +68,43 @@ namespace Mids_Reborn.Forms.ImportExportItems
             _share.LastPageIndex = pageIndex;
         }
 
-        private async void OnLoad(object? sender, EventArgs e)
+        private void OnLoad(object? sender, EventArgs e)
         {
             // Restyle utility windows - experimental
             StylizeWindow(Handle, Color.Silver, Color.Black, Color.WhiteSmoke);
             formPages1.SelectedIndex = _share.LastPageIndex > -1 ? _share.LastPageIndex : 0;
 
-            #region Page3
+            #region ExpiringCollection
 
-            await webViewPreview.EnsureCoreWebView2Async();
-            previewLabel.BackColor = Color.FromArgb(75, Color.Firebrick);
-            previewLabel.ForeColor = Color.FromArgb(100, Color.WhiteSmoke);
+            if (_expiringCollection is null)
+            {
+                _expiringCollection = new ExpiringCollection();
+                _expiringCollection.DeserializeFromJson();
+            }
 
-            cbInclAccolade.Checked = _share.MobileFriendly.InclAccolades;
-            cbInclIncarnate.Checked = _share.MobileFriendly.InclIncarnates;
-            cbInclSetBonus.Checked = _share.MobileFriendly.InclSetBonus;
-            cbInclSetBreakdown.Checked = _share.MobileFriendly.InclSetBreakdown;
-            PreviewUpdate?.Invoke(cbInclAccolade.Checked, cbInclIncarnate.Checked, cbInclSetBonus.Checked, cbInclSetBreakdown.Checked);
             #endregion
 
-            #region Page2
+            #region Page3 - Infographic
 
             chkUseAltIg.Checked = _share.InfoGraphic.UseAltImage;
 
             #endregion
 
-            #region Page1
+            #region Page 2 - Links (API)
+
+            txtId.Text = _buildManager.BuildData?.Id;
+            txtBuildName.Text = MidsContext.Character?.Name;
+            txtArchetype.Text = MidsContext.Character?.Archetype?.DisplayName;
+            txtPri.Text = MidsContext.Character?.Powersets[0]?.DisplayName;
+            txtSec.Text = MidsContext.Character?.Powersets[1]?.DisplayName;
+            txtDesc.Text = MidsContext.Character?.Comment;
+            _originalBuildName = txtBuildName.Text ?? string.Empty;
+            _originalDesc = txtDesc.Text ?? string.Empty;
+            CheckForChanges();
+
+            #endregion
+
+            #region Page1 - Forum Formats
             if (!_share.ForumFormat.ColorThemes.Any())
             {
                 _share.ForumFormat.ResetThemes();
@@ -176,53 +179,6 @@ namespace Mids_Reborn.Forms.ImportExportItems
             _isLoading = false;
         }
 
-        #region MobileFriendly
-
-        private void cbInclAccolade_CheckedChanged(object sender, EventArgs e)
-        {
-            _share.MobileFriendly.InclAccolades = cbInclAccolade.Checked;
-            PreviewUpdate?.Invoke(_share.MobileFriendly.InclAccolades, _share.MobileFriendly.InclIncarnates, _share.MobileFriendly.InclSetBonus, _share.MobileFriendly.InclSetBreakdown);
-        }
-
-        private void cbInclIncarnate_CheckedChanged(object sender, EventArgs e)
-        {
-            _share.MobileFriendly.InclIncarnates = cbInclIncarnate.Checked;
-            PreviewUpdate?.Invoke(_share.MobileFriendly.InclAccolades, _share.MobileFriendly.InclIncarnates, _share.MobileFriendly.InclSetBonus, _share.MobileFriendly.InclSetBreakdown);
-        }
-
-        private void cbInclSetBonus_CheckedChanged(object sender, EventArgs e)
-        {
-            _share.MobileFriendly.InclSetBonus = cbInclSetBonus.Checked;
-            PreviewUpdate?.Invoke(_share.MobileFriendly.InclAccolades, _share.MobileFriendly.InclIncarnates, _share.MobileFriendly.InclSetBonus, _share.MobileFriendly.InclSetBreakdown);
-        }
-
-        private void cbInclSetBreakdown_CheckedChanged(object sender, EventArgs e)
-        {
-            _share.MobileFriendly.InclSetBreakdown = cbInclSetBreakdown.Checked;
-            PreviewUpdate?.Invoke(_share.MobileFriendly.InclAccolades, _share.MobileFriendly.InclIncarnates, _share.MobileFriendly.InclSetBonus, _share.MobileFriendly.InclSetBreakdown);
-        }
-
-        private void OnPreviewUpdate(bool inclAcc, bool inclInc, bool inclSetBonus, bool inclSetBreakdown)
-        {
-            var pageBuilder = new PageBuilder();
-            var generatedHtml = pageBuilder.GeneratedPreviewHtml(inclAcc, inclInc, inclSetBonus, inclSetBreakdown);
-            webViewPreview.CoreWebView2.NavigateToString(generatedHtml);
-            InitializeOverlay();
-        }
-
-        private void InitializeOverlay()
-        {
-            _previewTimer.Start();
-        }
-
-        private void Timer_Tick(object? sender, EventArgs e)
-        {
-            _isLabelVisible = !_isLabelVisible;
-            previewLabel.Visible = _isLabelVisible;
-        }
-
-        #endregion
-
         #region ForumFormats
         // Previous HTML generator code
         private void btnExport_Click(object sender, EventArgs e)
@@ -235,25 +191,29 @@ namespace Mids_Reborn.Forms.ImportExportItems
                     case "bdExport":
                         data = new DataObject(bdChunkBox.Text);
                         Clipboard.SetDataObject(data, true);
-                        var messageBox = new MessageBoxEx("Export Result", "The data chunk has been placed in your clipboard.", MessageBoxEx.MessageBoxButtons.Okay);
+                        var messageBox = new MessageBoxEx("Export Result", "The data chunk has been placed in your clipboard.", MessageBoxEx.MessageBoxExButtons.Ok);
                         messageBox.ShowDialog(this);
                         break;
                     case "ffExport":
                         var exportData = ExportData(_share.ForumFormat.InclAccolades, _share.ForumFormat.InclIncarnates, _share.ForumFormat.InclBonusBreakdown);
                         data = new DataObject(exportData);
                         Clipboard.SetDataObject(data, true);
-                        messageBox = new MessageBoxEx("Export Result", "The Forum data has been placed in your clipboard.", MessageBoxEx.MessageBoxButtons.Okay);
+                        messageBox = new MessageBoxEx("Export Result", "The Forum data has been placed in your clipboard.", MessageBoxEx.MessageBoxExButtons.Ok);
                         messageBox.ShowDialog(this);
                         break;
                     case "igExport":
                         var image = ShareGenerator.SharedBuildImage(_share.InfoGraphic.UseAltImage);
                         data = new DataObject(image);
                         Clipboard.SetDataObject(data, true);
-                        messageBox = new MessageBoxEx("Export Result", "The InfoGraphic has been placed in your clipboard.", MessageBoxEx.MessageBoxButtons.Okay);
+                        messageBox = new MessageBoxEx("Export Result", "The InfoGraphic has been placed in your clipboard.", MessageBoxEx.MessageBoxExButtons.Ok);
                         messageBox.ShowDialog(this);
                         break;
-                    case "mbfExport":
-                        ShareGenerator.ShareMobileFriendlyBuild(this, _share.MobileFriendly.InclIncarnates, _share.MobileFriendly.InclAccolades, _share.MobileFriendly.InclSetBonus, _share.MobileFriendly.InclSetBreakdown);
+                    case "ibExportToClip":
+                        data = new DataObject();
+                        data.SetData(DataFormats.UnicodeText, $"[Build Infographic]({txtImageUrl.Text})\n[-->Click Here To Download Build<--]({txtDownloadUrl.Text})\n*Note: Build expires on {txtExpiresOn.Text}*");
+                        Clipboard.SetDataObject(data, true);
+                        messageBox = new MessageBoxEx("Export Result", "The image url and build url have been copied to your clipboard, you may now paste it into Discord.", MessageBoxEx.MessageBoxExButtons.Ok);
+                        messageBox.ShowDialog(this);
                         break;
                 }
             }
@@ -659,7 +619,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
                 var setsEffects = "";
                 var countDict = new Dictionary<int, int>();
 
-                foreach (var s in MidsContext.Character.CurrentBuild.SetBonus)
+                foreach (var s in MidsContext.Character.CurrentBuild.SetBonuses)
                 {
                     for (var i = 0; i < s.SetInfo.Length; i++)
                     {
@@ -846,8 +806,6 @@ namespace Mids_Reborn.Forms.ImportExportItems
                             : "";
                     }
 
-                    var petSum = 0;
-                    var selfSum = 0;
                     var fxBlockHeaderTotal = fxGroup.Key.EffectType switch
                     {
                         Enums.eEffectType.GlobalChanceMod or Enums.eEffectType.EntCreate => "",
@@ -1076,6 +1034,188 @@ namespace Mids_Reborn.Forms.ImportExportItems
         {
             _share.InfoGraphic.UseAltImage = chkUseAltIg.Checked;
             igPictureBox.Image = ShareGenerator.SharedBuildImage(_share.InfoGraphic.UseAltImage);
+        }
+
+        #region Build Links (API)
+
+        private async void IbSubmitButton_Click(object? sender, EventArgs e)
+        {
+            if ((txtBuildName.Text != _originalBuildName || txtDesc.Text != _originalDesc) && btnSaveChanges.Visible)
+            {
+                var message = new MessageBoxEx(
+                    "There are unsaved changes to the build information.\r\nPlease save the changes or uncheck the edit boxes to revert before submitting.",
+                    MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Protected);
+                message.ShowDialog(this);
+
+            }
+            else
+            {
+
+                var result = await ShareGenerator.SubmitOrUpdateBuild();
+                if (result.IsSuccessful)
+                {
+                    toolStripStatusLabel1.Text = result.Message;
+                    if (result.Data == null) return;
+                    txtId.Text = result.Data.Id;
+                    txtDownloadUrl.Text = result.Data.DownloadUrl;
+                    txtImageUrl.Text = result.Data.ImageUrl;
+                    txtSchemaUrl.Text = result.Data.SchemaUrl;
+                    txtExpiresOn.Text = result.Data.ExpiresAt;
+
+                    var newItem = new ExpiringCollectionItem
+                    {
+                        Name = txtBuildName.Text,
+                        Archetype = txtArchetype.Text,
+                        Primary = txtPri.Text,
+                        Secondary = txtSec.Text,
+                        Description = txtDesc.Text,
+                        Id = result.Data.Id,
+                        DownloadUrl = result.Data.DownloadUrl,
+                        ImageUrl = result.Data.ImageUrl,
+                        SchemaUrl = result.Data.SchemaUrl,
+                        ExpiresAt = result.Data.ExpiresAt,
+                    };
+                    _expiringCollection?.Add(newItem);
+                    ibDiscordCopy.Visible = true;
+                }
+                else
+                {
+                    toolStripStatusLabel1.Text = result.Message;
+                }
+            }
+        }
+
+        private async void IbUpdateButton_Click(object? sender, EventArgs e)
+        {
+            OperationResult<TransactionResult>? result;
+            if (_buildManager.BuildData?.Id is null)
+            {
+                var inputResult = InputBox.Show("Enter the id of the build you wish to update.", "Build Update", false, "New Group", InputBox.InputBoxIcon.Info, InputBox_Validating);
+                if (!inputResult.OK) return;
+                result = await ShareGenerator.SubmitOrUpdateBuild(inputResult.Text);
+            }
+            else
+            {
+                result = await ShareGenerator.SubmitOrUpdateBuild(_buildManager.BuildData?.Id);
+            }
+            if (result.IsSuccessful)
+            {
+                toolStripStatusLabel1.Text = result.Message;
+                if (result.Data == null) return;
+                txtId.Text = result.Data.Id;
+                txtDownloadUrl.Text = result.Data.DownloadUrl;
+                txtImageUrl.Text = result.Data.ImageUrl;
+                txtSchemaUrl.Text = result.Data.SchemaUrl;
+                txtExpiresOn.Text = result.Data.ExpiresAt;
+
+                var newItem = new ExpiringCollectionItem
+                {
+                    Name = txtBuildName.Text,
+                    Archetype = txtArchetype.Text,
+                    Primary = txtPri.Text,
+                    Secondary = txtSec.Text,
+                    Description = txtDesc.Text,
+                    Id = txtId.Text,
+                    DownloadUrl = txtDownloadUrl.Text,
+                    ImageUrl = txtImageUrl.Text,
+                    SchemaUrl = txtSchemaUrl.Text,
+                    ExpiresAt = txtExpiresOn.Text
+                };
+                _expiringCollection?.Update(newItem);
+                ibDiscordCopy.Visible = true;
+            }
+            else
+            {
+                toolStripStatusLabel1.Text = result.Message;
+            }
+        }
+
+        private void ibDiscordCopy_Click(object sender, EventArgs e)
+        {
+            var data = new DataObject();
+            // Set build name string
+            var buildTitle = !string.IsNullOrWhiteSpace(txtBuildName.Text) ? $"### {txtBuildName.Text} a {txtPri.Text}/{txtSec.Text} {txtArchetype.Text}" : $"### {txtPri.Text}/{txtSec.Text} {txtArchetype.Text}";
+
+            // Set clipboard object
+            data.SetData(DataFormats.UnicodeText, $"{buildTitle}\n\ud83d\udce5 [Grab The Build Here]({txtDownloadUrl.Text}) - *(Link expires {txtExpiresOn.Text}\\*)*\n:eye: [Stat Preview Below]({txtImageUrl.Text})");
+            Clipboard.SetDataObject(data, true);
+
+            var message = new MessageBoxEx("Clipboard", "The data has been successfully copied to your clipboard.\r\nYou can now paste it into Discord.", MessageBoxEx.MessageBoxExButtons.Ok);
+            message.ShowDialog(this);
+        }
+
+        private static void InputBox_Validating(object sender, InputBoxValidatingArgs e)
+        {
+            if (e.Text.Trim().Length != 0)
+            {
+                e.Cancel = false;
+            }
+            else
+            {
+                e.Cancel = true;
+                e.Message = "Required";
+            }
+        }
+
+        #endregion
+
+        private void chkEditName_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkEditName.Checked)
+            {
+                txtBuildName.ReadOnly = false;
+            }
+            else
+            {
+                if (txtBuildName.Text != _originalBuildName)
+                {
+                    txtBuildName.Text = _originalBuildName; // Restore original text if changed
+                }
+                txtBuildName.ReadOnly = true;
+            }
+        }
+
+        private void chkEditDesc_CheckedChanged(object sender, EventArgs e)
+        {
+            if (chkEditDesc.Checked)
+            {
+                txtDesc.ReadOnly = false;
+            }
+            else
+            {
+                if (txtDesc.Text != _originalDesc)
+                {
+                    txtDesc.Text = _originalDesc; // Restore original text if changed
+                }
+                txtDesc.ReadOnly = true;
+            }
+        }
+
+        private void BuildInfo_Changed(object sender, EventArgs e)
+        {
+            CheckForChanges();
+        }
+
+        private void CheckForChanges()
+        {
+            btnSaveChanges.Visible = txtBuildName.Text != _originalBuildName || txtDesc.Text != _originalDesc;
+        }
+
+        private void btnSaveChanges_Click(object sender, EventArgs e)
+        {
+            if (chkEditName.Checked && txtBuildName.Text != _originalBuildName)
+            {
+                MidsContext.Character.Name = txtBuildName.Text;
+                chkEditName.Checked = false;
+            }
+
+            if (chkEditDesc.Checked && txtDesc.Text != _originalDesc)
+            {
+                MidsContext.Character.Comment = txtDesc.Text;
+                chkEditDesc.Checked = false;
+            }
+
+            btnSaveChanges.Visible = false;
         }
     }
 }

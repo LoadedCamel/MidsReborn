@@ -92,7 +92,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             }
             else
             {
-                using var errorBox = new MessageBoxEx("Validation Error", "Please correct validation errors or cancel by clicking the x in the top right hand corner.", MessageBoxEx.MessageBoxButtons.Okay, MessageBoxEx.MessageBoxIcon.Error, true);
+                using var errorBox = new MessageBoxEx("Validation Error", "Please correct validation errors or cancel by clicking the x in the top right hand corner.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error, true);
                 errorBox.ShowDialog(this);
             }
         }
