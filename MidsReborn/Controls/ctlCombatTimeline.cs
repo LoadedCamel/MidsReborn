@@ -338,7 +338,6 @@ namespace Mids_Reborn.Controls
                     new() {EffectType = Enums.eEffectType.MaxFlySpeed},
                     new() {EffectType = Enums.eEffectType.MaxJumpSpeed},
                     new() {EffectType = Enums.eEffectType.MaxRunSpeed},
-                    new() {EffectType = Enums.eEffectType.JumpHeight},
                     new() {EffectType = Enums.eEffectType.Fly},
                     new() {EffectType = Enums.eEffectType.Absorb},
                     new() {EffectType = Enums.eEffectType.Enhancement, ETModifies = Enums.eEffectType.Heal},
