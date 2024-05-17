@@ -34,7 +34,7 @@ namespace Mids_Reborn.Core.Utils
             Activate = 0x20000
         }
 
-        [DllImport("DwmApi", PreserveSig = false)]
+        [DllImport("DwmApi")]
         private static extern int DwmSetWindowAttribute(IntPtr hWnd, WindowAttribute attr, int[] attrValue, int attrSize);
 
         public enum WindowAttribute : int
@@ -44,7 +44,8 @@ namespace Mids_Reborn.Core.Utils
             Corner = 33,
             BorderColor = 34,
             CaptionColor = 35,
-            TextColor = 36
+            TextColor = 36,
+            BorderThickness = 37
         }
 
         public enum BackdropTypes : int
@@ -59,17 +60,17 @@ namespace Mids_Reborn.Core.Utils
         public static void StylizeWindow(IntPtr handle, Color borderColor, Color? captionColor = null, Color? textColor = null)
         {
             var border = new[] { int.Parse(GetRgb(borderColor), NumberStyles.HexNumber) };
-            _ = DwmSetWindowAttribute(handle, WindowAttribute.BorderColor, border, Marshal.SizeOf<int>());
+            _ = DwmSetWindowAttribute(handle, WindowAttribute.BorderColor, border, 4);
 
             if (captionColor != null)
             {
                 var caption = new[] { int.Parse(GetRgb((Color)captionColor), NumberStyles.HexNumber) };
-                _ = DwmSetWindowAttribute(handle, WindowAttribute.CaptionColor, caption, Marshal.SizeOf<int>());
+                _ = DwmSetWindowAttribute(handle, WindowAttribute.CaptionColor, caption, 4);
             }
 
             if (textColor == null) return;
             var text = new[] { int.Parse(GetRgb((Color)textColor), NumberStyles.HexNumber) };
-            _ = DwmSetWindowAttribute(handle, WindowAttribute.TextColor, text, Marshal.SizeOf<int>());
+            _ = DwmSetWindowAttribute(handle, WindowAttribute.TextColor, text, 4);
         }
 
         // Example: Setting the Dark Mode

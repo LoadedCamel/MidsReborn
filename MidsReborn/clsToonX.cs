@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -980,15 +981,13 @@ namespace Mids_Reborn
                 return;
             }
 
-            var enhanceNames= Enum.GetNames<Enums.eEnhance>();
-            var mezNames = Enum.GetNames<Enums.eMez>();
             var newEffects = new List<IEffect>();
 
             foreach (var slotEntry in currentPowerEntry.Slots.Where(slot => slot.Enhancement.Enh >= 0))
             {
                 var enhancement = DatabaseAPI.Database.Enhancements[slotEntry.Enhancement.Enh];
                 var enhancementPower = enhancement.GetPower();
-                if (enhancementPower == null || enhancement.Effect.Any(e => e.FX != null && e.Mode != Enums.eEffMode.FX))
+                if (enhancementPower == null)
                 {
                     continue;
                 }
@@ -1004,62 +1003,8 @@ namespace Mids_Reborn
                     continue;
                 }
 
-                /*if (eSet.HasPetSpecial)
-                {
-                    var petSpecial = eSet.GetPetSpecialEnhancement();
-                    if (petSpecial == enhancement)
-                    {
-                        
-                    }
-                }*/
-
-                // specialEffects = enhancementPower.Effects.Difference(enhancementBoosts)
-                var enhancementBoostsRaw = enhancement.Effect
-                    .Where(e => e.Mode == Enums.eEffMode.Enhancement)
-                    .Select(e => new KeyValuePair<string, string>(enhanceNames[e.Enhance.ID < 0 || e.Enhance.ID >= enhanceNames.Length ? 0 : e.Enhance.ID], mezNames[e.Enhance.SubID < 0 || e.Enhance.ID >= mezNames.Length ? 0 : e.Enhance.SubID]))
-                    .ToList();
-
-                // Adjust eEnhance style boosts to match eEffectType style
-                var enhancementBoosts = new List<KeyValuePair<string, string>>();
-                foreach (var boost in enhancementBoostsRaw)
-                {
-                    switch (boost.Key)
-                    {
-                        case "Damage":
-                            enhancementBoosts.Add(new KeyValuePair<string, string>("DamageBuff", boost.Value));
-                            break;
-
-                        case "Interrupt":
-                            enhancementBoosts.Add(new KeyValuePair<string, string>("InterruptTime", boost.Value));
-                            break;
-
-                        case "X_RechargeTime":
-                            enhancementBoosts.Add(new KeyValuePair<string, string>("RechargeTime", boost.Value));
-                            break;
-
-                        case "Slow":
-                            enhancementBoosts.Add(new KeyValuePair<string, string>("SpeedRunning", boost.Value));
-                            enhancementBoosts.Add(new KeyValuePair<string, string>("SpeedFlying", boost.Value));
-                            enhancementBoosts.Add(new KeyValuePair<string, string>("SpeedJumping", boost.Value));
-                            break;
-
-                        default:
-                            enhancementBoosts.Add(new KeyValuePair<string, string>(boost.Key, boost.Value));
-                            break;
-                    }
-                }
-
-                enhancementBoosts = enhancementBoosts
-                    .Distinct()
-                    .ToList();
-
                 foreach (var enhEffect in enhancementPower.Effects)
                 {
-                    if (enhancementBoosts.Contains(new KeyValuePair<string, string>($"{(enhEffect.EffectType == Enums.eEffectType.Enhancement ? enhEffect.ETModifies : enhEffect.EffectType)}", enhEffect.EffectType == Enums.eEffectType.Mez ? $"{enhEffect.MezType}" : mezNames[0])))
-                    {
-                        continue;
-                    }
-
                     var shouldAddEffect = false;
                     if (enhEffect.AffectsPetsOnly() && iPower.IsBasePetPower)
                     {
@@ -1095,7 +1040,7 @@ namespace Mids_Reborn
                     }
                     else
                     {
-                        shouldAddEffect = true;
+                        shouldAddEffect = string.IsNullOrWhiteSpace(enhEffect.PowerFullName);
                     }
 
                     if (!shouldAddEffect)

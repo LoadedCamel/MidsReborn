@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -189,6 +190,7 @@ namespace Mids_Reborn.Forms.Controls
                 var num2 = Enhancement.ApplyED(schedule[index], value[index]) * 100f;
                 var num3 = num2 + afterED[index] * 100f;
                 var num4 = (float)Math.Round(num1 - (double)num2, 3);
+                
                 var str1 = num1.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
                 var str2 = num4.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
                 var str3 = num3.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
@@ -1388,12 +1390,12 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             var iTip3 = $"Time to go from 0-100% health: {Utilities.FixDP(displayStats.HealthRegenTimeToFull)}s.\r\nHealth regenerated per second: {Utilities.FixDP(displayStats.HealthRegenHealthPerSec)}%\r\nHitPoints regenerated per second at level 50: {Utilities.FixDP(displayStats.HealthRegenHPPerSec)} HP";
-            total_Misc.AddItem(new PairedListEx.Item("Recovery:", $"{displayStats.EnduranceRecoveryPercentage(false):0.#}% ({displayStats.EnduranceRecoveryNumeric:0.#}/s)", false, false, false, iTip2));
-            total_Misc.AddItem(new PairedListEx.Item("Regen:", $"{displayStats.HealthRegenPercent(false):0.#}%", false, false, false, iTip3));
-            total_Misc.AddItem(new PairedListEx.Item("EndDrain:", $"{displayStats.EnduranceUsage:0.#}/s", false, false, false, iTip1));
-            total_Misc.AddItem(new PairedListEx.Item("+ToHit:", $"{displayStats.BuffToHit:0.#}%", false, false, false, "This effect is increasing the accuracy of all your powers."));
-            total_Misc.AddItem(new PairedListEx.Item("+EndRdx:", $"{displayStats.BuffEndRdx:0.#}%", false, false, false, "The end cost of all your powers is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
-            total_Misc.AddItem(new PairedListEx.Item("+Recharge:", $"{displayStats.BuffHaste(false) - 100.0:0.#}%", false, false, false, "The recharge time of your powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
+            total_Misc.AddItem(new PairedListEx.Item("Recovery:", $"{displayStats.EnduranceRecoveryPercentage(false):0.##}% ({displayStats.EnduranceRecoveryNumeric:0.#}/s)", false, false, false, iTip2));
+            total_Misc.AddItem(new PairedListEx.Item("Regen:", $"{displayStats.HealthRegenPercent(false):0.##}%", false, false, false, iTip3));
+            total_Misc.AddItem(new PairedListEx.Item("EndDrain:", $"{displayStats.EnduranceUsage:0.##}/s", false, false, false, iTip1));
+            total_Misc.AddItem(new PairedListEx.Item("+ToHit:", $"{displayStats.BuffToHit:0.##}%", false, false, false, "This effect is increasing the accuracy of all your powers."));
+            total_Misc.AddItem(new PairedListEx.Item("+EndRdx:", $"{displayStats.BuffEndRdx:0.##}%", false, false, false, "The end cost of all your powers is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
+            total_Misc.AddItem(new PairedListEx.Item("+Recharge:", $"{displayStats.BuffHaste(false):0.#}%", false, false, false, "The recharge time of your powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
             total_Misc.Rows = 3;
             total_Misc.Redraw();
         }
