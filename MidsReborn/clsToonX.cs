@@ -16,7 +16,6 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
-using static Mids_Reborn.Core.CSV;
 
 namespace Mids_Reborn
 {
@@ -971,13 +970,16 @@ namespace Mids_Reborn
 
         private void GBPA_AddEnhFX(ref IPower? iPower, int iIndex)
         {
-            if (MidsContext.Config is null || CurrentBuild is null || MidsContext.Config.I9.IgnoreEnhFX || iIndex < 0 ||
-                iPower is null)
+            if (MidsContext.Config is null || CurrentBuild is null || MidsContext.Config.I9.IgnoreEnhFX || iIndex < 0 || iPower is null)
+            {
                 return;
+            }
 
             var currentPowerEntry = CurrentBuild.Powers[iIndex];
             if (currentPowerEntry?.Power == null)
+            {
                 return;
+            }
 
             var newEffects = new List<IEffect>();
 
@@ -985,22 +987,20 @@ namespace Mids_Reborn
             {
                 var enhancement = DatabaseAPI.Database.Enhancements[slotEntry.Enhancement.Enh];
                 var enhancementPower = enhancement.GetPower();
-                if (enhancementPower == null || enhancement.Effect.Any(e => e.FX != null && e.Mode != Enums.eEffMode.FX))
+                if (enhancementPower == null)
+                {
                     continue;
+                }
 
-                //Debug.WriteLine(enhancementPower.FullName);
                 if (currentPowerEntry.ProcInclude & enhancement.IsProc)
+                {
                     continue;
+                }
 
                 var eSet = enhancement.GetEnhancementSet();
-                if (eSet is null) continue;
-                if (eSet.HasPetSpecial)
+                if (eSet is null)
                 {
-                    var petSpecial = eSet.GetPetSpecialEnhancement();
-                    if (petSpecial == enhancement)
-                    {
-                        
-                    }
+                    continue;
                 }
 
                 foreach (var enhEffect in enhancementPower.Effects)
@@ -1008,9 +1008,7 @@ namespace Mids_Reborn
                     var shouldAddEffect = false;
                     if (enhEffect.AffectsPetsOnly() && iPower.IsBasePetPower)
                     {
-                        
-                        var uidEntity = iPower.Effects.FirstOrDefault(x => x.EffectType == Enums.eEffectType.EntCreate)
-                            ?.Summon;
+                        var uidEntity = iPower.Effects.FirstOrDefault(x => x.EffectType == Enums.eEffectType.EntCreate)?.Summon;
                         if (uidEntity != null)
                         {
                             var summon = DatabaseAPI.NidFromUidEntity(uidEntity);
@@ -1020,9 +1018,17 @@ namespace Mids_Reborn
                             {
                                 foreach (var entPower in entitySet.Powers)
                                 {
-                                    if (entPower == null) continue;
+                                    if (entPower == null)
+                                    {
+                                        continue;
+                                    }
+
                                     shouldAddEffect = entPower.Effects.Any(e => e.EffectType == enhEffect.EffectType);
-                                    if (!shouldAddEffect) continue;
+                                    if (!shouldAddEffect)
+                                    {
+                                        continue;
+                                    }
+
                                     AddClonedEffectToList(newEffects, enhEffect, enhancement.IsProc);
                                     if (enhEffect.EffectType == Enums.eEffectType.GrantPower)
                                     {
@@ -1034,10 +1040,14 @@ namespace Mids_Reborn
                     }
                     else
                     {
-                        shouldAddEffect = true;
+                        shouldAddEffect = string.IsNullOrWhiteSpace(enhEffect.PowerFullName);
                     }
 
-                    if (!shouldAddEffect) continue;
+                    if (!shouldAddEffect)
+                    {
+                        continue;
+                    }
+
                     AddClonedEffectToList(newEffects, enhEffect, enhancement.IsProc);
                     if (enhEffect.EffectType == Enums.eEffectType.GrantPower)
                     {

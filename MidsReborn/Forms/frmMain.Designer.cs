@@ -1,4 +1,3 @@
-using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -42,8 +41,7 @@ namespace Mids_Reborn.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources =
-                new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmMain));
             this.components = new System.ComponentModel.Container();
             this.txtName = new System.Windows.Forms.TextBox();
             this.cbAT = new System.Windows.Forms.ComboBox();
@@ -303,7 +301,7 @@ namespace Mids_Reborn.Forms
             // lblPrimary
             // 
             this.lblPrimary.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.lblPrimary.ForeColor = System.Drawing.Color.White;
             this.lblPrimary.Location = new System.Drawing.Point(20, 166);
             this.lblPrimary.Name = "lblPrimary";
@@ -315,7 +313,7 @@ namespace Mids_Reborn.Forms
             // lblSecondary
             // 
             this.lblSecondary.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.lblSecondary.ForeColor = System.Drawing.Color.White;
             this.lblSecondary.Location = new System.Drawing.Point(172, 166);
             this.lblSecondary.Name = "lblSecondary";
@@ -361,7 +359,7 @@ namespace Mids_Reborn.Forms
             // lblPool1
             // 
             this.lblPool1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.lblPool1.ForeColor = System.Drawing.Color.White;
             this.lblPool1.Location = new System.Drawing.Point(0, 5); // 328, 166
             this.lblPool1.Name = "lblPool1";
@@ -390,7 +388,7 @@ namespace Mids_Reborn.Forms
             // lblPool2
             // 
             this.lblPool2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.lblPool2.ForeColor = System.Drawing.Color.White;
             this.lblPool2.Location = new System.Drawing.Point(0, 113); // 328, 274
             this.lblPool2.Name = "lblPool2";
@@ -419,7 +417,7 @@ namespace Mids_Reborn.Forms
             // lblPool3
             // 
             this.lblPool3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.lblPool3.ForeColor = System.Drawing.Color.White;
             this.lblPool3.Location = new System.Drawing.Point(0, 221); // 328, 382
             this.lblPool3.Name = "lblPool3";
@@ -448,7 +446,7 @@ namespace Mids_Reborn.Forms
             // lblPool4
             // 
             this.lblPool4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.lblPool4.ForeColor = System.Drawing.Color.White;
             this.lblPool4.Location = new System.Drawing.Point(0, 329); // 328, 490
             this.lblPool4.Name = "lblPool4";
@@ -476,7 +474,7 @@ namespace Mids_Reborn.Forms
             // lblEpic
             // 
             this.lblEpic.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.lblEpic.ForeColor = System.Drawing.Color.White;
             this.lblEpic.Location = new System.Drawing.Point(0, 437); // 328, 598
             this.lblEpic.Name = "lblEpic";
@@ -487,10 +485,10 @@ namespace Mids_Reborn.Forms
             // 
             // lblATLocked
             // 
-            this.lblATLocked.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
-                ((int)(((byte)(224)))));
+            this.lblATLocked.BackColor = System.Drawing.Color.FromArgb(224, 224,
+                224);
             this.lblATLocked.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblATLocked.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            this.lblATLocked.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, 0);
             this.lblATLocked.ForeColor = System.Drawing.Color.Black;
             this.lblATLocked.Location = new System.Drawing.Point(94, 110);
             this.lblATLocked.Name = "lblATLocked";
@@ -523,11 +521,11 @@ namespace Mids_Reborn.Forms
             // 
             // lblLocked0
             // 
-            this.lblLocked0.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
-                ((int)(((byte)(224)))));
+            this.lblLocked0.BackColor = System.Drawing.Color.FromArgb(224, 224,
+                224);
             this.lblLocked0.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked0.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Point, 0);
             this.lblLocked0.ForeColor = System.Drawing.Color.Black;
             this.lblLocked0.Location = new System.Drawing.Point(308, 166);
             this.lblLocked0.Name = "lblLocked0";
@@ -541,11 +539,11 @@ namespace Mids_Reborn.Forms
             // 
             // lblLocked1
             // 
-            this.lblLocked1.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
-                ((int)(((byte)(224)))));
+            this.lblLocked1.BackColor = System.Drawing.Color.FromArgb(224, 224,
+                224);
             this.lblLocked1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Point, 0);
             this.lblLocked1.ForeColor = System.Drawing.Color.Black;
             this.lblLocked1.Location = new System.Drawing.Point(308, 186);
             this.lblLocked1.Name = "lblLocked1";
@@ -559,11 +557,11 @@ namespace Mids_Reborn.Forms
             // 
             // lblLocked2
             // 
-            this.lblLocked2.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
-                ((int)(((byte)(224)))));
+            this.lblLocked2.BackColor = System.Drawing.Color.FromArgb(224, 224,
+                224);
             this.lblLocked2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Point, 0);
             this.lblLocked2.ForeColor = System.Drawing.Color.Black;
             this.lblLocked2.Location = new System.Drawing.Point(304, 194);
             this.lblLocked2.Name = "lblLocked2";
@@ -577,11 +575,11 @@ namespace Mids_Reborn.Forms
             // 
             // lblLocked3
             // 
-            this.lblLocked3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))), ((int)(((byte)(224)))),
-                ((int)(((byte)(224)))));
+            this.lblLocked3.BackColor = System.Drawing.Color.FromArgb(224, 224,
+                224);
             this.lblLocked3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Point, 0);
             this.lblLocked3.ForeColor = System.Drawing.Color.Black;
             this.lblLocked3.Location = new System.Drawing.Point(284, 210);
             this.lblLocked3.Name = "lblLocked3";
@@ -595,11 +593,11 @@ namespace Mids_Reborn.Forms
             // 
             // lblLockedAncillary
             // 
-            this.lblLockedAncillary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))),
-                ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblLockedAncillary.BackColor = System.Drawing.Color.FromArgb(224,
+                224, 224);
             this.lblLockedAncillary.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLockedAncillary.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Point, 0);
             this.lblLockedAncillary.ForeColor = System.Drawing.Color.Black;
             this.lblLockedAncillary.Location = new System.Drawing.Point(268, 230);
             this.lblLockedAncillary.Name = "lblLockedAncillary";
@@ -614,11 +612,10 @@ namespace Mids_Reborn.Forms
             // 
             // lblLockedSecondary
             // 
-            this.lblLockedSecondary.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(224)))),
-                ((int)(((byte)(224)))), ((int)(((byte)(224)))));
+            this.lblLockedSecondary.BackColor = System.Drawing.Color.FromArgb(224, 224, 224);
             this.lblLockedSecondary.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLockedSecondary.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Point, 0);
             this.lblLockedSecondary.ForeColor = System.Drawing.Color.Black;
             this.lblLockedSecondary.Location = new System.Drawing.Point(257, 246);
             this.lblLockedSecondary.Name = "lblLockedSecondary";
@@ -663,9 +660,9 @@ namespace Mids_Reborn.Forms
             //
             // DynamicToHitToolStripComboBox
             //
-            this.EnemyRelativeToolStripComboBox.FlatStyle = FlatStyle.Popup;
-            this.EnemyRelativeToolStripComboBox.ComboBox.BackColor = Color.FromArgb(114, 137, 218);
-            this.EnemyRelativeToolStripComboBox.ComboBox.ForeColor = Color.Black;
+            this.EnemyRelativeToolStripComboBox.FlatStyle = FlatStyle.Standard;
+            this.EnemyRelativeToolStripComboBox.ComboBox.BackColor = Color.FromArgb(27, 27, 27); // Prev: 114, 137, 218
+            this.EnemyRelativeToolStripComboBox.ComboBox.ForeColor = Color.FromArgb(238, 238, 238); // Prev: Black
             this.EnemyRelativeToolStripComboBox.Name = "EnemyRelativeToolStripComboBox";
             this.EnemyRelativeToolStripComboBox.Size = new Size(185, 22);
             this.EnemyRelativeToolStripComboBox.Text = "Enemy Relative Level";
@@ -1639,7 +1636,7 @@ namespace Mids_Reborn.Forms
             this.lblCharacter.AutoSize = true;
             this.lblCharacter.BackColor = System.Drawing.Color.Transparent;
             this.lblCharacter.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.lblCharacter.ForeColor = System.Drawing.Color.White;
             this.lblCharacter.Location = new System.Drawing.Point(3, 3);
             this.lblCharacter.Name = "lblCharacter";
@@ -2123,7 +2120,7 @@ namespace Mids_Reborn.Forms
             // lblName
             // 
             this.lblName.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Point, 0);
             this.lblName.ForeColor = System.Drawing.Color.White;
             this.lblName.Text = "Name:";
             this.lblName.Location = new System.Drawing.Point(2, 82);
@@ -2135,7 +2132,7 @@ namespace Mids_Reborn.Forms
             // lblOrigin
             // 
             this.lblOrigin.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Point, 0);
             this.lblOrigin.Text = "Origin:";
             this.lblOrigin.Location = new System.Drawing.Point(2, 133);
             this.lblOrigin.Name = "lblOrigin";
@@ -2146,7 +2143,7 @@ namespace Mids_Reborn.Forms
             // lblAT
             // 
             this.lblAT.Font = new System.Drawing.Font("Segoe UI", 10F, System.Drawing.FontStyle.Bold,
-                System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Point, 0);
             this.lblAT.Text = "Archetype:";
             this.lblAT.Location = new System.Drawing.Point(2, 109);
             this.lblAT.Name = "lblAT";
@@ -2183,9 +2180,9 @@ namespace Mids_Reborn.Forms
             this.I9Popup.ColumnPosition = 0.5F;
             this.I9Popup.ColumnRight = false;
             this.I9Popup.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Regular,
-                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.I9Popup.ForeColor =
-                System.Drawing.Color.FromArgb(((int)(((byte)(96)))), ((int)(((byte)(48)))), ((int)(((byte)(255)))));
+                System.Drawing.Color.FromArgb(96, 48, 255);
             this.I9Popup.InternalPadding = 3;
             this.I9Popup.Location = new System.Drawing.Point(513, 490);
             this.I9Popup.Name = "I9Popup";
@@ -2429,7 +2426,7 @@ namespace Mids_Reborn.Forms
             this.Controls.Add(this.enhCheckMode);
             this.DoubleBuffered = true;
             this.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular,
-                System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.ForeColor = System.Drawing.Color.White;
             this.KeyPreview = true;
             this.MainMenuStrip = this.MenuBar;

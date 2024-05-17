@@ -42,6 +42,25 @@ namespace Mids_Reborn.Core.BuildFile
             {
                 enhancementData.Uid = DatabaseAPI.GetEnhancementUid(enhancementValue.ToObject<string>());
             }
+            if (jsonObject.TryGetValue("Grade", out var gradeValue))
+            {
+                enhancementData.Grade = gradeValue.ToObject<string>() ?? throw new InvalidOperationException();
+            }
+
+            if (jsonObject.TryGetValue("IoLevel", out var ioLevelValue))
+            {
+                enhancementData.IoLevel = ioLevelValue.ToObject<int>();
+            }
+
+            if (jsonObject.TryGetValue("RelativeLevel", out var relativeLevelValue))
+            {
+                enhancementData.RelativeLevel = relativeLevelValue.ToObject<string>() ?? throw new InvalidOperationException();
+            }
+
+            if (jsonObject.TryGetValue("Obtained", out var obtainedValue))
+            {
+                enhancementData.Obtained = obtainedValue.ToObject<bool>();
+            }
 
             return enhancementData;
         }
