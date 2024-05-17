@@ -987,7 +987,7 @@ namespace Mids_Reborn
             {
                 var enhancement = DatabaseAPI.Database.Enhancements[slotEntry.Enhancement.Enh];
                 var enhancementPower = enhancement.GetPower();
-                if (enhancementPower == null)
+                if (enhancementPower == null || enhancement.Effect.Any(e => e.Mode != Enums.eEffMode.FX))
                 {
                     continue;
                 }
@@ -1040,7 +1040,7 @@ namespace Mids_Reborn
                     }
                     else
                     {
-                        shouldAddEffect = string.IsNullOrWhiteSpace(enhEffect.PowerFullName);
+                        shouldAddEffect = true;
                     }
 
                     if (!shouldAddEffect)
