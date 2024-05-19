@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using Mids_Reborn.Core;
@@ -26,6 +25,7 @@ namespace Mids_Reborn.Controls
         private bool _setItemsBold;
         private List<Item>? _items;
         private bool _autoSizeLineHeight = true;
+        private bool _drawing;
 
         public delegate void ItemClickEventHandler(object? sender, Item item, MouseEventArgs e);
         public delegate void ItemHoverEventHandler(object? sender, int index, Enums.ShortFX tagId, string? tooltip = "");
@@ -41,6 +41,11 @@ namespace Mids_Reborn.Controls
             set
             {
                 _columns = value;
+                if (_drawing)
+                {
+                    return;
+                }
+
                 Invalidate();
             }
         }
@@ -51,6 +56,11 @@ namespace Mids_Reborn.Controls
             set
             {
                 _rows = value;
+                if (_drawing)
+                {
+                    return;
+                }
+
                 Invalidate();
             }
         }
@@ -59,7 +69,11 @@ namespace Mids_Reborn.Controls
         {
             get
             {
-                if (_items != null) return _items;
+                if (_items != null)
+                {
+                    return _items;
+                }
+
                 _items = new List<Item>();
                 AddItem(new Item("Item 1:", "Value", false));
                 AddItem(new Item("Item 2:", "Alternate", true));
@@ -71,6 +85,7 @@ namespace Mids_Reborn.Controls
                 AddItem(new Item("1 2 3 4 5 6 7 8 9 0:", "1 2 3 4 5 6 7 8 9 0", true));
                 AddItem(new Item("1 2 3 4 5 6 7 8 9 0:", "1 2 3 4 5 6 7 8 9 0", false, true));
                 AddItem(new Item("1 2 3 4 5 6 7 8 9 0:", "1 2 3 4 5 6 7 8 9 0", false, false, true));
+                
                 return _items;
             }
         } 
@@ -81,6 +96,11 @@ namespace Mids_Reborn.Controls
             set
             {
                 _setItemsBold = value;
+                if (_drawing)
+                {
+                    return;
+                }
+
                 Invalidate();
             }
         }
@@ -91,6 +111,11 @@ namespace Mids_Reborn.Controls
             set
             {
                 _itemColor = value;
+                if (_drawing)
+                {
+                    return;
+                }
+
                 Invalidate();
             }
         }
@@ -101,6 +126,11 @@ namespace Mids_Reborn.Controls
             set
             {
                 _valueColor = value;
+                if (_drawing)
+                {
+                    return;
+                }
+
                 Invalidate();
             }
         }
@@ -111,6 +141,11 @@ namespace Mids_Reborn.Controls
             set
             {
                 _valueAlternateColor = value;
+                if (_drawing)
+                {
+                    return;
+                }
+
                 Invalidate();
             }
         }
@@ -122,6 +157,11 @@ namespace Mids_Reborn.Controls
             set
             {
                 _valueConditionColor = value;
+                if (_drawing)
+                {
+                    return;
+                }
+
                 Invalidate();
             }
         }
@@ -132,6 +172,11 @@ namespace Mids_Reborn.Controls
             set
             {
                 _valueSpecialColor = value;
+                if (_drawing)
+                {
+                    return;
+                }
+
                 Invalidate();
             }
         }
@@ -144,6 +189,11 @@ namespace Mids_Reborn.Controls
             set
             {
                 _highlightColor = value;
+                if (_drawing)
+                {
+                    return;
+                }
+
                 Invalidate();
             }
         }
@@ -154,6 +204,11 @@ namespace Mids_Reborn.Controls
             set
             {
                 _highlightTextColor = value;
+                if (_drawing)
+                {
+                    return;
+                }
+
                 Invalidate();
             }
         }
@@ -164,6 +219,11 @@ namespace Mids_Reborn.Controls
             set
             {
                 _autoSizeLineHeight = value;
+                if (_drawing)
+                {
+                    return;
+                }
+
                 Invalidate();
             }
         }
@@ -194,27 +254,42 @@ namespace Mids_Reborn.Controls
 
         private void OnForeColorChanged(object? sender, EventArgs e)
         {
+            if (_drawing)
+            {
+                return;
+            }
+
             Invalidate();
         }
 
         private void OnFontChanged(object? sender, EventArgs e)
         {
+            if (_drawing)
+            {
+                return;
+            }
+
             Invalidate();
         }
 
         private void OnResize(object? sender, EventArgs e)
         {
+            if (_drawing)
+            {
+                return;
+            }
+
             Invalidate();
         }
 
         private void OnMouseClick(object? sender, MouseEventArgs e)
         {
-            if (Items == null)
+            if (_items == null)
             {
                 return;
             }
 
-            foreach (var item in Items.Where(item => e.X >= item.Bounds.Left && e.X <= item.Bounds.Right && e.Y >= item.Bounds.Top && e.Y <= item.Bounds.Bottom))
+            foreach (var item in _items.Where(item => e.X >= item.Bounds.Left && e.X <= item.Bounds.Right && e.Y >= item.Bounds.Top && e.Y <= item.Bounds.Bottom))
             {
                 ItemClick?.Invoke(this, item, e);
             }
@@ -224,7 +299,7 @@ namespace Mids_Reborn.Controls
         {
             if (UseHighlighting)
             {
-                Items?.ForEach(i => i.IsHighlightable = false);
+                _items?.ForEach(i => i.IsHighlightable = false);
             }
 
             Invalidate();
@@ -232,15 +307,15 @@ namespace Mids_Reborn.Controls
 
         private void OnMouseMove(object? sender, MouseEventArgs e)
         {
-            if (Items == null)
+            if (_items == null)
             {
                 return;
             }
 
             var hoveredItem = -1;
-            for (var i = 0; i < Items.Count; i++)
+            for (var i = 0; i < _items.Count; i++)
             {
-                var item = Items[i];
+                var item = _items[i];
                 if (e.X >= item.Bounds.Left && e.X <= item.Bounds.Right && e.Y >= item.Bounds.Top && e.Y <= item.Bounds.Bottom)
                 {
                     if (UseHighlighting)
@@ -274,13 +349,13 @@ namespace Mids_Reborn.Controls
                 return;
             }
 
-            if (Items[hoveredItem].ToolTip != null) ItemHover?.Invoke(this, hoveredItem, Items[hoveredItem].TagId, Items[hoveredItem].ToolTip);
+            if (_items[hoveredItem].ToolTip != null) ItemHover?.Invoke(this, hoveredItem, _items[hoveredItem].TagId, _items[hoveredItem].ToolTip);
         }
 
         private void OnLoad(object? sender, EventArgs e)
         {
             _hoverIndex = -1;
-            Redraw();
+            Invalidate();
         }
 
         public void AddItem(Item iItem)
@@ -302,12 +377,12 @@ namespace Mids_Reborn.Controls
 
         public void SetUnique()
         {
-            if (Items is { Count: > 0 }) Items[^1].UseUniqueColor = true;
+            if (_items is { Count: > 0 }) _items[^1].UseUniqueColor = true;
         }
 
         public bool IsSpecialColor()
         {
-            return Items != null && Items[^1].UseSpecialColor;
+            return _items != null && _items[^1].UseSpecialColor;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -331,54 +406,56 @@ namespace Mids_Reborn.Controls
             e.Graphics.FillRectangle(backBrush, ClientRectangle);
 
             // Perform drawing
-            if (Items == null)
+            if (_items == null)
             {
                 return;
             }
 
-            if (!Items.Any())
+            if (!_items.Any())
             {
                 return;
             }
+
+            _drawing = true;
 
             const int interlineHeight = 5;
             const int vPadding = 3;
             var y = vPadding;
             var rect = ClientRectangle;
-            var columnWidth = rect.Width / Columns;
-            var rowHeight = rect.Height / Rows;
+            var columnWidth = rect.Width / _columns;
+            var rowHeight = rect.Height / _rows;
             var font = SetItemsBold
                 ? new Font(Font.FontFamily, Font.Size, FontStyle.Bold)
                 : Font;
 
-            if (Items.Count > 0 & !_autoSizeLineHeight)
+            if (_items.Count > 0 & !_autoSizeLineHeight)
             {
-                var nameMeasured = TextRenderer.MeasureText(Items[0].Name?.Trim(), font, new Size(new Point(5, 0)), TextFormatFlags.Left | TextFormatFlags.NoPadding);
-                Rows = (int)Math.Floor(Math.Max(0, rect.Height - 2 * vPadding + interlineHeight) / (double)(nameMeasured.Height + interlineHeight));
+                var nameMeasured = TextRenderer.MeasureText(_items[0].Name?.Trim(), font, new Size(new Point(5, 0)), TextFormatFlags.Left | TextFormatFlags.NoPadding);
+                _rows = (int)Math.Floor(Math.Max(0, rect.Height - 2 * vPadding + interlineHeight) / (double)(nameMeasured.Height + interlineHeight));
             }
 
             var itemLocations = new List<Point>();
-            for (var cIndex = 0; cIndex < Columns; cIndex++)
+            for (var cIndex = 0; cIndex < _columns; cIndex++)
             {
-                for (var rIndex = 0; rIndex < Rows; rIndex++)
+                for (var rIndex = 0; rIndex < _rows; rIndex++)
                 {
                     var tLocation = new Point(5 + columnWidth * cIndex, rowHeight * rIndex);
                     itemLocations.Add(tLocation);
                 }
             }
 
-            for (var index = 0; index < Math.Min(Items.Count, itemLocations.Count); index++)
+            for (var index = 0; index < Math.Min(_items.Count, itemLocations.Count); index++)
             {
                 var itemColor = ItemColor;
                 Color valueColor;
-                var itemName = Items[index].Name?.Trim();
+                var itemName = _items[index].Name?.Trim();
                 if (string.IsNullOrWhiteSpace(itemName)) continue;
                 if (!itemName.EndsWith(":"))
                 {
                     itemName += ":";
                 }
 
-                var itemValue = Items[index].Value?.Trim();
+                var itemValue = _items[index].Value?.Trim();
                 var nameMeasured = TextRenderer.MeasureText(itemName, font, new Size(itemLocations[index]), TextFormatFlags.Left | TextFormatFlags.NoPadding);
                 var valueMeasured = TextRenderer.MeasureText(itemValue, font, new Size(itemLocations[index]), TextFormatFlags.Left | TextFormatFlags.NoPadding);
                 y += index == 0 ? 0 : nameMeasured.Height + interlineHeight;
@@ -394,12 +471,12 @@ namespace Mids_Reborn.Controls
                 var valueLocation = nameLocation with {X = nameLocation.X + nameMeasured.Width + 2};
 
                 var itemBounds = new Rectangle(itemLocations[index], nameMeasured with { Width = nameMeasured.Width + valueMeasured.Width + 2 });
-                Items[index].SetBounds(itemBounds);
+                _items[index].SetBounds(itemBounds);
                 e.Graphics.FillRectangle(backBrush, itemBounds);
 
                 if (UseHighlighting)
                 {
-                    if (Items[index].IsHighlightable)
+                    if (_items[index].IsHighlightable)
                     {
                         var highlightBrush = new SolidBrush(HighlightColor);
                         e.Graphics.FillRectangle(highlightBrush, itemBounds);
@@ -410,15 +487,15 @@ namespace Mids_Reborn.Controls
                     else
                     {
                         e.Graphics.FillRectangle(backBrush, itemBounds);
-                        if (Items[index].UseAlternateColor)
+                        if (_items[index].UseAlternateColor)
                         {
                             valueColor = ValueAlternateColor;
                         }
-                        else if (Items[index].UseSpecialColor)
+                        else if (_items[index].UseSpecialColor)
                         {
                             valueColor = ValueSpecialColor;
                         }
-                        else if (Items[index].UseUniqueColor)
+                        else if (_items[index].UseUniqueColor)
                         {
                             valueColor = ValueConditionColor;
                         }
@@ -431,15 +508,15 @@ namespace Mids_Reborn.Controls
                 }
                 else
                 {
-                    if (Items[index].UseAlternateColor)
+                    if (_items[index].UseAlternateColor)
                     {
                         valueColor = ValueAlternateColor;
                     }
-                    else if (Items[index].UseSpecialColor)
+                    else if (_items[index].UseSpecialColor)
                     {
                         valueColor = ValueSpecialColor;
                     }
-                    else if (Items[index].UseUniqueColor)
+                    else if (_items[index].UseUniqueColor)
                     {
                         valueColor = ValueConditionColor;
                     }
@@ -453,6 +530,8 @@ namespace Mids_Reborn.Controls
                 TextRenderer.DrawText(e.Graphics, itemName, font, nameLocation, itemColor, TextFormatFlags.Left | TextFormatFlags.NoPadding);
                 TextRenderer.DrawText(e.Graphics, itemValue, font, valueLocation, valueColor, TextFormatFlags.Left | TextFormatFlags.NoPadding);
             }
+
+            _drawing = false;
         }
 
         public class Item
