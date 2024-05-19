@@ -1395,26 +1395,10 @@ namespace Mids_Reborn.Forms.Controls
             total_Misc.AddItem(new PairedListEx.Item("EndDrain:", $"{displayStats.EnduranceUsage:0.##}/s", false, false, false, iTip1));
             total_Misc.AddItem(new PairedListEx.Item("+ToHit:", $"{displayStats.BuffToHit:0.##}%", false, false, false, "This effect is increasing the accuracy of all your powers."));
             total_Misc.AddItem(new PairedListEx.Item("+EndRdx:", $"{displayStats.BuffEndRdx:0.##}%", false, false, false, "The end cost of all your powers is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
-            total_Misc.AddItem(new PairedListEx.Item("+Recharge:", $"{displayStats.BuffHaste(false):0.#}%", false, false, false, "The recharge time of your powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
+            total_Misc.AddItem(new PairedListEx.Item("+Recharge:", $"{displayStats.BuffHaste(false) -100:0.#}%", false, false, false, "The recharge time of your powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
             total_Misc.Rows = 3;
             total_Misc.Redraw();
         }
-
-        /*protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-                components?.Dispose();
-            try
-            {
-                bxFlip?.Dispose();
-            }
-            catch
-            {
-                // ignored
-            }
-
-            base.Dispose(disposing);
-        }*/
 
         private void DoPaint()
         {
