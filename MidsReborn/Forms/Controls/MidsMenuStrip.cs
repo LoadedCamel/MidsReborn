@@ -119,5 +119,16 @@ namespace Mids_Reborn.Forms.Controls
 
             base.OnRenderItemText(e);
         }
+
+        // Override sub-menu arrow color
+        protected override void OnRenderArrow(ToolStripArrowRenderEventArgs e)
+        {
+            if (e.Item is ToolStripMenuItem)
+            {
+                e.ArrowColor = Color.FromArgb(239, 239, 239);
+            }
+
+            base.OnRenderArrow(e);
+        }
     }
 }
