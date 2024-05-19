@@ -32,27 +32,18 @@ namespace Mids_Reborn.Core.BuildFile
         {
             if (string.IsNullOrWhiteSpace(fileName)) return false;
             var returnedVal = false;
-            var schemaValidator = new Validator();
-            var validationResult = schemaValidator.ValidateFile(fileName);
-            if (validationResult.Valid)
+            var data = File.ReadAllText(fileName);
+            try
             {
-                try
+                var settings = new JsonSerializerSettings
                 {
-                    var settings = new JsonSerializerSettings
-                    {
-                        Converters = new List<JsonConverter>{ new EnhancementDataConverter() }
-                    };
-                    BuildData = JsonConvert.DeserializeObject<CharacterBuildData>(validationResult.Data, settings) ?? throw new InvalidOperationException();
-                }
-                catch (Exception ex)
-                {
-                    _notifier.ShowError(ex.Message);
-                }
+                    Converters = new List<JsonConverter>{ new EnhancementDataConverter() }
+                };
+                BuildData = JsonConvert.DeserializeObject<CharacterBuildData>(data, settings) ?? throw new InvalidOperationException();
             }
-            else
+            catch (Exception ex)
             {
-                _notifier.ShowError(validationResult.ErrorMessage);
-                return false;
+                _notifier.ShowError(ex.Message);
             }
 
             if (BuildData is null)
@@ -185,28 +176,18 @@ namespace Mids_Reborn.Core.BuildFile
         {
             if (string.IsNullOrWhiteSpace(data)) return false;
             var returnedVal = false;
-            var schemaValidator = new Validator();
-            var validationResult = schemaValidator.ValidateData(data);
-            if (validationResult.Valid)
+            try
             {
-                try
+                var settings = new JsonSerializerSettings
                 {
-                    var settings = new JsonSerializerSettings
-                    {
-                        Converters = new List<JsonConverter>{ new EnhancementDataConverter() }
-                    };
-                    BuildData = JsonConvert.DeserializeObject<CharacterBuildData>(validationResult.Data, settings) ?? throw new InvalidOperationException();
-                    if (id is not null) BuildData.Id = id;
-                }
-                catch (Exception ex)
-                {
-                    _notifier.ShowError(ex.Message);
-                }
+                    Converters = new List<JsonConverter>{ new EnhancementDataConverter() }
+                };
+                BuildData = JsonConvert.DeserializeObject<CharacterBuildData>(data, settings) ?? throw new InvalidOperationException();
+                if (id is not null) BuildData.Id = id;
             }
-            else
+            catch (Exception ex)
             {
-                _notifier.ShowError(validationResult.ErrorMessage);
-                return false;
+                _notifier.ShowError(ex.Message);
             }
 
             if (BuildData is null)
