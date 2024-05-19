@@ -1371,18 +1371,7 @@ namespace Mids_Reborn.Forms
             var ret = response.Data != null && _buildManager.ValidateAndLoadSchemaData(response.Data);
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
-            switch (MidsContext.Character?.Archetype?.DisplayName)
-            {
-                case "Mastermind":
-                    ibPetsEx.Visible = true;
-                    ibPetsEx.Enabled = true;
-                    break;
-                default:
-                    ibPetsEx.Visible = false;
-                    ibPetsEx.Enabled = false;
-                    break;
-            }
-
+            
             myDataView?.Clear();
             PowerModified(false);
             return ret;
@@ -1413,18 +1402,6 @@ namespace Mids_Reborn.Forms
             if (drawing != null)
             {
                 drawing.Highlight = -1;
-            }
-
-            switch (MidsContext.Character?.Archetype?.DisplayName)
-            {
-                case "Mastermind":
-                    ibPetsEx.Visible = true;
-                    ibPetsEx.Enabled = true;
-                    break;
-                default:
-                    ibPetsEx.Visible = false;
-                    ibPetsEx.Enabled = false;
-                    break;
             }
 
             myDataView?.Clear();
@@ -1477,18 +1454,7 @@ namespace Mids_Reborn.Forms
 
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
-            switch (MidsContext.Character?.Archetype?.DisplayName)
-            {
-                case "Mastermind":
-                    ibPetsEx.Visible = true;
-                    ibPetsEx.Enabled = true;
-                    break;
-                default:
-                    ibPetsEx.Visible = false;
-                    ibPetsEx.Enabled = false;
-                    break;
-            }
-
+            
             myDataView?.Clear();
             MidsContext.Character?.ResetLevel();
             PowerModified(false);
@@ -1514,18 +1480,7 @@ namespace Mids_Reborn.Forms
             Debug.WriteLine("Loaded");
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
-            switch (MidsContext.Character?.Archetype?.DisplayName)
-            {
-                case "Mastermind":
-                    ibPetsEx.Visible = true;
-                    ibPetsEx.Enabled = true;
-                    break;
-                default:
-                    ibPetsEx.Visible = false;
-                    ibPetsEx.Enabled = false;
-                    break;
-            }
-
+            
             NewDraw();
             myDataView.Clear();
             MidsContext.Character?.ResetLevel();
@@ -1552,18 +1507,7 @@ namespace Mids_Reborn.Forms
             Debug.WriteLine("Loaded");
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
-            switch (MidsContext.Character?.Archetype?.DisplayName)
-            {
-                case "Mastermind":
-                    ibPetsEx.Visible = true;
-                    ibPetsEx.Enabled = true;
-                    break;
-                default:
-                    ibPetsEx.Visible = false;
-                    ibPetsEx.Enabled = false;
-                    break;
-            }
-
+            
             NewDraw();
             myDataView.Clear();
             MidsContext.Character?.ResetLevel();
@@ -3495,18 +3439,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 if (fPrestige is { IsDisposed: false })
                 {
                     fPrestige.Dispose();
-                }
-
-                switch (MidsContext.Character?.Archetype?.DisplayName)
-                {
-                    case "Mastermind":
-                        ibPetsEx.Visible = true;
-                        ibPetsEx.Enabled = true;
-                        break;
-                    default:
-                        ibPetsEx.Visible = false;
-                        ibPetsEx.Enabled = false;
-                        break;
                 }
 
                 NewDraw(skipDraw);
@@ -5836,56 +5768,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 fTemp.Show(this);
         }
 
-        private void ibPetsEx_OnClick(object? sender, EventArgs e)
-        {
-            if (PetWindowFlag)
-            {
-                ibPetsEx.ToggleState = ImageButtonEx.States.ToggledOff;
-                fMMPets?.Close();
-                PetWindowFlag = false;
-            }
-            else
-            {
-                // Zed: added check on level so hidden Henchmen powers (*_H) don't get in,
-                // leading to duplicates.
-                MmPets = MidsContext.Character?.CurrentBuild.Powers == null
-                    ? new List<string>()
-                    : MidsContext.Character.CurrentBuild.Powers
-                    .Where(e =>
-                        e is { Power: { } } &&
-                        Enum.GetNames(typeof(Enums.eMMpets)).Contains(e.Name.Replace(" ", "_")) &
-                        e.Power.Level > 0)
-                    .Select(e => e.Name)
-                    .ToList();
-
-                var isEmpty = MmPets.Count <= 0;
-                if (!isEmpty)
-                {
-                    fMMPets = new frmMMPowers(this, MmPets)
-                    {
-                        Text = @"Mastermind Pets"
-                    };
-
-                    if (!fMMPets.Visible)
-                    {
-                        ibPetsEx.ToggleState = ImageButtonEx.States.ToggledOn;
-                        PetWindowFlag = true;
-                        fMMPets.Show(this);
-                    }
-                    else
-                    {
-                        ibPetsEx.ToggleState = ImageButtonEx.States.ToggledOff;
-                        fMMPets.Close();
-                    }
-                }
-                else
-                {
-                    MessageBox.Show(@"You haven't selected an pet abilities for your mastermind.", @"Unavailable", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-                    ibPetsEx.ToggleState = ImageButtonEx.States.ToggledOff;
-                }
-            }
-        }
-
         private void tlsDPA_Click(object sender, EventArgs e)
         {
             MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.DPA;
@@ -6205,18 +6087,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             if (!loaded) return;
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
-            switch (MidsContext.Character?.Archetype?.DisplayName)
-            {
-                case "Mastermind":
-                    ibPetsEx.Visible = true;
-                    ibPetsEx.Enabled = true;
-                    break;
-                default:
-                    ibPetsEx.Visible = false;
-                    ibPetsEx.Enabled = false;
-                    break;
-            }
-
+            
             myDataView?.Clear();
             PowerModified(false);
         }
@@ -6229,18 +6100,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             _buildManager.ValidateAndLoadSchemaData(vsb.FetchedData.Data, vsb.FetchedData.Id);
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
-            switch (MidsContext.Character?.Archetype?.DisplayName)
-            {
-                case "Mastermind":
-                    ibPetsEx.Visible = true;
-                    ibPetsEx.Enabled = true;
-                    break;
-                default:
-                    ibPetsEx.Visible = false;
-                    ibPetsEx.Enabled = false;
-                    break;
-            }
-
+            
             myDataView?.Clear();
             PowerModified(false);
         }
@@ -7663,7 +7523,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private frmStats? fGraphStats;
         private bool FileModified { get; set; }
         private FrmIncarnate? fIncarnate;
-        private frmMMPowers? fMMPets;
         private frmPrestige? fPrestige;
         private bool FlipActive;
         private PowerEntry? FlipGP;

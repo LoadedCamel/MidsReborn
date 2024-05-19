@@ -196,7 +196,6 @@ namespace Mids_Reborn.Forms
             this.ibAlignmentEx = new ImageButtonEx();
             this.ibSlotInfoEx = new ImageButtonEx();
             this.ibAccoladesEx = new ImageButtonEx();
-            this.ibPetsEx = new ImageButtonEx();
             this.ibTeamEx = new ImageButtonEx();
             this.ibPopupEx = new ImageButtonEx();
             this.ibPvXEx = new ImageButtonEx();
@@ -1617,7 +1616,6 @@ namespace Mids_Reborn.Forms
             this.topPanel.Controls.Add(this.lblCharacter);
             this.topPanel.Controls.Add(this.ibTeamEx);
             this.topPanel.Controls.Add(this.ibAlignmentEx);
-            this.topPanel.Controls.Add(this.ibPetsEx);
             this.topPanel.Controls.Add(this.ibTempPowersEx);
             this.topPanel.Controls.Add(this.ibAccoladesEx);
             this.topPanel.Controls.Add(this.ibIncarnatePowersEx);
@@ -1669,32 +1667,6 @@ namespace Mids_Reborn.Forms
             this.ibAlignmentEx.ToggleText.ToggledOn = "Villain";
             this.ibAlignmentEx.UseAlt = false;
             this.ibAlignmentEx.Click += new EventHandler(this.ibAlignmentEx_OnClick);
-            // 
-            // ibPetsEx
-            // 
-            this.ibPetsEx.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.ibPetsEx.ButtonType = ImageButtonEx.ButtonTypes.Normal;
-            this.ibPetsEx.Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Bold, GraphicsUnit.Pixel);
-            this.ibPetsEx.CurrentText = "ibPetsEx";
-            this.ibPetsEx.Images.Background = Resources.HeroButton;
-            this.ibPetsEx.Images.Hover = Resources.HeroButtonHover;
-            this.ibPetsEx.ImagesAlt.Background = Resources.VillainButton;
-            this.ibPetsEx.ImagesAlt.Hover = Resources.VillainButtonHover;
-            this.ibPetsEx.Location = new System.Drawing.Point(602, 29);
-            this.ibPetsEx.Lock = false;
-            this.ibPetsEx.Name = "ibPetsEx";
-            this.ibPetsEx.Size = new System.Drawing.Size(105, 22);
-            this.ibPetsEx.TabIndex = 116;
-            this.ibPetsEx.Text = "Pet Powers";
-            this.ibPetsEx.TextOutline.Color = System.Drawing.Color.Black;
-            this.ibPetsEx.TextOutline.Width = 3;
-            this.ibPetsEx.ToggleActivation = ImageButtonEx.MouseClicks.LeftButton;
-            this.ibPetsEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
-            this.ibPetsEx.ToggleText.Indeterminate = "Indeterminate State";
-            this.ibPetsEx.ToggleText.ToggledOff = "Toggled Off State";
-            this.ibPetsEx.ToggleText.ToggledOn = "Toggled On State";
-            this.ibPetsEx.UseAlt = false;
-            this.ibPetsEx.Click += new EventHandler(this.ibPetsEx_OnClick);
             // 
             // ibTempPowersEx
             // 
@@ -2621,7 +2593,6 @@ namespace Mids_Reborn.Forms
         ImageButtonEx ibAlignmentEx;
         ImageButtonEx ibSlotInfoEx;
         public ImageButtonEx ibAccoladesEx;
-        public ImageButtonEx ibPetsEx;
         ImageButtonEx ibTeamEx;
         ImageButtonEx ibPopupEx;
         ImageButtonEx ibPvXEx;
