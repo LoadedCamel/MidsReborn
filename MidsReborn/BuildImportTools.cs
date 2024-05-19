@@ -457,6 +457,22 @@ namespace Mids_Reborn
                 "teamwork.widow_teamwork.pain_tolerance" => "Teamwork.Widow_Teamwork.NW_Pain_Tolerance",
                 "teamwork.fortunata_teamwork.fate_sealed" => "Teamwork.Fortunata_Teamwork.FRT_Fate_Sealed",
                 "pool.speed.speedphase" => "Inherent.Inherent.Speed_Phase",
+                "defender_buff.shock_therapy.discharge" => "Defender_Buff.Shock_Therapy.Galvanic_Sentinel",
+                "controller_buff.shock_therapy.discharge" => "Controller_Buff.Electrical_Affinity.Galvanic_Sentinel",
+                "corruptor_buff.shock_therapy.discharge" => "Corruptor_Buff.Electrical_Affinity.Galvanic_Sentinel",
+                "mastermind_buff.shock_therapy.discharge" => "Mastermind_Buff.Electrical_Affinity.Galvanic_Sentinel",
+                "defender_buff.shock_therapy.defibrillate" => "Defender_Buff.Shock_Therapy.Defibrilate",
+                "controller_buff.shock_therapy.defibrillate" => "Controller_Buff.Electrical_Affinity.Defibrilate",
+                "corruptor_buff.shock_therapy.defibrillate" => "Corruptor_Buff.Electrical_Affinity.Defibrilate",
+                "mastermind_buff.shock_therapy.defibrillate" => "Mastermind_Buff.Electrical_Affinity.Defibrilate",
+                "defender_buff.electrical_affinity.discharge" => "Defender_Buff.Shock_Therapy.Galvanic_Sentinel",
+                "controller_buff.electrical_affinity.discharge" => "Controller_Buff.Electrical_Affinity.Galvanic_Sentinel",
+                "corruptor_buff.electrical_affinity.discharge" => "Corruptor_Buff.Electrical_Affinity.Galvanic_Sentinel",
+                "mastermind_buff.electrical_affinity.discharge" => "Mastermind_Buff.Electrical_Affinity.Galvanic_Sentinel",
+                "defender_buff.electrical_affinity.defibrillate" => "Defender_Buff.Shock_Therapy.Defibrilate",
+                "controller_buff.electrical_affinity.defibrillate" => "Controller_Buff.Electrical_Affinity.Defibrilate",
+                "corruptor_buff.electrical_affinity.defibrillate" => "Corruptor_Buff.Electrical_Affinity.Defibrilate",
+                "mastermind_buff.electrical_affinity.defibrillate" => "Mastermind_Buff.Electrical_Affinity.Defibrilate",
 
                 _ => fullName
             };
@@ -484,6 +500,9 @@ namespace Mids_Reborn
                 "epic.scrapper_ice_mastery" when archetype is "scrapper" or "stalker" => "Epic.Ice_Mastery_ScrapStalk",
                 "epic.tank_psionic_mastery" when archetype is "tanker" or "brute" => "Epic.Psionic_Mastery_TankBrute",
                 "epic.melee_psionic_mastery" when archetype is "scrapper" or "stalker" => "Epic.Psionic_Mastery_ScrapStalk",
+                "controller_buff.shock_therapy" when archetype is "controller" => "Controller_Buff.Electrical_Affinity",
+                "corruptor_buff.shock_therapy" when archetype is "corruptor" => "Corruptor_Buff.Electrical_Affinity",
+                "mastermind_buff.shock_therapy" when archetype is "mastermind" => "Mastermind_Buff.Electrical_Affinity",
 
                 _ => fullName
             };
@@ -542,15 +561,17 @@ namespace Mids_Reborn
                     var powerIDChunks = m1.Groups[2].Value.Split(' ');
                     var rawPowerset = $"{powerIDChunks[0]}.{powerIDChunks[1]}".Trim();
                     var powerBaseName = powerIDChunks[2].Trim();
-                    p.FullName = CheckForAliases($"{CheckForPowersetAliases(rawPowerset, CharacterInfo.Archetype)}.{powerBaseName}");
-                    p.Powerset = DatabaseAPI.GetPowersetByName(rawPowerset);
+                    var powersetName = CheckForPowersetAliases(rawPowerset, CharacterInfo.Archetype);
+                    p.FullName = CheckForAliases($"{powersetName}.{powerBaseName}");
+                    p.Powerset = DatabaseAPI.GetPowersetByName(powersetName);
                     p.pData = DatabaseAPI.GetPowerByFullName(p.FullName);
                     if (p.pData == null)
                     {
                         p.FullName = FixPowersetsNames(p.FullName);
                         powerIDChunks = p.FullName.Split('.');
                         rawPowerset = $"{powerIDChunks[0]}.{powerIDChunks[1]}".Trim();
-                        p.Powerset = DatabaseAPI.GetPowersetByName(rawPowerset);
+                        powersetName = CheckForPowersetAliases(rawPowerset, CharacterInfo.Archetype);
+                        p.Powerset = DatabaseAPI.GetPowersetByName(powersetName);
                         p.pData = DatabaseAPI.GetPowerByFullName(p.FullName);
                     }
 
