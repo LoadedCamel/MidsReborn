@@ -987,7 +987,7 @@ namespace Mids_Reborn
             {
                 var enhancement = DatabaseAPI.Database.Enhancements[slotEntry.Enhancement.Enh];
                 var enhancementPower = enhancement.GetPower();
-                if (enhancementPower == null || enhancement.Effect.Any(e => e.Mode != Enums.eEffMode.FX))
+                if (enhancementPower == null)
                 {
                     continue;
                 }
@@ -996,6 +996,7 @@ namespace Mids_Reborn
                 {
                     continue;
                 }
+
 
                 var eSet = enhancement.GetEnhancementSet();
                 if (eSet is null)
@@ -1040,7 +1041,11 @@ namespace Mids_Reborn
                     }
                     else
                     {
-                        shouldAddEffect = true;
+                        shouldAddEffect = enhEffect.IsFromProc;
+                        if (!shouldAddEffect)
+                        {
+                            continue;
+                        }
                     }
 
                     if (!shouldAddEffect)

@@ -641,7 +641,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public List<KeyValue<string, string>> ActiveConditionals { get; set; }
         public bool Validated { get; set; }
 
-        public bool IsFromProc => ProcsPerMinute > 0.0f && BuildEffectString().Contains("From Enh");
+        public bool IsFromProc => ProcsPerMinute > 0.0f;
 
         public int nOverride
         {
