@@ -85,10 +85,7 @@ namespace Mids_Reborn.Forms
                 Playable = false
             };
             var filteredArchetypes = new List<Archetype?> { genericAt };
-            foreach (var archetype in from ps in filteredPSets where ps != null select DatabaseAPI.GetArchetypeByClassName(ps.ATClass) into archetype where archetype != null && !filteredArchetypes.Contains(archetype) && archetype.Playable select archetype)
-            {
-                filteredArchetypes.Add(archetype);
-            }
+            filteredArchetypes.AddRange(DatabaseAPI.Database.Classes.Where(e => e is {Playable: true}));
             _archetypeList = filteredArchetypes;
             var selectIdx = 0;
             if (cbArchetype.SelectedIndex > 0)
@@ -249,7 +246,6 @@ namespace Mids_Reborn.Forms
             };
 
             cbEffectType.DataSource = GenerateComboBoxItems(effectTypeItems, placeholderText);
-
         }
 
         private void CbEffectType_SelectedIndexChanged(object sender, EventArgs e)
@@ -560,8 +556,7 @@ namespace Mids_Reborn.Forms
                     {
                         for (var i = 0; i < bonusItems.Length; i++)
                         {
-                            var i1 = i;
-                            if (selectedBonuses.Any(selectedBonus => bonusItems[i1].Name.Contains(selectedBonus)))
+                            if (selectedBonuses.Any(selectedBonus => bonusItems[i].Name.Contains(selectedBonus)))
                             {
                                 req = bonusItems[i].Slotted.ToString();
                             }

@@ -80,6 +80,7 @@ namespace Mids_Reborn.Forms
             // alvPowers
             // 
             alvPowers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader5, columnHeader6, columnHeader7 });
+            alvPowers.FullRowSelect = true;
             alvPowers.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             alvPowers.Location = new Point(12, 362);
             alvPowers.MultiSelect = false;
@@ -134,6 +135,7 @@ namespace Mids_Reborn.Forms
             // alvSets
             // 
             alvSets.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4 });
+            alvSets.FullRowSelect = true;
             alvSets.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
             alvSets.Location = new Point(12, 41);
             alvSets.MultiSelect = false;
