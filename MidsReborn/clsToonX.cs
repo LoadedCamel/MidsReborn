@@ -2094,7 +2094,12 @@ namespace Mids_Reborn
             powers.Add(CurrentBuild.Powers[basePowerHistoryIdx].Power.Clone()); // Restore original attached power
             for (var i = 0; i < powers.Count; i++)
             {
-                CurrentBuild.Powers[basePowerHistoryIdx].NIDPower = DatabaseAPI.Database.Power.TryFindIndex(e => e.StaticIndex == powers[i].StaticIndex);
+                if (powers[i] == null)
+                {
+                    continue;
+                }
+
+                CurrentBuild.Powers[basePowerHistoryIdx].NIDPower = DatabaseAPI.Database.Power.TryFindIndex(e => e != null && e.StaticIndex == powers[i].StaticIndex);
                 GenerateBuffedPowerArray();
 
                 if (i >= powers.Count - 1)

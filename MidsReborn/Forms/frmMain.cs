@@ -3441,6 +3441,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     fPrestige.Dispose();
                 }
 
+                if (FrmEntityDetails is { IsDisposed: false })
+                {
+                    FrmEntityDetails.Dispose();
+                }
+
                 NewDraw(skipDraw);
                 UpdateControls(true);
                 SetTitleBar(MidsContext.Character != null && MidsContext.Character.IsHero());
@@ -3450,6 +3455,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 enhCheckMode.Hide();
                 info_Totals();
                 FileModified = false;
+                myDataView?.SetData(null, null, true);
                 DoRedraw();
             }
             catch (Exception e)
