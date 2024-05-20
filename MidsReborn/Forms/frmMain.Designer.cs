@@ -212,7 +212,7 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator31 = new ToolStripSeparator();
             this.ToolStripSeparator32 = new ToolStripSeparator();
             this.pnlGFX = new PanelGfx();
-            this.pnlGFXFlow = new PanelGfxFlow();
+            this.pnlGFXFlow = new FlowLayoutPanel();
             this.lblName = new Label();
             this.lblOrigin = new Label();
             this.lblAT = new Label();
@@ -2539,7 +2539,7 @@ namespace Mids_Reborn.Forms
         MidsMenuStrip MenuBar;
         ToolStripMenuItem OptionsToolStripMenuItem;
         public PanelGfx pnlGFX;
-        public PanelGfxFlow pnlGFXFlow;
+        public FlowLayoutPanel pnlGFXFlow;
         ToolStripMenuItem SetAllIOsToDefault35ToolStripMenuItem;
         ToolStripMenuItem SlotsToolStripMenuItem;
         ToolStripMenuItem tlsDPA;
