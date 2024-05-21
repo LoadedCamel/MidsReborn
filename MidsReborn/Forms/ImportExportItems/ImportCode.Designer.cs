@@ -40,8 +40,9 @@
             tbChunkBox.Multiline = true;
             tbChunkBox.Name = "tbChunkBox";
             tbChunkBox.PlaceholderText = "Paste the build data chunk you received here, then click the import button.";
+            tbChunkBox.ReadOnly = false;
             tbChunkBox.ScrollBars = System.Windows.Forms.ScrollBars.Vertical;
-            tbChunkBox.ShortcutsEnabled = false;
+            tbChunkBox.ShortcutsEnabled = true;
             tbChunkBox.Size = new System.Drawing.Size(746, 294);
             tbChunkBox.TabIndex = 0;
             tbChunkBox.WordWrap = false;
