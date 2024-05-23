@@ -1,5 +1,4 @@
-﻿using System.Diagnostics;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Master_Classes;
 using MRBResourceLib;
 
@@ -27,8 +26,6 @@ namespace Mids_Reborn.Forms
 
         private void btnOk_Click(object sender, System.EventArgs e)
         {
-            Debug.WriteLine(textBox1.Text.Trim());
-
             MidsContext.Character.Comment = textBox1.Text.Trim();
 
             DialogResult = DialogResult.OK;

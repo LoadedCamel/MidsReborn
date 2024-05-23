@@ -6502,14 +6502,30 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsViewBuildComment_Click(object sender, EventArgs e)
         {
-            if (MidsContext.Character.CurrentBuild.PowersPlaced <= 0)
+            if (MidsContext.Character?.CurrentBuild?.PowersPlaced <= 0)
             {
                 var errorMsg = new MessageBoxEx("Error", "You cannot add a comment/description to an otherwise empty build.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Protected, true);
                 errorMsg.ShowDialog(this);
+
                 return;
             }
+
             using var editor = new frmEditComment();
             editor.ShowDialog(this);
+        }
+
+        private void tsViewBuildComment_MouseEnter(object sender, EventArgs e)
+        {
+            //tsViewBuildComment.BackColor = Color.FromArgb(64, 68, 74);
+            tsViewBuildComment.ForeColor = Color.FromArgb(5, 177, 255);
+            tsViewBuildComment.IconColor = Color.Gold;
+        }
+
+        private void tsViewBuildComment_MouseLeave(object sender, EventArgs e)
+        {
+            //tsViewBuildComment.BackColor = Color.Transparent;
+            tsViewBuildComment.ForeColor = Color.WhiteSmoke;
+            tsViewBuildComment.IconColor = Color.WhiteSmoke;
         }
 
         private void tsView2Col_Click(object sender, EventArgs e)

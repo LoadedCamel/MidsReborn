@@ -1,6 +1,7 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
+using FontAwesome.Sharp;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
@@ -228,7 +229,7 @@ namespace Mids_Reborn.Forms
             this.poolsPanel = new ScrollPanel();
             this.enhCheckMode = new EnhCheckMode(this);
             this.EnemyRelativeToolStripComboBox = new ToolStripComboBox();
-            this.tsViewBuildComment = new ToolStripButton();
+            this.tsViewBuildComment = new IconButton();
             this.MenuBar.SuspendLayout();
             this.topPanel.SuspendLayout();
             //((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).BeginInit();
@@ -484,8 +485,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblATLocked
             // 
-            this.lblATLocked.BackColor = System.Drawing.Color.FromArgb(224, 224,
-                224);
+            this.lblATLocked.BackColor = System.Drawing.Color.FromArgb(224, 224, 224);
             this.lblATLocked.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblATLocked.Font = new System.Drawing.Font("Segoe UI", 11.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, 0);
             this.lblATLocked.ForeColor = System.Drawing.Color.Black;
@@ -520,8 +520,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblLocked0
             // 
-            this.lblLocked0.BackColor = System.Drawing.Color.FromArgb(224, 224,
-                224);
+            this.lblLocked0.BackColor = System.Drawing.Color.FromArgb(224, 224, 224);
             this.lblLocked0.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked0.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, 0);
@@ -538,8 +537,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblLocked1
             // 
-            this.lblLocked1.BackColor = System.Drawing.Color.FromArgb(224, 224,
-                224);
+            this.lblLocked1.BackColor = System.Drawing.Color.FromArgb(224, 224, 224);
             this.lblLocked1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, 0);
@@ -556,8 +554,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblLocked2
             // 
-            this.lblLocked2.BackColor = System.Drawing.Color.FromArgb(224, 224,
-                224);
+            this.lblLocked2.BackColor = System.Drawing.Color.FromArgb(224, 224, 224);
             this.lblLocked2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, 0);
@@ -574,8 +571,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblLocked3
             // 
-            this.lblLocked3.BackColor = System.Drawing.Color.FromArgb(224, 224,
-                224);
+            this.lblLocked3.BackColor = System.Drawing.Color.FromArgb(224, 224, 224);
             this.lblLocked3.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLocked3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, 0);
@@ -592,8 +588,7 @@ namespace Mids_Reborn.Forms
             // 
             // lblLockedAncillary
             // 
-            this.lblLockedAncillary.BackColor = System.Drawing.Color.FromArgb(224,
-                224, 224);
+            this.lblLockedAncillary.BackColor = System.Drawing.Color.FromArgb(224, 224, 224);
             this.lblLockedAncillary.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
             this.lblLockedAncillary.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold,
                 System.Drawing.GraphicsUnit.Point, 0);
@@ -638,24 +633,37 @@ namespace Mids_Reborn.Forms
                 this.WindowToolStripMenuItem,
                 this.HelpToolStripMenuItem,
                 this.EnemyRelativeToolStripComboBox,
-                this.tsViewBuildComment,
-                this.DonateToolStripMenuItem
+                new ToolStripControlHost(this.tsViewBuildComment),
+                this.DonateToolStripMenuItem,
             });
             this.MenuBar.Location = new System.Drawing.Point(0, 0);
             this.MenuBar.Name = "MenuBar";
             this.MenuBar.Size = new System.Drawing.Size(1180, 24);
             this.MenuBar.TabIndex = 84;
             this.MenuBar.Text = "MenuStrip1";
-            //
-            // tsEditBuildComment
-            //
-            this.tsViewBuildComment.Name = "tsViewBuildComment";
-            this.tsViewBuildComment.ForeColor = Color.Black;
-            this.tsViewBuildComment.Image = MRBResourceLib.Resources.HeroButton;
-            this.tsViewBuildComment.Size = new System.Drawing.Size(282, 22);
-            this.tsViewBuildComment.Text = "Build Comment/Description";
-            this.tsViewBuildComment.Margin = new Padding(20, 0, 30, 0);
+            // 
+            // tsViewBuildComment
+            // 
+            this.tsViewBuildComment.BackColor = System.Drawing.Color.Transparent;
+            this.tsViewBuildComment.FlatAppearance.BorderSize = 0;
+            this.tsViewBuildComment.FlatAppearance.MouseDownBackColor = System.Drawing.Color.Transparent;
+            this.tsViewBuildComment.FlatAppearance.MouseOverBackColor = System.Drawing.Color.Transparent;
+            this.tsViewBuildComment.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.tsViewBuildComment.IconChar = FontAwesome.Sharp.IconChar.PencilAlt;
+            this.tsViewBuildComment.IconColor = System.Drawing.Color.WhiteSmoke;
+            this.tsViewBuildComment.IconFont = FontAwesome.Sharp.IconFont.Solid;
+            this.tsViewBuildComment.IconSize = 16;
+            this.tsViewBuildComment.Location = new System.Drawing.Point(75, 13);
+            this.tsViewBuildComment.Name = "btnEditComment";
+            this.tsViewBuildComment.Size = new System.Drawing.Size(153, 24);
+            this.tsViewBuildComment.TabIndex = 9;
+            this.tsViewBuildComment.Text = "Edit Build Comment";
+            this.tsViewBuildComment.TextImageRelation = System.Windows.Forms.TextImageRelation.ImageBeforeText;
+            this.tsViewBuildComment.UseMnemonic = false;
+            this.tsViewBuildComment.UseVisualStyleBackColor = false;
             this.tsViewBuildComment.Click += new System.EventHandler(this.tsViewBuildComment_Click);
+            this.tsViewBuildComment.MouseEnter += new System.EventHandler(this.tsViewBuildComment_MouseEnter);
+            this.tsViewBuildComment.MouseLeave += new System.EventHandler(this.tsViewBuildComment_MouseLeave);
             //
             // DynamicToHitToolStripComboBox
             //
@@ -696,8 +704,7 @@ namespace Mids_Reborn.Forms
             // tsFileNew
             // 
             this.tsFileNew.Name = "tsFileNew";
-            this.tsFileNew.ShortcutKeys =
-                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N)));
+            this.tsFileNew.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.N;
             this.tsFileNew.Size = new System.Drawing.Size(179, 22);
             this.tsFileNew.Text = "&New / Clear";
             this.tsFileNew.Click += new System.EventHandler(this.tsFileNew_Click);
@@ -710,8 +717,7 @@ namespace Mids_Reborn.Forms
             // tsFileOpen
             // 
             this.tsFileOpen.Name = "tsFileOpen";
-            this.tsFileOpen.ShortcutKeys =
-                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O)));
+            this.tsFileOpen.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.O;
             this.tsFileOpen.Size = new System.Drawing.Size(179, 22);
             this.tsFileOpen.Text = "&Open...";
             this.tsFileOpen.Click += new System.EventHandler(this.tsFileOpen_Click);
@@ -726,8 +732,7 @@ namespace Mids_Reborn.Forms
             // tsFileSave
             // 
             this.tsFileSave.Name = "tsFileSave";
-            this.tsFileSave.ShortcutKeys =
-                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S)));
+            this.tsFileSave.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.S;
             this.tsFileSave.Size = new System.Drawing.Size(179, 22);
             this.tsFileSave.Text = "&Save";
             this.tsFileSave.Click += new System.EventHandler(this.tsFileSave_Click);
@@ -760,8 +765,7 @@ namespace Mids_Reborn.Forms
             // tsFilePrint
             // 
             this.tsFilePrint.Name = "tsFilePrint";
-            this.tsFilePrint.ShortcutKeys =
-                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P)));
+            this.tsFilePrint.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.P;
             this.tsFilePrint.Size = new System.Drawing.Size(179, 22);
             this.tsFilePrint.Text = "&Print...";
             this.tsFilePrint.Click += new System.EventHandler(this.tsFilePrint_Click);
@@ -774,8 +778,7 @@ namespace Mids_Reborn.Forms
             // tsFileQuit
             // 
             this.tsFileQuit.Name = "tsFileQuit";
-            this.tsFileQuit.ShortcutKeys =
-                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q)));
+            this.tsFileQuit.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Q;
             this.tsFileQuit.Size = new System.Drawing.Size(179, 22);
             this.tsFileQuit.Text = "&Quit";
             this.tsFileQuit.Click += new System.EventHandler(this.tsFileQuit_Click);
@@ -1333,8 +1336,7 @@ namespace Mids_Reborn.Forms
             // tsImport
             // 
             this.tsImport.Name = "tsImport";
-            this.tsImport.ShortcutKeys =
-                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I)));
+            this.tsImport.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.I;
             this.tsImport.Size = new System.Drawing.Size(240, 22);
             this.tsImport.Text = "Import From Forum Post";
             this.tsImport.Click += new System.EventHandler(this.tsImport_Click);
@@ -1478,8 +1480,7 @@ namespace Mids_Reborn.Forms
             // tsViewSets
             // 
             this.tsViewSets.Name = "tsViewSets";
-            this.tsViewSets.ShortcutKeys =
-                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B)));
+            this.tsViewSets.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.B;
             this.tsViewSets.Size = new System.Drawing.Size(232, 22);
             this.tsViewSets.Text = "&Sets && Bonuses";
             this.tsViewSets.Click += new System.EventHandler(this.tsViewSets_Click);
@@ -1487,8 +1488,7 @@ namespace Mids_Reborn.Forms
             // tsViewGraphs
             // 
             this.tsViewGraphs.Name = "tsViewGraphs";
-            this.tsViewGraphs.ShortcutKeys =
-                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G)));
+            this.tsViewGraphs.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.G;
             this.tsViewGraphs.Size = new System.Drawing.Size(232, 22);
             this.tsViewGraphs.Text = "Power &Graphs";
             this.tsViewGraphs.Click += new System.EventHandler(this.tsViewGraphs_Click);
@@ -1496,8 +1496,7 @@ namespace Mids_Reborn.Forms
             // tsViewSetCompare
             // 
             this.tsViewSetCompare.Name = "tsViewSetCompare";
-            this.tsViewSetCompare.ShortcutKeys =
-                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C)));
+            this.tsViewSetCompare.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.C;
             this.tsViewSetCompare.Size = new System.Drawing.Size(232, 22);
             this.tsViewSetCompare.Text = "Powerset &Comparison";
             this.tsViewSetCompare.Click += new System.EventHandler(this.tsViewSetCompare_Click);
@@ -1505,8 +1504,7 @@ namespace Mids_Reborn.Forms
             // tsViewData
             // 
             this.tsViewData.Name = "tsViewData";
-            this.tsViewData.ShortcutKeys =
-                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D)));
+            this.tsViewData.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.D;
             this.tsViewData.Size = new System.Drawing.Size(232, 22);
             this.tsViewData.Text = "&Data View";
             this.tsViewData.Click += new System.EventHandler(this.tsViewData_Click);
@@ -1514,8 +1512,7 @@ namespace Mids_Reborn.Forms
             // tsViewTotals
             // 
             this.tsViewTotals.Name = "tsViewTotals";
-            this.tsViewTotals.ShortcutKeys =
-                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T)));
+            this.tsViewTotals.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.T;
             this.tsViewTotals.Size = new System.Drawing.Size(232, 22);
             this.tsViewTotals.Text = "Advanced &Totals";
             this.tsViewTotals.Click += new System.EventHandler(this.tsViewTotals_Click);
@@ -1528,8 +1525,7 @@ namespace Mids_Reborn.Forms
             // tsRecipeViewer
             // 
             this.tsRecipeViewer.Name = "tsRecipeViewer";
-            this.tsRecipeViewer.ShortcutKeys =
-                ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R)));
+            this.tsRecipeViewer.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.R;
             this.tsRecipeViewer.Size = new System.Drawing.Size(232, 22);
             this.tsRecipeViewer.Text = "&Recipe Viewer";
             this.tsRecipeViewer.Click += new System.EventHandler(this.tsRecipeViewer_Click);
@@ -2580,7 +2576,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem ShareToolStripMenuItem;
         ToolStripMenuItem DonateToolStripMenuItem;
         public ToolStripComboBox EnemyRelativeToolStripComboBox;
-        private ToolStripButton tsViewBuildComment;
+        private FontAwesome.Sharp.IconButton tsViewBuildComment;
         Timer tmrGfx;
         ScrollPanel poolsPanel;
         ToolTip tTip;
