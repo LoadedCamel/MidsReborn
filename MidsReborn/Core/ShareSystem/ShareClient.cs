@@ -13,7 +13,7 @@ namespace Mids_Reborn.Core.ShareSystem
         {
             get
             {
-                var options = new RestClientOptions("https://api.midsreborn.com") { MaxTimeout = -1, };
+                var options = new RestClientOptions("https://api.midsreborn.com") { Timeout = TimeSpan.FromSeconds(30), };
                 var serializerOpt = new JsonSerializerSettings { NullValueHandling = NullValueHandling.Ignore };
                 return new RestClient(options, configureSerialization: s => s.UseNewtonsoftJson(serializerOpt));
             }
