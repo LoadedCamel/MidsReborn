@@ -1784,6 +1784,7 @@ namespace Mids_Reborn.Forms
             {
                 FrmEntityDetails = new FrmEntityDetails(entityUid, powers, petInfo);
                 FrmEntityDetails.PowerIncludeChanged += FrmEntityDetails_PowerIncludeChanged;
+                FrmEntityDetails.PetViewSliderUpdated += FrmEntityDetails_SliderUpdated;
                 FrmEntityDetails.Show(this);
             }
             else if (FrmEntityDetails.Visible)
@@ -1797,15 +1798,20 @@ namespace Mids_Reborn.Forms
             PowerModified(true);
         }
 
+        private void FrmEntityDetails_SliderUpdated()
+        {
+            PowerModified(true);
+            FrmEntityDetails?.UpdateData();
+        }
+
         private bool EditAccoladesOrTemps(int hIDPower)
         {
             if (hIDPower <= -1 || MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers.Length <= 0)
                 return false;
 
-            var iPowers = new List<IPower?>();
-            var num1 = MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers.Length - 1;
-            for (var index = 0; index <= num1; ++index)
-                iPowers.Add(DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers[index].nIDPower]);
+            var iPowers = MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers
+                .Select(t => DatabaseAPI.Database.Power[t.nIDPower])
+                .ToList();
             using var frmAccolade = new frmAccolade(this, iPowers)
             {
                 Text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower].DisplayName
@@ -1821,7 +1827,7 @@ namespace Mids_Reborn.Forms
             FlipActive = false;
             tmrGfx.Enabled = false;
             FlipPowerID = -1;
-            FlipSlotState = new int[0];
+            FlipSlotState = Array.Empty<int>();
             DoRedraw();
         }
 

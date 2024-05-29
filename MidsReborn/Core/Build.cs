@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -11,7 +11,6 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
-using static Mids_Reborn.Core.CSV;
 
 namespace Mids_Reborn.Core
 {
@@ -107,12 +106,32 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public List<IPower?> PetPowers
+        /*public List<IPower?> PetPowers
         {
             get
             {
                 return Powers.Where(pe => pe?.Power is not null && pe.Power.Effects.Any(e => e.EffectType is Enums.eEffectType.EntCreate))
                     .Select(pe => pe?.Power).ToList();
+            }
+        }*/
+
+        public List<IPower?> PetSummonPowers
+        {
+            get
+            {
+                return Powers.Where(pe => pe?.Power is not null && pe.Power.Effects.Any(e => e.EffectType is Enums.eEffectType.EntCreate))
+                    .Select(pe => pe?.Power).ToList();
+            }
+        }
+
+        public BindingList<IPower> PetPowers
+        {
+            get
+            {
+                var powers = Powers.Where(pe => pe?.Power is not null && pe.Power.IsChildPetPower)
+                    .Select(pe => pe?.Power!)
+                    .ToList();
+                return new BindingList<IPower>(powers);
             }
         }
 

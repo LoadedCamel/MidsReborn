@@ -16,6 +16,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         public delegate void PowerIncludeChangedEventHandler(IPower power);
         public event PowerIncludeChangedEventHandler PowerIncludeChanged;
 
+        public delegate void PetViewSliderUpdatedEventHandler();
+        public event PetViewSliderUpdatedEventHandler PetViewSliderUpdated;
+        
         private const int WM_NCHITTEST = 0x84;
         private const int HTCLIENT = 0x1;
         private const int HTCAPTION = 0x2;
@@ -208,6 +211,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 : $"Entity: {_entityData.DisplayName}";
 
             SetTitleText(entityName);
+            UpdateColorTheme(MidsContext.Character == null ? Enums.Alignment.Hero : MidsContext.Character.Alignment);
 
             powersCombo1.DisplayMember = "DisplayName";
             powersCombo1.ValueMember = null;
@@ -348,6 +352,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             ReleaseCapture();
             SendMessage(Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
+        }
+
+        private void petView1_SlotUpdate()
+        {
+            //PetViewSliderUpdated?.Invoke();
         }
     }
 }

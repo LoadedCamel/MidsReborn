@@ -15,6 +15,30 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public bool AbsorbedPetEffects { get; set; } = false;
         public bool AppliedExecutes { get; set; } = false;
         public bool AppliedSubPowers { get; set; } = false;
+        private PowerEntry? _parentPetPowerEntry;
+        private int _parentPetPowerEntryIndex = -1;
+
+        public int ParentPetPowerEntryIndex
+        {
+            get => _parentPetPowerEntryIndex;
+            set
+            {
+                if (!IsChildPetPower) return;
+                _parentPetPowerEntryIndex = value;
+            }
+        }
+
+        private List<int> _childPetEntryIndexes = new();
+
+        public List<int> ChildPetEntryIndexes
+        {
+            get => _childPetEntryIndexes;
+            set
+            {
+                if (!IsBasePetPower) return;
+                _childPetEntryIndexes = value;
+            }
+        }
 
         public Power()
         {
@@ -611,6 +635,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         }
 
         public bool IsBasePetPower => Effects.Any(x => x.EffectType is Enums.eEffectType.EntCreate);
+        public bool IsChildPetPower => GetPowerSet()?.FullName.Contains("Pets") == true;
+
+        public PowerEntry? ParentPetPowerEntry
+        {
+            get => _parentPetPowerEntry;
+            set
+            {
+                if (!IsChildPetPower) _parentPetPowerEntry = null;
+                _parentPetPowerEntry = value;
+            }
+        }
 
         public bool Active { get; set; }
         public bool Taken { get; set; }

@@ -2216,8 +2216,7 @@ namespace Mids_Reborn.Forms.Controls
             SetPowerScaler();
             pLastScaleVal = num;
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
-            var slotUpdate = SlotUpdate;
-            slotUpdate?.Invoke();
+            SlotUpdate?.Invoke();
         }
 
         private void RedrawFlip()

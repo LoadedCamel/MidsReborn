@@ -14,7 +14,7 @@ using static Mids_Reborn.Core.Enums;
 
 namespace Mids_Reborn.Controls
 {
-    [DefaultEvent("BarClick")]
+   [DefaultEvent("BarClick")]
     public class CtlMultiGraph : UserControl
     {
         public delegate void BarClickEventHandler(float value);
@@ -968,6 +968,9 @@ namespace Mids_Reborn.Controls
 
         private void DrawBase(SKSurface s, int index, SKRect bounds, int ny)
         {
+            BaseBarColors ??= new List<Color>();
+            PerItemScales ??= new List<float>();
+
             using var fillPaint = new SKPaint
             {
                 Color = BaseBarColors.Count > 0
@@ -1032,16 +1035,19 @@ namespace Mids_Reborn.Controls
 
             checked
             {
-                var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[index] : ScaleValue;
+                var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0
+                    ? PerItemScales[index]
+                    : ScaleValue;
                 var width = (int) Math.Round(bounds.Width * (_items[index].ValueBase / itemScale));
-                var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width, bounds.Top + ny + (Style == GraphStyle.Twin ? (int) Math.Round(_pItemHeight / 2f) : _pItemHeight));
+                var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
+                    bounds.Top + ny + (Style == GraphStyle.Twin ? (int) Math.Round(_pItemHeight / 2f) : _pItemHeight));
                 s.Canvas.DrawRect(rect, fillPaint);
                 if (_pDrawLines)
                 {
                     s.Canvas.DrawRect(rect, linePaint);
                 }
 
-                if ((MarkerValue > 0) & (Math.Abs(MarkerValue - _items[index].ValueBase) > float.Epsilon))
+                if (MarkerValue > 0 & Math.Abs(MarkerValue - _items[index].ValueBase) > float.Epsilon)
                 {
                     var markerY = (int) Math.Round(rect.Left + bounds.Width * (MarkerValue / itemScale));
                     s.Canvas.DrawLine(markerY, rect.Top + 1, markerY, rect.Bottom, marker2Paint);
@@ -1062,6 +1068,9 @@ namespace Mids_Reborn.Controls
 
         private void DrawEnh(SKSurface s, int index, SKRect bounds, int ny)
         {
+            EnhBarColors ??= new List<Color>();
+            PerItemScales ??= new List<float>();
+
             using var fillBrush = new SKPaint
             {
                 Color = EnhBarColors.Count > 0
@@ -1132,6 +1141,9 @@ namespace Mids_Reborn.Controls
 
         private void DrawOvercap(SKSurface s, int index, SKRect bounds, int ny)
         {
+            OvercapColors ??= new List<Color>();
+            PerItemScales ??= new List<float>();
+
             using var fillPaint = new SKPaint
             {
                 Color = OvercapColors.Count > 0

@@ -43,6 +43,7 @@
             btnTopMost.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             btnTopMost.ButtonType = Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
             btnTopMost.CurrentText = "ToggledOn State";
+            btnTopMost.DisplayVertically = false;
             btnTopMost.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             btnTopMost.Images.Background = MRBResourceLib.Resources.HeroButton;
             btnTopMost.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
@@ -67,6 +68,7 @@
             // 
             btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
             btnClose.CurrentText = "Close";
+            btnClose.DisplayVertically = false;
             btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
             btnClose.Images.Background = MRBResourceLib.Resources.HeroButton;
             btnClose.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
@@ -108,6 +110,7 @@
             petView1.Size = new System.Drawing.Size(442, 519);
             petView1.TabIndex = 5;
             petView1.UseAlt = false;
+            petView1.SlotUpdate += petView1_SlotUpdate;
             // 
             // powersCombo1
             // 

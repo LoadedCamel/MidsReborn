@@ -1204,7 +1204,7 @@ namespace Mids_Reborn.Core
         //Pine
         private static int GetRecipeIdxByName(string iName)
         {
-            for (var index = 0; index <= Database.Recipes.Length - 1; ++index)
+            for (var index = 0; index < Database.Recipes.Length; index++)
                 if (string.Equals(Database.Recipes[index].InternalName, iName, StringComparison.OrdinalIgnoreCase))
                     return index;
             return -1;
@@ -1219,25 +1219,233 @@ namespace Mids_Reborn.Core
         public static string[] UidReferencingPowerFix(string uidPower, string uidNew = "")
         {
             var array = Array.Empty<string>();
-            for (var index1 = 0; index1 <= Database.Power.Length - 1; ++index1)
+            foreach (var p in Database.Power)
             {
-                if (Database.Power[index1].Requires.ReferencesPower(uidPower, uidNew))
+                if (p.Requires.ReferencesPower(uidPower, uidNew))
                 {
                     Array.Resize(ref array, array.Length + 1);
-                    array[^1] = Database.Power[index1].FullName + " (Requirement)";
+                    array[^1] = p.FullName + " (Requirement)";
                 }
 
-                for (var index2 = 0; index2 <= Database.Power[index1].Effects.Length - 1; ++index2)
+                foreach (var fx in p.Effects)
                 {
-                    if (Database.Power[index1].Effects[index2].Summon != uidPower)
+                    if (fx.Summon != uidPower)
                         continue;
-                    Database.Power[index1].Effects[index2].Summon = uidNew;
+                    fx.Summon = uidNew;
                     Array.Resize(ref array, array.Length + 1);
-                    array[^1] = Database.Power[index1].FullName + " (GrantPower)";
+                    array[^1] = p.FullName + " (GrantPower)";
                 }
             }
 
             return array;
+        }
+
+        public static SummonedEntity? GetEntityByUid(string entityUid)
+        {
+            return Database.Entities.FirstOrDefault(ent => ent.UID == entityUid);
+        }
+
+        public static SummonedEntity? GetEntityBySummonPower(IPower power)
+        {
+            var summonEffect = power.Effects.FirstOrDefault(ef => ef.EffectType is Enums.eEffectType.EntCreate);
+            
+            return summonEffect is not null ? Database.Entities[summonEffect.nSummon] : null;
+        }
+
+        public static Dictionary<string, List<IPower>>? GetEntityPowers(SummonedEntity? entity)
+        {
+            var powersByPowerset = new Dictionary<string, List<IPower>>();
+
+            if (entity == null) return null;
+
+            foreach (var setString in entity.PowersetFullName)
+            {
+                if (string.IsNullOrWhiteSpace(setString)) continue;
+
+                var powerset = GetPowersetByFullname(setString);
+                if (powerset == null) continue;
+
+                var powers = powerset.Powers
+                    .Where(power => power != null && !power.FullName.Contains("PM"))
+                    .OfType<IPower>()
+                    .ToList();
+
+                powersByPowerset.Add(powerset.FullName, powers);
+            }
+
+            return powersByPowerset;
+        }
+
+
+        public static List<IPower> GetAllEntityPowers(SummonedEntity entity)
+        {
+            var entityPowerSets = entity.PowersetFullName
+                .Where(setString => !string.IsNullOrWhiteSpace(setString))
+                .Select(GetPowersetByFullname)
+                .OfType<IPowerset>()
+                .ToList();
+
+            var powers = entityPowerSets
+                .SelectMany(powerSet => powerSet.Powers)
+                .Where(power => power != null && !power.FullName.Contains("PM"))
+                .OfType<IPower>()
+                .ToList();
+
+            return powers;
+        }
+
+        public static List<IPower> GetAvailableEntityPowers(SummonedEntity entity)
+        {
+            var allPowers = GetAllEntityPowers(entity);
+
+            var availablePowers = allPowers
+                .Where(power => RequirePetUpgradeObtainedAndActive(entity, power, out _))
+                .ToList();
+
+            return availablePowers;
+        }
+
+        public static List<SummonedEntity>? GetEntitiesBySummonPower(IPower power)
+        {
+            var summonedList = new List<SummonedEntity>();
+            foreach (var effect in power.Effects)
+            {
+                if (effect.EffectType is Enums.eEffectType.EntCreate)
+                {
+                    summonedList.Add(Database.Entities[effect.nSummon]);
+                }
+            }
+
+            return !summonedList.Any() ? null : summonedList;
+        }
+
+        public static Dictionary<string, List<IPower>> GetAvailableEntityPowersBySet(SummonedEntity? entity)
+        {
+            var availablePowersByPowerset = new Dictionary<string, List<IPower>>();
+
+            if (entity == null)
+            {
+                return availablePowersByPowerset;
+            }
+
+            var allPowersByPowerset = GetEntityPowers(entity);
+
+            if (allPowersByPowerset == null) return availablePowersByPowerset;
+            foreach (var powersetEntry in allPowersByPowerset)
+            {
+                var powerset = powersetEntry.Key;
+                var powers = powersetEntry.Value;
+
+                if (powers.Any(power => RequirePetUpgradeObtainedAndActive(entity, power)))
+                {
+                    availablePowersByPowerset[powerset] = powers;
+                }
+            }
+
+            return availablePowersByPowerset;
+        }
+
+        public static bool RequirePetUpgradeObtainedAndActive(SummonedEntity entity, IPower power, out string? required)
+        {
+            var entityPowerSets = entity.PowersetFullName
+                .Where(setString => !string.IsNullOrWhiteSpace(setString))
+                .Select(GetPowersetByFullname)
+                .OfType<IPowerset>()
+                .ToList();
+
+            var upgPowers = entity.UpgradePowerFullName
+                .Where(upgString => !string.IsNullOrWhiteSpace(upgString))
+                .Select(GetPowerByFullName)
+                .OfType<IPower>()
+                .ToList();
+
+            required = null;
+
+            if (entityPowerSets.Count == 1)
+            {
+                return true;
+            }
+
+            var providedPowerset = power.GetPowerSet();
+            if (providedPowerset is null)
+            {
+                return false;
+            }
+
+            var index = entityPowerSets.FindIndex(set => set == providedPowerset);
+            if (index <= 0)
+            {
+                return true;
+            }
+
+            index--;
+
+            if (index >= upgPowers.Count) return false;
+            var requiredUpgrade = upgPowers[index];
+            required = requiredUpgrade.DisplayName;
+            
+            return MidsContext.Character.CurrentBuild.Powers.Any(entry => entry?.Power == requiredUpgrade && entry.StatInclude);
+        }
+
+        private static bool RequirePetUpgradeObtainedAndActive(SummonedEntity? entity, IPower power)
+        {
+            if (entity == null)
+            {
+                return false;
+            }
+
+            var entityPowerSets = entity.PowersetFullName
+                .Where(setString => !string.IsNullOrWhiteSpace(setString))
+                .Select(GetPowersetByFullname)
+                .OfType<IPowerset>()
+                .ToList();
+
+            var upgPowers = entity.UpgradePowerFullName
+                .Where(upgString => !string.IsNullOrWhiteSpace(upgString))
+                .Select(GetPowerByFullName)
+                .OfType<IPower>()
+                .ToList();
+
+            if (entityPowerSets.Count == 1)
+            {
+                return true;
+            }
+
+            var providedPowerset = power.GetPowerSet();
+            if (providedPowerset is null)
+            {
+                return false;
+            }
+
+            var index = entityPowerSets.FindIndex(set => set == providedPowerset);
+            if (index <= 0)
+            {
+                return true;
+            }
+
+            index--;
+
+            if (index >= upgPowers.Count) return false;
+            var requiredUpgrade = upgPowers[index];
+            
+            return MidsContext.Character.CurrentBuild.Powers.Any(entry => entry?.Power == requiredUpgrade && entry.StatInclude);
+        }
+
+        public static bool IsUpgradePower(SummonedEntity entity, IPower power)
+        {
+            var upgradePowers = GetEntityUpgradePowers(entity);
+            return upgradePowers.Contains(power);
+        }
+
+        private static List<IPower> GetEntityUpgradePowers(SummonedEntity entity)
+        {
+            var upgPowers = entity.UpgradePowerFullName
+                .Where(upgString => !string.IsNullOrWhiteSpace(upgString))
+                .Select(GetPowerByFullName)
+                .OfType<IPower>()
+                .ToList();
+
+            return upgPowers;
         }
 
         public static int NidFromStaticIndexEnh(int sidEnh)

@@ -5,6 +5,7 @@ using Mids_Reborn.Core.Base.Master_Classes;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
@@ -29,6 +30,7 @@ namespace Mids_Reborn.Forms.Controls
         private int _lastScaleVal;
         private int _scaleVal;
         private bool _useAlt;
+        private bool _noLevel;
         private PetInfo? _petInfo;
 
         public bool Lock;
@@ -1283,27 +1285,61 @@ namespace Mids_Reborn.Forms.Controls
             return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, _basePower.Effects[index[id]].Probability < 1, false, tip);
         }
 
+        private int SelectPetPowerEntry()
+        {
+            if (_basePower == null)
+            {
+                return -1;
+            }
+
+            return MidsContext.Character.CurrentBuild.Powers
+                .Select((e, i) => new KeyValuePair<int, PowerEntry?>(i, e))
+                .Where(e => e.Value is {Power: not null})
+                .DefaultIfEmpty(new KeyValuePair<int, PowerEntry?>(-1, new PowerEntry()))
+                .FirstOrDefault(e => e.Value?.Power?.FullName == _basePower.FullName)
+                .Key;
+        }
+
         private void powerScaler_BarClick(float value)
         {
+            if (_basePower == null)
+            {
+                return;
+            }
+
+            var entryIndex = SelectPetPowerEntry();
+
+            if (_entryIndex < 0)
+            {
+                return;
+            }
+
             var num = (int)Math.Round(value);
             if (num < _basePower.VariableMin)
-                num = _basePower.VariableMin;
-            if (num > _basePower.VariableMax)
-                num = _basePower.VariableMax;
-            MidsContext.Character.CurrentBuild.Powers[_entryIndex].VariableValue = num;
-            MidsContext.Character.CurrentBuild.Powers[_entryIndex].Power.Stacks = num;
-            /*foreach (var effect in MidsContext.Character.CurrentBuild.Powers[_entryIndex].Power.Effects)
             {
-                effect.UpdateAttrib();
-                DisplayInfo();
-            }*/
+                num = _basePower.VariableMin;
+            }
+
+            if (num > _basePower.VariableMax)
+            {
+                num = _basePower.VariableMax;
+            }
+
+            MidsContext.Character.CurrentBuild.Powers[entryIndex].VariableValue = num;
+            MidsContext.Character.CurrentBuild.Powers[entryIndex].Power.Stacks = num;
+
             if (num == _lastScaleVal)
+            {
                 return;
-            SetPowerScaler();
+            }
+
+            //SetPowerScaler();
             _lastScaleVal = num;
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
-            var slotUpdate = SlotUpdate;
-            slotUpdate?.Invoke();
+            //SetData(_basePower, _enhancedPower, _noLevel, Lock);
+            SetDamageTip();
+            DisplayData(_noLevel);
+            SlotUpdate?.Invoke();
         }
 
         private void SetDamageTip()
@@ -1312,36 +1348,37 @@ namespace Mids_Reborn.Forms.Controls
             info_Damage.SetTip(iTip);
         }
 
-        private void SetPowerScaler()
+        private void SetPowerScaler(int entryIndex = -1)
         {
+            entryIndex = entryIndex >= 0 ? entryIndex : _entryIndex;
+
             if (_basePower == null)
             {
                 powerScaler.Visible = false;
+
+                return;
             }
-            else if (_basePower.VariableEnabled & (_entryIndex > -1))
-            {
-                var str = _basePower.VariableName;
-                if (string.IsNullOrEmpty(str))
-                    str = "Targets";
-                powerScaler.Visible = true;
-                powerScaler.BeginUpdate();
-                powerScaler.ForcedMax = _basePower.VariableMax;
-                powerScaler.Clear();
-                powerScaler.AddItem(
-                    str + ":|" + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[_entryIndex].VariableValue),
-                    MidsContext.Character.CurrentBuild.Powers[_entryIndex].VariableValue, 0.0f,
-                    "Use this slider to vary the power's effect.\r\nMin: " + Convert.ToString(_basePower.VariableMin) +
-                    "\r\nMax: " +
-                    Convert.ToString(_basePower.VariableMax));
-                powerScaler.EndUpdate();
-            }
-            else
+
+            if (!_basePower.VariableEnabled | _entryIndex <= -1)
             {
                 powerScaler.Visible = false;
+
+                return;
             }
+            
+            var str = string.IsNullOrEmpty(_basePower.VariableName) ? "Targets" : _basePower.VariableName;
+            powerScaler.Visible = true;
+            powerScaler.BeginUpdate();
+            powerScaler.ForcedMax = _basePower.VariableMax;
+            powerScaler.Clear();
+            powerScaler.AddItem(
+                $"{str}:|{MidsContext.Character.CurrentBuild.Powers[entryIndex].VariableValue}",
+                MidsContext.Character.CurrentBuild.Powers[entryIndex].VariableValue, 0,
+                $"Use this slider to vary the power's effect.\r\nMin: {_basePower.VariableMin}\r\nMax: {_basePower.VariableMax}");
+            powerScaler.EndUpdate();
         }
 
-        public void SetData(IPower? basePower, IPower? enhancedPower, bool noLevel = false, bool locked = false, int i_entryIndex = -1)
+        public void SetData(IPower? basePower, IPower? enhancedPower, bool noLevel = false, bool locked = false, int historyIdx = -1)
         {
             if (basePower == null)
             {
@@ -1349,23 +1386,33 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             Lock = locked;
+            _noLevel = noLevel;
 
             var basePowerData = new Power(basePower);
             var enhancedPowerData = new Power(enhancedPower);
 
-            var rootPowerName = MidsContext.Character.CurrentBuild.Powers
-                    .Where(e => e.Power != null)
-                    .Select(e => new KeyValuePair<string, IEffect[]>(e.Power.FullName, e.Power.Effects))
-                    .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", Array.Empty<IEffect>()))
-                    .FirstOrDefault(e => e.Value.Any(fx =>
-                        fx.EffectType == Enums.eEffectType.PowerRedirect &&
-                        ((basePower != null && fx.Override == basePower.FullName) |
-                         (enhancedPower != null && fx.Override == enhancedPower.FullName))))
-                    .Key;
+            if (basePower != null)
+            {
+                var baseBuildPowerEntry = MidsContext.Character.CurrentBuild.Powers
+                    .Where(e => e?.Power != null)
+                    .DefaultIfEmpty(new PowerEntry())
+                    .FirstOrDefault(e => e?.Power?.FullName == basePower.FullName);
 
-            _rootPowerBase = string.IsNullOrEmpty(rootPowerName)
-                ? null
-                : DatabaseAPI.GetPowerByFullName(rootPowerName);
+                if (baseBuildPowerEntry is {Power: not null})
+                {
+                    
+                    var parentPetPowerEntry = baseBuildPowerEntry.Power.ParentPetPowerEntry;
+                    basePowerData = new Power(baseBuildPowerEntry.Power)
+                    {
+                        ParentPetPowerEntry = parentPetPowerEntry
+                    };
+                }
+            }
+
+            _rootPowerBase = basePowerData.ParentPetPowerEntry?.Power;
+            _entryIndex = historyIdx >= 0
+                ? historyIdx
+                : SelectPetPowerEntry();
 
             if (enhancedPowerData.PowerIndex == -1 & basePowerData.PowerIndex == -1)
             {
@@ -1400,7 +1447,6 @@ namespace Mids_Reborn.Forms.Controls
 
             GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(_enhancedPower);
             EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, _basePower, _enhancedPower, _enhancedPower.GetRankedEffects(true).ToList(), info_DataList.Font.Size);
-            _entryIndex = i_entryIndex;
 
             SetDamageTip();
             DisplayData(noLevel);

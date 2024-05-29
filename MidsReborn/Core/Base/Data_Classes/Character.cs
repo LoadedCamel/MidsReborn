@@ -583,6 +583,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             //CheckInherentSlots();
             if (CurrentBuild?.Powers == null) return;
+
+            var petPowers = new List<IPower>();
+            PowerEntry? parentSummonPower = null;
             foreach (var power in CurrentBuild.Powers)
             {
                 if (power?.Power == null) continue;
@@ -634,6 +637,28 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             foreach (var power in CurrentBuild.Powers)
             {
                 if (power?.Power == null || !power.StatInclude) continue;
+
+                /*var isPetSummonPower = power.Power.IsBasePetPower;
+                if (isPetSummonPower)
+                {
+                    var entities = DatabaseAPI.GetEntitiesBySummonPower(power.Power);
+                    for (var i = 0; i < entities?.Count; i++)
+                    {
+                        var entityPowersets = DatabaseAPI.GetEntityPowers(entities[i]);
+                        if (entityPowersets == null)
+                        {
+                            continue;
+                        }
+
+                        foreach (var ps in entityPowersets)
+                        {
+                            petPowers.AddRange(ps.Value);
+                        }
+                    }
+                    
+                    parentSummonPower = power;
+                }*/
+
                 switch (power.Power.PowerName.ToUpper())
                 {
                     case "TIME_CRAWL":
@@ -755,9 +780,44 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
 
+            /*petPowers = petPowers.Distinct().ToList();
+            foreach (var p in petPowers)
+            {
+                if (CurrentBuild.Powers.Any(entry => entry != null && entry.Power == p))
+                {
+                    continue;
+                }
+
+                p.ParentPetPowerEntry = parentSummonPower;
+                var lastLevel = CurrentBuild.Powers.Last().Level;
+                CurrentBuild.Powers.Add(new PowerEntry(lastLevel + 1, p));
+            }
+
+            var hasBasePetPower = CurrentBuild.Powers.Any(entry => entry?.Power is { IsBasePetPower: true });
+            var powersToRemove = new List<int>();
+
+            for (var i = 0; i < CurrentBuild.Powers.Count; i++)
+            {
+                if (CurrentBuild.Powers[i]?.Power is {IsChildPetPower: true} && !petPowers.Contains(CurrentBuild.Powers[i].Power))
+                {
+                    powersToRemove.Add(i);
+                }
+                else if (CurrentBuild.Powers[i]?.Power != null && !hasBasePetPower && CurrentBuild.Powers[i].Power.IsChildPetPower)
+                {
+                    powersToRemove.Add(i);
+                }
+            }
+
+            CurrentBuild.Powers
+                .Select((e, i) => new KeyValuePair<int, PowerEntry?>(i, e))
+                .Where(e => !powersToRemove.Contains(e.Key))
+                .Select(e => e.Value)
+                .ToList();*/
+
             var inherentPowersList = CurrentBuild?.Powers
-                .Where(p => p is { Chosen: false, Power: { }} && CurrentBuild.PowerUsed(p.Power)).Select(p => p.Power)
+                .Where(p => p is { Chosen: false, Power: not null} && CurrentBuild.PowerUsed(p.Power)).Select(p => p.Power)
                 .ToList();
+            
             if (inherentPowersList != null)
             {
                 foreach (var inherent in inherentPowersList)
@@ -805,6 +865,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
         }
+
+
 
         protected void ReadMetadata(string buildText)
         {
@@ -865,6 +927,90 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             CheckAncillaryPowerSet();
             CurrentBuild?.Validate();
             RefreshActiveSpecial();
+            ProcessSummonPowers();
+        }
+
+        private void ProcessSummonPowers()
+        {
+            if (CurrentBuild == null) return;
+
+            var summonPowerEntry = new PowerEntry();
+            var petPowers = new List<IPower>();
+            var reprocessRequired = false;
+
+            foreach (var powerEntry in CurrentBuild.Powers.ToList())
+            {
+                if (powerEntry?.Power == null) continue;
+
+                // Get entities summoned by the power
+                var entities = DatabaseAPI.GetEntitiesBySummonPower(powerEntry.Power);
+
+                // Check if the power is a base pet power
+                if (powerEntry.Power.IsBasePetPower)
+                {
+                    if (entities != null)
+                    {
+                        foreach (var entity in entities)
+                        {
+                            var availableEntityPowers = DatabaseAPI.GetAvailableEntityPowersBySet(entity);
+                            foreach (var availableSet in availableEntityPowers)
+                            {
+                                petPowers.AddRange(availableSet.Value);
+                            }
+                        }
+
+                        summonPowerEntry = powerEntry;
+                    }
+                }
+
+                // Check if the power is an upgrade power
+                if (entities != null)
+                {
+                    if (entities.Any(entity => DatabaseAPI.IsUpgradePower(entity, powerEntry.Power)))
+                    {
+                        reprocessRequired = true;
+                    }
+                }
+
+                if (reprocessRequired) break;
+            }
+
+            // Reprocess if an upgrade power is added
+            if (reprocessRequired)
+            {
+                ProcessSummonPowers();
+                return;
+            }
+
+            foreach (var power in petPowers)
+            {
+                if (CurrentBuild.Powers.Any(entry => entry != null && entry.Power == power))
+                {
+                    continue;
+                }
+
+                power.ParentPetPowerEntryIndex = CurrentBuild.Powers.IndexOf(summonPowerEntry);
+                power.ParentPetPowerEntry = summonPowerEntry;
+                var lastLevel = CurrentBuild.Powers.Last()?.Level ?? 0;
+                CurrentBuild.Powers.Add(new PowerEntry(lastLevel + 1, power));
+                CurrentBuild.Powers.Last()!.Power!.InherentType = Enums.eGridType.Pet;
+                CurrentBuild.Powers.Last()!.Power!.DisplayLocation = (int)MidsContext.Character?.CurrentBuild?.Powers // Pick first available index on the inherents grid
+                    .Where(e => e?.Power is { IncludeFlag: true })
+                    .Select(e => e?.Power?.DisplayLocation)
+                    .Max()! + 1;
+                summonPowerEntry.Power?.ChildPetEntryIndexes.Add(CurrentBuild.Powers.Count - 1);
+            }
+
+            var hasBasePetPower = CurrentBuild.Powers.Any(entry => entry?.Power?.IsBasePetPower == true);
+            var powersToRemove = CurrentBuild.Powers
+                .Where(entry => entry?.Power?.IsChildPetPower == true &&
+                                (!petPowers.Contains(entry.Power) || !hasBasePetPower))
+                .ToList();
+
+            foreach (var entry in powersToRemove)
+            {
+                CurrentBuild.Powers.Remove(entry);
+            }
         }
 
         /// <summary>

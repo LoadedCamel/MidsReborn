@@ -284,15 +284,16 @@ namespace Mids_Reborn.Controls
 
         private void OnMouseClick(object? sender, MouseEventArgs e)
         {
-            if (_items == null)
+            var item = _items?
+                .DefaultIfEmpty(null)
+                .FirstOrDefault(f => e.X >= f?.Bounds.Left && e.X <= f.Bounds.Right && e.Y >= f.Bounds.Top && e.Y <= f.Bounds.Bottom);
+
+            if (item == null)
             {
                 return;
             }
-
-            foreach (var item in _items.Where(item => e.X >= item.Bounds.Left && e.X <= item.Bounds.Right && e.Y >= item.Bounds.Top && e.Y <= item.Bounds.Bottom))
-            {
-                ItemClick?.Invoke(this, item, e);
-            }
+            
+            ItemClick?.Invoke(this, item, e);
         }
 
         private void OnMouseLeave(object? sender, EventArgs e)

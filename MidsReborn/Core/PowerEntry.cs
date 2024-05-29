@@ -47,7 +47,7 @@ namespace Mids_Reborn.Core
                 if (power.NIDSubPower.Length > 0)
                 {
                     SubPowers = new PowerSubEntry[power.NIDSubPower.Length];
-                    for (var index = 0; index <= SubPowers.Length - 1; ++index)
+                    for (var index = 0; index < SubPowers.Length; index++)
                     {
                         SubPowers[index] = new PowerSubEntry
                         {
@@ -165,7 +165,7 @@ namespace Mids_Reborn.Core
                 SubPowers = (PowerSubEntry[]) SubPowers.Clone(),
                 Slots = new SlotEntry[Slots.Length]
             };
-            for (var index = 0; index < SlotCount; ++index)
+            for (var index = 0; index < SlotCount; index++)
             {
                 powerEntry.Slots[index].Level = Slots[index].Level;
                 powerEntry.Slots[index].IsInherent = Slots[index].IsInherent;
@@ -178,14 +178,12 @@ namespace Mids_Reborn.Core
 
         public void ClearInvisibleSlots()
         {
-            if (SlotCount > 0 && (Power == null && !Chosen || Power is { Slottable: false }))
+            Slots = SlotCount switch
             {
-                Slots = Array.Empty<SlotEntry>();
-            }
-            else if (SlotCount > 6)
-            {
-                Slots = Slots.Take(6).ToArray();
-            }
+                > 0 when (Power == null && !Chosen || Power is {Slottable: false}) => Array.Empty<SlotEntry>(),
+                > 6 => Slots.Take(6).ToArray(),
+                _ => Slots
+            };
         }
 
         public void Assign(PowerEntry? iPe)
@@ -202,7 +200,7 @@ namespace Mids_Reborn.Core
             if (iPe.Slots != null)
             {
                 Slots = new SlotEntry[iPe.Slots.Length];
-                for (var index = 0; index <= Slots.Length - 1; ++index)
+                for (var index = 0; index < Slots.Length; index++)
                 {
                     Slots[index].Assign(iPe.Slots[index]);
                 }
@@ -215,7 +213,7 @@ namespace Mids_Reborn.Core
             if (iPe.SubPowers != null)
             {
                 SubPowers = new PowerSubEntry[iPe.SubPowers.Length];
-                for (var index = 0; index <= SubPowers.Length - 1; ++index)
+                for (var index = 0; index < SubPowers.Length; index++)
                 {
                     SubPowers[index].Assign(iPe.SubPowers[index]);
                 }
@@ -228,7 +226,7 @@ namespace Mids_Reborn.Core
 
         public bool HasProc()
         {
-            for (var index = 0; index < SlotCount; ++index)
+            for (var index = 0; index < SlotCount; index++)
             {
                 if (Slots[index].Enhancement.Enh < 0) continue;
                 var enh = DatabaseAPI.Database.Enhancements[Slots[index].Enhancement.Enh];
@@ -283,7 +281,7 @@ namespace Mids_Reborn.Core
 
         public void ValidateSlots()
         {
-            for (var index = 0; index <= Slots.Length - 1; ++index)
+            for (var index = 0; index < Slots.Length; index++)
             {
                 if (!Power.IsEnhancementValid(Slots[index].Enhancement.Enh))
                 {
@@ -345,7 +343,7 @@ namespace Mids_Reborn.Core
                 else
                 {
                     var num2 = 0;
-                    for (var index2 = 1; index2 < Slots.Length; ++index2)
+                    for (var index2 = 1; index2 < Slots.Length; index2++)
                     {
                         if (Slots[index2].Level <= iLevel)
                         {
@@ -359,7 +357,7 @@ namespace Mids_Reborn.Core
 
                     var index3 = -1;
 
-                    for (var index2 = 0; index2 < slotEntryArray.Length; ++index2)
+                    for (var index2 = 0; index2 < slotEntryArray.Length; index2++)
                     {
                         if (index2 == index1)
                         {
@@ -374,16 +372,18 @@ namespace Mids_Reborn.Core
                     }
 
                     Slots = new SlotEntry[slotEntryArray.Length];
-                    for (var index2 = 0; index2 < Slots.Length; ++index2)
+                    for (var index2 = 0; index2 < Slots.Length; index2++)
                     {
-                        if (index2 != index1)
+                        if (index2 == index1)
                         {
-                            if (index2 is > 0 and < 2 && isInherent)
-                            {
-                                slotEntryArray[index2].IsInherent = true;
-                            }
-                            Slots[index2].Assign(slotEntryArray[index2]);
+                            continue;
                         }
+
+                        if (index2 is > 0 and < 2 && isInherent)
+                        {
+                            slotEntryArray[index2].IsInherent = true;
+                        }
+                        Slots[index2].Assign(slotEntryArray[index2]);
                     }
                 }
 
