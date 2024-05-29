@@ -461,7 +461,7 @@ namespace Mids_Reborn.Forms
             var code = url.Replace("mrb://", "");
             var options = new RestClientOptions("https://api.midsreborn.com")
             {
-                MaxTimeout = -1,
+                Timeout = TimeSpan.FromSeconds(30),
             };
             var client = new RestClient(options);
             var response = await client.GetJsonAsync<SchemaData>($"build/redirect-to-schema/{code}");
