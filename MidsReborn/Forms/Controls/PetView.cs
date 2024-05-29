@@ -5,7 +5,6 @@ using Mids_Reborn.Core.Base.Master_Classes;
 using System.Linq;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Windows.Forms;
@@ -1309,7 +1308,7 @@ namespace Mids_Reborn.Forms.Controls
 
             var entryIndex = SelectPetPowerEntry();
 
-            if (_entryIndex < 0)
+            if (entryIndex < 0)
             {
                 return;
             }
@@ -1333,7 +1332,6 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             }
 
-            //SetPowerScaler();
             _lastScaleVal = num;
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
             //SetData(_basePower, _enhancedPower, _noLevel, Lock);
@@ -1350,7 +1348,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private void SetPowerScaler(int entryIndex = -1)
         {
-            entryIndex = entryIndex >= 0 ? entryIndex : _entryIndex;
+            entryIndex = entryIndex >= 0 ? entryIndex : SelectPetPowerEntry();
 
             if (_basePower == null)
             {
@@ -1359,21 +1357,24 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             }
 
-            if (!_basePower.VariableEnabled | _entryIndex <= -1)
+            if (!_basePower.VariableEnabled | entryIndex <= -1)
             {
                 powerScaler.Visible = false;
 
                 return;
             }
-            
-            var str = string.IsNullOrEmpty(_basePower.VariableName) ? "Targets" : _basePower.VariableName;
+
+            var scalerValue = Math.Max(MidsContext.Character.CurrentBuild.Powers[entryIndex].Power.VariableMin,
+                Math.Min(MidsContext.Character.CurrentBuild.Powers[entryIndex].Power.VariableMax,
+                    MidsContext.Character.CurrentBuild.Powers[entryIndex].VariableValue));
             powerScaler.Visible = true;
+            powerScaler.Clickable = true;
             powerScaler.BeginUpdate();
             powerScaler.ForcedMax = _basePower.VariableMax;
             powerScaler.Clear();
             powerScaler.AddItem(
-                $"{str}:|{MidsContext.Character.CurrentBuild.Powers[entryIndex].VariableValue}",
-                MidsContext.Character.CurrentBuild.Powers[entryIndex].VariableValue, 0,
+                $"{(string.IsNullOrEmpty(_basePower.VariableName) ? "Targets" : _basePower.VariableName)}:|{scalerValue}",
+                scalerValue, 0,
                 $"Use this slider to vary the power's effect.\r\nMin: {_basePower.VariableMin}\r\nMax: {_basePower.VariableMax}");
             powerScaler.EndUpdate();
         }
@@ -1450,6 +1451,7 @@ namespace Mids_Reborn.Forms.Controls
 
             SetDamageTip();
             DisplayData(noLevel);
+            SetPowerScaler();
         }
 
         private string ShortStr(string full, string brief)
