@@ -794,7 +794,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         }
 
         //public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power == this);
-        public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power != null && x.Power.DisplayName == DisplayName);
+        public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x is { Power: not null } && x.Power.DisplayName == DisplayName);
 
         public float FXGetDamageValue(bool absorb = false)
         {
@@ -809,7 +809,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 if (effect.EffectType != Enums.eEffectType.Damage ||
                     MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum && !(Math.Abs(effect.Probability) > 0.999000012874603) ||
-                    (effect.EffectClass == Enums.eEffectClass.Ignored || effect is {DamageType: Enums.eDamage.Special, ToWho: Enums.eToWho.Self}) || (!(effect.Probability > 0) || !effect.CanInclude()) ||
+                    effect.EffectClass == Enums.eEffectClass.Ignored || effect is {DamageType: Enums.eDamage.Special, ToWho: Enums.eToWho.Self} || effect.Probability <= 0 || !effect.CanInclude() ||
                     !effect.PvXInclude())
                 {
                     continue;
