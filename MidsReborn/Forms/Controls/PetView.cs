@@ -526,7 +526,7 @@ namespace Mids_Reborn.Forms.Controls
         /// <param name="startIndex">Effect index to start processing from. Set to 0 unless processing _enhancedPower effects to avoid duplicates</param>
         private void ProcessMezResistEffects(IPower sourcePower, ref PairedListEx iList, bool specialEffects, ref int effectsCount, int startIndex = 0)
         {
-            var names = Enum.GetNames(typeof(Enums.eMezShort));
+            var names = Enum.GetNames<Enums.eMezShort>();
             var enhancedPower = specialEffects ? sourcePower : _enhancedPower;
             for (var tagId = startIndex; tagId < sourcePower.Effects.Length; tagId++)
             {

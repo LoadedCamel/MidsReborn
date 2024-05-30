@@ -1783,8 +1783,8 @@ namespace Mids_Reborn.Forms
             if (FrmEntityDetails is not {Visible: true})
             {
                 FrmEntityDetails = new FrmEntityDetails(entityUid, powers, petInfo);
-                FrmEntityDetails.PowerIncludeChanged += FrmEntityDetails_PowerIncludeChanged;
-                FrmEntityDetails.PetViewSliderUpdated += FrmEntityDetails_SliderUpdated;
+                //FrmEntityDetails.PowerIncludeChanged += FrmEntityDetails_PowerIncludeChanged;
+                //FrmEntityDetails.PetViewSliderUpdated += FrmEntityDetails_SliderUpdated;
                 FrmEntityDetails.Show(this);
             }
             else if (FrmEntityDetails.Visible)

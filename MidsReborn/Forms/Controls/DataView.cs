@@ -2468,7 +2468,7 @@ namespace Mids_Reborn.Forms.Controls
 
         public void SetEnhancement(I9Slot iEnh, int iLevel = -1)
         {
-            if (Lock & (TabPage != 3) || iLevel < 0)
+            if (Lock & TabPage != 3 || iLevel < 0)
             {
                 return;
             }
@@ -2487,7 +2487,7 @@ namespace Mids_Reborn.Forms.Controls
                                     "Shift+Click to move slot. Right-Click to place enh." + RTF.EndRTF();
             }
 
-            if ((iLevel > -1) & !MidsContext.Config.ShowSlotLevels)
+            if (iLevel > -1 & !MidsContext.Config.ShowSlotLevels)
             {
                 str1 += $" (Slot Level {iLevel + 1})";
             }
@@ -2499,36 +2499,36 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             var iStr1 = string.Empty;
             var str2 = string.Empty;
-            if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.InventO) | (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO))
+            if (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.InventO | DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO)
             {
-                iStr1 = RTF.Color(RTF.ElementID.Invention) + "Invention Level: " + Convert.ToString(iEnh.IOLevel + 1) + Enums.GetRelativeString(iEnh.RelativeLevel, false) + RTF.Color(RTF.ElementID.Text);
+                iStr1 = $"{RTF.Color(RTF.ElementID.Invention)}Invention Level: {iEnh.IOLevel + 1}{Enums.GetRelativeString(iEnh.RelativeLevel, false)}{RTF.Color(RTF.ElementID.Text)}";
             }
 
-            if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO) | (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SpecialO))
+            switch (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID)
             {
-                if (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO)
+                case Enums.eType.SetO:
+                if (DatabaseAPI.Database.Enhancements[iEnh.Enh].Unique)
                 {
-                    if (DatabaseAPI.Database.Enhancements[iEnh.Enh].Unique)
-                    {
-                        iStr1 = iStr1 + RTF.Color(RTF.ElementID.Warning) + " (Unique) " + RTF.Color(RTF.ElementID.Text);
-                    }
-
-                    if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance < 1.0) & (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
-                    {
-
-                        str2 = $"{str2}{RTF.Color(RTF.ElementID.Enhancement)}{Convert.ToDecimal(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0):#0.##)} % chance of ";
-                    }
+                    iStr1 += $"{RTF.Color(RTF.ElementID.Warning)} (Unique) {RTF.Color(RTF.ElementID.Text)}";
                 }
-                else
+
+                if (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance is < 1 and > 0)
                 {
-                    iStr1 = iStr1 + RTF.Color(RTF.ElementID.Enhancement) + "Hamidon/Synthetic Hamidon Origin Enhancement";
+
+                    str2 += $"{RTF.Color(RTF.ElementID.Enhancement)}{DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100:#0.##)} % chance of ";
                 }
-            }
-            else
-            {
-                if (iStr1 != string.Empty)
-                    iStr1 += " - ";
-                iStr1 += GetEnhancementStringRTF(iEnh);
+
+                break;
+
+                case Enums.eType.SpecialO:
+                    iStr1 += RTF.Color(RTF.ElementID.Enhancement) + "Hamidon/Synthetic Hamidon Origin Enhancement";
+                    break;
+
+                default:
+                    if (iStr1 != string.Empty)
+                        iStr1 += " - ";
+                    iStr1 += GetEnhancementStringRTF(iEnh);
+                    break;
             }
 
             string iStr2;
@@ -2557,32 +2557,32 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             var str1 = string.Empty;
             var iStr1 = string.Empty;
-            if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.InventO) |
-                (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO))
-                iStr1 = RTF.Color(RTF.ElementID.Invention) + "Invention Level: " + Convert.ToString(iEnh.IOLevel + 1) +
-                        Enums.GetRelativeString(iEnh.RelativeLevel, false) + RTF.Color(RTF.ElementID.Text);
-            if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO) |
-                (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SpecialO))
+            if (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID is Enums.eType.InventO or Enums.eType.SetO)
+                iStr1 = $"{RTF.Color(RTF.ElementID.Invention)}Invention Level: {iEnh.IOLevel + 1}{Enums.GetRelativeString(iEnh.RelativeLevel, false)}{RTF.Color(RTF.ElementID.Text)}";
+
+
+            switch (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID)
             {
-                if (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO)
-                {
+                case Enums.eType.SetO:
                     if (DatabaseAPI.Database.Enhancements[iEnh.Enh].Unique)
-                        iStr1 = iStr1 + RTF.Color(RTF.ElementID.Warning) + " (Unique) " + RTF.Color(RTF.ElementID.Text);
-                    if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 1.0) & (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance > 0.0))
+                        iStr1 += $"{RTF.Color(RTF.ElementID.Warning)} (Unique) {RTF.Color(RTF.ElementID.Text)}";
+                    if (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance is < 1 and > 0)
                     {
-                        str1 = $"{str1}{RTF.Color(RTF.ElementID.Enhancement)}{Convert.ToDecimal(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100.0):#0.##)} % chance of ";
+                        str1 +=
+                            $"{RTF.Color(RTF.ElementID.Enhancement)}{DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100:#0.##)} % chance of ";
                     }
-                }
-                else
-                {
+
+                    break;
+
+                case Enums.eType.SpecialO:
                     iStr1 += "Hamidon/Synthetic Hamidon Origin Enhancement";
-                }
-            }
-            else
-            {
-                if (iStr1 != string.Empty)
-                    iStr1 += " - ";
-                iStr1 += GetEnhancementStringRTF(iEnh);
+                    break;
+
+                default:
+                    if (iStr1 != string.Empty)
+                        iStr1 += " - ";
+                    iStr1 += GetEnhancementStringRTF(iEnh);
+                    break;
             }
 
             string iStr2;
@@ -2663,7 +2663,7 @@ namespace Mids_Reborn.Forms.Controls
 
         public void SetLocation(Point iLocation, bool Force)
         {
-            var flag = Force | ((SnapLocation.X == Location.X) & (SnapLocation.Y == Location.Y));
+            var flag = Force | SnapLocation.X == Location.X & SnapLocation.Y == Location.Y;
             SnapLocation.X = iLocation.X;
             SnapLocation.Y = iLocation.Y;
             SnapLocation.Width = Width;
@@ -2681,21 +2681,17 @@ namespace Mids_Reborn.Forms.Controls
             {
                 PowerScaler.Visible = false;
             }
-            else if (pBase.VariableEnabled & (HistoryIDX > -1))
+            else if (pBase.VariableEnabled & HistoryIDX > -1)
             {
-                var str = pBase.VariableName;
-                if (string.IsNullOrEmpty(str))
-                    str = "Targets";
+                var str = string.IsNullOrEmpty(pBase.VariableName) ? "Targets" : pBase.VariableName;
                 PowerScaler.Visible = true;
                 PowerScaler.BeginUpdate();
                 PowerScaler.ForcedMax = pBase.VariableMax;
                 PowerScaler.Clear();
                 PowerScaler.AddItem(
-                    str + ":|" + Convert.ToString(MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue),
-                    MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue, 0.0f,
-                    "Use this slider to vary the power's effect.\r\nMin: " + Convert.ToString(pBase.VariableMin) +
-                    "\r\nMax: " +
-                    Convert.ToString(pBase.VariableMax));
+                    $"{str}:|{MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue}",
+                    MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue, 0,
+                    $"Use this slider to vary the power's effect.\r\nMin: {pBase.VariableMin}\r\nMax: {pBase.VariableMax}");
                 PowerScaler.EndUpdate();
             }
             else
@@ -2734,15 +2730,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private bool sFXCheck(Enums.ShortFX isFX)
         {
-            if (isFX.Index == null)
-                return false;
-            var num = isFX.Index.Length - 1;
-            for (var index = 0; index <= num; ++index)
-                if ((pBase.Effects.Length > isFX.Index[index]) & (isFX.Index[index] > -1) &&
-                    pBase.Effects[isFX.Index[index]].isEnhancementEffect)
-                    return true;
-
-            return false;
+            return isFX.Index != null && isFX.Index.Any(t => pBase?.Effects.Length > t & t > -1 && pBase?.Effects[t].isEnhancementEffect == true);
         }
 
         private string ShortStr(string full, string brief)
@@ -2753,9 +2741,13 @@ namespace Mids_Reborn.Forms.Controls
         private void SizeRefresh()
         {
             if (Compact)
+            {
                 CompactSize();
+            }
             else
+            {
                 ResetSize();
+            }
         }
 
         public void SetGraphType(Enums.eDDGraph graphType, Enums.eDDStyle graphStyle)
@@ -2766,78 +2758,70 @@ namespace Mids_Reborn.Forms.Controls
 
         private bool SplitFX_AddToList(ref Enums.ShortFX BaseSFX, ref Enums.ShortFX EnhSFX, ref PairedListEx iList, string SpecialTitle = "")
         {
-            bool flag;
             if (!BaseSFX.Present)
             {
-                flag = false;
+                return false;
             }
-            else
+            
+            var shortFxArray1 = Power.SplitFX(ref BaseSFX, ref pBase);
+            var shortFxArray2 = Power.SplitFX(ref EnhSFX, ref pEnh);
+            if (shortFxArray2.Length < shortFxArray1.Length)
             {
-                var shortFxArray1 = Power.SplitFX(ref BaseSFX, ref pBase);
-                var shortFxArray2 = Power.SplitFX(ref EnhSFX, ref pEnh);
-                if (shortFxArray2.Length < shortFxArray1.Length)
-                {
-                    var swappedFX = SwapExtraEffects(shortFxArray1, shortFxArray2);
-                    shortFxArray1 = (Enums.ShortFX[])swappedFX[0].Clone();
-                    shortFxArray2 = (Enums.ShortFX[])swappedFX[1].Clone();
-                }
-
-                for (var index = 0; index < shortFxArray1.Length; index++)
-                {
-                    if (!shortFxArray1[index].Present)
-                        continue;
-                    var Suffix = string.Empty;
-                    var num2 = shortFxArray1[index].Value[0];
-                    var num3 = index < shortFxArray2.Length
-                        ? shortFxArray2[index].Value[0]
-                        : shortFxArray2[index - 1].Value[0];
-                    if (pEnh.Effects[shortFxArray1[index].Index[0]].DisplayPercentage)
-                    {
-                        Suffix = "%";
-                        var effect = pEnh.Effects[shortFxArray1[index].Index[0]];
-                        if ((effect.EffectType == Enums.eEffectType.Heal |
-                             effect.EffectType == Enums.eEffectType.Endurance |
-                             effect.EffectType == Enums.eEffectType.Damage) &
-                            pEnh.Effects[shortFxArray1[index].Index[0]].Aspect == Enums.eAspect.Cur)
-                        {
-                            num2 *= 100f;
-                            num3 *= 100f;
-                        }
-                    }
-                    else
-                    {
-                        switch (pEnh.Effects[shortFxArray1[index].Index[0]].EffectType)
-                        {
-                            case Enums.eEffectType.Heal:
-                                Suffix = " HP";
-                                break;
-                            case Enums.eEffectType.HitPoints:
-                                Suffix = " HP";
-                                break;
-                        }
-                    }
-
-                    var title = Enums.GetEffectNameShort(pEnh.Effects[shortFxArray1[index].Index[0]].EffectType);
-                    if (SpecialTitle != string.Empty)
-                        title = SpecialTitle;
-                    var s1 = num2;
-                    var s2 = num3;
-                    if ((pEnh.Effects[shortFxArray1[index].Index[0]].Suppression & MidsContext.Config.Suppression) !=
-                        Enums.eSuppress.None)
-                    {
-                        s1 = 0.0f;
-                        s2 = 0.0f;
-                    }
-
-                    iList.AddItem(FastItemBuilder.Fi.FastItem(title, s1, s2, Suffix, false, false, pEnh.Effects[shortFxArray1[index].Index[0]].Probability < 1.0, pEnh.Effects[shortFxArray1[index].Index[0]].ActiveConditionals.Count > 0, Power.SplitFXGroupTip(ref shortFxArray1[index], ref pEnh, false)));
-                    if (pEnh.Effects[shortFxArray1[index].Index[0]].isEnhancementEffect)
-                        iList.SetUnique();
-                }
-
-                flag = true;
+                var swappedFX = SwapExtraEffects(shortFxArray1, shortFxArray2);
+                shortFxArray1 = (Enums.ShortFX[])swappedFX[0].Clone();
+                shortFxArray2 = (Enums.ShortFX[])swappedFX[1].Clone();
             }
 
-            return flag;
+            for (var index = 0; index < shortFxArray1.Length; index++)
+            {
+                if (!shortFxArray1[index].Present)
+                    continue;
+                var Suffix = string.Empty;
+                var num2 = shortFxArray1[index].Value[0];
+                var num3 = index < shortFxArray2.Length
+                    ? shortFxArray2[index].Value[0]
+                    : shortFxArray2[index - 1].Value[0];
+                if (pEnh.Effects[shortFxArray1[index].Index[0]].DisplayPercentage)
+                {
+                    Suffix = "%";
+                    var effect = pEnh.Effects[shortFxArray1[index].Index[0]];
+                    if ((effect.EffectType == Enums.eEffectType.Heal |
+                         effect.EffectType == Enums.eEffectType.Endurance |
+                         effect.EffectType == Enums.eEffectType.Damage) &
+                        pEnh.Effects[shortFxArray1[index].Index[0]].Aspect == Enums.eAspect.Cur)
+                    {
+                        num2 *= 100;
+                        num3 *= 100;
+                    }
+                }
+                else
+                {
+                    switch (pEnh.Effects[shortFxArray1[index].Index[0]].EffectType)
+                    {
+                        case Enums.eEffectType.Heal:
+                        case Enums.eEffectType.HitPoints:
+                            Suffix = " HP";
+                            break;
+                    }
+                }
+
+                var title = Enums.GetEffectNameShort(pEnh.Effects[shortFxArray1[index].Index[0]].EffectType);
+                if (SpecialTitle != string.Empty)
+                    title = SpecialTitle;
+                var s1 = num2;
+                var s2 = num3;
+                if ((pEnh.Effects[shortFxArray1[index].Index[0]].Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None)
+                {
+                    s1 = 0;
+                    s2 = 0;
+                }
+
+                iList.AddItem(FastItemBuilder.Fi.FastItem(title, s1, s2, Suffix, false, false, pEnh.Effects[shortFxArray1[index].Index[0]].Probability < 1.0, pEnh.Effects[shortFxArray1[index].Index[0]].ActiveConditionals.Count > 0, Power.SplitFXGroupTip(ref shortFxArray1[index], ref pEnh, false)));
+                if (pEnh.Effects[shortFxArray1[index].Index[0]].isEnhancementEffect)
+                    iList.SetUnique();
+            }
+
+            return true;
         }
 
         private void Title_MouseDown(object sender, MouseEventArgs e)
@@ -2873,8 +2857,8 @@ namespace Mids_Reborn.Forms.Controls
             if (Location == point2)
                 return;
             Location = point2;
-            var moved = Moved;
-            moved?.Invoke();
+            
+            Moved?.Invoke();
         }
 
         private void Fx_ListItemClick(object? sender, PairedListEx.Item? item, MouseEventArgs e)
@@ -2883,11 +2867,8 @@ namespace Mids_Reborn.Forms.Controls
             {
                 return;
             }
-            if (item == null)
-            {
-                return;
-            }
-            if (item.EntTag == null)
+
+            if (item?.EntTag == null)
             {
                 return;
             }
@@ -2899,9 +2880,11 @@ namespace Mids_Reborn.Forms.Controls
                 if (powersFound != null) petPowers.AddRange(powersFound);
             }
 
-            if (pBase != null) PetInfo = new PetInfo(HistoryIDX, pBase, petPowers);
-
-
+            if (pBase != null)
+            {
+                PetInfo = new PetInfo(HistoryIDX, pBase, petPowers);
+            }
+            
             var powers = new HashSet<string>();
             foreach (var ps in sets)
             {
