@@ -1716,6 +1716,11 @@ namespace Mids_Reborn.Forms
                         }
                         break;
                 }
+
+                LastFileName = buildFile;
+                FileModified = false;
+                SetTitleBar(MidsContext.Character.IsHero());
+
                 return true;
             }
 
