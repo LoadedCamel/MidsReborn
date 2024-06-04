@@ -353,7 +353,7 @@ namespace Mids_Reborn.Core
         {
             if (!File.Exists(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath)))
             {
-                MessageBox.Show($@"Overrides file ({Files.MxdbFileOverrides}) was not found.\r\nCreating a new one...", @"Database file missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was not found.\r\nCreating a new one...", @"Database file missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CompOverride = Array.Empty<Enums.CompOverride>();
                 SaveOverrides(Serializer.GetSerializer());
 
@@ -364,7 +364,7 @@ namespace Mids_Reborn.Core
             using var binaryReader = new BinaryReader(fileStream);
             if (binaryReader.ReadString() != OverrideNames)
             {
-                MessageBox.Show($@"Overrides file ({Files.MxdbFileOverrides}) was missing a header!\r\nNot loading powerset comparison overrides.", @"Database file failed to load", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was missing a header!\r\nNot loading powerset comparison overrides.", @"Database file failed to load", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 return;
             }
