@@ -128,7 +128,7 @@ namespace Mids_Reborn.Core
         {
             get
             {
-                var powers = Powers.Where(pe => pe?.Power is not null && pe.Power.IsChildPetPower)
+                var powers = Powers.Where(pe => pe?.Power is not null && pe.Power.IsPetPower)
                     .Select(pe => pe?.Power!)
                     .ToList();
                 return new BindingList<IPower>(powers);

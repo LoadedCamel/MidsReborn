@@ -110,7 +110,13 @@ namespace Mids_Reborn.Forms
             tsHelp.Visible = false;
             tsHelp.Enabled = false;
             tmrGfx.Tick += tmrGfx_Tick;
+            PetView.SliderUpdated += OnPetViewSliderUpdated;
             Icon = Resources.MRB_Icon_Concept;
+        }
+
+        private void OnPetViewSliderUpdated()
+        {
+            RefreshInfo();
         }
 
         private void AddNonStandardControls()
@@ -335,8 +341,6 @@ namespace Mids_Reborn.Forms
                     var selectedIndex = comboData.IndexOf(scalingToHitItem);
                     EnemyRelativeToolStripComboBox.SelectedIndex = selectedIndex;
                 }
-
-                tsGenJsonExport.Visible = DatabaseAPI.Database.CrypticReplTable != null;
 
                 dvAnchored.Init();
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
@@ -6281,20 +6285,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             dirSelector.Dispose();
             FloatTop(true);
-        }
-
-        void tsGenJsonExport_Click(object sender, EventArgs e)
-        {
-            if (MainModule.MidsController.Toon == null)
-            {
-                return;
-            }
-
-            FloatTop(false);
-
-            clsGenFreebies.CrypticJsonExport.GenerateJson();
-
-            MessageBox.Show("Build data has been placed in the clipboard.\r\nFollow given instructions to proceed with the import.");
         }
 
         private void tsFlipAllEnh_Click(object sender, EventArgs e)

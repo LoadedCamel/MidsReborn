@@ -82,6 +82,47 @@ namespace Mids_Reborn.Core
             return _nClassID;
         }
 
+        public Dictionary<IPower, IPower?> GetPowers()
+        {
+            var powersByPowerset = new Dictionary<string, List<IPower>>();
+            foreach (var setString in PowersetFullName)
+            {
+                if (string.IsNullOrWhiteSpace(setString)) continue;
+
+                var powerset = DatabaseAPI.GetPowersetByFullname(setString);
+                if (powerset == null) continue;
+
+                var powers = powerset.Powers
+                    .Where(power => power != null && !power.FullName.Contains("PM"))
+                    .ToList();
+
+                powersByPowerset[powerset.FullName] = powers!;
+            }
+
+            var upgPowers = UpgradePowerFullName
+                .Where(upgString => !string.IsNullOrWhiteSpace(upgString))
+                .Select(DatabaseAPI.GetPowerByFullName)
+                .OfType<IPower>()
+                .ToList();
+
+            var allPowers = new Dictionary<IPower, IPower?>();
+            var powersetIndex = 0;
+            foreach (var powers in powersByPowerset.Values)
+            {
+                foreach (var power in powers)
+                {
+                    var requiredUpgrade = (powersetIndex > 0 && powersetIndex - 1 < upgPowers.Count)
+                        ? upgPowers[powersetIndex - 1]
+                        : null;
+
+                    allPowers[power] = requiredUpgrade;
+                }
+                powersetIndex++;
+            }
+
+            return allPowers;
+        }
+
         public static SummonedEntity AddEntity()
         {
             var iEntity = new SummonedEntity();

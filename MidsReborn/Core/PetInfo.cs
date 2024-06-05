@@ -29,31 +29,20 @@ namespace Mids_Reborn.Core
         private int _lastPower = -1;
 
         /// <summary>
-        /// The display name of the Pet entity
-        /// </summary>
-        public string? Name { get; set; }
-
-        /// <summary>
-        /// A description of the pet entity
-        /// </summary>
-        public string? Description { get; set; }
-
-        /// <summary>
         /// Returned values from generating buffed power data from pet powers.
         /// </summary>
-        public PetPowersData? PowersData { get; set; }
+        private PetPowersData? PowersData { get; set; }
 
         public PetInfo()
         {
 
         }
 
-        public PetInfo(int idxPower, IPower basePower, List<IPower?> powers)
+        public PetInfo(int idxPower, IPower basePower, List<IPower> powers)
         {
             _powerEntryIndex = idxPower;
             _basePower = basePower;
             _powers = powers;
-            PopulateBasicInfo();
             GeneratePetPowerData();
         }
 
@@ -72,7 +61,12 @@ namespace Mids_Reborn.Core
         public PetPower? GetPetPower(IPower power)
         {
             _lastPower = power.PowerIndex;
-            return new PetPower(PowersData.BasePowers.First(p => p.PowerIndex == power.PowerIndex), PowersData.BuffedPowers.First(p => p.PowerIndex == power.PowerIndex));
+            if (PowersData != null)
+            {
+                return new PetPower(PowersData.BasePowers.First(p => p.PowerIndex == power.PowerIndex),
+                    PowersData.BuffedPowers.First(p => p.PowerIndex == power.PowerIndex));
+            }
+            return null;
         }
 
         /// <summary>
@@ -81,33 +75,35 @@ namespace Mids_Reborn.Core
         /// <returns>PetPowers instance containing updated base and buffed versions of a power.</returns>
         public PetPower? GetPetPower()
         {
-            return _lastPower < 0 ? new PetPower(PowersData.BasePowers.First(), PowersData.BuffedPowers.First()) : new PetPower(PowersData.BasePowers.First(p => p.PowerIndex == _lastPower), PowersData.BuffedPowers.First(p => p.PowerIndex == _lastPower));
-        }
-
-        private void PopulateBasicInfo()
-        {
-            if (_basePower is not { HasEntity: true }) return;
-            Name = _basePower.DisplayName;
-            Description = _basePower.DescLong.Replace("\0", "");
+            if (PowersData != null)
+                return _lastPower < 0
+                    ? new PetPower(PowersData.BasePowers.First(), PowersData.BuffedPowers.First())
+                    : new PetPower(PowersData.BasePowers.First(p => p.PowerIndex == _lastPower),
+                        PowersData.BuffedPowers.First(p => p.PowerIndex == _lastPower));
+            return null;
         }
 
         private void GeneratePetPowerData()
         {
             if (_powers == null || _basePower == null) return;
             var powerData = MainModule.MidsController.Toon?.GenerateBuffedPowers(_powers, _powerEntryIndex);
-            if (powerData != null) PowersData = new PetPowersData(powerData.Value.Key, powerData.Value.Value);
+            if (powerData != null)
+            {
+                PowersData = new PetPowersData(powerData.Value.Key, powerData.Value.Value);
+            }
+
             PowersUpdated?.Invoke(this, EventArgs.Empty);
         }
 
-        public class PetPowersData
+        private class PetPowersData
         {
             public readonly List<IPower> BasePowers;
             public readonly List<IPower> BuffedPowers;
 
             public PetPowersData(List<IPower> basePowers, List<IPower> buffedPowers)
             {
-                BasePowers = basePowers;
-                BuffedPowers = buffedPowers;
+                BasePowers = basePowers.Where(p => p.IsPetPower).ToList();
+                BuffedPowers = buffedPowers.Where(p => p.IsPetPower).ToList();
             }
         }
 

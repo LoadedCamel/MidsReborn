@@ -1006,7 +1006,7 @@ namespace Mids_Reborn
                 foreach (var enhEffect in enhancementPower.Effects)
                 {
                     var shouldAddEffect = false;
-                    if (enhEffect.AffectsPetsOnly() && iPower.IsBasePetPower)
+                    if (enhEffect.AffectsPetsOnly() && iPower.IsSummonPower)
                     {
                         var uidEntity = iPower.Effects.FirstOrDefault(x => x.EffectType == Enums.eEffectType.EntCreate)?.Summon;
                         if (uidEntity != null)

@@ -2,10 +2,8 @@
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
-using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
 
@@ -13,24 +11,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class FrmEntityDetails : Form
     {
-        public delegate void PowerIncludeChangedEventHandler(IPower power);
-        public event PowerIncludeChangedEventHandler PowerIncludeChanged;
-
-        public delegate void PetViewSliderUpdatedEventHandler();
-        public event PetViewSliderUpdatedEventHandler PetViewSliderUpdated;
-        
-        private const int WM_NCHITTEST = 0x84;
-        private const int HTCLIENT = 0x1;
-        private const int HTCAPTION = 0x2;
-        private const int WM_NCLBUTTONDBLCLK = 0x00A3;
-        private const int WM_NCLBUTTONDOWN = 0xA1;
-
-        [DllImport("User32.dll")]
-        public static extern bool ReleaseCapture();
-
-        [DllImport("User32.dll")]
-        public static extern int SendMessage(IntPtr hWnd, int Msg, int wParam, int lParam);
-
         private string _entityUid;
         private List<string> _powers;
         private SummonedEntity? _entityData;
@@ -90,21 +70,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 cp.ExStyle |= 0x00000020;
                 return cp;
             }
-        }
-
-        // This is all you need to allow the window to be movable
-        protected override void WndProc(ref Message message)
-        {
-            if (message.Msg == WM_NCLBUTTONDBLCLK)
-            {
-                message.Result = IntPtr.Zero;
-                return;
-            }
-
-            base.WndProc(ref message);
-
-            if (message.Msg == WM_NCHITTEST && (int)message.Result == HTCLIENT)
-                message.Result = (IntPtr)HTCAPTION;
         }
 
         private void OnClosed(object? sender, EventArgs e)
@@ -191,11 +156,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     break;
             }
 
-            // Hide Totals and Enhance tabs
-            //petView1.TabsMask = new[] {true, true, false, false};
-            //petView1.BackColor = BackColor;
-            //petView1.Refresh();
-
             Text = _entityData != null ? $"Entity Details: {_entityData.DisplayName}" : "Entity Details";
 
             _entityData = DatabaseAPI.Database.Entities
@@ -203,7 +163,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 .FirstOrDefault(en => en?.UID == _entityUid);
 
             _powersData = _powers
-                .Select(DatabaseAPI.GetPowerByFullName).Where(p => !p.DisplayName.Contains("Granter"))
+                .Select(DatabaseAPI.GetPowerByFullName).Where(p => !p.IsSummonPower)
                 .ToList();
 
             var entityName = _entityData == null
@@ -225,18 +185,17 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void PowersCombo1OnSelectedPowersIndexChanged(object? sender, EventArgs e)
         {
-            var power = (IPower)powersCombo1.Items[powersCombo1.SelectedIndex];
-            var petPower = _petInfo.GetPetPower(power);
-            _dvPowerBase = petPower?.BasePower;
-            _dvPowerEnh = petPower?.BuffedPower;
+            if (powersCombo1.Items[powersCombo1.SelectedIndex] is IPower power)
+            {
+                var petPower = _petInfo.GetPetPower(power);
+                _dvPowerBase = petPower?.BasePower;
+                _dvPowerEnh = petPower?.BuffedPower;
+            }
 
             if (DvLocked)
             {
                 return;
             }
-
-            cbPowerInclude.Visible = power.ClickBuff | power.PowerType == Enums.ePowerType.Toggle;
-            cbPowerInclude.Checked = MidsContext.Character.CurrentBuild.PowerUsed(power);
 
             if (_dvPowerEnh != null) petView1.SetData(_dvPowerBase, _dvPowerEnh);
         }
@@ -310,53 +269,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             btnTopMost.UseAlt = charVillain;
             btnClose.UseAlt = charVillain;
             petView1.UseAlt = charVillain;
-        }
-
-        // Bug: DisplayLocation increases + 1 on every use
-        // Bug (CurrentBuild.AddPower): power modifications are ignored and have to be set on the resulting PowerEntry after the call
-        // Bug: Entity name is appended on every use and change every occurrence of the power (entity details, dataview, database editor...)
-        // To be improved: checkbox responsiveness is very slow (1-2s freeze delay)
-        private void cbPowerInclude_CheckedChanged(object sender, EventArgs e)
-        {
-            var power = new Power((IPower)powersCombo1.Items[powersCombo1.SelectedIndex]);
-
-            if (MidsContext.Character?.CurrentBuild?.PowerUsed(power) == false)
-            {
-                var pe = MidsContext.Character.CurrentBuild.AddPower(power, 49);
-                pe.StatInclude = true; // Toggle on
-                pe.Power.IncludeFlag = true; // Show in inherents
-                pe.Power.InherentType = Enums.eGridType.Pet;
-                pe.Power.DisplayName += _entityData == null
-                    ? ""
-                    : $" ({_entityData.DisplayName})";
-                pe.Power.DisplayLocation = (int)MidsContext.Character?.CurrentBuild?.Powers // Pick first available index on the inherents grid
-                    .Where(e => e?.Power is { IncludeFlag: true })
-                    .Select(e => e?.Power?.DisplayLocation)
-                    .Max() + 1;
-                //Debug.WriteLine($"- IncludeFlag: {pe.Power.IncludeFlag}, DisplayLocation: {pe.Power.DisplayLocation}, NIDPower: {pe.NIDPower}, NIDPowerset: {pe.NIDPowerset}");
-            }
-            else
-            {
-                MidsContext.Character?.CurrentBuild?.RemovePower(power);
-            }
-
-            PowerIncludeChanged?.Invoke(power);
-        }
-
-        private void borderPanel1_MouseDown(object sender, MouseEventArgs e)
-        {
-            if (e.Button != MouseButtons.Left)
-            {
-                return;
-            }
-
-            ReleaseCapture();
-            SendMessage(Handle, WM_NCLBUTTONDOWN, HTCAPTION, 0);
-        }
-
-        private void petView1_SlotUpdate()
-        {
-            //PetViewSliderUpdated?.Invoke();
         }
     }
 }

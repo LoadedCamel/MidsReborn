@@ -98,7 +98,7 @@ namespace Mids_Reborn.Forms.Controls
             powerScaler.BackColor = Color.Black;
             powerScaler.BackgroundImage = (Image)resources.GetObject("powerScaler.BackgroundImage");
             powerScaler.BackgroundImageLayout = ImageLayout.Stretch;
-            powerScaler.BaseBarColors = null;
+            powerScaler.BaseBarColors = (System.Collections.Generic.List<Color>)resources.GetObject("powerScaler.BaseBarColors");
             powerScaler.Border = true;
             powerScaler.BorderColor = Color.Black;
             powerScaler.Clickable = true;
@@ -116,13 +116,13 @@ namespace Mids_Reborn.Forms.Controls
             powerScaler.Dock = DockStyle.Top;
             powerScaler.DrawRuler = false;
             powerScaler.Dual = false;
-            powerScaler.EnhBarColors = null;
+            powerScaler.EnhBarColors = (System.Collections.Generic.List<Color>)resources.GetObject("powerScaler.EnhBarColors");
             powerScaler.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Bold, GraphicsUnit.Point);
             powerScaler.ForcedMax = 0F;
             powerScaler.ForeColor = Color.Azure;
             powerScaler.Highlight = false;
             powerScaler.ItemFontSizeOverride = 0F;
-            powerScaler.ItemHeight = 12;
+            powerScaler.ItemHeight = 11;
             powerScaler.Lines = true;
             powerScaler.Location = new Point(0, 192);
             powerScaler.MarkerValue = 0F;
@@ -131,10 +131,10 @@ namespace Mids_Reborn.Forms.Controls
             powerScaler.Name = "powerScaler";
             powerScaler.OuterBorder = true;
             powerScaler.Overcap = false;
-            powerScaler.OvercapColors = null;
+            powerScaler.OvercapColors = (System.Collections.Generic.List<Color>)resources.GetObject("powerScaler.OvercapColors");
             powerScaler.PaddingX = 2F;
             powerScaler.PaddingY = 2F;
-            powerScaler.PerItemScales = null;
+            powerScaler.PerItemScales = (System.Collections.Generic.List<float>)resources.GetObject("powerScaler.PerItemScales");
             powerScaler.RulerPos = CtlMultiGraph.RulerPosition.Top;
             powerScaler.ScaleHeight = 32;
             powerScaler.ScaleIndex = 8;
@@ -150,8 +150,8 @@ namespace Mids_Reborn.Forms.Controls
             info_TxtLarge.BackColor = Color.Black;
             info_TxtLarge.BorderStyle = BorderStyle.None;
             info_TxtLarge.Dock = DockStyle.Top;
-            info_TxtLarge.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            info_TxtLarge.ForeColor = Color.Black;
+            info_TxtLarge.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            info_TxtLarge.ForeColor = Color.WhiteSmoke;
             info_TxtLarge.Location = new Point(0, 88);
             info_TxtLarge.Name = "info_TxtLarge";
             info_TxtLarge.ReadOnly = true;
@@ -165,8 +165,8 @@ namespace Mids_Reborn.Forms.Controls
             info_TxtSmall.BackColor = Color.Black;
             info_TxtSmall.BorderStyle = BorderStyle.None;
             info_TxtSmall.Dock = DockStyle.Top;
-            info_TxtSmall.Font = new Font("Microsoft Sans Serif", 9F, FontStyle.Regular, GraphicsUnit.Point);
-            info_TxtSmall.ForeColor = Color.Black;
+            info_TxtSmall.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point);
+            info_TxtSmall.ForeColor = Color.WhiteSmoke;
             info_TxtSmall.Location = new Point(0, 42);
             info_TxtSmall.Name = "info_TxtSmall";
             info_TxtSmall.ReadOnly = true;
@@ -197,6 +197,7 @@ namespace Mids_Reborn.Forms.Controls
             // info_DataList
             // 
             info_DataList.AutoScroll = true;
+            info_DataList.AutoSizeLineHeight = true;
             info_DataList.Columns = 2;
             info_DataList.Dock = DockStyle.Top;
             info_DataList.Font = new Font("Microsoft Sans Serif", 9.75F, FontStyle.Regular, GraphicsUnit.Point);

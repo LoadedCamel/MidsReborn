@@ -242,11 +242,9 @@ namespace Mids_Reborn.Core
         
         float ArcanaCastTime { get; }
 
-        bool IsBasePetPower { get; }
+        bool IsSummonPower { get; }
         
-        bool IsChildPetPower { get; }
-        
-        PowerEntry? ParentPetPowerEntry { get; set; }
+        bool IsPetPower { get; }
 
         bool HasDefEffects();
 
@@ -330,7 +328,5 @@ namespace Mids_Reborn.Core
         bool AbsorbedPetEffects { get; set; }
         bool AppliedExecutes { get; set; }
         bool AppliedSubPowers { get; set; }
-        int ParentPetPowerEntryIndex { get; set; }
-        List<int> ChildPetEntryIndexes { get; set; }
     }
 }

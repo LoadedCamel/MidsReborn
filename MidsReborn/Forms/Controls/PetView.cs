@@ -14,10 +14,8 @@ namespace Mids_Reborn.Forms.Controls
 {
     public partial class PetView : UserControl
     {
-        public delegate void SlotUpdateEventHandler();
-        public delegate void UnlockClickEventHandler();
-        public event SlotUpdateEventHandler? SlotUpdate;
-        public event UnlockClickEventHandler? UnlockClick;
+        public delegate void SliderUpdateHandler();
+        public static SliderUpdateHandler? SliderUpdated;
 
         private event EventHandler? ViewColorChanged;
 
@@ -337,7 +335,6 @@ namespace Mids_Reborn.Forms.Controls
                 }
             }
 
-            //lblLock.Visible = Lock & (TabPage != 2);
             DisplayInfo(noLevel, iEnhLevel);
         }
 
@@ -1333,11 +1330,9 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             _lastScaleVal = num;
-            MainModule.MidsController.Toon.GenerateBuffedPowerArray();
-            //SetData(_basePower, _enhancedPower, _noLevel, Lock);
             SetDamageTip();
             DisplayData(_noLevel);
-            SlotUpdate?.Invoke();
+            SliderUpdated?.Invoke();
         }
 
         private void SetDamageTip()
@@ -1392,7 +1387,7 @@ namespace Mids_Reborn.Forms.Controls
             var basePowerData = new Power(basePower);
             var enhancedPowerData = new Power(enhancedPower);
 
-            if (basePower != null)
+            /*if (basePower != null)
             {
                 var baseBuildPowerEntry = MidsContext.Character.CurrentBuild.Powers
                     .Where(e => e?.Power != null)
@@ -1408,9 +1403,9 @@ namespace Mids_Reborn.Forms.Controls
                         ParentPetPowerEntry = parentPetPowerEntry
                     };
                 }
-            }
+            }*/
 
-            _rootPowerBase = basePowerData.ParentPetPowerEntry?.Power;
+            //_rootPowerBase = basePower.ParentPetPowerEntry?.Power;
             _entryIndex = historyIdx >= 0
                 ? historyIdx
                 : SelectPetPowerEntry();

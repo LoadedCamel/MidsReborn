@@ -33,7 +33,6 @@
             lblEntityName = new System.Windows.Forms.Label();
             petView1 = new Controls.PetView();
             powersCombo1 = new Controls.PowersCombo();
-            cbPowerInclude = new System.Windows.Forms.CheckBox();
             borderPanel1 = new Controls.BorderPanel();
             borderPanel1.SuspendLayout();
             SuspendLayout();
@@ -110,7 +109,6 @@
             petView1.Size = new System.Drawing.Size(442, 519);
             petView1.TabIndex = 5;
             petView1.UseAlt = false;
-            petView1.SlotUpdate += petView1_SlotUpdate;
             // 
             // powersCombo1
             // 
@@ -128,25 +126,12 @@
             powersCombo1.Size = new System.Drawing.Size(171, 34);
             powersCombo1.TabIndex = 6;
             // 
-            // cbPowerInclude
-            // 
-            cbPowerInclude.AutoSize = true;
-            cbPowerInclude.ForeColor = System.Drawing.Color.WhiteSmoke;
-            cbPowerInclude.Location = new System.Drawing.Point(13, 580);
-            cbPowerInclude.Name = "cbPowerInclude";
-            cbPowerInclude.Size = new System.Drawing.Size(134, 19);
-            cbPowerInclude.TabIndex = 7;
-            cbPowerInclude.Text = "Show power in build";
-            cbPowerInclude.UseVisualStyleBackColor = true;
-            cbPowerInclude.CheckedChanged += cbPowerInclude_CheckedChanged;
-            // 
             // borderPanel1
             // 
             borderPanel1.Border.Color = System.Drawing.Color.Silver;
             borderPanel1.Border.Style = System.Windows.Forms.ButtonBorderStyle.Solid;
             borderPanel1.Border.Thickness = 1;
             borderPanel1.Border.Which = Forms.Controls.BorderPanel.PanelBorder.BorderToDraw.All;
-            borderPanel1.Controls.Add(cbPowerInclude);
             borderPanel1.Controls.Add(powersCombo1);
             borderPanel1.Controls.Add(petView1);
             borderPanel1.Controls.Add(lblEntityName);
@@ -156,7 +141,6 @@
             borderPanel1.Name = "borderPanel1";
             borderPanel1.Size = new System.Drawing.Size(460, 608);
             borderPanel1.TabIndex = 8;
-            borderPanel1.MouseDown += borderPanel1_MouseDown;
             // 
             // FrmEntityDetails
             // 
@@ -186,7 +170,6 @@
         private System.Windows.Forms.Label lblEntityName;
         private Controls.PetView petView1;
         private Controls.PowersCombo powersCombo1;
-        private System.Windows.Forms.CheckBox cbPowerInclude;
         private Controls.BorderPanel borderPanel1;
     }
 }
