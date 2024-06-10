@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Mids_Reborn.Core.Base.Master_Classes;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 
@@ -9,19 +10,23 @@ namespace Mids_Reborn.Core
         /// <summary>
         /// An event that when subscribed to signifies when an update has completed on the PowerData.
         /// </summary>
-        public event EventHandler? PowersUpdated;
+        public static event EventHandler? PowersUpdated;
+
+        public event EventHandler? PowersDataUpdated;
 
         /// <summary>
         /// The parent power passed to the constructor that is the summoning power for the pet entity.
         /// </summary>
-        private readonly int _powerEntryIndex;
+        public readonly int PowerEntryIndex;
 
         private readonly IPower? _basePower;
+
+        private readonly SummonedEntity? _entity;
 
         /// <summary>
         /// List of powers passed to the constructor that represent the pet entities powers.
         /// </summary>
-        private readonly List<IPower>? _powers;
+        private List<IPower>? _powers;
 
         /// <summary>
         /// Last Power index that was passed to GetPower.
@@ -33,23 +38,52 @@ namespace Mids_Reborn.Core
         /// </summary>
         private PetPowersData? PowersData { get; set; }
 
+
+
         public PetInfo()
         {
 
         }
 
-        public PetInfo(int idxPower, IPower basePower, List<IPower> powers)
+        
+        public PetInfo(SummonedEntity entity, int idxPower, IPower basePower)
         {
-            _powerEntryIndex = idxPower;
+            _entity = entity;
+            PowerEntryIndex = idxPower;
             _basePower = basePower;
-            _powers = powers;
+            CompilePetPowers(out _);
             GeneratePetPowerData();
         }
 
         public bool HasEmptyBasePower => _basePower == null;
 
+        private void CompilePetPowers(out HashSet<string> powerNames)
+        {
+            powerNames = new HashSet<string>();
+            if (_entity == null) return;
+            var allPowers = _entity.GetPowers();
+            var currentBuildPowers = MidsContext.Character.CurrentBuild.Powers
+                .Where(pe => pe?.Power != null)
+                .Select(pe => pe?.Power)
+                .ToHashSet();
+
+            var filteredPowers = allPowers
+                .Where(powerPair => powerPair.Value == null || currentBuildPowers.Contains(powerPair.Value))
+                .Select(powerPair => powerPair.Key)
+                .ToList();
+
+            powerNames = filteredPowers.Select(x => x.FullName).ToHashSet();
+            _powers = filteredPowers;
+        }
+
         public void ExecuteUpdate()
         {
+            GeneratePetPowerData();
+        }
+
+        public void ExecuteUpdate(out HashSet<string> powers)
+        {
+            CompilePetPowers(out powers);
             GeneratePetPowerData();
         }
 
@@ -86,13 +120,13 @@ namespace Mids_Reborn.Core
         private void GeneratePetPowerData()
         {
             if (_powers == null || _basePower == null) return;
-            var powerData = MainModule.MidsController.Toon?.GenerateBuffedPowers(_powers, _powerEntryIndex);
+            var powerData = MainModule.MidsController.Toon?.GenerateBuffedPowers(_powers, PowerEntryIndex);
             if (powerData != null)
             {
                 PowersData = new PetPowersData(powerData.Value.Key, powerData.Value.Value);
             }
 
-            PowersUpdated?.Invoke(this, EventArgs.Empty);
+            PowersDataUpdated?.Invoke(this, EventArgs.Empty);
         }
 
         private class PetPowersData

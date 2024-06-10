@@ -7,6 +7,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 using FastDeepCloner;
 using Mids_Reborn.Controls;
@@ -2020,11 +2021,12 @@ namespace Mids_Reborn
 
             GenerateModifyEffectsArray();
             GenerateBuffData(ref _selfEnhance, true);
-            for (var hIDX = 0; hIDX < _mathPowers.Length; hIDX++)
+
+            Parallel.For(0, _mathPowers.Length, hIDX =>
             {
                 if (_mathPowers[hIDX] == null)
                 {
-                    continue;
+                    return;
                 }
 
                 GBPA_Pass1_EnhancePreED(ref _mathPowers[hIDX], hIDX);
@@ -2033,21 +2035,22 @@ namespace Mids_Reborn
                 GBPA_Pass4_Add(ref _mathPowers[hIDX]);
                 GBPA_ApplyArchetypeCaps(ref _mathPowers[hIDX]);
                 GBPA_Pass5_MultiplyPreBuff(ref _mathPowers[hIDX], ref _buffedPowers[hIDX]);
-            }
+            });
 
             GenerateBuffData(ref _selfBuffs, false);
 
-            for (var index = 0; index < _mathPowers.Length; index++)
+            Parallel.For(0, _mathPowers.Length, index =>
             {
                 if (_mathPowers[index] != null)
                 {
                     GBPA_Pass6_MultiplyPostBuff(ref _mathPowers[index], ref _buffedPowers[index]);
                 }
-            }
+            });
 
             ApplyGlobalEnhancements();
             GBD_Totals();
         }
+
 
         /// <summary>
         /// Generate MathPower, BuffedPower for the listed powers.
@@ -2063,16 +2066,19 @@ namespace Mids_Reborn
             {
                 // If root power is not picked in build, get unbuffed powers data from the db directly.
                 var powersList = powers
-                    .Select(e => DatabaseAPI.Database.Power.DefaultIfEmpty(new Power { StaticIndex = -1 }).FirstOrDefault(f => f?.StaticIndex == e.StaticIndex))
+                    .Select(e => DatabaseAPI.Database.Power.FirstOrDefault(f => f?.StaticIndex == e.StaticIndex) ?? new Power { StaticIndex = -1 })
                     .Cast<IPower>()
                     .ToList();
 
-                return new KeyValuePair<List<IPower>, List<IPower>>(powersList.Clone(), powersList.Clone());
+                var clonedPowersList = powersList.Clone();
+                return new KeyValuePair<List<IPower>, List<IPower>>(clonedPowersList, clonedPowersList);
             }
 
             var mathPowers = new List<IPower>();
             var buffedPowers = new List<IPower>();
-            powers.Add(CurrentBuild.Powers[basePowerHistoryIdx].Power.Clone()); // Restore original attached power
+            var basePower = CurrentBuild.Powers[basePowerHistoryIdx].Power.Clone();
+            powers.Add(basePower); // Restore original attached power
+
             for (var i = 0; i < powers.Count; i++)
             {
                 if (powers[i] == null)
@@ -2080,16 +2086,14 @@ namespace Mids_Reborn
                     continue;
                 }
 
-                CurrentBuild.Powers[basePowerHistoryIdx].NIDPower = DatabaseAPI.Database.Power.TryFindIndex(e => e != null && e.StaticIndex == powers[i].StaticIndex);
+                CurrentBuild.Powers[basePowerHistoryIdx].NIDPower = DatabaseAPI.Database.Power.TryFindIndex(e => e?.StaticIndex == powers[i].StaticIndex);
                 GenerateBuffedPowerArray();
 
-                if (i >= powers.Count - 1)
+                if (i < powers.Count - 1)
                 {
-                    continue;
+                    mathPowers.Add(_mathPowers[basePowerHistoryIdx].Clone());
+                    buffedPowers.Add(_buffedPowers[basePowerHistoryIdx].Clone());
                 }
-
-                mathPowers.Add(_mathPowers[basePowerHistoryIdx].Clone());
-                buffedPowers.Add(_buffedPowers[basePowerHistoryIdx].Clone());
             }
 
             return new KeyValuePair<List<IPower>, List<IPower>>(mathPowers, buffedPowers);

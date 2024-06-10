@@ -145,9 +145,11 @@ namespace Mids_Reborn.Core
 
         public IPowerset? PowerSet => Power != null ? DatabaseAPI.Database.Powersets[Power.PowerSetID] : null;
 
-        public bool AllowFrontLoading => Power != null && Power.AllowFrontLoading;
+        public bool AllowFrontLoading => Power is { AllowFrontLoading: true };
 
         public string Name => Power != null ? Power.DisplayName : "";
+
+        public bool IsSummonPower => Power is { IsSummonPower: true };
 
         public bool Virtual => !Chosen && SubPowers.Length > 0;
 

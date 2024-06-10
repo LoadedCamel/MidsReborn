@@ -97,49 +97,6 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public int BasePetPowersPlaced
-        {
-            get
-            {
-                return Powers.Count(pe => pe?.Power is not null && pe.Power.Effects.Any(e => e.EffectType is Enums.eEffectType.EntCreate));
-
-            }
-        }
-
-        /*public List<IPower?> PetPowers
-        {
-            get
-            {
-                return Powers.Where(pe => pe?.Power is not null && pe.Power.Effects.Any(e => e.EffectType is Enums.eEffectType.EntCreate))
-                    .Select(pe => pe?.Power).ToList();
-            }
-        }*/
-
-        public List<IPower?> PetSummonPowers
-        {
-            get
-            {
-                return Powers.Where(pe => pe?.Power is not null && pe.Power.Effects.Any(e => e.EffectType is Enums.eEffectType.EntCreate))
-                    .Select(pe => pe?.Power).ToList();
-            }
-        }
-
-        public BindingList<IPower> PetPowers
-        {
-            get
-            {
-                var powers = Powers.Where(pe => pe?.Power is not null && pe.Power.IsPetPower)
-                    .Select(pe => pe?.Power!)
-                    .ToList();
-                return new BindingList<IPower>(powers);
-            }
-        }
-
-        /*public int TotalSlotsAvailable
-    {
-        get { return DatabaseAPI.Database.Levels.Sum(level => level.Slots); }
-    }*/
-
         public static int TotalSlotsAvailable
         {
             get
@@ -167,7 +124,7 @@ namespace Mids_Reborn.Core
 
         public void RemovePower(IPower? powerToRemove)
         {
-            foreach (var powerEntry in Powers.Where(powerEntry => powerEntry is { Power: { } } && powerEntry.Power.PowerIndex == powerToRemove.PowerIndex))
+            foreach (var powerEntry in Powers.Where(powerEntry => powerToRemove != null && powerEntry is { Power: not null } && powerEntry.Power.PowerIndex == powerToRemove.PowerIndex))
             {
                 powerEntry?.Reset();
                 break;
@@ -176,7 +133,7 @@ namespace Mids_Reborn.Core
 
         private PowerEntry? GetPowerEntry(IPower? power)
         {
-            return Powers.FirstOrDefault(powerEntry => powerEntry is { Power: { } } && powerEntry.Power.PowerIndex.Equals(power.PowerIndex));
+            return Powers.FirstOrDefault(powerEntry => power != null && powerEntry is { Power: not null } && powerEntry.Power.PowerIndex.Equals(power.PowerIndex));
         }
 
         public async Task RemoveSlotFromPowerEntry(int powerIdx, int slotIdx)

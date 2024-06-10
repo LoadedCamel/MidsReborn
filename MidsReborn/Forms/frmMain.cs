@@ -116,7 +116,7 @@ namespace Mids_Reborn.Forms
 
         private void OnPetViewSliderUpdated()
         {
-            RefreshInfo();
+            FrmEntityDetails?.UpdateData();
         }
 
         private void AddNonStandardControls()
@@ -1792,25 +1792,12 @@ namespace Mids_Reborn.Forms
             if (FrmEntityDetails is not {Visible: true})
             {
                 FrmEntityDetails = new FrmEntityDetails(entityUid, powers, petInfo);
-                //FrmEntityDetails.PowerIncludeChanged += FrmEntityDetails_PowerIncludeChanged;
-                //FrmEntityDetails.PetViewSliderUpdated += FrmEntityDetails_SliderUpdated;
                 FrmEntityDetails.Show(this);
             }
             else if (FrmEntityDetails.Visible)
             {
                 FrmEntityDetails.UpdateData(entityUid, powers);
             }
-        }
-
-        private void FrmEntityDetails_PowerIncludeChanged(IPower power)
-        {
-            PowerModified(true);
-        }
-
-        private void FrmEntityDetails_SliderUpdated()
-        {
-            PowerModified(true);
-            FrmEntityDetails?.UpdateData();
         }
 
         private bool EditAccoladesOrTemps(int hIDPower)
@@ -5131,7 +5118,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 return;
             }
 
-            FrmEntityDetails.UpdateData();
+            FrmEntityDetails.UpdateData(true);
         }
 
         private void RefreshTabs(int iPower, I9Slot? iEnh, int iLevel = -1)

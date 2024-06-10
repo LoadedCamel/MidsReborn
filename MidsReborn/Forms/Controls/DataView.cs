@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -2874,31 +2875,6 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             }
 
-            /*var sets = item.EntTag.PowersetFullName.ToList();
-            var petPowers = new List<IPower?>();
-            foreach (var powersFound in sets.Select(powerSet => DatabaseAPI.GetPowersetByName(powerSet)?.Powers.ToList()).Where(powersFound => powersFound != null))
-            {
-                if (powersFound != null) petPowers.AddRange(powersFound);
-            }
-
-            if (pBase != null)
-            {
-                PetInfo = new PetInfo(HistoryIDX, pBase, petPowers);
-            }
-            
-            var powers = new HashSet<string>();
-            foreach (var ps in sets)
-            {
-                var powerList = DatabaseAPI.GetPowersetByName(ps)?.Powers;
-                var returnedPowers = powerList?.SelectMany(p => p!.FullName, (power, c) => power!.FullName).ToHashSet();
-                if (returnedPowers == null)
-                {
-                    continue;
-                }
-
-                powers.UnionWith(returnedPowers);
-            }*/
-
             var allPowers = item.EntTag.GetPowers();
             var currentBuildPowers = MidsContext.Character.CurrentBuild.Powers
                 .Where(pe => pe?.Power != null)
@@ -2912,7 +2888,7 @@ namespace Mids_Reborn.Forms.Controls
 
             if (pBase != null)
             {
-                PetInfo = new PetInfo(HistoryIDX, pBase, filteredPowers);
+                PetInfo = new PetInfo(item.EntTag, HistoryIDX, pBase);
             }
 
             var hashsetPowers = filteredPowers.Select(x => x.FullName).ToHashSet();
