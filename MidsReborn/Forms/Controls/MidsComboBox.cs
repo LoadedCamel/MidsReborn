@@ -137,6 +137,14 @@ namespace Mids_Reborn.Forms.Controls
             }
         }
 
+        public void ResetBindings(bool metaDataChanged = true)
+        {
+            if (_listBox.DataSource is BindingSource bindingSource)
+            {
+                bindingSource.ResetBindings(metaDataChanged);
+            }
+        }
+
         public void ApplyHeroBorder(bool villain)
         {
             BorderColor = villain switch
@@ -145,12 +153,6 @@ namespace Mids_Reborn.Forms.Controls
                 true => _villainColor
             };
             Invalidate(true);
-        }
-
-        public new void ResetBindings()
-        {
-            _listBox.BindingContext = new BindingContext();
-            _listBox.Refresh();
         }
 
         protected override void OnParentChanged(EventArgs e)

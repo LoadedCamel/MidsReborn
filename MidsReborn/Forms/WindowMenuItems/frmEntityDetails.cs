@@ -19,6 +19,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private IPower? _dvPowerBase;
         private IPower? _dvPowerEnh;
+        private BindingSource _bindingSource;
         private readonly PetInfo _petInfo;
 
         /// <summary>
@@ -36,6 +37,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             _powers = powers;
             _petInfo = petInfo;
             _petInfo.PowersDataUpdated += OnPetInfoPowersDataUpdated;
+            _bindingSource = new BindingSource();
             InitializeComponent();
             powersCombo1.SelectedIndexChanged += PowersCombo1OnSelectedPowersIndexChanged;
         }
@@ -75,7 +77,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             powersCombo1.DisplayMember = "DisplayName";
             powersCombo1.ValueMember = null;
-            powersCombo1.DataSource = _powersData;
+            _bindingSource.DataSource = _powersData;
+            powersCombo1.DataSource = _bindingSource;
             powersCombo1.SelectedIndex = 0;
 
             petView1.SetGraphType(Enums.eDDGraph.Simple, Enums.eDDStyle.TextUnderGraph);
@@ -140,9 +143,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 _powersData = _powers
                     .Select(DatabaseAPI.GetPowerByFullName)
                     .ToList();
-                powersCombo1.DataSource = null;
-                powersCombo1.DataSource = _powersData;
-                powersCombo1.ResetBindings();
+
+
+                _bindingSource.DataSource = _powersData;
+                powersCombo1.ResetBindings(false);
             }
             else
             {
