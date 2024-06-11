@@ -1992,7 +1992,7 @@ namespace Mids_Reborn.Core
 
                     break;
 
-                case Enums.eEffectType.CombatModShift:
+                case Enums.eEffectType.LevelShift:
                     rankedEffect.Name = "LvlShift";
                     rankedEffect.Value = $"{(effectSource.Mag > 0 ? "+" : "")}{effectSource.Mag:##0.##}";
 

@@ -432,7 +432,7 @@ namespace Mids_Reborn.Core
             SilentKill,
             Elusivity,
             GlobalChanceMod,
-            CombatModShift,
+            LevelShift,
             UnsetMode,
             Rage,
             MaxRunSpeed,

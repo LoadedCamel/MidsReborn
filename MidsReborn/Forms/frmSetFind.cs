@@ -73,7 +73,7 @@ namespace Mids_Reborn.Forms
                 Enums.eEffectType.BeastRun,
                 Enums.eEffectType.ClearDamagers,
                 Enums.eEffectType.ClearFog,
-                Enums.eEffectType.CombatModShift,
+                Enums.eEffectType.LevelShift,
                 Enums.eEffectType.CombatPhase,
                 Enums.eEffectType.Damage,
                 Enums.eEffectType.DesignerStatus,
