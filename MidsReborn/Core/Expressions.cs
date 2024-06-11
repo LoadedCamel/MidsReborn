@@ -471,9 +471,16 @@ namespace Mids_Reborn.Core
         {
             var modTable = DatabaseAPI.Database.AttribMods.Modifier.Where(e => e.ID == modifierName).ToList();
 
-            return modTable.Count <= 0
-                ? "0"
-                : $"{Math.Abs(modTable[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column])}";
+            if (modTable.Count <= 0)
+            {
+                Debug.WriteLine($"Returning 0 for {modifierName}");
+                return "0";
+            }
+            else
+            {
+                Debug.WriteLine($"Returning {Math.Abs(modTable[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column])} for {modifierName}");
+                return $"{modTable[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column]}";
+            }
         }
 
         private static string GetVariableValue(string powerName)
@@ -535,12 +542,6 @@ namespace Mids_Reborn.Core
                 _ => throw new ArgumentOutOfRangeException(nameof(exprType), exprType, null)
             };
 
-            // Constants
-            expr = CommandsDict(sourceFx).Aggregate(expr, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
-
-            // Non-numeric functions
-            expr = FunctionsDict(sourceFx, pickedPowerNames).Aggregate(expr, (current, f1) => f1.Key.Replace(current, f1.Value));
-
             // Numeric functions
             mathEngine.AddFunction("eq", (a, b) => Math.Abs(a - b) < double.Epsilon ? 1 : 0);
             mathEngine.AddFunction("ne", (a, b) => Math.Abs(a - b) > double.Epsilon ? 1 : 0);
@@ -549,6 +550,16 @@ namespace Mids_Reborn.Core
             mathEngine.AddFunction("lt", (a, b) => a < b ? 1 : 0);
             mathEngine.AddFunction("lte", (a, b) => a <= b ? 1 : 0);
             mathEngine.AddFunction("minmax", (a, b, c) => Math.Min(b > c ? b : c, Math.Max(b > c ? c : b, a)));
+
+            // Logical functions
+            mathEngine.AddFunction("and", (a, b) => (a != 0 && b != 0) ? 1 : 0);
+            mathEngine.AddFunction("or", (a, b) => (a != 0 || b != 0) ? 1 : 0);
+
+            // Constants
+            expr = CommandsDict(sourceFx).Aggregate(expr, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
+
+            // Non-numeric functions
+            expr = FunctionsDict(sourceFx, pickedPowerNames).Aggregate(expr, (current, f1) => f1.Key.Replace(current, f1.Value));
 
             try
             {
