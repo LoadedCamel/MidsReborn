@@ -196,7 +196,7 @@ namespace Mids_Reborn.Controls
             get => _yPadding;
             set
             {
-                if (!(value >= 0 & value < Height / 3.0))
+                if (!(value >= 0 & value < Height / 3f))
                     return;
                 _yPadding = value;
                 SetLineHeight();
@@ -283,7 +283,7 @@ namespace Mids_Reborn.Controls
             get => _scrollWidth;
             set
             {
-                if (value > 0 & value < Width / 2.0) _scrollWidth = value;
+                if (value > 0 & value < Width / 2f) _scrollWidth = value;
 
                 Recalculate();
                 Draw();
@@ -729,11 +729,7 @@ namespace Mids_Reborn.Controls
                 }
                 else if (!_disableEvents)
                 {
-                    int num;
-                    if (_scrollSteps / 3.0 < 5.0)
-                        num = (int) Math.Round(_scrollSteps / 3.0);
-                    else
-                        num = 5;
+                    var num = _scrollSteps / 3f < 5 ? (int)Math.Round(_scrollSteps / 3f) : 5;
 
                     switch (GetMouseTarget(e.X, e.Y))
                     {
@@ -1279,12 +1275,22 @@ namespace Mids_Reborn.Controls
                 return 0;
             }
 
-            if (IsExpanded)
+            var heightSum = 0;
+            var visibleItems = 0;
+            foreach (var item in _items)
             {
-                return GetTotalLineCount();
+                heightSum += item.ItemHeight;
+                if (heightSum > Height)
+                {
+                    break;
+                }
+
+                visibleItems += item.LineCount;
             }
 
-            return checked((int)Math.Round(_textArea.Height / (double)ActualLineHeight));
+            return IsExpanded
+                ? GetTotalLineCount()
+                : visibleItems;
         }
 
         private int GetTotalLineCount()
@@ -1330,9 +1336,9 @@ namespace Mids_Reborn.Controls
             Rectangle rect;
             checked
             {
-                _bxBuffer.Graphics.DrawLine(pen, (int) Math.Round(_textArea.Right + _scrollWidth / 2.0),
+                _bxBuffer.Graphics.DrawLine(pen, (int) Math.Round(_textArea.Right + _scrollWidth / 2f),
                     _yPadding + _scrollWidth,
-                    (int) Math.Round(_textArea.Right + _scrollWidth / 2.0), Height - (_scrollWidth + _yPadding));
+                    (int) Math.Round(_textArea.Right + _scrollWidth / 2f), Height - (_scrollWidth + _yPadding));
                 brush = new SolidBrush(_scButtonColor);
                 array = new PointF[3];
                 if (_scrollSteps > 0)
@@ -1376,7 +1382,7 @@ namespace Mids_Reborn.Controls
             var pen3 = new Pen(Color.FromArgb(128, 0, 0, 0), 1f);
             var brush = new SolidBrush(_scButtonColor);
             var array = new PointF[3];
-            var rectangle = checked(new Rectangle((int) Math.Round(Width / 3.0), Height - (_scrollWidth + _yPadding),
+            var rectangle = checked(new Rectangle((int) Math.Round(Width / 3f), Height - (_scrollWidth + _yPadding),
                 (int) Math.Round(Width / 3.0), _scrollWidth - _yPadding));
             if (IsExpanded)
             {
