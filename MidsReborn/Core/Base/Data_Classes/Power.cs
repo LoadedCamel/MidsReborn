@@ -611,7 +611,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         }
 
         public bool IsSummonPower => Effects.Any(x => x.EffectType is Enums.eEffectType.EntCreate);
-        public bool IsPetPower => GetPowerSet()?.FullName.Contains("Pets") == true;
+        public bool IsPetPower => FullName.StartsWith("Pets") || FullName.StartsWith("Mastermind_Pets");
+
+        public int ParentIdx { get; set; } = -1;
 
         public bool Active { get; set; }
         public bool Taken { get; set; }
@@ -759,8 +761,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(VariableStart);
         }
 
-        //public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power == this);
         public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x is { Power: not null } && x.Power.DisplayName == DisplayName);
+
+        public List<SummonedEntity>? GetEntities()
+        {
+            if (!IsSummonPower)
+                return null;
+            return (from effect in Effects
+                where effect.EffectType is Enums.eEffectType.EntCreate && effect.nSummon > -1
+                select DatabaseAPI.Database.Entities[effect.nSummon]).ToList();
+        }
 
         public float FXGetDamageValue(bool absorb = false)
         {
@@ -903,147 +913,174 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public string FXGetDamageString(bool absorb = false)
         {
-            var names = Enum.GetNames(typeof(Enums.eDamage));
-            var numArray1 = new float[names.Length];
-            var numArray2 = new float[names.Length, 2];
-            var numArray3 = new float[names.Length, 2];
-            var dmgString = string.Empty;
+            // Get the names of all damage types
+            var damageTypeNames = Enum.GetNames(typeof(Enums.eDamage));
+
+            // Arrays to store damage values and tick counts
+            var totalDamageArray = new float[damageTypeNames.Length];
+            var tickDamageArray = new float[damageTypeNames.Length, 2];
+            var tickCountArray = new float[damageTypeNames.Length, 2];
+
+            // String to store the resulting damage string
+            var damageString = string.Empty;
+
+            // Variable to store total calculated damage
             var totalDamage = 0f;
 
+            // Initialize the power object
             IPower power = new Power(this);
+
+            // Absorb pet effects if requested
             if (absorb)
             {
                 power.AbsorbPetEffects();
             }
 
+            // Check if any effects display percentage damage or have Strength aspect
             var hasPercentDamage = power.Effects
-                .Any(e => e.EffectType == Enums.eEffectType.Damage && e.DisplayPercentage | e.Aspect == Enums.eAspect.Str);
+                .Any(e => e.EffectType == Enums.eEffectType.Damage && (e.DisplayPercentage || e.Aspect == Enums.eAspect.Str));
 
+            // Iterate through each effect in the power
             foreach (var effect in power.Effects)
             {
+                // Skip effects that do not meet various conditions
                 if (effect.EffectType != Enums.eEffectType.Damage ||
                     MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum &&
                     !(Math.Abs(effect.Probability) > 0.999000012874603) ||
                     effect.EffectClass == Enums.eEffectClass.Ignored ||
-                    effect.DamageType == Enums.eDamage.Special && effect.ToWho == Enums.eToWho.Self ||
+                    effect is { DamageType: Enums.eDamage.Special, ToWho: Enums.eToWho.Self } ||
                     !(effect.Probability > 0) || !effect.CanInclude() || !effect.PvXInclude())
                 {
                     continue;
                 }
 
-                var effectMag = Math.Abs(effect.BuffedMag);
+                // Get the absolute magnitude of the effect
+                var effectMagnitude = Math.Abs(effect.BuffedMag);
 
+                // Adjust for average damage calculation
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
                 {
-                    effectMag *= effect.Probability;
+                    effectMagnitude *= effect.Probability;
                 }
 
+                // Further adjust for toggle powers with enhancement effects
                 if (power.PowerType == Enums.ePowerType.Toggle && effect.isEnhancementEffect)
                 {
-                    effectMag = (float)(effectMag * power.ActivatePeriod / 10d);
+                    effectMagnitude = (float)(effectMagnitude * power.ActivatePeriod / 10d);
                 }
 
-                if (Math.Abs(effectMag) < 0.0001)
+                // Skip negligible effects
+                if (Math.Abs(effectMagnitude) < 0.0001)
                 {
                     continue;
                 }
 
+                // Adjust effect magnitude for DPS or DPA based on power type and configuration
                 switch (MidsContext.Config.DamageMath.ReturnValue)
                 {
                     case ConfigData.EDamageReturn.DPS:
                         if (power.PowerType == Enums.ePowerType.Toggle && power.ActivatePeriod > 0)
                         {
-                            effectMag /= power.ActivatePeriod;
+                            effectMagnitude /= power.ActivatePeriod;
                             break;
                         }
 
                         if (power.RechargeTime + (double)power.CastTime > 0)
                         {
-                            effectMag /= power.RechargeTime + power.CastTime;
+                            effectMagnitude /= power.RechargeTime + power.CastTime;
                         }
 
                         break;
                     case ConfigData.EDamageReturn.DPA:
                         if (power.PowerType == Enums.ePowerType.Toggle && power.ActivatePeriod > 0)
                         {
-                            effectMag /= power.ActivatePeriod;
+                            effectMagnitude /= power.ActivatePeriod;
                             break;
                         }
 
                         if (power.CastTime > 0)
                         {
-                            effectMag /= power.CastTime;
+                            effectMagnitude /= power.CastTime;
                         }
 
                         break;
                 }
 
+                // Handle effects with ticks
                 if (effect.Ticks != 0)
                 {
-                    var num2 = !effect.CancelOnMiss ||
-                           MidsContext.Config.DamageMath.Calculate != ConfigData.EDamageMath.Average ||
-                           effect.Probability >= 1
+                    var effectiveTicks = !effect.CancelOnMiss ||
+                                         MidsContext.Config.DamageMath.Calculate != ConfigData.EDamageMath.Average ||
+                                         effect.Probability >= 1
                         ? effect.Ticks
                         : (float)((1 - Math.Pow(effect.Probability, effect.Ticks)) / (1 - effect.Probability));
 
                     var index = 0;
-                    if (Math.Abs(numArray2[(int)effect.DamageType, 0]) > 0.01)
+                    if (Math.Abs(tickDamageArray[(int)effect.DamageType, 0]) > 0.01)
                     {
                         index = 1;
                     }
 
-                    numArray2[(int)effect.DamageType, index] = effectMag;
-                    numArray3[(int)effect.DamageType, index] = num2;
-                    totalDamage += effectMag * num2;
+                    tickDamageArray[(int)effect.DamageType, index] = effectMagnitude;
+                    tickCountArray[(int)effect.DamageType, index] = effectiveTicks;
+                    totalDamage += effectMagnitude * effectiveTicks;
                 }
                 else
                 {
-                    totalDamage += effectMag;
-                    numArray1[(int)effect.DamageType] += effectMag;
+                    totalDamage += effectMagnitude;
+                    totalDamageArray[(int)effect.DamageType] += effectMagnitude;
                 }
             }
 
+            // Return "0" if total damage is negligible
             if (Math.Abs(totalDamage) < 0.0001)
             {
                 return "0";
             }
 
-            for (var index = 0; index < numArray1.Length; index++)
+            // Construct the damage string for each damage type
+            for (var index = 0; index < totalDamageArray.Length; index++)
             {
-                if (!(numArray1[index] > 0 | numArray2[index, 0] > 0))
+                if (!(totalDamageArray[index] > 0 || tickDamageArray[index, 0] > 0))
                 {
                     continue;
                 }
-                
-                if (!string.IsNullOrEmpty(dmgString))
+
+                if (!string.IsNullOrEmpty(damageString))
                 {
-                    dmgString += ", ";
+                    damageString += ", ";
                 }
 
-                var str2 = $"{dmgString}{Enums.GetDamageName((Enums.eDamage)index)}(";
-                if (numArray1[index] > 0)
+                var damageEntry = $"{Enums.GetDamageName((Enums.eDamage)index)}(";
+                if (totalDamageArray[index] > 0)
                 {
-                    str2 += hasPercentDamage ? $"{Utilities.FixDP(numArray1[index] * 100)}%" : Utilities.FixDP(numArray1[index]);
+                    damageEntry += hasPercentDamage
+                        ? $"{Utilities.FixDP(totalDamageArray[index] * 100)}%"
+                        : Utilities.FixDP(totalDamageArray[index]);
                 }
 
-                if (Math.Abs(numArray2[index, 0]) > 0.01)
+                if (Math.Abs(tickDamageArray[index, 0]) > 0.01)
                 {
-                    if (numArray1[index] > 0)
+                    if (totalDamageArray[index] > 0)
                     {
-                        str2 += "+";
+                        damageEntry += "+";
                     }
 
-                    str2 += $"{(hasPercentDamage ? $"{Utilities.FixDP(numArray2[index, 0] * 100)}%" : Utilities.FixDP(numArray2[index, 0]))}x{Utilities.FixDP(numArray3[index, 0])}";
-                    if (Math.Abs(numArray2[index, 1]) > 0.01)
+                    damageEntry +=
+                        $"{(hasPercentDamage ? $"{Utilities.FixDP(tickDamageArray[index, 0] * 100)}%" : Utilities.FixDP(tickDamageArray[index, 0]))}x{Utilities.FixDP(tickCountArray[index, 0])}";
+                    if (Math.Abs(tickDamageArray[index, 1]) > 0.01)
                     {
-                        str2 += $"+{(hasPercentDamage ? $"{Utilities.FixDP(numArray2[index, 1] * 100)}%" : Utilities.FixDP(numArray2[index, 1]))}x{Utilities.FixDP(numArray3[index, 1])}";
+                        damageEntry +=
+                            $"+{(hasPercentDamage ? $"{Utilities.FixDP(tickDamageArray[index, 1] * 100)}%" : Utilities.FixDP(tickDamageArray[index, 1]))}x{Utilities.FixDP(tickCountArray[index, 1])}";
                     }
                 }
 
-                dmgString = $"{str2})";
+                damageString += $"{damageEntry})";
             }
 
-            return $"{dmgString} = {(hasPercentDamage ? $"{Utilities.FixDP(totalDamage * 100)}% | {Utilities.FixDP(totalDamage * MidsContext.Character.Totals.HPMax)}" : Utilities.FixDP(totalDamage))}";
+            // Return the final formatted damage string with total damage
+            return
+                $"{damageString} = {(hasPercentDamage ? $"{Utilities.FixDP(totalDamage * 100)}% | {Utilities.FixDP(totalDamage * MidsContext.Character.Totals.HPMax)}" : Utilities.FixDP(totalDamage))}";
         }
 
         public int[] GetRankedEffects(bool newMode)

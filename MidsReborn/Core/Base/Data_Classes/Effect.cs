@@ -938,7 +938,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             if (sChance == "")
             {
-                if (ProcsPerMinute > 0 && Probability < 0.01)
+                if (ProcsPerMinute > 0 && Probability < 0.00)
                 {
                     sChance = $"{ProcsPerMinute} PPM";
                 }
@@ -946,7 +946,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     if (BaseProbability < 1)
                     {
-                        if (BaseProbability >= 0.01)
+                        if (BaseProbability >= 0.00)
                         {
                             sChance = BaseProbability >= 0.975f
                                 ? $"{BaseProbability * 100:#0.0}% chance"
@@ -972,16 +972,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                                 : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
                         }
                     }
-                    /*else if (EffectId != "" & EffectId != "Ones")
-                    {
-                        sChance = $"when {EffectId}";
-                    }*/
                 }
                 else
                 {
                     if (Probability < 1)
                     {
-                        if (Probability >= 0.01)
+                        if (Probability >= 0.00)
                         {
                             sChance = Probability >= 0.975f
                                 ? $"{Probability * 100:#0.0}% chance"
@@ -1007,10 +1003,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                                 : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
                         }
                     }
-                    /*else if (EffectId != "" & EffectId != "Ones")
-                    {
-                        sChance = $"when {EffectId}";
-                    }*/
                 }
             }
 

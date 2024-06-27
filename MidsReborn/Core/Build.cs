@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -1348,15 +1347,18 @@ namespace Mids_Reborn.Core
 
                         // Refactor the bitwise comparison to method call or direct comparison
                         var powerInfo = DatabaseAPI.Database.Power[power];
-                        if (ShouldSkipEffects(powerInfo))
+                        if (powerInfo != null && ShouldSkipEffects(powerInfo))
                         {
-                            skipEffects = true;
+                            continue;
                         }
                 
                         
                         if (setCount[power] < 6)
                         {
-                            effectList.AddRange(powerInfo.Effects.Select(t => (IEffect)t.Clone()));
+                            if (powerInfo != null)
+                            {
+                                effectList.AddRange(powerInfo.Effects.Select(t => (IEffect)t.Clone()));
+                            }
                         }
                     }
                 }

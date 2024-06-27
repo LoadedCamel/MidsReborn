@@ -179,12 +179,6 @@ namespace Mids_Reborn.Core
 
         public float MovementRunSpeed(Enums.eSpeedMeasure sType, bool uncapped)
         {
-            /*var iSpeed = _character.Totals.RunSpd;
-            if (!uncapped && _character.Totals.RunSpd > _character.Totals.MaxRunSpd)
-            {
-                iSpeed = _character.Totals.MaxRunSpd;
-            }*/
-
             var iSpeed = uncapped
                 ? MidsContext.Character?.Totals.RunSpd
                 : MidsContext.Character?.TotalsCapped.RunSpd;

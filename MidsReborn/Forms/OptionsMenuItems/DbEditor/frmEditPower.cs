@@ -277,11 +277,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             FormClosing += frmEditPower_CancelClose;
             lblNameFull.Text = $@"{myPower.GroupName}.{myPower.SetName}.{myPower.PowerName}";
-            if (string.IsNullOrWhiteSpace(myPower.GroupName) | string.IsNullOrWhiteSpace(myPower.SetName) |
+
+            if (string.IsNullOrWhiteSpace(myPower.GroupName) || string.IsNullOrWhiteSpace(myPower.SetName) ||
                 string.IsNullOrWhiteSpace(myPower.PowerName))
             {
-                MessageBox.Show(@$"Power name ({myPower.FullName}) is invalid.", @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
+                MessageBox.Show(@$"Power name ({myPower.FullName}) is invalid.", @"No Can Do", MessageBoxButtons.OK,
+                    MessageBoxIcon.Exclamation);
                 return;
             }
 
@@ -289,7 +290,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 MessageBox.Show(@$"Power name ({myPower.FullName}) already exists. Please enter a unique name.",
                     @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
                 return;
             }
 
@@ -297,31 +297,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 MessageBox.Show(@$"Invalid static index. Please enter a positive integer.", @"No Can Do",
                     MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
-
                 return;
             }
 
-            var siCheck = DatabaseAPI.Database.Power.Where(p => p.StaticIndex == myPower.StaticIndex & p.FullName != myPower.FullName).ToList();
+            var siCheck = DatabaseAPI.Database.Power
+                .Where(p => p.StaticIndex == myPower.StaticIndex && p.FullName != myPower.FullName).ToList();
             var firstAvailableIndex = 0;
-            switch (siCheck.Count)
+            if (siCheck.Count > 0)
             {
-                case 1:
-                    firstAvailableIndex = DatabaseAPI.Database.Power.Max(p => p.StaticIndex) + 1;
-                    MessageBox.Show(
-                        $"Another power with the same static index ({myPower.StaticIndex}) already exists. Please enter a unique static index.\r\nStatic index {myPower.StaticIndex} is used by:\r\n{siCheck[0].FullName}\r\n\r\nFirst available index: {firstAvailableIndex}",
-                        @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+                firstAvailableIndex = DatabaseAPI.Database.Power.Max(p => p.StaticIndex) + 1;
+                var pList = string.Join(",\r\n", siCheck.Select(p => p.FullName));
+                var message =
+                    $"Another power with the same static index ({myPower.StaticIndex}) already exists. Do you want to overwrite it?\r\n\r\nStatic index {myPower.StaticIndex} is used by:\r\n{pList}\r\n\r\nFirst available index: {firstAvailableIndex}";
 
+                var dialogResult = MessageBox.Show(message, "Static Index Conflict", MessageBoxButtons.YesNo,
+                    MessageBoxIcon.Warning);
+
+                if (dialogResult == DialogResult.No)
+                {
                     return;
-                case > 1:
-                    {
-                        var pList = string.Join(",\r\n", siCheck.Select(p => p.FullName));
-                        firstAvailableIndex = DatabaseAPI.Database.Power.Max(p => p.StaticIndex) + 1;
-                        MessageBox.Show(
-                            $"Other powers with the same static index ({myPower.StaticIndex}) already exists. Please fix them first.\r\nStatic index {myPower.StaticIndex} is used by:\r\n{pList}\r\n\r\nFirst available index: {firstAvailableIndex}",
-                            @"No Can Do", MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                        return;
-                    }
+                }
             }
 
             if (chkSubInclude.Checked)
@@ -331,19 +326,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 {
                     var ps = myPower.GetPowerSet()?.FullName ?? "---";
                     var inherentSlotPowers1 = DatabaseAPI.Database.Power
-                        .Where(e => e is { IncludeFlag: true, InherentType: not Enums.eGridType.None } && e.DisplayLocation == myPower.DisplayLocation && e.StaticIndex != myPower.StaticIndex && e.GetPowerSet()?.FullName == ps)
+                        .Where(e => e is { IncludeFlag: true, InherentType: not Enums.eGridType.None } &&
+                                    e.DisplayLocation == myPower.DisplayLocation &&
+                                    e.StaticIndex != myPower.StaticIndex && e.GetPowerSet()?.FullName == ps)
                         .OrderBy(e => e?.DisplayName)
                         .Select(e => $"- {e?.DisplayName}")
                         .ToList();
 
-
                     var inherentSlotPowers2 = DatabaseAPI.Database.Power
-                        .Where(e => e is { IncludeFlag: true, InherentType: not Enums.eGridType.None } && e.DisplayLocation == myPower.DisplayLocation && e.StaticIndex != myPower.StaticIndex && e.GetPowerSet()?.FullName != ps)
+                        .Where(e => e is { IncludeFlag: true, InherentType: not Enums.eGridType.None } &&
+                                    e.DisplayLocation == myPower.DisplayLocation &&
+                                    e.StaticIndex != myPower.StaticIndex && e.GetPowerSet()?.FullName != ps)
                         .OrderBy(e => e?.DisplayName)
                         .Select(e => $"- {e?.DisplayName} ({e?.GetPowerSet()?.FullName ?? "No powerset"})")
                         .ToList();
 
-                    if (inherentSlotPowers1.Count > 0 | inherentSlotPowers2.Count > 0)
+                    if (inherentSlotPowers1.Count > 0 || inherentSlotPowers2.Count > 0)
                     {
                         var msg = MessageBox.Show(
                             $"Warning: you have selected inherent slot {inherentGridIndex} for this power.\r\nIt may conflict with these powers{(inherentSlotPowers1.Count + inherentSlotPowers2.Count > 8 ? $" (and {inherentSlotPowers1.Count + inherentSlotPowers2.Count - 8} others)" : "")}:\r\n\r\nIn this powerset:\r\n{(inherentSlotPowers1.Count <= 0 ? "(None)" : string.Join("\r\n", inherentSlotPowers1.Take(Math.Min(8, inherentSlotPowers1.Count))))}\r\n\r\nOther powersets:\r\n{(inherentSlotPowers2.Count <= 0 ? "(None)" : string.Join("\r\n", inherentSlotPowers2.Take(Math.Min(8, inherentSlotPowers2.Count))))}\r\n\r\nConfirm selection ?",
@@ -359,7 +357,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     myPower.DisplayLocation = inherentGridIndex;
                 }
             }
-
 
             FormClosing -= frmEditPower_CancelClose;
 
@@ -403,6 +400,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DialogResult = DialogResult.OK;
             Hide();
         }
+
 
         private void btnPrDown_Click(object sender, EventArgs e)
         {

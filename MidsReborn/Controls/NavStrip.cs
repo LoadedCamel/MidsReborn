@@ -26,49 +26,134 @@ namespace Mids_Reborn.Controls
         public override ImageLayout BackgroundImageLayout { get; set; }
 
         #endregion
+
+        public enum ThemeColor
+        {
+            Hero,
+            Villain
+        }
+
         private FormPages? _dataSource;
         private readonly HashSet<Page> _pageHash = new();
         private readonly Color _separatorColor = Color.Black;
+        private ThemeColor _theme = ThemeColor.Hero;
+        private Color _activeTabColor = Color.Goldenrod;
+        private Color _backColor = Color.Black;
+        private Color _disabledTabColor = Color.DarkGray;
+        private Color _dimmedColor = Color.FromArgb(21, 61, 93);
+        private Color _foreColor = Color.WhiteSmoke;
+        private Color _inactiveTabColor = Color.FromArgb(30, 85, 130);
+        private Color _inactiveTabHoverColor = Color.FromArgb(43, 122, 187);
+        private Color _outlineColor = Color.Black;
+        private bool _outline = true;
+        private bool _useDimmed;
+        private bool _useTheme;
+        private int _padding = 15;
 
         [Category("Appearance")]
-        public Color ActiveTabColor { get; set; } = Color.Goldenrod;
-
-        [Category("Appearance")] 
-        public override Color BackColor { get; set; } = Color.Black;
-
-        [Category("Appearance")]
-        public Color DisabledTabColor { get; set; } = Color.DarkGray;
+        public Color ActiveTabColor
+        {
+            get => _activeTabColor;
+            set => SetField(ref _activeTabColor, value);
+        }
 
         [Category("Appearance")]
-        public Color DimmedColor { get; set; } = Color.FromArgb(21, 61, 93);
-
-        [Category("Appearance")] 
-        public override Color ForeColor { get; set; } = Color.WhiteSmoke;
-
-        [Category("Appearance")]
-        public Color InactiveTabColor { get; set; } = Color.FromArgb(30, 85, 130);
+        public override Color BackColor
+        {
+            get => _backColor;
+            set => SetField(ref _backColor, value);
+        }
 
         [Category("Appearance")]
-        public Color InactiveTabHoverColor { get; set; } = Color.FromArgb(43, 122, 187);
+        public Color DisabledTabColor
+        {
+            get => _disabledTabColor;
+            set => SetField(ref _disabledTabColor, value);
+        }
 
         [Category("Appearance")]
-        public Color OutlineColor { get; set; } = Color.Black;
+        public Color DimmedColor
+        {
+            get => _dimmedColor;
+            set => SetField(ref _dimmedColor, value);
+        }
+
+        [Category("Appearance")]
+        public override Color ForeColor
+        {
+            get => _foreColor;
+            set => SetField(ref _foreColor, value);
+        }
+
+        [Category("Appearance")]
+        public Color InactiveTabColor
+        {
+            get => _inactiveTabColor;
+            set => SetField(ref _inactiveTabColor, value);
+        }
+
+        [Category("Appearance")]
+        public Color InactiveTabHoverColor
+        {
+            get => _inactiveTabHoverColor;
+            set => SetField(ref _inactiveTabHoverColor, value);
+        }
+
+        [Category("Appearance")]
+        public Color OutlineColor
+        {
+            get => _outlineColor;
+            set => SetField(ref _outlineColor, value);
+        }
 
         [Category("Appearance")]
         [Description("Specifies whether the text has an outline.")]
         [DefaultValue(true)]
-        public bool Outline { get; set; } = true;
+        public bool Outline
+        {
+            get => _outline;
+            set => SetField(ref _outline, value);
+        }
+
+        public ThemeColor Theme
+        {
+            get => _theme;
+            set
+            {
+                if (!UseTheme) return;
+                if (SetField(ref _theme, value))
+                {
+                    SetTheme();
+                }
+            }
+        }
 
         [Category("Appearance")]
-        [Description("Specified whether or not to use the dimmed color as the BackColor of the control.")]
+        [Description("Specifies whether or not to use the dimmed color as the BackColor of the control.")]
         [DefaultValue(false)]
-        public bool UseDimmed { get; set; }
+        public bool UseDimmed
+        {
+            get => _useDimmed;
+            set => SetField(ref _useDimmed, value);
+        }
 
-        [Category("Layout")] 
-        public new int Padding { get; set; } = 15;
+        [Category("Appearance")]
+        [Description("Specifies whether or not the control uses the selected theme for colors.")]
+        [DefaultValue(false)]
+        public bool UseTheme
+        {
+            get => _useTheme;
+            set => SetField(ref _useTheme, value);
+        }
 
+        [Category("Layout")]
+        public new int Padding
+        {
+            get => _padding;
+            set => SetField(ref _padding, value);
+        }
 
-        [Browsable(false)] 
+        [Browsable(false)]
         private BindingList<NavStripItem> Items { get; } = new();
 
         [Category("Data")]
@@ -78,22 +163,16 @@ namespace Mids_Reborn.Controls
             get => _dataSource;
             set
             {
-                if (_dataSource == value) return;
-                if (_dataSource != null)
+                if (SetField(ref _dataSource, value))
                 {
-                    _dataSource.Pages.ListChanged -= DataSource_Changed;
-                    _dataSource.SelectedIndexChanged -= DataSource_SelectedIndexChanged;
+                    if (_dataSource != null)
+                    {
+                        _dataSource.Pages.ListChanged += DataSource_Changed;
+                        _dataSource.SelectedIndexChanged += DataSource_SelectedIndexChanged;
+                    }
+
+                    UpdateItems();
                 }
-
-                _dataSource = value;
-
-                if (_dataSource != null)
-                {
-                    _dataSource.Pages.ListChanged += DataSource_Changed;
-                    _dataSource.SelectedIndexChanged += DataSource_SelectedIndexChanged;
-                }
-
-                UpdateItems();
             }
         }
 
@@ -103,6 +182,25 @@ namespace Mids_Reborn.Controls
             InitializeComponent();
             Load += OnLoad;
             PropertyChanged += NavStrip_PropertyChanged;
+        }
+
+        private void SetTheme()
+        {
+            switch (Theme)
+            {
+                case ThemeColor.Hero:
+                    ActiveTabColor = Color.Goldenrod;
+                    DimmedColor = Color.FromArgb(21, 61, 93);
+                    InactiveTabColor = Color.FromArgb(30, 85, 130);
+                    InactiveTabHoverColor = Color.FromArgb(43, 122, 187);
+                    break;
+                case ThemeColor.Villain:
+                    ActiveTabColor = Color.Goldenrod;
+                    DimmedColor = Color.FromArgb(93,16,16);
+                    InactiveTabColor = Color.FromArgb(130, 22, 22);
+                    InactiveTabHoverColor = Color.FromArgb(187, 32, 32);    
+                    break;
+            }
         }
 
         private void OnLoad(object? sender, EventArgs e)

@@ -34,6 +34,13 @@ namespace Mids_Reborn.Forms.Controls
         private readonly Color _mainVillainColor = Color.FromArgb(100, 12, 12);
         private readonly Color _dimmedVillainColor = Color.FromArgb(77, 31, 31);
 
+        private struct ItemPairGroupEx
+        {
+            public string Label;
+            public Func<GroupedFx.FxId, bool> Filter;
+            public List<KeyValuePair<GroupedFx, PairedListEx.Item>> ItemPairsEx;
+        }
+
         public bool UseAlt
         {
             get => _useAlt;
@@ -52,19 +59,51 @@ namespace Mids_Reborn.Forms.Controls
             InitializeComponent();
         }
 
+        private void FormPages1OnSelectedIndexChanged(object? sender, int pageIndex)
+        {
+            if (pageIndex >= 0 && pageIndex < formPages1.Pages.Count)
+            {
+                switch (pageIndex)
+                {
+                    case 0: // Info Page
+                    {
+                        break;
+                    }
+                    case 1: // Effects Page
+                    {
+                        break;
+                    }
+                }
+            }
+        }
+
         private void OnViewColorChanged(object? sender, EventArgs e)
         {
+            navStrip1.Theme = _useAlt ? NavStrip.ThemeColor.Villain : NavStrip.ThemeColor.Hero;
             var backColor = _useAlt ? _mainVillainColor : _mainHeroColor;
             var separatorColor = _useAlt ? _dimmedVillainColor : _dimmedHeroColor;
 
             BackColor = backColor;
-            panelSeparator1.BackColor = separatorColor;
-            panelSeparator2.BackColor = separatorColor;
-            panelSeparator3.BackColor = separatorColor;
-            panelSeparator4.BackColor = separatorColor;
-            panelSeparator5.BackColor = separatorColor;
-            panelSeparator6.BackColor = separatorColor;
+            PerformActionOnMatchingPanels(this, separatorColor);
             Invalidate();
+        }
+
+        private void PerformActionOnMatchingPanels(Control parent, Color separatorColor)
+        {
+            foreach (Control control in parent.Controls)
+            {
+                if (control is Panel panel && panel.Name.Contains("panelSeparator"))
+                {
+                    // Perform your desired action on the panel
+                    panel.BackColor = separatorColor;
+                }
+
+                // Recursively check the children of the current control
+                if (control.HasChildren)
+                {
+                    PerformActionOnMatchingPanels(control, separatorColor);
+                }
+            }
         }
 
         private static string CapString(string iString, int capLength)
@@ -83,6 +122,7 @@ namespace Mids_Reborn.Forms.Controls
                 infoTitleText = $"{infoTitleText} (Slot Level {iEnhLvl + 1})";
 
             info_Title.Text = infoTitleText;
+            fx_Title.Text = infoTitleText;
             info_TxtSmall.Text = _basePower.DescShort;
             info_TxtLarge.Text = _basePower.DescLong.Trim().Replace("\0", "");
 
@@ -91,6 +131,156 @@ namespace Mids_Reborn.Forms.Controls
             AddInfoDataItems(_basePower, enhancedPower, tip1);
 
             SetDamageTip();
+        }
+
+        private void DisplayEffects(bool noLevel = false, int iEnhLvl = -1)
+        {
+            if (_basePower == null)
+            {
+                return;
+            }
+
+            fx_Title.Text = !noLevel & (_basePower.Level > 0)
+                ? $"[{_basePower.Level}] {_basePower.DisplayName}"
+                : _basePower.DisplayName;
+
+            if (iEnhLvl > -1)
+            {
+                var fxTitle = fx_Title;
+                fxTitle.Text = $"{fxTitle.Text} (Slot Level {iEnhLvl + 1})";
+            }
+
+            PairedListEx[] pairedListArray =
+            {
+                fx_List1, fx_List2, fx_List3
+            };
+
+            Label[] labelArray =
+            {
+                fx_lblHead1, fx_lblHead2, fx_LblHead3
+            };
+
+            fx_List1.Clear();
+            fx_List2.Clear();
+            fx_List3.Clear();
+            fx_lblHead1.Text = string.Empty;
+            fx_lblHead2.Text = string.Empty;
+            fx_LblHead3.Text = string.Empty;
+
+            var itemPairGroups = new List<ItemPairGroupEx>
+            {
+                new()
+                {
+                    Label = "Defense/Resistance",
+                    Filter = e => e.EffectType is Enums.eEffectType.Defense or Enums.eEffectType.Resistance,
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                },
+
+                new()
+                {
+                    Label = "Heal/Endurance",
+                    Filter = e => e.EffectType is Enums.eEffectType.Heal or Enums.eEffectType.HitPoints
+                        or Enums.eEffectType.Regeneration or Enums.eEffectType.Endurance
+                        or Enums.eEffectType.EnduranceDiscount or Enums.eEffectType.Recovery
+                        or Enums.eEffectType.Absorb,
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                },
+
+                new()
+                {
+                    Label = "Status",
+                    Filter = e => e.EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezResist
+                        or Enums.eEffectType.Translucency,
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                },
+
+                new()
+                {
+                    Label = "Buff/Debuff",
+                    Filter = e => e.EffectType is Enums.eEffectType.ToHit or Enums.eEffectType.DamageBuff
+                        or Enums.eEffectType.PerceptionRadius or Enums.eEffectType.StealthRadius
+                        or Enums.eEffectType.StealthRadiusPlayer or Enums.eEffectType.ResEffect
+                        or Enums.eEffectType.ThreatLevel or Enums.eEffectType.DropToggles
+                        or Enums.eEffectType.RechargeTime or Enums.eEffectType.Enhancement,
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                },
+
+                new()
+                {
+                    Label = "Movement",
+                    Filter = e => e.EffectType is Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedJumping
+                        or Enums.eEffectType.SpeedFlying or Enums.eEffectType.JumpHeight or Enums.eEffectType.Jumppack
+                        or Enums.eEffectType.Fly or Enums.eEffectType.MaxRunSpeed or Enums.eEffectType.MaxJumpSpeed
+                        or Enums.eEffectType.MaxFlySpeed,
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                },
+
+                new()
+                {
+                    Label = "Summon",
+                    Filter = e => e.EffectType is Enums.eEffectType.EntCreate,
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                },
+
+                new()
+                {
+                    Label = "Granted Powers",
+                    Filter = e => e.EffectType == Enums.eEffectType.GrantPower,
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                },
+
+                new()
+                {
+                    Label = "Modify Effect",
+                    Filter = e => e.EffectType == Enums.eEffectType.ModifyAttrib,
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                },
+
+                new()
+                {
+                    Label = "Elusivity",
+                    Filter = e =>
+                        (MidsContext.Config.Inc.DisablePvE) &
+                        e.EffectType == Enums.eEffectType.Elusivity,
+                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                }
+            };
+
+            for (var i = 0; i < itemPairGroups.Count; i++)
+            {
+                itemPairGroups[i] = new ItemPairGroupEx
+                {
+                    Label = itemPairGroups[i].Label,
+                    Filter = itemPairGroups[i].Filter,
+                    ItemPairsEx = GroupedFx.FilterListItemsExt(_effectsItemPairs, itemPairGroups[i].Filter)
+                };
+            }
+
+            var activeItemPairGroups = itemPairGroups
+                .Where(e => e.ItemPairsEx.Count > 0)
+                .ToList();
+
+            // Fill the 3 blocks once
+            // If more categories left, combine titles then display along with the other first 3 groups
+            for (var i = 0; i < activeItemPairGroups.Count; i++)
+            {
+                labelArray[i % 3].Text = labelArray[i % 3].Text.EndsWith(":")
+                    ? labelArray[i % 3].Text.Replace(":", $" | {activeItemPairGroups[i].Label}:")
+                    : $"{activeItemPairGroups[i].Label}:";
+
+                foreach (var ip in activeItemPairGroups[i].ItemPairsEx)
+                {
+                    pairedListArray[i % 3].AddItem(ip.Value);
+                    if (ip.Key.EnhancementEffect)
+                    {
+                        pairedListArray[i % 3].SetUnique();
+                    }
+                }
+            }
+
+            fx_List1.Redraw();
+            fx_List2.Redraw();
+            fx_List3.Redraw();
         }
 
         private static string GetTip1(IPower basePower, IPower? enhancedPower)
@@ -335,6 +525,7 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             DisplayInfo(noLevel, iEnhLevel);
+            DisplayEffects(noLevel, iEnhLevel);
         }
 
         private string GetToWhoShort(IEffect fx)
@@ -1419,7 +1610,7 @@ namespace Mids_Reborn.Forms.Controls
             return true;
         }
 
-        private void PairedList_Hover(object sender, Enums.ShortFX tag, string tooltip)
+        private void PairedList_Hover(object? sender, int index, Enums.ShortFX tag, string? tooltip)
         {
             var str1 = tag.Present
                 ? BuildToolTipStringFromTag(tag)

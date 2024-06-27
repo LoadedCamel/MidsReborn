@@ -149,7 +149,9 @@ namespace Mids_Reborn.Core
 
         public string Name => Power != null ? Power.DisplayName : "";
 
-        public bool IsSummonPower => Power is { IsSummonPower: true };
+        public bool IsSummonEntry => Power is { IsSummonPower: true };
+
+        public bool IsPetEntry => Power is  { IsPetPower: true };
 
         public bool Virtual => !Chosen && SubPowers.Length > 0;
 

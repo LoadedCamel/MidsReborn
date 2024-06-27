@@ -246,6 +246,10 @@ namespace Mids_Reborn.Core
         
         bool IsPetPower { get; }
 
+        int ParentIdx { get; set; }
+
+        List<SummonedEntity>? GetEntities();
+
         bool HasDefEffects();
 
         bool HasResEffects();

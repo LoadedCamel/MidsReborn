@@ -5,7 +5,10 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Jace;
+using Jace.Operations;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using static Mids_Reborn.Core.Base.Data_Classes.Character;
 
 namespace Mids_Reborn.Core
 {
@@ -132,6 +135,14 @@ namespace Mids_Reborn.Core
             },
             new ExprCommand
             {
+                Keyword = "@Strength",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
                 Keyword = "ifPvE",
                 KeywordType = ExprKeywordType.Keyword,
                 InfixMode = ExprKeywordInfix.Atomic,
@@ -192,6 +203,14 @@ namespace Mids_Reborn.Core
                 KeywordType = ExprKeywordType.Function,
                 InfixMode = ExprKeywordInfix.Prefix,
                 CommandTokenType = ExprCommandToken.PowerName,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "source.ownPowerNum?(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.ExpressionNumeric,
                 SingleToken = true
             },
             new ExprCommand
@@ -340,6 +359,22 @@ namespace Mids_Reborn.Core
             },
             new ExprCommand
             {
+                Keyword = "and(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = false
+            },
+            new ExprCommand
+            {
+                Keyword = "or(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = false
+            },
+            new ExprCommand
+            {
                 Keyword = "GCMActive(",
                 KeywordType = ExprKeywordType.Function,
                 InfixMode = ExprKeywordInfix.Atomic,
@@ -353,6 +388,22 @@ namespace Mids_Reborn.Core
                 InfixMode = ExprKeywordInfix.Atomic,
                 CommandTokenType = ExprCommandToken.None,
                 SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "source>kMeter",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "powerActive(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Prefix,
+                CommandTokenType = ExprCommandToken.PowerName,
+                SingleToken = false
             }
         };
 
@@ -370,6 +421,7 @@ namespace Mids_Reborn.Core
                 { "power.base>range", $"{(fxPower == null ? "0" : fxPower.Range)}" },
                 { "effect>scale", $"{sourceFx.Scale}" },
                 { "@StdResult", $"{sourceFx.Scale}" },
+                { "@Strength", $"{GetStrengthType(sourceFx)}"},
                 { "ifPvE", sourceFx.PvMode == Enums.ePvX.PvE ? "1" : "0" },
                 { "ifPvP", sourceFx.PvMode == Enums.ePvX.PvP ? "1" : "0" },
                 { "caster>modifier>current", ModifierCaster(sourceFx) },
@@ -379,7 +431,8 @@ namespace Mids_Reborn.Core
                 { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
                 { "base.kToHit", $"{(MidsContext.Config.ScalingToHit)}"},
                 { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" },
-                { "source>Base.kHitPoints", $"{(MidsContext.Character.Archetype == null ? 1000 : MidsContext.Character.Archetype.Hitpoints)}"}
+                { "source>Base.kHitPoints", $"{(MidsContext.Character.Archetype == null ? 1000 : MidsContext.Character.Archetype.Hitpoints)}"},
+                { "source>cur.kMeter", $"{GetVariableValue(fxPower!.FullName)}"}
             };
         }
 
@@ -390,6 +443,7 @@ namespace Mids_Reborn.Core
             return new Dictionary<Regex, MatchEvaluator>
             {
                 { new Regex(@"source\.ownPower\?\(([a-zA-Z0-9_\-\.]+)\)"), e => pickedPowerNames.Contains(e.Groups[1].Value) ? "1" : "0" },
+                { new Regex(@"source\.ownPowerNum\?\(([a-zA-Z0-9_\-\.]+)\)"), e => OwnPowerNumCheck(e.Groups[1].Value) },
                 { new Regex(@"([a-zA-Z\-_\.]+)>variableVal"), e => GetVariableValue(e.Groups[1].Value) },
                 { new Regex(@"modifier\>([a-zA-Z0-9_\-]+)"), e => GetModifier(e.Groups[1].Value) },
                 { new Regex(@"powerGroupIn\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.StartsWith(e.Groups[1].Value) ? "1" : "0" },
@@ -401,8 +455,15 @@ namespace Mids_Reborn.Core
                 { new Regex(@"source\.owner\>archIn\(([a-zA-Z\s\,]+)\)"), e => MidsContext.Character.Archetype == null ? "0" : Regex.Split(e.Groups[1].Value, @"(\s*)\,").Select(f => f.ToLowerInvariant().Trim()).Contains(MidsContext.Character.Archetype.DisplayName.ToLowerInvariant()) ? "1" : "0" },
                 { new Regex(@"caster\>modifier\(([a-zA-Z0-9_\-]+)\)"), e => ModifierCaster(e.Groups[1].Value) },
                 { new Regex(@"GCMActive\(([a-zA-Z0-9_\-]+)\)"), e => CheckGCM(e.Groups[1].Value) },
-                { new Regex(@"GCMScale\(([a-zA-Z0-9_\-]+)\)"), e => GCMScale(e.Groups[1].Value) }
+                { new Regex(@"GCMScale\(([a-zA-Z0-9_\-]+)\)"), e => GCMScale(e.Groups[1].Value) },
+                { new Regex(@"powerActive\(([a-zA-Z0-9_\-\.]+)\)"), e => IsPowerActive(e.Groups[1].Value) ? "1" : "0" }
             };
+        }
+
+        private static string OwnPowerNumCheck(string powerName)
+        {
+            var power = MidsContext.Character.CurrentBuild?.Powers.FirstOrDefault(p => p is { Power: not null } && p.Power.FullName.Equals(powerName, StringComparison.InvariantCultureIgnoreCase));
+            return power != null ? "1" : "0";
         }
 
         private static string CheckGCM(string gcm)
@@ -465,6 +526,97 @@ namespace Mids_Reborn.Core
             }
 
             return (sourcePower.AttackTypes & (Enums.eVector) eValue) == Enums.eVector.None ? "0" : "1";
+        }
+
+        private static bool IsPowerActive(string powerName)
+        {
+            var power = MidsContext.Character.CurrentBuild?.Powers.FirstOrDefault(p => p?.Power != null && p.Power.FullName.Equals(powerName, StringComparison.InvariantCultureIgnoreCase));
+            return power?.Power is { Active: true };
+        }
+
+        private static float GetStrengthType(IEffect? sourceEffect)
+        {
+            if (sourceEffect is null)
+            {
+                return 0f;
+            }
+
+            var effectType = sourceEffect.EffectType;
+            var totals = MidsContext.Character?.Totals;
+
+            if (totals is null)
+            {
+                return 0f;
+            }
+
+            int index;
+            var value = 0f;
+
+            switch (effectType)
+            {
+                case Enums.eEffectType.Damage:
+                    Debug.WriteLine(totals.BuffDam);
+                    break;
+                case Enums.eEffectType.Defense:
+                    index = (int)sourceEffect.DamageType;
+                    if (index >= 0 && index < totals.Def.Length)
+                    {
+                        value = totals.Def[index] * 100;
+                    }
+                    break;
+
+                case Enums.eEffectType.Resistance:
+                    index = (int)sourceEffect.DamageType;
+                    if (index >= 0 && index < totals.Res.Length)
+                    {
+                        value = totals.Res[index] * 100;
+                    }
+                    break;
+
+                case Enums.eEffectType.Mez:
+                    index = (int)sourceEffect.MezType;
+                    if (index >= 0 && index < totals.Mez.Length)
+                    {
+                        value = totals.Mez[index] * 100;
+                    }
+                    break;
+
+                case Enums.eEffectType.MezResist:
+                    index = (int)sourceEffect.MezType;
+                    if (index >= 0 && index < totals.MezRes.Length)
+                    {
+                        value = totals.MezRes[index] * 100;
+                    }
+                    break;
+
+                case Enums.eEffectType.ResEffect:
+                    index = (int)sourceEffect.ETModifies;
+                    if (index >= 0 && index < totals.DebuffRes.Length)
+                    {
+                        value = totals.DebuffRes[index] * 100;
+                    }
+                    break;
+
+                default:
+                    if (EffectTotalMap.TryGetValue(effectType, out var propName) && !string.IsNullOrWhiteSpace(propName))
+                    {
+                        var effectObj = typeof(TotalStatistics).GetProperty(propName);
+                        if (effectObj is not null)
+                        {
+                            if (effectObj.GetValue(totals) is float)
+                            {
+                                value = (float)(effectObj.GetValue(totals) ?? 0);
+                            }
+                            else
+                            {
+                                value = 0;
+                            }
+                        }
+                    }
+                    break;
+            }
+
+            return value <= 0f ? 1f : value;
         }
 
         private static string GetModifier(string modifierName)
@@ -679,5 +831,36 @@ namespace Mids_Reborn.Core
                 }
             }
         }
+
+        private static readonly Dictionary<Enums.eEffectType, string> EffectTotalMap = new()
+        {
+            { Enums.eEffectType.Accuracy, nameof(TotalStatistics.BuffAcc) },
+            { Enums.eEffectType.DamageBuff, nameof(TotalStatistics.BuffDam) },
+            { Enums.eEffectType.Defense, nameof(TotalStatistics.Def) },
+            { Enums.eEffectType.EnduranceDiscount, nameof(TotalStatistics.BuffEndRdx) },
+            { Enums.eEffectType.SpeedFlying, nameof(TotalStatistics.FlySpd) },
+            { Enums.eEffectType.HitPoints, nameof(TotalStatistics.HPMax) },
+            { Enums.eEffectType.JumpHeight, nameof(TotalStatistics.JumpHeight) },
+            { Enums.eEffectType.SpeedJumping, nameof(TotalStatistics.JumpSpd) },
+            { Enums.eEffectType.Mez, nameof(TotalStatistics.Mez) },
+            { Enums.eEffectType.MezResist, nameof(TotalStatistics.MezRes) },
+            { Enums.eEffectType.PerceptionRadius, nameof(TotalStatistics.Perception) },
+            { Enums.eEffectType.RechargeTime, nameof(TotalStatistics.BuffHaste) },
+            { Enums.eEffectType.Recovery, nameof(TotalStatistics.EndRec) },
+            { Enums.eEffectType.Regeneration, nameof(TotalStatistics.HPRegen) },
+            { Enums.eEffectType.ResEffect, nameof(TotalStatistics.DebuffRes) },
+            { Enums.eEffectType.Resistance, nameof(TotalStatistics.Res) },
+            { Enums.eEffectType.SpeedRunning, nameof(TotalStatistics.RunSpd) },
+            { Enums.eEffectType.StealthRadius, nameof(TotalStatistics.StealthPvE) },
+            { Enums.eEffectType.StealthRadiusPlayer, nameof(TotalStatistics.StealthPvP) },
+            { Enums.eEffectType.ThreatLevel, nameof(TotalStatistics.ThreatLevel) },
+            { Enums.eEffectType.ToHit, nameof(TotalStatistics.BuffToHit) },
+            { Enums.eEffectType.Elusivity, nameof(TotalStatistics.Elusivity) },
+            { Enums.eEffectType.MaxRunSpeed, nameof(TotalStatistics.MaxRunSpd) },
+            { Enums.eEffectType.MaxJumpSpeed, nameof(TotalStatistics.MaxJumpSpd) },
+            { Enums.eEffectType.MaxFlySpeed, nameof(TotalStatistics.MaxFlySpd) },
+            { Enums.eEffectType.Absorb, nameof(TotalStatistics.Absorb) },
+            { Enums.eEffectType.Stealth, nameof(TotalStatistics.StealthPvE) }
+        };
     }
 }

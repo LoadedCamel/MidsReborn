@@ -38,12 +38,12 @@
             powersCombo1.BackColor = System.Drawing.Color.Black;
             powersCombo1.BorderColor = System.Drawing.Color.DodgerBlue;
             powersCombo1.BorderWidth = 1;
-            //powersCombo1.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             powersCombo1.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             powersCombo1.ForeColor = System.Drawing.Color.WhiteSmoke;
             powersCombo1.HighlightColor = System.Drawing.Color.Goldenrod;
             powersCombo1.HighlightTextColor = System.Drawing.Color.Black;
             powersCombo1.Location = new System.Drawing.Point(281, 9);
+            powersCombo1.Margin = new System.Windows.Forms.Padding(5, 3, 5, 3);
             powersCombo1.MinimumSize = new System.Drawing.Size(171, 34);
             powersCombo1.Name = "powersCombo1";
             powersCombo1.Padding = new System.Windows.Forms.Padding(1);
@@ -56,7 +56,7 @@
             petView1.ForeColor = System.Drawing.Color.Black;
             petView1.Location = new System.Drawing.Point(12, 49);
             petView1.Name = "petView1";
-            petView1.Size = new System.Drawing.Size(442, 519);
+            petView1.Size = new System.Drawing.Size(442, 571);
             petView1.TabIndex = 8;
             petView1.UseAlt = false;
             // 
@@ -77,7 +77,7 @@
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.Color.Black;
-            ClientSize = new System.Drawing.Size(466, 577);
+            ClientSize = new System.Drawing.Size(466, 632);
             Controls.Add(powersCombo1);
             Controls.Add(petView1);
             Controls.Add(lblEntityName);

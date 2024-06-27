@@ -446,6 +446,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbAffects.Items.Add("None");
             cbAffects.Items.Add("Target");
             cbAffects.Items.Add("Self");
+            cbAffects.Items.Add("MyPet");
             foreach (var effectId in DatabaseAPI.Database.EffectIds)
             {
                 cmbEffectId.Items.Add(effectId);

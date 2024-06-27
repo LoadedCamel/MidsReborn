@@ -2,6 +2,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mids_Reborn.Core.Import;
 
 namespace Mids_Reborn.Core
 {
@@ -13,6 +14,7 @@ namespace Mids_Reborn.Core
         public static event EventHandler? PowersUpdated;
 
         public event EventHandler? PowersDataUpdated;
+        private static EventHandler? _powersDataModified;
 
         /// <summary>
         /// The parent power passed to the constructor that is the summoning power for the pet entity.
@@ -36,9 +38,7 @@ namespace Mids_Reborn.Core
         /// <summary>
         /// Returned values from generating buffed power data from pet powers.
         /// </summary>
-        private PetPowersData? PowersData { get; set; }
-
-
+        private static PetPowersData? PowersData { get; set; }
 
         public PetInfo()
         {
@@ -53,6 +53,12 @@ namespace Mids_Reborn.Core
             _basePower = basePower;
             CompilePetPowers(out _);
             GeneratePetPowerData();
+            _powersDataModified += OnPowersDataModified;
+        }
+
+        private void OnPowersDataModified(object? sender, EventArgs e)
+        {
+            PowersDataUpdated?.Invoke(this, EventArgs.Empty);
         }
 
         public bool HasEmptyBasePower => _basePower == null;
@@ -87,6 +93,11 @@ namespace Mids_Reborn.Core
             GeneratePetPowerData();
         }
 
+        public static List<IPower>? GetBuffedPowers()
+        {
+            return PowersData?.BuffedPowers;
+        }
+
         /// <summary>
         /// Gets PowersData for the power passed.
         /// </summary>
@@ -110,9 +121,10 @@ namespace Mids_Reborn.Core
         public PetPower? GetPetPower()
         {
             if (PowersData != null)
-                return _lastPower < 0
-                    ? new PetPower(PowersData.BasePowers.First(), PowersData.BuffedPowers.First())
-                    : new PetPower(PowersData.BasePowers.First(p => p.PowerIndex == _lastPower),
+                if (_lastPower < 0)
+                    return new PetPower(PowersData.BasePowers.First(), PowersData.BuffedPowers.First());
+                else
+                    return new PetPower(PowersData.BasePowers.First(p => p.PowerIndex == _lastPower),
                         PowersData.BuffedPowers.First(p => p.PowerIndex == _lastPower));
             return null;
         }

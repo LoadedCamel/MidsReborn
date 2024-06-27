@@ -28,187 +28,186 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.panel1 = new System.Windows.Forms.Panel();
-            this.btnPowerInsert = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnOkay = new System.Windows.Forms.Button();
-            this.label5 = new System.Windows.Forms.Label();
-            this.tbProbExpr = new System.Windows.Forms.TextBox();
-            this.label4 = new System.Windows.Forms.Label();
-            this.tbMagExpr = new System.Windows.Forms.TextBox();
-            this.label3 = new System.Windows.Forms.Label();
-            this.tbDurationExp = new System.Windows.Forms.TextBox();
-            this.label2 = new System.Windows.Forms.Label();
-            this.lbCommandVars = new System.Windows.Forms.ListBox();
-            this.panel1.SuspendLayout();
-            this.SuspendLayout();
+            panel1 = new System.Windows.Forms.Panel();
+            btnPowerInsert = new System.Windows.Forms.Button();
+            btnCancel = new System.Windows.Forms.Button();
+            btnOkay = new System.Windows.Forms.Button();
+            label5 = new System.Windows.Forms.Label();
+            tbProbExpr = new System.Windows.Forms.TextBox();
+            label4 = new System.Windows.Forms.Label();
+            tbMagExpr = new System.Windows.Forms.TextBox();
+            label3 = new System.Windows.Forms.Label();
+            tbDurationExp = new System.Windows.Forms.TextBox();
+            label2 = new System.Windows.Forms.Label();
+            lbCommandVars = new System.Windows.Forms.ListBox();
+            panel1.SuspendLayout();
+            SuspendLayout();
             // 
             // panel1
             // 
-            this.panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.panel1.Controls.Add(this.btnPowerInsert);
-            this.panel1.Controls.Add(this.btnCancel);
-            this.panel1.Controls.Add(this.btnOkay);
-            this.panel1.Controls.Add(this.label5);
-            this.panel1.Controls.Add(this.tbProbExpr);
-            this.panel1.Controls.Add(this.label4);
-            this.panel1.Controls.Add(this.tbMagExpr);
-            this.panel1.Controls.Add(this.label3);
-            this.panel1.Controls.Add(this.tbDurationExp);
-            this.panel1.Controls.Add(this.label2);
-            this.panel1.Controls.Add(this.lbCommandVars);
-            this.panel1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.panel1.ForeColor = System.Drawing.Color.Azure;
-            this.panel1.Location = new System.Drawing.Point(0, 0);
-            this.panel1.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.panel1.Name = "panel1";
-            this.panel1.Size = new System.Drawing.Size(897, 455);
-            this.panel1.TabIndex = 0;
+            panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            panel1.Controls.Add(btnPowerInsert);
+            panel1.Controls.Add(btnCancel);
+            panel1.Controls.Add(btnOkay);
+            panel1.Controls.Add(label5);
+            panel1.Controls.Add(tbProbExpr);
+            panel1.Controls.Add(label4);
+            panel1.Controls.Add(tbMagExpr);
+            panel1.Controls.Add(label3);
+            panel1.Controls.Add(tbDurationExp);
+            panel1.Controls.Add(label2);
+            panel1.Controls.Add(lbCommandVars);
+            panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            panel1.ForeColor = System.Drawing.Color.Azure;
+            panel1.Location = new System.Drawing.Point(0, 0);
+            panel1.Margin = new System.Windows.Forms.Padding(4);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(882, 455);
+            panel1.TabIndex = 0;
             // 
             // btnPowerInsert
             // 
-            this.btnPowerInsert.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(88)))), ((int)(((byte)(101)))), ((int)(((byte)(242)))));
-            this.btnPowerInsert.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnPowerInsert.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnPowerInsert.Location = new System.Drawing.Point(12, 402);
-            this.btnPowerInsert.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btnPowerInsert.Name = "btnPowerInsert";
-            this.btnPowerInsert.Size = new System.Drawing.Size(246, 28);
-            this.btnPowerInsert.TabIndex = 13;
-            this.btnPowerInsert.Text = "Select & Insert Power";
-            this.btnPowerInsert.UseMnemonic = false;
-            this.btnPowerInsert.UseVisualStyleBackColor = false;
-            this.btnPowerInsert.Click += new System.EventHandler(this.btnPowerInsert_Click);
+            btnPowerInsert.BackColor = System.Drawing.Color.FromArgb(88, 101, 242);
+            btnPowerInsert.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            btnPowerInsert.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            btnPowerInsert.Location = new System.Drawing.Point(12, 402);
+            btnPowerInsert.Margin = new System.Windows.Forms.Padding(4);
+            btnPowerInsert.Name = "btnPowerInsert";
+            btnPowerInsert.Size = new System.Drawing.Size(246, 28);
+            btnPowerInsert.TabIndex = 13;
+            btnPowerInsert.Text = "Select & Insert Power";
+            btnPowerInsert.UseMnemonic = false;
+            btnPowerInsert.UseVisualStyleBackColor = false;
+            btnPowerInsert.Click += btnPowerInsert_Click;
             // 
             // btnCancel
             // 
-            this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(88)))), ((int)(((byte)(40)))), ((int)(((byte)(18)))));
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnCancel.Location = new System.Drawing.Point(786, 405);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(88, 41);
-            this.btnCancel.TabIndex = 12;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = false;
-            this.btnCancel.Click += new System.EventHandler(this.Cancel_Clicked);
+            btnCancel.BackColor = System.Drawing.Color.FromArgb(88, 40, 18);
+            btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            btnCancel.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            btnCancel.Location = new System.Drawing.Point(777, 397);
+            btnCancel.Margin = new System.Windows.Forms.Padding(4);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(88, 41);
+            btnCancel.TabIndex = 12;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = false;
+            btnCancel.Click += Cancel_Clicked;
             // 
             // btnOkay
             // 
-            this.btnOkay.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(64)))), ((int)(((byte)(78)))), ((int)(((byte)(237)))));
-            this.btnOkay.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOkay.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
-            this.btnOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnOkay.Location = new System.Drawing.Point(692, 405);
-            this.btnOkay.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.btnOkay.Name = "btnOkay";
-            this.btnOkay.Size = new System.Drawing.Size(88, 41);
-            this.btnOkay.TabIndex = 11;
-            this.btnOkay.Text = "Okay";
-            this.btnOkay.UseVisualStyleBackColor = false;
-            this.btnOkay.Click += new System.EventHandler(this.Okay_Clicked);
+            btnOkay.BackColor = System.Drawing.Color.FromArgb(64, 78, 237);
+            btnOkay.DialogResult = System.Windows.Forms.DialogResult.OK;
+            btnOkay.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            btnOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            btnOkay.Location = new System.Drawing.Point(683, 397);
+            btnOkay.Margin = new System.Windows.Forms.Padding(4);
+            btnOkay.Name = "btnOkay";
+            btnOkay.Size = new System.Drawing.Size(88, 41);
+            btnOkay.TabIndex = 11;
+            btnOkay.Text = "Okay";
+            btnOkay.UseVisualStyleBackColor = false;
+            btnOkay.Click += Okay_Clicked;
             // 
             // label5
             // 
-            this.label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label5.ForeColor = System.Drawing.Color.Black;
-            this.label5.Location = new System.Drawing.Point(328, 295);
-            this.label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(203, 26);
-            this.label5.TabIndex = 10;
-            this.label5.Text = "Probability Expression:";
+            label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label5.ForeColor = System.Drawing.Color.Black;
+            label5.Location = new System.Drawing.Point(265, 272);
+            label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label5.Name = "label5";
+            label5.Size = new System.Drawing.Size(203, 26);
+            label5.TabIndex = 10;
+            label5.Text = "Probability Expression:";
             // 
             // tbProbExpr
             // 
-            this.tbProbExpr.Location = new System.Drawing.Point(331, 325);
-            this.tbProbExpr.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tbProbExpr.Multiline = true;
-            this.tbProbExpr.Name = "tbProbExpr";
-            this.tbProbExpr.Size = new System.Drawing.Size(542, 42);
-            this.tbProbExpr.TabIndex = 9;
+            tbProbExpr.Location = new System.Drawing.Point(265, 302);
+            tbProbExpr.Margin = new System.Windows.Forms.Padding(4);
+            tbProbExpr.Multiline = true;
+            tbProbExpr.Name = "tbProbExpr";
+            tbProbExpr.Size = new System.Drawing.Size(600, 80);
+            tbProbExpr.TabIndex = 9;
             // 
             // label4
             // 
-            this.label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label4.ForeColor = System.Drawing.Color.Black;
-            this.label4.Location = new System.Drawing.Point(328, 160);
-            this.label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(203, 26);
-            this.label4.TabIndex = 8;
-            this.label4.Text = "Magnitude Expression:";
+            label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label4.ForeColor = System.Drawing.Color.Black;
+            label4.Location = new System.Drawing.Point(265, 158);
+            label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label4.Name = "label4";
+            label4.Size = new System.Drawing.Size(203, 26);
+            label4.TabIndex = 8;
+            label4.Text = "Magnitude Expression:";
             // 
             // tbMagExpr
             // 
-            this.tbMagExpr.Location = new System.Drawing.Point(331, 190);
-            this.tbMagExpr.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tbMagExpr.Multiline = true;
-            this.tbMagExpr.Name = "tbMagExpr";
-            this.tbMagExpr.Size = new System.Drawing.Size(542, 42);
-            this.tbMagExpr.TabIndex = 7;
+            tbMagExpr.Location = new System.Drawing.Point(265, 188);
+            tbMagExpr.Margin = new System.Windows.Forms.Padding(4);
+            tbMagExpr.Multiline = true;
+            tbMagExpr.Name = "tbMagExpr";
+            tbMagExpr.Size = new System.Drawing.Size(600, 80);
+            tbMagExpr.TabIndex = 7;
             // 
             // label3
             // 
-            this.label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label3.ForeColor = System.Drawing.Color.Black;
-            this.label3.Location = new System.Drawing.Point(328, 42);
-            this.label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(203, 26);
-            this.label3.TabIndex = 6;
-            this.label3.Text = "Duration Expression:";
+            label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label3.ForeColor = System.Drawing.Color.Black;
+            label3.Location = new System.Drawing.Point(265, 44);
+            label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label3.Name = "label3";
+            label3.Size = new System.Drawing.Size(203, 26);
+            label3.TabIndex = 6;
+            label3.Text = "Duration Expression:";
             // 
             // tbDurationExp
             // 
-            this.tbDurationExp.Location = new System.Drawing.Point(331, 71);
-            this.tbDurationExp.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.tbDurationExp.Multiline = true;
-            this.tbDurationExp.Name = "tbDurationExp";
-            this.tbDurationExp.Size = new System.Drawing.Size(542, 42);
-            this.tbDurationExp.TabIndex = 5;
+            tbDurationExp.Location = new System.Drawing.Point(265, 74);
+            tbDurationExp.Margin = new System.Windows.Forms.Padding(4);
+            tbDurationExp.Multiline = true;
+            tbDurationExp.Name = "tbDurationExp";
+            tbDurationExp.Size = new System.Drawing.Size(600, 80);
+            tbDurationExp.TabIndex = 5;
             // 
             // label2
             // 
-            this.label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.label2.ForeColor = System.Drawing.Color.Black;
-            this.label2.Location = new System.Drawing.Point(12, 9);
-            this.label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(203, 26);
-            this.label2.TabIndex = 4;
-            this.label2.Text = "Expression Variables:";
+            label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label2.ForeColor = System.Drawing.Color.Black;
+            label2.Location = new System.Drawing.Point(12, 9);
+            label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(203, 26);
+            label2.TabIndex = 4;
+            label2.Text = "Expression Variables:";
             // 
             // lbCommandVars
             // 
-            this.lbCommandVars.FormattingEnabled = true;
-            this.lbCommandVars.ItemHeight = 16;
-            this.lbCommandVars.Location = new System.Drawing.Point(12, 38);
-            this.lbCommandVars.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.lbCommandVars.Name = "lbCommandVars";
-            this.lbCommandVars.Size = new System.Drawing.Size(245, 356);
-            this.lbCommandVars.TabIndex = 1;
+            lbCommandVars.FormattingEnabled = true;
+            lbCommandVars.ItemHeight = 15;
+            lbCommandVars.Location = new System.Drawing.Point(12, 38);
+            lbCommandVars.Margin = new System.Windows.Forms.Padding(4);
+            lbCommandVars.Name = "lbCommandVars";
+            lbCommandVars.Size = new System.Drawing.Size(245, 349);
+            lbCommandVars.TabIndex = 1;
             // 
             // frmExpressionBuilder
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(153)))), ((int)(((byte)(170)))), ((int)(((byte)(181)))));
-            this.ClientSize = new System.Drawing.Size(897, 455);
-            this.Controls.Add(this.panel1);
-            this.DoubleBuffered = true;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
-            this.Name = "frmExpressionBuilder";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "frmExpressionBuilder";
-            this.panel1.ResumeLayout(false);
-            this.panel1.PerformLayout();
-            this.ResumeLayout(false);
-
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            BackColor = System.Drawing.Color.FromArgb(153, 170, 181);
+            ClientSize = new System.Drawing.Size(882, 455);
+            Controls.Add(panel1);
+            DoubleBuffered = true;
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            Margin = new System.Windows.Forms.Padding(4);
+            Name = "frmExpressionBuilder";
+            ShowInTaskbar = false;
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "frmExpressionBuilder";
+            panel1.ResumeLayout(false);
+            panel1.PerformLayout();
+            ResumeLayout(false);
         }
 
         #endregion

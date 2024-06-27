@@ -121,12 +121,9 @@ namespace Mids_Reborn.Controls
         public eInterfaceMode InterfaceMode;
         private readonly bool _inDesigner = AppDomain.CurrentDomain.FriendlyName.Contains("devenv");
 
-        //bool VillainColor;
-
         public ClsDrawX(Control iTarget)
         {
             InterfaceMode = 0;
-            //VillainColor = false;
             _vcCols = 6;
             _vcRowsPowers = 24;
             BxPower = new List<ExtendedBitmap>();

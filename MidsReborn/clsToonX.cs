@@ -25,12 +25,8 @@ namespace Mids_Reborn
         private const double BuildFormatChange2 = 1.39999997615814;
         private IPower?[] _buffedPowers = Array.Empty<IPower>();
         private IPower[] _mathPowers = Array.Empty<IPower>();
-        private IPower[] _petPowers = Array.Empty<IPower>();
         private Enums.BuffsX _selfBuffs;
         private Enums.BuffsX _selfEnhance;
-
-        private Enums.BuffsX _petBuffs;
-        private Enums.BuffsX _petEnhance;
 
         private struct FxIdentifierKey
         {
@@ -892,7 +888,6 @@ namespace Mids_Reborn
                 if (CurrentBuild.Powers[hIDX]?.NIDPower > -1)
                 {
                     _mathPowers[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX, 1);
-                    //_refPower[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX, 1);
                 }
             }
 
@@ -1984,13 +1979,6 @@ namespace Mids_Reborn
                 CalculateAndApplyEffects(ref _buffedPowers[i], ref nBuffs, enhancementPass);
             }
 
-            // var setBonusPowers = CurrentBuild.SetBonusPowers;
-            // foreach (var bonusPower in setBonusPowers)
-            // {
-            //     var power = bonusPower;
-            //     CalculateAndApplyEffects(ref power, ref nBuffs, enhancementPass);
-            // }
-
             var setBonusPower = CurrentBuild.SetBonusVirtualPower;
             CalculateAndApplyEffects(ref setBonusPower, ref nBuffs, enhancementPass);
             if (!MidsContext.Config.Inc.DisablePvE)
@@ -2050,7 +2038,6 @@ namespace Mids_Reborn
             ApplyGlobalEnhancements();
             GBD_Totals();
         }
-
 
         /// <summary>
         /// Generate MathPower, BuffedPower for the listed powers.
@@ -2183,25 +2170,7 @@ namespace Mids_Reborn
             }
 
             var powerMath = GBPA_SubPass0_AssemblePowerEntry(nIDPower, iPower);
-            /*for (var index = 0; index < CurrentBuild.Powers.Count; index++)
-            {
-                if (CurrentBuild.Powers[index] == null)
-                {
-                    continue;
-                }
-
-                if (!(iPower != index & CurrentBuild.Powers[index].StatInclude &
-                      CurrentBuild.Powers[index].NIDPower > -1 & index < _mathPower.Length))
-                {
-                    continue;
-                }
-
-                var effectType = Enums.eEffectType.GrantPower;
-                GBPA_ApplyIncarnateEnhancements(ref powerMath, -1, _mathPower[index], false,
-                    ref effectType);
-            }*/
-
-                powerMath = new Power(DatabaseAPI.GetPowerByFullName(powerMath.FullName));
+            powerMath = new Power(DatabaseAPI.GetPowerByFullName(powerMath.FullName));
             powerMath?.ProcessExecutes();
             powerMath?.AbsorbPetEffects();
 
