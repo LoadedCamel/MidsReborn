@@ -1413,7 +1413,8 @@ namespace Mids_Reborn.Forms
             PowerModified(false);
             for (var i = 0; i < 5; i++)
             {
-                MainModule.MidsController.Toon.PoolLocked[i] = (MidsContext.Character.Powersets[i + 3]?.nID ?? -1) > -1;
+                MainModule.MidsController.Toon.PoolLocked[i] = (MidsContext.Character.Powersets[i + 3]?.nID ?? -1) > -1 &&
+                                                               MidsContext.Character.CurrentBuild.Powers.Any(e => e?.Power != null && e.Power.FullName.StartsWith(MidsContext.Character.Powersets[i + 3] == null ? "   " : MidsContext.Character.Powersets[i + 3].FullName));
             }
 
             UpdateControls(true);
@@ -1481,7 +1482,6 @@ namespace Mids_Reborn.Forms
             var loaded = MainModule.MidsController.Toon != null && MainModule.MidsController.Toon.Load("", ref data);
 
             if (!loaded) return true;
-            Debug.WriteLine("Loaded");
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
             
@@ -1495,12 +1495,12 @@ namespace Mids_Reborn.Forms
             GetBestDamageValues();
             UpdateColors();
             FloatUpdate(true);
+            
             return true;
         }
 
         private bool DoLoad(string? data)
         {
-            Debug.WriteLine(data);
             DataViewLocked = false;
             NewToon(true, true);
             if (data == null || (!data.Contains("MxDz") && !data.Contains("MxDu"))) return true;
@@ -1508,7 +1508,6 @@ namespace Mids_Reborn.Forms
             var loaded = MainModule.MidsController.Toon != null && MainModule.MidsController.Toon.Load("", ref mStream);
 
             if (!loaded) return true;
-            Debug.WriteLine("Loaded");
             FileModified = false;
             if (drawing != null) drawing.Highlight = -1;
             
@@ -1522,6 +1521,7 @@ namespace Mids_Reborn.Forms
             GetBestDamageValues();
             UpdateColors();
             FloatUpdate(true);
+
             return true;
         }
 
