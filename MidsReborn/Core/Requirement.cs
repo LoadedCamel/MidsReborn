@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Core
 {
@@ -31,7 +32,7 @@ namespace Mids_Reborn.Core
             NClassNameNot = new int[iReq.NClassNameNot.Length];
             Array.Copy(iReq.NClassNameNot, NClassNameNot, iReq.NClassNameNot.Length);
             PowerID = new string[iReq.PowerID.Length][];
-            for (var index = 0; index <= PowerID.Length - 1; ++index)
+            for (var index = 0; index < PowerID.Length; index++)
             {
                 PowerID[index] = new string[2];
                 PowerID[index][0] = iReq.PowerID[index][0];
@@ -39,7 +40,7 @@ namespace Mids_Reborn.Core
             }
 
             PowerIDNot = new string[iReq.PowerIDNot.Length][];
-            for (var index = 0; index <= PowerIDNot.Length - 1; ++index)
+            for (var index = 0; index < PowerIDNot.Length; index++)
             {
                 PowerIDNot[index] = new string[2];
                 PowerIDNot[index][0] = iReq.PowerIDNot[index][0];
@@ -47,7 +48,7 @@ namespace Mids_Reborn.Core
             }
 
             NPowerID = new int[iReq.NPowerID.Length][];
-            for (var index = 0; index <= NPowerID.Length - 1; ++index)
+            for (var index = 0; index < NPowerID.Length; index++)
             {
                 NPowerID[index] = new int[2];
                 NPowerID[index][0] = iReq.NPowerID[index][0];
@@ -55,7 +56,7 @@ namespace Mids_Reborn.Core
             }
 
             NPowerIDNot = new int[iReq.NPowerIDNot.Length][];
-            for (var index = 0; index <= NPowerIDNot.Length - 1; ++index)
+            for (var index = 0; index < NPowerIDNot.Length; index++)
             {
                 NPowerIDNot[index] = new int[2];
                 NPowerIDNot[index][0] = iReq.NPowerIDNot[index][0];
@@ -66,10 +67,10 @@ namespace Mids_Reborn.Core
         public Requirement(BinaryReader reader)
         {
             ClassName = new string[reader.ReadInt32() + 1];
-            for (var index = 0; index < ClassName.Length; ++index)
+            for (var index = 0; index < ClassName.Length; index++)
                 ClassName[index] = reader.ReadString();
             ClassNameNot = new string[reader.ReadInt32() + 1];
-            for (var index = 0; index < ClassNameNot.Length; ++index)
+            for (var index = 0; index < ClassNameNot.Length; index++)
                 ClassNameNot[index] = reader.ReadString();
             PowerID = new string[reader.ReadInt32() + 1][];
             for (var index = 0; index < PowerID.Length; ++index)
@@ -80,7 +81,7 @@ namespace Mids_Reborn.Core
             }
 
             PowerIDNot = new string[reader.ReadInt32() + 1][];
-            for (var index = 0; index < PowerIDNot.Length; ++index)
+            for (var index = 0; index < PowerIDNot.Length; index++)
             {
                 PowerIDNot[index] = new string[2];
                 PowerIDNot[index][0] = reader.ReadString();
@@ -115,83 +116,106 @@ namespace Mids_Reborn.Core
 
         public bool ClassOk(string uidClass)
         {
-            bool flag1;
             if (string.IsNullOrEmpty(uidClass))
             {
-                flag1 = true;
+                return true;
             }
-            else
+            
+            var flag2 = true;
+            if (ClassName.Length > 0)
             {
-                var flag2 = true;
-                if (ClassName.Length > 0)
-                {
-                    flag2 = false;
-                    for (var index = 0; index <= ClassName.Length - 1; ++index)
-                    {
-                        if (!string.Equals(ClassName[index], uidClass, StringComparison.OrdinalIgnoreCase))
-                            continue;
-                        flag2 = true;
-                        break;
-                    }
-                }
-
-                if (ClassNameNot.Length > 0)
-                    for (var index = 0; index <= ClassNameNot.Length - 1; ++index)
-                    {
-                        if (!string.Equals(ClassNameNot[index], uidClass, StringComparison.OrdinalIgnoreCase))
-                            continue;
-                        flag2 = false;
-                        break;
-                    }
-
-                flag1 = flag2;
+                flag2 = ClassName.Any(t => string.Equals(t, uidClass, StringComparison.OrdinalIgnoreCase));
             }
 
-            return flag1;
+            if (ClassNameNot.Length <= 0)
+            {
+                return flag2;
+            }
+
+            if (ClassNameNot.Any(t => string.Equals(t, uidClass, StringComparison.OrdinalIgnoreCase)))
+            {
+                flag2 = false;
+            }
+
+            return flag2;
         }
 
         public bool ClassOk(int nidClass)
         {
-            bool flag1;
             if (nidClass < 0)
             {
-                flag1 = true;
+                return true;
             }
-            else
+            
+            var flag2 = true;
+            if (NClassName.Length > 0)
             {
-                var flag2 = true;
-                if (NClassName.Length > 0) flag2 = NClassName.Any(t => t == nidClass);
-                if (NClassNameNot.Length > 0)
-                    if (NClassNameNot.Any(t => t == nidClass))
-                        flag2 = false;
-                flag1 = flag2;
+                flag2 = NClassName.Any(t => t == nidClass);
             }
 
-            return flag1;
+            if (NClassNameNot.Length <= 0)
+            {
+                return flag2;
+            }
+
+            if (NClassNameNot.Any(t => t == nidClass))
+            {
+                flag2 = false;
+            }
+
+            return flag2;
         }
 
         public bool ReferencesPower(string uidPower, string uidFix = "")
         {
             var flag = false;
             foreach (var index1 in PowerID)
-                for (var index2 = 0; index2 < index1.Length; ++index2)
+            {
+                for (var index2 = 0; index2 < index1.Length; index2++)
                 {
                     if (!string.Equals(index1[index2], uidPower, StringComparison.OrdinalIgnoreCase))
                         continue;
                     flag = true;
                     index1[index2] = uidFix;
                 }
+            }
 
             foreach (var index1 in PowerIDNot)
-                for (var index2 = 0; index2 < index1.Length; ++index2)
+            {
+                for (var index2 = 0; index2 < index1.Length; index2++)
                 {
                     if (!string.Equals(index1[index2], uidPower, StringComparison.OrdinalIgnoreCase))
                         continue;
                     flag = true;
                     index1[index2] = uidFix;
                 }
+            }
 
             return flag;
+        }
+
+        private bool RequiredPowersCheck()
+        {
+            if (PowerID.Length <= 0)
+            {
+                return true;
+            }
+
+            return PowerID.Any(e => e.Length == 2
+                ? MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.NidFromUidPower(e[0])) >= 0 & MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.NidFromUidPower(e[1])) >= 0
+                : MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.NidFromUidPower(e[0])) >= 0);
+        }
+
+        private bool ExcludedPowersCheck()
+        {
+            return !PowerIDNot.Any(e => e.Length == 2
+                ? MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.NidFromUidPower(e[0])) >= 0 & MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.NidFromUidPower(e[1])) >= 0
+                : MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.NidFromUidPower(e[0])) >= 0);
+        }
+
+        public bool RequiredPowersOk()
+        {
+            return RequiredPowersCheck() & ExcludedPowersCheck();
         }
 
         public void AddPowers(string power1, string power2)
@@ -212,8 +236,7 @@ namespace Mids_Reborn.Core
             }
             else
             {
-                var num = (int) MessageBox.Show(
-                    "An impossible power requirement has occurred: POWER AND NOT POWER. See clsPowerV2.addPowers()");
+                MessageBox.Show("An impossible power requirement has occurred: POWER AND NOT POWER.");
             }
         }
     }

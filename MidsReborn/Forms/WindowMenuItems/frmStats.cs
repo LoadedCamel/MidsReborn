@@ -593,27 +593,27 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 // Primary/Secondary
                 1 => powersetsPowers
-                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet().SetType is Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary)
+                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet()?.SetType is Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary)
                     .ToDictionary(e => e.Key, e => e.Value),
                 
                 // Primary
                 2 => powersetsPowers
-                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Primary)
+                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet()?.SetType == Enums.ePowerSetType.Primary)
                     .ToDictionary(e => e.Key, e => e.Value),
                 
                 // Secondary
                 3 => powersetsPowers
-                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Secondary)
+                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet()?.SetType == Enums.ePowerSetType.Secondary)
                     .ToDictionary(e => e.Key, e => e.Value),
                 
                 // Epic/Ancillary
                 4 => powersetsPowers
-                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Ancillary)
+                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet()?.SetType == Enums.ePowerSetType.Ancillary)
                     .ToDictionary(e => e.Key, e => e.Value),
                 
                 // Pools
                 5 => powersetsPowers
-                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet().SetType == Enums.ePowerSetType.Pool)
+                    .Where(e => e.Value.Key.FullName.StartsWith("Redirects.") | e.Value.Key.GetPowerSet()?.SetType == Enums.ePowerSetType.Pool)
                     .ToDictionary(e => e.Key, e => e.Value),
                 
                 // Powers taken
@@ -632,6 +632,28 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 _ => powersetsPowers
             };
 
+            // Filter inherents, prestige, etc
+            var dbPowers = powers.Select(e => DatabaseAPI.GetPowerByFullName(e.Value.Key.FullName)).Where(e => e is not null);
+            
+            // Valid Archetype, valid power requirements
+            dbPowers = dbPowers
+                .Where(e => e.Requires.ClassOk(MidsContext.Character.Archetype.Idx) & e.Requires.RequiredPowersOk());
+
+            // If temp/prestige/accolade, check if they are actually active in build
+            dbPowers = dbPowers
+                .Where(e => e.InherentType is not (Enums.eGridType.Temp or Enums.eGridType.Prestige or Enums.eGridType.Accolade) || MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.Database.Power.TryFindIndex(f => f != null && f.StaticIndex == e.StaticIndex)) >= 0);
+
+            var validPowersNames = dbPowers.Select(e => e.FullName);
+            powers = powers
+                .Where(e => validPowersNames.Contains(e.Value.Key.FullName))
+                .ToDictionary(e => e.Key, e => e.Value);
+
+            // Reorder by powerset type, then powerset name, then power static index
+            powers = powers.OrderBy(e => (int)(e.Value.Key.GetPowerSet().SetType))
+                .ThenBy(e => e.Value.Key.GetPowerSet().SetName)
+                .ThenBy(e => e.Value.Key.StaticIndex)
+                .ToDictionary(e => e.Key, e => e.Value);
+
             BaseArray = powers.Select(e => e.Value.Key).ToArray();
             EnhArray = powers.Select(e => e.Value.Value).ToArray();
         }
@@ -639,9 +661,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         /// <summary>
         /// Fill graph with values according to viewed stat.
         /// </summary>
-        /// <param name="getBaseValue">Lambda function of type f(basePower:IPower?, enhancedPower:IPower?) : float to get base value of each element</param>
-        /// <param name="getEnhValue">Lambda function of type f(basePower:IPower?, enhancedPower:IPower?) : float to get enhanced value of each element</param>
-        /// <param name="filterPower">Lambda function of type f(basePower:IPower?, enhancedPower:IPower?) : bool to filter each element. If it returns false, element will be ignored.</param>
+        /// <param name="getBaseValue">Lambda function of type f(basePower:IPower?, enhancedPower:IPower?): float to get base value of each element</param>
+        /// <param name="getEnhValue">Lambda function of type f(basePower:IPower?, enhancedPower:IPower?): float to get enhanced value of each element</param>
+        /// <param name="filterPower">Lambda function of type f(basePower:IPower?, enhancedPower:IPower?): bool to filter each element. If it returns false, element will be ignored.</param>
         /// <param name="statDisplayed">Stat displayed, one of display stat type (<see cref="DisplayMode"/>)</param>
         /// <param name="valueSuffix">Value suffix or unit to use in tooltips.</param>
         private void SetGraphValues(Func<IPower?, IPower?, float> getBaseValue, Func<IPower?, IPower?, float> getEnhValue,
@@ -998,7 +1020,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 Graph.ItemHeight = 18;
                 Graph.PaddingY = 6f;
             }
-            else if (Graph.ItemCount < 18.0)
+            else if (Graph.ItemCount < 18)
             {
                 Graph.ItemHeight = 15;
                 Graph.PaddingY = 5f;
