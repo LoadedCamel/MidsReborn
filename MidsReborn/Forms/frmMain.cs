@@ -1381,6 +1381,16 @@ namespace Mids_Reborn.Forms
             return ret;
         }
 
+        private void SetLockedPoolsState()
+        {
+            // Pool powerset must be selected and have at least one power picked
+            for (var i = 0; i < 5; i++)
+            {
+                MainModule.MidsController.Toon.PoolLocked[i] = (MidsContext.Character.Powersets[i + 3]?.nID ?? -1) > -1 &&
+                                                               MidsContext.Character.CurrentBuild.Powers.Any(e => e?.Power != null && e.Power.FullName.StartsWith(MidsContext.Character.Powersets[i + 3] == null ? "   " : MidsContext.Character.Powersets[i + 3].FullName));
+            }
+        }
+
         private bool LoadCharacterFile(string? fileName)
         {
             if (!File.Exists(fileName))
@@ -1411,12 +1421,7 @@ namespace Mids_Reborn.Forms
             myDataView?.Clear();
             MidsContext.Character?.ResetLevel();
             PowerModified(false);
-            for (var i = 0; i < 5; i++)
-            {
-                MainModule.MidsController.Toon.PoolLocked[i] = (MidsContext.Character.Powersets[i + 3]?.nID ?? -1) > -1 &&
-                                                               MidsContext.Character.CurrentBuild.Powers.Any(e => e?.Power != null && e.Power.FullName.StartsWith(MidsContext.Character.Powersets[i + 3] == null ? "   " : MidsContext.Character.Powersets[i + 3].FullName));
-            }
-
+            SetLockedPoolsState();
             UpdateControls(true);
             SetTitleBar();
             Application.DoEvents();
@@ -6094,6 +6099,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             if (!loaded) return;
             FileModified = false;
+            LastFileName = "";
+            SetTitleBar();
+            SetLockedPoolsState();
             if (drawing != null) drawing.Highlight = -1;
             
             myDataView?.Clear();
