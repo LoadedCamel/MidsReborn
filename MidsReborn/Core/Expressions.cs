@@ -542,7 +542,7 @@ namespace Mids_Reborn.Core
             }
 
             var effectType = sourceEffect.EffectType;
-            var totals = MidsContext.Character?.Totals;
+            var totals = MidsContext.Character?.TotalsCapped;
 
             if (totals is null)
             {
@@ -561,7 +561,7 @@ namespace Mids_Reborn.Core
                     index = (int)sourceEffect.DamageType;
                     if (index >= 0 && index < totals.Def.Length)
                     {
-                        value = totals.Def[index] * 100;
+                        value = totals.Def[index];
                     }
                     break;
 
@@ -569,7 +569,7 @@ namespace Mids_Reborn.Core
                     index = (int)sourceEffect.DamageType;
                     if (index >= 0 && index < totals.Res.Length)
                     {
-                        value = totals.Res[index] * 100;
+                        value = totals.Res[index];
                     }
                     break;
 
@@ -577,7 +577,7 @@ namespace Mids_Reborn.Core
                     index = (int)sourceEffect.MezType;
                     if (index >= 0 && index < totals.Mez.Length)
                     {
-                        value = totals.Mez[index] * 100;
+                        value = totals.Mez[index];
                     }
                     break;
 
@@ -585,7 +585,7 @@ namespace Mids_Reborn.Core
                     index = (int)sourceEffect.MezType;
                     if (index >= 0 && index < totals.MezRes.Length)
                     {
-                        value = totals.MezRes[index] * 100;
+                        value = totals.MezRes[index];
                     }
                     break;
 
@@ -593,10 +593,14 @@ namespace Mids_Reborn.Core
                     index = (int)sourceEffect.ETModifies;
                     if (index >= 0 && index < totals.DebuffRes.Length)
                     {
-                        value = totals.DebuffRes[index] * 100;
+                        value = totals.DebuffRes[index];
                     }
                     break;
 
+                case Enums.eEffectType.Regeneration:
+                    value = (totals.HPRegen + 1f) / 100f;
+
+                    break;
                 default:
                     if (EffectTotalMap.TryGetValue(effectType, out var propName) && !string.IsNullOrWhiteSpace(propName))
                     {

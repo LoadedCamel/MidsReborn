@@ -34,7 +34,7 @@ namespace Mids_Reborn.Forms.Controls
             InitializeComponent();
         }
 
-        public void AddColumnMapping(int columnIndex, Func<object, object?> dataRetriever, Func<object?, object?>? transformer1 = null, Func<object?, object>? transformer2 = null, Func<object?, object?>? tagFunction = null)
+        public void AddColumnMapping(int columnIndex, Func<object, object?> dataRetriever, Func<object?, object?>? transformer1 = null, Func<object?, object?>? dataRetriever2 = null, Func<object?, object>? transformer2 = null, Func<object?, object?>? tagFunction = null)
         {
             ColumnMappings ??= new List<ColumnMapping>();
 
@@ -43,6 +43,7 @@ namespace Mids_Reborn.Forms.Controls
             if (existingMapping != null)
             {
                 existingMapping.DataRetriever = dataRetriever;
+                existingMapping.DataRetriever2 = dataRetriever2;
                 existingMapping.Transformer1 = transformer1;
                 existingMapping.Transformer2 = transformer2;
                 existingMapping.TagFunction = tagFunction;
@@ -53,6 +54,7 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     ColumnIndex = columnIndex,
                     DataRetriever = dataRetriever,
+                    DataRetriever2 = dataRetriever2,
                     Transformer1 = transformer1,
                     Transformer2 = transformer2,
                     TagFunction = tagFunction
@@ -98,9 +100,15 @@ namespace Mids_Reborn.Forms.Controls
 
                     string columnText;
 
-                    if (mapping.Transformer2 != null)
+                    if (mapping.DataRetriever2 != null)
                     {
-                        // Use the second transformer if specified
+                        var dataValue2 = mapping.DataRetriever2(dataObject);
+                        var transformedValue2 = mapping.Transformer2?.Invoke(dataValue2) ?? dataValue2;
+                        columnText = $"{transformedValue1} - {transformedValue2}";
+                    }
+                    else if (mapping.Transformer2 != null)
+                    {
+                        // Use the second transformer if provided and second data retriever is null
                         var transformedValue2 = mapping.Transformer2(dataValue);
                         columnText = $"{transformedValue1} - {transformedValue2}";
                     }
@@ -142,6 +150,7 @@ namespace Mids_Reborn.Forms.Controls
         {
             public int ColumnIndex { get; init; }
             public Func<object, object?> DataRetriever { get; set; }
+            public Func<object, object?>? DataRetriever2 { get; set; }
             public Func<object?, object?>? Transformer1 { get; set; }
             public Func<object?, object>? Transformer2 { get; set; }
             public Func<object?, object?>? TagFunction { get; set; }

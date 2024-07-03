@@ -110,6 +110,7 @@ namespace Mids_Reborn.Forms
             alvSets.AddColumnMapping(0, obj => ((EnhancementSet)obj).DisplayName);
             alvSets.AddColumnMapping(1, obj => ((EnhancementSet)obj).LevelMin, 
                 value => (int)value! + 1, 
+                obj => ((EnhancementSet)obj!).LevelMax, 
                 value2 => (int)value2! + 1);
             alvSets.AddColumnMapping(2, obj => ((EnhancementSet)obj).SetType, 
                 value => DatabaseAPI.GetSetTypeByIndex((int)value!).Name);
@@ -510,15 +511,16 @@ namespace Mids_Reborn.Forms
 
                 if (chosenEffect.EffectType is eEffectType.None) return;
 
-                var selected = _effects.FirstOrDefault(effect =>
+                var selectedEffects = _effects.Where(effect =>
                     effect.EffectType == chosenEffect.EffectType &&
                     effect.ETModifies == chosenEffect.EtModifies &&
                     effect.DamageType == chosenEffect.DamageType && effect.MezType == chosenEffect.MezType &&
                     Math.Round(Convert.ToDecimal(effect.MagPercent), 2) == chosenEffect.MagPercent);
 
-                if (selected == null) return;
-                _selectedBonus = selected.PowerFullName;
-                FilterSetsByBonus(_selectedBonus);
+                var enumerable = selectedEffects.ToList();
+                if (!enumerable.Any()) return;
+                _selectedBonuses = enumerable.Select(x => x.PowerFullName).ToList();
+                FilterSetsByMultipleBonuses(_selectedBonuses);
             }
         }
 
@@ -539,8 +541,9 @@ namespace Mids_Reborn.Forms
 
             // Add column mappings with custom data retriever and transformers
             alvSets.AddColumnMapping(0, obj => ((EnhancementSet)obj).DisplayName);
-            alvSets.AddColumnMapping(1, obj => ((EnhancementSet)obj).LevelMin,
-                value => (int)value! + 1,
+            alvSets.AddColumnMapping(1, obj => ((EnhancementSet)obj).LevelMin, 
+                value => (int)value! + 1, 
+                obj => ((EnhancementSet)obj!).LevelMax, 
                 value2 => (int)value2! + 1);
             alvSets.AddColumnMapping(2, obj => ((EnhancementSet)obj).SetType,
                 value => DatabaseAPI.GetSetTypeByIndex((int)value!).Name);
@@ -564,75 +567,6 @@ namespace Mids_Reborn.Forms
                     }
 
                     return req;
-                });
-        }
-
-        private void FilterSetsByBonus(string selectedBonus)
-        {
-            _filteredEnhancementSets = EnhancementSetList
-                .Where(set => set.Bonus.Any(bonus => bonus.Name.Contains(selectedBonus)) ||
-                              set.SpecialBonus.Any(specialBonus => specialBonus.Name.Contains(selectedBonus)))
-                .ToList();
-
-            FillImageList(true);
-            alvSets.DataSource = _filteredEnhancementSets;
-
-            // Clear existing column mappings
-            alvSets.ColumnMappings?.Clear();
-
-            // Add column mappings with custom data retriever and transformers
-            alvSets.AddColumnMapping(0, obj => ((EnhancementSet)obj).DisplayName);
-            alvSets.AddColumnMapping(1, obj => ((EnhancementSet)obj).LevelMin,
-                value => (int)value! + 1,
-                value2 => (int)value2! + 1);
-            alvSets.AddColumnMapping(2, obj => ((EnhancementSet)obj).SetType,
-                value => DatabaseAPI.GetSetTypeByIndex((int)value!).Name);
-            alvSets.AddColumnMapping(3, obj => ((EnhancementSet)obj).Bonus,
-                value =>
-                {
-                    var req = "S";
-                    if (value is not BonusItem[] bonusItems)
-                    {
-                        req = "-1";
-                    }
-                    else
-                    {
-                        for (var i = 0; i < bonusItems.Length; i++)
-                        {
-                            if (bonusItems[i].Name.Contains(selectedBonus))
-                            {
-                                req = bonusItems[i].Slotted.ToString();
-                            }
-                        }
-                    }
-
-                    return req;
-                }, tagFunction: value =>
-                {
-                    if (value is EnhancementSet set)
-                    {
-                        for (var index = 0; index < set.Bonus.Length; index++)
-                        {
-                            if (set.Bonus[index].Name.Contains(selectedBonus))
-                            {
-                                return set.GetEffectString(index, false, true, true, true);
-                            }
-                        }
-
-                        for (var index = 0; index < set.SpecialBonus.Length; index++)
-                        {
-                            if (set.SpecialBonus[index].Name.Contains(selectedBonus))
-                            {
-                                return set.GetEffectString(index, true, true, true, true);
-                            }
-                        }
-                    }
-                    else
-                    {
-                        throw new ArgumentException($"Unexpected type: {value?.GetType().Name ?? "null"}");
-                    }
-
-                    return null;
                 });
         }
         
