@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Windows.Forms;
 using Mids_Reborn.UIv2.Controls;
 
 namespace Mids_Reborn.Forms
@@ -52,6 +53,7 @@ namespace Mids_Reborn.Forms
             // 
             // cbEffect
             // 
+            cbEffect.DropDownStyle = ComboBoxStyle.DropDownList;
             cbEffect.FormattingEnabled = true;
             cbEffect.Location = new Point(12, 12);
             cbEffect.Name = "cbEffect";
@@ -61,6 +63,7 @@ namespace Mids_Reborn.Forms
             // 
             // cbEffectType
             // 
+            cbEffectType.DropDownStyle = ComboBoxStyle.DropDownList;
             cbEffectType.FormattingEnabled = true;
             cbEffectType.Location = new Point(260, 12);
             cbEffectType.Name = "cbEffectType";
@@ -70,6 +73,7 @@ namespace Mids_Reborn.Forms
             // 
             // cbEffectStr
             // 
+            cbEffectStr.DropDownStyle = ComboBoxStyle.DropDownList;
             cbEffectStr.FormattingEnabled = true;
             cbEffectStr.Location = new Point(490, 12);
             cbEffectStr.Name = "cbEffectStr";
