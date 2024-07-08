@@ -1069,9 +1069,9 @@ namespace Mids_Reborn.Controls
         public int WhichEnh(int iX, int iY)
         {
             var oPower = -1;
-            checked
+            try
             {
-                Point point = default;
+                var point = new Point();
                 for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
                 {
                     point = MidsContext.Character.CurrentBuild.Powers[i] != null &&
@@ -1080,7 +1080,8 @@ namespace Mids_Reborn.Controls
                         ? PowerPosition(GetVisualIdx(i))
                         : PowerPosition(i);
 
-                    if (iX < point.X || iY < point.Y || iX >= SzPower.Width + point.X || iY >= point.Y + SzPower.Height + PaddingY / 2)
+                    if (iX < point.X || iY < point.Y || iX >= SzPower.Width + point.X ||
+                        iY >= point.Y + SzPower.Height + PaddingY / 2)
                     {
                         continue;
                     }
@@ -1095,10 +1096,11 @@ namespace Mids_Reborn.Controls
                 }
 
                 var isValid = iY >= point.Y + OffsetY &&
-                               MidsContext.Character.CurrentBuild.Powers[oPower] != null &&
-                               MidsContext.Character.CurrentBuild.Powers[oPower]?.NIDPowerset > -1 &&
-                               DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset]
-                                   .Powers[MidsContext.Character.CurrentBuild.Powers[oPower].IDXPower].Slottable;
+                              MidsContext.Character.CurrentBuild.Powers[oPower] != null &&
+                              MidsContext.Character.CurrentBuild.Powers[oPower]?.NIDPowerset > -1 &&
+                              DatabaseAPI.Database
+                                  .Powersets[MidsContext.Character.CurrentBuild.Powers[oPower].NIDPowerset]
+                                  .Powers[MidsContext.Character.CurrentBuild.Powers[oPower].IDXPower].Slottable;
 
                 if (!isValid)
                 {
@@ -1107,7 +1109,7 @@ namespace Mids_Reborn.Controls
 
                 var column = SzPower.Width + PaddingX == 0
                     ? 0
-                    : (int)Math.Floor(iX / (decimal)(SzPower.Width + PaddingX));
+                    : (int) Math.Floor(iX / (decimal) (SzPower.Width + PaddingX));
                 iX -= column * (SzPower.Width + PaddingX); // Remove column x offset
 
                 for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers[oPower].Slots.Length; i++)
@@ -1119,6 +1121,11 @@ namespace Mids_Reborn.Controls
                     }
                 }
 
+                return -1;
+            }
+            catch (IndexOutOfRangeException)
+            {
+                // May occur after db edits
                 return -1;
             }
         }
