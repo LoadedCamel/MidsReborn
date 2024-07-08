@@ -396,9 +396,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label21
             // 
-            Label21.Location = new System.Drawing.Point(6, 205);
+            Label21.AutoSize = true;
+            Label21.Location = new System.Drawing.Point(8, 208);
             Label21.Name = "Label21";
-            Label21.Size = new System.Drawing.Size(75, 23);
+            Label21.Size = new System.Drawing.Size(77, 13);
             Label21.TabIndex = 41;
             Label21.Text = "Grid Position:";
             Label21.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -558,6 +559,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // udScaleStart
             // 
             udScaleStart.Location = new System.Drawing.Point(76, 84);
+            udScaleStart.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
             udScaleStart.Name = "udScaleStart";
             udScaleStart.Size = new System.Drawing.Size(45, 22);
             udScaleStart.TabIndex = 10;
@@ -567,9 +569,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // label19
             // 
-            label19.Location = new System.Drawing.Point(6, 87);
+            label19.AutoSize = true;
+            label19.Location = new System.Drawing.Point(2, 87);
+            label19.Margin = new Padding(0);
             label19.Name = "label19";
-            label19.Size = new System.Drawing.Size(64, 20);
+            label19.Size = new System.Drawing.Size(70, 13);
             label19.TabIndex = 9;
             label19.Text = "Initial Value:";
             label19.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -587,9 +591,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label28
             // 
-            Label28.Location = new System.Drawing.Point(217, 87);
+            Label28.AutoSize = true;
+            Label28.Location = new System.Drawing.Point(222, 87);
+            Label28.Margin = new Padding(0);
             Label28.Name = "Label28";
-            Label28.Size = new System.Drawing.Size(34, 20);
+            Label28.Size = new System.Drawing.Size(31, 13);
             Label28.TabIndex = 7;
             Label28.Text = "Max:";
             Label28.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -597,6 +603,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // udScaleMax
             // 
             udScaleMax.Location = new System.Drawing.Point(257, 84);
+            udScaleMax.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
             udScaleMax.Name = "udScaleMax";
             udScaleMax.Size = new System.Drawing.Size(45, 22);
             udScaleMax.TabIndex = 3;
@@ -606,9 +613,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label27
             // 
-            Label27.Location = new System.Drawing.Point(133, 87);
+            Label27.AutoSize = true;
+            Label27.Location = new System.Drawing.Point(132, 87);
+            Label27.Margin = new Padding(0);
             Label27.Name = "Label27";
-            Label27.Size = new System.Drawing.Size(27, 20);
+            Label27.Size = new System.Drawing.Size(30, 13);
             Label27.TabIndex = 5;
             Label27.Text = "Min:";
             Label27.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -616,6 +625,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // udScaleMin
             // 
             udScaleMin.Location = new System.Drawing.Point(166, 84);
+            udScaleMin.Maximum = new decimal(new int[] { 255, 0, 0, 0 });
             udScaleMin.Name = "udScaleMin";
             udScaleMin.Size = new System.Drawing.Size(45, 22);
             udScaleMin.TabIndex = 2;
@@ -625,9 +635,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // Label26
             // 
-            Label26.Location = new System.Drawing.Point(5, 53);
+            Label26.AutoSize = true;
+            Label26.Location = new System.Drawing.Point(12, 56);
             Label26.Name = "Label26";
-            Label26.Size = new System.Drawing.Size(101, 23);
+            Label26.Size = new System.Drawing.Size(91, 13);
             Label26.TabIndex = 3;
             Label26.Text = "Scaling Variable:";
             Label26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
@@ -846,9 +857,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             tpBasic.Controls.Add(cbPowerType);
             tpBasic.Controls.Add(Label5);
             tpBasic.Controls.Add(Label4);
-            tpBasic.Location = new System.Drawing.Point(4, 22);
+            tpBasic.Location = new System.Drawing.Point(4, 24);
             tpBasic.Name = "tpBasic";
-            tpBasic.Size = new System.Drawing.Size(832, 413);
+            tpBasic.Size = new System.Drawing.Size(832, 411);
             tpBasic.TabIndex = 0;
             tpBasic.Text = "Power Attributes";
             tpBasic.UseVisualStyleBackColor = true;
@@ -1695,7 +1706,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lblEnhName
             // 
-            lblEnhName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            lblEnhName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblEnhName.Location = new System.Drawing.Point(21, 78);
             lblEnhName.Name = "lblEnhName";
             lblEnhName.Size = new System.Drawing.Size(316, 19);
@@ -1725,7 +1736,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lblInvSet
             // 
-            lblInvSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            lblInvSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             lblInvSet.Location = new System.Drawing.Point(24, 78);
             lblInvSet.Name = "lblInvSet";
             lblInvSet.Size = new System.Drawing.Size(316, 19);

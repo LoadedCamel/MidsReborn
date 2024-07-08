@@ -844,8 +844,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             if (!myPower.VariableEnabled)
             {
-                udScaleMin.Value = new decimal(0);
-                udScaleMax.Value = myPower.MaxTargets <= 1 ? new decimal(3) : new decimal(myPower.MaxTargets);
+                udScaleMin.Value = 0;
+                udScaleMax.Value = myPower.MaxTargets <= 1 ? 3 : Math.Min(255, myPower.MaxTargets);
             }
 
             myPower.VariableEnabled = chkScale.Checked;
