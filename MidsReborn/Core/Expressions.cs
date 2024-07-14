@@ -555,7 +555,7 @@ namespace Mids_Reborn.Core
             switch (effectType)
             {
                 case Enums.eEffectType.Damage:
-                    Debug.WriteLine(totals.BuffDam);
+                    //Debug.WriteLine(totals.BuffDam);
                     break;
                 case Enums.eEffectType.Defense:
                     index = (int)sourceEffect.DamageType;
@@ -620,7 +620,7 @@ namespace Mids_Reborn.Core
                     break;
             }
 
-            return value <= 0f ? 1f : value;
+            return value <= 0 ? 1f : value;
         }
 
         private static string GetModifier(string modifierName)
@@ -629,12 +629,12 @@ namespace Mids_Reborn.Core
 
             if (modTable.Count <= 0)
             {
-                Debug.WriteLine($"Returning 0 for {modifierName}");
+                //Debug.WriteLine($"Returning 0 for {modifierName}");
                 return "0";
             }
             else
             {
-                Debug.WriteLine($"Returning {Math.Abs(modTable[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column])} for {modifierName}");
+                //Debug.WriteLine($"Returning {Math.Abs(modTable[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column])} for {modifierName}");
                 return $"{modTable[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column]}";
             }
         }
