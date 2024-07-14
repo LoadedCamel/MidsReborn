@@ -1036,11 +1036,13 @@ namespace Mids_Reborn
                     }
                     else
                     {
-                        shouldAddEffect = enhEffect.IsFromProc;
-                        if (!shouldAddEffect)
-                        {
-                            continue;
-                        }
+                        //shouldAddEffect = enhEffect.IsFromProc;
+                        
+                        // Find enhancement index in set
+                        var enhIndexSet = eSet.Enhancements.TryFindIndex(e => e == slotEntry.Enhancement.Enh);
+
+                        // Will include if there is no special bonus for this enhancement (at set level)
+                        shouldAddEffect = enhIndexSet >= 0 && eSet.SpecialBonus[enhIndexSet].Index.Length <= 0;
                     }
 
                     if (!shouldAddEffect)
