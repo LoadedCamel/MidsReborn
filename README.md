@@ -17,6 +17,6 @@ https://twitter.com/midsreborn
    * This type of setup is not recommended (Not Officially Supported)
    * A 64-bit Wine prefix is required.
 
-### Notes
+### Notes/Thanks
 >Windows setup binaries are generated using **Advanced Installer** thanks to our friends at Caphyon.
->>We would also like to thank our friends at **JetBrains** for providing some of the productivity tools we use in developement.
+>We would also like to thank our friends at **JetBrains** for providing some of the productivity tools we use in developement.
