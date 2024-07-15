@@ -19,3 +19,4 @@ https://twitter.com/midsreborn
 
 ### Notes
 >Windows setup binaries are generated using **Advanced Installer** thanks to our friends at Caphyon.
+>>We would also like to thank our friends at **JetBrains** for providing some of the productivity tools we use in developement.
