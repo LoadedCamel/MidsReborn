@@ -432,7 +432,7 @@ namespace Mids_Reborn.Core
                 { "base.kToHit", $"{(MidsContext.Config.ScalingToHit)}"},
                 { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" },
                 { "source>Base.kHitPoints", $"{(MidsContext.Character.Archetype == null ? 1000 : MidsContext.Character.Archetype.Hitpoints)}"},
-                { "source>cur.kMeter", $"{GetVariableValue(fxPower!.FullName)}"}
+                { "source>cur.kMeter", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}"}
             };
         }
 

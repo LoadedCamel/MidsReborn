@@ -459,12 +459,14 @@ namespace Mids_Reborn.Core
                 _ => ""
             };
 
-            if (FxIdentifier.EffectType is Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning)
+            if (FxIdentifier.EffectType is not (Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning))
             {
-                if (fxMainEffectTypes.ContainsAll(allMovement))
-                {
-                    return "Slow";
-                }
+                return groupedVector != "" ? $"{fx[0].EffectType} ({groupedVector})" : $"{fx[0].EffectType}";
+            }
+
+            if (fxMainEffectTypes.ContainsAll(allMovement))
+            {
+                return "Slow";
             }
 
             return groupedVector != "" ? $"{fx[0].EffectType} ({groupedVector})" : $"{fx[0].EffectType}";
