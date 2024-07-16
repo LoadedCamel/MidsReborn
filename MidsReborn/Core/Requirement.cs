@@ -201,14 +201,37 @@ namespace Mids_Reborn.Core
                 return true;
             }
 
-            return PowerID.Any(e => e.Length == 2
+            var rqPowerId = PowerID
+                .Where(e => e.All(f => string.IsNullOrWhiteSpace(f) | DatabaseAPI.GetPowerByFullName(f) != null))
+                .ToArray();
+
+            if (rqPowerId.Length <= 0)
+            {
+                return true;
+            }
+
+            return rqPowerId.Any(e => e.Length == 2
                 ? MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.NidFromUidPower(e[0])) >= 0 & MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.NidFromUidPower(e[1])) >= 0
                 : MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.NidFromUidPower(e[0])) >= 0);
         }
 
         private bool ExcludedPowersCheck()
         {
-            return !PowerIDNot.Any(e => e.Length == 2
+            if (PowerIDNot.Length <= 0)
+            {
+                return true;
+            }
+
+            var rqPowerIdNot = PowerIDNot
+                .Where(e => e.All(f => string.IsNullOrWhiteSpace(f) | DatabaseAPI.GetPowerByFullName(f) != null))
+                .ToArray();
+
+            if (rqPowerIdNot.Length <= 0)
+            {
+                return true;
+            }
+
+            return !rqPowerIdNot.Any(e => e.Length == 2
                 ? MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.NidFromUidPower(e[0])) >= 0 & MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.NidFromUidPower(e[1])) >= 0
                 : MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.NidFromUidPower(e[0])) >= 0);
         }
