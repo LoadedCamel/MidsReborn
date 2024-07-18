@@ -106,7 +106,7 @@
             btnOkay.Name = "btnOkay";
             btnOkay.Size = new System.Drawing.Size(88, 41);
             btnOkay.TabIndex = 11;
-            btnOkay.Text = "Okay";
+            btnOkay.Text = "Ok";
             btnOkay.UseVisualStyleBackColor = false;
             btnOkay.Click += Okay_Clicked;
             // 
