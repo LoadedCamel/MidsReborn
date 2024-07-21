@@ -276,7 +276,6 @@ namespace Mids_Reborn.Forms.Controls
 
         private void ListBox_SelectedIndexChanged(object? sender, EventArgs e)
         {
-            Debug.WriteLine($"ListBox_SelectedIndexChanged: { _listBox.SelectedItem}");
             if (_listBox.SelectedIndex >= 0) // Ensure valid index
             {
                 SelectedIndexChanged?.Invoke(this, e);

@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Jace;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using static Mids_Reborn.Core.Base.Data_Classes.Character;
 
@@ -237,6 +238,14 @@ namespace Mids_Reborn.Core
             },
             new ExprCommand
             {
+                Keyword = ">mag(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Suffix,
+                CommandTokenType = ExprCommandToken.PowerName,
+                SingleToken = false
+            },
+            new ExprCommand
+            {
                 Keyword = "modifier>",
                 KeywordType = ExprKeywordType.Keyword,
                 InfixMode = ExprKeywordInfix.Prefix,
@@ -452,14 +461,15 @@ namespace Mids_Reborn.Core
                 { new Regex(@"source\.ownPower\?\(([a-zA-Z0-9_\-\.]+)\)"), e => pickedPowerNames.Contains(e.Groups[1].Value) ? "1" : "0" },
                 { new Regex(@"source\.ownPowerNum\?\(([a-zA-Z0-9_\-\.]+)\)"), e => OwnPowerNumCheck(e.Groups[1].Value) },
                 { new Regex(@"([a-zA-Z\-_\.]+)>variableVal"), e => GetVariableValue(e.Groups[1].Value) },
+                { new Regex(@"([a-zA-Z\-_\.]+)>mag\(([0-9]+)\)"), e => GetPowerMag(e.Groups[1].Value, e.Groups[2].Value) },
                 { new Regex(@"modifier\>([a-zA-Z0-9_\-]+)"), e => GetModifier(e.Groups[1].Value) },
                 { new Regex(@"powerGroupIn\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.StartsWith(e.Groups[1].Value) ? "1" : "0" },
                 { new Regex(@"powerGroupNotIn\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.StartsWith(e.Groups[1].Value) ? "0" : "1" },
                 { new Regex(@"powerIs\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
                 { new Regex(@"powerIsNot\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "0" : "1" },
                 { new Regex(@"powerVectorsContains\(([a-zA-Z0-9_\-\.]+)\)"), e => PowerVectorsContains(sourceFx.GetPower(), e.Groups[1].Value) },
-                { new Regex(@"source\.owner\>arch\(([a-zA-Z\s]+)\)"), e => MidsContext.Character.Archetype == null ? "0" : MidsContext.Character.Archetype.DisplayName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
-                { new Regex(@"source\.owner\>archIn\(([a-zA-Z\s\,]+)\)"), e => MidsContext.Character.Archetype == null ? "0" : Regex.Split(e.Groups[1].Value, @"(\s*)\,").Select(f => f.ToLowerInvariant().Trim()).Contains(MidsContext.Character.Archetype.DisplayName.ToLowerInvariant()) ? "1" : "0" },
+                { new Regex(@"source\.owner\>arch\(([a-zA-Z\s]+)\)"), e => MidsContext.Character?.Archetype == null ? "0" : MidsContext.Character.Archetype.DisplayName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
+                { new Regex(@"source\.owner\>archIn\(([a-zA-Z\s\,]+)\)"), e => MidsContext.Character?.Archetype == null ? "0" : Regex.Split(e.Groups[1].Value, @"(\s*)\,").Select(f => f.ToLowerInvariant().Trim()).Contains(MidsContext.Character.Archetype.DisplayName.ToLowerInvariant()) ? "1" : "0" },
                 { new Regex(@"caster\>modifier\(([a-zA-Z0-9_\-]+)\)"), e => ModifierCaster(e.Groups[1].Value) },
                 { new Regex(@"GCMActive\(([a-zA-Z0-9_\-]+)\)"), e => CheckGCM(e.Groups[1].Value) },
                 { new Regex(@"GCMScale\(([a-zA-Z0-9_\-]+)\)"), e => GCMScale(e.Groups[1].Value) },
@@ -546,6 +556,35 @@ namespace Mids_Reborn.Core
             }
 
             return sourceEffect.Scale;
+        }
+
+        private static string GetPowerMag(string targetPower, string effectIndex)
+        {
+            var enhancedPower = MainModule.MidsController.Toon?.GetEnhancedPower(new Power {FullName = targetPower});
+            if (enhancedPower is null)
+            {
+                // No enhanced power available, fall back to base
+                enhancedPower = DatabaseAPI.GetPowerByFullName(targetPower);
+                if (enhancedPower is null)
+                {
+                    return "0";
+                }
+            }
+
+            var ret = int.TryParse(effectIndex, out var targetEffectIndex);
+            if (!ret)
+            {
+                return "0";
+            }
+
+            if (targetEffectIndex < 0 | targetEffectIndex >= enhancedPower.Effects.Length)
+            {
+                return "0";
+            }
+
+            var targetEffect = enhancedPower.Effects[targetEffectIndex];
+
+            return $"{targetEffect.BuffedMag}";
         }
 
         private static string GetModifier(string modifierName)
