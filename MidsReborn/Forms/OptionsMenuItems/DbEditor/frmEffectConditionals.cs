@@ -257,8 +257,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     break;
 
                 case "Stacks":
-                    tbFilter.Visible = false;
-                    btnClearFilter.Visible = false;
+                    tbFilter.Visible = true;
+                    btnClearFilter.Visible = true;
                     lvConditionalBool.Enabled = true;
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
@@ -288,6 +288,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     //lvSubConditional.Columns[0].Width = -2;
                     lvSubConditional.EndUpdate();
                     break;
+
                 case "Team Members":
                     tbFilter.Visible = false;
                     btnClearFilter.Visible = false;
@@ -658,14 +659,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 ? ""
                 : lvConditionalType.SelectedItems[0].Text;
 
+            var pArray = DatabaseAPI.Database.Power;
+            var eArray = Array.Empty<int>();
             switch (conditionalType)
             {
                 case "Power Active":
-
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
-                    var pArray = DatabaseAPI.Database.Power;
-                    var eArray = new[] { 6, 7, 8, 9, 10, 11 };
+                    eArray = new[] { 6, 7, 8, 9, 10, 11 };
+
                     foreach (var power in pArray)
                     {
                         var pSetType = power.GetPowerSet().SetType;
@@ -703,16 +705,80 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 case "Power Taken":
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
-                    pArray = DatabaseAPI.Database.Power;
                     eArray = new[] { 6, 7, 8, 9, 10, 11 };
+
                     foreach (var power in pArray)
                     {
                         var pSetType = power.GetPowerSet().SetType;
                         var pType = power.PowerType;
-                        var isType = pType == Enums.ePowerType.Auto_ || pType == Enums.ePowerType.Toggle ||
-                                     (pType == Enums.ePowerType.Click && power.ClickBuff);
+                        var isType = pType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle ||
+                                     pType == Enums.ePowerType.Click && power.ClickBuff;
                         var isUsable = !eArray.Contains((int)pSetType);
                         if (!isUsable && !isType)
+                        {
+                            continue;
+                        }
+
+                        var pItem = new Regex("[_]");
+                        var pStrings = pItem.Replace(power.FullName, " ").Split('.');
+                        var pMatch = new Regex("[ ].*");
+                        var pArchetype = pMatch.Replace(pStrings[0], "");
+                        var textFilter = tbFilter.Text.Trim();
+                        if (!string.IsNullOrEmpty(textFilter))
+                        {
+                            if (!FilterMatch(textFilter, pStrings[2], pArchetype, pStrings[1]))
+                            {
+                                continue;
+                            }
+                        }
+
+                        lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
+                    }
+
+                    lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
+                    //lvSubConditional.Columns[0].Width = -2;
+                    lvSubConditional.EndUpdate();
+
+                    break;
+
+                case "Stacks":
+                    /*
+                     tbFilter.Visible = true;
+                       btnClearFilter.Visible = true;
+                       lvConditionalBool.Enabled = true;
+                       lvSubConditional.BeginUpdate();
+                       lvSubConditional.Items.Clear();
+                       pArray = DatabaseAPI.Database.Power;
+                       eArray = new[] { 6, 8, 9, 10, 11 };
+                       foreach (var power in pArray)
+                       {
+                           var pSetType = power.GetPowerSet().SetType;
+                           var isType = power.VariableEnabled;
+                           var isUsable = !eArray.Contains((int)pSetType);
+                           if (!isUsable || !isType) continue;
+                       
+                           var pItem = new Regex("[_]");
+                           var pStrings = pItem.Replace(power.FullName, " ").Split('.');
+                           var pMatch = new Regex("[ ].*");
+                           var pArchetype = pMatch.Replace(pStrings[0], "");
+                           lvConditionalBool.Size = lvBoolSizeSecondary;
+                           lvConditionalBool.Location = lvBoolLocSecondary;
+                           lvConditionalOp.Visible = true;
+                           lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name =
+                               power.FullName;
+                       }
+                    */
+
+                    lvSubConditional.BeginUpdate();
+                    lvSubConditional.Items.Clear();
+                    eArray = new[] { 6, 8, 9, 10, 11 };
+
+                    foreach (var power in pArray)
+                    {
+                        var pSetType = power.GetPowerSet().SetType;
+                        var isType = power.VariableEnabled;
+                        var isUsable = !eArray.Contains((int)pSetType);
+                        if (!isUsable || !isType)
                         {
                             continue;
                         }

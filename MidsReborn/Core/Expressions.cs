@@ -5,7 +5,6 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Jace;
-using Jace.Operations;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using static Mids_Reborn.Core.Base.Data_Classes.Character;
@@ -239,6 +238,14 @@ namespace Mids_Reborn.Core
             },
             new ExprCommand
             {
+                Keyword = ">mag(",
+                KeywordType = ExprKeywordType.Function,
+                InfixMode = ExprKeywordInfix.Suffix,
+                CommandTokenType = ExprCommandToken.PowerName,
+                SingleToken = false
+            },
+            new ExprCommand
+            {
                 Keyword = "modifier>",
                 KeywordType = ExprKeywordType.Keyword,
                 InfixMode = ExprKeywordInfix.Prefix,
@@ -392,7 +399,15 @@ namespace Mids_Reborn.Core
             new ExprCommand
             {
                 Keyword = "source>kMeter",
-                KeywordType = ExprKeywordType.Function,
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "source>kMeterAbs",
+                KeywordType = ExprKeywordType.Keyword,
                 InfixMode = ExprKeywordInfix.Atomic,
                 CommandTokenType = ExprCommandToken.None,
                 SingleToken = true
@@ -421,7 +436,7 @@ namespace Mids_Reborn.Core
                 { "power.base>range", $"{(fxPower == null ? "0" : fxPower.Range)}" },
                 { "effect>scale", $"{sourceFx.Scale}" },
                 { "@StdResult", $"{sourceFx.Scale}" },
-                { "@Strength", $"{GetStrengthType(sourceFx)}"},
+                { "@Strength", $"{GetStrength(sourceFx)}"},
                 { "ifPvE", sourceFx.PvMode == Enums.ePvX.PvE ? "1" : "0" },
                 { "ifPvP", sourceFx.PvMode == Enums.ePvX.PvP ? "1" : "0" },
                 { "caster>modifier>current", ModifierCaster(sourceFx) },
@@ -432,7 +447,8 @@ namespace Mids_Reborn.Core
                 { "base.kToHit", $"{(MidsContext.Config.ScalingToHit)}"},
                 { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" },
                 { "source>Base.kHitPoints", $"{(MidsContext.Character.Archetype == null ? 1000 : MidsContext.Character.Archetype.Hitpoints)}"},
-                { "source>cur.kMeter", $"{GetVariableValue(fxPower!.FullName)}"}
+                { "source>cur.kMeter", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName, false))}"},
+                { "source>cur.kMeterAbs", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}"}
             };
         }
 
@@ -445,14 +461,15 @@ namespace Mids_Reborn.Core
                 { new Regex(@"source\.ownPower\?\(([a-zA-Z0-9_\-\.]+)\)"), e => pickedPowerNames.Contains(e.Groups[1].Value) ? "1" : "0" },
                 { new Regex(@"source\.ownPowerNum\?\(([a-zA-Z0-9_\-\.]+)\)"), e => OwnPowerNumCheck(e.Groups[1].Value) },
                 { new Regex(@"([a-zA-Z\-_\.]+)>variableVal"), e => GetVariableValue(e.Groups[1].Value) },
+                { new Regex(@"([a-zA-Z\-_\.]+)>mag\(([0-9]+)\)"), e => GetPowerMag(e.Groups[1].Value, e.Groups[2].Value) },
                 { new Regex(@"modifier\>([a-zA-Z0-9_\-]+)"), e => GetModifier(e.Groups[1].Value) },
                 { new Regex(@"powerGroupIn\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.StartsWith(e.Groups[1].Value) ? "1" : "0" },
                 { new Regex(@"powerGroupNotIn\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.StartsWith(e.Groups[1].Value) ? "0" : "1" },
                 { new Regex(@"powerIs\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
                 { new Regex(@"powerIsNot\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "0" : "1" },
                 { new Regex(@"powerVectorsContains\(([a-zA-Z0-9_\-\.]+)\)"), e => PowerVectorsContains(sourceFx.GetPower(), e.Groups[1].Value) },
-                { new Regex(@"source\.owner\>arch\(([a-zA-Z\s]+)\)"), e => MidsContext.Character.Archetype == null ? "0" : MidsContext.Character.Archetype.DisplayName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
-                { new Regex(@"source\.owner\>archIn\(([a-zA-Z\s\,]+)\)"), e => MidsContext.Character.Archetype == null ? "0" : Regex.Split(e.Groups[1].Value, @"(\s*)\,").Select(f => f.ToLowerInvariant().Trim()).Contains(MidsContext.Character.Archetype.DisplayName.ToLowerInvariant()) ? "1" : "0" },
+                { new Regex(@"source\.owner\>arch\(([a-zA-Z\s]+)\)"), e => MidsContext.Character?.Archetype == null ? "0" : MidsContext.Character.Archetype.DisplayName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
+                { new Regex(@"source\.owner\>archIn\(([a-zA-Z\s\,]+)\)"), e => MidsContext.Character?.Archetype == null ? "0" : Regex.Split(e.Groups[1].Value, @"(\s*)\,").Select(f => f.ToLowerInvariant().Trim()).Contains(MidsContext.Character.Archetype.DisplayName.ToLowerInvariant()) ? "1" : "0" },
                 { new Regex(@"caster\>modifier\(([a-zA-Z0-9_\-]+)\)"), e => ModifierCaster(e.Groups[1].Value) },
                 { new Regex(@"GCMActive\(([a-zA-Z0-9_\-]+)\)"), e => CheckGCM(e.Groups[1].Value) },
                 { new Regex(@"GCMScale\(([a-zA-Z0-9_\-]+)\)"), e => GCMScale(e.Groups[1].Value) },
@@ -508,141 +525,86 @@ namespace Mids_Reborn.Core
                 .FirstOrDefault(e => e.Value == MidsContext.Character?.Archetype?.DisplayName)
                 .Key;
             
-            if (archetypeNid < 0)
-            {
-                return "0";
-            }
-
-            return Convert.ToString(modifierData.Table[maxPlayerLevel - 1][archetypeNid], CultureInfo.InvariantCulture);
+            return archetypeNid < 0
+                ? "0"
+                : Convert.ToString(modifierData.Table[maxPlayerLevel - 1][archetypeNid], CultureInfo.InvariantCulture);
         }
 
         private static string PowerVectorsContains(IPower? sourcePower, string vector)
         {
             var ret = Enum.TryParse(typeof(Enums.eVector), vector, out var eValue);
 
-            if (!ret)
-            {
-                return "0";
-            }
-
-            return (sourcePower.AttackTypes & (Enums.eVector) eValue) == Enums.eVector.None ? "0" : "1";
+            return !ret
+                ? "0"
+                : (sourcePower.AttackTypes & (Enums.eVector) eValue) == Enums.eVector.None
+                    ? "0"
+                    : "1";
         }
 
         private static bool IsPowerActive(string powerName)
         {
             var power = MidsContext.Character.CurrentBuild?.Powers.FirstOrDefault(p => p?.Power != null && p.Power.FullName.Equals(powerName, StringComparison.InvariantCultureIgnoreCase));
+            
             return power?.Power is { Active: true };
         }
 
-        private static float GetStrengthType(IEffect? sourceEffect)
+        private static float GetStrength(IEffect? sourceEffect)
         {
             if (sourceEffect is null)
             {
-                return 0f;
+                return 0;
             }
 
-            var effectType = sourceEffect.EffectType;
-            var totals = MidsContext.Character?.TotalsCapped;
+            return sourceEffect.Scale;
+        }
 
-            if (totals is null)
+        private static string GetPowerMag(string targetPower, string effectIndex)
+        {
+            var enhancedPower = MainModule.MidsController.Toon?.GetEnhancedPower(new Power {FullName = targetPower});
+            if (enhancedPower is null)
             {
-                return 0f;
+                // No enhanced power available, fall back to base
+                enhancedPower = DatabaseAPI.GetPowerByFullName(targetPower);
+                if (enhancedPower is null)
+                {
+                    return "0";
+                }
             }
 
-            int index;
-            var value = 0f;
-
-            switch (effectType)
+            var ret = int.TryParse(effectIndex, out var targetEffectIndex);
+            if (!ret)
             {
-                case Enums.eEffectType.Damage:
-                    Debug.WriteLine(totals.BuffDam);
-                    break;
-                case Enums.eEffectType.Defense:
-                    index = (int)sourceEffect.DamageType;
-                    if (index >= 0 && index < totals.Def.Length)
-                    {
-                        value = totals.Def[index];
-                    }
-                    break;
-
-                case Enums.eEffectType.Resistance:
-                    index = (int)sourceEffect.DamageType;
-                    if (index >= 0 && index < totals.Res.Length)
-                    {
-                        value = totals.Res[index];
-                    }
-                    break;
-
-                case Enums.eEffectType.Mez:
-                    index = (int)sourceEffect.MezType;
-                    if (index >= 0 && index < totals.Mez.Length)
-                    {
-                        value = totals.Mez[index];
-                    }
-                    break;
-
-                case Enums.eEffectType.MezResist:
-                    index = (int)sourceEffect.MezType;
-                    if (index >= 0 && index < totals.MezRes.Length)
-                    {
-                        value = totals.MezRes[index];
-                    }
-                    break;
-
-                case Enums.eEffectType.ResEffect:
-                    index = (int)sourceEffect.ETModifies;
-                    if (index >= 0 && index < totals.DebuffRes.Length)
-                    {
-                        value = totals.DebuffRes[index];
-                    }
-                    break;
-
-                case Enums.eEffectType.Regeneration:
-                    value = (totals.HPRegen + 1f) / 100f;
-
-                    break;
-                default:
-                    if (EffectTotalMap.TryGetValue(effectType, out var propName) && !string.IsNullOrWhiteSpace(propName))
-                    {
-                        var effectObj = typeof(TotalStatistics).GetProperty(propName);
-                        if (effectObj is not null)
-                        {
-                            if (effectObj.GetValue(totals) is float)
-                            {
-                                value = (float)(effectObj.GetValue(totals) ?? 0);
-                            }
-                            else
-                            {
-                                value = 0;
-                            }
-                        }
-                    }
-                    break;
+                return "0";
             }
 
-            return value <= 0f ? 1f : value;
+            if (targetEffectIndex < 0 | targetEffectIndex >= enhancedPower.Effects.Length)
+            {
+                return "0";
+            }
+
+            var targetEffect = enhancedPower.Effects[targetEffectIndex];
+
+            return $"{targetEffect.BuffedMag}";
         }
 
         private static string GetModifier(string modifierName)
         {
             var modTable = DatabaseAPI.Database.AttribMods.Modifier.Where(e => e.ID == modifierName).ToList();
 
-            if (modTable.Count <= 0)
-            {
-                Debug.WriteLine($"Returning 0 for {modifierName}");
-                return "0";
-            }
-            else
-            {
-                Debug.WriteLine($"Returning {Math.Abs(modTable[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column])} for {modifierName}");
-                return $"{modTable[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column]}";
-            }
+            return modTable.Count <= 0 ?
+                "0" :
+                $"{modTable[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column]}";
         }
 
-        private static string GetVariableValue(string powerName)
+        private static string GetVariableValue(string powerName, bool absoluteValue = true)
         {
-            var target = MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x.Power != null && x.Power.FullName == powerName);
-            return target == null ? "0" : $"{target.VariableValue}";
+            var target = MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x is {Power: not null} && x.Power.FullName == powerName);
+
+            return target == null
+                ? "0"
+                : absoluteValue
+                    ? $"{target.VariableValue}"
+                    : $"{target.VariableValue * target.Power.VariableMax / 100.0}";
         }
 
         public static float Parse(IEffect sourceFx, ExpressionType exprType, out ErrorData error)
@@ -665,13 +627,16 @@ namespace Mids_Reborn.Core
                         retValue = (float)((Math.Max(Math.Min(sourceFx.GetPower().RechargeTime, 30f), 0) * 0.800000011920929 + 1.79999995231628) / 5.0) / sourceFx.GetPower().AoEModifier * sourceFx.Scale;
                         if (sourceFx.Expressions.Magnitude.Length > ".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 2)
                         {
-                            retValue *= float.Parse(sourceFx.Expressions.Magnitude.Substring(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 1)[..2]);
+                            retValue *= float.Parse(sourceFx.Expressions.Magnitude[(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 1)..][..2]);
                         }
 
                         return retValue;
                     }
 
-                    if (string.IsNullOrWhiteSpace(sourceFx.Expressions.Magnitude)) return 0f;
+                    if (string.IsNullOrWhiteSpace(sourceFx.Expressions.Magnitude))
+                    {
+                        return 0;
+                    }
 
                     var baseFx = sourceFx.Clone() as IEffect;
                     retValue = InternalParsing(baseFx, exprType, out error);
@@ -681,7 +646,7 @@ namespace Mids_Reborn.Core
                     throw new ArgumentOutOfRangeException(nameof(exprType), exprType, null);
             }
 
-            return error.Found ? 0f : retValue;
+            return error.Found ? 0 : retValue;
         }
 
         private static float InternalParsing(IEffect sourceFx, ExpressionType exprType, out ErrorData error)
@@ -812,27 +777,29 @@ namespace Mids_Reborn.Core
                 }
             }
 
-            if (!string.IsNullOrWhiteSpace(fx.Expressions.Probability))
+            if (string.IsNullOrWhiteSpace(fx.Expressions.Probability))
             {
-                type = ExpressionType.Probability;
-                Parse(fx, type, out error);
-                if (error.Found)
+                return;
+            }
+
+            type = ExpressionType.Probability;
+            Parse(fx, type, out error);
+            if (error.Found)
+            {
+                validationItems.Add(new Validation
                 {
-                    validationItems.Add(new Validation
-                    {
-                        Type = error.Type,
-                        Validated = false,
-                        Message = $"{type} Expression Error: {error.Message}"
-                    });
-                }
-                else
+                    Type = error.Type,
+                    Validated = false,
+                    Message = $"{type} Expression Error: {error.Message}"
+                });
+            }
+            else
+            {
+                validationItems.Add(new Validation
                 {
-                    validationItems.Add(new Validation
-                    {
-                        Type = type,
-                        Validated = true
-                    });
-                }
+                    Type = type,
+                    Validated = true
+                });
             }
         }
 

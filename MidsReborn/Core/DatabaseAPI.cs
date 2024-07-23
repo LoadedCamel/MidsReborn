@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Globalization;
 using System.IO;
 using System.IO.Compression;
@@ -1479,7 +1480,7 @@ namespace Mids_Reborn.Core
                     }
                     catch (Exception ex)
                     {
-                        Console.WriteLine(ex.StackTrace);
+                        Debug.WriteLine(ex.StackTrace);
                     }
                 }
 

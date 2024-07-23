@@ -633,8 +633,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             };
 
             // Filter inherents, prestige, etc
-            var dbPowers = powers.Select(e => DatabaseAPI.GetPowerByFullName(e.Value.Key.FullName)).Where(e => e is not null);
-            
+            var dbPowers = powers
+                .Select(e => DatabaseAPI.GetPowerByFullName(e.Value.Key.FullName))
+                .Where(e => e is not null);
+
             // Valid Archetype, valid power requirements
             dbPowers = dbPowers
                 .Where(e => e.Requires.ClassOk(MidsContext.Character.Archetype.Idx) & e.Requires.RequiredPowersOk());
@@ -649,7 +651,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 .ToDictionary(e => e.Key, e => e.Value);
 
             // Reorder by powerset type, then powerset name, then power static index
-            powers = powers.OrderBy(e => (int)(e.Value.Key.GetPowerSet().SetType))
+            powers = powers.OrderBy(e => (int)e.Value.Key.GetPowerSet().SetType)
                 .ThenBy(e => e.Value.Key.GetPowerSet().SetName)
                 .ThenBy(e => e.Value.Key.StaticIndex)
                 .ToDictionary(e => e.Key, e => e.Value);
