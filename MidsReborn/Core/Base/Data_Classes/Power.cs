@@ -3061,8 +3061,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     var sFx = pEffects[j];
                     
                     // Cap effect duration to root power
+                    // Clone duration if caller has one > 0
                     sFx.nDuration = fx.nDuration > 0
-                        ? Math.Min(sFx.nDuration, fx.nDuration)
+                        ? fx.nDuration
                         : sFx.nDuration;
                     sFx.DelayedTime += fx.DelayedTime;
                     sFx.Probability = fx.Probability is 0 or 1
@@ -3078,6 +3079,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     {
                         sFx.Ticks = fx.Ticks;
                     }
+
+                    sFx.SetPower(this);
                 }
 
                 k += subEffects.Count;
