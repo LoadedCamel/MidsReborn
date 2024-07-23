@@ -238,6 +238,8 @@ namespace Mids_Reborn.Core
 
         public Point? EntityDetailsLocation { get; set; }
 
+        public bool DisableTips { get; set; } = false;
+
         internal static ConfigData? Current
         {
             get

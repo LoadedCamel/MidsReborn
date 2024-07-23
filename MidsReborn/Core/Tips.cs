@@ -1,7 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
-using System.Windows.Forms;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Core
@@ -47,7 +47,16 @@ namespace Mids_Reborn.Core
 
         public void Show(TipType tip)
         {
-            if (_tipShown == null || !_tipShown.ContainsKey(tip) || _tipShown[tip]) return;
+            if (_tipShown == null || !_tipShown.ContainsKey(tip) || _tipShown[tip])
+            {
+                return;
+            }
+
+            if (MidsContext.Config?.DisableTips == true)
+            {
+                return;
+            }
+
             var message = GetTipMessage(tip);
             _tipShown[tip] = true; // Mark the tip as shown
             MessageBoxEx.Show($"{message}\n\nThis message should not appear again.\n",@"Tip", MessageBoxEx.MessageBoxExButtons.Ok);

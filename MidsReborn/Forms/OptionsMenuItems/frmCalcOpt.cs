@@ -314,6 +314,7 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             chkNoTips.Checked = config.NoToolTips;
             chkShowAlphaPopup.Checked = !config.DisableAlphaPopup;
             chkUseArcanaTime.Checked = config.UseArcanaTime;
+            chkDisableUsageTips.Checked = config.DisableTips;
             TeamSize.Value = new decimal(config.TeamSize);
             var index = 0;
             do
@@ -564,6 +565,7 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             config.NoToolTips = chkNoTips.Checked;
             config.DisableAlphaPopup = !chkShowAlphaPopup.Checked;
             config.UseArcanaTime = chkUseArcanaTime.Checked;
+            config.DisableTips = chkDisableUsageTips.Checked;
             config.TeamSize = Convert.ToInt32(TeamSize.Value);
             config.TotalsWindowTitleStyle = (ConfigData.ETotalsWindowTitleStyle)cbTotalsWindowTitleOpt.SelectedIndex;
             config.UseOldTotalsWindow = chkOldStyle.Checked;
