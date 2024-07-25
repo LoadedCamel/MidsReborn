@@ -607,25 +607,24 @@ namespace Mids_Reborn.Forms
         {
             var flag = false;
             if (fAccolade == null)
+            {
                 flag = true;
+            }
             else if (fAccolade.IsDisposed)
+            {
                 flag = true;
+            }
+
             if (flag)
             {
                 var iParent = this;
                 var power = MainModule.MidsController.Toon != null && !MainModule.MidsController.Toon.IsHero()
-                    ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)]
-                    : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)];
+                    ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)] // Inherent.Inherent.MxD_Accolades_Villain
+                    : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)]; // Inherent.Inherent.MxD_Accolades_Hero
                 var iPowers = new List<IPower?>();
                 if (power != null)
                 {
-                    var num = power.NIDSubPower.Length - 1;
-                    for (var index = 0; index <= num; ++index)
-                    {
-                        var thisPower = DatabaseAPI.Database.Power[power.NIDSubPower[index]];
-                        if (thisPower != null && (thisPower.ClickBuff || thisPower.PowerType == Enums.ePowerType.Auto_ | thisPower.PowerType == Enums.ePowerType.Toggle))
-                            iPowers.Add(thisPower);
-                    }
+                    iPowers.AddRange(power.NIDSubPower.Select(t => DatabaseAPI.Database.Power[t]).OfType<IPower>().Where(thisPower => thisPower.ClickBuff || thisPower.PowerType == Enums.ePowerType.Auto_ | thisPower.PowerType == Enums.ePowerType.Toggle));
                 }
 
                 fAccolade = new frmAccolade(iParent, iPowers);
@@ -649,7 +648,7 @@ namespace Mids_Reborn.Forms
         private static int ArchetypeIndirectToIndex(int iIndirect)
         {
             var num1 = -1;
-            for (var index = 0; index <= DatabaseAPI.Database.Classes.Length - 1; ++index)
+            for (var index = 0; index < DatabaseAPI.Database.Classes.Length; index++)
             {
                 if (!DatabaseAPI.Database.Classes[index].Playable)
                     continue;
@@ -1817,6 +1816,7 @@ namespace Mids_Reborn.Forms
             {
                 Text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower].DisplayName
             };
+
             frmAccolade.ShowDialog(this);
             EnhancementModified();
             LastClickPlacedSlot = false;

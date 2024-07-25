@@ -101,8 +101,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             llRight.SuspendRedraw = true;
             llLeft.ClearItems();
             llRight.ClearItems();
-            var num = _myPowers.Count - 1;
-            for (var index = 0; index <= num; ++index)
+            for (var index = 0; index < _myPowers.Count; index++)
             {
                 var iState = !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index])
                     ? !((_myPowers[index].PowerType != Enums.ePowerType.Click) | _myPowers[index].ClickBuff)

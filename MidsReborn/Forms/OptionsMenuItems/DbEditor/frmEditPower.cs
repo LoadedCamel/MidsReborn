@@ -527,18 +527,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnSPAdd_Click(object sender, EventArgs e)
         {
             if (lvSPPower.SelectedItems.Count < 1)
+            {
                 return;
+            }
+
             var b = Convert.ToString(lvSPPower.SelectedItems[0].Tag, CultureInfo.InvariantCulture);
             if (myPower.UIDSubPower.Any(t => string.Equals(t, b, StringComparison.OrdinalIgnoreCase)))
             {
                 return;
             }
-            var power = myPower;
-            var strArray = Array.Empty<string>();
-            Array.Copy(power.UIDSubPower, strArray, power.UIDSubPower.Length + 1);
-            //var strArray = (string[]) Utils.CopyArray(power.UIDSubPower, new string[myPower.UIDSubPower.Length + 1]);
-            power.UIDSubPower = strArray;
-            myPower.UIDSubPower[^1] = b;
+
+            var subPowers = myPower.UIDSubPower.ToList();
+            subPowers.Add(b);
+            myPower.UIDSubPower = subPowers.ToArray();
+
             SPFillList();
             lvSPSelected.Items[^1].Selected = true;
             lvSPSelected.Items[^1].EnsureVisible();
@@ -593,7 +595,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (Updating)
                 return;
             var index = cbForcedClass.SelectedIndex - 1;
-            myPower.ForcedClass = !((index < 0) | (index > DatabaseAPI.Database.Classes.Length - 1))
+            myPower.ForcedClass = !(index < 0 | index > DatabaseAPI.Database.Classes.Length - 1)
                 ? DatabaseAPI.Database.Classes[index].ClassName
                 : "";
         }
