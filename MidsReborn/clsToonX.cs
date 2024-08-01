@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -999,6 +1000,8 @@ namespace Mids_Reborn
                     continue;
                 }
 
+                Debug.WriteLine($"Enhancement: {enhancement.LongName} (from {eSet.DisplayName})");
+
                 foreach (var enhEffect in enhancementPower.Effects)
                 {
                     var shouldAddEffect = false;
@@ -1043,9 +1046,10 @@ namespace Mids_Reborn
                         
                         // Will include if there is no special bonus for this enhancement (at set level),
                         // and no regular buff is attached to this enhancement
+                        // If enhancement contains regular and special boosts (e.g. some ATOs) only include if modifier is not Melee_Boosts_* and not Ranged_Boosts_*
                         shouldAddEffect = enhIndexSet >= 0 &&
                                           eSet.SpecialBonus[enhIndexSet].Index.Length <= 0 &&
-                                          enhancement.Effect.All(e => e.Mode != Enums.eEffMode.Enhancement);
+                                          (enhancement.Effect.All(e => e.Mode != Enums.eEffMode.Enhancement) || !Regex.IsMatch(enhEffect.ModifierTable, @"^(Melee|Ranged)_Boosts_"));
                     }
 
                     if (!shouldAddEffect)
