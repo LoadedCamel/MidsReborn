@@ -814,6 +814,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 GenericDataTooltip3(displayStats.BuffDamage(false), 100, displayStats.BuffDamage(true), "Damage")
                 );
 
+            graphRange.Clear();
+            graphRange.AddItemPair("Range",
+                    $"{displayStats.RangePercent:##0.##}%",
+                    0,
+                    Math.Max(0, displayStats.RangePercent),
+                    GenericDataTooltip3(displayStats.RangePercent, 0, displayStats.RangePercent, "Range", "%", "", true)
+                );
+
             graphEndRdx.Clear();
             graphEndRdx.AddItemPair("EndRdx",
                 $"{displayStats.BuffEndRdx:##0.##}%",
@@ -832,6 +840,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphToHit.Draw();
             graphAccuracy.Draw();
             graphDamage.Draw();
+            graphRange.Draw();
             graphEndRdx.Draw();
             graphThreat.Draw();
  

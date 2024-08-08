@@ -116,6 +116,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphStealth.Width = graphAcc.Width;
             graphToHit.Width = graphAcc.Width;
             graphElusivity.Width = graphAcc.Width;
+            graphEndRdx.Width = graphAcc.Width;
+            graphThreat.Width = graphAcc.Width;
+            graphRange.Width = graphAcc.Width;
+            Panel2.Width = graphAcc.Width;
             pbClose.Left = pnlDRHE.Right - pbClose.Width;
             StoreLocation();
         }
@@ -153,10 +157,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     : _myParent.Drawing.BxPower[4].Bitmap, destRect, 0, 0, rectangle.Width,
                 rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.PImageAttributes);
 
-            var height2 = bFont.GetHeight(e.Graphics) + 2f;
+            var height2 = bFont.GetHeight(e.Graphics) + 2;
             var bounds = new RectangleF(0f, (tab0.Height - height2) / 2f, tab0.Width, height2);
             var graphics = extendedBitmap.Graphics;
-            ClsDrawX.DrawOutlineText(iStr, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            ClsDrawX.DrawOutlineText(iStr, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -205,10 +209,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     GraphicsUnit.Pixel, _myParent.Drawing.PImageAttributes);
             }
 
-            var height = bFont.GetHeight(e.Graphics) + 2f;
-            var Bounds = new RectangleF(0f, (tab0.Height - height) / 2f, tab0.Width, height);
+            var height = bFont.GetHeight(e.Graphics) + 2;
+            var bounds = new RectangleF(0f, (tab0.Height - height) / 2f, tab0.Width, height);
             var graphics = extendedBitmap.Graphics;
-            ClsDrawX.DrawOutlineText(iStr, Bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            ClsDrawX.DrawOutlineText(iStr, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -248,7 +252,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             var graphControls = new List<CtlMultiGraph>
             {
-                graphAcc, graphDam, graphDef, graphDrain, graphHaste, graphHP,
+                graphAcc, graphDam, graphRange, graphDef, graphDrain, graphHaste, graphHP,
                 graphMaxEnd, graphMovement, graphRec, graphRegen, graphRes,
                 graphStealth, graphToHit, graphEndRdx, graphThreat,
                 graphElusivity, graphSProt, graphSRes, graphSDeb
@@ -432,10 +436,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     GraphicsUnit.Pixel, _myParent.Drawing.PImageAttributes);
             }
 
-            var height = bFont.GetHeight(e.Graphics) + 2f;
+            var height = bFont.GetHeight(e.Graphics) + 2;
             var bounds = new RectangleF(0f, (tab0.Height - height) / 2f, tab0.Width, height);
             var graphics = extendedBitmap.Graphics;
-            ClsDrawX.DrawOutlineText(iString, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1f, graphics);
+            ClsDrawX.DrawOutlineText(iString, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -514,17 +518,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
 
             var recTip = $"{str2}\r\nHover the mouse of the End Drain stats for more info.";
-            if (displayStats.EnduranceRecoveryNet > 0)
+            switch (displayStats.EnduranceRecoveryNet)
             {
-                drainTip = $"Net Endurance Gain (Recovery - Drain): {Utilities.FixDP(displayStats.EnduranceRecoveryNet)}/s.";
-                if (Math.Abs(displayStats.EnduranceRecoveryNet - displayStats.EnduranceRecoveryNumeric) > 0.01)
-                {
-                    drainTip += $"\r\nTime to go from 0-100% end (using net gain): {Utilities.FixDP(displayStats.EnduranceTimeToFullNet)}s.";
-                }
-            }
-            else if (displayStats.EnduranceRecoveryNet < 0)
-            {
-                drainTip = $"With current end drain, you will lose end at a rate of: {Utilities.FixDP(displayStats.EnduranceRecoveryLossNet)}/s.\r\nFrom 100% you would run out of end in: {Utilities.FixDP(displayStats.EnduranceTimeToZero)}s.";
+                case > 0:
+                    drainTip = $"Net Endurance Gain (Recovery - Drain): {Utilities.FixDP(displayStats.EnduranceRecoveryNet)}/s.";
+                    if (Math.Abs(displayStats.EnduranceRecoveryNet - displayStats.EnduranceRecoveryNumeric) > 0.01)
+                    {
+                        drainTip += $"\r\nTime to go from 0-100% end (using net gain): {Utilities.FixDP(displayStats.EnduranceTimeToFullNet)}s.";
+                    }
+
+                    break;
+                case < 0:
+                    drainTip = $"With current end drain, you will lose end at a rate of: {Utilities.FixDP(displayStats.EnduranceRecoveryLossNet)}/s.\r\nFrom 100% you would run out of end in: {Utilities.FixDP(displayStats.EnduranceTimeToZero)}s.";
+                    break;
             }
 
             graphMaxEnd.Clear();
@@ -635,7 +641,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphMovement.Draw();
 
             graphToHit.Clear();
-            graphToHit.AddItem($"ToHit|{displayStats.BuffToHit:##0.##}%", Math.Max(0, displayStats.BuffToHit), 0, "This effect increases the accuracy of all your powers.\r\nToHit values are added together before being multiplied by Accuracy");
+            graphToHit.AddItem($"ToHit|{displayStats.BuffToHit:##0.##}%", Math.Max(0, displayStats.BuffToHit), 0, "This effect increases the accuracy of all your powers.\r\nToHit values are added together before being multiplied by Accuracy.");
             graphToHit.Max = 100;
             graphToHit.Draw();
 
@@ -655,6 +661,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphDam.Max = MidsContext.Character.Archetype.DamageCap * 100f;
             graphDam.MarkerValue = 100f;
             graphDam.Draw();
+
+            graphRange.Clear();
+            graphRange.AddItem($"Range|{displayStats.RangePercent:##0.##}%", 0, Math.Max(0, displayStats.RangePercent), "This effect increases the range of all your powers.");
+            graphRange.Max = 300;
+            graphRange.Draw();
 
             graphHaste.Clear();
             var str8 = "";
@@ -712,8 +723,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep, Enums.eMez.Immobilized, Enums.eMez.Knockback, Enums.eMez.Repel,
                 Enums.eMez.Confused, Enums.eMez.Terrorized, Enums.eMez.Taunt, Enums.eMez.Placate, Enums.eMez.Teleport
             };
-            var names2 = Enum.GetNames(typeof(Enums.eMez)); // Enum.GetNames(eMezArray[0].GetType());
-            var names3 = Enum.GetNames(typeof(Enums.eMez)); // Enum.GetNames(eMezArray[0].GetType());
+            var names2 = Enum.GetNames<Enums.eMez>(); // Enum.GetNames(eMezArray[0].GetType());
+            var names3 = Enum.GetNames<Enums.eMez>(); // Enum.GetNames(eMezArray[0].GetType());
             names2[2] = "Hold";
             names2[3] = "Immob";
             names2[1] = "Confuse";

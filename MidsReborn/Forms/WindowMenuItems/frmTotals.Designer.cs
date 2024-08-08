@@ -78,6 +78,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             lblSProt = new Label();
             tab2 = new PictureBox();
             toolTip1 = new ToolTip(components);
+            graphRange = new CtlMultiGraph();
             pnlDRHE.SuspendLayout();
             pnlMisc.SuspendLayout();
             Panel2.SuspendLayout();
@@ -281,7 +282,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphDef.ScaleHeight = 32;
             graphDef.ScaleIndex = 8;
             graphDef.ShowScale = false;
-            graphDef.Size = new System.Drawing.Size(300, 152);
+            graphDef.Size = new System.Drawing.Size(300, 156);
             graphDef.Style = Enums.GraphStyle.baseOnly;
             graphDef.TabIndex = 0;
             graphDef.TextWidth = 125;
@@ -767,7 +768,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphMovement.ScaleHeight = 32;
             graphMovement.ScaleIndex = 8;
             graphMovement.ShowScale = false;
-            graphMovement.Size = new System.Drawing.Size(300, 61);
+            graphMovement.Size = new System.Drawing.Size(300, 60);
             graphMovement.Style = Enums.GraphStyle.Stacked;
             graphMovement.TabIndex = 2;
             graphMovement.TextWidth = 125;
@@ -834,6 +835,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // Panel2
             // 
             Panel2.BackColor = System.Drawing.Color.Black;
+            Panel2.Controls.Add(graphRange);
             Panel2.Controls.Add(graphElusivity);
             Panel2.Controls.Add(graphThreat);
             Panel2.Controls.Add(graphEndRdx);
@@ -872,7 +874,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphElusivity.ItemFontSizeOverride = 0F;
             graphElusivity.ItemHeight = 10;
             graphElusivity.Lines = true;
-            graphElusivity.Location = new System.Drawing.Point(0, 117);
+            graphElusivity.Location = new System.Drawing.Point(0, 133);
             graphElusivity.MarkerValue = 0F;
             graphElusivity.Max = 100F;
             graphElusivity.MaxItems = 60;
@@ -921,7 +923,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphThreat.ItemFontSizeOverride = 0F;
             graphThreat.ItemHeight = 10;
             graphThreat.Lines = true;
-            graphThreat.Location = new System.Drawing.Point(0, 96);
+            graphThreat.Location = new System.Drawing.Point(0, 114);
             graphThreat.MarkerValue = 0F;
             graphThreat.Max = 100F;
             graphThreat.MaxItems = 60;
@@ -970,7 +972,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphEndRdx.ItemFontSizeOverride = 0F;
             graphEndRdx.ItemHeight = 10;
             graphEndRdx.Lines = true;
-            graphEndRdx.Location = new System.Drawing.Point(0, 76);
+            graphEndRdx.Location = new System.Drawing.Point(0, 95);
             graphEndRdx.MarkerValue = 0F;
             graphEndRdx.Max = 100F;
             graphEndRdx.MaxItems = 60;
@@ -1140,7 +1142,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             graphSRes.ScaleHeight = 32;
             graphSRes.ScaleIndex = 8;
             graphSRes.ShowScale = false;
-            graphSRes.Size = new System.Drawing.Size(300, 136);
+            graphSRes.Size = new System.Drawing.Size(300, 134);
             graphSRes.Style = Enums.GraphStyle.baseOnly;
             graphSRes.TabIndex = 14;
             graphSRes.TextWidth = 125;
@@ -1283,6 +1285,55 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             tab2.Click += Tab2Click;
             tab2.Paint += Tab2Paint;
             // 
+            // graphRange
+            // 
+            graphRange.BackColor = System.Drawing.Color.Black;
+            graphRange.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphRange.BackgroundImage");
+            graphRange.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphRange.BaseBarColors");
+            graphRange.Border = true;
+            graphRange.BorderColor = System.Drawing.Color.Black;
+            graphRange.Clickable = false;
+            graphRange.ColorAbsorbed = System.Drawing.Color.FromArgb(229, 218, 147);
+            graphRange.ColorBase = System.Drawing.Color.FromArgb(151, 144, 97);
+            graphRange.ColorEnh = System.Drawing.Color.FromArgb(206, 196, 132);
+            graphRange.ColorFadeEnd = System.Drawing.Color.FromArgb(112, 107, 72);
+            graphRange.ColorFadeStart = System.Drawing.Color.Black;
+            graphRange.ColorHighlight = System.Drawing.Color.Gray;
+            graphRange.ColorLines = System.Drawing.Color.Black;
+            graphRange.ColorMarkerInner = System.Drawing.Color.Black;
+            graphRange.ColorMarkerOuter = System.Drawing.Color.Yellow;
+            graphRange.ColorOvercap = System.Drawing.Color.FromArgb(92, 88, 59);
+            graphRange.DifferentiateColors = false;
+            graphRange.DrawRuler = false;
+            graphRange.Dual = true;
+            graphRange.EnhBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphRange.EnhBarColors");
+            graphRange.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            graphRange.ForcedMax = 0F;
+            graphRange.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            graphRange.Highlight = true;
+            graphRange.ItemFontSizeOverride = 0F;
+            graphRange.ItemHeight = 10;
+            graphRange.Lines = true;
+            graphRange.Location = new System.Drawing.Point(0, 76);
+            graphRange.MarkerValue = 0F;
+            graphRange.Max = 300F;
+            graphRange.MaxItems = 60;
+            graphRange.Name = "graphRange";
+            graphRange.OuterBorder = false;
+            graphRange.Overcap = false;
+            graphRange.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphRange.OvercapColors");
+            graphRange.PaddingX = 2F;
+            graphRange.PaddingY = 2F;
+            graphRange.PerItemScales = (System.Collections.Generic.List<float>)resources.GetObject("graphRange.PerItemScales");
+            graphRange.RulerPos = CtlMultiGraph.RulerPosition.Top;
+            graphRange.ScaleHeight = 32;
+            graphRange.ScaleIndex = 11;
+            graphRange.ShowScale = false;
+            graphRange.Size = new System.Drawing.Size(300, 15);
+            graphRange.Style = Enums.GraphStyle.enhOnly;
+            graphRange.TabIndex = 15;
+            graphRange.TextWidth = 125;
+            // 
             // frmTotals
             // 
             AutoScaleMode = AutoScaleMode.None;
@@ -1364,5 +1415,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private CtlMultiGraph graphToHit;
 
         private ToolTip toolTip1;
+        private CtlMultiGraph graphRange;
     }
 }

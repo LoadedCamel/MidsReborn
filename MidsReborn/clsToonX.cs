@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -551,13 +550,18 @@ namespace Mids_Reborn
 
                 for (var shortFxIdx = 0; shortFxIdx < shortFx.Value.Length; shortFxIdx++)
                 {
-                    if (tPwr.Effects[shortFx.Index[shortFxIdx]].Absorbed_PowerType == Enums.ePowerType.GlobalBoost)
+                    var effect = tPwr.Effects[shortFx.Index[shortFxIdx]];
+                    if (effect.ToWho != Enums.eToWho.Self && effect.ToWho != Enums.eToWho.All)
                     {
                         continue;
                     }
 
-                    var effect = tPwr.Effects[shortFx.Index[shortFxIdx]];
-                    if (effect.ToWho != Enums.eToWho.Self && effect.ToWho != Enums.eToWho.All)
+                    if (effect.EffectType == Enums.eEffectType.Enhancement & effect.ETModifies == Enums.eEffectType.Range & !enhancementPass)
+                    {
+                        nBuffs.Effect[(int)Enums.eEffectType.Range] += shortFx.Value[shortFxIdx];
+                    }
+
+                    if (tPwr.Effects[shortFx.Index[shortFxIdx]].Absorbed_PowerType == Enums.ePowerType.GlobalBoost)
                     {
                         continue;
                     }
@@ -767,6 +771,7 @@ namespace Mids_Reborn
             Totals.HPRegen = _selfBuffs.Effect[(int)Enums.eStatType.HPRegen];
             Totals.EndRec = _selfBuffs.Effect[(int)Enums.eStatType.EndRec];
             Totals.Absorb = _selfBuffs.Effect[(int)Enums.eStatType.Absorb];
+            Totals.BuffRange = _selfBuffs.Effect[(int)Enums.eStatType.Range];
 
             Totals.FlySpd = (1 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.FlySpeed], -0.9f)) * Statistics.BaseFlySpeed;
             Totals.RunSpd = (1 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.RunSpeed], -0.9f)) * Statistics.BaseRunSpeed;
@@ -999,8 +1004,6 @@ namespace Mids_Reborn
                 {
                     continue;
                 }
-
-                Debug.WriteLine($"Enhancement: {enhancement.LongName} (from {eSet.DisplayName})");
 
                 foreach (var enhEffect in enhancementPower.Effects)
                 {

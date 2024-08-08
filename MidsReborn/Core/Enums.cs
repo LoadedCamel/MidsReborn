@@ -1221,11 +1221,16 @@ namespace Mids_Reborn.Core
         public enum eStatType
         {
             // _selfBuffs.Effect
+            Endurance = 7,
+            Enhancement = 9, // Warning: will pick enhancement buffs of any kind
             FlySpeed = 11,
+            Heal = 13,
             HPMax = 14,
             JumpHeight = 16,
             JumpSpeed = 17,
+            MezResist = 20,
             Perception = 23,
+            Range = 24,
             EndRec = 26,
             HPRegen = 27,
             RunSpeed = 32,
@@ -1900,18 +1905,18 @@ namespace Mids_Reborn.Core
 
             public void Reset()
             {
-                MaxEnd = 0.0f;
-                Effect = new float[Enum.GetValues(eEffectType.None.GetType()).Length];
+                MaxEnd = 0;
+                Effect = new float[Enum.GetValues<eEffectType>().Length];
                 EffectAux = new float[Effect.Length - 1];
-                Mez = new float[Enum.GetValues(eMez.None.GetType()).Length];
-                MezRes = new float[Enum.GetValues(eMez.None.GetType()).Length];
-                Damage = new float[Enum.GetValues(typeof(eDamage)).Length];
-                Defense = new float[Enum.GetValues(eDamage.None.GetType()).Length];
-                Resistance = new float[Enum.GetValues(eDamage.None.GetType()).Length];
-                Elusivity = new float[Enum.GetValues(eDamage.None.GetType()).Length];
-                StatusProtection = new float[Enum.GetValues(eMez.None.GetType()).Length];
-                StatusResistance = new float[Enum.GetValues(eMez.None.GetType()).Length];
-                DebuffResistance = new float[Enum.GetValues(eEffectType.None.GetType()).Length];
+                Mez = new float[Enum.GetValues<eMez>().Length];
+                MezRes = new float[Enum.GetValues<eMez>().Length];
+                Damage = new float[Enum.GetValues<eDamage>().Length];
+                Defense = new float[Enum.GetValues<eDamage>().Length];
+                Resistance = new float[Enum.GetValues<eDamage>().Length];
+                Elusivity = new float[Enum.GetValues<eDamage>().Length];
+                StatusProtection = new float[Enum.GetValues<eMez>().Length];
+                StatusResistance = new float[Enum.GetValues<eMez>().Length];
+                DebuffResistance = new float[Enum.GetValues<eEffectType>().Length];
             }
         }
 

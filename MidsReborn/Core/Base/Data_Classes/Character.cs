@@ -1845,35 +1845,37 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             public float BuffToHit { get; set; }
             public float BuffDam { get; set; }
             public float BuffEndRdx { get; set; }
+            public float BuffRange { get; set; }
 
             public void Init(bool fullReset = true)
             {
-                Def = new float[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
-                Res = new float[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
-                Mez = new float[Enum.GetValues(Enums.eMez.None.GetType()).Length];
-                MezRes = new float[Enum.GetValues(Enums.eMez.None.GetType()).Length];
-                DebuffRes = new float[Enum.GetValues(Enums.eEffectType.None.GetType()).Length];
-                Elusivity = new float[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
+                Def = new float[Enum.GetValues<Enums.eDamage>().Length];
+                Res = new float[Enum.GetValues<Enums.eDamage>().Length];
+                Mez = new float[Enum.GetValues<Enums.eMez>().Length];
+                MezRes = new float[Enum.GetValues<Enums.eMez>().Length];
+                DebuffRes = new float[Enum.GetValues<Enums.eEffectType>().Length];
+                Elusivity = new float[Enum.GetValues<Enums.eDamage>().Length];
                 if (!fullReset) return;
-                HPRegen = 0.0f;
-                HPMax = 0.0f;
-                Absorb = 0.0f;
-                EndRec = 0.0f;
-                EndUse = 0.0f;
-                EndMax = 0.0f;
-                RunSpd = 0.0f;
-                JumpSpd = 0.0f;
-                FlySpd = 0.0f;
-                JumpHeight = 0.0f;
-                StealthPvE = 0.0f;
-                StealthPvP = 0.0f;
-                ThreatLevel = 0.0f;
-                Perception = 0.0f;
-                BuffHaste = 0.0f;
-                BuffAcc = 0.0f;
-                BuffToHit = 0.0f;
-                BuffDam = 0.0f;
-                BuffEndRdx = 0.0f;
+                HPRegen = 0;
+                HPMax = 0;
+                Absorb = 0;
+                EndRec = 0;
+                EndUse = 0;
+                EndMax = 0;
+                RunSpd = 0;
+                JumpSpd = 0;
+                FlySpd = 0;
+                JumpHeight = 0;
+                StealthPvE = 0;
+                StealthPvP = 0;
+                ThreatLevel = 0;
+                Perception = 0;
+                BuffHaste = 0;
+                BuffAcc = 0;
+                BuffToHit = 0;
+                BuffDam = 0;
+                BuffEndRdx = 0;
+                BuffRange = 0;
             }
 
             public void Assign(TotalStatistics iSt)
@@ -1903,6 +1905,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 BuffToHit = iSt.BuffToHit;
                 BuffDam = iSt.BuffDam;
                 BuffEndRdx = iSt.BuffEndRdx;
+                BuffRange = iSt.BuffRange;
             }
         }
     }

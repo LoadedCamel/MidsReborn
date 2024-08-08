@@ -96,6 +96,10 @@ namespace Mids_Reborn.Core
         //public float Absorb => (_character.Totals.Absorb < 1 ? _character.Totals.Absorb * _character.Archetype.Hitpoints : _character.Totals.Absorb);
         public float Absorb => _character.Totals.Absorb;
 
+        public float Range => _character.Totals.BuffRange;
+
+        public float RangePercent => _character.Totals.BuffRange * 100;
+
         public float DamageResistance(int dType, bool uncapped)
         {
             return uncapped ? _character.Totals.Res[dType] * 100f : _character.TotalsCapped.Res[dType] * 100f;
