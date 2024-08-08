@@ -473,6 +473,10 @@ namespace Mids_Reborn
                 "controller_buff.electrical_affinity.defibrillate" => "Controller_Buff.Electrical_Affinity.Defibrilate",
                 "corruptor_buff.electrical_affinity.defibrillate" => "Corruptor_Buff.Electrical_Affinity.Defibrilate",
                 "mastermind_buff.electrical_affinity.defibrillate" => "Mastermind_Buff.Electrical_Affinity.Defibrilate",
+                "controller_buff.marine_affinity.call_depths" => "Controller_Buff.Marine_Affinity.Power_of_the_Depths",
+                "corruptor_buff.marine_affinity.call_depths" => "Corruptor_Buff.Marine_Affinity.Power_of_the_Depths",
+                "defender_buff.marine_affinity.call_depths" => "Defender_Buff.Marine_Affinity.Power_of_the_Depths",
+                "mastermind_buff.marine_affinity.call_depths" => "Mastermind_Buff.Marine_Affinity.Power_of_the_Depths",
 
                 _ => fullName
             };
