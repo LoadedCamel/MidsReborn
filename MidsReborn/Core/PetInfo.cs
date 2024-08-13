@@ -1,6 +1,7 @@
 ﻿using Mids_Reborn.Core.Base.Master_Classes;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using Mids_Reborn.Core.Import;
 
@@ -106,7 +107,7 @@ namespace Mids_Reborn.Core
         public PetPower? GetPetPower(IPower power)
         {
             _lastPower = power.PowerIndex;
-            if (PowersData != null)
+            if (PowersData != null && PowersData.BasePowers.Any())
             {
                 return new PetPower(PowersData.BasePowers.First(p => p.PowerIndex == power.PowerIndex),
                     PowersData.BuffedPowers.First(p => p.PowerIndex == power.PowerIndex));
@@ -120,7 +121,7 @@ namespace Mids_Reborn.Core
         /// <returns>PetPowers instance containing updated base and buffed versions of a power.</returns>
         public PetPower? GetPetPower()
         {
-            if (PowersData != null)
+            if (PowersData != null && PowersData.BasePowers.Any())
                 if (_lastPower < 0)
                     return new PetPower(PowersData.BasePowers.First(), PowersData.BuffedPowers.First());
                 else
