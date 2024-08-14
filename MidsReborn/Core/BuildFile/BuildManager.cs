@@ -258,38 +258,51 @@ namespace Mids_Reborn.Core.BuildFile
                 return false;
             }
 
-            // Split input to separate header and data
-            var lines = classificationResult.Content.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
-            if (lines.Length < 2) // Ensure there is at least one header line and data line
+            int uncompressedSize = -1, compressedSize = -1;
+            var data = string.Empty;
+            switch (classificationResult.Type)
             {
-                _notifier.ShowError("Input format is incorrect. No data found after header.");
-                return false;
+                case DataClassifier.DataType.Mbd or DataClassifier.DataType.Mxd:
+                    // Split input to separate header and data
+                    var lines = classificationResult.Content.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries);
+                    if (lines.Length < 2) // Ensure there is at least one header line and data line
+                    {
+                        _notifier.ShowError("Input format is incorrect. No data found after header.");
+                        return false;
+                    }
+
+                    if (lines.Length <= 0) return false;
+                    // Clean the header by removing surrounding pipes and trimming whitespace
+                    var header = lines[0].Trim('|').Trim();
+                    var headerItems = header.Split(';', StringSplitOptions.RemoveEmptyEntries);
+                    if (headerItems.Length != 5)
+                    {
+                        _notifier.ShowError("Header format is incorrect.");
+                        return false;
+                    }
+
+                    try
+                    {
+                        uncompressedSize = int.Parse(headerItems[1]);
+                        compressedSize = int.Parse(headerItems[2]);
+                    }
+                    catch (FormatException)
+                    {
+                        _notifier.ShowError("Header contains invalid size information.");
+                        return false;
+                    }
+
+                    data = string.Join("", lines.Skip(1)).Replace("|", "");
+                    break;
+                case DataClassifier.DataType.UnkBase64:
+                    data = classificationResult.Content.Trim();
+                    break;
+                case DataClassifier.DataType.Unknown:
+                default:
+                    break;
             }
 
-            if (lines.Length <= 0) return false;
-            // Clean the header by removing surrounding pipes and trimming whitespace
-            var header = lines[0].Trim('|').Trim();
-            var headerItems = header.Split(';', StringSplitOptions.RemoveEmptyEntries);
-            if (headerItems.Length != 5)
-            {
-                _notifier.ShowError("Header format is incorrect.");
-                return false;
-            }
-
-            int uncompressedSize, compressedSize;
-            try
-            {
-                uncompressedSize = int.Parse(headerItems[1]);
-                compressedSize = int.Parse(headerItems[2]);
-            }
-            catch (FormatException)
-            {
-                _notifier.ShowError("Header contains invalid size information.");
-                return false;
-            }
-
-            var data = string.Join("", lines.Skip(1)).Replace("|", "");
-
+            
             // Process data based on the type determined by the classification
             switch (classificationResult.Type)
             {
@@ -326,11 +339,31 @@ namespace Mids_Reborn.Core.BuildFile
                     if (decoded.CompressedSize == compressedSize) return LoadShareData(decoded.OutString);
                     _notifier.ShowError("Compressed size mismatch.");
                     return false;
+                case DataClassifier.DataType.UnkBase64:
+                    if (!Regex.IsMatch(data, @"^[a-zA-Z0-9\+/]*={0,3}$", RegexOptions.None))
+                    {
+                        _notifier.ShowError("Data is not valid BASE64.");
+                        return false;
+                    }
 
+                    try
+                    {
+                        var unkDecoded = Compression.DecompressFromBase64(data);
+                        return LoadShareData(unkDecoded.OutString);
+                    }
+                    catch (Exception)
+                    {
+                        _notifier.ShowError("An unknown error occurred.");
+                        return false;
+                    }
+                case DataClassifier.DataType.Unknown:
+                    break;
                 default:
                     _notifier.ShowError("Unsupported data type detected.");
                     return false;
             }
+
+            return false;
         }
 
         public bool ValidateAndLoadSchemaData(string data, string? id = null)

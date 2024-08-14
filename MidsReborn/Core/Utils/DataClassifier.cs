@@ -9,6 +9,7 @@ namespace Mids_Reborn.Core.Utils
         {
             Mbd,
             Mxd,
+            UnkBase64,
             Unknown
         }
 
@@ -34,19 +35,22 @@ namespace Mids_Reborn.Core.Utils
 
         private static readonly Regex MxdPattern = new(@"^\|MxDz;[0-9]+;[0-9]+;[0-9]+;HEX;\|", RegexOptions.Compiled);
         private static readonly Regex MbdPattern = new(@"^\|MBD;[0-9]+;[0-9]+;[0-9]+;BASE64;\|", RegexOptions.Compiled);
+        private static readonly Regex UnkBase64Pattern = new(@"^[A-Za-z0-9+/]+={0,2}$", RegexOptions.Compiled);
 
         public static ClassificationResult ClassifyAndExtractData(string data)
         {
-            // Check for .mxd match
-            if (MxdPattern.IsMatch(data))
+            if (MxdPattern.IsMatch(data)) // Check for mxd pattern match
             {
                 return ClassificationResult.Create(DataType.Mxd, data);
             }
-            // Check for .mbd match
 
-            return MbdPattern.IsMatch(data) ? ClassificationResult.Create(DataType.Mbd, data) :
-                // If neither, return unknown
-                ClassificationResult.Create(DataType.Unknown, null);
+            if (MbdPattern.IsMatch(data))
+            {
+                return ClassificationResult.Create(DataType.Mbd, data); // Check for mbd pattern match
+            }
+
+            return UnkBase64Pattern.IsMatch(data) ? ClassificationResult.Create(DataType.UnkBase64, data) :
+                ClassificationResult.Create(DataType.Unknown, null); // check for unknown base64 or unknown type
         }
     }
 

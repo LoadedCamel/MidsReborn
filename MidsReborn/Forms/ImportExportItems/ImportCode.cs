@@ -29,14 +29,27 @@ namespace Mids_Reborn.Forms.ImportExportItems
             var chunkData = tbChunkBox.Text;
             ImportClassificationResult = DataClassifier.ClassifyAndExtractData(chunkData);
 
-            if (ImportClassificationResult.IsValid)
+            if (ImportClassificationResult.IsValid && ImportClassificationResult.Type != DataClassifier.DataType.UnkBase64)
             {
                 DialogResult = DialogResult.OK;
                 Close();
             }
+            else if (ImportClassificationResult is { IsValid: true, Type: DataClassifier.DataType.UnkBase64 })
+            {
+                var result = MessageBoxEx.ShowDialog("This may be a MBD chunk that is missing its header.\r\nDo you wish to import it anyways?", "Unknown Base64 detected!", MessageBoxEx.MessageBoxExButtons.YesNo, MessageBoxEx.MessageBoxExIcon.Warning);
+                if (result == DialogResult.Yes)
+                {
+                    DialogResult = DialogResult.OK;
+                    Close();
+                }
+                else
+                {
+                    DialogResult = DialogResult.None;
+                }
+            }
             else
             {
-                MessageBoxEx.Show("Invalid chunk data detected! Please double check the data chunk and try again.", "Unable To Process Chunk", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
+                MessageBoxEx.Show("Please double check the data chunk and try again.", "Invalid chunk data detected!", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
                 DialogResult = DialogResult.None;
             }
         }
