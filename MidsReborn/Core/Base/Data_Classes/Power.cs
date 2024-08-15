@@ -611,7 +611,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         }
 
         public bool IsSummonPower => Effects.Any(x => x.EffectType is Enums.eEffectType.EntCreate);
-        public bool IsPetPower => FullName.StartsWith("Pets") || FullName.StartsWith("Mastermind_Pets") || FullName.StartsWith("Villain_Pets");
+        public bool IsPetPower => FullName.StartsWith("Pets") || FullName.StartsWith("Mastermind_Pets") || FullName.StartsWith("Villain_Pets") || FullName.StartsWith("Kheldian_Pets");
 
         public int ParentIdx { get; set; } = -1;
 
