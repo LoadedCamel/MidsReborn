@@ -605,29 +605,9 @@ namespace Mids_Reborn.Forms
 
         private void ibAccoladesEx_OnClick(object? sender, EventArgs e)
         {
-            var flag = false;
-            if (fAccolade == null)
+            if (fAccolade == null || fAccolade.IsDisposed)
             {
-                flag = true;
-            }
-            else if (fAccolade.IsDisposed)
-            {
-                flag = true;
-            }
-
-            if (flag)
-            {
-                var iParent = this;
-                var power = MainModule.MidsController.Toon != null && !MainModule.MidsController.Toon.IsHero()
-                    ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)] // Inherent.Inherent.MxD_Accolades_Villain
-                    : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)]; // Inherent.Inherent.MxD_Accolades_Hero
-                var iPowers = new List<IPower?>();
-                if (power != null)
-                {
-                    iPowers.AddRange(power.NIDSubPower.Select(t => DatabaseAPI.Database.Power[t]).OfType<IPower>().Where(thisPower => thisPower.ClickBuff || thisPower.PowerType == Enums.ePowerType.Auto_ | thisPower.PowerType == Enums.ePowerType.Toggle));
-                }
-
-                fAccolade = new frmAccolade(iParent, iPowers);
+                fAccolade = new frmAccolade(this);
             }
 
             if (fAccolade is { Visible: false })
@@ -1812,14 +1792,12 @@ namespace Mids_Reborn.Forms
             var iPowers = MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers
                 .Select(t => DatabaseAPI.Database.Power[t.nIDPower])
                 .ToList();
-            using var frmAccolade = new frmAccolade(this, iPowers)
-            {
-                Text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower].DisplayName
-            };
-
+            using var frmAccolade = new frmAccolade(this, iPowers);
+            frmAccolade.Text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower].DisplayName;
             frmAccolade.ShowDialog(this);
             EnhancementModified();
             LastClickPlacedSlot = false;
+
             return true;
         }
 
@@ -2531,6 +2509,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ibAlignmentEx_OnClick(object? sender, EventArgs e)
         {
+            var nbUpdated = 0;
             if (MidsContext.Character != null)
             {
                 MidsContext.Character.Alignment = ibAlignmentEx.ToggleState switch
@@ -2539,6 +2518,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     ImageButtonEx.States.ToggledOn => Enums.Alignment.Villain,
                     _ => MidsContext.Character.Alignment
                 };
+
                 if (fAccolade != null)
                 {
                     if (!fAccolade.IsDisposed)
@@ -2546,18 +2526,66 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         fAccolade.Dispose();
                     }
 
-                    var power = MidsContext.Character.IsHero()
-                        ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)]
-                        : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)];
-                    if (power != null)
-                        foreach (var p in power.NIDSubPower)
+                    var factionSpecificAccolades = frmAccolade.FactionSpecificAccolades();
+                    var pSource = new List<string>();
+                    var pTarget = new List<string>();
+
+                    if (MainModule.MidsController.Toon == null || MainModule.MidsController.Toon.IsHero())
+                    {
+                        pSource = factionSpecificAccolades.Select(x => x.Villain).ToList();
+                        pTarget = factionSpecificAccolades.Select(x => x.Hero).ToList();
+                    }
+                    else
+                    {
+                        pSource = factionSpecificAccolades.Select(x => x.Hero).ToList();
+                        pTarget = factionSpecificAccolades.Select(x => x.Villain).ToList();
+                    }
+
+                    var pDict = pSource
+                        .Zip(pTarget, KeyValuePair.Create)
+                        .ToDictionary(x => x.Key, x => x.Value);
+
+                    var selectedAccolades = MidsContext.Character?.CurrentBuild?.Powers
+                        .Where(x => x is { Power.InherentType: Enums.eGridType.Accolade })
+                        .Select(x => x?.Power)
+                        .ToList();
+
+                    if (selectedAccolades is not { Count: > 0 })
+                    {
+                        return;
+                    }
+
+                    foreach (var p in selectedAccolades)
+                    {
+                        if (p == null)
                         {
-                            if (MidsContext.Character.CurrentBuild != null && MidsContext.Character.CurrentBuild.PowerUsed(DatabaseAPI.Database.Power[p]))
-                            {
-                                MidsContext.Character.CurrentBuild.RemovePower(DatabaseAPI.Database.Power[p]);
-                            }
+                            continue;
                         }
+
+                        if (!pDict.TryGetValue(p.DisplayName, out var pName))
+                        {
+                            continue;
+                        }
+
+                        var targetPower = DatabaseAPI.Database.Power
+                            .DefaultIfEmpty(null)
+                            .FirstOrDefault(x => x is not null && x.FullName.StartsWith("Temporary_Powers.Accolades.") & x.DisplayName == pName);
+
+                        if (targetPower == null)
+                        {
+                            continue;
+                        }
+
+                        MidsContext.Character.CurrentBuild.RemovePower(p);
+                        MidsContext.Character.CurrentBuild.AddPower(targetPower, 49).StatInclude = true;
+                        nbUpdated++;
+                    }
                 }
+            }
+
+            if (nbUpdated > 0)
+            {
+                PowerModified(true, false);
             }
 
             drawing?.ColorSwitch();
@@ -2571,7 +2599,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void HidePopup()
         {
             if (!PopUpVisible)
+            {
                 return;
+            }
+
             PopUpVisible = false;
             var bounds = I9Popup.Bounds;
             bounds.X -= pnlGFXFlow.Left;
@@ -3754,17 +3785,22 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 var hIDPower = drawing.WhichSlot(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
                 var slotID = drawing.WhichEnh(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
                 if (hIDPower < 0 | hIDPower >= MidsContext.Character.CurrentBuild.Powers.Count)
+                {
                     return;
+                }
+
                 var flag = MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower < 0;
                 if (e.Button == MouseButtons.Left & ModifierKeys == (Keys.Shift | Keys.Control) && EditAccoladesOrTemps(hIDPower))
+                {
                     return;
+                }
 
                 if (MidsContext.EnhCheckMode)
                 {
                     if (!(e.Button == MouseButtons.Left & slotID > -1)) return;
 
                     MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement.Obtained = !MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement.Obtained;
-                    if (fRecipe != null && fRecipe.Visible)
+                    if (fRecipe is {Visible: true})
                     {
                         //fRecipe.RecalcSalvage();
                         fRecipe.UpdateEnhObtained();
@@ -6992,7 +7028,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 default:
                     throw new ArgumentOutOfRangeException();
             }
-            if (!ibDynMode.Lock && MidsContext.Config.BuildMode == Enums.dmModes.LevelUp) ibDynMode.Lock = true;
+
+            if (!ibDynMode.Lock && MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
+            {
+                ibDynMode.Lock = true;
+            }
         }
 
         private void UpdateLLColors(ListLabelV3 iList)
@@ -7021,71 +7061,67 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void UpdateOtherFormsFonts()
         {
-            if (fIncarnate != null)
+            if (fIncarnate is {Visible: true})
             {
-                var fIncarnate = this.fIncarnate;
-                if (fIncarnate.Visible)
+                foreach (var llControl in fIncarnate.Controls.OfType<ListLabelV3>())
                 {
-                    foreach (var llControl in fIncarnate.Controls.OfType<ListLabelV3>())
-                    {
-                        llControl.SuspendRedraw = true;
-                        llControl.Font = llPrimary.Font;
-                        llControl.UpdateTextColors(ListLabelV3.LlItemState.Enabled,
-                            MidsContext.Config.RtFont.ColorPowerAvailable);
-                        llControl.UpdateTextColors(ListLabelV3.LlItemState.Disabled,
-                            MidsContext.Config.RtFont.ColorPowerDisabled);
-                        llControl.UpdateTextColors(ListLabelV3.LlItemState.Invalid,
-                            Color.FromArgb(byte.MaxValue, 0, 0));
-                        llControl.ScrollBarColor = MidsContext.Character.IsHero()
+                    llControl.SuspendRedraw = true;
+                    llControl.Font = llPrimary.Font;
+                    llControl.UpdateTextColors(ListLabelV3.LlItemState.Enabled,
+                        MidsContext.Config.RtFont.ColorPowerAvailable);
+                    llControl.UpdateTextColors(ListLabelV3.LlItemState.Disabled,
+                        MidsContext.Config.RtFont.ColorPowerDisabled);
+                    llControl.UpdateTextColors(ListLabelV3.LlItemState.Invalid,
+                        Color.FromArgb(byte.MaxValue, 0, 0));
+                    llControl.ScrollBarColor = MidsContext.Character.IsHero()
+                        ? MidsContext.Config.RtFont.ColorPowerTakenHero
+                        : MidsContext.Config.RtFont.ColorPowerTakenVillain;
+                    llControl.ScrollButtonColor = MidsContext.Character.IsHero()
+                        ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
+                        : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
+                    llControl.UpdateTextColors(ListLabelV3.LlItemState.Selected,
+                        MidsContext.Character.IsHero()
                             ? MidsContext.Config.RtFont.ColorPowerTakenHero
-                            : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-                        llControl.ScrollButtonColor = MidsContext.Character.IsHero()
+                            : MidsContext.Config.RtFont.ColorPowerTakenVillain);
+                    llControl.UpdateTextColors(ListLabelV3.LlItemState.SelectedDisabled,
+                        MidsContext.Character.IsHero()
                             ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
-                            : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
-                        llControl.UpdateTextColors(ListLabelV3.LlItemState.Selected,
-                            MidsContext.Character.IsHero()
-                                ? MidsContext.Config.RtFont.ColorPowerTakenHero
-                                : MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                        llControl.UpdateTextColors(ListLabelV3.LlItemState.SelectedDisabled,
-                            MidsContext.Character.IsHero()
-                                ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
-                                : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                        llControl.HoverColor = MidsContext.Character.IsHero()
-                            ? MidsContext.Config.RtFont.ColorPowerHighlightHero
-                            : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-                    }
-
-                    var num1 = fIncarnate.LlLeft.Items.Length - 1;
-                    for (var index = 0; index <= num1; ++index)
-                        fIncarnate.LlLeft.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
-                    var num2 = fIncarnate.LlRight.Items.Length - 1;
-                    for (var index = 0; index <= num2; ++index)
-                        fIncarnate.LlRight.Items[index].Bold = MidsContext.Config.RtFont.PairedBold;
-                    fIncarnate.LlLeft.SuspendRedraw = false;
-                    fIncarnate.LlRight.SuspendRedraw = false;
-                    fIncarnate.LlLeft.Refresh();
-                    fIncarnate.LlRight.Refresh();
+                            : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
+                    llControl.HoverColor = MidsContext.Character.IsHero()
+                        ? MidsContext.Config.RtFont.ColorPowerHighlightHero
+                        : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
                 }
+
+                foreach (var t in fIncarnate.LlLeft.Items)
+                {
+                    t.Bold = MidsContext.Config.RtFont.PairedBold;
+                }
+
+                foreach (var t in fIncarnate.LlRight.Items)
+                {
+                    t.Bold = MidsContext.Config.RtFont.PairedBold;
+                }
+
+                fIncarnate.LlLeft.SuspendRedraw = false;
+                fIncarnate.LlRight.SuspendRedraw = false;
+                fIncarnate.LlLeft.Refresh();
+                fIncarnate.LlRight.Refresh();
             }
 
-            if (fTemp != null)
+            if (fTemp is {Visible: true})
             {
-                var tempPowers = fTemp;
-                if (tempPowers.Visible)
-                    tempPowers.UpdateFonts(llPrimary.Font);
+                fTemp.UpdateFonts(llPrimary.Font);
             }
 
-            if (fAccolade == null)
-                return;
-            var accoladePowers = fAccolade;
-            if (accoladePowers.Visible)
-                accoladePowers.UpdateFonts(llPrimary.Font);
+            if (fAccolade is {Visible: true})
+            {
+                fAccolade.UpdateFonts(llPrimary.Font);
+            }
 
-            if (fPrestige == null)
-                return;
-            var prestigePowers = fPrestige;
-            if (prestigePowers.Visible)
-                prestigePowers.UpdateFonts(llPrimary.Font);
+            if (fPrestige is {Visible: true})
+            {
+                fPrestige.UpdateFonts(llPrimary.Font);
+            }
         }
 
         private void UpdatePowerList(ListLabelV3 llPower)
@@ -7093,12 +7129,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
             llPower.SuspendRedraw = true;
             if (llPower.Items.Length == 0)
             {
-                llPower.AddItem(new ListLabelV3.ListLabelItemV3("Nothing", ListLabelV3.LlItemState.Disabled, -1, -1, -1, ""));
+                llPower.AddItem(new ListLabelV3.ListLabelItemV3("Nothing", ListLabelV3.LlItemState.Disabled));
             }
             
             foreach (var listLabelItemV3 in llPower.Items)
             {
-                if (!((listLabelItemV3.NIdSet > -1) & (listLabelItemV3.IdxPower > -1))) continue;
+                if (listLabelItemV3.NIdSet <= -1 | listLabelItemV3.IdxPower <= -1)
+                {
+                    continue;
+                }
+
                 var message = "";
                 listLabelItemV3.ItemState = MainModule.MidsController.Toon.PowerState(listLabelItemV3.NIdPower, ref message);
                 listLabelItemV3.Italic = listLabelItemV3.ItemState == ListLabelV3.LlItemState.Invalid;
@@ -7193,14 +7233,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         public bool IsSalvageHudVisible()
         {
-            return fSalvageHud != null && fSalvageHud.Visible;
+            return fSalvageHud is {Visible: true};
         }
 
         public void SetSalvageHudOnCloseExecution(bool s)
         {
             if (IsSalvageHudVisible())
             {
-                fSalvageHud.SetOnCloseUpdatesExecution(s);
+                fSalvageHud?.SetOnCloseUpdatesExecution(s);
             }
         }
     
@@ -7320,7 +7360,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     }
 
                     // Incarnate, Temps, Accolades
-                    if (powerEntryList[k].PowerSet?.FullName.StartsWith("Incarnate") == true ||
+                    if (powerEntryList[k].PowerSet?.FullName.StartsWith("Incarnate") == true |
                         powerEntryList[k].PowerSet?.FullName.StartsWith("Temporary_Powers") == true)
                     {
                         if (!MidsContext.Character.CurrentBuild.PowerUsed(powerEntryList[k].Power))
@@ -7346,12 +7386,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
                 {
-                    if (pe.Power == null)
+                    if (pe?.Power == null)
                     {
                         continue; // Not picked power will be in the list, but not instantiated!
                     }
 
-                    var pList = powerEntryList.Where(e => pe.Power.FullName == e.Power.FullName).ToArray();
+                    var pList = powerEntryList.Where(e => pe.Power.FullName == e.Power?.FullName).ToArray();
                     if (pList.Length == 0)
                     {
                         continue;

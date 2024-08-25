@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
-using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
@@ -16,6 +15,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmAccolade : Form
     {
+        public struct FactionSpecificAccolade
+        {
+            public string Hero;
+            public string Villain;
+        }
+
         private readonly frmMain _myParent;
 
         private bool _locked;
@@ -46,6 +51,52 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Name = nameof(frmAccolade);
             _myParent = iParent;
             _myPowers = iPowers;
+        }
+
+        public frmAccolade(frmMain iParent)
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
+            CenterToParent();
+            Location = new Point(Location.X, Location.Y - 100);
+            Load += frmAccolade_Load;
+            _locked = false;
+            InitializeComponent();
+            Icon = Resources.MRB_Icon_Concept;
+            Name = nameof(frmAccolade);
+            _myParent = iParent;
+
+            var power = GetMxDAccoladePower();
+            _myPowers = new List<IPower?>();
+            if (power != null)
+            {
+                _myPowers.AddRange(power.NIDSubPower.Select(t => DatabaseAPI.Database.Power[t]).OfType<IPower>().Where(thisPower => thisPower.ClickBuff || thisPower.PowerType == Enums.ePowerType.Auto_ | thisPower.PowerType == Enums.ePowerType.Toggle));
+            }
+        }
+
+        public static IPower? GetMxDAccoladePower()
+        {
+            if (MainModule.MidsController.Toon == null)
+            {
+                return null;
+            }
+            
+            return MainModule.MidsController.Toon.IsHero()
+                ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)]  // Inherent.Inherent.MxD_Accolades_Hero
+                : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)]; // Inherent.Inherent.MxD_Accolades_Villain
+        }
+
+        public static List<FactionSpecificAccolade> FactionSpecificAccolades()
+        {
+            return new List<FactionSpecificAccolade>
+            {
+                new() {Hero = "The Atlas Medallion", Villain = "Marshal"},
+                new() {Hero = "Portal Jockey", Villain = "Born In Battle"},
+                new() {Hero = "Task Force Commander", Villain = "Invader"},
+                new() {Hero = "Freedom Phalanx Reserve", Villain = "High Pain Threshold"},
+                new() {Hero = "Eye of the Magus", Villain = "Demonic Aura"},
+                new() {Hero = "Vanguard Medal", Villain = "Megalomaniac"},
+                new() {Hero = "Geas of the Kind Ones", Villain = "Force of Nature"}
+            };
         }
 
         public void UpdateFonts(Font font)
@@ -81,6 +132,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 {
                     e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
                 }
+
                 llControl.SuspendRedraw = false;
                 llControl.Refresh();
             }
@@ -250,105 +302,118 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void MiniPowerInfo(int pIDX)
         {
             if (_locked)
+            {
                 return;
+            }
+
             var iPopup = new PopUp.PopupData();
             if (pIDX < 0)
             {
                 PopInfo.SetPopup(iPopup);
                 ChangedScrollFrameContents();
+
+                return;
             }
-            else
+            
+            IPower? power1 = new Power(_myPowers[pIDX]);
+            var index1 = iPopup.Add();
+            var str = power1.PowerType switch
             {
-                IPower? power1 = new Power(_myPowers[pIDX]);
-                var index1 = iPopup.Add();
-                var str = string.Empty;
-                switch (power1.PowerType)
-                {
-                    case Enums.ePowerType.Click:
-                        if (power1.ClickBuff) str = "(Click)";
-                        break;
-                    case Enums.ePowerType.Auto_:
-                        str = "(Auto)";
-                        break;
-                    case Enums.ePowerType.Toggle:
-                        str = "(Toggle)";
-                        break;
-                }
+                Enums.ePowerType.Click when power1.ClickBuff => "(Click)",
+                Enums.ePowerType.Auto_ => "(Auto)",
+                Enums.ePowerType.Toggle => "(Toggle)",
+                _ => string.Empty
+            };
 
-                iPopup.Sections[index1].Add(power1.DisplayName, PopUp.Colors.Title);
-                iPopup.Sections[index1].Add(str + " " + power1.DescShort, PopUp.Colors.Text, 0.9f);
-                var index2 = iPopup.Add();
-                if (power1.EndCost > 0.0)
-                {
-                    if (power1.ActivatePeriod > 0.0)
-                        iPopup.Sections[index2].Add("End Cost:", PopUp.Colors.Title,
-                            Utilities.FixDP(power1.EndCost / power1.ActivatePeriod) + "/s", PopUp.Colors.Title, 0.9f,
-                            FontStyle.Bold, 1);
-                    else
-                        iPopup.Sections[index2].Add("End Cost:", PopUp.Colors.Title, Utilities.FixDP(power1.EndCost),
-                            PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                }
+            iPopup.Sections[index1].Add(power1.DisplayName, PopUp.Colors.Title);
+            iPopup.Sections[index1].Add($"{str} {power1.DescShort}", PopUp.Colors.Text, 0.9f);
+            var index2 = iPopup.Add();
+            if (power1.EndCost > 0)
+            {
+                iPopup.Sections[index2].Add("End Cost:", PopUp.Colors.Title,
+                    power1.ActivatePeriod > 0
+                        ? $"{Utilities.FixDP(power1.EndCost / power1.ActivatePeriod)}/s"
+                        : Utilities.FixDP(power1.EndCost), PopUp.Colors.Title, 0.9f,
+                    FontStyle.Bold, 1);
+            }
 
-                if ((power1.EntitiesAutoHit == Enums.eEntity.None) | ((power1.Range > 20.0) &
-                                                                      power1.I9FXPresentP(Enums.eEffectType.Mez,
-                                                                          Enums.eMez.Taunt)))
-                    iPopup.Sections[index2].Add("Accuracy:", PopUp.Colors.Title,
-                        Utilities.FixDP((float) (MidsContext.Config.ScalingToHit * (double) power1.Accuracy * 100.0)) + "%",
-                        PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                if (power1.RechargeTime > 0.0)
-                    iPopup.Sections[index2].Add("Recharge:", PopUp.Colors.Title,
-                        Utilities.FixDP(power1.RechargeTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                var durationEffectId = power1.GetDurationEffectID();
-                var iNum = 0.0f;
-                if (durationEffectId > -1)
-                    iNum = power1.Effects[durationEffectId].Duration;
-                if ((power1.PowerType != Enums.ePowerType.Toggle) & (power1.PowerType != Enums.ePowerType.Auto_) &&
-                    iNum > 0.0)
-                    iPopup.Sections[index2].Add("Duration:", PopUp.Colors.Title, Utilities.FixDP(iNum) + "s",
-                        PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                if (power1.Range > 0.0)
-                    iPopup.Sections[index2].Add("Range:", PopUp.Colors.Title, Utilities.FixDP(power1.Range) + "ft",
-                        PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                if (power1.Arc > 0)
-                    iPopup.Sections[index2].Add("Arc:", PopUp.Colors.Title, Convert.ToString(power1.Arc) + "°",
-                        PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                else if (power1.Radius > 0.0)
-                    iPopup.Sections[index2].Add("Radius:", PopUp.Colors.Title,
-                        Convert.ToString(power1.Radius, CultureInfo.InvariantCulture) + "ft", PopUp.Colors.Title, 0.9f,
-                        FontStyle.Bold, 1);
-                if (power1.CastTime > 0.0)
-                    iPopup.Sections[index2].Add("Cast Time:", PopUp.Colors.Title,
-                        Utilities.FixDP(power1.CastTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                var power2 = power1;
-                if (power2.Effects.Length > 0)
+            if (power1.EntitiesAutoHit == Enums.eEntity.None | power1.Range > 20 &
+                power1.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt))
+            {
+                iPopup.Sections[index2].Add("Accuracy:", PopUp.Colors.Title,
+                    $"{Utilities.FixDP((float) (MidsContext.Config.ScalingToHit * (double) power1.Accuracy * 100))}%",
+                    PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+            }
+
+            if (power1.RechargeTime > 0)
+            {
+                iPopup.Sections[index2].Add("Recharge:", PopUp.Colors.Title,
+                    $"{Utilities.FixDP(power1.RechargeTime)}s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+            }
+
+            var durationEffectId = power1.GetDurationEffectID();
+            var duration = durationEffectId > -1 ? power1.Effects[durationEffectId].Duration : 0;
+            if (power1.PowerType != Enums.ePowerType.Toggle & power1.PowerType != Enums.ePowerType.Auto_ && duration > 0)
+            {
+                iPopup.Sections[index2].Add("Duration:", PopUp.Colors.Title, $"{Utilities.FixDP(duration)}s",
+                    PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+            }
+
+            if (power1.Range > 0)
+            {
+                iPopup.Sections[index2].Add("Range:", PopUp.Colors.Title, $"{Utilities.FixDP(power1.Range)}ft",
+                    PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+            }
+
+            if (power1.Arc > 0)
+            {
+                iPopup.Sections[index2].Add("Arc:", PopUp.Colors.Title, $"{power1.Arc}°",
+                    PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+            }
+            else if (power1.Radius > 0)
+            {
+                iPopup.Sections[index2].Add("Radius:", PopUp.Colors.Title,
+                    $"{power1.Radius}ft", PopUp.Colors.Title, 0.9f,
+                    FontStyle.Bold, 1);
+            }
+
+            if (power1.CastTime > 0)
+            {
+                iPopup.Sections[index2].Add("Cast Time:", PopUp.Colors.Title,
+                    $"{Utilities.FixDP(power1.CastTime)}s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+            }
+
+            if (power1.Effects.Length > 0)
+            {
+                iPopup.Sections[index2].Add("Effects:", PopUp.Colors.Title);
+                char[] chArray = {'^'};
+                foreach (var fx in power1.Effects)
                 {
-                    iPopup.Sections[index2].Add("Effects:", PopUp.Colors.Title);
-                    char[] chArray = {'^'};
-                    var num1 = power2.Effects.Length - 1;
-                    for (var index3 = 0; index3 <= num1; ++index3)
+                    var index4 = iPopup.Add();
+                    fx.SetPower(power1);
+                    var strArray = fx.BuildEffectString(false, "", false, false, false, true)
+                        .Replace("[", "\r\n")
+                        .Replace("\r\n", "^")
+                        .Replace("  ", string.Empty)
+                        .Replace("]", string.Empty)
+                        .Split(chArray);
+                    for (var index5 = 0; index5 < strArray.Length; index5++)
                     {
-                        var index4 = iPopup.Add();
-                        power1.Effects[index3].SetPower(power1);
-                        var strArray = power1.Effects[index3].BuildEffectString(false, "", false, false, false, true)
-                            .Replace("[", "\r\n")
-                            .Replace("\r\n", "^")
-                            .Replace("  ", string.Empty)
-                            .Replace("]", string.Empty)
-                            .Split(chArray);
-                        var num2 = strArray.Length - 1;
-                        for (var index5 = 0; index5 <= num2; ++index5)
-                            if (index5 == 0)
-                                iPopup.Sections[index4].Add(strArray[index5], PopUp.Colors.Effect, 0.9f, FontStyle.Bold,
-                                    1);
-                            else
-                                iPopup.Sections[index4].Add(strArray[index5], PopUp.Colors.Disabled, 0.9f,
-                                    FontStyle.Italic, 2);
+                        if (index5 == 0)
+                        {
+                            iPopup.Sections[index4].Add(strArray[index5], PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
+                        }
+                        else
+                        {
+                            iPopup.Sections[index4].Add(strArray[index5], PopUp.Colors.Disabled, 0.9f,
+                                FontStyle.Italic, 2);
+                        }
                     }
                 }
-
-                PopInfo.SetPopup(iPopup);
-                ChangedScrollFrameContents();
             }
+
+            PopInfo.SetPopup(iPopup);
+            ChangedScrollFrameContents();
         }
 
         private void PopInfo_MouseEnter(object sender, EventArgs e)
