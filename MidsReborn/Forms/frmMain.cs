@@ -6190,7 +6190,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsFileOpen_Click(object sender, EventArgs e)
         {
-            if (MainModule.MidsController.Toon.Locked & FileModified)
+            /*if (DlgOpen == null)
+            {
+                MessageBox.Show("frmMain.tsFileOpen_Click(): DlgOpen is null");
+
+                return;
+            }*/
+
+            if (MainModule.MidsController.Toon?.Locked == true & FileModified)
             {
                 FloatTop(false);
                 var msgBoxResult = MessageBox.Show("Current hero/villain data will be discarded, are you sure?",
@@ -6198,7 +6205,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 FloatTop(true);
                 if (msgBoxResult == DialogResult.No)
+                {
                     return;
+                }
             }
 
             if (DlgOpen.ShowDialog() != DialogResult.OK)
@@ -6237,15 +6246,17 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     break;
             }
             FloatTop(true);
-            var containsPower = MidsContext.Character.CurrentBuild.Powers
+            var containsPower = MidsContext.Character?.CurrentBuild?.Powers
                 .Where(pe => pe?.Power != null)
                 .ToList()
-                .Exists(x => Enum.IsDefined(typeof(Enums.eGridType), x.Power.InherentType));
-            if (containsPower && ActiveForm == this)
+                .Exists(x => Enum.IsDefined(typeof(Enums.eGridType), x?.Power?.InherentType ?? Enums.eGridType.None));
+            if (containsPower != true || ActiveForm != this)
             {
-                pnlGFX.Update();
-                pnlGFX.Refresh();
+                return;
             }
+
+            pnlGFX.Update();
+            pnlGFX.Refresh();
         }
 
         private void tsFilePrint_Click(object sender, EventArgs e)
