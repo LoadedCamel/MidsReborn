@@ -143,6 +143,8 @@ namespace Mids_Reborn.Forms
             this.tsView4Col = new System.Windows.Forms.ToolStripMenuItem();
             this.tsView5Col = new System.Windows.Forms.ToolStripMenuItem();
             this.tsView6Col = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsView3ColV = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsView3ColH = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.tsViewIOLevels = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewSOLevels = new System.Windows.Forms.ToolStripMenuItem();
@@ -1159,6 +1161,8 @@ namespace Mids_Reborn.Forms
                 this.tsView4Col,
                 this.tsView5Col,
                 this.tsView6Col,
+                this.tsView3ColV,
+                this.tsView3ColH,
                 this.ToolStripSeparator13,
                 this.tsViewIOLevels,
                 this.tsViewRelative,
@@ -1208,6 +1212,20 @@ namespace Mids_Reborn.Forms
             this.tsView6Col.Size = new System.Drawing.Size(282, 22);
             this.tsView6Col.Text = "&6 Columns";
             this.tsView6Col.Click += new System.EventHandler(this.tsView6Col_Click);
+            // 
+            // tsView3ColV
+            // 
+            this.tsView3ColV.Name = "tsView3ColV";
+            this.tsView3ColV.Size = new System.Drawing.Size(282, 22);
+            this.tsView3ColV.Text = "3 Columns (per powerset, vertical stacking)";
+            this.tsView3ColV.Click += new System.EventHandler(this.tsView3ColV_Click);
+            // 
+            // tsView3ColH
+            // 
+            this.tsView3ColH.Name = "tsView3ColH";
+            this.tsView3ColH.Size = new System.Drawing.Size(282, 22);
+            this.tsView3ColH.Text = "Multi-columns (per powerset, horizontal stacking)";
+            this.tsView3ColH.Click += new System.EventHandler(this.tsView3ColH_Click);
             // 
             // ToolStripSeparator13
             // 
@@ -2465,6 +2483,8 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsView4Col;
         ToolStripMenuItem tsView5Col;
         ToolStripMenuItem tsView6Col;
+        ToolStripMenuItem tsView3ColV;
+        ToolStripMenuItem tsView3ColH;
         ToolStripMenuItem tsViewActualDamage_New;
         ToolStripMenuItem tsViewData;
         ToolStripMenuItem tsViewDPS_New;
