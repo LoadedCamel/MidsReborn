@@ -5377,10 +5377,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
         internal void SetMiniList(PopUp.PopupData iData, string iTitle, int bxHeight = 2048)
         {
             fMini ??= new frmMiniList(this);
-            fMini.PInfo.BXHeight = bxHeight;
-            fMini.SizeMe();
             fMini.Text = iTitle;
-            fMini.PInfo.SetPopup(iData);
+            fMini.SetData(iData);
             fMini.Show();
             fMini.BringToFront();
         }
@@ -5770,7 +5768,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 CheckInitDdsaValue(13, 0, "Slot being level-swapped is too low for the destination power",
                     "Allow swap anyway (mark as invalid)");
                 if (dragdropScenarioAction[13] == 1)
+                {
                     return;
+                }
             }
 
             if ((MidsContext.Character.CurrentBuild.Powers[destPower].Slots[destSlot].Level <
@@ -5780,7 +5780,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 CheckInitDdsaValue(14, 0, "Slot being level-swapped is too low for the source power",
                     "Allow swap anyway (mark as invalid)");
                 if (dragdropScenarioAction[14] == 1)
+                {
                     return;
+                }
             }
 
             var level = MidsContext.Character.CurrentBuild.Powers[sourcePower].Slots[sourceSlot].Level;
@@ -5793,29 +5795,29 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         internal void smlRespecLong(int iLevel, bool mode2)
         {
-            SetMiniList(MidsContext.Character.CurrentBuild.GetRespecHelper2(true, iLevel), "Respec Helper",
-                mode2 ? 5096 : 4072);
+            SetMiniList(MidsContext.Character.CurrentBuild.GetRespecHelper2(true, iLevel), "Respec Helper");
             fMini.Width = 350;
-            fMini.SizeMe();
         }
 
         internal void smlRespecShort(int iLevel, bool mode2)
         {
             var helper = MidsContext.Character.CurrentBuild.GetRespecHelper2(false, iLevel);
-            if (mode2)
-                SetMiniList(helper, "Respec Helper", 4072);
-            else
-                SetMiniList(helper, "Respec Helper");
+            SetMiniList(helper, "Respec Helper");
             fMini.Width = mode2 ? 300 : 250;
-            fMini.SizeMe();
         }
 
         private void StartFlip(int iPowerIndex)
         {
             if (FlipActive)
+            {
                 EndFlip();
+            }
+
             if (iPowerIndex <= -1 || MidsContext.Character.CurrentBuild.Powers[iPowerIndex].Slots.Length == 0)
+            {
                 return;
+            }
+
             FileModified = true;
             MainModule.MidsController.Toon.FlipSlots(iPowerIndex);
             RefreshInfo();
