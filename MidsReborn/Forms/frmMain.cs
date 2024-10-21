@@ -5374,12 +5374,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
             DoResize();
         }
 
-        internal void SetMiniList(PopUp.PopupData iData, string iTitle, int bxHeight = 2048)
+        internal void SetMiniList(PopUp.PopupData iData, string iTitle)
         {
+            var newMini = fMini == null;
             fMini ??= new frmMiniList(this);
             fMini.Text = iTitle;
-            fMini.SetData(iData);
-            fMini.Show();
+            fMini.SetData(iData, !newMini);
+            if (newMini)
+            {
+                fMini.Show();
+            }
             fMini.BringToFront();
         }
 
@@ -5793,17 +5797,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
             DoRedraw();
         }
 
-        internal void smlRespecLong(int iLevel, bool mode2)
+        internal void smlRespecShort(int iLevel)
         {
-            SetMiniList(MidsContext.Character.CurrentBuild.GetRespecHelper2(true, iLevel), "Respec Helper");
+            SetMiniList(MidsContext.Character.CurrentBuild.GetRespecHelper2(false, iLevel), "Respec Helper (Brief)");
             fMini.Width = 350;
         }
 
-        internal void smlRespecShort(int iLevel, bool mode2)
+        internal void smlRespecLong(int iLevel)
         {
-            var helper = MidsContext.Character.CurrentBuild.GetRespecHelper2(false, iLevel);
-            SetMiniList(helper, "Respec Helper");
-            fMini.Width = mode2 ? 300 : 250;
+            SetMiniList(MidsContext.Character.CurrentBuild.GetRespecHelper2(true, iLevel), "Respec Helper (Detailed)");
+            fMini.Width = 350;
         }
 
         private void StartFlip(int iPowerIndex)
@@ -6400,22 +6403,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsHelperLong_Click(object sender, EventArgs e)
         {
-            new FrmInputLevel(this, true, false).ShowDialog(this);
-        }
-
-        private void tsHelperLong2_Click(object sender, EventArgs e)
-        {
-            new FrmInputLevel(this, true, true).ShowDialog(this);
+            new FrmInputLevel(this, true).ShowDialog(this);
         }
 
         private void tsHelperShort_Click(object sender, EventArgs e)
         {
-            new FrmInputLevel(this, false, false).ShowDialog(this);
-        }
-
-        private void tsHelperShort2_Click(object sender, EventArgs e)
-        {
-            new FrmInputLevel(this, false, true).ShowDialog(this);
+            new FrmInputLevel(this, false).ShowDialog(this);
         }
 
         private void tsImport_Click(object sender, EventArgs e)

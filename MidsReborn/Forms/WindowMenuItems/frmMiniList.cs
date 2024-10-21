@@ -28,9 +28,15 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             MyParent.UnSetMiniList();
         }
 
-        public void SetData(PopUp.PopupData pData)
+        public void SetData(PopUp.PopupData pData, bool instantDisplay = true)
         {
             PData = pData;
+            if (!instantDisplay)
+            {
+                return;
+            }
+
+            DisplayData();
         }
 
         private void frmMiniList_Load(object sender, System.EventArgs e)

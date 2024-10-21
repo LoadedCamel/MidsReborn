@@ -7,19 +7,15 @@ namespace Mids_Reborn.Forms
     public partial class FrmInputLevel : Form
     {
         private readonly bool LongFormat;
-
-        private readonly bool Mode2;
-
         private readonly frmMain MyParent;
 
-        public FrmInputLevel(frmMain parent, bool lf, bool mode2)
+        public FrmInputLevel(frmMain parent, bool lf)
         {
             InitializeComponent();
             Name = nameof(FrmInputLevel);
             Icon = Resources.MRB_Icon_Concept;
             MyParent = parent;
             LongFormat = lf;
-            Mode2 = mode2;
         }
 
         private void btnOK_Click(object sender, EventArgs e)
@@ -29,11 +25,11 @@ namespace Mids_Reborn.Forms
 
             if (LongFormat)
             {
-                MyParent.smlRespecLong(num - 1, Mode2);
+                MyParent.smlRespecLong(num - 1);
             }
             else
             {
-                MyParent.smlRespecShort(num - 1, Mode2);
+                MyParent.smlRespecShort(num - 1);
             }
 
             Close();

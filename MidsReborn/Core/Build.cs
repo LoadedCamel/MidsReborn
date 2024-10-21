@@ -538,71 +538,72 @@ namespace Mids_Reborn.Core
             var popupData = new PopUp.PopupData();
             var historyMapArray = BuildHistoryMap(true);
             var index = popupData.Add();
-            popupData.Sections[index].Add("Respec to level: " + (iLevel + 1), PopUp.Colors.Effect, 1.25f);
+            popupData.Sections[index].Add($"Respec to level: {iLevel + 1}", PopUp.Colors.Effect, 1.25f);
             var histLvl = 0;
             foreach (var historyMap in historyMapArray)
             {
                 if (histLvl != historyMap.Level)
+                {
                     index = popupData.Add();
+                }
+
                 histLvl = historyMap.Level;
                 if (historyMap.HID < 0)
+                {
                     continue;
+                }
+
                 var power = Powers[historyMap.HID];
-                if ((DatabaseAPI.Database.Levels[historyMap.Level].Powers > 0) & (historyMap.Level <= iLevel))
+                if (DatabaseAPI.Database.Levels[historyMap.Level].Powers > 0 & historyMap.Level <= iLevel)
                 {
                     if (power.Slots.Length <= 0)
+                    {
                         continue;
-                    string iText1;
-                    if (power.Power != null)
-                        iText1 = "Level " + (historyMap.Level + 1) + ": " + power.Power.DisplayName;
-                    else
-                        iText1 = "Level " + (historyMap.Level + 1) + ": [Empty]";
+                    }
+
+                    var iText1 = power.Power != null
+                        ? $"Level {historyMap.Level + 1}: {power.Power.DisplayName}"
+                        : $"Level {historyMap.Level + 1}: [Empty]";
                     popupData.Sections[index].Add(iText1, PopUp.Colors.Text);
                     if (!longFormat)
+                    {
                         continue;
-                    var empty = string.Empty;
-                    string iText2;
+                    }
+
+                    var iText2 = "[Empty]";
                     if (power.Slots[historyMap.SID].Enhancement.Enh > -1)
                     {
-                        iText2 = empty +
-                                 DatabaseAPI.GetEnhancementNameShortWSet(power.Slots[historyMap.SID].Enhancement.Enh);
-                        if (DatabaseAPI.Database.Enhancements[power.Slots[historyMap.SID].Enhancement.Enh].TypeID ==
-                            Enums.eType.InventO ||
-                            DatabaseAPI.Database.Enhancements[power.Slots[historyMap.SID].Enhancement.Enh].TypeID ==
-                            Enums.eType.SetO)
-                            iText2 = iText2 + "-" + (power.Slots[historyMap.SID].Enhancement.IOLevel + 1);
-                    }
-                    else
-                    {
-                        iText2 = empty + "[Empty]";
+                        iText2 = DatabaseAPI.GetEnhancementNameShortWSet(power.Slots[historyMap.SID].Enhancement.Enh);
+                        if (DatabaseAPI.Database.Enhancements[power.Slots[historyMap.SID].Enhancement.Enh].TypeID is Enums.eType.InventO or Enums.eType.SetO)
+                        {
+                            iText2 += $"-{power.Slots[historyMap.SID].Enhancement.IOLevel + 1}";
+                        }
                     }
 
                     popupData.Sections[index].Add(iText2, PopUp.Colors.Invention, 1f, FontStyle.Regular, 1);
                 }
-                else if ((DatabaseAPI.Database.Levels[historyMap.Level].Slots > 0) & (historyMap.Level <= iLevel) &&
-                         historyMap.SID > -1)
+                else if (DatabaseAPI.Database.Levels[historyMap.Level].Slots > 0 & historyMap.Level <= iLevel && historyMap.SID > -1)
                 {
                     var str = historyMap.SID != 0
-                        ? "Level " + (historyMap.Level + 1) + ": Added Slot To "
-                        : "Level " + (historyMap.Level + 1) + ": Received Slot - ";
-                    var iText1 = power.Power == null ? str + "[Empty]" : str + power.Power.DisplayName;
+                        ? $"Level {historyMap.Level + 1}: Added Slot To "
+                        : $"Level {historyMap.Level + 1}: Received Slot - ";
+                    var iText1 = power.Power == null
+                        ? $"{str}[Empty]"
+                        : $"{str}{power.Power.DisplayName}";
                     popupData.Sections[index].Add(iText1, PopUp.Colors.Effect);
                     if (!longFormat)
+                    {
                         continue;
-                    string iText2;
+                    }
+
+                    var iText2 = "[Empty]";
                     if (power.Slots[historyMap.SID].Enhancement.Enh > -1)
                     {
-                        iText2 = string.Empty +
-                                 DatabaseAPI.GetEnhancementNameShortWSet(power.Slots[historyMap.SID].Enhancement.Enh);
-                        if (DatabaseAPI.Database.Enhancements[power.Slots[historyMap.SID].Enhancement.Enh].TypeID ==
-                            Enums.eType.InventO ||
-                            DatabaseAPI.Database.Enhancements[power.Slots[historyMap.SID].Enhancement.Enh].TypeID ==
-                            Enums.eType.SetO)
-                            iText2 = iText2 + "-" + (power.Slots[historyMap.SID].Enhancement.IOLevel + 1);
-                    }
-                    else
-                    {
-                        iText2 = "[Empty]";
+                        iText2 = DatabaseAPI.GetEnhancementNameShortWSet(power.Slots[historyMap.SID].Enhancement.Enh);
+                        if (DatabaseAPI.Database.Enhancements[power.Slots[historyMap.SID].Enhancement.Enh].TypeID is Enums.eType.InventO or Enums.eType.SetO)
+                        {
+                            iText2 += $"-{power.Slots[historyMap.SID].Enhancement.IOLevel + 1}";
+                        }
                     }
 
                     popupData.Sections[index].Add(iText2, PopUp.Colors.Invention, 1f, FontStyle.Regular, 1);
@@ -613,7 +614,7 @@ namespace Mids_Reborn.Core
         }
 
         // https://stackoverflow.com/a/65888392
-        // frmMain.FloatTop(false) should be used here but it is unreachable.
+        // frmMain.FloatTop(false) should be used here, but it is unreachable.
         private DialogResult TopMostMessageBox(string msg, string title, MessageBoxButtons buttons = MessageBoxButtons.OK)
         {
             using var form = new Form { TopMost = true };
