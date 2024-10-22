@@ -1876,26 +1876,31 @@ namespace Mids_Reborn.Forms
         private void FixStatIncludes()
         {
             if (MainModule.MidsController.Toon == null)
-                return;
-            for (var index = 0; index <= MidsContext.Character.CurrentBuild.Powers.Count - 1; ++index)
             {
-                if (MidsContext.Character.CurrentBuild.Powers[index] != null)
+                return;
+            }
+
+            foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
+            {
+                if (pe?.Power == null)
                 {
-                    if (MidsContext.Character.CurrentBuild.Powers[index].PowerSet == null)
-                        continue;
-                    switch (MidsContext.Character.CurrentBuild.Powers[index].PowerSet.DisplayName)
+                    continue;
+                }
+
+                if (pe.Power.FullName.StartsWith("Temporary_Powers.Temporary_Powers."))
+                {
+                    pe.StatInclude = ibTempPowersEx.ToggleState switch
                     {
-                        case "Temporary Powers":
-                            if (ibTempPowersEx.ToggleState == ImageButtonEx.States.ToggledOff)
-                            {
-                                MidsContext.Character.CurrentBuild.Powers[index].StatInclude = false;
-                            }
-                            else if (ibTempPowersEx.ToggleState == ImageButtonEx.States.ToggledOn)
-                            {
-                                MidsContext.Character.CurrentBuild.Powers[index].StatInclude = true;
-                            }
-                            break;
-                    }
+                        ImageButtonEx.States.ToggledOff => false,
+                        ImageButtonEx.States.ToggledOn => true,
+                        _ => pe.Power.AlwaysToggle
+                    };
+                }
+                else if (pe.Power is not ({PowerType: Enums.ePowerType.Toggle} or {PowerType: Enums.ePowerType.GlobalBoost} or {PowerType: Enums.ePowerType.Auto_}) & // Not a toggle, global boost, auto
+                         pe.Power is {ClickBuff: false} & // Not a click-buff
+                         pe.Slots.Select(e => e.Enhancement.Enh).Any(e => e > -1)) // Has at least one enhancement slotted
+                {
+                    pe.StatInclude = true;
                 }
             }
         }
@@ -4170,7 +4175,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 };
             }
 
-            if (MidsContext.Character != null && (index > -1) & (index <= MidsContext.Character.CurrentBuild.Powers.Count))
+            if (MidsContext.Character != null && index > -1 & index <= MidsContext.Character.CurrentBuild.Powers.Count)
             {
                 MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[index].Level;
             }
@@ -4189,11 +4194,20 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private bool? CheckInitDdsaValue(int index, int? defaultOpt, string descript, params string[] options)
         {
-            if (dragdropScenarioAction[index] != 0) return null;
+            if (dragdropScenarioAction[index] != 0)
+            {
+                return null;
+            }
+
             var (result, remember) = frmOptionListDlg.ShowWithOptions(true, defaultOpt ?? 1, descript, options);
             dragdropScenarioAction[index] = (short)result;
-            if (remember != true) return remember;
+            if (remember != true)
+            {
+                return remember;
+            }
+
             MidsContext.Config.DragDropScenarioAction[index] = dragdropScenarioAction[index];
+            
             return remember;
         }
 
