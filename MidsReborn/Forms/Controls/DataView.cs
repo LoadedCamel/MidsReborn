@@ -871,6 +871,8 @@ namespace Mids_Reborn.Forms.Controls
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid));
 
+            rankedEffectsExt = rankedEffectsExt.OrderByDescending(e => e.Value.UseAlternateColor ? 2 : e.Value.UseSpecialColor | e.Value.UseUniqueColor ? 1 : 0).ToList();
+
             foreach (var rex in rankedEffectsExt)
             {
                 info_DataList.AddItem(rex.Value);
