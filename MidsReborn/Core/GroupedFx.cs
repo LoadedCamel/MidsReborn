@@ -2131,6 +2131,7 @@ namespace Mids_Reborn.Core
                     break;
 
                 case Enums.eEffectType.EnduranceDiscount:
+                case Enums.eEffectType.ThreatLevel:
                     rankedEffect.Value = $"{gre.Mag * 100:###0.##}%{toWhoShort}";
                     rankedEffect.ToolTip = greTooltip;
 
