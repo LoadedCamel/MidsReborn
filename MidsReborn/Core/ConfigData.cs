@@ -122,6 +122,7 @@ namespace Mids_Reborn.Core
         public bool DisableVillainColors { get; set; }
         public bool IsInitialized { get; set; }
         public int Columns { get; set; } = 3;
+        public Enums.eColumnStacking ColumnStackingMode { get; set; } = Enums.eColumnStacking.None;
         public PrintOptionProfile PrintProfile { get; set; } = PrintOptionProfile.SinglePage;
         public bool DisablePrintProfileEnh { get; set; }
         public string LastPrinter { get; set; } = string.Empty;

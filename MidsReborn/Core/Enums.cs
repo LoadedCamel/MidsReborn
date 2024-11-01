@@ -1426,6 +1426,13 @@ namespace Mids_Reborn.Core
             UseEllipsis = 2
         }
 
+        public enum eColumnStacking
+        {
+            None = 0,
+            Vertical = 1,
+            Horizontal = 2
+        }
+
         public static bool MezDurationEnhanceable(eMez mezEnum)
         {
             return mezEnum is eMez.Confused or eMez.Held or eMez.Immobilized or eMez.Placate or eMez.Sleep or eMez.Stunned or eMez.Taunt or eMez.Terrorized or eMez.Untouchable;
@@ -1502,64 +1509,67 @@ namespace Mids_Reborn.Core
         {
             var num1 = 0;
             iStr = iStr.ToUpper();
-            var strArray1 = !iStr.Contains(",") ? iStr.Split(' ') : StringToArray(iStr);
+            var strArray1 = !iStr.Contains(',') ? iStr.Split(' ') : StringToArray(iStr);
             var strArray2 = strArray1;
-            int num2;
             if (strArray2.Length < 1)
             {
-                num2 = num1;
+                return num1;
             }
-            else
+            
+            var names = Enum.GetNames(eEnum.GetType());
+            var values = Enum.GetValues(eEnum.GetType());
+            for (var index = 0; index < names.Length; index++)
             {
-                var names = Enum.GetNames(eEnum.GetType());
-                var values = Enum.GetValues(eEnum.GetType());
-                for (var index = 0; index < names.Length; ++index)
-                    names[index] = names[index].ToUpper();
-                foreach (var index1 in strArray2)
+                names[index] = names[index].ToUpper();
+            }
+
+            foreach (var index1 in strArray2)
+            {
+                if (index1.Length <= 0)
                 {
-                    if (index1.Length <= 0)
-                        continue;
-                    var index2 = Array.IndexOf(names, index1);
-                    if (index2 <= -1)
-                        continue;
-                    if (noFlag)
-                        return (int) values.GetValue(index2);
-                    num1 += (int) values.GetValue(index2);
+                    continue;
                 }
 
-                num2 = num1;
+                var index2 = Array.IndexOf(names, index1);
+                if (index2 <= -1)
+                {
+                    continue;
+                }
+
+                if (noFlag)
+                {
+                    return (int) values.GetValue(index2);
+                }
+
+                num1 += (int) values.GetValue(index2);
             }
 
-            return num2;
+            return num1;
         }
 
         public static T[] StringToEnumArray<T>(string iStr, Type eEnum)
         {
             var objList = new List<T>();
             iStr = iStr.ToUpper();
-            var strArray1 = !iStr.Contains(",") ? iStr.Split(' ') : StringToArray(iStr);
+            var strArray1 = !iStr.Contains(',') ? iStr.Split(' ') : StringToArray(iStr);
             var strArray2 = strArray1;
-            T[] array;
             if (strArray2.Length < 1)
             {
-                array = objList.ToArray();
+                return objList.ToArray();
             }
-            else
-            {
-                var names = Enum.GetNames(eEnum);
-                var values = Enum.GetValues(eEnum);
-                for (var index = 0; index < names.Length; ++index)
-                    names[index] = names[index].ToUpper();
-                objList.AddRange(from t in strArray2
-                    where t.Length > 0
-                    select Array.IndexOf(names, t)
-                    into index2
-                    where index2 > -1
-                    select (T) values.GetValue(index2));
-                array = objList.ToArray();
-            }
-
-            return array;
+            
+            var names = Enum.GetNames(eEnum);
+            var values = Enum.GetValues(eEnum);
+            for (var index = 0; index < names.Length; ++index)
+                names[index] = names[index].ToUpper();
+            objList.AddRange(from t in strArray2
+                where t.Length > 0
+                select Array.IndexOf(names, t)
+                into index2
+                where index2 > -1
+                select (T) values.GetValue(index2));
+                
+            return objList.ToArray();
         }
 
         public static bool IsEnumValue(string? iStr, object eEnum)
@@ -1579,28 +1589,24 @@ namespace Mids_Reborn.Core
             return Array.IndexOf(names, iStr) > -1;
         }
 
-        public static string[] StringToArray(string iStr)
+        public static string[] StringToArray(string? iStr)
         {
             var strArray1 = Array.Empty<string>();
-            string[] strArray2;
             if (iStr == null)
             {
-                strArray2 = strArray1;
+                return strArray1;
             }
-            else if (string.IsNullOrEmpty(iStr))
+            
+            if (string.IsNullOrEmpty(iStr))
             {
-                strArray2 = strArray1;
+                return strArray1;
             }
-            else
-            {
-                char[] chArray = {','};
-                iStr = iStr.Replace(", ", ",");
-                var array = iStr.Split(chArray);
-                Array.Sort(array);
-                strArray2 = array;
-            }
-
-            return strArray2;
+            
+            iStr = iStr.Replace(", ", ",");
+            var array = iStr.Split(',');
+            Array.Sort(array);
+            
+            return array;
         }
 
         public static string GetGroupedDamage(bool[] iDamage, bool shortForm)
@@ -1608,110 +1614,106 @@ namespace Mids_Reborn.Core
             string str1;
             if (iDamage.Length < Enum.GetValues(eDamage.None.GetType()).Length - 1)
             {
-                str1 = "Error: Array Length Mismatch";
+                return "Error: Array Length Mismatch";
             }
-            else
+            
+            var str2 = "";
+            var validList = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
+            var damageList = iDamage.ToList();
+            var foundTypes = damageList.FindIndexes(x => x.Equals(true));
+            
+            var allElementsFound = foundTypes.SequenceEqual(validList);
+            if (allElementsFound)
             {
-                var str2 = "";
-
-                var validList = new List<int> { 1, 2, 3, 4, 5, 6, 7, 8 };
-                var damageList = iDamage.ToList();
-                var foundTypes = damageList.FindIndexes(x => x.Equals(true));
-
-                var allElementsFound = foundTypes.SequenceEqual(validList);
-
-                if (allElementsFound)
+                return @"All";
+            }
+            
+            for (var index = 0; index < iDamage.Length; index++)
+            {
+                if (!iDamage[index])
                 {
-                    str2 = @"All";
-                }
-                else
-                {
-                    for (var index = 0; index < iDamage.Length; ++index)
-                    {
-                        if (!iDamage[index])
-                            continue;
-                        var str3 = shortForm ? GetDamageNameShort((eDamage) index) : GetDamageName((eDamage) index);
-                        if (!string.IsNullOrEmpty(str2))
-                            str2 += ",";
-                        str2 += str3;
-                    }
+                    continue;
                 }
 
-                str1 = str2;
+                var str3 = shortForm ? GetDamageNameShort((eDamage) index) : GetDamageName((eDamage) index);
+                if (!string.IsNullOrEmpty(str2))
+                {
+                    str2 += ",";
+                }
+
+                str2 += str3;
             }
 
-            return str1;
+            return str2;
         }
 
         public static string GetGroupedDefense(bool[] iDamage, bool shortForm)
         {
-            string str1;
             if (iDamage.Length < Enum.GetValues(eDamage.None.GetType()).Length - 1)
             {
-                str1 = "Error: Array Length Mismatch";
+                return "Error: Array Length Mismatch";
             }
-            else
+            
+            var str2 = "";
+            if (iDamage[1] && iDamage[2] && iDamage[3] && iDamage[4] && iDamage[5] && iDamage[6] && iDamage[8] && iDamage[10] && iDamage[11] && iDamage[12])
             {
-                var str2 = "";
-                if (iDamage[1] && iDamage[2] && iDamage[3] && iDamage[4] && iDamage[5] && iDamage[6] && iDamage[8] && iDamage[10] && iDamage[11] && iDamage[12])
+                return "All";
+            }
+            
+            for (var index = 0; index < iDamage.Length; index++)
+            {
+                if (!iDamage[index])
                 {
-                    str2 = "All";
-                }
-                else
-                {
-                    for (var index = 0; index < iDamage.Length; ++index)
-                    {
-                        if (!iDamage[index])
-                        {
-                            continue;
-                        }
-
-                        var str3 = shortForm ? GetDamageNameShort((eDamage)index) : GetDamageName((eDamage)index);
-                        if (!string.IsNullOrEmpty(str2))
-                        {
-                            str2 += ",";
-                        }
-
-                        str2 += str3;
-                    }
+                    continue;
                 }
 
-                str1 = str2;
+                var str3 = shortForm ? GetDamageNameShort((eDamage)index) : GetDamageName((eDamage)index);
+                if (!string.IsNullOrEmpty(str2))
+                {
+                    str2 += ",";
+                }
+
+                str2 += str3;
             }
 
-            return str1;
+            return str2;
         }
 
         public static string GetGroupedMez(bool[] iMez, bool shortForm)
         {
-            string str1;
             if (iMez.Length < Enum.GetValues(eMez.None.GetType()).Length - 1)
             {
-                str1 = "Error: Array Length Mismatch";
+                return "Error: Array Length Mismatch";
             }
-            else
+            
+            var str2 = "";
+            if (iMez[1] && iMez[2] && iMez[10] && iMez[9])
             {
-                var str2 = "";
-                
-                if (iMez[1] && iMez[2] && iMez[10] && iMez[9])
-                    str2 = "Mez";
-                else if (iMez[4] && iMez[5] && iMez[1] && iMez[2] && iMez[10] && iMez[9])
-                    str2 = "Knocked";
-                else
-                    for (var index = 0; index < iMez.Length; ++index)
-                    {
-                        if (!iMez[index])
-                            continue;
-                        var str3 = shortForm ? GetMezNameShort((eMezShort) index) : GetMezName((eMezShort) index);
-                        if (!string.IsNullOrEmpty(str2))
-                            str2 += ",";
-                        str2 += str3;
-                    }
-
-                str1 = str2;
+                return "Mez";
             }
 
-            return str1;
+            if (iMez[4] && iMez[5] && iMez[1] && iMez[2] && iMez[10] && iMez[9])
+            {
+                return "Knocked";
+            }
+            
+            for (var index = 0; index < iMez.Length; index++)
+            {
+                if (!iMez[index])
+                {
+                    continue;
+                }
+
+                var str3 = shortForm ? GetMezNameShort((eMezShort) index) : GetMezName((eMezShort) index);
+                if (!string.IsNullOrEmpty(str2))
+                {
+                    str2 += ",";
+                }
+
+                str2 += str3;
+            }
+
+            return str2;
         }
 
         public struct sEnhClass
@@ -1747,7 +1749,10 @@ namespace Mids_Reborn.Core
                 Schedule = effect.Schedule;
                 Multiplier = effect.Multiplier;
                 if (effect.FX == null)
+                {
                     return;
+                }
+
                 FX = (IEffect) effect.FX.Clone();
             }
         }
@@ -1758,35 +1763,34 @@ namespace Mids_Reborn.Core
             public float[] Value;
             public float Sum;
 
-            public bool Present => Index != null && Index.Length >= 1 && Index[0] != -1;
+            public bool Present => Index is {Length: >= 1} && Index[0] != -1;
 
-            public bool Multiple => Index != null && Index.Length > 1;
+            public bool Multiple => Index is {Length: > 1};
 
             public int Max
             {
                 get
                 {
-                    var num1 = 0.0f;
+                    var num1 = 0f;
                     var num2 = 0;
-                    int num3;
-                    if (Present)
+
+                    if (!Present)
                     {
-                        for (var index = 0; index < Value.Length; ++index)
+                        return -1;
+                    }
+
+                    for (var index = 0; index < Value.Length; index++)
+                    {
+                        if (!(Value[index] > num1))
                         {
-                            if (!(Value[index] > (double) num1))
-                                continue;
-                            num1 = Value[index];
-                            num2 = index;
+                            continue;
                         }
 
-                        num3 = num2;
-                    }
-                    else
-                    {
-                        num3 = -1;
+                        num1 = Value[index];
+                        num2 = index;
                     }
 
-                    return num3;
+                    return num2;
                 }
             }
 
@@ -1796,7 +1800,7 @@ namespace Mids_Reborn.Core
                 {
                     Value = Array.Empty<float>();
                     Index = Array.Empty<int>();
-                    Sum = 0.0f;
+                    Sum = 0f;
                 }
 
                 var values = Value.ToList();
@@ -1815,13 +1819,16 @@ namespace Mids_Reborn.Core
                 var numArray1 = new float[Value.Length - 1];
                 var numArray2 = new int[Index.Length - 1];
                 var index1 = 0;
-                for (var index2 = 0; index2 <= Index.Length - 1; ++index2)
+                for (var index2 = 0; index2 < Index.Length; index2++)
                 {
                     if (index2 == iIndex)
+                    {
                         continue;
+                    }
+
                     numArray1[index1] = Value[index2];
                     numArray2[index1] = Index[index2];
-                    ++index1;
+                    index1++;
                 }
 
                 Value = numArray1;
@@ -1840,24 +1847,32 @@ namespace Mids_Reborn.Core
                 {
                     Index = Array.Empty<int>();
                     Value = Array.Empty<float>();
-                    Sum = 0.0f;
+                    Sum = 0;
                 }
             }
 
             public void Multiply()
             {
                 if (Value == null)
+                {
                     return;
-                for (var index = 0; index <= Value.Length - 1; ++index)
-                    Value[index] *= 100f;
-                Sum *= 100f;
+                }
+
+                for (var index = 0; index < Value.Length; index++)
+                {
+                    Value[index] *= 100;
+                }
+
+                Sum *= 100;
             }
 
             public void ReSum()
             {
-                Sum = 0.0f;
+                Sum = 0;
                 foreach (var index in Value)
+                {
                     Sum += index;
+                }
             }
         }
 

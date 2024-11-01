@@ -442,7 +442,7 @@ namespace Mids_Reborn.Forms
                 PriSec_ExpandChanged(true);
                 _loading = false;
                 UpdateControls(true);
-                setColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns);
+                SetColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns, MidsContext.Config.Columns == 3 ? MidsContext.Config.ColumnStackingMode : Enums.eColumnStacking.None);
                 UpdatePoolsPanelSize();
                 InitializeDv(); // This is the data view
                 SetEnhCheckModePosition();
@@ -1876,26 +1876,31 @@ namespace Mids_Reborn.Forms
         private void FixStatIncludes()
         {
             if (MainModule.MidsController.Toon == null)
-                return;
-            for (var index = 0; index <= MidsContext.Character.CurrentBuild.Powers.Count - 1; ++index)
             {
-                if (MidsContext.Character.CurrentBuild.Powers[index] != null)
+                return;
+            }
+
+            foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
+            {
+                if (pe?.Power == null)
                 {
-                    if (MidsContext.Character.CurrentBuild.Powers[index].PowerSet == null)
-                        continue;
-                    switch (MidsContext.Character.CurrentBuild.Powers[index].PowerSet.DisplayName)
+                    continue;
+                }
+
+                if (pe.Power.FullName.StartsWith("Temporary_Powers.Temporary_Powers."))
+                {
+                    pe.StatInclude = ibTempPowersEx.ToggleState switch
                     {
-                        case "Temporary Powers":
-                            if (ibTempPowersEx.ToggleState == ImageButtonEx.States.ToggledOff)
-                            {
-                                MidsContext.Character.CurrentBuild.Powers[index].StatInclude = false;
-                            }
-                            else if (ibTempPowersEx.ToggleState == ImageButtonEx.States.ToggledOn)
-                            {
-                                MidsContext.Character.CurrentBuild.Powers[index].StatInclude = true;
-                            }
-                            break;
-                    }
+                        ImageButtonEx.States.ToggledOff => false,
+                        ImageButtonEx.States.ToggledOn => true,
+                        _ => pe.Power.AlwaysToggle
+                    };
+                }
+                else if (pe.Power is not ({PowerType: Enums.ePowerType.Toggle} or {PowerType: Enums.ePowerType.GlobalBoost} or {PowerType: Enums.ePowerType.Auto_}) & // Not a toggle, global boost, auto
+                         pe.Power is {ClickBuff: false} & // Not a click-buff
+                         pe.Slots.Select(e => e.Enhancement.Enh).Any(e => e > -1)) // Has at least one enhancement slotted
+                {
+                    pe.StatInclude = true;
                 }
             }
         }
@@ -3558,8 +3563,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void pnlGFX_DragDrop(object sender, DragEventArgs e)
         {
-            if (!sender.Equals(pnlGFX))
+            if (MidsContext.Config.ColumnStackingMode != Enums.eColumnStacking.None)
+            {
                 return;
+            }
+
+            if (!sender.Equals(pnlGFX))
+            {
+                return;
+            }
+
             pnlGFX.AllowDrop = false;
             ControlPaint.DrawReversibleFrame(dragRect, Color.White, FrameStyle.Thick);
             oldDragRect = Rectangle.Empty;
@@ -3571,10 +3584,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 dragFinishSlot = drawing.WhichEnh(drawing.ScaleUp(iValue1), drawing.ScaleUp(iValue2));
                 if (dragFinishSlot == 0)
+                {
                     MessageBox.Show(this, "You cannot change the level of any power's automatic slot.", null,
                         MessageBoxButtons.OK);
+                }
                 else
+                {
                     SlotLevelSwap(dragStartPower, dragStartSlot, dragFinishPower, dragFinishSlot);
+                }
             }
             else if ((e.KeyState & 4) > 0)
             {
@@ -3588,11 +3605,21 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void pnlGFX_DragEnter(object sender, DragEventArgs e)
         {
+            if (MidsContext.Config.ColumnStackingMode != Enums.eColumnStacking.None)
+            {
+                return;
+            }
+
             e.Effect = sender.Equals(pnlGFX) ? DragDropEffects.Move : DragDropEffects.None;
         }
 
         private void pnlGFX_DragOver(object sender, DragEventArgs e)
         {
+            if (MidsContext.Config.ColumnStackingMode != Enums.eColumnStacking.None)
+            {
+                return;
+            }
+
             Point position;
             int num1;
             if (sender.Equals(pnlGFX))
@@ -4148,7 +4175,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 };
             }
 
-            if (MidsContext.Character != null && (index > -1) & (index <= MidsContext.Character.CurrentBuild.Powers.Count))
+            if (MidsContext.Character != null && index > -1 & index <= MidsContext.Character.CurrentBuild.Powers.Count)
             {
                 MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[index].Level;
             }
@@ -4167,11 +4194,20 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private bool? CheckInitDdsaValue(int index, int? defaultOpt, string descript, params string[] options)
         {
-            if (dragdropScenarioAction[index] != 0) return null;
+            if (dragdropScenarioAction[index] != 0)
+            {
+                return null;
+            }
+
             var (result, remember) = frmOptionListDlg.ShowWithOptions(true, defaultOpt ?? 1, descript, options);
             dragdropScenarioAction[index] = (short)result;
-            if (remember != true) return remember;
+            if (remember != true)
+            {
+                return remember;
+            }
+
             MidsContext.Config.DragDropScenarioAction[index] = dragdropScenarioAction[index];
+            
             return remember;
         }
 
@@ -5177,6 +5213,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void RemoveSlotFromTempList(PowerEntry? tp, int slotIDX)
         {
+            if (tp == null)
+            {
+                return;
+            }
+
             tp.Slots = tp.Slots.RemoveIndex(slotIDX);
         }
 
@@ -5187,21 +5228,46 @@ The default position/state will be used upon next launch.", @"Window State Warni
             do
             {
                 if (llAncillary.Top + num1 + llAncillary.ActualLineHeight <= ClientRectangle.Size.Height)
+                {
                     num1 += llAncillary.ActualLineHeight;
+                }
+
                 ++num2;
             } while (num2 <= 4);
 
             if (num1 < llAncillary.ActualLineHeight * 2)
+            {
                 num1 = llAncillary.ActualLineHeight * 2;
+            }
+
             llAncillary.Height = num1;
         }
 
-        private void setColumns(int columns)
+        private void SetColumns(int columns, Enums.eColumnStacking stackingMode = Enums.eColumnStacking.None)
         {
+            if (columns == MidsContext.Config.Columns & stackingMode == MidsContext.Config.ColumnStackingMode)
+            {
+                return;
+            }
+
+            var prevStackingMode = MidsContext.Config.ColumnStackingMode;
+
             MidsContext.Config.Columns = columns;
+            MidsContext.Config.ColumnStackingMode = stackingMode;
+
             drawing.Columns = columns;
+            drawing.ColumnStackingMode = stackingMode;
+
+            drawing.GetPowersLayout();
+            
             DoResize();
-            DoRedraw();
+
+            if (stackingMode == Enums.eColumnStacking.None & prevStackingMode != Enums.eColumnStacking.None)
+            {
+                // Bug: Glitched draw area when switching back to classic layout
+                // Pretend window size has been changed.
+                frmMain_ResizeEnd(this, EventArgs.Empty);
+            }
         }
 
         private void SetDamageMenuCheckMarks()
@@ -5250,7 +5316,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             int iVal2;
             var num = Height - ClientSize.Height;
             if (!dvAnchored.Visible)
+            {
                 iVal2 = llPool3.Top + llPool3.Height * 2 + 4 + num;
+            }
             else
                 switch (dvAnchored.VisibleSize)
                 {
@@ -5320,15 +5388,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
             DoResize();
         }
 
-        internal void SetMiniList(PopUp.PopupData iData, string iTitle, int bxHeight = 2048)
+        internal void SetMiniList(PopUp.PopupData iData, string iTitle)
         {
-            if (fMini == null)
-                fMini = new frmMiniList(this);
-            fMini.PInfo.BXHeight = bxHeight;
-            fMini.SizeMe();
+            var newMini = fMini == null;
+            fMini ??= new frmMiniList(this);
             fMini.Text = iTitle;
-            fMini.PInfo.SetPopup(iData);
-            fMini.Show();
+            fMini.SetData(iData, !newMini);
+            if (newMini)
+            {
+                fMini.Show();
+            }
             fMini.BringToFront();
         }
 
@@ -5490,9 +5559,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private static void ShallowCopyPowerList(PowerEntry?[] source)
         {
-            var num = MidsContext.Character.CurrentBuild.Powers.Count - 1;
-            for (var index = 0; index <= num; ++index)
+            for (var index = 0; index < MidsContext.Character.CurrentBuild.Powers.Count; index++)
+            {
                 MidsContext.Character.CurrentBuild.Powers[index] = source[index];
+            }
         }
 
         internal void ShowAnchoredDataView()
@@ -5716,7 +5786,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 CheckInitDdsaValue(13, 0, "Slot being level-swapped is too low for the destination power",
                     "Allow swap anyway (mark as invalid)");
                 if (dragdropScenarioAction[13] == 1)
+                {
                     return;
+                }
             }
 
             if ((MidsContext.Character.CurrentBuild.Powers[destPower].Slots[destSlot].Level <
@@ -5726,7 +5798,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 CheckInitDdsaValue(14, 0, "Slot being level-swapped is too low for the source power",
                     "Allow swap anyway (mark as invalid)");
                 if (dragdropScenarioAction[14] == 1)
+                {
                     return;
+                }
             }
 
             var level = MidsContext.Character.CurrentBuild.Powers[sourcePower].Slots[sourceSlot].Level;
@@ -5737,31 +5811,30 @@ The default position/state will be used upon next launch.", @"Window State Warni
             DoRedraw();
         }
 
-        internal void smlRespecLong(int iLevel, bool mode2)
+        internal void smlRespecShort(int iLevel)
         {
-            SetMiniList(MidsContext.Character.CurrentBuild.GetRespecHelper2(true, iLevel), "Respec Helper",
-                mode2 ? 5096 : 4072);
+            SetMiniList(MidsContext.Character.CurrentBuild.GetRespecHelper2(false, iLevel), "Respec Helper (Brief)");
             fMini.Width = 350;
-            fMini.SizeMe();
         }
 
-        internal void smlRespecShort(int iLevel, bool mode2)
+        internal void smlRespecLong(int iLevel)
         {
-            var helper = MidsContext.Character.CurrentBuild.GetRespecHelper2(false, iLevel);
-            if (mode2)
-                SetMiniList(helper, "Respec Helper", 4072);
-            else
-                SetMiniList(helper, "Respec Helper");
-            fMini.Width = mode2 ? 300 : 250;
-            fMini.SizeMe();
+            SetMiniList(MidsContext.Character.CurrentBuild.GetRespecHelper2(true, iLevel), "Respec Helper (Detailed)");
+            fMini.Width = 350;
         }
 
         private void StartFlip(int iPowerIndex)
         {
             if (FlipActive)
+            {
                 EndFlip();
+            }
+
             if (iPowerIndex <= -1 || MidsContext.Character.CurrentBuild.Powers[iPowerIndex].Slots.Length == 0)
+            {
                 return;
+            }
+
             FileModified = true;
             MainModule.MidsController.Toon.FlipSlots(iPowerIndex);
             RefreshInfo();
@@ -6344,22 +6417,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsHelperLong_Click(object sender, EventArgs e)
         {
-            new FrmInputLevel(this, true, false).ShowDialog(this);
-        }
-
-        private void tsHelperLong2_Click(object sender, EventArgs e)
-        {
-            new FrmInputLevel(this, true, true).ShowDialog(this);
+            new FrmInputLevel(this, true).ShowDialog(this);
         }
 
         private void tsHelperShort_Click(object sender, EventArgs e)
         {
-            new FrmInputLevel(this, false, false).ShowDialog(this);
-        }
-
-        private void tsHelperShort2_Click(object sender, EventArgs e)
-        {
-            new FrmInputLevel(this, false, true).ShowDialog(this);
+            new FrmInputLevel(this, false).ShowDialog(this);
         }
 
         private void tsImport_Click(object sender, EventArgs e)
@@ -6523,22 +6586,36 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsViewSelected()
         {
-            switch (MidsContext.Config.Columns)
+            switch (MidsContext.Config.ColumnStackingMode)
             {
-                case 2:
-                    tsView2Col.Checked = true;
+                case Enums.eColumnStacking.Horizontal:
+                    tsView3ColH.Checked = true;
                     break;
-                case 3:
-                    tsView3Col.Checked = true;
+
+                case Enums.eColumnStacking.Vertical:
+                    tsView3ColV.Checked = true;
                     break;
-                case 4:
-                    tsView4Col.Checked = true;
-                    break;
-                case 5:
-                    tsView5Col.Checked = true;
-                    break;
-                case 6:
-                    tsView6Col.Checked = true;
+
+                default:
+                    switch (MidsContext.Config.Columns)
+                    {
+                        case 2:
+                            tsView2Col.Checked = true;
+                            break;
+                        case 3:
+                            tsView3Col.Checked = true;
+                            break;
+                        case 4:
+                            tsView4Col.Checked = true;
+                            break;
+                        case 5:
+                            tsView5Col.Checked = true;
+                            break;
+                        case 6:
+                            tsView6Col.Checked = true;
+                            break;
+                    }
+
                     break;
             }
         }
@@ -6578,7 +6655,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             tsView5Col.Checked = false;
             tsView6Col.Checked = false;
             tsView2Col.Checked = true;
-            setColumns(2);
+            tsView3ColV.Checked = false;
+            tsView3ColH.Checked = false;
+            SetColumns(2);
         }
 
         private void tsView3Col_Click(object sender, EventArgs e)
@@ -6588,7 +6667,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             tsView5Col.Checked = false;
             tsView6Col.Checked = false;
             tsView3Col.Checked = true;
-            setColumns(3);
+            tsView3ColV.Checked = false;
+            tsView3ColH.Checked = false;
+            SetColumns(3);
         }
 
         private void tsView4Col_Click(object sender, EventArgs e)
@@ -6598,7 +6679,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             tsView5Col.Checked = false;
             tsView6Col.Checked = false;
             tsView4Col.Checked = true;
-            setColumns(4);
+            tsView3ColV.Checked = false;
+            tsView3ColH.Checked = false;
+            SetColumns(4);
         }
 
         private void tsView5Col_Click(object sender, EventArgs e)
@@ -6608,7 +6691,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             tsView4Col.Checked = false;
             tsView6Col.Checked = false;
             tsView5Col.Checked = true;
-            setColumns(5);
+            tsView3ColV.Checked = false;
+            tsView3ColH.Checked = false;
+            SetColumns(5);
         }
 
         private void tsView6Col_Click(object sender, EventArgs e)
@@ -6618,7 +6703,33 @@ The default position/state will be used upon next launch.", @"Window State Warni
             tsView4Col.Checked = false;
             tsView5Col.Checked = false;
             tsView6Col.Checked = true;
-            setColumns(6);
+            tsView3ColV.Checked = false;
+            tsView3ColH.Checked = false;
+            SetColumns(6);
+        }
+
+        private void tsView3ColV_Click(object sender, EventArgs e)
+        {
+            tsView2Col.Checked = false;
+            tsView3Col.Checked = false;
+            tsView4Col.Checked = false;
+            tsView5Col.Checked = false;
+            tsView6Col.Checked = false;
+            tsView3ColV.Checked = true;
+            tsView3ColH.Checked = false;
+            SetColumns(3, Enums.eColumnStacking.Vertical);
+        }
+
+        private void tsView3ColH_Click(object sender, EventArgs e)
+        {
+            tsView2Col.Checked = false;
+            tsView3Col.Checked = false;
+            tsView4Col.Checked = false;
+            tsView5Col.Checked = false;
+            tsView6Col.Checked = false;
+            tsView3ColV.Checked = false;
+            tsView3ColH.Checked = true;
+            SetColumns(3, Enums.eColumnStacking.Horizontal);
         }
 
         private void tsViewActualDamage_New_Click(object sender, EventArgs e)

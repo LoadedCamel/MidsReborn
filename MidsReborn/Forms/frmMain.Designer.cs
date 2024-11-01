@@ -143,6 +143,8 @@ namespace Mids_Reborn.Forms
             this.tsView4Col = new System.Windows.Forms.ToolStripMenuItem();
             this.tsView5Col = new System.Windows.Forms.ToolStripMenuItem();
             this.tsView6Col = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsView3ColV = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsView3ColH = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator13 = new System.Windows.Forms.ToolStripSeparator();
             this.tsViewIOLevels = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewSOLevels = new System.Windows.Forms.ToolStripMenuItem();
@@ -179,9 +181,6 @@ namespace Mids_Reborn.Forms
             this.InGameRespecHelperToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             this.tsHelperShort = new System.Windows.Forms.ToolStripMenuItem();
             this.tsHelperLong = new System.Windows.Forms.ToolStripMenuItem();
-            this.ToolStripSeparator20 = new System.Windows.Forms.ToolStripSeparator();
-            this.tsHelperShort2 = new System.Windows.Forms.ToolStripMenuItem();
-            this.tsHelperLong2 = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripMenuItem4 = new System.Windows.Forms.ToolStripSeparator();
             this.ToolStripSeparator28 = new System.Windows.Forms.ToolStripSeparator();
             this.ToggleCheckModeToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -1159,6 +1158,8 @@ namespace Mids_Reborn.Forms
                 this.tsView4Col,
                 this.tsView5Col,
                 this.tsView6Col,
+                this.tsView3ColV,
+                this.tsView3ColH,
                 this.ToolStripSeparator13,
                 this.tsViewIOLevels,
                 this.tsViewRelative,
@@ -1208,6 +1209,20 @@ namespace Mids_Reborn.Forms
             this.tsView6Col.Size = new System.Drawing.Size(282, 22);
             this.tsView6Col.Text = "&6 Columns";
             this.tsView6Col.Click += new System.EventHandler(this.tsView6Col_Click);
+            // 
+            // tsView3ColV
+            // 
+            this.tsView3ColV.Name = "tsView3ColV";
+            this.tsView3ColV.Size = new System.Drawing.Size(282, 22);
+            this.tsView3ColV.Text = "3 Columns (per powerset, vertical stacking)";
+            this.tsView3ColV.Click += new System.EventHandler(this.tsView3ColV_Click);
+            // 
+            // tsView3ColH
+            // 
+            this.tsView3ColH.Name = "tsView3ColH";
+            this.tsView3ColH.Size = new System.Drawing.Size(282, 22);
+            this.tsView3ColH.Text = "Multi-columns (per powerset, horizontal stacking)";
+            this.tsView3ColH.Click += new System.EventHandler(this.tsView3ColH_Click);
             // 
             // ToolStripSeparator13
             // 
@@ -1550,10 +1565,7 @@ namespace Mids_Reborn.Forms
             this.InGameRespecHelperToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
             {
                 this.tsHelperShort,
-                this.tsHelperLong,
-                this.ToolStripSeparator20,
-                this.tsHelperShort2,
-                this.tsHelperLong2
+                this.tsHelperLong
             });
             this.InGameRespecHelperToolStripMenuItem.Name = "InGameRespecHelperToolStripMenuItem";
             this.InGameRespecHelperToolStripMenuItem.Size = new System.Drawing.Size(232, 22);
@@ -1572,25 +1584,6 @@ namespace Mids_Reborn.Forms
             this.tsHelperLong.Size = new System.Drawing.Size(143, 22);
             this.tsHelperLong.Text = "Profile &Long";
             this.tsHelperLong.Click += new System.EventHandler(this.tsHelperLong_Click);
-            // 
-            // ToolStripSeparator20
-            // 
-            this.ToolStripSeparator20.Name = "ToolStripSeparator20";
-            this.ToolStripSeparator20.Size = new System.Drawing.Size(140, 6);
-            // 
-            // tsHelperShort2
-            // 
-            this.tsHelperShort2.Name = "tsHelperShort2";
-            this.tsHelperShort2.Size = new System.Drawing.Size(143, 22);
-            this.tsHelperShort2.Text = "History S&hort";
-            this.tsHelperShort2.Click += new System.EventHandler(this.tsHelperShort2_Click);
-            // 
-            // tsHelperLong2
-            // 
-            this.tsHelperLong2.Name = "tsHelperLong2";
-            this.tsHelperLong2.Size = new System.Drawing.Size(143, 22);
-            this.tsHelperLong2.Text = "History L&ong";
-            this.tsHelperLong2.Click += new System.EventHandler(this.tsHelperLong2_Click);
             // 
             // ToolStripMenuItem4
             // 
@@ -2447,9 +2440,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsFlipAllEnh;
         ToolStripMenuItem tsHelp;
         ToolStripMenuItem tsHelperLong;
-        ToolStripMenuItem tsHelperLong2;
         ToolStripMenuItem tsHelperShort;
-        ToolStripMenuItem tsHelperShort2;
         ToolStripMenuItem tsImport;
         ToolStripMenuItem tsIODefault;
         ToolStripMenuItem tsIOMax;
@@ -2465,6 +2456,8 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsView4Col;
         ToolStripMenuItem tsView5Col;
         ToolStripMenuItem tsView6Col;
+        ToolStripMenuItem tsView3ColV;
+        ToolStripMenuItem tsView3ColH;
         ToolStripMenuItem tsViewActualDamage_New;
         ToolStripMenuItem tsViewData;
         ToolStripMenuItem tsViewDPS_New;
@@ -2544,7 +2537,6 @@ namespace Mids_Reborn.Forms
         ToolStripSeparator ToolStripSeparator18;
         ToolStripSeparator ToolStripSeparator19;
         ToolStripSeparator ToolStripSeparator2;
-        ToolStripSeparator ToolStripSeparator20;
         ToolStripSeparator ToolStripSeparator21;
         ToolStripSeparator ToolStripSeparator22;
         ToolStripSeparator ToolStripSeparator23;

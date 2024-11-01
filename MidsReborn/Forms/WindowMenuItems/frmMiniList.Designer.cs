@@ -31,50 +31,46 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = (System.ComponentModel.IContainer)new System.ComponentModel.Container();
-
-            this.PInfo = new ctlPopUp();
-            this.VScrollBar1 = new System.Windows.Forms.VScrollBar();
-            this.SuspendLayout();
-            this.PInfo.BXHeight = 2048;
-            this.PInfo.ColumnPosition = 0.5f;
-            this.PInfo.ColumnRight = true;
-            this.PInfo.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
-            this.PInfo.InternalPadding = 3;
-
-            this.PInfo.Location = new System.Drawing.Point(0, 0);
-            this.PInfo.Name = "PInfo";
-            this.PInfo.ScrollY = 0.0f;
-            this.PInfo.SectionPadding = 8;
-
-            this.PInfo.Size = new System.Drawing.Size(230, 227);
-            this.PInfo.TabIndex = 0;
-
-            this.VScrollBar1.Location = new System.Drawing.Point(233, 0);
-            this.VScrollBar1.Name = "VScrollBar1";
-
-            this.VScrollBar1.Size = new System.Drawing.Size(17, 284);
-            this.VScrollBar1.TabIndex = 1;
-
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.Black;
-
-            this.ClientSize = new System.Drawing.Size(249, 284);
-            this.Controls.Add((System.Windows.Forms.Control)this.VScrollBar1);
-            this.Controls.Add((System.Windows.Forms.Control)this.PInfo);
-            this.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-
-            this.MaximumSize = new System.Drawing.Size(600, 600);
-
-            this.MinimumSize = new System.Drawing.Size(100, 150);
-            this.Text = "Mini List";
-            this.TopMost = true;
-
-
-            this.ResumeLayout(false);
+            richTextBox1 = new System.Windows.Forms.RichTextBox();
+            SuspendLayout();
+            // 
+            // richTextBox1
+            // 
+            richTextBox1.BackColor = System.Drawing.Color.Black;
+            richTextBox1.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            richTextBox1.DetectUrls = false;
+            richTextBox1.Dock = System.Windows.Forms.DockStyle.Fill;
+            richTextBox1.Font = new System.Drawing.Font("Microsoft Sans Serif", 14F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            richTextBox1.ForeColor = System.Drawing.Color.WhiteSmoke;
+            richTextBox1.Location = new System.Drawing.Point(0, 0);
+            richTextBox1.Name = "richTextBox1";
+            richTextBox1.ReadOnly = true;
+            richTextBox1.ScrollBars = System.Windows.Forms.RichTextBoxScrollBars.Vertical;
+            richTextBox1.ShortcutsEnabled = false;
+            richTextBox1.Size = new System.Drawing.Size(249, 284);
+            richTextBox1.TabIndex = 0;
+            richTextBox1.TabStop = false;
+            richTextBox1.Text = "";
+            // 
+            // frmMiniList
+            // 
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            BackColor = System.Drawing.Color.Black;
+            ClientSize = new System.Drawing.Size(249, 284);
+            Controls.Add(richTextBox1);
+            Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            MaximumSize = new System.Drawing.Size(600, 600);
+            MinimumSize = new System.Drawing.Size(100, 150);
+            Name = "frmMiniList";
+            Text = "Mini List";
+            TopMost = true;
+            Load += frmMiniList_Load;
+            FormClosed += frmMiniList_FormClosed;
+            ResumeLayout(false);
         }
         #endregion
 
+        private System.Windows.Forms.RichTextBox richTextBox1;
     }
 }

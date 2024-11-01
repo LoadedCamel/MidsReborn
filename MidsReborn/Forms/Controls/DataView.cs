@@ -17,7 +17,6 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
-using static Mids_Reborn.Core.PetInfo;
 using FontStyle = System.Drawing.FontStyle;
 using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
@@ -860,7 +859,7 @@ namespace Mids_Reborn.Forms.Controls
                              or Enums.eEffectType.DesignerStatus or Enums.eEffectType.StealthRadiusPlayer
                              or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x
                              or Enums.eEffectType.MovementControl or Enums.eEffectType.MovementFriction
-                             or Enums.eEffectType.Rage) ||
+                             or Enums.eEffectType.Rage or Enums.eEffectType.ModifyAttrib) ||
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid))
                 : GroupedFx.FilterListItemsExt(EffectsItemPairs,
@@ -868,9 +867,11 @@ namespace Mids_Reborn.Forms.Controls
                              or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez
                              or Enums.eEffectType.DesignerStatus or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x
                              or Enums.eEffectType.MovementControl or Enums.eEffectType.MovementFriction
-                             or Enums.eEffectType.Rage) ||
+                             or Enums.eEffectType.Rage or Enums.eEffectType.ModifyAttrib) ||
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid));
+
+            rankedEffectsExt = rankedEffectsExt.OrderByDescending(e => e.Value.UseAlternateColor ? 2 : e.Value.UseSpecialColor | e.Value.UseUniqueColor ? 1 : 0).ToList();
 
             foreach (var rex in rankedEffectsExt)
             {
@@ -1079,7 +1080,7 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     Label = "Elusivity",
                     Filter = e =>
-                        (MidsContext.Config.Inc.DisablePvE) &
+                        MidsContext.Config.Inc.DisablePvE &
                         e.EffectType == Enums.eEffectType.Elusivity,
                     ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 }
