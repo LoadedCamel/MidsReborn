@@ -1267,29 +1267,28 @@ namespace Mids_Reborn.Controls
                 ? MidsContext.Character.CurrentBuild.Powers[powerIndex].IDXPower
                 : -1;
 
+            var isInherent = powerIndex > 23;
+
             if (nidPowerset > -1)
             {
-                int vIdx;
-                if (DatabaseAPI.Database.Powersets[nidPowerset].SetType == ePowerSetType.Inherent)
+                if (DatabaseAPI.Database.Powersets[nidPowerset].SetType == ePowerSetType.Inherent & isInherent)
                 {
-                    vIdx = DatabaseAPI.Database.Powersets[nidPowerset].Powers[idxPower].LocationIndex;
+                    return DatabaseAPI.Database.Powersets[nidPowerset].Powers[idxPower].LocationIndex;
                 }
-                else
+                
+                var vIdx = -1;
+                for (var i = 0; i <= powerIndex; i++)
                 {
-                    vIdx = -1;
-                    for (var i = 0; i <= powerIndex; i++)
+                    if (MidsContext.Character.CurrentBuild.Powers[i]?.NIDPowerset > -1)
                     {
-                        if (MidsContext.Character.CurrentBuild.Powers[i]?.NIDPowerset > -1)
-                        {
-                            if (DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset].SetType != ePowerSetType.Inherent)
-                            {
-                                vIdx++;
-                            }
-                        }
-                        else
+                        if (DatabaseAPI.Database.Powersets[MidsContext.Character.CurrentBuild.Powers[i].NIDPowerset].SetType != ePowerSetType.Inherent | !isInherent)
                         {
                             vIdx++;
                         }
+                    }
+                    else
+                    {
+                        vIdx++;
                     }
                 }
 
@@ -1354,29 +1353,26 @@ namespace Mids_Reborn.Controls
             g.DrawString(iStr, bFont, new SolidBrush(textColor), layoutRectangle, stringFormat);
         }
 
-        public int WhichSlot(int iX, int iY)
+        public int WhichSlot(int x, int y)
         {
-            checked
+            for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
             {
-                for (var i = 0; i <= MidsContext.Character.CurrentBuild.Powers.Count - 1; i++)
-                {
-                    var point = MidsContext.Character.CurrentBuild.Powers[i] != null &&
+                var point = MidsContext.Character.CurrentBuild.Powers[i] != null &&
                             (MidsContext.Character.CurrentBuild.Powers[i].Power == null ||
                              MidsContext.Character.CurrentBuild.Powers[i].Chosen)
-                        ? PowerPosition(GetVisualIdx(i))
-                        : PowerPosition(i);
-                    
-                    if (iX >= point.X && iY >= point.Y && iX < SzPower.Width + point.X && iY < point.Y + SzPower.Height + PaddingY / 2)
-                    {
-                        return i;
-                    }
-                }
+                    ? PowerPosition(GetVisualIdx(i))
+                    : PowerPosition(i);
 
-                return -1;
+                if (x >= point.X && y >= point.Y && x < SzPower.Width + point.X && y < point.Y + SzPower.Height + PaddingY / 2)
+                {
+                    return i;
+                }
             }
+
+            return -1;
         }
 
-        public int WhichEnh(int iX, int iY)
+        public int WhichEnh(int x, int y)
         {
             var oPower = -1;
             try
@@ -1390,8 +1386,8 @@ namespace Mids_Reborn.Controls
                         ? PowerPosition(GetVisualIdx(i))
                         : PowerPosition(i);
 
-                    if (iX < point.X || iY < point.Y || iX >= SzPower.Width + point.X ||
-                        iY >= point.Y + SzPower.Height + PaddingY / 2)
+                    if (x < point.X || y < point.Y || x >= SzPower.Width + point.X ||
+                        y >= point.Y + SzPower.Height + PaddingY / 2)
                     {
                         continue;
                     }
@@ -1405,7 +1401,7 @@ namespace Mids_Reborn.Controls
                     return -1;
                 }
 
-                var isValid = iY >= point.Y + OffsetY &&
+                var isValid = y >= point.Y + OffsetY &&
                               MidsContext.Character.CurrentBuild.Powers[oPower] != null &&
                               MidsContext.Character.CurrentBuild.Powers[oPower]?.NIDPowerset > -1 &&
                               DatabaseAPI.Database
@@ -1419,13 +1415,13 @@ namespace Mids_Reborn.Controls
 
                 var column = SzPower.Width + PaddingX == 0
                     ? 0
-                    : (int) Math.Floor(iX / (decimal) (SzPower.Width + PaddingX));
-                iX -= column * (SzPower.Width + PaddingX); // Remove column x offset
+                    : (int) Math.Floor(x / (decimal) (SzPower.Width + PaddingX));
+                x -= column * (SzPower.Width + PaddingX); // Remove column x offset
 
                 for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers[oPower].Slots.Length; i++)
                 {
                     var iZ = (i + 1) * IcoOffset;
-                    if (iX <= iZ)
+                    if (x <= iZ)
                     {
                         return i;
                     }
