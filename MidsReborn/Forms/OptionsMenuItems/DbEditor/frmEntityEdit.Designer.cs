@@ -398,7 +398,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             this.btnCancel.Text = "Cancel";
             this.btnCancel.UseVisualStyleBackColor = true;
             this.AcceptButton = (System.Windows.Forms.IButtonControl)this.btnOK;
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.CancelButton = (System.Windows.Forms.IButtonControl)this.btnCancel;
 
             this.ClientSize = new System.Drawing.Size(918, 547);

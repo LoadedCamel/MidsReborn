@@ -1336,7 +1336,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // frmTotals
             // 
-            AutoScaleMode = AutoScaleMode.None;
+            AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = System.Drawing.Color.Black;
             ClientSize = new System.Drawing.Size(995, 505);
             Controls.Add(tab2);

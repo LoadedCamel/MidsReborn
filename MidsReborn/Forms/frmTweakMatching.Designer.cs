@@ -188,7 +188,7 @@ namespace Mids_Reborn.Forms
             this.btnAdd.Text = "Add";
             this.btnAdd.UseVisualStyleBackColor = false;
             this.btnAdd.Click += new System.EventHandler(btnAdd_Click);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
 
             this.ClientSize = new System.Drawing.Size(602, 446);

@@ -164,8 +164,8 @@
             // 
             // ThemeCreator
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             BackColor = System.Drawing.Color.FromArgb(44, 47, 51);
             ClientSize = new System.Drawing.Size(218, 241);
             Controls.Add(button1);

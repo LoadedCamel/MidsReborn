@@ -346,8 +346,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // SharedBuilds
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             BackColor = System.Drawing.Color.Black;
             ClientSize = new System.Drawing.Size(692, 643);
             Controls.Add(statusStrip1);

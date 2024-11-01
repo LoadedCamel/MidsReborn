@@ -32,7 +32,7 @@
             // 
             // ImageButtonEx
             // 
-            // this.AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            // this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             // this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.Name = "ImageButtonEx";
             this.Size = new System.Drawing.Size(100, 30);

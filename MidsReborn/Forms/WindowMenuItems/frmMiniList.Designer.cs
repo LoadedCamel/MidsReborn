@@ -56,7 +56,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.VScrollBar1.Size = new System.Drawing.Size(17, 284);
             this.VScrollBar1.TabIndex = 1;
 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.Black;
 
             this.ClientSize = new System.Drawing.Size(249, 284);

@@ -960,7 +960,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // frmRecipeEdit
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.ClientSize = new System.Drawing.Size(1127, 568);
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.btnMassUpdateTags);

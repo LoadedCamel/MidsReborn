@@ -164,7 +164,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.llLeft.MouseEnter += new System.EventHandler(llLeft_MouseEnter);
             this.llLeft.ItemHover += new ListLabelV3.ItemHoverEventHandler(llLeft_ItemHover);
             this.llLeft.ItemClick += new ListLabelV3.ItemClickEventHandler(llLeft_ItemClick);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
 
             this.ClientSize = new System.Drawing.Size(438, 403);

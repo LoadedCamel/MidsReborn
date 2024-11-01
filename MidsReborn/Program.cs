@@ -19,7 +19,7 @@ namespace Mids_Reborn
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
+            Application.SetHighDpiMode(HighDpiMode.PerMonitorV2);
             Fonts.BuildFontCollection();
             Application.Run(new MrbAppContext(args));
         }

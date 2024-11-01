@@ -653,8 +653,8 @@ namespace Mids_Reborn.Forms.Controls
             // 
             // GenericSelector
             // 
-            AutoScaleDimensions = new SizeF(7F, 15F);
-            AutoScaleMode = AutoScaleMode.Font;
+            AutoScaleDimensions = new SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             BackColor = Color.FromArgb(44, 47, 51);
             ClientSize = new Size(228, 300);
             Controls.Add(formPages1);
