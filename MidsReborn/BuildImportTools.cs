@@ -477,6 +477,8 @@ namespace Mids_Reborn
                 "corruptor_buff.marine_affinity.call_depths" => "Corruptor_Buff.Marine_Affinity.Power_of_the_Depths",
                 "defender_buff.marine_affinity.call_depths" => "Defender_Buff.Marine_Affinity.Power_of_the_Depths",
                 "mastermind_buff.marine_affinity.call_depths" => "Mastermind_Buff.Marine_Affinity.Power_of_the_Depths",
+                "controller_control.arsenal_control.gun_drone" => "Controller_Control.Arsenal_Control.Tri_Cannon",
+                "dominator_control.arsenal_control.gun_drone" => "Dominator_Control.Arsenal_Control.Tri_Cannon",
 
                 _ => fullName
             };
