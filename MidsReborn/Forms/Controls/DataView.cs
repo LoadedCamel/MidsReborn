@@ -896,7 +896,7 @@ namespace Mids_Reborn.Forms.Controls
                 str1 += " (% only)";
             }
 
-            var baseDamage = Math.Abs(pBase.FXGetDamageValue(pBase.PowerIndex > -1 & pEnh?.PowerIndex > -1, true));
+            var baseDamage = Math.Abs(pBase.FXGetDamageValue(pBase.PowerIndex > -1 & pEnh?.PowerIndex > -1));
             var enhancedDamage = pEnh == null || pEnh.PowerIndex == -1
                 ? baseDamage
                 : Math.Abs(enhancedPower.FXGetDamageValue());
