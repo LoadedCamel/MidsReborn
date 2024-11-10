@@ -2705,6 +2705,43 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return isSetBonusEffect && isPetEnh;
         }
 
+        public Damage GetDamage()
+        {
+            if (EffectType != Enums.eEffectType.Damage ||
+                MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum && !(Math.Abs(Probability) > 0.999000012874603) ||
+                EffectClass == Enums.eEffectClass.Ignored ||
+                this is { DamageType: Enums.eDamage.Special, ToWho: Enums.eToWho.Self } ||
+                Probability <= 0 ||
+                !CanInclude() ||
+                !PvXInclude())
+            {
+                return new Damage {Type = Enums.eDamage.None, Value = 0};
+            }
+
+            var effectDmg = BuffedMag;
+
+            if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
+            {
+                effectDmg *= Probability;
+            }
+
+            if (power.PowerType == Enums.ePowerType.Toggle && isEnhancementEffect)
+            {
+                effectDmg = (float)(effectDmg * power.ActivatePeriod / 10d);
+            }
+
+            if (Ticks > 1)
+            {
+                effectDmg *= CancelOnMiss &&
+                             MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average &&
+                             Probability < 1
+                    ? (float)((1 - Math.Pow(Probability, Ticks)) / (1 - Probability))
+                    : Ticks;
+            }
+
+            return new Damage { Type = DamageType, Value = effectDmg };
+        }
+
         public object Clone()
         {
             return new Effect(this);
@@ -2713,13 +2750,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private static string BuildCs(string iValue, string iStr, bool noComma = false)
         {
             if (string.IsNullOrEmpty(iValue))
+            {
                 return iStr;
-            var str = ", ";
-            if (noComma)
-                str = " ";
+            }
+
             if (!string.IsNullOrEmpty(iStr))
-                iStr += str;
+            {
+                iStr += noComma ? " " : ", ";
+            }
+
             iStr += iValue;
+            
             return iStr;
         }
 
@@ -2729,18 +2770,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             get
             {
-                if (nSummon <= -1)
+                _summonedEntName = nSummon switch
                 {
-                    _summonedEntName = Summon;
-                }
-                else if (nSummon > -1 && nSummon <= DatabaseAPI.Database.Entities.Length)
-                {
-                    _summonedEntName = DatabaseAPI.Database.Entities[nSummon].DisplayName;
-                }
-                else
-                {
-                    _summonedEntName = "";
-                }
+                    <= -1 => Summon,
+                    > -1 when nSummon <= DatabaseAPI.Database.Entities.Length => DatabaseAPI.Database.Entities[nSummon]
+                        .DisplayName,
+                    _ => ""
+                };
 
                 return _summonedEntName;
             }
@@ -2783,6 +2819,43 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 DelayedTime = DelayedTime,
                 PPM = ProcsPerMinute
             };
+        }
+    }
+
+    public struct Damage
+    {
+        public Enums.eDamage Type;
+        public float Value;
+    }
+
+    public struct DamageExt
+    {
+        public Enums.eDamage Type;
+        public float Value;
+        public int Ticks;
+        public bool HasPercentage;
+
+        public override string ToString()
+        {
+            var dmg = Value * (HasPercentage ? 100 : 1);
+            dmg = Ticks <= 0 ? dmg : dmg / Ticks;
+            var dmgStr = $"{Utilities.FixDP(dmg)}{(HasPercentage ? "%" : "")}";
+
+            return Ticks <= 0
+                ? dmgStr
+                : $"{Ticks}x{dmgStr}";
+        }
+
+        public string Stringify(bool longFormat = true)
+        {
+            var dmg = Value * (HasPercentage ? 100 : 1);
+            dmg = Ticks <= 0 ? dmg : dmg / Ticks;
+            var dmgStr = Utilities.FixDP(dmg);
+            dmgStr = Ticks <= 0
+                ? dmgStr
+                : $"{Ticks}x{dmgStr}";
+
+            return longFormat ? $"{Type} ({dmgStr})" : dmgStr;
         }
     }
 

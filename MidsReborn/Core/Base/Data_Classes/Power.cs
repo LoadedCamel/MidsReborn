@@ -781,6 +781,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 power.AbsorbPetEffects();
             }
 
+            if (!power.AppliedExecutes)
+            {
+                power.ProcessExecutes();
+            }
+
             foreach (var effect in power.Effects)
             {
                 if (effect.EffectType != Enums.eEffectType.Damage ||
@@ -792,7 +797,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 var effectDmg = effect.BuffedMag;
-
+                
                 if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
                 {
                     effectDmg *= effect.Probability;
@@ -851,9 +856,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public string GetDamageTip()
         {
             var tip = string.Empty;
-            var num1 = -1;
-            var num2 = -1;
-            var num3 = 0;
+            var hasSpecialEnhFx = -1;
+            var includedFxForToggle = -1;
+            var hasPvePvpEffect = 0;
+            var damageTotals = new Dictionary<Enums.eDamage, float>();
 
             if (Effects.Length <= 0)
             {
@@ -875,25 +881,41 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     }
 
                     var str = effect.BuildEffectString(false, "", false, false, false, false, false, true);
+                    if (effect.EffectType == Enums.eEffectType.Damage)
+                    {
+                        var fxDmg = effect.GetDamage();
+                        if (fxDmg.Type != Enums.eDamage.None & fxDmg.Value > float.Epsilon)
+                        {
+                            if (damageTotals.ContainsKey(fxDmg.Type))
+                            {
+                                damageTotals[fxDmg.Type] += fxDmg.Value;
+                            }
+                            else
+                            {
+                                damageTotals.Add(fxDmg.Type, fxDmg.Value);
+                            }
+                        }
+                    }
+                    
                     if (effect.isEnhancementEffect & PowerType == Enums.ePowerType.Toggle)
                     {
-                        num1++;
+                        hasSpecialEnhFx++;
                         str += " (Special, only every 10s)";
                     }
                     else if (PowerType == Enums.ePowerType.Toggle)
                     {
-                        num2++;
+                        includedFxForToggle++;
                     }
 
                     tip += str;
                 }
                 else
                 {
-                    num3++;
+                    hasPvePvpEffect++;
                 }
             }
 
-            if (num3 > 0)
+            if (hasPvePvpEffect > 0)
             {
                 if (tip != string.Empty)
                 {
@@ -903,9 +925,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 tip += "\r\nThis power deals different damage in PvP and PvE modes.";
             }
 
-            if (!(PowerType == Enums.ePowerType.Toggle & num1 == -1 & num2 == -1) && PowerType == Enums.ePowerType.Toggle & num2 > -1 && !string.IsNullOrEmpty(tip))
+            if (!(PowerType == Enums.ePowerType.Toggle & hasSpecialEnhFx == -1 & includedFxForToggle == -1) && PowerType == Enums.ePowerType.Toggle & includedFxForToggle > -1 && !string.IsNullOrEmpty(tip))
             {
                 tip = $"Applied every {ActivatePeriod} s:\r\n{tip}";
+            }
+
+            if (damageTotals.Count > 0)
+            {
+                tip += $"\r\n\r\nTotal: {damageTotals.Sum(e => e.Value):####0.##} ({string.Join(", ", damageTotals.Select(e => $"{e.Key}: {e.Value:####0.##}"))})";
             }
 
             return tip;
@@ -2236,7 +2263,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             if (effectId == -1)
             {
-                for (var index = 0; index <= source.Effects.Length - 1; ++index)
+                for (var index = 0; index < source.Effects.Length; index++)
                 {
                     if (!isGrantPower & source.EntitiesAffected == Enums.eEntity.Caster & source.Effects[index].EffectType != Enums.eEffectType.EntCreate)
                     {
@@ -2249,7 +2276,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         array[^1] = index;
                     }
 
-                    ++num1;
+                    num1++;
                     var effects = Effects;
                     Array.Resize(ref effects, num1 + length + 1);
                     Effects = effects;
@@ -3016,7 +3043,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             AppliedExecutes = true;
         }
 
-        public List<IEffect>? ProcessExecutesInner(IPower power = null, int rLevel = 0)
+        public List<IEffect>? ProcessExecutesInner(IPower? power = null, int rLevel = 0)
         {
             // Max recursion level
             if (rLevel > 5)

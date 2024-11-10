@@ -202,5 +202,7 @@ namespace Mids_Reborn.Core
         EffectIdentifier GenerateIdentifier();
 
         bool AffectsPetsOnly();
+        
+        Damage GetDamage();
     }
 }

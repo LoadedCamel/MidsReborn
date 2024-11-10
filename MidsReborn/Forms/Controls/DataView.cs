@@ -896,8 +896,8 @@ namespace Mids_Reborn.Forms.Controls
                 str1 += " (% only)";
             }
 
-            var baseDamage = Math.Abs(pBase.FXGetDamageValue(pBase.PowerIndex > -1 & pEnh.PowerIndex > -1));
-            var enhancedDamage = pEnh.PowerIndex == -1
+            var baseDamage = Math.Abs(pBase.FXGetDamageValue(pBase.PowerIndex > -1 & pEnh?.PowerIndex > -1, true));
+            var enhancedDamage = pEnh == null || pEnh.PowerIndex == -1
                 ? baseDamage
                 : Math.Abs(enhancedPower.FXGetDamageValue());
 
@@ -919,17 +919,17 @@ namespace Mids_Reborn.Forms.Controls
 
                 // Mids has no awareness of target data.
                 // When using damage %, estimate damage value based on character HP.
-                var hasPercentDamage = pEnh.Effects
+                var hasPercentDamage = pEnh?.Effects
                     .Any(e => e.EffectType == Enums.eEffectType.Damage && e.DisplayPercentage | e.Aspect == Enums.eAspect.Str);
-                var dmgMultiplier = hasPercentDamage ? MidsContext.Character.Totals.HPMax : 1;
+                var dmgMultiplier = hasPercentDamage == true ? MidsContext.Character.Totals.HPMax : 1;
 
                 Info_Damage.nBaseVal = Math.Max(0, baseDamage * dmgMultiplier); // Negative damage ? (see Toxins)
                 Info_Damage.nEnhVal = Math.Max(0, enhancedDamage * dmgMultiplier);
                 Info_Damage.nMaxEnhVal = Math.Max(baseDamage * dmgMultiplier * (1 + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f)), enhancedDamage * dmgMultiplier);
                 Info_Damage.nHighEnh = Math.Max(414, enhancedDamage * dmgMultiplier); // Maximum graph value
                 Info_Damage.Text = Math.Abs(enhancedDamage - baseDamage) > float.Epsilon
-                    ? $"{enhancedPower.FXGetDamageString(pEnh.PowerIndex == -1)} ({(hasPercentDamage ? $"{Utilities.FixDP(baseDamage * 100)}%" : Utilities.FixDP(baseDamage))})"
-                    : pBase.FXGetDamageString(pBase.PowerIndex > -1 & pEnh.PowerIndex > -1);
+                    ? $"{enhancedPower.FXGetDamageString(pEnh?.PowerIndex == -1)} ({(hasPercentDamage == true ? $"{Utilities.FixDP(baseDamage * 100)}%" : Utilities.FixDP(baseDamage))})"
+                    : pBase.FXGetDamageString(pBase.PowerIndex > -1 & pEnh?.PowerIndex > -1);
             }
 
             SetPowerScaler();
