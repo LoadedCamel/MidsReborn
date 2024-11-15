@@ -1,5 +1,6 @@
 using System;
 using System.Drawing;
+using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
@@ -900,49 +901,36 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private int MapDescString(string[] iStrings, ref bool[] placed)
         {
-            var num1 = 0;
             for (var powerIdx = 0; powerIdx < Powers[1].Length; powerIdx++)
             {
-                var flag1 = true;
-                foreach (var s in iStrings)
-                {
-                    if (Powers[1][powerIdx].DescShort.IndexOf(s, StringComparison.OrdinalIgnoreCase) < 0)
-                    {
-                        flag1 = false;
-                    }
-                }
+                var flag1 = iStrings.All(s => Powers[1][powerIdx]?.DescShort.IndexOf(s, StringComparison.OrdinalIgnoreCase) >= 0);
 
                 if (!(flag1 & !placed[powerIdx]))
                 {
                     continue;
                 }
 
+                for (var index2 = 0; index2 < Powers[0].Length; index2++)
                 {
-                    for (var index2 = 0; index2 <= Powers[0].Length; index2++)
+                    var flag2 = Map.Map[index2, 1] < 0;
+                    if (iStrings.Any(s => Powers[0][index2]?.DescShort.IndexOf(s, StringComparison.OrdinalIgnoreCase) < 0))
                     {
-                        var flag2 = Map.Map[index2, 1] < 0;
-                        foreach (var s in iStrings)
-                        {
-                            if (Powers[0][index2].DescShort.IndexOf(s, StringComparison.OrdinalIgnoreCase) < 0)
-                            {
-                                flag2 = false;
-                            }
-                        }
-
-                        if (!flag2)
-                        {
-                            continue;
-                        }
-
-                        Map.Map[index2, 1] = powerIdx;
-                        placed[powerIdx] = true;
-
-                        return powerIdx;
+                        flag2 = false;
                     }
+
+                    if (!flag2)
+                    {
+                        continue;
+                    }
+
+                    Map.Map[index2, 1] = powerIdx;
+                    placed[powerIdx] = true;
+
+                    return powerIdx;
                 }
             }
 
-            return num1;
+            return 0;
         }
 
         private void MapOverride()
