@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -841,7 +840,7 @@ namespace Mids_Reborn.Forms.Controls
             if (validMez)
             {
                 info_DataList.AddItem(new PairedListEx.Item("Effect:",
-                    Enum.GetName(Enums.eMez.None.GetType(), pBase.Effects[durationEffectId].MezType), false,
+                    $"{pBase.Effects[durationEffectId].MezType}", false,
                     pBase.Effects[durationEffectId].Probability < 1,
                     pBase.Effects[durationEffectId].CanInclude(),
                     durationEffectId));
@@ -859,7 +858,7 @@ namespace Mids_Reborn.Forms.Controls
                              or Enums.eEffectType.DesignerStatus or Enums.eEffectType.StealthRadiusPlayer
                              or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x
                              or Enums.eEffectType.MovementControl or Enums.eEffectType.MovementFriction
-                             or Enums.eEffectType.Rage or Enums.eEffectType.ModifyAttrib) ||
+                             or Enums.eEffectType.Rage or Enums.eEffectType.ModifyAttrib or Enums.eEffectType.LevelShift) ||
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid))
                 : GroupedFx.FilterListItemsExt(EffectsItemPairs,
@@ -867,7 +866,7 @@ namespace Mids_Reborn.Forms.Controls
                              or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez
                              or Enums.eEffectType.DesignerStatus or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x
                              or Enums.eEffectType.MovementControl or Enums.eEffectType.MovementFriction
-                             or Enums.eEffectType.Rage or Enums.eEffectType.ModifyAttrib) ||
+                             or Enums.eEffectType.Rage or Enums.eEffectType.ModifyAttrib or Enums.eEffectType.LevelShift) ||
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid));
 
@@ -1065,7 +1064,7 @@ namespace Mids_Reborn.Forms.Controls
                 new()
                 {
                     Label = "Granted Powers",
-                    Filter = e => e.EffectType == Enums.eEffectType.GrantPower,
+                    Filter = e => e.EffectType is Enums.eEffectType.GrantPower or Enums.eEffectType.LevelShift,
                     ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 },
 
