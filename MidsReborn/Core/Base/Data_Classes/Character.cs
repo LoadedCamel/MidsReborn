@@ -1472,20 +1472,22 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             var subCostTotal = subRecipesCost.Count <= 0 ? 0 : subRecipesCost.Sum(e => e.Value);
-            if (subRecipesCost.Count > 0 & subCostTotal > 0)
+            if (!(subRecipesCost.Count > 0 & subCostTotal > 0))
             {
-                section1.Add("", PopUp.Colors.Title);
-                section1.Add($"Salvage detailed cost:", PopUp.Colors.Title);
-                foreach (var c in subRecipesCost)
-                {
-                    if (c.Value <= 0) continue;
-                    var cAmt = c.Key == Enums.RewardCurrency.Influence
-                        ? $"{c.Value:###,###,##0}"
-                        : c.Value.ToString(CultureInfo.InvariantCulture);
-                    section1.Add(clsRewardCurrency.GetCurrencyName(c.Key),
-                        clsRewardCurrency.GetCurrencyRarityColor(c.Key), cAmt, PopUp.Colors.Title,
-                        0.9f, FontStyle.Bold, 1);
-                }
+                return section1;
+            }
+
+            section1.Add("", PopUp.Colors.Title);
+            section1.Add("Salvage detailed cost:", PopUp.Colors.Title);
+            foreach (var c in subRecipesCost)
+            {
+                if (c.Value <= 0) continue;
+                var cAmt = c.Key == Enums.RewardCurrency.Influence
+                    ? $"{c.Value:###,###,##0}"
+                    : $"{c.Value}";
+                section1.Add(clsRewardCurrency.GetCurrencyName(c.Key),
+                    clsRewardCurrency.GetCurrencyRarityColor(c.Key), cAmt, PopUp.Colors.Title,
+                    0.9f, FontStyle.Bold, 1);
             }
 
             return section1;
@@ -1495,90 +1497,101 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             if (sIdx < 0)
             {
-                var popupData1 = new PopUp.PopupData();
-                return popupData1;
+                return new PopUp.PopupData();
             }
-            else
+            
+            var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
+            var iColor = PopUp.Colors.Uncommon;
+            for (var index = 0; index < enhancementSet.Enhancements.Length; index++)
             {
-                var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
-                var iColor = PopUp.Colors.Uncommon;
-                for (var index = 0; index <= enhancementSet.Enhancements.Length - 1; ++index)
+                var enhancement = DatabaseAPI.Database.Enhancements[enhancementSet.Enhancements[index]];
+                if (enhancement.RecipeIDX <= -1)
                 {
-                    var enhancement = DatabaseAPI.Database.Enhancements[enhancementSet.Enhancements[index]];
-                    if (enhancement.RecipeIDX <= -1)
-                        continue;
-                    if (DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity == Recipe.RecipeRarity.Rare)
-                    {
-                        iColor = PopUp.Colors.Rare;
-                        break;
-                    }
-
-                    if (DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity == Recipe.RecipeRarity.UltraRare)
-                    {
-                        iColor = PopUp.Colors.UltraRare;
-                        break;
-                    }
-
-                    if (index > 2)
-                        break;
+                    continue;
                 }
 
-                var popupData1 = new PopUp.PopupData();
-                var index1 = popupData1.Add();
-                popupData1.Sections[index1].Add(enhancementSet.DisplayName, iColor, 1.25f);
-                popupData1.Sections[index1].Add($"Set Type: {DatabaseAPI.GetSetTypeByIndex(enhancementSet.SetType).Name}", PopUp.Colors.Invention);
-                //popupData1.Sections[index1].Add("Set Type: " + DatabaseAPI.Database.SetTypeStringLong[(int)enhancementSet.SetType], PopUp.Colors.Invention);
-                string str;
-                if (enhancementSet.LevelMin != enhancementSet.LevelMax)
+                iColor = DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity switch
                 {
-                    str = enhancementSet.LevelMin + 1 + " to " + (enhancementSet.LevelMax + 1);
-                }
-                else
-                {
-                    str = (enhancementSet.LevelMin + 1).ToString(CultureInfo.InvariantCulture);
-                }
+                    Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
+                    Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
+                    _ => iColor
+                };
 
-                popupData1.Sections[index1].Add("Level Range: " + str, PopUp.Colors.Text);
-                popupData1.Add(PopSetEnhList(sIdx, powerEntry));
-                popupData1.Add(PopSetBonusListing(sIdx, powerEntry));
-                return popupData1;
+                if (index > 2)
+                {
+                    break;
+                }
             }
+
+            var popupData1 = new PopUp.PopupData();
+            var index1 = popupData1.Add();
+            popupData1.Sections[index1].Add(enhancementSet.DisplayName, iColor, 1.25f);
+            popupData1.Sections[index1].Add($"Set Type: {DatabaseAPI.GetSetTypeByIndex(enhancementSet.SetType).Name}", PopUp.Colors.Invention);
+            var lvlRange = enhancementSet.LevelMin != enhancementSet.LevelMax ? $"{enhancementSet.LevelMin + 1} to {enhancementSet.LevelMax + 1}" : $"{enhancementSet.LevelMin + 1}";
+
+            popupData1.Sections[index1].Add($"Level Range: {lvlRange}", PopUp.Colors.Text);
+            popupData1.Add(PopSetEnhList(sIdx, powerEntry));
+            popupData1.Add(PopSetBonusListing(sIdx, powerEntry));
+            
+            return popupData1;
         }
 
-        private static PopUp.Section? PopSetEnhList(int sIdx, PowerEntry power)
+        private static PopUp.Section? PopSetEnhList(int sIdx, PowerEntry powerEntry)
         {
-            if (sIdx < 0 || sIdx > DatabaseAPI.Database.EnhancementSets.Count - 1) return new PopUp.Section();
+            if (sIdx < 0 || sIdx >= DatabaseAPI.Database.EnhancementSets.Count)
+            {
+                return new PopUp.Section();
+            }
 
-            var num = 0;
+            var enhUsedInSet = 0;
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
-            var flagArray = new bool[enhancementSet.Enhancements.Length];
-            for (var index = 0; index <= flagArray.Length - 1; ++index)
-                flagArray[index] = false;
-            if (power != null)
-                foreach (var slot in power.Slots)
+            var setEnhUsed = new List<int>();
+            var setEnhObtained = new List<int>();
+
+            if (powerEntry != null)
+            {
+                foreach (var slot in powerEntry.Slots)
                 {
-                    if (slot.Enhancement.Enh < 0 ||
-                        DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet != sIdx)
+                    if (slot.Enhancement.Enh < 0 || DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet != sIdx)
+                    {
                         continue;
-                    ++num;
-                    for (var index = 0; index <= enhancementSet.Enhancements.Length - 1; ++index)
-                        if (slot.Enhancement.Enh == enhancementSet.Enhancements[index])
-                            flagArray[index] = true;
+                    }
+
+                    enhUsedInSet++;
+                    for (var index = 0; index < enhancementSet.Enhancements.Length; index++)
+                    {
+                        if (slot.Enhancement.Enh != enhancementSet.Enhancements[index])
+                        {
+                            continue;
+                        }
+
+                        setEnhUsed.Add(index);
+                        if (slot.Enhancement.Obtained)
+                        {
+                            setEnhObtained.Add(index);
+                        }
+                    }
                 }
+            }
 
             var section1 = new PopUp.Section();
-            if (power != null)
-                section1.Add(
-                    "Set: " + enhancementSet.DisplayName + " (" + num + "/" + enhancementSet.Enhancements.Length + ")",
-                    PopUp.Colors.Title);
-            for (var index = 0; index <= enhancementSet.Enhancements.Length - 1; ++index)
+            if (powerEntry != null)
             {
-                var iText = enhancementSet.DisplayName + ": " +
-                            DatabaseAPI.Database.Enhancements[enhancementSet.Enhancements[index]].Name;
-                if (flagArray[index] || power == null)
-                    section1.Add(iText, PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 1);
-                else
-                    section1.Add(iText, PopUp.Colors.Disabled, 0.9f, FontStyle.Bold, 1);
+                section1.Add($"Set: {enhancementSet.DisplayName} ({enhUsedInSet}/{enhancementSet.Enhancements.Length})", PopUp.Colors.Title);
+            }
+
+            for (var index = 0; index < enhancementSet.Enhancements.Length; index++)
+            {
+                var enhUsed = setEnhUsed.Contains(index) || powerEntry == null;
+                var color = true switch
+                {
+                    _ when !MidsContext.EnhCheckMode & enhUsed => PopUp.Colors.Invention,
+                    _ when MidsContext.EnhCheckMode & enhUsed & setEnhObtained.Contains(index) => PopUp.Colors.Invention,
+                    _ when MidsContext.EnhCheckMode & enhUsed => PopUp.Colors.UltraRare,
+                    _ => PopUp.Colors.Disabled
+                };
+
+                section1.Add($"{enhancementSet.DisplayName}: {DatabaseAPI.Database.Enhancements[enhancementSet.Enhancements[index]].Name}", color, 0.9f, FontStyle.Bold, 1);
             }
 
             return section1;
@@ -1589,7 +1602,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             //var poolPowers = this.Powersets.Skip(2).Take(4).ToList();
             var poolOrder = new int[4];
             var poolIndex = new int[4];
-            for (var i = 3; i <= 6; ++i)
+            for (var i = 3; i < 7; i++)
             {
                 // This can actually happen.
                 // See: https://forums.homecomingservers.com/topic/19963-mids-reborn-hero-designer/?do=findComment&comment=382180
@@ -1609,20 +1622,26 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 poolOrder[i - 3] = ps != null ? GetEarliestPowerIndex(Powersets[i].nID) : -1;
             }
 
-            for (var i = 0; i <= 3; ++i)
+            for (var i = 0; i < 4; i++)
             {
                 int minO = byte.MaxValue;
                 var minI = -1;
-                for (var x = 0; x <= poolOrder.Length - 1; ++x)
+                for (var x = 0; x < poolOrder.Length; x++)
                 {
                     if (minO <= poolOrder[x])
+                    {
                         continue;
+                    }
+
                     minO = poolOrder[x];
                     minI = x;
                 }
 
                 if (minI <= -1 || poolIndex[minI] <= -1)
+                {
                     continue;
+                }
+
                 Powersets[i + 3] = DatabaseAPI.Database.Powersets[poolIndex[minI]];
                 poolOrder[minI] = 512;
             }
@@ -1659,17 +1678,25 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private bool PoolUnique(Enums.PowersetType pool)
         {
             var ps = Powersets[(int)pool];
-            if (ps == null) return false;
-            for (var index = 3; (Enums.PowersetType)index < pool; ++index)
+            if (ps == null)
+            {
+                return false;
+            }
+
+            for (var index = 3; (Enums.PowersetType)index < pool; index++)
+            {
                 if (Powersets[index] != null && Powersets[index].nID == Powersets[(int)pool].nID)
+                {
                     return false;
+                }
+            }
+
             return true;
         }
 
         private bool PowersetUsed(IPowerset? powerset)
         {
-            return powerset != null &&
-                   CurrentBuild.Powers.Any(t => (t?.NIDPowerset == powerset.nID) & (t?.IDXPower > -1));
+            return powerset != null && CurrentBuild.Powers.Any(t => t?.NIDPowerset == powerset.nID & t?.IDXPower > -1);
         }
 
         protected bool CanRemovePower(int index, bool allowSecondary, out string message)
@@ -1678,16 +1705,23 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var power = CurrentBuild.Powers[index];
             if (!power.Chosen)
             {
-                message =
-                    "You can't remove inherent powers.\nIf the power is a Kheldian form power, you can remove it by removing the shapeshift power which grants it.";
+                message = "You can't remove inherent powers.\nIf the power is a Kheldian form power, you can remove it by removing the shapeshift power which grants it.";
+                
                 return false;
             }
 
             if (!((power.NIDPowerset == Powersets[1].nID) & (power.IDXPower == 0) & !allowSecondary))
+            {
                 return power.NIDPowerset >= 0;
+            }
+
             if (CurrentBuild.PowersPlaced <= 1)
+            {
                 return true;
+            }
+
             message = "The first power from your secondary set is non-optional and can't be removed.";
+            
             return false;
         }
 
@@ -1701,40 +1735,39 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 oldTrunk = oldPowerset.nIDTrunkSet;
                 oldBranch = oldPowerset.nID;
-                if (newPowerset.nIDTrunkSet > -1)
-                {
-                    newTrunk = newPowerset.nIDTrunkSet;
-                    newBranch = newPowerset.nID;
-                }
-                else
-                {
-                    newTrunk = newPowerset.nID;
-                    newBranch = -1;
-                }
             }
             else
             {
                 oldTrunk = oldPowerset.nID;
                 oldBranch = -1;
-                if (newPowerset.nIDTrunkSet > -1)
+            }
+
+            if (newPowerset.nIDTrunkSet > -1)
+            {
+                newTrunk = newPowerset.nIDTrunkSet;
+                newBranch = newPowerset.nID;
+            }
+            else
+            {
+                newTrunk = newPowerset.nID;
+                newBranch = -1;
+            }
+
+            for (var index4 = 0; index4 < Powersets.Length; index4++)
+            {
+                if (Powersets[index4] != null && Powersets[index4].nID == oldPowerset.nID)
                 {
-                    newTrunk = newPowerset.nIDTrunkSet;
-                    newBranch = newPowerset.nID;
-                }
-                else
-                {
-                    newTrunk = newPowerset.nID;
-                    newBranch = -1;
+                    Powersets[index4] = newPowerset;
                 }
             }
 
-            for (var index4 = 0; index4 < Powersets.Length; ++index4)
-                if (Powersets[index4] != null && Powersets[index4].nID == oldPowerset.nID)
-                    Powersets[index4] = newPowerset;
             foreach (var power in CurrentBuild.Powers)
             {
                 if (power.NIDPowerset < 0)
+                {
                     continue;
+                }
+
                 var idxPower = power.IDXPower;
                 if (power.NIDPowerset == oldTrunk)
                 {
@@ -1742,12 +1775,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         index4 < DatabaseAPI.Database.Powersets[oldTrunk].Power.Length &&
                         DatabaseAPI.Database.Powersets[oldTrunk].Powers[index4].Level == 0;
                         ++index4)
+                    {
                         --idxPower;
+                    }
+
                     for (var index4 = 0;
-                        index4 < DatabaseAPI.Database.Powersets[newTrunk].Power.Length &&
-                        DatabaseAPI.Database.Powersets[newTrunk].Powers[index4].Level == 0;
-                        ++index4)
+                         index4 < DatabaseAPI.Database.Powersets[newTrunk].Power.Length &&
+                         DatabaseAPI.Database.Powersets[newTrunk].Powers[index4].Level == 0;
+                         ++index4)
+                    {
                         ++idxPower;
+                    }
+
                     if (newTrunk < 0)
                     {
                         power.Reset();
@@ -1769,12 +1808,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         index4 < DatabaseAPI.Database.Powersets[oldTrunk].Power.Length &&
                         DatabaseAPI.Database.Powersets[oldTrunk].Powers[index4].Level == 0;
                         ++index4)
+                    {
                         --idxPower;
+                    }
+
                     for (var index4 = 0;
-                        index4 < DatabaseAPI.Database.Powersets[newTrunk].Power.Length &&
-                        DatabaseAPI.Database.Powersets[newTrunk].Powers[index4].Level == 0;
-                        ++index4)
+                         index4 < DatabaseAPI.Database.Powersets[newTrunk].Power.Length &&
+                         DatabaseAPI.Database.Powersets[newTrunk].Powers[index4].Level == 0;
+                         ++index4)
+                    {
                         ++idxPower;
+                    }
+
                     if (newBranch < 0 || idxPower > DatabaseAPI.Database.Powersets[newBranch].Power.Length - 1)
                     {
                         power.Reset();
@@ -1787,9 +1832,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     }
                 }
 
-                if (power.Power == null || !power.Power.Slottable)
+                if (power.Power is not { Slottable: true })
+                {
                     power.Slots = Array.Empty<SlotEntry>();
+                }
                 else if (power.Slots.Length == 0)
+                {
                     power.Slots = new[]
                     {
                         new SlotEntry
@@ -1799,10 +1847,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             Level = power.Level
                         }
                     };
+                }
                 else if (idxPower > -1)
-                    for (var index4 = 0; index4 < power.SlotCount; ++index4)
+                {
+                    for (var index4 = 0; index4 < power.SlotCount; index4++)
+                    {
                         if (!power.PowerSet.Powers[idxPower].IsEnhancementValid(power.Slots[index4].Enhancement.Enh))
+                        {
                             power.Slots[index4].Enhancement = new I9Slot();
+                        }
+                    }
+                }
             }
 
             CurrentBuild.FullMutexCheck();
