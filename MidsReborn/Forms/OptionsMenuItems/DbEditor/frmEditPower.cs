@@ -860,7 +860,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void chkScale_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             if (!myPower.VariableEnabled)
             {
                 udScaleMin.Value = 0;
@@ -1243,14 +1246,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void FillComboBoxes()
         {
-            var eEnhance = Enums.eEnhance.X_RechargeTime;
             lvDisablePass1.BeginUpdate();
             lvDisablePass1.Items.Clear();
-            lvDisablePass1.Items.AddRange(Enum.GetNames(eEnhance.GetType()));
+            lvDisablePass1.Items.AddRange(Enum.GetNames<Enums.eEnhance>().ToArray<object>());
             lvDisablePass1.EndUpdate();
+
             lvDisablePass4.BeginUpdate();
             lvDisablePass4.Items.Clear();
-            lvDisablePass4.Items.AddRange(Enum.GetNames(eEnhance.GetType()));
+            lvDisablePass4.Items.AddRange(Enum.GetNames<Enums.eEnhance>().ToArray<object>());
             lvDisablePass4.EndUpdate();
         }
 
@@ -1533,6 +1536,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             FillTab_SubPowers();
             RefreshPowerData();
             CheckScaleValues();
+
+            overideScale.Enabled = myPower?.VariableEnabled == true;
+            txtScaleName.Enabled = myPower?.VariableEnabled == true;
+            udScaleStart.Enabled = myPower?.VariableEnabled == true;
+            udScaleMin.Enabled = myPower?.VariableEnabled == true;
+            udScaleMax.Enabled = myPower?.VariableEnabled == true;
+
             Updating = false;
             if (chkSubInclude.CheckState == CheckState.Checked)
             {
