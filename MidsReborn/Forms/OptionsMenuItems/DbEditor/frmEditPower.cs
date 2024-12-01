@@ -8,6 +8,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using FastDeepCloner;
+using Mids_Reborn.Controls.Extensions;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
@@ -50,6 +51,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             backup_Requires = new Requirement(myPower.Requires);
             EditMode = editMode;
             OrigStaticIndex = EditMode ? myPower.StaticIndex : -1;
+
+            clbFlags.DoubleBuffering();
+            lvFX.DoubleBuffering();
+            lvPrListing.DoubleBuffering();
+            lvPrGroup.DoubleBuffering();
+            lvPrSet.DoubleBuffering();
+            lvPrPower.DoubleBuffering();
+            clbClassReq.DoubleBuffering();
+            clbClassExclude.DoubleBuffering();
+            lvDisablePass1.DoubleBuffering();
+            lvDisablePass4.DoubleBuffering();
+            clbMutex.DoubleBuffering();
+            lvSPGroup.DoubleBuffering();
+            lvSPSet.DoubleBuffering();
+            lvSPPower.DoubleBuffering();
+            lvSPSelected.DoubleBuffering();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)

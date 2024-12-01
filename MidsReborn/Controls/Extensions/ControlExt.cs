@@ -1,4 +1,5 @@
 ﻿using System.Drawing;
+using System.Reflection;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Master_Classes;
 using SkiaSharp;
@@ -29,10 +30,10 @@ namespace Mids_Reborn.Controls.Extensions
 
             s.Canvas.Clear(backColor.ToSKColor());
             var bgBitmapIndex = active
-                ? MidsContext.Character.IsHero()
+                ? MidsContext.Character?.IsHero() == true
                     ? 3
                     : 5
-                : MidsContext.Character.IsHero()
+                : MidsContext.Character?.IsHero() == true
                     ? 2
                     : 4;
 
@@ -47,6 +48,12 @@ namespace Mids_Reborn.Controls.Extensions
             s.Canvas.DrawOutlineText(label, new SKRect(0, 0, target.Width, target.Height), SKColors.WhiteSmoke, eHTextAlign.Center, eVTextAlign.Middle, 255, 13, 3, true);
 
             target.BackgroundImage = s.Snapshot().ToBitmap();
+        }
+
+        public static void DoubleBuffering(this Control control, bool enable = true)
+        {
+            var method = typeof(Control).GetMethod("SetStyle", BindingFlags.Instance | BindingFlags.NonPublic);
+            method?.Invoke(control, new object[] { ControlStyles.OptimizedDoubleBuffer, enable });
         }
     }
 }
