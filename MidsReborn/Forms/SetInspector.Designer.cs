@@ -33,22 +33,22 @@ namespace Mids_Reborn.Forms
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            cbEffect = new System.Windows.Forms.ComboBox();
-            cbEffectType = new System.Windows.Forms.ComboBox();
-            cbEffectStr = new System.Windows.Forms.ComboBox();
+            cbEffect = new ComboBox();
+            cbEffectType = new ComboBox();
+            cbEffectStr = new ComboBox();
             alvPowers = new Controls.AdvListView();
-            columnHeader5 = new System.Windows.Forms.ColumnHeader();
-            columnHeader6 = new System.Windows.Forms.ColumnHeader();
-            columnHeader7 = new System.Windows.Forms.ColumnHeader();
-            powerImageList = new System.Windows.Forms.ImageList(components);
+            columnHeader5 = new ColumnHeader();
+            columnHeader6 = new ColumnHeader();
+            columnHeader7 = new ColumnHeader();
+            powerImageList = new ImageList(components);
             cbArchetype = new AoCombo();
             enhSetInfo1 = new Mids_Reborn.Controls.EnhSetInfo();
             alvSets = new Controls.AdvListView();
-            columnHeader1 = new System.Windows.Forms.ColumnHeader();
-            columnHeader2 = new System.Windows.Forms.ColumnHeader();
-            columnHeader3 = new System.Windows.Forms.ColumnHeader();
-            columnHeader4 = new System.Windows.Forms.ColumnHeader();
-            setImageList = new System.Windows.Forms.ImageList(components);
+            columnHeader1 = new ColumnHeader();
+            columnHeader2 = new ColumnHeader();
+            columnHeader3 = new ColumnHeader();
+            columnHeader4 = new ColumnHeader();
+            setImageList = new ImageList(components);
             SuspendLayout();
             // 
             // cbEffect
@@ -83,9 +83,9 @@ namespace Mids_Reborn.Forms
             // 
             // alvPowers
             // 
-            alvPowers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader5, columnHeader6, columnHeader7 });
+            alvPowers.Columns.AddRange(new ColumnHeader[] { columnHeader5, columnHeader6, columnHeader7 });
             alvPowers.FullRowSelect = true;
-            alvPowers.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            alvPowers.HeaderStyle = ColumnHeaderStyle.Nonclickable;
             alvPowers.Location = new Point(12, 362);
             alvPowers.MultiSelect = false;
             alvPowers.Name = "alvPowers";
@@ -93,7 +93,7 @@ namespace Mids_Reborn.Forms
             alvPowers.SmallImageList = powerImageList;
             alvPowers.TabIndex = 7;
             alvPowers.UseCompatibleStateImageBehavior = false;
-            alvPowers.View = System.Windows.Forms.View.Details;
+            alvPowers.View = View.Details;
             // 
             // columnHeader5
             // 
@@ -112,15 +112,15 @@ namespace Mids_Reborn.Forms
             // 
             // powerImageList
             // 
-            powerImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            powerImageList.ColorDepth = ColorDepth.Depth32Bit;
             powerImageList.ImageSize = new Size(16, 16);
             powerImageList.TransparentColor = Color.Transparent;
             // 
             // cbArchetype
             // 
             cbArchetype.ComboType = AoCombo.ComboBoxType.Archetype;
-            cbArchetype.DrawMode = System.Windows.Forms.DrawMode.OwnerDrawVariable;
-            cbArchetype.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbArchetype.DrawMode = DrawMode.OwnerDrawVariable;
+            cbArchetype.DropDownStyle = ComboBoxStyle.DropDownList;
             cbArchetype.FormattingEnabled = true;
             cbArchetype.HighlightColor = Color.Empty;
             cbArchetype.Location = new Point(12, 332);
@@ -138,9 +138,9 @@ namespace Mids_Reborn.Forms
             // 
             // alvSets
             // 
-            alvSets.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4 });
+            alvSets.Columns.AddRange(new ColumnHeader[] { columnHeader1, columnHeader2, columnHeader3, columnHeader4 });
             alvSets.FullRowSelect = true;
-            alvSets.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            alvSets.HeaderStyle = ColumnHeaderStyle.Nonclickable;
             alvSets.Location = new Point(12, 41);
             alvSets.MultiSelect = false;
             alvSets.Name = "alvSets";
@@ -148,7 +148,7 @@ namespace Mids_Reborn.Forms
             alvSets.SmallImageList = setImageList;
             alvSets.TabIndex = 12;
             alvSets.UseCompatibleStateImageBehavior = false;
-            alvSets.View = System.Windows.Forms.View.Details;
+            alvSets.View = View.Details;
             alvSets.SelectedIndexChanged += AdvListView1OnSelectedIndexChanged;
             // 
             // columnHeader1
@@ -172,14 +172,14 @@ namespace Mids_Reborn.Forms
             // 
             // setImageList
             // 
-            setImageList.ColorDepth = System.Windows.Forms.ColorDepth.Depth32Bit;
+            setImageList.ColorDepth = ColorDepth.Depth32Bit;
             setImageList.ImageSize = new Size(16, 16);
             setImageList.TransparentColor = Color.Transparent;
             // 
             // SetInspector
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = Color.Black;
             ClientSize = new Size(1094, 611);
             Controls.Add(enhSetInfo1);
@@ -189,8 +189,9 @@ namespace Mids_Reborn.Forms
             Controls.Add(cbEffectStr);
             Controls.Add(cbEffectType);
             Controls.Add(cbEffect);
+            DoubleBuffered = true;
             ForeColor = Color.WhiteSmoke;
-            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "SetInspector";

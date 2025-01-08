@@ -6,7 +6,6 @@ using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
-using static Mids_Reborn.Core.Utils.WinApi;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -193,27 +192,27 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             bool useVillain;
             if (MidsContext.Character != null && MidsContext.Character.IsHero())
             {
-                if (MidsContext.Config != null && MidsContext.Config.DimWindowStyleColors)
-                {
-                    StylizeWindow(Handle, Color.FromArgb(12, 56, 100), Color.FromArgb(12, 56, 100), Color.WhiteSmoke);
-                }
-                else
-                {
-                    StylizeWindow(Handle, Color.DodgerBlue, Color.DodgerBlue, Color.Black);
-                }
+                // if (MidsContext.Config != null && MidsContext.Config.DimWindowStyleColors)
+                // {
+                //     StylizeWindow(Handle, Color.FromArgb(12, 56, 100), Color.FromArgb(12, 56, 100), Color.WhiteSmoke);
+                // }
+                // else
+                // {
+                //     StylizeWindow(Handle, Color.DodgerBlue, Color.DodgerBlue, Color.Black);
+                // }
 
                 useVillain = false;
             }
             else
             {
-                if (MidsContext.Config != null && MidsContext.Config.DimWindowStyleColors)
-                {
-                    StylizeWindow(Handle, Color.FromArgb(100, 0, 0), Color.FromArgb(100, 0, 0), Color.WhiteSmoke);
-                }
-                else
-                {
-                    StylizeWindow(Handle, Color.DarkRed, Color.DarkRed, Color.WhiteSmoke);
-                }
+                // if (MidsContext.Config != null && MidsContext.Config.DimWindowStyleColors)
+                // {
+                //     StylizeWindow(Handle, Color.FromArgb(100, 0, 0), Color.FromArgb(100, 0, 0), Color.WhiteSmoke);
+                // }
+                // else
+                // {
+                //     StylizeWindow(Handle, Color.DarkRed, Color.DarkRed, Color.WhiteSmoke);
+                // }
 
                 useVillain = true;
             }

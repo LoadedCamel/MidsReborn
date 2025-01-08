@@ -3,7 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
-using static Mids_Reborn.Core.Utils.WinApi;
+
 
 namespace Mids_Reborn.Forms.ImportExportItems
 {
@@ -20,7 +20,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
         private void OnLoad(object? sender, EventArgs e)
         {
-            StylizeWindow(Handle, Color.Silver, Color.Black, Color.Silver);
+            //StylizeWindow(Handle, Color.Silver, Color.Black, Color.Silver);
             CenterToParent();
         }
 

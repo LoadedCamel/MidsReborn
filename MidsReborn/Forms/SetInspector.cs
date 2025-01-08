@@ -32,10 +32,13 @@ namespace Mids_Reborn.Forms
         private List<IPower>? _selectedPrimaries;
         private List<IPower>? _selectedSecondaries;
 
-        public SetInspector()
+        public SetInspector(Form parent)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer, true);
             InitializeComponent();
+
+            Owner = parent;
+
             Load += OnLoad;
             _effects = new List<IEffect>();
         }

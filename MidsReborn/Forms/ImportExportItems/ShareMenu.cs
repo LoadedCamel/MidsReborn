@@ -12,7 +12,6 @@ using Mids_Reborn.Core.ShareSystem;
 using Mids_Reborn.Core.ShareSystem.RestModels;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
-using static Mids_Reborn.Core.Utils.WinApi;
 
 namespace Mids_Reborn.Forms.ImportExportItems
 {
@@ -71,7 +70,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
         private void OnLoad(object? sender, EventArgs e)
         {
             // Restyle utility windows - experimental
-            StylizeWindow(Handle, Color.Silver, Color.Black, Color.WhiteSmoke);
+            //StylizeWindow(Handle, Color.Silver, Color.Black, Color.WhiteSmoke);
             formPages1.SelectedIndex = _share.LastPageIndex > -1 ? _share.LastPageIndex : 0;
 
             #region ExpiringCollection

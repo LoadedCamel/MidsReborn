@@ -25,7 +25,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
         private void OnLoad(object? sender, EventArgs e)
         {
-            WinApi.StylizeWindow(Handle, Color.Silver, Color.Black, Color.WhiteSmoke);
+            //WinApi.StylizeWindow(Handle, Color.Silver, Color.Black, Color.WhiteSmoke);
             _collection ??= new ExpiringCollection();
             _collection.DeserializeFromJson();
             alvShared.DataSource = _collection.GetItems();

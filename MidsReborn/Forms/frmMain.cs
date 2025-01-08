@@ -26,7 +26,7 @@ using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
 using MRBResourceLib;
 using RestSharp;
-using static Mids_Reborn.Core.Utils.WinApi;
+
 using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
@@ -57,6 +57,7 @@ namespace Mids_Reborn.Forms
         public bool DbChangeRequested { get; set; }
         public event EventHandler? TitleUpdated;
         public static frmMain? MainInstance;
+        private SetInspector? _setInspector;
 
         private string[]? CommandArgs { get; }
         private string? ProcessedCommand { get; set; }
@@ -490,7 +491,7 @@ namespace Mids_Reborn.Forms
 
         private void CharacterOnAlignmentChanged(object? sender, Enums.Alignment e)
         {
-            if (MidsContext.Character != null && MidsContext.Character.IsHero())
+            /*if (MidsContext.Character != null && MidsContext.Character.IsHero())
             {
                 if (MidsContext.Config.DimWindowStyleColors)
                 {
@@ -511,7 +512,7 @@ namespace Mids_Reborn.Forms
                 {
                     StylizeWindow(Handle, Color.DarkRed, Color.DarkRed, Color.WhiteSmoke);
                 }
-            }
+            }*/
 
             var imageButtonExControls = Helpers.GetControlOfType<ImageButtonEx>(Controls);
             foreach (var ibEx in imageButtonExControls)
@@ -6570,8 +6571,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsSetFind_Click(object sender, EventArgs e)
         {
-            using var setFinder = new SetInspector();
-            setFinder.ShowDialog(this);
+            if (_setInspector == null || _setInspector.IsDisposed)
+            {
+                _setInspector = new SetInspector(this);
+                _setInspector.FormClosing += (_, _) => _setInspector.Dispose(); // Dispose when closing
+            }
+
+            _setInspector.Show();
         }
 
         private void Github_Link(object? sender, EventArgs e)

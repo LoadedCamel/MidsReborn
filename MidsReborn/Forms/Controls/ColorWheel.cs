@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Mids_Reborn.Controls.Extensions;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
 
