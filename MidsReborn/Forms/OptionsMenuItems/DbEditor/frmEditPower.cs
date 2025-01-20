@@ -203,30 +203,39 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             myPower.Effects = new IEffect[myPower.Effects.Length - 1];
             var index1 = 0;
-            var num2 = effectArray.Length - 1;
-            for (var index2 = 0; index2 <= num2; ++index2)
+            for (var index2 = 0; index2 < effectArray.Length; index2++)
             {
                 if (index2 == selectedIndex)
                     continue;
                 myPower.Effects[index1] = effectArray[index2];
-                ++index1;
+                index1++;
             }
 
             RefreshFXData();
             if (lvFX.Items.Count > selectedIndex)
+            {
                 lvFX.SelectedIndex = selectedIndex;
+            }
             else if (lvFX.Items.Count > selectedIndex - 1)
+            {
                 lvFX.SelectedIndex = selectedIndex - 1;
+            }
         }
 
         private void btnFXUp_Click(object sender, EventArgs e)
         {
             if (lvFX.SelectedIndices.Count <= 0)
+            {
                 return;
+            }
+
             var selectedIndex = lvFX.SelectedIndices[0];
             var effectArray = new IEffect[2];
             if (selectedIndex < 1)
+            {
                 return;
+            }
+
             effectArray[0] = (IEffect)myPower.Effects[selectedIndex].Clone();
             effectArray[1] = (IEffect)myPower.Effects[selectedIndex - 1].Clone();
             myPower.Effects[selectedIndex] = (IEffect)effectArray[1].Clone();
@@ -499,14 +508,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnPrUp_Click(object sender, EventArgs e)
         {
             if (lvPrListing.SelectedItems.Count < 1)
+            {
                 return;
+            }
+
             var num = Convert.ToInt32(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag));
             //var num = (int) Math.Round(Conversion.Val(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
             var flag = lvPrListing.SelectedIndices[0] > myPower.Requires.PowerID.Length - 1;
             if (num < 1)
+            {
                 return;
-            var index1 = num;
-            var index2 = index1 - 1;
+            }
+
+            var index2 = num - 1;
             var strArray1 = new string[2][];
             var strArray2 = new string[2];
             strArray1[0] = strArray2;
@@ -514,26 +528,26 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             strArray1[1] = strArray3;
             if (flag)
             {
-                strArray1[0][0] = myPower.Requires.PowerIDNot[index1][0];
-                strArray1[0][1] = myPower.Requires.PowerIDNot[index1][1];
-                strArray1[1][0] = myPower.Requires.PowerIDNot[index2][0];
-                strArray1[1][1] = myPower.Requires.PowerIDNot[index2][1];
-                myPower.Requires.PowerIDNot[index1][0] = strArray1[1][0];
-                myPower.Requires.PowerIDNot[index1][1] = strArray1[1][1];
-                myPower.Requires.PowerIDNot[index2][0] = strArray1[0][0];
-                myPower.Requires.PowerIDNot[index2][1] = strArray1[0][1];
+                strArray1[0][0] = myPower.Requires.PowerIDNot[num][0];
+                strArray1[0][1] = myPower.Requires.PowerIDNot[num][1];
+                strArray1[1][0] = myPower.Requires.PowerIDNot[num - 1][0];
+                strArray1[1][1] = myPower.Requires.PowerIDNot[num - 1][1];
+                myPower.Requires.PowerIDNot[num][0] = strArray1[1][0];
+                myPower.Requires.PowerIDNot[num][1] = strArray1[1][1];
+                myPower.Requires.PowerIDNot[num - 1][0] = strArray1[0][0];
+                myPower.Requires.PowerIDNot[num - 1][1] = strArray1[0][1];
                 index2 = lvPrListing.SelectedIndices[0] - 1;
             }
             else
             {
-                strArray1[0][0] = myPower.Requires.PowerID[index1][0];
-                strArray1[0][1] = myPower.Requires.PowerID[index1][1];
-                strArray1[1][0] = myPower.Requires.PowerID[index2][0];
-                strArray1[1][1] = myPower.Requires.PowerID[index2][1];
-                myPower.Requires.PowerID[index1][0] = strArray1[1][0];
-                myPower.Requires.PowerID[index1][1] = strArray1[1][1];
-                myPower.Requires.PowerID[index2][0] = strArray1[0][0];
-                myPower.Requires.PowerID[index2][1] = strArray1[0][1];
+                strArray1[0][0] = myPower.Requires.PowerID[num][0];
+                strArray1[0][1] = myPower.Requires.PowerID[num][1];
+                strArray1[1][0] = myPower.Requires.PowerID[num - 1][0];
+                strArray1[1][1] = myPower.Requires.PowerID[num - 1][1];
+                myPower.Requires.PowerID[num][0] = strArray1[1][0];
+                myPower.Requires.PowerID[num][1] = strArray1[1][1];
+                myPower.Requires.PowerID[num - 1][0] = strArray1[0][0];
+                myPower.Requires.PowerID[num - 1][1] = strArray1[0][1];
             }
 
             FillTab_Req();
@@ -578,7 +592,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
 
                 strArray[index1] = uidSubPower;
-                ++index1;
+                index1++;
             }
 
             myPower.UIDSubPower = new string[strArray.Length];
@@ -1772,16 +1786,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void pbEnhancements_Hover(object sender, MouseEventArgs e)
         {
             var num = -1;
-            var length = myPower.Enhancements.Length;
-            for (var index = 0; index <= length; ++index)
-                if ((e.X > (enhPadding + 30) * index) & (e.X < (enhPadding + 30) * (index + 1)))
+            for (var index = 0; index < myPower.Enhancements.Length; index++)
+            {
+                if (e.X > (enhPadding + 30) * index & e.X < (enhPadding + 30) * (index + 1))
+                {
                     num = index;
-            var index1 = num;
-            if ((index1 < myPower.Enhancements.Length) & (num > -1))
-                lblEnhName.Text = DatabaseAPI.Database.EnhancementClasses[Utilities.GetEnhClassById(myPower.Enhancements[index1])]
-                    .Name;
-            else
-                lblEnhName.Text = "";
+                }
+            }
+
+            lblEnhName.Text = num < myPower.Enhancements.Length & num > -1
+                ? DatabaseAPI.Database.EnhancementClasses[Utilities.GetEnhClassById(myPower.Enhancements[num])]
+                    .Name
+                : "";
         }
 
         private void pbEnhancements_MouseDown(object sender, MouseEventArgs e)
@@ -1832,10 +1848,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (!((invSetListIndex < setTypes.Count) & (invSetListIndex > -1))) return;
 
             var flag = false;
-
-            for (var index = 0; index <= myPower.SetTypes.Count - 1; ++index)
+            foreach (var st in myPower.SetTypes)
             {
-                if (myPower.SetTypes[index] == invSetListIndex)
+                if (st == invSetListIndex)
                 {
                     flag = true;
                 }
@@ -1857,14 +1872,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var invSetListIndex = GetInvSetListIndex(new Point(e.X, e.Y));
             var setTypes = DatabaseAPI.Database.SetTypes;
 
-            if ((invSetListIndex < setTypes.Count) & (invSetListIndex > -1))
-            {
-                lblInvSet.Text = DatabaseAPI.GetSetTypeByIndex(invSetListIndex).Name;
-            }
-            else
-            {
-                lblInvSet.Text = "";
-            }
+            lblInvSet.Text = (invSetListIndex < setTypes.Count) & (invSetListIndex > -1)
+                ? DatabaseAPI.GetSetTypeByIndex(invSetListIndex).Name
+                : "";
         }
 
         private void pbInvSetList_Paint(object sender, PaintEventArgs e)
@@ -1967,14 +1977,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void rbPrRemove_Click(object sender, EventArgs e)
         {
             if (lvPrListing.SelectedItems.Count < 1)
+            {
                 return;
+            }
+
             var num1 = (int)Math.Round(Convert.ToDouble(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
             if (lvPrListing.SelectedIndices[0] > myPower.Requires.PowerID.Length - 1)
             {
                 var strArray1 = new string[myPower.Requires.PowerIDNot.Length][];
-                var num2 = num1;
-                var num3 = strArray1.Length - 1;
-                for (var index = 0; index <= num3; ++index)
+                for (var index = 0; index < strArray1.Length; index++)
                 {
                     var strArray2 = new string[2];
                     strArray1[index] = strArray2;
@@ -1984,24 +1995,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 myPower.Requires.PowerIDNot = new string[myPower.Requires.PowerIDNot.Length - 1][];
                 var index1 = 0;
-                var num4 = strArray1.Length - 1;
-                for (var index2 = 0; index2 <= num4; ++index2)
+                for (var index2 = 0; index2 < strArray1.Length; index2++)
                 {
-                    if (index2 == num2)
+                    if (index2 == num1)
+                    {
                         continue;
+                    }
+
                     var strArray2 = new string[2];
                     myPower.Requires.PowerIDNot[index1] = strArray2;
                     myPower.Requires.PowerIDNot[index1][0] = strArray1[index2][0];
                     myPower.Requires.PowerIDNot[index1][1] = strArray1[index2][1];
-                    ++index1;
+                    index1++;
                 }
             }
             else
             {
                 var strArray1 = new string[myPower.Requires.PowerID.Length][];
-                var num2 = num1;
-                var num3 = strArray1.Length - 1;
-                for (var index = 0; index <= num3; ++index)
+                for (var index = 0; index < strArray1.Length; index++)
                 {
                     var strArray2 = new string[2];
                     strArray1[index] = strArray2;
@@ -2011,15 +2022,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 myPower.Requires.PowerID = new string[myPower.Requires.PowerID.Length - 1][];
                 var index1 = 0;
-                var num4 = strArray1.Length - 1;
-                for (var index2 = 0; index2 <= num4; ++index2)
+                for (var index2 = 0; index2 < strArray1.Length; index2++)
                 {
-                    if (index2 == num2)
+                    if (index2 == num1)
+                    {
                         continue;
+                    }
+
                     myPower.Requires.PowerID[index1] = new string[2];
                     myPower.Requires.PowerID[index1][0] = strArray1[index2][0];
                     myPower.Requires.PowerID[index1][1] = strArray1[index2][1];
-                    ++index1;
+                    index1++;
                 }
             }
 
@@ -2151,15 +2164,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                var index1 =
-                    DatabaseAPI.NidFromUidPowerset(Convert.ToString(lvPrSet.SelectedItems[0].Tag,
+                var index1 = DatabaseAPI.NidFromUidPowerset(Convert.ToString(lvPrSet.SelectedItems[0].Tag,
                         CultureInfo.InvariantCulture));
                 if (index1 > -1)
                 {
-                    var num = DatabaseAPI.Database.Powersets[index1].Powers.Length - 1;
-                    for (var index2 = 0; index2 <= num; ++index2)
-                        if (!DatabaseAPI.Database.Powersets[index1].Powers[index2].HiddenPower)
-                            lvPrPower.Items.Add(DatabaseAPI.Database.Powersets[index1].Powers[index2].PowerName);
+                    foreach (var p in DatabaseAPI.Database.Powersets[index1].Powers)
+                    {
+                        if (!p.HiddenPower)
+                            lvPrPower.Items.Add(p.PowerName);
+                    }
                 }
 
                 lvPrPower.EndUpdate();
@@ -2177,12 +2190,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             else
             {
                 var indexesByGroupName = DatabaseAPI.GetPowersetIndexesByGroupName(lvPrGroup.SelectedItems[0].Text);
-                var num = indexesByGroupName.Length - 1;
-                for (var index = 0; index <= num; ++index)
+                foreach (var idx in indexesByGroupName)
                 {
-                    lvPrSet.Items.Add(DatabaseAPI.Database.Powersets[indexesByGroupName[index]].SetName);
+                    lvPrSet.Items.Add(DatabaseAPI.Database.Powersets[idx].SetName);
                     lvPrSet.Items[^1].Tag =
-                        DatabaseAPI.Database.Powersets[indexesByGroupName[index]].FullName;
+                        DatabaseAPI.Database.Powersets[idx].FullName;
                 }
 
                 lvPrSet.EndUpdate();
@@ -2322,8 +2334,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         CultureInfo.InvariantCulture));
                 if (index1 > -1)
                 {
-                    var num = DatabaseAPI.Database.Powersets[index1].Powers.Length - 1;
-                    for (var index2 = 0; index2 <= num; ++index2)
+                    for (var index2 = 0; index2 < DatabaseAPI.Database.Powersets[index1].Powers.Length; index2++)
                     {
                         if (DatabaseAPI.Database.Powersets[index1].Powers[index2].HiddenPower)
                             continue;
@@ -2348,12 +2359,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             else
             {
                 var indexesByGroupName = DatabaseAPI.GetPowersetIndexesByGroupName(lvSPGroup.SelectedItems[0].Text);
-                var num = indexesByGroupName.Length - 1;
-                for (var index = 0; index <= num; ++index)
+                foreach (var idx in indexesByGroupName)
                 {
-                    lvSPSet.Items.Add(DatabaseAPI.Database.Powersets[indexesByGroupName[index]].SetName);
+                    lvSPSet.Items.Add(DatabaseAPI.Database.Powersets[idx].SetName);
                     lvSPSet.Items[^1].Tag =
-                        DatabaseAPI.Database.Powersets[indexesByGroupName[index]].FullName;
+                        DatabaseAPI.Database.Powersets[idx].FullName;
                 }
 
                 lvSPSet.EndUpdate();
@@ -2364,24 +2374,29 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             lvSPSelected.BeginUpdate();
             lvSPSelected.Items.Clear();
-            var num = myPower.UIDSubPower.Length - 1;
-            for (var index = 0; index <= num; ++index)
-                lvSPSelected.Items.Add(myPower.UIDSubPower[index]);
+            foreach (var sp in myPower.UIDSubPower)
+            {
+                lvSPSelected.Items.Add(sp);
+            }
+
             lvSPSelected.EndUpdate();
         }
 
         private void Store_Req_Classes()
         {
             myPower.Requires.ClassName = new string[clbClassReq.CheckedIndices.Count];
-            var num1 = clbClassReq.CheckedIndices.Count - 1;
-            for (var index = 0; index <= num1; ++index)
+            for (var index = 0; index < clbClassReq.CheckedIndices.Count; index++)
+            {
                 myPower.Requires.ClassName[index] =
                     DatabaseAPI.Database.Classes[clbClassReq.CheckedIndices[index]].ClassName;
+            }
+
             myPower.Requires.ClassNameNot = new string[clbClassExclude.CheckedIndices.Count];
-            var num2 = clbClassExclude.CheckedIndices.Count - 1;
-            for (var index = 0; index <= num2; ++index)
+            for (var index = 0; index < clbClassExclude.CheckedIndices.Count; index++)
+            {
                 myPower.Requires.ClassNameNot[index] =
                     DatabaseAPI.Database.Classes[clbClassExclude.CheckedIndices[index]].ClassName;
+            }
         }
 
         private void txtAcc_Leave(object sender, EventArgs e)
