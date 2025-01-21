@@ -3,6 +3,7 @@ using System.Reflection;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Master_Classes;
 using SkiaSharp;
+using SkiaSharp.Views.Desktop;
 using static Mids_Reborn.Core.Enums;
 
 namespace Mids_Reborn.Controls.Extensions
