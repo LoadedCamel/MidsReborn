@@ -320,8 +320,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             iPower.DisplayName = "New Power";
             using var frmEditPower = new frmEditPower(iPower);
-            if (frmEditPower.ShowDialog() != DialogResult.OK)
+            var ret = frmEditPower.ShowDialog();
+            BringToFront();
+            if (ret != DialogResult.OK)
+            {
                 return;
+            }
+
             var database = DatabaseAPI.Database;
 
             var powerList = database.Power.ToList();
@@ -369,7 +374,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 newPower.PowerIndex = powerList.Count - 1;
 
                 using var frmEditPower = new frmEditPower(newPower);
-                if (frmEditPower.ShowDialog() != DialogResult.OK) return;
+                var ret = frmEditPower.ShowDialog();
+                BringToFront();
+                if (ret != DialogResult.OK)
+                {
+                    return;
+                }
+
                 newPower = frmEditPower.myPower;
                 powerList.Add(newPower);
                 DatabaseAPI.Database.Power = powerList.ToArray();
@@ -434,158 +445,184 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnPowerDown_Click(object sender, EventArgs e)
         {
             if (lvPower.SelectedIndices.Count <= 0)
+            {
                 return;
+            }
+
             var selectedIndex = lvPower.SelectedIndices[0];
             if (selectedIndex >= lvPower.Items.Count - 1)
+            {
                 return;
+            }
+
             var selIdx = lvPower.SelectedIndices[0] + 1;
             var index1 = DatabaseAPI.NidFromUidPower(lvPower.Items[selectedIndex].SubItems[3].Text);
             var index2 = DatabaseAPI.NidFromUidPower(lvPower.Items[selIdx].SubItems[3].Text);
-            if ((index1 < 0) | (index2 < 0))
+            if (index1 < 0 | index2 < 0)
             {
                 MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return;
             }
-            else
-            {
-                IPower? template = new Power(DatabaseAPI.Database.Power[index1]);
-                DatabaseAPI.Database.Power[index1] = new Power(DatabaseAPI.Database.Power[index2]);
-                DatabaseAPI.Database.Power[index2] = new Power(template);
-                BusyMsg("Re-Indexing...");
-                DatabaseAPI.MatchAllIDs();
-                List_Powers(selIdx);
-                BusyHide();
-            }
+            
+            IPower? template = new Power(DatabaseAPI.Database.Power[index1]);
+            DatabaseAPI.Database.Power[index1] = new Power(DatabaseAPI.Database.Power[index2]);
+            DatabaseAPI.Database.Power[index2] = new Power(template);
+            BusyMsg("Re-Indexing...");
+            DatabaseAPI.MatchAllIDs();
+            List_Powers(selIdx);
+            BusyHide();
         }
 
         private void btnPowerEdit_Click(object sender, EventArgs e)
         {
             if (lvPower.SelectedIndices.Count <= 0)
+            {
                 return;
+            }
+
             var text = lvPower.SelectedItems[0].SubItems[3].Text;
             var index1 = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
             if (index1 < 0)
             {
                 MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return;
             }
-            else
+            
+            using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1], true);
+            var ret = frmEditPower.ShowDialog();
+            BringToFront();
+            if (ret != DialogResult.OK)
             {
-                using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1], true);
-                if (frmEditPower.ShowDialog() != DialogResult.OK)
-                {
-                    return;
-                }
-
-                IPower? newPower = new Power(frmEditPower.myPower) { IsModified = true };
-                DatabaseAPI.Database.Power[index1] = newPower;
-                if (text == DatabaseAPI.Database.Power[index1].FullName)
-                {
-                    return;
-                }
-
-                //Update the full power name in the powerset array
-                if (newPower.PowerSetID > -1)
-                {
-                    DatabaseAPI.Database.Powersets[newPower.PowerSetID].Powers[newPower.PowerSetIndex].FullName =
-                        newPower.FullName;
-                }
-
-                foreach (var p in DatabaseAPI.Database.Power[index1].Effects)
-                {
-                    p.PowerFullName = DatabaseAPI.Database.Power[index1].FullName;
-                }
-
-                var strArray = DatabaseAPI.UidReferencingPowerFix(text, DatabaseAPI.Database.Power[index1].FullName);
-                var str1 = strArray.Aggregate("", (current, t) => $"{current}{t}\r\n");
-                if (strArray.Length > 0)
-                {
-                    var str2 = "Power: " + text + " changed to " + DatabaseAPI.Database.Power[index1].FullName +
-                               "\r\nThe following powers referenced this power and were updated:\r\n" + str1 +
-                               "\r\n\r\nThis list has been placed on the clipboard.";
-                    Clipboard.SetDataObject(str2, true);
-                    MessageBox.Show(str2);
-                }
-
-                RefreshLists();
+                return;
             }
+
+            IPower? newPower = new Power(frmEditPower.myPower) { IsModified = true };
+            DatabaseAPI.Database.Power[index1] = newPower;
+            if (text == DatabaseAPI.Database.Power[index1].FullName)
+            {
+                return;
+            }
+
+            //Update the full power name in the powerset array
+            if (newPower.PowerSetID > -1)
+            {
+                DatabaseAPI.Database.Powersets[newPower.PowerSetID].Powers[newPower.PowerSetIndex].FullName = newPower.FullName;
+            }
+
+            foreach (var p in DatabaseAPI.Database.Power[index1].Effects)
+            {
+                p.PowerFullName = DatabaseAPI.Database.Power[index1].FullName;
+            }
+
+            var strArray = DatabaseAPI.UidReferencingPowerFix(text, DatabaseAPI.Database.Power[index1].FullName);
+            var str1 = strArray.Aggregate("", (current, t) => $"{current}{t}\r\n");
+            if (strArray.Length > 0)
+            {
+                var str2 = $"Power: {text} changed to {DatabaseAPI.Database.Power[index1].FullName}\r\nThe following powers referenced this power and were updated:\r\n{str1}\r\n\r\nThis list has been placed on the clipboard.";
+                Clipboard.SetDataObject(str2, true);
+                MessageBox.Show(str2);
+            }
+
+            RefreshLists();
         }
 
         private void btnPowerUp_Click(object sender, EventArgs e)
         {
             if (lvPower.SelectedIndices.Count <= 0)
+            {
                 return;
+            }
+
             var selectedIndex = lvPower.SelectedIndices[0];
             if (selectedIndex < 1)
+            {
                 return;
+            }
+
             var selIdx = lvPower.SelectedIndices[0] - 1;
             var index1 = DatabaseAPI.NidFromUidPower(lvPower.Items[selectedIndex].SubItems[3].Text);
             var index2 = DatabaseAPI.NidFromUidPower(lvPower.Items[selIdx].SubItems[3].Text);
-            if ((index1 < 0) | (index2 < 0))
+            if (index1 < 0 | index2 < 0)
             {
                 MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return;
             }
-            else
-            {
-                IPower? template = new Power(DatabaseAPI.Database.Power[index1]);
-                DatabaseAPI.Database.Power[index1] = new Power(DatabaseAPI.Database.Power[index2]);
-                DatabaseAPI.Database.Power[index2] = new Power(template);
-                BusyMsg("Re-Indexing...");
-                DatabaseAPI.MatchAllIDs();
-                List_Powers(selIdx);
-                BusyHide();
-            }
+            
+            IPower? template = new Power(DatabaseAPI.Database.Power[index1]);
+            DatabaseAPI.Database.Power[index1] = new Power(DatabaseAPI.Database.Power[index2]);
+            DatabaseAPI.Database.Power[index2] = new Power(template);
+            BusyMsg("Re-Indexing...");
+            DatabaseAPI.MatchAllIDs();
+            List_Powers(selIdx);
+            BusyHide();
         }
 
         private void btnPSDown_Click(object sender, EventArgs e)
         {
             if (lvSet.SelectedIndices.Count <= 0)
+            {
                 return;
+            }
+
             var selectedIndex = lvSet.SelectedIndices[0];
             if (selectedIndex >= lvSet.Items.Count - 1)
+            {
                 return;
+            }
+
             var selIdx = lvSet.SelectedIndices[0] + 1;
             var index1 = DatabaseAPI.NidFromUidPowerset(lvSet.Items[selectedIndex].SubItems[3].Text);
             var index2 = DatabaseAPI.NidFromUidPowerset(lvSet.Items[selIdx].SubItems[3].Text);
-            if ((index1 < 0) | (index2 < 0))
+            if (index1 < 0 | index2 < 0)
             {
                 MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return;
             }
-            else
-            {
-                IPowerset? template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
-                DatabaseAPI.Database.Powersets[index1] = new Powerset(DatabaseAPI.Database.Powersets[index2]);
-                DatabaseAPI.Database.Powersets[index2] = new Powerset(template);
-                BusyMsg("Re-Indexing...");
-                DatabaseAPI.MatchAllIDs();
-                List_Sets(selIdx);
-                BusyHide();
-            }
+            
+            IPowerset? template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
+            DatabaseAPI.Database.Powersets[index1] = new Powerset(DatabaseAPI.Database.Powersets[index2]);
+            DatabaseAPI.Database.Powersets[index2] = new Powerset(template);
+            BusyMsg("Re-Indexing...");
+            DatabaseAPI.MatchAllIDs();
+            List_Sets(selIdx);
+            BusyHide();
         }
 
         private void btnPSUp_Click(object sender, EventArgs e)
 
         {
             if (lvSet.SelectedIndices.Count <= 0)
+            {
                 return;
+            }
+
             var selectedIndex = lvSet.SelectedIndices[0];
             if (selectedIndex < 1)
+            {
                 return;
+            }
+
             var selIdx = lvSet.SelectedIndices[0] - 1;
             var index1 = DatabaseAPI.NidFromUidPowerset(lvSet.Items[selectedIndex].SubItems[3].Text);
             var index2 = DatabaseAPI.NidFromUidPowerset(lvSet.Items[selIdx].SubItems[3].Text);
-            if ((index1 < 0) | (index2 < 0))
+            if (index1 < 0 | index2 < 0)
             {
                 MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return;
             }
-            else
-            {
-                IPowerset? template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
-                DatabaseAPI.Database.Powersets[index1] = new Powerset(DatabaseAPI.Database.Powersets[index2]);
-                DatabaseAPI.Database.Powersets[index2] = new Powerset(template);
-                BusyMsg("Re-Indexing...");
-                DatabaseAPI.MatchAllIDs();
-                List_Sets(selIdx);
-                BusyHide();
-            }
+            
+            IPowerset? template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
+            DatabaseAPI.Database.Powersets[index1] = new Powerset(DatabaseAPI.Database.Powersets[index2]);
+            DatabaseAPI.Database.Powersets[index2] = new Powerset(template);
+            BusyMsg("Re-Indexing...");
+            DatabaseAPI.MatchAllIDs();
+            List_Sets(selIdx);
+            BusyHide();
         }
 
         private void btnSetAdd_Click(object sender, EventArgs e)
@@ -596,19 +633,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 case 0:
                     {
                         if (lvGroup.SelectedItems.Count > 0)
-                            iSet.FullName = lvGroup.SelectedItems[0].SubItems[0].Text + ".New_Set";
+                            iSet.FullName = $"{lvGroup.SelectedItems[0].SubItems[0].Text}.New_Set";
                         break;
                     }
                 case 1 when lvGroup.SelectedItems.Count > 0:
-                    iSet.FullName = DatabaseAPI.Database.Classes[lvGroup.SelectedIndices[0]].PrimaryGroup + ".New_Set";
+                    iSet.FullName = $"{DatabaseAPI.Database.Classes[lvGroup.SelectedIndices[0]].PrimaryGroup}.New_Set";
                     break;
             }
 
             iSet.DisplayName = "New Set";
             using var frmEditPowerset = new frmEditPowerset(ref iSet);
-            var num = (int)frmEditPowerset.ShowDialog();
-            if (frmEditPowerset.DialogResult != DialogResult.OK)
+            var ret = frmEditPowerset.ShowDialog();
+            if (ret != DialogResult.OK)
+            {
                 return;
+            }
+
             var database = DatabaseAPI.Database;
             var psList = database.Powersets.ToList();
             psList.Add(new Powerset(frmEditPowerset.MyPowerSet) { IsNew = true, nID = psList.Count + 1 });
@@ -638,75 +678,101 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnSetDelete_Click(object sender, EventArgs e)
         {
             if (lvSet.SelectedIndices.Count <= 0)
+            {
                 return;
+            }
+
             var index1 = DatabaseAPI.NidFromUidPowerset(lvSet.SelectedItems[0].SubItems[3].Text);
             if (index1 < 0)
             {
                 MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return;
             }
-            else
+            
+            var str = "";
+            if (DatabaseAPI.Database.Powersets[index1].Powers.Length > 0)
             {
-                var str = "";
-                if (DatabaseAPI.Database.Powersets[index1].Powers.Length > 0)
-                    str = DatabaseAPI.Database.Powersets[index1].FullName +
-                          " still has powers attached to it.\r\nThese powers will be orphaned if you remove the set.\r\n\r\n";
-                if (MessageBox.Show($@"{str} Really delete Powerset: {DatabaseAPI.Database.Powersets[index1].DisplayName}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
-                    return;
-                var powersetArray = new IPowerset?[DatabaseAPI.Database.Powersets.Length];
-                var index2 = 0;
-                var num2 = DatabaseAPI.Database.Powersets.Length - 1;
-                for (var index3 = 0; index3 <= num2; ++index3)
-                {
-                    if (index3 == index1)
-                        continue;
-                    powersetArray[index2] = new Powerset(DatabaseAPI.Database.Powersets[index3]);
-                    ++index2;
-                }
-
-                DatabaseAPI.Database.Powersets = new IPowerset?[DatabaseAPI.Database.Powersets.Length - 1];
-                var num3 = DatabaseAPI.Database.Powersets.Length - 1;
-                for (var index3 = 0; index3 <= num3; ++index3)
-                    DatabaseAPI.Database.Powersets[index3] = new Powerset(powersetArray[index3]) { nID = index3 };
-                var powerset = -1;
-                if (lvSet.Items.Count > 0)
-                {
-                    if (lvSet.Items.Count > index1)
-                        powerset = index1;
-                    else if (lvSet.Items.Count == index1)
-                        powerset = index1 - 1;
-                }
-
-                BusyMsg("Re-Indexing...");
-                DatabaseAPI.MatchAllIDs();
-                RefreshLists(-1, powerset);
-                BusyHide();
+                str =
+                    $"{DatabaseAPI.Database.Powersets[index1].FullName} still has powers attached to it.\r\nThese powers will be orphaned if you remove the set.\r\n\r\n";
             }
+
+            if (MessageBox.Show($@"{str} Really delete Powerset: {DatabaseAPI.Database.Powersets[index1].DisplayName}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            {
+                return;
+            }
+
+            var powersetArray = new IPowerset?[DatabaseAPI.Database.Powersets.Length];
+            var index2 = 0;
+            for (var index3 = 0; index3 < DatabaseAPI.Database.Powersets.Length; index3++)
+            {
+                if (index3 == index1)
+                {
+                    continue;
+                }
+
+                powersetArray[index2] = new Powerset(DatabaseAPI.Database.Powersets[index3]);
+                index2++;
+            }
+
+            DatabaseAPI.Database.Powersets = new IPowerset?[DatabaseAPI.Database.Powersets.Length - 1];
+            for (var index3 = 0; index3 < DatabaseAPI.Database.Powersets.Length; index3++)
+            {
+                DatabaseAPI.Database.Powersets[index3] = new Powerset(powersetArray[index3]) { nID = index3 };
+            }
+
+            var powerset = -1;
+            if (lvSet.Items.Count > 0)
+            {
+                if (lvSet.Items.Count > index1)
+                {
+                    powerset = index1;
+                }
+                else if (lvSet.Items.Count == index1)
+                {
+                    powerset = index1 - 1;
+                }
+            }
+
+            BusyMsg("Re-Indexing...");
+            DatabaseAPI.MatchAllIDs();
+            RefreshLists(-1, powerset);
+            BusyHide();
         }
 
         private void btnSetEdit_Click(object sender, EventArgs e)
         {
             if (lvSet.SelectedIndices.Count <= 0)
+            {
                 return;
+            }
+
             var Powerset = DatabaseAPI.NidFromUidPowerset(lvSet.SelectedItems[0].SubItems[3].Text);
             if (Powerset < 0)
             {
                 MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
+
+                return;
             }
-            else
+            
+            var powerset = DatabaseAPI.Database.Powersets[Powerset];
+            var fullName = powerset.FullName;
+            using var frmEditPowerset = new frmEditPowerset(ref powerset);
+            if (frmEditPowerset.ShowDialog() != DialogResult.OK)
             {
-                var powerset = DatabaseAPI.Database.Powersets[Powerset];
-                var fullName = powerset.FullName;
-                using var frmEditPowerset = new frmEditPowerset(ref powerset);
-                if (frmEditPowerset.ShowDialog() != DialogResult.OK)
-                    return;
-                DatabaseAPI.Database.Powersets[Powerset] = new Powerset(frmEditPowerset.MyPowerSet) { IsModified = true };
-                if (DatabaseAPI.Database.Powersets[Powerset].FullName == fullName)
-                    return;
-                BusyMsg("Re-Indexing...");
-                DatabaseAPI.MatchAllIDs();
-                RefreshLists(-1, Powerset);
-                BusyHide();
+                return;
             }
+
+            DatabaseAPI.Database.Powersets[Powerset] = new Powerset(frmEditPowerset.MyPowerSet) { IsModified = true };
+            if (DatabaseAPI.Database.Powersets[Powerset].FullName == fullName)
+            {
+                return;
+            }
+
+            BusyMsg("Re-Indexing...");
+            DatabaseAPI.MatchAllIDs();
+            RefreshLists(-1, Powerset);
+            BusyHide();
         }
 
         private async void BuildATImageList()
@@ -856,31 +922,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
+                    foreach (Button btn in pnlGroup.Controls)
                     {
-                        foreach (Button btn in pnlGroup.Controls)
+                        if (buttons.Any(b => b == btn))
                         {
-                            if (buttons.Any(b => b == btn))
-                            {
-                                btn.Enabled = false;
-                            }
+                            btn.Enabled = false;
                         }
-
-                        lvGroup.Sorting = SortOrder.Ascending;
-                        break;
                     }
+
+                    lvGroup.Sorting = SortOrder.Ascending;
+                    break;
                 case 1:
+                    foreach (Button btn in pnlGroup.Controls)
                     {
-                        foreach (Button btn in pnlGroup.Controls)
+                        if (buttons.Any(b => b == btn))
                         {
-                            if (buttons.Any(b => b == btn))
-                            {
-                                btn.Enabled = true;
-                            }
+                            btn.Enabled = true;
                         }
-
-                        lvGroup.Sorting = SortOrder.None;
-                        break;
                     }
+
+                    lvGroup.Sorting = SortOrder.None;
+                    break;
             }
             UpdateLists();
         }
@@ -907,7 +969,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnManageHiddenPowers.Visible = MidsContext.Config.MasterMode;
             btnDbQueries.Visible = MidsContext.Config.MasterMode;
             Text = $"Power Database Browser [{DatabaseAPI.DatabaseName} DB]";
-            _selected = new[] { 0, 0, 0 };
+            _selected = [0, 0, 0];
 
             try
             {
@@ -929,43 +991,45 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
+                    foreach (var powersetGroup in DatabaseAPI.Database.PowersetGroups.Values)
                     {
-                        foreach (var powersetGroup in DatabaseAPI.Database.PowersetGroups.Values)
+                        var imageIndex = -1;
+                        for (var index = 0; index < DatabaseAPI.Database.Classes.Length; index++)
                         {
-                            var imageIndex = -1;
-                            var num = DatabaseAPI.Database.Classes.Length - 1;
-                            for (var index = 0; index <= num; ++index)
+                            if (!(string.Equals(DatabaseAPI.Database.Classes[index].PrimaryGroup, powersetGroup.Name, StringComparison.OrdinalIgnoreCase) | string.Equals(DatabaseAPI.Database.Classes[index].SecondaryGroup, powersetGroup.Name, StringComparison.OrdinalIgnoreCase)))
                             {
-                                if (!(string.Equals(DatabaseAPI.Database.Classes[index].PrimaryGroup, powersetGroup.Name, StringComparison.OrdinalIgnoreCase) | string.Equals(DatabaseAPI.Database.Classes[index].SecondaryGroup, powersetGroup.Name, StringComparison.OrdinalIgnoreCase)))
-                                    continue;
-                                imageIndex = index;
-                                break;
+                                continue;
                             }
 
-                            if (imageIndex > -1)
-                                lvGroup.Items.Add(new ListViewItem(powersetGroup.Name, imageIndex));
-                            else
-                                lvGroup.Items.Add(powersetGroup.Name);
+                            imageIndex = index;
+                            break;
                         }
 
-                        lvGroup.Columns[0].Text = @"Group";
-                        lvGroup.Columns[0].Width = -2;
-                        lvGroup.Enabled = true;
-                        pnlGroup.Enabled = true;
-                        break;
+                        if (imageIndex > -1)
+                            lvGroup.Items.Add(new ListViewItem(powersetGroup.Name, imageIndex));
+                        else
+                            lvGroup.Items.Add(powersetGroup.Name);
                     }
+
+                    lvGroup.Columns[0].Text = @"Group";
+                    lvGroup.Columns[0].Width = -2;
+                    lvGroup.Enabled = true;
+                    pnlGroup.Enabled = true;
+                    break;
+                
                 case 1:
+                    for (var imageIndex = 0; imageIndex < DatabaseAPI.Database.Classes.Length; imageIndex++)
                     {
-                        var num = DatabaseAPI.Database.Classes.Length - 1;
-                        for (var imageIndex = 0; imageIndex <= num; ++imageIndex)
-                            lvGroup.Items.Add(new ListViewItem(DatabaseAPI.Database.Classes[imageIndex].ClassName,
-                                imageIndex));
-                        lvGroup.Columns[0].Text = @"Class";
-                        lvGroup.Columns[0].Width = -2;
-                        lvGroup.Enabled = true;
-                        pnlGroup.Enabled = true;
-                        break;
+                        lvGroup.Items.Add(new ListViewItem(DatabaseAPI.Database.Classes[imageIndex].ClassName,
+                            imageIndex));
                     }
+
+                    lvGroup.Columns[0].Text = @"Class";
+                    lvGroup.Columns[0].Width = -2;
+                    lvGroup.Enabled = true;
+                    pnlGroup.Enabled = true;
+                    break;
+                
                 default:
                     lvGroup.Columns[0].Text = "";
                     lvGroup.Enabled = false;
@@ -995,22 +1059,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             var items = new string[4];
             if (iPowers.Count < 1)
-                return;
-            var num = iPowers.Count - 1;
-            for (var index = 0; index <= num; ++index)
             {
-                if (iPowers[index] <= -1 || DatabaseAPI.Database.Power[iPowers[index]].HiddenPower)
+                return;
+            }
+
+            foreach (var p in iPowers)
+            {
+                if (p <= -1 || DatabaseAPI.Database.Power[p].HiddenPower)
+                {
                     continue;
+                }
+
                 items[0] = !displayFullName
-                    ? DatabaseAPI.Database.Power[iPowers[index]].PowerName
-                    : DatabaseAPI.Database.Power[iPowers[index]].FullName;
-                items[1] = DatabaseAPI.Database.Power[iPowers[index]].DisplayName;
-                items[2] = Convert.ToString(DatabaseAPI.Database.Power[iPowers[index]].Level,
+                    ? DatabaseAPI.Database.Power[p].PowerName
+                    : DatabaseAPI.Database.Power[p].FullName;
+                items[1] = DatabaseAPI.Database.Power[p].DisplayName;
+                items[2] = Convert.ToString(DatabaseAPI.Database.Power[p].Level,
                     CultureInfo.InvariantCulture);
-                items[3] = DatabaseAPI.Database.Power[iPowers[index]].FullName;
+                items[3] = DatabaseAPI.Database.Power[p].FullName;
                 lvPower.Items.Add(new ListViewItem(items)
                 {
-                    Tag = iPowers[index]
+                    Tag = p
                 });
             }
         }
@@ -1019,13 +1088,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             var items = new string[4];
             if (iPowers.Count < 1)
-                return;
-            var num = iPowers.Count - 1;
-            for (var index1 = 0; index1 <= num; ++index1)
             {
-                var index2 = DatabaseAPI.NidFromUidPower(iPowers[index1]);
+                return;
+            }
+
+            foreach (var p in iPowers)
+            {
+                var index2 = DatabaseAPI.NidFromUidPower(p);
                 if (index2 <= -1 || DatabaseAPI.Database.Power[index2].HiddenPower)
+                {
                     continue;
+                }
+
                 items[0] = !displayFullName
                     ? DatabaseAPI.Database.Power[index2].PowerName
                     : DatabaseAPI.Database.Power[index2].FullName;
@@ -1044,84 +1118,73 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             switch (cbFilter.SelectedIndex)
             {
                 case 0:
-                    {
-                        if (lvSet.SelectedItems.Count > 0)
-                            iPowers2 = DatabaseAPI.UidPowers(lvSet.SelectedItems[0].SubItems[3].Text);
-                        break;
-                    }
+                    if (lvSet.SelectedItems.Count > 0)
+                        iPowers2 = DatabaseAPI.UidPowers(lvSet.SelectedItems[0].SubItems[3].Text);
+                    break;
                 case 1:
+                    if (lvSet.SelectedItems.Count > 0)
                     {
-                        if (lvSet.SelectedItems.Count > 0)
-                        {
-                            var uidClass = "";
-                            if (lvGroup.SelectedItems.Count > 0)
-                                uidClass = lvGroup.SelectedItems[0].SubItems[0].Text;
-                            iPowers2 = DatabaseAPI.UidPowers(lvSet.SelectedItems[0].SubItems[3].Text, uidClass);
-                        }
-
-                        break;
+                        var uidClass = "";
+                        if (lvGroup.SelectedItems.Count > 0)
+                            uidClass = lvGroup.SelectedItems[0].SubItems[0].Text;
+                        iPowers2 = DatabaseAPI.UidPowers(lvSet.SelectedItems[0].SubItems[3].Text, uidClass);
                     }
+
+                    break;
                 case 2:
+                    if (lvSet.SelectedItems.Count > 0)
                     {
-                        if (lvSet.SelectedItems.Count > 0)
-                        {
-                            if (lvSet.SelectedItems[0].SubItems[3].Text != "")
-                                iPowers2 = DatabaseAPI.UidPowers(lvSet.SelectedItems[0].SubItems[3].Text);
-                            else if (lvSet.SelectedItems[0].SubItems[4].Text != "")
-                                iPowers1 = DatabaseAPI.NidPowers(
-                                    (int)Math.Round(Convert.ToDouble(lvSet.SelectedItems[0].SubItems[4].Text)));
-                        }
-
-                        break;
+                        if (lvSet.SelectedItems[0].SubItems[3].Text != "")
+                            iPowers2 = DatabaseAPI.UidPowers(lvSet.SelectedItems[0].SubItems[3].Text);
+                        else if (lvSet.SelectedItems[0].SubItems[4].Text != "")
+                            iPowers1 = DatabaseAPI.NidPowers(
+                                (int)Math.Round(Convert.ToDouble(lvSet.SelectedItems[0].SubItems[4].Text)));
                     }
+
+                    break;
                 case 4:
+                    if (lvSet.SelectedItems.Count > 0)
                     {
-                        if (lvSet.SelectedItems.Count > 0)
+                        int index;
+                        if (lvSet.SelectedItems[0].SubItems[4].Text == "")
                         {
-                            int index;
-                            if (lvSet.SelectedItems[0].SubItems[4].Text == "")
-                            {
-                                index = -1;
-                            }
-                            else
-                            {
-                                index = (int)Math.Round(Convert.ToDouble(lvSet.SelectedItems[0].SubItems[4].Text));
-                            }
-
-                            if (index > -1)
-                            {
-                                iPowers1 = new int[DatabaseAPI.Database.Powersets[index].Power.Length];
-                                Array.Copy(DatabaseAPI.Database.Powersets[index].Power, iPowers1, iPowers1.Length);
-                            }
+                            index = -1;
+                        }
+                        else
+                        {
+                            index = (int)Math.Round(Convert.ToDouble(lvSet.SelectedItems[0].SubItems[4].Text));
                         }
 
-                        break;
+                        if (index > -1)
+                        {
+                            iPowers1 = new int[DatabaseAPI.Database.Powersets[index].Power.Length];
+                            Array.Copy(DatabaseAPI.Database.Powersets[index].Power, iPowers1, iPowers1.Length);
+                        }
                     }
+
+                    break;
                 case 5:
+                    for (var index = 0; index < DatabaseAPI.Database.Power.Length; index++)
                     {
-                        var num = DatabaseAPI.Database.Power.Length - 1;
-                        for (var index = 0; index <= num; ++index)
-                        {
-                            if (!((DatabaseAPI.Database.Power[index].GroupName == "") | (DatabaseAPI.Database.Power[index].SetName == "") | (DatabaseAPI.Database.Power[index].GetPowerSet() == null)))
-                                continue;
+                        if (!((DatabaseAPI.Database.Power[index].GroupName == "") | (DatabaseAPI.Database.Power[index].SetName == "") | (DatabaseAPI.Database.Power[index].GetPowerSet() == null)))
+                            continue;
 
-                            Array.Resize(ref iPowers1, iPowers1.Length + 1);
-                            iPowers1[^1] = index;
-                        }
-
-                        displayFullName = true;
-                        break;
+                        Array.Resize(ref iPowers1, iPowers1.Length + 1);
+                        iPowers1[^1] = index;
                     }
+
+                    displayFullName = true;
+                    break;
                 case 3:
+                    BusyMsg("Building List...");
+                    iPowers1 = new int[DatabaseAPI.Database.Power.Length];
+                    for (var index = 0; index < DatabaseAPI.Database.Power.Length; index++)
                     {
-                        BusyMsg("Building List...");
-                        iPowers1 = new int[DatabaseAPI.Database.Power.Length];
-                        var num = DatabaseAPI.Database.Power.Length - 1;
-                        for (var index = 0; index <= num; ++index)
-                            iPowers1[index] = index;
-                        displayFullName = true;
-                        break;
+                        iPowers1[index] = index;
                     }
+
+                    displayFullName = true;
+                    break;
             }
 
             lvPower.BeginUpdate();
@@ -1293,7 +1356,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvPower_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (lvPower.SelectedItems.Count <= 0)
+            {
                 return;
+            }
+
             lblPower.Text = lvPower.SelectedItems[0].SubItems[3].Text;
             _selected[2] = lvPower.SelectedIndices[0];
         }
@@ -1342,11 +1408,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var selectSet = powerset;
             var selectPower = power;
             if (lvGroup.SelectedIndices.Count > 0 & selectGroup == -1)
+            {
                 selectGroup = lvGroup.SelectedIndices[0];
+            }
+
             if (lvSet.SelectedIndices.Count > 0 & selectSet == -1)
+            {
                 selectSet = lvSet.SelectedIndices[0];
+            }
+
             if (lvPower.SelectedIndices.Count > 0 & selectPower == -1)
+            {
                 selectPower = lvPower.SelectedIndices[0];
+            }
+
             UpdateLists(selectGroup, selectSet, selectPower);
         }
 

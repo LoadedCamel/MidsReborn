@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
@@ -26,7 +25,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
         private void BdImport_Click(object sender, EventArgs e)
         {
-            var chunkData = tbChunkBox.Text;
+            var chunkData = tbChunkBox.Text.Trim();
             ImportClassificationResult = DataClassifier.ClassifyAndExtractData(chunkData);
 
             if (ImportClassificationResult.IsValid && ImportClassificationResult.Type != DataClassifier.DataType.UnkBase64)
