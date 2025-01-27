@@ -3,23 +3,26 @@ using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
 using FontAwesome.Sharp;
-using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Forms.Controls
 {
     public class InputBox : Form
     {
-        private Label inputLabel;
-        private TextBox inputTextBox;
-        private Button buttonOK;
-        private Button buttonCancel;
-        private Panel panel1;
-        private IconButton iconButton1;
-        private PictureBox inputIcon;
-        private static ImageList inputImages;
-        private ErrorProvider errorProviderText;
+        private Label InputLabel;
+        private TextBox InputTextBox;
+        private Button ButtonOk;
+        private Button ButtonCancel;
+        private Panel Panel1;
+        private IconButton IconButton1;
+        private PictureBox InputIcon;
+        private ImageList InputImages;
+        private ErrorProvider ErrorProviderText;
+        private IContainer Components;
         private IContainer components;
-        private ComponentResourceManager resources;
+        private ComponentResourceManager Resources;
+
+        public delegate void InputBoxValidatingHandler(object sender, InputBoxValidatingArgs e);
+        private InputBoxValidatingHandler? Validator { get; set; }
 
         public enum InputBoxIcon
         {
@@ -36,11 +39,35 @@ namespace Mids_Reborn.Forms.Controls
             InitializeComponent();
         }
 
+        private InputBox(string prompt, string title, string defaultResponse, bool isPassword, InputBoxIcon icon)
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            InitializeComponent();
+
+            InputLabel.Text = prompt;
+            Text = title;
+            InputTextBox.Text = defaultResponse;
+            IconButton1.Visible = isPassword;
+            InputIcon.Image = InputImages.Images[(int)icon];
+        }
+
+        private InputBox(string prompt, string title, string defaultResponse, bool isPassword, int iconIndex)
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            InitializeComponent();
+
+            InputLabel.Text = prompt;
+            Text = title;
+            InputTextBox.Text = defaultResponse;
+            IconButton1.Visible = isPassword;
+            InputIcon.Image = InputImages.Images[iconIndex < 0 | iconIndex >= InputImages.Images.Count ? 0 : iconIndex];
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing)
             {
-                components?.Dispose();
+                Components?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -54,132 +81,132 @@ namespace Mids_Reborn.Forms.Controls
         private void InitializeComponent()
         {
             components = new Container();
-            resources = new ComponentResourceManager(typeof(InputBox));
-            inputLabel = new Label();
-            inputTextBox = new TextBox();
-            buttonOK = new Button();
-            buttonCancel = new Button();
-            panel1 = new Panel();
-            iconButton1 = new IconButton();
-            inputIcon = new PictureBox();
-            inputImages = new ImageList(components);
-            errorProviderText = new ErrorProvider(components);
-            panel1.SuspendLayout();
-            ((ISupportInitialize) inputIcon).BeginInit();
-            ((ISupportInitialize) errorProviderText).BeginInit();
+            ComponentResourceManager resources = new ComponentResourceManager(typeof(InputBox));
+            InputLabel = new Label();
+            InputTextBox = new TextBox();
+            ButtonOk = new Button();
+            ButtonCancel = new Button();
+            Panel1 = new Panel();
+            IconButton1 = new IconButton();
+            InputIcon = new PictureBox();
+            InputImages = new ImageList(components);
+            ErrorProviderText = new ErrorProvider(components);
+            Panel1.SuspendLayout();
+            ((ISupportInitialize)InputIcon).BeginInit();
+            ((ISupportInitialize)ErrorProviderText).BeginInit();
             SuspendLayout();
             // 
-            // inputLabel
+            // InputLabel
             // 
-            inputLabel.AutoSize = true;
-            inputLabel.Font = new Font(Fonts.Family("Noto Sans"), 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            inputLabel.Location = new Point(73, 9);
-            inputLabel.Name = "inputLabel";
-            inputLabel.Size = new Size(71, 13);
-            inputLabel.TabIndex = 0;
-            inputLabel.Text = "Description";
+            InputLabel.AutoSize = true;
+            // Disabled: large interline with Noto
+            //InputLabel.Font = new Font(Fonts.Family("Noto Sans"), 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            InputLabel.Location = new Point(73, 9);
+            InputLabel.Name = "InputLabel";
+            InputLabel.Size = new Size(67, 15);
+            InputLabel.TabIndex = 0;
+            InputLabel.Text = "Description";
             // 
-            // inputTextBox
+            // InputTextBox
             // 
-            inputTextBox.Location = new Point(76, 37);
-            inputTextBox.Multiline = false;
-            inputTextBox.Name = "inputTextBox";
-            inputTextBox.Size = new Size(399, 20);
-            inputTextBox.TabIndex = 1;
-            inputTextBox.TextChanged += new EventHandler(inputTextBox_TextChanged);
-            inputTextBox.Validating += new CancelEventHandler(inputTextBox_Validating);
+            InputTextBox.Location = new Point(76, 45);
+            InputTextBox.Name = "InputTextBox";
+            InputTextBox.Size = new Size(399, 23);
+            InputTextBox.TabIndex = 1;
+            InputTextBox.TextChanged += InputTextBox_TextChanged;
+            InputTextBox.Validating += InputTextBox_Validating;
             // 
-            // buttonOK
+            // ButtonOk
             // 
-            buttonOK.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonOK.DialogResult = DialogResult.OK;
-            buttonOK.FlatAppearance.BorderSize = 0;
-            buttonOK.Location = new Point(319, 4);
-            buttonOK.Name = "buttonOK";
-            buttonOK.Size = new Size(75, 23);
-            buttonOK.TabIndex = 2;
-            buttonOK.Text = "OK";
-            buttonOK.UseVisualStyleBackColor = true;
-            buttonOK.Click += new EventHandler(buttonOK_Click);
+            ButtonOk.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            ButtonOk.DialogResult = DialogResult.OK;
+            ButtonOk.FlatAppearance.BorderSize = 0;
+            ButtonOk.Location = new Point(319, 4);
+            ButtonOk.Name = "ButtonOk";
+            ButtonOk.Size = new Size(75, 23);
+            ButtonOk.TabIndex = 2;
+            ButtonOk.Text = "OK";
+            ButtonOk.UseVisualStyleBackColor = true;
+            ButtonOk.Click += ButtonOk_Click;
             // 
-            // buttonCancel
+            // ButtonCancel
             // 
-            buttonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
-            buttonCancel.DialogResult = DialogResult.Cancel;
-            buttonCancel.FlatAppearance.BorderSize = 0;
-            buttonCancel.Location = new Point(400, 4);
-            buttonCancel.Name = "buttonCancel";
-            buttonCancel.Size = new Size(75, 23);
-            buttonCancel.TabIndex = 3;
-            buttonCancel.Text = "Cancel";
-            buttonCancel.UseVisualStyleBackColor = true;
-            buttonCancel.CausesValidation = false;
-            buttonCancel.Click += new EventHandler(buttonCancel_Click);
+            ButtonCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            ButtonCancel.CausesValidation = false;
+            ButtonCancel.DialogResult = DialogResult.Cancel;
+            ButtonCancel.FlatAppearance.BorderSize = 0;
+            ButtonCancel.Location = new Point(400, 4);
+            ButtonCancel.Name = "ButtonCancel";
+            ButtonCancel.Size = new Size(75, 23);
+            ButtonCancel.TabIndex = 3;
+            ButtonCancel.Text = "Cancel";
+            ButtonCancel.UseVisualStyleBackColor = true;
+            ButtonCancel.Click += ButtonCancel_Click;
             // 
-            // panel1
+            // Panel1
             // 
-            panel1.BackColor = SystemColors.Control;
-            panel1.Controls.Add(buttonOK);
-            panel1.Controls.Add(buttonCancel);
-            panel1.Dock = DockStyle.Bottom;
-            panel1.Location = new Point(0, 65);
-            panel1.Name = "panel1";
-            panel1.Size = new Size(492, 30);
-            panel1.TabIndex = 4;
-            //
-            // iconButton1
-            //
-            iconButton1.Visible = false;
-            iconButton1.FlatAppearance.BorderSize = 0;
-            iconButton1.FlatStyle = FlatStyle.Flat;
-            iconButton1.IconChar = IconChar.Eye;
-            iconButton1.IconColor = Color.Black;
-            iconButton1.IconFont = IconFont.Auto;
-            iconButton1.IconSize = 20;
-            iconButton1.Location = new Point(460, 37);
-            iconButton1.Name = "iconButton1";
-            iconButton1.Size = new Size(20, 19);
-            iconButton1.TabIndex = 5;
-            iconButton1.UseVisualStyleBackColor = true;
-            iconButton1.Click += new EventHandler(iconButton1_Click);
+            Panel1.BackColor = SystemColors.Control;
+            Panel1.Controls.Add(ButtonOk);
+            Panel1.Controls.Add(ButtonCancel);
+            Panel1.Dock = DockStyle.Bottom;
+            Panel1.Location = new Point(0, 73);
+            Panel1.Name = "Panel1";
+            Panel1.Size = new Size(492, 30);
+            Panel1.TabIndex = 4;
             // 
-            // inputIcon
+            // IconButton1
             // 
-            inputIcon.BackgroundImageLayout = ImageLayout.Stretch;
-            inputIcon.Location = new Point(12, 9);
-            inputIcon.Name = "inputIcon";
-            inputIcon.Size = new Size(48, 48);
-            inputIcon.TabIndex = 6;
-            inputIcon.TabStop = false;
+            IconButton1.FlatAppearance.BorderSize = 0;
+            IconButton1.FlatStyle = FlatStyle.Flat;
+            IconButton1.IconChar = IconChar.Eye;
+            IconButton1.IconColor = Color.Black;
+            IconButton1.IconFont = IconFont.Auto;
+            IconButton1.IconSize = 20;
+            IconButton1.Location = new Point(460, 45);
+            IconButton1.Name = "IconButton1";
+            IconButton1.Size = new Size(20, 19);
+            IconButton1.TabIndex = 5;
+            IconButton1.UseVisualStyleBackColor = true;
+            IconButton1.Click += IconButton1_Click;
             // 
-            // inputImages
+            // InputIcon
             // 
-            inputImages.ImageStream = (ImageListStreamer) resources.GetObject("inputImages.ImageStream");
-            inputImages.TransparentColor = Color.Transparent;
-            inputImages.Images.SetKeyName(0, "None.png");
-            inputImages.Images.SetKeyName(1, "Info.png");
-            inputImages.Images.SetKeyName(2, "Question.png");
-            inputImages.Images.SetKeyName(3, "Warning.png");
-            inputImages.Images.SetKeyName(4, "Error.png");
+            InputIcon.BackgroundImageLayout = ImageLayout.Stretch;
+            InputIcon.Location = new Point(12, 17);
+            InputIcon.Name = "InputIcon";
+            InputIcon.Size = new Size(48, 48);
+            InputIcon.TabIndex = 6;
+            InputIcon.TabStop = false;
             // 
-            // errorProviderText
+            // InputImages
             // 
-            errorProviderText.ContainerControl = this;
-            errorProviderText.DataMember = "";
+            InputImages.ColorDepth = ColorDepth.Depth32Bit;
+            InputImages.ImageStream = (ImageListStreamer)resources.GetObject("InputImages.ImageStream");
+            InputImages.TransparentColor = Color.Transparent;
+            InputImages.Images.SetKeyName(0, "None.png");
+            InputImages.Images.SetKeyName(1, "Info.png");
+            InputImages.Images.SetKeyName(2, "Question.png");
+            InputImages.Images.SetKeyName(3, "Warning.png");
+            InputImages.Images.SetKeyName(4, "Error.png");
+            // 
+            // ErrorProviderText
+            // 
+            ErrorProviderText.ContainerControl = this;
+            ErrorProviderText.DataMember = "";
             // 
             // InputBox
             // 
-            AcceptButton = buttonOK;
-            AutoScaleDimensions = new SizeF(6F, 13F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            AcceptButton = ButtonOk;
+            AutoScaleMode = AutoScaleMode.None;
             BackColor = SystemColors.Control;
-            CancelButton = buttonCancel;
-            ClientSize = new Size(492, 95);
-            Controls.Add(iconButton1);
-            Controls.Add(inputIcon);
-            Controls.Add(panel1);
-            Controls.Add(inputTextBox);
-            Controls.Add(inputLabel);
+            CancelButton = ButtonCancel;
+            ClientSize = new Size(492, 103);
+            Controls.Add(IconButton1);
+            Controls.Add(InputIcon);
+            Controls.Add(Panel1);
+            Controls.Add(InputTextBox);
+            Controls.Add(InputLabel);
+            DoubleBuffered = true;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -189,42 +216,42 @@ namespace Mids_Reborn.Forms.Controls
             StartPosition = FormStartPosition.CenterParent;
             Text = "Title";
             TopMost = true;
-            panel1.ResumeLayout(false);
-            ((ISupportInitialize) inputIcon).EndInit();
-            ((ISupportInitialize) errorProviderText).EndInit();
+            Panel1.ResumeLayout(false);
+            ((ISupportInitialize)InputIcon).EndInit();
+            ((ISupportInitialize)ErrorProviderText).EndInit();
             ResumeLayout(false);
             PerformLayout();
         }
         #endregion
 
-        private static InputBoxResult Show(string prompt, string title, bool isPassword, string defaultResponse, InputBoxIcon icon, InputBoxValidatingHandler validator, int xpos, int ypos)
+        private static InputBoxResult Show(string prompt, string title, bool isPassword, string defaultResponse, InputBoxIcon icon, InputBoxValidatingHandler validator, int xPos, int yPos)
         {
-            using var form = new InputBox
-            {
-                inputLabel = {Text = prompt},
-                Text = title,
-                inputTextBox = {Text = defaultResponse},
-                iconButton1 = {Visible = isPassword},
-                inputIcon = {Image = inputImages.Images[(int) icon]}
-            };
+            using var form = new InputBox(prompt, title, defaultResponse, isPassword, icon);
 
-            if (xpos >= 0 && ypos >= 0)
+            switch (xPos)
             {
-                form.StartPosition = FormStartPosition.Manual;
-                form.Left = xpos;
-                form.Top = ypos;
-            }
-            else if (xpos == -1 && ypos == -1)
-            {
-                form.StartPosition = FormStartPosition.CenterParent;
+                case >= 0 when yPos >= 0:
+                    form.StartPosition = FormStartPosition.Manual;
+                    form.Left = xPos;
+                    form.Top = yPos;
+                    break;
+                
+                case -1 when yPos == -1:
+                    form.StartPosition = FormStartPosition.CenterParent;
+                    break;
             }
 
             form.Validator = validator;
             var result = form.ShowDialog();
             var returnVal = new InputBoxResult();
-            if (result != DialogResult.OK) return returnVal;
-            returnVal.Text = form.inputTextBox.Text;
+            if (result != DialogResult.OK)
+            {
+                return returnVal;
+            }
+
+            returnVal.Text = form.InputTextBox.Text;
             returnVal.OK = true;
+            
             return returnVal;
         }
 
@@ -233,42 +260,50 @@ namespace Mids_Reborn.Forms.Controls
             return Show(prompt, title, isPassword, defaultText, icon, validator, -1, -1);
         }
 
-        private void inputTextBox_TextChanged(object sender, EventArgs e)
+        private void InputTextBox_TextChanged(object sender, EventArgs e)
         {
-            errorProviderText.SetError(inputTextBox, "");
+            ErrorProviderText.SetError(InputTextBox, "");
         }
 
-        private void inputTextBox_Validating(object sender, CancelEventArgs e)
+        private void InputTextBox_Validating(object sender, CancelEventArgs e)
         {
-            if (Validator == null) return;
-            if (buttonCancel.Focused) return;
-            
-            var args = new InputBoxValidatingArgs {Text = inputTextBox.Text};
+            if (Validator == null)
+            {
+                return;
+            }
+
+            if (ButtonCancel.Focused)
+            {
+                return;
+            }
+
+            var args = new InputBoxValidatingArgs {Text = InputTextBox.Text};
             Validator(this, args);
-            if (!args.Cancel) return;
-            
+            if (!args.Cancel)
+            {
+                return;
+            }
+
             e.Cancel = true;
-            errorProviderText.SetError(inputTextBox, args.Message);
+            ErrorProviderText.SetError(InputTextBox, args.Message);
         }
 
-        private InputBoxValidatingHandler Validator { get; set; }
-
-        private void iconButton1_Click(object sender, EventArgs e)
+        private void IconButton1_Click(object sender, EventArgs e)
         {
-            inputTextBox.UseSystemPasswordChar = inputTextBox.UseSystemPasswordChar switch
+            InputTextBox.UseSystemPasswordChar = InputTextBox.UseSystemPasswordChar switch
             {
                 false => true,
                 true => false
             };
         }
 
-        private void buttonCancel_Click(object sender, EventArgs e)
+        private void ButtonCancel_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.Cancel;
             Close();
         }
 
-        private void buttonOK_Click(object sender, EventArgs e)
+        private void ButtonOk_Click(object sender, EventArgs e)
         {
             DialogResult = DialogResult.OK;
             Close();
@@ -287,6 +322,4 @@ namespace Mids_Reborn.Forms.Controls
         public string Message;
         public bool Cancel;
     }
-
-    public delegate void InputBoxValidatingHandler(object sender, InputBoxValidatingArgs e);
 }
