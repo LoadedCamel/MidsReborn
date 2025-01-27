@@ -28,1247 +28,1241 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.cbCoDFormat = new System.Windows.Forms.CheckBox();
-            this.lblEffectDescription = new System.Windows.Forms.Label();
-            this.tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
-            this.Label2 = new System.Windows.Forms.Label();
-            this.cbPercentageOverride = new System.Windows.Forms.ComboBox();
-            this.txtFXScale = new System.Windows.Forms.TextBox();
-            this.Label11 = new System.Windows.Forms.Label();
-            this.Label1 = new System.Windows.Forms.Label();
-            this.Label22 = new System.Windows.Forms.Label();
-            this.txtPPM = new System.Windows.Forms.TextBox();
-            this.Label23 = new System.Windows.Forms.Label();
-            this.txtFXDuration = new System.Windows.Forms.TextBox();
-            this.Label24 = new System.Windows.Forms.Label();
-            this.txtFXMag = new System.Windows.Forms.TextBox();
-            this.txtFXTicks = new System.Windows.Forms.TextBox();
-            this.Label25 = new System.Windows.Forms.Label();
-            this.txtFXDelay = new System.Windows.Forms.TextBox();
-            this.Label26 = new System.Windows.Forms.Label();
-            this.txtFXProb = new System.Windows.Forms.TextBox();
-            this.Label4 = new System.Windows.Forms.Label();
-            this.cbAttribute = new System.Windows.Forms.ComboBox();
-            this.Label5 = new System.Windows.Forms.Label();
-            this.cbAspect = new System.Windows.Forms.ComboBox();
-            this.lvSubSub = new Mids_Reborn.Controls.ctlListViewColored();
-            this.chSubSub = new System.Windows.Forms.ColumnHeader();
-            this.lvSubAttribute = new Mids_Reborn.Controls.ctlListViewColored();
-            this.chSub = new System.Windows.Forms.ColumnHeader();
-            this.lvEffectType = new Mids_Reborn.Controls.ctlListViewColored();
-            this.ColumnHeader1 = new System.Windows.Forms.ColumnHeader();
-            this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
-            this.cbTarget = new System.Windows.Forms.ComboBox();
-            this.lblAffectsCaster = new System.Windows.Forms.Label();
-            this.label12 = new System.Windows.Forms.Label();
-            this.Label3 = new System.Windows.Forms.Label();
-            this.cbAffects = new System.Windows.Forms.ComboBox();
-            this.Label6 = new System.Windows.Forms.Label();
-            this.cbModifier = new System.Windows.Forms.ComboBox();
-            this.chkStack = new System.Windows.Forms.CheckBox();
-            this.chkNearGround = new System.Windows.Forms.CheckBox();
-            this.chkFXResistable = new System.Windows.Forms.CheckBox();
-            this.IgnoreED = new System.Windows.Forms.CheckBox();
-            this.chkFXBuffable = new System.Windows.Forms.CheckBox();
-            this.chkCancelOnMiss = new System.Windows.Forms.CheckBox();
-            this.flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
-            this.chkRqToHitCheck = new System.Windows.Forms.CheckBox();
-            this.chkIgnoreScale = new System.Windows.Forms.CheckBox();
-            this.Label28 = new System.Windows.Forms.Label();
-            this.cbFXClass = new System.Windows.Forms.ComboBox();
-            this.chkVariable = new System.Windows.Forms.CheckBox();
-            this.Label10 = new System.Windows.Forms.Label();
-            this.txtOverride = new System.Windows.Forms.TextBox();
-            this.cmbEffectId = new System.Windows.Forms.ComboBox();
-            this.Label9 = new System.Windows.Forms.Label();
-            this.Label30 = new System.Windows.Forms.Label();
-            this.cbFXSpecialCase = new System.Windows.Forms.ComboBox();
-            this.label13 = new System.Windows.Forms.Label();
-            this.clbSuppression = new System.Windows.Forms.CheckedListBox();
-            this.panel4 = new System.Windows.Forms.Panel();
-            this.btnCopy = new System.Windows.Forms.Button();
-            this.btnPaste = new System.Windows.Forms.Button();
-            this.btnOK = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnEditConditions = new System.Windows.Forms.Button();
-            this.btnExprBuilder = new System.Windows.Forms.Button();
-            this.tpPowerAttribs = new System.Windows.Forms.TableLayoutPanel();
-            this.txtMaxTargets = new System.Windows.Forms.Label();
-            this.txtArc = new System.Windows.Forms.Label();
-            this.txtEffectArea = new System.Windows.Forms.Label();
-            this.cbFXEffectArea = new System.Windows.Forms.ComboBox();
-            this.txtFXAccuracy = new System.Windows.Forms.TextBox();
-            this.txtRange = new System.Windows.Forms.Label();
-            this.txtAccuracy = new System.Windows.Forms.Label();
-            this.txtCastTime = new System.Windows.Forms.Label();
-            this.txtFXRange = new System.Windows.Forms.TextBox();
-            this.txtInterruptTime = new System.Windows.Forms.Label();
-            this.txtFXInterruptTime = new System.Windows.Forms.TextBox();
-            this.txtRechargeTime = new System.Windows.Forms.Label();
-            this.txtFXCastTime = new System.Windows.Forms.TextBox();
-            this.txtFXRechargeTime = new System.Windows.Forms.TextBox();
-            this.txtActivateInterval = new System.Windows.Forms.Label();
-            this.txtFXActivateInterval = new System.Windows.Forms.TextBox();
-            this.txtEnduranceCost = new System.Windows.Forms.Label();
-            this.txtFXEnduranceCost = new System.Windows.Forms.TextBox();
-            this.txtSecondaryRange = new System.Windows.Forms.Label();
-            this.txtRadius = new System.Windows.Forms.Label();
-            this.txtFXSecondaryRange = new System.Windows.Forms.TextBox();
-            this.txtFXRadius = new System.Windows.Forms.TextBox();
-            this.txtFXArc = new System.Windows.Forms.TextBox();
-            this.txtFXMaxTargets = new System.Windows.Forms.TextBox();
-            this.tableLayoutPanel1.SuspendLayout();
-            this.tableLayoutPanel3.SuspendLayout();
-            this.flowLayoutPanel1.SuspendLayout();
-            this.panel4.SuspendLayout();
-            this.tpPowerAttribs.SuspendLayout();
-            this.SuspendLayout();
+            cbCoDFormat = new System.Windows.Forms.CheckBox();
+            lblEffectDescription = new System.Windows.Forms.Label();
+            tableLayoutPanel1 = new System.Windows.Forms.TableLayoutPanel();
+            Label2 = new System.Windows.Forms.Label();
+            cbPercentageOverride = new System.Windows.Forms.ComboBox();
+            txtFXScale = new System.Windows.Forms.TextBox();
+            Label11 = new System.Windows.Forms.Label();
+            Label1 = new System.Windows.Forms.Label();
+            Label22 = new System.Windows.Forms.Label();
+            txtPPM = new System.Windows.Forms.TextBox();
+            Label23 = new System.Windows.Forms.Label();
+            txtFXDuration = new System.Windows.Forms.TextBox();
+            Label24 = new System.Windows.Forms.Label();
+            txtFXMag = new System.Windows.Forms.TextBox();
+            txtFXTicks = new System.Windows.Forms.TextBox();
+            Label25 = new System.Windows.Forms.Label();
+            txtFXDelay = new System.Windows.Forms.TextBox();
+            Label26 = new System.Windows.Forms.Label();
+            txtFXProb = new System.Windows.Forms.TextBox();
+            Label4 = new System.Windows.Forms.Label();
+            cbAttribute = new System.Windows.Forms.ComboBox();
+            Label5 = new System.Windows.Forms.Label();
+            cbAspect = new System.Windows.Forms.ComboBox();
+            lvSubSub = new Mids_Reborn.Controls.ctlListViewColored();
+            chSubSub = new System.Windows.Forms.ColumnHeader();
+            lvSubAttribute = new Mids_Reborn.Controls.ctlListViewColored();
+            chSub = new System.Windows.Forms.ColumnHeader();
+            lvEffectType = new Mids_Reborn.Controls.ctlListViewColored();
+            ColumnHeader1 = new System.Windows.Forms.ColumnHeader();
+            tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
+            cbTarget = new System.Windows.Forms.ComboBox();
+            lblAffectsCaster = new System.Windows.Forms.Label();
+            label12 = new System.Windows.Forms.Label();
+            Label3 = new System.Windows.Forms.Label();
+            cbAffects = new System.Windows.Forms.ComboBox();
+            Label6 = new System.Windows.Forms.Label();
+            cbModifier = new System.Windows.Forms.ComboBox();
+            chkStack = new System.Windows.Forms.CheckBox();
+            chkNearGround = new System.Windows.Forms.CheckBox();
+            chkFXResistable = new System.Windows.Forms.CheckBox();
+            IgnoreED = new System.Windows.Forms.CheckBox();
+            chkFXBuffable = new System.Windows.Forms.CheckBox();
+            chkCancelOnMiss = new System.Windows.Forms.CheckBox();
+            flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
+            chkRqToHitCheck = new System.Windows.Forms.CheckBox();
+            chkIgnoreScale = new System.Windows.Forms.CheckBox();
+            Label28 = new System.Windows.Forms.Label();
+            cbFXClass = new System.Windows.Forms.ComboBox();
+            chkVariable = new System.Windows.Forms.CheckBox();
+            Label10 = new System.Windows.Forms.Label();
+            txtOverride = new System.Windows.Forms.TextBox();
+            cmbEffectId = new System.Windows.Forms.ComboBox();
+            Label9 = new System.Windows.Forms.Label();
+            Label30 = new System.Windows.Forms.Label();
+            cbFXSpecialCase = new System.Windows.Forms.ComboBox();
+            label13 = new System.Windows.Forms.Label();
+            clbSuppression = new System.Windows.Forms.CheckedListBox();
+            panel4 = new System.Windows.Forms.Panel();
+            btnCopy = new System.Windows.Forms.Button();
+            btnPaste = new System.Windows.Forms.Button();
+            btnOK = new System.Windows.Forms.Button();
+            btnCancel = new System.Windows.Forms.Button();
+            btnEditConditions = new System.Windows.Forms.Button();
+            btnExprBuilder = new System.Windows.Forms.Button();
+            tpPowerAttribs = new System.Windows.Forms.TableLayoutPanel();
+            txtMaxTargets = new System.Windows.Forms.Label();
+            txtArc = new System.Windows.Forms.Label();
+            txtEffectArea = new System.Windows.Forms.Label();
+            cbFXEffectArea = new System.Windows.Forms.ComboBox();
+            txtFXAccuracy = new System.Windows.Forms.TextBox();
+            txtRange = new System.Windows.Forms.Label();
+            txtAccuracy = new System.Windows.Forms.Label();
+            txtCastTime = new System.Windows.Forms.Label();
+            txtFXRange = new System.Windows.Forms.TextBox();
+            txtInterruptTime = new System.Windows.Forms.Label();
+            txtFXInterruptTime = new System.Windows.Forms.TextBox();
+            txtRechargeTime = new System.Windows.Forms.Label();
+            txtFXCastTime = new System.Windows.Forms.TextBox();
+            txtFXRechargeTime = new System.Windows.Forms.TextBox();
+            txtActivateInterval = new System.Windows.Forms.Label();
+            txtFXActivateInterval = new System.Windows.Forms.TextBox();
+            txtEnduranceCost = new System.Windows.Forms.Label();
+            txtFXEnduranceCost = new System.Windows.Forms.TextBox();
+            txtSecondaryRange = new System.Windows.Forms.Label();
+            txtRadius = new System.Windows.Forms.Label();
+            txtFXSecondaryRange = new System.Windows.Forms.TextBox();
+            txtFXRadius = new System.Windows.Forms.TextBox();
+            txtFXArc = new System.Windows.Forms.TextBox();
+            txtFXMaxTargets = new System.Windows.Forms.TextBox();
+            tableLayoutPanel1.SuspendLayout();
+            tableLayoutPanel3.SuspendLayout();
+            flowLayoutPanel1.SuspendLayout();
+            panel4.SuspendLayout();
+            tpPowerAttribs.SuspendLayout();
+            SuspendLayout();
             // 
             // cbCoDFormat
             // 
-            this.cbCoDFormat.AutoSize = true;
-            this.cbCoDFormat.BackColor = System.Drawing.Color.Transparent;
-            this.cbCoDFormat.Location = new System.Drawing.Point(1152, 15);
-            this.cbCoDFormat.Margin = new System.Windows.Forms.Padding(4);
-            this.cbCoDFormat.Name = "cbCoDFormat";
-            this.cbCoDFormat.Size = new System.Drawing.Size(141, 20);
-            this.cbCoDFormat.TabIndex = 177;
-            this.cbCoDFormat.Text = "Use CoD effect format";
-            this.cbCoDFormat.UseVisualStyleBackColor = false;
-            this.cbCoDFormat.CheckedChanged += new System.EventHandler(this.cbCoDFormat_CheckedChanged);
+            cbCoDFormat.AutoSize = true;
+            cbCoDFormat.BackColor = System.Drawing.Color.Transparent;
+            cbCoDFormat.Location = new System.Drawing.Point(1152, 15);
+            cbCoDFormat.Margin = new System.Windows.Forms.Padding(4);
+            cbCoDFormat.Name = "cbCoDFormat";
+            cbCoDFormat.Size = new System.Drawing.Size(143, 19);
+            cbCoDFormat.TabIndex = 177;
+            cbCoDFormat.Text = "Use CoD effect format";
+            cbCoDFormat.UseVisualStyleBackColor = false;
+            cbCoDFormat.CheckedChanged += cbCoDFormat_CheckedChanged;
             // 
             // lblEffectDescription
             // 
-            this.lblEffectDescription.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblEffectDescription.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.lblEffectDescription.ForeColor = System.Drawing.SystemColors.ControlText;
-            this.lblEffectDescription.Location = new System.Drawing.Point(14, 11);
-            this.lblEffectDescription.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblEffectDescription.Name = "lblEffectDescription";
-            this.lblEffectDescription.Size = new System.Drawing.Size(1304, 110);
-            this.lblEffectDescription.TabIndex = 176;
-            this.lblEffectDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblEffectDescription.UseMnemonic = false;
+            lblEffectDescription.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            lblEffectDescription.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
+            lblEffectDescription.ForeColor = System.Drawing.SystemColors.ControlText;
+            lblEffectDescription.Location = new System.Drawing.Point(14, 11);
+            lblEffectDescription.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            lblEffectDescription.Name = "lblEffectDescription";
+            lblEffectDescription.Size = new System.Drawing.Size(1304, 110);
+            lblEffectDescription.TabIndex = 176;
+            lblEffectDescription.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblEffectDescription.UseMnemonic = false;
             // 
             // tableLayoutPanel1
             // 
-            this.tableLayoutPanel1.ColumnCount = 2;
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 96F));
-            this.tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
-            this.tableLayoutPanel1.Controls.Add(this.Label2, 0, 0);
-            this.tableLayoutPanel1.Controls.Add(this.cbPercentageOverride, 1, 0);
-            this.tableLayoutPanel1.Controls.Add(this.txtFXScale, 1, 1);
-            this.tableLayoutPanel1.Controls.Add(this.Label11, 0, 7);
-            this.tableLayoutPanel1.Controls.Add(this.Label1, 0, 1);
-            this.tableLayoutPanel1.Controls.Add(this.Label22, 0, 3);
-            this.tableLayoutPanel1.Controls.Add(this.txtPPM, 1, 7);
-            this.tableLayoutPanel1.Controls.Add(this.Label23, 0, 2);
-            this.tableLayoutPanel1.Controls.Add(this.txtFXDuration, 1, 2);
-            this.tableLayoutPanel1.Controls.Add(this.Label24, 0, 4);
-            this.tableLayoutPanel1.Controls.Add(this.txtFXMag, 1, 3);
-            this.tableLayoutPanel1.Controls.Add(this.txtFXTicks, 1, 4);
-            this.tableLayoutPanel1.Controls.Add(this.Label25, 0, 5);
-            this.tableLayoutPanel1.Controls.Add(this.txtFXDelay, 1, 5);
-            this.tableLayoutPanel1.Controls.Add(this.Label26, 0, 6);
-            this.tableLayoutPanel1.Controls.Add(this.txtFXProb, 1, 6);
-            this.tableLayoutPanel1.Controls.Add(this.Label4, 0, 8);
-            this.tableLayoutPanel1.Controls.Add(this.cbAttribute, 1, 8);
-            this.tableLayoutPanel1.Controls.Add(this.Label5, 0, 9);
-            this.tableLayoutPanel1.Controls.Add(this.cbAspect, 1, 9);
-            this.tableLayoutPanel1.Location = new System.Drawing.Point(14, 124);
-            this.tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
-            this.tableLayoutPanel1.Name = "tableLayoutPanel1";
-            this.tableLayoutPanel1.RowCount = 10;
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
-            this.tableLayoutPanel1.Size = new System.Drawing.Size(266, 338);
-            this.tableLayoutPanel1.TabIndex = 178;
+            tableLayoutPanel1.ColumnCount = 2;
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 96F));
+            tableLayoutPanel1.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 170F));
+            tableLayoutPanel1.Controls.Add(Label2, 0, 0);
+            tableLayoutPanel1.Controls.Add(cbPercentageOverride, 1, 0);
+            tableLayoutPanel1.Controls.Add(txtFXScale, 1, 1);
+            tableLayoutPanel1.Controls.Add(Label11, 0, 7);
+            tableLayoutPanel1.Controls.Add(Label1, 0, 1);
+            tableLayoutPanel1.Controls.Add(Label22, 0, 3);
+            tableLayoutPanel1.Controls.Add(txtPPM, 1, 7);
+            tableLayoutPanel1.Controls.Add(Label23, 0, 2);
+            tableLayoutPanel1.Controls.Add(txtFXDuration, 1, 2);
+            tableLayoutPanel1.Controls.Add(Label24, 0, 4);
+            tableLayoutPanel1.Controls.Add(txtFXMag, 1, 3);
+            tableLayoutPanel1.Controls.Add(txtFXTicks, 1, 4);
+            tableLayoutPanel1.Controls.Add(Label25, 0, 5);
+            tableLayoutPanel1.Controls.Add(txtFXDelay, 1, 5);
+            tableLayoutPanel1.Controls.Add(Label26, 0, 6);
+            tableLayoutPanel1.Controls.Add(txtFXProb, 1, 6);
+            tableLayoutPanel1.Controls.Add(Label4, 0, 8);
+            tableLayoutPanel1.Controls.Add(cbAttribute, 1, 8);
+            tableLayoutPanel1.Controls.Add(Label5, 0, 9);
+            tableLayoutPanel1.Controls.Add(cbAspect, 1, 9);
+            tableLayoutPanel1.Location = new System.Drawing.Point(14, 124);
+            tableLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
+            tableLayoutPanel1.Name = "tableLayoutPanel1";
+            tableLayoutPanel1.RowCount = 10;
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            tableLayoutPanel1.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 10F));
+            tableLayoutPanel1.Size = new System.Drawing.Size(266, 338);
+            tableLayoutPanel1.TabIndex = 178;
             // 
             // Label2
             // 
-            this.Label2.AutoSize = true;
-            this.Label2.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label2.Location = new System.Drawing.Point(4, 0);
-            this.Label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label2.Name = "Label2";
-            this.Label2.Size = new System.Drawing.Size(88, 33);
-            this.Label2.TabIndex = 128;
-            this.Label2.Text = "Percentage:";
-            this.Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            Label2.AutoSize = true;
+            Label2.Dock = System.Windows.Forms.DockStyle.Fill;
+            Label2.Location = new System.Drawing.Point(4, 0);
+            Label2.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label2.Name = "Label2";
+            Label2.Size = new System.Drawing.Size(88, 33);
+            Label2.TabIndex = 128;
+            Label2.Text = "Percentage:";
+            Label2.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cbPercentageOverride
             // 
-            this.cbPercentageOverride.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbPercentageOverride.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbPercentageOverride.Location = new System.Drawing.Point(100, 4);
-            this.cbPercentageOverride.Margin = new System.Windows.Forms.Padding(4);
-            this.cbPercentageOverride.Name = "cbPercentageOverride";
-            this.cbPercentageOverride.Size = new System.Drawing.Size(162, 24);
-            this.cbPercentageOverride.TabIndex = 127;
-            this.cbPercentageOverride.SelectedIndexChanged += new System.EventHandler(this.cbPercentageOverride_SelectedIndexChanged);
+            cbPercentageOverride.Dock = System.Windows.Forms.DockStyle.Fill;
+            cbPercentageOverride.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbPercentageOverride.Location = new System.Drawing.Point(100, 4);
+            cbPercentageOverride.Margin = new System.Windows.Forms.Padding(4);
+            cbPercentageOverride.Name = "cbPercentageOverride";
+            cbPercentageOverride.Size = new System.Drawing.Size(162, 23);
+            cbPercentageOverride.TabIndex = 127;
+            cbPercentageOverride.SelectedIndexChanged += cbPercentageOverride_SelectedIndexChanged;
             // 
             // txtFXScale
             // 
-            this.txtFXScale.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXScale.Location = new System.Drawing.Point(100, 37);
-            this.txtFXScale.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXScale.Name = "txtFXScale";
-            this.txtFXScale.Size = new System.Drawing.Size(162, 23);
-            this.txtFXScale.TabIndex = 129;
-            this.txtFXScale.Text = "0";
-            this.txtFXScale.TextChanged += new System.EventHandler(this.txtFXScale_TextChanged);
-            this.txtFXScale.Leave += new System.EventHandler(this.txtFXScale_Leave);
+            txtFXScale.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXScale.Location = new System.Drawing.Point(100, 37);
+            txtFXScale.Margin = new System.Windows.Forms.Padding(4);
+            txtFXScale.Name = "txtFXScale";
+            txtFXScale.Size = new System.Drawing.Size(162, 23);
+            txtFXScale.TabIndex = 129;
+            txtFXScale.Text = "0";
+            txtFXScale.TextChanged += txtFXScale_TextChanged;
+            txtFXScale.Leave += txtFXScale_Leave;
             // 
             // Label11
             // 
-            this.Label11.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label11.Location = new System.Drawing.Point(4, 231);
-            this.Label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label11.Name = "Label11";
-            this.Label11.Size = new System.Drawing.Size(88, 33);
-            this.Label11.TabIndex = 155;
-            this.Label11.Text = "PPM:";
-            this.Label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            Label11.Dock = System.Windows.Forms.DockStyle.Fill;
+            Label11.Location = new System.Drawing.Point(4, 231);
+            Label11.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label11.Name = "Label11";
+            Label11.Size = new System.Drawing.Size(88, 33);
+            Label11.TabIndex = 155;
+            Label11.Text = "PPM:";
+            Label11.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Label1
             // 
-            this.Label1.AutoSize = true;
-            this.Label1.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label1.Location = new System.Drawing.Point(4, 33);
-            this.Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label1.Name = "Label1";
-            this.Label1.Size = new System.Drawing.Size(88, 33);
-            this.Label1.TabIndex = 130;
-            this.Label1.Text = "Scale:";
-            this.Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            Label1.AutoSize = true;
+            Label1.Dock = System.Windows.Forms.DockStyle.Fill;
+            Label1.Location = new System.Drawing.Point(4, 33);
+            Label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label1.Name = "Label1";
+            Label1.Size = new System.Drawing.Size(88, 33);
+            Label1.TabIndex = 130;
+            Label1.Text = "Scale:";
+            Label1.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Label22
             // 
-            this.Label22.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label22.Location = new System.Drawing.Point(4, 99);
-            this.Label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label22.Name = "Label22";
-            this.Label22.Size = new System.Drawing.Size(88, 33);
-            this.Label22.TabIndex = 97;
-            this.Label22.Text = "Magnitude:";
-            this.Label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            Label22.Dock = System.Windows.Forms.DockStyle.Fill;
+            Label22.Location = new System.Drawing.Point(4, 99);
+            Label22.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label22.Name = "Label22";
+            Label22.Size = new System.Drawing.Size(88, 33);
+            Label22.TabIndex = 97;
+            Label22.Text = "Magnitude:";
+            Label22.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtPPM
             // 
-            this.txtPPM.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtPPM.Location = new System.Drawing.Point(100, 235);
-            this.txtPPM.Margin = new System.Windows.Forms.Padding(4);
-            this.txtPPM.Name = "txtPPM";
-            this.txtPPM.Size = new System.Drawing.Size(162, 23);
-            this.txtPPM.TabIndex = 154;
-            this.txtPPM.Text = "0";
-            this.txtPPM.TextChanged += new System.EventHandler(this.txtPPM_TextChanged);
-            this.txtPPM.Leave += new System.EventHandler(this.txtPPM_Leave);
+            txtPPM.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtPPM.Location = new System.Drawing.Point(100, 235);
+            txtPPM.Margin = new System.Windows.Forms.Padding(4);
+            txtPPM.Name = "txtPPM";
+            txtPPM.Size = new System.Drawing.Size(162, 23);
+            txtPPM.TabIndex = 154;
+            txtPPM.Text = "0";
+            txtPPM.TextChanged += txtPPM_TextChanged;
+            txtPPM.Leave += txtPPM_Leave;
             // 
             // Label23
             // 
-            this.Label23.AutoSize = true;
-            this.Label23.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label23.Location = new System.Drawing.Point(4, 66);
-            this.Label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label23.Name = "Label23";
-            this.Label23.Size = new System.Drawing.Size(88, 33);
-            this.Label23.TabIndex = 98;
-            this.Label23.Text = "Duration:";
-            this.Label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            Label23.AutoSize = true;
+            Label23.Dock = System.Windows.Forms.DockStyle.Fill;
+            Label23.Location = new System.Drawing.Point(4, 66);
+            Label23.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label23.Name = "Label23";
+            Label23.Size = new System.Drawing.Size(88, 33);
+            Label23.TabIndex = 98;
+            Label23.Text = "Duration:";
+            Label23.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtFXDuration
             // 
-            this.txtFXDuration.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXDuration.Location = new System.Drawing.Point(100, 70);
-            this.txtFXDuration.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXDuration.Name = "txtFXDuration";
-            this.txtFXDuration.Size = new System.Drawing.Size(162, 23);
-            this.txtFXDuration.TabIndex = 82;
-            this.txtFXDuration.Text = "0";
-            this.txtFXDuration.TextChanged += new System.EventHandler(this.txtFXDuration_TextChanged);
-            this.txtFXDuration.Leave += new System.EventHandler(this.txtFXDuration_Leave);
+            txtFXDuration.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXDuration.Location = new System.Drawing.Point(100, 70);
+            txtFXDuration.Margin = new System.Windows.Forms.Padding(4);
+            txtFXDuration.Name = "txtFXDuration";
+            txtFXDuration.Size = new System.Drawing.Size(162, 23);
+            txtFXDuration.TabIndex = 82;
+            txtFXDuration.Text = "0";
+            txtFXDuration.TextChanged += txtFXDuration_TextChanged;
+            txtFXDuration.Leave += txtFXDuration_Leave;
             // 
             // Label24
             // 
-            this.Label24.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label24.Location = new System.Drawing.Point(4, 132);
-            this.Label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label24.Name = "Label24";
-            this.Label24.Size = new System.Drawing.Size(88, 33);
-            this.Label24.TabIndex = 99;
-            this.Label24.Text = "Ticks:";
-            this.Label24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            Label24.Dock = System.Windows.Forms.DockStyle.Fill;
+            Label24.Location = new System.Drawing.Point(4, 132);
+            Label24.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label24.Name = "Label24";
+            Label24.Size = new System.Drawing.Size(88, 33);
+            Label24.TabIndex = 99;
+            Label24.Text = "Ticks:";
+            Label24.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtFXMag
             // 
-            this.txtFXMag.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXMag.Location = new System.Drawing.Point(100, 103);
-            this.txtFXMag.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXMag.Name = "txtFXMag";
-            this.txtFXMag.Size = new System.Drawing.Size(162, 23);
-            this.txtFXMag.TabIndex = 80;
-            this.txtFXMag.Text = "0";
-            this.txtFXMag.TextChanged += new System.EventHandler(this.txtFXMag_TextChanged);
-            this.txtFXMag.Leave += new System.EventHandler(this.txtFXMag_Leave);
+            txtFXMag.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXMag.Location = new System.Drawing.Point(100, 103);
+            txtFXMag.Margin = new System.Windows.Forms.Padding(4);
+            txtFXMag.Name = "txtFXMag";
+            txtFXMag.Size = new System.Drawing.Size(162, 23);
+            txtFXMag.TabIndex = 80;
+            txtFXMag.Text = "0";
+            txtFXMag.TextChanged += txtFXMag_TextChanged;
+            txtFXMag.Leave += txtFXMag_Leave;
             // 
             // txtFXTicks
             // 
-            this.txtFXTicks.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXTicks.Location = new System.Drawing.Point(100, 136);
-            this.txtFXTicks.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXTicks.Name = "txtFXTicks";
-            this.txtFXTicks.Size = new System.Drawing.Size(162, 23);
-            this.txtFXTicks.TabIndex = 83;
-            this.txtFXTicks.Text = "0";
-            this.txtFXTicks.TextChanged += new System.EventHandler(this.txtFXTicks_TextChanged);
-            this.txtFXTicks.Leave += new System.EventHandler(this.txtFXTicks_Leave);
+            txtFXTicks.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXTicks.Location = new System.Drawing.Point(100, 136);
+            txtFXTicks.Margin = new System.Windows.Forms.Padding(4);
+            txtFXTicks.Name = "txtFXTicks";
+            txtFXTicks.Size = new System.Drawing.Size(162, 23);
+            txtFXTicks.TabIndex = 83;
+            txtFXTicks.Text = "0";
+            txtFXTicks.TextChanged += txtFXTicks_TextChanged;
+            txtFXTicks.Leave += txtFXTicks_Leave;
             // 
             // Label25
             // 
-            this.Label25.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label25.Location = new System.Drawing.Point(4, 165);
-            this.Label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label25.Name = "Label25";
-            this.Label25.Size = new System.Drawing.Size(88, 33);
-            this.Label25.TabIndex = 100;
-            this.Label25.Text = "Delay Time:";
-            this.Label25.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            Label25.Dock = System.Windows.Forms.DockStyle.Fill;
+            Label25.Location = new System.Drawing.Point(4, 165);
+            Label25.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label25.Name = "Label25";
+            Label25.Size = new System.Drawing.Size(88, 33);
+            Label25.TabIndex = 100;
+            Label25.Text = "Delay Time:";
+            Label25.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtFXDelay
             // 
-            this.txtFXDelay.Location = new System.Drawing.Point(100, 169);
-            this.txtFXDelay.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXDelay.Name = "txtFXDelay";
-            this.txtFXDelay.Size = new System.Drawing.Size(75, 23);
-            this.txtFXDelay.TabIndex = 84;
-            this.txtFXDelay.Text = "0";
-            this.txtFXDelay.TextChanged += new System.EventHandler(this.txtFXDelay_TextChanged);
-            this.txtFXDelay.Leave += new System.EventHandler(this.txtFXDelay_Leave);
+            txtFXDelay.Location = new System.Drawing.Point(100, 169);
+            txtFXDelay.Margin = new System.Windows.Forms.Padding(4);
+            txtFXDelay.Name = "txtFXDelay";
+            txtFXDelay.Size = new System.Drawing.Size(75, 23);
+            txtFXDelay.TabIndex = 84;
+            txtFXDelay.Text = "0";
+            txtFXDelay.TextChanged += txtFXDelay_TextChanged;
+            txtFXDelay.Leave += txtFXDelay_Leave;
             // 
             // Label26
             // 
-            this.Label26.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label26.Location = new System.Drawing.Point(4, 198);
-            this.Label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label26.Name = "Label26";
-            this.Label26.Size = new System.Drawing.Size(88, 33);
-            this.Label26.TabIndex = 101;
-            this.Label26.Text = "Probability %:";
-            this.Label26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            Label26.Dock = System.Windows.Forms.DockStyle.Fill;
+            Label26.Location = new System.Drawing.Point(4, 198);
+            Label26.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label26.Name = "Label26";
+            Label26.Size = new System.Drawing.Size(88, 33);
+            Label26.TabIndex = 101;
+            Label26.Text = "Probability %:";
+            Label26.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtFXProb
             // 
-            this.txtFXProb.Location = new System.Drawing.Point(100, 202);
-            this.txtFXProb.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXProb.Name = "txtFXProb";
-            this.txtFXProb.Size = new System.Drawing.Size(116, 23);
-            this.txtFXProb.TabIndex = 156;
-            this.txtFXProb.TextChanged += new System.EventHandler(this.txtFXProb_TextChanged);
-            this.txtFXProb.MouseLeave += new System.EventHandler(this.txtFXProb_Leave);
+            txtFXProb.Location = new System.Drawing.Point(100, 202);
+            txtFXProb.Margin = new System.Windows.Forms.Padding(4);
+            txtFXProb.Name = "txtFXProb";
+            txtFXProb.Size = new System.Drawing.Size(116, 23);
+            txtFXProb.TabIndex = 156;
+            txtFXProb.TextChanged += txtFXProb_TextChanged;
+            txtFXProb.MouseLeave += txtFXProb_Leave;
             // 
             // Label4
             // 
-            this.Label4.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label4.Location = new System.Drawing.Point(4, 264);
-            this.Label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label4.Name = "Label4";
-            this.Label4.Size = new System.Drawing.Size(88, 33);
-            this.Label4.TabIndex = 134;
-            this.Label4.Text = "AttribType:";
-            this.Label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            Label4.Dock = System.Windows.Forms.DockStyle.Fill;
+            Label4.Location = new System.Drawing.Point(4, 264);
+            Label4.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label4.Name = "Label4";
+            Label4.Size = new System.Drawing.Size(88, 33);
+            Label4.TabIndex = 134;
+            Label4.Text = "AttribType:";
+            Label4.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cbAttribute
             // 
-            this.cbAttribute.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbAttribute.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAttribute.Location = new System.Drawing.Point(100, 268);
-            this.cbAttribute.Margin = new System.Windows.Forms.Padding(4);
-            this.cbAttribute.Name = "cbAttribute";
-            this.cbAttribute.Size = new System.Drawing.Size(162, 24);
-            this.cbAttribute.TabIndex = 133;
-            this.cbAttribute.SelectedIndexChanged += new System.EventHandler(this.cbAttribute_SelectedIndexChanged);
+            cbAttribute.Dock = System.Windows.Forms.DockStyle.Fill;
+            cbAttribute.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbAttribute.Location = new System.Drawing.Point(100, 268);
+            cbAttribute.Margin = new System.Windows.Forms.Padding(4);
+            cbAttribute.Name = "cbAttribute";
+            cbAttribute.Size = new System.Drawing.Size(162, 23);
+            cbAttribute.TabIndex = 133;
+            cbAttribute.SelectedIndexChanged += cbAttribute_SelectedIndexChanged;
             // 
             // Label5
             // 
-            this.Label5.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label5.Location = new System.Drawing.Point(4, 297);
-            this.Label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label5.Name = "Label5";
-            this.Label5.Size = new System.Drawing.Size(88, 41);
-            this.Label5.TabIndex = 136;
-            this.Label5.Text = "Aspect:";
-            this.Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            Label5.Dock = System.Windows.Forms.DockStyle.Fill;
+            Label5.Location = new System.Drawing.Point(4, 297);
+            Label5.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label5.Name = "Label5";
+            Label5.Size = new System.Drawing.Size(88, 41);
+            Label5.TabIndex = 136;
+            Label5.Text = "Aspect:";
+            Label5.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cbAspect
             // 
-            this.cbAspect.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbAspect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAspect.Location = new System.Drawing.Point(100, 301);
-            this.cbAspect.Margin = new System.Windows.Forms.Padding(4);
-            this.cbAspect.Name = "cbAspect";
-            this.cbAspect.Size = new System.Drawing.Size(162, 24);
-            this.cbAspect.TabIndex = 135;
-            this.cbAspect.SelectedIndexChanged += new System.EventHandler(this.cbAspect_SelectedIndexChanged);
+            cbAspect.Dock = System.Windows.Forms.DockStyle.Fill;
+            cbAspect.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbAspect.Location = new System.Drawing.Point(100, 301);
+            cbAspect.Margin = new System.Windows.Forms.Padding(4);
+            cbAspect.Name = "cbAspect";
+            cbAspect.Size = new System.Drawing.Size(162, 23);
+            cbAspect.TabIndex = 135;
+            cbAspect.SelectedIndexChanged += cbAspect_SelectedIndexChanged;
             // 
             // lvSubSub
             // 
-            this.lvSubSub.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.chSubSub});
-            this.lvSubSub.FullRowSelect = true;
-            this.lvSubSub.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvSubSub.Location = new System.Drawing.Point(948, 124);
-            this.lvSubSub.LostFocusItem = -1;
-            this.lvSubSub.Margin = new System.Windows.Forms.Padding(4);
-            this.lvSubSub.MultiSelect = false;
-            this.lvSubSub.Name = "lvSubSub";
-            this.lvSubSub.OwnerDraw = true;
-            this.lvSubSub.ShowItemToolTips = true;
-            this.lvSubSub.Size = new System.Drawing.Size(434, 431);
-            this.lvSubSub.TabIndex = 181;
-            this.lvSubSub.UseCompatibleStateImageBehavior = false;
-            this.lvSubSub.View = System.Windows.Forms.View.Details;
-            this.lvSubSub.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
-            this.lvSubSub.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
-            this.lvSubSub.SelectedIndexChanged += new System.EventHandler(this.lvSubSub_SelectedIndexChanged);
-            this.lvSubSub.Leave += new System.EventHandler(this.ListView_Leave);
+            lvSubSub.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { chSubSub });
+            lvSubSub.FullRowSelect = true;
+            lvSubSub.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            lvSubSub.Location = new System.Drawing.Point(948, 124);
+            lvSubSub.LostFocusItem = -1;
+            lvSubSub.Margin = new System.Windows.Forms.Padding(4);
+            lvSubSub.MultiSelect = false;
+            lvSubSub.Name = "lvSubSub";
+            lvSubSub.OwnerDraw = true;
+            lvSubSub.ShowItemToolTips = true;
+            lvSubSub.Size = new System.Drawing.Size(434, 431);
+            lvSubSub.TabIndex = 181;
+            lvSubSub.UseCompatibleStateImageBehavior = false;
+            lvSubSub.View = System.Windows.Forms.View.Details;
+            lvSubSub.DrawColumnHeader += ListView_DrawColumnHeader;
+            lvSubSub.DrawItem += ListView_DrawItem;
+            lvSubSub.SelectedIndexChanged += lvSubSub_SelectedIndexChanged;
+            lvSubSub.Leave += ListView_Leave;
             // 
             // chSubSub
             // 
-            this.chSubSub.Text = "Sub-Sub";
-            this.chSubSub.Width = 254;
+            chSubSub.Text = "Sub-Sub";
+            chSubSub.Width = 254;
             // 
             // lvSubAttribute
             // 
-            this.lvSubAttribute.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.chSub});
-            this.lvSubAttribute.FullRowSelect = true;
-            this.lvSubAttribute.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvSubAttribute.Location = new System.Drawing.Point(621, 124);
-            this.lvSubAttribute.LostFocusItem = -1;
-            this.lvSubAttribute.Margin = new System.Windows.Forms.Padding(4);
-            this.lvSubAttribute.MultiSelect = false;
-            this.lvSubAttribute.Name = "lvSubAttribute";
-            this.lvSubAttribute.OwnerDraw = true;
-            this.lvSubAttribute.Size = new System.Drawing.Size(320, 431);
-            this.lvSubAttribute.TabIndex = 180;
-            this.lvSubAttribute.UseCompatibleStateImageBehavior = false;
-            this.lvSubAttribute.View = System.Windows.Forms.View.Details;
-            this.lvSubAttribute.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
-            this.lvSubAttribute.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
-            this.lvSubAttribute.SelectedIndexChanged += new System.EventHandler(this.lvSubAttribute_SelectedIndexChanged);
-            this.lvSubAttribute.Leave += new System.EventHandler(this.ListView_Leave);
+            lvSubAttribute.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { chSub });
+            lvSubAttribute.FullRowSelect = true;
+            lvSubAttribute.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            lvSubAttribute.Location = new System.Drawing.Point(621, 124);
+            lvSubAttribute.LostFocusItem = -1;
+            lvSubAttribute.Margin = new System.Windows.Forms.Padding(4);
+            lvSubAttribute.MultiSelect = false;
+            lvSubAttribute.Name = "lvSubAttribute";
+            lvSubAttribute.OwnerDraw = true;
+            lvSubAttribute.Size = new System.Drawing.Size(320, 431);
+            lvSubAttribute.TabIndex = 180;
+            lvSubAttribute.UseCompatibleStateImageBehavior = false;
+            lvSubAttribute.View = System.Windows.Forms.View.Details;
+            lvSubAttribute.DrawColumnHeader += ListView_DrawColumnHeader;
+            lvSubAttribute.DrawItem += ListView_DrawItem;
+            lvSubAttribute.SelectedIndexChanged += lvSubAttribute_SelectedIndexChanged;
+            lvSubAttribute.Leave += ListView_Leave;
             // 
             // chSub
             // 
-            this.chSub.Text = "Sub-Attribute";
-            this.chSub.Width = 254;
+            chSub.Text = "Sub-Attribute";
+            chSub.Width = 254;
             // 
             // lvEffectType
             // 
-            this.lvEffectType.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.ColumnHeader1});
-            this.lvEffectType.FullRowSelect = true;
-            this.lvEffectType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            this.lvEffectType.Location = new System.Drawing.Point(287, 124);
-            this.lvEffectType.LostFocusItem = -1;
-            this.lvEffectType.Margin = new System.Windows.Forms.Padding(4);
-            this.lvEffectType.MultiSelect = false;
-            this.lvEffectType.Name = "lvEffectType";
-            this.lvEffectType.OwnerDraw = true;
-            this.lvEffectType.Size = new System.Drawing.Size(326, 431);
-            this.lvEffectType.TabIndex = 179;
-            this.lvEffectType.UseCompatibleStateImageBehavior = false;
-            this.lvEffectType.View = System.Windows.Forms.View.Details;
-            this.lvEffectType.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
-            this.lvEffectType.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
-            this.lvEffectType.SelectedIndexChanged += new System.EventHandler(this.lvEffectType_SelectedIndexChanged);
-            this.lvEffectType.Leave += new System.EventHandler(this.ListView_Leave);
+            lvEffectType.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { ColumnHeader1 });
+            lvEffectType.FullRowSelect = true;
+            lvEffectType.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
+            lvEffectType.Location = new System.Drawing.Point(287, 124);
+            lvEffectType.LostFocusItem = -1;
+            lvEffectType.Margin = new System.Windows.Forms.Padding(4);
+            lvEffectType.MultiSelect = false;
+            lvEffectType.Name = "lvEffectType";
+            lvEffectType.OwnerDraw = true;
+            lvEffectType.Size = new System.Drawing.Size(326, 431);
+            lvEffectType.TabIndex = 179;
+            lvEffectType.UseCompatibleStateImageBehavior = false;
+            lvEffectType.View = System.Windows.Forms.View.Details;
+            lvEffectType.DrawColumnHeader += ListView_DrawColumnHeader;
+            lvEffectType.DrawItem += ListView_DrawItem;
+            lvEffectType.SelectedIndexChanged += lvEffectType_SelectedIndexChanged;
+            lvEffectType.Leave += ListView_Leave;
             // 
             // ColumnHeader1
             // 
-            this.ColumnHeader1.Text = "Effect Attribute";
-            this.ColumnHeader1.Width = 202;
+            ColumnHeader1.Text = "Effect Attribute";
+            ColumnHeader1.Width = 202;
             // 
             // tableLayoutPanel3
             // 
-            this.tableLayoutPanel3.ColumnCount = 2;
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 104F));
-            this.tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 162F));
-            this.tableLayoutPanel3.Controls.Add(this.cbTarget, 1, 2);
-            this.tableLayoutPanel3.Controls.Add(this.lblAffectsCaster, 1, 1);
-            this.tableLayoutPanel3.Controls.Add(this.label12, 0, 2);
-            this.tableLayoutPanel3.Controls.Add(this.Label3, 0, 0);
-            this.tableLayoutPanel3.Controls.Add(this.cbAffects, 1, 0);
-            this.tableLayoutPanel3.Location = new System.Drawing.Point(14, 588);
-            this.tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(4);
-            this.tableLayoutPanel3.Name = "tableLayoutPanel3";
-            this.tableLayoutPanel3.RowCount = 3;
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
-            this.tableLayoutPanel3.Size = new System.Drawing.Size(266, 98);
-            this.tableLayoutPanel3.TabIndex = 182;
+            tableLayoutPanel3.ColumnCount = 2;
+            tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 104F));
+            tableLayoutPanel3.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 162F));
+            tableLayoutPanel3.Controls.Add(cbTarget, 1, 2);
+            tableLayoutPanel3.Controls.Add(lblAffectsCaster, 1, 1);
+            tableLayoutPanel3.Controls.Add(label12, 0, 2);
+            tableLayoutPanel3.Controls.Add(Label3, 0, 0);
+            tableLayoutPanel3.Controls.Add(cbAffects, 1, 0);
+            tableLayoutPanel3.Location = new System.Drawing.Point(14, 588);
+            tableLayoutPanel3.Margin = new System.Windows.Forms.Padding(4);
+            tableLayoutPanel3.Name = "tableLayoutPanel3";
+            tableLayoutPanel3.RowCount = 3;
+            tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            tableLayoutPanel3.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 33.33333F));
+            tableLayoutPanel3.Size = new System.Drawing.Size(266, 98);
+            tableLayoutPanel3.TabIndex = 182;
             // 
             // cbTarget
             // 
-            this.cbTarget.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbTarget.Items.AddRange(new object[] {
-            "Any",
-            "Mobs",
-            "Players"});
-            this.cbTarget.Location = new System.Drawing.Point(108, 68);
-            this.cbTarget.Margin = new System.Windows.Forms.Padding(4);
-            this.cbTarget.Name = "cbTarget";
-            this.cbTarget.Size = new System.Drawing.Size(154, 24);
-            this.cbTarget.TabIndex = 201;
-            this.cbTarget.SelectedIndexChanged += new System.EventHandler(this.cbTarget_IndexChanged);
+            cbTarget.Dock = System.Windows.Forms.DockStyle.Fill;
+            cbTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbTarget.Items.AddRange(new object[] { "Any", "Mobs", "Players" });
+            cbTarget.Location = new System.Drawing.Point(108, 68);
+            cbTarget.Margin = new System.Windows.Forms.Padding(4);
+            cbTarget.Name = "cbTarget";
+            cbTarget.Size = new System.Drawing.Size(154, 23);
+            cbTarget.TabIndex = 201;
+            cbTarget.SelectedIndexChanged += cbTarget_IndexChanged;
             // 
             // lblAffectsCaster
             // 
-            this.lblAffectsCaster.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.lblAffectsCaster.Location = new System.Drawing.Point(108, 32);
-            this.lblAffectsCaster.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.lblAffectsCaster.Name = "lblAffectsCaster";
-            this.lblAffectsCaster.Size = new System.Drawing.Size(154, 32);
-            this.lblAffectsCaster.TabIndex = 141;
-            this.lblAffectsCaster.Text = "Power also affects caster";
-            this.lblAffectsCaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblAffectsCaster.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            lblAffectsCaster.Location = new System.Drawing.Point(108, 32);
+            lblAffectsCaster.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            lblAffectsCaster.Name = "lblAffectsCaster";
+            lblAffectsCaster.Size = new System.Drawing.Size(154, 32);
+            lblAffectsCaster.TabIndex = 141;
+            lblAffectsCaster.Text = "Power also affects caster";
+            lblAffectsCaster.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // label12
             // 
-            this.label12.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.label12.Location = new System.Drawing.Point(4, 64);
-            this.label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label12.Name = "label12";
-            this.label12.Size = new System.Drawing.Size(96, 34);
-            this.label12.TabIndex = 202;
-            this.label12.Text = "Target:";
-            this.label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            label12.Dock = System.Windows.Forms.DockStyle.Fill;
+            label12.Location = new System.Drawing.Point(4, 64);
+            label12.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label12.Name = "label12";
+            label12.Size = new System.Drawing.Size(96, 34);
+            label12.TabIndex = 202;
+            label12.Text = "Target:";
+            label12.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // Label3
             // 
-            this.Label3.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.Label3.Location = new System.Drawing.Point(4, 0);
-            this.Label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label3.Name = "Label3";
-            this.Label3.Size = new System.Drawing.Size(96, 32);
-            this.Label3.TabIndex = 132;
-            this.Label3.Text = "Affects:";
-            this.Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            Label3.Dock = System.Windows.Forms.DockStyle.Fill;
+            Label3.Location = new System.Drawing.Point(4, 0);
+            Label3.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label3.Name = "Label3";
+            Label3.Size = new System.Drawing.Size(96, 32);
+            Label3.TabIndex = 132;
+            Label3.Text = "Affects:";
+            Label3.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cbAffects
             // 
-            this.cbAffects.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbAffects.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbAffects.Location = new System.Drawing.Point(108, 4);
-            this.cbAffects.Margin = new System.Windows.Forms.Padding(4);
-            this.cbAffects.Name = "cbAffects";
-            this.cbAffects.Size = new System.Drawing.Size(154, 24);
-            this.cbAffects.TabIndex = 131;
-            this.cbAffects.SelectedIndexChanged += new System.EventHandler(this.cbAffects_SelectedIndexChanged);
+            cbAffects.Dock = System.Windows.Forms.DockStyle.Fill;
+            cbAffects.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbAffects.Location = new System.Drawing.Point(108, 4);
+            cbAffects.Margin = new System.Windows.Forms.Padding(4);
+            cbAffects.Name = "cbAffects";
+            cbAffects.Size = new System.Drawing.Size(154, 23);
+            cbAffects.TabIndex = 131;
+            cbAffects.SelectedIndexChanged += cbAffects_SelectedIndexChanged;
             // 
             // Label6
             // 
-            this.Label6.Location = new System.Drawing.Point(14, 538);
-            this.Label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label6.Name = "Label6";
-            this.Label6.Size = new System.Drawing.Size(270, 18);
-            this.Label6.TabIndex = 142;
-            this.Label6.Text = "Modifier Table:";
-            this.Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            Label6.Location = new System.Drawing.Point(14, 538);
+            Label6.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label6.Name = "Label6";
+            Label6.Size = new System.Drawing.Size(270, 18);
+            Label6.TabIndex = 142;
+            Label6.Text = "Modifier Table:";
+            Label6.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // cbModifier
             // 
-            this.cbModifier.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbModifier.Location = new System.Drawing.Point(14, 559);
-            this.cbModifier.Margin = new System.Windows.Forms.Padding(4);
-            this.cbModifier.Name = "cbModifier";
-            this.cbModifier.Size = new System.Drawing.Size(265, 24);
-            this.cbModifier.TabIndex = 143;
-            this.cbModifier.SelectedIndexChanged += new System.EventHandler(this.cbModifier_SelectedIndexChanged);
+            cbModifier.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbModifier.Location = new System.Drawing.Point(14, 559);
+            cbModifier.Margin = new System.Windows.Forms.Padding(4);
+            cbModifier.Name = "cbModifier";
+            cbModifier.Size = new System.Drawing.Size(265, 23);
+            cbModifier.TabIndex = 143;
+            cbModifier.SelectedIndexChanged += cbModifier_SelectedIndexChanged;
             // 
             // chkStack
             // 
-            this.chkStack.AutoSize = true;
-            this.chkStack.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkStack.Location = new System.Drawing.Point(4, 4);
-            this.chkStack.Margin = new System.Windows.Forms.Padding(4);
-            this.chkStack.Name = "chkStack";
-            this.chkStack.Size = new System.Drawing.Size(77, 20);
-            this.chkStack.TabIndex = 171;
-            this.chkStack.Text = "Can Stack";
-            this.chkStack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkStack.CheckedChanged += new System.EventHandler(this.chkFxNoStack_CheckedChanged);
+            chkStack.AutoSize = true;
+            chkStack.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkStack.Location = new System.Drawing.Point(4, 4);
+            chkStack.Margin = new System.Windows.Forms.Padding(4);
+            chkStack.Name = "chkStack";
+            chkStack.Size = new System.Drawing.Size(78, 19);
+            chkStack.TabIndex = 171;
+            chkStack.Text = "Can Stack";
+            chkStack.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkStack.CheckedChanged += chkFxNoStack_CheckedChanged;
             // 
             // chkNearGround
             // 
-            this.chkNearGround.AutoSize = true;
-            this.chkNearGround.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkNearGround.Location = new System.Drawing.Point(367, 4);
-            this.chkNearGround.Margin = new System.Windows.Forms.Padding(4);
-            this.chkNearGround.Name = "chkNearGround";
-            this.chkNearGround.Size = new System.Drawing.Size(94, 20);
-            this.chkNearGround.TabIndex = 172;
-            this.chkNearGround.Text = "Near Ground";
-            this.chkNearGround.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkNearGround.CheckedChanged += new System.EventHandler(this.chkNearGround_CheckedChanged);
+            chkNearGround.AutoSize = true;
+            chkNearGround.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkNearGround.Location = new System.Drawing.Point(368, 4);
+            chkNearGround.Margin = new System.Windows.Forms.Padding(4);
+            chkNearGround.Name = "chkNearGround";
+            chkNearGround.Size = new System.Drawing.Size(94, 19);
+            chkNearGround.TabIndex = 172;
+            chkNearGround.Text = "Near Ground";
+            chkNearGround.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkNearGround.CheckedChanged += chkNearGround_CheckedChanged;
             // 
             // chkFXResistable
             // 
-            this.chkFXResistable.AutoSize = true;
-            this.chkFXResistable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkFXResistable.Location = new System.Drawing.Point(272, 4);
-            this.chkFXResistable.Margin = new System.Windows.Forms.Padding(4);
-            this.chkFXResistable.Name = "chkFXResistable";
-            this.chkFXResistable.Size = new System.Drawing.Size(87, 20);
-            this.chkFXResistable.TabIndex = 170;
-            this.chkFXResistable.Text = "Unresistible";
-            this.chkFXResistable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkFXResistable.CheckedChanged += new System.EventHandler(this.chkFXResistible_CheckedChanged);
+            chkFXResistable.AutoSize = true;
+            chkFXResistable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkFXResistable.Location = new System.Drawing.Point(273, 4);
+            chkFXResistable.Margin = new System.Windows.Forms.Padding(4);
+            chkFXResistable.Name = "chkFXResistable";
+            chkFXResistable.Size = new System.Drawing.Size(87, 19);
+            chkFXResistable.TabIndex = 170;
+            chkFXResistable.Text = "Unresistible";
+            chkFXResistable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkFXResistable.CheckedChanged += chkFXResistible_CheckedChanged;
             // 
             // IgnoreED
             // 
-            this.IgnoreED.AutoSize = true;
-            this.IgnoreED.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.IgnoreED.Location = new System.Drawing.Point(187, 4);
-            this.IgnoreED.Margin = new System.Windows.Forms.Padding(4);
-            this.IgnoreED.Name = "IgnoreED";
-            this.IgnoreED.Size = new System.Drawing.Size(77, 20);
-            this.IgnoreED.TabIndex = 173;
-            this.IgnoreED.Text = "Ignore ED";
-            this.IgnoreED.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.IgnoreED.CheckedChanged += new System.EventHandler(this.IgnoreED_CheckedChanged);
+            IgnoreED.AutoSize = true;
+            IgnoreED.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            IgnoreED.Location = new System.Drawing.Point(188, 4);
+            IgnoreED.Margin = new System.Windows.Forms.Padding(4);
+            IgnoreED.Name = "IgnoreED";
+            IgnoreED.Size = new System.Drawing.Size(77, 19);
+            IgnoreED.TabIndex = 173;
+            IgnoreED.Text = "Ignore ED";
+            IgnoreED.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            IgnoreED.CheckedChanged += IgnoreED_CheckedChanged;
             // 
             // chkFXBuffable
             // 
-            this.chkFXBuffable.AutoSize = true;
-            this.chkFXBuffable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkFXBuffable.Location = new System.Drawing.Point(89, 4);
-            this.chkFXBuffable.Margin = new System.Windows.Forms.Padding(4);
-            this.chkFXBuffable.Name = "chkFXBuffable";
-            this.chkFXBuffable.Size = new System.Drawing.Size(90, 20);
-            this.chkFXBuffable.TabIndex = 169;
-            this.chkFXBuffable.Text = "Ignore Buffs";
-            this.chkFXBuffable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkFXBuffable.CheckedChanged += new System.EventHandler(this.chkFXBuffable_CheckedChanged);
+            chkFXBuffable.AutoSize = true;
+            chkFXBuffable.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkFXBuffable.Location = new System.Drawing.Point(90, 4);
+            chkFXBuffable.Margin = new System.Windows.Forms.Padding(4);
+            chkFXBuffable.Name = "chkFXBuffable";
+            chkFXBuffable.Size = new System.Drawing.Size(90, 19);
+            chkFXBuffable.TabIndex = 169;
+            chkFXBuffable.Text = "Ignore Buffs";
+            chkFXBuffable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkFXBuffable.CheckedChanged += chkFXBuffable_CheckedChanged;
             // 
             // chkCancelOnMiss
             // 
-            this.chkCancelOnMiss.AutoSize = true;
-            this.chkCancelOnMiss.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkCancelOnMiss.Location = new System.Drawing.Point(469, 4);
-            this.chkCancelOnMiss.Margin = new System.Windows.Forms.Padding(4);
-            this.chkCancelOnMiss.Name = "chkCancelOnMiss";
-            this.chkCancelOnMiss.Size = new System.Drawing.Size(105, 20);
-            this.chkCancelOnMiss.TabIndex = 174;
-            this.chkCancelOnMiss.Text = "Cancel on Miss";
-            this.chkCancelOnMiss.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkCancelOnMiss.CheckedChanged += new System.EventHandler(this.chkCancelOnMiss_CheckedChanged);
+            chkCancelOnMiss.AutoSize = true;
+            chkCancelOnMiss.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkCancelOnMiss.Location = new System.Drawing.Point(470, 4);
+            chkCancelOnMiss.Margin = new System.Windows.Forms.Padding(4);
+            chkCancelOnMiss.Name = "chkCancelOnMiss";
+            chkCancelOnMiss.Size = new System.Drawing.Size(106, 19);
+            chkCancelOnMiss.TabIndex = 174;
+            chkCancelOnMiss.Text = "Cancel on Miss";
+            chkCancelOnMiss.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkCancelOnMiss.CheckedChanged += chkCancelOnMiss_CheckedChanged;
             // 
             // flowLayoutPanel1
             // 
-            this.flowLayoutPanel1.Controls.Add(this.chkStack);
-            this.flowLayoutPanel1.Controls.Add(this.chkFXBuffable);
-            this.flowLayoutPanel1.Controls.Add(this.IgnoreED);
-            this.flowLayoutPanel1.Controls.Add(this.chkFXResistable);
-            this.flowLayoutPanel1.Controls.Add(this.chkNearGround);
-            this.flowLayoutPanel1.Controls.Add(this.chkCancelOnMiss);
-            this.flowLayoutPanel1.Controls.Add(this.chkRqToHitCheck);
-            this.flowLayoutPanel1.Location = new System.Drawing.Point(493, 564);
-            this.flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
-            this.flowLayoutPanel1.Name = "flowLayoutPanel1";
-            this.flowLayoutPanel1.Size = new System.Drawing.Size(746, 31);
-            this.flowLayoutPanel1.TabIndex = 185;
+            flowLayoutPanel1.Controls.Add(chkStack);
+            flowLayoutPanel1.Controls.Add(chkFXBuffable);
+            flowLayoutPanel1.Controls.Add(IgnoreED);
+            flowLayoutPanel1.Controls.Add(chkFXResistable);
+            flowLayoutPanel1.Controls.Add(chkNearGround);
+            flowLayoutPanel1.Controls.Add(chkCancelOnMiss);
+            flowLayoutPanel1.Controls.Add(chkRqToHitCheck);
+            flowLayoutPanel1.Location = new System.Drawing.Point(493, 564);
+            flowLayoutPanel1.Margin = new System.Windows.Forms.Padding(4);
+            flowLayoutPanel1.Name = "flowLayoutPanel1";
+            flowLayoutPanel1.Size = new System.Drawing.Size(746, 31);
+            flowLayoutPanel1.TabIndex = 185;
             // 
             // chkRqToHitCheck
             // 
-            this.chkRqToHitCheck.AutoSize = true;
-            this.chkRqToHitCheck.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkRqToHitCheck.Location = new System.Drawing.Point(582, 4);
-            this.chkRqToHitCheck.Margin = new System.Windows.Forms.Padding(4);
-            this.chkRqToHitCheck.Name = "chkRqToHitCheck";
-            this.chkRqToHitCheck.Size = new System.Drawing.Size(132, 20);
-            this.chkRqToHitCheck.TabIndex = 175;
-            this.chkRqToHitCheck.Text = "Require ToHit Check";
-            this.chkRqToHitCheck.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkRqToHitCheck.CheckedChanged += new System.EventHandler(this.chkRqToHitCheck_CheckedChanged);
+            chkRqToHitCheck.AutoSize = true;
+            chkRqToHitCheck.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkRqToHitCheck.Location = new System.Drawing.Point(584, 4);
+            chkRqToHitCheck.Margin = new System.Windows.Forms.Padding(4);
+            chkRqToHitCheck.Name = "chkRqToHitCheck";
+            chkRqToHitCheck.Size = new System.Drawing.Size(133, 19);
+            chkRqToHitCheck.TabIndex = 175;
+            chkRqToHitCheck.Text = "Require ToHit Check";
+            chkRqToHitCheck.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkRqToHitCheck.CheckedChanged += chkRqToHitCheck_CheckedChanged;
             // 
             // chkIgnoreScale
             // 
-            this.chkIgnoreScale.Location = new System.Drawing.Point(1371, 86);
-            this.chkIgnoreScale.Margin = new System.Windows.Forms.Padding(4);
-            this.chkIgnoreScale.Name = "chkIgnoreScale";
-            this.chkIgnoreScale.Size = new System.Drawing.Size(203, 20);
-            this.chkIgnoreScale.TabIndex = 189;
-            this.chkIgnoreScale.Text = "Ignore Scaling For Effect";
-            this.chkIgnoreScale.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkIgnoreScale.UseVisualStyleBackColor = true;
-            this.chkIgnoreScale.CheckedChanged += new System.EventHandler(this.chkIgnoreScale_CheckChanged);
+            chkIgnoreScale.Location = new System.Drawing.Point(1371, 86);
+            chkIgnoreScale.Margin = new System.Windows.Forms.Padding(4);
+            chkIgnoreScale.Name = "chkIgnoreScale";
+            chkIgnoreScale.Size = new System.Drawing.Size(203, 20);
+            chkIgnoreScale.TabIndex = 189;
+            chkIgnoreScale.Text = "Ignore Scaling For Effect";
+            chkIgnoreScale.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkIgnoreScale.UseVisualStyleBackColor = true;
+            chkIgnoreScale.CheckedChanged += chkIgnoreScale_CheckChanged;
             // 
             // Label28
             // 
-            this.Label28.Location = new System.Drawing.Point(1325, 15);
-            this.Label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label28.Name = "Label28";
-            this.Label28.Size = new System.Drawing.Size(94, 27);
-            this.Label28.TabIndex = 187;
-            this.Label28.Text = "Display Priority:";
-            this.Label28.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            Label28.Location = new System.Drawing.Point(1325, 15);
+            Label28.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label28.Name = "Label28";
+            Label28.Size = new System.Drawing.Size(94, 27);
+            Label28.TabIndex = 187;
+            Label28.Text = "Display Priority:";
+            Label28.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cbFXClass
             // 
-            this.cbFXClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXClass.Location = new System.Drawing.Point(1427, 16);
-            this.cbFXClass.Margin = new System.Windows.Forms.Padding(4);
-            this.cbFXClass.Name = "cbFXClass";
-            this.cbFXClass.Size = new System.Drawing.Size(190, 24);
-            this.cbFXClass.TabIndex = 186;
-            this.cbFXClass.SelectedIndexChanged += new System.EventHandler(this.cbFXClass_SelectedIndexChanged);
+            cbFXClass.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbFXClass.Location = new System.Drawing.Point(1427, 16);
+            cbFXClass.Margin = new System.Windows.Forms.Padding(4);
+            cbFXClass.Name = "cbFXClass";
+            cbFXClass.Size = new System.Drawing.Size(190, 23);
+            cbFXClass.TabIndex = 186;
+            cbFXClass.SelectedIndexChanged += cbFXClass_SelectedIndexChanged;
             // 
             // chkVariable
             // 
-            this.chkVariable.Location = new System.Drawing.Point(1371, 55);
-            this.chkVariable.Margin = new System.Windows.Forms.Padding(4);
-            this.chkVariable.Name = "chkVariable";
-            this.chkVariable.Size = new System.Drawing.Size(203, 23);
-            this.chkVariable.TabIndex = 188;
-            this.chkVariable.Text = "Enable Power Scaling Override";
-            this.chkVariable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
-            this.chkVariable.CheckedChanged += new System.EventHandler(this.chkVariable_CheckedChanged);
+            chkVariable.Location = new System.Drawing.Point(1371, 55);
+            chkVariable.Margin = new System.Windows.Forms.Padding(4);
+            chkVariable.Name = "chkVariable";
+            chkVariable.Size = new System.Drawing.Size(203, 23);
+            chkVariable.TabIndex = 188;
+            chkVariable.Text = "Enable Power Scaling Override";
+            chkVariable.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkVariable.CheckedChanged += chkVariable_CheckedChanged;
             // 
             // Label10
             // 
-            this.Label10.Location = new System.Drawing.Point(1391, 537);
-            this.Label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label10.Name = "Label10";
-            this.Label10.Size = new System.Drawing.Size(64, 23);
-            this.Label10.TabIndex = 190;
-            this.Label10.Text = "Override:";
-            this.Label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            Label10.Location = new System.Drawing.Point(1391, 537);
+            Label10.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label10.Name = "Label10";
+            Label10.Size = new System.Drawing.Size(64, 23);
+            Label10.TabIndex = 190;
+            Label10.Text = "Override:";
+            Label10.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // txtOverride
             // 
-            this.txtOverride.Location = new System.Drawing.Point(1391, 564);
-            this.txtOverride.Margin = new System.Windows.Forms.Padding(4);
-            this.txtOverride.Name = "txtOverride";
-            this.txtOverride.Size = new System.Drawing.Size(219, 23);
-            this.txtOverride.TabIndex = 191;
-            this.txtOverride.TextChanged += new System.EventHandler(this.txtOverride_TextChanged);
+            txtOverride.Location = new System.Drawing.Point(1391, 564);
+            txtOverride.Margin = new System.Windows.Forms.Padding(4);
+            txtOverride.Name = "txtOverride";
+            txtOverride.Size = new System.Drawing.Size(219, 23);
+            txtOverride.TabIndex = 191;
+            txtOverride.TextChanged += txtOverride_TextChanged;
             // 
             // cmbEffectId
             // 
-            this.cmbEffectId.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cmbEffectId.Location = new System.Drawing.Point(1391, 506);
-            this.cmbEffectId.Margin = new System.Windows.Forms.Padding(4);
-            this.cmbEffectId.Name = "cmbEffectId";
-            this.cmbEffectId.Size = new System.Drawing.Size(219, 24);
-            this.cmbEffectId.TabIndex = 195;
-            this.cmbEffectId.SelectedIndexChanged += new System.EventHandler(this.cmbEffectId_SelectedIndexChanged);
+            cmbEffectId.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cmbEffectId.Location = new System.Drawing.Point(1391, 506);
+            cmbEffectId.Margin = new System.Windows.Forms.Padding(4);
+            cmbEffectId.Name = "cmbEffectId";
+            cmbEffectId.Size = new System.Drawing.Size(219, 23);
+            cmbEffectId.TabIndex = 195;
+            cmbEffectId.SelectedIndexChanged += cmbEffectId_SelectedIndexChanged;
             // 
             // Label9
             // 
-            this.Label9.Location = new System.Drawing.Point(1391, 479);
-            this.Label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label9.Name = "Label9";
-            this.Label9.Size = new System.Drawing.Size(145, 23);
-            this.Label9.TabIndex = 194;
-            this.Label9.Text = "GlobalChanceMod Flag:";
-            this.Label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            Label9.Location = new System.Drawing.Point(1391, 479);
+            Label9.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label9.Name = "Label9";
+            Label9.Size = new System.Drawing.Size(145, 23);
+            Label9.TabIndex = 194;
+            Label9.Text = "GlobalChanceMod Flag:";
+            Label9.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // Label30
             // 
-            this.Label30.Location = new System.Drawing.Point(1391, 607);
-            this.Label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.Label30.Name = "Label30";
-            this.Label30.Size = new System.Drawing.Size(167, 25);
-            this.Label30.TabIndex = 193;
-            this.Label30.Text = "Old Special Case:";
-            this.Label30.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            Label30.Location = new System.Drawing.Point(1391, 607);
+            Label30.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            Label30.Name = "Label30";
+            Label30.Size = new System.Drawing.Size(167, 25);
+            Label30.TabIndex = 193;
+            Label30.Text = "Old Special Case:";
+            Label30.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // cbFXSpecialCase
             // 
-            this.cbFXSpecialCase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXSpecialCase.Location = new System.Drawing.Point(1390, 635);
-            this.cbFXSpecialCase.Margin = new System.Windows.Forms.Padding(4);
-            this.cbFXSpecialCase.Name = "cbFXSpecialCase";
-            this.cbFXSpecialCase.Size = new System.Drawing.Size(219, 24);
-            this.cbFXSpecialCase.TabIndex = 192;
-            this.cbFXSpecialCase.SelectedIndexChanged += new System.EventHandler(this.cbFXSpecialCase_SelectedIndexChanged);
+            cbFXSpecialCase.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbFXSpecialCase.Location = new System.Drawing.Point(1390, 635);
+            cbFXSpecialCase.Margin = new System.Windows.Forms.Padding(4);
+            cbFXSpecialCase.Name = "cbFXSpecialCase";
+            cbFXSpecialCase.Size = new System.Drawing.Size(219, 23);
+            cbFXSpecialCase.TabIndex = 192;
+            cbFXSpecialCase.SelectedIndexChanged += cbFXSpecialCase_SelectedIndexChanged;
             // 
             // label13
             // 
-            this.label13.Font = new System.Drawing.Font("Segoe UI", 9F, ((System.Drawing.FontStyle)((System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline))), System.Drawing.GraphicsUnit.Point);
-            this.label13.Location = new System.Drawing.Point(4, 6);
-            this.label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.label13.Name = "label13";
-            this.label13.Size = new System.Drawing.Size(209, 18);
-            this.label13.TabIndex = 181;
-            this.label13.Text = "Suppress Effect (When)";
-            this.label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            label13.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold | System.Drawing.FontStyle.Underline);
+            label13.Location = new System.Drawing.Point(4, 6);
+            label13.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            label13.Name = "label13";
+            label13.Size = new System.Drawing.Size(209, 18);
+            label13.TabIndex = 181;
+            label13.Text = "Suppress Effect (When)";
+            label13.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // clbSuppression
             // 
-            this.clbSuppression.CheckOnClick = true;
-            this.clbSuppression.FormattingEnabled = true;
-            this.clbSuppression.Location = new System.Drawing.Point(7, 28);
-            this.clbSuppression.Margin = new System.Windows.Forms.Padding(4);
-            this.clbSuppression.Name = "clbSuppression";
-            this.clbSuppression.Size = new System.Drawing.Size(205, 292);
-            this.clbSuppression.TabIndex = 0;
-            this.clbSuppression.SelectedIndexChanged += new System.EventHandler(this.clbSuppression_SelectedIndexChanged);
+            clbSuppression.CheckOnClick = true;
+            clbSuppression.FormattingEnabled = true;
+            clbSuppression.Location = new System.Drawing.Point(7, 28);
+            clbSuppression.Margin = new System.Windows.Forms.Padding(4);
+            clbSuppression.Name = "clbSuppression";
+            clbSuppression.Size = new System.Drawing.Size(205, 292);
+            clbSuppression.TabIndex = 0;
+            clbSuppression.SelectedIndexChanged += clbSuppression_SelectedIndexChanged;
             // 
             // panel4
             // 
-            this.panel4.Controls.Add(this.label13);
-            this.panel4.Controls.Add(this.clbSuppression);
-            this.panel4.Location = new System.Drawing.Point(1391, 124);
-            this.panel4.Margin = new System.Windows.Forms.Padding(4);
-            this.panel4.Name = "panel4";
-            this.panel4.Size = new System.Drawing.Size(219, 351);
-            this.panel4.TabIndex = 196;
+            panel4.Controls.Add(label13);
+            panel4.Controls.Add(clbSuppression);
+            panel4.Location = new System.Drawing.Point(1391, 124);
+            panel4.Margin = new System.Windows.Forms.Padding(4);
+            panel4.Name = "panel4";
+            panel4.Size = new System.Drawing.Size(219, 351);
+            panel4.TabIndex = 196;
             // 
             // btnCopy
             // 
-            this.btnCopy.Location = new System.Drawing.Point(1134, 620);
-            this.btnCopy.Margin = new System.Windows.Forms.Padding(4);
-            this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(219, 32);
-            this.btnCopy.TabIndex = 197;
-            this.btnCopy.Text = "Copy Effect Data";
-            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
+            btnCopy.Location = new System.Drawing.Point(1134, 620);
+            btnCopy.Margin = new System.Windows.Forms.Padding(4);
+            btnCopy.Name = "btnCopy";
+            btnCopy.Size = new System.Drawing.Size(219, 32);
+            btnCopy.TabIndex = 197;
+            btnCopy.Text = "Copy Effect Data";
+            btnCopy.Click += btnCopy_Click;
             // 
             // btnPaste
             // 
-            this.btnPaste.Location = new System.Drawing.Point(1134, 656);
-            this.btnPaste.Margin = new System.Windows.Forms.Padding(4);
-            this.btnPaste.Name = "btnPaste";
-            this.btnPaste.Size = new System.Drawing.Size(219, 32);
-            this.btnPaste.TabIndex = 198;
-            this.btnPaste.Text = "Paste Effect Data";
-            this.btnPaste.Click += new System.EventHandler(this.btnPaste_Click);
+            btnPaste.Location = new System.Drawing.Point(1134, 656);
+            btnPaste.Margin = new System.Windows.Forms.Padding(4);
+            btnPaste.Name = "btnPaste";
+            btnPaste.Size = new System.Drawing.Size(219, 32);
+            btnPaste.TabIndex = 198;
+            btnPaste.Text = "Paste Effect Data";
+            btnPaste.Click += btnPaste_Click;
             // 
             // btnOK
             // 
-            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
-            this.btnOK.Location = new System.Drawing.Point(763, 620);
-            this.btnOK.Margin = new System.Windows.Forms.Padding(4);
-            this.btnOK.Name = "btnOK";
-            this.btnOK.Size = new System.Drawing.Size(105, 44);
-            this.btnOK.TabIndex = 200;
-            this.btnOK.Text = "OK";
-            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
+            btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            btnOK.Location = new System.Drawing.Point(763, 620);
+            btnOK.Margin = new System.Windows.Forms.Padding(4);
+            btnOK.Name = "btnOK";
+            btnOK.Size = new System.Drawing.Size(105, 44);
+            btnOK.TabIndex = 200;
+            btnOK.Text = "OK";
+            btnOK.Click += btnOK_Click;
             // 
             // btnCancel
             // 
-            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(875, 620);
-            this.btnCancel.Margin = new System.Windows.Forms.Padding(4);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(100, 44);
-            this.btnCancel.TabIndex = 199;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            btnCancel.Location = new System.Drawing.Point(875, 620);
+            btnCancel.Margin = new System.Windows.Forms.Padding(4);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(100, 44);
+            btnCancel.TabIndex = 199;
+            btnCancel.Text = "Cancel";
+            btnCancel.Click += btnCancel_Click;
             // 
             // btnEditConditions
             // 
-            this.btnEditConditions.Location = new System.Drawing.Point(332, 656);
-            this.btnEditConditions.Margin = new System.Windows.Forms.Padding(4);
-            this.btnEditConditions.Name = "btnEditConditions";
-            this.btnEditConditions.Size = new System.Drawing.Size(266, 32);
-            this.btnEditConditions.TabIndex = 205;
-            this.btnEditConditions.Text = "Edit Effect Conditions";
-            this.btnEditConditions.Click += new System.EventHandler(this.btnEditConditions_Click);
+            btnEditConditions.Location = new System.Drawing.Point(332, 656);
+            btnEditConditions.Margin = new System.Windows.Forms.Padding(4);
+            btnEditConditions.Name = "btnEditConditions";
+            btnEditConditions.Size = new System.Drawing.Size(266, 32);
+            btnEditConditions.TabIndex = 205;
+            btnEditConditions.Text = "Edit Effect Conditions";
+            btnEditConditions.Click += btnEditConditions_Click;
             // 
             // btnExprBuilder
             // 
-            this.btnExprBuilder.Location = new System.Drawing.Point(332, 620);
-            this.btnExprBuilder.Margin = new System.Windows.Forms.Padding(4);
-            this.btnExprBuilder.Name = "btnExprBuilder";
-            this.btnExprBuilder.Size = new System.Drawing.Size(266, 32);
-            this.btnExprBuilder.TabIndex = 206;
-            this.btnExprBuilder.Text = "Expression Builder";
-            this.btnExprBuilder.Click += new System.EventHandler(this.btnExprBuilder_Click);
+            btnExprBuilder.Location = new System.Drawing.Point(332, 620);
+            btnExprBuilder.Margin = new System.Windows.Forms.Padding(4);
+            btnExprBuilder.Name = "btnExprBuilder";
+            btnExprBuilder.Size = new System.Drawing.Size(266, 32);
+            btnExprBuilder.TabIndex = 206;
+            btnExprBuilder.Text = "Expression Builder";
+            btnExprBuilder.Click += btnExprBuilder_Click;
             // 
             // tpPowerAttribs
             // 
-            this.tpPowerAttribs.ColumnCount = 2;
-            this.tpPowerAttribs.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 136F));
-            this.tpPowerAttribs.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
-            this.tpPowerAttribs.Controls.Add(this.txtMaxTargets, 0, 14);
-            this.tpPowerAttribs.Controls.Add(this.txtArc, 0, 13);
-            this.tpPowerAttribs.Controls.Add(this.txtEffectArea, 0, 0);
-            this.tpPowerAttribs.Controls.Add(this.cbFXEffectArea, 1, 0);
-            this.tpPowerAttribs.Controls.Add(this.txtFXAccuracy, 1, 1);
-            this.tpPowerAttribs.Controls.Add(this.txtRange, 0, 7);
-            this.tpPowerAttribs.Controls.Add(this.txtAccuracy, 0, 1);
-            this.tpPowerAttribs.Controls.Add(this.txtCastTime, 0, 3);
-            this.tpPowerAttribs.Controls.Add(this.txtFXRange, 1, 7);
-            this.tpPowerAttribs.Controls.Add(this.txtInterruptTime, 0, 2);
-            this.tpPowerAttribs.Controls.Add(this.txtFXInterruptTime, 1, 2);
-            this.tpPowerAttribs.Controls.Add(this.txtRechargeTime, 0, 4);
-            this.tpPowerAttribs.Controls.Add(this.txtFXCastTime, 1, 3);
-            this.tpPowerAttribs.Controls.Add(this.txtFXRechargeTime, 1, 4);
-            this.tpPowerAttribs.Controls.Add(this.txtActivateInterval, 0, 5);
-            this.tpPowerAttribs.Controls.Add(this.txtFXActivateInterval, 1, 5);
-            this.tpPowerAttribs.Controls.Add(this.txtEnduranceCost, 0, 6);
-            this.tpPowerAttribs.Controls.Add(this.txtFXEnduranceCost, 1, 6);
-            this.tpPowerAttribs.Controls.Add(this.txtSecondaryRange, 0, 8);
-            this.tpPowerAttribs.Controls.Add(this.txtRadius, 0, 9);
-            this.tpPowerAttribs.Controls.Add(this.txtFXSecondaryRange, 1, 8);
-            this.tpPowerAttribs.Controls.Add(this.txtFXRadius, 1, 9);
-            this.tpPowerAttribs.Controls.Add(this.txtFXArc, 1, 13);
-            this.tpPowerAttribs.Controls.Add(this.txtFXMaxTargets, 1, 14);
-            this.tpPowerAttribs.Location = new System.Drawing.Point(14, 124);
-            this.tpPowerAttribs.Margin = new System.Windows.Forms.Padding(4);
-            this.tpPowerAttribs.Name = "tpPowerAttribs";
-            this.tpPowerAttribs.RowCount = 15;
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
-            this.tpPowerAttribs.Size = new System.Drawing.Size(266, 408);
-            this.tpPowerAttribs.TabIndex = 207;
-            this.tpPowerAttribs.Visible = false;
+            tpPowerAttribs.ColumnCount = 2;
+            tpPowerAttribs.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 136F));
+            tpPowerAttribs.ColumnStyles.Add(new System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Absolute, 130F));
+            tpPowerAttribs.Controls.Add(txtMaxTargets, 0, 14);
+            tpPowerAttribs.Controls.Add(txtArc, 0, 13);
+            tpPowerAttribs.Controls.Add(txtEffectArea, 0, 0);
+            tpPowerAttribs.Controls.Add(cbFXEffectArea, 1, 0);
+            tpPowerAttribs.Controls.Add(txtFXAccuracy, 1, 1);
+            tpPowerAttribs.Controls.Add(txtRange, 0, 7);
+            tpPowerAttribs.Controls.Add(txtAccuracy, 0, 1);
+            tpPowerAttribs.Controls.Add(txtCastTime, 0, 3);
+            tpPowerAttribs.Controls.Add(txtFXRange, 1, 7);
+            tpPowerAttribs.Controls.Add(txtInterruptTime, 0, 2);
+            tpPowerAttribs.Controls.Add(txtFXInterruptTime, 1, 2);
+            tpPowerAttribs.Controls.Add(txtRechargeTime, 0, 4);
+            tpPowerAttribs.Controls.Add(txtFXCastTime, 1, 3);
+            tpPowerAttribs.Controls.Add(txtFXRechargeTime, 1, 4);
+            tpPowerAttribs.Controls.Add(txtActivateInterval, 0, 5);
+            tpPowerAttribs.Controls.Add(txtFXActivateInterval, 1, 5);
+            tpPowerAttribs.Controls.Add(txtEnduranceCost, 0, 6);
+            tpPowerAttribs.Controls.Add(txtFXEnduranceCost, 1, 6);
+            tpPowerAttribs.Controls.Add(txtSecondaryRange, 0, 8);
+            tpPowerAttribs.Controls.Add(txtRadius, 0, 9);
+            tpPowerAttribs.Controls.Add(txtFXSecondaryRange, 1, 8);
+            tpPowerAttribs.Controls.Add(txtFXRadius, 1, 9);
+            tpPowerAttribs.Controls.Add(txtFXArc, 1, 13);
+            tpPowerAttribs.Controls.Add(txtFXMaxTargets, 1, 14);
+            tpPowerAttribs.Location = new System.Drawing.Point(14, 124);
+            tpPowerAttribs.Margin = new System.Windows.Forms.Padding(4);
+            tpPowerAttribs.Name = "tpPowerAttribs";
+            tpPowerAttribs.RowCount = 15;
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle());
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 33F));
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 16F));
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            tpPowerAttribs.RowStyles.Add(new System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Absolute, 25F));
+            tpPowerAttribs.Size = new System.Drawing.Size(266, 408);
+            tpPowerAttribs.TabIndex = 207;
+            tpPowerAttribs.Visible = false;
             // 
             // txtMaxTargets
             // 
-            this.txtMaxTargets.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtMaxTargets.Location = new System.Drawing.Point(4, 379);
-            this.txtMaxTargets.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtMaxTargets.Name = "txtMaxTargets";
-            this.txtMaxTargets.Size = new System.Drawing.Size(128, 29);
-            this.txtMaxTargets.TabIndex = 161;
-            this.txtMaxTargets.Text = "Max Targets:";
-            this.txtMaxTargets.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            txtMaxTargets.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtMaxTargets.Location = new System.Drawing.Point(4, 378);
+            txtMaxTargets.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            txtMaxTargets.Name = "txtMaxTargets";
+            txtMaxTargets.Size = new System.Drawing.Size(128, 30);
+            txtMaxTargets.TabIndex = 161;
+            txtMaxTargets.Text = "Max Targets:";
+            txtMaxTargets.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtArc
             // 
-            this.txtArc.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtArc.Location = new System.Drawing.Point(4, 346);
-            this.txtArc.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtArc.Name = "txtArc";
-            this.txtArc.Size = new System.Drawing.Size(128, 33);
-            this.txtArc.TabIndex = 156;
-            this.txtArc.Text = "Arc:";
-            this.txtArc.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            txtArc.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtArc.Location = new System.Drawing.Point(4, 345);
+            txtArc.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            txtArc.Name = "txtArc";
+            txtArc.Size = new System.Drawing.Size(128, 33);
+            txtArc.TabIndex = 156;
+            txtArc.Text = "Arc:";
+            txtArc.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtEffectArea
             // 
-            this.txtEffectArea.AutoSize = true;
-            this.txtEffectArea.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtEffectArea.Location = new System.Drawing.Point(4, 0);
-            this.txtEffectArea.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtEffectArea.Name = "txtEffectArea";
-            this.txtEffectArea.Size = new System.Drawing.Size(128, 32);
-            this.txtEffectArea.TabIndex = 128;
-            this.txtEffectArea.Text = "Effect Area:";
-            this.txtEffectArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            txtEffectArea.AutoSize = true;
+            txtEffectArea.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtEffectArea.Location = new System.Drawing.Point(4, 0);
+            txtEffectArea.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            txtEffectArea.Name = "txtEffectArea";
+            txtEffectArea.Size = new System.Drawing.Size(128, 31);
+            txtEffectArea.TabIndex = 128;
+            txtEffectArea.Text = "Effect Area:";
+            txtEffectArea.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // cbFXEffectArea
             // 
-            this.cbFXEffectArea.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.cbFXEffectArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbFXEffectArea.Location = new System.Drawing.Point(140, 4);
-            this.cbFXEffectArea.Margin = new System.Windows.Forms.Padding(4);
-            this.cbFXEffectArea.Name = "cbFXEffectArea";
-            this.cbFXEffectArea.Size = new System.Drawing.Size(122, 24);
-            this.cbFXEffectArea.TabIndex = 127;
-            this.cbFXEffectArea.SelectedIndexChanged += new System.EventHandler(this.cbFXEffectArea_SelectedIndexChanged);
+            cbFXEffectArea.Dock = System.Windows.Forms.DockStyle.Fill;
+            cbFXEffectArea.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            cbFXEffectArea.Location = new System.Drawing.Point(140, 4);
+            cbFXEffectArea.Margin = new System.Windows.Forms.Padding(4);
+            cbFXEffectArea.Name = "cbFXEffectArea";
+            cbFXEffectArea.Size = new System.Drawing.Size(122, 23);
+            cbFXEffectArea.TabIndex = 127;
+            cbFXEffectArea.SelectedIndexChanged += cbFXEffectArea_SelectedIndexChanged;
             // 
             // txtFXAccuracy
             // 
-            this.txtFXAccuracy.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXAccuracy.Location = new System.Drawing.Point(140, 36);
-            this.txtFXAccuracy.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXAccuracy.Name = "txtFXAccuracy";
-            this.txtFXAccuracy.Size = new System.Drawing.Size(122, 23);
-            this.txtFXAccuracy.TabIndex = 129;
-            this.txtFXAccuracy.Text = "0";
-            this.txtFXAccuracy.TextChanged += new System.EventHandler(this.txtFXAccuracy_TextChanged);
+            txtFXAccuracy.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXAccuracy.Location = new System.Drawing.Point(140, 35);
+            txtFXAccuracy.Margin = new System.Windows.Forms.Padding(4);
+            txtFXAccuracy.Name = "txtFXAccuracy";
+            txtFXAccuracy.Size = new System.Drawing.Size(122, 23);
+            txtFXAccuracy.TabIndex = 129;
+            txtFXAccuracy.Text = "0";
+            txtFXAccuracy.TextChanged += txtFXAccuracy_TextChanged;
             // 
             // txtRange
             // 
-            this.txtRange.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtRange.Location = new System.Drawing.Point(4, 238);
-            this.txtRange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtRange.Name = "txtRange";
-            this.txtRange.Size = new System.Drawing.Size(128, 36);
-            this.txtRange.TabIndex = 155;
-            this.txtRange.Text = "Range:";
-            this.txtRange.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            txtRange.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtRange.Location = new System.Drawing.Point(4, 237);
+            txtRange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            txtRange.Name = "txtRange";
+            txtRange.Size = new System.Drawing.Size(128, 36);
+            txtRange.TabIndex = 155;
+            txtRange.Text = "Range:";
+            txtRange.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtAccuracy
             // 
-            this.txtAccuracy.AutoSize = true;
-            this.txtAccuracy.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtAccuracy.Location = new System.Drawing.Point(4, 32);
-            this.txtAccuracy.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtAccuracy.Name = "txtAccuracy";
-            this.txtAccuracy.Size = new System.Drawing.Size(128, 31);
-            this.txtAccuracy.TabIndex = 130;
-            this.txtAccuracy.Text = "Accuracy:";
-            this.txtAccuracy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            txtAccuracy.AutoSize = true;
+            txtAccuracy.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtAccuracy.Location = new System.Drawing.Point(4, 31);
+            txtAccuracy.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            txtAccuracy.Name = "txtAccuracy";
+            txtAccuracy.Size = new System.Drawing.Size(128, 31);
+            txtAccuracy.TabIndex = 130;
+            txtAccuracy.Text = "Accuracy:";
+            txtAccuracy.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtCastTime
             // 
-            this.txtCastTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtCastTime.Location = new System.Drawing.Point(4, 94);
-            this.txtCastTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtCastTime.Name = "txtCastTime";
-            this.txtCastTime.Size = new System.Drawing.Size(128, 36);
-            this.txtCastTime.TabIndex = 97;
-            this.txtCastTime.Text = "Casting Time:";
-            this.txtCastTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            txtCastTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtCastTime.Location = new System.Drawing.Point(4, 93);
+            txtCastTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            txtCastTime.Name = "txtCastTime";
+            txtCastTime.Size = new System.Drawing.Size(128, 36);
+            txtCastTime.TabIndex = 97;
+            txtCastTime.Text = "Casting Time:";
+            txtCastTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtFXRange
             // 
-            this.txtFXRange.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXRange.Location = new System.Drawing.Point(140, 242);
-            this.txtFXRange.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXRange.Name = "txtFXRange";
-            this.txtFXRange.Size = new System.Drawing.Size(122, 23);
-            this.txtFXRange.TabIndex = 154;
-            this.txtFXRange.Text = "0";
-            this.txtFXRange.TextChanged += new System.EventHandler(this.txtFXRange_TextChanged);
+            txtFXRange.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXRange.Location = new System.Drawing.Point(140, 241);
+            txtFXRange.Margin = new System.Windows.Forms.Padding(4);
+            txtFXRange.Name = "txtFXRange";
+            txtFXRange.Size = new System.Drawing.Size(122, 23);
+            txtFXRange.TabIndex = 154;
+            txtFXRange.Text = "0";
+            txtFXRange.TextChanged += txtFXRange_TextChanged;
             // 
             // txtInterruptTime
             // 
-            this.txtInterruptTime.AutoSize = true;
-            this.txtInterruptTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtInterruptTime.Location = new System.Drawing.Point(4, 63);
-            this.txtInterruptTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtInterruptTime.Name = "txtInterruptTime";
-            this.txtInterruptTime.Size = new System.Drawing.Size(128, 31);
-            this.txtInterruptTime.TabIndex = 98;
-            this.txtInterruptTime.Text = "Interruptable Time:";
-            this.txtInterruptTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            txtInterruptTime.AutoSize = true;
+            txtInterruptTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtInterruptTime.Location = new System.Drawing.Point(4, 62);
+            txtInterruptTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            txtInterruptTime.Name = "txtInterruptTime";
+            txtInterruptTime.Size = new System.Drawing.Size(128, 31);
+            txtInterruptTime.TabIndex = 98;
+            txtInterruptTime.Text = "Interruptable Time:";
+            txtInterruptTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtFXInterruptTime
             // 
-            this.txtFXInterruptTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXInterruptTime.Location = new System.Drawing.Point(140, 67);
-            this.txtFXInterruptTime.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXInterruptTime.Name = "txtFXInterruptTime";
-            this.txtFXInterruptTime.Size = new System.Drawing.Size(122, 23);
-            this.txtFXInterruptTime.TabIndex = 82;
-            this.txtFXInterruptTime.Text = "0";
-            this.txtFXInterruptTime.TextChanged += new System.EventHandler(this.txtFXInterruptTime_TextChanged);
+            txtFXInterruptTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXInterruptTime.Location = new System.Drawing.Point(140, 66);
+            txtFXInterruptTime.Margin = new System.Windows.Forms.Padding(4);
+            txtFXInterruptTime.Name = "txtFXInterruptTime";
+            txtFXInterruptTime.Size = new System.Drawing.Size(122, 23);
+            txtFXInterruptTime.TabIndex = 82;
+            txtFXInterruptTime.Text = "0";
+            txtFXInterruptTime.TextChanged += txtFXInterruptTime_TextChanged;
             // 
             // txtRechargeTime
             // 
-            this.txtRechargeTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtRechargeTime.Location = new System.Drawing.Point(4, 130);
-            this.txtRechargeTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtRechargeTime.Name = "txtRechargeTime";
-            this.txtRechargeTime.Size = new System.Drawing.Size(128, 36);
-            this.txtRechargeTime.TabIndex = 99;
-            this.txtRechargeTime.Text = "Recharge Time:";
-            this.txtRechargeTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            txtRechargeTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtRechargeTime.Location = new System.Drawing.Point(4, 129);
+            txtRechargeTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            txtRechargeTime.Name = "txtRechargeTime";
+            txtRechargeTime.Size = new System.Drawing.Size(128, 36);
+            txtRechargeTime.TabIndex = 99;
+            txtRechargeTime.Text = "Recharge Time:";
+            txtRechargeTime.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtFXCastTime
             // 
-            this.txtFXCastTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXCastTime.Location = new System.Drawing.Point(140, 98);
-            this.txtFXCastTime.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXCastTime.Name = "txtFXCastTime";
-            this.txtFXCastTime.Size = new System.Drawing.Size(122, 23);
-            this.txtFXCastTime.TabIndex = 80;
-            this.txtFXCastTime.Text = "0";
-            this.txtFXCastTime.TextChanged += new System.EventHandler(this.txtFXCastTime_TextChanged);
+            txtFXCastTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXCastTime.Location = new System.Drawing.Point(140, 97);
+            txtFXCastTime.Margin = new System.Windows.Forms.Padding(4);
+            txtFXCastTime.Name = "txtFXCastTime";
+            txtFXCastTime.Size = new System.Drawing.Size(122, 23);
+            txtFXCastTime.TabIndex = 80;
+            txtFXCastTime.Text = "0";
+            txtFXCastTime.TextChanged += txtFXCastTime_TextChanged;
             // 
             // txtFXRechargeTime
             // 
-            this.txtFXRechargeTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXRechargeTime.Location = new System.Drawing.Point(140, 134);
-            this.txtFXRechargeTime.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXRechargeTime.Name = "txtFXRechargeTime";
-            this.txtFXRechargeTime.Size = new System.Drawing.Size(122, 23);
-            this.txtFXRechargeTime.TabIndex = 83;
-            this.txtFXRechargeTime.Text = "0";
-            this.txtFXRechargeTime.TextChanged += new System.EventHandler(this.txtFXRechargeTime_TextChanged);
+            txtFXRechargeTime.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXRechargeTime.Location = new System.Drawing.Point(140, 133);
+            txtFXRechargeTime.Margin = new System.Windows.Forms.Padding(4);
+            txtFXRechargeTime.Name = "txtFXRechargeTime";
+            txtFXRechargeTime.Size = new System.Drawing.Size(122, 23);
+            txtFXRechargeTime.TabIndex = 83;
+            txtFXRechargeTime.Text = "0";
+            txtFXRechargeTime.TextChanged += txtFXRechargeTime_TextChanged;
             // 
             // txtActivateInterval
             // 
-            this.txtActivateInterval.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtActivateInterval.Location = new System.Drawing.Point(4, 166);
-            this.txtActivateInterval.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtActivateInterval.Name = "txtActivateInterval";
-            this.txtActivateInterval.Size = new System.Drawing.Size(128, 36);
-            this.txtActivateInterval.TabIndex = 100;
-            this.txtActivateInterval.Text = "Activate Interval:";
-            this.txtActivateInterval.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            txtActivateInterval.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtActivateInterval.Location = new System.Drawing.Point(4, 165);
+            txtActivateInterval.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            txtActivateInterval.Name = "txtActivateInterval";
+            txtActivateInterval.Size = new System.Drawing.Size(128, 36);
+            txtActivateInterval.TabIndex = 100;
+            txtActivateInterval.Text = "Activate Interval:";
+            txtActivateInterval.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtFXActivateInterval
             // 
-            this.txtFXActivateInterval.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXActivateInterval.Location = new System.Drawing.Point(140, 170);
-            this.txtFXActivateInterval.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXActivateInterval.Name = "txtFXActivateInterval";
-            this.txtFXActivateInterval.Size = new System.Drawing.Size(122, 23);
-            this.txtFXActivateInterval.TabIndex = 84;
-            this.txtFXActivateInterval.Text = "0";
-            this.txtFXActivateInterval.TextChanged += new System.EventHandler(this.txtFXActivateInterval_TextChanged);
+            txtFXActivateInterval.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXActivateInterval.Location = new System.Drawing.Point(140, 169);
+            txtFXActivateInterval.Margin = new System.Windows.Forms.Padding(4);
+            txtFXActivateInterval.Name = "txtFXActivateInterval";
+            txtFXActivateInterval.Size = new System.Drawing.Size(122, 23);
+            txtFXActivateInterval.TabIndex = 84;
+            txtFXActivateInterval.Text = "0";
+            txtFXActivateInterval.TextChanged += txtFXActivateInterval_TextChanged;
             // 
             // txtEnduranceCost
             // 
-            this.txtEnduranceCost.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtEnduranceCost.Location = new System.Drawing.Point(4, 202);
-            this.txtEnduranceCost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtEnduranceCost.Name = "txtEnduranceCost";
-            this.txtEnduranceCost.Size = new System.Drawing.Size(128, 36);
-            this.txtEnduranceCost.TabIndex = 101;
-            this.txtEnduranceCost.Text = "Endurance Cost:";
-            this.txtEnduranceCost.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            txtEnduranceCost.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtEnduranceCost.Location = new System.Drawing.Point(4, 201);
+            txtEnduranceCost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            txtEnduranceCost.Name = "txtEnduranceCost";
+            txtEnduranceCost.Size = new System.Drawing.Size(128, 36);
+            txtEnduranceCost.TabIndex = 101;
+            txtEnduranceCost.Text = "Endurance Cost:";
+            txtEnduranceCost.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtFXEnduranceCost
             // 
-            this.txtFXEnduranceCost.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXEnduranceCost.Location = new System.Drawing.Point(140, 206);
-            this.txtFXEnduranceCost.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXEnduranceCost.Name = "txtFXEnduranceCost";
-            this.txtFXEnduranceCost.Size = new System.Drawing.Size(122, 23);
-            this.txtFXEnduranceCost.TabIndex = 85;
-            this.txtFXEnduranceCost.Text = "1";
-            this.txtFXEnduranceCost.TextChanged += new System.EventHandler(this.txtFXEnduranceCost_TextChanged);
+            txtFXEnduranceCost.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXEnduranceCost.Location = new System.Drawing.Point(140, 205);
+            txtFXEnduranceCost.Margin = new System.Windows.Forms.Padding(4);
+            txtFXEnduranceCost.Name = "txtFXEnduranceCost";
+            txtFXEnduranceCost.Size = new System.Drawing.Size(122, 23);
+            txtFXEnduranceCost.TabIndex = 85;
+            txtFXEnduranceCost.Text = "1";
+            txtFXEnduranceCost.TextChanged += txtFXEnduranceCost_TextChanged;
             // 
             // txtSecondaryRange
             // 
-            this.txtSecondaryRange.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtSecondaryRange.Location = new System.Drawing.Point(4, 274);
-            this.txtSecondaryRange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtSecondaryRange.Name = "txtSecondaryRange";
-            this.txtSecondaryRange.Size = new System.Drawing.Size(128, 36);
-            this.txtSecondaryRange.TabIndex = 134;
-            this.txtSecondaryRange.Text = "Secondary Range:";
-            this.txtSecondaryRange.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            txtSecondaryRange.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtSecondaryRange.Location = new System.Drawing.Point(4, 273);
+            txtSecondaryRange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            txtSecondaryRange.Name = "txtSecondaryRange";
+            txtSecondaryRange.Size = new System.Drawing.Size(128, 36);
+            txtSecondaryRange.TabIndex = 134;
+            txtSecondaryRange.Text = "Secondary Range:";
+            txtSecondaryRange.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtRadius
             // 
-            this.txtRadius.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtRadius.Location = new System.Drawing.Point(4, 310);
-            this.txtRadius.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
-            this.txtRadius.Name = "txtRadius";
-            this.txtRadius.Size = new System.Drawing.Size(128, 36);
-            this.txtRadius.TabIndex = 136;
-            this.txtRadius.Text = "Radius:";
-            this.txtRadius.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            txtRadius.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtRadius.Location = new System.Drawing.Point(4, 309);
+            txtRadius.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            txtRadius.Name = "txtRadius";
+            txtRadius.Size = new System.Drawing.Size(128, 36);
+            txtRadius.TabIndex = 136;
+            txtRadius.Text = "Radius:";
+            txtRadius.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // txtFXSecondaryRange
             // 
-            this.txtFXSecondaryRange.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXSecondaryRange.Location = new System.Drawing.Point(140, 278);
-            this.txtFXSecondaryRange.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXSecondaryRange.Name = "txtFXSecondaryRange";
-            this.txtFXSecondaryRange.Size = new System.Drawing.Size(122, 23);
-            this.txtFXSecondaryRange.TabIndex = 157;
-            this.txtFXSecondaryRange.Text = "0";
-            this.txtFXSecondaryRange.TextChanged += new System.EventHandler(this.txtFXSecondaryRange_TextChanged);
+            txtFXSecondaryRange.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXSecondaryRange.Location = new System.Drawing.Point(140, 277);
+            txtFXSecondaryRange.Margin = new System.Windows.Forms.Padding(4);
+            txtFXSecondaryRange.Name = "txtFXSecondaryRange";
+            txtFXSecondaryRange.Size = new System.Drawing.Size(122, 23);
+            txtFXSecondaryRange.TabIndex = 157;
+            txtFXSecondaryRange.Text = "0";
+            txtFXSecondaryRange.TextChanged += txtFXSecondaryRange_TextChanged;
             // 
             // txtFXRadius
             // 
-            this.txtFXRadius.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXRadius.Location = new System.Drawing.Point(140, 314);
-            this.txtFXRadius.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXRadius.Name = "txtFXRadius";
-            this.txtFXRadius.Size = new System.Drawing.Size(122, 23);
-            this.txtFXRadius.TabIndex = 158;
-            this.txtFXRadius.Text = "0";
-            this.txtFXRadius.TextChanged += new System.EventHandler(this.txtFXRadius_TextChanged);
+            txtFXRadius.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXRadius.Location = new System.Drawing.Point(140, 313);
+            txtFXRadius.Margin = new System.Windows.Forms.Padding(4);
+            txtFXRadius.Name = "txtFXRadius";
+            txtFXRadius.Size = new System.Drawing.Size(122, 23);
+            txtFXRadius.TabIndex = 158;
+            txtFXRadius.Text = "0";
+            txtFXRadius.TextChanged += txtFXRadius_TextChanged;
             // 
             // txtFXArc
             // 
-            this.txtFXArc.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXArc.Location = new System.Drawing.Point(140, 350);
-            this.txtFXArc.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXArc.Name = "txtFXArc";
-            this.txtFXArc.Size = new System.Drawing.Size(122, 23);
-            this.txtFXArc.TabIndex = 159;
-            this.txtFXArc.Text = "0";
-            this.txtFXArc.TextChanged += new System.EventHandler(this.txtFXArc_TextChanged);
+            txtFXArc.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXArc.Location = new System.Drawing.Point(140, 349);
+            txtFXArc.Margin = new System.Windows.Forms.Padding(4);
+            txtFXArc.Name = "txtFXArc";
+            txtFXArc.Size = new System.Drawing.Size(122, 23);
+            txtFXArc.TabIndex = 159;
+            txtFXArc.Text = "0";
+            txtFXArc.TextChanged += txtFXArc_TextChanged;
             // 
             // txtFXMaxTargets
             // 
-            this.txtFXMaxTargets.Dock = System.Windows.Forms.DockStyle.Fill;
-            this.txtFXMaxTargets.Location = new System.Drawing.Point(140, 383);
-            this.txtFXMaxTargets.Margin = new System.Windows.Forms.Padding(4);
-            this.txtFXMaxTargets.Name = "txtFXMaxTargets";
-            this.txtFXMaxTargets.Size = new System.Drawing.Size(122, 23);
-            this.txtFXMaxTargets.TabIndex = 162;
-            this.txtFXMaxTargets.Text = "0";
-            this.txtFXMaxTargets.TextChanged += new System.EventHandler(this.txtFXMaxTargets_TextChanged);
+            txtFXMaxTargets.Dock = System.Windows.Forms.DockStyle.Fill;
+            txtFXMaxTargets.Location = new System.Drawing.Point(140, 382);
+            txtFXMaxTargets.Margin = new System.Windows.Forms.Padding(4);
+            txtFXMaxTargets.Name = "txtFXMaxTargets";
+            txtFXMaxTargets.Size = new System.Drawing.Size(122, 23);
+            txtFXMaxTargets.TabIndex = 162;
+            txtFXMaxTargets.Text = "0";
+            txtFXMaxTargets.TextChanged += txtFXMaxTargets_TextChanged;
             // 
             // frmPowerEffect
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(1623, 698);
-            this.Controls.Add(this.tpPowerAttribs);
-            this.Controls.Add(this.btnExprBuilder);
-            this.Controls.Add(this.btnEditConditions);
-            this.Controls.Add(this.chkIgnoreScale);
-            this.Controls.Add(this.btnCopy);
-            this.Controls.Add(this.btnPaste);
-            this.Controls.Add(this.btnOK);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.panel4);
-            this.Controls.Add(this.cmbEffectId);
-            this.Controls.Add(this.Label9);
-            this.Controls.Add(this.Label30);
-            this.Controls.Add(this.cbFXSpecialCase);
-            this.Controls.Add(this.Label10);
-            this.Controls.Add(this.txtOverride);
-            this.Controls.Add(this.chkVariable);
-            this.Controls.Add(this.Label28);
-            this.Controls.Add(this.cbFXClass);
-            this.Controls.Add(this.flowLayoutPanel1);
-            this.Controls.Add(this.tableLayoutPanel3);
-            this.Controls.Add(this.lvSubSub);
-            this.Controls.Add(this.lvSubAttribute);
-            this.Controls.Add(this.Label6);
-            this.Controls.Add(this.lvEffectType);
-            this.Controls.Add(this.cbModifier);
-            this.Controls.Add(this.tableLayoutPanel1);
-            this.Controls.Add(this.cbCoDFormat);
-            this.Controls.Add(this.lblEffectDescription);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
-            this.Margin = new System.Windows.Forms.Padding(4);
-            this.Name = "frmPowerEffect";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "frmPowerEffect2";
-            this.tableLayoutPanel1.ResumeLayout(false);
-            this.tableLayoutPanel1.PerformLayout();
-            this.tableLayoutPanel3.ResumeLayout(false);
-            this.flowLayoutPanel1.ResumeLayout(false);
-            this.flowLayoutPanel1.PerformLayout();
-            this.panel4.ResumeLayout(false);
-            this.tpPowerAttribs.ResumeLayout(false);
-            this.tpPowerAttribs.PerformLayout();
-            this.ResumeLayout(false);
-            this.PerformLayout();
-
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            ClientSize = new System.Drawing.Size(1623, 698);
+            Controls.Add(tpPowerAttribs);
+            Controls.Add(btnExprBuilder);
+            Controls.Add(btnEditConditions);
+            Controls.Add(chkIgnoreScale);
+            Controls.Add(btnCopy);
+            Controls.Add(btnPaste);
+            Controls.Add(btnOK);
+            Controls.Add(btnCancel);
+            Controls.Add(panel4);
+            Controls.Add(cmbEffectId);
+            Controls.Add(Label9);
+            Controls.Add(Label30);
+            Controls.Add(cbFXSpecialCase);
+            Controls.Add(Label10);
+            Controls.Add(txtOverride);
+            Controls.Add(chkVariable);
+            Controls.Add(Label28);
+            Controls.Add(cbFXClass);
+            Controls.Add(flowLayoutPanel1);
+            Controls.Add(tableLayoutPanel3);
+            Controls.Add(lvSubSub);
+            Controls.Add(lvSubAttribute);
+            Controls.Add(Label6);
+            Controls.Add(lvEffectType);
+            Controls.Add(cbModifier);
+            Controls.Add(tableLayoutPanel1);
+            Controls.Add(cbCoDFormat);
+            Controls.Add(lblEffectDescription);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedSingle;
+            Margin = new System.Windows.Forms.Padding(4);
+            Name = "frmPowerEffect";
+            ShowInTaskbar = false;
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "frmPowerEffect2";
+            tableLayoutPanel1.ResumeLayout(false);
+            tableLayoutPanel1.PerformLayout();
+            tableLayoutPanel3.ResumeLayout(false);
+            flowLayoutPanel1.ResumeLayout(false);
+            flowLayoutPanel1.PerformLayout();
+            panel4.ResumeLayout(false);
+            tpPowerAttribs.ResumeLayout(false);
+            tpPowerAttribs.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
         }
 
         #endregion

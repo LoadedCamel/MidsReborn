@@ -294,7 +294,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnOkay.BackColor = System.Drawing.Color.FromArgb(64, 78, 237);
             btnOkay.DialogResult = DialogResult.OK;
             btnOkay.FlatStyle = FlatStyle.Popup;
-            btnOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            btnOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
             btnOkay.Location = new System.Drawing.Point(1108, 490);
             btnOkay.Margin = new Padding(4, 3, 4, 3);
             btnOkay.Name = "btnOkay";
@@ -309,7 +309,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnCancel.BackColor = System.Drawing.Color.FromArgb(88, 40, 18);
             btnCancel.DialogResult = DialogResult.Cancel;
             btnCancel.FlatStyle = FlatStyle.Popup;
-            btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
             btnCancel.Location = new System.Drawing.Point(1203, 490);
             btnCancel.Margin = new Padding(4, 3, 4, 3);
             btnCancel.Name = "btnCancel";
@@ -368,6 +368,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(4, 3, 4, 3);
             Name = "frmEffectConditionals";
+            ShowInTaskbar = false;
             Text = "Effect Conditions";
             groupBox2.ResumeLayout(false);
             panelLinkType.ResumeLayout(false);

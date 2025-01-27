@@ -197,6 +197,7 @@
             Controls.Add(label2);
             Controls.Add(label1);
             Name = "frmDbQueries";
+            ShowInTaskbar = false;
             StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             Text = "DB Queries";
             Load += frmDbQueries_Load;
