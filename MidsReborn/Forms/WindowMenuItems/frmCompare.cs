@@ -1024,86 +1024,92 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void ValuesAccuracy()
         {
-            var num1 = 1f;
-            var index1 = 0;
+            var scaleFactor = 1f;
             for (var i = 0 ; i < 2 ; i++)
             {
-                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
+                for (var j = 0; j < Powers[i].Length; j++)
                 {
-                    var flag = false;
-                    foreach (var fx in Powers[index1][index2].Effects)
+                    if (Powers[i][j] == null)
                     {
-                        if (fx.RequiresToHitCheck)
-                        {
-                            flag = true;
-                        }
+                        Tips[i][j] = "";
+                        Values[i][j] = 0;
+
+                        continue;
                     }
 
-                    Values[index1][index2] = !((Powers[index1][index2].EntitiesAutoHit == Enums.eEntity.None) | flag)
-                        ? 0
-                        : Powers[index1][index2].Accuracy * MidsContext.Config.ScalingToHit * 100;
-                    
-                    if (Math.Abs(Values[index1][index2]) < float.Epsilon)
+                    //Values[i][j] = !((Powers[i][j].EntitiesAutoHit == Enums.eEntity.None) | Powers[i][j].Effects.Any(e => e.RequiresToHitCheck))
+                    //    ? 0.01f
+                    //    : Powers[i][j].Accuracy * MidsContext.Config.ScalingToHit * 100;
+                    Values[i][j] = Powers[i][j].Accuracy * MidsContext.Config.ScalingToHit * 100;
+                    if (Math.Abs(Values[i][j]) < float.Epsilon)
                     {
                         continue;
                     }
 
-                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
+                    Tips[i][j] = $"{DatabaseAPI.Database.Classes[Powers[i][j].ForcedClassID].DisplayName}:{Powers[i][j].DisplayName}";
                     if (Matching)
                     {
-                        Tips[index1][index2] += $" [Level {Powers[index1][index2].Level}]";
+                        Tips[i][j] += $" [Level {Powers[i][j].Level}]";
                     }
 
-                    Tips[index1][index2] += $"\r\n {Values[index1][index2]:##0.##}% base Accuracy";
-                    Tips[index1][index2] += $"\r\n (Real Numbers style: {Powers[index1][index2].Accuracy:##0.##}x)";
-                    if (num1 < Values[index1][index2])
+                    Tips[i][j] += $"\r\n {Values[i][j]:##0.##}% base Accuracy";
+                    Tips[i][j] += $"\r\n (Real Numbers style: {Powers[i][j].Accuracy:##0.##}x)";
+                    if (Values[i][j] > scaleFactor)
                     {
-                        num1 = Values[index1][index2];
+                        scaleFactor = Values[i][j];
                     }
                 }
             }
 
-            GraphMax = num1 * 1.025f;
+            GraphMax = scaleFactor * 1.025f;
         }
 
         private void ValuesDamage()
         {
-            var num1 = 1f;
+            var scaleFactor = 1f;
             var returnValue = MidsContext.Config.DamageMath.ReturnValue;
             MidsContext.Config.DamageMath.ReturnValue = ConfigData.EDamageReturn.Numeric;
-            for (var index1 = 0 ; index1 < 2 ; index1++)
+            for (var i = 0; i < 2; i++)
             {
-                for (var index2 = 0; index2 < Powers[index1].Length; index2++)
+                for (var j = 0; j < Powers[i].Length; j++)
                 {
-                    Values[index1][index2] = Powers[index1][index2].FXGetDamageValue();
-                    if (Math.Abs(Values[index1][index2]) < float.Epsilon)
+                    if (Powers[i][j] == null)
+                    {
+                        Tips[i][j] = "";
+                        Values[i][j] = 0;
+
+                        continue;
+                    }
+
+                    Values[i][j] = Powers[i][j].FXGetDamageValue();
+                    if (Math.Abs(Values[i][j]) < float.Epsilon)
                     {
                         continue;
                     }
 
-                    Tips[index1][index2] = $"{DatabaseAPI.Database.Classes[Powers[index1][index2].ForcedClassID].DisplayName}:{Powers[index1][index2].DisplayName}";
+                    Tips[i][j] = $"{DatabaseAPI.Database.Classes[Powers[i][j].ForcedClassID].DisplayName}:{Powers[i][j].DisplayName}";
                     if (Matching)
                     {
-                        Tips[index1][index2] += $" [Level {Convert.ToString(Powers[index1][index2].Level)}]";
+                        Tips[i][j] += $" [Level {Convert.ToString(Powers[i][j].Level)}]";
                     }
 
-                    Tips[index1][index2] += $"\r\n  {Powers[index1][index2].FXGetDamageString()}";
-                    if (num1 < Values[index1][index2])
+                    Tips[i][j] += $"\r\n  {Powers[i][j].FXGetDamageString()}";
+                    if (Values[i][j] > scaleFactor)
                     {
-                        num1 = Values[index1][index2];
+                        scaleFactor = Values[i][j];
                     }
 
-                    if (Powers[index1][index2].PowerType != Enums.ePowerType.Toggle)
+                    if (Powers[i][j].PowerType != Enums.ePowerType.Toggle)
                     {
                         continue;
                     }
 
-                    Tips[index1][index2] += $"\r\n  (Applied every {Powers[index1][index2].ActivatePeriod}s)";
+                    Tips[i][j] += $"\r\n  (Applied every {Powers[i][j].ActivatePeriod}s)";
                 }
 
             }
 
-            GraphMax = num1 * 1.025f;
+            GraphMax = scaleFactor * 1.025f;
             MidsContext.Config.DamageMath.ReturnValue = returnValue;
         }
 

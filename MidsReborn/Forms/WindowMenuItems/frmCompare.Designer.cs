@@ -258,6 +258,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Graph.ScaleHeight = 16;
             Graph.ScaleIndex = 8;
             Graph.ShowScale = false;
+            Graph.SingleLineLabels = false;
             Graph.Size = new System.Drawing.Size(484, 468);
             Graph.Style = Enums.GraphStyle.Twin;
             Graph.TabIndex = 1;

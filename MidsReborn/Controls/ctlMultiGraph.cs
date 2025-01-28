@@ -63,6 +63,7 @@ namespace Mids_Reborn.Controls
         private int _maxItemsCapacity;
         private float _fontSize;
         private float _fontSizeOverride;
+        private bool _singleLineLabels;
         private const float Name2XPadding = 9;
 
         public CtlMultiGraph()
@@ -113,6 +114,7 @@ namespace Mids_Reborn.Controls
             _maxItemsCapacity = 60;
             _fontSize = _pItemHeight;
             _fontSizeOverride = 0;
+            _singleLineLabels = true;
             
             InitializeComponent();
             FillScales();
@@ -124,6 +126,16 @@ namespace Mids_Reborn.Controls
             get;
             [MethodImpl(MethodImplOptions.Synchronized)]
             set;
+        }
+
+        public bool SingleLineLabels
+        {
+            get => _singleLineLabels;
+            set
+            {
+                _singleLineLabels = value;
+                if (DesignMode) Draw();
+            }
         }
 
         public Color ColorBase
@@ -648,7 +660,7 @@ namespace Mids_Reborn.Controls
                     Math.Max(Name2XPadding, _nameWidth) - Name2XPadding,
                     drawArea.Top + ny + _pItemHeight + _yPadding / 2f);
                 var textRect2 = textRect with { Top = drawArea.Top + ny - _yPadding / 2f };
-                var separatorTextIndex = _items[i].Name.IndexOf("|", StringComparison.Ordinal);
+                var separatorTextIndex = _items[i].Name.IndexOf('|', StringComparison.Ordinal);
                 var label1 = _items[i].Name;
                 var label2 = _items[i].Name2;
                 if (separatorTextIndex >= 0)
@@ -658,10 +670,21 @@ namespace Mids_Reborn.Controls
                     label2 = combinedLabel[(separatorTextIndex + 1)..];
                 }
 
+                if (!_singleLineLabels)
+                {
+                    var num = Style == GraphStyle.Twin
+                        ? (int)Math.Round(_pItemHeight / 2f)
+                        : _pItemHeight;
+                    var ny2 = ny + (Style == GraphStyle.Twin ? num : 0);
+
+                    textRect = new SKRect(textRect.Left, drawArea.Top + ny, textRect.Right, drawArea.Top + ny + num);
+                    textRect2 = new SKRect(textRect2.Left, drawArea.Top + ny2, textRect2.Right, drawArea.Top + ny2 + num);
+                }
+
                 s.Canvas.DrawOutlineText(label1, textRect, ForeColor.ToSKColor(), eHTextAlign.Left, eVTextAlign.Middle, 255, fontSize, 3, true);
                 if (!string.IsNullOrWhiteSpace(label2) && label1 != label2)
                 {
-                    s.Canvas.DrawOutlineText(label2, textRect2, ForeColor.ToSKColor(), eHTextAlign.Right, eVTextAlign.Middle, 255, fontSize, 3, true);
+                    s.Canvas.DrawOutlineText(label2, textRect2, ForeColor.ToSKColor(), eHTextAlign.Left, eVTextAlign.Middle, 255, fontSize, 3, true);
                 }
 
                 if (Overcap)
