@@ -32,19 +32,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             LvKbHandler = lvEnh.AssignKeyboardNavHandler();
         }
 
-        private void AddListItem(int index)
-        {
-            var item = GetEnhancementData(index);
-            var lvi = new ListViewItem(item, index)
-            {
-                ToolTipText = item[0]
-            };
-            
-            lvEnh.Items.Add(lvi);
-            lvEnh.Items[^1].Selected = true;
-            lvEnh.Items[^1].EnsureVisible();
-        }
-
         private void btnAdd_Click(object sender, EventArgs e)
         {
             IEnhancement iEnh = new Enhancement();
@@ -67,11 +54,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 es.Enhancements = setEnhancements.ToArray();
             }
 
-            ImageUpdate();
-            lvEnh.VirtualListSize = 0;
-            lvEnh.VirtualListSize = DatabaseAPI.Database.Enhancements.Length - 1;
-            lvEnh.Invalidate();
-            //AddListItem(DatabaseAPI.Database.Enhancements.Length - 1);
+            DisplayList(true);
+            lvEnh.Items[^1].Selected = true;
+            lvEnh.Items[^1].EnsureVisible();
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -131,8 +116,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     continue;
                 }
 
-                enhancementArray[index1] = new Enhancement(DatabaseAPI.Database.Enhancements[index2]);
-                ++index1;
+                enhancementArray[index1++] = new Enhancement(DatabaseAPI.Database.Enhancements[index2]);
             }
 
             DatabaseAPI.Database.Enhancements = new IEnhancement[DatabaseAPI.Database.Enhancements.Length - 1];
@@ -141,7 +125,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 DatabaseAPI.Database.Enhancements[index2] = new Enhancement(enhancementArray[index2]);
             }
 
-            DisplayList();
+            DisplayList(true);
             if (lvEnh.Items.Count <= 0)
             {
                 return;
@@ -176,7 +160,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var enhList = DatabaseAPI.Database.Enhancements.ToList();
             enhList.Reverse(enhIndex, 2);
             DatabaseAPI.Database.Enhancements = enhList.ToArray();
-            DisplayList();
+            DisplayList(true);
             lvEnh.Items[selectedIndex + 1].Selected = true;
             lvEnh.Items[selectedIndex + 1].EnsureVisible();
         }
@@ -198,8 +182,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             var newEnhancement = new Enhancement(frmEnhData.myEnh) { IsModified = true };
             DatabaseAPI.Database.Enhancements[lvEnh.SelectedIndices[0]] = newEnhancement;
-            ImageUpdate();
             UpdateListItem(selectedIndex);
+            DisplayList();
         }
 
         private void BusyHide()
@@ -253,33 +237,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var enhList = DatabaseAPI.Database.Enhancements.ToList();
             enhList.Reverse(enhIndex - 1, 2);
             DatabaseAPI.Database.Enhancements = enhList.ToArray();
-            DisplayList();
+            DisplayList(true);
             lvEnh.Items[selectedIndex - 1].Selected = true;
             lvEnh.Items[selectedIndex - 1].EnsureVisible();
         }
 
-        private void DisplayList()
+        private void DisplayList(bool forceUpdate = false)
         {
             ImageUpdate();
-            /*lvEnh.BeginUpdate();
-            lvEnh.Items.Clear();
-            for (var index = 0; index < DatabaseAPI.Database.Enhancements.Length; index++)
-            {
-                if (string.IsNullOrWhiteSpace(txtFilter.Text) || DatabaseAPI.Database.Enhancements[index].LongName.ToLowerInvariant().Contains(txtFilter.Text.ToLowerInvariant()))
-                {
-                    AddListItem(index);
-                }
-            }
 
-            if (lvEnh.Items.Count > 0)
-            {
-                lvEnh.Items[0].Selected = true;
-                lvEnh.Items[0].EnsureVisible();
-            }
-
-            lvEnh.EndUpdate();*/
-
-            LvItems = new List<string[]>();
+            LvItems = [];
             for (var index = 0; index < DatabaseAPI.Database.Enhancements.Length; index++)
             {
                 if (!string.IsNullOrWhiteSpace(txtFilter.Text) &&
@@ -289,6 +256,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
 
                 LvItems.Add(GetEnhancementData(index));
+            }
+
+            if (forceUpdate)
+            {
+                lvEnh.VirtualListSize = 0;
             }
 
             lvEnh.VirtualListSize = LvItems.Count;
@@ -397,6 +369,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void lvEnh_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
         {
+            if (e.ItemIndex >= LvItems.Count)
+            {
+                //Debug.WriteLine($"frmEnhEdit.lvEnh_RetrieveVirtualItem() out of range exception - trying to get index {e.ItemIndex} / max index: {(LvItems.Count == 0 ? "(no items)" : $"{LvItems.Count - 1}")}");
+                e.Item = new ListViewItem(LvItems[0], 0);
+                
+                return;
+            }
+
             e.Item = new ListViewItem(LvItems[e.ItemIndex], e.ItemIndex);
         }
 
