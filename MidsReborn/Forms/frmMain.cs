@@ -2446,7 +2446,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
             var highEnh = highBase * (1f + MidsContext.Character.TotalsCapped.BuffDam + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f));
-            if ((MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPS) | (MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPA))
+            if (MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPS | MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPA)
             {
                 highEnh *= 1.5f;
             }
@@ -2473,12 +2473,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 return LastEnhPlaced.Enh;
             }
 
-            var num = DatabaseAPI.Database.EnhancementSets[nIdSet].Enhancements.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            var setEnhancements = DatabaseAPI.Database.EnhancementSets[nIdSet].Enhancements
+                .OrderBy(e => e < 0 ? "" : DatabaseAPI.Database.Enhancements[e].UID)
+                .ToArray();
+            for (var index = 0; index < DatabaseAPI.Database.EnhancementSets[nIdSet].Enhancements.Length; index++)
             {
-                if (MidsContext.Character.CurrentBuild.EnhancementTest(slotIndex, hID, DatabaseAPI.Database.EnhancementSets[nIdSet].Enhancements[index], true))
+                if (MidsContext.Character.CurrentBuild.EnhancementTest(slotIndex, hID, setEnhancements[index], true))
                 {
-                    return DatabaseAPI.Database.EnhancementSets[nIdSet].Enhancements[index];
+                    return setEnhancements[index];
                 }
             }
 
@@ -2493,20 +2495,34 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private I9Slot? GetRepeatEnhancement(int powerIndex, int iSlotIndex)
         {
             if (LastEnhPlaced == null)
+            {
                 return new I9Slot();
+            }
+
             if (MidsContext.Character.CurrentBuild.Powers[powerIndex].NIDPower < 0)
+            {
                 return new I9Slot();
+            }
+
             if (LastEnhPlaced.Enh <= -1)
+            {
                 return new I9Slot();
+            }
+
             if (DatabaseAPI.Database.Enhancements[LastEnhPlaced.Enh].TypeID != Enums.eType.SetO)
+            {
                 return DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[powerIndex].NIDPower]
                     .IsEnhancementValid(LastEnhPlaced.Enh)
                     ? LastEnhPlaced
                     : new I9Slot();
+            }
 
             var firstValidSetEnh = GetFirstValidSetEnh(iSlotIndex, powerIndex);
             if (firstValidSetEnh <= -1)
+            {
                 return new I9Slot();
+            }
+
             LastEnhPlaced.Enh = firstValidSetEnh;
             LastEnhPlaced.IOLevel = DatabaseAPI.Database.Enhancements[firstValidSetEnh]
                 .CheckAndFixIOLevel(LastEnhPlaced.IOLevel);
@@ -2632,12 +2648,27 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void I9Picker_EnhancementPicked(I9Slot? e)
         {
+            if (e == null)
+            {
+                I9Picker.Visible = false;
+                HidePopup();
+                EnhancingSlot = -1;
+                EnhancingPower = -1;
+
+                return;
+            }
+
             e.RelativeLevel = I9Picker.Ui.View.RelLevel;
             if (EnhancingSlot <= -1)
+            {
                 return;
+            }
+
             // Let popup visible when repeating enhancement
             if (!_gfxDrawing)
+            {
                 HidePopup();
+            }
 
             var enhChanged = false;
             if (MidsContext.Character != null && MidsContext.Character.CurrentBuild.EnhancementTest(EnhancingSlot, EnhancingPower, e.Enh) | e.Enh < 0)
@@ -2696,11 +2727,20 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                 I9Picker.Visible = false;
                 if (!_gfxDrawing)
+                {
                     PowerModified(true);
+                }
+
                 if (EnhancingPower > -1)
+                {
                     RefreshTabs(MidsContext.Character.CurrentBuild.Powers[EnhancingPower].NIDPower, e);
+                }
+
                 if (!dvAnchored.PetInfo.HasEmptyBasePower)
+                {
                     dvAnchored.PetInfo.ExecuteUpdate();
+                }
+
                 MidsContext.Config.Tips.Show(Tips.TipType.FirstEnhancement);
             }
             else

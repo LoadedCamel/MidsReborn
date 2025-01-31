@@ -1092,7 +1092,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     {
                         var strArray2 = !enhancement.HasPowerEffect
                             ? BreakByBracket(s)
-                            : new[] {s, string.Empty};
+                            : [s, string.Empty];
 
                         popupData1.Sections[index4].Add(strArray2[0], Color.FromArgb(0, 255, 0), strArray2[1], Color.FromArgb(0, 255, 0), 0.9f);
                     }
@@ -1580,18 +1580,23 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 section1.Add($"Set: {enhancementSet.DisplayName} ({enhUsedInSet}/{enhancementSet.Enhancements.Length})", PopUp.Colors.Title);
             }
 
-            for (var index = 0; index < enhancementSet.Enhancements.Length; index++)
+            // [index in set => enhancement nID]
+            var setEnhancements = enhancementSet.Enhancements
+                .Select((e, i) => new KeyValuePair<int, int>(i, e))
+                .OrderBy(e => e.Value < 0 ? "" : DatabaseAPI.Database.Enhancements[e.Value].UID)
+                .ToDictionary();
+            foreach (var enh in setEnhancements)
             {
-                var enhUsed = setEnhUsed.Contains(index) || powerEntry == null;
+                var enhUsed = setEnhUsed.Contains(enh.Key) || powerEntry == null;
                 var color = true switch
                 {
                     _ when !MidsContext.EnhCheckMode & enhUsed => PopUp.Colors.Invention,
-                    _ when MidsContext.EnhCheckMode & enhUsed & setEnhObtained.Contains(index) => PopUp.Colors.Invention,
+                    _ when MidsContext.EnhCheckMode & enhUsed & setEnhObtained.Contains(enh.Key) => PopUp.Colors.Invention,
                     _ when MidsContext.EnhCheckMode & enhUsed => PopUp.Colors.UltraRare,
                     _ => PopUp.Colors.Disabled
                 };
 
-                section1.Add($"{enhancementSet.DisplayName}: {DatabaseAPI.Database.Enhancements[enhancementSet.Enhancements[index]].Name}", color, 0.9f, FontStyle.Bold, 1);
+                section1.Add($"{enhancementSet.DisplayName}: {DatabaseAPI.Database.Enhancements[enh.Value].Name}", color, 0.9f, FontStyle.Bold, 1);
             }
 
             return section1;

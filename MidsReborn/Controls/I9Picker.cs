@@ -609,9 +609,12 @@ namespace Mids_Reborn.Controls
         {
             checked
             {
+                var enhSetList = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements
+                    .OrderBy(e => e < 0 ? "" : DatabaseAPI.Database.Enhancements[e].UID)
+                    .ToArray();
                 for (var i = 0; i < DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements.Length; i++)
                 {
-                    var enh = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[i];
+                    var enh = enhSetList[i];
                     var enhData = DatabaseAPI.Database.Enhancements[enh];
                     _enhUniqueStatus.Add(new EnhUniqueStatus
                     {
@@ -619,26 +622,26 @@ namespace Mids_Reborn.Controls
                             ? _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
                                 .Powers
                                 .Where(e => e is {Power.Slottable: true})
-                                .Any(f => f.Slots.Any(g => g.Enhancement.Enh == enh))
+                                .Any(f => f?.Slots.Any(g => g.Enhancement.Enh == enh) == true)
                             : _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
                                 .Powers
                                 .Where(e => e is {Power.Slottable: true} && e?.Power?.StaticIndex == DatabaseAPI.Database.Power[_nPowerIdx]?.StaticIndex)
-                                .Any(f => f.Slots.Any(g => g.Enhancement.Enh == enh)),
+                                .Any(f => f?.Slots.Any(g => g.Enhancement.Enh == enh) == true),
                         InAlternate = enhData.Unique
                             ? _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
                             .Powers
                             .Where(e => e is {Power.Slottable: true})
-                            .Any(f => f.Slots.Any(g => g.FlippedEnhancement.Enh == enh))
+                            .Any(f => f?.Slots.Any(g => g.FlippedEnhancement.Enh == enh) == true)
                             : _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
                                 .Powers
                                 .Where(e => e is { Power.Slottable: true } && e?.Power?.StaticIndex == DatabaseAPI.Database.Power[_nPowerIdx]?.StaticIndex)
-                                .Any(f => f.Slots.Any(g => g.FlippedEnhancement.Enh == enh))
+                                .Any(f => f?.Slots.Any(g => g.FlippedEnhancement.Enh == enh) == true)
                     });
 
                     var graphics = _myBx.Graphics;
                     I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)),
                         DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[i],
-                        (Origin.Grade) 5, GreyItem(_enhUniqueStatus[i]?.InMain == true));
+                        Origin.Grade.SetO, GreyItem(_enhUniqueStatus[i]?.InMain == true));
                 }
             }
         }
@@ -1175,12 +1178,12 @@ namespace Mids_Reborn.Controls
 
         private bool CellSetSelect(int cellIdx)
         {
-            return Ui.View.SetTypeId >= 0 && (Ui.View.TabId == Enums.eType.SetO) & (Ui.View.SetId == -1) & (cellIdx > -1) & (cellIdx < Ui.Sets[Ui.View.SetTypeId].Length);
+            return Ui.View.SetTypeId >= 0 && Ui.View.TabId == Enums.eType.SetO & Ui.View.SetId == -1 & cellIdx > -1 & cellIdx < Ui.Sets[Ui.View.SetTypeId].Length;
         }
 
         private bool CellEnhSelect(int cellIdx)
         {
-            if (cellIdx <= -1 || Ui.View.TabId == Enums.eType.SetO && Ui.View.SetId <= -1)
+            if (cellIdx <= -1 || Ui.View is { TabId: Enums.eType.SetO, SetId: <= -1 })
             {
                 return false;
             }
@@ -1207,126 +1210,134 @@ namespace Mids_Reborn.Controls
                     break;
             }
 
-            return (cellIdx > -1) & (cellIdx < array.Length);
+            return cellIdx > -1 & cellIdx < array.Length;
         }
 
         private bool DoEnhancementPicked(int index)
         {
             var i9Slot = (I9Slot)_mySlot.Clone();
             CheckAndFixIoLevel();
-            checked
+            if (Ui.View.IoLevel != Ui.Initial.IoLevel & Ui.View.IoLevel != _userLevel | _userLevel == -1 && !(Ui.View.TabId == Enums.eType.InventO & Enhancement.GranularLevelZb(_userLevel - 1, 9, 49) == Ui.View.IoLevel))
             {
-                if (Ui.View.IoLevel != Ui.Initial.IoLevel & Ui.View.IoLevel != _userLevel | _userLevel == -1 && !(Ui.View.TabId == Enums.eType.InventO & Enhancement.GranularLevelZb(_userLevel - 1, 9, 49) == Ui.View.IoLevel))
-                {
-                    _levelCapped = true;
-                }
+                _levelCapped = true;
+            }
 
-                switch (Ui.View.TabId)
-                {
-                    case 0:
-                        i9Slot = new I9Slot();
-                        break;
-                    case Enums.eType.Normal:
-                        i9Slot.Enh = Ui.No[index];
-                        i9Slot.Grade = Ui.View.GradeId;
-                        i9Slot.RelativeLevel = Ui.View.RelLevel;
-                        break;
-                    case Enums.eType.InventO:
-                        i9Slot.Enh = Ui.Io[index];
-                        i9Slot.IOLevel = Ui.View.IoLevel - 1;
-                        i9Slot.RelativeLevel = Ui.View.RelLevel;
-                        break;
-                    case Enums.eType.SpecialO:
-                        i9Slot.Enh = Ui.SpecialO[index];
-                        i9Slot.RelativeLevel = Ui.View.RelLevel;
-                        _lastSpecial = Ui.View.SpecialId;
-                        break;
-                    case Enums.eType.SetO:
-                        if (IsPlaced(index))
+            switch (Ui.View.TabId)
+            {
+                case 0:
+                    i9Slot = new I9Slot();
+                    break;
+                case Enums.eType.Normal:
+                    i9Slot.Enh = Ui.No[index];
+                    i9Slot.Grade = Ui.View.GradeId;
+                    i9Slot.RelativeLevel = Ui.View.RelLevel;
+                    break;
+                case Enums.eType.InventO:
+                    i9Slot.Enh = Ui.Io[index];
+                    i9Slot.IOLevel = Ui.View.IoLevel - 1;
+                    i9Slot.RelativeLevel = Ui.View.RelLevel;
+                    break;
+                case Enums.eType.SpecialO:
+                    i9Slot.Enh = Ui.SpecialO[index];
+                    i9Slot.RelativeLevel = Ui.View.RelLevel;
+                    _lastSpecial = Ui.View.SpecialId;
+                    break;
+                case Enums.eType.SetO:
+                    // Regular index => sorted index
+                    var setIndices = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
+                        .Enhancements
+                        .Select((e, i) => new KeyValuePair<int, int>(i, e))
+                        .OrderBy(e => e.Value < 0 ? "" : DatabaseAPI.Database.Enhancements[e.Value].UID)
+                        .Select(e => e.Key)
+                        .ToList();
+
+                    if (IsPlaced(setIndices[index]))
+                    {
+                        if (_mySlot.RelativeLevel == Ui.View.RelLevel)
                         {
-                            if (_mySlot.RelativeLevel == Ui.View.RelLevel)
+                            return false;
+                        }
+                    }
+
+                    var setEnhancements = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements
+                        .OrderBy(e => e < 0 ? "" : DatabaseAPI.Database.Enhancements[e].UID)
+                        .ToArray();
+                    i9Slot.Enh = setEnhancements[index];
+                    if (DatabaseAPI.Database.Enhancements[i9Slot.Enh].Unique)
+                    {
+                        var uniqueSlotted = MidsContext.Character.CurrentBuild.Powers
+                            .Where(e => e is {Power.Slottable: true})
+                            .Any(f => f?.Slots.Any(g => g.Enhancement.Enh == i9Slot.Enh) == true);
+
+                        if (uniqueSlotted)
+                        {
+                            if (_mySlot.Enh == i9Slot.Enh & _mySlot.RelativeLevel == Ui.View.RelLevel & _mySlot.IOLevel + 1 == Ui.View.IoLevel)
+                            {
+                                return false;
+                            }
+                                
+                            if (_mySlot.Enh != i9Slot.Enh)
                             {
                                 return false;
                             }
                         }
+                    }
 
-                        i9Slot.Enh = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[index];
-                        if (DatabaseAPI.Database.Enhancements[i9Slot.Enh].Unique)
-                        {
-                            var uniqueSlotted = MidsContext.Character.CurrentBuild.Powers
-                                .Where(e => e is {Power.Slottable: true})
-                                .Any(f => f.Slots.Any(g => g.Enhancement.Enh == i9Slot.Enh));
-
-                            if (uniqueSlotted)
-                            {
-                                if (_mySlot.Enh == i9Slot.Enh & _mySlot.RelativeLevel == Ui.View.RelLevel & _mySlot.IOLevel + 1 == Ui.View.IoLevel)
-                                {
-                                    return false;
-                                }
-                                
-                                if (_mySlot.Enh != i9Slot.Enh)
-                                {
-                                    return false;
-                                }
-                            }
-                        }
-
-                        i9Slot.IOLevel = Ui.View.IoLevel - 1;
-                        if (DatabaseAPI.Database.Enhancements[i9Slot.Enh].GetPower() is { } power)
-                        {
-                            if (power.BoostBoostable)
-                            {
-                                i9Slot.RelativeLevel = Ui.View.RelLevel;
-                            }
-                        }
-                        else
+                    i9Slot.IOLevel = Ui.View.IoLevel - 1;
+                    if (DatabaseAPI.Database.Enhancements[i9Slot.Enh].GetPower() is { } power)
+                    {
+                        if (power.BoostBoostable)
                         {
                             i9Slot.RelativeLevel = Ui.View.RelLevel;
                         }
-
-                        break;
-                }
-
-                if (Ui.View.TabId != 0)
-                {
-                    _lastTab = Ui.View.TabId;
-                }
-
-                switch (Ui.View.TabId)
-                {
-                    case Enums.eType.SetO:
-                        _lastSet = Ui.View.SetTypeId;
-                        break;
-                    case Enums.eType.Normal:
-                        _lastGrade = Ui.View.GradeId;
-                        _lastRelativeLevel = Ui.View.RelLevel;
-                        break;
-                    case Enums.eType.SpecialO:
-                        _lastSpecial = Ui.View.SpecialId;
-                        _lastRelativeLevel = Ui.View.RelLevel;
-                        break;
-                }
-
-                if ((Ui.View.TabId == Enums.eType.SetO | Ui.View.TabId == Enums.eType.InventO) & !_levelCapped)
-                {
-                    if (Ui.View.TabId == Enums.eType.InventO & Enhancement.GranularLevelZb(_userLevel - 1, 9, 49) == Ui.View.IoLevel)
-                    {
-                        LastLevel = _userLevel;
                     }
                     else
                     {
-                        LastLevel = Ui.View.IoLevel;
+                        i9Slot.RelativeLevel = Ui.View.RelLevel;
                     }
-                }
-                else if (_userLevel > -1)
+
+                    break;
+            }
+
+            if (Ui.View.TabId != 0)
+            {
+                _lastTab = Ui.View.TabId;
+            }
+
+            switch (Ui.View.TabId)
+            {
+                case Enums.eType.SetO:
+                    _lastSet = Ui.View.SetTypeId;
+                    break;
+                case Enums.eType.Normal:
+                    _lastGrade = Ui.View.GradeId;
+                    _lastRelativeLevel = Ui.View.RelLevel;
+                    break;
+                case Enums.eType.SpecialO:
+                    _lastSpecial = Ui.View.SpecialId;
+                    _lastRelativeLevel = Ui.View.RelLevel;
+                    break;
+            }
+
+            if ((Ui.View.TabId == Enums.eType.SetO | Ui.View.TabId == Enums.eType.InventO) & !_levelCapped)
+            {
+                if (Ui.View.TabId == Enums.eType.InventO & Enhancement.GranularLevelZb(_userLevel - 1, 9, 49) == Ui.View.IoLevel)
                 {
                     LastLevel = _userLevel;
                 }
-
-                EnhancementPicked?.Invoke(i9Slot);
-
-                return true;
+                else
+                {
+                    LastLevel = Ui.View.IoLevel;
+                }
             }
+            else if (_userLevel > -1)
+            {
+                LastLevel = _userLevel;
+            }
+
+            EnhancementPicked?.Invoke(i9Slot);
+
+            return true;
         }
 
         private void RaiseHoverEnhancement(int e, EnhUniqueStatus? enhUniqueStatus)
@@ -1526,7 +1537,10 @@ namespace Mids_Reborn.Controls
                                 break;
                             case Enums.eType.SetO:
                             {
-                                tId = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[cellIndex];
+                                    var enhSetList = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements
+                                        .OrderBy(e => e < 0 ? "" : DatabaseAPI.Database.Enhancements[e].UID)
+                                        .ToArray();
+                                tId = enhSetList[cellIndex];
                                 _selectedEnhancement = DatabaseAPI.Database.Enhancements[tId];
                                 var text = DatabaseAPI.Database.Enhancements[tId].Name;
                                 string str2;
