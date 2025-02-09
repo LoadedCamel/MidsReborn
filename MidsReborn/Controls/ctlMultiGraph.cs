@@ -664,7 +664,6 @@ namespace Mids_Reborn.Controls
             };*/
 
             const float nameXPadding = 3;
-            Debug.WriteLine($"{Name}<ctlMultiGraph> - SingleLineLabels: {_singleLineLabels}");
             for (var i = 0; i < _items.Count; i++)
             {
                 // Data sent from some components might contain nulls (e.g. frmCompare)
