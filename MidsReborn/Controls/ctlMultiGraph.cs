@@ -17,6 +17,12 @@ namespace Mids_Reborn.Controls
    [DefaultEvent("BarClick")]
     public class CtlMultiGraph : UserControl
     {
+        public enum Alignment
+        {
+            Left,
+            Right
+        }
+        
         public delegate void BarClickEventHandler(float value);
 
         public enum RulerPosition
@@ -64,6 +70,7 @@ namespace Mids_Reborn.Controls
         private float _fontSize;
         private float _fontSizeOverride;
         private bool _singleLineLabels;
+        private Alignment _secondaryLabelPosition;
         private const float Name2XPadding = 9;
 
         public CtlMultiGraph()
@@ -115,6 +122,7 @@ namespace Mids_Reborn.Controls
             _fontSize = _pItemHeight;
             _fontSizeOverride = 0;
             _singleLineLabels = true;
+            _secondaryLabelPosition = Alignment.Right;
             
             InitializeComponent();
             FillScales();
@@ -126,6 +134,16 @@ namespace Mids_Reborn.Controls
             get;
             [MethodImpl(MethodImplOptions.Synchronized)]
             set;
+        }
+
+        public Alignment SecondaryLabelPosition
+        {
+            get => _secondaryLabelPosition;
+            set
+            {
+                _secondaryLabelPosition = value;
+                if (DesignMode) Draw();
+            }
         }
 
         public bool SingleLineLabels
@@ -646,6 +664,7 @@ namespace Mids_Reborn.Controls
             };*/
 
             const float nameXPadding = 3;
+            Debug.WriteLine($"{Name}<ctlMultiGraph> - SingleLineLabels: {_singleLineLabels}");
             for (var i = 0; i < _items.Count; i++)
             {
                 // Data sent from some components might contain nulls (e.g. frmCompare)
@@ -669,7 +688,7 @@ namespace Mids_Reborn.Controls
                     label1 = combinedLabel[..separatorTextIndex];
                     label2 = combinedLabel[(separatorTextIndex + 1)..];
                 }
-
+                
                 if (!_singleLineLabels)
                 {
                     var num = Style == GraphStyle.Twin
@@ -684,7 +703,7 @@ namespace Mids_Reborn.Controls
                 s.Canvas.DrawOutlineText(label1, textRect, ForeColor.ToSKColor(), eHTextAlign.Left, eVTextAlign.Middle, 255, fontSize, 3, true);
                 if (!string.IsNullOrWhiteSpace(label2) && label1 != label2)
                 {
-                    s.Canvas.DrawOutlineText(label2, textRect2, ForeColor.ToSKColor(), eHTextAlign.Left, eVTextAlign.Middle, 255, fontSize, 3, true);
+                    s.Canvas.DrawOutlineText(label2, textRect2, ForeColor.ToSKColor(), _secondaryLabelPosition == Alignment.Left ? eHTextAlign.Left : eHTextAlign.Right, eVTextAlign.Middle, 255, fontSize, 3, true);
                 }
 
                 if (Overcap)

@@ -255,6 +255,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Graph.PaddingY = 6F;
             Graph.PerItemScales = (System.Collections.Generic.List<float>)resources.GetObject("Graph.PerItemScales");
             Graph.RulerPos = CtlMultiGraph.RulerPosition.Top;
+            Graph.SecondaryLabelPosition = CtlMultiGraph.Alignment.Left;
             Graph.ScaleHeight = 16;
             Graph.ScaleIndex = 8;
             Graph.ShowScale = false;
