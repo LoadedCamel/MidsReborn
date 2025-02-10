@@ -2113,6 +2113,12 @@ namespace Mids_Reborn.Core
 
                     break;
 
+                case Enums.eEffectType.RechargeTime:
+                    rankedEffect.Value = $"{gre.Mag * 100:###0.##}%{toWhoShort}";
+                    rankedEffect.ToolTip = greTooltip;
+
+                    break;
+
                 case Enums.eEffectType.Heal:
                     rankedEffect.Name = $"Heal{toWhoShort}";
                     rankedEffect.Value = effectSource.DisplayPercentage & effectSource.DisplayPercentageOverride == Enums.eOverrideBoolean.TrueOverride

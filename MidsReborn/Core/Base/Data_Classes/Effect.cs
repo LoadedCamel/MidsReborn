@@ -938,7 +938,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             if (sChance == "")
             {
-                if (ProcsPerMinute > 0 && Probability < 0.00)
+                if (ProcsPerMinute > 0 && Probability < 0)
                 {
                     sChance = $"{ProcsPerMinute} PPM";
                 }
@@ -946,7 +946,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     if (BaseProbability < 1)
                     {
-                        if (BaseProbability >= 0.00)
+                        if (BaseProbability >= 0)
                         {
                             sChance = BaseProbability >= 0.975f
                                 ? $"{BaseProbability * 100:#0.0}% chance"
@@ -977,7 +977,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     if (Probability < 1)
                     {
-                        if (Probability >= 0.00)
+                        if (Probability >= 0)
                         {
                             sChance = Probability >= 0.975f
                                 ? $"{Probability * 100:#0.0}% chance"
@@ -1459,7 +1459,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     tGrant = pID != null
                         ? $" {(MidsContext.Config.CoDEffectFormat ? $"({pID.FullName})" : pID.DisplayName)}"
                         : $" {Summon}";
-                    sBuild = $"{sEffect}{tGrant}{sTarget}{(Math.Abs(Duration) < float.Epsilon ? "" : $" for { Duration}s")}";
+                    sBuild = $"{sEffect}{tGrant}{sTarget}{(Math.Abs(Duration) < float.Epsilon ? "" : $" for { Duration}s")}{(Ticks > 0 & EffectType == Enums.eEffectType.ExecutePower ? $" ({Ticks} tick{(Ticks == 1 ? "" : "s")})" : "")}";
                     break;
                 case Enums.eEffectType.GlobalChanceMod:
                     sBuild = $"{sMag} {sEffect} {Reward}{sTarget}{sDuration}";
@@ -1485,14 +1485,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     break;
                 case Enums.eEffectType.PowerRedirect:
                 {
-                    if (!string.IsNullOrWhiteSpace(Override))
-                    {
-                        sBuild = $"{sEffect}{sTarget} ({DatabaseAPI.GetPowerByFullName(Override).DisplayName})";
-                    }
-                    else
-                    {
-                        sBuild = $"{sEffect}{sTarget} ({Override})";
-                    }
+                    sBuild = !string.IsNullOrWhiteSpace(Override)
+                        ? $"{sEffect}{sTarget} ({DatabaseAPI.GetPowerByFullName(Override).DisplayName})"
+                        : $"{sEffect}{sTarget} ({Override})";
 
                     break;
                 }
