@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Mids_Reborn.Controls
 {
-    partial class ListLabelV3
+    sealed partial class ListLabelV3
     {
         /// <summary> 
         /// Required designer variable.
@@ -32,8 +32,8 @@ namespace Mids_Reborn.Controls
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            SetStyle(ControlStyles.AllPaintingInWmPaint| ControlStyles.OptimizedDoubleBuffer| ControlStyles.SupportsTransparentBackColor|ControlStyles.ResizeRedraw, true);
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            DoubleBuffered = true;
         }
 
         #endregion
