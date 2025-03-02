@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -820,9 +821,30 @@ namespace Mids_Reborn.Forms.Controls
                               pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockup) &
                              pBase.Effects[durationEffectId].Mag < 0);
 
-            if (durationEffectId > -1)
+            var validMezProt = durationEffectId > -1 &&
+                               pBase.Effects
+                                   .Where(e => e.EffectType == Enums.eEffectType.Mez)
+                                   .Any(e => e.Mag < 0);
+
+            if (pBase.UsageTime > 0)
             {
-                if ((pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez && validMez) |
+                info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Usage Time", "Usgtm"), pBase.UsageTime, pBase.UsageTime, "s", $"This power cannot be used more than {Utilities.TimeConverter(pBase.UsageTime)}."));
+            }
+            else if (pBase.NumCharges > 0)
+            {
+                info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Num Charges", "NumChrg"), pBase.NumCharges, pBase.NumCharges, "s", $"This power has {pBase.UsageTime} charges."));
+            }
+            else if (pBase.LifeTime > 0)
+            {
+                info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Life Time", "DurTm"), pBase.LifeTime, pBase.LifeTime, "s", $"This power will fade after {Utilities.TimeConverter(pBase.LifeTimeInGame)}."));
+            }
+            else if (pBase.LifeTimeInGame > 0)
+            {
+                info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Life Time (IG)", "DurTmIg"), pBase.LifeTimeInGame, pBase.LifeTimeInGame, "s", $"This power will fade after {Utilities.TimeConverter(pBase.LifeTimeInGame)} of in-game time."));
+            }
+            else if (durationEffectId > -1)
+            {
+                if ((pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez && validMez) | validMezProt |
                     pBase.Effects[durationEffectId].EffectType != Enums.eEffectType.Mez)
                 {
                     info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s", durationTip));
