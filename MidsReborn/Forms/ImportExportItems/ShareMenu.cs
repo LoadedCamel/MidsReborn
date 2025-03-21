@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Drawing;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
@@ -69,6 +69,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
         private void OnLoad(object? sender, EventArgs e)
         {
+            Debug.WriteLine($"Config: {MidsContext.Config != null}, ShareConfig: {MidsContext.Config?.ShareConfig != null}, ForumFormat: {MidsContext.Config?.ShareConfig?.ForumFormat != null}, SelectedFormatCode: {MidsContext.Config?.ShareConfig?.ForumFormat.SelectedFormatCode != null}");
+
             // Restyle utility windows - experimental
             //StylizeWindow(Handle, Color.Silver, Color.Black, Color.WhiteSmoke);
             formPages1.SelectedIndex = _share.LastPageIndex > -1 ? _share.LastPageIndex : 0;
@@ -220,7 +222,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
 
         private string ExportData(bool inclAccolade, bool inclIncarnate, bool inclBonusBreakdown)
         {
-            var formatType = _share.ForumFormat.SelectedFormatCode!.Type;
+            var formatType = _share.ForumFormat.SelectedFormatCode!.Type; //Bug: System.NullReferenceException on fresh install
             var activeTheme = _share.ForumFormat.SelectedTheme!;
             var tg = new TagGenerator(formatType, activeTheme);
 

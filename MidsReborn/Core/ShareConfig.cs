@@ -8,12 +8,12 @@ namespace Mids_Reborn.Core
     {
         public class ForumFormatConfig
         {
-            public BindingList<ColorTheme?> ColorThemes { get; private set; } = new();
+            public BindingList<ColorTheme?> ColorThemes { get; private set; } = [];
             public ThemeFilter Filter { get; set; } = ThemeFilter.Any;
-            public BindingList<FormatCode> FormatCodes { get; private set; } = new();
+            public BindingList<FormatCode> FormatCodes { get; private set; } = [];
 
-            public ColorTheme? SelectedTheme { get; set; }
-            public FormatCode? SelectedFormatCode { get; set; }
+            public ColorTheme? SelectedTheme { get; set; } = new();
+            public FormatCode? SelectedFormatCode { get; set; } = new();
 
             public bool InclIncarnates { get; set; }
             public bool InclAccolades { get; set; }
@@ -21,8 +21,8 @@ namespace Mids_Reborn.Core
 
             internal void ResetThemes()
             {
-                ColorThemes = new BindingList<ColorTheme?>
-                {
+                ColorThemes =
+                [
                     new()
                     {
                         Name = "Navy",
@@ -122,18 +122,18 @@ namespace Mids_Reborn.Core
                         Slots = Color.FromArgb(0xff, 0xae, 0xff),
                         DarkTheme = true
                     }
-                };
+                ];
             }
             internal void ResetCodes()
             {
-                FormatCodes = new BindingList<FormatCode>
-                {
+                FormatCodes =
+                [
                     new("BBCode", ExportFormatType.BbCode),
                     new("HTML", ExportFormatType.Html),
                     new("Markdown", ExportFormatType.Markdown),
                     new("Markdown+HTML", ExportFormatType.MarkdownHtml),
-                    new("Plain Text", ExportFormatType.None)
-                };
+                    new() // Plain Text
+                ];
             }
             internal void AddTheme(string name, bool isDarkTheme = false)
             {

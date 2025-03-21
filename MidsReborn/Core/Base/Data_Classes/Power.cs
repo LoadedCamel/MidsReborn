@@ -2464,57 +2464,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return iType switch
             {
                 Enums.eType.SetO => GetValidEnhancementsFromSets().ToList(),
-                _ => DatabaseAPI.Database.Enhancements.Where(e => e.TypeID == iType)
-                    .Select((e, i) => new KeyValuePair<int, IEnhancement>(i, e))
-                    .Where(e => (e.Value.SubTypeID == 0 || iSubType == 0 || e.Value.SubTypeID == iSubType) &&
-                                e.Value.ClassID.Any(f =>
-                                    Enhancements.Any(g => DatabaseAPI.Database.EnhancementClasses[f].ID == g)))
-                    .Select(e => e.Key)
+                _ => DatabaseAPI.Database.Enhancements.Select((enhancement, index) => new { enhancement, index })
+                    .Where(e => e.enhancement.TypeID == iType &&
+                                e.enhancement.ClassID.Any(classId =>
+                                    Enhancements.Contains(DatabaseAPI.Database.EnhancementClasses[classId].ID)) &&
+                                (e.enhancement.SubTypeID == 0 || iSubType == 0 || e.enhancement.SubTypeID == iSubType))
+                    .Select(e => e.index)
                     .ToList()
             };
-
-            /*
-             var intList = new List<int>();
-               List<int> allowedEnh;
-               
-               switch (iType)
-               {
-                   case Enums.eType.SetO:
-                       allowedEnh = GetValidEnhancementsFromSets().ToList();
-                       break;
-                   default:
-                       for (var index1 = 0; index1 <= DatabaseAPI.Database.Enhancements.Length - 1; ++index1)
-                       {
-                           var enhancement1 = DatabaseAPI.Database.Enhancements[index1];
-                           if (enhancement1.TypeID != iType)
-                           {
-                               continue;
-                           }
-               
-                           var flag = false;
-                           foreach (var index2 in enhancement1.ClassID)
-                           {
-                               foreach (var enhancement2 in Enhancements)
-                               {
-                                   if (DatabaseAPI.Database.EnhancementClasses[index2].ID == enhancement2 && (enhancement1.SubTypeID == 0 || iSubType == 0 || enhancement1.SubTypeID == iSubType))
-                                   {
-                                       flag = true;
-                                   }
-                               }
-                           }
-               
-                           if (flag)
-                           {
-                               intList.Add(index1);
-                           }
-                       }
-               
-                       allowedEnh = intList;
-                       break;
-               }
-               
-               return allowedEnh;
-             */
         }
 
         public bool IsEnhancementValid(int iEnh)
