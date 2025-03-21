@@ -2461,46 +2461,60 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public List<int> GetValidEnhancements(Enums.eType iType, int iSubType = 0)
         {
-            var intList = new List<int>();
-            List<int> allowedEnh;
-
-            switch (iType)
+            return iType switch
             {
-                case Enums.eType.SetO:
-                    allowedEnh = GetValidEnhancementsFromSets().ToList();
-                    break;
-                default:
-                    for (var index1 = 0; index1 <= DatabaseAPI.Database.Enhancements.Length - 1; ++index1)
-                    {
-                        var enhancement1 = DatabaseAPI.Database.Enhancements[index1];
-                        if (enhancement1.TypeID != iType)
-                        {
-                            continue;
-                        }
+                Enums.eType.SetO => GetValidEnhancementsFromSets().ToList(),
+                _ => DatabaseAPI.Database.Enhancements.Where(e => e.TypeID == iType)
+                    .Select((e, i) => new KeyValuePair<int, IEnhancement>(i, e))
+                    .Where(e => (e.Value.SubTypeID == 0 || iSubType == 0 || e.Value.SubTypeID == iSubType) &&
+                                e.Value.ClassID.Any(f =>
+                                    Enhancements.Any(g => DatabaseAPI.Database.EnhancementClasses[f].ID == g)))
+                    .Select(e => e.Key)
+                    .ToList()
+            };
 
-                        var flag = false;
-                        foreach (var index2 in enhancement1.ClassID)
-                        {
-                            foreach (var enhancement2 in Enhancements)
-                            {
-                                if (DatabaseAPI.Database.EnhancementClasses[index2].ID == enhancement2 && (enhancement1.SubTypeID == 0 || iSubType == 0 || enhancement1.SubTypeID == iSubType))
-                                {
-                                    flag = true;
-                                }
-                            }
-                        }
-
-                        if (flag)
-                        {
-                            intList.Add(index1);
-                        }
-                    }
-
-                    allowedEnh = intList;
-                    break;
-            }
-
-            return allowedEnh;
+            /*
+             var intList = new List<int>();
+               List<int> allowedEnh;
+               
+               switch (iType)
+               {
+                   case Enums.eType.SetO:
+                       allowedEnh = GetValidEnhancementsFromSets().ToList();
+                       break;
+                   default:
+                       for (var index1 = 0; index1 <= DatabaseAPI.Database.Enhancements.Length - 1; ++index1)
+                       {
+                           var enhancement1 = DatabaseAPI.Database.Enhancements[index1];
+                           if (enhancement1.TypeID != iType)
+                           {
+                               continue;
+                           }
+               
+                           var flag = false;
+                           foreach (var index2 in enhancement1.ClassID)
+                           {
+                               foreach (var enhancement2 in Enhancements)
+                               {
+                                   if (DatabaseAPI.Database.EnhancementClasses[index2].ID == enhancement2 && (enhancement1.SubTypeID == 0 || iSubType == 0 || enhancement1.SubTypeID == iSubType))
+                                   {
+                                       flag = true;
+                                   }
+                               }
+                           }
+               
+                           if (flag)
+                           {
+                               intList.Add(index1);
+                           }
+                       }
+               
+                       allowedEnh = intList;
+                       break;
+               }
+               
+               return allowedEnh;
+             */
         }
 
         public bool IsEnhancementValid(int iEnh)
@@ -2715,7 +2729,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             var iDamage = new bool[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
-            for (var index = 0; index <= iSfx.Index.Length - 1; ++index)
+            for (var index = 0; index < iSfx.Index.Length; index++)
             {
                 iDamage[(int) iPower.Effects[iSfx.Index[index]].DamageType] = true;
             }
@@ -3017,19 +3031,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         private int[] GetValidEnhancementsFromSets()
         {
-            var intList = new List<int>();
-            foreach (var enhancementSet in DatabaseAPI.Database.EnhancementSets)
-            {
-                var flag = SetTypes.Any(setType => enhancementSet.SetType == setType);
-                if (!flag)
-                {
-                    continue;
-                }
-
-                intList.AddRange(enhancementSet.Enhancements);
-            }
-
-            return intList.ToArray();
+            return DatabaseAPI.Database.EnhancementSets
+                .Where(e => SetTypes.Any(f => e.SetType == f))
+                .SelectMany(e => e.Enhancements)
+                .ToArray();
         }
 
         public void ProcessExecutes()
