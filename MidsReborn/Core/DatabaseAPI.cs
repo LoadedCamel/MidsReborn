@@ -8,7 +8,6 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using FastDeepCloner;
 using Mids_Reborn.Core.Base;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.IO_Classes;
@@ -78,6 +77,12 @@ namespace Mids_Reborn.Core
         public static IEnumerable<string> GetATOEnhancements => GetArchetypeEnhancements();
         public static IDatabase Database => Base.Data_Classes.Database.Instance;
         public static ServerData ServerData => ServerData.Instance;
+
+        private static Dictionary<string, string> EnhTranslationTable = new()
+        {
+            {"Artillery", "Shrapnel"},
+            {"Crafted_Cupids_Crush", "Attuned_Cupids_Crush"}
+        };
 
         private static void ClearLookups()
         {
@@ -1118,32 +1123,41 @@ namespace Mids_Reborn.Core
             return enhResult != null ? enhResult.UID : string.Empty;
         }
 
-        public static int GetEnhancementByUIDName(string iName)
+        private static string EnhancementUidTranslation(string uidName)
         {
-            if (string.IsNullOrWhiteSpace(iName))
+            foreach (var e in EnhTranslationTable)
+            {
+                if (uidName.Contains(e.Key))
+                {
+                    return uidName.Replace(e.Key, e.Value);
+                }
+            }
+
+            return uidName;
+        }
+
+        public static int GetEnhancementByUIDName(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
             {
                 return -1;
             }
 
-            // Artillery set still use its old name for the UIDs.
-            if (iName.Contains("Artillery"))
-            {
-                iName = iName.Replace("Artillery", "Shrapnel");
-            }
+            name = EnhancementUidTranslation(name);
 
-            var e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(iName));
+            var e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(name));
             if (e >= 0)
             {
                 return e;
             }
 
             // CaltoArm-+Def(Pets) through build recovery
-            iName = iName.Replace("[", "(").Replace("]", ")");
-            e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(iName));
+            name = name.Replace("[", "(").Replace("]", ")");
+            e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(name));
 
             return e >= 0
                 ? e
-                : GetEnhancementByShortName(iName);
+                : GetEnhancementByShortName(name);
         }
 
         public static int GetEnhancementByName(string iName)
