@@ -4088,10 +4088,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
 
                             var point = new Point(
-                                (int) Math.Round(pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value + e.X -
-                                                 I9Picker.Width / 2.0),
-                                (int) Math.Round(pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value + e.Y -
-                                                 I9Picker.Height / 2.0));
+                                (int) Math.Round(pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value + e.X - I9Picker.Width / 2f),
+                                (int) Math.Round(pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value + e.Y - I9Picker.Height / 2f));
                             if (point.Y < MenuBar.Height)
                                 point.Y = MenuBar.Height;
                             Size clientSize;
