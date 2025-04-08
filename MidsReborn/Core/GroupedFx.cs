@@ -1104,7 +1104,7 @@ namespace Mids_Reborn.Core
                     .Select(e => e.Key)
                     .ToList(),
 
-                _ => new List<int>()
+                _ => []
             };
         }
 
@@ -1112,18 +1112,19 @@ namespace Mids_Reborn.Core
         /// Build grouped effects from ranked effects for a power
         /// </summary>
         /// <param name="power">Source power to build effects from. Use the enhanced power, not base.</param>
-        /// <oaram name="includeDamage">Where to include Damage effects</oaram>
+        /// <param name="includeDamage">Where to include Damage effects</param>
         /// <returns>List of grouped effects from source power</returns>
-        public static List<GroupedFx> AssembleGroupedEffects(IPower power, bool includeDamage = false)
+        public static List<GroupedFx> AssembleGroupedEffects(IPower? power, bool includeDamage = false)
         {
+            if (power == null)
+            {
+                return [];
+            }
+
             var rankedEffects = power.GetRankedEffects(true);
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
             var ignoredEffects = new List<int>();
             var groupedRankedEffects = new List<GroupedFx>();
-            if (power == null)
-            {
-                return new List<GroupedFx>();
-            }
 
             // Pass 1: build grouped effects from power effects
 
@@ -1501,7 +1502,7 @@ namespace Mids_Reborn.Core
         {
             if (itemsDict == null)
             {
-                return new List<PairedListEx.Item>();
+                return [];
             }
 
             return itemsDict
@@ -1532,7 +1533,7 @@ namespace Mids_Reborn.Core
         {
             if (itemsDict == null)
             {
-                return new List<PairedListEx.Item>();
+                return [];
             }
 
             return itemsDict
@@ -1542,7 +1543,7 @@ namespace Mids_Reborn.Core
 
         public static List<KeyValuePair<GroupedFx, PairedListEx.Item>> FilterListItemsExt(List<KeyValuePair<GroupedFx, PairedListEx.Item>> itemsDict)
         {
-            return itemsDict ?? new List<KeyValuePair<GroupedFx, PairedListEx.Item>>();
+            return itemsDict ?? [];
         }
 
         /// <summary>
