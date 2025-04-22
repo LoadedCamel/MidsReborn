@@ -82,8 +82,8 @@ namespace Mids_Reborn.Core.BuildFile
                 // Compare Database Version if Enabled
                 if (MidsContext.Config.WarnOnOldDbMbd)
                 {
-                    var outDatedDb = Helpers.CompareVersions(DatabaseAPI.Database.Version, metaData.DatabaseVersion);
-                    var newerDb = Helpers.CompareVersions(metaData.DatabaseVersion, DatabaseAPI.Database.Version);
+                    var outDatedDb = Helpers.IsVersionNewer(DatabaseAPI.Database.Version, metaData.DatabaseVersion);
+                    var newerDb = Helpers.IsVersionNewer(metaData.DatabaseVersion, DatabaseAPI.Database.Version);
                     var continueLoad = false;
 
                     if (outDatedDb)
@@ -219,8 +219,8 @@ namespace Mids_Reborn.Core.BuildFile
             // Compare Database Version if Enabled
             if (MidsContext.Config.WarnOnOldDbMbd)
             {
-                var outDatedDb = Helpers.CompareVersions(DatabaseAPI.Database.Version, metaData.DatabaseVersion);
-                var newerDb = Helpers.CompareVersions(metaData.DatabaseVersion, DatabaseAPI.Database.Version);
+                var outDatedDb = Helpers.IsVersionNewer(DatabaseAPI.Database.Version, metaData.DatabaseVersion);
+                var newerDb = Helpers.IsVersionNewer(metaData.DatabaseVersion, DatabaseAPI.Database.Version);
                 var continueLoad = false;
 
                 if (outDatedDb)

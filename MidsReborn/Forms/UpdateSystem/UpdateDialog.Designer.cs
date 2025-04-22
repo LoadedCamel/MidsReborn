@@ -1,7 +1,7 @@
 ﻿
 namespace Mids_Reborn.Forms.UpdateSystem
 {
-    partial class UpdateQuery
+    partial class UpdateDialog
     {
         /// <summary>
         /// Required designer variable.

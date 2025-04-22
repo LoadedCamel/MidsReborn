@@ -26,6 +26,14 @@ namespace Mids_Reborn.Core.Utils
             return BitConverter.ToString(hashResult).Replace("-", "").ToLowerInvariant();
         }
 
+        public static string ComputeHash(byte[] byteData)
+        {
+            using var hasher = SHA256.Create();
+            var hashResult = hasher.ComputeHash(byteData);
+            return BitConverter.ToString(hashResult).Replace("-", "").ToLowerInvariant();
+        }
+
+
         public static bool Compare(string incomingHash, string existingHash) => incomingHash.Equals(existingHash);
     }
 }

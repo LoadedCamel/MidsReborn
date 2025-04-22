@@ -2,28 +2,27 @@
 using System.Collections.Generic;
 using System.Text;
 using System.Windows.Forms;
-using Mids_Reborn.Core.Utils;
+using Mids_Reborn.Forms.UpdateSystem.Models;
 
 namespace Mids_Reborn.Forms.UpdateSystem
 {
-    public partial class UpdateQuery : Form
+    public partial class UpdateDialog : Form
     {
-        private List<string> Updates { get; set; }
-        public UpdateQuery(List<UpdateDetails> updates)
+        private List<string> Updates { get; }
+
+        public UpdateDialog(UpdateCheckResult result)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
-            Updates = new List<string>();
-            foreach (var update in updates)
+            Updates = [];
+
+            if (result.IsAppUpdateAvailable)
             {
-                switch (update.Type)
-                {
-                    case PatchType.Application:
-                        Updates.Add($"* {update.Name} v{update.Version}");
-                        break;
-                    case PatchType.Database:
-                        Updates.Add($"* {update.Name} Database ({update.Version})");
-                        break;
-                }
+                Updates.Add($"* {result.AppName} v{result.AppVersion}");
+            }
+
+            if (result.IsDbUpdateAvailable)
+            {
+                Updates.Add($"* {result.DbName} Database ({result.DbVersion})");
             }
             Load += OnQuery_Load;
             InitializeComponent();

@@ -24,6 +24,7 @@ using Mids_Reborn.Forms.OptionsMenuItems;
 using Mids_Reborn.Forms.OptionsMenuItems.DbEditor;
 using Mids_Reborn.Forms.UpdateSystem;
 using Mids_Reborn.Forms.WindowMenuItems;
+using MRBLogging;
 using MRBResourceLib;
 using RestSharp;
 
@@ -113,6 +114,7 @@ namespace Mids_Reborn.Forms
             tmrGfx.Tick += tmrGfx_Tick;
             PetView.SliderUpdated += OnPetViewSliderUpdated;
             Icon = Resources.MRB_Icon_Concept;
+            LogManager.Configure("Logs\\mids.log", "MidsReborn");
         }
 
         private void OnPetViewSliderUpdated()
@@ -242,13 +244,14 @@ namespace Mids_Reborn.Forms
             }
 
             if (!MidsContext.Config.AutomaticUpdates.Enabled) return;
+            var updateLogger = LogManager.GetLogger("UpdateCheck");
             switch (MidsContext.Config.AutomaticUpdates.Type)
             {
                 case ConfigData.AutoUpdType.Startup:
-                    await UpdateUtils.CheckForUpdates(this);
+                    await UpdateCoordinator.CheckAndHandleUpdatesAsync(this, false, updateLogger);
                     break;
                 case ConfigData.AutoUpdType.Delay:
-                    await UpdateUtils.CheckForUpdates(this, true);
+                    await UpdateCoordinator.CheckAndHandleUpdatesAsync(this, true);
                     break;
             }
 
@@ -6625,7 +6628,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private async void tsUpdateCheck_Click(object sender, EventArgs e)
         {
-            await UpdateUtils.CheckForUpdates(this);
+            await UpdateCoordinator.CheckAndHandleUpdatesAsync(this);
         }
 
         private void tsViewSelected()

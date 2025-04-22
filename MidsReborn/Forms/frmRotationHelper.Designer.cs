@@ -1,5 +1,6 @@
 ﻿using System.Windows.Forms;
 using Mids_Reborn.Controls;
+using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Forms
 {
@@ -40,7 +41,7 @@ namespace Mids_Reborn.Forms
             label2 = new Label();
             label3 = new Label();
             listBox2 = new ListBox();
-            progressBarEx1 = new MRBUpdater.Controls.ProgressBarEx();
+            progressBarEx1 = new Controls.ProgressBarEx();
             imageButtonEx1 = new Controls.ImageButtonEx();
             label4 = new Label();
             btnClearPowers = new Button();
@@ -149,7 +150,7 @@ namespace Mids_Reborn.Forms
             // 
             progressBarEx1.Border.Style = ButtonBorderStyle.Solid;
             progressBarEx1.Border.Thickness = 1;
-            progressBarEx1.Border.Which = MRBUpdater.Controls.ProgressBarEx.ProgressBorder.BorderToDraw.Left | MRBUpdater.Controls.ProgressBarEx.ProgressBorder.BorderToDraw.Top | MRBUpdater.Controls.ProgressBarEx.ProgressBorder.BorderToDraw.Right | MRBUpdater.Controls.ProgressBarEx.ProgressBorder.BorderToDraw.Bottom;
+            progressBarEx1.Border.Which = ProgressBarEx.ProgressBorder.BorderToDraw.Left | ProgressBarEx.ProgressBorder.BorderToDraw.Top | ProgressBarEx.ProgressBorder.BorderToDraw.Right | ProgressBarEx.ProgressBorder.BorderToDraw.Bottom;
             progressBarEx1.Colors.BackColor = System.Drawing.Color.FromArgb(44, 47, 51);
             progressBarEx1.Colors.BarEndColor = System.Drawing.Color.FromArgb(64, 78, 237);
             progressBarEx1.Colors.BarStartColor = System.Drawing.Color.FromArgb(30, 144, 255);
@@ -625,7 +626,7 @@ namespace Mids_Reborn.Forms
         private Label label2;
         private Label label3;
         private ListBox listBox2;
-        private MRBUpdater.Controls.ProgressBarEx progressBarEx1;
+        private Controls.ProgressBarEx progressBarEx1;
         private Controls.ImageButtonEx imageButtonEx1;
         private Label label4;
         private Button btnClearPowers;

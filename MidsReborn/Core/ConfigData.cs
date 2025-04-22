@@ -288,10 +288,6 @@ namespace Mids_Reborn.Core
 
         private void InitializeComponent()
         {
-            UpdatePath = Debugger.IsAttached
-                ? "https://midsreborn.com/mids_updates/app-test/update_manifest.xml"
-                : "https://midsreborn.com/mids_updates/app/update_manifest.xml";
-
             if (string.IsNullOrWhiteSpace(DataPath))
             {
                 DataPath = Files.FDefaultPath;

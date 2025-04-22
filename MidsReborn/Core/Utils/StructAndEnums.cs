@@ -42,7 +42,6 @@ namespace Mids_Reborn.Core.Utils
 
     public enum PatchType
     {
-        None,
         Application,
         Database
     }
@@ -52,26 +51,6 @@ namespace Mids_Reborn.Core.Utils
         Unavailable,
         Failure,
         Success
-    }
-
-    public struct UpdateDetails
-    {
-        public PatchType Type { get; set; }
-        public string Name { get; set; }
-        public string Uri { get; set; }
-        public string Version { get; set; }
-        public string File { get; set; }
-        public string ExtractTo { get; set; }
-
-        public UpdateDetails(PatchType type, string name, string uri, string ver, string file, string extract)
-        {
-            Type = type;
-            Name = name;
-            Uri = uri;
-            Version = ver;
-            File = file;
-            ExtractTo = extract;
-        }
     }
 
     [Flags]

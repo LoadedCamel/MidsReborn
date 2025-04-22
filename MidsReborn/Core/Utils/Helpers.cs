@@ -44,9 +44,9 @@ namespace Mids_Reborn.Core.Utils
             return controls;
         }
 
-        public static bool CompareVersions(Version versionA, Version versionB)
+        public static bool IsVersionNewer(Version candidate, Version current)
         {
-            var comparisonResult = versionA.CompareTo(versionB);
+            var comparisonResult = candidate.CompareTo(current);
             return comparisonResult > 0;
         }
 

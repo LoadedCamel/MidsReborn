@@ -1,147 +1,97 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
 using System.Linq;
-using System.Net.Http;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Xml.Serialization;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
-using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.UpdateSystem.Models;
-using Newtonsoft.Json;
-using Process = System.Diagnostics.Process;
+using RestSharp;
+using RestSharp.Serializers.Json;
 
 namespace Mids_Reborn.Forms.UpdateSystem
 {
     public static class UpdateUtils
     {
-        private static readonly List<UpdateDetails> Updates = new();
-        private static string? _tempFile;
-
-        private static async Task CheckForApp()
+        public static async Task<UpdateCheckResult> CheckForUpdatesAsync(bool honorDelay = false)
         {
-            try
-            {
-                using var client = new HttpClient();
-                var response = await client.GetAsync(MidsContext.Config?.UpdatePath);
-                response.EnsureSuccessStatusCode();
-                var content = await response.Content.ReadAsStringAsync();
-                var serializer = new XmlSerializer(typeof(Manifest));
-                using var reader = new StringReader(content);
-                if (serializer.Deserialize(reader) is Manifest manifest)
-                {
-                    var isAvailable =
-                        Helpers.CompareVersions(Version.Parse(manifest.Version), MidsContext.AppFileVersion);
-                    if (!isAvailable) return;
-                    Updates.Add(new UpdateDetails(PatchType.Application, MidsContext.AppName,
-                        $"{MidsContext.Config?.UpdatePath}", manifest.Version, manifest.File,
-                        $"{AppContext.BaseDirectory}"));
-                }
-            }
-            catch (Exception)
-            {
-                // Ignored
-            }
+            var manifestEntries = await FetchAllRelevantManifestEntriesAsync();
+            var result = CompareAgainstCurrentVersions(manifestEntries);
+
+            if (honorDelay) MidsContext.Config.AutomaticUpdates.LastChecked = DateTime.UtcNow.Date;
+            return result;
         }
 
-        private static async Task CheckForDatabase()
+        private static async Task<List<ManifestEntry>> FetchAllRelevantManifestEntriesAsync()
         {
-            try
-            {
-                using var client = new HttpClient();
-                var response = await client.GetAsync(DatabaseAPI.ServerData.ManifestUri);
-                response.EnsureSuccessStatusCode();
-                var content = await response.Content.ReadAsStringAsync();
-                var serializer = new XmlSerializer(typeof(Manifest));
-                using var reader = new StringReader(content);
-                if (serializer.Deserialize(reader) is Manifest manifest)
-                {
-                    var isAvailable =
-                        Helpers.CompareVersions(Version.Parse(manifest.Version), DatabaseAPI.Database.Version);
-                    if (!isAvailable) return;
-                    Updates.Add(new UpdateDetails(PatchType.Database, DatabaseAPI.DatabaseName,
-                        $"{DatabaseAPI.ServerData.ManifestUri}", manifest.Version, manifest.File,
-                        $"{Files.BaseDataPath}"));
-                }
-            }
-            catch (Exception)
-            {
-                // Ignored
-            }
-        }
-        
-        public static async Task CheckForUpdates(IWin32Window parent, bool checkDelay = false)
-        {
-            if (checkDelay)
-            {
-                if (!DelayCheckAvailable) return;
-            }
-            await CheckForApp();
-            await CheckForDatabase();
-            MidsContext.Config.AutomaticUpdates.LastChecked = DateTime.UtcNow;
+            var list = new List<ManifestEntry>();
 
-            if (!Updates.Any())
-            {
-                var updateMsg = new MessageBoxEx(@"Update Check", @"There aren't any updates available at this time.", MessageBoxEx.MessageBoxExButtons.Ok);
-                updateMsg.ShowDialog(parent);
-                return;
-            }
+            var midsManifest = await FetchManifest("https://updates.midsreborn.com/update_manifest.json");
+            list.AddRange(midsManifest.Updates);
 
-            _tempFile = Path.GetTempFileName();
-            await File.WriteAllTextAsync(_tempFile, JsonConvert.SerializeObject(Updates));
-            InitiateQuery(parent);
+            if (DatabaseAPI.DatabaseName.Equals("Homecoming", StringComparison.OrdinalIgnoreCase)) return list;
+            var externalUrl = DatabaseAPI.ServerData.ManifestUri;
+            if (string.IsNullOrWhiteSpace(externalUrl)) return list;
+            var externalManifest = await FetchManifest(externalUrl);
+            list.AddRange(externalManifest.Updates);
+
+            return list;
         }
 
-        private static void InitiateQuery(IWin32Window parent)
+        private static UpdateCheckResult CompareAgainstCurrentVersions(List<ManifestEntry> entries)
         {
-            var result = new UpdateQuery(Updates);
-            result.ShowDialog(parent);
-            switch (result.DialogResult)
-            {
-                case DialogResult.Abort:
-                    result.Close();
-                    break;
-                case DialogResult.Continue:
-                    if (_tempFile == null)
-                    {
-                        result.Close();
-                    }
-                    else
-                    {
-                        ExecuteUpdate(_tempFile);
-                    }
+            var result = new UpdateCheckResult();
 
-                    break;
+            var appEntry = entries.FirstOrDefault(e =>
+                e.Type == PatchType.Application &&
+                e.Name?.Equals(MidsContext.AppName, StringComparison.OrdinalIgnoreCase) == true);
+
+            if (appEntry != null && Version.TryParse(appEntry.Version, out var newAppVersion) && newAppVersion > MidsContext.AppFileVersion)
+            {
+                result.IsAppUpdateAvailable = true;
+                result.AppName = appEntry.Name;
+                result.AppVersion = appEntry.Version;
+                result.AppFile = appEntry.File;
             }
+
+            var dbEntry = entries.FirstOrDefault(e =>
+                e.Type == PatchType.Database &&
+                e.Name?.Equals(DatabaseAPI.DatabaseName, StringComparison.OrdinalIgnoreCase) == true);
+
+            if (dbEntry == null || !Version.TryParse(dbEntry.Version, out var newDbVersion) || !Helpers.IsVersionNewer(newDbVersion, DatabaseAPI.Database.Version))
+            {
+                return result;
+            }
+
+            result.IsDbUpdateAvailable = true;
+            result.DbName = dbEntry.Name;
+            result.DbVersion = dbEntry.Version;
+            result.DbFile = dbEntry.File;
+
+            return result;
         }
 
-        private static void ExecuteUpdate(string file)
+        private static async Task<Manifest> FetchManifest(string manifestUrl)
         {
-            var startInfo = new ProcessStartInfo
+            var jsonOptions = new JsonSerializerOptions
             {
-                UseShellExecute = true,
-                WindowStyle = ProcessWindowStyle.Normal,
-                WorkingDirectory = Application.StartupPath,
-                FileName = @"MRBUpdater.exe",
-                Arguments = $"\"{file}\" {Environment.ProcessId}"
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonStringEnumConverter() }
             };
 
-            Process.Start(startInfo);
-        }
-
-        private static bool DelayCheckAvailable
-        {
-            get
+            var options = new RestClientOptions(manifestUrl)
             {
-                var delay = MidsContext.Config.AutomaticUpdates.Delay;
-                var lastChecked = MidsContext.Config.AutomaticUpdates.LastChecked;
-                if (lastChecked == null) return true;
-                return DateTime.Compare(DateTime.UtcNow, lastChecked.Value.AddDays(delay)) > 0;
-            }
+                ThrowOnAnyError = false,
+                Timeout = TimeSpan.FromSeconds(5)
+            };
+            using var client = new RestClient(options, configureSerialization: s => s.UseSystemTextJson(jsonOptions));
+
+            var request = new RestRequest();
+            var result = await client.GetAsync<Manifest>(request);
+
+            return result ?? new Manifest(); // safe fallback
         }
     }
 }

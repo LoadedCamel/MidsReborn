@@ -3,15 +3,17 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Text.Json.Serialization;
+using System.Text.Json;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.Xml;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.UpdateSystem.Models;
 using Newtonsoft.Json;
 using Formatting = Newtonsoft.Json.Formatting;
+using JsonSerializer = System.Text.Json.JsonSerializer;
 
 namespace Mids_Reborn.Core.Utils
 {
@@ -19,21 +21,15 @@ namespace Mids_Reborn.Core.Utils
     {
         public delegate void ProgressChangedHandler(object? sender, ProgressEventArgs e);
         public event ProgressChangedHandler? ProgressChanged;
-        private PatchCompressor(EPatchType patchType)
+        private PatchCompressor(PatchType patchType)
         {
             PatchType = patchType;
         }
 
-        public static PatchCompressor AppPatchCompressor { get; } = new(EPatchType.Application);
-        public static PatchCompressor DbPatchCompressor { get; } = new(EPatchType.Database);
+        public static PatchCompressor AppPatchCompressor { get; } = new(PatchType.Application);
+        public static PatchCompressor DbPatchCompressor { get; } = new(PatchType.Database);
 
-        private enum EPatchType
-        {
-            Application,
-            Database
-        }
-
-        private EPatchType PatchType { get; set; }
+        private PatchType PatchType { get; set; }
 
         private const string PatchFolderName = @"Patches";
 
@@ -43,8 +39,8 @@ namespace Mids_Reborn.Core.Utils
             {
                 var value = PatchType switch
                 {
-                    EPatchType.Application => AppContext.BaseDirectory,
-                    EPatchType.Database => Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder),
+                    PatchType.Application => AppContext.BaseDirectory,
+                    PatchType.Database => Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder),
                     _ => string.Empty
                 };
 
@@ -58,8 +54,8 @@ namespace Mids_Reborn.Core.Utils
             {
                 var value = PatchType switch
                 {
-                    EPatchType.Application => $"{MidsContext.AssemblyFileVersion}",
-                    EPatchType.Database => $"{DatabaseAPI.Database.Version}",
+                    PatchType.Application => $"{MidsContext.AssemblyFileVersion}",
+                    PatchType.Database => $"{DatabaseAPI.Database.Version}",
                     _ => string.Empty
                 };
 
@@ -73,8 +69,8 @@ namespace Mids_Reborn.Core.Utils
             {
                 var value = PatchType switch
                 {
-                    EPatchType.Application => Path.Combine(AppContext.BaseDirectory, PatchFolderName, "App"),
-                    EPatchType.Database => Path.Combine(AppContext.BaseDirectory, PatchFolderName, "Db"),
+                    PatchType.Application => Path.Combine(AppContext.BaseDirectory, PatchFolderName, "App"),
+                    PatchType.Database => Path.Combine(AppContext.BaseDirectory, PatchFolderName, "Db"),
                     _ => string.Empty
                 };
                 if (!Directory.Exists(value)) Directory.CreateDirectory(value);
@@ -88,8 +84,8 @@ namespace Mids_Reborn.Core.Utils
             {
                 var value = PatchType switch
                 {
-                    EPatchType.Application => AppContext.BaseDirectory,
-                    EPatchType.Database => MidsContext.Config.DataPath!,
+                    PatchType.Application => AppContext.BaseDirectory,
+                    PatchType.Database => MidsContext.Config.DataPath!,
                     _ => string.Empty
                 };
 
@@ -103,8 +99,8 @@ namespace Mids_Reborn.Core.Utils
             {
                 var value = PatchType switch
                 {
-                    EPatchType.Application => Path.Combine(PatchDir, PatchName),
-                    EPatchType.Database => Path.Combine(PatchDir, PatchName),
+                    PatchType.Application => Path.Combine(PatchDir, PatchName),
+                    PatchType.Database => Path.Combine(PatchDir, PatchName),
                     _ => string.Empty
                 };
 
@@ -118,8 +114,8 @@ namespace Mids_Reborn.Core.Utils
             {
                 var value = PatchType switch
                 {
-                    EPatchType.Application => $"{MidsContext.AppName.Replace("' ", string.Empty)}-{MidsContext.AssemblyFileVersion}-cumulative.mru".ToLower(),
-                    EPatchType.Database => $"{DatabaseAPI.DatabaseName}-{DatabaseAPI.Database.Version}-cumulative.mru".ToLower(),
+                    PatchType.Application => $"{MidsContext.AppName.Replace(" ", string.Empty)}-{MidsContext.AssemblyFileVersion}-cumulative.mru".ToLower(),
+                    PatchType.Database => $"{DatabaseAPI.DatabaseName}-{DatabaseAPI.Database.Version}-cumulative.mru".ToLower(),
                     _ => string.Empty
                 };
 
@@ -133,8 +129,8 @@ namespace Mids_Reborn.Core.Utils
             {
                 var value = PatchType switch
                 {
-                    EPatchType.Application => Path.Combine(PatchDir, HashName),
-                    EPatchType.Database => Path.Combine(PatchDir, HashName),
+                    PatchType.Application => Path.Combine(PatchDir, HashName),
+                    PatchType.Database => Path.Combine(PatchDir, HashName),
                     _ => string.Empty
                 };
 
@@ -148,8 +144,8 @@ namespace Mids_Reborn.Core.Utils
             {
                 var value = PatchType switch
                 {
-                    EPatchType.Application => $"{MidsContext.AppName.Replace("' ", string.Empty)}-{MidsContext.AssemblyFileVersion}.hash".ToLower(),
-                    EPatchType.Database => $"{DatabaseAPI.DatabaseName}-{DatabaseAPI.Database.Version}.hash".ToLower(),
+                    PatchType.Application => $"{MidsContext.AppName.Replace(" ", string.Empty)}-{MidsContext.AssemblyFileVersion}-cumulative.hash".ToLower(),
+                    PatchType.Database => $"{DatabaseAPI.DatabaseName}-{DatabaseAPI.Database.Version}-cumulative.hash".ToLower(),
                     _ => string.Empty
                 };
 
@@ -165,17 +161,20 @@ namespace Mids_Reborn.Core.Utils
             var exclusionList = new List<string>();
             exclusionList = PatchType switch
             {
-                EPatchType.Application => new List<string> { "Patches", "Data", ".pdb", "deps.json", "MidsReborn.exe.WebView2", "cleanup.dll", "cleanup.exe", "runtimeconfig.json", "appSettings" },
-                EPatchType.Database => new List<string> { "Patches" },
+                PatchType.Application =>
+                [
+                    "Patches", "Data", "MRBBootstrap.exe", ".pdb", "MidsReborn.exe.WebView2", "appSettings"
+                ],
+                PatchType.Database => ["Patches"],
                 _ => exclusionList
             };
 
             files = PatchType switch
             {
-                EPatchType.Application => Directory.EnumerateFiles(PatchPath, "*.*", SearchOption.AllDirectories)
+                PatchType.Application => Directory.EnumerateFiles(PatchPath, "*.*", SearchOption.AllDirectories)
                     .Where(x => !exclusionList.Any(x.Contains))
                     .ToList(),
-                EPatchType.Database => Directory.EnumerateFiles(PatchPath, "*.*", SearchOption.AllDirectories)
+                PatchType.Database => Directory.EnumerateFiles(PatchPath, "*.*", SearchOption.AllDirectories)
                     .Where(x => !exclusionList.Any(x.Contains))
                     .ToList(),
                 _ => files
@@ -185,13 +184,19 @@ namespace Mids_Reborn.Core.Utils
             {
                 var fileInfo = new FileInfo(file);
                 var name = fileInfo.Name;
+
                 var directory = fileInfo.DirectoryName?
                     .Replace(TopLevelFolder, string.Empty)
                     .Replace(TopLevelFolder.Remove(TopLevelFolder.Length - 1, 1), string.Empty);
-                var data = File.ReadAllBytes(file);
+
                 if (directory == null) continue;
-                var hashedFile = new FileHash(directory, name, FileHash.ComputeHash(file));
+
+                var data = File.ReadAllBytes(file);
+
+                var hashedFile = new FileHash(directory, name, FileHash.ComputeHash(data));
+
                 hashes.Add(hashedFile);
+
                 fileQueue.Add(new FileData { FileName = name, Data = data, Path = directory });
                 
             }
@@ -212,9 +217,16 @@ namespace Mids_Reborn.Core.Utils
             else
             {
                 var generated = await GenerateCompressedFile(compressedData);
-                if (generated) GenerateManifest();
+                if (generated)
+                {
+                   var modifiedManifest = await PatchManifestBuilder.ModifyManifestAsync(PatchType, PatchType == PatchType.Application ? MidsContext.AppName : DatabaseAPI.DatabaseName, PatchVersion, PatchName);
+                   if (modifiedManifest is not null)
+                   {
+                       await WriteModifiedManifest(modifiedManifest);
+                   }
+                }
+
                 completionSource.TrySetResult(generated);
-                return await completionSource.Task;
             }
 
             return await completionSource.Task;
@@ -276,15 +288,9 @@ namespace Mids_Reborn.Core.Utils
             return true;
         }
 
-        private async void FileStreamOnProgressChanged(object sender, ProgressEventArgs e)
-        {
-            await Task.Delay(50);
-            ProgressChanged?.Invoke(this, new ProgressEventArgs($"Generating Patch From Container: {PatchName}", e.Processed, e.Total));
-        }
-
         private void CleanPrevious()
         {
-            string[] extensions = { ".mru", ".hash" };
+            string[] extensions = [".mru", ".hash"];
             var files = Directory.GetFiles(PatchDir).Where(file => extensions.Any(file.EndsWith));
             foreach (var file in files)
             {
@@ -292,19 +298,17 @@ namespace Mids_Reborn.Core.Utils
             }
         }
 
-        private void GenerateManifest()
+        private async Task WriteModifiedManifest(Manifest? manifest)
         {
-            using var writer = new XmlTextWriter(Path.Combine(PatchDir, "update_manifest.xml"), Encoding.UTF8);
-            writer.WriteStartDocument();
-            writer.Formatting = System.Xml.Formatting.Indented;
-            writer.Indentation = 2;
-            writer.WriteStartElement("manifest");
-            writer.WriteStartElement("version");
-            writer.WriteString(PatchVersion);
-            writer.WriteEndElement();
-            writer.WriteStartElement("file");
-            writer.WriteString(PatchName);
-            writer.WriteEndElement();
+            var jsonOptions = new JsonSerializerOptions
+            {
+                WriteIndented = true,
+                PropertyNameCaseInsensitive = true,
+                Converters = { new JsonStringEnumConverter(JsonNamingPolicy.CamelCase) }
+            };
+
+            await using var fileStream = File.Create(Path.Combine(PatchDir, "update_manifest.json"));
+            await JsonSerializer.SerializeAsync(fileStream, manifest, jsonOptions);
         }
     }
 }
