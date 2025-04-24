@@ -39,8 +39,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.lblLock = new System.Windows.Forms.Label();
             this.ibClose = new ImageButton();
             this.Panel2 = new FrmIncarnate.CustomPanel();
-            this.llRight = new ListLabelV3();
-            this.llLeft = new ListLabelV3();
+            this.llRight = new ListLabel();
+            this.llLeft = new ListLabel();
             this.Panel1.SuspendLayout();
             this.Panel2.SuspendLayout();
             this.SuspendLayout();
@@ -137,8 +137,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.llRight.SizeNormal = new System.Drawing.Size(190, 120);
             this.llRight.SuspendRedraw = false;
             this.llRight.TabIndex = 111;
-            this.llRight.ItemHover += new ListLabelV3.ItemHoverEventHandler(llRight_ItemHover);
-            this.llRight.ItemClick += new ListLabelV3.ItemClickEventHandler(llRight_ItemClick);
+            this.llRight.ItemHover += new ListLabel.ItemHoverEventHandler(llRight_ItemHover);
+            this.llRight.ItemClick += new ListLabel.ItemClickEventHandler(llRight_ItemClick);
             this.llRight.MouseEnter += new System.EventHandler(llRight_MouseEnter);
             this.llLeft.AutoSize = true;
             this.llLeft.Expandable = false;
@@ -162,8 +162,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.llLeft.SuspendRedraw = false;
             this.llLeft.TabIndex = 110;
             this.llLeft.MouseEnter += new System.EventHandler(llLeft_MouseEnter);
-            this.llLeft.ItemHover += new ListLabelV3.ItemHoverEventHandler(llLeft_ItemHover);
-            this.llLeft.ItemClick += new ListLabelV3.ItemClickEventHandler(llLeft_ItemClick);
+            this.llLeft.ItemHover += new ListLabel.ItemHoverEventHandler(llLeft_ItemHover);
+            this.llLeft.ItemClick += new ListLabel.ItemClickEventHandler(llLeft_ItemClick);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             this.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
 

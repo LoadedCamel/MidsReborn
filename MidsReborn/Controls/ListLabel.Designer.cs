@@ -3,7 +3,7 @@ using System.Windows.Forms;
 
 namespace Mids_Reborn.Controls
 {
-    sealed partial class ListLabelV3
+    sealed partial class ListLabel
     {
         /// <summary> 
         /// Required designer variable.

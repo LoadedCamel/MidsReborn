@@ -40,8 +40,8 @@ namespace Mids_Reborn.Forms
             _popInfo = new ctlPopUp();
             _lblLock = new Label();
             _panel2 = new Panel();
-            LlRight = new ListLabelV3();
-            LlLeft = new ListLabelV3();
+            LlRight = new ListLabel();
+            LlLeft = new ListLabel();
             _omegaButton = new ImageButton();
             _vitaeButton = new ImageButton();
             _stanceButton = new ImageButton();
@@ -379,8 +379,8 @@ namespace Mids_Reborn.Forms
         private ImageButton _interfaceBtn;
         private ImageButton _judgementBtn;
         private Label _lblLock;
-        internal ListLabelV3 LlLeft;
-        internal ListLabelV3 LlRight;
+        internal ListLabel LlLeft;
+        internal ListLabel LlRight;
         private ImageButton _loreBtn;
         private ImageButton _omegaButton;
         private Panel _panel1;

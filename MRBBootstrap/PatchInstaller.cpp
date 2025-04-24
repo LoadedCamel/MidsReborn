@@ -111,6 +111,10 @@ void PatchInstaller::CleanStaleFiles(const std::wstring& installPath, const std:
         L"appSettings.json"
     };
 
+    static const std::unordered_set<std::wstring> excluded_extensions = {
+        L".mxd", L".mbd", L".txt"
+    };
+
     std::unordered_set<std::wstring> validPaths;
 
     // Normalize and store all valid paths from the patch
@@ -136,15 +140,21 @@ void PatchInstaller::CleanStaleFiles(const std::wstring& installPath, const std:
         if (isExcluded)
             continue;
 
+        // Check for excluded extensions (case-insensitive)
+        std::wstring ext = entry.path().extension().wstring();
+        std::ranges::transform(ext, ext.begin(), ::towlower);
+        if (excluded_extensions.contains(ext))
+            continue;
+
         // Canonicalize for comparison
         std::wstring canonicalPath = fs::weakly_canonical(entry.path()).wstring();
         if (!validPaths.contains(canonicalPath))
         {
-            Logger::Log(L"[Installer] Removing stale file: " + canonicalPath);
+            Logger::Log(L"[Installer] Removing stale file: " + relativePath);
             std::error_code ec;
             fs::remove(entry.path(), ec);
             if (ec)
-                Logger::Log(L"[Installer] Failed to remove: " + canonicalPath + L" - " + std::wstring(ec.message().begin(), ec.message().end()));
+                Logger::Log(L"[Installer] Failed to remove: " + relativePath + L" - " + std::wstring(ec.message().begin(), ec.message().end()));
         }
     }
 }
