@@ -215,13 +215,13 @@ namespace Mids_Reborn.Forms
             this.lblName = new Label();
             this.lblOrigin = new Label();
             this.lblAT = new Label();
-            this.llPool0 = new ListLabelV3();
-            this.llPool1 = new ListLabelV3();
-            this.llSecondary = new ListLabelV3();
-            this.llPrimary = new ListLabelV3();
-            this.llPool3 = new ListLabelV3();
-            this.llPool2 = new ListLabelV3();
-            this.llAncillary = new ListLabelV3();
+            this.llPool0 = new ListLabel();
+            this.llPool1 = new ListLabel();
+            this.llSecondary = new ListLabel();
+            this.llPrimary = new ListLabel();
+            this.llPool3 = new ListLabel();
+            this.llPool2 = new ListLabel();
+            this.llAncillary = new ListLabel();
             this.i9Picker = new I9Picker();
             this.I9Popup = new ctlPopUp();
             this.poolsPanel = new ScrollPanel();
@@ -1911,10 +1911,10 @@ namespace Mids_Reborn.Forms
             this.llPrimary.SizeNormal = new System.Drawing.Size(145, 160);
             this.llPrimary.SuspendRedraw = false;
             this.llPrimary.TabIndex = 107;
-            this.llPrimary.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPrimary_ItemHover);
-            this.llPrimary.ItemClick += new ListLabelV3.ItemClickEventHandler(llPrimary_ItemClick);
-            this.llPrimary.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
-            this.llPrimary.ExpandChanged += new ListLabelV3.ExpandChangedEventHandler(PriSec_ExpandChanged);
+            this.llPrimary.ItemHover += new ListLabel.ItemHoverEventHandler(llPrimary_ItemHover);
+            this.llPrimary.ItemClick += new ListLabel.ItemClickEventHandler(llPrimary_ItemClick);
+            this.llPrimary.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPrimary.ExpandChanged += new ListLabel.ExpandChangedEventHandler(PriSec_ExpandChanged);
             // 
             // llSecondary
             // 
@@ -1936,10 +1936,10 @@ namespace Mids_Reborn.Forms
             this.llSecondary.SizeNormal = new System.Drawing.Size(145, 160);
             this.llSecondary.SuspendRedraw = false;
             this.llSecondary.TabIndex = 108;
-            this.llSecondary.ItemHover += new ListLabelV3.ItemHoverEventHandler(llSecondary_ItemHover);
-            this.llSecondary.ItemClick += new ListLabelV3.ItemClickEventHandler(llSecondary_ItemClick);
-            this.llSecondary.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
-            this.llSecondary.ExpandChanged += new ListLabelV3.ExpandChangedEventHandler(PriSec_ExpandChanged);
+            this.llSecondary.ItemHover += new ListLabel.ItemHoverEventHandler(llSecondary_ItemHover);
+            this.llSecondary.ItemClick += new ListLabel.ItemClickEventHandler(llSecondary_ItemClick);
+            this.llSecondary.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llSecondary.ExpandChanged += new ListLabel.ExpandChangedEventHandler(PriSec_ExpandChanged);
             // 
             // llPool0
             // 
@@ -1961,10 +1961,10 @@ namespace Mids_Reborn.Forms
             this.llPool0.SizeNormal = new System.Drawing.Size(145, 69);
             this.llPool0.SuspendRedraw = false;
             this.llPool0.TabIndex = 34;
-            this.llPool0.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool0_ItemHover);
-            this.llPool0.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool0_ItemClick);
+            this.llPool0.ItemHover += new ListLabel.ItemHoverEventHandler(llPool0_ItemHover);
+            this.llPool0.ItemClick += new ListLabel.ItemClickEventHandler(llPool0_ItemClick);
             //this.llPool0.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool0.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPool0.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llPool1
             // 
@@ -1987,10 +1987,10 @@ namespace Mids_Reborn.Forms
             this.llPool1.SizeNormal = new System.Drawing.Size(145, 69);
             this.llPool1.SuspendRedraw = false;
             this.llPool1.TabIndex = 35;
-            this.llPool1.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool1_ItemHover);
-            this.llPool1.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool1_ItemClick);
+            this.llPool1.ItemHover += new ListLabel.ItemHoverEventHandler(llPool1_ItemHover);
+            this.llPool1.ItemClick += new ListLabel.ItemClickEventHandler(llPool1_ItemClick);
             //this.llPool1.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool1.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPool1.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llPool2
             // 
@@ -2013,10 +2013,10 @@ namespace Mids_Reborn.Forms
             this.llPool2.SizeNormal = new System.Drawing.Size(145, 69);
             this.llPool2.SuspendRedraw = false;
             this.llPool2.TabIndex = 36;
-            this.llPool2.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool2_ItemHover);
-            this.llPool2.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool2_ItemClick);
+            this.llPool2.ItemHover += new ListLabel.ItemHoverEventHandler(llPool2_ItemHover);
+            this.llPool2.ItemClick += new ListLabel.ItemClickEventHandler(llPool2_ItemClick);
             //this.llPool2.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool2.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPool2.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llPool3
             // 
@@ -2039,10 +2039,10 @@ namespace Mids_Reborn.Forms
             this.llPool3.SizeNormal = new System.Drawing.Size(145, 69);
             this.llPool3.SuspendRedraw = false;
             this.llPool3.TabIndex = 37;
-            this.llPool3.ItemHover += new ListLabelV3.ItemHoverEventHandler(llPool3_ItemHover);
-            this.llPool3.ItemClick += new ListLabelV3.ItemClickEventHandler(llPool3_ItemClick);
+            this.llPool3.ItemHover += new ListLabel.ItemHoverEventHandler(llPool3_ItemHover);
+            this.llPool3.ItemClick += new ListLabel.ItemClickEventHandler(llPool3_ItemClick);
             //this.llPool3.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool3.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPool3.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llAncillary
             // 
@@ -2064,9 +2064,9 @@ namespace Mids_Reborn.Forms
             this.llAncillary.SizeNormal = new System.Drawing.Size(145, 69);
             this.llAncillary.SuspendRedraw = false;
             this.llAncillary.TabIndex = 110;
-            this.llAncillary.ItemHover += new ListLabelV3.ItemHoverEventHandler(llAncillary_ItemHover);
-            this.llAncillary.ItemClick += new ListLabelV3.ItemClickEventHandler(llAncillary_ItemClick);
-            this.llAncillary.EmptyHover += new ListLabelV3.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llAncillary.ItemHover += new ListLabel.ItemHoverEventHandler(llAncillary_ItemHover);
+            this.llAncillary.ItemClick += new ListLabel.ItemClickEventHandler(llAncillary_ItemClick);
+            this.llAncillary.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // lblName
             // 
@@ -2507,13 +2507,13 @@ namespace Mids_Reborn.Forms
         Label lblPool4;
         Label lblPrimary;
         Label lblSecondary;
-        ListLabelV3 llAncillary;
-        ListLabelV3 llPool0;
-        ListLabelV3 llPool1;
-        ListLabelV3 llPool2;
-        ListLabelV3 llPool3;
-        ListLabelV3 llPrimary;
-        ListLabelV3 llSecondary;
+        ListLabel llAncillary;
+        ListLabel llPool0;
+        ListLabel llPool1;
+        ListLabel llPool2;
+        ListLabel llPool3;
+        ListLabel llPrimary;
+        ListLabel llSecondary;
         MidsMenuStrip MenuBar;
         ToolStripMenuItem OptionsToolStripMenuItem;
         public PanelGfx pnlGFX;

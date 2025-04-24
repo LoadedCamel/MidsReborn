@@ -24,8 +24,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private ImageButton ibClose;
 
         private Label lblLock;
-        private ListLabelV3 llLeft;
-        private ListLabelV3 llRight;
+        private ListLabel llLeft;
+        private ListLabel llRight;
         private Panel Panel1;
 
         private FrmIncarnate.CustomPanel Panel2;
@@ -50,25 +50,25 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         public void UpdateFonts(Font font)
         {
-            foreach (var llControl in Controls.OfType<ListLabelV3>())
+            foreach (var llControl in Controls.OfType<ListLabel>())
             {
                 llControl.SuspendRedraw = true;
-                llControl.UpdateTextColors(ListLabelV3.LlItemState.Enabled,
+                llControl.UpdateTextColors(ListLabel.LlItemState.Enabled,
                     MidsContext.Config.RtFont.ColorPowerAvailable);
-                llControl.UpdateTextColors(ListLabelV3.LlItemState.Disabled,
+                llControl.UpdateTextColors(ListLabel.LlItemState.Disabled,
                     MidsContext.Config.RtFont.ColorPowerDisabled);
-                llControl.UpdateTextColors(ListLabelV3.LlItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
+                llControl.UpdateTextColors(ListLabel.LlItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
                 llControl.ScrollBarColor = MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerTakenHero
                     : MidsContext.Config.RtFont.ColorPowerTakenVillain;
                 llControl.ScrollButtonColor = MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                     : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
-                llControl.UpdateTextColors(ListLabelV3.LlItemState.Selected,
+                llControl.UpdateTextColors(ListLabel.LlItemState.Selected,
                     MidsContext.Character.IsHero()
                         ? MidsContext.Config.RtFont.ColorPowerTakenHero
                         : MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                llControl.UpdateTextColors(ListLabelV3.LlItemState.SelectedDisabled,
+                llControl.UpdateTextColors(ListLabel.LlItemState.SelectedDisabled,
                     MidsContext.Character.IsHero()
                         ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                         : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
@@ -106,14 +106,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 var iState = !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index])
                     ? !((_myPowers[index].PowerType != Enums.ePowerType.Click) | _myPowers[index].ClickBuff)
-                        ? !_myPowers[index].SubIsAltColor ? ListLabelV3.LlItemState.Disabled :
-                        ListLabelV3.LlItemState.Invalid
-                        : ListLabelV3.LlItemState.Enabled
-                    : ListLabelV3.LlItemState.Selected;
+                        ? !_myPowers[index].SubIsAltColor ? ListLabel.LlItemState.Disabled :
+                        ListLabel.LlItemState.Invalid
+                        : ListLabel.LlItemState.Enabled
+                    : ListLabel.LlItemState.Selected;
                 var iItem = !MidsContext.Config.RtFont.PairedBold
-                    ? new ListLabelV3.ListLabelItemV3(_myPowers[index].DisplayName, iState)
-                    : new ListLabelV3.ListLabelItemV3(_myPowers[index].DisplayName, iState, -1, -1, -1, "",
-                        ListLabelV3.LlFontFlags.Bold);
+                    ? new ListLabel.ListLabelItem(_myPowers[index].DisplayName, iState)
+                    : new ListLabel.ListLabelItem(_myPowers[index].DisplayName, iState, -1, -1, -1, "",
+                        ListLabel.LlFontFlags.Bold);
                 if (index >= _myPowers.Count / 2.0)
                 {
                     llRight.AddItem(iItem);
@@ -169,7 +169,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             lblLock.Visible = false;
         }
 
-        private void llLeft_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
+        private void llLeft_ItemClick(ListLabel.ListLabelItem Item, MouseButtons Button)
         {
             if (Button == MouseButtons.Right)
             {
@@ -180,7 +180,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
             else
             {
-                if (Item.ItemState == ListLabelV3.LlItemState.Disabled)
+                if (Item.ItemState == ListLabel.LlItemState.Disabled)
                 {
                     return;
                 }
@@ -188,12 +188,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[Item.Index]))
                 {
                     MidsContext.Character.CurrentBuild.RemovePower(_myPowers[Item.Index]);
-                    Item.ItemState = ListLabelV3.LlItemState.Enabled;
+                    Item.ItemState = ListLabel.LlItemState.Enabled;
                 }
                 else
                 {
                     MidsContext.Character.CurrentBuild.AddPower(_myPowers[Item.Index], 0).StatInclude = true;
-                    Item.ItemState = ListLabelV3.LlItemState.Selected;
+                    Item.ItemState = ListLabel.LlItemState.Selected;
                 }
 
                 llLeft.Refresh();
@@ -202,7 +202,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
         }
 
-        private void llLeft_ItemHover(ListLabelV3.ListLabelItemV3 Item)
+        private void llLeft_ItemHover(ListLabel.ListLabelItem Item)
         {
             MiniPowerInfo(Item.Index);
         }
@@ -217,7 +217,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Panel2.Focus();
         }
 
-        private void llRight_ItemClick(ListLabelV3.ListLabelItemV3 Item, MouseButtons Button)
+        private void llRight_ItemClick(ListLabel.ListLabelItem Item, MouseButtons Button)
         {
             var pIDX = Item.Index + llLeft.Items.Length;
             if (Button == MouseButtons.Right)
@@ -229,7 +229,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
             else
             {
-                if (Item.ItemState == ListLabelV3.LlItemState.Disabled)
+                if (Item.ItemState == ListLabel.LlItemState.Disabled)
                 {
                     return;
                 }
@@ -237,12 +237,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[pIDX]))
                 {
                     MidsContext.Character.CurrentBuild.RemovePower(_myPowers[pIDX]);
-                    Item.ItemState = ListLabelV3.LlItemState.Enabled;
+                    Item.ItemState = ListLabel.LlItemState.Enabled;
                 }
                 else
                 {
                     MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIDX], 0).StatInclude = true;
-                    Item.ItemState = ListLabelV3.LlItemState.Selected;
+                    Item.ItemState = ListLabel.LlItemState.Selected;
                 }
 
                 llRight.Refresh();
@@ -251,7 +251,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
         }
 
-        private void llRight_ItemHover(ListLabelV3.ListLabelItemV3 Item)
+        private void llRight_ItemHover(ListLabel.ListLabelItem Item)
         {
             MiniPowerInfo(Item.Index + llLeft.Items.Length);
         }
@@ -423,22 +423,22 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // }
         }
 
-        private static void UpdateLlColours(ref ListLabelV3 iList)
+        private static void UpdateLlColours(ref ListLabel iList)
         {
-            iList.UpdateTextColors(ListLabelV3.LlItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-            iList.UpdateTextColors(ListLabelV3.LlItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-            iList.UpdateTextColors(ListLabelV3.LlItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
+            iList.UpdateTextColors(ListLabel.LlItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
+            iList.UpdateTextColors(ListLabel.LlItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
+            iList.UpdateTextColors(ListLabel.LlItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
             iList.ScrollBarColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerTakenHero
                 : MidsContext.Config.RtFont.ColorPowerTakenVillain;
             iList.ScrollButtonColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                 : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
-            iList.UpdateTextColors(ListLabelV3.LlItemState.Selected,
+            iList.UpdateTextColors(ListLabel.LlItemState.Selected,
                 MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerTakenHero
                     : MidsContext.Config.RtFont.ColorPowerTakenVillain);
-            iList.UpdateTextColors(ListLabelV3.LlItemState.SelectedDisabled,
+            iList.UpdateTextColors(ListLabel.LlItemState.SelectedDisabled,
                 MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                     : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);

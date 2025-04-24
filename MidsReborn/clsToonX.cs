@@ -2651,7 +2651,7 @@ namespace Mids_Reborn
             }
 
             var empty = string.Empty;
-            if (PowerState(CurrentBuild.Powers[hIDX].NIDPower, ref empty) != ListLabelV3.LlItemState.Invalid || empty == "")
+            if (PowerState(CurrentBuild.Powers[hIDX].NIDPower, ref empty) != ListLabel.LlItemState.Invalid || empty == "")
             {
                 return popupData;
             }
@@ -3010,11 +3010,11 @@ namespace Mids_Reborn
             return section;
         }
 
-        public ListLabelV3.LlItemState PowerState(int nIDPower, ref string message)
+        public ListLabel.LlItemState PowerState(int nIDPower, ref string message)
         {
             if (nIDPower < 0)
             {
-                return ListLabelV3.LlItemState.Disabled;
+                return ListLabel.LlItemState.Disabled;
             }
 
             var power = DatabaseAPI.Database.Power[nIDPower];
@@ -3036,13 +3036,13 @@ namespace Mids_Reborn
             if (PowersetMutexClash(nIDPower))
             {
                 message = $"You cannot take the {Powersets[0].DisplayName} and {Powersets[1].DisplayName} sets together.";
-                return ListLabelV3.LlItemState.Heading;
+                return ListLabel.LlItemState.Heading;
             }
 
             if (!foundInBuild)
                 return flag2 && num1 >= power?.Level - 1
-                    ? ListLabelV3.LlItemState.Enabled
-                    : ListLabelV3.LlItemState.Disabled;
+                    ? ListLabel.LlItemState.Enabled
+                    : ListLabel.LlItemState.Disabled;
             
             var num2 = 0;
             Enums.PowersetType powersetType;
@@ -3085,7 +3085,7 @@ namespace Mids_Reborn
                     {
                         message = $"This power has been placed in a way that is not possible in-game. One of the {numArray.Length} level 1 powers from your {Enum.GetName(powersetType.GetType(), powersetType)} set must be taken at level 1.";
                         
-                        return ListLabelV3.LlItemState.Invalid;
+                        return ListLabel.LlItemState.Invalid;
                     }
                 }
 
@@ -3095,8 +3095,8 @@ namespace Mids_Reborn
             if (flag2)
             {
                 return num1 <= power.Level - 1
-                    ? ListLabelV3.LlItemState.SelectedDisabled
-                    : ListLabelV3.LlItemState.Selected;
+                    ? ListLabel.LlItemState.SelectedDisabled
+                    : ListLabel.LlItemState.Selected;
             }
 
             if (power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Ancillary | power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Pool)
@@ -3114,15 +3114,15 @@ namespace Mids_Reborn
             {
                 if (power?.InherentType != Enums.eGridType.None)
                 {
-                    return ListLabelV3.LlItemState.Enabled;
+                    return ListLabel.LlItemState.Enabled;
                 }
 
                 message = "This power has been placed in a way that is not possible in-game.\r\nCheck that any powers that it requires have been taken first, and that if this is a branching powerset, the power does not conflict with another.";
 
-                return ListLabelV3.LlItemState.Invalid;
+                return ListLabel.LlItemState.Invalid;
             }
 
-            return ListLabelV3.LlItemState.Invalid;
+            return ListLabel.LlItemState.Invalid;
         }
 
         private bool ReadInternalData(StreamReader iStream)
@@ -3460,7 +3460,7 @@ namespace Mids_Reborn
             if (CurrentBuild.FindInToonHistory(nIDPower) > -1)
                 return false;
             var message = "";
-            return PowerState(nIDPower, ref message) == ListLabelV3.LlItemState.Enabled;
+            return PowerState(nIDPower, ref message) == ListLabel.LlItemState.Enabled;
         }
     }
 }
