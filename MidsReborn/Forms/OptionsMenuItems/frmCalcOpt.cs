@@ -137,7 +137,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
                 return;
             }
 
-            var msgResult = MessageBox.Show(@"Do you want to move your builds to the new location?", @"Builds Path Change Detected!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            var msgResult = MessageBox.Show(@"Do you want to copy your builds to the new location?", @"Builds Path Change Detected!", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
             if (msgResult != DialogResult.Yes)
             {
                 return;
@@ -147,7 +147,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             var result = fMover.ShowDialog(this);
             if (result == DialogResult.Yes)
             {
-                MessageBox.Show(@"All builds have been moved to the new location.", @"Move Complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show(@"All builds have been copied to the new location.", @"Copy complete", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 var dirResult = MessageBox.Show(@"Do you wish to delete the old directory?", @"Remove Prior Directory?", MessageBoxButtons.YesNo);
                 if (dirResult == DialogResult.Yes) Directory.Delete(priorPath, true);
             }
@@ -166,11 +166,12 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
 
         private void clbSuppression_SelectedIndexChanged(object sender, EventArgs e)
         {
-            var values = (int[])Enum.GetValues(MidsContext.Config.Suppression.GetType());
+            var values = Enum.GetValues<Enums.eSuppress>().Cast<int>().ToArray();
             MidsContext.Config.Suppression = Enums.eSuppress.None;
-            var num = clbSuppression.CheckedIndices.Count - 1;
-            for (var index = 0; index <= num; ++index)
+            for (var index = 0; index < clbSuppression.CheckedIndices.Count; index++)
+            {
                 MidsContext.Config.Suppression += values[clbSuppression.CheckedIndices[index]];
+            }
         }
 
         private void cmbAction_SelectedIndexChanged(object sender, EventArgs e)
@@ -181,7 +182,10 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
         private void frmCalcOpt_Closing(object? sender, CancelEventArgs e)
         {
             if (DialogResult != DialogResult.Abort)
+            {
                 return;
+            }
+
             e.Cancel = true;
         }
 
@@ -339,31 +343,55 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             rbEnhPopupCloseStyle1.Checked = config.CloseEnhSelectPopupByMove;
             rbEnhPopupCloseStyle2.Checked = !config.CloseEnhSelectPopupByMove;
             cbWordwrapMode.SelectedIndex = (int)config.PowerListsWordwrapMode;
+
+            var logFile = $"{Application.StartupPath}\\Logs\\update.log";
+            if (!File.Exists(logFile))
+            {
+                lblLogSize.Text = "No update log file available.";
+                btnCopyLogPath.Enabled = false;
+                btnLogFilePrune.Enabled = false;
+            }
+            else
+            {
+                btnCopyLogPath.Enabled = true;
+                btnLogFilePrune.Enabled = true;
+                
+                var logInfo = new FileInfo($"{Application.StartupPath}\\Logs\\update.log");
+                var logSize = logInfo.Length switch
+                {
+                    > 1048576 => $"{logInfo.Length / 1048576f:####0.##} MB", // 1024 x 1024
+                    > 1024 => $"{logInfo.Length / 1024:####0.##} KB",
+                    0 => "(empty)",
+                    _ => $"{logInfo.Length} bytes"
+                };
+                lblLogSize.Text = $"Update log file size: {logSize}";
+            }
+
             ResumeLayout();
         }
 
         private void SetupScenarios()
         {
             scenarioExample[0] = "Swap a travel power with a power taken at level 2.";
-            scenActs[0] = new[]
-            {
+            scenActs[0] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Move/swap power to its lowest possible level",
                 "Allow power to be moved anyway (mark as invalid)"
-            };
+            ];
             scenarioExample[1] =
                 "Move a Primary power from level 35 into the level 44 slot of a character with 4 epic powers.";
-            scenActs[1] = new[]
-            {
+            scenActs[1] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Move to the last power that isn't at its min level"
-            };
+            ];
             scenarioExample[2] =
                 "Power taken at level 2 with two level 3 slots is swapped with level 4, where there is a power with one slot.";
-            scenActs[2] = new[]
-            {
+            scenActs[2] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Remove slots",
@@ -371,29 +399,29 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
                 "Swap slot levels if valid; remove invalid ones",
                 "Swap slot levels if valid; mark invalid ones",
                 "Rearrange all slots in build"
-            };
+            ];
             scenarioExample[3] =
                 "A 6-slotted power taken at level 41 is moved to level 49.\r\n(Note: if the remaining slots have invalid levels after impossible slots are removed, the action set for that scenario will be taken.)";
-            scenActs[3] = new[]
-            {
+            scenActs[3] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Remove impossible slots",
                 "Allow anyway (Mark slots as invalid)"
-            };
+            ];
             scenarioExample[4] =
                 "Power taken at level 4 is swapped with power taken at level 14, which is a travel power.";
-            scenActs[4] = new[]
-            {
+            scenActs[4] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Overwrite rather than swap",
                 "Allow power to be swapped anyway (mark as invalid)"
-            };
+            ];
             scenarioExample[5] =
                 "Power taken at level 8 is swapped with power taken at level 2, when the level 2 power has level 3 slots.";
-            scenActs[5] = new[]
-            {
+            scenActs[5] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Remove slots",
@@ -401,30 +429,30 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
                 "Swap slot levels if valid; remove invalid ones",
                 "Swap slot levels if valid; mark invalid ones",
                 "Rearrange all slots in build"
-            };
+            ];
             scenarioExample[6] =
                 "Pool power taken at level 49 is swapped with a 6-slotted power at level 41.\r\n(Note: if the remaining slots have invalid levels after impossible slots are removed, the action set for that scenario will be taken.)";
-            scenActs[6] = new[]
-            {
+            scenActs[6] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Remove impossible slots",
                 "Allow anyway (Mark slots as invalid)"
-            };
+            ];
             scenarioExample[7] =
                 "Power taken at level 4 is moved to level 8 when the power taken at level 6 is a pool power.\r\n(Note: If the power in the destination slot fails to shift, the 'Moved or swapped too low' scenario applies.)";
-            scenActs[7] = new[]
-            {
+            scenActs[7] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Shift other powers around it",
                 "Overwrite it; leave previous power slot empty",
                 "Allow anyway (mark as invalid)"
-            };
+            ];
             scenarioExample[8] =
                 "Power taken at level 8 has level 9 slots, and a power is being moved from level 12 to level 6, so the power at 8 is shifting up to 10.";
-            scenActs[8] = new[]
-            {
+            scenActs[8] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Remove slots",
@@ -432,58 +460,58 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
                 "Swap slot levels if valid; remove invalid ones",
                 "Swap slot levels if valid; mark invalid ones",
                 "Rearrange all slots in build"
-            };
+            ];
             scenarioExample[9] =
                 "Power taken at level 47 has 6 slots, and a power is being moved from level 49 to level 44, so the power at 47 is shifting to 49.\r\n(Note: if the remaining slots have invalid levels after impossible slots are removed, the action set for that scenario will be taken.)";
-            scenActs[9] = new[]
-            {
+            scenActs[9] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Remove impossible slots",
                 "Allow anyway (Mark slots as invalid)"
-            };
+            ];
             scenarioExample[10] = "Power taken at level 8 is being moved to 14, and the level 10 slot is blank.";
-            scenActs[10] = new[]
-            {
+            scenActs[10] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Fill empty slot; don't move powers unnecessarily",
                 "Shift empty slot as if it were a power"
-            };
+            ];
             scenarioExample[11] =
                 "Power placed at its minimum level is being shifted up.\r\n(Note: If and only the power in the destination slot fails to shift due to this setting, the next scenario applies.)";
-            scenActs[11] = new[]
-            {
+            scenActs[11] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Shift it along with the other powers",
                 "Shift other powers around it"
-            };
+            ];
             scenarioExample[12] =
                 "You chose to shift other powers around ones that are at their minimum levels, but you are moving a power in place of one that is at its minimum level. (This will never occur if you chose 'Cancel' or 'Shift it along with the other powers' from the previous scenario.)";
-            scenActs[12] = new[]
-            {
+            scenActs[12] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Unlock and shift all level-locked powers",
                 "Shift destination power to the first valid and empty slot",
                 "Swap instead of move"
-            };
+            ];
             scenarioExample[13] = "Click and drag a level 21 slot from a level 20 power to a level 44 power.";
-            scenActs[13] = new[]
-            {
+            scenActs[13] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Allow swap anyway (mark as invalid)"
-            };
+            ];
             scenarioExample[14] =
                 "Click and drag a slot from a level 44 power to a level 20 power in place of a level 21 slot.";
-            scenActs[14] = new[]
-            {
+            scenActs[14] =
+            [
                 "Show dialog",
                 "Cancel",
                 "Allow swap anyway (mark as invalid)"
-            };
+            ];
         }
 
         private void StoreControls()
@@ -658,7 +686,8 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             if (!textBox.Text.All(char.IsDigit))
             {
                 textBox.Text = "3";
-            };
+            }
+            ;
         }
 
         private void cbWordwrapMode_SelectedIndexChanged(object sender, EventArgs e)
@@ -674,6 +703,25 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
                 2 => Enums.WordwrapMode.UseEllipsis,
                 _ => Enums.WordwrapMode.Legacy
             };
+        }
+
+        private void btnCopyLogPath_Click(object sender, EventArgs e)
+        {
+            Clipboard.SetText($"{Application.StartupPath}\\Logs\\update.log");
+        }
+
+        private void btnLogFilePrune_Click(object sender, EventArgs e)
+        {
+            var messageBox = new MessageBoxEx("Clear log",
+                "Really clear update log?\nIt can contain useful information about the update process.",
+                MessageBoxEx.MessageBoxExButtons.YesNo, MessageBoxEx.MessageBoxExIcon.Question, true);
+            var ret = messageBox.ShowDialog();
+            if (ret != DialogResult.Yes)
+            {
+                return;
+            }
+
+            File.WriteAllText($"{Application.StartupPath}\\Logs\\update.log", "");
         }
     }
 }

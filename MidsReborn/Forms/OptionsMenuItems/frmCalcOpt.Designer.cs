@@ -57,6 +57,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             cPicker = new ColorDialog();
             fbdSave = new FolderBrowserDialog();
             TabPage5 = new TabPage();
+            groupBox10 = new GroupBox();
+            btnCopyLogPath = new Button();
+            btnLogFilePrune = new Button();
+            lblLogSize = new Label();
             groupBox4 = new GroupBox();
             SchemaStatus = new Label();
             btnRepairSchemaAssoc = new Button();
@@ -154,6 +158,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             ((ISupportInitialize)TeamSize).BeginInit();
             ((ISupportInitialize)udIOLevel).BeginInit();
             TabPage5.SuspendLayout();
+            groupBox10.SuspendLayout();
             groupBox4.SuspendLayout();
             groupBox16.SuspendLayout();
             groupBox19.SuspendLayout();
@@ -376,16 +381,58 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // TabPage5
             // 
+            TabPage5.Controls.Add(groupBox10);
             TabPage5.Controls.Add(groupBox4);
             TabPage5.Controls.Add(groupBox16);
             TabPage5.Controls.Add(groupBox19);
             TabPage5.Controls.Add(GroupBox1);
-            TabPage5.Location = new System.Drawing.Point(4, 24);
+            TabPage5.Location = new System.Drawing.Point(4, 22);
             TabPage5.Name = "TabPage5";
-            TabPage5.Size = new System.Drawing.Size(777, 365);
+            TabPage5.Size = new System.Drawing.Size(777, 367);
             TabPage5.TabIndex = 4;
             TabPage5.Text = "Updates & Paths";
             TabPage5.UseVisualStyleBackColor = true;
+            // 
+            // groupBox10
+            // 
+            groupBox10.Controls.Add(btnCopyLogPath);
+            groupBox10.Controls.Add(btnLogFilePrune);
+            groupBox10.Controls.Add(lblLogSize);
+            groupBox10.Location = new System.Drawing.Point(8, 300);
+            groupBox10.Name = "groupBox10";
+            groupBox10.Size = new System.Drawing.Size(761, 60);
+            groupBox10.TabIndex = 74;
+            groupBox10.TabStop = false;
+            groupBox10.Text = "Debugging";
+            // 
+            // btnCopyLogPath
+            // 
+            btnCopyLogPath.Location = new System.Drawing.Point(474, 19);
+            btnCopyLogPath.Name = "btnCopyLogPath";
+            btnCopyLogPath.Size = new System.Drawing.Size(105, 22);
+            btnCopyLogPath.TabIndex = 66;
+            btnCopyLogPath.Text = "Copy location";
+            btnCopyLogPath.UseVisualStyleBackColor = true;
+            btnCopyLogPath.Click += btnCopyLogPath_Click;
+            // 
+            // btnLogFilePrune
+            // 
+            btnLogFilePrune.Location = new System.Drawing.Point(614, 19);
+            btnLogFilePrune.Name = "btnLogFilePrune";
+            btnLogFilePrune.Size = new System.Drawing.Size(105, 22);
+            btnLogFilePrune.TabIndex = 65;
+            btnLogFilePrune.Text = "Prune";
+            btnLogFilePrune.UseVisualStyleBackColor = true;
+            btnLogFilePrune.Click += btnLogFilePrune_Click;
+            // 
+            // lblLogSize
+            // 
+            lblLogSize.AutoSize = true;
+            lblLogSize.Location = new System.Drawing.Point(24, 28);
+            lblLogSize.Name = "lblLogSize";
+            lblLogSize.Size = new System.Drawing.Size(109, 13);
+            lblLogSize.TabIndex = 0;
+            lblLogSize.Text = "Update log file size:";
             // 
             // groupBox4
             // 
@@ -403,7 +450,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // SchemaStatus
             // 
             SchemaStatus.AutoSize = true;
-            SchemaStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            SchemaStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             SchemaStatus.ForeColor = System.Drawing.Color.Goldenrod;
             SchemaStatus.Location = new System.Drawing.Point(252, 54);
             SchemaStatus.Name = "SchemaStatus";
@@ -434,7 +481,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // lblSchemaAssoc
             // 
-            lblSchemaAssoc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblSchemaAssoc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             lblSchemaAssoc.Location = new System.Drawing.Point(196, 54);
             lblSchemaAssoc.Name = "lblSchemaAssoc";
             lblSchemaAssoc.Size = new System.Drawing.Size(50, 14);
@@ -451,7 +498,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             groupBox16.Controls.Add(btnSaveFolder);
             groupBox16.Location = new System.Drawing.Point(8, 202);
             groupBox16.Name = "groupBox16";
-            groupBox16.Size = new System.Drawing.Size(761, 103);
+            groupBox16.Size = new System.Drawing.Size(761, 92);
             groupBox16.TabIndex = 72;
             groupBox16.TabStop = false;
             groupBox16.Text = "Character Builds Location";
@@ -477,7 +524,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // chkLoadLastFile
             // 
-            chkLoadLastFile.Location = new System.Drawing.Point(9, 72);
+            chkLoadLastFile.Location = new System.Drawing.Point(9, 58);
             chkLoadLastFile.Name = "chkLoadLastFile";
             chkLoadLastFile.Size = new System.Drawing.Size(205, 18);
             chkLoadLastFile.TabIndex = 61;
@@ -485,7 +532,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // btnSaveFolderReset
             // 
-            btnSaveFolderReset.Location = new System.Drawing.Point(614, 72);
+            btnSaveFolderReset.Location = new System.Drawing.Point(614, 58);
             btnSaveFolderReset.Name = "btnSaveFolderReset";
             btnSaveFolderReset.Size = new System.Drawing.Size(105, 22);
             btnSaveFolderReset.TabIndex = 64;
@@ -519,7 +566,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // FileAssocStatus
             // 
             FileAssocStatus.AutoSize = true;
-            FileAssocStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            FileAssocStatus.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             FileAssocStatus.ForeColor = System.Drawing.Color.Goldenrod;
             FileAssocStatus.Location = new System.Drawing.Point(252, 54);
             FileAssocStatus.Name = "FileAssocStatus";
@@ -550,7 +597,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // lblFileAssoc
             // 
-            lblFileAssoc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblFileAssoc.Font = new System.Drawing.Font("Segoe UI", 9.75F, System.Drawing.FontStyle.Bold);
             lblFileAssoc.Location = new System.Drawing.Point(196, 54);
             lblFileAssoc.Name = "lblFileAssoc";
             lblFileAssoc.Size = new System.Drawing.Size(50, 14);
@@ -609,7 +656,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // tbUpdDelayDays
             // 
             tbUpdDelayDays.Enabled = false;
-            tbUpdDelayDays.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            tbUpdDelayDays.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             tbUpdDelayDays.Location = new System.Drawing.Point(639, 60);
             tbUpdDelayDays.Name = "tbUpdDelayDays";
             tbUpdDelayDays.Size = new System.Drawing.Size(21, 20);
@@ -707,7 +754,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // Label10
             // 
             Label10.AutoSize = true;
-            Label10.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            Label10.Font = new System.Drawing.Font("Segoe UI", 9F);
             Label10.Location = new System.Drawing.Point(19, 268);
             Label10.Name = "Label10";
             Label10.Size = new System.Drawing.Size(278, 15);
@@ -754,6 +801,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // listScenarios
             // 
             listScenarios.FormattingEnabled = true;
+            listScenarios.ItemHeight = 13;
             listScenarios.Items.AddRange(new object[] { "Power is moved or swapped too low", "Power is moved too high (some powers will no longer fit)", "Power is moved or swapped higher than slots' levels", "Power is moved or swapped too high to have # slots", "Power being replaced is swapped too low", "Power being replaced is swapped higher than slots' levels", "Power being replaced is swapped too high to have # slots", "Power being shifted down cannot shift to the necessary level", "Power being shifted up has slots from lower levels", "Power being shifted up has impossible # of slots", "There is a gap in a group of powers that are being shifted", "A power placed at its minimum level is being shifted up", "The power in the destination slot is prevented from being shifted up", "Slot being level-swapped is too low for the destination power", "Slot being level-swapped is too low for the source power" });
             listScenarios.Location = new System.Drawing.Point(13, 19);
             listScenarios.Name = "listScenarios";
@@ -1338,7 +1386,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // optEnh
             // 
-            optEnh.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            optEnh.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             optEnh.ForeColor = System.Drawing.SystemColors.ControlText;
             optEnh.Location = new System.Drawing.Point(21, 121);
             optEnh.Name = "optEnh";
@@ -1403,6 +1451,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             ((ISupportInitialize)TeamSize).EndInit();
             ((ISupportInitialize)udIOLevel).EndInit();
             TabPage5.ResumeLayout(false);
+            groupBox10.ResumeLayout(false);
+            groupBox10.PerformLayout();
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
             groupBox16.ResumeLayout(false);
@@ -1555,5 +1605,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private Label label13;
         private ComboBox cbWordwrapMode;
         private CheckBox chkDisableUsageTips;
+        private GroupBox groupBox10;
+        private Label lblLogSize;
+        private Button btnCopyLogPath;
+        private Button btnLogFilePrune;
     }
 }

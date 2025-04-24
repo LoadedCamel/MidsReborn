@@ -61,9 +61,17 @@ namespace Mids_Reborn.Forms.Controls
             foreach (var file in files)
             {
                 var fileInfo = new FileInfo(file);
-                if (!fileInfo.Exists) continue;
+                if (!fileInfo.Exists)
+                {
+                    continue;
+                }
+
                 var dirInfo = fileInfo.Directory;
-                if (dirInfo == null) continue;
+                if (dirInfo == null)
+                {
+                    continue;
+                }
+
                 _items.Add(_sourceDirectory.Contains(dirInfo.Name)
                     ? new Item(fileInfo.FullName, string.Empty, Path.Combine(_destinationDirectory, fileInfo.Name))
                     : new Item(fileInfo.FullName, dirInfo.Name,
@@ -88,14 +96,14 @@ namespace Mids_Reborn.Forms.Controls
                     Directory.CreateDirectory(path);
                 }
             }
-            ctlProgressBar1.StatusText = @"Moving Builds...";
+            ctlProgressBar1.StatusText = @"Copying Builds...";
             ctlProgressBar1.ItemCount = _items.Count;
             for (var itemIndex = 0; itemIndex < _items.Count; itemIndex++)
             {
                 var item = _items[itemIndex];
                 try
                 {
-                    File.Move(item.Source, item.Destination);
+                    File.Copy(item.Source, item.Destination); // File.Move()
                 }
                 catch (Exception)
                 {
@@ -116,24 +124,9 @@ namespace Mids_Reborn.Forms.Controls
         private void ProgressWorker_RunWorkerCompleted(object? sender, RunWorkerCompletedEventArgs e)
         {
             ctlProgressBar1.StatusText = string.Empty;
-            if (!_moveExceptionRequested)
-            {
-                ResultYes();
-            }
-            else
-            {
-                ResultNo();
-            }
-        }
-
-        private void ResultYes()
-        {
-            DialogResult = DialogResult.Yes;
-        }
-
-        private void ResultNo()
-        {
-            DialogResult = DialogResult.No;
+            DialogResult = !_moveExceptionRequested
+                ? DialogResult.Yes
+                : DialogResult.No;
         }
     }
 }
