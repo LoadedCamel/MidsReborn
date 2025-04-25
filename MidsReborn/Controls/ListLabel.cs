@@ -19,7 +19,6 @@ namespace Mids_Reborn.Controls
         public delegate void ExpandChangedEventHandler(bool expanded);
         public delegate void ItemClickEventHandler(ListLabelItem item, MouseButtons button);
         public delegate void ItemHoverEventHandler(ListLabelItem item);
-        public delegate void ItemHoverEventHandler2(object sender, ListLabelItem item);
 
         [Flags]
         public enum LlFontFlags
@@ -381,44 +380,25 @@ namespace Mids_Reborn.Controls
             _visibleLineCount = GetVisibleLineCount();
         }
 
-        private void Recalculate(bool expanded = false)
+        private void Recalculate()
         {
-            checked
+            if (_items.Count == 0) return;
+
+            InitBuffer();
+
+            if (AutoSize)
             {
-                if (_items.Count == 0) return;
-                InitBuffer();
-                if (AutoSize)
-                {
-                    if (AutoSizeMode == AutoSizeMode.GrowAndShrink)
-                    {
-                        Height = DesiredHeight;
-                    }
-                    else if (DesiredHeight > SizeNormal.Height)
-                    {
-                        Height = DesiredHeight;
-                    }
-                    else
-                    {
-                        Height = SizeNormal.Height;
-                    }
-                }
-                else if (Name == "llAncillary" | Name.StartsWith("llPool"))
-                {
-                    Height = 18 * _items.Count;
-                }
+                Height = AutoSizeMode == AutoSizeMode.GrowAndShrink
+                    ? DesiredHeight
+                    : Math.Max(DesiredHeight, _szNormal.Height);
+            }
 
-                var bRect = new Rectangle(_xPadding, 0, Width - _xPadding * 2, Height);
-                RecalcLines(bRect);
-                if (_scrollSteps > 0 | IsExpanded)
-                {
-                    bRect = new Rectangle(_xPadding, 0, Width - _xPadding * 2, Height - (_scrollWidth + _yPadding));
-                    RecalcLines(bRect);
-                }
+            var bRect = new Rectangle(_xPadding, 0, Width - _xPadding * 2, Height);
+            RecalcLines(bRect);
 
-                if (expanded || _scrollSteps <= 0) return;
-                var num = _canExpand ? _scrollWidth + _yPadding : 0;
-
-                bRect = new Rectangle(_xPadding, 0, Width - (_xPadding * 2 + _scrollWidth), Height - num);
+            if (_scrollSteps > 0 || IsExpanded)
+            {
+                bRect = new Rectangle(_xPadding, 0, Width - _xPadding * 2 - _scrollWidth, Height);
                 RecalcLines(bRect);
             }
         }
@@ -813,15 +793,13 @@ namespace Mids_Reborn.Controls
         {
             if (!IsExpanded) return;
 
-            var num = _expandMaxY;
-            Recalculate(true);
-            var num2 = checked(GetRealTotalHeight() + _scrollWidth + _yPadding * 3);
-            if (num2 < num) num = num2;
+            var maxHeight = Math.Min(GetRealTotalHeight() + _scrollWidth + _yPadding * 3, _expandMaxY);
 
             _disableRedraw = true;
-            Height = num;
+            Height = maxHeight;
             Recalculate();
             _disableRedraw = false;
+
             Draw();
         }
 
