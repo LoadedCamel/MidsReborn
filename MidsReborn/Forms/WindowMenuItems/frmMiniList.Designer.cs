@@ -55,8 +55,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // frmMiniList
             //
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             BackColor = System.Drawing.Color.Black;
             ClientSize = new System.Drawing.Size(249, 284);
             Controls.Add(richTextBox1);
