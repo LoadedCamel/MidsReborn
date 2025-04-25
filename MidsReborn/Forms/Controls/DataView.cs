@@ -740,15 +740,15 @@ namespace Mids_Reborn.Forms.Controls
                 SetDamageTip();
             }*/
             info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, enhancedPower.ToggleCost, suffix1, tip1));
-            var absorbedEffectsFlag = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 && DatabaseAPI.Database.Power[pBase.PowerIndex].EntitiesAutoHit == Enums.eEntity.None;
+            var absorbedEffectsFlag = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 && DatabaseAPI.Database.Power[pBase.PowerIndex]?.EntitiesAutoHit == Enums.eEntity.None;
             var requiresToHitCheckFlag = pBase.Effects.Any(t => t.RequiresToHitCheck);
             var entitiesAutoHitFlag = pBase.EntitiesAutoHit == Enums.eEntity.None |
                                       pBase.Effects
                                           .Where(e => e.EffectType == Enums.eEffectType.EntCreate)
                                           .SelectMany(e => DatabaseAPI.Database.Entities.ElementAtOrDefault(e.nSummon) == null
-                                              ? Array.Empty<IPower?>()
+                                              ? []
                                               : DatabaseAPI.Database.Powersets.ElementAtOrDefault(DatabaseAPI.Database.Entities[e.nSummon].GetNPowerset()[0]) == null
-                                                ? Array.Empty<IPower?>()
+                                                ? []
                                                 : DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Entities[e.nSummon].GetNPowerset()[0]]?.Powers)
                                           .Any(e => e?.EntitiesAutoHit == Enums.eEntity.None);
 
@@ -855,10 +855,16 @@ namespace Mids_Reborn.Forms.Controls
             info_DataList.AddItem(pBase.Arc > 0
                 ? FastItemBuilder.Fi.FastItem("Arc", pBase.Arc, enhancedPower.Arc, "°")
                 : FastItemBuilder.Fi.FastItem("Radius", pBase.Radius, enhancedPower.Radius, "ft"));
-            info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Cast Time", "Cast"), enhancedPower.CastTime, pBase.CastTime, "s", $"CastTime: {enhancedPower.CastTimeBase:####0.###}s\r\nArcana CastTime: {enhancedPower.ArcanaCastTime:####0.###}s", false, true, false, false, 3));
+
+            if (pBase.PowerType != Enums.ePowerType.Auto_)
+            {
+                info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Cast Time", "Cast"), enhancedPower.CastTime, pBase.CastTime, "s", $"CastTime: {enhancedPower.CastTimeBase:####0.###}s\r\nArcana CastTime: {enhancedPower.ArcanaCastTime:####0.###}s", false, true, false, false, 3));
+            }
+
             info_DataList.AddItem(pBase.PowerType == Enums.ePowerType.Toggle
                 ? FastItemBuilder.Fi.FastItem(ShortStr("Activate", "Act"), pBase.ActivatePeriod, enhancedPower.ActivatePeriod, "s", "The effects of this toggle power are applied at this interval.")
                 : FastItemBuilder.Fi.FastItem(ShortStr("Interrupt", "Intrpt"), enhancedPower.InterruptTime, pBase.InterruptTime, "s", "After activating this power, it can be interrupted for this amount of time."));
+            
             if (validMez)
             {
                 info_DataList.AddItem(new PairedListEx.Item("Effect:",

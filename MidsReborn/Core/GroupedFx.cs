@@ -1897,6 +1897,8 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.Fly:
                 case Enums.eEffectType.MovementControl:
                 case Enums.eEffectType.MovementFriction:
+                case Enums.eEffectType.StealthRadius:
+                case Enums.eEffectType.StealthRadiusPlayer:
                     rankedEffect.Value = effectSource.DisplayPercentage
                         ? $"{magSum * 100:###0.##}%{toWhoShort}"
                         : $"{magSum:###0.##}{toWhoShort}";
@@ -2132,11 +2134,6 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.MaxRunSpeed:
                 case Enums.eEffectType.MaxJumpSpeed:
                 case Enums.eEffectType.MaxFlySpeed:
-                    rankedEffect.Value = $"{gre.Mag * 100:###0.##}%{toWhoShort}";
-                    rankedEffect.ToolTip = greTooltip;
-
-                    break;
-
                 case Enums.eEffectType.EnduranceDiscount:
                 case Enums.eEffectType.ThreatLevel:
                     rankedEffect.Value = $"{gre.Mag * 100:###0.##}%{toWhoShort}";
