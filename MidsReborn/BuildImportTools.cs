@@ -450,6 +450,7 @@ namespace Mids_Reborn
                 "peacebringer_defensive.luminous_aura.quantum_acceleration" => "Peacebringer_Defensive.Luminous_Aura.Quantum_Maneuvers",
                 "dominator_control.illusion_control.invisibility" => "Dominator_Control.Illusion_Control.Superior_Invisibility",
                 "dominator_control.illusion_control.decoy" => "Dominator_Control.Illusion_Control.Phantom_Army",
+                "dominator_control.illusion_control.spectral_terror" => "Dominator_Control.Illusion_Control.Spectral_Terrror", 
                 "blaster_support.tactical_arrow.quickness" => "Blaster_Support.Tactical_Arrow.Gymnastics",
                 "blaster_support.tactical_arrow.gymnastics" => "Blaster_Support.Tactical_Arrow.Oil_Slick_Arrow",
                 "blaster_support.electricity_manipulation.lightning_clap" => "Blaster_Support.Electricity_Manipulation.Lightning_Field",
@@ -616,7 +617,28 @@ namespace Mids_Reborn
                             : 0,
                         HasCatalyst = DatabaseAPI.EnhHasCatalyst(m3.Groups[1].Value)
                     };
+
+                    e.Level = Math.Max(e.Level, 1);
+                    e.Boosters = Math.Max(e.Boosters, 0);
+
                     e.eData = DatabaseAPI.GetEnhancementByUIDName(e.InternalName);
+
+                    if (e.eData > -1)
+                    {
+                        if (DatabaseAPI.Database.Enhancements[e.eData].TypeID is not (Enums.eType.InventO or Enums.eType.SetO))
+                        {
+                            // Propagate 50+ combined HO/SO level
+                            // Assume sub 50 enhancements are not combined.
+                            e.Level = Math.Min(e.Level, 53);
+                            e.Boosters = Math.Max(0, e.Level - 50);
+                            e.Level = Math.Min(e.Level, 50);
+                        }
+                        else
+                        {
+                            e.Level = Math.Min(e.Level, 50);
+                            e.Boosters = Math.Min(e.Boosters, 5);
+                        }
+                    }
 
                     p.Slots.Add(e);
                 }
