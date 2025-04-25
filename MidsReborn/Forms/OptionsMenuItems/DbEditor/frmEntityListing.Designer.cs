@@ -155,7 +155,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // frmEntityListing
             // 
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             ClientSize = new System.Drawing.Size(769, 454);
             Controls.Add(btnClone);
             Controls.Add(btnCancel);

@@ -176,7 +176,7 @@ namespace Mids_Reborn.Controls
         private void InitializeComponent()
         {
             SuspendLayout();
-            var autoScaleDimensions = new SizeF(96f, 96f);
+            var autoScaleDimensions = new SizeF(6f, 13f);
             AutoScaleDimensions = autoScaleDimensions;
             AutoScaleMode = AutoScaleMode.Dpi;
             Name = "ImageButton";

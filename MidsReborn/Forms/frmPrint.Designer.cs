@@ -204,7 +204,7 @@ namespace Mids_Reborn.Forms
             // frmPrint
             // 
             this.AcceptButton = this.btnPrint;
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(462, 180);
             this.Controls.Add(this.label1);

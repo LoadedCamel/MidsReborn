@@ -337,7 +337,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // frmCompare
             // 
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
             ClientSize = new System.Drawing.Size(640, 532);
             Controls.Add(ibExClose);

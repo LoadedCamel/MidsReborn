@@ -45,7 +45,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             this.pInfo.Size = new System.Drawing.Size(566, 230);
             this.pInfo.TabIndex = 0;
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.AutoScroll = true;
             this.BackColor = System.Drawing.Color.Black;
 

@@ -252,7 +252,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // frmStats
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
             this.ClientSize = new System.Drawing.Size(492, 491);
             this.Controls.Add(this.btnClose);

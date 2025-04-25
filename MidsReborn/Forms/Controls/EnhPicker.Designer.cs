@@ -46,8 +46,8 @@
             // 
             // EnhPicker
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             AutoSize = true;
             BackColor = System.Drawing.Color.Gray;
             ForeColor = System.Drawing.Color.WhiteSmoke;

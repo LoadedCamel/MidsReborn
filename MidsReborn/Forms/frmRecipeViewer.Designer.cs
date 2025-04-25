@@ -481,7 +481,7 @@ namespace Mids_Reborn.Forms
             // 
             // frmRecipeViewer
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
             this.ClientSize = new System.Drawing.Size(722, 504);
             this.Controls.Add(this.pSalvageSummary);

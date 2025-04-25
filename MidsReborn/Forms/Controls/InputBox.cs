@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.ComponentModel;
 using System.Drawing;
 using System.Windows.Forms;
@@ -197,7 +197,8 @@ namespace Mids_Reborn.Forms.Controls
             // InputBox
             // 
             AcceptButton = ButtonOk;
-            AutoScaleMode = AutoScaleMode.None;
+            AutoScaleDimensions = new SizeF(6F, 13F);
+            AutoScaleMode = AutoScaleMode.Font;
             BackColor = SystemColors.Control;
             CancelButton = ButtonCancel;
             ClientSize = new Size(492, 103);

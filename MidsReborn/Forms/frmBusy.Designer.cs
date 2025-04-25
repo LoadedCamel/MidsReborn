@@ -42,7 +42,7 @@ namespace Mids_Reborn.Forms
             this.Message.TabIndex = 0;
             this.Message.Text = "Busy";
             this.Message.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
 
             this.ClientSize = new System.Drawing.Size(405, 79);
             this.ControlBox = false;

@@ -49,8 +49,8 @@ namespace Mids_Reborn.Forms.Controls
             // 
             // StylizedCheckbox
             // 
-            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             Controls.Add(iconButton1);
             Name = "StylizedCheckbox";
             Size = new System.Drawing.Size(16, 16);

@@ -1,4 +1,4 @@
-﻿using System.Drawing;
+using System.Drawing;
 using System.Windows.Forms;
 using Mids_Reborn.UIv2.Controls;
 
@@ -178,8 +178,8 @@ namespace Mids_Reborn.Forms
             // 
             // SetInspector
             // 
-            AutoScaleDimensions = new SizeF(96F, 96F);
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleDimensions = new SizeF(7F, 15F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = Color.Black;
             ClientSize = new Size(1094, 611);
             Controls.Add(enhSetInfo1);

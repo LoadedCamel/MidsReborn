@@ -372,7 +372,7 @@ namespace Mids_Reborn.UIv2
             // MainForm
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            AutoScaleMode = AutoScaleMode.Font;
             BackColor = System.Drawing.Color.FromArgb(54, 57, 63);
             BackgroundImageLayout = ImageLayout.Stretch;
             ClientSize = new System.Drawing.Size(950, 600);

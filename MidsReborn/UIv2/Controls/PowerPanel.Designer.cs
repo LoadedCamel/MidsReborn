@@ -30,8 +30,8 @@ namespace Mids_Reborn.UIv2.Controls
         /// </summary>
         private void InitializeComponent()
         {
-            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
+            AutoScaleMode = AutoScaleMode.Font;
             Name = "PowerPanel";
         }
 

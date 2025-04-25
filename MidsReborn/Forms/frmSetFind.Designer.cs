@@ -299,7 +299,7 @@ namespace Mids_Reborn.Forms
             // 
             // frmSetFind
             // 
-            AutoScaleMode = AutoScaleMode.Dpi;
+            AutoScaleMode = AutoScaleMode.None;
             BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
             ClientSize = new System.Drawing.Size(1001, 574);
             Controls.Add(cbSecondary);
