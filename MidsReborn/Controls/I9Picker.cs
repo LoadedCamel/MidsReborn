@@ -1201,7 +1201,7 @@ namespace Mids_Reborn.Controls
             return cellIdx > -1 & cellIdx < array.Length;
         }
 
-        private bool DoEnhancementPicked(int index)
+        private bool DoEnhancementPicked(int index, bool fixIndex = true)
         {
             var i9Slot = (I9Slot)_mySlot.Clone();
             CheckAndFixIoLevel();
@@ -1231,30 +1231,47 @@ namespace Mids_Reborn.Controls
                     _lastSpecial = Ui.View.SpecialId;
                     break;
                 case Enums.eType.SetO:
-                    // Regular index => sorted index
-                    var setIndices = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
-                        .Enhancements
-                        .Select((e, i) => new KeyValuePair<int, int>(i, e))
-                        .OrderBy(e => e.Value < 0 ? "" : DatabaseAPI.Database.Enhancements[e.Value].UID)
-                        .Select(e => e.Key)
-                        .ToList();
-
-                    if (IsPlaced(setIndices[index]))
+                    if (fixIndex)
                     {
-                        if (_mySlot.RelativeLevel == Ui.View.RelLevel)
+                        // Regular index => sorted index
+                        var setIndices = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]]
+                            .Enhancements
+                            .Select((e, i) => new KeyValuePair<int, int>(i, e))
+                            .OrderBy(e => e.Value < 0 ? "" : DatabaseAPI.Database.Enhancements[e.Value].UID)
+                            .Select(e => e.Key)
+                            .ToList();
+
+                        if (IsPlaced(setIndices[index]))
                         {
-                            return false;
+                            if (_mySlot.RelativeLevel == Ui.View.RelLevel)
+                            {
+                                return false;
+                            }
                         }
+
+                        var setEnhancements = DatabaseAPI.Database
+                            .EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements
+                            .OrderBy(e => e < 0 ? "" : DatabaseAPI.Database.Enhancements[e].UID)
+                            .ToArray();
+                        i9Slot.Enh = setEnhancements[index];
+                    }
+                    else
+                    {
+                        if (IsPlaced(index))
+                        {
+                            if (_mySlot.RelativeLevel == Ui.View.RelLevel)
+                            {
+                                return false;
+                            }
+                        }
+
+                        i9Slot.Enh = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[index];
                     }
 
-                    var setEnhancements = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements
-                        .OrderBy(e => e < 0 ? "" : DatabaseAPI.Database.Enhancements[e].UID)
-                        .ToArray();
-                    i9Slot.Enh = setEnhancements[index];
                     if (DatabaseAPI.Database.Enhancements[i9Slot.Enh].Unique)
                     {
                         var uniqueSlotted = MidsContext.Character.CurrentBuild.Powers
-                            .Where(e => e is {Power.Slottable: true})
+                            .Where(e => e is { Power.Slottable: true })
                             .Any(f => f?.Slots.Any(g => g.Enhancement.Enh == i9Slot.Enh) == true);
 
                         if (uniqueSlotted)
@@ -1263,7 +1280,7 @@ namespace Mids_Reborn.Controls
                             {
                                 return false;
                             }
-                                
+
                             if (_mySlot.Enh != i9Slot.Enh)
                             {
                                 return false;
@@ -1986,7 +2003,9 @@ namespace Mids_Reborn.Controls
                     Ui.Initial.IoLevel = Ui.View.IoLevel;
                     Ui.Initial.RelLevel = Ui.View.RelLevel;
                     Ui.View = new CTracking.CLocation(Ui.Initial);
-                    DoEnhancementPicked(Ui.View.PickerId);
+
+                    // Pass-through: do not reparse set index as it applies on an already selected enhancement
+                    DoEnhancementPicked(Ui.View.PickerId, false);
                         
                     break;
                     
