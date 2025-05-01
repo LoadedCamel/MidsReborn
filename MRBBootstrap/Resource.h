@@ -14,6 +14,8 @@
 #define IDC_MRBBOOTSTRAP			109
 #define IDC_MYICON				2
 #define IDB_MRB_LOGO            200
+#define IDB_MIDS_LOGO           201
+#define IDB_PLASMA_TEXTURE      202
 #ifndef IDC_STATIC
 #define IDC_STATIC				-1
 #endif

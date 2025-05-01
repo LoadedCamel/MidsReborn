@@ -27,9 +27,6 @@
     <ClInclude Include="MRBBootstrap.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BootstrapperUI.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Downloader.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -45,12 +42,21 @@
     <ClInclude Include="PatchInstaller.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="ModernUI.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PatchInfo.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="PatchManager.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="ModernUIMessages.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="MRBBootstrap.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BootstrapperUI.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Downloader.cpp">
@@ -66,6 +72,15 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="HashValidator.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="ModernUI.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PatchInfo.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="PatchManager.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -84,5 +99,14 @@
     <Image Include="MRB_Logo.png">
       <Filter>Resource Files</Filter>
     </Image>
+    <Image Include="mids_logo.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+    <Image Include="plasma.png">
+      <Filter>Resource Files</Filter>
+    </Image>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="License.txt" />
   </ItemGroup>
 </Project>

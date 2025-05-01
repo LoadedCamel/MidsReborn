@@ -1,13 +1,18 @@
-#pragma once
+// Copyright (c) 2025 Jason Thompson
+// All rights reserved.
+//
+// This file is part of a proprietary software package.
+// Unauthorized copying, modification, or distribution is strictly prohibited.
+// For license information, see the LICENSE.txt file or contact jason@metalios.dev.
 
-#include "framework.h"
+
+#pragma once
 #include <string>
 
-namespace Logger
+class Logger
 {
-    // Initializes the log file.
-    void Init(const std::wstring& logFilePath);
-
-    // Appends a timestamped message to the log.
-    void Log(const std::wstring& message);
-}
+public:
+    static void Init(const std::wstring& logFilePath);
+    static void Log(const std::wstring& message); // General fallback
+    static void Log(const std::wstring& category, const std::wstring& message);
+};

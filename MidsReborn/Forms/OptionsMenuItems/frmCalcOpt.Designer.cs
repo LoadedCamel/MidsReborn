@@ -57,10 +57,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             cPicker = new ColorDialog();
             fbdSave = new FolderBrowserDialog();
             TabPage5 = new TabPage();
-            groupBox10 = new GroupBox();
-            btnCopyLogPath = new Button();
-            btnLogFilePrune = new Button();
-            lblLogSize = new Label();
             groupBox4 = new GroupBox();
             SchemaStatus = new Label();
             btnRepairSchemaAssoc = new Button();
@@ -158,7 +154,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             ((ISupportInitialize)TeamSize).BeginInit();
             ((ISupportInitialize)udIOLevel).BeginInit();
             TabPage5.SuspendLayout();
-            groupBox10.SuspendLayout();
             groupBox4.SuspendLayout();
             groupBox16.SuspendLayout();
             groupBox19.SuspendLayout();
@@ -381,7 +376,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             // 
             // TabPage5
             // 
-            TabPage5.Controls.Add(groupBox10);
             TabPage5.Controls.Add(groupBox4);
             TabPage5.Controls.Add(groupBox16);
             TabPage5.Controls.Add(groupBox19);
@@ -392,47 +386,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage5.TabIndex = 4;
             TabPage5.Text = "Updates & Paths";
             TabPage5.UseVisualStyleBackColor = true;
-            // 
-            // groupBox10
-            // 
-            groupBox10.Controls.Add(btnCopyLogPath);
-            groupBox10.Controls.Add(btnLogFilePrune);
-            groupBox10.Controls.Add(lblLogSize);
-            groupBox10.Location = new System.Drawing.Point(8, 300);
-            groupBox10.Name = "groupBox10";
-            groupBox10.Size = new System.Drawing.Size(761, 60);
-            groupBox10.TabIndex = 74;
-            groupBox10.TabStop = false;
-            groupBox10.Text = "Debugging";
-            // 
-            // btnCopyLogPath
-            // 
-            btnCopyLogPath.Location = new System.Drawing.Point(474, 19);
-            btnCopyLogPath.Name = "btnCopyLogPath";
-            btnCopyLogPath.Size = new System.Drawing.Size(105, 22);
-            btnCopyLogPath.TabIndex = 66;
-            btnCopyLogPath.Text = "Copy location";
-            btnCopyLogPath.UseVisualStyleBackColor = true;
-            btnCopyLogPath.Click += btnCopyLogPath_Click;
-            // 
-            // btnLogFilePrune
-            // 
-            btnLogFilePrune.Location = new System.Drawing.Point(614, 19);
-            btnLogFilePrune.Name = "btnLogFilePrune";
-            btnLogFilePrune.Size = new System.Drawing.Size(105, 22);
-            btnLogFilePrune.TabIndex = 65;
-            btnLogFilePrune.Text = "Prune";
-            btnLogFilePrune.UseVisualStyleBackColor = true;
-            btnLogFilePrune.Click += btnLogFilePrune_Click;
-            // 
-            // lblLogSize
-            // 
-            lblLogSize.AutoSize = true;
-            lblLogSize.Location = new System.Drawing.Point(24, 28);
-            lblLogSize.Name = "lblLogSize";
-            lblLogSize.Size = new System.Drawing.Size(109, 13);
-            lblLogSize.TabIndex = 0;
-            lblLogSize.Text = "Update log file size:";
             // 
             // groupBox4
             // 
@@ -1422,7 +1375,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             label12.AutoSize = true;
             label12.Location = new System.Drawing.Point(12, 406);
             label12.Name = "label12";
-            label12.Size = new System.Drawing.Size(113, 13);
+            label12.Size = new System.Drawing.Size(114, 13);
             label12.TabIndex = 2;
             label12.Text = "DB Version Warning:";
             // 
@@ -1451,8 +1404,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             ((ISupportInitialize)TeamSize).EndInit();
             ((ISupportInitialize)udIOLevel).EndInit();
             TabPage5.ResumeLayout(false);
-            groupBox10.ResumeLayout(false);
-            groupBox10.PerformLayout();
             groupBox4.ResumeLayout(false);
             groupBox4.PerformLayout();
             groupBox16.ResumeLayout(false);
@@ -1605,9 +1556,5 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
         private Label label13;
         private ComboBox cbWordwrapMode;
         private CheckBox chkDisableUsageTips;
-        private GroupBox groupBox10;
-        private Label lblLogSize;
-        private Button btnCopyLogPath;
-        private Button btnLogFilePrune;
     }
 }

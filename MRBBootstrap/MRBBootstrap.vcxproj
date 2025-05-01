@@ -72,6 +72,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <OutDir>$(SolutionDir)MidsReborn\bin\$(Platform)\$(Configuration)\net8.0-windows10.0.19041.0\</OutDir>
+    <TargetName>New_$(ProjectName)</TargetName>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <VcpkgUseStatic>true</VcpkgUseStatic>
@@ -143,33 +144,43 @@
     </Manifest>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="BootstrapperUI.h" />
     <ClInclude Include="Downloader.h" />
     <ClInclude Include="framework.h" />
     <ClInclude Include="HashValidator.h" />
     <ClInclude Include="Logger.h" />
+    <ClInclude Include="ModernUI.h" />
+    <ClInclude Include="ModernUIMessages.h" />
     <ClInclude Include="MRBBootstrap.h" />
     <ClInclude Include="PatchDecompressor.h" />
+    <ClInclude Include="PatchInfo.h" />
     <ClInclude Include="PatchInstaller.h" />
+    <ClInclude Include="PatchManager.h" />
     <ClInclude Include="Resource.h" />
     <ClInclude Include="targetver.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="BootstrapperUI.cpp" />
     <ClCompile Include="Downloader.cpp" />
     <ClCompile Include="HashValidator.cpp" />
     <ClCompile Include="Logger.cpp" />
+    <ClCompile Include="ModernUI.cpp" />
     <ClCompile Include="MRBBootstrap.cpp" />
     <ClCompile Include="PatchDecompressor.cpp" />
+    <ClCompile Include="PatchInfo.cpp" />
     <ClCompile Include="PatchInstaller.cpp" />
+    <ClCompile Include="PatchManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="MRBBootstrap.rc" />
   </ItemGroup>
   <ItemGroup>
+    <Image Include="mids_logo.png" />
     <Image Include="MRBBootstrap.ico" />
     <Image Include="MRB_Logo.png" />
+    <Image Include="plasma.png" />
     <Image Include="small.ico" />
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="License.txt" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

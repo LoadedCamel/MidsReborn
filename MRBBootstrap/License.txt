@@ -1,0 +1,25 @@
+Copyright (c) 2025 Jason Thompson. All rights reserved.
+
+This software and associated documentation files (the "Software") are the
+exclusive property of Jason Thompson. The Software is proprietary and
+confidential. It may not be copied, modified, distributed, sublicensed,
+or used in any way, in whole or in part, without the express written
+permission of the copyright holder.
+
+No license or other rights are granted by implication, estoppel, or
+otherwise under any intellectual property rights. All such rights are
+reserved.
+
+Unauthorized use of this Software is strictly prohibited and may result
+in civil and/or criminal liability under applicable law.
+
+For licensing, commercial use, or other inquiries, contact:
+jason@metalios.dev
+
+Disclaimer:
+This Software is provided "AS IS", without warranty of any kind, express
+or implied, including but not limited to the warranties of merchantability,
+fitness for a particular purpose, and noninfringement. In no event shall
+the author be liable for any claim, damages, or other liability, whether
+in an action of contract, tort, or otherwise, arising from, out of, or in
+connection with the Software or the use or other dealings in the Software.

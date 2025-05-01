@@ -1,10 +1,18 @@
+// Copyright (c) 2025 Jason Thompson
+// All rights reserved.
+//
+// This file is part of a proprietary software package.
+// Unauthorized copying, modification, or distribution is strictly prohibited.
+// For license information, see the LICENSE.txt file or contact jason@metalios.dev.
+
+
 #include "HashValidator.h"
 #include "PatchDecompressor.h"
 #include "Logger.h"
-#include "BootstrapperUI.h"
+#include "PatchManager.h"
 
 #include <fstream>
-#include <nlohmann/json.hpp>  // vcpkg install nlohmann-json
+#include <nlohmann/json.hpp>  
 #include <windows.h>
 #include <wincrypt.h>
 #include <iomanip>
@@ -13,6 +21,8 @@
 #include <filesystem>
 #include <string>
 #include <iostream>
+
+#include "ModernUI.h"
 
 
 #pragma comment(lib, "advapi32.lib")
@@ -95,10 +105,9 @@ static std::wstring ComputeSHA256(const std::wstring& path)
 }
 
 
-bool HashValidator::Validate(const std::wstring& mruPath, const std::wstring& hashPath)
+bool HashValidator::Validate(const std::wstring& stagingPath, const std::wstring& hashPath)
 {
-    std::wstring installPath = mruPath.substr(0, mruPath.find_last_of(L"\\/"));
-    std::wstring stagingDir = installPath + L"\\UpdateStaging";
+    std::wstring stagingDir = stagingPath;
 
     std::ifstream hashFile(hashPath);
     if (!hashFile.is_open())
@@ -120,11 +129,20 @@ bool HashValidator::Validate(const std::wstring& mruPath, const std::wstring& ha
     const size_t totalFiles = j.size();
     size_t currentIndex = 0;
 
-    BootstrapperUI::SetProgressLabel(L"Verifying files...");
-    BootstrapperUI::SetProgress(0, static_cast<int>(totalFiles));
+    ModernUI::PostUpdateStatus(L"Validating...");
+    ModernUI::PostShowProgressBar(true);
+    ModernUI::PostUpdateProgress(0.0f);
 
     for (const auto& item : j)
     {
+        if (PatchManager::gCancelled)
+        {
+            Logger::Log(L"[HashValidator] Cancelled during validation phase.");
+            ModernUI::PostUpdateStatus(L"Validation Cancelled.");
+            ModernUI::PostShowProgressBar(false);
+            return false;
+        }
+
         HashEntry entry;
 
         std::string dirStr = item.value("Directory", "");
@@ -140,12 +158,15 @@ bool HashValidator::Validate(const std::wstring& mruPath, const std::wstring& ha
         fs::path stagedPath = fs::path(stagingDir) / entry.Directory / entry.FileName;
         std::wstring actualHash = ComputeSHA256(stagedPath);
 
-        BootstrapperUI::UpdateFileName(entry.FileName);
-        BootstrapperUI::SetProgress(static_cast<int>(++currentIndex), static_cast<int>(totalFiles));
+        ++currentIndex;
+        ModernUI::SetProgress(static_cast<float>(currentIndex) / static_cast<float>(totalFiles));
 
         if (_wcsicmp(actualHash.c_str(), entry.Hash.c_str()) != 0)
         {
             Logger::Log(L"Hash mismatch for: " + entry.FileName);
+            ModernUI::PostUpdateStatus(L"Validation Failed.");
+            ModernUI::PostShowProgressBar(false);
+            Sleep(1500);
             return false;
         }
     }

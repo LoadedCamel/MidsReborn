@@ -1,60 +1,22 @@
+// Copyright (c) 2025 Jason Thompson
+// All rights reserved.
+//
+// This file is part of a proprietary software package.
+// Unauthorized copying, modification, or distribution is strictly prohibited.
+// For license information, see the LICENSE.txt file or contact jason@metalios.dev.
+
+
 #include "PatchInstaller.h"
+#include "PatchManager.h"
 #include "Logger.h"
-#include "BootstrapperUI.h"
 
 #include <filesystem>
 #include <fstream>
-#include <unordered_set>
 #include <windows.h>
 
+#include "ModernUI.h"
+
 namespace fs = std::filesystem;
-
-static bool BackupFile(const fs::path& target, const fs::path& backup)
-{
-    try {
-        if (exists(target))
-        {
-            create_directories(backup.parent_path());
-            copy_file(target, backup, fs::copy_options::overwrite_existing);
-        }
-        return true;
-    }
-    catch (...)
-    {
-        Logger::Log(L"[Installer] Failed to backup: " + target.wstring());
-        return false;
-    }
-}
-
-static bool RestoreBackup(const fs::path& backupDir, const fs::path& installDir)
-{
-    try {
-        for (auto& entry : fs::recursive_directory_iterator(backupDir))
-        {
-            if (entry.is_regular_file())
-            {
-                fs::path relative = fs::relative(entry.path(), backupDir);
-                fs::path dest = installDir / relative;
-                create_directories(dest.parent_path());
-                copy_file(entry.path(), dest, fs::copy_options::overwrite_existing);
-            }
-        }
-        return true;
-    }
-    catch (...)
-    {
-        Logger::Log(L"[Installer] Rollback failed.");
-        return false;
-    }
-}
-
-bool PatchInstaller::IsApplicationPatch(const std::vector<FileEntry>& files)
-{
-    // This can be enhanced in the future (e.g., check manifest metadata)
-    return std::ranges::any_of(files, [](const FileEntry& f) {
-        return _wcsicmp(f.FileName.c_str(), L"MidsReborn.exe") == 0;
-        });
-}
 
 bool PatchInstaller::WriteStagingFiles(const std::vector<FileEntry>& files, const std::wstring& stagingPath)
 {
@@ -63,16 +25,25 @@ bool PatchInstaller::WriteStagingFiles(const std::vector<FileEntry>& files, cons
     try {
         create_directories(staging);
 
-        BootstrapperUI::SetProgressLabel(L"Staging files...");
-        BootstrapperUI::SetProgress(0, static_cast<int>(files.size()));
-
         for (const auto& [Directory, FileName, Data] : files)
         {
+            if (PatchManager::gCancelled)
+            {
+                Logger::Log(L"[Installer] Cancelled while writing staged files.");
+                return false;
+            }
+
             fs::path staged = staging / Directory / FileName;
             create_directories(staged.parent_path());
 
             // Write file to staging
             std::ofstream out(staged, std::ios::binary);
+            if (!out.is_open())
+            {
+                Logger::Log(L"[Installer] Failed to open file for writing: " + staged.wstring());
+                return false;
+            }
+
             out.write(reinterpret_cast<const char*>(Data.data()), Data.size());
             out.close();
 
@@ -84,10 +55,6 @@ bool PatchInstaller::WriteStagingFiles(const std::vector<FileEntry>& files, cons
             {
                 Logger::Log(L"[Installer] WARNING: File size mismatch for " + staged.wstring());
             }
-
-            static int index = 0;
-            BootstrapperUI::UpdateFileName(FileName);
-            BootstrapperUI::SetProgress(++index, static_cast<int>(files.size()));
         }
 
         return true;
@@ -99,122 +66,58 @@ bool PatchInstaller::WriteStagingFiles(const std::vector<FileEntry>& files, cons
     }
 }
 
-void PatchInstaller::CleanStaleFiles(const std::wstring& installPath, const std::vector<FileEntry>& patchFiles)
-{
-    namespace fs = std::filesystem;
-
-    static const std::vector<std::wstring> excluded_paths = {
-        L"Data",
-        L"Logs",
-        L"UpdateStaging",
-        L"UpdateBackup",
-        L"appSettings.json"
-    };
-
-    static const std::unordered_set<std::wstring> excluded_extensions = {
-        L".mxd", L".mbd", L".txt"
-    };
-
-    std::unordered_set<std::wstring> validPaths;
-
-    // Normalize and store all valid paths from the patch
-    for (const auto& file : patchFiles)
-    {
-        fs::path full = fs::path(installPath) / file.Directory / file.FileName;
-        validPaths.insert(fs::weakly_canonical(full).wstring());
-    }
-
-    // Walk the install dir looking for unknown files
-    for (const auto& entry : fs::recursive_directory_iterator(installPath))
-    {
-        if (!entry.is_regular_file())
-            continue;
-
-        std::wstring relativePath = fs::relative(entry.path(), installPath).wstring();
-
-        // Check if path is excluded
-        bool isExcluded = std::ranges::any_of(excluded_paths, [&](const std::wstring& p) {
-            return relativePath.starts_with(p) || relativePath == p;
-            });
-
-        if (isExcluded)
-            continue;
-
-        // Check for excluded extensions (case-insensitive)
-        std::wstring ext = entry.path().extension().wstring();
-        std::ranges::transform(ext, ext.begin(), ::towlower);
-        if (excluded_extensions.contains(ext))
-            continue;
-
-        // Canonicalize for comparison
-        std::wstring canonicalPath = fs::weakly_canonical(entry.path()).wstring();
-        if (!validPaths.contains(canonicalPath))
-        {
-            Logger::Log(L"[Installer] Removing stale file: " + relativePath);
-            std::error_code ec;
-            fs::remove(entry.path(), ec);
-            if (ec)
-                Logger::Log(L"[Installer] Failed to remove: " + relativePath + L" - " + std::wstring(ec.message().begin(), ec.message().end()));
-        }
-    }
-}
-
 bool PatchInstaller::ApplyStagedFiles(const std::vector<FileEntry>& files, const std::wstring& installPath, const std::wstring& stagingPath)
 {
+    PatchManager::gInstalling = true; // Signal: installation in progress
     const fs::path staging = stagingPath;
-    const fs::path backup = installPath + L"\\UpdateBackup";
 
     try {
-        create_directories(backup);
-
-        BootstrapperUI::SetProgressLabel(L"Installing patch...");
-        BootstrapperUI::SetProgress(0, static_cast<int>(files.size()));
-
-        for (const auto& file : files)
-        {
-            std::filesystem::path target = std::filesystem::path(installPath) / file.Directory / file.FileName;
-            std::filesystem::path backupFile = backup / file.Directory / file.FileName;
-
-            if (!BackupFile(target, backupFile))
-            {
-                RestoreBackup(backup, installPath);
-                return false;
-            }
-        }
-
-        if (IsApplicationPatch(files)) {
-            Logger::Log(L"[Installer] Detected application patch. Cleaning stale files...");
-        	CleanStaleFiles(installPath, files);
-        }
+        ModernUI::PostUpdateStatus(L"Installing...");
+        ModernUI::PostShowProgressBar(true);
+        ModernUI::PostUpdateProgress(0.0f);
 
         int index = 0;
+        const int total = static_cast<int>(files.size());
+
+        // Install staged files
         for (const auto& file : files)
         {
-            std::filesystem::path target = std::filesystem::path(installPath) / file.Directory / file.FileName;
-            std::filesystem::path staged = staging / file.Directory / file.FileName;
+            if (PatchManager::gCancelled)
+            {
+                Logger::Log(L"[Installer] Cancelled during file install phase.");
+                return false;
+            }
+
+            fs::path target = fs::path(installPath) / file.Directory / file.FileName;
+            fs::path staged = staging / file.Directory / file.FileName;
+
+            if (file.Directory == L"Logs")
+            {
+                continue;
+            }
 
             create_directories(target.parent_path());
 
             if (!MoveFileExW(staged.c_str(), target.c_str(), MOVEFILE_REPLACE_EXISTING))
             {
-                Logger::Log(L"[Installer] Failed to replace: " + target.wstring());
-                RestoreBackup(backup, installPath);
+                DWORD lastError = GetLastError();
+
+                Logger::Log(L"[Installer] Failed to replace: " + staged.wstring() + L" -> " + target.wstring());
+                Logger::Log(L"[Installer] MoveFileExW error code: " + std::to_wstring(lastError));
+                PatchManager::gInstalling = false;
                 return false;
             }
 
-            BootstrapperUI::UpdateFileName(file.FileName);
-            BootstrapperUI::SetProgress(++index, static_cast<int>(files.size()));
+            ModernUI::PostUpdateProgress(static_cast<float>(++index) / static_cast<float>(total));
         }
 
-        remove_all(staging);
-        remove_all(backup);
-
+        PatchManager::gInstalling = false;
         return true;
     }
     catch (const std::exception& ex)
     {
         Logger::Log(L"[Installer] Exception during install: " + std::wstring(ex.what(), ex.what() + strlen(ex.what())));
-        RestoreBackup(backup, installPath);
+        PatchManager::gInstalling = false;
         return false;
     }
 }

@@ -344,29 +344,6 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             rbEnhPopupCloseStyle2.Checked = !config.CloseEnhSelectPopupByMove;
             cbWordwrapMode.SelectedIndex = (int)config.PowerListsWordwrapMode;
 
-            var logFile = $"{Application.StartupPath}\\Logs\\update.log";
-            if (!File.Exists(logFile))
-            {
-                lblLogSize.Text = "No update log file available.";
-                btnCopyLogPath.Enabled = false;
-                btnLogFilePrune.Enabled = false;
-            }
-            else
-            {
-                btnCopyLogPath.Enabled = true;
-                btnLogFilePrune.Enabled = true;
-                
-                var logInfo = new FileInfo($"{Application.StartupPath}\\Logs\\update.log");
-                var logSize = logInfo.Length switch
-                {
-                    > 1048576 => $"{logInfo.Length / 1048576f:####0.##} MB", // 1024 x 1024
-                    > 1024 => $"{logInfo.Length / 1024:####0.##} KB",
-                    0 => "(empty)",
-                    _ => $"{logInfo.Length} bytes"
-                };
-                lblLogSize.Text = $"Update log file size: {logSize}";
-            }
-
             ResumeLayout();
         }
 
@@ -703,25 +680,6 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
                 2 => Enums.WordwrapMode.UseEllipsis,
                 _ => Enums.WordwrapMode.Legacy
             };
-        }
-
-        private void btnCopyLogPath_Click(object sender, EventArgs e)
-        {
-            Clipboard.SetText($"{Application.StartupPath}\\Logs\\update.log");
-        }
-
-        private void btnLogFilePrune_Click(object sender, EventArgs e)
-        {
-            var messageBox = new MessageBoxEx("Clear log",
-                "Really clear update log?\nIt can contain useful information about the update process.",
-                MessageBoxEx.MessageBoxExButtons.YesNo, MessageBoxEx.MessageBoxExIcon.Question, true);
-            var ret = messageBox.ShowDialog();
-            if (ret != DialogResult.Yes)
-            {
-                return;
-            }
-
-            File.WriteAllText($"{Application.StartupPath}\\Logs\\update.log", "");
         }
     }
 }

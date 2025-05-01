@@ -1,6 +1,14 @@
+// Copyright (c) 2025 Jason Thompson
+// All rights reserved.
+//
+// This file is part of a proprietary software package.
+// Unauthorized copying, modification, or distribution is strictly prohibited.
+// For license information, see the LICENSE.txt file or contact jason@metalios.dev.
+
+
 #include "PatchDecompressor.h"
+#include "PatchManager.h"
 #include "Logger.h"
-#include "BootstrapperUI.h"
 
 #include <fstream>
 #include <iomanip>
@@ -94,6 +102,13 @@ std::vector<FileEntry> PatchDecompressor::Decompress(const std::wstring& mruPath
     int result;
     do
     {
+        if (PatchManager::gCancelled)
+        {
+            Logger::Log(L"[Decompressor] Cancelled during inflate.");
+            inflateEnd(&stream);
+            return files;
+        }
+
         stream.next_out = buffer.data();
         stream.avail_out = static_cast<uInt>(buffer.size());
 
@@ -126,11 +141,14 @@ std::vector<FileEntry> PatchDecompressor::Decompress(const std::wstring& mruPath
     uint32_t count = 0;
     ss.read(reinterpret_cast<char*>(&count), sizeof(count));
 
-    BootstrapperUI::SetProgressLabel(L"Extracting patch...");
-    BootstrapperUI::SetProgress(0, static_cast<int>(count));
-
     for (uint32_t i = 0; i < count; ++i)
     {
+        if (PatchManager::gCancelled)
+        {
+            Logger::Log(L"[Decompressor] Cancelled during patch entry parsing.");
+            break; // stop parsing
+        }
+
         FileEntry entry;
         uint32_t dataLen = 0;
 
@@ -166,9 +184,6 @@ std::vector<FileEntry> PatchDecompressor::Decompress(const std::wstring& mruPath
             Logger::Log(L"[Decompressor] Failed to read file data at index " + std::to_wstring(i));
             break;
         }
-
-        BootstrapperUI::SetProgress(static_cast<int>(i + 1), static_cast<int>(count));
-        BootstrapperUI::UpdateFileName(entry.FileName);
 
         files.push_back(entry);
     }

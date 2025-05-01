@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Threading;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Utils;
-using Mids_Reborn.Forms;
 
 namespace Mids_Reborn
 {
@@ -21,6 +20,7 @@ namespace Mids_Reborn
             Application.SetCompatibleTextRenderingDefault(false);
             Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
             Fonts.BuildFontCollection();
+            StrapUpdater.Run();
             Application.Run(new MrbAppContext(args));
         }
     }
