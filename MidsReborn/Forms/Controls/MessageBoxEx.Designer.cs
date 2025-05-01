@@ -214,6 +214,7 @@ namespace Mids_Reborn.Forms.Controls
             ShowInTaskbar = false;
             StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
             Text = "MessageBoxEx";
+            TopMost = true;
             mainPanel.ResumeLayout(false);
             mainPanel.PerformLayout();
             buttonPanel.ResumeLayout(false);
