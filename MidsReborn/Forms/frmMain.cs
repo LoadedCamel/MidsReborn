@@ -248,10 +248,10 @@ namespace Mids_Reborn.Forms
             switch (MidsContext.Config.AutomaticUpdates.Type)
             {
                 case ConfigData.AutoUpdType.Startup:
-                    await UpdateCoordinator.CheckAndHandleUpdatesAsync(this, true, false, updateLogger);
+                    await UpdateCoordinator.CheckAndHandleUpdatesAsync(this, false, false, updateLogger);
                     break;
                 case ConfigData.AutoUpdType.Delay:
-                    await UpdateCoordinator.CheckAndHandleUpdatesAsync(this, true, true);
+                    await UpdateCoordinator.CheckAndHandleUpdatesAsync(this, false, true);
                     break;
             }
 
