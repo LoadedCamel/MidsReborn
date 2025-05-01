@@ -6411,7 +6411,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             FloatTop(false);
             // Zed:
             // Rev. 2: use a folder picker instead of a file picker so the data folder
-            // and sub directories can be automatically created.
+            // and subdirectories can be automatically created.
             var dirSelector = new FolderBrowserDialog
             {
                 Description = @"Select your base CoH directory:",
@@ -6430,7 +6430,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             clsGenFreebies.MenuName = iResult.Text;
-            Directory.CreateDirectory(dirSelector.SelectedPath + @"\data\texts\English\Menus");
+            Directory.CreateDirectory($@"{dirSelector.SelectedPath}\data\texts\English\Menus");
             var mnuFileName = $@"{dirSelector.SelectedPath}\data\texts\English\Menus\{clsGenFreebies.MenuName}.{clsGenFreebies.MenuExt}";
             var saveOp = clsGenFreebies.MenuExport.SaveTo(mnuFileName);
             if (!saveOp)
