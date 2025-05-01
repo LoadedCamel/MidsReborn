@@ -17,17 +17,22 @@ namespace Mids_Reborn.Forms.UpdateSystem
 {
     public static class UpdateCoordinator
     {
-        public static async Task<bool> CheckAndHandleUpdatesAsync(IWin32Window parent, bool honorDelay = false, ILogger? logger = null)
+        public static async Task<bool> CheckAndHandleUpdatesAsync(IWin32Window parent, bool startupCheck = false, bool honorDelay = false, ILogger? logger = null)
         {
             if (honorDelay && !IsUpdateCheckDue()) { return false; }
             logger?.Info("[UpdateCoordinator] Starting update check...");
 
             var result = await UpdateUtils.CheckForUpdatesAsync(honorDelay);
-            if (result is { IsAppUpdateAvailable: false, IsDbUpdateAvailable: false })
+            if (result is { IsAppUpdateAvailable: false, IsDbUpdateAvailable: false})
             {
                 logger?.Info("[UpdateCoordinator] No updates available.");
-                var updateMsg = new MessageBoxEx(@"No updates available.", MessageBoxEx.MessageBoxExButtons.Ok);
-                updateMsg.ShowDialog(parent);
+                if (startupCheck)
+                {
+                    var updateMsg = new MessageBoxEx(@"Update", @"No updates available.",
+                        MessageBoxEx.MessageBoxExButtons.Ok);
+                    updateMsg.ShowDialog(parent);
+                }
+
                 return false;
             }
 
