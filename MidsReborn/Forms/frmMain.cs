@@ -6628,7 +6628,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private async void tsUpdateCheck_Click(object sender, EventArgs e)
         {
-            await UpdateCoordinator.CheckAndHandleUpdatesAsync(this);
+            await UpdateCoordinator.CheckAndHandleUpdatesAsync(this, true);
         }
 
         private void tsViewSelected()
