@@ -6,7 +6,7 @@ namespace Mids_Reborn.Forms.UpdateSystem.Models
     public class ManifestEntry
     {
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public PatchType Type { get; set; }
+        public PatchType? Type { get; set; }
         public string? Name { get; set; }
         public string? Version { get; set; }
         public string? File { get; set; }
@@ -17,6 +17,14 @@ namespace Mids_Reborn.Forms.UpdateSystem.Models
             Name = name;
             Version = version;
             File = file;
+        }
+
+        public ManifestEntry()
+        {
+            Type = null;
+            Name = null;
+            Version = null;
+            File = null;
         }
     }
 
