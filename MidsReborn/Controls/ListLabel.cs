@@ -242,9 +242,14 @@ namespace Mids_Reborn.Controls
             set
             {
                 _canExpand = value;
+                if (!_canExpand)
+                {
+                    Expand(true); // Force full expansion
+                }
                 Draw();
             }
         }
+
 
         public Size SizeNormal
         {
