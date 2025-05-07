@@ -14,7 +14,9 @@ https://discord.gg/mids-reborn-593336669004890113
    * This type of setup is not recommended (Not Officially Supported)
    * A 64-bit Wine prefix is required.
 
-### Notes
+### Notes/Thanks
 >Windows setup binaries are generated using **Advanced Installer** thanks to our friends at Caphyon.
 >
 >Mids Reborn uses a customized version the **Bootstrap Updater** created by Metalios and licensed to LoadedCamel.
+>
+>We would also like to thank our friends at **JetBrains** for providing some of the productivity tools we use in developement.
