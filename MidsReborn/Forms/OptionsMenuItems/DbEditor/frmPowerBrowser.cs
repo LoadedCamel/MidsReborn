@@ -464,7 +464,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 return;
             }
-            
+
             IPower? template = new Power(DatabaseAPI.Database.Power[index1]);
             DatabaseAPI.Database.Power[index1] = new Power(DatabaseAPI.Database.Power[index2]);
             DatabaseAPI.Database.Power[index2] = new Power(template);
@@ -489,7 +489,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 return;
             }
-            
+
             using var frmEditPower = new frmEditPower(DatabaseAPI.Database.Power[index1], true);
             var ret = frmEditPower.ShowDialog();
             BringToFront();
@@ -550,7 +550,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 return;
             }
-            
+
             IPower? template = new Power(DatabaseAPI.Database.Power[index1]);
             DatabaseAPI.Database.Power[index1] = new Power(DatabaseAPI.Database.Power[index2]);
             DatabaseAPI.Database.Power[index2] = new Power(template);
@@ -582,7 +582,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 return;
             }
-            
+
             IPowerset? template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
             DatabaseAPI.Database.Powersets[index1] = new Powerset(DatabaseAPI.Database.Powersets[index2]);
             DatabaseAPI.Database.Powersets[index2] = new Powerset(template);
@@ -615,7 +615,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 return;
             }
-            
+
             IPowerset? template = new Powerset(DatabaseAPI.Database.Powersets[index1]);
             DatabaseAPI.Database.Powersets[index1] = new Powerset(DatabaseAPI.Database.Powersets[index2]);
             DatabaseAPI.Database.Powersets[index2] = new Powerset(template);
@@ -689,7 +689,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 return;
             }
-            
+
             var str = "";
             if (DatabaseAPI.Database.Powersets[index1].Powers.Length > 0)
             {
@@ -754,7 +754,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 return;
             }
-            
+
             var powerset = DatabaseAPI.Database.Powersets[Powerset];
             var fullName = powerset.FullName;
             using var frmEditPowerset = new frmEditPowerset(ref powerset);
@@ -1016,7 +1016,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvGroup.Enabled = true;
                     pnlGroup.Enabled = true;
                     break;
-                
+
                 case 1:
                     for (var imageIndex = 0; imageIndex < DatabaseAPI.Database.Classes.Length; imageIndex++)
                     {
@@ -1029,7 +1029,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvGroup.Enabled = true;
                     pnlGroup.Enabled = true;
                     break;
-                
+
                 default:
                     lvGroup.Columns[0].Text = "";
                     lvGroup.Enabled = false;
@@ -1386,7 +1386,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 {
                     var ps = DatabaseAPI.GetPowersetByFullname(lvSet.SelectedItems[0].SubItems[3].Text);
                     var powersetsArchetypes = DatabaseAPI.Database.Classes
-                        .Where(t => t is {Playable: true})
+                        .Where(t => t is { Playable: true })
                         .Where(t => DatabaseAPI.GetPowersetIndexes(t, Enums.ePowerSetType.Ancillary).Any(p => p.Equals(ps)))
                         .Select(t => t.DisplayName)
                         .OrderBy(t => t)
@@ -1515,6 +1515,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnDbQueries_Click(object sender, EventArgs e)
         {
             using var f = new frmDbQueries();
+
+            f.ShowDialog();
+        }
+
+        private void btnDbDiff_Click(object sender, EventArgs e)
+        {
+            using var f = new frmDbDiff();
 
             f.ShowDialog();
         }

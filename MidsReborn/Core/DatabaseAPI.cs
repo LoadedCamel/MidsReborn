@@ -1523,6 +1523,149 @@ namespace Mids_Reborn.Core
             var serialized = JsonConvert.SerializeObject(Database.Entities, Formatting.Indented);
             File.WriteAllText($@"{Application.StartupPath}\\data\\Ents.json", serialized);
         }
+
+        public static bool LoadMainDatabase(string iPath, ref IDatabase database)
+        {
+            ClearLookups();
+            var path = $"{iPath.TrimEnd('/', '\\')}{Path.DirectorySeparatorChar}{Path.GetFileName(Files.SelectDataFileLoad(Files.MxdbFileDb, iPath))}";
+
+            FileStream fileStream;
+            BinaryReader reader;
+            try
+            {
+                fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                reader = new BinaryReader(fileStream);
+            }
+            catch
+            {
+                return false;
+            }
+
+            try
+            {
+                var headerFound = true;
+                var header = reader.ReadString();
+                if (header != Files.Headers.Db.Start)
+                {
+                    headerFound = false;
+                }
+
+                if (!headerFound)
+                {
+                    MessageBox.Show(@"Expected MRB header, got something else!", @"Error Reading Database");
+                    return false;
+                }
+
+                database = new Database();
+                database.Version = Version.Parse(reader.ReadString());
+                var year = reader.ReadInt32();
+                if (year > 0)
+                {
+                    var month = reader.ReadInt32();
+                    var day = reader.ReadInt32();
+                    database.Date = new DateTime(year, month, day);
+                }
+                else
+                {
+                    database.Date = DateTime.FromBinary(reader.ReadInt64());
+                }
+
+                database.Issue = reader.ReadInt32();
+                database.PageVol = reader.ReadInt32();
+                database.PageVolText = reader.ReadString();
+
+                if (reader.ReadString() != Files.Headers.Db.Archetypes)
+                {
+                    MessageBox.Show(@"Expected Archetype Data, got something else!", @"Eeeeee!");
+                    reader.Close();
+                    fileStream.Close();
+                    
+                    return false;
+                }
+
+                database.Classes = new Archetype?[reader.ReadInt32() + 1];
+                for (var index = 0; index < database.Classes.Length; index++)
+                {
+                    database.Classes[index] = new Archetype(reader)
+                    {
+                        Idx = index
+                    };
+                }
+
+                if (reader.ReadString() != Files.Headers.Db.Powersets)
+                {
+                    MessageBox.Show("Expected Powerset Data, got something else!", "Eeeeee!");
+                    reader.Close();
+                    fileStream.Close();
+                    
+                    return false;
+                }
+
+                var num3 = 0;
+                database.Powersets = new IPowerset?[reader.ReadInt32() + 1];
+                for (var index = 0; index < database.Powersets.Length; index++)
+                {
+                    database.Powersets[index] = new Powerset(reader)
+                    {
+                        nID = index
+                    };
+                    
+                    if (++num3 <= 10)
+                    {
+                        continue;
+                    }
+
+                    num3 = 0;
+                    //Application.DoEvents();
+                }
+
+                if (reader.ReadString() != Files.Headers.Db.Powers)
+                {
+                    MessageBox.Show("Expected Power Data, got something else!", "Eeeeee!");
+                    reader.Close();
+                    fileStream.Close();
+                    
+                    return false;
+                }
+
+                database.Power = new IPower[reader.ReadInt32() + 1];
+                for (var index = 0; index < database.Power.Length; index++)
+                {
+                    database.Power[index] = new Power(reader);
+                    if (++num3 <= 50)
+                    {
+                        continue;
+                    }
+
+                    num3 = 0;
+                    //Application.DoEvents();
+                }
+
+                if (reader.ReadString() != Files.Headers.Db.Summons)
+                {
+                    MessageBox.Show("Expected Summon Data, got something else!", "Eeeeee!");
+                    reader.Close();
+                    fileStream.Close();
+                    
+                    return false;
+                }
+
+                database.LoadEntities(reader);
+                reader.Close();
+                fileStream.Close();
+            }
+            catch (Exception e)
+            {
+                reader.Close();
+                fileStream.Close();
+                MessageBox.Show($@"{e.Message}\r\n{e.StackTrace}");
+                
+                return false;
+            }
+
+            return true;
+        }
+
         public static bool LoadMainDatabase(string? iPath)
         {
             ClearLookups();
@@ -1622,7 +1765,7 @@ namespace Mids_Reborn.Core
                 }
 
                 Database.Power = new IPower[reader.ReadInt32() + 1];
-                for (var index = 0; index <= Database.Power.Length - 1; ++index)
+                for (var index = 0; index < Database.Power.Length; index++)
                 {
                     Database.Power[index] = new Power(reader);
                     ++num3;
