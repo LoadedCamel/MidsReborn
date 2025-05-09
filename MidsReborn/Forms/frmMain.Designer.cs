@@ -347,7 +347,7 @@ namespace Mids_Reborn.Forms
             this.cbPool0.Location = new System.Drawing.Point(0, 21); // 328, 182
             this.cbPool0.MaxDropDownItems = 15;
             this.cbPool0.Name = "cbPool0";
-            this.cbPool0.Size = new System.Drawing.Size(145, 22);
+            this.cbPool0.Size = new System.Drawing.Size(142, 22);
             this.cbPool0.TabIndex = 15;
             this.cbPool0.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbPool0_DrawItem);
             this.cbPool0.SelectionChangeCommitted += new System.EventHandler(this.cbPool0_SelectedIndexChanged);
@@ -376,7 +376,7 @@ namespace Mids_Reborn.Forms
             this.cbPool1.Location = new System.Drawing.Point(0, 133); // 328, 290
             this.cbPool1.MaxDropDownItems = 15;
             this.cbPool1.Name = "cbPool1";
-            this.cbPool1.Size = new System.Drawing.Size(145, 22);
+            this.cbPool1.Size = new System.Drawing.Size(142, 22);
             this.cbPool1.TabIndex = 18;
             this.cbPool1.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbPool1_DrawItem);
             this.cbPool1.SelectionChangeCommitted += new System.EventHandler(this.cbPool1_SelectedIndexChanged);
@@ -405,7 +405,7 @@ namespace Mids_Reborn.Forms
             this.cbPool2.Location = new System.Drawing.Point(0, 241); // 328, 398
             this.cbPool2.MaxDropDownItems = 15;
             this.cbPool2.Name = "cbPool2";
-            this.cbPool2.Size = new System.Drawing.Size(145, 22);
+            this.cbPool2.Size = new System.Drawing.Size(142, 22);
             this.cbPool2.TabIndex = 21;
             this.cbPool2.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbPool2_DrawItem);
             this.cbPool2.SelectionChangeCommitted += new System.EventHandler(this.cbPool2_SelectedIndexChanged);
@@ -434,7 +434,7 @@ namespace Mids_Reborn.Forms
             this.cbPool3.Location = new System.Drawing.Point(0, 349); // 328, 506
             this.cbPool3.MaxDropDownItems = 15;
             this.cbPool3.Name = "cbPool3";
-            this.cbPool3.Size = new System.Drawing.Size(145, 22);
+            this.cbPool3.Size = new System.Drawing.Size(142, 22);
             this.cbPool3.TabIndex = 24;
             this.cbPool3.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbPool3_DrawItem);
             this.cbPool3.SelectionChangeCommitted += new System.EventHandler(this.cbPool3_SelectedIndexChanged);
@@ -462,7 +462,7 @@ namespace Mids_Reborn.Forms
             this.cbAncillary.ItemHeight = 16;
             this.cbAncillary.Location = new System.Drawing.Point(0, 457); // 328, 614
             this.cbAncillary.Name = "cbAncillary";
-            this.cbAncillary.Size = new System.Drawing.Size(145, 22);
+            this.cbAncillary.Size = new System.Drawing.Size(142, 22);
             this.cbAncillary.TabIndex = 27;
             this.cbAncillary.DrawItem += new System.Windows.Forms.DrawItemEventHandler(this.cbAncillary_DrawItem);
             this.cbAncillary.SelectionChangeCommitted += new System.EventHandler(this.cbAncillery_SelectedIndexChanged);
