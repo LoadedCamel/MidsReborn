@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Windows.Forms;
 using FontAwesome.Sharp;
 using Mids_Reborn.Controls;
+using Mids_Reborn.Controls.Skia;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
@@ -215,13 +216,13 @@ namespace Mids_Reborn.Forms
             this.lblName = new Label();
             this.lblOrigin = new Label();
             this.lblAT = new Label();
-            this.llPool0 = new ListLabel();
-            this.llPool1 = new ListLabel();
-            this.llSecondary = new ListLabel();
-            this.llPrimary = new ListLabel();
-            this.llPool3 = new ListLabel();
-            this.llPool2 = new ListLabel();
-            this.llAncillary = new ListLabel();
+            this.llPool0 = new SkList();
+            this.llPool1 = new SkList();
+            this.llSecondary = new SkList();
+            this.llPrimary = new SkList();
+            this.llPool3 = new SkList();
+            this.llPool2 = new SkList();
+            this.llAncillary = new SkList();
             this.i9Picker = new I9Picker();
             this.I9Popup = new ctlPopUp();
             this.poolsPanel = new ScrollPanelEx();
@@ -1907,14 +1908,14 @@ namespace Mids_Reborn.Forms
             this.llPrimary.ScrollBarColor = System.Drawing.Color.Red;
             this.llPrimary.ScrollBarWidth = 11;
             this.llPrimary.ScrollButtonColor = System.Drawing.Color.FromArgb(192, 0, 0);
-            this.llPrimary.Size = new System.Drawing.Size(145, 160);
-            this.llPrimary.SizeNormal = new System.Drawing.Size(145, 160);
+            this.llPrimary.Size = new System.Drawing.Size(145, 175);
+            this.llPrimary.SizeNormal = new System.Drawing.Size(145, 175);
             this.llPrimary.SuspendRedraw = false;
             this.llPrimary.TabIndex = 107;
-            this.llPrimary.ItemHover += new ListLabel.ItemHoverEventHandler(llPrimary_ItemHover);
-            this.llPrimary.ItemClick += new ListLabel.ItemClickEventHandler(llPrimary_ItemClick);
-            this.llPrimary.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
-            this.llPrimary.ExpandChanged += new ListLabel.ExpandChangedEventHandler(PriSec_ExpandChanged);
+            this.llPrimary.ItemHover += new SkList.ItemHoverEventHandler(llPrimary_ItemHover);
+            this.llPrimary.ItemClick += new SkList.ItemClickEventHandler(llPrimary_ItemClick);
+            this.llPrimary.EmptyHover += new SkList.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPrimary.ExpandChanged += new SkList.ExpandChangedEventHandler(PriSec_ExpandChanged);
             // 
             // llSecondary
             // 
@@ -1932,14 +1933,14 @@ namespace Mids_Reborn.Forms
             this.llSecondary.ScrollBarColor = System.Drawing.Color.Red;
             this.llSecondary.ScrollBarWidth = 11;
             this.llSecondary.ScrollButtonColor = System.Drawing.Color.FromArgb(192, 0, 0);
-            this.llSecondary.Size = new System.Drawing.Size(145, 160);
-            this.llSecondary.SizeNormal = new System.Drawing.Size(145, 160);
+            this.llSecondary.Size = new System.Drawing.Size(145, 175);
+            this.llSecondary.SizeNormal = new System.Drawing.Size(145, 175);
             this.llSecondary.SuspendRedraw = false;
             this.llSecondary.TabIndex = 108;
-            this.llSecondary.ItemHover += new ListLabel.ItemHoverEventHandler(llSecondary_ItemHover);
-            this.llSecondary.ItemClick += new ListLabel.ItemClickEventHandler(llSecondary_ItemClick);
-            this.llSecondary.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
-            this.llSecondary.ExpandChanged += new ListLabel.ExpandChangedEventHandler(PriSec_ExpandChanged);
+            this.llSecondary.ItemHover += new SkList.ItemHoverEventHandler(llSecondary_ItemHover);
+            this.llSecondary.ItemClick += new SkList.ItemClickEventHandler(llSecondary_ItemClick);
+            this.llSecondary.EmptyHover += new SkList.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llSecondary.ExpandChanged += new SkList.ExpandChangedEventHandler(PriSec_ExpandChanged);
             // 
             // llPool0
             // 
@@ -1961,10 +1962,10 @@ namespace Mids_Reborn.Forms
             this.llPool0.SizeNormal = new System.Drawing.Size(145, 69);
             this.llPool0.SuspendRedraw = false;
             this.llPool0.TabIndex = 34;
-            this.llPool0.ItemHover += new ListLabel.ItemHoverEventHandler(llPool0_ItemHover);
-            this.llPool0.ItemClick += new ListLabel.ItemClickEventHandler(llPool0_ItemClick);
+            this.llPool0.ItemHover += new SkList.ItemHoverEventHandler(llPool0_ItemHover);
+            this.llPool0.ItemClick += new SkList.ItemClickEventHandler(llPool0_ItemClick);
             //this.llPool0.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool0.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPool0.EmptyHover += new SkList.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llPool1
             // 
@@ -1983,14 +1984,14 @@ namespace Mids_Reborn.Forms
             this.llPool1.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool1.ScrollBarWidth = 11;
             this.llPool1.ScrollButtonColor = System.Drawing.Color.FromArgb(96, 0, 192);
-            this.llPool1.Size = new System.Drawing.Size(145, 100);
-            this.llPool1.SizeNormal = new System.Drawing.Size(145, 100);
+            this.llPool1.Size = new System.Drawing.Size(145, 69);
+            this.llPool1.SizeNormal = new System.Drawing.Size(145, 69);
             this.llPool1.SuspendRedraw = false;
             this.llPool1.TabIndex = 35;
-            this.llPool1.ItemHover += new ListLabel.ItemHoverEventHandler(llPool1_ItemHover);
-            this.llPool1.ItemClick += new ListLabel.ItemClickEventHandler(llPool1_ItemClick);
+            this.llPool1.ItemHover += new SkList.ItemHoverEventHandler(llPool1_ItemHover);
+            this.llPool1.ItemClick += new SkList.ItemClickEventHandler(llPool1_ItemClick);
             //this.llPool1.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool1.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPool1.EmptyHover += new SkList.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llPool2
             // 
@@ -2013,10 +2014,10 @@ namespace Mids_Reborn.Forms
             this.llPool2.SizeNormal = new System.Drawing.Size(145, 69);
             this.llPool2.SuspendRedraw = false;
             this.llPool2.TabIndex = 36;
-            this.llPool2.ItemHover += new ListLabel.ItemHoverEventHandler(llPool2_ItemHover);
-            this.llPool2.ItemClick += new ListLabel.ItemClickEventHandler(llPool2_ItemClick);
+            this.llPool2.ItemHover += new SkList.ItemHoverEventHandler(llPool2_ItemHover);
+            this.llPool2.ItemClick += new SkList.ItemClickEventHandler(llPool2_ItemClick);
             //this.llPool2.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool2.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPool2.EmptyHover += new SkList.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llPool3
             // 
@@ -2039,10 +2040,10 @@ namespace Mids_Reborn.Forms
             this.llPool3.SizeNormal = new System.Drawing.Size(145, 69);
             this.llPool3.SuspendRedraw = false;
             this.llPool3.TabIndex = 37;
-            this.llPool3.ItemHover += new ListLabel.ItemHoverEventHandler(llPool3_ItemHover);
-            this.llPool3.ItemClick += new ListLabel.ItemClickEventHandler(llPool3_ItemClick);
+            this.llPool3.ItemHover += new SkList.ItemHoverEventHandler(llPool3_ItemHover);
+            this.llPool3.ItemClick += new SkList.ItemClickEventHandler(llPool3_ItemClick);
             //this.llPool3.MouseLeave += new System.EventHandler(llALL_MouseLeave);
-            this.llPool3.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llPool3.EmptyHover += new SkList.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // llAncillary
             // 
@@ -2060,13 +2061,13 @@ namespace Mids_Reborn.Forms
             this.llAncillary.ScrollBarColor = System.Drawing.Color.Red;
             this.llAncillary.ScrollBarWidth = 11;
             this.llAncillary.ScrollButtonColor = System.Drawing.Color.FromArgb(192, 0, 0);
-            this.llAncillary.Size = new System.Drawing.Size(145, 125);
-            this.llAncillary.SizeNormal = new System.Drawing.Size(145, 125);
+            this.llAncillary.Size = new System.Drawing.Size(145, 69);
+            this.llAncillary.SizeNormal = new System.Drawing.Size(145, 69);
             this.llAncillary.SuspendRedraw = false;
             this.llAncillary.TabIndex = 110;
-            this.llAncillary.ItemHover += new ListLabel.ItemHoverEventHandler(llAncillary_ItemHover);
-            this.llAncillary.ItemClick += new ListLabel.ItemClickEventHandler(llAncillary_ItemClick);
-            this.llAncillary.EmptyHover += new ListLabel.EmptyHoverEventHandler(llAll_EmptyHover);
+            this.llAncillary.ItemHover += new SkList.ItemHoverEventHandler(llAncillary_ItemHover);
+            this.llAncillary.ItemClick += new SkList.ItemClickEventHandler(llAncillary_ItemClick);
+            this.llAncillary.EmptyHover += new SkList.EmptyHoverEventHandler(llAll_EmptyHover);
             // 
             // lblName
             // 
@@ -2505,13 +2506,13 @@ namespace Mids_Reborn.Forms
         Label lblPool4;
         Label lblPrimary;
         Label lblSecondary;
-        ListLabel llAncillary;
-        ListLabel llPool0;
-        ListLabel llPool1;
-        ListLabel llPool2;
-        ListLabel llPool3;
-        ListLabel llPrimary;
-        ListLabel llSecondary;
+        SkList llAncillary;
+        SkList llPool0;
+        SkList llPool1;
+        SkList llPool2;
+        SkList llPool3;
+        SkList llPrimary;
+        SkList llSecondary;
         MidsMenuStrip MenuBar;
         ToolStripMenuItem OptionsToolStripMenuItem;
         public PanelGfx pnlGFX;

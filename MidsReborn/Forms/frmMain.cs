@@ -11,6 +11,7 @@ using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Windows.Forms.VisualStyles;
 using Mids_Reborn.Controls;
+using Mids_Reborn.Controls.Skia;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
@@ -130,7 +131,7 @@ namespace Mids_Reborn.Forms
                 DrawVillain = false,
                 Floating = false,
                 Font = new Font(Fonts.Family("Noto Sans"), 10.25f, FontStyle.Regular, GraphicsUnit.Pixel, 0),
-                Location = new Point(16, 425),
+                Location = new Point(16, 430),
                 Name = "dvAnchored",
                 Size = new Size(300, 400),
                 TabIndex = 69,
@@ -644,7 +645,7 @@ namespace Mids_Reborn.Forms
             return 0;
         }
 
-        private void AssemblePowerList(ListLabel llPower, IPowerset? Powerset)
+        private void AssemblePowerList(SkList llPower, IPowerset? Powerset)
         {
             if (Powerset == null || Powerset.Powers?.Length < 1)
             {
@@ -660,30 +661,26 @@ namespace Mids_Reborn.Forms
                 if (Powerset.nIDTrunkSet > -1)
                 {
                     var powerset = DatabaseAPI.Database.Powersets[Powerset.nIDTrunkSet];
-                    var iItem1 = new ListLabel.ListLabelItem(powerset.DisplayName, ListLabel.LlItemState.Heading,
+                    var iItem1 = new SkListItem(powerset.DisplayName, EItemState.Heading,
                         Powerset.nIDTrunkSet,
-                        -1, -1, "", ListLabel.LlFontFlags.Bold, ListLabel.LlTextAlign.Center);
+                        -1, -1, "", EFontFlags.Bold, ETextAlign.Center);
                     llPower.AddItem(iItem1);
                     for (var iIDXPower = 0; iIDXPower < powerset.Powers.Length; iIDXPower++)
                     {
                         if (powerset.Powers[iIDXPower].Level <= 0) continue;
                         message = "";
-                        var iItem2 = new ListLabel.ListLabelItem(powerset.Powers[iIDXPower].DisplayName,
-                            MainModule.MidsController.Toon.PowerState(powerset.Powers[iIDXPower].PowerIndex,
-                                ref message), Powerset.nIDTrunkSet, iIDXPower, powerset.Powers[iIDXPower].PowerIndex,
-                            "",
-                            ListLabel.LlFontFlags.Bold)
+                        var iItem2 = new SkListItem(powerset.Powers[iIDXPower].DisplayName, MainModule.MidsController.Toon.SkPowerState(powerset.Powers[iIDXPower].PowerIndex, ref message), Powerset.nIDTrunkSet, iIDXPower, powerset.Powers[iIDXPower].PowerIndex, "", EFontFlags.Bold)
                         {
                             Bold = MidsContext.Config.RtFont.PairedBold
                         };
-                        if (iItem2.ItemState == ListLabel.LlItemState.Invalid)
+                        if (iItem2.ItemState == EItemState.Invalid)
                             iItem2.Italic = true;
                         llPower.AddItem(iItem2);
                     }
 
-                    var iItem = new ListLabel.ListLabelItem(Powerset.DisplayName, ListLabel.LlItemState.Heading,
+                    var iItem = new SkListItem(Powerset.DisplayName, EItemState.Heading,
                         Powerset.nID, -1, -1,
-                        "", ListLabel.LlFontFlags.Bold, ListLabel.LlTextAlign.Center);
+                        "", EFontFlags.Bold, ETextAlign.Center);
                     llPower.AddItem(iItem);
                 }
 
@@ -694,18 +691,18 @@ namespace Mids_Reborn.Forms
                             .AllowedForClass(MidsContext.Character.Archetype.Idx))
                             continue;
                         message = "";
-                        var targetPs = MainModule.MidsController.Toon.PowerState(Powerset.Powers[iIDXPower].PowerIndex, ref message);
+                        var targetPs = MainModule.MidsController.Toon.SkPowerState(Powerset.Powers[iIDXPower].PowerIndex, ref message);
                         var power = Powerset.Powers[iIDXPower];
-                        var iItem = new ListLabel.ListLabelItem(
+                        var iItem = new SkListItem(
                             Powerset.Powers[iIDXPower].DisplayName,
                             targetPs,
                             Powerset.nID,
                             iIDXPower,
-                            power.PowerIndex, "", ListLabel.LlFontFlags.Bold)
+                            power.PowerIndex, "", EFontFlags.Bold)
                         {
                             Bold = MidsContext.Config.RtFont.PairedBold
                         };
-                        if (iItem.ItemState == ListLabel.LlItemState.Invalid) iItem.Italic = true;
+                        if (iItem.ItemState == EItemState.Invalid) iItem.Italic = true;
                         llPower.AddItem(iItem);
                     }
 
@@ -3182,14 +3179,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
             DoRefresh();
         }
 
-        private void llAncillary_ItemClick(ListLabel.ListLabelItem Item, MouseButtons Button)
+        private void llAncillary_ItemClick(SkListItem Item, MouseButtons Button)
         {
             if (MidsContext.EnhCheckMode)
             {
                 return;
             }
 
-            if (Item.ItemState == ListLabel.LlItemState.Heading)
+            if (Item.ItemState == EItemState.Heading)
             {
                 return;
             }
@@ -3208,7 +3205,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             llALL_ItemClick_RefreshGfx();
         }
 
-        private void llAncillary_ItemHover(ListLabel.ListLabelItem Item)
+        private void llAncillary_ItemHover(SkListItem Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
@@ -3217,7 +3214,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 llAncillary.Bounds.Y + poolsPanel.Bounds.Y,
                 llAncillary.Bounds.Width,
                 llAncillary.Bounds.Height);
-            if (Item.ItemState == ListLabel.LlItemState.Heading)
+            if (Item.ItemState == EItemState.Heading)
             {
                 ShowPopup(Item.NIdSet, -1, llBounds);
             }
@@ -3228,7 +3225,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void llPool0_ItemClick(ListLabel.ListLabelItem Item, MouseButtons Button)
+        private void llPool0_ItemClick(SkListItem Item, MouseButtons Button)
         {
             if (MidsContext.EnhCheckMode)
             {
@@ -3252,7 +3249,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             llALL_ItemClick_RefreshGfx();
         }
 
-        private void llPool0_ItemHover(ListLabel.ListLabelItem Item)
+        private void llPool0_ItemHover(SkListItem Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
@@ -3261,7 +3258,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             ShowPopup(-1, Item.NIdPower, -1, new Point(), llBounds);
         }
 
-        private void llPool1_ItemClick(ListLabel.ListLabelItem Item, MouseButtons Button)
+        private void llPool1_ItemClick(SkListItem Item, MouseButtons Button)
         {
             if (MidsContext.EnhCheckMode)
             {
@@ -3285,7 +3282,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             llALL_ItemClick_RefreshGfx();
         }
 
-        private void llPool1_ItemHover(ListLabel.ListLabelItem Item)
+        private void llPool1_ItemHover(SkListItem Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
@@ -3294,7 +3291,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             ShowPopup(-1, Item.NIdPower, -1, new Point(), llBounds);
         }
 
-        private void llPool2_ItemClick(ListLabel.ListLabelItem Item, MouseButtons Button)
+        private void llPool2_ItemClick(SkListItem Item, MouseButtons Button)
         {
             if (MidsContext.EnhCheckMode)
             {
@@ -3318,7 +3315,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             llALL_ItemClick_RefreshGfx();
         }
 
-        private void llPool2_ItemHover(ListLabel.ListLabelItem Item)
+        private void llPool2_ItemHover(SkListItem Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
@@ -3327,7 +3324,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             ShowPopup(-1, Item.NIdPower, -1, new Point(), llBounds);
         }
 
-        private void llPool3_ItemClick(ListLabel.ListLabelItem Item, MouseButtons Button)
+        private void llPool3_ItemClick(SkListItem Item, MouseButtons Button)
         {
             if (MidsContext.EnhCheckMode)
             {
@@ -3351,7 +3348,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             llALL_ItemClick_RefreshGfx();
         }
 
-        private void llPool3_ItemHover(ListLabel.ListLabelItem Item)
+        private void llPool3_ItemHover(SkListItem Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
@@ -3360,9 +3357,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             ShowPopup(-1, Item.NIdPower, -1, new Point(), llBounds);
         }
 
-        private void llPrimary_ItemClick(ListLabel.ListLabelItem Item, MouseButtons Button)
+        private void llPrimary_ItemClick(SkListItem Item, MouseButtons Button)
         {
-            if (Item.ItemState == ListLabel.LlItemState.Heading)
+            if (Item.ItemState == EItemState.Heading)
             {
                 return;
             }
@@ -3385,11 +3382,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
             llALL_ItemClick_RefreshGfx();
         }
 
-        private void llPrimary_ItemHover(ListLabel.ListLabelItem Item)
+        private void llPrimary_ItemHover(SkListItem Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
-            if (Item.ItemState == ListLabel.LlItemState.Heading)
+            if (Item.ItemState == EItemState.Heading)
             {
                 ShowPopup(Item.NIdSet, -1, llPrimary.Bounds, string.Empty);
             }
@@ -3400,9 +3397,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void llSecondary_ItemClick(ListLabel.ListLabelItem Item, MouseButtons Button)
+        private void llSecondary_ItemClick(SkListItem Item, MouseButtons Button)
         {
-            if (Item.ItemState == ListLabel.LlItemState.Heading)
+            if (Item.ItemState == EItemState.Heading)
             {
                 return;
             }
@@ -3425,11 +3422,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
             llALL_ItemClick_RefreshGfx();
         }
 
-        private void llSecondary_ItemHover(ListLabel.ListLabelItem Item)
+        private void llSecondary_ItemHover(SkListItem Item)
         {
             LastIndex = -1;
             LastEnhIndex = -1;
-            if (Item.ItemState == ListLabel.LlItemState.Heading)
+            if (Item.ItemState == EItemState.Heading)
             {
                 ShowPopup(Item.NIdSet, -1, llSecondary.Bounds, string.Empty);
             }
@@ -4868,7 +4865,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private Rectangle raGetPoolRect(int index)
         {
             Label label;
-            ListLabel ll;
+            SkList ll;
             switch (index)
             {
                 case 0:
@@ -4916,7 +4913,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             Label label1;
             ComboBox comboBox;
             Label label2;
-            ListLabel ll;
+            SkList ll;
             switch (index)
             {
                 case 0:
@@ -5007,7 +5004,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             llPool3.Height = llPool3.DesiredHeight;
             llAncillary.Height = llAncillary.DesiredHeight;
             FixPrimarySecondaryHeight();
-            var llList = new List<ListLabel> {llAncillary, llPool3, llPool2, llPool1, llPool0};
+            var llList = new List<SkList> {llAncillary, llPool3, llPool2, llPool1, llPool0};
 
             foreach (var ll in llList)
             {
@@ -6911,7 +6908,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             foreach (var colorItem in toColor)
             {
                 colorItem.BackColor = BackColor;
-                if (!(colorItem is ListLabel ll))
+                if (!(colorItem is SkList ll))
                     continue;
                 UpdateLLColors(ll);
                 //ll.Font = font;
@@ -6923,7 +6920,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             };
             foreach (var colorItem in toOtherColor) colorItem.BackColor = lblATLocked.BackColor;
 
-            foreach (var llControl in Controls.OfType<ListLabel>())
+            foreach (var llControl in Controls.OfType<SkList>())
             {
                 llControl.ScrollBarColor = MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerTakenHero
@@ -6931,11 +6928,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 llControl.ScrollButtonColor = MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                     : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
-                llControl.UpdateTextColors(ListLabel.LlItemState.Selected,
+                llControl.UpdateTextColors(EItemState.Selected,
                     MidsContext.Character.IsHero()
                         ? MidsContext.Config.RtFont.ColorPowerTakenHero
                         : MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                llControl.UpdateTextColors(ListLabel.LlItemState.SelectedDisabled,
+                llControl.UpdateTextColors(EItemState.SelectedDisabled,
                     MidsContext.Character.IsHero()
                         ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                         : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
@@ -7082,7 +7079,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             llSecondary.PaddingY = 2;
             FixPrimarySecondaryHeight();
 
-            foreach (var llControl in Controls.OfType<ListLabel>().Concat(poolsPanel.Controls.OfType<ListLabel>()))
+            foreach (var llControl in Controls.OfType<SkList>().Concat(poolsPanel.Controls.OfType<SkList>()))
             {
                 var loc = llControl.Location;
                 var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
@@ -7204,22 +7201,22 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void UpdateLLColors(ListLabel iList)
+        private void UpdateLLColors(SkList iList)
         {
-            iList.UpdateTextColors(ListLabel.LlItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-            iList.UpdateTextColors(ListLabel.LlItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-            iList.UpdateTextColors(ListLabel.LlItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
+            iList.UpdateTextColors(EItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
+            iList.UpdateTextColors(EItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
+            iList.UpdateTextColors(EItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
             iList.ScrollBarColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerTakenHero
                 : MidsContext.Config.RtFont.ColorPowerTakenVillain;
             iList.ScrollButtonColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                 : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
-            iList.UpdateTextColors(ListLabel.LlItemState.Selected,
+            iList.UpdateTextColors(EItemState.Selected,
                 MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerTakenHero
                     : MidsContext.Config.RtFont.ColorPowerTakenVillain);
-            iList.UpdateTextColors(ListLabel.LlItemState.SelectedDisabled,
+            iList.UpdateTextColors(EItemState.SelectedDisabled,
                 MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                     : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
@@ -7293,12 +7290,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void UpdatePowerList(ListLabel llPower)
+        private void UpdatePowerList(SkList llPower)
         {
             llPower.SuspendRedraw = true;
             if (llPower.Items.Length == 0)
             {
-                llPower.AddItem(new ListLabel.ListLabelItem("Nothing", ListLabel.LlItemState.Disabled));
+                llPower.AddItem(new SkListItem("Nothing", EItemState.Disabled));
             }
             
             foreach (var listLabelItemV3 in llPower.Items)
@@ -7309,8 +7306,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 }
 
                 var message = "";
-                listLabelItemV3.ItemState = MainModule.MidsController.Toon.PowerState(listLabelItemV3.NIdPower, ref message);
-                listLabelItemV3.Italic = listLabelItemV3.ItemState == ListLabel.LlItemState.Invalid;
+                listLabelItemV3.ItemState = MainModule.MidsController.Toon.SkPowerState(listLabelItemV3.NIdPower, ref message);
+                listLabelItemV3.Italic = listLabelItemV3.ItemState == EItemState.Invalid;
                 listLabelItemV3.Bold = MidsContext.Config.RtFont.PairedBold;
             }
 
