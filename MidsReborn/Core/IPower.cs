@@ -328,6 +328,8 @@ namespace Mids_Reborn.Core
 
         string GetDifferentAttributesSubPower(int fxIndex);
 
+        string ExportToJson();
+
         bool AppliedPowersOverride { get; set; }
         bool AbsorbedPetEffects { get; set; }
         bool AppliedExecutes { get; set; }

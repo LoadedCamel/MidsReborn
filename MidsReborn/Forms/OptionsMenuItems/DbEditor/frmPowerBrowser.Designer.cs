@@ -75,6 +75,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnManageHiddenPowers = new Button();
             btnMassOp = new Button();
             btnDbQueries = new Button();
+            btnDbDiff = new Button();
             pnlGroup.SuspendLayout();
             pnlSet.SuspendLayout();
             pnlPower.SuspendLayout();
@@ -459,7 +460,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnManageHiddenPowers
             // 
-            btnManageHiddenPowers.Location = new System.Drawing.Point(652, 571);
+            btnManageHiddenPowers.Location = new System.Drawing.Point(458, 571);
             btnManageHiddenPowers.Name = "btnManageHiddenPowers";
             btnManageHiddenPowers.Size = new System.Drawing.Size(140, 32);
             btnManageHiddenPowers.TabIndex = 55;
@@ -469,7 +470,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnMassOp
             // 
-            btnMassOp.Location = new System.Drawing.Point(514, 571);
+            btnMassOp.Location = new System.Drawing.Point(320, 571);
             btnMassOp.Name = "btnMassOp";
             btnMassOp.Size = new System.Drawing.Size(132, 32);
             btnMassOp.TabIndex = 56;
@@ -480,7 +481,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnDbQueries
             // 
-            btnDbQueries.Location = new System.Drawing.Point(798, 571);
+            btnDbQueries.Location = new System.Drawing.Point(750, 571);
             btnDbQueries.Name = "btnDbQueries";
             btnDbQueries.Size = new System.Drawing.Size(132, 32);
             btnDbQueries.TabIndex = 57;
@@ -488,10 +489,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnDbQueries.UseVisualStyleBackColor = true;
             btnDbQueries.Click += btnDbQueries_Click;
             // 
+            // btnDbDiff
+            // 
+            btnDbDiff.Location = new System.Drawing.Point(604, 571);
+            btnDbDiff.Name = "btnDbDiff";
+            btnDbDiff.Size = new System.Drawing.Size(140, 32);
+            btnDbDiff.TabIndex = 58;
+            btnDbDiff.Text = "DB Diff";
+            btnDbDiff.UseVisualStyleBackColor = true;
+            btnDbDiff.Click += btnDbDiff_Click;
+            // 
             // frmPowerBrowser
             // 
             AutoScaleMode = AutoScaleMode.None;
             ClientSize = new System.Drawing.Size(1356, 612);
+            Controls.Add(btnDbDiff);
             Controls.Add(btnDbQueries);
             Controls.Add(btnMassOp);
             Controls.Add(btnManageHiddenPowers);
@@ -508,7 +520,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Controls.Add(pnlGroup);
             Controls.Add(pnlSet);
             Controls.Add(pnlPower);
-            Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            Font = new System.Drawing.Font("Segoe UI", 8.25F);
             FormBorderStyle = FormBorderStyle.FixedDialog;
             MaximizeBox = false;
             MinimizeBox = false;
@@ -566,5 +578,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Button btnMassOp;
         private Button btnClassUp;
         private Button btnDbQueries;
+        private Button btnDbDiff;
     }
 }

@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using FastDeepCloner;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
 {
@@ -3540,7 +3541,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 .SelectMany(e => e.Power.Select(p => DatabaseAPI.Database.Power[p]))
                 .Where(e => e != null)
                 .Select(e => new KeyValuePair<string, IEffect[]>(e.FullName, e.Effects))
-                .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", Array.Empty<IEffect>()))
+                .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", []))
                 .FirstOrDefault(e => e.Value.Any(fx =>
                     fx.EffectType == Enums.eEffectType.PowerRedirect &&
                     fx.Override == basePower.FullName |
@@ -3578,7 +3579,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     .SelectMany(e => e.Power.Select(p => DatabaseAPI.Database.Power[p]))
                     .Where(e => e != null)
                     .Select(e => new KeyValuePair<string, IEffect[]>(e.FullName, e.Effects))
-                    .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", Array.Empty<IEffect>()))
+                    .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", []))
                     .FirstOrDefault(e => e.Value.Any(fx =>
                         fx.EffectType == Enums.eEffectType.PowerRedirect &&
                         fx.Override == basePower.FullName |
@@ -3592,6 +3593,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return !string.IsNullOrEmpty(rootPowerName) && rootPowerBase != null && basePower.FullName != rootPowerName
                 ? rootPowerName
                 : null;
+        }
+
+        public string ExportToJson()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
 
         public override string ToString()

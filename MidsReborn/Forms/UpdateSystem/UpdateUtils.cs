@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
+using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.UpdateSystem.Models;
 using RestSharp;
 using RestSharp.Serializers.Json;
@@ -20,7 +21,11 @@ namespace Mids_Reborn.Forms.UpdateSystem
             var manifestEntries = await FetchAllRelevantManifestEntriesAsync();
             var result = CompareAgainstCurrentVersions(manifestEntries);
 
-            if (honorDelay) MidsContext.Config.AutomaticUpdates.LastChecked = DateTime.UtcNow.Date;
+            if (honorDelay)
+            {
+                MidsContext.Config.AutomaticUpdates.LastChecked = DateTime.UtcNow.Date;
+            }
+
             return result;
         }
 
@@ -31,9 +36,17 @@ namespace Mids_Reborn.Forms.UpdateSystem
             var midsManifest = await FetchManifest("https://updates.midsreborn.com/update_manifest.json");
             list.AddRange(midsManifest.Updates);
 
-            if (DatabaseAPI.DatabaseName.Equals("Homecoming", StringComparison.OrdinalIgnoreCase)) return list;
+            if (DatabaseAPI.DatabaseName.Equals("Homecoming", StringComparison.OrdinalIgnoreCase))
+            {
+                return list;
+            }
+
             var externalUrl = DatabaseAPI.ServerData.ManifestUri;
-            if (string.IsNullOrWhiteSpace(externalUrl)) return list;
+            if (string.IsNullOrWhiteSpace(externalUrl))
+            {
+                return list;
+            }
+
             var externalManifest = await FetchManifest(externalUrl);
             list.AddRange(externalManifest.Updates);
 
@@ -88,10 +101,27 @@ namespace Mids_Reborn.Forms.UpdateSystem
             };
             using var client = new RestClient(options, configureSerialization: s => s.UseSystemTextJson(jsonOptions));
 
-            var request = new RestRequest();
-            var result = await client.GetAsync<Manifest>(request);
+            try
+            {
+                var request = new RestRequest();
+                var result = await client.GetAsync<Manifest>(request);
 
-            return result ?? new Manifest(); // safe fallback
+                return result ?? new Manifest(); // safe fallback
+            }
+            catch (Exception e)
+            {
+                // Fancier error message box.
+                // From normal run: provide specific info
+                // From debug: prevent exception locator to jump into program.cs
+
+                var mbox = new MessageBoxEx(
+                    $"{e.GetType()} exception raised while trying to fetch manifest from {manifestUrl}\r\n\r\n{e.Message}",
+                    MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error, true);
+
+                mbox.ShowDialog();
+
+                return new Manifest();
+            }
         }
     }
 }

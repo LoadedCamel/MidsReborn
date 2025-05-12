@@ -114,15 +114,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public void LoadEntities(BinaryReader reader)
         {
             Entities = new SummonedEntity[reader.ReadInt32() + 1];
-            for (var index = 0; index <= Entities.Length - 1; ++index)
+            for (var index = 0; index < Entities.Length; index++)
+            {
                 Entities[index] = new SummonedEntity(reader);
+            }
         }
 
         public void StoreEntities(BinaryWriter writer)
         {
             writer.Write(Entities.Length - 1);
-            for (var index = 0; index <= Entities.Length - 1; ++index)
-                Entities[index].StoreTo(writer);
+            foreach (var ent in Entities)
+            {
+                ent.StoreTo(writer);
+            }
         }
 
     }
