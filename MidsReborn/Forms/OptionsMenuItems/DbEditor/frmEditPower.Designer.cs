@@ -149,6 +149,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             tpEffects = new TabPage();
             lvFX = new ListBox();
             pnlFX = new Panel();
+            btnDynRecharge = new Button();
             cbCoDFormat = new CheckBox();
             btnSetDamage = new Button();
             btnFXEdit = new Button();
@@ -1523,9 +1524,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             tpEffects.Controls.Add(lvFX);
             tpEffects.Controls.Add(pnlFX);
-            tpEffects.Location = new System.Drawing.Point(4, 24);
+            tpEffects.Location = new System.Drawing.Point(4, 22);
             tpEffects.Name = "tpEffects";
-            tpEffects.Size = new System.Drawing.Size(832, 411);
+            tpEffects.Size = new System.Drawing.Size(832, 413);
             tpEffects.TabIndex = 1;
             tpEffects.Text = "Effects";
             tpEffects.UseVisualStyleBackColor = true;
@@ -1534,6 +1535,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // lvFX
             // 
             lvFX.HorizontalScrollbar = true;
+            lvFX.ItemHeight = 13;
             lvFX.Location = new System.Drawing.Point(8, 9);
             lvFX.Name = "lvFX";
             lvFX.Size = new System.Drawing.Size(744, 303);
@@ -1542,6 +1544,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // pnlFX
             // 
+            pnlFX.Controls.Add(btnDynRecharge);
             pnlFX.Controls.Add(cbCoDFormat);
             pnlFX.Controls.Add(btnSetDamage);
             pnlFX.Controls.Add(btnFXEdit);
@@ -1555,10 +1558,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             pnlFX.Size = new System.Drawing.Size(824, 383);
             pnlFX.TabIndex = 71;
             // 
+            // btnDynRecharge
+            // 
+            btnDynRecharge.Location = new System.Drawing.Point(72, 351);
+            btnDynRecharge.Name = "btnDynRecharge";
+            btnDynRecharge.Size = new System.Drawing.Size(162, 28);
+            btnDynRecharge.TabIndex = 80;
+            btnDynRecharge.Text = "Set up dynamic recharge";
+            btnDynRecharge.Click += btnDynRecharge_Click;
+            // 
             // cbCoDFormat
             // 
             cbCoDFormat.AutoSize = true;
-            cbCoDFormat.Location = new System.Drawing.Point(580, 337);
+            cbCoDFormat.Location = new System.Drawing.Point(580, 322);
             cbCoDFormat.Name = "cbCoDFormat";
             cbCoDFormat.Size = new System.Drawing.Size(139, 17);
             cbCoDFormat.TabIndex = 79;
@@ -1568,7 +1580,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnSetDamage
             // 
-            btnSetDamage.Location = new System.Drawing.Point(312, 332);
+            btnSetDamage.Location = new System.Drawing.Point(336, 317);
             btnSetDamage.Name = "btnSetDamage";
             btnSetDamage.Size = new System.Drawing.Size(212, 28);
             btnSetDamage.TabIndex = 78;
@@ -1576,7 +1588,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnFXEdit
             // 
-            btnFXEdit.Location = new System.Drawing.Point(160, 332);
+            btnFXEdit.Location = new System.Drawing.Point(160, 317);
             btnFXEdit.Name = "btnFXEdit";
             btnFXEdit.Size = new System.Drawing.Size(64, 28);
             btnFXEdit.TabIndex = 77;
@@ -1603,7 +1615,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnFXRemove
             // 
-            btnFXRemove.Location = new System.Drawing.Point(236, 332);
+            btnFXRemove.Location = new System.Drawing.Point(236, 317);
             btnFXRemove.Name = "btnFXRemove";
             btnFXRemove.Size = new System.Drawing.Size(64, 28);
             btnFXRemove.TabIndex = 10;
@@ -1612,7 +1624,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnFXDuplicate
             // 
-            btnFXDuplicate.Location = new System.Drawing.Point(84, 332);
+            btnFXDuplicate.Location = new System.Drawing.Point(84, 317);
             btnFXDuplicate.Name = "btnFXDuplicate";
             btnFXDuplicate.Size = new System.Drawing.Size(64, 28);
             btnFXDuplicate.TabIndex = 69;
@@ -1621,7 +1633,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnFXAdd
             // 
-            btnFXAdd.Location = new System.Drawing.Point(8, 332);
+            btnFXAdd.Location = new System.Drawing.Point(8, 317);
             btnFXAdd.Name = "btnFXAdd";
             btnFXAdd.Size = new System.Drawing.Size(64, 28);
             btnFXAdd.TabIndex = 9;
@@ -1706,7 +1718,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lblEnhName
             // 
-            lblEnhName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblEnhName.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             lblEnhName.Location = new System.Drawing.Point(21, 78);
             lblEnhName.Name = "lblEnhName";
             lblEnhName.Size = new System.Drawing.Size(316, 19);
@@ -1736,7 +1748,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lblInvSet
             // 
-            lblInvSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            lblInvSet.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
             lblInvSet.Location = new System.Drawing.Point(24, 78);
             lblInvSet.Name = "lblInvSet";
             lblInvSet.Size = new System.Drawing.Size(316, 19);
@@ -2041,6 +2053,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lvDisablePass4
             // 
+            lvDisablePass4.ItemHeight = 13;
             lvDisablePass4.Location = new System.Drawing.Point(245, 51);
             lvDisablePass4.Name = "lvDisablePass4";
             lvDisablePass4.SelectionMode = SelectionMode.MultiSimple;
@@ -2050,6 +2063,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lvDisablePass1
             // 
+            lvDisablePass1.ItemHeight = 13;
             lvDisablePass1.Location = new System.Drawing.Point(6, 51);
             lvDisablePass1.Name = "lvDisablePass1";
             lvDisablePass1.SelectionMode = SelectionMode.MultiSimple;
@@ -2537,5 +2551,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Label label19;
         private CheckBox cbCoDFormat;
         private Button btnJsonImport;
+        private Button btnDynRecharge;
     }
 }

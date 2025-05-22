@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -60,7 +59,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         // Power.GetPowerset()?.GetGroupName() doesn't work.
-        // Pick first two chunks of power full name.
+        // Pick first two chunks of power's full name.
         private static string GetPowerGroup(string? pwName, bool fullName = true)
         {
             if (string.IsNullOrWhiteSpace(pwName))
@@ -146,9 +145,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             DiffData = tmpDiff.Clone();
             RefreshLv();
-            Debug.WriteLine($"DiffData: {DiffData.Count} items");
 
-            cbOpMode.SelectedIndex = 0;
             btnSelectExportDir.Visible = true;
             label2.Visible = true;
         }
@@ -277,34 +274,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DiffData[(int)lvi.Tag].Selected = !DiffData[(int)lvi.Tag].Selected;
         }
 
-        private void cbOpMode_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            switch (cbOpMode.SelectedIndex)
-            {
-                case 0:
-                    cbType.BeginUpdate();
-                    cbType.Items.Clear();
-                    cbType.Items.Add("All new powers (JSON)");
-                    cbType.Items.Add("All new powers (JSON) + removed (txt)");
-                    cbType.EndUpdate();
-                    cbType.SelectedIndex = 0;
-                    btnSelectExportDir.Visible = true;
-                    label2.Visible = true;
-                    label2.Text = $"Export to:{(ExportDir == null ? "" : $" {ExportDir}")}";
-
-                    break;
-
-                case 1:
-                    cbType.BeginUpdate();
-                    cbType.Items.Clear();
-                    cbType.Items.Add("All new powers");
-                    btnSelectExportDir.Visible = false;
-                    label2.Visible = false;
-
-                    break;
-            }
-        }
-
         private void btnOpRun_Click(object sender, EventArgs e)
         {
             if (SecDb == null)
@@ -312,65 +281,54 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            switch (cbOpMode.SelectedIndex)
+            if (ExportDir == null)
             {
-                case 0:
-                    if (ExportDir == null)
-                    {
-                        return;
-                    }
+                return;
+            }
 
-                    var newPowers = SecDb.Power
+            var newPowers = SecDb.Power
+                .Where(e => e != null)
+                .Where(e => !DatabaseAPI.Database.Power.Any(f => f != null && f.FullName == e?.FullName))
+                .ToList();
+
+
+            progressBar1.Minimum = 0;
+            progressBar1.Maximum = newPowers.Count;
+            progressBar1.Value = 0;
+            var k = 0;
+
+            foreach (var p in newPowers)
+            {
+                if (p == null)
+                {
+                    continue;
+                }
+
+                File.WriteAllText($"{ExportDir}{Path.DirectorySeparatorChar}{p.FullName}.json", p.ExportToJson());
+                progressBar1.Value = k++;
+            }
+
+            switch (cbType.SelectedIndex)
+            {
+                case 1:
+                    k = 0;
+                    var removedPowers = DatabaseAPI.Database.Power
                         .Where(e => e != null)
-                        .Where(e => !DatabaseAPI.Database.Power.Any(f => f != null && f.FullName == e?.FullName))
+                        .Where(e => !SecDb.Power.Any(f => f != null && f.FullName == e?.FullName))
+                        .Select(e => e?.FullName)
                         .ToList();
 
-
                     progressBar1.Minimum = 0;
-                    progressBar1.Maximum = newPowers.Count;
+                    progressBar1.Maximum = removedPowers.Count;
                     progressBar1.Value = 0;
-                    var k = 0;
 
-                    foreach (var p in newPowers)
-                    {
-                        if (p == null)
-                        {
-                            continue;
-                        }
-
-                        File.WriteAllText($"{ExportDir}{Path.DirectorySeparatorChar}{p.FullName}.json", p.ExportToJson());
-                        progressBar1.Value = k++;
-                    }
-
-                    switch (cbType.SelectedIndex)
-                    {
-                        case 1:
-                            k = 0;
-                            var removedPowers = DatabaseAPI.Database.Power
-                                .Where(e => e != null)
-                                .Where(e => !SecDb.Power.Any(f => f != null && f.FullName == e?.FullName))
-                                .Select(e => e?.FullName)
-                                .ToList();
-
-                            progressBar1.Minimum = 0;
-                            progressBar1.Maximum = removedPowers.Count;
-                            progressBar1.Value = 0;
-
-                            File.WriteAllText($"{ExportDir}{Path.DirectorySeparatorChar}removed_powers.txt", string.Join("\r\n", removedPowers));
-                            progressBar1.Value = k++;
-
-                            break;
-                    }
-
-                    progressBar1.Visible = false;
-
-                    break;
-
-                case 1:
-                    // Merge new powers
+                    File.WriteAllText($"{ExportDir}{Path.DirectorySeparatorChar}removed_powers.txt", string.Join("\r\n", removedPowers));
+                    progressBar1.Value = k++;
 
                     break;
             }
+
+            progressBar1.Visible = false;
         }
 
         private void btnSelectExportDir_Click(object sender, EventArgs e)

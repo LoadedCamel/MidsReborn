@@ -361,7 +361,7 @@ namespace Mids_Reborn.Forms
             this.lblPool1.ForeColor = System.Drawing.Color.White;
             this.lblPool1.Location = new System.Drawing.Point(0, 5); // 328, 166
             this.lblPool1.Name = "lblPool1";
-            this.lblPool1.Size = new System.Drawing.Size(136, 17);
+            this.lblPool1.Size = new System.Drawing.Size(133, 17);
             this.lblPool1.TabIndex = 14;
             this.lblPool1.Text = "Pool 1";
             this.lblPool1.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -390,7 +390,7 @@ namespace Mids_Reborn.Forms
             this.lblPool2.ForeColor = System.Drawing.Color.White;
             this.lblPool2.Location = new System.Drawing.Point(0, 115); // 328, 274
             this.lblPool2.Name = "lblPool2";
-            this.lblPool2.Size = new System.Drawing.Size(136, 17);
+            this.lblPool2.Size = new System.Drawing.Size(133, 17);
             this.lblPool2.TabIndex = 17;
             this.lblPool2.Text = "Pool 2";
             this.lblPool2.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -419,7 +419,7 @@ namespace Mids_Reborn.Forms
             this.lblPool3.ForeColor = System.Drawing.Color.White;
             this.lblPool3.Location = new System.Drawing.Point(0, 223); // 328, 382
             this.lblPool3.Name = "lblPool3";
-            this.lblPool3.Size = new System.Drawing.Size(136, 17);
+            this.lblPool3.Size = new System.Drawing.Size(133, 17);
             this.lblPool3.TabIndex = 20;
             this.lblPool3.Text = "Pool 3";
             this.lblPool3.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -448,7 +448,7 @@ namespace Mids_Reborn.Forms
             this.lblPool4.ForeColor = System.Drawing.Color.White;
             this.lblPool4.Location = new System.Drawing.Point(0, 331); // 328, 490
             this.lblPool4.Name = "lblPool4";
-            this.lblPool4.Size = new System.Drawing.Size(136, 17);
+            this.lblPool4.Size = new System.Drawing.Size(133, 17);
             this.lblPool4.TabIndex = 23;
             this.lblPool4.Text = "Pool 4";
             this.lblPool4.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
@@ -476,7 +476,7 @@ namespace Mids_Reborn.Forms
             this.lblEpic.ForeColor = System.Drawing.Color.White;
             this.lblEpic.Location = new System.Drawing.Point(0, 439); // 328, 598
             this.lblEpic.Name = "lblEpic";
-            this.lblEpic.Size = new System.Drawing.Size(136, 17);
+            this.lblEpic.Size = new System.Drawing.Size(133, 17);
             this.lblEpic.TabIndex = 26;
             this.lblEpic.Text = "Ancillary/Epic Pool";
             this.lblEpic.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;

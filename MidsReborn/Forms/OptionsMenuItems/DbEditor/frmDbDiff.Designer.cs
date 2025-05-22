@@ -43,7 +43,6 @@
             progressBar1 = new System.Windows.Forms.ProgressBar();
             btnOpRun = new System.Windows.Forms.Button();
             cbType = new System.Windows.Forms.ComboBox();
-            cbOpMode = new System.Windows.Forms.ComboBox();
             label1 = new System.Windows.Forms.Label();
             btnSelectExportDir = new System.Windows.Forms.Button();
             label2 = new System.Windows.Forms.Label();
@@ -158,7 +157,6 @@
             panel1.Controls.Add(progressBar1);
             panel1.Controls.Add(btnOpRun);
             panel1.Controls.Add(cbType);
-            panel1.Controls.Add(cbOpMode);
             panel1.Controls.Add(label1);
             panel1.Location = new System.Drawing.Point(12, 448);
             panel1.Name = "panel1";
@@ -168,16 +166,16 @@
             // 
             // progressBar1
             // 
-            progressBar1.Location = new System.Drawing.Point(588, 0);
+            progressBar1.Location = new System.Drawing.Point(340, 0);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new System.Drawing.Size(451, 23);
+            progressBar1.Size = new System.Drawing.Size(706, 23);
             progressBar1.TabIndex = 17;
             progressBar1.Visible = false;
             // 
             // btnOpRun
             // 
             btnOpRun.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
-            btnOpRun.Location = new System.Drawing.Point(480, 0);
+            btnOpRun.Location = new System.Drawing.Point(251, 0);
             btnOpRun.Name = "btnOpRun";
             btnOpRun.Size = new System.Drawing.Size(76, 23);
             btnOpRun.TabIndex = 16;
@@ -188,20 +186,10 @@
             // cbType
             // 
             cbType.FormattingEnabled = true;
-            cbType.Location = new System.Drawing.Point(278, 0);
+            cbType.Location = new System.Drawing.Point(56, 0);
             cbType.Name = "cbType";
             cbType.Size = new System.Drawing.Size(179, 23);
             cbType.TabIndex = 15;
-            // 
-            // cbOpMode
-            // 
-            cbOpMode.FormattingEnabled = true;
-            cbOpMode.Items.AddRange(new object[] { "Export to JSON", "Import to current DB" });
-            cbOpMode.Location = new System.Drawing.Point(80, 0);
-            cbOpMode.Name = "cbOpMode";
-            cbOpMode.Size = new System.Drawing.Size(179, 23);
-            cbOpMode.TabIndex = 14;
-            cbOpMode.SelectedIndexChanged += cbOpMode_SelectedIndexChanged;
             // 
             // label1
             // 
@@ -209,9 +197,9 @@
             label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             label1.Location = new System.Drawing.Point(3, 3);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(66, 15);
+            label1.Size = new System.Drawing.Size(47, 15);
             label1.TabIndex = 13;
-            label1.Text = "Operation:";
+            label1.Text = "Export:";
             // 
             // btnSelectExportDir
             // 
@@ -278,7 +266,6 @@
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button btnOpRun;
         private System.Windows.Forms.ComboBox cbType;
-        private System.Windows.Forms.ComboBox cbOpMode;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnSelectExportDir;
         private System.Windows.Forms.Label label2;

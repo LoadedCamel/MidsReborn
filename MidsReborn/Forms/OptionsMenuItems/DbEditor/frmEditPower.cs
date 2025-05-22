@@ -79,7 +79,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             var str = Clipboard.GetDataObject()?.GetData("System.String", true).ToString();
             if (!string.IsNullOrWhiteSpace(str))
+            {
                 return;
+            }
+
             if (new PowerData(str.Replace("\t", ",")).IsValid)
             {
                 MessageBox.Show("Import successful.");
@@ -131,7 +134,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             iFX.SetPower(myPower);
             using var frmPowerEffect = new frmPowerEffect(iFX, myPower, myPower.Effects.Length);
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
-            if (frmPowerEffect.ShowDialog() != DialogResult.OK) return;
+            if (frmPowerEffect.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
 
             var effectList = myPower.Effects.ToList();
             effectList.Add((IEffect)frmPowerEffect.MyFx.Clone());
@@ -142,12 +148,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void btnFXEdit_Click(object sender, EventArgs e)
         {
-            if (lvFX.SelectedIndices.Count <= 0) return;
+            if (lvFX.SelectedIndices.Count <= 0)
+            {
+                return;
+            }
 
             var selectedIndex = lvFX.SelectedIndices[0];
             using var frmPowerEffect = new frmPowerEffect(myPower.Effects[selectedIndex], myPower, selectedIndex);
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
-            if (frmPowerEffect.ShowDialog(this) != DialogResult.OK) return;
+            if (frmPowerEffect.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
 
             myPower.Effects[selectedIndex] = (IEffect)frmPowerEffect.MyFx.Clone();
             RefreshFXData();
@@ -157,10 +169,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnFXDown_Click(object sender, EventArgs e)
         {
             if (lvFX.SelectedIndices.Count <= 0)
+            {
                 return;
+            }
+
             var selectedIndex = lvFX.SelectedIndices[0];
             if (selectedIndex > myPower.Effects.Length - 2)
+            {
                 return;
+            }
+
             IEffect[] effectArray =
             {
                 (IEffect) myPower.Effects[selectedIndex].Clone(),
@@ -175,13 +193,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnFXDuplicate_Click(object sender, EventArgs e)
         {
             if (lvFX.SelectedIndices.Count <= 0)
+            {
                 return;
+            }
 
             var selectedEffect = (IEffect)myPower.Effects[lvFX.SelectedIndices[0]].Clone();
             using var frmPowerEffect = new frmPowerEffect(selectedEffect, myPower, myPower.Effects.Length);
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
+            {
                 return;
+            }
 
             var effectList = myPower.Effects.ToList();
             effectList.Add(frmPowerEffect.MyFx);
@@ -193,7 +215,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnFXRemove_Click(object sender, EventArgs e)
         {
             if (lvFX.SelectedIndex < 0)
+            {
                 return;
+            }
+
             var effectArray = new IEffect[myPower.Effects.Length];
             var selectedIndex = lvFX.SelectedIndex;
             for (var index = 0; index < effectArray.Length; index++)
@@ -206,7 +231,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             for (var index2 = 0; index2 < effectArray.Length; index2++)
             {
                 if (index2 == selectedIndex)
+                {
                     continue;
+                }
+
                 myPower.Effects[index1] = effectArray[index2];
                 index1++;
             }
@@ -275,12 +303,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnMutexAdd_Click(object sender, EventArgs e)
         {
             var result = InputBox.Show("Enter a name for the new group.", "Add Mutex Group", false, "New Group", InputBox.InputBoxIcon.Info, inputBox_MutexValidating);
-            if (!result.OK) return;
+            if (!result.OK)
+            {
+                return;
+            }
 
             var b = result.Text.Replace(" ", "_");
             var count = clbMutex.Items.Count;
             var index = 0;
-            if (index > count) return;
+            if (index > count)
+            {
+                return;
+            }
 
             if (string.Equals(clbMutex.Items[index].ToString(), b, StringComparison.OrdinalIgnoreCase))
             {
@@ -395,7 +429,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 {
                     myPower.VariableMin = 0;
                     if (myPower.VariableMax == 0)
+                    {
                         myPower.VariableMax = 1;
+                    }
                 }
 
                 if (!myPower.VariableOverride)
@@ -431,7 +467,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnPrDown_Click(object sender, EventArgs e)
         {
             if (lvPrListing.SelectedItems.Count < 1)
+            {
                 return;
+            }
+
             var num = Convert.ToInt32(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag));
             //var num = Math.Round(Conversion.Val(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
             var flag = lvPrListing.SelectedIndices[0] > myPower.Requires.PowerID.Length - 1;
@@ -445,7 +484,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (flag)
             {
                 if (num > myPower.Requires.PowerIDNot.Length - 2)
+                {
                     return;
+                }
+
                 strArray1[0][0] = myPower.Requires.PowerIDNot[index1][0];
                 strArray1[0][1] = myPower.Requires.PowerIDNot[index1][1];
                 strArray1[1][0] = myPower.Requires.PowerIDNot[index2][0];
@@ -459,7 +501,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             else
             {
                 if (num > myPower.Requires.PowerID.Length - 2)
+                {
                     return;
+                }
+
                 strArray1[0][0] = myPower.Requires.PowerID[index1][0];
                 strArray1[0][1] = myPower.Requires.PowerID[index1][1];
                 strArray1[1][0] = myPower.Requires.PowerID[index2][0];
@@ -484,7 +529,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnPrSetNone_Click(object sender, EventArgs e)
         {
             if (lvPrListing.SelectedItems.Count < 1)
+            {
                 return;
+            }
+
             if (rbPrPowerA.Checked)
             {
                 if (!string.IsNullOrWhiteSpace(myPower.Requires.PowerID[lvPrListing.SelectedIndices[0]][1]))
@@ -580,7 +628,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnSPRemove_Click(object sender, EventArgs e)
         {
             if (lvSPSelected.SelectedItems.Count < 1)
+            {
                 return;
+            }
+
             var text = lvSPSelected.SelectedItems[0].Text;
             var strArray = new string[myPower.UIDSubPower.Length - 1];
             var index1 = 0;
@@ -609,7 +660,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             SPFillList();
             if (lvSPSelected.Items.Count <= 0)
+            {
                 return;
+            }
+
             lvSPSelected.Items[^1].Selected = true;
             lvSPSelected.Items[^1].EnsureVisible();
         }
@@ -617,14 +671,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbEffectArea_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.EffectArea = (Enums.eEffectArea)cbEffectArea.SelectedIndex;
         }
 
         private void cbForcedClass_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             var index = cbForcedClass.SelectedIndex - 1;
             myPower.ForcedClass = !(index < 0 | index > DatabaseAPI.Database.Classes.Length - 1)
                 ? DatabaseAPI.Database.Classes[index].ClassName
@@ -634,7 +694,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbInherentType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.InherentType = (Enums.eGridType)cbInherentType.SelectedIndex;
         }
 
@@ -677,7 +740,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbNameSet_Leave(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.SetName = cbNameSet.Text;
             DisplayNameData();
             Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
@@ -686,7 +752,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbNameSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.SetName = cbNameSet.Text;
             SetFullName();
             Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
@@ -695,7 +764,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbNameSet_TextChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.SetName = cbNameSet.Text;
             SetFullName();
         }
@@ -703,13 +775,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbNotify_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.AIReport = (Enums.eNotify)cbNotify.SelectedIndex;
         }
 
         private void cbPowerType_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (Updating) return;
+            if (Updating)
+            {
+                return;
+            }
 
             myPower.PowerType = (Enums.ePowerType)cbPowerType.SelectedIndex;
             lblEndCost.Text = myPower.ActivatePeriod > 0 & myPower.PowerType == Enums.ePowerType.Toggle
@@ -723,7 +801,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             var t = int.TryParse(lblStaticIndex.Text, out var pIndex);
 
-            if (!t) return false;
+            if (!t)
+            {
+                return false;
+            }
 
             var hasDuplicate = DatabaseAPI.Database.Power.Any(p => p != null && p.StaticIndex == pIndex & p.FullName != (myPower?.FullName ?? ""));
 
@@ -733,13 +814,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void CheckScaleValues()
         {
             var ret = float.TryParse(udScaleStart.Text, out var scaleStart);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
 
             ret = float.TryParse(udScaleMin.Text, out var scaleMin);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
 
             ret = float.TryParse(udScaleMax.Text, out var scaleMax);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
 
             // Sync variables after a change
             scaleStart = myPower.VariableStart;
@@ -776,98 +866,139 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void chkAltSub_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
             //myPower.SubIsAltColor = chkAltSub.Checked;
         }
 
         private void chkAlwaysToggle_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.AlwaysToggle = chkAlwaysToggle.Checked;
         }
 
         private void chkBoostBoostable_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.BoostBoostable = chkPRFrontLoad.Checked;
         }
 
         private void chkBoostUsePlayerLevel_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.BoostUsePlayerLevel = chkPRFrontLoad.Checked;
         }
 
         private void chkBuffCycle_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.ClickBuff = chkBuffCycle.Checked;
         }
 
         private void chkGraphFix_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.SkipMax = chkGraphFix.Checked;
         }
 
         private void chkHidden_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.HiddenPower = chkHidden.Checked;
         }
 
         private void chkIgnoreStrength_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.IgnoreStrength = chkIgnoreStrength.Checked;
         }
 
         private void chkLos_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.TargetLoS = chkLos.Checked;
         }
 
         private void chkMutexAuto_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.MutexAuto = chkMutexAuto.Checked;
         }
 
         private void chkMutexSkip_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.MutexIgnore = chkMutexSkip.Checked;
         }
 
         private void chkNoAUReq_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.NeverAutoUpdateRequirements = chkNoAUReq.Checked;
         }
 
         private void chkNoAutoUpdate_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.NeverAutoUpdate = chkNoAutoUpdate.Checked;
         }
 
         private void chkPRFrontLoad_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.AllowFrontLoading = chkPRFrontLoad.Checked;
         }
 
@@ -890,26 +1021,36 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             udScaleMin.Enabled = myPower.VariableEnabled;
             overideScale.Enabled = myPower.VariableEnabled;
             txtScaleName.Enabled = myPower.VariableEnabled;
+            btnDynRecharge.Enabled = myPower.VariableEnabled;
         }
 
         private void overideScale_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.VariableOverride = overideScale.Checked;
         }
 
         private void chkSortOverride_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.SortOverride = chkSortOverride.Checked;
         }
 
         private void chkSubInclude_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             cbInherentType.Enabled = chkSubInclude.CheckState == CheckState.Checked;
             myPower.IncludeFlag = chkSubInclude.Checked;
         }
@@ -917,32 +1058,46 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void chkSummonDisplayEntity_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.ShowSummonAnyway = chkSummonDisplayEntity.Checked;
         }
 
         private void chkSummonStealAttributes_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.AbsorbSummonAttributes = chkSummonStealAttributes.Checked;
         }
 
         private void chkSummonStealEffects_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.AbsorbSummonEffects = chkSummonStealEffects.Checked;
         }
 
         private void clbFlags_ItemCheck(object sender, ItemCheckEventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             if (rbFlagCastThrough.Checked)
             {
                 if (e.Index == 0)
+                {
                     myPower.CastThroughHold = e.NewValue > CheckState.Unchecked;
+                }
             }
             else
             {
@@ -956,41 +1111,79 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
 
                 if (rbFlagAutoHit.Checked)
+                {
                     num1 = (int)myPower.EntitiesAutoHit;
+                }
                 else if (rbFlagAffected.Checked)
+                {
                     num1 = (int)myPower.EntitiesAffected;
+                }
                 else if (rbFlagTargets.Checked)
+                {
                     num1 = (int)myPower.Target;
+                }
                 else if (rbFlagTargetsSec.Checked)
+                {
                     num1 = (int)myPower.TargetSecondary;
+                }
                 else if (rbFlagCast.Checked)
+                {
                     num1 = (int)myPower.CastFlags;
+                }
                 else if (rbFlagVector.Checked)
+                {
                     num1 = (int)myPower.AttackTypes;
+                }
                 else if (rbFlagRequired.Checked)
+                {
                     num1 = (int)myPower.ModesRequired;
+                }
                 else if (rbFlagDisallow.Checked)
+                {
                     num1 = (int)myPower.ModesDisallowed;
+                }
+
                 if ((e.CurrentValue == CheckState.Unchecked) & (e.NewValue == CheckState.Checked))
+                {
                     num1 += numArray[e.Index];
+                }
                 else if ((e.CurrentValue == CheckState.Checked) & (e.NewValue == CheckState.Unchecked))
+                {
                     num1 -= numArray[e.Index];
+                }
+
                 if (rbFlagAutoHit.Checked)
+                {
                     myPower.EntitiesAutoHit = (Enums.eEntity)num1;
+                }
                 else if (rbFlagAffected.Checked)
+                {
                     myPower.EntitiesAffected = (Enums.eEntity)num1;
+                }
                 else if (rbFlagTargets.Checked)
+                {
                     myPower.Target = (Enums.eEntity)num1;
+                }
                 else if (rbFlagTargetsSec.Checked)
+                {
                     myPower.TargetSecondary = (Enums.eEntity)num1;
+                }
                 else if (rbFlagCast.Checked)
+                {
                     myPower.CastFlags = (Enums.eCastFlags)num1;
+                }
                 else if (rbFlagVector.Checked)
+                {
                     myPower.AttackTypes = (Enums.eVector)num1;
+                }
                 else if (rbFlagRequired.Checked)
+                {
                     myPower.ModesRequired = (Enums.eModeFlags)num1;
+                }
                 else if (rbFlagDisallow.Checked)
+                {
                     myPower.ModesDisallowed = (Enums.eModeFlags)num1;
+                }
             }
         }
 
@@ -1556,6 +1749,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             udScaleStart.Enabled = myPower?.VariableEnabled == true;
             udScaleMin.Enabled = myPower?.VariableEnabled == true;
             udScaleMax.Enabled = myPower?.VariableEnabled == true;
+            btnDynRecharge.Enabled = myPower?.VariableEnabled == true;
 
             Updating = false;
             if (chkSubInclude.CheckState == CheckState.Checked)
@@ -1578,7 +1772,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             do
             {
                 if (e.X > (enhPadding + 30) * num3 & e.X < (enhPadding + 30) * (num3 + 1))
+                {
                     num1 = num3;
+                }
+
                 ++num3;
             } while (num3 <= 9);
 
@@ -1586,7 +1783,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             do
             {
                 if (e.Y > (enhPadding + 30) * num4 & e.Y < (enhPadding + 30) * (num4 + 1))
+                {
                     num2 = num4;
+                }
+
                 ++num4;
             } while (num4 <= 10);
 
@@ -1609,7 +1809,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             do
             {
                 if (e.Y > (enhPadding + 30) * num4 & e.Y < (enhPadding + 30) * (num4 + 1))
+                {
                     num2 = num4;
+                }
+
                 ++num4;
             } while (num4 <= 10);
 
@@ -1619,11 +1822,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lblStaticIndex_Click(object sender, EventArgs e)
         {
             var result = InputBox.Show("Enter a new static index for this power.", "Add Static Index", false, $"{myPower.StaticIndex}", InputBox.InputBoxIcon.Info, inputBox_StaticIndexValidating);
-            if (!result.OK) return;
+            if (!result.OK)
+            {
+                return;
+            }
 
             lblStaticIndex.Text = result.Text;
             var t = int.TryParse(result.Text, out var pIndex);
-            if (!t) return;
+            if (!t)
+            {
+                return;
+            }
 
             myPower.StaticIndex = pIndex;
             lblStaticIndex.ForeColor = CheckStaticIndex() ? SystemColors.ControlText : Color.DarkRed;
@@ -1632,7 +1841,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvDisablePass1_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.IgnoreEnh = new Enums.eEnhance[lvDisablePass1.SelectedIndices.Count];
             for (var index = 0; index < lvDisablePass1.SelectedIndices.Count; index++)
             {
@@ -1643,7 +1855,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvDisablePass4_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             myPower.Ignore_Buff = new Enums.eEnhance[lvDisablePass4.SelectedIndices.Count];
             for (var index = 0; index < lvDisablePass4.SelectedIndices.Count; index++)
             {
@@ -1659,10 +1874,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvPrGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ReqChanging || lvPrGroup.SelectedItems.Count <= 0)
+            {
                 return;
+            }
+
             Req_SetList();
             if (lvPrSet.Items.Count > 0)
+            {
                 lvPrSet.Items[0].Selected = true;
+            }
         }
 
         private void lvPrListing_SelectedIndexChanged(object sender, EventArgs e)
@@ -1673,30 +1893,44 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvPrPower_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ReqChanging)
+            {
                 return;
+            }
+
             Req_UpdateItem();
         }
 
         private void lvPrSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ReqChanging || lvPrSet.SelectedItems.Count <= 0)
+            {
                 return;
+            }
+
             Req_PowerList();
         }
 
         private void lvSPGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ReqChanging || lvSPGroup.SelectedItems.Count <= 0)
+            {
                 return;
+            }
+
             SP_SetList();
             if (lvSPSet.Items.Count > 0)
+            {
                 lvSPSet.Items[0].Selected = true;
+            }
         }
 
         private void lvSPSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (ReqChanging || lvSPSet.SelectedItems.Count <= 0)
+            {
                 return;
+            }
+
             SP_PowerList();
         }
 
@@ -1740,7 +1974,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var num2 = -1;
             for (var index = 0; index < enhAcross; index++)
             {
-                if (!(e.X > (enhPadding + 30) * index & e.X < (enhPadding + 30) * (index + 1))) continue;
+                if (!(e.X > (enhPadding + 30) * index & e.X < (enhPadding + 30) * (index + 1)))
+                {
+                    continue;
+                }
 
                 num1 = index;
                 break;
@@ -1750,13 +1987,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             do
             {
                 if (e.Y > (enhPadding + 30) * num4 & e.Y < (enhPadding + 30) * (num4 + 1))
+                {
                     num2 = num4;
+                }
+
                 ++num4;
             } while (num4 <= 10);
 
             var index1 = num1 + num2 * enhAcross;
             if (!(index1 <= DatabaseAPI.Database.EnhancementClasses.Length - 1 & num1 > -1 & num2 > -1))
+            {
                 return;
+            }
+
             var flag = false;
             foreach (var pEnh in myPower.Enhancements)
             {
@@ -1767,7 +2010,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
             }
 
-            if (flag) return;
+            if (flag)
+            {
+                return;
+            }
 
             var enhList = myPower.Enhancements.ToList();
             enhList.Add(DatabaseAPI.Database.EnhancementClasses[index1].ID);
@@ -1779,7 +2025,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void pbEnhancementList_Paint(object sender, PaintEventArgs e)
         {
             if (bxEnhPicker == null)
+            {
                 return;
+            }
+
             e.Graphics.DrawImageUnscaled(bxEnhPicker.Bitmap, 0, 0);
         }
 
@@ -1805,13 +2054,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var enhIdx = -1;
             for (var index = 0; index < myPower.Enhancements.Length; index++)
             {
-                if (!((e.X > (enhPadding + 30) * index) & (e.X < (enhPadding + 30) * (index + 1)))) continue;
+                if (!((e.X > (enhPadding + 30) * index) & (e.X < (enhPadding + 30) * (index + 1))))
+                {
+                    continue;
+                }
 
                 enhIdx = index;
                 break;
             }
 
-            if (!((enhIdx < myPower.Enhancements.Length) & (enhIdx > -1))) return;
+            if (!((enhIdx < myPower.Enhancements.Length) & (enhIdx > -1)))
+            {
+                return;
+            }
 
             var numArray = new int[myPower.Enhancements.Length];
             for (var index = 0; index < myPower.Enhancements.Length; index++)
@@ -1824,7 +2079,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             for (var index2 = 0; index2 < numArray.Length; index2++)
             {
                 if (index2 == enhIdx)
+                {
                     continue;
+                }
+
                 myPower.Enhancements[index1] = numArray[index2];
                 index1++;
             }
@@ -1836,7 +2094,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void pbEnhancements_Paint(object sender, PaintEventArgs e)
         {
             if (bxEnhPicked == null)
+            {
                 return;
+            }
+
             e.Graphics.DrawImageUnscaled(bxEnhPicked.Bitmap, 0, 0);
         }
 
@@ -1845,7 +2106,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var invSetListIndex = GetInvSetListIndex(new Point(e.X, e.Y));
             var setTypes = DatabaseAPI.Database.SetTypes;
 
-            if (!((invSetListIndex < setTypes.Count) & (invSetListIndex > -1))) return;
+            if (!((invSetListIndex < setTypes.Count) & (invSetListIndex > -1)))
+            {
+                return;
+            }
 
             var flag = false;
             foreach (var st in myPower.SetTypes)
@@ -1880,7 +2144,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void pbInvSetList_Paint(object sender, PaintEventArgs e)
         {
             if (bxSetList == null)
+            {
                 return;
+            }
+
             e.Graphics.DrawImageUnscaled(bxSetList.Bitmap, 0, 0);
         }
 
@@ -1908,7 +2175,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void pbInvSetUsed_Paint(object sender, PaintEventArgs e)
         {
             if (bxSet == null)
+            {
                 return;
+            }
+
             e.Graphics.DrawImageUnscaled(bxSet.Bitmap, 0, 0);
         }
 
@@ -1927,7 +2197,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void rbFlagX_CheckedChanged(object sender, EventArgs e)
         {
             if (Updating)
+            {
                 return;
+            }
+
             FillAdvAtrList();
         }
 
@@ -1969,7 +2242,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void rbPrPowerX_CheckedChanged(object sender, EventArgs e)
         {
             if (sender.GetType() == rbPrPowerB.GetType() && ((Control)sender).Text == "Power B")
+            {
                 return;
+            }
+
             btnPrSetNone.Text = rbPrPowerA.Checked ? "Set Power A to None" : "Set Power B to None";
             Req_Listing_IndexChanged();
         }
@@ -2087,7 +2363,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 enhPadding2 += 30 + enhPadding;
                 ++num1;
                 if (num1 != enhAcross)
+                {
                     continue;
+                }
+
                 num1 = 0;
                 enhPadding2 = enhPadding;
                 enhPadding1 += 30 + enhPadding;
@@ -2128,9 +2407,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             lvFX.EndUpdate();
             if (lvFX.Items.Count > Index)
+            {
                 lvFX.SelectedIndex = Index;
+            }
             else
+            {
                 lvFX.SelectedIndex = lvFX.Items.Count - 1;
+            }
         }
 
         private void Req_GroupList()
@@ -2145,7 +2428,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void Req_Listing_IndexChanged()
         {
             if (lvPrListing.SelectedIndices.Count < 1)
+            {
                 return;
+            }
+
             var index = (int)Math.Round(Convert.ToDouble(RuntimeHelpers.GetObjectValue(lvPrListing.SelectedItems[0].Tag)));
             ReqDisplayPower(lvPrListing.SelectedIndices[0] <= myPower.Requires.PowerID.Length - 1
                 ? !rbPrPowerA.Checked ? myPower.Requires.PowerID[index][1] : myPower.Requires.PowerID[index][0]
@@ -2171,7 +2457,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     foreach (var p in DatabaseAPI.Database.Powersets[index1].Powers)
                     {
                         if (!p.HiddenPower)
+                        {
                             lvPrPower.Items.Add(p.PowerName);
+                        }
                     }
                 }
 
@@ -2261,7 +2549,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 for (var index = 0; index < lvPrSet.Items.Count; index++)
                 {
                     if (!string.Equals(lvPrSet.Items[index].Text, strArray[1], StringComparison.OrdinalIgnoreCase))
+                    {
                         continue;
+                    }
+
                     lvPrSet.Items[index].Selected = true;
                     lvPrSet.Items[index].EnsureVisible();
                     break;
@@ -2274,7 +2565,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 for (var index = 0; index < lvPrPower.Items.Count; index++)
                 {
                     if (!string.Equals(lvPrPower.Items[index].Text, strArray[2], StringComparison.OrdinalIgnoreCase))
+                    {
                         continue;
+                    }
+
                     lvPrPower.Items[index].Selected = true;
                     lvPrPower.Items[index].EnsureVisible();
                     break;
@@ -2334,13 +2628,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         CultureInfo.InvariantCulture));
                 if (index1 > -1)
                 {
-                    for (var index2 = 0; index2 < DatabaseAPI.Database.Powersets[index1].Powers.Length; index2++)
+                    foreach (var p in DatabaseAPI.Database.Powersets[index1].Powers)
                     {
-                        if (DatabaseAPI.Database.Powersets[index1].Powers[index2].HiddenPower)
+                        if (p.HiddenPower)
+                        {
                             continue;
-                        lvSPPower.Items.Add(DatabaseAPI.Database.Powersets[index1].Powers[index2].PowerName);
-                        lvSPPower.Items[^1].Tag =
-                            DatabaseAPI.Database.Powersets[index1].Powers[index2].FullName;
+                        }
+
+                        lvSPPower.Items.Add(p.PowerName);
+                        lvSPPower.Items[^1].Tag = p.FullName;
                     }
                 }
 
@@ -2362,8 +2658,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 foreach (var idx in indexesByGroupName)
                 {
                     lvSPSet.Items.Add(DatabaseAPI.Database.Powersets[idx].SetName);
-                    lvSPSet.Items[^1].Tag =
-                        DatabaseAPI.Database.Powersets[idx].FullName;
+                    lvSPSet.Items[^1].Tag = DatabaseAPI.Database.Powersets[idx].FullName;
                 }
 
                 lvSPSet.EndUpdate();
@@ -2412,10 +2707,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtAcc_TextChanged(object sender, EventArgs e)
         {
-            if (Updating) return;
+            if (Updating)
+            {
+                return;
+            }
 
             var res = float.TryParse(txtAcc.Text, out var num);
-            if (!res) return;
+            if (!res)
+            {
+                return;
+            }
 
             if (num is < 0 or > 100)
             {
@@ -2441,11 +2742,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtActivate_TextChanged(object sender, EventArgs e)
         {
-            if (Updating) return;
+            if (Updating)
+            {
+                return;
+            }
 
             var power = myPower;
             var ret = float.TryParse(txtActivate.Text, out var num);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
 
             if (num < 0)
             {
@@ -2460,7 +2767,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             power.ActivatePeriod = num;
 
-            if ((power.ActivatePeriod > 0) & (power.PowerType == Enums.ePowerType.Toggle))
+            if (power.ActivatePeriod > 0 & power.PowerType == Enums.ePowerType.Toggle)
             {
                 lblEndCost.Text = $"{power.EndCost / power.ActivatePeriod:##0.##}/s";
             }
@@ -2566,10 +2873,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void txtEndCost_TextChanged(object sender, EventArgs e)
         {
-            if (Updating) return;
+            if (Updating)
+            {
+                return;
+            }
 
             var res = float.TryParse(txtEndCost.Text, out var num);
-            if (!res) return;
+            if (!res)
+            {
+                return;
+            }
 
             if (num is < 0 or > 2147483904)
             {
@@ -3165,6 +3478,43 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 cbInherentType.Enabled = true;
             }
+        }
+
+        private void btnDynRecharge_Click(object sender, EventArgs e)
+        {
+            if (myPower == null)
+            {
+                return;
+            }
+
+            if (myPower.VariableMin == myPower.VariableMax)
+            {
+                MessageBox.Show("Cannot be used if minimum and maximum scaling values are the same.", "Dang",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                return;
+            }
+
+            using var frmDynRech = new frmDynRechIncrement();
+            frmDynRech.ShowDialog();
+
+            if (frmDynRech.DialogResult != DialogResult.OK)
+            {
+                return;
+            }
+
+            var fxList = myPower.Effects.ToList();
+            var scaleOffset = Math.Max(1, myPower.VariableMin) - 1;
+
+            for (var i = Math.Max(1, myPower.VariableMin); i < myPower.VariableMax; i++)
+            {
+                fxList.Add(Effect.GenerateModifyAttrib(myPower, Enums.ePowerAttribs.RechargeTime,
+                    myPower.RechargeTime + frmDynRech.IncrementValue * (i - scaleOffset),
+                    [new($"Stacks:{myPower.FullName}", $"= {i}")]));
+            }
+
+            myPower.Effects = fxList.ToArray();
+            RefreshFXData();
         }
     }
 
