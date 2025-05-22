@@ -588,7 +588,7 @@ namespace Mids_Reborn.Core
                     Enums.eColorSetting.ColorPlName => Color.FromArgb(192, 192, 255),
                     Enums.eColorSetting.ColorPlSpecial => Color.FromArgb(128, 128, 255),
                     Enums.eColorSetting.ColorPowerAvailable => Color.Gold,
-                    Enums.eColorSetting.ColorPowerDisabled => Color.DimGray,
+                    Enums.eColorSetting.ColorPowerDisabled => Color.LightGray,
                     Enums.eColorSetting.ColorPowerTakenHero => Color.FromArgb(116, 168, 234),
                     Enums.eColorSetting.ColorPowerTakenDarkHero => Color.DodgerBlue,
                     Enums.eColorSetting.ColorPowerHighlightHero => Color.FromArgb(64, 64, 96),
