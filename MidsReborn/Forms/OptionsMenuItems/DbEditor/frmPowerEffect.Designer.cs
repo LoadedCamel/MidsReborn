@@ -950,7 +950,7 @@
             // txtMaxTargets
             // 
             txtMaxTargets.Dock = System.Windows.Forms.DockStyle.Fill;
-            txtMaxTargets.Location = new System.Drawing.Point(4, 378);
+            txtMaxTargets.Location = new System.Drawing.Point(4, 377);
             txtMaxTargets.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             txtMaxTargets.Name = "txtMaxTargets";
             txtMaxTargets.Size = new System.Drawing.Size(128, 30);
@@ -961,7 +961,7 @@
             // txtArc
             // 
             txtArc.Dock = System.Windows.Forms.DockStyle.Fill;
-            txtArc.Location = new System.Drawing.Point(4, 345);
+            txtArc.Location = new System.Drawing.Point(4, 343);
             txtArc.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             txtArc.Name = "txtArc";
             txtArc.Size = new System.Drawing.Size(128, 33);
@@ -1006,7 +1006,7 @@
             // txtRange
             // 
             txtRange.Dock = System.Windows.Forms.DockStyle.Fill;
-            txtRange.Location = new System.Drawing.Point(4, 237);
+            txtRange.Location = new System.Drawing.Point(4, 233);
             txtRange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             txtRange.Name = "txtRange";
             txtRange.Size = new System.Drawing.Size(128, 36);
@@ -1018,7 +1018,7 @@
             // 
             txtAccuracy.AutoSize = true;
             txtAccuracy.Dock = System.Windows.Forms.DockStyle.Fill;
-            txtAccuracy.Location = new System.Drawing.Point(4, 31);
+            txtAccuracy.Location = new System.Drawing.Point(4, 30);
             txtAccuracy.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             txtAccuracy.Name = "txtAccuracy";
             txtAccuracy.Size = new System.Drawing.Size(128, 31);
@@ -1029,7 +1029,7 @@
             // txtCastTime
             // 
             txtCastTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            txtCastTime.Location = new System.Drawing.Point(4, 93);
+            txtCastTime.Location = new System.Drawing.Point(4, 89);
             txtCastTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             txtCastTime.Name = "txtCastTime";
             txtCastTime.Size = new System.Drawing.Size(128, 36);
@@ -1052,7 +1052,7 @@
             // 
             txtInterruptTime.AutoSize = true;
             txtInterruptTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            txtInterruptTime.Location = new System.Drawing.Point(4, 62);
+            txtInterruptTime.Location = new System.Drawing.Point(4, 61);
             txtInterruptTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             txtInterruptTime.Name = "txtInterruptTime";
             txtInterruptTime.Size = new System.Drawing.Size(128, 31);
@@ -1074,7 +1074,7 @@
             // txtRechargeTime
             // 
             txtRechargeTime.Dock = System.Windows.Forms.DockStyle.Fill;
-            txtRechargeTime.Location = new System.Drawing.Point(4, 129);
+            txtRechargeTime.Location = new System.Drawing.Point(4, 125);
             txtRechargeTime.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             txtRechargeTime.Name = "txtRechargeTime";
             txtRechargeTime.Size = new System.Drawing.Size(128, 36);
@@ -1107,7 +1107,7 @@
             // txtActivateInterval
             // 
             txtActivateInterval.Dock = System.Windows.Forms.DockStyle.Fill;
-            txtActivateInterval.Location = new System.Drawing.Point(4, 165);
+            txtActivateInterval.Location = new System.Drawing.Point(4, 161);
             txtActivateInterval.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             txtActivateInterval.Name = "txtActivateInterval";
             txtActivateInterval.Size = new System.Drawing.Size(128, 36);
@@ -1129,7 +1129,7 @@
             // txtEnduranceCost
             // 
             txtEnduranceCost.Dock = System.Windows.Forms.DockStyle.Fill;
-            txtEnduranceCost.Location = new System.Drawing.Point(4, 201);
+            txtEnduranceCost.Location = new System.Drawing.Point(4, 197);
             txtEnduranceCost.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             txtEnduranceCost.Name = "txtEnduranceCost";
             txtEnduranceCost.Size = new System.Drawing.Size(128, 36);
@@ -1151,7 +1151,7 @@
             // txtSecondaryRange
             // 
             txtSecondaryRange.Dock = System.Windows.Forms.DockStyle.Fill;
-            txtSecondaryRange.Location = new System.Drawing.Point(4, 273);
+            txtSecondaryRange.Location = new System.Drawing.Point(4, 269);
             txtSecondaryRange.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             txtSecondaryRange.Name = "txtSecondaryRange";
             txtSecondaryRange.Size = new System.Drawing.Size(128, 36);
@@ -1162,7 +1162,7 @@
             // txtRadius
             // 
             txtRadius.Dock = System.Windows.Forms.DockStyle.Fill;
-            txtRadius.Location = new System.Drawing.Point(4, 309);
+            txtRadius.Location = new System.Drawing.Point(4, 305);
             txtRadius.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             txtRadius.Name = "txtRadius";
             txtRadius.Size = new System.Drawing.Size(128, 36);

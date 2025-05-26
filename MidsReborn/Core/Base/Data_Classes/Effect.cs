@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Mids_Reborn.Core.Base.Master_Classes;
+using static Mids_Reborn.Core.CSV;
 using static Mids_Reborn.Core.Expressions;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
@@ -171,6 +172,55 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 var cValue = reader.ReadString();
                 ActiveConditionals.Add(new KeyValue<string, string>(cKey, cValue));
             }
+        }
+
+        /// <summary>
+        /// Shorthand to generate a ModifyAttrib effect.
+        /// </summary>
+        /// <param name="basePower">Power effect is attached to.</param>
+        /// <param name="powerAttrib">Type of attribute to modify. One of <see cref="Enums.ePowerAttribs"/>.</param>
+        /// <param name="attribModValue">Modified value. float type for everything except arc (int), max targets (int), effect area (<see cref="Enums.eEffectArea"/>).</param>
+        /// <param name="conditionals">Active conditionals. Set to empty list for none.</param>
+        /// <param name="ignoreScaling">Ignore scaling. Default is true.</param>
+        /// <returns>A ModifyAttrib effect with one of the attributes changed.</returns>
+        public static Effect GenerateModifyAttrib(IPower basePower, Enums.ePowerAttribs powerAttrib, dynamic attribModValue, List<KeyValue<string, string>> conditionals, bool ignoreScaling = true)
+        {
+            return new Effect
+            {
+                EffectType = Enums.eEffectType.ModifyAttrib,
+                PowerAttribs = powerAttrib,
+                nMagnitude = 1, // dummy
+                Scale = 1, // dummy
+                IgnoreScaling = ignoreScaling,
+                ActiveConditionals = conditionals,
+
+                // Inconsistent display behavior if those are not set
+                AtrOrigAccuracy = basePower.Accuracy,
+                AtrOrigActivatePeriod = basePower.ActivatePeriod,
+                AtrOrigArc = basePower.Arc,
+                AtrOrigCastTime = basePower.CastTime,
+                AtrOrigEffectArea = basePower.EffectArea,
+                AtrOrigEnduranceCost = basePower.EndCost,
+                AtrOrigInterruptTime = basePower.InterruptTime,
+                AtrOrigMaxTargets = basePower.MaxTargets,
+                AtrOrigRadius = basePower.Radius,
+                AtrOrigRange = basePower.Range,
+                AtrOrigRechargeTime = basePower.RechargeTime,
+                AtrOrigSecondaryRange = basePower.RangeSecondary,
+
+                AtrModAccuracy = powerAttrib == Enums.ePowerAttribs.Accuracy ? attribModValue : basePower.Accuracy,
+                AtrModActivatePeriod = powerAttrib == Enums.ePowerAttribs.ActivateInterval ? attribModValue : basePower.ActivatePeriod,
+                AtrModArc = powerAttrib == Enums.ePowerAttribs.Arc ? attribModValue : basePower.Arc,
+                AtrModCastTime = powerAttrib == Enums.ePowerAttribs.CastTime ? attribModValue : basePower.CastTime,
+                AtrModEffectArea = powerAttrib == Enums.ePowerAttribs.EffectArea ? attribModValue : basePower.EffectArea,
+                AtrModEnduranceCost = powerAttrib == Enums.ePowerAttribs.EnduranceCost ? attribModValue : basePower.EndCost,
+                AtrModInterruptTime = powerAttrib == Enums.ePowerAttribs.InterruptTime ? attribModValue : basePower.InterruptTime,
+                AtrModMaxTargets = powerAttrib == Enums.ePowerAttribs.MaxTargets ? attribModValue : basePower.MaxTargets,
+                AtrModRadius = powerAttrib == Enums.ePowerAttribs.Radius ? attribModValue : basePower.Radius,
+                AtrModRange = powerAttrib == Enums.ePowerAttribs.Range ? attribModValue : basePower.Range,
+                AtrModRechargeTime = powerAttrib == Enums.ePowerAttribs.RechargeTime ? attribModValue : basePower.RechargeTime,
+                AtrModSecondaryRange = powerAttrib == Enums.ePowerAttribs.SecondaryRange ? attribModValue : basePower.RangeSecondary
+            };
         }
 
         private void AssignExpression(string? magnitudeExpression)

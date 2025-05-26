@@ -62,16 +62,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             InitSelectedItems();
             _loading = false;
             UpdateFxText();
-            if (MyFx.EffectType == Enums.eEffectType.ModifyAttrib)
-            {
-                tableLayoutPanel1.Enabled = false;
-                tpPowerAttribs.Visible = true;
-            }
-            else
-            {
-                tableLayoutPanel1.Enabled = true;
-                tpPowerAttribs.Visible = false;
-            }
+            UpdateModifyAttribTable();
 
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
@@ -106,16 +97,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void btnPaste_Click(object sender, EventArgs e)
         {
             FullPaste();
-            if (MyFx.EffectType == Enums.eEffectType.ModifyAttrib)
-            {
-                tableLayoutPanel1.Enabled = false;
-                tpPowerAttribs.Visible = true;
-            }
-            else
-            {
-                tableLayoutPanel1.Enabled = true;
-                tpPowerAttribs.Visible = false;
-            }
+            UpdateModifyAttribTable();
         }
 
         private void btnEditConditions_Click(object sender, EventArgs e)
@@ -372,10 +354,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             chkIgnoreScale.Checked = MyFx.IgnoreScaling;
             clbSuppression.BeginUpdate();
             clbSuppression.Items.Clear();
-            var names1 = Enum.GetNames(MyFx.Suppression.GetType());
-            var values = (int[])Enum.GetValues(MyFx.Suppression.GetType());
-            var num1 = names1.Length;
-            for (var index = 0; index < num1; index++)
+            var names1 = Enum.GetNames<Enums.eSuppress>();
+            var values = Enum.GetValues<Enums.eSuppress>().Cast<int>().ToArray();
+            for (var index = 0; index < names1.Length; index++)
             {
                 clbSuppression.Items.Add(names1[index], (MyFx.Suppression & (Enums.eSuppress)values[index]) != Enums.eSuppress.None);
             }
@@ -384,13 +365,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvEffectType.BeginUpdate();
             lvEffectType.Items.Clear();
             var index1 = -1;
-            var names2 = Enum.GetNames(MyFx.EffectType.GetType());
-            var num2 = names2.Length - (MyPower == null ? 1 : 0);
-            for (var index2 = 0; index2 < num2; index2++)
+            var names2 = Enum.GetNames<Enums.eEffectType>();
+            for (var index2 = 0; index2 < names2.Length - (MyPower == null ? 1 : 0); index2++)
             {
                 lvEffectType.Items.Add(names2[index2]);
                 if ((Enums.eEffectType)index2 == MyFx.EffectType)
+                {
                     index1 = index2;
+                }
             }
 
             if (index1 > -1)
@@ -437,10 +419,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             cbAspect.DataSource = Enum.GetValues(typeof(Enums.eAspect));
             //cbAspect.Items.AddRange(Enum.GetNames(MyFx.Aspect.GetType()));
 
-            var num1 = DatabaseAPI.Database.AttribMods.Modifier.Count;
-            for (var index = 0; index < num1; index++)
+            foreach (var m in DatabaseAPI.Database.AttribMods.Modifier)
             {
-                cbModifier.Items.Add(DatabaseAPI.Database.AttribMods.Modifier[index].ID);
+                cbModifier.Items.Add(m.ID);
             }
 
             cbAffects.Items.Add("None");
@@ -489,47 +470,49 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 case Enums.eEffectType.ModifyAttrib:
                     SelectItemByName(lvSubAttribute, MyFx.PowerAttribs.ToString());
                     break;
+
                 case Enums.eEffectType.EntCreate:
                     SelectItemByName(lvSubAttribute, MyFx.Summon);
                     break;
+
                 default:
                 {
-                    if (MyFx.EffectType == Enums.eEffectType.Mez | MyFx.EffectType == Enums.eEffectType.MezResist)
+                    switch (MyFx.EffectType)
                     {
-                        SelectItemByName(lvSubAttribute, MyFx.MezType.ToString());
-                    }
-                    else if (MyFx.EffectType == Enums.eEffectType.Damage
-                             | MyFx.EffectType == Enums.eEffectType.DamageBuff
-                             | MyFx.EffectType == Enums.eEffectType.Defense
-                             | MyFx.EffectType == Enums.eEffectType.Resistance
-                             | MyFx.EffectType == Enums.eEffectType.Elusivity)
-                    {
-                        SelectItemByName(lvSubAttribute, MyFx.DamageType.ToString());
-                    }
-                    else switch (MyFx.EffectType)
-                    {
+                        case Enums.eEffectType.Mez:
+                        case Enums.eEffectType.MezResist:
+                            SelectItemByName(lvSubAttribute, MyFx.MezType.ToString());
+                            break;
+
+                        case Enums.eEffectType.Damage:
+                        case Enums.eEffectType.DamageBuff:
+                        case Enums.eEffectType.Defense:
+                        case Enums.eEffectType.Resistance:
+                        case Enums.eEffectType.Elusivity:
+                            SelectItemByName(lvSubAttribute, MyFx.DamageType.ToString());
+                            break;
+
                         case Enums.eEffectType.Enhancement:
                             SelectItemByName(lvSubAttribute, MyFx.ETModifies.ToString());
                             break;
+                        
                         case Enums.eEffectType.PowerRedirect:
-                        {
                             var group = MyFx.Override.Split('.');
-                            SelectItemByName(lvSubAttribute, @group[0]);
+                            SelectItemByName(lvSubAttribute, group[0]);
                             UpdateSubSubList();
                             SelectItemByName(lvSubSub, MyFx.Override);
                             break;
-                        }
                     }
 
                     break;
                 }
             }
 
-            if ((MyFx.EffectType == Enums.eEffectType.Enhancement | MyFx.EffectType == Enums.eEffectType.ResEffect) & MyFx.ETModifies == Enums.eEffectType.Mez)
+            if (MyFx.EffectType is Enums.eEffectType.Enhancement or Enums.eEffectType.ResEffect & MyFx.ETModifies == Enums.eEffectType.Mez)
             {
                 SelectItemByName(lvSubSub, MyFx.MezType.ToString());
             }
-            else if (MyFx.EffectType == Enums.eEffectType.Enhancement & (MyFx.ETModifies == Enums.eEffectType.Defense | MyFx.ETModifies == Enums.eEffectType.Damage))
+            else if (MyFx.EffectType == Enums.eEffectType.Enhancement & MyFx.ETModifies is Enums.eEffectType.Defense or Enums.eEffectType.Damage)
             {
                 SelectItemByName(lvSubSub, MyFx.DamageType.ToString());
             }
@@ -543,13 +526,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 var power = MyPower;
 
-                if (Math.Abs(MyFx.AtrOrigAccuracy - (-1)) < float.Epsilon)
+                if (Math.Abs(MyFx.AtrOrigAccuracy + 1) < float.Epsilon)
                 {
                     MyFx.AtrOrigAccuracy = power.Accuracy;
                     MyFx.AtrModAccuracy = power.Accuracy;
                 }
 
-                if (Math.Abs(MyFx.AtrOrigActivatePeriod - (-1)) < float.Epsilon)
+                if (Math.Abs(MyFx.AtrOrigActivatePeriod + 1) < float.Epsilon)
                 {
                     MyFx.AtrOrigActivatePeriod = power.ActivatePeriod;
                     MyFx.AtrModActivatePeriod = power.ActivatePeriod;
@@ -561,7 +544,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     MyFx.AtrModArc = power.Arc;
                 }
 
-                if (Math.Abs(MyFx.AtrOrigCastTime - (-1)) < float.Epsilon)
+                if (Math.Abs(MyFx.AtrOrigCastTime + 1) < float.Epsilon)
                 {
                     MyFx.AtrOrigCastTime = power.CastTime;
                     MyFx.AtrModCastTime = power.CastTime;
@@ -573,13 +556,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     MyFx.AtrModEffectArea = power.EffectArea;
                 }
 
-                if (Math.Abs(MyFx.AtrOrigEnduranceCost - (-1)) < float.Epsilon)
+                if (Math.Abs(MyFx.AtrOrigEnduranceCost + 1) < float.Epsilon)
                 {
                     MyFx.AtrOrigEnduranceCost = power.EndCost;
                     MyFx.AtrModEnduranceCost = power.EndCost;
                 }
 
-                if (Math.Abs(MyFx.AtrOrigInterruptTime - (-1)) < float.Epsilon)
+                if (Math.Abs(MyFx.AtrOrigInterruptTime + 1) < float.Epsilon)
                 {
                     MyFx.AtrOrigInterruptTime = power.InterruptTime;
                     MyFx.AtrModInterruptTime = power.InterruptTime;
@@ -591,25 +574,25 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     MyFx.AtrModMaxTargets = power.MaxTargets;
                 }
 
-                if (Math.Abs(MyFx.AtrOrigRadius - (-1)) < float.Epsilon)
+                if (Math.Abs(MyFx.AtrOrigRadius + 1) < float.Epsilon)
                 {
                     MyFx.AtrOrigRadius = power.Radius;
                     MyFx.AtrModRadius = power.Radius;
                 }
 
-                if (Math.Abs(MyFx.AtrOrigRange - (-1)) < float.Epsilon)
+                if (Math.Abs(MyFx.AtrOrigRange + 1) < float.Epsilon)
                 {
                     MyFx.AtrOrigRange = power.Range;
                     MyFx.AtrModRange = power.Range;
                 }
 
-                if (Math.Abs(MyFx.AtrOrigRechargeTime - (-1)) < float.Epsilon)
+                if (Math.Abs(MyFx.AtrOrigRechargeTime + 1) < float.Epsilon)
                 {
                     MyFx.AtrOrigRechargeTime = power.RechargeTime;
                     MyFx.AtrModRechargeTime = power.RechargeTime;
                 }
 
-                if (Math.Abs(MyFx.AtrOrigSecondaryRange - (-1)) < float.Epsilon)
+                if (Math.Abs(MyFx.AtrOrigSecondaryRange + 1) < float.Epsilon)
                 {
                     MyFx.AtrOrigSecondaryRange = power.RangeSecondary;
                     MyFx.AtrModSecondaryRange = power.RangeSecondary;
@@ -647,15 +630,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            var effectData = Serializer.GetSerializer().Deserialize<Effect>((string)Clipboard.GetData(@"MidsEffectData"));
-            MyFx = effectData;
+            MyFx = Serializer.GetSerializer().Deserialize<Effect>((string)Clipboard.GetData(@"MidsEffectData"));
+
             DisplayEffectData();
         }
 
         private void IgnoreED_CheckedChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             MyFx.IgnoreED = IgnoreED.Checked;
             UpdateFxText();
         }
@@ -663,19 +649,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void lvEffectType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_loading || lvEffectType.SelectedIndices.Count < 1)
+            {
                 return;
-            MyFx.EffectType = (Enums.eEffectType)lvEffectType.SelectedIndices[0];
-            if (MyFx.EffectType == Enums.eEffectType.ModifyAttrib)
-            {
-                tableLayoutPanel1.Enabled = false;
-                tpPowerAttribs.Visible = true;
-            }
-            else
-            {
-                tableLayoutPanel1.Enabled = true;
-                tpPowerAttribs.Visible = false;
             }
 
+            MyFx.EffectType = (Enums.eEffectType)lvEffectType.SelectedIndices[0];
+            UpdateModifyAttribTable();
             UpdateEffectSubAttribList();
             UpdateFxText();
         }
@@ -690,47 +669,45 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var sIndex = lvSubAttribute.SelectedIndices[0];
             var sText = lvSubAttribute.SelectedItems[0].Text;
 
-            if ((MyFx.EffectType == Enums.eEffectType.Damage)
-                | (MyFx.EffectType == Enums.eEffectType.DamageBuff)
-                | (MyFx.EffectType == Enums.eEffectType.Defense)
-                | (MyFx.EffectType == Enums.eEffectType.Resistance)
-                | (MyFx.EffectType == Enums.eEffectType.Elusivity))
+            switch (MyFx.EffectType)
             {
-                MyFx.DamageType = (Enums.eDamage)sIndex;
-            }
-            else if ((MyFx.EffectType == Enums.eEffectType.Mez) | (MyFx.EffectType == Enums.eEffectType.MezResist))
-            {
-                MyFx.MezType = (Enums.eMez)sIndex;
-            }
-            else
-            {
-                switch (MyFx.EffectType)
-                {
-                    case Enums.eEffectType.ResEffect:
-                    case Enums.eEffectType.Enhancement:
-                        MyFx.ETModifies = (Enums.eEffectType)sIndex;
-                        break;
-                    case Enums.eEffectType.EntCreate:
-                        MyFx.Summon = sText;
-                        break;
-                    case Enums.eEffectType.GlobalChanceMod:
-                        MyFx.Reward = sText;
-                        break;
-                    case Enums.eEffectType.GrantPower:
-                    case Enums.eEffectType.ExecutePower:
-                        MyFx.Summon = sText;
-                        break;
-                    case Enums.eEffectType.ModifyAttrib:
-                        MyFx.PowerAttribs = (Enums.ePowerAttribs)sIndex;
-                        var tpControls = tpPowerAttribs.Controls;
-                        for (var rowIndex = 0; rowIndex < tpControls.Count; rowIndex++)
-                        {
-                            tpControls[rowIndex].Enabled = tpControls[rowIndex].Name.Contains(sText);
-                        }
+                case Enums.eEffectType.Damage:
+                case Enums.eEffectType.DamageBuff:
+                case Enums.eEffectType.Defense:
+                case Enums.eEffectType.Resistance:
+                case Enums.eEffectType.Elusivity:
+                    MyFx.DamageType = (Enums.eDamage)sIndex;
+                    break;
 
-                        //cbTarget.Enabled = true;
-                        break;
-                }
+                case Enums.eEffectType.Mez:
+                case Enums.eEffectType.MezResist:
+                    MyFx.MezType = (Enums.eMez)sIndex;
+                    break;
+
+                case Enums.eEffectType.ResEffect:
+                case Enums.eEffectType.Enhancement:
+                    MyFx.ETModifies = (Enums.eEffectType)sIndex;
+                    break;
+
+                case Enums.eEffectType.EntCreate:
+                    MyFx.Summon = sText;
+                    break;
+
+                case Enums.eEffectType.GlobalChanceMod:
+                    MyFx.Reward = sText;
+                    break;
+
+                case Enums.eEffectType.GrantPower:
+                case Enums.eEffectType.ExecutePower:
+                    MyFx.Summon = sText;
+                    break;
+
+                case Enums.eEffectType.ModifyAttrib:
+                    MyFx.PowerAttribs = (Enums.ePowerAttribs)sIndex;
+                    UpdateModifyAttribTable();
+
+                    //cbTarget.Enabled = true;
+                    break;
             }
 
             UpdateFxText();
@@ -791,25 +768,32 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbTarget_IndexChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             MyFx.PvMode = (Enums.ePvX)cbTarget.SelectedIndex;
             UpdateFxText();
         }
 
         private void StoreSuppression()
         {
-            var values = (int[])Enum.GetValues(MyFx.Suppression.GetType());
+            var values = Enum.GetValues<Enums.eSuppress>().Cast<int>().ToArray();
             MyFx.Suppression = Enums.eSuppress.None;
-            var num = clbSuppression.CheckedIndices.Count - 1;
-            for (var index = 0; index <= num; ++index)
+            for (var index = 0; index < clbSuppression.CheckedIndices.Count; index++)
+            {
                 //this.myFX.Suppression += (Enums.eSuppress) values[this.clbSuppression.CheckedIndices[index]];
                 MyFx.Suppression += values[clbSuppression.CheckedIndices[index]];
+            }
         }
 
         private void txtFXDelay_Leave(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             txtFXDelay.Text = $@"{MyFx.DelayedTime:####0.0##}";
             UpdateFxText();
         }
@@ -817,20 +801,32 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void txtFXDelay_TextChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             var fx = MyFx;
             var ret = float.TryParse(txtFXDelay.Text, out var num);
             if (!ret)
+            {
                 return;
-            if ((num >= 0.0) & (num <= 2147483904.0))
+            }
+
+            if (num is >= 0 and <= 2147483904)
+            {
                 fx.DelayedTime = num;
+            }
+
             UpdateFxText();
         }
 
         private void txtFXDuration_Leave(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             txtFXDuration.Text = $@"{MyFx.nDuration:##0.0##}";
             UpdateFxText();
         }
@@ -838,20 +834,32 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void txtFXDuration_TextChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             var fx = MyFx;
             var ret = float.TryParse(txtFXDuration.Text, out var num);
             if (!ret)
+            {
                 return;
-            if ((num >= 0.0) & (num <= 2147483904.0))
+            }
+
+            if (num is >= 0 and <= 2147483904)
+            {
                 fx.nDuration = num;
+            }
+
             UpdateFxText();
         }
 
         private void txtFXMag_Leave(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             txtFXMag.Text = $@"{MyFx.nMagnitude:####0.0##}";
             UpdateFxText();
         }
@@ -859,29 +867,50 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void txtFXMag_TextChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             var inputStr = txtFXMag.Text;
             if (inputStr.EndsWith("%", StringComparison.InvariantCulture))
+            {
                 inputStr = inputStr.Substring(0, inputStr.Length - 1);
+            }
+
             var ret = float.TryParse(inputStr, out var num);
             if (!ret)
+            {
                 return;
-            if ((num >= -2147483904.0) & (num <= 2147483904.0))
+            }
+
+            if (num is >= -2147483904 and <= 2147483904)
+            {
                 MyFx.nMagnitude = num;
+            }
+
             UpdateFxText();
         }
 
         private void txtFXProb_TextChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             var ret = float.TryParse(txtFXProb.Text, out var num);
             if (!ret)
-                return;
-            if (num >= 0.0 & num <= 2147483904.0)
             {
-                if (num > 1.0)
+                return;
+            }
+
+            if (num is >= 0 and <= 2147483904)
+            {
+                if (num > 1)
+                {
                     num /= 100f;
+                }
+
                 MyFx.BaseProbability = num;
                 //lblProb.Text = $"({fx.BaseProbability * 100:###0}%)";
             }
@@ -892,7 +921,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void txtFXProb_Leave(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             txtFXProb.Text = $@"{MyFx.BaseProbability:####0.0##}";
             UpdateFxText();
         }
@@ -900,7 +932,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void txtFXScale_Leave(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             txtFXScale.Text = $@"{MyFx.Scale:####0.0##}";
             UpdateFxText();
         }
@@ -908,23 +943,38 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void txtFXScale_TextChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             var fxScaleRaw = txtFXScale.Text;
             if (fxScaleRaw.EndsWith("%", StringComparison.InvariantCulture))
-                fxScaleRaw = fxScaleRaw.Substring(0, fxScaleRaw.Length - 1);
+            {
+                fxScaleRaw = fxScaleRaw[..^1];
+            }
+
             var ret = float.TryParse(fxScaleRaw, out var fxScale);
             if (!ret)
+            {
                 return;
+            }
+
             //var fxScale = (float)Conversion.Val(fxScaleRaw);
-            if ((fxScale >= -2147483904.0) & (fxScale <= 2147483904.0))
+            if (fxScale is >= -2147483904 and <= 2147483904)
+            {
                 MyFx.Scale = fxScale;
+            }
+
             UpdateFxText();
         }
 
         private void txtFXTicks_Leave(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             txtFXTicks.Text = $@"{MyFx.Ticks:####0}";
             UpdateFxText();
         }
@@ -932,18 +982,27 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void txtFXTicks_TextChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             //var fxTicks = (float)Conversion.Val(txtFXTicks.Text);
             var ret = float.TryParse(txtFXTicks.Text, out var fxTicks);
-            if ((fxTicks >= 0.0) & (fxTicks <= 2147483904.0))
+            if (fxTicks is >= 0 and <= 2147483904)
+            {
                 MyFx.Ticks = (int)Math.Round(fxTicks);
+            }
+
             UpdateFxText();
         }
 
         private void txtOverride_TextChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             MyFx.Override = txtOverride.Text;
             UpdateFxText();
         }
@@ -951,122 +1010,222 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void txtPPM_Leave(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             txtPPM.Text = $@"{MyFx.ProcsPerMinute:####0.0##}";
         }
 
         private void txtPPM_TextChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             //var ppm = (float)Conversion.Val(txtPPM.Text);
             var ret = float.TryParse(txtPPM.Text, out var ppm);
-            if ((ppm >= 0.0) & (ppm < 2147483904.0))
+            if (ppm is >= 0 and < 2147483904)
+            {
                 MyFx.ProcsPerMinute = ppm;
+            }
         }
 
         private void txtFXAccuracy_TextChanged(object sender, EventArgs e)
         {
-            if (_loading) return;
+            if (_loading)
+            {
+                return;
+            }
+
             var ret = float.TryParse(txtFXAccuracy.Text, out var num);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
+
             MyFx.AtrModAccuracy = num;
             UpdateFxText();
         }
 
         private void txtFXActivateInterval_TextChanged(object sender, EventArgs e)
         {
-            if (_loading) return;
+            if (_loading)
+            {
+                return;
+            }
+
             var ret = float.TryParse(txtFXActivateInterval.Text, out var num);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
+
             MyFx.AtrModActivatePeriod = num;
             UpdateFxText();
         }
 
         private void txtFXArc_TextChanged(object sender, EventArgs e)
         {
-            if (_loading) return;
+            if (_loading)
+            {
+                return;
+            }
+
             var ret = int.TryParse(txtFXArc.Text, out var num);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
+
             MyFx.AtrModArc = num;
             UpdateFxText();
         }
 
         private void txtFXCastTime_TextChanged(object sender, EventArgs e)
         {
-            if (_loading) return;
+            if (_loading)
+            {
+                return;
+            }
+
             var ret = float.TryParse(txtFXCastTime.Text, out var num);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
+
             MyFx.AtrModCastTime = num;
             UpdateFxText();
         }
 
         private void cbFXEffectArea_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_loading) return;
+            if (_loading)
+            {
+                return;
+            }
+
             MyFx.AtrModEffectArea = (Enums.eEffectArea)cbFXEffectArea.SelectedIndex;
             UpdateFxText();
         }
 
         private void txtFXEnduranceCost_TextChanged(object sender, EventArgs e)
         {
-            if (_loading) return;
+            if (_loading)
+            {
+                return;
+            }
+
             var ret = float.TryParse(txtFXEnduranceCost.Text, out var num);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
+
             MyFx.AtrModEnduranceCost = num;
             UpdateFxText();
         }
 
         private void txtFXInterruptTime_TextChanged(object sender, EventArgs e)
         {
-            if (_loading) return;
+            if (_loading)
+            {
+                return;
+            }
+
             var ret = float.TryParse(txtFXInterruptTime.Text, out var num);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
+
             MyFx.AtrModInterruptTime = num;
             UpdateFxText();
         }
 
         private void txtFXMaxTargets_TextChanged(object sender, EventArgs e)
         {
-            if (_loading) return;
+            if (_loading)
+            {
+                return;
+            }
+
             var ret = int.TryParse(txtFXMaxTargets.Text, out var num);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
+
             MyFx.AtrModMaxTargets = num;
             UpdateFxText();
         }
 
         private void txtFXRadius_TextChanged(object sender, EventArgs e)
         {
-            if (_loading) return;
+            if (_loading)
+            {
+                return;
+            }
+
             var ret = float.TryParse(txtFXRadius.Text, out var num);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
+
             MyFx.AtrModRadius = num;
             UpdateFxText();
         }
 
         private void txtFXRange_TextChanged(object sender, EventArgs e)
         {
-            if (_loading) return;
+            if (_loading)
+            {
+                return;
+            }
+
             var ret = float.TryParse(txtFXRange.Text, out var num);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
+
             MyFx.AtrModRange = num;
             UpdateFxText();
         }
 
         private void txtFXRechargeTime_TextChanged(object sender, EventArgs e)
         {
-            if (_loading) return;
+            if (_loading)
+            {
+                return;
+            }
+
             var ret = float.TryParse(txtFXRechargeTime.Text, out var num);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
+
             MyFx.AtrModRechargeTime = num;
             UpdateFxText();
         }
 
         private void txtFXSecondaryRange_TextChanged(object sender, EventArgs e)
         {
-            if (_loading) return;
+            if (_loading)
+            {
+                return;
+            }
+
             var ret = float.TryParse(txtFXSecondaryRange.Text, out var num);
-            if (!ret) return;
+            if (!ret)
+            {
+                return;
+            }
+
             MyFx.AtrModSecondaryRange = num;
             UpdateFxText();
         }
@@ -1131,119 +1290,128 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvSubAttribute.BeginUpdate();
             lvSubAttribute.Items.Clear();
             var strArray = Array.Empty<string>();
-            var fx = MyFx;
-            if ((fx.EffectType == Enums.eEffectType.Damage) | (fx.EffectType == Enums.eEffectType.DamageBuff) | (fx.EffectType == Enums.eEffectType.Defense) | (fx.EffectType == Enums.eEffectType.Resistance) | (fx.EffectType == Enums.eEffectType.Elusivity))
+            switch (MyFx.EffectType)
             {
-                strArray = Enum.GetNames(fx.DamageType.GetType());
-                index1 = (int)fx.DamageType;
-                lvSubAttribute.Columns[0].Text = "Damage Type / Vector";
-                lvSubAttribute.Columns[0].Width = -2;
-            }
-            else if ((fx.EffectType == Enums.eEffectType.Mez) | (fx.EffectType == Enums.eEffectType.MezResist))
-            {
-                strArray = Enum.GetNames(fx.MezType.GetType());
-                index1 = (int)fx.MezType;
-                lvSubAttribute.Columns[0].Text = "Mez Type";
-                lvSubAttribute.Columns[0].Width = -2;
-            }
-            else
-            {
-                switch (fx.EffectType)
-                {
-                    case Enums.eEffectType.ModifyAttrib:
-                        strArray = Enum.GetNames(fx.PowerAttribs.GetType());
-                        index1 = (int)fx.PowerAttribs;
-                        lvSubAttribute.Columns[0].Text = "Power Attrib";
+                case Enums.eEffectType.Damage:
+                case Enums.eEffectType.DamageBuff:
+                case Enums.eEffectType.Defense:
+                case Enums.eEffectType.Resistance:
+                case Enums.eEffectType.Elusivity:
+                    strArray = Enum.GetNames<Enums.eDamage>();
+                    index1 = (int)MyFx.DamageType;
+                    lvSubAttribute.Columns[0].Text = "Damage Type / Vector";
+                    lvSubAttribute.Columns[0].Width = -2;
+                    break;
+                
+                case Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
+                    strArray = Enum.GetNames<Enums.eMez>();
+                    index1 = (int)MyFx.MezType;
+                    lvSubAttribute.Columns[0].Text = "Mez Type";
+                    lvSubAttribute.Columns[0].Width = -2;
+                    break;
+
+                case Enums.eEffectType.ModifyAttrib:
+                    strArray = Enum.GetNames<Enums.ePowerAttribs>();
+                    index1 = (int)MyFx.PowerAttribs;
+                    lvSubAttribute.Columns[0].Text = "Power Attrib";
+                    lvSubAttribute.Columns[0].Width = -2;
+                    break;
+
+                case Enums.eEffectType.ResEffect:
+                    strArray = Enum.GetNames<Enums.eEffectType>();
+                    index1 = (int)MyFx.ETModifies;
+                    lvSubAttribute.Columns[0].Text = "Effect Type";
+                    lvSubAttribute.Columns[0].Width = -2;
+                    break;
+
+                case Enums.eEffectType.EntCreate:
+                    {
+                        strArray = new string[DatabaseAPI.Database.Entities.Length];
+                        var lower = MyFx.Summon.ToLower();
+                        for (var index2 = 0; index2 < DatabaseAPI.Database.Entities.Length; index2++)
+                        {
+                            strArray[index2] = DatabaseAPI.Database.Entities[index2].UID;
+                            if (strArray[index2].ToLower() == lower)
+                            {
+                                index1 = index2;
+                            }
+                        }
+
+                        lvSubAttribute.Columns[0].Text = "Entity Name";
                         lvSubAttribute.Columns[0].Width = -2;
                         break;
-                    case Enums.eEffectType.ResEffect:
-                        strArray = Enum.GetNames(fx.EffectType.GetType());
-                        index1 = (int)fx.ETModifies;
-                        lvSubAttribute.Columns[0].Text = "Effect Type";
+                    }
+
+                case Enums.eEffectType.GrantPower:
+                case Enums.eEffectType.ExecutePower:
+                    {
+                        strArray = new string[DatabaseAPI.Database.Power.Length];
+                        var lower = MyFx.Summon.ToLower();
+                        for (var index2 = 0; index2 < DatabaseAPI.Database.Power.Length; index2++)
+                        {
+                            strArray[index2] = DatabaseAPI.Database.Power[index2].FullName;
+                            if (strArray[index2].ToLower() == lower)
+                            {
+                                index1 = index2;
+                            }
+                        }
+
+                        lvSubAttribute.Columns[0].Text = "Power Name";
                         lvSubAttribute.Columns[0].Width = -2;
                         break;
-                    case Enums.eEffectType.EntCreate:
-                        {
-                            strArray = new string[DatabaseAPI.Database.Entities.Length];
-                            var lower = fx.Summon.ToLower();
-                            var num = DatabaseAPI.Database.Entities.Length - 1;
-                            for (var index2 = 0; index2 <= num; ++index2)
-                            {
-                                strArray[index2] = DatabaseAPI.Database.Entities[index2].UID;
-                                if (strArray[index2].ToLower() == lower)
-                                    index1 = index2;
-                            }
+                    }
 
-                            lvSubAttribute.Columns[0].Text = "Entity Name";
-                            lvSubAttribute.Columns[0].Width = -2;
-                            break;
-                        }
-                    case Enums.eEffectType.GrantPower:
-                    case Enums.eEffectType.ExecutePower:
-                        {
-                            strArray = new string[DatabaseAPI.Database.Power.Length];
-                            var lower = fx.Summon.ToLower();
-                            var num = DatabaseAPI.Database.Power.Length;
-                            for (var index2 = 0; index2 < num; index2++)
-                            {
-                                strArray[index2] = DatabaseAPI.Database.Power[index2].FullName;
-                                if (strArray[index2].ToLower() == lower)
-                                    index1 = index2;
-                            }
+                case Enums.eEffectType.Enhancement:
+                    strArray = Enum.GetNames(MyFx.EffectType.GetType());
+                    index1 = (int)MyFx.ETModifies;
+                    lvSubAttribute.Columns[0].Text = "Effect Type";
+                    lvSubAttribute.Columns[0].Width = -2;
+                    break;
 
-                            lvSubAttribute.Columns[0].Text = "Power Name";
-                            lvSubAttribute.Columns[0].Width = -2;
-                            break;
+                case Enums.eEffectType.GlobalChanceMod:
+                    {
+                        strArray = new string[DatabaseAPI.Database.EffectIds.Count];
+                        var lower = MyFx.Reward.ToLower();
+                        for (var index2 = 0; index2 < DatabaseAPI.Database.EffectIds.Count; index2++)
+                        {
+                            strArray[index2] = Convert.ToString(DatabaseAPI.Database.EffectIds[index2]);
+                            if (strArray[index2].ToLower() == lower)
+                            {
+                                index1 = index2;
+                            }
                         }
-                    case Enums.eEffectType.Enhancement:
-                        strArray = Enum.GetNames(fx.EffectType.GetType());
-                        index1 = (int)fx.ETModifies;
-                        lvSubAttribute.Columns[0].Text = "Effect Type";
+
+                        lvSubAttribute.Columns[0].Text = @"GlobalChanceMod Flag";
                         lvSubAttribute.Columns[0].Width = -2;
                         break;
-                    case Enums.eEffectType.GlobalChanceMod:
-                        {
-                            strArray = new string[DatabaseAPI.Database.EffectIds.Count];
-                            var lower = fx.Reward.ToLower();
-                            var num = DatabaseAPI.Database.EffectIds.Count;
-                            for (var index2 = 0; index2 < num; index2++)
-                            {
-                                strArray[index2] = Convert.ToString(DatabaseAPI.Database.EffectIds[index2]);
-                                if (strArray[index2].ToLower() == lower)
-                                    index1 = index2;
-                            }
+                    }
 
-                            lvSubAttribute.Columns[0].Text = @"GlobalChanceMod Flag";
-                            lvSubAttribute.Columns[0].Width = -2;
-                            break;
-                        }
+                case Enums.eEffectType.PowerRedirect:
+                    var allowedTypes = new List<Enums.ePowerSetType>
+                    {
+                        Enums.ePowerSetType.Ancillary,
+                        Enums.ePowerSetType.Incarnate,
+                        Enums.ePowerSetType.Inherent,
+                        Enums.ePowerSetType.Pet,
+                        Enums.ePowerSetType.Primary,
+                        Enums.ePowerSetType.Secondary,
+                        Enums.ePowerSetType.Pool,
+                        Enums.ePowerSetType.Temp
+                    };
 
-                    case Enums.eEffectType.PowerRedirect:
-                        {
-                            var allowedTypes = new List<Enums.ePowerSetType>()
-                        {
-                            Enums.ePowerSetType.Ancillary,
-                            Enums.ePowerSetType.Incarnate,
-                            Enums.ePowerSetType.Inherent,
-                            Enums.ePowerSetType.Pet,
-                            Enums.ePowerSetType.Primary,
-                            Enums.ePowerSetType.Secondary,
-                            Enums.ePowerSetType.Pool,
-                            Enums.ePowerSetType.Temp
-                        };
-                            strArray = DatabaseAPI.Database.PowersetGroups.Keys.ToArray();
-                            lvSubAttribute.Columns[0].Text = @"Powerset Group";
-                            lvSubAttribute.Columns[0].Width = -2;
-                            break;
-                        }
-                }
+                    strArray = DatabaseAPI.Database.PowersetGroups.Keys.ToArray();
+                    lvSubAttribute.Columns[0].Text = @"Powerset Group";
+                    lvSubAttribute.Columns[0].Width = -2;
+                    break;
             }
 
             if (strArray.Length > 0)
             {
-                var num = strArray.Length - 1;
-                for (var index2 = 0; index2 <= num; ++index2)
-                    lvSubAttribute.Items.Add(strArray[index2]);
+                foreach (var s in strArray)
+                {
+                    lvSubAttribute.Items.Add(s);
+                }
+
                 lvSubAttribute.Enabled = true;
             }
             else
@@ -1284,11 +1452,43 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
         }*/
 
+        private void UpdateModifyAttribTable()
+        {
+            if (MyFx.EffectType == Enums.eEffectType.ModifyAttrib)
+            {
+                tableLayoutPanel1.Enabled = false;
+                tpPowerAttribs.Visible = true;
+
+                if (lvSubAttribute.SelectedItems.Count <= 0)
+                {
+                    for (var rowIndex = 0; rowIndex < tpPowerAttribs.Controls.Count; rowIndex++)
+                    {
+                        tpPowerAttribs.Controls[rowIndex].Enabled = false;
+                    }
+
+                    return;
+                }
+
+                for (var rowIndex = 0; rowIndex < tpPowerAttribs.Controls.Count; rowIndex++)
+                {
+                    tpPowerAttribs.Controls[rowIndex].Enabled = tpPowerAttribs.Controls[rowIndex].Name.Contains(lvSubAttribute.SelectedItems[0].Text) &
+                                                                (MyFx.PowerAttribs != Enums.ePowerAttribs.Range | !tpPowerAttribs.Controls[rowIndex].Name.Contains($"{Enums.ePowerAttribs.SecondaryRange}"));
+                }
+
+                return;
+            }
+            
+            tableLayoutPanel1.Enabled = true;
+            tpPowerAttribs.Visible = false;
+        }
+
         private void UpdateFxText(string? senderName = "")
         {
             if (_loading)
+            {
                 return;
-            
+            }
+
             if (!string.IsNullOrWhiteSpace(senderName))
             {
                 var errorString = string.Empty;
@@ -1311,6 +1511,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                             errorString += $"\r\n{validationItem.Message}";
                         }
                     }
+
                     lblEffectDescription.ForeColor = Color.Red;
                     lblEffectDescription.Text = errorString;
                 }
