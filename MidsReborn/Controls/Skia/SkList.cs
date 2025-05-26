@@ -460,10 +460,10 @@ public class SkList : SKGLControl
             else
                 Height = SizeNormal.Height;
         }
-        else if (Name == "llAncillary" || Name.StartsWith("llPool"))
-        {
-            Height = 18 * _items.Count;
-        }
+        // else if (Name == "llAncillary" || Name.StartsWith("llPool"))
+        // {
+        //     Height = 18 * _items.Count;
+        // }
 
         var fullRect = new SKRect(_paddingX, 0, Width - _paddingX * 2, Height - BottomVisualPadding);
         RecalculateLines(fullRect);

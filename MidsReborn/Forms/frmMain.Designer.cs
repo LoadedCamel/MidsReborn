@@ -2298,10 +2298,10 @@ namespace Mids_Reborn.Forms
             this.ibSlotInfoEx.Click += new EventHandler(this.ibSlotInfoEx_Onclick);
             // 
             // poolsPanel
-            //
             this.poolsPanel.Location = new System.Drawing.Point(322, 161); // 318, 161
+            //
             this.poolsPanel.Name = "poolsPanel";
-            this.poolsPanel.Size = new System.Drawing.Size(158, 650); // 162, 726
+            this.poolsPanel.Size = new System.Drawing.Size(158, 900); // 162, 726
             this.poolsPanel.TabIndex = 0;
             this.poolsPanel.BorderStyle = BorderStyle.None;
             this.poolsPanel.HorizontalScroll.Enabled = false;

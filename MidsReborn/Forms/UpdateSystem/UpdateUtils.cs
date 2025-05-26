@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -33,7 +34,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
         {
             var list = new List<ManifestEntry>();
 
-            var midsManifest = await FetchManifest("https://updates.midsreborn.com/update_manifest.json");
+            var midsManifest = await FetchManifest("https://updates.midsreborn.com/update_manifest.json", DatabaseAPI.DatabaseName);
             list.AddRange(midsManifest.Updates);
 
             if (DatabaseAPI.DatabaseName.Equals("Homecoming", StringComparison.OrdinalIgnoreCase))
@@ -41,13 +42,14 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 return list;
             }
 
-            var externalUrl = DatabaseAPI.ServerData.ManifestUri;
-            if (string.IsNullOrWhiteSpace(externalUrl))
+            var serverUri = DatabaseAPI.ServerData.ManifestUri;
+
+            if (string.IsNullOrWhiteSpace(serverUri))
             {
                 return list;
             }
 
-            var externalManifest = await FetchManifest(externalUrl);
+            var externalManifest = await FetchManifest(serverUri, DatabaseAPI.DatabaseName);
             list.AddRange(externalManifest.Updates);
 
             return list;
@@ -86,7 +88,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             return result;
         }
 
-        private static async Task<Manifest> FetchManifest(string manifestUrl)
+        private static async Task<Manifest> FetchManifest(string manifestUrl, string database)
         {
             var jsonOptions = new JsonSerializerOptions
             {
@@ -99,29 +101,59 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 ThrowOnAnyError = false,
                 Timeout = TimeSpan.FromSeconds(5)
             };
+
             using var client = new RestClient(options, configureSerialization: s => s.UseSystemTextJson(jsonOptions));
 
             try
             {
-                var request = new RestRequest();
-                var result = await client.GetAsync<Manifest>(request);
+                // === Step 0: Check if manifest URL is pointing to an old-style XML file
+                if (manifestUrl.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
+                {
+                    ShowMissingManifestWarning(database, manifestUrl);
+                    return new Manifest();
+                }
 
-                return result ?? new Manifest(); // safe fallback
+                // === Step 1: HEAD check to see if manifest exists
+                var headRequest = new RestRequest().AddHeader("Accept", "application/json");
+                headRequest.Method = Method.Head;
+
+                var headResponse = await client.ExecuteAsync(headRequest);
+                if (!headResponse.IsSuccessful || headResponse.StatusCode == HttpStatusCode.NotFound)
+                {
+                    ShowMissingManifestWarning(database, manifestUrl);
+                    return new Manifest();
+                }
+
+                // Step 2: Attempt to fetch and deserialize
+                var getRequest = new RestRequest();
+                var result = await client.GetAsync<Manifest>(getRequest);
+                return result ?? new Manifest();
             }
             catch (Exception e)
             {
-                // Fancier error message box.
-                // From normal run: provide specific info
-                // From debug: prevent exception locator to jump into program.cs
-
                 var mbox = new MessageBoxEx(
-                    $"{e.GetType()} exception raised while trying to fetch manifest from {manifestUrl}\r\n\r\n{e.Message}",
-                    MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error, true);
+                    $"{e.GetType()} exception raised while trying to fetch manifest from:\r\n{manifestUrl}\r\n\r\n{e.Message}",
+                    MessageBoxEx.MessageBoxExButtons.Ok,
+                    MessageBoxEx.MessageBoxExIcon.Error,
+                    true);
 
                 mbox.ShowDialog();
-
                 return new Manifest();
             }
+        }
+
+        private static void ShowMissingManifestWarning(string serverName, string manifestUrl)
+        {
+            var mbox = new MessageBoxEx(@"Check for Update(s)",
+                $"Could not locate the manifest for the {serverName} database.\r\n\r\n" +
+                $"This may indicate a misconfiguration or an outdated or missing manifest.\r\n" +
+                $"If this is a custom or community server, please reach out to the database administrator(s).\r\n\r\n" +
+                $"URL: {manifestUrl}",
+                MessageBoxEx.MessageBoxExButtons.Ok,
+                MessageBoxEx.MessageBoxExIcon.Warning,
+                true);
+
+            mbox.ShowDialog();
         }
     }
 }
