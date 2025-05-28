@@ -3510,7 +3510,16 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             {
                 fxList.Add(Effect.GenerateModifyAttrib(myPower, Enums.ePowerAttribs.RechargeTime,
                     myPower.RechargeTime + frmDynRech.IncrementValue * (i - scaleOffset),
-                    [new($"Stacks:{myPower.FullName}", $"= {i}")]));
+                    [new KeyValue<string, string>($"Stacks:{myPower.FullName}", $"= {i}")]));
+
+                if (i < myPower.VariableMax - 1)
+                {
+                    continue;
+                }
+
+                fxList.Add(Effect.GenerateModifyAttrib(myPower, Enums.ePowerAttribs.RechargeTime,
+                    myPower.RechargeTime + frmDynRech.IncrementValue * (i - scaleOffset),
+                    [new KeyValue<string, string>($"Stacks:{myPower.FullName}", $"> {i}")]));
             }
 
             myPower.Effects = fxList.ToArray();
