@@ -42,7 +42,6 @@
             panel1 = new System.Windows.Forms.Panel();
             progressBar1 = new System.Windows.Forms.ProgressBar();
             btnOpRun = new System.Windows.Forms.Button();
-            cbType = new System.Windows.Forms.ComboBox();
             label1 = new System.Windows.Forms.Label();
             btnSelectExportDir = new System.Windows.Forms.Button();
             label2 = new System.Windows.Forms.Label();
@@ -156,7 +155,6 @@
             // 
             panel1.Controls.Add(progressBar1);
             panel1.Controls.Add(btnOpRun);
-            panel1.Controls.Add(cbType);
             panel1.Controls.Add(label1);
             panel1.Location = new System.Drawing.Point(12, 448);
             panel1.Name = "panel1";
@@ -166,30 +164,22 @@
             // 
             // progressBar1
             // 
-            progressBar1.Location = new System.Drawing.Point(340, 0);
+            progressBar1.Location = new System.Drawing.Point(138, 0);
             progressBar1.Name = "progressBar1";
-            progressBar1.Size = new System.Drawing.Size(706, 23);
+            progressBar1.Size = new System.Drawing.Size(908, 23);
             progressBar1.TabIndex = 17;
             progressBar1.Visible = false;
             // 
             // btnOpRun
             // 
             btnOpRun.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
-            btnOpRun.Location = new System.Drawing.Point(251, 0);
+            btnOpRun.Location = new System.Drawing.Point(53, 0);
             btnOpRun.Name = "btnOpRun";
             btnOpRun.Size = new System.Drawing.Size(76, 23);
             btnOpRun.TabIndex = 16;
             btnOpRun.Text = "Run";
             btnOpRun.UseVisualStyleBackColor = true;
             btnOpRun.Click += btnOpRun_Click;
-            // 
-            // cbType
-            // 
-            cbType.FormattingEnabled = true;
-            cbType.Location = new System.Drawing.Point(56, 0);
-            cbType.Name = "cbType";
-            cbType.Size = new System.Drawing.Size(179, 23);
-            cbType.TabIndex = 15;
             // 
             // label1
             // 
@@ -215,9 +205,10 @@
             // label2
             // 
             label2.AutoSize = true;
+            label2.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
             label2.Location = new System.Drawing.Point(492, 16);
             label2.Name = "label2";
-            label2.Size = new System.Drawing.Size(58, 15);
+            label2.Size = new System.Drawing.Size(62, 15);
             label2.TabIndex = 10;
             label2.Text = "Export to:";
             label2.Visible = false;
@@ -239,7 +230,7 @@
             Name = "frmDbDiff";
             ShowInTaskbar = false;
             StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            Text = "frmDbDiff";
+            Text = "DB Diff";
             Load += frmDbDiff_Load;
             borderPanel1.ResumeLayout(false);
             borderPanel2.ResumeLayout(false);
@@ -265,7 +256,6 @@
         private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.Button btnOpRun;
-        private System.Windows.Forms.ComboBox cbType;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Button btnSelectExportDir;
         private System.Windows.Forms.Label label2;

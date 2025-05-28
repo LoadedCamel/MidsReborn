@@ -1,13 +1,14 @@
-﻿using System;
+﻿using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Extensions;
+using MRBResourceLib;
+using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
-using FastDeepCloner;
-using Mids_Reborn.Core;
-using Mids_Reborn.Core.Base.Data_Classes;
-using Mids_Reborn.Core.Base.Extensions;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
@@ -37,7 +38,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         public frmDbDiff()
         {
             InitializeComponent();
-            Icon = MRBResourceLib.Resources.MRB_Icon_Concept;
+            Icon = Resources.MRB_Icon_Concept;
         }
 
         // Get DB name (last chunk of path)
@@ -88,7 +89,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 $"Powers: {DatabaseAPI.Database.Power.Length}"
             ];
 
-            if (SecDb != null)
+            if (SecDbPath != null && SecDb != null)
             {
                 // Auxiliary db info
                 DbInfo.AddRange([
@@ -100,7 +101,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 ]);
             }
 
-            listBox1.Refresh();
+            listBox1.DataSource = new BindingList<string>(DbInfo);
 
             if (SecDb == null)
             {
@@ -110,40 +111,39 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             DiffData = [new DiffItem(["", "", "Processing diff...", "", ""])];
             RefreshLv();
 
-            var tmpDiff = new List<DiffItem>();
+            DiffData = [];
 
             // New powers
-            tmpDiff.AddRange(SecDb.Power
+            DiffData.AddRange(SecDb.Power
                 .Where(e => e != null)
                 .Where(e => !DatabaseAPI.Database.Power.Any(f => f != null && f.FullName == e?.FullName))
                 .Select(e => new DiffItem(["New", "Power", e?.DisplayName ?? "--", GetPowerGroup(e?.FullName), e?.FullName ?? "--"], true)));
 
             // Removed powers
-            tmpDiff.AddRange(DatabaseAPI.Database.Power
+            DiffData.AddRange(DatabaseAPI.Database.Power
                 .Where(e => e != null)
                 .Where(e => !SecDb.Power.Any(f => f != null && f.FullName == e?.FullName))
                 .Select(e => new DiffItem(["Rem", "Power", e?.DisplayName ?? "--", GetPowerGroup(e?.FullName), e?.FullName ?? "--"], true)));
 
             // Edited powers
             // Not working.
-            /*tmpDiff.AddRange(SecDb.Power
+            /*DiffData.AddRange(SecDb.Power
                 .Where(e => e != null)
                 .Where(e => DatabaseAPI.Database.Power.Any(f => f != null && f.FullName == e?.FullName) && e != DatabaseAPI.GetPowerByFullName(e.FullName))
                 .Select(e => new DiffItem(["Mod", "Power", e?.DisplayName ?? "--", GetPowerGroup(e?.FullName), e?.FullName ?? "--"], true)));*/
 
             // New powersets
-            tmpDiff.AddRange(SecDb.Powersets
+            DiffData.AddRange(SecDb.Powersets
                 .Where(e => e != null)
                 .Where(e => !DatabaseAPI.Database.Powersets.Any(f => f != null && f.FullName == e?.FullName))
                 .Select(e => new DiffItem(["New", "Powerset", e?.DisplayName ?? "--", e?.GroupName ?? "(none)", e?.FullName ?? "--"], true)));
 
             // Removed powersets
-            tmpDiff.AddRange(DatabaseAPI.Database.Powersets
+            DiffData.AddRange(DatabaseAPI.Database.Powersets
                 .Where(e => e != null)
                 .Where(e => !SecDb.Powersets.Any(f => f != null && f.FullName == e?.FullName))
                 .Select(e => new DiffItem(["Rem", "Powerset", e?.DisplayName ?? "--", e?.GroupName ?? "(none)", e?.FullName ?? "--"], true)));
 
-            DiffData = tmpDiff.Clone();
             RefreshLv();
 
             btnSelectExportDir.Visible = true;
@@ -155,10 +155,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             listView1.EnableDoubleBuffer();
             DiffData = [];
             DbInfo = [];
-            listBox1.DataSource = DbInfo;
+            listBox1.DataSource = new BindingList<string>();
             listBox1.BindingContext = new BindingContext();
             btnSelectExportDir.Visible = false;
             label2.Visible = false;
+            label2.Text = "";
         }
 
         private void btnClose_Click(object sender, EventArgs e)
@@ -224,12 +225,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (DiffData?[e.ItemIndex].TextData != null)
             {
-                item.Text = DiffData?[e.ItemIndex].TextData[0];
-                if (DiffData?[e.ItemIndex].TextData.Length > 1)
+                item.Text = DiffData?[e.ItemIndex].TextData?[0];
+                if (DiffData?[e.ItemIndex].TextData?.Length > 1)
                 {
                     for (var i = 1; i < (DiffData?[e.ItemIndex].TextData).Length; i++)
                     {
-                        var t = (DiffData?[e.ItemIndex].TextData)[i];
+                        var t = DiffData?[e.ItemIndex].TextData?[i];
                         var s = new ListViewItem.ListViewSubItem
                         {
                             Text = t
@@ -278,11 +279,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             if (SecDb == null)
             {
+                MessageBox.Show("No secondary database is loaded.", "Whoops");
+
                 return;
             }
 
             if (ExportDir == null)
             {
+                MessageBox.Show("Export directory is not set.", "Whoops");
+
                 return;
             }
 
@@ -293,7 +298,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
 
             progressBar1.Minimum = 0;
-            progressBar1.Maximum = newPowers.Count;
+            progressBar1.Maximum = newPowers.Count + 1;
             progressBar1.Value = 0;
             var k = 0;
 
@@ -308,27 +313,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 progressBar1.Value = k++;
             }
 
-            switch (cbType.SelectedIndex)
-            {
-                case 1:
-                    k = 0;
-                    var removedPowers = DatabaseAPI.Database.Power
-                        .Where(e => e != null)
-                        .Where(e => !SecDb.Power.Any(f => f != null && f.FullName == e?.FullName))
-                        .Select(e => e?.FullName)
-                        .ToList();
+            var removedPowers = DatabaseAPI.Database.Power
+                .Where(e => e != null)
+                .Where(e => !SecDb.Power.Any(f => f != null && f.FullName == e?.FullName))
+                .Select(e => e?.FullName)
+                .ToList();
 
-                    progressBar1.Minimum = 0;
-                    progressBar1.Maximum = removedPowers.Count;
-                    progressBar1.Value = 0;
-
-                    File.WriteAllText($"{ExportDir}{Path.DirectorySeparatorChar}removed_powers.txt", string.Join("\r\n", removedPowers));
-                    progressBar1.Value = k++;
-
-                    break;
-            }
-
+            File.WriteAllText($"{ExportDir}{Path.DirectorySeparatorChar}removed_powers.txt", string.Join("\r\n", removedPowers));
+            progressBar1.Value = ++k;
             progressBar1.Visible = false;
+
+            MessageBox.Show($"Exported {newPowers.Count} new powers, {removedPowers.Count} removed powers to {ExportDir}.", "Export complete");
         }
 
         private void btnSelectExportDir_Click(object sender, EventArgs e)
@@ -347,6 +342,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             ExportDir = dirSelector.SelectedPath;
             label2.Text = $"Export to: {ExportDir}";
+            panel1.Visible = true;
         }
     }
 }
