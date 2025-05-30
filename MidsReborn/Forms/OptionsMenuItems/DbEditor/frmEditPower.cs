@@ -6,6 +6,7 @@ using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FastDeepCloner;
 using Mids_Reborn.Controls.Extensions;
@@ -3518,12 +3519,57 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
 
                 fxList.Add(Effect.GenerateModifyAttrib(myPower, Enums.ePowerAttribs.RechargeTime,
-                    myPower.RechargeTime + frmDynRech.IncrementValue * (i - scaleOffset),
+                    myPower.RechargeTime + frmDynRech.IncrementValue * (i + 1 - scaleOffset),
                     [new KeyValue<string, string>($"Stacks:{myPower.FullName}", $"> {i}")]));
             }
 
             myPower.Effects = fxList.ToArray();
             RefreshFXData();
+        }
+
+        private void btnStacksUpdate_Click(object sender, EventArgs e)
+        {
+            if (myPower == null)
+            {
+                MessageBox.Show("Cannot apply operation: power is null.");
+                
+                return;
+            }
+
+            var ret = MessageBox.Show("All Stacks conditionals will be updated to this power.\r\nConfirm operation?",
+                "Confirm pending operation", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (ret != DialogResult.Yes)
+            {
+                return;
+            }
+
+            // "Key": "Stacks:Brute_Defense.Psionic_Armor.Memento_Mori",
+            var r = new Regex(@"^Stacks\:([a-zA-Z0-9\-\:_]+\.[a-zA-Z0-9\-\:_]+\.[a-zA-Z0-9\-\:_]+)$");
+            var k = 0;
+            var l = 0;
+            for (var i = 0; i < myPower?.Effects.Length; i++)
+            {
+                for (var j = 0; j < myPower?.Effects[i].ActiveConditionals?.Count; j++)
+                {
+                    if (myPower?.Effects[i].ActiveConditionals?[j] == null ||
+                        !r.IsMatch(myPower?.Effects[i].ActiveConditionals?[j].Key ?? ""))
+                    {
+                        continue;
+                    }
+
+                    k++;
+
+                    var origValue = myPower?.Effects[i].ActiveConditionals?[j].Key;
+                    var newValue = $"Stacks:{myPower?.FullName}";
+                    myPower.Effects[i].ActiveConditionals[j] = new KeyValue<string, string>(newValue, myPower?.Effects[i].ActiveConditionals?[j].Value);
+                    if (origValue != newValue)
+                    {
+                        l++;
+                    }
+                }
+            }
+
+            MessageBox.Show($"Found matching conditionals: {k}\r\nUpdated: {l}");
         }
     }
 

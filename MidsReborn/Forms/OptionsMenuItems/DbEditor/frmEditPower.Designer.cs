@@ -223,6 +223,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnFullCopy = new Button();
             btnJsonExport = new Button();
             btnJsonImport = new Button();
+            btnStacksUpdate = new Button();
             tcPower.SuspendLayout();
             tpText.SuspendLayout();
             GroupBox4.SuspendLayout();
@@ -1544,6 +1545,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // pnlFX
             // 
+            pnlFX.Controls.Add(btnStacksUpdate);
             pnlFX.Controls.Add(btnDynRecharge);
             pnlFX.Controls.Add(cbCoDFormat);
             pnlFX.Controls.Add(btnSetDamage);
@@ -1560,7 +1562,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // btnDynRecharge
             // 
-            btnDynRecharge.Location = new System.Drawing.Point(72, 351);
+            btnDynRecharge.Location = new System.Drawing.Point(8, 351);
             btnDynRecharge.Name = "btnDynRecharge";
             btnDynRecharge.Size = new System.Drawing.Size(162, 28);
             btnDynRecharge.TabIndex = 80;
@@ -2301,6 +2303,15 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnJsonImport.UseVisualStyleBackColor = true;
             btnJsonImport.Click += btnJsonImport_Click;
             // 
+            // btnStacksUpdate
+            // 
+            btnStacksUpdate.Location = new System.Drawing.Point(177, 351);
+            btnStacksUpdate.Name = "btnStacksUpdate";
+            btnStacksUpdate.Size = new System.Drawing.Size(162, 28);
+            btnStacksUpdate.TabIndex = 81;
+            btnStacksUpdate.Text = "Update stack conditionals";
+            btnStacksUpdate.Click += btnStacksUpdate_Click;
+            // 
             // frmEditPower
             // 
             AcceptButton = btnOK;
@@ -2552,5 +2563,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private CheckBox cbCoDFormat;
         private Button btnJsonImport;
         private Button btnDynRecharge;
+        private Button btnStacksUpdate;
     }
 }
