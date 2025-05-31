@@ -3543,7 +3543,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            // "Key": "Stacks:Brute_Defense.Psionic_Armor.Memento_Mori",
             var r = new Regex(@"^Stacks\:([a-zA-Z0-9\-\:_]+\.[a-zA-Z0-9\-\:_]+\.[a-zA-Z0-9\-\:_]+)$");
             var k = 0;
             var l = 0;
@@ -3568,6 +3567,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     }
                 }
             }
+
+            RefreshFXData();
 
             MessageBox.Show($"Found matching conditionals: {k}\r\nUpdated: {l}");
         }
