@@ -99,7 +99,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var imageFile = FileIO.StripPath(ImagePicker.FileName);
             if (!File.Exists(Path.Combine(I9Gfx.GetDbPowerSetsPath(), imageFile)))
             {
-                MessageBox.Show($@"You must select an image from the {I9Gfx.GetDbPowerSetsPath()} folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.", @"Select Image", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"You must select an image from the {I9Gfx.GetDbPowerSetsPath()} folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.", @"Select Image", MessageBoxButtons.OK, MessageBoxIcon.Warning);
             }
             else
             {
@@ -122,7 +122,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbAT_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             if (cbAT.SelectedIndex > -1)
             {
                 MyPowerSet.nArchetype = cbAT.SelectedIndex - 1;
@@ -137,14 +140,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbLinkGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             FillLinkSetCombo();
         }
 
         private void cbLinkSet_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             if (chkNoLink.Checked)
             {
                 MyPowerSet.UIDLinkSecondary = "";
@@ -152,7 +161,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             }
             else if (cbLinkSet.SelectedIndex > -1)
             {
-                var uidPowerset = cbLinkGroup.Text + "." + cbLinkSet.Text;
+                var uidPowerset = $"{cbLinkGroup.Text}.{cbLinkSet.Text}";
                 var num = DatabaseAPI.NidFromUidPowerset(uidPowerset);
                 MyPowerSet.UIDLinkSecondary = uidPowerset;
                 MyPowerSet.nIDLinkSecondary = num;
@@ -162,7 +171,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbNameGroup_Leave(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             DisplayNameData();
         }
 
@@ -176,14 +188,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbNameGroup_TextChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             BuildFullName();
         }
 
         private void cbSetType_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             if (cbSetType.SelectedIndex > -1)
                 MyPowerSet.SetType = (Enums.ePowerSetType)cbSetType.SelectedIndex;
             if (MyPowerSet.SetType == Enums.ePowerSetType.Primary)
@@ -202,7 +220,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void cbTrunkGroup_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             FillTrunkSetCombo();
         }
 

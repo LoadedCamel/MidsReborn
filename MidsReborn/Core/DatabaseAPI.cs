@@ -3055,12 +3055,14 @@ namespace Mids_Reborn.Core
                 if (powerset.UIDMutexSets.Length > 0)
                 {
                     powerset.nIDMutexSets = new int[powerset.UIDMutexSets.Length];
-                    for (var index2 = 0; index2 < powerset.UIDMutexSets.Length; ++index2)
+                    for (var index2 = 0; index2 < powerset.UIDMutexSets.Length; index2++)
+                    {
                         powerset.nIDMutexSets[index2] = NidFromUidPowerset(powerset.UIDMutexSets[index2]);
+                    }
                 }
 
-                powerset.Power = Array.Empty<int>();
-                powerset.Powers = Array.Empty<IPower>();
+                powerset.Power = [];
+                powerset.Powers = [];
             }
         }
 
@@ -3070,6 +3072,11 @@ namespace Mids_Reborn.Core
             for (var index = 0; index < Database.Power.Length; index++)
             {
                 var power1 = Database.Power[index];
+                if (power1 == null)
+                {
+                    continue;
+                }
+
                 if (string.IsNullOrEmpty(power1.FullName))
                 {
                     power1.FullName = $"Orphan.{power1.DisplayName.Replace(" ", "_")}";
@@ -3083,6 +3090,11 @@ namespace Mids_Reborn.Core
                 }
 
                 var ps = power1.GetPowerSet();
+                if (ps == null)
+                {
+                    continue;
+                }
+
                 var length = ps.Powers.Length;
                 power1.PowerSetIndex = length;
                 var power2 = ps.Power;
@@ -3097,15 +3109,22 @@ namespace Mids_Reborn.Core
 
             foreach (var power in Database.Power)
             {
+                if (power == null)
+                {
+                    continue;
+                }
+
                 var flag = false;
-                if (power.GetPowerSet().SetType == Enums.ePowerSetType.SetBonus)
+                if (power.GetPowerSet()?.SetType == Enums.ePowerSetType.SetBonus)
                 {
                     flag = power.PowerName.Contains("Slow");
                     if (flag)
                     {
                         power.BuffMode = Enums.eBuffMode.Debuff;
                         foreach (var index in power.Effects)
+                        {
                             index.buffMode = Enums.eBuffMode.Debuff;
+                        }
                     }
                 }
 
