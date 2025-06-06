@@ -663,7 +663,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 var cfgSettings = ConfigData.GetCombatSettings();
                 var formattedDesc = DescLong.Replace("  ", " ").Trim();
-                var r = new Regex(@"\{{link\:([a-zA-Z0-9\.\-_]+)\}}");
+                var r = new Regex(@"\{link\:([a-zA-Z0-9\.\-_]+)\}");
                 var g = r.Matches(formattedDesc)
                     .Select(e => e.Groups[1].Value)
                     .Where(e => cfgSettings.ContainsKey(e))
@@ -676,13 +676,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                 foreach (var k in cfgSettings)
                 {
-                    formattedDesc = formattedDesc.Replace($"{{link:{k.Key}}}", "");
+                    formattedDesc = formattedDesc.Replace($"{{link:{k.Key}}}", "", StringComparison.InvariantCultureIgnoreCase);
                 }
 
-                formattedDesc = $"{formattedDesc.Trim()} Mids' note: you can use the {cfgSettings[g[0]]} setting in the Combat Settings window to change the behavior of this power.";
+                formattedDesc = $"{formattedDesc.Trim()} Mids' note: you can use the {ConfigData.GetCombatSettingName(g[0], cfgSettings)} setting in the Combat Settings window to change the behavior of this power.";
                 if (g.Count > 1)
                 {
-                    formattedDesc += $" It is also affected by {string.Join(", ", g.Skip(1).Select(e => cfgSettings[e]))}.";
+                    formattedDesc += $" It is also affected by {string.Join(", ", g.Skip(1).Select(e => ConfigData.GetCombatSettingName(e, cfgSettings)))}.";
                 }
                 
                 return formattedDesc;

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using Path = System.IO.Path;
@@ -315,6 +316,11 @@ namespace Mids_Reborn.Core
                 { "cfg.target.hp", "Target HP %" },
                 { "cfg.target.end", "Target Endurance %" }
             };
+        }
+
+        public static string? GetCombatSettingName(string param, Dictionary<string, string> settingsTable)
+        {
+            return (from k in settingsTable where string.Equals(param, k.Key, StringComparison.InvariantCultureIgnoreCase) select k.Value).FirstOrDefault();
         }
 
         public Color GetStreamColor(BinaryReader br, Enums.eColorSetting clSetting, bool autoFix = true)
