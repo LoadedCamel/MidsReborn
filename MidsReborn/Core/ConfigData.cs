@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
 using System.Security.Cryptography;
 using System.Windows.Forms;
@@ -68,9 +69,9 @@ namespace Mids_Reborn.Core
         public AutoUpdate AutomaticUpdates { get; set; }
 
         public readonly short[] DragDropScenarioAction =
-        {
+        [
             3, 0, 5, 0, 3, 5, 0, 0, 5, 0, 2, 3, 0, 2, 2, 0, 0, 0, 0, 0
-        };
+        ];
 
         public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
         public bool CoDEffectFormat = false;
@@ -85,7 +86,7 @@ namespace Mids_Reborn.Core
             RtFont.SetDefault();
             Tips = new Tips();
             Export = new ExportConfig();
-            CompOverride = Array.Empty<Enums.CompOverride>();
+            CompOverride = [];
             TeamMembers = new Dictionary<string, int>();
             ShowSelfBuffsAny = false;
             WarnOnOldDbMbd = true;
@@ -93,6 +94,7 @@ namespace Mids_Reborn.Core
             CloseEnhSelectPopupByMove = true;
             PowerListsWordwrapMode = Enums.WordwrapMode.Legacy;
             Mode = Modes.User;
+            CombatContextSettings = new CombatContext();
             InitializeComponent();
         }
 
@@ -165,6 +167,8 @@ namespace Mids_Reborn.Core
         public Point? RotationHelperLocation { get; set; }
 
         public Enums.WordwrapMode PowerListsWordwrapMode { get; set; }
+
+        public CombatContext CombatContextSettings { get; set; }
 
         internal bool MasterMode
         {
@@ -300,6 +304,17 @@ namespace Mids_Reborn.Core
             {
                 MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
             }
+        }
+
+        public static Dictionary<string, string> GetCombatSettings()
+        {
+            return new Dictionary<string, string>
+            {
+                { "cfg.player.hp", "Player HP %" },
+                { "cfg.player.isAlive", "Player is Alive/Dead" },
+                { "cfg.target.hp", "Target HP %" },
+                { "cfg.target.end", "Target Endurance %" }
+            };
         }
 
         public Color GetStreamColor(BinaryReader br, Enums.eColorSetting clSetting, bool autoFix = true)
@@ -503,6 +518,58 @@ namespace Mids_Reborn.Core
             public bool DisableExportDataChunk { get; set; }
             public bool DisableExportCompress { get; set; }
             public bool ExportExtraSep { get; set; }
+        }
+
+        public class CombatContext
+        {
+            public static string FormatSettingName(string setting)
+            {
+                return CultureInfo.InvariantCulture.TextInfo
+                    .ToTitleCase(setting
+                        .ToLowerInvariant()
+                        .Replace("cfg.", "")
+                        .Replace("settings", "")
+                        .Replace("percent", "%")
+                        .Replace('.', ' '))
+                    .Replace("Isalive", "IsAlive");
+            }
+
+            public static List<string> EnumerateFields(object obj, string prefix = "cfg")
+            {
+                var objType = obj.GetType();
+                var properties = objType.GetProperties();
+                var settings = new List<string>();
+
+                foreach (var prop in properties)
+                {
+                    // May cut System.Collections
+                    if (prop.PropertyType.Assembly == objType.Assembly)
+                    {
+                        settings.AddRange(EnumerateFields(prop.GetValue(obj, null), $"{prefix}.{prop.Name}"));
+                    }
+                    else
+                    {
+                        settings.Add($"{prefix}.{prop.Name.ToLowerInvariant()}");
+                    }
+                }
+
+                return settings;
+            }
+
+            public class Player
+            {
+                public int HpPercent { get; set; } = 100;
+                public bool IsAlive { get; set; } = true;
+            }
+
+            public class Target
+            {
+                public int HpPercent { get; set; } = 100;
+                public int EndPercent { get; set; } = 100;
+            }
+
+            public Player PlayerSettings { get; set; } = new();
+            public Target TargetSettings { get; set; } = new();
         }
 
         public class FontSettings

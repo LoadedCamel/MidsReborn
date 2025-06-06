@@ -1,7 +1,6 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -12,6 +11,7 @@ using FastDeepCloner;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Master_Classes;
 using MRBResourceLib;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
@@ -22,13 +22,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private readonly List<string> _conditionalTypes;
         private readonly List<string> _conditionalOps;
+        private Dictionary<string, string> _CSFieldsRev;
 
         public frmEffectConditionals(List<KeyValue<string, string>>? conditions)
         {
             InitializeComponent();
-            _conditionalTypes = new List<string> { "Power Active", "Power Taken", "Stacks", "Team Members" };
-            _conditionalOps = new List<string> { "Equal To", "Greater Than", "Less Than" };
-            if (conditions != null) Conditionals = conditions.Clone();
+            _conditionalTypes = ["Power Active", "Power Taken", "Stacks", "Team Members", "Combat Setting"];
+            _conditionalOps = ["Equal To", "Greater Than", "Less Than"];
+            _CSFieldsRev = ConfigData.CombatContext.EnumerateFields(MidsContext.Config.CombatContextSettings)
+                .ToDictionary(ConfigData.CombatContext.FormatSettingName, e => e);
+
+            if (conditions != null)
+            {
+                Conditionals = conditions.Clone();
+            }
+
             Text = @"Effect Conditions";
             Icon = Resources.MRB_Icon_Concept;
             Load += OnLoad;
@@ -45,28 +53,30 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             lvConditionalType.BeginUpdate();
             lvConditionalType.Items.Clear();
-            var indexVal = _conditionalTypes.Count - 1;
+            //var indexVal = _conditionalTypes.Count - 1;
             foreach (var c in _conditionalTypes)
             {
                 lvConditionalType.Items.Add(c);
             }
 
-            if (indexVal > -1)
+            /*if (indexVal > -1)
             {
                 lvConditionalType.Items[indexVal].Selected = true;
                 lvConditionalType.Items[indexVal].EnsureVisible();
-            }
+            }*/
 
             lvConditionalType.View = View.Details;
             lvConditionalType.EndUpdate();
 
-            if (lvConditionalOp.Items.Count != 0) return;
+            lvConditionalOp.Visible = false;
+            lvConditionalBool.Visible = false;
 
+            /*if (lvConditionalOp.Items.Count != 0) return;
 
             foreach (var op in _conditionalOps)
             {
                 lvConditionalOp.Items.Add(op);
-            }
+            }*/
 
             await Task.CompletedTask;
         }
@@ -95,7 +105,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             foreach (var cVp in Conditionals)
             {
                 var condition = getCondition.Replace(cVp.Key, "");
-                //var linkType = k > 0 && condition.StartsWith("OR ") ? "OR" : "";
                 var linkTypeLv = k > 0
                     ? condition.StartsWith("OR ")
                         ? "OR"
@@ -114,6 +123,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         item.SubItems.Add(cVp.Value);
                         lvActiveConditionals.Items.Add(item);
                         break;
+                    
                     case "Taken":
                         item = new ListViewItem { Text = linkTypeLv, Name = power?.FullName };
                         item.SubItems.Add($@"{condition}:{power?.DisplayName}");
@@ -121,6 +131,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         item.SubItems.Add(cVp.Value);
                         lvActiveConditionals.Items.Add(item);
                         break;
+                    
                     case "Stacks":
                         item = new ListViewItem { Text = linkTypeLv, Name = power?.FullName };
                         item.SubItems.Add($@"{condition}:{power?.DisplayName}");
@@ -129,6 +140,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         item.SubItems.Add(cVSplit[1]);
                         lvActiveConditionals.Items.Add(item);
                         break;
+                    
                     case "Team":
                         item = new ListViewItem { Text = linkTypeLv, Name = conditionPower };
                         item.SubItems.Add($@"{condition}:{conditionPower}");
@@ -137,17 +149,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         item.SubItems.Add(cVSplit[1]);
                         lvActiveConditionals.Items.Add(item);
                         break;
+
+                    case "Config":
+                        var cfgSetting = getConditionPower.Replace(":", "");
+                        item = new ListViewItem { Text = linkTypeLv, Name = cfgSetting };
+                        item.SubItems.Add($@"{condition}:{ConfigData.CombatContext.FormatSettingName(cfgSetting)}");
+                        item.SubItems.Add("");
+                        item.SubItems.Add(cVp.Value);
+                        lvActiveConditionals.Items.Add(item);
+                        break;
                 }
 
                 k++;
             }
 
-            //lvActiveConditionals.Columns[0].Text = @"Currently Active Conditionals";
-            //lvActiveConditionals.Columns[0].Width = -2;
-            //lvActiveConditionals.Columns[1].Text = "";
-            //lvActiveConditionals.Columns[1].Width = -2;
-            //lvActiveConditionals.Columns[2].Text = @"Value";
-            //lvActiveConditionals.Columns[2].Width = -2;
             lvActiveConditionals.EndUpdate();
 
             panelLinkType.Visible = Conditionals.Count > 0;
@@ -164,7 +179,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var lvBoolSizeSecondary = new Size(112, 170);
             var lvBoolLocSecondary = new Point(537, 117);
 
-            switch (e.Item.Text)
+            if (lvConditionalType.SelectedItems.Count == 0)
+            {
+                lvSubConditional.BeginUpdate();
+                lvSubConditional.Items.Clear();
+                lvSubConditional.EndUpdate();
+
+                lvConditionalBool.BeginUpdate();
+                lvConditionalBool.Items.Clear();
+                lvConditionalBool.EndUpdate();
+
+                return;
+            }
+
+            switch (e.Item?.Text)
             {
                 case "Power Active":
                     tbFilter.Visible = true;
@@ -172,14 +200,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.Enabled = true;
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
-                    var pArray = DatabaseAPI.Database.Power;
+                    var pArray = DatabaseAPI.Database.Power.Where(p => p != null).ToArray();
                     var eArray = new[] { 6, 7, 8, 9, 10, 11 };
                     foreach (var power in pArray)
                     {
-                        var pSetType = power.GetPowerSet().SetType;
-                        var pType = power.PowerType;
+                        var pSetType = power?.GetPowerSet()?.SetType;
+                        var pType = power?.PowerType;
                         var isType = pType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle ||
-                                     pType == Enums.ePowerType.Click && power.ClickBuff;
+                                     pType == Enums.ePowerType.Click && power?.ClickBuff == true;
                         var isUsable = !eArray.Contains((int)pSetType);
                         if (!isUsable || !isType)
                         {
@@ -199,15 +227,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                             }
                         }
 
-                        lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name =
-                            power.FullName;
+                        lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
                     }
 
                     lvConditionalBool.Size = lvBoolSizeStandAlone;
                     lvConditionalBool.Location = lvBoolLocStandAlone;
                     lvConditionalOp.Visible = false;
                     lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
-                    //lvSubConditional.Columns[0].Width = -2;
                     lvSubConditional.EndUpdate();
                     break;
 
@@ -217,14 +243,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.Enabled = true;
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
-                    pArray = DatabaseAPI.Database.Power;
-                    eArray = new[] { 6, 7, 8, 9, 10, 11 };
+                    pArray = DatabaseAPI.Database.Power.Where(p => p != null).ToArray();
+                    eArray = [6, 7, 8, 9, 10, 11];
                     foreach (var power in pArray)
                     {
-                        var pSetType = power.GetPowerSet().SetType;
-                        var pType = power.PowerType;
+                        var pSetType = power?.GetPowerSet()?.SetType;
+                        var pType = power?.PowerType;
                         var isType = pType == Enums.ePowerType.Auto_ || pType == Enums.ePowerType.Toggle ||
-                                     (pType == Enums.ePowerType.Click && power.ClickBuff);
+                                     (pType == Enums.ePowerType.Click && power?.ClickBuff == true);
                         var isUsable = !eArray.Contains((int)pSetType);
                         if (!isUsable && !isType)
                         {
@@ -244,15 +270,13 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                             }
                         }
 
-                        lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name =
-                            power.FullName;
+                        lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
                     }
 
                     lvConditionalBool.Size = lvBoolSizeStandAlone;
                     lvConditionalBool.Location = lvBoolLocStandAlone;
                     lvConditionalOp.Visible = false;
                     lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
-                    //lvSubConditional.Columns[0].Width = -2;
                     lvSubConditional.EndUpdate();
                     break;
 
@@ -262,11 +286,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.Enabled = true;
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
-                    pArray = DatabaseAPI.Database.Power;
-                    eArray = new[] { 6, 8, 9, 10, 11 };
+                    pArray = DatabaseAPI.Database.Power.Where(p => p != null).ToArray();
+                    eArray = [6, 8, 9, 10, 11];
                     foreach (var power in pArray)
                     {
-                        var pSetType = power.GetPowerSet().SetType;
+                        var pSetType = power?.GetPowerSet()?.SetType;
                         var isType = power.VariableEnabled;
                         var isUsable = !eArray.Contains((int)pSetType);
                         if (!isUsable || !isType) continue;
@@ -278,14 +302,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         lvConditionalBool.Size = lvBoolSizeSecondary;
                         lvConditionalBool.Location = lvBoolLocSecondary;
                         lvConditionalOp.Visible = true;
-                        lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name =
-                            power.FullName;
+                        lvSubConditional.Items.Add($"{pStrings[2]} [{pArchetype} / {pStrings[1]}]").Name = power.FullName;
                     }
 
                     lvConditionalOp.Columns[0].Text = @"Stacks are?";
                     lvConditionalBool.Columns[0].Text = @"# of Stacks";
                     lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
-                    //lvSubConditional.Columns[0].Width = -2;
                     lvSubConditional.EndUpdate();
                     break;
 
@@ -295,16 +317,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.Size = lvBoolSizeSecondary;
                     lvConditionalBool.Location = lvBoolLocSecondary;
                     lvConditionalOp.Visible = true;
-                    lvConditionalBool.Enabled = true;
+                    lvConditionalBool.Visible = true;
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
                     var teamATs = new List<string>
                     {
                         "Any",
                     };
-                    var playableClasses = DatabaseAPI.Database.Classes.Where(x => x.Playable).Select(x => x.DisplayName)
+                    var playableClasses = DatabaseAPI.Database.Classes
+                        .Where(x => x is { Playable: true })
+                        .Select(x => x.DisplayName)
                         .ToList();
-                    teamATs = teamATs.Concat(playableClasses).ToList();
+                    teamATs = teamATs
+                        .Concat(playableClasses)
+                        .ToList();
 
                     foreach (var member in teamATs)
                     {
@@ -313,20 +339,37 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                     lvConditionalOp.Columns[0].Text = @"Members are?";
                     lvSubConditional.Columns[0].Text = @"Team Members";
-                    //lvSubConditional.Columns[0].Width = -2;
                     lvSubConditional.EndUpdate();
+                    break;
+
+                case "Combat Setting":
+                    var cfgSettings = ConfigData.CombatContext.EnumerateFields(MidsContext.Config.CombatContextSettings);
+
+                    lvSubConditional.Columns[0].Text = @"Combat Context Variable";
+
+                    lvConditionalOp.Columns[0].Text = @"Value is?";
+                    lvConditionalOp.Visible = true;
+
+                    lvConditionalBool.Columns[0].Text = @"Value";
+                    lvConditionalBool.Visible = true;
+                    
+                    lvSubConditional.BeginUpdate();
+                    lvSubConditional.Items.Clear();
+                    foreach (var setting in cfgSettings)
+                    {
+                        lvSubConditional.Items.Add(ConfigData.CombatContext.FormatSettingName(setting)).Name = setting;
+                    }
+                    lvSubConditional.EndUpdate();
+
                     break;
             }
         }
 
         private void lvSubConditional_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
-            var powName = string.Empty;
-
-            if (lvSubConditional.SelectedItems.Count != 0)
-            {
-                powName = lvSubConditional.SelectedItems[0].Name;
-            }
+            var powName = lvSubConditional.SelectedItems.Count > 0
+                ? lvSubConditional.SelectedItems[0].Name
+                : string.Empty;
 
             var selected = DatabaseAPI.GetPowerByFullName(powName);
 
@@ -340,6 +383,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.Columns[0].Text = @"Power Active?";
                     lvConditionalBool.EndUpdate();
                     break;
+                
                 case "Power Taken":
                     lvConditionalBool.BeginUpdate();
                     lvConditionalBool.Items.Add("True");
@@ -347,6 +391,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.Columns[0].Text = @"Power Taken?";
                     lvConditionalBool.EndUpdate();
                     break;
+                
                 case "Stacks":
                     lvConditionalBool.BeginUpdate();
                     if (selected != null)
@@ -364,6 +409,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.Columns[0].Text = @"# of Stacks?";
                     lvConditionalBool.EndUpdate();
                     break;
+                
                 case "Team Members":
                     var tRange = Enumerable.Range(1, 7);
                     lvConditionalBool.BeginUpdate();
@@ -375,6 +421,48 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                     lvConditionalBool.Columns[0].Text = @"# of Members";
                     lvConditionalBool.EndUpdate();
+                    break;
+
+                case "Combat Setting":
+                    if (lvConditionalType.SelectedItems.Count > 0 && lvSubConditional.SelectedItems.Count > 0)
+                    {
+                        var selectedItem = lvSubConditional.SelectedItems[0].Text.ToLowerInvariant();
+                        lvConditionalBool.BeginUpdate();
+                        lvConditionalBool.Items.Clear();
+                        if (selectedItem.Contains("isalive"))
+                        {
+                            // Type bool
+                            lvConditionalBool.Items.Add("True");
+                            lvConditionalBool.Items.Add("False");
+
+                            lvConditionalOp.BeginUpdate();
+                            lvConditionalOp.Items.Clear();
+                            lvConditionalOp.Items.Add("Equal To");
+                            lvConditionalOp.EndUpdate();
+                        }
+                        else
+                        {
+                            // Type int in [0; 100]
+                            var range = Enumerable.Range(0, 101);
+                            foreach (var num in range)
+                            {
+                                lvConditionalBool.Items.Add($"{num}");
+                            }
+
+                            lvConditionalBool.Columns[0].Text = @"Value";
+
+                            lvConditionalOp.BeginUpdate();
+                            lvConditionalOp.Items.Clear();
+                            foreach (var op in _conditionalOps)
+                            {
+                                lvConditionalOp.Items.Add(op);
+                            }
+                            lvConditionalOp.EndUpdate();
+                        }
+
+                        lvConditionalBool.EndUpdate();
+                    }
+
                     break;
             }
         }
@@ -439,13 +527,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     : "AND "
                 : "";
 
-            if (lvConditionalType.SelectedItems.Count <= 0) return;
+            if (lvConditionalType.SelectedItems.Count <= 0)
+            {
+                return;
+            }
 
             switch (lvConditionalType.SelectedItems[0].Text)
             {
                 case "Power Active":
-                    if (lvSubConditional.SelectedItems.Count <= 0) return;
-                    if (lvConditionalBool.SelectedItems.Count <= 0) return;
+                    if (lvSubConditional.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
+                    if (lvConditionalBool.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
                     powerName = lvSubConditional.SelectedItems[0].Name;
                     power = DatabaseAPI.GetPowerByFullName(powerName);
                     value = lvConditionalBool.SelectedItems[0].Text;
@@ -456,9 +555,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvActiveConditionals.Items.Add(item);
                     Conditionals.Add(new KeyValue<string, string>($"{linkPrefix}Active:{powerName}", value));
                     break;
+                
                 case "Power Taken":
-                    if (lvSubConditional.SelectedItems.Count <= 0) return;
-                    if (lvConditionalBool.SelectedItems.Count <= 0) return;
+                    if (lvSubConditional.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
+                    if (lvConditionalBool.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
                     powerName = lvSubConditional.SelectedItems[0].Name;
                     power = DatabaseAPI.GetPowerByFullName(powerName);
                     value = lvConditionalBool.SelectedItems[0].Text;
@@ -469,10 +577,23 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvActiveConditionals.Items.Add(item);
                     Conditionals.Add(new KeyValue<string, string>($"{linkPrefix}Taken:{powerName}", value));
                     break;
+                
                 case "Stacks":
-                    if (lvSubConditional.SelectedItems.Count <= 0) return;
-                    if (lvConditionalOp.SelectedItems.Count <= 0) return;
-                    if (lvConditionalBool.SelectedItems.Count <= 0) return;
+                    if (lvSubConditional.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
+                    if (lvConditionalOp.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
+                    if (lvConditionalBool.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
                     powerName = lvSubConditional.SelectedItems[0].Name;
                     power = DatabaseAPI.GetPowerByFullName(powerName);
                     cOp = lvConditionalOp.SelectedItems[0].Text switch
@@ -490,9 +611,18 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvActiveConditionals.Items.Add(item);
                     Conditionals.Add(new KeyValue<string, string>($"{linkPrefix}Stacks:{powerName}", $"{cOp} {value}"));
                     break;
+                
                 case "Team Members":
-                    if (lvSubConditional.SelectedItems.Count <= 0) return;
-                    if (lvConditionalBool.SelectedItems.Count <= 0) return;
+                    if (lvSubConditional.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
+                    if (lvConditionalBool.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
                     var archetype = lvSubConditional.SelectedItems[0].Text;
                     cOp = lvConditionalOp.SelectedItems[0].Text switch
                     {
@@ -501,6 +631,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         "Less Than" => "<",
                         _ => cOp
                     };
+
                     value = lvConditionalBool.SelectedItems[0].Text;
                     item = new ListViewItem { Text = linkPrefixLv, Name = archetype };
                     item.SubItems.Add($@"Team:{archetype}");
@@ -508,6 +639,41 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     item.SubItems.Add(value);
                     lvActiveConditionals.Items.Add(item);
                     Conditionals.Add(new KeyValue<string, string>($"{linkPrefix}Team:{archetype}", $"{cOp} {value}"));
+                    break;
+
+                case "Combat Setting":
+                    if (lvSubConditional.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
+                    if (lvConditionalOp.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
+                    if (lvConditionalBool.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
+                    cOp = lvConditionalOp.SelectedItems[0].Text switch
+                    {
+                        "Equal To" => "=",
+                        "Greater Than" => ">",
+                        "Less Than" => "<",
+                        _ => cOp
+                    };
+
+                    var field = lvSubConditional.SelectedItems[0].Text;
+                    value = lvConditionalBool.SelectedItems[0].Text;
+                    item = new ListViewItem { Text = linkPrefixLv, Name = field };
+                    item.SubItems.Add(@$"Config:{field}");
+                    item.SubItems.Add(cOp);
+                    item.SubItems.Add(value);
+                    lvActiveConditionals.Items.Add(item);
+                    Conditionals.Add(new KeyValue<string, string>($"{linkPrefix}Config:{_CSFieldsRev[field]}", $"{cOp} {value}"));
+
                     break;
             }
 
@@ -517,7 +683,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void removeConditional_Click(object sender, EventArgs e)
         {
-            if (lvActiveConditionals.SelectedItems.Count <= 0) return;
+            if (lvActiveConditionals.SelectedItems.Count <= 0)
+            {
+                return;
+            }
 
             foreach (var cVp in Conditionals.Where(kv => kv.Key.Contains(lvActiveConditionals.SelectedItems[0].Name))
                          .ToList())
@@ -528,27 +697,19 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             lvActiveConditionals.SelectedItems[0].Remove();
             if (Conditionals.Count == 1)
             {
-                Conditionals[0] =
-                    new KeyValue<string, string>(Conditionals[0].Key.Replace("OR ", ""), Conditionals[0].Value);
-                lvActiveConditionals.Items[0].SubItems[0] =
-                    new ListViewItem.ListViewSubItem(lvActiveConditionals.Items[0], "");
+                Conditionals[0] = new KeyValue<string, string>(Conditionals[0].Key.Replace("OR ", ""), Conditionals[0].Value);
+                lvActiveConditionals.Items[0].SubItems[0] = new ListViewItem.ListViewSubItem(lvActiveConditionals.Items[0], "");
             }
 
             panelLinkType.Visible = Conditionals.Count > 0;
             rbLinkTypeAnd.Checked = true;
         }
 
-        private void ListView_Leave(object sender, EventArgs e)
+        private void ListView_Leave(object? sender, EventArgs e)
         {
-            try
+            if (sender is ctlListViewColored { FocusedItem: not null } lvControl)
             {
-                var lvControl = (ctlListViewColored)sender;
                 lvControl.LostFocusItem = lvControl.FocusedItem.Index;
-            }
-            catch (Exception ex)
-            {
-                Debug.WriteLine("frmPowerEffect.ListView_Leave(): null sender object");
-                Debug.WriteLine($"Exception: {ex.Message}");
             }
         }
 
@@ -611,7 +772,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 case 0x84:
                     base.WndProc(ref m);
                     if ((int)m.Result == 0x1)
-                        m.Result = (IntPtr)0x2;
+                    {
+                        m.Result = 0x2;
+                    }
+
                     return;
             }
 
@@ -635,22 +799,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private bool FilterMatch(string textFilter, string shortName, string archetype, string powerset)
         {
-            if (textFilter.Contains(","))
+            if (!textFilter.Contains(','))
             {
-                var chunks = textFilter.Split(',');
-                for (var i = 0; i < chunks.Length; i++)
-                {
-                    chunks[i] = chunks[i].Trim();
-                }
-
-                var validName = shortName.ToLowerInvariant().Contains(chunks[0].ToLowerInvariant());
-                var validArchetype = chunks.Length <= 1 || string.IsNullOrEmpty(chunks[1]) || archetype.ToLowerInvariant().Contains(chunks[1].ToLowerInvariant());
-                var validPowerset = chunks.Length <= 2 || string.IsNullOrEmpty(chunks[2]) || powerset.ToLowerInvariant().Contains(chunks[2].ToLowerInvariant());
-
-                return validName & validArchetype & validPowerset;
+                return shortName.ToLowerInvariant().Contains(textFilter.ToLowerInvariant());
             }
 
-            return shortName.ToLowerInvariant().Contains(textFilter.ToLowerInvariant());
+            var chunks = textFilter.Split(',');
+            for (var i = 0; i < chunks.Length; i++)
+            {
+                chunks[i] = chunks[i].Trim();
+            }
+
+            var validName = shortName.ToLowerInvariant().Contains(chunks[0].ToLowerInvariant());
+            var validArchetype = chunks.Length <= 1 || string.IsNullOrEmpty(chunks[1]) || archetype.ToLowerInvariant().Contains(chunks[1].ToLowerInvariant());
+            var validPowerset = chunks.Length <= 2 || string.IsNullOrEmpty(chunks[2]) || powerset.ToLowerInvariant().Contains(chunks[2].ToLowerInvariant());
+
+            return validName & validArchetype & validPowerset;
         }
 
         private void tbFilter_TextChanged(object sender, EventArgs e)
@@ -659,21 +823,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 ? ""
                 : lvConditionalType.SelectedItems[0].Text;
 
-            var pArray = DatabaseAPI.Database.Power;
+            var pArray = DatabaseAPI.Database.Power.Where(p => p != null).ToArray();
             var eArray = Array.Empty<int>();
             switch (conditionalType)
             {
                 case "Power Active":
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
-                    eArray = new[] { 6, 7, 8, 9, 10, 11 };
+                    eArray = [6, 7, 8, 9, 10, 11];
 
                     foreach (var power in pArray)
                     {
-                        var pSetType = power.GetPowerSet().SetType;
-                        var pType = power.PowerType;
+                        var pSetType = power?.GetPowerSet()?.SetType;
+                        var pType = power?.PowerType;
                         var isType = pType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle ||
-                                     pType == Enums.ePowerType.Click && power.ClickBuff;
+                                     pType == Enums.ePowerType.Click && power?.ClickBuff == true;
                         var isUsable = !eArray.Contains((int)pSetType);
                         if (!isUsable || !isType)
                         {
@@ -697,7 +861,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     }
 
                     lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
-                    //lvSubConditional.Columns[0].Width = -2;
                     lvSubConditional.EndUpdate();
 
                     break;
@@ -705,14 +868,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 case "Power Taken":
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
-                    eArray = new[] { 6, 7, 8, 9, 10, 11 };
-
+                    
+                    eArray = [6, 7, 8, 9, 10, 11];
                     foreach (var power in pArray)
                     {
-                        var pSetType = power.GetPowerSet().SetType;
-                        var pType = power.PowerType;
+                        var pSetType = power?.GetPowerSet()?.SetType;
+                        var pType = power?.PowerType;
                         var isType = pType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle ||
-                                     pType == Enums.ePowerType.Click && power.ClickBuff;
+                                     pType == Enums.ePowerType.Click && power?.ClickBuff == true;
                         var isUsable = !eArray.Contains((int)pSetType);
                         if (!isUsable && !isType)
                         {
@@ -736,7 +899,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     }
 
                     lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
-                    //lvSubConditional.Columns[0].Width = -2;
                     lvSubConditional.EndUpdate();
 
                     break;
@@ -771,11 +933,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
-                    eArray = new[] { 6, 8, 9, 10, 11 };
-
+                    
+                    eArray = [6, 8, 9, 10, 11];
                     foreach (var power in pArray)
                     {
-                        var pSetType = power.GetPowerSet().SetType;
+                        var pSetType = power?.GetPowerSet()?.SetType;
                         var isType = power.VariableEnabled;
                         var isUsable = !eArray.Contains((int)pSetType);
                         if (!isUsable || !isType)
@@ -800,7 +962,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     }
 
                     lvSubConditional.Columns[0].Text = @"Power Name [Class / Powerset]";
-                    //lvSubConditional.Columns[0].Width = -2;
                     lvSubConditional.EndUpdate();
 
                     break;

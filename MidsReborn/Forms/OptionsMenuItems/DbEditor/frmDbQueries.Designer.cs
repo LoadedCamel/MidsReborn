@@ -154,7 +154,7 @@
             // 
             cbSpecialFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             cbSpecialFilter.FormattingEnabled = true;
-            cbSpecialFilter.Items.AddRange(new object[] { "First Available Index", "Highest Available Index", "All Available Indices", "List Indices", "Check Orphan Entries", "Duplicate Indices", "Bogus MaxRunSpeed effect", "Powers with Absorbed Entity" });
+            cbSpecialFilter.Items.AddRange(new object[] { "First Available Index", "Highest Available Index", "All Available Indices", "List Indices", "Check Orphan Entries", "Duplicate Indices", "Bogus MaxRunSpeed effect", "Powers with Absorbed Entity", "Powers with slider" });
             cbSpecialFilter.Location = new System.Drawing.Point(230, 122);
             cbSpecialFilter.Name = "cbSpecialFilter";
             cbSpecialFilter.Size = new System.Drawing.Size(220, 23);

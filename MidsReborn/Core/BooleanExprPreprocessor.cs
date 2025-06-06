@@ -51,6 +51,30 @@ namespace Mids_Reborn.Core
         }
 
         /// <summary>
+        /// Get config value from the ConfigData.CombatContextSettings branch
+        /// </summary>
+        /// <param name="cond">Config field name</param>
+        /// <param name="stringFormat">Use string output if true, int if false</param>
+        /// <returns>Value of config field according to format</returns>
+        private static dynamic GetConfigValue(string cond, bool stringFormat = true)
+        {
+            return cond.ToLowerInvariant() switch
+            {
+                "cfg.player.hppercent" when stringFormat => $"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}",
+                "cfg.player.isalive" when stringFormat => MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive ? "1" : "0",
+                "cfg.target.hppercent" when stringFormat => $"{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent}",
+                "cfg.target.endpercent" when stringFormat => $"{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent}",
+                _ when stringFormat => "0",
+                
+                "cfg.player.hppercent" => MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent,
+                "cfg.player.isalive" => MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive ? 1 : 0,
+                "cfg.target.hppercent" => MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent,
+                "cfg.target.endpercent" => MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent,
+                _ => 0
+            };
+        }
+
+        /// <summary>
         /// Build global infix expression from conditionals, restrict to conditional type and power name
         /// </summary>
         /// <param name="effect">Source effect</param>
@@ -76,13 +100,17 @@ namespace Mids_Reborn.Core
                 var k = cVp.Key.Replace("AND ", "").Replace("OR ", "");
                 var condition = getCondition.Replace(k, "");
                 var conditionItemName = getConditionItem.Replace(k, "").Replace(":", "");
-                var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
+                var conditionPower = condition == "Config" ? null : DatabaseAPI.GetPowerByFullName(conditionItemName);
+                var configValueInt = GetConfigValue(condition == "Config" ? conditionItemName : "", false);
                 var cVal = cVp.Value.Split(' ');
                 var powerDisplayName = conditionPower?.DisplayName;
 
-                if (powerDisplayName == null || !powerDisplayName.Contains(cPowerName))
+                if (condition != "Config")
                 {
-                    return "0";
+                    if (powerDisplayName == null || !powerDisplayName.Contains(cPowerName))
+                    {
+                        return "0";
+                    }
                 }
 
                 if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Active")
@@ -116,6 +144,20 @@ namespace Mids_Reborn.Core
                         "<" => MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
                                MidsContext.Config.TeamMembers[conditionItemName] < Convert.ToInt32(cVal[1]),
                         _ => true
+                    });
+                }
+                else if (string.Equals(cType, condition, StringComparison.CurrentCultureIgnoreCase) && condition == "Config")
+                {
+                    conditionResults.Add(conditionItemName.ToLowerInvariant() switch
+                    {
+                        "cfg.player.isalive" => cVal[1] == "True" ? MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive : !MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive,
+                        _ => cVal[0] switch
+                        {
+                            "=" => configValueInt == Convert.ToInt32(cVal[1]),
+                            ">" => configValueInt > Convert.ToInt32(cVal[1]),
+                            "<" => configValueInt < Convert.ToInt32(cVal[1]),
+                            _ => true
+                        }
                     });
                 }
                 else

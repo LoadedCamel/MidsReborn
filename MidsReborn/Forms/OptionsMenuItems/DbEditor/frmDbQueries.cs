@@ -53,7 +53,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             OrphanEntities,
             FindDuplicateIndices,
             BogusMaxRunSpeed,
-            PowersEntCreateAbsorbed
+            PowersEntCreateAbsorbed,
+            PowersHPSlider
 
         }
 
@@ -73,7 +74,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
         private void frmDbQueries_Load(object sender, EventArgs e)
         {
-            LvItems = new List<string[]>();
+            LvItems = [];
         }
 
         private void btnSearchByIndex_Click(object sender, EventArgs e)
@@ -114,7 +115,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             LvItems = iPowers.Select(pw => new Power(pw))
                 .Select(pw => new[] { $"{pw.StaticIndex}", pw.DisplayName, pw.FullName })
                 .ToList();
-            listView1.VirtualListSize = 0; // Force ListView to refresh items
+            listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -126,19 +127,17 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var availableIndices = indices.Except(dbIndices).ToList();
             availableIndices.Sort();
 
-            LvItems = new List<string[]>
-            {
-                new[] {$"{availableIndices[0]}", "First available", ""},
-                new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""}
-            };
-            listView1.VirtualListSize = 0; // Force ListView to refresh items
+            LvItems =
+            [
+                new[] { $"{availableIndices[0]}", "First available", "" },
+                new[] { $"{DatabaseAPI.Database.Power.Length}", "Power DB Count", "" }
+            ];
+            listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
 
         private void GetHighestAvailableIndex()
         {
-            //CurrentQueryType = QueryType.HighestAvailableIndex;
-
             var dbIndices = DatabaseAPI.Database.Power.Select(pw => pw?.StaticIndex ?? 0);
 
             LvItems = new List<string[]>
@@ -146,14 +145,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 new[] {$"{dbIndices.Max() + 1}", "Highest available", ""},
                 new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""}
             };
-            listView1.VirtualListSize = 0; // Force ListView to refresh items
+            listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
 
         private void GetAllAvailableIndices()
         {
-            //CurrentQueryType = QueryType.AllAvailableIndices;
-
             var dbIndices = DatabaseAPI.Database.Power.Select(pw => pw?.StaticIndex ?? 0).ToList();
             var indices = Enumerable.Range(0, dbIndices.Max() + 1).ToList();
 
@@ -161,40 +158,37 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             availableIndices.Sort();
 
             var lvItems = availableIndices.Select(d => new[] { $"{d}", "Available index", "In range" }).ToList();
-            lvItems.Add(new[] { $"{dbIndices.Max() + 1}", "Available index", "Index is past DB maximum" });
-            lvItems.Add(new[] { $"{DatabaseAPI.Database.Power.Length}", "Power DB Count", "" });
+            lvItems.Add([$"{dbIndices.Max() + 1}", "Available index", "Index is past DB maximum"]);
+            lvItems.Add([$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""]);
 
             LvItems = lvItems;
-            listView1.VirtualListSize = 0; // Force ListView to refresh items
+            listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
 
         private void ListStaticIndices()
         {
-            //CurrentQueryType = QueryType.ListStaticIndices;
             LvItems = DatabaseAPI.Database.Power
                 .Where(pw => pw != null)
                 .Select(pw => new[] { $"{pw!.StaticIndex}", pw.DisplayName, pw.FullName }).ToList();
-            listView1.VirtualListSize = 0; // Force ListView to refresh items
+            listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
 
         private void GetOrphanEntities()
         {
-            //CurrentQueryType = QueryType.OrphanEntities;
             var itemsList = DatabaseAPI.Database.Power
                 .Where(e => e != null)
                 .Select(e => new KeyValuePair<IPower?, List<IEffect>?>(e,
                 e?.Effects.Where(f => f.EffectType == Enums.eEffectType.EntCreate & f.nSummon < 0 & !string.IsNullOrEmpty(f.Summon)).ToList()));
 
             LvItems = itemsList.SelectMany(e => e.Value!, (k, v) => new[] { $"{k.Key!.StaticIndex}", v.Summon, k.Key.FullName }).ToList();
-            listView1.VirtualListSize = 0; // Force ListView to refresh items
+            listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
 
         private void GetDuplicateIndices()
         {
-            //CurrentQueryType = QueryType.FindDuplicateIndices;
             var indexList = DatabaseAPI.Database.Power
                 .Where(e => e != null)
                 .Select(e => e!.StaticIndex)
@@ -210,8 +204,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             LvItems = itemsList.Count > 0
                 ? itemsList.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, e.FullName }).ToList()
-                : new List<string[]> { new[] { "", "Nothing found", "" } };
-            listView1.VirtualListSize = 0; // Force ListView to refresh items
+                : [new[] { "", "Nothing found", "" }];
+            listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -223,8 +217,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             LvItems = itemsList.Count > 0
                 ? itemsList.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, e.FullName }).ToList()
-                : new List<string[]> { new[] { "", "Nothing found", "" } };
-            listView1.VirtualListSize = 0; // Force ListView to refresh items
+                : [new[] { "", "Nothing found", "" }];
+            listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -236,8 +230,21 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             LvItems = itemsList.Count > 0
                 ? itemsList.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, e.FullName }).ToList()
-                : new List<string[]> { new[] { "", "Nothing found", "" } };
-            listView1.VirtualListSize = 0; // Force ListView to refresh items
+                : [new[] { "", "Nothing found", "" }];
+            listView1.VirtualListSize = 0;
+            listView1.VirtualListSize = LvItems.Count;
+        }
+
+        private void GetPowersWithSlider()
+        {
+            var itemsList = DatabaseAPI.Database.Power
+                .Where(e => e is { VariableEnabled: true })
+                .ToList();
+
+            LvItems = itemsList.Count > 0
+                ? itemsList.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"{e.FullName} ({e.VariableName})" }).ToList()
+                : [new[] { "", "Nothing found", "" }];
+            listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
 
@@ -260,6 +267,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     QueryType.FindDuplicateIndices => "Find duplicate indices",
                     QueryType.BogusMaxRunSpeed => "Potentially bogus MaxRunSpeed effect",
                     QueryType.PowersEntCreateAbsorbed => "Powers with absorbed entities",
+                    QueryType.PowersHPSlider => "Powers with slider",
                     _ => CurrentQueryType.ToString()
                 };
             }
@@ -345,6 +353,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                 case QueryType.PowersEntCreateAbsorbed:
                     GetAbsorbedEntitiesPowers();
+                    break;
+
+                case QueryType.PowersHPSlider:
+                    GetPowersWithSlider();
                     break;
 
                 default:

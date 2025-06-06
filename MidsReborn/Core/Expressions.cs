@@ -419,6 +419,38 @@ namespace Mids_Reborn.Core
                 InfixMode = ExprKeywordInfix.Prefix,
                 CommandTokenType = ExprCommandToken.PowerName,
                 SingleToken = false
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>player>hp",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>player>isAlive",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>target>hp",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>target>end",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
             }
         };
 
@@ -428,7 +460,7 @@ namespace Mids_Reborn.Core
 
             return new Dictionary<string, string>
             {
-                { "power.base>activateperiod", $"{(fxPower == null ? "0" : fxPower.ActivatePeriod)}"},
+                { "power.base>activateperiod", $"{(fxPower == null ? "0" : fxPower.ActivatePeriod)}" },
                 { "power.base>activatetime", $"{(fxPower == null ? "0" : fxPower.CastTime)}" },
                 { "power.base>areafactor", $"{(fxPower == null ? "0" : fxPower.AoEModifier)}" },
                 { "power.base>rechargetime", $"{(fxPower == null ? "0" : fxPower.BaseRechargeTime)}" },
@@ -444,11 +476,15 @@ namespace Mids_Reborn.Core
                 { "maxEndurance", $"{MidsContext.Character.DisplayStats.EnduranceMaxEnd}" },
                 { "rand()", $"{sourceFx.Rand}" },
                 { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
-                { "base.kToHit", $"{MidsContext.Config.ScalingToHit}"},
+                { "base.kToHit", $"{MidsContext.Config.ScalingToHit}" },
                 { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" },
-                { "source>Base.kHitPoints", $"{(MidsContext.Character.Archetype == null ? 1000 : MidsContext.Character.Archetype.Hitpoints)}"},
-                { "source>cur.kMeter", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName, false))}"},
-                { "source>cur.kMeterAbs", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}"}
+                { "source>Base.kHitPoints", $"{(MidsContext.Character.Archetype == null ? 1000 : MidsContext.Character.Archetype.Hitpoints)}" },
+                { "source>cur.kMeter", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName, false))}" },
+                { "source>cur.kMeterAbs", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}" },
+                { "cfg>player>hp", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}" },
+                { "cfg>player>isAlive", $"{(MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive ? "1" : "0")}" },
+                { "cfg>target>hp", $"{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent}" },
+                { "cfg>target>end", $"{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent}" }
             };
         }
 

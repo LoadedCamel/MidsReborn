@@ -2209,7 +2209,7 @@ namespace Mids_Reborn.Forms
             this.ibTeamEx.Name = "ibTeamEx";
             this.ibTeamEx.Size = new System.Drawing.Size(105, 22);
             this.ibTeamEx.TabIndex = 116;
-            this.ibTeamEx.Text = "Team Members";
+            this.ibTeamEx.Text = "Combat Settings";
             this.ibTeamEx.TextOutline.Color = System.Drawing.Color.Black;
             this.ibTeamEx.TextOutline.Width = 3;
             this.ibTeamEx.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;

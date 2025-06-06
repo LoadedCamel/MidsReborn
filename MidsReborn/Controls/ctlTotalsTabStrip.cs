@@ -9,6 +9,22 @@ namespace Mids_Reborn.Controls
 {
     public partial class ctlTotalsTabStrip : UserControl, INotifyPropertyChanged
     {
+        #region Sub-classes
+
+        public static class DefaultColors
+        {
+            public static Color HeroInactiveTabColor { get; } = Color.FromArgb(30, 85, 130);
+            public static Color HeroInactiveHoveredTabColor { get; } = Color.FromArgb(43, 122, 187);
+            public static Color HeroBorderColor { get; } = Color.Goldenrod;
+            public static Color HeroActiveTabColor { get; } = Color.Goldenrod;
+
+            public static Color VillainInactiveTabColor { get; } = Color.FromArgb(86, 12, 12);
+            public static Color VillainInactiveHoveredTabColor { get; } = Color.FromArgb(143, 20, 20);
+            public static Color VillainBorderColor { get; } = Color.FromArgb(184, 184, 187);
+            public static Color VillainActiveTabColor { get; } = Color.FromArgb(184, 184, 187);
+        }
+        #endregion
+
         #region Events
         public delegate void TabClickEventHandler(int index);
         public event TabClickEventHandler? TabClick;

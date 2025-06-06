@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -58,7 +57,7 @@ namespace Mids_Reborn.Forms.Controls
         public delegate void MovedEventHandler();
         public delegate void SizeChangeEventHandler(Size newSize, bool isCompact);
         public delegate void SlotFlipEventHandler(int powerIndex);
-        public delegate void SlotUpdateEventHandler();
+        public delegate void SlotUpdateEventHandler(IPower? power, int val);
         public delegate void TabChangedEventHandler(int index);
         public delegate void UnlockClickEventHandler();
         public delegate void EntityDetailsEventHandler(string entityUid, HashSet<string> powers, int basePowerHistoryIdx, PetInfo petInfo);
@@ -173,61 +172,69 @@ namespace Mids_Reborn.Forms.Controls
         public event UnlockClickEventHandler? UnlockClick;
         public event EntityDetailsEventHandler EntityDetails;
 
-        private static PairedListEx.Item BuildEDItem(int index, float[] value, Enums.eSchedule[] schedule, string Name, float[] afterED)
+        private static PairedListEx.Item BuildEDItem(int index, float[] value, Enums.eSchedule[] schedule, string name, float[] afterED)
         {
             var flag1 = value[index] > (double)DatabaseAPI.Database.MultED[(int)schedule[index]][0];
             var flag2 = value[index] > (double)DatabaseAPI.Database.MultED[(int)schedule[index]][1];
             var iSpecialCase = value[index] > (double)DatabaseAPI.Database.MultED[(int)schedule[index]][2];
             PairedListEx.Item itemPair;
-            if (value[index] <= 0.0)
+            if (value[index] < 0)
             {
                 itemPair = new PairedListEx.Item(string.Empty, string.Empty, false, false, false, string.Empty);
             }
             else
             {
-                var iName = Name + ":";
+                var iName = $"{name}:";
                 var num1 = value[index] * 100f;
                 var num2 = Enhancement.ApplyED(schedule[index], value[index]) * 100f;
                 var num3 = num2 + afterED[index] * 100f;
                 var num4 = (float)Math.Round(num1 - (double)num2, 3);
                 
-                var str1 = num1.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
-                var str2 = num4.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
-                var str3 = num3.ToString("##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
-                var str4 = $"Total Effect: {Convert.ToDecimal(num1 + afterED[index] * 100.0):0.##}%\r\nWith ED Applied: {str3}\r\n\r\n";
-                //var str4 = "Total Effect: " + Strings.Format((float) (num1 + afterED[index] * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%\r\nWith ED Applied: " + str3 + "\r\n\r\n";
+                var str1 = $"{num1:##0.00} %";
+                var str2 = $"{num4:##0.00} %";
+                var str3 = $"{num3:##0.00} %";
+                var str4 = $"Total Effect: {num1 + afterED[index] * 100:0.##}%\r\nWith ED Applied: {str3}\r\n\r\n";
                 string iValue;
                 string iTip;
-                if (num4 > 0.0)
+                if (num4 > 0)
                 {
-                    iValue = $"{str3} (Pre-ED: {Convert.ToDecimal(num1 + afterED[index] * 100.0):0.##}%)";
-                    if (afterED[index] > 0.0)
-                        str4 = str4 + "Amount from pre-ED sources: " + str1 + "\r\n";
-                    iTip = $"{str4} ED reduction: {str2} ({Convert.ToDecimal(num4 / (double)num1 * 100.0):0.##}% of total)\r\n";
-                    //iTip = str4 + "ED reduction: " + str2 + " (" + Strings.Format((float) (num4 / (double) num1 * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "% of total)\r\n";
+                    iValue = $"{str3} (Pre-ED: {num1 + afterED[index] * 100:0.##}%)";
+                    if (afterED[index] > 0)
+                    {
+                        str4 += $"Amount from pre-ED sources: {str1}\r\n";
+                    }
+
+                    iTip = $"{str4} ED reduction: {str2} ({num4 / (double)num1 * 100:0.##}% of total)\r\n";
                     if (iSpecialCase)
-                        iTip = $"{iTip} The highest level of ED reduction is being applied.\r\nThreshold: {Convert.ToDecimal(DatabaseAPI.Database.MultED[(int)schedule[index]][2] * 100.0):0.##} %\r\n";
-                    //iTip = iTip + "The highest level of ED reduction is being applied.\r\nThreshold: " + Strings.Format((float) (DatabaseAPI.Database.MultED[(int) schedule[index]][2] * 100.0), "##0") + "%\r\n";
+                    {
+                        iTip = $"{iTip} The highest level of ED reduction is being applied.\r\nThreshold: {DatabaseAPI.Database.MultED[(int)schedule[index]][2] * 100:0.##} %\r\n";
+                    }
                     else if (flag2)
-                        iTip = $"{iTip} The middle level of ED reduction is being applied.\r\nThreshold: {Convert.ToDecimal(DatabaseAPI.Database.MultED[(int)schedule[index]][1] * 100.0):0.##} %\r\n";
-                    //iTip = iTip + "The middle level of ED reduction is being applied.\r\nThreshold: " + Strings.Format((float) (DatabaseAPI.Database.MultED[(int) schedule[index]][1] * 100.0), "##0") + "%\r\n";
+                    {
+                        iTip = $"{iTip} The middle level of ED reduction is being applied.\r\nThreshold: {DatabaseAPI.Database.MultED[(int)schedule[index]][1] * 100:0.##} %\r\n";
+                    }
                     else if (flag1)
-                        iTip = $"{iTip} The lowest level of ED reduction is being applied.\r\nThreshold: {Convert.ToDecimal(DatabaseAPI.Database.MultED[(int)schedule[index]][0] * 100.0):0.##} %\r\n";
-                    //iTip = iTip + "The lowest level of ED reduction is being applied.\r\nThreshold: " + Strings.Format((float) (DatabaseAPI.Database.MultED[(int) schedule[index]][0] * 100.0), "##0") + "%\r\n";
-                    if (afterED[index] > 0.0)
-                        iTip = $"{iTip} Amount from post-ED sources: {Convert.ToDecimal(afterED[index] * 100.0):0.##} %\r\n";
-                    //iTip = iTip + "Amount from post-ED sources: " + Strings.Format((float) (afterED[index] * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%\r\n";
+                    {
+                        iTip = $"{iTip} The lowest level of ED reduction is being applied.\r\nThreshold: {DatabaseAPI.Database.MultED[(int)schedule[index]][0] * 100:0.##} %\r\n";
+                    }
+
+                    if (afterED[index] > 0)
+                    {
+                        iTip = $"{iTip} Amount from post-ED sources: {afterED[index] * 100:0.##} %\r\n";
+                    }
                 }
                 else
                 {
                     iValue = str3;
-                    if (afterED[index] > 0.0)
-                        str4 = $"{str4} Amount from post-ED sources: {Convert.ToDecimal(afterED[index] * 100.0):0.##} %\r\n";
-                    iTip = str4 + "This effect has not been affected by ED.\r\n";
+                    if (afterED[index] > 0)
+                    {
+                        str4 = $"{str4} Amount from post-ED sources: {afterED[index] * 100:0.##} %\r\n";
+                    }
+
+                    iTip = $"{str4}This effect has not been affected by ED.\r\n";
                 }
 
-                itemPair = new PairedListEx.Item(iName, iValue, flag2 & !iSpecialCase, flag1 & !flag2,
-                    iSpecialCase, iTip);
+                itemPair = new PairedListEx.Item(iName, iValue, flag2 & !iSpecialCase, flag1 & !flag2, iSpecialCase, iTip);
             }
 
             return itemPair;
@@ -283,8 +290,11 @@ namespace Mids_Reborn.Forms.Controls
             pnlEnh.Height = pnlInfo.Height;
             Height = pnlInfo.Bottom;
             Compact = true;
-            if (!(Size != size))
+            if (Size == size)
+            {
                 return;
+            }
+
             SizeChange?.Invoke(Size, Compact);
         }
 
@@ -319,7 +329,7 @@ namespace Mids_Reborn.Forms.Controls
             total_Misc.Location = new Point(4, 243 + useToxicDefOffSet);
             lblTotal.Location = new Point(3, 323 + useToxicDefOffSet);
 
-            TabsMask ??= new[] {true, true, true, true};
+            TabsMask ??= [true, true, true, true];
 
             Clear();
         }
@@ -704,7 +714,7 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             enhNameDisp.Text = "Enhancement Values";
-            var longInfo = Regex.Replace(pBase.DescLong.Trim().Replace("\0", "").Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
+            var longInfo = Regex.Replace(pBase.DescLongFormatted.Trim().Replace("\0", "").Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
             info_txtSmall.Rtf = RTF.StartRTF() + RTF.ToRTF(pBase.DescShort.Trim()) + RTF.EndRTF();
             Info_txtLarge.Rtf = RTF.StartRTF() + RTF.ToRTF(longInfo) + RTF.EndRTF();
             var suffix1 = pBase.PowerType != Enums.ePowerType.Toggle ? "" : "/s";
@@ -1993,12 +2003,15 @@ namespace Mids_Reborn.Forms.Controls
         }
 
         private void lblShrink_Click(object sender, EventArgs e)
-
         {
             if (Compact)
+            {
                 ResetSize();
+            }
             else
+            {
                 CompactSize();
+            }
         }
 
         private void lblShrink_DoubleClick(object sender, EventArgs e)
@@ -2010,18 +2023,24 @@ namespace Mids_Reborn.Forms.Controls
         {
             var num1 = bxFlip.Size.Width - 188;
             if (pBase == null)
+            {
                 return -1;
+            }
+
             var inToonHistory = MidsContext.Character.CurrentBuild.FindInToonHistory(pBase.PowerIndex);
             if (inToonHistory < 0)
-                return -1;
-            var num2 = MidsContext.Character.CurrentBuild.Powers[inToonHistory].SlotCount - 1;
-            for (var index = 0; index <= num2; ++index)
             {
-                var rectangle = new Rectangle(num1 + 30 * index,
-                    (int)Math.Round((bxFlip.Size.Height / 2.0 - 30.0) / 2.0), 30, 30);
+                return -1;
+            }
+
+            for (var index = 0; index < MidsContext.Character.CurrentBuild.Powers[inToonHistory].SlotCount; index++)
+            {
+                var rectangle = new Rectangle(num1 + 30 * index, (int)Math.Round((bxFlip.Size.Height / 2f - 30) / 2f), 30, 30);
                 if ((iX > rectangle.X) & (iX < rectangle.X + rectangle.Width) &&
                     (iY > rectangle.Y) & (iY < rectangle.Y + rectangle.Height))
+                {
                     return index;
+                }
             }
 
             return -1;
@@ -2218,9 +2237,9 @@ namespace Mids_Reborn.Forms.Controls
             DoPaint();
         }
 
-        private void PowerScaler_BarClick(float Value)
+        private void PowerScaler_BarClick(float val)
         {
-            var num = (int)Math.Round(Value);
+            var num = (int)Math.Round(val);
             if (num < pBase.VariableMin)
             {
                 num = pBase.VariableMin;
@@ -2245,8 +2264,8 @@ namespace Mids_Reborn.Forms.Controls
 
             SetPowerScaler();
             pLastScaleVal = num;
-            MainModule.MidsController.Toon.GenerateBuffedPowerArray();
-            SlotUpdate?.Invoke();
+            MainModule.MidsController.Toon?.GenerateBuffedPowerArray();
+            SlotUpdate?.Invoke(pBase, num);
         }
 
         private void RedrawFlip()
@@ -2488,11 +2507,24 @@ namespace Mids_Reborn.Forms.Controls
             pEnh?.ProcessExecutes();
 
             GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
-            EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh.GetRankedEffects(true).ToList(), info_DataList.Font.Size);
+            EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh?.GetRankedEffects(true).ToList(), info_DataList.Font.Size);
 
             HistoryIDX = iHistoryIdx;
             SetDamageTip();
             DisplayData(noLevel);
+            SizeRefresh();
+        }
+
+        public void SetData()
+        {
+            pBase?.ProcessExecutes();
+            pEnh?.ProcessExecutes();
+
+            GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
+            EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh?.GetRankedEffects(true).ToList(), info_DataList.Font.Size);
+
+            SetDamageTip();
+            DisplayData();
             SizeRefresh();
         }
 

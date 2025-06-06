@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FastDeepCloner;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -21,32 +22,32 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             DescLong = string.Empty;
             DescShort = string.Empty;
-            Enhancements = new int[0];
+            Enhancements = [];
             MaxBoosts = string.Empty;
             DisplayName = string.Empty;
             FullName = string.Empty;
-            BoostsAllowed = new string[0];
+            BoostsAllowed = [];
             BuffMode = Enums.eBuffMode.Normal;
-            Effects = new IEffect[0];
+            Effects = [];
             ForcedClass = string.Empty;
             MutexAuto = true;
             TargetLoS = true;
-            GroupMembership = new string[0];
+            GroupMembership = [];
             PowerName = string.Empty;
             SetName = string.Empty;
             GroupName = string.Empty;
-            NGroupMembership = new int[0];
+            NGroupMembership = [];
             PowerSetIndex = -1;
             PowerSetID = -1;
             PowerIndex = -1;
-            SetTypes = new List<int>();
+            SetTypes = [];
             VariableName = string.Empty;
-            UIDSubPower = new string[0];
-            NIDSubPower = new int[0];
-            Ignore_Buff = new Enums.eEnhance[0];
-            IgnoreEnh = new Enums.eEnhance[0];
+            UIDSubPower = [];
+            NIDSubPower = [];
+            Ignore_Buff = [];
+            IgnoreEnh = [];
             SubIsAltColor = false;
-            BoostsAllowed = new string[0];
+            BoostsAllowed = [];
             Requires = new Requirement();
             var num = -2;
             foreach (var p in DatabaseAPI.Database.Power)
@@ -68,33 +69,33 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             DescLong = string.Empty;
             DescShort = string.Empty;
-            Enhancements = new int[0];
+            Enhancements = [];
             MaxBoosts = string.Empty;
             DisplayName = string.Empty;
             FullName = string.Empty;
-            BoostsAllowed = new string[0];
+            BoostsAllowed = [];
             BuffMode = Enums.eBuffMode.Normal;
-            Effects = new IEffect[0];
+            Effects = [];
             ForcedClass = string.Empty;
             MutexAuto = true;
             TargetLoS = true;
-            GroupMembership = new string[0];
+            GroupMembership = [];
             Requires = new Requirement();
             PowerName = string.Empty;
             SetName = string.Empty;
             GroupName = string.Empty;
-            NGroupMembership = new int[0];
+            NGroupMembership = [];
             StaticIndex = -1;
             PowerSetIndex = -1;
             PowerSetID = -1;
             PowerIndex = -1;
             //SetTypes = new Enums.eSetType[0];
-            SetTypes = new List<int>();
+            SetTypes = [];
             VariableName = string.Empty;
-            UIDSubPower = new string[0];
-            NIDSubPower = new int[0];
-            Ignore_Buff = new Enums.eEnhance[0];
-            IgnoreEnh = new Enums.eEnhance[0];
+            UIDSubPower = [];
+            NIDSubPower = [];
+            Ignore_Buff = [];
+            IgnoreEnh = [];
             SubIsAltColor = false;
             if (template == null)
             {
@@ -167,7 +168,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             // Array.Copy(template.SetTypes, SetTypes, SetTypes.Length);
 
             Effects = new IEffect[template.Effects.Length];
-            for (var index = 0; index <= Effects.Length - 1; ++index)
+            for (var index = 0; index < Effects.Length; index++)
             {
                 Effects[index] = (IEffect) template.Effects[index].Clone();
                 Effects[index].SetPower(this);
@@ -214,15 +215,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public Power(BinaryReader reader)
         {
-            Enhancements = new int[0];
+            Enhancements = [];
             BuffMode = Enums.eBuffMode.Normal;
-            Effects = new IEffect[0];
+            Effects = [];
             ForcedClass = string.Empty;
             MutexAuto = true;
             TargetLoS = true;
-            GroupMembership = new string[0];
+            GroupMembership = [];
             Requires = new Requirement();
-            NGroupMembership = new int[0];
+            NGroupMembership = [];
             StaticIndex = -1;
             PowerSetIndex = -1;
             PowerSetID = -1;
@@ -230,15 +231,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             //SetTypes = new Enums.eSetType[0];
 
-            SetTypes = new List<int>();
+            SetTypes = [];
 
             VariableName = string.Empty;
-            UIDSubPower = new string[0];
-            NIDSubPower = new int[0];
-            Ignore_Buff = new Enums.eEnhance[0];
-            IgnoreEnh = new Enums.eEnhance[0];
+            UIDSubPower = [];
+            NIDSubPower = [];
+            Ignore_Buff = [];
+            IgnoreEnh = [];
             SubIsAltColor = false;
-            BoostsAllowed = new string[0];
+            BoostsAllowed = [];
             StaticIndex = reader.ReadInt32();
             FullName = reader.ReadString();
             GroupName = reader.ReadString();
@@ -255,7 +256,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             AttackTypes = (Enums.eVector)reader.ReadInt32();
             GroupMembership = new string[reader.ReadInt32() + 1];
             for (var index = 0; index < GroupMembership.Length; ++index)
+            {
                 GroupMembership[index] = reader.ReadString();
+            }
+
             EntitiesAffected = (Enums.eEntity)reader.ReadInt32();
             EntitiesAutoHit = (Enums.eEntity)reader.ReadInt32();
             Target = (Enums.eEntity)reader.ReadInt32();
@@ -284,14 +288,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             DoNotSave = reader.ReadBoolean();
             BoostsAllowed = new string[reader.ReadInt32() + 1];
             for (var index = 0; index <= BoostsAllowed.Length - 1; ++index)
+            {
                 BoostsAllowed[index] = reader.ReadString();
+            }
+
             CastThroughHold = reader.ReadBoolean();
             IgnoreStrength = reader.ReadBoolean();
             DescShort = reader.ReadString();
             DescLong = reader.ReadString();
             Enhancements = new int[reader.ReadInt32() + 1];
             for (var index = 0; index <= Enhancements.Length - 1; ++index)
+            {
                 Enhancements[index] = reader.ReadInt32();
+            }
 
             // SetTypes = new Enums.eSetType[reader.ReadInt32() + 1];
             // for (var index = 0; index <= SetTypes.Length - 1; ++index)
@@ -316,14 +325,23 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             VariableMin = reader.ReadInt32();
             VariableMax = reader.ReadInt32();
             UIDSubPower = new string[reader.ReadInt32() + 1];
-            for (var index = 0; index <= UIDSubPower.Length - 1; ++index)
+            for (var index = 0; index < UIDSubPower.Length; index++)
+            {
                 UIDSubPower[index] = reader.ReadString();
+            }
+
             IgnoreEnh = new Enums.eEnhance[reader.ReadInt32() + 1];
-            for (var index = 0; index <= IgnoreEnh.Length - 1; ++index)
+            for (var index = 0; index < IgnoreEnh.Length; index++)
+            {
                 IgnoreEnh[index] = (Enums.eEnhance)reader.ReadInt32();
+            }
+
             Ignore_Buff = new Enums.eEnhance[reader.ReadInt32() + 1];
-            for (var index = 0; index <= Ignore_Buff.Length - 1; ++index)
+            for (var index = 0; index < Ignore_Buff.Length; index++)
+            {
                 Ignore_Buff[index] = (Enums.eEnhance)reader.ReadInt32();
+            }
+
             SkipMax = reader.ReadBoolean();
             InherentType = (Enums.eGridType)reader.ReadInt32();
             DisplayLocation = reader.ReadInt32();
@@ -340,7 +358,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             BoostBoostable = reader.ReadBoolean();
             BoostUsePlayerLevel = reader.ReadBoolean();
             Effects = new IEffect[reader.ReadInt32() + 1];
-            for (var index = 0; index <= Effects.Length - 1; ++index)
+            for (var index = 0; index < Effects.Length; index++)
             {
                 var eff = (IEffect)new Effect(reader)
                 {
@@ -638,6 +656,66 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         }
 
         public int InternalStacks => _Stacks;
+
+        public string DescLongFormatted
+        {
+            get
+            {
+                var cfgSettings = ConfigData.GetCombatSettings();
+                var formattedDesc = DescLong.Replace("  ", " ").Trim();
+                var r = new Regex(@"\{{link\:([a-zA-Z0-9\.\-_]+)\}}");
+                var g = r.Matches(formattedDesc)
+                    .Select(e => e.Groups[1].Value)
+                    .Where(e => cfgSettings.ContainsKey(e))
+                    .ToList();
+
+                if (g.Count == 0)
+                {
+                    return formattedDesc;
+                }
+
+                foreach (var k in cfgSettings)
+                {
+                    formattedDesc = formattedDesc.Replace($"{{link:{k.Key}}}", "");
+                }
+
+                formattedDesc = $"{formattedDesc.Trim()} Mids' note: you can use the {cfgSettings[g[0]]} setting in the Combat Settings window to change the behavior of this power.";
+                if (g.Count > 1)
+                {
+                    formattedDesc += $" It is also affected by {string.Join(", ", g.Skip(1).Select(e => cfgSettings[e]))}.";
+                }
+                
+                return formattedDesc;
+            }
+        }
+
+        public string? CSPrimaryKey
+        {
+            get
+            {
+                var cfgSettings = ConfigData.GetCombatSettings();
+                var r = new Regex(@"\{{link\:([a-zA-Z0-9\.\-_]+)\}}");
+                var g = r.Matches(DescLong)
+                    .Select(e => e.Groups[1].Value)
+                    .Where(e => cfgSettings.ContainsKey(e))
+                    .ToList();
+
+                return g.Count == 0 ? null : g[0];
+            }
+        }
+
+        public List<string> CSKeys
+        {
+            get
+            {
+                var cfgSettings = ConfigData.GetCombatSettings();
+                var r = new Regex(@"\{{link\:([a-zA-Z0-9\.\-_]+)\}}");
+                return r.Matches(DescLong)
+                    .Select(e => e.Groups[1].Value)
+                    .Where(e => cfgSettings.ContainsKey(e))
+                    .ToList();
+            }
+        }
 
         public void StoreTo(ref BinaryWriter writer)
         {

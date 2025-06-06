@@ -2,6 +2,7 @@ using MRBResourceLib;
 using System;
 using System.Drawing;
 using System.Windows.Forms;
+using Mids_Reborn.Core;
 
 namespace Mids_Reborn.Forms
 {
@@ -38,9 +39,9 @@ namespace Mids_Reborn.Forms
             myOwner.DataView_SlotFlip(powerIndex);
         }
 
-        private void dvFloat_SlotUpdate()
+        private void dvFloat_SlotUpdate(IPower? power, int val)
         {
-            myOwner.DataView_SlotUpdate();
+            myOwner.DataView_SlotUpdate(power, val);
         }
 
         private void dvFloat_TabChanged(int index)

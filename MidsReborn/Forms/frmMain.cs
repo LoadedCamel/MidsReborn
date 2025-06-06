@@ -53,6 +53,7 @@ namespace Mids_Reborn.Forms
 
         private const string UriScheme = "mrb";
         private frmBusy? _frmBusy;
+        private FrmTeam? _frmTeam;
         private bool _loading;
         private bool _gfxDrawing;
         private long _popupLastOpenTime;
@@ -1176,12 +1177,23 @@ namespace Mids_Reborn.Forms
             StartFlip(PowerIndex);
         }
 
-        internal void DataView_SlotUpdate()
+        internal void DataView_SlotUpdate(IPower? power, int val)
         {
             DoRedraw();
             RefreshInfo();
-        }
+            if (_frmTeam?.Visible != true || power == null)
+            {
+                return;
+            }
 
+            var pKey = power.CSPrimaryKey;
+            if (pKey == null)
+            {
+                return;
+            }
+
+            _frmTeam.FeedbackUpdate(pKey, val);
+        }
 
         private static PowerEntry?[] DeepCopyPowerList()
         {
@@ -1194,6 +1206,7 @@ namespace Mids_Reborn.Forms
             irect.Y -= iAdd;
             irect.Height += iAdd * 2;
             irect.Width += iAdd * 2;
+            
             return irect;
         }
 
@@ -2803,7 +2816,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void I9Picker_MouseDown(object? sender, MouseEventArgs e)
         {
             if (e.Button != MouseButtons.Right || EnhancingSlot <= -1)
+            {
                 return;
+            }
+
             I9Picker.Visible = false;
             EnhancingSlot = -1;
             RefreshInfo();
@@ -2825,19 +2841,24 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void I9Picker_KeyDown(object? sender, KeyEventArgs e)
         {
-            if (!MidsContext.Config.CloseEnhSelectPopupByMove && e.KeyCode == Keys.Escape)
+            if (MidsContext.Config.CloseEnhSelectPopupByMove || e.KeyCode != Keys.Escape)
             {
-                I9Picker.Visible = false;
-                HidePopup();
-                EnhancingSlot = -1;
+                return;
             }
+
+            I9Picker.Visible = false;
+            HidePopup();
+            EnhancingSlot = -1;
         }
 
         private void ibTeamEx_OnClick(object? sender, EventArgs e)
         {
-            var iParent = this;
-            var frmTeam = new FrmTeam(ref iParent);
-            frmTeam.ShowDialog();
+            if (_frmTeam == null || _frmTeam.IsDisposed)
+            {
+                _frmTeam = new FrmTeam(this);
+            }
+
+            _frmTeam.Show();
         }
 
         private void ibPopupEx_OnClick(object? sender, EventArgs e)
@@ -5220,7 +5241,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             lblLockedAncillary.Refresh();
         }
 
-        private void RefreshInfo()
+        public void RefreshInfo()
         {
             info_Totals();
             if (dvLastPower <= -1)
@@ -5906,17 +5927,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 var iPowers = new List<IPower?>();
                 if (power != null)
                 {
-                    var num = power.NIDSubPower.Length - 1;
-                    for (var index = 0; index <= num; ++index)
-                    {
-                        var thisPower = DatabaseAPI.Database.Power[power.NIDSubPower[index]];
-                        if (thisPower != null && (thisPower.ClickBuff ||
-                                                  thisPower.PowerType == Enums.ePowerType.Auto_ |
-                                                  thisPower.PowerType == Enums.ePowerType.Toggle))
-                        {
-                            iPowers.Add(thisPower);
-                        }
-                    }
+                    iPowers.AddRange(power.NIDSubPower.Select(t => DatabaseAPI.Database.Power[t]).OfType<IPower>().Where(p => p.ClickBuff || p.PowerType == Enums.ePowerType.Auto_ | p.PowerType == Enums.ePowerType.Toggle));
                 }
 
                 fTemp = new frmTemp(this, iPowers)
@@ -5946,9 +5957,15 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             var rectangle1 = new Rectangle();
             if (hID < 0)
+            {
                 return false;
+            }
+
             if (MidsContext.Character.CurrentBuild.Powers[hID].IDXPower < 0)
+            {
                 return false;
+            }
+
             var rectangle2 = new Rectangle
             {
                 Location = drawing.PowerPosition(MidsContext.Character.CurrentBuild.Powers[hID]),

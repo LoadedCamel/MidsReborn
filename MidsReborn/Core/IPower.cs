@@ -334,5 +334,9 @@ namespace Mids_Reborn.Core
         bool AbsorbedPetEffects { get; set; }
         bool AppliedExecutes { get; set; }
         bool AppliedSubPowers { get; set; }
+
+        string DescLongFormatted { get; }
+        string? CSPrimaryKey { get; }
+        List<string> CSKeys { get; }
     }
 }

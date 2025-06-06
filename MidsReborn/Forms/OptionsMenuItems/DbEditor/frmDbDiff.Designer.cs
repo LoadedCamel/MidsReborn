@@ -52,7 +52,7 @@
             // 
             // borderPanel1
             // 
-            borderPanel1.Border.Color = System.Drawing.SystemColors.Highlight;
+            borderPanel1.Border.Color = System.Drawing.Color.FromArgb(3, 111, 161);
             borderPanel1.Border.Style = System.Windows.Forms.ButtonBorderStyle.Solid;
             borderPanel1.Border.Thickness = 1;
             borderPanel1.Border.Which = Forms.Controls.BorderPanel.PanelBorder.BorderToDraw.All;
@@ -76,7 +76,7 @@
             // 
             // borderPanel2
             // 
-            borderPanel2.Border.Color = System.Drawing.SystemColors.Highlight;
+            borderPanel2.Border.Color = System.Drawing.Color.FromArgb(3, 111, 161);
             borderPanel2.Border.Style = System.Windows.Forms.ButtonBorderStyle.Solid;
             borderPanel2.Border.Thickness = 1;
             borderPanel2.Border.Which = Forms.Controls.BorderPanel.PanelBorder.BorderToDraw.All;
