@@ -674,10 +674,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     return formattedDesc;
                 }
 
-                foreach (var k in cfgSettings)
-                {
-                    formattedDesc = formattedDesc.Replace($"{{link:{k.Key}}}", "", StringComparison.InvariantCultureIgnoreCase);
-                }
+                formattedDesc = cfgSettings.Aggregate(formattedDesc, (current, k) => current.Replace($"{{link:{k.Key}}}", "", StringComparison.InvariantCultureIgnoreCase));
 
                 formattedDesc = $"{formattedDesc.Trim()} Mids' note: you can use the {ConfigData.GetCombatSettingName(g[0], cfgSettings)} setting in the Combat Settings window to change the behavior of this power.";
                 if (g.Count > 1)

@@ -496,16 +496,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             for (var i = 0; i < n; i++)
             {
                 var lvItem = lvSubConditional.Items[i].Text.ToLowerInvariant();
-                if (lvItem.StartsWith(searchPowerName))
+                if (!lvItem.StartsWith(searchPowerName))
                 {
-                    if (searchAtGroup == "" | lvItem.Contains($"[{searchAtGroup}"))
-                    {
-                        lvSubConditional.Items[i].Selected = true;
-                        lvSubConditional.Items[i].EnsureVisible();
-
-                        return;
-                    }
+                    continue;
                 }
+
+                if (!(searchAtGroup == "" | lvItem.Contains($"[{searchAtGroup}")))
+                {
+                    continue;
+                }
+
+                lvSubConditional.Items[i].Selected = true;
+                lvSubConditional.Items[i].EnsureVisible();
+
+                return;
             }
 
             MessageBox.Show(

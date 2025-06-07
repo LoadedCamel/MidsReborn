@@ -171,6 +171,18 @@ namespace Mids_Reborn.Forms
 
             lblPlayerHP.Text = $"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent:##0} %";
 
+            playerEnd.BeginUpdate();
+            playerEnd.ForcedMax = 100;
+            playerEnd.Clear();
+            playerEnd.AddItem(
+                $"HP %:|{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent}",
+                MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent, 0,
+                "Use this slider to vary player Endurance percentage.\r\nMin: 0\r\nMax: 100");
+            playerEnd.EndUpdate();
+            playerEnd.Invalidate();
+
+            lblPlayerEnd.Text = $"{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent:##0} %";
+
             rbPlayerStatusAlive.Checked = MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive;
             rbPlayerStatusDead.Checked = !MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive;
 
@@ -271,6 +283,21 @@ namespace Mids_Reborn.Forms
 
                     break;
 
+                case "cfg.player.end":
+                    MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent = (int)Math.Round(val);
+                    playerEnd.BeginUpdate();
+                    playerEnd.ForcedMax = 100;
+                    playerEnd.Clear();
+                    playerEnd.AddItem(
+                        $"HP %:|{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent}",
+                        MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent, 0,
+                        "Use this slider to vary player Endurance percentage.\r\nMin: 0\r\nMax: 100");
+                    playerEnd.EndUpdate();
+
+                    lblPlayerEnd.Text = $"{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent:##0} %";
+
+                    break;
+
                 case "cfg.target.hp":
                     MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent = (int)Math.Round(val);
 
@@ -304,6 +331,9 @@ namespace Mids_Reborn.Forms
         private void CharacterOnAlignmentChanged(object? sender, Enums.Alignment e)
         {
             SetStripColors(e);
+            btnToTop.UseAlt = e is Enums.Alignment.Loyalist or Enums.Alignment.Rogue or Enums.Alignment.Villain;
+            btnCancel.UseAlt = e is Enums.Alignment.Loyalist or Enums.Alignment.Rogue or Enums.Alignment.Villain;
+            btnSave.UseAlt = e is Enums.Alignment.Loyalist or Enums.Alignment.Rogue or Enums.Alignment.Villain;
         }
 
         private void btnSave_Click(object sender, EventArgs e)

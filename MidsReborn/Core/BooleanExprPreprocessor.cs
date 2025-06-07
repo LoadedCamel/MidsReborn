@@ -58,19 +58,39 @@ namespace Mids_Reborn.Core
         /// <returns>Value of config field according to format</returns>
         private static dynamic GetConfigValue(string cond, bool stringFormat = true)
         {
-            return cond.ToLowerInvariant() switch
+            var chunks = cond.ToLowerInvariant().Split('.');
+            if (chunks.Length != 3)
             {
-                "cfg.player.hppercent" when stringFormat => $"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}",
-                "cfg.player.isalive" when stringFormat => MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive ? "1" : "0",
-                "cfg.target.hppercent" when stringFormat => $"{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent}",
-                "cfg.target.endpercent" when stringFormat => $"{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent}",
-                _ when stringFormat => "0",
-                
-                "cfg.player.hppercent" => MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent,
-                "cfg.player.isalive" => MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive ? 1 : 0,
-                "cfg.target.hppercent" => MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent,
-                "cfg.target.endpercent" => MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent,
-                _ => 0
+                return stringFormat ? "0" : 0;
+            }
+
+            var group = MidsContext.Config.CombatContextSettings.GetType()
+                .GetProperty(ConfigData.CombatContext.GetConfigChunkName(chunks[1]));
+
+            if (group == null)
+            {
+                return stringFormat ? "0" : 0;
+            }
+
+            var v = group
+                .GetValue(MidsContext.Config.CombatContextSettings)?
+                .GetType()
+                .GetProperty(ConfigData.CombatContext.GetConfigChunkName(chunks[2]))?
+                .GetValue(group.GetValue(MidsContext.Config.CombatContextSettings));
+            var condType = ConfigData.CombatContext.ConfigChunkType(chunks[2]);
+
+            return stringFormat switch
+            {
+                true => condType switch
+                {
+                    "bool" => v as bool? ?? true ? "1" : "0",
+                    "int" => $"{v as int? ?? 100}"
+                },
+                _ => condType switch
+                {
+                    "bool" => v as bool? ?? true ? 1 : 0,
+                    "int" => v as int? ?? 100
+                }
             };
         }
 
@@ -202,13 +222,17 @@ namespace Mids_Reborn.Core
                 var k = cVp.Key.Replace("AND ", "").Replace("OR ", "");
                 var condition = getCondition.Replace(k, "");
                 var conditionItemName = getConditionItem.Replace(k, "").Replace(":", "");
-                var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
+                var conditionPower = condition == "Config" ? null : DatabaseAPI.GetPowerByFullName(conditionItemName);
+                var configValueInt = GetConfigValue(condition == "Config" ? conditionItemName : "", false);
                 var buildPowers = MidsContext.Character.CurrentBuild.Powers;
                 var cVal = cVp.Value.Split(' ');
                 var powerDisplayName = conditionPower?.DisplayName;
-                if (powerDisplayName == null || !powerDisplayName.Contains(cPowerName))
+                if (condition != "Config")
                 {
-                    return "0";
+                    if (powerDisplayName == null || !powerDisplayName.Contains(cPowerName))
+                    {
+                        return "0";
+                    }
                 }
 
                 switch (condition)
@@ -225,7 +249,7 @@ namespace Mids_Reborn.Core
                         break;
                     case "Stacks":
                         var stacks = buildPowers
-                            .Where(x => x.Power == conditionPower)
+                            .Where(x => x != null && x.Power == conditionPower)
                             .Select(x => x.Power.Stacks)
                             .ToList();
                         conditionResults.Add(cVal[0] switch
@@ -251,6 +275,34 @@ namespace Mids_Reborn.Core
                         });
 
                         break;
+
+                    case "Config":
+                        conditionResults.Add(conditionItemName.ToLowerInvariant() switch
+                        {
+                            "cfg.player.isalive" => cVal[1] == "True" ? MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive : !MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive,
+                            _ => cVal[0] switch
+                            {
+                                "=" => configValueInt == Convert.ToInt32(cVal[1]),
+                                ">" => configValueInt > Convert.ToInt32(cVal[1]),
+                                "<" => configValueInt < Convert.ToInt32(cVal[1]),
+                                _ => true
+                            }
+                        });
+
+                        conditionResults.Add(cVal[0] switch
+                        {
+                            "=" => MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext.Config
+                                .TeamMembers[conditionItemName]
+                                .Equals(Convert.ToInt32(cVal[1])),
+                            ">" => MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                                   MidsContext.Config.TeamMembers[conditionItemName] > Convert.ToInt32(cVal[1]),
+                            "<" => MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
+                                   MidsContext.Config.TeamMembers[conditionItemName] < Convert.ToInt32(cVal[1]),
+                            _ => true
+                        });
+
+                        break;
+
                     default:
                         conditionResults.Add(true);
                         break;

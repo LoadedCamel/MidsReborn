@@ -69,10 +69,14 @@ namespace Mids_Reborn.Forms
             udAny = new EnhancedUpDown();
             label17 = new Label();
             panel2 = new Panel();
+            btnToTop = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             btnSave = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             btnCancel = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             tabStrip = new Mids_Reborn.Controls.ctlTotalsTabStrip();
             playerPanel = new Panel();
+            lblPlayerEnd = new Label();
+            playerEnd = new Mids_Reborn.Controls.CtlMultiGraph();
+            label22 = new Label();
             lblPlayerHP = new Label();
             playerHP = new Mids_Reborn.Controls.CtlMultiGraph();
             rbPlayerStatusDead = new RadioButton();
@@ -371,7 +375,7 @@ namespace Mids_Reborn.Forms
             // 
             label16.AutoSize = true;
             label16.Dock = DockStyle.Fill;
-            label16.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label16.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label16.ForeColor = System.Drawing.Color.WhiteSmoke;
             label16.Location = new System.Drawing.Point(156, 170);
             label16.Margin = new Padding(4, 0, 4, 0);
@@ -385,7 +389,7 @@ namespace Mids_Reborn.Forms
             // 
             label15.AutoSize = true;
             label15.Dock = DockStyle.Fill;
-            label15.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label15.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label15.ForeColor = System.Drawing.Color.WhiteSmoke;
             label15.Location = new System.Drawing.Point(156, 147);
             label15.Margin = new Padding(4, 0, 4, 0);
@@ -399,7 +403,7 @@ namespace Mids_Reborn.Forms
             // 
             label14.AutoSize = true;
             label14.Dock = DockStyle.Fill;
-            label14.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label14.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label14.ForeColor = System.Drawing.Color.WhiteSmoke;
             label14.Location = new System.Drawing.Point(156, 124);
             label14.Margin = new Padding(4, 0, 4, 0);
@@ -413,7 +417,7 @@ namespace Mids_Reborn.Forms
             // 
             label13.AutoSize = true;
             label13.Dock = DockStyle.Fill;
-            label13.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label13.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label13.ForeColor = System.Drawing.Color.WhiteSmoke;
             label13.Location = new System.Drawing.Point(156, 101);
             label13.Margin = new Padding(4, 0, 4, 0);
@@ -427,7 +431,7 @@ namespace Mids_Reborn.Forms
             // 
             label12.AutoSize = true;
             label12.Dock = DockStyle.Fill;
-            label12.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label12.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label12.ForeColor = System.Drawing.Color.WhiteSmoke;
             label12.Location = new System.Drawing.Point(156, 78);
             label12.Margin = new Padding(4, 0, 4, 0);
@@ -441,7 +445,7 @@ namespace Mids_Reborn.Forms
             // 
             label11.AutoSize = true;
             label11.Dock = DockStyle.Fill;
-            label11.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label11.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label11.ForeColor = System.Drawing.Color.WhiteSmoke;
             label11.Location = new System.Drawing.Point(156, 55);
             label11.Margin = new Padding(4, 0, 4, 0);
@@ -455,7 +459,7 @@ namespace Mids_Reborn.Forms
             // 
             label10.AutoSize = true;
             label10.Dock = DockStyle.Fill;
-            label10.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label10.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label10.ForeColor = System.Drawing.Color.WhiteSmoke;
             label10.Location = new System.Drawing.Point(156, 28);
             label10.Margin = new Padding(4, 0, 4, 0);
@@ -469,7 +473,7 @@ namespace Mids_Reborn.Forms
             // 
             label9.AutoSize = true;
             label9.Dock = DockStyle.Fill;
-            label9.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label9.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label9.ForeColor = System.Drawing.Color.WhiteSmoke;
             label9.Location = new System.Drawing.Point(156, 0);
             label9.Margin = new Padding(4, 0, 4, 0);
@@ -483,7 +487,7 @@ namespace Mids_Reborn.Forms
             // 
             label8.AutoSize = true;
             label8.Dock = DockStyle.Fill;
-            label8.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label8.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label8.ForeColor = System.Drawing.Color.WhiteSmoke;
             label8.Location = new System.Drawing.Point(4, 170);
             label8.Margin = new Padding(4, 0, 4, 0);
@@ -497,7 +501,7 @@ namespace Mids_Reborn.Forms
             // 
             label7.AutoSize = true;
             label7.Dock = DockStyle.Fill;
-            label7.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label7.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label7.ForeColor = System.Drawing.Color.WhiteSmoke;
             label7.Location = new System.Drawing.Point(4, 147);
             label7.Margin = new Padding(4, 0, 4, 0);
@@ -511,7 +515,7 @@ namespace Mids_Reborn.Forms
             // 
             label6.AutoSize = true;
             label6.Dock = DockStyle.Fill;
-            label6.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label6.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label6.ForeColor = System.Drawing.Color.WhiteSmoke;
             label6.Location = new System.Drawing.Point(4, 124);
             label6.Margin = new Padding(4, 0, 4, 0);
@@ -525,7 +529,7 @@ namespace Mids_Reborn.Forms
             // 
             label5.AutoSize = true;
             label5.Dock = DockStyle.Fill;
-            label5.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label5.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label5.ForeColor = System.Drawing.Color.WhiteSmoke;
             label5.Location = new System.Drawing.Point(4, 101);
             label5.Margin = new Padding(4, 0, 4, 0);
@@ -539,7 +543,7 @@ namespace Mids_Reborn.Forms
             // 
             label4.AutoSize = true;
             label4.Dock = DockStyle.Fill;
-            label4.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label4.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label4.ForeColor = System.Drawing.Color.WhiteSmoke;
             label4.Location = new System.Drawing.Point(4, 78);
             label4.Margin = new Padding(4, 0, 4, 0);
@@ -553,7 +557,7 @@ namespace Mids_Reborn.Forms
             // 
             label2.AutoSize = true;
             label2.Dock = DockStyle.Fill;
-            label2.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label2.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label2.ForeColor = System.Drawing.Color.WhiteSmoke;
             label2.Location = new System.Drawing.Point(4, 28);
             label2.Margin = new Padding(4, 0, 4, 0);
@@ -567,7 +571,7 @@ namespace Mids_Reborn.Forms
             // 
             label3.AutoSize = true;
             label3.Dock = DockStyle.Fill;
-            label3.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label3.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label3.ForeColor = System.Drawing.Color.WhiteSmoke;
             label3.Location = new System.Drawing.Point(4, 55);
             label3.Margin = new Padding(4, 0, 4, 0);
@@ -581,7 +585,7 @@ namespace Mids_Reborn.Forms
             // 
             label1.AutoSize = true;
             label1.Dock = DockStyle.Fill;
-            label1.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label1.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label1.ForeColor = System.Drawing.Color.WhiteSmoke;
             label1.Location = new System.Drawing.Point(4, 0);
             label1.Margin = new Padding(4, 0, 4, 0);
@@ -606,17 +610,18 @@ namespace Mids_Reborn.Forms
             // label17
             // 
             label17.AutoSize = true;
-            label17.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label17.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label17.ForeColor = System.Drawing.Color.WhiteSmoke;
             label17.Location = new System.Drawing.Point(15, 38);
             label17.Margin = new Padding(4, 0, 4, 0);
             label17.Name = "label17";
-            label17.Size = new System.Drawing.Size(129, 13);
+            label17.Size = new System.Drawing.Size(117, 13);
             label17.TabIndex = 7;
             label17.Text = "Total Team Members:";
             // 
             // panel2
             // 
+            panel2.Controls.Add(btnToTop);
             panel2.Controls.Add(btnSave);
             panel2.Controls.Add(btnCancel);
             panel2.Dock = DockStyle.Bottom;
@@ -624,6 +629,32 @@ namespace Mids_Reborn.Forms
             panel2.Name = "panel2";
             panel2.Size = new System.Drawing.Size(1778, 42);
             panel2.TabIndex = 1;
+            // 
+            // btnToTop
+            // 
+            btnToTop.BackgroundImageLayout = ImageLayout.None;
+            btnToTop.ButtonType = Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
+            btnToTop.CurrentText = "ToggledOn State";
+            btnToTop.DisplayVertically = false;
+            btnToTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            btnToTop.ForeColor = System.Drawing.Color.WhiteSmoke;
+            btnToTop.Images.Background = MRBResourceLib.Resources.HeroButton;
+            btnToTop.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            btnToTop.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            btnToTop.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            btnToTop.Location = new System.Drawing.Point(15, 9);
+            btnToTop.Lock = false;
+            btnToTop.Name = "btnToTop";
+            btnToTop.Size = new System.Drawing.Size(122, 25);
+            btnToTop.TabIndex = 15;
+            btnToTop.Text = "Top Most";
+            btnToTop.TextOutline.Color = System.Drawing.Color.Black;
+            btnToTop.TextOutline.Width = 2;
+            btnToTop.ToggleState = Forms.Controls.ImageButtonEx.States.ToggledOn;
+            btnToTop.ToggleText.Indeterminate = "Indeterminate State";
+            btnToTop.ToggleText.ToggledOff = "To Top";
+            btnToTop.ToggleText.ToggledOn = "Top Most";
+            btnToTop.UseAlt = false;
             // 
             // btnSave
             // 
@@ -696,6 +727,9 @@ namespace Mids_Reborn.Forms
             // 
             // playerPanel
             // 
+            playerPanel.Controls.Add(lblPlayerEnd);
+            playerPanel.Controls.Add(playerEnd);
+            playerPanel.Controls.Add(label22);
             playerPanel.Controls.Add(lblPlayerHP);
             playerPanel.Controls.Add(playerHP);
             playerPanel.Controls.Add(rbPlayerStatusDead);
@@ -707,11 +741,84 @@ namespace Mids_Reborn.Forms
             playerPanel.Size = new System.Drawing.Size(587, 363);
             playerPanel.TabIndex = 3;
             // 
+            // lblPlayerEnd
+            // 
+            lblPlayerEnd.AutoSize = true;
+            lblPlayerEnd.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            lblPlayerEnd.Location = new System.Drawing.Point(484, 185);
+            lblPlayerEnd.Name = "lblPlayerEnd";
+            lblPlayerEnd.Size = new System.Drawing.Size(38, 15);
+            lblPlayerEnd.TabIndex = 82;
+            lblPlayerEnd.Text = "100%";
+            // 
+            // playerEnd
+            // 
+            playerEnd.BackColor = System.Drawing.Color.Black;
+            playerEnd.BackgroundImage = (System.Drawing.Image)resources.GetObject("playerEnd.BackgroundImage");
+            playerEnd.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("playerEnd.BaseBarColors");
+            playerEnd.Border = true;
+            playerEnd.BorderColor = System.Drawing.Color.Black;
+            playerEnd.Clickable = true;
+            playerEnd.ColorAbsorbed = System.Drawing.Color.Gainsboro;
+            playerEnd.ColorBase = System.Drawing.Color.FromArgb(64, 153, 255);
+            playerEnd.ColorEnh = System.Drawing.Color.Yellow;
+            playerEnd.ColorFadeEnd = System.Drawing.Color.FromArgb(0, 89, 191);
+            playerEnd.ColorFadeStart = System.Drawing.Color.Black;
+            playerEnd.ColorHighlight = System.Drawing.Color.Gray;
+            playerEnd.ColorLines = System.Drawing.Color.Black;
+            playerEnd.ColorMarkerInner = System.Drawing.Color.Red;
+            playerEnd.ColorMarkerOuter = System.Drawing.Color.Black;
+            playerEnd.ColorOvercap = System.Drawing.Color.Black;
+            playerEnd.DifferentiateColors = false;
+            playerEnd.DrawRuler = false;
+            playerEnd.Dual = false;
+            playerEnd.EnhBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("playerEnd.EnhBarColors");
+            playerEnd.Font = new System.Drawing.Font("Segoe UI", 9.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
+            playerEnd.ForcedMax = 0F;
+            playerEnd.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            playerEnd.Highlight = false;
+            playerEnd.ItemFontSizeOverride = 0F;
+            playerEnd.ItemHeight = 10;
+            playerEnd.Lines = true;
+            playerEnd.Location = new System.Drawing.Point(37, 185);
+            playerEnd.MarkerValue = 0F;
+            playerEnd.Max = 100F;
+            playerEnd.MaxItems = 1;
+            playerEnd.Name = "playerEnd";
+            playerEnd.OuterBorder = false;
+            playerEnd.Overcap = false;
+            playerEnd.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("playerEnd.OvercapColors");
+            playerEnd.PaddingX = 2F;
+            playerEnd.PaddingY = 2F;
+            playerEnd.PerItemScales = (System.Collections.Generic.List<float>)resources.GetObject("playerEnd.PerItemScales");
+            playerEnd.RulerPos = Mids_Reborn.Controls.CtlMultiGraph.RulerPosition.Top;
+            playerEnd.ScaleHeight = 32;
+            playerEnd.ScaleIndex = 8;
+            playerEnd.SecondaryLabelPosition = Mids_Reborn.Controls.CtlMultiGraph.Alignment.Right;
+            playerEnd.ShowScale = false;
+            playerEnd.SingleLineLabels = true;
+            playerEnd.Size = new System.Drawing.Size(441, 15);
+            playerEnd.Style = Core.Enums.GraphStyle.baseOnly;
+            playerEnd.TabIndex = 81;
+            playerEnd.TextWidth = 80;
+            // 
+            // label22
+            // 
+            label22.AutoSize = true;
+            label22.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
+            label22.ForeColor = System.Drawing.Color.WhiteSmoke;
+            label22.Location = new System.Drawing.Point(19, 159);
+            label22.Margin = new Padding(4, 0, 4, 0);
+            label22.Name = "label22";
+            label22.Size = new System.Drawing.Size(43, 13);
+            label22.TabIndex = 80;
+            label22.Text = "End %:";
+            // 
             // lblPlayerHP
             // 
             lblPlayerHP.AutoSize = true;
             lblPlayerHP.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
-            lblPlayerHP.Location = new System.Drawing.Point(484, 129);
+            lblPlayerHP.Location = new System.Drawing.Point(484, 110);
             lblPlayerHP.Name = "lblPlayerHP";
             lblPlayerHP.Size = new System.Drawing.Size(38, 15);
             lblPlayerHP.TabIndex = 73;
@@ -746,7 +853,7 @@ namespace Mids_Reborn.Forms
             playerHP.ItemFontSizeOverride = 0F;
             playerHP.ItemHeight = 10;
             playerHP.Lines = true;
-            playerHP.Location = new System.Drawing.Point(37, 129);
+            playerHP.Location = new System.Drawing.Point(37, 110);
             playerHP.MarkerValue = 0F;
             playerHP.Max = 100F;
             playerHP.MaxItems = 1;
@@ -772,10 +879,10 @@ namespace Mids_Reborn.Forms
             // rbPlayerStatusDead
             // 
             rbPlayerStatusDead.AutoSize = true;
-            rbPlayerStatusDead.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            rbPlayerStatusDead.Location = new System.Drawing.Point(171, 222);
+            rbPlayerStatusDead.Font = new System.Drawing.Font("Segoe UI", 8.25F);
+            rbPlayerStatusDead.Location = new System.Drawing.Point(171, 255);
             rbPlayerStatusDead.Name = "rbPlayerStatusDead";
-            rbPlayerStatusDead.Size = new System.Drawing.Size(51, 17);
+            rbPlayerStatusDead.Size = new System.Drawing.Size(52, 17);
             rbPlayerStatusDead.TabIndex = 11;
             rbPlayerStatusDead.TabStop = true;
             rbPlayerStatusDead.Text = "Dead";
@@ -785,10 +892,10 @@ namespace Mids_Reborn.Forms
             // rbPlayerStatusAlive
             // 
             rbPlayerStatusAlive.AutoSize = true;
-            rbPlayerStatusAlive.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F);
-            rbPlayerStatusAlive.Location = new System.Drawing.Point(37, 222);
+            rbPlayerStatusAlive.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
+            rbPlayerStatusAlive.Location = new System.Drawing.Point(37, 255);
             rbPlayerStatusAlive.Name = "rbPlayerStatusAlive";
-            rbPlayerStatusAlive.Size = new System.Drawing.Size(48, 17);
+            rbPlayerStatusAlive.Size = new System.Drawing.Size(49, 17);
             rbPlayerStatusAlive.TabIndex = 10;
             rbPlayerStatusAlive.TabStop = true;
             rbPlayerStatusAlive.Text = "Alive";
@@ -798,24 +905,24 @@ namespace Mids_Reborn.Forms
             // label19
             // 
             label19.AutoSize = true;
-            label19.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label19.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label19.ForeColor = System.Drawing.Color.WhiteSmoke;
-            label19.Location = new System.Drawing.Point(19, 195);
+            label19.Location = new System.Drawing.Point(19, 228);
             label19.Margin = new Padding(4, 0, 4, 0);
             label19.Name = "label19";
-            label19.Size = new System.Drawing.Size(47, 13);
+            label19.Size = new System.Drawing.Size(42, 13);
             label19.TabIndex = 9;
             label19.Text = "Status:";
             // 
             // label18
             // 
             label18.AutoSize = true;
-            label18.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label18.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label18.ForeColor = System.Drawing.Color.WhiteSmoke;
-            label18.Location = new System.Drawing.Point(19, 103);
+            label18.Location = new System.Drawing.Point(19, 84);
             label18.Margin = new Padding(4, 0, 4, 0);
             label18.Name = "label18";
-            label18.Size = new System.Drawing.Size(41, 13);
+            label18.Size = new System.Drawing.Size(38, 13);
             label18.TabIndex = 8;
             label18.Text = "HP %:";
             // 
@@ -897,12 +1004,12 @@ namespace Mids_Reborn.Forms
             // label23
             // 
             label23.AutoSize = true;
-            label23.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label23.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label23.ForeColor = System.Drawing.Color.WhiteSmoke;
             label23.Location = new System.Drawing.Point(31, 178);
             label23.Margin = new Padding(4, 0, 4, 0);
             label23.Name = "label23";
-            label23.Size = new System.Drawing.Size(46, 13);
+            label23.Size = new System.Drawing.Size(43, 13);
             label23.TabIndex = 77;
             label23.Text = "End %:";
             // 
@@ -971,12 +1078,12 @@ namespace Mids_Reborn.Forms
             // label21
             // 
             label21.AutoSize = true;
-            label21.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold);
+            label21.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold);
             label21.ForeColor = System.Drawing.Color.WhiteSmoke;
             label21.Location = new System.Drawing.Point(31, 103);
             label21.Margin = new Padding(4, 0, 4, 0);
             label21.Name = "label21";
-            label21.Size = new System.Drawing.Size(41, 13);
+            label21.Size = new System.Drawing.Size(38, 13);
             label21.TabIndex = 74;
             label21.Text = "HP %:";
             // 
@@ -996,7 +1103,7 @@ namespace Mids_Reborn.Forms
             Margin = new Padding(4, 3, 4, 3);
             Name = "FrmTeam";
             StartPosition = FormStartPosition.CenterParent;
-            Text = "Combat settings";
+            Text = "Combat Settings";
             teamPanel.ResumeLayout(false);
             teamPanel.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);
@@ -1081,5 +1188,9 @@ namespace Mids_Reborn.Forms
         private Label lblTargetEnd;
         private Mids_Reborn.Controls.CtlMultiGraph targetEnd;
         private Label label23;
+        private Controls.ImageButtonEx btnToTop;
+        private Label lblPlayerEnd;
+        private Mids_Reborn.Controls.CtlMultiGraph playerEnd;
+        private Label label22;
     }
 }

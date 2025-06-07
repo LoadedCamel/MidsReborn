@@ -526,8 +526,40 @@ namespace Mids_Reborn.Core
             public bool ExportExtraSep { get; set; }
         }
 
+        /// <summary>
+        /// Combat context variables, including player and target props.
+        /// See also when adding/changing fields here:
+        /// <seealso cref="Mids_Reborn.Forms.FrmTeam.frmTeam_OnLoad"/>
+        /// <seealso cref="Mids_Reborn.Forms.FrmTeam.FeedbackUpdate"/>
+        /// <seealso cref="Mids_Reborn.Core.BooleanExprPreprocessor.BuildGlobalExpression(IEffect, string, string)"/>
+        /// <seealso cref="Mids_Reborn.Core.BooleanExprPreprocessor.BuildGlobalExpression(IEffect, string)"/>
+        /// <seealso cref="Mids_Reborn.Core.BooleanExprPreprocessor.GetConfigValue"/>
+        /// </summary>
         public class CombatContext
         {
+            public static string GetConfigChunkName(string condChunk)
+            {
+                return condChunk.ToLowerInvariant() switch
+                {
+                    "player" => "PlayerSettings",
+                    "target" => "TargetSettings",
+                    "hp" => "HpPercent",
+                    "end" => "EndPercent",
+                    "isalive" => "IsAlive",
+                    _ => ""
+                };
+            }
+
+            public static string ConfigChunkType(string condChunk)
+            {
+                return condChunk.ToLowerInvariant() switch
+                {
+                    // Return bool/int types ?
+                    "isalive" => "bool",
+                    _ => "int"
+                };
+            }
+
             public static string FormatSettingName(string setting)
             {
                 return CultureInfo.InvariantCulture.TextInfo
@@ -565,6 +597,7 @@ namespace Mids_Reborn.Core
             public class Player
             {
                 public int HpPercent { get; set; } = 100;
+                public int EndPercent { get; set; } = 100;
                 public bool IsAlive { get; set; } = true;
             }
 
