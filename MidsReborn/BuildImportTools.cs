@@ -484,6 +484,15 @@ namespace Mids_Reborn
                 "corruptor_ranged.storm_blast.aim" => "Corruptor_Ranged.Storm_Blast.Intensify",
                 "defender_ranged.storm_blast.aim" => "Defender_Ranged.Storm_Blast.Intensify",
                 "sentinel_ranged.storm_blast.aim" => "Sentinel_Ranged.Storm_Blast.Intensify",
+                "dominator_control.pyrotechnic_control.sparkling_field" => "Dominator_Control.Pyrotechnic_Control.Sparkling_Chain",
+                "dominator_control.pyrotechnic_control.glitz" => "Dominator_Control.Pyrotechnic_Control.Multipurpose_Missiles",
+                "controller_control.pyrotechnic_control.sparkling_field" => "Controller_Control.Pyrotechnic_Control.Sparkling_Chain",
+                "controller_control.pyrotechnic_control.glitz" => "Controller_Control.Pyrotechnic_Control.Multipurpose_Missiles",
+                "brute_defense.psionic_armor.fortify_mind" => "Brute_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "scrapper_defense.psionic_armor.fortify_mind" => "Scrapper_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "sentinel_defense.psionic_armor.fortify_mind" => "Sentinel_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "stalker_defense.psionic_armor.fortify_mind" => "Stalker_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "tanker_defense.psionic_armor.fortify_mind" => "Tanker_Defense.Psionic_Armor.Psychokinetic_Barrier",
 
                 _ => fullName
             };
