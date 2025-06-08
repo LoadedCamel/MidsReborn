@@ -202,6 +202,8 @@ namespace Mids_Reborn.Forms
             udWidow.Name = "udWidow";
             udWidow.Size = new System.Drawing.Size(35, 19);
             udWidow.TabIndex = 2;
+            udWidow.UpButtonClicked += OnUpClicked;
+            udWidow.DownButtonClicked += OnDownClicked;
             // 
             // udSoldier
             // 
@@ -214,6 +216,8 @@ namespace Mids_Reborn.Forms
             udSoldier.Name = "udSoldier";
             udSoldier.Size = new System.Drawing.Size(35, 19);
             udSoldier.TabIndex = 2;
+            udSoldier.UpButtonClicked += OnUpClicked;
+            udSoldier.DownButtonClicked += OnDownClicked;
             // 
             // udCorruptor
             // 
@@ -226,6 +230,8 @@ namespace Mids_Reborn.Forms
             udCorruptor.Name = "udCorruptor";
             udCorruptor.Size = new System.Drawing.Size(35, 19);
             udCorruptor.TabIndex = 2;
+            udCorruptor.UpButtonClicked += OnUpClicked;
+            udCorruptor.DownButtonClicked += OnDownClicked;
             // 
             // udDominator
             // 
@@ -238,6 +244,8 @@ namespace Mids_Reborn.Forms
             udDominator.Name = "udDominator";
             udDominator.Size = new System.Drawing.Size(35, 19);
             udDominator.TabIndex = 2;
+            udDominator.UpButtonClicked += OnUpClicked;
+            udDominator.DownButtonClicked += OnDownClicked;
             // 
             // udMastermind
             // 
@@ -250,6 +258,8 @@ namespace Mids_Reborn.Forms
             udMastermind.Name = "udMastermind";
             udMastermind.Size = new System.Drawing.Size(35, 19);
             udMastermind.TabIndex = 2;
+            udMastermind.UpButtonClicked += OnUpClicked;
+            udMastermind.DownButtonClicked += OnDownClicked;
             // 
             // udStalker
             // 
@@ -262,6 +272,8 @@ namespace Mids_Reborn.Forms
             udStalker.Name = "udStalker";
             udStalker.Size = new System.Drawing.Size(35, 19);
             udStalker.TabIndex = 2;
+            udStalker.UpButtonClicked += OnUpClicked;
+            udStalker.DownButtonClicked += OnDownClicked;
             // 
             // udBrute
             // 
@@ -274,6 +286,8 @@ namespace Mids_Reborn.Forms
             udBrute.Name = "udBrute";
             udBrute.Size = new System.Drawing.Size(35, 19);
             udBrute.TabIndex = 2;
+            udBrute.UpButtonClicked += OnUpClicked;
+            udBrute.DownButtonClicked += OnDownClicked;
             // 
             // udSentGuard
             // 
@@ -286,6 +300,8 @@ namespace Mids_Reborn.Forms
             udSentGuard.Name = "udSentGuard";
             udSentGuard.Size = new System.Drawing.Size(35, 19);
             udSentGuard.TabIndex = 2;
+            udSentGuard.UpButtonClicked += OnUpClicked;
+            udSentGuard.DownButtonClicked += OnDownClicked;
             // 
             // udWarshade
             // 
@@ -298,6 +314,8 @@ namespace Mids_Reborn.Forms
             udWarshade.Name = "udWarshade";
             udWarshade.Size = new System.Drawing.Size(33, 19);
             udWarshade.TabIndex = 2;
+            udWarshade.UpButtonClicked += OnUpClicked;
+            udWarshade.DownButtonClicked += OnDownClicked;
             // 
             // udPeacebringer
             // 
@@ -310,6 +328,8 @@ namespace Mids_Reborn.Forms
             udPeacebringer.Name = "udPeacebringer";
             udPeacebringer.Size = new System.Drawing.Size(33, 19);
             udPeacebringer.TabIndex = 2;
+            udPeacebringer.UpButtonClicked += OnUpClicked;
+            udPeacebringer.DownButtonClicked += OnDownClicked;
             // 
             // udTanker
             // 
@@ -322,6 +342,8 @@ namespace Mids_Reborn.Forms
             udTanker.Name = "udTanker";
             udTanker.Size = new System.Drawing.Size(33, 19);
             udTanker.TabIndex = 2;
+            udTanker.UpButtonClicked += OnUpClicked;
+            udTanker.DownButtonClicked += OnDownClicked;
             // 
             // udScrapper
             // 
@@ -334,6 +356,8 @@ namespace Mids_Reborn.Forms
             udScrapper.Name = "udScrapper";
             udScrapper.Size = new System.Drawing.Size(33, 19);
             udScrapper.TabIndex = 2;
+            udScrapper.UpButtonClicked += OnUpClicked;
+            udScrapper.DownButtonClicked += OnDownClicked;
             // 
             // udDefender
             // 
@@ -346,6 +370,8 @@ namespace Mids_Reborn.Forms
             udDefender.Name = "udDefender";
             udDefender.Size = new System.Drawing.Size(33, 19);
             udDefender.TabIndex = 2;
+            udDefender.UpButtonClicked += OnUpClicked;
+            udDefender.DownButtonClicked += OnDownClicked;
             // 
             // udController
             // 
@@ -358,6 +384,8 @@ namespace Mids_Reborn.Forms
             udController.Name = "udController";
             udController.Size = new System.Drawing.Size(33, 19);
             udController.TabIndex = 2;
+            udController.UpButtonClicked += OnUpClicked;
+            udController.DownButtonClicked += OnDownClicked;
             // 
             // udBlaster
             // 
@@ -370,6 +398,8 @@ namespace Mids_Reborn.Forms
             udBlaster.Name = "udBlaster";
             udBlaster.Size = new System.Drawing.Size(33, 19);
             udBlaster.TabIndex = 2;
+            udBlaster.UpButtonClicked += OnUpClicked;
+            udBlaster.DownButtonClicked += OnDownClicked;
             // 
             // label16
             // 
@@ -606,6 +636,8 @@ namespace Mids_Reborn.Forms
             udAny.Name = "udAny";
             udAny.Size = new System.Drawing.Size(33, 19);
             udAny.TabIndex = 1;
+            udAny.UpButtonClicked += OnUpClicked;
+            udAny.DownButtonClicked += OnDownClicked;
             // 
             // label17
             // 
@@ -655,6 +687,7 @@ namespace Mids_Reborn.Forms
             btnToTop.ToggleText.ToggledOff = "To Top";
             btnToTop.ToggleText.ToggledOn = "Top Most";
             btnToTop.UseAlt = false;
+            btnToTop.Click += btnToTop_Click;
             // 
             // btnSave
             // 
@@ -680,6 +713,7 @@ namespace Mids_Reborn.Forms
             btnSave.ToggleText.ToggledOff = "ToggledOff State";
             btnSave.ToggleText.ToggledOn = "ToggledOn State";
             btnSave.UseAlt = false;
+            btnSave.Click += btnSave_Click;
             // 
             // btnCancel
             // 
@@ -705,6 +739,7 @@ namespace Mids_Reborn.Forms
             btnCancel.ToggleText.ToggledOff = "ToggledOff State";
             btnCancel.ToggleText.ToggledOn = "ToggledOn State";
             btnCancel.UseAlt = false;
+            btnCancel.Click += btnCancel_Click;
             // 
             // tabStrip
             // 
@@ -801,6 +836,7 @@ namespace Mids_Reborn.Forms
             playerEnd.Style = Core.Enums.GraphStyle.baseOnly;
             playerEnd.TabIndex = 81;
             playerEnd.TextWidth = 80;
+            playerEnd.BarClick += playerEnd_BarClick;
             // 
             // label22
             // 
@@ -1104,6 +1140,7 @@ namespace Mids_Reborn.Forms
             Name = "FrmTeam";
             StartPosition = FormStartPosition.CenterParent;
             Text = "Combat Settings";
+            TopMost = true;
             teamPanel.ResumeLayout(false);
             teamPanel.PerformLayout();
             tableLayoutPanel1.ResumeLayout(false);

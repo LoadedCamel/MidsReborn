@@ -5,6 +5,7 @@ using System;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
+using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Forms
 {
@@ -75,6 +76,9 @@ namespace Mids_Reborn.Forms
             }
 
             tabStrip.Invalidate();
+
+            // Buttons
+            btnToTop.ToggleState = ImageButtonEx.States.ToggledOn;
 
             // Team ATs config
             var charVillain = MidsContext.Character?.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
@@ -279,7 +283,7 @@ namespace Mids_Reborn.Forms
                         "Use this slider to vary player HP percentage.\r\nMin: 0\r\nMax: 100");
                     playerHP.EndUpdate();
 
-                    lblPlayerHP.Text = $"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent:##0} %";
+                    lblPlayerHP.Text = $@"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent:##0} %";
 
                     break;
 
@@ -294,7 +298,7 @@ namespace Mids_Reborn.Forms
                         "Use this slider to vary player Endurance percentage.\r\nMin: 0\r\nMax: 100");
                     playerEnd.EndUpdate();
 
-                    lblPlayerEnd.Text = $"{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent:##0} %";
+                    lblPlayerEnd.Text = $@"{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent:##0} %";
 
                     break;
 
@@ -309,7 +313,9 @@ namespace Mids_Reborn.Forms
                         MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent, 0,
                         "Use this slider to vary target HP percentage.\r\nMin: 0\r\nMax: 100");
                     targetHP.EndUpdate();
-                    
+
+                    lblTargetHP.Text = $@"{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent:##0} %";
+
                     break;
 
                 case "cfg.target.end":
@@ -323,6 +329,8 @@ namespace Mids_Reborn.Forms
                         MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent, 0,
                         "Use this slider to vary target Endurance percentage.\r\nMin: 0\r\nMax: 100");
                     targetEnd.EndUpdate();
+
+                    lblTargetEnd.Text = $@"{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent:##0} %";
 
                     break;
             }
@@ -347,6 +355,18 @@ namespace Mids_Reborn.Forms
         {
             DialogResult = DialogResult.Cancel;
             Hide();
+        }
+
+        private void btnToTop_Click(object sender, EventArgs e)
+        {
+            // ???
+            /*btnToTop.ToggleState = btnToTop.ToggleState switch
+            {
+                ImageButtonEx.States.ToggledOn => ImageButtonEx.States.ToggledOff,
+                _ => ImageButtonEx.States.ToggledOn
+            };*/
+
+            TopMost = !TopMost;
         }
 
         private void OnUpClicked(object sender, EventArgs e)
@@ -427,13 +447,50 @@ namespace Mids_Reborn.Forms
         {
             var val = (int)Math.Round(value);
             MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent = val;
+            playerHP.BeginUpdate();
+            playerHP.ForcedMax = 100;
+            playerHP.Clear();
+            playerHP.AddItem(
+                $"HP %:|{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}",
+                MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent, 0,
+                "Use this slider to vary player HP percentage.\r\nMin: 0\r\nMax: 100");
+            playerHP.EndUpdate();
+            lblPlayerHP.Text = $@"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent:##0} %";
+
             BuildUpdate("cfg.player.hp", val);
+        }
+
+        private void playerEnd_BarClick(float value)
+        {
+            var val = (int)Math.Round(value);
+            MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent = val;
+            playerEnd.BeginUpdate();
+            playerEnd.ForcedMax = 100;
+            playerEnd.Clear();
+            playerEnd.AddItem(
+                $"HP %:|{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent}",
+                MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent, 0,
+                "Use this slider to vary player Endurance percentage.\r\nMin: 0\r\nMax: 100");
+            playerEnd.EndUpdate();
+            lblPlayerEnd.Text = $@"{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent:##0} %";
+
+            BuildUpdate("cfg.player.end", val);
         }
 
         private void targetHP_BarClick(float value)
         {
             var val = (int)Math.Round(value);
             MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent = val;
+            targetHP.BeginUpdate();
+            targetHP.ForcedMax = 100;
+            targetHP.Clear();
+            targetHP.AddItem(
+                $"HP %:|{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent}",
+                MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent, 0,
+                "Use this slider to vary target HP percentage.\r\nMin: 0\r\nMax: 100");
+            targetHP.EndUpdate();
+            lblTargetHP.Text = $@"{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent:##0} %";
+
             BuildUpdate("cfg.target.hp", (int)Math.Round(value));
         }
 
@@ -441,6 +498,16 @@ namespace Mids_Reborn.Forms
         {
             var val = (int)Math.Round(value);
             MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent = val;
+            targetEnd.BeginUpdate();
+            targetEnd.ForcedMax = 100;
+            targetEnd.Clear();
+            targetEnd.AddItem(
+                $"HP %:|{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent}",
+                MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent, 0,
+                "Use this slider to vary target Endurance percentage.\r\nMin: 0\r\nMax: 100");
+            targetEnd.EndUpdate();
+            lblTargetEnd.Text = $@"{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent:##0} %";
+
             BuildUpdate("cfg.target.end", (int)Math.Round(value));
         }
     }
