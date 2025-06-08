@@ -220,43 +220,23 @@ namespace Mids_Reborn.Core
         {
             get
             {
-                for (var index = 0; index <= Effect.Length - 1; ++index)
+                for (var index = 0; index < Effect.Length; index++)
+                {
                     if (Effect[index].Mode == Enums.eEffMode.FX)
-                        return Effect[index].FX.Probability;
-                return 0.0f;
+                    {
+                        return Effect[index].FX?.Probability ?? 0;
+                    }
+                }
+
+                return 0;
             }
         }
 
-        public bool HasEnhEffect
-        {
-            get
-            {
-                for (var index = 0; index <= Effect.Length - 1; ++index)
-                    if (Effect[index].Mode == Enums.eEffMode.Enhancement)
-                        return true;
-                return false;
-            }
-        }
+        public bool HasEnhEffect => Effect.Any(e => e.Mode == Enums.eEffMode.Enhancement);
 
-        public bool HasPowerEffect
-        {
-            get
-            {
-                for (var index = 0; index <= Effect.Length - 1; ++index)
-                    if (Effect[index].Mode == Enums.eEffMode.FX)
-                        return true;
-                return false;
-            }
-        }
+        public bool HasPowerEffect => Effect.Any(e => e.Mode == Enums.eEffMode.FX);
 
-        public bool IsPetSpecialEnh
-        {
-            get
-            {
-                var set = GetEnhancementSet();
-                return set.GetPetSpecialEnhancement() == this;
-            }
-        }
+        public bool IsPetSpecialEnh => GetEnhancementSet()?.GetPetSpecialEnhancement() == this;
 
         // public IPower? PetSpecialPower
         // {
@@ -274,8 +254,8 @@ namespace Mids_Reborn.Core
                 {
                     Enums.eType.Normal => Name,
                     Enums.eType.SpecialO => Name,
-                    Enums.eType.InventO => "Invention: " + Name,
-                    Enums.eType.SetO => DatabaseAPI.Database.EnhancementSets[nIDSet].DisplayName + ": " + Name,
+                    Enums.eType.InventO => $"Invention: {Name}",
+                    Enums.eType.SetO => $"{DatabaseAPI.Database.EnhancementSets[nIDSet].DisplayName}: {Name}",
                     _ => string.Empty
                 };
                 return str;
@@ -296,15 +276,18 @@ namespace Mids_Reborn.Core
                         eSchedule = Enums.eSchedule.None;
                         break;
                     default:
-                    {
                         var schedule = Effect[0].Schedule;
                         var flag = false;
-                        for (var index = 0; index <= Effect.Length - 1; ++index)
+                        for (var index = 0; index < Effect.Length; index++)
+                        {
                             if (Effect[index].Schedule != schedule)
+                            {
                                 flag = true;
+                            }
+                        }
+
                         eSchedule = !flag ? schedule : Enums.eSchedule.Multiple;
                         break;
-                    }
                 }
 
                 return eSchedule;
@@ -321,8 +304,11 @@ namespace Mids_Reborn.Core
             //writer.Write((int) SubTypeID);
             writer.Write(SubTypeID);
             writer.Write(ClassID.Length - 1);
-            for (var index = 0; index <= ClassID.Length - 1; ++index)
-                writer.Write(ClassID[index]);
+            foreach (var c in ClassID)
+            {
+                writer.Write(c);
+            }
+
             writer.Write(Image);
             writer.Write(nIDSet);
             writer.Write(UIDSet);
@@ -333,7 +319,7 @@ namespace Mids_Reborn.Core
             writer.Write((int) MutExID);
             writer.Write((int) BuffMode);
             writer.Write(Effect.Length - 1);
-            for (var index = 0; index <= Effect.Length - 1; ++index)
+            for (var index = 0; index < Effect.Length; index++)
             {
                 writer.Write((int) Effect[index].Mode);
                 writer.Write((int) Effect[index].BuffMode);
@@ -348,7 +334,7 @@ namespace Mids_Reborn.Core
                 else
                 {
                     writer.Write(true);
-                    Effect[index].FX.StoreTo(ref writer);
+                    Effect[index].FX!.StoreTo(ref writer);
                 }
             }
 
@@ -362,7 +348,9 @@ namespace Mids_Reborn.Core
         public int CheckAndFixIOLevel(int level)
         {
             if (TypeID != Enums.eType.InventO && TypeID != Enums.eType.SetO)
+            {
                 return level - 1;
+            }
 
             var iMax = 52;
             var iMin = 9;
@@ -383,13 +371,25 @@ namespace Mids_Reborn.Core
             }
 
             if (level > iMax)
+            {
                 level = iMax;
+            }
+
             if (level < iMin)
+            {
                 level = iMin;
+            }
+
             if (TypeID != Enums.eType.InventO)
+            {
                 return level;
+            }
+
             if (iMax > 49)
+            {
                 iMax = 49;
+            }
+
             level = GranularLevelZb(level, iMin, iMax);
             return level;
         }
@@ -402,7 +402,11 @@ namespace Mids_Reborn.Core
 
         public EnhancementSet? GetEnhancementSet()
         {
-            if (string.IsNullOrWhiteSpace(UIDSet)) return null;
+            if (string.IsNullOrWhiteSpace(UIDSet))
+            {
+                return null;
+            }
+
             var data = DatabaseAPI.GetEnhancementSetFromEnhUid(UIDSet);
             return data;
         }
