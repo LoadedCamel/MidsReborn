@@ -54,8 +54,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             FindDuplicateIndices,
             BogusMaxRunSpeed,
             PowersEntCreateAbsorbed,
-            PowersHPSlider
-
+            PowersHPSlider,
+            PowerUsage
         }
 
         private List<string[]> LvItems;
@@ -248,6 +248,38 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             listView1.VirtualListSize = LvItems.Count;
         }
 
+        private void GetPowerUsage()
+        {
+            var pwName = tbPowerName.Text.Trim();
+            var itemsOverride = DatabaseAPI.Database.Power
+                .Where(e => e != null && e.Effects.Any(f => f.Override == pwName))
+                .ToList();
+
+            var itemsSummon = DatabaseAPI.Database.Power
+                .Where(e => e != null && e.Effects.Any(f => f.Summon == pwName))
+                .ToList();
+
+            var itemsExpressions = DatabaseAPI.Database.Power
+                .Where(e => e != null && e.Effects.Any(f => f.Expressions.Duration.Contains(pwName) | f.Expressions.Magnitude.Contains(pwName) | f.Expressions.Probability.Contains(pwName)))
+                .ToList();
+
+            var itemsConditionals = DatabaseAPI.Database.Power
+                .Where(e => e != null && e.Effects.Any(f => f.ActiveConditionals != null && f.ActiveConditionals.Any(g => g.Key.Contains(pwName))))
+                .ToList();
+
+            var itemsList = itemsOverride.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"{e.FullName} (Override)"})
+                .Concat(itemsSummon.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"(Summon) {e.FullName}" }))
+                .Concat(itemsExpressions.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"(Expression) {e.FullName}" }))
+                .Concat(itemsConditionals.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"(Conditional) {e.FullName}" }))
+                .ToList();
+
+            LvItems = itemsList.Count > 0
+                ? itemsList
+                : [new[] { "", "Nothing found", "" }];
+            listView1.VirtualListSize = 0;
+            listView1.VirtualListSize = LvItems.Count;
+        }
+
         private void btnCopy_Click(object sender, EventArgs e)
         {
             var text = string.Empty;
@@ -268,6 +300,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     QueryType.BogusMaxRunSpeed => "Potentially bogus MaxRunSpeed effect",
                     QueryType.PowersEntCreateAbsorbed => "Powers with absorbed entities",
                     QueryType.PowersHPSlider => "Powers with slider",
+                    QueryType.PowerUsage => "Power usage",
                     _ => CurrentQueryType.ToString()
                 };
             }
@@ -318,7 +351,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             try
             {
-                CurrentQueryType = (QueryType) (cbSpecialFilter.SelectedIndex + 2);
+                CurrentQueryType = (QueryType)(cbSpecialFilter.SelectedIndex + 2);
             }
             catch (Exception)
             {
@@ -359,6 +392,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     GetPowersWithSlider();
                     break;
 
+                case QueryType.PowerUsage:
+                    GetPowerUsage();
+                    break;
+
                 default:
                     GetFirstAvailableIndex();
                     break;
@@ -366,5 +403,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         }
 
         private void listView1_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e) => e.Item = new ListViewItem(LvItems[e.ItemIndex]);
+
+        private void cbSpecialFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            label2.Text = cbSpecialFilter.SelectedIndex == 9
+                ? "Power Full Name:"
+                : "Power Display Name:";
+
+            btnSearchByName.Enabled = cbSpecialFilter.SelectedIndex != 9;
+        }
     }
 }
