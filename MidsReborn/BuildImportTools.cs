@@ -480,6 +480,10 @@ namespace Mids_Reborn
                 "mastermind_buff.marine_affinity.call_depths" => "Mastermind_Buff.Marine_Affinity.Power_of_the_Depths",
                 "controller_control.arsenal_control.gun_drone" => "Controller_Control.Arsenal_Control.Tri_Cannon",
                 "dominator_control.arsenal_control.gun_drone" => "Dominator_Control.Arsenal_Control.Tri_Cannon",
+                "blaster_ranged.storm_blast.aim" => "Blaster_Ranged.Storm_Blast.Intensify",
+                "corruptor_ranged.storm_blast.aim" => "Corruptor_Ranged.Storm_Blast.Intensify",
+                "defender_ranged.storm_blast.aim" => "Defender_Ranged.Storm_Blast.Intensify",
+                "sentinel_ranged.storm_blast.aim" => "Sentinel_Ranged.Storm_Blast.Intensify",
 
                 _ => fullName
             };
