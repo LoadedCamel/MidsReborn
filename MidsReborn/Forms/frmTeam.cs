@@ -82,6 +82,7 @@ namespace Mids_Reborn.Forms
 
             // Team ATs config
             var charVillain = MidsContext.Character?.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            btnToTop.UseAlt = charVillain;
             btnCancel.UseAlt = charVillain;
             btnSave.UseAlt = charVillain;
 
@@ -339,6 +340,7 @@ namespace Mids_Reborn.Forms
         private void CharacterOnAlignmentChanged(object? sender, Enums.Alignment e)
         {
             SetStripColors(e);
+            
             btnToTop.UseAlt = e is Enums.Alignment.Loyalist or Enums.Alignment.Rogue or Enums.Alignment.Villain;
             btnCancel.UseAlt = e is Enums.Alignment.Loyalist or Enums.Alignment.Rogue or Enums.Alignment.Villain;
             btnSave.UseAlt = e is Enums.Alignment.Loyalist or Enums.Alignment.Rogue or Enums.Alignment.Villain;

@@ -1,10 +1,9 @@
+using Mids_Reborn.Core.Base.Master_Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Mids_Reborn.Core.Base.Master_Classes;
-using static Mids_Reborn.Core.CSV;
 using static Mids_Reborn.Core.Expressions;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
@@ -1133,7 +1132,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     {
                         var condition = getCondition.Replace(cVp.Key, "").Replace(":", "");
                         var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
-                        var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
+                        var conditionPower = condition == "Config" ? null : DatabaseAPI.GetPowerByFullName(conditionItemName);
                         var conditionOperator = cVp.Value switch
                         {
                             "True" => "is ",
@@ -1141,17 +1140,36 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             _ => ""
                         };
 
-                        if (!condition.Equals("Stacks") && !condition.Equals("Team"))
+                        switch (condition)
                         {
-                            conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower?.FullName : conditionPower?.DisplayName)} {conditionOperator}{condition}");
-                        }
-                        else if (condition.Equals("Stacks"))
-                        {
-                            conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower?.FullName : conditionPower?.DisplayName)} {condition} {cVp.Value}");
-                        }
-                        else if (condition.Equals("Team"))
-                        {
-                            conList.Add($"{conditionItemName}s on {condition} {cVp.Value}");
+                            case "Stacks":
+                                conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower?.FullName : conditionPower?.DisplayName)} {condition} {cVp.Value}");
+                                break;
+                            
+                            case "Team":
+                                conList.Add($"{conditionItemName}s on {condition} {cVp.Value}");
+                                break;
+                            
+                            case "Config":
+                                var cfgKey = MidsContext.Config.CoDEffectFormat
+                                    ? conditionItemName
+                                        .Replace("PlayerSettings", "player")
+                                        .Replace("TargetSettings", "target")
+                                    : conditionItemName;
+                                
+                                var cfgText = $"{condition}:{(MidsContext.Config.CoDEffectFormat ? cfgKey : ConfigData.CombatContext.FormatSettingName(conditionItemName))} {conditionOperator} {cVp.Value}"
+                                    .Replace("  ", " ")
+                                    .Replace("Player IsAlive = True", "Player is Alive", StringComparison.InvariantCultureIgnoreCase)
+                                    .Replace("Player IsAlive = False", "Player is Dead", StringComparison.InvariantCultureIgnoreCase)
+                                    .Replace("Target IsAlive = True", "Target is Alive", StringComparison.InvariantCultureIgnoreCase)
+                                    .Replace("Target IsAlive = False", "Target is Dead", StringComparison.InvariantCultureIgnoreCase);
+                                conList.Add(cfgText);
+                                    
+                                break;
+                            
+                            default:
+                                conList.Add($"{(MidsContext.Config.CoDEffectFormat ? conditionPower?.FullName : conditionPower?.DisplayName)} {conditionOperator}{condition}");
+                                break;
                         }
 
                         /*conList.Add(!condition.Equals("Stacks")

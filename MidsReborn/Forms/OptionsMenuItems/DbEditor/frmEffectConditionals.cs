@@ -382,6 +382,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.Items.Add("False");
                     lvConditionalBool.Columns[0].Text = @"Power Active?";
                     lvConditionalBool.EndUpdate();
+
+                    lvConditionalBool.Visible = selected != null;
+
                     break;
                 
                 case "Power Taken":
@@ -390,6 +393,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.Items.Add("False");
                     lvConditionalBool.Columns[0].Text = @"Power Taken?";
                     lvConditionalBool.EndUpdate();
+
                     break;
                 
                 case "Stacks":
@@ -408,6 +412,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                     lvConditionalBool.Columns[0].Text = @"# of Stacks?";
                     lvConditionalBool.EndUpdate();
+
+                    lvConditionalBool.Visible = selected != null;
+
                     break;
                 
                 case "Team Members":
@@ -421,6 +428,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
                     lvConditionalBool.Columns[0].Text = @"# of Members";
                     lvConditionalBool.EndUpdate();
+
+                    lvConditionalBool.Visible = true;
+
                     break;
 
                 case "Combat Setting":
@@ -461,6 +471,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                         }
 
                         lvConditionalBool.EndUpdate();
+
+                        lvConditionalBool.Visible = true;
                     }
 
                     break;
