@@ -482,6 +482,7 @@ namespace Mids_Reborn.Core
                 { "source>cur.kMeter", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName, false))}" },
                 { "source>cur.kMeterAbs", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}" },
                 { "cfg>player>hp", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}" },
+                { "cfg>player>end", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent}" },
                 { "cfg>player>isAlive", $"{(MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive ? "1" : "0")}" },
                 { "cfg>target>hp", $"{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent}" },
                 { "cfg>target>end", $"{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent}" }
