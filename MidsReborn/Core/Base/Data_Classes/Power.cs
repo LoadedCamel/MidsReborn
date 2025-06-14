@@ -675,13 +675,23 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 formattedDesc = cfgSettings.Aggregate(formattedDesc, (current, k) => current.Replace($"{{link:{k.Key}}}", "", StringComparison.InvariantCultureIgnoreCase));
-
-                formattedDesc = $"{formattedDesc.Trim()} Mids' note: you can use the {ConfigData.GetCombatSettingName(g[0], cfgSettings)} setting in the Combat Settings window to change the behavior of this power.";
-                if (g.Count > 1)
+                // If power has a slider, consider the first found variable as the primary key
+                // that will match the slider's one.
+                if (VariableEnabled)
                 {
-                    formattedDesc += $" It is also affected by {string.Join(", ", g.Skip(1).Select(e => ConfigData.GetCombatSettingName(e, cfgSettings)))}.";
-                }
+                    formattedDesc = $"{formattedDesc.Trim()} Mids' note: you can use the {ConfigData.GetCombatSettingName(g[0], cfgSettings)} setting in the Combat Settings window to change the behavior of this power.";
                 
+                    if (g.Count > 1)
+                    {
+                        formattedDesc += $" It is also affected by {string.Join(", ", g.Skip(1).Select(e => ConfigData.GetCombatSettingName(e, cfgSettings)))}.";
+                    }
+                }
+                else
+                {
+                    // None, just list what it is affected by.
+                    formattedDesc = $"{formattedDesc.Trim()} Mids' note: you can use the Combat Settings window to change the behavior of this power. It is affected by {string.Join(", ", g.Select(e => ConfigData.GetCombatSettingName(e, cfgSettings)))}";
+                }
+
                 return formattedDesc;
             }
         }

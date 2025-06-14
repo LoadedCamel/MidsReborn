@@ -1,11 +1,12 @@
 ﻿using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Forms.Controls;
 using System;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Mids_Reborn.Forms.Controls;
 
 namespace Mids_Reborn.Forms
 {
@@ -28,6 +29,8 @@ namespace Mids_Reborn.Forms
         private const int MaxMembers = 7;
         private int TotalMembers { get; set; }
         private int SelectedPage = 0;
+        private int? PrevPlayerHPValue;
+        private bool CfgSynced = true;
         private readonly TabColorScheme _tabColors = new();
 
         public FrmTeam(frmMain iParent)
@@ -248,6 +251,11 @@ namespace Mids_Reborn.Forms
 
         private void BuildUpdate(string settingName, int val)
         {
+            if (CfgSynced)
+            {
+                return;
+            }
+
             for (var i = 0; i < MidsContext.Character?.CurrentBuild?.Powers.Count; i++)
             {
                 if (MidsContext.Character.CurrentBuild?.Powers[i] == null ||
@@ -256,7 +264,25 @@ namespace Mids_Reborn.Forms
                     continue;
                 }
 
-                if (MidsContext.Character.CurrentBuild?.Powers[i]?.Power?.DescLong.Contains($"{{link:{settingName}}}") != true)
+                var cfgSettings = ConfigData.GetCombatSettings();
+                var formattedDesc = MidsContext.Character?.CurrentBuild?.Powers[i]?.Power?.DescLong.Replace("  ", " ").Trim();
+                var r = new Regex(@"\{link\:([a-zA-Z0-9\.\-_]+)\}");
+                var g = r.Matches(formattedDesc)
+                    .Select(e => e.Groups[1].Value)
+                    .Where(e => cfgSettings.ContainsKey(e))
+                    .ToList();
+
+                if (g.Count == 0)
+                {
+                    continue;
+                }
+
+                if (!MidsContext.Character?.CurrentBuild?.Powers[i]?.Power!.VariableEnabled == true)
+                {
+                    continue;
+                }
+
+                if (g[0] != settingName)
                 {
                     continue;
                 }
@@ -265,6 +291,18 @@ namespace Mids_Reborn.Forms
                 MidsContext.Character.CurrentBuild.Powers[i].Power.Stacks = val;
             }
 
+            CfgSynced = true;
+            _myParent.RefreshInfo();
+        }
+
+        private void BuildUpdate()
+        {
+            if (CfgSynced)
+            {
+                return;
+            }
+
+            CfgSynced = true;
             _myParent.RefreshInfo();
         }
 
@@ -437,12 +475,75 @@ namespace Mids_Reborn.Forms
         {
             rbPlayerStatusDead.Checked = !rbPlayerStatusAlive.Checked;
             MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive = rbPlayerStatusAlive.Checked;
+
+            if (PrevPlayerHPValue != null & MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive)
+            {
+                MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent = PrevPlayerHPValue!.Value;
+                playerHP.BeginUpdate();
+                playerHP.ForcedMax = 100;
+                playerHP.Clear();
+                playerHP.AddItem(
+                    $"HP %:|{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}",
+                    MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent, 0,
+                    "Use this slider to vary player HP percentage.\r\nMin: 0\r\nMax: 100");
+                playerHP.EndUpdate();
+                lblPlayerHP.Text = $@"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent:##0} %";
+            }
+            else if (!MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive)
+            {
+                MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent = 0;
+                playerHP.BeginUpdate();
+                playerHP.ForcedMax = 100;
+                playerHP.Clear();
+                playerHP.AddItem(
+                    $"HP %:|{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}",
+                    MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent, 0,
+                    "Use this slider to vary player HP percentage.\r\nMin: 0\r\nMax: 100");
+                playerHP.EndUpdate();
+                lblPlayerHP.Text = $@"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent:##0} %";
+            }
+
+            CfgSynced = false;
+            BuildUpdate();
         }
 
         private void rbPlayerStatusDead_CheckedChanged(object sender, EventArgs e)
         {
             rbPlayerStatusAlive.Checked = !rbPlayerStatusDead.Checked;
             MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive = !rbPlayerStatusDead.Checked;
+
+            if (PrevPlayerHPValue != null & MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive)
+            {
+                MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent = PrevPlayerHPValue!.Value;
+                playerHP.BeginUpdate();
+                playerHP.ForcedMax = 100;
+                playerHP.Clear();
+                playerHP.AddItem(
+                    $"HP %:|{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}",
+                    MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent, 0,
+                    "Use this slider to vary player HP percentage.\r\nMin: 0\r\nMax: 100");
+                playerHP.EndUpdate();
+                lblPlayerHP.Text = $@"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent:##0} %";
+
+                return;
+            }
+
+            if (!MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive)
+            {
+                MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent = 0;
+                playerHP.BeginUpdate();
+                playerHP.ForcedMax = 100;
+                playerHP.Clear();
+                playerHP.AddItem(
+                    $"HP %:|{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}",
+                    MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent, 0,
+                    "Use this slider to vary player HP percentage.\r\nMin: 0\r\nMax: 100");
+                playerHP.EndUpdate();
+                lblPlayerHP.Text = $@"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent:##0} %";
+            }
+
+            CfgSynced = false;
+            BuildUpdate();
         }
 
         private void playerHP_BarClick(float value)
@@ -459,6 +560,21 @@ namespace Mids_Reborn.Forms
             playerHP.EndUpdate();
             lblPlayerHP.Text = $@"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent:##0} %";
 
+            if (val > 0)
+            {
+                PrevPlayerHPValue = val;
+                rbPlayerStatusAlive.Checked = true;
+                rbPlayerStatusDead.Checked = false;
+                MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive = true;
+            }
+            else
+            {
+                rbPlayerStatusAlive.Checked = false;
+                rbPlayerStatusDead.Checked = true;
+                MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive = false;
+            }
+
+            CfgSynced = false;
             BuildUpdate("cfg.player.hp", val);
         }
 
@@ -476,6 +592,7 @@ namespace Mids_Reborn.Forms
             playerEnd.EndUpdate();
             lblPlayerEnd.Text = $@"{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent:##0} %";
 
+            CfgSynced = false;
             BuildUpdate("cfg.player.end", val);
         }
 
@@ -493,6 +610,7 @@ namespace Mids_Reborn.Forms
             targetHP.EndUpdate();
             lblTargetHP.Text = $@"{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent:##0} %";
 
+            CfgSynced = false;
             BuildUpdate("cfg.target.hp", (int)Math.Round(value));
         }
 
@@ -510,6 +628,7 @@ namespace Mids_Reborn.Forms
             targetEnd.EndUpdate();
             lblTargetEnd.Text = $@"{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent:##0} %";
 
+            CfgSynced = false;
             BuildUpdate("cfg.target.end", (int)Math.Round(value));
         }
     }
