@@ -483,9 +483,10 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // lbAssignedSets
             // 
-            lbAssignedSets.BackColor = System.Drawing.SystemColors.Info;
-            lbAssignedSets.ForeColor = System.Drawing.Color.Black;
+            lbAssignedSets.BackColor = System.Drawing.SystemColors.Window;
+            lbAssignedSets.ForeColor = System.Drawing.SystemColors.WindowText;
             lbAssignedSets.FormattingEnabled = true;
+            lbAssignedSets.ItemHeight = 13;
             lbAssignedSets.Location = new System.Drawing.Point(9, 380);
             lbAssignedSets.Name = "lbAssignedSets";
             lbAssignedSets.Size = new System.Drawing.Size(238, 238);
@@ -495,7 +496,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // label9
             // 
             label9.AutoSize = true;
-            label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label9.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             label9.Location = new System.Drawing.Point(10, 362);
             label9.Name = "label9";
             label9.Size = new System.Drawing.Size(86, 15);
@@ -505,7 +506,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // label8
             // 
             label8.AutoSize = true;
-            label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label8.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Bold);
             label8.Location = new System.Drawing.Point(10, 83);
             label8.Name = "label8";
             label8.Size = new System.Drawing.Size(87, 15);
@@ -515,6 +516,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // lbAvailbleSets
             // 
             lbAvailbleSets.FormattingEnabled = true;
+            lbAvailbleSets.ItemHeight = 13;
             lbAvailbleSets.Location = new System.Drawing.Point(9, 101);
             lbAvailbleSets.Name = "lbAvailbleSets";
             lbAvailbleSets.Size = new System.Drawing.Size(238, 238);
@@ -539,7 +541,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Controls.Add(cbSetType);
             Controls.Add(Label2);
             Controls.Add(cbAT);
-            Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            Font = new System.Drawing.Font("Segoe UI", 8.25F);
             FormBorderStyle = FormBorderStyle.FixedSingle;
             MaximizeBox = false;
             MinimizeBox = false;
