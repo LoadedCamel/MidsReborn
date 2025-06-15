@@ -548,7 +548,7 @@ namespace Mids_Reborn.Forms
 
         private void playerHP_BarClick(float value)
         {
-            var val = (int)Math.Round(value);
+            var val = (int)Math.Max(0, Math.Min(100, Math.Round(value)));
             MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent = val;
             playerHP.BeginUpdate();
             playerHP.ForcedMax = 100;
@@ -580,7 +580,7 @@ namespace Mids_Reborn.Forms
 
         private void playerEnd_BarClick(float value)
         {
-            var val = (int)Math.Round(value);
+            var val = (int)Math.Max(0, Math.Min(100, Math.Round(value)));
             MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent = val;
             playerEnd.BeginUpdate();
             playerEnd.ForcedMax = 100;
@@ -598,7 +598,7 @@ namespace Mids_Reborn.Forms
 
         private void targetHP_BarClick(float value)
         {
-            var val = (int)Math.Round(value);
+            var val = (int)Math.Max(0, Math.Min(100, Math.Round(value)));
             MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent = val;
             targetHP.BeginUpdate();
             targetHP.ForcedMax = 100;
@@ -611,12 +611,12 @@ namespace Mids_Reborn.Forms
             lblTargetHP.Text = $@"{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent:##0} %";
 
             CfgSynced = false;
-            BuildUpdate("cfg.target.hp", (int)Math.Round(value));
+            BuildUpdate("cfg.target.hp", val);
         }
 
         private void targetEnd_BarClick(float value)
         {
-            var val = (int)Math.Round(value);
+            var val = (int)Math.Max(0, Math.Min(100, Math.Round(value)));
             MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent = val;
             targetEnd.BeginUpdate();
             targetEnd.ForcedMax = 100;
@@ -629,7 +629,7 @@ namespace Mids_Reborn.Forms
             lblTargetEnd.Text = $@"{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent:##0} %";
 
             CfgSynced = false;
-            BuildUpdate("cfg.target.end", (int)Math.Round(value));
+            BuildUpdate("cfg.target.end", val);
         }
     }
 

@@ -32,41 +32,45 @@ namespace Mids_Reborn.Forms
         /// </summary>
         private void InitializeComponent()
         {
-            //this.components = (System.ComponentModel.IContainer)new System.ComponentModel.Container();
-            this.components = new System.ComponentModel.Container();
-            this.dvFloat = new DataView();
-            this.SuspendLayout();
-
-            this.dvFloat.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
-            this.dvFloat.DrawVillain = false;
-            this.dvFloat.Floating = true;
-            this.dvFloat.Font = new System.Drawing.Font("Segoe UI", 8.25f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
-            this.dvFloat.Location = new System.Drawing.Point(0, 0);
-            this.dvFloat.Name = "dvFloat";
-
-            this.dvFloat.Size = new System.Drawing.Size(300, 348);
-            this.dvFloat.TabIndex = 0;
-            this.dvFloat.VisibleSize = Enums.eVisibleSize.Full;
-            this.dvFloat.Load += new System.EventHandler(this.dvFloat_Load);
-            this.dvFloat.SizeChange += this.dvFloat_SizeChange;
-            this.dvFloat.FloatChange += this.dvFloat_FloatChanged;
-            this.dvFloat.UnlockClick += new DataView.UnlockClickEventHandler(this.dvFloat_Unlock);
-            this.dvFloat.TabChanged += this.dvFloat_TabChanged;
-            this.dvFloat.SlotUpdate += new DataView.SlotUpdateEventHandler(this.dvFloat_SlotUpdate);
-            this.dvFloat.SlotFlip += new DataView.SlotFlipEventHandler(this.dvFloat_SlotFlip);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
-
-            this.ClientSize = new System.Drawing.Size(298, 348);
-            this.Controls.Add((System.Windows.Forms.Control)this.dvFloat);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Info";
-            this.TopMost = true;
-            this.ResumeLayout(false);
+            dvFloat = new DataView();
+            SuspendLayout();
+            // 
+            // dvFloat
+            // 
+            dvFloat.BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+            dvFloat.DrawVillain = false;
+            dvFloat.Floating = true;
+            dvFloat.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
+            dvFloat.Location = new System.Drawing.Point(0, 0);
+            dvFloat.Name = "dvFloat";
+            dvFloat.Size = new System.Drawing.Size(300, 348);
+            dvFloat.TabIndex = 0;
+            dvFloat.VisibleSize = Enums.eVisibleSize.Full;
+            dvFloat.FloatChange += dvFloat_FloatChanged;
+            dvFloat.SizeChange += dvFloat_SizeChange;
+            dvFloat.SlotFlip += dvFloat_SlotFlip;
+            dvFloat.SlotUpdate += dvFloat_SlotUpdate;
+            dvFloat.TabChanged += dvFloat_TabChanged;
+            dvFloat.UnlockClick += dvFloat_Unlock;
+            dvFloat.Load += dvFloat_Load;
+            // 
+            // frmFloatingStats
+            // 
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+            ClientSize = new System.Drawing.Size(298, 348);
+            Controls.Add(dvFloat);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            MinimumSize = new System.Drawing.Size(314, 387);
+            Name = "frmFloatingStats";
+            ShowInTaskbar = false;
+            StartPosition = System.Windows.Forms.FormStartPosition.Manual;
+            Text = "Info";
+            TopMost = true;
+            ResumeLayout(false);
         }
 
 
