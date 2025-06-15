@@ -58,9 +58,10 @@ namespace Mids_Reborn.Forms
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            BackColor = System.Drawing.Color.FromArgb(64, 64, 64);
+            BackColor = System.Drawing.Color.Black;
             ClientSize = new System.Drawing.Size(298, 348);
             Controls.Add(dvFloat);
+            ForeColor = System.Drawing.Color.Gainsboro;
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
             MaximizeBox = false;
             MinimizeBox = false;
