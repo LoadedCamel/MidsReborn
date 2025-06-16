@@ -109,4 +109,7 @@
   <ItemGroup>
     <Text Include="License.txt" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="vcpkg.json" />
+  </ItemGroup>
 </Project>

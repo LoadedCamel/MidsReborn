@@ -1,0 +1,7 @@
+prefix=I:/Repos/Crytilis/MidsReborn/MRBBootstrap/vcpkg_installed/x64-windows-static/vcpkg/pkgs/nlohmann-json_x64-windows-static
+includedir=${prefix}/include
+
+Name: nlohmann_json
+Description: JSON for Modern C++
+Version: 3.12.0
+Cflags: -I${includedir}

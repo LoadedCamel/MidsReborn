@@ -1,0 +1,3 @@
+CRTLinkage: static
+LibraryLinkage: static
+PolicyCmakeHelperPort: enabled

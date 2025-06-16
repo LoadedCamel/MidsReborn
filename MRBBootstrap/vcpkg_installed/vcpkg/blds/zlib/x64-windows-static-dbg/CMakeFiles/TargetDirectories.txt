@@ -1,0 +1,7 @@
+I:/Repos/Crytilis/MidsReborn/MRBBootstrap/vcpkg_installed/vcpkg/blds/zlib/x64-windows-static-dbg/CMakeFiles/zlib.dir
+I:/Repos/Crytilis/MidsReborn/MRBBootstrap/vcpkg_installed/vcpkg/blds/zlib/x64-windows-static-dbg/CMakeFiles/test.dir
+I:/Repos/Crytilis/MidsReborn/MRBBootstrap/vcpkg_installed/vcpkg/blds/zlib/x64-windows-static-dbg/CMakeFiles/edit_cache.dir
+I:/Repos/Crytilis/MidsReborn/MRBBootstrap/vcpkg_installed/vcpkg/blds/zlib/x64-windows-static-dbg/CMakeFiles/rebuild_cache.dir
+I:/Repos/Crytilis/MidsReborn/MRBBootstrap/vcpkg_installed/vcpkg/blds/zlib/x64-windows-static-dbg/CMakeFiles/list_install_components.dir
+I:/Repos/Crytilis/MidsReborn/MRBBootstrap/vcpkg_installed/vcpkg/blds/zlib/x64-windows-static-dbg/CMakeFiles/install.dir
+I:/Repos/Crytilis/MidsReborn/MRBBootstrap/vcpkg_installed/vcpkg/blds/zlib/x64-windows-static-dbg/CMakeFiles/install/local.dir
