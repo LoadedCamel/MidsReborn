@@ -74,6 +74,10 @@
     <OutDir>$(SolutionDir)MidsReborn\bin\$(Platform)\$(Configuration)\net8.0-windows10.0.19041.0\</OutDir>
     <TargetName>New_$(ProjectName)</TargetName>
   </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(MSBuildProjectDirectory)\vcpkg_installed\x64-windows-static\include</ExternalIncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(MSBuildProjectDirectory)\vcpkg_installed\x64-windows-static\lib;$(MSBuildProjectDirectory)\vcpkg_installed\x64-windows\lib</LibraryPath>
+  </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <VcpkgUseStatic>true</VcpkgUseStatic>
     <VcpkgHostTriplet>x64-windows-static</VcpkgHostTriplet>
