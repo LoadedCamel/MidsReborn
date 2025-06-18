@@ -52,6 +52,11 @@ namespace Mids_Reborn.Forms.UpdateSystem
             // Write JSON patch manifest to temp
             var jsonPath = WriteTemporaryManifest(manifestEntries);
             logger?.Info($"[UpdateCoordinator] Patch manifest written: {jsonPath}");
+            var i = 1;
+            foreach (var entry in manifestEntries)
+            {
+                logger?.Info($"[UpdateCoordinator] Relevant manifest entry #{i++}: Name: {entry.Name ?? "<null>"}, File: {entry.File ?? "<null>"}, TargetPath: {entry.TargetPath ?? "<null>"}, {entry.Version ?? "<null>"}, Type: {entry.Type}");
+            }
 
             // Launch bootstrapper
             LaunchBootstrapper(jsonPath, logger);
