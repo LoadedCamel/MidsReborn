@@ -1,7 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Net;
+using System.Security.Cryptography;
+using System.Text;
 using System.Text.Json.Serialization;
 using System.Text.Json;
 using System.Threading.Tasks;
@@ -20,6 +24,8 @@ namespace Mids_Reborn.Forms.UpdateSystem
         public static async Task<UpdateCheckResult> CheckForUpdatesAsync(bool honorDelay = false)
         {
             var manifestEntries = await FetchAllRelevantManifestEntriesAsync();
+            var bootstrapperEntries = await FetchAllRelevantBootstrapperManifestEntriesAsync();
+            manifestEntries = manifestEntries.Concat(bootstrapperEntries).ToList();
             var result = CompareAgainstCurrentVersions(manifestEntries);
 
             if (honorDelay)
@@ -55,6 +61,13 @@ namespace Mids_Reborn.Forms.UpdateSystem
             return list;
         }
 
+        private static async Task<List<ManifestEntry>> FetchAllRelevantBootstrapperManifestEntriesAsync()
+        {
+            var midsManifest = await FetchManifest("https://updates.midsreborn.com/bootstrapper_update_manifest.json");
+            
+            return midsManifest.Updates;
+        }
+
         private static UpdateCheckResult CompareAgainstCurrentVersions(List<ManifestEntry> entries)
         {
             var result = new UpdateCheckResult();
@@ -75,20 +88,61 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 e.Type == PatchType.Database &&
                 e.Name?.Equals(DatabaseAPI.DatabaseName, StringComparison.OrdinalIgnoreCase) == true);
 
-            if (dbEntry == null || !Version.TryParse(dbEntry.Version, out var newDbVersion) || !Helpers.IsVersionNewer(newDbVersion, DatabaseAPI.Database.Version))
+            if (dbEntry != null && Version.TryParse(dbEntry.Version, out var newDbVersion) && Helpers.IsVersionNewer(newDbVersion, DatabaseAPI.Database.Version))
             {
-                return result;
+                result.IsDbUpdateAvailable = true;
+                result.DbName = dbEntry.Name;
+                result.DbVersion = dbEntry.Version;
+                result.DbFile = dbEntry.File;
             }
 
-            result.IsDbUpdateAvailable = true;
-            result.DbName = dbEntry.Name;
-            result.DbVersion = dbEntry.Version;
-            result.DbFile = dbEntry.File;
+            var bootstrapperEntry = entries.FirstOrDefault(e =>
+                e.Type == PatchType.Bootstrapper &&
+                e.Name?.Equals("Mids Reborn Bootstrapper", StringComparison.OrdinalIgnoreCase) == true);
+
+            var bootstrapperFile = $"{AppContext.BaseDirectory}\\MRBBootstrap.exe";
+            Debug.WriteLine($"Update check: Local Bootstrapper={bootstrapperFile}");
+            if (!File.Exists(bootstrapperFile) | bootstrapperEntry == null)
+            {
+                result.IsBootstrapperUpdateAvailable = false;
+            }
+            else
+            {
+                var modTime = File.GetLastWriteTime(bootstrapperFile);
+                var manifestBootstrapperVersionChunks = bootstrapperEntry.Version.Split('-');
+                Debug.WriteLine($"Bootstrapper mod time: {modTime.Year}.{modTime.Month:0#}.{modTime.Day:0#}");
+                
+                // Basic modification time check
+                if ($"{modTime.Year}.{modTime.Month:0#}.{modTime.Day:0#}" == manifestBootstrapperVersionChunks[0])
+                {
+                    return result;
+                }
+
+                var hashByteData = SHA256.HashData(File.ReadAllBytes(bootstrapperFile));
+                var sBuilder = new StringBuilder();
+                foreach (var b in hashByteData)
+                {
+                    sBuilder.Append($"{b:x2}");
+                }
+
+                var bootstrapperHash = sBuilder.ToString();
+                Debug.WriteLine($"Update check: Local Bootstrapper hash={bootstrapperHash}");
+                Debug.WriteLine($"Update check: Remote Bootstrapper mod time={manifestBootstrapperVersionChunks[0]}, hash={manifestBootstrapperVersionChunks[1]}");
+                if (bootstrapperHash.Equals(manifestBootstrapperVersionChunks[1], StringComparison.OrdinalIgnoreCase))
+                {
+                    return result;
+                }
+
+                result.IsBootstrapperUpdateAvailable = true;
+                result.BootstrapperVersion = bootstrapperEntry.Version;
+                result.BootstrapperFile = bootstrapperEntry.File;
+                result.BootstrapperName = bootstrapperEntry.Name;
+            }
 
             return result;
         }
 
-        private static async Task<Manifest> FetchManifest(string manifestUrl, string database)
+        private static async Task<Manifest> FetchManifest(string manifestUrl, string? database = null)
         {
             var jsonOptions = new JsonSerializerOptions
             {
@@ -109,7 +163,11 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 // === Step 0: Check if manifest URL is pointing to an old-style XML file
                 if (manifestUrl.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
                 {
-                    ShowMissingManifestWarning(database, manifestUrl);
+                    if (database != null)
+                    {
+                        ShowMissingManifestWarning(database, manifestUrl);
+                    }
+
                     return new Manifest();
                 }
 
@@ -120,7 +178,11 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 var headResponse = await client.ExecuteAsync(headRequest);
                 if (!headResponse.IsSuccessful || headResponse.StatusCode == HttpStatusCode.NotFound)
                 {
-                    ShowMissingManifestWarning(database, manifestUrl);
+                    if (database != null)
+                    {
+                        ShowMissingManifestWarning(database, manifestUrl);
+                    }
+
                     return new Manifest();
                 }
 
@@ -138,6 +200,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     true);
 
                 mbox.ShowDialog();
+                
                 return new Manifest();
             }
         }

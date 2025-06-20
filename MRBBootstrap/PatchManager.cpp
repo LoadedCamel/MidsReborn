@@ -213,8 +213,12 @@ namespace PatchManager
                 if (dbName.empty())
                     throw std::runtime_error("Database name is required for db patch.");
 
-                fs::path sourceDb = fs::path(installPath) / L"Data" / dbName;
-                fs::path destDb = fs::path(backupPath) / L"Data" / dbName;
+                // Double "Data" path chunk
+            	//fs::path sourceDb = fs::path(installPath) / L"Data" / dbName;
+                //fs::path destDb = fs::path(backupPath) / L"Data" / dbName;
+
+                fs::path sourceDb = fs::path(installPath) / dbName;
+                fs::path destDb = fs::path(backupPath) / dbName;
 
                 if (!fs::exists(sourceDb))
                     throw std::runtime_error("Source DB folder does not exist: " + sourceDb.string());
@@ -401,7 +405,7 @@ namespace PatchManager
                 installPath,
                 gBackupPath,
                 gPatchType,
-                (gPatchType == L"db" ? GetSimplePatchDisplayName(gPatchFile) : L"")
+                (gPatchType == L"Database" ? GetSimplePatchDisplayName(gPatchFile) : L"")
             );
         }
 
@@ -414,7 +418,7 @@ namespace PatchManager
                     installPath,
                     gBackupPath,
                     gPatchType,
-                    (gPatchType == L"db" ? GetSimplePatchDisplayName(gPatchFile) : L"")
+                    (gPatchType == L"Database" ? GetSimplePatchDisplayName(gPatchFile) : L"")
                 );
             }
         }
@@ -478,7 +482,8 @@ namespace PatchManager
             }
             else if (patchType == L"Database")
             {
-                fs::path dbPath = fs::path(installPath) / L"Data" / dbName;
+                //fs::path dbPath = fs::path(installPath) / L"Data" / dbName;
+                fs::path dbPath = fs::path(installPath) / dbName;
                 Logger::Log(L"[PreInstallCleanup] Target DB directory: " + dbPath.wstring());
 
                 if (!fs::exists(dbPath))
@@ -639,7 +644,8 @@ namespace PatchManager
         std::wstring backupBase = workingDir + L"\\UpdateBackup";
         gBackupPath = backupBase + simpleName;
 
-        if (!CreateBackup(workingDir, gBackupPath, gPatchType, (gPatchType == L"db" ? GetSimplePatchDisplayName(gPatchFile) : L"")))
+        Logger::Log(L"[Backup] CreateBackup settings: workingDir=" + workingDir + L", backupPath=" + gBackupPath + L", gPatchType=" + gPatchType + L", dbName='" + GetSimplePatchDisplayName(gPatchFile) + L"'");
+    	if (!CreateBackup(workingDir, gBackupPath, gPatchType, (gPatchType == L"Database" ? GetSimplePatchDisplayName(gPatchFile) : L"")))
         {
             return HandleUpdateTermination(L"Failed to create backup snapshot.");
         }
@@ -647,7 +653,7 @@ namespace PatchManager
         ModernUI::Delay(1500);
 
         // Step 7: Pre-Install Cleanup
-        PreInstallCleanup(workingDir, gPatchType, (gPatchType == L"db" ? GetSimplePatchDisplayName(gPatchFile) : L""));
+        PreInstallCleanup(workingDir, gPatchType, (gPatchType == L"Database" ? GetSimplePatchDisplayName(gPatchFile) : L""));
 
         // Step 8: Install staged files
         ModernUI::PostUpdateStatus(L"Installing update...");
@@ -817,15 +823,15 @@ namespace PatchManager
             std::wstring installPath = ExpandEnv(update.TargetPath);
             std::wstring backupBase = workingDir + L"\\UpdateBackup\\";
             gBackupPath = backupBase + simpleName;
-
-            if (!CreateBackup(installPath, gBackupPath, gPatchType, (gPatchType == L"db" ? GetSimplePatchDisplayName(gPatchFile) : L"")))
+            Logger::Log(L"[Backup] CreateBackup settings: workingDir=" + workingDir + L", backupPath=" + gBackupPath + L", gPatchType=" + gPatchType + L", dbName='" + GetSimplePatchDisplayName(gPatchFile) + L"'");
+            if (!CreateBackup(installPath, gBackupPath, gPatchType, (gPatchType == L"Database" ? GetSimplePatchDisplayName(gPatchFile) : L"")))
             {
                 return HandleUpdateTermination(L"Failed to create backup snapshot.");
             }
 
             // Step 7: Pre-Install Cleanup
             Logger::Log(L"[PatchManager] Initiating Pre-Install Cleanup.");
-            if (!PreInstallCleanup(installPath, gPatchType, (gPatchType == L"db" ? GetSimplePatchDisplayName(gPatchFile) : L"")))
+            if (!PreInstallCleanup(installPath, gPatchType, (gPatchType == L"Database" ? GetSimplePatchDisplayName(gPatchFile) : L"")))
             {
                 return HandleUpdateTermination(L"Pre-install cleanup failed.");
             }

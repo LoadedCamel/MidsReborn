@@ -11,5 +11,10 @@
         public string? DbVersion { get; set; }
         public string? DbFile { get; set; }
         public string? DbName { get; set; }
+
+        public bool IsBootstrapperUpdateAvailable { get; set; }
+        public string? BootstrapperVersion { get; set; }
+        public string? BootstrapperFile { get; set; }
+        public string? BootstrapperName { get; set; }
     }
 }
