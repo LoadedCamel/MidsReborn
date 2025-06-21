@@ -88,7 +88,8 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 e.Type == PatchType.Database &&
                 e.Name?.Equals(DatabaseAPI.DatabaseName, StringComparison.OrdinalIgnoreCase) == true);
 
-            if (dbEntry != null && Version.TryParse(dbEntry.Version, out var newDbVersion) && Helpers.IsVersionNewer(newDbVersion, DatabaseAPI.Database.Version))
+            var ret = Version.TryParse(dbEntry?.Version, out var newDbVersion);
+            if (dbEntry != null && ret && Helpers.IsVersionNewer(newDbVersion, DatabaseAPI.Database.Version))
             {
                 result.IsDbUpdateAvailable = true;
                 result.DbName = dbEntry.Name;
@@ -101,7 +102,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 e.Name?.Equals("Mids Reborn Bootstrapper", StringComparison.OrdinalIgnoreCase) == true);
 
             var bootstrapperFile = $"{AppContext.BaseDirectory}\\MRBBootstrap.exe";
-            Debug.WriteLine($"Update check: Local Bootstrapper={bootstrapperFile}");
             if (!File.Exists(bootstrapperFile) | bootstrapperEntry == null)
             {
                 result.IsBootstrapperUpdateAvailable = false;
@@ -110,7 +110,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
             {
                 var modTime = File.GetLastWriteTime(bootstrapperFile);
                 var manifestBootstrapperVersionChunks = bootstrapperEntry.Version.Split('-');
-                Debug.WriteLine($"Bootstrapper mod time: {modTime.Year}.{modTime.Month:0#}.{modTime.Day:0#}");
                 
                 // Basic modification time check
                 if ($"{modTime.Year}.{modTime.Month:0#}.{modTime.Day:0#}" == manifestBootstrapperVersionChunks[0])
@@ -126,8 +125,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 }
 
                 var bootstrapperHash = sBuilder.ToString();
-                Debug.WriteLine($"Update check: Local Bootstrapper hash={bootstrapperHash}");
-                Debug.WriteLine($"Update check: Remote Bootstrapper mod time={manifestBootstrapperVersionChunks[0]}, hash={manifestBootstrapperVersionChunks[1]}");
                 if (bootstrapperHash.Equals(manifestBootstrapperVersionChunks[1], StringComparison.OrdinalIgnoreCase))
                 {
                     return result;
