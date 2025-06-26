@@ -49,8 +49,9 @@ public class SkList : SKGLControl
     private int _hoverIndex = -1;
     private int _dragStartY;
     private int _dragScrollOffset;
+    // Bug: Cannot modify paddingX, paddingY from a form designer, default value takes priority
     private int _paddingX = 4;
-    private int _paddingY = 2;
+    private int _paddingY = 1;
     private int _expandMaxY = 400;
     private int _visibleLineCount;
     private int _selectedIndex = -1;
@@ -246,7 +247,9 @@ public class SkList : SKGLControl
         set
         {
             if (value < _sizeNormal.Height || value > 2000)
+            {
                 return;
+            }
 
             _expandMaxY = value;
             Invalidate();
@@ -271,7 +274,9 @@ public class SkList : SKGLControl
         set
         {
             if (value <= 0 || value >= Width / 2)
+            {
                 return;
+            }
 
             _scrollBarWidth = value;
             RecalculateLayout();
@@ -346,10 +351,12 @@ public class SkList : SKGLControl
     [Browsable(false)]
     public int DesiredHeight => _items.Sum(item =>
     {
-        int lines = item.LineCount;
-        int height = lines * ActualLineHeight;
+        var lines = item.LineCount;
+        var height = lines * ActualLineHeight;
         if (lines > 1)
+        {
             height += (lines - 1) * MultilineTextInterline;
+        }
 
         return height + PaddingY;
     });
@@ -376,13 +383,17 @@ public class SkList : SKGLControl
         _scrollSteps = GetScrollSteps();
 
         if (!SuspendRedraw)
+        {
             Invalidate();
+        }
     }
 
     public void ClearItems()
     {
         foreach (var item in _items)
+        {
             item.Dispose();
+        }
 
         _items.Clear();
         _hoverIndex = -1;
@@ -390,12 +401,18 @@ public class SkList : SKGLControl
         _scrollSteps = 0;
 
         if (!SuspendRedraw)
+        {
             Invalidate();
+        }
     }
 
     public void UpdateTextColors(EItemState state, Color color)
     {
-        if ((int)state < 0 || (int)state >= StateColors.Length) return;
+        if ((int)state < 0 || (int)state >= StateColors.Length)
+        {
+            return;
+        }
+
         StateColors[(int)state] = color;
         Invalidate();
     }
@@ -425,19 +442,24 @@ public class SkList : SKGLControl
 
     private void RecomputeExpand()
     {
-        if (!_isExpanded) return;
+        if (!_isExpanded)
+        {
+            return;
+        }
 
         _suspendRedraw = true;
 
         // First pass to estimate content height
         RecalculateLayout(true);
 
-        int contentHeight = GetRealTotalHeight();
-        int targetHeight = contentHeight + ScrollBarWidth + PaddingY * 3 + 20;
+        var contentHeight = GetRealTotalHeight();
+        var targetHeight = contentHeight + ScrollBarWidth + PaddingY * 3 + 20;
 
         // Enforce max expansion height
         if (targetHeight > _expandMaxY)
+        {
             targetHeight = _expandMaxY;
+        }
 
         Height = targetHeight;
 
@@ -451,14 +473,16 @@ public class SkList : SKGLControl
 
     private void RecalculateLayout(bool expanded = false)
     {
-        if (_items.Count == 0) return;
+        if (_items.Count == 0)
+        {
+            return;
+        }
 
         if (AutoSize)
         {
-            if (AutoSizeMode == AutoSizeMode.GrowAndShrink || DesiredHeight > SizeNormal.Height)
-                Height = DesiredHeight;
-            else
-                Height = SizeNormal.Height;
+            Height = AutoSizeMode == AutoSizeMode.GrowAndShrink || DesiredHeight > SizeNormal.Height
+                ? DesiredHeight
+                : SizeNormal.Height;
         }
         // else if (Name == "llAncillary" || Name.StartsWith("llPool"))
         // {
@@ -468,21 +492,21 @@ public class SkList : SKGLControl
         var fullRect = new SKRect(_paddingX, 0, Width - _paddingX * 2, Height - BottomVisualPadding);
         RecalculateLines(fullRect);
 
-        int totalContentHeight = GetRealTotalHeight();
-        bool needsScroll = totalContentHeight > Height - BottomVisualPadding;
+        var totalContentHeight = GetRealTotalHeight();
+        var needsScroll = totalContentHeight > Height - BottomVisualPadding;
 
         _scrollSteps = needsScroll ? GetScrollSteps() : 0;
 
         if (needsScroll || expanded)
         {
-            int scrollHeight = Height - (_scrollBarWidth + _paddingY + BottomVisualPadding);
+            var scrollHeight = Height - (_scrollBarWidth + _paddingY + BottomVisualPadding);
             var scrollRect = new SKRect(_paddingX, 0, Width - _paddingX * 2, scrollHeight);
             RecalculateLines(scrollRect);
         }
 
         if (expanded || _scrollSteps > 0)
         {
-            int bottomOffset = Expandable ? (_scrollBarWidth + _paddingY + BottomVisualPadding) : BottomVisualPadding;
+            var bottomOffset = Expandable ? (_scrollBarWidth + _paddingY + BottomVisualPadding) : BottomVisualPadding;
             var narrowRect = new SKRect(_paddingX, 0, Width - (_paddingX * 2 + _scrollBarWidth), Height - bottomOffset);
             RecalculateLines(narrowRect);
         }
@@ -500,7 +524,9 @@ public class SkList : SKGLControl
         SetLineHeight();
 
         foreach (var item in _items)
+        {
             WrapText(item);
+        }
 
         GetTotalLineCount();
         _scrollSteps = GetScrollSteps();
@@ -514,11 +540,11 @@ public class SkList : SKGLControl
         var metrics = skFont.Metrics;
 
         // True total height = |Ascent| + |Descent| + |Leading|
-        float ascent = Math.Abs(metrics.Ascent);
-        float descent = Math.Abs(metrics.Descent);
-        float leading = Math.Abs(metrics.Leading);
+        var ascent = Math.Abs(metrics.Ascent);
+        var descent = Math.Abs(metrics.Descent);
+        var leading = Math.Abs(metrics.Leading);
 
-        float fullHeight = ascent + descent + leading;
+        var fullHeight = ascent + descent + leading;
 
         // Apply vertical padding
         ActualLineHeight = (int)Math.Ceiling(fullHeight) + PaddingY * 2;
@@ -529,22 +555,24 @@ public class SkList : SKGLControl
     private void WrapText(SkListItem item)
     {
         if (string.IsNullOrEmpty(item.Text))
+        {
             return;
+        }
 
-        string baseText = item.Text.Trim("~ ".ToCharArray());
-        string prefix = item.ItemState == EItemState.Heading ? "~ " : "";
-        string suffix = item.ItemState == EItemState.Heading ? " ~" : "";
+        var baseText = item.Text.Trim("~ ".ToCharArray());
+        var prefix = item.ItemState == EItemState.Heading ? "~ " : "";
+        var suffix = item.ItemState == EItemState.Heading ? " ~" : "";
 
         var font = item.GetOrCreateFont(Font);
-        int availableWidth = (int)_textArea.Width;
+        var availableWidth = (int)_textArea.Width;
 
         var words = baseText.Split(' ');
         var lines = new List<string>();
-        string currentLine = words[0];
+        var currentLine = words[0];
 
-        for (int i = 1; i < words.Length; i++)
+        for (var i = 1; i < words.Length; i++)
         {
-            string testLine = currentLine + " " + words[i];
+            var testLine = $"{currentLine} {words[i]}";
             if (font.MeasureText(testLine) > availableWidth)
             {
                 lines.Add(currentLine);
@@ -562,7 +590,7 @@ public class SkList : SKGLControl
         if (item.ItemState == EItemState.Heading)
         {
             lines[0] = prefix + lines[0];
-            lines[^1] = lines[^1] + suffix;
+            lines[^1] += suffix;
         }
 
         item.WrappedText = string.Join('\n', lines);
@@ -585,16 +613,20 @@ public class SkList : SKGLControl
         }
 
         if (IsExpanded)
+        {
             return GetTotalLineCount();
+        }
 
-        int y = PaddingY;
-        int visibleLines = 0;
+        var y = PaddingY;
+        var visibleLines = 0;
 
         foreach (var item in _items)
         {
-            int nextY = y + item.ItemHeight;
+            var nextY = y + item.ItemHeight;
             if (nextY > Height - BottomVisualPadding)
+            {
                 break; // Cut-off detected
+            }
 
             visibleLines += item.LineCount;
             y = nextY + PaddingY;
@@ -611,8 +643,8 @@ public class SkList : SKGLControl
             return 0;
         }
 
-        int lineSum = 0;
-        int wrapCount = 0;
+        var lineSum = 0;
+        var wrapCount = 0;
 
         foreach (var item in _items)
         {
@@ -625,7 +657,9 @@ public class SkList : SKGLControl
 
         // Add one more scroll page if needed
         if (wrapCount > 0)
+        {
             wrapCount++;
+        }
 
         _scrollSteps = wrapCount <= 1 ? 0 : wrapCount;
 
@@ -656,19 +690,23 @@ public class SkList : SKGLControl
     private void OnPaintSurfaceGL(object? sender, SKPaintGLSurfaceEventArgs e)
     {
         if (SuspendRedraw || !IsHandleCreated || Width <= 0 || Height <= 0)
+        {
             return;
+        }
 
         var canvas = e.Surface.Canvas;
         canvas.Clear(IsExpanded ? SKColors.Black : ToSkColor(BackColor));
 
-        int width = e.BackendRenderTarget.Width;
-        int height = e.BackendRenderTarget.Height;
+        var width = e.BackendRenderTarget.Width;
+        var height = e.BackendRenderTarget.Height;
 
-        int y = PaddingY;
+        var y = PaddingY;
         foreach (var item in _items.Skip(_scrollOffset))
         {
             if (y > height)
+            {
                 break;
+            }
 
             DrawItem(canvas, item, y, width);
             y += item.ItemHeight + PaddingY;
@@ -676,20 +714,25 @@ public class SkList : SKGLControl
 
         DrawScrollbar(canvas);
         if (Expandable)
+        {
             DrawExpandToggle(canvas);
+        }
     }
 
     private void DrawItem(SKCanvas canvas, SkListItem item, float y, int width)
     {
         var lines = item.WrappedText?.Split('\n') ?? [];
-        if (lines.Length == 0) return;
+        if (lines.Length == 0)
+        {
+            return;
+        }
 
         var font = item.GetOrCreateFont(Font);
         var color = ToSkColor(StateColors[(int)item.ItemState]);
         var metrics = font.Metrics;
-        float textHeight = font.Size;
+        var textHeight = font.Size;
 
-        float x = item.TextAlign switch
+        var x = item.TextAlign switch
         {
             ETextAlign.Center => width / 2f,
             ETextAlign.Right => width - PaddingX - ScrollBarWidth,
@@ -703,12 +746,12 @@ public class SkList : SKGLControl
             canvas.DrawRect(hoverRect, bg);
         }
 
-        float lineY = y + PaddingY;
-        float interlineSpacing = font.Size + MultilineTextInterline;
+        var lineY = y + PaddingY;
+        var interlineSpacing = font.Size + MultilineTextInterline;
 
         foreach (var line in lines)
         {
-            string text = line.Trim();
+            var text = line.Trim();
 
             if (_highVis)
             {
@@ -720,11 +763,15 @@ public class SkList : SKGLControl
                     IsAntialias = true
                 };
 
-                for (int dx = -1; dx <= 1; dx++)
+                for (var dx = -1; dx <= 1; dx++)
                 {
-                    for (int dy = -1; dy <= 1; dy++)
+                    for (var dy = -1; dy <= 1; dy++)
                     {
-                        if (dx == 0 && dy == 0) continue;
+                        if (dx == 0 && dy == 0)
+                        {
+                            continue;
+                        }
+
                         canvas.DrawText(text, x + dx, lineY + textHeight + dy, font, outline);
                     }
                 }
@@ -735,27 +782,27 @@ public class SkList : SKGLControl
 
             if (item.FontFlags.HasFlag(EFontFlags.Underline))
             {
-                float underlineY = lineY + textHeight + (metrics.UnderlinePosition ?? 1);
+                var underlineY = lineY + textHeight + (metrics.UnderlinePosition ?? 1);
                 using var ul = new SKPaint
                 {
                     Color = color,
                     StrokeWidth = metrics.UnderlineThickness ?? 1,
                     IsAntialias = true
                 };
-                float measured = font.MeasureText(text);
+                var measured = font.MeasureText(text);
                 canvas.DrawLine(x, underlineY, x + measured, underlineY, ul);
             }
 
             if (item.FontFlags.HasFlag(EFontFlags.Strikethrough))
             {
-                float strikeY = lineY + textHeight / 2f;
+                var strikeY = lineY + textHeight / 2f;
                 using var sl = new SKPaint
                 {
                     Color = color,
                     StrokeWidth = 1,
                     IsAntialias = true
                 };
-                float measured = font.MeasureText(text);
+                var measured = font.MeasureText(text);
                 canvas.DrawLine(x, strikeY, x + measured, strikeY, sl);
             }
 
@@ -766,11 +813,13 @@ public class SkList : SKGLControl
     private void DrawScrollbar(SKCanvas canvas)
     {
         if (_scrollBarWidth < 1 || !_scrollable || _scrollSteps < 1)
+        {
             return;
+        }
 
-        int trackLeft = (int)(_textArea.Right + _scrollBarWidth / 2f);
-        int trackTop = PaddingY + _scrollBarWidth;
-        int trackBottom = Height - (_scrollBarWidth + PaddingY);
+        var trackLeft = (int)(_textArea.Right + _scrollBarWidth / 2f);
+        var trackTop = PaddingY + _scrollBarWidth;
+        var trackBottom = Height - (_scrollBarWidth + PaddingY);
 
         using var trackPen = new SKPaint
         {
@@ -789,9 +838,9 @@ public class SkList : SKGLControl
         };
 
         // Scroll thumb
-        int usableHeight = Height - (_scrollBarWidth + PaddingY) * 2 - PaddingY * 2;
-        int thumbY = (int)Math.Round((_scrollBarWidth + PaddingY * 2) + usableHeight / (double)_scrollSteps * _scrollOffset);
-        int thumbHeight = (int)Math.Round(usableHeight / (double)_scrollSteps);
+        var usableHeight = Height - (_scrollBarWidth + PaddingY) * 2 - PaddingY * 2;
+        var thumbY = (int)Math.Round((_scrollBarWidth + PaddingY * 2) + usableHeight / (double)_scrollSteps * _scrollOffset);
+        var thumbHeight = (int)Math.Round(usableHeight / (double)_scrollSteps);
 
         _thumbRect = new SKRect(_textArea.Right, thumbY, _textArea.Right + _scrollBarWidth, thumbY + thumbHeight);
         canvas.DrawRect(_thumbRect, fillBrush);
@@ -816,9 +865,9 @@ public class SkList : SKGLControl
         // Up arrow
         var upArrow = new SKPoint[]
         {
-        new(_textArea.Right, arrowTrack.Top),
-        new(_textArea.Right + _scrollBarWidth, arrowTrack.Top),
-        new(_textArea.Right + _scrollBarWidth / 2f, PaddingY)
+            new(_textArea.Right, arrowTrack.Top),
+            new(_textArea.Right + _scrollBarWidth, arrowTrack.Top),
+            new(_textArea.Right + _scrollBarWidth / 2f, PaddingY)
         };
         _arrowUpRect = new SKRect(upArrow[0].X, PaddingY, upArrow[1].X, arrowTrack.Top);
         canvas.DrawVertices(SKVertexMode.Triangles, upArrow, null, fillBrush);
@@ -830,9 +879,9 @@ public class SkList : SKGLControl
         // Down arrow
         var downArrow = new SKPoint[]
         {
-        new(_textArea.Right, arrowTrack.Bottom),
-        new(_textArea.Right + _scrollBarWidth, arrowTrack.Bottom),
-        new(_textArea.Right + _scrollBarWidth / 2f, Height - PaddingY)
+            new(_textArea.Right, arrowTrack.Bottom),
+            new(_textArea.Right + _scrollBarWidth, arrowTrack.Bottom),
+            new(_textArea.Right + _scrollBarWidth / 2f, Height - PaddingY)
         };
         _arrowDownRect = new SKRect(downArrow[0].X, arrowTrack.Bottom, downArrow[1].X, Height - PaddingY);
         canvas.DrawVertices(SKVertexMode.Triangles, downArrow, null, fillBrush);
@@ -845,14 +894,16 @@ public class SkList : SKGLControl
     private void DrawExpandToggle(SKCanvas canvas)
     {
         if (!Expandable || (!_isExpanded && _scrollSteps < 1) || Name?.Contains("llPool", StringComparison.OrdinalIgnoreCase) == true)
+        {
             return;
+        }
 
-        float toggleWidth = Width / 3f;
+        var toggleWidth = Width / 3f;
         float toggleHeight = ScrollBarWidth - PaddingY;
-        float toggleLeft = (Width - toggleWidth) / 2f;
+        var toggleLeft = (Width - toggleWidth) / 2f;
         float toggleTop = Height - (ScrollBarWidth + PaddingY);
-        float toggleRight = toggleLeft + toggleWidth;
-        float toggleBottom = toggleTop + toggleHeight;
+        var toggleRight = toggleLeft + toggleWidth;
+        var toggleBottom = toggleTop + toggleHeight;
 
         _expandToggleBounds = new SKRect(toggleLeft, toggleTop, toggleRight, toggleBottom);
 
@@ -916,12 +967,14 @@ public class SkList : SKGLControl
 
     private int GetItemAtY(int y)
     {
-        int currentY = PaddingY;
+        var currentY = PaddingY;
 
         foreach (var item in _items.Skip(_scrollOffset))
         {
             if (y >= currentY && y < currentY + item.ItemHeight)
+            {
                 return item.Index;
+            }
 
             currentY += item.ItemHeight + PaddingY;
         }
@@ -934,27 +987,40 @@ public class SkList : SKGLControl
         var pt = new SKPoint(x, y);
 
         if (_arrowUpRect.Contains(pt))
+        {
             return SkMouseTarget.UpArrow;
+        }
 
         if (_arrowDownRect.Contains(pt))
+        {
             return SkMouseTarget.DownArrow;
+        }
 
         if (_thumbRect.Contains(pt))
+        {
             return SkMouseTarget.ScrollThumb;
+        }
 
         if (_expandToggleBounds.Contains(pt))
+        {
             return SkMouseTarget.ExpandButton;
+        }
 
         if (pt.X >= _thumbRect.Left && pt.X <= _thumbRect.Right)
         {
             if (pt.Y < _thumbRect.Top)
+            {
                 return SkMouseTarget.ScrollTrackUp;
+            }
+
             if (pt.Y > _thumbRect.Bottom)
+            {
                 return SkMouseTarget.ScrollTrackDown;
+            }
         }
 
         // Item region
-        int itemIndex = GetItemAtY(y);
+        var itemIndex = GetItemAtY(y);
         return itemIndex != -1 ? SkMouseTarget.Item : SkMouseTarget.None;
     }
 
@@ -984,18 +1050,24 @@ public class SkList : SKGLControl
             return;
         }
 
-        int jump = _scrollSteps <= 0 ? 0 : Math.Min(5, Math.Max(1, _scrollSteps / 3));
+        var jump = _scrollSteps <= 0 ? 0 : Math.Min(5, Math.Max(1, _scrollSteps / 3));
 
         switch (target)
         {
             case SkMouseTarget.UpArrow:
                 if (_scrollOffset > 0)
+                {
                     _scrollOffset--;
+                }
+
                 break;
 
             case SkMouseTarget.DownArrow:
                 if (_scrollOffset + 1 < _scrollSteps)
+                {
                     _scrollOffset++;
+                }
+
                 break;
 
             case SkMouseTarget.ScrollTrackUp:
@@ -1017,7 +1089,7 @@ public class SkList : SKGLControl
                 break;
 
             case SkMouseTarget.Item:
-                int index = GetItemAtY(e.Y);
+                var index = GetItemAtY(e.Y);
                 if (index >= 0 && index < _items.Count)
                 {
                     if (_selectedIndex != index)
@@ -1042,27 +1114,27 @@ public class SkList : SKGLControl
     {
         var pt = new SKPoint(e.X, e.Y);
         var mouseTarget = GetMouseTarget(e.X, e.Y);
-        Cursor cursor = Cursors.Default;
+        var cursor = Cursors.Default;
 
         if (_draggingThumb)
         {
             Cursor = Cursors.SizeNS;
 
-            int deltaY = e.Y - _dragStartY;
-            float trackHeight = Height - PaddingY * 2 - _thumbRect.Height;
-            float scrollRatio = deltaY / trackHeight;
+            var deltaY = e.Y - _dragStartY;
+            var trackHeight = Height - PaddingY * 2 - _thumbRect.Height;
+            var scrollRatio = deltaY / trackHeight;
 
             _scrollOffset = Math.Clamp(_dragScrollOffset + (int)(scrollRatio * _scrollSteps), 0, Math.Max(_scrollSteps - 1, 0));
             Invalidate();
             return;
         }
 
-        bool invalidate = false;
+        var invalidate = false;
 
         switch (mouseTarget)
         {
             case SkMouseTarget.Item:
-                int itemIndex = GetItemAtY(e.Y);
+                var itemIndex = GetItemAtY(e.Y);
                 if (itemIndex != -1 && itemIndex != _hoverIndex)
                 {
                     _hoverIndex = itemIndex;
@@ -1124,11 +1196,15 @@ public class SkList : SKGLControl
 
             // Only redraw if hover state visually changes
             if (mouseTarget == SkMouseTarget.Item || _hoverIndex != -1)
+            {
                 invalidate = true;
+            }
         }
 
         if (invalidate)
+        {
             Invalidate();
+        }
 
         Cursor = cursor;
     }
@@ -1141,16 +1217,21 @@ public class SkList : SKGLControl
 
         // Restore default cursor if needed
         if (Cursor == Cursors.SizeNS)
+        {
             Cursor = Cursors.Default;
+        }
 
         Invalidate();
     }
 
     private void OnMouseWheel(object? sender, MouseEventArgs e)
     {
-        if (!_scrollable || _scrollSteps <= 0) return;
+        if (!_scrollable || _scrollSteps <= 0)
+        {
+            return;
+        }
 
-        int stepSize = Math.Min(5, Math.Max(1, _scrollSteps / 3));
+        var stepSize = Math.Min(5, Math.Max(1, _scrollSteps / 3));
 
         if (e.Delta > 0 && _scrollOffset > 0)
         {
@@ -1168,7 +1249,7 @@ public class SkList : SKGLControl
 
     private void OnMouseLeave(object? sender, EventArgs e)
     {
-        bool changed = _hoverIndex != -1 || _hoveringArrowUp || _hoveringArrowDown || _pressingArrowUp || _pressingArrowDown;
+        var changed = _hoverIndex != -1 || _hoveringArrowUp || _hoveringArrowDown || _pressingArrowUp || _pressingArrowDown;
 
         _hoverIndex = -1;
         _hoveringArrowUp = false;
@@ -1182,7 +1263,9 @@ public class SkList : SKGLControl
         EmptyHover?.Invoke();
 
         if (changed)
+        {
             Invalidate();
+        }
     }
 
     private void OnResize(object? sender, EventArgs e)
@@ -1204,7 +1287,9 @@ public class SkList : SKGLControl
         {
             // Dispose each SkListItem to release SKFont resources
             foreach (var item in _items)
+            {
                 item.Dispose();
+            }
 
             _items.Clear();
 
