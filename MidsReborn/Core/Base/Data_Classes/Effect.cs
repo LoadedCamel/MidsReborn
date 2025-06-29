@@ -361,9 +361,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         ? 0
                         : power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - globalRecharge);
 
-                    probability = Math.Min(power.PowerType == Enums.ePowerType.Click
-                        ? Math.Max(ProcsPerMinute * (rechargeVal + power.CastTimeReal) / (60f * areaFactor), (float)(0.05 + 0.015 * ProcsPerMinute))
-                        : Math.Max(ProcsPerMinute * 10 / (60f * areaFactor), (float)(0.05 + 0.015 * ProcsPerMinute)), 0.9f);
+                    probability = power.PowerType == Enums.ePowerType.Click
+                        ? ProcsPerMinute * (rechargeVal + power.CastTimeReal) / (60f * areaFactor)
+                        : ProcsPerMinute * 10 / (60f * areaFactor);
+
+                    probability = Math.Max(MinProcChance, Math.Min(MaxProcChance, probability));
                 }
 
                 if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) && MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
@@ -375,6 +377,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
         }
 
+        public float MinProcChance => ProcsPerMinute > 0 ? ProcsPerMinute * 0.015f + 0.05f : 0.05f;
+        public const float MaxProcChance = 0.9f;
+
         public float Probability
         {
             get
@@ -382,12 +387,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 switch (AttribType)
                 {
                     case Enums.eAttribType.Expression when !string.IsNullOrWhiteSpace(Expressions.Probability):
-                    {
                         var retValue = Parse(this, ExpressionType.Probability, out var error);
-                        return error.Found ? 0f : Math.Max(0, Math.Min(1, retValue));
-                    }
-                    case Enums.eAttribType.Expression:
-                        return ActualProbability;
+                        return error.Found ? 0 : Math.Max(0, Math.Min(1, retValue));
+                    
                     default:
                         return ActualProbability;
                 }

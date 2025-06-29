@@ -275,6 +275,11 @@ namespace Mids_Reborn.Core
             var flag4 = false;
             var flag5 = false;
 
+            if (enhBoostPower != null && enhBoostPower.Effects.All(e => e.EffectType != Enums.eEffectType.GrantPower))
+            {
+                return GetGroupedEffectsStringLong(enhBoostPower);
+            }
+
             foreach (var sEffect in enhancement.Effect)
             {
                 switch (sEffect.Mode)
@@ -490,6 +495,23 @@ namespace Mids_Reborn.Core
             }
 
             return str1;
+        }
+
+        private string GetGroupedEffectsStringLong(IPower? enhBoostPower)
+        {
+            if (enhBoostPower == null)
+            {
+                return "";
+            }
+
+            if (!enhBoostPower.AppliedExecutes)
+            {
+                enhBoostPower.ProcessExecutes();
+            }
+
+            var groupedEffects = GroupedFx.AssembleGroupedEffects(enhBoostPower, true);
+            
+            return string.Join("\r\n", groupedEffects.Select(e => e.GetTooltip(enhBoostPower, true)));
         }
 
         public string GetEnhancementStringLong()

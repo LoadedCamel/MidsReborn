@@ -3096,7 +3096,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             // Max recursion level
             if (rLevel > 5)
             {
-                return new List<IEffect>();
+                return [];
             }
 
             power = power ??= this;
