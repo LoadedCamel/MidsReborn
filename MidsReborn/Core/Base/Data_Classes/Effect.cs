@@ -1766,11 +1766,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case "Stacks":
                     if (conditionPower != null)
                     {
+                        var pe = MidsContext.Character?.CurrentBuild?.Powers
+                            .DefaultIfEmpty(null)
+                            .FirstOrDefault(e => e?.Power?.StaticIndex == conditionPower.StaticIndex);
+
+                        var stacks = Math.Max(conditionPower.Stacks, pe?.VariableValue ?? 0);
+                        var cStacks = Convert.ToInt32(cVal[1]);
+
                         cVp.Validated = cVal[0] switch
                         {
-                            "=" => conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1])),
-                            ">" => conditionPower.Stacks > Convert.ToInt32(cVal[1]),
-                            "<" => conditionPower.Stacks < Convert.ToInt32(cVal[1]),
+                            "=" => stacks == cStacks,
+                            ">" => stacks > cStacks,
+                            "<" => stacks < cStacks,
                             _ => cVp.Validated
                         };
                     }
@@ -1802,55 +1809,57 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public void UpdateAttrib()
         {
+            var validConds = PowerAttribs == Enums.ePowerAttribs.None || ValidateConditional();
+
             switch (PowerAttribs)
             {
-                case Enums.ePowerAttribs.Accuracy:
-                    var conditionsMet = ValidateConditional();
-                    power.Accuracy = conditionsMet ? AtrModAccuracy : AtrOrigAccuracy;
+                case Enums.ePowerAttribs.Accuracy when validConds:
+                    //power.Accuracy = conditionsMet ? AtrModAccuracy : AtrOrigAccuracy;
+                    power.Accuracy = AtrModAccuracy;
                     break;
-                case Enums.ePowerAttribs.ActivateInterval:
-                    conditionsMet = ValidateConditional();
-                    power.ActivatePeriod = conditionsMet ? AtrModActivatePeriod : AtrOrigActivatePeriod;
+                case Enums.ePowerAttribs.ActivateInterval when validConds:
+                    //power.ActivatePeriod = conditionsMet ? AtrModActivatePeriod : AtrOrigActivatePeriod;
+                    power.ActivatePeriod = AtrModActivatePeriod;
                     break;
-                case Enums.ePowerAttribs.Arc:
-                    conditionsMet = ValidateConditional();
-                    power.Arc = conditionsMet ? AtrModArc : AtrOrigArc;
+                case Enums.ePowerAttribs.Arc when validConds:
+                    //power.Arc = conditionsMet ? AtrModArc : AtrOrigArc;
+                    power.Arc = AtrModArc;
                     break;
-                case Enums.ePowerAttribs.CastTime:
-                    conditionsMet = ValidateConditional();
-                    power.CastTime = conditionsMet ? AtrModCastTime : AtrOrigCastTime;
+                case Enums.ePowerAttribs.CastTime when validConds:
+                    //power.CastTime = conditionsMet ? AtrModCastTime : AtrOrigCastTime;
+                    power.CastTime = AtrModCastTime;
                     break;
-                case Enums.ePowerAttribs.EffectArea:
-                    conditionsMet = ValidateConditional();
-                    power.EffectArea = conditionsMet ? AtrModEffectArea : AtrOrigEffectArea;
+                case Enums.ePowerAttribs.EffectArea when validConds:
+                    //power.EffectArea = conditionsMet ? AtrModEffectArea : AtrOrigEffectArea;
+                    power.EffectArea = AtrModEffectArea;
                     break;
-                case Enums.ePowerAttribs.EnduranceCost:
-                    conditionsMet = ValidateConditional();
-                    power.EndCost = conditionsMet ? AtrModEnduranceCost : AtrOrigEnduranceCost;
+                case Enums.ePowerAttribs.EnduranceCost when validConds:
+                    //power.EndCost = conditionsMet ? AtrModEnduranceCost : AtrOrigEnduranceCost;
+                    power.EndCost = AtrModEnduranceCost;
                     break;
-                case Enums.ePowerAttribs.InterruptTime:
-                    conditionsMet = ValidateConditional();
-                    power.InterruptTime = conditionsMet ? AtrModInterruptTime : AtrOrigInterruptTime;
+                case Enums.ePowerAttribs.InterruptTime when validConds:
+                    //power.InterruptTime = conditionsMet ? AtrModInterruptTime : AtrOrigInterruptTime;
+                    power.InterruptTime = AtrModInterruptTime;
                     break;
-                case Enums.ePowerAttribs.MaxTargets:
-                    conditionsMet = ValidateConditional();
-                    power.MaxTargets = conditionsMet ? AtrModMaxTargets : AtrOrigMaxTargets;
+                case Enums.ePowerAttribs.MaxTargets when validConds:
+                    //power.MaxTargets = conditionsMet ? AtrModMaxTargets : AtrOrigMaxTargets;
+                    power.MaxTargets = AtrModMaxTargets;
                     break;
-                case Enums.ePowerAttribs.Radius:
-                    conditionsMet = ValidateConditional();
-                    power.Radius = conditionsMet ? AtrModRadius : AtrOrigRadius;
+                case Enums.ePowerAttribs.Radius when validConds:
+                    //power.Radius = conditionsMet ? AtrModRadius : AtrOrigRadius;
+                    power.Radius = AtrModRadius;
                     break;
-                case Enums.ePowerAttribs.Range:
-                    conditionsMet = ValidateConditional();
-                    power.Range = conditionsMet ? AtrModRange : AtrOrigRange;
+                case Enums.ePowerAttribs.Range when validConds:
+                    //power.Range = conditionsMet ? AtrModRange : AtrOrigRange;
+                    power.Range = AtrModRange;
                     break;
-                case Enums.ePowerAttribs.RechargeTime:
-                    conditionsMet = ValidateConditional();
-                    power.RechargeTime = conditionsMet ? AtrModRechargeTime : AtrOrigRechargeTime;
+                case Enums.ePowerAttribs.RechargeTime when validConds:
+                    //power.RechargeTime = ValidateConditional() ? AtrModRechargeTime : AtrOrigRechargeTime;
+                    power.RechargeTime = AtrModRechargeTime;
                     break;
-                case Enums.ePowerAttribs.SecondaryRange:
-                    conditionsMet = ValidateConditional();
-                    power.RangeSecondary = conditionsMet ? AtrModSecondaryRange : AtrOrigSecondaryRange;
+                case Enums.ePowerAttribs.SecondaryRange when validConds:
+                    //power.RangeSecondary = conditionsMet ? AtrModSecondaryRange : AtrOrigSecondaryRange;
+                    power.RangeSecondary = AtrModSecondaryRange;
                     break;
             }
         }

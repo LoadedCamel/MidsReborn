@@ -3680,6 +3680,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 : null;
         }
 
+        public void ApplyModifyEffects()
+        {
+            foreach (var fx in Effects)
+            {
+                fx.UpdateAttrib();
+            }
+        }
+
         public string ExportToJson()
         {
             return JsonConvert.SerializeObject(this, Formatting.Indented);

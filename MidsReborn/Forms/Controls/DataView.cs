@@ -2504,6 +2504,9 @@ namespace Mids_Reborn.Forms.Controls
             }*/
 
             pBase?.ProcessExecutes();
+            pBase?.ApplyModifyEffects();
+
+            // Do not run ApplyModifyEffects() on pEnh, this is done within totals calculations
             pEnh?.ProcessExecutes();
 
             GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
@@ -2518,6 +2521,8 @@ namespace Mids_Reborn.Forms.Controls
         public void SetData()
         {
             pBase?.ProcessExecutes();
+            pBase?.ApplyModifyEffects();
+
             pEnh?.ProcessExecutes();
 
             GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
