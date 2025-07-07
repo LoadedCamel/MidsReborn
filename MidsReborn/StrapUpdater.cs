@@ -7,39 +7,71 @@ namespace Mids_Reborn
 {
     internal static class StrapUpdater
     {
-        private const string NewBootstrapName = "New_MRBBootstrap.exe";
-        private const string OldBootstrapName = "MRBBootstrap.exe";
+        private const string NewPrefix = "New_MRBBootstrap";
+        private const string FinalPrefix = "MRBBootstrap";
 
         internal static void Run()
         {
-            var newBootstrapPath = Path.Combine(AppContext.BaseDirectory, NewBootstrapName);
-            var oldBootstrapPath = Path.Combine(AppContext.BaseDirectory, OldBootstrapName);
+            var baseDir = AppContext.BaseDirectory;
 
-            if (!File.Exists(newBootstrapPath)) return;
-
-            if (IsProcessRunning(Path.GetFileNameWithoutExtension(OldBootstrapName)))
-            {
+            if (IsProcessRunning(FinalPrefix))
                 return;
-            }
 
-            try
+            var newFiles = Directory.GetFiles(baseDir, $"{NewPrefix}*");
+
+            foreach (var sourcePath in newFiles)
             {
-                if (File.Exists(oldBootstrapPath))
+                string fileName = Path.GetFileName(sourcePath);
+
+                if (!fileName.StartsWith(NewPrefix, StringComparison.OrdinalIgnoreCase))
+                    continue;
+
+                string suffix = fileName.Substring(NewPrefix.Length); // everything after "New_MRBBootstrap"
+                string targetPath = Path.Combine(baseDir, FinalPrefix + suffix);
+
+                try
                 {
-                    File.Delete(oldBootstrapPath);
-                }
+                    if (IsFileLocked(targetPath))
+                        continue;
 
-                File.Move(newBootstrapPath, oldBootstrapPath);
-            }
-            catch
-            {
-                // ignored
+                    if (File.Exists(targetPath))
+                        File.Delete(targetPath);
+
+                    File.Move(sourcePath, targetPath);
+                }
+                catch (Exception ex)
+                {
+                    Debug.WriteLine($"[StrapUpdater] Failed to move {sourcePath} → {targetPath}: {ex.Message}");
+                }
             }
         }
 
-        private static bool IsProcessRunning(string processName)
+        private static bool IsProcessRunning(string baseName)
         {
-            return Process.GetProcessesByName(processName).Any();
+            try
+            {
+                return Process.GetProcessesByName(Path.GetFileNameWithoutExtension(baseName)).Any();
+            }
+            catch
+            {
+                return true;
+            }
+        }
+
+        private static bool IsFileLocked(string path)
+        {
+            if (!File.Exists(path))
+                return false;
+
+            try
+            {
+                using var stream = File.Open(path, FileMode.Open, FileAccess.Read, FileShare.None);
+                return false;
+            }
+            catch (IOException)
+            {
+                return true;
+            }
         }
     }
 }

@@ -70,7 +70,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     Name = MidsContext.AppName,
                     Version = result.AppVersion,
                     File = result.AppFile,
-                    TargetPath = AppContext.BaseDirectory
+                    SourceUri = result.AppSourceUri
                 });
             }
 
@@ -82,7 +82,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     Name = DatabaseAPI.DatabaseName,
                     Version = result.DbVersion,
                     File = result.DbFile,
-                    TargetPath = Files.BaseDataPath
+                    SourceUri = result.DbSourceUri
                 });
             }
 
@@ -107,19 +107,29 @@ namespace Mids_Reborn.Forms.UpdateSystem
         {
             try
             {
+                var exePath = Path.Combine(AppContext.BaseDirectory, "MRBBootstrap.exe");
+
+                if (!File.Exists(exePath))
+                {
+                    MessageBox.Show("MRBBootstrap.exe not found:\n" + exePath);
+                    logger?.Info("[UpdateCoordinator] Bootstrapper EXE not found.");
+                    return;
+                }
+
                 var psi = new ProcessStartInfo
                 {
-                    FileName = "MRBBootstrap.exe",
-                    Arguments = $"\"{manifestPath}\"",
+                    FileName = exePath,
+                    Arguments = $"--manifest \"{manifestPath}\"",
                     UseShellExecute = true
                 };
 
-                logger?.Info("[UpdateCoordinator] Launching MRBBootstrap...");
+                logger?.Info($"[UpdateCoordinator] Launching MRBBootstrap from: {exePath}");
                 Process.Start(psi);
             }
             catch (Exception ex)
             {
                 logger?.Info($"[UpdateCoordinator] Failed to launch bootstrapper: {ex.Message}");
+                MessageBox.Show("Bootstrapper failed to launch:\n" + ex.Message);
             }
         }
 

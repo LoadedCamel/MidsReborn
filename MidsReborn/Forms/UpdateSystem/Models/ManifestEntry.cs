@@ -3,29 +3,18 @@ using System.Text.Json.Serialization;
 
 namespace Mids_Reborn.Forms.UpdateSystem.Models
 {
-    public class ManifestEntry
+    public class ManifestEntry(PatchType? type = null, string? name = null, string? version = null, string? file = null)
     {
         [JsonConverter(typeof(JsonStringEnumConverter))]
-        public PatchType? Type { get; set; }
-        public string? Name { get; set; }
-        public string? Version { get; set; }
-        public string? File { get; set; }
+        public PatchType? Type { get; set; } = type;
 
-        public ManifestEntry(PatchType type, string name, string version, string file)
-        {
-            Type = type;
-            Name = name;
-            Version = version;
-            File = file;
-        }
+        public string? Name { get; set; } = name;
+        public string? Version { get; set; } = version;
+        public string? File { get; set; } = file;
 
-        public ManifestEntry()
-        {
-            Type = null;
-            Name = null;
-            Version = null;
-            File = null;
-        }
+        // Not serialized, but tracked internally
+        [JsonIgnore]
+        public string? SourceUri { get; set; }
     }
 
     public class ManifestEntryDto
@@ -35,6 +24,7 @@ namespace Mids_Reborn.Forms.UpdateSystem.Models
         public string? Name { get; set; }
         public string? Version { get; set; }
         public string? File { get; set; }
-        public string? TargetPath { get; set; }
+
+        public string? SourceUri { get; set; }
     }
 }

@@ -69,6 +69,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 result.AppName = appEntry.Name;
                 result.AppVersion = appEntry.Version;
                 result.AppFile = appEntry.File;
+                result.AppSourceUri = appEntry.SourceUri;
             }
 
             var dbEntry = entries.FirstOrDefault(e =>
@@ -84,6 +85,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             result.DbName = dbEntry.Name;
             result.DbVersion = dbEntry.Version;
             result.DbFile = dbEntry.File;
+            result.DbSourceUri = dbEntry.SourceUri;
 
             return result;
         }
@@ -124,10 +126,21 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     return new Manifest();
                 }
 
-                // Step 2: Attempt to fetch and deserialize
+                // === Step 2: GET and parse manifest
                 var getRequest = new RestRequest();
                 var result = await client.GetAsync<Manifest>(getRequest);
-                return result ?? new Manifest();
+                if (result is null)
+                {
+                    return new Manifest();
+                }
+
+                // === Step 3: Tag all entries with the manifest's source URI
+                foreach (var entry in result.Updates)
+                {
+                    entry.SourceUri = GetBaseUriFromFileUrl(manifestUrl);
+                }
+
+                return result;
             }
             catch (Exception e)
             {
@@ -154,6 +167,20 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 true);
 
             mbox.ShowDialog();
+        }
+
+        public static string GetBaseUriFromFileUrl(string url)
+        {
+            if (!Uri.TryCreate(url, UriKind.Absolute, out var uri))
+                throw new ArgumentException(@"Invalid URL", nameof(url));
+
+            // Remove just the last segment (file name)
+            var segments = uri.Segments;
+            if (segments.Length == 0)
+                throw new InvalidOperationException("URL has no segments.");
+
+            var basePath = string.Join("", segments[..^1]); // all but last
+            return new Uri(uri, basePath).ToString();
         }
     }
 }

@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "MRB_Boostrap": {
+      "commandName": "Project",
+      "commandLineArgs": "--uitest"
+    }
+  }
+}
