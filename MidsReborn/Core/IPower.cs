@@ -328,6 +328,8 @@ namespace Mids_Reborn.Core
 
         string GetDifferentAttributesSubPower(int fxIndex);
 
+        void ApplyModifyEffects();
+
         string ExportToJson();
 
         bool AppliedPowersOverride { get; set; }

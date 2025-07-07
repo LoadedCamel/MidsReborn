@@ -1896,14 +1896,14 @@ namespace Mids_Reborn.Forms
             // 
             this.llPrimary.Expandable = true;
             this.llPrimary.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
-                System.Drawing.GraphicsUnit.Pixel, (byte)0);
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.llPrimary.HighVis = true;
             this.llPrimary.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llPrimary.Location = new System.Drawing.Point(16, 206);
             this.llPrimary.MaxHeight = 600;
             this.llPrimary.Name = "llPrimary";
-            this.llPrimary.PaddingX = 2;
-            this.llPrimary.PaddingY = 2;
+            this.llPrimary.PaddingX = 4;
+            this.llPrimary.PaddingY = 1;
             this.llPrimary.Scrollable = true;
             this.llPrimary.ScrollBarColor = System.Drawing.Color.Red;
             this.llPrimary.ScrollBarWidth = 11;
@@ -1921,14 +1921,14 @@ namespace Mids_Reborn.Forms
             // 
             this.llSecondary.Expandable = true;
             this.llSecondary.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
-                System.Drawing.GraphicsUnit.Pixel, (byte)0);
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.llSecondary.HighVis = true;
             this.llSecondary.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llSecondary.Location = new System.Drawing.Point(170, 206);
             this.llSecondary.MaxHeight = 600;
             this.llSecondary.Name = "llSecondary";
-            this.llSecondary.PaddingX = 2;
-            this.llSecondary.PaddingY = 2;
+            this.llSecondary.PaddingX = 4;
+            this.llSecondary.PaddingY = 1;
             this.llSecondary.Scrollable = true;
             this.llSecondary.ScrollBarColor = System.Drawing.Color.Red;
             this.llSecondary.ScrollBarWidth = 11;
@@ -1946,14 +1946,14 @@ namespace Mids_Reborn.Forms
             // 
             this.llPool0.Expandable = true;
             this.llPool0.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
-                System.Drawing.GraphicsUnit.Pixel, (byte)0);
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.llPool0.HighVis = true;
             this.llPool0.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llPool0.Location = new System.Drawing.Point(0, 47); // 328, 206
             this.llPool0.MaxHeight = 500;
             this.llPool0.Name = "llPool0";
-            this.llPool0.PaddingX = 2;
-            this.llPool0.PaddingY = 2;
+            this.llPool0.PaddingX = 4;
+            this.llPool0.PaddingY = 1;
             this.llPool0.Scrollable = true;
             this.llPool0.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool0.ScrollBarWidth = 11;
@@ -1971,15 +1971,15 @@ namespace Mids_Reborn.Forms
             // 
             this.llPool1.Expandable = true;
             this.llPool1.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
-                System.Drawing.GraphicsUnit.Pixel, (byte)0);
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.llPool1.ForeColor = System.Drawing.Color.Yellow;
             this.llPool1.HighVis = true;
             this.llPool1.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llPool1.Location = new System.Drawing.Point(0, 152); // 328, 314
             this.llPool1.MaxHeight = 500;
             this.llPool1.Name = "llPool1";
-            this.llPool1.PaddingX = 2;
-            this.llPool1.PaddingY = 2;
+            this.llPool1.PaddingX = 4;
+            this.llPool1.PaddingY = 1;
             this.llPool1.Scrollable = true;
             this.llPool1.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool1.ScrollBarWidth = 11;
@@ -1997,15 +1997,15 @@ namespace Mids_Reborn.Forms
             // 
             this.llPool2.Expandable = true;
             this.llPool2.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
-                System.Drawing.GraphicsUnit.Pixel, (byte)0);
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.llPool2.ForeColor = System.Drawing.Color.Yellow;
             this.llPool2.HighVis = true;
             this.llPool2.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llPool2.Location = new System.Drawing.Point(0, 266); // 328, 422
             this.llPool2.MaxHeight = 500;
             this.llPool2.Name = "llPool2";
-            this.llPool2.PaddingX = 2;
-            this.llPool2.PaddingY = 2;
+            this.llPool2.PaddingX = 4;
+            this.llPool2.PaddingY = 1;
             this.llPool2.Scrollable = true;
             this.llPool2.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool2.ScrollBarWidth = 11;
@@ -2023,15 +2023,15 @@ namespace Mids_Reborn.Forms
             // 
             this.llPool3.Expandable = true;
             this.llPool3.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
-                System.Drawing.GraphicsUnit.Pixel, (byte)0);
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.llPool3.ForeColor = System.Drawing.Color.Yellow;
             this.llPool3.HighVis = true;
             this.llPool3.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llPool3.Location = new System.Drawing.Point(0, 374); // 328, 530
             this.llPool3.MaxHeight = 500;
             this.llPool3.Name = "llPool3";
-            this.llPool3.PaddingX = 2;
-            this.llPool3.PaddingY = 2;
+            this.llPool3.PaddingX = 4;
+            this.llPool3.PaddingY = 1;
             this.llPool3.Scrollable = true;
             this.llPool3.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             this.llPool3.ScrollBarWidth = 11;
@@ -2049,14 +2049,14 @@ namespace Mids_Reborn.Forms
             // 
             this.llAncillary.Expandable = false;
             this.llAncillary.Font = new System.Drawing.Font(Fonts.Family("Noto Sans"), 12f, System.Drawing.FontStyle.Regular,
-                System.Drawing.GraphicsUnit.Pixel, (byte)0);
+                System.Drawing.GraphicsUnit.Pixel, 0);
             this.llAncillary.HighVis = true;
             this.llAncillary.HoverColor = System.Drawing.Color.WhiteSmoke;
             this.llAncillary.Location = new System.Drawing.Point(0, 477); // 328, 638
             this.llAncillary.MaxHeight = 500;
             this.llAncillary.Name = "llAncillary";
-            this.llAncillary.PaddingX = 2;
-            this.llAncillary.PaddingY = 2;
+            this.llAncillary.PaddingX = 4;
+            this.llAncillary.PaddingY = 1;
             this.llAncillary.Scrollable = true;
             this.llAncillary.ScrollBarColor = System.Drawing.Color.Red;
             this.llAncillary.ScrollBarWidth = 11;

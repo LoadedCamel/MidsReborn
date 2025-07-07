@@ -204,5 +204,7 @@ namespace Mids_Reborn.Core
         bool AffectsPetsOnly();
         
         Damage GetDamage();
+
+        public float MinProcChance { get; }
     }
 }

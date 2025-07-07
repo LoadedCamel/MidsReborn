@@ -892,9 +892,21 @@ namespace Mids_Reborn
                     continue;
                 }
 
-                if (CurrentBuild.Powers[hIDX]?.NIDPower > -1)
+                if (CurrentBuild.Powers[hIDX]?.NIDPower <= -1)
                 {
-                    _mathPowers[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX, 1);
+                    continue;
+                }
+
+                // Resync Power.Stacks and PowerEntry.VariableValue
+                if (CurrentBuild?.Powers[hIDX] != null && CurrentBuild?.Powers[hIDX].Power != null && CurrentBuild.Powers[hIDX].Power.Stacks < CurrentBuild?.Powers[hIDX]?.VariableValue)
+                {
+                    CurrentBuild.Powers[hIDX].Power.Stacks = CurrentBuild.Powers[hIDX].VariableValue;
+                }
+
+                _mathPowers[hIDX] = GBPA_SubPass0_AssemblePowerEntry(CurrentBuild.Powers[hIDX].NIDPower, hIDX, 1);
+                if (CurrentBuild.Powers[hIDX] != null)
+                {
+                    _mathPowers[hIDX].Stacks = CurrentBuild.Powers[hIDX].VariableValue;
                 }
             }
 
@@ -935,13 +947,30 @@ namespace Mids_Reborn
         private IPower GBPA_SubPass0_AssemblePowerEntry(int nIDPower, int hIDX, int stackingOverride = -1)
         {
             if (nIDPower < 0)
+            {
                 return null;
+            }
+
+            // Fetch unenhanced power from DB
             IPower power2 = new Power(DatabaseAPI.Database.Power[nIDPower]);
+            
+            // Apply stacks
+            if (stackingOverride > -1)
+            {
+                power2.Stacks = stackingOverride;
+            }
+            else if (hIDX >= 0 && hIDX < CurrentBuild?.Powers.Count && CurrentBuild?.Powers[hIDX] != null)
+            {
+                power2.Stacks = CurrentBuild!.Powers[hIDX]!.VariableValue;
+            }
+            
             GBPA_ApplyPowerOverride(ref power2);
             GBPA_AddEnhFX(ref power2, hIDX);
             power2.AbsorbPetEffects(hIDX, stackingOverride);
             power2.ApplyGrantPowerEffects();
             GBPA_AddSubPowerEffects(ref power2, hIDX);
+            power2.ApplyModifyEffects();
+
             return power2;
         }
 

@@ -71,8 +71,12 @@
   </ImportGroup>
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <OutDir>$(SolutionDir)MidsReborn\bin\$(Platform)\$(Configuration)\net8.0-windows10.0.19041.0\</OutDir>
-    <TargetName>New_$(ProjectName)</TargetName>
+    <OutDir>$(SolutionDir)MidsReborn\bin\$(Configuration)\net8.0-windows10.0.19041.0\</OutDir>
+    <TargetName>$(ProjectName)</TargetName>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ExternalIncludePath>$(VC_IncludePath);$(WindowsSDK_IncludePath);$(MSBuildProjectDirectory)\vcpkg_installed\x64-windows-static\include;$(MSBuildProjectDirectory)\vcpkg_installed\x64-windows\include</ExternalIncludePath>
+    <LibraryPath>$(VC_LibraryPath_x64);$(WindowsSDK_LibraryPath_x64);$(MSBuildProjectDirectory)\vcpkg_installed\x64-windows-static\lib;$(MSBuildProjectDirectory)\vcpkg_installed\x64-windows\lib;$(WindowsSDK_LibraryPath)</LibraryPath>
   </PropertyGroup>
   <PropertyGroup Label="Vcpkg" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <VcpkgUseStatic>true</VcpkgUseStatic>
@@ -120,6 +124,7 @@
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>$(CoreLibraryDependencies);$(AdditionalDependencies);gdiplus.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

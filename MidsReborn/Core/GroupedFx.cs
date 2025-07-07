@@ -345,11 +345,11 @@ namespace Mids_Reborn.Core
         /// <returns>List of damage resistance vectors.</returns>
         private static List<Enums.eDamage> GetAllResistances()
         {
-            return new List<Enums.eDamage>
-            {
+            return
+            [
                 Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
                 Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Toxic
-            };
+            ];
         }
 
         /// <summary>
@@ -358,11 +358,11 @@ namespace Mids_Reborn.Core
         /// <returns>List of main vectors: Immobilized, Held, Stunned, Sleep, Terrorized, Confused.</returns>
         private static List<Enums.eMez> GetAllMez()
         {
-            return new List<Enums.eMez>
-            {
+            return
+            [
                 Enums.eMez.Immobilized, Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep,
                 Enums.eMez.Terrorized, Enums.eMez.Confused
-            };
+            ];
         }
 
         /// <summary>
@@ -371,10 +371,10 @@ namespace Mids_Reborn.Core
         /// <returns>List of movement vectors: SpeedFlying, SpeedJumping, SpeedRunning</returns>
         private static List<Enums.eEffectType> GetAllMovement()
         {
-            return new List<Enums.eEffectType>
-            {
+            return
+            [
                 Enums.eEffectType.SpeedFlying, Enums.eEffectType.SpeedJumping, Enums.eEffectType.SpeedRunning
-            };
+            ];
         }
 
         /// <summary>
@@ -856,15 +856,16 @@ namespace Mids_Reborn.Core
         /// <returns>Negative value if it is positive, stripped of the minus sign if it is negative.</returns>
         private static string InvertStringValue(string value)
         {
-            return value.StartsWith("-") ? value[1..] : $"-{value}";
+            return value.StartsWith('-') ? value[1..] : $"-{value}";
         }
 
         /// <summary>
         /// Generate tooltip for a grouped effect.
         /// </summary>
         /// <param name="power">Source power</param>
+        /// <param name="simple">Short effect text generation</param>
         /// <returns>Build effect string from each effect, then concatenate into a single string (one effect per line)</returns>
-        public string GetTooltip(IPower power)
+        public string GetTooltip(IPower power, bool simple = false)
         {
             var vectors = "";
             var statName = GetStatName(power);
@@ -890,7 +891,7 @@ namespace Mids_Reborn.Core
                     Enums.eEffectType.Enhancement when
                         power.Effects[IncludedEffects[0]].ETModifies is Enums.eEffectType.Mez
                             or Enums.eEffectType.MezResist => !string.IsNullOrEmpty(groupedVector)
-                            ? new List<string> {$"{groupedVector}"}
+                            ? [$"{groupedVector}"]
                             : IncludedEffects
                                 .Select(e => $"{power.Effects[e].MezType}")
                                 .ToList(),
@@ -899,7 +900,7 @@ namespace Mids_Reborn.Core
                         power.Effects[IncludedEffects[0]].ETModifies is Enums.eEffectType.Defense
                             or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity &&
                         !string.IsNullOrEmpty(groupedVector)
-                            ? new List<string> {$"{groupedVector} {power.Effects[IncludedEffects[0]].ETModifies}"}
+                            ? [$"{groupedVector} {power.Effects[IncludedEffects[0]].ETModifies}"]
                             : IncludedEffects
                                 .Select(e =>
                                     power.Effects[e].ETModifies is Enums.eEffectType.Defense
@@ -910,7 +911,7 @@ namespace Mids_Reborn.Core
 
                     Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity
                         or Enums.eEffectType.DamageBuff => !string.IsNullOrEmpty(groupedVector)
-                            ? new List<string> {$"{power.Effects[IncludedEffects[0]].EffectType}({groupedVector})"}
+                            ? [$"{power.Effects[IncludedEffects[0]].EffectType}({groupedVector})"]
                             : IncludedEffects
                                 .Select(e => $"{power.Effects[e].DamageType}")
                                 .ToList(),
@@ -919,7 +920,7 @@ namespace Mids_Reborn.Core
                         .Select(e => $"{power.Effects[e].ETModifies}")
                         .ToList(),
 
-                    _ => new List<string>()
+                    _ => []
                 };
 
                 uniqueVectors.AddRangeUnique(vectorsChunks);
@@ -939,7 +940,7 @@ namespace Mids_Reborn.Core
             for (var i = 0; i < maxRange; i++)
             {
                 var baseEffectString = power.Effects[IncludedEffects[i]]
-                    .BuildEffectString(false, "", false, false, false, false, false, true);
+                    .BuildEffectString(simple, "", false, false, false, simple, false, true);
 
                 var fxTip = power.Effects[IncludedEffects[i]].EffectType switch
                 {

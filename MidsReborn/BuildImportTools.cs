@@ -274,13 +274,14 @@ namespace Mids_Reborn
             return (DatabaseAPI.DatabaseName != "Rebirth" || input?.DisplayName != "Disintegrating") && input != null && !ExcludePowers.Any(p => input.FullName.Contains(p));
         }
 
-        protected string FixPowersetsNames(string powerName)
+        protected string FixPowersetsNames(string powersetName)
         {
-            return powerName.Replace("Warshade_Defensive.Umbral_Aura.", "Inherent.Inherent.")
+            return powersetName.Replace("Warshade_Defensive.Umbral_Aura.", "Inherent.Inherent.")
                 .Replace("Warshade_Offensive.Umbral_Blast.", "Inherent.Inherent.")
                 .Replace("Peacebringer_Offensive.Luminous_Blast.", "Inherent.Inherent.")
                 .Replace("Peacebringer_Defensive.Luminous_Aura.", "Inherent.Inherent.")
-                .Replace("Mastermind_Buff.Shock_Therapy.", "Mastermind_Buff.Electrical_Affinity.");
+                .Replace("Mastermind_Buff.Shock_Therapy.", "Mastermind_Buff.Electrical_Affinity.")
+                .Replace("Epic.Defender_Fire_Mastery.", "Epic.Def_Flame_Mastery.");
         }
 
         public UniqueList<string> GetPowersets()
@@ -296,7 +297,7 @@ namespace Mids_Reborn
         public static int CountPools(UniqueList<string> listPowersets)
         {
             return listPowersets.
-                Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
+                Where(ps => ps.StartsWith("Pool.", StringComparison.OrdinalIgnoreCase))
                 .ToArray()
                 .Length;
         }
@@ -308,11 +309,12 @@ namespace Mids_Reborn
             if (nbPools == 4) return;
 
             var pickedPowerPools = listPowersets
-                .Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
+                .Where(ps => ps.StartsWith("Pool.", StringComparison.OrdinalIgnoreCase))
                 .ToArray();
             var dbPowerPools = Database.Instance.Powersets
                 .Where(ps =>
-                    ps.FullName.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0 &&
+                    ps != null &&
+                    ps.FullName.StartsWith("Pool.", StringComparison.OrdinalIgnoreCase) &&
                     !pickedPowerPools.Contains(ps.FullName))
                 .OrderBy(e => e.DisplayName)
                 .Select(e => e.FullName)

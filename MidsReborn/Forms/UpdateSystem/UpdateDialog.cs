@@ -15,15 +15,22 @@ namespace Mids_Reborn.Forms.UpdateSystem
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
             Updates = [];
 
+            if (result.IsBootstrapperUpdateAvailable)
+            {
+                var versionChunks = result.BootstrapperVersion.Split('-');
+                Updates.Add($"・ {result.BootstrapperName.Replace("Mids Reborn", "Mids'")} (revision {versionChunks[0]})");
+            }
+
             if (result.IsAppUpdateAvailable)
             {
-                Updates.Add($"* {result.AppName} v{result.AppVersion}");
+                Updates.Add($"・ {result.AppName} v{result.AppVersion}");
             }
 
             if (result.IsDbUpdateAvailable)
             {
-                Updates.Add($"* {result.DbName} Database ({result.DbVersion})");
+                Updates.Add($"・ {result.DbName} Database ({result.DbVersion})");
             }
+
             Load += OnQuery_Load;
             InitializeComponent();
         }

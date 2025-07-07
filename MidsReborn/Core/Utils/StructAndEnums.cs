@@ -43,7 +43,8 @@ namespace Mids_Reborn.Core.Utils
     public enum PatchType
     {
         Application,
-        Database
+        Database,
+        Bootstrapper
     }
 
     public enum ManifestStatus
