@@ -28,7 +28,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             InitializeComponent();
             Load += frmPowerEffect_Load;
             Icon = Resources.MRB_Icon_Concept;
-            if (iFx != null) MyFx = (IEffect)iFx.Clone();
+            if (iFx != null)
+            {
+                MyFx = (IEffect)iFx.Clone();
+            }
+
             _effectIndex = fxIndex;
         }
 
@@ -38,7 +42,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             InitializeComponent();
             Load += frmPowerEffect_Load;
             Icon = Resources.MRB_Icon_Concept;
-            if (iFx != null) MyFx = (IEffect)iFx.Clone();
+            if (iFx != null)
+            {
+                MyFx = (IEffect)iFx.Clone();
+            }
+
             _effectIndex = fxIndex;
         }
 
@@ -289,30 +297,22 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private void DisplayEffectData()
         {
             cbPercentageOverride.SelectedIndex = (int)MyFx.DisplayPercentageOverride;
-            txtFXScale.Text = $@"{MyFx.Scale:####0.0##}";
-            txtFXDuration.Text = $@"{MyFx.nDuration:####0.0##}";
-            txtFXMag.Text = $@"{MyFx.nMagnitude:####0.0##}";
+            txtFXScale.Text = $@"{MyFx.Scale:####0.####}";
+            txtFXDuration.Text = $@"{MyFx.nDuration:####0.####}";
+            txtFXMag.Text = $@"{MyFx.nMagnitude:####0.####}";
             txtFXTicks.Text = $@"{MyFx.Ticks:####0}";
             txtOverride.Text = MyFx.Override;
-            txtFXDelay.Text = $@"{MyFx.DelayedTime:####0.0##}";
-            txtFXProb.Text = $@"{MyFx.BaseProbability:####0.0##}";
-            txtPPM.Text = $@"{MyFx.ProcsPerMinute:####0.0##}";
+            txtFXDelay.Text = $@"{MyFx.DelayedTime:####0.####}";
+            txtFXProb.Text = $@"{MyFx.BaseProbability:####0.####}";
+            txtPPM.Text = $@"{MyFx.ProcsPerMinute:####0.####}";
             cbAttribute.SelectedIndex = (int)MyFx.AttribType;
             btnExprBuilder.Enabled = MyFx.AttribType == Enums.eAttribType.Expression;
             cbAspect.SelectedIndex = (int)MyFx.Aspect;
             cbModifier.SelectedIndex = DatabaseAPI.NidFromUidAttribMod(MyFx.ModifierTable);
             lblAffectsCaster.Text = "";
-            if (MyFx.ToWho == Enums.eToWho.All)
-            {
-                cbAffects.SelectedIndex = 1;
-            }
-            else
-            {
-                cbAffects.SelectedIndex = (int)MyFx.ToWho;
-            }
+            cbAffects.SelectedIndex = MyFx.ToWho == Enums.eToWho.All ? 1 : (int)MyFx.ToWho;
 
-            var nbFxId = cmbEffectId.Items.Count;
-            for (var i = 0; i < nbFxId; i++)
+            for (var i = 0; i < cmbEffectId.Items.Count; i++)
             {
                 if (cmbEffectId.Items[i].ToString() != MyFx.EffectId) continue;
 
@@ -794,7 +794,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            txtFXDelay.Text = $@"{MyFx.DelayedTime:####0.0##}";
+            txtFXDelay.Text = $@"{MyFx.DelayedTime:####0.####}";
             UpdateFxText();
         }
 
@@ -860,7 +860,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            txtFXMag.Text = $@"{MyFx.nMagnitude:####0.0##}";
+            txtFXMag.Text = $@"{MyFx.nMagnitude:####0.####}";
             UpdateFxText();
         }
 
@@ -925,7 +925,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            txtFXProb.Text = $@"{MyFx.BaseProbability:####0.0##}";
+            txtFXProb.Text = $@"{MyFx.BaseProbability:####0.####}";
             UpdateFxText();
         }
 
@@ -936,7 +936,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            txtFXScale.Text = $@"{MyFx.Scale:####0.0##}";
+            txtFXScale.Text = $@"{MyFx.Scale:####0.####}";
             UpdateFxText();
         }
 
@@ -1014,7 +1014,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            txtPPM.Text = $@"{MyFx.ProcsPerMinute:####0.0##}";
+            txtPPM.Text = $@"{MyFx.ProcsPerMinute:####0.####}";
         }
 
         private void txtPPM_TextChanged(object sender, EventArgs e)

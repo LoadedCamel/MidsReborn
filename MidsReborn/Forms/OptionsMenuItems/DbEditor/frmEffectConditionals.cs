@@ -400,13 +400,20 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.BeginUpdate();
                     if (selected != null)
                     {
-                        var stackRange = selected.VariableMin == 0
-                            ? FloatRange(selected.VariableMin, selected.VariableMax + 1, 1)
-                            : FloatRange(selected.VariableMin, selected.VariableMax, 1);
-
+                        var stackRange = FloatRange(selected.VariableMin, selected.VariableMax + 1, 1);
                         foreach (var stackNum in stackRange)
                         {
-                            lvConditionalBool.Items.Add(stackNum.ToString(CultureInfo.CurrentCulture));
+                            if (stackNum < selected.VariableMin)
+                            {
+                                continue;
+                            }
+
+                            if (stackNum > selected.VariableMax)
+                            {
+                                break;
+                            }
+
+                            lvConditionalBool.Items.Add($"{stackNum}");
                         }
                     }
 
@@ -423,7 +430,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.Items.Clear();
                     foreach (var num in tRange)
                     {
-                        lvConditionalBool.Items.Add(num.ToString());
+                        lvConditionalBool.Items.Add($"{num}");
                     }
 
                     lvConditionalBool.Columns[0].Text = @"# of Members";
