@@ -1,21 +1,17 @@
-﻿using Mids_Reborn.Core;
+﻿using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Text.Json;
+using System.Text.Json.Serialization;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms.Controls;
 using Mids_Reborn.Forms.UpdateSystem.Models;
 using MRBLogging;
-using RestSharp;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.IO;
-using System.Linq;
-using System.Net;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using RestSharp.Serializers.Json;
 
 namespace Mids_Reborn.Forms.UpdateSystem
 {
@@ -27,7 +23,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
             logger?.Info("[UpdateCoordinator] Starting update check...");
 
             var result = await UpdateUtils.CheckForUpdatesAsync(honorDelay);
-            if (result is { IsAppUpdateAvailable: false, IsDbUpdateAvailable: false, IsBootstrapperUpdateAvailable: false})
+            if (result is { IsAppUpdateAvailable: false, IsDbUpdateAvailable: false })
             {
                 logger?.Info("[UpdateCoordinator] No updates available.");
                 if (startupCheck)
@@ -51,79 +47,18 @@ namespace Mids_Reborn.Forms.UpdateSystem
             }
 
             // Build manifest DTO entries
-            var manifestEntriesFull = BuildManifestEntryDtoList(result, false);
             var manifestEntries = BuildManifestEntryDtoList(result);
 
             // Write JSON patch manifest to temp
             var jsonPath = WriteTemporaryManifest(manifestEntries);
             logger?.Info($"[UpdateCoordinator] Patch manifest written: {jsonPath}");
-            var i = 1;
-            foreach (var entry in manifestEntriesFull)
-            {
-                logger?.Info($"[UpdateCoordinator] Relevant manifest entry #{i++}: Name: {entry.Name ?? "<null>"}, File: {entry.File ?? "<null>"}, TargetPath: {entry.TargetPath ?? "<null>"}, {entry.Version ?? "<null>"}, Type: {entry.Type}");
-            }
-
-            if (result.IsBootstrapperUpdateAvailable)
-            {
-                Debug.WriteLine("Bootstrapper update available. Updating.");
-                await UpdateBootstrapper(manifestEntriesFull.First(e => e.Name == "Mids Reborn Bootstrapper"));
-            }
 
             // Launch bootstrapper
-            if (result.IsAppUpdateAvailable | result.IsDbUpdateAvailable)
-            {
-                LaunchBootstrapper(jsonPath, logger);
-            }
-
+            LaunchBootstrapper(jsonPath, logger);
             return true;
         }
 
-        public static async Task<bool> UpdateBootstrapper(ManifestEntryDto manifestEntry)
-        {
-            var jsonOptions = new JsonSerializerOptions
-            {
-                PropertyNameCaseInsensitive = true,
-                Converters = { new JsonStringEnumConverter() }
-            };
-
-            var options = new RestClientOptions($"https://updates.midsreborn.com/{manifestEntry.File}")
-            {
-                ThrowOnAnyError = false,
-                Timeout = TimeSpan.FromSeconds(5)
-            };
-
-
-            Debug.WriteLine($"[Bootstrapper update] Will download from {$"https://updates.midsreborn.com/{manifestEntry.File}"}");
-            using var client = new RestClient(options, configureSerialization: s => s.UseSystemTextJson(jsonOptions));
-
-            try
-            {
-                var headRequest = new RestRequest().AddHeader("Accept", "application/json");
-                headRequest.Method = Method.Head;
-
-                var headResponse = await client.ExecuteAsync(headRequest);
-                if (!headResponse.IsSuccessful || headResponse.StatusCode == HttpStatusCode.NotFound)
-                {
-                    // Show message box if failed or not found
-                    Debug.WriteLine("File not found or rest query failed");
-                    return false;
-                }
-
-                Debug.WriteLine("[Bootstrapper update] Launching bootstrapper updater gui");
-                using var bootstrapperUpdaterWindow = new BootstrapperUpdateDialog($"https://updates.midsreborn.com/{manifestEntry.File}", manifestEntry.Version, manifestEntry.TargetPath);
-                var ret = bootstrapperUpdaterWindow.ShowDialog();
-                Debug.WriteLine($"Bootstrapper update] Gui return code: {ret}");
-
-                return ret == DialogResult.OK;
-
-            }
-            catch (Exception ex)
-            {
-                return false;
-            }
-        }
-
-        private static List<ManifestEntryDto> BuildManifestEntryDtoList(UpdateCheckResult result, bool ignoreBootstrapper = true)
+        private static List<ManifestEntryDto> BuildManifestEntryDtoList(UpdateCheckResult result)
         {
             var entries = new List<ManifestEntryDto>();
 
@@ -149,24 +84,6 @@ namespace Mids_Reborn.Forms.UpdateSystem
                     File = result.DbFile,
                     SourceUri = result.DbSourceUri
                 });
-            }
-
-            if (ignoreBootstrapper)
-            {
-                return entries;
-            }
-
-            if (result.IsBootstrapperUpdateAvailable)
-            {
-                entries.Add(new ManifestEntryDto
-                    {
-                        Type = PatchType.Bootstrapper,
-                        Name = result.BootstrapperName,
-                        File = result.BootstrapperFile,
-                        Version = result.BootstrapperVersion,
-                        TargetPath = AppContext.BaseDirectory
-                    }
-                );
             }
 
             return entries;
