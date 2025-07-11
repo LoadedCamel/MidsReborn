@@ -357,7 +357,7 @@ namespace Mids_Reborn.Core
 
         public void SaveConfig()
         {
-            if (!File.Exists(Files.FNameJsonConfig) || new FileInfo(Files.FNameJsonConfig).Length == 0)
+            if (!File.Exists(Files.FNameJsonConfig))
             {
                 File.WriteAllText(Files.FNameJsonConfig, "{}");
             }

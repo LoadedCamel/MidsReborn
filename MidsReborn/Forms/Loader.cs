@@ -28,7 +28,7 @@ namespace Mids_Reborn.Forms
             {
                 if (!File.Exists(Files.FNameJsonConfig))
                 {
-                    File.Create(Files.FNameJsonConfig);
+                    File.WriteAllText(Files.FNameJsonConfig, "{}");
                 }
                 var fileInfo = new FileInfo(Files.FNameJsonConfig);
                 return fileInfo.Length <= 8;
