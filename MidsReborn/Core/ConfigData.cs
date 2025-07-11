@@ -357,11 +357,11 @@ namespace Mids_Reborn.Core
 
         public void SaveConfig()
         {
-            if (!File.Exists(Files.FNameJsonConfig))
+            if (!File.Exists(Files.FNameJsonConfig) || new FileInfo(Files.FNameJsonConfig).Length == 0)
             {
-                File.Create(Files.FNameJsonConfig);
+                File.WriteAllText(Files.FNameJsonConfig, "{}");
             }
-
+            
             var serializer = Serializer.GetSerializer();
             Save(serializer, Files.FNameJsonConfig);
             SaveOverrides(serializer);
@@ -372,7 +372,7 @@ namespace Mids_Reborn.Core
             if (!File.Exists(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath)))
             {
                 MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was not found.\r\nCreating a new one...", @"Database file missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                CompOverride = Array.Empty<Enums.CompOverride>();
+                CompOverride = [];
                 SaveOverrides(Serializer.GetSerializer());
 
                 return;
