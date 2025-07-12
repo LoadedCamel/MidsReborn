@@ -107,13 +107,14 @@ namespace Mids_Reborn
                 {
                     ConfigData.Initialize(true);
                 }
-                messenger.SetMessage("Loading Overrides...");
-                MidsContext.Config?.LoadOverrides(MidsContext.Config.DataPath);
+                
                 if (MidsContext.Config != null && MidsContext.Config.DataPath == null)
                 {
                     MidsContext.Config.DataPath = Files.FDefaultPath;
                     path = Files.FDefaultPath;
                 }
+                messenger.SetMessage("Loading Overrides...");
+                MidsContext.Config?.LoadOverrides(MidsContext.Config.DataPath);
                 messenger.SetMessage("Loading Server Data...");
                 if (!DatabaseAPI.LoadServerData(path))
                 {
