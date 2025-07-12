@@ -103,6 +103,10 @@ namespace Mids_Reborn
                 //messenger.SetMessage("Initializing Data...");
                 messenger.SetMessage("Loading Application Configuration...");
                 ConfigData.Initialize();
+                if (MidsContext.Config == null)
+                {
+                    ConfigData.Initialize(true);
+                }
                 messenger.SetMessage("Loading Overrides...");
                 MidsContext.Config?.LoadOverrides(MidsContext.Config.DataPath);
                 messenger.SetMessage("Loading Server Data...");

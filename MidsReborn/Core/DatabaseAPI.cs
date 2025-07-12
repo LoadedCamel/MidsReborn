@@ -1334,15 +1334,9 @@ namespace Mids_Reborn.Core
             return -1;
         }
 
-        public static string DatabaseName
-        {
-            get
-            {
-                string name;
-                name = MidsContext.Config == null ? new DirectoryInfo(Files.FDefaultPath).Name : new DirectoryInfo(MidsContext.Config.DataPath).Name;
-                return name;
-            }
-        }
+        public static string DatabaseName => MidsContext.Config?.DataPath == null
+                ? new DirectoryInfo(Files.FDefaultPath).Name
+                : new DirectoryInfo(MidsContext.Config.DataPath).Name;
 
         private static void CheckEhcBoosts()
         {
