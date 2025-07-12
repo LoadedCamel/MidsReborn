@@ -96,7 +96,7 @@ namespace Mids_Reborn.Core
             PowerListsWordwrapMode = Enums.WordwrapMode.Legacy;
             Mode = Modes.User;
             CombatContextSettings = new CombatContext();
-            InitializeComponent();
+            //InitializeComponent();
         }
 
         // these properties require setters for deserialization
@@ -281,12 +281,12 @@ namespace Mids_Reborn.Core
             {
                 Instance = new ConfigData();
                 Instance.SaveConfig();
-                Instance.InitializeComponent();
+                //Instance.InitializeComponent();
                 return;
             }
 
             Instance = serializer.Deserialize<ConfigData>(File.ReadAllText(Files.FNameJsonConfig));
-            Instance.InitializeComponent();
+            //Instance.InitializeComponent();
         }
 
         private void InitializeComponent()
@@ -367,18 +367,25 @@ namespace Mids_Reborn.Core
             SaveOverrides(serializer);
         }
 
-        private void LoadOverrides()
+        public void LoadOverrides(string dataPath = "")
         {
-            if (!File.Exists(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath)))
+            if (string.IsNullOrWhiteSpace(dataPath))
+            {
+                CompOverride = [];
+                //SaveOverrides(Serializer.GetSerializer());
+                return;
+            }
+
+            if (!File.Exists(Files.SelectDataFileLoad(Files.MxdbFileOverrides, dataPath)))
             {
                 MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was not found.\r\nCreating a new one...", @"Database file missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CompOverride = [];
-                SaveOverrides(Serializer.GetSerializer());
+                SaveOverrides(Serializer.GetSerializer(), dataPath);
 
                 return;
             }
 
-            using var fileStream = new FileStream(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath), FileMode.Open, FileAccess.Read);
+            using var fileStream = new FileStream(Files.SelectDataFileLoad(Files.MxdbFileOverrides, dataPath), FileMode.Open, FileAccess.Read);
             using var binaryReader = new BinaryReader(fileStream);
             if (binaryReader.ReadString() != OverrideNames)
             {
@@ -459,16 +466,25 @@ namespace Mids_Reborn.Core
             SaveRawMhd(serializer, toSerialize, iFilename, null);
         }
 
-        private void SaveOverrides(ISerialize serializer)
+        private void SaveOverrides(ISerialize serializer, string dataPath = "")
         {
-            var fn = Files.SelectDataFileLoad("Compare.mhd");
+            const string overridesFileName = "Compare.mhd";
+
+            var fn = string.IsNullOrWhiteSpace(dataPath)
+                ? Files.SelectDataFileLoad(overridesFileName)
+                : Path.Combine(dataPath, overridesFileName);
+            var dir = Path.GetDirectoryName(fn);
+            if (dir != null && !Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
             //SaveRawOverrides(serializer, fn, OverrideNames);
 
             using var fileStream = new FileStream(fn, FileMode.Create);
             using var binaryWriter = new BinaryWriter(fileStream);
             binaryWriter.Write(OverrideNames);
             binaryWriter.Write(CompOverride.Length - 1);
-            for (var index = 0; index <= CompOverride.Length - 1; ++index)
+            for (var index = 0; index < CompOverride.Length; index++)
             {
                 binaryWriter.Write(CompOverride[index].Powerset);
                 binaryWriter.Write(CompOverride[index].Power);

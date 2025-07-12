@@ -100,7 +100,11 @@ namespace Mids_Reborn
 
             public static async Task LoadData(IMessenger messenger, string? path)
             {
-                messenger.SetMessage("Initializing Data...");
+                //messenger.SetMessage("Initializing Data...");
+                messenger.SetMessage("Loading Application Configuration...");
+                ConfigData.Initialize();
+                messenger.SetMessage("Loading Overrides...");
+                MidsContext.Config?.LoadOverrides(MidsContext.Config.DataPath);
                 messenger.SetMessage("Loading Server Data...");
                 if (!DatabaseAPI.LoadServerData(path))
                 {
