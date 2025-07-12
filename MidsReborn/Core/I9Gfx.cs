@@ -73,6 +73,11 @@ namespace Mids_Reborn.Core
         private static IEnumerable<ImageInfo> GetExtendedImages(string? path)
         {
             var retList = new List<ImageInfo>();
+            if (path == null)
+            {
+                return retList;
+            }
+
             var files = Directory.GetFiles(path, ImageFilter, SearchOption.AllDirectories).ToList();
             foreach (var file in files)
             {
