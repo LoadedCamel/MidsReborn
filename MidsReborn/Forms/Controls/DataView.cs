@@ -896,7 +896,8 @@ namespace Mids_Reborn.Forms.Controls
                              or Enums.eEffectType.DesignerStatus or Enums.eEffectType.StealthRadiusPlayer
                              or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x
                              or Enums.eEffectType.MovementControl or Enums.eEffectType.MovementFriction
-                             or Enums.eEffectType.Rage or Enums.eEffectType.ModifyAttrib or Enums.eEffectType.LevelShift) ||
+                             or Enums.eEffectType.Rage or Enums.eEffectType.ModifyAttrib or Enums.eEffectType.RechargePower
+                             or Enums.eEffectType.LevelShift) ||
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid))
                 : GroupedFx.FilterListItemsExt(EffectsItemPairs,
