@@ -111,7 +111,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 // === Step 0: Check if manifest URL is pointing to an old-style XML file
                 if (manifestUrl.EndsWith(".xml", StringComparison.OrdinalIgnoreCase))
                 {
-                    ShowMissingManifestWarning(database, manifestUrl);
+                    ShowLegacyManifestWarning(database, manifestUrl);
                     return new Manifest();
                 }
 
@@ -162,6 +162,21 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 $"This may indicate a misconfiguration or an outdated or missing manifest.\r\n" +
                 $"If this is a custom or community server, please reach out to the database administrator(s).\r\n\r\n" +
                 $"URL: {manifestUrl}",
+                MessageBoxEx.MessageBoxExButtons.Ok,
+                MessageBoxEx.MessageBoxExIcon.Warning,
+                true);
+
+            mbox.ShowDialog();
+        }
+
+        private static void ShowLegacyManifestWarning(string serverName, string manifestUrl)
+        {
+            var mbox = new MessageBoxEx(@"Check for Update(s)",
+                $"Manifest file for {serverName} database has been found,\r\nbut it uses the old XML format which has been deprecated.\r\n\r\n" +
+                (MidsContext.Config?.Mode != ConfigData.Modes.User
+                    ? "Please update manifest URL to JSON in the Server Data from the Database Menu."
+                    : "This may indicate a misconfiguration or an outdated manifest\r\n\r\nIf this is a custom or community server, please reach out to the database administrator(s).") +
+                      $"\r\n\r\nURL: {manifestUrl}",
                 MessageBoxEx.MessageBoxExButtons.Ok,
                 MessageBoxEx.MessageBoxExIcon.Warning,
                 true);

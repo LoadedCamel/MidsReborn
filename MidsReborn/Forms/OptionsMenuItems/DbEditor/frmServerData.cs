@@ -63,10 +63,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
                 else
                 {
-                    if (e.Text.EndsWith(".xml"))
+                    if (e.Text.EndsWith(".xml") | e.Text.EndsWith(".json"))
                     {
                         return;
                     }
+
                     e.Cancel = true;
                     e.Message = "This is not a valid manifest URL";
                 }

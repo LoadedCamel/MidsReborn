@@ -1,5 +1,5 @@
 {
-  "ManifestUri": "https://join.cityofheroesrebirth.com/Mids/update_manifest.xml",
+  "ManifestUri": "https://join.cityofheroesrebirth.com/Mids/update_manifest.json",
   "BaseToHit": 0.75,
   "BaseFlySpeed": 31.5,
   "BaseJumpSpeed": 21.0,
@@ -8,7 +8,11 @@
   "BasePerception": 500.0,
   "MaxFlySpeed": 86.0,
   "MaxJumpSpeed": 114.4,
+  "MaxJumpHeight": 200.0,
   "MaxRunSpeed": 135.67,
+  "MaxMaxFlySpeed": 257.985,
+  "MaxMaxJumpSpeed": 166.25699,
+  "MaxMaxRunSpeed": 176.358,
   "MaxSlots": 72,
   "EnableInherentSlotting": true,
   "HealthSlots": 2,
