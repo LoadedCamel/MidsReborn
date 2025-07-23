@@ -6,6 +6,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
 
@@ -372,7 +373,7 @@ namespace Mids_Reborn.Core
         internal static bool MxDReadSaveData(ref byte[] buffer, bool silent)
         {
             var formatUsed = Formats.Current;
-            InherentPowers = new List<PowerEntry>();
+            InherentPowers = [];
             DisplayIndex = -1;
             if (buffer.Length < 1)
             {
@@ -407,7 +408,7 @@ namespace Mids_Reborn.Core
                     if (numArray.Length >= 4)
                     {
                         magicFound = true;
-                        for (var index = 0; index < MagicNumber.Length; ++index)
+                        for (var index = 0; index < MagicNumber.Length; index++)
                         {
                             if (MagicNumber[index] != numArray[index])
                             {
@@ -478,7 +479,7 @@ namespace Mids_Reborn.Core
                 }
 
                 MidsContext.Character.Reset(charClass, iOrigin);
-                if (fVersion > 1.0)
+                if (fVersion > 1)
                 {
                     var align = r.ReadInt32();
                     MidsContext.Character.Alignment = (Enums.Alignment) align;
@@ -685,6 +686,27 @@ namespace Mids_Reborn.Core
 
                             powerEntry1.NIDPowerset = power.PowerSetID;
                             powerEntry1.IDXPower = power.PowerSetIndex;
+                        }
+
+                        if (string.Equals(DatabaseAPI.DatabaseName, "homecoming", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            if (powerEntry1.Power?.FullName == "Pool.Flight.Afterburner" | (powerEntry1.Power?.FullName == "Inherent.Inherent.Afterburner" & powerIndex < 24))
+                            {
+                                nId = DatabaseAPI.NidFromUidPower("Pool.Flight.Evasive_Maneuvers");
+                                if (nId >= 0)
+                                {
+                                    powerEntry1.NIDPower = nId;
+
+                                    power = DatabaseAPI.Database.Power[nId];
+                                    if (power == null)
+                                    {
+                                        continue;
+                                    }
+
+                                    powerEntry1.NIDPowerset = power.PowerSetID;
+                                    powerEntry1.IDXPower = power.PowerSetIndex;
+                                }
+                            }
                         }
 
                         var ps = powerEntry1.Power?.GetPowerSet();
