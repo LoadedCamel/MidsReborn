@@ -56,7 +56,11 @@ namespace Mids_Reborn
                 {
                     for (var j = 0; j < p.Slots.Length; j++)
                     {
-                        if (p.Slots[j].Enhancement.Enh < 0) continue; // Empty slot
+                        if (p.Slots[j].Enhancement.Enh < 0)
+                        {
+                            continue; // Empty slot
+                        }
+
                         if (k % EnhancementsTrayCapacity == 0)
                         {
                             commandChunks.Add([]);
@@ -66,8 +70,12 @@ namespace Mids_Reborn
                             }
                         }
 
-                        var enhUid = EnhUIDShuffleFix(DatabaseAPI.Database.Enhancements[p.Slots[j].Enhancement.Enh].UID);
-                        var enhBoostLevel = p.Slots[j].Enhancement.IOLevel + 1;
+                        var enh = DatabaseAPI.Database.Enhancements[p.Slots[j].Enhancement.Enh];
+                        var enhUid = EnhUIDShuffleFix(enh.UID);
+                        
+                        // Non IO do not store levels.
+                        // Max levels in builds only.
+                        var enhBoostLevel = (enh.TypeID is not Enums.eType.SetO and not Enums.eType.InventO ? 49 : p.Slots[j].Enhancement.IOLevel) + 1;
 
                         commandChunks[l].Add($"{BoostCmd} {enhUid} {enhUid} {enhBoostLevel}");
 
@@ -102,7 +110,7 @@ namespace Mids_Reborn
                 mnuStr += "\tDIVIDER\r\n";
                 mnuStr += "\tLockedOption\r\n";
                 mnuStr += "\t{\r\n";
-                mnuStr += $"\t\tDisplayName \"{Application.ProductName} v{Application.ProductVersion}\"\r\n";
+                mnuStr += $"\t\tDisplayName \"{Application.ProductName} v{MidsContext.AssemblyVersion} rev. {MidsContext.AppFileVersion.Revision}\"\r\n";
                 mnuStr += "\t\tBadge \"X\"\r\n";
                 mnuStr += "\t}\r\n";
                 mnuStr += "\tLockedOption\r\n";
