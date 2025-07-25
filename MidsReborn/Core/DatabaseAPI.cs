@@ -746,7 +746,7 @@ namespace Mids_Reborn.Core
 
             var enhSetData = Database.EnhancementSets[enhData.nIDSet];
 
-            return enhSetData.DisplayName.IndexOf("Overwhelming Force", StringComparison.OrdinalIgnoreCase) > -1;
+            return enhSetData.DisplayName.IndexOf("Overwhelming Force", StringComparison.OrdinalIgnoreCase) > -1 | enhSetData.DisplayName.IndexOf("Cupid's Crush", StringComparison.OrdinalIgnoreCase) > -1;
         }
 
         public static bool EnhIsIO(int enhIdx)
