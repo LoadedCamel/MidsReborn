@@ -112,36 +112,12 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 break;
             }
 
-            cbSal0.BeginUpdate();
-            cbSal1.BeginUpdate();
-            cbSal2.BeginUpdate();
-            cbSal3.BeginUpdate();
-            cbSal4.BeginUpdate();
-            cbSal0.Items.Clear();
-            cbSal1.Items.Clear();
-            cbSal2.Items.Clear();
-            cbSal3.Items.Clear();
-            cbSal4.Items.Clear();
-            cbSal0.Items.Add("None");
-            cbSal1.Items.Add("None");
-            cbSal2.Items.Add("None");
-            cbSal3.Items.Add("None");
-            cbSal4.Items.Add("None");
-            foreach (var slv in DatabaseAPI.Database.Salvage)
-            {
-                var salvageName = slv.ExternalName;
-                cbSal0.Items.Add(salvageName);
-                cbSal1.Items.Add(salvageName);
-                cbSal2.Items.Add(salvageName);
-                cbSal3.Items.Add(salvageName);
-                cbSal4.Items.Add(salvageName);
-            }
+            PopulateComboBoxList(ref cbSal0);
+            PopulateComboBoxList(ref cbSal1);
+            PopulateComboBoxList(ref cbSal2);
+            PopulateComboBoxList(ref cbSal3);
+            PopulateComboBoxList(ref cbSal4);
 
-            cbSal0.EndUpdate();
-            cbSal1.EndUpdate();
-            cbSal2.EndUpdate();
-            cbSal3.EndUpdate();
-            cbSal4.EndUpdate();
             _lvColumnSorter = new ListViewColumnSorter();
             lvDPA.ListViewItemSorter = _lvColumnSorter;
             ClearInfo();
@@ -719,27 +695,23 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             udCraftM.Value = recipeEntry.CraftCostM;
             udCraftM.Enabled = true;
 
-            PopulateComboBoxList(ref cbSal0);
+            
             udSal0.Value = recipeEntry.Count[0];
             udSal0.Visible = true;
             cbSal0.SelectedIndex = recipeEntry.SalvageIdx[0] + 1;
 
-            PopulateComboBoxList(ref cbSal1);
             udSal1.Value = 1;
             udSal1.Visible = true;
             cbSal1.SelectedIndex = recipeEntry.SalvageIdx[1] + 1;
 
-            PopulateComboBoxList(ref cbSal2);
             udSal2.Value = 1;
             udSal2.Visible = true;
             cbSal2.SelectedIndex = recipeEntry.SalvageIdx[2] + 1;
 
-            PopulateComboBoxList(ref cbSal3);
             udSal3.Value = 1;
             udSal3.Visible = true;
             cbSal3.SelectedIndex = recipeEntry.SalvageIdx[3] + 1;
 
-            PopulateComboBoxList(ref cbSal4);
             udSal4.Value = 1;
             udSal4.Visible = true;
             cbSal4.SelectedIndex = recipeEntry.SalvageIdx[4] + 1;
