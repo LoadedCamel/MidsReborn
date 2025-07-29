@@ -1494,7 +1494,7 @@ namespace Mids_Reborn.Core
         public Enums.eMutex MutexV2(int hIdx, bool silent = false, bool doDetoggle = false)
         {
             Enums.eMutex eMutex;
-            if (hIdx < 0 || hIdx > Powers.Count || Powers[hIdx].Power == null)
+            if (hIdx < 0 || hIdx > Powers.Count || Powers[hIdx] == null || Powers[hIdx].Power == null)
             {
                 eMutex = Enums.eMutex.NoGroup;
             }
@@ -1529,19 +1529,22 @@ namespace Mids_Reborn.Core
                     }.Contains(power1.FullName);
                     foreach (var power2 in Powers)
                     {
-                        if (power2.Power == null || power2.Power.PowerIndex == power1.PowerIndex) continue;
-                        var power3 = power2.Power;
-                        if (!power2.StatInclude || power3.MutexIgnore) continue;
+                        if (power2?.Power == null || power2.Power.PowerIndex == power1.PowerIndex)
+                        {
+                            continue;
+                        }
+
+                        if (!power2.StatInclude || power2.Power.MutexIgnore) continue;
 
                         if (isKheldianShapeshift & (power2.Power.FullName.StartsWith("Temporary_Powers.Accolades.") | power2.Power.FullName.StartsWith("Incarnate.")))
                         {
                             continue;
                         }
 
-                        if (flag2 || (power3.PowerType != Enums.ePowerType.Click || power3.PowerName == "Light_Form") && power3.HasMutexID(index1))
+                        if (flag2 || (power2.Power.PowerType != Enums.ePowerType.Click || power2.Power.PowerName == "Light_Form") && power2.Power.HasMutexID(index1))
                         {
                             powerEntryList.Add(power2);
-                            if (power3.MutexAuto)
+                            if (power2.Power.MutexAuto)
                             {
                                 mutexAuto = true;
                             }
@@ -1550,11 +1553,18 @@ namespace Mids_Reborn.Core
                         {
                             foreach (var num1 in power1.NGroupMembership)
                             {
-                                foreach (var num2 in power3.NGroupMembership)
+                                foreach (var num2 in power2.Power.NGroupMembership)
                                 {
-                                    if (num1 != num2) continue;
+                                    if (num1 != num2)
+                                    {
+                                        continue;
+                                    }
+
                                     powerEntryList.Add(power2);
-                                    if (power3.MutexAuto) mutexAuto = true;
+                                    if (power2.Power.MutexAuto)
+                                    {
+                                        mutexAuto = true;
+                                    }
                                 }
                             }
                         }
@@ -1570,6 +1580,11 @@ namespace Mids_Reborn.Core
                     {
                         foreach (var powerEntry in powerEntryList)
                         {
+                            if (powerEntry == null)
+                            {
+                                continue;
+                            }
+
                             powerEntry.StatInclude = false;
                         }
 
@@ -1577,7 +1592,7 @@ namespace Mids_Reborn.Core
                     }
                     else
                     {
-                        if (doDetoggle && mutexAuto && Powers[hIdx].StatInclude)
+                        if (doDetoggle && mutexAuto && Powers[hIdx]?.StatInclude == true)
                         {
                             Powers[hIdx].StatInclude = false;
                         }
