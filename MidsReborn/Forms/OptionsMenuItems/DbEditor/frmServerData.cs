@@ -87,7 +87,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 DatabaseAPI.ServerData.ManifestUri = "";
                 loadingText = "Enter URL Here";
             }
-            var iResult = InputBox.Show("Enter your XML manifest URL", "Set Database Manifest URL", false, loadingText, InputBox.InputBoxIcon.Info, validate_Url);
+            var iResult = InputBox.Show("Enter your XML/JSON manifest URL", "Set Database Manifest URL", false, loadingText, InputBox.InputBoxIcon.Info, validate_Url);
             if (!iResult.OK) return;
             DatabaseAPI.ServerData.ManifestUri = iResult.Text == "Enter the URL here" ? "" : iResult.Text;
             tbManifestUrl.Text = DatabaseAPI.ServerData.ManifestUri;

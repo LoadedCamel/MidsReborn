@@ -380,9 +380,9 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             TabPage5.Controls.Add(groupBox16);
             TabPage5.Controls.Add(groupBox19);
             TabPage5.Controls.Add(GroupBox1);
-            TabPage5.Location = new System.Drawing.Point(4, 22);
+            TabPage5.Location = new System.Drawing.Point(4, 24);
             TabPage5.Name = "TabPage5";
-            TabPage5.Size = new System.Drawing.Size(777, 367);
+            TabPage5.Size = new System.Drawing.Size(777, 365);
             TabPage5.TabIndex = 4;
             TabPage5.Text = "Updates & Paths";
             TabPage5.UseVisualStyleBackColor = true;
@@ -961,6 +961,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             cbWordwrapMode.Name = "cbWordwrapMode";
             cbWordwrapMode.Size = new System.Drawing.Size(223, 21);
             cbWordwrapMode.TabIndex = 82;
+            cbWordwrapMode.Visible = false;
             cbWordwrapMode.SelectedIndexChanged += cbWordwrapMode_SelectedIndexChanged;
             // 
             // label13
@@ -971,6 +972,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             label13.Size = new System.Drawing.Size(165, 13);
             label13.TabIndex = 81;
             label13.Text = "Word-wrapping in power lists:";
+            label13.Visible = false;
             // 
             // chkShowSelfBuffsAny
             // 
@@ -1375,7 +1377,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems
             label12.AutoSize = true;
             label12.Location = new System.Drawing.Point(12, 406);
             label12.Name = "label12";
-            label12.Size = new System.Drawing.Size(114, 13);
+            label12.Size = new System.Drawing.Size(113, 13);
             label12.TabIndex = 2;
             label12.Text = "DB Version Warning:";
             // 
