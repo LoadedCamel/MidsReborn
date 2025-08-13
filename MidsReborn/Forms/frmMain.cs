@@ -5900,12 +5900,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
             RefreshInfo();
             FlipPowerID = iPowerIndex;
             FlipSlotState = new int[MidsContext.Character.CurrentBuild.Powers[iPowerIndex].Slots.Length];
-            var num = FlipSlotState.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            for (var index = 0; index < FlipSlotState.Length; index++)
+            {
                 FlipSlotState[index] = -(FlipStepDelay * index);
+            }
+
             FlipGP = new PowerEntry();
             FlipGP.Assign(MidsContext.Character.CurrentBuild.Powers[iPowerIndex]);
-            FlipGP.Slots = Array.Empty<SlotEntry>();
+            FlipGP.Slots = [];
             tmrGfx ??= new Timer(Container!);
             tmrGfx.Interval = FlipInterval;
             FlipActive = true;
@@ -5927,7 +5929,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 var iPowers = new List<IPower?>();
                 if (power != null)
                 {
-                    iPowers.AddRange(power.NIDSubPower.Select(t => DatabaseAPI.Database.Power[t]).OfType<IPower>().Where(p => p.ClickBuff || p.PowerType == Enums.ePowerType.Auto_ | p.PowerType == Enums.ePowerType.Toggle));
+                    iPowers.AddRange(power.NIDSubPower.Select(t => DatabaseAPI.Database.Power[t]).OfType<IPower>().Where(p => p.ClickBuff || p.PowerType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle));
                 }
 
                 fTemp = new frmTemp(this, iPowers)
@@ -5937,7 +5939,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             if (!fTemp.Visible)
+            {
                 fTemp.Show(this);
+            }
         }
 
         private void tlsDPA_Click(object sender, EventArgs e)
@@ -5950,7 +5954,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void tmrGfx_Tick(object? sender, EventArgs e)
         {
             if (FlipActive)
+            {
                 doFlipStep();
+            }
         }
         
         private bool ToggleClicked(int hID, int iX, int iY)
@@ -5976,25 +5982,34 @@ The default position/state will be used upon next launch.", @"Window State Warni
             rectangle1.Y = (int)Math.Round(rectangle2.Top + (rectangle2.Height - rectangle1.Height) / 2.0);
             rectangle1.X =
                 (int)Math.Round(rectangle2.Right - (rectangle1.Width + (rectangle2.Height - rectangle1.Height) / 2.0));
-            return (iX > rectangle1.X) & (iX < rectangle1.Right) & (iY > rectangle1.Top) & (iY < rectangle1.Bottom);
+            
+            return iX > rectangle1.X & iX < rectangle1.Right & iY > rectangle1.Top & iY < rectangle1.Bottom;
         }
 
         private bool ProcToggleClicked(int hID, int iX, int iY)
         {
             var rectangle1 = new Rectangle();
             if (hID < 0)
+            {
                 return false;
+            }
+
             if (MidsContext.Character.CurrentBuild.Powers[hID].IDXPower < 0)
+            {
                 return false;
+            }
+
             var rectangle2 = new Rectangle
             {
                 Location = drawing.PowerPosition(MidsContext.Character.CurrentBuild.Powers[hID]),
                 Size = drawing.BxPower[0].Size
             };
+            
             rectangle1.Height = 15;
             rectangle1.Width = rectangle1.Height;
             rectangle1.Y = (int)Math.Round(rectangle2.Top + (rectangle2.Height - rectangle1.Height) / 2.0);
             rectangle1.X = (int)Math.Round(rectangle2.Right - (rectangle1.Width + (rectangle2.Height - rectangle1.Height) / 1.0));
+            
             return (iX > rectangle1.X) & (iX < rectangle1.Right) & (iY > rectangle1.Top) & (iY < rectangle1.Bottom);
         }
 
@@ -6038,11 +6053,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 "Really clear all slotted enhancements?\r\nThis will not clear the alternate slotting, only the currently active slots.",
                 "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                for (var index1 = 0; index1 <= MidsContext.Character.CurrentBuild.Powers.Count - 1; ++index1)
-                    for (var index2 = 0;
-                        index2 <= MidsContext.Character.CurrentBuild.Powers[index1].Slots.Length - 1;
-                        ++index2)
-                        MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh = -1;
+                foreach (var p in MidsContext.Character.CurrentBuild.Powers.OfType<PowerEntry>())
+                {
+                    for (var index2 = 0; index2 <= p.Slots.Length; index2++)
+                    {
+                        p.Slots[index2].Enhancement.Enh = -1;
+                    }
+                }
 
                 DoRedraw();
                 RefreshInfo();
@@ -6080,7 +6097,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             frmCalcOpt.Dispose();
-            tsIODefault.Text = "Default (" + (MidsContext.Config.I9.DefaultIOLevel + 1) + ")";
+            tsIODefault.Text = $"Default ({(MidsContext.Config.I9.DefaultIOLevel + 1)})";
             FloatTop(true);
 
             // if (DbChangeRequested)
@@ -6188,9 +6205,15 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void OnGradePick(Enums.eEnhGrade grade)
         {
             if (MidsContext.Character == null)
+            {
                 return;
+            }
+
             if (MidsContext.Character.CurrentBuild.SetEnhGrades(grade))
+            {
                 I9Picker.Ui.Initial.GradeId = grade;
+            }
+
             info_Totals();
             DoRedraw();
         }
@@ -6230,20 +6253,15 @@ The default position/state will be used upon next launch.", @"Window State Warni
             MessageBoxEx message;
             if (Path.GetExtension(LastFileName)?.ToUpperInvariant() != ".MXD")
             {
-                if (MidsContext.Character.CurrentBuild.PowersPlaced > 0)
-                {
-                    message = new MessageBoxEx("Share Protection Activated", "You must save the build as an mxd prior to using this function.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
-                    message.ShowDialog(this);
-                }
-                else
-                {
-                    message = new MessageBoxEx("Share Protection Activated", "Your cannot share an otherwise empty build. Please create a build then save it as an mxd prior to using this function.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
-                    message.ShowDialog(this);
-                }
+                message = MidsContext.Character.CurrentBuild.PowersPlaced > 0
+                    ? new MessageBoxEx("Share Protection Activated", "You must save the build as an mxd prior to using this function.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error)
+                    : new MessageBoxEx("Share Protection Activated", "Your cannot share an otherwise empty build. Please create a build then save it as an mxd prior to using this function.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
+
+                message.ShowDialog(this);
             }
             else
             {
-                var data = MidsCharacterFileFormat.MxDBuildSaveHyperlink(true, false, false);
+                var data = MidsCharacterFileFormat.MxDBuildSaveHyperlink(true);
                 Clipboard.SetDataObject(data, true);
                 message = new MessageBoxEx("Success","The data-link has been successfully generated and added to your clipboard.", MessageBoxEx.MessageBoxExButtons.Ok);
                 message.ShowDialog(this);

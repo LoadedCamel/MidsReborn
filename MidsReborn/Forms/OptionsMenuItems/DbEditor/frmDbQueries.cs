@@ -61,6 +61,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private List<string[]> LvItems;
         private QueryType CurrentQueryType;
         private ListViewColumnSorter LvColumnSorter;
+        private bool IncludePartialNames;
 
         public frmDbQueries()
         {
@@ -109,7 +110,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            var iPowers = DatabaseAPI.Database.Power
+            var iPowers = IncludePartialNames
+                ? DatabaseAPI.Database.Power
+                    .Where(pw => pw != null && pw.DisplayName.Contains(pName, StringComparison.InvariantCultureIgnoreCase))
+                    .ToList()
+                : DatabaseAPI.Database.Power
                 .Where(pw => pw != null && string.Equals(pw.DisplayName, pName, StringComparison.InvariantCultureIgnoreCase))
                 .ToList();
             LvItems = iPowers.Select(pw => new Power(pw))
@@ -267,7 +272,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 .Where(e => e != null && e.Effects.Any(f => f.ActiveConditionals != null && f.ActiveConditionals.Any(g => g.Key.Contains(pwName))))
                 .ToList();
 
-            var itemsList = itemsOverride.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"{e.FullName} (Override)"})
+            var itemsList = itemsOverride.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"{e.FullName} (Override)" })
                 .Concat(itemsSummon.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"(Summon) {e.FullName}" }))
                 .Concat(itemsExpressions.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"(Expression) {e.FullName}" }))
                 .Concat(itemsConditionals.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"(Conditional) {e.FullName}" }))
@@ -411,6 +416,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 : "Power Display Name:";
 
             btnSearchByName.Enabled = cbSpecialFilter.SelectedIndex != 9;
+        }
+
+        private void checkPowerNamePartial_CheckedChanged(object sender, EventArgs e)
+        {
+            IncludePartialNames = checkPowerNamePartial.Checked;
         }
     }
 }

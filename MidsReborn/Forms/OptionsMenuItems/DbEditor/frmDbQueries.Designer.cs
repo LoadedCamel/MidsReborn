@@ -43,6 +43,7 @@
             cbSpecialFilter = new System.Windows.Forms.ComboBox();
             btnSpecFilterSearch = new System.Windows.Forms.Button();
             label3 = new System.Windows.Forms.Label();
+            checkPowerNamePartial = new System.Windows.Forms.CheckBox();
             SuspendLayout();
             // 
             // label1
@@ -57,7 +58,7 @@
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(27, 71);
+            label2.Location = new System.Drawing.Point(27, 61);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(119, 15);
             label2.TabIndex = 1;
@@ -73,7 +74,7 @@
             // 
             // tbPowerName
             // 
-            tbPowerName.Location = new System.Drawing.Point(166, 68);
+            tbPowerName.Location = new System.Drawing.Point(166, 58);
             tbPowerName.Name = "tbPowerName";
             tbPowerName.Size = new System.Drawing.Size(352, 23);
             tbPowerName.TabIndex = 4;
@@ -91,7 +92,7 @@
             // 
             // btnSearchByName
             // 
-            btnSearchByName.Location = new System.Drawing.Point(524, 68);
+            btnSearchByName.Location = new System.Drawing.Point(524, 58);
             btnSearchByName.Name = "btnSearchByName";
             btnSearchByName.Size = new System.Drawing.Size(75, 22);
             btnSearchByName.TabIndex = 5;
@@ -155,7 +156,7 @@
             cbSpecialFilter.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             cbSpecialFilter.FormattingEnabled = true;
             cbSpecialFilter.Items.AddRange(new object[] { "First Available Index", "Highest Available Index", "All Available Indices", "List Indices", "Check Orphan Entries", "Duplicate Indices", "Bogus MaxRunSpeed effect", "Powers with Absorbed Entity", "Powers with slider", "Power usage" });
-            cbSpecialFilter.Location = new System.Drawing.Point(230, 122);
+            cbSpecialFilter.Location = new System.Drawing.Point(230, 131);
             cbSpecialFilter.Name = "cbSpecialFilter";
             cbSpecialFilter.Size = new System.Drawing.Size(220, 23);
             cbSpecialFilter.TabIndex = 12;
@@ -163,7 +164,7 @@
             // 
             // btnSpecFilterSearch
             // 
-            btnSpecFilterSearch.Location = new System.Drawing.Point(524, 121);
+            btnSpecFilterSearch.Location = new System.Drawing.Point(524, 130);
             btnSpecFilterSearch.Name = "btnSpecFilterSearch";
             btnSpecFilterSearch.Size = new System.Drawing.Size(75, 22);
             btnSpecFilterSearch.TabIndex = 13;
@@ -174,17 +175,29 @@
             // label3
             // 
             label3.AutoSize = true;
-            label3.Location = new System.Drawing.Point(27, 125);
+            label3.Location = new System.Drawing.Point(27, 134);
             label3.Name = "label3";
             label3.Size = new System.Drawing.Size(76, 15);
             label3.TabIndex = 14;
             label3.Text = "Special Filter:";
+            // 
+            // checkPowerNamePartial
+            // 
+            checkPowerNamePartial.AutoSize = true;
+            checkPowerNamePartial.Location = new System.Drawing.Point(167, 96);
+            checkPowerNamePartial.Name = "checkPowerNamePartial";
+            checkPowerNamePartial.Size = new System.Drawing.Size(139, 19);
+            checkPowerNamePartial.TabIndex = 15;
+            checkPowerNamePartial.Text = "Include partial names";
+            checkPowerNamePartial.UseVisualStyleBackColor = true;
+            checkPowerNamePartial.CheckedChanged += checkPowerNamePartial_CheckedChanged;
             // 
             // frmDbQueries
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
             ClientSize = new System.Drawing.Size(631, 422);
+            Controls.Add(checkPowerNamePartial);
             Controls.Add(label3);
             Controls.Add(btnSpecFilterSearch);
             Controls.Add(cbSpecialFilter);
@@ -223,5 +236,6 @@
         private System.Windows.Forms.ComboBox cbSpecialFilter;
         private System.Windows.Forms.Button btnSpecFilterSearch;
         private System.Windows.Forms.Label label3;
+        private System.Windows.Forms.CheckBox checkPowerNamePartial;
     }
 }
