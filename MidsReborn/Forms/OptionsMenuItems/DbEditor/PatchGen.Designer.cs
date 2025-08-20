@@ -242,6 +242,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             Name = "PatchGen";
             Text = "PatchGen";
+            ShowInTaskbar = false;
             formPages1.ResumeLayout(false);
             page1.ResumeLayout(false);
             page2.ResumeLayout(false);
