@@ -504,199 +504,304 @@ namespace Mids_Reborn
 
         private void CalculateAndApplyEffects(ref IPower tPwr, ref Enums.BuffsX nBuffs, bool enhancementPass)
         {
+            // GlobalBoost is handled elsewhere (e.g., set-bonus virtual power); skip here.
             if (tPwr.PowerType == Enums.ePowerType.GlobalBoost)
             {
                 return;
             }
 
-            var shortFx = new Enums.ShortFX();
-            var sFxSelf = new Enums.ShortFX();
+            // Local helpers for readability (no allocations beyond compiler-generated).
+            static bool TargetsSelfOrAll(IEffect fx) =>
+                fx.ToWho is Enums.eToWho.Self or Enums.eToWho.All;
 
-            for (var index1 = 0; index1 < nBuffs.Effect.Length; index1++)
+            static bool IsMaxSpeedCap(IEffect fx, Enums.eEffectType mod) =>
+                fx.EffectType != Enums.eEffectType.ResEffect && fx.ETModifies == mod && fx.Aspect == Enums.eAspect.Max;
+
+            static bool IsSpeedScalar(Enums.eEffectType mod) =>
+                mod is Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.JumpHeight;
+
+            static bool IsDamageBuffOrEnhancement(IEffect fx) =>
+                fx.EffectType is Enums.eEffectType.DamageBuff or Enums.eEffectType.Enhancement;
+
+            static bool IsGlobalAccuracySource(IPower src) =>
+                ReferenceEquals(src, MidsContext.Character.CurrentBuild.SetBonusVirtualPower) ||
+                src.PowerType == Enums.ePowerType.GlobalBoost;
+
+            var shortFx = new Enums.ShortFX(); // main per-effect-type accumulator (values + effect indices)
+            var sFxSelf = new Enums.ShortFX(); // used only for Max* speed self caps
+
+            // We iterate effect-types by the stat array length (your original pattern).
+            for (var effIndex = 0; effIndex < nBuffs.Effect.Length; effIndex++)
             {
-                var iEffect = (Enums.eEffectType) index1;
+                var iEffect = (Enums.eEffectType)effIndex;
+
+                // Damage is never accumulated via this pass.
                 if (iEffect == Enums.eEffectType.Damage)
                 {
                     continue;
                 }
 
-                if (enhancementPass & iEffect != Enums.eEffectType.DamageBuff)
+                // Gather magnitudes for this effect-type, honoring your special Max* speed cases.
+                if (enhancementPass && iEffect != Enums.eEffectType.DamageBuff)
                 {
+                    // Enhancement scan (post-ED caller decides the proper source array).
                     shortFx.Assign(tPwr.GetEnhancementMagSum(iEffect, -1));
                 }
                 else
                 {
+                    // Non-enhancement scan with special cases for Max* speed caps (self-only).
                     switch (iEffect)
                     {
                         case Enums.eEffectType.MaxRunSpeed:
                             shortFx.Assign(tPwr.GetEffectMagSum(Enums.eEffectType.SpeedRunning, false, false, false, true));
                             sFxSelf.Assign(tPwr.GetEffectMagSum(Enums.eEffectType.MaxRunSpeed, false, true));
-                            nBuffs.Effect[(int) Enums.eStatType.MaxRunSpeed] += sFxSelf.Sum;
+                            nBuffs.Effect[(int)Enums.eStatType.MaxRunSpeed] += sFxSelf.Sum;
                             break;
+
                         case Enums.eEffectType.MaxJumpSpeed:
                             shortFx.Assign(tPwr.GetEffectMagSum(Enums.eEffectType.SpeedJumping, false, false, false, true));
                             sFxSelf.Assign(tPwr.GetEffectMagSum(Enums.eEffectType.MaxJumpSpeed, false, true));
-                            nBuffs.Effect[(int) Enums.eStatType.MaxJumpSpeed] += sFxSelf.Sum;
+                            nBuffs.Effect[(int)Enums.eStatType.MaxJumpSpeed] += sFxSelf.Sum;
                             break;
+
                         case Enums.eEffectType.MaxFlySpeed:
                             shortFx.Assign(tPwr.GetEffectMagSum(Enums.eEffectType.SpeedFlying, false, false, false, true));
                             sFxSelf.Assign(tPwr.GetEffectMagSum(Enums.eEffectType.MaxFlySpeed, false, true));
-                            nBuffs.Effect[(int) Enums.eStatType.MaxFlySpeed] += sFxSelf.Sum;
+                            nBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] += sFxSelf.Sum;
                             break;
+
                         default:
                             shortFx.Assign(tPwr.GetEffectMagSum(iEffect));
                             break;
                     }
                 }
 
+                // Apply each contributing sub-effect instance.
                 for (var shortFxIdx = 0; shortFxIdx < shortFx.Value.Length; shortFxIdx++)
                 {
-                    var effect = tPwr.Effects[shortFx.Index[shortFxIdx]];
-                    if (effect.ToWho != Enums.eToWho.Self && effect.ToWho != Enums.eToWho.All)
+                    var fx = tPwr.Effects[shortFx.Index[shortFxIdx]];
+                    if (!TargetsSelfOrAll(fx))
                     {
                         continue;
                     }
 
-                    if (effect.EffectType == Enums.eEffectType.Enhancement & effect.ETModifies == Enums.eEffectType.Range & !enhancementPass)
+                    var value = shortFx.Value[shortFxIdx];
+
+                    // Enhancement "Range" is modeled as a buff in MR: include during non-enhancement pass.
+                    if (!enhancementPass && fx is { EffectType: Enums.eEffectType.Enhancement, ETModifies: Enums.eEffectType.Range })
                     {
-                        nBuffs.Effect[(int)Enums.eEffectType.Range] += shortFx.Value[shortFxIdx];
+                        nBuffs.Effect[(int)Enums.eEffectType.Range] += value;
                     }
 
-                    if (tPwr.Effects[shortFx.Index[shortFxIdx]].Absorbed_PowerType == Enums.ePowerType.GlobalBoost)
+                    // Effects absorbed from a GlobalBoost power are excluded here.
+                    if (fx.Absorbed_PowerType == Enums.ePowerType.GlobalBoost)
                     {
                         continue;
                     }
 
+                    // ?????????????????????????????????????????????????????????????????
+                    // Non-enhancement-only status and resistance buckets
+                    // ?????????????????????????????????????????????????????????????????
                     if (!enhancementPass)
                     {
-                        switch (effect.EffectType)
+                        switch (fx.EffectType)
                         {
                             case Enums.eEffectType.Mez:
-                                nBuffs.StatusProtection[(int) effect.MezType] += shortFx.Value[shortFxIdx];
+                                nBuffs.StatusProtection[(int)fx.MezType] += value;
                                 break;
                             case Enums.eEffectType.MezResist:
-                                nBuffs.StatusResistance[(int) effect.MezType] += shortFx.Value[shortFxIdx];
+                                nBuffs.StatusResistance[(int)fx.MezType] += value;
                                 break;
                             case Enums.eEffectType.ResEffect:
-                                nBuffs.DebuffResistance[(int) effect.ETModifies] += shortFx.Value[shortFxIdx];
+                                nBuffs.DebuffResistance[(int)fx.ETModifies] += value;
                                 break;
                         }
                     }
 
-                    if (tPwr.Effects[shortFx.Index[shortFxIdx]].EffectType is Enums.eEffectType.DamageBuff or Enums.eEffectType.Enhancement & enhancementPass)
+                    // ?????????????????????????????????????????????????????????????????
+                    // Enhancement pass: only applies when the source effect is DamageBuff or Enhancement.
+                    // ?????????????????????????????????????????????????????????????????
+                    if (enhancementPass && IsDamageBuffOrEnhancement(fx))
                     {
-                        switch (effect.ETModifies)
+                        switch (fx.ETModifies)
                         {
                             case Enums.eEffectType.Mez:
-                                nBuffs.Mez[(int) effect.MezType] += shortFx.Value[shortFxIdx];
-                                break;
+                                nBuffs.Mez[(int)fx.MezType] += value;
+                                continue;
+
                             case Enums.eEffectType.Defense:
-                                nBuffs.Defense[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
-                                break;
+                                if (fx.DamageType != Enums.eDamage.None)
+                                {
+                                    nBuffs.Defense[(int)fx.DamageType] += value;
+                                }
+                                else
+                                {
+                                    nBuffs.Effect[effIndex] += value; // generic defense
+                                }
+
+                                continue;
+
                             case Enums.eEffectType.Resistance:
-                                nBuffs.Resistance[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
-                                break;
+                                if (fx.DamageType != Enums.eDamage.None)
+                                {
+                                    nBuffs.Resistance[(int)fx.DamageType] += value;
+                                }
+                                else
+                                {
+                                    nBuffs.Effect[effIndex] += value; // generic resistance
+                                }
+
+                                continue;
+
                             default:
+                                // DamageBuff aggregation (except for noted special-cases)
                                 if (iEffect == Enums.eEffectType.DamageBuff)
                                 {
-                                    if (!(effect.isEnhancementEffect &
-                                          effect.EffectClass == Enums.eEffectClass.Tertiary |
-                                          effect.ValidateConditional("Active", "Defiance") |
-                                          effect.SpecialCase == Enums.eSpecialCase.Defiance))
+                                    var isDefiance =
+                                        fx is { isEnhancementEffect: true, EffectClass: Enums.eEffectClass.Tertiary } ||
+                                        fx.ValidateConditional("Active", "Defiance") ||
+                                        fx.SpecialCase == Enums.eSpecialCase.Defiance;
+
+                                    if (!isDefiance)
                                     {
-                                        nBuffs.Damage[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
+                                        nBuffs.Damage[(int)fx.DamageType] += value;
                                     }
+
+                                    continue;
                                 }
-                                else if (!(effect.ETModifies == Enums.eEffectType.Accuracy & enhancementPass))
+
+                                // Skip pure Accuracy *enhancements* here (handled elsewhere/earlier in the math).
+                                if (fx.ETModifies == Enums.eEffectType.Accuracy)
                                 {
-                                    if (effect.ETModifies is Enums.eEffectType.SpeedRunning
-                                        or Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
-                                        or Enums.eEffectType.JumpHeight)
+                                    continue;
+                                }
+
+                                // Speed scalars respect buff/debuff channels
+                                if (IsSpeedScalar(fx.ETModifies))
+                                {
+                                    if (fx.buffMode != Enums.eBuffMode.Debuff)
                                     {
-                                        if (effect.buffMode != Enums.eBuffMode.Debuff)
-                                        {
-                                            nBuffs.Effect[(int) effect.ETModifies] += shortFx.Value[shortFxIdx];
-                                        }
-                                        else
-                                        {
-                                            nBuffs.EffectAux[(int) effect.ETModifies] += shortFx.Value[shortFxIdx];
-                                        }
+                                        nBuffs.Effect[(int)fx.ETModifies] += value;
                                     }
                                     else
                                     {
-                                        nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
+                                        nBuffs.EffectAux[(int)fx.ETModifies] += value;
                                     }
+
+                                    continue;
                                 }
 
-                                break;
+                                // Fallback enhancement contribution to the current effect bucket
+                                nBuffs.Effect[effIndex] += value;
+                                continue;
                         }
                     }
-                    else if (effect.EffectType == Enums.eEffectType.Endurance & effect.Aspect == Enums.eAspect.Max)
-                    {
-                        nBuffs.MaxEnd += shortFx.Value[shortFxIdx];
-                    }
-                    else if (effect.EffectType != Enums.eEffectType.ResEffect & effect.ETModifies == Enums.eEffectType.Mez & !enhancementPass)
-                    {
-                        nBuffs.Mez[(int) effect.MezType] += shortFx.Value[shortFxIdx];
-                    }
-                    else if (effect.EffectType != Enums.eEffectType.ResEffect & effect.ETModifies == Enums.eEffectType.MezResist & !enhancementPass)
-                    {
-                        nBuffs.MezRes[(int) effect.MezType] += shortFx.Value[shortFxIdx];
-                    }
-                    else if ((iEffect == Enums.eEffectType.Defense && effect.DamageType != Enums.eDamage.None) & !enhancementPass)
-                    {
-                        nBuffs.Defense[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
-                    }
-                    else if ((iEffect == Enums.eEffectType.Resistance && effect.DamageType != Enums.eDamage.None) & !enhancementPass)
-                    {
-                        nBuffs.Resistance[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
-                    }
-                    else if ((iEffect == Enums.eEffectType.Elusivity && effect.DamageType != Enums.eDamage.None) & !enhancementPass)
-                    {
-                        nBuffs.Elusivity[(int) effect.DamageType] += shortFx.Value[shortFxIdx];
-                    }
-                    else if (!(effect.ETModifies == Enums.eEffectType.Accuracy & enhancementPass))
-                    {
-                        if (effect.EffectType != Enums.eEffectType.ResEffect & effect.ETModifies == Enums.eEffectType.Accuracy & !enhancementPass)
-                        {
-                            nBuffs.Effect[(int)Enums.eStatType.BuffAcc] += shortFx.Value[shortFxIdx];
-                        }
-                        else if (effect.EffectType != Enums.eEffectType.ResEffect & effect.ETModifies == Enums.eEffectType.SpeedRunning & effect.Aspect == Enums.eAspect.Max)
-                        {
-                            nBuffs.Effect[(int)Enums.eStatType.MaxRunSpeed] += shortFx.Value[shortFxIdx];
-                        }
-                        else if (effect.EffectType != Enums.eEffectType.ResEffect & effect.ETModifies == Enums.eEffectType.SpeedFlying & effect.Aspect == Enums.eAspect.Max)
-                        {
-                            nBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] += shortFx.Value[shortFxIdx];
-                        }
-                        else if (effect.EffectType != Enums.eEffectType.ResEffect & effect.ETModifies == Enums.eEffectType.SpeedJumping & effect.Aspect == Enums.eAspect.Max)
-                        {
-                            nBuffs.Effect[(int)Enums.eStatType.MaxJumpSpeed] += shortFx.Value[shortFxIdx];
-                        }
-                        else if (iEffect == Enums.eEffectType.ToHit & !enhancementPass)
-                        {
-                            if (!(effect.isEnhancementEffect & effect.EffectClass == Enums.eEffectClass.Tertiary))
-                            {
-                                nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
-                            }
-                        }
-                        else if (!enhancementPass)
-                        {
-                            // Zed: force absorb to be flat value.
-                            // E.g. Bio Armor Parasitic Aura and Ablative Carapace use percentages.
-                            // Particle shielding does not.
-                            if (index1 == (int)Enums.eStatType.Absorb & effect.DisplayPercentage)
-                            {
-                                shortFx.Value[shortFxIdx] *= MidsContext.Character.Totals.HPMax; // MidsContext.Character.Archetype.Hitpoints
-                            }
 
-                            nBuffs.Effect[index1] += shortFx.Value[shortFxIdx];
-                            if (IsClickPower(effect.GetPower()) & !effect.BuildEffectString().Contains("From Enh"))
-                            {
-                                nBuffs.Effect[index1] -= effect.Mag;
-                            }
-                        }
+                    // ?????????????????????????????????????????????????????????????????
+                    // Non-enhancement (or remaining) contributions and special cases
+                    // ?????????????????????????????????????????????????????????????????
+
+                    // Max Endurance
+                    if (fx is { EffectType: Enums.eEffectType.Endurance, Aspect: Enums.eAspect.Max })
+                    {
+                        nBuffs.MaxEnd += value;
+                        continue;
                     }
+
+                    // Non-enhancement mez & mez-resist (when not modeled as ResEffect)
+                    if (!enhancementPass && fx.EffectType != Enums.eEffectType.ResEffect && fx.ETModifies == Enums.eEffectType.Mez)
+                    {
+                        nBuffs.Mez[(int)fx.MezType] += value;
+                        continue;
+                    }
+                    if (!enhancementPass && fx.EffectType != Enums.eEffectType.ResEffect && fx.ETModifies == Enums.eEffectType.MezResist)
+                    {
+                        nBuffs.MezRes[(int)fx.MezType] += value;
+                        continue;
+                    }
+
+                    // Non-enhancement typed buckets for Defense/Resistance/Elusivity
+                    if (!enhancementPass && iEffect == Enums.eEffectType.Defense && fx.DamageType != Enums.eDamage.None)
+                    {
+                        nBuffs.Defense[(int)fx.DamageType] += value;
+                        continue;
+                    }
+                    if (!enhancementPass && iEffect == Enums.eEffectType.Resistance && fx.DamageType != Enums.eDamage.None)
+                    {
+                        nBuffs.Resistance[(int)fx.DamageType] += value;
+                        continue;
+                    }
+                    if (!enhancementPass && iEffect == Enums.eEffectType.Elusivity && fx.DamageType != Enums.eDamage.None)
+                    {
+                        nBuffs.Elusivity[(int)fx.DamageType] += value;
+                        continue;
+                    }
+
+                    // Only true/global Accuracy (set-bonus / GlobalBoost) contributes to BuffAcc.
+                    // All other "Acc-like" buffs behave as ToHit in CoH.
+                    if (!enhancementPass && fx.EffectType != Enums.eEffectType.ResEffect && fx.ETModifies == Enums.eEffectType.Accuracy)
+                    {
+                        if (IsGlobalAccuracySource(tPwr))
+                        {
+                            nBuffs.Effect[(int)Enums.eStatType.BuffAcc] += value;     // global accuracy (e.g., set bonuses)
+                        }
+                        else
+                        {
+                            nBuffs.Effect[(int)Enums.eStatType.ToHit] += value;       // normal buffs behave as ToHit
+                        }
+
+                        continue;
+                    }
+
+                    // Max speed caps from scalar effects
+                    if (!enhancementPass && IsMaxSpeedCap(fx, Enums.eEffectType.SpeedRunning))
+                    {
+                        nBuffs.Effect[(int)Enums.eStatType.MaxRunSpeed] += value;
+                        continue;
+                    }
+                    if (!enhancementPass && IsMaxSpeedCap(fx, Enums.eEffectType.SpeedFlying))
+                    {
+                        nBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] += value;
+                        continue;
+                    }
+                    if (!enhancementPass && IsMaxSpeedCap(fx, Enums.eEffectType.SpeedJumping))
+                    {
+                        nBuffs.Effect[(int)Enums.eStatType.MaxJumpSpeed] += value;
+                        continue;
+                    }
+
+                    // ToHit (non-enhancement) — ignore tertiary enhancement-class side paths
+                    if (!enhancementPass && iEffect == Enums.eEffectType.ToHit)
+                    {
+                        if (fx is not { isEnhancementEffect: true, EffectClass: Enums.eEffectClass.Tertiary })
+                        {
+                            nBuffs.Effect[effIndex] += value;
+                        }
+
+                        continue;
+                    }
+
+                    // Generic non-enhancement effect accumulation, with Absorb normalization and click-power cancellation.
+                    if (enhancementPass)
+                    {
+                        continue;
+                    }
+
+                    // Normalize Absorb from % to flat HP when needed.
+                    if (effIndex == (int)Enums.eStatType.Absorb && fx.DisplayPercentage)
+                    {
+                        value *= MidsContext.Character.Totals.HPMax;
+                    }
+
+                    nBuffs.Effect[effIndex] += value;
+
+                    // Subtract the "base magnitude" for click powers that generate a mirrored removal entry.
+                    if (IsClickPower(fx.GetPower()) && !fx.BuildEffectString().Contains("From Enh"))
+                    {
+                        nBuffs.Effect[effIndex] -= fx.Mag;
+                    }
+
+                    // If we reach here in enhancementPass, nothing to do for this sub-effect.
                 }
             }
         }

@@ -638,7 +638,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // btnSaveChanges
             // 
             btnSaveChanges.Font = new System.Drawing.Font("Consolas", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, 0);
-            btnSaveChanges.ForeColor = System.Drawing.Color.Black;
+            btnSaveChanges.ForeColor = System.Drawing.Color.WhiteSmoke;
             btnSaveChanges.Location = new System.Drawing.Point(112, 339);
             btnSaveChanges.Name = "btnSaveChanges";
             btnSaveChanges.Size = new System.Drawing.Size(101, 22);
@@ -722,7 +722,7 @@ namespace Mids_Reborn.Forms.ImportExportItems
             toolStripStatusLabel1.BackColor = System.Drawing.Color.Transparent;
             toolStripStatusLabel1.BorderStyle = System.Windows.Forms.Border3DStyle.Adjust;
             toolStripStatusLabel1.DisplayStyle = System.Windows.Forms.ToolStripItemDisplayStyle.Text;
-            toolStripStatusLabel1.ForeColor = System.Drawing.Color.Black;
+            toolStripStatusLabel1.ForeColor = System.Drawing.Color.WhiteSmoke;
             toolStripStatusLabel1.Name = "toolStripStatusLabel1";
             toolStripStatusLabel1.Size = new System.Drawing.Size(194, 17);
             toolStripStatusLabel1.Text = "Please submit or update your build.";
@@ -753,7 +753,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // txtExpiresOn
             // 
-            txtExpiresOn.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            txtExpiresOn.BackColor = System.Drawing.Color.FromArgb(24, 24, 24);
+            txtExpiresOn.ForeColor = System.Drawing.Color.FromArgb(238, 238, 238);
             txtExpiresOn.Location = new System.Drawing.Point(20, 254);
             txtExpiresOn.Name = "txtExpiresOn";
             txtExpiresOn.ReadOnly = true;
@@ -771,7 +772,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // txtSchemaUrl
             // 
-            txtSchemaUrl.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            txtSchemaUrl.BackColor = System.Drawing.Color.FromArgb(24, 24, 24);
+            txtSchemaUrl.ForeColor = System.Drawing.Color.FromArgb(238, 238, 238);
             txtSchemaUrl.Location = new System.Drawing.Point(20, 201);
             txtSchemaUrl.Name = "txtSchemaUrl";
             txtSchemaUrl.ReadOnly = true;
@@ -789,7 +791,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // txtImageUrl
             // 
-            txtImageUrl.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            txtImageUrl.BackColor = System.Drawing.Color.FromArgb(24, 24, 24);
+            txtImageUrl.ForeColor = System.Drawing.Color.FromArgb(238, 238, 238);
             txtImageUrl.Location = new System.Drawing.Point(20, 151);
             txtImageUrl.Name = "txtImageUrl";
             txtImageUrl.ReadOnly = true;
@@ -807,7 +810,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // txtDownloadUrl
             // 
-            txtDownloadUrl.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            txtDownloadUrl.BackColor = System.Drawing.Color.FromArgb(24, 24, 24);
+            txtDownloadUrl.ForeColor = System.Drawing.Color.FromArgb(238, 238, 238);
             txtDownloadUrl.Location = new System.Drawing.Point(20, 101);
             txtDownloadUrl.Name = "txtDownloadUrl";
             txtDownloadUrl.ReadOnly = true;
@@ -825,7 +829,8 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // txtId
             // 
-            txtId.BackColor = System.Drawing.SystemColors.GradientInactiveCaption;
+            txtId.BackColor = System.Drawing.Color.FromArgb(24, 24, 24);
+            txtId.ForeColor = System.Drawing.Color.FromArgb(238, 238, 238);
             txtId.Location = new System.Drawing.Point(20, 49);
             txtId.Name = "txtId";
             txtId.ReadOnly = true;
@@ -889,7 +894,9 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // txtDesc
             // 
+            txtDesc.BackColor = System.Drawing.Color.FromArgb(43, 43, 43);
             txtDesc.Enabled = false;
+            txtDesc.ForeColor = System.Drawing.Color.FromArgb(238, 238, 238);
             txtDesc.Location = new System.Drawing.Point(20, 227);
             txtDesc.Multiline = true;
             txtDesc.Name = "txtDesc";
@@ -909,7 +916,9 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // txtSec
             // 
+            txtSec.BackColor = System.Drawing.Color.FromArgb(43, 43, 43);
             txtSec.Enabled = false;
+            txtSec.ForeColor = System.Drawing.Color.FromArgb(238, 238, 238);
             txtSec.Location = new System.Drawing.Point(20, 183);
             txtSec.Name = "txtSec";
             txtSec.ReadOnly = true;
@@ -927,7 +936,9 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // txtPri
             // 
+            txtPri.BackColor = System.Drawing.Color.FromArgb(43, 43, 43);
             txtPri.Enabled = false;
+            txtPri.ForeColor = System.Drawing.Color.FromArgb(238, 238, 238);
             txtPri.Location = new System.Drawing.Point(20, 138);
             txtPri.Name = "txtPri";
             txtPri.ReadOnly = true;
@@ -945,7 +956,9 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // txtArchetype
             // 
+            txtArchetype.BackColor = System.Drawing.Color.FromArgb(43, 43, 43);
             txtArchetype.Enabled = false;
+            txtArchetype.ForeColor = System.Drawing.Color.FromArgb(238, 238, 238);
             txtArchetype.Location = new System.Drawing.Point(20, 94);
             txtArchetype.Name = "txtArchetype";
             txtArchetype.ReadOnly = true;
@@ -963,7 +976,9 @@ namespace Mids_Reborn.Forms.ImportExportItems
             // 
             // txtBuildName
             // 
+            txtBuildName.BackColor = System.Drawing.Color.FromArgb(43, 43, 43);
             txtBuildName.Enabled = false;
+            txtBuildName.ForeColor = System.Drawing.Color.FromArgb(238, 238, 238);
             txtBuildName.Location = new System.Drawing.Point(20, 49);
             txtBuildName.Name = "txtBuildName";
             txtBuildName.ReadOnly = true;
