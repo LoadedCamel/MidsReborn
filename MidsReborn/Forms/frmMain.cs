@@ -1,15 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Text;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Controls.Skia;
 using Mids_Reborn.Core;
@@ -28,7 +16,19 @@ using Mids_Reborn.Forms.WindowMenuItems;
 using MRBLogging;
 using MRBResourceLib;
 using RestSharp;
-
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Text;
+using System.IO;
+using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
@@ -4235,7 +4235,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 };
             }
 
-            if (MidsContext.Character != null && index > -1 & index <= MidsContext.Character.CurrentBuild.Powers.Count)
+            if (MidsContext.Character != null && (index > -1) & (index <= MidsContext.Character.CurrentBuild.Powers.Count))
             {
                 MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[index].Level;
             }
@@ -4286,15 +4286,24 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             "Allow power to be moved anyway (mark as invalid)");
                     dragdropScenarioAction[0] = (short)result;
                     if (canOverride)
+                    {
                         if (dragdropScenarioAction[0] == 2)
+                        {
                             dragdropScenarioAction[0] = 3;
+                        }
+                    }
 
                     if (remember == true)
+                    {
                         MidsContext.Config.DragDropScenarioAction[0] = dragdropScenarioAction[0];
+                    }
                 }
 
                 if (dragdropScenarioAction[0] == 1)
+                {
                     return 0;
+                }
+
                 if (dragdropScenarioAction[0] == 2)
                 {
                     if (DatabaseAPI.Database.Power[tp[start].NIDPower].Level - 1 == tp[start].Level)
@@ -4311,19 +4320,21 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     {
                         ++index;
                         if (index > 23)
+                        {
                             return PowerMove(tp, start, lvl);
+                        }
                     }
                 }
             }
 
             var flag1 = start < finish;
-            var flagArray = new bool[tp.Length - 1 + 1];
+            var flagArray = new bool[tp.Length];
             if (flag1)
             {
                 flagArray[start] = true;
                 var level = tp[start].Level;
-                var num = finish;
-                for (var index = start + 1; index <= num; ++index)
+                for (var index = start + 1; index < finish; index++)
+                {
                     if (tp[index].NIDPower < 0)
                     {
                         flagArray[index] = true;
@@ -4342,6 +4353,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     {
                         flagArray[index] = false;
                     }
+                }
             }
 
             if (flag1 & !flagArray[finish])
@@ -4349,15 +4361,20 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 CheckInitDdsaValue(1, null, "Power is moved too high (some powers will no longer fit)",
                     "Move to the last power slot that can be shifted");
                 if (dragdropScenarioAction[1] == 1)
+                {
                     return 0;
+                }
+
                 if (dragdropScenarioAction[1] == 2)
                 {
-                    var num1 = start + 1;
                     int index;
-                    for (index = finish; index >= num1; index += -1)
+                    for (index = finish; index >= start + 1; index += -1)
                     {
                         if (!flagArray[index])
+                        {
                             continue;
+                        }
+
                         finish = index;
                         break;
                     }
@@ -4405,21 +4422,33 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         "Shift other powers around it",
                         "Overwrite it; leave previous power slot empty", "Allow anyway (mark as invalid)");
                     if (dragdropScenarioAction[7] == 1)
+                    {
                         return 0;
+                    }
+
                     if (dragdropScenarioAction[7] == 3)
                     {
-                        if (!flag2) start = index;
+                        if (!flag2)
+                        {
+                            start = index;
+                        }
 
                         break;
                     }
                 }
 
                 if (!(!flag2 & (tp[index].NIDPower < 0)))
+                {
                     continue;
+                }
+
                 CheckInitDdsaValue(10, null, "There is a gap in a group of powers that are being shifted",
                     "Fill empty slot; don't move powers unnecessarily", "Shift empty slot as if it were a power");
                 if (dragdropScenarioAction[10] == 1)
+                {
                     return 0;
+                }
+
                 if (dragdropScenarioAction[10] == 2)
                 {
                     if (tp[finish].NIDPower < 0)
@@ -4438,6 +4467,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var index1 = start;
             var num8 = !flag1 ? index1 - 1 : index1 + 1;
             while (num8 != finish)
+            {
                 switch (PowerSwap(2, ref tp, index1, num8))
                 {
                     case -1:
@@ -4468,6 +4498,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         PowerMoveByUser(dragStartPower, dragFinishPower);
                         return 0;
                 }
+            }
 
             powerEntry.Level = tp[index1].Level;
             tp[index1] = powerEntry;
@@ -4486,7 +4517,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void PowerMoveByUser(int dragStart, int dragFinish)
         {
             if (dragStart < 0 || dragStart > 23 || dragFinish < 0 || dragFinish > 23 || dragStart == dragFinish)
+            {
                 return;
+            }
+
             var index = 0;
             do
             {
@@ -6620,6 +6654,39 @@ The default position/state will be used upon next launch.", @"Window State Warni
             FloatRotationHelper(true);
         }
 
+        private void tsRunSythlinDpsTool_Click(object sender, EventArgs e)
+        {
+            if (!SlythinDpsToolRunner.FileExists())
+            {
+                var mbox = new MessageBoxEx(
+                    $"Sylthin's DPS Tool exe was not found in Mids' Directory.\r\n\r\nExpected: file {SlythinDpsToolRunner.ExeName} should be in {AppContext.BaseDirectory}",
+                    MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error, true);
+
+                mbox.ShowDialog(this);
+
+                return;
+            }
+
+            if (!SlythinDpsToolRunner.HashMatch())
+            {
+                var mbox = new MessageBoxEx(
+                    $"Unexpected hash from {SlythinDpsToolRunner.ExeName} file.",
+                    MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error, true);
+
+                mbox.ShowDialog(this);
+
+                return;
+            }
+
+            var psi = new ProcessStartInfo
+            {
+                FileName = SlythinDpsToolRunner.ExeName,
+                Arguments = "",
+                UseShellExecute = true
+            };
+            Process.Start(psi);
+        }
+
         private void tsRemoveAllSlots_Click(object sender, EventArgs e)
         {
             FloatTop(false);
@@ -6627,10 +6694,15 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 "Really remove all slots?\r\nThis will not remove the slots granted automatically with powers, but will remove all the slots you placed manually.",
                 "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                for (var index = 0; index <= MidsContext.Character.CurrentBuild.Powers.Count - 1; ++index)
-                    if (MidsContext.Character.CurrentBuild.Powers[index].SlotCount > 1)
-                        MidsContext.Character.CurrentBuild.Powers[index].Slots =
-                            MidsContext.Character.CurrentBuild.Powers[index].Slots.Take(1).ToArray();
+                for (var index = 0; index <= MidsContext.Character.CurrentBuild.Powers.Count; index++)
+                {
+                    if (MidsContext.Character.CurrentBuild.Powers[index].SlotCount <= 1)
+                    {
+                        continue;
+                    }
+
+                    MidsContext.Character.CurrentBuild.Powers[index].Slots = MidsContext.Character.CurrentBuild.Powers[index].Slots.Take(1).ToArray();
+                }
 
                 DoRedraw();
                 MidsContext.Character.ResetLevel();

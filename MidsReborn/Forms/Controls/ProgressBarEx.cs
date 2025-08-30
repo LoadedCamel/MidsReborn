@@ -186,25 +186,27 @@ namespace Mids_Reborn.Forms.Controls
                         Color.Empty, 0, ButtonBorderStyle.None,
                         Colors.BorderColor, Border.Thickness, Border.Style);
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
 
             var progressRect = new Rectangle(ClientRectangle.X + Border.Thickness, ClientRectangle.Y + Border.Thickness, ClientRectangle.Width - Border.Thickness*2, ClientRectangle.Height - Border.Thickness*2);
             ProgressBarRenderer.DrawHorizontalBar(e.Graphics, progressRect);
             e.Graphics.FillRectangle(new SolidBrush(Colors.BackColor), progressRect);
-            if (Value <= 0) return;
+            if (Value <= 0)
+            {
+                return;
+            }
+
             var bar = progressRect with { Width = (int)Math.Round((float)Value / Maximum * progressRect.Width) };
             var barGradient = new LinearGradientBrush(bar, Colors.BarStartColor, Colors.BarEndColor, LinearGradientMode.ForwardDiagonal);
             ProgressBarRenderer.DrawHorizontalBar(e.Graphics, bar);
             e.Graphics.FillRectangle(barGradient, bar);
             var formatFlags = Position switch
             {
-                Positions.Left => TextFormatFlags.Left | TextFormatFlags.VerticalCenter,
                 Positions.Right => TextFormatFlags.Right | TextFormatFlags.VerticalCenter,
                 Positions.Center => TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter,
-                _ => throw new ArgumentOutOfRangeException()
+                _ => TextFormatFlags.Left | TextFormatFlags.VerticalCenter
             };
+
             if (!ShowValue) return;
             TextRenderer.DrawText(e.Graphics, ValueText, Font, progressRect, Colors.TextColor, formatFlags);
         }

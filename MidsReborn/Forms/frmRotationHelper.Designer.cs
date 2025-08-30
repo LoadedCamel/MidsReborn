@@ -150,7 +150,7 @@ namespace Mids_Reborn.Forms
             // 
             progressBarEx1.Border.Style = ButtonBorderStyle.Solid;
             progressBarEx1.Border.Thickness = 1;
-            progressBarEx1.Border.Which = ProgressBarEx.ProgressBorder.BorderToDraw.Left | ProgressBarEx.ProgressBorder.BorderToDraw.Top | ProgressBarEx.ProgressBorder.BorderToDraw.Right | ProgressBarEx.ProgressBorder.BorderToDraw.Bottom;
+            progressBarEx1.Border.Which = ProgressBarEx.ProgressBorder.BorderToDraw.All;
             progressBarEx1.Colors.BackColor = System.Drawing.Color.FromArgb(44, 47, 51);
             progressBarEx1.Colors.BarEndColor = System.Drawing.Color.FromArgb(64, 78, 237);
             progressBarEx1.Colors.BarStartColor = System.Drawing.Color.FromArgb(30, 144, 255);

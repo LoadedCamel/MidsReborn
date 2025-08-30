@@ -430,6 +430,9 @@
     <None Update="Data\blank.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
+    <None Update="Sythlin_DPS_Tool.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <WebView2LoaderPreference>Static</WebView2LoaderPreference>

@@ -176,6 +176,7 @@ namespace Mids_Reborn.Forms
             this.ToolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.tsRecipeViewer = new System.Windows.Forms.ToolStripMenuItem();
             this.tsRotationHelper = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsRunSythlinDpsTool = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator19 = new System.Windows.Forms.ToolStripSeparator();
             this.tsSetFind = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator21 = new System.Windows.Forms.ToolStripSeparator();
@@ -1473,6 +1474,7 @@ namespace Mids_Reborn.Forms
                 this.ToolStripSeparator18,
                 this.tsRecipeViewer,
                 this.tsRotationHelper,
+                this.tsRunSythlinDpsTool,
                 this.ToolStripSeparator19,
                 this.tsSetFind,
                 this.ToolStripSeparator21,
@@ -1543,7 +1545,14 @@ namespace Mids_Reborn.Forms
             this.tsRotationHelper.Size = new System.Drawing.Size(232, 22);
             this.tsRotationHelper.Text = "Rotation Helper (Beta)";
             this.tsRotationHelper.Click += new System.EventHandler(this.tsRotationHelper_Click);
-            // 
+            //
+            // tsRunSythlinDpsTool
+            //
+            this.tsRunSythlinDpsTool.Name = "tsRunSythlinDpsTool";
+            this.tsRunSythlinDpsTool.Size = new System.Drawing.Size(232, 22);
+            this.tsRunSythlinDpsTool.Text = "Run Log Parser (External)";
+            this.tsRunSythlinDpsTool.Click += new System.EventHandler(this.tsRunSythlinDpsTool_Click);
+            //
             // ToolStripSeparator19
             // 
             this.ToolStripSeparator19.Name = "ToolStripSeparator19";
@@ -2471,6 +2480,7 @@ namespace Mids_Reborn.Forms
         ToolStripMenuItem tsViewTotals;
         ToolStripMenuItem AdvancedToolStripMenuItem1;
         ToolStripMenuItem AutoArrangeAllSlotsToolStripMenuItem;
+        ToolStripMenuItem tsRunSythlinDpsTool;
         private ToolStripMenuItem ExportToolStripMenuItem;
         private ToolStripMenuItem LegacyToolStripMenuItem;
         private ToolStripMenuItem tsViewSharedBuilds;
