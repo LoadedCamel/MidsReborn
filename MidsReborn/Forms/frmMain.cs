@@ -324,6 +324,11 @@ namespace Mids_Reborn.Forms
                     MidsContext.Config.I9.DefaultIOLevel = 49;
                 }
 
+                if (!SlythinDpsToolRunner.HashMatch())
+                {
+                    tsRunSythlinDpsTool.Visible = false;
+                }
+
                 myDataView = dvAnchored;
                 pnlGFX.BackColor = BackColor;
                 NoUpdate = true;
