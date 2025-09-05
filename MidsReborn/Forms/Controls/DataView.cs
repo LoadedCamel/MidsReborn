@@ -359,7 +359,7 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             }
 
-            var eEnhs = Enum.GetValues(typeof(Enums.eEnhance)).Length;
+            var eEnhs = Enum.GetValues<Enums.eEnhance>().Length;
             var buffs = new float[eEnhs];
             var debuffs = new float[eEnhs];
             var buffDebuffs = new float[eEnhs];
@@ -369,7 +369,7 @@ namespace Mids_Reborn.Forms.Controls
             var buffsAfterED = new float[eEnhs];
             var debuffsAfterED = new float[eEnhs];
             var buffsDebuffsAfterED = new float[eEnhs];
-            var mezBuffs = new float[Enum.GetValues(typeof(Enums.eMez)).Length];
+            var mezBuffs = new float[Enum.GetValues<Enums.eMez>().Length];
             var mezSchedule = new Enums.eSchedule[eEnhs];
             var mezAfterED = new float[eEnhs];
 
@@ -438,12 +438,7 @@ namespace Mids_Reborn.Forms.Controls
 
             foreach (var p in MidsContext.Character.CurrentBuild.Powers)
             {
-                if (p == null)
-                {
-                    continue;
-                }
-
-                if (!p.StatInclude)
+                if (p?.StatInclude != true)
                 {
                     continue;
                 }
@@ -453,12 +448,12 @@ namespace Mids_Reborn.Forms.Controls
                 power1.ApplyGrantPowerEffects();
                 foreach (var effect in power1.Effects)
                 {
-                    if (power1.PowerType != Enums.ePowerType.GlobalBoost & (!effect.Absorbed_Effect | effect.Absorbed_PowerType != Enums.ePowerType.GlobalBoost))
+                    if ((power1.PowerType != Enums.ePowerType.GlobalBoost) & (!effect.Absorbed_Effect | (effect.Absorbed_PowerType != Enums.ePowerType.GlobalBoost)))
                     {
                         continue;
                     }
 
-                    if (effect.Absorbed_Effect & effect.Absorbed_Power_nID > -1)
+                    if (effect.Absorbed_Effect & (effect.Absorbed_Power_nID > -1))
                     {
                         power1 = DatabaseAPI.Database.Power[effect.Absorbed_Power_nID];
                     }
@@ -570,52 +565,48 @@ namespace Mids_Reborn.Forms.Controls
                             break;
                         default:
                             {
-                                if (effect.EffectType == Enums.eEffectType.DamageBuff & effect.DamageType == Enums.eDamage.Smashing)
+                                if ((effect.EffectType == Enums.eEffectType.DamageBuff) & (effect.DamageType == Enums.eDamage.Smashing))
                                 {
                                     switch (effect.IgnoreED)
                                     {
                                         case true:
+                                            foreach (var b in power1?.BoostsAllowed)
                                             {
-                                                foreach (var b in power1?.BoostsAllowed)
+                                                if (b.StartsWith("Res_Damage"))
                                                 {
-                                                    if (b.StartsWith("Res_Damage"))
-                                                    {
-                                                        buffsDebuffsAfterED[(int)Enums.eEnhance.Resistance] += effect.BuffedMag; // 18
-                                                        break;
-                                                    }
-
-                                                    if (!b.StartsWith("Damage"))
-                                                    {
-                                                        continue;
-                                                    }
-
-                                                    buffsDebuffsAfterED[(int)Enums.eEnhance.Damage] += effect.BuffedMag; // 2
+                                                    buffsDebuffsAfterED[(int)Enums.eEnhance.Resistance] += effect.BuffedMag; // 18
                                                     break;
                                                 }
 
+                                                if (!b.StartsWith("Damage"))
+                                                {
+                                                    continue;
+                                                }
+
+                                                buffsDebuffsAfterED[(int)Enums.eEnhance.Damage] += effect.BuffedMag; // 2
                                                 break;
                                             }
+
+                                            break;
                                         default:
+                                            foreach (var b in power1?.BoostsAllowed)
                                             {
-                                                foreach (var b in power1?.BoostsAllowed)
+                                                if (b.StartsWith("Res_Damage"))
                                                 {
-                                                    if (b.StartsWith("Res_Damage"))
-                                                    {
-                                                        buffDebuffs[(int)Enums.eEnhance.Resistance] += effect.BuffedMag;
-                                                        break;
-                                                    }
-
-                                                    if (!b.StartsWith("Damage"))
-                                                    {
-                                                        continue;
-                                                    }
-
-                                                    buffDebuffs[(int)Enums.eEnhance.Damage] += effect.BuffedMag;
+                                                    buffDebuffs[(int)Enums.eEnhance.Resistance] += effect.BuffedMag;
                                                     break;
                                                 }
 
+                                                if (!b.StartsWith("Damage"))
+                                                {
+                                                    continue;
+                                                }
+
+                                                buffDebuffs[(int)Enums.eEnhance.Damage] += effect.BuffedMag;
                                                 break;
                                             }
+
+                                            break;
                                     }
                                 }
 
@@ -641,6 +632,7 @@ namespace Mids_Reborn.Forms.Controls
             {
                 new(),
                 new(),
+                new(),
                 new()
             };
 
@@ -648,18 +640,28 @@ namespace Mids_Reborn.Forms.Controls
             {
                 if (buffs[i] > 0)
                 {
-                    liBuffsDebuffs[0].Add(BuildEDItem(i, buffs, buffsSchedule, Enum.GetName(typeof(Enums.eEnhance), i), buffsAfterED));
+                    liBuffsDebuffs[0].Add(BuildEDItem(i, buffs, buffsSchedule, Enum.GetName(typeof(Enums.eEnhance), i) ?? "Buff", buffsAfterED));
                 }
 
                 if (debuffs[i] > 0)
                 {
-                    liBuffsDebuffs[1].Add(BuildEDItem(i, debuffs, debuffsSchedule, $"{Enum.GetName(typeof(Enums.eEnhance), i)} Debuff", debuffsAfterED));
+                    liBuffsDebuffs[1].Add(BuildEDItem(i, debuffs, debuffsSchedule, Enum.GetName(typeof(Enums.eEnhance), i) == null ? "Debuff" : $"{Enum.GetName(typeof(Enums.eEnhance), i)} Debuff", debuffsAfterED));
                 }
 
                 if (buffDebuffs[i] > 0)
                 {
-                    liBuffsDebuffs[2].Add(BuildEDItem(i, buffDebuffs, buffsDebuffsSchedule, Enum.GetName(typeof(Enums.eEnhance), i), buffsDebuffsAfterED));
+                    liBuffsDebuffs[2].Add(BuildEDItem(i, buffDebuffs, buffsDebuffsSchedule, Enum.GetName(typeof(Enums.eEnhance), i) ?? "Buff/Debuff", buffsDebuffsAfterED));
                 }
+            }
+
+            for (var i = 0; i < mezBuffs.Length; i++)
+            {
+                if (mezBuffs[i] <= 0)
+                {
+                    continue;
+                }
+
+                liBuffsDebuffs[3].Add(BuildEDItem(i, mezBuffs, mezSchedule, Enum.GetName(typeof(Enums.eMez), i) ?? "Mez", mezAfterED));
             }
 
             for (var i = 0; i < liBuffsDebuffs.Count; i++)
@@ -670,7 +672,7 @@ namespace Mids_Reborn.Forms.Controls
                 }
 
                 var slowIdx = liBuffsDebuffs[i].TryFindIndex(e => e.Name is "Slow:");
-                if (slowIdx >= 0 & slowIdx <= liBuffsDebuffs.Count)
+                if ((slowIdx >= 0) & (slowIdx <= liBuffsDebuffs.Count))
                 {
                     var slowValue = liBuffsDebuffs[i][slowIdx].Value;
                     liBuffsDebuffs[i] = liBuffsDebuffs[i]
@@ -704,7 +706,7 @@ namespace Mids_Reborn.Forms.Controls
 
             // If power is using redirects, level may not match.
             // Ignore the level set in redirects.
-            info_Title.Text = !noLevel & pBase.Level > 0
+            info_Title.Text = !noLevel & (pBase.Level > 0)
                 ? $"[{rootPowerBase?.Level ?? pBase.Level}] {pBase.DisplayName}"
                 : pBase.DisplayName;
 
@@ -723,13 +725,13 @@ namespace Mids_Reborn.Forms.Controls
             var tip1 = string.Empty;
             if (pBase.PowerType == Enums.ePowerType.Click)
             {
-                if (enhancedPower.ToggleCost > 0 & enhancedPower.RechargeTime + enhancedPower.CastTime + enhancedPower.InterruptTime > 0)
+                if ((enhancedPower.ToggleCost > 0) & (enhancedPower.RechargeTime + enhancedPower.CastTime + enhancedPower.InterruptTime > 0))
                 {
                     tip1 = $"Effective end drain per second: {Utilities.FixDP(enhancedPower.ToggleCost / (enhancedPower.RechargeTime + enhancedPower.CastTime + enhancedPower.InterruptTime))}/s";
                 }
 
-                if (enhancedPower.ToggleCost > 0 &
-                    MidsContext.Config?.DamageMath.ReturnValue == ConfigData.EDamageReturn.Numeric)
+                if ((enhancedPower.ToggleCost > 0) &
+                    (MidsContext.Config?.DamageMath.ReturnValue == ConfigData.EDamageReturn.Numeric))
                 {
                     var damageValue = enhancedPower.FXGetDamageValue(pEnh == null);
                     if (damageValue > 0)
@@ -752,7 +754,7 @@ namespace Mids_Reborn.Forms.Controls
             info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, enhancedPower.ToggleCost, suffix1, tip1));
             var absorbedEffectsFlag = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 && DatabaseAPI.Database.Power[pBase.PowerIndex]?.EntitiesAutoHit == Enums.eEntity.None;
             var requiresToHitCheckFlag = pBase.Effects.Any(t => t.RequiresToHitCheck);
-            var entitiesAutoHitFlag = pBase.EntitiesAutoHit == Enums.eEntity.None |
+            var entitiesAutoHitFlag = (pBase.EntitiesAutoHit == Enums.eEntity.None) |
                                       pBase.Effects
                                           .Where(e => e.EffectType == Enums.eEffectType.EntCreate)
                                           .SelectMany(e => DatabaseAPI.Database.Entities.ElementAtOrDefault(e.nSummon) == null
@@ -762,20 +764,20 @@ namespace Mids_Reborn.Forms.Controls
                                                 : DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Entities[e.nSummon].GetNPowerset()[0]]?.Powers)
                                           .Any(e => e?.EntitiesAutoHit == Enums.eEntity.None);
 
-            if (entitiesAutoHitFlag | requiresToHitCheckFlag | absorbedEffectsFlag | pBase.Range > 20 & pBase.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt))
+            if (entitiesAutoHitFlag | requiresToHitCheckFlag | absorbedEffectsFlag | ((pBase.Range > 20) & pBase.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt)))
             {
                 var accuracy1 = pBase.Accuracy;
                 var accuracy2 = enhancedPower.Accuracy;
                 var num2 = MidsContext.Config.ScalingToHit * pBase.Accuracy;
                 var str = string.Empty;
                 var suffix2 = "%";
-                if (pBase.EntitiesAutoHit != Enums.eEntity.None & requiresToHitCheckFlag)
+                if ((pBase.EntitiesAutoHit != Enums.eEntity.None) & requiresToHitCheckFlag)
                 {
                     str = "\r\n* This power is autohit, but has an effect that requires a ToHit roll.";
                     suffix2 += "*";
                 }
 
-                if (Math.Abs(accuracy1 - accuracy2) > float.Epsilon & Math.Abs(num2 - accuracy2) > float.Epsilon)
+                if ((Math.Abs(accuracy1 - accuracy2) > float.Epsilon) & (Math.Abs(num2 - accuracy2) > float.Epsilon))
                 {
                     var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.Accuracy + (enhancedPower.Accuracy - MidsContext.Config.ScalingToHit):##0.00000}x{str}";
                     info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Accuracy", "Acc"),
@@ -808,28 +810,28 @@ namespace Mids_Reborn.Forms.Controls
                         .Where(e => e.EffectType == Enums.eEffectType.Mez &&
                                     e.ToWho == enhancedPower.Effects[durationEffectId].ToWho &&
                                     Math.Abs(e.Duration - s2) <= 0.1 &&
-                                    e.PvMode == Enums.ePvX.Any |
-                                    e.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
-                                    e.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE)
+                                    (e.PvMode == Enums.ePvX.Any) |
+                                    ((e.PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) |
+                                    ((e.PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE))
                         .OrderBy(e => e.PvMode)
                         .Select(e => e.BuildEffectString(false, "", false, false, false, true)))
                     : string.Join("\r\n", enhancedPower.Effects
                         .Where(e => e.ToWho == enhancedPower.Effects[durationEffectId].ToWho &&
                                     Math.Abs(e.Duration - s2) <= 0.1 &&
-                                    e.PvMode == Enums.ePvX.Any |
-                                    e.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
-                                    e.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE)
+                                    (e.PvMode == Enums.ePvX.Any) |
+                                    ((e.PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) |
+                                    ((e.PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE))
                         .OrderBy(e => e.PvMode)
                         .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
             }
 
             var validMez = durationEffectId > -1 &&
-                           pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez &
-                           pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt &
-                           pBase.Effects[durationEffectId].MezType != Enums.eMez.Afraid &
-                           !((pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockback |
-                              pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockup) &
-                             pBase.Effects[durationEffectId].Mag < 0);
+                           (pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez) &
+                           (pBase.Effects[durationEffectId].MezType != Enums.eMez.Taunt) &
+                           (pBase.Effects[durationEffectId].MezType != Enums.eMez.Afraid) &
+                           !(((pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockback) |
+                              (pBase.Effects[durationEffectId].MezType == Enums.eMez.Knockup)) &
+                             (pBase.Effects[durationEffectId].Mag < 0));
 
             var validMezProt = durationEffectId > -1 &&
                                pBase.Effects
@@ -855,7 +857,7 @@ namespace Mids_Reborn.Forms.Controls
             else if (durationEffectId > -1)
             {
                 if ((pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez && validMez) | validMezProt |
-                    pBase.Effects[durationEffectId].EffectType != Enums.eEffectType.Mez)
+                    (pBase.Effects[durationEffectId].EffectType != Enums.eEffectType.Mez))
                 {
                     info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s", durationTip));
                 }
@@ -934,12 +936,12 @@ namespace Mids_Reborn.Forms.Controls
                 str1 += " (% only)";
             }
 
-            var baseDamage = Math.Abs(pBase.FXGetDamageValue(pBase.PowerIndex > -1 & pEnh?.PowerIndex > -1));
+            var baseDamage = Math.Abs(pBase.FXGetDamageValue((pBase.PowerIndex > -1) & (pEnh?.PowerIndex > -1)));
             var enhancedDamage = pEnh == null || pEnh.PowerIndex == -1
                 ? baseDamage
                 : Math.Abs(enhancedPower.FXGetDamageValue());
 
-            if (pBase.NIDSubPower.Length > 0 & baseDamage == 0 && enhancedDamage == 0)
+            if ((pBase.NIDSubPower.Length > 0) & (baseDamage == 0) && enhancedDamage == 0)
             {
                 lblDmg.Text = string.Empty;
                 Info_Damage.nBaseVal = 0;
@@ -958,7 +960,7 @@ namespace Mids_Reborn.Forms.Controls
                 // Mids has no awareness of target data.
                 // When using damage %, estimate damage value based on character HP.
                 var hasPercentDamage = pEnh?.Effects
-                    .Any(e => e.EffectType == Enums.eEffectType.Damage && e.DisplayPercentage | e.Aspect == Enums.eAspect.Str);
+                    .Any(e => e.EffectType == Enums.eEffectType.Damage && e.DisplayPercentage | (e.Aspect == Enums.eAspect.Str));
                 var dmgMultiplier = hasPercentDamage == true ? MidsContext.Character.Totals.HPMax : 1;
 
                 Info_Damage.nBaseVal = Math.Max(0, baseDamage * dmgMultiplier); // Negative damage ? (see Toxins)
@@ -967,7 +969,7 @@ namespace Mids_Reborn.Forms.Controls
                 Info_Damage.nHighEnh = Math.Max(414, enhancedDamage * dmgMultiplier); // Maximum graph value
                 Info_Damage.Text = Math.Abs(enhancedDamage - baseDamage) > float.Epsilon
                     ? $"{enhancedPower.FXGetDamageString(pEnh?.PowerIndex == -1)} ({(hasPercentDamage == true ? $"{Utilities.FixDP(baseDamage * 100)}%" : Utilities.FixDP(baseDamage))})"
-                    : pBase.FXGetDamageString(pBase.PowerIndex > -1 & pEnh?.PowerIndex > -1);
+                    : pBase.FXGetDamageString((pBase.PowerIndex > -1) & (pEnh?.PowerIndex > -1));
             }
 
             SetPowerScaler();
