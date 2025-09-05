@@ -97,10 +97,10 @@ namespace Mids_Reborn.Forms.Controls
         {
             MoveDisable = false;
             TabPage = 0;
-            Pages = new[]
-            {
+            Pages =
+            [
                 "INFO", "EFFECTS", "TOTALS", "ENHANCE"
-            };
+            ];
             pLastScaleVal = -1;
             Lock = false;
             bFloating = false;
@@ -885,10 +885,30 @@ namespace Mids_Reborn.Forms.Controls
                     pBase.Effects[durationEffectId].CanInclude(),
                     durationEffectId));
 
-                info_DataList.AddItem(new PairedListEx.Item("Mag:",
-                    $"{enhancedPower.Effects[durationEffectId].BuffedMag:####0.##}",
-                    Math.Abs(pBase.Effects[durationEffectId].BuffedMag - enhancedPower.Effects[durationEffectId].BuffedMag) > float.Epsilon,
-                    pBase.Effects[durationEffectId].Probability < 1));
+                var gre = EffectsItemPairs.FirstOrDefault(e => e.Key.ContainsFxIndex(durationEffectId)).Key;
+                if (gre != null)
+                {
+                    var baseMag = gre.GetMagSum(pBase, false);
+                    var enhMag = gre.GetMagSum(enhancedPower, false);
+                    var totalMag = EffectsItemPairs
+                        .Where(e => (e.Key.EffectType == gre.EffectType) & (e.Key.MezType == gre.MezType) &
+                                    ((e.Key.PvMode == gre.PvMode) | (e.Key.PvMode == Enums.ePvX.Any)) &
+                                    (e.Key.ToWho == gre.ToWho))
+                        .Select(e => e.Key.GetMagSum(enhancedPower, false))
+                        .Sum();
+
+                    info_DataList.AddItem(new PairedListEx.Item("Mag:",
+                        $"{totalMag:####0.##}",
+                        Math.Abs(enhMag - baseMag) > float.Epsilon,
+                        gre.GetEffects(pBase).Any(e => e.Probability < 1)));
+                }
+                else
+                {
+                    info_DataList.AddItem(new PairedListEx.Item("Mag:",
+                        $"{enhancedPower.Effects[durationEffectId].BuffedMag:####0.##}",
+                        Math.Abs(pBase.Effects[durationEffectId].BuffedMag - enhancedPower.Effects[durationEffectId].BuffedMag) > float.Epsilon,
+                        pBase.Effects[durationEffectId].Probability < 1));
+                }
             }
 
             var rankedEffectsExt = MidsContext.Config?.Inc.DisablePvE == false
@@ -1031,14 +1051,14 @@ namespace Mids_Reborn.Forms.Controls
             }
 
             PairedListEx[] pairedListArray =
-            {
+            [
                 fx_List1, fx_List2, fx_List3
-            };
+            ];
 
             Label[] labelArray =
-            {
+            [
                 fx_lblHead1, fx_lblHead2, fx_LblHead3
-            };
+            ];
 
             fx_List1.Clear();
             fx_List2.Clear();
@@ -1053,7 +1073,7 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     Label = "Defense/Resistance",
                     Filter = e => e.EffectType is Enums.eEffectType.Defense or Enums.eEffectType.Resistance,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                    ItemPairsEx = []
                 },
 
                 new()
@@ -1063,7 +1083,7 @@ namespace Mids_Reborn.Forms.Controls
                         or Enums.eEffectType.Regeneration or Enums.eEffectType.Endurance
                         or Enums.eEffectType.EnduranceDiscount or Enums.eEffectType.Recovery
                         or Enums.eEffectType.Absorb,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                    ItemPairsEx = []
                 },
 
                 new()
@@ -1071,7 +1091,7 @@ namespace Mids_Reborn.Forms.Controls
                     Label = "Status",
                     Filter = e => e.EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezResist
                         or Enums.eEffectType.Translucency,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                    ItemPairsEx = []
                 },
 
                 new()
@@ -1082,7 +1102,7 @@ namespace Mids_Reborn.Forms.Controls
                         or Enums.eEffectType.StealthRadiusPlayer or Enums.eEffectType.ResEffect
                         or Enums.eEffectType.ThreatLevel or Enums.eEffectType.DropToggles
                         or Enums.eEffectType.RechargeTime or Enums.eEffectType.Enhancement,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                    ItemPairsEx = []
                 },
 
                 new()
@@ -1092,28 +1112,28 @@ namespace Mids_Reborn.Forms.Controls
                         or Enums.eEffectType.SpeedFlying or Enums.eEffectType.JumpHeight or Enums.eEffectType.Jumppack
                         or Enums.eEffectType.Fly or Enums.eEffectType.MaxRunSpeed or Enums.eEffectType.MaxJumpSpeed
                         or Enums.eEffectType.MaxFlySpeed,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                    ItemPairsEx = []
                 },
 
                 new()
                 {
                     Label = "Summon",
                     Filter = e => e.EffectType is Enums.eEffectType.EntCreate,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                    ItemPairsEx = []
                 },
 
                 new()
                 {
                     Label = "Granted Powers",
                     Filter = e => e.EffectType is Enums.eEffectType.GrantPower or Enums.eEffectType.LevelShift,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                    ItemPairsEx = []
                 },
 
                 new()
                 {
                     Label = "Modify Effect",
                     Filter = e => e.EffectType == Enums.eEffectType.ModifyAttrib,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                    ItemPairsEx = []
                 },
 
                 new()
@@ -1121,8 +1141,8 @@ namespace Mids_Reborn.Forms.Controls
                     Label = "Elusivity",
                     Filter = e =>
                         MidsContext.Config.Inc.DisablePvE &
-                        e.EffectType == Enums.eEffectType.Elusivity,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
+                        (e.EffectType == Enums.eEffectType.Elusivity),
+                    ItemPairsEx = []
                 }
             };
 
@@ -1549,7 +1569,7 @@ namespace Mids_Reborn.Forms.Controls
             baseEffects = baseFxList.ToArray();
             enhEffects = enhFxList.ToArray();
 
-            return new List<IEffect[]> { baseEffects, enhEffects };
+            return [baseEffects, enhEffects];
         }
 
         private List<Enums.ShortFX[]> SwapExtraEffects(Enums.ShortFX[] baseEffects, Enums.ShortFX[] enhEffects)
@@ -1569,7 +1589,7 @@ namespace Mids_Reborn.Forms.Controls
             baseEffects = baseFxList.ToArray();
             enhEffects = enhFxList.ToArray();
 
-            return new List<Enums.ShortFX[]> { baseEffects, enhEffects };
+            return [baseEffects, enhEffects];
         }
 
         public void FlipStage(int Index, int Enh1, int Enh2, float State, int PowerID, Enums.eEnhGrade Grade1, Enums.eEnhGrade Grade2)
@@ -1580,17 +1600,17 @@ namespace Mids_Reborn.Forms.Controls
             var solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             if (PowerID != pBase.PowerIndex)
                 return;
-            ImageAttributes recolorIa = ClsDrawX.GetRecolorIa(MidsContext.Character.IsHero());
+            var recolorIa = ClsDrawX.GetRecolorIa(MidsContext.Character.IsHero());
             var rectangle1 = new Rectangle();
             ref var local1 = ref rectangle1;
             var size = bxFlip.Size;
             var x = size.Width - 188 + 30 * Index;
             size = bxFlip.Size;
-            var y1 = (int)Math.Round((size.Height / 2.0 - 30.0) / 2.0);
+            var y1 = (int)Math.Round((size.Height / 2.0 - 30) / 2.0);
             local1 = new Rectangle(x, y1, 30, 30);
             var destRect = rectangle1;
             bxFlip.Graphics.FillRectangle(solidBrush1, rectangle1);
-            var rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30.0 - 30.0 * State) / 2.0), rectangle1.Y,
+            var rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30 - 30 * State) / 2.0), rectangle1.Y,
                 (int)Math.Round(30.0 * State), 30);
             Graphics graphics;
             if (Enh1 > -1)
@@ -1613,7 +1633,7 @@ namespace Mids_Reborn.Forms.Controls
             var num2 = (int)Math.Round(y2 + num1);
             local2.Y = num2;
             bxFlip.Graphics.FillRectangle(solidBrush1, rectangle1);
-            rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30.0 - 30.0 * State) / 2.0), rectangle1.Y,
+            rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30 - 30 * State) / 2.0), rectangle1.Y,
                 (int)Math.Round(30.0 * State), 30);
             if (Enh2 > -1)
             {
@@ -1907,7 +1927,7 @@ namespace Mids_Reborn.Forms.Controls
             for (var index = 0; index < shortFxEnh.Index.Length; index++)
             {
                 var sFxIdx = shortFxEnh.Index[index];
-                if (sFxIdx >= pBase.Effects.Length & sFxIdx >= pEnh.Effects.Length)
+                if ((sFxIdx >= pBase.Effects.Length) & (sFxIdx >= pEnh.Effects.Length))
                 {
                     continue;
                 }
@@ -2207,7 +2227,7 @@ namespace Mids_Reborn.Forms.Controls
         {
             var clipRect = new Rectangle(0, 0, 70, pnlTabs.Height);
             var index = 0;
-            while (!(e.X >= clipRect.X & e.X <= clipRect.Width + clipRect.X))
+            while (!((e.X >= clipRect.X) & (e.X <= clipRect.Width + clipRect.X)))
             {
                 clipRect.X += clipRect.Width;
                 ++index;
@@ -2432,14 +2452,19 @@ namespace Mids_Reborn.Forms.Controls
 
         private Power GetPowerRedirectParent(IPower pSrc)
         {
-            var pSrcRedirectParent = new Power();
-            pSrcRedirectParent.FullName = "";
+            var pSrcRedirectParent = new Power
+            {
+                FullName = ""
+            };
             foreach (var p in DatabaseAPI.Database.Power)
             {
-                if (p.GetPowerSet().SetType != Enums.ePowerSetType.Primary &
-                    p.GetPowerSet().SetType != Enums.ePowerSetType.Secondary &
-                    p.GetPowerSet().SetType != Enums.ePowerSetType.Pool &
-                    p.GetPowerSet().SetType != Enums.ePowerSetType.Ancillary)
+                var ps = p?.GetPowerSet();
+                if (ps == null)
+                {
+                    continue;
+                }
+
+                if (ps.SetType is not Enums.ePowerSetType.Primary and not Enums.ePowerSetType.Secondary and not Enums.ePowerSetType.Pool and not Enums.ePowerSetType.Ancillary)
                 {
                     continue;
                 }
@@ -2447,10 +2472,14 @@ namespace Mids_Reborn.Forms.Controls
                 foreach (var fx in p.Effects)
                 {
                     if (fx.EffectType != Enums.eEffectType.PowerRedirect)
+                    {
                         continue;
+                    }
 
                     if (fx.Override != pSrc.FullName)
+                    {
                         continue;
+                    }
 
                     pSrcRedirectParent = new Power(DatabaseAPI.GetPowerByFullName(p.FullName));
                 }
@@ -2480,11 +2509,11 @@ namespace Mids_Reborn.Forms.Controls
                 ? null
                 : MainModule.MidsController.Toon?.GetEnhancedPower(iHistoryIdx);
 
-            if (enhancedPowerData.PowerIndex == -1 & basePowerData.PowerIndex == -1)
+            if ((enhancedPowerData.PowerIndex == -1) & (basePowerData.PowerIndex == -1))
             {
                 pBase = null;
             }
-            else if (enhancedPowerData.PowerIndex == -1 & basePowerData.PowerIndex > -1)
+            else if ((enhancedPowerData.PowerIndex == -1) & (basePowerData.PowerIndex > -1))
             {
                 pBase = basePowerData;
             }
@@ -2538,7 +2567,7 @@ namespace Mids_Reborn.Forms.Controls
 
         public void SetEnhancement(I9Slot iEnh, int iLevel = -1)
         {
-            if (Lock & TabPage != 3 || iLevel < 0)
+            if (Lock & (TabPage != 3) || iLevel < 0)
             {
                 return;
             }
@@ -2547,7 +2576,7 @@ namespace Mids_Reborn.Forms.Controls
             if (iEnh.Enh > -1)
             {
                 str1 = DatabaseAPI.Database.Enhancements[iEnh.Enh].LongName;
-                if (str1.Length > 38 & iLevel > -1)
+                if ((str1.Length > 38) & (iLevel > -1))
                     str1 = DatabaseAPI.GetEnhancementNameShortWSet(iEnh.Enh);
             }
             else
@@ -2557,7 +2586,7 @@ namespace Mids_Reborn.Forms.Controls
                                     "Shift+Click to move slot. Right-Click to place enh." + RTF.EndRTF();
             }
 
-            if (iLevel > -1 & !MidsContext.Config.ShowSlotLevels)
+            if ((iLevel > -1) & !MidsContext.Config.ShowSlotLevels)
             {
                 str1 += $" (Slot Level {iLevel + 1})";
             }
@@ -2569,7 +2598,7 @@ namespace Mids_Reborn.Forms.Controls
                 return;
             var iStr1 = string.Empty;
             var str2 = string.Empty;
-            if (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.InventO | DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO)
+            if ((DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.InventO) | (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO))
             {
                 iStr1 = $"{RTF.Color(RTF.ElementID.Invention)}Invention Level: {iEnh.IOLevel + 1}{Enums.GetRelativeString(iEnh.RelativeLevel, false)}{RTF.Color(RTF.ElementID.Text)}";
             }
@@ -2662,14 +2691,16 @@ namespace Mids_Reborn.Forms.Controls
                 /*iStr2 = str1 + GetEnhancementStringLongRTF(iEnh) + RTF.Size(RTF.SizeID.Tiny) + "\r\n" +
                         EnhancementSetCollection.GetSetInfoLongRTF(DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet);*/
 
-                iStr2 = str1 + GetEnhancementStringLongRTF(iEnh) + "\r\n" +
-                        EnhancementSetCollection.GetSetInfoLongRTF(DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet);
+                iStr2 = $"{str1}{GetEnhancementStringLongRTF(iEnh)}\r\n{EnhancementSetCollection.GetSetInfoLongRTF(DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet)}";
             }
             else
             {
                 var str2 = str1 + DatabaseAPI.Database.Enhancements[iEnh.Enh].Desc;
                 if (str2 != string.Empty)
+                {
                     str2 += "\r\n";
+                }
+
                 iStr2 = str2 + GetEnhancementStringLongRTF(iEnh);
             }
 
@@ -2733,7 +2764,7 @@ namespace Mids_Reborn.Forms.Controls
 
         public void SetLocation(Point iLocation, bool Force)
         {
-            var flag = Force | SnapLocation.X == Location.X & SnapLocation.Y == Location.Y;
+            var flag = Force | ((SnapLocation.X == Location.X) & (SnapLocation.Y == Location.Y));
             SnapLocation.X = iLocation.X;
             SnapLocation.Y = iLocation.Y;
             SnapLocation.Width = Width;
@@ -2751,7 +2782,7 @@ namespace Mids_Reborn.Forms.Controls
             {
                 PowerScaler.Visible = false;
             }
-            else if (pBase.VariableEnabled & HistoryIDX > -1)
+            else if (pBase.VariableEnabled & (HistoryIDX > -1))
             {
                 var str = string.IsNullOrEmpty(pBase.VariableName) ? "Targets" : pBase.VariableName;
                 PowerScaler.Visible = true;
@@ -2800,7 +2831,7 @@ namespace Mids_Reborn.Forms.Controls
 
         private bool sFXCheck(Enums.ShortFX isFX)
         {
-            return isFX.Index != null && isFX.Index.Any(t => pBase?.Effects.Length > t & t > -1 && pBase?.Effects[t].isEnhancementEffect == true);
+            return isFX.Index != null && isFX.Index.Any(t => (pBase?.Effects.Length > t) & (t > -1) && pBase?.Effects[t].isEnhancementEffect == true);
         }
 
         private string ShortStr(string full, string brief)
@@ -2855,10 +2886,10 @@ namespace Mids_Reborn.Forms.Controls
                 {
                     Suffix = "%";
                     var effect = pEnh.Effects[shortFxArray1[index].Index[0]];
-                    if ((effect.EffectType == Enums.eEffectType.Heal |
-                         effect.EffectType == Enums.eEffectType.Endurance |
-                         effect.EffectType == Enums.eEffectType.Damage) &
-                        pEnh.Effects[shortFxArray1[index].Index[0]].Aspect == Enums.eAspect.Cur)
+                    if (((effect.EffectType == Enums.eEffectType.Heal) |
+                         (effect.EffectType == Enums.eEffectType.Endurance) |
+                         (effect.EffectType == Enums.eEffectType.Damage)) &
+                        (pEnh.Effects[shortFxArray1[index].Index[0]].Aspect == Enums.eAspect.Cur))
                     {
                         num2 *= 100;
                         num3 *= 100;
