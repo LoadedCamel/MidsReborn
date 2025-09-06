@@ -2473,7 +2473,7 @@ namespace Mids_Reborn.Core
                         ? "Defiance"
                         : FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                             Enums.GetEffectNameShort(effectSource.EffectType));
-                    rankedEffect.Value = $"{effectSource.BuffedMag * 100:###0.##}%";
+                    rankedEffect.Value = $"{effectSource.BuffedMag * 100:###0.##}%{toWhoShort}";
                     rankedEffect.ToolTip = isDefiance
                         ? effectSource.BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
                         : greTooltip;
