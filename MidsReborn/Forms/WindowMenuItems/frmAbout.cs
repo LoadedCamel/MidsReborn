@@ -16,10 +16,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 {
     public partial class frmAbout : Form
     {
-        private const int WM_NCHITTEST = 0x84;
-        private const int HTCLIENT = 0x1;
-        private const int HTCAPTION = 0x2;
-        private const int WM_NCLBUTTONDBLCLK = 0x00A3;
+        private const int HT_CAPTION = 0x2;
+        private const int WM_NCLBUTTONDOWN = 0xA1;
+
+        [DllImportAttribute("user32.dll")]
+        public static extern int SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
+        [DllImportAttribute("user32.dll")]
+        public static extern bool ReleaseCapture();
 
         public frmAbout()
         {
@@ -29,6 +32,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmAbout_Load(object sender, EventArgs e)
         {
+            Icon = Resources.MRB_Icon_Concept;
             pbAppIcon.Image = Resources.MRB_Icon_Concept.ToBitmap();
             switch (MidsContext.Character?.Alignment)
             {
@@ -48,14 +52,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Refresh();
         }
 
-        private void DrawOutlineText(Graphics g, string text, Point location, Font font, Color textColor,
+        private static void DrawOutlineText(Graphics g, string text, Point location, Font font, Color textColor,
             Color outlineColor, float outlineWidth, StringFormat sFormat)
         {
-            using var outlinePen = new Pen(outlineColor, outlineWidth) {LineJoin = LineJoin.Round};
+            using var outlinePen = new Pen(outlineColor, outlineWidth) { LineJoin = LineJoin.Round };
             using var brush = new SolidBrush(textColor);
             using var gfxPath = new GraphicsPath();
 
-            gfxPath.AddString(text, font.FontFamily, (int) font.Style, font.Size, new Rectangle(location.X, location.Y, 300, 30), sFormat);
+            gfxPath.AddString(text, font.FontFamily, (int)font.Style, font.Size, new Rectangle(location.X, location.Y, 300, 30), sFormat);
             outlinePen.LineJoin = LineJoin.Round;
 
             g.DrawPath(outlinePen, gfxPath);
@@ -117,40 +121,27 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 var cp = base.CreateParams;
                 cp.ExStyle |= 0x00000020;
+                
                 return cp;
             }
         }
 
-        // Make the window movable by click-drag
-        protected override void WndProc(ref Message message)
-        {
-            if (message.Msg == WM_NCLBUTTONDBLCLK)
-            {
-                message.Result = IntPtr.Zero;
-                return;
-            }
-            base.WndProc(ref message);
-
-            if (message.Msg == WM_NCHITTEST && (int)message.Result == HTCLIENT)
-                message.Result = (IntPtr)HTCAPTION;
-        }
-
-        private string GetAppVersionString()
+        private static string GetAppVersionString()
         {
             return $"v{MidsContext.AppFileVersion.Major}.{MidsContext.AppFileVersion.Minor}.{MidsContext.AppFileVersion.Build}{(MidsContext.AppFileVersion.Revision <= 0 ? "" : $" rev {MidsContext.AppFileVersion.Revision}")}";
         }
 
-        private string GetDatabaseName()
+        private static string GetDatabaseName()
         {
             return DatabaseAPI.DatabaseName;
         }
 
-        private string GetDatabaseIssuePageVol()
+        private static string GetDatabaseIssuePageVol()
         {
             return $"{DatabaseAPI.Database.Issue}{(DatabaseAPI.Database.PageVol <= 0 ? "" : $" {DatabaseAPI.Database.PageVolText} {DatabaseAPI.Database.PageVol}")}";
         }
 
-        private string GetDatabaseVersionString()
+        private static string GetDatabaseVersionString()
         {
             return $"{DatabaseAPI.Database.Version.Major}.{DatabaseAPI.Database.Version.Minor}.{DatabaseAPI.Database.Version.Build}{(DatabaseAPI.Database.Version.Revision <= 0 ? "" : $" rev {DatabaseAPI.Database.Version.Revision}")}";
         }
@@ -171,6 +162,17 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         {
             DialogResult = DialogResult.OK;
             Close();
+        }
+
+        private void panel1_MouseMove(object sender, MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
+
+            ReleaseCapture();
+            _ = SendMessage(Handle, WM_NCLBUTTONDOWN, HT_CAPTION, 0);
         }
     }
 }

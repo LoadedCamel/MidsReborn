@@ -28,101 +28,117 @@
         /// </summary>
         private void InitializeComponent()
         {
-            this.btnCopy = new Mids_Reborn.Forms.Controls.ImageButtonEx();
-            this.btnClose = new Mids_Reborn.Forms.Controls.ImageButtonEx();
-            this.pbAppIcon = new System.Windows.Forms.PictureBox();
-            ((System.ComponentModel.ISupportInitialize)(this.pbAppIcon)).BeginInit();
-            this.SuspendLayout();
+            panel1 = new System.Windows.Forms.Panel();
+            pbAppIcon = new System.Windows.Forms.PictureBox();
+            btnClose = new Mids_Reborn.Forms.Controls.ImageButtonEx();
+            btnCopy = new Mids_Reborn.Forms.Controls.ImageButtonEx();
+            panel1.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)pbAppIcon).BeginInit();
+            SuspendLayout();
             // 
-            // btnCopy
+            // panel1
             // 
-            this.btnCopy.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.btnCopy.CurrentText = "Copy";
-            this.btnCopy.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnCopy.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.btnCopy.Images.Background = global::MRBResourceLib.Resources.HeroButton;
-            this.btnCopy.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
-            this.btnCopy.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
-            this.btnCopy.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
-            this.btnCopy.Location = new System.Drawing.Point(9, 304);
-            this.btnCopy.Lock = false;
-            this.btnCopy.Name = "btnCopy";
-            this.btnCopy.Size = new System.Drawing.Size(110, 30);
-            this.btnCopy.TabIndex = 9;
-            this.btnCopy.Text = "Copy";
-            this.btnCopy.TextOutline.Color = System.Drawing.Color.Black;
-            this.btnCopy.TextOutline.Width = 2;
-            this.btnCopy.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
-            this.btnCopy.ToggleText.Indeterminate = "Indeterminate State";
-            this.btnCopy.ToggleText.ToggledOff = "ToggledOff State";
-            this.btnCopy.ToggleText.ToggledOn = "ToggledOn State";
-            this.btnCopy.UseAlt = false;
-            this.btnCopy.Click += new System.EventHandler(this.btnCopy_Click);
-            // 
-            // btnClose
-            // 
-            this.btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.btnClose.CurrentText = "Close";
-            this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnClose.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.btnClose.Images.Background = global::MRBResourceLib.Resources.HeroButton;
-            this.btnClose.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
-            this.btnClose.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
-            this.btnClose.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
-            this.btnClose.Location = new System.Drawing.Point(138, 304);
-            this.btnClose.Lock = false;
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(110, 30);
-            this.btnClose.TabIndex = 10;
-            this.btnClose.Text = "Close";
-            this.btnClose.TextOutline.Color = System.Drawing.Color.Black;
-            this.btnClose.TextOutline.Width = 2;
-            this.btnClose.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
-            this.btnClose.ToggleText.Indeterminate = "Indeterminate State";
-            this.btnClose.ToggleText.ToggledOff = "ToggledOff State";
-            this.btnClose.ToggleText.ToggledOn = "ToggledOn State";
-            this.btnClose.UseAlt = false;
-            this.btnClose.Click += new System.EventHandler(this.btnClose_Click);
+            panel1.BackColor = System.Drawing.Color.Transparent;
+            panel1.Controls.Add(pbAppIcon);
+            panel1.Controls.Add(btnClose);
+            panel1.Controls.Add(btnCopy);
+            panel1.Dock = System.Windows.Forms.DockStyle.Fill;
+            panel1.Location = new System.Drawing.Point(0, 0);
+            panel1.Name = "panel1";
+            panel1.Size = new System.Drawing.Size(612, 344);
+            panel1.TabIndex = 0;
+            panel1.MouseMove += panel1_MouseMove;
             // 
             // pbAppIcon
             // 
-            this.pbAppIcon.BackColor = System.Drawing.Color.Transparent;
-            this.pbAppIcon.Location = new System.Drawing.Point(324, 15);
-            this.pbAppIcon.Name = "pbAppIcon";
-            this.pbAppIcon.Size = new System.Drawing.Size(48, 48);
-            this.pbAppIcon.TabIndex = 11;
-            this.pbAppIcon.TabStop = false;
+            pbAppIcon.BackColor = System.Drawing.Color.Transparent;
+            pbAppIcon.Location = new System.Drawing.Point(324, 15);
+            pbAppIcon.Name = "pbAppIcon";
+            pbAppIcon.Size = new System.Drawing.Size(48, 48);
+            pbAppIcon.TabIndex = 14;
+            pbAppIcon.TabStop = false;
+            // 
+            // btnClose
+            // 
+            btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            btnClose.CurrentText = "Close";
+            btnClose.DisplayVertically = false;
+            btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            btnClose.ForeColor = System.Drawing.Color.WhiteSmoke;
+            btnClose.Images.Background = MRBResourceLib.Resources.HeroButton;
+            btnClose.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            btnClose.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            btnClose.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            btnClose.Location = new System.Drawing.Point(138, 304);
+            btnClose.Lock = false;
+            btnClose.Name = "btnClose";
+            btnClose.Size = new System.Drawing.Size(110, 30);
+            btnClose.TabIndex = 13;
+            btnClose.Text = "Close";
+            btnClose.TextOutline.Color = System.Drawing.Color.Black;
+            btnClose.TextOutline.Width = 2;
+            btnClose.ToggleState = Forms.Controls.ImageButtonEx.States.ToggledOff;
+            btnClose.ToggleText.Indeterminate = "Indeterminate State";
+            btnClose.ToggleText.ToggledOff = "ToggledOff State";
+            btnClose.ToggleText.ToggledOn = "ToggledOn State";
+            btnClose.UseAlt = false;
+            btnClose.Click += btnClose_Click;
+            // 
+            // btnCopy
+            // 
+            btnCopy.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
+            btnCopy.CurrentText = "Copy";
+            btnCopy.DisplayVertically = false;
+            btnCopy.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            btnCopy.ForeColor = System.Drawing.Color.WhiteSmoke;
+            btnCopy.Images.Background = MRBResourceLib.Resources.HeroButton;
+            btnCopy.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            btnCopy.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            btnCopy.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            btnCopy.Location = new System.Drawing.Point(9, 304);
+            btnCopy.Lock = false;
+            btnCopy.Name = "btnCopy";
+            btnCopy.Size = new System.Drawing.Size(110, 30);
+            btnCopy.TabIndex = 12;
+            btnCopy.Text = "Copy";
+            btnCopy.TextOutline.Color = System.Drawing.Color.Black;
+            btnCopy.TextOutline.Width = 2;
+            btnCopy.ToggleState = Forms.Controls.ImageButtonEx.States.ToggledOff;
+            btnCopy.ToggleText.Indeterminate = "Indeterminate State";
+            btnCopy.ToggleText.ToggledOff = "ToggledOff State";
+            btnCopy.ToggleText.ToggledOn = "ToggledOn State";
+            btnCopy.UseAlt = false;
+            btnCopy.Click += btnCopy_Click;
             // 
             // frmAbout
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.BackColor = System.Drawing.Color.Black;
-            this.BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
-            this.ClientSize = new System.Drawing.Size(612, 344);
-            this.Controls.Add(this.pbAppIcon);
-            this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.btnCopy);
-            this.DoubleBuffered = true;
-            this.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.ForeColor = System.Drawing.Color.Black;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.Name = "frmAbout";
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "About";
-            this.TopMost = true;
-            this.Load += new System.EventHandler(this.frmAbout_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.pbAppIcon)).EndInit();
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            BackColor = System.Drawing.Color.Black;
+            BackgroundImageLayout = System.Windows.Forms.ImageLayout.Zoom;
+            ClientSize = new System.Drawing.Size(612, 344);
+            Controls.Add(panel1);
+            DoubleBuffered = true;
+            Font = new System.Drawing.Font("Microsoft Sans Serif", 9F);
+            ForeColor = System.Drawing.Color.Black;
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "frmAbout";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "About Mids Reborn";
+            Load += frmAbout_Load;
+            panel1.ResumeLayout(false);
+            ((System.ComponentModel.ISupportInitialize)pbAppIcon).EndInit();
+            ResumeLayout(false);
 
         }
 
         #endregion
-        private Mids_Reborn.Forms.Controls.ImageButtonEx btnCopy;
-        private Mids_Reborn.Forms.Controls.ImageButtonEx btnClose;
+
+        private System.Windows.Forms.Panel panel1;
         private System.Windows.Forms.PictureBox pbAppIcon;
+        private Controls.ImageButtonEx btnClose;
+        private Controls.ImageButtonEx btnCopy;
     }
 }
