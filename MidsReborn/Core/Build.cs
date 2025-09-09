@@ -49,7 +49,7 @@ namespace Mids_Reborn.Core
 
         public IPower? SetBonusVirtualPower => _setBonusVirtualPower ??= GetSetBonusVirtualPower();
 
-        public List<IPower> SetBonusPowers 
+        public List<IPower> SetBonusPowers
         {
             get
             {
@@ -772,43 +772,43 @@ namespace Mids_Reborn.Core
                 switch (power?.Power?.FullName)
                 {
                     case "Inherent.Fitness.Health":
-                       switch (MidsContext.Config.BuildMode)
-                            {
-                                case Enums.dmModes.LevelUp:
-                                    if (MidsContext.Character != null && MidsContext.Character.Level == DatabaseAPI.ServerData.HealthSlot1Level)
+                        switch (MidsContext.Config.BuildMode)
+                        {
+                            case Enums.dmModes.LevelUp:
+                                if (MidsContext.Character != null && MidsContext.Character.Level == DatabaseAPI.ServerData.HealthSlot1Level)
+                                {
+                                    if (power.InherentSlotsUsed < 1)
                                     {
-                                        if (power.InherentSlotsUsed < 1)
-                                        {
-                                            power.AddSlot(DatabaseAPI.ServerData.HealthSlot1Level, true);
-                                            power.InherentSlotsUsed += 1;
-                                        }
+                                        power.AddSlot(DatabaseAPI.ServerData.HealthSlot1Level, true);
+                                        power.InherentSlotsUsed += 1;
                                     }
+                                }
 
-                                    if (MidsContext.Character != null && MidsContext.Character.Level == DatabaseAPI.ServerData.HealthSlot2Level)
+                                if (MidsContext.Character != null && MidsContext.Character.Level == DatabaseAPI.ServerData.HealthSlot2Level)
+                                {
+                                    if (power.InherentSlotsUsed is > 0 and < 2)
                                     {
-                                        if (power.InherentSlotsUsed is > 0 and < 2)
-                                        {
-                                            power.AddSlot(DatabaseAPI.ServerData.HealthSlot2Level, true);
-                                            power.InherentSlotsUsed += 1;
-                                        }
+                                        power.AddSlot(DatabaseAPI.ServerData.HealthSlot2Level, true);
+                                        power.InherentSlotsUsed += 1;
                                     }
+                                }
 
-                                    break;
-                                case Enums.dmModes.Normal:
-                                    var chosenCount = Powers.Where(x => x is { Power: { }, Chosen: true }).ToList()
-                                        .Count;
-                                    if (chosenCount > 0)
+                                break;
+                            case Enums.dmModes.Normal:
+                                var chosenCount = Powers.Where(x => x is { Power: { }, Chosen: true }).ToList()
+                                    .Count;
+                                if (chosenCount > 0)
+                                {
+                                    if (power is { SlotCount: < 2, InherentSlotsUsed: < 2 })
                                     {
-                                        if (power is { SlotCount: < 2, InherentSlotsUsed: < 2 })
-                                        {
-                                            power.AddSlot(DatabaseAPI.ServerData.HealthSlot1Level, true);
-                                            power.AddSlot(DatabaseAPI.ServerData.HealthSlot2Level, true);
-                                            power.InherentSlotsUsed = 2;
-                                        }
+                                        power.AddSlot(DatabaseAPI.ServerData.HealthSlot1Level, true);
+                                        power.AddSlot(DatabaseAPI.ServerData.HealthSlot2Level, true);
+                                        power.InherentSlotsUsed = 2;
                                     }
+                                }
 
-                                    break;
-                            }
+                                break;
+                        }
 
                         break;
                     case "Inherent.Fitness.Stamina":
@@ -1385,8 +1385,8 @@ namespace Mids_Reborn.Core
                         {
                             continue;
                         }
-                
-                        
+
+
                         if (setCount[power] < 6)
                         {
                             if (powerInfo != null)
@@ -1941,7 +1941,7 @@ namespace Mids_Reborn.Core
                 var buffValues = new List<float>(eEnhs);
                 var buffSchedules = new List<Enums.eSchedule>(eEnhs);
                 var buffValuesAfterED = new List<float>(eEnhs);
-                
+
                 var debuffValues = new List<float>(eEnhs);
                 var debuffSchedules = new List<Enums.eSchedule>(eEnhs);
                 var debuffValuesAfterED = new List<float>(eEnhs);
