@@ -433,7 +433,7 @@ public class PowerEffectsGrid : Control
         int hh = ScalePx(_headerHeight);
         int y = gp;
 
-        // For each group: header, then rows. Stripe alternates per visible row row.
+        // For each group: header, then rows. Stripe alternates per visible row.
         for (int gi = 0; gi < _groups.Count; gi++)
         {
             var g = _groups[gi];
@@ -513,18 +513,6 @@ public class PowerEffectsGrid : Control
         int gp = ScalePx(_gridPadding);
         int hh = ScalePx(_headerHeight);
         var t = CurrentTheme;
-
-        // Top header (same style as PowerStatsGrid)
-        var rcHeader = new Rectangle(gp, gp, Width - gp * 2, hh);
-        // using (var headerBrush = new LinearGradientBrush(rcHeader, t.GridHeaderTop, t.GridHeaderBottom, 90f))
-        //     g.FillRectangle(headerBrush, rcHeader);
-        //
-        // var colsH = GetColumns(rcHeader);
-        // TextRenderer.DrawText(g, "Effect", Font, colsH.rcLabel, t.Text, Color.Transparent, HeaderFlags | TextFormatFlags.Left);
-        // TextRenderer.DrawText(g, "Base", Font, colsH.rcBase, t.Text, Color.Transparent, HeaderFlags | TextFormatFlags.Right);
-        // TextRenderer.DrawText(g, "Enhanced", Font, colsH.rcEnh, t.Text, Color.Transparent, HeaderFlags | TextFormatFlags.Right);
-        // TextRenderer.DrawText(g, "Gain", Font, colsH.rcDelta, t.Text, Color.Transparent, HeaderFlags | TextFormatFlags.Right);
-        // TextRenderer.DrawText(g, "Gain%", Font, colsH.rcDeltaPct, t.Text, Color.Transparent, HeaderFlags | TextFormatFlags.Right);
 
         // Rows
         bool stripeEven = true; // start zebra after header

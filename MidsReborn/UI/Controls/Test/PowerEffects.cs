@@ -23,7 +23,7 @@ public static class PowerEffects
     /// <summary>
     /// Build the groups/rows for the Effects grid (non-canonical stats + descriptors).
     /// </summary>
-    /*public static List<PowerEffectsGrid.Group> Build(IPower pBase, IPower pEnh, List<GroupedFx> groupedRankedEffects, List<int> rankedEffects)
+    public static List<PowerEffectsGrid.Group> Build(IPower pBase, IPower pEnh, List<GroupedFx> groupedRankedEffects, List<int> rankedEffects)
     {
         // 1) Build neutral, UI-agnostic effect items (labels/values/tooltips)
         //    (value = enhanced, alt = base) – straight from GroupedFx.
@@ -88,7 +88,7 @@ public static class PowerEffects
         return groups.Where(g => g.Rows.Count > 0).ToList();
     }
 
-    private static List<KeyValuePair<GroupedFx, EffectListItem>> Filter(List<KeyValuePair<GroupedFx, EffectListItem>> items, Func<GroupedFx.FxId, bool> predicate) => GroupedFx.FilterEffectItemsExt(items, predicate); // helper from GroupedFx*/
+    private static List<KeyValuePair<GroupedFx, EffectListItem>> Filter(List<KeyValuePair<GroupedFx, EffectListItem>> items, Func<GroupedFx.FxId, bool> predicate) => GroupedFx.FilterEffectItemsExt(items, predicate); // helper from GroupedFx
 
     private static PowerEffectsGrid.Group MakeGroup(
         string title,
