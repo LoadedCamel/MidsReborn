@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -25,7 +25,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Totals = new TotalStatistics();
             TotalsCapped = new TotalStatistics();
             DisplayStats = new Statistics(this);
-            Builds = new Build?[] { new(this, DatabaseAPI.Database.Levels) };
+            Builds = [new Build(this, DatabaseAPI.Database.Levels)];
             PEnhancementsList = new List<string>();
             Reset();
         }
@@ -110,13 +110,21 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             get
             {
-                if (_completeCache.HasValue) return _completeCache.GetValueOrDefault();
-                var num1 = Build.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
-                var num2 = CurrentBuild.LastPower + 1 - CurrentBuild.PowersPlaced;
-                _completeCache = num1 < 1 && num2 < 1;
-                return _completeCache.GetValueOrDefault();
+                if (_completeCache.HasValue) return _completeCache.Value;
+
+                int slotsLeft = 0;
+                int powersLeft = 0;
+
+                if (CurrentBuild is not null)
+                {
+                    slotsLeft = Build.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
+                    powersLeft = CurrentBuild.LastPower + 1 - CurrentBuild.PowersPlaced;
+                }
+
+                _completeCache = slotsLeft < 1 && powersLeft < 1;
+                return _completeCache.Value;
             }
-            set => _completeCache = value ? _completeCache : new bool?();
+            set => _completeCache = value ? true : null;
         }
 
         public int ActiveComboLevel { get; private set; }
@@ -210,34 +218,31 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             get
             {
+                // Normal/Respec: rely on totals (not the level schedule).
                 if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
                 {
-                    if (Build.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 && MidsContext.Config.BuildOption != Enums.dmItem.Power)
-                    {
+                    if (Build.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 &&
+                        MidsContext.Config.BuildOption != Enums.dmItem.Power)
                         return true;
-                    }
                 }
-                else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) && DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Slot && SlotsRemaining > 0)
+                else
                 {
-                    return true;
-                }
-                else if ((Level > -1) & (Level < DatabaseAPI.Database.Levels.Length) && DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Power && SlotsRemaining > 0 && DatabaseAPI.ServerData.EnableInherentSlotting)
-                {
-                    if (Level == DatabaseAPI.ServerData.HealthSlot1Level)
+                    // Level-gated slotting: respect per-level schedule.
+                    if (Level > -1 && Level < DatabaseAPI.Database.Levels.Length)
                     {
-                        return true;
-                    }
-                    if (Level == DatabaseAPI.ServerData.HealthSlot2Level)
-                    {
-                        return true;
-                    }
-                    if (Level == DatabaseAPI.ServerData.StaminaSlot1Level)
-                    {
-                        return true;
-                    }
-                    if (Level == DatabaseAPI.ServerData.StaminaSlot2Level)
-                    {
-                        return true;
+                        // A) normal slot grants at this level
+                        if (DatabaseAPI.Database.Levels[Level].LevelType() == Enums.dmItem.Slot &&
+                            SlotsRemaining > 0)
+                            return true;
+
+                        // B) inherent slotting (Health/Stamina), if enabled
+                        if (SlotsRemaining > 0 && DatabaseAPI.ServerData.EnableInherentSlotting)
+                        {
+                            if (Level == DatabaseAPI.ServerData.HealthSlot1Level) return true;
+                            if (Level == DatabaseAPI.ServerData.HealthSlot2Level) return true;
+                            if (Level == DatabaseAPI.ServerData.StaminaSlot1Level) return true;
+                            if (Level == DatabaseAPI.ServerData.StaminaSlot2Level) return true;
+                        }
                     }
                 }
 
@@ -245,32 +250,28 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
         }
 
-        public bool IsVillain => Alignment == Enums.Alignment.Rogue || Alignment == Enums.Alignment.Villain;
+        private static bool AtNameEquals(Archetype? at, string name) =>
+            at is not null &&
+            !string.IsNullOrEmpty(at.DisplayName) &&
+            string.Equals(at.DisplayName, name, StringComparison.OrdinalIgnoreCase);
 
-        public bool IsPraetorian => Alignment == Enums.Alignment.Loyalist || Alignment == Enums.Alignment.Resistance;
-        public bool IsBlaster => Archetype.DisplayName.ToLower() == "blaster";
+        //public bool IsHero => Alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante;
+        public bool IsVillain => Alignment is Enums.Alignment.Rogue or Enums.Alignment.Villain;
+        public bool IsPraetorian => Alignment is Enums.Alignment.Loyalist or Enums.Alignment.Resistance;
 
-        public bool IsController => Archetype.DisplayName.ToLower() == "controller";
+        public bool IsBlaster => AtNameEquals(Archetype, "Blaster");
+        public bool IsController => AtNameEquals(Archetype, "Controller");
+        public bool IsDefender => AtNameEquals(Archetype, "Defender");
+        public bool IsScrapper => AtNameEquals(Archetype, "Scrapper");
+        public bool IsTanker => AtNameEquals(Archetype, "Tank") || AtNameEquals(Archetype, "Tanker");
+        public bool IsBrute => AtNameEquals(Archetype, "Brute");
+        public bool IsCorruptor => AtNameEquals(Archetype, "Corruptor");
+        public bool IsDominator => AtNameEquals(Archetype, "Dominator");
+        public bool IsMastermind => AtNameEquals(Archetype, "Mastermind");
+        public bool IsStalker => AtNameEquals(Archetype, "Stalker");
 
-        public bool IsDefender => Archetype.DisplayName.ToLower() == "defender";
-
-        public bool IsScrapper => Archetype.DisplayName.ToLower() == "scrapper";
-
-        public bool IsTanker => Archetype.DisplayName.ToLower() == "tank";
-
-        public bool IsKheldian => Archetype.ClassType == Enums.eClassType.HeroEpic;
-
-        public bool IsBrute => Archetype.DisplayName.ToLower() == "brute";
-
-        public bool IsCorruptor => Archetype.DisplayName.ToLower() == "corruptor";
-
-        public bool IsDominator => Archetype.DisplayName.ToLower() == "dominator";
-
-        public bool IsMastermind => Archetype.DisplayName.ToLower() == "mastermind";
-
-        public bool IsStalker => Archetype.DisplayName.ToLower() == "stalker";
-
-        public bool IsArachnos => Archetype.ClassType == Enums.eClassType.VillainEpic;
+        public bool IsKheldian => Archetype?.ClassType == Enums.eClassType.HeroEpic;
+        public bool IsArachnos => Archetype?.ClassType == Enums.eClassType.VillainEpic;
 
         public void ResetLevel()
         {
@@ -322,9 +323,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return Alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante;
         }
 
-        public bool PoolTaken(int poolID)
+        public bool PoolTaken(int poolId)
         {
-            return Powersets[poolID] != null && poolID >= 3 && poolID <= 7 && PoolLocked[poolID - 3];
+            return Powersets[poolId] != null && poolId >= 3 && poolId <= 7 && PoolLocked[poolId - 3];
         }
 
         // There are 2 versions of this method distributed.
@@ -462,84 +463,63 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             PEnhancementsList = new List<string>();
         }
 
-        public async void ClearInvalidInherentSlots()
+        public void ClearInvalidInherentSlots()
         {
             ResetLevel();
-            foreach (var power in CurrentBuild.Powers.Where(power => power?.Power != null))
+            if (CurrentBuild?.Powers == null) return;
+
+            // Walk by index so we can call the synchronous RemoveSlotFromPower(...)
+            for (int p = 0; p < CurrentBuild.Powers.Count; p++)
             {
+                var power = CurrentBuild.Powers[p];
+                if (power?.Power == null) continue;
+
+                int allowed = 0;
                 switch (power.Power.FullName)
                 {
                     case "Inherent.Fitness.Health":
-                    {
-                        if (Level < DatabaseAPI.ServerData.HealthSlot1Level)
-                        {
-                            if (power.InherentSlotsUsed > 0)
-                            {
-                                for (var i = 0; i < power.Slots.Length; i++)
-                                {
-                                    var slot = power.Slots[i];
-                                    if (!slot.IsInherent) continue;
-                                    await CurrentBuild.RemoveSlotFromPowerEntry(power.IDXPower, i);
-                                    power.InherentSlotsUsed -= 1;
-                                    break;
-                                }
-                            }
-                        }
-
-                        if (MidsContext.Character.Level < DatabaseAPI.ServerData.HealthSlot2Level)
-                        {
-                            if (power.InherentSlotsUsed > 0)
-                            {
-                                for (var i = 0; i < power.Slots.Length; i++)
-                                {
-                                    var slot = power.Slots[i];
-                                    if (!slot.IsInherent) continue;
-                                    await CurrentBuild.RemoveSlotFromPowerEntry(power.IDXPower, i);
-                                    power.InherentSlotsUsed -= 1;
-                                    break;
-                                }
-                            }
-                        }
-
+                        if (Level >= DatabaseAPI.ServerData.HealthSlot1Level) allowed = 1;
+                        if (Level >= DatabaseAPI.ServerData.HealthSlot2Level) allowed = 2;
                         break;
-                    }
+
                     case "Inherent.Fitness.Stamina":
+                        if (Level >= DatabaseAPI.ServerData.StaminaSlot1Level) allowed = 1;
+                        if (Level >= DatabaseAPI.ServerData.StaminaSlot2Level) allowed = 2;
+                        break;
+
+                    default:
+                        continue;
+                }
+
+                // Trim down to the allowed count by removing highest-index inherent slots (>= 1)
+                while (power.InherentSlotsUsed > allowed)
+                {
+                    int idxToRemove = -1;
+
+                    // Never remove slot 0; scan from the end so subsequent indices remain valid
+                    for (int i = power.Slots.Length - 1; i >= 1; i--)
                     {
-                        if (MidsContext.Character.Level < DatabaseAPI.ServerData.StaminaSlot1Level)
+                        if (power.Slots[i].IsInherent)
                         {
-                            if (power.InherentSlotsUsed > 0)
-                            {
-                                for (var i = 0; i < power.Slots.Length; i++)
-                                {
-                                    var slot = power.Slots[i];
-                                    if (!slot.IsInherent) continue;
-                                    await CurrentBuild.RemoveSlotFromPowerEntry(power.IDXPower, i);
-                                    power.InherentSlotsUsed -= 1;
-                                    break;
-                                }
-                            }
+                            idxToRemove = i;
+                            break;
                         }
+                    }
 
-                        if (MidsContext.Character.Level < DatabaseAPI.ServerData.StaminaSlot2Level)
-                        {
-                            if (power.InherentSlotsUsed > 0)
-                            {
-                                for (var i = 0; i < power.Slots.Length; i++)
-                                {
-                                    var slot = power.Slots[i];
-                                    if (!slot.IsInherent) continue;
-                                    await CurrentBuild.RemoveSlotFromPowerEntry(power.IDXPower, i);
-                                    power.InherentSlotsUsed -= 1;
-                                    break;
-                                }
-                            }
-                        }
-
+                    if (idxToRemove < 0)
+                    {
+                        // No inherent slot found to remove; keep counters consistent and break.
+                        power.InherentSlotsUsed = Math.Max(allowed, power.InherentSlotsUsed);
                         break;
                     }
+
+                    // Remove synchronously and update the counter
+                    CurrentBuild.RemoveSlotFromPower(p, idxToRemove);
+                    power.InherentSlotsUsed = Math.Max(0, power.InherentSlotsUsed - 1);
                 }
             }
         }
+
 
         /// <summary>
         /// Call this function when a power is enabled/disabled, added, or removed, including when the archetype is changed.
@@ -756,9 +736,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             var inherentPowersList = CurrentBuild?.Powers
-                .Where(p => p is { Chosen: false, Power: not null} && CurrentBuild.PowerUsed(p.Power)).Select(p => p.Power)
+                .Where(p => p is { Chosen: false, Power: not null } && CurrentBuild.PowerUsed(p.Power)).Select(p => p.Power)
                 .ToList();
-            
+
             if (inherentPowersList != null)
             {
                 foreach (var inherent in inherentPowersList)
@@ -809,7 +789,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         protected void ReadMetadata(string buildText)
         {
-            var tags = new List<string> {"comment", "enhobtained"};
+            var tags = new List<string> { "comment", "enhobtained" };
 
             var metadata = MidsCharacterFileFormat.ReadMetadata(tags, buildText);
 
@@ -896,7 +876,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     return false;
             }
 
-            var psID = Powersets[(int) powersetType] == null ? -1 : Powersets[(int) powersetType].nID;
+            var psID = Powersets[(int)powersetType] == null ? -1 : Powersets[(int)powersetType].nID;
 
             if (powersetType == Enums.PowersetType.None)
                 return false;
@@ -906,11 +886,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 return true;
             }
 
-            if (Powersets[(int) powersetType] == null)
+            if (Powersets[(int)powersetType] == null)
                 return false;
 
-            return Powersets[(int) powersetType].nIDMutexSets
-                .Where(t => Powersets[(int) powersetType] != null).Any(t => t == powerSetId);
+            return Powersets[(int)powersetType].nIDMutexSets
+                .Where(t => Powersets[(int)powersetType] != null).Any(t => t == powerSetId);
         }
 
         private void CheckAncillaryPowerSet()
@@ -950,10 +930,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 var available = false;
                 for (var index2 = 3; index2 <= 6; ++index2)
+                {
                     if (index2 == iPool || !(PoolLocked[index2 - 3] && index1.nID == Powersets[index2].nID))
+                    {
                         available = true;
+                    }
+                }
+
                 if (available)
+                {
                     intList.Add(index1.nID);
+                }
             }
 
             return intList;
@@ -967,7 +954,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 ++num1;
                 if (num2 == index)
+                {
                     return num1;
+                }
             }
 
             return 0;
@@ -975,19 +964,31 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         private IEnumerable<int> GetAvailablePools(int poolSlot)
         {
+            // Collect IDs of pools that are locked in *other* slots.
             var lockedIds = new HashSet<int>(
-                from slot in Enumerable.Range(3, 4) // 3..6
+                from slot in Enumerable.Range(3, 4)           // 3,4,5,6
                 where slot != poolSlot && PoolLocked[slot - 3]
                 select Powersets[slot].nID
             );
 
+            // Any candidate whose ID is not locked elsewhere is available.
             return DatabaseAPI
                 .GetPowersetIndexes(Archetype, Enums.ePowerSetType.Pool)
                 .Where(candidate => !lockedIds.Contains(candidate.nID))
                 .Select(candidate => candidate.nID);
         }
 
-        public int PoolToDropDownIndex(int poolSlot, int powersetId) { int index = 0; foreach (int id in GetAvailablePools(poolSlot)) { if (id == powersetId) return index; index++; } return 0; }
+        public int PoolToDropDownIndex(int poolSlot, int powersetId)
+        {
+            int index = 0;
+            foreach (int id in GetAvailablePools(poolSlot))
+            {
+                if (id == powersetId)
+                    return index;
+                index++;
+            }
+            return 0;
+        }
 
         public static PopUp.PopupData PopEnhInfo(I9Slot iSlot, int iLevel = -1, PowerEntry? powerEntry = null)
         {
@@ -1012,7 +1013,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 var index2 = popupData1.Add();
                 popupData1.Sections[index2].Add("Right-Click to place an enhancement.", PopUp.Colors.Disabled, 1f, FontStyle.Bold | FontStyle.Italic);
                 popupData1.Sections[index2].Add("Shift-Click to move this slot.", PopUp.Colors.Disabled, 1f, FontStyle.Bold | FontStyle.Italic);
-                
+
                 return popupData1;
             }
 
@@ -1158,16 +1159,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return -1;
         }
 
-        private static int GetFirstAvailablePowerLevel(Build? currentbuild, int iLevel = 0)
+        private static int GetFirstAvailablePowerLevel(Build? currentBuild, int iLevel = 0)
         {
-            for (var index = 0; index < Math.Min(currentbuild.Powers.Count, currentbuild.LastPower + 1); index++)
-            {
-                if ((currentbuild.Powers[index].NIDPowerset < 0) & (currentbuild.Powers[index].Level >= iLevel))
-                {
-                    return currentbuild.Powers[index].Level;
-                }
-            }
+            if (currentBuild is null) return -1;
+            if (iLevel < 0) iLevel = 0;
 
+            int ceiling = Math.Min(currentBuild.Powers.Count, currentBuild.LastPower + 1);
+            for (int i = 0; i < ceiling; i++)
+            {
+                var p = currentBuild.Powers[i];
+                if (p is { NIDPowerset: < 0 } && p.Level >= iLevel)
+                    return p.Level;
+            }
             return -1;
         }
 
@@ -1372,14 +1375,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var sCost = clsRewardCurrency.GetSalvageCost(s, MidsContext.Config.PreferredCurrency, amount);
             if (sCost != null)
             {
-                costList[MidsContext.Config.PreferredCurrency] += (int) sCost;
+                costList[MidsContext.Config.PreferredCurrency] += (int)sCost;
             }
             else
             {
                 var sCost2 = clsRewardCurrency.GetSalvageCost(s, Enums.RewardCurrency.RewardMerit, amount);
                 if (sCost2 != null)
                 {
-                    costList[Enums.RewardCurrency.RewardMerit] += (int) sCost2;
+                    costList[Enums.RewardCurrency.RewardMerit] += (int)sCost2;
                 }
             }
         }
@@ -1393,51 +1396,38 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var index1 = -1;
             var lvlUbound = 52;
             var lvlLbound = 0;
-            for (var index2 = 0; index2 < recipe.Item.Length; index2++)
+
+            for (var i = 0; i < recipe.Item.Length; i++)
             {
-                if (recipe.Item[index2].Level > lvlLbound)
-                    lvlLbound = recipe.Item[index2].Level;
-                if (recipe.Item[index2].Level < lvlUbound)
-                    lvlUbound = recipe.Item[index2].Level;
-                if (recipe.Item[index2].Level != iLevel)
-                    continue;
-                index1 = index2;
-                break;
+                if (recipe.Item[i].Level > lvlLbound) lvlLbound = recipe.Item[i].Level;
+                if (recipe.Item[i].Level < lvlUbound) lvlUbound = recipe.Item[i].Level;
+                if (recipe.Item[i].Level == iLevel) index1 = i;
             }
 
+            // If the requested level was not found, fall back to the closest entry
             if (index1 < 0)
             {
-                iLevel = Enhancement.GranularLevelZb(iLevel, 0, 49);
-                for (var index2 = 0; index2 < recipe.Item.Length; index2++)
+                for (var i = 0; i < recipe.Item.Length; i++)
                 {
-                    if (recipe.Item[index2].Level != iLevel)
-                        continue;
-                    index1 = index2;
-                    break;
+                    if (recipe.Item[i].Level == iLevel) { index1 = i; break; }
                 }
             }
 
             if (index1 < 0) return section1;
 
             var recipeEntry = recipe.Item[index1];
-            if (recipe.EnhIdx > -1 & !recipe.IsGeneric & !recipe.InternalName.StartsWith("G_"))
-            {
+
+            // FIX: bitwise '&' -> logical '&&'
+            if (recipe.EnhIdx > -1 && !recipe.IsGeneric && !recipe.InternalName.StartsWith("G_", StringComparison.Ordinal))
                 section1.Add($"Recipe - {DatabaseAPI.Database.Enhancements[recipe.EnhIdx].LongName}", PopUp.Colors.Title);
-            }
             else
-            {
-                section1.Add($"Materials:", PopUp.Colors.Title);
-            }
+                section1.Add("Materials:", PopUp.Colors.Title);
 
             if (recipeEntry.BuyCost > 0)
-                section1.Add("Buy Cost:", PopUp.Colors.Invention, $"{recipeEntry.BuyCost:###,###,##0}",
-                    PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 1);
+                section1.Add("Buy Cost:", PopUp.Colors.Invention, $"{recipeEntry.BuyCost:###,###,##0}", PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 1);
+
             if (recipeEntry.CraftCost > 0)
-                section1.Add("Craft Cost:", PopUp.Colors.Invention, $"{recipeEntry.CraftCost:###,###,##0}",
-                    PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 1);
-            if (recipeEntry.CraftCostM > 0)
-                section1.Add("Craft Cost (Memorized):", PopUp.Colors.Effect, $"{recipeEntry.CraftCostM:###,###,##0}",
-                    PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
+                section1.Add("Craft Cost:", PopUp.Colors.Invention, $"{recipeEntry.CraftCost:###,###,##0}", PopUp.Colors.Invention, 0.9f, FontStyle.Bold, 1);
 
             var subRecipesCost = Enum.GetValues(typeof(Enums.RewardCurrency))
                 .Cast<Enums.RewardCurrency>()
@@ -1515,7 +1505,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 return new PopUp.PopupData();
             }
-            
+
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
             var iColor = PopUp.Colors.Uncommon;
             for (var index = 0; index < enhancementSet.Enhancements.Length; index++)
@@ -1548,18 +1538,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             popupData1.Sections[index1].Add($"Level Range: {lvlRange}", PopUp.Colors.Text);
             popupData1.Add(PopSetEnhList(sIdx, powerEntry));
             popupData1.Add(PopSetBonusListing(sIdx, powerEntry));
-            
+
             return popupData1;
         }
 
-        private static PopUp.Section? PopSetEnhList(int sIdx, PowerEntry powerEntry)
+        private static PopUp.Section? PopSetEnhList(int sIdx, PowerEntry? powerEntry)
         {
             if (sIdx < 0 || sIdx >= DatabaseAPI.Database.EnhancementSets.Count)
-            {
                 return new PopUp.Section();
-            }
 
-            var enhUsedInSet = 0;
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
             var setEnhUsed = new List<int>();
             var setEnhObtained = new List<int>();
@@ -1568,51 +1555,42 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 foreach (var slot in powerEntry.Slots)
                 {
-                    if (slot.Enhancement.Enh < 0 || DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet != sIdx)
-                    {
-                        continue;
-                    }
+                    if (slot.Enhancement.Enh < 0) continue;
+                    if (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet != sIdx) continue;
 
-                    enhUsedInSet++;
-                    for (var index = 0; index < enhancementSet.Enhancements.Length; index++)
-                    {
-                        if (slot.Enhancement.Enh != enhancementSet.Enhancements[index])
-                        {
-                            continue;
-                        }
-
-                        setEnhUsed.Add(index);
-                        if (slot.Enhancement.Obtained)
-                        {
-                            setEnhObtained.Add(index);
-                        }
-                    }
+                    setEnhUsed.Add(slot.Enhancement.Enh);
+                    if (slot.Enhancement.Obtained) setEnhObtained.Add(slot.Enhancement.Enh);
                 }
             }
 
             var section1 = new PopUp.Section();
             if (powerEntry != null)
-            {
-                section1.Add($"Set: {enhancementSet.DisplayName} ({enhUsedInSet}/{enhancementSet.Enhancements.Length})", PopUp.Colors.Title);
-            }
+                section1.Add($"Set: {enhancementSet.DisplayName} ({setEnhUsed.Count}/{enhancementSet.Enhancements.Length})", PopUp.Colors.Title);
 
-            // [index in set => enhancement nID]
+            // FIX: explicit ToDictionary key/value selectors (was .ToDictionary() → runtime exception)
             var setEnhancements = enhancementSet.Enhancements
                 .Select((e, i) => new KeyValuePair<int, int>(i, e))
                 .OrderBy(e => e.Value < 0 ? "" : DatabaseAPI.Database.Enhancements[e.Value].UID)
-                .ToDictionary();
-            foreach (var enh in setEnhancements)
+                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+
+            foreach (var kv in setEnhancements)
             {
-                var enhUsed = setEnhUsed.Contains(enh.Key) || powerEntry == null;
+                var indexInSet = kv.Key;
+                var enhId = kv.Value;
+
+                var enhUsed = setEnhUsed.Contains(indexInSet) || powerEntry == null;
+
+                // FIX: bitwise '&' → logical '&&'
                 var color = true switch
                 {
-                    _ when !MidsContext.EnhCheckMode & enhUsed => PopUp.Colors.Invention,
-                    _ when MidsContext.EnhCheckMode & enhUsed & setEnhObtained.Contains(enh.Key) => PopUp.Colors.Invention,
-                    _ when MidsContext.EnhCheckMode & enhUsed => PopUp.Colors.UltraRare,
+                    _ when !MidsContext.EnhCheckMode && enhUsed => PopUp.Colors.Invention,
+                    _ when MidsContext.EnhCheckMode && enhUsed && setEnhObtained.Contains(indexInSet) => PopUp.Colors.Invention,
+                    _ when MidsContext.EnhCheckMode && enhUsed => PopUp.Colors.UltraRare,
                     _ => PopUp.Colors.Disabled
                 };
 
-                section1.Add($"{enhancementSet.DisplayName}: {DatabaseAPI.Database.Enhancements[enh.Value].Name}", color, 0.9f, FontStyle.Bold, 1);
+                var text = enhId >= 0 ? DatabaseAPI.Database.Enhancements[enhId].LongName : "(empty)";
+                section1.Add(text, color);
             }
 
             return section1;
@@ -1717,7 +1695,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         private bool PowersetUsed(IPowerset? powerset)
         {
-            return powerset != null && CurrentBuild.Powers.Any(t => t?.NIDPowerset == powerset.nID & t?.IDXPower > -1);
+            if (powerset is null || CurrentBuild is null) return false;
+            return CurrentBuild.Powers.Any(t => t is not null &&
+                                                t.NIDPowerset == powerset.nID &&
+                                                t.IDXPower > -1);
         }
 
         protected bool CanRemovePower(int index, bool allowSecondary, out string message)
@@ -1727,7 +1708,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             if (!power.Chosen)
             {
                 message = "You can't remove inherent powers.\nIf the power is a Kheldian form power, you can remove it by removing the shapeshift power which grants it.";
-                
+
                 return false;
             }
 
@@ -1742,37 +1723,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             message = "The first power from your secondary set is non-optional and can't be removed.";
-            
+
             return false;
         }
 
         public void SwitchSets(IPowerset? newPowerset, IPowerset? oldPowerset)
         {
-            int oldTrunk;
-            int oldBranch;
-            int newTrunk;
-            int newBranch;
-            if (oldPowerset.nIDTrunkSet > -1)
-            {
-                oldTrunk = oldPowerset.nIDTrunkSet;
-                oldBranch = oldPowerset.nID;
-            }
-            else
-            {
-                oldTrunk = oldPowerset.nID;
-                oldBranch = -1;
-            }
+            if (newPowerset is null || oldPowerset is null) return;
 
-            if (newPowerset.nIDTrunkSet > -1)
-            {
-                newTrunk = newPowerset.nIDTrunkSet;
-                newBranch = newPowerset.nID;
-            }
-            else
-            {
-                newTrunk = newPowerset.nID;
-                newBranch = -1;
-            }
+            int oldTrunk = oldPowerset.nIDTrunkSet > -1 ? oldPowerset.nIDTrunkSet : oldPowerset.nID;
+            int oldBranch = oldPowerset.nIDTrunkSet > -1 ? oldPowerset.nID : -1;
+
+            int newTrunk = newPowerset.nIDTrunkSet > -1 ? newPowerset.nIDTrunkSet : newPowerset.nID;
+            int newBranch = newPowerset.nIDTrunkSet > -1 ? newPowerset.nID : -1;
 
             for (var index4 = 0; index4 < Powersets.Length; index4++)
             {
