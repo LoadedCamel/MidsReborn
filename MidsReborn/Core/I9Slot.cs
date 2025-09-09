@@ -47,7 +47,7 @@ namespace Mids_Reborn.Core
             var enhancement = DatabaseAPI.Database.Enhancements[Enh];
             foreach (var sEffect in enhancement.Effect)
             {
-                if (sEffect.Mode != Enums.eEffMode.Enhancement || sEffect.BuffMode == Enums.eBuffDebuff.DeBuffOnly && !(mag <= 0.0) || sEffect.BuffMode == Enums.eBuffDebuff.BuffOnly && !(mag >= 0.0) || sEffect.Schedule == Enums.eSchedule.None || (Enums.eEnhance) sEffect.Enhance.ID != iEffect || subEnh >= 0 && subEnh != sEffect.Enhance.SubID)
+                if (sEffect.Mode != Enums.eEffMode.Enhancement || sEffect.BuffMode == Enums.eBuffDebuff.DeBuffOnly && !(mag <= 0.0) || sEffect.BuffMode == Enums.eBuffDebuff.BuffOnly && !(mag >= 0.0) || sEffect.Schedule == Enums.eSchedule.None || (Enums.eEnhance)sEffect.Enhance.ID != iEffect || subEnh >= 0 && subEnh != sEffect.Enhance.SubID)
                 {
                     continue;
                 }
@@ -146,8 +146,8 @@ namespace Mids_Reborn.Core
             }
             else
             {
-                var num2 = (int) (RelativeLevel - 4);
-                num1 = num2 >= 0 ? (float) (num2 * 0.0500000007450581 + 1.0) : (float) (1.0 + num2 * 0.100000001490116);
+                var num2 = (int)(RelativeLevel - 4);
+                num1 = num2 >= 0 ? (float)(num2 * 0.0500000007450581 + 1.0) : (float)(1.0 + num2 * 0.100000001490116);
             }
 
             return num1;
@@ -202,17 +202,17 @@ namespace Mids_Reborn.Core
                                     var relativeString1 = Enums.GetRelativeString(RelativeLevel, false);
                                     if (!string.IsNullOrEmpty(relativeString1) & (relativeString1 != "X"))
                                     {
-                                        stringBuilder.Append(relativeString1 + " " + DatabaseAPI.Database.EnhGradeStringLong[(int) Grade] + " - ");
+                                        stringBuilder.Append(relativeString1 + " " + DatabaseAPI.Database.EnhGradeStringLong[(int)Grade] + " - ");
                                         break;
                                     }
 
                                     if (relativeString1 == "X")
                                     {
-                                        stringBuilder.Append("Disabled " + DatabaseAPI.Database.EnhGradeStringLong[(int) Grade] + " - ");
+                                        stringBuilder.Append("Disabled " + DatabaseAPI.Database.EnhGradeStringLong[(int)Grade] + " - ");
                                         break;
                                     }
 
-                                    stringBuilder.Append(DatabaseAPI.Database.EnhGradeStringLong[(int) Grade] + " - ");
+                                    stringBuilder.Append(DatabaseAPI.Database.EnhGradeStringLong[(int)Grade] + " - ");
                                     break;
                                 case Enums.eType.SpecialO:
                                     var relativeString2 = Enums.GetRelativeString(RelativeLevel, false);
@@ -377,7 +377,7 @@ namespace Mids_Reborn.Core
                         }
 
                         stringBuilder.Append(power.Effects[index1].BuildEffectString(true, "", false, false, false, true, false, false, true));
-                        
+
                         var empty = string.Empty;
 
                         var groupedEffectsArray = power.Effects.Where(x => x.EffectType.Equals(Enums.eEffectType.DamageBuff) || x.EffectType.Equals(Enums.eEffectType.Defense) || x.EffectType.Equals(Enums.eEffectType.Resistance) || x.EffectType.Equals(Enums.eEffectType.Elusivity) || x.EffectType.Equals(Enums.eEffectType.Mez)).ToArray();
@@ -415,7 +415,7 @@ namespace Mids_Reborn.Core
                             for (var effectId = 0; effectId < power.Effects.Length; effectId++)
                             {
                                 var flag6 = returnMask.Any(m => m == effectId);
-                                
+
                                 if (power.Effects[effectId].Absorbed_EffectID != index1 || flag6)
                                 {
                                     continue;
@@ -427,7 +427,7 @@ namespace Mids_Reborn.Core
 
                                 power.GetEffectStringGrouped(effectId, ref empty2, ref returnMask, false, false, false,
                                     true, true);
-                                stringBuilder.AppendFormat("  {0}",  empty2);
+                                stringBuilder.AppendFormat("  {0}", empty2);
                                 break;
                             }
                         }
@@ -510,7 +510,7 @@ namespace Mids_Reborn.Core
             }
 
             var groupedEffects = GroupedFx.AssembleGroupedEffects(enhBoostPower, true);
-            
+
             return string.Join("\r\n", groupedEffects.Select(e => e.GetTooltip(enhBoostPower, true)));
         }
 
