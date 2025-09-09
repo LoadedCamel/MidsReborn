@@ -217,7 +217,6 @@ namespace Mids_Reborn.Core
 
         string FXGetDamageString(bool absorb = false);
 
-        int[] GetRankedEffects();
         int[] GetRankedEffects(bool newMode);
 
         int GetDurationEffectID();
