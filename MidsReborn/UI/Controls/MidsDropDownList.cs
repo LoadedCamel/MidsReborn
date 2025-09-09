@@ -1,0 +1,475 @@
+﻿using Mids_Reborn.Core.Theming;
+using System;
+using System.Collections.Generic;
+using System.ComponentModel;
+using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
+using System.Linq;
+using System.Windows.Forms;
+using Mids_Reborn.UI.Theming;
+
+namespace Mids_Reborn.UI.Controls;
+
+[DefaultProperty(nameof(Items))]
+[DefaultEvent(nameof(SelectedIndexChanged))]
+[DesignerCategory("Code")]
+public class MidsDropDownList : ComboBox
+{
+    #region Constants
+
+    private const int IconPadding = 4;
+
+    #endregion
+
+    #region Private Fields
+
+    private string? _lockedText;
+    private bool _isLocked;
+    private bool _isHovering;
+    private int _iconSize = 16;
+    private readonly Dictionary<object, Bitmap?> _itemIcons = new();
+    private string? _placeholderText;
+
+    private IBindingList? _boundList;
+
+    #endregion
+
+    #region Public Properties
+
+    [Category("Behavior")]
+    [Description("Determines whether the ComboBox is locked from user interaction.")]
+    [DefaultValue(false)]
+    public bool IsLocked
+    {
+        get => _isLocked;
+        set
+        {
+            _isLocked = value;
+            _isHovering = false;
+            Invalidate();
+        }
+    }
+
+    [Category("Appearance")]
+    [Description("Target icon size to draw the item icons.")]
+    [DefaultValue(16)]
+    public int IconSize
+    {
+        get => _iconSize;
+        set
+        {
+            _iconSize = Math.Max(8, Math.Min(64, value));
+            Invalidate();
+        }
+    }
+
+    [Category("Appearance")]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Browsable(false)]
+    public Dictionary<object, Bitmap?> ItemIcons => _itemIcons;
+
+    [Category("Appearance")]
+    [Description("Optional placeholder text shown when no item is selected.")]
+    public string? PlaceholderText
+    {
+        get => _placeholderText;
+        set { _placeholderText = value; Invalidate(); }
+    }
+
+    [Category("Data")]
+    [Description("Callback that returns a Bitmap for a given bound item. Used to auto-populate ItemIcons.")]
+    public Func<object, Bitmap?>? IconProvider { get; set; }
+
+    #endregion
+
+    #region Private Properties
+
+    private bool IsInteracting => Focused || DroppedDown || Capture;
+    private DropDownListTheme CurrentTheme
+    {
+        get
+        {
+            if (DesignMode)
+            {
+                return ThemeManager.DesignTime.DropDownList;
+            }
+            return ThemeManager.CurrentTheme?.DropDownList ?? ThemeManager.DesignTime.DropDownList;
+        }
+    }
+
+    #endregion
+
+    #region Constructors
+
+    public MidsDropDownList()
+    {
+        SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
+        DrawMode = DrawMode.OwnerDrawFixed;
+        DropDownStyle = ComboBoxStyle.DropDownList;
+
+        if (!DesignMode) ThemeManager.ThemeChanged += Invalidate;
+    }
+
+    #endregion
+
+    #region Public Methods
+
+    public void Lock(string? text = null, bool clear = false)
+    {
+        _lockedText = text;
+        IsLocked = true;
+        if (clear)
+        {
+            SelectedItem = null;
+            DataSource = null; 
+            _itemIcons.Clear();
+            RefreshIcons(); 
+        }
+
+        Invalidate();
+    }
+
+    public void Unlock()
+    {
+        IsLocked = false;
+        _lockedText = null;
+        Invalidate();
+    }
+
+    #endregion
+
+    #region DataSource Methods
+
+    protected override void OnDataSourceChanged(EventArgs e)
+    {
+        base.OnDataSourceChanged(e);
+        DetachListChanged();
+        AttachListChanged();
+        RefreshIcons();      // rebuild icons for new data
+        Invalidate();
+    }
+
+    protected override void OnDisplayMemberChanged(EventArgs e)
+    {
+        base.OnDisplayMemberChanged(e);
+        Invalidate();
+    }
+
+    protected override void OnValueMemberChanged(EventArgs e)
+    {
+        base.OnValueMemberChanged(e);
+        Invalidate();
+    }
+
+    private void AttachListChanged()
+    {
+        // If DataSource is an IBindingList, listen for changes to rebuild icons.
+        if (DataSource is IBindingList bl)
+        {
+            _boundList = bl;
+            _boundList.ListChanged += OnListChanged;
+        }
+        else
+        {
+            _boundList = null;
+        }
+    }
+
+    private void DetachListChanged()
+    {
+        if (_boundList != null)
+        {
+            _boundList.ListChanged -= OnListChanged;
+            _boundList = null;
+        }
+    }
+
+    private void OnListChanged(object? sender, ListChangedEventArgs e)
+    {
+        // Full rebuild is simplest and safe; Items reflects DataSource state.
+        RefreshIcons();
+        Invalidate();
+    }
+
+    /// <summary>
+    /// Rebuilds ItemIcons from current Items using IconProvider (if set).
+    /// If IconProvider is null, leaves existing ItemIcons as-is.
+    /// </summary>
+    public void RefreshIcons()
+    {
+        if (IconProvider is null) return;
+
+        _itemIcons.Clear();
+
+        // Note: Items enumerates display objects regardless of DataSource or manual adding.
+        foreach (var obj in Items.Cast<object>())
+        {
+            try
+            {
+                var bmp = IconProvider(obj);
+                // Store even null results to avoid repeated calls for missing icons
+                _itemIcons[obj] = bmp;
+            }
+            catch
+            {
+                // swallow provider exceptions for robustness—control should still render
+            }
+        }
+    }
+
+    #endregion
+
+    #region Drawing
+
+    protected override void OnPaint(PaintEventArgs e)
+    {
+        if (DropDownStyle != ComboBoxStyle.DropDownList)
+        {
+            base.OnPaint(e);
+            return;
+        }
+
+        Graphics g = e.Graphics;
+        g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+
+        Rectangle rect = ClientRectangle;
+
+        bool locked = _isLocked;
+        bool hovering = _isHovering && !_isLocked && !IsInteracting;
+
+        var theme = CurrentTheme;
+        Color topColor = locked ? theme.GradientTop : hovering ? theme.HoverGradientTop : theme.GradientTop;
+        Color bottomColor = locked ? theme.GradientBottom : hovering ? theme.HoverGradientBottom : theme.GradientBottom;
+        Color arrowColor = hovering ? theme.HoverArrow : theme.Arrow;
+        Color borderColor = hovering ? theme.HoverBorder : theme.Border;
+
+        using (var brush = new LinearGradientBrush(rect, topColor, bottomColor, LinearGradientMode.Vertical))
+            g.FillRectangle(brush, rect);
+
+        if (locked && !string.IsNullOrWhiteSpace(_lockedText))
+        {
+            // Draw centered, subdued text; ignore icon and arrow
+            Size textSize = TextRenderer.MeasureText(g, "Mg", Font, Size.Empty, TextFormatFlags.NoPadding);
+            int textY = rect.Top + (rect.Height - textSize.Height) / 2 - 1;
+            Rectangle textRect = new Rectangle(rect.Left + IconPadding, textY, rect.Right - IconPadding * 2, textSize.Height);
+
+            // Slightly dimmed color to signal locked state (but readable)
+            var color = Color.FromArgb(200, theme.ForeColor);
+            TextRenderer.DrawText(g, _lockedText, Font, textRect,
+                color, TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter | TextFormatFlags.EndEllipsis);
+
+            ControlPaint.DrawBorder(g, rect, borderColor, ButtonBorderStyle.Solid);
+            // Arrow is intentionally not drawn when locked (matches your current behavior)
+            return;
+        }
+
+        if (SelectedItem != null)
+        {
+            Rectangle iconRect = new Rectangle(rect.Left + IconPadding, rect.Top + (rect.Height - IconSize) / 2, IconSize, IconSize);
+
+            Size textSize = TextRenderer.MeasureText(g, "Mg", Font, Size.Empty, TextFormatFlags.NoPadding);
+            int textY = rect.Top + (rect.Height - textSize.Height) / 2 - 1;
+
+            Rectangle textRect = new Rectangle(iconRect.Right + IconPadding, textY, rect.Right - iconRect.Right - IconPadding * 2,textSize.Height);
+
+            if (_itemIcons.TryGetValue(SelectedItem, out var icon) && icon != null)
+            {
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                g.DrawImage(icon, iconRect);
+            }
+
+            TextRenderer.DrawText(
+                g,
+                GetItemText(SelectedItem),
+                Font,
+                textRect,
+                theme.ForeColor,
+                TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
+        }
+        else if (!string.IsNullOrWhiteSpace(PlaceholderText))
+        {
+            Size textSize = TextRenderer.MeasureText(g, "Mg", Font, Size.Empty, TextFormatFlags.NoPadding);
+            int textY = rect.Top + (rect.Height - textSize.Height) / 2 - 1;
+
+            Rectangle textRect = new Rectangle(
+                rect.Left + IconPadding,
+                textY,
+                rect.Right - IconPadding * 2,
+                textSize.Height);
+
+            // Outline color (black)
+            Color outlineColor = Color.Black;
+
+            // Fill color (semi-transparent theme foreground)
+            Color fillColor = Color.FromArgb(160, theme.ForeColor);
+
+            TextFormatFlags flags = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter | TextFormatFlags.EndEllipsis;
+
+            // Draw 1px outline using surrounding offset copies
+            var offsets = new[]
+            {
+                new Point(-1, 0), new Point(1, 0),
+                new Point(0, -1), new Point(0, 1),
+                new Point(-1, -1), new Point(-1, 1),
+                new Point(1, -1), new Point(1, 1)
+            };
+
+            foreach (var offset in offsets)
+            {
+                var outlineRect = new Rectangle(
+                    textRect.X + offset.X,
+                    textRect.Y + offset.Y,
+                    textRect.Width,
+                    textRect.Height);
+
+                TextRenderer.DrawText(g, PlaceholderText, Font, outlineRect, outlineColor, flags);
+            }
+
+            // Draw the fill text on top
+            TextRenderer.DrawText(g, PlaceholderText, Font, textRect, fillColor, flags);
+        }
+
+        ControlPaint.DrawBorder(g, rect, borderColor, ButtonBorderStyle.Solid);
+
+        if (!locked)
+        {
+            Rectangle arrowRect = new Rectangle(rect.Right - 18, rect.Top + rect.Height / 2 - 2, 10, 5);
+            Point[] arrowPoints =
+            [
+                new(arrowRect.Left, arrowRect.Top),
+                new(arrowRect.Right, arrowRect.Top),
+                new(arrowRect.Left + arrowRect.Width / 2, arrowRect.Bottom)
+            ];
+            using var arrowBrush = new SolidBrush(arrowColor);
+            g.FillPolygon(arrowBrush, arrowPoints);
+        }
+    }
+
+    protected override void OnDrawItem(DrawItemEventArgs e)
+    {
+        if (e.Index < 0 || e.Index >= Items.Count)
+        {
+            base.OnDrawItem(e);
+            return;
+        }
+
+        object? item = Items[e.Index];
+        Rectangle bounds = e.Bounds;
+        Graphics g = e.Graphics;
+        g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+
+        bool isSelected = (e.State & DrawItemState.Selected) == DrawItemState.Selected;
+        bool isFocused = (e.State & DrawItemState.Focus) == DrawItemState.Focus;
+
+        var theme = CurrentTheme;
+        Color backColor = isSelected ? theme.DropDownSelectionBackColor : theme.DropDownBackColor;
+        Color textColor = isSelected ? theme.DropDownSelectionForeColor : theme.ForeColor;
+
+        using (var backBrush = new SolidBrush(backColor))
+            g.FillRectangle(backBrush, bounds);
+
+        // Icon layout
+        Rectangle iconRect = new Rectangle(
+            bounds.Left + IconPadding,
+            bounds.Top + (bounds.Height - IconSize) / 2,
+            IconSize,
+            IconSize);
+
+        Size textSize = TextRenderer.MeasureText(g, "Mg", Font, Size.Empty, TextFormatFlags.NoPadding);
+        int textY = bounds.Top + (bounds.Height - textSize.Height) / 2 - 1;
+
+        Rectangle textRect = new Rectangle(
+            iconRect.Right + IconPadding,
+            textY,
+            bounds.Right - iconRect.Right - IconPadding * 2,
+            textSize.Height);
+
+        // Icon draw
+        if (item != null && _itemIcons.TryGetValue(item, out var icon) && icon != null)
+        {
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.SmoothingMode = SmoothingMode.HighQuality;
+            g.CompositingQuality = CompositingQuality.HighQuality;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            g.DrawImage(icon, iconRect);
+        }
+
+        // Text draw
+        TextRenderer.DrawText(
+            g,
+            GetItemText(item) ?? string.Empty,
+            Font,
+            textRect,
+            textColor,
+            TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
+
+        if (isFocused)
+        {
+            using var pen = new Pen(theme.FocusBorder, 1);
+            pen.DashStyle = DashStyle.Solid;
+            var focusRect = bounds;
+            focusRect.Inflate(-1, -1);
+            g.DrawRectangle(pen, focusRect);
+        }
+    }
+
+    #endregion
+
+    #region Overridden Methods
+
+    protected override void WndProc(ref Message m)
+    {
+        const int leftButtonDown = 0x0201;
+        const int leftButtonDblClick = 0x0203;
+        const int keyDown = 0x0100;
+
+        if (_isLocked)
+        {
+            if (m.Msg is leftButtonDown or leftButtonDblClick or keyDown)
+                return; // Swallow input when locked
+        }
+
+        base.WndProc(ref m);
+    }
+
+    protected override void OnMouseEnter(EventArgs e)
+    {
+        if (_isLocked) return;
+        base.OnMouseEnter(e);
+        _isHovering = true;
+        Invalidate();
+    }
+
+    protected override void OnMouseLeave(EventArgs e)
+    {
+        if (_isLocked) return;
+        base.OnMouseLeave(e);
+        _isHovering = false;
+        Invalidate();
+    }
+
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+        if (_isLocked) return;
+        base.OnMouseDown(e);
+    }
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        if (_isLocked)
+        {
+            e.Handled = true;
+            return;
+        }
+        base.OnKeyDown(e);
+    }
+
+    protected override void OnDropDown(EventArgs e)
+    {
+        if (_isLocked) return;
+        base.OnDropDown(e);
+    }
+
+    #endregion
+}

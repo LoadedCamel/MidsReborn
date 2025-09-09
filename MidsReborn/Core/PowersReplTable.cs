@@ -91,8 +91,8 @@ namespace Mids_Reborn.Core
 
         public static void Initialize()
         {
-            if (EnableDebug) Debug.WriteLine($"Loading PowersReplTable from {Files.FNamePowersRepl}");
-            _current = new PowersReplTable(Files.FNamePowersRepl);
+            if (EnableDebug) Debug.WriteLine($"Loading PowersReplTable from {AppDataPaths.PowersRepl}");
+            _current = new PowersReplTable(AppDataPaths.PowersRepl);
             var pass1Count = _current._table.Count;
             if (EnableDebug) Debug.WriteLine($"PowersReplTable Count (pass 1): {pass1Count}");
             _current.CheckConsistency();

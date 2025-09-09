@@ -43,10 +43,10 @@ namespace Mids_Reborn.Core
             switch (useAltBg)
             {
                 case false:
-                    _graphics.DrawImage(MidsContext.Character!.IsHero() ? Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Images", "InfoBackDropH.png")) : Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Images", "InfoBackDropV.png")), new RectangleF(0, 0, tmp.Width, tmp.Height));
+                    _graphics.DrawImage(MidsContext.Character!.IsHero() ? Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Assets", "InfoBackDropH.png")) : Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Assets", "InfoBackDropV.png")), new RectangleF(0, 0, tmp.Width, tmp.Height));
                     break;
                 case true:
-                    _graphics.DrawImage(MidsContext.Character!.IsHero() ? Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Images", "InfoBackDropH2.png")) : Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Images", "InfoBackDropV2.png")), new RectangleF(0, 0, tmp.Width, tmp.Height));
+                    _graphics.DrawImage(MidsContext.Character!.IsHero() ? Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Assets", "InfoBackDropH2.png")) : Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Assets", "InfoBackDropV2.png")), new RectangleF(0, 0, tmp.Width, tmp.Height));
                     break;
             }
             

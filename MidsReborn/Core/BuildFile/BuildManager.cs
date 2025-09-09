@@ -62,7 +62,7 @@ namespace Mids_Reborn.Core.BuildFile
             var fileInfo = new FileInfo(fileName);
             if (DatabaseAPI.DatabaseName != metaData.Database)
             {
-                var databases = Directory.EnumerateDirectories(Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder)).ToList();
+                var databases = Directory.EnumerateDirectories(Path.Combine(AppContext.BaseDirectory, AppDataPaths.ParentDatabaseFolder)).ToList();
                 var selected = databases.FirstOrDefault(d => d.Contains(metaData.Database));
                 if (selected is null)
                 {
@@ -205,7 +205,7 @@ namespace Mids_Reborn.Core.BuildFile
 
             if (DatabaseAPI.DatabaseName != metaData.Database)
             {
-                var databases = Directory.EnumerateDirectories(Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder)).ToList();
+                var databases = Directory.EnumerateDirectories(Path.Combine(AppContext.BaseDirectory, AppDataPaths.ParentDatabaseFolder)).ToList();
                 var selected = databases.FirstOrDefault(d => d.Contains(metaData.Database));
                 if (selected is null)
                 {

@@ -4,9 +4,14 @@
 	  <LangVersion>12.0</LangVersion>
 	  <OutputType>WinExe</OutputType>
     <RootNamespace>Mids_Reborn</RootNamespace>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
     <UseWindowsForms>true</UseWindowsForms>
+	  <ApplicationVisualStyles>true</ApplicationVisualStyles>
+	  <ApplicationUseCompatibleTextRendering>false</ApplicationUseCompatibleTextRendering>
+	  <ApplicationHighDpiMode>SystemAware</ApplicationHighDpiMode>
 	  <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
+	  <EnablePreviewFeatures>true</EnablePreviewFeatures>
+	  <UseSystemRuntimeInteropServicesLibraryImportGenerator>true</UseSystemRuntimeInteropServicesLibraryImportGenerator>
     <Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
@@ -33,13 +38,16 @@
 	<AccelerateBuildsInVisualStudio>false</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Update="Forms\Controls\ColorSlider.cs">
+    <Compile Update="UI\Controls\MidsVectorButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ColorSlider.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Forms\Controls\CheckedListExt.cs">
+    <Compile Update="UI\Controls\CheckedListExt.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Forms\Controls\DataView.cs">
+    <Compile Update="UI\Controls\DataView.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Compile Update="Resources.en-US.Designer.cs">
@@ -47,35 +55,31 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="UIv2\Controls\CollapsiblePanel.cs">
+    <Compile Update="UI\Controls\Test\MidsDataViewNeo.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="UIv2\Controls\MultiOrientButton.cs" />
-    <Compile Update="UIv2\Controls\PowerList.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
-    <Content Include="Data\Generic\Example UpdateManifest.xml">
+    <Content Include="Databases\Generic\Example UpdateManifest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Images\*\*.png">
+    <Content Include="Databases\Homecoming\Images\*\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Images\*.png">
+    <Content Include="Databases\Homecoming\Images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Images\*\*.png">
+    <Content Include="Databases\Rebirth\Images\*\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Images\*.png">
+    <Content Include="Databases\Rebirth\Images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\*\*.png">
+    <Content Include="Assets\*\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\*.png">
+    <Content Include="Assets\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\SData.json">
+    <Content Include="Databases\Rebirth\SData.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Fonts\DejaVuSansMono-Bold.ttf">
@@ -144,169 +148,143 @@
     <Content Include="Fonts\NotoSans-ThinItalic.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\MRBLoading.gif">
+    <Content Include="Assets\MRBLoading.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-	<Content Include="Images\Unknown.png">
-	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-	</Content>
-    <Content Include="Data\Homecoming\AttribMod.json">
+    <Content Include="Databases\Homecoming\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\GlobalMods.mhd">
+    <Content Include="Databases\Homecoming\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\NLevels.mhd">
+    <Content Include="Databases\Homecoming\NLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\RLevels.mhd">
+    <Content Include="Databases\Homecoming\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\bbcode.mhd">
+    <Content Include="Databases\Generic\bbcode.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Compare.mhd">
+    <Content Include="Databases\Generic\Compare.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\EClasses.mhd">
+    <Content Include="Databases\Generic\EClasses.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\EnhDB.mhd">
+    <Content Include="Databases\Generic\EnhDB.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\I12.mhd">
+    <Content Include="Databases\Generic\I12.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\I9.mhd">
+    <Content Include="Databases\Generic\I9.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Maths.mhd">
+    <Content Include="Databases\Generic\Maths.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\NLevels.mhd">
+    <Content Include="Databases\Generic\NLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Origins.mhd">
+    <Content Include="Databases\Generic\Origins.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Recipe.mhd">
+    <Content Include="Databases\Generic\Recipe.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\RLevels.mhd">
+    <Content Include="Databases\Generic\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Salvage.mhd">
+    <Content Include="Databases\Generic\Salvage.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\AttribMod.json">
+    <Content Include="Databases\Generic\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\GlobalMods.mhd">
+    <Content Include="Databases\Generic\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\TypeGrades.json">
+    <Content Include="Databases\Generic\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="MRB_Icon_Concept.ico" />
-    <Content Include="Data\Generic\PowersReplTable.mhd">
+    <Content Include="Databases\Generic\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\SData.mhd">
+    <Content Include="Databases\Generic\SData.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\PowersReplTable.mhd">
+    <Content Include="Databases\Homecoming\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-	<Content Include="Data\Homecoming\CrypticPowerNames.mhd">
+	<Content Include="Databases\Homecoming\CrypticPowerNames.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\AttribMod.json">
+    <Content Include="Databases\Rebirth\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\bbcode.mhd">
+    <Content Include="Databases\Rebirth\bbcode.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Compare.mhd">
+    <Content Include="Databases\Rebirth\Compare.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\EClasses.mhd">
+    <Content Include="Databases\Rebirth\EClasses.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\EnhDB.mhd">
+    <Content Include="Databases\Rebirth\EnhDB.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\GlobalMods.mhd">
+    <Content Include="Databases\Rebirth\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\I12.mhd">
+    <Content Include="Databases\Rebirth\I12.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\I9.mhd">
+    <Content Include="Databases\Rebirth\I9.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Maths.mhd">
+    <Content Include="Databases\Rebirth\Maths.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\NLevels.mhd">
+    <Content Include="Databases\Rebirth\NLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Origins.mhd">
+    <Content Include="Databases\Rebirth\Origins.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\PowersReplTable.mhd">
+    <Content Include="Databases\Rebirth\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Recipe.mhd">
+    <Content Include="Databases\Rebirth\Recipe.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\RLevels.mhd">
+    <Content Include="Databases\Rebirth\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Salvage.mhd">
+    <Content Include="Databases\Rebirth\Salvage.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\TypeGrades.json">
+    <Content Include="Databases\Homecoming\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\TypeGrades.json">
+    <Content Include="Databases\Rebirth\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\SData.mhd">
+    <Content Include="Databases\Homecoming\SData.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\SData.mhd">
+    <Content Include="Databases\Rebirth\SData.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Themes\ArcaneMatrix.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <None Include="..\MRBResourceLib\Resources.resx" Link="Resources.resx">
       <Generator>None</Generator>
       <CustomToolNamespace>MRBResourceLib</CustomToolNamespace>
     </None>
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Images\Archetypes\Class_Arachnos_Soldier.png" />
-    <Content Include="Images\Archetypes\Class_Arachnos_Widow.png" />
-    <Content Include="Images\Archetypes\Class_Blaster.png" />
-    <Content Include="Images\Archetypes\Class_Boss_Henchman.png" />
-    <Content Include="Images\Archetypes\Class_Brute.png" />
-    <Content Include="Images\Archetypes\Class_Controller.png" />
-    <Content Include="Images\Archetypes\Class_Corruptor.png" />
-    <Content Include="Images\Archetypes\Class_Defender.png" />
-    <Content Include="Images\Archetypes\Class_Dominator.png" />
-    <Content Include="Images\Archetypes\Class_Lt_Henchman.png" />
-    <Content Include="Images\Archetypes\Class_Mastermind.png" />
-    <Content Include="Images\Archetypes\Class_Minion_Henchman.png" />
-    <Content Include="Images\Archetypes\Class_Minion_Pets.png" />
-    <Content Include="Images\Archetypes\Class_Peacebringer.png" />
-	<Content Include="Images\Archetypes\Class_Sentinel.png" />
-    <Content Include="Images\Archetypes\Class_Scrapper.png" />
-    <Content Include="Images\Archetypes\Class_Stalker.png" />
-    <Content Include="Images\Archetypes\Class_Tanker.png" />
-    <Content Include="Images\Archetypes\Class_Warshade.png" />
-    <Content Include="Images\Origins\Magic.png" />
-    <Content Include="Images\Origins\Mutation.png" />
-    <Content Include="Images\Origins\Natural.png" />
-    <Content Include="Images\Origins\Science.png" />
-    <Content Include="Images\Origins\Technology.png" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
@@ -317,34 +295,34 @@
     <ProjectReference Include="..\MRB_Boostrap\MRB_Boostrap.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\Homecoming\bbcode.mhd">
+    <Content Include="Databases\Homecoming\bbcode.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Compare.mhd">
+    <Content Include="Databases\Homecoming\Compare.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\EClasses.mhd">
+    <Content Include="Databases\Homecoming\EClasses.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\EnhDB.mhd">
+    <Content Include="Databases\Homecoming\EnhDB.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\I12.mhd">
+    <Content Include="Databases\Homecoming\I12.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\I9.mhd">
+    <Content Include="Databases\Homecoming\I9.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Maths.mhd">
+    <Content Include="Databases\Homecoming\Maths.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Origins.mhd">
+    <Content Include="Databases\Homecoming\Origins.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Recipe.mhd">
+    <Content Include="Databases\Homecoming\Recipe.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Salvage.mhd">
+    <Content Include="Databases\Homecoming\Salvage.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -352,10 +330,8 @@
     <PackageReference Include="Costura.Fody" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
     </PackageReference>
-    <PackageReference Include="FastDeepCloner">
-      <Version>1.3.6</Version>
-    </PackageReference>
-    <PackageReference Include="Fody" Version="6.9.2">
+    <PackageReference Include="FastDeepCloner" Version="1.3.6" />
+    <PackageReference Include="Fody" Version="6.9.3">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -363,8 +339,9 @@
       <Version>6.6.0</Version>
     </PackageReference>
     <PackageReference Include="Jace4fc" Version="1.0.2" />
+    <PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.22.1" />
     <PackageReference Include="Microsoft.Web.WebView2">
-      <Version>1.0.3065.39</Version>
+      <Version>1.0.3405.78</Version>
     </PackageReference>
     <PackageReference Include="Microsoft.WinForms.Designer.SDK" Version="1.9.0-preview.3.24054.5" />
     <PackageReference Include="Newtonsoft.Json">
@@ -377,26 +354,27 @@
       <Version>112.1.0</Version>
     </PackageReference>
     <PackageReference Include="SharpZipLib" Version="1.4.2" />
-    <PackageReference Include="SkiaSharp" Version="3.116.1" />
-    <PackageReference Include="SkiaSharp.Views" Version="3.116.1" />
-    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.116.1" />
-    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.116.1" />
+    <PackageReference Include="SkiaSharp" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp.Views" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp.Views.Desktop.Common" Version="3.119.0" />
+    <PackageReference Include="SkiaSharp.Views.WindowsForms" Version="3.119.0" />
     <PackageReference Include="zlib.net-mutliplatform" Version="1.0.8" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\Homecoming\Images\Classes\" />
-    <Folder Include="Data\Rebirth\Images\Classes\" />
+    <Folder Include="Databases\Homecoming\Images\Classes\" />
+    <Folder Include="Databases\Rebirth\Images\Classes\" />
+    <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Forms\frmUpdate.cs" />
-    <Compile Remove="Forms\OptionsMenuItems\frmAttribModImporter.cs" />
-    <Compile Remove="Forms\OptionsMenuItems\frmAttribModImporter.Designer.cs" />
+    <Compile Remove="UI\Forms\frmUpdate.cs" />
+    <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.cs" />
+    <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.Designer.cs" />
     <Compile Remove="GlobalSuppressions.cs" />
-    <Content Remove="Images\unlocked.png" />
+    <Content Remove="Assets\unlocked.png" />
     <EmbeddedResource Remove="frmImport_Powerset.resx" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Data\Rebirth\SData.json" />
+    <None Remove="Databases\Rebirth\SData.json" />
     <None Remove="Fonts\DejaVuSansMono-Bold.ttf" />
     <None Remove="Fonts\DejaVuSansMono-BoldOblique.ttf" />
     <None Remove="Fonts\DejaVuSansMono-Oblique.ttf" />
@@ -419,18 +397,19 @@
     <None Remove="Fonts\NotoSans-SemiBoldItalic.ttf" />
     <None Remove="Fonts\NotoSans-Thin.ttf" />
     <None Remove="Fonts\NotoSans-ThinItalic.ttf" />
-    <None Remove="Images\MRBLoading.gif" />
-    <None Remove="Images\unlocked.png" />
+    <None Remove="Assets\MRBLoading.gif" />
+    <None Remove="Assets\unlocked.png" />
     <None Remove="MidsReborn.csproj.old" />
+    <None Remove="Themes\ArcaneMatrix.json" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\blank.html">
+    <None Update="Databases\blank.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Sythlin_DPS_Tool.exe">
+    <None Update="Models\RealESRGAN_x4plus.onnx">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
@@ -452,8 +431,9 @@
 		<Osx>bin\$(Platform)\$(Configuration)\net6.0-windows\runtimes\osx</Osx>
 		<Win86>bin\$(Platform)\$(Configuration)\net6.0-windows\runtimes\win-x86</Win86>
         <WinARM>bin\$(Platform)\$(Configuration)\net6.0-windows\runtimes\win-arm64</WinARM>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+        <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
         <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+        <ImplicitUsings>enable</ImplicitUsings>
 	</PropertyGroup>
 
 	<Target Name="DeleteFilesAfterBuild" AfterTargets="Build">

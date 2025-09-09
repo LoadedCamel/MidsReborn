@@ -1,5 +1,4 @@
 using System;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using Mids_Reborn.Core.Base.Data_Classes;
@@ -343,6 +342,18 @@ namespace Mids_Reborn.Core
             writer.Write(Superior);
             writer.Write(IsProc);
             writer.Write(IsScalable);
+        }
+
+        public int GetFixedSpecialLevel(int level)
+        {
+            if (TypeID != Enums.eType.SpecialO) return level;
+
+            // Defensive fallback: SpecialOs should be level 50, however we set to 49 due to display.
+            int min = Math.Max(LevelMin, 49);
+            int max = Math.Max(LevelMax, 49);
+
+            // Clamp the given level to the expected SpecialO range
+            return Math.Clamp(level, min, max);
         }
 
         public int CheckAndFixIOLevel(int level)

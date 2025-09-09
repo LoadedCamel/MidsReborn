@@ -40,7 +40,7 @@ namespace Mids_Reborn.Core
 
         public bool Load(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.JsonFileModifiers, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.JsonFileModifiers, iPath);
             
             if (File.Exists(path))
             {
@@ -58,7 +58,7 @@ namespace Mids_Reborn.Core
             }
             if (!string.IsNullOrWhiteSpace(iPath))
             {
-                path = Files.SelectDataFileLoad(Files.MxdbFileModifiers, iPath);
+                path = AppDataPaths.SelectDataFileLoad(AppDataPaths.FileModifiers, iPath);
 
 
                 Modifier = new List<ModifierTable>();
@@ -124,11 +124,11 @@ namespace Mids_Reborn.Core
             string path;
             if (string.IsNullOrWhiteSpace(iPath))
             {
-                path = Files.SelectDataFileSave("AttribMod.json");
+                path = AppDataPaths.SelectDataFileSave("AttribMod.json");
             }
             else
             {
-                path = Files.SelectDataFileSave("AttribMod.json", iPath);
+                path = AppDataPaths.SelectDataFileSave("AttribMod.json", iPath);
             }
 
             File.WriteAllText(path, JsonConvert.SerializeObject(DatabaseAPI.Database.AttribMods, Serializer.SerializerSettings));

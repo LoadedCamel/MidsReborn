@@ -2,8 +2,7 @@
 using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
-using System.Threading.Tasks;
-using Mids_Reborn.Forms.UpdateSystem.Models;
+using Mids_Reborn.UI.Forms.UpdateSystem.Models;
 using RestSharp;
 using RestSharp.Serializers.Json;
 

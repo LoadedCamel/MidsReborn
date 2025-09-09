@@ -290,6 +290,13 @@ namespace Mids_Reborn.Core
             Teleport,
         }
 
+        public enum eToggleType
+        {
+            None,
+            Stat,
+            Proc
+        }
+
         public enum eDamage
         {
             None,
@@ -348,6 +355,22 @@ namespace Mids_Reborn.Core
             Graph,
             TextOnGraph,
             TextUnderGraph
+        }
+
+        // ModernDamageDisplay
+        public enum MDmgGraphType
+        {
+            Layered,        // enhanced and base overlap
+            Stacked,        // two rows: base top, enhanced bottom
+            BaseOnly,       // draw only base
+            EnhancedOnly    // draw only enhanced
+        }
+
+        public enum MDmgDisplayStyle
+        {
+            TextOnly,       // text fills control
+            TextOnGraph,    // text drawn inside the graph area
+            TextUnderGraph  // text drawn in a band beneath the graph
         }
 
         public enum eDDText

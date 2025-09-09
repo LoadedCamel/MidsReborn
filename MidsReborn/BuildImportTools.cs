@@ -15,31 +15,13 @@ namespace Mids_Reborn
     #region Common helpers
     public abstract class ImportBase
     {
-        protected struct OldPowerInfo
-        {
-            public string Name;
-            public string? Archetype;
-
-            public override bool Equals(object? obj)
-            {
-                if (obj is not OldPowerInfo o)
-                {
-                    return false;
-                }
-
-                return o.Name == Name & o.Archetype == Archetype;
-            }
-
-            public override int GetHashCode() => (Name, Archetype).GetHashCode();
-        }
-
         protected RawCharacterInfo CharacterInfo { get; set; }
         protected string BuildString { get; set; }
         protected UniqueList<string> PowerSets { get; set; }
-        protected string[] ExcludePowersets { get; } = ["Redirects."]; //{"Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents"};
+        protected string[] ExcludePowersets { get; } = { "Redirects." }; //{"Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents"};
 
         protected string[] ExcludePowers { get; } =
-        [
+        {
             "Efficient_Adaptation", "Defensive_Adaptation", "Offensive_Adaptation", // Bio armor
             "Form_of_the_Body", "Form_of_the_Mind", "Form_of_the_Soul", // Staff Fighting (all but stalkers)
             "Ammunition", // Dual Pistols
@@ -51,7 +33,7 @@ namespace Mids_Reborn
             "Inherent.Inherent.Lightning_Aura", // Storm Blast early iteration inherents
             "Inherent.Inherent.Wind_Speed",
             "Inherent.Inherent.Category_Five_Lightning"
-        ];
+        };
 
         protected Dictionary<int, int> OldFitnessPoolIDs { get; } = new()
         {
@@ -62,18 +44,18 @@ namespace Mids_Reborn
         };
 
         // Applies to HC db only.
-        protected Dictionary<OldPowerInfo, string> OldPowersDict = new()
+        protected Dictionary<KeyValuePair<string, string?>, string> OldPowersDict = new()
         {
-            {new OldPowerInfo { Name = "Invisibility", Archetype = null}, "Infiltration"},
-            {new OldPowerInfo { Name = "Psionic Dart", Archetype = null}, "Psionic Darts"},
-            {new OldPowerInfo { Name = "Whirling Axe", Archetype = null}, "Axe Cyclone"},
-            {new OldPowerInfo { Name = "Category 5", Archetype = null}, "Category Five"},
-            {new OldPowerInfo { Name = "Will Domination", Archetype = "Blaster"}, "Dominate Will"},
-            {new OldPowerInfo { Name = "Will Domination", Archetype = "Corruptor"}, "Dominate Will"},
-            {new OldPowerInfo { Name = "Will Domination", Archetype = "Defender"}, "Dominate Will"},
-            {new OldPowerInfo { Name = "Scramble Thoughts", Archetype = "Blaster"}, "Scramble Minds"},
-            {new OldPowerInfo { Name = "Afterburner", Archetype = null}, "Evasive Maneuvers"},
-            {new OldPowerInfo { Name = "Quantum Acceleration", Archetype = "Peacebringer"}, "Quantum Maneuvers"},
+            {new KeyValuePair<string, string?>("Invisibility", null), "Infiltration"},
+            {new KeyValuePair<string, string?>("Psionic Dart", null), "Psionic Darts"},
+            {new KeyValuePair<string, string?>("Whirling Axe", null), "Axe Cyclone"},
+            {new KeyValuePair<string, string?>("Category 5", null), "Category Five"},
+            {new KeyValuePair<string, string?>("Will Domination", "Blaster"), "Dominate Will"},
+            {new KeyValuePair<string, string?>("Will Domination", "Corruptor"), "Dominate Will"},
+            {new KeyValuePair<string, string?>("Will Domination", "Defender"), "Dominate Will"},
+            {new KeyValuePair<string, string?>("Scramble Thoughts", "Blaster"), "Scramble Minds"},
+            {new KeyValuePair<string, string?>("Afterburner", null), "Evasive Maneuvers"},
+            {new KeyValuePair<string, string?>("Quantum Acceleration", "Peacebringer"), "Quantum Maneuvers"},
         };
 
         protected Dictionary<string, string> OldEnhDict = new()
@@ -81,20 +63,20 @@ namespace Mids_Reborn
             {"Numina's Convalesence: Regen/Recovery Proc", "Numina's Convalesence: +Regeneration/+Recovery"}
         };
 
-        protected string ApplyPowerReplacementTable(string powerName, string? archetype, Dictionary<OldPowerInfo, string> oldPowersDict)
+        protected string ApplyPowerReplacementTable(string powerName, string? archetype, Dictionary<KeyValuePair<string, string?>, string> oldPowersDict)
         {
-            if (DatabaseAPI.DatabaseName is not "Homecoming" and not "Cryptic" and not "Breakout")
+            if (DatabaseAPI.DatabaseName is not "Homecoming" and not "Cryptic")
             {
                 return powerName;
             }
 
-            var k = new OldPowerInfo { Name = powerName, Archetype = archetype };
+            var k = new KeyValuePair<string, string?>(powerName, archetype);
             if (oldPowersDict.TryGetValue(k, value: out var newName))
             {
                 return newName;
             }
 
-            k = new OldPowerInfo { Name = powerName, Archetype = null };
+            k = new KeyValuePair<string, string?>(powerName, null);
             return oldPowersDict.TryGetValue(k, value: out newName)
                 ? newName
                 : powerName;
@@ -155,7 +137,7 @@ namespace Mids_Reborn
             }
 
             var iName = enhInternalName.Replace("Attuned", "Crafted").Replace("Synthetic_", string.Empty);
-            var r = new Regex(@" ^ (Science|Mutation|Technology|Natural)_(?!Science|Mutation|Technology|Natural|Magic)"); // SOs
+            var r = new Regex(@"^(Science|Mutation|Technology|Natural)_(?!Science|Mutation|Technology|Natural|Magic)"); // SOs
             if (r.IsMatch(iName))
             {
                 iName = r.Replace(iName, "Magic_");
@@ -272,6 +254,8 @@ namespace Mids_Reborn
                     return false;
             }
 
+            ;
+
             return !excludes.Any(x => input.Contains(x));
         }
 
@@ -367,7 +351,7 @@ namespace Mids_Reborn
             {
                 if (i == 2) continue;
 
-                if (!string.IsNullOrEmpty(listPowersets[i]))
+                if (listPowersets[i] != null && listPowersets[i] != "")
                 {
                     continue;
                 }
@@ -455,7 +439,7 @@ namespace Mids_Reborn
         public ImportFromBuildsave(string buildString)
         {
             BuildString = buildString;
-            PowerSets = [];
+            PowerSets = new UniqueList<string>();
             CharacterInfo = new RawCharacterInfo();
         }
 

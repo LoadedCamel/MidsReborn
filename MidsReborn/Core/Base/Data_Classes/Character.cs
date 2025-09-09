@@ -973,6 +973,22 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return 0;
         }
 
+        private IEnumerable<int> GetAvailablePools(int poolSlot)
+        {
+            var lockedIds = new HashSet<int>(
+                from slot in Enumerable.Range(3, 4) // 3..6
+                where slot != poolSlot && PoolLocked[slot - 3]
+                select Powersets[slot].nID
+            );
+
+            return DatabaseAPI
+                .GetPowersetIndexes(Archetype, Enums.ePowerSetType.Pool)
+                .Where(candidate => !lockedIds.Contains(candidate.nID))
+                .Select(candidate => candidate.nID);
+        }
+
+        public int PoolToDropDownIndex(int poolSlot, int powersetId) { int index = 0; foreach (int id in GetAvailablePools(poolSlot)) { if (id == powersetId) return index; index++; } return 0; }
+
         public static PopUp.PopupData PopEnhInfo(I9Slot iSlot, int iLevel = -1, PowerEntry? powerEntry = null)
         {
             var popupData1 = new PopUp.PopupData();

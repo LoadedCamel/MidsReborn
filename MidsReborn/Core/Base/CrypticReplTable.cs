@@ -65,7 +65,7 @@ namespace Mids_Reborn.Core.Base
 
         public static void Initialize()
         {
-            _current = new CrypticReplTable(Files.CNamePowersRepl);
+            _current = new CrypticReplTable(AppDataPaths.CrypticPowersRepl);
             var pass1Count = _current._table.Count;
             _current.CheckConsistency();
         }

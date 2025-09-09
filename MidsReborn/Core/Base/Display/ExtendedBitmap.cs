@@ -1,196 +1,225 @@
 ﻿using System;
 using System.Drawing;
+using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.IO;
 
 namespace Mids_Reborn.Core.Base.Display
 {
+    /// <summary>
+    /// A wrapper for System.Drawing.Bitmap that provides robust resource management,
+    /// state tracking, and a correct cloning implementation.
+    /// </summary>
     public class ExtendedBitmap : IDisposable, ICloneable
     {
         private Bitmap? _bits;
+        private Graphics? _surface;
+        private PropertyCache? _cache;
         private bool _isDisposed;
         private bool _isInitialized;
         private bool _isNew;
 
-        private Graphics? _surface;
-        private PropertyCache? _cache;
+        #region Constructors
 
+        /// <summary>
+        /// Initializes an empty ExtendedBitmap, ready for lazy initialization.
+        /// </summary>
         public ExtendedBitmap()
         {
             _cache = new PropertyCache();
             _isNew = true;
-            _isInitialized = false;
         }
 
-        public ExtendedBitmap(Size imageSize)
-        {
-            _cache = new PropertyCache
-            {
-                Size = imageSize
-            };
-            Initialize();
-        }
-
+        /// <summary>
+        /// Initializes a new ExtendedBitmap with the specified dimensions.
+        /// </summary>
         public ExtendedBitmap(int width, int height)
         {
-            _cache = new PropertyCache
-            {
-                Size = new Size(width, height)
-            };
+            _cache = new PropertyCache { Size = new Size(width, height) };
             Initialize();
         }
 
-        public ExtendedBitmap(string file)
+        /// <summary>
+        /// Initializes a new ExtendedBitmap with the specified dimensions.
+        /// </summary>
+        public ExtendedBitmap(Size imageSize) : this(imageSize.Width, imageSize.Height) { }
+
+        /// <summary>
+        /// Initializes a new ExtendedBitmap from an existing Bitmap object.
+        /// </summary>
+        public ExtendedBitmap(Bitmap bitmap)
         {
+            ArgumentNullException.ThrowIfNull(bitmap);
             _cache = new PropertyCache();
-            Initialize(file);
+            InitializeFromBitmap(bitmap, isFromNewSource: true);
         }
 
-        public ExtendedBitmap(Bitmap bitmap) => _bits = bitmap;
-
+        /// <summary>
+        /// Initializes a new ExtendedBitmap from an existing Image object.
+        /// </summary>
         public ExtendedBitmap(Image image)
         {
-            _cache = new PropertyCache
-            {
-                Size = image.Size,
-                BitDepth = image.PixelFormat
-            };
-            Initialize(image);
+            ArgumentNullException.ThrowIfNull(image);
+            _cache = new PropertyCache();
+            // Create a new Bitmap from the Image to ensure we have our own copy
+            InitializeFromBitmap(new Bitmap(image), isFromNewSource: true);
         }
 
+        /// <summary>
+        /// Initializes a new ExtendedBitmap from a file path.
+        /// </summary>
+        public ExtendedBitmap(string file)
+        {
+            ArgumentNullException.ThrowIfNull(file);
+            _cache = new PropertyCache();
+            InitializeFromBitmap(new Bitmap(file), isFromNewSource: true);
+        }
+
+        /// <summary>
+        /// Initializes a new ExtendedBitmap from a stream.
+        /// </summary>
         public ExtendedBitmap(Stream stream)
         {
+            ArgumentNullException.ThrowIfNull(stream);
             _cache = new PropertyCache();
-            Initialize(stream);
+            InitializeFromBitmap(new Bitmap(stream), isFromNewSource: true);
         }
 
+        /// <summary>
+        /// The copy constructor. Creates a deep clone of another ExtendedBitmap.
+        /// </summary>
+        public ExtendedBitmap(ExtendedBitmap other)
+        {
+            ArgumentNullException.ThrowIfNull(other);
+
+            // If the source is uninitialized or disposed, create a similar empty object
+            if (!other._isInitialized || other._isDisposed)
+            {
+                _cache = new PropertyCache();
+                _isNew = true;
+                return;
+            }
+
+            // Create a deep copy using the source bitmap's clone method
+            var clonedBitmap = (Bitmap)other._bits!.Clone();
+            _cache = new PropertyCache(other._cache!); // Use PropertyCache copy constructor
+
+            InitializeFromBitmap(clonedBitmap, isFromNewSource: false);
+
+            // Restore the state from the original
+            _isInitialized = other._isInitialized;
+            _isNew = other._isNew;
+        }
+
+        #endregion
+
+        #region Properties
+
+        /// <summary>
+        /// Gets the underlying Bitmap object. Returns null if not initialized.
+        /// </summary>
+        public Bitmap? Bitmap => _bits;
+
+        /// <summary>
+        /// Gets the Graphics surface for drawing on the bitmap.
+        /// Lazily initializes the bitmap if it hasn't been created yet.
+        /// Accessing this property marks the bitmap as not new.
+        /// </summary>
         public Graphics? Graphics
         {
             get
             {
-                Graphics graphics;
-                if (_isInitialized)
-                {
-                    _isNew = false;
-                    graphics = _surface;
-                }
-                else if (Initialize())
-                {
-                    _isNew = false;
-                    graphics = _surface;
-                }
-                else
-                {
-                    graphics = null;
-                }
-                return graphics;
-            }
-        }
+                if (_isDisposed) return null;
 
-        private bool CanInitialize
-        {
-            get
-            {
-                if (_isDisposed)
+                if (!_isInitialized && !Initialize())
                 {
-                    return false;
+                    return null; // Initialization failed
                 }
 
-                if ((_cache!.Size.Width > 0) & (_cache.Size.Height > 0))
+                // Create the Graphics object only if it doesn't already exist
+                if (_surface == null)
                 {
-                    return true;
+                    _surface = Graphics.FromImage(_bits!);
+                    _surface.SmoothingMode = SmoothingMode.AntiAlias;
+                    _surface.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    _surface.PixelOffsetMode = PixelOffsetMode.HighQuality;
+                    _surface.CompositingQuality = CompositingQuality.HighQuality;
+                    _surface.Clip = new Region(_cache!.Bounds);
+                    _cache!.UpdateFromGraphics(_surface);
                 }
 
-                if (!((_cache.Bounds.Width > 0) & (_cache.Bounds.Height > 0))) return false;
-                _cache.Size.Width = _cache.Bounds.Width;
-                _cache.Size.Height = _cache.Bounds.Height;
-                return true;
-            }
-        }
-
-        public Bitmap? Bitmap => !_isInitialized ? Initialize() ? _bits : null : _bits; 
-
-        private Region Clip
-        {
-            get => (_isInitialized ? _cache!.Clip : new Region())!;
-            set
-            {
-                if (!_isInitialized) return;
-                if (_surface != null)
-                {
-                    _surface.Clip = value;
-                    _cache?.Update(ref _surface);
-                }
                 _isNew = false;
+                return _surface;
             }
         }
 
-        public Rectangle ClipRect => _isInitialized ? _cache!.ClipRect : new Rectangle();
-
+        /// <summary>
+        /// Gets or sets the size of the bitmap. Setting a new size will re-initialize the bitmap.
+        /// </summary>
         public Size Size
         {
-            get => _isInitialized ? _cache!.Size : new Size();
+            get => _cache?.Size ?? Size.Empty;
             set
             {
-                if (value.Width == _cache!.Size.Width && value.Height == _cache.Size.Height) return;
+                if (_cache == null || value == _cache.Size) return;
                 _cache.Size = value;
                 Initialize();
             }
         }
 
+        #endregion
+
+        #region Methods
+
+        /// <summary>
+        /// Creates a deep clone of the object.
+        /// </summary>
+        public object Clone()
+        {
+            return new ExtendedBitmap(this);
+        }
+
+        /// <summary>
+        /// Centralized method to create a blank bitmap based on properties in the cache.
+        /// </summary>
         private bool Initialize()
         {
-            if (!CanInitialize) return false;
-            _surface?.Dispose();
-            _bits?.Dispose();
-            _bits = new Bitmap(_cache!.Size.Width, _cache.Size.Height, _cache.BitDepth);
-            _surface = Graphics.FromImage(_bits);
-            _cache.Update(ref _bits);
-            _surface.Clip = new Region(_cache.Bounds);
-            _cache.Update(ref _surface);
-            _isNew = true;
-            _isInitialized = true;
+            if (_isDisposed || _cache is null) return false;
+            if (_cache.Size.Width <= 0 || _cache.Size.Height <= 0) return false;
+
+            var newBitmap = new Bitmap(_cache.Size.Width, _cache.Size.Height, _cache.BitDepth);
+            InitializeFromBitmap(newBitmap, isFromNewSource: true);
             return true;
         }
 
-        private void Initialize(Image file)
+        /// <summary>
+        /// Centralized initialization logic. All constructors and methods that create or
+        /// replace the bitmap should flow through here.
+        /// </summary>
+        private void InitializeFromBitmap(Bitmap newBitmap, bool isFromNewSource)
         {
+            // Dispose previous resources
             _surface?.Dispose();
             _bits?.Dispose();
-            _bits = new Bitmap(file);
-            _surface = Graphics.FromImage(_bits);
-            _cache?.Update(ref _bits);
-            _surface.Clip = new Region(_cache!.Bounds);
-            _cache.Update(ref _surface);
-            _isNew = true;
+
+            // Set the new bitmap and create its graphics surface
+            _bits = newBitmap;
+            _surface = null;
+
+            // Update the cache with properties from the new bitmap
+            _cache!.UpdateFromBitmap(_bits);
+
+            // Update state flags
+            if (isFromNewSource)
+            {
+                _isNew = true;
+            }
             _isInitialized = true;
         }
 
-        private void Initialize(string file)
-        {
-            _surface?.Dispose();
-            _bits?.Dispose();
-            _bits = new Bitmap(file);
-            _surface = Graphics.FromImage(_bits);
-            _cache?.Update(ref _bits);
-            _surface.Clip = new Region(_cache!.Bounds);
-            _cache.Update(ref _surface);
-            _isNew = true;
-            _isInitialized = true;
-        }
+        #endregion
 
-        private void Initialize(Stream stream)
-        {
-            _surface?.Dispose();
-            _bits?.Dispose();
-            _bits = new Bitmap(stream);
-            _surface = Graphics.FromImage(_bits);
-            _cache?.Update(ref _bits);
-            _surface.Clip = new Region(_cache!.Bounds);
-            _cache.Update(ref _surface);
-            _isNew = true;
-            _isInitialized = true;
-        }
+        #region IDisposable
 
         public void Dispose()
         {
@@ -200,82 +229,69 @@ namespace Mids_Reborn.Core.Base.Display
 
         protected virtual void Dispose(bool disposing)
         {
-            if (!disposing || _isDisposed) return;
-            _isNew = false;
+            if (_isDisposed) return;
+
+            if (disposing)
+            {
+                // Dispose managed resources
+                _surface?.Dispose();
+                _bits?.Dispose();
+                _cache?.Dispose();
+            }
+
+            // Clear references and update state
+            _surface = null;
+            _bits = null;
+            _cache = null;
             _isInitialized = false;
-            _surface?.Dispose();
-            _bits?.Dispose();
-            _cache?.Clip?.Dispose();
             _isDisposed = true;
         }
 
-        public object Clone()
+        #endregion
+
+        #region Private Inner Class: PropertyCache
+
+        private class PropertyCache : IDisposable
         {
-            object obj;
-            if (!_isInitialized)
-            {
-                obj = new ExtendedBitmap();
-            }
-            else
-            {
-                var bitmapExt = new ExtendedBitmap(Size)
-                {
-                    _cache = _cache
-                };
-                if (_bits == null) return new ExtendedBitmap();
-                bitmapExt._surface?.DrawImageUnscaled(_bits, new Point(0, 0));
-                bitmapExt.Clip = Clip;
-                bitmapExt._isInitialized = _isInitialized;
-                bitmapExt._isNew = _isNew;
-                obj = bitmapExt;
-
-            }
-
-            return obj;
-
-        }
-
-        private class PropertyCache
-        {
-            private Point _location;
-
             public PixelFormat BitDepth = PixelFormat.Format32bppArgb;
             public Rectangle Bounds;
             public Region? Clip;
             public Rectangle ClipRect;
             public Size Size;
 
-            public void Update(ref Bitmap args)
+            // Default constructor
+            public PropertyCache() { }
+
+            // Copy constructor for cloning
+            public PropertyCache(PropertyCache other)
             {
-                Size = args.Size;
-                _location = new Point(0, 0);
-                Bounds = new Rectangle(_location, Size);
-                BitDepth = args.PixelFormat;
+                BitDepth = other.BitDepth;
+                Bounds = other.Bounds;
+                Clip = other.Clip?.Clone(); // Region must be cloned
+                ClipRect = other.ClipRect;
+                Size = other.Size;
             }
 
-            public void Update(ref Graphics args)
+            public void UpdateFromBitmap(Bitmap bitmap)
+            {
+                Size = bitmap.Size;
+                Bounds = new Rectangle(Point.Empty, Size);
+                BitDepth = bitmap.PixelFormat;
+            }
+
+            public void UpdateFromGraphics(Graphics graphics)
             {
                 Clip?.Dispose();
-                Clip = args.Clip;
-                ClipRect = RectConvert(args.ClipBounds);
+                Clip = graphics.Clip;
+                ClipRect = Rectangle.Truncate(graphics.ClipBounds);
             }
 
-            private static Rectangle RectConvert(RectangleF iRect)
+            public void Dispose()
             {
-                return new Rectangle(
-                    iRect.X <= 2147483648.0
-                        ? iRect.X >= (double) int.MinValue ? Convert.ToInt32(iRect.X) : int.MinValue
-                        : int.MaxValue,
-                    iRect.Y <= 2147483648.0
-                        ? iRect.Y >= (double) int.MinValue ? Convert.ToInt32(iRect.Y) : int.MinValue
-                        : int.MaxValue,
-                    iRect.Width <= 2147483648.0
-                        ? iRect.Width >= (double) int.MinValue ? Convert.ToInt32(iRect.Width) : int.MinValue
-                        : int.MaxValue,
-                    iRect.Height <= 2147483648.0
-                        ? iRect.Height >= (double) int.MinValue ? Convert.ToInt32(iRect.Height) : int.MinValue
-                        : int.MaxValue);
+                Clip?.Dispose();
             }
         }
+
+        #endregion
     }
 }

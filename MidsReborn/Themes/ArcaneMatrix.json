@@ -1,0 +1,101 @@
+{
+  "Name": "Arcane Matrix",
+  "Button": {
+    "GradientTop": "#2D004D",
+    "GradientBottom": "#11001C",
+    "HoverGradientTop": "#4A007D",
+    "HoverGradientBottom": "#2F004A",
+    "PressedGradientTop": "#11001C",
+    "PressedGradientBottom": "#2D004D",
+    "Border": "#D400FF",
+    "ForeColor": "#E0E0E0",
+    "TextOutlineColor": "#000000",
+    "ToggledGradientTop": "#2D004D",
+    "ToggledGradientBottom": "#11001C",
+    "ToggledBorderColor": "#00FFD8",
+    "ToggledTextColor": "#FFFFFF",
+    "ToggledTextOutlineColor": "#000000"
+  },
+  "DataView": {
+    "Background": "#0A0014",
+    "Card": "#11001C",
+    "Border": "#1F0035",
+    "Accent": "#D400FF",
+
+    "HeaderTop": "#2D004D",
+    "HeaderBottom": "#1F0035",
+    "TabActiveTop": "#4A007D",
+    "TabActiveBottom": "#2F004A",
+    "TabInactiveTop": "#1F0035",
+    "TabInactiveBottom": "#11001C",
+    "TabBorder": "#0C0016",
+    "Text": "#E0E0E0",
+    "Muted": "#B9BEC8",
+
+    "Chip": "#2D004D",
+    "ChipActive": "#4A007D",
+    "Rail": "#11001C",
+    "RailFill": "#00FFD8",
+    "Thumb": "#E0E0E0",
+    "ThumbBorder": "#1A0026",
+
+    "GridHeaderTop": "#1F0035",
+    "GridHeaderBottom": "#11001C",
+    "GridHeaderBorder": "#0C0016",
+    "GridRowEven": "#14001F",
+    "GridRowOdd": "#100018",
+    "GridRowLine": "#210032",
+    "GridGood": "#60D478",
+    "GridBad": "#E65656",
+    "GridNeutral": "#B9BEC8"
+  },
+  "DropDownList": {
+    "GradientTop": "#2D004D",
+    "GradientBottom": "#11001C",
+    "HoverGradientTop": "#4A007D",
+    "HoverGradientBottom": "#2F004A",
+    "Border": "#D400FF",
+    "HoverBorder": "#00FFD8",
+    "DropDownBackColor": "#0A0014",
+    "DropDownSelectionBackColor": "#4A007D",
+    "DropDownSelectionForeColor": "#FFFFFF",
+    "LockColor": "#808080",
+    "ForeColor": "#E0E0E0",
+    "Arrow": "#D400FF",
+    "HoverArrow": "#00FFD8",
+    "FocusBorder": "#00FFD8"
+  },
+  "Header": {
+    "HeaderLight": "#2D004D",
+    "HeaderMid": "#1F0035",
+    "HeaderDark": "#11001C",
+    "WindowIcon": "#F5F5F5",
+    "WindowIconHover": "#4000FFD8",
+    "WindowIconPressed": "#602D004D",
+    "WindowIconCloseHover": "#DC143C",
+    "WindowIconClosePressed": "#8B0000",
+    "LogoTargetColor": "#D400FF"
+  },
+  "ListView": {
+    "ScrollBar": "#11001C",
+    "ScrollButton": "#D400FF"
+  },
+  "MenuStrip": {
+    "ItemSelectedColor": "#4A007D",
+    "AccentColor": "#D400FF",
+    "AccentLightColor": "#00FFD8"
+  },
+  "PowerSlot": {
+    "Border": "#D400FF",
+    "GradientTop": "#2D004D",
+    "GradientBottom": "#11001C",
+    "OpenBorder": "#00FFD8",
+    "EmptyFill": "#444444",
+    "DisabledFill": "#303030"
+  },
+  "ScrollPanel": {
+    "Track": "#11001C",
+    "Bar": "#D400FF",
+    "Hover": "#00FFD8"
+  }
+}

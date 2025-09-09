@@ -72,6 +72,8 @@ namespace Mids_Reborn.Core
         IPower? GetPower();
         void SetPower(IPower power);
 
+        int GetFixedSpecialLevel(int level);
+
         int CheckAndFixIOLevel(int level);
 
         void StoreTo(BinaryWriter writer);

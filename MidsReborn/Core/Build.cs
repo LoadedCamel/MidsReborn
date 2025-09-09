@@ -9,7 +9,7 @@ using FastDeepCloner;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.Forms.Controls;
+using Mids_Reborn.UI.Forms.Controls;
 
 namespace Mids_Reborn.Core
 {
@@ -225,33 +225,38 @@ namespace Mids_Reborn.Core
         private void ValidateEnhancements()
         {
             foreach (var power in Powers.Where(p => p != null))
+            {
                 foreach (var slot in power.Slots)
                 {
                     if (slot.Enhancement.Enh > -1)
                     {
-                        if (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.Normal &&
-                            (slot.Enhancement.Grade <= Enums.eEnhGrade.None) |
-                            (slot.Enhancement.Grade > Enums.eEnhGrade.SingleO))
+                        if (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.Normal && (slot.Enhancement.Grade <= Enums.eEnhGrade.None) | (slot.Enhancement.Grade > Enums.eEnhGrade.SingleO))
+                        {
                             slot.Enhancement.Grade = Enums.eEnhGrade.SingleO;
-                        if ((DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.Normal) |
-                            (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.SpecialO) &&
-                            (slot.Enhancement.RelativeLevel < Enums.eEnhRelative.None) |
-                            (slot.Enhancement.RelativeLevel > Enums.eEnhRelative.PlusFive))
+                        }
+
+                        if ((DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.Normal) | (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID == Enums.eType.SpecialO) && (slot.Enhancement.RelativeLevel < Enums.eEnhRelative.None) | (slot.Enhancement.RelativeLevel > Enums.eEnhRelative.PlusFive))
+                        {
                             slot.Enhancement.RelativeLevel = MidsContext.Config.CalcEnhLevel;
+                        }
                     }
 
                     if (slot.FlippedEnhancement.Enh <= -1)
+                    {
                         continue;
-                    if (DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh].TypeID == Enums.eType.Normal &&
-                        (slot.FlippedEnhancement.Grade <= Enums.eEnhGrade.None) |
-                        (slot.FlippedEnhancement.Grade > Enums.eEnhGrade.SingleO))
+                    }
+
+                    if (DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh].TypeID == Enums.eType.Normal && (slot.FlippedEnhancement.Grade <= Enums.eEnhGrade.None) | (slot.FlippedEnhancement.Grade > Enums.eEnhGrade.SingleO))
+                    {
                         slot.FlippedEnhancement.Grade = Enums.eEnhGrade.SingleO;
-                    if ((DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh].TypeID == Enums.eType.Normal) |
-                        (DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh].TypeID == Enums.eType.SpecialO) &&
-                        (slot.FlippedEnhancement.RelativeLevel < Enums.eEnhRelative.None) |
-                        (slot.FlippedEnhancement.RelativeLevel > Enums.eEnhRelative.PlusFive))
+                    }
+
+                    if ((DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh].TypeID == Enums.eType.Normal) | (DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh].TypeID == Enums.eType.SpecialO) && (slot.FlippedEnhancement.RelativeLevel < Enums.eEnhRelative.None) | (slot.FlippedEnhancement.RelativeLevel > Enums.eEnhRelative.PlusFive))
+                    {
                         slot.FlippedEnhancement.RelativeLevel = MidsContext.Config.CalcEnhLevel;
+                    }
                 }
+            }
         }
 
         public bool SetEnhGrades(Enums.eEnhGrade newVal)
@@ -298,64 +303,77 @@ namespace Mids_Reborn.Core
 
             if (TopMostMessageBox(text, "Are you sure?", MessageBoxButtons.YesNo) != DialogResult.Yes)
                 return false;
+
             foreach (var power in Powers)
+            {
                 foreach (var slot in power.Slots)
                 {
-                    if (slot.Enhancement.Enh <= -1)
+                    int enhIndex = slot.Enhancement.Enh;
+
+                    // Skip if the slot is empty or not initialized
+                    if (enhIndex <= -1)
                         continue;
-                    switch (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].TypeID)
+
+                    var enhancement = DatabaseAPI.Database.Enhancements[enhIndex];
+
+                    switch (enhancement.TypeID)
                     {
                         case Enums.eType.InventO:
-                            var levelMin1 = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].LevelMin;
-                            var levelMax = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].LevelMax;
-                            if ((newVal >= levelMin1) & (newVal <= levelMax))
                             {
-                                slot.Enhancement.IOLevel = Enhancement.GranularLevelZb(newVal, levelMin1, levelMax);
+                                // Invention Origin enhancement: uses granular IO level based on allowed bounds
+                                int levelMin = enhancement.LevelMin;
+                                int levelMax = enhancement.LevelMax;
+
+                                // Clamp newVal to bounds and compute granular level
+                                if (newVal >= levelMin && newVal <= levelMax)
+                                {
+                                    slot.Enhancement.IOLevel = Enhancement.GranularLevelZb(newVal, levelMin, levelMax);
+                                }
+                                else if (newVal > levelMax)
+                                {
+                                    slot.Enhancement.IOLevel = Enhancement.GranularLevelZb(levelMax, levelMin, levelMax);
+                                }
+                                else // newVal < levelMin
+                                {
+                                    slot.Enhancement.IOLevel = Enhancement.GranularLevelZb(levelMin, levelMin, levelMax);
+                                }
+
                                 break;
                             }
 
-                            if (newVal > levelMax)
-                            {
-                                slot.Enhancement.IOLevel = Enhancement.GranularLevelZb(levelMax, levelMin1, levelMax);
-                                break;
-                            }
-
-                            if (newVal < levelMin1)
-                                slot.Enhancement.IOLevel = Enhancement.GranularLevelZb(levelMin1, levelMin1, levelMax);
-
-                            break;
                         case Enums.eType.SetO:
-                            var levelMin2 = DatabaseAPI.Database
-                                .EnhancementSets[DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet].LevelMin;
-                            var num = DatabaseAPI.Database
-                                .EnhancementSets[DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet].LevelMax;
-                            if (num > 49)
-                                num = 49;
-                            if ((newVal >= levelMin2) & (newVal <= num))
                             {
-                                slot.Enhancement.IOLevel = newVal;
+                                // Set enhancement: uses raw IO level clamped to bounds (no granularity logic)
+                                var set = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet];
+                                int levelMin = set.LevelMin;
+                                int levelMax = Math.Min(set.LevelMax, 49); // Level 50 enhancements are not valid for Sets
+
+                                // Clamp newVal to bounds
+                                if (newVal >= levelMin && newVal <= levelMax)
+                                {
+                                    slot.Enhancement.IOLevel = newVal;
+                                }
+                                else if (newVal > levelMax)
+                                {
+                                    slot.Enhancement.IOLevel = levelMax;
+                                }
+                                else // newVal < levelMin
+                                {
+                                    slot.Enhancement.IOLevel = levelMin;
+                                }
+
                                 break;
                             }
 
-                            if (newVal > num)
-                            {
-                                slot.Enhancement.IOLevel = num;
-                                break;
-                            }
-
-                            if (newVal < levelMin2) slot.Enhancement.IOLevel = levelMin2;
-
-                            break;
                         case Enums.eType.None:
-                            break;
                         case Enums.eType.Normal:
-                            break;
                         case Enums.eType.SpecialO:
-                            break;
+
                         default:
-                            throw new ArgumentOutOfRangeException();
+                            throw new ArgumentOutOfRangeException(nameof(enhancement.TypeID), $"Unhandled enhancement type: {enhancement.TypeID}");
                     }
                 }
+            }
 
             return true;
         }
@@ -614,7 +632,7 @@ namespace Mids_Reborn.Core
         }
 
         // https://stackoverflow.com/a/65888392
-        // frmMain.FloatTop(false) should be used here, but it is unreachable.
+        // MainWindow.FloatTop(false) should be used here, but it is unreachable.
         private DialogResult TopMostMessageBox(string msg, string title, MessageBoxButtons buttons = MessageBoxButtons.OK)
         {
             using var form = new Form { TopMost = true };
@@ -694,7 +712,15 @@ namespace Mids_Reborn.Core
                             }
                             else
                             {
-                                slot.Enhancement.IOLevel = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].CheckAndFixIOLevel(slot.Enhancement.IOLevel);
+                                var enh = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
+                                if (enh.TypeID is Enums.eType.SpecialO)
+                                {
+                                    slot.Enhancement.IOLevel = enh.GetFixedSpecialLevel(slot.Enhancement.IOLevel);
+                                }
+                                else
+                                {
+                                    slot.Enhancement.IOLevel = enh.CheckAndFixIOLevel(slot.Enhancement.IOLevel);
+                                }
                             }
                         }
 
@@ -709,8 +735,15 @@ namespace Mids_Reborn.Core
                         }
                         else
                         {
-                            slot.FlippedEnhancement.IOLevel = DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh]
-                                .CheckAndFixIOLevel(slot.FlippedEnhancement.IOLevel);
+                            var enh = DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh];
+                            if (enh.TypeID is Enums.eType.SpecialO)
+                            {
+                                slot.FlippedEnhancement.IOLevel = enh.GetFixedSpecialLevel(slot.FlippedEnhancement.IOLevel);
+                            }
+                            else
+                            {
+                                slot.FlippedEnhancement.IOLevel = enh.CheckAndFixIOLevel(slot.FlippedEnhancement.IOLevel);
+                            }
                         }
                     }
                     else
@@ -1027,7 +1060,7 @@ namespace Mids_Reborn.Core
         {
             for (var powerIdx = 0; powerIdx <= Powers.Count - 1; ++powerIdx)
             {
-                if (Powers[powerIdx]?.Power != null && Powers[powerIdx]?.Power.PowerIndex == nIDPower)
+                if (Powers[powerIdx]?.Power != null && Powers[powerIdx]?.Power?.PowerIndex == nIDPower)
                 {
                     return powerIdx;
                 }
@@ -1494,7 +1527,7 @@ namespace Mids_Reborn.Core
         public Enums.eMutex MutexV2(int hIdx, bool silent = false, bool doDetoggle = false)
         {
             Enums.eMutex eMutex;
-            if (hIdx < 0 || hIdx > Powers.Count || Powers[hIdx] == null || Powers[hIdx].Power == null)
+            if (hIdx < 0 || hIdx > Powers.Count || Powers[hIdx].Power == null)
             {
                 eMutex = Enums.eMutex.NoGroup;
             }
@@ -1529,22 +1562,19 @@ namespace Mids_Reborn.Core
                     }.Contains(power1.FullName);
                     foreach (var power2 in Powers)
                     {
-                        if (power2?.Power == null || power2.Power.PowerIndex == power1.PowerIndex)
-                        {
-                            continue;
-                        }
-
-                        if (!power2.StatInclude || power2.Power.MutexIgnore) continue;
+                        if (power2.Power == null || power2.Power.PowerIndex == power1.PowerIndex) continue;
+                        var power3 = power2.Power;
+                        if (!power2.StatInclude || power3.MutexIgnore) continue;
 
                         if (isKheldianShapeshift & (power2.Power.FullName.StartsWith("Temporary_Powers.Accolades.") | power2.Power.FullName.StartsWith("Incarnate.")))
                         {
                             continue;
                         }
 
-                        if (flag2 || (power2.Power.PowerType != Enums.ePowerType.Click || power2.Power.PowerName == "Light_Form") && power2.Power.HasMutexID(index1))
+                        if (flag2 || (power3.PowerType != Enums.ePowerType.Click || power3.PowerName == "Light_Form") && power3.HasMutexID(index1))
                         {
                             powerEntryList.Add(power2);
-                            if (power2.Power.MutexAuto)
+                            if (power3.MutexAuto)
                             {
                                 mutexAuto = true;
                             }
@@ -1553,18 +1583,11 @@ namespace Mids_Reborn.Core
                         {
                             foreach (var num1 in power1.NGroupMembership)
                             {
-                                foreach (var num2 in power2.Power.NGroupMembership)
+                                foreach (var num2 in power3.NGroupMembership)
                                 {
-                                    if (num1 != num2)
-                                    {
-                                        continue;
-                                    }
-
+                                    if (num1 != num2) continue;
                                     powerEntryList.Add(power2);
-                                    if (power2.Power.MutexAuto)
-                                    {
-                                        mutexAuto = true;
-                                    }
+                                    if (power3.MutexAuto) mutexAuto = true;
                                 }
                             }
                         }
@@ -1580,11 +1603,6 @@ namespace Mids_Reborn.Core
                     {
                         foreach (var powerEntry in powerEntryList)
                         {
-                            if (powerEntry == null)
-                            {
-                                continue;
-                            }
-
                             powerEntry.StatInclude = false;
                         }
 
@@ -1592,7 +1610,7 @@ namespace Mids_Reborn.Core
                     }
                     else
                     {
-                        if (doDetoggle && mutexAuto && Powers[hIdx]?.StatInclude == true)
+                        if (doDetoggle && mutexAuto && Powers[hIdx].StatInclude)
                         {
                             Powers[hIdx].StatInclude = false;
                         }

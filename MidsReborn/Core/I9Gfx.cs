@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
@@ -17,27 +16,30 @@ namespace Mids_Reborn.Core
 {
     public static class I9Gfx
     {
-        private const int IconLarge = 30;
+        private const int IconLarge = 128;
         private const int IconSmall = 16;
 
         private const string ImageFilter = "*.png";
-        private static List<ImageInfo> Images { get; set; }
+        private static List<ImageInfo> Images { get; set; } = [];
         private static bool Initialized { get; set; }
 
         public static int OriginIndex;
-        public static Bitmap[] Enhancements;
-        public static ExtendedBitmap Borders;
-        public static ExtendedBitmap Sets;
-        public static ExtendedBitmap Classes;
-        public static ExtendedBitmap SetTypes;
-        public static ExtendedBitmap EnhTypes;
-        public static ExtendedBitmap EnhGrades;
-        public static ExtendedBitmap EnhSpecials;
-        public static ExtendedBitmap Archetypes;
-        public static ExtendedBitmap Origins;
-        public static ExtendedBitmap Powersets;
-        public static ExtendedBitmap UnknownPowerset;
-        public static ExtendedBitmap UnknownArchetype;
+        public static Bitmap[]? Enhancements = [];
+        public static ExtendedBitmap Borders = new();
+        public static ExtendedBitmap Sets = new();
+        public static ExtendedBitmap Classes = new();
+        public static ExtendedBitmap SetTypes = new();
+        public static ExtendedBitmap EnhTypes = new();
+        public static ExtendedBitmap EnhGrades = new();
+        public static ExtendedBitmap EnhSpecials = new();
+        public static ExtendedBitmap Archetypes = new();
+        public static ExtendedBitmap Origins = new();
+        public static ExtendedBitmap Powersets = new();
+        public static ExtendedBitmap UnknownPowerset = new();
+        public static ExtendedBitmap UnknownArchetype = new();
+
+        public static Bitmap EmptySlot { get; private set; }
+        public static Bitmap NewSlot { get; private set; }
 
         private struct ImageInfo
         {
@@ -47,11 +49,37 @@ namespace Mids_Reborn.Core
             public bool IsBase { get; set; }
         }
 
-        private static string BaseImagePath => Path.Combine(AppContext.BaseDirectory, "Images");
+        private static string BaseImagePath => AppDataPaths.BaseAssetsPath;
 
         public static string ImagePath(string type = "")
         {
             return !string.IsNullOrWhiteSpace(type) ? Path.Combine(BaseImagePath, type) : BaseImagePath;
+        }
+
+        private static int GetDpiScaledSize(int logicalSize)
+        {
+            using var g = Graphics.FromHwnd(IntPtr.Zero);
+            float scale = g.DpiX / 96f;
+            return (int)(logicalSize * scale);
+        }
+
+        private static Bitmap ResizeTo(Bitmap original, int targetSizeLogical)
+        {
+            float scale = Graphics.FromHwnd(IntPtr.Zero).DpiX / 96f;
+            int targetSize = (int)(targetSizeLogical * scale);
+
+            if (original.Width == targetSize && original.Height == targetSize)
+            {
+                return new Bitmap(original); // shallow copy if needed
+            }
+
+            var result = new Bitmap(targetSize, targetSize);
+            result.SetResolution(original.HorizontalResolution, original.VerticalResolution);
+
+            using var g = Graphics.FromImage(result);
+            ConfigureGraphics(g);
+            g.DrawImage(original, 0, 0, targetSize, targetSize);
+            return result;
         }
 
         private static IEnumerable<ImageInfo> GetBaseImages()
@@ -73,11 +101,7 @@ namespace Mids_Reborn.Core
         private static IEnumerable<ImageInfo> GetExtendedImages(string? path)
         {
             var retList = new List<ImageInfo>();
-            if (path == null)
-            {
-                return retList;
-            }
-
+            if (path == null) return retList;
             var files = Directory.GetFiles(path, ImageFilter, SearchOption.AllDirectories).ToList();
             foreach (var file in files)
             {
@@ -89,19 +113,6 @@ namespace Mids_Reborn.Core
             }
 
             return retList;
-        }
-
-        private static ExtendedBitmap ExtendedBitmap(int x, int y)
-        {
-            var exBmp = new ExtendedBitmap(x, y);
-            exBmp.Graphics.CompositingMode = CompositingMode.SourceOver;
-            exBmp.Graphics.CompositingQuality = CompositingQuality.HighQuality;
-            exBmp.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            exBmp.Graphics.PageUnit = GraphicsUnit.Pixel;
-            exBmp.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            exBmp.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            exBmp.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            return exBmp;
         }
 
         public static void SetOrigin(string iOrigin)
@@ -134,6 +145,12 @@ namespace Mids_Reborn.Core
             var powersetImages = Images.Where(x => x.Directory == "Powersets").ToList();
             var setImages = Images.Where(x => x.Directory == "Sets").ToList();
 
+            var emptySlotPath = Images.FirstOrDefault(x => x.FileName.Equals("none.png", StringComparison.OrdinalIgnoreCase)).Path;
+            if (emptySlotPath != null) EmptySlot = new Bitmap(emptySlotPath);
+
+            var newSlotPath = Images.FirstOrDefault(x => x.FileName.Equals("newslot.png", StringComparison.OrdinalIgnoreCase)).Path;
+            if (newSlotPath != null) NewSlot = new Bitmap(newSlotPath);
+
             await LoadOriginImages(originImages);
             await LoadArchetypeImages(archetypeImages, baseImages);
             await LoadPowersetImages(powersetImages, baseImages);
@@ -144,25 +161,21 @@ namespace Mids_Reborn.Core
             await LoadEnhTypeImages(setImages, baseImages);
             await LoadEnhancementClassImages(classImages, baseImages);
 
+            GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: false);
             await Task.CompletedTask;
         }
 
-        public static async Task<List<string?>> LoadButtons()
+        public static List<string?> LoadButtons()
         {
-            var cSource = new TaskCompletionSource<List<string?>>();
-            var baseImages = Images.Where(x => x.IsBase).ToList();
-            var buttonImages = baseImages.Where(x => x.FileName.Contains("pSlot")).ToList();
-            var retList = buttonImages.Select(buttonImage => buttonImage.Path).ToList();
-            cSource.TrySetResult(retList);
-            return await cSource.Task;
+            return Images
+                .Where(x => x.IsBase && x.FileName.Contains("pSlot"))
+                .Select(x => x.Path)
+                .ToList();
         }
 
-        public static async Task<string?> LoadNewSlot()
+        public static string? LoadNewSlot()
         {
-            var cSource = new TaskCompletionSource<string?>();
-            var slotImage = Images.FirstOrDefault(x => x.FileName.Contains("New"));
-            cSource.TrySetResult(slotImage.Path);
-            return await cSource.Task;
+            return Images.FirstOrDefault(x => x.FileName.Contains("New")).Path;
         }
 
         public static Task<List<string>> LoadArchetypes()
@@ -267,10 +280,10 @@ namespace Mids_Reborn.Core
             return await cSource.Task;
         }
 
-        public static async Task<List<string>> LoadSets()
+        public static async Task<List<string?>> LoadSets()
         {
-            var cSource = new TaskCompletionSource<List<string>>();
-            var retList = new List<string>();
+            var cSource = new TaskCompletionSource<List<string?>>();
+            var retList = new List<string?>();
             var baseImages = Images.Where(x => x.IsBase).ToList();
             var enhancementImages = Images.Where(x => x.Directory == "Enhancements").ToList();
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
@@ -284,7 +297,7 @@ namespace Mids_Reborn.Core
                 }
                 retList.Add(path);
             }
-            
+
             for (var index = 0; index < retList.Count; index++)
             {
                 DatabaseAPI.Database.EnhancementSets[index].ImageIdx = index;
@@ -296,26 +309,29 @@ namespace Mids_Reborn.Core
 
         private static async Task LoadArchetypeImages(IReadOnlyCollection<ImageInfo> images, IEnumerable<ImageInfo> baseImages)
         {
-            var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
-            Archetypes = ExtendedBitmap(DatabaseAPI.Database.Classes.Length * IconSmall, IconSmall);
-            for (var index = 0; index < DatabaseAPI.Database.Classes.Length; index++)
-            {
-                var x = index * IconSmall;
-                var path = images.FirstOrDefault(i => i.FileName == $"{DatabaseAPI.Database.Classes[index].ClassName}.png").Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    path = unknown;
-                }
+            var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path ?? string.Empty;
+            int count = DatabaseAPI.Database.Classes.Length;
 
-                using var extendedBitmap = new ExtendedBitmap(path);
-                if ((extendedBitmap.Size.Height > IconSmall) | (extendedBitmap.Size.Width > IconSmall))
-                {
-                    Archetypes.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, IconSmall, IconSmall);
-                }
-                else
-                {
-                    Archetypes.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
-                }
+            var scaledSize = GetDpiScaledSize(IconSmall);
+
+            Archetypes = new ExtendedBitmap(count * scaledSize, scaledSize);
+            Archetypes.Graphics.CompositingMode = CompositingMode.SourceOver;
+            Archetypes.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+            Archetypes.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            Archetypes.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+            Archetypes.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+            Archetypes.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            for (var index = 0; index < count; index++)
+            {
+                var className = DatabaseAPI.Database.Classes[index].ClassName;
+                var path = images.FirstOrDefault(i => i.FileName == $"{className}.png").Path ?? unknown;
+
+                using var originalBitmap = new Bitmap(path);
+                using var resized = ResizeTo(originalBitmap, IconSmall);
+
+                int x = index * scaledSize;
+                Archetypes.Graphics.DrawImage(resized, x, 0, scaledSize, scaledSize);
             }
 
             UnknownArchetype = new ExtendedBitmap(unknown);
@@ -324,26 +340,28 @@ namespace Mids_Reborn.Core
 
         private static async Task LoadPowersetImages(IReadOnlyCollection<ImageInfo> images, IEnumerable<ImageInfo> baseImages)
         {
-            var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
-            Powersets = ExtendedBitmap(DatabaseAPI.Database.Powersets.Length * IconSmall, IconSmall);
-            for (var index = 0; index < DatabaseAPI.Database.Powersets.Length; index++)
-            {
-                var x = index * IconSmall;
-                var path = images.FirstOrDefault(i => i.FileName == DatabaseAPI.Database.Powersets[index].ImageName).Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    path = unknown;
-                }
+            var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path ?? string.Empty;
+            int count = DatabaseAPI.Database.Powersets.Length;
 
-                using var extendedBitmap = new ExtendedBitmap(path);
-                if ((extendedBitmap.Size.Height > IconSmall) | (extendedBitmap.Size.Width > IconSmall))
-                {
-                    Powersets.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, IconSmall, IconSmall);
-                }
-                else
-                {
-                    Powersets.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
-                }
+            var scaledSize = GetDpiScaledSize(IconSmall);
+            Powersets = new ExtendedBitmap(count * scaledSize, scaledSize);
+            Powersets.Graphics.CompositingMode = CompositingMode.SourceOver;
+            Powersets.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+            Powersets.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            Powersets.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+            Powersets.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+            Powersets.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            for (var index = 0; index < count; index++)
+            {
+                var ps = DatabaseAPI.Database.Powersets[index];
+                var path = images.FirstOrDefault(i => i.FileName == ps.ImageName).Path ?? unknown;
+
+                using var originalBitmap = new Bitmap(path);
+                using var resized = ResizeTo(originalBitmap, IconSmall);
+
+                int x = index * scaledSize;
+                Powersets.Graphics.DrawImage(resized, x, 0, scaledSize, scaledSize);
             }
 
             UnknownPowerset = new ExtendedBitmap(unknown);
@@ -352,62 +370,69 @@ namespace Mids_Reborn.Core
 
         private static async Task LoadOriginImages(IReadOnlyCollection<ImageInfo> images)
         {
-            Origins = ExtendedBitmap(DatabaseAPI.Database.Origins.Count * IconSmall, IconSmall);
-            for (var index = 0; index < DatabaseAPI.Database.Origins.Count; index++)
-            {
-                var x = index * IconSmall;
-                var path = images.FirstOrDefault(i => i.FileName.Contains(DatabaseAPI.Database.Origins[index].Name)).Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    continue;
-                }
+            int count = DatabaseAPI.Database.Origins.Count;
 
-                using var extendedBitmap = new ExtendedBitmap(path);
-                if ((extendedBitmap.Size.Height > IconSmall) | (extendedBitmap.Size.Width > IconSmall))
-                {
-                    Origins.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, IconSmall, IconSmall);
-                }
-                else
-                {
-                    Origins.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
-                }
+            var scaledSize = GetDpiScaledSize(IconSmall);
+            Origins = new ExtendedBitmap(count * scaledSize, scaledSize);
+            Origins.Graphics.CompositingMode = CompositingMode.SourceOver;
+            Origins.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+            Origins.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            Origins.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+            Origins.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+            Origins.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            for (int index = 0; index < count; index++)
+            {
+                var origin = DatabaseAPI.Database.Origins[index];
+                var path = images.FirstOrDefault(i => i.FileName.Contains(origin.Name)).Path;
+
+                if (string.IsNullOrWhiteSpace(path))
+                    continue;
+
+                using var originalBitmap = new Bitmap(path);
+                using var resized = ResizeTo(originalBitmap, IconSmall);
+
+                int x = index * scaledSize;
+                Origins.Graphics.DrawImage(resized, x, 0, scaledSize, scaledSize);
             }
+
             await Task.CompletedTask;
         }
 
         private static async Task LoadEnhancementClassImages(IReadOnlyCollection<ImageInfo> images, IReadOnlyCollection<ImageInfo> baseImages)
         {
-            var classImage = baseImages.FirstOrDefault(i => i.FileName == "Class.png").Path;
-            var incImage = baseImages.FirstOrDefault(i => i.FileName == "Inc.png").Path;
-            Classes = ExtendedBitmap(DatabaseAPI.Database.EnhancementClasses.Length * IconLarge, IconLarge);
-            var overlayBitmap = new ExtendedBitmap(classImage);
-            for (var index = 0; index < DatabaseAPI.Database.EnhancementClasses.Length; index++)
+            var classImagePath = baseImages.FirstOrDefault(i => i.FileName == "Class.png").Path;
+            var incImagePath = baseImages.FirstOrDefault(i => i.FileName == "Inc.png").Path;
+            int count = DatabaseAPI.Database.EnhancementClasses.Length;
+            var scaledSize = GetDpiScaledSize(IconLarge);
+
+            Classes = new ExtendedBitmap(count * scaledSize, scaledSize);
+            Classes.Graphics.CompositingMode = CompositingMode.SourceOver;
+            Classes.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+            Classes.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            Classes.Graphics.SmoothingMode = SmoothingMode.HighQuality;
+            Classes.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+            Classes.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            for (int index = 0; index < count; index++)
             {
-                if (index >= 27)
-                {
-                    overlayBitmap = new ExtendedBitmap(incImage);
-                }
+                string overlayPath = (index >= 27 ? incImagePath : classImagePath) ?? string.Empty;
+                using var overlayBitmap = new Bitmap(overlayPath);
+                using var resizedOverlay = ResizeTo(overlayBitmap, IconLarge);
 
-                var x = index * IconLarge;
-                var path = images.FirstOrDefault(i => i.FileName == $"{DatabaseAPI.Database.EnhancementClasses[index].ID}.png").Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
+                var classId = DatabaseAPI.Database.EnhancementClasses[index].ID;
+                var iconPath = images.FirstOrDefault(i => i.FileName == $"{classId}.png").Path;
+                if (string.IsNullOrWhiteSpace(iconPath))
                     continue;
-                }
 
-                using var extendedBitmap = new ExtendedBitmap(path);
-                Classes.Graphics.DrawImageUnscaled(overlayBitmap.Bitmap, x, 0);
-                if ((extendedBitmap.Size.Height > IconLarge) | (extendedBitmap.Size.Width > IconLarge))
-                {
-                    Classes.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, IconLarge, IconLarge);
-                }
-                else
-                {
-                    Classes.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
-                }
+                using var originalBitmap = new Bitmap(iconPath);
+                using var resized = ResizeTo(originalBitmap, IconLarge);
+
+                int x = index * scaledSize;
+                Classes.Graphics.DrawImage(resizedOverlay, x, 0, scaledSize, scaledSize);
+                Classes.Graphics.DrawImage(resized, x, 0, scaledSize, scaledSize);
             }
-            overlayBitmap.Dispose();
-            GC.Collect();
+
             await Task.CompletedTask;
         }
 
@@ -415,31 +440,31 @@ namespace Mids_Reborn.Core
         {
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             Enhancements = new Bitmap[DatabaseAPI.Database.Enhancements.Length];
-            for (var index = 0; index < DatabaseAPI.Database.Enhancements.Length; index++)
+
+            for (int index = 0; index < Enhancements.Length; index++)
             {
-                if (!string.IsNullOrWhiteSpace(DatabaseAPI.Database.Enhancements[index].Image))
+                var enh = DatabaseAPI.Database.Enhancements[index];
+
+                if (!string.IsNullOrWhiteSpace(enh.Image))
                 {
                     try
                     {
-                        var path = images.FirstOrDefault(i => i.FileName == DatabaseAPI.Database.Enhancements[index].Image).Path;
-                        if (string.IsNullOrWhiteSpace(path))
-                        {
-                            path = unknown;
-                        }
+                        var path = images.FirstOrDefault(i => i.FileName == enh.Image).Path ?? unknown;
 
-                        Enhancements[index] = new Bitmap(path);
+                        using var original = new Bitmap(path);
+                        Enhancements[index] = ResizeTo(original, IconLarge);
                     }
-                    catch (Exception)
+                    catch
                     {
                         Enhancements[index] = new Bitmap(IconLarge, IconLarge, PixelFormat.Format32bppArgb);
                     }
 
-                    DatabaseAPI.Database.Enhancements[index].ImageIdx = index;
+                    enh.ImageIdx = index;
                 }
                 else
                 {
                     Enhancements[index] = new Bitmap(IconLarge, IconLarge, PixelFormat.Format32bppArgb);
-                    DatabaseAPI.Database.Enhancements[index].ImageIdx = -1;
+                    enh.ImageIdx = -1;
                 }
 
                 if (index % 5 == 0)
@@ -447,197 +472,162 @@ namespace Mids_Reborn.Core
                     Application.DoEvents();
                 }
             }
+
             await Task.CompletedTask;
         }
 
         private static async Task LoadEnhancementSetImages(IReadOnlyCollection<ImageInfo> images, IEnumerable<ImageInfo> baseImages)
         {
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
-            Sets = ExtendedBitmap(DatabaseAPI.Database.EnhancementSets.Count * IconLarge, IconLarge);
-            for (var index = 0; index < DatabaseAPI.Database.EnhancementSets.Count; index++)
+            int count = DatabaseAPI.Database.EnhancementSets.Count;
+
+            var scaledSize = GetDpiScaledSize(IconLarge);
+            Sets = new ExtendedBitmap(count * scaledSize, scaledSize);
+            ConfigureGraphics(Sets.Graphics);
+
+            for (int index = 0; index < count; index++)
             {
-                var x = index * IconLarge;
-                var path = images.FirstOrDefault(i => i.FileName == DatabaseAPI.Database.EnhancementSets[index].Image).Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    path = unknown;
-                }
+                var enhSet = DatabaseAPI.Database.EnhancementSets[index];
+                var path = images.FirstOrDefault(i => i.FileName == enhSet.Image).Path ?? unknown;
 
-                using var extendedBitmap = new ExtendedBitmap(path);
-                var size = extendedBitmap.Size;
-                int num;
-                if (size.Height <= 30)
-                {
-                    size = extendedBitmap.Size;
-                    num = size.Width <= 30 ? 1 : 0;
-                }
-                else
-                {
-                    num = 0;
-                }
+                using var original = new Bitmap(path);
+                using var resized = ResizeTo(original, IconLarge);
 
-                if (num == 0)
-                {
-                    Sets.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, 30, 30);
-                }
-                else
-                {
-                    Sets.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
-                }
-                
+                int x = index * scaledSize;
+                Sets.Graphics.DrawImage(resized, x, 0, scaledSize, scaledSize);
             }
+
             await Task.CompletedTask;
         }
 
         private static async Task LoadSetTypeImages(IReadOnlyCollection<ImageInfo> images, IEnumerable<ImageInfo> baseImages)
         {
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
-
             var setTypes = DatabaseAPI.Database.SetTypes;
-            SetTypes = ExtendedBitmap(setTypes.Count * IconLarge, IconLarge);
-            for (var index = 0; index < setTypes.Count; index++)
-            {
-                var x = index * IconLarge;
-                var path = images.FirstOrDefault(i => i.FileName == $"{setTypes[index].ShortName}.png").Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    path = unknown;
-                }
+            int count = setTypes.Count;
+            int scaledSize = GetDpiScaledSize(IconLarge);
 
-                using var extendedBitmap = new ExtendedBitmap(path);
-                var size = extendedBitmap.Size;
-                var num1 = size.Height > IconLarge ? 1 : 0;
-                size = extendedBitmap.Size;
-                var num2 = size.Width > IconLarge ? 1 : 0;
-                if ((num1 | num2) != 0)
-                {
-                    SetTypes.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, IconLarge, IconLarge);
-                }
-                else
-                {
-                    SetTypes.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
-                }
+            SetTypes = new ExtendedBitmap(count * scaledSize, scaledSize);
+            ConfigureGraphics(SetTypes.Graphics);
+
+            for (int index = 0; index < count; index++)
+            {
+                var shortName = setTypes[index].ShortName;
+                var path = images.FirstOrDefault(i => i.FileName == $"{shortName}.png").Path ?? unknown;
+
+                using var original = new Bitmap(path);
+                using var resized = ResizeTo(original, IconLarge);
+
+                int x = index * scaledSize;
+                SetTypes.Graphics.DrawImage(resized, x, 0, scaledSize, scaledSize);
             }
+
             await Task.CompletedTask;
         }
 
         private static async Task LoadEnhTypeImages(IReadOnlyCollection<ImageInfo> images, IEnumerable<ImageInfo> baseImages)
         {
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
-            var values1 = Enum.GetValues(typeof(Enums.eType));
-            var names1 = Enum.GetNames(typeof(Enums.eType));
-            names1[3] = "HamiO";
-            EnhTypes = ExtendedBitmap(values1.Length * IconLarge, IconLarge);
-            for (var index = 0; index < values1.Length; index++)
-            {
-                var x = index * IconLarge;
-                var path = images.FirstOrDefault(i => i.FileName == $"{names1[index]}.png").Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    path = unknown;
-                }
 
-                using var extendedBitmap = new ExtendedBitmap(path);
-                var size = extendedBitmap.Size;
-                var num1 = size.Height > IconLarge ? 1 : 0;
-                size = extendedBitmap.Size;
-                var num2 = size.Width > IconLarge ? 1 : 0;
-                if ((num1 | num2) != 0)
-                {
-                    EnhTypes.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, IconLarge, IconLarge);
-                }
-                else
-                {
-                    EnhTypes.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
-                }
+            // --- Enhancement Types (Enums.eType) ---
+            var typeNames = Enum.GetNames(typeof(Enums.eType));
+            //typeNames[3] = "HamiO"; // fix name override
+            int scaledSize = GetDpiScaledSize(IconLarge);
+
+            EnhTypes = new ExtendedBitmap(typeNames.Length * scaledSize, scaledSize);
+            ConfigureGraphics(EnhTypes.Graphics);
+
+            for (int index = 0; index < typeNames.Length; index++)
+            {
+                var fileName = $"{typeNames[index]}.png";
+                var path = images.FirstOrDefault(i => i.FileName == fileName).Path ?? unknown;
+
+                using var original = new Bitmap(path);
+                using var resized = ResizeTo(original, IconLarge);
+
+                int x = index * scaledSize;
+                EnhTypes.Graphics.DrawImage(resized, x, 0, scaledSize, scaledSize);
             }
 
-            var values2 = Enum.GetValues(typeof(Enums.eEnhGrade));
-            var names2 = Enum.GetNames(typeof(Enums.eEnhGrade));
-            EnhGrades = ExtendedBitmap(values2.Length * IconLarge, IconLarge);
-            for (var index = 0; index < values2.Length; index++)
-            {
-                var x = index * IconLarge;
-                var path = images.FirstOrDefault(i => i.FileName == $"{names2[index]}.png").Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    path = unknown;
-                }
+            // --- Enhancement Grades (Enums.eEnhGrade) ---
+            var gradeNames = Enum.GetNames(typeof(Enums.eEnhGrade));
+            EnhGrades = new ExtendedBitmap(gradeNames.Length * scaledSize, scaledSize);
+            ConfigureGraphics(EnhGrades.Graphics);
 
-                using var extendedBitmap = new ExtendedBitmap(path);
-                var size = extendedBitmap.Size;
-                var num1 = size.Height > IconLarge ? 1 : 0;
-                size = extendedBitmap.Size;
-                var num2 = size.Width > IconLarge ? 1 : 0;
-                if ((num1 | num2) != 0)
-                {
-                    EnhGrades.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, IconLarge, IconLarge);
-                }
-                else
-                {
-                    EnhGrades.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
-                }
+            for (int index = 0; index < gradeNames.Length; index++)
+            {
+                var path = images.FirstOrDefault(i => i.FileName == $"{gradeNames[index]}.png").Path ?? unknown;
+
+                using var original = new Bitmap(path);
+                using var resized = ResizeTo(original, IconLarge);
+
+                int x = index * scaledSize;
+                EnhGrades.Graphics.DrawImage(resized, x, 0, scaledSize, scaledSize);
             }
 
-            // var values3 = Enum.GetValues(typeof(Enums.eSubtype));
-            //var names3 = Enum.GetNames(typeof(Enums.eSubtype));
+            // --- Special Enhancements (e.g., "Magic", "Mutant", etc.) ---
+            var specialEnhancements = DatabaseAPI.Database.SpecialEnhancements;
+            var specNames = specialEnhancements.Select(x => x.Name.Replace(" Origin", string.Empty)).ToArray();
 
-            var specialEnhTypes = DatabaseAPI.Database.SpecialEnhancements;
-            var specEnhNames = specialEnhTypes.Select(x => x.Name.Replace(" Origin", string.Empty)).ToArray();
-            EnhSpecials = ExtendedBitmap(specialEnhTypes.Count * IconLarge, IconLarge);
-            for (var index = 0; index < specialEnhTypes.Count; index++)
+            EnhSpecials = new ExtendedBitmap(specNames.Length * scaledSize, scaledSize);
+            ConfigureGraphics(EnhSpecials.Graphics);
+
+            for (int index = 0; index < specNames.Length; index++)
             {
-                var x = index * IconLarge;
-                var path = images.FirstOrDefault(i => i.FileName == $"{specEnhNames[index]}.png").Path;
-                if (string.IsNullOrWhiteSpace(path))
-                {
-                    path = unknown;
-                }
+                var path = images.FirstOrDefault(i => i.FileName == $"{specNames[index]}.png").Path ?? unknown;
 
-                using var extendedBitmap = new ExtendedBitmap(path);
-                var size = extendedBitmap.Size;
-                var num1 = size.Height > IconLarge ? 1 : 0;
-                size = extendedBitmap.Size;
-                var num2 = size.Width > IconLarge ? 1 : 0;
-                if ((num1 | num2) != 0)
-                {
-                    EnhSpecials.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0, IconLarge, IconLarge);
-                }
-                else
-                {
-                    EnhSpecials.Graphics.DrawImage(extendedBitmap.Bitmap, x, 0);
-                }
+                using var original = new Bitmap(path);
+                using var resized = ResizeTo(original, IconLarge);
+
+                int x = index * scaledSize;
+                EnhSpecials.Graphics.DrawImage(resized, x, 0, scaledSize, scaledSize);
             }
+
             await Task.CompletedTask;
         }
 
         private static async Task LoadBorderImages(IReadOnlyCollection<ImageInfo> images)
         {
-            Borders = ExtendedBitmap(DatabaseAPI.Database.Origins.Count * IconLarge, 180);
-            for (var index = 0; index < DatabaseAPI.Database.Origins.Count; index++)
-            {
-                var x = index * IconLarge;
-                for (var index2 = 0; index2 <= 5; ++index2)
-                {
-                    var path = images.FirstOrDefault(i => i.FileName == $"{DatabaseAPI.Database.Origins[index].Grades[index2]}.png").Path;
-                    if (string.IsNullOrWhiteSpace(path))
-                    {
-                        continue;
-                    }
+            var origins = DatabaseAPI.Database.Origins;
+            int originCount = origins.Count;
+            int gradeCount = 6;
 
-                    using var extendedBitmap = new ExtendedBitmap(path);
-                    if ((extendedBitmap.Size.Height > IconLarge) | (extendedBitmap.Size.Width > IconLarge))
-                    {
-                        Borders.Graphics.DrawImage(extendedBitmap.Bitmap, x, IconLarge * index2, IconLarge, IconLarge);
-                    }
-                    else
-                    {
-                        Borders.Graphics.DrawImage(extendedBitmap.Bitmap, x, IconLarge * index2);
-                    }
+            var scaledSize = GetDpiScaledSize(IconLarge);
+            Borders = new ExtendedBitmap(originCount * scaledSize, gradeCount * scaledSize);
+            ConfigureGraphics(Borders.Graphics);
+
+            for (int originIndex = 0; originIndex < originCount; originIndex++)
+            {
+                int x = originIndex * IconLarge;
+
+                for (int gradeIndex = 0; gradeIndex <= 5; gradeIndex++) // explicitly match original
+                {
+                    string fileName = origins[originIndex].Grades[gradeIndex];
+                    var path = images.FirstOrDefault(i => i.FileName == $"{fileName}.png").Path;
+
+                    if (string.IsNullOrWhiteSpace(path))
+                        continue;
+
+                    using var original = new Bitmap(path);
+                    using var resized = ResizeTo(original, IconLarge);
+
+                    int y = gradeIndex * scaledSize;
+                    Borders.Graphics.DrawImage(resized, x, y, scaledSize, scaledSize);
                 }
             }
 
             await Task.CompletedTask;
+        }
+
+
+        private static void ConfigureGraphics(Graphics g)
+        {
+            g.CompositingMode = CompositingMode.SourceOver;
+            g.CompositingQuality = CompositingQuality.HighQuality;
+            g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            g.SmoothingMode = SmoothingMode.HighQuality;
+            g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
         }
 
         public static Image GetArchetypeImage(IPower power)
@@ -768,12 +758,12 @@ namespace Mids_Reborn.Core
 
         public static string GetDbEnhancementsPath()
         {
-            return Path.Combine(MidsContext.Config.DataPath, "Images\\Enhancements");
+            return Path.Combine(MidsContext.Config.DataPath, "Assets\\Enhancements");
         }
 
         public static string GetDbPowerSetsPath()
         {
-            return Path.Combine(MidsContext.Config.DataPath, "Images\\Powersets");
+            return Path.Combine(MidsContext.Config.DataPath, "Assets\\Powersets");
         }
 
         public static string GetOriginsPath()
@@ -784,13 +774,16 @@ namespace Mids_Reborn.Core
         public static void DrawFlippingEnhancement(ref Graphics iTarget, Rectangle iDest, float iSize, int iImageIndex, Origin.Grade iGrade)
         {
             var iDest1 = iDest;
-            iDest1.Width = (int) (iDest1.Width * (double) iSize);
+            iDest1.Width = (int)(iDest1.Width * (double)iSize);
             iDest1.X += (iDest.Width - iDest1.Width) / 2;
             DrawEnhancementAt(ref iTarget, iDest1, iImageIndex, iGrade);
         }
 
         public static void DrawEnhancement(ref Graphics iTarget, int iImageIndex, Origin.Grade iGrade)
         {
+            int size = GetDpiScaledSize(IconLarge);
+            var srcRect = new RectangleF(0f, 0f, size, size);
+
             iTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
             iTarget.CompositingMode = CompositingMode.SourceOver;
             iTarget.CompositingQuality = CompositingQuality.HighQuality;
@@ -798,55 +791,41 @@ namespace Mids_Reborn.Core
             iTarget.SmoothingMode = SmoothingMode.HighQuality;
             iTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             iTarget.PageUnit = GraphicsUnit.Pixel;
+
             iTarget.DrawImage(Borders.Bitmap, iTarget.ClipBounds, GetOverlayRectF(iGrade), GraphicsUnit.Pixel);
-            iTarget.DrawImage(Enhancements[iImageIndex], iTarget.ClipBounds, new RectangleF(0.0f, 0.0f, 30f, 30f), GraphicsUnit.Pixel);
+            iTarget.DrawImage(Enhancements[iImageIndex], iTarget.ClipBounds, srcRect, GraphicsUnit.Pixel);
         }
 
         public static void DrawEnhancementAt(ref Graphics iTarget, Rectangle iDest, int iImageIndex, Origin.Grade iGrade, ImageAttributes imageAttributes)
         {
-            if (iDest.Width > 30)
-            {
-                iDest.Width = 30;
-            }
+            int scaledSize = GetDpiScaledSize(IconLarge);
 
-            if (iDest.Height > 30)
-            {
-                iDest.Height = 30;
-            }
+            if (iDest.Width > scaledSize)
+                iDest.Width = scaledSize;
 
-            if ((iImageIndex < 0) | (iImageIndex >= Enhancements.Length))
-            {
+            if (iDest.Height > scaledSize)
+                iDest.Height = scaledSize;
+
+            if (iImageIndex < 0 || iImageIndex >= Enhancements.Length)
                 return;
-            }
 
-            var graphics = iTarget;
-            var bitmap = Borders.Bitmap;
-            var destRect = iDest;
-            var overlayRect = GetOverlayRect(iGrade);
-            var x = overlayRect.X;
-            overlayRect = GetOverlayRect(iGrade);
-            var y = overlayRect.Y;
-            var imageAttr = imageAttributes;
-            graphics.DrawImage(bitmap, destRect, x, y, 30, 30, GraphicsUnit.Pixel, imageAttr);
-            iTarget.DrawImage(Enhancements[iImageIndex], iDest, 0, 0, 30, 30, GraphicsUnit.Pixel, imageAttributes);
+            Rectangle overlayRect = GetOverlayRect(iGrade);
+            iTarget.DrawImage(Borders.Bitmap, iDest, overlayRect.X, overlayRect.Y, scaledSize, scaledSize, GraphicsUnit.Pixel, imageAttributes);
+            iTarget.DrawImage(Enhancements[iImageIndex], iDest, 0, 0, scaledSize, scaledSize, GraphicsUnit.Pixel, imageAttributes);
         }
 
         public static void DrawEnhancementAt(ref Graphics iTarget, Rectangle iDest, int iImageIndex, Origin.Grade iGrade)
         {
-            if (iDest.Width > 30)
-            {
-                iDest.Width = 30;
-            }
+            int scaledSize = GetDpiScaledSize(IconLarge);
 
-            if (iDest.Height > 30)
-            {
-                iDest.Height = 30;
-            }
+            if (iDest.Width > scaledSize)
+                iDest.Width = scaledSize;
+
+            if (iDest.Height > scaledSize)
+                iDest.Height = scaledSize;
 
             if (iImageIndex < 0 || iImageIndex >= Enhancements.Length)
-            {
                 return;
-            }
 
             iTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
             iTarget.CompositingMode = CompositingMode.SourceOver;
@@ -855,8 +834,9 @@ namespace Mids_Reborn.Core
             iTarget.SmoothingMode = SmoothingMode.HighQuality;
             iTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             iTarget.PageUnit = GraphicsUnit.Pixel;
+
             iTarget.DrawImage(Borders.Bitmap, iDest, GetOverlayRect(iGrade), GraphicsUnit.Pixel);
-            iTarget.DrawImage(Enhancements[iImageIndex], iDest, new Rectangle(0, 0, 30, 30), GraphicsUnit.Pixel);
+            iTarget.DrawImage(Enhancements[iImageIndex], iDest, new Rectangle(0, 0, scaledSize, scaledSize), GraphicsUnit.Pixel);
         }
 
         public static void DrawEnhancementSet(ref Graphics iTarget, int iImageIndex)
@@ -883,7 +863,8 @@ namespace Mids_Reborn.Core
                 iGrade = Origin.Grade.HO;
             }
 
-            return new Rectangle(OriginIndex * 30, (int) iGrade * 30, 30, 30);
+            int size = GetDpiScaledSize(IconLarge);
+            return new Rectangle(OriginIndex * size, (int)iGrade * size, size, size);
         }
 
         private static RectangleF GetOverlayRectF(Origin.Grade iGrade)
@@ -894,7 +875,8 @@ namespace Mids_Reborn.Core
 
         public static Rectangle GetImageRect(int index)
         {
-            return new Rectangle(index * 30, 0, 30, 30);
+            int size = GetDpiScaledSize(IconLarge);
+            return new Rectangle(index * size, 0, size, size);
         }
 
         private static RectangleF GetImageRectF(int index)

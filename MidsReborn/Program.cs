@@ -1,7 +1,4 @@
-﻿using System;
-using System.Globalization;
-using System.Threading;
-using System.Windows.Forms;
+﻿using System.Globalization;
 using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn
@@ -12,15 +9,15 @@ namespace Mids_Reborn
         ///     The main entry point for the application.
         /// </summary>
         [STAThread]
-        private static void Main(string[] args)
+        static void Main(string[] args)
         {
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
-            Application.EnableVisualStyles();
-            Application.SetCompatibleTextRenderingDefault(false);
-            Application.SetHighDpiMode(HighDpiMode.DpiUnawareGdiScaled);
+
             Fonts.BuildFontCollection();
             StrapUpdater.Run();
+
+            ApplicationConfiguration.Initialize();
             Application.Run(new MrbAppContext(args));
         }
     }

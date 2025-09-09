@@ -22,50 +22,50 @@ namespace Mids_Reborn.Core.Base.Display
         public struct StringValue
         {
             public string Text;
-            public Color tColor;
-            public float tSize;
-            public FontStyle tFormat;
-            public int tIndent;
+            public Color Color;
+            public float Size;
+            public FontStyle Format;
+            public int Indent;
             public string TextColumn;
-            public Color tColorColumn;
+            public Color ColorColumn;
 
             public bool HasColumn => !string.IsNullOrEmpty(TextColumn);
         }
 
         public class Section
         {
-            public StringValue[] Content;
+            public StringValue[]? Content;
 
             public void Add(string iText, Color iColor, float iSize = 1f, FontStyle iFormat = FontStyle.Bold, int iIndent = 0)
             {
-                Content ??= Array.Empty<StringValue>();
+                Content ??= [];
                 Array.Resize(ref Content, Content.Length + 1);
                 Content[^1].Text = iText;
-                Content[^1].tColor = iColor;
-                Content[^1].tSize = iSize;
-                Content[^1].tFormat = iFormat;
-                Content[^1].tIndent = iIndent;
+                Content[^1].Color = iColor;
+                Content[^1].Size = iSize;
+                Content[^1].Format = iFormat;
+                Content[^1].Indent = iIndent;
                 Content[^1].TextColumn = "";
-                Content[^1].tColorColumn = iColor;
+                Content[^1].ColorColumn = iColor;
             }
 
             public void Add(string iText, Color iColor, string iColumnText, Color iColumnColor, float iSize = 1f, FontStyle iFormat = FontStyle.Bold, int iIndent = 0)
             {
-                Content ??= Array.Empty<StringValue>();
+                Content ??= [];
                 Array.Resize(ref Content, Content.Length + 1);
                 Content[^1].Text = iText;
-                Content[^1].tColor = iColor;
-                Content[^1].tSize = iSize;
-                Content[^1].tFormat = iFormat;
-                Content[^1].tIndent = iIndent;
+                Content[^1].Color = iColor;
+                Content[^1].Size = iSize;
+                Content[^1].Format = iFormat;
+                Content[^1].Indent = iIndent;
                 Content[^1].TextColumn = iColumnText;
-                Content[^1].tColorColumn = iColumnColor;
+                Content[^1].ColorColumn = iColumnColor;
             }
         }
 
         public struct PopupData
         {
-            public Section[] Sections;
+            public Section[]? Sections;
             private float _columnPosition;
 
             private bool _rightAlignColumn;
@@ -93,12 +93,12 @@ namespace Mids_Reborn.Core.Base.Display
                 }
             }
 
-            public int Add(Section section = null)
+            public int Add(Section? section = null)
             {
-                Sections ??= Array.Empty<Section>();
+                Sections ??= [];
                 section ??= new Section
                 {
-                    Content = Array.Empty<StringValue>()
+                    Content = []
                 };
                 Array.Resize(ref Sections, Sections.Length + 1);
                 Sections[^1] = section;
@@ -108,17 +108,17 @@ namespace Mids_Reborn.Core.Base.Display
             public void Init()
             {
                 var index1 = Add();
-                Sections[index1].Add("Popup Information", Colors.Title, 1.25f);
-                Sections[index1].Add("This is just an example string. It should wrap around if it gets too long, and not cause too many issues.", Colors.Text);
-                Sections[index1].Add("This is a second string added as an additional content structure within the section.", Colors.Disabled);
+                Sections?[index1].Add("Popup Information", Colors.Title, 1.25f);
+                Sections?[index1].Add("This is just an example string. It should wrap around if it gets too long, and not cause too many issues.", Colors.Text);
+                Sections?[index1].Add("This is a second string added as an additional content structure within the section.", Colors.Disabled);
                 var index2 = Add();
-                Sections[index2].Add("Second Section", Colors.Title);
-                Sections[index2].Add("Columns follow this item:", Colors.Text);
-                Sections[index2].Add("Column 1", Colors.Text, "Column 2", Colors.Invention, 0.9f, FontStyle.Bold, 1);
-                Sections[index2].Add("Column 1a", Colors.Text, "Column 2a", Colors.Invention, 0.9f, FontStyle.Bold, 1);
-                Sections[index2].Add("Column 1b", Colors.Text, "Column 2b", Colors.Invention, 0.9f, FontStyle.Bold, 1);
-                Sections[index2].Add("Page from the Malleus mundi", Colors.Text, "1", Colors.Invention, 0.9f, FontStyle.Bold, 1);
-                Sections[index2].Add("Extra long column list item 1234567890", Colors.Text, "1", Colors.Invention, 0.9f, FontStyle.Bold, 1);
+                Sections?[index2].Add("Second Section", Colors.Title);
+                Sections?[index2].Add("Columns follow this item:", Colors.Text);
+                Sections?[index2].Add("Column 1", Colors.Text, "Column 2", Colors.Invention, 0.9f, FontStyle.Bold, 1);
+                Sections?[index2].Add("Column 1a", Colors.Text, "Column 2a", Colors.Invention, 0.9f, FontStyle.Bold, 1);
+                Sections?[index2].Add("Column 1b", Colors.Text, "Column 2b", Colors.Invention, 0.9f, FontStyle.Bold, 1);
+                Sections?[index2].Add("Page from the Malleus mundi", Colors.Text, "1", Colors.Invention, 0.9f, FontStyle.Bold, 1);
+                Sections?[index2].Add("Extra long column list item 1234567890", Colors.Text, "1", Colors.Invention, 0.9f, FontStyle.Bold, 1);
             }
         }
     }

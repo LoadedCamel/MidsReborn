@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
-using Mids_Reborn.Controls;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.UI.Controls;
 
 namespace Mids_Reborn.Core
 {
@@ -105,17 +105,6 @@ namespace Mids_Reborn.Core
             public override string ToString()
             {
                 return $"<EnhancedMagSum> {{Base: {Base}, Enhanced: {Enhanced}}}";
-            }
-        }
-
-        private struct DelayedVector
-        {
-            public string Vector;
-            public float Delay;
-
-            public override string ToString()
-            {
-                return $"<DelayedVector> {{Vector: {Vector}, Delay: {Delay}}}";
             }
         }
 
@@ -234,9 +223,9 @@ namespace Mids_Reborn.Core
         /// <returns>Ranked effect index</returns>
         public int GetRankedEffectIndex(IEnumerable<int> rankedEffects, int index)
         {
-            return IncludedEffects.Count <= 0
-                ? -1
-                : rankedEffects.TryFindIndex(e => e == IncludedEffects[index]);
+            if (IncludedEffects.Count <= 0) return -1;
+
+            return rankedEffects.TryFindIndex(e => e == IncludedEffects[index]);
         }
 
         /// <summary>
@@ -251,20 +240,7 @@ namespace Mids_Reborn.Core
         }
 
         /// <summary>
-        /// Get matching effects from IncludedEffects
-        /// </summary>
-        /// <param name="power">Source power</param>
-        /// <returns>Power effects from IncludedEffects indices</returns>
-        public List<IEffect> GetEffects(IPower power)
-        {
-            return IncludedEffects
-                .Where(e => (e >= 0) & (e < power.Effects.Length))
-                .Select(e => power.Effects[e])
-                .ToList();
-        }
-
-        /// <summary>
-        /// Get matching effect from an effect index (in power effects)
+        /// Get mathing effect from an effect index (in power effects)
         /// </summary>
         /// <param name="power">Source power</param>
         /// <param name="index">Effect index</param>
@@ -281,20 +257,20 @@ namespace Mids_Reborn.Core
         private static List<Enums.eDamage> GetAllDefensesEx()
         {
             return DatabaseAPI.RealmUsesToxicDef()
-                ?
-                [
+                ? new List<Enums.eDamage>
+                {
                     Enums.eDamage.None,
                     Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
                     Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Toxic,
                     Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
-                ]
-                :
-                [
+                }
+                : new List<Enums.eDamage>
+                {
                     Enums.eDamage.None,
                     Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
                     Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
                     Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
-                ];
+                };
         }
 
         /// <summary>
@@ -304,18 +280,18 @@ namespace Mids_Reborn.Core
         private static List<Enums.eDamage> GetAllDefenses()
         {
             return DatabaseAPI.RealmUsesToxicDef()
-                ?
-                [
+                ? new List<Enums.eDamage>
+                {
                     Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
                     Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Toxic,
                     Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
-                ]
-                :
-                [
+                }
+                : new List<Enums.eDamage>
+                {
                     Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
                     Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
                     Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
-                ];
+                };
         }
 
         /// <summary>
@@ -324,7 +300,10 @@ namespace Mids_Reborn.Core
         /// <returns>List of position defense vectors.</returns>
         private static List<Enums.eDamage> GetPositionDefenses()
         {
-            return [Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE];
+            return new List<Enums.eDamage>
+            {
+                Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
+            };
         }
 
         /// <summary>
@@ -871,366 +850,6 @@ namespace Mids_Reborn.Core
         }
 
         /// <summary>
-        /// Compact display of a list of vectors
-        /// Defense, Elusivity, Resistance and Mez will show stat(All) when possible
-        /// </summary>
-        /// <remarks>Behavior unknown with Elusivity, Resistance and Mez</remarks>
-        /// <param name="vectors">List of vectors, as DelayedVector structs</param>
-        /// <returns>Compact form of the list of vectors</returns>
-        private static List<DelayedVector> CompactVectorsList(IReadOnlyList<DelayedVector> vectors, Enums.eEffectType effectType, Enums.eEffectType etModifies)
-        {
-            // Defense
-            var allDefensesEx = GetAllDefensesEx()
-                .ToDictionary(e => $"{e} Defense", _ => -1);
-
-            var allDefenses = GetAllDefenses()
-                .ToDictionary(e => $"{e} Defense", _ => -1);
-
-            var positionDefenses = GetPositionDefenses()
-                .ToDictionary(e => $"{e} Defense", _ => -1);
-
-            var typedDefenses = GetTypedDefenses()
-                .ToDictionary(e => $"{e} Defense", _ => -1);
-
-            // Elusivity
-            var allElusivity = GetAllDefenses()
-                .ToDictionary(e => $"{e} Elusivity", _ => -1);
-
-            var positionElusivity = GetPositionDefenses()
-                .ToDictionary(e => $"{e} Elusivity", _ => -1);
-
-            var typedElusivity = GetTypedDefenses()
-                .ToDictionary(e => $"{e} Elusivity", _ => -1);
-
-            // Resistance
-            var allResistances = GetAllResistances()
-                .ToDictionary(e => $"{e} Resistance", _ => -1);
-
-            // Mez
-            var allMez = GetAllMez()
-                .ToDictionary(e => $"{e}", _ => -1);
-
-            var keyNameFound = "";
-            for (var i = 0; i < vectors.Count; i++)
-            {
-                if (allDefensesEx.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    allDefensesEx[keyNameFound] = i;
-                }
-
-                if (allDefenses.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    allDefenses[keyNameFound] = i;
-                }
-
-                if (positionDefenses.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    positionDefenses[keyNameFound] = i;
-                }
-
-                if (typedDefenses.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    typedDefenses[keyNameFound] = i;
-                }
-
-                //////////////////////
-
-                if (allElusivity.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    allElusivity[keyNameFound] = i;
-                }
-
-                if (positionElusivity.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    positionElusivity[keyNameFound] = i;
-                }
-
-                if (typedElusivity.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    typedElusivity[keyNameFound] = i;
-                }
-
-                //////////////////////
-
-                if (allResistances.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    allResistances[keyNameFound] = i;
-                }
-
-                //////////////////////
-
-                if (allMez.ContainsKey(vectors[i].Vector))
-                {
-                    allMez[vectors[i].Vector] = i;
-                }
-            }
-
-            var ignoredVectors = new List<int>();
-            var cVectors = new List<DelayedVector>();
-
-            switch (effectType)
-            {
-                case Enums.eEffectType.Defense:
-                case Enums.eEffectType.Enhancement when etModifies == Enums.eEffectType.Defense:
-                    if (allDefensesEx.All(e => e.Value >= 0))
-                    {
-                        cVectors.Add(new DelayedVector { Vector = "Defense(All)", Delay = vectors[0].Delay });
-                        ignoredVectors.AddRangeUnique(allDefensesEx.Values.ToList());
-                    }
-                    else if (allDefenses.All(e => e.Value >= 0))
-                    {
-                        cVectors.Add(new DelayedVector { Vector = "Defense(All)", Delay = vectors[0].Delay });
-                        ignoredVectors.AddRangeUnique(allDefenses.Values.ToList());
-                    }
-                    else if (positionDefenses.All(e => e.Value >= 0))
-                    {
-                        cVectors.Add(new DelayedVector { Vector = "Defense(All positions)", Delay = vectors[0].Delay });
-                        ignoredVectors.AddRangeUnique(positionDefenses.Values.ToList());
-                    }
-                    else if (typedDefenses.All(e => e.Value >= 0))
-                    {
-                        cVectors.Add(new DelayedVector { Vector = "Defense(All types)", Delay = vectors[0].Delay });
-                        ignoredVectors.AddRangeUnique(typedDefenses.Values.ToList());
-                    }
-                    else if (typedDefenses.Count(e => e.Value >= 0) == typedDefenses.Count - 1)
-                    {
-                        var diff = typedDefenses.Select(e => e.Key).Except(vectors.Select(e => e.Vector.EndsWith(" Defense") ? e.Vector : $"{e.Vector} Defense")).First();
-                        cVectors.Add(new DelayedVector { Vector = $"Defense(All types but {diff.Replace(" Defense", "")})", Delay = vectors[0].Delay });
-                        ignoredVectors.AddRangeUnique(typedDefenses.Where(e => e.Value >= 0).Select(e => e.Value).ToList());
-                    }
-
-                    break;
-
-                case Enums.eEffectType.Elusivity:
-                case Enums.eEffectType.Enhancement when etModifies == Enums.eEffectType.Elusivity:
-                    if (allElusivity.All(e => e.Value >= 0))
-                    {
-                        cVectors.Add(new DelayedVector { Vector = "Elusivity(All)", Delay = vectors[0].Delay });
-                        ignoredVectors.AddRangeUnique(allElusivity.Values.ToList());
-                    }
-                    else if (positionElusivity.All(e => e.Value >= 0))
-                    {
-                        cVectors.Add(new DelayedVector { Vector = "Elusivity(All positions)", Delay = vectors[0].Delay });
-                        ignoredVectors.AddRangeUnique(positionElusivity.Values.ToList());
-                    }
-                    else if (typedElusivity.All(e => e.Value >= 0))
-                    {
-                        cVectors.Add(new DelayedVector { Vector = "Elusivity(All types)", Delay = vectors[0].Delay });
-                        ignoredVectors.AddRangeUnique(typedElusivity.Values.ToList());
-                    }
-                    else if (typedElusivity.Count(e => e.Value >= 0) == typedElusivity.Count - 1)
-                    {
-                        var diff = typedElusivity.Select(e => e.Key).Except(vectors.Select(e => e.Vector.EndsWith(" Elusivity") ? e.Vector : $"{e.Vector} Elusivity")).First();
-                        cVectors.Add(new DelayedVector { Vector = $"Elusivity(All types but {diff.Replace(" Elusivity", "")})", Delay = vectors[0].Delay });
-                        ignoredVectors.AddRangeUnique(typedElusivity.Where(e => e.Value >= 0).Select(e => e.Value).ToList());
-                    }
-
-                    break;
-
-                case Enums.eEffectType.Resistance:
-                case Enums.eEffectType.Enhancement when etModifies == Enums.eEffectType.Resistance:
-                    if (allResistances.All(e => e.Value >= 0))
-                    {
-                        cVectors.Add(new DelayedVector { Vector = "Resistance(All)", Delay = vectors[0].Delay });
-                        ignoredVectors.AddRangeUnique(allResistances.Values.ToList());
-                    }
-                    else if (allResistances.Count(e => e.Value >= 0) == allResistances.Count - 1)
-                    {
-                        var diff = allResistances.Select(e => e.Key).Except(vectors.Select(e => e.Vector.EndsWith(" Resistance") ? e.Vector : $"{e.Vector} Resistance")).First();
-                        cVectors.Add(new DelayedVector { Vector = $"Resistance(All but {diff.Replace(" Resistance", "")})", Delay = vectors[0].Delay });
-                        ignoredVectors.AddRangeUnique(allResistances.Where(e => e.Value >= 0).Select(e => e.Value).ToList());
-                    }
-
-                    break;
-
-                case Enums.eEffectType.Mez:
-                case Enums.eEffectType.Enhancement when etModifies == Enums.eEffectType.Mez:
-                    if (allMez.All(e => e.Value >= 0))
-                    {
-                        cVectors.Add(new DelayedVector { Vector = "Mez", Delay = vectors[0].Delay });
-                        ignoredVectors.AddRangeUnique(allMez.Values.ToList());
-                    }
-
-                    break;
-            }
-
-            cVectors.AddRange(vectors.Where((_, i) => !ignoredVectors.Contains(i)));
-
-            // Run pass 2 for multi-effect enhancements
-            return CompactVectorsList(cVectors);
-        }
-
-        private static List<DelayedVector> CompactVectorsList(IReadOnlyList<DelayedVector> vectors)
-        {
-            // Defense
-            var allDefensesEx = GetAllDefensesEx()
-                .ToDictionary(e => $"{e} Defense", _ => -1);
-
-            var allDefenses = GetAllDefenses()
-                .ToDictionary(e => $"{e} Defense", _ => -1);
-
-            var positionDefenses = GetPositionDefenses()
-                .ToDictionary(e => $"{e} Defense", _ => -1);
-
-            var typedDefenses = GetTypedDefenses()
-                .ToDictionary(e => $"{e} Defense", _ => -1);
-
-            // Elusivity
-            var allElusivity = GetAllDefenses()
-                .ToDictionary(e => $"{e} Elusivity", _ => -1);
-
-            var positionElusivity = GetPositionDefenses()
-                .ToDictionary(e => $"{e} Elusivity", _ => -1);
-
-            var typedElusivity = GetTypedDefenses()
-                .ToDictionary(e => $"{e} Elusivity", _ => -1);
-
-            // Resistance
-            var allResistances = GetAllResistances()
-                .ToDictionary(e => $"{e} Resistance", _ => -1);
-
-            // Mez
-            var allMez = GetAllMez()
-                .ToDictionary(e => $"{e}", _ => -1);
-
-            var keyNameFound = "";
-            for (var i = 0; i < vectors.Count; i++)
-            {
-                if (allDefensesEx.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    allDefensesEx[keyNameFound] = i;
-                }
-
-                if (allDefenses.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    allDefenses[keyNameFound] = i;
-                }
-
-                if (positionDefenses.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    positionDefenses[keyNameFound] = i;
-                }
-
-                if (typedDefenses.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    typedDefenses[keyNameFound] = i;
-                }
-
-                //////////////////////
-
-                if (allElusivity.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    allElusivity[keyNameFound] = i;
-                }
-
-                if (positionElusivity.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    positionElusivity[keyNameFound] = i;
-                }
-
-                if (typedElusivity.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    typedElusivity[keyNameFound] = i;
-                }
-
-                //////////////////////
-
-                if (allResistances.ContainsKeyPrefix(vectors[i].Vector, ref keyNameFound))
-                {
-                    allResistances[keyNameFound] = i;
-                }
-
-                //////////////////////
-
-                if (allMez.ContainsKey(vectors[i].Vector))
-                {
-                    allMez[vectors[i].Vector] = i;
-                }
-            }
-
-            var ignoredVectors = new List<int>();
-            var cVectors = new List<DelayedVector>();
-
-            // Defense, Enhancement(Defense)
-            if (allDefensesEx.All(e => e.Value >= 0))
-            {
-                cVectors.Add(new DelayedVector { Vector = "Defense(All)", Delay = vectors[0].Delay });
-                ignoredVectors.AddRangeUnique(allDefensesEx.Values.ToList());
-            }
-            else if (allDefenses.All(e => e.Value >= 0))
-            {
-                cVectors.Add(new DelayedVector { Vector = "Defense(All)", Delay = vectors[0].Delay });
-                ignoredVectors.AddRangeUnique(allDefenses.Values.ToList());
-            }
-            else if (positionDefenses.All(e => e.Value >= 0))
-            {
-                cVectors.Add(new DelayedVector { Vector = "Defense(All positions)", Delay = vectors[0].Delay });
-                ignoredVectors.AddRangeUnique(positionDefenses.Values.ToList());
-            }
-            else if (typedDefenses.All(e => e.Value >= 0))
-            {
-                cVectors.Add(new DelayedVector { Vector = "Defense(All types)", Delay = vectors[0].Delay });
-                ignoredVectors.AddRangeUnique(typedDefenses.Values.ToList());
-            }
-            else if (typedDefenses.Count(e => e.Value >= 0) == typedDefenses.Count - 1)
-            {
-                var diff = typedDefenses.Select(e => e.Key)
-                    .Except(vectors.Select(e => e.Vector.EndsWith(" Defense") ? e.Vector : $"{e.Vector} Defense")).First();
-                cVectors.Add(new DelayedVector { Vector = $"Defense(All types but {diff.Replace(" Defense", "")}", Delay = vectors[0].Delay });
-                ignoredVectors.AddRangeUnique(typedDefenses.Where(e => e.Value >= 0).Select(e => e.Value).ToList());
-            }
-
-            // Elusivity, Enhancement(Elusivity)
-            if (allElusivity.All(e => e.Value >= 0))
-            {
-                cVectors.Add(new DelayedVector { Vector = "Elusivity(All)", Delay = vectors[0].Delay });
-                ignoredVectors.AddRangeUnique(allElusivity.Values.ToList());
-            }
-            else if (positionElusivity.All(e => e.Value >= 0))
-            {
-                cVectors.Add(new DelayedVector { Vector = "Elusivity(All positions)", Delay = vectors[0].Delay });
-                ignoredVectors.AddRangeUnique(positionElusivity.Values.ToList());
-            }
-            else if (typedElusivity.All(e => e.Value >= 0))
-            {
-                cVectors.Add(new DelayedVector { Vector = "Elusivity(All types)", Delay = vectors[0].Delay });
-                ignoredVectors.AddRangeUnique(typedElusivity.Values.ToList());
-            }
-            else if (typedElusivity.Count(e => e.Value >= 0) == typedElusivity.Count - 1)
-            {
-                var diff = typedElusivity.Select(e => e.Key)
-                    .Except(vectors.Select(e => e.Vector.EndsWith(" Elusivity") ? e.Vector : $"{e.Vector} Elusivity")).First();
-                cVectors.Add(new DelayedVector { Vector = $"Elusivity(All types but {diff.Replace(" Elusivity", "")}", Delay = vectors[0].Delay });
-                ignoredVectors.AddRangeUnique(typedElusivity.Where(e => e.Value >= 0).Select(e => e.Value).ToList());
-            }
-
-            // Resistance, Enhancement(Resistance)
-            if (allResistances.All(e => e.Value >= 0))
-            {
-                cVectors.Add(new DelayedVector { Vector = "Resistance(All)", Delay = vectors[0].Delay });
-                ignoredVectors.AddRangeUnique(allResistances.Values.ToList());
-            }
-            else if (allResistances.Count(e => e.Value >= 0) == allResistances.Count - 1)
-            {
-                var diff = allResistances.Select(e => e.Key)
-                    .Except(vectors.Select(e => e.Vector.EndsWith(" Resistance") ? e.Vector : $"{e.Vector} Resistance")).First();
-                cVectors.Add(new DelayedVector { Vector = $"Resistance(All but {diff.Replace(" Resistance", "")}", Delay = vectors[0].Delay });
-                ignoredVectors.AddRangeUnique(allResistances.Where(e => e.Value >= 0).Select(e => e.Value).ToList());
-            }
-
-            // Mez, Enhancement(Mez)
-            if (allMez.All(e => e.Value >= 0))
-            {
-                cVectors.Add(new DelayedVector { Vector = "Mez", Delay = vectors[0].Delay });
-                ignoredVectors.AddRangeUnique(allMez.Values.ToList());
-            }
-
-            cVectors.AddRange(vectors.Where((_, i) => !ignoredVectors.Contains(i)));
-
-            return cVectors;
-        }
-
-        /// <summary>
         /// Change sign of a numeric value, as a string.
         /// </summary>
         /// <param name="value">Input value (string)</param>
@@ -1238,29 +857,6 @@ namespace Mids_Reborn.Core
         private static string InvertStringValue(string value)
         {
             return value.StartsWith('-') ? value[1..] : $"-{value}";
-        }
-
-        /// <summary>
-        /// float.TryParse() wrapper
-        /// </summary>
-        /// <param name="value">String value</param>
-        /// <param name="defaultValue">Value to return if failed to parse</param>
-        /// <returns>Parsed value, as float, or defaultValue if failed</returns>
-        private static float ParseFloat(string value, float defaultValue = 0)
-        {
-            var ret = float.TryParse(value, out var fNum);
-
-            return ret ? fNum : defaultValue;
-        }
-
-        /// <summary>
-        /// Test if an effect index is part of the included effects
-        /// </summary>
-        /// <param name="idx">Effect index</param>
-        /// <returns>True if index is member of IncludedEffects, false otherwise</returns>
-        public bool ContainsFxIndex(int idx)
-        {
-            return IncludedEffects.Contains(idx);
         }
 
         /// <summary>
@@ -1274,7 +870,6 @@ namespace Mids_Reborn.Core
             var vectors = "";
             var statName = GetStatName(power);
             var groupedVector = GetGroupedVector(statName);
-            var numDelays = 1;
 
             if (!string.IsNullOrEmpty(groupedVector))
             {
@@ -1282,47 +877,47 @@ namespace Mids_Reborn.Core
             }
             else
             {
-                var uniqueVectors = new List<DelayedVector>();
+                var uniqueVectors = new List<string>();
                 var vectorsChunks = power.Effects[IncludedEffects[0]].EffectType switch
                 {
                     Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning => IncludedEffects
-                            .Select(e => new DelayedVector { Vector = $"{power.Effects[e].EffectType}", Delay = power.Effects[e].DelayedTime })
+                            .Select(e => $"{power.Effects[e].EffectType}")
                             .ToList(),
 
                     Enums.eEffectType.Mez or Enums.eEffectType.MezResist => IncludedEffects
-                        .Select(e => new DelayedVector { Vector = $"{power.Effects[e].MezType}", Delay = power.Effects[e].DelayedTime })
+                        .Select(e => $"{power.Effects[e].MezType}") // Cannot use .Cast<string>()
                         .ToList(),
 
                     Enums.eEffectType.Enhancement when
                         power.Effects[IncludedEffects[0]].ETModifies is Enums.eEffectType.Mez
                             or Enums.eEffectType.MezResist => !string.IsNullOrEmpty(groupedVector)
-                            ? [new DelayedVector { Vector = $"{groupedVector}", Delay = power.Effects[IncludedEffects[0]].DelayedTime }]
+                            ? [$"{groupedVector}"]
                             : IncludedEffects
-                                .Select(e => new DelayedVector { Vector = $"{power.Effects[e].MezType}", Delay = power.Effects[e].DelayedTime })
+                                .Select(e => $"{power.Effects[e].MezType}")
                                 .ToList(),
 
                     Enums.eEffectType.Enhancement =>
                         power.Effects[IncludedEffects[0]].ETModifies is Enums.eEffectType.Defense
                             or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity &&
                         !string.IsNullOrEmpty(groupedVector)
-                            ? [new DelayedVector { Vector = $"{groupedVector} {power.Effects[IncludedEffects[0]].ETModifies}", Delay = power.Effects[IncludedEffects[0]].DelayedTime }]
+                            ? [$"{groupedVector} {power.Effects[IncludedEffects[0]].ETModifies}"]
                             : IncludedEffects
                                 .Select(e =>
                                     power.Effects[e].ETModifies is Enums.eEffectType.Defense
                                         or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity
-                                        ? new DelayedVector { Vector = $"{power.Effects[e].DamageType} {power.Effects[e].ETModifies}", Delay = power.Effects[e].DelayedTime }
-                                        : new DelayedVector { Vector = $"{power.Effects[e].ETModifies}", Delay = power.Effects[e].DelayedTime })
+                                        ? $"{power.Effects[e].DamageType} {power.Effects[e].ETModifies}"
+                                        : $"{power.Effects[e].ETModifies}")
                                 .ToList(),
 
                     Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity
                         or Enums.eEffectType.DamageBuff => !string.IsNullOrEmpty(groupedVector)
-                            ? [new DelayedVector { Vector = $"{power.Effects[IncludedEffects[0]].EffectType}({groupedVector})", Delay = power.Effects[IncludedEffects[0]].DelayedTime }]
+                            ? [$"{power.Effects[IncludedEffects[0]].EffectType}({groupedVector})"]
                             : IncludedEffects
-                                .Select(e => new DelayedVector { Vector = $"{power.Effects[e].DamageType}", Delay = power.Effects[e].DelayedTime })
+                                .Select(e => $"{power.Effects[e].DamageType}")
                                 .ToList(),
 
                     Enums.eEffectType.ResEffect => IncludedEffects
-                        .Select(e => new DelayedVector { Vector = $"{power.Effects[e].ETModifies}", Delay = power.Effects[e].DelayedTime })
+                        .Select(e => $"{power.Effects[e].ETModifies}")
                         .ToList(),
 
                     _ => []
@@ -1330,52 +925,24 @@ namespace Mids_Reborn.Core
 
                 uniqueVectors.AddRangeUnique(vectorsChunks);
                 uniqueVectors = CompactVectorsList(uniqueVectors, power.Effects[IncludedEffects[0]].EffectType, power.Effects[IncludedEffects[0]].ETModifies);
-                vectors = string.Join(", ", uniqueVectors.Select(e => e.Vector));
-                numDelays = Math.Max(1, uniqueVectors.Select(e => e.Delay).Distinct().Count()); // Some effect types can return count == 0
+                vectors = string.Join(", ", uniqueVectors);
             }
 
             // Change stat name inside effect string with list of vectors
             // Use the first effect of the group as base
-            var refEffect = power.Effects[IncludedEffects[0]];
-            var sameKindBuff = IncludedEffects.Select(e => power.Effects[e]).All(e =>
-                (e.EffectType == refEffect.EffectType) & (e.DamageType == refEffect.DamageType) &
-                (e.MezType == refEffect.MezType) & (e.ETModifies == refEffect.ETModifies));
-
-            var maxRange = (IsAggregated &
-                           (IncludedEffects.Count > 1) &
-                           IncludedEffects
+            var maxRange = IsAggregated & IncludedEffects.Count > 1 & IncludedEffects
                 .Select(e => power.Effects[e].BuffedMag)
-                .Any(e => e != power.Effects[IncludedEffects[0]].BuffedMag)) |
-                           (numDelays > 1) | sameKindBuff
+                .Any(e => e != power.Effects[IncludedEffects[0]].BuffedMag)
                 ? IncludedEffects.Count
                 : 1; // Will completely hide tooltip if set to zero
 
-            var altList = new List<int>();
-            var delaysDict = new Dictionary<int, string>();
-            if (numDelays <= 1)
-            {
-                var fxStrings = IncludedEffects
-                    .Select(e => power.Effects[e].BuildEffectString(simple, "", false, false, false, simple, false, true))
-                    .ToList();
-
-                delaysDict = fxStrings
-                    .Select((e, i) => new KeyValuePair<int, string>(i, Regex.IsMatch(e, @"after ([0-9\.]+) (delay|second)") ? Regex.Match(e, @"after ([0-9]\.) (delay|second)").Groups[1].Value : "0"))
-                    .DistinctBy(e => e.Value)
-                    .ToDictionary(e => e.Key, e => e.Value);
-
-                altList = delaysDict.Keys.ToList();
-            }
-
-            var useAltList = altList.Count > 0 && delaysDict.Any(e => ParseFloat(e.Value) > 0);
             var tip = "";
-            for (var i = 0; i < (useAltList ? altList.Count : maxRange); i++)
+            for (var i = 0; i < maxRange; i++)
             {
-                var index = useAltList ? altList[i] : i;
-
-                var baseEffectString = power.Effects[IncludedEffects[index]]
+                var baseEffectString = power.Effects[IncludedEffects[i]]
                     .BuildEffectString(simple, "", false, false, false, simple, false, true);
 
-                var fxTip = power.Effects[IncludedEffects[index]].EffectType switch
+                var fxTip = power.Effects[IncludedEffects[i]].EffectType switch
                 {
                     Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning =>
                         statName == "Slow"
@@ -1385,28 +952,29 @@ namespace Mids_Reborn.Core
                             : Regex.Replace(baseEffectString, @"(SpeedFlying|SpeedJumping|SpeedRunning)", vectors),
 
                     Enums.eEffectType.Mez or Enums.eEffectType.MezResist => baseEffectString.Replace(
-                        $"{power.Effects[IncludedEffects[index]].EffectType}({power.Effects[IncludedEffects[index]].MezType})",
-                        $"{power.Effects[IncludedEffects[index]].EffectType}({vectors})"),
+                        $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].MezType})",
+                        $"{power.Effects[IncludedEffects[i]].EffectType}({vectors})"),
 
-                    Enums.eEffectType.Enhancement when power.Effects[IncludedEffects[index]].ETModifies is Enums.eEffectType.Mez
+                    Enums.eEffectType.Enhancement when power.Effects[IncludedEffects[i]].ETModifies is Enums.eEffectType
+                            .Mez
                         or Enums.eEffectType.MezResist => baseEffectString.Replace(
-                        $"{power.Effects[IncludedEffects[index]].EffectType}({power.Effects[IncludedEffects[index]].MezType})",
-                        $"{power.Effects[IncludedEffects[index]].EffectType}({(vectors == "All" && power.Effects[IncludedEffects[index]].ETModifies == Enums.eEffectType.Mez ? "Mez" : vectors)})"),
+                        $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].MezType})",
+                        $"{power.Effects[IncludedEffects[i]].EffectType}({(vectors == "All" && power.Effects[IncludedEffects[i]].ETModifies == Enums.eEffectType.Mez ? "Mez" : vectors)})"),
 
                     Enums.eEffectType.Enhancement when
-                        power.Effects[IncludedEffects[index]].ETModifies is Enums.eEffectType.Defense
+                        power.Effects[IncludedEffects[i]].ETModifies is Enums.eEffectType.Defense
                             or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity => baseEffectString.Replace(
-                            $"{power.Effects[IncludedEffects[index]].EffectType}({power.Effects[IncludedEffects[index]].DamageType} {power.Effects[IncludedEffects[index]].ETModifies})",
-                            $"{power.Effects[IncludedEffects[index]].EffectType}({vectors}{(power.Effects[IncludedEffects[^1]].ETModifies is Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity && vectors.Contains("All") ? $" {power.Effects[IncludedEffects[^1]].ETModifies}" : "")})"),
+                            $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].DamageType} {power.Effects[IncludedEffects[i]].ETModifies})",
+                            $"{power.Effects[IncludedEffects[i]].EffectType}({vectors}{(power.Effects[IncludedEffects[^1]].ETModifies is Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity && vectors.Contains("All") ? $" {power.Effects[IncludedEffects[^1]].ETModifies}" : "")})"),
 
                     Enums.eEffectType.Enhancement or Enums.eEffectType.ResEffect => baseEffectString.Replace(
-                        $"{power.Effects[IncludedEffects[index]].EffectType}({power.Effects[IncludedEffects[index]].ETModifies})",
-                        $"{power.Effects[IncludedEffects[index]].EffectType}({vectors})"),
+                        $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].ETModifies})",
+                        $"{power.Effects[IncludedEffects[i]].EffectType}({vectors})"),
 
                     Enums.eEffectType.Resistance or Enums.eEffectType.Defense or Enums.eEffectType.Elusivity
                         or Enums.eEffectType.DamageBuff => baseEffectString.Replace(
-                            $"{power.Effects[IncludedEffects[index]].EffectType}({power.Effects[IncludedEffects[index]].DamageType})",
-                            $"{power.Effects[IncludedEffects[index]].EffectType}({vectors})"),
+                            $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].DamageType})",
+                            $"{power.Effects[IncludedEffects[i]].EffectType}({vectors})"),
 
                     Enums.eEffectType.SilentKill => baseEffectString.Replace("SilentKill", "Self-Destructs")
                         .Replace(" in ", " after ")
@@ -1915,10 +1483,7 @@ namespace Mids_Reborn.Core
             foreach (var gre in groupedRankedEffects)
             {
                 var greIndex = gre.GetRankedEffectIndex(rankedEffects, 0);
-                if (greIndex < 0)
-                {
-                    continue;
-                }
+                if (greIndex < 0) continue;
 
                 var rankedEffect = FastItemBuilder.GetRankedEffect(rankedEffects.ToArray(), greIndex, pBase, pEnh);
                 FinalizeListItem(ref rankedEffect, pBase, pEnh, gre, rankedEffects[greIndex], powerInBuild, displayBlockFontSize);
@@ -2151,20 +1716,6 @@ namespace Mids_Reborn.Core
                     .Select(e => e >= 0 && e < power.Effects.Length ? GetPowerEffectAt(power, e).BuffedMag : 0)
                     .All(e => e < 0);
 
-            var refEffect = GetEffectAt(power);
-            var fx = IncludedEffects.Select(e => power.Effects[e]);
-            if (fx.All(e => e.EffectType == refEffect.EffectType && e.MezType == refEffect.MezType && e.ETModifies == refEffect.ETModifies && e.DamageType == refEffect.DamageType))
-            {
-                return allNegEnh | !ignoreNegs
-                    ? IncludedEffects
-                        .Select(e => GetPowerEffectAt(power, e).BuffedMag)
-                        .Sum()
-                    : IncludedEffects
-                        .Select(e => GetPowerEffectAt(power, e).BuffedMag)
-                        .Where(e => e > 0)
-                        .Sum();
-            }
-
             if (GetEffectAt(power).EffectType is Enums.eEffectType.Defense
                 or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity or Enums.eEffectType.Mez
                 or Enums.eEffectType.MezResist or Enums.eEffectType.ResEffect or Enums.eEffectType.Enhancement)
@@ -2218,8 +1769,8 @@ namespace Mids_Reborn.Core
                         or Enums.eEffectType.JumpHeight)
                     {
                         if (!greList[i].FxIdentifier.Equals(greList[j].FxIdentifier) |
-                            (greList[i].EnhancementEffect != greList[j].EnhancementEffect) |
-                            (greList[i].SpecialCase != greList[j].SpecialCase))
+                            greList[i].EnhancementEffect != greList[j].EnhancementEffect |
+                            greList[i].SpecialCase != greList[j].SpecialCase)
                         {
                             continue;
                         }
@@ -2227,9 +1778,9 @@ namespace Mids_Reborn.Core
                     else
                     {
                         if (!greList[i].FxIdentifier.Equals(greList[j].FxIdentifier) |
-                            (Math.Abs(greList[i].Mag - greList[j].Mag) > float.Epsilon) |
-                            (greList[i].EnhancementEffect != greList[j].EnhancementEffect) |
-                            (greList[i].SpecialCase != greList[j].SpecialCase))
+                            Math.Abs(greList[i].Mag - greList[j].Mag) > float.Epsilon |
+                            greList[i].EnhancementEffect != greList[j].EnhancementEffect |
+                            greList[i].SpecialCase != greList[j].SpecialCase)
                         {
                             continue;
                         }
@@ -2249,7 +1800,7 @@ namespace Mids_Reborn.Core
         {
             var gre = (GroupedFx)Clone();
             gre.IncludedEffects = gre.IncludedEffects
-                .Where(e => (e >= 0) & (e < power.Effects.Length))
+                .Where(e => e >= 0 & e < power.Effects.Length)
                 .ToList();
 
             return gre;
@@ -2274,7 +1825,6 @@ namespace Mids_Reborn.Core
             var effectSource = gre.GetEffectAt(pEnh);
             var effectType = gre.EffectType;
             var greTooltip = gre.GetTooltip(pEnh);
-
             var magSum = effectType is Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
                 or Enums.eEffectType.SpeedRunning or Enums.eEffectType.JumpHeight
                 ? gre.GetMagSum(pEnh, false)
@@ -2284,24 +1834,21 @@ namespace Mids_Reborn.Core
                 ? gre.CropIncludedEffects(pBase).GetMagSum(pBase, false)
                 : gre.CropIncludedEffects(pBase).GetMagSum(pBase);
 
-            var sameKindBuff = gre.IncludedEffects.Select(e => pEnh.Effects[e]).All(e =>
-                (e.EffectType == effectSource.EffectType) & (e.DamageType == effectSource.DamageType) &
-                (e.MezType == effectSource.MezType) & (e.ETModifies == effectSource.ETModifies));
-
-            var mezDurationDiff = (effectType == Enums.eEffectType.Mez) & (Math.Abs(
+            var mezDurationDiff = effectType == Enums.eEffectType.Mez & Math.Abs(
                 (effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].Duration : 0) -
-                (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].Duration : 0)) > float.Epsilon);
+                (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].Duration : 0)) > float.Epsilon;
             
             var magDiff = false;
             var buffedMagDiff = false;
             if (pEnh.Effects[effectIndex].Buffable)
             {
-                 magDiff = (Math.Abs((effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].BuffedMag : 0) -
-                                     (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].BuffedMag : 0)) > float.Epsilon) |
-                          (Math.Abs(magSum - baseMagSum) > float.Epsilon) |
+                 magDiff = Math.Abs((effectIndex < pBase.Effects.Length ? pBase.Effects[effectIndex].BuffedMag : 0) -
+                                   (effectIndex < pEnh.Effects.Length ? pEnh.Effects[effectIndex].BuffedMag : 0)) > float.Epsilon |
+                          Math.Abs(magSum - baseMagSum) > float.Epsilon |
                           mezDurationDiff;
                  buffedMagDiff = effectIndex < pEnh.Effects.Length &&
-                                 Math.Abs(pEnh.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].Mag) > float.Epsilon;
+                                 Math.Abs(pEnh.Effects[effectIndex].BuffedMag - pEnh.Effects[effectIndex].Mag) >
+                                 float.Epsilon;
             }
             else
             {
@@ -2309,14 +1856,14 @@ namespace Mids_Reborn.Core
                 var fxSourceAlt = gre.IncludedEffects
                     .Select(e => indexedFx[e])
                     .DefaultIfEmpty(new KeyValuePair<int, IEffect>(-1, new Effect()))
-                    .FirstOrDefault(e => e.Value.Buffable & (e.Key < pBase.Effects.Length))
+                    .FirstOrDefault(e => e.Value.Buffable & e.Key < pBase.Effects.Length)
                     .Key;
 
                 if (fxSourceAlt >= 0)
                 {
-                    magDiff = (Math.Abs((fxSourceAlt < pBase.Effects.Length ? pBase.Effects[fxSourceAlt].BuffedMag : 0) -
-                                        (fxSourceAlt < pEnh.Effects.Length ? pEnh.Effects[fxSourceAlt].BuffedMag : 0)) > float.Epsilon) |
-                              (Math.Abs(magSum - baseMagSum) > float.Epsilon) |
+                    magDiff = Math.Abs((fxSourceAlt < pBase.Effects.Length ? pBase.Effects[fxSourceAlt].BuffedMag : 0) -
+                                       (fxSourceAlt < pEnh.Effects.Length ? pEnh.Effects[fxSourceAlt].BuffedMag : 0)) > float.Epsilon |
+                              Math.Abs(magSum - baseMagSum) > float.Epsilon |
                               mezDurationDiff;
                     buffedMagDiff = fxSourceAlt < pEnh.Effects.Length &&
                                     Math.Abs(pEnh.Effects[fxSourceAlt].BuffedMag - pEnh.Effects[fxSourceAlt].Mag) >
@@ -2441,8 +1988,8 @@ namespace Mids_Reborn.Core
                         var subEffectsTip = string.Join("\r\n",
                             DatabaseAPI.Database.Power[effectSource.nSummon].Effects
                                 .Where(e => (e.PvMode == Enums.ePvX.Any ||
-                                             (e.PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE ||
-                                             (e.PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE) &
+                                             e.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE ||
+                                             e.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE) &
                                             (e.ActiveConditionals.Count <= 0 || e.ValidateConditional()))
                                 .Select(e => e.BuildEffectString(false, "", false, false, false, false, false, true)
                                     .Replace("\r\n", "\n").Replace("\n", " -- ").Replace("  ", " ")));
@@ -2473,7 +2020,7 @@ namespace Mids_Reborn.Core
                         ? "Defiance"
                         : FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                             Enums.GetEffectNameShort(effectSource.EffectType));
-                    rankedEffect.Value = $"{effectSource.BuffedMag * 100:###0.##}%{toWhoShort}";
+                    rankedEffect.Value = $"{effectSource.BuffedMag * 100:###0.##}%";
                     rankedEffect.ToolTip = isDefiance
                         ? effectSource.BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
                         : greTooltip;
@@ -2492,27 +2039,15 @@ namespace Mids_Reborn.Core
                         };
                     }
 
-                    var minDuration = gre.IncludedEffects.Select(e => pEnh.Effects[e].Duration).Min();
-                    var maxDuration = gre.IncludedEffects.Select(e => pEnh.Effects[e].Duration).Max();
-                    var minMaxDuration = Math.Abs(minDuration - maxDuration) > float.Epsilon
-                        ? $"{(minDuration > 0 ? $"{minDuration:###0.##}s" : "Up to")} {maxDuration:###0.##}s"
-                        : $"{maxDuration:###0.##}s";
                     rankedEffect.Value = effectSource.ToWho switch
                     {
-                        Enums.eToWho.Target when !sameKindBuff => effectSource.MezType is Enums.eMez.Knockback or Enums.eMez.Knockup
+                        Enums.eToWho.Target => effectSource.MezType is Enums.eMez.Knockback or Enums.eMez.Knockup
                             or Enums.eMez.Teleport
                             ? $"{effectSource.BuffedMag:###0.##} (Tgt)"
                             : $"{effectSource.Duration:###0.##}s (Mag {effectSource.BuffedMag:###0.##}, to Tgt)",
 
-                        Enums.eToWho.Self when !sameKindBuff => rankedEffect.Value = $"{effectSource.BuffedMag:###0.##} (Slf)",
-
-                        Enums.eToWho.Target when sameKindBuff => effectSource.MezType is Enums.eMez.Knockback or Enums.eMez.Knockup
-                            or Enums.eMez.Teleport
-                            ? $"{magSum:###0.##} (Tgt)"
-                            : $"{minMaxDuration} (Mag {magSum:###0.##}, to Tgt)",
-
-                        Enums.eToWho.Self when sameKindBuff => rankedEffect.Value = $"{magSum:###0.##} (Slf)",
-
+                        Enums.eToWho.Self => rankedEffect.Value = $"{effectSource.BuffedMag:###0.##} (Slf)",
+                        
                         _ => rankedEffect.Value
                     };
                     
@@ -2537,7 +2072,7 @@ namespace Mids_Reborn.Core
                         rankedEffect.Name = "Slow";
                         rankedEffect.Value = InvertStringValue(rankedEffect.Value);
                     }
-                    else if ((gre.IncludedEffects.Count > 1) & gre.IncludedEffects.Select(e => pEnh.Effects[e].EffectType).Any(e => e != pEnh.Effects[gre.IncludedEffects[0]].EffectType))
+                    else if (gre.IncludedEffects.Count > 1 & gre.IncludedEffects.Select(e => pEnh.Effects[e].EffectType).Any(e => e != pEnh.Effects[gre.IncludedEffects[0]].EffectType))
                     {
                         rankedEffect.Name = $"{((gre.IsAggregated ? magSum : effectSource.Mag) < 0 ? "-" : "")}Movement";
                     }
@@ -2572,7 +2107,6 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.PerceptionRadius:
                     rankedEffect.Name = $"Pceptn{toWhoShort}";
                     rankedEffect.Value = $"{(effectSource.DisplayPercentage ? $"{magSum * 100:###0.##}%" : $"{magSum:###0.##}")} ({Statistics.BasePerception * magSum:###0.##}ft)";
-                    rankedEffect.ToolTip = greTooltip;
 
                     break;
 
@@ -2591,7 +2125,7 @@ namespace Mids_Reborn.Core
 
                 case Enums.eEffectType.Heal:
                     rankedEffect.Name = $"Heal{toWhoShort}";
-                    rankedEffect.Value = effectSource.DisplayPercentage & (effectSource.DisplayPercentageOverride == Enums.eOverrideBoolean.TrueOverride)
+                    rankedEffect.Value = effectSource.DisplayPercentage & effectSource.DisplayPercentageOverride == Enums.eOverrideBoolean.TrueOverride
                         ? $"{gre.Mag * 100:####0.##}% HP"
                         : $"{gre.Mag:####0.##} HP ({gre.Mag / MidsContext.Character.DisplayStats.HealthHitpointsNumeric(false) * 100:###0.##}%)";
                     rankedEffect.ToolTip = greTooltip;
@@ -2616,16 +2150,16 @@ namespace Mids_Reborn.Core
                     rankedEffect.Name = FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                         Enums.GetEffectNameShort(effectSource.EffectType));
                     rankedEffect.ToolTip = string.Join("\r\n", pEnh.Effects
-                        .Where(e => ((configDisablePvE & (e.PvMode == Enums.ePvX.PvP)) |
-                                     (!configDisablePvE & (e.PvMode == Enums.ePvX.PvE)) |
-                                     (e.PvMode == Enums.ePvX.Any)) &
-                                    (Math.Abs(e.BuffedMag) > float.Epsilon) &
-                                    (effectSource.ToWho == e.ToWho) &
-                                    (effectSource.EffectType == e.EffectType) &
-                                    (effectSource.MezType == e.MezType) &
-                                    (effectSource.ETModifies == e.ETModifies) &
-                                    ((effectSource.PvMode == e.PvMode) | (e.PvMode == Enums.ePvX.Any)) &
-                                    (effectSource.IgnoreScaling == e.IgnoreScaling))
+                        .Where(e => (configDisablePvE & e.PvMode == Enums.ePvX.PvP |
+                                     !configDisablePvE & e.PvMode == Enums.ePvX.PvE |
+                                     e.PvMode == Enums.ePvX.Any) &
+                                    Math.Abs(e.BuffedMag) > float.Epsilon &
+                                    effectSource.ToWho == e.ToWho &
+                                    effectSource.EffectType == e.EffectType &
+                                    effectSource.MezType == e.MezType &
+                                    effectSource.ETModifies == e.ETModifies &
+                                    (effectSource.PvMode == e.PvMode | e.PvMode == Enums.ePvX.Any) &
+                                    effectSource.IgnoreScaling == e.IgnoreScaling)
                         .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
 
                     break;

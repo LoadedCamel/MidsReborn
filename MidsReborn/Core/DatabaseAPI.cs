@@ -13,7 +13,7 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
-using Mids_Reborn.Forms.Controls;
+using Mids_Reborn.UI.Forms.Controls;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -746,7 +746,7 @@ namespace Mids_Reborn.Core
 
             var enhSetData = Database.EnhancementSets[enhData.nIDSet];
 
-            return enhSetData.DisplayName.IndexOf("Overwhelming Force", StringComparison.OrdinalIgnoreCase) > -1 | enhSetData.DisplayName.IndexOf("Cupid's Crush", StringComparison.OrdinalIgnoreCase) > -1;
+            return enhSetData.DisplayName.IndexOf("Overwhelming Force", StringComparison.OrdinalIgnoreCase) > -1;
         }
 
         public static bool EnhIsIO(int enhIdx)
@@ -1334,9 +1334,14 @@ namespace Mids_Reborn.Core
             return -1;
         }
 
-        public static string DatabaseName => MidsContext.Config?.DataPath == null
-                ? new DirectoryInfo(Files.FDefaultPath).Name
-                : new DirectoryInfo(MidsContext.Config.DataPath).Name;
+        public static string DatabaseName
+        {
+            get
+            {
+                var name = MidsContext.Config == null ? new DirectoryInfo(AppDataPaths.DefaultPath).Name : new DirectoryInfo(MidsContext.Config.DataPath).Name;
+                return name;
+            }
+        }
 
         private static void CheckEhcBoosts()
         {
@@ -1364,19 +1369,19 @@ namespace Mids_Reborn.Core
 
         public static void SaveServerData(string? iPath)
         {
-            var path = Files.SelectDataFileSave(Files.ServerDataFile, iPath);
+            var path = AppDataPaths.SelectDataFileSave(AppDataPaths.ServerDataFile, iPath);
             ServerData.Save(path);
         }
         
         public static bool LoadServerData(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.ServerDataFile, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.ServerDataFile, iPath);
             return !File.Exists(path) ? ProformaServerData(iPath) : ServerData.Load(path);
         }
 
         private static bool ProformaServerData(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileSd, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.FileSd, iPath);
 
             FileStream fileStream;
             BinaryReader reader;
@@ -1394,7 +1399,7 @@ namespace Mids_Reborn.Core
             {
                 var headerFound = true;
                 var header = reader.ReadString();
-                if (header != Files.Headers.ServerData.Start)
+                if (header != AppDataPaths.Headers.ServerData.Start)
                 {
                     headerFound = false;
                 }
@@ -1440,7 +1445,7 @@ namespace Mids_Reborn.Core
         public static void SaveMainDatabase(ISerialize serializer, string? iPath)
         {
             CheckEhcBoosts();
-            var path = Files.SelectDataFileSave(Files.MxdbFileDb, iPath);
+            var path = AppDataPaths.SelectDataFileSave(AppDataPaths.FileDb, iPath);
             FileStream fileStream;
             BinaryWriter writer;
             try
@@ -1457,28 +1462,28 @@ namespace Mids_Reborn.Core
             try
             {
                 UpdateDbModified();
-                writer.Write(Files.Headers.Db.Start);
+                writer.Write(AppDataPaths.Headers.Db.Start);
                 writer.Write(Database.Version.ToString());
                 writer.Write(-1);
                 writer.Write(Database.Date.ToBinary());
                 writer.Write(Database.Issue);
                 writer.Write(Database.PageVol);
                 writer.Write(Database.PageVolText);
-                writer.Write(Files.Headers.Db.Archetypes);
+                writer.Write(AppDataPaths.Headers.Db.Archetypes);
                 writer.Write(Database.Classes.Length - 1);
                 for (var index = 0; index <= Database.Classes.Length - 1; ++index)
                 {
                     Database.Classes[index].StoreTo(ref writer);
                 }
 
-                writer.Write(Files.Headers.Db.Powersets);
+                writer.Write(AppDataPaths.Headers.Db.Powersets);
                 writer.Write(Database.Powersets.Length - 1);
                 for (var index = 0; index <= Database.Powersets.Length - 1; ++index)
                 {
                     Database.Powersets[index].StoreTo(ref writer);
                 }
 
-                writer.Write(Files.Headers.Db.Powers);
+                writer.Write(AppDataPaths.Headers.Db.Powers);
                 writer.Write(Database.Power.Length - 1);
                 for (var index = 0; index <= Database.Power.Length - 1; ++index)
                 {
@@ -1492,7 +1497,7 @@ namespace Mids_Reborn.Core
                     }
                 }
 
-                writer.Write(Files.Headers.Db.Summons);
+                writer.Write(AppDataPaths.Headers.Db.Summons);
                 Database.StoreEntities(writer);
                 writer.Close();
                 fileStream.Close();
@@ -1521,7 +1526,7 @@ namespace Mids_Reborn.Core
         public static bool LoadMainDatabase(string iPath, ref IDatabase database)
         {
             ClearLookups();
-            var path = $"{iPath.TrimEnd('/', '\\')}{Path.DirectorySeparatorChar}{Path.GetFileName(Files.SelectDataFileLoad(Files.MxdbFileDb, iPath))}";
+            var path = $"{iPath.TrimEnd('/', '\\')}{Path.DirectorySeparatorChar}{Path.GetFileName(AppDataPaths.SelectDataFileLoad(AppDataPaths.FileDb, iPath))}";
 
             FileStream fileStream;
             BinaryReader reader;
@@ -1539,7 +1544,7 @@ namespace Mids_Reborn.Core
             {
                 var headerFound = true;
                 var header = reader.ReadString();
-                if (header != Files.Headers.Db.Start)
+                if (header != AppDataPaths.Headers.Db.Start)
                 {
                     headerFound = false;
                 }
@@ -1568,7 +1573,7 @@ namespace Mids_Reborn.Core
                 database.PageVol = reader.ReadInt32();
                 database.PageVolText = reader.ReadString();
 
-                if (reader.ReadString() != Files.Headers.Db.Archetypes)
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Archetypes)
                 {
                     MessageBox.Show(@"Expected Archetype Data, got something else!", @"Eeeeee!");
                     reader.Close();
@@ -1586,7 +1591,7 @@ namespace Mids_Reborn.Core
                     };
                 }
 
-                if (reader.ReadString() != Files.Headers.Db.Powersets)
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Powersets)
                 {
                     MessageBox.Show("Expected Powerset Data, got something else!", "Eeeeee!");
                     reader.Close();
@@ -1613,7 +1618,7 @@ namespace Mids_Reborn.Core
                     //Application.DoEvents();
                 }
 
-                if (reader.ReadString() != Files.Headers.Db.Powers)
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Powers)
                 {
                     MessageBox.Show("Expected Power Data, got something else!", "Eeeeee!");
                     reader.Close();
@@ -1635,7 +1640,7 @@ namespace Mids_Reborn.Core
                     //Application.DoEvents();
                 }
 
-                if (reader.ReadString() != Files.Headers.Db.Summons)
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Summons)
                 {
                     MessageBox.Show("Expected Summon Data, got something else!", "Eeeeee!");
                     reader.Close();
@@ -1663,7 +1668,7 @@ namespace Mids_Reborn.Core
         public static bool LoadMainDatabase(string? iPath)
         {
             ClearLookups();
-            var path = Files.SelectDataFileLoad(Files.MxdbFileDb, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.FileDb, iPath);
 
             FileStream fileStream;
             BinaryReader reader;
@@ -1681,7 +1686,7 @@ namespace Mids_Reborn.Core
             {
                 var headerFound = true;
                 var header = reader.ReadString();
-                if (header != Files.Headers.Db.Start)
+                if (header != AppDataPaths.Headers.Db.Start)
                 {
                     headerFound = false;
                 }
@@ -1710,7 +1715,7 @@ namespace Mids_Reborn.Core
                 Database.PageVol = reader.ReadInt32();
                 Database.PageVolText = reader.ReadString();
 
-                if (reader.ReadString() != Files.Headers.Db.Archetypes)
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Archetypes)
                 {
                     MessageBox.Show(@"Expected Archetype Data, got something else!", @"Eeeeee!");
                     reader.Close();
@@ -1727,7 +1732,7 @@ namespace Mids_Reborn.Core
                     };
                 }
 
-                if (reader.ReadString() != Files.Headers.Db.Powersets)
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Powersets)
                 {
                     MessageBox.Show("Expected Powerset Data, got something else!", "Eeeeee!");
                     reader.Close();
@@ -1750,7 +1755,7 @@ namespace Mids_Reborn.Core
                     Application.DoEvents();
                 }
 
-                if (reader.ReadString() != Files.Headers.Db.Powers)
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Powers)
                 {
                     MessageBox.Show("Expected Power Data, got something else!", "Eeeeee!");
                     reader.Close();
@@ -1769,7 +1774,7 @@ namespace Mids_Reborn.Core
                     Application.DoEvents();
                 }
 
-                if (reader.ReadString() != Files.Headers.Db.Summons)
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Summons)
                 {
                     MessageBox.Show("Expected Summon Data, got something else!", "Eeeeee!");
                     reader.Close();
@@ -1794,7 +1799,7 @@ namespace Mids_Reborn.Core
 
         public static void LoadDatabaseVersion(string? iPath)
         {
-            var target = Files.SelectDataFileLoad(Files.MxdbFileDb, iPath);
+            var target = AppDataPaths.SelectDataFileLoad(AppDataPaths.FileDb, iPath);
             Database.Version = GetDatabaseVersion(target);
         }
 
@@ -1812,7 +1817,7 @@ namespace Mids_Reborn.Core
                 {
                     try
                     {
-                        if (binaryReader.ReadString() != Files.Headers.Db.Start)
+                        if (binaryReader.ReadString() != AppDataPaths.Headers.Db.Start)
                         {
                             MessageBox.Show(@"Expected MRB header, got something else!");
                         }
@@ -1835,7 +1840,7 @@ namespace Mids_Reborn.Core
 
         public static bool LoadEffectIdsDatabase(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileEffectIds, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.FileEffectIds, iPath);
             if (File.Exists(path))
             {
                 Database.EffectIds.Clear();
@@ -1877,7 +1882,7 @@ namespace Mids_Reborn.Core
 
         public static void SaveEffectIdsDatabase(string? iPath)
         {
-            var path = Files.SelectDataFileSave(Files.MxdbFileEffectIds, iPath);
+            var path = AppDataPaths.SelectDataFileSave(AppDataPaths.FileEffectIds, iPath);
 
             FileStream fileStream;
             BinaryWriter writer;
@@ -1919,13 +1924,13 @@ namespace Mids_Reborn.Core
                 {
                     case Enums.dmModes.LevelUp or Enums.dmModes.Normal:
                         path = string.IsNullOrWhiteSpace(iPath)
-                            ? Files.SelectDataFileLoad(Files.MxdbFileNLevels)
-                            : Files.SelectDataFileLoad(Files.MxdbFileNLevels, iPath);
+                            ? AppDataPaths.SelectDataFileLoad(AppDataPaths.FileNLevels)
+                            : AppDataPaths.SelectDataFileLoad(AppDataPaths.FileNLevels, iPath);
                         break;
                     case Enums.dmModes.Respec:
                         path = string.IsNullOrWhiteSpace(iPath)
-                            ? Files.SelectDataFileLoad(Files.MxdbFileRLevels)
-                            : Files.SelectDataFileLoad(Files.MxdbFileRLevels, iPath);
+                            ? AppDataPaths.SelectDataFileLoad(AppDataPaths.FileRLevels)
+                            : AppDataPaths.SelectDataFileLoad(AppDataPaths.FileRLevels, iPath);
                         break;
                 }
             }
@@ -1970,7 +1975,7 @@ namespace Mids_Reborn.Core
 
         public static void LoadOrigins(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileOrigins, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.FileOrigins, iPath);
 
             Database.Origins = new List<Origin>();
             StreamReader streamReader;
@@ -2128,7 +2133,7 @@ namespace Mids_Reborn.Core
 
         public static void LoadRecipes(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileRecipe, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.FileRecipe, iPath);
 
             Database.Recipes = Array.Empty<Recipe>();
             FileStream fileStream;
@@ -2146,7 +2151,7 @@ namespace Mids_Reborn.Core
 
             var headerFound = true;
             var header = reader.ReadString();
-            if (header != Files.Headers.Recipe.Start)
+            if (header != AppDataPaths.Headers.Recipe.Start)
             {
                 headerFound = false;
             }
@@ -2192,7 +2197,7 @@ namespace Mids_Reborn.Core
 
         public static void SaveRecipes(ISerialize serializer, string? iPath)
         {
-            var path = Files.SelectDataFileSave(Files.MxdbFileRecipe, iPath);
+            var path = AppDataPaths.SelectDataFileSave(AppDataPaths.FileRecipe, iPath);
 
             //SaveRecipesRaw(serializer, path, RecipeName);
             FileStream fileStream;
@@ -2210,7 +2215,7 @@ namespace Mids_Reborn.Core
 
             try
             {
-                writer.Write(Files.Headers.Recipe.Start);
+                writer.Write(AppDataPaths.Headers.Recipe.Start);
                 writer.Write(Database.RecipeSource1);
                 writer.Write(Database.RecipeSource2);
                 writer.Write(Database.RecipeRevisionDate.ToBinary());
@@ -2230,7 +2235,7 @@ namespace Mids_Reborn.Core
 
         public static void LoadSalvage(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileSalvage, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.FileSalvage, iPath);
 
             Database.Salvage = Array.Empty<Salvage>();
             FileStream fileStream;
@@ -2252,7 +2257,7 @@ namespace Mids_Reborn.Core
                 var headerFound = true;
                 var header = reader.ReadString();
 
-                if (header != Files.Headers.Salvage.Start)
+                if (header != AppDataPaths.Headers.Salvage.Start)
                 {
                     headerFound = false;
                 }
@@ -2294,7 +2299,7 @@ namespace Mids_Reborn.Core
 
         public static void SaveSalvage(ISerialize serializer, string? iPath)
         {
-            var path = Files.SelectDataFileSave(Files.MxdbFileSalvage, iPath);
+            var path = AppDataPaths.SelectDataFileSave(AppDataPaths.FileSalvage, iPath);
 
             //SaveSalvageRaw(serializer, path, SalvageName);
             FileStream fileStream;
@@ -2312,7 +2317,7 @@ namespace Mids_Reborn.Core
 
             try
             {
-                writer.Write(Files.Headers.Salvage.Start);
+                writer.Write(AppDataPaths.Headers.Salvage.Start);
                 writer.Write(Database.Salvage.Length - 1);
                 for (var index = 0; index <= Database.Salvage.Length - 1; ++index)
                     Database.Salvage[index].StoreTo(writer);
@@ -2344,7 +2349,7 @@ namespace Mids_Reborn.Core
 
         public static void LoadCrypticReplacementTable()
         {
-            if (!File.Exists(Files.CNamePowersRepl))
+            if (!File.Exists(AppDataPaths.CrypticPowersRepl))
             {
                 Database.CrypticReplTable = null;
             }
@@ -2374,14 +2379,14 @@ namespace Mids_Reborn.Core
 
         public static void SaveEnhancementDb(ISerialize serializer, string? iPath)
         {
-            var path = Files.SelectDataFileSave(Files.MxdbFileEnhDb, iPath);
+            var path = AppDataPaths.SelectDataFileSave(AppDataPaths.FileEnhDb, iPath);
 
             //SaveEnhancementDbRaw(serializer, path, EnhancementDbName);
             using var fileStream = new FileStream(path, FileMode.Create);
             using var writer = new BinaryWriter(fileStream, Encoding.UTF8);
             try
             {
-                writer.Write(Files.Headers.EnhDb.Start);
+                writer.Write(AppDataPaths.Headers.EnhDb.Start);
                 writer.Write(Database.VersionEnhDb);
                 writer.Write(Database.Enhancements.Length - 1);
 
@@ -2405,7 +2410,7 @@ namespace Mids_Reborn.Core
 
         public static void LoadEnhancementDb(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileEnhDb, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.FileEnhDb, iPath);
 
             Database.Enhancements = Array.Empty<IEnhancement>();
             FileStream fileStream;
@@ -2427,7 +2432,7 @@ namespace Mids_Reborn.Core
                 var headerFound = true;
                 var header = reader.ReadString();
 
-                if (header != Files.Headers.EnhDb.Start)
+                if (header != AppDataPaths.Headers.EnhDb.Start)
                 {
                     headerFound = false;
                 }
@@ -2481,13 +2486,13 @@ namespace Mids_Reborn.Core
 
         public static bool LoadEnhancementClasses(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileEClasses, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.FileEClasses, iPath);
 
             using var streamReader = new StreamReader(path);
             Database.EnhancementClasses = Array.Empty<Enums.sEnhClass>();
             try
             {
-                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, Files.Headers.VersionComment)))
+                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, AppDataPaths.Headers.VersionComment)))
                     throw new EndOfStreamException("Unable to load Enhancement Class data, version header not found!");
                 if (!FileIO.IOSeek(streamReader, "Index"))
                     throw new EndOfStreamException("Unable to load Enhancement Class data, section header not found!");
@@ -2528,12 +2533,12 @@ namespace Mids_Reborn.Core
 
         public static void LoadTypeGrades(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.JsonFileTypeGrades, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.JsonFileTypeGrades, iPath);
             var jsonData = File.ReadAllText(path);
             var parsedData = JObject.Parse(jsonData);
 
             var headerResult = parsedData["Name"]?.ToObject<string>();
-            if (headerResult != Files.Headers.TypeGrade.Start)
+            if (headerResult != AppDataPaths.Headers.TypeGrade.Start)
             {
                 MessageBox.Show(@"Invalid header detected!", @"Error Reading TypeGrades", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -2749,7 +2754,7 @@ namespace Mids_Reborn.Core
 
         public static bool LoadMaths(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileMaths, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.FileMaths, iPath);
 
             StreamReader streamReader;
             try
@@ -2770,7 +2775,7 @@ namespace Mids_Reborn.Core
 
             try
             {
-                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, Files.Headers.VersionComment)))
+                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, AppDataPaths.Headers.VersionComment)))
                 {
                     streamReader.Close();
                     var m = new MessageBoxEx("Unable to load Enhancement Maths data, version header not found!", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
@@ -3429,8 +3434,8 @@ namespace Mids_Reborn.Core
         public static Dictionary<string, string> GetInstalledDatabases()
         {
             var databases = new Dictionary<string, string>();
-            var foundDatabases = Directory.GetDirectories(Files.BaseDataPath).ToList();
-            foundDatabases.RemoveAll(x => !File.Exists(Path.Combine(x, Files.MxdbFileDb)));
+            var foundDatabases = Directory.GetDirectories(AppDataPaths.BaseDataPath).ToList();
+            foundDatabases.RemoveAll(x => !File.Exists(Path.Combine(x, AppDataPaths.FileDb)));
             foreach (var database in foundDatabases)
             {
                 var dirInfo = new DirectoryInfo(database);

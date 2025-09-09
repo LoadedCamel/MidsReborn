@@ -1,0 +1,32 @@
+{
+  "ManifestUri": "https://join.cityofheroesrebirth.com/Mids/update_manifest.xml",
+  "BaseToHit": 0.75,
+  "BaseFlySpeed": 31.5,
+  "BaseJumpSpeed": 21.0,
+  "BaseJumpHeight": 4.0,
+  "BaseRunSpeed": 21.0,
+  "BasePerception": 500.0,
+  "MaxFlySpeed": 86.0,
+  "MaxJumpSpeed": 114.4,
+  "MaxRunSpeed": 135.67,
+  "MaxSlots": 72,
+  "EnableInherentSlotting": true,
+  "HealthSlots": 2,
+  "HealthSlot1Level": 8,
+  "HealthSlot2Level": 16,
+  "StaminaSlots": 2,
+  "StaminaSlot1Level": 12,
+  "StaminaSlot2Level": 22,
+  "EnabledIncarnates": {
+    "Alpha": true,
+    "Destiny": true,
+    "Genesis": true,
+    "Hybrid": true,
+    "Interface": true,
+    "Judgement": true,
+    "Lore": true,
+    "Omega": false,
+    "Stance": false,
+    "Vitae": false
+  }
+}

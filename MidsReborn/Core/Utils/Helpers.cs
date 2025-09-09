@@ -13,21 +13,6 @@ namespace Mids_Reborn.Core.Utils
 {
     internal static class Helpers
     {
-        public static IEnumerable<Control> GetControlHierarchy(Control root)
-        {
-            var queue = new Queue<Control>();
-            queue.Enqueue(root);
-            do
-            {
-                var control = queue.Dequeue();
-                yield return control;
-                foreach (var child in control.Controls.OfType<Control>())
-                {
-                    queue.Enqueue(child);
-                }
-            } while (queue.Count > 0);
-        }
-
         public static IEnumerable<T> GetControlOfType<T>(Control.ControlCollection root) where T : Control
         {
             var controls = new List<T>();
@@ -42,6 +27,32 @@ namespace Mids_Reborn.Core.Utils
             }
 
             return controls;
+        }
+
+        public static IEnumerable<T> GetAllControlsOfType<T>(this Control control) where T : Control
+        {
+            var controls = control.Controls.Cast<Control>();
+            var enumerable = controls.ToList();
+            return enumerable.SelectMany(c => c.GetAllControlsOfType<T>())
+                .Concat(enumerable)
+                .OfType<T>();
+        }
+
+        public static IEnumerable<T> GetControlsOfType<T>(Control root) where T : Control
+        {
+            var queue = new Queue<Control>();
+            queue.Enqueue(root);
+
+            while (queue.Count > 0)
+            {
+                var control = queue.Dequeue();
+
+                if (control is T typedControl)
+                    yield return typedControl;
+
+                foreach (Control child in control.Controls)
+                    queue.Enqueue(child);
+            }
         }
 
         public static bool IsVersionNewer(Version candidate, Version current)
