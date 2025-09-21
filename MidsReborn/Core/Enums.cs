@@ -1144,7 +1144,8 @@ namespace Mids_Reborn.Core
             ActivateAttackClick = 512, // 0x00000200
             Damaged = 1024, // 0x00000400
             Phased1 = 2048, // 0x00000800
-            Confused = 4096 // 0x00001000
+            Confused = 4096, // 0x00001000
+            Repelled = 8192, // 0x00002000
         }
 
         public enum eToWho

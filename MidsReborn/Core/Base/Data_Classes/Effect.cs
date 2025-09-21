@@ -1330,6 +1330,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     sSuppress += "\n  Suppressed when Confused.";
                 }
+
+                if ((Suppression & Enums.eSuppress.Repelled) == Enums.eSuppress.Repelled)
+                {
+                    sSuppress += "\n  Suppressed when Repelled.";
+                }
             }
             else
             {
@@ -1403,7 +1408,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     break;
                 case Enums.eEffectType.MezResist:
                     sSubEffect = Enum.GetName(typeof(Enums.eMez), MezType);
-                    if (noMag == false)
+                    if (!noMag)
                     {
                         sMag = $" {sMag}";
                     }
@@ -1503,7 +1508,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         ? " " + (MidsContext.Config.CoDEffectFormat
                             ? $"({DatabaseAPI.Database.Entities[summon].UID})"
                             : DatabaseAPI.Database.Entities[summon].DisplayName)
-                        : " " + Summon;
+                        : $" {Summon}";
                     sBuild = $"{sEffect}{tSummon}{sTarget}{(Duration > 9999 ? "" : sDuration)}";
                     break;
                 case Enums.eEffectType.Endurance:
@@ -1511,7 +1516,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     {
                         sMag = $"{Ticks} x {sMag}";
                     }
-                    if (noMag) sBuild = "+Max End";
+                    if (noMag)
+                    {
+                        sBuild = "+Max End";
+                    }
                     else if (Aspect == Enums.eAspect.Max)
                     {
                         sBuild = $"{sMag}% Max End{sTarget}{sDuration}";
@@ -1524,9 +1532,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eEffectType.GrantPower:
                 case Enums.eEffectType.ExecutePower:
                     sResist = string.Empty;
-                    string tGrant;
                     var pID = DatabaseAPI.GetPowerByFullName(Summon);
-                    tGrant = pID != null
+                    var tGrant = pID != null
                         ? $" {(MidsContext.Config.CoDEffectFormat ? $"({pID.FullName})" : pID.DisplayName)}"
                         : $" {Summon}";
                     sBuild = $"{sEffect}{tGrant}{sTarget}{(Math.Abs(Duration) < float.Epsilon ? "" : $" for { Duration}s")}{(Ticks > 0 & EffectType == Enums.eEffectType.ExecutePower ? $" ({Ticks} tick{(Ticks == 1 ? "" : "s")})" : "")}";
