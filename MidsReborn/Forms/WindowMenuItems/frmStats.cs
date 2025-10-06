@@ -36,7 +36,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         
         private readonly frmMain myParent;
 
-        private IPower[] BaseArray;
+        private IPower?[] BaseArray;
         private bool BaseOverride;
 
         private ComboBox cbSet;
@@ -45,7 +45,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private ComboBox cbValues;
 
-        private IPower[] EnhArray;
+        private IPower?[] EnhArray;
         private CtlMultiGraph Graph;
         private float GraphMax;
         private Label lblKey1;
@@ -66,8 +66,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Move += frmStats_Move;
             Resize += frmStats_Resize;
             //VisibleChanged += frmStats_VisibleChanged;
-            BaseArray = Array.Empty<IPower?>();
-            EnhArray = Array.Empty<IPower?>();
+            BaseArray = [];
+            EnhArray = [];
             GraphMax = 1;
             BaseOverride = false;
             Loaded = false;
@@ -497,10 +497,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             // Powers in build
             var powers = new Dictionary<int, KeyValuePair<IPower, IPower>>();
-            for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
+            for (var i = 0; i < MidsContext.Character?.CurrentBuild?.Powers.Count; i++)
             {
-                var pBase = MainModule.MidsController.Toon.GetBasePower(i);
-                var pEnh = MainModule.MidsController.Toon.GetEnhancedPower(i);
+                var pBase = MainModule.MidsController.Toon?.GetBasePower(i);
+                var pEnh = MainModule.MidsController.Toon?.GetEnhancedPower(i);
 
                 if (pBase == null)
                 {
@@ -516,10 +516,13 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         : new KeyValuePair<IPower, IPower>(pEnh, pBase));
             }
 
-            // Filter out zero damage powers
-            powers = powers
+            // Filter out zero damage powers (if needed)
+            if (StatDisplayed is DisplayMode.Damage or DisplayMode.DPA or DisplayMode.DPS or DisplayMode.DPE)
+            {
+                powers = powers
                 .Where(e => (e.Value.Value != null && e.Value.Value.FXGetDamageValue(e.Value.Value == null) > 0) || (e.Value.Key != null && e.Value.Key.FXGetDamageValue() > 0))
                 .ToDictionary(e => e.Key, e => e.Value);
+            }
 
             // basePower FullName -> index
             var powersDict = powers
@@ -527,7 +530,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 .ToDictionary(e => e.Key.FullName, e => e.Value);
 
             // Selected powersets in build
-            var powersets = MainModule.MidsController.Toon.Powersets
+            var powersets = MainModule.MidsController.Toon?.Powersets
                 .Where(e => e != null)
                 .ToList();
 
@@ -1004,35 +1007,32 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void SetGraphMetrics()
         {
-            if (Graph.ItemCount < 13.5)
+            switch (Graph.ItemCount)
             {
-                Graph.ItemHeight = 18;
-                Graph.PaddingY = 6f;
-            }
-            else if (Graph.ItemCount < 18)
-            {
-                Graph.ItemHeight = 15;
-                Graph.PaddingY = 5f;
-            }
-            else if (Graph.ItemCount > 32)
-            {
-                Graph.PaddingY = 2f;
-                Graph.ItemHeight = 10;
-            }
-            else if (Graph.ItemCount > 30)
-            {
-                Graph.PaddingY = 2f;
-                Graph.ItemHeight = 11;
-            }
-            else if (Graph.ItemCount > 27)
-            {
-                Graph.PaddingY = 2.666667f;
-                Graph.ItemHeight = 11;
-            }
-            else
-            {
-                Graph.ItemHeight = 12;
-                Graph.PaddingY = 4f;
+                case <= 13:
+                    Graph.ItemHeight = 18;
+                    Graph.PaddingY = 6f;
+                    break;
+                case < 18:
+                    Graph.ItemHeight = 15;
+                    Graph.PaddingY = 5f;
+                    break;
+                case > 32:
+                    Graph.PaddingY = 2f;
+                    Graph.ItemHeight = 10;
+                    break;
+                case > 30:
+                    Graph.PaddingY = 2f;
+                    Graph.ItemHeight = 11;
+                    break;
+                case > 27:
+                    Graph.PaddingY = 2.666667f;
+                    Graph.ItemHeight = 11;
+                    break;
+                default:
+                    Graph.ItemHeight = 12;
+                    Graph.PaddingY = 4f;
+                    break;
             }
         }
 
