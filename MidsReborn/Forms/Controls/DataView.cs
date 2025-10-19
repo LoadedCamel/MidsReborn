@@ -2537,9 +2537,6 @@ namespace Mids_Reborn.Forms.Controls
             pBase?.ProcessExecutes();
             pBase?.ApplyModifyEffects();
 
-            // Do not run ApplyModifyEffects() on pEnh, this is done within totals calculations
-            pEnh?.ProcessExecutes();
-
             GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
             EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh?.GetRankedEffects(true).ToList(), info_DataList.Font.Size);
 

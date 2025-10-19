@@ -1,11 +1,11 @@
+using FastDeepCloner;
+using Mids_Reborn.Core.Base.Master_Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using FastDeepCloner;
-using Mids_Reborn.Core.Base.Master_Classes;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
@@ -2531,9 +2531,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                                 continue;
                             }
 
-                            var fxc = Effects[index2].Clone<IEffect>();
-                            fxc.Probability = 0f;
-                            Effects[index2].Probability = Effects[lFxIndex[index1]].Probability * fxc.Probability;
+                            Effects[index2].Probability *= Effects[lFxIndex[index1]].Probability;
                         }
                     }
                 }
