@@ -2325,16 +2325,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public int[] AbsorbEffects(IPower? source, float nDuration, float nDelay, Archetype? archetype, int stacking, bool isGrantPower = false, int fxid = -1, int effectId = -1)
         {
             var num1 = -1;
-            var length = Effects.Length;
-            var array = Array.Empty<int>();
+            var lst = new List<int>();
             var num2 = 0f;
-            if (source.PowerSetID > -1 && DatabaseAPI.Database.Powersets[source.PowerSetID].SetType == Enums.ePowerSetType.Pet)
+            if (source?.PowerSetID > -1 && DatabaseAPI.Database.Powersets[source.PowerSetID]?.SetType == Enums.ePowerSetType.Pet)
             {
-                foreach (var power in DatabaseAPI.Database.Powersets[source.PowerSetID].Powers)
+                foreach (var power in DatabaseAPI.Database.Powersets[source.PowerSetID]!.Powers)
                 {
+                    if (power == null)
+                    {
+                        continue;
+                    }
+
                     foreach (var effect in power.Effects)
                     {
-                        if (effect.EffectType == Enums.eEffectType.SilentKill & effect.ToWho == Enums.eToWho.Self & effect.DelayedTime > 0)
+                        if ((effect.EffectType == Enums.eEffectType.SilentKill) & (effect.ToWho == Enums.eToWho.Self) & (effect.DelayedTime > 0))
                         {
                             num2 = effect.DelayedTime;
                         }
@@ -2349,23 +2353,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             if (effectId == -1)
             {
+                var fxList = Effects.ToList();
                 for (var index = 0; index < source.Effects.Length; index++)
                 {
-                    if (!isGrantPower & source.EntitiesAffected == Enums.eEntity.Caster & source.Effects[index].EffectType != Enums.eEffectType.EntCreate)
+                    if (!isGrantPower & (source.EntitiesAffected == Enums.eEntity.Caster) & (source.Effects[index].EffectType != Enums.eEffectType.EntCreate))
                     {
                         continue;
                     }
 
                     if (source.Effects[index].EffectType == Enums.eEffectType.EntCreate && source.Effects[index].nSummon > -1)
                     {
-                        Array.Resize(ref array, array.Length + 1);
-                        array[^1] = index;
+                        lst.Add(index);
                     }
 
                     num1++;
-                    var effects = Effects;
-                    Array.Resize(ref effects, num1 + length + 1);
-                    Effects = effects;
                     var effect = (IEffect) source.Effects[index].Clone();
                     effect.Absorbed_Effect = true;
                     effect.Absorbed_PowerType = source.PowerType;
@@ -2377,7 +2378,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         effect.SetTicks(nDuration, source.ActivatePeriod);
                     }
 
-                    if ((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend & (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
+                    if (((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend) & ((source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster))
                     {
                         effect.ToWho = Enums.eToWho.Target;
                         if (effect.Stacking == Enums.eStacking.Yes)
@@ -2386,7 +2387,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         }
                     }
 
-                    if ((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet & (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
+                    if (((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet) & ((source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster))
                     {
                         effect.ToWho = Enums.eToWho.Target;
                         if (effect.Stacking == Enums.eStacking.Yes)
@@ -2396,7 +2397,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     }
 
                     effect.Absorbed_Duration = nDuration;
-                    if (source.RechargeTime > 0 & source.PowerType == Enums.ePowerType.Click)
+                    if ((source.RechargeTime > 0) & (source.PowerType == Enums.ePowerType.Click))
                     {
                         effect.Absorbed_Interval = source.RechargeTime + source.CastTime;
                     }
@@ -2406,27 +2407,25 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         effect.DelayedTime = nDelay;
                     }
 
-                    if (effect.Absorbed_Duration > 0 & num2 > 0)
+                    if ((effect.Absorbed_Duration > 0) & (num2 > 0))
                     {
                         effect.nDuration = effect.Absorbed_Duration;
                     }
 
-                    Effects[num1 + length] = effect;
+                    fxList.Add(effect);
                 }
+
+                Effects = fxList.ToArray();
             }
             else if (isGrantPower || source.EntitiesAffected != Enums.eEntity.Caster || source.Effects[effectId].EffectType == Enums.eEffectType.EntCreate)
             {
                 if (source.Effects[effectId].EffectType == Enums.eEffectType.EntCreate && source.Effects[effectId].nSummon > -1)
                 {
-                    Array.Resize(ref array, array.Length + 1);
-                    array[^1] = effectId;
+                    lst.Add(effectId);
                 }
 
-                var num3 = num1 + 1;
-                var effects = Effects;
-                Array.Resize(ref effects, num3 + length + 1);
-                Effects = effects;
-                var effect = (IEffect) source.Effects[effectId].Clone();
+                var fxList = Effects.ToList();
+                var effect = source.Effects[effectId].Clone<IEffect>();
                 effect.Absorbed_Effect = true;
                 effect.Absorbed_PowerType = source.PowerType;
                 effect.Absorbed_Class_nID = archetype.Idx;
@@ -2456,7 +2455,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 effect.Absorbed_Duration = nDuration;
-                if (source.RechargeTime > 0 & source.PowerType == Enums.ePowerType.Click)
+                if ((source.RechargeTime > 0) & (source.PowerType == Enums.ePowerType.Click))
                 {
                     effect.Absorbed_Interval = source.RechargeTime + source.CastTime;
                 }
@@ -2466,77 +2465,75 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     effect.DelayedTime = nDelay;
                 }
 
-                if (effect.Absorbed_Duration > 0 & num2 > 0)
+                if ((effect.Absorbed_Duration > 0) & (num2 > 0))
                 {
                     effect.nDuration = effect.Absorbed_Duration;
                 }
 
-                Effects[num3 + length] = effect;
+                fxList.Add(effect);
+
+                Effects = fxList.ToArray();
             }
 
-            return array;
+            return lst.ToArray();
         }
 
         public void ApplyGrantPowerEffects()
         {
             var flag = true;
             var num1 = 0;
-            var num2 = 0;
             if (HasGrantPowerEffect)
             {
                 for (; flag & (num1 < 100); num1++)
                 {
                     flag = false;
-                    var array1 = Array.Empty<int>();
-                    var array2 = Array.Empty<int>();
-                    for (var index = num2; index < Effects.Length; index++)
+                    var lFxIndex = new List<int>();
+                    var lFxSummons = new List<int>();
+                    for (var index = 0; index < Effects.Length; index++)
                     {
                         if (Effects[index].EffectType != Enums.eEffectType.GrantPower || !Effects[index].CanGrantPower() || Effects[index].EffectClass == Enums.eEffectClass.Ignored || Effects[index].nSummon <= -1)
                         {
                             continue;
                         }
 
-                        Array.Resize(ref array1, array1.Length + 1);
-                        Array.Resize(ref array2, array2.Length + 1);
-                        array1[^1] = index;
-                        array2[^1] = Effects[index].nSummon;
+                        lFxIndex.Add(index);
+                        lFxSummons.Add(Effects[index].nSummon);
                     }
 
-                    num2 = Effects.Length;
-                    for (var index1 = 0; index1 < array1.Length; index1++)
+                    for (var index1 = 0; index1 < lFxIndex.Count; index1++)
                     {
                         flag = true;
-                        Effects[array1[index1]].EffectClass = Enums.eEffectClass.Ignored;
+                        Effects[lFxIndex[index1]].EffectClass = Enums.eEffectClass.Ignored;
                         var length = Effects.Length;
-                        AbsorbEffects(DatabaseAPI.Database.Power[array2[index1]], Effects[array1[index1]].Duration, 0, MidsContext.Archetype, 1, true, array1[index1]);
+                        AbsorbEffects(DatabaseAPI.Database.Power[lFxSummons[index1]], Effects[lFxIndex[index1]].Duration, 0, MidsContext.Archetype, 1, true, lFxIndex[index1]);
                         for (var index2 = length; index2 < Effects.Length; index2++)
                         {
-                            if (Effects[array1[index1]].Absorbed_Power_nID > -1)
+                            if (Effects[lFxIndex[index1]].Absorbed_Power_nID > -1)
                             {
-                                Effects[index2].Absorbed_PowerType = Effects[array1[index1]].Absorbed_PowerType;
+                                Effects[index2].Absorbed_PowerType = Effects[lFxIndex[index1]].Absorbed_PowerType;
                             }
 
                             if (Effects[index2].EffectType != Enums.eEffectType.GrantPower)
                             {
-                                Effects[index2].ToWho = Effects[array1[index1]].ToWho;
+                                Effects[index2].ToWho = Effects[lFxIndex[index1]].ToWho;
                             }
 
-                            if (Effects[index2].ToWho == Enums.eToWho.All && ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster || (EntitiesAffected & Enums.eEntity.Friend) != Enums.eEntity.Friend))
-                            {
-                                Effects[index2].ToWho = Enums.eToWho.Target;
-                            }
-                            else if (Effects[index2].ToWho == Enums.eToWho.All &&
-                                     ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster ||
-                                      (EntitiesAffected & Enums.eEntity.Foe) != Enums.eEntity.Foe))
+                            if ((Effects[index2].ToWho == Enums.eToWho.All && ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster || (EntitiesAffected & Enums.eEntity.Friend) != Enums.eEntity.Friend)) || (Effects[index2].ToWho == Enums.eToWho.All &&
+                                    ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster ||
+                                     (EntitiesAffected & Enums.eEntity.Foe) != Enums.eEntity.Foe)))
                             {
                                 Effects[index2].ToWho = Enums.eToWho.Target;
                             }
 
-                            Effects[index2].isEnhancementEffect = Effects[array1[index1]].isEnhancementEffect;
-                            if (Effects[array1[index1]].Probability < 1)
+                            Effects[index2].isEnhancementEffect = Effects[lFxIndex[index1]].isEnhancementEffect;
+                            if (!(Effects[lFxIndex[index1]].Probability < 1))
                             {
-                                Effects[index2].Probability = Effects[array1[index1]].Probability * Effects[index2].Probability;
+                                continue;
                             }
+
+                            var fxc = Effects[index2].Clone<IEffect>();
+                            fxc.Probability = 0f;
+                            Effects[index2].Probability = Effects[lFxIndex[index1]].Probability * fxc.Probability;
                         }
                     }
                 }

@@ -24,8 +24,8 @@ namespace Mids_Reborn
     {
         private const double BuildFormatChange1 = 1.29999995231628;
         private const double BuildFormatChange2 = 1.39999997615814;
-        private IPower?[] _buffedPowers = Array.Empty<IPower>();
-        private IPower[] _mathPowers = Array.Empty<IPower>();
+        private IPower?[] _buffedPowers = [];
+        private IPower[] _mathPowers = [];
         private Enums.BuffsX _selfBuffs;
         private Enums.BuffsX _selfEnhance;
 
@@ -47,12 +47,14 @@ namespace Mids_Reborn
 
         private void ApplyPvpDr()
         {
-            if (MidsContext.Config.Inc.DisablePvE)
+            if (!MidsContext.Config.Inc.DisablePvE)
             {
-                for (var index = 0; index < Totals.Def.Length; index++)
-                {
-                    Totals.Def[index] = CalculatePvpDr(Totals.Def[index], 1.2f, 1f);
-                }
+                return;
+            }
+
+            for (var index = 0; index < Totals.Def.Length; index++)
+            {
+                Totals.Def[index] = CalculatePvpDr(Totals.Def[index], 1.2f, 1f);
             }
         }
 
@@ -76,7 +78,7 @@ namespace Mids_Reborn
                 string str4;
                 if (Math.Round(num1 - num2, 3) > 0)
                 {
-                    str4 = str3 + "  (Pre-ED: " + str2 + ")";
+                    str4 = $"{str3}  (Pre-ED: {str2})";
                     if (flag3)
                         color = Color.FromArgb(byte.MaxValue, 0, 0);
                     else if (flag2)
