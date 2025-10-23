@@ -2504,35 +2504,45 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     {
                         flag = true;
                         Effects[lFxIndex[index1]].EffectClass = Enums.eEffectClass.Ignored;
-                        var length = Effects.Length;
+                        
                         AbsorbEffects(DatabaseAPI.Database.Power[lFxSummons[index1]], Effects[lFxIndex[index1]].Duration, 0, MidsContext.Archetype, 1, true, lFxIndex[index1]);
-                        for (var index2 = length; index2 < Effects.Length; index2++)
+                        
+                        if (Effects[lFxIndex[index1]].Absorbed_Power_nID > -1)
                         {
-                            if (Effects[lFxIndex[index1]].Absorbed_Power_nID > -1)
-                            {
-                                Effects[index2].Absorbed_PowerType = Effects[lFxIndex[index1]].Absorbed_PowerType;
-                            }
-
-                            if (Effects[index2].EffectType != Enums.eEffectType.GrantPower)
-                            {
-                                Effects[index2].ToWho = Effects[lFxIndex[index1]].ToWho;
-                            }
-
-                            if ((Effects[index2].ToWho == Enums.eToWho.All && ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster || (EntitiesAffected & Enums.eEntity.Friend) != Enums.eEntity.Friend)) || (Effects[index2].ToWho == Enums.eToWho.All &&
-                                    ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster ||
-                                     (EntitiesAffected & Enums.eEntity.Foe) != Enums.eEntity.Foe)))
-                            {
-                                Effects[index2].ToWho = Enums.eToWho.Target;
-                            }
-
-                            Effects[index2].isEnhancementEffect = Effects[lFxIndex[index1]].isEnhancementEffect;
-                            if (!(Effects[lFxIndex[index1]].Probability < 1))
-                            {
-                                continue;
-                            }
-
-                            Effects[index2].Probability *= Effects[lFxIndex[index1]].Probability;
+                            Effects[^1].Absorbed_PowerType = Effects[lFxIndex[index1]].Absorbed_PowerType;
                         }
+
+                        if (Effects[^1].EffectType != Enums.eEffectType.GrantPower)
+                        {
+                            Effects[^1].ToWho = Effects[lFxIndex[index1]].ToWho;
+                        }
+
+                        if ((Effects[^1].ToWho == Enums.eToWho.All && ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster || (EntitiesAffected & Enums.eEntity.Friend) != Enums.eEntity.Friend)) || (Effects[^1].ToWho == Enums.eToWho.All &&
+                                ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster ||
+                                 (EntitiesAffected & Enums.eEntity.Foe) != Enums.eEntity.Foe)))
+                        {
+                            Effects[^1].ToWho = Enums.eToWho.Target;
+                        }
+
+                        /*
+                        Effects[^1].isEnhancementEffect = Effects[lFxIndex[^1]].isEnhancementEffect;
+                        if (!(Effects[lFxIndex[index1]].Probability < 1))
+                        {
+                           continue;
+                        }
+
+                        Effects[^1].Probability *= Effects[lFxIndex[index1]].Probability;
+                        */
+
+                        Effects[^1].isEnhancementEffect = Effects[lFxIndex[index1]].isEnhancementEffect;
+                        if (!(Effects[lFxIndex[index1]].BaseProbability < 1))
+                        {
+                            continue;
+                        }
+
+                        // Needed?
+                        // Handled by clsToonX.GBPA_ApplyIncarnateEnhancements() for _BuffedPowers (in use by the dataview)
+                        Effects[^1].EffectiveProbability = Effects[^1].Probability * Effects[lFxIndex[index1]].Probability;
                     }
                 }
             }

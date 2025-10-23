@@ -206,5 +206,7 @@ namespace Mids_Reborn.Core
         Damage GetDamage();
 
         public float MinProcChance { get; }
+        
+        float EffectiveProbability { set; }
     }
 }

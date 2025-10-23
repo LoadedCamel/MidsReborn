@@ -355,7 +355,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (ProcsPerMinute > 0 && power != null)
                 {
                     var areaFactor = (float)(power.AoEModifier * 0.75 + 0.25);
-
                     var globalRecharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
                     var rechargeVal = Math.Abs(power.RechargeTime) < float.Epsilon
                         ? 0
@@ -374,6 +373,23 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 return Math.Max(0, Math.Min(1, probability));
+            }
+        }
+
+        public float EffectiveProbability
+        {
+            set
+            {
+                // Reverse calculation Probability -> BaseProbability
+                var p = value;
+                if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) && MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
+                {
+                    p -= MidsContext.Character.ModifyEffects[EffectId];
+                }
+
+                // PPM calc doesn't use base probability
+
+                BaseProbability = p;
             }
         }
 

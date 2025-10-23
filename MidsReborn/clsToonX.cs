@@ -1,14 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Drawing;
-using System.Globalization;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using FastDeepCloner;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Controls.Skia;
@@ -17,6 +6,18 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
+using System;
+using System.Collections.Generic;
+using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.Drawing;
+using System.Globalization;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Mids_Reborn
 {
@@ -821,7 +822,7 @@ namespace Mids_Reborn
             for (var index1 = 0; index1 < CurrentBuild.Powers.Count; index1++)
             {
                 if (CurrentBuild.Powers[index1] == null) continue;
-                if (!(CurrentBuild.Powers[index1].StatInclude & _buffedPowers[index1] != null))
+                if (!(CurrentBuild.Powers[index1].StatInclude & (_buffedPowers[index1] != null)))
                 {
                     continue;
                 }
@@ -834,7 +835,7 @@ namespace Mids_Reborn
 
                 foreach (var buffedPwr in _buffedPowers[index1].Effects)
                 {
-                    if (buffedPwr.EffectType == Enums.eEffectType.Fly & buffedPwr.Mag > 0)
+                    if ((buffedPwr.EffectType == Enums.eEffectType.Fly) & (buffedPwr.Mag > 0))
                     {
                         canFly = true;
                     }
@@ -955,7 +956,7 @@ namespace Mids_Reborn
             {
                 Totals.BuffDam = maxDmgBuff;
             }
-            else if (maxDmgBuff - avgDmgBuff > avgDmgBuff - minDmgBuff & minDmgBuff > 0)
+            else if ((maxDmgBuff - avgDmgBuff > avgDmgBuff - minDmgBuff) & (minDmgBuff > 0))
             {
                 Totals.BuffDam = minDmgBuff;
             }
@@ -1349,6 +1350,7 @@ namespace Mids_Reborn
             }
         }
 
+        // Exists but is never called
         private static void HandleGrantPowerIncarnate(ref IPower powerMath, IEffect effect1, IReadOnlyList<IPower> buffedPowers, int effIdx, Archetype? at, int hIDX)
         {
             powerMath.AbsorbEffects(DatabaseAPI.Database.Power[effect1.nSummon], effect1.Duration, 0, at, 1, true, effIdx);
@@ -1358,21 +1360,21 @@ namespace Mids_Reborn
                 fx.Absorbed_Effect = true;
                 fx.isEnhancementEffect = effect1.isEnhancementEffect;
                 fx.BaseProbability *= effect1.BaseProbability;
+                fx.EffectiveProbability = fx.Probability * effect1.Probability;
                 fx.Ticks = effect1.Ticks;
             }
 
             if (hIDX <= -1) return;
+            
+            var length2 = buffedPowers[hIDX].Effects.Length;
+            buffedPowers[hIDX].AbsorbEffects(DatabaseAPI.Database.Power[effect1.nSummon], effect1.Duration, 0, at, 1, true, effIdx);
+            for (var index2 = length2; index2 < buffedPowers[hIDX].Effects.Length; index2++)
             {
-                var length2 = buffedPowers[hIDX].Effects.Length;
-                buffedPowers[hIDX].AbsorbEffects(DatabaseAPI.Database.Power[effect1.nSummon], effect1.Duration, 0, at, 1, true, effIdx);
-                for (var index2 = length2; index2 < buffedPowers[hIDX].Effects.Length; index2++)
-                {
-                    buffedPowers[hIDX].Effects[index2].ToWho = effect1.ToWho;
-                    buffedPowers[hIDX].Effects[index2].Absorbed_Effect = true;
-                    buffedPowers[hIDX].Effects[index2].isEnhancementEffect = effect1.isEnhancementEffect;
-                    buffedPowers[hIDX].Effects[index2].BaseProbability *= effect1.BaseProbability;
-                    buffedPowers[hIDX].Effects[index2].Ticks = effect1.Ticks;
-                }
+                buffedPowers[hIDX].Effects[index2].ToWho = effect1.ToWho;
+                buffedPowers[hIDX].Effects[index2].Absorbed_Effect = true;
+                buffedPowers[hIDX].Effects[index2].isEnhancementEffect = effect1.isEnhancementEffect;
+                buffedPowers[hIDX].Effects[index2].EffectiveProbability = buffedPowers[hIDX].Effects[index2].Probability * effect1.Probability;
+                buffedPowers[hIDX].Effects[index2].Ticks = effect1.Ticks;
             }
         }
 
@@ -1398,6 +1400,9 @@ namespace Mids_Reborn
                 return;
             }
 
+            var powerGrantsMap = new PowerGrantsMap(power);
+            var gcmFlags = new List<string>();
+            var len = powerMath.Effects.Length;
             for (var effIdx = 0; effIdx < power.Effects.Length; effIdx++)
             {
                 var effect1 = power.Effects[effIdx];
@@ -1411,21 +1416,14 @@ namespace Mids_Reborn
                     switch (effectType)
                     {
                         case Enums.eEffectType.Enhancement when effect1.EffectType != Enums.eEffectType.Enhancement && effect1.EffectType != Enums.eEffectType.DamageBuff:
-                            disqualified = true;
-                            break;
                         case Enums.eEffectType.GrantPower when effect1.EffectType is Enums.eEffectType.Enhancement or Enums.eEffectType.DamageBuff:
                             disqualified = true;
                             break;
+
                         default:
-                            if (effect1.IgnoreED != ignoreED)
-                            {
-                                disqualified = true;
-                            }
-                            else if (power.PowerType != Enums.ePowerType.GlobalBoost && (!effect1.Absorbed_Effect || effect1.Absorbed_PowerType != Enums.ePowerType.GlobalBoost))
-                            {
-                                disqualified = true;
-                            }
-                            else if (effect1 is {EffectType: Enums.eEffectType.GrantPower, Absorbed_Effect: true})
+                            if (effect1.IgnoreED != ignoreED ||
+                                (power.PowerType != Enums.ePowerType.GlobalBoost && (!effect1.Absorbed_Effect || effect1.Absorbed_PowerType != Enums.ePowerType.GlobalBoost)) ||
+                                effect1 is {EffectType: Enums.eEffectType.GrantPower, Absorbed_Effect: true})
                             {
                                 disqualified = true;
                             }
@@ -1433,8 +1431,6 @@ namespace Mids_Reborn
                             break;
                     }
                 }
-
-                //var disqualified = effect1.EffectClass == Enums.eEffectClass.Ignored || effectType == Enums.eEffectType.Enhancement && effect1.EffectType != Enums.eEffectType.Enhancement && effect1.EffectType != Enums.eEffectType.DamageBuff || effectType == Enums.eEffectType.GrantPower && (effect1.EffectType == Enums.eEffectType.Enhancement || effect1.EffectType == Enums.eEffectType.DamageBuff) || effect1.IgnoreED != ignoreED || power.PowerType != Enums.ePowerType.GlobalBoost && (!effect1.Absorbed_Effect || effect1.Absorbed_PowerType != Enums.ePowerType.GlobalBoost) || effect1.EffectType == Enums.eEffectType.GrantPower && effect1.Absorbed_Effect;
 
                 if (disqualified)
                 {
@@ -1493,30 +1489,68 @@ namespace Mids_Reborn
                 else
                 {
                     powerMath.AbsorbEffects(power, effect1.Duration, 0, Archetype, 1, true, effIdx, effIdx);
-                    for (var index2 = powerMath.Effects.Length; index2 < powerMath.Effects.Length; index2++)
-                    {
-                        powerMath.Effects[index2].ToWho = Enums.eToWho.Target;
-                        powerMath.Effects[index2].Absorbed_Effect = true;
-                        powerMath.Effects[index2].isEnhancementEffect = effect1.isEnhancementEffect;
-                        powerMath.Effects[index2].BaseProbability *= effect1.BaseProbability;
-                        powerMath.Effects[index2].Ticks = effect1.Ticks;
-                    }
 
-                    if (hIDX <= -1)
-                    {
-                        continue;
-                    }
+                    powerMath.Effects[^1].ToWho = Enums.eToWho.Target;
+                    powerMath.Effects[^1].Absorbed_Effect = true;
+                    powerMath.Effects[^1].isEnhancementEffect = effect1.isEnhancementEffect;
+                    powerMath.Effects[^1].Ticks = effect1.Ticks;
 
-                    var length2 = _buffedPowers[hIDX].Effects.Length;
-                    _buffedPowers[hIDX].AbsorbEffects(power, effect1.Duration, 0, Archetype, 1, true, effIdx, effIdx);
-                    for (var index2 = length2; index2 < _buffedPowers[hIDX].Effects.Length; index2++)
+                    if (hIDX > -1 && _buffedPowers[hIDX] != null)
                     {
-                        _buffedPowers[hIDX].Effects[index2].ToWho = effect1.ToWho;
-                        _buffedPowers[hIDX].Effects[index2].Absorbed_Effect = true;
-                        _buffedPowers[hIDX].Effects[index2].isEnhancementEffect = effect1.isEnhancementEffect;
-                        _buffedPowers[hIDX].Effects[index2].BaseProbability *= effect1.BaseProbability;
-                        _buffedPowers[hIDX].Effects[index2].Ticks = effect1.Ticks;
+                        _buffedPowers[hIDX].AbsorbEffects(power, effect1.Duration, 0, Archetype, 1, true, effIdx, effIdx);
+                        
+                        _buffedPowers[hIDX].Effects[^1].ToWho = effect1.ToWho;
+                        _buffedPowers[hIDX].Effects[^1].Absorbed_Effect = true;
+                        _buffedPowers[hIDX].Effects[^1].isEnhancementEffect = effect1.isEnhancementEffect;
+                        _buffedPowers[hIDX].Effects[^1].Ticks = effect1.Ticks;
                     }
+                }
+            }
+
+            // Calculate grant vs absorbed effect probabilities
+
+            // Pass 1: gather GCM flags needed
+            for (var i = len; i < powerMath.Effects.Length; i++)
+            {
+                var grantFx = powerGrantsMap.GetGrantRoot(i - len);
+                var fx = powerMath.Effects[i];
+                if (grantFx != null && !string.IsNullOrWhiteSpace(grantFx.EffectId) && !gcmFlags.Contains(grantFx.EffectId))
+                {
+                    gcmFlags.Add(grantFx.EffectId);
+                }
+
+                if (!string.IsNullOrWhiteSpace(fx.EffectId) && !gcmFlags.Contains(fx.EffectId))
+                {
+                    gcmFlags.Add(fx.EffectId);
+                }
+            }
+
+            // Pass 2: calc GCM flags scale (from source incarnate power only)
+            // This assumes incarnate powers do not interact with each other.
+            foreach (var flag in gcmFlags)
+            {
+                if (MidsContext.Character?.ModifyEffects?.ContainsKey(flag) == true)
+                {
+                    continue;
+                }
+
+                var scale = power.Effects
+                    .Where(e => e.Reward == flag)
+                    .Select(e => e.Scale)
+                    .Sum();
+
+                MidsContext.Character?.ModifyEffects?.Add(flag, scale);
+            }
+
+            // Pass 3: recalculate probabilities
+            for (var i = len; i < powerMath.Effects.Length; i++)
+            {
+                var grantPowerProbability = powerGrantsMap.GetGrantProbability(i - len);
+                powerMath.Effects[i].EffectiveProbability = powerMath.Effects[i].Probability * (grantPowerProbability ?? 1);
+
+                if (hIDX > -1 && _buffedPowers[hIDX] != null)
+                {
+                    _buffedPowers[hIDX].Effects[i].EffectiveProbability = _buffedPowers[hIDX].Effects[i].Probability * (grantPowerProbability ?? 1);
                 }
             }
         }
@@ -2157,6 +2191,7 @@ namespace Mids_Reborn
             GBPA_Pass0_InitializePowerArray();
 
             GenerateModifyEffectsArray();
+
             GenerateBuffData(ref _selfEnhance, true);
 
             Parallel.For(0, _mathPowers.Length, hIDX =>
@@ -2235,9 +2270,9 @@ namespace Mids_Reborn
             return new KeyValuePair<List<IPower>, List<IPower>>(mathPowers, buffedPowers);
         }
 
-        private void GenerateModifyEffectsArray()
+        private void GenerateModifyEffectsArray(bool ignoreExisting = true)
         {
-            for (var index = 0; index <= CurrentBuild.Powers.Count - 1; ++index)
+            for (var index = 0; index < CurrentBuild.Powers.Count; index++)
             {
                 if (CurrentBuild.Powers[index] == null)
                 {
@@ -2261,11 +2296,17 @@ namespace Mids_Reborn
                         continue;
                     }
 
+                    if (ignoreExisting)
+                    {
+                        if (ModifyEffects.ContainsKey(effect.Reward))
+                        {
+                            continue;
+                        }
+                    }
+
                     if (ModifyEffects.ContainsKey(effect.Reward))
                     {
-                        Dictionary<string, float>? modifyEffects;
-                        string reward;
-                        (modifyEffects = ModifyEffects)[reward = effect.Reward] = modifyEffects[reward] + effect.Scale;
+                        ModifyEffects[effect.Reward] += effect.Scale;
                     }
                     else
                     {
@@ -2286,11 +2327,17 @@ namespace Mids_Reborn
                     continue;
                 }
 
+                if (ignoreExisting)
+                {
+                    if (ModifyEffects.ContainsKey(effect.Reward))
+                    {
+                        continue;
+                    }
+                }
+
                 if (ModifyEffects.ContainsKey(effect.Reward))
                 {
-                    Dictionary<string, float>? modifyEffects;
-                    string reward;
-                    (modifyEffects = ModifyEffects)[reward = effect.Reward] = modifyEffects[reward] + effect.Scale;
+                    ModifyEffects[effect.Reward] += effect.Scale;
                 }
                 else
                 {
@@ -2331,9 +2378,15 @@ namespace Mids_Reborn
             foreach (var enhCls in DatabaseAPI.Database.EnhancementClasses)
             {
                 if (string.Equals(enhCls.ShortName, iName, StringComparison.OrdinalIgnoreCase))
+                {
                     return enhCls.ID;
+                }
+
                 if (!string.Equals(enhCls.Name, iName, StringComparison.OrdinalIgnoreCase))
+                {
                     continue;
+                }
+
                 return enhCls.ID;
             }
 
