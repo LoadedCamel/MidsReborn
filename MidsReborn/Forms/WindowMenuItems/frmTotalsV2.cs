@@ -32,19 +32,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private bool KeepOnTop { get; set; }
         private readonly TabColorScheme _tabColors = new();
 
-        private readonly List<Enums.eMez> MezList = new()
-        {
+        private readonly List<Enums.eMez> MezList =
+        [
             Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep, Enums.eMez.Immobilized,
             Enums.eMez.Knockback, Enums.eMez.Repel, Enums.eMez.Confused, Enums.eMez.Terrorized,
             Enums.eMez.Taunt, Enums.eMez.Placate, Enums.eMez.Teleport
-        };
+        ];
 
-        private readonly List<Enums.eEffectType> DebuffEffectsList = new()
-        {
+        private readonly List<Enums.eEffectType> DebuffEffectsList =
+        [
             Enums.eEffectType.Defense, Enums.eEffectType.Endurance, Enums.eEffectType.Recovery,
             Enums.eEffectType.PerceptionRadius, Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime,
             Enums.eEffectType.SpeedRunning, Enums.eEffectType.Regeneration
-        };
+        ];
 
         public frmTotalsV2(ref frmMain parentForm)
         {
@@ -169,9 +169,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             radioButton4.Checked = MidsContext.Config.SpeedFormat == Enums.eSpeedMeasure.MetersPerSecond;
         }
 
-        public static void SetTitle(frmTotalsV2 frm)
+        public static void SetTitle(frmTotalsV2? frm)
         {
-            if (frm == null) return;
+            if (frm == null)
+            {
+                return;
+            }
 
             var titleTxt = "";
             var epicPowersetIndex = GetEpicPowersetIndex();
@@ -214,13 +217,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     }
                     else
                     {
-                        titleTxt += !string.IsNullOrEmpty(buildFileName) ? $"[{buildFileName}]" : "";
+                        titleTxt += !string.IsNullOrEmpty(buildFileName) ? $" [{buildFileName}]" : "";
                     }
 
                     frm.Text = titleTxt == "" ? "Totals for Self" : $"Totals - {titleTxt}";
                     break;
 
-                case ConfigData.ETotalsWindowTitleStyle.Generic:
                 default:
                     frm.Text = "Totals for Self";
                     break;

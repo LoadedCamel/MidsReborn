@@ -1025,7 +1025,7 @@ namespace Mids_Reborn.Core
 
         public int FindInToonHistory(int nIDPower)
         {
-            for (var powerIdx = 0; powerIdx <= Powers.Count - 1; ++powerIdx)
+            for (var powerIdx = 0; powerIdx < Powers.Count; powerIdx++)
             {
                 if (Powers[powerIdx]?.Power != null && Powers[powerIdx]?.Power.PowerIndex == nIDPower)
                 {
@@ -1043,13 +1043,14 @@ namespace Mids_Reborn.Core
 
         public bool PowerActive(IPower power)
         {
-            for (var powerIdx = 0; powerIdx <= Powers.Count - 1; ++powerIdx)
+            foreach (var pe in Powers)
             {
-                if (Powers[powerIdx] != null && Powers[powerIdx].Power != null && Powers[powerIdx].Power.PowerIndex == power.PowerIndex)
+                if (pe is { Power: not null } && pe.Power.PowerIndex == power.PowerIndex)
                 {
-                    return Powers[powerIdx].Power.Active;
+                    return pe.Power.Active;
                 }
             }
+
             return false;
         }
 
@@ -1104,20 +1105,10 @@ namespace Mids_Reborn.Core
             var foundInPower = false;
             var foundEnh = string.Empty;
             var mutexType = -1;
-            if (enhancement.TypeID == Enums.eType.SetO && enhancement.nIDSet > -1 && hIdx > -1 && Powers[hIdx].Power != null)
+            if (enhancement is { TypeID: Enums.eType.SetO, nIDSet: > -1 } && hIdx > -1 && Powers[hIdx].Power != null)
             {
-                var allowedSet = false;
                 var setType = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].SetType;
-                for (var index = 0; index <= Powers[hIdx].Power.SetTypes.Count - 1; ++index)
-                {
-                    if (Powers[hIdx].Power.SetTypes[index] != setType)
-                    {
-                        continue;
-                    }
-
-                    allowedSet = true;
-                    break;
-                }
+                var allowedSet = Powers[hIdx].Power.SetTypes.Any(t => t == setType);
 
                 if (!allowedSet)
                 {
@@ -1135,7 +1126,7 @@ namespace Mids_Reborn.Core
                 var power = Powers[powerIdx];
                 for (var slotIndex = 0; slotIndex < power.Slots.Length; slotIndex++)
                 {
-                    if (slotIndex == iSlotID && powerIdx == hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh <= -1)
+                    if ((slotIndex == iSlotID && powerIdx == hIdx) || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh <= -1)
                     {
                         continue;
                     }
@@ -1159,12 +1150,14 @@ namespace Mids_Reborn.Core
                         var nVersion = Regex.Replace(enhancement.UID, @"(Attuned_|Superior_)", "");
                         foreach (var item in MidsContext.Character.PEnhancementsList)
                         {
-                            if (item.Contains(nVersion))
+                            if (!item.Contains(nVersion))
                             {
-                                foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
-                                mutexType = 0;
-                                foundMutex = true;
+                                continue;
                             }
+
+                            foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
+                            mutexType = 0;
+                            foundMutex = true;
                         }
                     }
                     else if (!enhancement.Superior && enhancement.MutExID != Enums.eEnhMutex.None && enhancement.MutExID != Enums.eEnhMutex.Stealth)

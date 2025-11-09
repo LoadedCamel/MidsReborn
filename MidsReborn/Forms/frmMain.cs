@@ -762,11 +762,18 @@ namespace Mids_Reborn.Forms
         private void cbAncillery_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (NoUpdate)
+            {
                 return;
+            }
+
             ChangeSets();
             UpdatePowerLists();
             if (!MidsContext.Config.UseOldTotalsWindow)
+            {
                 frmTotalsV2.SetTitle(fTotals2);
+            }
+
+            frmStats.SetTitle(fGraphStats);
         }
 
         private void cbAT_DrawItem(object sender, DrawItemEventArgs e)
@@ -823,7 +830,11 @@ namespace Mids_Reborn.Forms
             SetAncilPoolHeight();
             GetBestDamageValues();
             if (!MidsContext.Config.UseOldTotalsWindow)
+            {
                 frmTotalsV2.SetTitle(fTotals2);
+            }
+
+            frmStats.SetTitle(fGraphStats);
         }
 
         private static void cbDrawItem(ComboBoxT<string> target, Enums.ePowerSetType SetType, DrawItemEventArgs e)
@@ -985,11 +996,18 @@ namespace Mids_Reborn.Forms
         private void cbPrimary_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (NoUpdate)
+            {
                 return;
+            }
+
             ChangeSets();
             UpdatePowerLists();
             if (!MidsContext.Config.UseOldTotalsWindow)
+            {
                 frmTotalsV2.SetTitle(fTotals2);
+            }
+
+            frmStats.SetTitle(fGraphStats);
         }
 
         private void cbSecondary_DrawItem(object sender, DrawItemEventArgs e)
@@ -1019,11 +1037,18 @@ namespace Mids_Reborn.Forms
         private void cbSecondary_SelectedIndexChanged(object sender, EventArgs e)
         {
             if (NoUpdate)
+            {
                 return;
+            }
+
             ChangeSets();
             UpdatePowerLists();
             if (!MidsContext.Config.UseOldTotalsWindow)
+            {
                 frmTotalsV2.SetTitle(fTotals2);
+            }
+
+            frmStats.SetTitle(fGraphStats);
         }
 
         private void ChangeSets()
@@ -2423,30 +2448,29 @@ The default position/state will be used upon next launch.", @"Window State Warni
             I9Picker.LastLevel = MidsContext.Config.I9.DefaultIOLevel + 1;
             myDataView?.SetFontData();
             if (dvLastPower > -1)
+            {
                 Info_Power(dvLastPower, dvLastEnh, dvLastNoLev, DataViewLocked);
+            }
+
             if (drawing != null)
+            {
                 DoRedraw();
+            }
+
             UpdateColors();
             SetTitleBar();
             frmTotalsV2.SetTitle(fTotals2);
+            frmStats.SetTitle(fGraphStats);
         }
 
         private void GetBestDamageValues()
         {
             if (MainModule.MidsController.Toon == null)
-                return;
-            var highBase = 0.0f;
-            for (var index = 0; index <= MidsContext.Character.Powersets[0].Powers.Length - 1; ++index)
             {
-                var power = MidsContext.Character.Powersets[0].Powers[index];
-                if (power.SkipMax)
-                    continue;
-                var damageValue = power.FXGetDamageValue();
-                if (damageValue > (double)highBase)
-                    highBase = damageValue;
+                return;
             }
 
-
+            var highBase = (from power in MidsContext.Character.Powersets[0].Powers where !power.SkipMax select power.FXGetDamageValue()).Prepend(0f).Max();
             var ps1 = MainModule.MidsController.Toon.PickDefaultSecondaryPowerset();
             foreach (var power in ps1.Powers)
             {
@@ -2464,7 +2488,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             MainModule.MidsController.Toon.GenerateBuffedPowerArray();
             var highEnh = highBase * (1f + MidsContext.Character.TotalsCapped.BuffDam + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f));
-            if (MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPS | MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPA)
+            if ((MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPS) | (MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPA))
             {
                 highEnh *= 1.5f;
             }

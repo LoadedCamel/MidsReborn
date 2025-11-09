@@ -32,6 +32,12 @@ namespace Mids_Reborn.Controls
             Both
         }
 
+        public enum BarAlignment
+        {
+            Left,
+            Center
+        }
+
         public int ContentHeight => CalcContentHeight();
 
         private IContainer? Components;
@@ -71,6 +77,13 @@ namespace Mids_Reborn.Controls
         private float _fontSizeOverride;
         private bool _singleLineLabels;
         private Alignment _secondaryLabelPosition;
+        private BarAlignment _BarAlignment;
+
+        private Color _NegativeBaseColor;
+        private Color _NegativeEnhColor;
+        private Color _NegativeOvercapColor;
+        private Color _NegativeAbsorbedColor;
+
         private const float Name2XPadding = 9;
 
         public CtlMultiGraph()
@@ -87,8 +100,8 @@ namespace Mids_Reborn.Controls
             ForeColorChanged += ctlMultiGraph_ForeColorChanged;
             Resize += ctlMultiGraph_Resize;
             MouseMove += ctlMultiGraph_MouseMove;
-            _scales = new List<float>();
-            _items = new List<GraphItem>();
+            _scales = [];
+            _items = [];
             _pBaseColor = Color.Blue;
             _pEnhColor = Color.Yellow;
             _pBlendColor1 = Color.Black;
@@ -109,6 +122,7 @@ namespace Mids_Reborn.Controls
             _loaded = false;
             _pShowScale = false;
             _pScaleHeight = 32;
+            _BarAlignment = BarAlignment.Left;
             _pHighlight = -1;
             _pHighlightColor = Color.FromArgb(128, 128, 255);
             _noDraw = false;
@@ -116,6 +130,10 @@ namespace Mids_Reborn.Controls
             MarkerValue = 0f;
             _pMarkerColor = Color.Black;
             _pMarkerColor2 = Color.Yellow;
+            _NegativeBaseColor = Color.Navy;
+            _NegativeEnhColor = Color.Olive;
+            _NegativeOvercapColor = Color.DarkMagenta;
+            _NegativeAbsorbedColor = Color.SlateGray;
             _pForcedMax = 0;
             Clickable = false;
             _maxItemsCapacity = 60;
@@ -422,11 +440,11 @@ namespace Mids_Reborn.Controls
 
         public Color BorderColor { get; set; } = Color.Black;
 
-        public List<Color> BaseBarColors { get; set; } = new();
+        public List<Color> BaseBarColors { get; set; } = [];
         
-        public List<Color> EnhBarColors { get; set; } = new();
+        public List<Color> EnhBarColors { get; set; } = [];
 
-        public List<Color> OvercapColors { get; set; } = new();
+        public List<Color> OvercapColors { get; set; } = [];
 
         public bool DifferentiateColors
         {
@@ -474,7 +492,57 @@ namespace Mids_Reborn.Controls
             }
         }
 
-        public List<float> PerItemScales { get; set; } = new();
+        public BarAlignment BarsAlignment
+        {
+            get => _BarAlignment;
+            set
+            {
+                _BarAlignment = value;
+                if (DesignMode) Draw();
+            }
+        }
+
+        public Color NegativeBaseColor
+        {
+            get => _NegativeBaseColor;
+            set
+            {
+                _NegativeBaseColor = value;
+                if (DesignMode) Draw();
+            }
+        }
+
+        public Color NegativeEnhColor
+        {
+            get => _NegativeEnhColor;
+            set
+            {
+                _NegativeEnhColor = value;
+                if (DesignMode) Draw();
+            }
+        }
+
+        public Color NegativeOvercapColor
+        {
+            get => _NegativeOvercapColor;
+            set
+            {
+                _NegativeOvercapColor = value;
+                if (DesignMode) Draw();
+            }
+        }
+
+        public Color NegativeAbsorbedColor
+        {
+            get => _NegativeAbsorbedColor;
+            set
+            {
+                _NegativeAbsorbedColor = value;
+                if (DesignMode) Draw();
+            }
+        }
+
+        public List<float> PerItemScales { get; set; } = [];
 
         public event BarClickEventHandler? BarClick;
 
@@ -509,7 +577,9 @@ namespace Mids_Reborn.Controls
                     var max = (int) (PerItemScales.Count >= _maxItemsCapacity
                         ? PerItemScales[i]
                         : ScaleValue);
-                    var values = new List<int> {rng.Next(0, max), rng.Next(0, max), rng.Next(0, (int) (1.5 * max))};
+                    var values = _BarAlignment == BarAlignment.Left
+                        ? new List<int> { rng.Next(0, max), rng.Next(0, max), rng.Next(0, (int)(1.5 * max)) }
+                        : new List<int> { rng.Next(-max, max), rng.Next(-max, max), rng.Next((int)(-1.5 * max), (int)(1.5 * max)) };
                     values.Sort();
                     if (Overcap)
                     {
@@ -566,7 +636,7 @@ namespace Mids_Reborn.Controls
 
         public void Clear()
         {
-            _items = new List<GraphItem>();
+            _items = [];
         }
 
         /// <summary>
@@ -594,12 +664,17 @@ namespace Mids_Reborn.Controls
             var fontSize = _fontSizeOverride > 0 ? _fontSizeOverride : _fontSize;
             using var bgGradientBrush = new SKPaint
             {
-                Shader = SKShader.CreateLinearGradient(
+                Shader = _BarAlignment == BarAlignment.Left
+                    ? SKShader.CreateLinearGradient(
                     new SKPoint(drawArea.Left, drawArea.Top), new SKPoint(drawArea.Right, drawArea.Top),
-                    new[] {_pBlendColor1.ToSKColor(), _pBlendColor1.ToSKColor(), _pBlendColor2.ToSKColor()},
-                    new[] {0, _nameWidth / (float) Width, 1f},
-                    SKShaderTileMode.Clamp
-                ),
+                    [_pBlendColor1.ToSKColor(), _pBlendColor1.ToSKColor(), _pBlendColor2.ToSKColor()],
+                    [0, _nameWidth / (float) Width, 1],
+                    SKShaderTileMode.Clamp)
+                    : SKShader.CreateLinearGradient(
+                        new SKPoint(fullArea.Left, drawArea.Top), new SKPoint(drawArea.Right, drawArea.Top),
+                        [_pBlendColor1.ToSKColor(), _pBlendColor1.ToSKColor(), _pBlendColor2.ToSKColor(), _pBlendColor1.ToSKColor(), _pBlendColor2.ToSKColor()],
+                        [0, drawArea.Left / Width, drawArea.Left / Width + 1e-5f, (drawArea.Left + drawArea.Width / 2f) / Width, 1],
+                        SKShaderTileMode.Clamp),
                 Style = SKPaintStyle.Fill
             };
 
@@ -855,7 +930,7 @@ namespace Mids_Reborn.Controls
                     : values.Max();
             */
 
-            var vMin = 0f;
+            var vMin = _BarAlignment == BarAlignment.Left ? 0 : -ScaleValue;
             var vMax = ScaleValue;
 
             if (_pRulerPosition != RulerPosition.Bottom)
@@ -986,7 +1061,7 @@ namespace Mids_Reborn.Controls
                     num3 = Math.Max(num3, Size.Width - 1);
 
                     s.Canvas.DrawLine(num3, num4, num3, rect.Top + rect.Height, lineBrush);
-                    var layoutRectangle = new SKRect((float) (num3 - num / 2.0), num4 - num2, num, num2);
+                    var layoutRectangle = new SKRect(num3 - num / 2f, num4 - num2, num, num2);
                     if (i == 10)
                     {
                         layoutRectangle.Left = num3 - num;
@@ -1009,16 +1084,8 @@ namespace Mids_Reborn.Controls
 
         private void DrawBase(SKSurface s, int index, SKRect bounds, int ny)
         {
-            BaseBarColors ??= new List<Color>();
-            PerItemScales ??= new List<float>();
-
-            using var fillPaint = new SKPaint
-            {
-                Color = BaseBarColors.Count > 0
-                    ? BaseBarColors[index % BaseBarColors.Count].ToSKColor()
-                    : _pBaseColor.ToSKColor(),
-                Style = SKPaintStyle.Fill
-            };
+            BaseBarColors ??= [];
+            PerItemScales ??= [];
 
             using var linePaint = new SKPaint
             {
@@ -1073,52 +1140,59 @@ namespace Mids_Reborn.Controls
                 StrokeWidth = 1,
                 StrokeCap = SKStrokeCap.Butt
             };
+            
+            var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0
+                ? PerItemScales[index]
+                : ScaleValue;
+            var width = (int) Math.Round(bounds.Width * (_items[index].ValueBase / itemScale));
 
-            checked
+            using var fillPaint = (_BarAlignment == BarAlignment.Left) | (width >= 0)
+                ? new SKPaint
+                {
+                    Color = BaseBarColors.Count > 0
+                        ? BaseBarColors[index % BaseBarColors.Count].ToSKColor()
+                        : _pBaseColor.ToSKColor(),
+                    Style = SKPaintStyle.Fill
+                }
+                : new SKPaint
+                {
+                    Color = _NegativeBaseColor.ToSKColor(),
+                    Style = SKPaintStyle.Fill
+                };
+
+            var rect = _BarAlignment == BarAlignment.Left
+                ? new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
+                    bounds.Top + ny + (Style == GraphStyle.Twin ? (int)Math.Round(_pItemHeight / 2f) : _pItemHeight))
+                : new SKRect(bounds.Left + Math.Min(bounds.Width / 2f, (bounds.Width + width) / 2f), bounds.Top + ny, bounds.Left + Math.Max(bounds.Width / 2f, (bounds.Width + width) / 2f),
+                    bounds.Top + ny + (Style == GraphStyle.Twin ? (int)Math.Round(_pItemHeight / 2f) : _pItemHeight));
+            s.Canvas.DrawRect(rect, fillPaint);
+            if (_pDrawLines)
             {
-                var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0
-                    ? PerItemScales[index]
-                    : ScaleValue;
-                var width = (int) Math.Round(bounds.Width * (_items[index].ValueBase / itemScale));
-                var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
-                    bounds.Top + ny + (Style == GraphStyle.Twin ? (int) Math.Round(_pItemHeight / 2f) : _pItemHeight));
-                s.Canvas.DrawRect(rect, fillPaint);
-                if (_pDrawLines)
-                {
-                    s.Canvas.DrawRect(rect, linePaint);
-                }
-
-                if (MarkerValue > 0 & Math.Abs(MarkerValue - _items[index].ValueBase) > float.Epsilon)
-                {
-                    var markerY = (int) Math.Round(rect.Left + bounds.Width * (MarkerValue / itemScale));
-                    s.Canvas.DrawLine(markerY, rect.Top + 1, markerY, rect.Bottom, marker2Paint);
-                    s.Canvas.DrawLine(markerY, rect.Top + 1, markerY, rect.Bottom, markerPaint);
-                }
-
-                if (!Clickable)
-                {
-                    return;
-                }
-
-                s.Canvas.DrawLine(rect.Right, rect.Top + 1, rect.Right, rect.Bottom, clickableMarkerPaint6);
-                s.Canvas.DrawLine(rect.Right, rect.Top + 1, rect.Right, rect.Bottom, clickableMarkerPaint2);
-                s.Canvas.DrawLine(rect.Right - 1, rect.Top, rect.Right + 1, rect.Top, clickableMarkerPaint1);
-                s.Canvas.DrawLine(rect.Right - 1, rect.Bottom, rect.Right + 1, rect.Bottom, clickableMarkerPaint1);
+                s.Canvas.DrawRect(rect, linePaint);
             }
+
+            if ((MarkerValue > 0) & (Math.Abs(MarkerValue - _items[index].ValueBase) > float.Epsilon))
+            {
+                var markerY = (int) Math.Round(rect.Left + bounds.Width * (MarkerValue / itemScale));
+                s.Canvas.DrawLine(markerY, rect.Top + 1, markerY, rect.Bottom, marker2Paint);
+                s.Canvas.DrawLine(markerY, rect.Top + 1, markerY, rect.Bottom, markerPaint);
+            }
+
+            if (!Clickable)
+            {
+                return;
+            }
+
+            s.Canvas.DrawLine(rect.Right, rect.Top + 1, rect.Right, rect.Bottom, clickableMarkerPaint6);
+            s.Canvas.DrawLine(rect.Right, rect.Top + 1, rect.Right, rect.Bottom, clickableMarkerPaint2);
+            s.Canvas.DrawLine(rect.Right - 1, rect.Top, rect.Right + 1, rect.Top, clickableMarkerPaint1);
+            s.Canvas.DrawLine(rect.Right - 1, rect.Bottom, rect.Right + 1, rect.Bottom, clickableMarkerPaint1);
         }
 
         private void DrawEnh(SKSurface s, int index, SKRect bounds, int ny)
         {
-            EnhBarColors ??= new List<Color>();
-            PerItemScales ??= new List<float>();
-
-            using var fillBrush = new SKPaint
-            {
-                Color = EnhBarColors.Count > 0
-                    ? EnhBarColors[index % EnhBarColors.Count].ToSKColor()
-                    : _pEnhColor.ToSKColor(),
-                Style = SKPaintStyle.Fill
-            };
+            EnhBarColors ??= [];
+            PerItemScales ??= [];
 
             using var lineBrush = new SKPaint
             {
@@ -1153,45 +1227,50 @@ namespace Mids_Reborn.Controls
                 Color = ForeColor.ToSKColor()
             };*/
 
-            checked
+            var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[index] : ScaleValue;
+            var width = (int) Math.Round(bounds.Width * (_items[index].ValueEnh / itemScale));
+            var num = _pItemHeight;
+            if (Style == GraphStyle.Twin)
             {
-                var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[index] : ScaleValue;
-                var width = (int) Math.Round(bounds.Width * (_items[index].ValueEnh / itemScale));
-                var num = _pItemHeight;
-                if (Style == GraphStyle.Twin)
-                {
-                    num = (int) Math.Round(num / 2.0);
-                    ny += num;
-                }
+                num = (int) Math.Round(num / 2f);
+                ny += num;
+            }
 
-                var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width, bounds.Top + ny + num);
-                s.Canvas.DrawRect(rect, fillBrush);
-                if (_pDrawLines)
+            using var fillBrush = (_BarAlignment == BarAlignment.Left) | (width >= 0)
+                ? new SKPaint
                 {
-                    s.Canvas.DrawRect(rect, lineBrush);
+                    Color = EnhBarColors.Count > 0
+                        ? EnhBarColors[index % EnhBarColors.Count].ToSKColor()
+                        : _pEnhColor.ToSKColor(),
+                    Style = SKPaintStyle.Fill
                 }
+                : new SKPaint
+                {
+                    Color = _NegativeEnhColor.ToSKColor(),
+                    Style = SKPaintStyle.Fill
+                };
 
-                if ((MarkerValue > 0f) & (Math.Abs(MarkerValue - _items[index].ValueEnh) > float.Epsilon))
-                {
-                    var num2 = (int) Math.Round(rect.Left + bounds.Width * (MarkerValue / itemScale));
-                    s.Canvas.DrawLine(num2, rect.Top + 1, num2, rect.Bottom, markerBrush2);
-                    s.Canvas.DrawLine(num2, rect.Top + 1, num2, rect.Bottom, markerBrush);
-                }
+            var rect = _BarAlignment == BarAlignment.Left
+                ? new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width, bounds.Top + ny + num)
+                : new SKRect(bounds.Left + Math.Min(bounds.Width / 2f, (bounds.Width + width) / 2f), bounds.Top + ny, bounds.Left + Math.Max(bounds.Width / 2f, (bounds.Width + width) / 2f), bounds.Top + ny + num);
+            s.Canvas.DrawRect(rect, fillBrush);
+            if (_pDrawLines)
+            {
+                s.Canvas.DrawRect(rect, lineBrush);
+            }
+
+            if ((MarkerValue > 0) & (Math.Abs(MarkerValue - _items[index].ValueEnh) > float.Epsilon))
+            {
+                var num2 = (int) Math.Round(rect.Left + bounds.Width * (MarkerValue / itemScale));
+                s.Canvas.DrawLine(num2, rect.Top + 1, num2, rect.Bottom, markerBrush2);
+                s.Canvas.DrawLine(num2, rect.Top + 1, num2, rect.Bottom, markerBrush);
             }
         }
 
         private void DrawOvercap(SKSurface s, int index, SKRect bounds, int ny)
         {
-            OvercapColors ??= new List<Color>();
-            PerItemScales ??= new List<float>();
-
-            using var fillPaint = new SKPaint
-            {
-                Color = OvercapColors.Count > 0
-                    ? OvercapColors[index % OvercapColors.Count].ToSKColor()
-                    : ColorOvercap.ToSKColor(),
-                Style = SKPaintStyle.Fill
-            };
+            OvercapColors ??= [];
+            PerItemScales ??= [];
 
             using var linePaint = new SKPaint
             {
@@ -1204,8 +1283,26 @@ namespace Mids_Reborn.Controls
 
             var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[index] : ScaleValue;
             var width = (int) Math.Round(bounds.Width * (_items[index].ValueOvercap / itemScale));
-            var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
-                bounds.Top + ny + (Style == GraphStyle.Twin ? (int) Math.Round(_pItemHeight / 2f) : _pItemHeight));
+
+            using var fillPaint = (_BarAlignment == BarAlignment.Left) | (width >= 0)
+                ? new SKPaint
+                {
+                    Color = OvercapColors.Count > 0
+                        ? OvercapColors[index % OvercapColors.Count].ToSKColor()
+                        : ColorOvercap.ToSKColor(),
+                    Style = SKPaintStyle.Fill
+                }
+                : new SKPaint
+                {
+                    Color = _NegativeOvercapColor.ToSKColor(),
+                    Style = SKPaintStyle.Fill
+                };
+
+            var rect = _BarAlignment == BarAlignment.Left
+                ? new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
+                    bounds.Top + ny + (Style == GraphStyle.Twin ? (int)Math.Round(_pItemHeight / 2f) : _pItemHeight))
+                : new SKRect(bounds.Left + Math.Min(bounds.Width / 2f, (bounds.Width + width) / 2f), bounds.Top + ny, bounds.Left + Math.Max(bounds.Width / 2f, (bounds.Width + width) / 2f),
+                    bounds.Top + ny + (Style == GraphStyle.Twin ? (int)Math.Round(_pItemHeight / 2f) : _pItemHeight));
             s.Canvas.DrawRect(rect, fillPaint);
             if (_pDrawLines)
             {
@@ -1215,12 +1312,6 @@ namespace Mids_Reborn.Controls
 
         private void DrawAbsorbed(SKSurface s, int index, SKRect bounds, int ny)
         {
-            using var fillPaint = new SKPaint
-            {
-                Color = ColorAbsorbed.ToSKColor(),
-                Style = SKPaintStyle.Fill
-            };
-
             using var linePaint = new SKPaint
             {
                 IsAntialias = true,
@@ -1232,8 +1323,18 @@ namespace Mids_Reborn.Controls
 
             var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[index] : ScaleValue;
             var width = (int) Math.Round(bounds.Width * (_items[index].ValueAbsorbed / itemScale));
-            var rect = new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
-                bounds.Top + ny + (Style == GraphStyle.Twin ? (int) Math.Round(_pItemHeight / 2f) : _pItemHeight));
+
+            using var fillPaint = new SKPaint
+            {
+                Color = (_BarAlignment == BarAlignment.Left) | (width >= 0) ? ColorAbsorbed.ToSKColor() : _NegativeAbsorbedColor.ToSKColor(),
+                Style = SKPaintStyle.Fill
+            };
+
+            var rect = _BarAlignment == BarAlignment.Left
+                ? new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
+                bounds.Top + ny + (Style == GraphStyle.Twin ? (int) Math.Round(_pItemHeight / 2f) : _pItemHeight))
+                : new SKRect(bounds.Left + Math.Min(bounds.Width / 2f, (bounds.Width + width) / 2f), bounds.Top + ny, bounds.Left + Math.Max(bounds.Width / 2f, (bounds.Width + width) / 2f),
+                    bounds.Top + ny + (Style == GraphStyle.Twin ? (int)Math.Round(_pItemHeight / 2f) : _pItemHeight));
             s.Canvas.DrawRect(rect, fillPaint);
             if (_pDrawLines)
             {
@@ -1274,13 +1375,13 @@ namespace Mids_Reborn.Controls
         {
             checked
             {
-                if (Clickable & e.Button == MouseButtons.Left)
+                if (Clickable & (e.Button == MouseButtons.Left))
                 {
                     var valueAtXy = GetValueAtXy(e.X, e.Y);
                     var barClickEvent = BarClick;
                     barClickEvent?.Invoke(valueAtXy);
                 }
-                else if (!(e.X == _oldMouseX & e.Y == _oldMouseY))
+                else if (!((e.X == _oldMouseX) & (e.Y == _oldMouseY)))
                 {
                     _oldMouseX = e.X;
                     _oldMouseY = e.Y;
@@ -1292,7 +1393,7 @@ namespace Mids_Reborn.Controls
                         rectangle.Y += _pScaleHeight;
                     }
 
-                    var drawArea = new SKRect(_nameWidth, _pDrawRuler & _pRulerPosition != RulerPosition.Bottom ? 15 : 0, Width - 1, Height - (_pDrawRuler & _pRulerPosition != RulerPosition.Top ? 1 : 16));
+                    var drawArea = new SKRect(_nameWidth, _pDrawRuler & (_pRulerPosition != RulerPosition.Bottom) ? 15 : 0, Width - 1, Height - (_pDrawRuler & (_pRulerPosition != RulerPosition.Top) ? 1 : 16));
                     for (var i = 0 ; i < _items.Count ; i++)
                     {
                         //var num4 = (int) Math.Round(YPadding / 2.0 + checked(i * (PItemHeight + YPadding)));
@@ -1350,8 +1451,8 @@ namespace Mids_Reborn.Controls
 
         private void FillScales()
         {
-            _scales = new List<float>
-            {
+            _scales =
+            [
                 1,
                 2,
                 3,
@@ -1372,50 +1473,44 @@ namespace Mids_Reborn.Controls
                 3000,
                 3600,
                 4000
-            };
+            ];
         }
 
         public float GetMaxValue()
         {
-            checked
+            if (_scales.Count >= 1 && _items.Count >= 1)
             {
-                if (_scales.Count >= 1 && _items.Count >= 1)
-                {
-                    return Math.Max(
-                        _items.Select(e => e.ValueBase).Max(),
-                        _items.Select(e => e.ValueEnh).Max());
-                }
-
-                ScaleValue = 100;
-                    
-                return 100;
+                return Math.Max(
+                    _items.Select(e => e.ValueBase).Max(),
+                    _items.Select(e => e.ValueEnh).Max());
             }
+
+            ScaleValue = 100;
+                    
+            return 100;
         }
 
         private void SetBestScale(float value)
         {
-            checked
+            if (_scales.Count < 1)
             {
-                if (_scales.Count < 1)
+                ScaleValue = value;
+            }
+            else
+            {
+                foreach (var scale in _scales)
                 {
-                    ScaleValue = value;
-                }
-                else
-                {
-                    foreach (var scale in _scales)
+                    if (scale < value)
                     {
-                        if (scale < value)
-                        {
-                            continue;
-                        }
-
-                        ScaleValue = scale;
-                        
-                        return;
+                        continue;
                     }
 
-                    ScaleValue = _scales[^1];
+                    ScaleValue = scale;
+                        
+                    return;
                 }
+
+                ScaleValue = _scales[^1];
             }
         }
 
@@ -1462,8 +1557,8 @@ namespace Mids_Reborn.Controls
                 if (!_items.Select((t, i) => (int) Math.Round(_yPadding / 2.0 + checked(i * (_pItemHeight + _yPadding))))
                         .Select(num4 => new Rectangle(rectangle.Left, rectangle.Top + num4, num, height))
                         .Any(rectangle2 =>
-                            iX >= rectangle2.X && iY >= rectangle2.Y & iY <= rectangle2.Y + rectangle2.Height |
-                            _items.Count == 1))
+                            iX >= rectangle2.X && ((iY >= rectangle2.Y) & (iY <= rectangle2.Y + rectangle2.Height)) |
+                            (_items.Count == 1)))
                 {
                     return 0;
                 }

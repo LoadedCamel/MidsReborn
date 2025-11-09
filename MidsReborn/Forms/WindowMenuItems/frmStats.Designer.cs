@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Windows.Forms;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -30,260 +31,429 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = new System.ComponentModel.Container();
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(frmStats));
-            this.lblKey2 = new System.Windows.Forms.Label();
-            this.lblKey1 = new System.Windows.Forms.Label();
-            this.lblKeyColor2 = new System.Windows.Forms.Label();
-            this.lblKeyColor1 = new System.Windows.Forms.Label();
-            this.tbScaleX = new System.Windows.Forms.TrackBar();
-            this.lblScale = new System.Windows.Forms.Label();
-            this.tTip = new System.Windows.Forms.ToolTip(this.components);
-            this.cbSet = new System.Windows.Forms.ComboBox();
-            this.cbValues = new System.Windows.Forms.ComboBox();
-            this.cbStyle = new System.Windows.Forms.ComboBox();
-            this.Graph = new Mids_Reborn.Controls.CtlMultiGraph();
-            this.chkOnTop = new Mids_Reborn.Forms.Controls.ImageButtonEx();
-            this.btnClose = new Mids_Reborn.Forms.Controls.ImageButtonEx();
-            ((System.ComponentModel.ISupportInitialize)(this.tbScaleX)).BeginInit();
-            this.SuspendLayout();
+            components = new Container();
+            ComponentResourceManager resources = new ComponentResourceManager(typeof(frmStats));
+            lblKey2 = new Label();
+            lblKey1 = new Label();
+            lblKeyColor2 = new Label();
+            lblKeyColor1 = new Label();
+            tbScaleX = new TrackBar();
+            lblScale = new Label();
+            tTip = new ToolTip(components);
+            cbSet = new ComboBox();
+            cbValues = new ComboBox();
+            cbStyle = new ComboBox();
+            Graph = new Mids_Reborn.Controls.CtlMultiGraph();
+            chkOnTop = new Mids_Reborn.Forms.Controls.ImageButtonEx();
+            btnClose = new Mids_Reborn.Forms.Controls.ImageButtonEx();
+            CompareGraph = new Mids_Reborn.Controls.CtlMultiGraph();
+            MenuBar = new Mids_Reborn.Forms.Controls.MidsMenuStrip();
+            CompareToolStripMenuItem = new ToolStripMenuItem();
+            TsCompareImport = new ToolStripMenuItem();
+            TsCompareExport = new ToolStripMenuItem();
+            ToolStripSeparator1 = new ToolStripSeparator();
+            TsEndCompare = new ToolStripMenuItem();
+            label1 = new Label();
+            label2 = new Label();
+            cbCompareGraphStyle = new ComboBox();
+            ((ISupportInitialize)tbScaleX).BeginInit();
+            MenuBar.SuspendLayout();
+            SuspendLayout();
             // 
             // lblKey2
             // 
-            this.lblKey2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblKey2.Location = new System.Drawing.Point(56, 463);
-            this.lblKey2.Name = "lblKey2";
-            this.lblKey2.Size = new System.Drawing.Size(78, 16);
-            this.lblKey2.TabIndex = 3;
-            this.lblKey2.Text = "Enhanced";
-            this.lblKey2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            lblKey2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            lblKey2.Location = new System.Drawing.Point(56, 555);
+            lblKey2.Name = "lblKey2";
+            lblKey2.Size = new System.Drawing.Size(78, 16);
+            lblKey2.TabIndex = 3;
+            lblKey2.Text = "Enhanced";
+            lblKey2.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblKey1
             // 
-            this.lblKey1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblKey1.Location = new System.Drawing.Point(56, 443);
-            this.lblKey1.Name = "lblKey1";
-            this.lblKey1.Size = new System.Drawing.Size(78, 16);
-            this.lblKey1.TabIndex = 2;
-            this.lblKey1.Text = "Base";
-            this.lblKey1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+            lblKey1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            lblKey1.Location = new System.Drawing.Point(56, 535);
+            lblKey1.Name = "lblKey1";
+            lblKey1.Size = new System.Drawing.Size(78, 16);
+            lblKey1.TabIndex = 2;
+            lblKey1.Text = "Base";
+            lblKey1.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
             // lblKeyColor2
             // 
-            this.lblKeyColor2.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblKeyColor2.BackColor = System.Drawing.Color.Yellow;
-            this.lblKeyColor2.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblKeyColor2.Location = new System.Drawing.Point(12, 463);
-            this.lblKeyColor2.Name = "lblKeyColor2";
-            this.lblKeyColor2.Size = new System.Drawing.Size(40, 16);
-            this.lblKeyColor2.TabIndex = 1;
+            lblKeyColor2.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            lblKeyColor2.BackColor = System.Drawing.Color.Yellow;
+            lblKeyColor2.BorderStyle = BorderStyle.FixedSingle;
+            lblKeyColor2.Location = new System.Drawing.Point(12, 555);
+            lblKeyColor2.Name = "lblKeyColor2";
+            lblKeyColor2.Size = new System.Drawing.Size(40, 16);
+            lblKeyColor2.TabIndex = 1;
             // 
             // lblKeyColor1
             // 
-            this.lblKeyColor1.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblKeyColor1.BackColor = System.Drawing.Color.Blue;
-            this.lblKeyColor1.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblKeyColor1.Location = new System.Drawing.Point(12, 443);
-            this.lblKeyColor1.Name = "lblKeyColor1";
-            this.lblKeyColor1.Size = new System.Drawing.Size(40, 16);
-            this.lblKeyColor1.TabIndex = 0;
+            lblKeyColor1.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            lblKeyColor1.BackColor = System.Drawing.Color.Blue;
+            lblKeyColor1.BorderStyle = BorderStyle.FixedSingle;
+            lblKeyColor1.Location = new System.Drawing.Point(12, 535);
+            lblKeyColor1.Name = "lblKeyColor1";
+            lblKeyColor1.Size = new System.Drawing.Size(40, 16);
+            lblKeyColor1.TabIndex = 0;
             // 
             // tbScaleX
             // 
-            this.tbScaleX.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.tbScaleX.LargeChange = 1;
-            this.tbScaleX.Location = new System.Drawing.Point(140, 438);
-            this.tbScaleX.Minimum = 1;
-            this.tbScaleX.Name = "tbScaleX";
-            this.tbScaleX.Size = new System.Drawing.Size(237, 45);
-            this.tbScaleX.TabIndex = 6;
-            this.tbScaleX.TickFrequency = 10;
-            this.tbScaleX.TickStyle = System.Windows.Forms.TickStyle.None;
-            this.tTip.SetToolTip(this.tbScaleX, "Move the slider to the left to zoom in on lower values.");
-            this.tbScaleX.Value = 10;
-            this.tbScaleX.Scroll += new System.EventHandler(this.tbScaleX_Scroll);
+            tbScaleX.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            tbScaleX.LargeChange = 1;
+            tbScaleX.Location = new System.Drawing.Point(140, 530);
+            tbScaleX.Minimum = 1;
+            tbScaleX.Name = "tbScaleX";
+            tbScaleX.Size = new System.Drawing.Size(237, 45);
+            tbScaleX.TabIndex = 6;
+            tbScaleX.TickFrequency = 10;
+            tbScaleX.TickStyle = TickStyle.None;
+            tTip.SetToolTip(tbScaleX, "Move the slider to the left to zoom in on lower values.");
+            tbScaleX.Value = 10;
+            tbScaleX.Scroll += tbScaleX_Scroll;
             // 
             // lblScale
             // 
-            this.lblScale.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblScale.Location = new System.Drawing.Point(212, 462);
-            this.lblScale.Name = "lblScale";
-            this.lblScale.Size = new System.Drawing.Size(108, 20);
-            this.lblScale.TabIndex = 7;
-            this.lblScale.Text = "Scale: 100%";
-            this.lblScale.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblScale.Anchor = AnchorStyles.Bottom | AnchorStyles.Left;
+            lblScale.Location = new System.Drawing.Point(212, 554);
+            lblScale.Name = "lblScale";
+            lblScale.Size = new System.Drawing.Size(108, 20);
+            lblScale.TabIndex = 7;
+            lblScale.Text = "Scale: 100%";
+            lblScale.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // tTip
             // 
-            this.tTip.AutoPopDelay = 10000;
-            this.tTip.InitialDelay = 500;
-            this.tTip.ReshowDelay = 100;
+            tTip.AutoPopDelay = 10000;
+            tTip.InitialDelay = 500;
+            tTip.ReshowDelay = 100;
             // 
             // cbSet
             // 
-            this.cbSet.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbSet.FormattingEnabled = true;
-            this.cbSet.Location = new System.Drawing.Point(6, 5);
-            this.cbSet.MaxDropDownItems = 16;
-            this.cbSet.Name = "cbSet";
-            this.cbSet.Size = new System.Drawing.Size(158, 24);
-            this.cbSet.TabIndex = 10;
-            this.cbSet.SelectedIndexChanged += new System.EventHandler(this.cbSet_SelectedIndexChanged);
+            cbSet.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbSet.FormattingEnabled = true;
+            cbSet.Location = new System.Drawing.Point(6, 29);
+            cbSet.MaxDropDownItems = 16;
+            cbSet.Name = "cbSet";
+            cbSet.Size = new System.Drawing.Size(158, 23);
+            cbSet.TabIndex = 10;
+            cbSet.SelectedIndexChanged += cbSet_SelectedIndexChanged;
             // 
             // cbValues
             // 
-            this.cbValues.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbValues.FormattingEnabled = true;
-            this.cbValues.Location = new System.Drawing.Point(170, 5);
-            this.cbValues.MaxDropDownItems = 16;
-            this.cbValues.Name = "cbValues";
-            this.cbValues.Size = new System.Drawing.Size(101, 24);
-            this.cbValues.TabIndex = 11;
-            this.cbValues.SelectedIndexChanged += new System.EventHandler(this.cbValues_SelectedIndexChanged);
+            cbValues.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbValues.FormattingEnabled = true;
+            cbValues.Location = new System.Drawing.Point(170, 29);
+            cbValues.MaxDropDownItems = 16;
+            cbValues.Name = "cbValues";
+            cbValues.Size = new System.Drawing.Size(132, 23);
+            cbValues.TabIndex = 11;
+            cbValues.SelectedIndexChanged += cbValues_SelectedIndexChanged;
             // 
             // cbStyle
             // 
-            this.cbStyle.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            this.cbStyle.FormattingEnabled = true;
-            this.cbStyle.Location = new System.Drawing.Point(277, 5);
-            this.cbStyle.Name = "cbStyle";
-            this.cbStyle.Size = new System.Drawing.Size(186, 24);
-            this.cbStyle.TabIndex = 12;
-            this.cbStyle.SelectedIndexChanged += new System.EventHandler(this.cbStyle_SelectedIndexChanged);
+            cbStyle.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbStyle.FormattingEnabled = true;
+            cbStyle.Location = new System.Drawing.Point(308, 29);
+            cbStyle.Name = "cbStyle";
+            cbStyle.Size = new System.Drawing.Size(180, 23);
+            cbStyle.TabIndex = 12;
+            cbStyle.SelectedIndexChanged += cbStyle_SelectedIndexChanged;
             // 
             // Graph
             // 
-            this.Graph.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
-            this.Graph.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("Graph.BackgroundImage")));
-            this.Graph.BaseBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("Graph.BaseBarColors")));
-            this.Graph.Border = false;
-            this.Graph.BorderColor = System.Drawing.Color.Black;
-            this.Graph.Clickable = false;
-            this.Graph.ColorAbsorbed = System.Drawing.Color.Gainsboro;
-            this.Graph.ColorBase = System.Drawing.Color.Blue;
-            this.Graph.ColorEnh = System.Drawing.Color.Yellow;
-            this.Graph.ColorFadeEnd = System.Drawing.Color.DarkRed;
-            this.Graph.ColorFadeStart = System.Drawing.Color.Black;
-            this.Graph.ColorHighlight = System.Drawing.Color.White;
-            this.Graph.ColorLines = System.Drawing.Color.Black;
-            this.Graph.ColorMarkerInner = System.Drawing.Color.Black;
-            this.Graph.ColorMarkerOuter = System.Drawing.Color.Yellow;
-            this.Graph.ColorOvercap = System.Drawing.Color.Cyan;
-            this.Graph.DifferentiateColors = false;
-            this.Graph.DrawRuler = true;
-            this.Graph.Dual = true;
-            this.Graph.EnhBarColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("Graph.EnhBarColors")));
-            this.Graph.Font = new System.Drawing.Font("Segoe UI", 7.5F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.Graph.ForcedMax = 0F;
-            this.Graph.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
-            this.Graph.Highlight = true;
-            this.Graph.ImeMode = System.Windows.Forms.ImeMode.Off;
-            this.Graph.ItemFontSizeOverride = 11F;
-            this.Graph.ItemHeight = 12;
-            this.Graph.Lines = true;
-            this.Graph.Location = new System.Drawing.Point(4, 35);
-            this.Graph.MarkerValue = 0F;
-            this.Graph.Max = 75F;
-            this.Graph.MaxItems = 60;
-            this.Graph.Name = "Graph";
-            this.Graph.OuterBorder = false;
-            this.Graph.Overcap = false;
-            this.Graph.OvercapColors = ((System.Collections.Generic.List<System.Drawing.Color>)(resources.GetObject("Graph.OvercapColors")));
-            this.Graph.PaddingX = 2F;
-            this.Graph.PaddingY = 4F;
-            this.Graph.PerItemScales = ((System.Collections.Generic.List<float>)(resources.GetObject("Graph.PerItemScales")));
-            this.Graph.RulerPos = Mids_Reborn.Controls.CtlMultiGraph.RulerPosition.Top;
-            this.Graph.ScaleHeight = 16;
-            this.Graph.ScaleIndex = 7;
-            this.Graph.ShowScale = false;
-            this.Graph.Size = new System.Drawing.Size(484, 398);
-            this.Graph.Style = Mids_Reborn.Core.Enums.GraphStyle.Stacked;
-            this.Graph.TabIndex = 0;
-            this.Graph.TextWidth = 100;
+            Graph.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
+            Graph.BackgroundImage = (System.Drawing.Image)resources.GetObject("Graph.BackgroundImage");
+            Graph.BarsAlignment = Mids_Reborn.Controls.CtlMultiGraph.BarAlignment.Left;
+            Graph.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("Graph.BaseBarColors");
+            Graph.Border = false;
+            Graph.BorderColor = System.Drawing.Color.Black;
+            Graph.Clickable = false;
+            Graph.ColorAbsorbed = System.Drawing.Color.Gainsboro;
+            Graph.ColorBase = System.Drawing.Color.Blue;
+            Graph.ColorEnh = System.Drawing.Color.Yellow;
+            Graph.ColorFadeEnd = System.Drawing.Color.DarkRed;
+            Graph.ColorFadeStart = System.Drawing.Color.Black;
+            Graph.ColorHighlight = System.Drawing.Color.White;
+            Graph.ColorLines = System.Drawing.Color.Black;
+            Graph.ColorMarkerInner = System.Drawing.Color.Black;
+            Graph.ColorMarkerOuter = System.Drawing.Color.Yellow;
+            Graph.ColorOvercap = System.Drawing.Color.Cyan;
+            Graph.DifferentiateColors = false;
+            Graph.DrawRuler = true;
+            Graph.Dual = true;
+            Graph.EnhBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("Graph.EnhBarColors");
+            Graph.Font = new System.Drawing.Font("Segoe UI", 7.5F);
+            Graph.ForcedMax = 0F;
+            Graph.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            Graph.Highlight = true;
+            Graph.ImeMode = ImeMode.Off;
+            Graph.ItemFontSizeOverride = 11F;
+            Graph.ItemHeight = 12;
+            Graph.Lines = true;
+            Graph.Location = new System.Drawing.Point(4, 121);
+            Graph.MarkerValue = 0F;
+            Graph.Max = 75F;
+            Graph.MaxItems = 60;
+            Graph.Name = "Graph";
+            Graph.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            Graph.NegativeBaseColor = System.Drawing.Color.Navy;
+            Graph.NegativeEnhColor = System.Drawing.Color.Olive;
+            Graph.NegativeOvercapColor = System.Drawing.Color.Teal;
+            Graph.OuterBorder = false;
+            Graph.Overcap = false;
+            Graph.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("Graph.OvercapColors");
+            Graph.PaddingX = 2F;
+            Graph.PaddingY = 4F;
+            Graph.PerItemScales = (System.Collections.Generic.List<float>)resources.GetObject("Graph.PerItemScales");
+            Graph.RulerPos = Mids_Reborn.Controls.CtlMultiGraph.RulerPosition.Top;
+            Graph.ScaleHeight = 16;
+            Graph.ScaleIndex = 7;
+            Graph.SecondaryLabelPosition = Mids_Reborn.Controls.CtlMultiGraph.Alignment.Right;
+            Graph.ShowScale = false;
+            Graph.SingleLineLabels = true;
+            Graph.Size = new System.Drawing.Size(484, 398);
+            Graph.Style = Core.Enums.GraphStyle.Stacked;
+            Graph.TabIndex = 0;
+            Graph.TextWidth = 100;
             // 
             // chkOnTop
             // 
-            this.chkOnTop.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.chkOnTop.ButtonType = Mids_Reborn.Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
-            this.chkOnTop.CurrentText = "To Top Most";
-            this.chkOnTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.chkOnTop.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.chkOnTop.Images.Background = global::MRBResourceLib.Resources.HeroButton;
-            this.chkOnTop.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
-            this.chkOnTop.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
-            this.chkOnTop.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
-            this.chkOnTop.Location = new System.Drawing.Point(383, 438);
-            this.chkOnTop.Lock = false;
-            this.chkOnTop.Name = "chkOnTop";
-            this.chkOnTop.Size = new System.Drawing.Size(105, 22);
-            this.chkOnTop.TabIndex = 13;
-            this.chkOnTop.Text = "imageButtonEx1";
-            this.chkOnTop.TextOutline.Color = System.Drawing.Color.Black;
-            this.chkOnTop.TextOutline.Width = 2;
-            this.chkOnTop.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
-            this.chkOnTop.ToggleText.Indeterminate = "Indeterminate State";
-            this.chkOnTop.ToggleText.ToggledOff = "To Top Most";
-            this.chkOnTop.ToggleText.ToggledOn = "Top Most";
-            this.chkOnTop.UseAlt = false;
+            chkOnTop.BackgroundImageLayout = ImageLayout.None;
+            chkOnTop.ButtonType = Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
+            chkOnTop.CurrentText = "ToggledOff State";
+            chkOnTop.DisplayVertically = false;
+            chkOnTop.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            chkOnTop.ForeColor = System.Drawing.Color.WhiteSmoke;
+            chkOnTop.Images.Background = MRBResourceLib.Resources.HeroButton;
+            chkOnTop.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            chkOnTop.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            chkOnTop.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            chkOnTop.Location = new System.Drawing.Point(383, 524);
+            chkOnTop.Lock = false;
+            chkOnTop.Name = "chkOnTop";
+            chkOnTop.Size = new System.Drawing.Size(105, 22);
+            chkOnTop.TabIndex = 13;
+            chkOnTop.Text = "imageButtonEx1";
+            chkOnTop.TextOutline.Color = System.Drawing.Color.Black;
+            chkOnTop.TextOutline.Width = 2;
+            chkOnTop.ToggleState = Forms.Controls.ImageButtonEx.States.ToggledOff;
+            chkOnTop.ToggleText.Indeterminate = "Indeterminate State";
+            chkOnTop.ToggleText.ToggledOff = "To Top Most";
+            chkOnTop.ToggleText.ToggledOn = "Top Most";
+            chkOnTop.UseAlt = false;
             // 
             // btnClose
             // 
-            this.btnClose.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.btnClose.CurrentText = "Close";
-            this.btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
-            this.btnClose.ForeColor = System.Drawing.Color.WhiteSmoke;
-            this.btnClose.Images.Background = global::MRBResourceLib.Resources.HeroButton;
-            this.btnClose.Images.Hover = global::MRBResourceLib.Resources.HeroButtonHover;
-            this.btnClose.ImagesAlt.Background = global::MRBResourceLib.Resources.VillainButton;
-            this.btnClose.ImagesAlt.Hover = global::MRBResourceLib.Resources.VillainButtonHover;
-            this.btnClose.Location = new System.Drawing.Point(383, 465);
-            this.btnClose.Lock = false;
-            this.btnClose.Name = "btnClose";
-            this.btnClose.Size = new System.Drawing.Size(105, 22);
-            this.btnClose.TabIndex = 14;
-            this.btnClose.Text = "Close";
-            this.btnClose.TextOutline.Color = System.Drawing.Color.Black;
-            this.btnClose.TextOutline.Width = 2;
-            this.btnClose.ToggleState = Mids_Reborn.Forms.Controls.ImageButtonEx.States.ToggledOff;
-            this.btnClose.ToggleText.Indeterminate = "Indeterminate State";
-            this.btnClose.ToggleText.ToggledOff = "ToggledOff State";
-            this.btnClose.ToggleText.ToggledOn = "ToggledOn State";
-            this.btnClose.UseAlt = false;
+            btnClose.BackgroundImageLayout = ImageLayout.None;
+            btnClose.CurrentText = "Close";
+            btnClose.DisplayVertically = false;
+            btnClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            btnClose.ForeColor = System.Drawing.Color.WhiteSmoke;
+            btnClose.Images.Background = MRBResourceLib.Resources.HeroButton;
+            btnClose.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            btnClose.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            btnClose.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            btnClose.Location = new System.Drawing.Point(383, 551);
+            btnClose.Lock = false;
+            btnClose.Name = "btnClose";
+            btnClose.Size = new System.Drawing.Size(105, 22);
+            btnClose.TabIndex = 14;
+            btnClose.Text = "Close";
+            btnClose.TextOutline.Color = System.Drawing.Color.Black;
+            btnClose.TextOutline.Width = 2;
+            btnClose.ToggleState = Forms.Controls.ImageButtonEx.States.ToggledOff;
+            btnClose.ToggleText.Indeterminate = "Indeterminate State";
+            btnClose.ToggleText.ToggledOff = "ToggledOff State";
+            btnClose.ToggleText.ToggledOn = "ToggledOn State";
+            btnClose.UseAlt = false;
+            // 
+            // CompareGraph
+            // 
+            CompareGraph.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
+            CompareGraph.BackgroundImage = (System.Drawing.Image)resources.GetObject("CompareGraph.BackgroundImage");
+            CompareGraph.BarsAlignment = Mids_Reborn.Controls.CtlMultiGraph.BarAlignment.Left;
+            CompareGraph.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("CompareGraph.BaseBarColors");
+            CompareGraph.Border = false;
+            CompareGraph.BorderColor = System.Drawing.Color.Black;
+            CompareGraph.Clickable = false;
+            CompareGraph.ColorAbsorbed = System.Drawing.Color.Gainsboro;
+            CompareGraph.ColorBase = System.Drawing.Color.Blue;
+            CompareGraph.ColorEnh = System.Drawing.Color.Yellow;
+            CompareGraph.ColorFadeEnd = System.Drawing.Color.DarkRed;
+            CompareGraph.ColorFadeStart = System.Drawing.Color.Black;
+            CompareGraph.ColorHighlight = System.Drawing.Color.White;
+            CompareGraph.ColorLines = System.Drawing.Color.Black;
+            CompareGraph.ColorMarkerInner = System.Drawing.Color.Black;
+            CompareGraph.ColorMarkerOuter = System.Drawing.Color.Yellow;
+            CompareGraph.ColorOvercap = System.Drawing.Color.Cyan;
+            CompareGraph.DifferentiateColors = false;
+            CompareGraph.DrawRuler = true;
+            CompareGraph.Dual = true;
+            CompareGraph.EnhBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("CompareGraph.EnhBarColors");
+            CompareGraph.Font = new System.Drawing.Font("Segoe UI", 7.5F);
+            CompareGraph.ForcedMax = 0F;
+            CompareGraph.ForeColor = System.Drawing.Color.FromArgb(192, 192, 255);
+            CompareGraph.Highlight = true;
+            CompareGraph.ImeMode = ImeMode.Off;
+            CompareGraph.ItemFontSizeOverride = 11F;
+            CompareGraph.ItemHeight = 12;
+            CompareGraph.Lines = true;
+            CompareGraph.Location = new System.Drawing.Point(510, 121);
+            CompareGraph.MarkerValue = 0F;
+            CompareGraph.Max = 75F;
+            CompareGraph.MaxItems = 60;
+            CompareGraph.Name = "CompareGraph";
+            CompareGraph.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            CompareGraph.NegativeBaseColor = System.Drawing.Color.Navy;
+            CompareGraph.NegativeEnhColor = System.Drawing.Color.Olive;
+            CompareGraph.NegativeOvercapColor = System.Drawing.Color.Teal;
+            CompareGraph.OuterBorder = false;
+            CompareGraph.Overcap = false;
+            CompareGraph.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("CompareGraph.OvercapColors");
+            CompareGraph.PaddingX = 2F;
+            CompareGraph.PaddingY = 4F;
+            CompareGraph.PerItemScales = (System.Collections.Generic.List<float>)resources.GetObject("CompareGraph.PerItemScales");
+            CompareGraph.RulerPos = Mids_Reborn.Controls.CtlMultiGraph.RulerPosition.Top;
+            CompareGraph.ScaleHeight = 16;
+            CompareGraph.ScaleIndex = 7;
+            CompareGraph.SecondaryLabelPosition = Mids_Reborn.Controls.CtlMultiGraph.Alignment.Right;
+            CompareGraph.ShowScale = false;
+            CompareGraph.SingleLineLabels = true;
+            CompareGraph.Size = new System.Drawing.Size(484, 398);
+            CompareGraph.Style = Core.Enums.GraphStyle.Stacked;
+            CompareGraph.TabIndex = 15;
+            CompareGraph.TextWidth = 100;
+            CompareGraph.Visible = false;
+            // 
+            // MenuBar
+            // 
+            MenuBar.Items.AddRange(new ToolStripItem[] { CompareToolStripMenuItem });
+            MenuBar.Location = new System.Drawing.Point(0, 0);
+            MenuBar.Name = "MenuBar";
+            MenuBar.Size = new System.Drawing.Size(1004, 24);
+            MenuBar.TabIndex = 16;
+            MenuBar.Text = "Compare";
+            // 
+            // CompareToolStripMenuItem
+            // 
+            CompareToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { TsCompareImport, TsCompareExport, ToolStripSeparator1, TsEndCompare });
+            CompareToolStripMenuItem.ForeColor = System.Drawing.SystemColors.ControlText;
+            CompareToolStripMenuItem.Name = "CompareToolStripMenuItem";
+            CompareToolStripMenuItem.Size = new System.Drawing.Size(68, 20);
+            CompareToolStripMenuItem.Text = "&Compare";
+            // 
+            // TsCompareImport
+            // 
+            TsCompareImport.Name = "TsCompareImport";
+            TsCompareImport.Size = new System.Drawing.Size(170, 22);
+            TsCompareImport.Text = "&Import / Compare";
+            TsCompareImport.Click += TsCompareImport_Click;
+            // 
+            // TsCompareExport
+            // 
+            TsCompareExport.Name = "TsCompareExport";
+            TsCompareExport.Size = new System.Drawing.Size(170, 22);
+            TsCompareExport.Text = "&Export";
+            TsCompareExport.Click += TsCompareExport_Click;
+            // 
+            // ToolStripSeparator1
+            // 
+            ToolStripSeparator1.Name = "ToolStripSeparator1";
+            ToolStripSeparator1.Size = new System.Drawing.Size(167, 6);
+            ToolStripSeparator1.Visible = false;
+            // 
+            // TsEndCompare
+            // 
+            TsEndCompare.Name = "TsEndCompare";
+            TsEndCompare.Size = new System.Drawing.Size(170, 22);
+            TsEndCompare.Text = "&Export";
+            TsEndCompare.Visible = false;
+            TsEndCompare.Click += TsEndCompare_Click;
+            // 
+            // label1
+            // 
+            label1.ForeColor = System.Drawing.Color.LightGray;
+            label1.Location = new System.Drawing.Point(6, 55);
+            label1.Name = "label1";
+            label1.Size = new System.Drawing.Size(482, 63);
+            label1.TabIndex = 17;
+            label1.Text = "label1";
+            // 
+            // label2
+            // 
+            label2.ForeColor = System.Drawing.Color.LightGray;
+            label2.Location = new System.Drawing.Point(512, 55);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(482, 63);
+            label2.TabIndex = 18;
+            label2.Text = "label2";
+            // 
+            // cbCompareGraphStyle
+            // 
+            cbCompareGraphStyle.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbCompareGraphStyle.FormattingEnabled = true;
+            cbCompareGraphStyle.Items.AddRange(new object[] { "Diff", "Raw Values" });
+            cbCompareGraphStyle.Location = new System.Drawing.Point(814, 29);
+            cbCompareGraphStyle.Name = "cbCompareGraphStyle";
+            cbCompareGraphStyle.Size = new System.Drawing.Size(180, 23);
+            cbCompareGraphStyle.TabIndex = 19;
+            cbCompareGraphStyle.SelectedIndexChanged += cbCompareGraphStyle_SelectedIndexChanged;
             // 
             // frmStats
             // 
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
-            this.ClientSize = new System.Drawing.Size(492, 491);
-            this.Controls.Add(this.btnClose);
-            this.Controls.Add(this.chkOnTop);
-            this.Controls.Add(this.cbStyle);
-            this.Controls.Add(this.lblKey2);
-            this.Controls.Add(this.cbValues);
-            this.Controls.Add(this.lblKey1);
-            this.Controls.Add(this.cbSet);
-            this.Controls.Add(this.lblKeyColor2);
-            this.Controls.Add(this.lblKeyColor1);
-            this.Controls.Add(this.lblScale);
-            this.Controls.Add(this.tbScaleX);
-            this.Controls.Add(this.Graph);
-            this.ForeColor = System.Drawing.Color.White;
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.SizableToolWindow;
-            this.MaximizeBox = false;
-            this.MinimizeBox = false;
-            this.MinimumSize = new System.Drawing.Size(400, 340);
-            this.Name = "frmStats";
-            this.StartPosition = System.Windows.Forms.FormStartPosition.Manual;
-            this.Text = "Power Stats";
-            this.TopMost = true;
-            ((System.ComponentModel.ISupportInitialize)(this.tbScaleX)).EndInit();
-            this.ResumeLayout(false);
-            this.PerformLayout();
+            AutoScaleMode = AutoScaleMode.None;
+            BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
+            ClientSize = new System.Drawing.Size(1004, 577);
+            Controls.Add(cbCompareGraphStyle);
+            Controls.Add(label2);
+            Controls.Add(label1);
+            Controls.Add(CompareGraph);
+            Controls.Add(btnClose);
+            Controls.Add(chkOnTop);
+            Controls.Add(cbStyle);
+            Controls.Add(lblKey2);
+            Controls.Add(cbValues);
+            Controls.Add(lblKey1);
+            Controls.Add(cbSet);
+            Controls.Add(lblKeyColor2);
+            Controls.Add(lblKeyColor1);
+            Controls.Add(lblScale);
+            Controls.Add(tbScaleX);
+            Controls.Add(Graph);
+            Controls.Add(MenuBar);
+            ForeColor = System.Drawing.Color.White;
+            FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            MaximizeBox = false;
+            MinimizeBox = false;
+            MinimumSize = new System.Drawing.Size(400, 340);
+            Name = "frmStats";
+            StartPosition = FormStartPosition.Manual;
+            Text = "Power Stats";
+            TopMost = true;
+            ((ISupportInitialize)tbScaleX).EndInit();
+            MenuBar.ResumeLayout(false);
+            MenuBar.PerformLayout();
+            ResumeLayout(false);
+            PerformLayout();
 
         }
         #endregion
 
         private Controls.ImageButtonEx chkOnTop;
         private Controls.ImageButtonEx btnClose;
+        private Mids_Reborn.Controls.CtlMultiGraph CompareGraph;
+        private Controls.MidsMenuStrip MenuBar;
+        private ToolStripMenuItem CompareToolStripMenuItem;
+        private ToolStripMenuItem TsCompareImport;
+        private ToolStripMenuItem TsCompareExport;
+        private ToolStripMenuItem TsEndCompare;
+        private ToolStripSeparator ToolStripSeparator1;
+        private Label label1;
+        private Label label2;
+        private ComboBox cbCompareGraphStyle;
     }
 }
