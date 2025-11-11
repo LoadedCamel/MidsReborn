@@ -249,12 +249,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             if (fillComboValues)
             {
                 var stat = cbValues.SelectedIndex;
-                Debug.WriteLine($"SetUiForCompare(): {CompareData?.Metadata.PvMode} / CompareMode: {CompareMode}");
                 cbValues.BeginUpdate();
                 cbValues.Items.Clear();
                 if (!CompareMode)
                 {
-                    Debug.WriteLine($"SetUiForCompare(): cbValues items #0");
                     cbValues.Items.AddRange([
                         "Accuracy", "Damage", "Damage / Anim", "Damage / Sec", "Damage / End", "End Use", "End / Sec",
                         "Healing", "Heal / Sec", "Heal / End", "Effect Duration", "Range", "Recharge Time", "Regeneration"
@@ -262,7 +260,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
                 else if (CompareData?.Metadata.PvMode == "PvP")
                 {
-                    Debug.WriteLine($"SetUiForCompare(): cbValues items #1");
                     cbValues.Items.AddRange([
                         "Accuracy", "Damage", "Damage / Anim", "Damage / Sec", "Damage / End", "End Use", "End / Sec",
                         "Healing", "Heal / Sec", "Heal / End", "Effect Duration", "Range", "Recharge Time", "Regeneration",
@@ -271,7 +268,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
                 else
                 {
-                    Debug.WriteLine($"SetUiForCompare(): cbValues items #2");
                     cbValues.Items.AddRange([
                         "Accuracy", "Damage", "Damage / Anim", "Damage / Sec", "Damage / End", "End Use", "End / Sec",
                         "Healing", "Heal / Sec", "Heal / End", "Effect Duration", "Range", "Recharge Time", "Regeneration",
@@ -611,7 +607,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     ? CtlMultiGraph.BarAlignment.Center
                     : CtlMultiGraph.BarAlignment.Left;
 
-            Debug.WriteLine($"Getting compare graph values ({StatDisplayed})");
             SetCompareGraphValues(StatDisplayed, false);
 
             // Sync max range for power stats
@@ -793,8 +788,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     : 186;
             }*/
 
-            Debug.WriteLine("frmStats_Resize()");
-
             btnClose.Location = new Point(Math.Max(4, ClientSize.Width - btnClose.Width - 4), Math.Max(4, ClientSize.Height - btnClose.Height - 4));
             chkOnTop.Location = new Point(Math.Max(4, ClientSize.Width - chkOnTop.Width - 4), Math.Max(4, ClientSize.Height - chkOnTop.Height - 31));
 
@@ -847,8 +840,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     DisplayMode.Defense when DatabaseAPI.RealmUsesToxicDefense => ["Smashing", "Lethal", "Fire", "Cold", "Energy", "Negative", "Toxic", "Psionic", "Melee", "Ranged", "AoE"],
                     DisplayMode.Defense => ["Smashing", "Lethal", "Fire", "Cold", "Energy", "Negative", "Psionic", "Melee", "Ranged", "AoE"]
                 };
-
-                Debug.WriteLine($"Compare graph: {statGroup.Length} items for current, {statGroupAux.Length} items for reference ");
 
                 for (var index = 0; index < statGroup.Length; index++)
                 {
@@ -1011,12 +1002,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     }
                     else
                     {
-                        Debug.WriteLine($"{StatDisplayed}/{displayName}, base={nBaseRef}, enh={nEnhRef}");
                         CompareGraph.AddItem(displayName, nBaseRef, nEnhRef, nUncappedRef, tip);
                     }
                 }
 
-                Debug.WriteLine($"Getting compare graph max ({StatDisplayed})");
                 if (CompareGraphMode == CompareGraphStyle.Diff)
                 {
                     var diff = 0f;
@@ -1026,11 +1015,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         var diff2 = Math.Abs((statGroup[i].UncappedValue ?? statGroup[i].EnhValue ?? statGroup[i].BaseValue) - (statGroupAux[i].UncappedValue ?? statGroupAux[i].EnhValue ?? statGroupAux[i].BaseValue));
 
                         diff = Math.Max(diff, Math.Max(diff1, diff2));
-
-                        Debug.WriteLine($"  diff1: {diff1}, diff2: {diff2}, diff: {diff}");
                     }
 
-                    Debug.WriteLine($"Max ({StatDisplayed}): {diff * 1.025f}");
                     CompareGraph.Max = diff * 1.025f;
 
                     /*CompareGraph.Max = statGroup
@@ -1038,12 +1024,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                             Math.Abs(Math.Abs(e.BaseValue) - Math.Abs(statGroupAux[i].BaseValue)),
                             Math.Abs(Math.Abs(e.UncappedValue ?? e.EnhValue ?? e.BaseValue) - Math.Abs(statGroupAux[i].UncappedValue ?? statGroupAux[i].EnhValue ?? statGroupAux[i].BaseValue))))
                         .Max() * 1.025f;*/
-                    Debug.WriteLine($"CompareGraph max ({StatDisplayed}): {CompareGraph.Max}");
                 }
                 else
                 {
                     CompareGraph.Max = statGroupAux.Max(e => Math.Max(e.BaseValue, e.UncappedValue ?? e.EnhValue ?? e.BaseValue)) * 1.025f;
-                    Debug.WriteLine($"CompareGraph max ({StatDisplayed}): {CompareGraph.Max}");
                 }
             }
             else
@@ -1694,7 +1678,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void TsCompareImport_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine("TsCompareImport() - Start");
             using var dlgOpen = new OpenFileDialog();
             dlgOpen.Filter = "Compare Data|*.json";
             dlgOpen.InitialDirectory = MidsContext.Config.BuildsPath;
@@ -1704,14 +1687,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             var ret = dlgOpen.ShowDialog();
             if (ret != DialogResult.OK)
             {
-                Debug.WriteLine("  Cancelled");
                 return;
             }
 
             var importStatus = ImportFromJson(dlgOpen.FileName);
             if (!importStatus)
             {
-                Debug.WriteLine($"  Failed to load compare data from {dlgOpen.FileName}");
                 return;
             }
 
@@ -1720,33 +1701,36 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void TsCompareExport_Click(object sender, EventArgs e)
         {
-            Debug.WriteLine("TsCompareExport() - Start");
             using var dlgSave = new SaveFileDialog();
-
             dlgSave.Filter = "Compare Data|*.json";
             dlgSave.InitialDirectory = MidsContext.Config.BuildsPath;
 
             var buildFile = myParent.GetBuildFile();
             buildFile = Path.GetFileName(buildFile ?? "");
 
-            var fileInfo = new FileInfo(buildFile);
-            var saveFile = string.IsNullOrEmpty(buildFile)
-                ? !string.IsNullOrWhiteSpace(MidsContext.Character.Name)
+            
+            string saveFile;
+            if (string.IsNullOrEmpty(buildFile))
+            {
+                saveFile = !string.IsNullOrWhiteSpace(MidsContext.Character.Name)
                     ? $"{MidsContext.Character.Name} - {MidsContext.Character.Archetype.DisplayName} ({MidsContext.Character.Powersets[0].DisplayName} - {MidsContext.Character.Powersets[1].DisplayName})"
-                    : $"{MidsContext.Character.Archetype.DisplayName} ({MidsContext.Character.Powersets[0].DisplayName} - {MidsContext.Character.Powersets[1].DisplayName})"
-                : fileInfo.Name.Replace(fileInfo.Extension, "");
+                    : $"{MidsContext.Character.Archetype.DisplayName} ({MidsContext.Character.Powersets[0].DisplayName} - {MidsContext.Character.Powersets[1].DisplayName})";
+            }
+            else
+            {
+                var fileInfo = new FileInfo(buildFile);
+                saveFile = fileInfo.Name.Replace(fileInfo.Extension, "");
+            }
 
             dlgSave.FileName = $"[Compare] {saveFile}.json";
 
             var ret = dlgSave.ShowDialog();
             if (ret != DialogResult.OK)
             {
-                Debug.WriteLine("  Cancelled");
                 return;
             }
 
             var exportStatus = ExportToJson(dlgSave.FileName);
-            Debug.WriteLine($"JSON export status: {exportStatus}");
             if (exportStatus)
             {
                 return;
