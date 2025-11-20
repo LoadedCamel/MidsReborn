@@ -3532,7 +3532,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             if (myPower == null)
             {
                 MessageBox.Show("Cannot apply operation: power is null.");
-                
+
                 return;
             }
 
@@ -3571,6 +3571,70 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             RefreshFXData();
 
             MessageBox.Show($"Found matching conditionals: {k}\r\nUpdated: {l}");
+        }
+
+        private void btnExprSR_Click(object sender, EventArgs e)
+        {
+            if (myPower == null)
+            {
+                MessageBox.Show("Cannot apply operation: power is null.");
+
+                return;
+            }
+
+            using var exprSR = new frmExprSR();
+            var ret = exprSR.ShowDialog(this);
+            if (ret != DialogResult.OK)
+            {
+                return;
+            }
+
+            var k = 0;
+            for (var i = 0; i < myPower?.Effects.Length; i++)
+            {
+                if (myPower?.Effects[i].AttribType != Enums.eAttribType.Expression)
+                {
+                    continue;
+                }
+
+                for (var j = 0; j < 3; j++)
+                {
+                    var expr = j switch
+                    {
+                        0 => myPower?.Effects[i].Expressions.Duration,
+                        1 => myPower?.Effects[i].Expressions.Magnitude,
+                        2 => myPower?.Effects[i].Expressions.Probability
+                    };
+
+                    if (expr == null)
+                    {
+                        continue;
+                    }
+
+                    if (expr.Contains(exprSR.SearchText))
+                    {
+                        k++;
+                        switch (j)
+                        {
+                            case 0:
+                                myPower.Effects[i].Expressions.Duration = expr.Replace(exprSR.SearchText, exprSR.ReplaceText);
+                                break;
+
+                            case 1:
+                                myPower.Effects[i].Expressions.Magnitude = expr.Replace(exprSR.SearchText, exprSR.ReplaceText);
+                                break;
+
+                            case 2:
+                                myPower.Effects[i].Expressions.Probability = expr.Replace(exprSR.SearchText, exprSR.ReplaceText);
+                                break;
+                        }
+                    }
+                }
+            }
+
+            RefreshFXData();
+
+            MessageBox.Show(k == 0 ? $"No occurence found for '{exprSR.SearchText}'." : $"{k} occurence{(k == 1 ? "" : "s")} replaced from '{exprSR.SearchText}' to '{exprSR.ReplaceText}'.", "Expressions search/replace", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 

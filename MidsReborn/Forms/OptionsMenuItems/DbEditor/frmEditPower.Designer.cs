@@ -149,6 +149,8 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             tpEffects = new TabPage();
             lvFX = new ListBox();
             pnlFX = new Panel();
+            btnExprSR = new Button();
+            btnStacksUpdate = new Button();
             btnDynRecharge = new Button();
             cbCoDFormat = new CheckBox();
             btnSetDamage = new Button();
@@ -223,7 +225,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnFullCopy = new Button();
             btnJsonExport = new Button();
             btnJsonImport = new Button();
-            btnStacksUpdate = new Button();
             tcPower.SuspendLayout();
             tpText.SuspendLayout();
             GroupBox4.SuspendLayout();
@@ -1545,6 +1546,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             // 
             // pnlFX
             // 
+            pnlFX.Controls.Add(btnExprSR);
             pnlFX.Controls.Add(btnStacksUpdate);
             pnlFX.Controls.Add(btnDynRecharge);
             pnlFX.Controls.Add(cbCoDFormat);
@@ -1559,6 +1561,24 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             pnlFX.Name = "pnlFX";
             pnlFX.Size = new System.Drawing.Size(824, 383);
             pnlFX.TabIndex = 71;
+            // 
+            // btnExprSR
+            // 
+            btnExprSR.Location = new System.Drawing.Point(345, 351);
+            btnExprSR.Name = "btnExprSR";
+            btnExprSR.Size = new System.Drawing.Size(110, 28);
+            btnExprSR.TabIndex = 82;
+            btnExprSR.Text = "Expression S/R";
+            btnExprSR.Click += btnExprSR_Click;
+            // 
+            // btnStacksUpdate
+            // 
+            btnStacksUpdate.Location = new System.Drawing.Point(177, 351);
+            btnStacksUpdate.Name = "btnStacksUpdate";
+            btnStacksUpdate.Size = new System.Drawing.Size(162, 28);
+            btnStacksUpdate.TabIndex = 81;
+            btnStacksUpdate.Text = "Update stack conditionals";
+            btnStacksUpdate.Click += btnStacksUpdate_Click;
             // 
             // btnDynRecharge
             // 
@@ -2303,15 +2323,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             btnJsonImport.UseVisualStyleBackColor = true;
             btnJsonImport.Click += btnJsonImport_Click;
             // 
-            // btnStacksUpdate
-            // 
-            btnStacksUpdate.Location = new System.Drawing.Point(177, 351);
-            btnStacksUpdate.Name = "btnStacksUpdate";
-            btnStacksUpdate.Size = new System.Drawing.Size(162, 28);
-            btnStacksUpdate.TabIndex = 81;
-            btnStacksUpdate.Text = "Update stack conditionals";
-            btnStacksUpdate.Click += btnStacksUpdate_Click;
-            // 
             // frmEditPower
             // 
             AcceptButton = btnOK;
@@ -2564,5 +2575,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         private Button btnJsonImport;
         private Button btnDynRecharge;
         private Button btnStacksUpdate;
+        private Button btnExprSR;
     }
 }
