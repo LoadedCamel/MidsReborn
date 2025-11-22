@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -3632,9 +3633,31 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 }
             }
 
+            if (exprSR.IncludeConditionals)
+            {
+                for (var i = 0; i < myPower?.Effects.Length; i++)
+                {
+                    if (myPower?.Effects[i].ActiveConditionals is { Count: 0 })
+                    {
+                        continue;
+                    }
+
+                    for (var j = 0; j < myPower?.Effects[i].ActiveConditionals?.Count; j++)
+                    {
+                        if (myPower?.Effects[i].ActiveConditionals?[j].Key.Contains(exprSR.SearchText) != true)
+                        {
+                            continue;
+                        }
+
+                        k++;
+                        myPower.Effects[i].ActiveConditionals![j].Key = myPower?.Effects[i].ActiveConditionals?[j].Key.Replace(exprSR.SearchText, exprSR.ReplaceText)!;
+                    }
+                }
+            }
+
             RefreshFXData();
 
-            MessageBox.Show(k == 0 ? $"No occurence found for '{exprSR.SearchText}'." : $"{k} occurence{(k == 1 ? "" : "s")} replaced from '{exprSR.SearchText}' to '{exprSR.ReplaceText}'.", "Expressions search/replace", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(k == 0 ? $"No occurence found for '{exprSR.SearchText}'." : $"{k} occurence{(k == 1 ? "" : "s")} replaced from '{exprSR.SearchText}' to '{exprSR.ReplaceText}'.", $"Expressions{(exprSR.IncludeConditionals ? " & Conditionals" : "")} Search/Replace", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 

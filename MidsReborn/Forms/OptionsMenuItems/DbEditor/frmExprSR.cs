@@ -7,12 +7,14 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
     {
         public string SearchText;
         public string ReplaceText;
+        public bool IncludeConditionals;
 
         public frmExprSR()
         {
             InitializeComponent();
             SearchText = "";
             ReplaceText = "";
+            IncludeConditionals = false;
         }
 
         private void frmExprSR_Load(object sender, EventArgs e)
@@ -42,6 +44,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        private void chkIncludeConditionals_CheckedChanged(object sender, EventArgs e)
+        {
+            IncludeConditionals = chkIncludeConditionals.Checked;
         }
     }
 }
