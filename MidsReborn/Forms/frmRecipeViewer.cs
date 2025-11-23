@@ -131,11 +131,6 @@ namespace Mids_Reborn.Forms
             return numBoosters;
         }
 
-        private int GetPopupDataLines(PopUp.PopupData popupData)
-        {
-            return popupData.Sections?.Sum(s => s.Content.Length) ?? 0;
-        }
-
         private PopUp.PopupData BuildList(bool mini)
         {
             var iIndent = 1;
@@ -155,10 +150,11 @@ namespace Mids_Reborn.Forms
             {
                 var salvageTotalCount = new Dictionary<int, int>();
                 var recipeTotalCount = new Dictionary<KeyValuePair<int, int>, int>();
-                var num1 = 0;
-                var num2 = 0;
-                var num3 = 0;
-                var num4 = 0;
+                var specialSalvage = new Dictionary<string, int>();
+                var craftingCostInInf = 0;
+                var purchaseCostInInf = 0;
+                var craftingCostMemoriedInInf = 0;
+                var craftingCostInSalvage = 0;
                 DrawIcon(-1);
 
                 var lvRecipesItems = lvDPA.Items.Count;
@@ -186,13 +182,13 @@ namespace Mids_Reborn.Forms
                     if (chkRecipe.Checked)
                     {
                         var rk = new KeyValuePair<int, int>(rIDX, itemId);
-                        if (!recipeTotalCount.ContainsKey(rk))
+                        if (!recipeTotalCount.TryGetValue(rk, out int value))
                         {
                             recipeTotalCount.Add(rk, 1);
                         }
                         else
                         {
-                            recipeTotalCount[rk]++;
+                            recipeTotalCount[rk] = ++value;
                         }
                     }
 
@@ -206,39 +202,40 @@ namespace Mids_Reborn.Forms
                             continue;
                         }
 
-                        if (!salvageTotalCount.ContainsKey(cs))
+                        if (DatabaseAPI.Database.Salvage[cs].Origin == Salvage.SalvageOrigin.Special)
                         {
-                            salvageTotalCount.Add(cs, csc);
+                            if (!specialSalvage.TryAdd(DatabaseAPI.Database.Salvage[cs].ExternalName, csc))
+                            {
+                                specialSalvage[DatabaseAPI.Database.Salvage[cs].ExternalName] += csc;
+                            }
+                            continue;
                         }
-                        else
+
+                        if (!salvageTotalCount.TryAdd(cs, csc))
                         {
                             salvageTotalCount[cs] += csc;
                         }
 
-                        num4 += csc;
+                        craftingCostInSalvage += csc;
                     }
 
                     numBoosters = GetNumBoostersFromLv(lvDPA.Items[i]);
-                    if (!salvageTotalCount.ContainsKey(boosterSalvageIdx))
-                    {
-                        salvageTotalCount.Add(boosterSalvageIdx, numBoosters);
-                    }
-                    else
+                    if (!salvageTotalCount.TryAdd(boosterSalvageIdx, numBoosters))
                     {
                         salvageTotalCount[boosterSalvageIdx] += numBoosters;
                     }
 
-                    num1 += recipeEntry.CraftCost;
+                    craftingCostInInf += recipeEntry.CraftCost;
                     if (recipeEntry.CraftCostM > 0)
                     {
-                        num3 += recipeEntry.CraftCostM;
+                        craftingCostMemoriedInInf += recipeEntry.CraftCostM;
                     }
                     else if (DatabaseAPI.Database.Enhancements[Convert.ToInt32(lvDPA.Items[i].Tag)].TypeID == Enums.eType.SetO)
                     {
-                        num3 += recipeEntry.CraftCost;
+                        craftingCostMemoriedInInf += recipeEntry.CraftCost;
                     }
 
-                    num2 += recipeEntry.BuyCost;
+                    purchaseCostInInf += recipeEntry.BuyCost;
                 }
 
                 var index3 = popupData.Add();
@@ -273,22 +270,33 @@ namespace Mids_Reborn.Forms
                         PopUp.Colors.Title);
                 }
 
-                if (num2 > 0)
+                if (purchaseCostInInf > 0)
                 {
-                    popupData.Sections[index3].Add($"Buy{(mini ? "" : " Cost")}: {num2:###,###,##0}",
+                    popupData.Sections[index3].Add($"Buy{(mini ? "" : " Cost")}: {purchaseCostInInf:###,###,##0}",
                         PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
                 }
 
-                if (num1 > 0)
+                if (craftingCostInInf > 0)
                 {
-                    popupData.Sections[index3].Add($"Craft{(mini ? "" : " Cost")}: {num1:###,###,##0}",
+                    popupData.Sections[index3].Add($"Craft{(mini ? "" : " Cost")}: {craftingCostInInf:###,###,##0}",
                         PopUp.Colors.Invention, 0.9f, FontStyle.Bold, iIndent);
                 }
 
-                if ((num3 > 0) & (num3 != num1))
+                if ((craftingCostMemoriedInInf > 0) & (craftingCostMemoriedInInf != craftingCostInInf))
                 {
-                    popupData.Sections[index3].Add($"Craft ({(mini ? "Mem'd" : "Memorized Common")}): {num3:###,###,##0}",
+                    popupData.Sections[index3].Add($"Craft ({(mini ? "Mem'd" : "Memorized Common")}): {craftingCostMemoriedInInf:###,###,##0}",
                         PopUp.Colors.Effect, 0.9f, FontStyle.Bold, iIndent);
+                }
+
+                if (specialSalvage.Count > 0)
+                {
+                    var index1 = popupData.Add();
+                    popupData.Sections[index1].Add("Special Salvage:", PopUp.Colors.Title);
+                    foreach (var ss in specialSalvage)
+                    {
+                        popupData.Sections[index1].Add($"{ss.Key}: {ss.Value:###,###,##0}",
+                            PopUp.Colors.UltraRare, 0.9f, FontStyle.Bold, iIndent);
+                    }
                 }
 
                 if (chkRecipe.Checked)
@@ -402,7 +410,7 @@ namespace Mids_Reborn.Forms
                 }
 
                 var index5 = popupData.Add();
-                var iText1 = mini ? $"{num4} Items:" : $"{num4} Salvage Items:";
+                var iText1 = mini ? $"{craftingCostInSalvage} Items:" : $"{craftingCostInSalvage} Salvage Items:";
                 popupData.Sections[index5].Add(iText1, PopUp.Colors.Title);
                 foreach (var sl in salvageTotalCount)
                 {
