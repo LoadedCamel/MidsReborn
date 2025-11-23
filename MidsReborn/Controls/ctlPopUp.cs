@@ -66,7 +66,6 @@ namespace Mids_Reborn.Controls
             pIDX = -1;
             eIDX = -1;
             psIDX = -1;
-            pFont = new Font(Fonts.Family("Noto Sans"), 12.25f, FontStyle.Bold, GraphicsUnit.Pixel);
             InitializeComponent();
         }
 
@@ -156,7 +155,6 @@ namespace Mids_Reborn.Controls
         {
             SuspendLayout();
             AutoScaleMode = AutoScaleMode.Font;
-            Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
             Name = "ctlPopUp";
             var size = new Size(167, 104);
             Size = size;
@@ -216,6 +214,20 @@ namespace Mids_Reborn.Controls
             if (myBX == null)
             {
                 NewBX();
+            }
+
+            if (pFont == null)
+            {
+                try
+                {
+                    pFont = new Font(Fonts.Family("Noto Sans"), 12.25f, FontStyle.Bold, GraphicsUnit.Pixel);
+                    Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Regular, GraphicsUnit.Pixel);
+                }
+                catch (Exception)
+                {
+                    pFont = new Font("Microsoft Sans Serif", 12.25f, FontStyle.Bold, GraphicsUnit.Point);
+                    Font = new Font("Microsoft Sans Serif", 11f, FontStyle.Regular, GraphicsUnit.Point);
+                }
             }
 
             myBX.Graphics.Clear(BackColor);
