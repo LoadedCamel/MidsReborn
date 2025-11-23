@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Mids_Reborn.Controls;
 using Mids_Reborn.Core;
@@ -247,6 +248,8 @@ namespace Mids_Reborn.Forms
                 }
 
                 lblHeader.Text = "Shopping List";
+                // First line is cut by the shopping list header
+                popupData.Sections[index3].Add("", PopUp.Colors.Common);
                 if (lvPower.CheckedIndices.Count == 1)
                 {
                     popupData.Sections[index3].Add(
@@ -340,6 +343,64 @@ namespace Mids_Reborn.Forms
                     popupData.ColRight = false;
                 }
 
+                var specialEnhCount = new Dictionary<int, int>();
+                foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
+                {
+                    if (pe?.Power == null)
+                    {
+                        continue;
+                    }
+
+                    foreach (var s in pe.Slots)
+                    {
+                        if (s.Enhancement.Enh < 0)
+                        {
+                            continue;
+                        }
+
+                        if (!DatabaseAPI.EnhIsNaturallyAttuned(s.Enhancement.Enh))
+                        {
+                            continue;
+                        }
+
+                        if (!specialEnhCount.TryAdd(s.Enhancement.Enh, 1))
+                        {
+                            specialEnhCount[s.Enhancement.Enh]++;
+                        }
+                    }
+                }
+
+                if (specialEnhCount.Count > 0)
+                {
+                    var index6 = popupData.Add();
+                    popupData.Sections[index6].Add($"{specialEnhCount.Count} Special Enhancement{(specialEnhCount.Count > 1 ? "s" : "")}:", PopUp.Colors.Title);
+                    foreach (var c in specialEnhCount)
+                    {
+                        var enh = DatabaseAPI.Database.Enhancements[c.Key];
+                        var recipe = enh.RecipeIDX < 0
+                            ? null
+                            : DatabaseAPI.Database.Recipes[enh.RecipeIDX];
+                        var color = recipe == null
+                            ? PopUp.Colors.Common
+                            : recipe.Rarity switch
+                            {
+                                Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
+                                Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
+                                Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
+                                _ => PopUp.Colors.Common
+                            };
+
+                        if (mini)
+                        {
+                            popupData.Sections[index6].Add(enh.LongName, color, c.Value.ToString(), color, 0.9f);
+                        }
+                        else
+                        {
+                            popupData.Sections[index6].Add(enh.LongName, color, c.Value.ToString(), color, 0.9f, FontStyle.Bold, 1);
+                        }
+                    }
+                }
+
                 var index5 = popupData.Add();
                 var iText1 = mini ? $"{num4} Items:" : $"{num4} Salvage Items:";
                 popupData.Sections[index5].Add(iText1, PopUp.Colors.Title);
@@ -367,30 +428,31 @@ namespace Mids_Reborn.Forms
 
                 popupData.Sections[index5].Content = sortPopupStrings(mini, 1, popupData.Sections[index5].Content);
                 if (nonRecipeCount == 1)
-                    return popupData;
                 {
-                    var index1 = popupData.Add();
-                    var iText2 = mini
-                        ? $"{nonRecipeCount - 1} Enhs:"
-                        : $"{nonRecipeCount - 1} Non-Crafted Enhancements:";
-
-                    popupData.Sections[index1].Add(iText2, PopUp.Colors.Title);
-                    for (var index2 = 0; index2 < tl.Count; index2++)
-                    {
-                        if (mini)
-                        {
-                            popupData.Sections[index1].Add($" {tl[index2].Count} x", PopUp.Colors.Common,
-                                tl[index2].Text, PopUp.Colors.Common, 0.9f);
-                        }
-                        else
-                        {
-                            popupData.Sections[index1].Add(tl[index2].Text, PopUp.Colors.Common, Convert.ToString(tl[index2].Count),
-                                PopUp.Colors.Common, 0.9f, FontStyle.Bold, 1);
-                        }
-                    }
-
-                    popupData.Sections[index1].Content = sortPopupStrings(mini, 1, popupData.Sections[index1].Content);
+                    return popupData;
                 }
+
+                var idx = popupData.Add();
+                var iText2 = mini
+                    ? $"{nonRecipeCount - 1} Enhs:"
+                    : $"{nonRecipeCount - 1} Non-Crafted Enhancements:";
+
+                popupData.Sections[idx].Add(iText2, PopUp.Colors.Title);
+                for (var index2 = 0; index2 < tl.Count; index2++)
+                {
+                    if (mini)
+                    {
+                        popupData.Sections[idx].Add($" {tl[index2].Count} x", PopUp.Colors.Common,
+                            tl[index2].Text, PopUp.Colors.Common, 0.9f);
+                    }
+                    else
+                    {
+                        popupData.Sections[idx].Add(tl[index2].Text, PopUp.Colors.Common, Convert.ToString(tl[index2].Count),
+                            PopUp.Colors.Common, 0.9f, FontStyle.Bold, 1);
+                    }
+                }
+
+                popupData.Sections[idx].Content = sortPopupStrings(mini, 1, popupData.Sections[idx].Content);
 
                 RecipeInfo.Height = (int) Math.Round(RecipeInfo.lHeight) + Panel1.Height + 16;
                 RecipeInfo.ResumeLayout();
@@ -726,6 +788,7 @@ namespace Mids_Reborn.Forms
             lvPower.EnableDoubleBuffer();
             lvDPA.EnableDoubleBuffer();
             UpdateColorTheme();
+            // Bug: Will crash with NullReferenceException here if designer file is edited with the GUI
             RecipeInfo.SetPopup(new PopUp.PopupData());
             chkRecipe.Checked = MidsContext.Config.ShoppingListIncludesRecipes;
             RecalcSalvage();
@@ -798,10 +861,18 @@ namespace Mids_Reborn.Forms
         private bool HasIOs(int hIDX)
         {
             if (hIDX < 0)
+            {
                 return false;
+            }
+
             for (var index = 0; index < MidsContext.Character.CurrentBuild.Powers[hIDX].Slots.Length; index++)
+            {
                 if (MidsContext.Character.CurrentBuild.Powers[hIDX].Slots[index].Enhancement.Enh > -1)
+                {
                     return true;
+                }
+            }
+
             return false;
         }
 
@@ -814,7 +885,9 @@ namespace Mids_Reborn.Forms
                 for (var index2 = 0; index2 < RecipeInfo.pData.Sections[index1].Content.Length; index2++)
                 {
                     var content = popupData.Sections[index1].Content;
-                    ret += $"{content[index2].Text}{(content[index2].TextColumn != "" ? $"  {content[index2].TextColumn}" : "")}\r\n";
+                    ret += Regex.IsMatch(content[index2].Text, @"[0-9]+ x$")
+                        ? $"{content[index2].Text.Trim()}{(content[index2].TextColumn != "" ? $"  {content[index2].TextColumn}" : "")}\r\n"
+                        : $"{(content[index2].TextColumn != "" ? $"{content[index2].TextColumn} x  " : "")}{content[index2].Text.Trim()}\r\n";
                 }
 
                 ret += "\r\n";

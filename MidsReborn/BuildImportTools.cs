@@ -511,6 +511,7 @@ namespace Mids_Reborn
                 "sentinel_defense.psionic_armor.fortify_mind" => "Sentinel_Defense.Psionic_Armor.Psychokinetic_Barrier",
                 "stalker_defense.psionic_armor.fortify_mind" => "Stalker_Defense.Psionic_Armor.Psychokinetic_Barrier",
                 "tanker_defense.psionic_armor.fortify_mind" => "Tanker_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "stalker_melee.sonic_melee.assassins_resonance" => "Stalker_Melee.Sonic_Melee.Assassins_Whisper",
 
                 _ => fullName
             };
