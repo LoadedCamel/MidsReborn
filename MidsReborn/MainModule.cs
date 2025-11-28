@@ -118,7 +118,7 @@ namespace Mids_Reborn
                 messenger.SetMessage("Loading Server Data...");
                 if (!DatabaseAPI.LoadServerData(path))
                 {
-                    MessageBox.Show(@"There was an error reading the data. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(@$"There was an error reading server data ({Path.GetFileName(Files.SelectDataFileLoad(Files.ServerDataFile, path))}. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.Exit();
                 }
                 messenger.SetMessage("Loading Build Preferences");
