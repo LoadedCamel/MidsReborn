@@ -220,13 +220,13 @@ namespace Mids_Reborn.Controls
             {
                 try
                 {
-                    pFont = new Font(Fonts.Family("Noto Sans"), 12.25f, FontStyle.Bold, GraphicsUnit.Pixel);
+                    pFont = new Font(Fonts.Family("Noto Sans"), 12f, FontStyle.Bold, GraphicsUnit.Pixel);
                     Font = new Font(Fonts.Family("Noto Sans"), 11f, FontStyle.Regular, GraphicsUnit.Pixel);
                 }
                 catch (Exception)
                 {
-                    pFont = new Font("Microsoft Sans Serif", 12.25f, FontStyle.Bold, GraphicsUnit.Point);
-                    Font = new Font("Microsoft Sans Serif", 11f, FontStyle.Regular, GraphicsUnit.Point);
+                    pFont = new Font("Microsoft Sans Serif", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
+                    Font = new Font("Microsoft Sans Serif", 11f, FontStyle.Regular, GraphicsUnit.Pixel);
                 }
             }
 
@@ -271,7 +271,7 @@ namespace Mids_Reborn.Controls
                     {
                         unchecked
                         {
-                            var layoutRectangle = new RectangleF(pInternalPadding + section.Content[j].tIndent * Font.Size, num + pInternalPadding, Width - (checked(pInternalPadding * 2) + section.Content[j].tIndent * Font.Size), myBX.Size.Height);
+                            var layoutRectangle = new RectangleF(pInternalPadding + section.Content[j].tIndent * pFont.Size, num + pInternalPadding, Width - (checked(pInternalPadding * 2) + section.Content[j].tIndent * pFont.Size), myBX.Size.Height);
                             if (section.Content[j].HasColumn)
                             {
                                 stringFormat.FormatFlags |= StringFormatFlags.NoWrap;
@@ -331,14 +331,9 @@ namespace Mids_Reborn.Controls
         private void DrawBorder()
         {
             var pen = new Pen(ForeColor);
-            Rectangle rect = default;
-            rect.X = 0;
-            rect.Y = 0;
             checked
             {
-                rect.Height = Height - 1;
-                rect.Width = Width - 1;
-                myBX.Graphics.DrawRectangle(pen, rect);
+                myBX.Graphics?.DrawRectangle(pen, new Rectangle(0, 0, Width - 1, Height - 1));
             }
         }
 
