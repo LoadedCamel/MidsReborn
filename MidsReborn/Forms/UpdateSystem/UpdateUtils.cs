@@ -101,6 +101,8 @@ namespace Mids_Reborn.Forms.UpdateSystem
             var options = new RestClientOptions(manifestUrl)
             {
                 ThrowOnAnyError = false,
+                // specify a user agent so that cloudflare won't block
+                UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36",
                 Timeout = TimeSpan.FromSeconds(5)
             };
 
@@ -122,7 +124,7 @@ namespace Mids_Reborn.Forms.UpdateSystem
                 var headResponse = await client.ExecuteAsync(headRequest);
                 if (!headResponse.IsSuccessful || headResponse.StatusCode == HttpStatusCode.NotFound)
                 {
-                    ShowMissingManifestWarning(database, manifestUrl);
+                    ShowMissingManifestWarning(database, manifestUrl, headResponse.ErrorException?.Message ?? "Unknown error");
                     return new Manifest();
                 }
 
@@ -155,13 +157,14 @@ namespace Mids_Reborn.Forms.UpdateSystem
             }
         }
 
-        private static void ShowMissingManifestWarning(string serverName, string manifestUrl)
+        private static void ShowMissingManifestWarning(string serverName, string manifestUrl, string errorMessage)
         {
             var mbox = new MessageBoxEx(@"Check for Update(s)",
                 $"Could not locate the manifest for the {serverName} database.\r\n\r\n" +
                 $"This may indicate a misconfiguration or an outdated or missing manifest.\r\n" +
                 $"If this is a custom or community server, please reach out to the database administrator(s).\r\n\r\n" +
-                $"URL: {manifestUrl}",
+                $"URL: {manifestUrl}\r\n" +
+                $"Response: {errorMessage}",
                 MessageBoxEx.MessageBoxExButtons.Ok,
                 MessageBoxEx.MessageBoxExIcon.Warning,
                 true);
