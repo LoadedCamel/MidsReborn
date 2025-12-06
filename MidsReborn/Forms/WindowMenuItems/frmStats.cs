@@ -230,6 +230,36 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             return -1;
         }
 
+        private void SizeElements()
+        {
+            btnClose.Location = new Point(Math.Max(4, ClientSize.Width - btnClose.Width - 4), Math.Max(4, ClientSize.Height - btnClose.Height - 4));
+            chkOnTop.Location = new Point(Math.Max(4, ClientSize.Width - chkOnTop.Width - 4), Math.Max(4, ClientSize.Height - chkOnTop.Height - 31));
+
+            if (Graph != null)
+            {
+                Graph.Height = chkOnTop.Top - Graph.Top - 4;
+
+                if (!CompareMode)
+                {
+                    Graph.Width = ClientSize.Width - 8;
+                    tbScaleX.Width = chkOnTop.Left - tbScaleX.Left - 4;
+                }
+                else
+                {
+                    Graph.Width = (int)Math.Floor(ClientSize.Width / 2f) - 8;
+                    CompareGraph.Left = (int)Math.Floor(ClientSize.Width / 2f) + 4;
+                    CompareGraph.Width = Graph.Width;
+                    CompareGraph.Height = Graph.Height;
+                    tbScaleX.Width = (int)Math.Round((chkOnTop.Left - tbScaleX.Left) / 2f) - 4;
+                    cbCompareGraphStyle.Left = ClientSize.Width - cbCompareGraphStyle.Width - 4;
+                }
+
+                lblScale.Left = (int)Math.Round(tbScaleX.Left + (tbScaleX.Width - lblScale.Width) / 2f);
+            }
+
+            StoreLocation();
+        }
+
         private void SetUiForCompare(bool fillComboValues = true)
         {
             ClientSize = CompareMode
@@ -369,6 +399,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             cbValues.SelectedIndex = valuesSelectedIndex;
             cbStyle.SelectedIndex = styleSelectedIndex;
+
+            SizeElements();
         }
 
         private void SetGraphColors()
@@ -785,32 +817,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmStats_Resize(object sender, EventArgs e)
         {
-            if (Graph != null)
-            {
-                if (!CompareMode)
-                {
-                    Graph.Width = ClientSize.Width - 8;
-                    Graph.Height = ClientSize.Height - Graph.Top - ClientSize.Height + tbScaleX.Top - 12;
-                    tbScaleX.Width = ClientSize.Width - tbScaleX.Left - ClientSize.Width + chkOnTop.Left - 4;
-                    lblScale.Left = (int)Math.Round(tbScaleX.Left + (tbScaleX.Width - lblScale.Width) / 2f);
-                }
-                else
-                {
-                    Graph.Width = (int)Math.Floor(ClientSize.Width / 2f) - 8;
-                    Graph.Height = ClientSize.Height - Graph.Top - ClientSize.Height + tbScaleX.Top - 12;
-                    CompareGraph.Left = (int)Math.Floor(ClientSize.Width / 2f) + 4;
-                    CompareGraph.Width = Graph.Width;
-                    CompareGraph.Height = Graph.Height;
-                    tbScaleX.Width = (int)Math.Floor(ClientSize.Width / 2f) - tbScaleX.Left - ClientSize.Width + chkOnTop.Left - 4;
-                    lblScale.Left = (int)Math.Round(tbScaleX.Left + (tbScaleX.Width - lblScale.Width) / 2f);
-                    cbCompareGraphStyle.Left = ClientSize.Width - cbCompareGraphStyle.Width - 4;
-                }
-            }
-
-            btnClose.Location = new Point(Math.Max(4, ClientSize.Width - btnClose.Width - 4), Math.Max(4, ClientSize.Height - btnClose.Height - 4));
-            chkOnTop.Location = new Point(Math.Max(4, ClientSize.Width - chkOnTop.Width - 4), Math.Max(4, ClientSize.Height - chkOnTop.Height - 31));
-
-            StoreLocation();
+            SizeElements();
         }
 
         private void SetCompareGraphValues(DisplayMode statDisplayed, bool draw = true)
