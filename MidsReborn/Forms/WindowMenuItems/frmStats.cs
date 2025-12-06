@@ -92,6 +92,16 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private StatsPowerData? CompareData;
         private StatsPowerData.TotalStats Totals;
 
+        // FeetPerSecond, MetersPerSecond, MilesPerHour, KilometersPerHour
+        // Row -> Col
+        private static readonly float[][] SpeedCnvMatrix =
+        [
+            [1, 3.28084f, 1.466667f, 0.911344f],
+            [0.3048f, 1, 0.44704f, 0.277778f],
+            [0.681818f, 2.236936f, 1, 0.621371f],
+            [1.09728f, 3.6f, 1.609344f, 1]
+        ];
+
         public frmStats(ref frmMain iParent)
         {
             FormClosed += frmStats_FormClosed;
@@ -222,13 +232,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void SetUiForCompare(bool fillComboValues = true)
         {
-            // TODO: bottom bar items should be centered, Top Most/Close on the right (compare mode only)
-            // TODO: export current + compare data to csv
-            // TODO: disable Elusivity display in compare if compare data is for PvE
-
             ClientSize = CompareMode
                 ? new Size(Math.Max(ClientSize.Width, 1004), Math.Max(ClientSize.Height, 601))
                 : new Size(Math.Min(ClientSize.Width, 492), Math.Min(ClientSize.Height, 515));
+
+            MinimumSize = CompareMode ? new Size(1020, 640) : new Size(508, 554);
 
             var yOffset = CompareMode ? 64 : 0;
             Graph.Location = new Point(4, 57 + yOffset);
@@ -777,16 +785,27 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void frmStats_Resize(object sender, EventArgs e)
         {
-            /*if (Graph != null)
+            if (Graph != null)
             {
-                Graph.Width = ClientSize.Width - Graph.Left - 4;
-                Graph.Height = ClientSize.Height - Graph.Top - ClientSize.Height + tbScaleX.Top - 4;
-                tbScaleX.Width = ClientSize.Width - tbScaleX.Left - ClientSize.Width + chkOnTop.Left - 4;
-                lblScale.Left = (int) Math.Round(tbScaleX.Left + (tbScaleX.Width - lblScale.Width) / 2f);
-                cbStyle.Width = cbStyle.Left + 157 > ClientSize.Width
-                    ? ClientSize.Width - cbStyle.Left - 4
-                    : 186;
-            }*/
+                if (!CompareMode)
+                {
+                    Graph.Width = ClientSize.Width - 8;
+                    Graph.Height = ClientSize.Height - Graph.Top - ClientSize.Height + tbScaleX.Top - 12;
+                    tbScaleX.Width = ClientSize.Width - tbScaleX.Left - ClientSize.Width + chkOnTop.Left - 4;
+                    lblScale.Left = (int)Math.Round(tbScaleX.Left + (tbScaleX.Width - lblScale.Width) / 2f);
+                }
+                else
+                {
+                    Graph.Width = (int)Math.Floor(ClientSize.Width / 2f) - 8;
+                    Graph.Height = ClientSize.Height - Graph.Top - ClientSize.Height + tbScaleX.Top - 12;
+                    CompareGraph.Left = (int)Math.Floor(ClientSize.Width / 2f) + 4;
+                    CompareGraph.Width = Graph.Width;
+                    CompareGraph.Height = Graph.Height;
+                    tbScaleX.Width = (int)Math.Floor(ClientSize.Width / 2f) - tbScaleX.Left - ClientSize.Width + chkOnTop.Left - 4;
+                    lblScale.Left = (int)Math.Round(tbScaleX.Left + (tbScaleX.Width - lblScale.Width) / 2f);
+                    cbCompareGraphStyle.Left = ClientSize.Width - cbCompareGraphStyle.Width - 4;
+                }
+            }
 
             btnClose.Location = new Point(Math.Max(4, ClientSize.Width - btnClose.Width - 4), Math.Max(4, ClientSize.Height - btnClose.Height - 4));
             chkOnTop.Location = new Point(Math.Max(4, ClientSize.Width - chkOnTop.Width - 4), Math.Max(4, ClientSize.Height - chkOnTop.Height - 31));
@@ -838,7 +857,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     DisplayMode.DebuffResistance => ["Defense", "Endurance", "Recovery", "PerceptionRadius", "ToHit", "RechargeTime", "SpeedRunning", "Regeneration"],
                     DisplayMode.Elusivity => ["Untyped", "Smashing", "Lethal", "Fire", "Cold", "Energy", "Negative", "Toxic", "Psionic", "Melee", "Ranged", "AoE"],
                     DisplayMode.Defense when DatabaseAPI.RealmUsesToxicDefense => ["Smashing", "Lethal", "Fire", "Cold", "Energy", "Negative", "Toxic", "Psionic", "Melee", "Ranged", "AoE"],
-                    DisplayMode.Defense => ["Smashing", "Lethal", "Fire", "Cold", "Energy", "Negative", "Psionic", "Melee", "Ranged", "AoE"]
+                    DisplayMode.Defense => ["Smashing", "Lethal", "Fire", "Cold", "Energy", "Negative", "Psionic", "Toxic", "Melee", "Ranged", "AoE"]
                 };
 
                 for (var index = 0; index < statGroup.Length; index++)
@@ -851,6 +870,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     var nEnhRef = statGroupAux[index].EnhValue ?? statGroupAux[index].BaseValue;
                     var nUncappedRef = statGroupAux[index].UncappedValue ?? statGroupAux[index].EnhValue ?? statGroupAux[index].BaseValue;
 
+                    // Convert to currently selected speed/distance units
+                    if (statDisplayed == DisplayMode.MovementStealth)
+                    {
+                        nBaseRef = ConvertSpeedValue(nBaseRef, CompareData?.Metadata.SpeedFormat ?? MidsContext.Config.SpeedFormat);
+                        nEnhRef = ConvertSpeedValue(nEnhRef, CompareData?.Metadata.SpeedFormat ?? MidsContext.Config.SpeedFormat);
+                        nUncappedRef = ConvertSpeedValue(nUncappedRef, CompareData?.Metadata.SpeedFormat ?? MidsContext.Config.SpeedFormat);
+                    }
+
                     if (!MidsContext.Config.Inc.DisablePvE & (StatDisplayed == DisplayMode.Elusivity))
                     {
                         nBaseRef = 0;
@@ -862,6 +889,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     //var nUncappedDiff = nUncappedMain - nUncappedRef;
 
                     var displayName = statLabels[index];
+                    var speedUnit = MidsContext.Config.SpeedFormat switch
+                    {
+                        Enums.eSpeedMeasure.KilometersPerHour => "km/h",
+                        Enums.eSpeedMeasure.FeetPerSecond => "ft/s",
+                        Enums.eSpeedMeasure.MetersPerSecond => "m/s",
+                        _ => "mph"
+                    };
+
+                    var distanceUnit = MidsContext.Config.SpeedFormat switch
+                    {
+                        Enums.eSpeedMeasure.KilometersPerHour or Enums.eSpeedMeasure.MetersPerSecond => "m",
+                        _ => "ft"
+                    };
 
                     var tip = string.Empty;
 
@@ -953,14 +993,14 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
                         case DisplayMode.MovementStealth when index is < 2 or 3: // Run Speed, Jump Speed, Fly Speed
                             tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##} mph\r\nReference: {nBaseRef:##0.##} mph\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.##} mph"
-                                : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##} mph\r\nReference: {nEnhRef:##0.##} mph\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.##} mph";
+                                ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##} mph\r\nReference: {nBaseRef:##0.##} mph\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.##} {speedUnit}"
+                                : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##} mph\r\nReference: {nEnhRef:##0.##} mph\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.##} {speedUnit}";
                             break;
 
-                        case DisplayMode.MovementStealth when index is 2 or > 3: // Jump height
+                        case DisplayMode.MovementStealth when index is 2 or > 3: // Jump height, Stealth/Perception
                             tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##} ft\r\nReference: {nBaseRef:##0.##} ft\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.##} ft"
-                                : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##} ft\r\nReference: {nEnhRef:##0.##} ft\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.##} ft";
+                                ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##} ft\r\nReference: {nBaseRef:##0.##} ft\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.##} {distanceUnit}"
+                                : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##} ft\r\nReference: {nEnhRef:##0.##} ft\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.##} {distanceUnit}";
                             break;
 
                         case DisplayMode.MiscBuffs when index == 6: // Threat
@@ -1523,6 +1563,15 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             SetupGraph(true);
         }
 
+        private float ConvertSpeedValue(float val, Enums.eSpeedMeasure unit)
+        {
+            var targetUnit = MidsContext.Config.SpeedFormat;
+            var xIndex = (int)unit;
+            var yIndex = (int)targetUnit;
+
+            return val * SpeedCnvMatrix[yIndex][xIndex];
+        }
+
         private bool ExportToJson(string file)
         {
             var buildFile = myParent.GetBuildFile();
@@ -1747,8 +1796,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 return;
             }
-
-            Debug.WriteLine("TsEndCompare()");
 
             CompareMode = false;
             SetUiForCompare();

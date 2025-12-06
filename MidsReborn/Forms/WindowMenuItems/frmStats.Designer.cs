@@ -370,7 +370,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             TsEndCompare.Name = "TsEndCompare";
             TsEndCompare.Size = new System.Drawing.Size(170, 22);
-            TsEndCompare.Text = "&Export";
+            TsEndCompare.Text = "E&nd Compare";
             TsEndCompare.Visible = false;
             TsEndCompare.Click += TsEndCompare_Click;
             // 
@@ -426,7 +426,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             Controls.Add(Graph);
             Controls.Add(MenuBar);
             ForeColor = System.Drawing.Color.White;
-            FormBorderStyle = FormBorderStyle.FixedToolWindow;
+            FormBorderStyle = FormBorderStyle.SizableToolWindow;
             MaximizeBox = false;
             MinimizeBox = false;
             MinimumSize = new System.Drawing.Size(400, 340);

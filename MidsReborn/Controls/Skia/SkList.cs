@@ -560,11 +560,14 @@ public class SkList : SKGLControl
         }
 
         var baseText = item.Text.Trim("~ ".ToCharArray());
-        var prefix = item.ItemState == EItemState.Heading ? "~ " : "";
-        var suffix = item.ItemState == EItemState.Heading ? " ~" : "";
 
         var font = item.GetOrCreateFont(Font);
-        var availableWidth = (int)_textArea.Width;
+        var availableWidth = (int)_textArea.Width - (_scrollable ? _scrollBarWidth + 2 : 0);
+
+        // Apply prefix/suffix only once if heading
+        baseText = item.ItemState == EItemState.Heading
+            ? $"~_{baseText}_~"
+            : baseText;
 
         var words = baseText.Split(' ');
         var lines = new List<string>();
@@ -575,7 +578,7 @@ public class SkList : SKGLControl
             var testLine = $"{currentLine} {words[i]}";
             if (font.MeasureText(testLine) > availableWidth)
             {
-                lines.Add(currentLine);
+                lines.Add(currentLine.Replace("~_", "~ ").Replace("_~", " ~"));
                 currentLine = words[i];
             }
             else
@@ -584,14 +587,8 @@ public class SkList : SKGLControl
             }
         }
 
-        lines.Add(currentLine); // last line
-
-        // Apply prefix/suffix only once if heading
-        if (item.ItemState == EItemState.Heading)
-        {
-            lines[0] = prefix + lines[0];
-            lines[^1] += suffix;
-        }
+        // Last line
+        lines.Add(currentLine.Replace("~_", "~ ").Replace("_~", " ~"));
 
         item.WrappedText = string.Join('\n', lines);
         item.LineCount = lines.Count;
@@ -778,7 +775,7 @@ public class SkList : SKGLControl
             }
 
             using var paint = new SKPaint { Color = color, IsAntialias = true };
-            canvas.DrawText(text, x, lineY + textHeight, font, paint);
+            canvas.DrawText(text, new SKPoint(x, lineY + textHeight), item.TextAlign == ETextAlign.Center ? SKTextAlign.Center : SKTextAlign.Left, font, paint);
 
             if (item.FontFlags.HasFlag(EFontFlags.Underline))
             {
