@@ -247,11 +247,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 else
                 {
                     Graph.Width = (int)Math.Floor(ClientSize.Width / 2f) - 8;
-                    CompareGraph.Left = (int)Math.Floor(ClientSize.Width / 2f) + 4;
+                    CompareGraph.Left = Graph.Width + 16;
                     CompareGraph.Width = Graph.Width;
                     CompareGraph.Height = Graph.Height;
                     tbScaleX.Width = (int)Math.Round((chkOnTop.Left - tbScaleX.Left) / 2f) - 4;
-                    cbCompareGraphStyle.Left = ClientSize.Width - cbCompareGraphStyle.Width - 4;
                 }
 
                 lblScale.Left = (int)Math.Round(tbScaleX.Left + (tbScaleX.Width - lblScale.Width) / 2f);
@@ -269,15 +268,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             MinimumSize = CompareMode ? new Size(1020, 640) : new Size(508, 554);
 
             var yOffset = CompareMode ? 64 : 0;
-            Graph.Location = new Point(4, 57 + yOffset);
-            CompareGraph.Location = new Point(510, 57 + yOffset);
-            lblKeyColor1.Location = new Point(12, 471 + yOffset);
-            lblKeyColor2.Location = new Point(12, 491 + yOffset);
-            lblKey1.Location = new Point(56, 471 + yOffset);
-            lblKey2.Location = new Point(56, 491 + yOffset);
-            tbScaleX.Location = new Point(140, 466 + yOffset);
-            chkOnTop.Location = new Point(383, 460 + yOffset);
-            btnClose.Location = new Point(383, 487 + yOffset);
+            Graph.Top = 57 + yOffset;
+            CompareGraph.Top = 57 + yOffset;
 
             cbCompareGraphStyle.Visible = CompareMode & (StatDisplayed >= DisplayMode.Defense);
             ToolStripSeparator1.Visible = CompareMode;

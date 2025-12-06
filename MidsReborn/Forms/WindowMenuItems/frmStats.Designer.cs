@@ -222,6 +222,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // chkOnTop
             // 
+            chkOnTop.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             chkOnTop.BackgroundImageLayout = ImageLayout.None;
             chkOnTop.ButtonType = Forms.Controls.ImageButtonEx.ButtonTypes.Toggle;
             chkOnTop.CurrentText = "ToggledOff State";
@@ -248,6 +249,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // btnClose
             // 
+            btnClose.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnClose.BackgroundImageLayout = ImageLayout.None;
             btnClose.CurrentText = "Close";
             btnClose.DisplayVertically = false;
@@ -394,6 +396,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             // 
             // cbCompareGraphStyle
             // 
+            cbCompareGraphStyle.Anchor = AnchorStyles.Top | AnchorStyles.Right;
             cbCompareGraphStyle.DropDownStyle = ComboBoxStyle.DropDownList;
             cbCompareGraphStyle.FormattingEnabled = true;
             cbCompareGraphStyle.Items.AddRange(new object[] { "Diff", "Raw Values" });
