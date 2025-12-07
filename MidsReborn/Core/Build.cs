@@ -1,10 +1,4 @@
-using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using FastDeepCloner;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
@@ -1338,6 +1332,7 @@ namespace Mids_Reborn.Core
                     for (var index2 = 0; index2 < Powers[index1].SlotCount; ++index2)
                     {
                         i9SetData.Add(ref Powers[index1].Slots[index2].Enhancement);
+
                     }
                 }
 
@@ -1351,7 +1346,7 @@ namespace Mids_Reborn.Core
             _setBonusVirtualPower = null;
         }
 
-        private IPower GetSetBonusVirtualPower()
+        /*private IPower GetSetBonusVirtualPower()
         {
             IPower power1 = new Power();
             if (MidsContext.Config.I9.IgnoreSetBonusFX)
@@ -1386,7 +1381,6 @@ namespace Mids_Reborn.Core
                             continue;
                         }
 
-
                         if (setCount[power] < 6)
                         {
                             if (powerInfo != null)
@@ -1400,6 +1394,60 @@ namespace Mids_Reborn.Core
 
             power1.Effects = effectList.ToArray();
             return power1;
+        }*/
+
+        private IPower GetSetBonusVirtualPower()
+        {
+            var virtualPower = new Power();
+            if (MidsContext.Config.I9.IgnoreSetBonusFX)
+                return virtualPower;
+
+            var setBonusNids = DatabaseAPI.NidPowers("set_bonus");
+            if (setBonusNids == null || setBonusNids.Length == 0)
+                return virtualPower;
+
+            var nidToIndex = BuildNidIndexMap(setBonusNids);
+            var seenCounts = new int[setBonusNids.Length]; // kept for diagnostics; not used for capping
+            var effects = new List<IEffect>(128);
+
+            foreach (var setBonus in SetBonuses)
+            {
+                if (setBonus?.SetInfo == null) continue;
+
+                foreach (var setInfo in setBonus.SetInfo)
+                {
+                    if (setInfo.Powers.Length == 0) continue;
+
+                    foreach (var nid in setInfo.Powers)
+                    {
+                        if (nid < 0) continue; // skip placeholders
+
+                        // Only count powers that are actually in the set_bonus class
+                        if (!nidToIndex.TryGetValue(nid, out var idx))
+                            continue;
+
+                        seenCounts[idx]++;
+
+                        var dbPower = DatabaseAPI.Database.Power[nid];
+                        if (dbPower == null) continue;
+                        if (ShouldSkipEffects(dbPower)) continue; // skip pet-only bonuses
+
+                        // No stacking cap here. We'll enforce the Law of Fives upon assignment to the container.
+                        var src = dbPower.Effects;
+                        if (src == null || src.Length == 0) continue;
+
+                        for (int i = 0; i < src.Length; i++)
+                        {
+                            var fx = src[i];
+                            if (fx == null) continue;
+                            effects.Add((IEffect)fx.Clone());
+                        }
+                    }
+                }
+            }
+
+            virtualPower.Effects = effects.ToArray();
+            return virtualPower;
         }
 
         private List<IPower> GetSetBonusPowers()
@@ -1437,11 +1485,24 @@ namespace Mids_Reborn.Core
             return powerList;
         }
 
-        private bool ShouldSkipEffects(IPower power)
+        private static Dictionary<int, int> BuildNidIndexMap(int[] nids)
         {
-            // Assuming Target and EntitiesAffected are enums, refactor your bitwise comparison logic here.
-            // This example directly checks for a specific condition. Adjust based on your actual logic.
-            return power.Target.HasFlag(Enums.eEntity.MyPet) && power.EntitiesAffected.HasFlag(Enums.eEntity.MyPet);
+            var map = new Dictionary<int, int>(nids.Length);
+            for (int i = 0; i < nids.Length; i++)
+                map[nids[i]] = i;
+            return map;
+        }
+
+        private static bool ShouldSkipEffects(IPower p)
+        {
+            // Keep Self/All; skip truly pet-only bonuses.
+            var self = Enums.eEntity.Caster;
+            var pet = Enums.eEntity.MyPet;
+
+            bool affectsSelf = p.Target.HasFlag(self) || p.EntitiesAffected.HasFlag(self);
+            bool affectsPets = p.Target.HasFlag(pet) || p.EntitiesAffected.HasFlag(pet);
+
+            return affectsPets && !affectsSelf;
         }
 
         public List<IEffect> GetCumulativeSetBonuses()

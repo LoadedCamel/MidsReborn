@@ -16,7 +16,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             public string Villain;
         }
 
-        private readonly MainWindow _myParent;
+        private readonly MainWindow2 _myParent;
 
         private bool _locked;
 
@@ -44,11 +44,45 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             InitializeComponent();
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmAccolade);
+            //_myParent = iParent;
+            _myPowers = iPowers;
+        }
+
+        public frmAccolade(MainWindow2 iParent, List<IPower?> iPowers)
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
+            CenterToParent();
+            Location = new Point(Location.X, Location.Y - 100);
+            Load += frmAccolade_Load;
+            _locked = false;
+            InitializeComponent();
+            Icon = Resources.MRB_Icon_Concept;
+            Name = nameof(frmAccolade);
             _myParent = iParent;
             _myPowers = iPowers;
         }
 
         public frmAccolade(MainWindow iParent)
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
+            CenterToParent();
+            Location = new Point(Location.X, Location.Y - 100);
+            Load += frmAccolade_Load;
+            _locked = false;
+            InitializeComponent();
+            Icon = Resources.MRB_Icon_Concept;
+            Name = nameof(frmAccolade);
+            //_myParent = iParent;
+
+            var power = GetMxDAccoladePower();
+            _myPowers = new List<IPower?>();
+            if (power != null)
+            {
+                _myPowers.AddRange(power.NIDSubPower.Select(t => DatabaseAPI.Database.Power[t]).OfType<IPower>().Where(thisPower => thisPower.ClickBuff || thisPower.PowerType == Enums.ePowerType.Auto_ | thisPower.PowerType == Enums.ePowerType.Toggle));
+            }
+        }
+
+        public frmAccolade(MainWindow2 iParent)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
             CenterToParent();
@@ -237,7 +271,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
                 llLeft.Refresh();
                 _myParent.PowerModified(true);
-                _myParent.DoRefresh();
+                //_myParent.DoRefresh();
             }
         }
 
@@ -280,7 +314,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
                 llRight.Refresh();
                 _myParent.PowerModified(false);
-                _myParent.DoRefresh();
+                //_myParent.DoRefresh();
             }
         }
 

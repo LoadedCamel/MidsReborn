@@ -43,13 +43,12 @@ namespace Mids_Reborn.UI.Controls
             title = new Label();
             dvPages = new FormPages();
             infoView = new Page();
-            infoLayoutPanel = new TableLayoutPanel();
-            infoDataList = new PairedListEx();
-            infoLDesc = new MidsRichTextView();
-            infoSDesc = new RichTextBox();
-            powerScaler = new CtlMultiGraph();
-            damageHeader = new Label();
             infoDamageDisplay = new ModernDamageDisplay();
+            damageHeader = new Label();
+            infoSDesc = new RichTextBox();
+            infoLDesc = new MidsRichTextView();
+            powerScaler = new CtlMultiGraph();
+            infoDataList = new PairedListEx();
             effectView = new Page();
             effectViewScrollPanel = new MidsVScrollPanel();
             effectDataList3 = new PairedListEx();
@@ -72,9 +71,7 @@ namespace Mids_Reborn.UI.Controls
             defenseGraph1 = new CtlMultiGraph();
             totalsHeader1 = new Label();
             enhanceView = new Page();
-            spacer = new Panel();
             pnlEnhActive = new Panel();
-            spacer2 = new Panel();
             pnlEnhInactive = new Panel();
             enhDataList = new PairedListEx();
             enhanceSubtitlePanel = new Panel();
@@ -84,7 +81,6 @@ namespace Mids_Reborn.UI.Controls
             titlePanel.SuspendLayout();
             dvPages.SuspendLayout();
             infoView.SuspendLayout();
-            infoLayoutPanel.SuspendLayout();
             effectView.SuspendLayout();
             effectViewScrollPanel.ContentPanel.SuspendLayout();
             effectViewScrollPanel.SuspendLayout();
@@ -167,7 +163,7 @@ namespace Mids_Reborn.UI.Controls
             title.BackColor = Color.Transparent;
             title.Dock = DockStyle.Fill;
             title.FlatStyle = FlatStyle.Flat;
-            title.Font = new Font("Noto Sans SemiBold", 10.25F, FontStyle.Bold);
+            title.Font = new Font("Segoe UI", 10.25F, FontStyle.Bold);
             title.Location = new Point(0, 0);
             title.Name = "title";
             title.Size = new Size(400, 20);
@@ -200,7 +196,12 @@ namespace Mids_Reborn.UI.Controls
             infoView.Anchor = AnchorStyles.None;
             infoView.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             infoView.BackColor = Color.Transparent;
-            infoView.Controls.Add(infoLayoutPanel);
+            infoView.Controls.Add(infoDamageDisplay);
+            infoView.Controls.Add(damageHeader);
+            infoView.Controls.Add(infoSDesc);
+            infoView.Controls.Add(infoLDesc);
+            infoView.Controls.Add(powerScaler);
+            infoView.Controls.Add(infoDataList);
             infoView.Dock = DockStyle.Fill;
             infoView.ForeColor = Color.WhiteSmoke;
             infoView.Location = new Point(0, 0);
@@ -209,81 +210,66 @@ namespace Mids_Reborn.UI.Controls
             infoView.TabIndex = 0;
             infoView.Title = "My First Page";
             // 
-            // infoLayoutPanel
+            // infoDamageDisplay
             // 
-            infoLayoutPanel.ColumnCount = 1;
-            infoLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            infoLayoutPanel.Controls.Add(infoDataList, 0, 3);
-            infoLayoutPanel.Controls.Add(infoLDesc, 0, 1);
-            infoLayoutPanel.Controls.Add(infoSDesc, 0, 0);
-            infoLayoutPanel.Controls.Add(powerScaler, 0, 2);
-            infoLayoutPanel.Controls.Add(damageHeader, 0, 4);
-            infoLayoutPanel.Controls.Add(infoDamageDisplay, 0, 5);
-            infoLayoutPanel.Dock = DockStyle.Fill;
-            infoLayoutPanel.Location = new Point(0, 0);
-            infoLayoutPanel.Name = "infoLayoutPanel";
-            infoLayoutPanel.RowCount = 6;
-            infoLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
-            infoLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 19.3756542F));
-            infoLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 17F));
-            infoLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 51.83498F));
-            infoLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 17F));
-            infoLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 28.7893639F));
-            infoLayoutPanel.Size = new Size(400, 363);
-            infoLayoutPanel.TabIndex = 0;
+            infoDamageDisplay.BackColor = Color.Transparent;
+            infoDamageDisplay.BackgroundGradientEnd = Color.Transparent;
+            infoDamageDisplay.BackgroundGradientStart = Color.Transparent;
+            infoDamageDisplay.BarCornerRadius = 4;
+            infoDamageDisplay.BarHeight = 26;
+            infoDamageDisplay.BaseGradientEnd = Color.FromArgb(38, 252, 45);
+            infoDamageDisplay.BaseGradientStart = Color.Green;
+            infoDamageDisplay.EnhancedGradientEnd = Color.FromArgb(252, 52, 38);
+            infoDamageDisplay.EnhancedGradientStart = Color.Red;
+            infoDamageDisplay.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            infoDamageDisplay.ForeColor = Color.WhiteSmoke;
+            infoDamageDisplay.Location = new Point(3, 281);
+            infoDamageDisplay.Name = "infoDamageDisplay";
+            infoDamageDisplay.PaddingV = 3;
+            infoDamageDisplay.Size = new Size(394, 79);
+            infoDamageDisplay.TabIndex = 78;
+            infoDamageDisplay.TextColor = Color.WhiteSmoke;
+            infoDamageDisplay.ToolTipText = "";
             // 
-            // infoDataList
+            // damageHeader
             // 
-            infoDataList.AutoScroll = true;
-            infoDataList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            infoDataList.BackColor = Color.FromArgb(150, 26, 28, 36);
-            infoDataList.Dock = DockStyle.Fill;
-            infoDataList.Font = new Font("Noto Sans SemiBold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            infoDataList.HighlightColor = Color.FromArgb(128, 128, 255);
-            infoDataList.HighlightTextColor = Color.Black;
-            infoDataList.ItemColor = Color.White;
-            infoDataList.Location = new Point(4, 116);
-            infoDataList.Margin = new Padding(4);
-            infoDataList.Name = "infoDataList";
-            infoDataList.SampleRowsPerColumn = 5;
-            infoDataList.SetItemsBold = false;
-            infoDataList.ShowRuntimeSamples = true;
-            infoDataList.Size = new Size(392, 141);
-            infoDataList.TabIndex = 73;
-            infoDataList.UseHighlighting = true;
-            infoDataList.ValueAlternateColor = Color.Chartreuse;
-            infoDataList.ValueColor = Color.WhiteSmoke;
-            infoDataList.ValueConditionColor = Color.Firebrick;
-            infoDataList.ValueSpecialColor = Color.SlateBlue;
-            // 
-            // infoLDesc
-            // 
-            infoLDesc.BackColor = Color.FromArgb(15, 16, 21);
-            infoLDesc.DetectUrls = false;
-            infoLDesc.Dock = DockStyle.Fill;
-            infoLDesc.Font = new Font("Noto Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            infoLDesc.ForeColor = Color.White;
-            infoLDesc.Location = new Point(3, 43);
-            infoLDesc.Name = "infoLDesc";
-            infoLDesc.Rtf = resources.GetString("infoLDesc.Rtf");
-            infoLDesc.Size = new Size(394, 49);
-            infoLDesc.TabIndex = 74;
-            infoLDesc.Text = resources.GetString("infoLDesc.Text");
+            damageHeader.BackColor = Color.FromArgb(150, 0, 0, 0);
+            damageHeader.Font = new Font("Noto Sans SemiBold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            damageHeader.ForeColor = Color.White;
+            damageHeader.Location = new Point(3, 261);
+            damageHeader.Name = "damageHeader";
+            damageHeader.Size = new Size(394, 17);
+            damageHeader.TabIndex = 73;
+            damageHeader.Text = "Damage (Green = Base | Red = Enhanced)";
+            damageHeader.TextAlign = ContentAlignment.TopCenter;
             // 
             // infoSDesc
             // 
             infoSDesc.BackColor = Color.FromArgb(15, 16, 21);
             infoSDesc.BorderStyle = BorderStyle.None;
-            infoSDesc.Dock = DockStyle.Fill;
-            infoSDesc.Font = new Font("Noto Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            infoSDesc.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
             infoSDesc.ForeColor = Color.White;
             infoSDesc.Location = new Point(3, 3);
             infoSDesc.Name = "infoSDesc";
             infoSDesc.ReadOnly = true;
             infoSDesc.ScrollBars = RichTextBoxScrollBars.None;
-            infoSDesc.Size = new Size(394, 34);
+            infoSDesc.Size = new Size(393, 34);
             infoSDesc.TabIndex = 75;
             infoSDesc.Text = "PBAoE, Minor DMG (Energy), Minor DoT (Toxic), Foe -Regen, Self HP, +End, Res (-Regen)";
+            // 
+            // infoLDesc
+            // 
+            infoLDesc.BackColor = Color.FromArgb(15, 16, 21);
+            infoLDesc.BorderStyle = BorderStyle.None;
+            infoLDesc.DetectUrls = false;
+            infoLDesc.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            infoLDesc.ForeColor = Color.White;
+            infoLDesc.Location = new Point(3, 43);
+            infoLDesc.Name = "infoLDesc";
+            infoLDesc.Rtf = resources.GetString("infoLDesc.Rtf");
+            infoLDesc.Size = new Size(394, 89);
+            infoLDesc.TabIndex = 74;
+            infoLDesc.Text = resources.GetString("infoLDesc.Text");
             // 
             // powerScaler
             // 
@@ -304,7 +290,6 @@ namespace Mids_Reborn.UI.Controls
             powerScaler.ColorMarkerOuter = Color.Black;
             powerScaler.ColorOvercap = Color.Black;
             powerScaler.DifferentiateColors = false;
-            powerScaler.Dock = DockStyle.Fill;
             powerScaler.DrawRuler = false;
             powerScaler.Dual = false;
             powerScaler.EnhBarColors = (List<Color>)resources.GetObject("powerScaler.EnhBarColors");
@@ -315,7 +300,7 @@ namespace Mids_Reborn.UI.Controls
             powerScaler.ItemFontSizeOverride = 0F;
             powerScaler.ItemHeight = 10;
             powerScaler.Lines = true;
-            powerScaler.Location = new Point(3, 98);
+            powerScaler.Location = new Point(3, 112);
             powerScaler.MarkerValue = 0F;
             powerScaler.Max = 100F;
             powerScaler.MaxItems = 1;
@@ -338,40 +323,28 @@ namespace Mids_Reborn.UI.Controls
             powerScaler.TabIndex = 76;
             powerScaler.TextWidth = 80;
             // 
-            // damageHeader
+            // infoDataList
             // 
-            damageHeader.BackColor = Color.FromArgb(150, 0, 0, 0);
-            damageHeader.Dock = DockStyle.Fill;
-            damageHeader.Font = new Font("Noto Sans SemiBold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            damageHeader.ForeColor = Color.White;
-            damageHeader.Location = new Point(3, 261);
-            damageHeader.Name = "damageHeader";
-            damageHeader.Size = new Size(394, 17);
-            damageHeader.TabIndex = 73;
-            damageHeader.Text = "Damage (Green = Base | Red = Enhanced)";
-            damageHeader.TextAlign = ContentAlignment.TopCenter;
-            // 
-            // infoDamageDisplay
-            // 
-            infoDamageDisplay.BackColor = Color.Transparent;
-            infoDamageDisplay.BackgroundGradientEnd = Color.Transparent;
-            infoDamageDisplay.BackgroundGradientStart = Color.Transparent;
-            infoDamageDisplay.BarCornerRadius = 4;
-            infoDamageDisplay.BarHeight = 26;
-            infoDamageDisplay.BaseGradientEnd = Color.FromArgb(38, 252, 45);
-            infoDamageDisplay.BaseGradientStart = Color.Green;
-            infoDamageDisplay.Dock = DockStyle.Fill;
-            infoDamageDisplay.EnhancedGradientEnd = Color.FromArgb(252, 52, 38);
-            infoDamageDisplay.EnhancedGradientStart = Color.Red;
-            infoDamageDisplay.Font = new Font("Noto Sans SemiBold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            infoDamageDisplay.ForeColor = Color.WhiteSmoke;
-            infoDamageDisplay.Location = new Point(3, 281);
-            infoDamageDisplay.Name = "infoDamageDisplay";
-            infoDamageDisplay.PaddingV = 3;
-            infoDamageDisplay.Size = new Size(394, 79);
-            infoDamageDisplay.TabIndex = 78;
-            infoDamageDisplay.TextColor = Color.WhiteSmoke;
-            infoDamageDisplay.ToolTipText = "";
+            infoDataList.AutoScroll = true;
+            infoDataList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            infoDataList.BackColor = Color.FromArgb(150, 26, 28, 36);
+            infoDataList.Font = new Font("Segoe UI", 9.75F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            infoDataList.HighlightColor = Color.FromArgb(128, 128, 255);
+            infoDataList.HighlightTextColor = Color.Black;
+            infoDataList.ItemColor = Color.White;
+            infoDataList.Location = new Point(4, 139);
+            infoDataList.Margin = new Padding(4);
+            infoDataList.Name = "infoDataList";
+            infoDataList.SampleRowsPerColumn = 5;
+            infoDataList.SetItemsBold = false;
+            infoDataList.ShowRuntimeSamples = true;
+            infoDataList.Size = new Size(392, 118);
+            infoDataList.TabIndex = 73;
+            infoDataList.UseHighlighting = true;
+            infoDataList.ValueAlternateColor = Color.Chartreuse;
+            infoDataList.ValueColor = Color.WhiteSmoke;
+            infoDataList.ValueConditionColor = Color.Firebrick;
+            infoDataList.ValueSpecialColor = Color.SlateBlue;
             // 
             // effectView
             // 
@@ -384,7 +357,7 @@ namespace Mids_Reborn.UI.Controls
             effectView.ForeColor = Color.WhiteSmoke;
             effectView.Location = new Point(0, 0);
             effectView.Name = "effectView";
-            effectView.Size = new Size(400, 364);
+            effectView.Size = new Size(400, 363);
             effectView.TabIndex = 1;
             effectView.Title = "My Page Title";
             // 
@@ -403,29 +376,28 @@ namespace Mids_Reborn.UI.Controls
             effectViewScrollPanel.ContentPanel.Location = new Point(0, 0);
             effectViewScrollPanel.ContentPanel.Margin = new Padding(0);
             effectViewScrollPanel.ContentPanel.Name = "ContentPanel";
-            effectViewScrollPanel.ContentPanel.Size = new Size(384, 526);
+            effectViewScrollPanel.ContentPanel.Size = new Size(384, 517);
             effectViewScrollPanel.ContentPanel.TabIndex = 0;
             effectViewScrollPanel.Dock = DockStyle.Fill;
             effectViewScrollPanel.Location = new Point(0, 0);
             effectViewScrollPanel.MinimumSize = new Size(64, 64);
             effectViewScrollPanel.Name = "effectViewScrollPanel";
-            effectViewScrollPanel.Size = new Size(400, 364);
+            effectViewScrollPanel.Size = new Size(400, 363);
             effectViewScrollPanel.TabIndex = 0;
             effectViewScrollPanel.TabStop = true;
             // 
             // effectDataList3
             // 
             effectDataList3.BackColor = Color.FromArgb(150, 26, 28, 36);
-            effectDataList3.Dock = DockStyle.Top;
-            effectDataList3.Font = new Font("Noto Sans SemiBold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            effectDataList3.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             effectDataList3.HighlightColor = Color.CornflowerBlue;
             effectDataList3.HighlightTextColor = Color.Black;
             effectDataList3.ItemColor = Color.Silver;
-            effectDataList3.Location = new Point(0, 366);
+            effectDataList3.Location = new Point(0, 357);
             effectDataList3.Name = "effectDataList3";
             effectDataList3.SetItemsBold = false;
             effectDataList3.ShowRuntimeSamples = true;
-            effectDataList3.Size = new Size(384, 150);
+            effectDataList3.Size = new Size(383, 150);
             effectDataList3.TabIndex = 11;
             effectDataList3.UseHighlighting = false;
             effectDataList3.ValueAlternateColor = Color.Chartreuse;
@@ -436,28 +408,26 @@ namespace Mids_Reborn.UI.Controls
             // effectsHeader3
             // 
             effectsHeader3.AutoSize = true;
-            effectsHeader3.Dock = DockStyle.Top;
-            effectsHeader3.Font = new Font("Noto Sans SemiBold", 10.25F, FontStyle.Bold);
-            effectsHeader3.Location = new Point(0, 344);
+            effectsHeader3.Font = new Font("Segoe UI", 10.25F, FontStyle.Bold);
+            effectsHeader3.Location = new Point(0, 338);
             effectsHeader3.Name = "effectsHeader3";
-            effectsHeader3.Size = new Size(91, 22);
+            effectsHeader3.Size = new Size(86, 19);
             effectsHeader3.TabIndex = 10;
             effectsHeader3.Text = "Misc Effects";
             // 
             // effectDataList2
             // 
             effectDataList2.BackColor = Color.FromArgb(150, 26, 28, 36);
-            effectDataList2.Dock = DockStyle.Top;
-            effectDataList2.Font = new Font("Noto Sans SemiBold", 9F, FontStyle.Bold);
+            effectDataList2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             effectDataList2.HighlightColor = Color.CornflowerBlue;
             effectDataList2.HighlightTextColor = Color.Black;
             effectDataList2.ItemColor = Color.Silver;
-            effectDataList2.Location = new Point(0, 194);
+            effectDataList2.Location = new Point(0, 188);
             effectDataList2.Name = "effectDataList2";
             effectDataList2.SampleRowsPerColumn = 5;
             effectDataList2.SetItemsBold = false;
             effectDataList2.ShowRuntimeSamples = true;
-            effectDataList2.Size = new Size(384, 150);
+            effectDataList2.Size = new Size(383, 150);
             effectDataList2.TabIndex = 9;
             effectDataList2.UseHighlighting = false;
             effectDataList2.ValueAlternateColor = Color.Chartreuse;
@@ -468,28 +438,26 @@ namespace Mids_Reborn.UI.Controls
             // effectsHeader2
             // 
             effectsHeader2.AutoSize = true;
-            effectsHeader2.Dock = DockStyle.Top;
-            effectsHeader2.Font = new Font("Noto Sans SemiBold", 10.25F, FontStyle.Bold);
-            effectsHeader2.Location = new Point(0, 172);
+            effectsHeader2.Font = new Font("Segoe UI", 10.25F, FontStyle.Bold);
+            effectsHeader2.Location = new Point(0, 169);
             effectsHeader2.Name = "effectsHeader2";
-            effectsHeader2.Size = new Size(132, 22);
+            effectsHeader2.Size = new Size(128, 19);
             effectsHeader2.TabIndex = 8;
             effectsHeader2.Text = "Secondary Effects";
             // 
             // effectDataList1
             // 
             effectDataList1.BackColor = Color.FromArgb(150, 26, 28, 36);
-            effectDataList1.Dock = DockStyle.Top;
-            effectDataList1.Font = new Font("Noto Sans SemiBold", 9F, FontStyle.Bold);
+            effectDataList1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             effectDataList1.HighlightColor = Color.CornflowerBlue;
             effectDataList1.HighlightTextColor = Color.Black;
             effectDataList1.ItemColor = Color.Silver;
-            effectDataList1.Location = new Point(0, 22);
+            effectDataList1.Location = new Point(0, 19);
             effectDataList1.Name = "effectDataList1";
             effectDataList1.SampleRowsPerColumn = 5;
             effectDataList1.SetItemsBold = false;
             effectDataList1.ShowRuntimeSamples = true;
-            effectDataList1.Size = new Size(384, 150);
+            effectDataList1.Size = new Size(383, 150);
             effectDataList1.TabIndex = 7;
             effectDataList1.UseHighlighting = false;
             effectDataList1.ValueAlternateColor = Color.Chartreuse;
@@ -500,11 +468,10 @@ namespace Mids_Reborn.UI.Controls
             // effectsHeader1
             // 
             effectsHeader1.AutoSize = true;
-            effectsHeader1.Dock = DockStyle.Top;
-            effectsHeader1.Font = new Font("Noto Sans SemiBold", 10.25F, FontStyle.Bold);
+            effectsHeader1.Font = new Font("Segoe UI", 10.25F, FontStyle.Bold);
             effectsHeader1.Location = new Point(0, 0);
             effectsHeader1.Name = "effectsHeader1";
-            effectsHeader1.Size = new Size(114, 22);
+            effectsHeader1.Size = new Size(111, 19);
             effectsHeader1.TabIndex = 6;
             effectsHeader1.Text = "Primary Effects";
             // 
@@ -519,7 +486,7 @@ namespace Mids_Reborn.UI.Controls
             totalView.ForeColor = Color.WhiteSmoke;
             totalView.Location = new Point(0, 0);
             totalView.Name = "totalView";
-            totalView.Size = new Size(400, 364);
+            totalView.Size = new Size(400, 363);
             totalView.TabIndex = 2;
             totalView.Title = "My Page Title";
             // 
@@ -539,21 +506,21 @@ namespace Mids_Reborn.UI.Controls
             totalViewScrollPanel.ContentPanel.Location = new Point(0, 0);
             totalViewScrollPanel.ContentPanel.Margin = new Padding(0);
             totalViewScrollPanel.ContentPanel.Name = "ContentPanel";
-            totalViewScrollPanel.ContentPanel.Size = new Size(400, 364);
+            totalViewScrollPanel.ContentPanel.Size = new Size(400, 363);
             totalViewScrollPanel.ContentPanel.TabIndex = 0;
             totalViewScrollPanel.Dock = DockStyle.Fill;
             totalViewScrollPanel.Location = new Point(0, 0);
             totalViewScrollPanel.MinimumSize = new Size(64, 64);
             totalViewScrollPanel.Name = "totalViewScrollPanel";
-            totalViewScrollPanel.Size = new Size(400, 364);
+            totalViewScrollPanel.Size = new Size(400, 363);
             totalViewScrollPanel.TabIndex = 0;
             totalViewScrollPanel.TabStop = true;
             // 
             // totalsFooter
             // 
             totalsFooter.Dock = DockStyle.Top;
-            totalsFooter.Font = new Font("Noto Sans SemiBold", 10.25F, FontStyle.Bold);
-            totalsFooter.Location = new Point(0, 323);
+            totalsFooter.Font = new Font("Segoe UI", 10.25F, FontStyle.Bold);
+            totalsFooter.Location = new Point(0, 302);
             totalsFooter.Name = "totalsFooter";
             totalsFooter.Size = new Size(400, 22);
             totalsFooter.TabIndex = 80;
@@ -564,15 +531,15 @@ namespace Mids_Reborn.UI.Controls
             // 
             coreDataList.BackColor = Color.FromArgb(150, 26, 28, 36);
             coreDataList.Dock = DockStyle.Top;
-            coreDataList.Font = new Font("Noto Sans SemiBold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            coreDataList.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             coreDataList.HighlightColor = Color.CornflowerBlue;
             coreDataList.HighlightTextColor = Color.Black;
             coreDataList.ItemColor = Color.Silver;
-            coreDataList.Location = new Point(0, 242);
+            coreDataList.Location = new Point(0, 233);
             coreDataList.Name = "coreDataList";
             coreDataList.SetItemsBold = false;
             coreDataList.ShowRuntimeSamples = true;
-            coreDataList.Size = new Size(400, 81);
+            coreDataList.Size = new Size(400, 69);
             coreDataList.TabIndex = 79;
             coreDataList.UseHighlighting = false;
             coreDataList.ValueAlternateColor = Color.Chartreuse;
@@ -584,10 +551,10 @@ namespace Mids_Reborn.UI.Controls
             // 
             totalsHeader3.AutoSize = true;
             totalsHeader3.Dock = DockStyle.Top;
-            totalsHeader3.Font = new Font("Noto Sans SemiBold", 9.25F, FontStyle.Bold);
-            totalsHeader3.Location = new Point(0, 222);
+            totalsHeader3.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            totalsHeader3.Location = new Point(0, 216);
             totalsHeader3.Name = "totalsHeader3";
-            totalsHeader3.Size = new Size(39, 20);
+            totalsHeader3.Size = new Size(36, 17);
             totalsHeader3.TabIndex = 78;
             totalsHeader3.Text = "Core";
             // 
@@ -597,7 +564,7 @@ namespace Mids_Reborn.UI.Controls
             totalsResistPanel.Controls.Add(resistGraph1);
             totalsResistPanel.Dock = DockStyle.Top;
             totalsResistPanel.Font = new Font("Noto Sans SemiBold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            totalsResistPanel.Location = new Point(0, 147);
+            totalsResistPanel.Location = new Point(0, 141);
             totalsResistPanel.Name = "totalsResistPanel";
             totalsResistPanel.Size = new Size(400, 75);
             totalsResistPanel.TabIndex = 77;
@@ -625,7 +592,7 @@ namespace Mids_Reborn.UI.Controls
             resistGraph2.DrawRuler = false;
             resistGraph2.Dual = true;
             resistGraph2.EnhBarColors = (List<Color>)resources.GetObject("resistGraph2.EnhBarColors");
-            resistGraph2.Font = new Font("Microsoft Sans Serif", 9.25F);
+            resistGraph2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             resistGraph2.ForcedMax = 0F;
             resistGraph2.ForeColor = Color.FromArgb(192, 192, 255);
             resistGraph2.Highlight = true;
@@ -677,7 +644,7 @@ namespace Mids_Reborn.UI.Controls
             resistGraph1.DrawRuler = false;
             resistGraph1.Dual = true;
             resistGraph1.EnhBarColors = (List<Color>)resources.GetObject("resistGraph1.EnhBarColors");
-            resistGraph1.Font = new Font("Segoe UI", 9.25F);
+            resistGraph1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             resistGraph1.ForcedMax = 0F;
             resistGraph1.ForeColor = Color.FromArgb(192, 192, 255);
             resistGraph1.Highlight = true;
@@ -710,10 +677,10 @@ namespace Mids_Reborn.UI.Controls
             // 
             totalsHeader2.AutoSize = true;
             totalsHeader2.Dock = DockStyle.Top;
-            totalsHeader2.Font = new Font("Noto Sans SemiBold", 9.25F, FontStyle.Bold);
-            totalsHeader2.Location = new Point(0, 127);
+            totalsHeader2.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            totalsHeader2.Location = new Point(0, 124);
             totalsHeader2.Name = "totalsHeader2";
-            totalsHeader2.Size = new Size(77, 20);
+            totalsHeader2.Size = new Size(72, 17);
             totalsHeader2.TabIndex = 76;
             totalsHeader2.Text = "Resistance";
             // 
@@ -722,7 +689,7 @@ namespace Mids_Reborn.UI.Controls
             totalsDefensePanel.Controls.Add(defenseGraph2);
             totalsDefensePanel.Controls.Add(defenseGraph1);
             totalsDefensePanel.Dock = DockStyle.Top;
-            totalsDefensePanel.Location = new Point(0, 20);
+            totalsDefensePanel.Location = new Point(0, 17);
             totalsDefensePanel.Name = "totalsDefensePanel";
             totalsDefensePanel.Size = new Size(400, 107);
             totalsDefensePanel.TabIndex = 75;
@@ -750,7 +717,7 @@ namespace Mids_Reborn.UI.Controls
             defenseGraph2.DrawRuler = false;
             defenseGraph2.Dual = true;
             defenseGraph2.EnhBarColors = (List<Color>)resources.GetObject("defenseGraph2.EnhBarColors");
-            defenseGraph2.Font = new Font("Segoe UI", 9.25F);
+            defenseGraph2.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             defenseGraph2.ForcedMax = 0F;
             defenseGraph2.ForeColor = Color.FromArgb(192, 192, 255);
             defenseGraph2.Highlight = true;
@@ -802,7 +769,7 @@ namespace Mids_Reborn.UI.Controls
             defenseGraph1.DrawRuler = false;
             defenseGraph1.Dual = true;
             defenseGraph1.EnhBarColors = (List<Color>)resources.GetObject("defenseGraph1.EnhBarColors");
-            defenseGraph1.Font = new Font("Segoe UI", 9.25F);
+            defenseGraph1.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             defenseGraph1.ForcedMax = 0F;
             defenseGraph1.ForeColor = Color.FromArgb(192, 192, 255);
             defenseGraph1.Highlight = true;
@@ -835,10 +802,10 @@ namespace Mids_Reborn.UI.Controls
             // 
             totalsHeader1.AutoSize = true;
             totalsHeader1.Dock = DockStyle.Top;
-            totalsHeader1.Font = new Font("Noto Sans SemiBold", 9.25F, FontStyle.Bold);
+            totalsHeader1.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             totalsHeader1.Location = new Point(0, 0);
             totalsHeader1.Name = "totalsHeader1";
-            totalsHeader1.Size = new Size(62, 20);
+            totalsHeader1.Size = new Size(58, 17);
             totalsHeader1.TabIndex = 7;
             totalsHeader1.Text = "Defense";
             // 
@@ -848,9 +815,7 @@ namespace Mids_Reborn.UI.Controls
             enhanceView.Anchor = AnchorStyles.None;
             enhanceView.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             enhanceView.BackColor = Color.Transparent;
-            enhanceView.Controls.Add(spacer);
             enhanceView.Controls.Add(pnlEnhActive);
-            enhanceView.Controls.Add(spacer2);
             enhanceView.Controls.Add(pnlEnhInactive);
             enhanceView.Controls.Add(enhDataList);
             enhanceView.Controls.Add(enhanceSubtitlePanel);
@@ -862,45 +827,26 @@ namespace Mids_Reborn.UI.Controls
             enhanceView.TabIndex = 3;
             enhanceView.Title = "My Page Title";
             // 
-            // spacer
-            // 
-            spacer.Dock = DockStyle.Bottom;
-            spacer.Location = new Point(0, 243);
-            spacer.Name = "spacer";
-            spacer.Size = new Size(400, 10);
-            spacer.TabIndex = 83;
-            // 
             // pnlEnhActive
             // 
             pnlEnhActive.BackColor = Color.FromArgb(150, 0, 0, 0);
-            pnlEnhActive.Dock = DockStyle.Bottom;
-            pnlEnhActive.Location = new Point(0, 253);
+            pnlEnhActive.Location = new Point(3, 254);
             pnlEnhActive.Name = "pnlEnhActive";
-            pnlEnhActive.Size = new Size(400, 50);
+            pnlEnhActive.Size = new Size(394, 50);
             pnlEnhActive.TabIndex = 84;
-            // 
-            // spacer2
-            // 
-            spacer2.Dock = DockStyle.Bottom;
-            spacer2.Location = new Point(0, 303);
-            spacer2.Name = "spacer2";
-            spacer2.Size = new Size(400, 10);
-            spacer2.TabIndex = 85;
             // 
             // pnlEnhInactive
             // 
             pnlEnhInactive.BackColor = Color.FromArgb(150, 0, 0, 0);
-            pnlEnhInactive.Dock = DockStyle.Bottom;
-            pnlEnhInactive.Location = new Point(0, 313);
+            pnlEnhInactive.Location = new Point(3, 310);
             pnlEnhInactive.Name = "pnlEnhInactive";
-            pnlEnhInactive.Size = new Size(400, 50);
+            pnlEnhInactive.Size = new Size(394, 50);
             pnlEnhInactive.TabIndex = 0;
             // 
             // enhDataList
             // 
             enhDataList.BackColor = Color.FromArgb(150, 26, 28, 36);
-            enhDataList.Dock = DockStyle.Fill;
-            enhDataList.Font = new Font("Noto Sans SemiBold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            enhDataList.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold);
             enhDataList.HighlightColor = Color.CornflowerBlue;
             enhDataList.HighlightTextColor = Color.Black;
             enhDataList.ItemColor = Color.Silver;
@@ -909,7 +855,7 @@ namespace Mids_Reborn.UI.Controls
             enhDataList.SampleRowsPerColumn = 10;
             enhDataList.SetItemsBold = false;
             enhDataList.ShowRuntimeSamples = true;
-            enhDataList.Size = new Size(400, 343);
+            enhDataList.Size = new Size(397, 228);
             enhDataList.TabIndex = 80;
             enhDataList.UseHighlighting = false;
             enhDataList.ValueAlternateColor = Color.Chartreuse;
@@ -925,7 +871,7 @@ namespace Mids_Reborn.UI.Controls
             enhanceSubtitlePanel.ForeColor = Color.WhiteSmoke;
             enhanceSubtitlePanel.Location = new Point(0, 0);
             enhanceSubtitlePanel.Name = "enhanceSubtitlePanel";
-            enhanceSubtitlePanel.Size = new Size(400, 20);
+            enhanceSubtitlePanel.Size = new Size(400, 14);
             enhanceSubtitlePanel.TabIndex = 5;
             // 
             // subTitle
@@ -933,13 +879,13 @@ namespace Mids_Reborn.UI.Controls
             subTitle.BackColor = Color.Transparent;
             subTitle.Dock = DockStyle.Fill;
             subTitle.FlatStyle = FlatStyle.Flat;
-            subTitle.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            subTitle.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             subTitle.Location = new Point(0, 0);
             subTitle.Name = "subTitle";
-            subTitle.Size = new Size(400, 20);
+            subTitle.Size = new Size(400, 14);
             subTitle.TabIndex = 0;
             subTitle.Text = "Subtitle";
-            subTitle.TextAlign = ContentAlignment.TopCenter;
+            subTitle.TextAlign = ContentAlignment.MiddleCenter;
             // 
             // MidsDataView
             // 
@@ -957,7 +903,6 @@ namespace Mids_Reborn.UI.Controls
             titlePanel.ResumeLayout(false);
             dvPages.ResumeLayout(false);
             infoView.ResumeLayout(false);
-            infoLayoutPanel.ResumeLayout(false);
             effectView.ResumeLayout(false);
             effectViewScrollPanel.ContentPanel.ResumeLayout(false);
             effectViewScrollPanel.ContentPanel.PerformLayout();
@@ -985,7 +930,6 @@ namespace Mids_Reborn.UI.Controls
         private Page effectView;
         private Page totalView;
         private Page enhanceView;
-        private TableLayoutPanel infoLayoutPanel;
         private PairedListEx infoDataList;
         internal MidsRichTextView infoLDesc;
         private RichTextBox infoSDesc;
@@ -1013,9 +957,7 @@ namespace Mids_Reborn.UI.Controls
         private PairedListEx enhDataList;
         private Panel enhanceSubtitlePanel;
         private Label subTitle;
-        private Panel spacer;
         private Panel pnlEnhActive;
-        private Panel spacer2;
         private Panel pnlEnhInactive;
         private ToolTip dvToolTip;
         internal ModernDamageDisplay infoDamageDisplay;

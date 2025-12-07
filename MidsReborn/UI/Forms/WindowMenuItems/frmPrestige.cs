@@ -10,7 +10,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 {
     public partial class frmPrestige : Form
     {
-        private readonly MainWindow _myParent;
+        private readonly MainWindow2 _myParent;
 
         private bool _locked;
 
@@ -29,6 +29,22 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private VScrollBar VScrollBar1;
 
         public frmPrestige(MainWindow iParent, List<IPower?> iPowers)
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
+            CenterToParent();
+            Location = new Point(Location.X, Location.Y - 100);
+            Load += frmPrestige_Load;
+            _locked = false;
+            InitializeComponent();
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmPrestige));
+            Icon = Resources.MRB_Icon_Concept;
+            Name = nameof(frmPrestige);
+           // _myParent = iParent;
+            _myPowers = iPowers;
+            FormClosing += FrmPrestige_FormClosing;
+        }
+
+        public frmPrestige(MainWindow2 iParent, List<IPower?> iPowers)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
             CenterToParent();
@@ -231,7 +247,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             }
 
             _myParent.PowerModified(true);
-            _myParent.DoRefresh();
+            //_myParent.DoRefresh();
         }
 
         private void llLeft_ItemClick(ListLabel.ListLabelItem item, MouseButtons button)

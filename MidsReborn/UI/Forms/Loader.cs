@@ -19,17 +19,23 @@ namespace Mids_Reborn.UI.Forms
         private bool _webViewReady;
 
         private static bool FirstRun
-        {
-            get
-            {
-                if (!File.Exists(AppDataPaths.JsonConfig))
-                {
-                    File.Create(AppDataPaths.JsonConfig);
-                }
-                var fileInfo = new FileInfo(AppDataPaths.JsonConfig);
-                return fileInfo.Length <= 8;
-            }
-        }
+           {
+               get
+               {
+                   var path = AppDataPaths.JsonConfig;
+                   if (!File.Exists(path)) return true;
+                   try
+                   {
+                       var len = new FileInfo(path).Length;
+                       return len <= 8; // keep your heuristic if needed
+                   }
+                   catch
+                   {
+                       // If we can't read length, treat as first run rather than crashing.
+                       return true;
+                   }
+               }
+           }
 
         private readonly TaskCompletionSource<bool> _loadCompleteSource = new();
 
@@ -58,27 +64,8 @@ namespace Mids_Reborn.UI.Forms
             RoundControlCorners(mainPanel);
             RoundControlCorners(webView);
 
-            switch (FirstRun)
-            {
-                case true:
-                    ConfigData.Initialize(true);
-                    if (MidsContext.Config != null)
-                    {
-                        MidsContext.Config.IsInitialized = true;
-                        MidsContext.Config.FirstRun = true;
-                    }
-
-                    break;
-                default:
-                    ConfigData.Initialize();
-                    break;
-            }
-
+            ConfigData.Initialize();
             ThemeManager.Initialize();
-            if (MidsContext.Config != null)
-            {
-                ThemeManager.SetTheme(MidsContext.Config.ThemeName);
-            }
         }
 
         private async void InitializeWebView()
@@ -145,6 +132,7 @@ namespace Mids_Reborn.UI.Forms
 
             MidsContext.Config.SaveConfig();
             _loadCompleteSource.SetResult(true);
+            DialogResult = DialogResult.OK;
             Close();
         }
 

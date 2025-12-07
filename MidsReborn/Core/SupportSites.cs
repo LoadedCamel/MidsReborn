@@ -6,9 +6,14 @@ namespace Mids_Reborn.Core
 {
     public abstract class SupportSites
     {
-        public static void SupportServer()
+        public static void DiscordServer()
         {
             LaunchBrowser("https://discord.gg/mids-reborn-593336669004890113");
+        }
+
+        public static void Website() 
+        {
+            LaunchBrowser("https://midsreborn.com");
         }
 
         public static void KoFi()

@@ -3422,7 +3422,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsSupport_Click(object sender, EventArgs e)
         {
-            SupportSites.SupportServer();
+            SupportSites.DiscordServer();
         }
 
         private void tsAbout_Click(object sender, EventArgs e)
@@ -3644,7 +3644,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 DrawVillain = false,
                 Floating = false,
                 Font = new Font(Fonts.Family("Noto Sans"), 10.25f, FontStyle.Regular, GraphicsUnit.Pixel, 0),
-                Location = new Point(3, 3),
+                Location = new Point(16, 3),
                 Name = "dvAnchored",
                 Size = new Size(300, 400),
                 TabIndex = 69,
@@ -3660,7 +3660,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             _dvAnchored.TabChanged += dvAnchored_TabChanged;
             _dvAnchored.EntityDetails += dvAnchored_EntityDetails;
 
-            //dataPanel.Controls.Add(_dvAnchored);
+            panel1.Controls.Add(_dvAnchored);
             //dataPanel.Controls.Add(_enhCheckMode);
         }
 
@@ -5484,7 +5484,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 if (MainModule.MidsController.Toon == null)
                 {
-                    MainModule.MidsController.Toon = new clsToonX();
+                    MainModule.MidsController.Toon = new Toon();
                 }
                 else if (init)
                 {
@@ -5935,14 +5935,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             MainModule.MidsController.Toon.BuildPower(MidsContext.Character.Powersets[(int)setId].nID, nIdPower);
             PowerModified(true);
-            MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
+            //MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
         }
 
         private void PowerPicked(int nIdPowerset, int nIdPower)
         {
             MainModule.MidsController.Toon.BuildPower(nIdPowerset, nIdPower);
             PowerModified(true);
-            MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
+            //MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
             DoRedraw();
         }
 

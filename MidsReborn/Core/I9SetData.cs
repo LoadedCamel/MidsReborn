@@ -76,8 +76,8 @@ namespace Mids_Reborn.Core
             {
                 if (SetInfo[index1].SlottedCount > 1)
                     for (var index2 = 0;
-                        index2 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus.Length - 1;
-                        ++index2)
+                         index2 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus.Length - 1;
+                         ++index2)
                     {
                         if (!((DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].Slotted <=
                                SetInfo[index1].SlottedCount) &
@@ -87,9 +87,9 @@ namespace Mids_Reborn.Core
                                 Enums.ePvX.Any))))
                             continue;
                         for (var index3 = 0;
-                            index3 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].Index
-                                .Length - 1;
-                            ++index3)
+                             index3 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].Index
+                                 .Length - 1;
+                             ++index3)
                         {
                             Array.Resize(ref SetInfo[index1].Powers, SetInfo[index1].Powers.Length + 1);
                             SetInfo[index1].Powers[^1] = DatabaseAPI.Database
@@ -101,11 +101,11 @@ namespace Mids_Reborn.Core
                     continue;
                 {
                     for (var index2 = 0;
-                        index2 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Enhancements.Length - 1;
-                        ++index2)
+                         index2 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Enhancements.Length - 1;
+                         ++index2)
                     {
                         if (DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].SpecialBonus[index2].Index
-                            .Length <= -1)
+                                .Length <= -1)
                             continue;
                         for (var index3 = 0; index3 <= SetInfo[index1].EnhIndexes.Length - 1; ++index3)
                         {
@@ -113,9 +113,10 @@ namespace Mids_Reborn.Core
                                 DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Enhancements[index2])
                                 continue;
                             for (var index4 = 0;
-                                index4 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].SpecialBonus[index2]
-                                    .Index.Length - 1;
-                                ++index4)
+                                 index4 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX]
+                                     .SpecialBonus[index2]
+                                     .Index.Length - 1;
+                                 ++index4)
                             {
                                 Array.Resize(ref SetInfo[index1].Powers, SetInfo[index1].Powers.Length + 1);
                                 SetInfo[index1].Powers[^1] = DatabaseAPI.Database

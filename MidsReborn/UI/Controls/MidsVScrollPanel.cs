@@ -30,7 +30,7 @@ public sealed class MidsVScrollPanelDesigner : ParentControlDesigner
 [DesignerCategory("Code")]
 public sealed class MidsVScrollPanel : Panel
 {
-    #region Constants and DPI Scaling
+    #region Constants
 
     private const int LogicalScrollBarWidth = 16;
     private const int LogicalArrowHeight = 16;
@@ -72,6 +72,8 @@ public sealed class MidsVScrollPanel : Panel
     private bool _hoveringUpArrow;
     private bool _hoveringDownArrow;
 
+    private int _lastContentClientWidth;
+
     // Cache during a layout/paint cycle
     private int _cachedContentHeight;
 
@@ -81,7 +83,7 @@ public sealed class MidsVScrollPanel : Panel
 
     #endregion
 
-    #region Theme (expects ThemeManager/ScrollPanelTheme in your project)
+    #region Private Properties
 
     private static bool IsInDesignModeSafe(IComponent? c)
         => LicenseManager.UsageMode == LicenseUsageMode.Designtime ||
@@ -97,6 +99,15 @@ public sealed class MidsVScrollPanel : Panel
             return ThemeManager.CurrentTheme?.ScrollPanel ?? ThemeManager.DesignTime.ScrollPanel;
         }
     }
+
+    #endregion
+
+    #region Public Properties
+
+    public int AvailableClientWidth
+        => ClientSize.Width - (NeedsScrollbar(_cachedContentHeight) ? ScrollBarWidth : 0);
+
+    public event EventHandler<int>? AvailableClientWidthChanged;
 
     #endregion
 
@@ -146,6 +157,14 @@ public sealed class MidsVScrollPanel : Panel
             _themeChangedHandler = null;
         }
 
+        if (disposing)
+        {
+            _contentPanel.ControlAdded -= ContentPanel_ControlAdded;
+            _contentPanel.ControlRemoved -= ContentPanel_ControlRemoved;
+            foreach (Control c in _contentPanel.Controls)
+                UnhookChild(c);
+        }
+
         base.Dispose(disposing);
     }
 
@@ -159,6 +178,13 @@ public sealed class MidsVScrollPanel : Panel
             ThemeManager.ThemeChanged += _themeChangedHandler;
             _themeHooked = true;
         }
+
+        _contentPanel.ControlAdded += ContentPanel_ControlAdded;
+        _contentPanel.ControlRemoved += ContentPanel_ControlRemoved;
+
+        // hook existing children (designer already added)
+        foreach (Control c in _contentPanel.Controls)
+            HookChild(c);
     }
 
     #endregion
@@ -186,6 +212,11 @@ public sealed class MidsVScrollPanel : Panel
 
     #region Layout & Scroll Management
 
+    public void RecalculateLayout()
+    {
+        LayoutContentAndScrollbar();
+    }
+
     protected override void OnLayout(LayoutEventArgs levent)
     {
         base.OnLayout(levent);
@@ -206,8 +237,17 @@ public sealed class MidsVScrollPanel : Panel
         int maxScroll = Math.Max(0, _cachedContentHeight - ClientSize.Height);
         _scrollOffset = Math.Max(0, Math.Min(_scrollOffset, maxScroll));
 
-        // Reserve space for the scrollbar (if needed) before measuring child layout that depends on width
+        // Reserve space for the scrollbar (if needed) BEFORE children measure based on width
         int contentWidth = ClientSize.Width - (NeedsScrollbar(_cachedContentHeight) ? ScrollBarWidth : 0);
+
+        // === NEW: detect width changes we expose to consumers ===
+        int newAvailable = contentWidth;
+        if (newAvailable != _lastContentClientWidth)
+        {
+            _lastContentClientWidth = newAvailable;
+            AvailableClientWidthChanged?.Invoke(this, newAvailable);
+        }
+
         _contentPanel.Width = Math.Max(0, contentWidth);
 
         // Height of inner panel equals measured content height
@@ -315,6 +355,29 @@ public sealed class MidsVScrollPanel : Panel
             thumbY,
             Math.Max(1, _scrollbarBounds.Width - 2 * inset),
             thumbHeight);
+    }
+
+    private void ContentPanel_ControlAdded(object? sender, ControlEventArgs e) => HookChild(e.Control);
+    private void ContentPanel_ControlRemoved(object? sender, ControlEventArgs e) => UnhookChild(e.Control);
+
+    private void HookChild(Control c)
+    {
+        c.SizeChanged += Child_Changed;
+        c.VisibleChanged += Child_Changed;
+        c.LocationChanged += Child_Changed;
+    }
+
+    private void UnhookChild(Control c)
+    {
+        c.SizeChanged -= Child_Changed;
+        c.VisibleChanged -= Child_Changed;
+        c.LocationChanged -= Child_Changed;
+    }
+
+    private void Child_Changed(object? sender, EventArgs e)
+    {
+        // A child changed -> recompute content height/scrollbar immediately
+        LayoutContentAndScrollbar();
     }
 
     #endregion

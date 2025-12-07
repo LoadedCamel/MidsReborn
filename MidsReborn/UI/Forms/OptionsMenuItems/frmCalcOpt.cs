@@ -10,7 +10,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
     public partial class frmCalcOpt : Form
     {
         private readonly short[] defActs;
-        private readonly MainWindow myParent;
+        private readonly MainWindow2 myParent;
         private readonly string[][] scenActs;
 
         private readonly string[] scenarioExample;
@@ -45,8 +45,27 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             optDO.Image = Resources.optDO_Image;
             optSO.Image = Resources.optSO_Image;
             Icon = Resources.MRB_Icon_Concept;
+            //myParent = iParent;
+        }
+
+        public frmCalcOpt(ref MainWindow2 iParent)
+        {
+            Load += frmCalcOpt_Load;
+            Closing += frmCalcOpt_Closing;
+            fcNoUpdate = false;
+            scenarioExample = new string[20];
+            scenActs = new string[20][];
+            defActs = new short[20];
+            InitializeComponent();
+            _updRadios = GroupBox1.Controls.OfType<RadioButton>();
+            Name = nameof(frmCalcOpt);
+            optTO.Image = Resources.optTO_Image;
+            optDO.Image = Resources.optDO_Image;
+            optSO.Image = Resources.optSO_Image;
+            Icon = Resources.MRB_Icon_Concept;
             myParent = iParent;
         }
+
 
         private void BindAndDefaultUpdRadios()
         {

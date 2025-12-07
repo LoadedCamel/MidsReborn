@@ -20,7 +20,7 @@ namespace Mids_Reborn.UI.Forms
             public bool DisplayPercentage;
         }
 
-        private readonly MainWindow myParent;
+        private readonly MainWindow2 myParent;
         private frmTimelineColorRefTable? fTimelineColorRefTable;
         private Stopwatch Stopwatch;
         private Size NormalGraphSize;
@@ -56,6 +56,17 @@ namespace Mids_Reborn.UI.Forms
         private static extern IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wp, IntPtr lp);
 
         public frmRotationHelper(MainWindow parent)
+        {
+            //myParent = parent;
+            InitializeComponent();
+            Application.AddMessageFilter(this);
+            Icon = MRBResourceLib.Resources.MRB_Icon_Concept;
+            ctlCombatTimeline1.UseArcanaTime = true;
+            ctlCombatTimeline1.Powers = new List<ctlCombatTimeline.BuildPowerSlot>();
+            ctlCombatTimeline1.UserBoosts = new List<IPower>();
+        }
+
+        public frmRotationHelper(MainWindow2 parent)
         {
             myParent = parent;
             InitializeComponent();

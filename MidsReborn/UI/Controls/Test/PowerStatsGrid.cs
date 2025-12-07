@@ -80,12 +80,9 @@ public sealed class PowerStatsGrid : Control
     private int _colGap = 12;
     private int _hoverRow = -1;
 
-    // Column widths as fractions (sum <= 1). We compute device px each paint.
-    private float _wLabel = 0.30f;
-    private float _wBase = 0.16f;
-    private float _wEnh = 0.22f;
-    private float _wDelta = 0.16f;
-    private float _wDeltaPct = 0.16f;
+    // Column width ratio (Stat|Value)
+    private float _wLabel = 0.46f;   // stat column
+    private float _wValue = 0.54f;   // value column (right aligned)
 
     #endregion
 
@@ -191,8 +188,6 @@ public sealed class PowerStatsGrid : Control
 
     #region Private Methods
 
-
-
     private int ScalePx(int px) => (int)Math.Round(px * DpiScale);
 
     #endregion
@@ -220,26 +215,19 @@ public sealed class PowerStatsGrid : Control
         Height = Math.Max(Height, h);
     }
 
-    private (Rectangle rcLabel, Rectangle rcBase, Rectangle rcEnh, Rectangle rcDelta, Rectangle rcDeltaPct) GetColumns(Rectangle bounds)
+    private (Rectangle rcLabel, Rectangle rcValue) GetColumns(Rectangle bounds)
     {
         int gap = ScalePx(_colGap);
-        int totalGap = gap * 4;
+        int wAvail = bounds.Width - gap;
 
-        int wAvail = bounds.Width - totalGap;
         int wLabel = (int)Math.Floor(wAvail * _wLabel);
-        int wBase = (int)Math.Floor(wAvail * _wBase);
-        int wEnh = (int)Math.Floor(wAvail * _wEnh);
-        int wDelta = (int)Math.Floor(wAvail * _wDelta);
-        int wPct = Math.Max(0, wAvail - (wLabel + wBase + wEnh + wDelta + 5)); // remainder
+        int wValue = Math.Max(0, wAvail - wLabel);
 
         int x = bounds.X;
         var c0 = new Rectangle(x + 5, bounds.Y, wLabel, bounds.Height); x += wLabel + gap;
-        var c1 = new Rectangle(x, bounds.Y, wBase, bounds.Height); x += wBase + gap;
-        var c2 = new Rectangle(x, bounds.Y, wEnh, bounds.Height); x += wEnh + gap;
-        var c3 = new Rectangle(x, bounds.Y, wDelta, bounds.Height); x += wDelta + gap;
-        var c4 = new Rectangle(x, bounds.Y, wPct, bounds.Height);
+        var c1 = new Rectangle(x, bounds.Y, wValue, bounds.Height);
 
-        return (c0, c1, c2, c3, c4);
+        return (c0, c1);
     }
 
     private Rectangle GetRowBounds(int index)
@@ -257,7 +245,6 @@ public sealed class PowerStatsGrid : Control
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
-
         var g = e.Graphics;
         g.Clear(BackColor);
 
@@ -274,10 +261,7 @@ public sealed class PowerStatsGrid : Control
 
         var cols = GetColumns(rcHeader);
         TextRenderer.DrawText(g, "Stat", Font, cols.rcLabel, t.Text, Color.Transparent, HeaderFlags | TextFormatFlags.Left);
-        TextRenderer.DrawText(g, "Base", Font, cols.rcBase, t.Text, Color.Transparent, HeaderFlags | TextFormatFlags.Right);
-        TextRenderer.DrawText(g, "Enhanced", Font, cols.rcEnh, t.Text, Color.Transparent, HeaderFlags | TextFormatFlags.Right);
-        TextRenderer.DrawText(g, "Gain", Font, cols.rcDelta, t.Text, Color.Transparent, HeaderFlags | TextFormatFlags.Right);
-        TextRenderer.DrawText(g, "Gain%", Font, cols.rcDeltaPct, t.Text, Color.Transparent, HeaderFlags | TextFormatFlags.Right);
+        TextRenderer.DrawText(g, "Value", Font, cols.rcValue, t.Text, Color.Transparent, HeaderFlags | TextFormatFlags.Right);
 
         // Rows
         for (int i = 0; i < _rows.Count; i++)
@@ -296,60 +280,62 @@ public sealed class PowerStatsGrid : Control
                 g.FillRectangle(hov, rc);
             }
 
+            // Stat label (include ED marker)
             var label = row.Label + (row.AffectedByEd ? "  ⓔ" : "");
             TextRenderer.DrawText(g, label, Font, rcc.rcLabel, Color.FromArgb(200, t.Accent), Color.Transparent, CellFlags | TextFormatFlags.Left);
 
-            // Numbers already scaled for display (e.g., Accuracy passed in as 86.6, unit "%")
-            var baseTxt = FormatNorm(row.BaseValue, row.Unit);
-            var enhTxt = FormatNorm(row.EnhancedValue, row.Unit);
+            // Build value cell: Enhanced + inline delta (+/-) and optional %.
+            var (valueText, valueColor) = BuildValueCell(row, t);
 
-            // Gain semantics: positive when beneficial (lower-is-better rows invert the sign)
-            double rawDelta = row.EnhancedValue - row.BaseValue;
-            bool improved = row.HigherIsBetter ? rawDelta > 0.0 : rawDelta < 0.0;
-
-            double gain = row.HigherIsBetter ? rawDelta : -rawDelta;
-            if (Math.Abs(gain) < 1e-9) gain = 0.0;
-
-            string gainUnit = row.GainUnitOverride ?? row.Unit;
-
-            // Neutral if no change, or both ~0
-            bool noChange = Math.Abs(rawDelta) < Eps || (Math.Abs(row.BaseValue) < Eps && Math.Abs(row.EnhancedValue) < Eps);
-
-            var bandLow = t.GridBandLow;
-            var bandMid = t.GridBandMid;
-            var bandHigh = t.GridBandHigh;
-            var neutral = t.GridNeutral;
-
-            Color valueColor = bandLow;
-            switch (row.Band)
-            {
-                case -1: valueColor = (noChange && row.NeutralWhenZero) ? neutral : (improved ? bandLow : neutral); break;
-                case 0: valueColor = (noChange && row.NeutralWhenZero) ? neutral : (improved ? bandLow : neutral); break;
-                case 1: valueColor = (noChange && row.NeutralWhenZero) ? neutral : (improved ? bandMid : neutral); break;
-                case 2: valueColor = (noChange && row.NeutralWhenZero) ? neutral : (improved ? bandHigh : neutral); break;
-            }
-
-            // Base / Enhanced
-            TextRenderer.DrawText(g, baseTxt, Font, rcc.rcBase, neutral, Color.Transparent, CellFlags | TextFormatFlags.Right);
-            TextRenderer.DrawText(g, enhTxt, Font, rcc.rcEnh, valueColor, Color.Transparent, CellFlags | TextFormatFlags.Right);
-
-            // Gain text — show dash when unchanged
-            string gainTxt = (noChange && row.NeutralWhenZero) ? "—" : FormatNormSigned(gain, gainUnit);
-            string gainPctTxt = "—";
-            if (!row.HideGainPercent && !noChange && Math.Abs(row.BaseValue) >= 1e-9)
-            {
-                double gainPct = (gain / Math.Abs(row.BaseValue)) * 100.0;
-                gainPctTxt = FormatNorm(gainPct, "%", sign: false);
-            }
-
-            // Gain / Gain%
-            TextRenderer.DrawText(g, gainTxt, Font, rcc.rcDelta, valueColor, Color.Transparent, CellFlags | TextFormatFlags.Right);
-            TextRenderer.DrawText(g, gainPctTxt, Font, rcc.rcDeltaPct, valueColor, Color.Transparent, CellFlags | TextFormatFlags.Right);
+            // Right-align main value + inline delta
+            TextRenderer.DrawText(g, valueText, Font, rcc.rcValue, valueColor, Color.Transparent, CellFlags | TextFormatFlags.Right);
 
             // Row separator
             using var pen = new Pen(Color.FromArgb(24, 255, 255, 255));
             g.DrawLine(pen, rc.Left, rc.Bottom, rc.Right, rc.Bottom);
         }
+    }
+
+    private static (string text, Color color) BuildValueCell(Row row, DataViewTheme theme)
+    {
+        // Enhanced/Base already scaled for display upstream when needed (e.g., Accuracy%).
+        string main = FormatNorm(row.EnhancedValue, row.Unit);
+
+        // Gain semantics: positive when beneficial (lower-is-better inverts)
+        double rawDelta = row.EnhancedValue - row.BaseValue;
+        double gain = row.HigherIsBetter ? rawDelta : -rawDelta;
+
+        bool noChange = Math.Abs(rawDelta) < Eps
+                        || (Math.Abs(row.BaseValue) < Eps && Math.Abs(row.EnhancedValue) < Eps);
+
+        // Color by ED band (if available) and improvement
+        var neutral = theme.GridNeutral;
+        var bandLow = theme.GridBandLow;
+        var bandMid = theme.GridBandMid;
+        var bandHigh = theme.GridBandHigh;
+
+        bool improved = row.HigherIsBetter ? rawDelta > 0.0 : rawDelta < 0.0;
+        Color valueColor = bandLow;
+        switch (row.Band)
+        {
+            case -1: valueColor = (noChange && row.NeutralWhenZero) ? neutral : (improved ? bandLow : neutral); break;
+            case 0: valueColor = (noChange && row.NeutralWhenZero) ? neutral : (improved ? bandLow : neutral); break;
+            case 1: valueColor = (noChange && row.NeutralWhenZero) ? neutral : (improved ? bandMid : neutral); break;
+            case 2: valueColor = (noChange && row.NeutralWhenZero) ? neutral : (improved ? bandHigh : neutral); break;
+        }
+
+        // Append inline signed absolute delta
+        string gainUnit = row.GainUnitOverride ?? row.Unit;
+        string inline = (noChange && row.NeutralWhenZero) ? string.Empty : $"  ({FormatNormSigned(gain, gainUnit)})";
+
+        // Append % if requested and base != 0
+        if (!row.HideGainPercent && !noChange && Math.Abs(row.BaseValue) >= 1e-9)
+        {
+            double pct = (gain / Math.Abs(row.BaseValue)) * 100.0;
+            inline += $"  ({pct:0.#} %)";
+        }
+
+        return (main + inline, valueColor);
     }
 
     private static string FormatNorm(double v, string unit, bool sign = false)

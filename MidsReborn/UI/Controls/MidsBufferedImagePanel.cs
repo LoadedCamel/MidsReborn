@@ -122,6 +122,8 @@ public sealed class MidsBufferedImagePanel : Control
         {
             _suspendAutoSize = false;
         }
+
+        (Parent as MidsVScrollPanel)?.RecalculateLayout();
     }
 
     /// <summary>Returns the scaled rectangle for the power button at history index <paramref name="hIdx"/> in panel client coords.</summary>

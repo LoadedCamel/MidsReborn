@@ -52,7 +52,6 @@ namespace Mids_Reborn.UI.Forms
             slotInfoEx = new MidsVectorButton();
             setsEx = new MidsVectorButton();
             slotLevelsEx = new MidsVectorButton();
-            dataView = new MidsDataViewNeo();
             midsvScrollPanel1 = new MidsVScrollPanel();
             rightInnerLayoutPanel = new TableLayoutPanel();
             ancillaryList = new MidsListView();
@@ -71,6 +70,7 @@ namespace Mids_Reborn.UI.Forms
             pool0Label = new Label();
             pool0List = new MidsListView();
             leftInnerLayoutPanel = new TableLayoutPanel();
+            dataView = new MidsDataViewNeo();
             secondaryList = new MidsListView();
             secondaryDropDown = new PowersetDropDownList();
             label1 = new Label();
@@ -143,10 +143,12 @@ namespace Mids_Reborn.UI.Forms
             ToolStripSeparator1 = new ToolStripSeparator();
             AutoArrangeAllSlotsToolStripMenuItem = new ToolStripMenuItem();
             ViewToolStripMenuItem = new ToolStripMenuItem();
-            toolStripMenuItem3 = new ToolStripMenuItem();
+            layoutMenuItem = new ToolStripMenuItem();
             tsView2Col = new ToolStripMenuItem();
             tsView3Col = new ToolStripMenuItem();
             tsView4Col = new ToolStripMenuItem();
+            themeMenuItem = new ToolStripMenuItem();
+            toolStripSeparator15 = new ToolStripSeparator();
             ToolStripSeparator13 = new ToolStripSeparator();
             toolStripMenuItem4 = new ToolStripMenuItem();
             tsViewIOLevels = new ToolStripMenuItem();
@@ -167,8 +169,8 @@ namespace Mids_Reborn.UI.Forms
             toolStripMenuItem6 = new ToolStripMenuItem();
             toolStripSeparator6 = new ToolStripSeparator();
             importBuildFromToolStripMenuItem = new ToolStripMenuItem();
-            forumPostLegacyToolStripMenuItem = new ToolStripMenuItem();
-            datachunkToolStripMenuItem = new ToolStripMenuItem();
+            tsImportLegacyForumPost = new ToolStripMenuItem();
+            tsImportDataChunk = new ToolStripMenuItem();
             ToolStripSeparator27 = new ToolStripSeparator();
             tsViewSharedBuilds = new ToolStripMenuItem();
             WindowToolStripMenuItem = new ToolStripMenuItem();
@@ -198,9 +200,9 @@ namespace Mids_Reborn.UI.Forms
             tsGitHub = new ToolStripMenuItem();
             ToolStripSeparator31 = new ToolStripSeparator();
             tsAbout = new ToolStripMenuItem();
-            iconMenuItem1 = new FontAwesome.Sharp.IconMenuItem();
-            iconMenuItem2 = new FontAwesome.Sharp.IconMenuItem();
-            iconMenuItem3 = new FontAwesome.Sharp.IconMenuItem();
+            supportIconMenuItem = new FontAwesome.Sharp.IconMenuItem();
+            kofiIconMenuItem = new FontAwesome.Sharp.IconMenuItem();
+            patreonIconMenuItem = new FontAwesome.Sharp.IconMenuItem();
             DlgOpen = new OpenFileDialog();
             DlgSave = new SaveFileDialog();
             tmrGfx = new Timer(components);
@@ -292,7 +294,6 @@ namespace Mids_Reborn.UI.Forms
             leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 410F));
             leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             leftLayoutPanel.Controls.Add(characterLayoutPanel, 0, 0);
-            leftLayoutPanel.Controls.Add(dataView, 0, 2);
             leftLayoutPanel.Controls.Add(midsvScrollPanel1, 1, 1);
             leftLayoutPanel.Controls.Add(leftInnerLayoutPanel, 0, 1);
             leftLayoutPanel.Dock = DockStyle.Fill;
@@ -352,6 +353,7 @@ namespace Mids_Reborn.UI.Forms
             dynMode.ToggleText.Indeterminate = "Power / Slot";
             dynMode.ToggleText.ToggledOff = "Power";
             dynMode.ToggleText.ToggledOn = "Slot";
+            dynMode.Click += DynMode_Click;
             // 
             // lblName
             // 
@@ -464,6 +466,7 @@ namespace Mids_Reborn.UI.Forms
             modeEx.ToggleText.ToggledOff = "Level-Up";
             modeEx.ToggleText.ToggledOn = "Normal";
             tTip.SetToolTip(modeEx, "Build Mode");
+            modeEx.Click += ibModeEx_OnClick;
             // 
             // totalsEx
             // 
@@ -534,17 +537,6 @@ namespace Mids_Reborn.UI.Forms
             slotLevelsEx.ToggleText.Indeterminate = "Indeterminate State";
             slotLevelsEx.ToggleText.ToggledOff = "Slot Levels: Off";
             slotLevelsEx.ToggleText.ToggledOn = "Slot Levels: On";
-            // 
-            // dataView
-            // 
-            dataView.BackColor = Color.FromArgb(1, 7, 15);
-            dataView.Dock = DockStyle.Fill;
-            dataView.Font = new Font("Segoe UI", 9F);
-            dataView.IsLocked = false;
-            dataView.Location = new Point(3, 273);
-            dataView.Name = "dataView";
-            dataView.Size = new Size(404, 405);
-            dataView.TabIndex = 3;
             // 
             // midsvScrollPanel1
             // 
@@ -864,6 +856,7 @@ namespace Mids_Reborn.UI.Forms
             leftInnerLayoutPanel.ColumnCount = 2;
             leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            leftInnerLayoutPanel.Controls.Add(dataView, 0, 3);
             leftInnerLayoutPanel.Controls.Add(secondaryList, 1, 2);
             leftInnerLayoutPanel.Controls.Add(secondaryDropDown, 1, 1);
             leftInnerLayoutPanel.Controls.Add(label1, 1, 0);
@@ -874,11 +867,26 @@ namespace Mids_Reborn.UI.Forms
             leftInnerLayoutPanel.Location = new Point(3, 113);
             leftInnerLayoutPanel.Name = "leftInnerLayoutPanel";
             leftInnerLayoutPanel.RowCount = 3;
+            leftLayoutPanel.SetRowSpan(leftInnerLayoutPanel, 2);
             leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 26F));
-            leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            leftInnerLayoutPanel.Size = new Size(404, 154);
+            leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 66.6666641F));
+            leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+            leftInnerLayoutPanel.Size = new Size(404, 565);
             leftInnerLayoutPanel.TabIndex = 5;
+            // 
+            // dataView
+            // 
+            dataView.BackColor = Color.FromArgb(1, 7, 15);
+            leftInnerLayoutPanel.SetColumnSpan(dataView, 2);
+            dataView.Dock = DockStyle.Fill;
+            dataView.Font = new Font("Segoe UI", 9F);
+            dataView.IsLocked = false;
+            dataView.Location = new Point(3, 222);
+            dataView.Name = "dataView";
+            dataView.Size = new Size(398, 340);
+            dataView.TabIndex = 3;
             // 
             // secondaryList
             // 
@@ -893,7 +901,7 @@ namespace Mids_Reborn.UI.Forms
             secondaryList.PaddingY = 0;
             secondaryList.Scrollable = true;
             secondaryList.ScrollBarWidth = 10;
-            secondaryList.Size = new Size(196, 102);
+            secondaryList.Size = new Size(196, 167);
             secondaryList.TabIndex = 153;
             secondaryList.TextWrapMode = WordwrapMode.New;
             secondaryList.ItemClicked += SecondaryList_ItemClicked;
@@ -955,7 +963,7 @@ namespace Mids_Reborn.UI.Forms
             primaryList.PaddingY = 0;
             primaryList.Scrollable = true;
             primaryList.ScrollBarWidth = 10;
-            primaryList.Size = new Size(196, 102);
+            primaryList.Size = new Size(196, 167);
             primaryList.TabIndex = 150;
             primaryList.TextWrapMode = WordwrapMode.New;
             primaryList.ItemClicked += PrimaryList_ItemClicked;
@@ -1021,6 +1029,7 @@ namespace Mids_Reborn.UI.Forms
             tempPowersEx.ToggleText.ToggledOff = "Temp Powers: Off";
             tempPowersEx.ToggleText.ToggledOn = "Temp Powers: On";
             tTip.SetToolTip(tempPowersEx, "Temporary Powers");
+            tempPowersEx.Click += TempPowersEx_OnClick;
             // 
             // ibPrestigePowersEx
             // 
@@ -1038,6 +1047,7 @@ namespace Mids_Reborn.UI.Forms
             ibPrestigePowersEx.ToggleText.ToggledOff = "ToggledOff State";
             ibPrestigePowersEx.ToggleText.ToggledOn = "ToggledOn State";
             tTip.SetToolTip(ibPrestigePowersEx, "Prestige Powers");
+            ibPrestigePowersEx.Click += ibPrestigePowersEx_OnClick;
             // 
             // incarnatesEx
             // 
@@ -1055,6 +1065,7 @@ namespace Mids_Reborn.UI.Forms
             incarnatesEx.ToggleText.ToggledOff = "Toggled Off State";
             incarnatesEx.ToggleText.ToggledOn = "Toggled On State";
             tTip.SetToolTip(incarnatesEx, "Incarnate Powers");
+            incarnatesEx.Click += IncarnatesEx_OnClick;
             // 
             // accoladesEx
             // 
@@ -1072,6 +1083,7 @@ namespace Mids_Reborn.UI.Forms
             accoladesEx.ToggleText.ToggledOff = "Accolades: Off";
             accoladesEx.ToggleText.ToggledOn = "Accolades: On";
             tTip.SetToolTip(accoladesEx, "Accolade Powers");
+            accoladesEx.Click += ibAccoladesEx_OnClick;
             // 
             // popupEx
             // 
@@ -1133,7 +1145,7 @@ namespace Mids_Reborn.UI.Forms
             MenuBar.BackColor = Color.Transparent;
             MenuBar.Font = new Font("Noto Sans SemiBold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             MenuBar.ForeColor = Color.WhiteSmoke;
-            MenuBar.Items.AddRange(new ToolStripItem[] { FileToolStripMenuItem, CharacterToolStripMenuItem, ViewToolStripMenuItem, ShareToolStripMenuItem, WindowToolStripMenuItem, HelpToolStripMenuItem, iconMenuItem1 });
+            MenuBar.Items.AddRange(new ToolStripItem[] { FileToolStripMenuItem, CharacterToolStripMenuItem, ViewToolStripMenuItem, ShareToolStripMenuItem, WindowToolStripMenuItem, HelpToolStripMenuItem, supportIconMenuItem });
             MenuBar.Location = new Point(10, 45);
             MenuBar.Name = "MenuBar";
             MenuBar.Padding = new Padding(0, 2, 0, 2);
@@ -1169,6 +1181,7 @@ namespace Mids_Reborn.UI.Forms
             tsFileOpen.ShowShortcutKeys = false;
             tsFileOpen.Size = new Size(273, 22);
             tsFileOpen.Text = "&Open Build...";
+            tsFileOpen.Click += TsFileOpen_Click;
             // 
             // tsBuildRcv
             // 
@@ -1188,12 +1201,14 @@ namespace Mids_Reborn.UI.Forms
             tsFileSave.ShowShortcutKeys = false;
             tsFileSave.Size = new Size(273, 22);
             tsFileSave.Text = "&Save Build";
+            tsFileSave.Click += TsFileSave_Click;
             // 
             // tsFileSaveAs
             // 
             tsFileSaveAs.Name = "tsFileSaveAs";
             tsFileSaveAs.Size = new Size(273, 22);
             tsFileSaveAs.Text = "Save Build &As...";
+            tsFileSaveAs.Click += TsFileSaveAs_Click;
             // 
             // ToolStripSeparator22
             // 
@@ -1205,6 +1220,7 @@ namespace Mids_Reborn.UI.Forms
             tsGenFreebies.Name = "tsGenFreebies";
             tsGenFreebies.Size = new Size(273, 22);
             tsGenFreebies.Text = "Generate Beta Server Pop Menu...";
+            tsGenFreebies.Click += tsGenFreebies_Click;
             // 
             // ToolStripSeparator8
             // 
@@ -1218,6 +1234,7 @@ namespace Mids_Reborn.UI.Forms
             tsFilePrint.ShowShortcutKeys = false;
             tsFilePrint.Size = new Size(273, 22);
             tsFilePrint.Text = "&Print Build Summary...";
+            tsFilePrint.Click += tsFilePrint_Click;
             // 
             // ToolStripSeparator9
             // 
@@ -1342,6 +1359,7 @@ namespace Mids_Reborn.UI.Forms
             tsIODefault.Name = "tsIODefault";
             tsIODefault.Size = new Size(144, 22);
             tsIODefault.Text = "Default (35)";
+            tsIODefault.Click += tsIODefault_Click;
             // 
             // ToolStripSeparator11
             // 
@@ -1353,12 +1371,14 @@ namespace Mids_Reborn.UI.Forms
             tsIOMin.Name = "tsIOMin";
             tsIOMin.Size = new Size(144, 22);
             tsIOMin.Text = "Minimum";
+            tsIOMin.Click += tsIOMin_Click;
             // 
             // tsIOMax
             // 
             tsIOMax.Name = "tsIOMax";
             tsIOMax.Size = new Size(144, 22);
             tsIOMax.Text = "Maximum";
+            tsIOMax.Click += tsIOMax_Click;
             // 
             // ToolStripMenuItem1
             // 
@@ -1372,18 +1392,21 @@ namespace Mids_Reborn.UI.Forms
             tsEnhToSO.Name = "tsEnhToSO";
             tsEnhToSO.Size = new Size(151, 22);
             tsEnhToSO.Text = "Single Origin";
+            tsEnhToSO.Click += tsEnhToSO_Click;
             // 
             // tsEnhToDO
             // 
             tsEnhToDO.Name = "tsEnhToDO";
             tsEnhToDO.Size = new Size(151, 22);
             tsEnhToDO.Text = "Dual Origin";
+            tsEnhToDO.Click += tsEnhToDO_Click;
             // 
             // tsEnhToTO
             // 
             tsEnhToTO.Name = "tsEnhToTO";
             tsEnhToTO.Size = new Size(151, 22);
             tsEnhToTO.Text = "Training";
+            tsEnhToTO.Click += tsEnhToTO_Click;
             // 
             // ToolStripMenuItem2
             // 
@@ -1397,60 +1420,70 @@ namespace Mids_Reborn.UI.Forms
             tsEnhToPlus5.Name = "tsEnhToPlus5";
             tsEnhToPlus5.Size = new Size(221, 22);
             tsEnhToPlus5.Text = "+5 Levels";
+            tsEnhToPlus5.Click += tsEnhToPlus5_Click;
             // 
             // tsEnhToPlus4
             // 
             tsEnhToPlus4.Name = "tsEnhToPlus4";
             tsEnhToPlus4.Size = new Size(221, 22);
             tsEnhToPlus4.Text = "+4 Levels";
+            tsEnhToPlus4.Click += tsEnhToPlus4_Click;
             // 
             // tsEnhToPlus3
             // 
             tsEnhToPlus3.Name = "tsEnhToPlus3";
             tsEnhToPlus3.Size = new Size(221, 22);
             tsEnhToPlus3.Text = "+3 Levels";
+            tsEnhToPlus3.Click += tsEnhToPlus3_Click;
             // 
             // tsEnhToPlus2
             // 
             tsEnhToPlus2.Name = "tsEnhToPlus2";
             tsEnhToPlus2.Size = new Size(221, 22);
             tsEnhToPlus2.Text = "+2 Levels";
+            tsEnhToPlus2.Click += tsEnhToPlus2_Click;
             // 
             // tsEnhToPlus1
             // 
             tsEnhToPlus1.Name = "tsEnhToPlus1";
             tsEnhToPlus1.Size = new Size(221, 22);
             tsEnhToPlus1.Text = "+1 Level";
+            tsEnhToPlus1.Click += tsEnhToPlus1_Click;
             // 
             // tsEnhToEven
             // 
             tsEnhToEven.Name = "tsEnhToEven";
             tsEnhToEven.Size = new Size(221, 22);
             tsEnhToEven.Text = "Even Level";
+            tsEnhToEven.Click += tsEnhToEven_Click;
             // 
             // tsEnhToMinus1
             // 
             tsEnhToMinus1.Name = "tsEnhToMinus1";
             tsEnhToMinus1.Size = new Size(221, 22);
             tsEnhToMinus1.Text = "-1 Level";
+            tsEnhToMinus1.Click += tsEnhToMinus1_Click;
             // 
             // tsEnhToMinus2
             // 
             tsEnhToMinus2.Name = "tsEnhToMinus2";
             tsEnhToMinus2.Size = new Size(221, 22);
             tsEnhToMinus2.Text = "-2 Levels";
+            tsEnhToMinus2.Click += tsEnhToMinus2_Click;
             // 
             // tsEnhToMinus3
             // 
             tsEnhToMinus3.Name = "tsEnhToMinus3";
             tsEnhToMinus3.Size = new Size(221, 22);
             tsEnhToMinus3.Text = "-3 Levels";
+            tsEnhToMinus3.Click += tsEnhToMinus3_Click;
             // 
             // tsEnhToNone
             // 
             tsEnhToNone.Name = "tsEnhToNone";
             tsEnhToNone.Size = new Size(221, 22);
             tsEnhToNone.Text = "None (Enh has no effect)";
+            tsEnhToNone.Click += tsEnhToNone_Click;
             // 
             // ToolStripSeparator28
             // 
@@ -1469,6 +1502,7 @@ namespace Mids_Reborn.UI.Forms
             tsFlipAllEnh.Name = "tsFlipAllEnh";
             tsFlipAllEnh.Size = new Size(215, 22);
             tsFlipAllEnh.Text = "Flip All to Alternate";
+            tsFlipAllEnh.Click += tsFlipAllEnh_Click;
             // 
             // ToolStripSeparator4
             // 
@@ -1480,12 +1514,14 @@ namespace Mids_Reborn.UI.Forms
             tsClearAllEnh.Name = "tsClearAllEnh";
             tsClearAllEnh.Size = new Size(215, 22);
             tsClearAllEnh.Text = "Clear All Enhancements";
+            tsClearAllEnh.Click += tsClearAllEnh_Click;
             // 
             // tsRemoveAllSlots
             // 
             tsRemoveAllSlots.Name = "tsRemoveAllSlots";
             tsRemoveAllSlots.Size = new Size(215, 22);
             tsRemoveAllSlots.Text = "Remove All Slots";
+            tsRemoveAllSlots.Click += tsRemoveAllSlots_Click;
             // 
             // ToolStripSeparator1
             // 
@@ -1497,39 +1533,55 @@ namespace Mids_Reborn.UI.Forms
             AutoArrangeAllSlotsToolStripMenuItem.Name = "AutoArrangeAllSlotsToolStripMenuItem";
             AutoArrangeAllSlotsToolStripMenuItem.Size = new Size(215, 22);
             AutoArrangeAllSlotsToolStripMenuItem.Text = "&Auto-Arrange All Slots";
+            AutoArrangeAllSlotsToolStripMenuItem.Click += AutoArrangeAllSlotsToolStripMenuItem_Click;
             // 
             // ViewToolStripMenuItem
             // 
-            ViewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripMenuItem3, ToolStripSeparator13, toolStripMenuItem4, ToolStripSeparator2, toolStripMenuItem5, toolStripSeparator3, ToggleCheckModeToolStripMenuItem });
+            ViewToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { layoutMenuItem, themeMenuItem, ToolStripSeparator13, toolStripMenuItem4, ToolStripSeparator2, toolStripMenuItem5, toolStripSeparator3, ToggleCheckModeToolStripMenuItem });
             ViewToolStripMenuItem.ForeColor = SystemColors.ControlText;
             ViewToolStripMenuItem.Name = "ViewToolStripMenuItem";
             ViewToolStripMenuItem.Size = new Size(48, 22);
             ViewToolStripMenuItem.Text = "&View";
             // 
-            // toolStripMenuItem3
+            // layoutMenuItem
             // 
-            toolStripMenuItem3.DropDownItems.AddRange(new ToolStripItem[] { tsView2Col, tsView3Col, tsView4Col });
-            toolStripMenuItem3.Name = "toolStripMenuItem3";
-            toolStripMenuItem3.Size = new Size(276, 22);
-            toolStripMenuItem3.Text = "Layout";
+            layoutMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tsView2Col, tsView3Col, tsView4Col });
+            layoutMenuItem.Name = "layoutMenuItem";
+            layoutMenuItem.Size = new Size(276, 22);
+            layoutMenuItem.Text = "Layout";
             // 
             // tsView2Col
             // 
             tsView2Col.Name = "tsView2Col";
             tsView2Col.Size = new Size(138, 22);
             tsView2Col.Text = "2 Columns";
+            tsView2Col.Click += tsView2Col_Click;
             // 
             // tsView3Col
             // 
             tsView3Col.Name = "tsView3Col";
             tsView3Col.Size = new Size(138, 22);
             tsView3Col.Text = "3 Columns";
+            tsView3Col.Click += tsView3Col_Click;
             // 
             // tsView4Col
             // 
             tsView4Col.Name = "tsView4Col";
             tsView4Col.Size = new Size(138, 22);
             tsView4Col.Text = "4 Columns";
+            tsView4Col.Click += tsView4Col_Click;
+            // 
+            // themeMenuItem
+            // 
+            themeMenuItem.DropDownItems.AddRange(new ToolStripItem[] { toolStripSeparator15 });
+            themeMenuItem.Name = "themeMenuItem";
+            themeMenuItem.Size = new Size(276, 22);
+            themeMenuItem.Text = "Theme";
+            // 
+            // toolStripSeparator15
+            // 
+            toolStripSeparator15.Name = "toolStripSeparator15";
+            toolStripSeparator15.Size = new Size(57, 6);
             // 
             // ToolStripSeparator13
             // 
@@ -1550,30 +1602,35 @@ namespace Mids_Reborn.UI.Forms
             tsViewIOLevels.Name = "tsViewIOLevels";
             tsViewIOLevels.Size = new Size(300, 22);
             tsViewIOLevels.Text = "Show &IO Levels";
+            tsViewIOLevels.Click += tsViewIOLevels_Click;
             // 
             // tsViewSOLevels
             // 
             tsViewSOLevels.Name = "tsViewSOLevels";
             tsViewSOLevels.Size = new Size(300, 22);
             tsViewSOLevels.Text = "Show SO/HO Levels";
+            tsViewSOLevels.Click += tsViewSOLevels_Click;
             // 
             // tsViewRelative
             // 
             tsViewRelative.Name = "tsViewRelative";
             tsViewRelative.Size = new Size(300, 22);
             tsViewRelative.Text = "Show &Enhancement Relative Levels";
+            tsViewRelative.Click += tsViewRelative_Click;
             // 
             // tsViewSlotLevels
             // 
             tsViewSlotLevels.Name = "tsViewSlotLevels";
             tsViewSlotLevels.Size = new Size(300, 22);
             tsViewSlotLevels.Text = "Show &Slot Placement Levels";
+            tsViewSlotLevels.Click += tsViewSlotLevels_Click;
             // 
             // tsViewRelativeAsSigns
             // 
             tsViewRelativeAsSigns.Name = "tsViewRelativeAsSigns";
             tsViewRelativeAsSigns.Size = new Size(300, 22);
             tsViewRelativeAsSigns.Text = "Show Relative Levels with signs ('+'/'-')";
+            tsViewRelativeAsSigns.Click += tsViewRelativeAsSigns_Click;
             // 
             // ToolStripSeparator2
             // 
@@ -1594,18 +1651,21 @@ namespace Mids_Reborn.UI.Forms
             tsViewActualDamage_New.Name = "tsViewActualDamage_New";
             tsViewActualDamage_New.Size = new Size(247, 22);
             tsViewActualDamage_New.Text = "Show Damage Per Activation";
+            tsViewActualDamage_New.Click += tsViewActualDamage_New_Click;
             // 
             // tsViewDPS_New
             // 
             tsViewDPS_New.Name = "tsViewDPS_New";
             tsViewDPS_New.Size = new Size(247, 22);
             tsViewDPS_New.Text = "Show Damage Per Second";
+            tsViewDPS_New.Click += tsViewDPS_New_Click;
             // 
             // tlsDPA
             // 
             tlsDPA.Name = "tlsDPA";
             tlsDPA.Size = new Size(247, 22);
             tlsDPA.Text = "Show Damage Per Animation";
+            tlsDPA.Click += tlsDPA_Click;
             // 
             // toolStripSeparator3
             // 
@@ -1631,6 +1691,7 @@ namespace Mids_Reborn.UI.Forms
             tsShareMenu.Name = "tsShareMenu";
             tsShareMenu.Size = new Size(227, 22);
             tsShareMenu.Text = "Export / Share Build...";
+            tsShareMenu.Click += ShareMenu_Click;
             // 
             // ToolStripSeparator24
             // 
@@ -1650,22 +1711,24 @@ namespace Mids_Reborn.UI.Forms
             // 
             // importBuildFromToolStripMenuItem
             // 
-            importBuildFromToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { forumPostLegacyToolStripMenuItem, datachunkToolStripMenuItem });
+            importBuildFromToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tsImportLegacyForumPost, tsImportDataChunk });
             importBuildFromToolStripMenuItem.Name = "importBuildFromToolStripMenuItem";
             importBuildFromToolStripMenuItem.Size = new Size(227, 22);
             importBuildFromToolStripMenuItem.Text = "Import Build from...";
             // 
-            // forumPostLegacyToolStripMenuItem
+            // tsImportLegacyForumPost
             // 
-            forumPostLegacyToolStripMenuItem.Name = "forumPostLegacyToolStripMenuItem";
-            forumPostLegacyToolStripMenuItem.Size = new Size(195, 22);
-            forumPostLegacyToolStripMenuItem.Text = "Forum Post (Legacy)";
+            tsImportLegacyForumPost.Name = "tsImportLegacyForumPost";
+            tsImportLegacyForumPost.Size = new Size(195, 22);
+            tsImportLegacyForumPost.Text = "Forum Post (Legacy)";
+            tsImportLegacyForumPost.Click += tsImportLegacyForumPost_Click;
             // 
-            // datachunkToolStripMenuItem
+            // tsImportDataChunk
             // 
-            datachunkToolStripMenuItem.Name = "datachunkToolStripMenuItem";
-            datachunkToolStripMenuItem.Size = new Size(195, 22);
-            datachunkToolStripMenuItem.Text = "Datachunk";
+            tsImportDataChunk.Name = "tsImportDataChunk";
+            tsImportDataChunk.Size = new Size(195, 22);
+            tsImportDataChunk.Text = "Datachunk";
+            tsImportDataChunk.Click += tsImportChunk_Click;
             // 
             // ToolStripSeparator27
             // 
@@ -1677,6 +1740,7 @@ namespace Mids_Reborn.UI.Forms
             tsViewSharedBuilds.Name = "tsViewSharedBuilds";
             tsViewSharedBuilds.Size = new Size(227, 22);
             tsViewSharedBuilds.Text = "View Shared Build Library";
+            tsViewSharedBuilds.Click += tsViewSharedBuilds_Click;
             // 
             // WindowToolStripMenuItem
             // 
@@ -1693,6 +1757,7 @@ namespace Mids_Reborn.UI.Forms
             tsViewSets.ShowShortcutKeys = false;
             tsViewSets.Size = new Size(214, 22);
             tsViewSets.Text = "&Sets && Bonuses";
+            tsViewSets.Click += tsViewSets_Click;
             // 
             // tsViewGraphs
             // 
@@ -1701,6 +1766,7 @@ namespace Mids_Reborn.UI.Forms
             tsViewGraphs.ShowShortcutKeys = false;
             tsViewGraphs.Size = new Size(214, 22);
             tsViewGraphs.Text = "Power &Graphs";
+            tsViewGraphs.Click += tsViewGraphs_Click;
             // 
             // tsViewSetCompare
             // 
@@ -1709,6 +1775,7 @@ namespace Mids_Reborn.UI.Forms
             tsViewSetCompare.ShowShortcutKeys = false;
             tsViewSetCompare.Size = new Size(214, 22);
             tsViewSetCompare.Text = "Powerset &Comparison";
+            tsViewSetCompare.Click += tsViewSetCompare_Click;
             // 
             // tsViewData
             // 
@@ -1717,12 +1784,14 @@ namespace Mids_Reborn.UI.Forms
             tsViewData.ShowShortcutKeys = false;
             tsViewData.Size = new Size(214, 22);
             tsViewData.Text = "&Power Data";
+            tsViewData.Click += tsViewData_Click;
             // 
             // tsSetFind
             // 
             tsSetFind.Name = "tsSetFind";
             tsSetFind.Size = new Size(214, 22);
             tsSetFind.Text = "Set &Inspector";
+            tsSetFind.Click += tsSetFind_Click;
             // 
             // ToolStripSeparator18
             // 
@@ -1736,6 +1805,7 @@ namespace Mids_Reborn.UI.Forms
             tsRecipeViewer.ShowShortcutKeys = false;
             tsRecipeViewer.Size = new Size(214, 22);
             tsRecipeViewer.Text = "&Recipe Viewer";
+            tsRecipeViewer.Click += tsRecipeViewer_Click;
             // 
             // tsRotationHelper
             // 
@@ -1744,6 +1814,7 @@ namespace Mids_Reborn.UI.Forms
             tsRotationHelper.ShowShortcutKeys = false;
             tsRotationHelper.Size = new Size(214, 22);
             tsRotationHelper.Text = "Rotation Helper (Beta)";
+            tsRotationHelper.Click += tsRotationHelper_Click;
             // 
             // ToolStripSeparator19
             // 
@@ -1762,12 +1833,14 @@ namespace Mids_Reborn.UI.Forms
             tsHelperShort.Name = "tsHelperShort";
             tsHelperShort.Size = new Size(148, 22);
             tsHelperShort.Text = "Profile &Short";
+            tsHelperShort.Click += tsHelperShort_Click;
             // 
             // tsHelperLong
             // 
             tsHelperLong.Name = "tsHelperLong";
             tsHelperLong.Size = new Size(148, 22);
             tsHelperLong.Text = "Profile &Long";
+            tsHelperLong.Click += tsHelperLong_Click;
             // 
             // toolStripSeparator5
             // 
@@ -1779,12 +1852,14 @@ namespace Mids_Reborn.UI.Forms
             tsConfig.Name = "tsConfig";
             tsConfig.Size = new Size(214, 22);
             tsConfig.Text = "&Options...";
+            tsConfig.Click += tsConfig_Click;
             // 
             // tsAdvDBEdit
             // 
             tsAdvDBEdit.Name = "tsAdvDBEdit";
             tsAdvDBEdit.Size = new Size(214, 22);
             tsAdvDBEdit.Text = "&Database Editor Suite";
+            tsAdvDBEdit.Click += tsAdvDBEdit_Click;
             // 
             // HelpToolStripMenuItem
             // 
@@ -1816,6 +1891,7 @@ namespace Mids_Reborn.UI.Forms
             tsUpdateCheck.Name = "tsUpdateCheck";
             tsUpdateCheck.Size = new Size(198, 22);
             tsUpdateCheck.Text = "Check for &Updates";
+            tsUpdateCheck.Click += tsUpdateCheck_Click;
             // 
             // ToolStripSeparator10
             // 
@@ -1833,12 +1909,14 @@ namespace Mids_Reborn.UI.Forms
             tsSupport.Name = "tsSupport";
             tsSupport.Size = new Size(198, 22);
             tsSupport.Text = "Join our Discord...";
+            tsSupport.Click += tsSupport_Click;
             // 
             // tsGitHub
             // 
             tsGitHub.Name = "tsGitHub";
             tsGitHub.Size = new Size(198, 22);
             tsGitHub.Text = "Project on GiHub...";
+            tsGitHub.Click += Github_Link;
             // 
             // ToolStripSeparator31
             // 
@@ -1850,35 +1928,36 @@ namespace Mids_Reborn.UI.Forms
             tsAbout.Name = "tsAbout";
             tsAbout.Size = new Size(198, 22);
             tsAbout.Text = "About Mids Reborn...";
+            tsAbout.Click += tsAbout_Click;
             // 
-            // iconMenuItem1
+            // supportIconMenuItem
             // 
-            iconMenuItem1.Alignment = ToolStripItemAlignment.Right;
-            iconMenuItem1.DropDownItems.AddRange(new ToolStripItem[] { iconMenuItem2, iconMenuItem3 });
-            iconMenuItem1.IconChar = FontAwesome.Sharp.IconChar.Heart;
-            iconMenuItem1.IconColor = Color.Red;
-            iconMenuItem1.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconMenuItem1.Name = "iconMenuItem1";
-            iconMenuItem1.Size = new Size(161, 22);
-            iconMenuItem1.Text = "Support Mids Reborn";
+            supportIconMenuItem.Alignment = ToolStripItemAlignment.Right;
+            supportIconMenuItem.DropDownItems.AddRange(new ToolStripItem[] { kofiIconMenuItem, patreonIconMenuItem });
+            supportIconMenuItem.IconChar = FontAwesome.Sharp.IconChar.Heart;
+            supportIconMenuItem.IconColor = Color.Red;
+            supportIconMenuItem.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            supportIconMenuItem.Name = "supportIconMenuItem";
+            supportIconMenuItem.Size = new Size(161, 22);
+            supportIconMenuItem.Text = "Support Mids Reborn";
             // 
-            // iconMenuItem2
+            // kofiIconMenuItem
             // 
-            iconMenuItem2.IconChar = FontAwesome.Sharp.IconChar.MugHot;
-            iconMenuItem2.IconColor = Color.White;
-            iconMenuItem2.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconMenuItem2.Name = "iconMenuItem2";
-            iconMenuItem2.Size = new Size(236, 22);
-            iconMenuItem2.Text = "Ko-Fi (Buy us a coffee)";
+            kofiIconMenuItem.IconChar = FontAwesome.Sharp.IconChar.MugHot;
+            kofiIconMenuItem.IconColor = Color.White;
+            kofiIconMenuItem.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            kofiIconMenuItem.Name = "kofiIconMenuItem";
+            kofiIconMenuItem.Size = new Size(236, 22);
+            kofiIconMenuItem.Text = "Ko-Fi (Buy us a coffee)";
             // 
-            // iconMenuItem3
+            // patreonIconMenuItem
             // 
-            iconMenuItem3.IconChar = FontAwesome.Sharp.IconChar.Patreon;
-            iconMenuItem3.IconColor = Color.OrangeRed;
-            iconMenuItem3.IconFont = FontAwesome.Sharp.IconFont.Auto;
-            iconMenuItem3.Name = "iconMenuItem3";
-            iconMenuItem3.Size = new Size(236, 22);
-            iconMenuItem3.Text = "Patreon  (Become a patron)";
+            patreonIconMenuItem.IconChar = FontAwesome.Sharp.IconChar.Patreon;
+            patreonIconMenuItem.IconColor = Color.OrangeRed;
+            patreonIconMenuItem.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            patreonIconMenuItem.Name = "patreonIconMenuItem";
+            patreonIconMenuItem.Size = new Size(236, 22);
+            patreonIconMenuItem.Text = "Patreon  (Become a patron)";
             // 
             // DlgOpen
             // 
@@ -1908,6 +1987,7 @@ namespace Mids_Reborn.UI.Forms
             btnMinimize.TabIndex = 0;
             tTip.SetToolTip(btnMinimize, "Minimize");
             btnMinimize.UseVisualStyleBackColor = false;
+            btnMinimize.Click += BtnMinimize_Click;
             // 
             // btnMaximize
             // 
@@ -1927,6 +2007,7 @@ namespace Mids_Reborn.UI.Forms
             btnMaximize.TabIndex = 1;
             tTip.SetToolTip(btnMaximize, "Maximize");
             btnMaximize.UseVisualStyleBackColor = false;
+            btnMaximize.Click += BtnMaximize_Click;
             // 
             // btnClose
             // 
@@ -1947,6 +2028,7 @@ namespace Mids_Reborn.UI.Forms
             btnClose.TabIndex = 2;
             tTip.SetToolTip(btnClose, "Close");
             btnClose.UseVisualStyleBackColor = false;
+            btnClose.Click += BtnClose_Click;
             // 
             // titlePanel
             // 
@@ -1961,6 +2043,7 @@ namespace Mids_Reborn.UI.Forms
             titlePanel.Name = "titlePanel";
             titlePanel.Size = new Size(1260, 35);
             titlePanel.TabIndex = 104;
+            titlePanel.MouseDown += Title_MouseDown;
             // 
             // logoPanel
             // 
@@ -1969,6 +2052,7 @@ namespace Mids_Reborn.UI.Forms
             logoPanel.Name = "logoPanel";
             logoPanel.Size = new Size(103, 35);
             logoPanel.TabIndex = 6;
+            logoPanel.MouseDown += Title_MouseDown;
             // 
             // titleLabel
             // 
@@ -1980,6 +2064,7 @@ namespace Mids_Reborn.UI.Forms
             titleLabel.TabIndex = 5;
             titleLabel.Text = "v4.0 Alpha (build 1.711)";
             titleLabel.TextAlign = ContentAlignment.MiddleCenter;
+            titleLabel.MouseDown += Title_MouseDown;
             // 
             // MainWindow2
             // 
@@ -2123,7 +2208,7 @@ namespace Mids_Reborn.UI.Forms
         private FontAwesome.Sharp.IconButton btnMinimize;
         private Label titleLabel;
         private MidsLogoPanel logoPanel;
-        private ToolStripMenuItem toolStripMenuItem3;
+        private ToolStripMenuItem layoutMenuItem;
         private ToolStripMenuItem tsView2Col;
         private ToolStripMenuItem tsView3Col;
         private ToolStripMenuItem tsView4Col;
@@ -2148,17 +2233,17 @@ namespace Mids_Reborn.UI.Forms
         private ToolStripMenuItem toolStripMenuItem6;
         private ToolStripSeparator toolStripSeparator6;
         private ToolStripMenuItem importBuildFromToolStripMenuItem;
-        private ToolStripMenuItem forumPostLegacyToolStripMenuItem;
-        private ToolStripMenuItem datachunkToolStripMenuItem;
+        private ToolStripMenuItem tsImportLegacyForumPost;
+        private ToolStripMenuItem tsImportDataChunk;
         private ToolStripSeparator toolStripSeparator5;
         private ToolStripMenuItem tsConfig;
         private ToolStripMenuItem tsAdvDBEdit;
         private ToolStripMenuItem toolStripMenuItem7;
         private ToolStripMenuItem toolStripMenuItem8;
         private ToolStripSeparator toolStripSeparator12;
-        private FontAwesome.Sharp.IconMenuItem iconMenuItem1;
-        private FontAwesome.Sharp.IconMenuItem iconMenuItem2;
-        private FontAwesome.Sharp.IconMenuItem iconMenuItem3;
+        private FontAwesome.Sharp.IconMenuItem supportIconMenuItem;
+        private FontAwesome.Sharp.IconMenuItem kofiIconMenuItem;
+        private FontAwesome.Sharp.IconMenuItem patreonIconMenuItem;
         private ToolStripMenuItem tsBuildRcv;
         private ToolStripSeparator toolStripSeparator14;
         private ToolStripMenuItem toolStripMenuItem9;
@@ -2196,5 +2281,7 @@ namespace Mids_Reborn.UI.Forms
         private Label pool1Label;
         private PowersetDropDownList pool0DropDown;
         private MidsBufferedImagePanel canvas;
+        private ToolStripMenuItem themeMenuItem;
+        private ToolStripSeparator toolStripSeparator15;
     }
 }

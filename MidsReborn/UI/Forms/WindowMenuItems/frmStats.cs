@@ -29,7 +29,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             Regeneration
         }
         
-        private readonly MainWindow myParent;
+        private readonly MainWindow2 myParent;
 
         private IPower[] BaseArray;
         private bool BaseOverride;
@@ -55,6 +55,28 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private DisplayMode StatDisplayed;
 
         public frmStats(ref MainWindow iParent)
+        {
+            FormClosed += frmStats_FormClosed;
+            Load += frmStats_Load;
+            Move += frmStats_Move;
+            Resize += frmStats_Resize;
+            //VisibleChanged += frmStats_VisibleChanged;
+            BaseArray = Array.Empty<IPower?>();
+            EnhArray = Array.Empty<IPower?>();
+            GraphMax = 1;
+            BaseOverride = false;
+            Loaded = false;
+            SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint, true);
+            InitializeComponent();
+            btnClose.Click += btnClose_Click;
+            chkOnTop.Click += chkOnTop_Click;
+            Name = nameof(frmStats);
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmStats));
+            Icon = Resources.MRB_Icon_Concept;
+            //myParent = iParent;
+        }
+
+        public frmStats(ref MainWindow2 iParent)
         {
             FormClosed += frmStats_FormClosed;
             Load += frmStats_Load;

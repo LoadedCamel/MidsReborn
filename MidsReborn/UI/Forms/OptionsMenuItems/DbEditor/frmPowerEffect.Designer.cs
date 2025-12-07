@@ -521,7 +521,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             cbTarget.Dock = System.Windows.Forms.DockStyle.Fill;
             cbTarget.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
-            cbTarget.Items.AddRange(new object[] { "Any", "Mobs", "Players" });
+            cbTarget.Items.AddRange(new object[] { "Any", "Critters", "Players" });
             cbTarget.Location = new System.Drawing.Point(108, 68);
             cbTarget.Margin = new System.Windows.Forms.Padding(4);
             cbTarget.Name = "cbTarget";

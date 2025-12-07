@@ -1021,7 +1021,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             Label18.Name = "Label18";
             Label18.Size = new System.Drawing.Size(122, 23);
             Label18.TabIndex = 33;
-            Label18.Text = "Notify Mobs:";
+            Label18.Text = "Notify AI:";
             Label18.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             // 
             // GroupBox9

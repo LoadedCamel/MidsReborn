@@ -11,7 +11,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 {
     public partial class frmTemp : Form
     {
-        private readonly MainWindow _myParent;
+        private readonly MainWindow2 _myParent;
 
         private bool _locked;
 
@@ -30,6 +30,20 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private VScrollBar VScrollBar1;
 
         public frmTemp(MainWindow iParent, List<IPower?> iPowers)
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
+            CenterToParent();
+            Location = new Point(Location.X, Location.Y - 100);
+            Load += frmTemp_Load;
+            _locked = false;
+            InitializeComponent();
+            Icon = Resources.MRB_Icon_Concept;
+            Name = nameof(frmTemp);
+            //_myParent = iParent;
+            _myPowers = iPowers;
+        }
+
+        public frmTemp(MainWindow2 iParent, List<IPower?> iPowers)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
             CenterToParent();
@@ -193,7 +207,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
                 llLeft.Refresh();
                 _myParent.PowerModified(false);
-                _myParent.DoRefresh();
+                //_myParent.DoRefresh();
             }
         }
 
@@ -242,7 +256,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
                 llRight.Refresh();
                 _myParent.PowerModified(false);
-                _myParent.DoRefresh();
+                //_myParent.DoRefresh();
             }
         }
 

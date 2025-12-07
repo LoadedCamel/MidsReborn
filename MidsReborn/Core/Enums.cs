@@ -499,92 +499,92 @@ namespace Mids_Reborn.Core
 
         public enum eEffectTypeShort
         {
-            None,
-            Acc,
-            Anlyz,
-            Dmg,
-            DamBuff,
-            Def,
-            ToglDrop,
-            Endrnce,
-            EndRdx,
-            Enhance,
-            Fly,
-            FlySpd,
-            Grant,
-            Heal,
-            HP,
-            ActRdx,
-            Jump,
-            JumpSpd,
-            Meter,
-            Mez,
-            MezRes,
-            MveCtrl,
-            MveFrctn,
-            Pceptn,
-            Rng,
-            Rechg,
-            EndRec,
-            Regen,
-            ResEffect,
-            Res,
-            Revke,
-            Reward,
-            RunSpd,
-            Costume,
-            Smode,
-            Slow,
-            StealthR,
-            StealthP,
-            Summon,
-            ThreatLvl,
-            ToHit,
-            Tnslncy,
-            DebtProt,
-            Expire,
-            Elsvty,
-            GlobalChance,
-            LvlShift,
-            ClrMode,
-            Fury,
-            MaxRunSpd,
-            MaxJumpSpd,
-            MaxFlySpd,
-            DeStatus,
-            Redirect,
-            TokenAdd,
-            RDebuff1,
-            RDebuff2,
-            RDebuff3,
-            AddBehav,
-            RechPower,
-            LostCure,
-            VisionPhase,
-            CombatPhase,
-            ClearFog,
-            SetSZEValue,
-            ExVisionPhase,
-            Absorb,
-            Afraid,
-            Avoid,
-            BeastRun,
-            ClearDamagers,
-            EntCreate,
-            Glide,
-            Hoverboard,
-            Jumppack,
-            MagicCarpet,
-            NinjaRun,
-            Null,
-            NullBool,
-            Stealth,
-            SteamJump,
-            Walk,
-            XPDebt,
-            ForceMove,
-            ModifyAttrib,
-            ExecPower
+            None,           // None
+            Acc,            // Accuracy
+            View,           // ViewAttrib
+            Dmg,            // Damage
+            DmgStr,         // DamageBuff (outgoing damage strength)
+            Def,            // Defense
+            DropTog,        // DropToggles
+            End,            // Endurance (kept special-case)
+            EndCost,        // EnduranceDiscount (end cost reduction)
+            EffStr,         // Enhancement (Effect Strength)
+            Fly,            // Fly
+            FlySpd,         // SpeedFlying
+            Grant,          // GrantPower
+            Heal,           // Heal
+            HP,             // HitPoints (Max HP)
+            Interrupt,      // InterruptTime
+            Jump,           // JumpHeight
+            JumpSpd,        // SpeedJumping
+            Meter,          // Meter
+            Mez,            // Mez (status effects)
+            MezProt,        // MezResist (Status Protection)
+            MoveCtrl,       // MovementControl
+            MoveFric,       // MovementFriction
+            Percep,         // PerceptionRadius
+            Range,          // Range
+            Rech,           // RechargeTime
+            EndRec,         // Recovery (end/sec)
+            Regen,          // Regeneration (hp/sec)
+            SEffRes,        // ResEffect (Status Effect Resistance / Debuff Resist)
+            Res,            // Resistance (damage resist)
+            Revoke,         // RevokePower
+            Reward,         // Reward
+            RunSpd,         // SpeedRunning
+            Costume,        // SetCostume
+            ModeSet,        // SetMode
+            Slow,           // Slow
+            StealthR,       // StealthRadius
+            StealthP,       // StealthRadiusPlayer
+            Summon,         // EntCreate (Summon / Pseudopet)
+            Threat,         // ThreatLevel
+            ToHit,          // ToHit
+            Transluc,       // Translucency
+            DebtProt,       // XPDebtProtection
+            SilentKill,     // SilentKill
+            Elusivity,      // Elusivity
+            ProcChance,     // GlobalChanceMod (global proc chance mod)
+            LvlShift,       // LevelShift
+            ModeClr,        // UnsetMode
+            Rage,           // Rage
+            MaxRun,         // MaxRunSpeed
+            MaxJump,        // MaxJumpSpeed
+            MaxFly,         // MaxFlySpeed
+            Designer,       // DesignerStatus
+            Redirect,       // PowerRedirect
+            TokenAdd,       // TokenAdd
+            XPGain,         // ExperienceGain
+            InfGain,        // InfluenceGain
+            PrstgGain,      // PrestigeGain
+            AddBehav,       // AddBehavior
+            RechPower,      // RechargePower
+            TeamReward,     // RewardSourceTeam
+            VisionPh,       // VisionPhase
+            CombatPh,       // CombatPhase
+            ClearFog,       // ClearFog
+            SZEValue,       // SetSZEValue
+            ExVisionPh,     // ExclusiveVisionPhase
+            Absorb,         // Absorb
+            Afraid,         // XAfraid
+            Avoid,          // XAvoid
+            BeastRun,       // BeastRun
+            ClearDmg,       // ClearDamagers
+            SummonX,        // EntCreate_x
+            Glide,          // Glide
+            Hoverboard,     // Hoverboard
+            Jumppack,       // Jumppack
+            MagicCarpet,    // MagicCarpet
+            NinjaRun,       // NinjaRun
+            Null,           // Null
+            NullBool,       // NullBool
+            Stealth,        // Stealth
+            SteamJump,      // SteamJump
+            Walk,           // Walk
+            XPDebt,         // XPDebt
+            ForceMove,      // ForceMove
+            ModAttrib,      // ModifyAttrib
+            ExecPower       // ExecutePower
         }
 
         public enum ePowerAttribs
@@ -1466,9 +1466,9 @@ namespace Mids_Reborn.Core
             return iID.ToString();
         }
 
-        public static string GetEffectNameShort(eEffectType iID)
+        public static string GetEffectNameShort(eEffectType effectType)
         {
-            return iID != eEffectType.Endurance ? ((eEffectTypeShort) iID).ToString() : "End";
+            return ((eEffectTypeShort)effectType).ToString();
         }
 
         public static string GetMezName(eMezShort iID)

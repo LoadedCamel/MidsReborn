@@ -5,10 +5,21 @@ namespace Mids_Reborn.UI.Forms
 {
     public partial class frmBuildSalvageHud : Form
     {
-        private readonly MainWindow _myParent;
+        private readonly MainWindow2 _myParent;
         private bool _executeOnCloseUpdates = true;
 
         public frmBuildSalvageHud(MainWindow iParent)
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            InitializeComponent();
+            Icon = Resources.MRB_Icon_Concept;
+            Load += frmBuildSalvageHud_Load;
+            Closed += frmBuildSalvageHud_Closed;
+            //_myParent = iParent;
+            Opacity = 0.9d;
+        }
+
+        public frmBuildSalvageHud(MainWindow2 iParent)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             InitializeComponent();
@@ -49,7 +60,7 @@ namespace Mids_Reborn.UI.Forms
             UpdateColorTheme();
             RecalcSalvage();
             MidsContext.EnhCheckMode = true;
-            _myParent.UpdateEnhCheckModeToolStrip();
+            //_myParent.UpdateEnhCheckModeToolStrip();
             _myParent.DoRedraw();
             RecalcSalvage();
             _myParent.Activate();
@@ -60,7 +71,7 @@ namespace Mids_Reborn.UI.Forms
             if (_executeOnCloseUpdates)
             {
                 MidsContext.EnhCheckMode = false;
-                _myParent.UpdateEnhCheckModeToolStrip();
+                //_myParent.UpdateEnhCheckModeToolStrip();
                 _myParent.DoRedraw();
             }
 

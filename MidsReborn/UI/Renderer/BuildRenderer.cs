@@ -1,15 +1,16 @@
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Theming;
 using Mids_Reborn.Core.Utils;
+using Mids_Reborn.UI.Theming;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
-using Mids_Reborn.Core.Base.Extensions;
-using Mids_Reborn.UI.Theming;
+using Windows.ApplicationModel;
 using static Mids_Reborn.Core.Enums;
 
 namespace Mids_Reborn.UI.Renderer
@@ -120,21 +121,6 @@ namespace Mids_Reborn.UI.Renderer
             LicenseManager.UsageMode == LicenseUsageMode.Designtime ||
             AppDomain.CurrentDomain.FriendlyName.Contains("devenv");
 
-        public BuildRenderer(Control targetControl)
-        {
-            InterfaceMode = eInterfaceMode.Normal;
-            _vcCols = 6;
-            _vcRowsPowers = 24;
-            BxPower = [];
-            _cTarget = targetControl;
-            _backColor = targetControl.BackColor;
-            _defaultFont = new Font(Fonts.Family("Noto Sans"), _currentFontSize);
-
-            InitColumns = MidsContext.Config.Columns;
-            ColorSwitch();
-            Initialize(); // Load images + buffer setup
-        }
-
         private PowerSlotTheme CurrentTheme
         {
             get
@@ -145,6 +131,21 @@ namespace Mids_Reborn.UI.Renderer
                 }
                 return ThemeManager.CurrentTheme?.PowerSlot ?? ThemeManager.DesignTime.PowerSlot;
             }
+        }
+
+        public BuildRenderer(Control targetControl)
+        {
+            InterfaceMode = eInterfaceMode.Normal;
+            _vcCols = 6;
+            _vcRowsPowers = 24;
+            BxPower = [];
+            _cTarget = targetControl;
+            _backColor = targetControl.BackColor;
+            _defaultFont = new Font("Segoe UI", _currentFontSize);
+
+            InitColumns = MidsContext.Config.Columns;
+            ColorSwitch();
+            Initialize(); // Load images + buffer setup
         }
 
         public static bool EpicColumns => MidsContext.Character is { Archetype.ClassType: eClassType.HeroEpic };
@@ -330,7 +331,7 @@ namespace Mids_Reborn.UI.Renderer
             int y = mainGridBottom + (inherentGridTop - mainGridBottom) / 2 + ScaleLogical(30);
 
             using var pen = new Pen(Color.Goldenrod, 2f);
-            using var font = new Font(Fonts.Family("Noto Sans"), 13f, FontStyle.Regular, GraphicsUnit.Pixel);
+            using var font = new Font("Segoe UI", 13f, FontStyle.Regular, GraphicsUnit.Pixel);
             var brush = MidsContext.Character.IsHero() ? Brushes.DodgerBlue : Brushes.Red;
 
             string label = "Inherent Powers";
@@ -1314,7 +1315,7 @@ namespace Mids_Reborn.UI.Renderer
                 return;
             }
 
-            using var textFont = new Font(Fonts.Family("Noto Sans"), 9f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
+            using var textFont = new Font("Segoe UI", 9f, FontStyle.Bold, GraphicsUnit.Pixel, 0);
             var powerSets = GetDistinctPowersets();
 
             int y = ScaleLogical(2);

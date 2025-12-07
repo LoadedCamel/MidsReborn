@@ -90,15 +90,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             var imageFile = FileIO.StripPath(ImagePicker.FileName);
-            if (!File.Exists(Path.Combine(AssetManager.GetDbPowerSetsPath(), imageFile)))
-            {
-                MessageBox.Show($"You must select an image from the {AssetManager.GetDbPowerSetsPath()} folder!\r\n\r\nIf you are adding a new image, you should copy it to the folder and then select it.", @"Select Image", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-            }
-            else
-            {
-                MyPowerSet.ImageName = imageFile;
-                DisplayIcon();
-            }
+
+            MyPowerSet.ImageName = imageFile;
+            DisplayIcon();
         }
 
         private string BuildFullName()

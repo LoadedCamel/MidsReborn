@@ -208,6 +208,7 @@ namespace Mids_Reborn.UI.Forms
             DlgSave = new SaveFileDialog();
             tTip = new ToolTip(components);
             tmrGfx = new System.Windows.Forms.Timer(components);
+            panel1 = new Panel();
             mainLayoutPanel.SuspendLayout();
             buttonsLayoutPanel.SuspendLayout();
             pnlGFXFlow.SuspendLayout();
@@ -843,6 +844,7 @@ namespace Mids_Reborn.UI.Forms
             leftInsidePanel.Controls.Add(lblPrimary, 0, 0);
             leftInsidePanel.Controls.Add(llPrimary, 0, 2);
             leftInsidePanel.Controls.Add(llSecondary, 1, 2);
+            leftInsidePanel.Controls.Add(panel1, 0, 4);
             leftInsidePanel.Dock = DockStyle.Left;
             leftInsidePanel.Location = new Point(3, 121);
             leftInsidePanel.Name = "leftInsidePanel";
@@ -850,8 +852,9 @@ namespace Mids_Reborn.UI.Forms
             leftControlPanel.SetRowSpan(leftInsidePanel, 2);
             leftInsidePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 3.97983551F));
             leftInsidePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 7.075263F));
-            leftInsidePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 44.97214F));
-            leftInsidePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 43.97276F));
+            leftInsidePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 77.73585F));
+            leftInsidePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 11.6981134F));
+            leftInsidePanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 370F));
             leftInsidePanel.Size = new Size(331, 637);
             leftInsidePanel.TabIndex = 145;
             // 
@@ -861,7 +864,7 @@ namespace Mids_Reborn.UI.Forms
             lblLockedSecondary.BorderStyle = BorderStyle.Fixed3D;
             lblLockedSecondary.Font = new Font("Segoe UI", 8.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
             lblLockedSecondary.ForeColor = Color.Black;
-            lblLockedSecondary.Location = new Point(3, 356);
+            lblLockedSecondary.Location = new Point(3, 234);
             lblLockedSecondary.Name = "lblLockedSecondary";
             lblLockedSecondary.Size = new Size(92, 29);
             lblLockedSecondary.TabIndex = 150;
@@ -876,7 +879,7 @@ namespace Mids_Reborn.UI.Forms
             cbSecondary.DropDownStyle = ComboBoxStyle.DropDownList;
             cbSecondary.ForeColor = Color.Black;
             cbSecondary.ItemHeight = 16;
-            cbSecondary.Location = new Point(168, 28);
+            cbSecondary.Location = new Point(168, 13);
             cbSecondary.MaxDropDownItems = 15;
             cbSecondary.Name = "cbSecondary";
             cbSecondary.Size = new Size(160, 22);
@@ -893,7 +896,7 @@ namespace Mids_Reborn.UI.Forms
             lblSecondary.ForeColor = Color.White;
             lblSecondary.Location = new Point(168, 0);
             lblSecondary.Name = "lblSecondary";
-            lblSecondary.Size = new Size(160, 25);
+            lblSecondary.Size = new Size(160, 10);
             lblSecondary.TabIndex = 146;
             lblSecondary.Text = "Secondary Power Set";
             lblSecondary.TextAlign = ContentAlignment.MiddleCenter;
@@ -906,7 +909,7 @@ namespace Mids_Reborn.UI.Forms
             cbPrimary.DropDownStyle = ComboBoxStyle.DropDownList;
             cbPrimary.ForeColor = Color.Black;
             cbPrimary.ItemHeight = 16;
-            cbPrimary.Location = new Point(3, 28);
+            cbPrimary.Location = new Point(3, 13);
             cbPrimary.MaxDropDownItems = 15;
             cbPrimary.Name = "cbPrimary";
             cbPrimary.Size = new Size(159, 22);
@@ -923,7 +926,7 @@ namespace Mids_Reborn.UI.Forms
             lblPrimary.ForeColor = Color.White;
             lblPrimary.Location = new Point(3, 0);
             lblPrimary.Name = "lblPrimary";
-            lblPrimary.Size = new Size(159, 25);
+            lblPrimary.Size = new Size(159, 10);
             lblPrimary.TabIndex = 145;
             lblPrimary.Text = "Primary Power Set";
             lblPrimary.TextAlign = ContentAlignment.MiddleCenter;
@@ -935,7 +938,7 @@ namespace Mids_Reborn.UI.Forms
             llPrimary.HighVis = true;
             llPrimary.HoverColor = Color.WhiteSmoke;
             llPrimary.IsExpanded = false;
-            llPrimary.Location = new Point(3, 73);
+            llPrimary.Location = new Point(3, 31);
             llPrimary.MaxHeight = 600;
             llPrimary.Name = "llPrimary";
             llPrimary.PaddingX = 4;
@@ -944,7 +947,7 @@ namespace Mids_Reborn.UI.Forms
             llPrimary.ScrollBarColor = Color.Red;
             llPrimary.ScrollBarWidth = 11;
             llPrimary.ScrollButtonColor = Color.FromArgb(192, 0, 0);
-            llPrimary.Size = new Size(144, 175);
+            llPrimary.Size = new Size(144, 200);
             llPrimary.SizeNormal = new Size(145, 175);
             llPrimary.SuspendRedraw = false;
             llPrimary.TabIndex = 148;
@@ -958,7 +961,7 @@ namespace Mids_Reborn.UI.Forms
             llSecondary.HighVis = true;
             llSecondary.HoverColor = Color.WhiteSmoke;
             llSecondary.IsExpanded = false;
-            llSecondary.Location = new Point(168, 73);
+            llSecondary.Location = new Point(168, 31);
             llSecondary.MaxHeight = 600;
             llSecondary.Name = "llSecondary";
             llSecondary.PaddingX = 4;
@@ -967,7 +970,7 @@ namespace Mids_Reborn.UI.Forms
             llSecondary.ScrollBarColor = Color.Red;
             llSecondary.ScrollBarWidth = 11;
             llSecondary.ScrollButtonColor = Color.FromArgb(192, 0, 0);
-            llSecondary.Size = new Size(153, 175);
+            llSecondary.Size = new Size(153, 200);
             llSecondary.SizeNormal = new Size(145, 175);
             llSecondary.SuspendRedraw = false;
             llSecondary.TabIndex = 149;
@@ -1986,6 +1989,15 @@ namespace Mids_Reborn.UI.Forms
             tTip.InitialDelay = 500;
             tTip.ReshowDelay = 100;
             // 
+            // panel1
+            // 
+            leftInsidePanel.SetColumnSpan(panel1, 2);
+            panel1.Dock = DockStyle.Fill;
+            panel1.Location = new Point(3, 268);
+            panel1.Name = "panel1";
+            panel1.Size = new Size(325, 366);
+            panel1.TabIndex = 151;
+            // 
             // MainWindow
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -2192,5 +2204,6 @@ namespace Mids_Reborn.UI.Forms
         private ListLabel llPool3;
         private ListLabel llAncillary;
         private Label lblLockedSecondary;
+        private Panel panel1;
     }
 }

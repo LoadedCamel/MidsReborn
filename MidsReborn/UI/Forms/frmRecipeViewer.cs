@@ -12,7 +12,7 @@ namespace Mids_Reborn.UI.Forms
     public partial class frmRecipeViewer : Form
     {
         private readonly ExtendedBitmap bxRecipe;
-        private readonly MainWindow myParent;
+        private readonly MainWindow2 myParent;
 
         private ImageButton ibClipboard;
         private ImageButton ibClose;
@@ -25,6 +25,30 @@ namespace Mids_Reborn.UI.Forms
         private ctlPopUp RecipeInfo;
 
         public frmRecipeViewer(MainWindow iParent)
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            FormClosed += frmRecipeViewer_FormClosed;
+            Load += frmRecipeViewer_Load;
+            Loading = true;
+            InitializeComponent();
+            Name = nameof(frmRecipeViewer);
+            Icon = Resources.MRB_Icon_Concept;
+            lvPower.MouseEnter += lvPower_MouseEnter;
+            lvPower.ItemChecked += lvPower_ItemChecked;
+            lvDPA.SelectedIndexChanged += lvDPA_SelectedIndexChanged;
+            lvDPA.MouseEnter += lvDPA_MouseEnter;
+            chkRecipe.CheckedChanged += chkRecipe_CheckedChanged;
+            chkSortByLevel.CheckedChanged += chkSortByLevel_CheckedChanged;
+            ibClipboard.ButtonClicked += ibClipboard_ButtonClicked;
+            ibClose.ButtonClicked += ibClose_ButtonClicked;
+            ibMiniList.ButtonClicked += ibMiniList_ButtonClicked;
+            ibTopmost.ButtonClicked += ibTopmost_ButtonClicked;
+            ibEnhCheckMode.ButtonClicked += ibEnhCheckMode_ButtonClicked;
+            //myParent = iParent;
+            bxRecipe = new ExtendedBitmap(AssetManager.RecipeIconTransparent);
+        }
+
+        public frmRecipeViewer(MainWindow2 iParent)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             FormClosed += frmRecipeViewer_FormClosed;
@@ -708,7 +732,7 @@ namespace Mids_Reborn.UI.Forms
                 MidsContext.EnhCheckMode = false;
                 ibEnhCheckMode.Checked = false;
                 pSalvageSummary.Visible = false;
-                myParent.UpdateEnhCheckModeToolStrip();
+                //myParent.UpdateEnhCheckModeToolStrip();
                 myParent.DoRedraw();
             }
 
@@ -726,16 +750,16 @@ namespace Mids_Reborn.UI.Forms
             RecipeInfo.SetPopup(new PopUp.PopupData());
             chkRecipe.Checked = MidsContext.Config.ShoppingListIncludesRecipes;
             RecalcSalvage();
-            SalvageHudVisible = myParent.IsSalvageHudVisible();
+           // SalvageHudVisible = myParent.IsSalvageHudVisible();
             if (SalvageHudVisible)
             {
-                myParent.SetSalvageHudOnCloseExecution(false);
+              //  myParent.SetSalvageHudOnCloseExecution(false);
                 myParent.FloatBuildSalvageHud(false);
             }
             else
             {
                 MidsContext.EnhCheckMode = false;
-                myParent.UpdateEnhCheckModeToolStrip();
+               // myParent.UpdateEnhCheckModeToolStrip();
             }
 
             ibEnhCheckMode.Checked = false;

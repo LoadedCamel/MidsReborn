@@ -427,7 +427,7 @@ namespace Mids_Reborn
 
         private static string PowerNameFix(string iStr)
         {
-            return clsToonX.FixSpelling(iStr)
+            return Toon.FixSpelling(iStr)
                 .Replace("Gravity Emanation", "Gravitic Emanation")
                 .Replace("Dark Matter Detonation", "Dark Detonation")
                 .Replace("Dark Nova Emmanation", "Dark Nova Emanation");

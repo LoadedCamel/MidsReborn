@@ -1,6 +1,7 @@
 ﻿using FastDeepCloner;
 using FontAwesome.Sharp;
 using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -109,13 +110,7 @@ namespace Mids_Reborn.UI.Controls
         public bool IsLocked
         {
             get => _isLocked;
-            set
-            {
-                _isLocked = value;
-                LockButton.IconChar = value ? IconChar.Lock : IconChar.Unlock;
-                LockButton.IconColor = value ? Color.Red : Color.LimeGreen;
-                LockButton.Invalidate();
-            }
+            set => SetLock(value, true);
         }
 
         private DataViewTheme CurrentTheme
@@ -142,10 +137,13 @@ namespace Mids_Reborn.UI.Controls
             // Ensure the header panel itself is double-buffered (prevents flicker)
             EnableDoubleBuffer(headerPanel);
 
-            dvPages.SelectedIndexChanged += DvPages_SelectedIndexChanged;
+            
+            LockButton.Click += LockButton_Click;
+            ApplyLockVisuals();
 
-            _selectedTabIndex = Math.Max(0, Math.Min(dvPages.SelectedIndex, _tabs.Length - 1));
+            _selectedTabIndex = 0;
             SelectTab(_selectedTabIndex);
+            //dvPages.SelectedIndexChanged += DvPages_SelectedIndexChanged;
 
             PetInfo = new PetInfo();
             if (!DesignMode) ThemeManager.ThemeChanged += Invalidate;
@@ -316,17 +314,14 @@ namespace Mids_Reborn.UI.Controls
 
         public void SelectTab(int index)
         {
-            if (index < 0 || index >= _tabs.Length || index == _selectedTabIndex)
+            if (index < 0 || index > _tabs.Length - 1 || index == _selectedTabIndex)
                 return;
-
-            // Drive selection via FormPages so visibility/layout is handled centrally
-            if (dvPages.SelectedIndex != index)
-                dvPages.SelectedIndex = index;
 
             // If it was already the selected index, ensure header state is consistent
             if (_selectedTabIndex != index)
             {
                 _selectedTabIndex = index;
+                dvPages.SelectedIndex = _selectedTabIndex;
                 headerPanel.Invalidate();
                 TabChanged?.Invoke(this, index);
             }
@@ -339,34 +334,27 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            _isLocked = locked;
+            IsLocked = locked;
 
             var basePowerData = new Power(basePower);
             var enhancedPowerData = new Power(enhancedPower);
+
+            // (Optional) show the redirect parent in the header if present
             var rootPowerName = Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower);
+            rootPowerBase = string.IsNullOrEmpty(rootPowerName) ? null : DatabaseAPI.GetPowerByFullName(rootPowerName);
+            rootPowerEnh = string.IsNullOrEmpty(rootPowerName) ? null : MainModule.MidsController.Toon?.GetEnhancedPower(iHistoryIdx);
 
-            rootPowerBase = string.IsNullOrEmpty(rootPowerName)
-                ? null
-                : DatabaseAPI.GetPowerByFullName(rootPowerName);
-
-            rootPowerEnh = string.IsNullOrEmpty(rootPowerName)
-                ? null
-                : MainModule.MidsController.Toon?.GetEnhancedPower(iHistoryIdx);
-
-            if (enhancedPowerData.PowerIndex == -1 & basePowerData.PowerIndex == -1)
+            if ((enhancedPowerData?.PowerIndex ?? -1) == -1 && basePowerData.PowerIndex == -1)
             {
                 pBase = null;
             }
-            else if (enhancedPowerData.PowerIndex == -1 & basePowerData.PowerIndex > -1)
+            else
             {
                 pBase = basePowerData;
             }
-            else
-            {
-                pBase = new Power(DatabaseAPI.Database.Power[enhancedPowerData.PowerIndex]);
-            }
 
-            pEnh = enhancedPowerData.PowerIndex == -1
+            // Build pEnh consistently: if none provided, synthesize from base
+            pEnh = (enhancedPowerData?.PowerIndex ?? -1) == -1
                 ? new Power(basePower) { PowerIndex = -1 }
                 : enhancedPowerData;
 
@@ -409,7 +397,7 @@ namespace Mids_Reborn.UI.Controls
 
         public void SetEnhancement(I9Slot iEnh, int iLevel = -1)
         {
-            if (_isLocked & _selectedTabIndex != 3 || iLevel < 0)
+            if ((_isLocked & _selectedTabIndex != 3) || iLevel < 0)
             {
                 return;
             }
@@ -1401,9 +1389,7 @@ namespace Mids_Reborn.UI.Controls
             if (iEnhLvl > -1) title.Text += $" (Slot Level {iEnhLvl + 1})";
             subTitle.Text = "Enhancement Values";
 
-            var longInfo = Regex.Replace(
-                pBase.DescLongFormatted.Trim().Replace("\0", "").Replace("<br>", RTF.Crlf()),
-                @"\s{2,}", " ");
+            //var longInfo = Regex.Replace(pBase.DescLongFormatted.Trim().Replace("\0", "").Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
             //infoLDesc.Rtf = RTF.StartRTF() + RTF.ToRTF(longInfo) + RTF.EndRTF();
 
             // --- NEW: Canonical stats via PowerCanonicalStats → powerStatsGrid ---
@@ -1493,14 +1479,25 @@ namespace Mids_Reborn.UI.Controls
             // --- Build UI-agnostic effect items (uses the same ranked effects pipeline) ---
             // GroupedRankedEffects is already set earlier in the flow when powers change 
             var enh = pEnh ?? pBase;
-            //var rankedSafe = GetRankedEffectsSafe(enh);
+            var rankedSafe = GetRankedEffectsSafe(enh);
 
             // --- Build Effect groups for the PowerEffectsGrid ---
             // PowerEffects maps items into (Defense/Resistance, Heal/Endurance, Status, Buff/Debuff, Movement, Special, Descriptors)
-            //var groups = PowerEffects.Build(pBase, enh, GroupedRankedEffects, rankedSafe);
+            var groups = PowerEffects.Build(pBase, enh, GroupedRankedEffects, rankedSafe);
 
             // --- Push into the grid ---
-            //effectsGrid.SetGroups(groups);
+            effectsGrid.SetGroups(groups);
+        }
+
+        private static List<int> GetRankedEffectsSafe(IPower power)
+        {
+            var ranked = power?.GetRankedEffects(true)?.ToList();
+            if (ranked == null || ranked.Count == 0)
+            {
+                var n = power?.Effects?.Length ?? 0;
+                ranked = Enumerable.Range(0, n).ToList();
+            }
+            return ranked;
         }
 
         private void DisplayFlippedEnhancements()
@@ -1686,16 +1683,6 @@ namespace Mids_Reborn.UI.Controls
             }
         }
 
-        // private static List<int> GetRankedEffectsSafe(IPower power)
-        // {
-        //     var ranked = power?.GetRankedEffects(true)?.ToList();
-        //     if (ranked == null || ranked.Count == 0)
-        //     {
-        //         var n = power?.Effects?.Length ?? 0;
-        //         ranked = Enumerable.Range(0, n).ToList();
-        //     }
-        //     return ranked;
-        // }
         private string GetToWhoShort(IEffect fx)
         {
             return fx.ToWho switch
@@ -2385,8 +2372,8 @@ namespace Mids_Reborn.UI.Controls
             }
 
             // Toggle icon back to locked anchor
-            DockButton.IconChar = IconChar.Docker;
-            DockButton.IconColor = Color.FromArgb(0, 119, 190);
+            DockButton.IconChar = IconChar.UpRightFromSquare;
+            DockButton.IconColor = Color.Silver;
 
             _isDocked = true;
         }
@@ -2395,14 +2382,27 @@ namespace Mids_Reborn.UI.Controls
 
         #region Lock/Unlock
 
-        private void LockButton_Click(object sender, EventArgs e)
+        private void ApplyLockVisuals()
         {
-            _isLocked = !_isLocked;
-
-            LockButton.IconColor = _isLocked ? Color.Red : Color.LimeGreen;
             LockButton.IconChar = _isLocked ? IconChar.Lock : IconChar.Unlock;
-            //LockStateChanged?.Invoke(this, _isLocked);
+            LockButton.IconColor = _isLocked ? Color.Red : Color.LimeGreen;
             LockButton.Invalidate();
+        }
+
+        private void SetLock(bool locked, bool raiseEvent)
+        {
+            if (_isLocked == locked) return;
+            _isLocked = locked;
+            ApplyLockVisuals();
+            if (raiseEvent)
+                LockStateChanged?.Invoke(this, _isLocked);
+        }
+
+        public void ToggleLock() => SetLock(!_isLocked, true);
+
+        private void LockButton_Click(object? sender, EventArgs e)
+        {
+            ToggleLock();
         }
 
         #endregion

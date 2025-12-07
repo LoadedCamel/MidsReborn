@@ -13,11 +13,28 @@ namespace Mids_Reborn.UI.Forms
     public partial class FrmIncarnate : Form
     {
         private readonly ImageButton[] _buttonArray;
-        private readonly MainWindow? _myParent;
+        private readonly MainWindow2? _myParent;
         private bool _locked;
         private IPower?[]? _myPowers;
 
         public FrmIncarnate(ref MainWindow iParent)
+        {
+            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
+            Icon = Resources.MRB_Icon_Concept;
+            //_myParent = iParent;
+            Load += frmIncarnate_Load;
+            FormClosing += FrmIncarnate_FormClosing;
+            _myPowers = Array.Empty<IPower>();
+            _locked = false;
+            _buttonArray = new ImageButton[10];
+            _myPowers = DatabaseAPI.GetPowersetByName("Alpha", Enums.ePowerSetType.Incarnate)?.Powers;
+            InitializeComponent();
+            // PopInfo events
+            _popInfo!.MouseWheel += PopInfo_MouseWheel;
+            _popInfo.MouseEnter += PopInfo_MouseEnter;
+        }
+
+        public FrmIncarnate(ref MainWindow2 iParent)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             Icon = Resources.MRB_Icon_Concept;
@@ -38,12 +55,12 @@ namespace Mids_Reborn.UI.Forms
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
-                _myParent.ibIncarnatePowersEx.ToggleState = MidsVectorButton.States.ToggledOff;
+                _myParent.incarnatesEx.ToggleState = MidsVectorButton.States.ToggledOff;
             }
 
             if (DialogResult == DialogResult.Cancel)
             {
-                _myParent.ibIncarnatePowersEx.ToggleState = MidsVectorButton.States.ToggledOff;
+                _myParent.incarnatesEx.ToggleState = MidsVectorButton.States.ToggledOff;
             }
         }
 
@@ -415,7 +432,7 @@ namespace Mids_Reborn.UI.Forms
             LlLeft.Invalidate();
             LlRight.Invalidate();
             _myParent.PowerModified(true);
-            _myParent.DoRefresh();
+            //_myParent.DoRefresh();
         }
 
         private void llLeft_ItemHover(ListLabel.ListLabelItem item)
@@ -493,7 +510,7 @@ namespace Mids_Reborn.UI.Forms
                 LlLeft.Invalidate();
                 LlRight.Invalidate();
                 _myParent.PowerModified(unused || hasChanges);
-                _myParent.DoRefresh();
+                //_myParent.DoRefresh();
             }
         }
 

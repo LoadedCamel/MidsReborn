@@ -2294,9 +2294,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             }
 
                             Effects[index2].isEnhancementEffect = Effects[array1[index1]].isEnhancementEffect;
-                            if (Effects[array1[index1]].Probability < 1)
+                            if (Effects[array1[index1]].EffectType != Enums.eEffectType.GrantPower && Effects[array1[index1]].Probability < 1)
                             {
-                                Effects[index2].Probability = Effects[array1[index1]].Probability * Effects[index2].Probability;
+                                Effects[index2].Probability *= Effects[array1[index1]].Probability;
                             }
                         }
                     }

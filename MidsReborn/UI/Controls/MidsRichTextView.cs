@@ -139,6 +139,7 @@ namespace Mids_Reborn.UI.Controls
             _rtb = new RichTextBox
             {
                 BorderStyle = BorderStyle.None,
+                Font = Font,
                 ScrollBars = RichTextBoxScrollBars.None, // we render/scroll ourselves
                 DetectUrls = false,
                 WordWrap = true,

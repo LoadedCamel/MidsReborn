@@ -68,7 +68,7 @@ namespace Mids_Reborn.UI.Controls
 
         private int[] _slotted = [];
 
-        public int LastLevel { get; private set; }
+        public int LastLevel { get; internal set; }
 
         private readonly List<(Rectangle Bounds, int Index)> _enhancementRects = [];
         private readonly List<(Rectangle Bounds, int Index)> _gradeRects = [];

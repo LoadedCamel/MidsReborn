@@ -8,7 +8,7 @@ namespace Mids_Reborn.UI.Forms
     // avoid mutation and the service location pattern
     public static class MainUiLogic
     {
-        public static void ChangeSets(clsToonX toon, Character? ch, int primaryIndex, int secondaryIndex, int pool0Index, int pool1Index, int pool2Index, int pool3Index, int ancillaryIndex, Func<Archetype, Enums.ePowerSetType, IPowerset[]> getPowerSets, Action lockSecondary)
+        public static void ChangeSets(Toon toon, Character? ch, int primaryIndex, int secondaryIndex, int pool0Index, int pool1Index, int pool2Index, int pool3Index, int ancillaryIndex, Func<Archetype, Enums.ePowerSetType, IPowerset[]> getPowerSets, Action lockSecondary)
         {
             var at = ch.Archetype;
             var newPrimaryPowerset = getPowerSets(at, Enums.ePowerSetType.Primary)[primaryIndex];
@@ -62,7 +62,7 @@ namespace Mids_Reborn.UI.Forms
             ch.Validate();
         }
 
-        public static void ChangeSets(clsToonX? toon, Character? ch, int primaryIndex, int secondaryIndex, int pool0Index, int pool1Index, int pool2Index, int pool3Index, int ancillaryIndex, Func<Archetype, Enums.ePowerSetType, IPowerset[]> getPowerSets, Action<bool> setSecondaryLocked /* true = lock (no clear), false = unlock */)
+        public static void ChangeSets(Toon? toon, Character? ch, int primaryIndex, int secondaryIndex, int pool0Index, int pool1Index, int pool2Index, int pool3Index, int ancillaryIndex, Func<Archetype, Enums.ePowerSetType, IPowerset[]> getPowerSets, Action<bool> setSecondaryLocked /* true = lock (no clear), false = unlock */)
         {
             var at = ch?.Archetype;
 

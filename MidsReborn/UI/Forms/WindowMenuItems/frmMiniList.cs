@@ -7,10 +7,20 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 {
     public partial class frmMiniList : Form
     {
-        private readonly MainWindow MyParent;
+        private readonly MainWindow2 MyParent;
         private PopUp.PopupData PData;
 
         public frmMiniList(MainWindow iParent)
+        {
+            SetStyle(ControlStyles.DoubleBuffer, true);
+            InitializeComponent();
+            Name = nameof(frmMiniList);
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmMiniList));
+            Icon = Resources.MRB_Icon_Concept;
+            //MyParent = iParent;
+        }
+
+        public frmMiniList(MainWindow2 iParent)
         {
             SetStyle(ControlStyles.DoubleBuffer, true);
             InitializeComponent();

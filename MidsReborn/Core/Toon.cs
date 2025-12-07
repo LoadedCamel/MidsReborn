@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Text;
 using System.Text.RegularExpressions;
 using FastDeepCloner;
-using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -11,9 +10,9 @@ using Mids_Reborn.Core.Utils;
 using Mids_Reborn.UI.Controls;
 using Mids_Reborn.UI.Controls.Skia;
 
-namespace Mids_Reborn
+namespace Mids_Reborn.Core
 {
-    public class clsToonX : Character
+    public class Toon : Character
     {
         private const double BuildFormatChange1 = 1.29999995231628;
         private const double BuildFormatChange2 = 1.39999997615814;
@@ -64,8 +63,6 @@ namespace Mids_Reborn
                 var num2 = Enhancement.ApplyED(schedule[index], value[index]) * 100f;
                 var str2 = $"{Convert.ToDecimal(num1 + afterED[index] * 100f):0.##}%";
                 var str3 = $"{Convert.ToDecimal(num2 + afterED[index] * 100f):0.##}%";
-                //var str2 = Strings.Format((float) (num1 + afterED[index] * 100.0), "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
-                //var str3 = Strings.Format(num2 + afterED[index] * 100f, "##0" + NumberFormatInfo.CurrentInfo.NumberDecimalSeparator + "00") + "%";
                 string str4;
                 if (Math.Round(num1 - num2, 3) > 0)
                 {
@@ -851,31 +848,6 @@ namespace Mids_Reborn
             Totals.RunSpd = Math.Min(Totals.RunSpd, DatabaseAPI.ServerData.MaxMaxRunSpeed); // Statistics.BaseRunSpeed * 8.398f == 166.257
             Totals.JumpSpd = Math.Min(Totals.JumpSpd, DatabaseAPI.ServerData.MaxMaxJumpSpeed); // Statistics.BaseJumpSpeed * 7.917f == 176.358
 
-            /*Totals.FlySpd = Statistics.BaseFlySpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.FlySpeed], -0.9f) * Statistics.BaseFlySpeed;
-            // This number(21.0) looks wrong, like it should match the multiplier above (31.5), changing it
-            // Statistics.BaseFlySpeed -> Statistics.BaseRunSpeed, because increasing speed caps do not use 1.5x modifier fly speed gives.
-            Totals.MaxFlySpd = Statistics.MaxFlySpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxFlySpeed] * Statistics.BaseRunSpeed;
-            if (Totals.MaxFlySpd > 171.990005493164) // 128.990005493164
-            {
-                Totals.MaxFlySpd = 171.99f; // 8.19f * 21.0f == 171.99f -- Note: although the cap can reach 8.19, there is currently no way to go beyond 7.1425 (149.99 fps)
-            }
-
-            Totals.RunSpd = Statistics.BaseRunSpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.RunSpeed], -0.9f) * Statistics.BaseRunSpeed;
-            Totals.MaxRunSpd = Statistics.MaxRunSpeed + _selfBuffs.Effect[(int)Enums.eStatType.MaxRunSpeed] * Statistics.BaseRunSpeed;
-            if (Totals.MaxRunSpd > 176.35777) // 135.669998168945
-            {
-                Totals.MaxRunSpd = 135.67f; // 8.398f * 21.0f == 135.67f
-            }
-
-            Totals.JumpSpd = Statistics.BaseJumpSpeed + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpSpeed], -0.9f) * Statistics.BaseJumpSpeed;
-            Totals.MaxJumpSpd = (float) (114.400001525879 + _selfBuffs.Effect[(int)Enums.eStatType.MaxJumpSpeed] * Statistics.BaseJumpSpeed);
-            if (Totals.MaxJumpSpd > 166.256666) // 114.400001525879
-            {
-                Totals.MaxJumpSpd = 166.257f; // 7.917f * 21.0f // Statistics.MaxJumpSpeed == 114.4f
-            }
-
-            Totals.JumpHeight = 4 + Math.Max(_selfBuffs.Effect[(int)Enums.eStatType.JumpHeight], -0.9f) * 4;*/
-
             Totals.HPMax = _selfBuffs.Effect[(int)Enums.eStatType.HPMax] + (Archetype?.Hitpoints ?? 0);
             if (!canFly)
             {
@@ -1312,7 +1284,11 @@ namespace Mids_Reborn
                 fx.ToWho = Enums.eToWho.Target;
                 fx.Absorbed_Effect = true;
                 fx.isEnhancementEffect = effect1.isEnhancementEffect;
-                fx.BaseProbability *= effect1.BaseProbability;
+                if (effect1.EffectType != Enums.eEffectType.GrantPower)
+                {
+                    fx.BaseProbability *= effect1.BaseProbability;
+                }
+                //fx.BaseProbability *= effect1.BaseProbability;
                 fx.Ticks = effect1.Ticks;
             }
 
@@ -2129,6 +2105,9 @@ namespace Mids_Reborn
             // Build per-power modify effects (caps, ignores, etc.)
             GenerateModifyEffectsArray();
 
+            // --- NOW compute self-enhancement *after* ED from _mathPowers ---
+            GenerateBuffData(ref _selfEnhance, true);
+
             // --- Enhancement math first (pre-ED -> ED -> post-ED -> additive -> caps) ---
             Parallel.For(0, _mathPowers.Length, hIDX =>
             {
@@ -2143,9 +2122,6 @@ namespace Mids_Reborn
                 // Build the pre-buff multiplied copy alongside
                 GBPA_Pass5_MultiplyPreBuff(ref _mathPowers[hIDX], ref _buffedPowers[hIDX]);
             });
-
-            // --- NOW compute self-enhancement *after* ED from _mathPowers ---
-            GenerateBuffData(ref _selfEnhance, true);
 
             // --- Then compute self-buffs (toggles/click buffs, set-bonus globals) from _buffedPowers ---
             GenerateBuffData(ref _selfBuffs, false);
@@ -2274,7 +2250,7 @@ namespace Mids_Reborn
             }
         }
 
-        public IPower GetBasePower(int iPower, int nIDPower = -1)
+        public IPower? GetBasePower(int iPower, int nIDPower = -1)
         {
             if (iPower > -1)
             {
@@ -2315,7 +2291,7 @@ namespace Mids_Reborn
             return -1;
         }
 
-        public IPower GetEnhancedPower(int iPower)
+        public IPower? GetEnhancedPower(int iPower)
         {
             if (!((iPower < 0) | (_buffedPowers.Length - 1 < iPower)))
                 return _buffedPowers[iPower];

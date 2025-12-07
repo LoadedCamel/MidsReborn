@@ -11,7 +11,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
     public partial class frmCompare : Form
     {
         private readonly string[] DisplayValueStrings;
-        private readonly MainWindow myParent;
+        private readonly MainWindow2 myParent;
         private readonly IPower?[][] Powers;
         private readonly string[][] Tips;
         private readonly float[][] Values;
@@ -39,6 +39,52 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private ToolTip tTip;
 
         public frmCompare(ref MainWindow iFrm)
+        {
+            Load += frmCompare_Load;
+            KeyDown += frmCompare_KeyDown;
+            VisibleChanged += frmCompare_VisibleChanged;
+            Resize += frmCompare_Resize;
+            Move += frmCompare_Move;
+            FormClosed += frmCompare_FormClosed;
+            Powers = new IPower[2][];
+            Values = new float[2][];
+            Tips = new string[2][];
+            GraphMax = 1f;
+            Matching = false;
+            Loaded = false;
+            DisplayValueStrings = new[]
+            {
+                "Base Accuracy",
+                "Damage",
+                "Damage / Anim",
+                "Damage / Sec",
+                "Damage / End",
+                "Damage Buff",
+                "Defense",
+                "Defense Debuff",
+                "Duration",
+                "End Use",
+                "End Use / Sec",
+                "Healing",
+                "Healing / Sec",
+                "Healing / End",
+                "+HP",
+                "Max Targets",
+                "Range",
+                "Recharge Time",
+                "Regeneration",
+                "Resistance",
+                "Resistance Debuff",
+                "ToHit Buff",
+                "ToHit Debuff"
+            };
+            InitializeComponent();
+            Name = nameof(frmCompare);
+            //myParent = iFrm;
+            Icon = Resources.MRB_Icon_Concept;
+        }
+
+        public frmCompare(ref MainWindow2 iFrm)
         {
             Load += frmCompare_Load;
             KeyDown += frmCompare_KeyDown;

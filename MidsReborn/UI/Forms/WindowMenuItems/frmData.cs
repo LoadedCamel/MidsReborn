@@ -142,7 +142,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
                 iPopup.Sections[index2].Add("Max Targets:", PopUp.Colors.Text, Convert.ToString(power1.MaxTargets),
                     PopUp.Colors.Text, 0.9f, FontStyle.Bold, 1);
-                iPopup.Sections[index2].Add("Notify Mobs:", PopUp.Colors.Text,
+                iPopup.Sections[index2].Add("Notify AI:", PopUp.Colors.Text,
                     Enum.GetName(power1.AIReport.GetType(), power1.AIReport), PopUp.Colors.Text, 0.9f, FontStyle.Bold,
                     1);
                 if (Math.Abs(power1.Radius) > float.Epsilon)

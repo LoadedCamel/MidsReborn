@@ -918,7 +918,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             rbPvE.Size = new System.Drawing.Size(260, 20);
             rbPvE.TabIndex = 0;
             rbPvE.TabStop = true;
-            rbPvE.Text = "Show values for Mobs (PvE)";
+            rbPvE.Text = "Show values for Critters (PvE)";
             // 
             // TabPage3
             // 

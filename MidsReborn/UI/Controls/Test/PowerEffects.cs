@@ -90,12 +90,7 @@ public static class PowerEffects
 
     private static List<KeyValuePair<GroupedFx, EffectListItem>> Filter(List<KeyValuePair<GroupedFx, EffectListItem>> items, Func<GroupedFx.FxId, bool> predicate) => GroupedFx.FilterEffectItemsExt(items, predicate); // helper from GroupedFx
 
-    private static PowerEffectsGrid.Group MakeGroup(
-        string title,
-        List<KeyValuePair<GroupedFx, EffectListItem>> items,
-        IPower pBase,
-        IPower pEnh,
-        List<int> rankedEffects)
+    private static PowerEffectsGrid.Group MakeGroup(string title, List<KeyValuePair<GroupedFx, EffectListItem>> items, IPower pBase, IPower pEnh, List<int> rankedEffects)
     {
         var rows = new List<PowerEffectsGrid.Row>();
 
@@ -151,7 +146,23 @@ public static class PowerEffects
 
                 // --- Descriptor-only buckets (no numeric columns) ---
                 case Enums.eEffectType.EntCreate:
+                {
+                    rows.Add(new PowerEffectsGrid.DescriptorRow(
+                        label: item.Label,
+                        tag: TagForDescriptor(gre.EffectType),
+                        description: item.Value,
+                        tooltip: item.ToolTip));
+                    break;
+                }
                 case Enums.eEffectType.GrantPower:
+                {
+                    rows.Add(new PowerEffectsGrid.DescriptorRow(
+                        label: item.Label,
+                        tag: TagForDescriptor(gre.EffectType),
+                        description: item.Value,
+                        tooltip: item.ToolTip));
+                    break;
+                }
                 case Enums.eEffectType.ModifyAttrib:
                 {
                     rows.Add(new PowerEffectsGrid.DescriptorRow(

@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.UI.Controls.Test;
 
 namespace Mids_Reborn.UI.Theming;
@@ -7,18 +8,37 @@ namespace Mids_Reborn.UI.Theming;
 public static class ThemeManager
 {
     private static readonly Dictionary<string, ApplicationTheme> BuiltInThemes = CreateBuiltInThemes();
+    private static Dictionary<string, ApplicationTheme>? _runtimeThemes;
+
+    public readonly record struct ThemeEntry(string Name, bool IsUser);
 
     public static string DesignTimeThemeName { get; set; } = "Hero";
 
     public static ApplicationTheme DesignTime
         => BuiltInThemes.TryGetValue(DesignTimeThemeName, out var theme) ? theme : BuiltInThemes.Values.First();
 
-    private static Dictionary<string, ApplicationTheme>? _runtimeThemes;
+    // public static IReadOnlyCollection<string> AvailableThemeNames
+    //     => _runtimeThemes?.Keys ?? (IReadOnlyCollection<string>)BuiltInThemes.Keys;
 
-    public static IReadOnlyCollection<string> AvailableThemeNames
-        => _runtimeThemes?.Keys ?? (IReadOnlyCollection<string>)BuiltInThemes.Keys;
+    public static bool IsUserTheme(string name)
+        => (_runtimeThemes?.ContainsKey(name) ?? false) && !BuiltInThemes.ContainsKey(name);
+
+    public static IReadOnlyCollection<ThemeEntry> AvailableThemes
+    {
+        get
+        {
+            // If runtime map exists, it contains built-ins + user themes; else use built-ins only.
+            var dict = _runtimeThemes ?? BuiltInThemes;
+            // For each key, user theme = exists in runtime but NOT in built-ins.
+            var list = new List<ThemeEntry>(capacity: dict.Count);
+            foreach (var name in dict.Keys)
+                list.Add(new ThemeEntry(name, IsUserTheme(name)));
+            return list;
+        }
+    }
 
     public static event Action? ThemeChanged;
+
     public static ApplicationTheme? CurrentTheme { get; private set; }
 
     public static void Initialize()
@@ -58,11 +78,74 @@ public static class ThemeManager
     {
         if (_runtimeThemes != null && _runtimeThemes.TryGetValue(themeName, out var theme))
         {
-            if (CurrentTheme?.Name != themeName)
+            if (CurrentTheme?.Name == themeName) return;
+
+            CurrentTheme = theme;
+
+            var cfg = MidsContext.Config;
+            if (cfg != null)
+                cfg.SelectedTheme = themeName;
+            
+            ThemeChanged?.Invoke();
+        }
+    }
+
+    public static void ReloadCustomThemes()
+    {
+        // Ensure runtime map exists and is seeded with built-ins
+        _runtimeThemes ??= new Dictionary<string, ApplicationTheme>(BuiltInThemes);
+
+        var themesFolderPath = Path.Combine(AppContext.BaseDirectory, "Themes");
+        if (!Directory.Exists(themesFolderPath))
+            Directory.CreateDirectory(themesFolderPath);
+
+        // Load current on-disk user themes
+        var options = new JsonSerializerOptions { PropertyNameCaseInsensitive = true };
+        var files = Directory.EnumerateFiles(themesFolderPath, "*.json", SearchOption.TopDirectoryOnly).ToArray();
+
+        var seenUserNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var filePath in files)
+        {
+            try
             {
-                CurrentTheme = theme;
-                ThemeChanged?.Invoke();
+                var jsonContent = File.ReadAllText(filePath);
+                var customTheme = JsonSerializer.Deserialize<ApplicationTheme>(jsonContent, options);
+
+                if (customTheme is null || string.IsNullOrWhiteSpace(customTheme.Name))
+                    continue;
+
+                // Do not allow overriding built-ins
+                if (BuiltInThemes.ContainsKey(customTheme.Name))
+                {
+                    Debug.WriteLine($"Custom theme '{customTheme.Name}' conflicts with a built-in theme and was ignored.");
+                    continue;
+                }
+
+                seenUserNames.Add(customTheme.Name);
+                _runtimeThemes[customTheme.Name] = customTheme; // add or update
             }
+            catch (Exception ex)
+            {
+                Debug.WriteLine($"Failed to load custom theme from '{Path.GetFileName(filePath)}': {ex.Message}");
+            }
+        }
+
+        // Remove user themes that no longer exist on disk
+        var toRemove = _runtimeThemes.Keys
+            .Where(name => !BuiltInThemes.ContainsKey(name) && !seenUserNames.Contains(name))
+            .ToList();
+
+        foreach (var name in toRemove)
+            _runtimeThemes.Remove(name);
+
+        // If the current theme vanished, fall back to first built-in and fire ThemeChanged
+        if (CurrentTheme is not null && !_runtimeThemes.ContainsKey(CurrentTheme.Name))
+        {
+            var previous = CurrentTheme.Name;
+            CurrentTheme = BuiltInThemes.Values.FirstOrDefault();
+            if (CurrentTheme is not null && !string.Equals(previous, CurrentTheme.Name, StringComparison.OrdinalIgnoreCase))
+                ThemeChanged?.Invoke();
         }
     }
 

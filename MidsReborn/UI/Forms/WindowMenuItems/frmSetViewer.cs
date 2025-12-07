@@ -224,7 +224,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         }
         #endregion
 
-        private readonly MainWindow myParent;
+        private readonly MainWindow2 myParent;
         private ImageButton btnClose;
         private ImageButton btnSmall;
         private ImageButton chkOnTop;
@@ -254,7 +254,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             //var componentResourceManager = new ComponentResourceManager(typeof(frmSetViewer));
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmSetViewer);
-            myParent = iParent;
+            //myParent = iParent;
             BarsFX = new Dictionary<string, Build.FXIdentifierKey>();
 
             #region Shrunk/expanded control positions and sizes
@@ -275,6 +275,151 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             ShrinkExpandItemsPos.Add("btnDetailFx", new Dictionary<string, Coord2D[]>());
             ShrinkExpandItemsPos["btnDetailFx"].Add("Location", new []
+            {
+                new Coord2D(9, 3),
+                new Coord2D(0, 3)
+            });
+
+            ShrinkExpandItemsPos.Add("btnSmall", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["btnSmall"].Add("Location", new[]
+            {
+                new Coord2D(117, 3),
+                new Coord2D(0, 31)
+            });
+
+            ShrinkExpandItemsPos.Add("chkOnTop", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["chkOnTop"].Add("Location", new[]
+            {
+                new Coord2D(281, 3),
+                new Coord2D(224, 3)
+            });
+
+            ShrinkExpandItemsPos.Add("btnClose", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["btnClose"].Add("Location", new[]
+            {
+                new Coord2D(389, 3),
+                new Coord2D(224, 31)
+            });
+
+            ShrinkExpandItemsPos.Add("panelButtons", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["panelButtons"].Add("Size", new[]
+            {
+                new Coord2D(516, 30),
+                new Coord2D(329, 53)
+            });
+            ShrinkExpandItemsPos["panelButtons"].Add("Location", new[]
+            {
+                new Coord2D(0, rtxtInfo.Bottom - 20),
+                new Coord2D(panelBars.Left, panelBars.Bottom)
+            });
+            #endregion
+
+            #region Bar settings
+            EffectListOrder = new List<BarSettings>
+            {
+                new BarSettings (Enums.eEffectType.DamageBuff, Color.Red, Color.FromArgb(204, 0, 0)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Accuracy, Color.Yellow, Color.FromArgb(204, 204, 0)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.RechargeTime, Color.FromArgb(255, 128, 0), Color.FromArgb(204, 102, 0)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Range, Color.FromArgb(170, 168, 179), Color.FromArgb(121, 120, 128)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.Heal, Color.FromArgb(116, 255, 116), Color.FromArgb(92, 204, 92)),
+
+                new BarSettings (Enums.eEffectType.Regeneration, Color.FromArgb(64, 255, 64), Color.FromArgb(51, 204, 51)),
+                new BarSettings (Enums.eEffectType.HitPoints, Color.FromArgb(44, 180, 44), Color.FromArgb(31, 130, 31)),
+                new BarSettings (Enums.eEffectType.Recovery, Color.DodgerBlue, Color.FromArgb(24, 114, 204)),
+                new BarSettings (Enums.eEffectType.Endurance, Color.FromArgb(59, 158, 255), Color.FromArgb(47, 125, 204)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.EnduranceDiscount, Color.RoyalBlue, Color.FromArgb(50, 81, 173)),
+
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Smashing, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Fire, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Energy, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Toxic, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+                new BarSettings (Enums.eEffectType.Resistance, Enums.eDamage.Psionic, Color.FromArgb(0, 192, 192), Color.FromArgb(0, 140, 140)),
+
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Smashing, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Fire, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Energy, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Psionic, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Melee, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.Ranged, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Defense, Enums.eDamage.AoE, Color.Magenta, Color.FromArgb(204, 0, 204)),
+                new BarSettings (Enums.eEffectType.Elusivity, Color.FromArgb(163, 1, 231), Color.FromArgb(127, 1, 181)),
+
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Held, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Stunned, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Sleep, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Immobilized, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Knockback, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Confused, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eMez.Terrorized, Color.FromArgb(100, 70, 85), Color.FromArgb(48, 34, 41)),
+
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Held, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Stunned, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Sleep, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Immobilized, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Knockback, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Confused, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Terrorized, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+                new BarSettings (Enums.eEffectType.MezResist, Enums.eMez.Teleport, Color.FromArgb(90, 90, 120), Color.FromArgb(52, 52, 69)),
+
+                new BarSettings (Enums.eEffectType.SpeedRunning, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                //new BarSettings (Enums.eEffectType.MaxRunSpeed, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                new BarSettings (Enums.eEffectType.SpeedJumping, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                //new BarSettings (Enums.eEffectType.JumpHeight, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                //new BarSettings (Enums.eEffectType.MaxJumpSpeed, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                new BarSettings (Enums.eEffectType.SpeedFlying, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                //new BarSettings (Enums.eEffectType.MaxFlySpeed, Color.FromArgb(0, 192, 128), Color.FromArgb(0, 140, 94)),
+                new BarSettings (Enums.eEffectType.ResEffect, Enums.eEffectType.SpeedRunning, Color.FromArgb(90, 120, 110), Color.FromArgb(52, 69, 63)),
+                // Enhancement (slow)
+                new BarSettings (Enums.eEffectType.Enhancement, Enums.eEffectType.SpeedRunning, Color.FromArgb(90, 120, 110), Color.FromArgb(52, 69, 63)),
+
+                new BarSettings (Enums.eEffectType.StealthRadius, Color.FromArgb(106, 121, 136), Color.FromArgb(84, 95, 107)),
+                new BarSettings (Enums.eEffectType.StealthRadiusPlayer, Color.FromArgb(106, 121, 136), Color.FromArgb(84, 95, 107)),
+                new BarSettings (Enums.eEffectType.PerceptionRadius, Color.FromArgb(106, 121, 136), Color.FromArgb(84, 95, 107))
+            };
+
+            EffectListOrder = EffectListOrder
+                .AsEnumerable()
+                .OrderBy(e => (int)new Build.FXIdentifierKey
+                {
+                    EffectType = e.EffectType,
+                    TargetEffectType = e.TargetEffectType,
+                    DamageType = e.DamageType,
+                    MezType = e.MezType
+                }.L1Group)
+                .ToList();
+            #endregion
+        }
+
+        public frmSetViewer(MainWindow2 iParent)
+        {
+            Move += frmSetViewer_Move;
+            FormClosed += frmSetViewer_FormClosed;
+            Load += frmSetViewer_Load;
+            InitializeComponent();
+            //var componentResourceManager = new ComponentResourceManager(typeof(frmSetViewer));
+            Icon = Resources.MRB_Icon_Concept;
+            Name = nameof(frmSetViewer);
+            myParent = iParent;
+            BarsFX = new Dictionary<string, Build.FXIdentifierKey>();
+
+            #region Shrunk/expanded control positions and sizes
+            ShrinkExpandItemsPos = new Dictionary<string, Dictionary<string, Coord2D[]>>();
+            ShrinkExpandItemsPos.Add("this", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["this"].Add("Size", new[]
+            {
+                new Coord2D(panelBars.Left + 20, Height),
+                new Coord2D(panelBars.Right + 20, Height)
+            });
+
+            ShrinkExpandItemsPos.Add("rtxtInfo", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["rtxtInfo"].Add("Size", new[]
+            {
+                new Coord2D(rtxtInfo.Width, 109),
+                new Coord2D(rtxtInfo.Width, 132)
+            });
+
+            ShrinkExpandItemsPos.Add("btnDetailFx", new Dictionary<string, Coord2D[]>());
+            ShrinkExpandItemsPos["btnDetailFx"].Add("Location", new[]
             {
                 new Coord2D(9, 3),
                 new Coord2D(0, 3)
@@ -883,8 +1028,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             if (rectangle.Y < 32)
             {
-                rectangle.Y = myParent.Top + (myParent.Height - myParent.ClientSize.Height) +
-                              myParent.GetPrimaryBottom();
+                rectangle.Y = myParent.Top + (myParent.Height - myParent.ClientSize.Height);// +myParent.GetPrimaryBottom();
             }
 
             if (MidsContext.Config.ShrinkFrmSets & (Width > 700) |

@@ -26,9 +26,9 @@ namespace Mids_Reborn
             public static bool IsAppInitialized { get; private set; }
             private static frmBusy? _bFrm;
 
-            public static clsToonX? Toon
+            public static Toon? Toon
             {
-                get => MidsContext.Character as clsToonX;
+                get => MidsContext.Character as Toon;
                 set => MidsContext.Character = value;
             }
 
@@ -72,31 +72,10 @@ namespace Mids_Reborn
                 if (MidsContext.Config == null) return;
                 MidsContext.Config.DataPath = defaultDatabase.Value;
                 MidsContext.Config.SavePath = defaultDatabase.Value;
-                MidsContext.Config.FirstRun = false;
+                //MidsContext.Config.FirstRun = false;
 
                 await LoadData(iFrm, MidsContext.Config.DataPath);
             }
-
-            /*public static void SelectDatabase(frmInitializing? iFrm)
-            {
-                using var dbSelector = new DatabaseSelector();
-                var result = dbSelector.ShowDialog();
-                string? dbSelected;
-                if (result == DialogResult.OK)
-                {
-                    dbSelected = dbSelector.SelectedDatabase;
-                }
-                else
-                {
-                    MessageBox.Show(@"The default i24 (Generic) Database will be used as you did not select a database.", @"Database Not Selected", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    dbSelected = Files.FDefaultPath;
-                }
-
-                
-                MidsContext.Config.DataPath = dbSelected;
-                MidsContext.Config.SavePath = dbSelected;
-                LoadData(ref iFrm, MidsContext.Config.DataPath);
-            }*/
 
             public static async Task LoadData(IMessenger messenger, string? path)
             {

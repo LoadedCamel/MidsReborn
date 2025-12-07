@@ -287,6 +287,24 @@ namespace Mids_Reborn.UI.Controls
 
         #region Public API
 
+        public void Clear()
+        {
+            infoDataList.Clear(true);
+            title.Text = dvPages.Pages[0].Text;
+            infoLDesc.Text = string.Empty;
+            infoSDesc.Text = @"Hold the mouse over a power to see its description.";
+            powerScaler.Visible = false;
+            effectsHeader1.Text = string.Empty;
+            effectsHeader2.Text = string.Empty;
+            effectsHeader3.Text = string.Empty;
+            effectDataList1.Clear(true);
+            effectDataList2.Clear(true);
+            effectDataList3.Clear(true);
+            subTitle.Text = string.Empty;
+            enhDataList.Clear(true);
+            coreDataList.Clear(true);
+        }
+
         public void SelectTab(int index)
         {
             if (index < 0 || index >= _tabs.Length || index == _selectedTabIndex)
@@ -1263,8 +1281,8 @@ namespace Mids_Reborn.UI.Controls
 
             subTitle.Text = "Enhancement Values";
             var longInfo = Regex.Replace(pBase.DescLongFormatted.Trim().Replace("\0", "").Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
-            infoSDesc.Rtf = RTF.StartRTF() + RTF.ToRTF(pBase.DescShort.Trim()) + RTF.EndRTF();
-            infoLDesc.Rtf = RTF.StartRTF() + RTF.ToRTF(longInfo) + RTF.EndRTF();
+            infoSDesc.Rtf = RTF.StartRTF(infoSDesc.Font) + RTF.ToRTF(pBase.DescShort.Trim()) + RTF.EndRTF();
+            infoLDesc.Rtf = RTF.StartRTF(infoLDesc.Font) + RTF.ToRTF(longInfo) + RTF.EndRTF();
             var suffix1 = pBase.PowerType != Enums.ePowerType.Toggle ? "" : "/s";
 
             infoDataList.Clear();

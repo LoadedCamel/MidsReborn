@@ -5,9 +5,18 @@ namespace Mids_Reborn.UI.Forms
     public partial class FrmInputLevel : Form
     {
         private readonly bool LongFormat;
-        private readonly MainWindow MyParent;
+        private readonly MainWindow2 MyParent;
 
         public FrmInputLevel(MainWindow parent, bool lf)
+        {
+            InitializeComponent();
+            Name = nameof(FrmInputLevel);
+            Icon = Resources.MRB_Icon_Concept;
+            //MyParent = parent;
+            LongFormat = lf;
+        }
+
+        public FrmInputLevel(MainWindow2 parent, bool lf)
         {
             InitializeComponent();
             Name = nameof(FrmInputLevel);
