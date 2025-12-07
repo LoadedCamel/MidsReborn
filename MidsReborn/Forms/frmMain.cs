@@ -302,11 +302,16 @@ namespace Mids_Reborn.Forms
 
         public string? GetBuildFile(bool stripExt = false)
         {
-            if (MainModule.MidsController.Toon == null) return "";
-            if (!stripExt) return LastFileName;
+            if (MainModule.MidsController.Toon == null)
+            {
+                return "";
+            }
 
-            var r = new Regex(@"\.(([tT][xX][tT])|([mM][hHxX][dD]))$");
-            return r.Replace(LastFileName, "");
+            return LastFileName == null
+                ? null
+                : !stripExt
+                    ? LastFileName
+                    : Regex.Replace(LastFileName ?? "", @"\.(txt|m[bhx]d)$", "", RegexOptions.IgnoreCase);
         }
 
         private ComboBoxT<string> GetCbOrigin()

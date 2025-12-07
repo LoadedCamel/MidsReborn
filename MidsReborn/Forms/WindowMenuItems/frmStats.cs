@@ -246,11 +246,11 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 }
                 else
                 {
-                    Graph.Width = (int)Math.Floor(ClientSize.Width / 2f) - 8;
+                    Graph.Width = (int)Math.Floor(ClientSize.Width / 2f) - 12;
                     CompareGraph.Left = Graph.Width + 16;
                     CompareGraph.Width = Graph.Width;
                     CompareGraph.Height = Graph.Height;
-                    tbScaleX.Width = (int)Math.Round((chkOnTop.Left - tbScaleX.Left) / 2f) - 4;
+                    tbScaleX.Width = (int)Math.Round((chkOnTop.Left - tbScaleX.Left) / 2f) - 16;
                 }
 
                 lblScale.Left = (int)Math.Round(tbScaleX.Left + (tbScaleX.Width - lblScale.Width) / 2f);
@@ -261,11 +261,26 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void SetUiForCompare(bool fillComboValues = true)
         {
-            ClientSize = CompareMode
+            /*ClientSize = CompareMode
                 ? new Size(Math.Max(ClientSize.Width, 1004), Math.Max(ClientSize.Height, 601))
-                : new Size(Math.Min(ClientSize.Width, 492), Math.Min(ClientSize.Height, 515));
+                : new Size(Math.Min(ClientSize.Width, 492), Math.Min(ClientSize.Height, 515));*/
 
-            MinimumSize = CompareMode ? new Size(1020, 640) : new Size(508, 554);
+            MinimumSize = CompareMode
+                ? new Size(1020, 640)
+                : new Size(508, 554);
+
+            // MainModule.MidsController.SzFrmStats
+            // MainModule.MidsController.SzFrmStatsCompare
+
+            var storedCompareSize = MainModule.MidsController.SzFrmStatsCompare == null
+                ? new Rectangle(0, 0, 1004, 601)
+                : MainModule.MidsController.SzFrmStatsCompare.Value with { X = 0, Y = 0 };
+
+            var storedSize = MainModule.MidsController.SzFrmStats with { X = 0, Y = 0 };
+
+            ClientSize = CompareMode
+                ? new Size(Math.Max(1004, storedCompareSize.Width), Math.Max(601, storedCompareSize.Height))
+                : new Size(Math.Max(492, storedSize.Width), Math.Max(515, storedSize.Height));
 
             var yOffset = CompareMode ? 64 : 0;
             Graph.Top = 57 + yOffset;
@@ -1536,10 +1551,18 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 return;
             }
 
-            MainModule.MidsController.SzFrmStats.X = Left;
-            MainModule.MidsController.SzFrmStats.Y = Top;
-            MainModule.MidsController.SzFrmStats.Width = Width;
-            MainModule.MidsController.SzFrmStats.Height = Height;
+            if (!CompareMode)
+            {
+                MainModule.MidsController.SzFrmStats.X = Left;
+                MainModule.MidsController.SzFrmStats.Y = Top;
+                MainModule.MidsController.SzFrmStats.Width = Width;
+                MainModule.MidsController.SzFrmStats.Height = Height;
+            }
+            else
+            {
+                MainModule.MidsController.SzFrmStatsCompare = new Rectangle(Left, Top, Width, Height);
+            }
+            
         }
 
         private void tbScaleX_Scroll(object sender, EventArgs e)
@@ -1798,7 +1821,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             CompareMode = false;
             SetUiForCompare();
-        }
+ }
 
         private void cbCompareGraphStyle_SelectedIndexChanged(object sender, EventArgs e)
         {

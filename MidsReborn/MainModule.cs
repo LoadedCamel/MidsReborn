@@ -21,6 +21,7 @@ namespace Mids_Reborn
             public static Rectangle SzFrmRecipe = new();
             public static Rectangle SzFrmSets = new();
             public static Rectangle SzFrmStats = new();
+            public static Rectangle? SzFrmStatsCompare = new();
             public static Rectangle SzFrmTotals = new();
 
             public static bool IsAppInitialized { get; private set; }
