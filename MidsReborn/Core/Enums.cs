@@ -1612,7 +1612,6 @@ namespace Mids_Reborn.Core
 
         public static string GetGroupedDamage(bool[] iDamage, bool shortForm)
         {
-            string str1;
             if (iDamage.Length < Enum.GetValues(eDamage.None.GetType()).Length - 1)
             {
                 return "Error: Array Length Mismatch";

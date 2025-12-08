@@ -1,7 +1,4 @@
-﻿using System.Reflection.PortableExecutable;
-using System.Windows.Controls;
-
-namespace Mids_Reborn.Forms.Controls
+﻿namespace Mids_Reborn.Forms.Controls
 {
     partial class MessageBoxEx
     {

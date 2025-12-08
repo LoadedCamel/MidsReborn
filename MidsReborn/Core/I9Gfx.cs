@@ -642,7 +642,6 @@ namespace Mids_Reborn.Core
 
         public static Image GetArchetypeImage(IPower power)
         {
-            var imgString = "";
             var imgFile = "";
             var atString = power.GetPowerSet().ATClass;
             if (string.IsNullOrWhiteSpace(atString))

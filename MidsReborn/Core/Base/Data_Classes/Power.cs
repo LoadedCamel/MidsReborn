@@ -2009,7 +2009,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool GetEffectStringGrouped(int idEffect, ref string returnString, ref int[] returnMask, bool shortForm, bool simple, bool noMag = false, bool fromPopup = false, bool ignoreConditions = false)
         {
-            bool flag;
             if (idEffect < 0 | idEffect > Effects.Length - 1)
             {
                 return false;

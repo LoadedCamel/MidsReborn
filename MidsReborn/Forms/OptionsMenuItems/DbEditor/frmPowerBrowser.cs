@@ -1378,7 +1378,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (lvSet.SelectedItems.Count > 0)
             {
-                var setArchetypes = "";
                 lblSet.Text = lvSet.SelectedItems[0].SubItems[3].Text;
                 _selected[1] = lvSet.SelectedIndices[0];
 

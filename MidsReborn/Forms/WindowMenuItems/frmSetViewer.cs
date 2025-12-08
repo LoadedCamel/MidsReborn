@@ -704,8 +704,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         fxBlockStr += fxGroup.Key.DamageType != Enums.eDamage.None ? $" ({fxGroup.Key.DamageType})" : "";
                         fxBlockStr += fxGroup.Key.TargetEffectType != Enums.eEffectType.None ? $" ({fxGroup.Key.TargetEffectType})" : "";
                     }
-                    var petSum = 0;
-                    var selfSum = 0;
                     fxBlockStr += $" ({(fxTypePercent ? fxSumMag * (fxGroup.Key.EffectType == Enums.eEffectType.Endurance ? 1 : 100) : fxSumMag):##0.##}{(fxTypePercent ? "%" : "")} Total)";
 
                     foreach (var e in effectSources[fxGroup.Key])
@@ -823,7 +821,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
 
             var fxPetMagSum = 0.0;
-            var fxSelfMagSum = 0.0;
             var stext = string.Empty;
             var fxValue = sEffects.Where(x => OverlayText.Vector(x.Key) == overlayVector).Select(e => e.Value).FirstOrDefault();
             if (fxValue != null)

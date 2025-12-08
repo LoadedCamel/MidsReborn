@@ -699,8 +699,6 @@ namespace Mids_Reborn.Forms.Controls
             {
                 return;
             }
-
-            var defianceFound = false;
             var enhancedPower = pEnh == null || pEnh.PowerIndex == -1 ? pBase : pEnh;
 
             // If power is using redirects, level may not match.

@@ -1323,7 +1323,6 @@ namespace Mids_Reborn.Core
             // Initialize setCount with 0's using LINQ, more concise.
             var setCount = new int[nidPowers.Length];
 
-            var skipEffects = false;
             var effectList = new List<IEffect>();
 
             foreach (var setBonus in SetBonuses)

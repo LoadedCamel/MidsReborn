@@ -111,8 +111,8 @@ namespace Mids_Reborn.UIv2.Controls
             //var height = _scrollPanel.ClientSize.Height;
 
             // Define minimum and maximum spacing values
-            const int minSpacing = 5;
-            const int maxSpacing = 20;
+            //const int minSpacing = 5;
+            //const int maxSpacing = 20;
 
             // Calculate a factor based on control size
             //var sizeFactor = Math.Min(width, height) / 100.0;
