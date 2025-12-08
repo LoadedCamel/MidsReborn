@@ -5,7 +5,6 @@
         public class Display
         {
             private static Display _instance;
-            private static readonly object Mutex = new();
 
             public Absorb Absorb { get; set; }
             public Accuracy Accuracy { get; set; }

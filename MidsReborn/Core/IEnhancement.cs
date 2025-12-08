@@ -8,13 +8,7 @@ namespace Mids_Reborn.Core
 
         bool HasPowerEffect { get; }
 
-        Enums.eSchedule Schedule { get; }
-
         float Probability { get; }
-
-        bool IsModified { get; set; }
-
-        bool IsNew { get; set; }
 
         int StaticIndex { get; set; }
 

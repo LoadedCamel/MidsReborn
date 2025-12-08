@@ -260,10 +260,6 @@ namespace Mids_Reborn.Forms
             Shown -= OnShown;
         }
 
-        public bool PetWindowFlag { get; set; }
-
-        private List<string> MmPets { get; set; } = new();
-
         // store the instance for reuse, as these things are called per draw/redraw
         private Lazy<ComboBoxT<Archetype>> CbtAT => new(() => new ComboBoxT<Archetype>(cbAT));
         private Lazy<ComboBoxT<string>> CbtPrimary => new(() => new ComboBoxT<string>(cbPrimary));
@@ -915,7 +911,7 @@ namespace Mids_Reborn.Forms
             if (NoUpdate)
                 return;
             MidsContext.Character.Origin = cbOrigin.SelectedIndex;
-            I9Gfx.SetOrigin(cbOrigin.SelectedItem.ToStringOrNull());
+            I9Gfx.SetOrigin(cbOrigin.SelectedItem?.ToString() ?? "");
             DisplayName();
         }
 
@@ -1301,11 +1297,10 @@ namespace Mids_Reborn.Forms
             var Enh2 = -1;
             I9Slot? i9Slot1 = null;
             I9Slot? i9Slot2 = null;
-            var recolorIa = ClsDrawX.GetRecolorIa(MainModule.MidsController.Toon.IsHero());
+            var recolorIa = ClsDrawX.GetRecolorIa();
             using var solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             var num1 = FlipSlotState.Length - 1;
             Rectangle rectangle1;
-            var slotId = -1;
             for (var i = 0; i <= num1; ++i)
             {
                 point1.X = (int)Math.Round(point2.X - 30 + (drawing.SzPower.Width - drawing.SzSlot.Width * 6) / 2.0);
@@ -1314,7 +1309,6 @@ namespace Mids_Reborn.Forms
                 var num2 = 1f;
                 var powerEntry = MidsContext.Character.CurrentBuild.Powers[FlipPowerID];
                 var slot = powerEntry.Slots[i];
-                slotId = i;
                 if (FlipSlotState[i] < 0)
                 {
                     index = slot.FlippedEnhancement.Enh;
@@ -7656,7 +7650,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
             //MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
 
             var powerEntryList = listPowers.OrderBy(x => x.Level).ToList();
-            var pickedSlots = 0;
             try
             {
                 for (var k = 0; k < listPowers.Count; k++)
@@ -7734,7 +7727,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         else
                         {
                             pe.Slots[i].Level = sl.PickSlot();
-                            pickedSlots++;
                         }
                     }
                 }

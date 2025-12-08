@@ -1,7 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -15,7 +13,6 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.Core.Import;
 using Mids_Reborn.Forms.Controls;
 using MRBResourceLib;
 using Newtonsoft.Json;
@@ -75,25 +72,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
         {
             DialogResult = DialogResult.Cancel;
             Hide();
-        }
-
-        private void btnCSVImport_Click(object sender, EventArgs e)
-        {
-            var str = Clipboard.GetDataObject()?.GetData("System.String", true).ToString();
-            if (!string.IsNullOrWhiteSpace(str))
-            {
-                return;
-            }
-
-            if (new PowerData(str.Replace("\t", ",")).IsValid)
-            {
-                MessageBox.Show("Import successful.");
-                RefreshPowerData();
-            }
-            else
-            {
-                MessageBox.Show("Import failed. No changes made.");
-            }
         }
 
         private void btnFullCopy_Click(object sender, EventArgs e)

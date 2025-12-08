@@ -57,14 +57,6 @@ namespace Mids_Reborn.Core
         //nIDs_Powers(UIDSet)    -   Performs nID_From_UID on arguments and passes to the PowerIndex version - Slow
         //UIDPowers(UIDSet)    -   Text-UID lookup only (for database editor)
 
-        public const int HeroAccolades = 3257;
-        public const int VillainAccolades = 3258;
-        public const int TempPowers = 3259;
-
-        private const string RecipeName = "Mids Reborn Recipe Database";
-        private const string SalvageName = "Mids Reborn Salvage Database";
-        private const string EnhancementDbName = "Mids Reborn Enhancement Database";
-
         private static IDictionary<string, int> AttribMod = new Dictionary<string, int>();
 
         private static readonly IDictionary<string, int> Classes = new Dictionary<string, int>();
@@ -74,7 +66,6 @@ namespace Mids_Reborn.Core
         private static string[] PurpleSetsEnhUIDList = Array.Empty<string>();
         private static List<string> _archetypeEnhancements = new();
         
-        public static IEnumerable<string> GetATOEnhancements => GetArchetypeEnhancements();
         public static IDatabase Database => Base.Data_Classes.Database.Instance;
         public static ServerData ServerData => ServerData.Instance;
 
@@ -101,15 +92,6 @@ namespace Mids_Reborn.Core
             var ordered = AttribMod.OrderBy(x => x.Value)
                 .ToDictionary(x => x.Key, x => x.Value);
             File.WriteAllText(path3, JsonConvert.SerializeObject(ordered, Serializer.SerializerSettings));
-        }
-
-        public static void UpdateModifiersDict(Modifiers.ModifierTable[] mList)
-        {
-            AttribMod.Clear();
-            for (int i = 0; i < mList.Length; i++)
-            {
-                AttribMod.Add(mList[i].ID, i);
-            }
         }
 
         //Modifier Table
@@ -575,19 +557,6 @@ namespace Mids_Reborn.Core
             return Array.IndexOf(Database.Power, pw);
         }
 
-        public static IPower? GetPowerByDisplayName(string iName, int iArchetype)
-        {
-            return Database.Power
-                .DefaultIfEmpty(null)
-                .FirstOrDefault(p => p != null &&
-                                     p.DisplayName == iName &&
-                                     p.FullName.StartsWith("Inherent") | p.FullName.StartsWith("Temporary_Powers") |
-                                     p.FullName.StartsWith("Incarnate") | p.GetPowerSet().nArchetype == iArchetype |
-                                     p.GetPowerSet().nArchetype == -1 &&
-                                     !p.FullName.StartsWith("Incarnate.Ion_Judgement") &&
-                                     !p.FullName.StartsWith("Incarnate.Lore_Pet_"));
-        }
-
         public static IPower? GetPowerByDisplayName(string iName, int iArchetype, IList<string> listPowersets)
         {
             return Database.Power
@@ -760,18 +729,6 @@ namespace Mids_Reborn.Core
                    !EnhIsNaturallyAttuned(enhIdx);
         }
 
-        // Enh for which a catalyst can be used on OR has been used on already
-        // All ATOs, Winter Event sets, all IOs but regular (white grade) ones
-        public static bool EnhCanReceiveCatalyst(int enhIdx)
-        {
-            if (enhIdx == -1) return false;
-            if (enhIdx >= Database.Enhancements.Length) return false;
-
-            var enhData = Database.Enhancements[enhIdx];
-
-            return EnhIsATO(enhIdx) || EnhIsWinterEventE(enhIdx) || enhData.TypeID == Enums.eType.SetO;
-        }
-
         // Purple grade IOs + Superior ATOs + Superior Winter Event enhancements
         public static bool EnhIsSuperior(int enhIdx)
         {
@@ -786,45 +743,12 @@ namespace Mids_Reborn.Core
             return enhRecipe.Rarity == Recipe.RecipeRarity.UltraRare;
         }
 
-        // Purple grade IOs only
-        public static bool EnhIsSuperiorIO(int enhIdx)
-        {
-            if (enhIdx == -1) return false;
-            if (enhIdx >= Database.Enhancements.Length) return false;
-
-            var enhData = Database.Enhancements[enhIdx];
-            if (enhData.RecipeIDX == -1) return false;
-
-            var enhRecipe = Database.Recipes[enhData.RecipeIDX];
-
-            return enhRecipe.Rarity == Recipe.RecipeRarity.UltraRare && !EnhIsATO(enhIdx) && !EnhIsWinterEventE(enhIdx);
-        }
-
         public static bool EnhIsNaturallyAttuned(int enhIdx)
         {
             if (enhIdx == -1) return false;
             if (enhIdx >= Database.Enhancements.Length) return false;
 
             return EnhIsATO(enhIdx) || EnhIsWinterEventE(enhIdx) || EnhIsMovieE(enhIdx);
-        }
-
-        // Enh + catalyst = Superior Enh
-        // Basic ATOs, Basic Winter Event sets or purple grade sets
-        // For Reference: Attuned_Overwhelming_Force_A
-        public static bool CanCatalystUpgradeSuperior(int enhIdx)
-        {
-            if (enhIdx == -1) return false;
-            if (enhIdx >= Database.Enhancements.Length) return false;
-
-            var enhData = Database.Enhancements[enhIdx];
-            Recipe.RecipeRarity enhRarity;
-            if (enhData.RecipeIDX == -1) enhRarity = Recipe.RecipeRarity.Common;
-
-            var enhRecipe = Database.Recipes[enhData.RecipeIDX];
-            enhRarity = enhRecipe.Rarity;
-
-            return EnhIsATO(enhIdx) || EnhIsWinterEventE(enhIdx) || enhRarity == Recipe.RecipeRarity.Rare &&
-                enhData.LongName.IndexOf("Superior", StringComparison.OrdinalIgnoreCase) == -1;
         }
 
         private static string[] GetPurpleSetsEnhUIDList()
@@ -865,11 +789,6 @@ namespace Mids_Reborn.Core
         public static EnhancementSet? GetEnhancementSetFromEnhUid(string uid)
         {
             return Database.EnhancementSets.FirstOrDefault(x => x.Uid == uid);
-        }
-
-        public static List<string>? GetEnhancementsInSet(int niDSet)
-        {
-            return niDSet <= -1 ? null : Database.EnhancementSets[niDSet].Enhancements.Select(enh => Database.Enhancements[enh].UID).ToList();
         }
 
         private static IEnumerable<string> GetArchetypeEnhancements()
@@ -962,63 +881,6 @@ namespace Mids_Reborn.Core
             return Database.EnhancementSets.Count(x => x.Uid.Contains(setName.Remove(setName.Length - 2))) > 1;
         }
 
-        /*public static Dictionary<Enums.eSetType, List<IPower>> SlottablePowers()
-        {
-            var ret = new Dictionary<Enums.eSetType, List<IPower>>();
-            foreach (var power in Database.Power)
-            {
-                var powerset = power.GetPowerSet();
-                if (powerset.SetType != Enums.ePowerSetType.Primary &&
-                    powerset.SetType != Enums.ePowerSetType.Secondary &&
-                    powerset.SetType != Enums.ePowerSetType.Pool &&
-                    powerset.SetType != Enums.ePowerSetType.Ancillary &&
-                    powerset.SetType != Enums.ePowerSetType.Inherent) continue;
-
-                var setTypes = power.SetTypes.ToList();
-                foreach (var t in setTypes)
-                {
-                    if (!ret.ContainsKey(t)) ret[t] = new List<IPower>();
-                    ret[t].Add(power);
-                }
-            }
-
-            return ret;
-        }*/
-
-        public static List<IPower?> SlottablePowersSetType(int enhSetType)
-        {
-            var retList = new List<IPower?>();
-            foreach (var power in Database.Power)
-            {
-                var powerset = power.GetPowerSet();
-                if (powerset?.SetType != Enums.ePowerSetType.Primary &&
-                    powerset?.SetType != Enums.ePowerSetType.Secondary &&
-                    powerset?.SetType != Enums.ePowerSetType.Pool &&
-                    powerset?.SetType != Enums.ePowerSetType.Ancillary &&
-                    powerset?.SetType != Enums.ePowerSetType.Inherent) continue;
-                var setTypes = power.SetTypes.ToList();
-                var containsType = setTypes.Any(x => x == enhSetType);
-                if (containsType)
-                {
-                    retList.Add(power);
-                }
-            }
-
-            return retList;
-        }
-
-        public static List<IPowerset?> GetEpicPowersets(Archetype atClass)
-        {
-            if (atClass.DisplayName != "Peacebringer" && atClass.DisplayName != "Warshade")
-            {
-                return atClass.Ancillary
-                    .Select(t => Database.Powersets.FirstOrDefault(p => p.SetType == Enums.ePowerSetType.Ancillary && p.nID.Equals(t)))
-                    .ToList();
-            }
-
-            return new List<IPowerset>();
-        }
-
         public static List<IPowerset?> GetEpicPowersets(string atClass)
         {
             if (string.IsNullOrWhiteSpace(atClass) | atClass == "Class_Peacebringer" | atClass == "Class_Warshade")
@@ -1107,14 +969,6 @@ namespace Mids_Reborn.Core
             }
 
             return -1;
-        }
-
-        public static int GetEnhancementFromUid(string? uid)
-        {
-            if (string.IsNullOrWhiteSpace(uid)) return -1;
-            var enhancement = Database.Enhancements.FirstOrDefault(x => x.UID.Equals(uid));
-            if (enhancement is null) return -1;
-            return enhancement.StaticIndex;
         }
 
         public static string GetEnhancementUid(string? name)
@@ -1226,12 +1080,6 @@ namespace Mids_Reborn.Core
             return -1;
         }
 
-        public static Recipe GetRecipeByName(string iName)
-        {
-            return Database.Recipes.FirstOrDefault(recipe =>
-                string.Equals(recipe.InternalName, iName, StringComparison.OrdinalIgnoreCase));
-        }
-
         public static string[] UidReferencingPowerFix(string uidPower, string uidNew = "")
         {
             var array = Array.Empty<string>();
@@ -1282,54 +1130,10 @@ namespace Mids_Reborn.Core
             return -1;
         }
 
-        public static int NidFromUidRecipe(string uidRecipe, ref int subIndex)
-        {
-            //Returns recipe index, and sets SubIndex for the extra int value
-            var isSub = (subIndex > -1) & uidRecipe.Contains("_");
-            subIndex = -1;
-            var uid = isSub ? uidRecipe.Substring(0, uidRecipe.LastIndexOf("_", StringComparison.Ordinal)) : uidRecipe;
-            for (var recipeIdx = 0; recipeIdx < Database.Recipes.Length; ++recipeIdx)
-            {
-                if (!string.Equals(Database.Recipes[recipeIdx].InternalName, uid, StringComparison.OrdinalIgnoreCase))
-                    continue;
-                if (!isSub)
-                    return recipeIdx;
-                var startIndex = uidRecipe.LastIndexOf("_", StringComparison.Ordinal) + 1;
-                if (startIndex < 0 || startIndex > uidRecipe.Length - 1)
-                    return -1;
-                uid = uidRecipe.Substring(startIndex);
-                for (var index2 = 0; index2 < Database.Recipes[recipeIdx].Item.Length; ++index2)
-                {
-                    if (Database.Recipes[recipeIdx].Item[index2].Level != startIndex)
-                        continue;
-                    subIndex = index2;
-                    return recipeIdx;
-                }
-            }
-
-            return -1;
-        }
-
         public static int NidFromUidEnh(string uidEnh)
         {
             for (var index = 0; index < Database.Enhancements.Length; ++index)
                 if (string.Equals(Database.Enhancements[index].UID, uidEnh, StringComparison.OrdinalIgnoreCase))
-                    return index;
-            return -1;
-        }
-
-        /// <summary>
-        /// Fully qualified name is Group.Set.Name. Group is always 'Boosts'. Set is always the same as Name.
-        /// </summary>
-        /// <param name="uidEnh"></param>
-        /// <returns></returns>
-        public static int NidFromUidEnhExtended(string uidEnh)
-        {
-            if (!uidEnh.StartsWith("BOOSTS", true, CultureInfo.CurrentCulture))
-                return NidFromUidEnh(uidEnh);
-            for (var index = 0; index < Database.Enhancements.Length; ++index)
-                if (string.Equals("BOOSTS." + Database.Enhancements[index].UID + "." + Database.Enhancements[index].UID,
-                    uidEnh, StringComparison.OrdinalIgnoreCase))
                     return index;
             return -1;
         }
@@ -1510,12 +1314,6 @@ namespace Mids_Reborn.Core
             var revision = Database.Version.Build + 1;
             Database.Date = DateTime.Now;
             Database.Version = Version.Parse($"{Database.Date.Year}.{Database.Date.Month:00}.{revision}");
-        }
-
-        private static void saveEnts()
-        {
-            var serialized = JsonConvert.SerializeObject(Database.Entities, Formatting.Indented);
-            File.WriteAllText($@"{Application.StartupPath}\\data\\Ents.json", serialized);
         }
 
         public static bool LoadMainDatabase(string iPath, ref IDatabase database)
@@ -1790,12 +1588,6 @@ namespace Mids_Reborn.Core
             }
 
             return true;
-        }
-
-        public static void LoadDatabaseVersion(string? iPath)
-        {
-            var target = Files.SelectDataFileLoad(Files.MxdbFileDb, iPath);
-            Database.Version = GetDatabaseVersion(target);
         }
 
         private static Version GetDatabaseVersion(string fp)
@@ -2177,19 +1969,6 @@ namespace Mids_Reborn.Core
             fileStream.Close();
         }
 
-        private static void SaveRecipesRaw(ISerialize serializer, string fn, string name)
-        {
-            var toSerialize = new
-            {
-                name,
-                Database.RecipeSource1,
-                Database.RecipeSource2,
-                Database.RecipeRevisionDate,
-                Database.Recipes
-            };
-            ConfigData.SaveRawMhd(serializer, toSerialize, fn, null);
-        }
-
         public static void SaveRecipes(ISerialize serializer, string? iPath)
         {
             var path = Files.SelectDataFileSave(Files.MxdbFileRecipe, iPath);
@@ -2282,16 +2061,6 @@ namespace Mids_Reborn.Core
             }
         }
 
-        private static void SaveSalvageRaw(ISerialize serializer, string fn, string name)
-        {
-            var toSerialize = new
-            {
-                name,
-                Database.Salvage
-            };
-            ConfigData.SaveRawMhd(serializer, toSerialize, fn, null);
-        }
-
         public static void SaveSalvage(ISerialize serializer, string? iPath)
         {
             var path = Files.SelectDataFileSave(Files.MxdbFileSalvage, iPath);
@@ -2358,18 +2127,6 @@ namespace Mids_Reborn.Core
             {
                 Database.CrypticReplTable = null;
             }
-        }
-
-        private static void SaveEnhancementDbRaw(ISerialize serializer, string filename, string name)
-        {
-            var toSerialize = new
-            {
-                name,
-                Database.VersionEnhDb,
-                Database.Enhancements,
-                Database.EnhancementSets
-            };
-            ConfigData.SaveRawMhd(serializer, toSerialize, filename, null);
         }
 
         public static void SaveEnhancementDb(ISerialize serializer, string? iPath)
@@ -2587,16 +2344,6 @@ namespace Mids_Reborn.Core
             Database.EnhGradeStringShort[3] = "SO";
         }
 
-        public static TypeGrade GetSetTypeByName(string name)
-        {
-            return Database.SetTypes.FirstOrDefault(x => x.Name == name);
-        }
-
-        public static TypeGrade GetSetTypeByShortName(string shortName)
-        {
-            return Database.SetTypes.FirstOrDefault(x => x.ShortName == shortName);
-        }
-
         public static TypeGrade GetSetTypeByIndex(int index)
         {
             return Database.SetTypes.FirstOrDefault(x => x.Index == index);
@@ -2606,90 +2353,6 @@ namespace Mids_Reborn.Core
         {
             return Database.SpecialEnhancements.FirstOrDefault(x => x.Index == index);
         }
-
-        public static TypeGrade GetSpecialEnhByName(string name)
-        {
-            return Database.SpecialEnhancements.FirstOrDefault(x => x.Name == name);
-        }
-
-        /*public static void LoadSetTypeStrings(string iPath)
-        {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileSetTypes, iPath);
-
-            Database.SetTypeStringLong = Array.Empty<string>();
-            Database.SetTypeStringShort = Array.Empty<string>();
-            StreamReader streamReader;
-            try
-            {
-                streamReader = new StreamReader(path);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                return;
-            }
-
-            try
-            {
-                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, Files.Headers.VersionComment)))
-                    throw new EndOfStreamException("Unable to load SetType data, version header not found!");
-                if (!FileIO.IOSeek(streamReader, "SetID"))
-                    throw new EndOfStreamException("Unable to load SetType data, section header not found!");
-                var setTypeStringLong = Database.SetTypeStringLong;
-                var setTypeStringShort = Database.SetTypeStringShort;
-                string[] strArray;
-                do
-                {
-                    strArray = FileIO.IOGrab(streamReader);
-                    if (strArray[0] != "End")
-                    {
-                        Array.Resize(ref setTypeStringLong, setTypeStringLong.Length + 1);
-                        Array.Resize(ref setTypeStringShort, setTypeStringShort.Length + 1);
-                        setTypeStringShort[setTypeStringShort.Length - 1] = strArray[1];
-                        setTypeStringLong[setTypeStringLong.Length - 1] = strArray[2];
-                    }
-                    else
-                    {
-                        break;
-                    }
-                } while (strArray[0] != "End");
-
-                Database.SetTypeStringLong = setTypeStringLong;
-                Database.SetTypeStringShort = setTypeStringShort;
-                Database.EnhGradeStringLong = new string[4];
-                Database.EnhGradeStringShort = new string[4];
-                Database.EnhGradeStringLong[0] = "None";
-                Database.EnhGradeStringLong[1] = "Training Origin";
-                Database.EnhGradeStringLong[2] = "Dual Origin";
-                Database.EnhGradeStringLong[3] = "Single Origin";
-                Database.EnhGradeStringShort[0] = "None";
-                Database.EnhGradeStringShort[1] = "TO";
-                Database.EnhGradeStringShort[2] = "DO";
-                Database.EnhGradeStringShort[3] = "SO";
-                Database.SpecialEnhStringLong = new string[5];
-                Database.SpecialEnhStringShort = new string[5];
-                Database.SpecialEnhStringLong[0] = "None";
-                Database.SpecialEnhStringLong[1] = "Hamidon Origin";
-                Database.SpecialEnhStringLong[2] = "Hydra Origin";
-                Database.SpecialEnhStringLong[3] = "Titan Origin";
-                Database.SpecialEnhStringLong[4] = "D-Sync Origin";
-                //Database.SpecialEnhStringLong[5] = "Yin's Talisman";
-                Database.SpecialEnhStringShort[0] = "None";
-                Database.SpecialEnhStringShort[1] = "HO";
-                Database.SpecialEnhStringShort[2] = "TnO";
-                Database.SpecialEnhStringShort[3] = "HyO";
-                Database.SpecialEnhStringShort[4] = "DSyncO";
-                //Database.SpecialEnhStringShort[5] = "YinO";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                streamReader.Close();
-                return;
-            }
-
-            streamReader.Close();
-        }*/
 
         private static void InitializeMaths()
         {
@@ -3001,18 +2664,6 @@ namespace Mids_Reborn.Core
             UpdateMessage(messenger, "Matching Modifier IDs...");
             MatchModifierIDs();
             UpdateMessage(messenger, "Matching Entity IDs...");
-            MatchSummonIDs();
-        }
-
-        public static void MatchIds()
-        {
-            FillGroupArray();
-            MatchArchetypeIDs();
-            MatchPowersetIDs();
-            MatchPowerIDs();
-            SetPowersetsFromGroups();
-            MatchEnhancementIDs();
-            MatchModifierIDs();
             MatchSummonIDs();
         }
 
@@ -3439,17 +3090,5 @@ namespace Mids_Reborn.Core
 
             return databases;
         }
-    }
-
-    public class AbstractConverter<TReal, TAbstract> : JsonConverter where TReal : TAbstract
-    {
-        public override bool CanConvert(Type objectType)
-            => objectType == typeof(TAbstract);
-
-        public override object? ReadJson(JsonReader reader, Type type, object? value, JsonSerializer jser)
-            => jser.Deserialize<TReal>(reader);
-
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer jser)
-            => jser.Serialize(writer, value);
     }
 }

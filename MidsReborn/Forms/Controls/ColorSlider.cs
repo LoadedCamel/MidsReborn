@@ -1360,7 +1360,6 @@ namespace Mids_Reborn.Forms.Controls
                     // TODO: color for Text different?
                     float tx = 0;
                     float ty = 0;
-                    int startDiv = 0;
 
                     Color _scaleColor = ForeColor;
                     SolidBrush br = new SolidBrush(_scaleColor);
@@ -1485,8 +1484,6 @@ namespace Mids_Reborn.Forms.Controls
                                     ty = start + barRect.Y + interval - (float)(size.Height * 0.5);
                                     e.Graphics.DrawString(str, font, br, tx, ty);
                                 }
-
-                                startDiv = (int)maxsize.Width + 3;
                             }
 
 

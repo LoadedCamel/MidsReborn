@@ -236,16 +236,6 @@ namespace Mids_Reborn.Core
 
         public bool HasPowerEffect => Effect.Any(e => e.Mode == Enums.eEffMode.FX);
 
-        public bool IsPetSpecialEnh => GetEnhancementSet()?.GetPetSpecialEnhancement() == this;
-
-        // public IPower? PetSpecialPower
-        // {
-        //     get
-        //     {
-        //         var set
-        //     }
-        // }
-
         public string LongName
         {
             get

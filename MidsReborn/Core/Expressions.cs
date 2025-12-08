@@ -839,36 +839,5 @@ namespace Mids_Reborn.Core
                 });
             }
         }
-
-        private static readonly Dictionary<Enums.eEffectType, string> EffectTotalMap = new()
-        {
-            { Enums.eEffectType.Accuracy, nameof(TotalStatistics.BuffAcc) },
-            { Enums.eEffectType.DamageBuff, nameof(TotalStatistics.BuffDam) },
-            { Enums.eEffectType.Defense, nameof(TotalStatistics.Def) },
-            { Enums.eEffectType.EnduranceDiscount, nameof(TotalStatistics.BuffEndRdx) },
-            { Enums.eEffectType.SpeedFlying, nameof(TotalStatistics.FlySpd) },
-            { Enums.eEffectType.HitPoints, nameof(TotalStatistics.HPMax) },
-            { Enums.eEffectType.JumpHeight, nameof(TotalStatistics.JumpHeight) },
-            { Enums.eEffectType.SpeedJumping, nameof(TotalStatistics.JumpSpd) },
-            { Enums.eEffectType.Mez, nameof(TotalStatistics.Mez) },
-            { Enums.eEffectType.MezResist, nameof(TotalStatistics.MezRes) },
-            { Enums.eEffectType.PerceptionRadius, nameof(TotalStatistics.Perception) },
-            { Enums.eEffectType.RechargeTime, nameof(TotalStatistics.BuffHaste) },
-            { Enums.eEffectType.Recovery, nameof(TotalStatistics.EndRec) },
-            { Enums.eEffectType.Regeneration, nameof(TotalStatistics.HPRegen) },
-            { Enums.eEffectType.ResEffect, nameof(TotalStatistics.DebuffRes) },
-            { Enums.eEffectType.Resistance, nameof(TotalStatistics.Res) },
-            { Enums.eEffectType.SpeedRunning, nameof(TotalStatistics.RunSpd) },
-            { Enums.eEffectType.StealthRadius, nameof(TotalStatistics.StealthPvE) },
-            { Enums.eEffectType.StealthRadiusPlayer, nameof(TotalStatistics.StealthPvP) },
-            { Enums.eEffectType.ThreatLevel, nameof(TotalStatistics.ThreatLevel) },
-            { Enums.eEffectType.ToHit, nameof(TotalStatistics.BuffToHit) },
-            { Enums.eEffectType.Elusivity, nameof(TotalStatistics.Elusivity) },
-            { Enums.eEffectType.MaxRunSpeed, nameof(TotalStatistics.MaxRunSpd) },
-            { Enums.eEffectType.MaxJumpSpeed, nameof(TotalStatistics.MaxJumpSpd) },
-            { Enums.eEffectType.MaxFlySpeed, nameof(TotalStatistics.MaxFlySpd) },
-            { Enums.eEffectType.Absorb, nameof(TotalStatistics.Absorb) },
-            { Enums.eEffectType.Stealth, nameof(TotalStatistics.StealthPvE) }
-        };
     }
 }

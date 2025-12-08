@@ -27,7 +27,6 @@ namespace Mids_Reborn.Forms.JsonImport
 
         private void parseAttriModFile(string fileName)
         {
-            var serializer = new JsonSerializer();
             var json = File.ReadAllText(fileName);
             var classes = JsonConvert.DeserializeObject<List<Class>>(json);
 

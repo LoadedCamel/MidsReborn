@@ -67,11 +67,6 @@ namespace Mids_Reborn.Core
             return _nPowerset;
         }
 
-        public IReadOnlyList<int> GetNUpgradePower()
-        {
-            return _nUpgradePower;
-        }
-
         public int GetNId()
         {
             return _nID;

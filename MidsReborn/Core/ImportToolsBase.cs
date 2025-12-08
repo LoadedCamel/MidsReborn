@@ -54,26 +54,9 @@ namespace Mids_Reborn.Core
 
     public class SlotLevelQueue
     {
-        private int Index;
         private int Level = -1;
 
         private int SlotsAtLevel;
-        /*private static readonly int[] SlotLevels = new[]
-        {
-            2, 2, 4, 4, 6, 6, 8, 8, 10, 10, 12, 12, 14, 14, 16, 16, 18, 18, 20, 20, 22, 22, 24, 24, 26, 26, 28, 28,
-            30, 30, 30, 32, 32, 32, 33, 33, 33, 35, 35, 35, 36, 36, 36, 38, 38, 38, 39, 39, 39,
-            41, 41, 41, 42, 42, 42, 45, 44, 44, 44, 45, 45, 47, 47, 47, 49, 49, 49
-        };*/
-
-        public static int GetNumSlotsBeforeLevel(int level)
-        {
-            return DatabaseAPI.Database.Levels.Take(level).Select(e => e.Slots).Sum();
-        }
-
-        public static int GetTotalSlots()
-        {
-            return DatabaseAPI.Database.Levels.Select(e => e.Slots).Sum();
-        }
 
         public int PickSlot()
         {
@@ -87,7 +70,6 @@ namespace Mids_Reborn.Core
             if (SlotsAtLevel > 0)
             {
                 SlotsAtLevel--;
-                Index++;
 
                 return Level;
             }
@@ -98,14 +80,8 @@ namespace Mids_Reborn.Core
                 SlotsAtLevel = DatabaseAPI.Database.Levels[Level].Slots;
             }
 
-            Index++;
             SlotsAtLevel--;
             return Level;
-        }
-
-        public bool IsValidNext()
-        {
-            return Level != 49 || SlotsAtLevel != 0;
         }
     }
 }

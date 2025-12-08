@@ -365,12 +365,6 @@ namespace Mids_Reborn.Core
         public static class Fi
         {
 
-            public static PairedListEx.Item FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix,
-                Enums.ShortFX tag, IPower basePower)
-            {
-                return FastItem(title, s1, s2, suffix, false, false, false, false, tag, basePower);
-            }
-
             public static PairedListEx.Item FastItem(string title, float s1, float s2, string suffix, string tip)
             {
                 return FastItem(title, s1, s2, suffix, false, false, false, false, tip.Trim());
@@ -533,42 +527,6 @@ namespace Mids_Reborn.Core
 
         public static class Tooltip
         {
-            public static string GenerateTipFromEffect(IPower basePower, IEffect baseFx)
-            {
-                return (string.Join("\n",
-                            basePower.Effects
-                                .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                                .Where(e =>
-                                    e.Value.EffectType == baseFx.EffectType &
-                                    e.Value.DamageType == baseFx.DamageType &
-                                    e.Value.MezType == baseFx.MezType &
-                                    e.Value.ETModifies == baseFx.ETModifies &
-                                    e.Value.ToWho == Enums.eToWho.Self &
-                                    (e.Value.PvMode != (MidsContext.Config.Inc.DisablePvE
-                                        ? Enums.ePvX.PvE
-                                        : Enums.ePvX.PvP)) &
-                                    (e.Value.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
-                                .Select(e =>
-                                    (e.Value.BuildEffectString(false, "", false, false, false, true) +
-                                     basePower.GetDifferentAttributesSubPower(e.Key)).Replace(".,", ",")))
-                        + "\n\n"
-                        + string.Join("\n",
-                            basePower.Effects
-                                .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                                .Where(e =>
-                                    e.Value.EffectType == baseFx.EffectType &
-                                    e.Value.DamageType == baseFx.DamageType &
-                                    e.Value.MezType == baseFx.MezType &
-                                    e.Value.ETModifies == baseFx.ETModifies &
-                                    e.Value.ToWho == Enums.eToWho.Target &
-                                    (e.Value.PvMode != (MidsContext.Config.Inc.DisablePvE
-                                        ? Enums.ePvX.PvE
-                                        : Enums.ePvX.PvP)) &
-                                    (e.Value.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
-                                .Select(e =>
-                                    (e.Value.BuildEffectString(false, "", false, false, false, true) +
-                                     basePower.GetDifferentAttributesSubPower(e.Key)).Replace(".,", ",")))).Trim();
-            }
 
             public static string GenerateTipFromEffect(IPower basePower, Enums.ShortFX tag)
             {
@@ -611,40 +569,6 @@ namespace Mids_Reborn.Core
                                .Select(e =>
                                    (e.Value.BuildEffectString(false, "", false, false, false, true) +
                                     basePower.GetDifferentAttributesSubPower(e.Key)).Replace(".,", ","))).Trim();
-            }
-
-            // Def/Res/Elusivity
-            public static string GenerateTipFromEffect(IPower basePower, Enums.eEffectType effectType,
-                Enums.eDamage dmgType)
-            {
-                return (string.Join("\n",
-                            basePower.Effects
-                                .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                                .Where(e =>
-                                    e.Value.EffectType == effectType &
-                                    e.Value.DamageType == dmgType &
-                                    e.Value.ToWho == Enums.eToWho.Self &
-                                    (e.Value.PvMode != (MidsContext.Config.Inc.DisablePvE
-                                        ? Enums.ePvX.PvE
-                                        : Enums.ePvX.PvP)) &
-                                    (e.Value.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
-                                .Select(e => (e.Value.BuildEffectString(false, "", false, false, false, true) +
-                                              basePower.GetDifferentAttributesSubPower(e.Key)).Replace(".,", ",")))
-                        + "\n\n"
-                        + string.Join("\n",
-                            basePower.Effects
-                                .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                                .Where(e =>
-                                    e.Value.EffectType == effectType &
-                                    e.Value.DamageType == dmgType &
-                                    e.Value.ToWho == Enums.eToWho.Target &
-                                    (e.Value.PvMode != (MidsContext.Config.Inc.DisablePvE
-                                        ? Enums.ePvX.PvE
-                                        : Enums.ePvX.PvP)) &
-                                    (e.Value.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None)
-                                .Select(e => (e.Value.BuildEffectString(false, "", false, false, false, true) +
-                                              basePower.GetDifferentAttributesSubPower(e.Key)).Replace(".,", ","))))
-                    .Trim();
             }
         }
     }

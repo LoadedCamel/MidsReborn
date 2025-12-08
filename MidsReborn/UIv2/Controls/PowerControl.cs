@@ -18,7 +18,6 @@ namespace Mids_Reborn.UIv2.Controls
         public Image PowerImage { get; set; }
         public List<Image> SlotEnhancements { get; private set; } = new List<Image>();
         public int SlotCount { get; set; } = 0; // Dynamically set based on the power
-        private const int MaxSlots = 6;
         private int _baseSlotSize = 32; // Base size for slots
         private int _slotSize; // Actual slot size, adjusted dynamically
         private int _padding; // Dynamic padding, adjusted dynamically
@@ -108,8 +107,7 @@ namespace Mids_Reborn.UIv2.Controls
         private void AdjustSizes()
         {
             // Dynamic calculation for slot size and padding based on control size
-            int controlWidth = Width;
-            int controlHeight = Height;
+            var controlWidth = Width;
 
             // Example dynamic resizing logic (customize as needed):
             // Adjust slot size relative to control size, maintaining aspect ratio

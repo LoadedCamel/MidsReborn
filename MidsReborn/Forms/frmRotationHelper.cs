@@ -163,64 +163,6 @@ namespace Mids_Reborn.Forms
             listBox2.DisplayMember = "Key";
         }
 
-        // Import from frmDPSCalc
-        /*public void SetLocation()
-        {
-            var rectangle = MainModule.MidsController.SzFrmRecipe with {Width = 800};
-            if (rectangle.Width < 1)
-            {
-                rectangle.Width = Width;
-            }
-
-            if (rectangle.Height < 1)
-            {
-                rectangle.Height = Height;
-            }
-
-            if (rectangle.Width < MinimumSize.Width)
-            {
-                rectangle.Width = MinimumSize.Width;
-            }
-
-            if (rectangle.Height < MinimumSize.Height)
-            {
-                rectangle.Height = MinimumSize.Height;
-            }
-
-            if (rectangle.X < 1)
-            {
-                rectangle.X = (int)Math.Round((Screen.PrimaryScreen.Bounds.Width - Width) / 2f);
-            }
-
-            if (rectangle.Y < 32)
-            {
-                rectangle.Y = (int)Math.Round((Screen.PrimaryScreen.Bounds.Height - Height) / 2f);
-            }
-
-            Top = rectangle.Y;
-            Left = rectangle.X;
-            Height = rectangle.Height;
-            Width = rectangle.Width;
-        }*/
-
-        /*private void StoreLocation()
-        {
-            if (!MainModule.MidsController.IsAppInitialized)
-            {
-                return;
-            }
-
-            MainModule.MidsController.SzFrmRecipe.X = Left;
-            MainModule.MidsController.SzFrmRecipe.Y = Top;
-            MainModule.MidsController.SzFrmRecipe.Width = Width;
-            MainModule.MidsController.SzFrmRecipe.Height = Height;
-        }*/
-
-        private float CalcArcanaCastTime(float castTime)
-        {
-            return (float)(Math.Ceiling(castTime / 0.132f) + 1) * 0.132f;
-        }
-
         private void UpdateBoostsText()
         {
             lblBoosts.Text = string.Join(", ", ctlCombatTimeline1.UserBoosts.Select(e => e.DisplayName).OrderBy(e => e));

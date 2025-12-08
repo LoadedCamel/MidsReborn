@@ -19,7 +19,6 @@ namespace Mids_Reborn.Core.Base.Master_Classes
         public const string Title = "Mids' Reborn";
 
         public const int MathLevelBase = 49;
-        public const int MathLevelExemp = -1;
 
         internal static bool EnhCheckMode = false;
 

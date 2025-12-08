@@ -24,20 +24,7 @@ namespace Mids_Reborn.Core
 
         #endregion
 
-        private void StoreRaw(ISerialize serializer, string path, string name)
-        {
-            var toSerialize = new
-            {
-                name,
-                Revision,
-                RevisionDate,
-                SourceIndex,
-                SourceTables,
-                Modifier
-            };
-            ConfigData.SaveRawMhd(serializer, toSerialize, path, null);
-        }
-
+        
         public bool Load(string? iPath)
         {
             var path = Files.SelectDataFileLoad(Files.JsonFileModifiers, iPath);

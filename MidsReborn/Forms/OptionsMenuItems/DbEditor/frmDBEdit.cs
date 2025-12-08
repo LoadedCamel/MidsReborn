@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -59,7 +58,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Load += frmDBEdit_Load;
             Initialized = false;
             InitializeComponent();
-            var componentResourceManager = new ComponentResourceManager(typeof(frmDBEdit));
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmDBEdit);
         }

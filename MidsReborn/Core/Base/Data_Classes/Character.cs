@@ -189,8 +189,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public TotalStatistics TotalsCapped { get; }
 
         public Statistics DisplayStats { get; }
-
-        public int displayIndex { get; set; }
         public List<InherentDisplayItem>? InherentDisplayList { get; set; }
         public int SlotsRemaining
         {
@@ -199,11 +197,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 var num = Build.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
                 return num;
             }
-        }
-
-        public static void ParseCase()
-        {
-            Console.WriteLine(nameof(BoxingBuff));
         }
 
         public bool CanPlaceSlot
@@ -307,14 +300,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 Locked = false;
                 ResetLevel();
             }
-        }
-
-        public int GetPowersByLevel(int Level)
-        {
-            int[] powerPickedLevels =
-                {0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 34, 37, 40, 43, 46, 48};
-
-            return powerPickedLevels.Where(e => e <= Level).ToArray().Length;
         }
 
         public bool IsHero()
@@ -1202,19 +1187,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 numArray[0] += DatabaseAPI.Database.Levels[level].Slots - num;
                 numArray[1] += num;
             }
-
-            return numArray;
-        }
-
-        public int[] GetSlotCounts(int level)
-        {
-            var numArray = new int[2];
-
-            var numTaken = SlotLevelQueue.GetNumSlotsBeforeLevel(level) + CurrentBuild.SlotsPlacedAtLevel(level);
-            var numTotal = DatabaseAPI.Database.Levels.Sum(e => e.Slots);
-
-            numArray[0] = numTotal - numTaken;
-            numArray[1] = numTaken;
 
             return numArray;
         }

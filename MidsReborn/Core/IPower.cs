@@ -8,7 +8,6 @@ namespace Mids_Reborn.Core
 {
     public interface IPower : IComparable
     {
-        bool HasEntity { get; }
         bool HasProcSlotted { get; set; }
         string FullSetName { get; }
 
@@ -208,21 +207,15 @@ namespace Mids_Reborn.Core
         IPowerset? GetPowerSet();
 
         void StoreTo(ref BinaryWriter writer);
-
-        PowerEntry? GetPowerEntry();
         
         float FXGetDamageValue(bool absorb = false);
 
         string GetDamageTip();
 
         string FXGetDamageString(bool absorb = false);
-
-        int[] GetRankedEffects();
         int[] GetRankedEffects(bool newMode);
 
         int GetDurationEffectID();
-
-        float[] GetDef(int buffDebuff = 0);
 
         float[] GetRes(bool pvE = true);
 
@@ -234,10 +227,6 @@ namespace Mids_Reborn.Core
     
         int Stacks { get; set; }
 
-        int InternalStacks { get; }
-
-        int VirtualStacks { get; set; }
-
         float CastTimeBase { get; }
         
         float ArcanaCastTime { get; }
@@ -246,17 +235,7 @@ namespace Mids_Reborn.Core
         
         bool IsPetPower { get; }
 
-        int ParentIdx { get; set; }
-
         List<SummonedEntity>? GetEntities();
-
-        bool HasDefEffects();
-
-        bool HasResEffects();
-
-        bool HasDamageEffects();
-
-        bool HasDamageBuffEffects();
 
         bool HasAttribModEffects();
 
@@ -275,8 +254,6 @@ namespace Mids_Reborn.Core
 
         bool AffectsTarget(Enums.eEffectType iEffect);
 
-        bool AffectsSelf(Enums.eEffectType iEffect);
-
         bool I9FXPresentP(Enums.eEffectType iEffect, Enums.eMez iMez = Enums.eMez.None);
 
         bool IgnoreEnhancement(Enums.eEnhance iEffect);
@@ -294,9 +271,6 @@ namespace Mids_Reborn.Core
             bool noMag = false,
             bool fromPopup = false,
             bool ignoreConditions = false);
-
-        string? BuildEffectStringGrouped(int idEffect, bool simple = true, bool noMag = false, bool shortForm = false,
-            bool fromPopup = false, bool ignoreConditions = false);
 
         int[] AbsorbEffects(
             IPower? source,
@@ -320,25 +294,16 @@ namespace Mids_Reborn.Core
 
         void ProcessExecutes();
 
-        string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName = "", bool includeEnhEffects = false, bool activeOnly = true);
-
         string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, Enums.eEffectType etModifies, Enums.eDamage damageType, Enums.eMez mezType, string groupName = "", bool includeEnhEffects = false);
-
-        Dictionary<int, string> GetEffectsInSummons();
 
         string GetDifferentAttributesSubPower(int fxIndex);
 
         void ApplyModifyEffects();
 
         string ExportToJson();
-
-        bool AppliedPowersOverride { get; set; }
-        bool AbsorbedPetEffects { get; set; }
         bool AppliedExecutes { get; set; }
-        bool AppliedSubPowers { get; set; }
 
         string DescLongFormatted { get; }
         string? CSPrimaryKey { get; }
-        List<string> CSKeys { get; }
     }
 }

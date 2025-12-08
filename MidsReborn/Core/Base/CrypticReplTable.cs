@@ -66,32 +66,7 @@ namespace Mids_Reborn.Core.Base
         public static void Initialize()
         {
             _current = new CrypticReplTable(Files.CNamePowersRepl);
-            var pass1Count = _current._table.Count;
             _current.CheckConsistency();
-        }
-
-        public bool KeyExists(string id)
-        {
-            return _table.Any(item => item.Key == id);
-        }
-
-        public string FetchAlternate(string id)
-        {
-            return _table.ContainsKey(id)
-                ? _table[id]
-                : "";
-        }
-
-        public string FetchSource(string id)
-        {
-            foreach (var item in _table)
-            {
-                if (item.Value != id) continue;
-
-                return item.Key;
-            }
-
-            return "";
         }
 
         private void CheckConsistency()

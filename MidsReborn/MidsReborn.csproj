@@ -36,9 +36,6 @@
     <Compile Update="Forms\Controls\ColorSlider.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="Forms\Controls\CheckedListExt.cs">
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Update="Forms\Controls\DataView.cs">
       <SubType>UserControl</SubType>
     </Compile>

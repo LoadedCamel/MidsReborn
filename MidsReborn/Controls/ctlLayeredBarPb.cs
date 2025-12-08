@@ -363,7 +363,6 @@ namespace Mids_Reborn.Controls
 
         private void ctlLayeredBarPb_MouseLeave(object sender, EventArgs e)
         {
-            var target = sender as ctlLayeredBarPb;
             TTip.SetToolTip(this, "");
             Draw();
             Refresh();

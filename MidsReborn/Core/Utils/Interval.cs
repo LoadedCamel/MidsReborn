@@ -167,30 +167,6 @@ namespace Mids_Reborn.Core.Utils
                 : new Interval(Start, End); // return this; // ???
         }
 
-        /// <summary>
-        /// Cap an interval inside min, max values. If changeSize is set to true, bounds are just set min and max values, changing length
-        /// </summary>
-        /// <param name="cStart">Lower bound</param>
-        /// <param name="cEnd">Upper bound</param>
-        /// <param name="changeSize">Allow interval size to be changed if cap is hit</param>
-        /// <returns>Capped interval</returns>
-        public Interval MinMax(float cStart, float cEnd, bool changeSize = false)
-        {
-            if (changeSize)
-            {
-                return new Interval(Math.Max(cStart, Start), Math.Min(cEnd, End));
-            }
-
-            if (Start < cStart)
-            {
-                return new Interval(cStart, cStart + Length);
-            }
-
-            return End > cEnd
-                ? new Interval(cEnd - Length, cEnd)
-                : new Interval(Start, End); // return this; // ???
-        }
-
         public override string ToString()
         {
             return $"<Interval> {{{Start}, {End} (Len={Length})}}";

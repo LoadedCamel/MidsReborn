@@ -8,8 +8,6 @@ namespace Mids_Reborn.Core
     {
         bool IsModified { get; set; }
 
-        bool IsNew { get; set; }
-
         int nID { get; set; }
 
         int nArchetype { get; set; }

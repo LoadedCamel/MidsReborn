@@ -23,12 +23,6 @@ namespace Mids_Reborn.Core
             return lastIdx <= -1 ? iFileName : iFileName.Substring(lastIdx + 1);
         }
 
-        public static string StripFileName(string iFileName)
-        {
-            var length = iFileName.LastIndexOf("\\", StringComparison.Ordinal);
-            return length <= -1 ? AddSlash(iFileName) : iFileName.Substring(0, length);
-        }
-
         public static string[] IOGrab(StreamReader iStream)
         {
             if (iStream == null)
@@ -65,7 +59,7 @@ namespace Mids_Reborn.Core
             }
             catch (Exception ex)
             {
-                var num = (int) MessageBox.Show("An error has occured when reading the stream. Error: " + ex.Message);
+                MessageBox.Show("An error has occured when reading the stream. Error: " + ex.Message);
                 str = "";
             }
 
@@ -87,48 +81,6 @@ namespace Mids_Reborn.Core
                 MessageBox.Show("An error has occured when reading the stream. Error: " + ex.Message);
                 return false;
             }
-        }
-
-        public static bool CopyFolder(string src, string dest)
-        {
-            if (!Directory.Exists(src))
-                return false;
-
-            if (!Directory.Exists(dest))
-                try
-                {
-                    Directory.CreateDirectory(dest);
-                }
-                catch (Exception ex)
-                {
-                    MessageBox.Show("An error has occured when copying the folder. Error: " + ex.Message);
-                    return false;
-                }
-
-            if (!FolderCopy(new DirectoryInfo(src), dest))
-                return false;
-            try
-            {
-                var str = StripSlash(src) + ".old";
-                src = StripSlash(src);
-                var num = 0;
-                while (Directory.Exists(str))
-                {
-                    ++num;
-                    str = src + ".old." + num;
-                    if (num > 100)
-                        return false;
-                }
-
-                Directory.Move(src, str);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("An error has occured when copying the folder. Error: " + ex.Message);
-                return true;
-            }
-
-            return true;
         }
 
         private static bool FolderCopy(DirectoryInfo iDi, string dest)

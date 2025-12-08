@@ -17,11 +17,9 @@ namespace Mids_Reborn.Core
         public const string MxdbFileSalvage = "Salvage.mhd";
         public const string MxdbFileRecipe = "Recipe.mhd";
         public const string MxdbFileEnhDb = "EnhDB.mhd";
-        public const string MxdbFileBbCodeUpdate = "BBCode.mhd";
         public const string MxdbFileOverrides = "Compare.mhd";
         public const string MxdbFileModifiers = "AttribMod.mhd";
         public const string MxdbFileEffectIds = "GlobalMods.mhd";
-        public const string MxdbFileGraphics = "I9.mhd";
         public const string MxdbFileSd = "SData.mhd";
 
         public const string ServerDataFile = "SData.json";

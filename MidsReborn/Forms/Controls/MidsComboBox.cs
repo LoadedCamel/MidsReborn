@@ -106,15 +106,6 @@ namespace Mids_Reborn.Forms.Controls
         }
 
         [Category("Data")]
-        [Browsable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public object? SelectedValue
-        {
-            get => _listBox.SelectedValue;
-            set => _listBox.SelectedValue = value;
-        }
-
-        [Category("Data")]
         [Bindable(true)]
         [Browsable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]

@@ -103,11 +103,6 @@ namespace Mids_Reborn.Core
             _current.Dump();
         }
 
-        public bool KeyExists(int id)
-        {
-            return _table.Any(item => item.SourcePowerId == id);
-        }
-
         public int FetchAlternate(int oldId, string archetype = "")
         {
             if (_table == null || _table.Count == 0)

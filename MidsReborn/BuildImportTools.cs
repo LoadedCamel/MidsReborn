@@ -254,27 +254,6 @@ namespace Mids_Reborn
             }
         }
 
-        // CheckValid, from power/powerset fullName
-        protected bool CheckValid(string input, Enums.eValidationType validateType)
-        {
-            string[] excludes;
-            switch (validateType)
-            {
-                case Enums.eValidationType.Powerset:
-                    excludes = ExcludePowersets;
-                    break;
-
-                case Enums.eValidationType.Power:
-                    excludes = ExcludePowers;
-                    break;
-
-                default:
-                    return false;
-            }
-
-            return !excludes.Any(x => input.Contains(x));
-        }
-
         // CheckValid, for direct powerset result
         // Since DatabaseAPI.GetPowersetByName may return null
         protected bool CheckValid(IPowerset? input)

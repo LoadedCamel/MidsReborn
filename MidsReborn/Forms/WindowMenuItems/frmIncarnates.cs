@@ -205,115 +205,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             this.loreBtn = loreBtn;
         }
 
-        private void miniPowerInfo(int pIDX)
-        {
-            if (Locked)
-                return;
-            IPower? power1 = new Power(myPowers[pIDX]);
-            power1.AbsorbPetEffects();
-            power1.ApplyGrantPowerEffects();
-            var iPopup = new PopUp.PopupData();
-            if (pIDX < 0)
-            {
-                PopInfo.SetPopup(iPopup);
-                ChangedScrollFrameContents();
-            }
-            else
-            {
-                var index1 = iPopup.Add();
-                var str1 = "";
-                switch (power1.PowerType)
-                {
-                    case Enums.ePowerType.Click:
-                        if (power1.ClickBuff) str1 = "(Click)";
-                        break;
-                    case Enums.ePowerType.Auto_:
-                        str1 = "(Auto)";
-                        break;
-                    case Enums.ePowerType.Toggle:
-                        str1 = "(Toggle)";
-                        break;
-                }
-
-                iPopup.Sections[index1].Add(power1.DisplayName, PopUp.Colors.Title);
-                iPopup.Sections[index1].Add(str1 + " " + power1.DescShort, PopUp.Colors.Text, 0.9f);
-                var str2 = power1.DescLong.Replace("\0", "").Replace("<br>", "\r\n");
-                iPopup.Sections[index1].Add(str1 + " " + str2, PopUp.Colors.Common, 1f, FontStyle.Regular);
-                var index2 = iPopup.Add();
-                if (power1.EndCost > 0.0)
-                {
-                    if (power1.ActivatePeriod > 0.0)
-                        iPopup.Sections[index2].Add("End Cost:", PopUp.Colors.Title,
-                            Utilities.FixDP(power1.EndCost / power1.ActivatePeriod) + "/s", PopUp.Colors.Title, 0.9f,
-                            FontStyle.Bold, 1);
-                    else
-                        iPopup.Sections[index2].Add("End Cost:", PopUp.Colors.Title, Utilities.FixDP(power1.EndCost),
-                            PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                }
-
-                if ((power1.EntitiesAutoHit == Enums.eEntity.None) | ((power1.Range > 20.0) &
-                                                                      power1.I9FXPresentP(Enums.eEffectType.Mez,
-                                                                          Enums.eMez.Taunt)))
-                    iPopup.Sections[index2].Add("Accuracy:", PopUp.Colors.Title,
-                        Utilities.FixDP((float)(MidsContext.Config.ScalingToHit * (double)power1.Accuracy * 100.0)) + "%",
-                        PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                if (power1.RechargeTime > 0.0)
-                    iPopup.Sections[index2].Add("Recharge:", PopUp.Colors.Title,
-                        Utilities.FixDP(power1.RechargeTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                var durationEffectId = power1.GetDurationEffectID();
-                var iNum = 0.0f;
-                if (durationEffectId > -1)
-                    iNum = power1.Effects[durationEffectId].Duration;
-                if ((power1.PowerType != Enums.ePowerType.Toggle) & (power1.PowerType != Enums.ePowerType.Auto_) &&
-                    iNum > 0.0)
-                    iPopup.Sections[index2].Add("Duration:", PopUp.Colors.Title, Utilities.FixDP(iNum) + "s",
-                        PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                if (power1.Range > 0.0)
-                    iPopup.Sections[index2].Add("Range:", PopUp.Colors.Title, Utilities.FixDP(power1.Range) + "ft",
-                        PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                if (power1.Arc > 0)
-                    iPopup.Sections[index2].Add("Arc:", PopUp.Colors.Title, Convert.ToString(power1.Arc) + "°",
-                        PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                else if (power1.Radius > 0.0)
-                    iPopup.Sections[index2].Add("Radius:", PopUp.Colors.Title,
-                        Convert.ToString(power1.Radius, CultureInfo.InvariantCulture) + "ft", PopUp.Colors.Title, 0.9f,
-                        FontStyle.Bold, 1);
-                if (power1.CastTime > 0.0)
-                    iPopup.Sections[index2].Add("Cast Time:", PopUp.Colors.Title,
-                        Utilities.FixDP(power1.CastTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                var power2 = power1;
-                if (power2.Effects.Length > 0)
-                {
-                    iPopup.Sections[index2].Add("Effects:", PopUp.Colors.Title);
-                    char[] chArray = { '^' };
-                    var num1 = power2.Effects.Length - 1;
-                    for (var index3 = 0; index3 <= num1; ++index3)
-                    {
-                        if (!(((power2.Effects[index3].EffectType != Enums.eEffectType.GrantPower) |
-                               power2.Effects[index3].Absorbed_Effect) &
-                              (power2.Effects[index3].EffectType != Enums.eEffectType.RevokePower) &
-                              (power2.Effects[index3].EffectType != Enums.eEffectType.SetMode)))
-                            continue;
-                        var index4 = iPopup.Add();
-                        power1.Effects[index3].SetPower(power1);
-                        var strArray = power1.Effects[index3].BuildEffectString().Replace("[", "\r\n")
-                            .Replace("\r\n", "^").Replace("  ", "").Replace("]", "").Split(chArray);
-                        var num2 = strArray.Length - 1;
-                        for (var index5 = 0; index5 <= num2; ++index5)
-                            if (index5 == 0)
-                                iPopup.Sections[index4].Add(strArray[index5], PopUp.Colors.Effect, 0.9f, FontStyle.Bold,
-                                    1);
-                            else
-                                iPopup.Sections[index4].Add(strArray[index5], PopUp.Colors.Disabled, 0.9f,
-                                    FontStyle.Italic, 2);
-                    }
-                }
-
-                PopInfo.SetPopup(iPopup);
-                ChangedScrollFrameContents();
-            }
-        }
-
         private void OmegaButton_ButtonClicked()
         {
             var omegaButton = OmegaButton;
@@ -400,14 +291,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             iList.Font = new Font("Segoe UI", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);
             iList.Refresh();
             iList.Update();
-        }
-
-        public class CustomPanel : Panel
-        {
-            protected override Point ScrollToControl(Control activeControl)
-            {
-                return DisplayRectangle.Location;
-            }
         }
     }
 }

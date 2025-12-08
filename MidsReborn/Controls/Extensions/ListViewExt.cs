@@ -17,17 +17,6 @@ namespace Mids_Reborn.Controls.Extensions
             return targetControl.SelectedIndices.Count <= 0 ? -1 : targetControl.SelectedIndices[0];
         }
 
-        public static void RefreshVirtual(this ListView targetControl, int newItemsCount)
-        {
-            if (!targetControl.VirtualMode)
-            {
-                return;
-            }
-
-            targetControl.VirtualListSize = 0;
-            targetControl.VirtualListSize = newItemsCount;
-        }
-
         public class LvKeyboardNavHandler
         {
             private ListView TargetControl;

@@ -170,12 +170,6 @@ namespace Mids_Reborn.Forms.Controls
             Close();
         }
 
-        private void ManageIgnoreState(bool showIgnore)
-        {
-            chkIgnore.Visible = showIgnore;
-            chkIgnore.Enabled = showIgnore;
-        }
-
         public static DialogResult ShowDialog(string message, string title, MessageBoxExButtons buttons, MessageBoxExIcon icon = MessageBoxExIcon.Information, bool showIgnore = false)
         {
             using var msgBox = new MessageBoxEx(title, message, buttons, icon, showIgnore: showIgnore);

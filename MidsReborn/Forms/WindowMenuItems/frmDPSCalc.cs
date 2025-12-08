@@ -322,50 +322,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             lvPower.Focus();
         }
 
-        private static void putInList(ref CountingList[] tl, string item)
-        {
-            var num = tl.Length - 1;
-            for (var index = 0; index <= num; ++index)
-            {
-                if (tl[index].Text != item)
-                    continue;
-                ++tl[index].Count;
-                return;
-            }
-
-            Array.Resize(ref tl, tl.Length+1);
-            //tl = (CountingList[]) Utils.CopyArray(tl, new CountingList[tl.Length + 1]);
-            tl[^1].Count = 1;
-            tl[^1].Text = item;
-        }
-
-        public void SetLocation()
-        {
-            var rectangle = new Rectangle
-            {
-                X = MainModule.MidsController.SzFrmRecipe.X,
-                Y = MainModule.MidsController.SzFrmRecipe.Y,
-                Width = 800,
-                Height = MainModule.MidsController.SzFrmRecipe.Height
-            };
-            if (rectangle.Width < 1)
-                rectangle.Width = Width;
-            if (rectangle.Height < 1)
-                rectangle.Height = Height;
-            if (rectangle.Width < MinimumSize.Width)
-                rectangle.Width = MinimumSize.Width;
-            if (rectangle.Height < MinimumSize.Height)
-                rectangle.Height = MinimumSize.Height;
-            if (rectangle.X < 1)
-                rectangle.X = (int) Math.Round((Screen.PrimaryScreen.Bounds.Width - Width) / 2.0);
-            if (rectangle.Y < 32)
-                rectangle.Y = (int) Math.Round((Screen.PrimaryScreen.Bounds.Height - Height) / 2.0);
-            Top = rectangle.Y;
-            Left = rectangle.X;
-            Height = rectangle.Height;
-            Width = rectangle.Width;
-        }
-
         private void StoreLocation()
         {
             if (!MainModule.MidsController.IsAppInitialized)
@@ -607,8 +563,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                         num3 += GlobalPowerList[index].Animation;
                         GlobalPowerList[index].RechargeTimer = GlobalPowerList[index].Recharge;
                     }
-
-                    var animation = GlobalPowerList[index].Animation;
                 }
 
                 var powerListArray = new PowerList[GlobalPowerList.Length * 2];
@@ -648,12 +602,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 lblDPSNum.Text = (num1 / num3).ToString(CultureInfo.InvariantCulture);
                 lblEPSNum.Text = (num2 / num3).ToString(CultureInfo.InvariantCulture);
             }
-        }
-
-        private struct CountingList
-        {
-            public string Text;
-            public int Count;
         }
 
         private struct PowerList

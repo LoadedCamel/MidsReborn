@@ -9,7 +9,6 @@ namespace Mids_Reborn.Controls.Designer
 {
     internal partial class FormPagesDesigner : ParentControlDesigner
     {
-        private FormPages? FormPages => Control as FormPages;
 
         public override SelectionRules SelectionRules => SelectionRules.Moveable |
                                                          SelectionRules.LeftSizeable |

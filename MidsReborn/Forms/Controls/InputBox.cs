@@ -51,18 +51,6 @@ namespace Mids_Reborn.Forms.Controls
             InputIcon.Image = InputImages.Images[(int)icon];
         }
 
-        private InputBox(string prompt, string title, string defaultResponse, bool isPassword, int iconIndex)
-        {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
-            InitializeComponent();
-
-            InputLabel.Text = prompt;
-            Text = title;
-            InputTextBox.Text = defaultResponse;
-            IconButton1.Visible = isPassword;
-            InputIcon.Image = InputImages.Images[iconIndex < 0 | iconIndex >= InputImages.Images.Count ? 0 : iconIndex];
-        }
-
         protected override void Dispose(bool disposing)
         {
             if (disposing)

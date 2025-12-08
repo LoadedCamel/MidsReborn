@@ -153,27 +153,6 @@ namespace Mids_Reborn.Core
             return DatabaseAPI.Database.Recipes[recipeIdx].Rarity.ToString();
         }
 
-        public List<IEffect> GetEffectDetailedData(int index, bool special)
-        {
-            var ret = new List<IEffect>();
-            var bonusItemArray = special ? SpecialBonus : Bonus;
-            if (index < 0 | index > bonusItemArray.Length - 1)
-            {
-                return ret;
-            }
-
-            for (var i = 0; i < bonusItemArray[index].Name.Length; i++)
-            {
-                if (bonusItemArray[index].Index[i] < 0) continue;
-                if (bonusItemArray[index].Index[i] > DatabaseAPI.Database.Power.Length - 1) continue;
-
-                var linkedPower = DatabaseAPI.Database.Power[bonusItemArray[index].Index[i]];
-                ret.AddRange((IEnumerable<IEffect>) linkedPower.Effects.Clone());
-            }
-
-            return ret;
-        }
-
         public Dictionary<string, List<IEffect>> GetEffectDetailedData2(int index, bool special)
         {
             var ret = new Dictionary<string, List<IEffect>>();
@@ -238,16 +217,6 @@ namespace Mids_Reborn.Core
             }
 
             return power;
-        }
-
-        public bool HasPetSpecial
-        {
-            get
-            {
-                var isPetSet = DatabaseAPI.GetSetTypeByIndex(SetType).Name.Contains("Pet");
-                var special = GetLinkedPower(Enhancements.Length - 1, true);
-                return isPetSet && special != null;
-            }
         }
 
         public IEnhancement? GetPetSpecialEnhancement()
@@ -389,24 +358,6 @@ namespace Mids_Reborn.Core
                     writer.Write(SpecialBonus[index1].Index[index2]);
                 }
             }
-        }
-
-        private static string GenerateShortName(string displayName)
-        {
-            var strArray = displayName.Split(' ');
-            var stringBuilder = new StringBuilder();
-            foreach (var str1 in strArray)
-            {
-                var str2 = str1;
-                if (str2.Length > 4)
-                    str2 = str2.Replace("a", string.Empty).Replace("e", string.Empty).Replace("i", string.Empty)
-                        .Replace("o", string.Empty).Replace("u", string.Empty);
-                if (string.IsNullOrEmpty(str2))
-                    str2 = str1;
-                stringBuilder.Append(str2.Length > 3 ? str2.Substring(0, 3) : str2);
-            }
-
-            return stringBuilder.Length > 9 ? stringBuilder.ToString().Substring(0, 9) : stringBuilder.ToString();
         }
 
         public struct BonusItem

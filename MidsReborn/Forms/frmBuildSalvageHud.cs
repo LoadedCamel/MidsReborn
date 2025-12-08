@@ -27,11 +27,6 @@ namespace Mids_Reborn.Forms
             BuildSalvageSummary.UpdateAllSalvage(lblEnhObtained, lblCatalysts, lblBoosters);
         }
 
-        public void UpdateEnhObtained()
-        {
-            BuildSalvageSummary.UpdateEnhObtained(lblEnhObtained);
-        }
-
         public void UpdateColorTheme()
         {
             ibClose.IA = _myParent.Drawing.PImageAttributes;

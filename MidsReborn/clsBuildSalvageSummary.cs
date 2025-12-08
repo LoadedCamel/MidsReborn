@@ -74,21 +74,6 @@ namespace Mids_Reborn
             }
         }
 
-        public static void CalcTotalEnhancements()
-        {
-            TotalEnhancements = 0;
-            foreach (var p in MidsContext.Character.CurrentBuild.Powers)
-            {
-                for (var j = 0; j < p.Slots.Length; j++)
-                {
-                    if (p.Slots[j].Enhancement.Enh > -1)
-                    {
-                        TotalEnhancements++;
-                    }
-                }
-            }
-        }
-
         private static void CalcEnhObtained()
         {
             EnhObtained = 0;
@@ -101,47 +86,6 @@ namespace Mids_Reborn
                     {
                         EnhObtained++;
                     }
-                }
-            }
-        }
-
-        public static void CalcEnhCatalysts()
-        {
-            EnhCatalysts = 0;
-            foreach (var p in MidsContext.Character.CurrentBuild.Powers)
-            {
-                for (var j = 0; j < p?.Slots.Length; j++)
-                {
-                    var enhIdx = p.Slots[j].Enhancement.Enh;
-                    if (enhIdx == -1) continue;
-                    var enhName = Database.Instance.Enhancements[enhIdx].UID;
-
-                    if (DatabaseAPI.EnhHasCatalyst(enhName) && DatabaseAPI.EnhIsSuperior(enhIdx)) EnhCatalysts++;
-                }
-            }
-        }
-
-        public static void CalcEnhBoosters()
-        {
-            EnhBoosters = 0;
-            foreach (var p in MidsContext.Character.CurrentBuild.Powers)
-            {
-                for (var j = 0; j < p.Slots.Length; j++)
-                {
-                    var enhIdx = p.Slots[j].Enhancement.Enh;
-                    if (enhIdx == -1) continue;
-                    if (!DatabaseAPI.EnhIsIO(enhIdx)) continue;
-
-                    var relativeLevel = p.Slots[j].Enhancement.RelativeLevel;
-                    EnhBoosters += relativeLevel switch
-                    {
-                        Enums.eEnhRelative.PlusOne => 1,
-                        Enums.eEnhRelative.PlusTwo => 2,
-                        Enums.eEnhRelative.PlusThree => 3,
-                        Enums.eEnhRelative.PlusFour => 4,
-                        Enums.eEnhRelative.PlusFive => 5,
-                        _ => 0
-                    };
                 }
             }
         }

@@ -96,24 +96,6 @@ namespace Mids_Reborn.Controls
                 ValueSign = valueSign;
             }
 
-            public FxIdentifier(Enums.eMez? mezType, Enums.eToWho toWho, ValueSign? valueSign)
-            {
-                EffectType = Enums.eEffectType.Mez;
-                MezType = mezType;
-                ETModifies = null;
-                ToWho = toWho;
-                ValueSign = valueSign;
-            }
-
-            public FxIdentifier(Enums.eEffectType? effectType, Enums.eEffectType? etModifies, Enums.eToWho toWho, ValueSign? valueSign)
-            {
-                EffectType = effectType;
-                MezType = null;
-                ETModifies = etModifies;
-                ToWho = toWho;
-                ValueSign = valueSign;
-            }
-
             public FxIdentifier(Enums.eEffectType? effectType, Enums.eEffectType? etModifies, Enums.eMez? mezType, Enums.eToWho toWho, ValueSign? valueSign)
             {
                 EffectType = effectType;
@@ -472,16 +454,6 @@ namespace Mids_Reborn.Controls
         }
 
         /// <summary>
-        /// Calculate power cast time using ArcanaTime formula
-        /// </summary>
-        /// <param name="castTime">Base cast time</param>
-        /// <returns></returns>
-        private float CalcArcanaCastTime(float castTime)
-        {
-            return (float)(Math.Ceiling(castTime / 0.132f) + 1) * 0.132f;
-        }
-
-        /// <summary>
         /// Place all powers on the timeline, calculate all enhanced powers
         /// </summary>
         /// <param name="redraw">Triggers a redraw after calculations.</param>
@@ -591,30 +563,6 @@ namespace Mids_Reborn.Controls
         }
 
         /// <summary>
-        /// Get occurrences of a single power in the timeline
-        /// </summary>
-        /// <param name="power">Power to look for (from power object)</param>
-        /// <returns>List of matching powers in the timeline</returns>
-        private List<TimelineItem> GetPowerOccurrences(IPower? power)
-        {
-            return Timeline
-                .Where(e => e.PowerSlot.BasePower?.FullName == power?.FullName)
-                .ToList();
-        }
-
-        /// <summary>
-        /// Get occurrences of a single power in the timeline
-        /// </summary>
-        /// <param name="powerName">Power to look for (from power full name)</param>
-        /// <returns>List of matching powers in the timeline</returns>
-        private List<TimelineItem> GetPowerOccurrences(string powerName)
-        {
-            return Timeline
-                .Where(e => e.PowerSlot.BasePower?.FullName == powerName)
-                .ToList();
-        }
-
-        /// <summary>
         /// Get unique powers present on a timeline
         /// </summary>
         /// <returns>List of powers full name</returns>
@@ -705,96 +653,6 @@ namespace Mids_Reborn.Controls
 
             return boostSources.Count <= 0 ? null : boostSources;
         }
-
-        /// <summary>
-        /// Calculate enhanced power from a base one with only boosting powers active
-        /// </summary>
-        /// <param name="timelinePower">Target power</param>
-        /// <param name="recalcStats">Recalculate totals with original activation state when done</param>
-        /// <remarks>Warning: possibly very slow</remarks>
-        private void CalcEnhancedPower(ref TimelineItem timelinePower, bool recalcStats = false)
-        {
-            var origProcIncludes = MidsContext.Character.CurrentBuild.Powers
-                .Select(e => e?.ProcInclude)
-                .ToList();
-
-            var origStatIncludes = MidsContext.Character.CurrentBuild.Powers
-                .Select(e => e?.StatInclude)
-                .ToList();
-
-            foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
-            {
-                if (pe == null)
-                {
-                    continue;
-                }
-
-                pe.ProcInclude = false;
-            }
-
-            var userBoostNames = UserBoosts
-                .Select(e => e.FullName)
-                .ToList();
-
-            foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
-            {
-                if (pe == null)
-                {
-                    continue;
-                }
-
-                if (!userBoostNames.Contains(pe.Power?.FullName))
-                {
-                    continue;
-                }
-
-                pe.StatInclude = false;
-            }
-
-            var boostingPowers = IsAffectedByBoosts(timelinePower);
-            if (boostingPowers != null)
-            {
-                foreach (var p in boostingPowers)
-                {
-                    var pe = GetMatchingPowerEntry(p.PowerSlot.BasePower);
-
-                    if (pe == null)
-                    {
-                        continue;
-                    }
-
-                    pe.ProcInclude = true;
-                    pe.StatInclude = true;
-                }
-            }
-
-            RecalcTotals();
-
-            // Select enhanced power by historyIdx doesn't work.
-            var pName = timelinePower.PowerSlot.BasePower == null ? "" : timelinePower.PowerSlot.BasePower.FullName;
-            timelinePower.PowerSlot.SetEnhancedPower(MainModule.MidsController.Toon.GetEnhancedPower(timelinePower.PowerSlot.BasePower));
-
-            if (!recalcStats)
-            {
-                // frmMain.DoRedraw() ?
-                return;
-            }
-
-            for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
-            {
-                if (MidsContext.Character.CurrentBuild.Powers[i] == null)
-                {
-                    continue;
-                }
-
-                MidsContext.Character.CurrentBuild.Powers[i].ProcInclude = origProcIncludes[i] == true;
-                MidsContext.Character.CurrentBuild.Powers[i].StatInclude = origStatIncludes[i] == true;
-            }
-
-            RecalcTotals();
-        }
-
-        
 
         /// <summary>
         /// Get active stacks for a power boost, at the time of a reference power.

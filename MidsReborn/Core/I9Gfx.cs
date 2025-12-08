@@ -179,54 +179,6 @@ namespace Mids_Reborn.Core
             return Task.FromResult(archTypePaths.ToList());
         }
 
-        public static List<string> ArchetypeImages
-        {
-            get
-            {
-                var retList = new List<string>();
-                var baseImages = Images.Where(x => x.IsBase).ToList();
-                var archetypeImages = Images.Where(x => x.Directory == "Archetypes").ToList();
-                var unknown = baseImages.First(i => i.FileName == "Unknown.png").Path;
-                foreach (var c in DatabaseAPI.Database.Classes)
-                {
-                    var path = archetypeImages.FirstOrDefault(i => i.FileName == $"{c?.ClassName}.png").Path;
-                    if (string.IsNullOrWhiteSpace(path))
-                    {
-                        path = unknown;
-                    }
-
-                    if (retList.Any(p => p == path)) continue;
-                    if (path != null) retList.Add(path);
-                }
-
-                return retList;
-            }
-        }
-
-        public static List<string> OriginImages
-        {
-            get
-            {
-                var retList = new List<string>();
-                var baseImages = Images.Where(x => x.IsBase).ToList();
-                var images = Images.Where(x => x.Directory == "Origins").ToList();
-                var unknown = baseImages.First(i => i.FileName == "Unknown.png").Path;
-                foreach (var o in DatabaseAPI.Database.Origins)
-                {
-                    var path = images.First(i => i.FileName == $"{o.Name}.png").Path;
-                    if (string.IsNullOrWhiteSpace(path))
-                    {
-                        path = unknown;
-                    }
-
-                    if (retList.Any(p => p == path)) continue;
-                    if (path != null) retList.Add(path);
-                }
-
-                return retList;
-            }
-        }
-
         public static Task<List<string>> LoadOrigins()
         {
             var baseImage = Images.FirstOrDefault(x => x is { IsBase: true, FileName: "Unknown.png" }).Path ?? string.Empty;
@@ -640,42 +592,6 @@ namespace Mids_Reborn.Core
             await Task.CompletedTask;
         }
 
-        public static Image GetArchetypeImage(IPower power)
-        {
-            var imgFile = "";
-            var atString = power.GetPowerSet().ATClass;
-            if (string.IsNullOrWhiteSpace(atString))
-            {
-                atString = power.Requires.ClassName[0];
-            }
-
-            if (string.IsNullOrWhiteSpace(atString))
-            {
-                imgFile = $"{ImagePath()}\\Unknown.png";
-            }
-            else
-            {
-                imgFile = $"{ImagePath("OriginAT")}\\{atString}.png";
-                if (!File.Exists(imgFile))
-                {
-                    imgFile = $"{ImagePath()}\\Unknown.png";
-                }
-            }
-
-            return Image.FromFile(imgFile);
-        }
-
-        public static Image GetArchetypeImage(Archetype atClass)
-        {
-            var imgFile = $"{ImagePath("OriginAT")}\\{atClass.ClassName}.png";
-            if (!File.Exists(imgFile))
-            {
-                imgFile = $"{ImagePath()}\\Unknown.png";
-            }
-
-            return Image.FromFile(imgFile);
-        }
-
         public static Image GetPowersetImage(IPower power)
         {
             var imgString = power.GetPowerSet().ImageName;
@@ -773,11 +689,6 @@ namespace Mids_Reborn.Core
         public static string GetDbPowerSetsPath()
         {
             return Path.Combine(MidsContext.Config.DataPath, "Assets\\Powersets");
-        }
-
-        public static string GetOriginsPath()
-        {
-            return ImagePath() + "\\Origins\\";
         }
 
         public static void DrawFlippingEnhancement(ref Graphics iTarget, Rectangle iDest, float iSize, int iImageIndex, Origin.Grade iGrade)

@@ -376,20 +376,5 @@ namespace Mids_Reborn.Core.BuildFile
             var decoded = Compression.DecompressFromBase64(data);
             return LoadShareData(decoded.OutString, id);
         }
-
-        internal BuildRecordDto GenerateDto()
-        {
-            var dto = new BuildRecordDto
-            {
-                Name = MidsContext.Character?.Name,
-                Archetype = MidsContext.Character?.Archetype?.DisplayName,
-                Description = MidsContext.Character?.Comment,
-                Primary = MidsContext.Character?.Powersets[0]?.DisplayName,
-                Secondary = MidsContext.Character?.Powersets[1]?.DisplayName,
-                BuildData = GetShareData(),
-                ImageData = InfoGraphic.GenerateImageData()
-            };
-            return dto;
-        }
     }
 }
