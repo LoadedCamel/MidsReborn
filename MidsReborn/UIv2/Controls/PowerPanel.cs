@@ -1,8 +1,6 @@
 ﻿using System;
 using System.Drawing;
 using System.Windows.Forms;
-//using MaterialSkin;
-//using MaterialSkin.Controls;
 
 namespace Mids_Reborn.UIv2.Controls
 {
