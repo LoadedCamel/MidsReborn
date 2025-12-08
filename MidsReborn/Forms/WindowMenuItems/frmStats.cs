@@ -11,6 +11,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Windows.Forms;
+using Mids_Reborn.Core.Base.Extensions;
 
 namespace Mids_Reborn.Forms.WindowMenuItems
 {
@@ -235,6 +236,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             btnClose.Location = new Point(Math.Max(4, ClientSize.Width - btnClose.Width - 4), Math.Max(4, ClientSize.Height - btnClose.Height - 4));
             chkOnTop.Location = new Point(Math.Max(4, ClientSize.Width - chkOnTop.Width - 4), Math.Max(4, ClientSize.Height - chkOnTop.Height - 31));
 
+            ibExport.Location = btnClose.Location with { X = btnClose.Location.X - ibExport.Size.Width - 4 };
+            ibExport.Visible = CompareMode;
+
             if (Graph != null)
             {
                 Graph.Height = chkOnTop.Top - Graph.Top - 4;
@@ -261,16 +265,9 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         private void SetUiForCompare(bool fillComboValues = true)
         {
-            /*ClientSize = CompareMode
-                ? new Size(Math.Max(ClientSize.Width, 1004), Math.Max(ClientSize.Height, 601))
-                : new Size(Math.Min(ClientSize.Width, 492), Math.Min(ClientSize.Height, 515));*/
-
             MinimumSize = CompareMode
                 ? new Size(1020, 640)
                 : new Size(508, 554);
-
-            // MainModule.MidsController.SzFrmStats
-            // MainModule.MidsController.SzFrmStatsCompare
 
             var storedCompareSize = MainModule.MidsController.SzFrmStatsCompare == null
                 ? new Rectangle(0, 0, 1004, 601)
@@ -373,7 +370,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                             : "",
                         CompareData?.Metadata.Archetype,
                         "\r\n",
-                        Path.GetFileName(myParent.GetBuildFile() ?? ""))
+                        Path.GetFileName(CompareData?.Metadata.BuildFile ?? ""))
                 .Replace("  ", " ")
                 .Replace(" \r\n ", "\r\n")
                 .ToString()
@@ -827,6 +824,29 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             SizeElements();
         }
 
+        private string DiffTip(StatsPowerData.PowerValueInfo item, StatsPowerData.PowerValueInfoExt[]? gValues, string refTip)
+        {
+            if (gValues == null || gValues.All(e => e.PowerName != item.PowerName))
+            {
+                return refTip;
+            }
+
+            var currentData = gValues.First(e => e.PowerName == item.PowerName);
+            if (currentData.EnhValue != null && item.EnhValue != null)
+            {
+                if (Math.Abs((currentData.EnhValue ?? 0) - (item.EnhValue ?? 0)) < float.Epsilon)
+                {
+                    return refTip;
+                }
+            }
+
+            return Graph.Style == Enums.GraphStyle.baseOnly
+                ? $"Reference:\r\n{refTip}\r\n(Also in current, power is {(!currentData.PowerTaken ? "not " : "")} taken)"
+                : (currentData.EnhValue == null) | (item.EnhValue == null)
+                    ? refTip
+                    : $"Current: {currentData.BaseValue:####0.##}{currentData.UnitSuffix} | {currentData.EnhValue:####0.##}{currentData.UnitSuffix} ({(!currentData.PowerTaken ? "not " : "")}taken)\r\n{currentData.Tip}\r\n\r\nReference: {item.BaseValue:####0.##}{item.UnitSuffix} | {item.EnhValue:####0.##}{item.UnitSuffix} ({(!item.PowerTaken ? "not " : "")}taken)\r\n{item.Tip}{(Math.Abs(item.EnhValue ?? 0) < float.Epsilon ? "" : $"\r\n\r\nDiff: {(currentData.EnhValue > item.EnhValue ? "+" : "")}{currentData.EnhValue / item.EnhValue * 100 - 100:####0.##}%")}";
+        }
+
         private void SetCompareGraphValues(DisplayMode statDisplayed, bool draw = true)
         {
             CompareGraph.BeginUpdate();
@@ -870,8 +890,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     DisplayMode.StatusProtection or DisplayMode.StatusResistance => ["Held", "Stunned", "Sleep", "Immobilized", "Knockback", "Repel", "Confused", "Terrorized", "Taunt", "Placate", "Teleport"],
                     DisplayMode.DebuffResistance => ["Defense", "Endurance", "Recovery", "PerceptionRadius", "ToHit", "RechargeTime", "SpeedRunning", "Regeneration"],
                     DisplayMode.Elusivity => ["Untyped", "Smashing", "Lethal", "Fire", "Cold", "Energy", "Negative", "Toxic", "Psionic", "Melee", "Ranged", "AoE"],
-                    DisplayMode.Defense when DatabaseAPI.RealmUsesToxicDefense => ["Smashing", "Lethal", "Fire", "Cold", "Energy", "Negative", "Toxic", "Psionic", "Melee", "Ranged", "AoE"],
-                    DisplayMode.Defense => ["Smashing", "Lethal", "Fire", "Cold", "Energy", "Negative", "Psionic", "Toxic", "Melee", "Ranged", "AoE"]
+                    DisplayMode.Defense => ["Smashing", "Lethal", "Fire", "Cold", "Energy", "Negative", "Toxic", "Psionic", "Melee", "Ranged", "AoE"],
                 };
 
                 for (var index = 0; index < statGroup.Length; index++)
@@ -903,153 +922,8 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     //var nUncappedDiff = nUncappedMain - nUncappedRef;
 
                     var displayName = statLabels[index];
-                    var speedUnit = MidsContext.Config.SpeedFormat switch
-                    {
-                        Enums.eSpeedMeasure.KilometersPerHour => "km/h",
-                        Enums.eSpeedMeasure.FeetPerSecond => "ft/s",
-                        Enums.eSpeedMeasure.MetersPerSecond => "m/s",
-                        _ => "mph"
-                    };
+                    var tip = GetCompareGraphTip(statDisplayed, index, displayName, nBaseMain, nEnhMain, nBaseRef, nEnhRef, nBaseDiff, nEnhDiff);
 
-                    var distanceUnit = MidsContext.Config.SpeedFormat switch
-                    {
-                        Enums.eSpeedMeasure.KilometersPerHour or Enums.eSpeedMeasure.MetersPerSecond => "m",
-                        _ => "ft"
-                    };
-
-                    var tip = string.Empty;
-
-                    switch (statDisplayed)
-                    {
-                        case DisplayMode.Defense:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName} Defense:\r\nCurrent: {nBaseMain:##0.#}%\r\nReference: {nBaseRef:##0.#}%\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.#}%"
-                                : $"{displayName} Defense:\r\nCurrent: {nEnhMain:##0.#}%\r\nReference: {nEnhRef:##0.#}%\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.#}%";
-                            break;
-
-                        case DisplayMode.Resistance:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName} Resistance:\r\nCurrent: {nBaseMain:##0.#}%\r\nReference: {nBaseRef:##0.#}%\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.#}%"
-                                : $"{displayName} Resistance:\r\nCurrent: {nEnhMain:##0.#}%\r\nReference: {nEnhRef:##0.#}%\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.#}%";
-                            break;
-
-                        case DisplayMode.HealthEndurance when index == 0: // Regeneration
-                            var maxHpMain = Totals.Health[1].EnhValue ?? Totals.Health[1].BaseValue;
-                            var baseRegenMain = maxHpMain / 12f * (0.05f + 0.05f * ((nBaseMain - 100) / 100f));
-                            var baseRegenPercentMain = baseRegenMain / maxHpMain * 100f;
-                            var enhRegenMain = maxHpMain / 12f * (0.05f + 0.05f * ((nEnhMain - 100) / 100f));
-                            var enhRegenPercentMain = enhRegenMain / maxHpMain * 100;
-
-                            var maxHpRef = CompareData?.Totals.Health[1].EnhValue ?? CompareData?.Totals.Health[1].BaseValue ?? CompareData?.Totals.Health[1].BaseValue; // ??
-                            var baseRegenRef = maxHpRef / 12f * (0.05f + 0.05f * ((nBaseRef - 100) / 100f));
-                            var baseRegenPercentRef = baseRegenRef / maxHpRef * 100f;
-                            var enhRegenRef = maxHpRef / 12f * (0.05f + 0.05f * ((nEnhRef - 100) / 100f));
-                            var enhRegenPercentRef = enhRegenRef / maxHpRef * 100;
-
-                            var baseRegenDiff = baseRegenMain - baseRegenRef;
-                            var baseRegenPercentDiff = baseRegenPercentMain - baseRegenPercentRef;
-                            var enhRegenDiff = enhRegenMain - enhRegenRef;
-                            var enhRegenPercentDiff = enhRegenPercentMain - enhRegenPercentRef;
-
-                            if (BaseOverride)
-                            {
-                                (baseRegenMain, enhRegenMain) = (enhRegenMain, baseRegenMain);
-                                (baseRegenPercentMain, enhRegenPercentMain) = (enhRegenPercentMain, baseRegenPercentMain);
-
-                                (baseRegenRef, enhRegenRef) = (enhRegenRef, baseRegenRef);
-                                (baseRegenPercentRef, enhRegenPercentRef) = (enhRegenPercentRef, baseRegenPercentRef);
-                            }
-
-                            if ((Graph.Style == Enums.GraphStyle.baseOnly) | (Math.Abs(nBaseMain - nEnhMain) < float.Epsilon))
-                            {
-                                tip = $"Regeneration:\r\nCurrent:\r\nHealth regenerated per second: {baseRegenPercentMain:##0.##}%\r\n Hit Points regenerated per second at level 50: {baseRegenMain:##0.#} HP\r\n\r\nReference:\r\nHealth regenerated per second: {baseRegenPercentRef:##0.##}%\r\n Hit Points regenerated per second at level 50: {baseRegenRef:##0.#} HP\r\n\r\nDiff: {(baseRegenPercentDiff > 0 ? "+" : "")}{baseRegenPercentDiff:##0.##}% ({(baseRegenDiff > 0 ? "+" : "")}{baseRegenDiff:##0.#} HP/s)";
-                            }
-                            /*else if (Math.Abs(nBaseMain - nEnhMain) < float.Epsilon)
-                            {
-                                tip = $"{displayName}: {nBaseMain:##0.#}%\r\n Health regenerated per second: {baseRegenPercentMain:##0.##}%\r\n Hit Points regenerated per second at level 50: {baseRegenMain:##0.#} HP";
-                            }*/
-                            else
-                            {
-                                tip = $"Regeneration:\r\nCurrent:\r\nHealth regenerated per second: {enhRegenPercentMain:##0.##}%\r\n Hit Points regenerated per second at level 50: {enhRegenMain:##0.#} HP\r\n\r\nReference:\r\nHealth regenerated per second: {enhRegenPercentRef:##0.##}%\r\n Hit Points regenerated per second at level 50: {enhRegenRef:##0.#} HP\r\n\r\nDiff: {(enhRegenPercentDiff > 0 ? "+" : "")}{enhRegenPercentDiff:##0.##}% ({(enhRegenDiff > 0 ? "+" : "")}{enhRegenDiff:##0.#} HP/s)";
-                            }
-
-                            break;
-
-                        case DisplayMode.HealthEndurance when index == 1: // Max HP
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}:\r\nCurrent: {nBaseMain:###0.#}\r\nReference: {nBaseRef:###0.#}\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:###0.#}"
-                                : $"{displayName}:\r\nCurrent: {nEnhMain:###0.#}\r\nReference: {nEnhRef:###0.#}\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:###0.#}";
-                            break;
-
-                        case DisplayMode.HealthEndurance when index == 2: // Absorb
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}:\r\nCurrent: {nBaseMain:###0.#}\r\nReference: {nBaseRef:###0.#}\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:###0.#}" // Also show % of base HP here
-                                : $"{displayName}:\r\nCurrent: {nEnhMain:###0.#}\r\nReference: {nEnhRef:###0.#}\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:###0.#}";
-                            break;
-
-                        case DisplayMode.HealthEndurance when index == 3: // End Rec
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##}/s\r\nReference: {nBaseRef:##0.##}/s\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.#}/s"
-                                : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##}/s\r\nReference: {nEnhRef:##0.##}/s\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.#}/s";
-                            break;
-
-                        case DisplayMode.HealthEndurance when index == 4: // End Use
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##}/s\r\nReference: {nBaseRef:##0.##}/s\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.##}/s"
-                                : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##}/s\r\nReference: {nEnhRef:##0.##}/s\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.##}/s";
-                            break;
-
-                        case DisplayMode.HealthEndurance when index == 5: // Max End
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##}\r\nReference: {nBaseRef:##0.##}\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.##}"
-                                : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##}\r\nReference: {nEnhRef:##0.##}\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.##}";
-                            break;
-
-                        case DisplayMode.MovementStealth when index is < 2 or 3: // Run Speed, Jump Speed, Fly Speed
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##} mph\r\nReference: {nBaseRef:##0.##} mph\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.##} {speedUnit}"
-                                : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##} mph\r\nReference: {nEnhRef:##0.##} mph\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.##} {speedUnit}";
-                            break;
-
-                        case DisplayMode.MovementStealth when index is 2 or > 3: // Jump height, Stealth/Perception
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##} ft\r\nReference: {nBaseRef:##0.##} ft\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.##} {distanceUnit}"
-                                : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##} ft\r\nReference: {nEnhRef:##0.##} ft\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.##} {distanceUnit}";
-                            break;
-
-                        case DisplayMode.MiscBuffs when index == 6: // Threat
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}:\r\nCurrent: {nBaseMain:###0.#}\r\nReference: {nBaseRef:###0.#}\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:###0.#}"
-                                : $"{displayName}:\r\nCurrent: {nEnhMain:###0.#}\r\nReference: {nEnhRef:###0.#}\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:###0.#}";
-                            break;
-
-                        case DisplayMode.MiscBuffs:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}:\r\nCurrent: {nBaseMain:###0.##}%\r\nReference: {nBaseRef:###0.##}%\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:###0.##}%"
-                                : $"{displayName}:\r\nCurrent: {nEnhMain:###0.##}%\r\nReference: {nEnhRef:###0.##}%\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:###0.##}%";
-                            break;
-
-                        case DisplayMode.StatusProtection:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName} Protection:\r\nCurrent: {nBaseMain:###0.##}\r\nReference: {nBaseRef:###0.##}\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:###0.##}"
-                                : $"{displayName} Protection:\r\nCurrent: {nEnhMain:###0.##}\r\nReference: {nEnhRef:###0.##}\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:###0.##}";
-                            break;
-
-                        case DisplayMode.StatusResistance:
-                        case DisplayMode.DebuffResistance:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"Resistance to {displayName}:\r\nCurrent: {nBaseMain:###0.##}%\r\nReference: {nBaseRef:###0.##}%\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:###0.##}%"
-                                : $"Resistance to {displayName}:\r\nCurrent: {nEnhMain:###0.##}%\r\nReference: {nEnhRef:###0.##}%\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:###0.##}%";
-                            break;
-
-                        case DisplayMode.Elusivity:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"Elusivity ({displayName}):\r\nCurrent: {nBaseMain:####0.##}%\r\nReference: {nBaseRef:####0.##}%\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:####0.##}%"
-                                : $"Elusivity ({displayName}):\r\nCurrent: {nEnhMain:####0.##}%\r\nReference: {nEnhRef:####0.##}%\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:####0.##}%";
-                            break;
-                    }
-
-                    tip = tip.Trim();
                     if (CompareGraphMode == CompareGraphStyle.Diff)
                     {
                         CompareGraph.AddItem(displayName, nBaseDiff, nEnhDiff, tip);
@@ -1072,12 +946,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     }
 
                     CompareGraph.Max = diff * 1.025f;
-
-                    /*CompareGraph.Max = statGroup
-                        .Select((e, i) => Math.Max(
-                            Math.Abs(Math.Abs(e.BaseValue) - Math.Abs(statGroupAux[i].BaseValue)),
-                            Math.Abs(Math.Abs(e.UncappedValue ?? e.EnhValue ?? e.BaseValue) - Math.Abs(statGroupAux[i].UncappedValue ?? statGroupAux[i].EnhValue ?? statGroupAux[i].BaseValue))))
-                        .Max() * 1.025f;*/
                 }
                 else
                 {
@@ -1086,29 +954,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
             else
             {
-                string DiffTip(StatsPowerData.PowerValueInfo item, StatsPowerData.PowerValueInfoExt[]? gValues, string refTip)
-                {
-                    if (gValues == null || gValues.All(e => e.PowerName != item.PowerName))
-                    {
-                        return refTip;
-                    }
-
-                    var currentData = gValues.First(e => e.PowerName == item.PowerName);
-                    if (currentData.EnhValue != null && item.EnhValue != null)
-                    {
-                        if (Math.Abs((currentData.EnhValue ?? 0) - (item.EnhValue ?? 0)) < float.Epsilon)
-                        {
-                            return refTip;
-                        }
-                    }
-
-                    return Graph.Style == Enums.GraphStyle.baseOnly
-                        ? $"Reference:\r\n{refTip}\r\n(Also in current, power is {(!currentData.PowerTaken ? "not " : "")} taken)"
-                        : (currentData.EnhValue == null) | (item.EnhValue == null)
-                            ? refTip
-                            : $"Current: {currentData.BaseValue:####0.##}{currentData.UnitSuffix} | {currentData.EnhValue:####0.##}{currentData.UnitSuffix} ({(!currentData.PowerTaken ? "not " : "")}taken)\r\n{currentData.Tip}\r\n\r\nReference: {item.BaseValue:####0.##}{item.UnitSuffix} | {item.EnhValue:####0.##}{item.UnitSuffix} ({(!item.PowerTaken ? "not " : "")}taken)\r\n{item.Tip}{(Math.Abs(item.EnhValue ?? 0) < float.Epsilon ? "" : $"\r\n\r\nDiff: {(currentData.EnhValue > item.EnhValue ? "+" : "")}{currentData.EnhValue / item.EnhValue * 100 - 100:####0.##}%")}";
-                }
-
                 var pwStats = StatsPowerData.GetPowerStatsArray(cbSet.SelectedIndex, StatDisplayed);
                 var graphValues = StatsPowerData.PreparePowersGraph(pwStats[0], pwStats[1], BaseOverride, Graph.Style, StatDisplayed);
 
@@ -1180,212 +1025,10 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                     //var nUncappedRef = statGroupAux[index].UncappedValue ?? statGroupAux[index].EnhValue ?? statGroupAux[index].BaseValue;
 
                     var displayName = statGroupAux[index].Power?.DisplayName ?? "";
-                    var baseHealValue = nBaseRef / CompareData?.Totals.Health[1].BaseValue * 100;
-                    var enhHealValue = nEnhRef / CompareData?.Totals.Health[1].EnhValue * 100;
-                    var tip = string.Empty;
-                    var stacksTip = $"{(statGroupAux[index].Stacks == null ? "" : $" (at {statGroupAux[index].Stacks} stack{(statGroupAux[index].Stacks == 1 ? "" : "s")})")}";
+                    var tip = GetCompareGraphTip(statDisplayed, statGroupAux[index].Power?.DisplayName ?? "",
+                        statGroupAux[index].BaseValue, statGroupAux[index].EnhValue ?? statGroupAux[index].BaseValue,
+                        statGroupAux[index].Power, statGroupAux[index].Stacks, statGroupAux[index].Tip);
 
-                    switch (statDisplayed)
-                    {
-                        case DisplayMode.Accuracy:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName} Accuracy:\r\nReference: {nBaseRef:##0.#}%{stacksTip}"
-                                : $"{displayName} Accuracy:\r\nReference: {nEnhRef:##0.#}%{stacksTip}";
-
-                            break;
-
-                        case DisplayMode.Damage:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName} Damage:\r\nReference: {nBaseRef:###0.##}{stacksTip}"
-                                : !BaseOverride
-                                    ? $"{displayName} Damage:\r\nReference: {nEnhRef:###0.##}{stacksTip}"
-                                    : $"{displayName} Damage:\r\nReference: {nBaseRef:###0.##}{stacksTip}";
-
-                            if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
-                            {
-                                tip += $" ({nBaseRef:###0.##})";
-                            }
-
-                            if (statGroupAux[index].Power?.PowerType == Enums.ePowerType.Toggle)
-                            {
-                                tip += $"\r\n(Applied every {statGroupAux[index].Power?.ActivatePeriod}s)";
-                            }
-
-                            if (!string.IsNullOrWhiteSpace(statGroupAux[index].Tip))
-                            {
-                                tip += $"\r\n\r\n{statGroupAux[index].Tip}";
-                            }
-
-                            break;
-
-                        case DisplayMode.DPA:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName} DPA:\r\nReference: {nBaseRef:###0.##}{stacksTip}"
-                                : !BaseOverride
-                                    ? $"{displayName} DPA:\r\nReference: {nEnhRef:###0.##}{stacksTip}"
-                                    : $"{displayName} DPA:\r\nReference: {nBaseRef:###0.##}{stacksTip}";
-
-                            tip += "/s";
-                            if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
-                            {
-                                tip += $" ({nBaseRef:###0.##}/s)";
-                            }
-
-                            break;
-
-                        case DisplayMode.DPS:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName} DPS:\r\nReference: {nBaseRef:###0.##}{stacksTip}"
-                                : !BaseOverride
-                                    ? $"{displayName} DPS:\r\nReference: {nEnhRef:###0.##}{stacksTip}"
-                                    : $"{displayName} DPS:\r\nReference: {nBaseRef:###0.##}{stacksTip}";
-
-                            tip += "/s";
-                            if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
-                            {
-                                tip += $" ({nBaseRef:###0.##}/s)";
-                            }
-
-                            break;
-
-                        case DisplayMode.DPE:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName} DPE:\r\nReference: {nBaseRef:###0.##}{stacksTip}"
-                                : !BaseOverride
-                                    ? $"{displayName} DPE:\r\nReference: {nEnhRef:###0.##}{stacksTip}"
-                                    : $"{displayName} DPE:\r\nReference: {nBaseRef:###0.##}{stacksTip}";
-
-                            if (Graph.Style == Enums.GraphStyle.baseOnly)
-                            {
-                                tip += $"\r\nDamage per unit of End: {nBaseRef:###0.##}";
-                            }
-                            else
-                            {
-                                tip += $"\r\nDamage per unit of End: {nEnhRef:###0.##}";
-                                if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
-                                {
-                                    tip += $" ({nBaseRef:###0.##})";
-                                }
-                            }
-
-                            break;
-
-                        case DisplayMode.EffectDuration:
-                            var durationEffectId = statGroupAux[index].Power?.GetDurationEffectID() ?? -1;
-                            if (durationEffectId > -1)
-                            {
-                                var str = statGroupAux[index].Power.Effects[durationEffectId].EffectType != Enums.eEffectType.Mez
-                                    ? Enums.GetEffectName(statGroupAux[index].Power.Effects[durationEffectId].EffectType)
-                                    : Enums.GetMezName((Enums.eMezShort)statGroupAux[index].Power.Effects[durationEffectId].MezType);
-                                if (statGroupAux[index].Power.Effects[durationEffectId].Mag < 0)
-                                {
-                                    str = $"-{str}";
-                                }
-
-                                tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                    ? $"{displayName} ({str}): {nBaseRef:##0.#}s{stacksTip}"
-                                    : $"{displayName} ({str}): {nEnhRef:##0.#}s{stacksTip}";
-
-                                if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
-                                {
-                                    tip += $" ({nBaseRef:##0.#}s)";
-                                }
-                            }
-
-                            break;
-
-                        case DisplayMode.EndUse:
-                            tip = Graph.Style != Enums.GraphStyle.baseOnly
-                                ? $"{displayName}: {nEnhRef:##0.##}{stacksTip}"
-                                : $"{displayName}: {nBaseRef:##0.##}{stacksTip}";
-
-                            if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
-                            {
-                                tip += $" ({nBaseRef:##0.##})";
-                            }
-
-                            if (statGroupAux[index].Power?.PowerType == Enums.ePowerType.Toggle)
-                            {
-                                tip += "\r\n(Per Second)";
-                            }
-
-                            break;
-
-                        case DisplayMode.EndPerSec:
-                            tip = Graph.Style != Enums.GraphStyle.baseOnly
-                                ? $"{displayName}: {nEnhRef:##0.##}/s{stacksTip}"
-                                : $"{displayName}: {nBaseRef:##0.##}/s{stacksTip}";
-
-                            if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
-                            {
-                                tip += $" ({nBaseRef:##0.##})";
-                            }
-
-                            break;
-
-                        case DisplayMode.Healing:
-                        case DisplayMode.Regeneration:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}: {baseHealValue:###0.#}% ({nBaseRef:###0.#} HP){stacksTip}"
-                                : $"{displayName}\r\n Enhanced: {enhHealValue:###0.#}% ({nEnhRef:###0.#} HP){stacksTip}";
-
-                            if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
-                            {
-                                tip += $"\r\n Base: {baseHealValue:##0.#}% ({nBaseRef:##0.#} HP)";
-                            }
-
-                            break;
-
-                        case DisplayMode.HPE:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}: {nBaseRef:##0.##}%{stacksTip}"
-                                : $"{displayName}\r\n Enhanced Heal per unit of End: {enhHealValue:##0.##}% ({nEnhRef:##0.##} HP){stacksTip}";
-
-                            if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
-                            {
-                                tip += $"\r\n Base Heal per unit of End: {baseHealValue:##0.##}% ({nBaseRef:##0.##} HP)";
-                            }
-
-                            break;
-
-                        case DisplayMode.HPS:
-                            tip = Graph.Style == Enums.GraphStyle.baseOnly
-                                ? $"{displayName}: {baseHealValue:###0.##}%/s ({nBaseRef:###0.##} HP/s){stacksTip}"
-                                : $"{displayName}\r\n Enhanced: {enhHealValue:###0.##}%/s ({nEnhRef:###0.##} HP/s){stacksTip}";
-
-                            if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
-                            {
-                                tip += $"\r\n Base: {baseHealValue:###0.#}%/s ({nBaseRef:###0.##} HP/s)";
-                            }
-
-                            break;
-
-                        case DisplayMode.Range:
-                            tip = Graph.Style != Enums.GraphStyle.baseOnly
-                                ? $"{displayName} Range:\r\nReference: {nEnhRef:###0.#} ft{stacksTip}"
-                                : $"{displayName} Range:\r\nReference: {nBaseRef:###0.#} ft{stacksTip}";
-
-                            if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
-                            {
-                                tip += $" ({nBaseRef:###0.#} ft)";
-                            }
-
-                            break;
-
-                        case DisplayMode.RechargeTime:
-                            tip = Graph.Style != Enums.GraphStyle.baseOnly
-                                ? $"{displayName}: {nEnhRef:###0.##}s{stacksTip}"
-                                : $"{displayName}: {nBaseRef:###0.##}s{stacksTip}";
-
-                            if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
-                            {
-                                tip += $" ({nBaseRef:###0.##}s)";
-                            }
-
-                            break;
-                    }
-
-                    tip = tip.Trim();
                     CompareGraph.AddItem(displayName, nBaseRef, nEnhRef, tip);
                 }
 
@@ -1401,6 +1044,366 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             }
 
             CompareGraph.Draw();
+        }
+
+        private string GetCompareGraphTip(DisplayMode statDisplayed, int subIndex, string displayName, float nBaseMain, float nEnhMain, float nBaseRef, float nEnhRef, float nBaseDiff, float nEnhDiff)
+        {
+            var tip = "";
+            var speedUnit = MidsContext.Config?.SpeedFormat switch
+            {
+                Enums.eSpeedMeasure.KilometersPerHour => "km/h",
+                Enums.eSpeedMeasure.FeetPerSecond => "ft/s",
+                Enums.eSpeedMeasure.MetersPerSecond => "m/s",
+                _ => "mph"
+            };
+
+            var distanceUnit = MidsContext.Config?.SpeedFormat switch
+            {
+                Enums.eSpeedMeasure.KilometersPerHour or Enums.eSpeedMeasure.MetersPerSecond => "m",
+                _ => "ft"
+            };
+
+            switch (statDisplayed)
+            {
+                case DisplayMode.Defense:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName} Defense:\r\nCurrent: {nBaseMain:##0.#}%\r\nReference: {nBaseRef:##0.#}%\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.#}%"
+                        : $"{displayName} Defense:\r\nCurrent: {nEnhMain:##0.#}%\r\nReference: {nEnhRef:##0.#}%\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.#}%";
+                    break;
+
+                case DisplayMode.Resistance:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName} Resistance:\r\nCurrent: {nBaseMain:##0.#}%\r\nReference: {nBaseRef:##0.#}%\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.#}%"
+                        : $"{displayName} Resistance:\r\nCurrent: {nEnhMain:##0.#}%\r\nReference: {nEnhRef:##0.#}%\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.#}%";
+                    break;
+
+                case DisplayMode.HealthEndurance when subIndex == 0: // Regeneration
+                    var maxHpMain = Totals.Health[1].EnhValue ?? Totals.Health[1].BaseValue;
+                    var baseRegenMain = maxHpMain / 12f * (0.05f + 0.05f * ((nBaseMain - 100) / 100f));
+                    var baseRegenPercentMain = baseRegenMain / maxHpMain * 100f;
+                    var enhRegenMain = maxHpMain / 12f * (0.05f + 0.05f * ((nEnhMain - 100) / 100f));
+                    var enhRegenPercentMain = enhRegenMain / maxHpMain * 100;
+
+                    var maxHpRef = CompareData?.Totals?.Health[1].EnhValue ?? CompareData?.Totals?.Health[1].BaseValue ?? CompareData?.Totals?.Health[1].BaseValue;
+                    var baseRegenRef = maxHpRef / 12f * (0.05f + 0.05f * ((nBaseRef - 100) / 100f));
+                    var baseRegenPercentRef = baseRegenRef / maxHpRef * 100f;
+                    var enhRegenRef = maxHpRef / 12f * (0.05f + 0.05f * ((nEnhRef - 100) / 100f));
+                    var enhRegenPercentRef = enhRegenRef / maxHpRef * 100;
+
+                    var baseRegenDiff = baseRegenMain - baseRegenRef;
+                    var baseRegenPercentDiff = baseRegenPercentMain - baseRegenPercentRef;
+                    var enhRegenDiff = enhRegenMain - enhRegenRef;
+                    var enhRegenPercentDiff = enhRegenPercentMain - enhRegenPercentRef;
+
+                    if (BaseOverride)
+                    {
+                        (baseRegenMain, enhRegenMain) = (enhRegenMain, baseRegenMain);
+                        (baseRegenPercentMain, enhRegenPercentMain) = (enhRegenPercentMain, baseRegenPercentMain);
+
+                        (baseRegenRef, enhRegenRef) = (enhRegenRef, baseRegenRef);
+                        (baseRegenPercentRef, enhRegenPercentRef) = (enhRegenPercentRef, baseRegenPercentRef);
+                    }
+
+                    if ((Graph.Style == Enums.GraphStyle.baseOnly) | (Math.Abs(nBaseMain - nEnhMain) < float.Epsilon))
+                    {
+                        tip = $"Regeneration:\r\nCurrent:\r\nHealth regenerated per second: {baseRegenPercentMain:##0.##}%\r\n Hit Points regenerated per second at level 50: {baseRegenMain:##0.#} HP\r\n\r\nReference:\r\nHealth regenerated per second: {baseRegenPercentRef:##0.##}%\r\n Hit Points regenerated per second at level 50: {baseRegenRef:##0.#} HP\r\n\r\nDiff: {(baseRegenPercentDiff > 0 ? "+" : "")}{baseRegenPercentDiff:##0.##}% ({(baseRegenDiff > 0 ? "+" : "")}{baseRegenDiff:##0.#} HP/s)";
+                    }
+                    /*else if (Math.Abs(nBaseMain - nEnhMain) < float.Epsilon)
+                    {
+                        tip = $"{displayName}: {nBaseMain:##0.#}%\r\n Health regenerated per second: {baseRegenPercentMain:##0.##}%\r\n Hit Points regenerated per second at level 50: {baseRegenMain:##0.#} HP";
+                    }*/
+                    else
+                    {
+                        tip = $"Regeneration:\r\nCurrent:\r\nHealth regenerated per second: {enhRegenPercentMain:##0.##}%\r\n Hit Points regenerated per second at level 50: {enhRegenMain:##0.#} HP\r\n\r\nReference:\r\nHealth regenerated per second: {enhRegenPercentRef:##0.##}%\r\n Hit Points regenerated per second at level 50: {enhRegenRef:##0.#} HP\r\n\r\nDiff: {(enhRegenPercentDiff > 0 ? "+" : "")}{enhRegenPercentDiff:##0.##}% ({(enhRegenDiff > 0 ? "+" : "")}{enhRegenDiff:##0.#} HP/s)";
+                    }
+
+                    break;
+
+                case DisplayMode.HealthEndurance when subIndex == 1: // Max HP
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName}:\r\nCurrent: {nBaseMain:###0.#}\r\nReference: {nBaseRef:###0.#}\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:###0.#}"
+                        : $"{displayName}:\r\nCurrent: {nEnhMain:###0.#}\r\nReference: {nEnhRef:###0.#}\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:###0.#}";
+                    break;
+
+                case DisplayMode.HealthEndurance when subIndex == 2: // Absorb
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName}:\r\nCurrent: {nBaseMain:###0.#}\r\nReference: {nBaseRef:###0.#}\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:###0.#}"
+                        : $"{displayName}:\r\nCurrent: {nEnhMain:###0.#}\r\nReference: {nEnhRef:###0.#}\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:###0.#}";
+                    break;
+
+                case DisplayMode.HealthEndurance when subIndex == 3: // End Rec
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##}/s\r\nReference: {nBaseRef:##0.##}/s\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.#}/s"
+                        : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##}/s\r\nReference: {nEnhRef:##0.##}/s\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.#}/s";
+                    break;
+
+                case DisplayMode.HealthEndurance when subIndex == 4: // End Use
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##}/s\r\nReference: {nBaseRef:##0.##}/s\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.##}/s"
+                        : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##}/s\r\nReference: {nEnhRef:##0.##}/s\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.##}/s";
+                    break;
+
+                case DisplayMode.HealthEndurance when subIndex == 5: // Max End
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##}\r\nReference: {nBaseRef:##0.##}\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.##}"
+                        : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##}\r\nReference: {nEnhRef:##0.##}\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.##}";
+                    break;
+
+                case DisplayMode.MovementStealth when subIndex is < 2 or 3: // Run Speed, Jump Speed, Fly Speed
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##} mph\r\nReference: {nBaseRef:##0.##} mph\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.##} {speedUnit}"
+                        : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##} mph\r\nReference: {nEnhRef:##0.##} mph\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.##} {speedUnit}";
+                    break;
+
+                case DisplayMode.MovementStealth when subIndex is 2 or > 3: // Jump height, Stealth/Perception
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName}:\r\nCurrent: {nBaseMain:##0.##} ft\r\nReference: {nBaseRef:##0.##} ft\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:##0.##} {distanceUnit}"
+                        : $"{displayName}:\r\nCurrent: {nEnhMain:##0.##} ft\r\nReference: {nEnhRef:##0.##} ft\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:##0.##} {distanceUnit}";
+                    break;
+
+                case DisplayMode.MiscBuffs when subIndex == 6: // Threat
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName}:\r\nCurrent: {nBaseMain:###0.#}\r\nReference: {nBaseRef:###0.#}\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:###0.#}"
+                        : $"{displayName}:\r\nCurrent: {nEnhMain:###0.#}\r\nReference: {nEnhRef:###0.#}\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:###0.#}";
+                    break;
+
+                case DisplayMode.MiscBuffs:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName}:\r\nCurrent: {nBaseMain:###0.##}%\r\nReference: {nBaseRef:###0.##}%\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:###0.##}%"
+                        : $"{displayName}:\r\nCurrent: {nEnhMain:###0.##}%\r\nReference: {nEnhRef:###0.##}%\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:###0.##}%";
+                    break;
+
+                case DisplayMode.StatusProtection:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName} Protection:\r\nCurrent: {nBaseMain:###0.##}\r\nReference: {nBaseRef:###0.##}\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:###0.##}"
+                        : $"{displayName} Protection:\r\nCurrent: {nEnhMain:###0.##}\r\nReference: {nEnhRef:###0.##}\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:###0.##}";
+                    break;
+
+                case DisplayMode.StatusResistance:
+                case DisplayMode.DebuffResistance:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"Resistance to {displayName}:\r\nCurrent: {nBaseMain:###0.##}%\r\nReference: {nBaseRef:###0.##}%\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:###0.##}%"
+                        : $"Resistance to {displayName}:\r\nCurrent: {nEnhMain:###0.##}%\r\nReference: {nEnhRef:###0.##}%\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:###0.##}%";
+                    break;
+
+                case DisplayMode.Elusivity:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"Elusivity ({displayName}):\r\nCurrent: {nBaseMain:####0.##}%\r\nReference: {nBaseRef:####0.##}%\r\n\r\nDiff: {(nBaseDiff > 0 ? "+" : "")}{nBaseDiff:####0.##}%"
+                        : $"Elusivity ({displayName}):\r\nCurrent: {nEnhMain:####0.##}%\r\nReference: {nEnhRef:####0.##}%\r\n\r\nDiff: {(nEnhDiff > 0 ? "+" : "")}{nEnhDiff:####0.##}%";
+                    break;
+            }
+
+            return tip.Trim();
+        }
+
+        private string GetCompareGraphTip(DisplayMode statDisplayed, string displayName, float nBaseRef, float nEnhRef, IPower? power, int? stacks, string powerTip)
+        {
+            var tip = "";
+            var baseHealValue = nBaseRef / CompareData?.Totals?.Health[1].BaseValue * 100;
+            var enhHealValue = nEnhRef / CompareData?.Totals?.Health[1].EnhValue * 100;
+            var stacksTip = $"{(stacks == null ? "" : $" (at {stacks} stack{(stacks == 1 ? "" : "s")})")}";
+
+            switch (statDisplayed)
+            {
+                case DisplayMode.Accuracy:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName} Accuracy:\r\nReference: {nBaseRef:##0.#}%{stacksTip}"
+                        : $"{displayName} Accuracy:\r\nReference: {nEnhRef:##0.#}%{stacksTip}";
+
+                    break;
+
+                case DisplayMode.Damage:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName} Damage:\r\nReference: {nBaseRef:###0.##}{stacksTip}"
+                        : !BaseOverride
+                            ? $"{displayName} Damage:\r\nReference: {nEnhRef:###0.##}{stacksTip}"
+                            : $"{displayName} Damage:\r\nReference: {nBaseRef:###0.##}{stacksTip}";
+
+                    if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
+                    {
+                        tip += $" ({nBaseRef:###0.##})";
+                    }
+
+                    if (power?.PowerType == Enums.ePowerType.Toggle)
+                    {
+                        tip += $"\r\n(Applied every {power?.ActivatePeriod}s)";
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(powerTip))
+                    {
+                        tip += $"\r\n\r\n{powerTip}";
+                    }
+
+                    break;
+
+                case DisplayMode.DPA:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName} DPA:\r\nReference: {nBaseRef:###0.##}{stacksTip}"
+                        : !BaseOverride
+                            ? $"{displayName} DPA:\r\nReference: {nEnhRef:###0.##}{stacksTip}"
+                            : $"{displayName} DPA:\r\nReference: {nBaseRef:###0.##}{stacksTip}";
+
+                    tip += "/s";
+                    if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
+                    {
+                        tip += $" ({nBaseRef:###0.##}/s)";
+                    }
+
+                    break;
+
+                case DisplayMode.DPS:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName} DPS:\r\nReference: {nBaseRef:###0.##}{stacksTip}"
+                        : !BaseOverride
+                            ? $"{displayName} DPS:\r\nReference: {nEnhRef:###0.##}{stacksTip}"
+                            : $"{displayName} DPS:\r\nReference: {nBaseRef:###0.##}{stacksTip}";
+
+                    tip += "/s";
+                    if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
+                    {
+                        tip += $" ({nBaseRef:###0.##}/s)";
+                    }
+
+                    break;
+
+                case DisplayMode.DPE:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName} DPE:\r\nReference: {nBaseRef:###0.##}{stacksTip}"
+                        : !BaseOverride
+                            ? $"{displayName} DPE:\r\nReference: {nEnhRef:###0.##}{stacksTip}"
+                            : $"{displayName} DPE:\r\nReference: {nBaseRef:###0.##}{stacksTip}";
+
+                    if (Graph.Style == Enums.GraphStyle.baseOnly)
+                    {
+                        tip += $"\r\nDamage per unit of End: {nBaseRef:###0.##}";
+                    }
+                    else
+                    {
+                        tip += $"\r\nDamage per unit of End: {nEnhRef:###0.##}";
+                        if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
+                        {
+                            tip += $" ({nBaseRef:###0.##})";
+                        }
+                    }
+
+                    break;
+
+                case DisplayMode.EffectDuration:
+                    var durationEffectId = power?.GetDurationEffectID() ?? -1;
+                    if (durationEffectId > -1)
+                    {
+                        var str = power.Effects[durationEffectId].EffectType != Enums.eEffectType.Mez
+                            ? Enums.GetEffectName(power.Effects[durationEffectId].EffectType)
+                            : Enums.GetMezName((Enums.eMezShort)power.Effects[durationEffectId].MezType);
+                        if (power.Effects[durationEffectId].Mag < 0)
+                        {
+                            str = $"-{str}";
+                        }
+
+                        tip = Graph.Style == Enums.GraphStyle.baseOnly
+                            ? $"{displayName} ({str}): {nBaseRef:##0.#}s{stacksTip}"
+                            : $"{displayName} ({str}): {nEnhRef:##0.#}s{stacksTip}";
+
+                        if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
+                        {
+                            tip += $" ({nBaseRef:##0.#}s)";
+                        }
+                    }
+
+                    break;
+
+                case DisplayMode.EndUse:
+                    tip = Graph.Style != Enums.GraphStyle.baseOnly
+                        ? $"{displayName}: {nEnhRef:##0.##}{stacksTip}"
+                        : $"{displayName}: {nBaseRef:##0.##}{stacksTip}";
+
+                    if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
+                    {
+                        tip += $" ({nBaseRef:##0.##})";
+                    }
+
+                    if (power?.PowerType == Enums.ePowerType.Toggle)
+                    {
+                        tip += "\r\n(Per Second)";
+                    }
+
+                    break;
+
+                case DisplayMode.EndPerSec:
+                    tip = Graph.Style != Enums.GraphStyle.baseOnly
+                        ? $"{displayName}: {nEnhRef:##0.##}/s{stacksTip}"
+                        : $"{displayName}: {nBaseRef:##0.##}/s{stacksTip}";
+
+                    if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
+                    {
+                        tip += $" ({nBaseRef:##0.##})";
+                    }
+
+                    break;
+
+                case DisplayMode.Healing:
+                case DisplayMode.Regeneration:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName}: {baseHealValue:###0.#}% ({nBaseRef:###0.#} HP){stacksTip}"
+                        : $"{displayName}\r\n Enhanced: {enhHealValue:###0.#}% ({nEnhRef:###0.#} HP){stacksTip}";
+
+                    if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
+                    {
+                        tip += $"\r\n Base: {baseHealValue:##0.#}% ({nBaseRef:##0.#} HP)";
+                    }
+
+                    break;
+
+                case DisplayMode.HPE:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName}: {nBaseRef:##0.##}%{stacksTip}"
+                        : $"{displayName}\r\n Enhanced Heal per unit of End: {enhHealValue:##0.##}% ({nEnhRef:##0.##} HP){stacksTip}";
+
+                    if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
+                    {
+                        tip += $"\r\n Base Heal per unit of End: {baseHealValue:##0.##}% ({nBaseRef:##0.##} HP)";
+                    }
+
+                    break;
+
+                case DisplayMode.HPS:
+                    tip = Graph.Style == Enums.GraphStyle.baseOnly
+                        ? $"{displayName}: {baseHealValue:###0.##}%/s ({nBaseRef:###0.##} HP/s){stacksTip}"
+                        : $"{displayName}\r\n Enhanced: {enhHealValue:###0.##}%/s ({nEnhRef:###0.##} HP/s){stacksTip}";
+
+                    if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
+                    {
+                        tip += $"\r\n Base: {baseHealValue:###0.#}%/s ({nBaseRef:###0.##} HP/s)";
+                    }
+
+                    break;
+
+                case DisplayMode.Range:
+                    tip = Graph.Style != Enums.GraphStyle.baseOnly
+                        ? $"{displayName} Range:\r\nReference: {nEnhRef:###0.#} ft{stacksTip}"
+                        : $"{displayName} Range:\r\nReference: {nBaseRef:###0.#} ft{stacksTip}";
+
+                    if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
+                    {
+                        tip += $" ({nBaseRef:###0.#} ft)";
+                    }
+
+                    break;
+
+                case DisplayMode.RechargeTime:
+                    tip = Graph.Style != Enums.GraphStyle.baseOnly
+                        ? $"{displayName}: {nEnhRef:###0.##}s{stacksTip}"
+                        : $"{displayName}: {nBaseRef:###0.##}s{stacksTip}";
+
+                    if (Math.Abs(nBaseRef - nEnhRef) > float.Epsilon)
+                    {
+                        tip += $" ({nBaseRef:###0.##}s)";
+                    }
+
+                    break;
+            }
+
+            return tip.Trim();
         }
 
         [DebuggerStepThrough]
@@ -1562,7 +1565,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             {
                 MainModule.MidsController.SzFrmStatsCompare = new Rectangle(Left, Top, Width, Height);
             }
-            
+
         }
 
         private void tbScaleX_Scroll(object sender, EventArgs e)
@@ -1750,7 +1753,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void TsCompareImport_Click(object sender, EventArgs e)
         {
             using var dlgOpen = new OpenFileDialog();
-            dlgOpen.Filter = "Compare Data|*.json";
+            dlgOpen.Filter = @"Compare Data|*.json";
             dlgOpen.InitialDirectory = MidsContext.Config.BuildsPath;
             dlgOpen.Multiselect = false;
             dlgOpen.CheckFileExists = true;
@@ -1773,13 +1776,12 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private void TsCompareExport_Click(object sender, EventArgs e)
         {
             using var dlgSave = new SaveFileDialog();
-            dlgSave.Filter = "Compare Data|*.json";
+            dlgSave.Filter = @"Compare Data|*.json";
             dlgSave.InitialDirectory = MidsContext.Config.BuildsPath;
 
             var buildFile = myParent.GetBuildFile();
             buildFile = Path.GetFileName(buildFile ?? "");
 
-            
             string saveFile;
             if (string.IsNullOrEmpty(buildFile))
             {
@@ -1821,7 +1823,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             CompareMode = false;
             SetUiForCompare();
- }
+        }
 
         private void cbCompareGraphStyle_SelectedIndexChanged(object sender, EventArgs e)
         {
@@ -1834,6 +1836,367 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 ? CompareGraphStyle.Diff
                 : CompareGraphStyle.RawValues;
             SetupGraph();
+        }
+
+        private void ibExport_Click(object sender, EventArgs e)
+        {
+            if (CompareData == null)
+            {
+                return;
+            }
+
+            using var dlgSave = new SaveFileDialog();
+            dlgSave.Filter = @"Raw Compare Data|*.csv";
+            dlgSave.InitialDirectory = MidsContext.Config.BuildsPath;
+            dlgSave.FileName = "compare_data.csv";
+
+            var ret = dlgSave.ShowDialog(this);
+            if (ret != DialogResult.OK)
+            {
+                return;
+            }
+
+            File.WriteAllText(dlgSave.FileName, ExportCsv());
+        }
+
+        private string ExportCsv()
+        {
+            dynamic[] headers =
+            [
+                "Notes",
+                "Name",
+                "Archetype",
+                "PvMode",
+                "Build File",
+                "Primary Powerset",
+                "Secondary Powerset",
+                "Pool Powerset 1",
+                "Pool Powerset 2",
+                "Pool Powerset 3",
+                "Pool Powerset 4",
+                "Epic Powerset",
+                "Speed Format",
+                "",
+                "Power Name",
+                "Power Taken (current)",
+                "Power Taken (ref)",
+                "Stacks (current)",
+                "Stacks (ref)",
+                "Stat Name",
+                "Base Value",
+                "Enh. Value",
+                "Uncapped Value",
+                "Ref. Base Value",
+                "Ref. Enh. Value",
+                "Ref. Uncapped Value",
+                "Diff. (base)",
+                "Diff. (enh)",
+                "Unit",
+                "Details",
+                "",
+                "Stat Name",
+                "Base Value",
+                "Enh. Value",
+                "Uncapped Value",
+                "Ref. Base Value",
+                "Ref. Enh. Value",
+                "Ref. Uncapped Value",
+                "Diff. (base)",
+                "Diff. (enh.)",
+                "Unit",
+                "Details"
+            ];
+
+            Totals = StatsPowerData.GetTotals();
+
+            var data = new List<dynamic[]>
+            {
+                headers,
+                new dynamic[] {
+                    $"Compare Data Record\r\n{MidsContext.AppName} v{MidsContext.AssemblyVersion} rev. {MidsContext.AppFileVersion.Revision}"
+                }.Pad("", headers.Length),
+                    
+                new dynamic[] {
+                    MidsContext.Character.Name.Trim(),
+                    MidsContext.Character.Archetype.DisplayName,
+                    MidsContext.Config.Inc.DisablePvE ? "PvP" : "PvE",
+                    Path.GetFileName(myParent.GetBuildFile() ?? ""),
+                    MidsContext.Character.Powersets[0]?.DisplayName ?? "",
+                    MidsContext.Character.Powersets[1]?.DisplayName ?? "",
+                    MidsContext.Character.Powersets[3]?.DisplayName ?? "",
+                    MidsContext.Character.Powersets[4]?.DisplayName ?? "",
+                    MidsContext.Character.Powersets[5]?.DisplayName ?? "",
+                    MidsContext.Character.Powersets[6]?.DisplayName ?? "",
+                    MidsContext.Character.Powersets[7]?.DisplayName ?? "",
+                    MidsContext.Config.SpeedFormat
+                }.Pad("", headers.Length, 1),
+                    
+                new dynamic[]
+                {
+                    CompareData?.Metadata.Name?.Trim() ?? "",
+                    CompareData?.Metadata.Archetype ?? "",
+                    CompareData?.Metadata.PvMode == "PvP" ? "PvP" : "PvE",
+                    Path.GetFileName(CompareData?.Metadata.BuildFile ?? ""),
+                    CompareData?.Metadata.Powersets[0] ?? "",
+                    CompareData?.Metadata.Powersets[1] ?? "",
+                    CompareData?.Metadata.Powersets[2] ?? "",
+                    CompareData?.Metadata.Powersets[3] ?? "",
+                    CompareData?.Metadata.Powersets[4] ?? "",
+                    CompareData?.Metadata.Powersets[5] ?? "",
+                    CompareData?.Metadata.Powersets[6] ?? "",
+                    CompareData?.Metadata.SpeedFormat ?? MidsContext.Config.SpeedFormat
+                }.Pad("", headers.Length, 1)
+            };
+
+            foreach (var s in Enum.GetValues<DisplayMode>())
+            {
+                if ((int)s <= MaxDisplayModeNoCompare)
+                {
+                    //Current Data
+                    var pwStats = StatsPowerData.GetPowerStatsArray(cbSet.SelectedIndex, StatDisplayed);
+                    var statGroup = StatsPowerData.PreparePowersGraph(pwStats[0], pwStats[1], BaseOverride, Graph.Style, StatDisplayed);
+
+                    // Reference data
+                    var statGroupAux = CompareData?.GetGroupData(s)
+                        .Select(e => new StatsPowerData.PowerValueInfoExt
+                        {
+                            PowerName = e.PowerName,
+                            Power = DatabaseAPI.GetPowerByFullName(e.PowerName),
+                            PowerTaken = e.PowerTaken,
+                            BaseValue = e.BaseValue,
+                            EnhValue = e.EnhValue,
+                            UncappedValue = e.UncappedValue,
+                            Stacks = e.Stacks,
+                            UnitSuffix = e.UnitSuffix,
+                            Tip = DiffTip(e, statGroup, e.Tip)
+                        })
+                        .ToList();
+
+                    // Apply power type filter
+                    statGroupAux = cbSet.SelectedIndex switch
+                    {
+                        // Primary/Secondary
+                        1 => statGroupAux
+                            .Where(e => (e.Power?.FullName.StartsWith("Redirects.") == true) | e.Power?.GetPowerSet()?.SetType is Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary)
+                            .ToList(),
+
+                        // Primary
+                        2 => statGroupAux
+                            .Where(e => (e.Power?.FullName.StartsWith("Redirects.") == true) | (e.Power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Primary))
+                            .ToList(),
+
+                        // Secondary
+                        3 => statGroupAux
+                            .Where(e => (e.Power?.FullName.StartsWith("Redirects.") == true) | (e.Power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Secondary))
+                            .ToList(),
+
+                        // Epic/Ancillary
+                        4 => statGroupAux
+                            .Where(e => (e.Power?.FullName.StartsWith("Redirects.") == true) | (e.Power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Ancillary))
+                            .ToList(),
+
+                        // Pools
+                        5 => statGroupAux
+                            .Where(e => (e.Power?.FullName.StartsWith("Redirects.") == true) | (e.Power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Pool))
+                            .ToList(),
+
+                        // Powers taken
+                        6 => statGroupAux
+                            .Where(e => e.PowerTaken)
+                            .ToList(),
+
+                        // All toggles
+                        7 => statGroupAux
+                            .Where(e => e.Power is { PowerType: Enums.ePowerType.Toggle })
+                            .ToList(),
+
+                        // All clicks
+                        8 => statGroupAux
+                            .Where(e => e.Power is { PowerType: Enums.ePowerType.Click })
+                            .ToList(),
+
+                        _ => statGroupAux
+                    };
+
+                    for (var index = 0; index < statGroupAux?.Count; index++)
+                    {
+                        var nBaseRef = statGroupAux[index].BaseValue;
+                        var nEnhRef = statGroupAux[index].EnhValue ?? statGroupAux[index].BaseValue;
+                        var nUncappedRef = statGroupAux[index].UncappedValue ?? statGroupAux[index].EnhValue ?? statGroupAux[index].BaseValue;
+
+                        var tip = GetCompareGraphTip(s, statGroupAux[index].Power?.DisplayName ?? "",
+                            statGroupAux[index].BaseValue, statGroupAux[index].EnhValue ?? statGroupAux[index].BaseValue,
+                            statGroupAux[index].Power, statGroupAux[index].Stacks, statGroupAux[index].Tip);
+
+                        statGroupAux[index] = new StatsPowerData.PowerValueInfoExt
+                        {
+                            BaseValue = nBaseRef,
+                            EnhValue = nEnhRef,
+                            UncappedValue = nUncappedRef,
+                            Power = statGroupAux[index].Power,
+                            PowerName = statGroupAux[index].PowerName,
+                            PowerTaken = statGroupAux[index].PowerTaken,
+                            Stacks = statGroupAux[index].Stacks,
+                            UnitSuffix = statGroupAux[index].UnitSuffix,
+                            Tip = tip
+                        };
+                    }
+
+                    for (var index = 0; index < Math.Min(statGroup?.Length ?? 0, statGroupAux?.Count ?? 0); index++)
+                    {
+                        var displayName = (statGroup[index].Power?.DisplayName != statGroup[index].PowerName) & (statGroup[index].Power?.FullName != statGroup[index].PowerName)
+                            ? statGroup[index].PowerName
+                            : statGroup[index].Power?.DisplayName;
+
+                        data.Add(new dynamic[]
+                        {
+                            displayName ?? "--",
+                            statGroup[index].PowerTaken ? "Yes" : "No",
+                            statGroupAux[index].PowerTaken ? "Yes" : "No",
+                            statGroup[index].Stacks ?? 1,
+                            statGroupAux[index].Stacks ?? 1,
+                            s.ToString(),
+                            statGroup[index].BaseValue,
+                            statGroup[index].EnhValue ?? statGroup[index].BaseValue,
+                            statGroup[index].UncappedValue ?? statGroup[index].EnhValue ?? statGroup[index].BaseValue,
+                            statGroupAux[index].BaseValue,
+                            statGroupAux[index].EnhValue ?? statGroupAux[index].BaseValue,
+                            statGroupAux[index].UncappedValue ?? statGroupAux[index].EnhValue ?? statGroupAux[index].BaseValue,
+                            statGroup[index].BaseValue - statGroupAux[index].BaseValue,
+                            (statGroup[index].EnhValue ?? statGroup[index].BaseValue) - (statGroupAux[index].EnhValue ?? statGroupAux[index].BaseValue),
+                            statGroup[index].UnitSuffix,
+                            statGroupAux[index].Tip
+                        }.Pad("", headers.Length, 14));
+                    }
+                }
+                else
+                {
+                    string[] statLabels = s switch
+                    {
+                        DisplayMode.Resistance => ["Smashing", "Lethal", "Fire", "Cold", "Energy", "Negative", "Toxic", "Psionic"],
+                        DisplayMode.HealthEndurance => ["Regeneration", "Max HP", "Absorb", "End Rec", "End Use", "Max End"],
+                        DisplayMode.MovementStealth => ["Run Speed", "Jump Speed", "Jump Height", "Fly Speed", "Stealth PvE", "Stealth PvP", "Perception"],
+                        DisplayMode.MiscBuffs => ["Haste", "ToHit", "Accuracy", "Damage", "Range", "EndRdx", "Threat"],
+                        DisplayMode.StatusProtection or DisplayMode.StatusResistance => ["Held", "Stunned", "Sleep", "Immobilized", "Knockback", "Repel", "Confused", "Terrorized", "Taunt", "Placate", "Teleport"],
+                        DisplayMode.DebuffResistance => ["Defense", "Endurance", "Recovery", "PerceptionRadius", "ToHit", "RechargeTime", "SpeedRunning", "Regeneration"],
+                        DisplayMode.Elusivity => ["Untyped", "Smashing", "Lethal", "Fire", "Cold", "Energy", "Negative", "Toxic", "Psionic", "Melee", "Ranged", "AoE"],
+                        DisplayMode.Defense => ["Smashing", "Lethal", "Fire", "Cold", "Energy", "Negative", "Toxic", "Psionic", "Melee", "Ranged", "AoE"]
+                    };
+
+                    string statGroupLabel = s switch
+                    {
+                        DisplayMode.Defense => " Defense",
+                        DisplayMode.Resistance or DisplayMode.StatusResistance => " Resistance",
+                        DisplayMode.StatusProtection => " Protection",
+                        DisplayMode.DebuffResistance => " Debuff Resistance",
+                        DisplayMode.Elusivity => " Elusivity",
+                        _ => ""
+                    };
+
+                    // Current data
+                    var statGroup = s switch
+                    {
+                        DisplayMode.Resistance => Totals.Resistance,
+                        DisplayMode.HealthEndurance => Totals.Health.Concat(Totals.Endurance).ToArray(),
+                        DisplayMode.MovementStealth => Totals.Movement.Concat(Totals.Stealth).ToArray(),
+                        DisplayMode.MiscBuffs => Totals.MiscBuffs,
+                        DisplayMode.StatusProtection => Totals.StatusProtection,
+                        DisplayMode.StatusResistance => Totals.StatusResistance,
+                        DisplayMode.DebuffResistance => Totals.DebuffResistance,
+                        DisplayMode.Elusivity => Totals.Elusivity,
+                        _ => Totals.Defense
+                    };
+
+                    // Reference data
+                    var statGroupAux = s switch
+                    {
+                        DisplayMode.Resistance => CompareData?.Totals?.Resistance ?? [],
+                        DisplayMode.HealthEndurance => (CompareData?.Totals?.Health ?? []).Concat(CompareData?.Totals?.Endurance ?? []).ToArray(),
+                        DisplayMode.MovementStealth => (CompareData?.Totals?.Movement ?? []).Concat(CompareData?.Totals?.Stealth ?? []).ToArray(),
+                        DisplayMode.MiscBuffs => CompareData?.Totals?.MiscBuffs ?? [],
+                        DisplayMode.StatusProtection => CompareData?.Totals?.StatusProtection ?? [],
+                        DisplayMode.StatusResistance => CompareData?.Totals?.StatusResistance ?? [],
+                        DisplayMode.DebuffResistance => CompareData?.Totals?.DebuffResistance ?? [],
+                        DisplayMode.Elusivity => CompareData?.Totals?.Elusivity ?? [],
+                        _ => CompareData?.Totals?.Defense ?? []
+                    };
+
+                    for (var index = 0; index < Math.Min(statGroup.Length, statGroupAux.Length); index++)
+                    {
+                        var nBaseMain = statGroup[index].BaseValue;
+                        var nEnhMain = statGroup[index].EnhValue ?? statGroup[index].BaseValue;
+                        var nUncappedMain = statGroup[index].UncappedValue ?? statGroup[index].EnhValue ?? statGroup[index].BaseValue;
+
+                        var nBaseRef = statGroupAux[index].BaseValue;
+                        var nEnhRef = statGroupAux[index].EnhValue ?? statGroupAux[index].BaseValue;
+                        var nUncappedRef = statGroupAux[index].UncappedValue ?? statGroupAux[index].EnhValue ?? statGroupAux[index].BaseValue;
+
+                        // Convert to currently selected speed/distance units
+                        if (s == DisplayMode.MovementStealth)
+                        {
+                            nBaseRef = ConvertSpeedValue(nBaseRef, CompareData?.Metadata.SpeedFormat ?? MidsContext.Config.SpeedFormat);
+                            nEnhRef = ConvertSpeedValue(nEnhRef, CompareData?.Metadata.SpeedFormat ?? MidsContext.Config.SpeedFormat);
+                            nUncappedRef = ConvertSpeedValue(nUncappedRef, CompareData?.Metadata.SpeedFormat ?? MidsContext.Config.SpeedFormat);
+                        }
+
+                        if (!MidsContext.Config.Inc.DisablePvE & (StatDisplayed == DisplayMode.Elusivity))
+                        {
+                            nBaseRef = 0;
+                            nEnhRef = 0;
+                        }
+
+                        var nBaseDiff = nBaseMain - nBaseRef;
+                        var nEnhDiff = nEnhMain - nEnhRef;
+                        //var nUncappedDiff = nUncappedMain - nUncappedRef;
+
+                        var displayName = $"{statLabels[index]}{statGroupLabel}";
+                        var speedUnit = MidsContext.Config.SpeedFormat switch
+                        {
+                            Enums.eSpeedMeasure.KilometersPerHour => "km/h",
+                            Enums.eSpeedMeasure.FeetPerSecond => "ft/s",
+                            Enums.eSpeedMeasure.MetersPerSecond => "m/s",
+                            _ => "mph"
+                        };
+
+                        var distanceUnit = MidsContext.Config.SpeedFormat switch
+                        {
+                            Enums.eSpeedMeasure.KilometersPerHour or Enums.eSpeedMeasure.MetersPerSecond => "m",
+                            _ => "ft"
+                        };
+
+                        var unitSuffix = s switch
+                        {
+                            DisplayMode.HealthEndurance when index <= 2 => " HP",
+                            DisplayMode.HealthEndurance when index <= 4 => "/s",
+                            DisplayMode.HealthEndurance => "",
+                            DisplayMode.MovementStealth when index is < 2 or 3 => $" {speedUnit}",
+                            DisplayMode.MovementStealth when index is 2 or > 3 => $" {distanceUnit}",
+                            DisplayMode.MiscBuffs when index == 6 => "",
+                            DisplayMode.StatusProtection => "",
+                            _ => "%"
+                        };
+
+                        var tip = GetCompareGraphTip(s, index, displayName, nBaseMain, nEnhMain, nBaseRef, nEnhRef, nBaseDiff, nEnhDiff);
+
+                        data.Add(new dynamic[]
+                        {
+                            displayName,
+                            nBaseMain,
+                            nEnhMain,
+                            nUncappedMain,
+                            nBaseRef,
+                            nEnhRef,
+                            nUncappedRef,
+                            nBaseDiff,
+                            nEnhDiff,
+                            unitSuffix,
+                            tip
+                        }.Pad("", headers.Length, 31));
+                    }
+                }
+            }
+
+            return CSV.ExportCsv(data);
         }
     }
 }

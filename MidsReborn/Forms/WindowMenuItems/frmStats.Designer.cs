@@ -56,6 +56,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             label1 = new Label();
             label2 = new Label();
             cbCompareGraphStyle = new ComboBox();
+            ibExport = new Mids_Reborn.Forms.Controls.ImageButtonEx();
             ((ISupportInitialize)tbScaleX).BeginInit();
             MenuBar.SuspendLayout();
             SuspendLayout();
@@ -406,11 +407,40 @@ namespace Mids_Reborn.Forms.WindowMenuItems
             cbCompareGraphStyle.TabIndex = 19;
             cbCompareGraphStyle.SelectedIndexChanged += cbCompareGraphStyle_SelectedIndexChanged;
             // 
+            // ibExport
+            // 
+            ibExport.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
+            ibExport.BackgroundImageLayout = ImageLayout.None;
+            ibExport.CurrentText = "Export";
+            ibExport.DisplayVertically = false;
+            ibExport.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
+            ibExport.ForeColor = System.Drawing.Color.WhiteSmoke;
+            ibExport.Images.Background = MRBResourceLib.Resources.HeroButton;
+            ibExport.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
+            ibExport.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
+            ibExport.ImagesAlt.Hover = MRBResourceLib.Resources.VillainButtonHover;
+            ibExport.Location = new System.Drawing.Point(494, 552);
+            ibExport.Lock = false;
+            ibExport.Name = "ibExport";
+            ibExport.Size = new System.Drawing.Size(105, 22);
+            ibExport.TabIndex = 20;
+            ibExport.Text = "Export";
+            ibExport.TextOutline.Color = System.Drawing.Color.Black;
+            ibExport.TextOutline.Width = 2;
+            ibExport.ToggleState = Forms.Controls.ImageButtonEx.States.ToggledOff;
+            ibExport.ToggleText.Indeterminate = "Indeterminate State";
+            ibExport.ToggleText.ToggledOff = "ToggledOff State";
+            ibExport.ToggleText.ToggledOn = "ToggledOn State";
+            ibExport.UseAlt = false;
+            ibExport.Visible = false;
+            ibExport.Click += ibExport_Click;
+            // 
             // frmStats
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
             ClientSize = new System.Drawing.Size(1004, 577);
+            Controls.Add(ibExport);
             Controls.Add(cbCompareGraphStyle);
             Controls.Add(label2);
             Controls.Add(label1);
@@ -458,5 +488,6 @@ namespace Mids_Reborn.Forms.WindowMenuItems
         private Label label1;
         private Label label2;
         private ComboBox cbCompareGraphStyle;
+        private Controls.ImageButtonEx ibExport;
     }
 }

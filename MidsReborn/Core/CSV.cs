@@ -1,18 +1,22 @@
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Mids_Reborn.Core
 {
     public static class CSV
     {
-        private static readonly Regex Reg = new Regex(",(?=(?:[^\"]|\"[^\"]*\")*$)", RegexOptions.CultureInvariant);
+        private static readonly Regex Reg = new(",(?=(?:[^\"]|\"[^\"]*\")*$)", RegexOptions.CultureInvariant);
 
 
         public static string[] ToArray(string iLine)
         {
             var strArray = Reg.Split(iLine);
-            char[] chArray = {'"'};
-            for (var index = 0; index < strArray.Length; ++index)
+            char[] chArray = ['"'];
+            for (var index = 0; index < strArray.Length; index++)
+            {
                 strArray[index] = strArray[index].Trim(chArray);
+            }
+
             return strArray;
         }
 
@@ -185,6 +189,66 @@ namespace Mids_Reborn.Core
             GroupName,
             MinLevel,
             MaxLevel
+        }
+
+        public static string ExportCsv(List<dynamic[]> arr)
+        {
+            var ret = "";
+            var k = 0;
+            foreach (var row in arr)
+            {
+                var line = new List<string>();
+                foreach (var item in row)
+                {
+                    if (item is string)
+                    {
+                        line.Add($"{item}".Contains(' ') | string.IsNullOrWhiteSpace(item) ? $"\"{item}\"" : $"{item}");
+                    }
+                    else
+                    {
+                        line.Add($"{item}");
+                    }
+                }
+
+                if (k++ > 0)
+                {
+                    ret += "\r\n";
+                }
+                
+                ret += string.Join(", ", line);
+            }
+
+            return ret;
+        }
+
+        public static string ExportCsv(dynamic[][] arr)
+        {
+            var ret = "";
+            var k = 0;
+            foreach (var row in arr)
+            {
+                var line = new List<string>();
+                foreach (var item in row)
+                {
+                    if (item is string)
+                    {
+                        line.Add($"{item}".Contains(' ') | string.IsNullOrWhiteSpace(item) ? $"\"{item}\"" : $"{item}");
+                    }
+                    else
+                    {
+                        line.Add($"{item}");
+                    }
+                }
+
+                if (k++ > 0)
+                {
+                    ret += "\r\n";
+                }
+                
+                ret += string.Join(", ", line);
+            }
+
+            return ret;
         }
     }
 }
