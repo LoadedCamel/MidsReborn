@@ -23,12 +23,6 @@ namespace Mids_Reborn.Forms.Controls
 {
     public partial class DataView : UserControl
     {
-        private struct ItemPairGroup
-        {
-            public string Label;
-            public Func<GroupedFx.FxId, bool> Filter;
-            public List<PairedListEx.Item> ItemPairs;
-        }
 
         private struct ItemPairGroupEx
         {
@@ -699,8 +693,6 @@ namespace Mids_Reborn.Forms.Controls
             {
                 return;
             }
-
-            var defianceFound = false;
             var enhancedPower = pEnh == null || pEnh.PowerIndex == -1 ? pBase : pEnh;
 
             // If power is using redirects, level may not match.
@@ -1599,7 +1591,7 @@ namespace Mids_Reborn.Forms.Controls
             var solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             if (PowerID != pBase.PowerIndex)
                 return;
-            var recolorIa = ClsDrawX.GetRecolorIa(MidsContext.Character.IsHero());
+            var recolorIa = ClsDrawX.GetRecolorIa();
             var rectangle1 = new Rectangle();
             ref var local1 = ref rectangle1;
             var size = bxFlip.Size;

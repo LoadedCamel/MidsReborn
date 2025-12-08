@@ -8,10 +8,8 @@ using static Mids_Reborn.Core.Expressions;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
 {
-    public class Effect : IEffect, IComparable, ICloneable
+    public class Effect : IEffect
     {
-        private static readonly Regex UidClassRegex = new("arch source(.owner)?> (Class_[^ ]*)", RegexOptions.IgnoreCase);
-
         private IPower power;
 
         public double Rand => new Random().NextDouble();
@@ -220,31 +218,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 AtrModRechargeTime = powerAttrib == Enums.ePowerAttribs.RechargeTime ? attribModValue : basePower.RechargeTime,
                 AtrModSecondaryRange = powerAttrib == Enums.ePowerAttribs.SecondaryRange ? attribModValue : basePower.RangeSecondary
             };
-        }
-
-        private void AssignExpression(string? magnitudeExpression)
-        {
-            if (MagnitudeExpression.Contains("///"))
-            {
-                var replaced = magnitudeExpression?.Replace("///", "®");
-                var splitExpr = replaced?.Split('®');
-                Expressions = new Expressions
-                {
-                    Duration = "",
-                    Magnitude = splitExpr?[0].Trim(),
-                    Probability = splitExpr?[1].Trim()
-                };
-            }
-            else
-            {
-                Expressions = new Expressions
-                {
-                    Duration = "",
-                    Magnitude = magnitudeExpression ?? "",
-                    Probability = ""
-                };
-            }
-
         }
 
         private Effect(IEffect template) : this()
@@ -707,8 +680,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public List<KeyValue<string, string>> ActiveConditionals { get; set; }
         public bool Validated { get; set; }
-
-        public bool IsFromProc => ProcsPerMinute > 0.0f;
 
         public int nOverride
         {
@@ -1741,11 +1712,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             return Ticks;
-        }
-
-        public bool ValidateConditional(string cPowername)
-        {
-            return BooleanExprPreprocessor.Parse(this, cPowername);
         }
 
         public bool ValidateConditional(string cType, string cPowername)
@@ -2923,37 +2889,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
     {
         public Enums.eDamage Type;
         public float Value;
-    }
-
-    public struct DamageExt
-    {
-        public Enums.eDamage Type;
-        public float Value;
-        public int Ticks;
-        public bool HasPercentage;
-
-        public override string ToString()
-        {
-            var dmg = Value * (HasPercentage ? 100 : 1);
-            dmg = Ticks <= 0 ? dmg : dmg / Ticks;
-            var dmgStr = $"{Utilities.FixDP(dmg)}{(HasPercentage ? "%" : "")}";
-
-            return Ticks <= 0
-                ? dmgStr
-                : $"{Ticks}x{dmgStr}";
-        }
-
-        public string Stringify(bool longFormat = true)
-        {
-            var dmg = Value * (HasPercentage ? 100 : 1);
-            dmg = Ticks <= 0 ? dmg : dmg / Ticks;
-            var dmgStr = Utilities.FixDP(dmg);
-            dmgStr = Ticks <= 0
-                ? dmgStr
-                : $"{Ticks}x{dmgStr}";
-
-            return longFormat ? $"{Type} ({dmgStr})" : dmgStr;
-        }
     }
 
     public class KeyValue<TKey, TValue>

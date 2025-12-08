@@ -1109,7 +1109,6 @@ public class SkList : SKGLControl
 
     private void OnMouseMove(object? sender, MouseEventArgs e)
     {
-        var pt = new SKPoint(e.X, e.Y);
         var mouseTarget = GetMouseTarget(e.X, e.Y);
         var cursor = Cursors.Default;
 

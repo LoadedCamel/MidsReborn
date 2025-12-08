@@ -15,9 +15,7 @@ namespace Mids_Reborn.Core
         }
 
         public Dictionary<int, GrantCount> Map { get; }
-        public Dictionary<int, KeyValuePair<IEffect, GrantCount>> DetailedMap => Map.ToDictionary(e => e.Key,
-        e => new KeyValuePair<IEffect, GrantCount>(SourcePower.Effects[e.Key], e.Value));
-        
+
         private IPower SourcePower;
         private int BaseEffects;
 
@@ -71,16 +69,6 @@ namespace Mids_Reborn.Core
             return getBaseProbability
                 ? (from grc in Map where realIndex >= grc.Value.StartIndex && realIndex < grc.Value.StartIndex + grc.Value.Effects select SourcePower.Effects[grc.Key].BaseProbability).FirstOrDefault()
                 : (from grc in Map where realIndex >= grc.Value.StartIndex && realIndex < grc.Value.StartIndex + grc.Value.Effects select SourcePower.Effects[grc.Key].Probability).FirstOrDefault();
-        }
-
-        public Enums.eEffectType[] GetEffectTypes()
-        {
-            return SourcePower.Effects.Select(e => e.EffectType).ToArray();
-        }
-
-        public string[] GetEffectTypesDetail()
-        {
-            return SourcePower.Effects.Select((e, i) => $"[{i}] => {e.EffectType}").ToArray();
         }
 
         public string[] GetRanges(bool grantDetail = true)

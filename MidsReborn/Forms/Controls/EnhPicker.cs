@@ -111,10 +111,5 @@ namespace Mids_Reborn.Forms.Controls
             e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             DrawLayout(e.Graphics);
         }
-
-        protected override void OnPaint(PaintEventArgs e)
-        {
-            base.OnPaint(e);
-        }
     }
 }

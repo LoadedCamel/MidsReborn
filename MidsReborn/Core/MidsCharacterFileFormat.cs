@@ -62,19 +62,6 @@ namespace Mids_Reborn.Core
             return s.Replace("<", "&lt;").Replace(">", "&gt;");
         }
 
-        public static string? ReadMetadata(string tagName, string s)
-        {
-            var r = new Regex($@"\<{tagName}\>(.+)\<\/{tagName}\>");
-            if (!r.IsMatch(s))
-            {
-                return null;
-            }
-
-            var m = r.Match(s);
-
-            return DecodeEntities(m.Groups[1].Value.Trim());
-        }
-
         public static Dictionary<string, string> ReadMetadata(List<string> tagNames, string s)
         {
             var ret = new Dictionary<string, string>();
@@ -93,16 +80,6 @@ namespace Mids_Reborn.Core
             }
 
             return ret;
-        }
-
-        private static string SaveMetadata(string tagName, string s)
-        {
-            return $"<{tagName}>{EncodeEntities(s.Trim())}</{tagName}>";
-        }
-
-        private static string SaveMetadata(Dictionary<string, string> tagValues)
-        {
-            return string.Join("\r\n", tagValues.Select(e => $"<{e.Key}>{EncodeEntities(e.Value.Trim())}</{e.Key}>")) + (tagValues.Count > 0 ? "\r\n" : "");
         }
 
         private static bool MxDBuildSaveBuffer(ref byte[] buffer, bool includeAltEnh)
@@ -211,15 +188,6 @@ namespace Mids_Reborn.Core
             return breakString ? ModernZlib.BreakString(resultString, 67, true) : resultString;
         }
 
-        public static string MxDGenerateByteString(bool includeAltEnh)
-        {
-            var cData = new CompressionData();
-            var saveString = MxDBuildSaveStringShared(ref cData, includeAltEnh, true);
-            if (string.IsNullOrEmpty(saveString)) return string.Empty;
-            var separator = string.Empty;
-            return $"|{MagicCompressed};{cData.SzUncompressed};{cData.SzCompressed};{cData.SzEncoded};HEX;|{separator}{saveString}{saveString}";
-        }
-
         public static string MxDBuildSaveString(bool includeAltEnh, bool forumMode)
         {
             var cData = new CompressionData();
@@ -296,7 +264,6 @@ namespace Mids_Reborn.Core
             }
 
             const string str6 = ";HEX";
-            var output = $"|{MagicCompressed};{cData.SzUncompressed};{cData.SzCompressed};{cData.SzEncoded}{str6};|{str3}{str1}{str3}";
             return str4 + "|" + MagicCompressed + ";" + cData.SzUncompressed + ";" + cData.SzCompressed + ";" +
                    cData.SzEncoded + str6 + ";|" + str3 + str1 + str3 +
                    "|-------------------------------------------------------------------|";
@@ -512,7 +479,6 @@ namespace Mids_Reborn.Core
 
                 MidsContext.Character.CurrentBuild.LastPower = r.ReadInt32() - 1;
 
-                var pEntryList = new List<PowerEntry>();
                 var powerCount = r.ReadInt32() + 1;
                 try
                 {

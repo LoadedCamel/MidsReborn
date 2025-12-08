@@ -90,13 +90,6 @@ namespace Mids_Reborn.Controls.Extensions
         private static void DrawOutlineText(this SKCanvas canvas, string text, SKPoint location, SKColor textColor,
             eHTextAlign textAlign = eHTextAlign.Left, byte opacity = 0xFF, float fontSize = 12f, float strokeWidth = 3f, bool oldSchoolStyle = false)
         {
-            var textAlignSk = textAlign switch
-            {
-                eHTextAlign.Left => SKTextAlign.Left,
-                eHTextAlign.Right => SKTextAlign.Right,
-                _ => SKTextAlign.Center
-            };
-
             using var textFont = new SKFont(SKTypeface.Default, fontSize);
             using var textPaint = new SKPaint(textFont)
             {
@@ -107,13 +100,6 @@ namespace Mids_Reborn.Controls.Extensions
 
             var textBounds = new SKRect();
             textPaint.MeasureText(text, ref textBounds);
-
-            /*using var textPath = textAlign switch
-            {
-                eHTextAlign.Center => textPaint.GetTextPath(text, location.X - textBounds.Width / 2f, location.Y),
-                eHTextAlign.Right => textPaint.GetTextPath(text, location.X - textBounds.Width - 0.5f, location.Y),
-                _ => textPaint.GetTextPath(text, location.X, location.Y)
-            };*/
 
             using var textPath = textPaint.GetTextPath(text, location.X, location.Y);
 

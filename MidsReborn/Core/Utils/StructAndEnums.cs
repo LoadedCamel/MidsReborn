@@ -47,13 +47,6 @@ namespace Mids_Reborn.Core.Utils
         Bootstrapper
     }
 
-    public enum ManifestStatus
-    {
-        Unavailable,
-        Failure,
-        Success
-    }
-
     [Flags]
     public enum NavItemState
     {

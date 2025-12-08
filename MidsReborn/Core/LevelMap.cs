@@ -21,7 +21,7 @@ namespace Mids_Reborn.Core
             }
             catch (Exception ex)
             {
-                var num = (int) MessageBox.Show("An error has occurred reading level data from database. Error: " +
+                MessageBox.Show("An error has occurred reading level data from database. Error: " +
                                                 ex.Message);
                 throw;
             }

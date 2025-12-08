@@ -9,37 +9,6 @@ namespace Mids_Reborn.Core.Base.Master_Classes
     {
         public static class RelLevel
         {
-            public static int RelativeLevelToValue(Enums.eEnhRelative relLevel)
-            {
-                return relLevel switch
-                {
-                    Enums.eEnhRelative.MinusThree => -3,
-                    Enums.eEnhRelative.MinusTwo => -2,
-                    Enums.eEnhRelative.MinusOne => -1,
-                    Enums.eEnhRelative.PlusOne => 1,
-                    Enums.eEnhRelative.PlusTwo => 2,
-                    Enums.eEnhRelative.PlusThree => 3,
-                    Enums.eEnhRelative.PlusFour => 4,
-                    Enums.eEnhRelative.PlusFive => 5,
-                    _ => 0
-                };
-            }
-
-            public static Enums.eEnhRelative ValueToRelativeLevel(int relLevel)
-            {
-                return relLevel switch
-                {
-                    <= -3 => Enums.eEnhRelative.MinusThree,
-                    -2 => Enums.eEnhRelative.MinusTwo,
-                    -1 => Enums.eEnhRelative.MinusOne,
-                    0 => Enums.eEnhRelative.Even,
-                    1 => Enums.eEnhRelative.PlusOne,
-                    2 => Enums.eEnhRelative.PlusTwo,
-                    3 => Enums.eEnhRelative.PlusThree,
-                    4 => Enums.eEnhRelative.PlusFour,
-                    >= 5 => Enums.eEnhRelative.PlusFive
-                };
-            }
 
             public static Enums.eEnhRelative UpOne(Enums.eEnhRelative relLevel)
             {
@@ -58,27 +27,8 @@ namespace Mids_Reborn.Core.Base.Master_Classes
                 };
             }
 
-            public static Enums.eEnhRelative DownOne(Enums.eEnhRelative relLevel)
-            {
-                return relLevel switch
-                {
-                    Enums.eEnhRelative.MinusThree => Enums.eEnhRelative.MinusThree,
-                    Enums.eEnhRelative.MinusTwo => Enums.eEnhRelative.MinusThree,
-                    Enums.eEnhRelative.MinusOne => Enums.eEnhRelative.MinusTwo,
-                    Enums.eEnhRelative.Even => Enums.eEnhRelative.MinusOne,
-                    Enums.eEnhRelative.PlusOne => Enums.eEnhRelative.Even,
-                    Enums.eEnhRelative.PlusTwo => Enums.eEnhRelative.PlusOne,
-                    Enums.eEnhRelative.PlusThree => Enums.eEnhRelative.PlusTwo,
-                    Enums.eEnhRelative.PlusFour => Enums.eEnhRelative.PlusThree,
-                    Enums.eEnhRelative.PlusFive => Enums.eEnhRelative.PlusFour,
-                    _ => Enums.eEnhRelative.Even
-                };
-            }
-
             public static Enums.eEnhRelative Maximum => Enums.eEnhRelative.PlusFive;
             public static Enums.eEnhRelative Minimum => Enums.eEnhRelative.MinusThree;
-            public static Enums.eEnhRelative MaximumIo => Enums.eEnhRelative.PlusFive;
-            public static Enums.eEnhRelative MaximumSoHo => Enums.eEnhRelative.PlusThree;
             public static Enums.eEnhRelative Neutral => Enums.eEnhRelative.Even;
         }
 
@@ -101,13 +51,6 @@ namespace Mids_Reborn.Core.Base.Master_Classes
             }
 
             return iNum.ToString(format);
-        }
-
-        public static TV ProperEnum<T, TV>(dynamic value) where TV : struct
-        {
-            var converted = Enum.TryParse<TV>(Enum.GetName(typeof(T), (T)value), out var result);
-            
-            return converted ? result : new TV();
         }
 
         public static void ModifiedEffectString(ref string effectString, int collection)

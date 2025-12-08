@@ -7,8 +7,6 @@ namespace Mids_Reborn.Core
 {
     public class I9Slot : ICloneable
     {
-        private const float SuperiorMult = 1.25f;
-
         public int Enh;
         public Enums.eEnhGrade Grade;
         public int IOLevel;

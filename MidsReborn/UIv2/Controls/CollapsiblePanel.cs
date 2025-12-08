@@ -123,9 +123,6 @@ namespace Mids_Reborn.UIv2.Controls
             }
         }
 
-        [Category("Behavior"), Description("Determines the speed of collapse/expand animation.")]
-        public int CollapseSpeed { get; set; } = 10;
-
         #endregion
 
         #region PublicProps

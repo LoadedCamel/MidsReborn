@@ -3,19 +3,13 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Mids_Reborn.Core.Import;
 
 namespace Mids_Reborn.Core
 {
     public class PetInfo
     {
-        /// <summary>
-        /// An event that when subscribed to signifies when an update has completed on the PowerData.
-        /// </summary>
-        public static event EventHandler? PowersUpdated;
 
         public event EventHandler? PowersDataUpdated;
-        private static EventHandler? _powersDataModified;
 
         /// <summary>
         /// The parent power passed to the constructor that is the summoning power for the pet entity.
@@ -54,12 +48,6 @@ namespace Mids_Reborn.Core
             _basePower = basePower;
             CompilePetPowers(out _);
             GeneratePetPowerData();
-            _powersDataModified += OnPowersDataModified;
-        }
-
-        private void OnPowersDataModified(object? sender, EventArgs e)
-        {
-            PowersDataUpdated?.Invoke(this, EventArgs.Empty);
         }
 
         public bool HasEmptyBasePower => _basePower == null;
@@ -92,11 +80,6 @@ namespace Mids_Reborn.Core
         {
             CompilePetPowers(out powers);
             GeneratePetPowerData();
-        }
-
-        public static List<IPower>? GetBuffedPowers()
-        {
-            return PowersData?.BuffedPowers;
         }
 
         /// <summary>

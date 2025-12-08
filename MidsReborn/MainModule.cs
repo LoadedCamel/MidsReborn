@@ -41,17 +41,6 @@ namespace Mids_Reborn
                 _bFrm = null;
             }
 
-            private static void BusyMsg(ref frmMain iFrm, string sMessage, string sTitle = "")
-            {
-                var bFrm = new frmBusy();
-                if (!string.IsNullOrWhiteSpace(sTitle))
-                {
-                    bFrm.SetTitle(sTitle);
-                }
-                bFrm.Show(iFrm);
-                bFrm.SetMessage(sMessage);
-            }
-
             public static async Task ChangeDatabase(frmBusy? iFrm)
             {
                 iFrm?.SetMessage(@"Restarting with selected database.");

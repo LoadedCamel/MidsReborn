@@ -1,25 +1,11 @@
 using System;
 using System.Collections.Generic;
-using System.Drawing;
-using System.IO;
 using System.Linq;
 
 namespace Mids_Reborn.Core
 {
     public static class Extensions
     {
-        public static Color ReadRGB(this BinaryReader reader)
-        {
-            return Color.FromArgb(reader.ReadByte(), reader.ReadByte(), reader.ReadByte());
-        }
-
-        //public static T[] Append<T>(this T[] source, T item)
-        //{
-        //    var next = new T[source.Length + 1];
-        //    Array.Copy(source, next, source.Length);
-        //    next[next.Length - 1] = item;
-        //    return next;
-        //}
 
         public static T[] RemoveIndex<T>(this T[] source, int index)
         {
@@ -29,11 +15,6 @@ namespace Mids_Reborn.Core
         public static T[] RemoveLast<T>(this T[] items)
         {
             return items.Take(items.Length - 1).ToArray();
-        }
-
-        public static string ToStringOrNull(this object o)
-        {
-            return o?.ToString();
         }
 
         // we use + 1 such that FirstOrDefault gives 0, which still isn't valid
@@ -75,12 +56,6 @@ namespace Mids_Reborn.Core
                 .Select(x => x.index);
         }
 
-        // works just fine when x is null, extension methods aren't instance methods.
-        public static bool IsValueString(this string x)
-        {
-            return !string.IsNullOrWhiteSpace(x);
-        }
-
         public static string After(this string x, string delimiter)
         {
             if (x == null) throw new ArgumentNullException(nameof(x));
@@ -104,50 +79,6 @@ namespace Mids_Reborn.Core
             var i = x.IndexOf(delimiter, StringComparison.Ordinal);
             if (i < 0) throw new InvalidOperationException($"{nameof(x)} did not contain '{delimiter}'");
             return x.Substring(0, i);
-        }
-
-        // model after F#, both indexes are inclusive, unlike substring which is (index, count), this is (index, index)
-        // in F# this would be x.[start..stop]
-        private static string GetRange(this string x, int start, int stop)
-        {
-            return x.Substring(start, stop - start + 1);
-        }
-
-        public static string GetLine(this string x, int lineIndex)
-        {
-            while (true)
-            {
-                if (x == null)
-                    throw new ArgumentNullException(nameof(x));
-                if (lineIndex < 0)
-                    throw new ArgumentOutOfRangeException($"{nameof(lineIndex)} must be 0 or greater");
-                var strIndex = x.IndexOfAny(new[]
-                {
-                    '\r', '\n'
-                });
-                switch (lineIndex)
-                {
-                    case 0 when strIndex < 0:
-                        return x;
-                    case 0 when strIndex == 0:
-                        return string.Empty;
-                    case 0 when 0 < strIndex:
-                        return x.GetRange(0, strIndex - 1);
-                }
-
-                if (0 < lineIndex && strIndex < 0)
-                    throw new InvalidOperationException("Reached end of string before finding desired index");
-                var rem = x.Substring(strIndex + 1);
-                if (0 < rem.Length && x[strIndex] == '\r' && rem[0] == '\n')
-                {
-                    x = rem.Substring(1);
-                    lineIndex = lineIndex - 1;
-                    continue;
-                }
-
-                x = rem;
-                lineIndex = lineIndex - 1;
-            }
         }
     }
 }

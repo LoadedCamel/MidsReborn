@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -19,17 +18,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmPowerBrowser : Form
     {
-        private const int FILTER_ALL_POWERS = 3;
-
-        private const int FILTER_ALL_SETS = 2;
-
-        private const int FILTER_CLASSES = 1;
-
-        private const int FILTER_GROUPS = 0;
-
-        private const int FILTER_ORPHAN_POWERS = 5;
-
-        private const int FILTER_ORPHAN_SETS = 4;
 
         private frmBusy BusyForm { get; set; }
 
@@ -43,7 +31,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             _updating = false;
             InitializeComponent();
             Name = nameof(frmPowerBrowser);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmPowerBrowser));
             Icon = Resources.MRB_Icon_Concept;
         }
 
@@ -87,7 +74,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                             DisplayName = "New Class"
                         };
                         using var frmEditArchetype = new frmEditArchetype(ref iAt);
-                        var num = (int)frmEditArchetype.ShowDialog();
+                        frmEditArchetype.ShowDialog();
                         if (frmEditArchetype.DialogResult != DialogResult.OK)
                             return;
                         var classes = DatabaseAPI.Database.Classes.ToList();
@@ -115,7 +102,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 iAt.ClassName += "_Clone";
                 iAt.DisplayName += " (Clone)";
                 using var frmEditArchetype = new frmEditArchetype(ref iAt);
-                var num2 = (int)frmEditArchetype.ShowDialog();
+                frmEditArchetype.ShowDialog();
                 if (frmEditArchetype.DialogResult != DialogResult.OK)
                     return;
                 var database = DatabaseAPI.Database;
@@ -1378,7 +1365,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
 
             if (lvSet.SelectedItems.Count > 0)
             {
-                var setArchetypes = "";
                 lblSet.Text = lvSet.SelectedItems[0].SubItems[3].Text;
                 _selected[1] = lvSet.SelectedIndices[0];
 

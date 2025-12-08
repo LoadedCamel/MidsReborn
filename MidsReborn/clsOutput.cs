@@ -191,7 +191,6 @@ namespace Mids_Reborn
                         formatColor(
                             DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[index1].NIDPower]
                                 .DisplayName, ExportConfig.Element.Power)) + str2;
-                    var flag5 = !MidsContext.Character.CurrentBuild.Powers[index1].Chosen;
                 }
                 else
                 {

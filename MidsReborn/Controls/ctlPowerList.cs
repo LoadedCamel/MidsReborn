@@ -162,40 +162,6 @@ namespace Mids_Reborn.Controls
             base.WndProc(ref m);
         }
     }
-
-    public class PowerListItem
-    {
-        public IPower Power { get; set; }
-        public int Index { get; set; }
-        public int ItemHeight { get; set; }
-        public ItemState ItemState { get; }
-        public string Text => Power.DisplayName;
-        public ItemAlign TextAlign { get; set; }
-
-        public enum ItemAlign
-        {
-            Left,
-            Right,
-            Center
-        }
-
-        public PowerListItem()
-        {
-            Power = new Power();
-            Index = -1;
-            ItemHeight = 1;
-            ItemState = ItemState.Enabled;
-            TextAlign = ItemAlign.Left;
-        }
-
-        public PowerListItem(IPower power, int index, ItemState state, ItemAlign alignment)
-        {
-            Power = power;
-            Index = index;
-            ItemState = state;
-            TextAlign = alignment;
-        }
-    }
     public class PowerListDrawItemEventArgs : EventArgs
     {
         public Graphics Graphics { get; }

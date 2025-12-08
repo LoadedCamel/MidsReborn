@@ -54,12 +54,6 @@ namespace Mids_Reborn.Controls
                 DataSeries.AddRange(dataPoints);
             }
 
-            public void SetDataPoints(float[] dataPoints)
-            {
-                DataSeries.Clear();
-                DataSeries.AddRange(dataPoints);
-            }
-
             public void Draw(Graphics g)
             {
                 int i;
@@ -107,7 +101,6 @@ namespace Mids_Reborn.Controls
                 }
 
                 Pen p;
-                var res = new Bitmap(BitmapDimensions.Width, BitmapDimensions.Height);
                 g.Clear(ColorOptions.BGColor);
 
                 var font = new Font("Segoe UI", DefaultFont.Size, FontStyle.Regular, GraphicsUnit.Pixel);

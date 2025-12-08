@@ -15,11 +15,6 @@ namespace Mids_Reborn.Forms.Controls
             StartPosition = FormStartPosition.CenterScreen;
             InitializeComponent();
         }
-        
-        public void SetTopMost(bool topMost)
-        {
-            TopMost = topMost;
-        }
 
         protected override CreateParams CreateParams
         {
@@ -49,79 +44,6 @@ namespace Mids_Reborn.Forms.Controls
                 base.WndProc(ref message);
             }
         }
-
-        /// <summary>
-        /// 
-        /// </summary>
-        /// <param name="bitmap">
-        /// 
-        /// </param>
-        /// <param name="opacity">
-        /// Specifies an alpha transparency value to be used on the entire source 
-        /// bitmap. The SourceConstantAlpha value is combined with any per-pixel 
-        /// alpha values in the source bitmap. The value ranges from 0 to 255. If 
-        /// you set SourceConstantAlpha to 0, it is assumed that your image is 
-        /// transparent. When you only want to use per-pixel alpha values, set 
-        /// the SourceConstantAlpha value to 255 (opaque).
-        /// </param>
-        protected void SelectBitmap(Bitmap bitmap, int opacity = 255)
-        {
-            // Does this bitmap contain an alpha channel?
-            if (bitmap.PixelFormat != PixelFormat.Format32bppArgb)
-            {
-                throw new ApplicationException("The bitmap must be 32bpp with alpha-channel.");
-            }
-
-            // Get device contexts
-            var screenDc = GetDC(IntPtr.Zero);
-            var memDc = CreateCompatibleDC(screenDc);
-            var hBitmap = IntPtr.Zero;
-            var hOldBitmap = IntPtr.Zero;
-
-            try
-            {
-                // Get handle to the new bitmap and select it into the current 
-                // device context.
-                hBitmap = bitmap.GetHbitmap(Color.FromArgb(0));
-                hOldBitmap = SelectObject(memDc, hBitmap);
-
-                // Set parameters for layered window update.
-                var newSize = new Size(bitmap.Width, bitmap.Height);
-                var sourceLocation = new Point(0, 0);
-                var newLocation = new Point(Left, Top);
-                var blend = new BlendFunction
-                {
-                    BlendOp = AC_SRC_OVER,
-                    BlendFlags = 0,
-                    SourceConstantAlpha = (byte)opacity,
-                    AlphaFormat = AC_SRC_ALPHA
-                };
-
-                // Update the window.
-                UpdateLayeredWindow(
-                    Handle,     // Handle to the layered window
-                    screenDc,        // Handle to the screen DC
-                    ref newLocation, // New screen position of the layered window
-                    ref newSize,     // New size of the layered window
-                    memDc,           // Handle to the layered window surface DC
-                    ref sourceLocation, // Location of the layer in the DC
-                    0,               // Color key of the layered window
-                    ref blend,       // Transparency of the layered window
-                    ULW_ALPHA        // Use blend as the blend function
-                    );
-            }
-            finally
-            {
-                // Release device context.
-                _ = ReleaseDC(IntPtr.Zero, screenDc);
-                if (hBitmap != IntPtr.Zero)
-                {
-                    SelectObject(memDc, hOldBitmap);
-                    DeleteObject(hBitmap);
-                }
-                DeleteDC(memDc);
-            }
-        }
         #region Native Methods and Structures
 
         const int WS_EX_LAYERED = 0x80000;
@@ -149,15 +71,6 @@ namespace Mids_Reborn.Forms.Controls
 
             public Size(int cx, int cy)
             { this.cx = cx; this.cy = cy; }
-        }
-
-        [StructLayout(LayoutKind.Sequential, Pack = 1)]
-        private struct Argb
-        {
-            public byte Blue;
-            public byte Green;
-            public byte Red;
-            public byte Alpha;
         }
 
         [StructLayout(LayoutKind.Sequential, Pack = 1)]

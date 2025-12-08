@@ -1,5 +1,4 @@
-﻿using System.Windows.Controls;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
 using Mids_Reborn.Controls;
 
 namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor

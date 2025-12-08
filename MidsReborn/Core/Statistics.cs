@@ -9,12 +9,6 @@ namespace Mids_Reborn.Core
         public static readonly float MaxRunSpeed = DatabaseAPI.ServerData.MaxRunSpeed;
         public static readonly float MaxJumpSpeed = DatabaseAPI.ServerData.MaxJumpSpeed;
         public static readonly float MaxFlySpeed = DatabaseAPI.ServerData.MaxFlySpeed;
-        public static readonly float MaxMaxRunSpeed = DatabaseAPI.ServerData.MaxMaxRunSpeed;
-        public static readonly float MaxMaxJumpSpeed = DatabaseAPI.ServerData.MaxMaxJumpSpeed;
-        public static readonly float MaxMaxFlySpeed = DatabaseAPI.ServerData.MaxMaxFlySpeed;
-        public const float CapRunSpeed = 135.67f;
-        public const float CapJumpSpeed = 114.4f;
-        public const float CapFlySpeed = 128.99f;
         public static readonly float BaseRunSpeed = DatabaseAPI.ServerData.BaseRunSpeed;
         public static readonly float BaseJumpSpeed = DatabaseAPI.ServerData.BaseJumpSpeed;
         public static readonly float BaseJumpHeight = DatabaseAPI.ServerData.BaseJumpHeight;
@@ -188,15 +182,6 @@ namespace Mids_Reborn.Core
                 : MidsContext.Character?.TotalsCapped.RunSpd;
 
             return Speed(iSpeed ?? 0, sType);
-        }
-
-        public float MovementRunSpeed(Enums.eSpeedMeasure sType, Enums.eSpeedMeasure baseUnit, bool uncapped)
-        {
-            var iSpeed = uncapped
-                ? MidsContext.Character?.Totals.RunSpd
-                : MidsContext.Character?.TotalsCapped.RunSpd;
-
-            return Speed(iSpeed ?? 0, sType, baseUnit);
         }
 
         public float MovementFlySpeed(Enums.eSpeedMeasure sType, bool uncapped)

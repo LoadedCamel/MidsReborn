@@ -169,7 +169,6 @@ namespace Mids_Reborn.Core
 
         List<KeyValue<string, string>>? ActiveConditionals { get; set; }
         bool Validated { get; set; }
-        bool IsFromProc { get; }
         IPower? GetPower();
         void SetPower(IPower? power);
 
@@ -177,7 +176,6 @@ namespace Mids_Reborn.Core
 
         void UpdateAttrib();
         bool ValidateConditional();
-        bool ValidateConditional(string powerName);
         bool ValidateConditional(string cType, string powerName);
         bool ValidateConditional(int index);
 
@@ -204,8 +202,6 @@ namespace Mids_Reborn.Core
         bool AffectsPetsOnly();
         
         Damage GetDamage();
-
-        public float MinProcChance { get; }
         
         float EffectiveProbability { set; }
     }

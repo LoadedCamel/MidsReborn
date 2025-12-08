@@ -196,14 +196,6 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             PopulateSuppression();
         }
 
-        private void ServerSpecificEnablement()
-        {
-            if (!MidsContext.Config.MasterMode)
-            {
-                TabControl1.TabPages[^1].Enabled = false;
-            }
-        }
-
         private void listScenarios_SelectedIndexChanged(object sender, EventArgs e)
         {
             lblExample.Text = scenarioExample[listScenarios.SelectedIndex];

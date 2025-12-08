@@ -37,12 +37,6 @@ namespace Mids_Reborn.Forms.Controls
         [EditorBrowsable(EditorBrowsableState.Never)]
         [Bindable(false)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
-        public new int MarqueeAnimationSpeed { get; set; }
-
-        [Browsable(false)]
-        [EditorBrowsable(EditorBrowsableState.Never)]
-        [Bindable(false)]
-        [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
         public new ProgressBarStyle Style { get; set; }
 
         #endregion
@@ -209,19 +203,6 @@ namespace Mids_Reborn.Forms.Controls
 
             if (!ShowValue) return;
             TextRenderer.DrawText(e.Graphics, ValueText, Font, progressRect, Colors.TextColor, formatFlags);
-        }
-
-        private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
-        {
-            PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-        }
-
-        private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
-        {
-            if (EqualityComparer<T>.Default.Equals(field, value)) return false;
-            field = value;
-            OnPropertyChanged(propertyName);
-            return true;
         }
 
         #region TypeClasses

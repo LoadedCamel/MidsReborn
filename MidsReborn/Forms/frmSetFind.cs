@@ -149,27 +149,6 @@ namespace Mids_Reborn.Forms
             cbArchetype.SelectedIndex = 0;
         }
 
-        private void AddEffect(ref List<string> list, ref List<int> nIDList, string effect, int nID)
-        {
-            if (list.Contains(effect))
-            {
-                return;
-            }
-
-            list.Add(effect);
-            nIDList.Add(nID);
-        }
-
-        private void AddEffect(ref Dictionary<string, int> list, string effect, int nID)
-        {
-            if (list.ContainsKey(effect))
-            {
-                return;
-            }
-
-            list.Add(effect, nID);
-        }
-
         private void BuildEffectsMap()
         {
             //var t = new Stopwatch();
@@ -616,48 +595,6 @@ namespace Mids_Reborn.Forms
             cbSecondary.EndUpdate();
         }
 
-        private string GetPowerString(int nIDPower)
-        {
-            var str1 = "";
-            var returnString = "";
-            var returnMask = Array.Empty<int>();
-            DatabaseAPI.Database.Power[nIDPower]
-                .GetEffectStringGrouped(0, ref returnString, ref returnMask, true, true, true);
-            if (returnString != "")
-            {
-                return returnString;
-            }
-
-            for (var index1 = 0; index1 < DatabaseAPI.Database.Power[nIDPower].Effects.Length; index1++)
-            {
-                var flag = false;
-                foreach (var m in returnMask)
-                {
-                    if (index1 == m)
-                        flag = true;
-                }
-
-                if (flag)
-                    continue;
-                if (str1 != "")
-                    str1 += ", ";
-                var str3 = DatabaseAPI.Database.Power[nIDPower].Effects[index1].BuildEffectString(true, "", true).Trim();
-                if (str3.Contains("Res("))
-                    str3 = str3.Replace("Res(", "Resistance(");
-                if (str3.Contains("Def("))
-                    str3 = str3.Replace("Def(", "Defense(");
-                if (str3.Contains("EndRec"))
-                    str3 = str3.Replace("EndRec", "Recovery");
-                if (str3.Contains("Endurance"))
-                    str3 = str3.Replace("Endurance", "Max End");
-                else if (str3.Contains("End") & !str3.Contains("Max End"))
-                    str3 = str3.Replace("End", "Max End");
-                str1 += str3;
-            }
-
-            return str1;
-        }
-
         private void UpdateEffectSubAttribList(out bool hasSubs)
         {
             lvVector.BeginUpdate();
@@ -1042,27 +979,6 @@ namespace Mids_Reborn.Forms
 
             lvPowers.ShowSubItemIcons();
             lvPowers.EndUpdate();
-        }
-
-        private void ibSelAt_ButtonClicked()
-        {
-            var selectedArchetype = myParent.GetSelectedArchetype();
-            if (selectedArchetype == "")
-            {
-                cbArchetype.SelectedIndex = 0;
-
-                return;
-            }
-
-            var n = cbArchetype.Items.Count;
-            for (var i = 1; i < n; i++)
-            {
-                if (selectedArchetype != cbArchetype.Items[i].ToString()) continue;
-
-                cbArchetype.SelectedIndex = i;
-
-                return;
-            }
         }
 
         private void cbArchetype_SelectedIndexChanged(object sender, EventArgs e)

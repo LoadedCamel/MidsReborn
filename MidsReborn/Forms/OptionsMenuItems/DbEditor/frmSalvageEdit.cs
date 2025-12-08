@@ -19,7 +19,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Updating = true;
             InitializeComponent();
             Name = nameof(frmSalvageEdit);
-            var componentResourceManager = new ComponentResourceManager(typeof(frmSalvageEdit));
             Icon = Resources.MRB_Icon_Concept;
         }
 

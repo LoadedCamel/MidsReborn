@@ -106,15 +106,6 @@ namespace Mids_Reborn.Controls
         }
 
         /// <summary>
-        /// Add multiple items to the collection
-        /// </summary>
-        /// <param name="items">List/Array of items</param>
-        public void AddItemsRange(IList<string> items)
-        {
-            Items.AddRange(items);
-        }
-
-        /// <summary>
         /// Purges all items from collection
         /// </summary>
         public void ClearItems()

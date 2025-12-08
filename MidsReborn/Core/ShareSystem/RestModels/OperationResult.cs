@@ -10,9 +10,4 @@
     {
         public T? Data { get; set; }
     }
-
-    public class OperationResult<T, TU> : OperationResult<T>
-    {
-        public TU? AdditionalData { get; set; }
-    }
 }

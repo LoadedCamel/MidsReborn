@@ -131,22 +131,6 @@ namespace Mids_Reborn.Controls.Designer
                 };
                 return items;
             }
-
-            private void InvokePropertyEditor(string propertyName)
-            {
-                if (Component == null) return;
-                var property = TypeDescriptor.GetProperties(Component)[propertyName];
-                var typeDescriptor = new FormPagesDesigner.TypeDescriptorContext(Component, property);
-
-                var editor = (UITypeEditor)property?.GetEditor(typeof(UITypeEditor))!;
-                var value = property?.GetValue(Component);
-                var newValue = editor.EditValue(typeDescriptor, value);
-
-                if (!Equals(newValue, value))
-                {
-                    property?.SetValue(Component, newValue);
-                }
-            }
         }
     }
 }

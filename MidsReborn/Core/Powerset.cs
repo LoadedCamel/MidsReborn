@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Mids_Reborn.Core
 {
-    public class Powerset : IPowerset, IComparable
+    public class Powerset : IPowerset
     {
         private string _fullName;
 

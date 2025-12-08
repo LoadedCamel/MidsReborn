@@ -58,10 +58,8 @@ namespace Mids_Reborn.Controls
         private int _vcRowsPowers;
         private eColumnStacking _ColumnStackingMode = eColumnStacking.None;
         private Dictionary<int, Point> ColumnsPowersLayout;
-        private int LayoutColumns = 0;
-        private bool HasNullColumn = false;
-
-        private bool HasHeaders => _ColumnStackingMode != eColumnStacking.None;
+        private int LayoutColumns;
+        private bool HasNullColumn;
 
         // Recoloring variables
         private ColorMatrix? _pColorMatrix;
@@ -94,33 +92,9 @@ namespace Mids_Reborn.Controls
                 0f, 0f, 0f, 0f, 1f
             }
         };
-        private static readonly float[][] VillainMatrix =
-        {
-            new[]
-            {
-                0.45f, 0, 0, 0, 0
-            },
-            new[]
-            {
-                0, 0.35f, 0, 0, 0
-            },
-            new[]
-            {
-                0.75f, 0, 0, 0.175f, 0
-            },
-            new[]
-            {
-                0, 0, 0, 1f, 0
-            },
-            new[]
-            {
-                0, 0, 0, 0, 1f
-            }
-        };
         private const int IcoOffset = 32;
         private Color _backColor;
         private Control _cTarget;
-        private Size _baseControlSize;
         private Font _defaultFont;
         public int Highlight;
         public eInterfaceMode InterfaceMode;
@@ -138,7 +112,6 @@ namespace Mids_Reborn.Controls
                 ColorSwitch();
                 InitColumns = MidsContext.Config.Columns;
                 _cTarget = iTarget;
-                _baseControlSize = iTarget.Size;
                 InitializeAsync();
                 _gTarget = iTarget.CreateGraphics();
                 _gTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
@@ -197,17 +170,6 @@ namespace Mids_Reborn.Controls
         }
 
         public static bool EpicColumns => MidsContext.Character is { Archetype.ClassType: eClassType.HeroEpic };
-
-        private int PoolColumns => _ColumnStackingMode switch
-        {
-            eColumnStacking.Vertical => 1,
-            eColumnStacking.Horizontal => MidsContext.Character.CurrentBuild.Powers
-                .Where(e => e is {Power: not null})
-                .Select(e => e?.Power?.GetPowerSet()?.FullName)
-                .Distinct()
-                .Count(e => e != null && e.StartsWith("Pool.") | e.StartsWith("Epic.")),
-            _ => 0
-        };
 
         public int Columns
         {
@@ -1699,7 +1661,7 @@ namespace Mids_Reborn.Controls
             PImageAttributes.SetColorMatrix(_pColorMatrix);
         }
 
-        public static ImageAttributes GetRecolorIa(bool hero)
+        public static ImageAttributes GetRecolorIa()
         {
             var colorMatrix = new ColorMatrix(HeroMatrix);
             var imageAttributes = new ImageAttributes();
@@ -2692,13 +2654,6 @@ namespace Mids_Reborn.Controls
             var crPos = PowerPositionCr(powerEntry, displayLocation);
 
             return CRtoXy(crPos.X, crPos.Y);
-        }
-
-        public Point PowerPosition(PowerEntry? powerEntry, bool ignorePadding, int displayLocation = -1)
-        {
-            var crPos = PowerPositionCr(powerEntry, displayLocation);
-
-            return CRtoXy(crPos.X, crPos.Y, ignorePadding);
         }
 
         private Point CRtoXy(int iCol, int iRow, bool ignorePadding = false)

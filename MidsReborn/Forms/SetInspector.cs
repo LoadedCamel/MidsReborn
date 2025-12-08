@@ -81,7 +81,6 @@ namespace Mids_Reborn.Forms
 
         private void ApplyAtFilter()
         {
-            var filteredPSets = DatabaseAPI.Database.Powersets.Where(ps => ps != null && ps.Powers.Any(power => _selectedSet != null && power != null && power.SetTypes.Contains(_selectedSet.SetType))).ToList();
             var genericAt = new Archetype
             {
                 DisplayName = "Select Archetype",

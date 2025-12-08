@@ -142,7 +142,7 @@ namespace Mids_Reborn.Core
         public bool DisableShowPopup { get; set; }
         public bool DisableAlphaPopup { get; set; }
         public bool DisableRepeatOnMiddleClick { get; set; }
-        private static ConfigData? Instance { get; set; } = null;
+        private static ConfigData? Instance { get; set; }
         public bool ExportBonusTotals { get; set; }
         public bool ExportBonusList { get; set; }
         public bool NoToolTips { get; set; }
@@ -232,8 +232,6 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public string? UpdatePath { get; private set; }
-
         public Enums.RewardCurrency PreferredCurrency = Enums.RewardCurrency.RewardMerit;
 
         public bool ShowSelfBuffsAny { get; set; }
@@ -289,24 +287,6 @@ namespace Mids_Reborn.Core
             //Instance.InitializeComponent();
         }
 
-        private void InitializeComponent()
-        {
-            if (string.IsNullOrWhiteSpace(DataPath))
-            {
-                DataPath = Files.FDefaultPath;
-            }
-
-            // RelocateSaveFolder(false);
-            try
-            {
-                LoadOverrides();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-            }
-        }
-
         public static Dictionary<string, string> GetCombatSettings()
         {
             return new Dictionary<string, string>
@@ -321,28 +301,6 @@ namespace Mids_Reborn.Core
         public static string? GetCombatSettingName(string param, Dictionary<string, string> settingsTable)
         {
             return (from k in settingsTable where string.Equals(param, k.Key, StringComparison.InvariantCultureIgnoreCase) select k.Value).FirstOrDefault();
-        }
-
-        public Color GetStreamColor(BinaryReader br, Enums.eColorSetting clSetting, bool autoFix = true)
-        {
-            var cl = br.ReadRGB();
-            if (autoFix & cl.R == 0 & cl.G == 0 & cl.B == 0)
-            {
-                return RtFont.GetDefaultColorSetting(clSetting);
-            }
-
-            return cl;
-        }
-
-        public float GetStreamFontSize(BinaryReader br, Enums.eFontSizeSetting fntSetting, bool autoFix = true)
-        {
-            var fntSize = br.ReadSingle();
-            if (autoFix & !RtFont.ValidFontSize(fntSize))
-            {
-                return RtFont.GetDefaultFontSizeSetting(fntSetting);
-            }
-
-            return fntSize;
         }
 
         private void SaveRaw(ISerialize serializer, string iFilename)
@@ -456,16 +414,6 @@ namespace Mids_Reborn.Core
             return new RawSaveResult(newContent.Length, newContentHash);
         }
 
-        private void SaveRawOverrides(ISerialize serializer, string iFilename, string name)
-        {
-            var toSerialize = new
-            {
-                name,
-                CompOverride
-            };
-            SaveRawMhd(serializer, toSerialize, iFilename, null);
-        }
-
         private void SaveOverrides(ISerialize serializer, string dataPath = "")
         {
             const string overridesFileName = "Compare.mhd";
@@ -537,9 +485,6 @@ namespace Mids_Reborn.Core
             public bool ExportIOLevels { get; set; }
             public bool ExportStripSetNames { get; set; }
             public bool ExportStripEnh { get; set; }
-            public bool DisableExportDataChunk { get; set; }
-            public bool DisableExportCompress { get; set; }
-            public bool ExportExtraSep { get; set; }
         }
 
         /// <summary>

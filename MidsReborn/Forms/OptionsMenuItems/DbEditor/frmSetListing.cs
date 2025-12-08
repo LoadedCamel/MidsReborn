@@ -70,7 +70,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 case DialogResult.Yes:
                 {
                     using var frmSetEdit = new FrmSetEditPvP(ref iSet);
-                    var num = (int)frmSetEdit.ShowDialog();
+                    frmSetEdit.ShowDialog();
                     if (frmSetEdit.DialogResult != DialogResult.OK)
                         return;
                     DatabaseAPI.Database.EnhancementSets.Add(new EnhancementSet(frmSetEdit.MySet));
@@ -79,7 +79,7 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
                 case DialogResult.No:
                 {
                     using var frmSetEdit = new FrmSetEdit(ref iSet);
-                    var num = (int)frmSetEdit.ShowDialog();
+                    frmSetEdit.ShowDialog();
                     if (frmSetEdit.DialogResult != DialogResult.OK)
                         return;
                     DatabaseAPI.Database.EnhancementSets.Add(new EnhancementSet(frmSetEdit.MySet));

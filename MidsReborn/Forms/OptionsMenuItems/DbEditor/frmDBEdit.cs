@@ -1,5 +1,4 @@
 using System;
-using System.ComponentModel;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -59,7 +58,6 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             Load += frmDBEdit_Load;
             Initialized = false;
             InitializeComponent();
-            var componentResourceManager = new ComponentResourceManager(typeof(frmDBEdit));
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmDBEdit);
         }
@@ -286,11 +284,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var dbName = iResult.Text;
             var path = Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder, dbName);
             Directory.CreateDirectory(path);
-            Directory.CreateDirectory(Path.Combine(path, "Images"));
-            Directory.CreateDirectory(Path.Combine(path, "Images", "Archetypes"));
-            Directory.CreateDirectory(Path.Combine(path, "Images", "Enhancements"));
-            Directory.CreateDirectory(Path.Combine(path, "Images", "Powersets"));
-            Directory.CreateDirectory(Path.Combine(path, "Images", "Sets"));
+            Directory.CreateDirectory(Path.Combine(path, "Assets"));
+            Directory.CreateDirectory(Path.Combine(path, "Assets", "Archetypes"));
+            Directory.CreateDirectory(Path.Combine(path, "Assets", "Enhancements"));
+            Directory.CreateDirectory(Path.Combine(path, "Assets", "Powersets"));
+            Directory.CreateDirectory(Path.Combine(path, "Assets", "Sets"));
             var files = Directory.GetFiles(Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder, "Generic"));
             foreach (var file in files)
             {
