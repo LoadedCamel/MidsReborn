@@ -1,3 +1,0 @@
-I:/Repos/Crytilis/MidsReborn/MRBBootstrap/vcpkg_installed/x64-windows-static/vcpkg/pkgs/zlib_x64-windows-static/lib/zlib.lib
-I:/Repos/Crytilis/MidsReborn/MRBBootstrap/vcpkg_installed/x64-windows-static/vcpkg/pkgs/zlib_x64-windows-static/include/zconf.h
-I:/Repos/Crytilis/MidsReborn/MRBBootstrap/vcpkg_installed/x64-windows-static/vcpkg/pkgs/zlib_x64-windows-static/include/zlib.h

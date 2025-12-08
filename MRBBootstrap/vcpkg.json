@@ -1,9 +1,0 @@
-{
-  "name": "mrb-bootstrap",
-  "version-string": "1.0.0",
-  "dependencies": [
-    "zlib",
-    "nlohmann-json"
-  ],
-  "builtin-baseline": "22881dbfabcf0a9f5e58222087f24c01bff06639"
-}
