@@ -171,7 +171,7 @@ namespace Mids_Reborn.Controls
         [EditorBrowsable(EditorBrowsableState.Always)]
         [Bindable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
-        public Image HoverImage { get; set; } = Image.FromFile($"Images/pSlot3.png");
+        public Image HoverImage { get; set; } = Image.FromFile($"Assets/pSlot3.png");
         
         [Description("The image to be used for the control.")]
         [Category("SwitchButton Settings")]
@@ -381,7 +381,7 @@ namespace Mids_Reborn.Controls
 
             Font = DefaultFont;
             ForeColor = Color.Azure;
-            Image = Image.FromFile($"Images/pSlot2.png");
+            Image = Image.FromFile($"Assets/pSlot2.png");
             SwitchedState = SwitchState.None;
         }
 

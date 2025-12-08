@@ -47,7 +47,7 @@ namespace Mids_Reborn.Core
             public bool IsBase { get; set; }
         }
 
-        private static string BaseImagePath => Path.Combine(AppContext.BaseDirectory, "Images");
+        private static string BaseImagePath => Path.Combine(AppContext.BaseDirectory, "Assets");
 
         public static string ImagePath(string type = "")
         {
@@ -768,12 +768,12 @@ namespace Mids_Reborn.Core
 
         public static string GetDbEnhancementsPath()
         {
-            return Path.Combine(MidsContext.Config.DataPath, "Images\\Enhancements");
+            return Path.Combine(MidsContext.Config.DataPath, "Assets\\Enhancements");
         }
 
         public static string GetDbPowerSetsPath()
         {
-            return Path.Combine(MidsContext.Config.DataPath, "Images\\Powersets");
+            return Path.Combine(MidsContext.Config.DataPath, "Assets\\Powersets");
         }
 
         public static string GetOriginsPath()

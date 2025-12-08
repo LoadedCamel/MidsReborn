@@ -286,11 +286,11 @@ namespace Mids_Reborn.Forms.OptionsMenuItems.DbEditor
             var dbName = iResult.Text;
             var path = Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder, dbName);
             Directory.CreateDirectory(path);
-            Directory.CreateDirectory(Path.Combine(path, "Images"));
-            Directory.CreateDirectory(Path.Combine(path, "Images", "Archetypes"));
-            Directory.CreateDirectory(Path.Combine(path, "Images", "Enhancements"));
-            Directory.CreateDirectory(Path.Combine(path, "Images", "Powersets"));
-            Directory.CreateDirectory(Path.Combine(path, "Images", "Sets"));
+            Directory.CreateDirectory(Path.Combine(path, "Assets"));
+            Directory.CreateDirectory(Path.Combine(path, "Assets", "Archetypes"));
+            Directory.CreateDirectory(Path.Combine(path, "Assets", "Enhancements"));
+            Directory.CreateDirectory(Path.Combine(path, "Assets", "Powersets"));
+            Directory.CreateDirectory(Path.Combine(path, "Assets", "Sets"));
             var files = Directory.GetFiles(Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder, "Generic"));
             foreach (var file in files)
             {
