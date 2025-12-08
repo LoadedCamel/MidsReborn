@@ -33,7 +33,7 @@ namespace Mids_Reborn.Core
         private const string MxdbPowersReplTable = "PowersReplTable.mhd";
         private const string MxdbCrypticReplTable = "CrypticPowerNames.mhd";
 
-        public const string RoamingFolder = "Data\\";
+        public const string RoamingFolder = "Databases\\";
         public const string BuildsFolder = "Hero & Villain Builds\\";
         
         public static string FileData = string.Empty;

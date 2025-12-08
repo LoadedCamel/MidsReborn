@@ -163,7 +163,7 @@ namespace Mids_Reborn.Core.Utils
             {
                 PatchType.Application =>
                 [
-                    "Patches", "Data", "MRBBootstrap.exe", ".pdb", "MidsReborn.exe.WebView2", "appSettings"
+                    "Patches", "Databases", "MRBBootstrap.exe", ".pdb", "MidsReborn.exe.WebView2", "appSettings"
                 ],
                 PatchType.Database => ["Patches"],
                 _ => exclusionList

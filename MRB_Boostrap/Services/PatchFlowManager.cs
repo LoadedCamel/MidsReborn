@@ -48,7 +48,7 @@ public sealed class PatchFlowManager : IPatchFlowManager
 
             string installPath = entry.Type.Equals("Application", StringComparison.OrdinalIgnoreCase)
                 ? baseDir
-                : Path.Combine(baseDir, "Data", entry.Name);
+                : Path.Combine(baseDir, "Databases", entry.Name);
 
             string patchPath = Path.Combine(baseDir, entry.File);
             string hashPath = Path.ChangeExtension(patchPath, ".hash");

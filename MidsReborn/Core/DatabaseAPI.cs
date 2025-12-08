@@ -336,7 +336,7 @@ namespace Mids_Reborn.Core
             AddZipFileEntry("Recipes.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Recipes)), archive);
             AddZipFileEntry("Salvage.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Salvage)), archive);
             archive.Dispose();
-            File.WriteAllBytes(Path.Combine(Application.StartupPath, @"Data\Mids.zip"), zipContent.ToArray());
+            File.WriteAllBytes(Path.Combine(Application.StartupPath, @"Databases\Mids.zip"), zipContent.ToArray());
 
             if (msgOnCompletion)
             {
@@ -399,7 +399,7 @@ namespace Mids_Reborn.Core
             archive.Dispose();
 
             prg.Text = "|99|Writing Zip archive to disk...";
-            File.WriteAllBytes(Path.Combine(Application.StartupPath, @"Data\Mids.zip"), zipContent.ToArray());
+            File.WriteAllBytes(Path.Combine(Application.StartupPath, @"Databases\Mids.zip"), zipContent.ToArray());
 
             prg.Text = "|100|";
 

@@ -33,7 +33,7 @@ public sealed class RestoreFlowManager : IRestoreFlowManager
             string baseDir = AppContext.BaseDirectory;
             string installPath = patchType.Equals("Application", StringComparison.OrdinalIgnoreCase)
                 ? baseDir
-                : Path.Combine(baseDir, "Data", name);
+                : Path.Combine(baseDir, "Databases", name);
 
             string backupPath = Path.Combine(baseDir, "Backup", name);
 

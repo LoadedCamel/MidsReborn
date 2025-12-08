@@ -54,19 +54,19 @@
     <Compile Update="UIv2\Controls\PowerList.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Content Include="Data\Generic\Example UpdateManifest.xml">
+    <Content Include="Databases\Generic\Example UpdateManifest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Images\*\*.png">
+    <Content Include="Databases\Homecoming\Images\*\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Images\*.png">
+    <Content Include="Databases\Homecoming\Images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Images\*\*.png">
+    <Content Include="Databases\Rebirth\Images\*\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Images\*.png">
+    <Content Include="Databases\Rebirth\Images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\*\*.png">
@@ -75,7 +75,7 @@
     <Content Include="Assets\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\SData.json">
+    <Content Include="Databases\Rebirth\SData.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Fonts\DejaVuSansMono-Bold.ttf">
@@ -150,131 +150,131 @@
 	<Content Include="Assets\Unknown.png">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</Content>
-    <Content Include="Data\Homecoming\AttribMod.json">
+    <Content Include="Databases\Homecoming\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\GlobalMods.mhd">
+    <Content Include="Databases\Homecoming\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\NLevels.mhd">
+    <Content Include="Databases\Homecoming\NLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\RLevels.mhd">
+    <Content Include="Databases\Homecoming\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\bbcode.mhd">
+    <Content Include="Databases\Generic\bbcode.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Compare.mhd">
+    <Content Include="Databases\Generic\Compare.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\EClasses.mhd">
+    <Content Include="Databases\Generic\EClasses.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\EnhDB.mhd">
+    <Content Include="Databases\Generic\EnhDB.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\I12.mhd">
+    <Content Include="Databases\Generic\I12.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\I9.mhd">
+    <Content Include="Databases\Generic\I9.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Maths.mhd">
+    <Content Include="Databases\Generic\Maths.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\NLevels.mhd">
+    <Content Include="Databases\Generic\NLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Origins.mhd">
+    <Content Include="Databases\Generic\Origins.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Recipe.mhd">
+    <Content Include="Databases\Generic\Recipe.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\RLevels.mhd">
+    <Content Include="Databases\Generic\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Salvage.mhd">
+    <Content Include="Databases\Generic\Salvage.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\AttribMod.json">
+    <Content Include="Databases\Generic\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\GlobalMods.mhd">
+    <Content Include="Databases\Generic\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\TypeGrades.json">
+    <Content Include="Databases\Generic\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="MRB_Icon_Concept.ico" />
-    <Content Include="Data\Generic\PowersReplTable.mhd">
+    <Content Include="Databases\Generic\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\SData.mhd">
+    <Content Include="Databases\Generic\SData.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\PowersReplTable.mhd">
+    <Content Include="Databases\Homecoming\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-	<Content Include="Data\Homecoming\CrypticPowerNames.mhd">
+	<Content Include="Databases\Homecoming\CrypticPowerNames.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\AttribMod.json">
+    <Content Include="Databases\Rebirth\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\bbcode.mhd">
+    <Content Include="Databases\Rebirth\bbcode.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Compare.mhd">
+    <Content Include="Databases\Rebirth\Compare.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\EClasses.mhd">
+    <Content Include="Databases\Rebirth\EClasses.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\EnhDB.mhd">
+    <Content Include="Databases\Rebirth\EnhDB.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\GlobalMods.mhd">
+    <Content Include="Databases\Rebirth\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\I12.mhd">
+    <Content Include="Databases\Rebirth\I12.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\I9.mhd">
+    <Content Include="Databases\Rebirth\I9.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Maths.mhd">
+    <Content Include="Databases\Rebirth\Maths.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\NLevels.mhd">
+    <Content Include="Databases\Rebirth\NLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Origins.mhd">
+    <Content Include="Databases\Rebirth\Origins.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\PowersReplTable.mhd">
+    <Content Include="Databases\Rebirth\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Recipe.mhd">
+    <Content Include="Databases\Rebirth\Recipe.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\RLevels.mhd">
+    <Content Include="Databases\Rebirth\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Salvage.mhd">
+    <Content Include="Databases\Rebirth\Salvage.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\TypeGrades.json">
+    <Content Include="Databases\Homecoming\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\TypeGrades.json">
+    <Content Include="Databases\Rebirth\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\SData.mhd">
+    <Content Include="Databases\Homecoming\SData.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\SData.mhd">
+    <Content Include="Databases\Rebirth\SData.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="..\MRBResourceLib\Resources.resx" Link="Resources.resx">
@@ -317,34 +317,34 @@
     <ProjectReference Include="..\MRB_Boostrap\MRB_Boostrap.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\Homecoming\bbcode.mhd">
+    <Content Include="Databases\Homecoming\bbcode.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Compare.mhd">
+    <Content Include="Databases\Homecoming\Compare.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\EClasses.mhd">
+    <Content Include="Databases\Homecoming\EClasses.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\EnhDB.mhd">
+    <Content Include="Databases\Homecoming\EnhDB.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\I12.mhd">
+    <Content Include="Databases\Homecoming\I12.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\I9.mhd">
+    <Content Include="Databases\Homecoming\I9.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Maths.mhd">
+    <Content Include="Databases\Homecoming\Maths.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Origins.mhd">
+    <Content Include="Databases\Homecoming\Origins.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Recipe.mhd">
+    <Content Include="Databases\Homecoming\Recipe.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Salvage.mhd">
+    <Content Include="Databases\Homecoming\Salvage.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
@@ -384,8 +384,8 @@
     <PackageReference Include="zlib.net-mutliplatform" Version="1.0.8" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\Homecoming\Images\Classes\" />
-    <Folder Include="Data\Rebirth\Images\Classes\" />
+    <Folder Include="Databases\Homecoming\Images\Classes\" />
+    <Folder Include="Databases\Rebirth\Images\Classes\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Forms\frmUpdate.cs" />
@@ -396,7 +396,7 @@
     <EmbeddedResource Remove="frmImport_Powerset.resx" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Data\Rebirth\SData.json" />
+    <None Remove="Databases\Rebirth\SData.json" />
     <None Remove="Fonts\DejaVuSansMono-Bold.ttf" />
     <None Remove="Fonts\DejaVuSansMono-BoldOblique.ttf" />
     <None Remove="Fonts\DejaVuSansMono-Oblique.ttf" />
@@ -427,7 +427,7 @@
     <None Update="appSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\blank.html">
+    <None Update="Databases\blank.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
     <None Update="Sythlin_DPS_Tool.exe">
