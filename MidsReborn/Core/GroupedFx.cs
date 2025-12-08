@@ -186,7 +186,7 @@ namespace Mids_Reborn.Core
                 IncludedEffects.AddRangeUnique(gre.IncludedEffects);
             }
 
-            if (IncludedEffects.Count <= 1)
+            if (NumEffects <= 1)
             {
                 IsAggregated = false;
             }
@@ -222,7 +222,7 @@ namespace Mids_Reborn.Core
 
         public override string ToString()
         {
-            return $"<GroupedFx> {{{FxIdentifier}, effects: {IncludedEffects.Count}, Mag: {Mag}, EnhancementFx: {IsEnhancement}, Special case: {SpecialCase}, Aggregated: {IsAggregated}}}";
+            return $"<GroupedFx> {{{FxIdentifier}, effects: {NumEffects}, Mag: {Mag}, EnhancementFx: {IsEnhancement}, Special case: {SpecialCase}, Aggregated: {IsAggregated}}}";
         }
 
         /// <summary>
@@ -234,7 +234,7 @@ namespace Mids_Reborn.Core
         /// <returns>Ranked effect index</returns>
         public int GetRankedEffectIndex(IEnumerable<int> rankedEffects, int index)
         {
-            return IncludedEffects.Count <= 0
+            return NumEffects <= 0
                 ? -1
                 : rankedEffects.TryFindIndex(e => e == IncludedEffects[index]);
         }
@@ -1342,12 +1342,12 @@ namespace Mids_Reborn.Core
                 (e.MezType == refEffect.MezType) & (e.ETModifies == refEffect.ETModifies));
 
             var maxRange = (IsAggregated &
-                           (IncludedEffects.Count > 1) &
+                           (NumEffects > 1) &
                            IncludedEffects
                 .Select(e => power.Effects[e].BuffedMag)
                 .Any(e => e != power.Effects[IncludedEffects[0]].BuffedMag)) |
                            (numDelays > 1) | sameKindBuff
-                ? IncludedEffects.Count
+                ? NumEffects
                 : 1; // Will completely hide tooltip if set to zero
 
             var altList = new List<int>();
@@ -2140,26 +2140,27 @@ namespace Mids_Reborn.Core
         /// <returns>Magnitude sum for this grouped effect based on source power, as a float.</returns>
         public float GetMagSum(IPower power, bool ignoreNegs = true)
         {
-            if (IncludedEffects.Count <= 0)
+            if (NumEffects <= 0)
             {
                 return 0;
             }
 
-            // Exception in GetMagSum(power: Incarnate.Alpha.Intuition_Radial_Boost, ignoreNegs: True)
-            // Exception.IndexOutOfBoundsException
-            var allNegEnh = IncludedEffects
-                    .Select(e => e >= 0 && e < power.Effects.Length ? GetPowerEffectAt(power, e).BuffedMag : 0)
+            // When referencing base power, the effects list is shorter, so ignore things outside it
+            var validEffects = IncludedEffects.Where(e => e >= 0 && e < power.Effects.Length);
+
+            var allNegEnh = validEffects
+                    .Select(e => GetPowerEffectAt(power, e).BuffedMag)
                     .All(e => e < 0);
 
             var refEffect = GetEffectAt(power);
-            var fx = IncludedEffects.Select(e => power.Effects[e]);
+            var fx = validEffects.Select(e => power.Effects[e]);
             if (fx.All(e => e.EffectType == refEffect.EffectType && e.MezType == refEffect.MezType && e.ETModifies == refEffect.ETModifies && e.DamageType == refEffect.DamageType))
             {
                 return allNegEnh | !ignoreNegs
-                    ? IncludedEffects
+                    ? validEffects
                         .Select(e => GetPowerEffectAt(power, e).BuffedMag)
                         .Sum()
-                    : IncludedEffects
+                    : validEffects
                         .Select(e => GetPowerEffectAt(power, e).BuffedMag)
                         .Where(e => e > 0)
                         .Sum();
@@ -2173,10 +2174,10 @@ namespace Mids_Reborn.Core
             }
 
             return allNegEnh | !ignoreNegs
-                ? IncludedEffects
+                ? validEffects
                     .Select(e => GetPowerEffectAt(power, e).BuffedMag)
                     .Sum()
-                : IncludedEffects
+                : validEffects
                     .Select(e => GetPowerEffectAt(power, e).BuffedMag)
                     .Where(e => e > 0)
                     .Sum();
@@ -2384,9 +2385,9 @@ namespace Mids_Reborn.Core
                         ? DatabaseAPI.Database.Entities[effectSource.nSummon].DisplayName
                         : Regex.Replace(effectSource.Summon, @"^(MastermindPets|Pets|Villain_Pets)_", string.Empty);
 
-                    if (gre.IncludedEffects.Count > 1)
+                    if (gre.NumEffects > 1)
                     {
-                        rankedEffect.Value += $" x{gre.IncludedEffects.Count}";
+                        rankedEffect.Value += $" x{gre.NumEffects}";
                     }
 
                     if (effectSource.nSummon > -1)
@@ -2537,7 +2538,7 @@ namespace Mids_Reborn.Core
                         rankedEffect.Name = "Slow";
                         rankedEffect.Value = InvertStringValue(rankedEffect.Value);
                     }
-                    else if ((gre.IncludedEffects.Count > 1) & gre.IncludedEffects.Select(e => pEnh.Effects[e].EffectType).Any(e => e != pEnh.Effects[gre.IncludedEffects[0]].EffectType))
+                    else if ((gre.NumEffects > 1) & gre.IncludedEffects.Select(e => pEnh.Effects[e].EffectType).Any(e => e != pEnh.Effects[gre.IncludedEffects[0]].EffectType))
                     {
                         rankedEffect.Name = $"{((gre.IsAggregated ? magSum : effectSource.Mag) < 0 ? "-" : "")}Movement";
                     }
@@ -2553,7 +2554,7 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.Enhancement:
                 case Enums.eEffectType.ResEffect:
                     rankedEffect.Name = effectType == Enums.eEffectType.Enhancement
-                        ? gre.IncludedEffects.Count > 1
+                        ? gre.NumEffects > 1
                             ? effectSource.Mag < 0
                                 ? "Debuff"
                                 : "Enhancement"
