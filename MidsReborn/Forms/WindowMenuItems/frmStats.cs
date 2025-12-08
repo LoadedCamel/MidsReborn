@@ -269,11 +269,19 @@ namespace Mids_Reborn.Forms.WindowMenuItems
                 ? new Size(1020, 640)
                 : new Size(508, 554);
 
-            var storedCompareSize = MainModule.MidsController.SzFrmStatsCompare == null
-                ? new Rectangle(0, 0, 1004, 601)
-                : MainModule.MidsController.SzFrmStatsCompare.Value with { X = 0, Y = 0 };
+            if (MainModule.MidsController.SzFrmStats == null ||
+                MainModule.MidsController.SzFrmStatsCompare == null ||
+                (MainModule.MidsController.SzFrmStats?.Width <= 0) |
+                (MainModule.MidsController.SzFrmStats?.Height <= 0) |
+                (MainModule.MidsController.SzFrmStatsCompare?.Width <= 0) |
+                (MainModule.MidsController.SzFrmStatsCompare?.Height <= 0))
+            {
+                MainModule.MidsController.SzFrmStats = new Rectangle(Left, Top, 492, 515);
+                MainModule.MidsController.SzFrmStatsCompare = new Rectangle(Left, Top, 1004, 601);
+            }
 
-            var storedSize = MainModule.MidsController.SzFrmStats with { X = 0, Y = 0 };
+            var storedCompareSize = MainModule.MidsController.SzFrmStatsCompare!.Value with { X = 0, Y = 0 };
+            var storedSize = MainModule.MidsController.SzFrmStats!.Value with { X = 0, Y = 0 };
 
             ClientSize = CompareMode
                 ? new Size(Math.Max(1004, storedCompareSize.Width), Math.Max(601, storedCompareSize.Height))
@@ -1498,13 +1506,17 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
         public void SetLocation()
         {
-            var rectangle = new Rectangle
-            {
-                X = MainModule.MidsController.SzFrmStats.X,
-                Y = MainModule.MidsController.SzFrmStats.Y,
-                Width = MainModule.MidsController.SzFrmStats.Width,
-                Height = MainModule.MidsController.SzFrmStats.Height
-            };
+            var storedCompareSize = MainModule.MidsController.SzFrmStatsCompare == null
+                ? new Rectangle(0, 0, 1004, 601)
+                : MainModule.MidsController.SzFrmStatsCompare.Value;
+
+            var storedSize = MainModule.MidsController.SzFrmStats == null
+                ? new Rectangle(0, 0, 492, 515)
+                : MainModule.MidsController.SzFrmStats.Value;
+
+            var rectangle = CompareMode
+                ? storedCompareSize
+                : storedSize;
 
             if (rectangle.Width < 1)
             {
@@ -1556,10 +1568,7 @@ namespace Mids_Reborn.Forms.WindowMenuItems
 
             if (!CompareMode)
             {
-                MainModule.MidsController.SzFrmStats.X = Left;
-                MainModule.MidsController.SzFrmStats.Y = Top;
-                MainModule.MidsController.SzFrmStats.Width = Width;
-                MainModule.MidsController.SzFrmStats.Height = Height;
+                MainModule.MidsController.SzFrmStats = new Rectangle(Left, Top, Width, Height);
             }
             else
             {
