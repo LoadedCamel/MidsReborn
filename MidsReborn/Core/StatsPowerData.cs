@@ -5,7 +5,7 @@ using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using static Mids_Reborn.Forms.WindowMenuItems.frmStats;
+using static Mids_Reborn.UI.Forms.WindowMenuItems.frmStats;
 
 namespace Mids_Reborn.Core
 {

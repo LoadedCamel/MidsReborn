@@ -10,10 +10,10 @@ using System.Windows.Forms;
 using ICSharpCode.SharpZipLib.Zip.Compression;
 using ICSharpCode.SharpZipLib.Zip.Compression.Streams;
 using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.Forms.UpdateSystem.Models;
 using Newtonsoft.Json;
 using Formatting = Newtonsoft.Json.Formatting;
 using JsonSerializer = System.Text.Json.JsonSerializer;
+using Mids_Reborn.UI.Forms.UpdateSystem.Models;
 
 namespace Mids_Reborn.Core.Utils
 {
@@ -40,7 +40,7 @@ namespace Mids_Reborn.Core.Utils
                 var value = PatchType switch
                 {
                     PatchType.Application => AppContext.BaseDirectory,
-                    PatchType.Database => Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder),
+                    PatchType.Database => Path.Combine(AppContext.BaseDirectory, AppDataPaths.RoamingFolder),
                     _ => string.Empty
                 };
 

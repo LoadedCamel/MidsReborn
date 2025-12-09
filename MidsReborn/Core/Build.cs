@@ -9,7 +9,7 @@ using FastDeepCloner;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.Forms.Controls;
+using Mids_Reborn.UI.Forms;
 
 namespace Mids_Reborn.Core
 {

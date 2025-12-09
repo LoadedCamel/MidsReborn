@@ -1,5 +1,5 @@
 ﻿using System.Drawing;
-using Mids_Reborn.Controls;
+using Mids_Reborn.UI.Controls;
 
 namespace Mids_Reborn.Core.Utils
 {

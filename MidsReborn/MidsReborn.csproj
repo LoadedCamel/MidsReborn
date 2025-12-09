@@ -33,22 +33,168 @@
 	<AccelerateBuildsInVisualStudio>false</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Update="Forms\Controls\ColorSlider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Forms\Controls\DataView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Update="Resources.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="UIv2\Controls\CollapsiblePanel.cs">
+    <Compile Update="UI\Controls\AdvGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\AdvListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\BorderPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\BrightnessSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="UIv2\Controls\MultiOrientButton.cs" />
-    <Compile Update="UIv2\Controls\PowerList.cs">
+    <Compile Update="UI\Controls\ColorSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ColorWheel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlColorList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlCombatTimeline.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlDamageDisplay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlDataGraph.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlEnhPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlListViewColored.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlLockedTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlMultiGraph.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlOutlinedLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlPopUp.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlPowerButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlPowerList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlTotalsTabStrip.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\DataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\EditableLabel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\EnhCheckMode.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\EnhPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\EnhSetInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\FileMover.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\FilterableListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\FormPages.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\GenericSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\GFXLabel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\I9Picker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ImageButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ImageButtonEx.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\InputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\LabelEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ListLabel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\MessageBoxEx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\MidsComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\MidsMenuStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\NavStrip.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\Page.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\PairedList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\PairedListEx.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\PanelGfx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\PerPixelAlpha.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\PetView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\PowerSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ProgressBarEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ScrollPanelEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\StylizedCheckbox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\SwitchButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\TimelineCursorZoom.cs">
       <SubType>UserControl</SubType>
     </Compile>
     <Content Include="Databases\Generic\Example UpdateManifest.xml">
@@ -383,11 +529,12 @@
   <ItemGroup>
     <Folder Include="Databases\Homecoming\Images\Classes\" />
     <Folder Include="Databases\Rebirth\Images\Classes\" />
+    <Folder Include="Forms\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Forms\frmUpdate.cs" />
-    <Compile Remove="Forms\OptionsMenuItems\frmAttribModImporter.cs" />
-    <Compile Remove="Forms\OptionsMenuItems\frmAttribModImporter.Designer.cs" />
+    <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.cs" />
+    <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.Designer.cs" />
     <Compile Remove="GlobalSuppressions.cs" />
     <Content Remove="Assets\unlocked.png" />
     <EmbeddedResource Remove="frmImport_Powerset.resx" />
