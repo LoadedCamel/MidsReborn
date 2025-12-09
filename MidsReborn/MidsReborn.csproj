@@ -185,9 +185,7 @@
     <Compile Update="UI\Controls\ProgressBarEx.cs">
       <SubType>Component</SubType>
     </Compile>
-    <Compile Update="UI\Controls\ScrollPanelEx.cs">
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Update="UI\Controls\ScrollPanelEx.cs" />
     <Compile Update="UI\Controls\StylizedCheckbox.cs">
       <SubType>UserControl</SubType>
     </Compile>
