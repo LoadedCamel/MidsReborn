@@ -186,9 +186,6 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Update="UI\Controls\ScrollPanelEx.cs" />
-    <Compile Update="UI\Controls\StylizedCheckbox.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Update="UI\Controls\SwitchButton.cs">
       <SubType>UserControl</SubType>
     </Compile>
@@ -527,10 +524,8 @@
   <ItemGroup>
     <Folder Include="Databases\Homecoming\Images\Classes\" />
     <Folder Include="Databases\Rebirth\Images\Classes\" />
-    <Folder Include="Forms\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Forms\frmUpdate.cs" />
     <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.cs" />
     <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.Designer.cs" />
     <Compile Remove="GlobalSuppressions.cs" />

@@ -10,7 +10,7 @@ namespace Mids_Reborn.UI.Forms
 {
     public partial class frmColorOptions : Form
     {
-        private readonly ConfigData.FontSettings _myFs = new ConfigData.FontSettings();
+        private readonly ConfigData.FontSettings _myFs = new();
 
         public frmColorOptions()
         {

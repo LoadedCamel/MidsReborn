@@ -82,7 +82,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             OriginalName = "";
             ONDuplicate = false;
             InitializeComponent();
-            var componentResourceManager = new ComponentResourceManager(typeof(frmEditArchetype));
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEditArchetype);
             MyAT = new Archetype(iAT);

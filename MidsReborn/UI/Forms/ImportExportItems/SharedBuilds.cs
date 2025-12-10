@@ -22,7 +22,6 @@ namespace Mids_Reborn.UI.Forms.ImportExportItems
 
         private void OnLoad(object? sender, EventArgs e)
         {
-            //WinApi.StylizeWindow(Handle, Color.Silver, Color.Black, Color.WhiteSmoke);
             _collection ??= new ExpiringCollection();
             _collection.DeserializeFromJson();
             alvShared.DataSource = _collection.GetItems();
@@ -91,7 +90,7 @@ namespace Mids_Reborn.UI.Forms.ImportExportItems
                 toolStripStatusLabel1.Text = @"Select a build or choose an action item from the menu.");
         }
 
-        private async void discordMarkdownToolStripMenuItem_Click(object sender, EventArgs e)
+        private void discordMarkdownToolStripMenuItem_Click(object sender, EventArgs e)
         {
             if (_selectedBuild == null) return;
             var data = new DataObject();

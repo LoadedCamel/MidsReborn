@@ -16,7 +16,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditAttribMod : Form
     {
-        private Modifiers TempAttribMods = new Modifiers();
+        private Modifiers TempAttribMods = new();
         private frmBusy? _bFrm;
 
         public frmEditAttribMod()

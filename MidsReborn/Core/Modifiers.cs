@@ -9,9 +9,9 @@ namespace Mids_Reborn.Core
 {
     public class Modifiers : ICloneable
     {
-        public List<ModifierTable> Modifier = new List<ModifierTable>();
+        public List<ModifierTable> Modifier = new();
         public int Revision;
-        public DateTime RevisionDate = new DateTime(0L);
+        public DateTime RevisionDate = new(0L);
         public string SourceIndex = string.Empty;
         public string SourceTables = string.Empty;
 

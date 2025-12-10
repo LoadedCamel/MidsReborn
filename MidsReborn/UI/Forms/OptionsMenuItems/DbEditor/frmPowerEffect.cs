@@ -986,8 +986,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            //var fxTicks = (float)Conversion.Val(txtFXTicks.Text);
-            var ret = float.TryParse(txtFXTicks.Text, out var fxTicks);
+            float.TryParse(txtFXTicks.Text, out var fxTicks);
             if (fxTicks is >= 0 and <= 2147483904)
             {
                 MyFx.Ticks = (int)Math.Round(fxTicks);
@@ -1024,8 +1023,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            //var ppm = (float)Conversion.Val(txtPPM.Text);
-            var ret = float.TryParse(txtPPM.Text, out var ppm);
+            float.TryParse(txtPPM.Text, out var ppm);
             if (ppm is >= 0 and < 2147483904)
             {
                 MyFx.ProcsPerMinute = ppm;
@@ -1387,18 +1385,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     }
 
                 case Enums.eEffectType.PowerRedirect:
-                    var allowedTypes = new List<Enums.ePowerSetType>
-                    {
-                        Enums.ePowerSetType.Ancillary,
-                        Enums.ePowerSetType.Incarnate,
-                        Enums.ePowerSetType.Inherent,
-                        Enums.ePowerSetType.Pet,
-                        Enums.ePowerSetType.Primary,
-                        Enums.ePowerSetType.Secondary,
-                        Enums.ePowerSetType.Pool,
-                        Enums.ePowerSetType.Temp
-                    };
-
                     strArray = DatabaseAPI.Database.PowersetGroups.Keys.ToArray();
                     lvSubAttribute.Columns[0].Text = @"Powerset Group";
                     lvSubAttribute.Columns[0].Width = -2;

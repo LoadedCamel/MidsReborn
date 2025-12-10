@@ -215,9 +215,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 var overlayMezType = MezType(idk, true);
                 var overlayTargetEffect = TargetEffect(idk, true);
                 var overlayDmgType = DamageType(idk, true);
-                var overlayValuePercent = HasPercentage(idk);
 
-                //overlayDmgType = overlayDmgType != "" ? $"{overlayDmgType} " : "";
                 overlayTargetEffect = overlayTargetEffect switch
                 {
                     "" => "",
@@ -935,9 +933,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             {
                 rtxtInfo.BackColor = BackColor;
             }
-
-            var imageOffIdx = MidsContext.Character.IsHero() ? 2 : 4;
-            var imageOnIdx = imageOffIdx + 1;
 
             SetupImageButton(btnClose);
             SetupImageButton(chkOnTop);

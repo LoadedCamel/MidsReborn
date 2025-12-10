@@ -14,7 +14,6 @@ namespace Mids_Reborn.UI.Controls
     [DesignerGenerated]
     public class ctlPopUp : UserControl
     {
-        private IContainer components;
 
         public int eIDX;
 
@@ -131,22 +130,6 @@ namespace Mids_Reborn.UI.Controls
 
                 pScroll = value;
                 Draw();
-            }
-        }
-
-        [DebuggerNonUserCode]
-        protected override void Dispose(bool disposing)
-        {
-            try
-            {
-                if (disposing)
-                {
-                    components?.Dispose();
-                }
-            }
-            finally
-            {
-                base.Dispose(disposing);
             }
         }
 

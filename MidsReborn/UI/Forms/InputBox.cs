@@ -17,7 +17,6 @@ namespace Mids_Reborn.UI.Forms
         private PictureBox InputIcon;
         private ImageList InputImages;
         private ErrorProvider ErrorProviderText;
-        private IContainer Components;
         private IContainer components;
         private ComponentResourceManager Resources;
 
@@ -49,15 +48,6 @@ namespace Mids_Reborn.UI.Forms
             InputTextBox.Text = defaultResponse;
             IconButton1.Visible = isPassword;
             InputIcon.Image = InputImages.Images[(int)icon];
-        }
-
-        protected override void Dispose(bool disposing)
-        {
-            if (disposing)
-            {
-                Components?.Dispose();
-            }
-            base.Dispose(disposing);
         }
 
         #region Windows Form Designer generated code

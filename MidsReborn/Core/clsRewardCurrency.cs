@@ -13,7 +13,7 @@ namespace Mids_Reborn.Core
         // Game does not always allow bidirectional conversions
         // but we need this for calculations.
         private static readonly Dictionary<KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>, KeyValuePair<int, int>> AllowedConversions =
-            new Dictionary<KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>, KeyValuePair<int, int>>
+            new()
             {
                 {
                     new KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>(Enums.RewardCurrency.VanguardMerit, Enums.RewardCurrency.RewardMerit),

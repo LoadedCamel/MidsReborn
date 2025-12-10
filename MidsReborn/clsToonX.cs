@@ -1276,7 +1276,7 @@ namespace Mids_Reborn
             }
         }
 
-        private static void HandleDefaultIncarnateEnh(ref IPower powerMath, IEffect effect1, IEffect[] buffedPowerEffects)
+        private static void HandleDefaultIncarnateEnh(ref IPower powerMath, IEffect effect1)
         {
             foreach (var effect in powerMath.Effects)
             {
@@ -1478,7 +1478,7 @@ namespace Mids_Reborn
                             continue;
 
                         default:
-                            HandleDefaultIncarnateEnh(ref powerMath, effect1, _buffedPowers[hIDX].Effects);
+                            HandleDefaultIncarnateEnh(ref powerMath, effect1);
                             break;
                     }
                 }

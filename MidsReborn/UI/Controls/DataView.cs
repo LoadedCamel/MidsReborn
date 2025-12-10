@@ -1463,7 +1463,6 @@ namespace Mids_Reborn.UI.Controls
             var font1 = new Font("Segoe UI", 9.25f, FontStyle.Regular);
             var font2 = new Font("Segoe UI", 9.25f, FontStyle.Bold);
             var format = new StringFormat(StringFormatFlags.NoWrap);
-            var solidBrush1 = new SolidBrush(Color.White);
             var solidBrush2 = new SolidBrush(BackColor);
             var solidBrush3 = new SolidBrush(Color.Black);
             var extendedBitmap = new ExtendedBitmap(pnlTabs.Size);
@@ -1590,7 +1589,6 @@ namespace Mids_Reborn.UI.Controls
             var solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             if (PowerID != pBase.PowerIndex)
                 return;
-            var recolorIa = ClsDrawX.GetRecolorIa();
             var rectangle1 = new Rectangle();
             ref var local1 = ref rectangle1;
             var size = bxFlip.Size;

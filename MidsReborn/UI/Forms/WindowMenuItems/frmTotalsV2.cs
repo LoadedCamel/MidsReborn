@@ -624,16 +624,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         public void UpdateData()
         {
-            //pbClose.Refresh();
-            //pbTopMost.Refresh();
-            //var uncappedStats = MidsContext.Character.Totals;
-            //var cappedStats = MidsContext.Character.TotalsCapped;
             const int graphBottomMargin = 8;
             var displayStats = MidsContext.Character.DisplayStats;
             var atName = MidsContext.Character.Archetype.DisplayName;
-
-            var movementUnitSpeed = clsConvertibleUnitValue.FormatSpeedUnit(MidsContext.Config.SpeedFormat);
-            //var movementUnitDistance = clsConvertibleUnitValue.FormatDistanceUnit(MidsContext.Config.SpeedFormat);
 
             var damageVectors = Enum.GetValues(typeof(Enums.eDamage));
             var damageVectorsNames = Enum.GetNames(typeof(Enums.eDamage));

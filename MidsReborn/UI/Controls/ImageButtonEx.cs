@@ -746,7 +746,6 @@ namespace Mids_Reborn.UI.Controls
             {
                 if (_currentImage == null) return;
                 // Rotate the image
-                var newSize = new Size(ClientSize.Width, ClientSize.Height);
                 var bmp = new Bitmap(_currentImage);
                 bmp.RotateFlip(RotateFlipType.Rotate90FlipNone);
                 var rotatedImage = bmp; // Assuming a 90-degree rotation

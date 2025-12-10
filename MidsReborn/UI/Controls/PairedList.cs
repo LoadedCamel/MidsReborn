@@ -201,8 +201,6 @@ namespace Mids_Reborn.UI.Controls
                         var stringM = _bxBuffer.Graphics.MeasureString(text, font);
 
                         var columnWidth = (int)Math.Round(Width / (double)_myColumns);
-                        var scaleWidth = (int)Math.Round(columnWidth * (_myValueWidth / 125f));
-                        var controlWidth = columnWidth - scaleWidth;
 
                         var location = new PointF(columnWidth * num5 + Margin.Left, rectangleF.Height * num4 + checked(LinePadding * num4));
                         rectangleF.Location = location;

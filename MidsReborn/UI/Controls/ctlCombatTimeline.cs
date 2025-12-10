@@ -764,7 +764,6 @@ namespace Mids_Reborn.UI.Controls
             RecalcTotals();
 
             // Select enhanced power by historyIdx doesn't work.
-            var pName = timelinePower.PowerSlot.BasePower == null ? "" : timelinePower.PowerSlot.BasePower.FullName;
             timelinePower.PowerSlot.SetEnhancedPower(MainModule.MidsController.Toon.GetEnhancedPower(timelinePower.PowerSlot.BasePower));
 
             if (!recalcStats)

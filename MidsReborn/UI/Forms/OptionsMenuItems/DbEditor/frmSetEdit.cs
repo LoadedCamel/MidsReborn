@@ -523,7 +523,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 cbSlotCount.Items.Add($"{index + 2} Enhancements");
             }
 
-            var num2 = MySet.Enhancements.Length - 1;
             foreach (var idx in MySet.Enhancements)
             {
                 cbSlotCount.Items.Add(DatabaseAPI.Database.Enhancements[idx].Name);

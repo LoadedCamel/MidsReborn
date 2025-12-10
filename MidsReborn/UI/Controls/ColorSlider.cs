@@ -1368,7 +1368,6 @@ namespace Mids_Reborn.UI.Controls
                     //string str = String.Format("{0,0:D}", (int)_maximum);
                     string str = String.Format("{0,0:##}", _maximum);
                     Font font = Font;
-                    SizeF maxsize = e.Graphics.MeasureString(str, font);
 
                     for (int i = 0; i <= _scaleDivisions; i++)
                     {

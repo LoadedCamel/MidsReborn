@@ -1976,7 +1976,6 @@ namespace Mids_Reborn.UI.Forms
             {
                 if (fData == null)
                 {
-                    var iParent = this;
                     fData = new frmData(() => FloatData(false));
                 }
 

@@ -8,11 +8,6 @@ namespace Mids_Reborn
 {
     public abstract class clsConvertibleUnitValue
     {
-        public static string FormatSpeedUnit()
-        {
-            return FormatSpeedUnit(MidsContext.Config.SpeedFormat);
-        }
-        
         public static string FormatSpeedUnit(Enums.eSpeedMeasure speedUnit)
         {
             return speedUnit switch
@@ -23,11 +18,6 @@ namespace Mids_Reborn
                 Enums.eSpeedMeasure.KilometersPerHour => "km/h",
                 _ => "ft/s"
             };
-        }
-
-        public static string FormatDistanceUnit()
-        {
-            return FormatDistanceUnit(MidsContext.Config.SpeedFormat);
         }
 
         public static string FormatDistanceUnit(Enums.eSpeedMeasure distanceUnit)

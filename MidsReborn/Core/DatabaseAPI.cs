@@ -2198,7 +2198,6 @@ namespace Mids_Reborn.Core
                 }
 
                 reader.ReadSingle();
-                var versionEnhDb = Database.VersionEnhDb;
                 var num1 = 0;
                 Database.Enhancements = new IEnhancement[reader.ReadInt32() + 1];
                 for (var index = 0; index < Database.Enhancements.Length; ++index)

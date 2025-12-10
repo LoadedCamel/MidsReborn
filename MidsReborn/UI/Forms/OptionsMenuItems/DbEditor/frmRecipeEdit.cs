@@ -586,7 +586,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var rId = RecipeID();
             if (rId < 0) return;
 
-            var itemCount = _tempRecipes[rId].Item.Length;
             if (_tempRecipes[rId].Item.Length < 1) return;
             if (_tempRecipes[rId].Item.Length > 53) return;
             
