@@ -17,6 +17,7 @@ using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.BuildFile;
 using Mids_Reborn.Core.ShareSystem.RestModels;
 using Mids_Reborn.Core.Utils;
+using Mids_Reborn.Forms;
 using Mids_Reborn.UI.Controls;
 using Mids_Reborn.UI.Controls.Skia;
 using Mids_Reborn.UI.Forms.ImportExportItems;

@@ -8,6 +8,7 @@ namespace Mids_Reborn.Core.BuildFile
         void ShowError(string message);
         void ShowWarning(string message);
         DialogResult ShowWarningDialog(string message, string title, bool showIgnore = false);
+        DialogResult ShowQuestionDialog(string message, string title, MessageBoxEx.MessageBoxExIcon icon = MessageBoxEx.MessageBoxExIcon.Question, bool showIgnore = false);
     }
 
     public class BuildNotifier : IBuildNotifier
@@ -27,5 +28,9 @@ namespace Mids_Reborn.Core.BuildFile
             return MessageBoxEx.ShowDialog(message, title, MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Warning, showIgnore);
         }
 
+        public DialogResult ShowQuestionDialog(string message, string title, MessageBoxEx.MessageBoxExIcon icon = MessageBoxEx.MessageBoxExIcon.Question, bool showIgnore = false)
+        {
+            return MessageBoxEx.ShowDialog(message, title, MessageBoxEx.MessageBoxExButtons.YesNo, icon, showIgnore);
+        }
     }
 }

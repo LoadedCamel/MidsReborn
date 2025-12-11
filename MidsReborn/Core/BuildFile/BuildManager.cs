@@ -6,8 +6,8 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.Core.ShareSystem.RestModels;
 using Mids_Reborn.Core.Utils;
+using Mids_Reborn.UI.Forms;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.BuildFile
@@ -69,8 +69,12 @@ namespace Mids_Reborn.Core.BuildFile
                     _notifier.ShowError($"This build requires the {metaData.Database} be installed prior to loading it.\r\nPlease install the database and try again.");
                     return false;
                 }
-                var result = _notifier.ShowWarningDialog($"This build was created using the {metaData.Database} database.\r\nDo you want to reload and switch to this database, then attempt to load the build?", fileInfo.Name);
-                if (result != DialogResult.Yes) return returnedVal;
+                var result = _notifier.ShowQuestionDialog($"This build was created using the {metaData.Database} database.\r\nDo you want to reload and switch to this database, then attempt to load the build?", fileInfo.Name, MessageBoxEx.MessageBoxExIcon.Warning);
+                if (result != DialogResult.Yes)
+                {
+                    return returnedVal;
+                }
+
                 MidsContext.Config.LastFileName = fileName;
                 MidsContext.Config.DataPath = selected;
                 MidsContext.Config.SavePath = selected;

@@ -6,13 +6,14 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.UI.Forms;
 
 namespace Mids_Reborn.Forms
 {
     public partial class frmTemplateManage : Form
     {
         private ManageMode Mode;
-        private frmMain _ParentForm;
+        private MainWindow2 _ParentForm;
 
         public enum ManageMode
         {
@@ -20,7 +21,7 @@ namespace Mids_Reborn.Forms
             Load
         }
 
-        public frmTemplateManage(ManageMode mode, frmMain parentForm)
+        public frmTemplateManage(ManageMode mode, MainWindow2 parentForm)
         {
             InitializeComponent();
             Mode = mode;

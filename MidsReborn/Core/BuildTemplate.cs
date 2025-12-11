@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
+using Mids_Reborn.UI.Forms;
 
 namespace Mids_Reborn.Core
 {
@@ -23,7 +24,7 @@ namespace Mids_Reborn.Core
         public List<PowerInfo> PickedPowers;
         public string? Name = null;
 
-        public static BuildTemplate SnapshotBuild(frmMain f)
+        public static BuildTemplate SnapshotBuild(MainWindow2 f)
         {
             var poolSelections = f.GetCbPoolsIndices(false);
             var pickedPowers = MidsContext.Character?.CurrentBuild?.Powers
@@ -57,7 +58,7 @@ namespace Mids_Reborn.Core
             PickedPowers = [];
         }
 
-        public void InjectToBuild(frmMain f, bool draw = true)
+        public void InjectToBuild(MainWindow2 f, bool draw = true)
         {
             // Combo boxes
             for (var i = 0; i < PoolSelections.Length; i++)
@@ -222,9 +223,9 @@ namespace Mids_Reborn.Core
 
             MidsContext.Character.ResetLevel();
             MidsContext.Character.PoolShuffle();
-            var powerEntryArray = frmMain.DeepCopyPowerList();
+            var powerEntryArray = MainWindow2.DeepCopyPowerList();
             f.RearrangeAllSlotsInBuild(powerEntryArray, true);
-            frmMain.ShallowCopyPowerList(powerEntryArray);
+            MainWindow2.ShallowCopyPowerList(powerEntryArray);
             f.PowerModified(false);
             f.SetFileModified(false);
             MidsContext.Config.BuildMode = buildMode;
