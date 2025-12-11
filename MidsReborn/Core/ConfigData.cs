@@ -171,6 +171,8 @@ namespace Mids_Reborn.Core
         public Enums.WordwrapMode PowerListsWordwrapMode { get; set; }
 
         public CombatContext CombatContextSettings { get; set; }
+        public List<BuildTemplate>? Templates { get; set; } = [];
+        public string? ActiveTemplate { get; set; } = null;
 
         internal bool MasterMode
         {
