@@ -834,7 +834,7 @@ namespace Mids_Reborn.Core
                     if (startIndex < 0)
                         startIndex = line.IndexOf(MagicCompressed, StringComparison.Ordinal);
                     if (startIndex < 0)
-                        startIndex = line.IndexOf(Files.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase);
+                        startIndex = line.IndexOf(AppDataPaths.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase);
                     if (startIndex <= -1) continue;
                     headers = line[startIndex..].Split(';');
                     header = headers.Length > 0 ? headers[0] : string.Empty;

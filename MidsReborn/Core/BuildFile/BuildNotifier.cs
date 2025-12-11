@@ -1,5 +1,5 @@
-﻿using Mids_Reborn.Forms.Controls;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using Mids_Reborn.UI.Forms;
 
 namespace Mids_Reborn.Core.BuildFile
 {

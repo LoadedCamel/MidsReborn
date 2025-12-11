@@ -5,7 +5,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Forms;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
@@ -13,10 +12,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
     public class Power : IPower
     {
         private bool Contains;
-        public bool AppliedPowersOverride { get; set; }
         public bool AbsorbedPetEffects { get; set; }
         public bool AppliedExecutes { get; set; }
-        public bool AppliedSubPowers { get; set; }
 
         public Power()
         {

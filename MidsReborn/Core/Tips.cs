@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.Forms.Controls;
+using Mids_Reborn.UI.Forms;
 
 namespace Mids_Reborn.Core
 {

@@ -65,7 +65,7 @@ namespace Mids_Reborn.Core.Base
 
         public static void Initialize()
         {
-            _current = new CrypticReplTable(Files.CNamePowersRepl);
+            _current = new CrypticReplTable(AppDataPaths.CNamePowersRepl);
             _current.CheckConsistency();
         }
 

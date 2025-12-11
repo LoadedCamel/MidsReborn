@@ -55,7 +55,5 @@ namespace Mids_Reborn.Core
         public List<string> GetArchetypes();
 
         void StoreTo(ref BinaryWriter writer);
-
-        bool ImportFromCSV(string csv);
     }
 }

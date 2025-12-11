@@ -8,7 +8,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.BuildFile;
-using Mids_Reborn.Forms;
+using Mids_Reborn.UI.Forms;
 
 namespace Mids_Reborn
 {
@@ -100,15 +100,15 @@ namespace Mids_Reborn
                 
                 if (MidsContext.Config != null && MidsContext.Config.DataPath == null)
                 {
-                    MidsContext.Config.DataPath = Files.FDefaultPath;
-                    path = Files.FDefaultPath;
+                    MidsContext.Config.DataPath = AppDataPaths.FDefaultPath;
+                    path = AppDataPaths.FDefaultPath;
                 }
                 messenger.SetMessage("Loading Overrides...");
                 MidsContext.Config?.LoadOverrides(MidsContext.Config.DataPath);
                 messenger.SetMessage("Loading Server Data...");
                 if (!DatabaseAPI.LoadServerData(path))
                 {
-                    MessageBox.Show(@$"There was an error reading server data ({Path.GetFileName(Files.SelectDataFileLoad(Files.ServerDataFile, path))}. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(@$"There was an error reading server data ({Path.GetFileName(AppDataPaths.SelectDataFileLoad(AppDataPaths.ServerDataFile, path))}. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.Exit();
                 }
                 messenger.SetMessage("Loading Build Preferences");
@@ -158,7 +158,7 @@ namespace Mids_Reborn
                 DatabaseAPI.LoadSalvage(path);
                 DatabaseAPI.LoadRecipes(path);
 
-                if (File.Exists(Files.CNamePowersRepl))
+                if (File.Exists(AppDataPaths.CNamePowersRepl))
                 {
                     messenger.SetMessage("Loading Powers Replacement Table...");
                     DatabaseAPI.LoadReplacementTable();

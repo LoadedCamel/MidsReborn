@@ -6,6 +6,7 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
+using Mids_Reborn.UI.Forms;
 using Path = System.IO.Path;
 using Rectangle = System.Drawing.Rectangle;
 
@@ -191,7 +192,7 @@ namespace Mids_Reborn.Core
         public bool DimWindowStyleColors { get; set; }
         public bool CloseEnhSelectPopupByMove { get; set; }
 
-        private string _buildsPath = Files.FDefaultBuildsPath;
+        private string _buildsPath = AppDataPaths.FDefaultBuildsPath;
 
         public string BuildsPath
         {
@@ -209,7 +210,7 @@ namespace Mids_Reborn.Core
 
         public string? DataPath { get; set; }
 
-        private string? _savePath = Files.FDefaultPath;
+        private string? _savePath = AppDataPaths.FDefaultPath;
 
         public string? SavePath
         {
@@ -269,7 +270,7 @@ namespace Mids_Reborn.Core
 
         public void ResetBuildsPath()
         {
-            BuildsPath = Files.FDefaultBuildsPath;
+            BuildsPath = AppDataPaths.FDefaultBuildsPath;
         }
 
         public static void Initialize(bool firstRun = false)
@@ -283,7 +284,7 @@ namespace Mids_Reborn.Core
                 return;
             }
 
-            Instance = serializer.Deserialize<ConfigData>(File.ReadAllText(Files.FNameJsonConfig));
+            Instance = serializer.Deserialize<ConfigData>(File.ReadAllText(AppDataPaths.FNameJsonConfig));
             //Instance.InitializeComponent();
         }
 
@@ -315,13 +316,13 @@ namespace Mids_Reborn.Core
 
         public void SaveConfig()
         {
-            if (!File.Exists(Files.FNameJsonConfig))
+            if (!File.Exists(AppDataPaths.FNameJsonConfig))
             {
-                File.WriteAllText(Files.FNameJsonConfig, "{}");
+                File.WriteAllText(AppDataPaths.FNameJsonConfig, "{}");
             }
             
             var serializer = Serializer.GetSerializer();
-            Save(serializer, Files.FNameJsonConfig);
+            Save(serializer, AppDataPaths.FNameJsonConfig);
             SaveOverrides(serializer);
         }
 
@@ -334,20 +335,20 @@ namespace Mids_Reborn.Core
                 return;
             }
 
-            if (!File.Exists(Files.SelectDataFileLoad(Files.MxdbFileOverrides, dataPath)))
+            if (!File.Exists(AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileOverrides, dataPath)))
             {
-                MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was not found.\r\nCreating a new one...", @"Database file missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show($"Overrides file ({AppDataPaths.MxdbFileOverrides}) was not found.\r\nCreating a new one...", @"Database file missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 CompOverride = [];
                 SaveOverrides(Serializer.GetSerializer(), dataPath);
 
                 return;
             }
 
-            using var fileStream = new FileStream(Files.SelectDataFileLoad(Files.MxdbFileOverrides, dataPath), FileMode.Open, FileAccess.Read);
+            using var fileStream = new FileStream(AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileOverrides, dataPath), FileMode.Open, FileAccess.Read);
             using var binaryReader = new BinaryReader(fileStream);
             if (binaryReader.ReadString() != OverrideNames)
             {
-                MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was missing a header!\r\nNot loading powerset comparison overrides.", @"Database file failed to load", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Overrides file ({AppDataPaths.MxdbFileOverrides}) was missing a header!\r\nNot loading powerset comparison overrides.", @"Database file failed to load", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 return;
             }
@@ -419,7 +420,7 @@ namespace Mids_Reborn.Core
             const string overridesFileName = "Compare.mhd";
 
             var fn = string.IsNullOrWhiteSpace(dataPath)
-                ? Files.SelectDataFileLoad(overridesFileName)
+                ? AppDataPaths.SelectDataFileLoad(overridesFileName)
                 : Path.Combine(dataPath, overridesFileName);
             var dir = Path.GetDirectoryName(fn);
             if (dir != null && !Directory.Exists(dir))
@@ -490,8 +491,8 @@ namespace Mids_Reborn.Core
         /// <summary>
         /// Combat context variables, including player and target props.
         /// See also when adding/changing fields here:
-        /// <seealso cref="Mids_Reborn.Forms.FrmTeam.frmTeam_OnLoad"/>
-        /// <seealso cref="Mids_Reborn.Forms.FrmTeam.FeedbackUpdate"/>
+        /// <seealso cref="FrmTeam.frmTeam_OnLoad"/>
+        /// <seealso cref="FrmTeam.FeedbackUpdate"/>
         /// <seealso cref="Mids_Reborn.Core.BooleanExprPreprocessor.BuildGlobalExpression(IEffect, string, string)"/>
         /// <seealso cref="Mids_Reborn.Core.BooleanExprPreprocessor.BuildGlobalExpression(IEffect, string)"/>
         /// <seealso cref="Mids_Reborn.Core.BooleanExprPreprocessor.GetConfigValue"/>

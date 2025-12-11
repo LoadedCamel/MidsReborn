@@ -30,25 +30,6 @@ namespace Mids_Reborn.Core
             Huge = 8
         }
 
-        private const string Header =
-            "{\\rtf1\\ansi\\ansicpg1252\\deff0\\deflang2057{\\fonttbl{\\f0\\fswiss\\fcharset0 Arial;}{\\f1\\fnil\\fcharset2 Symbol;}}";
-
-        private const string CharTab = "\\tab ";
-
-        private const string CharCrlf = "\\par ";
-
-        private const string BoldOn = "\\b ";
-
-        private const string BoldOff = "\\b0 ";
-
-        private const string ItalicOn = "\\i ";
-
-        private const string ItalicOff = "\\i0 ";
-
-        private const string UnderlineOn = "\\ul ";
-
-        private const string UnderlineOff = "\\ulnone ";
-
 
         public static string ToRTF(string iStr)
         {

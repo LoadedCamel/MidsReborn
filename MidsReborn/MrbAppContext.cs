@@ -1,7 +1,6 @@
 ﻿using System.Threading.Tasks;
 using System.Windows.Forms;
-using Mids_Reborn.Forms;
-using Mids_Reborn.UIv2;
+using Mids_Reborn.UI.Forms;
 
 namespace Mids_Reborn
 {
@@ -21,7 +20,7 @@ namespace Mids_Reborn
             await splashScreen.LoadCompleted;
 
             // Once the splash screen has completed loading, proceed to show the main form.
-            var mainForm = new frmMain(args);
+            var mainForm = new MainWindow2(args);
             mainForm.Closed += (sender, e) => { ExitThread(); };
 
             mainForm.Show();

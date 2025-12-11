@@ -12,11 +12,6 @@ namespace Mids_Reborn.Core
             return iPath.EndsWith("\\") ? iPath : iPath + "\\";
         }
 
-        private static string StripSlash(string iPath)
-        {
-            return iPath.EndsWith("\\") ? iPath.Substring(0, iPath.Length - 1) : iPath;
-        }
-
         public static string StripPath(string iFileName)
         {
             var lastIdx = iFileName.LastIndexOf("\\", StringComparison.Ordinal);
