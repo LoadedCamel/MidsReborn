@@ -816,7 +816,7 @@ namespace Mids_Reborn.Forms
             ShowPopup(-1, CbtAT.Value.SelectedItem.Idx, cbAT.Bounds);
         }
 
-        private void SetEnhCheckModePosition()
+        internal void SetEnhCheckModePosition()
         {
             enhCheckMode.Location = enhCheckMode.Location with { Y = Math.Max(llPrimary.Top + llPrimary.SizeNormal.Height + 431, poolsPanel.Top + llAncillary.Top + llAncillary.SizeNormal.Height + 35) };
         }
@@ -1178,7 +1178,9 @@ namespace Mids_Reborn.Forms
                 var msgBoxResult = MessageBox.Show(@"Current character data will be discarded, are you sure?", @"Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 FloatTop(true);
                 if (msgBoxResult == DialogResult.No)
+                {
                     return;
+                }
             }
 
             DataViewLocked = false;
@@ -1196,6 +1198,15 @@ namespace Mids_Reborn.Forms
 
             MidsContext.Config.LastFileName = "";
             LastFileName = "";
+            if (MidsContext.Config.Templates != null && MidsContext.Config.ActiveTemplate != null)
+            {
+                var buildTemplate = MidsContext.Config.Templates
+                    .DefaultIfEmpty(null)
+                    .FirstOrDefault(e => e?.Name == MidsContext.Config.ActiveTemplate);
+
+                buildTemplate?.InjectToBuild(this, false);
+            }
+
             PowerModified(false);
             FileModified = false;
             SetTitleBar();
@@ -1226,7 +1237,7 @@ namespace Mids_Reborn.Forms
             _frmTeam.FeedbackUpdate(pKey, val);
         }
 
-        private static PowerEntry?[] DeepCopyPowerList()
+        internal static PowerEntry?[] DeepCopyPowerList()
         {
             return MidsContext.Character.CurrentBuild.Powers.Select(x => (PowerEntry)x?.Clone()).ToArray();
         }
@@ -1916,7 +1927,7 @@ namespace Mids_Reborn.Forms
             }
         }
 
-        private void FixStatIncludes()
+        internal void FixStatIncludes()
         {
             if (MainModule.MidsController.Toon == null)
             {
@@ -4579,7 +4590,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             DoRedraw();
         }
 
-        private void PowerPickedNoRedraw(int nIDPowerset, int nIDPower)
+        internal void PowerPickedNoRedraw(int nIDPowerset, int nIDPower)
         {
             MainModule.MidsController.Toon.BuildPower(nIDPowerset, nIDPower, true);
             // Zed: Important: if using PowerModified() the rendering will be super slow!
@@ -5142,7 +5153,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             return flag2;
         }
 
-        private void RearrangeAllSlotsInBuild(PowerEntry?[] tp, bool notifyUser = false)
+        internal void RearrangeAllSlotsInBuild(PowerEntry?[] tp, bool notifyUser = false)
         {
             var index1 = 0;
             var numArray1 = new int[tp.Length];
@@ -5679,7 +5690,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             SetTitleBar(MidsContext.Character.IsHero());
         }
 
-        private static void ShallowCopyPowerList(PowerEntry?[] source)
+        internal static void ShallowCopyPowerList(PowerEntry?[] source)
         {
             for (var index = 0; index < MidsContext.Character.CurrentBuild.Powers.Count; index++)
             {
@@ -6357,11 +6368,18 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             using var vsb = new SharedBuilds();
             var result = vsb.ShowDialog(this);
-            if (result != DialogResult.Continue || vsb.FetchedData == null) return;
+            if (result != DialogResult.Continue || vsb.FetchedData == null)
+            {
+                return;
+            }
+
             _buildManager.ValidateAndLoadSchemaData(vsb.FetchedData.Data, vsb.FetchedData.Id);
             FileModified = false;
-            if (drawing != null) drawing.Highlight = -1;
-            
+            if (drawing != null)
+            {
+                drawing.Highlight = -1;
+            }
+
             myDataView?.Clear();
             PowerModified(false);
         }
@@ -6369,6 +6387,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void tsFileNew_Click(object sender, EventArgs e)
         {
             command_New();
+        }
+
+        private void tsManageTemplates_Click(object sender, EventArgs e)
+        {
+            using var templateManager = new frmTemplateManage(frmTemplateManage.ManageMode.Save, this);
+            templateManager.ShowDialog(this);
         }
 
         private void tsBuildRcv_Click(object sender, EventArgs e)
@@ -7154,22 +7178,17 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             ComboCheckPS(CbtPrimary.Value, Enums.PowersetType.Primary, Enums.ePowerSetType.Primary);
             ComboCheckPS(CbtSecondary.Value, Enums.PowersetType.Secondary, Enums.ePowerSetType.Secondary);
-            cbSecondary.Enabled = MidsContext.Character.Powersets[0].nIDLinkSecondary <= -1;
+            cbSecondary.Enabled = MidsContext.Character.Powersets[0]?.nIDLinkSecondary <= -1;
             ComboCheckPool(CbtPool0.Value, Enums.ePowerSetType.Pool);
             ComboCheckPool(CbtPool1.Value, Enums.ePowerSetType.Pool);
             ComboCheckPool(CbtPool2.Value, Enums.ePowerSetType.Pool);
             ComboCheckPool(CbtPool3.Value, Enums.ePowerSetType.Pool);
             ComboCheckPool(CbtAncillary.Value, Enums.ePowerSetType.Ancillary);
-            cbPool0.SelectedIndex =
-                MainModule.MidsController.Toon.PoolToComboID(0, MidsContext.Character.Powersets[3]?.nID ?? -1);
-            cbPool1.SelectedIndex =
-                MainModule.MidsController.Toon.PoolToComboID(1, MidsContext.Character.Powersets[4]?.nID ?? -1);
-            cbPool2.SelectedIndex =
-                MainModule.MidsController.Toon.PoolToComboID(2, MidsContext.Character.Powersets[5]?.nID ?? -1);
-            cbPool3.SelectedIndex =
-                MainModule.MidsController.Toon.PoolToComboID(3, MidsContext.Character.Powersets[6]?.nID ?? -1);
-            var powersetIndexes =
-                DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, Enums.ePowerSetType.Ancillary);
+            cbPool0.SelectedIndex = MainModule.MidsController.Toon.PoolToComboID(0, MidsContext.Character.Powersets[3]?.nID ?? -1);
+            cbPool1.SelectedIndex = MainModule.MidsController.Toon.PoolToComboID(1, MidsContext.Character.Powersets[4]?.nID ?? -1);
+            cbPool2.SelectedIndex = MainModule.MidsController.Toon.PoolToComboID(2, MidsContext.Character.Powersets[5]?.nID ?? -1);
+            cbPool3.SelectedIndex = MainModule.MidsController.Toon.PoolToComboID(3, MidsContext.Character.Powersets[6]?.nID ?? -1);
+            var powersetIndexes = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, Enums.ePowerSetType.Ancillary);
             cbAncillary.SelectedIndex = MidsContext.Character.Powersets[7] != null
                 ? DatabaseAPI.ToDisplayIndex(MidsContext.Character.Powersets[7], powersetIndexes)
                 : 0;
@@ -7720,14 +7739,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     p.Slots.CopyTo(pe.Slots, 0);
                     for (var i = 0; i < pe.Slots.Length; i++)
                     {
-                        if (i == 0)
-                        {
-                            pe.Slots[i].Level = pe.Level;
-                        }
-                        else
-                        {
-                            pe.Slots[i].Level = sl.PickSlot();
-                        }
+                        pe.Slots[i].Level = i == 0 ? pe.Level : sl.PickSlot();
                     }
                 }
             }
@@ -7845,6 +7857,80 @@ The default position/state will be used upon next launch.", @"Window State Warni
             MidsContext.Character.Validate();
             MidsContext.Config.LastFileName = buildFile;
             */
+        }
+
+        internal int[] GetCbPoolsIndices(bool includeAncillary = true)
+        {
+            return includeAncillary
+                ?
+                [
+                    Math.Max(cbPool0.SelectedIndex, 0), Math.Max(cbPool1.SelectedIndex, 0),
+                    Math.Max(cbPool2.SelectedIndex, 0), Math.Max(cbPool3.SelectedIndex, 0),
+                    Math.Max(cbAncillary.SelectedIndex, 0)
+                ]
+                :
+                [
+                    Math.Max(cbPool0.SelectedIndex, 0), Math.Max(cbPool1.SelectedIndex, 0),
+                    Math.Max(cbPool2.SelectedIndex, 0), Math.Max(cbPool3.SelectedIndex, 0)
+                ];
+
+        }
+
+        internal void SetCbPoolIndex(int poolIndex, int cbIndex = 0)
+        {
+            switch (poolIndex)
+            {
+                case 1:
+                    cbPool1.SelectedIndex = cbIndex;
+                    break;
+
+                case 2:
+                    cbPool2.SelectedIndex = cbIndex;
+                    break;
+
+                case 3:
+                    cbPool3.SelectedIndex = cbIndex;
+                    break;
+
+                case 4:
+                    cbAncillary.SelectedIndex = cbIndex;
+                    break;
+
+                default:
+                    cbPool0.SelectedIndex = cbIndex;
+                    break;
+            }
+        }
+
+        internal dynamic GetCbPoolIndex(int poolIndex, bool returnText = false)
+        {
+            return !returnText
+                ? poolIndex switch
+                {
+                    1 => cbPool1.SelectedIndex,
+                    2 => cbPool2.SelectedIndex,
+                    3 => cbPool3.SelectedIndex,
+                    4 => cbAncillary.SelectedIndex,
+                    _ => cbPool0.SelectedIndex,
+                }
+                : (poolIndex switch
+                {
+                    1 => cbPool1.SelectedIndex < 0 ? "" : cbPool1.Items[cbPool1.SelectedIndex],
+                    2 => cbPool2.SelectedIndex < 0 ? "" : cbPool2.Items[cbPool2.SelectedIndex],
+                    3 => cbPool3.SelectedIndex < 0 ? "" : cbPool3.Items[cbPool3.SelectedIndex],
+                    4 => cbAncillary.SelectedIndex < 0 ? "" : cbAncillary.Items[cbAncillary.SelectedIndex],
+                    _ => cbPool0.SelectedIndex < 0 ? "" : cbPool0.Items[cbPool0.SelectedIndex],
+                })?.ToString() ?? "";
+        }
+
+        internal void SetFileModified(bool state)
+        {
+            FileModified = state;
+        }
+
+        internal void SetPowerEntryHighlight(int peIndex = -1)
+        {
+            drawing?.HighlightSlot(peIndex);
         }
 
         #region "fields"
