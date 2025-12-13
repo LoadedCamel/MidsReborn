@@ -238,9 +238,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
         }
 
-        public bool IsVillain => Alignment == Enums.Alignment.Rogue || Alignment == Enums.Alignment.Villain;
+        public bool IsVillain => Alignment is Enums.Alignment.Rogue or Enums.Alignment.Villain;
 
-        public bool IsPraetorian => Alignment == Enums.Alignment.Loyalist || Alignment == Enums.Alignment.Resistance;
+        public bool IsPraetorian => Alignment is Enums.Alignment.Loyalist or Enums.Alignment.Resistance;
         public bool IsBlaster => Archetype.DisplayName.ToLower() == "blaster";
 
         public bool IsController => Archetype.DisplayName.ToLower() == "controller";
@@ -278,28 +278,32 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public void Lock()
         {
             var powersPlaced = CurrentBuild.PowersPlaced;
-            var ps1 = Powersets[1] == null || Powersets[1].nID < 0
+            var ps1 = Powersets[1] == null || Powersets[1]?.nID < 0
                 ? DatabaseAPI.Database.Powersets
                     .First(ps =>
-                        ps.ATClass == MidsContext.Character.Archetype.ClassName &
-                        ps.SetType == Enums.ePowerSetType.Secondary)
+                        (ps?.ATClass == MidsContext.Character.Archetype.ClassName) &
+                        (ps?.SetType == Enums.ePowerSetType.Secondary))
                 : Powersets[1];
-            if ((powersPlaced == 1) & CurrentBuild.PowerUsed(ps1.Powers[0]))
+            var atSpecificPowersUsed = CurrentBuild.Powers
+                .Where(e => e?.Power != null)
+                .Any(e => e?.Power?.GetPowerSet()?.SetType is Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary or Enums.ePowerSetType.Ancillary);
+
+            if ((powersPlaced == 1) & CurrentBuild.PowerUsed(ps1?.Powers[0]))
             {
-                Locked = false;
+                //Locked = false;
                 ResetLevel();
             }
             else if (powersPlaced > 0)
             {
-                Locked = true;
+                //Locked = true;
             }
             else
             {
-                if (powersPlaced != 0)
-                    return;
-                Locked = false;
+                //Locked = false;
                 ResetLevel();
             }
+
+            Locked = atSpecificPowersUsed;
         }
 
         public bool IsHero()
@@ -309,7 +313,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool PoolTaken(int poolID)
         {
-            return Powersets[poolID] != null && poolID >= 3 && poolID <= 7 && PoolLocked[poolID - 3];
+            return Powersets[poolID] != null && poolID is >= 3 and <= 7 && PoolLocked[poolID - 3];
         }
 
         // There are 2 versions of this method distributed.
