@@ -14,6 +14,12 @@ namespace Mids_Reborn.Core.BuildFile
 {
     public class BuildManager
     {
+        public struct LoadFileResult
+        {
+            public CharacterBuildData? BuildData;
+            public string? ErrorMsg;
+        }
+
         private static readonly Lazy<BuildManager> LazyInstance = new(() => new BuildManager());
         public static BuildManager Instance => LazyInstance.Value;
 
@@ -26,6 +32,51 @@ namespace Mids_Reborn.Core.BuildFile
             BuildData = CharacterBuildData.Instance;
             _notifier = new BuildNotifier();
             _preferences = BuildPreferences.Load();
+        }
+
+        public LoadFileResult LoadFromFileLight(string? fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return new LoadFileResult { BuildData = null, ErrorMsg = "No file provided." };
+            }
+
+            if (!File.Exists(fileName))
+            {
+                return new LoadFileResult { BuildData = null, ErrorMsg = "Specified file doesn't exist." };
+            }
+
+            var data = File.ReadAllText(fileName);
+            try
+            {
+                var settings = new JsonSerializerSettings
+                {
+                    Converters = new List<JsonConverter> { new EnhancementDataConverter() }
+                };
+                BuildData = JsonConvert.DeserializeObject<CharacterBuildData>(data, settings) ?? throw new InvalidOperationException();
+            }
+            catch (Exception ex)
+            {
+                return new LoadFileResult { BuildData = null, ErrorMsg = "Unable to load build from file." };
+            }
+
+            if (BuildData is null)
+            {
+                return new LoadFileResult { BuildData = null, ErrorMsg = "Unable to read build data." };
+            }
+
+            var metaData = BuildData.BuiltWith;
+            if (metaData == null)
+            {
+                return new LoadFileResult { BuildData = null, ErrorMsg = "Unable to read metadata." };
+            }
+
+            if (DatabaseAPI.DatabaseName != metaData.Database)
+            {
+                return new LoadFileResult { BuildData = null, ErrorMsg = $"This build has been made with {metaData.Database} and doesn't match current database ({DatabaseAPI.DatabaseName})." };
+            }
+
+            return new LoadFileResult { BuildData = BuildData, ErrorMsg = null };
         }
         
         public bool LoadFromFile(string? fileName)

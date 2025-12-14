@@ -714,7 +714,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             this.tsManageTemplates.Name = "tsManageTemplates";
             this.tsManageTemplates.Size = new System.Drawing.Size(179, 22);
-            this.tsManageTemplates.Text = "Manage Templates...";
+            this.tsManageTemplates.Text = "Select Template...";
             this.tsManageTemplates.Click += new System.EventHandler(this.tsManageTemplates_Click);
             // 
             // ToolStripSeparator7

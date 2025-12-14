@@ -1197,20 +1197,26 @@ namespace Mids_Reborn.UI.Forms
 
             MidsContext.Config.LastFileName = "";
             LastFileName = "";
-            if (MidsContext.Config.Templates != null && MidsContext.Config.ActiveTemplate != null)
+            if (!string.IsNullOrWhiteSpace(MidsContext.Config.ActiveTemplate) && File.Exists(MidsContext.Config.ActiveTemplate))
             {
-                var buildTemplate = MidsContext.Config.Templates
-                    .DefaultIfEmpty(null)
-                    .FirstOrDefault(e => e?.Name == MidsContext.Config.ActiveTemplate);
+                if (MidsContext.Config.ActiveTemplate.EndsWith(".mxd"))
+                {
+                    DoOpen(MidsContext.Config.ActiveTemplate, true);
+                }
+                else if (MidsContext.Config.ActiveTemplate.EndsWith(".mbd"))
+                {
+                    LoadCharacterFile(MidsContext.Config.ActiveTemplate, true);
+                }
 
-                buildTemplate?.InjectToBuild(this, false);
+                MidsContext.Config.LastFileName = "";
+                LastFileName = "";
             }
 
             PowerModified(false);
             FileModified = false;
             SetTitleBar();
             DoRedraw();
-            myDataView.Clear();
+            myDataView?.Clear();
         }
 
         internal void DataView_SlotFlip(int PowerIndex)
@@ -1423,7 +1429,7 @@ namespace Mids_Reborn.UI.Forms
             }
         }
 
-        private bool LoadCharacterFile(string? fileName)
+        private bool LoadCharacterFile(string? fileName, bool asTemplate = false)
         {
             if (!File.Exists(fileName))
             {
@@ -1434,13 +1440,20 @@ namespace Mids_Reborn.UI.Forms
             NewToon(true, true);
             if (_buildManager.LoadFromFile(fileName))
             {
-                MidsContext.Config.LastFileName = fileName;
-                LastFileName = fileName;
+                if (!asTemplate)
+                {
+                    MidsContext.Config.LastFileName = fileName;
+                    LastFileName = fileName;
+                }
             }
             else
             {
-                MidsContext.Config.LastFileName = string.Empty;
-                LastFileName = string.Empty;
+                if (!asTemplate)
+                {
+                    MidsContext.Config.LastFileName = string.Empty;
+                    LastFileName = string.Empty;
+                }
+                
                 return false;
             }
 
@@ -1465,7 +1478,7 @@ namespace Mids_Reborn.UI.Forms
             return true;
         }
 
-        private bool DoOpen(string? fName)
+        private bool DoOpen(string? fName, bool asTemplate = false)
         {
             if (!File.Exists(fName))
             {
@@ -1482,10 +1495,13 @@ namespace Mids_Reborn.UI.Forms
             else if (MainModule.MidsController.Toon != null && !MainModule.MidsController.Toon.Load(fName, ref mStream))
             {
                 NewToon();
-                LastFileName = "";
-                MidsContext.Config.LastFileName = "";
+                if (!asTemplate)
+                {
+                    LastFileName = "";
+                    MidsContext.Config.LastFileName = "";
+                }
             }
-            else
+            else if (!asTemplate)
             {
                 LastFileName = fName;
                 if (!fName.EndsWith("mids_build.mxd"))
@@ -1495,8 +1511,11 @@ namespace Mids_Reborn.UI.Forms
             }
 
             FileModified = false;
-            if (drawing != null) drawing.Highlight = -1;
-            
+            if (drawing != null)
+            {
+                drawing.Highlight = -1;
+            }
+
             myDataView?.Clear();
             MidsContext.Character?.ResetLevel();
             PowerModified(false);
@@ -5642,7 +5661,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             var str1 = string.Empty;
-            if (MainModule.MidsController.Toon != null & !ignoreBuildSource)
+            if ((MainModule.MidsController.Toon != null) & !ignoreBuildSource)
             {
                 if (!string.IsNullOrWhiteSpace(LastFileName))
                 {
@@ -6389,7 +6408,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsManageTemplates_Click(object sender, EventArgs e)
         {
-            using var templateManager = new frmTemplateManage(frmTemplateManage.ManageMode.Save, this);
+            using var templateManager = new frmTemplateManage();
             templateManager.ShowDialog(this);
         }
 

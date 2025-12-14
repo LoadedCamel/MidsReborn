@@ -2602,6 +2602,27 @@ namespace Mids_Reborn
             return strArray;
         }
 
+        public List<PowerEntry?>? LoadFromFileLight(string iFileName)
+        {
+            if (string.IsNullOrWhiteSpace(iFileName))
+            {
+                return null;
+            }
+
+            if (!File.Exists(iFileName))
+            {
+                return null;
+            }
+
+            var mStream = new FileStream(iFileName, FileMode.Open, FileAccess.Read);
+            var ret = MidsCharacterFileFormat.MxDExtractAndLoadLight(mStream);
+            mStream.Close();
+
+            return ret.Key != MidsCharacterFileFormat.eLoadReturnCode.Success
+                ? null
+                : ret.Value;
+        }
+
         public bool Load(string iFileName, ref Stream? mStream)
         {
             var buildString = "";
