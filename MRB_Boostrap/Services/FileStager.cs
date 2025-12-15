@@ -67,33 +67,54 @@ public sealed class FileStager : IFileStager
 
     public async Task<bool> ApplyStagedFilesAsync(List<FileEntry> files, string installPath, string stagingPath, CancellationToken cancellationToken)
     {
-        int total = files.Count;
+        var total = files.Count;
 
         try
         {
             _ui.UpdateProgress(0f);
 
-            for (int i = 0; i < total; i++)
+            for (var i = 0; i < total; i++)
             {
                 cancellationToken.ThrowIfCancellationRequested();
 
-                FileEntry file = files[i];
+                var file = files[i];
 
                 // Skip logs — don't apply them
                 if (file.Directory.Equals("Logs", StringComparison.OrdinalIgnoreCase))
+                {
                     continue;
+                }
 
-                string stagedFile = Path.Combine(stagingPath, file.Directory, file.FileName);
-                string targetFile = Path.Combine(installPath, file.Directory, file.FileName);
-                string? targetDir = Path.GetDirectoryName(targetFile);
+                var installPathSubDir = Path.GetFileName(installPath);
+                var fDir = file.Directory;
+                var fDirChunks = file.Directory.Split(Path.DirectorySeparatorChar);
+                
+                // Rebirth install updates patch
+                // file.Directory includes database name and will create an extra subdirectory with the same database name
+                // Only valid 1st level directory for installation path are (empty) and Images
+                // Consider anything else as invalid and strip first chunk
+                if (!installPathSubDir.Equals("") & !installPathSubDir.Equals("Images", StringComparison.InvariantCultureIgnoreCase))
+                {
+                    fDir = fDirChunks.Length > 1
+                        ? string.Join(Path.DirectorySeparatorChar, fDirChunks.Skip(1))
+                        : "";
+                }
+
+                var stagedFile = Path.Combine(stagingPath, file.Directory, file.FileName);
+                var targetFile = Path.Combine(installPath, fDir, file.FileName);
+                var targetDir = Path.GetDirectoryName(targetFile);
+
+                _logger.LogInformation("  Staged file: {StagedFile} -> {TargetFile} (with installPath={InstallPath}, fileDir={FileDirectory}, fileName={FileFileName}", stagedFile, targetFile, installPath, fDir, file.FileName);
 
                 if (!string.IsNullOrEmpty(targetDir))
+                {
                     Directory.CreateDirectory(targetDir);
+                }
 
-                bool moved = Win32.MoveFileEx(stagedFile, targetFile, Win32.MoveFileFlags.ReplaceExisting);
+                var moved = Win32.MoveFileEx(stagedFile, targetFile, Win32.MoveFileFlags.ReplaceExisting);
                 if (!moved)
                 {
-                    int error = Marshal.GetLastWin32Error();
+                    var error = Marshal.GetLastWin32Error();
                     _logger.LogError("Patch application failed for file: {File}", file.FileName);
                     _logger.LogError("  Source : {Source}", stagedFile);
                     _logger.LogError("  Target : {Target}", targetFile);
@@ -101,7 +122,7 @@ public sealed class FileStager : IFileStager
                     return false;
                 }
 
-                float progress = (float)(i + 1) / total;
+                var progress = (float)(i + 1) / total;
                 _ui.UpdateProgress(progress);
             }
 
