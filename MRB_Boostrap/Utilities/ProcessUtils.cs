@@ -46,7 +46,7 @@ public static class ProcessUtils
 
     public static void StartMidsReborn()
     {
-        string exePath = Path.Combine(AppContext.BaseDirectory, "MidsReborn");
+        string exePath = Path.Combine(AppContext.BaseDirectory, "MidsReborn.exe");
         if (!File.Exists(exePath))
         {
             Log.Warning("MidsReborn.exe not found at {Path}. Cannot restart.", exePath);
