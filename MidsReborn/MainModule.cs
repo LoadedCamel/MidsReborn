@@ -103,6 +103,15 @@ namespace Mids_Reborn
                     MidsContext.Config.DataPath = AppDataPaths.FDefaultPath;
                     path = AppDataPaths.FDefaultPath;
                 }
+
+                // Migrate from pre-3.8 folders structure
+                var oldDataPath = $"{Path.GetDirectoryName(Application.ExecutablePath)}{Path.DirectorySeparatorChar}Data{Path.DirectorySeparatorChar}";
+                if (MidsContext.Config.DataPath.Contains(oldDataPath))
+                {
+                    var newDataPath = $"{Path.GetDirectoryName(Application.ExecutablePath)}{Path.DirectorySeparatorChar}Databases{Path.DirectorySeparatorChar}";
+                    MidsContext.Config.DataPath = MidsContext.Config.DataPath.Replace(oldDataPath, newDataPath);
+                }
+
                 messenger.SetMessage("Loading Overrides...");
                 MidsContext.Config?.LoadOverrides(MidsContext.Config.DataPath);
                 messenger.SetMessage("Loading Server Data...");
