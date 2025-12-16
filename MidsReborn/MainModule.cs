@@ -108,7 +108,7 @@ namespace Mids_Reborn
                 var oldDataPath = $"{Path.GetDirectoryName(Application.ExecutablePath)}{Path.DirectorySeparatorChar}Data{Path.DirectorySeparatorChar}";
                 var newDataPath = $"{Path.GetDirectoryName(Application.ExecutablePath)}{Path.DirectorySeparatorChar}Databases{Path.DirectorySeparatorChar}";
                 var oldPathsDetected = false;
-                MessageBox.Show($"Paths:\r\nData: {MidsContext.Config.DataPath}\r\nSave: {MidsContext.Config.SavePath}\r\n\r\nConfig: {AppDataPaths.FNameJsonConfig}");
+
                 if (MidsContext.Config.DataPath.Contains(oldDataPath))
                 {
                     MidsContext.Config.DataPath = MidsContext.Config.DataPath.Replace(oldDataPath, newDataPath);
@@ -140,7 +140,6 @@ namespace Mids_Reborn
 
                 if (oldPathsDetected)
                 {
-                    MessageBox.Show($"New paths:\r\nData: {MidsContext.Config.DataPath}\r\nSave: {MidsContext.Config.SavePath}\r\n\r\nConfig: {AppDataPaths.FNameJsonConfig}");
                     MidsContext.Config.SaveConfig();
                 }
 
