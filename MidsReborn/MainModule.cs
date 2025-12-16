@@ -104,12 +104,44 @@ namespace Mids_Reborn
                     path = AppDataPaths.FDefaultPath;
                 }
 
-                // Migrate from pre-3.8 folders structure
+                // Migrate from pre-3.8 folders structure - attempt #1
                 var oldDataPath = $"{Path.GetDirectoryName(Application.ExecutablePath)}{Path.DirectorySeparatorChar}Data{Path.DirectorySeparatorChar}";
+                var newDataPath = $"{Path.GetDirectoryName(Application.ExecutablePath)}{Path.DirectorySeparatorChar}Databases{Path.DirectorySeparatorChar}";
+                var oldPathsDetected = false;
+                MessageBox.Show($"Paths:\r\nData: {MidsContext.Config.DataPath}\r\nSave: {MidsContext.Config.SavePath}\r\n\r\nConfig: {AppDataPaths.FNameJsonConfig}");
                 if (MidsContext.Config.DataPath.Contains(oldDataPath))
                 {
-                    var newDataPath = $"{Path.GetDirectoryName(Application.ExecutablePath)}{Path.DirectorySeparatorChar}Databases{Path.DirectorySeparatorChar}";
                     MidsContext.Config.DataPath = MidsContext.Config.DataPath.Replace(oldDataPath, newDataPath);
+                    oldPathsDetected = true;
+                }
+
+                if (MidsContext.Config.SavePath.Contains(oldDataPath))
+                {
+                    MidsContext.Config.SavePath = MidsContext.Config.SavePath.Replace(oldDataPath, newDataPath);
+                    oldPathsDetected = true;
+                }
+
+                // Attempt #2
+                var dataPathChunks = MidsContext.Config.DataPath.Split(Path.DirectorySeparatorChar);
+                if (dataPathChunks is [.., "Data", _])
+                {
+                    dataPathChunks[^2] = dataPathChunks[^2].Replace("Data", "Databases");
+                    MidsContext.Config.DataPath = string.Join(Path.DirectorySeparatorChar, dataPathChunks);
+                    oldPathsDetected = true;
+                }
+
+                var savePathChunks = MidsContext.Config.SavePath.Split(Path.DirectorySeparatorChar);
+                if (savePathChunks is [.., "Data", _])
+                {
+                    savePathChunks[^2] = savePathChunks[^2].Replace("Data", "Databases");
+                    MidsContext.Config.SavePath = string.Join(Path.DirectorySeparatorChar, savePathChunks);
+                    oldPathsDetected = true;
+                }
+
+                if (oldPathsDetected)
+                {
+                    MessageBox.Show($"New paths:\r\nData: {MidsContext.Config.DataPath}\r\nSave: {MidsContext.Config.SavePath}\r\n\r\nConfig: {AppDataPaths.FNameJsonConfig}");
+                    MidsContext.Config.SaveConfig();
                 }
 
                 messenger.SetMessage("Loading Overrides...");
