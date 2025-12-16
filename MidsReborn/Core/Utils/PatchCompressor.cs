@@ -164,7 +164,7 @@ namespace Mids_Reborn.Core.Utils
             {
                 PatchType.Application =>
                 [
-                    "Patches", "Databases", ".pdb", "MidsReborn.exe.WebView2", "appSettings",
+                    "Patches", "Databases", "MRBBootstrap", ".pdb", "MidsReborn.exe.WebView2", "appSettings",
                     $"{Path.DirectorySeparatorChar}Data{Path.DirectorySeparatorChar}",
                     $"{Path.DirectorySeparatorChar}Images{Path.DirectorySeparatorChar}",
                     $"{Path.DirectorySeparatorChar}Staging{Path.DirectorySeparatorChar}",
