@@ -164,7 +164,12 @@ namespace Mids_Reborn.Core.Utils
             {
                 PatchType.Application =>
                 [
-                    "Patches", "Databases", ".pdb", "MidsReborn.exe.WebView2", "appSettings", $"{Path.DirectorySeparatorChar}Data{Path.DirectorySeparatorChar}", $"{Path.DirectorySeparatorChar}Images{Path.DirectorySeparatorChar}"
+                    "Patches", "Databases", ".pdb", "MidsReborn.exe.WebView2", "appSettings",
+                    $"{Path.DirectorySeparatorChar}Data{Path.DirectorySeparatorChar}",
+                    $"{Path.DirectorySeparatorChar}Images{Path.DirectorySeparatorChar}",
+                    $"{Path.DirectorySeparatorChar}Staging{Path.DirectorySeparatorChar}",
+                    $"{Path.DirectorySeparatorChar}Backup{Path.DirectorySeparatorChar}",
+                    $"{Path.DirectorySeparatorChar}Logs{Path.DirectorySeparatorChar}"
                 ],
                 PatchType.Database => ["Patches"],
                 _ => exclusionList
