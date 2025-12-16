@@ -1,6 +1,7 @@
 ﻿#nullable enable
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text.Json.Serialization;
@@ -163,7 +164,7 @@ namespace Mids_Reborn.Core.Utils
             {
                 PatchType.Application =>
                 [
-                    "Patches", "Databases", "MRBBootstrap.exe", ".pdb", "MidsReborn.exe.WebView2", "appSettings"
+                    "Patches", "Databases", ".pdb", "MidsReborn.exe.WebView2", "appSettings", $"{Path.DirectorySeparatorChar}Data{Path.DirectorySeparatorChar}", $"{Path.DirectorySeparatorChar}Images{Path.DirectorySeparatorChar}"
                 ],
                 PatchType.Database => ["Patches"],
                 _ => exclusionList
