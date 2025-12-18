@@ -240,7 +240,7 @@ internal class Program
         catch (Exception ex)
         {
             Log.Logger.Fatal(ex, "Fatal crash in Program.Main");
-            MessageBox.Show($"Fatal error:\n{ex.Message}", "Fatal", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            MessageBox.Show($"Fatal error:\n{ex.Message}\n\n{ex.StackTrace}", "Fatal", MessageBoxButtons.OK, MessageBoxIcon.Error);
         }
         finally
         {

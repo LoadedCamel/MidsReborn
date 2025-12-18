@@ -6,6 +6,6 @@
         public string Name { get; set; } = "";
         public string Version { get; set; } = "";
         public string File { get; set; } = "";
-        public string SourceUri { get; set; } = "";
+        public string? SourceUri { get; set; } = "";
     }
 }
