@@ -6728,7 +6728,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             if (!SythlinDpsToolRunner.FileExists())
             {
                 var mbox = new MessageBoxEx(
-                    $"Sylthin's DPS Tool exe was not found in Mids' Directory.\r\n\r\nExpected: file {SythlinDpsToolRunner.ExeName} should be in {AppContext.BaseDirectory}",
+                    $"Sythlin's DPS Tool exe was not found in Mids' Directory.\r\n\r\nExpected: file {SythlinDpsToolRunner.ExeName} should be in {AppContext.BaseDirectory}",
                     MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error, true);
 
                 mbox.ShowDialog(this);
