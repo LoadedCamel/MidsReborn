@@ -324,7 +324,7 @@ namespace Mids_Reborn.UI.Forms
                     MidsContext.Config.I9.DefaultIOLevel = 49;
                 }
 
-                if (!SlythinDpsToolRunner.HashMatch())
+                if (!SythlinDpsToolRunner.HashMatch())
                 {
                     tsRunSythlinDpsTool.Visible = false;
                 }
@@ -6725,10 +6725,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsRunSythlinDpsTool_Click(object sender, EventArgs e)
         {
-            if (!SlythinDpsToolRunner.FileExists())
+            if (!SythlinDpsToolRunner.FileExists())
             {
                 var mbox = new MessageBoxEx(
-                    $"Sylthin's DPS Tool exe was not found in Mids' Directory.\r\n\r\nExpected: file {SlythinDpsToolRunner.ExeName} should be in {AppContext.BaseDirectory}",
+                    $"Sylthin's DPS Tool exe was not found in Mids' Directory.\r\n\r\nExpected: file {SythlinDpsToolRunner.ExeName} should be in {AppContext.BaseDirectory}",
                     MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error, true);
 
                 mbox.ShowDialog(this);
@@ -6736,10 +6736,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 return;
             }
 
-            if (!SlythinDpsToolRunner.HashMatch())
+            if (!SythlinDpsToolRunner.HashMatch())
             {
                 var mbox = new MessageBoxEx(
-                    $"Unexpected hash from {SlythinDpsToolRunner.ExeName} file.",
+                    $"Unexpected hash from {SythlinDpsToolRunner.ExeName} file.",
                     MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error, true);
 
                 mbox.ShowDialog(this);
@@ -6749,7 +6749,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             var psi = new ProcessStartInfo
             {
-                FileName = SlythinDpsToolRunner.ExeName,
+                FileName = SythlinDpsToolRunner.ExeName,
                 Arguments = "",
                 UseShellExecute = true
             };
@@ -6763,14 +6763,19 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 "Really remove all slots?\r\nThis will not remove the slots granted automatically with powers, but will remove all the slots you placed manually.",
                 "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                for (var index = 0; index <= MidsContext.Character.CurrentBuild.Powers.Count; index++)
+                foreach (var pe in MidsContext.Character?.CurrentBuild?.Powers)
                 {
-                    if (MidsContext.Character.CurrentBuild.Powers[index].SlotCount <= 1)
+                    if (pe == null)
                     {
                         continue;
                     }
 
-                    MidsContext.Character.CurrentBuild.Powers[index].Slots = MidsContext.Character.CurrentBuild.Powers[index].Slots.Take(1).ToArray();
+                    if (pe.SlotCount <= 1)
+                    {
+                        continue;
+                    }
+
+                    pe.Slots = pe.Slots.Take(1).ToArray();
                 }
 
                 DoRedraw();

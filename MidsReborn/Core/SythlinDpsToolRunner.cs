@@ -5,7 +5,7 @@ using System.Security.Cryptography;
 
 namespace Mids_Reborn.Core
 {
-    public static class SlythinDpsToolRunner
+    public static class SythlinDpsToolRunner
     {
         public const string ExeName = "Sythlin_DPS_Tool.exe";
         // At your own discretion if changed.
