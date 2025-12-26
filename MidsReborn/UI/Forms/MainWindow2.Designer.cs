@@ -748,6 +748,7 @@ namespace Mids_Reborn.UI.Forms
             // tsFileSaveAs
             // 
             this.tsFileSaveAs.Name = "tsFileSaveAs";
+            this.tsFileSaveAs.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.S;
             this.tsFileSaveAs.Size = new System.Drawing.Size(179, 22);
             this.tsFileSaveAs.Text = "Save &As...";
             this.tsFileSaveAs.Click += new System.EventHandler(this.tsFileSaveAs_Click);
