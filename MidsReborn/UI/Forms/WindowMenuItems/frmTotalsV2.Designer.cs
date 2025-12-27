@@ -46,6 +46,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             label3 = new Label();
             label4 = new Label();
             panelTab2 = new Panel();
+            graphHealBuff = new CtlMultiGraph();
             graphRange = new CtlMultiGraph();
             label7 = new Label();
             label6 = new Label();
@@ -98,7 +99,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             ibClose.BackgroundImageLayout = ImageLayout.None;
             ibClose.CurrentText = "Close";
             ibClose.DisplayVertically = false;
-            ibClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            ibClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             ibClose.Images.Background = MRBResourceLib.Resources.HeroButton;
             ibClose.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             ibClose.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
@@ -124,7 +125,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             ibTopMost.ButtonType = ImageButtonEx.ButtonTypes.Toggle;
             ibTopMost.CurrentText = "ToggledOff State";
             ibTopMost.DisplayVertically = false;
-            ibTopMost.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point);
+            ibTopMost.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F);
             ibTopMost.Images.Background = MRBResourceLib.Resources.HeroButton;
             ibTopMost.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             ibTopMost.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
@@ -164,6 +165,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphEnd
             // 
             graphEnd.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphEnd.BackgroundImage");
+            graphEnd.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphEnd.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphEnd.BaseBarColors");
             graphEnd.Border = true;
             graphEnd.BorderColor = System.Drawing.Color.RoyalBlue;
@@ -193,6 +195,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphEnd.Max = 100F;
             graphEnd.MaxItems = 3;
             graphEnd.Name = "graphEnd";
+            graphEnd.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphEnd.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphEnd.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphEnd.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphEnd.OuterBorder = true;
             graphEnd.Overcap = true;
             graphEnd.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphEnd.OvercapColors");
@@ -202,7 +208,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphEnd.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphEnd.ScaleHeight = 32;
             graphEnd.ScaleIndex = 8;
+            graphEnd.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphEnd.ShowScale = false;
+            graphEnd.SingleLineLabels = true;
             graphEnd.Size = new System.Drawing.Size(526, 65);
             graphEnd.Style = Core.Enums.GraphStyle.Stacked;
             graphEnd.TabIndex = 116;
@@ -211,6 +219,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphHP
             // 
             graphHP.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphHP.BackgroundImage");
+            graphHP.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphHP.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphHP.BaseBarColors");
             graphHP.Border = true;
             graphHP.BorderColor = System.Drawing.Color.PaleGreen;
@@ -240,6 +249,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphHP.Max = 4000F;
             graphHP.MaxItems = 2;
             graphHP.Name = "graphHP";
+            graphHP.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphHP.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphHP.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphHP.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphHP.OuterBorder = true;
             graphHP.Overcap = true;
             graphHP.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphHP.OvercapColors");
@@ -249,7 +262,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphHP.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphHP.ScaleHeight = 32;
             graphHP.ScaleIndex = 19;
+            graphHP.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphHP.ShowScale = false;
+            graphHP.SingleLineLabels = true;
             graphHP.Size = new System.Drawing.Size(526, 46);
             graphHP.Style = Core.Enums.GraphStyle.Stacked;
             graphHP.TabIndex = 115;
@@ -259,6 +274,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphRes
             // 
             graphRes.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphRes.BackgroundImage");
+            graphRes.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphRes.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphRes.BaseBarColors");
             graphRes.Border = true;
             graphRes.BorderColor = System.Drawing.Color.LightSeaGreen;
@@ -288,6 +304,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphRes.Max = 100F;
             graphRes.MaxItems = 8;
             graphRes.Name = "graphRes";
+            graphRes.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphRes.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphRes.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphRes.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphRes.OuterBorder = true;
             graphRes.Overcap = true;
             graphRes.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphRes.OvercapColors");
@@ -297,7 +317,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphRes.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphRes.ScaleHeight = 32;
             graphRes.ScaleIndex = 8;
+            graphRes.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphRes.ShowScale = false;
+            graphRes.SingleLineLabels = true;
             graphRes.Size = new System.Drawing.Size(526, 160);
             graphRes.Style = Core.Enums.GraphStyle.Stacked;
             graphRes.TabIndex = 114;
@@ -307,6 +329,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphDef
             // 
             graphDef.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphDef.BackgroundImage");
+            graphDef.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphDef.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphDef.BaseBarColors");
             graphDef.Border = true;
             graphDef.BorderColor = System.Drawing.Color.BlueViolet;
@@ -336,6 +359,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphDef.Max = 100F;
             graphDef.MaxItems = 11;
             graphDef.Name = "graphDef";
+            graphDef.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphDef.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphDef.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphDef.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphDef.OuterBorder = true;
             graphDef.Overcap = false;
             graphDef.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphDef.OvercapColors");
@@ -345,7 +372,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphDef.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphDef.ScaleHeight = 32;
             graphDef.ScaleIndex = 8;
+            graphDef.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphDef.ShowScale = false;
+            graphDef.SingleLineLabels = true;
             graphDef.Size = new System.Drawing.Size(526, 217);
             graphDef.Style = Core.Enums.GraphStyle.enhOnly;
             graphDef.TabIndex = 113;
@@ -356,7 +385,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             label1.AutoSize = true;
             label1.BackColor = System.Drawing.Color.Transparent;
-            label1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label1.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             label1.ForeColor = System.Drawing.Color.Gainsboro;
             label1.Location = new System.Drawing.Point(16, 6);
             label1.Name = "label1";
@@ -369,7 +398,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             label2.AutoSize = true;
             label2.BackColor = System.Drawing.Color.Transparent;
-            label2.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label2.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             label2.ForeColor = System.Drawing.Color.Gainsboro;
             label2.Location = new System.Drawing.Point(16, 264);
             label2.Name = "label2";
@@ -382,7 +411,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             label3.AutoSize = true;
             label3.BackColor = System.Drawing.Color.Transparent;
-            label3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label3.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             label3.ForeColor = System.Drawing.Color.Gainsboro;
             label3.Location = new System.Drawing.Point(16, 463);
             label3.Name = "label3";
@@ -395,7 +424,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             label4.AutoSize = true;
             label4.BackColor = System.Drawing.Color.Transparent;
-            label4.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label4.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             label4.ForeColor = System.Drawing.Color.Gainsboro;
             label4.Location = new System.Drawing.Point(16, 549);
             label4.Name = "label4";
@@ -406,6 +435,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             // panelTab2
             // 
+            panelTab2.Controls.Add(graphHealBuff);
             panelTab2.Controls.Add(graphRange);
             panelTab2.Controls.Add(label7);
             panelTab2.Controls.Add(label6);
@@ -428,9 +458,64 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             panelTab2.TabIndex = 102;
             panelTab2.Visible = false;
             // 
+            // graphHealBuff
+            // 
+            graphHealBuff.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphHealBuff.BackgroundImage");
+            graphHealBuff.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
+            graphHealBuff.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphHealBuff.BaseBarColors");
+            graphHealBuff.Border = true;
+            graphHealBuff.BorderColor = System.Drawing.Color.FromArgb(8, 138, 60);
+            graphHealBuff.Clickable = false;
+            graphHealBuff.ColorAbsorbed = System.Drawing.Color.Gainsboro;
+            graphHealBuff.ColorBase = System.Drawing.Color.FromArgb(12, 200, 87);
+            graphHealBuff.ColorEnh = System.Drawing.Color.FromArgb(12, 200, 87);
+            graphHealBuff.ColorFadeEnd = System.Drawing.Color.FromArgb(8, 138, 60);
+            graphHealBuff.ColorFadeStart = System.Drawing.Color.Black;
+            graphHealBuff.ColorHighlight = System.Drawing.Color.FromArgb(14, 240, 104);
+            graphHealBuff.ColorLines = System.Drawing.Color.Black;
+            graphHealBuff.ColorMarkerInner = System.Drawing.Color.Black;
+            graphHealBuff.ColorMarkerOuter = System.Drawing.Color.Yellow;
+            graphHealBuff.ColorOvercap = System.Drawing.Color.FromArgb(12, 200, 87);
+            graphHealBuff.DifferentiateColors = false;
+            graphHealBuff.DrawRuler = false;
+            graphHealBuff.Dual = true;
+            graphHealBuff.EnhBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphHealBuff.EnhBarColors");
+            graphHealBuff.ForcedMax = 0F;
+            graphHealBuff.ForeColor = System.Drawing.Color.WhiteSmoke;
+            graphHealBuff.Highlight = true;
+            graphHealBuff.ItemFontSizeOverride = 0F;
+            graphHealBuff.ItemHeight = 13;
+            graphHealBuff.Lines = true;
+            graphHealBuff.Location = new System.Drawing.Point(12, 573);
+            graphHealBuff.MarkerValue = 0F;
+            graphHealBuff.Max = 300F;
+            graphHealBuff.MaxItems = 1;
+            graphHealBuff.Name = "graphHealBuff";
+            graphHealBuff.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphHealBuff.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphHealBuff.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphHealBuff.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
+            graphHealBuff.OuterBorder = true;
+            graphHealBuff.Overcap = false;
+            graphHealBuff.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphHealBuff.OvercapColors");
+            graphHealBuff.PaddingX = 4F;
+            graphHealBuff.PaddingY = 6F;
+            graphHealBuff.PerItemScales = (System.Collections.Generic.List<float>)resources.GetObject("graphHealBuff.PerItemScales");
+            graphHealBuff.RulerPos = CtlMultiGraph.RulerPosition.Top;
+            graphHealBuff.ScaleHeight = 32;
+            graphHealBuff.ScaleIndex = 11;
+            graphHealBuff.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
+            graphHealBuff.ShowScale = false;
+            graphHealBuff.SingleLineLabels = true;
+            graphHealBuff.Size = new System.Drawing.Size(526, 27);
+            graphHealBuff.Style = Core.Enums.GraphStyle.enhOnly;
+            graphHealBuff.TabIndex = 129;
+            graphHealBuff.TextWidth = 187;
+            // 
             // graphRange
             // 
             graphRange.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphRange.BackgroundImage");
+            graphRange.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphRange.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphRange.BaseBarColors");
             graphRange.Border = true;
             graphRange.BorderColor = System.Drawing.Color.FromArgb(206, 196, 132);
@@ -455,11 +540,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphRange.ItemFontSizeOverride = 0F;
             graphRange.ItemHeight = 13;
             graphRange.Lines = true;
-            graphRange.Location = new System.Drawing.Point(12, 511);
+            graphRange.Location = new System.Drawing.Point(12, 503);
             graphRange.MarkerValue = 0F;
             graphRange.Max = 300F;
             graphRange.MaxItems = 1;
             graphRange.Name = "graphRange";
+            graphRange.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphRange.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphRange.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphRange.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphRange.OuterBorder = true;
             graphRange.Overcap = false;
             graphRange.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphRange.OvercapColors");
@@ -469,7 +558,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphRange.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphRange.ScaleHeight = 32;
             graphRange.ScaleIndex = 11;
+            graphRange.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphRange.ShowScale = false;
+            graphRange.SingleLineLabels = true;
             graphRange.Size = new System.Drawing.Size(526, 29);
             graphRange.Style = Core.Enums.GraphStyle.enhOnly;
             graphRange.TabIndex = 128;
@@ -479,9 +570,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             label7.AutoSize = true;
             label7.BackColor = System.Drawing.Color.Transparent;
-            label7.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label7.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             label7.ForeColor = System.Drawing.Color.Gainsboro;
-            label7.Location = new System.Drawing.Point(16, 349);
+            label7.Location = new System.Drawing.Point(16, 341);
             label7.Name = "label7";
             label7.Size = new System.Drawing.Size(45, 20);
             label7.TabIndex = 127;
@@ -492,9 +583,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             label6.AutoSize = true;
             label6.BackColor = System.Drawing.Color.Transparent;
-            label6.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label6.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             label6.ForeColor = System.Drawing.Color.Gainsboro;
-            label6.Location = new System.Drawing.Point(16, 200);
+            label6.Location = new System.Drawing.Point(16, 196);
             label6.Name = "label6";
             label6.Size = new System.Drawing.Size(62, 20);
             label6.TabIndex = 126;
@@ -505,7 +596,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             label5.AutoSize = true;
             label5.BackColor = System.Drawing.Color.Transparent;
-            label5.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label5.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             label5.ForeColor = System.Drawing.Color.Gainsboro;
             label5.Location = new System.Drawing.Point(16, 6);
             label5.Name = "label5";
@@ -517,7 +608,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // radioButton1
             // 
             radioButton1.AutoSize = true;
-            radioButton1.Font = new System.Drawing.Font("Segoe UI Variable Display Semib", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            radioButton1.Font = new System.Drawing.Font("Segoe UI Variable Display Semib", 10F, System.Drawing.FontStyle.Bold);
             radioButton1.ForeColor = System.Drawing.Color.WhiteSmoke;
             radioButton1.Location = new System.Drawing.Point(27, 121);
             radioButton1.Name = "radioButton1";
@@ -531,7 +622,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // radioButton2
             // 
             radioButton2.AutoSize = true;
-            radioButton2.Font = new System.Drawing.Font("Segoe UI Variable Display Semib", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            radioButton2.Font = new System.Drawing.Font("Segoe UI Variable Display Semib", 10F, System.Drawing.FontStyle.Bold);
             radioButton2.ForeColor = System.Drawing.Color.WhiteSmoke;
             radioButton2.Location = new System.Drawing.Point(157, 121);
             radioButton2.Name = "radioButton2";
@@ -545,7 +636,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // radioButton3
             // 
             radioButton3.AutoSize = true;
-            radioButton3.Font = new System.Drawing.Font("Segoe UI Variable Display Semib", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            radioButton3.Font = new System.Drawing.Font("Segoe UI Variable Display Semib", 10F, System.Drawing.FontStyle.Bold);
             radioButton3.ForeColor = System.Drawing.Color.WhiteSmoke;
             radioButton3.Location = new System.Drawing.Point(280, 121);
             radioButton3.Name = "radioButton3";
@@ -559,7 +650,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // radioButton4
             // 
             radioButton4.AutoSize = true;
-            radioButton4.Font = new System.Drawing.Font("Segoe UI Variable Display Semib", 10F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            radioButton4.Font = new System.Drawing.Font("Segoe UI Variable Display Semib", 10F, System.Drawing.FontStyle.Bold);
             radioButton4.ForeColor = System.Drawing.Color.WhiteSmoke;
             radioButton4.Location = new System.Drawing.Point(425, 121);
             radioButton4.Name = "radioButton4";
@@ -573,6 +664,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphThreat
             // 
             graphThreat.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphThreat.BackgroundImage");
+            graphThreat.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphThreat.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphThreat.BaseBarColors");
             graphThreat.Border = true;
             graphThreat.BorderColor = System.Drawing.Color.FromArgb(131, 112, 255);
@@ -597,11 +689,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphThreat.ItemFontSizeOverride = 0F;
             graphThreat.ItemHeight = 13;
             graphThreat.Lines = true;
-            graphThreat.Location = new System.Drawing.Point(12, 583);
+            graphThreat.Location = new System.Drawing.Point(12, 607);
             graphThreat.MarkerValue = 0F;
             graphThreat.Max = 600F;
             graphThreat.MaxItems = 1;
             graphThreat.Name = "graphThreat";
+            graphThreat.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphThreat.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphThreat.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphThreat.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphThreat.OuterBorder = true;
             graphThreat.Overcap = false;
             graphThreat.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphThreat.OvercapColors");
@@ -611,7 +707,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphThreat.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphThreat.ScaleHeight = 32;
             graphThreat.ScaleIndex = 13;
+            graphThreat.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphThreat.ShowScale = false;
+            graphThreat.SingleLineLabels = true;
             graphThreat.Size = new System.Drawing.Size(526, 27);
             graphThreat.Style = Core.Enums.GraphStyle.Stacked;
             graphThreat.TabIndex = 123;
@@ -620,6 +718,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphEndRdx
             // 
             graphEndRdx.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphEndRdx.BackgroundImage");
+            graphEndRdx.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphEndRdx.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphEndRdx.BaseBarColors");
             graphEndRdx.Border = true;
             graphEndRdx.BorderColor = System.Drawing.Color.FromArgb(131, 112, 255);
@@ -644,11 +743,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphEndRdx.ItemFontSizeOverride = 0F;
             graphEndRdx.ItemHeight = 13;
             graphEndRdx.Lines = true;
-            graphEndRdx.Location = new System.Drawing.Point(12, 547);
+            graphEndRdx.Location = new System.Drawing.Point(12, 539);
             graphEndRdx.MarkerValue = 0F;
             graphEndRdx.Max = 100F;
             graphEndRdx.MaxItems = 1;
             graphEndRdx.Name = "graphEndRdx";
+            graphEndRdx.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphEndRdx.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphEndRdx.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphEndRdx.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphEndRdx.OuterBorder = true;
             graphEndRdx.Overcap = false;
             graphEndRdx.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphEndRdx.OvercapColors");
@@ -658,7 +761,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphEndRdx.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphEndRdx.ScaleHeight = 32;
             graphEndRdx.ScaleIndex = 8;
+            graphEndRdx.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphEndRdx.ShowScale = false;
+            graphEndRdx.SingleLineLabels = true;
             graphEndRdx.Size = new System.Drawing.Size(526, 27);
             graphEndRdx.Style = Core.Enums.GraphStyle.enhOnly;
             graphEndRdx.TabIndex = 121;
@@ -667,6 +772,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphDamage
             // 
             graphDamage.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphDamage.BackgroundImage");
+            graphDamage.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphDamage.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphDamage.BaseBarColors");
             graphDamage.Border = true;
             graphDamage.BorderColor = System.Drawing.Color.FromArgb(227, 113, 113);
@@ -691,11 +797,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphDamage.ItemFontSizeOverride = 0F;
             graphDamage.ItemHeight = 13;
             graphDamage.Lines = true;
-            graphDamage.Location = new System.Drawing.Point(12, 477);
+            graphDamage.Location = new System.Drawing.Point(12, 469);
             graphDamage.MarkerValue = 0F;
             graphDamage.Max = 900F;
             graphDamage.MaxItems = 1;
             graphDamage.Name = "graphDamage";
+            graphDamage.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphDamage.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphDamage.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphDamage.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphDamage.OuterBorder = true;
             graphDamage.Overcap = true;
             graphDamage.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphDamage.OvercapColors");
@@ -705,7 +815,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphDamage.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphDamage.ScaleHeight = 32;
             graphDamage.ScaleIndex = 14;
+            graphDamage.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphDamage.ShowScale = false;
+            graphDamage.SingleLineLabels = true;
             graphDamage.Size = new System.Drawing.Size(526, 27);
             graphDamage.Style = Core.Enums.GraphStyle.Stacked;
             graphDamage.TabIndex = 119;
@@ -714,6 +826,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphAccuracy
             // 
             graphAccuracy.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphAccuracy.BackgroundImage");
+            graphAccuracy.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphAccuracy.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphAccuracy.BaseBarColors");
             graphAccuracy.Border = true;
             graphAccuracy.BorderColor = System.Drawing.Color.FromArgb(242, 242, 0);
@@ -738,11 +851,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphAccuracy.ItemFontSizeOverride = 0F;
             graphAccuracy.ItemHeight = 13;
             graphAccuracy.Lines = true;
-            graphAccuracy.Location = new System.Drawing.Point(12, 443);
+            graphAccuracy.Location = new System.Drawing.Point(12, 435);
             graphAccuracy.MarkerValue = 0F;
             graphAccuracy.Max = 100F;
             graphAccuracy.MaxItems = 1;
             graphAccuracy.Name = "graphAccuracy";
+            graphAccuracy.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphAccuracy.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphAccuracy.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphAccuracy.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphAccuracy.OuterBorder = true;
             graphAccuracy.Overcap = false;
             graphAccuracy.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphAccuracy.OvercapColors");
@@ -752,7 +869,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphAccuracy.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphAccuracy.ScaleHeight = 32;
             graphAccuracy.ScaleIndex = 8;
+            graphAccuracy.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphAccuracy.ShowScale = false;
+            graphAccuracy.SingleLineLabels = true;
             graphAccuracy.Size = new System.Drawing.Size(526, 27);
             graphAccuracy.Style = Core.Enums.GraphStyle.enhOnly;
             graphAccuracy.TabIndex = 117;
@@ -761,6 +880,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphToHit
             // 
             graphToHit.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphToHit.BackgroundImage");
+            graphToHit.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphToHit.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphToHit.BaseBarColors");
             graphToHit.Border = true;
             graphToHit.BorderColor = System.Drawing.Color.FromArgb(242, 242, 0);
@@ -785,11 +905,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphToHit.ItemFontSizeOverride = 0F;
             graphToHit.ItemHeight = 13;
             graphToHit.Lines = true;
-            graphToHit.Location = new System.Drawing.Point(12, 409);
+            graphToHit.Location = new System.Drawing.Point(12, 401);
             graphToHit.MarkerValue = 0F;
             graphToHit.Max = 100F;
             graphToHit.MaxItems = 1;
             graphToHit.Name = "graphToHit";
+            graphToHit.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphToHit.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphToHit.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphToHit.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphToHit.OuterBorder = true;
             graphToHit.Overcap = false;
             graphToHit.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphToHit.OvercapColors");
@@ -799,7 +923,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphToHit.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphToHit.ScaleHeight = 32;
             graphToHit.ScaleIndex = 8;
+            graphToHit.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphToHit.ShowScale = false;
+            graphToHit.SingleLineLabels = true;
             graphToHit.Size = new System.Drawing.Size(526, 27);
             graphToHit.Style = Core.Enums.GraphStyle.enhOnly;
             graphToHit.TabIndex = 116;
@@ -808,6 +934,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphHaste
             // 
             graphHaste.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphHaste.BackgroundImage");
+            graphHaste.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphHaste.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphHaste.BaseBarColors");
             graphHaste.Border = true;
             graphHaste.BorderColor = System.Drawing.Color.FromArgb(242, 81, 0);
@@ -832,11 +959,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphHaste.ItemFontSizeOverride = 0F;
             graphHaste.ItemHeight = 13;
             graphHaste.Lines = true;
-            graphHaste.Location = new System.Drawing.Point(12, 375);
+            graphHaste.Location = new System.Drawing.Point(12, 367);
             graphHaste.MarkerValue = 0F;
             graphHaste.Max = 450F;
             graphHaste.MaxItems = 1;
             graphHaste.Name = "graphHaste";
+            graphHaste.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphHaste.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphHaste.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphHaste.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphHaste.OuterBorder = true;
             graphHaste.Overcap = true;
             graphHaste.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphHaste.OvercapColors");
@@ -846,7 +977,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphHaste.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphHaste.ScaleHeight = 32;
             graphHaste.ScaleIndex = 12;
+            graphHaste.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphHaste.ShowScale = false;
+            graphHaste.SingleLineLabels = true;
             graphHaste.Size = new System.Drawing.Size(526, 27);
             graphHaste.Style = Core.Enums.GraphStyle.Stacked;
             graphHaste.TabIndex = 115;
@@ -856,6 +989,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             graphPerception.BackColor = System.Drawing.Color.Black;
             graphPerception.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphPerception.BackgroundImage");
+            graphPerception.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphPerception.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphPerception.BaseBarColors");
             graphPerception.Border = true;
             graphPerception.BorderColor = System.Drawing.Color.FromArgb(124, 104, 237);
@@ -880,11 +1014,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphPerception.ItemFontSizeOverride = 0F;
             graphPerception.ItemHeight = 13;
             graphPerception.Lines = true;
-            graphPerception.Location = new System.Drawing.Point(12, 226);
+            graphPerception.Location = new System.Drawing.Point(12, 222);
             graphPerception.MarkerValue = 0F;
             graphPerception.Max = 1200F;
             graphPerception.MaxItems = 3;
             graphPerception.Name = "graphPerception";
+            graphPerception.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphPerception.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphPerception.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphPerception.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphPerception.OuterBorder = true;
             graphPerception.Overcap = true;
             graphPerception.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphPerception.OvercapColors");
@@ -894,7 +1032,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphPerception.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphPerception.ScaleHeight = 32;
             graphPerception.ScaleIndex = 15;
+            graphPerception.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphPerception.ShowScale = false;
+            graphPerception.SingleLineLabels = true;
             graphPerception.Size = new System.Drawing.Size(526, 64);
             graphPerception.Style = Core.Enums.GraphStyle.Stacked;
             graphPerception.TabIndex = 114;
@@ -903,6 +1043,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphMovement
             // 
             graphMovement.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphMovement.BackgroundImage");
+            graphMovement.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphMovement.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphMovement.BaseBarColors");
             graphMovement.Border = true;
             graphMovement.BorderColor = System.Drawing.Color.FromArgb(0, 227, 170);
@@ -932,6 +1073,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphMovement.Max = 225F;
             graphMovement.MaxItems = 4;
             graphMovement.Name = "graphMovement";
+            graphMovement.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphMovement.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphMovement.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphMovement.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphMovement.OuterBorder = true;
             graphMovement.Overcap = true;
             graphMovement.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphMovement.OvercapColors");
@@ -941,7 +1086,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphMovement.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphMovement.ScaleHeight = 32;
             graphMovement.ScaleIndex = 10;
+            graphMovement.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphMovement.ShowScale = false;
+            graphMovement.SingleLineLabels = true;
             graphMovement.Size = new System.Drawing.Size(526, 82);
             graphMovement.Style = Core.Enums.GraphStyle.Stacked;
             graphMovement.TabIndex = 113;
@@ -963,7 +1110,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             label9.AutoSize = true;
             label9.BackColor = System.Drawing.Color.Transparent;
-            label9.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label9.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             label9.ForeColor = System.Drawing.Color.Gainsboro;
             label9.Location = new System.Drawing.Point(16, 300);
             label9.Name = "label9";
@@ -976,7 +1123,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             label8.AutoSize = true;
             label8.BackColor = System.Drawing.Color.Transparent;
-            label8.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label8.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             label8.ForeColor = System.Drawing.Color.Gainsboro;
             label8.Location = new System.Drawing.Point(16, 6);
             label8.Name = "label8";
@@ -988,6 +1135,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphStatusRes
             // 
             graphStatusRes.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphStatusRes.BackgroundImage");
+            graphStatusRes.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphStatusRes.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphStatusRes.BaseBarColors");
             graphStatusRes.Border = true;
             graphStatusRes.BorderColor = System.Drawing.Color.FromArgb(227, 227, 0);
@@ -1017,6 +1165,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphStatusRes.Max = 600F;
             graphStatusRes.MaxItems = 11;
             graphStatusRes.Name = "graphStatusRes";
+            graphStatusRes.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphStatusRes.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphStatusRes.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphStatusRes.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphStatusRes.OuterBorder = true;
             graphStatusRes.Overcap = false;
             graphStatusRes.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphStatusRes.OvercapColors");
@@ -1026,7 +1178,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphStatusRes.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphStatusRes.ScaleHeight = 32;
             graphStatusRes.ScaleIndex = 13;
+            graphStatusRes.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphStatusRes.ShowScale = false;
+            graphStatusRes.SingleLineLabels = true;
             graphStatusRes.Size = new System.Drawing.Size(526, 218);
             graphStatusRes.Style = Core.Enums.GraphStyle.enhOnly;
             graphStatusRes.TabIndex = 115;
@@ -1036,6 +1190,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphStatusProt
             // 
             graphStatusProt.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphStatusProt.BackgroundImage");
+            graphStatusProt.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphStatusProt.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphStatusProt.BaseBarColors");
             graphStatusProt.Border = true;
             graphStatusProt.BorderColor = System.Drawing.Color.FromArgb(227, 113, 0);
@@ -1065,6 +1220,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphStatusProt.Max = 50F;
             graphStatusProt.MaxItems = 11;
             graphStatusProt.Name = "graphStatusProt";
+            graphStatusProt.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphStatusProt.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphStatusProt.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphStatusProt.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphStatusProt.OuterBorder = true;
             graphStatusProt.Overcap = false;
             graphStatusProt.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphStatusProt.OvercapColors");
@@ -1074,7 +1233,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphStatusProt.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphStatusProt.ScaleHeight = 32;
             graphStatusProt.ScaleIndex = 6;
+            graphStatusProt.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphStatusProt.ShowScale = false;
+            graphStatusProt.SingleLineLabels = true;
             graphStatusProt.Size = new System.Drawing.Size(526, 218);
             graphStatusProt.Style = Core.Enums.GraphStyle.enhOnly;
             graphStatusProt.TabIndex = 114;
@@ -1097,7 +1258,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             label11.AutoSize = true;
             label11.BackColor = System.Drawing.Color.Transparent;
-            label11.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label11.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             label11.ForeColor = System.Drawing.Color.Gainsboro;
             label11.Location = new System.Drawing.Point(16, 288);
             label11.Name = "label11";
@@ -1110,7 +1271,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             label10.AutoSize = true;
             label10.BackColor = System.Drawing.Color.Transparent;
-            label10.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            label10.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold);
             label10.ForeColor = System.Drawing.Color.Gainsboro;
             label10.Location = new System.Drawing.Point(16, 6);
             label10.Name = "label10";
@@ -1122,6 +1283,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphElusivity
             // 
             graphElusivity.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphElusivity.BackgroundImage");
+            graphElusivity.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphElusivity.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphElusivity.BaseBarColors");
             graphElusivity.Border = true;
             graphElusivity.BorderColor = System.Drawing.Color.FromArgb(180, 1, 255);
@@ -1151,6 +1313,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphElusivity.Max = 100F;
             graphElusivity.MaxItems = 13;
             graphElusivity.Name = "graphElusivity";
+            graphElusivity.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphElusivity.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphElusivity.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphElusivity.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphElusivity.OuterBorder = true;
             graphElusivity.Overcap = false;
             graphElusivity.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphElusivity.OvercapColors");
@@ -1160,7 +1326,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphElusivity.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphElusivity.ScaleHeight = 32;
             graphElusivity.ScaleIndex = 8;
+            graphElusivity.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphElusivity.ShowScale = false;
+            graphElusivity.SingleLineLabels = true;
             graphElusivity.Size = new System.Drawing.Size(526, 235);
             graphElusivity.Style = Core.Enums.GraphStyle.enhOnly;
             graphElusivity.TabIndex = 116;
@@ -1170,6 +1338,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // graphDebuffRes
             // 
             graphDebuffRes.BackgroundImage = (System.Drawing.Image)resources.GetObject("graphDebuffRes.BackgroundImage");
+            graphDebuffRes.BarsAlignment = CtlMultiGraph.BarAlignment.Left;
             graphDebuffRes.BaseBarColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphDebuffRes.BaseBarColors");
             graphDebuffRes.Border = true;
             graphDebuffRes.BorderColor = System.Drawing.Color.LightSeaGreen;
@@ -1199,6 +1368,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphDebuffRes.Max = 100F;
             graphDebuffRes.MaxItems = 8;
             graphDebuffRes.Name = "graphDebuffRes";
+            graphDebuffRes.NegativeAbsorbedColor = System.Drawing.Color.SlateGray;
+            graphDebuffRes.NegativeBaseColor = System.Drawing.Color.Navy;
+            graphDebuffRes.NegativeEnhColor = System.Drawing.Color.Olive;
+            graphDebuffRes.NegativeOvercapColor = System.Drawing.Color.DarkMagenta;
             graphDebuffRes.OuterBorder = true;
             graphDebuffRes.Overcap = true;
             graphDebuffRes.OvercapColors = (System.Collections.Generic.List<System.Drawing.Color>)resources.GetObject("graphDebuffRes.OvercapColors");
@@ -1208,7 +1381,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphDebuffRes.RulerPos = CtlMultiGraph.RulerPosition.Top;
             graphDebuffRes.ScaleHeight = 32;
             graphDebuffRes.ScaleIndex = 8;
+            graphDebuffRes.SecondaryLabelPosition = CtlMultiGraph.Alignment.Right;
             graphDebuffRes.ShowScale = false;
+            graphDebuffRes.SingleLineLabels = true;
             graphDebuffRes.Size = new System.Drawing.Size(526, 160);
             graphDebuffRes.Style = Core.Enums.GraphStyle.Stacked;
             graphDebuffRes.TabIndex = 115;
@@ -1324,5 +1499,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private Panel panel1;
         private ctlTotalsTabStrip ctlTotalsTabStrip1;
         private CtlMultiGraph graphRange;
+        private CtlMultiGraph graphHealBuff;
     }
 }

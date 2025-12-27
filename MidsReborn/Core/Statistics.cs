@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 
@@ -59,6 +61,21 @@ namespace Mids_Reborn.Core
         public float BuffEndRdx => _character.Totals.BuffEndRdx * 100f;
 
         public float ThreatLevel => (float) ((_character.Totals.ThreatLevel + (double) _character.Archetype.BaseThreat) * 100.0);
+
+        public float BuffHeal => _character.Totals.BuffHeal * 100f;
+
+        public float[] BoostsRaw => _character.Totals.Boosts;
+        public float[] BoostsMezRaw => _character.Totals.BoostsMez;
+
+        public Dictionary<Enums.eEffectType, float> Boosts => _character.Totals.Boosts
+            .Select((x, i) => new KeyValuePair<int, float>(i, x))
+            .Where(x => Math.Abs(x.Value) > float.Epsilon)
+            .ToDictionary(x => (Enums.eEffectType)x.Key, x => x.Value);
+
+        public Dictionary<Enums.eMez, float> BoostsMez => _character.Totals.BoostsMez
+            .Select((x, i) => new KeyValuePair<int, float>(i, x))
+            .Where(x => Math.Abs(x.Value) > float.Epsilon)
+            .ToDictionary(x => (Enums.eMez)x.Key, x => x.Value);
 
         private float EnduranceRecovery(bool uncapped)
         {

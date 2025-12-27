@@ -1,6 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
@@ -296,30 +295,25 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void CharacterOnAlignmentChanged(object? sender, Enums.Alignment e)
         {
-            switch (e)
+            if (e is Enums.Alignment.Hero or Enums.Alignment.Vigilante or Enums.Alignment.Resistance)
             {
-                case Enums.Alignment.Hero:
-                case Enums.Alignment.Vigilante:
-                case Enums.Alignment.Resistance:
-
-                    ctlTotalsTabStrip1.InactiveTabColor = _tabColors.HeroInactiveTabColor;
-                    ctlTotalsTabStrip1.BackColor = _tabColors.HeroInactiveTabColor;
-                    ctlTotalsTabStrip1.ActiveTabColor = _tabColors.HeroActiveTabColor;
-                    ctlTotalsTabStrip1.StripLineColor = _tabColors.HeroBorderColor;
-                    ctlTotalsTabStrip1.InactiveHoveredTabColor = _tabColors.HeroInactiveHoveredTabColor;
-                    ibTopMost.UseAlt = false;
-                    ibClose.UseAlt = false;
-                    break;
-
-                default:
-                    ctlTotalsTabStrip1.InactiveTabColor = _tabColors.VillainInactiveTabColor;
-                    ctlTotalsTabStrip1.BackColor = _tabColors.VillainInactiveTabColor;
-                    ctlTotalsTabStrip1.ActiveTabColor = _tabColors.VillainActiveTabColor;
-                    ctlTotalsTabStrip1.StripLineColor = _tabColors.VillainBorderColor;
-                    ctlTotalsTabStrip1.InactiveHoveredTabColor = _tabColors.VillainInactiveHoveredTabColor;
-                    ibTopMost.UseAlt = true;
-                    ibClose.UseAlt = true;
-                    break;
+                ctlTotalsTabStrip1.InactiveTabColor = _tabColors.HeroInactiveTabColor;
+                ctlTotalsTabStrip1.BackColor = _tabColors.HeroInactiveTabColor;
+                ctlTotalsTabStrip1.ActiveTabColor = _tabColors.HeroActiveTabColor;
+                ctlTotalsTabStrip1.StripLineColor = _tabColors.HeroBorderColor;
+                ctlTotalsTabStrip1.InactiveHoveredTabColor = _tabColors.HeroInactiveHoveredTabColor;
+                ibTopMost.UseAlt = false;
+                ibClose.UseAlt = false;
+            }
+            else
+            {
+                ctlTotalsTabStrip1.InactiveTabColor = _tabColors.VillainInactiveTabColor;
+                ctlTotalsTabStrip1.BackColor = _tabColors.VillainInactiveTabColor;
+                ctlTotalsTabStrip1.ActiveTabColor = _tabColors.VillainActiveTabColor;
+                ctlTotalsTabStrip1.StripLineColor = _tabColors.VillainBorderColor;
+                ctlTotalsTabStrip1.InactiveHoveredTabColor = _tabColors.VillainInactiveHoveredTabColor;
+                ibTopMost.UseAlt = true;
+                ibClose.UseAlt = true;
             }
         }
 
@@ -331,9 +325,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             if (panelTab1.Visible)
             {
-                Debug.WriteLine($"h1: {panelTab1.Size}");
                 panelTab1.Size = new Size(Width, Height - panel1.Height - panel2.Height - centerPanelYPad);
-                Debug.WriteLine($"h2: {panelTab1.Size}");
             }
 
             if (panelTab2.Visible)
@@ -363,6 +355,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphAccuracy.Width = Width - graphControlWidthPad;
             graphDamage.Width = Width - graphControlWidthPad;
             graphEndRdx.Width = Width - graphControlWidthPad;
+            graphHealBuff.Width = Width - graphControlWidthPad;
             graphThreat.Width = Width - graphControlWidthPad;
 
             graphStatusProt.Width = Width - graphControlWidthPad;
@@ -824,6 +817,13 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 displayStats.BuffEndRdx,
                 GenericDataTooltip3(displayStats.BuffEndRdx, 0, displayStats.BuffEndRdx, "EndRdx"));
 
+            graphHealBuff.Clear();
+            graphHealBuff.AddItemPair("Heal",
+                $"{displayStats.BuffHeal:##0.##}%",
+                0,
+                Math.Max(0, displayStats.BuffHeal),
+                GenericDataTooltip3(displayStats.BuffHeal, 0, displayStats.BuffHeal, "Heal", "%", "", true));
+
             graphThreat.Clear();
             graphThreat.AddItemPair("Threat",
                 $"{displayStats.ThreatLevel:##0.##}",
@@ -837,6 +837,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphDamage.Draw();
             graphRange.Draw();
             graphEndRdx.Draw();
+            graphHealBuff.Draw();
             graphThreat.Draw();
  
             ///////////////////////////////
