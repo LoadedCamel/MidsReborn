@@ -596,47 +596,44 @@ namespace Mids_Reborn.UI.Controls
 
         private void DisplaySetEnhancements()
         {
-            checked
+            var enhSetList = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements
+                .OrderBy(e => e < 0 ? "" : DatabaseAPI.Database.Enhancements[e].UID)
+                .ToArray();
+            for (var i = 0; i < DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements.Length; i++)
             {
-                var enhSetList = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements
-                    .OrderBy(e => e < 0 ? "" : DatabaseAPI.Database.Enhancements[e].UID)
-                    .ToArray();
-                for (var i = 0; i < DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements.Length; i++)
+                var enhSet = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]];
+                var enh = enhSetList[i];
+                var enhData = DatabaseAPI.Database.Enhancements[enh];
+                _enhUniqueStatus.Add(new EnhUniqueStatus
                 {
-                    var enhSet = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]];
-                    var enh = enhSetList[i];
-                    var enhData = DatabaseAPI.Database.Enhancements[enh];
-                    _enhUniqueStatus.Add(new EnhUniqueStatus
-                    {
-                        InMain = enhData.Unique
-                            ? _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
-                                .Powers
-                                .Where(e => e is {Power.Slottable: true})
-                                .Any(f => f?.Slots.Any(g => g.Enhancement.Enh == enh) == true)
-                            : _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
-                                .Powers
-                                .Where(e => e is {Power.Slottable: true} && e?.Power?.StaticIndex == DatabaseAPI.Database.Power[_nPowerIdx]?.StaticIndex)
-                                .Any(f => f?.Slots.Any(g => g.Enhancement.Enh == enh) == true),
-                        InAlternate = enhData.Unique
-                            ? _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
+                    InMain = enhData.Unique
+                        ? _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
+                            .Powers
+                            .Where(e => e is {Power.Slottable: true})
+                            .Any(f => f?.Slots.Any(g => g.Enhancement.Enh == enh) == true)
+                        : _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
+                            .Powers
+                            .Where(e => e is {Power.Slottable: true} && e?.Power?.StaticIndex == DatabaseAPI.Database.Power[_nPowerIdx]?.StaticIndex)
+                            .Any(f => f?.Slots.Any(g => g.Enhancement.Enh == enh) == true),
+                    InAlternate = enhData.Unique
+                        ? _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
                             .Powers
                             .Where(e => e is {Power.Slottable: true})
                             .Any(f => f?.Slots.Any(g => g.FlippedEnhancement.Enh == enh) == true)
-                            : _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
-                                .Powers
-                                .Where(e => e is { Power.Slottable: true } && e?.Power?.StaticIndex == DatabaseAPI.Database.Power[_nPowerIdx]?.StaticIndex)
-                                .Any(f => f?.Slots.Any(g => g.FlippedEnhancement.Enh == enh) == true)
-                    });
+                        : _mySlotted.Any(slotted => enh == slotted) || MidsContext.Character.CurrentBuild
+                            .Powers
+                            .Where(e => e is { Power.Slottable: true } && e?.Power?.StaticIndex == DatabaseAPI.Database.Power[_nPowerIdx]?.StaticIndex)
+                            .Any(f => f?.Slots.Any(g => g.FlippedEnhancement.Enh == enh) == true)
+                });
 
-                    var graphics = _myBx.Graphics;
-                    Recipe.RecipeRarity? rarity = enhData.RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[enhData.RecipeIDX].Rarity;
-                    var isPvP = enhSet.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true));
+                var graphics = _myBx.Graphics;
+                Recipe.RecipeRarity? rarity = enhData.RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[enhData.RecipeIDX].Rarity;
+                var isPvP = enhSet.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true));
 
-                    I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)),
-                        DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[i],
-                        Origin.Grade.SetO, GreyItem(_enhUniqueStatus[i]?.InMain == true),
-                        rarity, isPvP);
-                }
+                I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)),
+                    DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[i],
+                    Origin.Grade.SetO, GreyItem(_enhUniqueStatus[i]?.InMain == true),
+                    rarity, isPvP);
             }
         }
 
@@ -703,16 +700,14 @@ namespace Mids_Reborn.UI.Controls
                 for (var i = 0; i < Ui.Sets[Ui.View.SetTypeId].Length; i++)
                 {
                     var enhSet = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][i]];
-                    Recipe.RecipeRarity? rarity = null;
-                    var isPvP = false;
-                    rarity = enhSet.Enhancements.All(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX < 0)
+                    Recipe.RecipeRarity? rarity = enhSet.Enhancements.All(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX < 0)
                         ? null
                         : enhSet.Enhancements
                             .Where(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX >= 0)
                             .Select(e => DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[e].RecipeIDX].Rarity)
                             .Max();
                     
-                    isPvP = enhSet.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true));
+                    var isPvP = enhSet.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true));
 
                     var ioGradeOffset = 0;
                     if ((DatabaseAPI.DatabaseName is "Homecoming" or "Cryptic" or "Breakout" &&
@@ -728,13 +723,13 @@ namespace Mids_Reborn.UI.Controls
                         };
                     }
 
-                    var srcRect = new Rectangle(I9Gfx.OriginIndex * _nSize, 4 * _nSize, _nSize, _nSize);
-                    _myBx.Graphics.DrawImage(I9Gfx.Borders.Bitmap, GetRectBounds(IndexToXy(i)), srcRect,
-                        GraphicsUnit.Pixel);
+                    var srcRect = ioGradeOffset > 0
+                        ? new Rectangle((4 + ioGradeOffset) * _nSize, 4 * _nSize, _nSize, _nSize)
+                        : new Rectangle(I9Gfx.OriginIndex * _nSize, 4 * _nSize, _nSize, _nSize);
+                    _myBx.Graphics.DrawImage(I9Gfx.Borders.Bitmap, GetRectBounds(IndexToXy(i)), srcRect, GraphicsUnit.Pixel);
 
                     srcRect = new Rectangle(Ui.Sets[Ui.View.SetTypeId][i] * _nSize, 0, _nSize, _nSize);
-                    _myBx.Graphics.DrawImage(I9Gfx.Sets.Bitmap, GetRectBounds(IndexToXy(i)), srcRect,
-                        GraphicsUnit.Pixel);
+                    _myBx.Graphics.DrawImage(I9Gfx.Sets.Bitmap, GetRectBounds(IndexToXy(i)), srcRect, GraphicsUnit.Pixel);
                 }
             }
         }

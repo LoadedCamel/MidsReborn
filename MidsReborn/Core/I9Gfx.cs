@@ -741,7 +741,7 @@ namespace Mids_Reborn.Core
             DrawEnhancementAt(ref iTarget, iDest1, iImageIndex, iGrade, rarity, isPvP);
         }
 
-        public static void DrawEnhancement(ref Graphics iTarget, int iImageIndex, Origin.Grade iGrade)
+        public static void DrawEnhancement(ref Graphics iTarget, int iImageIndex, Origin.Grade iGrade, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
             iTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
             iTarget.CompositingMode = CompositingMode.SourceOver;
@@ -750,8 +750,8 @@ namespace Mids_Reborn.Core
             iTarget.SmoothingMode = SmoothingMode.HighQuality;
             iTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             iTarget.PageUnit = GraphicsUnit.Pixel;
-            iTarget.DrawImage(Borders.Bitmap, iTarget.ClipBounds, GetOverlayRectF(iGrade), GraphicsUnit.Pixel);
-            iTarget.DrawImage(Enhancements[iImageIndex], iTarget.ClipBounds, new RectangleF(0.0f, 0.0f, 30f, 30f), GraphicsUnit.Pixel);
+            iTarget.DrawImage(Borders.Bitmap, iTarget.ClipBounds, GetOverlayRectF(iGrade, rarity, isPvP), GraphicsUnit.Pixel);
+            iTarget.DrawImage(Enhancements[iImageIndex], iTarget.ClipBounds, new RectangleF(0, 0, 30f, 30f), GraphicsUnit.Pixel);
         }
 
         public static void DrawEnhancementAt(ref Graphics iTarget, Rectangle iDest, int iImageIndex, Origin.Grade iGrade, ImageAttributes imageAttributes, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
@@ -809,7 +809,7 @@ namespace Mids_Reborn.Core
             iTarget.DrawImage(Enhancements[iImageIndex], iDest, new Rectangle(0, 0, 30, 30), GraphicsUnit.Pixel);
         }
 
-        public static void DrawEnhancementSet(ref Graphics iTarget, int iImageIndex)
+        public static void DrawEnhancementSet(ref Graphics iTarget, int iImageIndex, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
             iTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
             iTarget.CompositingMode = CompositingMode.SourceOver;
@@ -819,7 +819,7 @@ namespace Mids_Reborn.Core
             iTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             iTarget.PageUnit = GraphicsUnit.Pixel;
             if (Borders.Bitmap == null) return;
-            iTarget.DrawImage(Borders.Bitmap, iTarget.ClipBounds, GetOverlayRectF(Origin.Grade.SetO), GraphicsUnit.Pixel);
+            iTarget.DrawImage(Borders.Bitmap, iTarget.ClipBounds, GetOverlayRectF(Origin.Grade.SetO, rarity, isPvP), GraphicsUnit.Pixel);
             if (Sets.Bitmap != null)
             {
                 iTarget.DrawImage(Sets.Bitmap, iTarget.ClipBounds, GetImageRectF(iImageIndex), GraphicsUnit.Pixel);
@@ -854,9 +854,9 @@ namespace Mids_Reborn.Core
                 : new Rectangle(OriginIndex * iconSize, (int)iGrade * iconSize, iconSize, iconSize);
         }
 
-        private static RectangleF GetOverlayRectF(Origin.Grade iGrade)
+        private static RectangleF GetOverlayRectF(Origin.Grade iGrade, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
-            var overlayRect = GetOverlayRect(iGrade);
+            var overlayRect = GetOverlayRect(iGrade, rarity, isPvP);
             return new RectangleF(overlayRect.X, overlayRect.Y, overlayRect.Width, overlayRect.Height);
         }
 

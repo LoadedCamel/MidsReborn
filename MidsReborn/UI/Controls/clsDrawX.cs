@@ -783,7 +783,6 @@ namespace Mids_Reborn.UI.Controls
                     if (enhancement.TypeID == Enums.eType.SetO)
                     {
                         rarity = enhancement.RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity;
-                        Debug.WriteLine($"Enhancement: {enhancement.LongName}, RecipeIdx: {enhancement.RecipeIDX}, Rarity: {rarity}");
                         var enhSet = enhancement.GetEnhancementSet();
                         isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
                     }
