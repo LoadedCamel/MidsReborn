@@ -192,6 +192,226 @@
     <Compile Update="UI\Controls\TimelineCursorZoom.cs">
       <SubType>UserControl</SubType>
     </Compile>
+        <Compile Update="UI\Forms\JsonImport\frmJsonImportMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmConditionalAttributeSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmDbDiff.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmDBEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmDbQueries.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmDynRechIncrement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEditArchetype.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEditAttribMod.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEditPower.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEditPowerset.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEffectConditionals.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEnhData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEnhEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEntityEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEntityListing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmExpressionBuilder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmExprSR.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmGCMEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmJsonImportOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmPowerBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmPowerEffect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmRecipeEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmRestoreHidden.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmSalvageEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmServerData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmSetEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmSetListing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\PatchGen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DatabaseSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\frmCalcOpt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\UpdateSystem\UpdateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmAccolade.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmCompare.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmDPSCalc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmEntityDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmIncarnates.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmMiniList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmPrestige.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmRecipeEditorBulkFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmSetViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmStats.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmTemp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmTotals.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmTotalsV2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+
+    <Compile Update="UI\Forms\frmBuildSalvageHud.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmBuildSalvageHud.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmBusy.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmColorOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmEditComment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmEnhMiniPick.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmFloatingStats.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmIncarnate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\FrmInputLevel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmOptionListDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmPrint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmRecipeViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmSetFind.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmTeam.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmTemplateManage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmTimelineColorRefTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmTweakMatching.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\InputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\Loader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\MainWindow2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\MessageBoxEx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\PerPixelAlpha.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\PowerSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\SetInspector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmRotationHelper.cs">
+      <SubType>Form</SubType>
+    </Compile>
     <Content Include="Databases\Generic\Example UpdateManifest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
@@ -419,7 +639,7 @@
       <Generator>None</Generator>
       <CustomToolNamespace>MRBResourceLib</CustomToolNamespace>
     </None>
-  </ItemGroup>
+  </ItemGroup>  
   <ItemGroup>
     <Content Include="Assets\Archetypes\Class_Arachnos_Soldier.png" />
     <Content Include="Assets\Archetypes\Class_Arachnos_Widow.png" />
@@ -435,7 +655,7 @@
     <Content Include="Assets\Archetypes\Class_Minion_Henchman.png" />
     <Content Include="Assets\Archetypes\Class_Minion_Pets.png" />
     <Content Include="Assets\Archetypes\Class_Peacebringer.png" />
-	<Content Include="Assets\Archetypes\Class_Sentinel.png" />
+	  <Content Include="Assets\Archetypes\Class_Sentinel.png" />
     <Content Include="Assets\Archetypes\Class_Scrapper.png" />
     <Content Include="Assets\Archetypes\Class_Stalker.png" />
     <Content Include="Assets\Archetypes\Class_Tanker.png" />
