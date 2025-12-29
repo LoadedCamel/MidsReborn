@@ -565,10 +565,15 @@ namespace Mids_Reborn.Core
 
         private static async Task LoadBorderImages(IReadOnlyCollection<ImageInfo> images)
         {
-            Borders = ExtendedBitmap(DatabaseAPI.Database.Origins.Count * IconLarge, 180);
+            var isHcDatabase = DatabaseAPI.DatabaseName is "Homecoming" or "Cryptic" or "Breakout";
+
+            Borders = isHcDatabase
+                ? ExtendedBitmap((DatabaseAPI.Database.Origins.Count + 4) * IconLarge, 180)
+                : ExtendedBitmap(DatabaseAPI.Database.Origins.Count * IconLarge, 180);
+            var x = 0;
             for (var index = 0; index < DatabaseAPI.Database.Origins.Count; index++)
             {
-                var x = index * IconLarge;
+                x = index * IconLarge;
                 for (var index2 = 0; index2 <= 5; ++index2)
                 {
                     var path = images.FirstOrDefault(i => i.FileName == $"{DatabaseAPI.Database.Origins[index].Grades[index2]}.png").Path;
@@ -589,12 +594,49 @@ namespace Mids_Reborn.Core
                 }
             }
 
+            if (isHcDatabase)
+            {
+                var rankedIoBorders = new[] {
+                    "IO_Uncommon",
+                    "IO_Rare",
+                    "IO_VeryRare",
+                    "IO_PvP"
+                };
+
+                var basePath = ImagePath("Overlay");
+                var baseIndex = DatabaseAPI.Database.Origins.Count;
+                for (var index = 0; index < rankedIoBorders.Length; index++)
+                {
+                    x = (index + baseIndex) * IconLarge;
+                    var path = Path.Combine(basePath, $"{rankedIoBorders[index]}.png");
+
+                    using var extendedBitmap = new ExtendedBitmap(path);
+                    if ((extendedBitmap.Size.Height > IconLarge) | (extendedBitmap.Size.Width > IconLarge))
+                    {
+                        Borders.Graphics.DrawImage(extendedBitmap.Bitmap, x, IconLarge * 4, IconLarge, IconLarge);
+                        Borders.Graphics.DrawImage(extendedBitmap.Bitmap, x, IconLarge * 5, IconLarge, IconLarge);
+                    }
+                    else
+                    {
+                        Borders.Graphics.DrawImage(extendedBitmap.Bitmap, x, IconLarge * 4);
+                        Borders.Graphics.DrawImage(extendedBitmap.Bitmap, x, IconLarge * 5);
+                    }
+
+                }
+            }
+
             await Task.CompletedTask;
         }
 
         public static Image GetPowersetImage(IPower power)
         {
-            var imgString = power.GetPowerSet().ImageName;
+            var powerset = power.GetPowerSet();
+            if (powerset == null)
+            {
+                return Image.FromFile($"{ImagePath()}Unknown.png");
+            }
+
+            var imgString = power.GetPowerSet()?.ImageName;
             var imgFile = $"{ImagePath("Powersets")}\\{imgString}";
             if (!File.Exists(imgFile))
             {
@@ -691,12 +733,12 @@ namespace Mids_Reborn.Core
             return Path.Combine(MidsContext.Config.DataPath, "Assets\\Powersets");
         }
 
-        public static void DrawFlippingEnhancement(ref Graphics iTarget, Rectangle iDest, float iSize, int iImageIndex, Origin.Grade iGrade)
+        public static void DrawFlippingEnhancement(ref Graphics iTarget, Rectangle iDest, float iSize, int iImageIndex, Origin.Grade iGrade, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
             var iDest1 = iDest;
             iDest1.Width = (int) (iDest1.Width * (double) iSize);
             iDest1.X += (iDest.Width - iDest1.Width) / 2;
-            DrawEnhancementAt(ref iTarget, iDest1, iImageIndex, iGrade);
+            DrawEnhancementAt(ref iTarget, iDest1, iImageIndex, iGrade, rarity, isPvP);
         }
 
         public static void DrawEnhancement(ref Graphics iTarget, int iImageIndex, Origin.Grade iGrade)
@@ -712,7 +754,7 @@ namespace Mids_Reborn.Core
             iTarget.DrawImage(Enhancements[iImageIndex], iTarget.ClipBounds, new RectangleF(0.0f, 0.0f, 30f, 30f), GraphicsUnit.Pixel);
         }
 
-        public static void DrawEnhancementAt(ref Graphics iTarget, Rectangle iDest, int iImageIndex, Origin.Grade iGrade, ImageAttributes imageAttributes)
+        public static void DrawEnhancementAt(ref Graphics iTarget, Rectangle iDest, int iImageIndex, Origin.Grade iGrade, ImageAttributes imageAttributes, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
             if (iDest.Width > 30)
             {
@@ -732,16 +774,14 @@ namespace Mids_Reborn.Core
             var graphics = iTarget;
             var bitmap = Borders.Bitmap;
             var destRect = iDest;
-            var overlayRect = GetOverlayRect(iGrade);
+            var overlayRect = GetOverlayRect(iGrade, rarity, isPvP);
             var x = overlayRect.X;
-            overlayRect = GetOverlayRect(iGrade);
             var y = overlayRect.Y;
-            var imageAttr = imageAttributes;
-            graphics.DrawImage(bitmap, destRect, x, y, 30, 30, GraphicsUnit.Pixel, imageAttr);
+            graphics.DrawImage(bitmap, destRect, x, y, 30, 30, GraphicsUnit.Pixel, imageAttributes);
             iTarget.DrawImage(Enhancements[iImageIndex], iDest, 0, 0, 30, 30, GraphicsUnit.Pixel, imageAttributes);
         }
 
-        public static void DrawEnhancementAt(ref Graphics iTarget, Rectangle iDest, int iImageIndex, Origin.Grade iGrade)
+        public static void DrawEnhancementAt(ref Graphics iTarget, Rectangle iDest, int iImageIndex, Origin.Grade iGrade, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
             if (iDest.Width > 30)
             {
@@ -765,7 +805,7 @@ namespace Mids_Reborn.Core
             iTarget.SmoothingMode = SmoothingMode.HighQuality;
             iTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             iTarget.PageUnit = GraphicsUnit.Pixel;
-            iTarget.DrawImage(Borders.Bitmap, iDest, GetOverlayRect(iGrade), GraphicsUnit.Pixel);
+            iTarget.DrawImage(Borders.Bitmap, iDest, GetOverlayRect(iGrade, rarity, isPvP), GraphicsUnit.Pixel);
             iTarget.DrawImage(Enhancements[iImageIndex], iDest, new Rectangle(0, 0, 30, 30), GraphicsUnit.Pixel);
         }
 
@@ -786,14 +826,32 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static Rectangle GetOverlayRect(Origin.Grade iGrade)
+        public static Rectangle GetOverlayRect(Origin.Grade iGrade, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
+            const int iconSize = 30;
+
             if (iGrade == Origin.Grade.None)
             {
                 iGrade = Origin.Grade.HO;
             }
 
-            return new Rectangle(OriginIndex * 30, (int) iGrade * 30, 30, 30);
+            var ioGradeOffset = 0;
+            if ((DatabaseAPI.DatabaseName is "Homecoming" or "Cryptic" or "Breakout" &&
+                 rarity is not (null or Recipe.RecipeRarity.Common)) || isPvP)
+            {
+                ioGradeOffset = rarity switch
+                {
+                    _ when isPvP => 4,
+                    Recipe.RecipeRarity.UltraRare => 3,
+                    Recipe.RecipeRarity.Rare => 2,
+                    Recipe.RecipeRarity.Uncommon => 1,
+                    _ => 0
+                };
+            }
+
+            return ioGradeOffset > 0
+                ? new Rectangle((4 + ioGradeOffset) * iconSize, 4 * iconSize, iconSize, iconSize)
+                : new Rectangle(OriginIndex * iconSize, (int)iGrade * iconSize, iconSize, iconSize);
         }
 
         private static RectangleF GetOverlayRectF(Origin.Grade iGrade)

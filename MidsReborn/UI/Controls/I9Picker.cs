@@ -475,7 +475,7 @@ namespace Mids_Reborn.UI.Controls
         {
             checked
             {
-                _enhUniqueStatus = new List<EnhUniqueStatus?>();
+                _enhUniqueStatus = [];
                 switch (Ui.View.TabId)
                 {
                     case Enums.eType.Normal:
@@ -498,7 +498,6 @@ namespace Mids_Reborn.UI.Controls
                             {
                                 Enums.eEnhGrade.TrainingO => (Origin.Grade) 0,
                                 Enums.eEnhGrade.DualO => Origin.Grade.DualO,
-                                Enums.eEnhGrade.SingleO => Origin.Grade.SingleO,
                                 _ => Origin.Grade.SingleO
                             };
 
@@ -604,6 +603,7 @@ namespace Mids_Reborn.UI.Controls
                     .ToArray();
                 for (var i = 0; i < DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements.Length; i++)
                 {
+                    var enhSet = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]];
                     var enh = enhSetList[i];
                     var enhData = DatabaseAPI.Database.Enhancements[enh];
                     _enhUniqueStatus.Add(new EnhUniqueStatus
@@ -629,9 +629,13 @@ namespace Mids_Reborn.UI.Controls
                     });
 
                     var graphics = _myBx.Graphics;
+                    Recipe.RecipeRarity? rarity = enhData.RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[enhData.RecipeIDX].Rarity;
+                    var isPvP = enhSet.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true));
+
                     I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)),
                         DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].Enhancements[i],
-                        Origin.Grade.SetO, GreyItem(_enhUniqueStatus[i]?.InMain == true));
+                        Origin.Grade.SetO, GreyItem(_enhUniqueStatus[i]?.InMain == true),
+                        rarity, isPvP);
                 }
             }
         }
@@ -669,8 +673,8 @@ namespace Mids_Reborn.UI.Controls
                 return false;
             }
 
-            if (Ui.Initial.SetTypeId == Ui.View.SetTypeId & Ui.Initial.SetId == Ui.View.SetId &
-                Ui.Initial.PickerId == index)
+            if ((Ui.Initial.SetTypeId == Ui.View.SetTypeId) & (Ui.Initial.SetId == Ui.View.SetId) &
+                (Ui.Initial.PickerId == index))
             {
                 return false;
             }
@@ -698,6 +702,32 @@ namespace Mids_Reborn.UI.Controls
 
                 for (var i = 0; i < Ui.Sets[Ui.View.SetTypeId].Length; i++)
                 {
+                    var enhSet = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][i]];
+                    Recipe.RecipeRarity? rarity = null;
+                    var isPvP = false;
+                    rarity = enhSet.Enhancements.All(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX < 0)
+                        ? null
+                        : enhSet.Enhancements
+                            .Where(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX >= 0)
+                            .Select(e => DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[e].RecipeIDX].Rarity)
+                            .Max();
+                    
+                    isPvP = enhSet.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true));
+
+                    var ioGradeOffset = 0;
+                    if ((DatabaseAPI.DatabaseName is "Homecoming" or "Cryptic" or "Breakout" &&
+                         rarity is not (null or Recipe.RecipeRarity.Common)) || isPvP)
+                    {
+                        ioGradeOffset = rarity switch
+                        {
+                            _ when isPvP => 4,
+                            Recipe.RecipeRarity.UltraRare => 3,
+                            Recipe.RecipeRarity.Rare => 2,
+                            Recipe.RecipeRarity.Uncommon => 1,
+                            _ => 0
+                        };
+                    }
+
                     var srcRect = new Rectangle(I9Gfx.OriginIndex * _nSize, 4 * _nSize, _nSize, _nSize);
                     _myBx.Graphics.DrawImage(I9Gfx.Borders.Bitmap, GetRectBounds(IndexToXy(i)), srcRect,
                         GraphicsUnit.Pixel);
