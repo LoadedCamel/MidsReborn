@@ -301,9 +301,16 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             {
                 if (es.ImageIdx > -1)
                 {
+                    Recipe.RecipeRarity? rarity = es.Enhancements.All(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX < 0)
+                        ? null
+                        : es.Enhancements
+                            .Where(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX >= 0)
+                            .Select(e => DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[e].RecipeIDX].Rarity)
+                            .Max();
+                    var isPvP = es.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true));
                     extendedBitmap.Graphics.Clear(Color.Transparent);
                     var graphics = extendedBitmap.Graphics;
-                    I9Gfx.DrawEnhancementSet(ref graphics, es.ImageIdx);
+                    I9Gfx.DrawEnhancementSet(ref graphics, es.ImageIdx, rarity, isPvP);
                     ilSets.Images.Add(extendedBitmap.Bitmap);
                 }
                 else

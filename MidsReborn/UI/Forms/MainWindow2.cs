@@ -1303,7 +1303,10 @@ namespace Mids_Reborn.UI.Forms
         private void doFlipStep()
         {
             if (!FlipActive)
+            {
                 return;
+            }
+
             var point1 = new Point();
             var currentBuild = MidsContext.Character.CurrentBuild;
             var power = currentBuild.Powers[FlipPowerID];
@@ -1345,9 +1348,9 @@ namespace Mids_Reborn.UI.Forms
                 if (FlipSlotState[i] >= 0 && FlipSlotState[i] <= FlipSteps)
                 {
                     var num3 = FlipSlotState[i] / (FlipSteps / 2f);
-                    if (num3 > 1.0)
+                    if (num3 > 1)
                     {
-                        num2 = (float)(-1.0 * (1.0 - num3));
+                        num2 = (float)(-1 * (1 - num3));
                         index = slot.Enhancement.Enh;
                         Enh1 = index;
                         Enh2 = slot.FlippedEnhancement.Enh;
@@ -1356,7 +1359,7 @@ namespace Mids_Reborn.UI.Forms
                     }
                     else
                     {
-                        num2 = 1f - num3;
+                        num2 = 1 - num3;
                         index = slot.FlippedEnhancement.Enh;
                         Enh1 = index;
                         Enh2 = slot.Enhancement.Enh;
@@ -1366,20 +1369,34 @@ namespace Mids_Reborn.UI.Forms
                 }
 
                 rectangle1 = new Rectangle(point1.X + 30 * i, point1.Y, 30, 30);
-                if (!(num2 > 0.0))
+                if (num2 <= 0)
+                {
                     continue;
-                var rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30.0 - 30.0 * num2) / 2.0),
+                }
+
+                var rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30 - 30 * num2) / 2.0),
                     rectangle1.Y,
-                    (int)Math.Round(30.0 * num2), 30);
+                    (int)Math.Round(30 * num2), 30);
                 rectangle2 = drawing.ScaleDown(rectangle2);
                 rectangle1 = drawing.ScaleDown(rectangle1);
                 if (index > -1)
                 {
                     var graphics = drawing.BxBuffer.Graphics;
+                    Recipe.RecipeRarity? rarity = null;
+                    var isPvP = false;
+                    if (DatabaseAPI.Database.Enhancements[index].TypeID == Enums.eType.SetO)
+                    {
+                        rarity = DatabaseAPI.Database.Enhancements[index].RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[index].RecipeIDX].Rarity;
+                        var enhSet = DatabaseAPI.Database.Enhancements[index].GetEnhancementSet();
+                        isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
+                    }
                     if (i9Slot1 != null)
+                    {
                         I9Gfx.DrawFlippingEnhancement(ref graphics, rectangle1, num2,
                             DatabaseAPI.Database.Enhancements[index].ImageIdx,
-                            I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[index].TypeID, i9Slot1.Grade));
+                            I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[index].TypeID, i9Slot1.Grade),
+                            rarity, isPvP);
+                    }
                 }
                 else
                 {
@@ -1403,7 +1420,9 @@ namespace Mids_Reborn.UI.Forms
                 drawing.SzSlot.Height + 1);
             drawing.Refresh(drawing.ScaleDown(rectangle1));
             if (FlipSlotState[^1] >= FlipSteps)
+            {
                 EndFlip();
+            }
         }
 
         private bool DoLoadFromSchema(SchemaData response)

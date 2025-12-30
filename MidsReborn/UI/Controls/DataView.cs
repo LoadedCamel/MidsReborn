@@ -1,4 +1,9 @@
-﻿using System;
+﻿using FastDeepCloner;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Master_Classes;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
@@ -9,11 +14,6 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using FastDeepCloner;
-using Mids_Reborn.Core;
-using Mids_Reborn.Core.Base.Data_Classes;
-using Mids_Reborn.Core.Base.Display;
-using Mids_Reborn.Core.Base.Master_Classes;
 using FontStyle = System.Drawing.FontStyle;
 using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
@@ -1236,11 +1236,20 @@ namespace Mids_Reborn.UI.Controls
                     if (power.Slots[index].Enhancement.Enh > -1)
                     {
                         var graphics1 = bxFlip.Graphics;
+                        Recipe.RecipeRarity? rarity = null;
+                        var isPvP = false;
+                        if (DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID == Enums.eType.SetO)
+                        {
+                            rarity = DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].RecipeIDX].Rarity;
+                            var enhSet = DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].GetEnhancementSet();
+                            isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
+                        }
                         I9Gfx.DrawEnhancementAt(ref graphics1, iDest,
                             DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].ImageIdx,
                             I9Gfx.ToGfxGrade(
                                 DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID,
-                                power.Slots[index].Enhancement.Grade));
+                                power.Slots[index].Enhancement.Grade),
+                            rarity, isPvP);
                         if (power.Slots[index].Enhancement.Enh > -1)
                         {
                             if (!MidsContext.Config.I9.HideIOLevels & DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID is Enums.eType.SetO or Enums.eType.InventO)
@@ -1281,10 +1290,19 @@ namespace Mids_Reborn.UI.Controls
                     if (power.Slots[index].FlippedEnhancement.Enh > -1)
                     {
                         var graphics1 = bxFlip.Graphics;
+                        Recipe.RecipeRarity? rarity = null;
+                        var isPvP = false;
+                        if (DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID == Enums.eType.SetO)
+                        {
+                            rarity = DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].RecipeIDX].Rarity;
+                            var enhSet = DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].GetEnhancementSet();
+                            isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
+                        }
                         I9Gfx.DrawEnhancementAt(ref graphics1, rectangle2, DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].ImageIdx,
                             I9Gfx.ToGfxGrade(
                                 DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID,
-                                power.Slots[index].FlippedEnhancement.Grade));
+                                power.Slots[index].FlippedEnhancement.Grade)
+                            , rarity, isPvP);
 
                         if (power.Slots[index].FlippedEnhancement.Enh > -1)
                         {
@@ -1581,32 +1599,47 @@ namespace Mids_Reborn.UI.Controls
             return [baseEffects, enhEffects];
         }
 
-        public void FlipStage(int Index, int Enh1, int Enh2, float State, int PowerID, Enums.eEnhGrade Grade1, Enums.eEnhGrade Grade2)
+        public void FlipStage(int index, int enh1, int enh2, float state, int powerId, Enums.eEnhGrade grade1, Enums.eEnhGrade grade2)
         {
             using var solidBrush1 = new SolidBrush(enhListing.BackColor);
             if (pBase == null)
+            {
                 return;
+            }
+
             var solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
-            if (PowerID != pBase.PowerIndex)
+            if (powerId != pBase.PowerIndex)
+            {
                 return;
+            }
+
             var rectangle1 = new Rectangle();
             ref var local1 = ref rectangle1;
             var size = bxFlip.Size;
-            var x = size.Width - 188 + 30 * Index;
+            var x = size.Width - 188 + 30 * index;
             size = bxFlip.Size;
             var y1 = (int)Math.Round((size.Height / 2.0 - 30) / 2.0);
             local1 = new Rectangle(x, y1, 30, 30);
             var destRect = rectangle1;
             bxFlip.Graphics.FillRectangle(solidBrush1, rectangle1);
-            var rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30 - 30 * State) / 2.0), rectangle1.Y,
-                (int)Math.Round(30.0 * State), 30);
+            var rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30 - 30 * state) / 2.0), rectangle1.Y,
+                (int)Math.Round(30.0 * state), 30);
             Graphics graphics;
-            if (Enh1 > -1)
+            if (enh1 > -1)
             {
                 graphics = bxFlip.Graphics;
-                I9Gfx.DrawFlippingEnhancement(ref graphics, rectangle1, State,
-                    DatabaseAPI.Database.Enhancements[Enh1].ImageIdx,
-                    I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[Enh1].TypeID, Grade1));
+                Recipe.RecipeRarity? rarity = null;
+                var isPvP = false;
+                if (DatabaseAPI.Database.Enhancements[enh1].TypeID == Enums.eType.SetO)
+                {
+                    rarity = DatabaseAPI.Database.Enhancements[enh1].RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[enh1].RecipeIDX].Rarity;
+                    var enhSet = DatabaseAPI.Database.Enhancements[enh1].GetEnhancementSet();
+                    isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
+                }
+                I9Gfx.DrawFlippingEnhancement(ref graphics, rectangle1, state,
+                    DatabaseAPI.Database.Enhancements[enh1].ImageIdx,
+                    I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[enh1].TypeID, grade1),
+                    rarity, isPvP);
             }
             else
             {
@@ -1621,14 +1654,23 @@ namespace Mids_Reborn.UI.Controls
             var num2 = (int)Math.Round(y2 + num1);
             local2.Y = num2;
             bxFlip.Graphics.FillRectangle(solidBrush1, rectangle1);
-            rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30 - 30 * State) / 2.0), rectangle1.Y,
-                (int)Math.Round(30.0 * State), 30);
-            if (Enh2 > -1)
+            rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30 - 30 * state) / 2.0), rectangle1.Y,
+                (int)Math.Round(30 * state), 30);
+            if (enh2 > -1)
             {
+                Recipe.RecipeRarity? rarity = null;
+                var isPvP = false;
+                if (DatabaseAPI.Database.Enhancements[enh1].TypeID == Enums.eType.SetO)
+                {
+                    rarity = DatabaseAPI.Database.Enhancements[enh1].RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[enh1].RecipeIDX].Rarity;
+                    var enhSet = DatabaseAPI.Database.Enhancements[enh1].GetEnhancementSet();
+                    isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
+                }
                 graphics = bxFlip.Graphics;
-                I9Gfx.DrawFlippingEnhancement(ref graphics, rectangle1, State,
-                    DatabaseAPI.Database.Enhancements[Enh2].ImageIdx,
-                    I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[Enh2].TypeID, Grade2));
+                I9Gfx.DrawFlippingEnhancement(ref graphics, rectangle1, state,
+                    DatabaseAPI.Database.Enhancements[enh2].ImageIdx,
+                    I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[enh2].TypeID, grade2),
+                    rarity, isPvP);
             }
             else
             {

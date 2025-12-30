@@ -77,9 +77,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             using var frmPowerEffect = new frmPowerEffect(iFx);
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
                 return;
-            var enh = myEnh;
   
-            var effects = enh.Effect.ToList();
+            var effects = myEnh.Effect.ToList();
             effects.Add(new Enums.sEffect
             {
                 Mode = Enums.eEffMode.FX,
@@ -90,57 +89,70 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             });
             effects[^1].FX.isEnhancementEffect = true;
             var sEffects = effects.ToArray();
-            enh.Effect = sEffects;
+            myEnh.Effect = sEffects;
             ListSelectedEffects();
             lstSelected.SelectedIndex = lstSelected.Items.Count - 1;
         }
 
         private void btnAutoFill_Click(object sender, EventArgs e)
         {
-            var eEnhance = Enums.eEnhance.None;
-            var eEnhanceShort = Enums.eEnhanceShort.None;
-            var eMez = Enums.eMez.None;
-            var eMezShort = Enums.eMezShort.None;
-            var names1 = Enum.GetNames(eEnhance.GetType());
-            var names2 = Enum.GetNames(eEnhanceShort.GetType());
-            var names3 = Enum.GetNames(eMez.GetType());
-            var names4 = Enum.GetNames(eMezShort.GetType());
+            var eEnhanceNames = Enum.GetNames<Enums.eEnhance>();
+            var eEnhanceShortNames = Enum.GetNames<Enums.eEnhanceShort>();
+            var eMezNames = Enum.GetNames<Enums.eMez>();
+            var eMezShortNames = Enum.GetNames<Enums.eMezShort>();
             myEnh.Name = "";
             myEnh.ShortName = "";
-            names1[4] = "Endurance";
-            names1[18] = "Resistance";
-            names1[5] = "EndMod";
-            names2[18] = "ResDam";
-            names3[2] = "Hold";
-            names4[2] = "Hold";
+            eEnhanceNames[4] = "Endurance";
+            eEnhanceNames[18] = "Resistance";
+            eEnhanceNames[5] = "EndMod";
+            eEnhanceShortNames[18] = "ResDam";
+            eMezNames[2] = "Hold";
+            eMezShortNames[2] = "Hold";
             if ((myEnh.TypeID == Enums.eType.SetO) & (myEnh.nIDSet > -1) &
                 (myEnh.nIDSet <= DatabaseAPI.Database.EnhancementSets.Count - 1))
+            {
                 myEnh.UID = DatabaseAPI.Database.EnhancementSets[myEnh.nIDSet].DisplayName.Replace(" ", "_") + "_";
+            }
+
             var num1 = 0;
-            var num2 = myEnh.Effect.Length - 1;
-            for (var index = 0; index <= num2; ++index)
+            for (var index = 0; index < myEnh.Effect.Length; index++)
             {
                 if (myEnh.Effect[index].Mode != Enums.eEffMode.Enhancement)
+                {
                     continue;
-                ++num1;
+                }
+
+                num1++;
                 var id = (Enums.eEnhance)myEnh.Effect[index].Enhance.ID;
                 if (id != Enums.eEnhance.Mez)
                 {
                     if (!string.IsNullOrWhiteSpace(myEnh.Name))
+                    {
                         myEnh.Name += "/";
-                    myEnh.Name += names1[(int)id];
+                    }
+
+                    myEnh.Name += eEnhanceNames[(int)id];
                     if (!string.IsNullOrWhiteSpace(myEnh.ShortName))
+                    {
                         myEnh.ShortName += "/";
-                    myEnh.ShortName += names2[(int)id];
+                    }
+
+                    myEnh.ShortName += eEnhanceShortNames[(int)id];
                 }
                 else
                 {
                     if (!string.IsNullOrWhiteSpace(myEnh.Name))
+                    {
                         myEnh.Name += "/";
-                    myEnh.Name += names3[myEnh.Effect[index].Enhance.SubID];
+                    }
+
+                    myEnh.Name += eMezNames[myEnh.Effect[index].Enhance.SubID];
                     if (!string.IsNullOrWhiteSpace(myEnh.ShortName))
+                    {
                         myEnh.ShortName += "/";
-                    myEnh.ShortName += names4[myEnh.Effect[index].Enhance.SubID];
+                    }
+
+                    myEnh.ShortName += eMezShortNames[myEnh.Effect[index].Enhance.SubID];
                 }
             }
 
@@ -153,10 +165,15 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 4 => 7f / 16f,
                 _ => 1f
             };
-            var num4 = myEnh.Effect.Length - 1;
-            for (var index = 0; index <= num4; ++index)
+            
+            for (var index = 0; index < myEnh.Effect.Length; index++)
+            {
                 if (myEnh.Effect[index].Mode == Enums.eEffMode.Enhancement)
+                {
                     myEnh.Effect[index].Multiplier = num3;
+                }
+            }
+
             DisplayAll();
         }
 
@@ -246,16 +263,20 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void btnEditPowerData3_Click(object sender, EventArgs e)
         {
-            var enh = myEnh;
-            var power = enh.GetPower();
+            var power = myEnh.GetPower();
             using var frmEditPower = new frmEditPower(power);
             if (frmEditPower.ShowDialog() != DialogResult.OK)
+            {
                 return;
+            }
+
             power = new Power(frmEditPower.myPower) { IsModified = true };
             // could really use structural equality here, but since we don't have it... we'll mark it as modified just because :/
-            var num = power.Effects.Length - 1;
-            for (var index = 0; index <= num; ++index)
-                power.Effects[index].PowerFullName = power.FullName;
+            foreach (var fx in power.Effects)
+            {
+                fx.PowerFullName = power.FullName;
+            }
+
             myEnh.SetPower(power);
         }
 
@@ -572,11 +593,22 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             if (!string.IsNullOrWhiteSpace(myEnh.Image))
             {
+                Recipe.RecipeRarity? rarity = null;
+                var isPvP = false;
+
+                if (myEnh.TypeID == Enums.eType.SetO)
+                {
+                    var enhSet = myEnh.GetEnhancementSet();
+
+                    rarity = myEnh.RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[myEnh.RecipeIDX].Rarity;
+                    isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
+                }
+
                 var img = myEnh.Image;
                 var path = Path.Combine(File.Exists(Path.Combine(I9Gfx.GetEnhancementsPath(), img)) ? I9Gfx.GetEnhancementsPath() : I9Gfx.GetDbEnhancementsPath(), img);
                 using var extendedBitmap1 = new ExtendedBitmap(path);
                 using var extendedBitmap2 = new ExtendedBitmap(30, 30);
-                extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(myEnh.TypeID)), GraphicsUnit.Pixel);
+                extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(myEnh.TypeID), rarity, isPvP), GraphicsUnit.Pixel);
                 extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect, extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
                 btnImage.Image = new Bitmap(extendedBitmap2.Bitmap);
                 btnImage.Text = myEnh.Image;
@@ -1166,6 +1198,11 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void SetTypeIcons()
         {
+            var enhSet = myEnh.GetEnhancementSet();
+
+            Recipe.RecipeRarity? rarity = myEnh.RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[myEnh.RecipeIDX].Rarity;
+            var isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
+
             var img = myEnh.Image;
             var path = Path.Combine(File.Exists(Path.Combine(I9Gfx.GetEnhancementsPath(), img)) ? I9Gfx.GetEnhancementsPath() : I9Gfx.GetDbEnhancementsPath(), img);
             using var extendedBitmap1 = new ExtendedBitmap(30, 30);
@@ -1185,7 +1222,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, 0, 0);
             typeHO.Image = new Bitmap(extendedBitmap1.Bitmap);
             extendedBitmap1.Graphics.Clear(Color.Transparent);
-            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.SetO)), GraphicsUnit.Pixel);
+            extendedBitmap1.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect, I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade(Enums.eType.SetO), rarity, isPvP), GraphicsUnit.Pixel);
             extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, 0, 0);
             typeSet.Image = new Bitmap(extendedBitmap1.Bitmap);
         }

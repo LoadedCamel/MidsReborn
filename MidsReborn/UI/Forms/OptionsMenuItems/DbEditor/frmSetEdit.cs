@@ -22,7 +22,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         public FrmSetEdit(ref EnhancementSet iSet)
         {
             Load += frmSetEdit_Load;
-            _setBonusList = Array.Empty<int>();
+            _setBonusList = [];
             _loading = true;
             InitializeComponent();
             Name = nameof(FrmSetEdit);
@@ -378,7 +378,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
                 if (MySet.Bonus[index1].Index.Length > 0)
                 {
-                    str1 += RTF.Crlf() + "   " + RTF.Italic(MySet.GetEffectString(index1, false));
+                    str1 += $"{RTF.Crlf()}   {RTF.Italic(MySet.GetEffectString(index1, false))}";
                 }
 
                 if (MySet.Bonus[index1].PvMode == Enums.ePvX.PvP)
@@ -419,7 +419,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                         }
                     }
 
-                    str1 = str3 + RTF.Crlf() + "   " + RTF.Italic(MySet.GetEffectString(index1, true)) + RTF.Crlf();
+                    str1 = $"{str3}{RTF.Crlf()}   {RTF.Italic(MySet.GetEffectString(index1, true))}{RTF.Crlf()}";
                 }
 
                 if (MySet.SpecialBonus[index1].Index.Length > 0)
@@ -435,12 +435,21 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             if (!string.IsNullOrWhiteSpace(MySet.Image))
             {
+                Recipe.RecipeRarity? rarity = MySet.Enhancements.All(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX < 0)
+                    ? null
+                    : MySet.Enhancements
+                        .Where(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX >= 0)
+                        .Select(e => DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[e].RecipeIDX].Rarity)
+                        .Max();
+
+                var isPvP = MySet.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true));
+
                 var img = MySet.Image;
                 var path = Path.Combine(File.Exists(Path.Combine(I9Gfx.GetEnhancementsPath(), img)) ? I9Gfx.GetEnhancementsPath() : I9Gfx.GetDbEnhancementsPath(), img);
                 using var extendedBitmap1 = new ExtendedBitmap(path);
                 using var extendedBitmap2 = new ExtendedBitmap(30, 30);
                 extendedBitmap2.Graphics.DrawImage(I9Gfx.Borders.Bitmap, extendedBitmap2.ClipRect,
-                    I9Gfx.GetOverlayRect(Origin.Grade.SetO), GraphicsUnit.Pixel);
+                    I9Gfx.GetOverlayRect(Origin.Grade.SetO, rarity, isPvP), GraphicsUnit.Pixel);
                 extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.ClipRect,
                     extendedBitmap2.ClipRect, GraphicsUnit.Pixel);
                 btnImage.Image = new Bitmap(extendedBitmap2.Bitmap);
@@ -494,7 +503,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                         var num3 = 1;
                         string[] strArray2;
                         IntPtr index2;
-                        (strArray2 = strArray1)[(int) (index2 = (IntPtr) num3)] = strArray2[(int) index2] + ",";
+                        (strArray2 = strArray1)[(int) (index2 = (IntPtr) num3)] = $"{strArray2[(int)index2]},";
                     }
 
                     var strArray3 = items;
@@ -586,11 +595,13 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 var enhancement = DatabaseAPI.Database.Enhancements[enh];
                 if (enhancement.ImageIdx > -1)
                 {
+                    Recipe.RecipeRarity? rarity = enhancement.RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity;
+                    var isPvP = MySet.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true));
+
                     var gfxGrade = I9Gfx.ToGfxGrade(enhancement.TypeID);
                     extendedBitmap.Graphics.Clear(Color.Transparent);
                     var graphics = extendedBitmap.Graphics;
-                    I9Gfx.DrawEnhancement(ref graphics,
-                        DatabaseAPI.Database.Enhancements[enh].ImageIdx, gfxGrade);
+                    I9Gfx.DrawEnhancement(ref graphics, DatabaseAPI.Database.Enhancements[enh].ImageIdx, gfxGrade, rarity, isPvP);
                     ilEnh.Images.Add(extendedBitmap.Bitmap);
                 }
                 else
