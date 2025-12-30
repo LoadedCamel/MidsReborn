@@ -1,14 +1,15 @@
-﻿using System;
+﻿using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.UI.Controls;
+using MRBResourceLib;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Mids_Reborn.Core;
-using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.UI.Controls;
-using MRBResourceLib;
+using Windows.Devices.Display.Core;
 
 namespace Mids_Reborn.UI.Forms.WindowMenuItems
 {
@@ -44,6 +45,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             Enums.eEffectType.PerceptionRadius, Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime,
             Enums.eEffectType.SpeedRunning, Enums.eEffectType.Regeneration
         ];
+
+        private List<CtlMultiGraph> CustomGraphs = [];
 
         public frmTotalsV2(ref MainWindow2 parentForm)
         {
@@ -279,6 +282,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             ctlTotalsTabStrip1.Invalidate();
 
+            PrepareCustomGraphs();
+
             //panel1.Size = new Size(561, 697);
             //panel2.Location = new Point(0, 684);
             //panel2.Size = Size with {Width = panel1.Width};
@@ -291,6 +296,43 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             SetTitle(this);
             SetUnitRadioButtons();
             UpdateData();
+        }
+
+        private void PrepareCustomGraphs()
+        {
+            panelTab2.SuspendLayout();
+
+            foreach (var c in CustomGraphs)
+            {
+                panelTab2.Controls.Remove(c);
+                c.Dispose();
+            }
+
+            var loc = new Point(12, 367);
+            const int incrementLocY = 34;
+            CustomGraphs = [];
+
+            for (var i = 0; i < Math.Min(MidsContext.Config.CustomGraphs.Count, 8); i++)
+            {
+                var settings = MidsContext.Config.CustomGraphSetting[i];
+                var mode = settings.EffectType != null
+                    ? settings.EffectMode
+                    : settings.DamageType != null
+                        ? settings.DamageMode
+                        : settings.MezType != null
+                            ? settings.MezMode
+                            : CustomGraphStat.eCustomGraphMode.Single;
+
+                var graph = CustomGraphStat.GenerateGraph(MidsContext.Config.CustomGraphs[i], mode);
+                graph.Location = loc;
+
+                CustomGraphs.Add(graph);
+                panelTab2.Controls.Add(graph);
+
+                loc = loc with { Y = loc.Y + incrementLocY };
+            }
+
+            panelTab2.ResumeLayout(true);
         }
 
         private void CharacterOnAlignmentChanged(object? sender, Enums.Alignment e)
@@ -770,6 +812,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             UpdatePerceptionData();
 
             ///////////////////////////////
+
+            graphHaste.Visible = false;
+            graphToHit.Visible = false;
+            graphAccuracy.Visible = false;
+            graphDamage.Visible = false;
+            graphRange.Visible = false;
+            graphEndRdx.Visible = false;
+            graphHealBuff.Visible = false;
+            graphThreat.Visible = false;
 
             graphHaste.Clear();
             graphHaste.AddItemPair("Haste",

@@ -77,6 +77,11 @@ namespace Mids_Reborn.Core
             .Where(x => Math.Abs(x.Value) > float.Epsilon)
             .ToDictionary(x => (Enums.eMez)x.Key, x => x.Value);
 
+        public Dictionary<Enums.eEffectType, float> BoostsResEffect => _character.Totals.BoostsResEffect
+            .Select((x, i) => new KeyValuePair<int, float>(i, x))
+            .Where(x => Math.Abs(x.Value) > float.Epsilon)
+            .ToDictionary(x => (Enums.eEffectType)x.Key, x => x.Value);
+
         private float EnduranceRecovery(bool uncapped)
         {
             return uncapped ? _character.Totals.EndRec + 1f : _character.TotalsCapped.EndRec + 1f;
@@ -116,6 +121,10 @@ namespace Mids_Reborn.Core
             return uncapped ? _character.Totals.Res[dType] * 100f : _character.TotalsCapped.Res[dType] * 100f;
         }
 
+        public float DamageResistanceMin => _character.Totals.Res.Min() * 100f;
+        public float DamageResistanceMax => _character.Totals.Res.Max() * 100f;
+        public float DamageResistanceAvg => _character.Totals.Res.Average() * 100f;
+
         public float Perception(bool uncapped)
         {
             return uncapped ? _character.Totals.Perception : _character.TotalsCapped.Perception;
@@ -125,6 +134,10 @@ namespace Mids_Reborn.Core
         {
             return _character.Totals.Def[dType] * 100f;
         }
+
+        public float DefenseMin => _character.Totals.Def.Min() * 100f;
+        public float DefenseMax => _character.Totals.Def.Max() * 100f;
+        public float DefenseAvg => _character.Totals.Def.Average() * 100f;
 
         public float Speed(float iSpeed, Enums.eSpeedMeasure unit)
         {
@@ -174,7 +187,6 @@ namespace Mids_Reborn.Core
                     Enums.eSpeedMeasure.FeetPerSecond => iSpeed * 0.911344488f,
                     Enums.eSpeedMeasure.MetersPerSecond => iSpeed * 0.2777778f,
                     Enums.eSpeedMeasure.MilesPerHour => iSpeed * 0.621371242f,
-                    Enums.eSpeedMeasure.KilometersPerHour => iSpeed,
                     _ => iSpeed
                 }
             };

@@ -1918,6 +1918,7 @@ namespace Mids_Reborn.Core
             public float[] DebuffResistance;
             public float[] Boosts;
             public float[] BoostsMez;
+            public float[] BoostsResEffect;
             public float MaxEnd;
 
             public void Reset()

@@ -471,7 +471,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphHealBuff.ColorEnh = System.Drawing.Color.FromArgb(12, 200, 87);
             graphHealBuff.ColorFadeEnd = System.Drawing.Color.FromArgb(8, 138, 60);
             graphHealBuff.ColorFadeStart = System.Drawing.Color.Black;
-            graphHealBuff.ColorHighlight = System.Drawing.Color.FromArgb(14, 240, 104);
+            graphHealBuff.ColorHighlight = System.Drawing.Color.FromArgb(128, 128, 255);
             graphHealBuff.ColorLines = System.Drawing.Color.Black;
             graphHealBuff.ColorMarkerInner = System.Drawing.Color.Black;
             graphHealBuff.ColorMarkerOuter = System.Drawing.Color.Yellow;
