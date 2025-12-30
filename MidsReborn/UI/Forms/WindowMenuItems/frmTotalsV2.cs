@@ -8,8 +8,10 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
+using System.Windows.Controls;
 using System.Windows.Forms;
 using Windows.Devices.Display.Core;
+using RadioButton = System.Windows.Forms.RadioButton;
 
 namespace Mids_Reborn.UI.Forms.WindowMenuItems
 {
@@ -312,7 +314,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             const int incrementLocY = 34;
             CustomGraphs = [];
 
-            for (var i = 0; i < Math.Min(MidsContext.Config.CustomGraphs.Count, 8); i++)
+            for (var i = 0; i < Math.Min(MidsContext.Config.CustomGraphs.Length, 8); i++)
             {
                 var settings = MidsContext.Config.CustomGraphSetting[i];
                 var mode = settings.EffectType != null
@@ -392,14 +394,25 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             graphMovement.Width = Width - graphControlWidthPad;
             graphPerception.Width = Width - graphControlWidthPad;
-            graphHaste.Width = Width - graphControlWidthPad;
+            
+            /*graphHaste.Width = Width - graphControlWidthPad;
             graphToHit.Width = Width - graphControlWidthPad;
             graphAccuracy.Width = Width - graphControlWidthPad;
             graphDamage.Width = Width - graphControlWidthPad;
             graphEndRdx.Width = Width - graphControlWidthPad;
             graphHealBuff.Width = Width - graphControlWidthPad;
-            graphThreat.Width = Width - graphControlWidthPad;
+            graphThreat.Width = Width - graphControlWidthPad;*/
 
+            foreach (var c in panelTab2.Controls)
+            {
+                if (c is not CtlMultiGraph ctl)
+                {
+                    continue;
+                }
+
+                ctl.Width = Width - graphControlWidthPad;
+            }
+            
             graphStatusProt.Width = Width - graphControlWidthPad;
             graphStatusRes.Width = Width - graphControlWidthPad;
 
@@ -812,7 +825,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             UpdatePerceptionData();
 
             ///////////////////////////////
-
+            
             graphHaste.Visible = false;
             graphToHit.Visible = false;
             graphAccuracy.Visible = false;
@@ -822,7 +835,29 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphHealBuff.Visible = false;
             graphThreat.Visible = false;
 
-            graphHaste.Clear();
+            var k = 0;
+            foreach (var c in panelTab2.Controls)
+            {
+                if (c is not CtlMultiGraph ctl)
+                {
+                    continue;
+                }
+
+                if (!ctl.Name.StartsWith("graphCustom"))
+                {
+                    continue;
+                }
+
+                var graphSettings = (CustomGraphStat.Settings.GraphSettingsExtended)(ctl.Tag ?? new CustomGraphStat.Settings.GraphSettingsExtended());
+                var cfgSettings = MidsContext.Config == null || k >= MidsContext.Config.CustomGraphSetting.Length
+                    ? new ConfigData.CustomGraphSettings()
+                    : MidsContext.Config.CustomGraphSetting[k];
+                ctl.SetGraphItem(graphSettings.Stat, graphSettings.Mode, cfgSettings);
+
+                k++;
+            }
+
+            /*graphHaste.Clear();
             graphHaste.AddItemPair("Haste",
                 $"{displayStats.BuffHaste(false):##0.##}%",
                 100,
@@ -889,7 +924,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphRange.Draw();
             graphEndRdx.Draw();
             graphHealBuff.Draw();
-            graphThreat.Draw();
+            graphThreat.Draw();*/
  
             ///////////////////////////////
 

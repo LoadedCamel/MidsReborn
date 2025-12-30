@@ -1,3 +1,5 @@
+using Mids_Reborn.UI.Forms;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
-using Mids_Reborn.UI.Forms;
 using Path = System.IO.Path;
 using Rectangle = System.Drawing.Rectangle;
 
@@ -173,15 +174,18 @@ namespace Mids_Reborn.Core
         public CombatContext CombatContextSettings { get; set; }
         public string? ActiveTemplate { get; set; } = null;
 
-        public List<CustomGraphStat.eCustomGraphStat> CustomGraphs { get; set; } =
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public CustomGraphStat.eCustomGraphStat[]? CustomGraphs { get; set; } =
         [
             CustomGraphStat.eCustomGraphStat.Recharge, CustomGraphStat.eCustomGraphStat.ToHit, CustomGraphStat.eCustomGraphStat.Accuracy,
             CustomGraphStat.eCustomGraphStat.Damage, CustomGraphStat.eCustomGraphStat.Range, CustomGraphStat.eCustomGraphStat.EndRdx,
             CustomGraphStat.eCustomGraphStat.Heal, CustomGraphStat.eCustomGraphStat.Threat
         ];
 
-        public List<CustomGraphSettings> CustomGraphSetting { get; set; } = [
-            new() // Recharge
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public CustomGraphSettings[]? CustomGraphSetting { get; set; } =
+        [
+            new CustomGraphSettings // Recharge
             {
                 DamageMode = CustomGraphStat.eCustomGraphMode.Single,
                 DamageType = null,
@@ -191,7 +195,7 @@ namespace Mids_Reborn.Core
                 MezMode = CustomGraphStat.eCustomGraphMode.Single,
                 MezType = null
             },
-            new() // ToHit
+            new CustomGraphSettings // ToHit
             {
                 DamageMode = CustomGraphStat.eCustomGraphMode.Single,
                 DamageType = null,
@@ -201,7 +205,7 @@ namespace Mids_Reborn.Core
                 MezMode = CustomGraphStat.eCustomGraphMode.Single,
                 MezType = null
             },
-            new() // Accuracy
+            new CustomGraphSettings // Accuracy
             {
                 DamageMode = CustomGraphStat.eCustomGraphMode.Single,
                 DamageType = null,
@@ -211,7 +215,7 @@ namespace Mids_Reborn.Core
                 MezMode = CustomGraphStat.eCustomGraphMode.Single,
                 MezType = null
             },
-            new() // Damage
+            new CustomGraphSettings // Damage
             {
                 DamageMode = CustomGraphStat.eCustomGraphMode.Single,
                 DamageType = null,
@@ -221,7 +225,7 @@ namespace Mids_Reborn.Core
                 MezMode = CustomGraphStat.eCustomGraphMode.Single,
                 MezType = null
             },
-            new() // Range
+            new CustomGraphSettings // Range
             {
                 DamageMode = CustomGraphStat.eCustomGraphMode.Single,
                 DamageType = null,
@@ -231,7 +235,7 @@ namespace Mids_Reborn.Core
                 MezMode = CustomGraphStat.eCustomGraphMode.Single,
                 MezType = null
             },
-            new() // EndRdx
+            new CustomGraphSettings // EndRdx
             {
                 DamageMode = CustomGraphStat.eCustomGraphMode.Single,
                 DamageType = null,
@@ -241,7 +245,7 @@ namespace Mids_Reborn.Core
                 MezMode = CustomGraphStat.eCustomGraphMode.Single,
                 MezType = null
             },
-            new() // Heal
+            new CustomGraphSettings // Heal
             {
                 DamageMode = CustomGraphStat.eCustomGraphMode.Single,
                 DamageType = null,
@@ -251,7 +255,7 @@ namespace Mids_Reborn.Core
                 MezMode = CustomGraphStat.eCustomGraphMode.Single,
                 MezType = null
             },
-            new() // Threat
+            new CustomGraphSettings // Threat
             {
                 DamageMode = CustomGraphStat.eCustomGraphMode.Single,
                 DamageType = null,
@@ -260,7 +264,7 @@ namespace Mids_Reborn.Core
                 EffectTypeAux = null,
                 MezMode = CustomGraphStat.eCustomGraphMode.Single,
                 MezType = null
-            },
+            }
         ];
 
         internal bool MasterMode
@@ -532,15 +536,15 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public struct CustomGraphSettings
+        public class CustomGraphSettings
         {
-            public Enums.eMez? MezType;
-            public CustomGraphStat.eCustomGraphMode MezMode;
-            public Enums.eDamage? DamageType;
-            public CustomGraphStat.eCustomGraphMode DamageMode;
-            public Enums.eEffectType? EffectType;
-            public Enums.eEffectType? EffectTypeAux;
-            public CustomGraphStat.eCustomGraphMode EffectMode;
+            public Enums.eMez? MezType { get; set; }
+            public CustomGraphStat.eCustomGraphMode MezMode { get; set; }
+            public Enums.eDamage? DamageType { get; set; }
+            public CustomGraphStat.eCustomGraphMode DamageMode { get; set; }
+            public Enums.eEffectType? EffectType { get; set; }
+            public Enums.eEffectType? EffectTypeAux { get; set; }
+            public CustomGraphStat.eCustomGraphMode EffectMode { get; set; }
         }
 
         public class AutoUpdate

@@ -1,9 +1,11 @@
-﻿using System;
+﻿using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.UI.Controls;
+using System;
 using System.Collections.Generic;
-using Mids_Reborn.Core.Base.Master_Classes;
 using System.Drawing;
 using System.Linq;
-using Mids_Reborn.UI.Controls;
+using static Mids_Reborn.Core.ConfigData;
+using static Mids_Reborn.Core.Utils.Helpers;
 
 namespace Mids_Reborn.Core
 {
@@ -60,14 +62,47 @@ namespace Mids_Reborn.Core
             Average
         }
 
-        private static readonly List<Enums.eMez> MezList =
+        private static readonly Enums.eDamage[] DamageVectors = Enum.GetValues<Enums.eDamage>();
+        private static readonly string[] DamageVectorsNames = Enum.GetNames<Enums.eDamage>();
+        
+        private static readonly int[] ExcludedDefVectors = new[]
+        {
+            Enums.eDamage.None,
+            DatabaseAPI.RealmUsesToxicDef()? Enums.eDamage.None : Enums.eDamage.Toxic,
+            Enums.eDamage.Special,
+            Enums.eDamage.Unique1,
+            Enums.eDamage.Unique2,
+            Enums.eDamage.Unique3
+        }.Cast<int>().ToArray();
+        
+        private static readonly int[] ExcludedResVectors = new[]
+        {
+            Enums.eDamage.None,
+            Enums.eDamage.Melee,
+            Enums.eDamage.Ranged,
+            Enums.eDamage.AoE,
+            Enums.eDamage.Special,
+            Enums.eDamage.Unique1,
+            Enums.eDamage.Unique2,
+            Enums.eDamage.Unique3
+        }.Cast<int>().ToArray();
+        
+        private static readonly int[] ExcludedElusivityVectors = new[]
+        {
+            Enums.eDamage.Special,
+            Enums.eDamage.Unique1,
+            Enums.eDamage.Unique2,
+            Enums.eDamage.Unique3
+        }.Cast<int>().ToArray();
+
+        private static readonly Enums.eMez[] MezList =
         [
             Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep, Enums.eMez.Immobilized,
             Enums.eMez.Knockback, Enums.eMez.Repel, Enums.eMez.Confused, Enums.eMez.Terrorized,
             Enums.eMez.Taunt, Enums.eMez.Placate, Enums.eMez.Teleport
         ];
 
-        private static readonly List<Enums.eEffectType> DebuffEffectsList =
+        private static readonly Enums.eEffectType[] DebuffEffectsList =
         [
             Enums.eEffectType.Defense, Enums.eEffectType.Endurance, Enums.eEffectType.Recovery,
             Enums.eEffectType.PerceptionRadius, Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime,
@@ -131,38 +166,6 @@ namespace Mids_Reborn.Core
         {
             var displayStats = MidsContext.Character.DisplayStats;
             var atName = MidsContext.Character.Archetype.DisplayName;
-
-            var damageVectors = Enum.GetValues(typeof(Enums.eDamage));
-            var damageVectorsNames = Enum.GetNames(typeof(Enums.eDamage));
-            var excludedDefVectors = new List<Enums.eDamage>
-            {
-                Enums.eDamage.None,
-                DatabaseAPI.RealmUsesToxicDef() ? Enums.eDamage.None : Enums.eDamage.Toxic,
-                Enums.eDamage.Special,
-                Enums.eDamage.Unique1,
-                Enums.eDamage.Unique2,
-                Enums.eDamage.Unique3
-            }.Cast<int>().ToList();
-
-            var excludedResVectors = new List<Enums.eDamage>
-            {
-                Enums.eDamage.None,
-                Enums.eDamage.Melee,
-                Enums.eDamage.Ranged,
-                Enums.eDamage.AoE,
-                Enums.eDamage.Special,
-                Enums.eDamage.Unique1,
-                Enums.eDamage.Unique2,
-                Enums.eDamage.Unique3
-            }.Cast<int>().ToList();
-
-            var excludedElusivityVectors = new List<Enums.eDamage>
-            {
-                Enums.eDamage.Special,
-                Enums.eDamage.Unique1,
-                Enums.eDamage.Unique2,
-                Enums.eDamage.Unique3
-            }.Cast<int>().ToList();
 
             var longName = Names.CustomStatNameLong(stat);
             
@@ -1206,6 +1209,31 @@ namespace Mids_Reborn.Core
                 public StatUnitType UnitType;
                 public string? UnitSuffix;
                 public float Max;
+
+                public static GraphSettings FromGraphSettingsExtended(GraphSettingsExtended s)
+                {
+                    return new GraphSettings
+                    {
+                        ValueNames = new StatNames
+                        {
+                            LongName = s.ValueNames.LongName,
+                            ShortName = s.ValueNames.ShortName
+                        },
+                        Style = s.Style,
+                        Appearance = new Colors.GraphColors
+                        {
+                            Base = s.Appearance.Base,
+                            Border = s.Appearance.Border,
+                            Enhanced = s.Appearance.Enhanced,
+                            FadeEnd = s.Appearance.FadeEnd,
+                            Highlight = s.Appearance.Highlight,
+                            Overcap = s.Appearance.Overcap
+                        },
+                        Max = s.Max,
+                        UnitSuffix = s.UnitSuffix,
+                        UnitType = s.UnitType
+                    };
+                }
             }
 
             public struct GraphSettingsExtended

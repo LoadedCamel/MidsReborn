@@ -77,11 +77,6 @@ namespace Mids_Reborn.Core
             .Where(x => Math.Abs(x.Value) > float.Epsilon)
             .ToDictionary(x => (Enums.eMez)x.Key, x => x.Value);
 
-        public Dictionary<Enums.eEffectType, float> BoostsResEffect => _character.Totals.BoostsResEffect
-            .Select((x, i) => new KeyValuePair<int, float>(i, x))
-            .Where(x => Math.Abs(x.Value) > float.Epsilon)
-            .ToDictionary(x => (Enums.eEffectType)x.Key, x => x.Value);
-
         private float EnduranceRecovery(bool uncapped)
         {
             return uncapped ? _character.Totals.EndRec + 1f : _character.TotalsCapped.EndRec + 1f;
