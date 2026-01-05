@@ -8,9 +8,7 @@ using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
-using System.Windows.Controls;
 using System.Windows.Forms;
-using Windows.Devices.Display.Core;
 using RadioButton = System.Windows.Forms.RadioButton;
 
 namespace Mids_Reborn.UI.Forms.WindowMenuItems
@@ -92,7 +90,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void Radio_CheckedChanged(object sender, EventArgs e)
         {
-            var sendingControl = (RadioButton) sender;
+            var sendingControl = (RadioButton)sender;
             var radioControls = Controls.OfType<RadioButton>();
             if (!sendingControl.Checked) return;
 
@@ -394,7 +392,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             graphMovement.Width = Width - graphControlWidthPad;
             graphPerception.Width = Width - graphControlWidthPad;
-            
+
             /*graphHaste.Width = Width - graphControlWidthPad;
             graphToHit.Width = Width - graphControlWidthPad;
             graphAccuracy.Width = Width - graphControlWidthPad;
@@ -412,7 +410,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
                 ctl.Width = Width - graphControlWidthPad;
             }
-            
+
+            label12.Location = label12.Location with { X = Width - graphControlWidthPad - label12.Width };
+
             graphStatusProt.Width = Width - graphControlWidthPad;
             graphStatusRes.Width = Width - graphControlWidthPad;
 
@@ -601,7 +601,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void rbUnits_CheckChanged(object sender, EventArgs e)
         {
-            var target = (RadioButton) sender;
+            var target = (RadioButton)sender;
             if (!target.Checked)
             {
                 return;
@@ -634,7 +634,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         }
 
         #endregion
-        
+
 
         #region frmTotals import
 
@@ -723,7 +723,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     $"{displayStats.Defense(i):##0.###}% {FormatVectorType(typeof(Enums.eDamage), i)} defense");
             }
 
-            graphDef.Size = graphDef.Size with {Height = Math.Max(graphDef.Size.Height, graphDef.ContentHeight + graphBottomMargin)};
+            graphDef.Size = graphDef.Size with { Height = Math.Max(graphDef.Size.Height, graphDef.ContentHeight + graphBottomMargin) };
             graphDef.Draw();
 
             graphRes.Clear();
@@ -745,7 +745,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                         : $"{resValue:##0.##}% {FormatVectorType(typeof(Enums.eDamage), i)} resistance ({atName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)");
             }
 
-            graphRes.Size = graphRes.Size with {Height = Math.Max(graphRes.Size.Height, graphRes.ContentHeight + graphBottomMargin)};
+            graphRes.Size = graphRes.Size with { Height = Math.Max(graphRes.Size.Height, graphRes.ContentHeight + graphBottomMargin) };
             graphRes.Draw();
 
             graphHP.Clear();
@@ -783,9 +783,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     ? $"\r\nAbsorb: {absorbValue:##0.##} ({absorbValue / hpBase * 100:##0.##}% of base HP)"
                     : ""));
 
-            graphHP.Size = graphHP.Size with {Height = Math.Max(graphHP.Size.Height, graphHP.ContentHeight + graphBottomMargin)};
+            graphHP.Size = graphHP.Size with { Height = Math.Max(graphHP.Size.Height, graphHP.ContentHeight + graphBottomMargin) };
             graphHP.Draw();
-            
+
             graphEnd.Clear();
             var endRecValue = displayStats.EnduranceRecoveryNumeric;
             var endRecValueUncapped = displayStats.EnduranceRecoveryNumericUncapped;
@@ -799,7 +799,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     : $"{endRecValue:##0.##}/s End. ({displayStats.EnduranceRecoveryPercentage(false):##0.##}%) ({atName} End. recovery cap: {MidsContext.Character.Archetype.RecoveryCap * 100:##0.##}%)"
                 ) +
                 $"\r\nBase: {endRecBase:##0.##}/s");
-            
+
             graphEnd.AddItemPair("End Use",
                 $"{displayStats.EnduranceUsage:##0.##}/s",
                 0,
@@ -813,7 +813,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 displayStats.EnduranceMaxEnd,
                 $"{displayStats.EnduranceMaxEnd:##0.##} Maximum Endurance (base: {maxEndBase:##0.##})");
 
-            graphEnd.Size = graphEnd.Size with {Height = Math.Max(graphEnd.Size.Height, graphEnd.ContentHeight + graphBottomMargin)};
+            graphEnd.Size = graphEnd.Size with { Height = Math.Max(graphEnd.Size.Height, graphEnd.ContentHeight + graphBottomMargin) };
             graphEnd.Draw();
 
             ///////////////////////////////
@@ -825,15 +825,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             UpdatePerceptionData();
 
             ///////////////////////////////
-            
-            graphHaste.Visible = false;
-            graphToHit.Visible = false;
-            graphAccuracy.Visible = false;
-            graphDamage.Visible = false;
-            graphRange.Visible = false;
-            graphEndRdx.Visible = false;
-            graphHealBuff.Visible = false;
-            graphThreat.Visible = false;
 
             var k = 0;
             foreach (var c in panelTab2.Controls)
@@ -849,83 +840,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 }
 
                 var graphSettings = (CustomGraphStat.Settings.GraphSettingsExtended)(ctl.Tag ?? new CustomGraphStat.Settings.GraphSettingsExtended());
-                var cfgSettings = MidsContext.Config == null || k >= MidsContext.Config.CustomGraphSetting.Length
+                var cfgSettings = MidsContext.Config is not { CustomGraphSetting: null } || k >= MidsContext.Config.CustomGraphSetting.Length
                     ? new ConfigData.CustomGraphSettings()
                     : MidsContext.Config.CustomGraphSetting[k];
                 ctl.SetGraphItem(graphSettings.Stat, graphSettings.Mode, cfgSettings);
+                ctl.Draw();
 
                 k++;
             }
 
-            /*graphHaste.Clear();
-            graphHaste.AddItemPair("Haste",
-                $"{displayStats.BuffHaste(false):##0.##}%",
-                100,
-                Math.Max(0, displayStats.BuffHaste(false)),
-                Math.Max(0, displayStats.BuffHaste(true)),
-                GenericDataTooltip3(displayStats.BuffHaste(false), 100, displayStats.BuffHaste(true), "Haste"));
-
-            graphToHit.Clear();
-            graphToHit.AddItemPair("ToHit",
-                $"{displayStats.BuffToHit:##0.##}%",
-                0,
-                Math.Max(0, displayStats.BuffToHit),
-                GenericDataTooltip3(displayStats.BuffToHit, 0, displayStats.BuffToHit, "ToHit", "%", "", true));
-
-            graphAccuracy.Clear();
-            graphAccuracy.AddItemPair("Accuracy",
-                $"{displayStats.BuffAccuracy:##0.##}%",
-                0,
-                Math.Max(0, displayStats.BuffAccuracy),
-                GenericDataTooltip3(displayStats.BuffAccuracy, 0, displayStats.BuffAccuracy, "Accuracy", "%", "", true));
-
-            graphDamage.Clear();
-            graphDamage.AddItemPair("Damage",
-                $"{displayStats.BuffDamage(false):##0.##}%",
-                100,
-                Math.Max(0, displayStats.BuffDamage(false)),
-                Math.Max(0, displayStats.BuffDamage(true)),
-                GenericDataTooltip3(displayStats.BuffDamage(false), 100, displayStats.BuffDamage(true), "Damage")
-                );
-
-            graphRange.Clear();
-            graphRange.AddItemPair("Range",
-                    $"{displayStats.RangePercent:##0.##}%",
-                    0,
-                    Math.Max(0, displayStats.RangePercent),
-                    GenericDataTooltip3(displayStats.RangePercent, 0, displayStats.RangePercent, "Range", "%", "", true)
-                );
-
-            graphEndRdx.Clear();
-            graphEndRdx.AddItemPair("EndRdx",
-                $"{displayStats.BuffEndRdx:##0.##}%",
-                0,
-                displayStats.BuffEndRdx,
-                GenericDataTooltip3(displayStats.BuffEndRdx, 0, displayStats.BuffEndRdx, "EndRdx"));
-
-            graphHealBuff.Clear();
-            graphHealBuff.AddItemPair("Heal",
-                $"{displayStats.BuffHeal:##0.##}%",
-                0,
-                Math.Max(0, displayStats.BuffHeal),
-                GenericDataTooltip3(displayStats.BuffHeal, 0, displayStats.BuffHeal, "Heal", "%", "", true));
-
-            graphThreat.Clear();
-            graphThreat.AddItemPair("Threat",
-                $"{displayStats.ThreatLevel:##0.##}",
-                MidsContext.Character.Archetype.BaseThreat * 100,
-                displayStats.ThreatLevel,
-                GenericDataTooltip3(displayStats.ThreatLevel, MidsContext.Character.Archetype.BaseThreat * 100, displayStats.ThreatLevel, "Threat"));
-
-            graphHaste.Draw();
-            graphToHit.Draw();
-            graphAccuracy.Draw();
-            graphDamage.Draw();
-            graphRange.Draw();
-            graphEndRdx.Draw();
-            graphHealBuff.Draw();
-            graphThreat.Draw();*/
- 
             ///////////////////////////////
 
             graphStatusProt.Clear();
@@ -937,22 +860,22 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             {
                 // Use Math.Abs() here instead of negative sign to prevent display of "-0"
                 graphStatusProt.AddItemPair($"{m}",
-                    $"{mezProtections[(int) m]:####0.##}",
+                    $"{mezProtections[(int)m]:####0.##}",
                     0,
-                    mezProtections[(int) m],
-                    $"{mezProtections[(int) m]:####0.##} Status protection to {m}");
+                    mezProtections[(int)m],
+                    $"{mezProtections[(int)m]:####0.##} Status protection to {m}");
 
                 graphStatusRes.AddItemPair($"{m}",
-                    $"{MidsContext.Character.Totals.MezRes[(int) m]:####0.##}%",
+                    $"{MidsContext.Character.Totals.MezRes[(int)m]:####0.##}%",
                     0,
-                    MidsContext.Character.Totals.MezRes[(int) m],
-                    $"{MidsContext.Character.Totals.MezRes[(int) m]:####0.##}% Status resistance to {m}");
+                    MidsContext.Character.Totals.MezRes[(int)m],
+                    $"{MidsContext.Character.Totals.MezRes[(int)m]:####0.##}% Status resistance to {m}");
             }
 
-            graphStatusProt.Size = graphStatusProt.Size with { Height = Math.Max(graphStatusProt.Size.Height, graphStatusProt.ContentHeight + graphBottomMargin)};
+            graphStatusProt.Size = graphStatusProt.Size with { Height = Math.Max(graphStatusProt.Size.Height, graphStatusProt.ContentHeight + graphBottomMargin) };
             graphStatusProt.Draw();
 
-            graphStatusRes.Size = graphStatusRes.Size with { Height = Math.Max(graphStatusRes.Size.Height, graphStatusRes.ContentHeight + graphBottomMargin)};
+            graphStatusRes.Size = graphStatusRes.Size with { Height = Math.Max(graphStatusRes.Size.Height, graphStatusRes.ContentHeight + graphBottomMargin) };
             graphStatusRes.Draw();
 
             ///////////////////////////////
@@ -962,10 +885,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     e == Enums.eEffectType.Defense
                         ? Statistics.MaxDefenseDebuffRes
                         : Statistics.MaxGenericDebuffRes,
-                    MidsContext.Character.Totals.DebuffRes[(int) e]))
+                    MidsContext.Character.Totals.DebuffRes[(int)e]))
                 .ToList();
 
-            var uncappedDebuffRes = DebuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int) e]).ToList();
+            var uncappedDebuffRes = DebuffEffectsList.Select(e => MidsContext.Character.Totals.DebuffRes[(int)e]).ToList();
             for (var i = 0; i < cappedDebuffRes.Count; i++)
             {
                 graphDebuffRes.AddItemPair($"{DebuffEffectsList[i]}",
@@ -977,7 +900,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 );
             }
 
-            graphDebuffRes.Size = graphDebuffRes.Size with { Height = Math.Max(graphDebuffRes.Size.Height, graphDebuffRes.ContentHeight + graphBottomMargin)};
+            graphDebuffRes.Size = graphDebuffRes.Size with { Height = Math.Max(graphDebuffRes.Size.Height, graphDebuffRes.ContentHeight + graphBottomMargin) };
             graphDebuffRes.Draw();
 
             graphElusivity.Clear();
@@ -999,6 +922,21 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             graphElusivity.Size = graphElusivity.Size with { Height = Math.Max(graphElusivity.Size.Height, graphElusivity.ContentHeight + graphBottomMargin) };
             graphElusivity.Draw();
+        }
+
+        private void label12_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void label12_MouseEnter(object sender, EventArgs e)
+        {
+            label12.ForeColor = Color.FromArgb(20, 177, 225);
+        }
+
+        private void label12_MouseLeave(object sender, EventArgs e)
+        {
+            label12.ForeColor = Color.Gainsboro;
         }
     }
 }

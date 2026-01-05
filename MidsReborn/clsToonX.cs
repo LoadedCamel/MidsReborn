@@ -950,6 +950,14 @@ namespace Mids_Reborn
                 Totals.FlySpd = 0;
             }
 
+            if (_selfBuffs.Damage.All(e => Math.Abs(e) < float.Epsilon))
+            {
+                for (var i = 0; i < _selfBuffs.Damage.Length; i++)
+                {
+                    _selfBuffs.Damage[i] += _selfEnhance.Damage[i];
+                }
+            }
+
             var minDmgBuff = _selfBuffs.Damage[1..8].Min();
             var maxDmgBuff = _selfBuffs.Damage[1..8].Max();
             var avgDmgBuff = _selfBuffs.Damage[1..8].Average();

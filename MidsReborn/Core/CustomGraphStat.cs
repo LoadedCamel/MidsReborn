@@ -2,10 +2,9 @@
 using Mids_Reborn.UI.Controls;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
-using static Mids_Reborn.Core.ConfigData;
-using static Mids_Reborn.Core.Utils.Helpers;
 
 namespace Mids_Reborn.Core
 {
@@ -112,6 +111,7 @@ namespace Mids_Reborn.Core
         public static CtlMultiGraph GenerateGraph(eCustomGraphStat stat, eCustomGraphMode mode, string? ctlName = null)
         {
             var settings = Settings.Get(stat);
+            var settingsExt = Settings.GraphSettingsExtended.FromGraphSettings(settings, stat, mode);
 
             return new CtlMultiGraph
             {
@@ -136,6 +136,7 @@ namespace Mids_Reborn.Core
                 ForeColor = Color.WhiteSmoke,
                 Highlight = true,
                 ItemFontSizeOverride = 0,
+                ItemHeight = 13,
                 Lines = true,
                 MarkerValue = 0,
                 Max = settings.Max,
@@ -151,13 +152,13 @@ namespace Mids_Reborn.Core
                 PaddingY = 6,
                 RulerPos = CtlMultiGraph.RulerPosition.Top,
                 ScaleHeight = 32,
-                ScaleIndex = 11,
+                ScaleIndex = settingsExt.ScaleIndex,
                 SecondaryLabelPosition = CtlMultiGraph.Alignment.Right,
                 ShowScale = false,
                 SingleLineLabels = true,
                 Size = MidsContext.Config?.UseOldTotalsWindow == true ? new Size(300, 15) : new Size(526, 27),
                 Style = settings.Style == Settings.GraphStyle.EnhOnly ? Enums.GraphStyle.enhOnly : Enums.GraphStyle.Stacked,
-                Tag = Settings.GraphSettingsExtended.FromGraphSettings(settings, stat, mode),
+                Tag = settingsExt,
                 TextWidth = MidsContext.Config?.UseOldTotalsWindow == true ? 125 : 187
             };
         }
@@ -1178,6 +1179,30 @@ namespace Mids_Reborn.Core
 
         public static class Settings
         {
+            private static readonly int[] Scales =
+            [
+                1,
+                2,
+                3,
+                5,
+                10,
+                25,
+                50,
+                75,
+                100,
+                150,
+                225,
+                300,
+                450,
+                600,
+                900,
+                1200,
+                2400,
+                3000,
+                3600,
+                4000
+            ];
+
             public enum GraphStyle
             {
                 EnhOnly, // Enh
@@ -1231,7 +1256,7 @@ namespace Mids_Reborn.Core
                         },
                         Max = s.Max,
                         UnitSuffix = s.UnitSuffix,
-                        UnitType = s.UnitType
+                        UnitType = s.UnitType,
                     };
                 }
             }
@@ -1244,6 +1269,7 @@ namespace Mids_Reborn.Core
                 public StatUnitType UnitType;
                 public string? UnitSuffix;
                 public float Max;
+                public int ScaleIndex;
                 public eCustomGraphStat Stat;
                 public eCustomGraphMode Mode;
 
@@ -1268,11 +1294,25 @@ namespace Mids_Reborn.Core
                         },
                         Max = s.Max,
                         Mode = mode,
+                        ScaleIndex = GetScaleIndex(s.Max),
                         Stat = stat,
                         UnitSuffix = s.UnitSuffix,
                         UnitType = s.UnitType
                     };
                 }
+            }
+
+            internal static int GetScaleIndex(float graphMax)
+            {
+                for (var i = 0; i < Scales.Length; i++)
+                {
+                    if (graphMax <= Scales[i])
+                    {
+                        return i;
+                    }
+                }
+
+                return Scales.Length - 1;
             }
 
             public static GraphSettings Get(eCustomGraphStat stat)
@@ -1302,7 +1342,7 @@ namespace Mids_Reborn.Core
                     eCustomGraphStat.JumpHeight => new GraphSettings { ValueNames = statNames, Style = GraphStyle.ThreeStatsStacked, Appearance = colors, UnitType = StatUnitType.Distance, Max = 225 },
                     eCustomGraphStat.StealthPvE or eCustomGraphStat.StealthPvP => new GraphSettings { ValueNames = statNames, Style = GraphStyle.ThreeStatsStacked, Appearance = colors, UnitType = StatUnitType.Distance, Max = 1200 },
                     eCustomGraphStat.PerceptionRadius => new GraphSettings { ValueNames = statNames, Style = GraphStyle.ThreeStatsStacked, Appearance = colors, UnitType = StatUnitType.Distance, Max = 1200 },
-                    eCustomGraphStat.Recharge => new GraphSettings { ValueNames = statNames, Style = GraphStyle.ThreeStatsStacked, Appearance = colors, UnitType = StatUnitType.Percentage, Max = 100 },
+                    eCustomGraphStat.Recharge => new GraphSettings { ValueNames = statNames, Style = GraphStyle.ThreeStatsStacked, Appearance = colors, UnitType = StatUnitType.Percentage, Max = 400 },
                     eCustomGraphStat.Damage => new GraphSettings { ValueNames = statNames, Style = GraphStyle.ThreeStatsStacked, Appearance = colors, UnitType = StatUnitType.Percentage, Max = 900 },
                     eCustomGraphStat.Range => new GraphSettings { ValueNames = statNames, Style = GraphStyle.EnhOnly, Appearance = colors, UnitType = StatUnitType.Percentage, Max = 300 },
                     eCustomGraphStat.Heal => new GraphSettings { ValueNames = statNames, Style = GraphStyle.EnhOnly, Appearance = colors, UnitType = StatUnitType.Percentage, Max = 300 },
