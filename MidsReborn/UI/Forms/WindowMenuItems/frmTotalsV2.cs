@@ -335,6 +335,32 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             panelTab2.ResumeLayout(true);
         }
 
+        private void DrawCustomGraphs()
+        {
+            var k = 0;
+            foreach (var c in panelTab2.Controls)
+            {
+                if (c is not CtlMultiGraph ctl)
+                {
+                    continue;
+                }
+
+                if (!ctl.Name.StartsWith("graphCustom"))
+                {
+                    continue;
+                }
+
+                var graphSettings = (CustomGraphStat.Settings.GraphSettingsExtended)(ctl.Tag ?? new CustomGraphStat.Settings.GraphSettingsExtended());
+                var cfgSettings = MidsContext.Config is { CustomGraphSetting: null } || k >= MidsContext.Config!.CustomGraphSetting.Length
+                    ? new ConfigData.CustomGraphSettings()
+                    : MidsContext.Config.CustomGraphSetting[k];
+                ctl.SetGraphItem(graphSettings.Stat, graphSettings.Mode, cfgSettings);
+                ctl.Draw();
+
+                k++;
+            }
+        }
+
         private void CharacterOnAlignmentChanged(object? sender, Enums.Alignment e)
         {
             if (e is Enums.Alignment.Hero or Enums.Alignment.Vigilante or Enums.Alignment.Resistance)
@@ -740,7 +766,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     Math.Max(0, resValue),
                     Math.Max(0, resValue),
                     Math.Max(0, resValueUncapped),
-                    resValueUncapped > resValue & resValue > 0
+                    (resValueUncapped > resValue) & (resValue > 0)
                         ? $"{resValueUncapped:##0.##}% {FormatVectorType(typeof(Enums.eDamage), i)} resistance (capped at {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)"
                         : $"{resValue:##0.##}% {FormatVectorType(typeof(Enums.eDamage), i)} resistance ({atName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)");
             }
@@ -757,7 +783,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 Math.Max(0, regenBase),
                 Math.Max(0, regenValue),
                 Math.Max(0, regenValueUncapped),
-                (regenValueUncapped > regenValue & regenValue > 0
+                ((regenValueUncapped > regenValue) & (regenValue > 0)
                     ? $"{regenValueUncapped:##0.##}% Regeneration, capped at {regenValue:##0.##}%"
                     : $"{regenValue:##0.##}% Regeneration"
                 ) +
@@ -773,7 +799,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 Math.Max(0, hpValue),
                 Math.Max(0, hpValueUncapped),
                 Math.Max(0, absorbValue),
-                (hpValueUncapped > hpValue & hpValue > 0
+                ((hpValueUncapped > hpValue) & (hpValue > 0)
                     ? $"{hpValueUncapped:##0.##} HP, capped at {MidsContext.Character.Archetype.HPCap} HP"
                     : $"{hpValue:##0.##} HP ({atName} HP cap: {MidsContext.Character.Archetype.HPCap} HP)"
 
@@ -794,7 +820,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 Math.Max(0, endRecBase),
                 Math.Max(0, endRecValue),
                 Math.Max(0, endRecValueUncapped),
-                (endRecValueUncapped > endRecValue & endRecValue > 0
+                ((endRecValueUncapped > endRecValue) & (endRecValue > 0)
                     ? $"{endRecValueUncapped:##0.##}/s End. ({displayStats.EnduranceRecoveryPercentage(true):##0.##}%), capped at {MidsContext.Character.Archetype.RecoveryCap * 100:##0.##}%"
                     : $"{endRecValue:##0.##}/s End. ({displayStats.EnduranceRecoveryPercentage(false):##0.##}%) ({atName} End. recovery cap: {MidsContext.Character.Archetype.RecoveryCap * 100:##0.##}%)"
                 ) +
@@ -819,35 +845,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             ///////////////////////////////
 
             UpdateMovementData();
-
-            ///////////////////////////////
-
             UpdatePerceptionData();
-
-            ///////////////////////////////
-
-            var k = 0;
-            foreach (var c in panelTab2.Controls)
-            {
-                if (c is not CtlMultiGraph ctl)
-                {
-                    continue;
-                }
-
-                if (!ctl.Name.StartsWith("graphCustom"))
-                {
-                    continue;
-                }
-
-                var graphSettings = (CustomGraphStat.Settings.GraphSettingsExtended)(ctl.Tag ?? new CustomGraphStat.Settings.GraphSettingsExtended());
-                var cfgSettings = MidsContext.Config is not { CustomGraphSetting: null } || k >= MidsContext.Config.CustomGraphSetting.Length
-                    ? new ConfigData.CustomGraphSettings()
-                    : MidsContext.Config.CustomGraphSetting[k];
-                ctl.SetGraphItem(graphSettings.Stat, graphSettings.Mode, cfgSettings);
-                ctl.Draw();
-
-                k++;
-            }
+            DrawCustomGraphs();
 
             ///////////////////////////////
 
@@ -926,7 +925,23 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void label12_Click(object sender, EventArgs e)
         {
+            // Avoid sub-window to show behind totals if TopMost is set
+            var topMost = TopMost;
+            TopMost = false;
+            ibTopMost.ToggleState = TopMost ? ImageButtonEx.States.ToggledOn : ImageButtonEx.States.ToggledOff;
 
+            using var fCustomizeGraphs = new frmCustomGraphsSelector();
+            var ret = fCustomizeGraphs.ShowDialog(this);
+            TopMost = topMost;
+            ibTopMost.ToggleState = TopMost ? ImageButtonEx.States.ToggledOn : ImageButtonEx.States.ToggledOff;
+
+            if (ret != DialogResult.OK)
+            {
+                return;
+            }
+
+            PrepareCustomGraphs();
+            DrawCustomGraphs();
         }
 
         private void label12_MouseEnter(object sender, EventArgs e)

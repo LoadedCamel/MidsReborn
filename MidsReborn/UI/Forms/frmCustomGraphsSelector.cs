@@ -18,6 +18,7 @@ namespace Mids_Reborn.UI.Forms
         public frmCustomGraphsSelector()
         {
             InitializeComponent();
+            Icon = MRBResourceLib.Resources.MRB_Icon_Concept;
         }
 
         private bool UniqueStat(CustomGraphStat.eCustomGraphStat stat)
@@ -41,6 +42,7 @@ namespace Mids_Reborn.UI.Forms
                 : MidsContext.Config.CustomGraphSetting.Clone() as ConfigData.CustomGraphSettings[];
 
             CalcAvailableStats();
+            RefreshLvs();
         }
 
         private void CalcAvailableStats()

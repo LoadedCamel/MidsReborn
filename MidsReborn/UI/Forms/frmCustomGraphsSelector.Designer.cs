@@ -44,57 +44,54 @@
             // label1
             // 
             label1.AutoSize = true;
+            label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, 0);
             label1.Location = new System.Drawing.Point(32, 37);
             label1.Name = "label1";
-            label1.Size = new System.Drawing.Size(158, 15);
+            label1.Size = new System.Drawing.Size(153, 15);
             label1.TabIndex = 0;
             label1.Text = "Select up to 8 items to show.";
             // 
             // lvAvailableStats
             // 
-            lvAvailableStats.AllowColumnReorder = true;
             lvAvailableStats.BackColor = System.Drawing.SystemColors.ControlDark;
             lvAvailableStats.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader1 });
             lvAvailableStats.FullRowSelect = true;
-            lvAvailableStats.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            lvAvailableStats.LabelWrap = false;
+            lvAvailableStats.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             lvAvailableStats.Location = new System.Drawing.Point(49, 69);
             lvAvailableStats.MultiSelect = false;
             lvAvailableStats.Name = "lvAvailableStats";
+            lvAvailableStats.OwnerDraw = true;
             lvAvailableStats.Size = new System.Drawing.Size(313, 306);
             lvAvailableStats.TabIndex = 1;
             lvAvailableStats.UseCompatibleStateImageBehavior = false;
-            lvAvailableStats.View = System.Windows.Forms.View.List;
+            lvAvailableStats.View = System.Windows.Forms.View.Details;
             lvAvailableStats.VirtualMode = true;
             lvAvailableStats.RetrieveVirtualItem += lvAvailableStats_RetrieveVirtualItem;
             // 
             // columnHeader1
             // 
             columnHeader1.Text = "Stat";
-            columnHeader1.Width = 200;
             // 
             // lvActiveStats
             // 
-            lvActiveStats.AllowColumnReorder = true;
             lvActiveStats.BackColor = System.Drawing.SystemColors.ControlDark;
             lvActiveStats.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader2 });
             lvActiveStats.FullRowSelect = true;
-            lvActiveStats.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.Nonclickable;
-            lvActiveStats.LabelWrap = false;
+            lvActiveStats.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             lvActiveStats.Location = new System.Drawing.Point(461, 69);
             lvActiveStats.MultiSelect = false;
             lvActiveStats.Name = "lvActiveStats";
+            lvActiveStats.OwnerDraw = true;
             lvActiveStats.Size = new System.Drawing.Size(313, 306);
             lvActiveStats.TabIndex = 2;
             lvActiveStats.UseCompatibleStateImageBehavior = false;
-            lvActiveStats.View = System.Windows.Forms.View.List;
+            lvActiveStats.View = System.Windows.Forms.View.Details;
             lvActiveStats.VirtualMode = true;
             lvActiveStats.RetrieveVirtualItem += lvActiveStats_RetrieveVirtualItem;
             // 
             // columnHeader2
             // 
             columnHeader2.Text = "Stat";
-            columnHeader2.Width = 200;
             // 
             // btnOk
             // 
@@ -172,6 +169,7 @@
             Controls.Add(label1);
             DoubleBuffered = true;
             Name = "frmCustomGraphsSelector";
+            ShowInTaskbar = false;
             Text = "Select custom graphs";
             Load += frmCustomGraphsSelector_Load;
             ResumeLayout(false);
@@ -182,14 +180,14 @@
 
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.ListView lvAvailableStats;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ListView lvActiveStats;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnUp;
         private System.Windows.Forms.Button btnDown;
+        private System.Windows.Forms.ColumnHeader columnHeader1;
+        private System.Windows.Forms.ColumnHeader columnHeader2;
     }
 }
