@@ -39,13 +39,14 @@
             btnRemove = new System.Windows.Forms.Button();
             btnUp = new System.Windows.Forms.Button();
             btnDown = new System.Windows.Forms.Button();
+            label2 = new System.Windows.Forms.Label();
             SuspendLayout();
             // 
             // label1
             // 
             label1.AutoSize = true;
             label1.Font = new System.Drawing.Font("Segoe UI", 9F, System.Drawing.FontStyle.Italic, System.Drawing.GraphicsUnit.Point, 0);
-            label1.Location = new System.Drawing.Point(32, 37);
+            label1.Location = new System.Drawing.Point(49, 38);
             label1.Name = "label1";
             label1.Size = new System.Drawing.Size(153, 15);
             label1.TabIndex = 0;
@@ -54,13 +55,13 @@
             // lvAvailableStats
             // 
             lvAvailableStats.BackColor = System.Drawing.SystemColors.ControlDark;
+            lvAvailableStats.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             lvAvailableStats.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader1 });
             lvAvailableStats.FullRowSelect = true;
             lvAvailableStats.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             lvAvailableStats.Location = new System.Drawing.Point(49, 69);
             lvAvailableStats.MultiSelect = false;
             lvAvailableStats.Name = "lvAvailableStats";
-            lvAvailableStats.OwnerDraw = true;
             lvAvailableStats.Size = new System.Drawing.Size(313, 306);
             lvAvailableStats.TabIndex = 1;
             lvAvailableStats.UseCompatibleStateImageBehavior = false;
@@ -71,27 +72,30 @@
             // columnHeader1
             // 
             columnHeader1.Text = "Stat";
+            columnHeader1.Width = 275;
             // 
             // lvActiveStats
             // 
             lvActiveStats.BackColor = System.Drawing.SystemColors.ControlDark;
+            lvActiveStats.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
             lvActiveStats.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader2 });
             lvActiveStats.FullRowSelect = true;
             lvActiveStats.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
             lvActiveStats.Location = new System.Drawing.Point(461, 69);
             lvActiveStats.MultiSelect = false;
             lvActiveStats.Name = "lvActiveStats";
-            lvActiveStats.OwnerDraw = true;
             lvActiveStats.Size = new System.Drawing.Size(313, 306);
             lvActiveStats.TabIndex = 2;
             lvActiveStats.UseCompatibleStateImageBehavior = false;
             lvActiveStats.View = System.Windows.Forms.View.Details;
             lvActiveStats.VirtualMode = true;
             lvActiveStats.RetrieveVirtualItem += lvActiveStats_RetrieveVirtualItem;
+            lvActiveStats.SelectedIndexChanged += lvActiveStats_SelectedIndexChanged;
             // 
             // columnHeader2
             // 
             columnHeader2.Text = "Stat";
+            columnHeader2.Width = 275;
             // 
             // btnOk
             // 
@@ -153,11 +157,21 @@
             btnDown.UseVisualStyleBackColor = true;
             btnDown.Click += btnDown_Click;
             // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new System.Drawing.Point(461, 38);
+            label2.Name = "label2";
+            label2.Size = new System.Drawing.Size(86, 15);
+            label2.TabIndex = 9;
+            label2.Text = "Selected items:";
+            // 
             // frmCustomGraphsSelector
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(862, 450);
+            Controls.Add(label2);
             Controls.Add(btnDown);
             Controls.Add(btnUp);
             Controls.Add(btnRemove);
@@ -189,5 +203,6 @@
         private System.Windows.Forms.Button btnDown;
         private System.Windows.Forms.ColumnHeader columnHeader1;
         private System.Windows.Forms.ColumnHeader columnHeader2;
+        private System.Windows.Forms.Label label2;
     }
 }

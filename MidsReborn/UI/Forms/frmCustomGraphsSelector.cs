@@ -15,6 +15,9 @@ namespace Mids_Reborn.UI.Forms
         private CustomGraphStat.eCustomGraphStat[]? SelectedStats = [];
         private ConfigData.CustomGraphSettings[]? SelectedSettings = [];
 
+        private int? AvailableStatSelectedItem = null;
+        private int? SelectedStatSelectedItem = null;
+
         public frmCustomGraphsSelector()
         {
             InitializeComponent();
@@ -79,17 +82,22 @@ namespace Mids_Reborn.UI.Forms
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if (lvActiveStats.SelectedIndices.Count < 1)
+            if (lvAvailableStats.SelectedIndices.Count < 1)
             {
                 return;
             }
 
-            if (lvActiveStats.SelectedIndices[0] < 0)
+            if (lvAvailableStats.SelectedIndices[0] < 0)
             {
                 return;
             }
 
-            ConfigData.CustomGraphSettings statSettings = AvailableStats[lvAvailableStats.SelectedIndices[0]] switch
+            if ((SelectedStats ?? []).Length >= 8)
+            {
+                return;
+            }
+
+            var statSettings = AvailableStats[lvAvailableStats.SelectedIndices[0]] switch
             {
                 CustomGraphStat.eCustomGraphStat.EnhAccuracy => new ConfigData.CustomGraphSettings
                 {
@@ -129,7 +137,8 @@ namespace Mids_Reborn.UI.Forms
                 },
                 CustomGraphStat.eCustomGraphStat.EnhMez => new ConfigData.CustomGraphSettings
                 {
-                    EffectType = Enums.eEffectType.Enhancement, EffectTypeAux = Enums.eEffectType.Mez
+                    EffectType = Enums.eEffectType.Enhancement,
+                    EffectTypeAux = Enums.eEffectType.Mez
                 },
                 CustomGraphStat.eCustomGraphStat.EnhPerceptionRadius => new ConfigData.CustomGraphSettings
                 {
@@ -161,7 +170,8 @@ namespace Mids_Reborn.UI.Forms
                 },
                 CustomGraphStat.eCustomGraphStat.Resistance => new ConfigData.CustomGraphSettings
                 {
-                    EffectType = Enums.eEffectType.Enhancement, EffectTypeAux = Enums.eEffectType.Resistance
+                    EffectType = Enums.eEffectType.Enhancement,
+                    EffectTypeAux = Enums.eEffectType.Resistance
                 },
                 CustomGraphStat.eCustomGraphStat.Regeneration => new ConfigData.CustomGraphSettings
                 {
@@ -170,11 +180,13 @@ namespace Mids_Reborn.UI.Forms
                 },
                 CustomGraphStat.eCustomGraphStat.MaxHP => new ConfigData.CustomGraphSettings
                 {
-                    EffectMode = CustomGraphStat.eCustomGraphMode.Single, EffectType = Enums.eEffectType.HitPoints,
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.HitPoints,
                 },
                 CustomGraphStat.eCustomGraphStat.Absorb => new ConfigData.CustomGraphSettings
                 {
-                    EffectMode = CustomGraphStat.eCustomGraphMode.Single, EffectType = Enums.eEffectType.Absorb
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.Absorb
                 },
                 CustomGraphStat.eCustomGraphStat.EndRec => new ConfigData.CustomGraphSettings
                 {
@@ -200,11 +212,13 @@ namespace Mids_Reborn.UI.Forms
                 },
                 CustomGraphStat.eCustomGraphStat.JumpHeight => new ConfigData.CustomGraphSettings
                 {
-                    EffectMode = CustomGraphStat.eCustomGraphMode.Single, EffectType = Enums.eEffectType.JumpHeight
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.JumpHeight
                 },
                 CustomGraphStat.eCustomGraphStat.SpeedFlying => new ConfigData.CustomGraphSettings
                 {
-                    EffectMode = CustomGraphStat.eCustomGraphMode.Single, EffectType = Enums.eEffectType.SpeedFlying
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.SpeedFlying
                 },
                 CustomGraphStat.eCustomGraphStat.StealthPvE => new ConfigData.CustomGraphSettings
                 {
@@ -229,15 +243,18 @@ namespace Mids_Reborn.UI.Forms
                 },
                 CustomGraphStat.eCustomGraphStat.ToHit => new ConfigData.CustomGraphSettings
                 {
-                    EffectMode = CustomGraphStat.eCustomGraphMode.Single, EffectType = Enums.eEffectType.ToHit
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.ToHit
                 },
                 CustomGraphStat.eCustomGraphStat.Accuracy => new ConfigData.CustomGraphSettings
                 {
-                    EffectMode = CustomGraphStat.eCustomGraphMode.Single, EffectType = Enums.eEffectType.Accuracy
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.Accuracy
                 },
                 CustomGraphStat.eCustomGraphStat.Damage => new ConfigData.CustomGraphSettings
                 {
-                    EffectMode = CustomGraphStat.eCustomGraphMode.Single, EffectType = Enums.eEffectType.DamageBuff
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.DamageBuff
                 },
                 CustomGraphStat.eCustomGraphStat.Range => new ConfigData.CustomGraphSettings
                 {
@@ -259,7 +276,8 @@ namespace Mids_Reborn.UI.Forms
                 },
                 CustomGraphStat.eCustomGraphStat.Threat => new ConfigData.CustomGraphSettings
                 {
-                    EffectMode = CustomGraphStat.eCustomGraphMode.Single, EffectType = Enums.eEffectType.ThreatLevel
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.ThreatLevel
                 },
                 CustomGraphStat.eCustomGraphStat.StatusProtection => new ConfigData.CustomGraphSettings
                 {
@@ -276,7 +294,7 @@ namespace Mids_Reborn.UI.Forms
                 CustomGraphStat.eCustomGraphStat.Elusivity => new ConfigData.CustomGraphSettings
                 {
                     EffectType = Enums.eEffectType.Elusivity
-                }, 
+                },
                 _ => new ConfigData.CustomGraphSettings()
             };
 
@@ -291,18 +309,18 @@ namespace Mids_Reborn.UI.Forms
                 {
                     return;
                 }
-                
+
                 statSettings = statOptions.Settings;
             }
 
             SelectedStats = (SelectedStats ?? [])
-                .Append(AvailableStats[lvActiveStats.SelectedIndices[0]])
+                .Append(AvailableStats[lvAvailableStats.SelectedIndices[0]])
                 .ToArray();
 
             SelectedSettings = (SelectedSettings ?? [])
                 .Append(statSettings)
                 .ToArray();
-            
+
             CalcAvailableStats();
             RefreshLvs();
         }
@@ -352,7 +370,10 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
+            var selectedItem = lvActiveStats.SelectedIndices[0];
+
             (SelectedStats[lvActiveStats.SelectedIndices[0]], SelectedStats[lvActiveStats.SelectedIndices[0] - 1]) = (SelectedStats[lvActiveStats.SelectedIndices[0] - 1], SelectedStats[lvActiveStats.SelectedIndices[0]]);
+            SelectedStatSelectedItem = selectedItem - 1;
 
             RefreshLvs();
         }
@@ -374,7 +395,10 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
+            var selectedItem = lvActiveStats.SelectedIndices[0];
+
             (SelectedStats[lvActiveStats.SelectedIndices[0]], SelectedStats[lvActiveStats.SelectedIndices[0] + 1]) = (SelectedStats[lvActiveStats.SelectedIndices[0] + 1], SelectedStats[lvActiveStats.SelectedIndices[0]]);
+            SelectedStatSelectedItem = selectedItem + 1;
 
             RefreshLvs();
         }
@@ -389,7 +413,7 @@ namespace Mids_Reborn.UI.Forms
             var stat = SelectedStats[e.ItemIndex];
             var statOptions = SelectedSettings[e.ItemIndex];
 
-            var label = "";
+            string label;
 
             if (stat is CustomGraphStat.eCustomGraphStat.DebuffResistance
                 or CustomGraphStat.eCustomGraphStat.Defense or CustomGraphStat.eCustomGraphStat.Elusivity
@@ -414,7 +438,37 @@ namespace Mids_Reborn.UI.Forms
                 label = CustomGraphStat.Names.CustomStatNameLong(SelectedStats[e.ItemIndex]);
             }
 
-            e.Item = new ListViewItem(label);
+            e.Item = new ListViewItem(label)
+            {
+                Selected = SelectedStatSelectedItem != null && e.ItemIndex == SelectedStatSelectedItem
+            };
+        }
+
+        private void lvActiveStats_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (lvActiveStats.SelectedIndices.Count <= 0)
+            {
+                SelectedStatSelectedItem = null;
+                return;
+            }
+
+            SelectedStatSelectedItem = lvActiveStats.SelectedIndices[0];
+
+            if (lvActiveStats.SelectedIndices[0] == 0)
+            {
+                btnUp.Enabled = false;
+                btnDown.Enabled = true;
+            }
+            else if (lvActiveStats.SelectedIndices[0] >= Math.Max(0, (SelectedStats ?? []).Length - 1))
+            {
+                btnUp.Enabled = true;
+                btnDown.Enabled = false;
+            }
+            else
+            {
+                btnUp.Enabled = true;
+                btnDown.Enabled = true;
+            }
         }
     }
 }

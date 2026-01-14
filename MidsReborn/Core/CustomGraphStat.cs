@@ -2,7 +2,6 @@
 using Mids_Reborn.UI.Controls;
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 
@@ -61,9 +60,18 @@ namespace Mids_Reborn.Core
             Average
         }
 
+        /// <summary>
+        /// Usable damage vectors (all available), as Enums.eDamage
+        /// </summary>
         private static readonly Enums.eDamage[] DamageVectors = Enum.GetValues<Enums.eDamage>();
+        /// <summary>
+        /// Usable damage vectors (all available), as string
+        /// </summary>
         private static readonly string[] DamageVectorsNames = Enum.GetNames<Enums.eDamage>();
         
+        /// <summary>
+        /// Unused defense vectors
+        /// </summary>
         private static readonly int[] ExcludedDefVectors = new[]
         {
             Enums.eDamage.None,
@@ -74,6 +82,9 @@ namespace Mids_Reborn.Core
             Enums.eDamage.Unique3
         }.Cast<int>().ToArray();
         
+        /// <summary>
+        /// Unused resistance vectors
+        /// </summary>
         private static readonly int[] ExcludedResVectors = new[]
         {
             Enums.eDamage.None,
@@ -86,6 +97,9 @@ namespace Mids_Reborn.Core
             Enums.eDamage.Unique3
         }.Cast<int>().ToArray();
         
+        /// <summary>
+        /// Unused elusivity vectors
+        /// </summary>
         private static readonly int[] ExcludedElusivityVectors = new[]
         {
             Enums.eDamage.Special,
@@ -94,6 +108,9 @@ namespace Mids_Reborn.Core
             Enums.eDamage.Unique3
         }.Cast<int>().ToArray();
 
+        /// <summary>
+        /// Used mez types
+        /// </summary>
         private static readonly Enums.eMez[] MezList =
         [
             Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep, Enums.eMez.Immobilized,
@@ -101,6 +118,9 @@ namespace Mids_Reborn.Core
             Enums.eMez.Taunt, Enums.eMez.Placate, Enums.eMez.Teleport
         ];
 
+        /// <summary>
+        /// Used debuff types, for debuff resistances
+        /// </summary>
         private static readonly Enums.eEffectType[] DebuffEffectsList =
         [
             Enums.eEffectType.Defense, Enums.eEffectType.Endurance, Enums.eEffectType.Recovery,
@@ -108,6 +128,13 @@ namespace Mids_Reborn.Core
             Enums.eEffectType.SpeedRunning, Enums.eEffectType.Regeneration
         ];
 
+        /// <summary>
+        /// Create a custom graphs from a set of settings
+        /// </summary>
+        /// <param name="stat">Statistics type to display</param>
+        /// <param name="mode">Display mode (min, max, average, single vector), for multi vectors e.g. defense</param>
+        /// <param name="ctlName">Optional specific control name, default is graphCustom + short name of stat</param>
+        /// <returns>A CtlMultiGraph object that monitors a single value</returns>
         public static CtlMultiGraph GenerateGraph(eCustomGraphStat stat, eCustomGraphMode mode, string? ctlName = null)
         {
             var settings = Settings.Get(stat);
@@ -163,6 +190,13 @@ namespace Mids_Reborn.Core
             };
         }
 
+        /// <summary>
+        /// Set up displayed item, values, tooltip
+        /// </summary>
+        /// <param name="ctl">(Implicit - extension method) Target control</param>
+        /// <param name="stat">Statistic type</param>
+        /// <param name="mode">Display mode (min, max, average, single vector), for multi vectors e.g. defense</param>
+        /// <param name="cfgSettings">Graph settings to apply</param>
         public static void SetGraphItem(this CtlMultiGraph ctl, eCustomGraphStat stat, eCustomGraphMode mode, ConfigData.CustomGraphSettings cfgSettings)
         {
             var displayStats = MidsContext.Character.DisplayStats;
@@ -170,8 +204,8 @@ namespace Mids_Reborn.Core
 
             var longName = Names.CustomStatNameLong(stat);
             
-            var val = 0f;
-            var suffix = "";
+            float val;
+            string suffix;
             
             var hpValue = displayStats.HealthHitpointsNumeric(false);
             var hpValueUncapped = displayStats.HealthHitpointsNumeric(true);
@@ -779,7 +813,17 @@ namespace Mids_Reborn.Core
             ctl.ResumeLayout(true);
         }
 
-        // Import from frmTotalsV2
+        /// <summary>
+        /// Generate a generic tooltip text for base, main and uncapped values
+        /// </summary>
+        /// <param name="value">Actual value</param>
+        /// <param name="valueBase">Base value</param>
+        /// <param name="valueUncapped">Uncapped value</param>
+        /// <param name="statName">Statistics name</param>
+        /// <param name="percentageSign">Use percentage sign for values</param>
+        /// <param name="movementUnit">Movement unit (speed or distance)</param>
+        /// <param name="plusSignEnabled">Show + sign for positive values (e.g. for enhancements effects)</param>
+        /// <returns>Tooltip string</returns>
         public static string GenericDataTooltip3(float value, float valueBase, float valueUncapped, string statName, string percentageSign = "%", string movementUnit = "", bool plusSignEnabled = false)
         {
             return (valueUncapped > value
@@ -796,6 +840,11 @@ namespace Mids_Reborn.Core
 
         public static class Names
         {
+            /// <summary>
+            /// Stat name to short text converter
+            /// </summary>
+            /// <param name="stat">Statistic name</param>
+            /// <returns>Short name for specified statistic</returns>
             public static string CustomStatNameShort(eCustomGraphStat stat)
             {
                 return stat switch
@@ -842,6 +891,11 @@ namespace Mids_Reborn.Core
                 };
             }
 
+            /// <summary>
+            /// Stat name to long text converter
+            /// </summary>
+            /// <param name="stat">Statistic name</param>
+            /// <returns>Long name for specified statistic</returns>
             public static string CustomStatNameLong(eCustomGraphStat stat)
             {
                 return stat switch
@@ -860,7 +914,7 @@ namespace Mids_Reborn.Core
                     eCustomGraphStat.Defense => "Enhancement(Defense)",
                     eCustomGraphStat.Resistance => "Enhancement(Resistance)",
                     eCustomGraphStat.Regeneration => "Enhancement(Regen)",
-                    eCustomGraphStat.MaxHP => "Enh(MaxHP)",
+                    eCustomGraphStat.MaxHP => "Enhancement(MaxHP)",
                     eCustomGraphStat.Absorb => "Absorb",
                     eCustomGraphStat.EndRec => "End Rec",
                     eCustomGraphStat.EndUse => "End Use",
@@ -901,11 +955,21 @@ namespace Mids_Reborn.Core
                 public Color Highlight;
             }
 
+            /// <summary>
+            /// Get graph highlight (hover) back color.
+            /// Static value for all, depending only on using old window style or new.
+            /// </summary>
+            /// <returns>Graph highlight color</returns>
             private static Color GetHighlightBackColor()
             {
                 return MidsContext.Config?.UseOldTotalsWindow == true ? Color.Gray : Color.FromArgb(128, 128, 255);
             }
 
+            /// <summary>
+            /// Get color theme for graph, for specific stat
+            /// </summary>
+            /// <param name="stat">Statistic name</param>
+            /// <returns>Colors template containing up to base, enhanced, overcap, fade end, highlight, border colors (nulls allowed). Defaults are greyscale.</returns>
             public static GraphColors GetTemplate(eCustomGraphStat stat)
             {
                 var highlightColor = GetHighlightBackColor();
@@ -1235,6 +1299,10 @@ namespace Mids_Reborn.Core
                 public string? UnitSuffix;
                 public float Max;
 
+                /// <summary>
+                /// Convert a <see cref="GraphSettingsExtended">GraphSettingsExtended struct</see> into a GraphSettings one
+                /// </summary>
+                /// <param name="s">A GraphSettingsExtended struct object</param>
                 public static GraphSettings FromGraphSettingsExtended(GraphSettingsExtended s)
                 {
                     return new GraphSettings
@@ -1273,6 +1341,12 @@ namespace Mids_Reborn.Core
                 public eCustomGraphStat Stat;
                 public eCustomGraphMode Mode;
 
+                /// <summary>
+                /// Converts and expand a <see cref="GraphSettings">GraphSettings struct</see> into a GraphSettingsExpanded one, adding stat name and stat mode
+                /// </summary>
+                /// <param name="s">A GraphSettings struct object</param>
+                /// <param name="stat">Statistic name</param>
+                /// <param name="mode">Statistic display mode</param>
                 public static GraphSettingsExtended FromGraphSettings(GraphSettings s, eCustomGraphStat stat, eCustomGraphMode mode)
                 {
                     return new GraphSettingsExtended
@@ -1302,6 +1376,11 @@ namespace Mids_Reborn.Core
                 }
             }
 
+            /// <summary>
+            /// Get graph scale from its maximum
+            /// </summary>
+            /// <param name="graphMax">Graph maximum value</param>
+            /// <returns>Scale value (see <see cref="Scales">Scales</see>)</returns>
             internal static int GetScaleIndex(float graphMax)
             {
                 for (var i = 0; i < Scales.Length; i++)
@@ -1315,6 +1394,11 @@ namespace Mids_Reborn.Core
                 return Scales.Length - 1;
             }
 
+            /// <summary>
+            /// Get graph settings from specified statistic
+            /// </summary>
+            /// <param name="stat">Statistic name</param>
+            /// <returns>A GraphSettings struct for matching statistic</returns>
             public static GraphSettings Get(eCustomGraphStat stat)
             {
                 var statNames = new StatNames
