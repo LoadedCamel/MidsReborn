@@ -9,6 +9,7 @@
     <PlatformTarget>x64</PlatformTarget>
     <ApplicationIcon>mids_icon.ico</ApplicationIcon>
 	<AssemblyName>MRBBootstrap</AssemblyName>
+	<Platforms>AnyCPU;x64</Platforms>
   </PropertyGroup>
 
   <ItemGroup>

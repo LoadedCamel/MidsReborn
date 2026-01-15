@@ -1,27 +1,25 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	  <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+	  <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
 	  <LangVersion>12.0</LangVersion>
 	  <OutputType>WinExe</OutputType>
-    <RootNamespace>Mids_Reborn</RootNamespace>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <UseWindowsForms>true</UseWindowsForms>
-	  <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-    <Platforms>AnyCPU;x64</Platforms>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <Optimize>true</Optimize>
-	  <NoWarn>CS1690, CS0169, CA1823, CA2213, CA1416</NoWarn>
-	  <DebugType>full</DebugType>
+	  <UseWindowsForms>true</UseWindowsForms>
+	  <Platforms>x64</Platforms>
+	  <PlatformTarget>x64</PlatformTarget>
+	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	  <RootNamespace>Mids_Reborn</RootNamespace>
+	  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Optimize>true</Optimize>
-    <NoWarn>CS1690, CS0169, CA1823, CA2213, CA1416</NoWarn>
+      <Optimize>false</Optimize>
+	  <NoWarn>CS1690, CS0169, CA1823, CA2213, CA1416</NoWarn>
     <DebugType>full</DebugType>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <NoWarn>1701;1702;CA1416</NoWarn>
-    <DebugType>full</DebugType>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+	  <Optimize>true</Optimize>
+	  <NoWarn>1701;1702;CA1416</NoWarn>
+	<DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>MRB_Icon_Concept.ico</ApplicationIcon>
@@ -580,37 +578,43 @@
     <PlatformTarget>x64</PlatformTarget>
     <UseWPF>False</UseWPF>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <NoWarn>1701;1702;CA1416</NoWarn>
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-	    <PropertyGroup>
-        <Main>bin\$(Platform)\$(Configuration)\net6.0-windows\</Main>
-		<Osx>bin\$(Platform)\$(Configuration)\net6.0-windows\runtimes\osx</Osx>
-		<Win86>bin\$(Platform)\$(Configuration)\net6.0-windows\runtimes\win-x86</Win86>
-        <WinARM>bin\$(Platform)\$(Configuration)\net6.0-windows\runtimes\win-arm64</WinARM>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
-	</PropertyGroup>
 
-	<Target Name="DeleteFilesAfterBuild" AfterTargets="Build">
+
+	<Target Name="DeleteRuntimesFolder" AfterTargets="Build">
+		<RemoveDir Directories="$(TargetDir)runtimes" Condition="Exists('$(TargetDir)runtimes')" />
+	</Target>
+
+	<Target Name="RenameBootstrapperOutputs" AfterTargets="Build">
+		<PropertyGroup>
+			<_BootstrapBase>$(TargetDir)MRBBootstrap</_BootstrapBase>
+			<_BootstrapNew>$(TargetDir)New_MRBBootstrap</_BootstrapNew>
+		</PropertyGroup>
+
 		<ItemGroup>
-			<FilesToDelete Include="$(Main)*Wpf.dll" />
+			<_BootstrapFiles Include="$(_BootstrapBase).exe" Condition="Exists('$(_BootstrapBase).exe')" />
+			<_BootstrapFiles Include="$(_BootstrapBase).dll" Condition="Exists('$(_BootstrapBase).dll')" />
+			<_BootstrapFiles Include="$(_BootstrapBase).pdb" Condition="Exists('$(_BootstrapBase).pdb')" />
+			<_BootstrapFiles Include="$(_BootstrapBase).runtimeconfig.json" Condition="Exists('$(_BootstrapBase).runtimeconfig.json')" />
+			<_BootstrapFiles Include="$(_BootstrapBase).deps.json" Condition="Exists('$(_BootstrapBase).deps.json')" />
 		</ItemGroup>
-		<Message Text="Deleting Files @(FilesToDelete)" />
-		<Delete Files="@(FilesToDelete)">
-			<Output TaskParameter="DeletedFiles" ItemName="FilesDeleted" />
-		</Delete>
-		<Message Text="Files deleted: @(FilesDeleted)" />
+
+		<Copy
+			SourceFiles="@(_BootstrapFiles)"
+			DestinationFiles="@(_BootstrapFiles->'$(_BootstrapNew)%(Extension)')"
+			SkipUnchangedFiles="true" />
+
+		<Delete Files="@(_BootstrapFiles)" />
 	</Target>
 
-	<Target Name="DeleteFoldersAfterBuild" AfterTargets="DeleteFilesAfterBuild">
-		<RemoveDir Directories="$(Osx)" />
-		<RemoveDir Directories="$(Win86)" />
-		<RemoveDir Directories="$(WinARM)" />
-	</Target>
+	<Target Name="CleanOutputArtifacts" AfterTargets="Build">
+		<ItemGroup>
+			<_FilesToDelete Include="$(TargetDir)*.pdb" />
+			<_FilesToDelete Include="$(TargetDir)WebView2.Wpf.*" />
+			<_FilesToDelete Include="$(TargetDir)Microsoft.Web.WebView2.*.xml" />
+		</ItemGroup>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-	  <Exec Command="set Out=$(TargetDir)&#xD;&#xA;&#xD;&#xA;move /y &quot;%25Out%25MRBBootstrap.exe&quot;                &quot;%25Out%25New_MRBBootstrap.exe&quot;&#xD;&#xA;move /y &quot;%25Out%25MRBBootstrap.dll&quot;                &quot;%25Out%25New_MRBBootstrap.dll&quot;&#xD;&#xA;move /y &quot;%25Out%25MRBBootstrap.pdb&quot;                &quot;%25Out%25New_MRBBootstrap.pdb&quot;&#xD;&#xA;move /y &quot;%25Out%25MRBBootstrap.runtimeconfig.json&quot; &quot;%25Out%25New_MRBBootstrap.runtimeconfig.json&quot;&#xD;&#xA;move /y &quot;%25Out%25MRBBootstrap.deps.json&quot;          &quot;%25Out%25New_MRBBootstrap.deps.json&quot;" />
-	</Target>						
+		<Message Text="Deleting unwanted artifacts: @(_FilesToDelete)" Importance="High" />
+		<Delete Files="@(_FilesToDelete)" />
+	</Target>
+  					
 </Project>
