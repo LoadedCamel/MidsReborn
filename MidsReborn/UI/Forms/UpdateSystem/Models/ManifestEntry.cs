@@ -12,6 +12,10 @@ namespace Mids_Reborn.UI.Forms.UpdateSystem.Models
         public string? Version { get; set; } = version;
         public string? File { get; set; } = file;
 
+        public ManifestEntry() : this(null)
+        {
+        }
+
         // Not serialized, but tracked internally
         [JsonIgnore]
         public string? SourceUri { get; set; }

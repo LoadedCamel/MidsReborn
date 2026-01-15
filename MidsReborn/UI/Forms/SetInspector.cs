@@ -130,9 +130,16 @@ namespace Mids_Reborn.UI.Forms
                 {
                     if (set.ImageIdx > -1)
                     {
+                        Recipe.RecipeRarity? rarity = set.Enhancements.All(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX < 0)
+                            ? null
+                            : set.Enhancements
+                                .Where(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX >= 0)
+                                .Select(e => DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[e].RecipeIDX].Rarity)
+                                .Max();
+                        var isPvP = set.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true));
                         extendedBitmap.Graphics!.Clear(Color.Transparent);
                         var graphics = extendedBitmap.Graphics;
-                        I9Gfx.DrawEnhancementSet(ref graphics, set.ImageIdx);
+                        I9Gfx.DrawEnhancementSet(ref graphics, set.ImageIdx, rarity, isPvP);
                         setImageList.Images.Add(extendedBitmap.Bitmap!);
                     }
                     else
@@ -150,9 +157,16 @@ namespace Mids_Reborn.UI.Forms
                 {
                     if (set.ImageIdx > -1)
                     {
+                        Recipe.RecipeRarity? rarity = set.Enhancements.All(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX < 0)
+                            ? null
+                            : set.Enhancements
+                                .Where(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX >= 0)
+                                .Select(e => DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[e].RecipeIDX].Rarity)
+                                .Max();
+                        var isPvP = set.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true));
                         extendedBitmap.Graphics!.Clear(Color.Transparent);
                         var graphics = extendedBitmap.Graphics;
-                        I9Gfx.DrawEnhancementSet(ref graphics, set.ImageIdx);
+                        I9Gfx.DrawEnhancementSet(ref graphics, set.ImageIdx, rarity, isPvP);
                         setImageList.Images.Add(extendedBitmap.Bitmap!);
                     }
                     else

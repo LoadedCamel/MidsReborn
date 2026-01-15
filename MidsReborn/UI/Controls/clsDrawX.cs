@@ -1,15 +1,16 @@
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Forms;
-using Mids_Reborn.Core;
-using Mids_Reborn.Core.Base.Display;
-using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.Core.Utils;
 using static Mids_Reborn.Core.Enums;
 
 namespace Mids_Reborn.UI.Controls
@@ -328,7 +329,7 @@ namespace Mids_Reborn.UI.Controls
         {
             for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
             {
-                if (MidsContext.Character.CanPlaceSlot & Highlight == i)
+                if (MidsContext.Character.CanPlaceSlot & (Highlight == i))
                 {
                     var value = MidsContext.Character.CurrentBuild.Powers[i];
                     DrawPowerSlot(ref value, true);
@@ -760,9 +761,9 @@ namespace Mids_Reborn.UI.Controls
                         SzSlot.Height); // New slot rectangle
                     BxBuffer.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, ScaleDown(clipRect3), 0, 0, SzSlot.Width,
                         SzSlot.Height, GraphicsUnit.Pixel, PImageAttributes);
-                    if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level > MidsContext.Config.ForceLevel |
-                        InterfaceMode == eInterfaceMode.PowerToggle & !powerEntry.StatInclude |
-                        !powerEntry.AllowFrontLoading & slot.Level < powerEntry.Level)
+                    if ((MidsContext.Config.CalcEnhLevel == 0) | (slot.Level > MidsContext.Config.ForceLevel) |
+                        ((InterfaceMode == eInterfaceMode.PowerToggle) & !powerEntry.StatInclude) |
+                        (!powerEntry.AllowFrontLoading & (slot.Level < powerEntry.Level)))
                     {
                         solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                         BxBuffer.Graphics.FillEllipse(solidBrush, ScaleDown(rectangleF));
@@ -776,14 +777,22 @@ namespace Mids_Reborn.UI.Controls
 
                     var enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
                     var graphics6 = BxBuffer.Graphics;
-                    var clipRect3 = new Rectangle((int)Math.Round(rectangleF.X), slotLocation.Y, SzSlot.Width,
-                        SzSlot.Height);
+                    var clipRect3 = new Rectangle((int)Math.Round(rectangleF.X), slotLocation.Y, SzSlot.Width, SzSlot.Height);
+                    Recipe.RecipeRarity? rarity = null;
+                    var isPvP = false;
+                    if (enhancement.TypeID == Enums.eType.SetO)
+                    {
+                        rarity = enhancement.RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity;
+                        var enhSet = enhancement.GetEnhancementSet();
+                        isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
+                    }
                     I9Gfx.DrawEnhancementAt(ref graphics6, ScaleDown(clipRect3), enhancement.ImageIdx,
-                        I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
-                    if (slot.Enhancement.RelativeLevel == 0 | slot.Level > MidsContext.Config.ForceLevel |
-                        InterfaceMode == eInterfaceMode.PowerToggle & !powerEntry.StatInclude |
-                        !powerEntry.AllowFrontLoading & slot.Level < powerEntry.Level |
-                        MidsContext.EnhCheckMode & !slot.Enhancement.Obtained)
+                        I9Gfx.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade),
+                        rarity, isPvP);
+                    if ((slot.Enhancement.RelativeLevel == 0) | (slot.Level > MidsContext.Config.ForceLevel) |
+                        ((InterfaceMode == eInterfaceMode.PowerToggle) & !powerEntry.StatInclude) |
+                        (!powerEntry.AllowFrontLoading & (slot.Level < powerEntry.Level)) |
+                        (MidsContext.EnhCheckMode & !slot.Enhancement.Obtained))
                     {
                         solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                         var iValue3 = rectangleF;

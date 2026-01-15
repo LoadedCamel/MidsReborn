@@ -25,8 +25,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Totals = new TotalStatistics();
             TotalsCapped = new TotalStatistics();
             DisplayStats = new Statistics(this);
-            Builds = new Build?[] { new(this, DatabaseAPI.Database.Levels) };
-            PEnhancementsList = new List<string>();
+            Builds = [new Build(this, DatabaseAPI.Database.Levels)];
+            PEnhancementsList = [];
             Reset();
         }
 
@@ -53,16 +53,26 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     var val1 = GetFirstAvailablePowerLevel(CurrentBuild);
                     if (val1 < 0)
+                    {
                         val1 = 49;
+                    }
+
                     var val2 = GetFirstAvailableSlotLevel();
                     if (val2 < 0)
+                    {
                         val2 = 49;
+                    }
+
                     num2 = Math.Min(val1, val2);
                 }
 
                 if (num2 < 0)
+                {
                     num2 = 49;
+                }
+
                 LevelCache = num2;
+                
                 return num2;
             }
         }
@@ -238,9 +248,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
         }
 
-        public bool IsVillain => Alignment == Enums.Alignment.Rogue || Alignment == Enums.Alignment.Villain;
+        public bool IsVillain => Alignment is Enums.Alignment.Rogue or Enums.Alignment.Villain;
 
-        public bool IsPraetorian => Alignment == Enums.Alignment.Loyalist || Alignment == Enums.Alignment.Resistance;
+        public bool IsPraetorian => Alignment is Enums.Alignment.Loyalist or Enums.Alignment.Resistance;
         public bool IsBlaster => Archetype.DisplayName.ToLower() == "blaster";
 
         public bool IsController => Archetype.DisplayName.ToLower() == "controller";
@@ -278,28 +288,32 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public void Lock()
         {
             var powersPlaced = CurrentBuild.PowersPlaced;
-            var ps1 = Powersets[1] == null || Powersets[1].nID < 0
+            var ps1 = Powersets[1] == null || Powersets[1]?.nID < 0
                 ? DatabaseAPI.Database.Powersets
                     .First(ps =>
-                        ps.ATClass == MidsContext.Character.Archetype.ClassName &
-                        ps.SetType == Enums.ePowerSetType.Secondary)
+                        (ps?.ATClass == MidsContext.Character.Archetype.ClassName) &
+                        (ps?.SetType == Enums.ePowerSetType.Secondary))
                 : Powersets[1];
-            if ((powersPlaced == 1) & CurrentBuild.PowerUsed(ps1.Powers[0]))
+            var atSpecificPowersUsed = CurrentBuild.Powers
+                .Where(e => e?.Power != null)
+                .Any(e => e?.Power?.GetPowerSet()?.SetType is Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary or Enums.ePowerSetType.Ancillary);
+
+            if ((powersPlaced == 1) & CurrentBuild.PowerUsed(ps1?.Powers[0]))
             {
-                Locked = false;
+                //Locked = false;
                 ResetLevel();
             }
             else if (powersPlaced > 0)
             {
-                Locked = true;
+                //Locked = true;
             }
             else
             {
-                if (powersPlaced != 0)
-                    return;
-                Locked = false;
+                //Locked = false;
                 ResetLevel();
             }
+
+            Locked = atSpecificPowersUsed;
         }
 
         public bool IsHero()
@@ -309,7 +323,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool PoolTaken(int poolID)
         {
-            return Powersets[poolID] != null && poolID >= 3 && poolID <= 7 && PoolLocked[poolID - 3];
+            return Powersets[poolID] != null && poolID is >= 3 and <= 7 && PoolLocked[poolID - 3];
         }
 
         // There are 2 versions of this method distributed.
@@ -1878,6 +1892,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             public float BuffDam { get; set; }
             public float BuffEndRdx { get; set; }
             public float BuffRange { get; set; }
+            public float BuffHeal { get; set; }
+            public float[] Boosts { get; set; }
+            public float[] BoostsMez { get; set; }
 
             public void Init(bool fullReset = true)
             {
@@ -1887,7 +1904,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 MezRes = new float[Enum.GetValues<Enums.eMez>().Length];
                 DebuffRes = new float[Enum.GetValues<Enums.eEffectType>().Length];
                 Elusivity = new float[Enum.GetValues<Enums.eDamage>().Length];
-                if (!fullReset) return;
+                Boosts = new float[Enum.GetValues<Enums.eEffectType>().Length];
+                BoostsMez = new float[Enum.GetValues<Enums.eMez>().Length];
+                if (!fullReset)
+                {
+                    return;
+                }
+
                 HPRegen = 0;
                 HPMax = 0;
                 Absorb = 0;
@@ -1908,6 +1931,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 BuffDam = 0;
                 BuffEndRdx = 0;
                 BuffRange = 0;
+                BuffHeal = 0;
             }
 
             public void Assign(TotalStatistics iSt)
@@ -1917,6 +1941,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 Mez = (float[])iSt.Mez.Clone();
                 MezRes = (float[])iSt.MezRes.Clone();
                 DebuffRes = (float[])iSt.DebuffRes.Clone();
+                Boosts = (float[])iSt.Boosts.Clone();
+                BoostsMez = (float[])iSt.BoostsMez.Clone();
+
                 Elusivity = iSt.Elusivity;
                 HPRegen = iSt.HPRegen;
                 HPMax = iSt.HPMax;
@@ -1938,6 +1965,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 BuffDam = iSt.BuffDam;
                 BuffEndRdx = iSt.BuffEndRdx;
                 BuffRange = iSt.BuffRange;
+                BuffHeal = iSt.BuffHeal;
             }
         }
     }

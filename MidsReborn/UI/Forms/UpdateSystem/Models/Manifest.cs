@@ -1,9 +1,7 @@
 ﻿using System.Collections.Generic;
-using System.Xml.Serialization;
 
 namespace Mids_Reborn.UI.Forms.UpdateSystem.Models
 {
-    [XmlRoot("manifest"), XmlType("manifest")]
     public class Manifest
     {
         public string ManifestVersion { get; set; } = "3.0";

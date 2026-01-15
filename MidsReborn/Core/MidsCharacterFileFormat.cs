@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
 
@@ -701,7 +699,6 @@ namespace Mids_Reborn.Core
                                 InherentPowers.Add(powerEntry1);
                             }
 
-                            //Console.WriteLine($"{powerEntry1.Power.DisplayName} - {powerEntry1.Power.InherentType}");
                             //MidsContext.Character.CurrentBuild.Powers.Add(powerEntry1);
                         }
                         else if (powerEntry1.Power != null && (ps is { nArchetype: > -1 } || powerEntry1.Power.GroupName == "Pool"))
@@ -749,6 +746,397 @@ namespace Mids_Reborn.Core
                 }
 
                 return false;
+            }
+        }
+
+        internal static List<PowerEntry?>? MxDReadSaveDataLight(ref byte[] buffer, bool silent = true)
+        {
+            var ret = new List<PowerEntry?>();
+
+            var formatUsed = Formats.Current;
+            InherentPowers = [];
+            DisplayIndex = -1;
+            if (buffer.Length < 1)
+            {
+                if (!silent)
+                {
+                    MessageBox.Show("Unable to read data - Empty Buffer.", "ReadSaveData Failed");
+                }
+
+                return null;
+            }
+
+            MemoryStream memoryStream;
+            BinaryReader r;
+            try
+            {
+                memoryStream = new MemoryStream(buffer, false);
+                r = new BinaryReader(memoryStream);
+                r.BaseStream.Seek(0L, SeekOrigin.Begin);
+            }
+            catch (Exception ex)
+            {
+                if (!silent)
+                {
+                    MessageBox.Show($"Unable to read data - {ex.Message}", "ReadSaveData Failed");
+                }
+
+                return null;
+            }
+
+            try
+            {
+                var streamIndex = 0;
+                var magicFound = false;
+                // try to find magic number, reading 4 bytes at a time, offset by 1 on each failure
+                do
+                {
+                    r.BaseStream.Seek(streamIndex, SeekOrigin.Begin);
+
+                    var numArray = r.ReadBytes(4);
+                    if (numArray.Length >= 4)
+                    {
+                        magicFound = true;
+                        for (var index = 0; index < MagicNumber.Length; index++)
+                        {
+                            if (MagicNumber[index] != numArray[index])
+                            {
+                                magicFound = false;
+                            }
+                        }
+
+                        if (magicFound)
+                        {
+                            break;
+                        }
+
+                        ++streamIndex;
+                    }
+                    else
+                    {
+                        if (!silent)
+                        {
+                            MessageBox.Show("Unable to read data - Magic Number not found.", "ReadSaveData Failed");
+                        }
+
+                        r.Close();
+                        memoryStream.Close();
+
+                        return null;
+                    }
+                } while (!magicFound);
+
+                var fVersion = r.ReadSingle();
+
+                switch (fVersion)
+                {
+                    case > ThisVersion:
+                        MessageBox.Show(@"File was saved by a newer version of the application. Please obtain the most recent release in order to open this file.", @"Unable to Load");
+                        r.Close();
+                        memoryStream.Close();
+                        return null;
+                    case < PriorVersion:
+                        formatUsed = Formats.Legacy;
+                        break;
+                    case < ThisVersion and >= PriorVersion:
+                        formatUsed = Formats.Prior;
+                        break;
+                    case ThisVersion:
+                        formatUsed = Formats.Current;
+                        break;
+                }
+
+                var qualifiedNames = r.ReadBoolean();
+                var hasSubPower = r.ReadBoolean();
+                var nIdClass = DatabaseAPI.NidFromUidClass(r.ReadString());
+                if (nIdClass < 0)
+                {
+                    if (!silent)
+                    {
+                        MessageBox.Show("Unable to read data - Invalid Class UID.", "ReadSaveData Failed");
+                    }
+
+                    r.Close();
+                    memoryStream.Close();
+                    return null;
+                }
+
+                var iOrigin = DatabaseAPI.NidFromUidOrigin(r.ReadString(), nIdClass);
+                var charClass = DatabaseAPI.Database.Classes[nIdClass];
+                if (charClass == null)
+                {
+                    return null;
+                }
+
+                if (fVersion > 1)
+                {
+                    var align = r.ReadInt32();
+                }
+
+                var characterName = r.ReadString();
+                var powerSetCount = r.ReadInt32();
+                var names = new List<string>();
+                for (var index = 0; index < powerSetCount + 1; index++)
+                {
+                    var iName = r.ReadString();
+                    iName = iName switch
+                    {
+                        "Pool.Leadership_beta" => "Pool.Leadership",
+
+                        // Partial support for builds made with MHD 1.x
+                        "Blaster_Support.Atomic_Manipulation" => "Blaster_Support.Radiation_Manipulation",
+                        "Pool.Fitness" => "Pool.Invisibility",
+                        _ => iName
+                    };
+
+                    names.Add(iName);
+                }
+
+                /*var errors = MidsContext.Character.LoadPowersetsByName(names);
+                foreach (var (i, n) in errors)
+                {
+                    MessageBox.Show($"Failed to load powerset by name: {n} at {i} on {DatabaseAPI.DatabaseName} DB version {DatabaseAPI.Database.Version}", "Powerset load failure");
+                }*/
+
+                var lastPower = r.ReadInt32() - 1;
+                var powerCount = r.ReadInt32() + 1;
+                try
+                {
+                    for (var powerIndex = 0; powerIndex < powerCount; powerIndex++)
+                    {
+                        var nId = -1;
+                        var name1 = string.Empty;
+                        var sidPower1 = -1;
+                        if (qualifiedNames)
+                        {
+                            name1 = r.ReadString();
+                            if (!string.IsNullOrEmpty(name1))
+                            {
+                                nId = DatabaseAPI.NidFromUidPower(name1);
+                            }
+                        }
+                        else
+                        {
+                            sidPower1 = r.ReadInt32();
+                            var newId = DatabaseAPI.Database.ReplTable?.FetchAlternate(sidPower1, charClass.ClassName);
+                            if (newId >= 0)
+                            {
+                                sidPower1 = (int)newId;
+                            }
+
+                            nId = DatabaseAPI.NidFromStaticIndexPower(sidPower1);
+                        }
+
+                        var flag5 = false;
+                        PowerEntry? powerEntry1;
+                        powerEntry1 = new PowerEntry();
+                        flag5 = true;
+
+                        if (powerEntry1 == null)
+                        {
+                            continue;
+                        }
+
+                        if ((sidPower1 > -1) | !string.IsNullOrEmpty(name1))
+                        {
+                            powerEntry1.Level = r.ReadSByte();
+                            switch (formatUsed)
+                            {
+                                case Formats.Current:
+                                    powerEntry1.StatInclude = r.ReadBoolean();
+                                    powerEntry1.ProcInclude = r.ReadBoolean();
+                                    powerEntry1.VariableValue = r.ReadInt32();
+                                    powerEntry1.InherentSlotsUsed = r.ReadInt32();
+                                    break;
+                                case Formats.Prior:
+                                    powerEntry1.StatInclude = r.ReadBoolean();
+                                    powerEntry1.ProcInclude = r.ReadBoolean();
+                                    powerEntry1.VariableValue = r.ReadInt32();
+                                    break;
+                                case Formats.Legacy:
+                                    powerEntry1.StatInclude = r.ReadBoolean();
+                                    powerEntry1.VariableValue = r.ReadInt32();
+                                    break;
+                            }
+
+                            if (hasSubPower)
+                            {
+                                powerEntry1.SubPowers = new PowerSubEntry[r.ReadSByte() + 1];
+                                for (var subPowerIndex = 0; subPowerIndex < powerEntry1.SubPowers.Length; subPowerIndex++)
+                                {
+                                    var powerSub = new PowerSubEntry();
+                                    powerEntry1.SubPowers[subPowerIndex] = powerSub;
+                                    if (qualifiedNames)
+                                    {
+                                        var name2 = r.ReadString();
+                                        if (!string.IsNullOrEmpty(name2))
+                                        {
+                                            powerSub.nIDPower = DatabaseAPI.NidFromUidPower(name2);
+                                        }
+                                    }
+                                    else
+                                    {
+                                        var sidPower2 = r.ReadInt32();
+                                        powerSub.nIDPower = DatabaseAPI.NidFromStaticIndexPower(sidPower2);
+                                    }
+
+                                    var subPower = DatabaseAPI.Database.Power[powerSub.nIDPower];
+
+                                    if (powerSub.nIDPower > -1)
+                                    {
+                                        if (subPower == null)
+                                        {
+                                            continue;
+                                        }
+
+                                        powerSub.Powerset = subPower.PowerSetID;
+                                        powerSub.Power = subPower.PowerSetIndex;
+                                    }
+
+                                    powerSub.StatInclude = r.ReadBoolean();
+                                    if (!((powerSub.nIDPower > -1) & powerSub.StatInclude))
+                                    {
+                                        continue;
+                                    }
+
+                                    var powerEntry2 = new PowerEntry(DatabaseAPI.Database.Power[powerSub.nIDPower])
+                                    {
+                                        StatInclude = true
+                                    };
+
+                                    ret.Add(powerEntry2);
+                                }
+                            }
+                        }
+
+                        if (nId < 0 && powerIndex < DatabaseAPI.Database.Levels_MainPowers.Length)
+                        {
+                            powerEntry1.Level = DatabaseAPI.Database.Levels_MainPowers[powerIndex];
+                        }
+
+                        powerEntry1.Slots = new SlotEntry[r.ReadSByte() + 1];
+                        for (var index3 = 0; index3 < powerEntry1.Slots.Length; index3++)
+                        {
+                            powerEntry1.Slots[index3] = new SlotEntry
+                            {
+                                Level = r.ReadSByte(),
+                                IsInherent = formatUsed == Formats.Current && r.ReadBoolean(),
+                                Enhancement = new I9Slot(),
+                                FlippedEnhancement = new I9Slot()
+                            };
+
+                            ReadSlotData(r, ref powerEntry1.Slots[index3].Enhancement, qualifiedNames, fVersion);
+                            if (r.ReadBoolean())
+                            {
+                                ReadSlotData(r, ref powerEntry1.Slots[index3].FlippedEnhancement, qualifiedNames, fVersion);
+                            }
+                        }
+
+                        if (powerEntry1.SubPowers.Length > 0)
+                        {
+                            nId = -1;
+                        }
+
+                        if (nId <= -1)
+                        {
+                            continue;
+                        }
+
+                        powerEntry1.NIDPower = nId;
+                        var power = DatabaseAPI.Database.Power[nId];
+                        if (power == null)
+                        {
+                            continue;
+                        }
+
+                        powerEntry1.NIDPowerset = power.PowerSetID;
+                        powerEntry1.IDXPower = power.PowerSetIndex;
+                        if (powerEntry1.Level == 0 && powerEntry1.Power.FullSetName == "Pool.Fitness")
+                        {
+                            powerEntry1.NIDPower = powerEntry1.NIDPower switch
+                            {
+                                2553 => 1521,
+                                2554 => 1523,
+                                2555 => 1522,
+                                2556 => 1524,
+                                _ => powerEntry1.NIDPower
+                            };
+
+                            powerEntry1.NIDPowerset = power.PowerSetID;
+                            powerEntry1.IDXPower = power.PowerSetIndex;
+                        }
+
+                        if (string.Equals(DatabaseAPI.DatabaseName, "homecoming", StringComparison.InvariantCultureIgnoreCase))
+                        {
+                            if ((powerEntry1.Power?.FullName == "Pool.Flight.Afterburner") | ((powerEntry1.Power?.FullName == "Inherent.Inherent.Afterburner") & (powerIndex < 24)))
+                            {
+                                nId = DatabaseAPI.NidFromUidPower("Pool.Flight.Evasive_Maneuvers");
+                                if (nId >= 0)
+                                {
+                                    powerEntry1.NIDPower = nId;
+
+                                    power = DatabaseAPI.Database.Power[nId];
+                                    if (power == null)
+                                    {
+                                        continue;
+                                    }
+
+                                    powerEntry1.NIDPowerset = power.PowerSetID;
+                                    powerEntry1.IDXPower = power.PowerSetIndex;
+                                }
+                            }
+                        }
+
+                        var ps = powerEntry1.Power?.GetPowerSet();
+
+                        if (flag5)
+                        {
+                            if (powerEntry1.Power != null && powerEntry1.Power.InherentType != Enums.eGridType.None)
+                            {
+                                ret.Add(powerEntry1);
+                            }
+                        }
+                        else if (powerEntry1.Power != null && (ps is { nArchetype: > -1 } || powerEntry1.Power.GroupName == "Pool"))
+                        {
+                            ret.Add(powerEntry1);
+                        }
+                    }
+
+                    var newPowerList = new List<PowerEntry>();
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Class));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Inherent));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Powerset));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Power));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Prestige));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Incarnate));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Accolade));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Pet));
+                    newPowerList.AddRange(SortGridPowers(InherentPowers, Enums.eGridType.Temp));
+                    foreach (var entry in newPowerList)
+                    {
+                        ret.Add(entry);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (!silent)
+                    {
+                        MessageBox.Show($"Error reading some power data with the {DatabaseAPI.DatabaseName} database, will attempt to build character with known data.\r\n{ex.Message}\r\n\r\n{ex.StackTrace}", "ReadSaveData Failed");
+                    }
+
+                    return null;
+                }
+
+                return ret;
+            }
+            catch (Exception ex)
+            {
+                if (!silent)
+                {
+                    MessageBox.Show($"Unable to read data - {ex.Message}\r\n\r\n{ex.StackTrace}", "ReadSaveData Failed");
+                }
+
+                return null;
             }
         }
 
@@ -838,6 +1226,123 @@ namespace Mids_Reborn.Core
                     if (startIndex <= -1) continue;
                     headers = line[startIndex..].Split(';');
                     header = headers.Length > 0 ? headers[0] : string.Empty;
+                    return index;
+                }
+
+                return -1; // Not found
+            }
+        }
+
+        public static KeyValuePair<eLoadReturnCode, List<PowerEntry?>?> MxDExtractAndLoadLight(Stream? inputStream, bool silent = true)
+        {
+            if (inputStream is null)
+            {
+                if (!silent)
+                {
+                    MessageBox.Show("Input stream is null", "ExtractAndLoad Failed");
+                }
+                
+                return new KeyValuePair<eLoadReturnCode, List<PowerEntry?>?>(eLoadReturnCode.Failure, null);
+            }
+
+            using var streamReader = new StreamReader(inputStream);
+            streamReader.BaseStream.Seek(0L, SeekOrigin.Begin);
+
+            string data;
+            try
+            {
+                data = streamReader.ReadToEnd().Replace("||", "|\n|");
+            }
+            catch (Exception ex)
+            {
+                if (!silent)
+                {
+                    MessageBox.Show($"Unable to read data - {ex.Message}", "ExtractAndLoad Failed");
+                }
+                
+                return new KeyValuePair<eLoadReturnCode, List<PowerEntry?>?>(eLoadReturnCode.Failure, null);
+            }
+
+            var lines = data.Split('\n');
+            string[] headers = { "ABCD", "0", "0", "0" };
+            var header = "";
+            var dataIndex = FindDataIndex();
+
+            if (dataIndex < 0)
+            {
+                if (!silent)
+                {
+                    MessageBox.Show("Unable to locate data header - Magic Number not found!", "ExtractAndLoad Failed");
+                }
+                
+                return new KeyValuePair<eLoadReturnCode, List<PowerEntry?>?>(eLoadReturnCode.Failure, null);
+            }
+
+            if (lines.Length <= dataIndex + 1)
+            {
+                if (!silent)
+                {
+                    MessageBox.Show("Unable to locate data - Nothing beyond header!", "ExtractAndLoad Failed");
+                }
+                
+                return new KeyValuePair<eLoadReturnCode, List<PowerEntry?>?>(eLoadReturnCode.Failure, null);
+            }
+
+            var payload = string.Join("\n", lines[(dataIndex + 1)..]);
+            var isHex = headers.Length > 4 && string.Equals(headers[4], "HEX", StringComparison.OrdinalIgnoreCase);
+            var bytes =
+                new ASCIIEncoding().GetBytes(isHex
+                    ? ModernZlib.UnbreakHex(payload)
+                    : ModernZlib.UnbreakString(payload, true));
+
+            if (bytes.Length < Convert.ToInt32(headers[3]))
+            {
+                if (!silent)
+                {
+                    MessageBox.Show("Data chunk was incomplete! Check that the entire chunk was copied to the clipboard.", "ExtractAndLoad Failed");
+                }
+                
+                return new KeyValuePair<eLoadReturnCode, List<PowerEntry?>?>(eLoadReturnCode.Failure, null);
+            }
+
+            if (bytes.Length > Convert.ToInt32(headers[3]))
+            {
+                Array.Resize(ref bytes, Convert.ToInt32(headers[3]));
+            }
+
+            bytes = isHex ? ModernZlib.HexDecodeBytes(bytes) : ModernZlib.UuDecodeBytes(bytes);
+
+            if (bytes.Length == 0)
+            {
+                return new KeyValuePair<eLoadReturnCode, List<PowerEntry?>?>(eLoadReturnCode.Failure, null);
+            }
+
+            if (header == MagicCompressed)
+            {
+                bytes = ModernZlib.DecompressChunk(bytes, Convert.ToInt32(headers[1]));
+            }
+
+            var buildReaderRet= MxDReadSaveDataLight(ref bytes);
+
+            return buildReaderRet == null
+                ? new KeyValuePair<eLoadReturnCode, List<PowerEntry?>?>(eLoadReturnCode.Failure, null)
+                : new KeyValuePair<eLoadReturnCode, List<PowerEntry?>?>(eLoadReturnCode.Success, buildReaderRet);
+
+            // Local function to find the data index
+            int FindDataIndex()
+            {
+                for (var index = 0; index < lines.Length; index++)
+                {
+                    var line = lines[index];
+                    var startIndex = line.IndexOf(MagicUncompressed, StringComparison.Ordinal);
+                    if (startIndex < 0)
+                        startIndex = line.IndexOf(MagicCompressed, StringComparison.Ordinal);
+                    if (startIndex < 0)
+                        startIndex = line.IndexOf(AppDataPaths.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase);
+                    if (startIndex <= -1) continue;
+                    headers = line[startIndex..].Split(';');
+                    header = headers.Length > 0 ? headers[0] : string.Empty;
+                    
                     return index;
                 }
 

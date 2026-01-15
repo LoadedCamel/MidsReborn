@@ -17,6 +17,7 @@ using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.BuildFile;
 using Mids_Reborn.Core.ShareSystem.RestModels;
 using Mids_Reborn.Core.Utils;
+using Mids_Reborn.Forms;
 using Mids_Reborn.UI.Controls;
 using Mids_Reborn.UI.Controls.Skia;
 using Mids_Reborn.UI.Forms.ImportExportItems;
@@ -323,7 +324,7 @@ namespace Mids_Reborn.UI.Forms
                     MidsContext.Config.I9.DefaultIOLevel = 49;
                 }
 
-                if (!SlythinDpsToolRunner.HashMatch())
+                if (!SythlinDpsToolRunner.HashMatch())
                 {
                     tsRunSythlinDpsTool.Visible = false;
                 }
@@ -814,7 +815,7 @@ namespace Mids_Reborn.UI.Forms
             ShowPopup(-1, CbtAT.Value.SelectedItem.Idx, cbAT.Bounds);
         }
 
-        private void SetEnhCheckModePosition()
+        internal void SetEnhCheckModePosition()
         {
             enhCheckMode.Location = enhCheckMode.Location with { Y = Math.Max(llPrimary.Top + llPrimary.SizeNormal.Height + 431, poolsPanel.Top + llAncillary.Top + llAncillary.SizeNormal.Height + 35) };
         }
@@ -1176,7 +1177,9 @@ namespace Mids_Reborn.UI.Forms
                 var msgBoxResult = MessageBox.Show(@"Current character data will be discarded, are you sure?", @"Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
                 FloatTop(true);
                 if (msgBoxResult == DialogResult.No)
+                {
                     return;
+                }
             }
 
             DataViewLocked = false;
@@ -1194,11 +1197,26 @@ namespace Mids_Reborn.UI.Forms
 
             MidsContext.Config.LastFileName = "";
             LastFileName = "";
+            if (!string.IsNullOrWhiteSpace(MidsContext.Config.ActiveTemplate) && File.Exists(MidsContext.Config.ActiveTemplate))
+            {
+                if (MidsContext.Config.ActiveTemplate.EndsWith(".mxd"))
+                {
+                    DoOpen(MidsContext.Config.ActiveTemplate, true);
+                }
+                else if (MidsContext.Config.ActiveTemplate.EndsWith(".mbd"))
+                {
+                    LoadCharacterFile(MidsContext.Config.ActiveTemplate, true);
+                }
+
+                MidsContext.Config.LastFileName = "";
+                LastFileName = "";
+            }
+
             PowerModified(false);
             FileModified = false;
             SetTitleBar();
             DoRedraw();
-            myDataView.Clear();
+            myDataView?.Clear();
         }
 
         internal void DataView_SlotFlip(int PowerIndex)
@@ -1224,7 +1242,7 @@ namespace Mids_Reborn.UI.Forms
             _frmTeam.FeedbackUpdate(pKey, val);
         }
 
-        private static PowerEntry?[] DeepCopyPowerList()
+        internal static PowerEntry?[] DeepCopyPowerList()
         {
             return MidsContext.Character.CurrentBuild.Powers.Select(x => (PowerEntry)x?.Clone()).ToArray();
         }
@@ -1285,7 +1303,10 @@ namespace Mids_Reborn.UI.Forms
         private void doFlipStep()
         {
             if (!FlipActive)
+            {
                 return;
+            }
+
             var point1 = new Point();
             var currentBuild = MidsContext.Character.CurrentBuild;
             var power = currentBuild.Powers[FlipPowerID];
@@ -1327,9 +1348,9 @@ namespace Mids_Reborn.UI.Forms
                 if (FlipSlotState[i] >= 0 && FlipSlotState[i] <= FlipSteps)
                 {
                     var num3 = FlipSlotState[i] / (FlipSteps / 2f);
-                    if (num3 > 1.0)
+                    if (num3 > 1)
                     {
-                        num2 = (float)(-1.0 * (1.0 - num3));
+                        num2 = (float)(-1 * (1 - num3));
                         index = slot.Enhancement.Enh;
                         Enh1 = index;
                         Enh2 = slot.FlippedEnhancement.Enh;
@@ -1338,7 +1359,7 @@ namespace Mids_Reborn.UI.Forms
                     }
                     else
                     {
-                        num2 = 1f - num3;
+                        num2 = 1 - num3;
                         index = slot.FlippedEnhancement.Enh;
                         Enh1 = index;
                         Enh2 = slot.Enhancement.Enh;
@@ -1348,20 +1369,34 @@ namespace Mids_Reborn.UI.Forms
                 }
 
                 rectangle1 = new Rectangle(point1.X + 30 * i, point1.Y, 30, 30);
-                if (!(num2 > 0.0))
+                if (num2 <= 0)
+                {
                     continue;
-                var rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30.0 - 30.0 * num2) / 2.0),
+                }
+
+                var rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30 - 30 * num2) / 2.0),
                     rectangle1.Y,
-                    (int)Math.Round(30.0 * num2), 30);
+                    (int)Math.Round(30 * num2), 30);
                 rectangle2 = drawing.ScaleDown(rectangle2);
                 rectangle1 = drawing.ScaleDown(rectangle1);
                 if (index > -1)
                 {
                     var graphics = drawing.BxBuffer.Graphics;
+                    Recipe.RecipeRarity? rarity = null;
+                    var isPvP = false;
+                    if (DatabaseAPI.Database.Enhancements[index].TypeID == Enums.eType.SetO)
+                    {
+                        rarity = DatabaseAPI.Database.Enhancements[index].RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[index].RecipeIDX].Rarity;
+                        var enhSet = DatabaseAPI.Database.Enhancements[index].GetEnhancementSet();
+                        isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
+                    }
                     if (i9Slot1 != null)
+                    {
                         I9Gfx.DrawFlippingEnhancement(ref graphics, rectangle1, num2,
                             DatabaseAPI.Database.Enhancements[index].ImageIdx,
-                            I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[index].TypeID, i9Slot1.Grade));
+                            I9Gfx.ToGfxGrade(DatabaseAPI.Database.Enhancements[index].TypeID, i9Slot1.Grade),
+                            rarity, isPvP);
+                    }
                 }
                 else
                 {
@@ -1385,7 +1420,9 @@ namespace Mids_Reborn.UI.Forms
                 drawing.SzSlot.Height + 1);
             drawing.Refresh(drawing.ScaleDown(rectangle1));
             if (FlipSlotState[^1] >= FlipSteps)
+            {
                 EndFlip();
+            }
         }
 
         private bool DoLoadFromSchema(SchemaData response)
@@ -1411,7 +1448,7 @@ namespace Mids_Reborn.UI.Forms
             }
         }
 
-        private bool LoadCharacterFile(string? fileName)
+        private bool LoadCharacterFile(string? fileName, bool asTemplate = false)
         {
             if (!File.Exists(fileName))
             {
@@ -1422,13 +1459,20 @@ namespace Mids_Reborn.UI.Forms
             NewToon(true, true);
             if (_buildManager.LoadFromFile(fileName))
             {
-                MidsContext.Config.LastFileName = fileName;
-                LastFileName = fileName;
+                if (!asTemplate)
+                {
+                    MidsContext.Config.LastFileName = fileName;
+                    LastFileName = fileName;
+                }
             }
             else
             {
-                MidsContext.Config.LastFileName = string.Empty;
-                LastFileName = string.Empty;
+                if (!asTemplate)
+                {
+                    MidsContext.Config.LastFileName = string.Empty;
+                    LastFileName = string.Empty;
+                }
+                
                 return false;
             }
 
@@ -1453,7 +1497,7 @@ namespace Mids_Reborn.UI.Forms
             return true;
         }
 
-        private bool DoOpen(string? fName)
+        private bool DoOpen(string? fName, bool asTemplate = false)
         {
             if (!File.Exists(fName))
             {
@@ -1470,10 +1514,13 @@ namespace Mids_Reborn.UI.Forms
             else if (MainModule.MidsController.Toon != null && !MainModule.MidsController.Toon.Load(fName, ref mStream))
             {
                 NewToon();
-                LastFileName = "";
-                MidsContext.Config.LastFileName = "";
+                if (!asTemplate)
+                {
+                    LastFileName = "";
+                    MidsContext.Config.LastFileName = "";
+                }
             }
-            else
+            else if (!asTemplate)
             {
                 LastFileName = fName;
                 if (!fName.EndsWith("mids_build.mxd"))
@@ -1483,8 +1530,11 @@ namespace Mids_Reborn.UI.Forms
             }
 
             FileModified = false;
-            if (drawing != null) drawing.Highlight = -1;
-            
+            if (drawing != null)
+            {
+                drawing.Highlight = -1;
+            }
+
             myDataView?.Clear();
             MidsContext.Character?.ResetLevel();
             PowerModified(false);
@@ -1914,7 +1964,7 @@ namespace Mids_Reborn.UI.Forms
             }
         }
 
-        private void FixStatIncludes()
+        internal void FixStatIncludes()
         {
             if (MainModule.MidsController.Toon == null)
             {
@@ -4576,7 +4626,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             DoRedraw();
         }
 
-        private void PowerPickedNoRedraw(int nIDPowerset, int nIDPower)
+        internal void PowerPickedNoRedraw(int nIDPowerset, int nIDPower)
         {
             MainModule.MidsController.Toon.BuildPower(nIDPowerset, nIDPower, true);
             // Zed: Important: if using PowerModified() the rendering will be super slow!
@@ -5139,7 +5189,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             return flag2;
         }
 
-        private void RearrangeAllSlotsInBuild(PowerEntry?[] tp, bool notifyUser = false)
+        internal void RearrangeAllSlotsInBuild(PowerEntry?[] tp, bool notifyUser = false)
         {
             var index1 = 0;
             var numArray1 = new int[tp.Length];
@@ -5630,7 +5680,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             var str1 = string.Empty;
-            if (MainModule.MidsController.Toon != null & !ignoreBuildSource)
+            if ((MainModule.MidsController.Toon != null) & !ignoreBuildSource)
             {
                 if (!string.IsNullOrWhiteSpace(LastFileName))
                 {
@@ -5676,7 +5726,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             SetTitleBar(MidsContext.Character.IsHero());
         }
 
-        private static void ShallowCopyPowerList(PowerEntry?[] source)
+        internal static void ShallowCopyPowerList(PowerEntry?[] source)
         {
             for (var index = 0; index < MidsContext.Character.CurrentBuild.Powers.Count; index++)
             {
@@ -6354,11 +6404,18 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             using var vsb = new SharedBuilds();
             var result = vsb.ShowDialog(this);
-            if (result != DialogResult.Continue || vsb.FetchedData == null) return;
+            if (result != DialogResult.Continue || vsb.FetchedData == null)
+            {
+                return;
+            }
+
             _buildManager.ValidateAndLoadSchemaData(vsb.FetchedData.Data, vsb.FetchedData.Id);
             FileModified = false;
-            if (drawing != null) drawing.Highlight = -1;
-            
+            if (drawing != null)
+            {
+                drawing.Highlight = -1;
+            }
+
             myDataView?.Clear();
             PowerModified(false);
         }
@@ -6366,6 +6423,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private void tsFileNew_Click(object sender, EventArgs e)
         {
             command_New();
+        }
+
+        private void tsManageTemplates_Click(object sender, EventArgs e)
+        {
+            using var templateManager = new frmTemplateManage();
+            templateManager.ShowDialog(this);
         }
 
         private void tsBuildRcv_Click(object sender, EventArgs e)
@@ -6681,10 +6744,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void tsRunSythlinDpsTool_Click(object sender, EventArgs e)
         {
-            if (!SlythinDpsToolRunner.FileExists())
+            if (!SythlinDpsToolRunner.FileExists())
             {
                 var mbox = new MessageBoxEx(
-                    $"Sylthin's DPS Tool exe was not found in Mids' Directory.\r\n\r\nExpected: file {SlythinDpsToolRunner.ExeName} should be in {AppContext.BaseDirectory}",
+                    $"Sythlin's DPS Tool exe was not found in Mids' Directory.\r\n\r\nExpected: file {SythlinDpsToolRunner.ExeName} should be in {AppContext.BaseDirectory}",
                     MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error, true);
 
                 mbox.ShowDialog(this);
@@ -6692,10 +6755,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 return;
             }
 
-            if (!SlythinDpsToolRunner.HashMatch())
+            if (!SythlinDpsToolRunner.HashMatch())
             {
                 var mbox = new MessageBoxEx(
-                    $"Unexpected hash from {SlythinDpsToolRunner.ExeName} file.",
+                    $"Unexpected hash from {SythlinDpsToolRunner.ExeName} file.",
                     MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error, true);
 
                 mbox.ShowDialog(this);
@@ -6705,7 +6768,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             var psi = new ProcessStartInfo
             {
-                FileName = SlythinDpsToolRunner.ExeName,
+                FileName = SythlinDpsToolRunner.ExeName,
                 Arguments = "",
                 UseShellExecute = true
             };
@@ -6719,14 +6782,19 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 "Really remove all slots?\r\nThis will not remove the slots granted automatically with powers, but will remove all the slots you placed manually.",
                 "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
-                for (var index = 0; index <= MidsContext.Character.CurrentBuild.Powers.Count; index++)
+                foreach (var pe in MidsContext.Character?.CurrentBuild?.Powers)
                 {
-                    if (MidsContext.Character.CurrentBuild.Powers[index].SlotCount <= 1)
+                    if (pe == null)
                     {
                         continue;
                     }
 
-                    MidsContext.Character.CurrentBuild.Powers[index].Slots = MidsContext.Character.CurrentBuild.Powers[index].Slots.Take(1).ToArray();
+                    if (pe.SlotCount <= 1)
+                    {
+                        continue;
+                    }
+
+                    pe.Slots = pe.Slots.Take(1).ToArray();
                 }
 
                 DoRedraw();
@@ -7151,22 +7219,17 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             ComboCheckPS(CbtPrimary.Value, Enums.PowersetType.Primary, Enums.ePowerSetType.Primary);
             ComboCheckPS(CbtSecondary.Value, Enums.PowersetType.Secondary, Enums.ePowerSetType.Secondary);
-            cbSecondary.Enabled = MidsContext.Character.Powersets[0].nIDLinkSecondary <= -1;
+            cbSecondary.Enabled = MidsContext.Character.Powersets[0]?.nIDLinkSecondary <= -1;
             ComboCheckPool(CbtPool0.Value, Enums.ePowerSetType.Pool);
             ComboCheckPool(CbtPool1.Value, Enums.ePowerSetType.Pool);
             ComboCheckPool(CbtPool2.Value, Enums.ePowerSetType.Pool);
             ComboCheckPool(CbtPool3.Value, Enums.ePowerSetType.Pool);
             ComboCheckPool(CbtAncillary.Value, Enums.ePowerSetType.Ancillary);
-            cbPool0.SelectedIndex =
-                MainModule.MidsController.Toon.PoolToComboID(0, MidsContext.Character.Powersets[3]?.nID ?? -1);
-            cbPool1.SelectedIndex =
-                MainModule.MidsController.Toon.PoolToComboID(1, MidsContext.Character.Powersets[4]?.nID ?? -1);
-            cbPool2.SelectedIndex =
-                MainModule.MidsController.Toon.PoolToComboID(2, MidsContext.Character.Powersets[5]?.nID ?? -1);
-            cbPool3.SelectedIndex =
-                MainModule.MidsController.Toon.PoolToComboID(3, MidsContext.Character.Powersets[6]?.nID ?? -1);
-            var powersetIndexes =
-                DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, Enums.ePowerSetType.Ancillary);
+            cbPool0.SelectedIndex = MainModule.MidsController.Toon.PoolToComboID(0, MidsContext.Character.Powersets[3]?.nID ?? -1);
+            cbPool1.SelectedIndex = MainModule.MidsController.Toon.PoolToComboID(1, MidsContext.Character.Powersets[4]?.nID ?? -1);
+            cbPool2.SelectedIndex = MainModule.MidsController.Toon.PoolToComboID(2, MidsContext.Character.Powersets[5]?.nID ?? -1);
+            cbPool3.SelectedIndex = MainModule.MidsController.Toon.PoolToComboID(3, MidsContext.Character.Powersets[6]?.nID ?? -1);
+            var powersetIndexes = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, Enums.ePowerSetType.Ancillary);
             cbAncillary.SelectedIndex = MidsContext.Character.Powersets[7] != null
                 ? DatabaseAPI.ToDisplayIndex(MidsContext.Character.Powersets[7], powersetIndexes)
                 : 0;
@@ -7717,14 +7780,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     p.Slots.CopyTo(pe.Slots, 0);
                     for (var i = 0; i < pe.Slots.Length; i++)
                     {
-                        if (i == 0)
-                        {
-                            pe.Slots[i].Level = pe.Level;
-                        }
-                        else
-                        {
-                            pe.Slots[i].Level = sl.PickSlot();
-                        }
+                        pe.Slots[i].Level = i == 0 ? pe.Level : sl.PickSlot();
                     }
                 }
             }
@@ -7842,6 +7898,80 @@ The default position/state will be used upon next launch.", @"Window State Warni
             MidsContext.Character.Validate();
             MidsContext.Config.LastFileName = buildFile;
             */
+        }
+
+        internal int[] GetCbPoolsIndices(bool includeAncillary = true)
+        {
+            return includeAncillary
+                ?
+                [
+                    Math.Max(cbPool0.SelectedIndex, 0), Math.Max(cbPool1.SelectedIndex, 0),
+                    Math.Max(cbPool2.SelectedIndex, 0), Math.Max(cbPool3.SelectedIndex, 0),
+                    Math.Max(cbAncillary.SelectedIndex, 0)
+                ]
+                :
+                [
+                    Math.Max(cbPool0.SelectedIndex, 0), Math.Max(cbPool1.SelectedIndex, 0),
+                    Math.Max(cbPool2.SelectedIndex, 0), Math.Max(cbPool3.SelectedIndex, 0)
+                ];
+
+        }
+
+        internal void SetCbPoolIndex(int poolIndex, int cbIndex = 0)
+        {
+            switch (poolIndex)
+            {
+                case 1:
+                    cbPool1.SelectedIndex = cbIndex;
+                    break;
+
+                case 2:
+                    cbPool2.SelectedIndex = cbIndex;
+                    break;
+
+                case 3:
+                    cbPool3.SelectedIndex = cbIndex;
+                    break;
+
+                case 4:
+                    cbAncillary.SelectedIndex = cbIndex;
+                    break;
+
+                default:
+                    cbPool0.SelectedIndex = cbIndex;
+                    break;
+            }
+        }
+
+        internal dynamic GetCbPoolIndex(int poolIndex, bool returnText = false)
+        {
+            return !returnText
+                ? poolIndex switch
+                {
+                    1 => cbPool1.SelectedIndex,
+                    2 => cbPool2.SelectedIndex,
+                    3 => cbPool3.SelectedIndex,
+                    4 => cbAncillary.SelectedIndex,
+                    _ => cbPool0.SelectedIndex,
+                }
+                : (poolIndex switch
+                {
+                    1 => cbPool1.SelectedIndex < 0 ? "" : cbPool1.Items[cbPool1.SelectedIndex],
+                    2 => cbPool2.SelectedIndex < 0 ? "" : cbPool2.Items[cbPool2.SelectedIndex],
+                    3 => cbPool3.SelectedIndex < 0 ? "" : cbPool3.Items[cbPool3.SelectedIndex],
+                    4 => cbAncillary.SelectedIndex < 0 ? "" : cbAncillary.Items[cbAncillary.SelectedIndex],
+                    _ => cbPool0.SelectedIndex < 0 ? "" : cbPool0.Items[cbPool0.SelectedIndex],
+                })?.ToString() ?? "";
+        }
+
+        internal void SetFileModified(bool state)
+        {
+            FileModified = state;
+        }
+
+        internal void SetPowerEntryHighlight(int peIndex = -1)
+        {
+            drawing?.HighlightSlot(peIndex);
         }
 
         #region "fields"

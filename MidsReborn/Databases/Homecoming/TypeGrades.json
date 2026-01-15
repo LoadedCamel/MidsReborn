@@ -243,7 +243,7 @@
 		{
 			"Name": "Hamidon Origin",
 			"ShortName": "HO",
-			"Description": "Rewards from the Hamidon Raid."
+			"Description": "Rewards from the Hamidon Raid and Lady Grey Task Force on Advanced difficulty."
 		},
 		{
 			"Name": "Hydra Origin",
@@ -258,7 +258,7 @@
 		{
 			"Name": "D-Sync Origin",
 			"ShortName": "DSyncO",
-			"Description": "Rewards from the Aeon Strike Force."
+			"Description": "Rewards from Aeon Strike Force and Zoe Task Force."
 		}
 	]
 }

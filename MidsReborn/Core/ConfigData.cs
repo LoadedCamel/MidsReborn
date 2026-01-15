@@ -1,3 +1,5 @@
+using Mids_Reborn.UI.Forms;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
@@ -6,7 +8,6 @@ using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
-using Mids_Reborn.UI.Forms;
 using Path = System.IO.Path;
 using Rectangle = System.Drawing.Rectangle;
 
@@ -171,6 +172,100 @@ namespace Mids_Reborn.Core
         public Enums.WordwrapMode PowerListsWordwrapMode { get; set; }
 
         public CombatContext CombatContextSettings { get; set; }
+        public string? ActiveTemplate { get; set; } = null;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public CustomGraphStat.eCustomGraphStat[]? CustomGraphs { get; set; } =
+        [
+            CustomGraphStat.eCustomGraphStat.Recharge, CustomGraphStat.eCustomGraphStat.ToHit, CustomGraphStat.eCustomGraphStat.Accuracy,
+            CustomGraphStat.eCustomGraphStat.Damage, CustomGraphStat.eCustomGraphStat.Range, CustomGraphStat.eCustomGraphStat.EndRdx,
+            CustomGraphStat.eCustomGraphStat.Heal, CustomGraphStat.eCustomGraphStat.Threat
+        ];
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public CustomGraphSettings[]? CustomGraphSetting { get; set; } =
+        [
+            new CustomGraphSettings // Recharge
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.Enhancement,
+                EffectTypeAux = Enums.eEffectType.RechargeTime,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // ToHit
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.ToHit,
+                EffectTypeAux = null,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // Accuracy
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.Enhancement,
+                EffectTypeAux = Enums.eEffectType.Accuracy,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // Damage
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.DamageBuff,
+                EffectTypeAux = null,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // Range
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.Enhancement,
+                EffectTypeAux = Enums.eEffectType.Range,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // EndRdx
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.Enhancement,
+                EffectTypeAux = Enums.eEffectType.EnduranceDiscount, // ???
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // Heal
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.Enhancement,
+                EffectTypeAux = Enums.eEffectType.Heal,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // Threat
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.ThreatLevel,
+                EffectTypeAux = null,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            }
+        ];
 
         internal bool MasterMode
         {
@@ -439,6 +534,17 @@ namespace Mids_Reborn.Core
                 binaryWriter.Write(CompOverride[index].Power);
                 binaryWriter.Write(CompOverride[index].Override);
             }
+        }
+
+        public class CustomGraphSettings
+        {
+            public Enums.eMez? MezType { get; set; }
+            public CustomGraphStat.eCustomGraphMode MezMode { get; set; }
+            public Enums.eDamage? DamageType { get; set; }
+            public CustomGraphStat.eCustomGraphMode DamageMode { get; set; }
+            public Enums.eEffectType? EffectType { get; set; }
+            public Enums.eEffectType? EffectTypeAux { get; set; }
+            public CustomGraphStat.eCustomGraphMode EffectMode { get; set; }
         }
 
         public class AutoUpdate

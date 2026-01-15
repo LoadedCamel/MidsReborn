@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
@@ -31,6 +32,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private async void App_Click(object? sender, EventArgs e)
         {
             formPages1.SelectedIndex = 2;
+            await RenameBootstrapperFiles();
+            await Task.Delay(100);
             _compressor = PatchCompressor.AppPatchCompressor;
             _compressor.ProgressChanged += CompressorOnProgressChanged;
             await Task.Delay(100);
@@ -45,6 +48,29 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             await Task.Delay(100);
             await StartProcess();
         }
+
+        private async Task RenameBootstrapperFiles()
+        {
+            processLabel.Text = "Renaming Bootstrapper files...";
+            await Task.Delay(100);
+            var filesDir = Path.GetDirectoryName(Application.ExecutablePath);
+            var files = Directory.EnumerateFiles(filesDir, "MRBBootstrap*", SearchOption.TopDirectoryOnly);
+            foreach (var file in files)
+            {
+                try
+                {
+                    File.Move(file, file.Replace("MRBBootstrap", "New_MRBBootstrap"), true);
+                }
+                catch (Exception ex)
+                {
+                    MessageBox.Show($"Error renaming file from {file}:\r\n{ex.Message}", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                }
+            }
+
+            processLabel.Text = "Done preparing Bootstrapper files";
+            await Task.Delay(150);
+        }
+
 
         private async Task StartProcess()
         {

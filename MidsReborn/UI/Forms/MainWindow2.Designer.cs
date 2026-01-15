@@ -229,6 +229,7 @@ namespace Mids_Reborn.UI.Forms
             this.enhCheckMode = new EnhCheckMode(this);
             this.EnemyRelativeToolStripComboBox = new ToolStripComboBox();
             this.tsViewBuildComment = new IconButton();
+            this.tsManageTemplates = new ToolStripMenuItem();
             this.MenuBar.SuspendLayout();
             this.topPanel.SuspendLayout();
             //((System.ComponentModel.ISupportInitialize)(this.pbDynMode)).BeginInit();
@@ -684,6 +685,7 @@ namespace Mids_Reborn.UI.Forms
             this.FileToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[]
             {
                 this.tsFileNew,
+                this.tsManageTemplates,
                 this.ToolStripSeparator7,
                 this.tsFileOpen,
                 this.tsFileSave,
@@ -707,6 +709,13 @@ namespace Mids_Reborn.UI.Forms
             this.tsFileNew.Size = new System.Drawing.Size(179, 22);
             this.tsFileNew.Text = "&New / Clear";
             this.tsFileNew.Click += new System.EventHandler(this.tsFileNew_Click);
+            // 
+            // tsManageTemplates
+            // 
+            this.tsManageTemplates.Name = "tsManageTemplates";
+            this.tsManageTemplates.Size = new System.Drawing.Size(179, 22);
+            this.tsManageTemplates.Text = "Select Template...";
+            this.tsManageTemplates.Click += new System.EventHandler(this.tsManageTemplates_Click);
             // 
             // ToolStripSeparator7
             // 
@@ -739,6 +748,7 @@ namespace Mids_Reborn.UI.Forms
             // tsFileSaveAs
             // 
             this.tsFileSaveAs.Name = "tsFileSaveAs";
+            this.tsFileSaveAs.ShortcutKeys = System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.Shift | System.Windows.Forms.Keys.S;
             this.tsFileSaveAs.Size = new System.Drawing.Size(179, 22);
             this.tsFileSaveAs.Text = "Save &As...";
             this.tsFileSaveAs.Click += new System.EventHandler(this.tsFileSaveAs_Click);
@@ -2566,6 +2576,7 @@ namespace Mids_Reborn.UI.Forms
         ToolStripMenuItem DonateToolStripMenuItem;
         public ToolStripComboBox EnemyRelativeToolStripComboBox;
         private FontAwesome.Sharp.IconButton tsViewBuildComment;
+        private ToolStripMenuItem tsManageTemplates;
         Timer tmrGfx;
         ScrollPanelEx poolsPanel;
         ToolTip tTip;

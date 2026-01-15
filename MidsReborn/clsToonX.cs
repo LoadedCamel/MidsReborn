@@ -8,7 +8,6 @@ using Mids_Reborn.UI.Controls.Skia;
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.IO;
@@ -513,23 +512,6 @@ namespace Mids_Reborn
                 return;
             }
 
-            // Local helpers for readability (no allocations beyond compiler-generated).
-            static bool TargetsSelfOrAll(IEffect fx) =>
-                fx.ToWho is Enums.eToWho.Self or Enums.eToWho.All;
-
-            static bool IsMaxSpeedCap(IEffect fx, Enums.eEffectType mod) =>
-                fx.EffectType != Enums.eEffectType.ResEffect && fx.ETModifies == mod && fx.Aspect == Enums.eAspect.Max;
-
-            static bool IsSpeedScalar(Enums.eEffectType mod) =>
-                mod is Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.JumpHeight;
-
-            static bool IsDamageBuffOrEnhancement(IEffect fx) =>
-                fx.EffectType is Enums.eEffectType.DamageBuff or Enums.eEffectType.Enhancement;
-
-            static bool IsGlobalAccuracySource(IPower src) =>
-                ReferenceEquals(src, MidsContext.Character.CurrentBuild.SetBonusVirtualPower) ||
-                src.PowerType == Enums.ePowerType.GlobalBoost;
-
             var shortFx = new Enums.ShortFX(); // main per-effect-type accumulator (values + effect indices)
             var sFxSelf = new Enums.ShortFX(); // used only for Max* speed self caps
 
@@ -590,10 +572,31 @@ namespace Mids_Reborn
 
                     var value = shortFx.Value[shortFxIdx];
 
+                    // Enhancement buffs (stored out of nBuffs.Effect)
+                    if (fx is { EffectType: Enums.eEffectType.Enhancement })
+                    {
+                        switch (fx)
+                        {
+                            case { ETModifies: Enums.eEffectType.Mez, MezType: not Enums.eMez.None }:
+                                nBuffs.BoostsMez[(int)fx.MezType] += value;
+                                break;
+                            
+                            case { ETModifies: not (Enums.eEffectType.None or Enums.eEffectType.Null or Enums.eEffectType.NullBool or Enums.eEffectType.Mez) }:
+                                nBuffs.Boosts[(int)fx.ETModifies] += value;
+                                break;
+                        }
+                    }
+
                     // Enhancement "Range" is modeled as a buff in MR: include during non-enhancement pass.
                     if (!enhancementPass && fx is { EffectType: Enums.eEffectType.Enhancement, ETModifies: Enums.eEffectType.Range })
                     {
                         nBuffs.Effect[(int)Enums.eEffectType.Range] += value;
+                    }
+
+                    // Redirect Enhancement(Heal) to Heal
+                    if (fx is { EffectType: Enums.eEffectType.Enhancement, ETModifies: Enums.eEffectType.Heal })
+                    {
+                        nBuffs.Effect[(int)Enums.eEffectType.Heal] += value;
                     }
 
                     // Effects absorbed from a GlobalBoost power are excluded here.
@@ -673,8 +676,8 @@ namespace Mids_Reborn
                                     continue;
                                 }
 
-                                // Skip pure Accuracy *enhancements* here (handled elsewhere/earlier in the math).
-                                if (fx.ETModifies == Enums.eEffectType.Accuracy)
+                                // Skip pure Accuracy *enhancements* or Heal effects here (handled elsewhere/earlier in the math)
+                                if (fx.ETModifies is Enums.eEffectType.Accuracy or Enums.eEffectType.Heal)
                                 {
                                     continue;
                                 }
@@ -703,6 +706,14 @@ namespace Mids_Reborn
                     // ?????????????????????????????????????????????????????????????????
                     // Non-enhancement (or remaining) contributions and special cases
                     // ?????????????????????????????????????????????????????????????????
+
+                    // Heal / Enhancement(Heal)
+                    // Enhancement(Heal) is processed before here, ignore it
+                    // Heal has to be ignored or the fallback case will mix it up
+                    if (fx.EffectType == Enums.eEffectType.Heal || fx is { EffectType: Enums.eEffectType.Enhancement, ETModifies: Enums.eEffectType.Heal })
+                    {
+                        continue;
+                    }
 
                     // Max Endurance
                     if (fx is { EffectType: Enums.eEffectType.Endurance, Aspect: Enums.eAspect.Max })
@@ -807,6 +818,17 @@ namespace Mids_Reborn
                     // If we reach here in enhancementPass, nothing to do for this sub-effect.
                 }
             }
+
+            return;
+
+            // Local helpers for readability (no allocations beyond compiler-generated)
+            static bool TargetsSelfOrAll(IEffect fx) => fx.ToWho is Enums.eToWho.Self or Enums.eToWho.All;
+            static bool IsMaxSpeedCap(IEffect fx, Enums.eEffectType mod) => fx.EffectType != Enums.eEffectType.ResEffect && fx.ETModifies == mod && fx.Aspect == Enums.eAspect.Max;
+            static bool IsSpeedScalar(Enums.eEffectType mod) => mod is Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.JumpHeight;
+            static bool IsDamageBuffOrEnhancement(IEffect fx) => fx.EffectType is Enums.eEffectType.DamageBuff or Enums.eEffectType.Enhancement;
+            static bool IsGlobalAccuracySource(IPower src) => ReferenceEquals(src, MidsContext.Character.CurrentBuild.SetBonusVirtualPower) || src.PowerType == Enums.ePowerType.GlobalBoost;
+            static bool IsHealBuff(IEffect fx) => fx is { EffectType: Enums.eEffectType.Enhancement, ETModifies: Enums.eEffectType.Heal };
+            static bool IsHPBuff(IEffect fx) => fx is { EffectType: Enums.eEffectType.Enhancement, ETModifies: Enums.eEffectType.HitPoints };
         }
 
         private static bool IsClickPower(IPower power)
@@ -928,30 +950,18 @@ namespace Mids_Reborn
                 Totals.FlySpd = 0;
             }
 
-            var maxDmgBuff = -1000f;
-            var minDmgBuff = -1000f;
-            var avgDmgBuff = 0f;
-            for (var index = 0; index < _selfBuffs.Damage.Length; index++)
+            if (_selfBuffs.Damage.All(e => Math.Abs(e) < float.Epsilon))
             {
-                if (index is <= 0 or >= 9)
+                for (var i = 0; i < _selfBuffs.Damage.Length; i++)
                 {
-                    continue;
+                    _selfBuffs.Damage[i] += _selfEnhance.Damage[i];
                 }
-
-                if (_selfEnhance.Damage[index] > maxDmgBuff)
-                {
-                    maxDmgBuff = _selfEnhance.Damage[index];
-                }
-
-                if (_selfEnhance.Damage[index] < minDmgBuff)
-                {
-                    minDmgBuff = _selfEnhance.Damage[index];
-                }
-
-                avgDmgBuff += _selfEnhance.Damage[index];
             }
 
-            avgDmgBuff /= _selfEnhance.Damage.Length;
+            var minDmgBuff = _selfBuffs.Damage[1..8].Min();
+            var maxDmgBuff = _selfBuffs.Damage[1..8].Max();
+            var avgDmgBuff = _selfBuffs.Damage[1..8].Average();
+
             if (maxDmgBuff - avgDmgBuff < avgDmgBuff - minDmgBuff)
             {
                 Totals.BuffDam = maxDmgBuff;
@@ -964,6 +974,8 @@ namespace Mids_Reborn
             {
                 Totals.BuffDam = maxDmgBuff;
             }
+
+            Totals.BuffHeal = _selfBuffs.Effect[(int)Enums.eStatType.Heal];
 
             ApplyPvpDr();
             TotalsCapped.Assign(Totals);
@@ -2149,7 +2161,7 @@ namespace Mids_Reborn
                     continue;
                 }
 
-                if (!(CurrentBuild.Powers[i].StatInclude & CurrentBuild.Powers[i].NIDPower > -1) || DatabaseAPI.Database.Power[CurrentBuild.Powers[i].NIDPower].PowerType == Enums.ePowerType.GlobalBoost)
+                if (!(CurrentBuild.Powers[i].StatInclude & (CurrentBuild.Powers[i].NIDPower > -1)) || DatabaseAPI.Database.Power[CurrentBuild.Powers[i].NIDPower].PowerType == Enums.ePowerType.GlobalBoost)
                 {
                     continue;
                 }
@@ -2600,6 +2612,27 @@ namespace Mids_Reborn
             for (var index = 0; index <= strArray.Length - 1; ++index)
                 strArray[index] = FileIO.IOStrip(strArray[index]);
             return strArray;
+        }
+
+        public List<PowerEntry?>? LoadFromFileLight(string iFileName)
+        {
+            if (string.IsNullOrWhiteSpace(iFileName))
+            {
+                return null;
+            }
+
+            if (!File.Exists(iFileName))
+            {
+                return null;
+            }
+
+            var mStream = new FileStream(iFileName, FileMode.Open, FileAccess.Read);
+            var ret = MidsCharacterFileFormat.MxDExtractAndLoadLight(mStream);
+            mStream.Close();
+
+            return ret.Key != MidsCharacterFileFormat.eLoadReturnCode.Success
+                ? null
+                : ret.Value;
         }
 
         public bool Load(string iFileName, ref Stream? mStream)

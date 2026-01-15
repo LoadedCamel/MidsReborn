@@ -118,6 +118,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphElusivity.Width = graphAcc.Width;
             graphEndRdx.Width = graphAcc.Width;
             graphThreat.Width = graphAcc.Width;
+            graphHealBuff.Width = graphAcc.Width;
             graphRange.Width = graphAcc.Width;
             Panel2.Width = graphAcc.Width;
             pbClose.Left = pnlDRHE.Right - pbClose.Width;
@@ -255,7 +256,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 graphAcc, graphDam, graphRange, graphDef, graphDrain, graphHaste, graphHP,
                 graphMaxEnd, graphMovement, graphRec, graphRegen, graphRes,
                 graphStealth, graphToHit, graphEndRdx, graphThreat,
-                graphElusivity, graphSProt, graphSRes, graphSDeb
+                graphElusivity, graphHealBuff, graphSProt, graphSRes, graphSDeb
             };
 
             foreach (var graphControl in graphControls)
@@ -629,9 +630,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 iTip8 += $"\r\n{strCap}{FormatSpeed(MidsContext.Character.Totals.RunSpd, displayStats, speedFormat, rateDisp)}";
             }
 
-            var jmpHtTip = !(speedFormat == Enums.eSpeedMeasure.FeetPerSecond | speedFormat == Enums.eSpeedMeasure.MilesPerHour)
-                ? jmpTip2 + " m."
-                : jmpTip2 + " ft.";
+            var jmpHtTip = speedFormat is not Enums.eSpeedMeasure.FeetPerSecond and not Enums.eSpeedMeasure.MilesPerHour
+                ? $"{jmpTip2} m."
+                : $"{jmpTip2} ft.";
 
             AddGraphMovementItem("Run|", displayStats.MovementRunSpeed, iTip8, speedFormat, rateDisp);
             AddGraphMovementItem("Jump|", displayStats.MovementJumpSpeed, jumpTip, speedFormat, rateDisp);
@@ -690,9 +691,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphEndRdx.Draw();
 
             graphStealth.Clear();
-            graphStealth.AddItem($"PvE|{MidsContext.Character.Totals.StealthPvE:##0} ft", MidsContext.Character.Totals.StealthPvE, 0.0f, "This is subtracted from a mob's perception to work out if they can see you.");
-            graphStealth.AddItem($"PvE|{MidsContext.Character.Totals.StealthPvP:##0} ft", MidsContext.Character.Totals.StealthPvE, 0.0f, "This is subtracted from a player's perception to work out if they can see you.");
-            graphStealth.AddItem($"Perception|{displayStats.Perception(false):###0} ft", displayStats.Perception(false), 0.0f, "This, minus a player's stealth radius, is the distance you can see it.");
+            graphStealth.AddItem($"PvE|{MidsContext.Character.Totals.StealthPvE:##0} ft", MidsContext.Character.Totals.StealthPvE, 0, "This is subtracted from a mob's perception to work out if they can see you.");
+            graphStealth.AddItem($"PvE|{MidsContext.Character.Totals.StealthPvP:##0} ft", MidsContext.Character.Totals.StealthPvE, 0, "This is subtracted from a player's perception to work out if they can see you.");
+            graphStealth.AddItem($"Perception|{displayStats.Perception(false):###0} ft", displayStats.Perception(false), 0, "This, minus a player's stealth radius, is the distance you can see it.");
             graphStealth.Max = graphStealth.GetMaxValue() * 1.01f;
             graphStealth.Draw();
             var iTip10 = $"This affects how mobs prioritize you as a threat.\r\nLower values make you a less tempting target.\r\nThe {MidsContext.Character.Archetype.DisplayName} base Threat Level of {MidsContext.Character.Archetype.BaseThreat * 100.0:###}% is included in this figure.";
@@ -702,6 +703,11 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphThreat.MarkerValue = MidsContext.Character.Archetype.BaseThreat * 100 + 200;
             graphThreat.Max = 800;
             graphThreat.Draw();
+
+            graphHealBuff.Clear();
+            graphHealBuff.AddItem($"Heal|{displayStats.BuffHeal:##0.##}%", displayStats.BuffHeal, displayStats.BuffHeal, "This affects the efficiency of your healing powers.");
+            graphHealBuff.Max = 300;
+            graphHealBuff.Draw();
 
             graphElusivity.Clear();
             var sElusivity = MidsContext.Character.Totals.ElusivityMax;
@@ -714,15 +720,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             }
 
             var totals = MidsContext.Character.Totals;
-            var str9 = "\r\nStatus protection prevents you being affected by a status effect such as" + "\r\na Hold until the magnitude of the effect exceeds that of the protection.";
-            var str10 = "\r\nStatus resistance reduces the time you are affected by a status effect such as" + "\r\na Hold. Note that 100% resistance would make a 10s effect last 5s, and not 0s.";
+            const string str9 = "\r\nStatus protection prevents you being affected by a status effect such as\r\na Hold until the magnitude of the effect exceeds that of the protection.";
+            const string str10 = "\r\nStatus resistance reduces the time you are affected by a status effect such as\r\na Hold. Note that 100% resistance would make a 10s effect last 5s, and not 0s.";
             graphSProt.Clear();
             graphSRes.Clear();
             Enums.eMez[] eMezArray =
-            {
+            [
                 Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep, Enums.eMez.Immobilized, Enums.eMez.Knockback, Enums.eMez.Repel,
                 Enums.eMez.Confused, Enums.eMez.Terrorized, Enums.eMez.Taunt, Enums.eMez.Placate, Enums.eMez.Teleport
-            };
+            ];
             var names2 = Enum.GetNames<Enums.eMez>(); // Enum.GetNames(eMezArray[0].GetType());
             var names3 = Enum.GetNames<Enums.eMez>(); // Enum.GetNames(eMezArray[0].GetType());
             names2[2] = "Hold";
@@ -745,7 +751,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
                 var mezResPercent = 100 / (1 + totals.MezRes[(int)e] / 100);
                 var str11 = "";
-                if (e != Enums.eMez.Knockback & e != Enums.eMez.Knockup & e != Enums.eMez.Repel & e != Enums.eMez.Teleport)
+                if (e is not (Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Repel or Enums.eMez.Teleport))
                 {
                     if (totals.MezRes[(int)e] > sResMax)
                     {

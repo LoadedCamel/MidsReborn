@@ -228,6 +228,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         }
         #endregion
 
+        private struct SetImageInfo
+        {
+            public int SetId;
+            public string SetImage;
+            public Recipe.RecipeRarity? Rarity;
+            public bool IsPvP;
+            public Bitmap? ImageBitmap;
+        }
+
         private readonly MainWindow2 myParent;
         private ImageButton btnClose;
         private ImageButton btnSmall;
@@ -757,31 +766,22 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             rtApplied.Rtf = str9;
         }
 
-        private Bitmap DrawEnhancementSetBitmap(int w, int h, int imgIndex)
+        private Bitmap DrawEnhancementSetBitmap(int w, int h, int imgIndex, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
             var xb = new ExtendedBitmap(w, h);
             xb.Graphics.Clear(Color.Transparent);
             var graphics = xb.Graphics;
-            I9Gfx.DrawEnhancementSet(ref graphics, imgIndex);
+            I9Gfx.DrawEnhancementSet(ref graphics, imgIndex, rarity, isPvP);
 
             return xb.Bitmap ?? new Bitmap(w, h);
         }
 
         private void FillImageList()
         {
-            /*
-            I9Gfx.LoadSets():
-            for (var index = 0; index < retList.Count; index++)
-            {
-                DatabaseAPI.Database.EnhancementSets[index].ImageIdx = index;
-            }
-            */
-
             var imgSets = MidsContext.Character.CurrentBuild.SetBonuses
                 .SelectMany(e => e.SetInfo.Where(f => f.SetIDX >= 0))
-                .Select(e => DatabaseAPI.Database.EnhancementSets[e.SetIDX].Image)
-                .Select(e => DatabaseAPI.Database.EnhancementSets.TryFindIndex(f => f.Image == e))
-                .Select(e => DrawEnhancementSetBitmap(ilSet.ImageSize.Width, ilSet.ImageSize.Height, e))
+                .Select(e => AssembleSetImageInfo(e.SetIDX))
+                .Select(e => e.ImageBitmap)
                 .ToArray();
 
             ilSet.Images.Clear();
@@ -789,6 +789,28 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             {
                 ilSet.Images.Add(img);
             }
+        }
+
+        private SetImageInfo AssembleSetImageInfo(int setIdx)
+        {
+            var set = DatabaseAPI.Database.EnhancementSets[setIdx];
+            Recipe.RecipeRarity? rarity = set.Enhancements.All(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX < 0)
+                ? null
+                : set.Enhancements
+                    .Where(e => DatabaseAPI.Database.Enhancements[e].RecipeIDX >= 0)
+                    .Select(e => DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[e].RecipeIDX].Rarity)
+                    .Max();
+            var isPvP = set.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true));
+            var imgBitmap = DrawEnhancementSetBitmap(ilSet.ImageSize.Width, ilSet.ImageSize.Height, DatabaseAPI.Database.EnhancementSets.TryFindIndex(f => f.Image == set.Image), rarity, isPvP);
+
+            return new SetImageInfo
+            {
+                ImageBitmap = imgBitmap,
+                IsPvP = isPvP,
+                Rarity = rarity,
+                SetId = setIdx,
+                SetImage = set.Image
+            };
         }
 
         private void Bar_Hover(object sender)
