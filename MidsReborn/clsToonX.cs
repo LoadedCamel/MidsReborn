@@ -2407,10 +2407,9 @@ namespace Mids_Reborn
 
         public IPower GetEnhancedPower(int iPower)
         {
-            if (!((iPower < 0) | (_buffedPowers.Length - 1 < iPower)))
-                return _buffedPowers[iPower];
-            else
-                return null;
+            return !((iPower < 0) | (_buffedPowers.Length - 1 < iPower))
+                ? _buffedPowers[iPower]
+                : null;
         }
 
         public IPower? GetEnhancedPower(IPower? power)
@@ -2754,7 +2753,7 @@ namespace Mids_Reborn
 
             popupData.Sections[index1].Add(power.DescShort, PopUp.Colors.Text);
             var flag1 = false;
-            if (hIDX < 0 & pIDX > -1)
+            if ((hIDX < 0) & (pIDX > -1))
             {
                 if (DatabaseAPI.Database.Power[pIDX].NIDSubPower.Length > 0)
                 {
@@ -2841,10 +2840,10 @@ namespace Mids_Reborn
                     popupData.Sections[index1].Add($"{enhancementSet.DisplayName} ({setInfo[senInfoIdx].SlottedCount}/{enhancementSet.Enhancements.Length})", PopUp.Colors.Title);
                     for (var bonusIdx = 0; bonusIdx < enhancementSet.Bonus.Length; bonusIdx++)
                     {
-                        if (!(setInfo[senInfoIdx].SlottedCount >= enhancementSet.Bonus[bonusIdx].Slotted &
-                              (enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE |
-                               enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
-                               enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.Any)))
+                        if (!((setInfo[senInfoIdx].SlottedCount >= enhancementSet.Bonus[bonusIdx].Slotted) &
+                              (((enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE) |
+                               ((enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) |
+                               (enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.Any))))
                         {
                             continue;
                         }
@@ -3014,24 +3013,24 @@ namespace Mids_Reborn
 
             if (!MidsContext.Config.DisableAlphaPopup)
             {
-                for (var index1 = 0; index1 < CurrentBuild.Powers.Count; index1++)
+                foreach (var pe in CurrentBuild.Powers)
                 {
-                    if (CurrentBuild.Powers[index1] == null || CurrentBuild.Powers[index1].Power == null || !CurrentBuild.Powers[index1].StatInclude)
+                    if (pe?.Power == null || !pe.StatInclude)
                     {
                         continue;
                     }
 
-                    IPower power1 = new Power(CurrentBuild.Powers[index1]?.Power);
+                    var power1 = new Power(pe.Power);
                     power1.AbsorbPetEffects();
                     power1.ApplyGrantPowerEffects();
                     foreach (var effect in power1.Effects)
                     {
-                        if (power1.PowerType != Enums.ePowerType.GlobalBoost & (!effect.Absorbed_Effect | effect.Absorbed_PowerType != Enums.ePowerType.GlobalBoost))
+                        if ((power1.PowerType != Enums.ePowerType.GlobalBoost) & (!effect.Absorbed_Effect | (effect.Absorbed_PowerType != Enums.ePowerType.GlobalBoost)))
                         {
                             continue;
                         }
 
-                        var power2 = effect.Absorbed_Effect & effect.Absorbed_Power_nID > -1
+                        var power2 = effect.Absorbed_Effect & (effect.Absorbed_Power_nID > -1)
                             ? DatabaseAPI.Database.Power[effect.Absorbed_Power_nID]
                             : power1;
 
@@ -3065,13 +3064,12 @@ namespace Mids_Reborn
                             continue;
                         }
 
-                        if (effect.EffectType == Enums.eEffectType.Enhancement)
+                        switch (effect.EffectType)
                         {
-                            switch (effect.ETModifies)
-                            {
-                                case Enums.eEffectType.Defense:
-                                    if (effect.DamageType == Enums.eDamage.Smashing)
-                                    {
+                            case Enums.eEffectType.Enhancement:
+                                switch (effect.ETModifies)
+                                {
+                                    case Enums.eEffectType.Defense when effect.DamageType == Enums.eDamage.Smashing:
                                         if (effect.IgnoreED)
                                         {
                                             switch (eBuffDebuff)
@@ -3102,75 +3100,82 @@ namespace Mids_Reborn
                                                     break;
                                             }
                                         }
-                                    }
 
-                                    break;
-                                case Enums.eEffectType.Mez:
-                                    if (effect.IgnoreED)
-                                    {
-                                        afterED4[(int) effect.MezType] += effect.Mag;
                                         break;
-                                    }
+                                    
+                                    case Enums.eEffectType.Mez:
+                                        if (effect.IgnoreED)
+                                        {
+                                            afterED4[(int) effect.MezType] += effect.Mag;
+                                            break;
+                                        }
 
-                                    nMez[(int) effect.MezType] += effect.Mag;
-                                    break;
-                                default:
-                                    var index3 = effect.ETModifies != Enums.eEffectType.RechargeTime ? Convert.ToInt32(Enum.Parse(typeof(Enums.eEnhance), effect.ETModifies.ToString())) : 14;
-                                    if (effect.IgnoreED)
-                                    {
-                                        afterED3[index3] += effect.Mag;
+                                        nMez[(int) effect.MezType] += effect.Mag;
                                         break;
-                                    }
+                                    
+                                    default:
+                                        var index3 = effect.ETModifies != Enums.eEffectType.RechargeTime
+                                            ? Convert.ToInt32(Enum.Parse<Enums.eEnhance>(effect.ETModifies.ToString()))
+                                            : 14; // Enums.eEnhance.RechargeTime
+                                        
+                                        if (effect.IgnoreED)
+                                        {
+                                            afterED3[index3] += effect.Mag;
+                                            break;
+                                        }
 
-                                    nAny[index3] += effect.Mag;
-                                    break;
-                            }
-                        }
-                        else if (effect.EffectType == Enums.eEffectType.DamageBuff & effect.DamageType == Enums.eDamage.Smashing)
-                        {
-                            if (power2 == null)
-                            {
-                                continue;
-                            }
-
-                            if (effect.IgnoreED)
-                            {
-                                foreach (var str in power2.BoostsAllowed)
-                                {
-                                    if (str.StartsWith("Res_Damage"))
-                                    {
-                                        afterED3[18] += effect.Mag;
+                                        nAny[index3] += effect.Mag;
                                         break;
-                                    }
-
-                                    if (!str.StartsWith("Damage"))
-                                    {
-                                        continue;
-                                    }
-
-                                    afterED3[2] += effect.Mag;
-                                    break;
                                 }
-                            }
-                            else
-                            {
-                                foreach (var str in power2.BoostsAllowed)
+
+                                break;
+
+                            case Enums.eEffectType.DamageBuff when effect.DamageType == Enums.eDamage.Smashing:
+                                if (power2 == null)
                                 {
-                                    if (str.StartsWith("Res_Damage"))
+                                    continue;
+                                }
+
+                                if (effect.IgnoreED)
+                                {
+                                    foreach (var str in power2.BoostsAllowed)
                                     {
-                                        nAny[18] += effect.Mag;
+                                        if (str.StartsWith("Res_Damage"))
+                                        {
+                                            afterED3[18] += effect.Mag;
+                                            break;
+                                        }
+
+                                        if (!str.StartsWith("Damage"))
+                                        {
+                                            continue;
+                                        }
+
+                                        afterED3[2] += effect.Mag;
                                         break;
                                     }
-
-                                    if (!str.StartsWith("Damage"))
-                                    {
-                                        continue;
-                                    }
-
-                                    nAny[2] += effect.Mag;
-                                    break;
                                 }
-                            }
+                                else
+                                {
+                                    foreach (var str in power2.BoostsAllowed)
+                                    {
+                                        if (str.StartsWith("Res_Damage"))
+                                        {
+                                            nAny[18] += effect.Mag;
+                                            break;
+                                        }
+
+                                        if (!str.StartsWith("Damage"))
+                                        {
+                                            continue;
+                                        }
+
+                                        nAny[2] += effect.Mag;
+                                        break;
+                                    }
+                                }
+
+                                break;
                         }
                     }
                 }
@@ -3189,8 +3194,54 @@ namespace Mids_Reborn
             nAny[17] = 0;
 
             var sContent = new List<PopUp.StringValue>();
+            //var enhPower = GetEnhancedPower(MidsContext.Character?.CurrentBuild?.Powers[hIDX]?.Power);
             for (var index = 0; index < nBuff.Length; index++)
             {
+                /*if (nAny[index] > 0)
+                {
+                    var fxType = Enums.EnhanceToEffectType((Enums.eEnhance)index);
+                    if ((fxType[0] == null) & (fxType[1] == null))
+                    {
+                        sContent.Add(BuildEDItem(index, nAny, schedAny, Enum.GetName(eEnhance.GetType(), index) ?? "", afterED3));
+                    }
+                    else
+                    {
+                        bool hasBuffs;
+                        bool hasDebuffs;
+                        if (fxType[0] == Enums.eEffectType.Enhancement)
+                        {
+                            hasBuffs = enhPower != null && enhPower.Effects
+                                .Where(fx => (fx.EffectType == fxType[0]) & (fx.ETModifies == fxType[1]))
+                                .Any(fx => fx.BuffedMag > 0);
+                            hasDebuffs = enhPower != null && enhPower.Effects
+                                .Where(fx => (fx.EffectType == fxType[0]) & (fx.ETModifies == fxType[1]))
+                                .Any(fx => fx.BuffedMag < 0);
+                        }
+                        else
+                        {
+                            hasBuffs = enhPower != null && enhPower.Effects
+                                .Where(fx => fx.EffectType == fxType[0])
+                                .Any(fx => fx.BuffedMag > 0);
+                            hasDebuffs = enhPower != null && enhPower.Effects
+                                .Where(fx => fx.EffectType == fxType[0])
+                                .Any(fx => fx.BuffedMag < 0);
+                        }
+
+                        if (hasBuffs & !hasDebuffs)
+                        {
+                            nBuff[index] += nAny[index];
+                        }
+                        else if (!hasBuffs & hasDebuffs)
+                        {
+                            nDebuff[index] += nAny[index];
+                        }
+                        else
+                        {
+                            sContent.Add(BuildEDItem(index, nAny, schedAny, Enum.GetName(eEnhance.GetType(), index) ?? "", afterED3));
+                        }
+                    }
+                }*/
+
                 if (nBuff[index] > 0)
                 {
                     sContent.Add(BuildEDItem(index, nBuff, schedBuff, Enum.GetName(eEnhance.GetType(), index) ?? "", afterED1));

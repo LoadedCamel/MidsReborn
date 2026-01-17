@@ -1959,6 +1959,35 @@ namespace Mids_Reborn.Core
             BaseLine
         }
 
+        public static eEffectType?[] EnhanceToEffectType(eEnhance enh)
+        {
+            return enh switch
+            {
+                eEnhance.Accuracy => [eEffectType.Enhancement, eEffectType.Accuracy],
+                eEnhance.Damage => [eEffectType.Damage, null],
+                eEnhance.Defense => [eEffectType.Defense, null],
+                eEnhance.EnduranceDiscount => [eEffectType.Enhancement, eEffectType.EnduranceDiscount],
+                eEnhance.Endurance => [eEffectType.Endurance, null],
+                eEnhance.SpeedFlying => [eEffectType.SpeedFlying, null],
+                eEnhance.Heal => [eEffectType.Heal, null],
+                eEnhance.HitPoints => [eEffectType.HitPoints, null],
+                eEnhance.Interrupt => [eEffectType.InterruptTime, null],
+                eEnhance.JumpHeight => [eEffectType.JumpHeight, null],
+                eEnhance.SpeedJumping => [eEffectType.SpeedJumping, null],
+                eEnhance.Mez => [eEffectType.Mez, null],
+                eEnhance.Range => [eEffectType.Enhancement, eEffectType.Range],
+                eEnhance.RechargeTime or eEnhance.X_RechargeTime => [eEffectType.Enhancement, eEffectType.RechargeTime],
+                eEnhance.Recovery => [eEffectType.Recovery, null],
+                eEnhance.Regeneration => [eEffectType.Regeneration, null],
+                eEnhance.Resistance => [eEffectType.Resistance, null],
+                eEnhance.SpeedRunning => [eEffectType.SpeedRunning, null],
+                eEnhance.ToHit => [eEffectType.ToHit, null],
+                // eEnhance.Slow => [null, null], // Virtual effect: SpeedJumping + SpeedRunning + SpeedFlying debuffs
+                eEnhance.Absorb => [eEffectType.Absorb, null],
+                _ => [null, null]
+            };
+        }
+
         public class VersionData
         {
             public int Revision;
