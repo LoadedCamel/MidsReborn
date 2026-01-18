@@ -526,7 +526,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             MinimizeBox = false;
             Name = "frmPowerBrowser";
             ShowInTaskbar = false;
-            StartPosition = FormStartPosition.CenterScreen;
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Power Database Browser";
             pnlGroup.ResumeLayout(false);
             pnlSet.ResumeLayout(false);
