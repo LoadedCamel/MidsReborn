@@ -30,126 +30,127 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         /// </summary>
         private void InitializeComponent()
         {
-            this.lvModifiers = new ctlListViewColored();
-            this.columnHeader1 = ((System.Windows.Forms.ColumnHeader)(new System.Windows.Forms.ColumnHeader()));
-            this.btnRemoveMod = new System.Windows.Forms.Button();
-            this.btnAddMod = new System.Windows.Forms.Button();
-            this.btnImportMods = new System.Windows.Forms.Button();
-            this.btnExportMods = new System.Windows.Forms.Button();
-            this.btnCancel = new System.Windows.Forms.Button();
-            this.btnSave = new System.Windows.Forms.Button();
-            this.fdJSONImport = new System.Windows.Forms.OpenFileDialog();
-            this.SuspendLayout();
+            lvModifiers = new ctlListViewColored();
+            columnHeader1 = new System.Windows.Forms.ColumnHeader();
+            btnRemoveMod = new System.Windows.Forms.Button();
+            btnAddMod = new System.Windows.Forms.Button();
+            btnImportMods = new System.Windows.Forms.Button();
+            btnExportMods = new System.Windows.Forms.Button();
+            btnCancel = new System.Windows.Forms.Button();
+            btnSave = new System.Windows.Forms.Button();
+            fdJSONImport = new System.Windows.Forms.OpenFileDialog();
+            SuspendLayout();
             // 
             // lvModifiers
             // 
-            this.lvModifiers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] {
-            this.columnHeader1});
-            this.lvModifiers.HideSelection = false;
-            this.lvModifiers.Location = new System.Drawing.Point(12, 12);
-            this.lvModifiers.LostFocusItem = -1;
-            this.lvModifiers.Name = "lvModifiers";
-            this.lvModifiers.OwnerDraw = true;
-            this.lvModifiers.Size = new System.Drawing.Size(208, 381);
-            this.lvModifiers.TabIndex = 0;
-            this.lvModifiers.UseCompatibleStateImageBehavior = false;
-            this.lvModifiers.View = System.Windows.Forms.View.Details;
-            this.lvModifiers.DrawColumnHeader += new System.Windows.Forms.DrawListViewColumnHeaderEventHandler(this.ListView_DrawColumnHeader);
-            this.lvModifiers.DrawItem += new System.Windows.Forms.DrawListViewItemEventHandler(this.ListView_DrawItem);
-            this.lvModifiers.Leave += new System.EventHandler(this.ListView_Leave);
+            lvModifiers.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader1 });
+            lvModifiers.Location = new System.Drawing.Point(12, 12);
+            lvModifiers.LostFocusItem = -1;
+            lvModifiers.Name = "lvModifiers";
+            lvModifiers.OwnerDraw = true;
+            lvModifiers.Size = new System.Drawing.Size(208, 381);
+            lvModifiers.TabIndex = 0;
+            lvModifiers.UseCompatibleStateImageBehavior = false;
+            lvModifiers.View = System.Windows.Forms.View.Details;
+            lvModifiers.DrawColumnHeader += ListView_DrawColumnHeader;
+            lvModifiers.DrawItem += ListView_DrawItem;
+            lvModifiers.Leave += ListView_Leave;
             // 
             // columnHeader1
             // 
-            this.columnHeader1.Text = "Current Modifiers";
-            this.columnHeader1.Width = 187;
+            columnHeader1.Text = "Current Modifiers";
+            columnHeader1.Width = 187;
             // 
             // btnRemoveMod
             // 
-            this.btnRemoveMod.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnRemoveMod.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnRemoveMod.Location = new System.Drawing.Point(232, 12);
-            this.btnRemoveMod.Name = "btnRemoveMod";
-            this.btnRemoveMod.Size = new System.Drawing.Size(173, 43);
-            this.btnRemoveMod.TabIndex = 1;
-            this.btnRemoveMod.Text = "Remove Selected Modifier";
-            this.btnRemoveMod.UseVisualStyleBackColor = true;
-            this.btnRemoveMod.Click += new System.EventHandler(this.btnRemoveMod_Click);
+            btnRemoveMod.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            btnRemoveMod.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            btnRemoveMod.Location = new System.Drawing.Point(232, 12);
+            btnRemoveMod.Name = "btnRemoveMod";
+            btnRemoveMod.Size = new System.Drawing.Size(173, 43);
+            btnRemoveMod.TabIndex = 1;
+            btnRemoveMod.Text = "Remove Selected Modifier";
+            btnRemoveMod.UseVisualStyleBackColor = true;
+            btnRemoveMod.Click += btnRemoveMod_Click;
             // 
             // btnAddMod
             // 
-            this.btnAddMod.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnAddMod.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnAddMod.Location = new System.Drawing.Point(232, 61);
-            this.btnAddMod.Name = "btnAddMod";
-            this.btnAddMod.Size = new System.Drawing.Size(173, 44);
-            this.btnAddMod.TabIndex = 2;
-            this.btnAddMod.Text = "Add New Modifier";
-            this.btnAddMod.UseVisualStyleBackColor = true;
-            this.btnAddMod.Click += new System.EventHandler(this.btnAddMod_Click);
+            btnAddMod.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            btnAddMod.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            btnAddMod.Location = new System.Drawing.Point(232, 61);
+            btnAddMod.Name = "btnAddMod";
+            btnAddMod.Size = new System.Drawing.Size(173, 44);
+            btnAddMod.TabIndex = 2;
+            btnAddMod.Text = "Add New Modifier";
+            btnAddMod.UseVisualStyleBackColor = true;
+            btnAddMod.Click += btnAddMod_Click;
             // 
             // btnImportMods
             // 
-            this.btnImportMods.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnImportMods.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnImportMods.Location = new System.Drawing.Point(232, 174);
-            this.btnImportMods.Name = "btnImportMods";
-            this.btnImportMods.Size = new System.Drawing.Size(173, 40);
-            this.btnImportMods.TabIndex = 3;
-            this.btnImportMods.Text = "Import Modifiers from JSON";
-            this.btnImportMods.UseVisualStyleBackColor = true;
-            this.btnImportMods.Click += new System.EventHandler(this.btnImportMods_Click);
+            btnImportMods.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            btnImportMods.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            btnImportMods.Location = new System.Drawing.Point(232, 174);
+            btnImportMods.Name = "btnImportMods";
+            btnImportMods.Size = new System.Drawing.Size(173, 40);
+            btnImportMods.TabIndex = 3;
+            btnImportMods.Text = "Import Modifiers from JSON";
+            btnImportMods.UseVisualStyleBackColor = true;
+            btnImportMods.Click += btnImportMods_Click;
             // 
             // btnExportMods
             // 
-            this.btnExportMods.Anchor = System.Windows.Forms.AnchorStyles.Right;
-            this.btnExportMods.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnExportMods.Location = new System.Drawing.Point(232, 220);
-            this.btnExportMods.Name = "btnExportMods";
-            this.btnExportMods.Size = new System.Drawing.Size(173, 37);
-            this.btnExportMods.TabIndex = 4;
-            this.btnExportMods.Text = "Export Modifiers to JSON";
-            this.btnExportMods.UseVisualStyleBackColor = true;
-            this.btnExportMods.Click += new System.EventHandler(this.btnExportMods_Click);
+            btnExportMods.Anchor = System.Windows.Forms.AnchorStyles.Right;
+            btnExportMods.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            btnExportMods.Location = new System.Drawing.Point(232, 220);
+            btnExportMods.Name = "btnExportMods";
+            btnExportMods.Size = new System.Drawing.Size(173, 37);
+            btnExportMods.TabIndex = 4;
+            btnExportMods.Text = "Export Modifiers to JSON";
+            btnExportMods.UseVisualStyleBackColor = true;
+            btnExportMods.Click += btnExportMods_Click;
             // 
             // btnCancel
             // 
-            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(232, 357);
-            this.btnCancel.Name = "btnCancel";
-            this.btnCancel.Size = new System.Drawing.Size(71, 33);
-            this.btnCancel.TabIndex = 5;
-            this.btnCancel.Text = "Cancel";
-            this.btnCancel.UseVisualStyleBackColor = true;
-            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
+            btnCancel.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            btnCancel.Location = new System.Drawing.Point(232, 357);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(71, 33);
+            btnCancel.TabIndex = 5;
+            btnCancel.Text = "Cancel";
+            btnCancel.UseVisualStyleBackColor = true;
+            btnCancel.Click += btnCancel_Click;
             // 
             // btnSave
             // 
-            this.btnSave.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSave.Location = new System.Drawing.Point(309, 357);
-            this.btnSave.Name = "btnSave";
-            this.btnSave.Size = new System.Drawing.Size(96, 33);
-            this.btnSave.TabIndex = 6;
-            this.btnSave.Text = "Save && Close";
-            this.btnSave.UseVisualStyleBackColor = true;
-            this.btnSave.Click += new System.EventHandler(this.btnSave_Click);
+            btnSave.Anchor = System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right;
+            btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, 0);
+            btnSave.Location = new System.Drawing.Point(309, 357);
+            btnSave.Name = "btnSave";
+            btnSave.Size = new System.Drawing.Size(96, 33);
+            btnSave.TabIndex = 6;
+            btnSave.Text = "Save && Close";
+            btnSave.UseVisualStyleBackColor = true;
+            btnSave.Click += btnSave_Click;
             // 
             // FrmGCMEditor
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(417, 402);
-            this.Controls.Add(this.btnSave);
-            this.Controls.Add(this.btnCancel);
-            this.Controls.Add(this.btnExportMods);
-            this.Controls.Add(this.btnImportMods);
-            this.Controls.Add(this.btnAddMod);
-            this.Controls.Add(this.btnRemoveMod);
-            this.Controls.Add(this.lvModifiers);
-            this.Name = "FrmGCMEditor";
-            this.Text = "Global Chance Modifiers Editor";
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
+            ClientSize = new System.Drawing.Size(417, 402);
+            Controls.Add(btnSave);
+            Controls.Add(btnCancel);
+            Controls.Add(btnExportMods);
+            Controls.Add(btnImportMods);
+            Controls.Add(btnAddMod);
+            Controls.Add(btnRemoveMod);
+            Controls.Add(lvModifiers);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "FrmGCMEditor";
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "Global Chance Modifiers Editor";
+            ResumeLayout(false);
 
         }
 

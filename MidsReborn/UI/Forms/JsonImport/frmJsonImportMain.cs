@@ -5,6 +5,7 @@ using System.Linq;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
+using MRBResourceLib;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn.UI.Forms.JsonImport
@@ -14,6 +15,7 @@ namespace Mids_Reborn.UI.Forms.JsonImport
         public frmJsonImportMain()
         {
             InitializeComponent();
+            Icon = Resources.MRB_Icon_Concept;
         }
 
         private void button1_Click(object sender, EventArgs e)

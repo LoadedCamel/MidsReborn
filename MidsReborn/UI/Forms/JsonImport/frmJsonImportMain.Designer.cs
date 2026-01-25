@@ -31,34 +31,37 @@ namespace Mids_Reborn.UI.Forms.JsonImport
         /// </summary>
         private void InitializeComponent()
         {
-            this.button1 = new System.Windows.Forms.Button();
-            this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
-            this.SuspendLayout();
+            button1 = new Button();
+            openFileDialog1 = new OpenFileDialog();
+            SuspendLayout();
             // 
             // button1
             // 
-            this.button1.BackgroundImageLayout = System.Windows.Forms.ImageLayout.None;
-            this.button1.Location = new System.Drawing.Point(12, 12);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(119, 23);
-            this.button1.TabIndex = 0;
-            this.button1.Text = "Import AttribMod";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            button1.BackgroundImageLayout = ImageLayout.None;
+            button1.Location = new System.Drawing.Point(12, 12);
+            button1.Name = "button1";
+            button1.Size = new System.Drawing.Size(119, 23);
+            button1.TabIndex = 0;
+            button1.Text = "Import AttribMod";
+            button1.UseVisualStyleBackColor = true;
+            button1.Click += button1_Click;
             // 
             // openFileDialog1
             // 
-            this.openFileDialog1.FileName = "openFileDialog";
+            openFileDialog1.FileName = "openFileDialog";
             // 
             // frmJsonImportMain
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Dpi;
-            this.ClientSize = new System.Drawing.Size(141, 46);
-            this.Controls.Add(this.button1);
-            this.Name = "frmJsonImportMain";
-            this.Text = "JSON Importer";
-            this.ResumeLayout(false);
+            AutoScaleDimensions = new System.Drawing.SizeF(96F, 96F);
+            AutoScaleMode = AutoScaleMode.Dpi;
+            ClientSize = new System.Drawing.Size(141, 46);
+            Controls.Add(button1);
+            MaximizeBox = false;
+            MinimizeBox = false;
+            Name = "frmJsonImportMain";
+            StartPosition = FormStartPosition.CenterParent;
+            Text = "JSON Importer";
+            ResumeLayout(false);
 
         }
 

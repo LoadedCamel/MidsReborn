@@ -863,6 +863,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             MinimizeBox = false;
             Name = "frmRecipeEdit";
             ShowInTaskbar = false;
+            StartPosition = FormStartPosition.CenterParent;
             Text = "Recipe Editor";
             GroupBox1.ResumeLayout(false);
             ((ISupportInitialize)udSal4).EndInit();
