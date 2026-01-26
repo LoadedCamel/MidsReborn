@@ -751,10 +751,16 @@ namespace Mids_Reborn
                         continue;
                     }
 
-                    // Only true/global Accuracy (set-bonus / GlobalBoost) contributes to BuffAcc.
-                    // All other "Acc-like" buffs behave as ToHit in CoH.
                     if (!enhancementPass && fx.EffectType != Enums.eEffectType.ResEffect && fx.ETModifies == Enums.eEffectType.Accuracy)
                     {
+                        /*
+                        // ---- OBSOLETE - For information only ----
+                        // Will cause issues on some powers e.g. Focused Accuracy:
+                        // All Accuracy buff will be directed to ToHit.
+                        //
+                        // Only true/global Accuracy (set-bonus / GlobalBoost) contributes to BuffAcc.
+                        // All other "Acc-like" buffs behave as ToHit in CoH.
+                        // --------
                         if (IsGlobalAccuracySource(tPwr))
                         {
                             nBuffs.Effect[(int)Enums.eStatType.BuffAcc] += value;     // global accuracy (e.g., set bonuses)
@@ -762,7 +768,9 @@ namespace Mids_Reborn
                         else
                         {
                             nBuffs.Effect[(int)Enums.eStatType.ToHit] += value;       // normal buffs behave as ToHit
-                        }
+                        }*/
+
+                        nBuffs.Effect[(int)Enums.eStatType.BuffAcc] += value;
 
                         continue;
                     }
