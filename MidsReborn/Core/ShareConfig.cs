@@ -135,18 +135,6 @@ namespace Mids_Reborn.Core
                     new() // Plain Text
                 ];
             }
-            internal void AddTheme(string name, bool isDarkTheme = false)
-            {
-                ColorThemes.Add(new ColorTheme
-                {
-                    Name = name,
-                    Title = Color.Empty,
-                    Headings = Color.Empty,
-                    Levels = Color.Empty,
-                    Slots = Color.Empty,
-                    DarkTheme = isDarkTheme
-                });
-            }
             internal void AddTheme(ColorTheme theme)
             {
                 ColorThemes.Add(theme);

@@ -8,7 +8,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.BuildFile;
-using Mids_Reborn.Forms;
+using Mids_Reborn.UI.Forms;
 
 namespace Mids_Reborn
 {
@@ -20,7 +20,8 @@ namespace Mids_Reborn
             public static Rectangle SzFrmData = new();
             public static Rectangle SzFrmRecipe = new();
             public static Rectangle SzFrmSets = new();
-            public static Rectangle SzFrmStats = new();
+            public static Rectangle? SzFrmStats = new();
+            public static Rectangle? SzFrmStatsCompare = new();
             public static Rectangle SzFrmTotals = new();
 
             public static bool IsAppInitialized { get; private set; }
@@ -38,17 +39,6 @@ namespace Mids_Reborn
                     return;
                 _bFrm.Close();
                 _bFrm = null;
-            }
-
-            private static void BusyMsg(ref frmMain iFrm, string sMessage, string sTitle = "")
-            {
-                var bFrm = new frmBusy();
-                if (!string.IsNullOrWhiteSpace(sTitle))
-                {
-                    bFrm.SetTitle(sTitle);
-                }
-                bFrm.Show(iFrm);
-                bFrm.SetMessage(sMessage);
             }
 
             public static async Task ChangeDatabase(frmBusy? iFrm)
@@ -100,11 +90,65 @@ namespace Mids_Reborn
 
             public static async Task LoadData(IMessenger messenger, string? path)
             {
-                messenger.SetMessage("Initializing Data...");
+                //messenger.SetMessage("Initializing Data...");
+                messenger.SetMessage("Loading Application Configuration...");
+                ConfigData.Initialize();
+                if (MidsContext.Config == null)
+                {
+                    ConfigData.Initialize(true);
+                }
+                
+                if (MidsContext.Config != null && MidsContext.Config.DataPath == null)
+                {
+                    MidsContext.Config.DataPath = AppDataPaths.FDefaultPath;
+                    path = AppDataPaths.FDefaultPath;
+                }
+
+                // Migrate from pre-3.8 folders structure - attempt #1
+                var oldDataPath = $"{Path.GetDirectoryName(Application.ExecutablePath)}{Path.DirectorySeparatorChar}Data{Path.DirectorySeparatorChar}";
+                var newDataPath = $"{Path.GetDirectoryName(Application.ExecutablePath)}{Path.DirectorySeparatorChar}Databases{Path.DirectorySeparatorChar}";
+                var oldPathsDetected = false;
+
+                if (MidsContext.Config.DataPath.Contains(oldDataPath))
+                {
+                    MidsContext.Config.DataPath = MidsContext.Config.DataPath.Replace(oldDataPath, newDataPath);
+                    oldPathsDetected = true;
+                }
+
+                if (MidsContext.Config.SavePath.Contains(oldDataPath))
+                {
+                    MidsContext.Config.SavePath = MidsContext.Config.SavePath.Replace(oldDataPath, newDataPath);
+                    oldPathsDetected = true;
+                }
+
+                // Attempt #2
+                var dataPathChunks = MidsContext.Config.DataPath.Split(Path.DirectorySeparatorChar);
+                if (dataPathChunks is [.., "Data", _])
+                {
+                    dataPathChunks[^2] = dataPathChunks[^2].Replace("Data", "Databases");
+                    MidsContext.Config.DataPath = string.Join(Path.DirectorySeparatorChar, dataPathChunks);
+                    oldPathsDetected = true;
+                }
+
+                var savePathChunks = MidsContext.Config.SavePath.Split(Path.DirectorySeparatorChar);
+                if (savePathChunks is [.., "Data", _])
+                {
+                    savePathChunks[^2] = savePathChunks[^2].Replace("Data", "Databases");
+                    MidsContext.Config.SavePath = string.Join(Path.DirectorySeparatorChar, savePathChunks);
+                    oldPathsDetected = true;
+                }
+
+                if (oldPathsDetected)
+                {
+                    MidsContext.Config.SaveConfig();
+                }
+
+                messenger.SetMessage("Loading Overrides...");
+                MidsContext.Config?.LoadOverrides(MidsContext.Config.DataPath);
                 messenger.SetMessage("Loading Server Data...");
                 if (!DatabaseAPI.LoadServerData(path))
                 {
-                    MessageBox.Show(@"There was an error reading the data. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show(@$"There was an error reading server data ({Path.GetFileName(AppDataPaths.SelectDataFileLoad(AppDataPaths.ServerDataFile, path))}). Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.Exit();
                 }
                 messenger.SetMessage("Loading Build Preferences");
@@ -154,7 +198,7 @@ namespace Mids_Reborn
                 DatabaseAPI.LoadSalvage(path);
                 DatabaseAPI.LoadRecipes(path);
 
-                if (File.Exists(Files.CNamePowersRepl))
+                if (File.Exists(AppDataPaths.CNamePowersRepl))
                 {
                     messenger.SetMessage("Loading Powers Replacement Table...");
                     DatabaseAPI.LoadReplacementTable();

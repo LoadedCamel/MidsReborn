@@ -6,14 +6,20 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.Core.ShareSystem.RestModels;
 using Mids_Reborn.Core.Utils;
+using Mids_Reborn.UI.Forms;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.BuildFile
 {
     public class BuildManager
     {
+        public struct LoadFileResult
+        {
+            public CharacterBuildData? BuildData;
+            public string? ErrorMsg;
+        }
+
         private static readonly Lazy<BuildManager> LazyInstance = new(() => new BuildManager());
         public static BuildManager Instance => LazyInstance.Value;
 
@@ -26,6 +32,51 @@ namespace Mids_Reborn.Core.BuildFile
             BuildData = CharacterBuildData.Instance;
             _notifier = new BuildNotifier();
             _preferences = BuildPreferences.Load();
+        }
+
+        public LoadFileResult LoadFromFileLight(string? fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName))
+            {
+                return new LoadFileResult { BuildData = null, ErrorMsg = "No file provided." };
+            }
+
+            if (!File.Exists(fileName))
+            {
+                return new LoadFileResult { BuildData = null, ErrorMsg = "Specified file doesn't exist." };
+            }
+
+            var data = File.ReadAllText(fileName);
+            try
+            {
+                var settings = new JsonSerializerSettings
+                {
+                    Converters = new List<JsonConverter> { new EnhancementDataConverter() }
+                };
+                BuildData = JsonConvert.DeserializeObject<CharacterBuildData>(data, settings) ?? throw new InvalidOperationException();
+            }
+            catch (Exception ex)
+            {
+                return new LoadFileResult { BuildData = null, ErrorMsg = "Unable to load build from file." };
+            }
+
+            if (BuildData is null)
+            {
+                return new LoadFileResult { BuildData = null, ErrorMsg = "Unable to read build data." };
+            }
+
+            var metaData = BuildData.BuiltWith;
+            if (metaData == null)
+            {
+                return new LoadFileResult { BuildData = null, ErrorMsg = "Unable to read metadata." };
+            }
+
+            if (DatabaseAPI.DatabaseName != metaData.Database)
+            {
+                return new LoadFileResult { BuildData = null, ErrorMsg = $"This build has been made with {metaData.Database} and doesn't match current database ({DatabaseAPI.DatabaseName})." };
+            }
+
+            return new LoadFileResult { BuildData = BuildData, ErrorMsg = null };
         }
         
         public bool LoadFromFile(string? fileName)
@@ -62,15 +113,19 @@ namespace Mids_Reborn.Core.BuildFile
             var fileInfo = new FileInfo(fileName);
             if (DatabaseAPI.DatabaseName != metaData.Database)
             {
-                var databases = Directory.EnumerateDirectories(Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder)).ToList();
+                var databases = Directory.EnumerateDirectories(Path.Combine(AppContext.BaseDirectory, AppDataPaths.RoamingFolder)).ToList();
                 var selected = databases.FirstOrDefault(d => d.Contains(metaData.Database));
                 if (selected is null)
                 {
                     _notifier.ShowError($"This build requires the {metaData.Database} be installed prior to loading it.\r\nPlease install the database and try again.");
                     return false;
                 }
-                var result = _notifier.ShowWarningDialog($"This build was created using the {metaData.Database} database.\r\nDo you want to reload and switch to this database, then attempt to load the build?", fileInfo.Name);
-                if (result != DialogResult.Yes) return returnedVal;
+                var result = _notifier.ShowQuestionDialog($"This build was created using the {metaData.Database} database.\r\nDo you want to reload and switch to this database, then attempt to load the build?", fileInfo.Name, MessageBoxEx.MessageBoxExIcon.Warning);
+                if (result != DialogResult.Yes)
+                {
+                    return returnedVal;
+                }
+
                 MidsContext.Config.LastFileName = fileName;
                 MidsContext.Config.DataPath = selected;
                 MidsContext.Config.SavePath = selected;
@@ -205,7 +260,7 @@ namespace Mids_Reborn.Core.BuildFile
 
             if (DatabaseAPI.DatabaseName != metaData.Database)
             {
-                var databases = Directory.EnumerateDirectories(Path.Combine(AppContext.BaseDirectory, Files.RoamingFolder)).ToList();
+                var databases = Directory.EnumerateDirectories(Path.Combine(AppContext.BaseDirectory, AppDataPaths.RoamingFolder)).ToList();
                 var selected = databases.FirstOrDefault(d => d.Contains(metaData.Database));
                 if (selected is null)
                 {
@@ -375,21 +430,6 @@ namespace Mids_Reborn.Core.BuildFile
             }
             var decoded = Compression.DecompressFromBase64(data);
             return LoadShareData(decoded.OutString, id);
-        }
-
-        internal BuildRecordDto GenerateDto()
-        {
-            var dto = new BuildRecordDto
-            {
-                Name = MidsContext.Character?.Name,
-                Archetype = MidsContext.Character?.Archetype?.DisplayName,
-                Description = MidsContext.Character?.Comment,
-                Primary = MidsContext.Character?.Powersets[0]?.DisplayName,
-                Secondary = MidsContext.Character?.Powersets[1]?.DisplayName,
-                BuildData = GetShareData(),
-                ImageData = InfoGraphic.GenerateImageData()
-            };
-            return dto;
         }
     }
 }

@@ -9,8 +9,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
     {
         public static Database Instance { get; } = new();
 
-        public string UpdateManifest { get; set; }
-
         public Version Version { get; set; }
 
         public int Issue { get; set; }
@@ -23,19 +21,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public IPower?[] Power { get; set; }
 
-        public Enums.VersionData PowerVersion { get; set; } = new();
-
-        public Enums.VersionData PowerEffectVersion { get; set; } = new();
-
-        public Enums.VersionData PowerLevelVersion { get; set; } = new();
-
         public IPowerset?[] Powersets { get; set; }
 
-        public Enums.VersionData PowersetVersion { get; set; } = new();
-
         public Archetype[]? Classes { get; set; }
-
-        public Enums.VersionData ArchetypeVersion { get; set; } = new();
 
         public IEnhancement[] Enhancements { get; set; }
 
@@ -64,8 +52,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public bool Loading { get; set; }
 
         public object I9 { get; set; }
-
-        public Enums.VersionData IOAssignmentVersion { get; set; } = new();
 
         public SummonedEntity[] Entities { get; set; } = new SummonedEntity[0];
 
@@ -97,32 +83,28 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public List<TypeGrade> SpecialEnhancements { get; set; }
 
-        public string[] SetTypeStringLong { get; set; }
-
-        public string[] SetTypeStringShort { get; set; }
-
         public string[] EnhGradeStringLong { get; set; }
 
         public string[] EnhGradeStringShort { get; set; }
-
-        public string[] SpecialEnhStringLong { get; set; }
-
-        public string[] SpecialEnhStringShort { get; set; }
 
         public string[] MutexList { get; set; }
 
         public void LoadEntities(BinaryReader reader)
         {
             Entities = new SummonedEntity[reader.ReadInt32() + 1];
-            for (var index = 0; index <= Entities.Length - 1; ++index)
+            for (var index = 0; index < Entities.Length; index++)
+            {
                 Entities[index] = new SummonedEntity(reader);
+            }
         }
 
         public void StoreEntities(BinaryWriter writer)
         {
             writer.Write(Entities.Length - 1);
-            for (var index = 0; index <= Entities.Length - 1; ++index)
-                Entities[index].StoreTo(writer);
+            foreach (var ent in Entities)
+            {
+                ent.StoreTo(writer);
+            }
         }
 
     }

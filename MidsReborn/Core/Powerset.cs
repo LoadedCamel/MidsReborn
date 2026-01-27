@@ -5,7 +5,7 @@ using System.Linq;
 
 namespace Mids_Reborn.Core
 {
-    public class Powerset : IPowerset, IComparable
+    public class Powerset : IPowerset
     {
         private string _fullName;
 
@@ -211,87 +211,6 @@ namespace Mids_Reborn.Core
             if (num == 0)
                 num = string.Compare(DisplayName, powerset.DisplayName, StringComparison.OrdinalIgnoreCase);
             return num;
-        }
-
-        public bool ImportFromCSV(string csv)
-        {
-            bool flag;
-            if (string.IsNullOrEmpty(csv))
-            {
-                flag = false;
-            }
-            else
-            {
-                var array = CSV.ToArray(csv);
-                FullName = array[0];
-                SetName = array[1];
-                DisplayName = array[2];
-                Description = array[3];
-                SubName = array[4];
-                for (var index = 0; index <= DatabaseAPI.Database.Classes.Length - 1; ++index)
-                {
-                    if (!DatabaseAPI.Database.Classes[index].Playable)
-                        continue;
-                    if (string.Equals(DatabaseAPI.Database.Classes[index].PrimaryGroup, GroupName,
-                        StringComparison.OrdinalIgnoreCase))
-                    {
-                        ATClass = DatabaseAPI.Database.Classes[index].ClassName;
-                        SetType = Enums.ePowerSetType.Primary;
-                        break;
-                    }
-
-                    if (!string.Equals(DatabaseAPI.Database.Classes[index].SecondaryGroup, GroupName,
-                        StringComparison.OrdinalIgnoreCase))
-                        continue;
-                    ATClass = DatabaseAPI.Database.Classes[index].ClassName;
-                    SetType = Enums.ePowerSetType.Secondary;
-                    break;
-                }
-
-                if (SetType == Enums.ePowerSetType.None)
-                    switch (GroupName.ToUpper())
-                    {
-                        case "EPIC":
-                            SetType = Enums.ePowerSetType.Ancillary;
-                            return true;
-                        case "POOL":
-                            SetType = Enums.ePowerSetType.Pool;
-                            return true;
-                        case "MASTERMIND_PETS":
-                            SetType = Enums.ePowerSetType.Pet;
-                            return true;
-                        case "PETS":
-                        case "VILLAIN_PETS":
-                        case "KHELDIAN_PETS":
-                            SetType = Enums.ePowerSetType.Pet;
-                            return true;
-                        case "SET_BONUS":
-                            SetType = Enums.ePowerSetType.SetBonus;
-                            return true;
-                        case "TEMPORARY_POWERS":
-                            SetType = string.Equals(FullName, "TEMPORARY_POWERS.ACCOLADES",
-                                StringComparison.OrdinalIgnoreCase)
-                                ? Enums.ePowerSetType.Accolade
-                                : Enums.ePowerSetType.Temp;
-                            return true;
-                        case "INHERENT":
-                            SetType = Enums.ePowerSetType.Inherent;
-                            return true;
-                        case "INCARNATE":
-                            SetType = Enums.ePowerSetType.Incarnate;
-                            return true;
-                        case "BOOSTS":
-                            SetType = Enums.ePowerSetType.Boost;
-                            return true;
-                        default:
-                            flag = false;
-                            break;
-                    }
-                else
-                    flag = true;
-            }
-
-            return flag;
         }
     }
 }

@@ -7,10 +7,6 @@ namespace Mids_Reborn
 {
     public class clsUniversalImport
     {
-        public const string MarkerA = "Primary";
-        public const string MarkerB = "Secondary";
-        private static int IndexOf;
-
         private static sPowerLine BreakLine(string iLine, int nAT)
         {
             var sPowerLine = new sPowerLine();
@@ -25,7 +21,6 @@ namespace Mids_Reborn
                 var iStr = EnhNameFix(strArray2[index]);
                 var flag1 = false;
                 var flag2 = iStr.IndexOf("-I", StringComparison.Ordinal) > -1;
-                IndexOf = iStr.IndexOf("-S", StringComparison.Ordinal);
                 if (flag2 | (iStr.IndexOf(":", StringComparison.Ordinal) > -1))
                     flag1 = true;
                 if (iStr.Length <= 0)

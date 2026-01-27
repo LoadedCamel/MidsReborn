@@ -13,7 +13,7 @@ namespace Mids_Reborn.Core
         // Game does not always allow bidirectional conversions
         // but we need this for calculations.
         private static readonly Dictionary<KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>, KeyValuePair<int, int>> AllowedConversions =
-            new Dictionary<KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>, KeyValuePair<int, int>>
+            new()
             {
                 {
                     new KeyValuePair<Enums.RewardCurrency, Enums.RewardCurrency>(Enums.RewardCurrency.VanguardMerit, Enums.RewardCurrency.RewardMerit),
@@ -100,13 +100,6 @@ namespace Mids_Reborn.Core
             return ret == null ? null : Math.Max(1, (int) ret);
         }
 
-        public static int? GetSalvageCost(int salvageIdx, Enums.RewardCurrency c = Enums.RewardCurrency.RewardMerit)
-        {
-            if (salvageIdx < 0 || salvageIdx >= DatabaseAPI.Database.Salvage.Length) return null;
-
-            return GetSalvageCost(DatabaseAPI.Database.Salvage[salvageIdx], c);
-        }
-
         public static string GetCurrencyName(Enums.RewardCurrency c, int amount = 1)
         {
             var plural = amount > 1 ? "s" : "";
@@ -128,20 +121,6 @@ namespace Mids_Reborn.Core
                 _ => ""
             };
         }
-
-        public static Recipe.RecipeRarity GetCurrencyRarity(Enums.RewardCurrency c)
-        {
-            return c switch
-            {
-                Enums.RewardCurrency.RewardMerit => Recipe.RecipeRarity.Rare,
-                Enums.RewardCurrency.AstralMerit => Recipe.RecipeRarity.UltraRare,
-                Enums.RewardCurrency.EmpyreanMerit => Recipe.RecipeRarity.UltraRare,
-                Enums.RewardCurrency.AlignmentMerit => Recipe.RecipeRarity.UltraRare,
-                Enums.RewardCurrency.VanguardMerit => Recipe.RecipeRarity.Rare,
-                _ => Recipe.RecipeRarity.Common,
-            };
-        }
-
         public static Color GetCurrencyRarityColor(Enums.RewardCurrency c)
         {
             return c switch

@@ -37,20 +37,14 @@ namespace Mids_Reborn.Core.Utils
     public struct DatabaseItems
     {
         public string Name { get; set; }
-        public string Path { get; set; }
+        public string? Path { get; set; }
     }
 
     public enum PatchType
     {
         Application,
-        Database
-    }
-
-    public enum ManifestStatus
-    {
-        Unavailable,
-        Failure,
-        Success
+        Database,
+        Bootstrapper
     }
 
     [Flags]

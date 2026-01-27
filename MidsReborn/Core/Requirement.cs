@@ -236,11 +236,6 @@ namespace Mids_Reborn.Core
                 : MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.NidFromUidPower(e[0])) >= 0);
         }
 
-        public bool RequiredPowersOk()
-        {
-            return RequiredPowersCheck() & ExcludedPowersCheck();
-        }
-
         public void AddPowers(string power1, string power2)
         {
             if (power1.StartsWith("!") & (power2.StartsWith("!") | string.IsNullOrEmpty(power2)))

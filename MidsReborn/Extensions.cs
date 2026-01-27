@@ -8,26 +8,6 @@ using System.Windows.Forms;
 
 namespace Mids_Reborn
 {
-    public class ListBoxT<T>
-    {
-        private readonly ListBox _lb;
-
-        public ListBoxT(ListBox lb)
-        {
-            _lb = lb;
-        }
-
-        public T SelectedItem
-        {
-            get => (T) _lb.SelectedItem;
-            set => _lb.SelectedItem = value;
-        }
-
-        public void AddItem(T item)
-        {
-            _lb.Items.Add(item);
-        }
-    }
 
     public class ComboBoxT<T>
     {
@@ -111,19 +91,6 @@ namespace Mids_Reborn
                 MessageBox.Show(string.IsNullOrWhiteSpace(titlingOpt) ? ex.Message : titlingOpt + ":" + ex.Message,
                     captionOpt ?? ex.GetType().Name);
             }
-        }
-
-        // this could be chained indefinitely so... be careful with it
-        // defer the execution until later
-        public static Action WithCatchMessage(this Action f, string titling, string captionOpt = null)
-        {
-            return () => ExecuteWithCatchMessage(f, titling, captionOpt);
-        }
-
-        // does not handle the possibility this is a child control, and a parent is in design mode
-        public static bool IsInDesignMode(this Control c)
-        {
-            return LicenseManager.UsageMode == LicenseUsageMode.Designtime || c?.Site?.DesignMode == true;
         }
     }
 }

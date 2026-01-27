@@ -1144,7 +1144,8 @@ namespace Mids_Reborn.Core
             ActivateAttackClick = 512, // 0x00000200
             Damaged = 1024, // 0x00000400
             Phased1 = 2048, // 0x00000800
-            Confused = 4096 // 0x00001000
+            Confused = 4096, // 0x00001000
+            Repelled = 8192, // 0x00002000
         }
 
         public enum eToWho
@@ -1224,8 +1225,8 @@ namespace Mids_Reborn.Core
             Endurance = 7,
             Enhancement = 9, // Warning: will pick enhancement buffs of any kind
             FlySpeed = 11,
-            Heal = 13,
-            HPMax = 14,
+            Heal = 13, // Enhancement(Heal)
+            HPMax = 14, // Enhancement(HitPoints)
             JumpHeight = 16,
             JumpSpeed = 17,
             MezResist = 20,
@@ -1611,7 +1612,6 @@ namespace Mids_Reborn.Core
 
         public static string GetGroupedDamage(bool[] iDamage, bool shortForm)
         {
-            string str1;
             if (iDamage.Length < Enum.GetValues(eDamage.None.GetType()).Length - 1)
             {
                 return "Error: Array Length Mismatch";
@@ -1888,7 +1888,7 @@ namespace Mids_Reborn.Core
                 IdxAT = new int[2];
                 IdxSet = new int[2];
                 Map = new int[21, 2];
-                for (var index = 0; index < 21; ++index)
+                for (var index = 0; index < 21; index++)
                 {
                     Map[index, 0] = -1;
                     Map[index, 1] = -1;
@@ -1916,6 +1916,9 @@ namespace Mids_Reborn.Core
             public float[] StatusProtection;
             public float[] StatusResistance;
             public float[] DebuffResistance;
+            public float[] Boosts;
+            public float[] BoostsMez;
+            public float[] BoostsResEffect;
             public float MaxEnd;
 
             public void Reset()
@@ -1932,7 +1935,13 @@ namespace Mids_Reborn.Core
                 StatusProtection = new float[Enum.GetValues<eMez>().Length];
                 StatusResistance = new float[Enum.GetValues<eMez>().Length];
                 DebuffResistance = new float[Enum.GetValues<eEffectType>().Length];
+                Boosts = new float[Enum.GetValues<eEffectType>().Length];
+                BoostsMez = new float[Enum.GetValues<eMez>().Length];
             }
+
+            public float BoostMezMax => BoostsMez.Max();
+            public float BoostMezMin => BoostsMez.Min();
+            public float BoostMezAvg => BoostsMez.Average();
         }
 
         public enum eHTextAlign

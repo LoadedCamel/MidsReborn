@@ -1,118 +1,25 @@
+using System.Collections.Generic;
 using System.Text.RegularExpressions;
 
 namespace Mids_Reborn.Core
 {
     public static class CSV
     {
-        private static readonly Regex Reg = new Regex(",(?=(?:[^\"]|\"[^\"]*\")*$)", RegexOptions.CultureInvariant);
+        private static readonly Regex Reg = new(",(?=(?:[^\"]|\"[^\"]*\")*$)", RegexOptions.CultureInvariant);
 
 
         public static string[] ToArray(string iLine)
         {
             var strArray = Reg.Split(iLine);
-            char[] chArray = {'"'};
-            for (var index = 0; index < strArray.Length; ++index)
+            char[] chArray = ['"'];
+            for (var index = 0; index < strArray.Length; index++)
+            {
                 strArray[index] = strArray[index].Trim(chArray);
+            }
+
             return strArray;
         }
 
-        internal enum HPower
-        {
-            PowerId,
-            DisplayName,
-            Available,
-            Requires,
-            ModesRequired,
-            ModesDisallowed,
-            Type,
-            Accuracy,
-            AttackTypes,
-            GroupMembership,
-            AIGroups,
-            EntsAffected,
-            EntsAutohit,
-            Target,
-            TargetVisibility,
-            TimeToConfirm,
-            DisplayConfirm,
-            Range,
-            TargetSecondary,
-            RangeSecondary,
-            EnduranceCost,
-            IdeaCost,
-            InterruptTime,
-            CastTime,
-            RechargeTime,
-            ActivatePeriod,
-            EffectArea,
-            Radius,
-            Arc,
-            MaxTargetsHit,
-            MaxBoosts,
-            Misc,
-            AIreport,
-            NumCharges,
-            UsageTime,
-            Lifetime,
-            LifetimeInGame,
-            NumAllowed,
-            DoNotSave,
-            BoostsAllowed,
-            AnimMainTargetOnly,
-            CastThroughHold,
-            CastThroughSleep,
-            CastThroughStun,
-            CastThroughTerrorize,
-            IgnoreStrength,
-            MouseOverText,
-            HelpText,
-            AttackerHitMessage,
-            VictimHitMessage,
-            IconName,
-            ActivateRequires,
-            SlotRequires,
-            TargetRequires,
-            RewardRequires,
-            AuctionRequires,
-            RewardFallback,
-            DisplayAttackerAttackFloater,
-            ShowBuffIcon,
-            ShowInInventory,
-            ShowInManage,
-            ShowInInfo,
-            Deleteable,
-            Tradeable,
-            BoostIgnoresEffectiveness,
-            BoostAlwaysCountForSet,
-            BoostTradeable,
-            BoostCombinable,
-            BoostAccountBound,
-            BoostBoostable,
-            BoostUsePlayerLevel,
-            BoostCatalystConversion,
-            BoostLicenseLevel,
-            MinSlotLevel,
-            MaxSlotLevel,
-            MaxBoostLevel,
-            StrengthsDisallowed,
-            ProcMainTargetOnly,
-            HighlightEval,
-            HighlightRingRed,
-            HighlightRingGreen,
-            HighlightRingBlue,
-            HighlightRingAlpha,
-            ChainIntoPower,
-            InstanceLocked,
-            PowerRedirector,
-            Cancelable,
-            IgnoreToggleMaxDistance,
-            ToggleIgnoreHold,
-            ToggleIgnoreSleep,
-            ToggleIgnoreStun,
-            IgnoreLevelBought,
-            ShootThroughUntouchable,
-            InterruptLikeSleep
-        }
 
         internal enum HEffect
         {
@@ -185,6 +92,36 @@ namespace Mids_Reborn.Core
             GroupName,
             MinLevel,
             MaxLevel
+        }
+
+        public static string ExportCsv(List<dynamic[]> arr)
+        {
+            var ret = "";
+            var k = 0;
+            foreach (var row in arr)
+            {
+                var line = new List<string>();
+                foreach (var item in row)
+                {
+                    if (item is string)
+                    {
+                        line.Add($"{item}".Contains(' ') | string.IsNullOrWhiteSpace(item) ? $"\"{item}\"" : $"{item}");
+                    }
+                    else
+                    {
+                        line.Add($"{item}");
+                    }
+                }
+
+                if (k++ > 0)
+                {
+                    ret += "\r\n";
+                }
+                
+                ret += string.Join(", ", line);
+            }
+
+            return ret;
         }
     }
 }

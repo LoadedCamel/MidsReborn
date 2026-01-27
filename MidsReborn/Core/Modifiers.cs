@@ -9,9 +9,9 @@ namespace Mids_Reborn.Core
 {
     public class Modifiers : ICloneable
     {
-        public List<ModifierTable> Modifier = new List<ModifierTable>();
+        public List<ModifierTable> Modifier = new();
         public int Revision;
-        public DateTime RevisionDate = new DateTime(0L);
+        public DateTime RevisionDate = new(0L);
         public string SourceIndex = string.Empty;
         public string SourceTables = string.Empty;
 
@@ -24,23 +24,10 @@ namespace Mids_Reborn.Core
 
         #endregion
 
-        private void StoreRaw(ISerialize serializer, string path, string name)
-        {
-            var toSerialize = new
-            {
-                name,
-                Revision,
-                RevisionDate,
-                SourceIndex,
-                SourceTables,
-                Modifier
-            };
-            ConfigData.SaveRawMhd(serializer, toSerialize, path, null);
-        }
-
+        
         public bool Load(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.JsonFileModifiers, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.JsonFileModifiers, iPath);
             
             if (File.Exists(path))
             {
@@ -58,7 +45,7 @@ namespace Mids_Reborn.Core
             }
             if (!string.IsNullOrWhiteSpace(iPath))
             {
-                path = Files.SelectDataFileLoad(Files.MxdbFileModifiers, iPath);
+                path = AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileModifiers, iPath);
 
 
                 Modifier = new List<ModifierTable>();
@@ -124,11 +111,11 @@ namespace Mids_Reborn.Core
             string path;
             if (string.IsNullOrWhiteSpace(iPath))
             {
-                path = Files.SelectDataFileSave("AttribMod.json");
+                path = AppDataPaths.SelectDataFileSave("AttribMod.json");
             }
             else
             {
-                path = Files.SelectDataFileSave("AttribMod.json", iPath);
+                path = AppDataPaths.SelectDataFileSave("AttribMod.json", iPath);
             }
 
             File.WriteAllText(path, JsonConvert.SerializeObject(DatabaseAPI.Database.AttribMods, Serializer.SerializerSettings));

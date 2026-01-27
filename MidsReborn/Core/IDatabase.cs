@@ -9,7 +9,6 @@ namespace Mids_Reborn.Core
 {
     public interface IDatabase
     {
-        string UpdateManifest { get; set; }
 
         Version Version { get; set; }
 
@@ -23,27 +22,15 @@ namespace Mids_Reborn.Core
 
         IPower?[] Power { get; set; }
 
-        Enums.VersionData PowerVersion { get; set; }
-
-        Enums.VersionData PowerEffectVersion { get; set; }
-
-        Enums.VersionData PowerLevelVersion { get; set; }
-
         IPowerset?[] Powersets { get; set; }
 
-        Enums.VersionData PowersetVersion { get; set; }
-
         Archetype?[] Classes { get; set; }
-
-        Enums.VersionData ArchetypeVersion { get; set; }
 
         IDictionary<string, PowersetGroup> PowersetGroups { get; set; }
 
         bool Loading { get; set; }
 
         object I9 { get; set; }
-
-        Enums.VersionData IOAssignmentVersion { get; set; }
 
         Modifiers AttribMods { get; set; }
 
@@ -97,17 +84,9 @@ namespace Mids_Reborn.Core
 
         List<TypeGrade> SpecialEnhancements { get; set; }
 
-        string[] SetTypeStringLong { get; set; }
-
-        string[] SetTypeStringShort { get; set; }
-
         string[] EnhGradeStringLong { get; set; }
 
         string[] EnhGradeStringShort { get; set; }
-
-        string[] SpecialEnhStringLong { get; set; }
-
-        string[] SpecialEnhStringShort { get; set; }
 
         string[] MutexList { get; set; }
 

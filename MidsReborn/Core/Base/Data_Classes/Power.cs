@@ -1,51 +1,50 @@
+using FastDeepCloner;
+using Mids_Reborn.Core.Base.Master_Classes;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Windows.Forms;
-using FastDeepCloner;
-using Mids_Reborn.Core.Base.Master_Classes;
+using System.Text.RegularExpressions;
+using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
 {
-    public class Power : IPower, IComparable
+    public class Power : IPower
     {
         private bool Contains;
-        public bool AppliedPowersOverride { get; set; } = false;
-        public bool AbsorbedPetEffects { get; set; } = false;
-        public bool AppliedExecutes { get; set; } = false;
-        public bool AppliedSubPowers { get; set; } = false;
+        public bool AbsorbedPetEffects { get; set; }
+        public bool AppliedExecutes { get; set; }
 
         public Power()
         {
             DescLong = string.Empty;
             DescShort = string.Empty;
-            Enhancements = new int[0];
+            Enhancements = [];
             MaxBoosts = string.Empty;
             DisplayName = string.Empty;
             FullName = string.Empty;
-            BoostsAllowed = new string[0];
+            BoostsAllowed = [];
             BuffMode = Enums.eBuffMode.Normal;
-            Effects = new IEffect[0];
+            Effects = [];
             ForcedClass = string.Empty;
             MutexAuto = true;
             TargetLoS = true;
-            GroupMembership = new string[0];
+            GroupMembership = [];
             PowerName = string.Empty;
             SetName = string.Empty;
             GroupName = string.Empty;
-            NGroupMembership = new int[0];
+            NGroupMembership = [];
             PowerSetIndex = -1;
             PowerSetID = -1;
             PowerIndex = -1;
-            SetTypes = new List<int>();
+            SetTypes = [];
             VariableName = string.Empty;
-            UIDSubPower = new string[0];
-            NIDSubPower = new int[0];
-            Ignore_Buff = new Enums.eEnhance[0];
-            IgnoreEnh = new Enums.eEnhance[0];
+            UIDSubPower = [];
+            NIDSubPower = [];
+            Ignore_Buff = [];
+            IgnoreEnh = [];
             SubIsAltColor = false;
-            BoostsAllowed = new string[0];
+            BoostsAllowed = [];
             Requires = new Requirement();
             var num = -2;
             foreach (var p in DatabaseAPI.Database.Power)
@@ -67,33 +66,33 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             DescLong = string.Empty;
             DescShort = string.Empty;
-            Enhancements = new int[0];
+            Enhancements = [];
             MaxBoosts = string.Empty;
             DisplayName = string.Empty;
             FullName = string.Empty;
-            BoostsAllowed = new string[0];
+            BoostsAllowed = [];
             BuffMode = Enums.eBuffMode.Normal;
-            Effects = new IEffect[0];
+            Effects = [];
             ForcedClass = string.Empty;
             MutexAuto = true;
             TargetLoS = true;
-            GroupMembership = new string[0];
+            GroupMembership = [];
             Requires = new Requirement();
             PowerName = string.Empty;
             SetName = string.Empty;
             GroupName = string.Empty;
-            NGroupMembership = new int[0];
+            NGroupMembership = [];
             StaticIndex = -1;
             PowerSetIndex = -1;
             PowerSetID = -1;
             PowerIndex = -1;
             //SetTypes = new Enums.eSetType[0];
-            SetTypes = new List<int>();
+            SetTypes = [];
             VariableName = string.Empty;
-            UIDSubPower = new string[0];
-            NIDSubPower = new int[0];
-            Ignore_Buff = new Enums.eEnhance[0];
-            IgnoreEnh = new Enums.eEnhance[0];
+            UIDSubPower = [];
+            NIDSubPower = [];
+            Ignore_Buff = [];
+            IgnoreEnh = [];
             SubIsAltColor = false;
             if (template == null)
             {
@@ -166,7 +165,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             // Array.Copy(template.SetTypes, SetTypes, SetTypes.Length);
 
             Effects = new IEffect[template.Effects.Length];
-            for (var index = 0; index <= Effects.Length - 1; ++index)
+            for (var index = 0; index < Effects.Length; index++)
             {
                 Effects[index] = (IEffect) template.Effects[index].Clone();
                 Effects[index].SetPower(this);
@@ -213,15 +212,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public Power(BinaryReader reader)
         {
-            Enhancements = new int[0];
+            Enhancements = [];
             BuffMode = Enums.eBuffMode.Normal;
-            Effects = new IEffect[0];
+            Effects = [];
             ForcedClass = string.Empty;
             MutexAuto = true;
             TargetLoS = true;
-            GroupMembership = new string[0];
+            GroupMembership = [];
             Requires = new Requirement();
-            NGroupMembership = new int[0];
+            NGroupMembership = [];
             StaticIndex = -1;
             PowerSetIndex = -1;
             PowerSetID = -1;
@@ -229,15 +228,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             //SetTypes = new Enums.eSetType[0];
 
-            SetTypes = new List<int>();
+            SetTypes = [];
 
             VariableName = string.Empty;
-            UIDSubPower = new string[0];
-            NIDSubPower = new int[0];
-            Ignore_Buff = new Enums.eEnhance[0];
-            IgnoreEnh = new Enums.eEnhance[0];
+            UIDSubPower = [];
+            NIDSubPower = [];
+            Ignore_Buff = [];
+            IgnoreEnh = [];
             SubIsAltColor = false;
-            BoostsAllowed = new string[0];
+            BoostsAllowed = [];
             StaticIndex = reader.ReadInt32();
             FullName = reader.ReadString();
             GroupName = reader.ReadString();
@@ -254,7 +253,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             AttackTypes = (Enums.eVector)reader.ReadInt32();
             GroupMembership = new string[reader.ReadInt32() + 1];
             for (var index = 0; index < GroupMembership.Length; ++index)
+            {
                 GroupMembership[index] = reader.ReadString();
+            }
+
             EntitiesAffected = (Enums.eEntity)reader.ReadInt32();
             EntitiesAutoHit = (Enums.eEntity)reader.ReadInt32();
             Target = (Enums.eEntity)reader.ReadInt32();
@@ -283,14 +285,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             DoNotSave = reader.ReadBoolean();
             BoostsAllowed = new string[reader.ReadInt32() + 1];
             for (var index = 0; index <= BoostsAllowed.Length - 1; ++index)
+            {
                 BoostsAllowed[index] = reader.ReadString();
+            }
+
             CastThroughHold = reader.ReadBoolean();
             IgnoreStrength = reader.ReadBoolean();
             DescShort = reader.ReadString();
             DescLong = reader.ReadString();
             Enhancements = new int[reader.ReadInt32() + 1];
             for (var index = 0; index <= Enhancements.Length - 1; ++index)
+            {
                 Enhancements[index] = reader.ReadInt32();
+            }
 
             // SetTypes = new Enums.eSetType[reader.ReadInt32() + 1];
             // for (var index = 0; index <= SetTypes.Length - 1; ++index)
@@ -315,14 +322,23 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             VariableMin = reader.ReadInt32();
             VariableMax = reader.ReadInt32();
             UIDSubPower = new string[reader.ReadInt32() + 1];
-            for (var index = 0; index <= UIDSubPower.Length - 1; ++index)
+            for (var index = 0; index < UIDSubPower.Length; index++)
+            {
                 UIDSubPower[index] = reader.ReadString();
+            }
+
             IgnoreEnh = new Enums.eEnhance[reader.ReadInt32() + 1];
-            for (var index = 0; index <= IgnoreEnh.Length - 1; ++index)
+            for (var index = 0; index < IgnoreEnh.Length; index++)
+            {
                 IgnoreEnh[index] = (Enums.eEnhance)reader.ReadInt32();
+            }
+
             Ignore_Buff = new Enums.eEnhance[reader.ReadInt32() + 1];
-            for (var index = 0; index <= Ignore_Buff.Length - 1; ++index)
+            for (var index = 0; index < Ignore_Buff.Length; index++)
+            {
                 Ignore_Buff[index] = (Enums.eEnhance)reader.ReadInt32();
+            }
+
             SkipMax = reader.ReadBoolean();
             InherentType = (Enums.eGridType)reader.ReadInt32();
             DisplayLocation = reader.ReadInt32();
@@ -339,7 +355,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             BoostBoostable = reader.ReadBoolean();
             BoostUsePlayerLevel = reader.ReadBoolean();
             Effects = new IEffect[reader.ReadInt32() + 1];
-            for (var index = 0; index <= Effects.Length - 1; ++index)
+            for (var index = 0; index < Effects.Length; index++)
             {
                 var eff = (IEffect)new Effect(reader)
                 {
@@ -638,6 +654,73 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int InternalStacks => _Stacks;
 
+        public string DescLongFormatted
+        {
+            get
+            {
+                var cfgSettings = ConfigData.GetCombatSettings();
+                var formattedDesc = DescLong.Replace("  ", " ").Trim();
+                var r = new Regex(@"\{link\:([a-zA-Z0-9\.\-_]+)\}");
+                var g = r.Matches(formattedDesc)
+                    .Select(e => e.Groups[1].Value)
+                    .Where(e => cfgSettings.ContainsKey(e))
+                    .ToList();
+
+                if (g.Count == 0)
+                {
+                    return formattedDesc;
+                }
+
+                formattedDesc = cfgSettings.Aggregate(formattedDesc, (current, k) => current.Replace($"{{link:{k.Key}}}", "", StringComparison.InvariantCultureIgnoreCase));
+                // If power has a slider, consider the first found variable as the primary key
+                // that will match the slider's one.
+                if (VariableEnabled)
+                {
+                    formattedDesc = $"{formattedDesc.Trim()} Mids' note: you can use the {ConfigData.GetCombatSettingName(g[0], cfgSettings)} setting in the Combat Settings window to change the behavior of this power.";
+                
+                    if (g.Count > 1)
+                    {
+                        formattedDesc += $" It is also affected by {string.Join(", ", g.Skip(1).Select(e => ConfigData.GetCombatSettingName(e, cfgSettings)))}.";
+                    }
+                }
+                else
+                {
+                    // None, just list what it is affected by.
+                    formattedDesc = $"{formattedDesc.Trim()} Mids' note: you can use the Combat Settings window to change the behavior of this power. It is affected by {string.Join(", ", g.Select(e => ConfigData.GetCombatSettingName(e, cfgSettings)))}";
+                }
+
+                return formattedDesc;
+            }
+        }
+
+        public string? CSPrimaryKey
+        {
+            get
+            {
+                var cfgSettings = ConfigData.GetCombatSettings();
+                var r = new Regex(@"\{{link\:([a-zA-Z0-9\.\-_]+)\}}");
+                var g = r.Matches(DescLong)
+                    .Select(e => e.Groups[1].Value)
+                    .Where(e => cfgSettings.ContainsKey(e))
+                    .ToList();
+
+                return g.Count == 0 ? null : g[0];
+            }
+        }
+
+        public List<string> CSKeys
+        {
+            get
+            {
+                var cfgSettings = ConfigData.GetCombatSettings();
+                var r = new Regex(@"\{{link\:([a-zA-Z0-9\.\-_]+)\}}");
+                return r.Matches(DescLong)
+                    .Select(e => e.Groups[1].Value)
+                    .Where(e => cfgSettings.ContainsKey(e))
+                    .ToList();
+            }
+        }
+
         public void StoreTo(ref BinaryWriter writer)
         {
             writer.Write(StaticIndex);
@@ -760,8 +843,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(Stacks);
             writer.Write(VariableStart);
         }
-
-        public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x is { Power: not null } && x.Power.DisplayName == DisplayName);
 
         public List<SummonedEntity>? GetEntities()
         {
@@ -1251,237 +1332,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return weightedEffects.Select(e => e.Key.Value).ToArray();
         }
 
-        public int[] GetRankedEffects()
-        {
-            var effectsWeights = new int[Effects.Length];
-            for (var index1 = 0; index1 < Effects.Length; index1++)
-            {
-                if ((MidsContext.Config.Suppression & Effects[index1].Suppression) == Enums.eSuppress.None & (!MidsContext.Config.Inc.DisablePvE & Effects[index1].PvMode != Enums.ePvX.PvP | MidsContext.Config.Inc.DisablePvE & Effects[index1].PvMode != Enums.ePvX.PvE))
-                {
-                    effectsWeights[index1] = (int) (Effects[index1].EffectClass + 1);
-                    if (Math.Abs(Effects[index1].Probability - 1f) < 0.01)
-                    {
-                        effectsWeights[index1] += 10;
-                    }
-
-                    if (HasAbsorbedEffects & Effects[index1].EffectType != Enums.eEffectType.EntCreate)
-                    {
-                        effectsWeights[index1] += 50;
-                    }
-
-                    if (Effects[index1].DelayedTime > 1)
-                    {
-                        effectsWeights[index1] -= 100;
-                    }
-
-                    if (Effects[index1].DelayedTime > 0 & Effects[index1].DelayedTime <= 1)
-                    {
-                        effectsWeights[index1] -= 25;
-                    }
-
-                    if (Effects[index1].InherentSpecial)
-                    {
-                        effectsWeights[index1] -= 100;
-                    }
-
-                    if (Effects[index1].InherentSpecial2)
-                    {
-                        effectsWeights[index1] -= 100;
-                    }
-
-                    if (Effects[index1].ToWho == Enums.eToWho.Self & (Effects[index1].BuffedMag > 0 | Effects[index1].EffectType == Enums.eEffectType.Mez))
-                    {
-                        effectsWeights[index1] += 10;
-                    }
-
-                    if (Effects[index1].ToWho == Enums.eToWho.Target & Effects[index1].BuffedMag < 0)
-                    {
-                        effectsWeights[index1] += 10;
-                    }
-
-                    if (Effects[index1].ToWho == Enums.eToWho.Target & Effects[index1].BuffedMag > 0 & Effects[index1].Absorbed_Effect)
-                    {
-                        effectsWeights[index1] += 10;
-                    }
-
-                    if (Effects[index1].ToWho == Enums.eToWho.Self & Effects[index1].BuffedMag > 0 & Effects[index1].Absorbed_Effect)
-                    {
-                        effectsWeights[index1] += 10;
-                    }
-
-                    if (Effects[index1].isEnhancementEffect)
-                    {
-                        effectsWeights[index1] -= 30;
-                    }
-
-                    if (Effects[index1].VariableModified)
-                    {
-                        effectsWeights[index1] += 30;
-                    }
-
-                    switch (Effects[index1].EffectType)
-                    {
-                        case Enums.eEffectType.None:
-                            effectsWeights[index1] -= 1000;
-                            continue;
-                        case Enums.eEffectType.Damage:
-                            effectsWeights[index1] -= 500;
-                            continue;
-                        case Enums.eEffectType.DamageBuff:
-                            effectsWeights[index1] += 10;
-                            continue;
-                        case Enums.eEffectType.Defense:
-                            effectsWeights[index1] += 25;
-                            continue;
-                        case Enums.eEffectType.Endurance:
-                            effectsWeights[index1] += 15;
-                            continue;
-                        case Enums.eEffectType.Enhancement:
-                            switch (Effects[index1].ETModifies)
-                            {
-                                case Enums.eEffectType.SpeedFlying:
-                                    effectsWeights[index1] += 5;
-                                    continue;
-                                case Enums.eEffectType.JumpHeight:
-                                    effectsWeights[index1] -= 5;
-                                    continue;
-                                case Enums.eEffectType.SpeedJumping:
-                                    effectsWeights[index1] += 5;
-                                    continue;
-                                case Enums.eEffectType.SpeedRunning:
-                                    effectsWeights[index1] += 5;
-                                    continue;
-                                default:
-                                    effectsWeights[index1] += 9;
-                                    continue;
-                            }
-                        case Enums.eEffectType.Fly:
-                            effectsWeights[index1] += 3;
-                            continue;
-                        case Enums.eEffectType.SpeedFlying:
-                            effectsWeights[index1] += 5;
-                            continue;
-                        case Enums.eEffectType.GrantPower:
-                            effectsWeights[index1] -= 20;
-                            continue;
-                        case Enums.eEffectType.Heal:
-                            effectsWeights[index1] += 15;
-                            continue;
-                        case Enums.eEffectType.HitPoints:
-                            effectsWeights[index1] += 10;
-                            continue;
-                        case Enums.eEffectType.JumpHeight:
-                            effectsWeights[index1] += 5;
-                            continue;
-                        case Enums.eEffectType.SpeedJumping:
-                            effectsWeights[index1] += 5;
-                            continue;
-                        case Enums.eEffectType.Mez:
-                            if (!Effects[index1].Buffable)
-                            {
-                                effectsWeights[index1] -= 1;
-                            }
-
-                            if (Effects[index1].MezType == Enums.eMez.OnlyAffectsSelf | Effects[index1].MezType == Enums.eMez.Untouchable)
-                            {
-                                effectsWeights[index1] -= 9;
-                                continue;
-                            }
-
-                            if (Effects[index1].MezType == Enums.eMez.Knockback |
-                                Effects[index1].MezType == Enums.eMez.Knockup)
-                            {
-                                effectsWeights[index1] += Convert.ToInt32(8f * Effects[index1].Probability);
-                                continue;
-                            }
-
-                            effectsWeights[index1] += Convert.ToInt32(9f * Effects[index1].Probability);
-                            continue;
-                        case Enums.eEffectType.MezResist:
-                            effectsWeights[index1] += 5;
-                            continue;
-                        case Enums.eEffectType.MovementControl:
-                            effectsWeights[index1] += 3;
-                            continue;
-                        case Enums.eEffectType.MovementFriction:
-                            effectsWeights[index1] += 3;
-                            continue;
-                        case Enums.eEffectType.Recovery:
-                            effectsWeights[index1] += 10;
-                            continue;
-                        case Enums.eEffectType.Regeneration:
-                            effectsWeights[index1] += 10;
-                            continue;
-                        case Enums.eEffectType.Resistance:
-                            effectsWeights[index1] += 20;
-                            continue;
-                        case Enums.eEffectType.RevokePower:
-                            effectsWeights[index1] -= 20;
-                            continue;
-                        case Enums.eEffectType.SpeedRunning:
-                            effectsWeights[index1] += 5;
-                            continue;
-                        case Enums.eEffectType.SetMode:
-                            effectsWeights[index1] = -500;
-                            continue;
-                        case Enums.eEffectType.StealthRadius:
-                            effectsWeights[index1] += 7;
-                            continue;
-                        case Enums.eEffectType.StealthRadiusPlayer:
-                            effectsWeights[index1] += 6;
-                            continue;
-                        case Enums.eEffectType.EntCreate:
-                            if (HasAbsorbedEffects)
-                            {
-                                effectsWeights[index1] -= 500;
-                            }
-                            continue;
-                        case Enums.eEffectType.ToHit:
-                            effectsWeights[index1] += 10;
-                            continue;
-                        case Enums.eEffectType.Translucency:
-                            effectsWeights[index1] += -20;
-                            continue;
-                        case Enums.eEffectType.GlobalChanceMod:
-                            ++effectsWeights[index1];
-                            continue;
-                        case Enums.eEffectType.DesignerStatus:
-                        case Enums.eEffectType.Null:
-                        case Enums.eEffectType.NullBool:
-                            effectsWeights[index1] += int.MinValue;
-                            continue;
-                        default:
-                            effectsWeights[index1] += 9;
-                            continue;
-                    }
-                }
-
-                effectsWeights[index1] = int.MinValue;
-            }
-
-            var iID1 = -1;
-            var num1 = -1;
-            var num2 = 0;
-            var num3 = 0;
-            for (var iID2 = 0; iID2 < effectsWeights.Length; iID2++)
-            {
-                if (effectsWeights[iID2] > num2)
-                {
-                    num1 = iID1;
-                    num3 = num2;
-                    iID1 = iID2;
-                    num2 = effectsWeights[iID2];
-                }
-                else if (effectsWeights[iID2] > num3 & GreOverride(iID1, iID2))
-                {
-                    num1 = iID2;
-                    num3 = effectsWeights[iID2];
-                }
-            }
-
-            return new[] {iID1, num1};
-        }
-
         internal class EffectDurationComparer : IComparer<IEffect>
         {
             public int Compare(IEffect? a, IEffect? b)
@@ -1506,18 +1356,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int GetDurationEffectID()
         {
-            return Effects.Any(e => e.EffectType == Enums.eEffectType.Mez)
+            return Effects
+                .Where(e => e.EffectType is not (Enums.eEffectType.Null or Enums.eEffectType.NullBool or Enums.eEffectType.DesignerStatus))
+                .Any(e => e.EffectType == Enums.eEffectType.Mez)
                 ? Effects
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e =>
-                        (e.Value.PvMode == Enums.ePvX.Any |
-                         e.Value.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
-                         e.Value.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE) &
-                        e.Value.EffectType == Enums.eEffectType.Mez &
-                        e.Value.EffectClass != Enums.eEffectClass.Ignored & e.Value.Duration > 0 &
+                        ((e.Value.PvMode == Enums.ePvX.Any) |
+                         ((e.Value.PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) |
+                         ((e.Value.PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE)) &
+                        (e.Value.EffectType == Enums.eEffectType.Mez) &
+                        (e.Value.EffectClass != Enums.eEffectClass.Ignored) & (e.Value.Duration > 0) &
                         e.Value.ValidateConditional() &
-                        e.Value.Probability > float.Epsilon &
-                        e.Value.SpecialCase != Enums.eSpecialCase.Defiance)
+                        (e.Value.Probability > float.Epsilon) &
+                        (e.Value.SpecialCase != Enums.eSpecialCase.Defiance))
                     .OrderByDescending(e => e.Value, new EffectDurationComparer())
                     .DefaultIfEmpty(new KeyValuePair<int, IEffect>(-1, new Effect()))
                     .FirstOrDefault()
@@ -1525,55 +1377,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 : Effects
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e =>
-                        (e.Value.PvMode == Enums.ePvX.Any |
-                         e.Value.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
-                         e.Value.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE) &
-                        e.Value.EffectClass != Enums.eEffectClass.Ignored & e.Value.Duration > 0 &
+                        ((e.Value.PvMode == Enums.ePvX.Any) |
+                         ((e.Value.PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) |
+                         ((e.Value.PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE)) &
+                        (e.Value.EffectClass != Enums.eEffectClass.Ignored) & (e.Value.Duration > 0) &
                         e.Value.ValidateConditional() &
-                        e.Value.Probability > float.Epsilon &
-                        e.Value.SpecialCase != Enums.eSpecialCase.Defiance)
+                        (e.Value.Probability > float.Epsilon) &
+                        (e.Value.SpecialCase != Enums.eSpecialCase.Defiance))
                     .OrderByDescending(e => e.Value, new EffectDurationComparer())
                     .DefaultIfEmpty(new KeyValuePair<int, IEffect>(-1, new Effect()))
                     .FirstOrDefault()
                     .Key;
-        }
-
-        public float[] GetDef(int buffDebuff = 0)
-        {
-            var numArray = new float[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
-            var flag = false;
-            var ePvX = !MidsContext.Config.Inc.DisablePvE ? Enums.ePvX.PvE : Enums.ePvX.PvP;
-            foreach (var fx in Effects)
-            {
-                if (!(fx.EffectType == Enums.eEffectType.Defense & fx.Probability > 0 &
-                      fx.CanInclude()) ||
-                    !(buffDebuff == 0 | buffDebuff < 0 & fx.BuffedMag < 0 |
-                      buffDebuff > 0 & fx.BuffedMag > 0) ||
-                    (fx.Suppression & MidsContext.Config.Suppression) != Enums.eSuppress.None ||
-                    !(fx.PvMode == ePvX | fx.PvMode == Enums.ePvX.Any))
-                {
-                    continue;
-                }
-
-                numArray[(int) fx.DamageType] += fx.BuffedMag;
-                if (fx.DamageType != Enums.eDamage.None)
-                {
-                    flag = true;
-                }
-            }
-
-            if (flag)
-            {
-                return numArray;
-            }
-
-            var num = numArray[0];
-            for (var index = 0; index < numArray.Length; index++)
-            {
-                numArray[index] = num;
-            }
-
-            return numArray;
         }
 
         public float[] GetRes(bool pvE = true)
@@ -1609,26 +1423,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             return resists;
-        }
-
-        public bool HasDefEffects()
-        {
-            return Effects.Any(t => t.EffectType == Enums.eEffectType.Defense & t.Probability > 0 & (t.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None & (t.PvMode != Enums.ePvX.PvP & !MidsContext.Config.Inc.DisablePvE | t.PvMode != Enums.ePvX.PvE & MidsContext.Config.Inc.DisablePvE));
-        }
-
-        public bool HasResEffects()
-        {
-            return Effects.Any(t => t.EffectType == Enums.eEffectType.Resistance & t.Probability > 0 & (t.Suppression & MidsContext.Config.Suppression) == Enums.eSuppress.None & (t.PvMode != Enums.ePvX.PvP & !MidsContext.Config.Inc.DisablePvE | t.PvMode != Enums.ePvX.PvE & MidsContext.Config.Inc.DisablePvE));
-        }
-
-        public bool HasDamageBuffEffects()
-        {
-            return Effects.Any(t => t.EffectType == Enums.eEffectType.DamageBuff);
-        }
-
-        public bool HasDamageEffects()
-        {
-            return Effects.Any(t => t.EffectType == Enums.eEffectType.Damage);
         }
 
         public bool HasAttribModEffects()
@@ -1683,8 +1477,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         break;
                 }
 
-                if ((iEffect == Enums.eEffectType.SpeedFlying) & !maxMode &&
-                    Effects[iIndex].Aspect == Enums.eAspect.Max ||
+                if (((iEffect == Enums.eEffectType.SpeedFlying) & !maxMode &&
+                     Effects[iIndex].Aspect == Enums.eAspect.Max) ||
                     (iEffect == Enums.eEffectType.SpeedRunning) & !maxMode &
                     (Effects[iIndex].Aspect == Enums.eAspect.Max) || (iEffect == Enums.eEffectType.SpeedJumping) &
                     !maxMode & (Effects[iIndex].Aspect == Enums.eAspect.Max))
@@ -1698,7 +1492,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 if (!flag || !(Effects[iIndex].Probability > 0) ||
-                    maxMode && Effects[iIndex].Aspect != Enums.eAspect.Max || Effects[iIndex].EffectType != iEffect ||
+                    (maxMode && Effects[iIndex].Aspect != Enums.eAspect.Max) || Effects[iIndex].EffectType != iEffect ||
                     Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored ||
                     Effects[iIndex].EffectClass == Enums.eEffectClass.Special ||
                     !(Effects[iIndex].DelayedTime <= 5) && !includeDelayed || !Effects[iIndex].CanInclude() ||
@@ -1746,8 +1540,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     _ => false
                 };
 
-                if ((iEffect == Enums.eEffectType.SpeedFlying) & !maxMode &&
-                    fx.Aspect == Enums.eAspect.Max ||
+                if (((iEffect == Enums.eEffectType.SpeedFlying) & !maxMode &&
+                     fx.Aspect == Enums.eAspect.Max) ||
                     (iEffect == Enums.eEffectType.SpeedRunning) & !maxMode &
                     (fx.Aspect == Enums.eAspect.Max) || (iEffect == Enums.eEffectType.SpeedJumping) &
                     !maxMode & (fx.Aspect == Enums.eAspect.Max))
@@ -1761,9 +1555,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 if (!includeFlag || fx.Probability <= 0 ||
-                    maxMode && fx.Aspect != Enums.eAspect.Max || fx.EffectType != iEffect ||
+                    (maxMode && fx.Aspect != Enums.eAspect.Max) || fx.EffectType != iEffect ||
                     fx.EffectClass is Enums.eEffectClass.Ignored or Enums.eEffectClass.Special ||
-                    fx.DelayedTime > 5 && !includeDelayed || !fx.CanInclude() || !fx.PvXInclude())
+                    (fx.DelayedTime > 5 && !includeDelayed) || !fx.CanInclude() || !fx.PvXInclude())
                 {
                     continue;
                 }
@@ -1785,7 +1579,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }*/
 
                 var mag = fx.BuffedMag;
-                if (fx.Ticks > 1 && fx.Stacking == Enums.eStacking.Yes)
+                if (fx is { Ticks: > 1, Stacking: Enums.eStacking.Yes })
                 {
                     mag *= fx.Ticks;
                 }
@@ -1871,11 +1665,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return Effects.Any(t => t.EffectType == iEffect && t.ToWho == Enums.eToWho.Target);
         }
 
-        public bool AffectsSelf(Enums.eEffectType iEffect)
-        {
-            return Effects.Any(t => t.EffectType == iEffect && t.ToWho == Enums.eToWho.Self);
-        }
-
         public bool I9FXPresentP(Enums.eEffectType iEffect, Enums.eMez iMez = Enums.eMez.None)
         {
             return Effects.Where(t => t.EffectType == iEffect & t.BuffedMag > 0 && !(t.EffectType == Enums.eEffectType.Damage & t.DamageType == Enums.eDamage.Special)).Any(t => iMez == Enums.eMez.None || t.MezType == iMez);
@@ -1921,7 +1710,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool GetEffectStringGrouped(int idEffect, ref string returnString, ref int[] returnMask, bool shortForm, bool simple, bool noMag = false, bool fromPopup = false, bool ignoreConditions = false)
         {
-            bool flag;
             if (idEffect < 0 | idEffect > Effects.Length - 1)
             {
                 return false;
@@ -2087,168 +1875,22 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return true;
         }
 
-        public string? BuildEffectStringGrouped(int idEffect, bool simple = true, bool noMag = false, bool shortForm = false, bool fromPopup = false, bool ignoreConditions = false)
-        {
-            if (idEffect < 0 | idEffect > Effects.Length - 1)
-            {
-                return null;
-            }
-
-            var returnValue = string.Empty;
-            var array = Array.Empty<int>();
-            var effect = (IEffect) Effects[idEffect].Clone();
-            switch (effect.EffectType)
-            {
-                case Enums.eEffectType.DamageBuff or Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity:
-                {
-                    var iDamage = new bool[Enum.GetValues(typeof(Enums.eDamage)).Length];
-                    for (var index1 = 0; index1 < Effects.Length; index1++)
-                    {
-                        for (var index2 = 0; index2 < iDamage.Length; index2++)
-                        {
-                            effect.DamageType = (Enums.eDamage) index2;
-                            if (effect.CompareTo(Effects[index1]) != 0)
-                            {
-                                continue;
-                            }
-
-                            iDamage[index2] = true;
-                            Array.Resize(ref array, array.Length + 1);
-                            array[^1] = index1;
-                        }
-                    }
-
-                    if (array.Length <= 1)
-                    {
-                        return null;
-                    }
-
-                    effect.DamageType = Enums.eDamage.Special;
-                    var newValue = effect.EffectType == Enums.eEffectType.Defense ? Enums.GetGroupedDefense(iDamage, shortForm) : Enums.GetGroupedDamage(iDamage, shortForm);
-                    returnValue = shortForm ? effect.BuildEffectStringShort(noMag, simple).Replace("Spec", newValue) : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true, ignoreConditions).Replace("Special", newValue);
-                    break;
-                }
-                case Enums.eEffectType.RechargePower:
-                {
-                    for (var index1 = 0; index1 < Effects.Length; index1++)
-                    {
-                        if (Effects[index1].EffectType != Enums.eEffectType.RechargePower)
-                        {
-                            continue;
-                        }
-
-                        Array.Resize(ref array, array.Length + 1);
-                        array[^1] = index1;
-                    }
-
-                    returnValue = shortForm
-                        ? effect.BuildEffectStringShort(noMag, simple)
-                            .Replace("RechargePower", "RechargePower(Stalker's Build-Ups)")
-                        : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true,
-                            ignoreConditions).Replace("RechargePower", "RechargePower(Stalker's Build-Ups)");
-                    break;
-                }
-                case Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
-                {
-                    var iMez = new bool[Enum.GetValues(typeof(Enums.eMez)).Length];
-                    for (var index1 = 0; index1 < Effects.Length; index1++)
-                    {
-                        for (var index2 = 0; index2 < iMez.Length; index2++)
-                        {
-                            effect.MezType = (Enums.eMez) index2;
-                            if (effect.CompareTo(Effects[index1]) != 0)
-                            {
-                                continue;
-                            }
-
-                            iMez[index2] = true;
-                            Array.Resize(ref array, array.Length + 1);
-                            array[^1] = index1;
-                        }
-                    }
-
-                    if (array.Length <= 1)
-                    {
-                        return null;
-                    }
-
-                    effect.MezType = Enums.eMez.None;
-                    var newValue = Enums.GetGroupedMez(iMez, shortForm);
-
-                    if (newValue == "Knocked" && effect.BuffedMag < 0)
-                    {
-                        newValue = "Knockback Protection";
-                    }
-
-                    returnValue = shortForm ? effect.BuildEffectStringShort(noMag, simple).Replace("None", newValue) : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true, ignoreConditions).Replace("None", newValue);
-
-                    switch (effect.EffectType)
-                    {
-                        case Enums.eEffectType.MezResist:
-                            if (newValue == "Mez")
-                            {
-                                returnValue = returnValue.Replace("MezResist(Mez)", "Status Resistance");
-                            }
-
-                            break;
-                        case Enums.eEffectType.Mez when newValue == "Mez" & effect.BuffedMag < 0:
-                            returnValue = returnValue.Replace("Mez", "Status Protection").Replace("-", string.Empty);
-                            break;
-                        case Enums.eEffectType.Mez:
-                            if (newValue != "Knockback Protection")
-                            {
-                                returnValue = returnValue.Replace("(Mag -", "protection (Mag ");
-                            }
-
-                            break;
-                    }
-
-                    break;
-                }
-                case Enums.eEffectType.Enhancement:
-                {
-                    var num = 0;
-                    if (Effects.Length == 4)
-                    {
-                        num += Effects.Count(t => t.EffectType == Enums.eEffectType.Enhancement && t.ETModifies == Enums.eEffectType.SpeedRunning | t.ETModifies == Enums.eEffectType.SpeedFlying | t.ETModifies == Enums.eEffectType.SpeedJumping | t.ETModifies == Enums.eEffectType.JumpHeight);
-
-                        if (num == Effects.Length)
-                        {
-                            array = new int[Effects.Length];
-                            for (var index = 0; index < array.Length; index++)
-                            {
-                                array[index] = index;
-                            }
-
-                            effect.ETModifies = Enums.eEffectType.Slow;
-                            returnValue = shortForm ? effect.BuildEffectStringShort(noMag, simple) : effect.BuildEffectString(simple, "", false, false, false, fromPopup, false, true, ignoreConditions);
-                            if (BuffMode != Enums.eBuffMode.Debuff)
-                            {
-                                returnValue = returnValue.Replace("Slow", "Movement");
-                            }
-                        }
-                    }
-
-                    break;
-                }
-            }
-
-            return returnValue;
-        }
-
         public int[] AbsorbEffects(IPower? source, float nDuration, float nDelay, Archetype? archetype, int stacking, bool isGrantPower = false, int fxid = -1, int effectId = -1)
         {
-            var num1 = -1;
-            var length = Effects.Length;
-            var array = Array.Empty<int>();
+            var lst = new List<int>();
             var num2 = 0f;
-            if (source.PowerSetID > -1 && DatabaseAPI.Database.Powersets[source.PowerSetID].SetType == Enums.ePowerSetType.Pet)
+            if (source?.PowerSetID > -1 && DatabaseAPI.Database.Powersets[source.PowerSetID]?.SetType == Enums.ePowerSetType.Pet)
             {
-                foreach (var power in DatabaseAPI.Database.Powersets[source.PowerSetID].Powers)
+                foreach (var power in DatabaseAPI.Database.Powersets[source.PowerSetID]!.Powers)
                 {
+                    if (power == null)
+                    {
+                        continue;
+                    }
+
                     foreach (var effect in power.Effects)
                     {
-                        if (effect.EffectType == Enums.eEffectType.SilentKill & effect.ToWho == Enums.eToWho.Self & effect.DelayedTime > 0)
+                        if ((effect.EffectType == Enums.eEffectType.SilentKill) & (effect.ToWho == Enums.eToWho.Self) & (effect.DelayedTime > 0))
                         {
                             num2 = effect.DelayedTime;
                         }
@@ -2263,23 +1905,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             if (effectId == -1)
             {
+                var fxList = Effects.ToList();
                 for (var index = 0; index < source.Effects.Length; index++)
                 {
-                    if (!isGrantPower & source.EntitiesAffected == Enums.eEntity.Caster & source.Effects[index].EffectType != Enums.eEffectType.EntCreate)
+                    if (!isGrantPower & (source.EntitiesAffected == Enums.eEntity.Caster) & (source.Effects[index].EffectType != Enums.eEffectType.EntCreate))
                     {
                         continue;
                     }
 
                     if (source.Effects[index].EffectType == Enums.eEffectType.EntCreate && source.Effects[index].nSummon > -1)
                     {
-                        Array.Resize(ref array, array.Length + 1);
-                        array[^1] = index;
+                        lst.Add(index);
                     }
 
-                    num1++;
-                    var effects = Effects;
-                    Array.Resize(ref effects, num1 + length + 1);
-                    Effects = effects;
                     var effect = (IEffect) source.Effects[index].Clone();
                     effect.Absorbed_Effect = true;
                     effect.Absorbed_PowerType = source.PowerType;
@@ -2291,7 +1929,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         effect.SetTicks(nDuration, source.ActivatePeriod);
                     }
 
-                    if ((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend & (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
+                    if (((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend) & ((source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster))
                     {
                         effect.ToWho = Enums.eToWho.Target;
                         if (effect.Stacking == Enums.eStacking.Yes)
@@ -2300,7 +1938,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         }
                     }
 
-                    if ((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet & (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
+                    if (((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet) & ((source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster))
                     {
                         effect.ToWho = Enums.eToWho.Target;
                         if (effect.Stacking == Enums.eStacking.Yes)
@@ -2310,7 +1948,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     }
 
                     effect.Absorbed_Duration = nDuration;
-                    if (source.RechargeTime > 0 & source.PowerType == Enums.ePowerType.Click)
+                    if ((source.RechargeTime > 0) & (source.PowerType == Enums.ePowerType.Click))
                     {
                         effect.Absorbed_Interval = source.RechargeTime + source.CastTime;
                     }
@@ -2320,27 +1958,25 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         effect.DelayedTime = nDelay;
                     }
 
-                    if (effect.Absorbed_Duration > 0 & num2 > 0)
+                    if ((effect.Absorbed_Duration > 0) & (num2 > 0))
                     {
                         effect.nDuration = effect.Absorbed_Duration;
                     }
 
-                    Effects[num1 + length] = effect;
+                    fxList.Add(effect);
                 }
+
+                Effects = fxList.ToArray();
             }
             else if (isGrantPower || source.EntitiesAffected != Enums.eEntity.Caster || source.Effects[effectId].EffectType == Enums.eEffectType.EntCreate)
             {
                 if (source.Effects[effectId].EffectType == Enums.eEffectType.EntCreate && source.Effects[effectId].nSummon > -1)
                 {
-                    Array.Resize(ref array, array.Length + 1);
-                    array[^1] = effectId;
+                    lst.Add(effectId);
                 }
 
-                var num3 = num1 + 1;
-                var effects = Effects;
-                Array.Resize(ref effects, num3 + length + 1);
-                Effects = effects;
-                var effect = (IEffect) source.Effects[effectId].Clone();
+                var fxList = Effects.ToList();
+                var effect = source.Effects[effectId].Clone<IEffect>();
                 effect.Absorbed_Effect = true;
                 effect.Absorbed_PowerType = source.PowerType;
                 effect.Absorbed_Class_nID = archetype.Idx;
@@ -2370,7 +2006,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 effect.Absorbed_Duration = nDuration;
-                if (source.RechargeTime > 0 & source.PowerType == Enums.ePowerType.Click)
+                if ((source.RechargeTime > 0) & (source.PowerType == Enums.ePowerType.Click))
                 {
                     effect.Absorbed_Interval = source.RechargeTime + source.CastTime;
                 }
@@ -2380,78 +2016,84 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     effect.DelayedTime = nDelay;
                 }
 
-                if (effect.Absorbed_Duration > 0 & num2 > 0)
+                if ((effect.Absorbed_Duration > 0) & (num2 > 0))
                 {
                     effect.nDuration = effect.Absorbed_Duration;
                 }
 
-                Effects[num3 + length] = effect;
+                fxList.Add(effect);
+
+                Effects = fxList.ToArray();
             }
 
-            return array;
+            return lst.ToArray();
         }
 
         public void ApplyGrantPowerEffects()
         {
             var flag = true;
             var num1 = 0;
-            var num2 = 0;
             if (HasGrantPowerEffect)
             {
                 for (; flag & (num1 < 100); num1++)
                 {
                     flag = false;
-                    var array1 = Array.Empty<int>();
-                    var array2 = Array.Empty<int>();
-                    for (var index = num2; index < Effects.Length; index++)
+                    var lFxIndex = new List<int>();
+                    var lFxSummons = new List<int>();
+                    for (var index = 0; index < Effects.Length; index++)
                     {
                         if (Effects[index].EffectType != Enums.eEffectType.GrantPower || !Effects[index].CanGrantPower() || Effects[index].EffectClass == Enums.eEffectClass.Ignored || Effects[index].nSummon <= -1)
                         {
                             continue;
                         }
 
-                        Array.Resize(ref array1, array1.Length + 1);
-                        Array.Resize(ref array2, array2.Length + 1);
-                        array1[^1] = index;
-                        array2[^1] = Effects[index].nSummon;
+                        lFxIndex.Add(index);
+                        lFxSummons.Add(Effects[index].nSummon);
                     }
 
-                    num2 = Effects.Length;
-                    for (var index1 = 0; index1 < array1.Length; index1++)
+                    for (var index1 = 0; index1 < lFxIndex.Count; index1++)
                     {
                         flag = true;
-                        Effects[array1[index1]].EffectClass = Enums.eEffectClass.Ignored;
-                        var length = Effects.Length;
-                        AbsorbEffects(DatabaseAPI.Database.Power[array2[index1]], Effects[array1[index1]].Duration, 0, MidsContext.Archetype, 1, true, array1[index1]);
-                        for (var index2 = length; index2 < Effects.Length; index2++)
+                        Effects[lFxIndex[index1]].EffectClass = Enums.eEffectClass.Ignored;
+                        
+                        AbsorbEffects(DatabaseAPI.Database.Power[lFxSummons[index1]], Effects[lFxIndex[index1]].Duration, 0, MidsContext.Archetype, 1, true, lFxIndex[index1]);
+                        
+                        if (Effects[lFxIndex[index1]].Absorbed_Power_nID > -1)
                         {
-                            if (Effects[array1[index1]].Absorbed_Power_nID > -1)
-                            {
-                                Effects[index2].Absorbed_PowerType = Effects[array1[index1]].Absorbed_PowerType;
-                            }
-
-                            if (Effects[index2].EffectType != Enums.eEffectType.GrantPower)
-                            {
-                                Effects[index2].ToWho = Effects[array1[index1]].ToWho;
-                            }
-
-                            if (Effects[index2].ToWho == Enums.eToWho.All && ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster || (EntitiesAffected & Enums.eEntity.Friend) != Enums.eEntity.Friend))
-                            {
-                                Effects[index2].ToWho = Enums.eToWho.Target;
-                            }
-                            else if (Effects[index2].ToWho == Enums.eToWho.All &&
-                                     ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster ||
-                                      (EntitiesAffected & Enums.eEntity.Foe) != Enums.eEntity.Foe))
-                            {
-                                Effects[index2].ToWho = Enums.eToWho.Target;
-                            }
-
-                            Effects[index2].isEnhancementEffect = Effects[array1[index1]].isEnhancementEffect;
-                            if (Effects[array1[index1]].Probability < 1)
-                            {
-                                Effects[index2].Probability = Effects[array1[index1]].Probability * Effects[index2].Probability;
-                            }
+                            Effects[^1].Absorbed_PowerType = Effects[lFxIndex[index1]].Absorbed_PowerType;
                         }
+
+                        if (Effects[^1].EffectType != Enums.eEffectType.GrantPower)
+                        {
+                            Effects[^1].ToWho = Effects[lFxIndex[index1]].ToWho;
+                        }
+
+                        if ((Effects[^1].ToWho == Enums.eToWho.All && ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster || (EntitiesAffected & Enums.eEntity.Friend) != Enums.eEntity.Friend)) || (Effects[^1].ToWho == Enums.eToWho.All &&
+                                ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster ||
+                                 (EntitiesAffected & Enums.eEntity.Foe) != Enums.eEntity.Foe)))
+                        {
+                            Effects[^1].ToWho = Enums.eToWho.Target;
+                        }
+
+                        /*
+                        Effects[^1].isEnhancementEffect = Effects[lFxIndex[^1]].isEnhancementEffect;
+                        if (!(Effects[lFxIndex[index1]].Probability < 1))
+                        {
+                           continue;
+                        }
+
+                        Effects[^1].Probability *= Effects[lFxIndex[index1]].Probability;
+                        */
+
+                        Effects[^1].isEnhancementEffect = Effects[lFxIndex[index1]].isEnhancementEffect;
+                        if (!(Effects[lFxIndex[index1]].BaseProbability < 1))
+                        {
+                            continue;
+                        }
+
+                        // Needed?
+                        // Handled by clsToonX.GBPA_ApplyIncarnateEnhancements() for _BuffedPowers (in use by the dataview)
+                        Effects[^1].EffectiveProbability = Effects[^1].Probability * Effects[lFxIndex[index1]].Probability;
                     }
                 }
             }
@@ -2703,289 +2345,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return str.Replace("%VALUE%", newValue);
         }
 
-        /*public static List<string> SplitFXGroupTipL(ref Enums.ShortFX iSfx, ref IPower iPower, bool shortForm)
-        {
-            var str = iPower.Effects[iSfx.Index[0]].BuildEffectString(false, string.Empty, false, true);
-            var newValue = string.Empty;
-            //if (!iPower.Effects[iSfx.Index[0]].isDamage())
-            //{
-            //    return str.Replace("%VALUE%", newValue);
-            //}
-
-            var iDamage = new bool[Enum.GetValues(Enums.eDamage.None.GetType()).Length];
-            for (var index = 0; index <= iSfx.Index.Length - 1; ++index)
-            {
-                iDamage[(int)iPower.Effects[iSfx.Index[index]].DamageType] = true;
-            }
-
-            newValue = !((iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Defense) | (iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Elusivity)) ? Enums.GetGroupedDamage(iDamage, shortForm) : Enums.GetGroupedDefense(iDamage, shortForm);
-            return str.Replace("%VALUE%", newValue);
-        }*/
-
-        private Requirement ImportRequirementString(string iReq)
-        {
-            Requirement requirement1;
-            if (NeverAutoUpdateRequirements)
-            {
-                requirement1 = Requires;
-            }
-            else
-            {
-                var requirement2 = new Requirement();
-                if (iReq == null)
-                {
-                    requirement1 = requirement2;
-                }
-                else if (iReq.Length == 0)
-                {
-                    requirement1 = requirement2;
-                }
-                else
-                {
-                    requirement2.ClassNameNot = new string[0];
-                    requirement2.ClassName = new string[0];
-                    requirement2.PowerID = new string[0][];
-                    requirement2.PowerIDNot = new string[0][];
-                    iReq = iReq.ToUpper();
-                    for (var index1 = 0; index1 <= 1; ++index1)
-                    {
-                        var str = "$ARCHETYPE @";
-                        if (index1 == 1)
-                        {
-                            str = "$ARCHTYPE @";
-                        }
-
-                        Contains = iReq.Contains(str);
-                        for (var index2 = 0; index2 <= DatabaseAPI.Database.Classes.Length - 1; ++index2)
-                        {
-                            var oldValue1 = str + DatabaseAPI.Database.Classes[index2].ClassName.ToUpper() + " ==";
-                            var oldValue2 = oldValue1 + " !";
-                            if (iReq.Contains(oldValue2))
-                            {
-                                Array.Resize(ref requirement2.ClassNameNot, requirement2.ClassNameNot.Length + 1);
-                                requirement2.ClassNameNot[^1] =
-                                    DatabaseAPI.Database.Classes[index2].ClassName;
-                                iReq = iReq.Replace(oldValue2, "true");
-                            }
-                            else if (iReq.Contains(oldValue1))
-                            {
-                                Array.Resize(ref requirement2.ClassName, requirement2.ClassName.Length + 1);
-                                requirement2.ClassName[^1] =
-                                    DatabaseAPI.Database.Classes[index2].ClassName;
-                                iReq = iReq.Replace(oldValue1, "true");
-                            }
-                        }
-
-                        if (!Contains)
-                        {
-                            continue;
-                        }
-
-                        {
-                            var startIndex = iReq.IndexOf(str, StringComparison.Ordinal);
-                            for (var index2 = startIndex + str.Length; index2 <= iReq.Length - 1; ++index2)
-                            {
-                                if (iReq[index2] != ' ')
-                                {
-                                    continue;
-                                }
-
-                                iReq = iReq.Replace(iReq.Substring(startIndex, index2 - startIndex), "true");
-                                break;
-                            }
-
-                            iReq = iReq.Replace("true ==", "true");
-                            iReq = iReq.Replace("true !", "true");
-                        }
-                    }
-
-                    var strArray1 = new string[33];
-                    var index3 = 0;
-                    var strArray2 = iReq.Split(null);
-                    for (var index1 = 0; index1 <= strArray2.Length - 1; ++index1)
-                    {
-                        strArray2[index1] = strArray2[index1].ToLower();
-                        switch (strArray2[index1])
-                        {
-                            case "&&" when index3 > 1 &&
-                                           (strArray1[index3 - 1] == "true") & (strArray1[index3 - 2] == "true"):
-                                --index3;
-                                strArray1[index3] = string.Empty;
-                                strArray1[index3 - 1] = "true";
-                                break;
-                            case "&&" when index3 > 1 &&
-                                           (strArray1[index3 - 1] == "true") & (strArray1[index3 - 2] != "true"):
-                                requirement2.AddPowers(strArray1[index3 - 2], string.Empty);
-                                --index3;
-                                strArray1[index3] = string.Empty;
-                                strArray1[index3 - 1] = "true";
-                                break;
-                            case "&&" when index3 > 1 &&
-                                           (strArray1[index3 - 1] != "true") & (strArray1[index3 - 2] == "true"):
-                                requirement2.AddPowers(strArray1[index3 - 1], string.Empty);
-                                --index3;
-                                strArray1[index3] = string.Empty;
-                                break;
-                            case "&&":
-                            {
-                                if (index3 > 1 && (strArray1[index3 - 1] != "true") & (strArray1[index3 - 2] != "true"))
-                                {
-                                    requirement2.AddPowers(strArray1[index3 - 2], strArray1[index3 - 1]);
-                                    --index3;
-                                    strArray1[index3] = string.Empty;
-                                    strArray1[index3 - 1] = "true";
-                                }
-
-                                break;
-                            }
-                            case "!":
-                                strArray1[index3 - 1] = "!" + strArray1[index3 - 1];
-                                break;
-                            case "||":
-                            {
-                                if (index3 > 1)
-                                {
-                                    if ((strArray1[index3 - 1] == "true") & (strArray1[index3 - 2] == "true"))
-                                    {
-                                        --index3;
-                                        strArray1[index3] = string.Empty;
-                                        strArray1[index3 - 1] = "true";
-                                    }
-                                    else if ((strArray1[index3 - 1] != "true") & (strArray1[index3 - 2] == "true"))
-                                    {
-                                        requirement2.AddPowers(strArray1[index3 - 1], string.Empty);
-                                        --index3;
-                                        strArray1[index3] = string.Empty;
-                                    }
-                                    else if ((strArray1[index3 - 1] == "true") & (strArray1[index3 - 2] != "true"))
-                                    {
-                                        requirement2.AddPowers(strArray1[index3 - 2], string.Empty);
-                                        --index3;
-                                        strArray1[index3] = string.Empty;
-                                        strArray1[index3 - 1] = "true";
-                                    }
-                                    else
-                                    {
-                                        requirement2.AddPowers(strArray1[index3 - 2], string.Empty);
-                                        requirement2.AddPowers(strArray1[index3 - 1], string.Empty);
-                                        --index3;
-                                        strArray1[index3] = string.Empty;
-                                        strArray1[index3 - 1] = "true";
-                                    }
-                                }
-
-                                break;
-                            }
-                            case "owned?":
-                            case "auth>":
-                            case "productowned?":
-                            case "tokenowned?":
-                            case "char>":
-                                strArray1[index3 - 1] = "true";
-                                break;
-                            case ">=":
-                                --index3;
-                                strArray1[index3] = string.Empty;
-                                strArray1[index3 - 1] = "true";
-                                break;
-                            case ">":
-                                --index3;
-                                strArray1[index3] = string.Empty;
-                                strArray1[index3 - 1] = "true";
-                                break;
-                            case "source>":
-                                strArray1[index3 - 1] = "true";
-                                break;
-                            default:
-                            {
-                                if (strArray2[index1] != "eq")
-                                {
-                                    switch (strArray2[index1])
-                                    {
-                                        case "ispvpmap?":
-                                        {
-                                            if (index1 < strArray2.GetUpperBound(0) && strArray2[index1 + 1] == "!")
-                                            {
-                                                strArray2[index1 + 1] = string.Empty;
-                                            }
-
-                                            strArray1[index3] = "true";
-                                            ++index3;
-                                            break;
-                                        }
-                                        case "isarchitectmap?":
-                                        {
-                                            if (index1 < strArray2.GetUpperBound(0) && strArray2[index1 + 1] == "!")
-                                            {
-                                                strArray2[index1 + 1] = string.Empty;
-                                            }
-
-                                            strArray1[index3] = "true";
-                                            ++index3;
-                                            break;
-                                        }
-                                        default:
-                                        {
-                                            if (!string.IsNullOrEmpty(strArray2[index1]))
-                                            {
-                                                strArray1[index3] = strArray2[index1];
-                                                ++index3;
-                                            }
-
-                                            break;
-                                        }
-                                    }
-                                }
-
-                                break;
-                            }
-                        }
-                    }
-
-                    if (index3 == 1 && strArray1[0] != "true")
-                    {
-                        requirement2.AddPowers(strArray1[0], string.Empty);
-                        strArray1[0] = "true";
-                    }
-
-                    if (index3 != 0 && (index3 > 1) | (strArray1[0] != "true"))
-                    {
-                        var str = "Tokens remain in the stack (this can cause problems): \n";
-                        for (var index1 = 0; index1 <= index3; ++index1)
-                            str = str + strArray1[index1] + " ";
-                        var num = (int) MessageBox.Show(str + "\n\niReq: " + iReq +
-                                                        "\n\nSee clsPowerV2/ImportRequirementString to tweak.");
-                    }
-
-                    for (var index1 = 0; index1 <= requirement2.PowerID.Length - 1; ++index1)
-                    for (var index2 = 0; index2 <= requirement2.PowerID[index1].Length - 1; ++index2)
-                    {
-                        if (string.IsNullOrEmpty(requirement2.PowerID[index1][index2]))
-                        {
-                            continue;
-                        }
-
-                        for (var index4 = 0; index4 <= DatabaseAPI.Database.Power.Length - 1; ++index4)
-                        {
-                            if (!string.Equals(DatabaseAPI.Database.Power[index4].FullName,
-                                requirement2.PowerID[index1][index2],
-                                StringComparison.OrdinalIgnoreCase))
-                            {
-                                continue;
-                            }
-
-                            requirement2.PowerID[index1][index2] = DatabaseAPI.Database.Power[index4].FullName;
-                            break;
-                        }
-                    }
-
-                    requirement1 = requirement2;
-                }
-            }
-
-            return requirement1;
-        }
-
         private int[] GetValidEnhancementsFromSets()
         {
             return DatabaseAPI.Database.EnhancementSets
@@ -3010,7 +2369,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             // Max recursion level
             if (rLevel > 5)
             {
-                return new List<IEffect>();
+                return [];
             }
 
             power = power ??= this;
@@ -3137,140 +2496,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         /// 6.68% Defense (All but Toxic) to Self for 0.75 seconds (when Buff_Def, in PvP)
         ///   Effect does not stack from same caster
         /// </example>
-        public string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, string groupName = "", bool includeEnhEffects = false, bool activeOnly = true)
-        {
-            if (string.IsNullOrEmpty(groupName))
-            {
-                groupName = $"{effectType} (All)";
-            }
-
-            var damageVectors = effectType switch
-            {
-                Enums.eEffectType.Resistance or Enums.eEffectType.DamageBuff => new List<Enums.eDamage>
-                {
-                    Enums.eDamage.Smashing,
-                    Enums.eDamage.Lethal,
-                    Enums.eDamage.Fire,
-                    Enums.eDamage.Cold,
-                    Enums.eDamage.Energy,
-                    Enums.eDamage.Negative,
-                    Enums.eDamage.Toxic,
-                    Enums.eDamage.Psionic
-                },
-
-                Enums.eEffectType.Defense when !DatabaseAPI.RealmUsesToxicDef() => new List<Enums.eDamage>
-                {
-                    Enums.eDamage.Smashing,
-                    Enums.eDamage.Lethal,
-                    Enums.eDamage.Fire,
-                    Enums.eDamage.Cold,
-                    Enums.eDamage.Energy,
-                    Enums.eDamage.Negative,
-                    Enums.eDamage.Psionic,
-                    Enums.eDamage.Melee,
-                    Enums.eDamage.Ranged,
-                    Enums.eDamage.AoE
-                },
-
-                _ => new List<Enums.eDamage>
-                {
-                    Enums.eDamage.Smashing,
-                    Enums.eDamage.Lethal,
-                    Enums.eDamage.Fire,
-                    Enums.eDamage.Cold,
-                    Enums.eDamage.Energy,
-                    Enums.eDamage.Negative,
-                    Enums.eDamage.Toxic,
-                    Enums.eDamage.Psionic,
-                    Enums.eDamage.Melee,
-                    Enums.eDamage.Ranged,
-                    Enums.eDamage.AoE
-                }
-            };
-
-            var effects = activeOnly
-                ? Effects
-                    .Where(e => e.PvMode == Enums.ePvX.Any | (e.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE) | (e.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE))
-                    .ToArray()
-                : Effects;
-            var effectsList = string.Empty;
-            var pvModes = new List<Enums.ePvX> { Enums.ePvX.Any, Enums.ePvX.PvE, Enums.ePvX.PvP };
-
-            foreach (var pvMode in pvModes)
-            {
-                // Select identifiers from effects
-                var effectIdentifiers2 = effects
-                    .Where(e => e.EffectType == effectType && e.PvMode == pvMode && (includeEnhEffects || !e.isEnhancementEffect))
-                    .Select(e => e.GenerateIdentifier())
-                    .ToList();
-
-                // Distinct() with custom comparer
-                var effectIdentifiers = new List<EffectIdentifier>();
-                foreach (var fxId2 in effectIdentifiers2)
-                {
-                    if (effectIdentifiers.Any(e => e.Compare(fxId2)))
-                    {
-                        continue;
-                    }
-
-                    effectIdentifiers.Add(fxId2);
-                }
-
-                var pvxEffects = new List<string>();
-                foreach (var effectId in effectIdentifiers)
-                {
-                    // Select distinct damage vectors from effects of the specified kind
-                    var effectsVectors = effects
-                        .Where(e => (includeEnhEffects || !e.isEnhancementEffect) & e.GenerateIdentifier().Compare(effectId))
-                        .Select(e => e.DamageType)
-                        .Distinct()
-                        .ToList();
-
-                    // Check if effects contains all the effectType vectors (listed above)
-                    var effectsInMode = string.Empty;
-                    if (!damageVectors.Except(effectsVectors).Any())
-                    {
-                        var effectsInModeBase = effects
-                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                            .First(e => (includeEnhEffects || !e.Value.isEnhancementEffect) & e.Value.GenerateIdentifier().Compare(effectId));
-                            
-                            effectsInMode = effectsInModeBase.Value.BuildEffectString(false, groupName, false, false, false, true) + GetDifferentAttributesSubPower(effectsInModeBase.Key);
-                    }
-                    else
-                    {
-                        // If 3 or less vectors are excluded, use the "All but..." format instead and only list those non-matched
-                        var vectors = (damageVectors.Count - effectsVectors.Count <= 3)
-                            ? $"All but {string.Join(", ", damageVectors.Except(effectsVectors))}"
-                            : string.Join(", ", effectsVectors);
-
-                        // Pick all matching effects
-                        var effectsInModeBase = effects
-                            .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                            .First(e => (includeEnhEffects || !e.Value.isEnhancementEffect) & e.Value.GenerateIdentifier().Compare(effectId));
-                            
-                            effectsInMode = effectsInModeBase.Value.BuildEffectString(false, $"{effectType} ({vectors})", false, false, false, true) + GetDifferentAttributesSubPower(effectsInModeBase.Key);
-                    }
-
-                    effectsInMode = effectsInMode.Trim().Replace("\n\n", "\n");
-                    if (string.IsNullOrEmpty(effectsInMode))
-                    {
-                        continue;
-                    }
-
-                    pvxEffects.Add(effectsInMode);
-                }
-
-                if (pvxEffects.Count <= 0)
-                {
-                    continue;
-                }
-                
-                effectsList += (!string.IsNullOrEmpty(effectsList) ? "\n---------------------\n" : "") + string.Join("\n", pvxEffects);
-            }
-
-            return effectsList;
-        }
-
         public string BuildTooltipStringAllVectorsEffects(Enums.eEffectType effectType, Enums.eEffectType etModifies, Enums.eDamage damageType, Enums.eMez mezType, string groupName = "", bool includeEnhEffects = false)
         {
             if (string.IsNullOrEmpty(groupName))
@@ -3540,7 +2765,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 .SelectMany(e => e.Power.Select(p => DatabaseAPI.Database.Power[p]))
                 .Where(e => e != null)
                 .Select(e => new KeyValuePair<string, IEffect[]>(e.FullName, e.Effects))
-                .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", Array.Empty<IEffect>()))
+                .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", []))
                 .FirstOrDefault(e => e.Value.Any(fx =>
                     fx.EffectType == Enums.eEffectType.PowerRedirect &&
                     fx.Override == basePower.FullName |
@@ -3578,7 +2803,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     .SelectMany(e => e.Power.Select(p => DatabaseAPI.Database.Power[p]))
                     .Where(e => e != null)
                     .Select(e => new KeyValuePair<string, IEffect[]>(e.FullName, e.Effects))
-                    .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", Array.Empty<IEffect>()))
+                    .DefaultIfEmpty(new KeyValuePair<string, IEffect[]>("", []))
                     .FirstOrDefault(e => e.Value.Any(fx =>
                         fx.EffectType == Enums.eEffectType.PowerRedirect &&
                         fx.Override == basePower.FullName |
@@ -3592,6 +2817,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return !string.IsNullOrEmpty(rootPowerName) && rootPowerBase != null && basePower.FullName != rootPowerName
                 ? rootPowerName
                 : null;
+        }
+
+        public void ApplyModifyEffects()
+        {
+            foreach (var fx in Effects)
+            {
+                fx.UpdateAttrib();
+            }
+        }
+
+        public string ExportToJson()
+        {
+            return JsonConvert.SerializeObject(this, Formatting.Indented);
         }
 
         public override string ToString()

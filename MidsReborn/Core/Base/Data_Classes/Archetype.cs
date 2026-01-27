@@ -242,38 +242,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return popupData;
         }
 
-        public bool UpdateFromCSV(string csv)
-        {
-            if (string.IsNullOrEmpty(csv))
-                return false;
-
-            var array = CSV.ToArray(csv);
-            if (array.Length < 11)
-                return false;
-
-            ClassName = array[0];
-            Column = int.Parse(array[1]) - 2;
-            DisplayName = array[2];
-            DescLong = array[3];
-            Origin = array[4].Split(Convert.ToChar(" "));
-            var str = array[5];
-            if (str.IndexOf("KHELDIAN HERO", StringComparison.OrdinalIgnoreCase) > -1)
-                ClassType = Enums.eClassType.HeroEpic;
-            else if (str.IndexOf("ARACHNOSSOLDIER VILLAIN", StringComparison.OrdinalIgnoreCase) > -1 ||
-                     str.IndexOf("ARACHNOSWIDOW VILLAIN", StringComparison.OrdinalIgnoreCase) > -1)
-                ClassType = Enums.eClassType.VillainEpic;
-            else if (str.IndexOf("HERO", StringComparison.OrdinalIgnoreCase) > -1)
-                ClassType = Enums.eClassType.Hero;
-            else if (str.IndexOf("VILLAIN", StringComparison.OrdinalIgnoreCase) > -1)
-                ClassType = Enums.eClassType.Villain;
-            Playable = !string.IsNullOrWhiteSpace(str);
-            DescShort = array[6];
-            PrimaryGroup = array[8];
-            SecondaryGroup = array[9];
-            PoolGroup = array[10];
-            return true;
-        }
-
         public static string[] GetNpcClasses()
         {
             return new[]

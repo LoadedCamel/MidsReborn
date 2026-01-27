@@ -18,10 +18,10 @@ namespace Mids_Reborn
         protected RawCharacterInfo CharacterInfo { get; set; }
         protected string BuildString { get; set; }
         protected UniqueList<string> PowerSets { get; set; }
-        protected string[] ExcludePowersets { get; } = { "Redirects." }; //{"Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents"};
+        protected string[] ExcludePowersets { get; } = ["Redirects."]; //{"Inherent.Inherent", "Inherent.Fitness", "Redirects.Inherents"};
 
         protected string[] ExcludePowers { get; } =
-        {
+        [
             "Efficient_Adaptation", "Defensive_Adaptation", "Offensive_Adaptation", // Bio armor
             "Form_of_the_Body", "Form_of_the_Mind", "Form_of_the_Soul", // Staff Fighting (all but stalkers)
             "Ammunition", // Dual Pistols
@@ -33,7 +33,7 @@ namespace Mids_Reborn
             "Inherent.Inherent.Lightning_Aura", // Storm Blast early iteration inherents
             "Inherent.Inherent.Wind_Speed",
             "Inherent.Inherent.Category_Five_Lightning"
-        };
+        ];
 
         protected Dictionary<int, int> OldFitnessPoolIDs { get; } = new()
         {
@@ -65,7 +65,7 @@ namespace Mids_Reborn
 
         protected string ApplyPowerReplacementTable(string powerName, string? archetype, Dictionary<KeyValuePair<string, string?>, string> oldPowersDict)
         {
-            if (DatabaseAPI.DatabaseName is not "Homecoming" and not "Cryptic")
+            if (DatabaseAPI.DatabaseName is not "Homecoming" and not "Cryptic" and not "Breakout")
             {
                 return powerName;
             }
@@ -236,29 +236,6 @@ namespace Mids_Reborn
             }
         }
 
-        // CheckValid, from power/powerset fullName
-        protected bool CheckValid(string input, Enums.eValidationType validateType)
-        {
-            string[] excludes;
-            switch (validateType)
-            {
-                case Enums.eValidationType.Powerset:
-                    excludes = ExcludePowersets;
-                    break;
-
-                case Enums.eValidationType.Power:
-                    excludes = ExcludePowers;
-                    break;
-
-                default:
-                    return false;
-            }
-
-            ;
-
-            return !excludes.Any(x => input.Contains(x));
-        }
-
         // CheckValid, for direct powerset result
         // Since DatabaseAPI.GetPowersetByName may return null
         protected bool CheckValid(IPowerset? input)
@@ -274,13 +251,14 @@ namespace Mids_Reborn
             return (DatabaseAPI.DatabaseName != "Rebirth" || input?.DisplayName != "Disintegrating") && input != null && !ExcludePowers.Any(p => input.FullName.Contains(p));
         }
 
-        protected string FixPowersetsNames(string powerName)
+        protected string FixPowersetsNames(string powersetName)
         {
-            return powerName.Replace("Warshade_Defensive.Umbral_Aura.", "Inherent.Inherent.")
+            return powersetName.Replace("Warshade_Defensive.Umbral_Aura.", "Inherent.Inherent.")
                 .Replace("Warshade_Offensive.Umbral_Blast.", "Inherent.Inherent.")
                 .Replace("Peacebringer_Offensive.Luminous_Blast.", "Inherent.Inherent.")
                 .Replace("Peacebringer_Defensive.Luminous_Aura.", "Inherent.Inherent.")
-                .Replace("Mastermind_Buff.Shock_Therapy.", "Mastermind_Buff.Electrical_Affinity.");
+                .Replace("Mastermind_Buff.Shock_Therapy.", "Mastermind_Buff.Electrical_Affinity.")
+                .Replace("Epic.Defender_Fire_Mastery.", "Epic.Def_Flame_Mastery.");
         }
 
         public UniqueList<string> GetPowersets()
@@ -296,7 +274,7 @@ namespace Mids_Reborn
         public static int CountPools(UniqueList<string> listPowersets)
         {
             return listPowersets.
-                Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
+                Where(ps => ps.StartsWith("Pool.", StringComparison.OrdinalIgnoreCase))
                 .ToArray()
                 .Length;
         }
@@ -308,11 +286,12 @@ namespace Mids_Reborn
             if (nbPools == 4) return;
 
             var pickedPowerPools = listPowersets
-                .Where(ps => ps.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0)
+                .Where(ps => ps.StartsWith("Pool.", StringComparison.OrdinalIgnoreCase))
                 .ToArray();
             var dbPowerPools = Database.Instance.Powersets
                 .Where(ps =>
-                    ps.FullName.IndexOf("Pool.", StringComparison.OrdinalIgnoreCase) == 0 &&
+                    ps != null &&
+                    ps.FullName.StartsWith("Pool.", StringComparison.OrdinalIgnoreCase) &&
                     !pickedPowerPools.Contains(ps.FullName))
                 .OrderBy(e => e.DisplayName)
                 .Select(e => e.FullName)
@@ -349,7 +328,7 @@ namespace Mids_Reborn
             {
                 if (i == 2) continue;
 
-                if (listPowersets[i] != null && listPowersets[i] != "")
+                if (!string.IsNullOrEmpty(listPowersets[i]))
                 {
                     continue;
                 }
@@ -437,7 +416,7 @@ namespace Mids_Reborn
         public ImportFromBuildsave(string buildString)
         {
             BuildString = buildString;
-            PowerSets = new UniqueList<string>();
+            PowerSets = [];
             CharacterInfo = new RawCharacterInfo();
         }
 
@@ -480,6 +459,20 @@ namespace Mids_Reborn
                 "mastermind_buff.marine_affinity.call_depths" => "Mastermind_Buff.Marine_Affinity.Power_of_the_Depths",
                 "controller_control.arsenal_control.gun_drone" => "Controller_Control.Arsenal_Control.Tri_Cannon",
                 "dominator_control.arsenal_control.gun_drone" => "Dominator_Control.Arsenal_Control.Tri_Cannon",
+                "blaster_ranged.storm_blast.aim" => "Blaster_Ranged.Storm_Blast.Intensify",
+                "corruptor_ranged.storm_blast.aim" => "Corruptor_Ranged.Storm_Blast.Intensify",
+                "defender_ranged.storm_blast.aim" => "Defender_Ranged.Storm_Blast.Intensify",
+                "sentinel_ranged.storm_blast.aim" => "Sentinel_Ranged.Storm_Blast.Intensify",
+                "dominator_control.pyrotechnic_control.sparkling_field" => "Dominator_Control.Pyrotechnic_Control.Sparkling_Chain",
+                "dominator_control.pyrotechnic_control.glitz" => "Dominator_Control.Pyrotechnic_Control.Multipurpose_Missiles",
+                "controller_control.pyrotechnic_control.sparkling_field" => "Controller_Control.Pyrotechnic_Control.Sparkling_Chain",
+                "controller_control.pyrotechnic_control.glitz" => "Controller_Control.Pyrotechnic_Control.Multipurpose_Missiles",
+                "brute_defense.psionic_armor.fortify_mind" => "Brute_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "scrapper_defense.psionic_armor.fortify_mind" => "Scrapper_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "sentinel_defense.psionic_armor.fortify_mind" => "Sentinel_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "stalker_defense.psionic_armor.fortify_mind" => "Stalker_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "tanker_defense.psionic_armor.fortify_mind" => "Tanker_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "stalker_melee.sonic_melee.assassins_resonance" => "Stalker_Melee.Sonic_Melee.Assassins_Whisper",
 
                 _ => fullName
             };

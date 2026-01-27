@@ -1,16 +1,14 @@
-﻿using Mids_Reborn.Forms.Controls;
-using System.Windows.Forms;
+﻿using System.Windows.Forms;
+using Mids_Reborn.UI.Forms;
 
 namespace Mids_Reborn.Core.BuildFile
 {
     public interface IBuildNotifier
     {
         void ShowError(string message);
-        DialogResult ShowErrorDialog(string message, string title);
         void ShowWarning(string message);
         DialogResult ShowWarningDialog(string message, string title, bool showIgnore = false);
-        void ShowInfo(string message);
-        DialogResult ShowInfoDialog(string message, string title);
+        DialogResult ShowQuestionDialog(string message, string title, MessageBoxEx.MessageBoxExIcon icon = MessageBoxEx.MessageBoxExIcon.Question, bool showIgnore = false);
     }
 
     public class BuildNotifier : IBuildNotifier
@@ -18,11 +16,6 @@ namespace Mids_Reborn.Core.BuildFile
         public void ShowError(string message)
         {
             MessageBoxEx.Show(message, "Error", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
-        }
-
-        public DialogResult ShowErrorDialog(string message, string title)
-        {
-            return MessageBoxEx.ShowDialog(message, title, MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
         }
 
         public void ShowWarning(string message)
@@ -35,15 +28,9 @@ namespace Mids_Reborn.Core.BuildFile
             return MessageBoxEx.ShowDialog(message, title, MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Warning, showIgnore);
         }
 
-        public void ShowInfo(string message)
+        public DialogResult ShowQuestionDialog(string message, string title, MessageBoxEx.MessageBoxExIcon icon = MessageBoxEx.MessageBoxExIcon.Question, bool showIgnore = false)
         {
-            MessageBoxEx.Show(message, "Info", MessageBoxEx.MessageBoxExButtons.Ok);
+            return MessageBoxEx.ShowDialog(message, title, MessageBoxEx.MessageBoxExButtons.YesNo, icon, showIgnore);
         }
-
-        public DialogResult ShowInfoDialog(string message, string title)
-        {
-            return MessageBoxEx.ShowDialog(message, title, MessageBoxEx.MessageBoxExButtons.Ok);
-        }
-
     }
 }

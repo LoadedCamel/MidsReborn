@@ -1,7 +1,11 @@
+using Mids_Reborn.UI.Forms;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Globalization;
 using System.IO;
+using System.Linq;
 using System.Security.Cryptography;
 using System.Windows.Forms;
 using Path = System.IO.Path;
@@ -68,9 +72,9 @@ namespace Mids_Reborn.Core
         public AutoUpdate AutomaticUpdates { get; set; }
 
         public readonly short[] DragDropScenarioAction =
-        {
+        [
             3, 0, 5, 0, 3, 5, 0, 0, 5, 0, 2, 3, 0, 2, 2, 0, 0, 0, 0, 0
-        };
+        ];
 
         public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
         public bool CoDEffectFormat = false;
@@ -85,15 +89,16 @@ namespace Mids_Reborn.Core
             RtFont.SetDefault();
             Tips = new Tips();
             Export = new ExportConfig();
-            CompOverride = Array.Empty<Enums.CompOverride>();
+            CompOverride = [];
             TeamMembers = new Dictionary<string, int>();
             ShowSelfBuffsAny = false;
-            WarnOnOldDbMbd = true;
+            WarnOnOldDbMbd = false;
             DimWindowStyleColors = true;
             CloseEnhSelectPopupByMove = true;
             PowerListsWordwrapMode = Enums.WordwrapMode.Legacy;
             Mode = Modes.User;
-            InitializeComponent();
+            CombatContextSettings = new CombatContext();
+            //InitializeComponent();
         }
 
         // these properties require setters for deserialization
@@ -139,7 +144,7 @@ namespace Mids_Reborn.Core
         public bool DisableShowPopup { get; set; }
         public bool DisableAlphaPopup { get; set; }
         public bool DisableRepeatOnMiddleClick { get; set; }
-        private static ConfigData? Instance { get; set; } = null;
+        private static ConfigData? Instance { get; set; }
         public bool ExportBonusTotals { get; set; }
         public bool ExportBonusList { get; set; }
         public bool NoToolTips { get; set; }
@@ -166,6 +171,102 @@ namespace Mids_Reborn.Core
 
         public Enums.WordwrapMode PowerListsWordwrapMode { get; set; }
 
+        public CombatContext CombatContextSettings { get; set; }
+        public string? ActiveTemplate { get; set; } = null;
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public CustomGraphStat.eCustomGraphStat[]? CustomGraphs { get; set; } =
+        [
+            CustomGraphStat.eCustomGraphStat.Recharge, CustomGraphStat.eCustomGraphStat.ToHit, CustomGraphStat.eCustomGraphStat.Accuracy,
+            CustomGraphStat.eCustomGraphStat.Damage, CustomGraphStat.eCustomGraphStat.Range, CustomGraphStat.eCustomGraphStat.EndRdx,
+            CustomGraphStat.eCustomGraphStat.Heal, CustomGraphStat.eCustomGraphStat.Threat
+        ];
+
+        [JsonProperty(NullValueHandling = NullValueHandling.Ignore)]
+        public CustomGraphSettings[]? CustomGraphSetting { get; set; } =
+        [
+            new CustomGraphSettings // Recharge
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.Enhancement,
+                EffectTypeAux = Enums.eEffectType.RechargeTime,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // ToHit
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.ToHit,
+                EffectTypeAux = null,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // Accuracy
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.Enhancement,
+                EffectTypeAux = Enums.eEffectType.Accuracy,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // Damage
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.DamageBuff,
+                EffectTypeAux = null,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // Range
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.Enhancement,
+                EffectTypeAux = Enums.eEffectType.Range,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // EndRdx
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.Enhancement,
+                EffectTypeAux = Enums.eEffectType.EnduranceDiscount, // ???
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // Heal
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.Enhancement,
+                EffectTypeAux = Enums.eEffectType.Heal,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            },
+            new CustomGraphSettings // Threat
+            {
+                DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                DamageType = null,
+                EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                EffectType = Enums.eEffectType.ThreatLevel,
+                EffectTypeAux = null,
+                MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                MezType = null
+            }
+        ];
+
         internal bool MasterMode
         {
             get
@@ -186,7 +287,7 @@ namespace Mids_Reborn.Core
         public bool DimWindowStyleColors { get; set; }
         public bool CloseEnhSelectPopupByMove { get; set; }
 
-        private string _buildsPath = Files.FDefaultBuildsPath;
+        private string _buildsPath = AppDataPaths.FDefaultBuildsPath;
 
         public string BuildsPath
         {
@@ -204,7 +305,7 @@ namespace Mids_Reborn.Core
 
         public string? DataPath { get; set; }
 
-        private string? _savePath = Files.FDefaultPath;
+        private string? _savePath = AppDataPaths.FDefaultPath;
 
         public string? SavePath
         {
@@ -226,8 +327,6 @@ namespace Mids_Reborn.Core
                 }
             }
         }
-
-        public string? UpdatePath { get; private set; }
 
         public Enums.RewardCurrency PreferredCurrency = Enums.RewardCurrency.RewardMerit;
 
@@ -266,7 +365,7 @@ namespace Mids_Reborn.Core
 
         public void ResetBuildsPath()
         {
-            BuildsPath = Files.FDefaultBuildsPath;
+            BuildsPath = AppDataPaths.FDefaultBuildsPath;
         }
 
         public static void Initialize(bool firstRun = false)
@@ -276,52 +375,28 @@ namespace Mids_Reborn.Core
             {
                 Instance = new ConfigData();
                 Instance.SaveConfig();
-                Instance.InitializeComponent();
+                //Instance.InitializeComponent();
                 return;
             }
 
-            Instance = serializer.Deserialize<ConfigData>(File.ReadAllText(Files.FNameJsonConfig));
-            Instance.InitializeComponent();
+            Instance = serializer.Deserialize<ConfigData>(File.ReadAllText(AppDataPaths.FNameJsonConfig));
+            //Instance.InitializeComponent();
         }
 
-        private void InitializeComponent()
+        public static Dictionary<string, string> GetCombatSettings()
         {
-            if (string.IsNullOrWhiteSpace(DataPath))
+            return new Dictionary<string, string>
             {
-                DataPath = Files.FDefaultPath;
-            }
-
-            // RelocateSaveFolder(false);
-            try
-            {
-                LoadOverrides();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-            }
+                { "cfg.player.hp", "Player HP %" },
+                { "cfg.player.isAlive", "Player is Alive/Dead" },
+                { "cfg.target.hp", "Target HP %" },
+                { "cfg.target.end", "Target Endurance %" }
+            };
         }
 
-        public Color GetStreamColor(BinaryReader br, Enums.eColorSetting clSetting, bool autoFix = true)
+        public static string? GetCombatSettingName(string param, Dictionary<string, string> settingsTable)
         {
-            var cl = br.ReadRGB();
-            if (autoFix & cl.R == 0 & cl.G == 0 & cl.B == 0)
-            {
-                return RtFont.GetDefaultColorSetting(clSetting);
-            }
-
-            return cl;
-        }
-
-        public float GetStreamFontSize(BinaryReader br, Enums.eFontSizeSetting fntSetting, bool autoFix = true)
-        {
-            var fntSize = br.ReadSingle();
-            if (autoFix & !RtFont.ValidFontSize(fntSize))
-            {
-                return RtFont.GetDefaultFontSizeSetting(fntSetting);
-            }
-
-            return fntSize;
+            return (from k in settingsTable where string.Equals(param, k.Key, StringComparison.InvariantCultureIgnoreCase) select k.Value).FirstOrDefault();
         }
 
         private void SaveRaw(ISerialize serializer, string iFilename)
@@ -336,32 +411,39 @@ namespace Mids_Reborn.Core
 
         public void SaveConfig()
         {
-            if (!File.Exists(Files.FNameJsonConfig))
+            if (!File.Exists(AppDataPaths.FNameJsonConfig))
             {
-                File.Create(Files.FNameJsonConfig);
+                File.WriteAllText(AppDataPaths.FNameJsonConfig, "{}");
             }
-
+            
             var serializer = Serializer.GetSerializer();
-            Save(serializer, Files.FNameJsonConfig);
+            Save(serializer, AppDataPaths.FNameJsonConfig);
             SaveOverrides(serializer);
         }
 
-        private void LoadOverrides()
+        public void LoadOverrides(string dataPath = "")
         {
-            if (!File.Exists(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath)))
+            if (string.IsNullOrWhiteSpace(dataPath))
             {
-                MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was not found.\r\nCreating a new one...", @"Database file missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                CompOverride = Array.Empty<Enums.CompOverride>();
-                SaveOverrides(Serializer.GetSerializer());
+                CompOverride = [];
+                //SaveOverrides(Serializer.GetSerializer());
+                return;
+            }
+
+            if (!File.Exists(AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileOverrides, dataPath)))
+            {
+                MessageBox.Show($"Overrides file ({AppDataPaths.MxdbFileOverrides}) was not found.\r\nCreating a new one...", @"Database file missing", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                CompOverride = [];
+                SaveOverrides(Serializer.GetSerializer(), dataPath);
 
                 return;
             }
 
-            using var fileStream = new FileStream(Files.SelectDataFileLoad(Files.MxdbFileOverrides, DataPath), FileMode.Open, FileAccess.Read);
+            using var fileStream = new FileStream(AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileOverrides, dataPath), FileMode.Open, FileAccess.Read);
             using var binaryReader = new BinaryReader(fileStream);
             if (binaryReader.ReadString() != OverrideNames)
             {
-                MessageBox.Show($"Overrides file ({Files.MxdbFileOverrides}) was missing a header!\r\nNot loading powerset comparison overrides.", @"Database file failed to load", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show($"Overrides file ({AppDataPaths.MxdbFileOverrides}) was missing a header!\r\nNot loading powerset comparison overrides.", @"Database file failed to load", MessageBoxButtons.OK, MessageBoxIcon.Warning);
 
                 return;
             }
@@ -428,31 +510,41 @@ namespace Mids_Reborn.Core
             return new RawSaveResult(newContent.Length, newContentHash);
         }
 
-        private void SaveRawOverrides(ISerialize serializer, string iFilename, string name)
+        private void SaveOverrides(ISerialize serializer, string dataPath = "")
         {
-            var toSerialize = new
-            {
-                name,
-                CompOverride
-            };
-            SaveRawMhd(serializer, toSerialize, iFilename, null);
-        }
+            const string overridesFileName = "Compare.mhd";
 
-        private void SaveOverrides(ISerialize serializer)
-        {
-            var fn = Files.SelectDataFileLoad("Compare.mhd");
+            var fn = string.IsNullOrWhiteSpace(dataPath)
+                ? AppDataPaths.SelectDataFileLoad(overridesFileName)
+                : Path.Combine(dataPath, overridesFileName);
+            var dir = Path.GetDirectoryName(fn);
+            if (dir != null && !Directory.Exists(dir))
+            {
+                Directory.CreateDirectory(dir);
+            }
             //SaveRawOverrides(serializer, fn, OverrideNames);
 
             using var fileStream = new FileStream(fn, FileMode.Create);
             using var binaryWriter = new BinaryWriter(fileStream);
             binaryWriter.Write(OverrideNames);
             binaryWriter.Write(CompOverride.Length - 1);
-            for (var index = 0; index <= CompOverride.Length - 1; ++index)
+            for (var index = 0; index < CompOverride.Length; index++)
             {
                 binaryWriter.Write(CompOverride[index].Powerset);
                 binaryWriter.Write(CompOverride[index].Power);
                 binaryWriter.Write(CompOverride[index].Override);
             }
+        }
+
+        public class CustomGraphSettings
+        {
+            public Enums.eMez? MezType { get; set; }
+            public CustomGraphStat.eCustomGraphMode MezMode { get; set; }
+            public Enums.eDamage? DamageType { get; set; }
+            public CustomGraphStat.eCustomGraphMode DamageMode { get; set; }
+            public Enums.eEffectType? EffectType { get; set; }
+            public Enums.eEffectType? EffectTypeAux { get; set; }
+            public CustomGraphStat.eCustomGraphMode EffectMode { get; set; }
         }
 
         public class AutoUpdate
@@ -500,9 +592,91 @@ namespace Mids_Reborn.Core
             public bool ExportIOLevels { get; set; }
             public bool ExportStripSetNames { get; set; }
             public bool ExportStripEnh { get; set; }
-            public bool DisableExportDataChunk { get; set; }
-            public bool DisableExportCompress { get; set; }
-            public bool ExportExtraSep { get; set; }
+        }
+
+        /// <summary>
+        /// Combat context variables, including player and target props.
+        /// See also when adding/changing fields here:
+        /// <seealso cref="FrmTeam.frmTeam_OnLoad"/>
+        /// <seealso cref="FrmTeam.FeedbackUpdate"/>
+        /// <seealso cref="Mids_Reborn.Core.BooleanExprPreprocessor.BuildGlobalExpression(IEffect, string, string)"/>
+        /// <seealso cref="Mids_Reborn.Core.BooleanExprPreprocessor.BuildGlobalExpression(IEffect, string)"/>
+        /// <seealso cref="Mids_Reborn.Core.BooleanExprPreprocessor.GetConfigValue"/>
+        /// </summary>
+        public class CombatContext
+        {
+            public static string GetConfigChunkName(string condChunk)
+            {
+                return condChunk.ToLowerInvariant() switch
+                {
+                    "player" => "PlayerSettings",
+                    "target" => "TargetSettings",
+                    "hp" => "HpPercent",
+                    "end" => "EndPercent",
+                    "isalive" => "IsAlive",
+                    _ => ""
+                };
+            }
+
+            public static string ConfigChunkType(string condChunk)
+            {
+                return condChunk.ToLowerInvariant() switch
+                {
+                    // Return bool/int types ?
+                    "isalive" => "bool",
+                    _ => "int"
+                };
+            }
+
+            public static string FormatSettingName(string setting)
+            {
+                return CultureInfo.InvariantCulture.TextInfo
+                    .ToTitleCase(setting
+                        .ToLowerInvariant()
+                        .Replace("cfg.", "")
+                        .Replace("settings", "")
+                        .Replace("percent", "%")
+                        .Replace('.', ' '))
+                    .Replace("Isalive", "IsAlive");
+            }
+
+            public static List<string> EnumerateFields(object obj, string prefix = "cfg")
+            {
+                var objType = obj.GetType();
+                var properties = objType.GetProperties();
+                var settings = new List<string>();
+
+                foreach (var prop in properties)
+                {
+                    // May cut System.Collections
+                    if (prop.PropertyType.Assembly == objType.Assembly)
+                    {
+                        settings.AddRange(EnumerateFields(prop.GetValue(obj, null), $"{prefix}.{prop.Name}"));
+                    }
+                    else
+                    {
+                        settings.Add($"{prefix}.{prop.Name.ToLowerInvariant()}");
+                    }
+                }
+
+                return settings;
+            }
+
+            public class Player
+            {
+                public int HpPercent { get; set; } = 100;
+                public int EndPercent { get; set; } = 100;
+                public bool IsAlive { get; set; } = true;
+            }
+
+            public class Target
+            {
+                public int HpPercent { get; set; } = 100;
+                public int EndPercent { get; set; } = 100;
+            }
+
+            public Player PlayerSettings { get; set; } = new();
+            public Target TargetSettings { get; set; } = new();
         }
 
         public class FontSettings
@@ -588,7 +762,7 @@ namespace Mids_Reborn.Core
                     Enums.eColorSetting.ColorPlName => Color.FromArgb(192, 192, 255),
                     Enums.eColorSetting.ColorPlSpecial => Color.FromArgb(128, 128, 255),
                     Enums.eColorSetting.ColorPowerAvailable => Color.Gold,
-                    Enums.eColorSetting.ColorPowerDisabled => Color.DimGray,
+                    Enums.eColorSetting.ColorPowerDisabled => Color.LightGray,
                     Enums.eColorSetting.ColorPowerTakenHero => Color.FromArgb(116, 168, 234),
                     Enums.eColorSetting.ColorPowerTakenDarkHero => Color.DodgerBlue,
                     Enums.eColorSetting.ColorPowerHighlightHero => Color.FromArgb(64, 64, 96),

@@ -47,7 +47,7 @@ namespace Mids_Reborn.Core
             public bool IsBase { get; set; }
         }
 
-        private static string BaseImagePath => Path.Combine(AppContext.BaseDirectory, "Images");
+        private static string BaseImagePath => Path.Combine(AppContext.BaseDirectory, "Assets");
 
         public static string ImagePath(string type = "")
         {
@@ -73,6 +73,11 @@ namespace Mids_Reborn.Core
         private static IEnumerable<ImageInfo> GetExtendedImages(string? path)
         {
             var retList = new List<ImageInfo>();
+            if (path == null)
+            {
+                return retList;
+            }
+
             var files = Directory.GetFiles(path, ImageFilter, SearchOption.AllDirectories).ToList();
             foreach (var file in files)
             {
@@ -172,54 +177,6 @@ namespace Mids_Reborn.Core
             }
 
             return Task.FromResult(archTypePaths.ToList());
-        }
-
-        public static List<string> ArchetypeImages
-        {
-            get
-            {
-                var retList = new List<string>();
-                var baseImages = Images.Where(x => x.IsBase).ToList();
-                var archetypeImages = Images.Where(x => x.Directory == "Archetypes").ToList();
-                var unknown = baseImages.First(i => i.FileName == "Unknown.png").Path;
-                foreach (var c in DatabaseAPI.Database.Classes)
-                {
-                    var path = archetypeImages.FirstOrDefault(i => i.FileName == $"{c?.ClassName}.png").Path;
-                    if (string.IsNullOrWhiteSpace(path))
-                    {
-                        path = unknown;
-                    }
-
-                    if (retList.Any(p => p == path)) continue;
-                    if (path != null) retList.Add(path);
-                }
-
-                return retList;
-            }
-        }
-
-        public static List<string> OriginImages
-        {
-            get
-            {
-                var retList = new List<string>();
-                var baseImages = Images.Where(x => x.IsBase).ToList();
-                var images = Images.Where(x => x.Directory == "Origins").ToList();
-                var unknown = baseImages.First(i => i.FileName == "Unknown.png").Path;
-                foreach (var o in DatabaseAPI.Database.Origins)
-                {
-                    var path = images.First(i => i.FileName == $"{o.Name}.png").Path;
-                    if (string.IsNullOrWhiteSpace(path))
-                    {
-                        path = unknown;
-                    }
-
-                    if (retList.Any(p => p == path)) continue;
-                    if (path != null) retList.Add(path);
-                }
-
-                return retList;
-            }
         }
 
         public static Task<List<string>> LoadOrigins()
@@ -608,10 +565,15 @@ namespace Mids_Reborn.Core
 
         private static async Task LoadBorderImages(IReadOnlyCollection<ImageInfo> images)
         {
-            Borders = ExtendedBitmap(DatabaseAPI.Database.Origins.Count * IconLarge, 180);
+            var isHcDatabase = DatabaseAPI.DatabaseName is "Homecoming" or "Cryptic" or "Breakout";
+
+            Borders = isHcDatabase
+                ? ExtendedBitmap((DatabaseAPI.Database.Origins.Count + 4) * IconLarge, 180)
+                : ExtendedBitmap(DatabaseAPI.Database.Origins.Count * IconLarge, 180);
+            var x = 0;
             for (var index = 0; index < DatabaseAPI.Database.Origins.Count; index++)
             {
-                var x = index * IconLarge;
+                x = index * IconLarge;
                 for (var index2 = 0; index2 <= 5; ++index2)
                 {
                     var path = images.FirstOrDefault(i => i.FileName == $"{DatabaseAPI.Database.Origins[index].Grades[index2]}.png").Path;
@@ -632,49 +594,49 @@ namespace Mids_Reborn.Core
                 }
             }
 
-            await Task.CompletedTask;
-        }
+            if (isHcDatabase)
+            {
+                var rankedIoBorders = new[] {
+                    "IO_Uncommon",
+                    "IO_Rare",
+                    "IO_VeryRare",
+                    "IO_PvP"
+                };
 
-        public static Image GetArchetypeImage(IPower power)
-        {
-            var imgString = "";
-            var imgFile = "";
-            var atString = power.GetPowerSet().ATClass;
-            if (string.IsNullOrWhiteSpace(atString))
-            {
-                atString = power.Requires.ClassName[0];
-            }
-
-            if (string.IsNullOrWhiteSpace(atString))
-            {
-                imgFile = $"{ImagePath()}\\Unknown.png";
-            }
-            else
-            {
-                imgFile = $"{ImagePath("OriginAT")}\\{atString}.png";
-                if (!File.Exists(imgFile))
+                var basePath = ImagePath("Overlay");
+                var baseIndex = DatabaseAPI.Database.Origins.Count;
+                for (var index = 0; index < rankedIoBorders.Length; index++)
                 {
-                    imgFile = $"{ImagePath()}\\Unknown.png";
+                    x = (index + baseIndex) * IconLarge;
+                    var path = Path.Combine(basePath, $"{rankedIoBorders[index]}.png");
+
+                    using var extendedBitmap = new ExtendedBitmap(path);
+                    if ((extendedBitmap.Size.Height > IconLarge) | (extendedBitmap.Size.Width > IconLarge))
+                    {
+                        Borders.Graphics.DrawImage(extendedBitmap.Bitmap, x, IconLarge * 4, IconLarge, IconLarge);
+                        Borders.Graphics.DrawImage(extendedBitmap.Bitmap, x, IconLarge * 5, IconLarge, IconLarge);
+                    }
+                    else
+                    {
+                        Borders.Graphics.DrawImage(extendedBitmap.Bitmap, x, IconLarge * 4);
+                        Borders.Graphics.DrawImage(extendedBitmap.Bitmap, x, IconLarge * 5);
+                    }
+
                 }
             }
 
-            return Image.FromFile(imgFile);
-        }
-
-        public static Image GetArchetypeImage(Archetype atClass)
-        {
-            var imgFile = $"{ImagePath("OriginAT")}\\{atClass.ClassName}.png";
-            if (!File.Exists(imgFile))
-            {
-                imgFile = $"{ImagePath()}\\Unknown.png";
-            }
-
-            return Image.FromFile(imgFile);
+            await Task.CompletedTask;
         }
 
         public static Image GetPowersetImage(IPower power)
         {
-            var imgString = power.GetPowerSet().ImageName;
+            var powerset = power.GetPowerSet();
+            if (powerset == null)
+            {
+                return Image.FromFile($"{ImagePath()}Unknown.png");
+            }
+
+            var imgString = power.GetPowerSet()?.ImageName;
             var imgFile = $"{ImagePath("Powersets")}\\{imgString}";
             if (!File.Exists(imgFile))
             {
@@ -763,28 +725,23 @@ namespace Mids_Reborn.Core
 
         public static string GetDbEnhancementsPath()
         {
-            return Path.Combine(MidsContext.Config.DataPath, "Images\\Enhancements");
+            return Path.Combine(MidsContext.Config.DataPath, "Assets\\Enhancements");
         }
 
         public static string GetDbPowerSetsPath()
         {
-            return Path.Combine(MidsContext.Config.DataPath, "Images\\Powersets");
+            return Path.Combine(MidsContext.Config.DataPath, "Assets\\Powersets");
         }
 
-        public static string GetOriginsPath()
-        {
-            return ImagePath() + "\\Origins\\";
-        }
-
-        public static void DrawFlippingEnhancement(ref Graphics iTarget, Rectangle iDest, float iSize, int iImageIndex, Origin.Grade iGrade)
+        public static void DrawFlippingEnhancement(ref Graphics iTarget, Rectangle iDest, float iSize, int iImageIndex, Origin.Grade iGrade, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
             var iDest1 = iDest;
             iDest1.Width = (int) (iDest1.Width * (double) iSize);
             iDest1.X += (iDest.Width - iDest1.Width) / 2;
-            DrawEnhancementAt(ref iTarget, iDest1, iImageIndex, iGrade);
+            DrawEnhancementAt(ref iTarget, iDest1, iImageIndex, iGrade, rarity, isPvP);
         }
 
-        public static void DrawEnhancement(ref Graphics iTarget, int iImageIndex, Origin.Grade iGrade)
+        public static void DrawEnhancement(ref Graphics iTarget, int iImageIndex, Origin.Grade iGrade, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
             iTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
             iTarget.CompositingMode = CompositingMode.SourceOver;
@@ -793,11 +750,11 @@ namespace Mids_Reborn.Core
             iTarget.SmoothingMode = SmoothingMode.HighQuality;
             iTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             iTarget.PageUnit = GraphicsUnit.Pixel;
-            iTarget.DrawImage(Borders.Bitmap, iTarget.ClipBounds, GetOverlayRectF(iGrade), GraphicsUnit.Pixel);
-            iTarget.DrawImage(Enhancements[iImageIndex], iTarget.ClipBounds, new RectangleF(0.0f, 0.0f, 30f, 30f), GraphicsUnit.Pixel);
+            iTarget.DrawImage(Borders.Bitmap, iTarget.ClipBounds, GetOverlayRectF(iGrade, rarity, isPvP), GraphicsUnit.Pixel);
+            iTarget.DrawImage(Enhancements[iImageIndex], iTarget.ClipBounds, new RectangleF(0, 0, 30f, 30f), GraphicsUnit.Pixel);
         }
 
-        public static void DrawEnhancementAt(ref Graphics iTarget, Rectangle iDest, int iImageIndex, Origin.Grade iGrade, ImageAttributes imageAttributes)
+        public static void DrawEnhancementAt(ref Graphics iTarget, Rectangle iDest, int iImageIndex, Origin.Grade iGrade, ImageAttributes imageAttributes, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
             if (iDest.Width > 30)
             {
@@ -817,16 +774,14 @@ namespace Mids_Reborn.Core
             var graphics = iTarget;
             var bitmap = Borders.Bitmap;
             var destRect = iDest;
-            var overlayRect = GetOverlayRect(iGrade);
+            var overlayRect = GetOverlayRect(iGrade, rarity, isPvP);
             var x = overlayRect.X;
-            overlayRect = GetOverlayRect(iGrade);
             var y = overlayRect.Y;
-            var imageAttr = imageAttributes;
-            graphics.DrawImage(bitmap, destRect, x, y, 30, 30, GraphicsUnit.Pixel, imageAttr);
+            graphics.DrawImage(bitmap, destRect, x, y, 30, 30, GraphicsUnit.Pixel, imageAttributes);
             iTarget.DrawImage(Enhancements[iImageIndex], iDest, 0, 0, 30, 30, GraphicsUnit.Pixel, imageAttributes);
         }
 
-        public static void DrawEnhancementAt(ref Graphics iTarget, Rectangle iDest, int iImageIndex, Origin.Grade iGrade)
+        public static void DrawEnhancementAt(ref Graphics iTarget, Rectangle iDest, int iImageIndex, Origin.Grade iGrade, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
             if (iDest.Width > 30)
             {
@@ -850,11 +805,11 @@ namespace Mids_Reborn.Core
             iTarget.SmoothingMode = SmoothingMode.HighQuality;
             iTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             iTarget.PageUnit = GraphicsUnit.Pixel;
-            iTarget.DrawImage(Borders.Bitmap, iDest, GetOverlayRect(iGrade), GraphicsUnit.Pixel);
+            iTarget.DrawImage(Borders.Bitmap, iDest, GetOverlayRect(iGrade, rarity, isPvP), GraphicsUnit.Pixel);
             iTarget.DrawImage(Enhancements[iImageIndex], iDest, new Rectangle(0, 0, 30, 30), GraphicsUnit.Pixel);
         }
 
-        public static void DrawEnhancementSet(ref Graphics iTarget, int iImageIndex)
+        public static void DrawEnhancementSet(ref Graphics iTarget, int iImageIndex, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
             iTarget.PixelOffsetMode = PixelOffsetMode.HighQuality;
             iTarget.CompositingMode = CompositingMode.SourceOver;
@@ -864,26 +819,44 @@ namespace Mids_Reborn.Core
             iTarget.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
             iTarget.PageUnit = GraphicsUnit.Pixel;
             if (Borders.Bitmap == null) return;
-            iTarget.DrawImage(Borders.Bitmap, iTarget.ClipBounds, GetOverlayRectF(Origin.Grade.SetO), GraphicsUnit.Pixel);
+            iTarget.DrawImage(Borders.Bitmap, iTarget.ClipBounds, GetOverlayRectF(Origin.Grade.SetO, rarity, isPvP), GraphicsUnit.Pixel);
             if (Sets.Bitmap != null)
             {
                 iTarget.DrawImage(Sets.Bitmap, iTarget.ClipBounds, GetImageRectF(iImageIndex), GraphicsUnit.Pixel);
             }
         }
 
-        public static Rectangle GetOverlayRect(Origin.Grade iGrade)
+        public static Rectangle GetOverlayRect(Origin.Grade iGrade, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
+            const int iconSize = 30;
+
             if (iGrade == Origin.Grade.None)
             {
                 iGrade = Origin.Grade.HO;
             }
 
-            return new Rectangle(OriginIndex * 30, (int) iGrade * 30, 30, 30);
+            var ioGradeOffset = 0;
+            if ((DatabaseAPI.DatabaseName is "Homecoming" or "Cryptic" or "Breakout" &&
+                 rarity is not (null or Recipe.RecipeRarity.Common)) || isPvP)
+            {
+                ioGradeOffset = rarity switch
+                {
+                    _ when isPvP => 4,
+                    Recipe.RecipeRarity.UltraRare => 3,
+                    Recipe.RecipeRarity.Rare => 2,
+                    Recipe.RecipeRarity.Uncommon => 1,
+                    _ => 0
+                };
+            }
+
+            return ioGradeOffset > 0
+                ? new Rectangle((4 + ioGradeOffset) * iconSize, 4 * iconSize, iconSize, iconSize)
+                : new Rectangle(OriginIndex * iconSize, (int)iGrade * iconSize, iconSize, iconSize);
         }
 
-        private static RectangleF GetOverlayRectF(Origin.Grade iGrade)
+        private static RectangleF GetOverlayRectF(Origin.Grade iGrade, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
         {
-            var overlayRect = GetOverlayRect(iGrade);
+            var overlayRect = GetOverlayRect(iGrade, rarity, isPvP);
             return new RectangleF(overlayRect.X, overlayRect.Y, overlayRect.Width, overlayRect.Height);
         }
 

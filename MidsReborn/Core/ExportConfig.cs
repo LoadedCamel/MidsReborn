@@ -33,57 +33,12 @@ namespace Mids_Reborn.Core
             ResetColorsToDefaults();
         }
 
-        public void AddScheme()
-        {
-            Array.Resize(ref ColorSchemes, ColorSchemes.Length + 1);
-            ColorSchemes[ColorSchemes.Length - 1].SetDefault();
-            ColorSchemes[ColorSchemes.Length - 1].SchemeName = "New Colors";
-        }
-
         public void AddCodes()
         {
             Array.Resize(ref FormatCode, FormatCode.Length + 1);
             FormatCode[FormatCode.Length - 1].SetDefault();
             FormatCode[FormatCode.Length - 1].Name = "New Format";
             FormatCode[FormatCode.Length - 1].Notes = string.Empty;
-        }
-
-        public void RemoveScheme(int index)
-        {
-            if (!((index > -1) & (index < ColorSchemes.Length)))
-                return;
-            var colorSchemeArray = new ColorScheme[ColorSchemes.Length - 1];
-            var index1 = 0;
-            for (var index2 = 0; index2 < ColorSchemes.Length; ++index2)
-            {
-                if (index2 == index)
-                    continue;
-                colorSchemeArray[index1].Assign(ColorSchemes[index2]);
-                ++index1;
-            }
-
-            ColorSchemes = new ColorScheme[colorSchemeArray.Length];
-            for (var index2 = 0; index2 < colorSchemeArray.Length; ++index2)
-                ColorSchemes[index2].Assign(colorSchemeArray[index2]);
-        }
-
-        public void RemoveCodes(int index)
-        {
-            if (!((index > -1) & (index < FormatCode.Length)))
-                return;
-            var formatCodesArray = new FormatCodes[FormatCode.Length - 1];
-            var index1 = 0;
-            for (var index2 = 0; index2 < FormatCode.Length; ++index2)
-            {
-                if (index2 == index)
-                    continue;
-                formatCodesArray[index1].Assign(FormatCode[index2]);
-                ++index1;
-            }
-
-            FormatCode = new FormatCodes[formatCodesArray.Length];
-            for (var index2 = 0; index2 < formatCodesArray.Length; ++index2)
-                FormatCode[index2].Assign(formatCodesArray[index2]);
         }
 
         private static bool GrabString(out string dest, ref StreamReader reader)
@@ -278,81 +233,6 @@ namespace Mids_Reborn.Core
             FormatCode[FormatCode.Length - 1].Space = WhiteSpace.Space;
         }
 
-        public void LoadCodes(string fName)
-        {
-            if (!File.Exists(fName))
-                return;
-            var flag = false;
-            StreamReader reader;
-            try
-            {
-                reader = new StreamReader(fName);
-            }
-            catch (Exception ex)
-            {
-                var num = (int) MessageBox.Show(ex.Message);
-                return;
-            }
-
-            var num1 = 0;
-            try
-            {
-                var str = reader.ReadLine();
-                do
-                {
-                    ++num1;
-                    if (str == "#END#" || str != "#CODE#")
-                        continue;
-                    var index1 = -1;
-                    var iFc = new FormatCodes();
-                    flag = GrabString(out iFc.Name, ref reader) | GrabString(out iFc.Notes, ref reader) |
-                           GrabString(out iFc.ColorOn, ref reader) | GrabString(out iFc.ColorOff, ref reader) |
-                           GrabString(out iFc.SizeOn, ref reader) | GrabString(out iFc.SizeOff, ref reader) |
-                           GrabString(out iFc.BoldOn, ref reader) | GrabString(out iFc.BoldOff, ref reader) |
-                           GrabString(out iFc.ItalicOn, ref reader) | GrabString(out iFc.ItalicOff, ref reader) |
-                           GrabString(out iFc.UnderlineOn, ref reader) | GrabString(out iFc.UnderlineOff, ref reader) |
-                           GrabString(out var dest, ref reader);
-                    iFc.Space = dest.IndexOf(" ", StringComparison.Ordinal) > -1 ? WhiteSpace.Space : WhiteSpace.Tab;
-                    if (!flag)
-                    {
-                        for (var index2 = 0; index2 < FormatCode.Length; ++index2)
-                            if (FormatCode[index2].Name == iFc.Name)
-                                index1 = index2;
-                        if (index1 == -1)
-                        {
-                            Array.Resize(ref FormatCode, FormatCode.Length + 1);
-                            index1 = FormatCode.Length - 1;
-                        }
-
-                        FormatCode[index1].Assign(iFc);
-                        str = reader.ReadLine();
-                    }
-                    else
-                    {
-                        break;
-                    }
-                } while (!((str == "#END#") | (num1 > 1024)));
-
-                if ((num1 > 1024) & !flag)
-                {
-                    var num2 = (int) MessageBox.Show(
-                        "Nonfatal error reading Forum Code Update. Couldn't find end of file!");
-                }
-                else if (flag)
-                {
-                    var num3 = (int) MessageBox.Show("Nonfatal error reading Forum Code Update.");
-                }
-            }
-            catch (Exception ex)
-            {
-                var num2 = (int) MessageBox.Show(ex.Message);
-            }
-            finally
-            {
-                reader.Close();
-            }
-        }
-
         public struct ColorScheme
         {
             public string SchemeName;
@@ -394,8 +274,6 @@ namespace Mids_Reborn.Core
 
         public struct FormatCodes
         {
-            private const string Placeholder = "%VAL%";
-
             public string Name;
             public string Notes;
             public string ColorOn;

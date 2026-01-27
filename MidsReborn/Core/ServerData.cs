@@ -25,7 +25,7 @@ namespace Mids_Reborn.Core
 
         public ServerData()
         {
-            ManifestUri = "https://midsreborn.com/mids_updates/db/update_manifest.xml";
+            ManifestUri = "https://updates.midsreborn.com/update_manifest.json";
             BaseToHit = 0.75f;
             BaseFlySpeed = 31.5f;
             BaseJumpSpeed = 21f;

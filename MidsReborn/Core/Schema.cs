@@ -12,22 +12,6 @@
         }
     }
 
-    public class FHash
-    {
-        public readonly string Archetype;
-        public readonly string Fullname;
-        public readonly int Hash;
-        public readonly int Length;
-
-        public FHash(string archetype, string fullname, int length, int hash)
-        {
-            Archetype = archetype;
-            Fullname = fullname;
-            Hash = hash;
-            Length = length;
-        }
-    }
-
     public class HistoryMap
     {
         internal int HID = -1;

@@ -1,0 +1,60 @@
+﻿using System.Drawing;
+using System.Reflection;
+using System.Windows.Forms;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.UI.Controls;
+using SkiaSharp;
+using SkiaSharp.Views.Desktop;
+using static Mids_Reborn.Core.Enums;
+
+namespace Mids_Reborn.UI.Design.Extensions
+{
+    public static class ControlExt
+    {
+        /// <summary>
+        /// Transforms a compatible control (usually Panel or PictureBox but can be any) into an image button.
+        /// </summary>
+        /// <param name="target"></param>
+        /// <param name="drawing">clsDrawX link, needed to fetch pre-loaded button background images</param>
+        /// <param name="backColor">Color to fill the background with</param>
+        /// <param name="label">Button text</param>
+        /// <param name="active">'Pressed' state for the button</param>
+        /// <remarks>Graphics once drawn are sent to the control BackgroundImage bitmap.</remarks>
+        public static void DrawImageButton(this Control target, ClsDrawX drawing, Color backColor, string label, bool active = false)
+        {
+            if (drawing == null)
+            {
+                return;
+            }
+
+            using var s = SKSurface.Create(new SKImageInfo(target.Width, target.Height));
+
+            s.Canvas.Clear(backColor.ToSKColor());
+            var bgBitmapIndex = active
+                ? MidsContext.Character?.IsHero() == true
+                    ? 3
+                    : 5
+                : MidsContext.Character?.IsHero() == true
+                    ? 2
+                    : 4;
+
+            using var bgBitmap = drawing.BxPower[bgBitmapIndex].Bitmap.ToSKImage();
+            using var colorFilter = s.Canvas.HeroVillainColorMatrix();
+
+            s.Canvas.DrawImage(bgBitmap,
+                new SKRect(0, 0, drawing.BxPower[bgBitmapIndex].Size.Width, drawing.BxPower[bgBitmapIndex].Size.Height),
+                new SKRect(0, 0, target.Width, target.Height),
+                new SKPaint { ColorFilter = colorFilter });
+
+            s.Canvas.DrawOutlineText(label, new SKRect(0, 0, target.Width, target.Height), SKColors.WhiteSmoke, eHTextAlign.Center, eVTextAlign.Middle, 255, 13, 3, true);
+
+            target.BackgroundImage = s.Snapshot().ToBitmap();
+        }
+
+        public static void DoubleBuffering(this Control control, bool enable = true)
+        {
+            var method = typeof(Control).GetMethod("SetStyle", BindingFlags.Instance | BindingFlags.NonPublic);
+            method?.Invoke(control, new object[] { ControlStyles.OptimizedDoubleBuffer, enable });
+        }
+    }
+}

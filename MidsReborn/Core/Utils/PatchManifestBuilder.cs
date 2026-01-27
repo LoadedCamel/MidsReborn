@@ -3,7 +3,7 @@ using System.Globalization;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading.Tasks;
-using Mids_Reborn.Forms.UpdateSystem.Models;
+using Mids_Reborn.UI.Forms.UpdateSystem.Models;
 using RestSharp;
 using RestSharp.Serializers.Json;
 
@@ -30,7 +30,10 @@ public static class PatchManifestBuilder
     public static async Task<Manifest?> ModifyManifestAsync(PatchType type, string name, string version, string file)
     {
         var manifestUrl = ResolveManifestUri(type, name);
-        var options = new RestClientOptions(manifestUrl);
+        var options = new RestClientOptions(manifestUrl)
+        {
+            UserAgent = "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/100.0.4896.127 Safari/537.36"
+        };
         var jsonOptions = new JsonSerializerOptions
         {
             PropertyNameCaseInsensitive = true,
@@ -38,11 +41,21 @@ public static class PatchManifestBuilder
         };
         using var client = new RestClient(options, configureSerialization: s => s.UseSystemTextJson(jsonOptions));
         var request = new RestRequest();
-        var response = await client.GetAsync<Manifest>(request);
+        var responseError = "";
+        Manifest? response;
+        try
+        {
+            response = await client.GetAsync<Manifest>(request);
+        }
+        catch (Exception ex)
+        {
+            response = null;
+            responseError = ex.Message;
+        }
 
         if (response is null)
         {
-            throw new Exception($"Unable to fetch manifest from {manifestUrl}");
+            throw new Exception($"Unable to fetch manifest from {manifestUrl}:\r\n\r\n{responseError}");
         }
 
         var updatedEntry = new ManifestEntry(type, name, version, file);

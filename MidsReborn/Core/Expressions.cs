@@ -419,6 +419,38 @@ namespace Mids_Reborn.Core
                 InfixMode = ExprKeywordInfix.Prefix,
                 CommandTokenType = ExprCommandToken.PowerName,
                 SingleToken = false
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>player>hp",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>player>isAlive",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>target>hp",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>target>end",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
             }
         };
 
@@ -428,7 +460,7 @@ namespace Mids_Reborn.Core
 
             return new Dictionary<string, string>
             {
-                { "power.base>activateperiod", $"{(fxPower == null ? "0" : fxPower.ActivatePeriod)}"},
+                { "power.base>activateperiod", $"{(fxPower == null ? "0" : fxPower.ActivatePeriod)}" },
                 { "power.base>activatetime", $"{(fxPower == null ? "0" : fxPower.CastTime)}" },
                 { "power.base>areafactor", $"{(fxPower == null ? "0" : fxPower.AoEModifier)}" },
                 { "power.base>rechargetime", $"{(fxPower == null ? "0" : fxPower.BaseRechargeTime)}" },
@@ -444,11 +476,16 @@ namespace Mids_Reborn.Core
                 { "maxEndurance", $"{MidsContext.Character.DisplayStats.EnduranceMaxEnd}" },
                 { "rand()", $"{sourceFx.Rand}" },
                 { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
-                { "base.kToHit", $"{MidsContext.Config.ScalingToHit}"},
+                { "base.kToHit", $"{MidsContext.Config.ScalingToHit}" },
                 { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" },
-                { "source>Base.kHitPoints", $"{(MidsContext.Character.Archetype == null ? 1000 : MidsContext.Character.Archetype.Hitpoints)}"},
-                { "source>cur.kMeter", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName, false))}"},
-                { "source>cur.kMeterAbs", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}"}
+                { "source>Base.kHitPoints", $"{(MidsContext.Character.Archetype == null ? 1000 : MidsContext.Character.Archetype.Hitpoints)}" },
+                { "source>cur.kMeter", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName, false))}" },
+                { "source>cur.kMeterAbs", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}" },
+                { "cfg>player>hp", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}" },
+                { "cfg>player>end", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent}" },
+                { "cfg>player>isAlive", $"{(MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive ? "1" : "0")}" },
+                { "cfg>target>hp", $"{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent}" },
+                { "cfg>target>end", $"{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent}" }
             };
         }
 
@@ -802,36 +839,5 @@ namespace Mids_Reborn.Core
                 });
             }
         }
-
-        private static readonly Dictionary<Enums.eEffectType, string> EffectTotalMap = new()
-        {
-            { Enums.eEffectType.Accuracy, nameof(TotalStatistics.BuffAcc) },
-            { Enums.eEffectType.DamageBuff, nameof(TotalStatistics.BuffDam) },
-            { Enums.eEffectType.Defense, nameof(TotalStatistics.Def) },
-            { Enums.eEffectType.EnduranceDiscount, nameof(TotalStatistics.BuffEndRdx) },
-            { Enums.eEffectType.SpeedFlying, nameof(TotalStatistics.FlySpd) },
-            { Enums.eEffectType.HitPoints, nameof(TotalStatistics.HPMax) },
-            { Enums.eEffectType.JumpHeight, nameof(TotalStatistics.JumpHeight) },
-            { Enums.eEffectType.SpeedJumping, nameof(TotalStatistics.JumpSpd) },
-            { Enums.eEffectType.Mez, nameof(TotalStatistics.Mez) },
-            { Enums.eEffectType.MezResist, nameof(TotalStatistics.MezRes) },
-            { Enums.eEffectType.PerceptionRadius, nameof(TotalStatistics.Perception) },
-            { Enums.eEffectType.RechargeTime, nameof(TotalStatistics.BuffHaste) },
-            { Enums.eEffectType.Recovery, nameof(TotalStatistics.EndRec) },
-            { Enums.eEffectType.Regeneration, nameof(TotalStatistics.HPRegen) },
-            { Enums.eEffectType.ResEffect, nameof(TotalStatistics.DebuffRes) },
-            { Enums.eEffectType.Resistance, nameof(TotalStatistics.Res) },
-            { Enums.eEffectType.SpeedRunning, nameof(TotalStatistics.RunSpd) },
-            { Enums.eEffectType.StealthRadius, nameof(TotalStatistics.StealthPvE) },
-            { Enums.eEffectType.StealthRadiusPlayer, nameof(TotalStatistics.StealthPvP) },
-            { Enums.eEffectType.ThreatLevel, nameof(TotalStatistics.ThreatLevel) },
-            { Enums.eEffectType.ToHit, nameof(TotalStatistics.BuffToHit) },
-            { Enums.eEffectType.Elusivity, nameof(TotalStatistics.Elusivity) },
-            { Enums.eEffectType.MaxRunSpeed, nameof(TotalStatistics.MaxRunSpd) },
-            { Enums.eEffectType.MaxJumpSpeed, nameof(TotalStatistics.MaxJumpSpd) },
-            { Enums.eEffectType.MaxFlySpeed, nameof(TotalStatistics.MaxFlySpd) },
-            { Enums.eEffectType.Absorb, nameof(TotalStatistics.Absorb) },
-            { Enums.eEffectType.Stealth, nameof(TotalStatistics.StealthPvE) }
-        };
     }
 }

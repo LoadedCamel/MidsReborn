@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using Mids_Reborn.Core.Base.Data_Classes;
@@ -7,8 +8,6 @@ namespace Mids_Reborn.Core
 {
     public class I9Slot : ICloneable
     {
-        private const float SuperiorMult = 1.25f;
-
         public int Enh;
         public Enums.eEnhGrade Grade;
         public int IOLevel;
@@ -275,6 +274,11 @@ namespace Mids_Reborn.Core
             var flag4 = false;
             var flag5 = false;
 
+            /*if (enhBoostPower != null && enhBoostPower.Effects.All(e => e.EffectType != Enums.eEffectType.GrantPower))
+            {
+                return GetGroupedEffectsStringLong(enhBoostPower);
+            }*/
+
             foreach (var sEffect in enhancement.Effect)
             {
                 switch (sEffect.Mode)
@@ -322,7 +326,7 @@ namespace Mids_Reborn.Core
                                     break;
                                 default:
                                     {
-                                        if (((enhancement.Name.IndexOf("Slow", StringComparison.Ordinal) > -1 ? 1 : 0) & (sEffect.BuffMode != Enums.eBuffDebuff.DeBuffOnly ? 0 : sEffect.Enhance.ID == 6 || sEffect.Enhance.ID == 11 ? 1 : sEffect.Enhance.ID == 19 ? 1 : 0)) != 0 || sEffect.Enhance.ID == 21)
+                                        if (((enhancement.Name.IndexOf("Slow", StringComparison.Ordinal) > -1 ? 1 : 0) & (sEffect.BuffMode != Enums.eBuffDebuff.DeBuffOnly ? 0 : sEffect.Enhance.ID is 6 or 11 ? 1 : sEffect.Enhance.ID == 19 ? 1 : 0)) != 0 || sEffect.Enhance.ID == 21)
                                         {
                                             str2 = !flag5 ? "Slow Movement" : string.Empty;
                                             flag5 = true;
@@ -336,10 +340,10 @@ namespace Mids_Reborn.Core
                             {
                                 if (stringBuilder.Length > 0)
                                 {
-                                    stringBuilder.Append("\n");
+                                    stringBuilder.Append('\n');
                                 }
 
-                                stringBuilder.Append($"{str2} enhancement (Sched. {Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule)}: {scheduleMult * 100:##0.###}%{(Math.Abs(sEffect.Multiplier) > float.Epsilon & sEffect.Multiplier != 1 & sEffect.Multiplier != 0.625 & sEffect.Multiplier != 0.5 & sEffect.Multiplier != 0.4375 ? $" [x{sEffect.Multiplier}]" : "")})");
+                                stringBuilder.Append($"{str2} enhancement (Sched. {Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule)}: {scheduleMult * 100:##0.###}%{((Math.Abs(sEffect.Multiplier) > float.Epsilon) & sEffect.Multiplier is not (1 or 0.625f or 0.5f or 0.4375f) ? $" [x{sEffect.Multiplier}]" : "")})");
                             }
 
                             break;
@@ -354,142 +358,156 @@ namespace Mids_Reborn.Core
 
             if (!flag1)
             {
-                str1 = stringBuilder.ToString();
+                return stringBuilder.ToString();
             }
-            else
-            {
-                IPower power = new Power(enhBoostPower);
-                power.ApplyGrantPowerEffects();
-                var returnMask = Array.Empty<int>();
+            
+            IPower power = new Power(enhBoostPower);
+            power.ApplyGrantPowerEffects();
+            var returnMask = Array.Empty<int>();
 
-                for (var index1 = 0; index1 < power.Effects.Length; index1++)
+            for (var index1 = 0; index1 < power.Effects.Length; index1++)
+            {
+                if (power.Effects[index1].EffectType == Enums.eEffectType.GrantPower && power.Effects[index1].CanGrantPower())
                 {
-                    if (power.Effects[index1].EffectType == Enums.eEffectType.GrantPower && power.Effects[index1].CanGrantPower())
+                    if (stringBuilder.Length > 0)
                     {
-                        if (stringBuilder.Length > 0)
+                        stringBuilder.Append('\n');
+                    }
+
+                    stringBuilder.Append(power.Effects[index1].BuildEffectString(true, "", false, false, false, true, false, false, true));
+                        
+                    var empty = string.Empty;
+
+                    var groupedEffectsArray = power.Effects.Where(x => x.EffectType is Enums.eEffectType.DamageBuff or Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity or Enums.eEffectType.Mez).ToArray();
+                    for (var effectId = 0; effectId < groupedEffectsArray.Length; effectId++)
+                    {
+                        if (power.Effects[index1] == groupedEffectsArray[effectId])
                         {
-                            stringBuilder.Append("\n");
+                            groupedEffectsArray[effectId].Stacking = Enums.eStacking.Yes;
+                            groupedEffectsArray[effectId].Buffable = true;
                         }
 
-                        stringBuilder.Append(power.Effects[index1].BuildEffectString(true, "", false, false, false, true, false, false, true));
-                        
-                        var empty = string.Empty;
-
-                        var groupedEffectsArray = power.Effects.Where(x => x.EffectType.Equals(Enums.eEffectType.DamageBuff) || x.EffectType.Equals(Enums.eEffectType.Defense) || x.EffectType.Equals(Enums.eEffectType.Resistance) || x.EffectType.Equals(Enums.eEffectType.Elusivity) || x.EffectType.Equals(Enums.eEffectType.Mez)).ToArray();
-                        for (var effectId = 0; effectId < groupedEffectsArray.Length; effectId++)
+                        if (groupedEffectsArray[effectId].Absorbed_EffectID == index1)
                         {
-                            if (power.Effects[index1] == groupedEffectsArray[effectId])
+                            power.GetEffectStringGrouped(effectId, ref empty, ref returnMask, false, false, false, true, true);
+                        }
+
+                        if (returnMask.Length <= 0)
+                        {
+                            continue;
+                        }
+
+                        if (stringBuilder.Length > 0)
+                        {
+                            stringBuilder.Append('\n');
+                        }
+
+                        stringBuilder.AppendFormat("  {0}", empty);
+                        break;
+                    }
+
+                    var empty2 = string.Empty;
+                    var groupedMezEffectsArray = power.Effects.Where(x => x.EffectType == Enums.eEffectType.MezResist).ToArray();
+                    if (groupedMezEffectsArray.Length > 0)
+                    {
+                        for (var effectId = 0; effectId < power.Effects.Length; effectId++)
+                        {
+                            var flag6 = returnMask.Any(m => m == effectId);
+                                
+                            if (power.Effects[effectId].Absorbed_EffectID != index1 || flag6)
                             {
-                                groupedEffectsArray[effectId].Stacking = Enums.eStacking.Yes;
-                                groupedEffectsArray[effectId].Buffable = true;
+                                continue;
+                            }
+                            if (stringBuilder.Length > 0)
+                            {
+                                stringBuilder.Append("\n");
                             }
 
-                            if (groupedEffectsArray[effectId].Absorbed_EffectID == index1)
-                            {
-                                power.GetEffectStringGrouped(effectId, ref empty, ref returnMask, false, false, false, true, true);
-                            }
+                            power.GetEffectStringGrouped(effectId, ref empty2, ref returnMask, false, false, false,
+                                true, true);
+                            stringBuilder.AppendFormat("  {0}",  empty2);
+                            break;
+                        }
+                    }
+                    else
+                    {
 
-                            if (returnMask.Length <= 0)
+                        for (var index2 = 0; index2 < power.Effects.Length; index2++)
+                        {
+                            var flag6 = returnMask.Any(m => m == index2);
+
+                            if (power.Effects[index2].Absorbed_EffectID != index1 || flag6)
                             {
                                 continue;
                             }
 
                             if (stringBuilder.Length > 0)
                             {
-                                stringBuilder.Append("\n");
+                                stringBuilder.Append('\n');
                             }
 
-                            stringBuilder.AppendFormat("  {0}", empty);
-                            break;
-                        }
+                            power.Effects[index2].Stacking = Enums.eStacking.Yes;
+                            power.Effects[index2].Buffable = true;
 
-                        var empty2 = string.Empty;
-                        var groupedMezEffectsArray = power.Effects.Where(x => x.EffectType == Enums.eEffectType.MezResist).ToArray();
-                        if (groupedMezEffectsArray.Length > 0)
-                        {
-                            for (var effectId = 0; effectId < power.Effects.Length; effectId++)
-                            {
-                                var flag6 = returnMask.Any(m => m == effectId);
-                                
-                                if (power.Effects[effectId].Absorbed_EffectID != index1 || flag6)
-                                {
-                                    continue;
-                                }
-                                if (stringBuilder.Length > 0)
-                                {
-                                    stringBuilder.Append("\n");
-                                }
-
-                                power.GetEffectStringGrouped(effectId, ref empty2, ref returnMask, false, false, false,
-                                    true, true);
-                                stringBuilder.AppendFormat("  {0}",  empty2);
-                                break;
-                            }
-                        }
-                        else
-                        {
-
-                            for (var index2 = 0; index2 < power.Effects.Length; index2++)
-                            {
-                                var flag6 = returnMask.Any(m => m == index2);
-
-                                if (power.Effects[index2].Absorbed_EffectID != index1 || flag6)
-                                {
-                                    continue;
-                                }
-
-                                if (stringBuilder.Length > 0)
-                                {
-                                    stringBuilder.Append("\n");
-                                }
-
-                                power.Effects[index2].Stacking = Enums.eStacking.Yes;
-                                power.Effects[index2].Buffable = true;
-
-                                stringBuilder.AppendFormat("  {0}", power.Effects[index2].BuildEffectString(true, "", false, false, false, true, false, false, true));
-                            }
-                        }
-                    }
-                    else if (!power.Effects[index1].Absorbed_Effect) // (!power.Effects[index1].Absorbed_Effect && power.Effects[index1].EffectType != Enums.eEffectType.Enhancement)
-                    {
-                        if (stringBuilder.Length > 0)
-                        {
-                            stringBuilder.Append("\n");
-                        }
-
-                        var effectString = power.Effects[index1].BuildEffectString(true, "", false, false, false, true).Trim();
-                        if (effectString.Contains("Null"))
-                        {
-                            var enhId = DatabaseAPI.GetEnhancementByBoostName(power.FullName);
-                            var enhSetSpecials = DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[enhId].nIDSet];
-                            var enhIndex = enhSetSpecials.Enhancements.TryFindIndex(e => e == enhId);
-                            if (enhSetSpecials.SpecialBonus.Length > 0)
-                            {
-                                effectString = enhSetSpecials.SpecialBonus[^1].Index.Length switch
-                                {
-                                    0 => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 2, true, true, true, true),
-                                    _ => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 1, true, true, true, true)
-                                };
-
-                                if (string.IsNullOrEmpty(effectString))
-                                {
-                                    effectString = enhSetSpecials.GetEffectString(enhIndex, true, true, true, true);
-                                }
-                                effectString = effectString.Replace(", ", "\n");
-                            }
-                        }
-
-                        if (!stringBuilder.ToString().Contains(effectString))
-                        {
-                            stringBuilder.Append(effectString);
+                            stringBuilder.AppendFormat("  {0}", power.Effects[index2].BuildEffectString(true, "", false, false, false, true, false, false, true));
                         }
                     }
                 }
+                else if (!power.Effects[index1].Absorbed_Effect) // (!power.Effects[index1].Absorbed_Effect && power.Effects[index1].EffectType != Enums.eEffectType.Enhancement)
+                {
+                    if (stringBuilder.Length > 0)
+                    {
+                        stringBuilder.Append('\n');
+                    }
 
-                str1 = stringBuilder.ToString().Replace("Slf", "Self").Replace("Tgt", "Target");
+                    var effectString = power.Effects[index1].BuildEffectString(true, "", false, false, false, true).Trim();
+                    if (effectString.Contains("Null"))
+                    {
+                        var enhId = DatabaseAPI.GetEnhancementByBoostName(power.FullName);
+                        var enhSetSpecials = DatabaseAPI.Database.EnhancementSets[DatabaseAPI.Database.Enhancements[enhId].nIDSet];
+                        var enhIndex = enhSetSpecials.Enhancements.TryFindIndex(e => e == enhId);
+                        if (enhSetSpecials.SpecialBonus.Length > 0)
+                        {
+                            effectString = enhSetSpecials.SpecialBonus[^1].Index.Length switch
+                            {
+                                0 => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 2, true, true, true, true),
+                                _ => enhSetSpecials.GetEffectString(enhSetSpecials.SpecialBonus.Length - 1, true, true, true, true)
+                            };
+
+                            if (string.IsNullOrEmpty(effectString))
+                            {
+                                effectString = enhSetSpecials.GetEffectString(enhIndex, true, true, true, true);
+                            }
+                            effectString = effectString.Replace(", ", "\n");
+                        }
+                    }
+
+                    if (!stringBuilder.ToString().Contains(effectString))
+                    {
+                        stringBuilder.Append(effectString);
+                    }
+                }
             }
 
-            return str1;
+            return stringBuilder.ToString().Replace("Slf", "Self").Replace("Tgt", "Target");
+        }
+
+        private string GetGroupedEffectsStringLong(IPower? enhBoostPower)
+        {
+            // Bug: doesn't account for enhancement boosters
+            if (enhBoostPower == null)
+            {
+                return "";
+            }
+
+            if (!enhBoostPower.AppliedExecutes)
+            {
+                enhBoostPower.ProcessExecutes();
+            }
+
+            var groupedEffects = GroupedFx.AssembleGroupedEffects(enhBoostPower, true);
+            
+            return string.Join("\r\n", groupedEffects.Select(e => e.GetTooltip(enhBoostPower, true)));
         }
 
         public string GetEnhancementStringLong()
@@ -501,7 +519,7 @@ namespace Mids_Reborn.Core
 
             var enhancement = DatabaseAPI.Database.Enhancements[Enh];
             var enhPowerEffects = GetEffectsStringLong(enhancement, enhancement.GetPower());
-            if (enhancement.nIDSet < 0 | !string.IsNullOrWhiteSpace(enhPowerEffects.Trim()))
+            if ((enhancement.nIDSet < 0) | !string.IsNullOrWhiteSpace(enhPowerEffects.Trim()))
             {
                 return enhPowerEffects;
             }

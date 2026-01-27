@@ -13,7 +13,7 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
-using Mids_Reborn.Forms.Controls;
+using Mids_Reborn.UI.Forms;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -57,14 +57,6 @@ namespace Mids_Reborn.Core
         //nIDs_Powers(UIDSet)    -   Performs nID_From_UID on arguments and passes to the PowerIndex version - Slow
         //UIDPowers(UIDSet)    -   Text-UID lookup only (for database editor)
 
-        public const int HeroAccolades = 3257;
-        public const int VillainAccolades = 3258;
-        public const int TempPowers = 3259;
-
-        private const string RecipeName = "Mids Reborn Recipe Database";
-        private const string SalvageName = "Mids Reborn Salvage Database";
-        private const string EnhancementDbName = "Mids Reborn Enhancement Database";
-
         private static IDictionary<string, int> AttribMod = new Dictionary<string, int>();
 
         private static readonly IDictionary<string, int> Classes = new Dictionary<string, int>();
@@ -74,7 +66,6 @@ namespace Mids_Reborn.Core
         private static string[] PurpleSetsEnhUIDList = Array.Empty<string>();
         private static List<string> _archetypeEnhancements = new();
         
-        public static IEnumerable<string> GetATOEnhancements => GetArchetypeEnhancements();
         public static IDatabase Database => Base.Data_Classes.Database.Instance;
         public static ServerData ServerData => ServerData.Instance;
 
@@ -101,15 +92,6 @@ namespace Mids_Reborn.Core
             var ordered = AttribMod.OrderBy(x => x.Value)
                 .ToDictionary(x => x.Key, x => x.Value);
             File.WriteAllText(path3, JsonConvert.SerializeObject(ordered, Serializer.SerializerSettings));
-        }
-
-        public static void UpdateModifiersDict(Modifiers.ModifierTable[] mList)
-        {
-            AttribMod.Clear();
-            for (int i = 0; i < mList.Length; i++)
-            {
-                AttribMod.Add(mList[i].ID, i);
-            }
         }
 
         //Modifier Table
@@ -336,7 +318,7 @@ namespace Mids_Reborn.Core
             AddZipFileEntry("Recipes.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Recipes)), archive);
             AddZipFileEntry("Salvage.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Salvage)), archive);
             archive.Dispose();
-            File.WriteAllBytes(Path.Combine(Application.StartupPath, @"Data\Mids.zip"), zipContent.ToArray());
+            File.WriteAllBytes(Path.Combine(Application.StartupPath, @"Databases\Mids.zip"), zipContent.ToArray());
 
             if (msgOnCompletion)
             {
@@ -399,7 +381,7 @@ namespace Mids_Reborn.Core
             archive.Dispose();
 
             prg.Text = "|99|Writing Zip archive to disk...";
-            File.WriteAllBytes(Path.Combine(Application.StartupPath, @"Data\Mids.zip"), zipContent.ToArray());
+            File.WriteAllBytes(Path.Combine(Application.StartupPath, @"Databases\Mids.zip"), zipContent.ToArray());
 
             prg.Text = "|100|";
 
@@ -575,19 +557,6 @@ namespace Mids_Reborn.Core
             return Array.IndexOf(Database.Power, pw);
         }
 
-        public static IPower? GetPowerByDisplayName(string iName, int iArchetype)
-        {
-            return Database.Power
-                .DefaultIfEmpty(null)
-                .FirstOrDefault(p => p != null &&
-                                     p.DisplayName == iName &&
-                                     p.FullName.StartsWith("Inherent") | p.FullName.StartsWith("Temporary_Powers") |
-                                     p.FullName.StartsWith("Incarnate") | p.GetPowerSet().nArchetype == iArchetype |
-                                     p.GetPowerSet().nArchetype == -1 &&
-                                     !p.FullName.StartsWith("Incarnate.Ion_Judgement") &&
-                                     !p.FullName.StartsWith("Incarnate.Lore_Pet_"));
-        }
-
         public static IPower? GetPowerByDisplayName(string iName, int iArchetype, IList<string> listPowersets)
         {
             return Database.Power
@@ -746,7 +715,7 @@ namespace Mids_Reborn.Core
 
             var enhSetData = Database.EnhancementSets[enhData.nIDSet];
 
-            return enhSetData.DisplayName.IndexOf("Overwhelming Force", StringComparison.OrdinalIgnoreCase) > -1;
+            return enhSetData.DisplayName.IndexOf("Overwhelming Force", StringComparison.OrdinalIgnoreCase) > -1 | enhSetData.DisplayName.IndexOf("Cupid's Crush", StringComparison.OrdinalIgnoreCase) > -1;
         }
 
         public static bool EnhIsIO(int enhIdx)
@@ -758,18 +727,6 @@ namespace Mids_Reborn.Core
 
             return enhData.TypeID is Enums.eType.InventO or Enums.eType.SetO &&
                    !EnhIsNaturallyAttuned(enhIdx);
-        }
-
-        // Enh for which a catalyst can be used on OR has been used on already
-        // All ATOs, Winter Event sets, all IOs but regular (white grade) ones
-        public static bool EnhCanReceiveCatalyst(int enhIdx)
-        {
-            if (enhIdx == -1) return false;
-            if (enhIdx >= Database.Enhancements.Length) return false;
-
-            var enhData = Database.Enhancements[enhIdx];
-
-            return EnhIsATO(enhIdx) || EnhIsWinterEventE(enhIdx) || enhData.TypeID == Enums.eType.SetO;
         }
 
         // Purple grade IOs + Superior ATOs + Superior Winter Event enhancements
@@ -786,45 +743,12 @@ namespace Mids_Reborn.Core
             return enhRecipe.Rarity == Recipe.RecipeRarity.UltraRare;
         }
 
-        // Purple grade IOs only
-        public static bool EnhIsSuperiorIO(int enhIdx)
-        {
-            if (enhIdx == -1) return false;
-            if (enhIdx >= Database.Enhancements.Length) return false;
-
-            var enhData = Database.Enhancements[enhIdx];
-            if (enhData.RecipeIDX == -1) return false;
-
-            var enhRecipe = Database.Recipes[enhData.RecipeIDX];
-
-            return enhRecipe.Rarity == Recipe.RecipeRarity.UltraRare && !EnhIsATO(enhIdx) && !EnhIsWinterEventE(enhIdx);
-        }
-
         public static bool EnhIsNaturallyAttuned(int enhIdx)
         {
             if (enhIdx == -1) return false;
             if (enhIdx >= Database.Enhancements.Length) return false;
 
             return EnhIsATO(enhIdx) || EnhIsWinterEventE(enhIdx) || EnhIsMovieE(enhIdx);
-        }
-
-        // Enh + catalyst = Superior Enh
-        // Basic ATOs, Basic Winter Event sets or purple grade sets
-        // For Reference: Attuned_Overwhelming_Force_A
-        public static bool CanCatalystUpgradeSuperior(int enhIdx)
-        {
-            if (enhIdx == -1) return false;
-            if (enhIdx >= Database.Enhancements.Length) return false;
-
-            var enhData = Database.Enhancements[enhIdx];
-            Recipe.RecipeRarity enhRarity;
-            if (enhData.RecipeIDX == -1) enhRarity = Recipe.RecipeRarity.Common;
-
-            var enhRecipe = Database.Recipes[enhData.RecipeIDX];
-            enhRarity = enhRecipe.Rarity;
-
-            return EnhIsATO(enhIdx) || EnhIsWinterEventE(enhIdx) || enhRarity == Recipe.RecipeRarity.Rare &&
-                enhData.LongName.IndexOf("Superior", StringComparison.OrdinalIgnoreCase) == -1;
         }
 
         private static string[] GetPurpleSetsEnhUIDList()
@@ -865,11 +789,6 @@ namespace Mids_Reborn.Core
         public static EnhancementSet? GetEnhancementSetFromEnhUid(string uid)
         {
             return Database.EnhancementSets.FirstOrDefault(x => x.Uid == uid);
-        }
-
-        public static List<string>? GetEnhancementsInSet(int niDSet)
-        {
-            return niDSet <= -1 ? null : Database.EnhancementSets[niDSet].Enhancements.Select(enh => Database.Enhancements[enh].UID).ToList();
         }
 
         private static IEnumerable<string> GetArchetypeEnhancements()
@@ -962,63 +881,6 @@ namespace Mids_Reborn.Core
             return Database.EnhancementSets.Count(x => x.Uid.Contains(setName.Remove(setName.Length - 2))) > 1;
         }
 
-        /*public static Dictionary<Enums.eSetType, List<IPower>> SlottablePowers()
-        {
-            var ret = new Dictionary<Enums.eSetType, List<IPower>>();
-            foreach (var power in Database.Power)
-            {
-                var powerset = power.GetPowerSet();
-                if (powerset.SetType != Enums.ePowerSetType.Primary &&
-                    powerset.SetType != Enums.ePowerSetType.Secondary &&
-                    powerset.SetType != Enums.ePowerSetType.Pool &&
-                    powerset.SetType != Enums.ePowerSetType.Ancillary &&
-                    powerset.SetType != Enums.ePowerSetType.Inherent) continue;
-
-                var setTypes = power.SetTypes.ToList();
-                foreach (var t in setTypes)
-                {
-                    if (!ret.ContainsKey(t)) ret[t] = new List<IPower>();
-                    ret[t].Add(power);
-                }
-            }
-
-            return ret;
-        }*/
-
-        public static List<IPower?> SlottablePowersSetType(int enhSetType)
-        {
-            var retList = new List<IPower?>();
-            foreach (var power in Database.Power)
-            {
-                var powerset = power.GetPowerSet();
-                if (powerset?.SetType != Enums.ePowerSetType.Primary &&
-                    powerset?.SetType != Enums.ePowerSetType.Secondary &&
-                    powerset?.SetType != Enums.ePowerSetType.Pool &&
-                    powerset?.SetType != Enums.ePowerSetType.Ancillary &&
-                    powerset?.SetType != Enums.ePowerSetType.Inherent) continue;
-                var setTypes = power.SetTypes.ToList();
-                var containsType = setTypes.Any(x => x == enhSetType);
-                if (containsType)
-                {
-                    retList.Add(power);
-                }
-            }
-
-            return retList;
-        }
-
-        public static List<IPowerset?> GetEpicPowersets(Archetype atClass)
-        {
-            if (atClass.DisplayName != "Peacebringer" && atClass.DisplayName != "Warshade")
-            {
-                return atClass.Ancillary
-                    .Select(t => Database.Powersets.FirstOrDefault(p => p.SetType == Enums.ePowerSetType.Ancillary && p.nID.Equals(t)))
-                    .ToList();
-            }
-
-            return new List<IPowerset>();
-        }
-
         public static List<IPowerset?> GetEpicPowersets(string atClass)
         {
             if (string.IsNullOrWhiteSpace(atClass) | atClass == "Class_Peacebringer" | atClass == "Class_Warshade")
@@ -1107,14 +969,6 @@ namespace Mids_Reborn.Core
             }
 
             return -1;
-        }
-
-        public static int GetEnhancementFromUid(string? uid)
-        {
-            if (string.IsNullOrWhiteSpace(uid)) return -1;
-            var enhancement = Database.Enhancements.FirstOrDefault(x => x.UID.Equals(uid));
-            if (enhancement is null) return -1;
-            return enhancement.StaticIndex;
         }
 
         public static string GetEnhancementUid(string? name)
@@ -1226,12 +1080,6 @@ namespace Mids_Reborn.Core
             return -1;
         }
 
-        public static Recipe GetRecipeByName(string iName)
-        {
-            return Database.Recipes.FirstOrDefault(recipe =>
-                string.Equals(recipe.InternalName, iName, StringComparison.OrdinalIgnoreCase));
-        }
-
         public static string[] UidReferencingPowerFix(string uidPower, string uidNew = "")
         {
             var array = Array.Empty<string>();
@@ -1282,34 +1130,6 @@ namespace Mids_Reborn.Core
             return -1;
         }
 
-        public static int NidFromUidRecipe(string uidRecipe, ref int subIndex)
-        {
-            //Returns recipe index, and sets SubIndex for the extra int value
-            var isSub = (subIndex > -1) & uidRecipe.Contains("_");
-            subIndex = -1;
-            var uid = isSub ? uidRecipe.Substring(0, uidRecipe.LastIndexOf("_", StringComparison.Ordinal)) : uidRecipe;
-            for (var recipeIdx = 0; recipeIdx < Database.Recipes.Length; ++recipeIdx)
-            {
-                if (!string.Equals(Database.Recipes[recipeIdx].InternalName, uid, StringComparison.OrdinalIgnoreCase))
-                    continue;
-                if (!isSub)
-                    return recipeIdx;
-                var startIndex = uidRecipe.LastIndexOf("_", StringComparison.Ordinal) + 1;
-                if (startIndex < 0 || startIndex > uidRecipe.Length - 1)
-                    return -1;
-                uid = uidRecipe.Substring(startIndex);
-                for (var index2 = 0; index2 < Database.Recipes[recipeIdx].Item.Length; ++index2)
-                {
-                    if (Database.Recipes[recipeIdx].Item[index2].Level != startIndex)
-                        continue;
-                    subIndex = index2;
-                    return recipeIdx;
-                }
-            }
-
-            return -1;
-        }
-
         public static int NidFromUidEnh(string uidEnh)
         {
             for (var index = 0; index < Database.Enhancements.Length; ++index)
@@ -1318,31 +1138,9 @@ namespace Mids_Reborn.Core
             return -1;
         }
 
-        /// <summary>
-        /// Fully qualified name is Group.Set.Name. Group is always 'Boosts'. Set is always the same as Name.
-        /// </summary>
-        /// <param name="uidEnh"></param>
-        /// <returns></returns>
-        public static int NidFromUidEnhExtended(string uidEnh)
-        {
-            if (!uidEnh.StartsWith("BOOSTS", true, CultureInfo.CurrentCulture))
-                return NidFromUidEnh(uidEnh);
-            for (var index = 0; index < Database.Enhancements.Length; ++index)
-                if (string.Equals("BOOSTS." + Database.Enhancements[index].UID + "." + Database.Enhancements[index].UID,
-                    uidEnh, StringComparison.OrdinalIgnoreCase))
-                    return index;
-            return -1;
-        }
-
-        public static string DatabaseName
-        {
-            get
-            {
-                string name;
-                name = MidsContext.Config == null ? new DirectoryInfo(Files.FDefaultPath).Name : new DirectoryInfo(MidsContext.Config.DataPath).Name;
-                return name;
-            }
-        }
+        public static string DatabaseName => MidsContext.Config?.DataPath == null
+                ? new DirectoryInfo(AppDataPaths.FDefaultPath).Name
+                : new DirectoryInfo(MidsContext.Config.DataPath).Name;
 
         private static void CheckEhcBoosts()
         {
@@ -1370,19 +1168,19 @@ namespace Mids_Reborn.Core
 
         public static void SaveServerData(string? iPath)
         {
-            var path = Files.SelectDataFileSave(Files.ServerDataFile, iPath);
+            var path = AppDataPaths.SelectDataFileSave(AppDataPaths.ServerDataFile, iPath);
             ServerData.Save(path);
         }
         
         public static bool LoadServerData(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.ServerDataFile, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.ServerDataFile, iPath);
             return !File.Exists(path) ? ProformaServerData(iPath) : ServerData.Load(path);
         }
 
         private static bool ProformaServerData(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileSd, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileSd, iPath);
 
             FileStream fileStream;
             BinaryReader reader;
@@ -1400,7 +1198,7 @@ namespace Mids_Reborn.Core
             {
                 var headerFound = true;
                 var header = reader.ReadString();
-                if (header != Files.Headers.ServerData.Start)
+                if (header != AppDataPaths.Headers.ServerData.Start)
                 {
                     headerFound = false;
                 }
@@ -1446,7 +1244,7 @@ namespace Mids_Reborn.Core
         public static void SaveMainDatabase(ISerialize serializer, string? iPath)
         {
             CheckEhcBoosts();
-            var path = Files.SelectDataFileSave(Files.MxdbFileDb, iPath);
+            var path = AppDataPaths.SelectDataFileSave(AppDataPaths.MxdbFileDb, iPath);
             FileStream fileStream;
             BinaryWriter writer;
             try
@@ -1463,28 +1261,28 @@ namespace Mids_Reborn.Core
             try
             {
                 UpdateDbModified();
-                writer.Write(Files.Headers.Db.Start);
+                writer.Write(AppDataPaths.Headers.Db.Start);
                 writer.Write(Database.Version.ToString());
                 writer.Write(-1);
                 writer.Write(Database.Date.ToBinary());
                 writer.Write(Database.Issue);
                 writer.Write(Database.PageVol);
                 writer.Write(Database.PageVolText);
-                writer.Write(Files.Headers.Db.Archetypes);
+                writer.Write(AppDataPaths.Headers.Db.Archetypes);
                 writer.Write(Database.Classes.Length - 1);
                 for (var index = 0; index <= Database.Classes.Length - 1; ++index)
                 {
                     Database.Classes[index].StoreTo(ref writer);
                 }
 
-                writer.Write(Files.Headers.Db.Powersets);
+                writer.Write(AppDataPaths.Headers.Db.Powersets);
                 writer.Write(Database.Powersets.Length - 1);
                 for (var index = 0; index <= Database.Powersets.Length - 1; ++index)
                 {
                     Database.Powersets[index].StoreTo(ref writer);
                 }
 
-                writer.Write(Files.Headers.Db.Powers);
+                writer.Write(AppDataPaths.Headers.Db.Powers);
                 writer.Write(Database.Power.Length - 1);
                 for (var index = 0; index <= Database.Power.Length - 1; ++index)
                 {
@@ -1498,7 +1296,7 @@ namespace Mids_Reborn.Core
                     }
                 }
 
-                writer.Write(Files.Headers.Db.Summons);
+                writer.Write(AppDataPaths.Headers.Db.Summons);
                 Database.StoreEntities(writer);
                 writer.Close();
                 fileStream.Close();
@@ -1518,15 +1316,10 @@ namespace Mids_Reborn.Core
             Database.Version = Version.Parse($"{Database.Date.Year}.{Database.Date.Month:00}.{revision}");
         }
 
-        private static void saveEnts()
-        {
-            var serialized = JsonConvert.SerializeObject(Database.Entities, Formatting.Indented);
-            File.WriteAllText($@"{Application.StartupPath}\\data\\Ents.json", serialized);
-        }
-        public static bool LoadMainDatabase(string? iPath)
+        public static bool LoadMainDatabase(string iPath, ref IDatabase database)
         {
             ClearLookups();
-            var path = Files.SelectDataFileLoad(Files.MxdbFileDb, iPath);
+            var path = $"{iPath.TrimEnd('/', '\\')}{Path.DirectorySeparatorChar}{Path.GetFileName(AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileDb, iPath))}";
 
             FileStream fileStream;
             BinaryReader reader;
@@ -1544,7 +1337,149 @@ namespace Mids_Reborn.Core
             {
                 var headerFound = true;
                 var header = reader.ReadString();
-                if (header != Files.Headers.Db.Start)
+                if (header != AppDataPaths.Headers.Db.Start)
+                {
+                    headerFound = false;
+                }
+
+                if (!headerFound)
+                {
+                    MessageBox.Show(@"Expected MRB header, got something else!", @"Error Reading Database");
+                    return false;
+                }
+
+                database = new Database();
+                database.Version = Version.Parse(reader.ReadString());
+                var year = reader.ReadInt32();
+                if (year > 0)
+                {
+                    var month = reader.ReadInt32();
+                    var day = reader.ReadInt32();
+                    database.Date = new DateTime(year, month, day);
+                }
+                else
+                {
+                    database.Date = DateTime.FromBinary(reader.ReadInt64());
+                }
+
+                database.Issue = reader.ReadInt32();
+                database.PageVol = reader.ReadInt32();
+                database.PageVolText = reader.ReadString();
+
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Archetypes)
+                {
+                    MessageBox.Show(@"Expected Archetype Data, got something else!", @"Eeeeee!");
+                    reader.Close();
+                    fileStream.Close();
+                    
+                    return false;
+                }
+
+                database.Classes = new Archetype?[reader.ReadInt32() + 1];
+                for (var index = 0; index < database.Classes.Length; index++)
+                {
+                    database.Classes[index] = new Archetype(reader)
+                    {
+                        Idx = index
+                    };
+                }
+
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Powersets)
+                {
+                    MessageBox.Show("Expected Powerset Data, got something else!", "Eeeeee!");
+                    reader.Close();
+                    fileStream.Close();
+                    
+                    return false;
+                }
+
+                var num3 = 0;
+                database.Powersets = new IPowerset?[reader.ReadInt32() + 1];
+                for (var index = 0; index < database.Powersets.Length; index++)
+                {
+                    database.Powersets[index] = new Powerset(reader)
+                    {
+                        nID = index
+                    };
+                    
+                    if (++num3 <= 10)
+                    {
+                        continue;
+                    }
+
+                    num3 = 0;
+                    //Application.DoEvents();
+                }
+
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Powers)
+                {
+                    MessageBox.Show("Expected Power Data, got something else!", "Eeeeee!");
+                    reader.Close();
+                    fileStream.Close();
+                    
+                    return false;
+                }
+
+                database.Power = new IPower[reader.ReadInt32() + 1];
+                for (var index = 0; index < database.Power.Length; index++)
+                {
+                    database.Power[index] = new Power(reader);
+                    if (++num3 <= 50)
+                    {
+                        continue;
+                    }
+
+                    num3 = 0;
+                    //Application.DoEvents();
+                }
+
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Summons)
+                {
+                    MessageBox.Show("Expected Summon Data, got something else!", "Eeeeee!");
+                    reader.Close();
+                    fileStream.Close();
+                    
+                    return false;
+                }
+
+                database.LoadEntities(reader);
+                reader.Close();
+                fileStream.Close();
+            }
+            catch (Exception e)
+            {
+                reader.Close();
+                fileStream.Close();
+                MessageBox.Show($@"{e.Message}\r\n{e.StackTrace}");
+                
+                return false;
+            }
+
+            return true;
+        }
+
+        public static bool LoadMainDatabase(string? iPath)
+        {
+            ClearLookups();
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileDb, iPath);
+
+            FileStream fileStream;
+            BinaryReader reader;
+            try
+            {
+                fileStream = new FileStream(path, FileMode.Open, FileAccess.Read);
+                reader = new BinaryReader(fileStream);
+            }
+            catch
+            {
+                return false;
+            }
+
+            try
+            {
+                var headerFound = true;
+                var header = reader.ReadString();
+                if (header != AppDataPaths.Headers.Db.Start)
                 {
                     headerFound = false;
                 }
@@ -1573,7 +1508,7 @@ namespace Mids_Reborn.Core
                 Database.PageVol = reader.ReadInt32();
                 Database.PageVolText = reader.ReadString();
 
-                if (reader.ReadString() != Files.Headers.Db.Archetypes)
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Archetypes)
                 {
                     MessageBox.Show(@"Expected Archetype Data, got something else!", @"Eeeeee!");
                     reader.Close();
@@ -1590,7 +1525,7 @@ namespace Mids_Reborn.Core
                     };
                 }
 
-                if (reader.ReadString() != Files.Headers.Db.Powersets)
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Powersets)
                 {
                     MessageBox.Show("Expected Powerset Data, got something else!", "Eeeeee!");
                     reader.Close();
@@ -1613,7 +1548,7 @@ namespace Mids_Reborn.Core
                     Application.DoEvents();
                 }
 
-                if (reader.ReadString() != Files.Headers.Db.Powers)
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Powers)
                 {
                     MessageBox.Show("Expected Power Data, got something else!", "Eeeeee!");
                     reader.Close();
@@ -1622,7 +1557,7 @@ namespace Mids_Reborn.Core
                 }
 
                 Database.Power = new IPower[reader.ReadInt32() + 1];
-                for (var index = 0; index <= Database.Power.Length - 1; ++index)
+                for (var index = 0; index < Database.Power.Length; index++)
                 {
                     Database.Power[index] = new Power(reader);
                     ++num3;
@@ -1632,7 +1567,7 @@ namespace Mids_Reborn.Core
                     Application.DoEvents();
                 }
 
-                if (reader.ReadString() != Files.Headers.Db.Summons)
+                if (reader.ReadString() != AppDataPaths.Headers.Db.Summons)
                 {
                     MessageBox.Show("Expected Summon Data, got something else!", "Eeeeee!");
                     reader.Close();
@@ -1655,12 +1590,6 @@ namespace Mids_Reborn.Core
             return true;
         }
 
-        public static void LoadDatabaseVersion(string? iPath)
-        {
-            var target = Files.SelectDataFileLoad(Files.MxdbFileDb, iPath);
-            Database.Version = GetDatabaseVersion(target);
-        }
-
         private static Version GetDatabaseVersion(string fp)
         {
             var version = new Version();
@@ -1675,7 +1604,7 @@ namespace Mids_Reborn.Core
                 {
                     try
                     {
-                        if (binaryReader.ReadString() != Files.Headers.Db.Start)
+                        if (binaryReader.ReadString() != AppDataPaths.Headers.Db.Start)
                         {
                             MessageBox.Show(@"Expected MRB header, got something else!");
                         }
@@ -1698,7 +1627,7 @@ namespace Mids_Reborn.Core
 
         public static bool LoadEffectIdsDatabase(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileEffectIds, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileEffectIds, iPath);
             if (File.Exists(path))
             {
                 Database.EffectIds.Clear();
@@ -1740,7 +1669,7 @@ namespace Mids_Reborn.Core
 
         public static void SaveEffectIdsDatabase(string? iPath)
         {
-            var path = Files.SelectDataFileSave(Files.MxdbFileEffectIds, iPath);
+            var path = AppDataPaths.SelectDataFileSave(AppDataPaths.MxdbFileEffectIds, iPath);
 
             FileStream fileStream;
             BinaryWriter writer;
@@ -1782,13 +1711,13 @@ namespace Mids_Reborn.Core
                 {
                     case Enums.dmModes.LevelUp or Enums.dmModes.Normal:
                         path = string.IsNullOrWhiteSpace(iPath)
-                            ? Files.SelectDataFileLoad(Files.MxdbFileNLevels)
-                            : Files.SelectDataFileLoad(Files.MxdbFileNLevels, iPath);
+                            ? AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileNLevels)
+                            : AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileNLevels, iPath);
                         break;
                     case Enums.dmModes.Respec:
                         path = string.IsNullOrWhiteSpace(iPath)
-                            ? Files.SelectDataFileLoad(Files.MxdbFileRLevels)
-                            : Files.SelectDataFileLoad(Files.MxdbFileRLevels, iPath);
+                            ? AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileRLevels)
+                            : AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileRLevels, iPath);
                         break;
                 }
             }
@@ -1833,7 +1762,7 @@ namespace Mids_Reborn.Core
 
         public static void LoadOrigins(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileOrigins, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileOrigins, iPath);
 
             Database.Origins = new List<Origin>();
             StreamReader streamReader;
@@ -1991,7 +1920,7 @@ namespace Mids_Reborn.Core
 
         public static void LoadRecipes(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileRecipe, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileRecipe, iPath);
 
             Database.Recipes = Array.Empty<Recipe>();
             FileStream fileStream;
@@ -2009,7 +1938,7 @@ namespace Mids_Reborn.Core
 
             var headerFound = true;
             var header = reader.ReadString();
-            if (header != Files.Headers.Recipe.Start)
+            if (header != AppDataPaths.Headers.Recipe.Start)
             {
                 headerFound = false;
             }
@@ -2040,22 +1969,9 @@ namespace Mids_Reborn.Core
             fileStream.Close();
         }
 
-        private static void SaveRecipesRaw(ISerialize serializer, string fn, string name)
-        {
-            var toSerialize = new
-            {
-                name,
-                Database.RecipeSource1,
-                Database.RecipeSource2,
-                Database.RecipeRevisionDate,
-                Database.Recipes
-            };
-            ConfigData.SaveRawMhd(serializer, toSerialize, fn, null);
-        }
-
         public static void SaveRecipes(ISerialize serializer, string? iPath)
         {
-            var path = Files.SelectDataFileSave(Files.MxdbFileRecipe, iPath);
+            var path = AppDataPaths.SelectDataFileSave(AppDataPaths.MxdbFileRecipe, iPath);
 
             //SaveRecipesRaw(serializer, path, RecipeName);
             FileStream fileStream;
@@ -2073,7 +1989,7 @@ namespace Mids_Reborn.Core
 
             try
             {
-                writer.Write(Files.Headers.Recipe.Start);
+                writer.Write(AppDataPaths.Headers.Recipe.Start);
                 writer.Write(Database.RecipeSource1);
                 writer.Write(Database.RecipeSource2);
                 writer.Write(Database.RecipeRevisionDate.ToBinary());
@@ -2093,7 +2009,7 @@ namespace Mids_Reborn.Core
 
         public static void LoadSalvage(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileSalvage, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileSalvage, iPath);
 
             Database.Salvage = Array.Empty<Salvage>();
             FileStream fileStream;
@@ -2115,7 +2031,7 @@ namespace Mids_Reborn.Core
                 var headerFound = true;
                 var header = reader.ReadString();
 
-                if (header != Files.Headers.Salvage.Start)
+                if (header != AppDataPaths.Headers.Salvage.Start)
                 {
                     headerFound = false;
                 }
@@ -2145,19 +2061,9 @@ namespace Mids_Reborn.Core
             }
         }
 
-        private static void SaveSalvageRaw(ISerialize serializer, string fn, string name)
-        {
-            var toSerialize = new
-            {
-                name,
-                Database.Salvage
-            };
-            ConfigData.SaveRawMhd(serializer, toSerialize, fn, null);
-        }
-
         public static void SaveSalvage(ISerialize serializer, string? iPath)
         {
-            var path = Files.SelectDataFileSave(Files.MxdbFileSalvage, iPath);
+            var path = AppDataPaths.SelectDataFileSave(AppDataPaths.MxdbFileSalvage, iPath);
 
             //SaveSalvageRaw(serializer, path, SalvageName);
             FileStream fileStream;
@@ -2175,7 +2081,7 @@ namespace Mids_Reborn.Core
 
             try
             {
-                writer.Write(Files.Headers.Salvage.Start);
+                writer.Write(AppDataPaths.Headers.Salvage.Start);
                 writer.Write(Database.Salvage.Length - 1);
                 for (var index = 0; index <= Database.Salvage.Length - 1; ++index)
                     Database.Salvage[index].StoreTo(writer);
@@ -2207,7 +2113,7 @@ namespace Mids_Reborn.Core
 
         public static void LoadCrypticReplacementTable()
         {
-            if (!File.Exists(Files.CNamePowersRepl))
+            if (!File.Exists(AppDataPaths.CNamePowersRepl))
             {
                 Database.CrypticReplTable = null;
             }
@@ -2223,28 +2129,16 @@ namespace Mids_Reborn.Core
             }
         }
 
-        private static void SaveEnhancementDbRaw(ISerialize serializer, string filename, string name)
-        {
-            var toSerialize = new
-            {
-                name,
-                Database.VersionEnhDb,
-                Database.Enhancements,
-                Database.EnhancementSets
-            };
-            ConfigData.SaveRawMhd(serializer, toSerialize, filename, null);
-        }
-
         public static void SaveEnhancementDb(ISerialize serializer, string? iPath)
         {
-            var path = Files.SelectDataFileSave(Files.MxdbFileEnhDb, iPath);
+            var path = AppDataPaths.SelectDataFileSave(AppDataPaths.MxdbFileEnhDb, iPath);
 
             //SaveEnhancementDbRaw(serializer, path, EnhancementDbName);
             using var fileStream = new FileStream(path, FileMode.Create);
             using var writer = new BinaryWriter(fileStream, Encoding.UTF8);
             try
             {
-                writer.Write(Files.Headers.EnhDb.Start);
+                writer.Write(AppDataPaths.Headers.EnhDb.Start);
                 writer.Write(Database.VersionEnhDb);
                 writer.Write(Database.Enhancements.Length - 1);
 
@@ -2268,7 +2162,7 @@ namespace Mids_Reborn.Core
 
         public static void LoadEnhancementDb(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileEnhDb, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileEnhDb, iPath);
 
             Database.Enhancements = Array.Empty<IEnhancement>();
             FileStream fileStream;
@@ -2290,7 +2184,7 @@ namespace Mids_Reborn.Core
                 var headerFound = true;
                 var header = reader.ReadString();
 
-                if (header != Files.Headers.EnhDb.Start)
+                if (header != AppDataPaths.Headers.EnhDb.Start)
                 {
                     headerFound = false;
                 }
@@ -2304,7 +2198,6 @@ namespace Mids_Reborn.Core
                 }
 
                 reader.ReadSingle();
-                var versionEnhDb = Database.VersionEnhDb;
                 var num1 = 0;
                 Database.Enhancements = new IEnhancement[reader.ReadInt32() + 1];
                 for (var index = 0; index < Database.Enhancements.Length; ++index)
@@ -2344,13 +2237,13 @@ namespace Mids_Reborn.Core
 
         public static bool LoadEnhancementClasses(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileEClasses, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileEClasses, iPath);
 
             using var streamReader = new StreamReader(path);
             Database.EnhancementClasses = Array.Empty<Enums.sEnhClass>();
             try
             {
-                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, Files.Headers.VersionComment)))
+                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, AppDataPaths.Headers.VersionComment)))
                     throw new EndOfStreamException("Unable to load Enhancement Class data, version header not found!");
                 if (!FileIO.IOSeek(streamReader, "Index"))
                     throw new EndOfStreamException("Unable to load Enhancement Class data, section header not found!");
@@ -2391,12 +2284,12 @@ namespace Mids_Reborn.Core
 
         public static void LoadTypeGrades(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.JsonFileTypeGrades, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.JsonFileTypeGrades, iPath);
             var jsonData = File.ReadAllText(path);
             var parsedData = JObject.Parse(jsonData);
 
             var headerResult = parsedData["Name"]?.ToObject<string>();
-            if (headerResult != Files.Headers.TypeGrade.Start)
+            if (headerResult != AppDataPaths.Headers.TypeGrade.Start)
             {
                 MessageBox.Show(@"Invalid header detected!", @"Error Reading TypeGrades", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return;
@@ -2450,16 +2343,6 @@ namespace Mids_Reborn.Core
             Database.EnhGradeStringShort[3] = "SO";
         }
 
-        public static TypeGrade GetSetTypeByName(string name)
-        {
-            return Database.SetTypes.FirstOrDefault(x => x.Name == name);
-        }
-
-        public static TypeGrade GetSetTypeByShortName(string shortName)
-        {
-            return Database.SetTypes.FirstOrDefault(x => x.ShortName == shortName);
-        }
-
         public static TypeGrade GetSetTypeByIndex(int index)
         {
             return Database.SetTypes.FirstOrDefault(x => x.Index == index);
@@ -2469,90 +2352,6 @@ namespace Mids_Reborn.Core
         {
             return Database.SpecialEnhancements.FirstOrDefault(x => x.Index == index);
         }
-
-        public static TypeGrade GetSpecialEnhByName(string name)
-        {
-            return Database.SpecialEnhancements.FirstOrDefault(x => x.Name == name);
-        }
-
-        /*public static void LoadSetTypeStrings(string iPath)
-        {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileSetTypes, iPath);
-
-            Database.SetTypeStringLong = Array.Empty<string>();
-            Database.SetTypeStringShort = Array.Empty<string>();
-            StreamReader streamReader;
-            try
-            {
-                streamReader = new StreamReader(path);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                return;
-            }
-
-            try
-            {
-                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, Files.Headers.VersionComment)))
-                    throw new EndOfStreamException("Unable to load SetType data, version header not found!");
-                if (!FileIO.IOSeek(streamReader, "SetID"))
-                    throw new EndOfStreamException("Unable to load SetType data, section header not found!");
-                var setTypeStringLong = Database.SetTypeStringLong;
-                var setTypeStringShort = Database.SetTypeStringShort;
-                string[] strArray;
-                do
-                {
-                    strArray = FileIO.IOGrab(streamReader);
-                    if (strArray[0] != "End")
-                    {
-                        Array.Resize(ref setTypeStringLong, setTypeStringLong.Length + 1);
-                        Array.Resize(ref setTypeStringShort, setTypeStringShort.Length + 1);
-                        setTypeStringShort[setTypeStringShort.Length - 1] = strArray[1];
-                        setTypeStringLong[setTypeStringLong.Length - 1] = strArray[2];
-                    }
-                    else
-                    {
-                        break;
-                    }
-                } while (strArray[0] != "End");
-
-                Database.SetTypeStringLong = setTypeStringLong;
-                Database.SetTypeStringShort = setTypeStringShort;
-                Database.EnhGradeStringLong = new string[4];
-                Database.EnhGradeStringShort = new string[4];
-                Database.EnhGradeStringLong[0] = "None";
-                Database.EnhGradeStringLong[1] = "Training Origin";
-                Database.EnhGradeStringLong[2] = "Dual Origin";
-                Database.EnhGradeStringLong[3] = "Single Origin";
-                Database.EnhGradeStringShort[0] = "None";
-                Database.EnhGradeStringShort[1] = "TO";
-                Database.EnhGradeStringShort[2] = "DO";
-                Database.EnhGradeStringShort[3] = "SO";
-                Database.SpecialEnhStringLong = new string[5];
-                Database.SpecialEnhStringShort = new string[5];
-                Database.SpecialEnhStringLong[0] = "None";
-                Database.SpecialEnhStringLong[1] = "Hamidon Origin";
-                Database.SpecialEnhStringLong[2] = "Hydra Origin";
-                Database.SpecialEnhStringLong[3] = "Titan Origin";
-                Database.SpecialEnhStringLong[4] = "D-Sync Origin";
-                //Database.SpecialEnhStringLong[5] = "Yin's Talisman";
-                Database.SpecialEnhStringShort[0] = "None";
-                Database.SpecialEnhStringShort[1] = "HO";
-                Database.SpecialEnhStringShort[2] = "TnO";
-                Database.SpecialEnhStringShort[3] = "HyO";
-                Database.SpecialEnhStringShort[4] = "DSyncO";
-                //Database.SpecialEnhStringShort[5] = "YinO";
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                streamReader.Close();
-                return;
-            }
-
-            streamReader.Close();
-        }*/
 
         private static void InitializeMaths()
         {
@@ -2612,7 +2411,7 @@ namespace Mids_Reborn.Core
 
         public static bool LoadMaths(string? iPath)
         {
-            var path = Files.SelectDataFileLoad(Files.MxdbFileMaths, iPath);
+            var path = AppDataPaths.SelectDataFileLoad(AppDataPaths.MxdbFileMaths, iPath);
 
             StreamReader streamReader;
             try
@@ -2633,7 +2432,7 @@ namespace Mids_Reborn.Core
 
             try
             {
-                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, Files.Headers.VersionComment)))
+                if (string.IsNullOrEmpty(FileIO.IOSeekReturn(streamReader, AppDataPaths.Headers.VersionComment)))
                 {
                     streamReader.Close();
                     var m = new MessageBoxEx("Unable to load Enhancement Maths data, version header not found!", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Error);
@@ -2867,18 +2666,6 @@ namespace Mids_Reborn.Core
             MatchSummonIDs();
         }
 
-        public static void MatchIds()
-        {
-            FillGroupArray();
-            MatchArchetypeIDs();
-            MatchPowersetIDs();
-            MatchPowerIDs();
-            SetPowersetsFromGroups();
-            MatchEnhancementIDs();
-            MatchModifierIDs();
-            MatchSummonIDs();
-        }
-
         private static void UpdateMessage(IMessenger? messenger, string iMessage)
         {
             messenger?.SetMessage(iMessage);
@@ -2912,12 +2699,14 @@ namespace Mids_Reborn.Core
                 if (powerset.UIDMutexSets.Length > 0)
                 {
                     powerset.nIDMutexSets = new int[powerset.UIDMutexSets.Length];
-                    for (var index2 = 0; index2 < powerset.UIDMutexSets.Length; ++index2)
+                    for (var index2 = 0; index2 < powerset.UIDMutexSets.Length; index2++)
+                    {
                         powerset.nIDMutexSets[index2] = NidFromUidPowerset(powerset.UIDMutexSets[index2]);
+                    }
                 }
 
-                powerset.Power = Array.Empty<int>();
-                powerset.Powers = Array.Empty<IPower>();
+                powerset.Power = [];
+                powerset.Powers = [];
             }
         }
 
@@ -2927,6 +2716,11 @@ namespace Mids_Reborn.Core
             for (var index = 0; index < Database.Power.Length; index++)
             {
                 var power1 = Database.Power[index];
+                if (power1 == null)
+                {
+                    continue;
+                }
+
                 if (string.IsNullOrEmpty(power1.FullName))
                 {
                     power1.FullName = $"Orphan.{power1.DisplayName.Replace(" ", "_")}";
@@ -2940,6 +2734,11 @@ namespace Mids_Reborn.Core
                 }
 
                 var ps = power1.GetPowerSet();
+                if (ps == null)
+                {
+                    continue;
+                }
+
                 var length = ps.Powers.Length;
                 power1.PowerSetIndex = length;
                 var power2 = ps.Power;
@@ -2954,15 +2753,22 @@ namespace Mids_Reborn.Core
 
             foreach (var power in Database.Power)
             {
+                if (power == null)
+                {
+                    continue;
+                }
+
                 var flag = false;
-                if (power.GetPowerSet().SetType == Enums.ePowerSetType.SetBonus)
+                if (power.GetPowerSet()?.SetType == Enums.ePowerSetType.SetBonus)
                 {
                     flag = power.PowerName.Contains("Slow");
                     if (flag)
                     {
                         power.BuffMode = Enums.eBuffMode.Debuff;
                         foreach (var index in power.Effects)
+                        {
                             index.buffMode = Enums.eBuffMode.Debuff;
+                        }
                     }
                 }
 
@@ -3273,8 +3079,8 @@ namespace Mids_Reborn.Core
         public static Dictionary<string, string> GetInstalledDatabases()
         {
             var databases = new Dictionary<string, string>();
-            var foundDatabases = Directory.GetDirectories(Files.BaseDataPath).ToList();
-            foundDatabases.RemoveAll(x => !File.Exists(Path.Combine(x, Files.MxdbFileDb)));
+            var foundDatabases = Directory.GetDirectories(AppDataPaths.BaseDataPath).ToList();
+            foundDatabases.RemoveAll(x => !File.Exists(Path.Combine(x, AppDataPaths.MxdbFileDb)));
             foreach (var database in foundDatabases)
             {
                 var dirInfo = new DirectoryInfo(database);
@@ -3283,17 +3089,5 @@ namespace Mids_Reborn.Core
 
             return databases;
         }
-    }
-
-    public class AbstractConverter<TReal, TAbstract> : JsonConverter where TReal : TAbstract
-    {
-        public override bool CanConvert(Type objectType)
-            => objectType == typeof(TAbstract);
-
-        public override object? ReadJson(JsonReader reader, Type type, object? value, JsonSerializer jser)
-            => jser.Deserialize<TReal>(reader);
-
-        public override void WriteJson(JsonWriter writer, object? value, JsonSerializer jser)
-            => jser.Serialize(writer, value);
     }
 }

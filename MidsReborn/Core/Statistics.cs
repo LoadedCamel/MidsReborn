@@ -1,4 +1,6 @@
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 
@@ -9,12 +11,6 @@ namespace Mids_Reborn.Core
         public static readonly float MaxRunSpeed = DatabaseAPI.ServerData.MaxRunSpeed;
         public static readonly float MaxJumpSpeed = DatabaseAPI.ServerData.MaxJumpSpeed;
         public static readonly float MaxFlySpeed = DatabaseAPI.ServerData.MaxFlySpeed;
-        public static readonly float MaxMaxRunSpeed = DatabaseAPI.ServerData.MaxMaxRunSpeed;
-        public static readonly float MaxMaxJumpSpeed = DatabaseAPI.ServerData.MaxMaxJumpSpeed;
-        public static readonly float MaxMaxFlySpeed = DatabaseAPI.ServerData.MaxMaxFlySpeed;
-        public const float CapRunSpeed = 135.67f;
-        public const float CapJumpSpeed = 114.4f;
-        public const float CapFlySpeed = 128.99f;
         public static readonly float BaseRunSpeed = DatabaseAPI.ServerData.BaseRunSpeed;
         public static readonly float BaseJumpSpeed = DatabaseAPI.ServerData.BaseJumpSpeed;
         public static readonly float BaseJumpHeight = DatabaseAPI.ServerData.BaseJumpHeight;
@@ -66,6 +62,21 @@ namespace Mids_Reborn.Core
 
         public float ThreatLevel => (float) ((_character.Totals.ThreatLevel + (double) _character.Archetype.BaseThreat) * 100.0);
 
+        public float BuffHeal => _character.Totals.BuffHeal * 100f;
+
+        public float[] BoostsRaw => _character.Totals.Boosts;
+        public float[] BoostsMezRaw => _character.Totals.BoostsMez;
+
+        public Dictionary<Enums.eEffectType, float> Boosts => _character.Totals.Boosts
+            .Select((x, i) => new KeyValuePair<int, float>(i, x))
+            .Where(x => Math.Abs(x.Value) > float.Epsilon)
+            .ToDictionary(x => (Enums.eEffectType)x.Key, x => x.Value);
+
+        public Dictionary<Enums.eMez, float> BoostsMez => _character.Totals.BoostsMez
+            .Select((x, i) => new KeyValuePair<int, float>(i, x))
+            .Where(x => Math.Abs(x.Value) > float.Epsilon)
+            .ToDictionary(x => (Enums.eMez)x.Key, x => x.Value);
+
         private float EnduranceRecovery(bool uncapped)
         {
             return uncapped ? _character.Totals.EndRec + 1f : _character.TotalsCapped.EndRec + 1f;
@@ -105,6 +116,10 @@ namespace Mids_Reborn.Core
             return uncapped ? _character.Totals.Res[dType] * 100f : _character.TotalsCapped.Res[dType] * 100f;
         }
 
+        public float DamageResistanceMin => _character.Totals.Res.Min() * 100f;
+        public float DamageResistanceMax => _character.Totals.Res.Max() * 100f;
+        public float DamageResistanceAvg => _character.Totals.Res.Average() * 100f;
+
         public float Perception(bool uncapped)
         {
             return uncapped ? _character.Totals.Perception : _character.TotalsCapped.Perception;
@@ -114,6 +129,10 @@ namespace Mids_Reborn.Core
         {
             return _character.Totals.Def[dType] * 100f;
         }
+
+        public float DefenseMin => _character.Totals.Def.Min() * 100f;
+        public float DefenseMax => _character.Totals.Def.Max() * 100f;
+        public float DefenseAvg => _character.Totals.Def.Average() * 100f;
 
         public float Speed(float iSpeed, Enums.eSpeedMeasure unit)
         {
@@ -163,7 +182,6 @@ namespace Mids_Reborn.Core
                     Enums.eSpeedMeasure.FeetPerSecond => iSpeed * 0.911344488f,
                     Enums.eSpeedMeasure.MetersPerSecond => iSpeed * 0.2777778f,
                     Enums.eSpeedMeasure.MilesPerHour => iSpeed * 0.621371242f,
-                    Enums.eSpeedMeasure.KilometersPerHour => iSpeed,
                     _ => iSpeed
                 }
             };
@@ -188,15 +206,6 @@ namespace Mids_Reborn.Core
                 : MidsContext.Character?.TotalsCapped.RunSpd;
 
             return Speed(iSpeed ?? 0, sType);
-        }
-
-        public float MovementRunSpeed(Enums.eSpeedMeasure sType, Enums.eSpeedMeasure baseUnit, bool uncapped)
-        {
-            var iSpeed = uncapped
-                ? MidsContext.Character?.Totals.RunSpd
-                : MidsContext.Character?.TotalsCapped.RunSpd;
-
-            return Speed(iSpeed ?? 0, sType, baseUnit);
         }
 
         public float MovementFlySpeed(Enums.eSpeedMeasure sType, bool uncapped)

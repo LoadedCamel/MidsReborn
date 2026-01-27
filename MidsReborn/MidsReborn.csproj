@@ -1,26 +1,25 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
 	  <TargetFramework>net8.0-windows10.0.19041.0</TargetFramework>
+	  <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
+	  <LangVersion>12.0</LangVersion>
 	  <OutputType>WinExe</OutputType>
-    <RootNamespace>Mids_Reborn</RootNamespace>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
-    <UseWindowsForms>true</UseWindowsForms>
-	  <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
-    <Platforms>AnyCPU;x64</Platforms>
-  </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
-    <Optimize>true</Optimize>
-	  <NoWarn>CS1690, CS0169, CA1823, CA2213, CA1416</NoWarn>
-	  <DebugType>full</DebugType>
+	  <UseWindowsForms>true</UseWindowsForms>
+	  <Platforms>x64</Platforms>
+	  <PlatformTarget>x64</PlatformTarget>
+	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+	  <RootNamespace>Mids_Reborn</RootNamespace>
+	  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
-    <Optimize>true</Optimize>
-    <NoWarn>CS1690, CS0169, CA1823, CA2213, CA1416</NoWarn>
+      <Optimize>false</Optimize>
+	  <NoWarn>CS1690, CS0169, CA1823, CA2213, CA1416</NoWarn>
     <DebugType>full</DebugType>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
-    <NoWarn>1701;1702;CA1416</NoWarn>
-    <DebugType>full</DebugType>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+	  <Optimize>true</Optimize>
+	  <NoWarn>1701;1702;CA1416</NoWarn>
+	<DebugType>pdbonly</DebugType>
   </PropertyGroup>
   <PropertyGroup>
     <ApplicationIcon>MRB_Icon_Concept.ico</ApplicationIcon>
@@ -32,49 +31,407 @@
 	<AccelerateBuildsInVisualStudio>false</AccelerateBuildsInVisualStudio>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Update="Forms\Controls\ColorSlider.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Forms\Controls\CheckedListExt.cs">
-      <SubType>Component</SubType>
-    </Compile>
-    <Compile Update="Forms\Controls\DataView.cs">
-      <SubType>UserControl</SubType>
-    </Compile>
     <Compile Update="Resources.en-US.Designer.cs">
       <DesignTime>True</DesignTime>
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.en-US.resx</DependentUpon>
     </Compile>
-    <Compile Update="UIv2\Controls\CollapsiblePanel.cs">
+    <Compile Update="UI\Controls\AdvGroupBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\AdvListView.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\BorderPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\BrightnessSelector.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Compile Update="UIv2\Controls\MultiOrientButton.cs" />
-    <Compile Update="UIv2\Controls\PowerList.cs">
+    <Compile Update="UI\Controls\ColorSlider.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ColorWheel.cs">
       <SubType>UserControl</SubType>
     </Compile>
-    <Content Include="Data\Generic\Example UpdateManifest.xml">
+    <Compile Update="UI\Controls\ctlColorList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlCombatTimeline.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlDamageDisplay.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlDataGraph.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlEnhPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlListViewColored.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlLockedTextBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlMultiGraph.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlOutlinedLabel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlPanel.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlPopUp.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlPowerButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlPowerList.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlProgressBar.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ctlTotalsTabStrip.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\DataView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\EditableLabel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\EnhCheckMode.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\EnhPicker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\EnhSetInfo.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\FileMover.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\FilterableListBox.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\FormPages.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\GenericSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\GFXLabel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\I9Picker.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ImageButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ImageButtonEx.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\InputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\LabelEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ListLabel.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\MessageBoxEx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\MidsComboBox.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\MidsMenuStrip.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\NavStrip.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\Page.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\PairedList.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\PairedListEx.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\PanelGfx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\PerPixelAlpha.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\PetView.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\PowerSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ProgressBarEx.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\ScrollPanelEx.cs" />
+    <Compile Update="UI\Controls\SwitchButton.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+    <Compile Update="UI\Controls\TimelineCursorZoom.cs">
+      <SubType>UserControl</SubType>
+    </Compile>
+        <Compile Update="UI\Forms\JsonImport\frmJsonImportMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmConditionalAttributeSearch.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmDbDiff.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmDBEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmDbQueries.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmDynRechIncrement.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEditArchetype.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEditAttribMod.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEditPower.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEditPowerset.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEffectConditionals.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEnhData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEnhEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEntityEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmEntityListing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmExpressionBuilder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmExprSR.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmGCMEditor.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmJsonImportOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmPowerBrowser.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmPowerEffect.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmRecipeEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmRestoreHidden.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmSalvageEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmServerData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmSetEdit.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmSetEditPvP.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\frmSetListing.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DbEditor\PatchGen.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\DatabaseSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\OptionsMenuItems\frmCalcOpt.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\UpdateSystem\UpdateDialog.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmAbout.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmAccolade.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmCompare.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmData.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmDPSCalc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmEntityDetails.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmIncarnates.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmMiniList.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmPrestige.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmRecipeEditorBulkFilter.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmSetViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmStats.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmTemp.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmTotals.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\WindowMenuItems\frmTotalsV2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+
+    <Compile Update="UI\Forms\frmBuildSalvageHud.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmBuildSalvageHud.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmBusy.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmColorOptions.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmEditComment.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmEnhMiniPick.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmFloatingStats.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmIncarnate.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\FrmInputLevel.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmOptionListDlg.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmPrint.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmProgress.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmRecipeViewer.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmSetFind.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmTeam.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmTemplateManage.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmTimelineColorRefTable.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmTweakMatching.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\InputBox.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\Loader.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\MainWindow2.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\MessageBoxEx.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\PerPixelAlpha.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\PowerSelector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\SetInspector.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Update="UI\Forms\frmRotationHelper.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Content Include="Databases\Generic\Example UpdateManifest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Images\*\*.png">
+    <Content Include="Databases\Homecoming\Images\*\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Images\*.png">
+    <Content Include="Databases\Homecoming\Images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Images\*\*.png">
+    <Content Include="Databases\Rebirth\Images\*\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Images\*.png">
+    <Content Include="Databases\Rebirth\Images\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\*\*.png">
+    <Content Include="Assets\*\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\*.png">
+    <Content Include="Assets\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\SData.json">
+    <Content Include="Databases\Rebirth\SData.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Fonts\DejaVuSansMono-Bold.ttf">
@@ -143,169 +500,169 @@
     <Content Include="Fonts\NotoSans-ThinItalic.ttf">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Images\MRBLoading.gif">
+    <Content Include="Assets\MRBLoading.gif">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-	<Content Include="Images\Unknown.png">
+	<Content Include="Assets\Unknown.png">
 	  <CopyToOutputDirectory>Always</CopyToOutputDirectory>
 	</Content>
-    <Content Include="Data\Homecoming\AttribMod.json">
+    <Content Include="Databases\Homecoming\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\GlobalMods.mhd">
+    <Content Include="Databases\Homecoming\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\NLevels.mhd">
+    <Content Include="Databases\Homecoming\NLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\RLevels.mhd">
+    <Content Include="Databases\Homecoming\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\bbcode.mhd">
+    <Content Include="Databases\Generic\bbcode.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Compare.mhd">
+    <Content Include="Databases\Generic\Compare.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\EClasses.mhd">
+    <Content Include="Databases\Generic\EClasses.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\EnhDB.mhd">
+    <Content Include="Databases\Generic\EnhDB.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\I12.mhd">
+    <Content Include="Databases\Generic\I12.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\I9.mhd">
+    <Content Include="Databases\Generic\I9.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Maths.mhd">
+    <Content Include="Databases\Generic\Maths.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\NLevels.mhd">
+    <Content Include="Databases\Generic\NLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Origins.mhd">
+    <Content Include="Databases\Generic\Origins.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Recipe.mhd">
+    <Content Include="Databases\Generic\Recipe.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\RLevels.mhd">
+    <Content Include="Databases\Generic\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\Salvage.mhd">
+    <Content Include="Databases\Generic\Salvage.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\AttribMod.json">
+    <Content Include="Databases\Generic\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\GlobalMods.mhd">
+    <Content Include="Databases\Generic\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\TypeGrades.json">
+    <Content Include="Databases\Generic\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="MRB_Icon_Concept.ico" />
-    <Content Include="Data\Generic\PowersReplTable.mhd">
+    <Content Include="Databases\Generic\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Generic\SData.mhd">
+    <Content Include="Databases\Generic\SData.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\PowersReplTable.mhd">
+    <Content Include="Databases\Homecoming\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-	<Content Include="Data\Homecoming\CrypticPowerNames.mhd">
+	<Content Include="Databases\Homecoming\CrypticPowerNames.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\AttribMod.json">
+    <Content Include="Databases\Rebirth\AttribMod.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\bbcode.mhd">
+    <Content Include="Databases\Rebirth\bbcode.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Compare.mhd">
+    <Content Include="Databases\Rebirth\Compare.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\EClasses.mhd">
+    <Content Include="Databases\Rebirth\EClasses.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\EnhDB.mhd">
+    <Content Include="Databases\Rebirth\EnhDB.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\GlobalMods.mhd">
+    <Content Include="Databases\Rebirth\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\I12.mhd">
+    <Content Include="Databases\Rebirth\I12.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\I9.mhd">
+    <Content Include="Databases\Rebirth\I9.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Maths.mhd">
+    <Content Include="Databases\Rebirth\Maths.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\NLevels.mhd">
+    <Content Include="Databases\Rebirth\NLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Origins.mhd">
+    <Content Include="Databases\Rebirth\Origins.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\PowersReplTable.mhd">
+    <Content Include="Databases\Rebirth\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Recipe.mhd">
+    <Content Include="Databases\Rebirth\Recipe.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\RLevels.mhd">
+    <Content Include="Databases\Rebirth\RLevels.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\Salvage.mhd">
+    <Content Include="Databases\Rebirth\Salvage.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\TypeGrades.json">
+    <Content Include="Databases\Homecoming\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\TypeGrades.json">
+    <Content Include="Databases\Rebirth\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\SData.mhd">
+    <Content Include="Databases\Homecoming\SData.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Rebirth\SData.mhd">
+    <Content Include="Databases\Rebirth\SData.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <None Include="..\MRBResourceLib\Resources.resx" Link="Resources.resx">
       <Generator>None</Generator>
       <CustomToolNamespace>MRBResourceLib</CustomToolNamespace>
     </None>
-  </ItemGroup>
+  </ItemGroup>  
   <ItemGroup>
-    <Content Include="Images\Archetypes\Class_Arachnos_Soldier.png" />
-    <Content Include="Images\Archetypes\Class_Arachnos_Widow.png" />
-    <Content Include="Images\Archetypes\Class_Blaster.png" />
-    <Content Include="Images\Archetypes\Class_Boss_Henchman.png" />
-    <Content Include="Images\Archetypes\Class_Brute.png" />
-    <Content Include="Images\Archetypes\Class_Controller.png" />
-    <Content Include="Images\Archetypes\Class_Corruptor.png" />
-    <Content Include="Images\Archetypes\Class_Defender.png" />
-    <Content Include="Images\Archetypes\Class_Dominator.png" />
-    <Content Include="Images\Archetypes\Class_Lt_Henchman.png" />
-    <Content Include="Images\Archetypes\Class_Mastermind.png" />
-    <Content Include="Images\Archetypes\Class_Minion_Henchman.png" />
-    <Content Include="Images\Archetypes\Class_Minion_Pets.png" />
-    <Content Include="Images\Archetypes\Class_Peacebringer.png" />
-	<Content Include="Images\Archetypes\Class_Sentinel.png" />
-    <Content Include="Images\Archetypes\Class_Scrapper.png" />
-    <Content Include="Images\Archetypes\Class_Stalker.png" />
-    <Content Include="Images\Archetypes\Class_Tanker.png" />
-    <Content Include="Images\Archetypes\Class_Warshade.png" />
-    <Content Include="Images\Origins\Magic.png" />
-    <Content Include="Images\Origins\Mutation.png" />
-    <Content Include="Images\Origins\Natural.png" />
-    <Content Include="Images\Origins\Science.png" />
-    <Content Include="Images\Origins\Technology.png" />
+    <Content Include="Assets\Archetypes\Class_Arachnos_Soldier.png" />
+    <Content Include="Assets\Archetypes\Class_Arachnos_Widow.png" />
+    <Content Include="Assets\Archetypes\Class_Blaster.png" />
+    <Content Include="Assets\Archetypes\Class_Boss_Henchman.png" />
+    <Content Include="Assets\Archetypes\Class_Brute.png" />
+    <Content Include="Assets\Archetypes\Class_Controller.png" />
+    <Content Include="Assets\Archetypes\Class_Corruptor.png" />
+    <Content Include="Assets\Archetypes\Class_Defender.png" />
+    <Content Include="Assets\Archetypes\Class_Dominator.png" />
+    <Content Include="Assets\Archetypes\Class_Lt_Henchman.png" />
+    <Content Include="Assets\Archetypes\Class_Mastermind.png" />
+    <Content Include="Assets\Archetypes\Class_Minion_Henchman.png" />
+    <Content Include="Assets\Archetypes\Class_Minion_Pets.png" />
+    <Content Include="Assets\Archetypes\Class_Peacebringer.png" />
+	  <Content Include="Assets\Archetypes\Class_Sentinel.png" />
+    <Content Include="Assets\Archetypes\Class_Scrapper.png" />
+    <Content Include="Assets\Archetypes\Class_Stalker.png" />
+    <Content Include="Assets\Archetypes\Class_Tanker.png" />
+    <Content Include="Assets\Archetypes\Class_Warshade.png" />
+    <Content Include="Assets\Origins\Magic.png" />
+    <Content Include="Assets\Origins\Mutation.png" />
+    <Content Include="Assets\Origins\Natural.png" />
+    <Content Include="Assets\Origins\Science.png" />
+    <Content Include="Assets\Origins\Technology.png" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Connected Services\" />
@@ -313,42 +670,50 @@
   <ItemGroup>
     <ProjectReference Include="..\MRBLogging\MRBLogging.csproj" />
     <ProjectReference Include="..\MRBResourceLib\MRBResourceLib.csproj" />
+    <ProjectReference Include="..\MRB_Boostrap\MRB_Boostrap.csproj" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Data\Homecoming\bbcode.mhd">
+    <Content Include="Databases\Homecoming\bbcode.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Compare.mhd">
+    <Content Include="Databases\Homecoming\Compare.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\EClasses.mhd">
+    <Content Include="Databases\Homecoming\EClasses.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\EnhDB.mhd">
+    <Content Include="Databases\Homecoming\EnhDB.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\I12.mhd">
+    <Content Include="Databases\Homecoming\I12.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\I9.mhd">
+    <Content Include="Databases\Homecoming\I9.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Maths.mhd">
+    <Content Include="Databases\Homecoming\Maths.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Origins.mhd">
+    <Content Include="Databases\Homecoming\Origins.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Recipe.mhd">
+    <Content Include="Databases\Homecoming\Recipe.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Data\Homecoming\Salvage.mhd">
+    <Content Include="Databases\Homecoming\Salvage.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
   </ItemGroup>
   <ItemGroup>
+    <PackageReference Include="Costura.Fody" Version="6.0.0">
+      <PrivateAssets>all</PrivateAssets>
+    </PackageReference>
     <PackageReference Include="FastDeepCloner">
       <Version>1.3.6</Version>
+    </PackageReference>
+    <PackageReference Include="Fody" Version="6.9.2">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="FontAwesome.Sharp">
       <Version>6.6.0</Version>
@@ -359,7 +724,7 @@
     </PackageReference>
     <PackageReference Include="Microsoft.WinForms.Designer.SDK" Version="1.9.0-preview.3.24054.5" />
     <PackageReference Include="Newtonsoft.Json">
-      <Version>13.0.3</Version>
+      <Version>13.0.4</Version>
     </PackageReference>
     <PackageReference Include="RestSharp">
       <Version>112.1.0</Version>
@@ -375,19 +740,18 @@
     <PackageReference Include="zlib.net-mutliplatform" Version="1.0.8" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Data\Homecoming\Images\Classes\" />
-    <Folder Include="Data\Rebirth\Images\Classes\" />
+    <Folder Include="Databases\Homecoming\Images\Classes\" />
+    <Folder Include="Databases\Rebirth\Images\Classes\" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Forms\frmUpdate.cs" />
-    <Compile Remove="Forms\OptionsMenuItems\frmAttribModImporter.cs" />
-    <Compile Remove="Forms\OptionsMenuItems\frmAttribModImporter.Designer.cs" />
+    <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.cs" />
+    <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.Designer.cs" />
     <Compile Remove="GlobalSuppressions.cs" />
-    <Content Remove="Images\unlocked.png" />
+    <Content Remove="Assets\unlocked.png" />
     <EmbeddedResource Remove="frmImport_Powerset.resx" />
   </ItemGroup>
   <ItemGroup>
-    <None Remove="Data\Rebirth\SData.json" />
+    <None Remove="Databases\Rebirth\SData.json" />
     <None Remove="Fonts\DejaVuSansMono-Bold.ttf" />
     <None Remove="Fonts\DejaVuSansMono-BoldOblique.ttf" />
     <None Remove="Fonts\DejaVuSansMono-Oblique.ttf" />
@@ -410,16 +774,19 @@
     <None Remove="Fonts\NotoSans-SemiBoldItalic.ttf" />
     <None Remove="Fonts\NotoSans-Thin.ttf" />
     <None Remove="Fonts\NotoSans-ThinItalic.ttf" />
-    <None Remove="Images\MRBLoading.gif" />
-    <None Remove="Images\unlocked.png" />
+    <None Remove="Assets\MRBLoading.gif" />
+    <None Remove="Assets\unlocked.png" />
     <None Remove="MidsReborn.csproj.old" />
   </ItemGroup>
   <ItemGroup>
     <None Update="appSettings.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
-    <None Update="Data\blank.html">
+    <None Update="Databases\blank.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </None>
+    <None Update="Sythlin_DPS_Tool.exe">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <PropertyGroup Label="Globals">
@@ -431,33 +798,43 @@
     <PlatformTarget>x64</PlatformTarget>
     <UseWPF>False</UseWPF>
   </PropertyGroup>
-  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
-    <NoWarn>1701;1702;CA1416</NoWarn>
-    <DebugType>full</DebugType>
-  </PropertyGroup>
-	    <PropertyGroup>
-        <Main>bin\$(Platform)\$(Configuration)\net6.0-windows\</Main>
-		<Osx>bin\$(Platform)\$(Configuration)\net6.0-windows\runtimes\osx</Osx>
-		<Win86>bin\$(Platform)\$(Configuration)\net6.0-windows\runtimes\win-x86</Win86>
-        <WinARM>bin\$(Platform)\$(Configuration)\net6.0-windows\runtimes\win-arm64</WinARM>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
-        <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
-	</PropertyGroup>
-	
-	<Target Name="DeleteFilesAfterBuild" AfterTargets="Build">
-		<ItemGroup>
-			<FilesToDelete Include="$(Main)*Wpf.dll" />
-		</ItemGroup>
-		<Message Text="Deleting Files @(FilesToDelete)" />
-		<Delete Files="@(FilesToDelete)">
-			<Output TaskParameter="DeletedFiles" ItemName="FilesDeleted" />
-		</Delete>
-		<Message Text="Files deleted: @(FilesDeleted)" />
+
+
+	<Target Name="DeleteRuntimesFolder" AfterTargets="Build">
+		<RemoveDir Directories="$(TargetDir)runtimes" Condition="Exists('$(TargetDir)runtimes')" />
 	</Target>
 
-	<Target Name="DeleteFoldersAfterBuild" AfterTargets="DeleteFilesAfterBuild">
-		<RemoveDir Directories="$(Osx)" />
-		<RemoveDir Directories="$(Win86)" />
-		<RemoveDir Directories="$(WinARM)" />
-	</Target>						
+	<Target Name="RenameBootstrapperOutputs" AfterTargets="Build">
+		<PropertyGroup>
+			<_BootstrapBase>$(TargetDir)MRBBootstrap</_BootstrapBase>
+			<_BootstrapNew>$(TargetDir)New_MRBBootstrap</_BootstrapNew>
+		</PropertyGroup>
+
+		<ItemGroup>
+			<_BootstrapFiles Include="$(_BootstrapBase).exe" Condition="Exists('$(_BootstrapBase).exe')" />
+			<_BootstrapFiles Include="$(_BootstrapBase).dll" Condition="Exists('$(_BootstrapBase).dll')" />
+			<_BootstrapFiles Include="$(_BootstrapBase).pdb" Condition="Exists('$(_BootstrapBase).pdb')" />
+			<_BootstrapFiles Include="$(_BootstrapBase).runtimeconfig.json" Condition="Exists('$(_BootstrapBase).runtimeconfig.json')" />
+			<_BootstrapFiles Include="$(_BootstrapBase).deps.json" Condition="Exists('$(_BootstrapBase).deps.json')" />
+		</ItemGroup>
+
+		<Copy
+			SourceFiles="@(_BootstrapFiles)"
+			DestinationFiles="@(_BootstrapFiles->'$(_BootstrapNew)%(Extension)')"
+			SkipUnchangedFiles="true" />
+
+		<Delete Files="@(_BootstrapFiles)" />
+	</Target>
+
+	<Target Name="CleanOutputArtifacts" AfterTargets="Build">
+		<ItemGroup>
+			<_FilesToDelete Include="$(TargetDir)*.pdb" />
+			<_FilesToDelete Include="$(TargetDir)WebView2.Wpf.*" />
+			<_FilesToDelete Include="$(TargetDir)Microsoft.Web.WebView2.*.xml" />
+		</ItemGroup>
+
+		<Message Text="Deleting unwanted artifacts: @(_FilesToDelete)" Importance="High" />
+		<Delete Files="@(_FilesToDelete)" />
+	</Target>
+  					
 </Project>

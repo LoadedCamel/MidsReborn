@@ -91,8 +91,8 @@ namespace Mids_Reborn.Core
 
         public static void Initialize()
         {
-            if (EnableDebug) Debug.WriteLine($"Loading PowersReplTable from {Files.FNamePowersRepl}");
-            _current = new PowersReplTable(Files.FNamePowersRepl);
+            if (EnableDebug) Debug.WriteLine($"Loading PowersReplTable from {AppDataPaths.FNamePowersRepl}");
+            _current = new PowersReplTable(AppDataPaths.FNamePowersRepl);
             var pass1Count = _current._table.Count;
             if (EnableDebug) Debug.WriteLine($"PowersReplTable Count (pass 1): {pass1Count}");
             _current.CheckConsistency();
@@ -101,11 +101,6 @@ namespace Mids_Reborn.Core
             Debug.WriteLine($"{(pass1Count == _current._table.Count ? "OK" : $"{pass1Count - _current._table.Count} invalid item(s) removed")}");
             Debug.WriteLine("");
             _current.Dump();
-        }
-
-        public bool KeyExists(int id)
-        {
-            return _table.Any(item => item.SourcePowerId == id);
         }
 
         public int FetchAlternate(int oldId, string archetype = "")
