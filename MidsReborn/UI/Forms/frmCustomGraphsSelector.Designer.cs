@@ -29,10 +29,6 @@
         private void InitializeComponent()
         {
             label1 = new System.Windows.Forms.Label();
-            lvAvailableStats = new System.Windows.Forms.ListView();
-            columnHeader1 = new System.Windows.Forms.ColumnHeader();
-            lvActiveStats = new System.Windows.Forms.ListView();
-            columnHeader2 = new System.Windows.Forms.ColumnHeader();
             btnOk = new System.Windows.Forms.Button();
             btnCancel = new System.Windows.Forms.Button();
             btnAdd = new System.Windows.Forms.Button();
@@ -40,6 +36,8 @@
             btnUp = new System.Windows.Forms.Button();
             btnDown = new System.Windows.Forms.Button();
             label2 = new System.Windows.Forms.Label();
+            lbAvailableStats = new System.Windows.Forms.ListBox();
+            lbActiveStats = new System.Windows.Forms.ListBox();
             SuspendLayout();
             // 
             // label1
@@ -51,51 +49,6 @@
             label1.Size = new System.Drawing.Size(153, 15);
             label1.TabIndex = 0;
             label1.Text = "Select up to 8 items to show.";
-            // 
-            // lvAvailableStats
-            // 
-            lvAvailableStats.BackColor = System.Drawing.SystemColors.ControlDark;
-            lvAvailableStats.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            lvAvailableStats.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader1 });
-            lvAvailableStats.FullRowSelect = true;
-            lvAvailableStats.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            lvAvailableStats.Location = new System.Drawing.Point(49, 69);
-            lvAvailableStats.MultiSelect = false;
-            lvAvailableStats.Name = "lvAvailableStats";
-            lvAvailableStats.Size = new System.Drawing.Size(313, 306);
-            lvAvailableStats.TabIndex = 1;
-            lvAvailableStats.UseCompatibleStateImageBehavior = false;
-            lvAvailableStats.View = System.Windows.Forms.View.Details;
-            lvAvailableStats.VirtualMode = true;
-            lvAvailableStats.RetrieveVirtualItem += lvAvailableStats_RetrieveVirtualItem;
-            // 
-            // columnHeader1
-            // 
-            columnHeader1.Text = "Stat";
-            columnHeader1.Width = 275;
-            // 
-            // lvActiveStats
-            // 
-            lvActiveStats.BackColor = System.Drawing.SystemColors.ControlDark;
-            lvActiveStats.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            lvActiveStats.Columns.AddRange(new System.Windows.Forms.ColumnHeader[] { columnHeader2 });
-            lvActiveStats.FullRowSelect = true;
-            lvActiveStats.HeaderStyle = System.Windows.Forms.ColumnHeaderStyle.None;
-            lvActiveStats.Location = new System.Drawing.Point(461, 69);
-            lvActiveStats.MultiSelect = false;
-            lvActiveStats.Name = "lvActiveStats";
-            lvActiveStats.Size = new System.Drawing.Size(313, 306);
-            lvActiveStats.TabIndex = 2;
-            lvActiveStats.UseCompatibleStateImageBehavior = false;
-            lvActiveStats.View = System.Windows.Forms.View.Details;
-            lvActiveStats.VirtualMode = true;
-            lvActiveStats.RetrieveVirtualItem += lvActiveStats_RetrieveVirtualItem;
-            lvActiveStats.SelectedIndexChanged += lvActiveStats_SelectedIndexChanged;
-            // 
-            // columnHeader2
-            // 
-            columnHeader2.Text = "Stat";
-            columnHeader2.Width = 275;
             // 
             // btnOk
             // 
@@ -166,11 +119,34 @@
             label2.TabIndex = 9;
             label2.Text = "Selected items:";
             // 
+            // lbAvailableStats
+            // 
+            lbAvailableStats.BackColor = System.Drawing.SystemColors.ControlDark;
+            lbAvailableStats.FormattingEnabled = true;
+            lbAvailableStats.ItemHeight = 15;
+            lbAvailableStats.Location = new System.Drawing.Point(34, 69);
+            lbAvailableStats.Name = "lbAvailableStats";
+            lbAvailableStats.Size = new System.Drawing.Size(332, 304);
+            lbAvailableStats.TabIndex = 10;
+            // 
+            // lbActiveStats
+            // 
+            lbActiveStats.BackColor = System.Drawing.SystemColors.ControlDark;
+            lbActiveStats.FormattingEnabled = true;
+            lbActiveStats.ItemHeight = 15;
+            lbActiveStats.Location = new System.Drawing.Point(461, 69);
+            lbActiveStats.Name = "lbActiveStats";
+            lbActiveStats.Size = new System.Drawing.Size(309, 304);
+            lbActiveStats.TabIndex = 11;
+            lbActiveStats.SelectedIndexChanged += lbActiveStats_SelectedIndexChanged;
+            // 
             // frmCustomGraphsSelector
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(862, 450);
+            Controls.Add(lbActiveStats);
+            Controls.Add(lbAvailableStats);
             Controls.Add(label2);
             Controls.Add(btnDown);
             Controls.Add(btnUp);
@@ -178,10 +154,10 @@
             Controls.Add(btnAdd);
             Controls.Add(btnCancel);
             Controls.Add(btnOk);
-            Controls.Add(lvActiveStats);
-            Controls.Add(lvAvailableStats);
             Controls.Add(label1);
             DoubleBuffered = true;
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frmCustomGraphsSelector";
             ShowInTaskbar = false;
             Text = "Select custom graphs";
@@ -193,16 +169,14 @@
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.ListView lvAvailableStats;
-        private System.Windows.Forms.ListView lvActiveStats;
         private System.Windows.Forms.Button btnOk;
         private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.Button btnAdd;
         private System.Windows.Forms.Button btnRemove;
         private System.Windows.Forms.Button btnUp;
         private System.Windows.Forms.Button btnDown;
-        private System.Windows.Forms.ColumnHeader columnHeader1;
-        private System.Windows.Forms.ColumnHeader columnHeader2;
         private System.Windows.Forms.Label label2;
+        private System.Windows.Forms.ListBox lbAvailableStats;
+        private System.Windows.Forms.ListBox lbActiveStats;
     }
 }

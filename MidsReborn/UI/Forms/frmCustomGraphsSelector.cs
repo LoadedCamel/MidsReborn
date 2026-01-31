@@ -1,74 +1,196 @@
 ﻿using Mids_Reborn.Core;
-using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.UI.Forms.WindowMenuItems;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using System.Windows.Forms;
-using Mids_Reborn.UI.Forms.WindowMenuItems;
 
 namespace Mids_Reborn.UI.Forms
 {
     public partial class frmCustomGraphsSelector : Form
     {
-        private CustomGraphStat.eCustomGraphStat[] AvailableStats = [];
-        private CustomGraphStat.eCustomGraphStat[]? SelectedStats = [];
-        private ConfigData.CustomGraphSettings[]? SelectedSettings = [];
+        internal sealed class StatSettings(Func<int, string> selectedLabelFactory)
+        {
+            private readonly Func<int, string> _selectedLabelFactory = selectedLabelFactory ?? throw new ArgumentNullException(nameof(selectedLabelFactory));
 
-        private int? AvailableStatSelectedItem = null;
-        private int? SelectedStatSelectedItem = null;
+            public ResettableBindingList<AvailableItem> AvailableItems { get; } = [];
+            public ResettableBindingList<SelectedItem> SelectedItems { get; } = [];
+
+            public IReadOnlyList<CustomGraphStat.eCustomGraphStat> AvailableStats { get; private set; } = [];
+
+            public IReadOnlyList<CustomGraphStat.eCustomGraphStat> SelectedStats { get; private set; } = [];
+
+            public void SetAvailableStats(IEnumerable<CustomGraphStat.eCustomGraphStat>? stats)
+            {
+                AvailableStats = stats?.ToArray() ?? [];
+                AvailableItems.ReplaceWith(AvailableStats.Select(s => new AvailableItem(s)));
+            }
+
+            public void SetSelectedStats(IEnumerable<CustomGraphStat.eCustomGraphStat>? stats)
+            {
+                SelectedStats = stats?.ToArray() ?? [];
+
+                SelectedItems.ReplaceWith(
+                    Enumerable.Range(0, SelectedStats.Count)
+                              .Select(i => new SelectedItem(i, SelectedStats[i], _selectedLabelFactory))
+                );
+            }
+
+            /// <summary>
+            /// Call when the text produced by GetSelectedStatListItem(i) changes
+            /// (e.g., mode/damage-type changes) without changing the list content.
+            /// </summary>
+            public void RefreshSelectedLabels() => SelectedItems.RefreshAll();
+
+            public sealed class AvailableItem(CustomGraphStat.eCustomGraphStat stat)
+            {
+                public CustomGraphStat.eCustomGraphStat Stat { get; } = stat;
+                public string Display => CustomGraphStat.Names.CustomStatNameLong(Stat);
+
+                public override string ToString() => Display;
+            }
+
+            public sealed class SelectedItem(int index, CustomGraphStat.eCustomGraphStat stat, Func<int, string> labelFactory)
+            {
+                private readonly Func<int, string> _labelFactory = labelFactory ?? throw new ArgumentNullException(nameof(labelFactory));
+
+                public int Index { get; } = index;
+                public CustomGraphStat.eCustomGraphStat Stat { get; } = stat;
+                public string Display => _labelFactory(Index);
+
+                public override string ToString() => Display;
+            }
+
+            public sealed class ResettableBindingList<T> : BindingList<T>
+            {
+                public void ReplaceWith(IEnumerable<T> items)
+                {
+                    if (items is null)
+                    {
+                        throw new ArgumentNullException(nameof(items));
+                    }
+
+                    RaiseListChangedEvents = false;
+                    try
+                    {
+                        ClearItems();
+                        foreach (var item in items)
+                        {
+                            Add(item);
+                        }
+                    }
+                    finally
+                    {
+                        RaiseListChangedEvents = true;
+                        OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+                    }
+                }
+
+                public void RefreshAll() => OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+            }
+        }
+
+        private CustomGraphStat.eCustomGraphStat[] AvailableStats = [];
+        private CustomGraphStat.eCustomGraphStat[] SelectedStats = [];
+        private ConfigData.CustomGraphSettings[] SelectedSettings = [];
+
+        private int? _selectedStatSelectedItem = null;
+        private StatSettings _statSettings = null!;
 
         public frmCustomGraphsSelector()
         {
             InitializeComponent();
             Icon = MRBResourceLib.Resources.MRB_Icon_Concept;
+
+            lbAvailableStats.SelectionMode = SelectionMode.One;
+            lbActiveStats.SelectionMode = SelectionMode.One;
         }
 
         private bool UniqueStat(CustomGraphStat.eCustomGraphStat stat)
         {
-            return stat is not (CustomGraphStat.eCustomGraphStat.Defense or CustomGraphStat.eCustomGraphStat.Resistance
-                or CustomGraphStat.eCustomGraphStat.EnhMez or CustomGraphStat.eCustomGraphStat.StatusProtection
+            return stat is not (CustomGraphStat.eCustomGraphStat.Defense
+                or CustomGraphStat.eCustomGraphStat.Resistance
+                or CustomGraphStat.eCustomGraphStat.EnhMez
+                or CustomGraphStat.eCustomGraphStat.StatusProtection
                 or CustomGraphStat.eCustomGraphStat.StatusResistance
-                or CustomGraphStat.eCustomGraphStat.DebuffResistance or CustomGraphStat.eCustomGraphStat.Elusivity);
+                or CustomGraphStat.eCustomGraphStat.DebuffResistance
+                or CustomGraphStat.eCustomGraphStat.Elusivity);
+        }
+
+        private bool NeedsOptionsDialog(CustomGraphStat.eCustomGraphStat stat)
+        {
+            return stat is CustomGraphStat.eCustomGraphStat.DebuffResistance
+                or CustomGraphStat.eCustomGraphStat.Defense
+                or CustomGraphStat.eCustomGraphStat.Elusivity
+                or CustomGraphStat.eCustomGraphStat.EnhMez
+                or CustomGraphStat.eCustomGraphStat.Resistance
+                or CustomGraphStat.eCustomGraphStat.StatusProtection
+                or CustomGraphStat.eCustomGraphStat.StatusResistance;
         }
 
         private void frmCustomGraphsSelector_Load(object sender, EventArgs e)
         {
-            lvAvailableStats.EnableDoubleBuffer();
-            lvActiveStats.EnableDoubleBuffer();
-
             SelectedStats = MidsContext.Config?.CustomGraphs == null
                 ? []
-                : MidsContext.Config.CustomGraphs.Clone() as CustomGraphStat.eCustomGraphStat[];
+                : MidsContext.Config.CustomGraphs.Clone() as CustomGraphStat.eCustomGraphStat[] ?? [];
+
             SelectedSettings = MidsContext.Config?.CustomGraphSetting == null
                 ? []
-                : MidsContext.Config.CustomGraphSetting.Clone() as ConfigData.CustomGraphSettings[];
+                : MidsContext.Config.CustomGraphSetting.Clone() as ConfigData.CustomGraphSettings[] ?? [];
+
+            // Keep them aligned
+            if (SelectedSettings.Length != SelectedStats.Length)
+            {
+                Array.Resize(ref SelectedSettings, SelectedStats.Length);
+                for (var i = 0; i < SelectedSettings.Length; i++)
+                {
+                    SelectedSettings[i] ??= new ConfigData.CustomGraphSettings();
+                }
+            }
+
+            _statSettings = new StatSettings(GetSelectedStatListItem);
+
+            lbAvailableStats.DataSource = _statSettings.AvailableItems;
+            lbAvailableStats.DisplayMember = nameof(StatSettings.AvailableItem.Display);
+            lbAvailableStats.ValueMember = nameof(StatSettings.AvailableItem.Stat);
+
+            lbActiveStats.DataSource = _statSettings.SelectedItems;
+            lbActiveStats.DisplayMember = nameof(StatSettings.SelectedItem.Display);
+            lbActiveStats.ValueMember = nameof(StatSettings.SelectedItem.Index);
 
             CalcAvailableStats();
-            RefreshLvs();
+            RefreshLists();
+
+            UpdateMoveButtons();
         }
 
         private void CalcAvailableStats()
         {
-            var usedUniqueValues = (SelectedStats ?? []).Where(UniqueStat);
+            var usedUniqueValues = SelectedStats.Where(UniqueStat).ToHashSet();
+
             AvailableStats = Enum.GetValues<CustomGraphStat.eCustomGraphStat>()
-                .Where(f => !usedUniqueValues.Contains(f))
+                .Where(s => !usedUniqueValues.Contains(s))
                 .ToArray();
         }
 
-        private void RefreshLvs()
+        private void RefreshLists()
         {
-            lvActiveStats.VirtualListSize = 0;
-            lvActiveStats.VirtualListSize = (SelectedStats ?? []).Length;
+            _statSettings.SetAvailableStats(AvailableStats);
+            _statSettings.SetSelectedStats(SelectedStats);
 
-            lvAvailableStats.VirtualListSize = 0;
-            lvAvailableStats.VirtualListSize = AvailableStats.Length;
+            // Restore selection if possible
+            if (_selectedStatSelectedItem is >= 0 && _selectedStatSelectedItem.Value < lbActiveStats.Items.Count)
+            {
+                lbActiveStats.SelectedIndex = _selectedStatSelectedItem.Value;
+            }
         }
 
         private void btnOk_Click(object sender, EventArgs e)
         {
-            MidsContext.Config.CustomGraphs = (SelectedStats ?? []).Clone() as CustomGraphStat.eCustomGraphStat[];
-            MidsContext.Config.CustomGraphSetting = (SelectedSettings ?? []).Clone() as ConfigData.CustomGraphSettings[];
+            MidsContext.Config.CustomGraphs = (SelectedStats ?? []).ToArray();
+            MidsContext.Config.CustomGraphSetting = (SelectedSettings ?? []).ToArray();
 
             DialogResult = DialogResult.OK;
             Close();
@@ -82,22 +204,119 @@ namespace Mids_Reborn.UI.Forms
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
-            if (lvAvailableStats.SelectedIndices.Count < 1)
+            if (lbAvailableStats.SelectedItem is not StatSettings.AvailableItem item)
             {
                 return;
             }
 
-            if (lvAvailableStats.SelectedIndices[0] < 0)
+            if (SelectedStats.Length >= 8)
             {
                 return;
             }
 
-            if ((SelectedStats ?? []).Length >= 8)
+            var stat = item.Stat;
+            var statSettings = CreateDefaultSettings(stat);
+
+            if (NeedsOptionsDialog(stat))
+            {
+                using var statOptions = new frmCustomGraphSettingsSelector(stat, statSettings);
+                if (statOptions.ShowDialog(this) != DialogResult.OK)
+                {
+                    return;
+                }
+
+                statSettings = statOptions.Settings;
+            }
+
+            SelectedStats = SelectedStats.Append(stat).ToArray();
+            SelectedSettings = SelectedSettings.Append(statSettings).ToArray();
+
+            _selectedStatSelectedItem = SelectedStats.Length - 1;
+
+            CalcAvailableStats();
+            RefreshLists();
+            UpdateMoveButtons();
+        }
+
+        private void btnRemove_Click(object sender, EventArgs e)
+        {
+            var idx = lbActiveStats.SelectedIndex;
+            if (idx < 0 || idx >= SelectedStats.Length)
             {
                 return;
             }
 
-            var statSettings = AvailableStats[lvAvailableStats.SelectedIndices[0]] switch
+            SelectedStats = SelectedStats.Where((_, i) => i != idx).ToArray();
+            SelectedSettings = SelectedSettings.Where((_, i) => i != idx).ToArray();
+
+            _selectedStatSelectedItem = SelectedStats.Length == 0
+                ? null
+                : Math.Min(idx, SelectedStats.Length - 1);
+
+            CalcAvailableStats();
+            RefreshLists();
+            UpdateMoveButtons();
+        }
+
+        private void btnUp_Click(object sender, EventArgs e)
+        {
+            var idx = lbActiveStats.SelectedIndex;
+            if (idx <= 0 || idx >= SelectedStats.Length)
+            {
+                return;
+            }
+
+            Swap(ref SelectedStats, idx, idx - 1);
+            Swap(ref SelectedSettings, idx, idx - 1);
+
+            _selectedStatSelectedItem = idx - 1;
+
+            RefreshLists();
+            UpdateMoveButtons();
+        }
+
+        private void btnDown_Click(object sender, EventArgs e)
+        {
+            var idx = lbActiveStats.SelectedIndex;
+            if (idx < 0 || idx >= SelectedStats.Length - 1)
+            {
+                return;
+            }
+
+            Swap(ref SelectedStats, idx, idx + 1);
+            Swap(ref SelectedSettings, idx, idx + 1);
+
+            _selectedStatSelectedItem = idx + 1;
+
+            RefreshLists();
+            UpdateMoveButtons();
+        }
+
+        private void lbActiveStats_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            _selectedStatSelectedItem = lbActiveStats.SelectedIndex >= 0 ? lbActiveStats.SelectedIndex : null;
+            UpdateMoveButtons();
+        }
+
+        private void UpdateMoveButtons()
+        {
+            var idx = lbActiveStats.SelectedIndex;
+            var hasSelection = idx >= 0 && idx < SelectedStats.Length;
+
+            btnUp.Enabled = hasSelection && idx > 0;
+            btnDown.Enabled = hasSelection && idx < SelectedStats.Length - 1;
+            btnRemove.Enabled = hasSelection;
+            btnAdd.Enabled = lbAvailableStats.SelectedIndex >= 0 && SelectedStats.Length < 8;
+        }
+
+        private static void Swap<T>(ref T[] arr, int a, int b)
+        {
+            (arr[a], arr[b]) = (arr[b], arr[a]);
+        }
+
+        private ConfigData.CustomGraphSettings CreateDefaultSettings(CustomGraphStat.eCustomGraphStat stat)
+        {
+            return stat switch
             {
                 CustomGraphStat.eCustomGraphStat.EnhAccuracy => new ConfigData.CustomGraphSettings
                 {
@@ -297,178 +516,60 @@ namespace Mids_Reborn.UI.Forms
                 },
                 _ => new ConfigData.CustomGraphSettings()
             };
-
-            if (AvailableStats[lvAvailableStats.SelectedIndices[0]] is CustomGraphStat.eCustomGraphStat.DebuffResistance
-                or CustomGraphStat.eCustomGraphStat.Defense or CustomGraphStat.eCustomGraphStat.Elusivity
-                or CustomGraphStat.eCustomGraphStat.EnhMez or CustomGraphStat.eCustomGraphStat.Resistance
-                or CustomGraphStat.eCustomGraphStat.StatusProtection or CustomGraphStat.eCustomGraphStat.StatusResistance)
-            {
-                using var statOptions = new frmCustomGraphSettingsSelector(AvailableStats[lvAvailableStats.SelectedIndices[0]], statSettings);
-                var ret = statOptions.ShowDialog(this);
-                if (ret != DialogResult.OK)
-                {
-                    return;
-                }
-
-                statSettings = statOptions.Settings;
-            }
-
-            SelectedStats = (SelectedStats ?? [])
-                .Append(AvailableStats[lvAvailableStats.SelectedIndices[0]])
-                .ToArray();
-
-            SelectedSettings = (SelectedSettings ?? [])
-                .Append(statSettings)
-                .ToArray();
-
-            CalcAvailableStats();
-            RefreshLvs();
         }
 
-        private void btnRemove_Click(object sender, EventArgs e)
+        private string GetSelectedStatListItem(int i)
         {
-            if (lvActiveStats.SelectedIndices.Count < 1)
+            if (i < 0 || i >= SelectedStats.Length || i >= SelectedSettings.Length)
             {
-                return;
+                return string.Empty;
             }
 
-            if (lvActiveStats.SelectedIndices[0] < 0)
+            var stat = SelectedStats[i];
+            var opt = SelectedSettings[i];
+            var statName = CustomGraphStat.Names.CustomStatNameLong(stat);
+
+            if (!NeedsOptionsDialog(stat))
             {
-                return;
+                return statName;
             }
 
-            SelectedStats = (SelectedStats ?? [])
-                .Select((s, i) => new KeyValuePair<int, CustomGraphStat.eCustomGraphStat>(i, s))
-                .Where(f => f.Key != lvActiveStats.SelectedIndices[0])
-                .Select(f => f.Value)
-                .ToArray();
-
-            SelectedSettings = (SelectedSettings ?? [])
-                .Select((s, i) => new KeyValuePair<int, ConfigData.CustomGraphSettings>(i, s))
-                .Where(f => f.Key != lvActiveStats.SelectedIndices[0])
-                .Select(f => f.Value)
-                .ToArray();
-
-            CalcAvailableStats();
-            RefreshLvs();
-        }
-
-        private void btnUp_Click(object sender, EventArgs e)
-        {
-            if (lvActiveStats.SelectedIndices.Count < 1)
+            var modeText = stat switch
             {
-                return;
-            }
+                CustomGraphStat.eCustomGraphStat.DebuffResistance =>
+                    opt.EffectMode == CustomGraphStat.eCustomGraphMode.Single
+                        ? $"{opt.EffectTypeAux} only"
+                        : $"{opt.EffectMode}",
 
-            if (lvActiveStats.SelectedIndices[0] <= 0)
-            {
-                return;
-            }
+                CustomGraphStat.eCustomGraphStat.Defense or CustomGraphStat.eCustomGraphStat.Resistance =>
+                    opt.DamageMode == CustomGraphStat.eCustomGraphMode.Single
+                        ? $"{opt.DamageType} only"
+                        : $"{opt.DamageMode}",
 
-            if (SelectedStats == null || SelectedStats.Length < 2)
-            {
-                return;
-            }
+                CustomGraphStat.eCustomGraphStat.StatusProtection =>
+                    opt.MezMode == CustomGraphStat.eCustomGraphMode.Single
+                        ? $"Protection to {opt.MezType} only"
+                        : $"{opt.MezMode}",
 
-            var selectedItem = lvActiveStats.SelectedIndices[0];
+                CustomGraphStat.eCustomGraphStat.StatusResistance =>
+                    opt.MezMode == CustomGraphStat.eCustomGraphMode.Single
+                        ? $"Resistance to {opt.MezType} only"
+                        : $"{opt.MezMode}",
 
-            (SelectedStats[lvActiveStats.SelectedIndices[0]], SelectedStats[lvActiveStats.SelectedIndices[0] - 1]) = (SelectedStats[lvActiveStats.SelectedIndices[0] - 1], SelectedStats[lvActiveStats.SelectedIndices[0]]);
-            SelectedStatSelectedItem = selectedItem - 1;
+                CustomGraphStat.eCustomGraphStat.EnhMez =>
+                    opt.MezMode == CustomGraphStat.eCustomGraphMode.Single
+                        ? $"{opt.MezType} only"
+                        : $"{opt.MezMode}",
 
-            RefreshLvs();
-        }
+                CustomGraphStat.eCustomGraphStat.Elusivity =>
+                    opt.DamageMode == CustomGraphStat.eCustomGraphMode.Single
+                        ? $"{(opt.DamageType == Enums.eDamage.None ? "Untyped" : opt.DamageType)} only"
+                        : $"{opt.DamageMode}",
 
-        private void btnDown_Click(object sender, EventArgs e)
-        {
-            if (lvActiveStats.SelectedIndices.Count < 1)
-            {
-                return;
-            }
-
-            if (lvActiveStats.SelectedIndices[0] >= MidsContext.Config.CustomGraphs.Length)
-            {
-                return;
-            }
-
-            if (SelectedStats == null || SelectedStats.Length < 2)
-            {
-                return;
-            }
-
-            var selectedItem = lvActiveStats.SelectedIndices[0];
-
-            (SelectedStats[lvActiveStats.SelectedIndices[0]], SelectedStats[lvActiveStats.SelectedIndices[0] + 1]) = (SelectedStats[lvActiveStats.SelectedIndices[0] + 1], SelectedStats[lvActiveStats.SelectedIndices[0]]);
-            SelectedStatSelectedItem = selectedItem + 1;
-
-            RefreshLvs();
-        }
-
-        private void lvAvailableStats_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
-        {
-            e.Item = new ListViewItem(CustomGraphStat.Names.CustomStatNameLong(AvailableStats[e.ItemIndex]));
-        }
-
-        private void lvActiveStats_RetrieveVirtualItem(object sender, RetrieveVirtualItemEventArgs e)
-        {
-            var stat = SelectedStats[e.ItemIndex];
-            var statOptions = SelectedSettings[e.ItemIndex];
-
-            string label;
-
-            if (stat is CustomGraphStat.eCustomGraphStat.DebuffResistance
-                or CustomGraphStat.eCustomGraphStat.Defense or CustomGraphStat.eCustomGraphStat.Elusivity
-                or CustomGraphStat.eCustomGraphStat.EnhMez or CustomGraphStat.eCustomGraphStat.Resistance
-                or CustomGraphStat.eCustomGraphStat.StatusProtection or CustomGraphStat.eCustomGraphStat.StatusResistance)
-            {
-                var statName = CustomGraphStat.Names.CustomStatNameLong(SelectedStats[e.ItemIndex]);
-                var suffix = stat switch
-                {
-                    CustomGraphStat.eCustomGraphStat.DebuffResistance => $"{(statOptions.EffectMode == CustomGraphStat.eCustomGraphMode.Single ? $"{statOptions.EffectTypeAux}) only" : statOptions.EffectMode)}",
-                    CustomGraphStat.eCustomGraphStat.Defense or CustomGraphStat.eCustomGraphStat.Resistance => $"[{(statOptions.DamageMode == CustomGraphStat.eCustomGraphMode.Single ? $"{statOptions.DamageType}) only" : statOptions.DamageMode)}",
-                    CustomGraphStat.eCustomGraphStat.StatusProtection => $"{(statOptions.MezMode == CustomGraphStat.eCustomGraphMode.Single ? $"Protection to {statOptions.MezType}) only" : statOptions.MezMode)}",
-                    CustomGraphStat.eCustomGraphStat.StatusResistance => $"{(statOptions.MezMode == CustomGraphStat.eCustomGraphMode.Single ? $"Resistance to {statOptions.MezType}) only" : statOptions.MezMode)}",
-                    CustomGraphStat.eCustomGraphStat.Elusivity => $"{(statOptions.DamageMode == CustomGraphStat.eCustomGraphMode.Single ? $"{statOptions.EffectType}({(statOptions.DamageType == Enums.eDamage.None ? "Untyped" : statOptions.DamageType)}) only" : statOptions.DamageMode)}",
-                    CustomGraphStat.eCustomGraphStat.EnhMez => $"{(statOptions.MezMode == CustomGraphStat.eCustomGraphMode.Single ? $"{statOptions.EffectType}({statOptions.MezType}) only" : statOptions.MezMode)}",
-                };
-
-                label = $"{statName} [{suffix}]";
-            }
-            else
-            {
-                label = CustomGraphStat.Names.CustomStatNameLong(SelectedStats[e.ItemIndex]);
-            }
-
-            e.Item = new ListViewItem(label)
-            {
-                Selected = SelectedStatSelectedItem != null && e.ItemIndex == SelectedStatSelectedItem
+                _ => ""
             };
-        }
 
-        private void lvActiveStats_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (lvActiveStats.SelectedIndices.Count <= 0)
-            {
-                SelectedStatSelectedItem = null;
-                return;
-            }
-
-            SelectedStatSelectedItem = lvActiveStats.SelectedIndices[0];
-
-            if (lvActiveStats.SelectedIndices[0] == 0)
-            {
-                btnUp.Enabled = false;
-                btnDown.Enabled = true;
-            }
-            else if (lvActiveStats.SelectedIndices[0] >= Math.Max(0, (SelectedStats ?? []).Length - 1))
-            {
-                btnUp.Enabled = true;
-                btnDown.Enabled = false;
-            }
-            else
-            {
-                btnUp.Enabled = true;
-                btnDown.Enabled = true;
-            }
+            return $"{statName}{(modeText == "" ? "" : $" [{modeText}]")}";
         }
     }
 }
