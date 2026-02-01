@@ -709,13 +709,12 @@ namespace Mids_Reborn.UI.Forms.Controls
             var tip1 = string.Empty;
             if (pBase.PowerType == Enums.ePowerType.Click)
             {
-                if (enhancedPower.ToggleCost > 0 & enhancedPower.RechargeTime + enhancedPower.CastTime + enhancedPower.InterruptTime > 0)
+                if ((enhancedPower.ToggleCost > 0) & (enhancedPower.RechargeTime + enhancedPower.CastTime + enhancedPower.InterruptTime > 0))
                 {
                     tip1 = $"Effective end drain per second: {Utilities.FixDP(enhancedPower.ToggleCost / (enhancedPower.RechargeTime + enhancedPower.CastTime + enhancedPower.InterruptTime))}/s";
                 }
 
-                if (enhancedPower.ToggleCost > 0 &
-                    MidsContext.Config?.DamageMath.ReturnValue == ConfigData.EDamageReturn.Numeric)
+                if ((enhancedPower.ToggleCost > 0) & (MidsContext.Config?.DamageMath.ReturnValue == ConfigData.EDamageReturn.Numeric))
                 {
                     var damageValue = enhancedPower.FXGetDamageValue(pEnh == null);
                     if (damageValue > 0)
@@ -738,7 +737,7 @@ namespace Mids_Reborn.UI.Forms.Controls
             info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, enhancedPower.ToggleCost, suffix1, tip1));
             var absorbedEffectsFlag = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 && DatabaseAPI.Database.Power[pBase.PowerIndex]?.EntitiesAutoHit == Enums.eEntity.None;
             var requiresToHitCheckFlag = pBase.Effects.Any(t => t.RequiresToHitCheck);
-            var entitiesAutoHitFlag = pBase.EntitiesAutoHit == Enums.eEntity.None |
+            var entitiesAutoHitFlag = (pBase.EntitiesAutoHit == Enums.eEntity.None) |
                                       pBase.Effects
                                           .Where(e => e.EffectType == Enums.eEffectType.EntCreate)
                                           .SelectMany(e => DatabaseAPI.Database.Entities.ElementAtOrDefault(e.nSummon) == null
@@ -748,20 +747,20 @@ namespace Mids_Reborn.UI.Forms.Controls
                                                 : DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Entities[e.nSummon].GetNPowerset()[0]]?.Powers)
                                           .Any(e => e?.EntitiesAutoHit == Enums.eEntity.None);
 
-            if (entitiesAutoHitFlag | requiresToHitCheckFlag | absorbedEffectsFlag | pBase.Range > 20 & pBase.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt))
+            if (entitiesAutoHitFlag | requiresToHitCheckFlag | absorbedEffectsFlag | ((pBase.Range > 20) & pBase.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt)))
             {
                 var accuracy1 = pBase.Accuracy;
                 var accuracy2 = enhancedPower.Accuracy;
                 var num2 = MidsContext.Config.ScalingToHit * pBase.Accuracy;
                 var str = string.Empty;
                 var suffix2 = "%";
-                if (pBase.EntitiesAutoHit != Enums.eEntity.None & requiresToHitCheckFlag)
+                if ((pBase.EntitiesAutoHit != Enums.eEntity.None) & requiresToHitCheckFlag)
                 {
                     str = "\r\n* This power is autohit, but has an effect that requires a ToHit roll.";
                     suffix2 += "*";
                 }
 
-                if (Math.Abs(accuracy1 - accuracy2) > float.Epsilon & Math.Abs(num2 - accuracy2) > float.Epsilon)
+                if ((Math.Abs(accuracy1 - accuracy2) > float.Epsilon) & (Math.Abs(num2 - accuracy2) > float.Epsilon))
                 {
                     var tip2 = $"Accuracy multiplier without other buffs (Real Numbers style): {pBase.Accuracy + (enhancedPower.Accuracy - MidsContext.Config.ScalingToHit):##0.00000}x{str}";
                     info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Accuracy", "Acc"),
@@ -841,7 +840,7 @@ namespace Mids_Reborn.UI.Forms.Controls
             else if (durationEffectId > -1)
             {
                 if ((pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez && validMez) | validMezProt |
-                    pBase.Effects[durationEffectId].EffectType != Enums.eEffectType.Mez)
+                    (pBase.Effects[durationEffectId].EffectType != Enums.eEffectType.Mez))
                 {
                     info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s", durationTip));
                 }
@@ -2540,6 +2539,7 @@ namespace Mids_Reborn.UI.Forms.Controls
             pEnh?.ProcessExecutes();
 
             GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
+            GroupedRankedEffects = GroupedFx.AggregateGroupedEffectsPass2(pEnh, GroupedRankedEffects);
             EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh?.GetRankedEffects(true).ToList(), info_DataList.Font.Size);
 
             HistoryIDX = iHistoryIdx;
@@ -2556,6 +2556,7 @@ namespace Mids_Reborn.UI.Forms.Controls
             pEnh?.ProcessExecutes();
 
             GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
+            GroupedRankedEffects = GroupedFx.AggregateGroupedEffectsPass2(pEnh, GroupedRankedEffects);
             EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh?.GetRankedEffects(true).ToList(), info_DataList.Font.Size);
 
             SetDamageTip();
