@@ -128,6 +128,7 @@
             lbAvailableStats.Name = "lbAvailableStats";
             lbAvailableStats.Size = new System.Drawing.Size(332, 304);
             lbAvailableStats.TabIndex = 10;
+            lbAvailableStats.DoubleClick += lbAvailableStats_DoubleClick;
             // 
             // lbActiveStats
             // 
@@ -139,6 +140,7 @@
             lbActiveStats.Size = new System.Drawing.Size(309, 304);
             lbActiveStats.TabIndex = 11;
             lbActiveStats.SelectedIndexChanged += lbActiveStats_SelectedIndexChanged;
+            lbActiveStats.DoubleClick += lbActiveStats_DoubleClick;
             // 
             // frmCustomGraphsSelector
             // 

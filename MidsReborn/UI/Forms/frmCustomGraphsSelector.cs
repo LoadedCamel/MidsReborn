@@ -99,6 +99,8 @@ namespace Mids_Reborn.UI.Forms
         private int? _selectedStatSelectedItem = null;
         private StatSettings _statSettings = null!;
 
+        private const int MaxItems = 8;
+
         public frmCustomGraphsSelector()
         {
             InitializeComponent();
@@ -164,6 +166,7 @@ namespace Mids_Reborn.UI.Forms
             RefreshLists();
 
             UpdateMoveButtons();
+            UpdateSelectedStatsLabel();
         }
 
         private void CalcAvailableStats()
@@ -209,7 +212,7 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            if (SelectedStats.Length >= 8)
+            if (SelectedStats.Length >= MaxItems)
             {
                 return;
             }
@@ -236,6 +239,12 @@ namespace Mids_Reborn.UI.Forms
             CalcAvailableStats();
             RefreshLists();
             UpdateMoveButtons();
+            UpdateSelectedStatsLabel();
+        }
+
+        private void lbAvailableStats_DoubleClick(object sender, EventArgs e)
+        {
+            btnAdd_Click(sender, e);
         }
 
         private void btnRemove_Click(object sender, EventArgs e)
@@ -256,6 +265,12 @@ namespace Mids_Reborn.UI.Forms
             CalcAvailableStats();
             RefreshLists();
             UpdateMoveButtons();
+            UpdateSelectedStatsLabel();
+        }
+
+        private void lbActiveStats_DoubleClick(object sender, EventArgs e)
+        {
+            btnRemove_Click(sender, e);
         }
 
         private void btnUp_Click(object sender, EventArgs e)
@@ -306,7 +321,12 @@ namespace Mids_Reborn.UI.Forms
             btnUp.Enabled = hasSelection && idx > 0;
             btnDown.Enabled = hasSelection && idx < SelectedStats.Length - 1;
             btnRemove.Enabled = hasSelection;
-            btnAdd.Enabled = lbAvailableStats.SelectedIndex >= 0 && SelectedStats.Length < 8;
+            btnAdd.Enabled = lbAvailableStats.SelectedIndex >= 0 && SelectedStats.Length < MaxItems;
+        }
+
+        private void UpdateSelectedStatsLabel()
+        {
+            label2.Text = $"Selected items ({SelectedStats.Length}/{MaxItems}):";
         }
 
         private static void Swap<T>(ref T[] arr, int a, int b)
