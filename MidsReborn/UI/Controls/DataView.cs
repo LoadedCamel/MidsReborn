@@ -1660,10 +1660,10 @@ namespace Mids_Reborn.UI.Controls
             {
                 Recipe.RecipeRarity? rarity = null;
                 var isPvP = false;
-                if (DatabaseAPI.Database.Enhancements[enh1].TypeID == Enums.eType.SetO)
+                if (DatabaseAPI.Database.Enhancements[enh2].TypeID == Enums.eType.SetO)
                 {
-                    rarity = DatabaseAPI.Database.Enhancements[enh1].RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[enh1].RecipeIDX].Rarity;
-                    var enhSet = DatabaseAPI.Database.Enhancements[enh1].GetEnhancementSet();
+                    rarity = DatabaseAPI.Database.Enhancements[enh2].RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[enh2].RecipeIDX].Rarity;
+                    var enhSet = DatabaseAPI.Database.Enhancements[enh2].GetEnhancementSet();
                     isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
                 }
                 graphics = bxFlip.Graphics;
