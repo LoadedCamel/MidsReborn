@@ -347,6 +347,7 @@ namespace Mids_Reborn.UI.Controls
             if (buildHistoryIdx < 0)
             {
                 enhListing.Redraw();
+                RedrawFlip();
 
                 return;
             }
@@ -1173,11 +1174,11 @@ namespace Mids_Reborn.UI.Controls
             fx_List3.Redraw();
         }
 
-        private void DisplayFlippedEnhancements()
+        private void DisplayFlippedEnhancements(bool callbackRedraw = true)
         {
             var pen = enhListing.BackColor.B <= 10
-                ? new Pen(Color.FromArgb(byte.MaxValue, 0, 0))
-                : new Pen(Color.FromArgb(0, 0, byte.MaxValue));
+                ? new Pen(Color.FromArgb(255, 0, 0))
+                : new Pen(Color.FromArgb(0, 0, 255));
             bxFlip ??= new ExtendedBitmap(pnlEnhActive.Width, pnlEnhInactive.Height * 2);
             bxFlip.Graphics.Clear(enhListing.BackColor);
             bxFlip.Graphics.DrawRectangle(pen, 0, 0, pnlEnhActive.Width - 1, pnlEnhInactive.Height - 1);
@@ -1193,161 +1194,171 @@ namespace Mids_Reborn.UI.Controls
             var inToonHistory = MidsContext.Character.CurrentBuild.FindInToonHistory(powerBase.PowerIndex);
             if (inToonHistory < 0)
             {
-                RedrawFlip();
-            }
-            else
-            {
-                using var format = new StringFormat();
-                var num1 = bxFlip.Size.Width - 188;
-                var rectangle1 = new Rectangle();
-                ref var local1 = ref rectangle1;
-                var width = num1;
-                var size = bxFlip.Size;
-                var height = (int)Math.Round(size.Height / 2.0);
-                local1 = new Rectangle(-4, 0, width, height);
-                using var solidBrush1 = new SolidBrush(enhListing.ItemColor);
-                format.Alignment = StringAlignment.Far;
-                format.LineAlignment = StringAlignment.Center;
-                bxFlip.Graphics.DrawString("Active Slotting:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
-                rectangle1.Y += rectangle1.Height;
-                bxFlip.Graphics.DrawString("Alternate:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
-                //ImageAttributes recolorIa = clsDrawX.GetRecolorIa(MidsContext.Character.IsHero());
-                using var solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
-                var power = MidsContext.Character.CurrentBuild.Powers[inToonHistory];
-                for (var index = 0; index < power.SlotCount; index++)
+                if (!callbackRedraw)
                 {
-                    var iDest = new Rectangle();
-                    ref var local2 = ref iDest;
-                    var x1 = num1 + 30 * index;
-                    size = bxFlip.Size;
-                    var y1 = (int)Math.Round((size.Height / 2.0 - 30) / 2.0);
-                    local2 = new Rectangle(x1, y1, 30, 30);
-                    var rectangle2 = new Rectangle();
-                    ref var local3 = ref rectangle2;
-                    var x2 = num1 + 30 * index;
-                    size = bxFlip.Size;
-                    var num3 = size.Height / 2.0;
-                    size = bxFlip.Size;
-                    var num4 = (size.Height / 2.0 - 30) / 2.0;
-                    var y2 = (int)Math.Round(num3 + num4);
-                    local3 = new Rectangle(x2, y2, 30, 30);
-                    RectangleF bounds;
-                    Rectangle destRect;
+                    return;
+                }
+                
+                RedrawFlip();
+
+                return;
+            }
+
+            using var format = new StringFormat();
+            var num1 = bxFlip.Size.Width - 188;
+            var rectangle1 = new Rectangle();
+            ref var local1 = ref rectangle1;
+            var width = num1;
+            var size = bxFlip.Size;
+            var height = (int)Math.Round(size.Height / 2.0);
+            local1 = new Rectangle(-4, 0, width, height);
+            using var solidBrush1 = new SolidBrush(enhListing.ItemColor);
+            format.Alignment = StringAlignment.Far;
+            format.LineAlignment = StringAlignment.Center;
+            bxFlip.Graphics.DrawString("Active Slotting:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
+            rectangle1.Y += rectangle1.Height;
+            bxFlip.Graphics.DrawString("Alternate:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
+            //ImageAttributes recolorIa = clsDrawX.GetRecolorIa(MidsContext.Character.IsHero());
+            using var solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
+            var power = MidsContext.Character.CurrentBuild.Powers[inToonHistory];
+            for (var index = 0; index < power.SlotCount; index++)
+            {
+                var iDest = new Rectangle();
+                ref var local2 = ref iDest;
+                var x1 = num1 + 30 * index;
+                size = bxFlip.Size;
+                var y1 = (int)Math.Round((size.Height / 2.0 - 30) / 2.0);
+                local2 = new Rectangle(x1, y1, 30, 30);
+                var rectangle2 = new Rectangle();
+                ref var local3 = ref rectangle2;
+                var x2 = num1 + 30 * index;
+                size = bxFlip.Size;
+                var num3 = size.Height / 2.0;
+                size = bxFlip.Size;
+                var num4 = (size.Height / 2.0 - 30) / 2.0;
+                var y2 = (int)Math.Round(num3 + num4);
+                local3 = new Rectangle(x2, y2, 30, 30);
+                RectangleF bounds;
+                Rectangle destRect;
+                if (power.Slots[index].Enhancement.Enh > -1)
+                {
+                    var graphics1 = bxFlip.Graphics;
+                    Recipe.RecipeRarity? rarity = null;
+                    var isPvP = false;
+                    if (DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID == Enums.eType.SetO)
+                    {
+                        rarity = DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].RecipeIDX].Rarity;
+                        var enhSet = DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].GetEnhancementSet();
+                        isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
+                    }
+                    I9Gfx.DrawEnhancementAt(ref graphics1, iDest,
+                        DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].ImageIdx,
+                        I9Gfx.ToGfxGrade(
+                            DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID,
+                            power.Slots[index].Enhancement.Grade),
+                        rarity, isPvP);
                     if (power.Slots[index].Enhancement.Enh > -1)
                     {
-                        var graphics1 = bxFlip.Graphics;
-                        Recipe.RecipeRarity? rarity = null;
-                        var isPvP = false;
-                        if (DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID == Enums.eType.SetO)
+                        if (!MidsContext.Config.I9.HideIOLevels & DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID is Enums.eType.SetO or Enums.eType.InventO)
                         {
-                            rarity = DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].RecipeIDX].Rarity;
-                            var enhSet = DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].GetEnhancementSet();
-                            isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
+                            bounds = iDest;
+                            bounds.Y -= 3f;
+                            bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
+                            var graphics2 = bxFlip.Graphics;
+                            ClsDrawX.DrawOutlineText($"{power.Slots[index].Enhancement.IOLevel + 1}", bounds,
+                                Color.Cyan, Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
                         }
-                        I9Gfx.DrawEnhancementAt(ref graphics1, iDest,
-                            DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].ImageIdx,
-                            I9Gfx.ToGfxGrade(
-                                DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID,
-                                power.Slots[index].Enhancement.Grade),
-                            rarity, isPvP);
-                        if (power.Slots[index].Enhancement.Enh > -1)
+                        else if (MidsContext.Config.ShowEnhRel & DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID is Enums.eType.Normal or Enums.eType.SpecialO)
                         {
-                            if (!MidsContext.Config.I9.HideIOLevels & DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID is Enums.eType.SetO or Enums.eType.InventO)
-                            {
-                                bounds = iDest;
-                                bounds.Y -= 3f;
-                                bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
-                                var graphics2 = bxFlip.Graphics;
-                                ClsDrawX.DrawOutlineText($"{power.Slots[index].Enhancement.IOLevel + 1}", bounds,
-                                    Color.Cyan, Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
-                            }
-                            else if (MidsContext.Config.ShowEnhRel & DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID is Enums.eType.Normal or Enums.eType.SpecialO)
-                            {
-                                bounds = iDest;
-                                bounds.Y -= 3f;
-                                bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
-                                var text = power.Slots[index].Enhancement.RelativeLevel != Enums.eEnhRelative.None
-                                        ? power.Slots[index].Enhancement.RelativeLevel >= Enums.eEnhRelative.Even
-                                            ? power.Slots[index].Enhancement.RelativeLevel <= Enums.eEnhRelative.Even
-                                                ? Color.White
-                                                : Color.FromArgb(0, byte.MaxValue, byte.MaxValue)
-                                            : Color.Yellow
-                                        : Color.Red;
-                                var graphics2 = bxFlip.Graphics;
-                                ClsDrawX.DrawOutlineText(
-                                    Enums.GetRelativeString(power.Slots[index].Enhancement.RelativeLevel,
-                                        MidsContext.Config.ShowRelSymbols), bounds, text, Color.FromArgb(128, 0, 0, 0),
-                                    pnlEnhActive.Font, 1f, graphics2);
-                            }
+                            bounds = iDest;
+                            bounds.Y -= 3f;
+                            bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
+                            var text = power.Slots[index].Enhancement.RelativeLevel != Enums.eEnhRelative.None
+                                ? power.Slots[index].Enhancement.RelativeLevel >= Enums.eEnhRelative.Even
+                                    ? power.Slots[index].Enhancement.RelativeLevel <= Enums.eEnhRelative.Even
+                                        ? Color.White
+                                        : Color.FromArgb(0, byte.MaxValue, byte.MaxValue)
+                                    : Color.Yellow
+                                : Color.Red;
+                            var graphics2 = bxFlip.Graphics;
+                            ClsDrawX.DrawOutlineText(
+                                Enums.GetRelativeString(power.Slots[index].Enhancement.RelativeLevel,
+                                    MidsContext.Config.ShowRelSymbols), bounds, text, Color.FromArgb(128, 0, 0, 0),
+                                pnlEnhActive.Font, 1f, graphics2);
                         }
                     }
-                    else
+                }
+                else
+                {
+                    destRect = iDest with {Width = 30, Height = 30};
+                    bxFlip.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, destRect, 0, 0, 30, 30, GraphicsUnit.Pixel);
+                }
+
+                if (power.Slots[index].FlippedEnhancement.Enh > -1)
+                {
+                    var graphics1 = bxFlip.Graphics;
+                    Recipe.RecipeRarity? rarity = null;
+                    var isPvP = false;
+                    if (DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID == Enums.eType.SetO)
                     {
-                        destRect = iDest with {Width = 30, Height = 30};
-                        bxFlip.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, destRect, 0, 0, 30, 30, GraphicsUnit.Pixel);
+                        rarity = DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].RecipeIDX].Rarity;
+                        var enhSet = DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].GetEnhancementSet();
+                        isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
                     }
+                    I9Gfx.DrawEnhancementAt(ref graphics1, rectangle2, DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].ImageIdx,
+                        I9Gfx.ToGfxGrade(
+                            DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID,
+                            power.Slots[index].FlippedEnhancement.Grade)
+                        , rarity, isPvP);
 
                     if (power.Slots[index].FlippedEnhancement.Enh > -1)
                     {
-                        var graphics1 = bxFlip.Graphics;
-                        Recipe.RecipeRarity? rarity = null;
-                        var isPvP = false;
-                        if (DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID == Enums.eType.SetO)
+                        if (!MidsContext.Config.I9.HideIOLevels & DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID is Enums.eType.SetO or Enums.eType.InventO)
                         {
-                            rarity = DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].RecipeIDX].Rarity;
-                            var enhSet = DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].GetEnhancementSet();
-                            isPvP = enhSet?.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true)) == true;
+                            bounds = rectangle2;
+                            bounds.Y -= 3f;
+                            bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
+                            var graphics2 = bxFlip.Graphics;
+                            ClsDrawX.DrawOutlineText(
+                                $"{power.Slots[index].FlippedEnhancement.IOLevel + 1}", bounds, Color.Cyan,
+                                Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
                         }
-                        I9Gfx.DrawEnhancementAt(ref graphics1, rectangle2, DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].ImageIdx,
-                            I9Gfx.ToGfxGrade(
-                                DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID,
-                                power.Slots[index].FlippedEnhancement.Grade)
-                            , rarity, isPvP);
-
-                        if (power.Slots[index].FlippedEnhancement.Enh > -1)
+                        else if (MidsContext.Config.ShowEnhRel & DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID is Enums.eType.Normal or Enums.eType.SpecialO)
                         {
-                            if (!MidsContext.Config.I9.HideIOLevels & DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID is Enums.eType.SetO or Enums.eType.InventO)
-                            {
-                                bounds = rectangle2;
-                                bounds.Y -= 3f;
-                                bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
-                                var graphics2 = bxFlip.Graphics;
-                                ClsDrawX.DrawOutlineText(
-                                    $"{power.Slots[index].FlippedEnhancement.IOLevel + 1}", bounds, Color.Cyan,
-                                    Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
-                            }
-                            else if (MidsContext.Config.ShowEnhRel & DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID is Enums.eType.Normal or Enums.eType.SpecialO)
-                            {
-                                bounds = rectangle2;
-                                bounds.Y -= 3f;
-                                bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
-                                var text = power.Slots[index].FlippedEnhancement.RelativeLevel != Enums.eEnhRelative.None
-                                        ? power.Slots[index].FlippedEnhancement.RelativeLevel >= Enums.eEnhRelative.Even
-                                            ? power.Slots[index].FlippedEnhancement.RelativeLevel <= Enums.eEnhRelative.Even
-                                                ? Color.White
-                                                : Color.FromArgb(0, byte.MaxValue, byte.MaxValue)
-                                            : Color.Yellow
-                                        : Color.Red;
-                                var graphics2 = bxFlip.Graphics;
-                                ClsDrawX.DrawOutlineText(
-                                    Enums.GetRelativeString(power.Slots[index].FlippedEnhancement.RelativeLevel,
-                                        MidsContext.Config.ShowRelSymbols), bounds, text, Color.FromArgb(128, 0, 0, 0),
-                                    pnlEnhActive.Font, 1f, graphics2);
-                            }
+                            bounds = rectangle2;
+                            bounds.Y -= 3f;
+                            bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
+                            var text = power.Slots[index].FlippedEnhancement.RelativeLevel != Enums.eEnhRelative.None
+                                ? power.Slots[index].FlippedEnhancement.RelativeLevel >= Enums.eEnhRelative.Even
+                                    ? power.Slots[index].FlippedEnhancement.RelativeLevel <= Enums.eEnhRelative.Even
+                                        ? Color.White
+                                        : Color.FromArgb(0, byte.MaxValue, byte.MaxValue)
+                                    : Color.Yellow
+                                : Color.Red;
+                            var graphics2 = bxFlip.Graphics;
+                            ClsDrawX.DrawOutlineText(
+                                Enums.GetRelativeString(power.Slots[index].FlippedEnhancement.RelativeLevel,
+                                    MidsContext.Config.ShowRelSymbols), bounds, text, Color.FromArgb(128, 0, 0, 0),
+                                pnlEnhActive.Font, 1f, graphics2);
                         }
                     }
-                    else
-                    {
-                        destRect = rectangle2 with {Width = 30, Height = 30};
-                        bxFlip.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, destRect, 0, 0, 30, 30, GraphicsUnit.Pixel);
-                    }
-
-                    rectangle2.Inflate(2, 2);
-                    bxFlip.Graphics.FillEllipse(solidBrush2, rectangle2);
+                }
+                else
+                {
+                    destRect = rectangle2 with {Width = 30, Height = 30};
+                    bxFlip.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, destRect, 0, 0, 30, 30, GraphicsUnit.Pixel);
                 }
 
-                RedrawFlip();
+                rectangle2.Inflate(2, 2);
+                bxFlip.Graphics.FillEllipse(solidBrush2, rectangle2);
             }
+
+            if (!callbackRedraw)
+            {
+                return;
+            }
+
+            RedrawFlip();
         }
 
         public void DisplayTotals()
@@ -2323,10 +2334,8 @@ namespace Mids_Reborn.UI.Controls
 
         private void RedrawFlip()
         {
-            if (bxFlip == null)
-            {
-                DisplayFlippedEnhancements();
-            }
+            // Prevent infinite recursive call
+            DisplayFlippedEnhancements(false);
 
             var srcRect = new Rectangle(0, 0, pnlEnhActive.Width, pnlEnhActive.Height);
             var destRect = new Rectangle(0, 0, pnlEnhActive.Width, pnlEnhActive.Height);
