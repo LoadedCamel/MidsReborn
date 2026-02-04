@@ -2859,7 +2859,7 @@ namespace Mids_Reborn
                         var enhString = enhancementSet.GetEffectString(bonusIdx, false, true, true, true);
                         if (!string.IsNullOrWhiteSpace(enhString))
                         {
-                            popupData.Sections[index1].Add(enhString.Replace(", ", "\n"), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
+                            popupData.Sections[index1].Add(enhString.Replace(", ", "\n").Replace("  ", " "), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
                         }
                     }
 

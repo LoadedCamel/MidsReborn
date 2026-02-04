@@ -1085,15 +1085,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     {
                         enhStringLong = Regex.Replace(enhStringLong, @"(([\s]*)([0-9\.\%]+) RechargePower([0-9a-zA-Z\%\.\(\) ]+)[\r\n]*)+", "\r\n$2RechargePower(Stalker's Build Ups)\r\n");
                     }
-                    var strArray3 = BreakByNewLine(enhStringLong);
-
-                    foreach (var s in strArray3)
+                    
+                    if (!string.IsNullOrWhiteSpace(enhStringLong))
                     {
-                        var strArray2 = !enhancement.HasPowerEffect
-                            ? BreakByBracket(s)
-                            : [s, string.Empty];
+                        var strArray3 = BreakByNewLine(enhStringLong);
+                        foreach (var s in strArray3)
+                        {
+                            var strArray2 = !enhancement.HasPowerEffect
+                                ? BreakByBracket(s)
+                                : [s, string.Empty];
 
-                        popupData1.Sections[index4].Add(strArray2[0], Color.FromArgb(0, 255, 0), strArray2[1], Color.FromArgb(0, 255, 0), 0.9f);
+                            popupData1.Sections[index4].Add(strArray2[0], Color.FromArgb(0, 255, 0), strArray2[1], Color.FromArgb(0, 255, 0), 0.9f);
+                        }
                     }
 
                     break;

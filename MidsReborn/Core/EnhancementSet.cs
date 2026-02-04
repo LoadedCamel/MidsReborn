@@ -239,7 +239,7 @@ namespace Mids_Reborn.Core
             bonusItemArray = special ? SpecialBonus : Bonus;
 
             string str1;
-            if (index < 0 | index > bonusItemArray.Length - 1)
+            if ((index < 0) | (index > bonusItemArray.Length - 1))
             {
                 str1 = string.Empty;
             }
@@ -252,7 +252,7 @@ namespace Mids_Reborn.Core
                 var effectList = new List<string>();
                 for (var index1 = 0; index1 < bonusItemArray[index].Name.Length; index1++)
                 {
-                    if (bonusItemArray[index].Index[index1] < 0 | bonusItemArray[index].Index[index1] > DatabaseAPI.Database.Power.Length - 1)
+                    if ((bonusItemArray[index].Index[index1] < 0) | (bonusItemArray[index].Index[index1] > DatabaseAPI.Database.Power.Length - 1))
                     {
                         return string.Empty;
                     }
@@ -313,7 +313,7 @@ namespace Mids_Reborn.Core
                 }
             }
 
-            return str1;
+            return str1.Replace("  ", " ");
         }
 
         public void StoreTo(BinaryWriter writer)

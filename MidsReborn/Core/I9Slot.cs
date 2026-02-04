@@ -363,9 +363,20 @@ namespace Mids_Reborn.Core
             
             IPower power = new Power(enhBoostPower);
             power.ApplyGrantPowerEffects();
-            var returnMask = Array.Empty<int>();
+            var gre = GroupedFx.AssembleGroupedEffects(power, true);
+            //var returnMask = Array.Empty<int>();
 
-            for (var index1 = 0; index1 < power.Effects.Length; index1++)
+            foreach (var g in gre)
+            {
+                if (stringBuilder.Length > 0)
+                {
+                    stringBuilder.Append('\n');
+                }
+
+                stringBuilder.Append(g.GetTooltip(power, true));
+            }
+
+            /*for (var index1 = 0; index1 < power.Effects.Length; index1++)
             {
                 if (power.Effects[index1].EffectType == Enums.eEffectType.GrantPower && power.Effects[index1].CanGrantPower())
                 {
@@ -487,7 +498,7 @@ namespace Mids_Reborn.Core
                         stringBuilder.Append(effectString);
                     }
                 }
-            }
+            }*/
 
             return stringBuilder.ToString().Replace("Slf", "Self").Replace("Tgt", "Target");
         }
@@ -536,15 +547,33 @@ namespace Mids_Reborn.Core
             var result = "";
             foreach (var idx in setBonusesForEnh.Index)
             {
-                var power = DatabaseAPI.Database.Power[idx];
-                var effectList = power.Effects.Select(effect => effect.BuildEffectString(true, "", false, false, false, true, false, false, true)).Where(tEffectString => !string.IsNullOrEmpty(tEffectString)).ToList();
-
-                result += effectList.Count switch // result = effectList.Count ?
+                if (idx < 0)
                 {
-                    > 1 => string.Join("\n", effectList),
+                    continue;
+                }
+                
+                var power = DatabaseAPI.Database.Power[idx];
+                if (power == null)
+                {
+                    continue;
+                }
+
+                //var effectList = power.Effects.Select(effect => effect.BuildEffectString(true, "", false, false, false, true, false, false, true)).Where(tEffectString => !string.IsNullOrEmpty(tEffectString)).ToList();
+                var gre = GroupedFx.AssembleGroupedEffects(power, true);
+                var greEffects = string.Join("\n", gre.Select(e => e.GetTooltip(power, true)));
+                if (!string.IsNullOrEmpty(result) & !string.IsNullOrEmpty(greEffects))
+                {
+                    result += '\n';
+                }
+
+                result += greEffects;
+
+                /*result += effectList.Count switch // result = effectList.Count ?
+                {
+                    > 1 => string.Join(" aaa\n", effectList),
                     1 => effectList[0],
                     _ => ""
-                };
+                };*/
             }
 
             return result;
