@@ -1350,8 +1350,9 @@ namespace Mids_Reborn.Core
         /// </summary>
         /// <param name="power">Source power to build effects from. Use the enhanced power, not base.</param>
         /// <param name="includeDamage">Where to include Damage effects</param>
+        /// <param name="includeZero">Where to include zero-mag effects</param>
         /// <returns>List of grouped effects from source power</returns>
-        public static List<GroupedFx> AssembleGroupedEffects(IPower? power, bool includeDamage = false)
+        public static List<GroupedFx> AssembleGroupedEffects(IPower? power, bool includeDamage = false, bool includeZero = false)
         {
             if (power == null)
             {
@@ -1377,7 +1378,7 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
-                if (!includeDamage & power.Effects[re].EffectType == Enums.eEffectType.Damage)
+                if (!includeDamage & (power.Effects[re].EffectType == Enums.eEffectType.Damage))
                 {
                     continue;
                 }
@@ -1389,15 +1390,15 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
-                if (power.Effects[re].EffectType == Enums.eEffectType.ResEffect &
+                if ((power.Effects[re].EffectType == Enums.eEffectType.ResEffect) &
                     power.Effects[re].ETModifies is Enums.eEffectType.Null or Enums.eEffectType.NullBool)
                 {
                     continue;
                 }
 
-                if (!(power.Effects[re].Probability > 0 &
-                      (MidsContext.Config?.Suppression & power.Effects[re].Suppression) ==
-                      Enums.eSuppress.None & power.Effects[re].CanInclude()))
+                if (!((power.Effects[re].Probability > 0) &
+                      ((MidsContext.Config?.Suppression & power.Effects[re].Suppression) ==
+                       Enums.eSuppress.None) & power.Effects[re].CanInclude()))
                 {
                     continue;
                 }
@@ -1415,8 +1416,8 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
-                if (power.Effects[re].PvMode == Enums.ePvX.PvP & !MidsContext.Config.Inc.DisablePvE |
-                    power.Effects[re].PvMode == Enums.ePvX.PvE & MidsContext.Config.Inc.DisablePvE)
+                if (((power.Effects[re].PvMode == Enums.ePvX.PvP) & !MidsContext.Config.Inc.DisablePvE) |
+                    ((power.Effects[re].PvMode == Enums.ePvX.PvE) & MidsContext.Config.Inc.DisablePvE))
                 {
                     continue;
                 }
@@ -1429,7 +1430,7 @@ namespace Mids_Reborn.Core
                     }
                 }
 
-                if (power.Effects[re].EffectType == Enums.eEffectType.Mez & power.Effects[re].MezType is not (Enums.eMez.Teleport or Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Repel or Enums.eMez.ToggleDrop))
+                if ((power.Effects[re].EffectType == Enums.eEffectType.Mez) & power.Effects[re].MezType is not (Enums.eMez.Teleport or Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Repel or Enums.eMez.ToggleDrop))
                 {
                     if (power.Effects[re].Duration <= 0)
                     {
@@ -1702,10 +1703,11 @@ namespace Mids_Reborn.Core
             }
 
             // Pass 4: filter 0-mag GroupedFx
-
-            return greAggregated
-                .Where(e => Math.Abs(e.Mag) > float.Epsilon)
-                .ToList();
+            return includeZero
+                ? greAggregated
+                : greAggregated
+                    .Where(e => Math.Abs(e.Mag) > float.Epsilon)
+                    .ToList();
         }
 
         /// <summary> Generate ItemPairs usable in the DataView, with their associated grouped effect and effect identifier.</summary>

@@ -559,7 +559,7 @@ namespace Mids_Reborn.Core
                 }
 
                 //var effectList = power.Effects.Select(effect => effect.BuildEffectString(true, "", false, false, false, true, false, false, true)).Where(tEffectString => !string.IsNullOrEmpty(tEffectString)).ToList();
-                var gre = GroupedFx.AssembleGroupedEffects(power, true);
+                var gre = GroupedFx.AssembleGroupedEffects(power, true, true);
                 var greEffects = string.Join("\n", gre.Select(e => e.GetTooltip(power, true)));
                 if (!string.IsNullOrEmpty(result) & !string.IsNullOrEmpty(greEffects))
                 {
