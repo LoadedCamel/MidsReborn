@@ -17,6 +17,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private bool _loaded;
         private readonly MainWindow2 _myParent;
         private int _tabPage;
+        private List<CtlMultiGraph> CustomGraphs = [];
 
         public frmTotals(ref MainWindow2 iParent)
         {
@@ -35,11 +36,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             _myParent = iParent;
         }
 
-        public bool A_GT_B(float a, float b)
+        private bool ValuesDiff(float a, float b)
         {
-            var num = (double)Math.Abs(a - b);
-
-            return num is >= 1.0000000116861E-07 and > 0;
+            return (double)Math.Abs(a - b) > float.Epsilon;
         }
 
         private void FrmTotalsFormClosed(object sender, FormClosedEventArgs e)
@@ -84,7 +83,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphDrain.Location = new Point(15, 375 + yOffset);
             graphMaxEnd.Location = new Point(15, 394 + yOffset);
 
+            PrepareCustomGraphs();
             _loaded = true;
+            
             SetFonts();
         }
 
@@ -102,25 +103,29 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             pnlDRHE.Width = ClientSize.Width - pnlDRHE.Left * 2;
             pnlMisc.Width = pnlDRHE.Width;
-            graphAcc.Width = pnlDRHE.Width - (graphAcc.Left + 4);
-            graphDam.Width = graphAcc.Width;
-            graphDef.Width = graphAcc.Width;
-            graphDrain.Width = graphAcc.Width;
-            graphHaste.Width = graphAcc.Width;
-            graphHP.Width = graphAcc.Width;
-            graphMaxEnd.Width = graphAcc.Width;
-            graphMovement.Width = graphAcc.Width;
-            graphRec.Width = graphAcc.Width;
-            graphRegen.Width = graphAcc.Width;
-            graphRes.Width = graphAcc.Width;
-            graphStealth.Width = graphAcc.Width;
-            graphToHit.Width = graphAcc.Width;
-            graphElusivity.Width = graphAcc.Width;
-            graphEndRdx.Width = graphAcc.Width;
-            graphThreat.Width = graphAcc.Width;
-            graphHealBuff.Width = graphAcc.Width;
-            graphRange.Width = graphAcc.Width;
-            Panel2.Width = graphAcc.Width;
+            var w = pnlDRHE.Width - (graphDef.Left + 4);
+            Panel2.Width = w;
+
+            foreach (var c in Panel2.Controls)
+            {
+                if (c is not CtlMultiGraph ctl)
+                {
+                    continue;
+                }
+
+                ctl.Width = w;
+            }
+
+            graphDef.Width = w;
+            graphDrain.Width = w;
+            graphHP.Width = w;
+            graphMaxEnd.Width = w;
+            graphMovement.Width = w;
+            graphRec.Width = w;
+            graphRegen.Width = w;
+            graphRes.Width = w;
+            graphStealth.Width = w;
+            
             pbClose.Left = pnlDRHE.Right - pbClose.Width;
             StoreLocation();
         }
@@ -137,7 +142,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 return;
             }
 
-            var iStr = "Close";
             var rectangle = new Rectangle();
             ref var local = ref rectangle;
             var size = _myParent.Drawing.BxPower[2].Size;
@@ -161,7 +165,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             var height2 = bFont.GetHeight(e.Graphics) + 2;
             var bounds = new RectangleF(0f, (tab0.Height - height2) / 2f, tab0.Width, height2);
             var graphics = extendedBitmap.Graphics;
-            ClsDrawX.DrawOutlineText(iStr, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
+            ClsDrawX.DrawOutlineText("Close", bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -185,7 +189,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 index = 3;
             }
 
-            var iStr = "Keep On Top";
             var rectangle = new Rectangle(0, 0, _myParent.Drawing.BxPower[index].Size.Width,
                 _myParent.Drawing.BxPower[index].Size.Height);
             var destRect = new Rectangle(0, 0, tab0.Width, tab0.Height);
@@ -213,7 +216,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             var height = bFont.GetHeight(e.Graphics) + 2;
             var bounds = new RectangleF(0f, (tab0.Height - height) / 2f, tab0.Width, height);
             var graphics = extendedBitmap.Graphics;
-            ClsDrawX.DrawOutlineText(iStr, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
+            ClsDrawX.DrawOutlineText("Keep On Top", bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -253,15 +256,24 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         {
             var graphControls = new List<CtlMultiGraph>
             {
-                graphAcc, graphDam, graphRange, graphDef, graphDrain, graphHaste, graphHP,
+                graphDef, graphDrain, graphHP,
                 graphMaxEnd, graphMovement, graphRec, graphRegen, graphRes,
-                graphStealth, graphToHit, graphEndRdx, graphThreat,
-                graphElusivity, graphHealBuff, graphSProt, graphSRes, graphSDeb
+                graphStealth, graphSProt, graphSRes, graphSDeb
             };
 
             foreach (var graphControl in graphControls)
             {
                 var g = graphControl;
+                SetFontDataSingle(ref g);
+            }
+
+            foreach (var c in Panel2.Controls)
+            {
+                if (c is not CtlMultiGraph g)
+                {
+                    continue;
+                }
+
                 SetFontDataSingle(ref g);
             }
 
@@ -610,7 +622,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             var jmpTip2 = $"Base Jump Height: {FormatDistance(Statistics.BaseJumpHeight, displayStats, speedFormat)}"; // 4
             var iTip8 = $"Base Run Speed: {FormatSpeed(Statistics.BaseRunSpeed, displayStats, speedFormat, rateDisp)}"; // 21
 
-            if (A_GT_B(displayStats.MovementFlySpeed(speedFormat, true), displayStats.MovementFlySpeed(speedFormat, false)))
+            if (ValuesDiff(displayStats.MovementFlySpeed(speedFormat, true), displayStats.MovementFlySpeed(speedFormat, false)))
             {
                 fltTip += $"\r\n{strCap}{displayStats.Speed(MidsContext.Character.Totals.FlySpd, speedFormat):##0.##}{rateDisp}.";
             }
@@ -620,12 +632,12 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             }
 
             var jumpTip = $"Base Jump Speed: {FormatSpeed(Statistics.BaseJumpSpeed, displayStats, speedFormat, rateDisp)}"; // 21f
-            if (A_GT_B(displayStats.MovementJumpSpeed(speedFormat, true), displayStats.MovementJumpSpeed(speedFormat, false)))
+            if (ValuesDiff(displayStats.MovementJumpSpeed(speedFormat, true), displayStats.MovementJumpSpeed(speedFormat, false)))
             {
                 jumpTip += $"\r\n{strCap}{FormatSpeed(MidsContext.Character.Totals.JumpSpd, displayStats, speedFormat, rateDisp)}";
             }
 
-            if (A_GT_B(displayStats.MovementRunSpeed(speedFormat, true), displayStats.MovementRunSpeed(speedFormat, false)))
+            if (ValuesDiff(displayStats.MovementRunSpeed(speedFormat, true), displayStats.MovementRunSpeed(speedFormat, false)))
             {
                 iTip8 += $"\r\n{strCap}{FormatSpeed(MidsContext.Character.Totals.RunSpd, displayStats, speedFormat, rateDisp)}";
             }
@@ -641,7 +653,14 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphMovement.ForcedMax = displayStats.Speed(200f, Enums.eSpeedMeasure.FeetPerSecond);
             graphMovement.Draw();
 
-            graphToHit.Clear();
+            graphStealth.Clear();
+            graphStealth.AddItem($"PvE|{MidsContext.Character.Totals.StealthPvE:##0} ft", MidsContext.Character.Totals.StealthPvE, 0, "This is subtracted from a mob's perception to work out if they can see you.");
+            graphStealth.AddItem($"PvE|{MidsContext.Character.Totals.StealthPvP:##0} ft", MidsContext.Character.Totals.StealthPvE, 0, "This is subtracted from a player's perception to work out if they can see you.");
+            graphStealth.AddItem($"Perception|{displayStats.Perception(false):###0} ft", displayStats.Perception(false), 0, "This, minus a player's stealth radius, is the distance you can see it.");
+            graphStealth.Max = graphStealth.GetMaxValue() * 1.01f;
+            graphStealth.Draw();
+
+            /*graphToHit.Clear();
             graphToHit.AddItem($"ToHit|{displayStats.BuffToHit:##0.##}%", Math.Max(0, displayStats.BuffToHit), 0, "This effect increases the accuracy of all your powers.\r\nToHit values are added together before being multiplied by Accuracy.");
             graphToHit.Max = 100;
             graphToHit.Draw();
@@ -653,7 +672,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             graphDam.Clear();
             var str7 = "";
-            if (A_GT_B(displayStats.BuffDamage(true), displayStats.BuffDamage(false)))
+            if (ValuesDiff(displayStats.BuffDamage(true), displayStats.BuffDamage(false)))
             {
                 str7 = $"\r\n\nDamage Capped from {displayStats.BuffDamage(true)}% to {displayStats.BuffDamage(false)}%";
             }
@@ -670,7 +689,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             graphHaste.Clear();
             var str8 = "";
-            if (A_GT_B(displayStats.BuffHaste(true), displayStats.BuffHaste(false)))
+            if (ValuesDiff(displayStats.BuffHaste(true), displayStats.BuffHaste(false)))
             {
                 str8 = $"\r\n\r\nRecharge Speed Capped from {displayStats.BuffHaste(true)}% to {displayStats.BuffHaste(false)}%";
             }
@@ -690,12 +709,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphEndRdx.Max = 200;
             graphEndRdx.Draw();
 
-            graphStealth.Clear();
-            graphStealth.AddItem($"PvE|{MidsContext.Character.Totals.StealthPvE:##0} ft", MidsContext.Character.Totals.StealthPvE, 0, "This is subtracted from a mob's perception to work out if they can see you.");
-            graphStealth.AddItem($"PvE|{MidsContext.Character.Totals.StealthPvP:##0} ft", MidsContext.Character.Totals.StealthPvE, 0, "This is subtracted from a player's perception to work out if they can see you.");
-            graphStealth.AddItem($"Perception|{displayStats.Perception(false):###0} ft", displayStats.Perception(false), 0, "This, minus a player's stealth radius, is the distance you can see it.");
-            graphStealth.Max = graphStealth.GetMaxValue() * 1.01f;
-            graphStealth.Draw();
             var iTip10 = $"This affects how mobs prioritize you as a threat.\r\nLower values make you a less tempting target.\r\nThe {MidsContext.Character.Archetype.DisplayName} base Threat Level of {MidsContext.Character.Archetype.BaseThreat * 100.0:###}% is included in this figure.";
             var nBase = displayStats.ThreatLevel + 200;
             graphThreat.Clear();
@@ -717,7 +730,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             if (Math.Abs(graphAcc.Font.Size - MidsContext.Config.RtFont.PairedBase) > float.Epsilon)
             {
                 SetFonts();
-            }
+            }*/
 
             var totals = MidsContext.Character.Totals;
             const string str9 = "\r\nStatus protection prevents you being affected by a status effect such as\r\na Hold until the magnitude of the effect exceeds that of the protection.";
@@ -729,51 +742,48 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep, Enums.eMez.Immobilized, Enums.eMez.Knockback, Enums.eMez.Repel,
                 Enums.eMez.Confused, Enums.eMez.Terrorized, Enums.eMez.Taunt, Enums.eMez.Placate, Enums.eMez.Teleport
             ];
-            var names2 = Enum.GetNames<Enums.eMez>(); // Enum.GetNames(eMezArray[0].GetType());
-            var names3 = Enum.GetNames<Enums.eMez>(); // Enum.GetNames(eMezArray[0].GetType());
-            names2[2] = "Hold";
-            names2[3] = "Immob";
-            names2[1] = "Confuse";
-            names2[12] = "Fear";
-            names3[2] = "Hold";
-            names3[1] = "Confuse";
-            names3[12] = "Fear (Terrorized)";
-            names3[4] = "Knockback and Knockup";
+
+            var shortMezNames = Enum.GetNames<Enums.eMez>();
+            var longMezNames = Enum.GetNames<Enums.eMez>();
+            shortMezNames[1] = "Confuse";
+            shortMezNames[2] = "Hold";
+            shortMezNames[3] = "Immob";
+            shortMezNames[12] = "Fear";
+            longMezNames[1] = "Confuse";
+            longMezNames[2] = "Hold";
+            longMezNames[4] = "Knockback and Knockup";
+            longMezNames[12] = "Fear (Terrorized)";
             var sResMax = 5;
             foreach (var e in eMezArray)
             {
                 var mezProtection = totals.Mez[(int)e] > 0 ? 0 : Math.Abs(totals.Mez[(int)e]);
                 var iTip11 = mezProtection < float.Epsilon
-                    ? $"You have no protection from {names3[(int)e]} effects.\r\n{str9}"
-                    : $"You have mag {mezProtection:##0.##} protection from {names3[(int)e]} effects.\r\n{str9}";
+                    ? $"You have no protection from {longMezNames[(int)e]} effects.\r\n{str9}"
+                    : $"You have mag {mezProtection:##0.##} protection from {longMezNames[(int)e]} effects.\r\n{str9}";
 
-                graphSProt.AddItem($"{names2[(int)e]}|{mezProtection:##0.##}", mezProtection, 0, iTip11);
+                graphSProt.AddItem($"{shortMezNames[(int)e]}|{mezProtection:##0.##}", mezProtection, 0, iTip11);
 
                 var mezResPercent = 100 / (1 + totals.MezRes[(int)e] / 100);
-                var str11 = "";
                 if (e is not (Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Repel or Enums.eMez.Teleport))
                 {
                     if (totals.MezRes[(int)e] > sResMax)
                     {
                         sResMax = (int)Math.Round(totals.MezRes[(int)e]);
                     }
+                }
 
-                    str11 = $"\r\n{names3[(int)e]} effects will last {mezResPercent:##0.##}% of their full duration.\r\n{str10}";
-                }
-                else if (e == Enums.eMez.Teleport)
+                var str11 = e switch
                 {
-                    str11 = $"\r\n{names3[(int)e]} effects will be resisted.\r\n{str10}";
-                }
-                else
-                {
-                    str11 = $"\r\n{names3[(int)e]} effects will have {mezResPercent:##0.##}% of their full effect.\r\n{str10}";
-                }
+                    Enums.eMez.Teleport => $"\r\n{longMezNames[(int)e]} effects will be resisted.\r\n{str10}",
+                    Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Repel => $"\r\n{longMezNames[(int)e]} effects will have {mezResPercent:##0.##}% of their full effect.\r\n{str10}",
+                    _ => $"\r\n{longMezNames[(int)e]} effects will last {mezResPercent:##0.##}% of their full duration.\r\n{str10}"
+                };
 
                 var iTip12 = Math.Abs(totals.MezRes[(int)e]) < float.Epsilon
-                    ? $"You have no resistance to {names3[(int)e]} effects.\r\n{str10}"
-                    : $"You have {totals.Mez[(int)e]:##0.##}% resistance to {names3[(int)e]} effects.{str11}";
+                    ? $"You have no resistance to {longMezNames[(int)e]} effects.\r\n{str10}"
+                    : $"You have {totals.Mez[(int)e]:##0.##}% resistance to {longMezNames[(int)e]} effects.{str11}";
 
-                graphSRes.AddItem($"{names2[(int)e]}|{totals.MezRes[(int)e]:##0.##}%", totals.MezRes[(int)e], 0, iTip12);
+                graphSRes.AddItem($"{shortMezNames[(int)e]}|{totals.MezRes[(int)e]:##0.##}%", totals.MezRes[(int)e], 0, iTip12);
             }
 
             graphSProt.Max = graphSProt.GetMaxValue();
@@ -784,10 +794,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             graphSDeb.Clear();
             Enums.eEffectType[] eEffectTypeArray =
-            {
+            [
                 Enums.eEffectType.Defense, Enums.eEffectType.Endurance, Enums.eEffectType.Recovery, Enums.eEffectType.PerceptionRadius,
                 Enums.eEffectType.ToHit, Enums.eEffectType.RechargeTime, Enums.eEffectType.SpeedRunning, Enums.eEffectType.Regeneration
-            };
+            ];
 
             for (var index = 0; index < eEffectTypeArray.Length; index++)
             {
@@ -800,6 +810,105 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             graphSDeb.Max = graphSDeb.GetMaxValue() + 1;
             graphSDeb.Draw();
+
+            DrawCustomGraphs();
+        }
+
+        private void label1_MouseEnter(object sender, EventArgs e)
+        {
+            label1.ForeColor = Color.FromArgb(20, 177, 225);
+        }
+
+        private void label1_MouseLeave(object sender, EventArgs e)
+        {
+            label1.ForeColor = Color.White;
+        }
+
+        private void label1_Click(object sender, EventArgs e)
+        {
+            // Avoid sub-window to show behind totals if TopMost is set
+            var topMost = TopMost;
+            _keepOnTop = !_keepOnTop;
+            TopMost = _keepOnTop;
+            pbTopMost.Refresh();
+
+            using var fCustomizeGraphs = new frmCustomGraphsSelector();
+            var ret = fCustomizeGraphs.ShowDialog(this);
+            _keepOnTop = topMost;
+            TopMost = topMost;
+            pbTopMost.Refresh();
+
+            if (ret != DialogResult.OK)
+            {
+                return;
+            }
+
+            PrepareCustomGraphs();
+            DrawCustomGraphs();
+        }
+
+        private void PrepareCustomGraphs()
+        {
+            Panel2.SuspendLayout();
+
+            foreach (var c in CustomGraphs)
+            {
+                Panel2.Controls.Remove(c);
+                c.Dispose();
+            }
+
+            var loc = new Point(15, 196);
+            const int incrementLocY = 19;
+            CustomGraphs = [];
+
+            for (var i = 0; i < Math.Min(MidsContext.Config.CustomGraphs.Length, 8); i++)
+            {
+                var settings = MidsContext.Config.CustomGraphSetting[i];
+                var mode = settings.EffectType != null
+                    ? settings.EffectMode
+                    : settings.DamageType != null
+                        ? settings.DamageMode
+                        : settings.MezType != null
+                            ? settings.MezMode
+                            : CustomGraphStat.eCustomGraphMode.Single;
+
+                var graph = CustomGraphStat.GenerateGraph(MidsContext.Config.CustomGraphs[i], mode);
+                graph.Location = loc;
+                graph.Size = new Size(pnlDRHE.Width - loc.X + 4, 15);
+
+                CustomGraphs.Add(graph);
+                Panel2.Controls.Add(graph);
+
+                loc = loc with { Y = loc.Y + incrementLocY };
+            }
+
+            Panel2.ResumeLayout(true);
+        }
+
+        private void DrawCustomGraphs()
+        {
+            var k = 0;
+            foreach (var c in Panel2.Controls)
+            {
+                if (c is not CtlMultiGraph ctl)
+                {
+                    continue;
+                }
+
+                if (!ctl.Name.StartsWith("graphCustom"))
+                {
+                    continue;
+                }
+
+                var graphSettings = (CustomGraphStat.Settings.GraphSettingsExtended)(ctl.Tag ?? new CustomGraphStat.Settings.GraphSettingsExtended());
+                var cfgSettings = MidsContext.Config is { CustomGraphSetting: null } || k >= MidsContext.Config!.CustomGraphSetting.Length
+                    ? new ConfigData.CustomGraphSettings()
+                    : MidsContext.Config.CustomGraphSetting[k];
+                ctl.SetGraphItem(graphSettings.Stat, graphSettings.Mode, cfgSettings);
+                ctl.Draw();
+
+                k++;
+            }
         }
     }
 }
