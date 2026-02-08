@@ -841,7 +841,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void tbFilter_TextChanged(object sender, EventArgs e)
         {
-            var conditionalType = lvConditionalType.SelectedIndices.Count < 0
+            var conditionalType = lvConditionalType.SelectedItems.Count <= 0
                 ? ""
                 : lvConditionalType.SelectedItems[0].Text;
 
