@@ -112,8 +112,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             };
             iFX.SetPower(myPower);
             using var frmPowerEffect = new frmPowerEffect(iFX, myPower, myPower.Effects.Length);
+            var ret = frmPowerEffect.ShowDialog();
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
-            if (frmPowerEffect.ShowDialog() != DialogResult.OK)
+            if (ret != DialogResult.OK)
             {
                 return;
             }
@@ -134,8 +135,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             var selectedIndex = lvFX.SelectedIndices[0];
             using var frmPowerEffect = new frmPowerEffect(myPower.Effects[selectedIndex], myPower, selectedIndex);
+            var ret = frmPowerEffect.ShowDialog();
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
-            if (frmPowerEffect.ShowDialog(this) != DialogResult.OK)
+            if (ret != DialogResult.OK)
             {
                 return;
             }
@@ -159,10 +161,10 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             IEffect[] effectArray =
-            {
+            [
                 (IEffect) myPower.Effects[selectedIndex].Clone(),
                 (IEffect) myPower.Effects[selectedIndex + 1].Clone()
-            };
+            ];
             myPower.Effects[selectedIndex] = (IEffect)effectArray[1].Clone();
             myPower.Effects[selectedIndex + 1] = (IEffect)effectArray[0].Clone();
             RefreshFXData();
@@ -178,8 +180,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             var selectedEffect = (IEffect)myPower.Effects[lvFX.SelectedIndices[0]].Clone();
             using var frmPowerEffect = new frmPowerEffect(selectedEffect, myPower, myPower.Effects.Length);
+            var ret = frmPowerEffect.ShowDialog();
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
-            if (frmPowerEffect.ShowDialog() != DialogResult.OK)
+            if (ret != DialogResult.OK)
             {
                 return;
             }

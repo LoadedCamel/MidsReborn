@@ -31,18 +31,18 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.ListViewItem listViewItem1 = new System.Windows.Forms.ListViewItem("Equal To");
-            System.Windows.Forms.ListViewItem listViewItem2 = new System.Windows.Forms.ListViewItem("Greater Than");
-            System.Windows.Forms.ListViewItem listViewItem3 = new System.Windows.Forms.ListViewItem("Less Than");
-            groupBox2 = new System.Windows.Forms.GroupBox();
-            panelLinkType = new System.Windows.Forms.Panel();
-            rbLinkTypeOr = new System.Windows.Forms.RadioButton();
-            rbLinkTypeAnd = new System.Windows.Forms.RadioButton();
-            label1 = new System.Windows.Forms.Label();
+            ListViewItem listViewItem1 = new ListViewItem("Equal To");
+            ListViewItem listViewItem2 = new ListViewItem("Greater Than");
+            ListViewItem listViewItem3 = new ListViewItem("Less Than");
+            groupBox2 = new GroupBox();
+            panelLinkType = new Panel();
+            rbLinkTypeOr = new RadioButton();
+            rbLinkTypeAnd = new RadioButton();
+            label1 = new Label();
             lvConditionalOp = new ctlListViewColored();
             columnHeader7 = new ColumnHeader();
-            removeConditional = new System.Windows.Forms.Button();
-            addConditional = new System.Windows.Forms.Button();
+            removeConditional = new Button();
+            addConditional = new Button();
             lvActiveConditionals = new ctlListViewColored();
             columnHeader1 = new ColumnHeader();
             columnHeader5 = new ColumnHeader();
@@ -54,11 +54,11 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             columnHeader3 = new ColumnHeader();
             lvSubConditional = new ctlListViewColored();
             columnHeader2 = new ColumnHeader();
-            btnOkay = new System.Windows.Forms.Button();
-            btnCancel = new System.Windows.Forms.Button();
-            panel1 = new System.Windows.Forms.Panel();
-            btnClearFilter = new System.Windows.Forms.Button();
-            tbFilter = new System.Windows.Forms.TextBox();
+            btnOkay = new Button();
+            btnCancel = new Button();
+            panel1 = new Panel();
+            btnClearFilter = new Button();
+            tbFilter = new TextBox();
             groupBox2.SuspendLayout();
             panelLinkType.SuspendLayout();
             panel1.SuspendLayout();
@@ -131,7 +131,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             lvConditionalOp.Columns.AddRange(new ColumnHeader[] { columnHeader7 });
             lvConditionalOp.FullRowSelect = true;
             lvConditionalOp.HeaderStyle = ColumnHeaderStyle.Nonclickable;
-            lvConditionalOp.Items.AddRange(new System.Windows.Forms.ListViewItem[] { listViewItem1, listViewItem2, listViewItem3 });
+            lvConditionalOp.Items.AddRange(new ListViewItem[] { listViewItem1, listViewItem2, listViewItem3 });
             lvConditionalOp.Location = new System.Drawing.Point(537, 16);
             lvConditionalOp.LostFocusItem = -1;
             lvConditionalOp.Margin = new Padding(4, 3, 4, 3);
@@ -366,6 +366,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             ForeColor = System.Drawing.Color.Azure;
             FormBorderStyle = FormBorderStyle.FixedDialog;
             Margin = new Padding(4, 3, 4, 3);
+            MaximizeBox = false;
+            MinimizeBox = false;
             Name = "frmEffectConditionals";
             ShowInTaskbar = false;
             Text = "Effect Conditions";
