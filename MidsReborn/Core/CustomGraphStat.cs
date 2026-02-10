@@ -327,7 +327,7 @@ namespace Mids_Reborn.Core
                         eCustomGraphMode.Single => displayStats.BoostsMez.GetValueOrDefault(cfgSettings.MezType ?? Enums.eMez.Held, 0),
                         eCustomGraphMode.Min => displayStats.BoostsMez.Values.Min(),
                         eCustomGraphMode.Average => displayStats.BoostsMez.Values.Average(),
-                        _ => displayStats.BoostsMez.Values.Max(),
+                        _ => displayStats.BoostsMez.Values.Max()
                     };
 
                     suffix = mode switch
@@ -335,7 +335,7 @@ namespace Mids_Reborn.Core
                         eCustomGraphMode.Single => $"({cfgSettings.MezType} only)",
                         eCustomGraphMode.Min => "(min value)",
                         eCustomGraphMode.Average => "(average value)",
-                        _ => "(max value)",
+                        _ => "(max value)"
                     };
                     
                     ctl.AddItemPair(longName,
@@ -392,14 +392,14 @@ namespace Mids_Reborn.Core
                         eCustomGraphMode.Single => displayStats.Defense(cfgSettings.DamageType != null ? (int)cfgSettings.DamageType : 1),
                         eCustomGraphMode.Min => displayStats.DefenseMin,
                         eCustomGraphMode.Average => displayStats.DefenseAvg,
-                        _ => displayStats.DefenseMax,
+                        _ => displayStats.DefenseMax
                     };
 
                     barLabelVector = mode switch
                     {
                         eCustomGraphMode.Average => "Avg",
                         eCustomGraphMode.Min or eCustomGraphMode.Max => $"{mode}",
-                        _ => $"{cfgSettings.DamageType}",
+                        _ => $"{cfgSettings.DamageType}"
                     };
 
                     barLabel = $"{longName}{(!string.IsNullOrEmpty(barLabelVector) ? $" ({barLabelVector})" : "")}";
@@ -409,7 +409,7 @@ namespace Mids_Reborn.Core
                         eCustomGraphMode.Single => $"({cfgSettings.DamageType} only)",
                         eCustomGraphMode.Min => "(min value)",
                         eCustomGraphMode.Average => "(average value)",
-                        _ => "(max value)",
+                        _ => "(max value)"
                     };
 
                     ctl.AddItemPair(barLabel,
@@ -423,17 +423,17 @@ namespace Mids_Reborn.Core
                 case eCustomGraphStat.Resistance:
                     val = mode switch
                     {
-                        eCustomGraphMode.Single => displayStats.Defense(cfgSettings.DamageType != null ? (int)cfgSettings.DamageType : 1),
-                        eCustomGraphMode.Min => displayStats.DefenseMin,
-                        eCustomGraphMode.Average => displayStats.DefenseAvg,
-                        _ => displayStats.DefenseMax,
+                        eCustomGraphMode.Single => displayStats.DamageResistance(cfgSettings.DamageType != null ? (int)cfgSettings.DamageType : 1, false),
+                        eCustomGraphMode.Min => displayStats.DamageResistanceMin,
+                        eCustomGraphMode.Average => displayStats.DamageResistanceAvg,
+                        _ => displayStats.DamageResistanceMax
                     };
 
                     barLabelVector = mode switch
                     {
                         eCustomGraphMode.Average => "Avg",
                         eCustomGraphMode.Min or eCustomGraphMode.Max => $"{mode}",
-                        _ => $"{cfgSettings.DamageType}",
+                        _ => $"{cfgSettings.DamageType}"
                     };
 
                     barLabel = $"{longName}{(!string.IsNullOrEmpty(barLabelVector) ? $" ({barLabelVector})" : "")}";
@@ -443,7 +443,7 @@ namespace Mids_Reborn.Core
                         eCustomGraphMode.Single => $"({cfgSettings.DamageType} only)",
                         eCustomGraphMode.Min => "(min value)",
                         eCustomGraphMode.Average => "(average value)",
-                        _ => "(max value)",
+                        _ => "(max value)"
                     };
 
                     ctl.AddItemPair(barLabel,
@@ -695,7 +695,7 @@ namespace Mids_Reborn.Core
                         eCustomGraphMode.Single => mezProtections[cfgSettings.MezType != null ? mezIndex : 0],
                         eCustomGraphMode.Min => mezProtections.Min(),
                         eCustomGraphMode.Average => mezProtections.Average(),
-                        _ => mezProtections.Max(),
+                        _ => mezProtections.Max()
                     };
 
                     mezLabel = mode switch
@@ -703,7 +703,7 @@ namespace Mids_Reborn.Core
                         eCustomGraphMode.Single => cfgSettings.MezType != null ? $"{cfgSettings.MezType} Prot." : "Held Prot.",
                         eCustomGraphMode.Min => "Mez Prot. (Min)",
                         eCustomGraphMode.Average => "Mez Prot. (Avg)",
-                        _  => "Mez Prot. (Max)",
+                        _  => "Mez Prot. (Max)"
                     };
 
                     mezLabelLong = mode switch
@@ -711,7 +711,7 @@ namespace Mids_Reborn.Core
                         eCustomGraphMode.Single => cfgSettings.MezType != null ? $"Status Protection to {cfgSettings.MezType}" : "Status Protection to Held",
                         eCustomGraphMode.Min => "Status Protection (Min)",
                         eCustomGraphMode.Average => "Status Protection (Avg)",
-                        _ => "Status Protection (Max)",
+                        _ => "Status Protection (Max)"
                     };
 
                     ctl.AddItemPair(mezLabel,
@@ -727,7 +727,7 @@ namespace Mids_Reborn.Core
                         eCustomGraphMode.Single => MidsContext.Character.Totals.MezRes[cfgSettings.MezType != null ? mezIndex : 0],
                         eCustomGraphMode.Min => MidsContext.Character.Totals.MezRes.Min(),
                         eCustomGraphMode.Average => MidsContext.Character.Totals.MezRes.Average(),
-                        _ => MidsContext.Character.Totals.MezRes.Max(),
+                        _ => MidsContext.Character.Totals.MezRes.Max()
                     };
 
                     mezLabel = mode switch
@@ -735,7 +735,7 @@ namespace Mids_Reborn.Core
                         eCustomGraphMode.Single => cfgSettings.MezType != null ? $"{cfgSettings.MezType} Resist." : "Held Resist.",
                         eCustomGraphMode.Min => "Mez Resist. (Min)",
                         eCustomGraphMode.Average => "Mez Resist. (Avg)",
-                        _ => "Mez Resist. (Max)",
+                        _ => "Mez Resist. (Max)"
                     };
 
                     mezLabelLong = mode switch
@@ -743,7 +743,7 @@ namespace Mids_Reborn.Core
                         eCustomGraphMode.Single => cfgSettings.MezType != null ? $"Status Resistance to {cfgSettings.MezType}" : "Status Resistance to Held",
                         eCustomGraphMode.Min => "Status Resistance (Min)",
                         eCustomGraphMode.Average => "Status Resistance (Avg)",
-                        _ => "Status Resistance (Max)",
+                        _ => "Status Resistance (Max)"
                     };
 
                     ctl.AddItemPair(mezLabel,
