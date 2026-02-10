@@ -20,13 +20,12 @@ namespace Mids_Reborn.UI.Forms
             public ResettableBindingList<SelectedItem> SelectedItems { get; } = [];
 
             public IReadOnlyList<CustomGraphStat.eCustomGraphStat> AvailableStats { get; private set; } = [];
-
             public IReadOnlyList<CustomGraphStat.eCustomGraphStat> SelectedStats { get; private set; } = [];
 
             public void SetAvailableStats(IEnumerable<CustomGraphStat.eCustomGraphStat>? stats)
             {
                 AvailableStats = stats?.ToArray() ?? [];
-                AvailableItems.ReplaceWith(AvailableStats.Select(s => new AvailableItem(s)));
+                AvailableItems.ReplaceWith(AvailableStats.Select(s => new AvailableItem(s)), raiseReset: false);
             }
 
             public void SetSelectedStats(IEnumerable<CustomGraphStat.eCustomGraphStat>? stats)
@@ -35,7 +34,8 @@ namespace Mids_Reborn.UI.Forms
 
                 SelectedItems.ReplaceWith(
                     Enumerable.Range(0, SelectedStats.Count)
-                              .Select(i => new SelectedItem(i, SelectedStats[i], _selectedLabelFactory))
+                        .Select(i => new SelectedItem(i, SelectedStats[i], _selectedLabelFactory)),
+                    raiseReset: false
                 );
             }
 
@@ -66,41 +66,47 @@ namespace Mids_Reborn.UI.Forms
 
             public sealed class ResettableBindingList<T> : BindingList<T>
             {
-                public void ReplaceWith(IEnumerable<T> items)
+                public void ReplaceWith(IEnumerable<T> items, bool raiseReset = true)
                 {
-                    if (items is null)
-                    {
-                        throw new ArgumentNullException(nameof(items));
-                    }
+                    if (items is null) throw new ArgumentNullException(nameof(items));
 
                     RaiseListChangedEvents = false;
                     try
                     {
-                        ClearItems();
+                        Items.Clear();
                         foreach (var item in items)
                         {
-                            Add(item);
+                            Items.Add(item);
                         }
                     }
                     finally
                     {
                         RaiseListChangedEvents = true;
-                        OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+                        if (raiseReset)
+                        {
+                            Reset();
+                        }
                     }
                 }
 
-                public void RefreshAll() => OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
+                public void RefreshAll() => Reset();
+
+                private void Reset() => OnListChanged(new ListChangedEventArgs(ListChangedType.Reset, -1));
             }
         }
 
-        private CustomGraphStat.eCustomGraphStat[] AvailableStats = [];
-        private CustomGraphStat.eCustomGraphStat[] SelectedStats = [];
-        private ConfigData.CustomGraphSettings[] SelectedSettings = [];
+        private CustomGraphStat.eCustomGraphStat[] _availableStats = [];
+        private CustomGraphStat.eCustomGraphStat[] _selectedStats = [];
+        private ConfigData.CustomGraphSettings[] _selectedSettings = [];
 
         private int? _selectedStatSelectedItem = null;
         private StatSettings _statSettings = null!;
 
         private const int MaxItems = 8;
+
+        private readonly BindingSource _availableSource = new();
+        private readonly BindingSource _selectedSource = new();
+        private bool _isRefreshingLists;
 
         public frmCustomGraphsSelector()
         {
@@ -135,31 +141,33 @@ namespace Mids_Reborn.UI.Forms
 
         private void frmCustomGraphsSelector_Load(object sender, EventArgs e)
         {
-            SelectedStats = MidsContext.Config?.CustomGraphs == null
+            _selectedStats = MidsContext.Config?.CustomGraphs == null
                 ? []
                 : MidsContext.Config.CustomGraphs.Clone() as CustomGraphStat.eCustomGraphStat[] ?? [];
 
-            SelectedSettings = MidsContext.Config?.CustomGraphSetting == null
+            _selectedSettings = MidsContext.Config?.CustomGraphSetting == null
                 ? []
                 : MidsContext.Config.CustomGraphSetting.Clone() as ConfigData.CustomGraphSettings[] ?? [];
 
             // Keep them aligned
-            if (SelectedSettings.Length != SelectedStats.Length)
+            if (_selectedSettings.Length != _selectedStats.Length)
             {
-                Array.Resize(ref SelectedSettings, SelectedStats.Length);
-                for (var i = 0; i < SelectedSettings.Length; i++)
+                Array.Resize(ref _selectedSettings, _selectedStats.Length);
+                for (var i = 0; i < _selectedSettings.Length; i++)
                 {
-                    SelectedSettings[i] ??= new ConfigData.CustomGraphSettings();
+                    _selectedSettings[i] ??= new ConfigData.CustomGraphSettings();
                 }
             }
 
             _statSettings = new StatSettings(GetSelectedStatListItem);
 
-            lbAvailableStats.DataSource = _statSettings.AvailableItems;
+            _availableSource.DataSource = _statSettings.AvailableItems;
+            lbAvailableStats.DataSource = _availableSource;
             lbAvailableStats.DisplayMember = nameof(StatSettings.AvailableItem.Display);
             lbAvailableStats.ValueMember = nameof(StatSettings.AvailableItem.Stat);
 
-            lbActiveStats.DataSource = _statSettings.SelectedItems;
+            _selectedSource.DataSource = _statSettings.SelectedItems;
+            lbActiveStats.DataSource = _selectedSource;
             lbActiveStats.DisplayMember = nameof(StatSettings.SelectedItem.Display);
             lbActiveStats.ValueMember = nameof(StatSettings.SelectedItem.Index);
 
@@ -172,34 +180,78 @@ namespace Mids_Reborn.UI.Forms
 
         private void CalcAvailableStats()
         {
-            var usedUniqueValues = SelectedStats.Where(UniqueStat).ToHashSet();
+            var usedUniqueValues = _selectedStats.Where(UniqueStat).ToHashSet();
 
             Debug.WriteLine($"Used unique values ({usedUniqueValues.Count}): {string.Join(", ", usedUniqueValues)}");
 
             var allStats = Enum.GetValues<CustomGraphStat.eCustomGraphStat>();
-            AvailableStats = allStats
+            _availableStats = allStats
                 .Where(s => !usedUniqueValues.Contains(s))
                 .ToArray();
 
-            Debug.WriteLine($"Available stats: {AvailableStats.Length} / {allStats.Length}");
+            Debug.WriteLine($"Available stats: {_availableStats.Length} / {allStats.Length}");
         }
 
         private void RefreshLists()
         {
-            _statSettings.SetAvailableStats(AvailableStats);
-            _statSettings.SetSelectedStats(SelectedStats);
+            _isRefreshingLists = true;
 
-            // Restore selection if possible
-            if (_selectedStatSelectedItem is >= 0 && _selectedStatSelectedItem.Value < lbActiveStats.Items.Count)
+            // capture requested selection before reset
+            var restoreIndex = _selectedStatSelectedItem;
+
+            lbAvailableStats.BeginUpdate();
+            lbActiveStats.BeginUpdate();
+
+            try
             {
-                lbActiveStats.SelectedIndex = _selectedStatSelectedItem.Value;
+                // Ensure the CurrencyManager isn't trying to keep a stale selection/position.
+                lbAvailableStats.SelectedIndex = -1;
+                lbActiveStats.SelectedIndex = -1;
+
+                _availableSource.Position = -1;
+                _selectedSource.Position = -1;
+
+                _availableSource.SuspendBinding();
+                _selectedSource.SuspendBinding();
+
+                // Replace list contents while binding is suspended.
+                _statSettings.SetAvailableStats(_availableStats);
+                _statSettings.SetSelectedStats(_selectedStats);
+
+                // Resume first so ResetBindings runs against a stable list.
+                _availableSource.ResumeBinding();
+                _selectedSource.ResumeBinding();
+
+                _availableSource.ResetBindings(false);
+                _selectedSource.ResetBindings(false);
+
+                // Restore selection while events are suppressed by _isRefreshingLists.
+                if (restoreIndex is >= 0 && restoreIndex.Value < lbActiveStats.Items.Count)
+                {
+                    lbActiveStats.SelectedIndex = restoreIndex.Value;
+                }
+                else
+                {
+                    _selectedStatSelectedItem = null;
+                }
+            }
+            finally
+            {
+                if (_availableSource.IsBindingSuspended) _availableSource.ResumeBinding();
+                if (_selectedSource.IsBindingSuspended) _selectedSource.ResumeBinding();
+
+                lbAvailableStats.EndUpdate();
+                lbActiveStats.EndUpdate();
+
+                _isRefreshingLists = false;
             }
         }
 
+
         private void btnOk_Click(object sender, EventArgs e)
         {
-            MidsContext.Config.CustomGraphs = (SelectedStats ?? []).ToArray();
-            MidsContext.Config.CustomGraphSetting = (SelectedSettings ?? []).ToArray();
+            MidsContext.Config.CustomGraphs = (_selectedStats ?? []).ToArray();
+            MidsContext.Config.CustomGraphSetting = (_selectedSettings ?? []).ToArray();
 
             DialogResult = DialogResult.OK;
             Close();
@@ -218,7 +270,7 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            if (SelectedStats.Length >= MaxItems)
+            if (_selectedStats.Length >= MaxItems)
             {
                 return;
             }
@@ -237,10 +289,10 @@ namespace Mids_Reborn.UI.Forms
                 statSettings = statOptions.Settings;
             }
 
-            SelectedStats = SelectedStats.Append(stat).ToArray();
-            SelectedSettings = SelectedSettings.Append(statSettings).ToArray();
+            _selectedStats = _selectedStats.Append(stat).ToArray();
+            _selectedSettings = _selectedSettings.Append(statSettings).ToArray();
 
-            _selectedStatSelectedItem = SelectedStats.Length - 1;
+            _selectedStatSelectedItem = _selectedStats.Length - 1;
 
             CalcAvailableStats();
             RefreshLists();
@@ -256,17 +308,17 @@ namespace Mids_Reborn.UI.Forms
         private void btnRemove_Click(object sender, EventArgs e)
         {
             var idx = lbActiveStats.SelectedIndex;
-            if (idx < 0 || idx >= SelectedStats.Length)
+            if (idx < 0 || idx >= _selectedStats.Length)
             {
                 return;
             }
 
-            SelectedStats = SelectedStats.Where((_, i) => i != idx).ToArray();
-            SelectedSettings = SelectedSettings.Where((_, i) => i != idx).ToArray();
+            _selectedStats = _selectedStats.Where((_, i) => i != idx).ToArray();
+            _selectedSettings = _selectedSettings.Where((_, i) => i != idx).ToArray();
 
-            _selectedStatSelectedItem = SelectedStats.Length == 0
+            _selectedStatSelectedItem = _selectedStats.Length == 0
                 ? null
-                : Math.Min(idx, SelectedStats.Length - 1);
+                : Math.Min(idx, _selectedStats.Length - 1);
 
             CalcAvailableStats();
             RefreshLists();
@@ -282,13 +334,13 @@ namespace Mids_Reborn.UI.Forms
         private void btnUp_Click(object sender, EventArgs e)
         {
             var idx = lbActiveStats.SelectedIndex;
-            if (idx <= 0 || idx >= SelectedStats.Length)
+            if (idx <= 0 || idx >= _selectedStats.Length)
             {
                 return;
             }
 
-            Swap(ref SelectedStats, idx, idx - 1);
-            Swap(ref SelectedSettings, idx, idx - 1);
+            Swap(ref _selectedStats, idx, idx - 1);
+            Swap(ref _selectedSettings, idx, idx - 1);
 
             _selectedStatSelectedItem = idx - 1;
 
@@ -299,13 +351,13 @@ namespace Mids_Reborn.UI.Forms
         private void btnDown_Click(object sender, EventArgs e)
         {
             var idx = lbActiveStats.SelectedIndex;
-            if (idx < 0 || idx >= SelectedStats.Length - 1)
+            if (idx < 0 || idx >= _selectedStats.Length - 1)
             {
                 return;
             }
 
-            Swap(ref SelectedStats, idx, idx + 1);
-            Swap(ref SelectedSettings, idx, idx + 1);
+            Swap(ref _selectedStats, idx, idx + 1);
+            Swap(ref _selectedSettings, idx, idx + 1);
 
             _selectedStatSelectedItem = idx + 1;
 
@@ -315,6 +367,8 @@ namespace Mids_Reborn.UI.Forms
 
         private void lbActiveStats_SelectedIndexChanged(object sender, EventArgs e)
         {
+            if (_isRefreshingLists) return;
+
             _selectedStatSelectedItem = lbActiveStats.SelectedIndex >= 0 ? lbActiveStats.SelectedIndex : null;
             UpdateMoveButtons();
         }
@@ -322,17 +376,17 @@ namespace Mids_Reborn.UI.Forms
         private void UpdateMoveButtons()
         {
             var idx = lbActiveStats.SelectedIndex;
-            var hasSelection = idx >= 0 && idx < SelectedStats.Length;
+            var hasSelection = idx >= 0 && idx < _selectedStats.Length;
 
             btnUp.Enabled = hasSelection && idx > 0;
-            btnDown.Enabled = hasSelection && idx < SelectedStats.Length - 1;
+            btnDown.Enabled = hasSelection && idx < _selectedStats.Length - 1;
             btnRemove.Enabled = hasSelection;
-            btnAdd.Enabled = lbAvailableStats.SelectedIndex >= 0 && SelectedStats.Length < MaxItems;
+            btnAdd.Enabled = lbAvailableStats.SelectedIndex >= 0 && _selectedStats.Length < MaxItems;
         }
 
         private void UpdateSelectedStatsLabel()
         {
-            label2.Text = $"Selected items ({SelectedStats.Length}/{MaxItems}):";
+            label2.Text = $"Selected items ({_selectedStats.Length}/{MaxItems}):";
         }
 
         private static void Swap<T>(ref T[] arr, int a, int b)
@@ -546,13 +600,13 @@ namespace Mids_Reborn.UI.Forms
 
         private string GetSelectedStatListItem(int i)
         {
-            if (i < 0 || i >= SelectedStats.Length || i >= SelectedSettings.Length)
+            if (i < 0 || i >= _selectedStats.Length || i >= _selectedSettings.Length)
             {
                 return string.Empty;
             }
 
-            var stat = SelectedStats[i];
-            var opt = SelectedSettings[i];
+            var stat = _selectedStats[i];
+            var opt = _selectedSettings[i];
             var statName = CustomGraphStat.Names.CustomStatNameLong(stat);
 
             if (!NeedsOptionsDialog(stat))
