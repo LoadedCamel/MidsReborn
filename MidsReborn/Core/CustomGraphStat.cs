@@ -251,8 +251,10 @@ namespace Mids_Reborn.Core
                 _ => 0
             };
 
-            var mezLabel = "";
-            var mezLabelLong = "";
+            string mezLabel;
+            string mezLabelLong;
+            string barLabel;
+            string barLabelVector;
 
             ctl.SuspendLayout();
             ctl.Clear();
@@ -393,6 +395,15 @@ namespace Mids_Reborn.Core
                         _ => displayStats.DefenseMax,
                     };
 
+                    barLabelVector = mode switch
+                    {
+                        eCustomGraphMode.Average => "Avg",
+                        eCustomGraphMode.Min or eCustomGraphMode.Max => $"{mode}",
+                        _ => $"{cfgSettings.DamageType}",
+                    };
+
+                    barLabel = $"{longName}{(!string.IsNullOrEmpty(barLabelVector) ? $" ({barLabelVector})" : "")}";
+
                     suffix = mode switch
                     {
                         eCustomGraphMode.Single => $"({cfgSettings.DamageType} only)",
@@ -401,7 +412,7 @@ namespace Mids_Reborn.Core
                         _ => "(max value)",
                     };
 
-                    ctl.AddItemPair(longName,
+                    ctl.AddItemPair(barLabel,
                         $"{val:##0.##}%",
                         0,
                         val,
@@ -418,6 +429,15 @@ namespace Mids_Reborn.Core
                         _ => displayStats.DefenseMax,
                     };
 
+                    barLabelVector = mode switch
+                    {
+                        eCustomGraphMode.Average => "Avg",
+                        eCustomGraphMode.Min or eCustomGraphMode.Max => $"{mode}",
+                        _ => $"{cfgSettings.DamageType}",
+                    };
+
+                    barLabel = $"{longName}{(!string.IsNullOrEmpty(barLabelVector) ? $" ({barLabelVector})" : "")}";
+
                     suffix = mode switch
                     {
                         eCustomGraphMode.Single => $"({cfgSettings.DamageType} only)",
@@ -426,7 +446,7 @@ namespace Mids_Reborn.Core
                         _ => "(max value)",
                     };
 
-                    ctl.AddItemPair(longName,
+                    ctl.AddItemPair(barLabel,
                         $"{val:##0.##}%",
                         0,
                         val,
@@ -811,6 +831,27 @@ namespace Mids_Reborn.Core
             }
 
             ctl.ResumeLayout(true);
+        }
+
+        /// <summary>
+        /// Get view mode associated with specific stat
+        /// </summary>
+        /// <param name="stat">Statistic name</param>
+        /// <param name="settings">Associated config settings</param>
+        /// <returns>Damage/Effect/Mez mode for selected statistic, from the provided settings</returns>
+        public static eCustomGraphMode GetModeFromStat(eCustomGraphStat stat, ConfigData.CustomGraphSettings? settings)
+        {
+            if (settings == null)
+            {
+                return eCustomGraphMode.Single;
+            }
+
+            return stat switch
+            {
+                eCustomGraphStat.DebuffResistance => settings.EffectMode,
+                eCustomGraphStat.Defense or eCustomGraphStat.Resistance or eCustomGraphStat.Elusivity => settings.DamageMode,
+                _ => settings.MezMode
+            };
         }
 
         /// <summary>

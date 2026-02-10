@@ -863,14 +863,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             for (var i = 0; i < Math.Min(MidsContext.Config.CustomGraphs.Length, 8); i++)
             {
-                var settings = MidsContext.Config.CustomGraphSetting[i];
-                var mode = settings.EffectType != null
-                    ? settings.EffectMode
-                    : settings.DamageType != null
-                        ? settings.DamageMode
-                        : settings.MezType != null
-                            ? settings.MezMode
-                            : CustomGraphStat.eCustomGraphMode.Single;
+                var mode = CustomGraphStat.GetModeFromStat(MidsContext.Config.CustomGraphs[i],
+                    MidsContext.Config.CustomGraphSetting?[i]);
 
                 var graph = CustomGraphStat.GenerateGraph(MidsContext.Config.CustomGraphs[i], mode);
                 graph.Location = loc;
