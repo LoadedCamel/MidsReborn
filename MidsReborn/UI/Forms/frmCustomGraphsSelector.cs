@@ -4,6 +4,7 @@ using Mids_Reborn.UI.Forms.WindowMenuItems;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
 
@@ -173,9 +174,14 @@ namespace Mids_Reborn.UI.Forms
         {
             var usedUniqueValues = SelectedStats.Where(UniqueStat).ToHashSet();
 
-            AvailableStats = Enum.GetValues<CustomGraphStat.eCustomGraphStat>()
+            Debug.WriteLine($"Used unique values ({usedUniqueValues.Count}): {string.Join(", ", usedUniqueValues)}");
+
+            var allStats = Enum.GetValues<CustomGraphStat.eCustomGraphStat>();
+            AvailableStats = allStats
                 .Where(s => !usedUniqueValues.Contains(s))
                 .ToArray();
+
+            Debug.WriteLine($"Available stats: {AvailableStats.Length} / {allStats.Length}");
         }
 
         private void RefreshLists()
