@@ -1,12 +1,14 @@
 ﻿using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.UI.Forms.WindowMenuItems;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Linq;
 using System.Windows.Forms;
+using static Mids_Reborn.Core.ConfigData;
 
 namespace Mids_Reborn.UI.Forms
 {
@@ -174,7 +176,7 @@ namespace Mids_Reborn.UI.Forms
             CalcAvailableStats();
             RefreshLists();
 
-            UpdateMoveButtons();
+            UpdateButtons();
             UpdateSelectedStatsLabel();
         }
 
@@ -296,7 +298,7 @@ namespace Mids_Reborn.UI.Forms
 
             CalcAvailableStats();
             RefreshLists();
-            UpdateMoveButtons();
+            UpdateButtons();
             UpdateSelectedStatsLabel();
         }
 
@@ -322,7 +324,7 @@ namespace Mids_Reborn.UI.Forms
 
             CalcAvailableStats();
             RefreshLists();
-            UpdateMoveButtons();
+            UpdateButtons();
             UpdateSelectedStatsLabel();
         }
 
@@ -345,7 +347,7 @@ namespace Mids_Reborn.UI.Forms
             _selectedStatSelectedItem = idx - 1;
 
             RefreshLists();
-            UpdateMoveButtons();
+            UpdateButtons();
         }
 
         private void btnDown_Click(object sender, EventArgs e)
@@ -362,7 +364,7 @@ namespace Mids_Reborn.UI.Forms
             _selectedStatSelectedItem = idx + 1;
 
             RefreshLists();
-            UpdateMoveButtons();
+            UpdateButtons();
         }
 
         private void lbActiveStats_SelectedIndexChanged(object sender, EventArgs e)
@@ -370,10 +372,10 @@ namespace Mids_Reborn.UI.Forms
             if (_isRefreshingLists) return;
 
             _selectedStatSelectedItem = lbActiveStats.SelectedIndex >= 0 ? lbActiveStats.SelectedIndex : null;
-            UpdateMoveButtons();
+            UpdateButtons();
         }
 
-        private void UpdateMoveButtons()
+        private void UpdateButtons()
         {
             var idx = lbActiveStats.SelectedIndex;
             var hasSelection = idx >= 0 && idx < _selectedStats.Length;
@@ -382,6 +384,7 @@ namespace Mids_Reborn.UI.Forms
             btnDown.Enabled = hasSelection && idx < _selectedStats.Length - 1;
             btnRemove.Enabled = hasSelection;
             btnAdd.Enabled = lbAvailableStats.SelectedIndex >= 0 && _selectedStats.Length < MaxItems;
+            btnOk.Enabled = _selectedStats.Length is < MaxItems and > 0;
         }
 
         private void UpdateSelectedStatsLabel()
@@ -650,6 +653,119 @@ namespace Mids_Reborn.UI.Forms
             };
 
             return $"{statName}{(modeText == "" ? "" : $" [{modeText}]")}";
+        }
+
+        private void btnClearAll_Click(object sender, EventArgs e)
+        {
+            _selectedStats = [];
+            _selectedSettings = [];
+
+            _selectedStatSelectedItem = null;
+
+            CalcAvailableStats();
+            RefreshLists();
+            UpdateButtons();
+            UpdateSelectedStatsLabel();
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            _selectedStats =
+            [
+                CustomGraphStat.eCustomGraphStat.Recharge, CustomGraphStat.eCustomGraphStat.ToHit,
+                CustomGraphStat.eCustomGraphStat.Accuracy, CustomGraphStat.eCustomGraphStat.Damage,
+                CustomGraphStat.eCustomGraphStat.Range, CustomGraphStat.eCustomGraphStat.EndRdx,
+                CustomGraphStat.eCustomGraphStat.Heal, CustomGraphStat.eCustomGraphStat.Threat
+            ];
+
+            _selectedSettings =
+            [
+                new CustomGraphSettings // Recharge
+                {
+                    DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                    DamageType = null,
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.Enhancement,
+                    EffectTypeAux = Enums.eEffectType.RechargeTime,
+                    MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                    MezType = null
+                },
+                new CustomGraphSettings // ToHit
+                {
+                    DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                    DamageType = null,
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.ToHit,
+                    EffectTypeAux = null,
+                    MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                    MezType = null
+                },
+                new CustomGraphSettings // Accuracy
+                {
+                    DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                    DamageType = null,
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.Enhancement,
+                    EffectTypeAux = Enums.eEffectType.Accuracy,
+                    MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                    MezType = null
+                },
+                new CustomGraphSettings // Damage
+                {
+                    DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                    DamageType = null,
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.DamageBuff,
+                    EffectTypeAux = null,
+                    MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                    MezType = null
+                },
+                new CustomGraphSettings // Range
+                {
+                    DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                    DamageType = null,
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.Enhancement,
+                    EffectTypeAux = Enums.eEffectType.Range,
+                    MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                    MezType = null
+                },
+                new CustomGraphSettings // EndRdx
+                {
+                    DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                    DamageType = null,
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.Enhancement,
+                    EffectTypeAux = Enums.eEffectType.EnduranceDiscount, // ???
+                    MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                    MezType = null
+                },
+                new CustomGraphSettings // Heal
+                {
+                    DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                    DamageType = null,
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.Enhancement,
+                    EffectTypeAux = Enums.eEffectType.Heal,
+                    MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                    MezType = null
+                },
+                new CustomGraphSettings // Threat
+                {
+                    DamageMode = CustomGraphStat.eCustomGraphMode.Single,
+                    DamageType = null,
+                    EffectMode = CustomGraphStat.eCustomGraphMode.Single,
+                    EffectType = Enums.eEffectType.ThreatLevel,
+                    EffectTypeAux = null,
+                    MezMode = CustomGraphStat.eCustomGraphMode.Single,
+                    MezType = null
+                }
+            ];
+
+            CalcAvailableStats();
+            RefreshLists();
+            UpdateButtons();
+            UpdateSelectedStatsLabel();
         }
     }
 }

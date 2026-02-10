@@ -38,6 +38,8 @@
             label2 = new System.Windows.Forms.Label();
             lbAvailableStats = new System.Windows.Forms.ListBox();
             lbActiveStats = new System.Windows.Forms.ListBox();
+            btnReset = new System.Windows.Forms.Button();
+            btnClearAll = new System.Windows.Forms.Button();
             SuspendLayout();
             // 
             // label1
@@ -142,11 +144,33 @@
             lbActiveStats.SelectedIndexChanged += lbActiveStats_SelectedIndexChanged;
             lbActiveStats.DoubleClick += lbActiveStats_DoubleClick;
             // 
+            // btnReset
+            // 
+            btnReset.Location = new System.Drawing.Point(430, 405);
+            btnReset.Name = "btnReset";
+            btnReset.Size = new System.Drawing.Size(121, 23);
+            btnReset.TabIndex = 13;
+            btnReset.Text = "Reset to Defaults";
+            btnReset.UseVisualStyleBackColor = true;
+            btnReset.Click += btnReset_Click;
+            // 
+            // btnClearAll
+            // 
+            btnClearAll.Location = new System.Drawing.Point(278, 405);
+            btnClearAll.Name = "btnClearAll";
+            btnClearAll.Size = new System.Drawing.Size(121, 23);
+            btnClearAll.TabIndex = 12;
+            btnClearAll.Text = "Clear All";
+            btnClearAll.UseVisualStyleBackColor = true;
+            btnClearAll.Click += btnClearAll_Click;
+            // 
             // frmCustomGraphsSelector
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             ClientSize = new System.Drawing.Size(862, 450);
+            Controls.Add(btnReset);
+            Controls.Add(btnClearAll);
             Controls.Add(lbActiveStats);
             Controls.Add(lbAvailableStats);
             Controls.Add(label2);
@@ -180,5 +204,7 @@
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.ListBox lbAvailableStats;
         private System.Windows.Forms.ListBox lbActiveStats;
+        private System.Windows.Forms.Button btnReset;
+        private System.Windows.Forms.Button btnClearAll;
     }
 }
