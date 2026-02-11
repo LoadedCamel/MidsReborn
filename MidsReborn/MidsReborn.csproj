@@ -5,8 +5,7 @@
 	  <LangVersion>12.0</LangVersion>
 	  <OutputType>WinExe</OutputType>
 	  <UseWindowsForms>true</UseWindowsForms>
-	  <Platforms>x64</Platforms>
-	  <PlatformTarget>x64</PlatformTarget>
+	  <Platforms>AnyCPU;x64</Platforms>
 	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
 	  <RootNamespace>Mids_Reborn</RootNamespace>
 	  <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -795,7 +794,7 @@
   </PropertyGroup>
   <PropertyGroup>
     <Nullable>enable</Nullable>
-    <PlatformTarget>x64</PlatformTarget>
+    <PlatformTarget>AnyCPU</PlatformTarget>
     <UseWPF>False</UseWPF>
   </PropertyGroup>
 
@@ -818,10 +817,7 @@
 			<_BootstrapFiles Include="$(_BootstrapBase).deps.json" Condition="Exists('$(_BootstrapBase).deps.json')" />
 		</ItemGroup>
 
-		<Copy
-			SourceFiles="@(_BootstrapFiles)"
-			DestinationFiles="@(_BootstrapFiles->'$(_BootstrapNew)%(Extension)')"
-			SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(_BootstrapFiles)" DestinationFiles="@(_BootstrapFiles->'$(_BootstrapNew)%(Extension)')" SkipUnchangedFiles="true" />
 
 		<Delete Files="@(_BootstrapFiles)" />
 	</Target>
