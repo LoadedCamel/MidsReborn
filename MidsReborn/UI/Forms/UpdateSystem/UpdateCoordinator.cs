@@ -92,13 +92,21 @@ namespace Mids_Reborn.UI.Forms.UpdateSystem
         {
             var tempPath = Path.Combine(Path.GetTempPath(), $"mids_patch_{Guid.NewGuid():N}.json");
 
+            var tempManifest = new
+            {
+                ManifestVersion = "3.0",
+                Updates = entries,
+                LastUpdated = DateTimeOffset.UtcNow.ToString("O")
+            };
+
             var options = new JsonSerializerOptions
             {
                 WriteIndented = true,
+                DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
                 Converters = { new JsonStringEnumConverter() }
             };
 
-            File.WriteAllText(tempPath, JsonSerializer.Serialize(entries, options));
+            File.WriteAllText(tempPath, JsonSerializer.Serialize(tempManifest, options));
             return tempPath;
         }
 
