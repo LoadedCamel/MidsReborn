@@ -4,7 +4,9 @@
 	  <SupportedOSPlatformVersion>10.0.19041.0</SupportedOSPlatformVersion>
 	  <LangVersion>12.0</LangVersion>
 	  <OutputType>WinExe</OutputType>
+	  <Nullable>enable</Nullable>
 	  <UseWindowsForms>true</UseWindowsForms>
+      <UseWPF>false</UseWPF>
 	  <Platforms>x64</Platforms>
 	  <PlatformTarget>x64</PlatformTarget>
 	  <RuntimeIdentifier>win-x64</RuntimeIdentifier>
@@ -793,12 +795,6 @@
     <WebView2LoaderPreference>Static</WebView2LoaderPreference>
     <WV2WinRTVerbosity>low</WV2WinRTVerbosity>
   </PropertyGroup>
-  <PropertyGroup>
-    <Nullable>enable</Nullable>
-    <PlatformTarget>AnyCPU</PlatformTarget>
-    <UseWPF>False</UseWPF>
-  </PropertyGroup>
-
 
 	<Target Name="DeleteRuntimesFolder" AfterTargets="Build">
 		<RemoveDir Directories="$(TargetDir)runtimes" Condition="Exists('$(TargetDir)runtimes')" />
@@ -807,7 +803,6 @@
 	<Target Name="RenameBootstrapperOutputs" AfterTargets="Build">
 		<PropertyGroup>
 			<_BootstrapBase>$(TargetDir)MRBBootstrap</_BootstrapBase>
-			<_BootstrapNew>$(TargetDir)New_MRBBootstrap</_BootstrapNew>
 		</PropertyGroup>
 
 		<ItemGroup>
@@ -818,9 +813,12 @@
 			<_BootstrapFiles Include="$(_BootstrapBase).deps.json" Condition="Exists('$(_BootstrapBase).deps.json')" />
 		</ItemGroup>
 
+		<!-- New_%(Filename) keeps multi-dot names intact:
+       MRBBootstrap.runtimeconfig.json -> New_MRBBootstrap.runtimeconfig.json
+       MRBBootstrap.deps.json          -> New_MRBBootstrap.deps.json -->
 		<Copy
 			SourceFiles="@(_BootstrapFiles)"
-			DestinationFiles="@(_BootstrapFiles->'$(_BootstrapNew)%(Extension)')"
+			DestinationFiles="@(_BootstrapFiles->'$(TargetDir)New_%(Filename)%(Extension)')"
 			SkipUnchangedFiles="true" />
 
 		<Delete Files="@(_BootstrapFiles)" />
