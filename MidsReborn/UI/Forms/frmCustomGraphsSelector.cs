@@ -183,15 +183,11 @@ namespace Mids_Reborn.UI.Forms
         private void CalcAvailableStats()
         {
             var usedUniqueValues = _selectedStats.Where(UniqueStat).ToHashSet();
-
-            Debug.WriteLine($"Used unique values ({usedUniqueValues.Count}): {string.Join(", ", usedUniqueValues)}");
-
             var allStats = Enum.GetValues<CustomGraphStat.eCustomGraphStat>();
+            
             _availableStats = allStats
                 .Where(s => !usedUniqueValues.Contains(s))
                 .ToArray();
-
-            Debug.WriteLine($"Available stats: {_availableStats.Length} / {allStats.Length}");
         }
 
         private void RefreshLists()
@@ -384,7 +380,7 @@ namespace Mids_Reborn.UI.Forms
             btnDown.Enabled = hasSelection && idx < _selectedStats.Length - 1;
             btnRemove.Enabled = hasSelection;
             btnAdd.Enabled = lbAvailableStats.SelectedIndex >= 0 && _selectedStats.Length < MaxItems;
-            btnOk.Enabled = _selectedStats.Length is < MaxItems and > 0;
+            btnOk.Enabled = _selectedStats.Length is <= MaxItems and > 0;
         }
 
         private void UpdateSelectedStatsLabel()
