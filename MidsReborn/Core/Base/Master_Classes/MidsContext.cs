@@ -9,9 +9,9 @@ namespace Mids_Reborn.Core.Base.Master_Classes
         private const int AppMajorVersion = 3;
         private const int AppMinorVersion = 8;
         private const int AppBuildVersion = 1;
-        private const int AppRevisionVersion = 0;
+        private const int AppRevisionVersion = 1;
         public const string AssemblyVersion = "3.8.1";
-        public const string AssemblyFileVersion = "3.8.1.0";
+        public const string AssemblyFileVersion = "3.8.1.1";
       
         public static Version AppFileVersion { get; set; } = new(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 
