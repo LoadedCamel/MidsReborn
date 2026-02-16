@@ -317,7 +317,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 var mode = CustomGraphStat.GetModeFromStat(MidsContext.Config.CustomGraphs[i],
                     MidsContext.Config.CustomGraphSetting?[i]);
                 
-                var graph = CustomGraphStat.GenerateGraph(MidsContext.Config.CustomGraphs[i], mode);
+                var graph = CustomGraphStat.GenerateGraph(MidsContext.Config.CustomGraphs[i], mode, false);
                 graph.Location = loc;
                 // missing graph control size
 

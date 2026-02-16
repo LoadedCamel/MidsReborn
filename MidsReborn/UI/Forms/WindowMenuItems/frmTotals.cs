@@ -84,9 +84,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphMaxEnd.Location = new Point(15, 394 + yOffset);
 
             PrepareCustomGraphs();
-            _loaded = true;
-            
             SetFonts();
+            DrawCustomGraphs();
+
+            _loaded = true;
         }
 
         private void FrmTotalsMove(object sender, EventArgs e)
@@ -267,7 +268,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 SetFontDataSingle(ref g);
             }
 
-            foreach (var c in Panel2.Controls)
+            // Unaffected by font size. Change ItemHeight
+            /*foreach (var c in Panel2.Controls)
             {
                 if (c is not CtlMultiGraph g)
                 {
@@ -275,7 +277,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 }
 
                 SetFontDataSingle(ref g);
-            }
+            }*/
 
             lblDef.Font = graphDef.Font;
             lblMisc.Font = graphDef.Font;
@@ -857,7 +859,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 c.Dispose();
             }
 
-            var loc = new Point(15, 196);
+            var loc = new Point(4, 4);
             const int incrementLocY = 19;
             CustomGraphs = [];
 
@@ -866,7 +868,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 var mode = CustomGraphStat.GetModeFromStat(MidsContext.Config.CustomGraphs[i],
                     MidsContext.Config.CustomGraphSetting?[i]);
 
-                var graph = CustomGraphStat.GenerateGraph(MidsContext.Config.CustomGraphs[i], mode);
+                var graph = CustomGraphStat.GenerateGraph(MidsContext.Config.CustomGraphs[i], mode, true);
                 graph.Location = loc;
                 graph.Size = new Size(pnlDRHE.Width - loc.X + 4, 15);
 

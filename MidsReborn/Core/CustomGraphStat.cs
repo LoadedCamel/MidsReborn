@@ -133,15 +133,17 @@ namespace Mids_Reborn.Core
         /// </summary>
         /// <param name="stat">Statistics type to display</param>
         /// <param name="mode">Display mode (min, max, average, single vector), for multi vectors e.g. defense</param>
+        /// <param name="oldStyle">Set up for old style totals</param>
         /// <param name="ctlName">Optional specific control name, default is graphCustom + short name of stat</param>
         /// <returns>A CtlMultiGraph object that monitors a single value</returns>
-        public static CtlMultiGraph GenerateGraph(eCustomGraphStat stat, eCustomGraphMode mode, string? ctlName = null)
+        public static CtlMultiGraph GenerateGraph(eCustomGraphStat stat, eCustomGraphMode mode, bool oldStyle, string? ctlName = null)
         {
             var settings = Settings.Get(stat);
             var settingsExt = Settings.GraphSettingsExtended.FromGraphSettings(settings, stat, mode);
 
             return new CtlMultiGraph
             {
+                BackColor = Color.Black,
                 BarsAlignment = CtlMultiGraph.BarAlignment.Left,
                 Border = true,
                 BorderColor = settings.Appearance.Border,
@@ -163,7 +165,7 @@ namespace Mids_Reborn.Core
                 ForeColor = Color.WhiteSmoke,
                 Highlight = true,
                 ItemFontSizeOverride = 0,
-                ItemHeight = 13,
+                ItemHeight = oldStyle ? 10 : 13,
                 Lines = true,
                 MarkerValue = 0,
                 Max = settings.Max,
@@ -173,10 +175,10 @@ namespace Mids_Reborn.Core
                 NegativeBaseColor = Color.Navy,
                 NegativeEnhColor = Color.Olive,
                 NegativeOvercapColor = Color.DarkMagenta,
-                OuterBorder = true,
+                OuterBorder = !oldStyle,
                 Overcap = settings.Style is Settings.GraphStyle.EnhancedWithOvercap or Settings.GraphStyle.ThreeStatsStacked,
-                PaddingX = 4,
-                PaddingY = 6,
+                PaddingX = oldStyle ? 2 : 4,
+                PaddingY = oldStyle ? 2 : 6,
                 RulerPos = CtlMultiGraph.RulerPosition.Top,
                 ScaleHeight = 32,
                 ScaleIndex = settingsExt.ScaleIndex,
@@ -484,12 +486,12 @@ namespace Mids_Reborn.Core
                     break;
 
                 case eCustomGraphStat.Absorb:
-                    ctl.AddItemPair("Max HP", $"{hpValue:###0.##}",
+                    ctl.AddItemPair("Absorb", $"{hpValue:###0.##}",
                         0,
                         Math.Min(hpBase, Math.Max(0, absorbValue)),
                         Math.Max(0, absorbValue),
                         0,
-                        $"\r\nAbsorb: {absorbValue:##0.##} ({absorbValue / hpBase * 100:##0.##}% of base HP)");
+                        $"Absorb: {absorbValue:##0.##}{(absorbValue > float.Epsilon ? $" ({absorbValue / hpBase * 100:##0.##}% of base HP)" : "")}");
                     break;
 
                 case eCustomGraphStat.EndRec:
