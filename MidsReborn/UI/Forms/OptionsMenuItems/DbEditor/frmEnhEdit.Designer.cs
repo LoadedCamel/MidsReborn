@@ -120,7 +120,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // btnUp
             // 
-            this.btnUp.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnUp.BackColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.btnUp.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnUp.Location = new System.Drawing.Point(748, 28);
             this.btnUp.Name = "btnUp";
@@ -132,7 +132,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // btnDown
             // 
-            this.btnDown.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnDown.BackColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.btnDown.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnDown.Location = new System.Drawing.Point(748, 56);
             this.btnDown.Name = "btnDown";
@@ -144,7 +144,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // btnAdd
             // 
-            this.btnAdd.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnAdd.BackColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.btnAdd.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnAdd.Location = new System.Drawing.Point(748, 104);
             this.btnAdd.Name = "btnAdd";
@@ -156,7 +156,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // btnDelete
             // 
-            this.btnDelete.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnDelete.BackColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.btnDelete.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnDelete.Location = new System.Drawing.Point(748, 224);
             this.btnDelete.Name = "btnDelete";
@@ -168,7 +168,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // btnEdit
             // 
-            this.btnEdit.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnEdit.BackColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.btnEdit.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnEdit.Location = new System.Drawing.Point(748, 184);
             this.btnEdit.Name = "btnEdit";
@@ -180,10 +180,10 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // btnSave
             // 
-            this.btnSave.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnSave.BackColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.btnSave.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnSave.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnSave.Location = new System.Drawing.Point(719, 570);
+            this.btnSave.Location = new System.Drawing.Point(493, 570);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(112, 32);
             this.btnSave.TabIndex = 21;
@@ -193,10 +193,10 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // btnCancel
             // 
-            this.btnCancel.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnCancel.BackColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            this.btnCancel.Location = new System.Drawing.Point(493, 570);
+            this.btnCancel.Location = new System.Drawing.Point(621, 570);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(207, 32);
             this.btnCancel.TabIndex = 22;
@@ -206,7 +206,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // btnClone
             // 
-            this.btnClone.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(192)))), ((int)(((byte)(255)))));
+            this.btnClone.BackColor = System.Drawing.Color.FromArgb(192, 192, 255);
             this.btnClone.Font = new System.Drawing.Font("Segoe UI", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
             this.btnClone.Location = new System.Drawing.Point(748, 144);
             this.btnClone.Name = "btnClone";
@@ -260,7 +260,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             this.AcceptButton = this.btnSave;
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
-            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
+            this.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
             this.CancelButton = this.btnCancel;
             this.ClientSize = new System.Drawing.Size(838, 608);
             this.Controls.Add(this.txtFilter);

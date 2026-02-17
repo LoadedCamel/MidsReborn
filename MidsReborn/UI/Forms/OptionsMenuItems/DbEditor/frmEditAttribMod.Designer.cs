@@ -95,7 +95,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // btnCancel
             // 
             this.btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnCancel.Location = new System.Drawing.Point(641, 399);
+            this.btnCancel.Location = new System.Drawing.Point(789, 399);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(127, 39);
             this.btnCancel.TabIndex = 5;
@@ -106,7 +106,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // btnSave
             // 
             this.btnSave.Font = new System.Drawing.Font("Microsoft Sans Serif", 8.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnSave.Location = new System.Drawing.Point(789, 399);
+            this.btnSave.Location = new System.Drawing.Point(641, 399);
             this.btnSave.Name = "btnSave";
             this.btnSave.Size = new System.Drawing.Size(127, 39);
             this.btnSave.TabIndex = 6;

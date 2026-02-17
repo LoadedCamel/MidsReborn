@@ -193,10 +193,20 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             Label4.Text = "Powers:";
             Label4.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
             // 
+            // btnCancel
+            // 
+            btnCancel.DialogResult = DialogResult.OK;
+            btnCancel.Location = new System.Drawing.Point(452, 663);
+            btnCancel.Name = "btnCancel";
+            btnCancel.Size = new System.Drawing.Size(75, 42);
+            btnCancel.TabIndex = 28;
+            btnCancel.Text = "Cancel";
+            btnCancel.Click += btnCancel_Click;
+            // 
             // btnClose
             // 
             btnClose.DialogResult = DialogResult.OK;
-            btnClose.Location = new System.Drawing.Point(452, 663);
+            btnClose.Location = new System.Drawing.Point(371, 663);
             btnClose.Name = "btnClose";
             btnClose.Size = new System.Drawing.Size(75, 42);
             btnClose.TabIndex = 15;
@@ -303,16 +313,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             GroupBox2.TabIndex = 27;
             GroupBox2.TabStop = false;
             GroupBox2.Text = "Icon";
-            // 
-            // btnCancel
-            // 
-            btnCancel.DialogResult = DialogResult.OK;
-            btnCancel.Location = new System.Drawing.Point(371, 663);
-            btnCancel.Name = "btnCancel";
-            btnCancel.Size = new System.Drawing.Size(75, 42);
-            btnCancel.TabIndex = 28;
-            btnCancel.Text = "Cancel";
-            btnCancel.Click += btnCancel_Click;
             // 
             // GroupBox3
             // 

@@ -662,7 +662,7 @@
             // btnCancel
             // 
             btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            btnCancel.Location = new System.Drawing.Point(671, 448);
+            btnCancel.Location = new System.Drawing.Point(777, 448);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(100, 28);
             btnCancel.TabIndex = 77;
@@ -673,11 +673,11 @@
             // btnOkay
             // 
             btnOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
-            btnOkay.Location = new System.Drawing.Point(777, 448);
+            btnOkay.Location = new System.Drawing.Point(671, 448);
             btnOkay.Name = "btnOkay";
             btnOkay.Size = new System.Drawing.Size(100, 28);
             btnOkay.TabIndex = 78;
-            btnOkay.Text = "Okay";
+            btnOkay.Text = "Ok";
             btnOkay.UseVisualStyleBackColor = true;
             btnOkay.Click += btnOkay_Click;
             // 

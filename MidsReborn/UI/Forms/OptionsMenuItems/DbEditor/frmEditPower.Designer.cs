@@ -2266,7 +2266,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // btnOK
             // 
             btnOK.DialogResult = DialogResult.OK;
-            btnOK.Location = new System.Drawing.Point(740, 455);
+            btnOK.Location = new System.Drawing.Point(632, 455);
             btnOK.Name = "btnOK";
             btnOK.Size = new System.Drawing.Size(104, 41);
             btnOK.TabIndex = 3;
@@ -2276,7 +2276,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // btnCancel
             // 
             btnCancel.DialogResult = DialogResult.Cancel;
-            btnCancel.Location = new System.Drawing.Point(632, 455);
+            btnCancel.Location = new System.Drawing.Point(740, 455);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(104, 41);
             btnCancel.TabIndex = 4;
