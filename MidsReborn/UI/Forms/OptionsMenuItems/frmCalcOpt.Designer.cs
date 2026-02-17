@@ -35,7 +35,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             ComponentResourceManager resources = new ComponentResourceManager(typeof(frmCalcOpt));
             btnOK = new Button();
             btnCancel = new Button();
-            chkColorPrint = new CheckBox();
             myTip = new ToolTip(components);
             chkIOEffects = new CheckBox();
             chkSetBonus = new CheckBox();
@@ -108,14 +107,13 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             rbPvE = new RadioButton();
             TabPage3 = new TabPage();
             chkDisableUsageTips = new CheckBox();
-            cbWordwrapMode = new ComboBox();
-            label13 = new Label();
-            chkShowSelfBuffsAny = new CheckBox();
             groupBox18 = new GroupBox();
+            rbRegenFormat2 = new RadioButton();
+            rbRegenFormat1 = new RadioButton();
+            label13 = new Label();
             chkOldStyle = new CheckBox();
             cbTotalsWindowTitleOpt = new ComboBox();
             label2 = new Label();
-            chkNoTips = new CheckBox();
             chkMiddle = new CheckBox();
             GroupBox17 = new GroupBox();
             chkDimWindowBorders = new CheckBox();
@@ -180,7 +178,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             // btnOK
             // 
             btnOK.DialogResult = DialogResult.OK;
-            btnOK.Location = new System.Drawing.Point(400, 399);
+            btnOK.Location = new System.Drawing.Point(305, 399);
             btnOK.Name = "btnOK";
             btnOK.Size = new System.Drawing.Size(75, 28);
             btnOK.TabIndex = 59;
@@ -190,21 +188,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             // btnCancel
             // 
             btnCancel.DialogResult = DialogResult.Cancel;
-            btnCancel.Location = new System.Drawing.Point(305, 399);
+            btnCancel.Location = new System.Drawing.Point(400, 399);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(75, 28);
             btnCancel.TabIndex = 60;
             btnCancel.Text = "Cancel";
             btnCancel.Click += btnCancel_Click;
-            // 
-            // chkColorPrint
-            // 
-            chkColorPrint.Location = new System.Drawing.Point(675, 406);
-            chkColorPrint.Name = "chkColorPrint";
-            chkColorPrint.Size = new System.Drawing.Size(98, 16);
-            chkColorPrint.TabIndex = 2;
-            chkColorPrint.Text = "Print in color";
-            chkColorPrint.Visible = false;
             // 
             // myTip
             // 
@@ -924,11 +913,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             // TabPage3
             // 
             TabPage3.Controls.Add(chkDisableUsageTips);
-            TabPage3.Controls.Add(cbWordwrapMode);
-            TabPage3.Controls.Add(label13);
-            TabPage3.Controls.Add(chkShowSelfBuffsAny);
             TabPage3.Controls.Add(groupBox18);
-            TabPage3.Controls.Add(chkNoTips);
             TabPage3.Controls.Add(chkMiddle);
             TabPage3.Controls.Add(GroupBox17);
             TabPage3.Controls.Add(chkIOPrintLevels);
@@ -950,49 +935,53 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             chkDisableUsageTips.TabIndex = 83;
             chkDisableUsageTips.Text = "Disable usage tips";
             // 
-            // cbWordwrapMode
-            // 
-            cbWordwrapMode.DropDownStyle = ComboBoxStyle.DropDownList;
-            cbWordwrapMode.FormattingEnabled = true;
-            cbWordwrapMode.Items.AddRange(new object[] { "Legacy (some words are off view)", "New (goes multiline more often)", "Ellipsis (use '...' to  cut words)" });
-            cbWordwrapMode.Location = new System.Drawing.Point(439, 339);
-            cbWordwrapMode.Name = "cbWordwrapMode";
-            cbWordwrapMode.Size = new System.Drawing.Size(223, 21);
-            cbWordwrapMode.TabIndex = 82;
-            cbWordwrapMode.Visible = false;
-            cbWordwrapMode.SelectedIndexChanged += cbWordwrapMode_SelectedIndexChanged;
-            // 
-            // label13
-            // 
-            label13.AutoSize = true;
-            label13.Location = new System.Drawing.Point(253, 342);
-            label13.Name = "label13";
-            label13.Size = new System.Drawing.Size(165, 13);
-            label13.TabIndex = 81;
-            label13.Text = "Word-wrapping in power lists:";
-            label13.Visible = false;
-            // 
-            // chkShowSelfBuffsAny
-            // 
-            chkShowSelfBuffsAny.Location = new System.Drawing.Point(194, 321);
-            chkShowSelfBuffsAny.Name = "chkShowSelfBuffsAny";
-            chkShowSelfBuffsAny.Size = new System.Drawing.Size(259, 18);
-            chkShowSelfBuffsAny.TabIndex = 80;
-            chkShowSelfBuffsAny.Text = "Show \"in PvE/PvP\" for self buffs";
-            chkShowSelfBuffsAny.Visible = false;
-            chkShowSelfBuffsAny.CheckedChanged += chkShowSelfBuffsAny_CheckedChanged;
-            // 
             // groupBox18
             // 
+            groupBox18.Controls.Add(rbRegenFormat2);
+            groupBox18.Controls.Add(rbRegenFormat1);
+            groupBox18.Controls.Add(label13);
             groupBox18.Controls.Add(chkOldStyle);
             groupBox18.Controls.Add(cbTotalsWindowTitleOpt);
             groupBox18.Controls.Add(label2);
             groupBox18.Location = new System.Drawing.Point(388, 120);
             groupBox18.Name = "groupBox18";
-            groupBox18.Size = new System.Drawing.Size(353, 44);
+            groupBox18.Size = new System.Drawing.Size(353, 70);
             groupBox18.TabIndex = 79;
             groupBox18.TabStop = false;
             groupBox18.Text = "Totals Window:";
+            // 
+            // rbRegenFormat2
+            // 
+            rbRegenFormat2.AutoSize = true;
+            rbRegenFormat2.Location = new System.Drawing.Point(229, 42);
+            rbRegenFormat2.Name = "rbRegenFormat2";
+            rbRegenFormat2.Size = new System.Drawing.Size(82, 17);
+            rbRegenFormat2.TabIndex = 83;
+            rbRegenFormat2.TabStop = true;
+            rbRegenFormat2.Text = "Percentage";
+            rbRegenFormat2.UseVisualStyleBackColor = true;
+            rbRegenFormat2.CheckedChanged += rbRegenFormat2_CheckedChanged;
+            // 
+            // rbRegenFormat1
+            // 
+            rbRegenFormat1.AutoSize = true;
+            rbRegenFormat1.Location = new System.Drawing.Point(149, 42);
+            rbRegenFormat1.Name = "rbRegenFormat1";
+            rbRegenFormat1.Size = new System.Drawing.Size(48, 17);
+            rbRegenFormat1.TabIndex = 82;
+            rbRegenFormat1.TabStop = true;
+            rbRegenFormat1.Text = "HP/s";
+            rbRegenFormat1.UseVisualStyleBackColor = true;
+            rbRegenFormat1.CheckedChanged += rbRegenFormat1_CheckedChanged;
+            // 
+            // label13
+            // 
+            label13.AutoSize = true;
+            label13.Location = new System.Drawing.Point(8, 44);
+            label13.Name = "label13";
+            label13.Size = new System.Drawing.Size(117, 13);
+            label13.TabIndex = 81;
+            label13.Text = "Regeneration format:";
             // 
             // chkOldStyle
             // 
@@ -1022,18 +1011,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             label2.TabIndex = 0;
             label2.Text = "Show in titlebar:";
             // 
-            // chkNoTips
-            // 
-            chkNoTips.Location = new System.Drawing.Point(507, 321);
-            chkNoTips.Name = "chkNoTips";
-            chkNoTips.Size = new System.Drawing.Size(98, 18);
-            chkNoTips.TabIndex = 78;
-            chkNoTips.Text = "No Tooltips";
-            chkNoTips.Visible = false;
-            // 
             // chkMiddle
             // 
-            chkMiddle.Location = new System.Drawing.Point(507, 301);
+            chkMiddle.Location = new System.Drawing.Point(507, 337);
             chkMiddle.Name = "chkMiddle";
             chkMiddle.Size = new System.Drawing.Size(262, 18);
             chkMiddle.TabIndex = 77;
@@ -1058,7 +1038,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             GroupBox17.Controls.Add(Label21);
             GroupBox17.Controls.Add(udStatSize);
             GroupBox17.Controls.Add(udRTFSize);
-            GroupBox17.Location = new System.Drawing.Point(196, 166);
+            GroupBox17.Location = new System.Drawing.Point(196, 196);
             GroupBox17.Name = "GroupBox17";
             GroupBox17.Size = new System.Drawing.Size(545, 132);
             GroupBox17.TabIndex = 76;
@@ -1219,7 +1199,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             // 
             // chkIOPrintLevels
             // 
-            chkIOPrintLevels.Location = new System.Drawing.Point(194, 301);
+            chkIOPrintLevels.Location = new System.Drawing.Point(194, 337);
             chkIOPrintLevels.Name = "chkIOPrintLevels";
             chkIOPrintLevels.Size = new System.Drawing.Size(285, 18);
             chkIOPrintLevels.TabIndex = 75;
@@ -1259,7 +1239,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             GroupBox14.Controls.Add(udIOLevel);
             GroupBox14.Location = new System.Drawing.Point(196, 4);
             GroupBox14.Name = "GroupBox14";
-            GroupBox14.Size = new System.Drawing.Size(188, 160);
+            GroupBox14.Size = new System.Drawing.Size(188, 186);
             GroupBox14.TabIndex = 69;
             GroupBox14.TabStop = false;
             GroupBox14.Text = "Inventions:";
@@ -1268,7 +1248,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             // 
             cbCurrency.DropDownStyle = ComboBoxStyle.DropDownList;
             cbCurrency.FormattingEnabled = true;
-            cbCurrency.Location = new System.Drawing.Point(9, 81);
+            cbCurrency.Location = new System.Drawing.Point(9, 89);
             cbCurrency.Name = "cbCurrency";
             cbCurrency.Size = new System.Drawing.Size(171, 21);
             cbCurrency.TabIndex = 62;
@@ -1276,7 +1256,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             // label19
             // 
             label19.AutoSize = true;
-            label19.Location = new System.Drawing.Point(5, 64);
+            label19.Location = new System.Drawing.Point(5, 72);
             label19.Name = "label19";
             label19.Size = new System.Drawing.Size(103, 13);
             label19.TabIndex = 61;
@@ -1284,7 +1264,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             // 
             // btnIOReset
             // 
-            btnIOReset.Location = new System.Drawing.Point(8, 109);
+            btnIOReset.Location = new System.Drawing.Point(8, 124);
             btnIOReset.Name = "btnIOReset";
             btnIOReset.Size = new System.Drawing.Size(172, 44);
             btnIOReset.TabIndex = 59;
@@ -1387,7 +1367,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             CancelButton = btnCancel;
             ClientSize = new System.Drawing.Size(785, 434);
             Controls.Add(label12);
-            Controls.Add(chkColorPrint);
             Controls.Add(chkWarnOldDbVersion);
             Controls.Add(TabControl1);
             Controls.Add(btnCancel);
@@ -1421,7 +1400,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             GroupBox8.ResumeLayout(false);
             GroupBox6.ResumeLayout(false);
             TabPage3.ResumeLayout(false);
-            TabPage3.PerformLayout();
             groupBox18.ResumeLayout(false);
             groupBox18.PerformLayout();
             GroupBox17.ResumeLayout(false);
@@ -1442,7 +1420,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
         #endregion
         Button btnCancel;
         Button btnOK;
-        CheckBox chkColorPrint;
         ColorDialog cPicker;
         FolderBrowserDialog fbdSave;
         ToolTip myTip;
@@ -1487,12 +1464,10 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
         private RadioButton rbPvP;
         private RadioButton rbPvE;
         private TabPage TabPage3;
-        private CheckBox chkShowSelfBuffsAny;
         private GroupBox groupBox18;
         private CheckBox chkOldStyle;
         private ComboBox cbTotalsWindowTitleOpt;
         private Label label2;
-        private CheckBox chkNoTips;
         private CheckBox chkMiddle;
         private GroupBox GroupBox17;
         private CheckBox chkPowersBold;
@@ -1553,8 +1528,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
         private RadioButton rbUpdDisabled;
         private GroupBox GroupBox1;
         private Label label12;
-        private Label label13;
-        private ComboBox cbWordwrapMode;
         private CheckBox chkDisableUsageTips;
+        private RadioButton rbRegenFormat2;
+        private RadioButton rbRegenFormat1;
+        private Label label13;
     }
 }

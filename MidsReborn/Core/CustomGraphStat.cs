@@ -212,9 +212,12 @@ namespace Mids_Reborn.Core
             var hpValue = displayStats.HealthHitpointsNumeric(false);
             var hpValueUncapped = displayStats.HealthHitpointsNumeric(true);
             var hpBase = MidsContext.Character.Archetype.Hitpoints;
-            
+
+            const float regenBase = 100;
             var regenValue = displayStats.HealthRegenPercent(false);
             var regenValueUncapped = displayStats.HealthRegenPercent(true);
+            var regenValueRaw = displayStats.HealthRegenHPPerSec;
+            var regenValueRawUncapped = displayStats.HealthRegenHPPerSecUncapped;
             
             var absorbValue = Math.Min(displayStats.Absorb, hpBase);
 
@@ -457,18 +460,35 @@ namespace Mids_Reborn.Core
                     break;
 
                 case eCustomGraphStat.Regeneration:
-                    const float regenBase = 100;
+                    var gRegenBase = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                        ? regenBase
+                        : 0;
+
+                    var gRegenValue = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                        ? regenValue
+                        : regenValueRaw;
+
+                    var gRegenValueUncapped = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                        ? regenValueUncapped
+                        : regenValueRawUncapped;
+
+                    var gValuesUnit = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                        ? "%"
+                        : " HP/s";
+
+                    var gExtraInfo = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                        ? $" ({regenValueRaw:###0.##} HP/s)"
+                        : $" ({regenValue:###0.##}%){(regenBase > 0 ? $"\r\nBase: {regenBase:###0.##}%" : "")}";
+
                     ctl.AddItemPair("Regeneration",
-                        $"{regenValue:###0.##}%",
-                        Math.Max(0, regenBase),
-                        Math.Max(0, regenValue),
-                        Math.Max(0, regenValueUncapped),
-                        ((regenValueUncapped > regenValue) & (regenValue > 0)
-                            ? $"{regenValueUncapped:##0.##}% Regeneration, capped at {regenValue:##0.##}%"
-                            : $"{regenValue:##0.##}% Regeneration"
-                        ) +
-                        $" ({MidsContext.Character.DisplayStats.HealthRegenHPPerSec:##0.##} HP/s)" +
-                        (regenBase > 0 ? $"\r\nBase: {regenBase:##0.##}%" : ""));
+                        $"{gRegenValue:###0.##}{gValuesUnit}",
+                        Math.Max(0, gRegenBase),
+                        Math.Max(0, gRegenValue),
+                        Math.Max(0, gRegenValueUncapped),
+                        ((gRegenValueUncapped > gRegenValue) & (gRegenValue > 0)
+                            ? $"{gRegenValueUncapped:###0.##}{gValuesUnit} Regeneration, capped at {gRegenValue:###0.##}{gValuesUnit}"
+                            : $"{gRegenValue:###0.##}{gValuesUnit} Regeneration"
+                        ) + gExtraInfo);
                     break;
 
                 case eCustomGraphStat.MaxHP:
@@ -478,11 +498,11 @@ namespace Mids_Reborn.Core
                         Math.Max(0, hpValueUncapped),
                         0,
                         ((hpValueUncapped > hpValue) & (hpValue > 0)
-                            ? $"{hpValueUncapped:##0.##} HP, capped at {MidsContext.Character.Archetype.HPCap} HP"
-                            : $"{hpValue:##0.##} HP ({atName} HP cap: {MidsContext.Character.Archetype.HPCap} HP)"
+                            ? $"{hpValueUncapped:###0.##} HP, capped at {MidsContext.Character.Archetype.HPCap} HP"
+                            : $"{hpValue:###0.##} HP ({atName} HP cap: {MidsContext.Character.Archetype.HPCap} HP)"
 
                         ) +
-                        $"\r\nBase: {hpBase:##0.##} HP");
+                        $"\r\nBase: {hpBase:###0.##} HP");
                     break;
 
                 case eCustomGraphStat.Absorb:
@@ -491,7 +511,7 @@ namespace Mids_Reborn.Core
                         Math.Min(hpBase, Math.Max(0, absorbValue)),
                         Math.Max(0, absorbValue),
                         0,
-                        $"Absorb: {absorbValue:##0.##}{(absorbValue > float.Epsilon ? $" ({absorbValue / hpBase * 100:##0.##}% of base HP)" : "")}");
+                        $"Absorb: {absorbValue:###0.##}{(absorbValue > float.Epsilon ? $" ({absorbValue / hpBase * 100:###0.##}% of base HP)" : "")}");
                     break;
 
                 case eCustomGraphStat.EndRec:
@@ -1459,7 +1479,7 @@ namespace Mids_Reborn.Core
                     
                     eCustomGraphStat.Defense => new GraphSettings { ValueNames = statNames, Style = GraphStyle.EnhOnly, Appearance = colors, UnitType = StatUnitType.Percentage, Max = 100 },
                     eCustomGraphStat.Resistance => new GraphSettings { ValueNames = statNames, Style = GraphStyle.ThreeStatsStacked, Appearance = colors, UnitType = StatUnitType.Percentage, Max = 100 },
-                    eCustomGraphStat.Regeneration => new GraphSettings { ValueNames = statNames, Style = GraphStyle.ThreeStatsStacked, Appearance = colors, UnitType = StatUnitType.Custom, UnitSuffix = "%HP/s", Max = 100 },
+                    eCustomGraphStat.Regeneration => new GraphSettings { ValueNames = statNames, Style = GraphStyle.ThreeStatsStacked, Appearance = colors, UnitType = StatUnitType.Custom, UnitSuffix = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage ? "%" : "HP/s", Max = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage ? 2500 : 250 },
                     eCustomGraphStat.MaxHP => new GraphSettings { ValueNames = statNames, Style = GraphStyle.ThreeStatsStacked, Appearance = colors, UnitType = StatUnitType.Custom, UnitSuffix = "HP", Max = 4000 },
                     eCustomGraphStat.Absorb => new GraphSettings { ValueNames = statNames, Style = GraphStyle.EnhancedWithOvercap, Appearance = colors, UnitType = StatUnitType.Custom, UnitSuffix = "HP", Max = 100 },
                     eCustomGraphStat.EndRec => new GraphSettings { ValueNames = statNames, Style = GraphStyle.ThreeStatsStacked, Appearance = colors, UnitType = StatUnitType.Custom, UnitSuffix = "end/s", Max = 10 },

@@ -571,14 +571,29 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphRec.MarkerValue = 100;
             graphRec.Draw();
 
+            var regenValue = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                ? displayStats.HealthRegenPercent(false)
+                : displayStats.HealthRegenHPPerSec;
+            var regenValueUncapped = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                ? displayStats.HealthRegenPercent(true)
+                : displayStats.HealthRegenHPPerSecUncapped;
+            var gRegenUnit = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                ? "%"
+                : " HP/s";
+
             var iTip4 = $"Time to go from 0-100% health: {Utilities.FixDP(displayStats.HealthRegenTimeToFull)}s.\r\nHealth regenerated per second: {Utilities.FixDP(displayStats.HealthRegenHealthPerSec)}%\r\nHitPoints regenerated per second at level 50: {Utilities.FixDP(displayStats.HealthRegenHPPerSec)} HP";
-            if (Math.Abs(displayStats.HealthRegenPercent(false) - displayStats.HealthRegenPercent(true)) > 0.01)
+            if (MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.HPPerSecond)
             {
-                iTip4 += $"\r\nCapped from a total of: {displayStats.HealthRegenPercent(true):###0}%.";
+                iTip4 += $"\r\nRegeneration value: {displayStats.HealthRegenPercent(false):###0}%{(Math.Abs(displayStats.HealthRegenPercent(false) - displayStats.HealthRegenPercent(true)) > 0.01 ? $" (capped from {displayStats.HealthRegenPercent(true):###0}%)" : "")}";
             }
 
+            if (Math.Abs(regenValue - regenValueUncapped) > 0.01)
+            {
+                iTip4 += $"\r\nCapped from a total of: {regenValueUncapped:###0}{gRegenUnit}.";
+            }
+            
             graphRegen.Clear();
-            graphRegen.AddItem($"Regeneration|{displayStats.HealthRegenPercent(false):###0}%", Math.Max(0, displayStats.HealthRegenPercent(false)), Math.Max(0, displayStats.HealthRegenPercent(true)), iTip4);
+            graphRegen.AddItem($"Regeneration|{regenValue:###0}{gRegenUnit}", Math.Max(0, regenValue), Math.Max(0, regenValueUncapped), iTip4);
             graphRegen.Max = graphRegen.GetMaxValue();
             graphRegen.MarkerValue = 100f;
             graphRegen.Draw();

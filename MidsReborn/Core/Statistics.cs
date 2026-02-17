@@ -49,6 +49,7 @@ namespace Mids_Reborn.Core
         public float HealthRegenHealthPerSec => (float) (HealthRegen(false) * (double) _character.Archetype.BaseRegen * 1.66666662693024);
 
         public float HealthRegenHPPerSec => (float) (HealthRegen(false) * (double) _character.Archetype.BaseRegen * 1.66666662693024 * HealthHitpointsNumeric(false) / 100.0);
+        public float HealthRegenHPPerSecUncapped => (float)(HealthRegen(true) * (double)_character.Archetype.BaseRegen * 1.66666662693024 * HealthHitpointsNumeric(true) / 100.0);
 
         public float HealthRegenTimeToFull => HealthHitpointsNumeric(false) / HealthRegenHPPerSec;
 

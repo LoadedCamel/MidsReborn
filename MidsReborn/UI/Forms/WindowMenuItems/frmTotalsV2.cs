@@ -772,8 +772,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphHP.Clear();
             var regenValue = displayStats.HealthRegenPercent(false);
             var regenValueUncapped = displayStats.HealthRegenPercent(true);
+            var regenValueRaw = displayStats.HealthRegenHPPerSec;
+            var regenValueRawUncapped = displayStats.HealthRegenHPPerSecUncapped;
             const float regenBase = 100;
-            graphHP.AddItemPair("Regeneration",
+            /*graphHP.AddItemPair("Regeneration",
                 $"{regenValue:###0.##}%",
                 Math.Max(0, regenBase),
                 Math.Max(0, regenValue),
@@ -784,6 +786,36 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 ) +
                 $" ({MidsContext.Character.DisplayStats.HealthRegenHPPerSec:##0.##} HP/s)" +
                 (regenBase > 0 ? $"\r\nBase: {regenBase:##0.##}%" : ""));
+            */
+            var gRegenBase = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                ? regenBase
+                : 0;
+
+            var gRegenValue = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                ? regenValue
+                : regenValueRaw;
+
+            var gRegenValueUncapped = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                ? regenValueUncapped
+                : regenValueRawUncapped;
+
+            var gValuesUnit = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                ? "%"
+                : " HP/s";
+
+            var gRegenExtraInfo = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                ? $" ({regenValueRaw:###0.##} HP/s)"
+                : $" ({regenValue:###0.##}%){(regenBase > 0 ? $"\r\nBase: {regenBase:###0.##}%" : "")}";
+
+            graphHP.AddItemPair("Regeneration",
+                $"{gRegenValue:###0.##}{gValuesUnit}",
+                Math.Max(0, gRegenBase),
+                Math.Max(0, gRegenValue),
+                Math.Max(0, gRegenValueUncapped),
+                ((gRegenValueUncapped > gRegenValue) & (gRegenValue > 0)
+                    ? $"{gRegenValueUncapped:###0.##}{gValuesUnit} Regeneration, capped at {gRegenValue:###0.##}{gValuesUnit}"
+                    : $"{gRegenValue:###0.##}{gValuesUnit} Regeneration"
+                ) + gRegenExtraInfo);
 
             var hpValue = displayStats.HealthHitpointsNumeric(false);
             var hpValueUncapped = displayStats.HealthHitpointsNumeric(true);
@@ -803,6 +835,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 (absorbValue > 0
                     ? $"\r\nAbsorb: {absorbValue:##0.##} ({absorbValue / hpBase * 100:##0.##}% of base HP)"
                     : ""));
+
+            graphHP.PerItemScales = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                ? [4000, 4000]
+                : [250, 4000];
 
             graphHP.Size = graphHP.Size with { Height = Math.Max(graphHP.Size.Height, graphHP.ContentHeight + graphBottomMargin) };
             graphHP.Draw();

@@ -70,15 +70,20 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
                     radio.Checked = true;
                 }
             }
-
-
         }
 
         private void UpdRadioOnCheckedChanged(object? sender, EventArgs e)
         {
-            if (sender is not RadioButton selected) return;
+            if (sender is not RadioButton selected)
+            {
+                return;
+            }
+
             AutoUpdate = (ConfigData.AutoUpdType)selected.Tag;
-            if (AutoUpdate is ConfigData.AutoUpdType.Startup or ConfigData.AutoUpdType.Disabled) tbUpdDelayDays.Text = @"0";
+            if (AutoUpdate is ConfigData.AutoUpdType.Startup or ConfigData.AutoUpdType.Disabled)
+            {
+                tbUpdDelayDays.Text = @"0";
+            }
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -206,22 +211,31 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
         private void optDO_CheckedChanged(object sender, EventArgs e)
         {
             if (!optDO.Checked)
+            {
                 return;
-            optEnh.Text = "Dual Origin";
+            }
+
+            optEnh.Text = @"Dual Origin";
         }
 
         private void optSO_CheckedChanged(object sender, EventArgs e)
         {
             if (!optSO.Checked)
+            {
                 return;
-            optEnh.Text = "Single Origin";
+            }
+
+            optEnh.Text = @"Single Origin";
         }
 
         private void optTO_CheckedChanged(object sender, EventArgs e)
         {
             if (!optTO.Checked)
+            {
                 return;
-            optEnh.Text = "Training Origin";
+            }
+
+            optEnh.Text = @"Training Origin";
         }
 
         // Ref: chkIOLevel
@@ -254,12 +268,14 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
         {
             clbSuppression.BeginUpdate();
             clbSuppression.Items.Clear();
-            var names = Enum.GetNames(MidsContext.Config.Suppression.GetType());
-            var values = (int[])Enum.GetValues(MidsContext.Config.Suppression.GetType());
-            var num = names.Length - 1;
-            for (var index = 0; index <= num; ++index)
+            var names = Enum.GetNames<Enums.eSuppress>();
+            var values = Enum.GetValues<Enums.eSuppress>();
+            for (var index = 0; index < names.Length; index++)
+            {
                 clbSuppression.Items.Add(names[index],
-                    (MidsContext.Config.Suppression & (Enums.eSuppress)values[index]) != Enums.eSuppress.None);
+                    (MidsContext.Config.Suppression & values[index]) != Enums.eSuppress.None);
+            }
+
             clbSuppression.EndUpdate();
         }
 
@@ -295,7 +311,6 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             chkSetBonus.Checked = !config.I9.IgnoreSetBonusFX;
             chkRelSignOnly.Checked = config.ShowRelSymbols;
             chkIOPrintLevels.Checked = !config.I9.DisablePrintIOLevels;
-            chkColorPrint.Checked = config.PrintInColor;
             udRTFSize.Value = new decimal(config.RtFont.RTFBase / 2.0);
             udStatSize.Value = new decimal(config.RtFont.PairedBase);
             udPowSelectSize.Value = new decimal(config.RtFont.PowersSelectBase);
@@ -306,7 +321,6 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             chkPowersBold.Checked = config.RtFont.PowersBold;
             chkLoadLastFile.Checked = !config.DisableLoadLastFileOnStart;
             chkMiddle.Checked = !config.DisableRepeatOnMiddleClick;
-            chkNoTips.Checked = config.NoToolTips;
             chkShowAlphaPopup.Checked = !config.DisableAlphaPopup;
             chkUseArcanaTime.Checked = config.UseArcanaTime;
             chkDisableUsageTips.Checked = config.DisableTips;
@@ -327,13 +341,13 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             }
 
             cbCurrency.SelectedIndex = (int)config.PreferredCurrency;
-            chkShowSelfBuffsAny.Checked = config.ShowSelfBuffsAny;
             lblSaveFolder.Text = config.BuildsPath;
             chkWarnOldDbVersion.Checked = config.WarnOnOldDbMbd;
             chkDimWindowBorders.Checked = config.DimWindowStyleColors;
             rbEnhPopupCloseStyle1.Checked = config.CloseEnhSelectPopupByMove;
             rbEnhPopupCloseStyle2.Checked = !config.CloseEnhSelectPopupByMove;
-            cbWordwrapMode.SelectedIndex = (int)config.PowerListsWordwrapMode;
+            rbRegenFormat1.Checked = config.RegenFormat == ConfigData.RegenerationFormat.HPPerSecond;
+            rbRegenFormat2.Checked = config.RegenFormat == ConfigData.RegenerationFormat.Percentage;
 
             ResumeLayout();
         }
@@ -537,7 +551,6 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             config.ShowRelSymbols = chkRelSignOnly.Checked;
             config.ShowSoLevels = chkShowSOLevels.Checked;
             config.I9.DisablePrintIOLevels = !chkIOPrintLevels.Checked;
-            config.PrintInColor = chkColorPrint.Checked;
             config.RtFont.RTFBase = Convert.ToInt32(decimal.Multiply(udRTFSize.Value, new decimal(2)));
             config.RtFont.PairedBase = Convert.ToSingle(udStatSize.Value);
             config.RtFont.RTFBold = chkTextBold.Checked;
@@ -558,7 +571,6 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             //config.UpdatePath = this.txtUpdatePath.Text;
             config.DisableDesaturateInherent = false;
             config.DisableRepeatOnMiddleClick = !chkMiddle.Checked;
-            config.NoToolTips = chkNoTips.Checked;
             config.DisableAlphaPopup = !chkShowAlphaPopup.Checked;
             config.UseArcanaTime = chkUseArcanaTime.Checked;
             config.DisableTips = chkDisableUsageTips.Checked;
@@ -575,11 +587,9 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             config.WarnOnOldDbMbd = chkWarnOldDbVersion.Checked;
             config.DimWindowStyleColors = chkDimWindowBorders.Checked;
             config.CloseEnhSelectPopupByMove = rbEnhPopupCloseStyle1.Checked;
-        }
-
-        private void chkShowSelfBuffsAny_CheckedChanged(object sender, EventArgs e)
-        {
-            MidsContext.Config.ShowSelfBuffsAny = chkShowSelfBuffsAny.Checked;
+            config.RegenFormat = rbRegenFormat1.Checked
+                ? ConfigData.RegenerationFormat.HPPerSecond
+                : ConfigData.RegenerationFormat.Percentage;
         }
 
         private void FileAssocStatus_Update()
@@ -650,27 +660,25 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
 
         private void TbUpdDelayDaysOnTextChanged(object? sender, EventArgs e)
         {
-            if (sender is not TextBox textBox) return;
-            if (!textBox.Text.All(char.IsDigit))
-            {
-                textBox.Text = "3";
-            }
-            ;
-        }
-
-        private void cbWordwrapMode_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (MidsContext.Config == null)
+            if (sender is not TextBox textBox)
             {
                 return;
             }
 
-            MidsContext.Config.PowerListsWordwrapMode = cbWordwrapMode.SelectedIndex switch
+            if (!textBox.Text.All(char.IsDigit))
             {
-                1 => Enums.WordwrapMode.New,
-                2 => Enums.WordwrapMode.UseEllipsis,
-                _ => Enums.WordwrapMode.Legacy
-            };
+                textBox.Text = "3";
+            }
+        }
+
+        private void rbRegenFormat1_CheckedChanged(object sender, EventArgs e)
+        {
+            rbRegenFormat2.Checked = !rbRegenFormat1.Checked;
+        }
+
+        private void rbRegenFormat2_CheckedChanged(object sender, EventArgs e)
+        {
+            rbRegenFormat1.Checked = !rbRegenFormat2.Checked;
         }
     }
 }
