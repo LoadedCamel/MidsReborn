@@ -6164,7 +6164,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 foreach (var p in MidsContext.Character.CurrentBuild.Powers.OfType<PowerEntry>())
                 {
-                    for (var index2 = 0; index2 <= p.Slots.Length; index2++)
+                    for (var index2 = 0; index2 < p.Slots.Length; index2++)
                     {
                         p.Slots[index2].Enhancement.Enh = -1;
                     }
