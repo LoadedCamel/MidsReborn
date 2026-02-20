@@ -393,6 +393,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     lvConditionalBool.Columns[0].Text = @"Power Taken?";
                     lvConditionalBool.EndUpdate();
 
+                    lvConditionalBool.Visible = selected != null;
+
                     break;
                 
                 case "Stacks":
