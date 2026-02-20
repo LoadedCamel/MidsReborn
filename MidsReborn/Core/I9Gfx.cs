@@ -725,12 +725,12 @@ namespace Mids_Reborn.Core
 
         public static string GetDbEnhancementsPath()
         {
-            return Path.Combine(MidsContext.Config.DataPath, "Assets\\Enhancements");
+            return Path.Combine(MidsContext.Config.DataPath, "Images\\Enhancements");
         }
 
         public static string GetDbPowerSetsPath()
         {
-            return Path.Combine(MidsContext.Config.DataPath, "Assets\\Powersets");
+            return Path.Combine(MidsContext.Config.DataPath, "Images\\Powersets");
         }
 
         public static void DrawFlippingEnhancement(ref Graphics iTarget, Rectangle iDest, float iSize, int iImageIndex, Origin.Grade iGrade, Recipe.RecipeRarity? rarity = null, bool isPvP = false)
