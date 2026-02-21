@@ -441,6 +441,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             lvSubSub.DrawItem += ListView_DrawItem;
             lvSubSub.SelectedIndexChanged += lvSubSub_SelectedIndexChanged;
             lvSubSub.Leave += ListView_Leave;
+            lvSubSub.MouseClick += lvSubSub_MouseClick;
             // 
             // chSubSub
             // 
@@ -466,6 +467,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             lvSubAttribute.DrawItem += ListView_DrawItem;
             lvSubAttribute.SelectedIndexChanged += lvSubAttribute_SelectedIndexChanged;
             lvSubAttribute.Leave += ListView_Leave;
+            lvSubAttribute.MouseClick += lvSubAttribute_MouseClick;
             // 
             // chSub
             // 

@@ -1,5 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
@@ -20,6 +19,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         public IEffect MyFx;
         private IPower? MyPower { get; set; }
         private readonly int _effectIndex;
+        private string LastGotoSearch;
 
         public frmPowerEffect(ICloneable iFx, IPower? fxPower, int fxIndex = 0)
         {
@@ -34,6 +34,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             _effectIndex = fxIndex;
+            LastGotoSearch = "";
         }
 
         public frmPowerEffect(ICloneable iFx, int fxIndex = 0)
@@ -280,16 +281,16 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 MyFx.SpecialCase = Enums.eSpecialCase.None;
             }
             else switch (cbFXSpecialCase.SelectedIndex)
-            {
-                case > 0 when MyFx.ActiveConditionals.Count == 0:
-                    MyFx.SpecialCase = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
-                    btnEditConditions.Enabled = false;
-                    break;
-                case 0 when MyFx.ActiveConditionals.Count == 0:
-                    MyFx.SpecialCase = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
-                    btnEditConditions.Enabled = true;
-                    break;
-            }
+                {
+                    case > 0 when MyFx.ActiveConditionals.Count == 0:
+                        MyFx.SpecialCase = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
+                        btnEditConditions.Enabled = false;
+                        break;
+                    case 0 when MyFx.ActiveConditionals.Count == 0:
+                        MyFx.SpecialCase = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
+                        btnEditConditions.Enabled = true;
+                        break;
+                }
 
             UpdateFxText();
         }
@@ -476,36 +477,36 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     break;
 
                 default:
-                {
-                    switch (MyFx.EffectType)
                     {
-                        case Enums.eEffectType.Mez:
-                        case Enums.eEffectType.MezResist:
-                            SelectItemByName(lvSubAttribute, MyFx.MezType.ToString());
-                            break;
+                        switch (MyFx.EffectType)
+                        {
+                            case Enums.eEffectType.Mez:
+                            case Enums.eEffectType.MezResist:
+                                SelectItemByName(lvSubAttribute, MyFx.MezType.ToString());
+                                break;
 
-                        case Enums.eEffectType.Damage:
-                        case Enums.eEffectType.DamageBuff:
-                        case Enums.eEffectType.Defense:
-                        case Enums.eEffectType.Resistance:
-                        case Enums.eEffectType.Elusivity:
-                            SelectItemByName(lvSubAttribute, MyFx.DamageType.ToString());
-                            break;
+                            case Enums.eEffectType.Damage:
+                            case Enums.eEffectType.DamageBuff:
+                            case Enums.eEffectType.Defense:
+                            case Enums.eEffectType.Resistance:
+                            case Enums.eEffectType.Elusivity:
+                                SelectItemByName(lvSubAttribute, MyFx.DamageType.ToString());
+                                break;
 
-                        case Enums.eEffectType.Enhancement:
-                            SelectItemByName(lvSubAttribute, MyFx.ETModifies.ToString());
-                            break;
-                        
-                        case Enums.eEffectType.PowerRedirect:
-                            var group = MyFx.Override.Split('.');
-                            SelectItemByName(lvSubAttribute, group[0]);
-                            UpdateSubSubList();
-                            SelectItemByName(lvSubSub, MyFx.Override);
-                            break;
+                            case Enums.eEffectType.Enhancement:
+                                SelectItemByName(lvSubAttribute, MyFx.ETModifies.ToString());
+                                break;
+
+                            case Enums.eEffectType.PowerRedirect:
+                                var group = MyFx.Override.Split('.');
+                                SelectItemByName(lvSubAttribute, group[0]);
+                                UpdateSubSubList();
+                                SelectItemByName(lvSubSub, MyFx.Override);
+                                break;
+                        }
+
+                        break;
                     }
-
-                    break;
-                }
             }
 
             if (MyFx.EffectType is Enums.eEffectType.Enhancement or Enums.eEffectType.ResEffect & MyFx.ETModifies == Enums.eEffectType.Mez)
@@ -761,7 +762,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             {
                 txtOverride.Text = lvSubSub.SelectedItems[0].Text;
             }*/
-            
+
             UpdateFxText();
         }
 
@@ -1300,7 +1301,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     lvSubAttribute.Columns[0].Text = "Damage Type / Vector";
                     lvSubAttribute.Columns[0].Width = -2;
                     break;
-                
+
                 case Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
                     strArray = Enum.GetNames<Enums.eMez>();
                     index1 = (int)MyFx.MezType;
@@ -1463,7 +1464,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
                 return;
             }
-            
+
             tableLayoutPanel1.Enabled = true;
             tpPowerAttribs.Visible = false;
         }
@@ -1543,7 +1544,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var index1 = 0;
             lvSubSub.BeginUpdate();
             lvSubSub.Items.Clear();
-            
+
             var strArray = Array.Empty<string>();
             switch (MyFx.EffectType)
             {
@@ -1576,13 +1577,13 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
                     break;
 
-                /*case Enums.eEffectType.ResEffect:
-                    lvSubSub.Columns[0].Text = @"Effect type";
-                    lvSubSub.Columns[0].Width = -2;
-                    strArray = Enum.GetNames(typeof(Enums.eEffectType));
-                    index1 = 0;
+                    /*case Enums.eEffectType.ResEffect:
+                        lvSubSub.Columns[0].Text = @"Effect type";
+                        lvSubSub.Columns[0].Width = -2;
+                        strArray = Enum.GetNames(typeof(Enums.eEffectType));
+                        index1 = 0;
 
-                    break;*/
+                        break;*/
             }
 
             if (strArray.Length > 0)
@@ -1623,9 +1624,115 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private void chkRqToHitCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (_loading)
+            {
                 return;
+            }
+
             MyFx.RequiresToHitCheck = chkRqToHitCheck.Checked;
             UpdateFxText();
+        }
+
+        private void lvSubAttribute_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (_loading)
+            {
+                return;
+            }
+
+            if (e.Button != MouseButtons.Right)
+            {
+                return;
+            }
+
+            // Bug/missing feature: right click on list will also change selection
+            using var editor = new EditableLabel
+            {
+                Location = new Point(Location.X + lvSubAttribute.Location.X + e.Location.X + 2, Location.Y + lvSubAttribute.Location.Y + e.Location.Y + 2),
+                Text = LastGotoSearch == "" ? "Go to..." : LastGotoSearch,
+                TopMost = true
+            };
+
+            if (editor.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(editor.Text))
+            {
+                return;
+            }
+
+            var searchText = editor.Text.Trim();
+
+            LastGotoSearch = searchText;
+
+            var start = lvSubAttribute.SelectedIndices.Count > 0 && lvSubAttribute.SelectedIndices[0] >= 0
+                ? Math.Min(lvSubAttribute.SelectedIndices[0] + 1, lvSubAttribute.Items.Count - 1)
+                : 0;
+            for (var i = start; i < lvSubAttribute.Items.Count; i++)
+            {
+                if (!lvSubAttribute.Items[i].Text.Contains(searchText, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    continue;
+                }
+
+                lvSubAttribute.Items[i].Selected = true; // Mouse-click selection
+                lvSubAttribute.Items[i].Focused = true; // Keyboard selection
+                lvSubAttribute.Items[i].EnsureVisible();
+
+                return;
+            }
+        }
+
+        private void lvSubSub_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (_loading)
+            {
+                return;
+            }
+
+            if (e.Button != MouseButtons.Right)
+            {
+                return;
+            }
+
+            using var editor = new EditableLabel
+            {
+                Location = new Point(Location.X + lvSubSub.Location.X + e.Location.X + 2, Location.Y + lvSubSub.Location.Y + e.Location.Y + 2),
+                Text = LastGotoSearch == "" ? "Go to..." : LastGotoSearch,
+                TopMost = true
+            };
+
+            if (editor.ShowDialog() != DialogResult.OK)
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(editor.Text))
+            {
+                return;
+            }
+
+            var searchText = editor.Text.Trim();
+
+            LastGotoSearch = searchText;
+
+            var start = lvSubSub.SelectedIndices.Count > 0 && lvSubSub.SelectedIndices[0] >= 0
+                ? Math.Min(lvSubSub.SelectedIndices[0] + 1, lvSubSub.Items.Count - 1)
+                : 0;
+            for (var i = start; i < lvSubSub.Items.Count; i++)
+            {
+                if (!lvSubSub.Items[i].Text.Contains(searchText, StringComparison.InvariantCultureIgnoreCase))
+                {
+                    continue;
+                }
+
+                lvSubSub.Items[i].Selected = true;
+                lvSubSub.Items[i].Focused = true;
+                lvSubSub.Items[i].EnsureVisible();
+
+                return;
+            }
         }
     }
 }
