@@ -3346,7 +3346,7 @@ namespace Mids_Reborn
                     index1 = 1;
                 }
 
-                if (power?.GetPowerSet().SetType == ePowerSetType & power.Level - 1 == 0)
+                if ((power?.GetPowerSet().SetType == ePowerSetType) & (power.Level - 1 == 0))
                 {
                     numArray = DatabaseAPI.NidPowersAtLevelBranch(0, Powersets[(int)powersetType].nID);
                     var flag3 = false;
@@ -3363,7 +3363,7 @@ namespace Mids_Reborn
                         }
                     }
 
-                    if (CurrentBuild.Powers[index1].NIDPowerset > 0 & !flag3 | num3 == numArray.Length)
+                    if (((CurrentBuild.Powers[index1].NIDPowerset > 0) & !flag3) | (num3 == numArray.Length))
                     {
                         message = $"This power has been placed in a way that is not possible in-game. One of the {numArray.Length} level 1 powers from your {Enum.GetName(powersetType.GetType(), powersetType)} set must be taken at level 1.";
                         
@@ -3381,7 +3381,7 @@ namespace Mids_Reborn
                     : ListLabel.LlItemState.Selected;
             }
 
-            if (power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Ancillary | power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Pool)
+            if ((power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Ancillary) | (power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Pool))
             {
                 message = "This power has been placed in a way that is not possible in-game.";
                 message += power?.PowerSetIndex switch
@@ -3400,8 +3400,6 @@ namespace Mids_Reborn
                 }
 
                 message = "This power has been placed in a way that is not possible in-game.\r\nCheck that any powers that it requires have been taken first, and that if this is a branching powerset, the power does not conflict with another.";
-
-                return ListLabel.LlItemState.Invalid;
             }
 
             return ListLabel.LlItemState.Invalid;
@@ -3429,25 +3427,27 @@ namespace Mids_Reborn
                 : num1;
 
             message = "";
-            var flag2 = CurrentBuild.MeetsRequirement(power, nLevel);
+            var requiresOk = CurrentBuild.MeetsRequirement(power, nLevel);
             if (PowersetMutexClash(nIDPower))
             {
                 message = $"You cannot take the {Powersets[0].DisplayName} and {Powersets[1].DisplayName} sets together.";
+                
                 return EItemState.Heading;
             }
 
             if (!foundInBuild)
-                return flag2 && num1 >= power?.Level - 1
+            {
+                return requiresOk && num1 >= power?.Level - 1
                     ? EItemState.Enabled
                     : EItemState.Disabled;
+            }
 
             var num2 = 0;
-            Enums.PowersetType powersetType;
-            int[] numArray;
             do
             {
                 Enums.ePowerSetType ePowerSetType;
                 int index1;
+                Enums.PowersetType powersetType;
                 if (num2 == 0)
                 {
                     ePowerSetType = Enums.ePowerSetType.Primary;
@@ -3461,9 +3461,9 @@ namespace Mids_Reborn
                     index1 = 1;
                 }
 
-                if (power?.GetPowerSet().SetType == ePowerSetType & power.Level - 1 == 0)
+                if ((power?.GetPowerSet().SetType == ePowerSetType) & (power.Level - 1 == 0))
                 {
-                    numArray = DatabaseAPI.NidPowersAtLevelBranch(0, Powersets[(int)powersetType].nID);
+                    var numArray = DatabaseAPI.NidPowersAtLevelBranch(0, Powersets[(int)powersetType].nID);
                     var flag3 = false;
                     var num3 = 0;
                     foreach (var k in numArray)
@@ -3478,7 +3478,7 @@ namespace Mids_Reborn
                         }
                     }
 
-                    if (CurrentBuild.Powers[index1].NIDPowerset > 0 & !flag3 | num3 == numArray.Length)
+                    if (((CurrentBuild.Powers[index1].NIDPowerset > 0) & !flag3) | (num3 == numArray.Length))
                     {
                         message = $"This power has been placed in a way that is not possible in-game. One of the {numArray.Length} level 1 powers from your {Enum.GetName(powersetType.GetType(), powersetType)} set must be taken at level 1.";
 
@@ -3489,14 +3489,14 @@ namespace Mids_Reborn
                 ++num2;
             } while (num2 <= 1);
 
-            if (flag2)
+            if (requiresOk)
             {
                 return num1 <= power.Level - 1
                     ? EItemState.SelectedDisabled
                     : EItemState.Selected;
             }
 
-            if (power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Ancillary | power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Pool)
+            if ((power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Ancillary) | (power?.GetPowerSet()?.SetType == Enums.ePowerSetType.Pool))
             {
                 message = "This power has been placed in a way that is not possible in-game.";
                 message += power?.PowerSetIndex switch
@@ -3515,8 +3515,6 @@ namespace Mids_Reborn
                 }
 
                 message = "This power has been placed in a way that is not possible in-game.\r\nCheck that any powers that it requires have been taken first, and that if this is a branching powerset, the power does not conflict with another.";
-
-                return EItemState.Invalid;
             }
 
             return EItemState.Invalid;

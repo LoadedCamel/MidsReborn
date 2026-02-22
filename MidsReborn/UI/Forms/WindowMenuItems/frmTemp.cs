@@ -3,13 +3,12 @@ using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Windows.Forms;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.UI.Controls;
+using Mids_Reborn.UI.Controls.Skia;
 using MRBResourceLib;
 
 namespace Mids_Reborn.UI.Forms.WindowMenuItems
@@ -17,72 +16,64 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
     public partial class frmTemp : Form
     {
         private readonly MainWindow2 _myParent;
-
         private bool _locked;
-
         private List<IPower?> _myPowers;
-        private ImageButton ibClose;
-
-        private Label lblLock;
-        private ListLabel llLeft;
-        private ListLabel llRight;
-        private Panel Panel1;
-
-        private FrmIncarnate.CustomPanel Panel2;
-
-        private ctlPopUp PopInfo;
-
-        private VScrollBar VScrollBar1;
-
-        public frmTemp(MainWindow2 iParent, List<IPower?> iPowers)
+        
+        public frmTemp(MainWindow2 parentForm, List<IPower?> powersList)
         {
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
-            CenterToParent();
-            Location = new Point(Location.X, Location.Y - 100);
-            Load += frmTemp_Load;
-            _locked = false;
+            CenterToParent(); // Bug: Designer form.StartPosition doesn't work, has to be called before InitializeComponent()
+            Location = new Point(Location.X, Location.Y - 100); // ??
             InitializeComponent();
+            _locked = false;
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmTemp);
-            _myParent = iParent;
-            _myPowers = iPowers;
+            _myParent = parentForm;
+            _myPowers = powersList;
+        }
+
+        private void frmTemp_Load(object sender, EventArgs e)
+        {
+            BackColor = _myParent.BackColor;
+            PopInfo.ForeColor = BackColor; // ??
+
+            UpdateColorTheme();
+
+            var iPopup = new PopUp.PopupData();
+            var index = iPopup.Add();
+            iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title);
+            iPopup.Sections[index]
+                .Add("Powers in gray (or your custom 'power disabled' color) cannot be included in your stats.",
+                    PopUp.Colors.Text, 0.9f);
+            PopInfo.SetPopup(iPopup);
+            ChangedScrollFrameContents();
+            FillLists();
         }
 
         public void UpdateFonts(Font font)
         {
-            foreach (var llControl in Controls.OfType<ListLabel>())
+            SetListColors();
+
+            SkPairedList1.SuspendRedraw = true;
+            SkPairedList1.Font = font;
+            foreach (var item in SkPairedList1.Items)
             {
-                llControl.SuspendRedraw = true;
-                llControl.UpdateTextColors(ListLabel.LlItemState.Enabled,
-                    MidsContext.Config.RtFont.ColorPowerAvailable);
-                llControl.UpdateTextColors(ListLabel.LlItemState.Disabled,
-                    MidsContext.Config.RtFont.ColorPowerDisabled);
-                llControl.UpdateTextColors(ListLabel.LlItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
-                llControl.ScrollBarColor = MidsContext.Character.IsHero()
-                    ? MidsContext.Config.RtFont.ColorPowerTakenHero
-                    : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-                llControl.ScrollButtonColor = MidsContext.Character.IsHero()
-                    ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
-                    : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
-                llControl.UpdateTextColors(ListLabel.LlItemState.Selected,
-                    MidsContext.Character.IsHero()
-                        ? MidsContext.Config.RtFont.ColorPowerTakenHero
-                        : MidsContext.Config.RtFont.ColorPowerTakenVillain);
-                llControl.UpdateTextColors(ListLabel.LlItemState.SelectedDisabled,
-                    MidsContext.Character.IsHero()
-                        ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
-                        : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                llControl.HoverColor = MidsContext.Character.IsHero()
-                    ? MidsContext.Config.RtFont.ColorPowerHighlightHero
-                    : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-                var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
-                llControl.Font = new Font(llControl.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
-                foreach (var e in llControl.Items)
-                {
-                    e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
-                }
-                llControl.SuspendRedraw = false;
-                llControl.Refresh();
+                item.Bold = MidsContext.Config.RtFont.PowersSelectBold;
+            }
+
+            SkPairedList1.SuspendRedraw = false;
+            SkPairedList1.Invalidate();
+        }
+
+        public void UpdateFonts()
+        {
+            SetListColors();
+
+            SkPairedList1.Font = new Font(SkPairedList1.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase,
+                !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold, GraphicsUnit.Point);
+            foreach (var e in SkPairedList1.Items)
+            {
+                e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
             }
         }
 
@@ -96,64 +87,99 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private void FillLists()
         {
             _myPowers = _myPowers.OrderBy(x => x?.DisplayName).ToList();
-            llLeft.SuspendRedraw = true;
-            llRight.SuspendRedraw = true;
-            llLeft.ClearItems();
-            llRight.ClearItems();
-            for (var index = 0; index < _myPowers.Count; index++)
+            SkPairedList1.SuspendRedraw = true;
+            SkPairedList1.ClearItems();
+            var message = string.Empty; // Has to be initialized first
+            foreach (var p in _myPowers)
             {
-                var iState = !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index])
-                    ? !((_myPowers[index].PowerType != Enums.ePowerType.Click) | _myPowers[index].ClickBuff)
-                        ? !_myPowers[index].SubIsAltColor ? ListLabel.LlItemState.Disabled :
-                        ListLabel.LlItemState.Invalid
-                        : ListLabel.LlItemState.Enabled
-                    : ListLabel.LlItemState.Selected;
-                var iItem = !MidsContext.Config.RtFont.PairedBold
-                    ? new ListLabel.ListLabelItem(_myPowers[index].DisplayName, iState)
-                    : new ListLabel.ListLabelItem(_myPowers[index].DisplayName, iState, -1, -1, -1, "",
-                        ListLabel.LlFontFlags.Bold);
-                if (index >= _myPowers.Count / 2.0)
+                if (p == null)
                 {
-                    llRight.AddItem(iItem);
+                    continue;
                 }
-                else
+                
+                var item = new SkListItem(p.DisplayName, MainModule.MidsController.Toon.SkPowerState(p.PowerIndex, ref message), -1, -1, p.PowerIndex, p.FullName, EFontFlags.Bold)
                 {
-                    llLeft.AddItem(iItem);
+                    Bold = MidsContext.Config.RtFont.PairedBold
+                };
+
+                if (item.ItemState == EItemState.Invalid)
+                {
+                    item.Italic = true;
                 }
+
+                SkPairedList1.AddItem(item);
             }
 
-            llLeft.SuspendRedraw = false;
-            llRight.SuspendRedraw = false;
-            llLeft.Refresh();
-            llRight.Refresh();
+            SkPairedList1.SuspendRedraw = false;
+            SkPairedList1.Invalidate();
         }
 
-        private void frmTemp_Load(object sender, EventArgs e)
+        public void UpdateColorTheme()
         {
-            BackColor = _myParent.BackColor;
-            PopInfo.ForeColor = BackColor;
-            var llLeft = this.llLeft;
-            UpdateLlColours(ref llLeft);
-            this.llLeft = llLeft;
-            var llRight = this.llRight;
-            UpdateLlColours(ref llRight);
-            this.llRight = llRight;
+            SetButtonColors();
+            SetListColors();
+            UpdateFonts();
+        }
+
+        public void UpdateColorTheme(Enums.Alignment alignment)
+        {
+            SetButtonColors(alignment);
+            SetListColors(alignment);
+        }
+
+        private void SetButtonColors(Enums.Alignment? alignment = null)
+        {
             ibClose.IA = _myParent.Drawing.PImageAttributes;
-            ibClose.ImageOff = MidsContext.Character.IsHero()
+            var isHero = alignment == null
+                ? MidsContext.Character.IsHero() // Automatic
+                : alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante or Enums.Alignment.Resistance; // Manual, parameter-driven
+
+            ibClose.ImageOff = isHero
                 ? _myParent.Drawing.BxPower[2].Bitmap
                 : _myParent.Drawing.BxPower[4].Bitmap;
-            ibClose.ImageOn = MidsContext.Character.IsHero()
+            ibClose.ImageOn = isHero
                 ? _myParent.Drawing.BxPower[3].Bitmap
                 : _myParent.Drawing.BxPower[5].Bitmap;
-            var iPopup = new PopUp.PopupData();
-            var index = iPopup.Add();
-            iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title);
-            iPopup.Sections[index]
-                .Add("Powers in gray (or your custom 'power disabled' color) cannot be included in your stats.",
-                    PopUp.Colors.Text, 0.9f);
-            PopInfo.SetPopup(iPopup);
-            ChangedScrollFrameContents();
-            FillLists();
+        }
+
+        private void SetListColors(Enums.Alignment? alignment = null)
+        {
+            SkPairedList1.SuspendRedraw = true;
+
+            var isHero = alignment == null
+                ? MidsContext.Character.IsHero()
+                : alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante or Enums.Alignment.Resistance;
+
+            // ----------- Alignment-specific colors -----------
+            SkPairedList1.ScrollBarColor = isHero
+                ? MidsContext.Config.RtFont.ColorPowerTakenHero
+                : MidsContext.Config.RtFont.ColorPowerTakenVillain;
+            
+            SkPairedList1.ScrollButtonColor = isHero
+                ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
+                : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
+
+            SkPairedList1.UpdateTextColors(EItemState.Selected,
+                isHero
+                    ? MidsContext.Config.RtFont.ColorPowerTakenHero
+                    : MidsContext.Config.RtFont.ColorPowerTakenVillain);
+            
+            SkPairedList1.UpdateTextColors(EItemState.SelectedDisabled,
+                isHero
+                    ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
+                    : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
+            
+            SkPairedList1.HoverColor = isHero
+                ? MidsContext.Config.RtFont.ColorPowerHighlightHero
+                : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
+
+            // -------------- Others -------------
+            SkPairedList1.UpdateTextColors(EItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
+            SkPairedList1.UpdateTextColors(EItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
+            // No custom color for headings
+
+            SkPairedList1.SuspendRedraw = false;
+            SkPairedList1.Invalidate();
         }
 
         private void ibClose_ButtonClicked()
@@ -167,115 +193,72 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             lblLock.Visible = false;
         }
 
-        private void llLeft_ItemClick(ListLabel.ListLabelItem Item, MouseButtons Button)
+        private void SkPairedList1_ItemClick(SkListItem item, MouseButtons button)
         {
-            if (Button == MouseButtons.Right)
+            if (button == MouseButtons.Right)
             {
                 _locked = false;
-                MiniPowerInfo(Item.Index);
+                MiniPowerInfo(item.Index);
                 lblLock.Visible = true;
                 _locked = true;
+
+                return;
             }
-            else
-            {
-                if (Item.ItemState == ListLabel.LlItemState.Disabled)
-                {
-                    return;
-                }
 
-                if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[Item.Index]))
-                {
-                    MidsContext.Character.CurrentBuild.RemovePower(_myPowers[Item.Index]);
-                    Item.ItemState = ListLabel.LlItemState.Enabled;
-                }
-                else
-                {
-                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[Item.Index], 0).StatInclude = true;
-                    Item.ItemState = ListLabel.LlItemState.Selected;
-                }
-
-                llLeft.Refresh();
-                _myParent.PowerModified(false);
-                _myParent.DoRefresh();
-            }
-        }
-
-        private void llLeft_ItemHover(ListLabel.ListLabelItem Item)
-        {
-            MiniPowerInfo(Item.Index);
-        }
-
-        private void llLeft_MouseEnter(object sender, EventArgs e)
-        {
-            if (!ContainsFocus)
+            if (item.ItemState == EItemState.Disabled)
             {
                 return;
             }
 
-            Panel2.Focus();
-        }
-
-        private void llRight_ItemClick(ListLabel.ListLabelItem Item, MouseButtons Button)
-        {
-            var pIDX = Item.Index + llLeft.Items.Length;
-            if (Button == MouseButtons.Right)
+            if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[item.Index]))
             {
-                _locked = false;
-                MiniPowerInfo(pIDX);
-                lblLock.Visible = true;
-                _locked = true;
+                MidsContext.Character.CurrentBuild.RemovePower(_myPowers[item.Index]);
+                item.ItemState = EItemState.Enabled;
             }
             else
             {
-                if (Item.ItemState == ListLabel.LlItemState.Disabled)
-                {
-                    return;
-                }
-
-                if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[pIDX]))
-                {
-                    MidsContext.Character.CurrentBuild.RemovePower(_myPowers[pIDX]);
-                    Item.ItemState = ListLabel.LlItemState.Enabled;
-                }
-                else
-                {
-                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIDX], 0).StatInclude = true;
-                    Item.ItemState = ListLabel.LlItemState.Selected;
-                }
-
-                llRight.Refresh();
-                _myParent.PowerModified(false);
-                _myParent.DoRefresh();
+                MidsContext.Character.CurrentBuild.AddPower(_myPowers[item.Index], 0).StatInclude = true;
+                item.ItemState = EItemState.Selected;
             }
+
+            SkPairedList1.Invalidate();
+            
+            _myParent.PowerModified(false);
+            _myParent.DoRefresh();
         }
 
-        private void llRight_ItemHover(ListLabel.ListLabelItem Item)
+        private void SkPairedList1_ItemHover(SkListItem item)
         {
-            MiniPowerInfo(Item.Index + llLeft.Items.Length);
+            MiniPowerInfo(item.Index);
         }
 
-        private void llRight_MouseEnter(object sender, EventArgs e)
+        private void SkPairedList1_EmptyHover()
         {
-            llLeft_MouseEnter(RuntimeHelpers.GetObjectValue(sender), e);
+            MiniPowerInfo(-1);
         }
 
-        private void MiniPowerInfo(int pIDX)
+        private void SkPairedList1_MouseLeave(object sender, EventArgs e)
+        {
+            MiniPowerInfo(-1);
+        }
+
+        private void MiniPowerInfo(int pIdx)
         {
             if (_locked)
             {
                 return;
             }
 
-            IPower? power1 = new Power(_myPowers[pIDX]);
             var iPopup = new PopUp.PopupData();
-            if (pIDX < 0)
+            if (pIdx < 0)
             {
                 PopInfo.SetPopup(iPopup);
                 ChangedScrollFrameContents();
 
                 return;
             }
-            
+
+            var power1 = new Power(_myPowers[pIdx]);
             var index1 = iPopup.Add();
             var pwType = power1.PowerType switch
             {
@@ -297,7 +280,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     FontStyle.Bold, 1);
             }
 
-            if (power1.EntitiesAutoHit == Enums.eEntity.None | power1.Range > 20 & power1.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt))
+            if ((power1.EntitiesAutoHit == Enums.eEntity.None) | ((power1.Range > 20) & power1.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt)))
             {
                 iPopup.Sections?[index2].Add("Accuracy:", PopUp.Colors.Title,
                     $"{Utilities.FixDP(MidsContext.Config.ScalingToHit * power1.Accuracy * 100)}%",
@@ -313,7 +296,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             var durationEffectId = power1.GetDurationEffectID();
             var pwDuration = durationEffectId > -1 ? power1.Effects[durationEffectId].Duration : 0;
 
-            if (power1.PowerType != Enums.ePowerType.Toggle & power1.PowerType != Enums.ePowerType.Auto_ && pwDuration > 0)
+            if ((power1.PowerType != Enums.ePowerType.Toggle) & (power1.PowerType != Enums.ePowerType.Auto_) && pwDuration > 0)
             {
                 iPopup.Sections?[index2].Add("Duration:", PopUp.Colors.Title, $"{Utilities.FixDP(pwDuration)}s",
                     PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
@@ -396,32 +379,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             //     VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender),
             //         new ScrollEventArgs(ScrollEventType.EndScroll, 0));
             // }
-        }
-
-        private static void UpdateLlColours(ref ListLabel iList)
-        {
-            iList.UpdateTextColors(ListLabel.LlItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-            iList.UpdateTextColors(ListLabel.LlItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-            iList.UpdateTextColors(ListLabel.LlItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
-            iList.ScrollBarColor = MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerTakenHero
-                : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-            iList.ScrollButtonColor = MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
-                : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
-            iList.UpdateTextColors(ListLabel.LlItemState.Selected,
-                MidsContext.Character.IsHero()
-                    ? MidsContext.Config.RtFont.ColorPowerTakenHero
-                    : MidsContext.Config.RtFont.ColorPowerTakenVillain);
-            iList.UpdateTextColors(ListLabel.LlItemState.SelectedDisabled,
-                MidsContext.Character.IsHero()
-                    ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
-                    : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-            iList.HoverColor = MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerHighlightHero
-                : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-            var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
-            iList.Font = new Font(iList.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
         }
 
         private void VScrollBar1_Scroll(object sender, ScrollEventArgs e)

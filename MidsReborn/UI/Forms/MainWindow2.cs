@@ -549,6 +549,11 @@ namespace Mids_Reborn.UI.Forms
             {
                 fRotationHelper.UpdateColorTheme(e);
             }
+
+            if (fTemp is { Visible: true })
+            {
+                fTemp.UpdateColorTheme(e);
+            }
         }
 
         private void ibModeEx_OnClick(object sender, EventArgs eventArgs)

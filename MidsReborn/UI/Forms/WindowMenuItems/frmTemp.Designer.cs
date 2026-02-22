@@ -1,5 +1,9 @@
-using System.ComponentModel;
 using Mids_Reborn.UI.Controls;
+using Mids_Reborn.UI.Controls.Skia;
+using System.ComponentModel;
+using System.Windows.Forms;
+using ABI.Windows.UI;
+using Color = System.Drawing.Color;
 
 namespace Mids_Reborn.UI.Forms.WindowMenuItems
 {
@@ -31,159 +35,143 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         /// </summary>
         private void InitializeComponent()
         {
-            this.components = (System.ComponentModel.IContainer)new System.ComponentModel.Container();
-
-            this.Panel1 = new System.Windows.Forms.Panel();
-            this.VScrollBar1 = new System.Windows.Forms.VScrollBar();
-            this.PopInfo = new ctlPopUp();
-            this.lblLock = new System.Windows.Forms.Label();
-            this.ibClose = new ImageButton();
-            this.Panel2 = new FrmIncarnate.CustomPanel();
-            this.llRight = new ListLabel();
-            this.llLeft = new ListLabel();
-            this.Panel1.SuspendLayout();
-            this.Panel2.SuspendLayout();
-            this.SuspendLayout();
-            this.Panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.Panel1.Controls.Add((System.Windows.Forms.Control)this.VScrollBar1);
-            this.Panel1.Controls.Add((System.Windows.Forms.Control)this.PopInfo);
-
-            this.Panel1.Location = new System.Drawing.Point(12, 174);
-            this.Panel1.Name = "Panel1";
-
-            this.Panel1.Size = new System.Drawing.Size(414, 189);
-            this.Panel1.TabIndex = 35;
-
-            this.VScrollBar1.Location = new System.Drawing.Point(393, 0);
-            this.VScrollBar1.Name = "VScrollBar1";
-
-            this.VScrollBar1.Size = new System.Drawing.Size(17, 185);
-            this.VScrollBar1.TabIndex = 11;
-            this.VScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(VScrollBar1_Scroll);
-            this.PopInfo.BXHeight = 1024;
-            this.PopInfo.ColumnPosition = 0.5f;
-            this.PopInfo.ColumnRight = false;
-            this.PopInfo.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
-            this.PopInfo.ForeColor = System.Drawing.Color.FromArgb(0, 0, 32);
-            this.PopInfo.InternalPadding = 3;
-
-            this.PopInfo.Location = new System.Drawing.Point(0, 0);
-            this.PopInfo.Name = "PopInfo";
-            this.PopInfo.ScrollY = 0.0f;
-            this.PopInfo.SectionPadding = 8;
-
-            this.PopInfo.Size = new System.Drawing.Size(391, 200);
-            this.PopInfo.TabIndex = 9;
-            this.PopInfo.MouseWheel += new System.Windows.Forms.MouseEventHandler(PopInfo_MouseWheel);
-            this.PopInfo.MouseEnter += new System.EventHandler(PopInfo_MouseEnter);
-
-            this.lblLock.BackColor = System.Drawing.Color.Red;
-            this.lblLock.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblLock.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
-            this.lblLock.ForeColor = System.Drawing.Color.White;
-
-            this.lblLock.Location = new System.Drawing.Point(12, 155);
-            this.lblLock.Name = "lblLock";
-
-            this.lblLock.Size = new System.Drawing.Size(56, 16);
-            this.lblLock.TabIndex = 69;
-            this.lblLock.Text = "[Unlock]";
-            this.lblLock.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
-            this.lblLock.Visible = false;
-            this.lblLock.Click += new System.EventHandler(lblLock_Click);
-            this.ibClose.Checked = false;
-            this.ibClose.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
-
-            this.ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-
-            this.ibClose.Location = new System.Drawing.Point(166, 369);
-            this.ibClose.Name = "ibClose";
-
-            this.ibClose.Size = new System.Drawing.Size(105, 22);
-            this.ibClose.TabIndex = 7;
-            this.ibClose.TextOff = "Done";
-            this.ibClose.TextOn = "Alt Text";
-            this.ibClose.Toggle = false;
-            this.ibClose.ButtonClicked += new ImageButton.ButtonClickedEventHandler(ibClose_ButtonClicked);
-            this.Panel2.AutoScroll = true;
-            this.Panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
-            this.Panel2.Controls.Add((System.Windows.Forms.Control)this.llRight);
-            this.Panel2.Controls.Add((System.Windows.Forms.Control)this.llLeft);
-
-            this.Panel2.Location = new System.Drawing.Point(12, 12);
-            this.Panel2.Name = "Panel2";
-
-            this.Panel2.Size = new System.Drawing.Size(414, 140);
-            this.Panel2.TabIndex = 126;
-            this.Panel2.TabStop = true;
-            this.llRight.AutoSize = true;
-            this.llRight.Expandable = false;
-            this.llRight.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.llRight.HighVis = true;
-            this.llRight.HoverColor = System.Drawing.Color.WhiteSmoke;
-
-            this.llRight.Location = new System.Drawing.Point(196, 3);
-            this.llRight.MaxHeight = 600;
-            this.llRight.Name = "llRight";
-            this.llRight.PaddingX = 2;
-            this.llRight.PaddingY = 2;
-            this.llRight.Scrollable = false;
-            this.llRight.ScrollBarColor = System.Drawing.Color.Red;
-            this.llRight.ScrollBarWidth = 11;
-            this.llRight.ScrollButtonColor = System.Drawing.Color.FromArgb(192, 0, 0);
-
-            this.llRight.Size = new System.Drawing.Size(190, 414);
-
-            this.llRight.SizeNormal = new System.Drawing.Size(190, 120);
-            this.llRight.SuspendRedraw = false;
-            this.llRight.TabIndex = 111;
-            this.llRight.ItemHover += new ListLabel.ItemHoverEventHandler(llRight_ItemHover);
-            this.llRight.ItemClick += new ListLabel.ItemClickEventHandler(llRight_ItemClick);
-            this.llRight.MouseEnter += new System.EventHandler(llRight_MouseEnter);
-            this.llLeft.AutoSize = true;
-            this.llLeft.Expandable = false;
-            this.llLeft.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel);
-            this.llLeft.HighVis = true;
-            this.llLeft.HoverColor = System.Drawing.Color.WhiteSmoke;
-
-            this.llLeft.Location = new System.Drawing.Point(3, 3);
-            this.llLeft.MaxHeight = 600;
-            this.llLeft.Name = "llLeft";
-            this.llLeft.PaddingX = 2;
-            this.llLeft.PaddingY = 2;
-            this.llLeft.Scrollable = false;
-            this.llLeft.ScrollBarColor = System.Drawing.Color.Red;
-            this.llLeft.ScrollBarWidth = 11;
-            this.llLeft.ScrollButtonColor = System.Drawing.Color.FromArgb(192, 0, 0);
-
-            this.llLeft.Size = new System.Drawing.Size(187, 414);
-
-            this.llLeft.SizeNormal = new System.Drawing.Size(187, 120);
-            this.llLeft.SuspendRedraw = false;
-            this.llLeft.TabIndex = 110;
-            this.llLeft.MouseEnter += new System.EventHandler(llLeft_MouseEnter);
-            this.llLeft.ItemHover += new ListLabel.ItemHoverEventHandler(llLeft_ItemHover);
-            this.llLeft.ItemClick += new ListLabel.ItemClickEventHandler(llLeft_ItemClick);
-            this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            this.BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
-
-            this.ClientSize = new System.Drawing.Size(438, 403);
-            this.Controls.Add((System.Windows.Forms.Control)this.Panel2);
-            this.Controls.Add((System.Windows.Forms.Control)this.lblLock);
-            this.Controls.Add((System.Windows.Forms.Control)this.Panel1);
-            this.Controls.Add((System.Windows.Forms.Control)this.ibClose);
-            this.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
-            this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
-            this.ShowInTaskbar = false;
-            this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            this.Text = "Powers";
-            this.TopMost = true;
-            this.Panel1.ResumeLayout(false);
-            this.Panel2.ResumeLayout(false);
-            this.Panel2.PerformLayout();
-
-            this.ResumeLayout(false);
+            Panel1 = new System.Windows.Forms.Panel();
+            Panel2 = new System.Windows.Forms.Panel();
+            VScrollBar1 = new System.Windows.Forms.VScrollBar();
+            PopInfo = new ctlPopUp();
+            lblLock = new System.Windows.Forms.Label();
+            ibClose = new ImageButton();
+            SkPairedList1 = new SkPairedList();
+            Panel1.SuspendLayout();
+            Panel2.SuspendLayout();
+            SuspendLayout();
+            //
+            // SkPairedList1
+            //
+            SkPairedList1.AutoColumns = false;
+            SkPairedList1.BackColor = Color.Black;
+            SkPairedList1.Columns = 2;
+            SkPairedList1.Dock = DockStyle.Fill;
+            SkPairedList1.HighVis = true;
+            SkPairedList1.HoverColor = System.Drawing.Color.WhiteSmoke;
+            SkPairedList1.Location = new System.Drawing.Point(0, 0);
+            SkPairedList1.Name = "SkPairedList1";
+            SkPairedList1.Scrollable = true;
+            SkPairedList1.Size = new System.Drawing.Size(414, 140);
+            SkPairedList1.ItemClick += SkPairedList1_ItemClick;
+            SkPairedList1.ItemHover += SkPairedList1_ItemHover;
+            SkPairedList1.EmptyHover += SkPairedList1_EmptyHover;
+            SkPairedList1.MouseLeave += SkPairedList1_MouseLeave;
+            // 
+            // Panel1
+            // 
+            Panel1.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            Panel1.Controls.Add(VScrollBar1);
+            Panel1.Controls.Add(PopInfo);
+            Panel1.Location = new System.Drawing.Point(12, 174);
+            Panel1.Name = "Panel1";
+            Panel1.Size = new System.Drawing.Size(414, 189);
+            Panel1.TabIndex = 35;
+            // 
+            // VScrollBar1
+            // 
+            VScrollBar1.Location = new System.Drawing.Point(393, 0);
+            VScrollBar1.Name = "VScrollBar1";
+            VScrollBar1.Size = new System.Drawing.Size(17, 185);
+            VScrollBar1.TabIndex = 11;
+            VScrollBar1.Scroll += VScrollBar1_Scroll;
+            // 
+            // PopInfo
+            // 
+            PopInfo.BXHeight = 1024;
+            PopInfo.ColumnPosition = 0.5F;
+            PopInfo.ColumnRight = false;
+            PopInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
+            PopInfo.ForeColor = System.Drawing.Color.FromArgb(0, 0, 32);
+            PopInfo.InternalPadding = 3;
+            PopInfo.Location = new System.Drawing.Point(0, 0);
+            PopInfo.Margin = new System.Windows.Forms.Padding(4, 3, 4, 3);
+            PopInfo.Name = "PopInfo";
+            PopInfo.ScrollY = 0F;
+            PopInfo.SectionPadding = 8;
+            PopInfo.Size = new System.Drawing.Size(391, 204);
+            PopInfo.TabIndex = 9;
+            PopInfo.MouseEnter += PopInfo_MouseEnter;
+            PopInfo.MouseWheel += PopInfo_MouseWheel;
+            // 
+            // lblLock
+            // 
+            lblLock.BackColor = System.Drawing.Color.Red;
+            lblLock.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            lblLock.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, 0);
+            lblLock.ForeColor = System.Drawing.Color.White;
+            lblLock.Location = new System.Drawing.Point(12, 155);
+            lblLock.Name = "lblLock";
+            lblLock.Size = new System.Drawing.Size(56, 16);
+            lblLock.TabIndex = 69;
+            lblLock.Text = "[Unlock]";
+            lblLock.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            lblLock.Visible = false;
+            lblLock.Click += lblLock_Click;
+            // 
+            // ibClose
+            // 
+            ibClose.Checked = false;
+            ibClose.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, 0);
+            ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
+            ibClose.Location = new System.Drawing.Point(166, 369);
+            ibClose.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+            ibClose.Name = "ibClose";
+            ibClose.Size = new System.Drawing.Size(105, 22);
+            ibClose.TabIndex = 7;
+            ibClose.TextOff = "Done";
+            ibClose.TextOn = "Alt Text";
+            ibClose.Toggle = false;
+            ibClose.ButtonClicked += ibClose_ButtonClicked;
+            // 
+            // Panel2
+            // 
+            Panel2.AutoScroll = false;
+            Panel2.BorderStyle = System.Windows.Forms.BorderStyle.Fixed3D;
+            Panel2.Controls.Add(SkPairedList1);
+            Panel2.Location = new System.Drawing.Point(12, 12);
+            Panel2.Name = "Panel2";
+            Panel2.Size = new System.Drawing.Size(414, 140);
+            Panel2.TabIndex = 126;
+            Panel2.TabStop = true;
+            // 
+            // frmTemp
+            // 
+            AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
+            BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
+            ClientSize = new System.Drawing.Size(438, 403);
+            Controls.Add(Panel2);
+            Controls.Add(lblLock);
+            Controls.Add(Panel1);
+            Controls.Add(ibClose);
+            DoubleBuffered = true;
+            Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
+            FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
+            StartPosition = FormStartPosition.CenterParent;
+            Name = "frmTemp";
+            ShowInTaskbar = false;
+            StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
+            Text = "Powers";
+            TopMost = true;
+            Panel1.ResumeLayout(false);
+            Panel2.ResumeLayout(false);
+            ResumeLayout(false);
+            Load += frmTemp_Load;
         }
+
+        private ImageButton ibClose;
+        private Label lblLock;
+        private Panel Panel1;
+        private Panel Panel2;
+        private ctlPopUp PopInfo;
+        private VScrollBar VScrollBar1;
+        private SkPairedList SkPairedList1;
+
         #endregion
     }
 }
