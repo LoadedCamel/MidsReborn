@@ -8,6 +8,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.UI.Controls;
 using Mids_Reborn.UI.Controls.Skia;
 using MRBResourceLib;
 
@@ -21,9 +22,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         
         public frmTemp(MainWindow2 parentForm, List<IPower?> powersList)
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.DoubleBuffer | ControlStyles.ResizeRedraw, true);
-            CenterToParent(); // Bug: Designer form.StartPosition doesn't work, has to be called before InitializeComponent()
-            Location = new Point(Location.X, Location.Y - 100); // ??
             InitializeComponent();
             _locked = false;
             Icon = Resources.MRB_Icon_Concept;
@@ -34,8 +32,22 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void frmTemp_Load(object sender, EventArgs e)
         {
-            BackColor = _myParent.BackColor;
-            PopInfo.ForeColor = BackColor; // ??
+            // Bug: StartPosition doesn't work, if called from constructor (old way),
+            // parent window disappear when this one is closed
+            CenterToParent();
+            // PopInfo.ForeColor = BackColor; // ??
+
+            ibClose.Images = new ImageButtonEx.BaseImages
+            {
+                Background = Resources.HeroButton,
+                Hover = Resources.HeroButtonHover
+            };
+
+            ibClose.ImagesAlt = new ImageButtonEx.AltImages
+            {
+                Background = Resources.VillainButton,
+                Hover = Resources.VillainButtonHover
+            };
 
             UpdateColorTheme();
 
@@ -129,17 +141,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void SetButtonColors(Enums.Alignment? alignment = null)
         {
-            ibClose.IA = _myParent.Drawing.PImageAttributes;
-            var isHero = alignment == null
-                ? MidsContext.Character.IsHero() // Automatic
-                : alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante or Enums.Alignment.Resistance; // Manual, parameter-driven
-
-            ibClose.ImageOff = isHero
-                ? _myParent.Drawing.BxPower[2].Bitmap
-                : _myParent.Drawing.BxPower[4].Bitmap;
-            ibClose.ImageOn = isHero
-                ? _myParent.Drawing.BxPower[3].Bitmap
-                : _myParent.Drawing.BxPower[5].Bitmap;
+            ibClose.UseAlt = alignment == null
+                ? !MidsContext.Character.IsHero() // Automatic
+                : alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist; // Manual, parameter-driven;
         }
 
         private void SetListColors(Enums.Alignment? alignment = null)
@@ -173,7 +177,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
 
-            // -------------- Others -------------
+            // ----------- Others -----------
             SkPairedList1.UpdateTextColors(EItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
             SkPairedList1.UpdateTextColors(EItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
             // No custom color for headings
@@ -182,7 +186,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             SkPairedList1.Invalidate();
         }
 
-        private void ibClose_ButtonClicked()
+        private void ibClose_Click(object sender, EventArgs e)
         {
             Close();
         }

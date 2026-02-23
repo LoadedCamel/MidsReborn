@@ -1,9 +1,9 @@
+using ABI.Windows.UI;
 using Mids_Reborn.UI.Controls;
 using Mids_Reborn.UI.Controls.Skia;
+using MRBResourceLib;
 using System.ComponentModel;
 using System.Windows.Forms;
-using ABI.Windows.UI;
-using Color = System.Drawing.Color;
 
 namespace Mids_Reborn.UI.Forms.WindowMenuItems
 {
@@ -40,7 +40,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             VScrollBar1 = new System.Windows.Forms.VScrollBar();
             PopInfo = new ctlPopUp();
             lblLock = new System.Windows.Forms.Label();
-            ibClose = new ImageButton();
+            ibClose = new ImageButtonEx();
             SkPairedList1 = new SkPairedList();
             Panel1.SuspendLayout();
             Panel2.SuspendLayout();
@@ -49,7 +49,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // SkPairedList1
             //
             SkPairedList1.AutoColumns = false;
-            SkPairedList1.BackColor = Color.Black;
+            SkPairedList1.BackColor = System.Drawing.Color.Black;
             SkPairedList1.Columns = 2;
             SkPairedList1.Dock = DockStyle.Fill;
             SkPairedList1.HighVis = true;
@@ -116,18 +116,24 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             // ibClose
             // 
-            ibClose.Checked = false;
-            ibClose.Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, 0);
-            ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
-            ibClose.Location = new System.Drawing.Point(166, 369);
-            ibClose.Margin = new System.Windows.Forms.Padding(48, 22, 48, 22);
+            ibClose.BackgroundImageLayout = ImageLayout.None;
+            ibClose.ButtonType = ImageButtonEx.ButtonTypes.Normal;
+            ibClose.Font = new System.Drawing.Font("MS Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            ibClose.Location = new System.Drawing.Point(165, 366);
+            ibClose.Margin = new System.Windows.Forms.Padding(3, 4, 3, 4);
             ibClose.Name = "ibClose";
-            ibClose.Size = new System.Drawing.Size(105, 22);
+            ibClose.Size = new System.Drawing.Size(107, 28);
             ibClose.TabIndex = 7;
-            ibClose.TextOff = "Done";
-            ibClose.TextOn = "Alt Text";
-            ibClose.Toggle = false;
-            ibClose.ButtonClicked += ibClose_ButtonClicked;
+            ibClose.Text = "Done";
+            ibClose.TextOutline.Color = System.Drawing.Color.Black;
+            ibClose.TextOutline.Width = 3;
+            ibClose.ToggleState = ImageButtonEx.States.ToggledOff;
+            ibClose.ToggleText.Indeterminate = "Indeterminate State";
+            ibClose.ToggleText.ToggledOff = "ToggledOff State";
+            ibClose.ToggleText.ToggledOn = "ToggledOn State";
+            ibClose.ThreeState = false;
+            ibClose.UseAlt = false;
+            ibClose.Click += ibClose_Click;
             // 
             // Panel2
             // 
@@ -143,7 +149,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // frmTemp
             // 
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.None;
-            BackColor = System.Drawing.Color.FromArgb(0, 0, 32);
+            BackColor = System.Drawing.Color.Black;
             ClientSize = new System.Drawing.Size(438, 403);
             Controls.Add(Panel2);
             Controls.Add(lblLock);
@@ -164,7 +170,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             Load += frmTemp_Load;
         }
 
-        private ImageButton ibClose;
+        private ImageButtonEx ibClose;
         private Label lblLock;
         private Panel Panel1;
         private Panel Panel2;
