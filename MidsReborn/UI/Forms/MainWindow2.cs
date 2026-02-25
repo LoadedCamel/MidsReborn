@@ -6043,13 +6043,13 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 var iPowers = new List<IPower?>();
                 if (power != null)
                 {
-                    iPowers.AddRange(power.NIDSubPower.Select(t => DatabaseAPI.Database.Power[t]).OfType<IPower>().Where(p => p.ClickBuff || p.PowerType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle));
+                    iPowers.AddRange(power.NIDSubPower
+                        .Select(t => DatabaseAPI.Database.Power[t])
+                        .OfType<IPower>()
+                        .Where(p => p.ClickBuff || p.PowerType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle));
                 }
 
-                fTemp = new frmTemp(this, iPowers)
-                {
-                    Text = @"Temporary Powers"
-                };
+                fTemp = new frmTemp(this, iPowers);
             }
 
             if (!fTemp.Visible)

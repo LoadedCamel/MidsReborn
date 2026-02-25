@@ -162,7 +162,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             Name = "frmTemp";
             ShowInTaskbar = false;
             StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;
-            Text = "Powers";
+            Text = "Temporary Powers";
             TopMost = true;
             Panel1.ResumeLayout(false);
             Panel2.ResumeLayout(false);
