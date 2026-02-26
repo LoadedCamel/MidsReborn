@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -36,6 +37,7 @@ namespace Mids_Reborn.UI.Controls
         private event EventHandler<Image?>? ImageChanged;
         private new event EventHandler<string?>? TextChanged;
         private event EventHandler<bool> ThreeStateChanged;
+        private event EventHandler<EnabledStates> EnabledStateChanged;
         private event EventHandler<ButtonTypes>? ButtonTypeChanged;
         private event EventHandler<bool>? UseAltChanged;
         private event EventHandler<MouseButtons>? ToggleMouseButtonChanged;
@@ -53,6 +55,13 @@ namespace Mids_Reborn.UI.Controls
         {
             Normal,
             Toggle
+        }
+
+        public enum EnabledStates
+        {
+            Enabled,
+            DisabledGloss,
+            DisabledFlat
         }
 
         public enum States
@@ -81,11 +90,13 @@ namespace Mids_Reborn.UI.Controls
         private string? _text;
         private ButtonTypes _buttonType = ButtonTypes.Normal;
         private bool _isThreeState;
+        private EnabledStates _enabledState = EnabledStates.Enabled;
         private bool _useAlt;
         private bool _setByToggle;
         private MouseButtons _toggleMouseButton = MouseButtons.Left;
         private MouseClicks _toggleActivation = MouseClicks.LeftButton;
         private bool _displayVertically;
+        private bool _mouseOver;
 
         private Color ColorWhenClicked
         {
@@ -162,6 +173,14 @@ namespace Mids_Reborn.UI.Controls
         [Bindable(true)]
         [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
         public AltImages? ImagesAlt { get; set; }
+
+        [Description("The images to be used by the control for the disabled state.")]
+        [Category("Appearance")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Bindable(true)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Content)]
+        public DisabledImages? ImagesDis { get; set; }
 
         [Description("The text to display on the control when not in toggle mode.")]
         [Category("Appearance")]
@@ -278,6 +297,16 @@ namespace Mids_Reborn.UI.Controls
             {
                 _isThreeState = value;
                 ThreeStateChanged?.Invoke(this, value);
+            }
+        }
+
+        public EnabledStates EnabledState
+        {
+            get => _enabledState;
+            set
+            {
+                _enabledState = value;
+                EnabledStateChanged?.Invoke(this, value);
             }
         }
 
@@ -406,6 +435,44 @@ namespace Mids_Reborn.UI.Controls
             }
         }
 
+        [TypeConverter(typeof(ImageButtonExTypeConverter<DisabledImages>))]
+        public class DisabledImages : INotifyPropertyChanged
+        {
+            [Description("'Gloss' style used for when the button is disabled.")]
+            [Browsable(true)]
+            [EditorBrowsable(EditorBrowsableState.Always)]
+            [Bindable(true)]
+            [NotifyParentProperty(true)]
+            public Image? Gloss { get; set; }
+
+            [Description("'Flat' style used for when the button is disabled.")]
+            [Browsable(true)]
+            [EditorBrowsable(EditorBrowsableState.Always)]
+            [Bindable(true)]
+            [NotifyParentProperty(true)]
+            public Image? Flat { get; set; }
+
+            public override string ToString()
+            {
+                return @"Disabled Images";
+            }
+
+            public event PropertyChangedEventHandler? PropertyChanged;
+
+            private void OnPropertyChanged([CallerMemberName] string? propertyName = null)
+            {
+                PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
+            }
+
+            private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
+            {
+                if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+                field = value;
+                OnPropertyChanged(propertyName);
+                return true;
+            }
+        }
+
         [TypeConverter(typeof(ImageButtonExTypeConverter<StateText>))]
         public class StateText
         {
@@ -492,6 +559,7 @@ namespace Mids_Reborn.UI.Controls
             StateChanged += OnStateChanged;
             TextChanged += OnTextChanged;
             ThreeStateChanged += OnThreeStateChanged;
+            EnabledStateChanged += OnEnabledStateChanged;
             UseAltChanged += OnUseAltChanged;
             ToggleMouseButtonChanged += OnToggleMouseButtonChanged;
             VerticalDisplayChanged += OnVerticalDisplayChanged;
@@ -500,6 +568,9 @@ namespace Mids_Reborn.UI.Controls
             Images = new BaseImages();
             Images.PropertyChanged += ImagesOnPropertyChanged;
             ImagesAlt = new AltImages();
+            ImagesAlt.PropertyChanged += ImagesAltOnPropertyChanged;
+            ImagesDis = new DisabledImages();
+            ImagesDis.PropertyChanged += ImagesDisOnPropertyChanged;
             TextOutline = new Outline();
             TextOutline.PropertyChanged += TextOutlineOnPropertyChanged;
             ToggleText = new StateText();
@@ -528,6 +599,20 @@ namespace Mids_Reborn.UI.Controls
             if (e.PropertyName == "Background") ImageChanged?.Invoke(this, Images?.Background);
         }
 
+        private void ImagesAltOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (e.PropertyName == "Background") ImageChanged?.Invoke(this, ImagesAlt?.Background);
+        }
+
+        private void ImagesDisOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
+        {
+            if (_enabledState == EnabledStates.Enabled) return;
+
+            if (e.PropertyName is "Gloss" or "Flat")
+                ImageChanged?.Invoke(this,
+                    _enabledState == EnabledStates.DisabledGloss ? ImagesDis?.Gloss : ImagesDis?.Flat);
+        }
+
         private void OnUseAltChanged(object? sender, bool e)
         {
             if (Images == null) return;
@@ -542,6 +627,8 @@ namespace Mids_Reborn.UI.Controls
 
         private void OnMouseUp(object? sender, MouseEventArgs e)
         {
+            if (_enabledState != EnabledStates.Enabled) return;
+
             if (ButtonType == ButtonTypes.Normal)
             {
                 ForeColorChanged?.Invoke(this, _foreColor);
@@ -550,6 +637,8 @@ namespace Mids_Reborn.UI.Controls
 
         private void OnMouseDown(object? sender, MouseEventArgs e)
         {
+            if (_enabledState != EnabledStates.Enabled) return;
+
             switch (ButtonType)
             {
                 case ButtonTypes.Normal:
@@ -591,6 +680,7 @@ namespace Mids_Reborn.UI.Controls
         {
             Image? usedImage;
             if (_setByToggle) return;
+            if (_enabledState != EnabledStates.Enabled) return;
             switch (UseAlt)
             {
                 case true:
@@ -605,6 +695,7 @@ namespace Mids_Reborn.UI.Controls
                     break;
             }
 
+            _mouseOver = false;
             ImageChanged?.Invoke(this, usedImage);
             Refresh();
         }
@@ -612,6 +703,7 @@ namespace Mids_Reborn.UI.Controls
         private void OnMouseEnter(object? sender, EventArgs e)
         {
             if (_setByToggle) return;
+            if (_enabledState != EnabledStates.Enabled) return;
             var control = sender as ImageButtonEx;
             if (control?.Name != Name) return;
             Image? usedImage;
@@ -627,6 +719,7 @@ namespace Mids_Reborn.UI.Controls
                     break;
             }
 
+            _mouseOver = true;
             ImageChanged?.Invoke(this, usedImage);
             Refresh();
         }
@@ -664,6 +757,20 @@ namespace Mids_Reborn.UI.Controls
         private void OnThreeStateChanged(object? sender, bool e)
         {
             _isThreeState = e;
+        }
+
+        private void OnEnabledStateChanged(object? sender, EnabledStates e)
+        {
+            _enabledState = e;
+            _currentImage = e switch
+            {
+                EnabledStates.DisabledGloss => ImagesDis?.Gloss,
+                EnabledStates.DisabledFlat => ImagesDis?.Flat,
+                EnabledStates.Enabled when UseAlt => _mouseOver ? ImagesAlt?.Hover : ImagesAlt?.Background,
+                _ => _mouseOver ? Images?.Hover : Images?.Background
+            };
+
+            Debug.WriteLine($"<{Name}:{GetType().Name}> - OnEnabledStateChanged({Name}, {e})");
         }
 
         private void OnImageChanged(object? sender, Image? e)
@@ -742,6 +849,8 @@ namespace Mids_Reborn.UI.Controls
             e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             e.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
 
+            Debug.WriteLine($"<{Name}:{GetType().Name}>: OnPaint({EnabledState})");
+
             if (_displayVertically)
             {
                 if (_currentImage == null) return;
@@ -755,7 +864,7 @@ namespace Mids_Reborn.UI.Controls
                 var totalTextHeight = CurrentText.Select(c => e.Graphics.MeasureString(c.ToString(), Font)).Sum(size => size.Height);
 
                 // Start drawing the text from this vertical position to center it.
-                var verticalTextPosition = (ClientSize.Height - totalTextHeight) / 2;
+                var verticalTextPosition = (float)Math.Round((ClientSize.Height - totalTextHeight) / 2f);
                 
                 // Draw the rotated and resized image
                 e.Graphics.DrawImage(rotatedImage, ClientRectangle);
@@ -773,7 +882,7 @@ namespace Mids_Reborn.UI.Controls
         private void DrawVerticalText(PaintEventArgs e, float verticalPosition)
         {
             using var brush = new SolidBrush(_currentTextColor);
-            float horizontalCenter = ClientSize.Width / 2;
+            var horizontalCenter = ClientSize.Width / 2f;
             if (CurrentText == null) return;
             foreach (var character in CurrentText)
             {
@@ -796,17 +905,15 @@ namespace Mids_Reborn.UI.Controls
             if (_currentImage == null)
             {
                 e.Graphics.DrawRectangle(rectPen, rect);
-                gfxPath.AddString($"{CurrentText}", Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle,
-                    new StringFormat
-                        { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
             }
             else
             {
                 e.Graphics.DrawImage(_currentImage, ClientRectangle);
-                gfxPath.AddString($"{CurrentText}", Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle,
-                    new StringFormat
-                        { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
             }
+
+            gfxPath.AddString($"{CurrentText}", Font.FontFamily, (int)Font.Style, Font.Size, ClientRectangle,
+                new StringFormat
+                    { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
 
             outlinePen.LineJoin = LineJoin.Round;
             e.Graphics.DrawPath(outlinePen, gfxPath);

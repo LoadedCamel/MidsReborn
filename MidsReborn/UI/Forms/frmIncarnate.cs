@@ -1,3 +1,10 @@
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.UI.Controls;
+using Mids_Reborn.UI.Controls.Skia;
+using MRBResourceLib;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,40 +13,233 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
-using Mids_Reborn.Core;
-using Mids_Reborn.Core.Base.Data_Classes;
-using Mids_Reborn.Core.Base.Display;
-using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.UI.Controls;
-using MRBResourceLib;
 
 namespace Mids_Reborn.UI.Forms
 {
     public partial class FrmIncarnate : Form
     {
-        private readonly ImageButton[] _buttonArray;
+        private enum IncarnateGroup
+        {
+            Alpha,
+            Judgement,
+            Interface,
+            Lore,
+            Destiny,
+            Hybrid,
+            Genesis,
+            Stance,
+            Vitae,
+            Omega
+        }
+
+        private readonly Dictionary<IncarnateGroup, ImageButtonEx> _buttons;
         private readonly MainWindow2? _myParent;
         private bool _locked;
         private IPower?[]? _myPowers;
+        private IncarnateGroup _currentIncarnateGroup;
+        private const ImageButtonEx.EnabledStates DisabledButtonStyle = ImageButtonEx.EnabledStates.DisabledGloss;
 
         public FrmIncarnate(ref MainWindow2 iParent)
         {
-            SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw, true);
             Icon = Resources.MRB_Icon_Concept;
             _myParent = iParent;
-            Load += frmIncarnate_Load;
-            FormClosing += FrmIncarnate_FormClosing;
-            _myPowers = Array.Empty<IPower>();
             _locked = false;
-            _buttonArray = new ImageButton[10];
-            _myPowers = DatabaseAPI.GetPowersetByName("Alpha", Enums.ePowerSetType.Incarnate)?.Powers;
+            _currentIncarnateGroup = IncarnateGroup.Alpha;
+            _myPowers = DatabaseAPI.GetPowersetByName(_currentIncarnateGroup.ToString(), Enums.ePowerSetType.Incarnate)?.Powers;
             InitializeComponent();
-            // PopInfo events
-            _popInfo!.MouseWheel += PopInfo_MouseWheel;
-            _popInfo.MouseEnter += PopInfo_MouseEnter;
+            _buttons = new Dictionary<IncarnateGroup, ImageButtonEx>
+            {
+                { IncarnateGroup.Alpha, BtnAlpha },
+                { IncarnateGroup.Judgement, BtnJudgement },
+                { IncarnateGroup.Interface, BtnInterface },
+                { IncarnateGroup.Lore, BtnLore },
+                { IncarnateGroup.Destiny, BtnDestiny },
+                { IncarnateGroup.Hybrid, BtnHybrid },
+                { IncarnateGroup.Genesis, BtnGenesis },
+                { IncarnateGroup.Stance, BtnStance },
+                { IncarnateGroup.Vitae, BtnVitae },
+                { IncarnateGroup.Omega, BtnOmega }
+            };
         }
 
-        private void FrmIncarnate_FormClosing(object? sender, FormClosingEventArgs e)
+        private void frmIncarnate_Load(object? sender, EventArgs e)
+        {
+            // Bug: StartPosition doesn't work, if called from constructor (old way)
+            CenterToParent();
+
+            var iPopup = new PopUp.PopupData();
+            var index = iPopup.Add();
+            iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title);
+            iPopup.Sections[index]
+                .Add("Powers in gray (or your custom 'power disabled' color) cannot be included in your stats.",
+                    PopUp.Colors.Text, 0.9f);
+            PopInfo.SetPopup(iPopup);
+            ChangedScrollFrameContents();
+            ToggleButtons();
+            EnableButtons();
+            UpdateColorTheme();
+            UpdateFonts();
+            FillLists("Alpha");
+        }
+
+        public void UpdateColorTheme()
+        {
+            SetListColors();
+
+            foreach (var g in _buttons)
+            {
+                g.Value.UseAlt = MidsContext.Character?.IsHero() == false;
+            }
+
+            BtnDone.UseAlt = MidsContext.Character?.IsHero() == false;
+        }
+
+        public void UpdateColorTheme(Enums.Alignment alignment)
+        {
+            SetListColors(alignment);
+
+            foreach (var g in _buttons)
+            {
+                g.Value.UseAlt = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            }
+
+            BtnDone.UseAlt = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+        }
+
+        private void SetListColors(Enums.Alignment? alignment = null)
+        {
+            SkPairedList1.SuspendRedraw = true;
+
+            var isHero = alignment == null
+                ? MidsContext.Character.IsHero()
+                : alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante or Enums.Alignment.Resistance;
+
+            // ----------- Alignment-specific colors -----------
+            SkPairedList1.ScrollBarColor = isHero
+                ? MidsContext.Config.RtFont.ColorPowerTakenHero
+                : MidsContext.Config.RtFont.ColorPowerTakenVillain;
+
+            SkPairedList1.ScrollButtonColor = isHero
+                ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
+                : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
+
+            SkPairedList1.UpdateTextColors(EItemState.Selected,
+                isHero
+                    ? MidsContext.Config.RtFont.ColorPowerTakenHero
+                    : MidsContext.Config.RtFont.ColorPowerTakenVillain);
+
+            SkPairedList1.UpdateTextColors(EItemState.SelectedDisabled,
+                isHero
+                    ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
+                    : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
+
+            SkPairedList1.HoverColor = isHero
+                ? MidsContext.Config.RtFont.ColorPowerHighlightHero
+                : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
+
+            // ----------- Others -----------
+            SkPairedList1.UpdateTextColors(EItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
+            SkPairedList1.UpdateTextColors(EItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
+            // No custom color for headings
+
+            SkPairedList1.SuspendRedraw = false;
+            SkPairedList1.Invalidate();
+        }
+
+        public void UpdateFonts(Font font)
+        {
+            UpdateColorTheme();
+
+            SkPairedList1.SuspendRedraw = true;
+            SkPairedList1.Font = font;
+            foreach (var item in SkPairedList1.Items)
+            {
+                item.Bold = MidsContext.Config.RtFont.PowersSelectBold;
+            }
+
+            SkPairedList1.SuspendRedraw = false;
+            SkPairedList1.Invalidate();
+        }
+
+        public void UpdateFonts()
+        {
+            UpdateColorTheme();
+
+            SkPairedList1.Font = new Font(SkPairedList1.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase,
+                !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold, GraphicsUnit.Point);
+            foreach (var e in SkPairedList1.Items)
+            {
+                e.Bold = MidsContext.Config.RtFont.PowersSelectBold;
+            }
+        }
+
+        private void IncarnateGroupButton_Click(object? sender, EventArgs e)
+        {
+            if (sender is not ImageButtonEx btn)
+            {
+                return;
+            }
+
+            var btnNames = _buttons.Values.Select(b => b.Name);
+            if (!btnNames.Contains(btn.Name))
+            {
+                return;
+            }
+
+            var group = _buttons.First(g => g.Value.Name == btn.Name).Key;
+            if (group == _currentIncarnateGroup)
+            {
+                return;
+            }
+
+            ToggleButtons(group);
+            _currentIncarnateGroup = group;
+            FillLists(_currentIncarnateGroup.ToString());
+        }
+
+        private void ToggleButtons(IncarnateGroup? newGroup = null)
+        {
+            var changedGroup = newGroup == null || newGroup != _currentIncarnateGroup;
+            Debug.WriteLine($"ToggleButtons({(newGroup == null ? "null" : newGroup)}): changedGroup: {changedGroup}");
+            newGroup ??= _currentIncarnateGroup;
+            Debug.WriteLine($"  New group: {newGroup}, Current group: {_currentIncarnateGroup}");
+
+            if (!changedGroup)
+            {
+                return;
+            }
+
+            foreach (var g in _buttons)
+            {
+                if (newGroup == g.Key)
+                {
+                    g.Value.ToggleState = ImageButtonEx.States.ToggledOn;
+                    g.Value.Invalidate();
+
+                    continue;
+                }
+                
+                g.Value.ToggleState = ImageButtonEx.States.ToggledOff;
+            }
+        }
+
+        private void EnableButtons()
+        {
+            foreach (var g in _buttons)
+            {
+                Debug.WriteLine($"EnableButtons({g.Key}): {DatabaseAPI.ServerData.EnabledIncarnates[g.Key.ToString()]}");
+                g.Value.EnabledState = DatabaseAPI.ServerData.EnabledIncarnates[g.Key.ToString()]
+                    ? ImageButtonEx.EnabledStates.Enabled
+                    : DisabledButtonStyle;
+            }
+        }
+
+        private void BtnDone_Click(object? sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void frmIncarnate_FormClosing(object? sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
             {
@@ -54,9 +254,9 @@ namespace Mids_Reborn.UI.Forms
 
         private void ChangedScrollFrameContents()
         {
-            _vScrollBar1.Value = 0;
-            _vScrollBar1.Maximum = (int) Math.Round(_popInfo.lHeight * (_vScrollBar1.LargeChange / (double) _panel1.Height));
-            VScrollBar1_Scroll(_vScrollBar1, new ScrollEventArgs(ScrollEventType.EndScroll, 0));
+            VScrollBar1.Value = 0;
+            VScrollBar1.Maximum = (int)Math.Round(PopInfo.lHeight * (VScrollBar1.LargeChange / (double)Panel1.Height));
+            VScrollBar1_Scroll(VScrollBar1, new ScrollEventArgs(ScrollEventType.EndScroll, 0));
         }
 
         private void FillLists(string setName)
@@ -74,6 +274,7 @@ namespace Mids_Reborn.UI.Forms
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Spiritual"));
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Vigor"));
                     break;
+                
                 case "Judgement":
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Cryonic"));
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Ion"));
@@ -82,6 +283,7 @@ namespace Mids_Reborn.UI.Forms
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Void"));
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Vorpal"));
                     break;
+                
                 case "Interface":
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Cognitive"));
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Degenerative"));
@@ -92,6 +294,7 @@ namespace Mids_Reborn.UI.Forms
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Reactive"));
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Spectral"));
                     break;
+                
                 case "Lore":
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Arachnos"));
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Banished Pantheon"));
@@ -115,6 +318,7 @@ namespace Mids_Reborn.UI.Forms
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Vanguard"));
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Warworks"));
                     break;
+                
                 case "Destiny":
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Ageless"));
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Barrier"));
@@ -122,12 +326,14 @@ namespace Mids_Reborn.UI.Forms
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Incandescence"));
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Rebirth"));
                     break;
+                
                 case "Hybrid":
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Assault"));
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Control"));
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Melee"));
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Support"));
                     break;
+                
                 case "Genesis":
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Data"));
                     newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Fate"));
@@ -137,48 +343,41 @@ namespace Mids_Reborn.UI.Forms
             }
 
             _myPowers = newPowerList.ToArray();
-            LlLeft.SuspendRedraw = true;
-            LlRight.SuspendRedraw = true;
-            LlLeft.ClearItems();
-            LlRight.ClearItems();
-            var num1 = _myPowers.Length - 1;
-            for (var index = 0; index <= num1; ++index)
+            SkPairedList1.SuspendRedraw = true;
+            SkPairedList1.ClearItems();
+
+            foreach (var p in _myPowers)
             {
-                ListLabel.LlItemState iState;
-                if (MidsContext.Character?.CurrentBuild != null && !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index]))
+                if (p == null)
                 {
-                    if (_myPowers[index].DisplayName != "Nothing")
-                    {
-                        iState = ListLabel.LlItemState.Enabled;
-                    }
-                    else
-                    {
-                        iState = ListLabel.LlItemState.Disabled;
-                    }
-                }
-                else
-                {
-                    iState = ListLabel.LlItemState.Selected;
+                    continue;
                 }
 
-                var iItem = !MidsContext.Config.RtFont.PairedBold ? new ListLabel.ListLabelItem(_myPowers[index].DisplayName, iState) : new ListLabel.ListLabelItem(_myPowers[index].DisplayName, iState, -1, -1, -1, "", ListLabel.LlFontFlags.Bold);
-                if (index < _myPowers.Length / 2)
+                var state = MidsContext.Character?.CurrentBuild != null &&
+                                   !MidsContext.Character.CurrentBuild.PowerUsed(p)
+                    ? p.DisplayName != "Nothing"
+                        ? EItemState.Enabled
+                        : EItemState.Disabled
+                    : EItemState.Selected;
+
+                var item = new SkListItem(p.DisplayName, state, -1, -1, -1, p.FullName, EFontFlags.Bold)
                 {
-                    LlLeft.AddItem(iItem);
-                }
-                else
+                    Bold = MidsContext.Config.RtFont.PairedBold
+                };
+
+                if (item.ItemState == EItemState.Invalid)
                 {
-                    LlRight.AddItem(iItem);
+                    item.Italic = true;
                 }
+
+                SkPairedList1.AddItem(item);
             }
 
-            LlLeft.SuspendRedraw = false;
-            LlRight.SuspendRedraw = false;
-            LlLeft.Invalidate();
-            LlRight.Invalidate();
+            SkPairedList1.SuspendRedraw = false;
+            SkPairedList1.Invalidate();
         }
 
-        private static IEnumerable<IPower?> ParseIncarnate(List<IPower?> powerList, string order, string name)
+        private static List<IPower?> ParseIncarnate(List<IPower?> powerList, string order, string name)
         {
             var pairList = new List<KeyValuePair<int, IPower?>>();
             var tList = powerList.FindAll(x => x != null && x.DisplayName.Contains(name));
@@ -194,42 +393,37 @@ namespace Mids_Reborn.UI.Forms
                         case "Alpha":
                             pos = (int)Enum.Parse(typeof(Enums.eAlphaOrder), value.Replace(" ", "_"));
                             break;
+                        
                         case "Judgement":
                             pos = (int)Enum.Parse(typeof(Enums.eJudgementOrder), value.Replace(" ", "_"));
                             break;
+                        
                         case "Interface":
                             pos = (int)Enum.Parse(typeof(Enums.eInterfaceOrder), value.Replace(" ", "_"));
                             break;
+                        
                         case "Lore":
-                            switch (name)
+                            value = name switch
                             {
-                                case "Banished Pantheon":
-                                    value = power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", "");
-                                    break;
-                                case "Knives of Vengeance":
-                                    value = power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} {nSplit[2]} ", "");
-                                    break;
-                                case "Polar Lights":
-                                    value = power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", "");
-                                    break;
-                                case "Robotic Drones":
-                                    value = power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", "");
-                                    break;
-                                case "Storm Elemental":
-                                    value = power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", "");
-                                    break;
-                                case "Talons of Vengeance":
-                                    value = power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} {nSplit[2]} ", "");
-                                    break;
-                            }
+                                "Banished Pantheon" => power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", ""),
+                                "Knives of Vengeance" => power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} {nSplit[2]} ", ""),
+                                "Polar Lights" => power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", ""),
+                                "Robotic Drones" => power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", ""),
+                                "Storm Elemental" => power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", ""),
+                                "Talons of Vengeance" => power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} {nSplit[2]} ", ""),
+                                _ => value
+                            };
                             pos = (int)Enum.Parse(typeof(Enums.eLoreOrder), value.Replace(" ", "_"));
                             break;
+                        
                         case "Destiny":
                             pos = (int)Enum.Parse(typeof(Enums.eDestinyOrder), value.Replace(" ", "_"));
                             break;
+                        
                         case "Hybrid":
                             pos = (int)Enum.Parse(typeof(Enums.eHybridOrder), value.Replace(" ", "_"));
                             break;
+                        
                         case "Genesis":
                             pos = (int)Enum.Parse(typeof(Enums.eGenesisOrder), value.Replace(" ", "_"));
                             break;
@@ -244,274 +438,10 @@ namespace Mids_Reborn.UI.Forms
             return oList.Select(power => power.Value).ToList();
         }
 
-        private void frmIncarnate_Load(object? sender, EventArgs e)
-        {
-            if (_myParent != null)
-            {
-                var x = _myParent.Left + (_myParent.Width - Width) / 2;
-                var y = _myParent.Top + (_myParent.Height - Height) / 2;
-                Location = new Point(x, y);
-            }
-            _buttonArray[0] = _alphaBtn;
-            _buttonArray[1] = _destinyBtn;
-            _buttonArray[2] = _hybridBtn;
-            _buttonArray[3] = _interfaceBtn;
-            _buttonArray[4] = _judgementBtn;
-            _buttonArray[5] = _loreBtn;
-            _buttonArray[6] = _genesisButton;
-            _buttonArray[7] = _stanceButton;
-            _buttonArray[8] = _vitaeButton;
-            _buttonArray[9] = _omegaButton;
-            foreach (var button in _buttonArray)
-            {
-                button.Enabled = DatabaseAPI.ServerData.EnabledIncarnates[button.TextOn];
-                if (button.Enabled)
-                {
-                    button.IA = _myParent.Drawing.PImageAttributes;
-                    button.ImageOff = MidsContext.Character.IsHero()
-                        ? _myParent.Drawing.BxPower[2].Bitmap
-                        : _myParent.Drawing.BxPower[4].Bitmap;
-                    button.ImageOn = MidsContext.Character.IsHero()
-                        ? _myParent.Drawing.BxPower[3].Bitmap
-                        : _myParent.Drawing.BxPower[5].Bitmap;
-                }
-                else
-                {
-                    button.IA = _myParent.Drawing.PImageAttributes;
-                    button.ImageOff = _myParent.Drawing.BxPower[1].Bitmap;
-                    button.ImageOn = _myParent.Drawing.BxPower[1].Bitmap;
-                }
-            }
-
-            BackColor = _myParent.BackColor;
-            _popInfo.ForeColor = BackColor;
-            var llLeft = LlLeft;
-            UpdateLlColours(ref llLeft);
-            LlLeft = llLeft;
-            var llRight = LlRight;
-            UpdateLlColours(ref llRight);
-            LlRight = llRight;
-            _ibClose.IA = _myParent.Drawing.PImageAttributes;
-            _ibClose.ImageOff = MidsContext.Character.IsHero() ? _myParent.Drawing.BxPower[2].Bitmap : _myParent.Drawing.BxPower[4].Bitmap;
-            _ibClose.ImageOn = MidsContext.Character.IsHero() ? _myParent.Drawing.BxPower[3].Bitmap : _myParent.Drawing.BxPower[5].Bitmap;
-            var iPopup = new PopUp.PopupData();
-            var index = iPopup.Add();
-            iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title);
-            iPopup.Sections[index]
-                .Add("Powers in gray (or your custom 'power disabled' color) cannot be included in your stats.",
-                    PopUp.Colors.Text, 0.9f);
-            _popInfo.SetPopup(iPopup);
-            ChangedScrollFrameContents();
-            FillLists("Alpha");
-        }
-
-        private void ibClose_ButtonClicked()
-        {
-            Close();
-        }
-
-        private void alphaBtn_ButtonClicked()
-        {
-            var alphaBtn = _alphaBtn;
-            SetPowerSet("Alpha", ref alphaBtn);
-            _alphaBtn = alphaBtn;
-        }
-
-        private void destinyBtn_ButtonClicked()
-        {
-            var destinyBtn = _destinyBtn;
-            SetPowerSet("Destiny", ref destinyBtn);
-            _destinyBtn = destinyBtn;
-        }
-
-        private void GenesisButton_ButtonClicked()
-        {
-            var genesisButton = _genesisButton;
-            SetPowerSet("Genesis", ref genesisButton);
-            _genesisButton = genesisButton;
-        }
-
-        private void hybridBtn_ButtonClicked()
-        {
-            var hybridBtn = _hybridBtn;
-            SetPowerSet("Hybrid", ref hybridBtn);
-            _hybridBtn = hybridBtn;
-        }
-
-        [DebuggerStepThrough]
-        private void interfaceBtn_ButtonClicked()
-        {
-            var interfaceBtn = _interfaceBtn;
-            SetPowerSet("Interface", ref interfaceBtn);
-            _interfaceBtn = interfaceBtn;
-        }
-
-        private void judgementBtn_ButtonClicked()
-        {
-            var judgementBtn = _judgementBtn;
-            SetPowerSet("Judgement", ref judgementBtn);
-            _judgementBtn = judgementBtn;
-        }
-
-        private void loreBtn_ButtonClicked()
-        {
-            var loreBtn = _loreBtn;
-            SetPowerSet("Lore", ref loreBtn);
-            _loreBtn = loreBtn;
-        }
-
-        private void lblLock_Click(object? sender, EventArgs e)
+        private void LblLock_Click(object? sender, EventArgs e)
         {
             _locked = false;
-            _lblLock.Visible = false;
-        }
-
-        private void llLeft_ItemClick(ListLabel.ListLabelItem item, MouseButtons button)
-        {
-            if (button == MouseButtons.Right)
-            {
-                _locked = false;
-                MiniPowerInfo(item.Index);
-                _lblLock.Visible = true;
-                _locked = true;
-                return;
-            }
-
-            if (item.ItemState == ListLabel.LlItemState.Disabled)
-            {
-                return;
-            }
-
-            var flag = !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[item.Index]);
-            var num1 = LlLeft.Items.Length - 1;
-            for (var index = 0; index <= num1; ++index)
-            {
-                if (LlLeft.Items[index].ItemState == ListLabel.LlItemState.Selected)
-                {
-                    LlLeft.Items[index].ItemState = ListLabel.LlItemState.Enabled;
-                }
-
-                if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index]))
-                {
-                    MidsContext.Character.CurrentBuild.RemovePower(_myPowers[index]);
-                }
-            }
-
-            var num2 = LlRight.Items.Length - 1;
-            for (var index = 0; index <= num2; ++index)
-            {
-                if (LlRight.Items[index].ItemState == ListLabel.LlItemState.Selected)
-                {
-                    LlRight.Items[index].ItemState = ListLabel.LlItemState.Enabled;
-                }
-
-                if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index + LlLeft.Items.Length]))
-                {
-                    MidsContext.Character.CurrentBuild.RemovePower(_myPowers[index + LlLeft.Items.Length]);
-                }
-            }
-
-            if (flag)
-            {
-                MidsContext.Character.CurrentBuild.AddPower(_myPowers[item.Index], 49).StatInclude = true;
-                item.ItemState = ListLabel.LlItemState.Selected;
-            }
-
-            LlLeft.Invalidate();
-            LlRight.Invalidate();
-            _myParent.PowerModified(true);
-            _myParent.DoRefresh();
-        }
-
-        private void llLeft_ItemHover(ListLabel.ListLabelItem item)
-        {
-            MiniPowerInfo(item.Index);
-        }
-
-        private void llLeft_MouseEnter(object? sender, EventArgs e)
-        {
-            if (!ContainsFocus)
-            {
-                return;
-            }
-
-            _panel2.Focus();
-        }
-
-        private void llRight_ItemClick(ListLabel.ListLabelItem item, MouseButtons button)
-        {
-            var pIdx = item.Index + LlLeft.Items.Length;
-            if (button == MouseButtons.Right)
-            {
-                _locked = false;
-                MiniPowerInfo(pIdx);
-                _lblLock.Visible = true;
-                _locked = true;
-            }
-            else
-            {
-                if (item.ItemState == ListLabel.LlItemState.Disabled)
-                {
-                    return;
-                }
-
-                var unused = !MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[pIdx]);
-                var hasChanges = false;
-                for (var index = 0; index <= LlLeft.Items.Length - 1; ++index)
-                {
-                    if (LlLeft.Items[index].ItemState == ListLabel.LlItemState.Selected)
-                    {
-                        LlLeft.Items[index].ItemState = ListLabel.LlItemState.Enabled;
-                    }
-
-                    if (!MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index]))
-                    {
-                        continue;
-                    }
-
-                    MidsContext.Character.CurrentBuild.RemovePower(_myPowers[index]);
-                    hasChanges = true;
-                }
-
-                for (var index = 0; index <= LlRight.Items.Length - 1; ++index)
-                {
-                    if (LlRight.Items[index].ItemState == ListLabel.LlItemState.Selected)
-                    {
-                        LlRight.Items[index].ItemState = ListLabel.LlItemState.Enabled;
-                    }
-
-                    if (!MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[index + LlLeft.Items.Length]))
-                    {
-                        continue;
-                    }
-
-                    MidsContext.Character.CurrentBuild.RemovePower(_myPowers[index + LlLeft.Items.Length]);
-                    hasChanges = true;
-                }
-
-                if (unused)
-                {
-                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[pIdx], 49).StatInclude = true;
-                    item.ItemState = ListLabel.LlItemState.Selected;
-                }
-
-                LlLeft.Invalidate();
-                LlRight.Invalidate();
-                _myParent.PowerModified(unused || hasChanges);
-                _myParent.DoRefresh();
-            }
-        }
-
-        private void llRight_ItemHover(ListLabel.ListLabelItem item)
-
-        {
-            MiniPowerInfo(item.Index + LlLeft.Items.Length);
-        }
-
-        private void llRight_MouseEnter(object? sender, EventArgs e)
-
-        {
-            llLeft_MouseEnter(RuntimeHelpers.GetObjectValue(sender), e);
+            LblLock.Visible = false;
         }
 
         private void MiniPowerInfo(int pIdx)
@@ -524,156 +454,122 @@ namespace Mids_Reborn.UI.Forms
             var iPopup = new PopUp.PopupData();
             if (pIdx < 0)
             {
-                _popInfo.SetPopup(iPopup);
+                PopInfo.SetPopup(iPopup);
                 ChangedScrollFrameContents();
+
+                return;
             }
-            else
+            
+            var power = new Power(_myPowers[pIdx]);
+            power.AbsorbPetEffects();
+            power.ApplyGrantPowerEffects();
+            var index1 = iPopup.Add();
+            var powerTypeSuffix = power.PowerType switch
             {
-                IPower power1 = new Power(_myPowers[pIdx]);
-                power1.AbsorbPetEffects();
-                power1.ApplyGrantPowerEffects();
-                var index1 = iPopup.Add();
-                var str1 = "";
-                switch (power1.PowerType)
-                {
-                    case Enums.ePowerType.Click:
-                        if (power1.ClickBuff)
-                        {
-                            str1 = "(Click)";
-                        }
+                Enums.ePowerType.Click when power.ClickBuff => "(Click)",
+                Enums.ePowerType.Auto_ => "(Auto)",
+                Enums.ePowerType.Toggle => "(Toggle)",
+                _ => ""
+            };
 
-                        break;
-                    case Enums.ePowerType.Auto_:
-                        str1 = "(Auto)";
-                        break;
-                    case Enums.ePowerType.Toggle:
-                        str1 = "(Toggle)";
-                        break;
-                }
-
-                iPopup.Sections?[index1].Add(power1.DisplayName, PopUp.Colors.Title);
-                iPopup.Sections?[index1].Add(str1 + " " + power1.DescShort, PopUp.Colors.Text, 0.9f);
-                var str2 = power1.DescLong.Replace("\0", "").Replace("<br>", "\r\n");
-                iPopup.Sections?[index1].Add(str1 + " " + str2, PopUp.Colors.Common, 1f, FontStyle.Regular);
-                var index2 = iPopup.Add();
-                if (power1.EndCost > 0.0)
-                {
-                    if (power1.ActivatePeriod > 0.0)
-                    {
-                        iPopup.Sections?[index2].Add("End Cost:", PopUp.Colors.Title,
-                            Utilities.FixDP(power1.EndCost / power1.ActivatePeriod) + "/s", PopUp.Colors.Title, 0.9f,
-                            FontStyle.Bold, 1);
-                    }
-                    else
-                    {
-                        iPopup.Sections?[index2].Add("End Cost:", PopUp.Colors.Title, Utilities.FixDP(power1.EndCost),
-                            PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                    }
-                }
-
-                if ((power1.EntitiesAutoHit == Enums.eEntity.None) | ((power1.Range > 20.0) &
-                                                                      power1.I9FXPresentP(Enums.eEffectType.Mez,
-                                                                          Enums.eMez.Taunt)))
-                {
-                    iPopup.Sections?[index2].Add("Accuracy:", PopUp.Colors.Title,
-                        Utilities.FixDP((float) (MidsContext.Config.ScalingToHit * (double) power1.Accuracy * 100.0)) + "%",
-                        PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                }
-
-                if (power1.RechargeTime > 0.0)
-                {
-                    iPopup.Sections?[index2].Add("Recharge:", PopUp.Colors.Title,
-                        Utilities.FixDP(power1.RechargeTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                }
-
-                var durationEffectId = power1.GetDurationEffectID();
-                var iNum = 0.0f;
-                if (durationEffectId > -1)
-                {
-                    iNum = power1.Effects[durationEffectId].Duration;
-                }
-
-                if ((power1.PowerType != Enums.ePowerType.Toggle) & (power1.PowerType != Enums.ePowerType.Auto_) &&
-                    iNum > 0.0)
-                {
-                    iPopup.Sections?[index2].Add("Duration:", PopUp.Colors.Title, Utilities.FixDP(iNum) + "s",
-                        PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                }
-
-                if (power1.Range > 0.0)
-                {
-                    iPopup.Sections?[index2].Add("Range:", PopUp.Colors.Title, Utilities.FixDP(power1.Range) + "ft",
-                        PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                }
-
-                if (power1.Arc > 0)
-                {
-                    iPopup.Sections?[index2].Add("Arc:", PopUp.Colors.Title, Convert.ToString(power1.Arc) + "°",
-                        PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                }
-                else if (power1.Radius > 0.0)
-                {
-                    iPopup.Sections?[index2].Add("Radius:", PopUp.Colors.Title,
-                        Convert.ToString(power1.Radius, CultureInfo.InvariantCulture) + "ft", PopUp.Colors.Title, 0.9f,
-                        FontStyle.Bold, 1);
-                }
-
-                if (power1.CastTime > 0.0)
-                {
-                    iPopup.Sections?[index2].Add("Cast Time:", PopUp.Colors.Title,
-                        Utilities.FixDP(power1.CastTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
-                }
-
-                var power2 = power1;
-                if (power2.Effects.Length > 0)
-                {
-                    iPopup.Sections?[index2].Add("Effects:", PopUp.Colors.Title);
-                    char[] chArray = {'^'};
-                    var num1 = power2.Effects.Length - 1;
-                    for (var index3 = 0; index3 <= num1; ++index3)
-                    {
-                        if (!(((power2.Effects[index3].EffectType != Enums.eEffectType.GrantPower) |
-                               power2.Effects[index3].Absorbed_Effect) &
-                              (power2.Effects[index3].EffectType != Enums.eEffectType.RevokePower) &
-                              (power2.Effects[index3].EffectType != Enums.eEffectType.SetMode)))
-                        {
-                            continue;
-                        }
-
-                        var index4 = iPopup.Add();
-                        power1.Effects[index3].SetPower(power1);
-                        var strArray = power1.Effects[index3].BuildEffectString(false, "", false, false, false, true)
-                            .Replace("[", "\r\n")
-                            .Replace("\r\n", "^")
-                            .Replace("  ", "")
-                            .Replace("]", "")
-                            .Split(chArray);
-                        var num2 = strArray.Length - 1;
-                        for (var index5 = 0; index5 <= num2; ++index5)
-                            if (index5 == 0)
-                            {
-                                iPopup.Sections?[index4].Add(strArray[index5], PopUp.Colors.Effect, 0.9f, FontStyle.Bold,
-                                    1);
-                            }
-                            else
-                            {
-                                iPopup.Sections?[index4].Add(strArray[index5], PopUp.Colors.Disabled, 0.9f,
-                                    FontStyle.Italic, 2);
-                            }
-                    }
-                }
-
-                _popInfo.SetPopup(iPopup);
-                ChangedScrollFrameContents();
+            iPopup.Sections?[index1].Add(power.DisplayName, PopUp.Colors.Title);
+            iPopup.Sections?[index1].Add($"{powerTypeSuffix} {power.DescShort}", PopUp.Colors.Text, 0.9f);
+            var powerLongDesc = power.DescLong.Replace("\0", "").Replace("<br>", "\r\n");
+            iPopup.Sections?[index1].Add($"{powerTypeSuffix} {powerLongDesc}", PopUp.Colors.Common, 1f, FontStyle.Regular);
+            var index2 = iPopup.Add();
+            if (power.EndCost > 0)
+            {
+                iPopup.Sections?[index2].Add("End Cost:", PopUp.Colors.Title,
+                    power.ActivatePeriod > 0
+                        ? $"{Utilities.FixDP(power.EndCost / power.ActivatePeriod)}/s"
+                        : Utilities.FixDP(power.EndCost), PopUp.Colors.Title, 0.9f,
+                    FontStyle.Bold, 1);
             }
-        }
 
-        private void OmegaButton_ButtonClicked()
+            if ((power.EntitiesAutoHit == Enums.eEntity.None) | ((power.Range > 20) & power.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt)))
+            {
+                iPopup.Sections?[index2].Add("Accuracy:", PopUp.Colors.Title,
+                    $"{Utilities.FixDP(MidsContext.Config.ScalingToHit * power.Accuracy * 100)}%",
+                    PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+            }
 
-        {
-            var omegaButton = _omegaButton;
-            SetPowerSet("Omega", ref omegaButton);
-            _omegaButton = omegaButton;
+            if (power.RechargeTime > 0)
+            {
+                iPopup.Sections?[index2].Add("Recharge:", PopUp.Colors.Title,
+                    $"{Utilities.FixDP(power.RechargeTime)}s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+            }
+
+            var durationEffectId = power.GetDurationEffectID();
+            var durationValue = durationEffectId > -1
+                ? power.Effects[durationEffectId].Duration
+                : 0;
+                
+            if ((power.PowerType != Enums.ePowerType.Toggle) & (power.PowerType != Enums.ePowerType.Auto_) && durationValue > 0)
+            {
+                iPopup.Sections?[index2].Add("Duration:", PopUp.Colors.Title, $"{Utilities.FixDP(durationValue)}s",
+                    PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+            }
+
+            if (power.Range > 0)
+            {
+                iPopup.Sections?[index2].Add("Range:", PopUp.Colors.Title, $"{Utilities.FixDP(power.Range)}ft",
+                    PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+            }
+
+            if (power.Arc > 0)
+            {
+                iPopup.Sections?[index2].Add("Arc:", PopUp.Colors.Title, $"{Convert.ToString(power.Arc)}°",
+                    PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+            }
+            else if (power.Radius > 0)
+            {
+                iPopup.Sections?[index2].Add("Radius:", PopUp.Colors.Title,
+                    $"{Convert.ToString(power.Radius, CultureInfo.InvariantCulture)}ft", PopUp.Colors.Title, 0.9f,
+                    FontStyle.Bold, 1);
+            }
+
+            if (power.CastTime > 0)
+            {
+                iPopup.Sections?[index2].Add("Cast Time:", PopUp.Colors.Title,
+                    $"{Utilities.FixDP(power.CastTime)}s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+            }
+
+            if (power.Effects.Length > 0)
+            {
+                iPopup.Sections?[index2].Add("Effects:", PopUp.Colors.Title);
+                foreach (var fx in power.Effects)
+                {
+                    if (!(((fx.EffectType != Enums.eEffectType.GrantPower) | fx.Absorbed_Effect) &
+                          (fx.EffectType != Enums.eEffectType.RevokePower) &
+                          (fx.EffectType != Enums.eEffectType.SetMode)))
+                    {
+                        continue;
+                    }
+
+                    var index4 = iPopup.Add();
+                    fx.SetPower(power);
+                    var strArray = fx.BuildEffectString(false, "", false, false, false, true)
+                        .Replace("[", "\r\n")
+                        .Replace("\r\n", "^")
+                        .Replace("  ", "")
+                        .Replace("]", "")
+                        .Split('^');
+                    for (var index5 = 0; index5 < strArray.Length; index5++)
+                    {
+                        if (index5 == 0)
+                        {
+                            iPopup.Sections?[index4].Add(strArray[index5], PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);
+                        }
+                        else
+                        {
+                            iPopup.Sections?[index4].Add(strArray[index5], PopUp.Colors.Disabled, 0.9f, FontStyle.Italic, 2);
+                        }
+                    }
+                }
+            }
+
+            PopInfo.SetPopup(iPopup);
+            ChangedScrollFrameContents();
         }
 
         private void PopInfo_MouseEnter(object? sender, EventArgs e)
@@ -684,89 +580,94 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            _vScrollBar1.Focus();
+            VScrollBar1.Focus();
         }
 
         private void PopInfo_MouseWheel(object? sender, MouseEventArgs e)
         {
             if (e.Delta < 0)
             {
-                if (_vScrollBar1.Value + _vScrollBar1.LargeChange <= _vScrollBar1.Maximum)
+                if (VScrollBar1.Value + VScrollBar1.LargeChange <= VScrollBar1.Maximum)
                 {
-                    _vScrollBar1.Value += _vScrollBar1.LargeChange;
+                    VScrollBar1.Value += VScrollBar1.LargeChange;
                 }
             }
-            else if (_vScrollBar1.Value - _vScrollBar1.LargeChange >= _vScrollBar1.Minimum)
+            else if (VScrollBar1.Value - VScrollBar1.LargeChange >= VScrollBar1.Minimum)
             {
-                _vScrollBar1.Value -= _vScrollBar1.LargeChange;
-            }
-            VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender), new ScrollEventArgs(ScrollEventType.EndScroll, _vScrollBar1.Value));
-        }
-
-        private void SetPowerSet(string setname, ref ImageButton button)
-        {
-            foreach (var button1 in _buttonArray)
-            {
-                button1.Checked = false;
+                VScrollBar1.Value -= VScrollBar1.LargeChange;
             }
 
-            button.Checked = true;
-            _myPowers = DatabaseAPI.GetPowersetByID(setname, Enums.ePowerSetType.Incarnate).Powers;
-            FillLists(setname);
+            VScrollBar1_Scroll(RuntimeHelpers.GetObjectValue(sender), new ScrollEventArgs(ScrollEventType.EndScroll, VScrollBar1.Value));
         }
-
-        private void StanceButton_ButtonClicked()
-        {
-            var stanceButton = _stanceButton;
-            SetPowerSet("Stance", ref stanceButton);
-            _stanceButton = stanceButton;
-        }
-
-        private void UpdateLlColours(ref ListLabel iList)
-        {
-            iList.UpdateTextColors(ListLabel.LlItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
-            iList.UpdateTextColors(ListLabel.LlItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-            iList.UpdateTextColors(ListLabel.LlItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
-            iList.ScrollBarColor = MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerTakenHero
-                : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-            iList.ScrollButtonColor = MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
-                : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
-            iList.UpdateTextColors(ListLabel.LlItemState.Selected,
-                MidsContext.Character.IsHero()
-                    ? MidsContext.Config.RtFont.ColorPowerTakenHero
-                    : MidsContext.Config.RtFont.ColorPowerTakenVillain);
-            iList.UpdateTextColors(ListLabel.LlItemState.SelectedDisabled,
-                MidsContext.Character.IsHero()
-                    ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
-                    : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-            iList.HoverColor = MidsContext.Character.IsHero()
-                ? MidsContext.Config.RtFont.ColorPowerHighlightHero
-                : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
-            var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
-            iList.Font = new Font(iList.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);
-        }
-
-        private void VitaeButton_ButtonClicked()
-        {
-            var vitaeButton = _vitaeButton;
-            SetPowerSet("Vitae", ref vitaeButton);
-            _vitaeButton = vitaeButton;
-        }
-
+        
         private void VScrollBar1_Scroll(object? sender, ScrollEventArgs e)
         {
-            if ((_popInfo.lHeight > (double) _panel1.Height) & (_vScrollBar1.Maximum > _vScrollBar1.LargeChange))
+            PopInfo.ScrollY = (PopInfo.lHeight > Panel1.Height) & (VScrollBar1.Maximum > VScrollBar1.LargeChange)
+                ? VScrollBar1.Value / (float)(VScrollBar1.Maximum - VScrollBar1.LargeChange) * (PopInfo.lHeight - Panel1.Height)
+                : 0;
+        }
+
+        private void SkPairedList1_ItemClick(SkListItem item, MouseButtons button)
+        {
+            if (button == MouseButtons.Right)
             {
-                _popInfo.ScrollY = (float) (_vScrollBar1.Value /
-                                            (double) (_vScrollBar1.Maximum - _vScrollBar1.LargeChange) *
-                                            (_popInfo.lHeight - (double) _panel1.Height));
+                _locked = false;
+                MiniPowerInfo(item.Index);
+                LblLock.Visible = true;
+                _locked = true;
+                
+                return;
             }
-            else
+
+            if (item.ItemState == EItemState.Disabled)
             {
-                _popInfo.ScrollY = 0.0f;
+                return;
             }
+
+            var powerUsed = MidsContext.Character?.CurrentBuild?.PowerUsed(_myPowers[item.Index]) == true;
+            SkPairedList1.SuspendRedraw = true;
+            for (var i = 0; i < SkPairedList1.Items.Length; i++)
+            {
+                if (i != item.Index)
+                {
+                    SkPairedList1.Items[i].ItemState = _myPowers[i].DisplayName != "Nothing"
+                        ? EItemState.Enabled
+                        : EItemState.Disabled;
+
+                    continue;
+                }
+
+                SkPairedList1.Items[i].ItemState = powerUsed ? EItemState.Enabled : EItemState.Selected;
+                if (powerUsed)
+                {
+                    MidsContext.Character?.CurrentBuild?.RemovePower(_myPowers[i]);
+                }
+                else
+                {
+                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[item.Index], 49).StatInclude = true;
+                }
+            }
+
+            SkPairedList1.SuspendRedraw = false;
+            SkPairedList1.Invalidate();
+
+            _myParent.PowerModified(true);
+            _myParent.DoRefresh();
+        }
+
+        private void SkPairedList1_ItemHover(SkListItem item)
+        {
+            MiniPowerInfo(item.Index);
+        }
+
+        private void SkPairedList1_EmptyHover()
+        {
+            MiniPowerInfo(-1);
+        }
+
+        private void SkPairedList1_MouseLeave(object sender, EventArgs e)
+        {
+            MiniPowerInfo(-1);
         }
 
         public class CustomPanel : Panel

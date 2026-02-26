@@ -32,8 +32,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void frmTemp_Load(object sender, EventArgs e)
         {
-            // Bug: StartPosition doesn't work, if called from constructor (old way),
-            // parent window disappear when this one is closed
+            // Bug: StartPosition doesn't work, if called from constructor (old way)
             CenterToParent();
             // PopInfo.ForeColor = BackColor; // ??
 

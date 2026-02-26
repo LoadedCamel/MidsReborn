@@ -535,7 +535,7 @@ namespace Mids_Reborn.UI.Forms
                 };
             }
 
-            if (FrmEntityDetails is {Visible: true})
+            if (FrmEntityDetails is { Visible: true })
             {
                 FrmEntityDetails.UpdateColorTheme(e);
             }
@@ -545,7 +545,7 @@ namespace Mids_Reborn.UI.Forms
                 fGraphStats.UpdateColorTheme(e);
             }
 
-            if (fRotationHelper is {Visible: true})
+            if (fRotationHelper is { Visible: true })
             {
                 fRotationHelper.UpdateColorTheme(e);
             }
@@ -553,6 +553,11 @@ namespace Mids_Reborn.UI.Forms
             if (fTemp is { Visible: true })
             {
                 fTemp.UpdateColorTheme(e);
+            }
+
+            if (fIncarnate is { Visible: true })
+            {
+                fIncarnate.UpdateColorTheme(e);
             }
         }
 
@@ -7457,34 +7462,24 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                         : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
                 }
-
-                foreach (var t in fIncarnate.LlLeft.Items)
-                {
-                    t.Bold = MidsContext.Config.RtFont.PairedBold;
-                }
-
-                foreach (var t in fIncarnate.LlRight.Items)
-                {
-                    t.Bold = MidsContext.Config.RtFont.PairedBold;
-                }
-
-                fIncarnate.LlLeft.SuspendRedraw = false;
-                fIncarnate.LlRight.SuspendRedraw = false;
-                fIncarnate.LlLeft.Refresh();
-                fIncarnate.LlRight.Refresh();
             }
 
-            if (fTemp is {Visible: true})
+            if (fTemp is { Visible: true })
             {
                 fTemp.UpdateFonts(llPrimary.Font);
             }
 
-            if (fAccolade is {Visible: true})
+            if (fIncarnate is { Visible: true })
+            {
+                fIncarnate.UpdateFonts(llPrimary.Font);
+            }
+
+            if (fAccolade is { Visible: true })
             {
                 fAccolade.UpdateFonts(llPrimary.Font);
             }
 
-            if (fPrestige is {Visible: true})
+            if (fPrestige is { Visible: true })
             {
                 fPrestige.UpdateFonts(llPrimary.Font);
             }
