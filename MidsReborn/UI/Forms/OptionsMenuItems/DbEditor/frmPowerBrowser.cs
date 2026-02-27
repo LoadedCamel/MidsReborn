@@ -35,6 +35,15 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void btnCancel_Click(object sender, EventArgs e)
         {
+            var m = MessageBox.Show(
+                "Do you reall want to exit the editor and discard changes?\r\nAll unsaved changes will be lost.",
+                "Confirm discarding changes?", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+
+            if (m != DialogResult.Yes)
+            {
+                return;
+            }
+
             BusyMsg("Discarding Changes...");
             DatabaseAPI.LoadMainDatabase(MidsContext.Config.DataPath);
             DatabaseAPI.MatchAllIDs();
