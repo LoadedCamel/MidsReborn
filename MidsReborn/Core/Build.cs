@@ -1025,11 +1025,15 @@ namespace Mids_Reborn.Core
 
         public bool EnhancementTest(int iSlotID, int hIdx, int iEnh, bool silent = false)
         {
-            if (iEnh < 0 || iSlotID < 0) return false;
+            if (iEnh < 0 || iSlotID < 0)
+            {
+                return false;
+            }
 
             var enhancement = DatabaseAPI.Database.Enhancements[iEnh];
             var foundMutex = false;
             var foundInPower = false;
+            PowerEntry? foundPower = null;
             var foundEnh = string.Empty;
             var mutexType = -1;
             if (enhancement is { TypeID: Enums.eType.SetO, nIDSet: > -1 } && hIdx > -1 && Powers[hIdx].Power != null)
@@ -1073,16 +1077,17 @@ namespace Mids_Reborn.Core
 
                     if (enhancement.Superior && enhancement.MutExID != Enums.eEnhMutex.None)
                     {
-                        //Debug.WriteLine(enhancement.UID);
                         var nVersion = Regex.Replace(enhancement.UID, @"(Attuned_|Superior_)", "");
-                        foreach (var item in MidsContext.Character.PEnhancementsList)
+                        var mainSlotsEnhancements = GetMainEnhancements();
+                        foreach (var item in mainSlotsEnhancements)
                         {
-                            if (!item.Contains(nVersion))
+                            if (!item.Value.UID.Contains(nVersion))
                             {
                                 continue;
                             }
 
-                            foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
+                            foundEnh = item.Value.LongName;
+                            foundPower = MidsContext.Character.CurrentBuild.Powers[item.Key];
                             mutexType = 0;
                             foundMutex = true;
                         }
@@ -1090,31 +1095,49 @@ namespace Mids_Reborn.Core
                     else if (!enhancement.Superior && enhancement.MutExID != Enums.eEnhMutex.None && enhancement.MutExID != Enums.eEnhMutex.Stealth)
                     {
                         var nVersion = Regex.Replace(enhancement.UID, @"(Attuned_|Superior_)", "");
-                        foreach (var item in MidsContext.Character.PEnhancementsList)
+                        var mainSlotsEnhancements = GetMainEnhancements();
+                        foreach (var item in mainSlotsEnhancements)
                         {
-                            if (item.Contains($"Superior_Attuned_{nVersion}") || item.Contains($"Superior_Attuned_Superior_{nVersion}"))
+                            if (!item.Value.UID.Contains($"Superior_Attuned_{nVersion}") && !item.Value.UID.Contains($"Superior_Attuned_Superior_{nVersion}"))
                             {
-                                foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
-                                mutexType = 0;
-                                foundMutex = true;
+                                continue;
                             }
+
+                            foundEnh = item.Value.LongName;
+                            foundPower = MidsContext.Character.CurrentBuild.Powers[item.Key];
+                            mutexType = 0;
+                            foundMutex = true;
+
+                            break;
                         }
                     }
                     else if (enhancement.MutExID == Enums.eEnhMutex.Stealth)
                     {
-                        foreach (var item in MidsContext.Character.PEnhancementsList)
+                        var mainSlotsEnhancements = GetMainEnhancements();
+                        foreach (var item in mainSlotsEnhancements)
                         {
-                            if (DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].MutExID == Enums.eEnhMutex.Stealth)
+                            if (item.Value.MutExID != Enums.eEnhMutex.Stealth)
                             {
-                                foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
-                                mutexType = 1;
-                                foundMutex = true;
+                                continue;
                             }
+
+                            foundEnh = item.Value.LongName;
+                            foundPower = MidsContext.Character.CurrentBuild.Powers[item.Key];
+                            mutexType = 1;
+                            foundMutex = true;
+                            
+                            break;
                         }
                     }
 
-                    if (enhancement.nIDSet <= -1 || powerIdx != hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh != iEnh) continue;
+                    if (enhancement.nIDSet <= -1 || powerIdx != hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh != iEnh)
+                    {
+                        continue;
+                    }
+
+                    foundPower = MidsContext.Character.CurrentBuild.Powers[powerIdx];
                     foundInPower = true;
+
                     break;
                 }
             }
@@ -1123,19 +1146,12 @@ namespace Mids_Reborn.Core
             {
                 if (!silent)
                 {
-                    switch (mutexType)
-                    {
-                        case 0:
-                            MessageBox.Show(@$"{enhancement.LongName} is mutually exclusive with {foundEnh}. You can only slot one type of this enhancement across your entire build.", @"Unable To Slot Enhancement");
-                            break;
-                        case 1:
-                            MessageBox.Show(@$"{enhancement.LongName} is mutually exclusive with {foundEnh}. You can only slot one stealth proc across your entire build.", @"Unable To Slot Enhancement");
-                            break;
-                    }
-
-                    return false;
+                    MessageBox.Show(@$"{(enhancement.LongName != foundEnh ? $"{enhancement.LongName} is mutually exclusive with {foundEnh}" : $"{enhancement.LongName} is unique")}. You can only slot {(mutexType == 0 ? "one type of this enhancement" : "one stealth proc")} across your entire build.{(foundPower == null ? "" : $"\r\nConflicting power: {foundPower?.Power?.DisplayName}")}", @"Unable To Slot Enhancement");
                 }
+
+                return false;
             }
+
             if (!foundInPower)
             {
                 return true;
@@ -1145,7 +1161,54 @@ namespace Mids_Reborn.Core
             {
                 MessageBox.Show(@$"{enhancement.LongName} is already slotted in this power. You can only slot one of each enhancement from the set in a given power.", @"Unable To Slot Enhancement");
             }
+            
             return false;
+        }
+
+        public static KeyValuePair<int, IEnhancement>[] GetMainEnhancements()
+        {
+            // <PowerEntry.HistoryID (int), IEnhancement>[] for all main slots (non-empty)
+            return MidsContext.Character.CurrentBuild.Powers
+                .Select((e, i) => new KeyValuePair<int, PowerEntry>(i, e))
+                .Where(e => e.Value is { Power.Slottable: true })
+                .SelectMany(e => e.Value.Slots.Select(f => f.Enhancement.Enh).Where(f => f > -1).Select(f =>
+                    new KeyValuePair<int, IEnhancement>(e.Key, DatabaseAPI.Database.Enhancements[f])))
+                .ToArray();
+        }
+
+        public static IEnhancement[] GetMainEnhancementsSimple()
+        {
+            // IEnhancement[] for all main slots (non-empty)
+            return MidsContext.Character.CurrentBuild.Powers
+                .Select((e, i) => new KeyValuePair<int, PowerEntry>(i, e))
+                .Where(e => e.Value is { Power.Slottable: true })
+                .SelectMany(e => e.Value.Slots.Select(f => f.Enhancement.Enh))
+                .Where(e => e > -1)
+                .Select(e => DatabaseAPI.Database.Enhancements[e])
+                .ToArray();
+        }
+
+        public static KeyValuePair<int, IEnhancement>[] GetAlternateEnhancements()
+        {
+            // <PowerEntry.HistoryID (int), IEnhancement>[] for all alternate slots (non-empty)
+            return MidsContext.Character.CurrentBuild.Powers
+                .Select((e, i) => new KeyValuePair<int, PowerEntry>(i, e))
+                .Where(e => e.Value is { Power.Slottable: true })
+                .SelectMany(e => e.Value.Slots.Select(f => f.FlippedEnhancement.Enh).Where(f => f > -1).Select(f =>
+                    new KeyValuePair<int, IEnhancement>(e.Key, DatabaseAPI.Database.Enhancements[f])))
+                .ToArray();
+        }
+
+        public static IEnhancement[] GetAlternateEnhancementsSimple()
+        {
+            // IEnhancement[] for all alternate slots (non-empty)
+            return MidsContext.Character.CurrentBuild.Powers
+                .Select((e, i) => new KeyValuePair<int, PowerEntry>(i, e))
+                .Where(e => e.Value is { Power.Slottable: true })
+                .SelectMany(e => e.Value.Slots.Select(f => f.Enhancement.Enh))
+                .Where(e => e > -1)
+                .Select(e => DatabaseAPI.Database.Enhancements[e])
+                .ToArray();
         }
 
         public void GenerateSetBonusData()

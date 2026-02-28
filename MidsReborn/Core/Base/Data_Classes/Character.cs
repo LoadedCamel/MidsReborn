@@ -458,7 +458,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Totals.Init();
             TotalsCapped.Init();
             RequestedLevel = -1;
-            PEnhancementsList = new List<string>();
+            PEnhancementsList = [];
         }
 
         public async void ClearInvalidInherentSlots()
@@ -577,8 +577,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             NotPackMentality = true;
             FastSnipe = false;
             NotFastSnipe = true;
-            InherentDisplayList = new List<InherentDisplayItem>();
-            PEnhancementsList = new List<string>();
+            InherentDisplayList = [];
+            PEnhancementsList = [];
             if (CurrentBuild?.Powers == null) return;
 
             foreach (var power in CurrentBuild.Powers)
