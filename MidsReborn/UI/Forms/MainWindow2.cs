@@ -559,6 +559,11 @@ namespace Mids_Reborn.UI.Forms
             {
                 fIncarnate.UpdateColorTheme(e);
             }
+
+            if (fPrestige is { Visible: true })
+            {
+                fPrestige.UpdateColorTheme(e);
+            }
         }
 
         private void ibModeEx_OnClick(object sender, EventArgs eventArgs)
