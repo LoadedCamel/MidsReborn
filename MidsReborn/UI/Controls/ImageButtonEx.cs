@@ -1,7 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
@@ -769,8 +768,6 @@ namespace Mids_Reborn.UI.Controls
                 EnabledStates.Enabled when UseAlt => _mouseOver ? ImagesAlt?.Hover : ImagesAlt?.Background,
                 _ => _mouseOver ? Images?.Hover : Images?.Background
             };
-
-            Debug.WriteLine($"<{Name}:{GetType().Name}> - OnEnabledStateChanged({Name}, {e})");
         }
 
         private void OnImageChanged(object? sender, Image? e)
@@ -848,8 +845,6 @@ namespace Mids_Reborn.UI.Controls
             e.Graphics.CompositingQuality = CompositingQuality.HighQuality;
             e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
             e.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
-
-            Debug.WriteLine($"<{Name}:{GetType().Name}>: OnPaint({EnabledState})");
 
             if (_displayVertically)
             {

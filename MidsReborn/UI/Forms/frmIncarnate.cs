@@ -45,7 +45,7 @@ namespace Mids_Reborn.UI.Forms
             _myParent = iParent;
             _locked = false;
             _currentIncarnateGroup = IncarnateGroup.Alpha;
-            _myPowers = DatabaseAPI.GetPowersetByName(_currentIncarnateGroup.ToString(), Enums.ePowerSetType.Incarnate)?.Powers;
+            _myPowers = DatabaseAPI.Database.Power.Where(e => e != null && e.FullName.StartsWith("Incarnate.")).ToArray();
             InitializeComponent();
             _buttons = new Dictionary<IncarnateGroup, ImageButtonEx>
             {
@@ -261,98 +261,20 @@ namespace Mids_Reborn.UI.Forms
 
         private void FillLists(string setName)
         {
-            var newPowerList = new List<IPower?>();
-            switch (setName)
-            {
-                case "Alpha":
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Agility"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Cardiac"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Intuition"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Musculature"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Nerve"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Resilient"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Spiritual"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Vigor"));
-                    break;
-                
-                case "Judgement":
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Cryonic"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Ion"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Mighty"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Pyronic"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Void"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Vorpal"));
-                    break;
-                
-                case "Interface":
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Cognitive"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Degenerative"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Diamagnetic"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Gravitic"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Paralytic"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Preemptive"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Reactive"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Spectral"));
-                    break;
-                
-                case "Lore":
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Arachnos"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Banished Pantheon"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Carnival"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Cimeroran"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Clockwork"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Demons"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "IDF"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Knives of Vengeance"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Longbow"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Nemesis"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Phantom"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Polar Lights"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Rikti"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Robotic Drones"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Rularuu"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Seers"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Storm Elemental"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Talons of Vengeance"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Tsoo"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Vanguard"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Warworks"));
-                    break;
-                
-                case "Destiny":
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Ageless"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Barrier"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Clarion"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Incandescence"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Rebirth"));
-                    break;
-                
-                case "Hybrid":
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Assault"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Control"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Melee"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Support"));
-                    break;
-                
-                case "Genesis":
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Data"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Fate"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Socket"));
-                    newPowerList.AddRange(ParseIncarnate(_myPowers.ToList(), setName, "Verdict"));
-                    break;
-            }
+            var subPowers =
+                _myPowers == null
+                    ? []
+                    : _myPowers
+                        .Where(e => e != null &&
+                                    !e.FullName.Contains("_silent", StringComparison.InvariantCultureIgnoreCase) &&
+                                    e.FullName.StartsWith($"Incarnate.{setName.Replace(' ', '_')}."))
+                        .ToArray();
 
-            _myPowers = newPowerList.ToArray();
             SkPairedList1.SuspendRedraw = true;
             SkPairedList1.ClearItems();
 
-            foreach (var p in _myPowers)
+            foreach (var p in subPowers)
             {
-                if (p == null)
-                {
-                    continue;
-                }
-
                 var state = MidsContext.Character?.CurrentBuild != null &&
                                    !MidsContext.Character.CurrentBuild.PowerUsed(p)
                     ? p.DisplayName != "Nothing"
@@ -375,67 +297,6 @@ namespace Mids_Reborn.UI.Forms
 
             SkPairedList1.SuspendRedraw = false;
             SkPairedList1.Invalidate();
-        }
-
-        private static List<IPower?> ParseIncarnate(List<IPower?> powerList, string order, string name)
-        {
-            var pairList = new List<KeyValuePair<int, IPower?>>();
-            var tList = powerList.FindAll(x => x != null && x.DisplayName.Contains(name));
-            var pos = 0;
-            foreach (var power in tList)
-            {
-                if (power != null)
-                {
-                    var nSplit = power.DisplayName.Split();
-                    var value = power.DisplayName.Replace($"{nSplit[0]} ", "");
-                    switch (order)
-                    {
-                        case "Alpha":
-                            pos = (int)Enum.Parse(typeof(Enums.eAlphaOrder), value.Replace(" ", "_"));
-                            break;
-                        
-                        case "Judgement":
-                            pos = (int)Enum.Parse(typeof(Enums.eJudgementOrder), value.Replace(" ", "_"));
-                            break;
-                        
-                        case "Interface":
-                            pos = (int)Enum.Parse(typeof(Enums.eInterfaceOrder), value.Replace(" ", "_"));
-                            break;
-                        
-                        case "Lore":
-                            value = name switch
-                            {
-                                "Banished Pantheon" => power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", ""),
-                                "Knives of Vengeance" => power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} {nSplit[2]} ", ""),
-                                "Polar Lights" => power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", ""),
-                                "Robotic Drones" => power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", ""),
-                                "Storm Elemental" => power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} ", ""),
-                                "Talons of Vengeance" => power.DisplayName.Replace($"{nSplit[0]} {nSplit[1]} {nSplit[2]} ", ""),
-                                _ => value
-                            };
-                            pos = (int)Enum.Parse(typeof(Enums.eLoreOrder), value.Replace(" ", "_"));
-                            break;
-                        
-                        case "Destiny":
-                            pos = (int)Enum.Parse(typeof(Enums.eDestinyOrder), value.Replace(" ", "_"));
-                            break;
-                        
-                        case "Hybrid":
-                            pos = (int)Enum.Parse(typeof(Enums.eHybridOrder), value.Replace(" ", "_"));
-                            break;
-                        
-                        case "Genesis":
-                            pos = (int)Enum.Parse(typeof(Enums.eGenesisOrder), value.Replace(" ", "_"));
-                            break;
-                    }
-                }
-
-                pairList.Add(new KeyValuePair<int, IPower?>(pos, power));
-            }
-
-            var oList = pairList.OrderBy(x => x.Key);
-
-            return oList.Select(power => power.Value).ToList();
         }
 
         private void LblLock_Click(object? sender, EventArgs e)
