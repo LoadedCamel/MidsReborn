@@ -817,24 +817,30 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     : $"{gRegenValue:###0.##}{gValuesUnit} Regeneration"
                 ) + gRegenExtraInfo);
 
-            var hpValue = displayStats.HealthHitpointsNumeric(false);
-            var hpValueUncapped = displayStats.HealthHitpointsNumeric(true);
             var hpBase = MidsContext.Character.Archetype.Hitpoints;
+            var hpValueRaw = displayStats.HealthHitpointsNumeric(false);
+            var hpValueRawUncapped = displayStats.HealthHitpointsNumeric(true);
+            var hpValuePercent = hpValueRaw / hpBase * 100;
+            var hpValuePercentUncapped = hpValueRawUncapped / hpBase * 100;
             var absorbValue = Math.Min(displayStats.Absorb, hpBase);
-            graphHP.AddItemPair("Max HP", $"{hpValue:###0.##}",
+            graphHP.AddItemPair("Max HP", $"{(MidsContext.Config.HPFormat == ConfigData.HitPointsFormat.HP ? hpValueRaw : hpValuePercent):###0.##}{(MidsContext.Config.HPFormat == ConfigData.HitPointsFormat.HP ? "" : "%")}",
                 Math.Max(0, hpBase),
-                Math.Max(0, hpValue),
-                Math.Max(0, hpValueUncapped),
+                Math.Max(0, hpValueRaw),
+                Math.Max(0, hpValueRawUncapped),
                 Math.Max(0, absorbValue),
-                ((hpValueUncapped > hpValue) & (hpValue > 0)
-                    ? $"{hpValueUncapped:##0.##} HP, capped at {MidsContext.Character.Archetype.HPCap} HP"
-                    : $"{hpValue:##0.##} HP ({atName} HP cap: {MidsContext.Character.Archetype.HPCap} HP)"
-
-                ) +
-                $"\r\nBase: {hpBase:##0.##} HP" +
-                (absorbValue > 0
-                    ? $"\r\nAbsorb: {absorbValue:##0.##} ({absorbValue / hpBase * 100:##0.##}% of base HP)"
-                    : ""));
+                (MidsContext.Config.HPFormat == ConfigData.HitPointsFormat.HP
+                    ? (hpValueRawUncapped > hpValueRaw) & (hpValueRaw > 0)
+                          ? $"{hpValueRawUncapped:###0.##} HP ({hpValuePercentUncapped:##0.##}%), capped at {MidsContext.Character.Archetype.HPCap:###0.##} HP ({MidsContext.Character.Archetype.HPCap / hpBase * 100:##0.##}%)"
+                          : $"{hpValueRaw:###0.##} HP ({hpValuePercent:##0.##}% - {atName} HP cap: {MidsContext.Character.Archetype.HPCap:###0.##} HP / {MidsContext.Character.Archetype.HPCap / hpBase * 100:##0.##}%)"
+                    
+                    : (hpValueRawUncapped > hpValueRaw) & (hpValueRaw > 0)
+                        ? $"{hpValuePercentUncapped:##0.##}% ({hpValueRawUncapped:###0.##} HP), capped at {MidsContext.Character.Archetype.HPCap / hpBase * 100:###0.##}% ({MidsContext.Character.Archetype.HPCap:###0.##} HP)"
+                        : $"{hpValuePercent:##0.##}% ({hpValueRaw:###0.##} HP - {atName} HP cap: {MidsContext.Character.Archetype.HPCap / hpBase * 100:##0.##}% / {MidsContext.Character.Archetype.HPCap:###0.##} HP)"
+                      ) +
+                      $"\r\nBase: {(MidsContext.Config.HPFormat == ConfigData.HitPointsFormat.HP ? $"{hpBase:###0.##} HP" : $"100% ({hpBase:###0.##} HP)")}" +
+                      (absorbValue > 0
+                          ? $"\r\nAbsorb: {absorbValue:###0.##} ({absorbValue / hpBase * 100:##0.##}% of base HP)"
+                          : ""));
 
             graphHP.PerItemScales = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage
                 ? [4000, 4000]

@@ -1,11 +1,11 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Windows.Forms;
+using FontAwesome.Sharp;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using MRBResourceLib;
@@ -17,11 +17,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
         private readonly short[] defActs;
         private readonly MainWindow2 myParent;
         private readonly string[][] scenActs;
-
         private readonly string[] scenarioExample;
 
         private bool fcNoUpdate;
         private readonly IEnumerable<RadioButton> _updRadios;
+        private bool _hpRegenFormatsLinked;
+        private bool _disableCbCheckboxes;
 
         private ConfigData.AutoUpdType _autoUpdType = MidsContext.Config.AutomaticUpdates.Type;
 
@@ -37,8 +38,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
 
         public frmCalcOpt(ref MainWindow2 iParent)
         {
-            Load += frmCalcOpt_Load;
-            Closing += frmCalcOpt_Closing;
             fcNoUpdate = false;
             scenarioExample = new string[20];
             scenActs = new string[20][];
@@ -129,7 +128,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
 
         private void MovePrior(string priorPath, string currentPath)
         {
-            Debug.WriteLine($"Prev: {priorPath}\nCurrent: {currentPath}");
             if (currentPath == priorPath)
             {
                 return;
@@ -195,9 +193,11 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
 
         private void frmCalcOpt_Load(object? sender, EventArgs e)
         {
+            _disableCbCheckboxes = true;
             SetupScenarios();
             SetControls();
             PopulateSuppression();
+            _disableCbCheckboxes = false;
         }
 
         private void listScenarios_SelectedIndexChanged(object sender, EventArgs e)
@@ -346,8 +346,18 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             chkDimWindowBorders.Checked = config.DimWindowStyleColors;
             rbEnhPopupCloseStyle1.Checked = config.CloseEnhSelectPopupByMove;
             rbEnhPopupCloseStyle2.Checked = !config.CloseEnhSelectPopupByMove;
-            rbRegenFormat1.Checked = config.RegenFormat == ConfigData.RegenerationFormat.HPPerSecond;
-            rbRegenFormat2.Checked = config.RegenFormat == ConfigData.RegenerationFormat.Percentage;
+            _hpRegenFormatsLinked = config.HPRegenFormatsLinked;
+            ipbFormatsLinked.IconChar = _hpRegenFormatsLinked ? IconChar.Lock : IconChar.LockOpen;
+
+            chkRegenFormat1.Checked = config.RegenFormat == ConfigData.RegenerationFormat.HPPerSecond;
+            chkRegenFormat2.Checked = config.RegenFormat == ConfigData.RegenerationFormat.Percentage;
+
+            chkHPFormat1.Checked = _hpRegenFormatsLinked
+                ? config.RegenFormat == ConfigData.RegenerationFormat.HPPerSecond
+                : config.HPFormat == ConfigData.HitPointsFormat.HP;
+            chkHPFormat2.Checked = _hpRegenFormatsLinked
+                ? config.RegenFormat == ConfigData.RegenerationFormat.Percentage
+                : config.HPFormat == ConfigData.HitPointsFormat.Percentage;
 
             ResumeLayout();
         }
@@ -587,9 +597,12 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             config.WarnOnOldDbMbd = chkWarnOldDbVersion.Checked;
             config.DimWindowStyleColors = chkDimWindowBorders.Checked;
             config.CloseEnhSelectPopupByMove = rbEnhPopupCloseStyle1.Checked;
-            config.RegenFormat = rbRegenFormat1.Checked
+            config.RegenFormat = chkRegenFormat1.Checked
                 ? ConfigData.RegenerationFormat.HPPerSecond
                 : ConfigData.RegenerationFormat.Percentage;
+            config.HPFormat = chkHPFormat1.Checked
+                ? ConfigData.HitPointsFormat.HP
+                : ConfigData.HitPointsFormat.Percentage;
         }
 
         private void FileAssocStatus_Update()
@@ -667,18 +680,118 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
 
             if (!textBox.Text.All(char.IsDigit))
             {
-                textBox.Text = "3";
+                textBox.Text = @"3";
             }
         }
 
-        private void rbRegenFormat1_CheckedChanged(object sender, EventArgs e)
+        private void chkRegenFormat1_CheckedChanged(object sender, EventArgs e)
         {
-            rbRegenFormat2.Checked = !rbRegenFormat1.Checked;
+            if (_disableCbCheckboxes)
+            {
+                return;
+            }
+
+            SuspendLayout();
+
+            _disableCbCheckboxes = true;
+            chkRegenFormat2.Checked = !chkRegenFormat1.Checked;
+            if (_hpRegenFormatsLinked)
+            {
+                chkHPFormat1.Checked = chkRegenFormat1.Checked;
+                chkHPFormat2.Checked = chkRegenFormat2.Checked;
+            }
+
+            _disableCbCheckboxes = false;
+
+            ResumeLayout();
         }
 
-        private void rbRegenFormat2_CheckedChanged(object sender, EventArgs e)
+        private void chkRegenFormat2_CheckedChanged(object sender, EventArgs e)
         {
-            rbRegenFormat1.Checked = !rbRegenFormat2.Checked;
+            if (_disableCbCheckboxes)
+            {
+                return;
+            }
+
+            SuspendLayout();
+
+            _disableCbCheckboxes = true;
+            chkRegenFormat1.Checked = !chkRegenFormat2.Checked;
+            if (_hpRegenFormatsLinked)
+            {
+                chkHPFormat1.Checked = chkRegenFormat1.Checked;
+                chkHPFormat2.Checked = chkRegenFormat2.Checked;
+            }
+
+            _disableCbCheckboxes = false;
+
+            ResumeLayout();
+        }
+
+        private void chkHPFormat1_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_disableCbCheckboxes)
+            {
+                return;
+            }
+
+            SuspendLayout();
+
+            _disableCbCheckboxes = true;
+            chkHPFormat2.Checked = !chkHPFormat1.Checked;
+            if (_hpRegenFormatsLinked)
+            {
+                chkRegenFormat1.Checked = chkHPFormat1.Checked;
+                chkRegenFormat2.Checked = chkHPFormat2.Checked;
+            }
+
+            _disableCbCheckboxes = false;
+
+            ResumeLayout();
+        }
+
+        private void chkHPFormat2_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_disableCbCheckboxes)
+            {
+                return;
+            }
+
+            SuspendLayout();
+
+            _disableCbCheckboxes = true;
+            chkHPFormat1.Checked = !chkHPFormat2.Checked;
+            if (_hpRegenFormatsLinked)
+            {
+                chkRegenFormat1.Checked = chkHPFormat1.Checked;
+                chkRegenFormat2.Checked = chkHPFormat2.Checked;
+            }
+
+            _disableCbCheckboxes = false;
+
+            ResumeLayout();
+        }
+
+        private void ipbFormatsLinked_Click(object sender, EventArgs e)
+        {
+            if (_disableCbCheckboxes)
+            {
+                return;
+            }
+
+            SuspendLayout();
+
+            _hpRegenFormatsLinked = !_hpRegenFormatsLinked;
+            ipbFormatsLinked.IconChar = _hpRegenFormatsLinked ? IconChar.Lock : IconChar.LockOpen;
+            if (_hpRegenFormatsLinked)
+            {
+                _disableCbCheckboxes = true;
+                chkHPFormat1.Checked = chkRegenFormat1.Checked;
+                chkHPFormat2.Checked = chkRegenFormat2.Checked;
+                _disableCbCheckboxes = false;
+            }
+
+            ResumeLayout();
         }
     }
 }

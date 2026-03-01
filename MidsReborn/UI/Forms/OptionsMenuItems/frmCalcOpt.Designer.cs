@@ -108,12 +108,15 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             TabPage3 = new TabPage();
             chkDisableUsageTips = new CheckBox();
             groupBox18 = new GroupBox();
-            rbRegenFormat2 = new RadioButton();
-            rbRegenFormat1 = new RadioButton();
+            ipbFormatsLinked = new FontAwesome.Sharp.IconPictureBox();
+            pictureBox2 = new PictureBox();
+            pictureBox1 = new PictureBox();
+            label14 = new Label();
             label13 = new Label();
             chkOldStyle = new CheckBox();
             cbTotalsWindowTitleOpt = new ComboBox();
             label2 = new Label();
+            panelLink = new Panel();
             chkMiddle = new CheckBox();
             GroupBox17 = new GroupBox();
             chkDimWindowBorders = new CheckBox();
@@ -147,6 +150,10 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             Label4 = new Label();
             TabControl1 = new TabControl();
             label12 = new Label();
+            chkRegenFormat1 = new CheckBox();
+            chkRegenFormat2 = new CheckBox();
+            chkHPFormat1 = new CheckBox();
+            chkHPFormat2 = new CheckBox();
             ((ISupportInitialize)TeamSize).BeginInit();
             ((ISupportInitialize)udIOLevel).BeginInit();
             TabPage5.SuspendLayout();
@@ -164,6 +171,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             GroupBox6.SuspendLayout();
             TabPage3.SuspendLayout();
             groupBox18.SuspendLayout();
+            ((ISupportInitialize)ipbFormatsLinked).BeginInit();
+            ((ISupportInitialize)pictureBox2).BeginInit();
+            ((ISupportInitialize)pictureBox1).BeginInit();
             GroupBox17.SuspendLayout();
             ((ISupportInitialize)udPowersSize).BeginInit();
             ((ISupportInitialize)udPowSelectSize).BeginInit();
@@ -322,9 +332,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             // rbGraphTwoLine
             // 
             rbGraphTwoLine.Checked = true;
-            rbGraphTwoLine.Location = new System.Drawing.Point(6, 45);
+            rbGraphTwoLine.Location = new System.Drawing.Point(6, 37);
             rbGraphTwoLine.Name = "rbGraphTwoLine";
-            rbGraphTwoLine.Size = new System.Drawing.Size(286, 23);
+            rbGraphTwoLine.Size = new System.Drawing.Size(341, 23);
             rbGraphTwoLine.TabIndex = 3;
             rbGraphTwoLine.TabStop = true;
             rbGraphTwoLine.Text = "Base / Enhanced against Max Enhancable (Default)";
@@ -332,18 +342,18 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             // 
             // rbGraphStacked
             // 
-            rbGraphStacked.Location = new System.Drawing.Point(6, 66);
+            rbGraphStacked.Location = new System.Drawing.Point(6, 56);
             rbGraphStacked.Name = "rbGraphStacked";
-            rbGraphStacked.Size = new System.Drawing.Size(286, 23);
+            rbGraphStacked.Size = new System.Drawing.Size(341, 23);
             rbGraphStacked.TabIndex = 4;
             rbGraphStacked.Text = "Base + Enhanced (stacked) against Max Enhancable";
             myTip.SetToolTip(rbGraphStacked, "'Max Enhacable' is damage if slotted with 6 +3 damage enhancements.");
             // 
             // rbGraphSimple
             // 
-            rbGraphSimple.Location = new System.Drawing.Point(6, 87);
+            rbGraphSimple.Location = new System.Drawing.Point(6, 76);
             rbGraphSimple.Name = "rbGraphSimple";
-            rbGraphSimple.Size = new System.Drawing.Size(164, 23);
+            rbGraphSimple.Size = new System.Drawing.Size(341, 23);
             rbGraphSimple.TabIndex = 5;
             rbGraphSimple.Text = "Base against Enhanced";
             myTip.SetToolTip(rbGraphSimple, "This graph type doesn't reflect the max damage potential of other powers.");
@@ -937,47 +947,70 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             // 
             // groupBox18
             // 
-            groupBox18.Controls.Add(rbRegenFormat2);
-            groupBox18.Controls.Add(rbRegenFormat1);
+            groupBox18.Controls.Add(chkHPFormat2);
+            groupBox18.Controls.Add(chkHPFormat1);
+            groupBox18.Controls.Add(chkRegenFormat2);
+            groupBox18.Controls.Add(chkRegenFormat1);
+            groupBox18.Controls.Add(ipbFormatsLinked);
+            groupBox18.Controls.Add(pictureBox2);
+            groupBox18.Controls.Add(pictureBox1);
+            groupBox18.Controls.Add(label14);
             groupBox18.Controls.Add(label13);
             groupBox18.Controls.Add(chkOldStyle);
             groupBox18.Controls.Add(cbTotalsWindowTitleOpt);
             groupBox18.Controls.Add(label2);
-            groupBox18.Location = new System.Drawing.Point(388, 120);
+            groupBox18.Controls.Add(panelLink);
+            groupBox18.Location = new System.Drawing.Point(388, 114);
             groupBox18.Name = "groupBox18";
-            groupBox18.Size = new System.Drawing.Size(353, 70);
+            groupBox18.Size = new System.Drawing.Size(381, 82);
             groupBox18.TabIndex = 79;
             groupBox18.TabStop = false;
             groupBox18.Text = "Totals Window:";
             // 
-            // rbRegenFormat2
+            // ipbFormatsLinked
             // 
-            rbRegenFormat2.AutoSize = true;
-            rbRegenFormat2.Location = new System.Drawing.Point(229, 42);
-            rbRegenFormat2.Name = "rbRegenFormat2";
-            rbRegenFormat2.Size = new System.Drawing.Size(82, 17);
-            rbRegenFormat2.TabIndex = 83;
-            rbRegenFormat2.TabStop = true;
-            rbRegenFormat2.Text = "Percentage";
-            rbRegenFormat2.UseVisualStyleBackColor = true;
-            rbRegenFormat2.CheckedChanged += rbRegenFormat2_CheckedChanged;
+            ipbFormatsLinked.BackColor = System.Drawing.Color.Transparent;
+            ipbFormatsLinked.ForeColor = System.Drawing.SystemColors.ControlText;
+            ipbFormatsLinked.IconChar = FontAwesome.Sharp.IconChar.LockOpen;
+            ipbFormatsLinked.IconColor = System.Drawing.SystemColors.ControlText;
+            ipbFormatsLinked.IconFont = FontAwesome.Sharp.IconFont.Auto;
+            ipbFormatsLinked.IconSize = 16;
+            ipbFormatsLinked.Location = new System.Drawing.Point(330, 50);
+            ipbFormatsLinked.Name = "ipbFormatsLinked";
+            ipbFormatsLinked.Size = new System.Drawing.Size(16, 16);
+            ipbFormatsLinked.TabIndex = 90;
+            ipbFormatsLinked.TabStop = false;
+            ipbFormatsLinked.Click += ipbFormatsLinked_Click;
             // 
-            // rbRegenFormat1
+            // pictureBox2
             // 
-            rbRegenFormat1.AutoSize = true;
-            rbRegenFormat1.Location = new System.Drawing.Point(149, 42);
-            rbRegenFormat1.Name = "rbRegenFormat1";
-            rbRegenFormat1.Size = new System.Drawing.Size(48, 17);
-            rbRegenFormat1.TabIndex = 82;
-            rbRegenFormat1.TabStop = true;
-            rbRegenFormat1.Text = "HP/s";
-            rbRegenFormat1.UseVisualStyleBackColor = true;
-            rbRegenFormat1.CheckedChanged += rbRegenFormat1_CheckedChanged;
+            pictureBox2.Location = new System.Drawing.Point(159, 40);
+            pictureBox2.Name = "pictureBox2";
+            pictureBox2.Size = new System.Drawing.Size(41, 34);
+            pictureBox2.TabIndex = 89;
+            pictureBox2.TabStop = false;
+            // 
+            // pictureBox1
+            // 
+            pictureBox1.Location = new System.Drawing.Point(224, 40);
+            pictureBox1.Name = "pictureBox1";
+            pictureBox1.Size = new System.Drawing.Size(86, 34);
+            pictureBox1.TabIndex = 88;
+            pictureBox1.TabStop = false;
+            // 
+            // label14
+            // 
+            label14.AutoSize = true;
+            label14.Location = new System.Drawing.Point(8, 62);
+            label14.Name = "label14";
+            label14.Size = new System.Drawing.Size(94, 13);
+            label14.TabIndex = 84;
+            label14.Text = "HitPoints format:";
             // 
             // label13
             // 
             label13.AutoSize = true;
-            label13.Location = new System.Drawing.Point(8, 44);
+            label13.Location = new System.Drawing.Point(8, 39);
             label13.Name = "label13";
             label13.Size = new System.Drawing.Size(117, 13);
             label13.TabIndex = 81;
@@ -997,7 +1030,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             cbTotalsWindowTitleOpt.DropDownStyle = ComboBoxStyle.DropDownList;
             cbTotalsWindowTitleOpt.FormattingEnabled = true;
             cbTotalsWindowTitleOpt.Items.AddRange(new object[] { "Generic - Totals for Self", "Character name + Archetype + Powersets", "Build file name + Archetype + Powersets", "Character name + Build file name (fallback to generic if none)" });
-            cbTotalsWindowTitleOpt.Location = new System.Drawing.Point(199, 13);
+            cbTotalsWindowTitleOpt.Location = new System.Drawing.Point(223, 13);
             cbTotalsWindowTitleOpt.Name = "cbTotalsWindowTitleOpt";
             cbTotalsWindowTitleOpt.Size = new System.Drawing.Size(148, 21);
             cbTotalsWindowTitleOpt.TabIndex = 1;
@@ -1005,11 +1038,19 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             // label2
             // 
             label2.AutoSize = true;
-            label2.Location = new System.Drawing.Point(108, 18);
+            label2.Location = new System.Drawing.Point(132, 18);
             label2.Name = "label2";
             label2.Size = new System.Drawing.Size(92, 13);
             label2.TabIndex = 0;
             label2.Text = "Show in titlebar:";
+            // 
+            // panelLink
+            // 
+            panelLink.BorderStyle = BorderStyle.Fixed3D;
+            panelLink.Location = new System.Drawing.Point(174, 45);
+            panelLink.Name = "panelLink";
+            panelLink.Size = new System.Drawing.Size(151, 25);
+            panelLink.TabIndex = 87;
             // 
             // chkMiddle
             // 
@@ -1040,7 +1081,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             GroupBox17.Controls.Add(udRTFSize);
             GroupBox17.Location = new System.Drawing.Point(196, 196);
             GroupBox17.Name = "GroupBox17";
-            GroupBox17.Size = new System.Drawing.Size(545, 132);
+            GroupBox17.Size = new System.Drawing.Size(573, 132);
             GroupBox17.TabIndex = 76;
             GroupBox17.TabStop = false;
             GroupBox17.Text = "Font Size/Colors:";
@@ -1213,7 +1254,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             GroupBox5.Controls.Add(rbGraphTwoLine);
             GroupBox5.Location = new System.Drawing.Point(388, 4);
             GroupBox5.Name = "GroupBox5";
-            GroupBox5.Size = new System.Drawing.Size(353, 117);
+            GroupBox5.Size = new System.Drawing.Size(381, 104);
             GroupBox5.TabIndex = 72;
             GroupBox5.TabStop = false;
             GroupBox5.Text = "Damage Graph Style:";
@@ -1239,7 +1280,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             GroupBox14.Controls.Add(udIOLevel);
             GroupBox14.Location = new System.Drawing.Point(196, 4);
             GroupBox14.Name = "GroupBox14";
-            GroupBox14.Size = new System.Drawing.Size(188, 186);
+            GroupBox14.Size = new System.Drawing.Size(188, 192);
             GroupBox14.TabIndex = 69;
             GroupBox14.TabStop = false;
             GroupBox14.Text = "Inventions:";
@@ -1359,6 +1400,50 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             label12.TabIndex = 2;
             label12.Text = "DB Version Warning:";
             // 
+            // chkRegenFormat1
+            // 
+            chkRegenFormat1.AutoSize = true;
+            chkRegenFormat1.Location = new System.Drawing.Point(149, 37);
+            chkRegenFormat1.Name = "chkRegenFormat1";
+            chkRegenFormat1.Size = new System.Drawing.Size(49, 17);
+            chkRegenFormat1.TabIndex = 91;
+            chkRegenFormat1.Text = "HP/s";
+            chkRegenFormat1.UseVisualStyleBackColor = true;
+            chkRegenFormat1.CheckedChanged += chkRegenFormat1_CheckedChanged;
+            // 
+            // chkRegenFormat2
+            // 
+            chkRegenFormat2.AutoSize = true;
+            chkRegenFormat2.Location = new System.Drawing.Point(229, 37);
+            chkRegenFormat2.Name = "chkRegenFormat2";
+            chkRegenFormat2.Size = new System.Drawing.Size(83, 17);
+            chkRegenFormat2.TabIndex = 92;
+            chkRegenFormat2.Text = "Percentage";
+            chkRegenFormat2.UseVisualStyleBackColor = true;
+            chkRegenFormat2.CheckedChanged += chkRegenFormat2_CheckedChanged;
+            // 
+            // chkHPFormat1
+            // 
+            chkHPFormat1.AutoSize = true;
+            chkHPFormat1.Location = new System.Drawing.Point(149, 60);
+            chkHPFormat1.Name = "chkHPFormat1";
+            chkHPFormat1.Size = new System.Drawing.Size(40, 17);
+            chkHPFormat1.TabIndex = 93;
+            chkHPFormat1.Text = "HP";
+            chkHPFormat1.UseVisualStyleBackColor = true;
+            chkHPFormat1.CheckedChanged += chkHPFormat1_CheckedChanged;
+            // 
+            // chkHPFormat2
+            // 
+            chkHPFormat2.AutoSize = true;
+            chkHPFormat2.Location = new System.Drawing.Point(229, 60);
+            chkHPFormat2.Name = "chkHPFormat2";
+            chkHPFormat2.Size = new System.Drawing.Size(83, 17);
+            chkHPFormat2.TabIndex = 94;
+            chkHPFormat2.Text = "Percentage";
+            chkHPFormat2.UseVisualStyleBackColor = true;
+            chkHPFormat2.CheckedChanged += chkHPFormat2_CheckedChanged;
+            // 
             // frmCalcOpt
             // 
             AcceptButton = btnOK;
@@ -1380,6 +1465,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             ShowInTaskbar = false;
             StartPosition = FormStartPosition.CenterScreen;
             Text = "Options";
+            Closing += frmCalcOpt_Closing;
+            Load += frmCalcOpt_Load;
             ((ISupportInitialize)TeamSize).EndInit();
             ((ISupportInitialize)udIOLevel).EndInit();
             TabPage5.ResumeLayout(false);
@@ -1402,6 +1489,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
             TabPage3.ResumeLayout(false);
             groupBox18.ResumeLayout(false);
             groupBox18.PerformLayout();
+            ((ISupportInitialize)ipbFormatsLinked).EndInit();
+            ((ISupportInitialize)pictureBox2).EndInit();
+            ((ISupportInitialize)pictureBox1).EndInit();
             GroupBox17.ResumeLayout(false);
             GroupBox17.PerformLayout();
             ((ISupportInitialize)udPowersSize).EndInit();
@@ -1529,8 +1619,15 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems
         private GroupBox GroupBox1;
         private Label label12;
         private CheckBox chkDisableUsageTips;
-        private RadioButton rbRegenFormat2;
-        private RadioButton rbRegenFormat1;
         private Label label13;
+        private Label label14;
+        private Panel panelLink;
+        private PictureBox pictureBox1;
+        private FontAwesome.Sharp.IconPictureBox ipbFormatsLinked;
+        private PictureBox pictureBox2;
+        private CheckBox chkHPFormat2;
+        private CheckBox chkHPFormat1;
+        private CheckBox chkRegenFormat2;
+        private CheckBox chkRegenFormat1;
     }
 }

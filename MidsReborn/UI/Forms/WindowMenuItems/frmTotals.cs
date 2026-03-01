@@ -599,15 +599,29 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphRegen.Draw();
 
             graphHP.Clear();
-            var iTip5 = $"Base HitPoints: {MidsContext.Character.Archetype.Hitpoints}\r\nCurrent HitPoints: {displayStats.HealthHitpointsNumeric(false)}";
+            var iTip5 = MidsContext.Config.HPFormat == ConfigData.HitPointsFormat.HP
+                ? $"Base HitPoints multiplier: 100% ({MidsContext.Character.Archetype.Hitpoints:###0.##} HP)\r\nCurrent HitPoints multiplier: {displayStats.HealthHitpointsPercentage:###0.##}% ({displayStats.HealthHitpointsNumeric(false):###0.##} HP)"
+                : $"Base HitPoints: {MidsContext.Character.Archetype.Hitpoints} (100%)\r\nCurrent HitPoints: {displayStats.HealthHitpointsNumeric(false):###0.##} HP ({displayStats.HealthHitpointsPercentage:##0.##}%)";
             if (Math.Abs(displayStats.HealthHitpointsNumeric(false) - displayStats.HealthHitpointsNumeric(true)) > 0.01)
             {
-                iTip5 += $"\r\n(Capped from a total of: {displayStats.HealthHitpointsNumeric(true):###0.##})";
+                iTip5 += $"\r\n(Capped from a total of: {(MidsContext.Config.HPFormat == ConfigData.HitPointsFormat.HP ? $"{displayStats.HealthHitpointsNumeric(true):###0.##} HP ({displayStats.HealthHitpointsNumeric(true) / MidsContext.Character.Archetype.Hitpoints * 100:##0.##}%)" : $"{displayStats.HealthHitpointsNumeric(true) / MidsContext.Character.Archetype.Hitpoints * 100:##0.##}% ({displayStats.HealthHitpointsNumeric(true):###0.##} HP)")})";
             }
 
-            graphHP.AddItem($"Max HP|{displayStats.HealthHitpointsPercentage:###0.##}%", Math.Max(0, displayStats.HealthHitpointsPercentage), Math.Max(0, displayStats.HealthHitpointsPercentage), iTip5);
-            graphHP.Max = (float)(MidsContext.Character.Archetype.HPCap / (double)MidsContext.Character.Archetype.Hitpoints * 100);
-            graphHP.MarkerValue = 100f;
+            if (MidsContext.Config.HPFormat == ConfigData.HitPointsFormat.HP)
+            {
+                graphHP.AddItem($"Max HP|{displayStats.HealthHitpointsNumeric(false):###0.##}", MidsContext.Character.Archetype.Hitpoints, Math.Max(0, displayStats.HealthHitpointsNumeric(false)), iTip5);
+            }
+            else
+            {
+                graphHP.AddItem($"Max HP|{displayStats.HealthHitpointsPercentage:###0.##}%", 100, Math.Max(0, displayStats.HealthHitpointsPercentage), iTip5);
+            }
+
+            graphHP.Max = MidsContext.Config.HPFormat == ConfigData.HitPointsFormat.HP
+                ? MidsContext.Character.Archetype.HPCap
+                : MidsContext.Character.Archetype.HPCap / MidsContext.Character.Archetype.Hitpoints * 100;
+            graphHP.MarkerValue = MidsContext.Config.HPFormat == ConfigData.HitPointsFormat.HP
+                ? MidsContext.Character.Archetype.Hitpoints
+                : 100;
             graphHP.Draw();
 
             graphMovement.Clear();

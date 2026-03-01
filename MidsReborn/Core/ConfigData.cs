@@ -72,6 +72,12 @@ namespace Mids_Reborn.Core
             Percentage
         }
 
+        public enum HitPointsFormat
+        {
+            HP,
+            Percentage
+        }
+
         private const string OverrideNames = "Mids Reborn Comparison Overrides";
 
         public bool FirstRun { get; set; }
@@ -179,6 +185,8 @@ namespace Mids_Reborn.Core
 
         public CombatContext CombatContextSettings { get; set; }
         public RegenerationFormat RegenFormat { get; set; } = RegenerationFormat.Percentage;
+        public HitPointsFormat HPFormat { get; set; } = HitPointsFormat.HP;
+        public bool HPRegenFormatsLinked { get; set; } = false;
 
         public string? ActiveTemplate { get; set; } = null;
 
