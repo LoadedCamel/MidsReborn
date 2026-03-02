@@ -306,9 +306,6 @@
     <Compile Update="UI\Forms\WindowMenuItems\frmEntityDetails.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="UI\Forms\WindowMenuItems\frmIncarnates.cs">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Update="UI\Forms\WindowMenuItems\frmMiniList.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -355,7 +352,7 @@
     <Compile Update="UI\Forms\frmFloatingStats.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Update="UI\Forms\frmIncarnate.cs">
+    <Compile Update="UI\Forms\WindowMenuItems\frmIncarnate.cs">
       <SubType>Form</SubType>
     </Compile>
     <Compile Update="UI\Forms\FrmInputLevel.cs">
@@ -816,10 +813,7 @@
 		<!-- New_%(Filename) keeps multi-dot names intact:
        MRBBootstrap.runtimeconfig.json -> New_MRBBootstrap.runtimeconfig.json
        MRBBootstrap.deps.json          -> New_MRBBootstrap.deps.json -->
-		<Copy
-			SourceFiles="@(_BootstrapFiles)"
-			DestinationFiles="@(_BootstrapFiles->'$(TargetDir)New_%(Filename)%(Extension)')"
-			SkipUnchangedFiles="true" />
+		<Copy SourceFiles="@(_BootstrapFiles)" DestinationFiles="@(_BootstrapFiles->'$(TargetDir)New_%(Filename)%(Extension)')" SkipUnchangedFiles="true" />
 
 		<Delete Files="@(_BootstrapFiles)" />
 	</Target>

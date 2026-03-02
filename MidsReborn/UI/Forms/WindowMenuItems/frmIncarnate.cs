@@ -1,10 +1,3 @@
-using Mids_Reborn.Core;
-using Mids_Reborn.Core.Base.Data_Classes;
-using Mids_Reborn.Core.Base.Display;
-using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.UI.Controls;
-using Mids_Reborn.UI.Controls.Skia;
-using MRBResourceLib;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -13,8 +6,15 @@ using System.Globalization;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Windows.Forms;
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.UI.Controls;
+using Mids_Reborn.UI.Controls.Skia;
+using MRBResourceLib;
 
-namespace Mids_Reborn.UI.Forms
+namespace Mids_Reborn.UI.Forms.WindowMenuItems
 {
     public partial class FrmIncarnate : Form
     {

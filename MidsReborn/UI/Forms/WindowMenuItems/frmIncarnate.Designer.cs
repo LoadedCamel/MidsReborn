@@ -4,7 +4,7 @@ using System.Windows.Forms;
 using Mids_Reborn.UI.Controls;
 using Mids_Reborn.UI.Controls.Skia;
 
-namespace Mids_Reborn.UI.Forms
+namespace Mids_Reborn.UI.Forms.WindowMenuItems
 {
     public partial class FrmIncarnate
     {

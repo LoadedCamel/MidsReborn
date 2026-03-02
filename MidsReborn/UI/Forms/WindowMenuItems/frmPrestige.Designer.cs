@@ -38,7 +38,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             VScrollBar1 = new VScrollBar();
             PopInfo = new ctlPopUp();
             lblLock = new Label();
-            Panel2 = new Mids_Reborn.UI.Forms.FrmIncarnate.CustomPanel();
+            Panel2 = new FrmIncarnate.CustomPanel();
             BtnDone = new ImageButtonEx();
             SkPairedList1 = new SkPairedList();
             Panel1.SuspendLayout();
