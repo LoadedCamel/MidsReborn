@@ -523,7 +523,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void SkPairedList1_EmptyHover()
         {
-            MiniPowerInfo(-1);
+            // Can be enabled if padding between items starts becoming large.
+            // As the default value is of 2px, this is disabled to reduce flickering.
+            //MiniPowerInfo(-1);
         }
 
         private void SkPairedList1_MouseLeave(object sender, EventArgs e)
