@@ -60,10 +60,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             this.VScrollBar1.Size = new System.Drawing.Size(17, 185);
             this.VScrollBar1.TabIndex = 11;
             this.VScrollBar1.Scroll += new System.Windows.Forms.ScrollEventHandler(VScrollBar1_Scroll);
-            this.PopInfo.BXHeight = 1024;
             this.PopInfo.ColumnPosition = 0.5f;
             this.PopInfo.ColumnRight = false;
-            this.PopInfo.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.PopInfo.Font = new System.Drawing.Font("Segoe UI", 12f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
             this.PopInfo.ForeColor = System.Drawing.Color.FromArgb(0, 0, 32);
             this.PopInfo.InternalPadding = 3;
 
@@ -79,7 +78,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             this.lblLock.BackColor = System.Drawing.Color.Red;
             this.lblLock.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
-            this.lblLock.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.lblLock.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, 0);
             this.lblLock.ForeColor = System.Drawing.Color.White;
 
             this.lblLock.Location = new System.Drawing.Point(12, 155);
@@ -92,7 +91,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             this.lblLock.Visible = false;
             this.lblLock.Click += new System.EventHandler(lblLock_Click);
             this.ibClose.Checked = false;
-            this.ibClose.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.ibClose.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Pixel, 0);
 
             this.ibClose.KnockoutLocationPoint = new System.Drawing.Point(0, 0);
 
@@ -172,7 +171,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             this.Controls.Add((System.Windows.Forms.Control)this.lblLock);
             this.Controls.Add((System.Windows.Forms.Control)this.Panel1);
             this.Controls.Add((System.Windows.Forms.Control)this.ibClose);
-            this.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, (byte)0);
+            this.Font = new System.Drawing.Font("Segoe UI", 11f, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedToolWindow;
             this.ShowInTaskbar = false;
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterParent;

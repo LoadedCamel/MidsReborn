@@ -185,8 +185,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // RecipeInfo
             // 
-            this.RecipeInfo.BXHeight = 4096;
-            this.RecipeInfo.ColumnPosition = 0.5F;
+            this.RecipeInfo.ColumnPosition = 0.5f;
             this.RecipeInfo.ColumnRight = false;
             this.RecipeInfo.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
             this.RecipeInfo.ForeColor = System.Drawing.Color.Black;
@@ -400,8 +399,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // ctlPopUp1
             // 
-            this.ctlPopUp1.BXHeight = 2048;
-            this.ctlPopUp1.ColumnPosition = 0.5F;
+            this.ctlPopUp1.ColumnPosition = 0.5f;
             this.ctlPopUp1.ColumnRight = false;
             this.ctlPopUp1.Font = new System.Drawing.Font("Segoe UI", 14F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
             this.ctlPopUp1.ForeColor = System.Drawing.Color.Black;

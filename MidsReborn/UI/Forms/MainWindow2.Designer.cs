@@ -2146,13 +2146,10 @@ namespace Mids_Reborn.UI.Forms
             // I9Popup
             // 
             this.I9Popup.BackColor = System.Drawing.Color.Black;
-            this.I9Popup.BXHeight = 675;
             this.I9Popup.ColumnPosition = 0.5F;
             this.I9Popup.ColumnRight = false;
-            this.I9Popup.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Regular,
-                System.Drawing.GraphicsUnit.Pixel, 0);
-            this.I9Popup.ForeColor =
-                System.Drawing.Color.FromArgb(96, 48, 255);
+            this.I9Popup.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
+            this.I9Popup.ForeColor = System.Drawing.Color.FromArgb(96, 48, 255);
             this.I9Popup.InternalPadding = 3;
             this.I9Popup.Location = new System.Drawing.Point(513, 490);
             this.I9Popup.Name = "I9Popup";

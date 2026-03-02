@@ -92,7 +92,6 @@ namespace Mids_Reborn.UI.Forms
             // 
             // PopInfo
             // 
-            PopInfo.BXHeight = 1024;
             PopInfo.ColumnPosition = 0.5F;
             PopInfo.ColumnRight = false;
             PopInfo.Font = new Font("Segoe UI", 12F, FontStyle.Regular, GraphicsUnit.Pixel, 0);

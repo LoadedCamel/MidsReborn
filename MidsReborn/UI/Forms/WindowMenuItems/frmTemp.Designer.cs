@@ -83,8 +83,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             // PopInfo
             // 
-            PopInfo.BXHeight = 1024;
-            PopInfo.ColumnPosition = 0.5F;
+            PopInfo.ColumnPosition = 0.5f;
             PopInfo.ColumnRight = false;
             PopInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
             PopInfo.ForeColor = System.Drawing.Color.FromArgb(0, 0, 32);

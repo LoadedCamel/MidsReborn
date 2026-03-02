@@ -5839,119 +5839,119 @@ The default position/state will be used upon next launch.", @"Window State Warni
             if (MidsContext.Config.DisableShowPopup)
             {
                 HidePopup();
+
+                return;
+            }
+            
+            var flag = false;
+            var iPopup = new PopUp.PopupData();
+            var picker = false;
+            var powerListing = false;
+            var bounds = I9Popup.Bounds;
+            if ((hIdx < 0) & (pIdx > -1))
+            {
+                hIdx = MidsContext.Character.CurrentBuild.FindInToonHistory(pIdx);
+            }
+
+            PowerEntry? powerEntry = null;
+            if (hIdx > -1)
+            {
+                powerEntry = MidsContext.Character.CurrentBuild.Powers[hIdx];
+            }
+
+            if (!((I9Popup.hIDX != hIdx) | (I9Popup.eIDX != sIdx) | (I9Popup.pIDX != pIdx) | (I9Popup.hIDX == -1) | (I9Popup.eIDX == -1) | (I9Popup.pIDX == -1)))
+            {
+                return;
+            }
+
+            var rectangle = new Rectangle();
+            if ((hIdx > -1) & (sIdx < 0) & (pIdx < 0) & (eSlot == null) & (setIdx < 0))
+            {
+                rectangle = drawing.PowerBoundsUnScaled(hIdx);
+                var e1 = new Point(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
+                if (drawing.WithinPowerBar(rectangle, e1))
+                {
+                    if (powerEntry is { NIDPower: > -1 })
+                    {
+                        iPopup = MainModule.MidsController.Toon.PopPowerInfo(hIdx, powerEntry.NIDPower);
+                    }
+
+                    flag = true;
+                }
+            }
+            else if (sIdx > -1)
+            {
+                rectangle = drawing.PowerBoundsUnScaled(hIdx);
+                if (powerEntry != null)
+                {
+                    iPopup = Character.PopEnhInfo(powerEntry.Slots[sIdx].Enhancement, powerEntry.Slots[sIdx].Level, powerEntry);
+                }
+
+                flag = true;
+            }
+            else if (pIdx > -1)
+            {
+                rectangle = rBounds;
+                iPopup = MainModule.MidsController.Toon.PopPowerInfo(hIdx, pIdx);
+                flag = true;
+                powerListing = true;
+            }
+            else if ((eSlot != null) & (setIdx < 0))
+            {
+                rectangle = rBounds;
+                iPopup = Character.PopEnhInfo(eSlot, -1, powerEntry);
+                flag = true;
+                picker = true;
+            }
+            else if (setIdx > -1)
+            {
+                rectangle = rBounds;
+                iPopup = Character.PopSetInfo(setIdx, powerEntry);
+                flag = true;
+                picker = true;
+            }
+
+            if (flag & (iPopup.Sections != null))
+            {
+                if ((I9Popup.hIDX != hIdx) | (I9Popup.eIDX != sIdx) | (I9Popup.pIDX != pIdx) | (I9Popup.hIDX == -1) | (I9Popup.eIDX == -1) | (I9Popup.pIDX == -1))
+                {
+                    if (!picker & !powerListing)
+                    {
+                        rectangle = Dilate(drawing.ScaleDown(rectangle), 2);
+                        rectangle.X += pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value;
+                        rectangle.Y += pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value;
+                    }
+
+                    I9Popup.SetPopup(iPopup, enhUniqueStatus);
+                    if (vAlign == VerticalAlignment.Bottom)
+                    {
+                        rectangle.Y -= rectangle.Height;
+                    }
+                    //else if (rectangle.Bottom > ClientSize.Height - MenuBar.Height)
+                    //{
+                    //    rectangle.Y -= rectangle.Bottom - (ClientSize.Height - MenuBar.Height); // I9Popup.Height
+                    //}
+
+                    PopUpVisible = true;
+                    SetPopupLocation(rectangle, powerListing, picker);
+                }
+
+                I9Popup.Visible = true;
+                if (ActivePopupBounds != I9Popup.Bounds)
+                {
+                    RedrawUnderPopup(bounds);
+                    ActivePopupBounds = I9Popup.Bounds;
+                }
             }
             else
             {
-                var flag = false;
-                var iPopup = new PopUp.PopupData();
-                var picker = false;
-                var powerListing = false;
-                var bounds = I9Popup.Bounds;
-                if (hIdx < 0 & pIdx > -1)
-                {
-                    hIdx = MidsContext.Character.CurrentBuild.FindInToonHistory(pIdx);
-                }
-
-                PowerEntry? powerEntry = null;
-                if (hIdx > -1)
-                {
-                    powerEntry = MidsContext.Character.CurrentBuild.Powers[hIdx];
-                }
-
-                if (!(I9Popup.hIDX != hIdx | I9Popup.eIDX != sIdx | I9Popup.pIDX != pIdx | I9Popup.hIDX == -1 | I9Popup.eIDX == -1 | I9Popup.pIDX == -1))
-                {
-                    return;
-                }
-
-                var rectangle = new Rectangle();
-                if (hIdx > -1 & sIdx < 0 & pIdx < 0 & eSlot == null & setIdx < 0)
-                {
-                    rectangle = drawing.PowerBoundsUnScaled(hIdx);
-                    var e1 = new Point(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
-                    if (drawing.WithinPowerBar(rectangle, e1))
-                    {
-                        if (powerEntry is { NIDPower: > -1 })
-                        {
-                            iPopup = MainModule.MidsController.Toon.PopPowerInfo(hIdx, powerEntry.NIDPower);
-                        }
-
-                        flag = true;
-                    }
-                }
-                else if (sIdx > -1)
-                {
-                    rectangle = drawing.PowerBoundsUnScaled(hIdx);
-                    if (powerEntry != null)
-                    {
-                        iPopup = Character.PopEnhInfo(powerEntry.Slots[sIdx].Enhancement, powerEntry.Slots[sIdx].Level, powerEntry);
-                    }
-
-                    flag = true;
-                }
-                else if (pIdx > -1)
-                {
-                    rectangle = rBounds;
-                    iPopup = MainModule.MidsController.Toon.PopPowerInfo(hIdx, pIdx);
-                    flag = true;
-                    powerListing = true;
-                }
-                else if (eSlot != null & setIdx < 0)
-                {
-                    rectangle = rBounds;
-                    iPopup = Character.PopEnhInfo(eSlot, -1, powerEntry);
-                    flag = true;
-                    picker = true;
-                }
-                else if (setIdx > -1)
-                {
-                    rectangle = rBounds;
-                    iPopup = Character.PopSetInfo(setIdx, powerEntry);
-                    flag = true;
-                    picker = true;
-                }
-
-                if (flag & iPopup.Sections != null)
-                {
-                    if (I9Popup.hIDX != hIdx | I9Popup.eIDX != sIdx | I9Popup.pIDX != pIdx | I9Popup.hIDX == -1 | I9Popup.eIDX == -1 | I9Popup.pIDX == -1)
-                    {
-                        if (!picker & !powerListing)
-                        {
-                            rectangle = Dilate(drawing.ScaleDown(rectangle), 2);
-                            rectangle.X += pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value;
-                            rectangle.Y += pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value;
-                        }
-
-                        I9Popup.SetPopup(iPopup, enhUniqueStatus);
-                        if (vAlign == VerticalAlignment.Bottom)
-                        {
-                            rectangle.Y -= rectangle.Height;
-                        }
-                        //else if (rectangle.Bottom > ClientSize.Height - MenuBar.Height)
-                        //{
-                        //    rectangle.Y -= rectangle.Bottom - (ClientSize.Height - MenuBar.Height); // I9Popup.Height
-                        //}
-
-                        PopUpVisible = true;
-                        SetPopupLocation(rectangle, powerListing, picker);
-                    }
-
-                    I9Popup.Visible = true;
-                    if (ActivePopupBounds != I9Popup.Bounds)
-                    {
-                        RedrawUnderPopup(bounds);
-                        ActivePopupBounds = I9Popup.Bounds;
-                    }
-                }
-                else
-                {
-                    HidePopup();
-                }
-
-                I9Popup.hIDX = hIdx;
-                I9Popup.eIDX = sIdx;
-                I9Popup.pIDX = pIdx;
-                I9Popup.psIDX = -1;
+                HidePopup();
             }
+
+            I9Popup.hIDX = hIdx;
+            I9Popup.eIDX = sIdx;
+            I9Popup.pIDX = pIdx;
+            I9Popup.psIDX = -1;
         }
 
         private void SlotLevelSwap(int sourcePower, int sourceSlot, int destPower, int destSlot)

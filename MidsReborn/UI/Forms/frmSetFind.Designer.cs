@@ -137,10 +137,9 @@ namespace Mids_Reborn.UI.Forms
             //
             // SetInfo
             // 
-            SetInfo.BXHeight = 600;
-            SetInfo.ColumnPosition = 0.5F;
+            SetInfo.ColumnPosition = 0.5f;
             SetInfo.ColumnRight = false;
-            SetInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, ((byte)(0)));
+            SetInfo.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
             SetInfo.InternalPadding = 3;
             SetInfo.Location = new System.Drawing.Point(0, 0);
             SetInfo.Name = "SetInfo";
