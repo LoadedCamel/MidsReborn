@@ -28,6 +28,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             Name = nameof(frmTemp);
             _myParent = parentForm;
             _myPowers = powersList;
+            _myPowers = _myPowers.OrderBy(x => x?.DisplayName).ToList();
         }
 
         private void frmTemp_Load(object sender, EventArgs e)
@@ -97,7 +98,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void FillLists()
         {
-            _myPowers = _myPowers.OrderBy(x => x?.DisplayName).ToList();
             SkPairedList1.SuspendRedraw = true;
             SkPairedList1.ClearItems();
             var message = string.Empty; // Has to be initialized first

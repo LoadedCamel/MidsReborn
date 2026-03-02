@@ -564,6 +564,11 @@ namespace Mids_Reborn.UI.Forms
             {
                 fPrestige.UpdateColorTheme(e);
             }
+
+            if (fAccolade is { Visible: true })
+            {
+                fAccolade.UpdateColorTheme(e);
+            }
         }
 
         private void ibModeEx_OnClick(object sender, EventArgs eventArgs)
