@@ -12,7 +12,6 @@ using System.Windows.Forms;
 using Microsoft.VisualBasic;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
-using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
 using FontStyle = System.Drawing.FontStyle;
@@ -41,12 +40,17 @@ namespace Mids_Reborn.UI.Controls
             public bool InAlternate;
         }
 
+        private BufferedGraphics? _buffer;
+        private BufferedGraphicsContext? _bufferContext;
+        private bool _disableRedraw;
+        private ImageAttributes _pImageAttributes;
+
         private const bool AllowPlusThreeSpecialO = true;
 
         private const int IoMax = 50;
         private Color _cHighlight;
         private Color _cSelected;
-        private ClsDrawX? _hDraw;
+        //private ClsDrawX? _hDraw;
         private int _headerHeight;
         private Point _hoverCell;
         private string _hoverText;
@@ -59,7 +63,7 @@ namespace Mids_Reborn.UI.Controls
         private bool _levelCapped;
 
         private Point _mouseOffset;
-        private ExtendedBitmap _myBx;
+        //private ExtendedBitmap _myBx;
         private I9Slot _mySlot;
         private int[] _mySlotted;
         private int _nPad;
@@ -88,13 +92,12 @@ namespace Mids_Reborn.UI.Controls
             CloseButton
         }
 
+        private bool IsDesignMode =>
+            LicenseManager.UsageMode == LicenseUsageMode.Designtime ||
+            Site is { DesignMode: true };
+
         public I9Picker()
         {
-            Load += I9PickerLoad;
-            Paint += I9PickerPaint;
-            KeyDown += I9PickerKeyDown;
-            MouseDown += I9PickerMouseDown;
-            MouseMove += I9PickerMouseMove;
             _rows = 5;
             _hoverCell = new Point(-1, -1);
             _hoverTitle = "";
@@ -112,12 +115,55 @@ namespace Mids_Reborn.UI.Controls
             _cHighlight = Color.SlateBlue;
             _cSelected = Color.BlueViolet;
             _nPowerIdx = -1;
-            _myBx = new ExtendedBitmap(Width, Height);
-            SetStyle(
-                ControlStyles.AllPaintingInWmPaint | ControlStyles.ContainerControl |
-                ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw |
-                ControlStyles.SupportsTransparentBackColor, true);
+            SetStyle(ControlStyles.ContainerControl | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
             InitializeComponent();
+            _pImageAttributes = new ImageAttributes();
+            _pImageAttributes.SetColorMatrix(new ColorMatrix(ClsDrawX.HeroMatrix));
+        }
+
+        private void InitBuffer()
+        {
+            if (_disableRedraw || Width <= 0 || Height <= 0)
+                return;
+
+            _buffer?.Dispose(); // Dispose the previous buffer if it exists
+
+            _bufferContext ??= BufferedGraphicsManager.Current;
+
+            // Allocate a new buffer for the current size
+            _buffer = _bufferContext.Allocate(CreateGraphics(), ClientRectangle);
+
+            // Set high-quality rendering options
+            _buffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            _buffer.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            _buffer.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            _buffer.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+
+            if (!IsDesignMode)
+            {
+                SafeInitialize(); // move this here instead of constructor
+            }
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            _buffer?.Dispose();
+            _buffer = null;
+            base.OnHandleDestroyed(e);
+        }
+
+        private void SafeInitialize()
+        {
+            Load += I9PickerLoad;
+            //Paint += I9PickerPaint;
+            KeyDown += I9PickerKeyDown;
+            MouseDown += I9PickerMouseDown;
+            MouseMove += I9PickerMouseMove;
         }
 
         [field: AccessedThroughProperty("tTip")]
@@ -213,28 +259,70 @@ namespace Mids_Reborn.UI.Controls
 
         private void I9PickerLoad(object sender, EventArgs e)
         {
-            FullDraw();
-        }
-
-        private void SetBxSize()
-        {
-            if (_myBx.Size.Width != Width | _myBx.Size.Height != Height)
-            {
-                _myBx = new ExtendedBitmap(Width, Height);
-            }
-
-            _myBx.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
-            _myBx.Graphics.CompositingQuality = CompositingQuality.HighQuality;
-            _myBx.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
-            _myBx.Graphics.SmoothingMode = SmoothingMode.HighQuality;
-            _myBx.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            _disableRedraw = true;
+            InitBuffer();
+            _disableRedraw = false;
         }
 
         public override Font Font => new(Fonts.Family("Noto Sans"), base.Font.Size, base.Font.Style, GraphicsUnit.Pixel);
 
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            if (DesignMode)
+            {
+                DrawDesignTimePlaceholder(e.Graphics);
+                return;
+            }
+
+            if (_buffer is null)
+            {
+                FullDraw(); // ensures buffer is initialized and populated
+            }
+
+            _buffer?.Render(e.Graphics);
+        }
+
+        private void DrawDesignTimePlaceholder(Graphics g)
+        {
+            using var bgBrush = new SolidBrush(Color.FromArgb(80, 0, 120, 215));
+            g.FillRectangle(bgBrush, ClientRectangle);
+
+            using var borderPen = new Pen(Color.Gray, 1);
+            borderPen.DashStyle = DashStyle.Dash;
+            g.DrawRectangle(borderPen, 0, 0, Width - 1, Height - 1);
+
+            var label = string.IsNullOrWhiteSpace(Name)
+                ? $"{GetType().Name} (Design Time)"
+                : $"{Name}";
+
+            using var font = new Font("Segoe UI", 9f, FontStyle.Italic);
+            using var textBrush = new SolidBrush(Color.White);
+
+            var textSize = g.MeasureString(label, font);
+            var center = new PointF((Width - textSize.Width) / 2f, (Height - textSize.Height) / 2f);
+            g.DrawString(label, font, textBrush, center);
+        }
+
         private void FullDraw(Point? mouseLocation = null)
         {
             const int levelBoxHeight = 46;
+
+            if (IsDisposed || _disableRedraw || Width <= 0 || Height <= 0)
+            {
+                return;
+            }
+
+            InitBuffer(); // ensures _buffer is created and sized correctly
+
+            if (_buffer is null)
+            {
+                return;
+            }
+
+            var g = _buffer.Graphics;
+            g.Clear(BackColor);
 
             // Ensure constant height of the level box line
             var rectBounds = GetRectBounds(4, _rows + 1);
@@ -244,13 +332,7 @@ namespace Mids_Reborn.UI.Controls
                 Height += levelBoxHeight - h;
             }
 
-            SetBxSize();
             DrawLayerLowest(mouseLocation ?? new Point(-1, -1));
-            if (_hDraw == null)
-            {
-                return;
-            }
-
             DrawLayerImages();
 
             /*var zoneNames = Enum.GetValues(typeof(ActiveZone)).Cast<ActiveZone>().ToList();
@@ -266,13 +348,17 @@ namespace Mids_Reborn.UI.Controls
                 _myBx.Graphics.DrawPath(new Pen(zoneColors[k++]), GetZonePath(z));
             }*/
 
-            var graphics = CreateGraphics();
-            I9PickerPaint(this, new PaintEventArgs(graphics, new Rectangle(0, 0, Width, Height)));
+            //var graphics = CreateGraphics();
+            //I9PickerPaint(this, new PaintEventArgs(graphics, new Rectangle(0, 0, Width, Height)));
+
+            // Push the completed buffer to the screen
+            using var screenGraphics = CreateGraphics();
+            _buffer.Render(screenGraphics);
         }
 
         private void DrawLayerLowest(Point mouseLocation)
         {
-            _myBx.Graphics.Clear(BackColor);
+            _buffer?.Graphics.Clear(BackColor);
 
             DrawBorder();
             DrawHeaderBox(mouseLocation);
@@ -300,38 +386,35 @@ namespace Mids_Reborn.UI.Controls
             Rectangle iRect = default;
             iRect.X = _nPad;
             iRect.Y = _nPad;
-            checked
+            
+            iRect.Width = _nSize * 5 + _nPad * 4;
+            iRect.Height = (int) Math.Round(font.GetHeight(_buffer?.Graphics));
+            _headerHeight = iRect.Height + _nPad;
+            var layoutRectangle = new RectangleF(iRect.X, iRect.Y, iRect.Width, iRect.Height);
+            _buffer?.Graphics.DrawRectangle(pen, Dilate(iRect));
+            var buttonSize = layoutRectangle.Height - 4;
+            var buttonLoc = new PointF(layoutRectangle.X + layoutRectangle.Width - 2 - buttonSize,
+                layoutRectangle.Y + 2);
+            _buttonRectangle = new Rectangle(new Point((int) Math.Round(buttonLoc.X), (int) Math.Round(buttonLoc.Y)),
+                new Size((int) Math.Round(buttonSize), (int) Math.Round(buttonSize)));
+            if (!MidsContext.Config.CloseEnhSelectPopupByMove)
             {
-                iRect.Width = _nSize * 5 + _nPad * 4;
-                iRect.Height = (int) Math.Round(font.GetHeight(_myBx.Graphics));
-                _headerHeight = iRect.Height + _nPad;
-                var layoutRectangle = new RectangleF(iRect.X, iRect.Y, iRect.Width, iRect.Height);
-                _myBx.Graphics.DrawRectangle(pen, Dilate(iRect));
-                var buttonSize = layoutRectangle.Height - 4;
-                var buttonLoc = new PointF(layoutRectangle.X + layoutRectangle.Width - 2 - buttonSize,
-                    layoutRectangle.Y + 2);
-                _buttonRectangle = new Rectangle(new Point((int) Math.Round(buttonLoc.X), (int) Math.Round(buttonLoc.Y)),
-                    new Size((int) Math.Round(buttonSize), (int) Math.Round(buttonSize)));
-                if (!MidsContext.Config.CloseEnhSelectPopupByMove)
+                var hoveredButton = PointInRectangle(mouseLocation, _buttonRectangle);
+                if (hoveredButton)
                 {
-                    var hoveredButton = PointInRectangle(mouseLocation, _buttonRectangle);
-                    if (hoveredButton)
-                    {
-                        _myBx.Graphics.FillRectangle(highlightBrush, buttonLoc.X, buttonLoc.Y, buttonSize, buttonSize);
-                    }
-
-                    _myBx.Graphics.DrawRectangle(pen, buttonLoc.X, buttonLoc.Y, buttonSize, buttonSize);
-                    _myBx.Graphics.DrawString("X", buttonFont, hoveredButton ? brush : buttonTextBrush, buttonLoc.X + 2,
-                        buttonLoc.Y);
+                    _buffer?.Graphics.FillRectangle(highlightBrush, buttonLoc.X, buttonLoc.Y, buttonSize, buttonSize);
                 }
 
-                if (_nPowerIdx <= -1)
-                {
-                    return;
-                }
-
-                _myBx.Graphics.DrawString($"Enhancing: {DatabaseAPI.Database.Power[_nPowerIdx]?.DisplayName}", font, brush, layoutRectangle);
+                _buffer?.Graphics.DrawRectangle(pen, buttonLoc.X, buttonLoc.Y, buttonSize, buttonSize);
+                _buffer?.Graphics.DrawString("X", buttonFont, hoveredButton ? brush : buttonTextBrush, buttonLoc.X + 2, buttonLoc.Y);
             }
+
+            if (_nPowerIdx <= -1)
+            {
+                return;
+            }
+
+            _buffer?.Graphics.DrawString($"Enhancing: {DatabaseAPI.Database.Power[_nPowerIdx]?.DisplayName}", font, brush, layoutRectangle);
         }
 
         private void DrawLevelBox()
@@ -342,29 +425,27 @@ namespace Mids_Reborn.UI.Controls
             Rectangle rectBounds;
             StringFormat stringFormat;
             RectangleF layoutRectangle;
-            checked
+            
+            rectBounds = GetRectBounds(4, _rows + 1);
+            rectBounds.Y += 2;
+            rectBounds.Height = Height - (rectBounds.Y + _nPad);
+            _buffer?.Graphics.DrawRectangle(pen, Dilate(rectBounds));
+            stringFormat = new StringFormat(StringFormatFlags.NoWrap | StringFormatFlags.NoClip)
             {
-                rectBounds = GetRectBounds(4, _rows + 1);
-                rectBounds.Y += 2;
-                rectBounds.Height = Height - (rectBounds.Y + _nPad);
-                _myBx.Graphics.DrawRectangle(pen, Dilate(rectBounds));
-                stringFormat = new StringFormat(StringFormatFlags.NoWrap | StringFormatFlags.NoClip)
-                {
-                    Alignment = StringAlignment.Center, Trimming = StringTrimming.None
-                };
-                layoutRectangle = new RectangleF(rectBounds.X, rectBounds.Y, rectBounds.Width, rectBounds.Height);
-                _myBx.Graphics.DrawString("LVL", font, brush, layoutRectangle, stringFormat);
-            }
+                Alignment = StringAlignment.Center, Trimming = StringTrimming.None
+            };
+            layoutRectangle = new RectangleF(rectBounds.X, rectBounds.Y, rectBounds.Width, rectBounds.Height);
+            _buffer?.Graphics.DrawString("LVL", font, brush, layoutRectangle, stringFormat);
 
-            layoutRectangle.Y += font.GetHeight(_myBx.Graphics) + 3f;
+            layoutRectangle.Y += font.GetHeight(_buffer?.Graphics) + 3f;
             rectBounds.Height = checked(Height - (rectBounds.Y + _nPad));
             brush = new SolidBrush(ForeColor);
             font = new Font(Fonts.Family("Noto Sans"), 19f, FontStyle.Bold, GraphicsUnit.Pixel);
-            var s = Ui.View.TabId == Enums.eType.InventO | Ui.View.TabId == Enums.eType.SetO
+            var s = (Ui.View.TabId == Enums.eType.InventO) | (Ui.View.TabId == Enums.eType.SetO)
                 ? $"{Ui.View.IoLevel}"
                 : GetRelativeString(Ui.View.RelLevel);
 
-            _myBx.Graphics.DrawString(s, font, brush, layoutRectangle, stringFormat);
+            _buffer?.Graphics.DrawString(s, font, brush, layoutRectangle, stringFormat);
         }
 
         private static string GetRelativeString(Enums.eEnhRelative iRel)
@@ -395,40 +476,36 @@ namespace Mids_Reborn.UI.Controls
             iRect.X = _nPad;
             RectangleF layoutRectangle = default;
             RectangleF layoutRectangle2 = default;
-            checked
-            {
-                iRect.Y = _headerHeight + _nPad * 2 + _nSize + _nSize * _rows + _nPad * (_rows - 1) + 2 + _nPad;
-                iRect.Height = Height - (iRect.Y + _nPad);
-                iRect.Width = _nSize * 4 + _nPad * 3;
-                layoutRectangle.X = iRect.X;
-                layoutRectangle.Y = iRect.Y;
-                layoutRectangle.Width = iRect.Width;
-                layoutRectangle.Height = Font.GetHeight(_myBx.Graphics);
-                layoutRectangle2.X = iRect.X;
-            }
+            
+            iRect.Y = _headerHeight + _nPad * 2 + _nSize + _nSize * _rows + _nPad * (_rows - 1) + 2 + _nPad;
+            iRect.Height = Height - (iRect.Y + _nPad);
+            iRect.Width = _nSize * 4 + _nPad * 3;
+            layoutRectangle.X = iRect.X;
+            layoutRectangle.Y = iRect.Y;
+            layoutRectangle.Width = iRect.Width;
+            layoutRectangle.Height = Font.GetHeight(_buffer?.Graphics);
+            layoutRectangle2.X = iRect.X;
 
             layoutRectangle2.Y = iRect.Y + layoutRectangle.Height;
             layoutRectangle2.Width = iRect.Width;
             layoutRectangle2.Height = iRect.Height - layoutRectangle.Height;
-            _myBx.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
             var fontScale = 1f;
-            var num2 = checked((int) Math.Round(_myBx.Graphics
-                .MeasureString(_hoverTitle, Font, (int) Math.Round(layoutRectangle.Width * 10)).Width));
+            var num2 = checked((int) Math.Round(_buffer.Graphics.MeasureString(_hoverTitle, Font, (int) Math.Round(layoutRectangle.Width * 10)).Width));
             if (num2 > layoutRectangle.Width - 10)
             {
                 fontScale = Math.Max(0.5f, (layoutRectangle.Width - 10) / num2);
             }
 
             using var font = new Font(Name, Font.Size * fontScale, FontStyle.Bold, Font.Unit, 0);
-            _myBx.Graphics.DrawRectangle(pen, Dilate(iRect));
+            _buffer?.Graphics.DrawRectangle(pen, Dilate(iRect));
             if (!string.IsNullOrWhiteSpace(_hoverTitle))
             {
-                _myBx.Graphics.DrawString(_hoverTitle, font, brush, layoutRectangle);
+                _buffer?.Graphics.DrawString(_hoverTitle, font, brush, layoutRectangle);
             }
 
             if (!string.IsNullOrWhiteSpace(_hoverText))
             {
-                _myBx.Graphics.DrawString(_hoverText, Font, brush, layoutRectangle2);
+                _buffer?.Graphics.DrawString(_hoverText, Font, brush, layoutRectangle2);
             }
         }
 
@@ -443,119 +520,114 @@ namespace Mids_Reborn.UI.Controls
             var srcRect = new Rectangle(0, 0, _nSize, _nSize);
             Enums.eType eType = 0;
             var rectBounds = GetRectBounds(0, 0);
-            checked
-            {
-                srcRect.X = (int) eType * _nSize;
-                _myBx.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect.X, srcRect.Y, 30, 30,
-                    GraphicsUnit.Pixel, _hDraw.PImageAttributes);
+            
+            srcRect.X = (int) eType * _nSize;
+            _buffer?.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect.X, srcRect.Y, 30, 30,
+                GraphicsUnit.Pixel, _pImageAttributes);
 
-                eType = Enums.eType.Normal;
-                rectBounds = GetRectBounds(1, 0);
-                srcRect.X = (int) eType * _nSize;
-                _myBx.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect, GraphicsUnit.Pixel);
+            eType = Enums.eType.Normal;
+            rectBounds = GetRectBounds(1, 0);
+            srcRect.X = (int) eType * _nSize;
+            _buffer?.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect, GraphicsUnit.Pixel);
 
-                eType = Enums.eType.InventO;
-                rectBounds = GetRectBounds(2, 0);
-                srcRect.X = (int) eType * _nSize;
-                _myBx.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect, GraphicsUnit.Pixel);
+            eType = Enums.eType.InventO;
+            rectBounds = GetRectBounds(2, 0);
+            srcRect.X = (int) eType * _nSize;
+            _buffer?.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect, GraphicsUnit.Pixel);
 
-                eType = Enums.eType.SpecialO;
-                rectBounds = GetRectBounds(3, 0);
-                srcRect.X = (int) eType * _nSize;
-                _myBx.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect, GraphicsUnit.Pixel);
+            eType = Enums.eType.SpecialO;
+            rectBounds = GetRectBounds(3, 0);
+            srcRect.X = (int) eType * _nSize;
+            _buffer?.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect, GraphicsUnit.Pixel);
 
-                eType = Enums.eType.SetO;
-                rectBounds = GetRectBounds(4, 0);
-                srcRect.X = (int) eType * _nSize;
-                _myBx.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect, GraphicsUnit.Pixel);
-            }
+            eType = Enums.eType.SetO;
+            rectBounds = GetRectBounds(4, 0);
+            srcRect.X = (int) eType * _nSize;
+            _buffer?.Graphics.DrawImage(I9Gfx.EnhTypes.Bitmap, rectBounds, srcRect, GraphicsUnit.Pixel);
         }
 
         private void DrawEnhImages()
         {
-            checked
+            _enhUniqueStatus = [];
+            switch (Ui.View.TabId)
             {
-                _enhUniqueStatus = [];
-                switch (Ui.View.TabId)
+                case Enums.eType.Normal:
                 {
-                    case Enums.eType.Normal:
+                    var num = 1;
+                    for (var i = Ui.NoGrades.Length - 1; i >= 1; i -= 1)
                     {
-                        var num = 1;
-                        for (var i = Ui.NoGrades.Length - 1; i >= 1; i -= 1)
-                        {
-                            var srcRect = new Rectangle(Ui.NoGrades[i] * _nSize, 0, _nSize, _nSize);
-                            _myBx.Graphics.DrawImage(I9Gfx.Borders.Bitmap, GetRectBounds(4, num),
-                                I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade((Enums.eType) 1, (Enums.eEnhGrade) i)),
-                                GraphicsUnit.Pixel);
-                            _myBx.Graphics.DrawImage(I9Gfx.EnhGrades.Bitmap, GetRectBounds(4, num), srcRect,
-                                GraphicsUnit.Pixel);
-                            num++;
-                        }
-
-                        for (var i = 0; i < Ui.No.Length; i++)
-                        {
-                            var grade = Ui.View.GradeId switch
-                            {
-                                Enums.eEnhGrade.TrainingO => (Origin.Grade) 0,
-                                Enums.eEnhGrade.DualO => Origin.Grade.DualO,
-                                _ => Origin.Grade.SingleO
-                            };
-
-                            var graphics = _myBx.Graphics;
-                            I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)), Ui.No[i], grade);
-                        }
-
-                        break;
+                        var srcRect = new Rectangle(Ui.NoGrades[i] * _nSize, 0, _nSize, _nSize);
+                        _buffer?.Graphics.DrawImage(I9Gfx.Borders.Bitmap, GetRectBounds(4, num),
+                            I9Gfx.GetOverlayRect(I9Gfx.ToGfxGrade((Enums.eType) 1, (Enums.eEnhGrade) i)),
+                            GraphicsUnit.Pixel);
+                        _buffer?.Graphics.DrawImage(I9Gfx.EnhGrades.Bitmap, GetRectBounds(4, num), srcRect,
+                            GraphicsUnit.Pixel);
+                        num++;
                     }
-                    case Enums.eType.InventO:
+
+                    for (var i = 0; i < Ui.No.Length; i++)
                     {
-                        for (var i = 0; i < Ui.Io.Length; i++)
+                        var grade = Ui.View.GradeId switch
                         {
-                            var graphics = _myBx.Graphics;
-                            I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)), Ui.Io[i],
-                                (Origin.Grade) 4);
-                        }
+                            Enums.eEnhGrade.TrainingO => (Origin.Grade) 0,
+                            Enums.eEnhGrade.DualO => Origin.Grade.DualO,
+                            _ => Origin.Grade.SingleO
+                        };
 
-                        break;
+                        var graphics = _buffer?.Graphics;
+                        I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)), Ui.No[i], grade);
                     }
-                    case Enums.eType.SpecialO:
+
+                    break;
+                }
+                case Enums.eType.InventO:
+                {
+                    for (var i = 0; i < Ui.Io.Length; i++)
                     {
-                        for (var i = 1; i < Ui.SpecialTypes.Length; i++)
-                        {
-                            var srcRect2 = new Rectangle(Ui.SpecialTypes[i] * _nSize, 0, _nSize, _nSize);
-                            _myBx.Graphics.DrawImage(I9Gfx.EnhSpecials.Bitmap, GetRectBounds(4, i), srcRect2,
-                                GraphicsUnit.Pixel);
-                        }
-
-                        for (var i = 0; i < Ui.SpecialO.Length; i++)
-                        {
-                            var graphics = _myBx.Graphics;
-                            I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)), Ui.SpecialO[i],
-                                (Origin.Grade) 3);
-                        }
-
-                        break;
+                        var graphics = _buffer?.Graphics;
+                        I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)), Ui.Io[i],
+                            (Origin.Grade) 4);
                     }
-                    case Enums.eType.SetO:
+
+                    break;
+                }
+                case Enums.eType.SpecialO:
+                {
+                    for (var i = 1; i < Ui.SpecialTypes.Length; i++)
                     {
-                        for (var i = 0; i < Ui.SetTypes.Length; i++)
-                        {
-                            var srcRect3 = new Rectangle(Ui.SetTypes[i] * _nSize, 0, _nSize, _nSize);
-                            _myBx.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, GetRectBounds(4, i + 1), srcRect3,
-                                GraphicsUnit.Pixel);
-                        }
-
-                        if (Ui.View.SetId > -1)
-                        {
-                            DisplaySetEnhancements();
-                        }
-                        else
-                        {
-                            DisplaySetImages();
-                        }
-
-                        break;
+                        var srcRect2 = new Rectangle(Ui.SpecialTypes[i] * _nSize, 0, _nSize, _nSize);
+                        _buffer?.Graphics.DrawImage(I9Gfx.EnhSpecials.Bitmap, GetRectBounds(4, i), srcRect2,
+                            GraphicsUnit.Pixel);
                     }
+
+                    for (var i = 0; i < Ui.SpecialO.Length; i++)
+                    {
+                        var graphics = _buffer?.Graphics;
+                        I9Gfx.DrawEnhancementAt(ref graphics, GetRectBounds(IndexToXy(i)), Ui.SpecialO[i],
+                            (Origin.Grade) 3);
+                    }
+
+                    break;
+                }
+                case Enums.eType.SetO:
+                {
+                    for (var i = 0; i < Ui.SetTypes.Length; i++)
+                    {
+                        var srcRect3 = new Rectangle(Ui.SetTypes[i] * _nSize, 0, _nSize, _nSize);
+                        _buffer?.Graphics.DrawImage(I9Gfx.SetTypes.Bitmap, GetRectBounds(4, i + 1), srcRect3,
+                            GraphicsUnit.Pixel);
+                    }
+
+                    if (Ui.View.SetId > -1)
+                    {
+                        DisplaySetEnhancements();
+                    }
+                    else
+                    {
+                        DisplaySetImages();
+                    }
+
+                    break;
                 }
             }
         }
@@ -626,7 +698,7 @@ namespace Mids_Reborn.UI.Controls
                             .Any(f => f?.Slots.Any(g => g.FlippedEnhancement.Enh == enh) == true)
                 });
 
-                var graphics = _myBx.Graphics;
+                var graphics = _buffer?.Graphics;
                 Recipe.RecipeRarity? rarity = enhData.RecipeIDX < 0 ? null : DatabaseAPI.Database.Recipes[enhData.RecipeIDX].Rarity;
                 var isPvP = enhSet.Bonus.Any(e => e.Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p?.FullName.ToLowerInvariant().Contains("pvp") == true));
 
@@ -726,10 +798,10 @@ namespace Mids_Reborn.UI.Controls
                     var srcRect = ioGradeOffset > 0
                         ? new Rectangle((4 + ioGradeOffset) * _nSize, 4 * _nSize, _nSize, _nSize)
                         : new Rectangle(I9Gfx.OriginIndex * _nSize, 4 * _nSize, _nSize, _nSize);
-                    _myBx.Graphics.DrawImage(I9Gfx.Borders.Bitmap, GetRectBounds(IndexToXy(i)), srcRect, GraphicsUnit.Pixel);
+                    _buffer?.Graphics.DrawImage(I9Gfx.Borders.Bitmap, GetRectBounds(IndexToXy(i)), srcRect, GraphicsUnit.Pixel);
 
                     srcRect = new Rectangle(Ui.Sets[Ui.View.SetTypeId][i] * _nSize, 0, _nSize, _nSize);
-                    _myBx.Graphics.DrawImage(I9Gfx.Sets.Bitmap, GetRectBounds(IndexToXy(i)), srcRect, GraphicsUnit.Pixel);
+                    _buffer?.Graphics.DrawImage(I9Gfx.Sets.Bitmap, GetRectBounds(IndexToXy(i)), srcRect, GraphicsUnit.Pixel);
                 }
             }
         }
@@ -740,7 +812,7 @@ namespace Mids_Reborn.UI.Controls
             checked
             {
                 var rect = new Rectangle(new Point(1, 1), new Size(Width - 2, Height - 2));
-                _myBx.Graphics.DrawRectangle(pen, rect);
+                _buffer?.Graphics.DrawRectangle(pen, rect);
             }
         }
 
@@ -778,9 +850,9 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            if (Ui.Initial.TabId == Ui.View.TabId & Ui.Initial.SetTypeId == Ui.View.SetTypeId &
-                Ui.Initial.SetId == Ui.View.SetId & Ui.Initial.GradeId == Ui.View.GradeId &
-                Ui.Initial.SpecialId == Ui.View.SpecialId)
+            if ((Ui.Initial.TabId == Ui.View.TabId) & (Ui.Initial.SetTypeId == Ui.View.SetTypeId) &
+                (Ui.Initial.SetId == Ui.View.SetId) & (Ui.Initial.GradeId == Ui.View.GradeId) &
+                (Ui.Initial.SpecialId == Ui.View.SpecialId))
             {
                 DrawSelected(IndexToXy(Ui.Initial.PickerId).X, IndexToXy(Ui.Initial.PickerId).Y);
                 DrawBox(IndexToXy(Ui.Initial.PickerId).X, IndexToXy(Ui.Initial.PickerId).Y);
@@ -873,36 +945,33 @@ namespace Mids_Reborn.UI.Controls
                 var y = ly1 + _nPad - 2;
                 var ly2 = (int)Math.Round(rectBounds.X + rectBounds.Width / 2.0);
                 using var pen = new Pen(ForeColor);
-                _myBx.Graphics.DrawLine(pen, ly2, ly1, ly2, y);
+                _buffer?.Graphics.DrawLine(pen, ly2, ly1, ly2, y);
             }
         }
 
         private void DrawSetLine()
         {
-            checked
+            switch (Ui.View.TabId)
             {
-                switch (Ui.View.TabId)
-                {
-                    case Enums.eType.SetO when Ui.View.SetTypeId < 0:
-                    case Enums.eType.Normal when Ui.View.GradeId < 0:
-                    case Enums.eType.SpecialO when Ui.View.SpecialId < 0:
-                        return;
-                }
-
-                var rectangle = Ui.View.TabId switch
-                {
-                    Enums.eType.Normal => GetRectBounds(4, Reverse((int)Ui.View.GradeId)),
-                    Enums.eType.SpecialO => GetRectBounds(4, Ui.View.SpecialId),
-                    Enums.eType.SetO => GetRectBounds(4, Ui.View.SetTypeId + 1),
-                    _ => default
-                };
-
-                var ly = (int)Math.Round(rectangle.Y + rectangle.Height / 2.0);
-                var x = rectangle.X - 2;
-                var x2 = rectangle.X - _nPad + 2;
-                using var pen = new Pen(ForeColor);
-                _myBx.Graphics.DrawLine(pen, x, ly, x2, ly);
+                case Enums.eType.SetO when Ui.View.SetTypeId < 0:
+                case Enums.eType.Normal when Ui.View.GradeId < 0:
+                case Enums.eType.SpecialO when Ui.View.SpecialId < 0:
+                    return;
             }
+
+            var rectangle = Ui.View.TabId switch
+            {
+                Enums.eType.Normal => GetRectBounds(4, Reverse((int)Ui.View.GradeId)),
+                Enums.eType.SpecialO => GetRectBounds(4, Ui.View.SpecialId),
+                Enums.eType.SetO => GetRectBounds(4, Ui.View.SetTypeId + 1),
+                _ => default
+            };
+
+            var ly = (int)Math.Round(rectangle.Y + rectangle.Height / 2f);
+            var x = rectangle.X - 2;
+            var x2 = rectangle.X - _nPad + 2;
+            using var pen = new Pen(ForeColor);
+            _buffer?.Graphics.DrawLine(pen, x, ly, x2, ly);
         }
 
         private void DrawEnhBox()
@@ -916,30 +985,27 @@ namespace Mids_Reborn.UI.Controls
         private void DrawEnhBoxSet()
         {
             using var pen = new Pen(ForeColor);
-            Rectangle iRect = default;
-            iRect.X = _nPad;
-            checked
-            {
-                iRect.Y = _headerHeight + _nPad * 2 + _nSize;
-                iRect.Width = _nSize * 4 + _nPad * 3;
-                iRect.Height = _nSize * _rows + _nPad * (_rows -1);
-                _myBx.Graphics.DrawRectangle(pen, Dilate(iRect));
-            }
+            var iRect = new Rectangle(
+                _nPad,
+                _headerHeight + _nPad * 2 + _nSize,
+                _nSize * 4 + _nPad * 3,
+                _nSize * _rows + _nPad * (_rows - 1));
+            _buffer?.Graphics.DrawRectangle(pen, Dilate(iRect));
         }
 
         private void DrawSetBox()
         {
             var rectBounds = GetRectBounds(4, 1);
             using var pen = new Pen(ForeColor);
-            rectBounds.Height = checked(_nSize * _rows + _nPad * (_rows - 1));
-            _myBx.Graphics.DrawRectangle(pen, Dilate(rectBounds));
+            rectBounds.Height = _nSize * _rows + _nPad * (_rows - 1);
+            _buffer?.Graphics.DrawRectangle(pen, Dilate(rectBounds));
         }
 
         private void DrawHighlight(int x, int y)
         {
             if (x > -1 && y > -1)
             {
-                _myBx.Graphics.FillRectangle(new SolidBrush(_cHighlight), GetRectBounds(x, y));
+                _buffer?.Graphics.FillRectangle(new SolidBrush(_cHighlight), GetRectBounds(x, y));
             }
         }
 
@@ -947,7 +1013,7 @@ namespace Mids_Reborn.UI.Controls
         {
             if (x > -1 && y > -1)
             {
-                _myBx.Graphics.FillRectangle(new SolidBrush(_cSelected), GetRectBounds(x, y));
+                _buffer?.Graphics.FillRectangle(new SolidBrush(_cSelected), GetRectBounds(x, y));
             }
         }
 
@@ -955,7 +1021,7 @@ namespace Mids_Reborn.UI.Controls
         {
             checked
             {
-                if (!(x > -1 & y > -1))
+                if (!((x > -1) & (y > -1)))
                 {
                     return;
                 }
@@ -966,13 +1032,13 @@ namespace Mids_Reborn.UI.Controls
                 rectBounds.Y--;
                 rectBounds.Width++;
                 rectBounds.Height++;
-                _myBx.Graphics.DrawRectangle(pen, rectBounds);
+                _buffer?.Graphics.DrawRectangle(pen, rectBounds);
             }
         }
 
         private static Rectangle Dilate(Rectangle iRect, int extra = 2)
         {
-            return checked(new Rectangle(iRect.X - extra, iRect.Y - extra, iRect.Width + extra + 1, iRect.Height + extra + 1));
+            return new Rectangle(iRect.X - extra, iRect.Y - extra, iRect.Width + extra + 1, iRect.Height + extra + 1);
         }
 
         private Point IndexToXy(int index)
@@ -994,7 +1060,7 @@ namespace Mids_Reborn.UI.Controls
 
         private Rectangle GetRectBounds(int x, int y)
         {
-            return checked(new Rectangle(_nPad + x * (_nSize + _nPad), _headerHeight + _nPad + y * (_nSize + _nPad), _nSize, _nSize));
+            return new Rectangle(_nPad + x * (_nSize + _nPad), _headerHeight + _nPad + y * (_nSize + _nPad), _nSize, _nSize);
         }
 
         private Rectangle GetRectBounds(Point iPoint)
@@ -1004,10 +1070,10 @@ namespace Mids_Reborn.UI.Controls
 
         private void I9PickerPaint(object sender, PaintEventArgs e)
         {
-            if (_myBx.Bitmap != null)
+            /*if (_myBx.Bitmap != null)
             {
                 e.Graphics.DrawImage(_myBx.Bitmap, e.ClipRectangle.X, e.ClipRectangle.Y, e.ClipRectangle, GraphicsUnit.Pixel);
-            }
+            }*/
         }
 
         private Point GetCellXy(Point iPt)
@@ -1019,8 +1085,8 @@ namespace Mids_Reborn.UI.Controls
                     for (var y = 0; y <= _rows; y++)
                     {
                         var rectBounds = GetRectBounds(x, y);
-                        if (iPt.X >= rectBounds.X & iPt.X <= rectBounds.X + rectBounds.Width &&
-                            iPt.Y >= rectBounds.Y & iPt.Y <= rectBounds.Y + rectBounds.Height)
+                        if ((iPt.X >= rectBounds.X) & (iPt.X <= rectBounds.X + rectBounds.Width) &&
+                            (iPt.Y >= rectBounds.Y) & (iPt.Y <= rectBounds.Y + rectBounds.Height))
                         {
                             return new Point(x, y);
                         }
@@ -1033,12 +1099,12 @@ namespace Mids_Reborn.UI.Controls
 
         private int GetCellIndex(Point cell)
         {
-            if (cell.X < 0 | cell.Y <= 0)
+            if ((cell.X < 0) | (cell.Y <= 0))
             {
                 return -1;
             }
 
-            return checked((cell.Y - 1) * 4 + cell.X);
+            return (cell.Y - 1) * 4 + cell.X;
         }
 
         private void I9PickerMouseDown(object sender, MouseEventArgs e)
@@ -1086,7 +1152,7 @@ namespace Mids_Reborn.UI.Controls
                             break;
                     }
 
-                    if (cellXy.X == 4 & Ui.SetTypes.Length > 0)
+                    if ((cellXy.X == 4) & (Ui.SetTypes.Length > 0))
                     {
                         if (Ui.View.SetTypeId != 4)
                         {
@@ -1191,7 +1257,7 @@ namespace Mids_Reborn.UI.Controls
 
         private bool CellSetSelect(int cellIdx)
         {
-            return Ui.View.SetTypeId >= 0 && Ui.View.TabId == Enums.eType.SetO & Ui.View.SetId == -1 & cellIdx > -1 & cellIdx < Ui.Sets[Ui.View.SetTypeId].Length;
+            return Ui.View.SetTypeId >= 0 && (Ui.View.TabId == Enums.eType.SetO) & (Ui.View.SetId == -1) & (cellIdx > -1) & (cellIdx < Ui.Sets[Ui.View.SetTypeId].Length);
         }
 
         private bool CellEnhSelect(int cellIdx)
@@ -1223,14 +1289,14 @@ namespace Mids_Reborn.UI.Controls
                     break;
             }
 
-            return cellIdx > -1 & cellIdx < array.Length;
+            return (cellIdx > -1) & (cellIdx < array.Length);
         }
 
         private bool DoEnhancementPicked(int index, bool fixIndex = true)
         {
             var i9Slot = (I9Slot)_mySlot.Clone();
             CheckAndFixIoLevel();
-            if (Ui.View.IoLevel != Ui.Initial.IoLevel & Ui.View.IoLevel != _userLevel | _userLevel == -1 && !(Ui.View.TabId == Enums.eType.InventO & Enhancement.GranularLevelZb(_userLevel - 1, 9, 49) == Ui.View.IoLevel))
+            if (((Ui.View.IoLevel != Ui.Initial.IoLevel) & (Ui.View.IoLevel != _userLevel)) | (_userLevel == -1) && !((Ui.View.TabId == Enums.eType.InventO) & (Enhancement.GranularLevelZb(_userLevel - 1, 9, 49) == Ui.View.IoLevel)))
             {
                 _levelCapped = true;
             }
@@ -1301,7 +1367,7 @@ namespace Mids_Reborn.UI.Controls
 
                         if (uniqueSlotted)
                         {
-                            if (_mySlot.Enh == i9Slot.Enh & _mySlot.RelativeLevel == Ui.View.RelLevel & _mySlot.IOLevel + 1 == Ui.View.IoLevel)
+                            if ((_mySlot.Enh == i9Slot.Enh) & (_mySlot.RelativeLevel == Ui.View.RelLevel) & (_mySlot.IOLevel + 1 == Ui.View.IoLevel))
                             {
                                 return false;
                             }
@@ -1349,9 +1415,9 @@ namespace Mids_Reborn.UI.Controls
                     break;
             }
 
-            if ((Ui.View.TabId == Enums.eType.SetO | Ui.View.TabId == Enums.eType.InventO) & !_levelCapped)
+            if (((Ui.View.TabId == Enums.eType.SetO) | (Ui.View.TabId == Enums.eType.InventO)) & !_levelCapped)
             {
-                if (Ui.View.TabId == Enums.eType.InventO & Enhancement.GranularLevelZb(_userLevel - 1, 9, 49) == Ui.View.IoLevel)
+                if ((Ui.View.TabId == Enums.eType.InventO) & (Enhancement.GranularLevelZb(_userLevel - 1, 9, 49) == Ui.View.IoLevel))
                 {
                     LastLevel = _userLevel;
                 }
@@ -1533,7 +1599,7 @@ namespace Mids_Reborn.UI.Controls
 
                         SetInfoStrings(DatabaseAPI.Database.EnhancementSets[tId].DisplayName + str, $"Type: {DatabaseAPI.GetSetTypeByIndex(DatabaseAPI.Database.EnhancementSets[tId].SetType).ShortName}");
                         //SetInfoStrings(DatabaseAPI.Database.EnhancementSets[tId].DisplayName + str, "Type: " + setTypeStringLong[(int)DatabaseAPI.Database.EnhancementSets[tId].SetType]);
-                        if (cell.X != _hoverCell.X | cell.Y != _hoverCell.Y || alwaysUpdate)
+                        if ((cell.X != _hoverCell.X) | (cell.Y != _hoverCell.Y) || alwaysUpdate)
                         {
                             RaiseHoverSet(tId);
                         }
@@ -1656,12 +1722,12 @@ namespace Mids_Reborn.UI.Controls
                 : DatabaseAPI.Database.Power[iPowerIdx].GetValidEnhancements(iType, iSubType);
         }
 
-        public void SetData(int iPower, ref I9Slot iSlot, ref ClsDrawX iDraw, int[] slotted)
+        public void SetData(int iPower, ref I9Slot iSlot, int[] slotted)
         {
             TimerReset();
             _levelCapped = false;
             _userLevel = -1;
-            _hDraw = iDraw;
+            //_hDraw = iDraw;
             _mySlot = (I9Slot)iSlot.Clone();
             _hoverCell = new Point(-1, -1);
             _hoverText = "";
@@ -1671,9 +1737,8 @@ namespace Mids_Reborn.UI.Controls
             {
                 SpecialTypes = DatabaseAPI.Database.SpecialEnhancements.Select(x => x.Index).ToArray()
             };
-            Enums.eEnhGrade eEnhGrade = 0;
-            Ui.NoGrades = (int[])Enum.GetValues(eEnhGrade.GetType());
-
+            
+            Ui.NoGrades = Enum.GetValues<Enums.eEnhGrade>().Cast<int>().ToArray();
             Ui.No = GetValidEnhancements(_nPowerIdx, Enums.eType.Normal).ToArray();
             Ui.Io = GetValidEnhancements(_nPowerIdx, Enums.eType.InventO).ToArray();
             Ui.Initial.GradeId = _lastGrade;
@@ -1804,7 +1869,7 @@ namespace Mids_Reborn.UI.Controls
             if (Ui.View.TabId == 0)
             {
                 Ui.View.TabId = _lastTab != 0 ? _lastTab : Enums.eType.Normal;
-                if (Ui.View.TabId == Enums.eType.SetO & Ui.SetTypes.Length > _lastSet)
+                if ((Ui.View.TabId == Enums.eType.SetO) & (Ui.SetTypes.Length > _lastSet))
                 {
                     Ui.View.SetTypeId = _lastSet;
                 }
@@ -1831,7 +1896,7 @@ namespace Mids_Reborn.UI.Controls
             {
                 Ui.SpecialO = GetValidEnhancements(_nPowerIdx, Enums.eType.SpecialO, Ui.View.SpecialId).ToArray();
             }
-            else if (Ui.Initial.SpecialId == Ui.View.SpecialId & (int)Ui.Initial.TabId == 3)
+            else if ((Ui.Initial.SpecialId == Ui.View.SpecialId) & ((int)Ui.Initial.TabId == 3))
             {
                 Ui.SpecialO = new int[1];
                 Ui.SpecialO[0] = _mySlot.Enh;
@@ -1940,7 +2005,7 @@ namespace Mids_Reborn.UI.Controls
                 {
                     case Enums.eType.InventO:
                     {
-                        if (Ui.Initial.TabId == Ui.View.TabId & Ui.Initial.PickerId == Ui.View.PickerId & Ui.View.PickerId > -1)
+                        if ((Ui.Initial.TabId == Ui.View.TabId) & (Ui.Initial.PickerId == Ui.View.PickerId) & (Ui.View.PickerId > -1))
                         {
                             ioMax = DatabaseAPI.Database.Enhancements[Ui.Io[Ui.View.PickerId]].LevelMax + 1;
                             ioMin = DatabaseAPI.Database.Enhancements[Ui.Io[Ui.View.PickerId]].LevelMin + 1;
@@ -1948,7 +2013,7 @@ namespace Mids_Reborn.UI.Controls
 
                         break;
                     }
-                    case Enums.eType.SetO when Ui.View.SetId > -1 & Ui.View.SetTypeId > -1:
+                    case Enums.eType.SetO when (Ui.View.SetId > -1) & (Ui.View.SetTypeId > -1):
                         ioMax = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].LevelMax + 1;
                         ioMin = DatabaseAPI.Database.EnhancementSets[Ui.Sets[Ui.View.SetTypeId][Ui.View.SetId]].LevelMin + 1;
                         break;
@@ -2124,15 +2189,15 @@ namespace Mids_Reborn.UI.Controls
             {
                 eEnhRelative = Enums.eEnhRelative.Even;
             }
-            else if (eEnhRelative > Enums.eEnhRelative.PlusThree & Ui.View.TabId == Enums.eType.Normal)
+            else if ((eEnhRelative > Enums.eEnhRelative.PlusThree) & (Ui.View.TabId == Enums.eType.Normal))
             {
                 eEnhRelative = Enums.eEnhRelative.PlusThree;
             }
-            else if (eEnhRelative > specialOLimit & Ui.View.TabId == Enums.eType.SpecialO)
+            else if ((eEnhRelative > specialOLimit) & (Ui.View.TabId == Enums.eType.SpecialO))
             {
                 eEnhRelative = specialOLimit;
             }
-            else if (eEnhRelative < Enums.eEnhRelative.Even & (Ui.View.TabId == Enums.eType.InventO | Ui.View.TabId == Enums.eType.SetO))
+            else if ((eEnhRelative < Enums.eEnhRelative.Even) & ((Ui.View.TabId == Enums.eType.InventO) | (Ui.View.TabId == Enums.eType.SetO)))
             {
                 eEnhRelative = Enums.eEnhRelative.Even;
             }

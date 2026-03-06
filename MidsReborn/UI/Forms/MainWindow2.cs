@@ -4191,15 +4191,14 @@ The default position/state will be used upon next launch.", @"Window State Warni
                             {
                                 if (enhancements != null)
                                     I9Picker.SetData(MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower,
-                                        ref MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID]
-                                            .Enhancement,
-                                        ref drawing, enhancements);
+                                        ref MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement,
+                                        enhancements);
                             }
                             else if (enhancements != null)
                             {
                                 I9Picker.SetData(-1,
                                     ref MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement,
-                                    ref drawing, enhancements);
+                                    enhancements);
                             }
 
 
