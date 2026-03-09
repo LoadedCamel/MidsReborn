@@ -1101,7 +1101,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                 if (DelayedTime > 0)
                 {
-                    sDelay = $"after {Utilities.FixDP(DelayedTime)} seconds";
+                    sDelay = $"after {Utilities.FixDP(DelayedTime, 3)} seconds";
                 }
             }
 

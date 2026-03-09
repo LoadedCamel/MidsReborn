@@ -828,7 +828,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            txtFXDuration.Text = $@"{MyFx.nDuration:##0.0##}";
+            txtFXDuration.Text = $@"{MyFx.nDuration:####0.####}";
             UpdateFxText();
         }
 
