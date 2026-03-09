@@ -990,7 +990,7 @@ namespace Mids_Reborn.Core
             return uidName;
         }
 
-        public static int GetEnhancementByUIDName(string name)
+        public static int GetEnhancementByUIDName(string name, bool caseInsensitive = false)
         {
             if (string.IsNullOrWhiteSpace(name))
             {
@@ -999,7 +999,7 @@ namespace Mids_Reborn.Core
 
             name = EnhancementUidTranslation(name);
 
-            var e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(name));
+            var e = Database.Enhancements.TryFindIndex(enh => caseInsensitive ? enh.UID.Contains(name, StringComparison.InvariantCultureIgnoreCase) : enh.UID.Contains(name));
             if (e >= 0)
             {
                 return e;
@@ -1007,7 +1007,7 @@ namespace Mids_Reborn.Core
 
             // CaltoArm-+Def(Pets) through build recovery
             name = name.Replace("[", "(").Replace("]", ")");
-            e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(name));
+            e = Database.Enhancements.TryFindIndex(enh => caseInsensitive ? enh.UID.Contains(name, StringComparison.InvariantCultureIgnoreCase) : enh.UID.Contains(name));
 
             return e >= 0
                 ? e

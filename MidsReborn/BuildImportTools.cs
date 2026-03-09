@@ -151,7 +151,7 @@ namespace Mids_Reborn
                 i9Slot.Grade = Enums.eEnhGrade.DualO;
             }
 
-            i9Slot.Enh = DatabaseAPI.GetEnhancementByUIDName(iName);
+            i9Slot.Enh = DatabaseAPI.GetEnhancementByUIDName(iName, true);
             if (i9Slot.Enh != -1)
             {
                 return i9Slot;
