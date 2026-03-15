@@ -1,21 +1,20 @@
 ﻿using System;
-using Mids_Reborn.Core.Base.Display;
-using Mids_Reborn.Core.Utils;
 using System.ComponentModel;
-using System.Diagnostics;
 using System.Drawing;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Windows.Forms;
+using Mids_Reborn.Core.Base.Display;
+using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.UI.Controls
 {
-    public class ctlPopUp : UserControl
+    public partial class PopUp2 : Form
     {
         public int eIDX;
         public int hIDX;
         public float lHeight;
-        
+
         public PopUp.PopupData pData;
         public int pIDX;
         public int psIDX;
@@ -37,14 +36,18 @@ namespace Mids_Reborn.UI.Controls
             LicenseManager.UsageMode == LicenseUsageMode.Designtime ||
             Site is { DesignMode: true };
 
-        public ctlPopUp()
+        /// <summary>
+        /// Main window specific popup, as a subwindow form.
+        /// Use <see cref="ctlPopUp"/> for any other use cases, like embedded into a form.
+        /// </summary>
+        public PopUp2()
         {
             SetStyle(ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
             pSectionPadding = 8;
             pInternalPadding = 3;
             pScroll = 0;
             lHeight = 0;
-            pBXHeight = 675;
+            pBXHeight = 675; // ??
             pColumnPosition = 0.5f;
             pRightAlignColumn = false;
             hIDX = -1;
@@ -53,6 +56,34 @@ namespace Mids_Reborn.UI.Controls
             psIDX = -1;
             InitializeComponent();
         }
+
+        // Show as inactive top-window (control-specific part)
+        protected override CreateParams CreateParams
+        {
+            get
+            {
+                var baseParams = base.CreateParams;
+
+                const int WS_EX_NOACTIVATE = 0x08000000;
+                const int WS_EX_TOOLWINDOW = 0x00000080;
+                baseParams.ExStyle |= WS_EX_NOACTIVATE | WS_EX_TOOLWINDOW;
+
+                return baseParams;
+            }
+        }
+
+        protected override bool ShowWithoutActivation => true;
+
+        private void PopUp2_Load(object? sender, EventArgs e)
+        {
+            _disableRedraw = true;
+            InitBuffer();
+            pData = default;
+            pData.Init();
+            _disableRedraw = false;
+        }
+
+        
 
         private void InitBuffer()
         {
@@ -90,11 +121,11 @@ namespace Mids_Reborn.UI.Controls
 
         private void SafeInitialize()
         {
-            BackColorChanged += ctlPopUp_BackColorChanged;
-            FontChanged += ctlPopUp_FontChanged;
-            ForeColorChanged += ctlPopUp_ForeColorChanged;
-            Load += ctlPopUp_Load;
-            SizeChanged += ctlPopUp_SizeChanged;
+            BackColorChanged += PopUp2_BackColorChanged;
+            FontChanged += PopUp2_FontChanged;
+            ForeColorChanged += PopUp2_ForeColorChanged;
+            Load += PopUp2_Load;
+            SizeChanged += PopUp2_SizeChanged;
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -192,40 +223,6 @@ namespace Mids_Reborn.UI.Controls
             }
         }
 
-        [DebuggerStepThrough]
-        private void InitializeComponent()
-        {
-            SuspendLayout();
-            AutoScaleMode = AutoScaleMode.Font;
-            Name = "ctlPopUp";
-            Size = new Size(167, 104);
-            ResumeLayout(false);
-        }
-
-        private void ctlPopUp_BackColorChanged(object? sender, EventArgs e)
-        {
-            Draw();
-        }
-
-        private void ctlPopUp_FontChanged(object? sender, EventArgs e)
-        {
-            Draw();
-        }
-
-        private void ctlPopUp_ForeColorChanged(object? sender, EventArgs e)
-        {
-            Draw();
-        }
-
-        private void ctlPopUp_Load(object? sender, EventArgs e)
-        {
-            _disableRedraw = true;
-            InitBuffer();
-            pData = default;
-            pData.Init();
-            _disableRedraw = false;
-        }
-
         public void SetPopup(PopUp.PopupData iPopup, I9Picker.EnhUniqueStatus? enhUniqueStatus = null)
         {
             pData = iPopup;
@@ -247,7 +244,7 @@ namespace Mids_Reborn.UI.Controls
             {
                 return;
             }
-           
+
             if (pFont == null)
             {
                 try
@@ -270,10 +267,16 @@ namespace Mids_Reborn.UI.Controls
             _buffer.Render(screenGraphics);
         }
 
+        private void DrawBorder()
+        {
+            using var pen = new Pen(ForeColor);
+            _buffer?.Graphics.DrawRectangle(pen, new Rectangle(0, 0, Width - 1, Height - 1));
+        }
+
         private void DrawStrings()
         {
             var num = 0f;
-            
+
             if (pData.Sections == null)
             {
                 return;
@@ -318,7 +321,7 @@ namespace Mids_Reborn.UI.Controls
                         : Math.Max(maxPos, contentTextSize.Width);
                     var brush = new SolidBrush(section.Content[j].tColor);
                     layoutRectangle.Height = sizeF.Value.Height + 1;
-                    layoutRectangle = layoutRectangle with {Y = layoutRectangle.Y - pScroll};
+                    layoutRectangle = layoutRectangle with { Y = layoutRectangle.Y - pScroll };
                     _buffer.Graphics.DrawString(section.Content[j].Text, pFont, brush, layoutRectangle, stringFormat);
                     if (section.Content[j].HasColumn)
                     {
@@ -357,13 +360,22 @@ namespace Mids_Reborn.UI.Controls
             }
         }
 
-        private void DrawBorder()
+        private void PopUp2_BackColorChanged(object? sender, EventArgs e)
         {
-            using var pen = new Pen(ForeColor);
-            _buffer?.Graphics.DrawRectangle(pen, new Rectangle(0, 0, Width - 1, Height - 1));
+            Draw();
         }
 
-        private void ctlPopUp_SizeChanged(object? sender, EventArgs e)
+        private void PopUp2_FontChanged(object? sender, EventArgs e)
+        {
+            Draw();
+        }
+
+        private void PopUp2_ForeColorChanged(object? sender, EventArgs e)
+        {
+            Draw();
+        }
+
+        private void PopUp2_SizeChanged(object? sender, EventArgs e)
         {
             Draw();
         }

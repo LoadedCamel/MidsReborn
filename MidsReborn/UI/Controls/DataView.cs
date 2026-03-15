@@ -14,6 +14,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Mids_Reborn.UI.Controls.GfxModules;
 using FontStyle = System.Drawing.FontStyle;
 using Point = System.Drawing.Point;
 using Size = System.Drawing.Size;
@@ -1265,7 +1266,7 @@ namespace Mids_Reborn.UI.Controls
                             bounds.Y -= 3f;
                             bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
                             var graphics2 = bxFlip.Graphics;
-                            ClsDrawX.DrawOutlineText($"{power.Slots[index].Enhancement.IOLevel + 1}", bounds,
+                            GfxTextUtils.DrawOutlineText($"{power.Slots[index].Enhancement.IOLevel + 1}", bounds,
                                 Color.Cyan, Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
                         }
                         else if (MidsContext.Config.ShowEnhRel & DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID is Enums.eType.Normal or Enums.eType.SpecialO)
@@ -1281,7 +1282,7 @@ namespace Mids_Reborn.UI.Controls
                                     : Color.Yellow
                                 : Color.Red;
                             var graphics2 = bxFlip.Graphics;
-                            ClsDrawX.DrawOutlineText(
+                            GfxTextUtils.DrawOutlineText(
                                 Enums.GetRelativeString(power.Slots[index].Enhancement.RelativeLevel,
                                     MidsContext.Config.ShowRelSymbols), bounds, text, Color.FromArgb(128, 0, 0, 0),
                                 pnlEnhActive.Font, 1f, graphics2);
@@ -1319,7 +1320,7 @@ namespace Mids_Reborn.UI.Controls
                             bounds.Y -= 3f;
                             bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
                             var graphics2 = bxFlip.Graphics;
-                            ClsDrawX.DrawOutlineText(
+                            GfxTextUtils.DrawOutlineText(
                                 $"{power.Slots[index].FlippedEnhancement.IOLevel + 1}", bounds, Color.Cyan,
                                 Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
                         }
@@ -1336,7 +1337,7 @@ namespace Mids_Reborn.UI.Controls
                                     : Color.Yellow
                                 : Color.Red;
                             var graphics2 = bxFlip.Graphics;
-                            ClsDrawX.DrawOutlineText(
+                            GfxTextUtils.DrawOutlineText(
                                 Enums.GetRelativeString(power.Slots[index].FlippedEnhancement.RelativeLevel,
                                     MidsContext.Config.ShowRelSymbols), bounds, text, Color.FromArgb(128, 0, 0, 0),
                                 pnlEnhActive.Font, 1f, graphics2);

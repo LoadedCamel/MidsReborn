@@ -1,15 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Text;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
@@ -19,7 +7,9 @@ using Mids_Reborn.Core.ShareSystem.RestModels;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.Forms;
 using Mids_Reborn.UI.Controls;
+using Mids_Reborn.UI.Controls.GfxModules;
 using Mids_Reborn.UI.Controls.Skia;
+using Mids_Reborn.UI.Design.Extensions;
 using Mids_Reborn.UI.Forms.ImportExportItems;
 using Mids_Reborn.UI.Forms.OptionsMenuItems;
 using Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor;
@@ -28,6 +18,19 @@ using Mids_Reborn.UI.Forms.WindowMenuItems;
 using MRBLogging;
 using MRBResourceLib;
 using RestSharp;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Text;
+using System.IO;
+using System.Linq;
+using System.Runtime.InteropServices;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
@@ -46,7 +49,98 @@ namespace Mids_Reborn.UI.Forms
                 cp.Style &= ~0x0002;
                 cp.ExStyle &= ~0x02000000;
                 cp.ExStyle &= ~0x00000020;
+                
                 return cp;
+            }
+        }
+
+        private const int SW_SHOWNOACTIVATE = 4;
+        private const int HWND_TOPMOST = -1;
+        private const uint SWP_NOACTIVATE = 0x0010;
+
+        [DllImport("user32.dll", EntryPoint = "SetWindowPos")]
+        static extern bool SetWindowPos(
+            int hWnd,             // Window handle
+            int hWndInsertAfter,  // Placement-order handle
+            int X,                // Horizontal position
+            int Y,                // Vertical position
+            int cx,               // Width
+            int cy,               // Height
+            uint uFlags);         // Window positioning flags
+
+        [DllImport("user32.dll")]
+        static extern bool ShowWindow(IntPtr hWnd, int nCmdShow);
+
+        static void ShowInactiveTopmost(Form frm)
+        {
+            ShowWindow(frm.Handle, SW_SHOWNOACTIVATE);
+            SetWindowPos(frm.Handle.ToInt32(), HWND_TOPMOST,
+                frm.Left, frm.Top, frm.Width, frm.Height,
+                SWP_NOACTIVATE);
+        }
+
+        private struct PopupDataStatus : IEquatable<PopupDataStatus>
+        {
+            public int? ModelType;
+
+            // Variant 1
+            public int? NidPowerset;
+            public int? NidClass;
+            public string? ExtraString;
+
+            // Variant 2
+            public int? HIdx;
+            public int? PIdx;
+            public int? SIdx;
+            public Point? EPoint;
+            public I9Slot? ESlot;
+            public int? SetIdx;
+            public I9Picker.EnhUniqueStatus? EnhUniqueStatus;
+            
+            // Common
+            public Rectangle? RBounds;
+            public VerticalAlignment? VAlign;
+
+            public bool Equals(PopupDataStatus other)
+            {
+                return ModelType switch
+                {
+                    0 => ModelType == other.ModelType && NidPowerset == other.NidPowerset && NidClass == other.NidClass && ExtraString == other.ExtraString &&
+                         Nullable.Equals(RBounds, other.RBounds) && VAlign == other.VAlign,
+                    1 => ModelType == other.ModelType && HIdx == other.HIdx && PIdx == other.PIdx && SIdx == other.SIdx && Nullable.Equals(EPoint, other.EPoint) && Equals(ESlot, other.ESlot) && SetIdx == other.SetIdx && Nullable.Equals(EnhUniqueStatus, other.EnhUniqueStatus) &&
+                         Nullable.Equals(RBounds, other.RBounds) && VAlign == other.VAlign,
+                    _ => other.ModelType == null
+                };
+            }
+
+            public override bool Equals(object? obj)
+            {
+                if (obj is PopupDataStatus other)
+                {
+                    return Equals(other);
+                }
+
+                return false;
+            }
+
+            public override int GetHashCode()
+            {
+                var hashCode = new HashCode();
+                hashCode.Add(ModelType);
+                hashCode.Add(NidPowerset);
+                hashCode.Add(NidClass);
+                hashCode.Add(ExtraString);
+                hashCode.Add(HIdx);
+                hashCode.Add(PIdx);
+                hashCode.Add(SIdx);
+                hashCode.Add(EPoint);
+                hashCode.Add(ESlot);
+                hashCode.Add(SetIdx);
+                hashCode.Add(EnhUniqueStatus);
+                hashCode.Add(RBounds);
+                hashCode.Add(VAlign);
+
+                return hashCode.ToHashCode();
             }
         }
 
@@ -68,6 +162,9 @@ namespace Mids_Reborn.UI.Forms
 
         private Rectangle _formOrigin;
         private readonly BuildManager _buildManager;
+
+        private PopUp2 I9Popup;
+        private PopupDataStatus _popupDataStatus;
 
         public MainWindow2(string[]? args = null)
         {
@@ -99,7 +196,7 @@ namespace Mids_Reborn.UI.Forms
             FlipInterval = 10;
             FlipStepDelay = 3;
             FlipPowerID = -1;
-            FlipSlotState = Array.Empty<int>();
+            FlipSlotState = [];
             dragStartPower = -1;
             dragStartSlot = -1;
             dragdropScenarioAction = new short[20];
@@ -116,6 +213,21 @@ namespace Mids_Reborn.UI.Forms
             PetView.SliderUpdated += OnPetViewSliderUpdated;
             Icon = Resources.MRB_Icon_Concept;
             LogManager.Configure("Logs\\mids.log", "MidsReborn");
+            
+            I9Popup = new PopUp2();
+            I9Popup.ColumnPosition = 0.5f;
+            I9Popup.ColumnRight = false;
+            I9Popup.Font = new Font("Segoe UI", 13f, FontStyle.Regular, GraphicsUnit.Pixel, 0);
+            I9Popup.ForeColor = Color.FromArgb(96, 48, 255);
+            I9Popup.InternalPadding = 3;
+            I9Popup.Location = new Point(513, 490);
+            I9Popup.Name = "I9Popup";
+            I9Popup.ScrollY = 0;
+            I9Popup.SectionPadding = 8;
+            I9Popup.Size = new Size(450, 203);
+            I9Popup.TabIndex = 102;
+            I9Popup.Visible = false;
+            _popupDataStatus = new PopupDataStatus();
         }
 
         private void OnPetViewSliderUpdated()
@@ -317,8 +429,9 @@ namespace Mids_Reborn.UI.Forms
         private void frmMain_Load(object? sender, EventArgs e)
         {
             _loading = true;
-            try
-            {
+            pnlGFX.DoubleBuffering();
+            //try
+            //{
                 if (MidsContext.Config.I9.DefaultIOLevel == 27)
                 {
                     MidsContext.Config.I9.DefaultIOLevel = 49;
@@ -457,14 +570,14 @@ namespace Mids_Reborn.UI.Forms
                 UpdatePoolsPanelSize();
                 InitializeDv(); // This is the data view
                 SetEnhCheckModePosition();
-            }
+            /*}
             catch (Exception ex)
             {
                 MessageBox.Show(
                     $"An error has occurred when loading the main form. Error: {ex.Message}\r\n{ex.StackTrace}",
                     "OMIGODHAX");
                 throw;
-            }
+            }*/
 
             _loading = false;
             //MidsContext.Config.SaveConfig();
@@ -1336,13 +1449,12 @@ namespace Mids_Reborn.UI.Forms
             var Enh2 = -1;
             I9Slot? i9Slot1 = null;
             I9Slot? i9Slot2 = null;
-            var recolorIa = ClsDrawX.GetRecolorIa();
+            var recolorIa = drawing.GetRecolorIa();
             using var solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
-            var num1 = FlipSlotState.Length - 1;
             Rectangle rectangle1;
-            for (var i = 0; i <= num1; ++i)
+            for (var i = 0; i < FlipSlotState.Length; i++)
             {
-                point1.X = (int)Math.Round(point2.X - 30 + (drawing.SzPower.Width - drawing.SzSlot.Width * 6) / 2.0);
+                point1.X = (int)Math.Round(point2.X - 30 + (drawing.SzPower.Width - drawing.SzSlot.Width * 6) / 2f);
                 point1.Y = point2.Y + ClsDrawX.OffsetY;
                 ++FlipSlotState[i];
                 var num2 = 1f;
@@ -1700,10 +1812,10 @@ namespace Mids_Reborn.UI.Forms
                 pnlGFX.Height = drawingHeight;
             }
 
-            drawing.BxBuffer.Size = pnlGFX.Size;
+            //drawing.BxBuffer.Size = pnlGFX.Size;
             drawing.ReInit(pnlGFX);
-            pnlGFX.Image = drawing.BxBuffer.Bitmap;
-            drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.BxBuffer.Size);
+            //pnlGFX.Image = drawing.BxBuffer.Bitmap;
+            drawing.SetScaling(scale < 1 ? pnlGFX.Size : drawing.GetBufferSize());
             drawing.SetScaling(pnlGFX.Size);
             ReArrange(false);
             ReArrangeButtons();
@@ -2743,7 +2855,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             I9Popup.hIDX = -1;
             I9Popup.psIDX = -1;
             ActivePopupBounds = new Rectangle(0, 0, 0, 0);
-            drawing?.Refresh(bounds);
+            //drawing?.Refresh(bounds);
         }
 
         private void I9Picker_EnhancementSelectionCancelled()
@@ -3588,11 +3700,17 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 drawing.ReInit(pnlGFX);
             }
 
-            pnlGFX.Image = drawing.BxBuffer.Bitmap;
+            //pnlGFX.Image = drawing.BxBuffer.Bitmap;
             if (drawing != null)
+            {
                 drawing.Highlight = -1;
+            }
+
             if (skipDraw)
+            {
                 return;
+            }
+
             DoRedraw();
         }
 
@@ -5315,21 +5433,29 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 null, MessageBoxButtons.OK);
         }
 
-        private void RedrawUnderPopup(Rectangle RectRedraw)
+        private void RedrawUnderPopup(Rectangle rectRedraw)
         {
-            var Clip = RectRedraw;
-            ref var local = ref Clip;
+            return;
+
+            var clip = rectRedraw;
+            ref var local = ref clip;
             var location = pnlGFXFlow.Location;
             var x = -location.X;
             location = pnlGFXFlow.Location;
             var y = -location.Y;
             local.Offset(x, y);
-            drawing.Refresh(Clip);
-            if (llPrimary.Bounds.IntersectsWith(RectRedraw))
+            
+            if (llPrimary.Bounds.IntersectsWith(rectRedraw))
+            {
                 llPrimary.Refresh();
-            if (llSecondary.Bounds.IntersectsWith(RectRedraw))
+            }
+
+            if (llSecondary.Bounds.IntersectsWith(rectRedraw))
+            {
                 llSecondary.Refresh();
-            if (raGetPoolRect(0).IntersectsWith(RectRedraw))
+            }
+
+            if (raGetPoolRect(0).IntersectsWith(rectRedraw))
             {
                 llPool0.Refresh();
                 cbPool0.Refresh();
@@ -5337,7 +5463,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 lblLocked0.Refresh();
             }
 
-            if (raGetPoolRect(1).IntersectsWith(RectRedraw))
+            if (raGetPoolRect(1).IntersectsWith(rectRedraw))
             {
                 llPool1.Refresh();
                 cbPool1.Refresh();
@@ -5345,7 +5471,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 lblLocked1.Refresh();
             }
 
-            if (raGetPoolRect(2).IntersectsWith(RectRedraw))
+            if (raGetPoolRect(2).IntersectsWith(rectRedraw))
             {
                 llPool2.Refresh();
                 cbPool2.Refresh();
@@ -5353,7 +5479,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 lblLocked2.Refresh();
             }
 
-            if (raGetPoolRect(3).IntersectsWith(RectRedraw))
+            if (raGetPoolRect(3).IntersectsWith(rectRedraw))
             {
                 llPool3.Refresh();
                 cbPool3.Refresh();
@@ -5361,8 +5487,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 lblLocked3.Refresh();
             }
 
-            if (!raGetPoolRect(4).IntersectsWith(RectRedraw))
+            if (!raGetPoolRect(4).IntersectsWith(rectRedraw))
+            {
                 return;
+            }
+
             llAncillary.Refresh();
             cbAncillary.Refresh();
             lblEpic.Refresh();
@@ -5796,24 +5925,22 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                 if (I9Popup.psIDX != (nIdPowerset <= -1 ? nIdClass : nIdPowerset))
                 {
-                    PopUp.PopupData iPopup;
-                    if (nIdPowerset <= -1)
-                    {
-                        iPopup = MidsContext.Character.Archetype.PopInfo();
-                    }
-                    else
-                    {
-                        iPopup = MainModule.MidsController.Toon.PopPowersetInfo(nIdPowerset, extraString);
-                    }
+                    var iPopup = nIdPowerset <= -1
+                        ? MidsContext.Character.Archetype.PopInfo()
+                        : MainModule.MidsController.Toon.PopPowersetInfo(nIdPowerset, extraString);
 
                     if (iPopup.Sections != null)
                     {
                         I9Popup.SetPopup(iPopup);
                         if (vAlign == VerticalAlignment.Bottom)
                         {
-                            I9Popup.Location = new Point(I9Popup.Location.X, I9Popup.Location.Y - I9Popup.Height);
+                            I9Popup.Location = I9Popup.Location with { Y = I9Popup.Location.Y - I9Popup.Height };
                             rBounds.Y -= I9Popup.Height;
                         }
+
+                        // For a sub window, position is relative to screen, not main window
+                        rBounds.X += Location.X;
+                        rBounds.Y += Location.Y;
 
                         PopUpVisible = true;
                         SetPopupLocation(rBounds, false, true);
@@ -5823,11 +5950,44 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         HidePopup();
                     }
 
-                    I9Popup.Visible = true;
-                    if (ActivePopupBounds != I9Popup.Bounds)
+                    var newPopupStatus = new PopupDataStatus
                     {
-                        RedrawUnderPopup(bounds);
-                        ActivePopupBounds = I9Popup.Bounds;
+                        ModelType = 0,
+                        NidPowerset = nIdPowerset,
+                        NidClass = nIdClass,
+                        ExtraString = extraString,
+                        RBounds = rBounds,
+                        VAlign = vAlign
+                    };
+
+                    // Prevent show popup spam
+                    if (!_popupDataStatus.Equals(newPopupStatus))
+                    {
+                        I9Popup.Location = new Point(I9Popup.Location.X + Location.X + 4, I9Popup.Location.Y + Location.Y + 4);
+                        if (!I9Popup.Visible)
+                        {
+                            // BUG: popup steals focus when shown
+                            //I9Popup.Show();
+                            ShowInactiveTopmost(I9Popup);
+                        }
+
+                        I9Popup.Visible = true;
+                        //Focus();
+                        if (ActivePopupBounds != I9Popup.Bounds)
+                        {
+                            RedrawUnderPopup(bounds);
+                            ActivePopupBounds = I9Popup.Bounds;
+                        }
+
+                        _popupDataStatus = new PopupDataStatus
+                        {
+                            ModelType = 0,
+                            NidPowerset = nIdPowerset,
+                            NidClass = nIdClass,
+                            ExtraString = extraString,
+                            RBounds = rBounds,
+                            VAlign = vAlign
+                        };
                     }
                 }
 
@@ -5863,6 +6023,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 powerEntry = MidsContext.Character.CurrentBuild.Powers[hIdx];
             }
 
+            // ???
             if (!((I9Popup.hIDX != hIdx) | (I9Popup.eIDX != sIdx) | (I9Popup.pIDX != pIdx) | (I9Popup.hIDX == -1) | (I9Popup.eIDX == -1) | (I9Popup.pIDX == -1)))
             {
                 return;
@@ -5926,6 +6087,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         rectangle.Y += pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value;
                     }
 
+                    // For a sub window, position is relative to screen, not main window
+                    rectangle.X += Location.X;
+                    rectangle.Y += Location.Y;
+
                     I9Popup.SetPopup(iPopup, enhUniqueStatus);
                     if (vAlign == VerticalAlignment.Bottom)
                     {
@@ -5940,11 +6105,50 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     SetPopupLocation(rectangle, powerListing, picker);
                 }
 
-                I9Popup.Visible = true;
-                if (ActivePopupBounds != I9Popup.Bounds)
+                var newPopupStatus = new PopupDataStatus
                 {
-                    RedrawUnderPopup(bounds);
-                    ActivePopupBounds = I9Popup.Bounds;
+                    ModelType = 1,
+                    HIdx = hIdx,
+                    PIdx = pIdx,
+                    SIdx = sIdx,
+                    EPoint = e,
+                    ESlot = eSlot,
+                    SetIdx = setIdx,
+                    EnhUniqueStatus = enhUniqueStatus,
+                    RBounds = rBounds,
+                    VAlign = vAlign
+                };
+
+                if (!newPopupStatus.Equals(_popupDataStatus))
+                {
+                    if (!I9Popup.Visible)
+                    {
+                        //I9Popup.Show();
+                        // BUG: popup steals focus when shown
+                        ShowInactiveTopmost(I9Popup);
+                    }
+
+                    //Focus();
+                    //I9Popup.Visible = true;
+                    if (ActivePopupBounds != I9Popup.Bounds)
+                    {
+                        RedrawUnderPopup(bounds);
+                        ActivePopupBounds = I9Popup.Bounds;
+                    }
+
+                    _popupDataStatus = new PopupDataStatus
+                    {
+                        ModelType = 1,
+                        HIdx = hIdx,
+                        PIdx = pIdx,
+                        SIdx = sIdx,
+                        EPoint = e,
+                        ESlot = eSlot,
+                        SetIdx = setIdx,
+                        EnhUniqueStatus = enhUniqueStatus,
+                        RBounds = rBounds,
+                        VAlign = vAlign
+                    };
                 }
             }
             else

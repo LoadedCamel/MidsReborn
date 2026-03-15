@@ -34,10 +34,25 @@ namespace Mids_Reborn.UI.Controls
         public event HoverSetEventHandler HoverSet;
         public event MovedEventHandler Moved;
 
-        public struct EnhUniqueStatus
+        public struct EnhUniqueStatus : IEquatable<EnhUniqueStatus>
         {
             public bool InMain;
             public bool InAlternate;
+
+            public bool Equals(EnhUniqueStatus other)
+            {
+                return InMain == other.InMain && InAlternate == other.InAlternate;
+            }
+
+            public override bool Equals(object? obj)
+            {
+                return obj is EnhUniqueStatus other && Equals(other);
+            }
+
+            public override int GetHashCode()
+            {
+                return HashCode.Combine(InMain, InAlternate);
+            }
         }
 
         private BufferedGraphics? _buffer;

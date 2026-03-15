@@ -7,6 +7,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.UI.Controls;
+using Mids_Reborn.UI.Controls.GfxModules;
 using MRBResourceLib;
 
 namespace Mids_Reborn.UI.Forms.WindowMenuItems
@@ -166,7 +167,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             var height2 = bFont.GetHeight(e.Graphics) + 2;
             var bounds = new RectangleF(0f, (tab0.Height - height2) / 2f, tab0.Width, height2);
             var graphics = extendedBitmap.Graphics;
-            ClsDrawX.DrawOutlineText("Close", bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
+            GfxTextUtils.DrawOutlineText("Close", bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -217,7 +218,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             var height = bFont.GetHeight(e.Graphics) + 2;
             var bounds = new RectangleF(0f, (tab0.Height - height) / 2f, tab0.Width, height);
             var graphics = extendedBitmap.Graphics;
-            ClsDrawX.DrawOutlineText("Keep On Top", bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
+            GfxTextUtils.DrawOutlineText("Keep On Top", bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 
@@ -454,7 +455,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             var height = bFont.GetHeight(e.Graphics) + 2;
             var bounds = new RectangleF(0f, (tab0.Height - height) / 2f, tab0.Width, height);
             var graphics = extendedBitmap.Graphics;
-            ClsDrawX.DrawOutlineText(iString, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
+            GfxTextUtils.DrawOutlineText(iString, bounds, Color.WhiteSmoke, Color.FromArgb(192, 0, 0, 0), bFont, 1, graphics);
             e.Graphics.DrawImage(extendedBitmap.Bitmap, 0, 0);
         }
 

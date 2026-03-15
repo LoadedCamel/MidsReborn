@@ -224,7 +224,6 @@ namespace Mids_Reborn.UI.Forms
             this.llPool2 = new SkList();
             this.llAncillary = new SkList();
             this.i9Picker = new I9Picker();
-            this.I9Popup = new ctlPopUp();
             this.poolsPanel = new ScrollPanelEx();
             this.enhCheckMode = new EnhCheckMode(this);
             this.EnemyRelativeToolStripComboBox = new ToolStripComboBox();
@@ -2145,7 +2144,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // I9Popup
             // 
-            this.I9Popup.BackColor = System.Drawing.Color.Black;
+            /*this.I9Popup.BackColor = System.Drawing.Color.Black;
             this.I9Popup.ColumnPosition = 0.5F;
             this.I9Popup.ColumnRight = false;
             this.I9Popup.Font = new System.Drawing.Font("Segoe UI", 13F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
@@ -2158,7 +2157,7 @@ namespace Mids_Reborn.UI.Forms
             this.I9Popup.Size = new System.Drawing.Size(450, 203);
             this.I9Popup.TabIndex = 102;
             this.I9Popup.Visible = false;
-            this.I9Popup.MouseMove += new System.Windows.Forms.MouseEventHandler(this.I9Popup_MouseMove);
+            this.I9Popup.MouseMove += new System.Windows.Forms.MouseEventHandler(this.I9Popup_MouseMove);*/
             // 
             // ibTotalsEx
             // 
@@ -2579,7 +2578,6 @@ namespace Mids_Reborn.UI.Forms
         ToolTip tTip;
         TextBox txtName;
         I9Picker i9Picker;
-        ctlPopUp I9Popup;
         EnhCheckMode enhCheckMode;
         ImageButtonEx ibModeEx;
         ImageButtonEx ibDynMode;
