@@ -79,7 +79,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             {
                 return null;
             }
-            
+
             return MainModule.MidsController.Toon.IsHero()
                 ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)]  // Inherent.Inherent.MxD_Accolades_Hero
                 : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)]; // Inherent.Inherent.MxD_Accolades_Villain
@@ -189,7 +189,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private void ChangedScrollFrameContents()
         {
             VScrollBar1.Value = 0;
-            VScrollBar1.Maximum = (int) Math.Round(PopInfo.lHeight * (VScrollBar1.LargeChange / (double) Panel1.Height));
+            VScrollBar1.Maximum = (int)Math.Round(PopInfo.lHeight * (VScrollBar1.LargeChange / (double)Panel1.Height));
             VScrollBar1_Scroll(VScrollBar1, new ScrollEventArgs(ScrollEventType.EndScroll, 0));
         }
 
@@ -248,7 +248,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
                 return;
             }
-            
+
             var power1 = new Power(_myPowers[pIDX]);
             var index1 = iPopup.Add();
             var str = power1.PowerType switch
@@ -274,7 +274,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             if ((power1.EntitiesAutoHit == Enums.eEntity.None) | ((power1.Range > 20) & power1.I9FXPresentP(Enums.eEffectType.Mez, Enums.eMez.Taunt)))
             {
                 iPopup.Sections[index2].Add("Accuracy:", PopUp.Colors.Title,
-                    $"{Utilities.FixDP((float) (MidsContext.Config.ScalingToHit * (double) power1.Accuracy * 100))}%",
+                    $"{Utilities.FixDP((float)(MidsContext.Config.ScalingToHit * (double)power1.Accuracy * 100))}%",
                     PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
             }
 
@@ -329,7 +329,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                         .Replace("  ", string.Empty)
                         .Replace("]", string.Empty)
                         .Split('^');
-                    
+
                     for (var index5 = 0; index5 < strArray.Length; index5++)
                     {
                         if (index5 == 0)

@@ -160,7 +160,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             ibClose.CurrentText = "Done";
             ibClose.DisplayVertically = false;
             ibClose.EnabledState = ImageButtonEx.EnabledStates.Enabled;
-            ibClose.Font = new System.Drawing.Font("MS Sans Serif", 12F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            ibClose.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
             ibClose.Images.Background = MRBResourceLib.Resources.HeroButton;
             ibClose.Images.Hover = MRBResourceLib.Resources.HeroButtonHover;
             ibClose.ImagesAlt.Background = MRBResourceLib.Resources.VillainButton;
@@ -180,18 +180,18 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             ibClose.ToggleText.ToggledOff = "ToggledOff State";
             ibClose.ToggleText.ToggledOn = "ToggledOn State";
             ibClose.UseAlt = false;
-            Click += ibClose_Click;
+            ibClose.Click += ibClose_Click;
             // 
             // frmAccolade
             // 
             AutoScaleMode = AutoScaleMode.None;
             BackColor = System.Drawing.Color.Black;
             ClientSize = new System.Drawing.Size(438, 403);
-            DoubleBuffered = true;
             Controls.Add(ibClose);
             Controls.Add(Panel2);
             Controls.Add(lblLock);
             Controls.Add(Panel1);
+            DoubleBuffered = true;
             Font = new System.Drawing.Font("Segoe UI", 11F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Pixel, 0);
             FormBorderStyle = FormBorderStyle.FixedToolWindow;
             Name = "frmAccolade";
@@ -199,10 +199,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             StartPosition = FormStartPosition.CenterParent;
             Text = "Powers";
             TopMost = true;
+            Load += frmAccolade_Load;
             Panel1.ResumeLayout(false);
             Panel2.ResumeLayout(false);
             ResumeLayout(false);
-            Load += frmAccolade_Load;
         }
 
         private Label lblLock;
