@@ -1898,14 +1898,24 @@ namespace Mids_Reborn.UI.Forms
         private bool EditAccoladesOrTemps(int hIDPower)
         {
             if (hIDPower <= -1 || MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers.Length <= 0)
+            {
                 return false;
+            }
 
             var iPowers = MidsContext.Character.CurrentBuild.Powers[hIDPower].SubPowers
                 .Select(t => DatabaseAPI.Database.Power[t.nIDPower])
                 .ToList();
-            using var frmAccolade = new frmAccolade(this, iPowers);
-            frmAccolade.Text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower].DisplayName;
-            frmAccolade.ShowDialog(this);
+            
+            // ??
+            if (fAccolade is { Visible: true })
+            {
+                fAccolade.Close();
+                fAccolade.Dispose();
+            }
+            
+            fAccolade = new frmAccolade(this, iPowers);
+            fAccolade.Text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower].DisplayName;
+            fAccolade.Show(this); // ?? (Previously frmAccolade.ShowDialog(this))
             EnhancementModified();
             LastClickPlacedSlot = false;
 
@@ -1917,7 +1927,7 @@ namespace Mids_Reborn.UI.Forms
             FlipActive = false;
             tmrGfx.Enabled = false;
             FlipPowerID = -1;
-            FlipSlotState = Array.Empty<int>();
+            FlipSlotState = [];
             DoRedraw();
         }
 
@@ -2634,20 +2644,31 @@ The default position/state will be used upon next launch.", @"Window State Warni
             LastEnhPlaced.Enh = firstValidSetEnh;
             LastEnhPlaced.IOLevel = DatabaseAPI.Database.Enhancements[firstValidSetEnh]
                 .CheckAndFixIOLevel(LastEnhPlaced.IOLevel);
+            
             return LastEnhPlaced;
         }
 
         private void ibAlignmentEx_OnClick(object? sender, EventArgs e)
         {
+            ToggleAlignment();
+        }
+
+        private void ToggleAlignment(Enums.Alignment? alignment = null, bool redraw = true)
+        {
+            Debug.WriteLine($"ToggleAlignment(alignment={(alignment == null ? "null" : alignment)}, redraw: {redraw})");
+
             var nbUpdated = 0;
             if (MidsContext.Character != null)
             {
-                MidsContext.Character.Alignment = ibAlignmentEx.ToggleState switch
+                if (alignment == null)
                 {
-                    ImageButtonEx.States.ToggledOff => Enums.Alignment.Hero,
-                    ImageButtonEx.States.ToggledOn => Enums.Alignment.Villain,
-                    _ => MidsContext.Character.Alignment
-                };
+                    MidsContext.Character.Alignment = ibAlignmentEx.ToggleState switch
+                    {
+                        ImageButtonEx.States.ToggledOff => Enums.Alignment.Hero,
+                        ImageButtonEx.States.ToggledOn => Enums.Alignment.Villain,
+                        _ => MidsContext.Character.Alignment
+                    };
+                }
 
                 if (fAccolade != null)
                 {
@@ -2657,8 +2678,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     }
 
                     var factionSpecificAccolades = frmAccolade.FactionSpecificAccolades();
-                    var pSource = new List<string>();
-                    var pTarget = new List<string>();
+                    List<string> pSource;
+                    List<string> pTarget;
 
                     if (MainModule.MidsController.Toon == null || MainModule.MidsController.Toon.IsHero())
                     {
@@ -2680,35 +2701,36 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         .Select(x => x?.Power)
                         .ToList();
 
-                    if (selectedAccolades is not { Count: > 0 })
+                    if (selectedAccolades is { Count: > 0 })
                     {
-                        return;
-                    }
-
-                    foreach (var p in selectedAccolades)
-                    {
-                        if (p == null)
+                        foreach (var p in selectedAccolades)
                         {
-                            continue;
+                            if (p == null)
+                            {
+                                continue;
+                            }
+
+                            if (!pDict.TryGetValue(p.DisplayName, out var pName))
+                            {
+                                continue;
+                            }
+
+                            var targetPower = DatabaseAPI.Database.Power
+                                .DefaultIfEmpty(null)
+                                .FirstOrDefault(x =>
+                                    x is not null && x.FullName.StartsWith("Temporary_Powers.Accolades.") &
+                                    (x.DisplayName == pName));
+
+                            if (targetPower == null)
+                            {
+                                continue;
+                            }
+
+                            MidsContext.Character.CurrentBuild.RemovePower(p);
+                            MidsContext.Character.CurrentBuild.AddPower(targetPower, 49).StatInclude = true;
+
+                            nbUpdated++;
                         }
-
-                        if (!pDict.TryGetValue(p.DisplayName, out var pName))
-                        {
-                            continue;
-                        }
-
-                        var targetPower = DatabaseAPI.Database.Power
-                            .DefaultIfEmpty(null)
-                            .FirstOrDefault(x => x is not null && x.FullName.StartsWith("Temporary_Powers.Accolades.") & x.DisplayName == pName);
-
-                        if (targetPower == null)
-                        {
-                            continue;
-                        }
-
-                        MidsContext.Character.CurrentBuild.RemovePower(p);
-                        MidsContext.Character.CurrentBuild.AddPower(targetPower, 49).StatInclude = true;
-                        nbUpdated++;
                     }
                 }
             }
@@ -2723,6 +2745,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
             fTotals2?.Refresh();
             SetTitleBar();
             UpdateColors();
+
+            if (!redraw)
+            {
+                return;
+            }
+
             DoRedraw();
         }
 
@@ -3963,284 +3991,284 @@ The default position/state will be used upon next launch.", @"Window State Warni
             if (DoneDblClick)
             {
                 DoneDblClick = false;
+
+                return;
+            }
+            
+            var hIDPower = drawing.WhichSlot(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
+            var slotID = drawing.WhichEnh(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
+            if (hIDPower < 0 | hIDPower >= MidsContext.Character.CurrentBuild.Powers.Count)
+            {
+                return;
+            }
+
+            var flag = MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower < 0;
+            if (e.Button == MouseButtons.Left & ModifierKeys == (Keys.Shift | Keys.Control) && EditAccoladesOrTemps(hIDPower))
+            {
+                return;
+            }
+
+            if (MidsContext.EnhCheckMode)
+            {
+                if (!(e.Button == MouseButtons.Left & slotID > -1)) return;
+
+                MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement.Obtained = !MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement.Obtained;
+                if (fRecipe is {Visible: true})
+                {
+                    //fRecipe.RecalcSalvage();
+                    fRecipe.UpdateEnhObtained();
+                }
+
+                if (enhCheckMode.Visible)
+                {
+                    enhCheckMode.UpdateEnhObtained();
+                }
+
+                var powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDPower];
+                RedrawSinglePower(ref powerEntry, true);
             }
             else
             {
-                var hIDPower = drawing.WhichSlot(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
-                var slotID = drawing.WhichEnh(drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y));
-                if (hIDPower < 0 | hIDPower >= MidsContext.Character.CurrentBuild.Powers.Count)
+                if (drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle & e.Button == MouseButtons.Left)
                 {
-                    return;
+                    if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
+                    {
+                        if (MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude)
+                        {
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = false;
+                        }
+                        else
+                        {
+                            var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
+                            if (eMutex == Enums.eMutex.NoConflict | eMutex == Enums.eMutex.NoGroup)
+                                MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
+                        }
+                    }
+
+                    else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
+                    {
+                        MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = !MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude;
+                    }
+
+                    EnhancementModified();
+                    LastClickPlacedSlot = false;
+                    pnlGFX.Update();
+                    pnlGFX.Refresh();
                 }
-
-                var flag = MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower < 0;
-                if (e.Button == MouseButtons.Left & ModifierKeys == (Keys.Shift | Keys.Control) && EditAccoladesOrTemps(hIDPower))
+                else if (ToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & e.Button == MouseButtons.Left)
                 {
-                    return;
-                }
-
-                if (MidsContext.EnhCheckMode)
-                {
-                    if (!(e.Button == MouseButtons.Left & slotID > -1)) return;
-
-                    MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement.Obtained = !MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement.Obtained;
-                    if (fRecipe is {Visible: true})
+                    if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() &&
+                        !MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
                     {
-                        //fRecipe.RecalcSalvage();
-                        fRecipe.UpdateEnhObtained();
-                    }
-
-                    if (enhCheckMode.Visible)
-                    {
-                        enhCheckMode.UpdateEnhObtained();
-                    }
-
-                    var powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDPower];
-                    RedrawSinglePower(ref powerEntry, true);
-                }
-                else
-                {
-                    if (drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle & e.Button == MouseButtons.Left)
-                    {
-                        if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
+                        if (MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude)
                         {
-                            if (MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude)
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = false;
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = false;
+                        }
+                        else
+                        {
+                            var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
+                            if (eMutex == Enums.eMutex.NoConflict | eMutex == Enums.eMutex.NoGroup)
                             {
-                                MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = false;
-                            }
-                            else
-                            {
-                                var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
-                                if (eMutex == Enums.eMutex.NoConflict | eMutex == Enums.eMutex.NoGroup)
-                                    MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
+                                MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
+                                MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = true;
                             }
                         }
 
-                        else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
-                        {
-                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = !MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude;
-                        }
-
-                        EnhancementModified();
-                        LastClickPlacedSlot = false;
-                        pnlGFX.Update();
-                        pnlGFX.Refresh();
+                        MidsContext.Character.Validate();
                     }
-                    else if (ToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & e.Button == MouseButtons.Left)
+                    else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc() && !MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
                     {
-                        if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() &&
-                            !MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
-                        {
-                            if (MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude)
-                            {
-                                MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = false;
-                                MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = false;
-                            }
-                            else
-                            {
-                                var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
-                                if (eMutex == Enums.eMutex.NoConflict | eMutex == Enums.eMutex.NoGroup)
-                                {
-                                    MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
-                                    MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = true;
-                                }
-                            }
-
-                            MidsContext.Character.Validate();
-                        }
-                        else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc() && !MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats())
-                        {
-                            MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = !MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude;
-                        }
-                        else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
-                        {
-                            if (MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude)
-                            {
-                                MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = false;
-                                MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = false;
-                            }
-                            else
-                            {
-                                if (MainModule.MidsController.Toon != null)
-                                {
-                                    if (MainModule.MidsController.Toon.CurrentBuild != null)
-                                    {
-                                        var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
-                                        if (eMutex == Enums.eMutex.NoConflict | eMutex == Enums.eMutex.NoGroup)
-                                        {
-                                            MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
-                                            MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = true;
-                                        }
-                                    }
-                                }
-                            }
-
-                            MidsContext.Character.Validate();
-                        }
-
-                        EnhancementModified();
-                        LastClickPlacedSlot = false;
+                        MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude = !MidsContext.Character.CurrentBuild.Powers[hIDPower].ProcInclude;
                     }
-                    else if (ProcToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & e.Button == MouseButtons.Left)
+                    else if (!flag && MidsContext.Character.CurrentBuild.Powers[hIDPower].CanIncludeForStats() && MidsContext.Character.CurrentBuild.Powers[hIDPower].HasProc())
                     {
-                        var powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDPower];
-                        if (!flag && powerEntry.CanIncludeForStats() && powerEntry.HasProc())
+                        if (MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude)
                         {
-                            powerEntry.ProcInclude = !powerEntry.ProcInclude;
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = false;
+                            MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = false;
                         }
-
-                        //EnhancementModified();
-                        RedrawSinglePower(ref powerEntry, true, true);
-                        LastClickPlacedSlot = false;
-                    }
-                    else if (e.Button == MouseButtons.Left & ModifierKeys == Keys.Alt)
-                    {
-                        MainModule.MidsController.Toon?.BuildPower(
-                            MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPowerset,
-                            MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower);
-                        PowerModified(true);
-                        LastClickPlacedSlot = false;
-                    }
-                    else if (e.Button == MouseButtons.Left & ModifierKeys == Keys.Shift & slotID > -1)
-                    {
-                        if (MidsContext.Config is { BuildMode: Enums.dmModes.LevelUp })
+                        else
                         {
                             if (MainModule.MidsController.Toon != null)
                             {
-                                MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Level;
+                                if (MainModule.MidsController.Toon.CurrentBuild != null)
+                                {
+                                    var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
+                                    if (eMutex == Enums.eMutex.NoConflict | eMutex == Enums.eMutex.NoGroup)
+                                    {
+                                        MidsContext.Character.CurrentBuild.Powers[hIDPower].StatInclude = true;
+                                        MidsContext.Character.CurrentBuild.Powers[hIDPower].Power.Active = true;
+                                    }
+                                }
                             }
-
-                            MidsContext.Character.ResetLevel();
                         }
-                        MainModule.MidsController.Toon?.BuildSlot(hIDPower, slotID);
-                        PowerModified(true);
-                        LastClickPlacedSlot = false;
-                        if (!dvAnchored.PetInfo.HasEmptyBasePower)
-                            dvAnchored.PetInfo.ExecuteUpdate();
+
+                        MidsContext.Character.Validate();
                     }
-                    else
+
+                    EnhancementModified();
+                    LastClickPlacedSlot = false;
+                }
+                else if (ProcToggleClicked(hIDPower, drawing.ScaleUp(e.X), drawing.ScaleUp(e.Y)) & e.Button == MouseButtons.Left)
+                {
+                    var powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDPower];
+                    if (!flag && powerEntry.CanIncludeForStats() && powerEntry.HasProc())
                     {
-                        if (e.Button == MouseButtons.Left & !EnhPickerActive)
+                        powerEntry.ProcInclude = !powerEntry.ProcInclude;
+                    }
+
+                    //EnhancementModified();
+                    RedrawSinglePower(ref powerEntry, true, true);
+                    LastClickPlacedSlot = false;
+                }
+                else if (e.Button == MouseButtons.Left & ModifierKeys == Keys.Alt)
+                {
+                    MainModule.MidsController.Toon?.BuildPower(
+                        MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPowerset,
+                        MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower);
+                    PowerModified(true);
+                    LastClickPlacedSlot = false;
+                }
+                else if (e.Button == MouseButtons.Left & ModifierKeys == Keys.Shift & slotID > -1)
+                {
+                    if (MidsContext.Config is { BuildMode: Enums.dmModes.LevelUp })
+                    {
+                        if (MainModule.MidsController.Toon != null)
                         {
-                            if (MidsContext.Config.BuildMode == Enums.dmModes.Normal & flag)
-                            {
-                                if (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1)
-                                {
-                                    if (MainModule.MidsController.Toon != null)
-                                    {
-                                        MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
-                                    }
-
-                                    UpdatePowerLists();
-                                    DoRedraw();
-                                    return;
-                                }
-                            }
-                            else if (MidsContext.Config.BuildMode == Enums.dmModes.Respec & flag)
-                            {
-                                if (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1)
-                                {
-                                    if (MainModule.MidsController.Toon != null)
-                                    {
-                                        MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
-                                    }
-
-                                    UpdatePowerLists();
-                                    DoRedraw();
-                                    return;
-                                }
-                            }
-                            else
-                            {
-                                if (MainModule.MidsController.Toon != null && MainModule.MidsController.Toon.BuildSlot(hIDPower) > -1)
-                                {
-                                    // adding a slot by itself doesn't really change the build substantially without an enh going into it
-                                    // var powerEntryArray = DeepCopyPowerList();
-                                    // RearrangeAllSlotsInBuild(powerEntryArray, true);
-                                    // ShallowCopyPowerList(powerEntryArray);
-                                    PowerModified(false);
-                                    DoRedraw();
-                                    PowerModified(false);
-                                    LastClickPlacedSlot = true;
-                                    MidsContext.Config.Tips.Show(Tips.TipType.FirstSlot);
-                                    return;
-                                }
-
-                                LastClickPlacedSlot = false;
-                            }
+                            MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Level;
                         }
 
-                        if (e.Button == MouseButtons.Middle & slotID > -1 & !MidsContext.Config.DisableRepeatOnMiddleClick)
+                        MidsContext.Character.ResetLevel();
+                    }
+                    MainModule.MidsController.Toon?.BuildSlot(hIDPower, slotID);
+                    PowerModified(true);
+                    LastClickPlacedSlot = false;
+                    if (!dvAnchored.PetInfo.HasEmptyBasePower)
+                        dvAnchored.PetInfo.ExecuteUpdate();
+                }
+                else
+                {
+                    if (e.Button == MouseButtons.Left & !EnhPickerActive)
+                    {
+                        if (MidsContext.Config.BuildMode == Enums.dmModes.Normal & flag)
                         {
-                            EnhancingSlot = slotID;
-                            EnhancingPower = hIDPower;
-                            _gfxDrawing = true;
-                            I9Picker_EnhancementPicked(GetRepeatEnhancement(hIDPower, slotID));
-                            _gfxDrawing = false;
-                            EnhancementModified();
+                            if (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1)
+                            {
+                                if (MainModule.MidsController.Toon != null)
+                                {
+                                    MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
+                                }
+
+                                UpdatePowerLists();
+                                DoRedraw();
+                                return;
+                            }
+                        }
+                        else if (MidsContext.Config.BuildMode == Enums.dmModes.Respec & flag)
+                        {
+                            if (MidsContext.Character.CurrentBuild.Powers[hIDPower].Level > -1)
+                            {
+                                if (MainModule.MidsController.Toon != null)
+                                {
+                                    MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[hIDPower].Level;
+                                }
+
+                                UpdatePowerLists();
+                                DoRedraw();
+                                return;
+                            }
+                        }
+                        else
+                        {
+                            if (MainModule.MidsController.Toon != null && MainModule.MidsController.Toon.BuildSlot(hIDPower) > -1)
+                            {
+                                // adding a slot by itself doesn't really change the build substantially without an enh going into it
+                                // var powerEntryArray = DeepCopyPowerList();
+                                // RearrangeAllSlotsInBuild(powerEntryArray, true);
+                                // ShallowCopyPowerList(powerEntryArray);
+                                PowerModified(false);
+                                DoRedraw();
+                                PowerModified(false);
+                                LastClickPlacedSlot = true;
+                                MidsContext.Config.Tips.Show(Tips.TipType.FirstSlot);
+                                return;
+                            }
+
+                            LastClickPlacedSlot = false;
+                        }
+                    }
+
+                    if (e.Button == MouseButtons.Middle & slotID > -1 & !MidsContext.Config.DisableRepeatOnMiddleClick)
+                    {
+                        EnhancingSlot = slotID;
+                        EnhancingPower = hIDPower;
+                        _gfxDrawing = true;
+                        I9Picker_EnhancementPicked(GetRepeatEnhancement(hIDPower, slotID));
+                        _gfxDrawing = false;
+                        EnhancementModified();
                             
-                            drawing.Refresh(new Rectangle(0, 0, pnlGFX.Width, pnlGFX.Height));
-                        }
-                        else if (e.Button == MouseButtons.Right & slotID > -1 && ModifierKeys != Keys.Shift)
+                        drawing.Refresh(new Rectangle(0, 0, pnlGFX.Width, pnlGFX.Height));
+                    }
+                    else if (e.Button == MouseButtons.Right & slotID > -1 && ModifierKeys != Keys.Shift)
+                    {
+                        EnhancingSlot = slotID;
+                        EnhancingPower = hIDPower;
+                        var enhancements = MainModule.MidsController.Toon?.GetEnhancements(hIDPower);
+                        PickerHID = hIDPower;
+                        if (!flag)
                         {
-                            EnhancingSlot = slotID;
-                            EnhancingPower = hIDPower;
-                            var enhancements = MainModule.MidsController.Toon?.GetEnhancements(hIDPower);
-                            PickerHID = hIDPower;
-                            if (!flag)
-                            {
-                                if (enhancements != null)
-                                    I9Picker.SetData(MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower,
-                                        ref MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement,
-                                        enhancements);
-                            }
-                            else if (enhancements != null)
-                            {
-                                I9Picker.SetData(-1,
+                            if (enhancements != null)
+                                I9Picker.SetData(MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower,
                                     ref MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement,
                                     enhancements);
-                            }
+                        }
+                        else if (enhancements != null)
+                        {
+                            I9Picker.SetData(-1,
+                                ref MidsContext.Character.CurrentBuild.Powers[hIDPower].Slots[slotID].Enhancement,
+                                enhancements);
+                        }
 
 
-                            var point = new Point(
-                                (int) Math.Round(pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value + e.X - I9Picker.Width / 2f),
-                                (int) Math.Round(pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value + e.Y - I9Picker.Height / 2f));
-                            if (point.Y < MenuBar.Height)
-                                point.Y = MenuBar.Height;
-                            Size clientSize;
-                            if (point.Y + I9Picker.Height > ClientSize.Height)
-                            {
-                                ref var local = ref point;
-                                clientSize = ClientSize;
-                                local.Y = clientSize.Height - I9Picker.Height;
-                            }
-
+                        var point = new Point(
+                            (int) Math.Round(pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value + e.X - I9Picker.Width / 2f),
+                            (int) Math.Round(pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value + e.Y - I9Picker.Height / 2f));
+                        if (point.Y < MenuBar.Height)
+                            point.Y = MenuBar.Height;
+                        Size clientSize;
+                        if (point.Y + I9Picker.Height > ClientSize.Height)
+                        {
+                            ref var local = ref point;
                             clientSize = ClientSize;
-                            if (point.X + I9Picker.Width > clientSize.Width)
-                            {
-                                ref var local = ref point;
-                                clientSize = ClientSize;
-                                var num2 = clientSize.Width - I9Picker.Width;
-                                local.X = num2;
-                            }
+                            local.Y = clientSize.Height - I9Picker.Height;
+                        }
 
-                            I9Picker.Location = point;
-                            I9Picker.BringToFront();
-                            _popupLastOpenTime = DateTime.Now.Ticks;
-                            I9Picker.Visible = true;
-                            I9Picker.Select();
-                            LastClickPlacedSlot = false;
-                        }
-                        else if (e.Button == MouseButtons.Right & ModifierKeys == Keys.Shift)
+                        clientSize = ClientSize;
+                        if (point.X + I9Picker.Width > clientSize.Width)
                         {
-                            //MidsContext.Character.PEnhancementsList.Clear();
-                            StartFlip(hIDPower);
+                            ref var local = ref point;
+                            clientSize = ClientSize;
+                            var num2 = clientSize.Width - I9Picker.Width;
+                            local.X = num2;
                         }
-                        else if (e.Button == MouseButtons.Right)
-                        {
-                            Info_Power(MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower, -1, true, true);
-                            LastClickPlacedSlot = false;
-                        }
+
+                        I9Picker.Location = point;
+                        I9Picker.BringToFront();
+                        _popupLastOpenTime = DateTime.Now.Ticks;
+                        I9Picker.Visible = true;
+                        I9Picker.Select();
+                        LastClickPlacedSlot = false;
+                    }
+                    else if (e.Button == MouseButtons.Right & ModifierKeys == Keys.Shift)
+                    {
+                        //MidsContext.Character.PEnhancementsList.Clear();
+                        StartFlip(hIDPower);
+                    }
+                    else if (e.Button == MouseButtons.Right)
+                    {
+                        Info_Power(MidsContext.Character.CurrentBuild.Powers[hIDPower].NIDPower, -1, true, true);
+                        LastClickPlacedSlot = false;
                     }
                 }
             }
@@ -7099,19 +7127,22 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void UpdateColors(bool skipDraw = false)
         {
-            myDataView.DrawVillain = !MidsContext.Character.IsHero();
-            bool draw;
-            draw = I9Picker.ForeColor.R != 96;
+            myDataView.DrawVillain = !MidsContext.Character.IsHero(); 
+            //var draw = I9Picker.ForeColor.R != 96; // Always true
             BackColor = Color.FromArgb(0, 0, 0);
+            
             lblATLocked.BackColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerTakenHero
                 : MidsContext.Config.RtFont.ColorPowerTakenVillain;
+            
             I9Picker.ForeColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                 : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
+            
             I9Picker.Selected = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
+            
             I9Picker.BackColor = BackColor;
             I9Popup.BackColor = Color.Black;
             I9Popup.ForeColor = I9Picker.ForeColor;
@@ -7124,11 +7155,15 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 llPrimary, llSecondary, llPool0, llPool1, llPool2, llPool3, llAncillary, lblName, lblAT, lblOrigin,
                 lblCharacter, pnlGFX
             };
+            
             foreach (var colorItem in toColor)
             {
                 colorItem.BackColor = BackColor;
-                if (!(colorItem is SkList ll))
+                if (colorItem is not SkList ll)
+                {
                     continue;
+                }
+
                 UpdateLLColors(ll);
                 //ll.Font = font;
             }
@@ -7137,24 +7172,32 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 lblLocked0, lblLocked1, lblLocked2, lblLocked3, lblLockedAncillary, lblLockedSecondary, lblATLocked
             };
-            foreach (var colorItem in toOtherColor) colorItem.BackColor = lblATLocked.BackColor;
+
+            foreach (var colorItem in toOtherColor)
+            {
+                colorItem.BackColor = lblATLocked.BackColor;
+            }
 
             foreach (var llControl in Controls.OfType<SkList>())
             {
                 llControl.ScrollBarColor = MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerTakenHero
                     : MidsContext.Config.RtFont.ColorPowerTakenVillain;
+                
                 llControl.ScrollButtonColor = MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                     : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
+                
                 llControl.UpdateTextColors(EItemState.Selected,
                     MidsContext.Character.IsHero()
                         ? MidsContext.Config.RtFont.ColorPowerTakenHero
                         : MidsContext.Config.RtFont.ColorPowerTakenVillain);
+                
                 llControl.UpdateTextColors(EItemState.SelectedDisabled,
                     MidsContext.Character.IsHero()
                         ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                         : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
+                
                 llControl.HoverColor = MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                     : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
@@ -7165,15 +7208,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 fRecipe.UpdateColorTheme();
             }
 
-            if (fSalvageHud != null && fSalvageHud.Visible)
+            if (fSalvageHud is { Visible: true })
             {
                 fSalvageHud.UpdateColorTheme();
             }
 
-            if (!draw)
-                return;
             if (!skipDraw)
+            {
                 DoRedraw();
+            }
+
             UpdateDmBuffer();
         }
 
@@ -7355,7 +7399,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void UpdateDmBuffer()
         {
-            if (MainModule.MidsController.Toon == null || MidsContext.Character == null) return;
+            if (MainModule.MidsController.Toon == null || MidsContext.Character == null)
+            {
+                return;
+            }
 
             Enums.ePowerState powerState;
             string? text;
@@ -7374,13 +7421,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     text = @"Power";
                     break;
                 default:
-                {
                     var slotsLeft = MainModule.MidsController.Toon.SlotsRemaining;
                     var slotText = slotsLeft > 9 ? @"Slots" : @"Slot";
                     powerState = Enums.ePowerState.Open;
                     text = $"{slotsLeft} {slotText}";
                     break;
-                }
             }
 
             if (MainModule.MidsController.Toon.Complete)
@@ -7393,8 +7438,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 text = @"Complete";
             }
 
-            if (ibDynMode.Lock && MidsContext.Config.BuildMode == Enums.dmModes.LevelUp) ibDynMode.Lock = false;
-            else if (MidsContext.Config.BuildMode != Enums.dmModes.LevelUp) ibDynMode.Lock = false;
+            if ((ibDynMode.Lock && MidsContext.Config.BuildMode == Enums.dmModes.LevelUp) || MidsContext.Config.BuildMode != Enums.dmModes.LevelUp)
+            {
+                ibDynMode.Lock = false;
+            }
+
             switch (powerState)
             {
                 case Enums.ePowerState.Used:
@@ -7405,8 +7453,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     ibDynMode.ToggleText.ToggledOn = text;
                     ibDynMode.ToggleState = ImageButtonEx.States.ToggledOn;
                     break;
-                default:
-                    throw new ArgumentOutOfRangeException();
             }
 
             if (!ibDynMode.Lock && MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
@@ -7419,21 +7465,26 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             iList.UpdateTextColors(EItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
             iList.UpdateTextColors(EItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
-            iList.UpdateTextColors(EItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
+            iList.UpdateTextColors(EItemState.Invalid, Color.FromArgb(255, 0, 0));
+            
             iList.ScrollBarColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerTakenHero
                 : MidsContext.Config.RtFont.ColorPowerTakenVillain;
+            
             iList.ScrollButtonColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                 : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
+            
             iList.UpdateTextColors(EItemState.Selected,
                 MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerTakenHero
                     : MidsContext.Config.RtFont.ColorPowerTakenVillain);
+            
             iList.UpdateTextColors(EItemState.SelectedDisabled,
                 MidsContext.Character.IsHero()
                     ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                     : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
+            
             iList.HoverColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
@@ -7683,7 +7734,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 .Distinct()
                 .ToList();
 
-            listPowersetsFull = new UniqueList<string>();
+            listPowersetsFull = [];
             foreach (var ps in psFullNames)
             {
                 listPowersetsFull.Add(ps);
@@ -7729,8 +7780,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     }
 
                     // Incarnate, Temps, Accolades
-                    if (powerEntryList[k].PowerSet?.FullName.StartsWith("Incarnate") == true |
-                        powerEntryList[k].PowerSet?.FullName.StartsWith("Temporary_Powers") == true)
+                    if ((powerEntryList[k].PowerSet?.FullName.StartsWith("Incarnate") == true) |
+                        (powerEntryList[k].PowerSet?.FullName.StartsWith("Temporary_Powers") == true))
                     {
                         if (!MidsContext.Character.CurrentBuild.PowerUsed(powerEntryList[k].Power))
                         {
@@ -7830,12 +7881,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
             else if (DatabaseAPI.Database.Levels[MidsContext.Character.Level].LevelType() == Enums.dmItem.Power)
             {
                 idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
-                drawing.HighlightSlot(-1);
+                drawing?.HighlightSlot(-1);
             }
 
             if (MainModule.MidsController.Toon.Complete)
             {
-                drawing.HighlightSlot(-1);
+                drawing?.HighlightSlot(-1);
             }
 
             if ((idx > -1) & (idx <= MidsContext.Character.CurrentBuild.Powers.Count))
@@ -7850,6 +7901,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             MidsContext.Archetype = MidsContext.Character.Archetype;
+            ToggleAlignment(MidsContext.Character.IsHero() ? Enums.Alignment.Hero : Enums.Alignment.Villain, false);
             MidsContext.Character.Validate();
             MidsContext.Character.Lock();
             MidsContext.Character.ResetLevel();
@@ -7859,10 +7911,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var powerEntryArray = DeepCopyPowerList();
             RearrangeAllSlotsInBuild(powerEntryArray, true);
             ShallowCopyPowerList(powerEntryArray);
-            PowerModified(false);
-            DoRedraw();
-
+            //PowerModified(false); // Handled by ToggleAlignment()
             MidsContext.Config.BuildMode = buildMode;
+            DoRedraw();
 
             // Update slots counter... maybe.
             // Turns out all this block is not needed. (I think)
