@@ -503,14 +503,14 @@ namespace Mids_Reborn.UI.Forms
             // 
             this.DlgOpen.InitialDirectory = MidsContext.Config.BuildsPath;
             this.DlgOpen.DefaultExt = "mbd";
-            this.DlgOpen.Filter = "All Supported Formats (*.mbd; *.mxd; *.txt)|*.mbd;*.mxd;*.txt|Character Builds (*.mbd)|*.mbd|Legacy Character Builds (*.mxd;*.txt)|*.mxd;*.txt|Game Export Builds (*.txt)|*.txt";
+            this.DlgOpen.Filter = "All Supported Formats (*.mbd; *.mxd; *.txt; *.json)|*.mbd;*.mxd;*.txt;*.json|Character Builds (*.mbd)|*.mbd|Legacy Character Builds (*.mxd; *.txt)|*.mxd;*.txt|Game Export Builds (*.txt)|*.txt|Vault Export Builds (*.json)|*.json";
             this.DlgOpen.FilterIndex = 1;
             // 
             // DlgSave
             // 
             this.DlgSave.InitialDirectory = MidsContext.Config.BuildsPath;
             this.DlgSave.DefaultExt = "mbd";
-            this.DlgSave.Filter = "Character Build, MBD Format (*.mbd)|*.mbd|Character Build, Legacy Format (*.mxd;)|*.mxd;";
+            this.DlgSave.Filter = "Character Build, MBD Format (*.mbd)|*.mbd|Character Build, Legacy Format (*.mxd)|*.mxd";
             // 
             // tTip
             // 

@@ -1,15 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Drawing;
-using System.Drawing.Text;
-using System.IO;
-using System.Linq;
-using System.Text;
-using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using System.Windows.Forms;
-using System.Windows.Forms.VisualStyles;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
@@ -27,7 +15,20 @@ using Mids_Reborn.UI.Forms.UpdateSystem;
 using Mids_Reborn.UI.Forms.WindowMenuItems;
 using MRBLogging;
 using MRBResourceLib;
+using Newtonsoft.Json;
 using RestSharp;
+using System;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.Drawing;
+using System.Drawing.Text;
+using System.IO;
+using System.Linq;
+using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
+using System.Windows.Forms;
+using System.Windows.Forms.VisualStyles;
 using Cursor = System.Windows.Forms.Cursor;
 using Cursors = System.Windows.Forms.Cursors;
 using KeyEventArgs = System.Windows.Forms.KeyEventArgs;
@@ -1531,6 +1532,10 @@ namespace Mids_Reborn.UI.Forms
             {
                 GameImport(fName);
             }
+            else if (fName.Trim(' ', '"').EndsWith(".json"))
+            {
+                VaultImport(fName);
+            }
             else if (MainModule.MidsController.Toon != null && !MainModule.MidsController.Toon.Load(fName, ref mStream))
             {
                 NewToon();
@@ -2655,8 +2660,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ToggleAlignment(Enums.Alignment? alignment = null, bool redraw = true)
         {
-            Debug.WriteLine($"ToggleAlignment(alignment={(alignment == null ? "null" : alignment)}, redraw: {redraw})");
-
             var nbUpdated = 0;
             if (MidsContext.Character != null)
             {
@@ -3070,16 +3073,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ibPrestigePowersEx_OnClick(object? sender, EventArgs e)
         {
-            var flag = false;
-            if (fPrestige == null)
-                flag = true;
-            else if (fPrestige.IsDisposed)
-                flag = true;
-            if (flag)
+            if (fPrestige == null || fPrestige.IsDisposed)
             {
-                var iParent = this;
                 var iPowers = DatabaseAPI.Database.Power.Where(power => power is { InherentType: Enums.eGridType.Prestige, PowerType: Enums.ePowerType.Toggle }).ToList();
-                fPrestige = new frmPrestige(iParent, iPowers);
+                fPrestige = new frmPrestige(this, iPowers);
             }
 
             if (fPrestige is { Visible: false })
@@ -6513,7 +6510,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 return;
             }*/
 
-            if (MainModule.MidsController.Toon?.Locked == true & FileModified)
+            if ((MainModule.MidsController.Toon?.Locked == true) & FileModified)
             {
                 FloatTop(false);
                 var msgBoxResult = MessageBox.Show("Current hero/villain data will be discarded, are you sure?",
@@ -6553,12 +6550,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     LoadCharacterFile(newBuild);
                     break;
 
-                default:
-                    if (DlgOpen.FileName.EndsWith(".txt"))
-                    {
-                        DoOpen(DlgOpen.FileName);
-                    }
-                    
+                case var jsonBuild when DlgOpen.FileName.EndsWith(".json"):
+                    DoOpen(jsonBuild);
+                    break;
+
+                case var txtBuild when DlgOpen.FileName.EndsWith(".txt"):
+                    DoOpen(txtBuild);
                     break;
             }
             FloatTop(true);
@@ -7667,6 +7664,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
     
         private void GameImport(string? buildString)
         {
+            if (buildString == null)
+            {
+                return;
+            }
+
             try
             {
                 var importHandle = new ImportFromBuildsave(buildString);
@@ -7675,6 +7677,41 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 if (listPowers == null) return;
 
                 InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo());
+            }
+            catch (Exception e)
+            {
+                MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
+            }
+        }
+
+        private void VaultImport(string? buildString)
+        {
+            if (buildString == null)
+            {
+                return;
+            }
+
+            try
+            {
+                var fSize = new FileInfo(buildString).Length;
+                if (fSize > 1048576) // 1 MB
+                {
+                    throw new FileFormatException("JSON build cannot exceed 1 MB.\r\nIf you need more, download more RAM as necessary.");
+                }
+
+                var jsonBuild = JsonConvert.DeserializeObject<JsonBuild>(File.ReadAllText(buildString), new JsonSerializerSettings
+                {
+                    MissingMemberHandling = MissingMemberHandling.Error
+                });
+
+                if (jsonBuild == null)
+                {
+                    return;
+                }
+
+                Debug.WriteLine($"JSON Build for {jsonBuild?.CharacterBuildInfo.CharacterInfo.Name} ({jsonBuild?.CharacterBuildInfo.CharacterInfo.Archetype}) - Powers: {jsonBuild?.CharacterBuildInfo.Powers.Length} - IsOk: {jsonBuild?.IsOk}");
+
+                InjectBuild(jsonBuild);
             }
             catch (Exception e)
             {
@@ -7958,6 +7995,322 @@ The default position/state will be used upon next launch.", @"Window State Warni
             MidsContext.Character.Validate();
             MidsContext.Config.LastFileName = buildFile;
             */
+        }
+
+        private void InjectBuild(JsonBuild? jsonBuild)
+        {
+            var s = Stopwatch.StartNew();
+
+            if (jsonBuild == null)
+            {
+                return;
+            }
+
+            var buildMode = MidsContext.Config.BuildMode;
+
+            if (buildMode == Enums.dmModes.LevelUp)
+            {
+                MidsContext.Config.BuildMode = Enums.dmModes.Respec;
+            }
+
+            // Set basic character info: archetype, name, origin
+            var archetype = DatabaseAPI.GetArchetypeByClassName(jsonBuild.CharacterBuildInfo.CharacterInfo.Archetype);
+            MidsContext.Character.Archetype = archetype;
+            MidsContext.Character.Name = string.IsNullOrWhiteSpace(jsonBuild.CharacterBuildInfo.CharacterInfo.Name)
+                ? ""
+                : jsonBuild.CharacterBuildInfo.CharacterInfo.Name;
+            I9Gfx.SetOrigin(jsonBuild.CharacterBuildInfo.CharacterInfo.Origin);
+            MidsContext.Character.Origin = I9Gfx.OriginIndex;
+
+            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Get archetype done");
+
+            // Fetch allowed Prestige, Accolades, Temps
+            var allowedPrestigePowers = Mids_Reborn.VaultImport.GetPrestigePowers()
+                .Where(e => e != null)
+                .Select(e => e?.FullName)
+                .ToArray();
+
+            var allowedAccoladePowers = Mids_Reborn.VaultImport.GetAccolades(archetype?.Hero == false ? Enums.Alignment.Villain : Enums.Alignment.Hero)
+                .Where(e => e != null)
+                .Select(e => e?.FullName)
+                .ToArray();
+
+            var allowedTempPowers = Mids_Reborn.VaultImport.GetTempPowers()
+                .Where(e => e != null)
+                .Select(e => e?.FullName)
+                .ToArray();
+
+            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Get Prestige, Accolade, Temps done");
+
+            // Get unique powersets from build
+            var listPowersetsFull = jsonBuild.CharacterBuildInfo.Powers
+                .Select(e => e.FullPowerSetName)
+                .Distinct()
+                .ToList();
+            
+
+            // Get trunk powersets (for VEATs)
+            var listPowersets = new UniqueList<string>();
+            var trunkPowersets = listPowersetsFull
+                .Select(e => DatabaseAPI.GetPowersetByFullname(e) ?? null)
+                .Where(e => e is { SetType: Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary, nIDTrunkSet: > -1 })
+                .Select(e => Mids_Reborn.VaultImport.CheckForPowersetAliases(ImportBase.FixPowersetsNames(DatabaseAPI.Database.Powersets[e.nIDTrunkSet].FullName), jsonBuild.CharacterBuildInfo.CharacterInfo.Archetype))
+                .ToList();
+
+            foreach (var ps in listPowersetsFull)
+            {
+                if (!trunkPowersets.Contains(ps))
+                {
+                    listPowersets.Add(ps);
+                }
+            }
+
+            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Powersets: {string.Join(", ", listPowersets)}");
+            
+            // Get powers
+            var sl = new SlotLevelQueue();
+            var listPowers = new List<PowerEntry?>();
+            foreach (var p in jsonBuild.CharacterBuildInfo.Powers)
+            {
+                var pName = Mids_Reborn.VaultImport.CheckForAliases(p.FullName);
+                var powerIdx = DatabaseAPI.Database.Power.TryFindIndex(e => e?.FullName.Equals(pName, StringComparison.InvariantCultureIgnoreCase) == true);
+                var dbPower = powerIdx < 0 || powerIdx >= DatabaseAPI.Database.Power.Length ? null : DatabaseAPI.Database.Power[powerIdx];
+                
+                if (powerIdx < 0 || dbPower == null)
+                {
+                    Debug.WriteLine($"  Power: {p.FullName} -> {pName} - not found in db");
+
+                    continue;
+                }
+
+                //Debug.WriteLine($"  Power: {p.FullName} -> {pName} - found in db at index {powerIdx} (Inherent Type: {dbPower.InherentType})");
+                // Filter out unavailable Accolade/Prestige/Temp
+                switch (dbPower.InherentType)
+                {
+                    case Enums.eGridType.Accolade:
+                        if (!allowedAccoladePowers.Contains(dbPower.FullName))
+                        {
+                            continue;
+                        }
+
+                        break;
+
+                    case Enums.eGridType.Prestige:
+                        if (!allowedPrestigePowers.Contains(dbPower.FullName))
+                        {
+                            continue;
+                        }
+
+                        break;
+
+                    case Enums.eGridType.Temp:
+                        if (!allowedTempPowers.Contains(dbPower.FullName))
+                        {
+                            continue;
+                        }
+
+                        break;
+                }
+                
+
+                var slots = !dbPower.Slottable
+                    ? []
+                    : p.Boosts.Select(f => new SlotEntry
+                    {
+                        Level = f.Index == 0 ? p.LevelPicked : sl.PickSlot(),
+                        IsInherent = false,
+                        Enhancement = new I9Slot
+                        {
+                            Enh = DatabaseAPI.GetEnhancementByUIDName(f.Enhancement?.UID.Replace("Synthetic_", "")),
+                            Grade = Enums.eEnhGrade.SingleO,
+                            IOLevel = f.Level - 1
+                        },
+                        FlippedEnhancement = new I9Slot()
+                    }).ToArray();
+
+                var pe = new PowerEntry
+                {
+                    IDXPower = dbPower.PowerSetIndex,
+                    Level = p.LevelPicked - 1,
+                    NIDPower = dbPower.PowerIndex,
+                    NIDPowerset = dbPower.PowerSetID,
+                    ProcInclude = false,
+                    Slots = slots,
+                    StatInclude = false,
+                    VariableValue = dbPower.VariableEnabled
+                        ? Math.Max(dbPower.VariableMin, Math.Min(dbPower.VariableMax, dbPower.VariableStart))
+                        : 0
+                };
+
+                if (pe is { Level: 0, Power.FullSetName: "Pool.Fitness" })
+                {
+                    pe.NIDPower = ImportBase.OldFitnessPoolIDs[pe.NIDPower];
+                    pe.NIDPowerset = dbPower.PowerSetID;
+                    pe.IDXPower = dbPower.PowerSetIndex;
+                }
+
+                listPowers.Add(pe);
+            }
+
+            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Powers: {string.Join(", ", listPowers.Select(e => $"{e?.Power?.FullName ?? "(null)"} ({e?.Level + 1})"))}");
+
+            // Initialize stacking values (inside PowerEntries)
+            foreach (var pe in listPowers)
+            {
+                if (pe?.Power == null || pe.NIDPower < 0 || DatabaseAPI.Database.Power[pe.NIDPower] == null || !DatabaseAPI.Database.Power[pe.NIDPower]!.VariableEnabled)
+                {
+                    continue;
+                }
+
+                pe.Power.Stacks = pe.VariableValue;
+            }
+
+            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Initialize power stacks done");
+
+            // Need to pad pools powers list so there are 4
+            // So epic pools doesn't end up shown as a regular pool...
+            ImportBase.FilterVEATPools(ref listPowersets);
+            ImportBase.FixUndetectedPowersets(ref listPowersets);
+            ImportBase.FinalizePowersetsList(ref listPowersets, listPowers, trunkPowersets);
+            ImportBase.PadPowerPools(ref listPowersets);
+            ImportBase.FilterTempPowersets(ref listPowersets);
+            ImportBase.SortPowersets(ref listPowersets);
+
+            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Fix pools done");
+
+            var toBlameSet = string.Empty;
+            MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
+            MidsContext.Character.CurrentBuild.LastPower = 24;
+            //MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
+
+            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Load powersets done");
+
+            var powerEntryList = listPowers.OrderBy(x => x?.Level).ToList();
+            for (var k = 0; k < listPowers.Count; k++)
+            {
+                if (powerEntryList[k].PowerSet?.FullName.Contains("Inherent") == true)
+                {
+                    continue;
+                }
+
+                // Incarnate, Temps, Accolades
+                if ((powerEntryList[k].PowerSet?.FullName.StartsWith("Incarnate") == true) |
+                    (powerEntryList[k].PowerSet?.FullName.StartsWith("Temporary_Powers") == true))
+                {
+                    if (!MidsContext.Character.CurrentBuild.PowerUsed(powerEntryList[k].Power))
+                    {
+                        MidsContext.Character.CurrentBuild.AddPower(powerEntryList[k].Power, 49).StatInclude = true;
+                    }
+
+                    continue;
+                }
+
+                // Regular powers
+                PowerPickedNoRedraw(powerEntryList[k].NIDPowerset, powerEntryList[k].NIDPower);
+            }
+            
+            sl = new SlotLevelQueue();
+            foreach (var pe in MidsContext.Character.CurrentBuild.Powers)
+            {
+                if (pe?.Power == null)
+                {
+                    continue; // Not picked power will be in the list, but not instantiated!
+                }
+
+                var pList = powerEntryList.Where(e => pe.Power.FullName == e.Power?.FullName).ToArray();
+                if (pList.Length == 0)
+                {
+                    continue;
+                }
+
+                if (!DatabaseAPI.Database.Power[pe.NIDPower].Slottable)
+                {
+                    continue;
+                }
+
+                if (DatabaseAPI.Database.Power[pe.NIDPower].VariableEnabled)
+                {
+                    var initialStacks = Math.Max(DatabaseAPI.Database.Power[pe.NIDPower].VariableMin,
+                        Math.Min(DatabaseAPI.Database.Power[pe.NIDPower].VariableMax,
+                            DatabaseAPI.Database.Power[pe.NIDPower].VariableStart));
+                    pe.VariableValue = initialStacks;
+                    pe.Power.Stacks = initialStacks;
+                }
+
+                var p = pList.First();
+                while (pe.Slots.Length < p.Slots.Length)
+                {
+                    pe.AddSlot(Character.MaxLevel);
+                }
+
+                p.Slots.CopyTo(pe.Slots, 0);
+                for (var i = 0; i < pe.Slots.Length; i++)
+                {
+                    pe.Slots[i].Level = i == 0 ? pe.Level : sl.PickSlot();
+                }
+            }
+            
+            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Load powers done");
+
+            FixStatIncludes();
+            FileModified = false;
+            MidsContext.Character.Lock();
+            MidsContext.Character.PoolShuffle();
+            MidsContext.Config.LastFileName = "";
+            LastFileName = "";
+
+            SetEnhCheckModePosition();
+            SetTitleBar();
+
+            var idx = -1;
+            if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
+            {
+                idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex(MainModule.MidsController.Toon.RequestedLevel);
+                if (idx < 0)
+                {
+                    idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
+                }
+            }
+            else if (DatabaseAPI.Database.Levels[MidsContext.Character.Level].LevelType() == Enums.dmItem.Power)
+            {
+                idx = MainModule.MidsController.Toon.GetFirstAvailablePowerIndex();
+                drawing?.HighlightSlot(-1);
+            }
+
+            if (MainModule.MidsController.Toon.Complete)
+            {
+                drawing?.HighlightSlot(-1);
+            }
+
+            if ((idx > -1) & (idx <= MidsContext.Character.CurrentBuild.Powers.Count))
+            {
+                MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[idx].Level;
+                MidsContext.Character.SetLevelTo(MidsContext.Character.CurrentBuild.Powers[idx].Level);
+            }
+            else
+            {
+                MidsContext.Character.RequestedLevel = Character.MaxLevel;
+                MidsContext.Character.SetLevelTo(Character.MaxLevel);
+            }
+
+            MidsContext.Archetype = MidsContext.Character.Archetype;
+            ToggleAlignment(MidsContext.Character.IsHero() ? Enums.Alignment.Hero : Enums.Alignment.Villain, false);
+            MidsContext.Character.Validate();
+            MidsContext.Character.Lock();
+            MidsContext.Character.ResetLevel();
+            MidsContext.Character.PoolShuffle();
+            MidsContext.Character.Validate();
+            var powerEntryArray = DeepCopyPowerList();
+            RearrangeAllSlotsInBuild(powerEntryArray, true);
+            ShallowCopyPowerList(powerEntryArray);
+            //PowerModified(false); // Handled by ToggleAlignment()
+            MidsContext.Config.BuildMode = buildMode;
+
+            s.Stop();
+            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Finalize build done");
+            Debug.WriteLine($"JSON build load complete");
+
+            DoRedraw();
         }
 
         internal int[] GetCbPoolsIndices(bool includeAncillary = true)

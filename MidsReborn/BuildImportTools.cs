@@ -35,7 +35,7 @@ namespace Mids_Reborn
             "Inherent.Inherent.Category_Five_Lightning"
         ];
 
-        protected Dictionary<int, int> OldFitnessPoolIDs { get; } = new()
+        public static Dictionary<int, int> OldFitnessPoolIDs { get; } = new()
         {
             [2553] = 1521,
             [2554] = 1523,
@@ -251,7 +251,7 @@ namespace Mids_Reborn
             return (DatabaseAPI.DatabaseName != "Rebirth" || input?.DisplayName != "Disintegrating") && input != null && !ExcludePowers.Any(p => input.FullName.Contains(p));
         }
 
-        protected string FixPowersetsNames(string powersetName)
+        public static string FixPowersetsNames(string powersetName)
         {
             return powersetName.Replace("Warshade_Defensive.Umbral_Aura.", "Inherent.Inherent.")
                 .Replace("Warshade_Offensive.Umbral_Blast.", "Inherent.Inherent.")
@@ -408,10 +408,10 @@ namespace Mids_Reborn
     }
     #endregion
 
-    #region Import from /buildsave .txt builds
+    #region Import from /buildsave .txt builds / forum posts
     public class ImportFromBuildsave : ImportBase
     {
-        private readonly int HeaderSize = 4; // Number of lines before actual build data
+        protected readonly int HeaderSize = 4; // Number of lines before actual build data
 
         public ImportFromBuildsave(string buildString)
         {
@@ -421,7 +421,7 @@ namespace Mids_Reborn
         }
 
         // Some power internal names differs from game
-        private string CheckForAliases(string fullName)
+        public static string CheckForAliases(string fullName)
         {
             return fullName.ToLowerInvariant() switch
             {
@@ -478,7 +478,7 @@ namespace Mids_Reborn
             };
         }
 
-        private string CheckForPowersetAliases(string fullName, string archetype)
+        public static string CheckForPowersetAliases(string fullName, string archetype)
         {
             archetype = archetype.ToLowerInvariant();
             
@@ -603,7 +603,7 @@ namespace Mids_Reborn
                     // Enhancement: internal name, level, (dummy), boosters
                     var e = new RawEnhData
                     {
-                        InternalName = DatabaseAPI.GetEnhancementBaseUIDName(m3.Groups[1].Value),
+                        InternalName = DatabaseAPI.GetEnhancementBaseUIDName(m3.Groups[1].Value.Replace("Synthetic_", "")),
                         Level = Convert.ToInt32(m3.Groups[2].Value, null),
                         Boosters = (m3.Groups.Count > 3) & !string.IsNullOrWhiteSpace(m3.Groups[4].Value)
                             ? Convert.ToInt32(m3.Groups[4].Value, null)
@@ -1349,6 +1349,194 @@ namespace Mids_Reborn
             }
 
             return listPowers;
+        }
+    }
+    #endregion
+
+    #region Import from JSON HC Vault builds
+    public static class VaultImport
+    {
+        public static string CheckForAliases(string fullName)
+        {
+            return fullName.ToLowerInvariant() switch
+            {
+                "pool.flight.afterburner" => "Pool.Flight.Evasive_Maneuvers",
+                "peacebringer_defensive.luminous_aura.quantum_acceleration" => "Peacebringer_Defensive.Luminous_Aura.Quantum_Maneuvers",
+                "dominator_control.illusion_control.invisibility" => "Dominator_Control.Illusion_Control.Superior_Invisibility",
+                "dominator_control.illusion_control.decoy" => "Dominator_Control.Illusion_Control.Phantom_Army",
+                "dominator_control.illusion_control.spectral_terror" => "Dominator_Control.Illusion_Control.Spectral_Terrror",
+                "blaster_support.tactical_arrow.quickness" => "Blaster_Support.Tactical_Arrow.Gymnastics",
+                "blaster_support.tactical_arrow.gymnastics" => "Blaster_Support.Tactical_Arrow.Oil_Slick_Arrow",
+                "blaster_support.electricity_manipulation.lightning_clap" => "Blaster_Support.Electricity_Manipulation.Lightning_Field",
+                "blaster_support.electricity_manipulation.lightning_field" => "Blaster_Support.Electricity_Manipulation.Lightning_Clap",
+                "teamwork.widow_teamwork.pain_tolerance" => "Teamwork.Widow_Teamwork.NW_Pain_Tolerance",
+                "teamwork.fortunata_teamwork.fate_sealed" => "Teamwork.Fortunata_Teamwork.FRT_Fate_Sealed",
+                "pool.speed.speedphase" => "Inherent.Inherent.Speed_Phase",
+                "defender_buff.shock_therapy.discharge" => "Defender_Buff.Shock_Therapy.Galvanic_Sentinel",
+                "controller_buff.shock_therapy.discharge" => "Controller_Buff.Electrical_Affinity.Galvanic_Sentinel",
+                "corruptor_buff.shock_therapy.discharge" => "Corruptor_Buff.Electrical_Affinity.Galvanic_Sentinel",
+                "mastermind_buff.shock_therapy.discharge" => "Mastermind_Buff.Electrical_Affinity.Galvanic_Sentinel",
+                "defender_buff.shock_therapy.defibrillate" => "Defender_Buff.Shock_Therapy.Defibrilate",
+                "controller_buff.shock_therapy.defibrillate" => "Controller_Buff.Electrical_Affinity.Defibrilate",
+                "corruptor_buff.shock_therapy.defibrillate" => "Corruptor_Buff.Electrical_Affinity.Defibrilate",
+                "mastermind_buff.shock_therapy.defibrillate" => "Mastermind_Buff.Electrical_Affinity.Defibrilate",
+                "defender_buff.electrical_affinity.discharge" => "Defender_Buff.Shock_Therapy.Galvanic_Sentinel",
+                "controller_buff.electrical_affinity.discharge" => "Controller_Buff.Electrical_Affinity.Galvanic_Sentinel",
+                "corruptor_buff.electrical_affinity.discharge" => "Corruptor_Buff.Electrical_Affinity.Galvanic_Sentinel",
+                "mastermind_buff.electrical_affinity.discharge" => "Mastermind_Buff.Electrical_Affinity.Galvanic_Sentinel",
+                "defender_buff.electrical_affinity.defibrillate" => "Defender_Buff.Shock_Therapy.Defibrilate",
+                "controller_buff.electrical_affinity.defibrillate" => "Controller_Buff.Electrical_Affinity.Defibrilate",
+                "corruptor_buff.electrical_affinity.defibrillate" => "Corruptor_Buff.Electrical_Affinity.Defibrilate",
+                "mastermind_buff.electrical_affinity.defibrillate" => "Mastermind_Buff.Electrical_Affinity.Defibrilate",
+                "controller_buff.marine_affinity.call_depths" => "Controller_Buff.Marine_Affinity.Power_of_the_Depths",
+                "corruptor_buff.marine_affinity.call_depths" => "Corruptor_Buff.Marine_Affinity.Power_of_the_Depths",
+                "defender_buff.marine_affinity.call_depths" => "Defender_Buff.Marine_Affinity.Power_of_the_Depths",
+                "mastermind_buff.marine_affinity.call_depths" => "Mastermind_Buff.Marine_Affinity.Power_of_the_Depths",
+                "controller_control.arsenal_control.gun_drone" => "Controller_Control.Arsenal_Control.Tri_Cannon",
+                "dominator_control.arsenal_control.gun_drone" => "Dominator_Control.Arsenal_Control.Tri_Cannon",
+                "blaster_ranged.storm_blast.aim" => "Blaster_Ranged.Storm_Blast.Intensify",
+                "corruptor_ranged.storm_blast.aim" => "Corruptor_Ranged.Storm_Blast.Intensify",
+                "defender_ranged.storm_blast.aim" => "Defender_Ranged.Storm_Blast.Intensify",
+                "sentinel_ranged.storm_blast.aim" => "Sentinel_Ranged.Storm_Blast.Intensify",
+                "dominator_control.pyrotechnic_control.sparkling_field" => "Dominator_Control.Pyrotechnic_Control.Sparkling_Chain",
+                "dominator_control.pyrotechnic_control.glitz" => "Dominator_Control.Pyrotechnic_Control.Multipurpose_Missiles",
+                "controller_control.pyrotechnic_control.sparkling_field" => "Controller_Control.Pyrotechnic_Control.Sparkling_Chain",
+                "controller_control.pyrotechnic_control.glitz" => "Controller_Control.Pyrotechnic_Control.Multipurpose_Missiles",
+                "brute_defense.psionic_armor.fortify_mind" => "Brute_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "scrapper_defense.psionic_armor.fortify_mind" => "Scrapper_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "sentinel_defense.psionic_armor.fortify_mind" => "Sentinel_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "stalker_defense.psionic_armor.fortify_mind" => "Stalker_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "tanker_defense.psionic_armor.fortify_mind" => "Tanker_Defense.Psionic_Armor.Psychokinetic_Barrier",
+                "stalker_melee.sonic_melee.assassins_resonance" => "Stalker_Melee.Sonic_Melee.Assassins_Whisper",
+
+                "prestige.prestige_utility.prestige_inspirationgrant" => "Inherent.Inherent.Prestige_InspirationGrant",
+                "prestige.prestige_utility.prestige_selfrez" => "Inherent.Inherent.prestige_SelfRez",
+                "prestige.prestige_utility.prestige_permanent_selfdestruction" => "Inherent.Inherent.prestige_Permanent_SelfDestruction",
+                "prestige.prestige_utility.mystic_fortune" => "Inherent.Inherent.Mystic_Fortune",
+                "prestige.prestige_utility.secondary_mutation" => "Inherent.Inherent.Secondary_Mutation",
+                "prestige.prestige_utility.prestige_reveal" => "Inherent.Inherent.prestige_reveal",
+                "prestige.prestige_utility.shadowy_presence" => "Inherent.Inherent.Shadowy_Presence",
+                "prestige.prestige_utility.portable_workbench" => "Temporary_Powers.Accolades.Portable_Workbench",
+                "prestige.prestige_travel.prestige_jump_pack_temp" => "Inherent.Inherent.prestige_Jump_Pack_Temp",
+                "prestige.prestige_travel.prestige_team_recall" => "Inherent.Inherent.prestige_Team_Recall",
+                "prestige.prestige_travel.prestige_base_teleport" => "Inherent.Inherent.prestige_Base_Teleport",
+                "prestige.prestige_travel.prestige_mission_teleport" => "Inherent.Inherent.prestige_Mission_Teleport",
+                "prestige.prestige_travel.prestige_ninja_run" => "Inherent.Inherent.Prestige_Ninja_Run",
+                "prestige.prestige_travel.prestige_beast_run" => "Inherent.Inherent.Prestige_Beast_Run",
+                "prestige.prestige_travel.prestige_steam_jump" => "Inherent.Inherent.Prestige_Steam_Jump",
+                "prestige.prestige_travel.alt_hover_board" => "Inherent.Inherent.Alt_Hover_Board",
+                "prestige.prestige_travel.team_transporter" => "Inherent.Inherent.Team_Transporter",
+                "prestige.fun.snowball" => "Inherent.Inherent.SnowBall",
+                "prestige.combat_pets.prestige_bluewisp_pet" => "Inherent.Inherent.prestige_BlueWisp_Pet",
+                "prestige.combat_pets.prestige_redwisp_pet" => "Inherent.Inherent.prestige_RedWisp_Pet",
+                "prestige.combat_pets.prestige_darkfairy_pet" => "Inherent.Inherent.prestige_DarkFairy_Pet",
+                "prestige.combat_pets.prestige_fairy_pet" => "Inherent.Inherent.prestige_Fairy_Pet",
+                "prestige.combat_pets.prestige_powerdrone_pet" => "Inherent.Inherent.prestige_PowerDrone_Pet",
+                "prestige.combat_pets.prestige_shielddrone_pet" => "Inherent.Inherent.prestige_ShieldDrone_Pet",
+                "prestige.combat_pets.prestige_poweroscillator_pet" => "Inherent.Inherent.prestige_PowerOscillator_Pet",
+                "prestige.combat_pets.prestige_shieldoscillator_pet" => "Inherent.Inherent.prestige_ShieldOscillator_Pet",
+                "prestige.prestige_attacks.prestige_permanent_undead_slaying_axe" => "Temporary_Powers.Temporary_Powers.Undead_Slaying_Axe",
+                "prestige.prestige_attacks.prestige_permanent_sands_of_mu" => "Inherent.Inherent.prestige_Permanent_Sands_of_Mu",
+                "prestige.prestige_attacks.prestige_permanent_nemesis_staff" => "Inherent.Inherent.prestige_Permanent_Nemesis_Staff",
+                "prestige.prestige_attacks.prestige_permanent_nemesis_staff_54" => "Inherent.Inherent.prestige_Permanent_Nemesis_Staff_54",
+                "prestige.prestige_attacks.prestige_permanent_blackwand" => "Inherent.Inherent.prestige_Permanent_Blackwand",
+                "prestige.prestige_attacks.prestige_permanent_blackwand_54" => "Inherent.Inherent.prestige_Permanent_Blackwand_54",
+                "prestige.prestige_attacks.brawl_charm" => "Temporary_Powers.Temporary_Powers.Brawl_Charm",
+                "prestige.prestige_attacks.brawl_mutagen" => "Temporary_Powers.Temporary_Powers.Brawl_Mutagen",
+                "prestige.prestige_attacks.brawl_taser" => "Temporary_Powers.Temporary_Powers.Brawl_Taser",
+                "prestige.prestige_attacks.brawl_knives" => "Temporary_Powers.Temporary_Powers.Brawl_Knives",
+                "prestige.prestige_attacks.brawl_tranq" => "Temporary_Powers.Temporary_Powers.Brawl_Tranq",
+
+                _ => fullName
+            };
+        }
+
+        public static string CheckForPowersetAliases(string fullName, string archetype)
+        {
+            return ImportFromBuildsave.CheckForPowersetAliases(fullName, archetype);
+        }
+
+        private static IPower? GetMxDAccoladePower()
+        {
+            if (MainModule.MidsController.Toon == null)
+            {
+                return null;
+            }
+
+            return MainModule.MidsController.Toon.IsHero()
+                ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)]  // Inherent.Inherent.MxD_Accolades_Hero
+                : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)]; // Inherent.Inherent.MxD_Accolades_Villain
+        }
+
+        private static IPower? GetMxDAccoladePower(Enums.Alignment alignment)
+        {
+            if (MainModule.MidsController.Toon == null)
+            {
+                return null;
+            }
+
+            return alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante or Enums.Alignment.Resistance
+                ? DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3257)]  // Inherent.Inherent.MxD_Accolades_Hero
+                : DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3258)]; // Inherent.Inherent.MxD_Accolades_Villain
+        }
+
+        public static IPower?[] GetAccolades()
+        {
+            var mxdAccoladePower = GetMxDAccoladePower();
+            if (mxdAccoladePower == null)
+            {
+                return [];
+            }
+
+            return mxdAccoladePower.NIDSubPower
+                .Where(t => t > -1)
+                .Select(t => DatabaseAPI.Database.Power[t])
+                .OfType<IPower>()
+                .Where(p =>
+                    p.ClickBuff ||
+                    p.PowerType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle)
+                .ToArray();
+        }
+
+        public static IPower?[] GetAccolades(Enums.Alignment alignment)
+        {
+            var mxdAccoladePower = GetMxDAccoladePower(alignment);
+            if (mxdAccoladePower == null)
+            {
+                return [];
+            }
+
+            return mxdAccoladePower.NIDSubPower
+                .Where(t => t > -1)
+                .Select(t => DatabaseAPI.Database.Power[t])
+                .OfType<IPower>()
+                .Where(p =>
+                    p.ClickBuff ||
+                    p.PowerType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle)
+                .ToArray();
+        }
+
+        public static IPower?[] GetPrestigePowers()
+        {
+            return DatabaseAPI.Database.Power
+                .Where(power => power is { InherentType: Enums.eGridType.Prestige, PowerType: Enums.ePowerType.Toggle })
+                .ToArray();
+        }
+
+        public static IPower?[] GetTempPowers()
+        {
+            // Inherent.Inherent.MxD_Temps
+            var basePower = DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3259)];
+            if (basePower == null)
+            {
+                return [];
+            }
+            
+            return basePower.NIDSubPower
+                .Select(t => DatabaseAPI.Database.Power[t])
+                .OfType<IPower>()
+                .Where(p => p.ClickBuff || p.PowerType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle)
+                .ToArray();
         }
     }
     #endregion

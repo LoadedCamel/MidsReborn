@@ -170,9 +170,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public float BaseThreat { get; set; }
 
-        public bool Hero => ClassType == Enums.eClassType.Hero || ClassType == Enums.eClassType.HeroEpic;
+        public bool Hero => ClassType is Enums.eClassType.Hero or Enums.eClassType.HeroEpic;
 
-        public bool Epic => ClassType == Enums.eClassType.HeroEpic || ClassType == Enums.eClassType.VillainEpic;
+        public bool Epic => ClassType is Enums.eClassType.HeroEpic or Enums.eClassType.VillainEpic;
 
         public int CompareTo(object obj)
         {

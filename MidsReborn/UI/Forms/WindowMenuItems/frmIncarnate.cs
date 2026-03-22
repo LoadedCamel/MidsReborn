@@ -200,9 +200,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private void ToggleButtons(IncarnateGroup? newGroup = null)
         {
             var changedGroup = newGroup == null || newGroup != _currentIncarnateGroup;
-            Debug.WriteLine($"ToggleButtons({(newGroup == null ? "null" : newGroup)}): changedGroup: {changedGroup}");
+            //Debug.WriteLine($"ToggleButtons({(newGroup == null ? "null" : newGroup)}): changedGroup: {changedGroup}");
             newGroup ??= _currentIncarnateGroup;
-            Debug.WriteLine($"  New group: {newGroup}, Current group: {_currentIncarnateGroup}");
+            //Debug.WriteLine($"  New group: {newGroup}, Current group: {_currentIncarnateGroup}");
 
             if (!changedGroup)
             {
@@ -227,7 +227,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         {
             foreach (var g in _buttons)
             {
-                Debug.WriteLine($"EnableButtons({g.Key}): {DatabaseAPI.ServerData.EnabledIncarnates[g.Key.ToString()]}");
+                //Debug.WriteLine($"EnableButtons({g.Key}): {DatabaseAPI.ServerData.EnabledIncarnates[g.Key.ToString()]}");
                 g.Value.EnabledState = DatabaseAPI.ServerData.EnabledIncarnates[g.Key.ToString()]
                     ? ImageButtonEx.EnabledStates.Enabled
                     : DisabledButtonStyle;

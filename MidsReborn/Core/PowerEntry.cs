@@ -26,8 +26,8 @@ namespace Mids_Reborn.Core
             }
 
             Tag = false;
-            Slots = Array.Empty<SlotEntry>();
-            SubPowers = Array.Empty<PowerSubEntry>();
+            Slots = [];
+            SubPowers = [];
             VariableValue = 0;
             ProcInclude = false;
             InherentSlotsUsed = 0;
@@ -59,7 +59,7 @@ namespace Mids_Reborn.Core
                 }
                 else
                 {
-                    SubPowers = Array.Empty<PowerSubEntry>();
+                    SubPowers = [];
                 }
 
                 if (power.Slottable & (power.GetPowerSet()?.GroupName != "Incarnate"))
@@ -72,7 +72,7 @@ namespace Mids_Reborn.Core
                 }
                 else
                 {
-                    Slots = Array.Empty<SlotEntry>();
+                    Slots = [];
                 }
 
                 if (power.PowerType is Enums.ePowerType.Toggle or Enums.ePowerType.Auto_ & power.AlwaysToggle)
@@ -85,8 +85,8 @@ namespace Mids_Reborn.Core
                 IDXPower = -1;
                 NIDPowerset = -1;
                 NIDPower = -1;
-                Slots = Array.Empty<SlotEntry>();
-                SubPowers = Array.Empty<PowerSubEntry>();
+                Slots = [];
+                SubPowers = [];
             }
 
             Tag = false;
