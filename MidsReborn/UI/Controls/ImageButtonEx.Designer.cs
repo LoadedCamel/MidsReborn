@@ -37,7 +37,6 @@
             this.Name = "ImageButtonEx";
             this.Size = new System.Drawing.Size(100, 30);
             this.ResumeLayout(false);
-
         }
 
         #endregion

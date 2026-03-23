@@ -663,10 +663,15 @@ namespace Mids_Reborn.UI.Forms
             for (var index = 0; index < DatabaseAPI.Database.Classes.Length; index++)
             {
                 if (!DatabaseAPI.Database.Classes[index].Playable)
+                {
                     continue;
+                }
+
                 ++num1;
                 if (num1 == iIndirect)
+                {
                     return index;
+                }
             }
 
             return 0;
@@ -3056,12 +3061,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             if (fIncarnate is { Visible: false })
             {
-                ibIncarnatePowersEx.ToggleState = ImageButtonEx.States.ToggledOn;
+                //ibIncarnatePowersEx.ToggleState = ImageButtonEx.States.ToggledOn;
                 fIncarnate.Show(this);
             }
             else
             {
-                ibIncarnatePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+                //ibIncarnatePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
                 fIncarnate?.Close();
             }
         }
@@ -3081,12 +3086,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             if (fPrestige is { Visible: false })
             {
-                ibPrestigePowersEx.ToggleState = ImageButtonEx.States.ToggledOn;
+                //ibPrestigePowersEx.ToggleState = ImageButtonEx.States.ToggledOn;
                 fPrestige.Show(this);
             }
             else
             {
-                ibPrestigePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+                //ibPrestigePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
                 fPrestige?.Close();
             }
         }

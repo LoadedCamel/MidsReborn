@@ -35,8 +35,8 @@ namespace Mids_Reborn.UI.Controls
         private new event EventHandler<Color>? ForeColorChanged;
         private event EventHandler<Image?>? ImageChanged;
         private new event EventHandler<string?>? TextChanged;
-        private event EventHandler<bool> ThreeStateChanged;
-        private event EventHandler<EnabledStates> EnabledStateChanged;
+        private event EventHandler<bool>? ThreeStateChanged;
+        private event EventHandler<EnabledStates>? EnabledStateChanged;
         private event EventHandler<ButtonTypes>? ButtonTypeChanged;
         private event EventHandler<bool>? UseAltChanged;
         private event EventHandler<MouseButtons>? ToggleMouseButtonChanged;
@@ -299,6 +299,13 @@ namespace Mids_Reborn.UI.Controls
             }
         }
 
+        [Description("Indicate button state and change style accordingly.")]
+        [Category("Appearance")]
+        [Browsable(true)]
+        [EditorBrowsable(EditorBrowsableState.Always)]
+        [Bindable(true)]
+        [DefaultValue(EnabledStates.Enabled)]
+        [DesignerSerializationVisibility(DesignerSerializationVisibility.Visible)]
         public EnabledStates EnabledState
         {
             get => _enabledState;
@@ -388,9 +395,14 @@ namespace Mids_Reborn.UI.Controls
 
             private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
             {
-                if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+                if (EqualityComparer<T>.Default.Equals(field, value))
+                {
+                    return false;
+                }
+
                 field = value;
                 OnPropertyChanged(propertyName);
+                
                 return true;
             }
         }
@@ -427,9 +439,14 @@ namespace Mids_Reborn.UI.Controls
 
             private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
             {
-                if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+                if (EqualityComparer<T>.Default.Equals(field, value))
+                {
+                    return false;
+                }
+
                 field = value;
                 OnPropertyChanged(propertyName);
+                
                 return true;
             }
         }
@@ -465,9 +482,14 @@ namespace Mids_Reborn.UI.Controls
 
             private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
             {
-                if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+                if (EqualityComparer<T>.Default.Equals(field, value))
+                {
+                    return false;
+                }
+
                 field = value;
                 OnPropertyChanged(propertyName);
+                
                 return true;
             }
         }
@@ -533,9 +555,14 @@ namespace Mids_Reborn.UI.Controls
 
             private bool SetField<T>(ref T field, T value, [CallerMemberName] string? propertyName = null)
             {
-                if (EqualityComparer<T>.Default.Equals(field, value)) return false;
+                if (EqualityComparer<T>.Default.Equals(field, value))
+                {
+                    return false;
+                }
+
                 field = value;
                 OnPropertyChanged(propertyName);
+                
                 return true;
             }
         }
@@ -562,7 +589,11 @@ namespace Mids_Reborn.UI.Controls
             UseAltChanged += OnUseAltChanged;
             ToggleMouseButtonChanged += OnToggleMouseButtonChanged;
             VerticalDisplayChanged += OnVerticalDisplayChanged;
-            if (_currentTextColor == Color.Empty) _currentTextColor = _foreColor;
+            if (_currentTextColor == Color.Empty)
+            {
+                _currentTextColor = _foreColor;
+            }
+
             InitializeComponent();
             Images = new BaseImages();
             Images.PropertyChanged += ImagesOnPropertyChanged;
@@ -595,38 +626,56 @@ namespace Mids_Reborn.UI.Controls
 
         private void ImagesOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Background") ImageChanged?.Invoke(this, Images?.Background);
+            if (e.PropertyName == "Background")
+            {
+                ImageChanged?.Invoke(this, Images?.Background);
+            }
         }
 
         private void ImagesAltOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (e.PropertyName == "Background") ImageChanged?.Invoke(this, ImagesAlt?.Background);
+            if (e.PropertyName == "Background")
+            {
+                ImageChanged?.Invoke(this, ImagesAlt?.Background);
+            }
         }
 
         private void ImagesDisOnPropertyChanged(object? sender, PropertyChangedEventArgs e)
         {
-            if (_enabledState == EnabledStates.Enabled) return;
+            if (_enabledState == EnabledStates.Enabled)
+            {
+                return;
+            }
 
             if (e.PropertyName is "Gloss" or "Flat")
-                ImageChanged?.Invoke(this,
-                    _enabledState == EnabledStates.DisabledGloss ? ImagesDis?.Gloss : ImagesDis?.Flat);
+            {
+                ImageChanged?.Invoke(this, _enabledState == EnabledStates.DisabledGloss ? ImagesDis?.Gloss : ImagesDis?.Flat);
+            }
         }
 
         private void OnUseAltChanged(object? sender, bool e)
         {
-            if (Images == null) return;
+            if (Images == null)
+            {
+                return;
+            }
+
             var usedImage = e switch
             {
                 true => ImagesAlt?.Background,
                 false => Images?.Background
             };
+
             ImageChanged?.Invoke(this, usedImage);
             Refresh();
         }
 
         private void OnMouseUp(object? sender, MouseEventArgs e)
         {
-            if (_enabledState != EnabledStates.Enabled) return;
+            if (_enabledState != EnabledStates.Enabled)
+            {
+                return;
+            }
 
             if (ButtonType == ButtonTypes.Normal)
             {
@@ -636,7 +685,10 @@ namespace Mids_Reborn.UI.Controls
 
         private void OnMouseDown(object? sender, MouseEventArgs e)
         {
-            if (_enabledState != EnabledStates.Enabled) return;
+            if (_enabledState != EnabledStates.Enabled)
+            {
+                return;
+            }
 
             switch (ButtonType)
             {
@@ -644,8 +696,16 @@ namespace Mids_Reborn.UI.Controls
                     ForeColorChanged?.Invoke(this, ColorWhenClicked);
                     break;
                 case ButtonTypes.Toggle:
-                    if (e.Button != _toggleMouseButton) return;
-                    if (Lock) return;
+                    if (e.Button != _toggleMouseButton)
+                    {
+                        return;
+                    }
+
+                    if (Lock)
+                    {
+                        return;
+                    }
+
                     if (!_isThreeState)
                     {
                         StateChanged?.Invoke(this,
@@ -678,49 +738,93 @@ namespace Mids_Reborn.UI.Controls
         private void OnMouseLeave(object? sender, EventArgs e)
         {
             Image? usedImage;
-            if (_setByToggle) return;
-            if (_enabledState != EnabledStates.Enabled) return;
+            if (_setByToggle)
+            {
+                return;
+            }
+
+            if (_enabledState != EnabledStates.Enabled)
+            {
+                return;
+            }
+
+            if ((_enabledState == EnabledStates.Enabled) & (_state == States.ToggledOn))
+            {
+                return;
+            }
+
             switch (UseAlt)
             {
                 case true:
                     if (ImagesAlt?.Background == null || _currentImage == ImagesAlt?.Background ||
-                        _currentImage != ImagesAlt?.Hover) return;
+                        _currentImage != ImagesAlt?.Hover)
+                    {
+                        return;
+                    }
+
                     usedImage = ImagesAlt?.Background;
                     break;
                 case false:
                     if (Images?.Background == null || _currentImage == Images?.Background ||
-                        _currentImage != Images?.Hover) return;
+                        _currentImage != Images?.Hover)
+                    {
+                        return;
+                    }
+
                     usedImage = Images?.Background;
                     break;
             }
 
             _mouseOver = false;
             ImageChanged?.Invoke(this, usedImage);
-            Refresh();
         }
 
         private void OnMouseEnter(object? sender, EventArgs e)
         {
-            if (_setByToggle) return;
-            if (_enabledState != EnabledStates.Enabled) return;
+            if (_setByToggle)
+            {
+                return;
+            }
+
+            if (_enabledState != EnabledStates.Enabled)
+            {
+                return;
+            }
+
+            if ((_enabledState == EnabledStates.Enabled) & (_state == States.ToggledOn))
+            {
+                return;
+            }
+
             var control = sender as ImageButtonEx;
-            if (control?.Name != Name) return;
+            if (control?.Name != Name)
+            {
+                return;
+            }
+
             Image? usedImage;
             switch (UseAlt)
             {
                 case true:
-                    if (ImagesAlt?.Hover == null) return;
+                    if (ImagesAlt?.Hover == null)
+                    {
+                        return;
+                    }
+
                     usedImage = ImagesAlt?.Hover;
                     break;
                 case false:
-                    if (Images?.Hover == null) return;
+                    if (Images?.Hover == null)
+                    {
+                        return;
+                    }
+
                     usedImage = Images?.Hover;
                     break;
             }
 
             _mouseOver = true;
             ImageChanged?.Invoke(this, usedImage);
-            Refresh();
         }
 
         private void OnButtonTypeChanged(object? sender, ButtonTypes e)
@@ -744,12 +848,14 @@ namespace Mids_Reborn.UI.Controls
         private void OnForeColorChanged(object? sender, Color e)
         {
             _currentTextColor = e;
+
             Refresh();
         }
 
         private void OnFontChanged(object? sender, Font e)
         {
             _font = e;
+
             Refresh();
         }
 
@@ -761,36 +867,69 @@ namespace Mids_Reborn.UI.Controls
         private void OnEnabledStateChanged(object? sender, EnabledStates e)
         {
             _enabledState = e;
-            _currentImage = e switch
-            {
-                EnabledStates.DisabledGloss => ImagesDis?.Gloss,
-                EnabledStates.DisabledFlat => ImagesDis?.Flat,
-                EnabledStates.Enabled when UseAlt => _mouseOver ? ImagesAlt?.Hover : ImagesAlt?.Background,
-                _ => _mouseOver ? Images?.Hover : Images?.Background
-            };
+            OnImageChanged(this);
         }
 
-        private void OnImageChanged(object? sender, Image? e)
+        private void OnImageChanged(object? sender, Image? e = null)
         {
-            if (e != null) _currentImage = e;
+            if (e != null)
+            {
+                _currentImage = e;
+            }
+
+            SetButtonGraphicsState();
+
             Refresh();
+        }
+
+        private void SetButtonGraphicsState()
+        {
+            _currentImage = _enabledState switch
+            {
+                // Forced ToggledOn, stays always in this state
+                EnabledStates.Enabled when _state == States.ToggledOn => _useAlt ? ImagesAlt?.Hover : Images?.Hover,
+
+                // Enabled (ToggledOff or Indeterminate), mouse over effect
+                EnabledStates.Enabled => _mouseOver
+                    ? _useAlt ? ImagesAlt?.Hover : Images?.Hover
+                    : _useAlt
+                        ? ImagesAlt?.Background
+                        : Images?.Background,
+
+                // Disabled (flat style)
+                EnabledStates.DisabledFlat => ImagesDis?.Flat,
+
+                // Disabled (glossy style)
+                EnabledStates.DisabledGloss => ImagesDis?.Gloss,
+
+                _ => _currentImage
+            };
         }
 
         private void OnTextChanged(object? sender, string? e)
         {
-            if (e != null) CurrentText = e;
+            if (e != null)
+            {
+                CurrentText = e;
+            }
+
             Refresh();
         }
 
         private void OnStateChanged(object? sender, States state)
         {
-            if (ButtonType != ButtonTypes.Toggle || Lock) return;
+            if (ButtonType != ButtonTypes.Toggle || Lock)
+            {
+                return;
+            }
+
             switch (state)
             {
                 case States.ToggledOff:
                     TextChanged?.Invoke(this, ToggleText.ToggledOff);
                     if (!ThreeState)
                     {
+                        _mouseOver = false;
                         switch (UseAlt)
                         {
                             case true:
@@ -824,15 +963,20 @@ namespace Mids_Reborn.UI.Controls
 
                     break;
                 case States.Indeterminate:
-                    if (_isThreeState) TextChanged?.Invoke(this, ToggleText.Indeterminate);
+                    if (_isThreeState)
+                    {
+                        TextChanged?.Invoke(this, ToggleText.Indeterminate);
+                    }
+
                     break;
                 default:
                     throw new ArgumentOutOfRangeException(nameof(state), state, null);
             }
 
             _state = state;
-        }
 
+            Refresh();
+        }
         #endregion
 
         protected override void OnPaint(PaintEventArgs e)
@@ -848,41 +992,53 @@ namespace Mids_Reborn.UI.Controls
 
             if (_displayVertically)
             {
-                if (_currentImage == null) return;
+                if (_currentImage == null)
+                {
+                    return;
+                }
+
                 // Rotate the image
                 var bmp = new Bitmap(_currentImage);
                 bmp.RotateFlip(RotateFlipType.Rotate90FlipNone);
                 var rotatedImage = bmp; // Assuming a 90-degree rotation
 
                 // Calculate the total height of the text
-                if (CurrentText == null) return;
+                if (CurrentText == null)
+                {
+                    return;
+                }
+
                 var totalTextHeight = CurrentText.Select(c => e.Graphics.MeasureString(c.ToString(), Font)).Sum(size => size.Height);
 
                 // Start drawing the text from this vertical position to center it.
                 var verticalTextPosition = (float)Math.Round((ClientSize.Height - totalTextHeight) / 2f);
-                
+
                 // Draw the rotated and resized image
                 e.Graphics.DrawImage(rotatedImage, ClientRectangle);
 
                 // Draw the vertical text in the image
                 DrawVerticalText(e, verticalTextPosition);
+
+                return;
             }
-            else
-            {
-                // Fallback to original drawing logic for horizontal text and full image display
-                DrawHorizontalTextAndImage(e);
-            }
+            
+            // Fallback to original drawing logic for horizontal text and full image display
+            DrawHorizontalTextAndImage(e);
         }
 
         private void DrawVerticalText(PaintEventArgs e, float verticalPosition)
         {
             using var brush = new SolidBrush(_currentTextColor);
             var horizontalCenter = ClientSize.Width / 2f;
-            if (CurrentText == null) return;
+            if (CurrentText == null)
+            {
+                return;
+            }
+
             foreach (var character in CurrentText)
             {
                 var charSize = e.Graphics.MeasureString(character.ToString(), Font);
-                var charPosition = new PointF(horizontalCenter - (charSize.Width / 2), verticalPosition);
+                var charPosition = new PointF(horizontalCenter - charSize.Width / 2f, verticalPosition);
                 e.Graphics.DrawString(character.ToString(), Font, brush, charPosition);
                 verticalPosition += charSize.Height;
             }
@@ -914,5 +1070,20 @@ namespace Mids_Reborn.UI.Controls
             e.Graphics.DrawPath(outlinePen, gfxPath);
             e.Graphics.FillPath(brush, gfxPath);
         }
+
+        private string CheckCurrentImage() =>
+            _currentImage switch
+            {
+                _ when _currentImage == Images?.Background => "Images.Background",
+                _ when _currentImage == Images?.Hover => "Images.Hover",
+
+                _ when _currentImage == ImagesAlt?.Background => "ImagesAlt.Background",
+                _ when _currentImage == ImagesAlt?.Hover => "ImagesAlt.Hover",
+
+                _ when _currentImage == ImagesDis?.Flat => "ImagesDis.Flat",
+                _ when _currentImage == ImagesDis?.Gloss => "ImagesDis.Gloss",
+
+                _ => "(no image set)"
+            };
     }
 }

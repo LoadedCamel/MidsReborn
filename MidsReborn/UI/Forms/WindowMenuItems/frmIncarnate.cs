@@ -211,15 +211,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             foreach (var g in _buttons)
             {
-                if (newGroup == g.Key)
-                {
-                    g.Value.ToggleState = ImageButtonEx.States.ToggledOn;
-                    g.Value.Invalidate();
-
-                    continue;
-                }
-                
-                g.Value.ToggleState = ImageButtonEx.States.ToggledOff;
+                g.Value.ToggleState = newGroup == g.Key ? ImageButtonEx.States.ToggledOn : ImageButtonEx.States.ToggledOff;
+                g.Value.Invalidate();
             }
         }
 
@@ -227,7 +220,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         {
             foreach (var g in _buttons)
             {
-                //Debug.WriteLine($"EnableButtons({g.Key}): {DatabaseAPI.ServerData.EnabledIncarnates[g.Key.ToString()]}");
                 g.Value.EnabledState = DatabaseAPI.ServerData.EnabledIncarnates[g.Key.ToString()]
                     ? ImageButtonEx.EnabledStates.Enabled
                     : DisabledButtonStyle;
