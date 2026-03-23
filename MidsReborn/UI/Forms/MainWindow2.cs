@@ -7701,7 +7701,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                 var jsonBuild = JsonConvert.DeserializeObject<JsonBuild>(File.ReadAllText(buildString), new JsonSerializerSettings
                 {
-                    MissingMemberHandling = MissingMemberHandling.Error
+                    MissingMemberHandling = MissingMemberHandling.Ignore
                 });
 
                 if (jsonBuild == null)
@@ -7999,8 +7999,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void InjectBuild(JsonBuild? jsonBuild)
         {
-            var s = Stopwatch.StartNew();
-
             if (jsonBuild == null)
             {
                 return;
@@ -8022,8 +8020,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
             I9Gfx.SetOrigin(jsonBuild.CharacterBuildInfo.CharacterInfo.Origin);
             MidsContext.Character.Origin = I9Gfx.OriginIndex;
 
-            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Get archetype done");
-
             // Fetch allowed Prestige, Accolades, Temps
             var allowedPrestigePowers = Mids_Reborn.VaultImport.GetPrestigePowers()
                 .Where(e => e != null)
@@ -8039,8 +8035,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 .Where(e => e != null)
                 .Select(e => e?.FullName)
                 .ToArray();
-
-            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Get Prestige, Accolade, Temps done");
 
             // Get unique powersets from build
             var listPowersetsFull = jsonBuild.CharacterBuildInfo.Powers
@@ -8065,8 +8059,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 }
             }
 
-            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Powersets: {string.Join(", ", listPowersets)}");
-            
             // Get powers
             var sl = new SlotLevelQueue();
             var listPowers = new List<PowerEntry?>();
@@ -8078,8 +8070,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 
                 if (powerIdx < 0 || dbPower == null)
                 {
-                    Debug.WriteLine($"  Power: {p.FullName} -> {pName} - not found in db");
-
                     continue;
                 }
 
@@ -8111,22 +8101,32 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                         break;
                 }
-                
 
-                var slots = !dbPower.Slottable
-                    ? []
-                    : p.Boosts.Select(f => new SlotEntry
-                    {
-                        Level = f.Index == 0 ? p.LevelPicked : sl.PickSlot(),
-                        IsInherent = false,
-                        Enhancement = new I9Slot
+                var slots = new List<SlotEntry>();
+                if (dbPower.Slottable)
+                {
+                    var boosts = p.Boosts.OrderBy(e => e.Index).ToArray();
+                    slots.AddRange(from b in boosts
+                        let enh = DatabaseAPI.GetEnhancementByUIDName(Mids_Reborn.VaultImport.FormatEnhancementUidLC(b.BoostName.ToLowerInvariant()), true)
+                        let dbEnh = enh < 0 || enh >= DatabaseAPI.Database.Enhancements.Length
+                            ? null
+                            : DatabaseAPI.Database.Enhancements[enh]
+                        select new SlotEntry
                         {
-                            Enh = DatabaseAPI.GetEnhancementByUIDName(f.Enhancement?.UID.Replace("Synthetic_", "")),
-                            Grade = Enums.eEnhGrade.SingleO,
-                            IOLevel = f.Level - 1
-                        },
-                        FlippedEnhancement = new I9Slot()
-                    }).ToArray();
+                            Level = b.Index == 0 ? p.LevelPicked : sl.PickSlot(),
+                            IsInherent = false,
+                            Enhancement = new I9Slot
+                            {
+                                Enh = enh,
+                                Grade = Enums.eEnhGrade.SingleO,
+                                IOLevel = b.BoostName.StartsWith("attuned_", StringComparison.InvariantCultureIgnoreCase)
+                                    ? dbEnh?.LevelMax ?? b.Level - 1 // Adjust attuned enhancements to max level since Mids doesn't handle that
+                                    : b.Level - 1,
+                                RelativeLevel = b.RelativeLevel
+                            },
+                            FlippedEnhancement = new I9Slot()
+                        });
+                }
 
                 var pe = new PowerEntry
                 {
@@ -8135,7 +8135,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     NIDPower = dbPower.PowerIndex,
                     NIDPowerset = dbPower.PowerSetID,
                     ProcInclude = false,
-                    Slots = slots,
+                    Slots = slots.ToArray(),
                     StatInclude = false,
                     VariableValue = dbPower.VariableEnabled
                         ? Math.Max(dbPower.VariableMin, Math.Min(dbPower.VariableMax, dbPower.VariableStart))
@@ -8152,8 +8152,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 listPowers.Add(pe);
             }
 
-            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Powers: {string.Join(", ", listPowers.Select(e => $"{e?.Power?.FullName ?? "(null)"} ({e?.Level + 1})"))}");
-
             // Initialize stacking values (inside PowerEntries)
             foreach (var pe in listPowers)
             {
@@ -8165,8 +8163,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 pe.Power.Stacks = pe.VariableValue;
             }
 
-            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Initialize power stacks done");
-
             // Need to pad pools powers list so there are 4
             // So epic pools doesn't end up shown as a regular pool...
             ImportBase.FilterVEATPools(ref listPowersets);
@@ -8176,14 +8172,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
             ImportBase.FilterTempPowersets(ref listPowersets);
             ImportBase.SortPowersets(ref listPowersets);
 
-            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Fix pools done");
-
             var toBlameSet = string.Empty;
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
             MidsContext.Character.CurrentBuild.LastPower = 24;
             //MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
-
-            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Load powersets done");
 
             var powerEntryList = listPowers.OrderBy(x => x?.Level).ToList();
             for (var k = 0; k < listPowers.Count; k++)
@@ -8250,8 +8242,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 }
             }
             
-            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Load powers done");
-
             FixStatIncludes();
             FileModified = false;
             MidsContext.Character.Lock();
@@ -8295,20 +8285,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             MidsContext.Archetype = MidsContext.Character.Archetype;
             ToggleAlignment(MidsContext.Character.IsHero() ? Enums.Alignment.Hero : Enums.Alignment.Villain, false);
-            MidsContext.Character.Validate();
+            MidsContext.Character.Validate(); // ??
             MidsContext.Character.Lock();
             MidsContext.Character.ResetLevel();
             MidsContext.Character.PoolShuffle();
-            MidsContext.Character.Validate();
+            MidsContext.Character.Validate(); // ??
             var powerEntryArray = DeepCopyPowerList();
             RearrangeAllSlotsInBuild(powerEntryArray, true);
             ShallowCopyPowerList(powerEntryArray);
             //PowerModified(false); // Handled by ToggleAlignment()
             MidsContext.Config.BuildMode = buildMode;
-
-            s.Stop();
-            Debug.WriteLine($"[{s.ElapsedMilliseconds} ms] Finalize build done");
-            Debug.WriteLine($"JSON build load complete");
 
             DoRedraw();
         }

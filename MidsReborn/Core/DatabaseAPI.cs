@@ -983,7 +983,7 @@ namespace Mids_Reborn.Core
             {
                 if (uidName.Contains(e.Key))
                 {
-                    return uidName.Replace(e.Key, e.Value);
+                    return uidName.Replace(e.Key, e.Value, StringComparison.InvariantCultureIgnoreCase);
                 }
             }
 

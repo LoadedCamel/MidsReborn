@@ -6,7 +6,6 @@ namespace Mids_Reborn.Core;
 
 public class JsonBuild
 {
-    [JsonRequired]
     [JsonProperty("ok")]
     public bool IsOk { get; set; } // Unused. Assuming --all-- are ok!
 
@@ -23,6 +22,12 @@ public class JsonBuild
         [JsonRequired]
         [JsonProperty("powers")]
         public Power[] Powers { get; set; } = [];
+
+        [JsonProperty("buildNum")]
+        public int BuildIndex { get; set; } = 1;
+
+        [JsonProperty("dbBuildNum")]
+        public int DbBuildIndex { get; set; }
     }
 
     public class CharacterInfo
@@ -85,6 +90,7 @@ public class JsonBuild
     public class Boost
     {
         private int _index;
+        private int _boostLevel;
 
         // Null index is auto-granted slot.
         // Assign index 0 in this case.
@@ -111,9 +117,28 @@ public class JsonBuild
         [JsonProperty("level")]
         public int Level { get; set; } = 1;
 
+        [JsonProperty("numCombines")]
+        public int? BoostLevel
+        {
+            get => _boostLevel;
+            set => _boostLevel = value ?? 0;
+        }
+
         public string PowerFullName => string.IsNullOrWhiteSpace(CategoryName) & string.IsNullOrWhiteSpace(PowerSetName) & string.IsNullOrWhiteSpace(BoostName)
             ? ""
             : $"{CategoryName}.{PowerSetName}.{BoostName}";
+
+        public bool IsIOAttuned => !string.IsNullOrEmpty(PowerFullName) && PowerFullName.StartsWith("Attuned_");
+
+        public Enums.eEnhRelative RelativeLevel => _boostLevel switch
+        {
+            1 => Enums.eEnhRelative.PlusOne,
+            2 => Enums.eEnhRelative.PlusTwo,
+            3 => Enums.eEnhRelative.PlusThree,
+            4 => Enums.eEnhRelative.PlusFour,
+            5 => Enums.eEnhRelative.PlusFive,
+            _ => Enums.eEnhRelative.Even
+        };
 
         public IPower? BoostPower =>
             DatabaseAPI.Database.Power
@@ -123,6 +148,6 @@ public class JsonBuild
         public IEnhancement? Enhancement =>
             DatabaseAPI.Database.Enhancements
                 .DefaultIfEmpty(null)
-                .FirstOrDefault(e => e != null && e.UID.Equals(BoostName, StringComparison.InvariantCultureIgnoreCase));
+                .FirstOrDefault(e => e != null && e.UID.Equals(VaultImport.FormatEnhancementUid(BoostName), StringComparison.InvariantCultureIgnoreCase));
     }
 }

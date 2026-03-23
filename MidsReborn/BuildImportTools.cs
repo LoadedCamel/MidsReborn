@@ -1,4 +1,7 @@
 ﻿#nullable enable
+using Mids_Reborn.Core;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Master_Classes;
 using System;
 using System.Collections.Generic;
 using System.Diagnostics;
@@ -6,9 +9,6 @@ using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
-using Mids_Reborn.Core;
-using Mids_Reborn.Core.Base.Data_Classes;
-using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn
 {
@@ -1356,6 +1356,11 @@ namespace Mids_Reborn
     #region Import from JSON HC Vault builds
     public static class VaultImport
     {
+        private static readonly Regex SORegex = new(@"^(Science|Mutation|Technology|Natural)_(?!Science|Mutation|Technology|Natural|Magic)");
+        private static readonly Regex DORegex = new(@"^(Science|Mutation|Technology|Natural|Magic)_(Science|Mutation|Technology|Natural|Magic)");
+        private static readonly Regex SORegexLC = new(@"^(science|mutation|technology|natural)_(?!science|mutation|technology|natural|magic)");
+        private static readonly Regex DORegexLC = new(@"^(science|mutation|technology|natural|magic)_(science|mutation|technology|natural|magic)");
+
         public static string CheckForAliases(string fullName)
         {
             return fullName.ToLowerInvariant() switch
@@ -1537,6 +1542,56 @@ namespace Mids_Reborn
                 .OfType<IPower>()
                 .Where(p => p.ClickBuff || p.PowerType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle)
                 .ToArray();
+        }
+
+        public static string FormatEnhancementUid(string uid)
+        {
+            if (string.IsNullOrWhiteSpace(uid))
+            {
+                return "";
+            }
+
+            uid = Regex.Replace(uid
+                    .Replace("Synthetic_", "")
+                    .Replace("Artillery", "Shrapnel"),
+                @"^Attuned_", "Crafted_");
+
+            if (SORegex.IsMatch(uid))
+            {
+                uid = SORegex.Replace(uid, "Magic_");
+            }
+
+            if (DORegex.IsMatch(uid))
+            {
+                uid = DORegex.Replace(uid, "Magic");
+            }
+
+            return uid;
+        }
+
+        public static string FormatEnhancementUidLC(string uid)
+        {
+            if (string.IsNullOrWhiteSpace(uid))
+            {
+                return "";
+            }
+
+            uid = Regex.Replace(uid
+                    .Replace("synthetic_", "")
+                    .Replace("artillery", "shrapnel"),
+                @"^attuned_", "crafted_");
+
+            if (SORegexLC.IsMatch(uid))
+            {
+                uid = SORegexLC.Replace(uid, "magic_");
+            }
+
+            if (DORegexLC.IsMatch(uid))
+            {
+                uid = DORegexLC.Replace(uid, "magic");
+            }
+
+            return uid;
         }
     }
     #endregion
