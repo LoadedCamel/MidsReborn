@@ -1452,6 +1452,16 @@ namespace Mids_Reborn
                 "prestige.prestige_attacks.brawl_knives" => "Temporary_Powers.Temporary_Powers.Brawl_Knives",
                 "prestige.prestige_attacks.brawl_tranq" => "Temporary_Powers.Temporary_Powers.Brawl_Tranq",
 
+                "temporary_powers.day_job_powers.day_job_movement_increase_lesser" => "Temporary_Powers.Day_Job_Powers.Day_Job_Movement_Increase_Greater",
+                "temporary_powers.day_job_powers.day_job_increase_regeneration_lesser" => "Temporary_Powers.Day_Job_Powers.Day_Job_Increase_Regeneration_Greater",
+                "temporary_powers.day_job_powers.day_job_increase_endurance_lesser" => "Temporary_Powers.Day_Job_Powers.Day_Job_Increase_Endurance_Greater",
+                "temporary_powers.day_job_powers.day_job_increase_recovery_lesser" => "Temporary_Powers.Day_Job_Powers.Day_Job_Increase_Recovery_Greater",
+                "temporary_powers.day_job_powers.day_job_coldnegative_resistance_lesser" => "Temporary_Powers.Day_Job_Powers.Day_Job_ColdNegative_Resistance_Greater",
+                "temporary_powers.day_job_powers.day_job_improved_recharge_time_lesser" => "Temporary_Powers.Day_Job_Powers.Day_Job_Improved_Recharge_Time_Greater",
+                "temporary_powers.day_job_powers.pilot_lesser" => "Temporary_Powers.Day_Job_Powers.Pilot_Greater",
+                "temporary_powers.day_job_powers.day_job_psionic_resistance_lesser" => "Temporary_Powers.Day_Job_Powers.Day_Job_Psionic_Resistance_Greater",
+                "temporary_powers.day_job_powers.day_job_damage_resistance_lesser" => "Temporary_Powers.Day_Job_Powers.Day_Job_Damage_Resistance_Greater",
+
                 _ => fullName
             };
         }
