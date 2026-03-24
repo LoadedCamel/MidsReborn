@@ -1370,6 +1370,210 @@ namespace Mids_Reborn
             }
         }
 
+
+        private static bool IsGrantPowerEffectEligible(IEffect effect)
+        {
+            return effect is
+            {
+                EffectType: Enums.eEffectType.GrantPower,
+                EffectClass: not Enums.eEffectClass.Ignored,
+                nSummon: > -1
+            } &&
+                   effect.Probability > 0 &&
+                   effect.PvXInclude() &&
+                   effect.CanGrantPower() &&
+                   effect.ToWho is Enums.eToWho.Self or Enums.eToWho.All;
+        }
+
+        private static bool IsGrantModifierEffectEligible(IEffect? effect)
+        {
+            if (effect == null)
+            {
+                return false;
+            }
+
+            if (effect.EffectClass is Enums.eEffectClass.Ignored or Enums.eEffectClass.Special)
+            {
+                return false;
+            }
+
+            if (effect.EffectType is Enums.eEffectType.None or Enums.eEffectType.GrantPower or Enums.eEffectType.ExecutePower)
+            {
+                return false;
+            }
+
+            return effect.Probability > 0 &&
+                   effect.PvXInclude() &&
+                   effect.CanInclude() &&
+                   effect.ToWho is Enums.eToWho.Self or Enums.eToWho.All;
+        }
+
+        private static void ApplyGrantEffectToPowerMathEffects(ref IPower powerMath, IEffect grantEffect, float mag)
+        {
+            foreach (var effect in powerMath.Effects)
+            {
+                if (!effect.Buffable)
+                {
+                    continue;
+                }
+
+                if (grantEffect.EffectType == Enums.eEffectType.DamageBuff)
+                {
+                    if ((effect.EffectType is Enums.eEffectType.Damage or Enums.eEffectType.Resistance) &&
+                        (grantEffect.DamageType == Enums.eDamage.None || effect.DamageType == grantEffect.DamageType))
+                    {
+                        effect.Math_Mag += mag;
+                    }
+
+                    continue;
+                }
+
+                var modifierType = grantEffect.EffectType == Enums.eEffectType.Enhancement
+                    ? grantEffect.ETModifies
+                    : grantEffect.EffectType;
+
+                if (modifierType is Enums.eEffectType.None or Enums.eEffectType.Null or Enums.eEffectType.NullBool)
+                {
+                    continue;
+                }
+
+                if (effect.EffectType != modifierType)
+                {
+                    continue;
+                }
+
+                if (modifierType == Enums.eEffectType.ResEffect && effect.ETModifies != grantEffect.ETModifies)
+                {
+                    continue;
+                }
+
+                switch (modifierType)
+                {
+                    case Enums.eEffectType.Damage:
+                    case Enums.eEffectType.Defense:
+                    case Enums.eEffectType.Resistance:
+                    case Enums.eEffectType.Elusivity:
+                        if (grantEffect.DamageType == Enums.eDamage.None || effect.DamageType == grantEffect.DamageType)
+                        {
+                            effect.Math_Mag += mag;
+                        }
+
+                        break;
+
+                    case Enums.eEffectType.Mez:
+                        if (grantEffect.MezType == Enums.eMez.None || effect.MezType == grantEffect.MezType)
+                        {
+                            if (effect.AttribType == Enums.eAttribType.Duration)
+                            {
+                                effect.Math_Duration += mag;
+                            }
+                            else
+                            {
+                                effect.Math_Mag += mag;
+                            }
+                        }
+
+                        break;
+
+                    default:
+                        effect.Math_Mag += mag;
+                        break;
+                }
+            }
+        }
+
+        private static void ApplyGrantEffectToPowerMath(ref IPower powerMath, IEffect grantEffect, bool includeAcc, bool includeRecharge, bool includeEnduranceDiscount)
+        {
+            var mag = grantEffect.BuffedMag;
+            if (Math.Abs(mag) < float.Epsilon)
+            {
+                return;
+            }
+
+            if (grantEffect.EffectType is Enums.eEffectType.DamageBuff or Enums.eEffectType.Enhancement)
+            {
+                switch (grantEffect.ETModifies)
+                {
+                    case Enums.eEffectType.Accuracy when includeAcc:
+                        powerMath.Accuracy += mag;
+                        return;
+
+                    case Enums.eEffectType.RechargeTime when includeRecharge:
+                        powerMath.RechargeTime += mag;
+                        return;
+
+                    case Enums.eEffectType.EnduranceDiscount when includeEnduranceDiscount:
+                        powerMath.EndCost += mag;
+                        return;
+
+                    case Enums.eEffectType.InterruptTime:
+                        powerMath.InterruptTime += mag;
+                        return;
+
+                    case Enums.eEffectType.Range:
+                        powerMath.Range += mag;
+                        return;
+                }
+            }
+
+            ApplyGrantEffectToPowerMathEffects(ref powerMath, grantEffect, mag);
+        }
+
+        private static void ApplyExecuteGrantPowerModifiersRecursive(ref IPower powerMath, IEffect grantEffect, ISet<int> path, int level, bool includeAcc, bool includeRecharge, bool includeEnduranceDiscount)
+        {
+            if (level > 8 || grantEffect.nSummon < 0 || grantEffect.nSummon >= DatabaseAPI.Database.Power.Length)
+            {
+                return;
+            }
+
+            var grantedPowerDb = DatabaseAPI.Database.Power[grantEffect.nSummon];
+            if (grantedPowerDb == null)
+            {
+                return;
+            }
+
+            if (path.Contains(grantedPowerDb.PowerIndex))
+            {
+                return;
+            }
+
+            path.Add(grantedPowerDb.PowerIndex);
+
+            var grantedPower = new Power(grantedPowerDb);
+            grantedPower.ProcessExecutes();
+
+            foreach (var grantedEffect in grantedPower.Effects)
+            {
+                if (IsGrantPowerEffectEligible(grantedEffect))
+                {
+                    ApplyExecuteGrantPowerModifiersRecursive(ref powerMath, grantedEffect, path, level + 1, includeAcc, includeRecharge, includeEnduranceDiscount);
+                    continue;
+                }
+
+                if (!IsGrantModifierEffectEligible(grantedEffect))
+                {
+                    continue;
+                }
+
+                ApplyGrantEffectToPowerMath(ref powerMath, grantedEffect, includeAcc, includeRecharge, includeEnduranceDiscount);
+            }
+
+            path.Remove(grantedPowerDb.PowerIndex);
+        }
+
+        private static void GBPA_ApplyExecuteGrantPowerModifiers(ref IPower powerMath, bool includeAcc, bool includeRecharge, bool includeEnduranceDiscount)
+        {
+            foreach (var effect in powerMath.Effects)
+            {
+                if (!IsGrantPowerEffectEligible(effect))
+                {
+                    continue;
+                }
+
+                ApplyExecuteGrantPowerModifiersRecursive(ref powerMath, effect, new HashSet<int>(), 0, includeAcc, includeRecharge, includeEnduranceDiscount);
+            }
+        }
+
         // Exists but is never called
         private static void HandleGrantPowerIncarnate(ref IPower powerMath, IEffect effect1, IReadOnlyList<IPower> buffedPowers, int effIdx, Archetype? at, int hIDX)
         {
@@ -2081,6 +2285,8 @@ namespace Mids_Reborn
                         break;
                 }
             }
+
+            GBPA_ApplyExecuteGrantPowerModifiers(ref powerMath, okAcc, okRecharge, okEnd);
 
             for (var index = 0; index < CurrentBuild.Powers.Count; index++)
             {
