@@ -1416,6 +1416,7 @@ namespace Mids_Reborn
 
                 "prestige.prestige_utility.prestige_inspirationgrant" => "Inherent.Inherent.Prestige_InspirationGrant",
                 "prestige.prestige_utility.prestige_selfrez" => "Inherent.Inherent.prestige_SelfRez",
+                "prestige.prestige_utility.renewal_of_light" => "Inherent.Inherent.Renewal_of_Light",
                 "prestige.prestige_utility.prestige_permanent_selfdestruction" => "Inherent.Inherent.prestige_Permanent_SelfDestruction",
                 "prestige.prestige_utility.mystic_fortune" => "Inherent.Inherent.Mystic_Fortune",
                 "prestige.prestige_utility.secondary_mutation" => "Inherent.Inherent.Secondary_Mutation",
