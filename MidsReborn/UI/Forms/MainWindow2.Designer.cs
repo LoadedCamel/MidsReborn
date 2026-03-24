@@ -2324,6 +2324,7 @@ namespace Mids_Reborn.UI.Forms
             this.poolsPanel.VerticalScroll.Enabled = true;
             this.poolsPanel.VerticalScroll.Visible = false;
             this.poolsPanel.Padding = new System.Windows.Forms.Padding(0, 0, 0, 0);
+            this.poolsPanel.UseAlt = false;
 
             this.poolsPanel.Controls.Add(this.lblLocked0);
             this.poolsPanel.Controls.Add(this.lblLocked1);

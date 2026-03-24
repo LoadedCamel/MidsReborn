@@ -2,6 +2,9 @@
 using System;
 using System.ComponentModel;
 using System.Drawing;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
+using System.Linq;
 using System.Windows.Forms;
 
 namespace Mids_Reborn.UI.Controls;
@@ -11,8 +14,8 @@ public sealed class ScrollPanelEx : Panel
 {
     private const int ScrollBarWidth = 16;
     private const int ArrowHeight = 16;
+    private const int ScrollBarXOffset = -3;
 
-    private readonly Panel _innerPanel;
     private int _scrollOffset;
     private Rectangle _upArrowRect;
     private Rectangle _downArrowRect;
@@ -20,20 +23,31 @@ public sealed class ScrollPanelEx : Panel
     private bool _draggingThumb;
     private int _dragStartY;
 
-    private bool _initialized = false;
+    private bool _initialized;
+    private bool _useAlt;
 
     private bool IsDesignMode =>
         LicenseManager.UsageMode == LicenseUsageMode.Designtime ||
         DesignMode || Site?.DesignMode == true;
 
-    internal Panel InnerPanel => _innerPanel;
+    internal Panel InnerPanel { get; }
+
+    public bool UseAlt
+    {
+        get => _useAlt;
+        set
+        {
+            _useAlt = value;
+            Refresh();
+        }
+    }
 
     public ScrollPanelEx()
     {
         DoubleBuffered = true;
         AutoScroll = false;
 
-        _innerPanel = new Panel
+        InnerPanel = new Panel
         {
             Location = Point.Empty,
             Size = new Size(Width - ScrollBarWidth, 0), // width is dynamic, height will grow
@@ -41,11 +55,11 @@ public sealed class ScrollPanelEx : Panel
             AutoSize = false,
             AutoScroll = false
         };
-        base.Controls.Add(_innerPanel);
+        base.Controls.Add(InnerPanel);
 
         Resize += (_, _) =>
         {
-            _innerPanel.Width = Width - ScrollBarWidth;
+            InnerPanel.Width = Width - ScrollBarWidth;
             SetScrollOffset(_scrollOffset);
             Invalidate();
         };
@@ -53,15 +67,15 @@ public sealed class ScrollPanelEx : Panel
 
     protected override void OnControlAdded(ControlEventArgs e)
     {
-        if (e.Control != _innerPanel)
+        if (e.Control != InnerPanel)
         {
             base.Controls.Remove(e.Control);
-            _innerPanel.Controls.Add(e.Control);
+            InnerPanel.Controls.Add(e.Control);
         }
         base.OnControlAdded(e);
     }
 
-    public new ControlCollection Controls => _innerPanel.Controls;
+    public new ControlCollection Controls => InnerPanel.Controls;
 
     protected override void OnHandleCreated(EventArgs e)
     {
@@ -86,7 +100,7 @@ public sealed class ScrollPanelEx : Panel
             BeginInvoke(() =>
             {
                 // Force all children to layout and then calculate scroll
-                _innerPanel.PerformLayout();
+                InnerPanel.PerformLayout();
                 PerformLayout();
                 SetScrollOffset(0);
             });
@@ -125,19 +139,21 @@ public sealed class ScrollPanelEx : Panel
 
     protected override void OnMouseMove(MouseEventArgs e)
     {
-        if (_draggingThumb)
+        if (!_draggingThumb)
         {
-            int trackHeight = ClientSize.Height - ArrowHeight * 2;
-            int contentHeight = GetContentHeight();
-            int availableThumbTrack = trackHeight - _thumbRect.Height;
-
-            int newThumbY = e.Y - _dragStartY - ArrowHeight;
-            newThumbY = Math.Max(0, Math.Min(newThumbY, availableThumbTrack));
-
-            float ratio = (float)newThumbY / availableThumbTrack;
-            int newScroll = (int)(ratio * (contentHeight - ClientSize.Height));
-            SetScrollOffset(newScroll);
+            return;
         }
+
+        var trackHeight = ClientSize.Height - ArrowHeight * 2;
+        var contentHeight = GetContentHeight();
+        var availableThumbTrack = trackHeight - _thumbRect.Height;
+
+        var newThumbY = e.Y - _dragStartY - ArrowHeight;
+        newThumbY = Math.Max(0, Math.Min(newThumbY, availableThumbTrack));
+
+        var ratio = (float)newThumbY / availableThumbTrack;
+        var newScroll = (int)(ratio * (contentHeight - ClientSize.Height));
+        SetScrollOffset(newScroll);
     }
 
     private void ScrollBy(int delta)
@@ -150,19 +166,21 @@ public sealed class ScrollPanelEx : Panel
         if (IsDesignMode)
             return;
 
-        int contentHeight = GetContentHeight();
+        var contentHeight = GetContentHeight();
 
-        _innerPanel.Height = contentHeight;
+        InnerPanel.Height = contentHeight;
 
-        int maxScroll = Math.Max(0, GetContentHeight() - ClientSize.Height);
-        int clamped = Math.Max(0, Math.Min(value, maxScroll));
+        var maxScroll = Math.Max(0, GetContentHeight() - ClientSize.Height);
+        var clamped = Math.Max(0, Math.Min(value, maxScroll));
 
         if (clamped == _scrollOffset)
+        {
             return;
+        }
 
         _scrollOffset = clamped;
-        _innerPanel.Height = contentHeight;
-        _innerPanel.Top = -_scrollOffset;
+        InnerPanel.Height = contentHeight;
+        InnerPanel.Top = -_scrollOffset;
 
         Invalidate();
     }
@@ -170,51 +188,63 @@ public sealed class ScrollPanelEx : Panel
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e); // paints background and border
+
+        e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+        e.Graphics.CompositingMode = CompositingMode.SourceOver;
+        e.Graphics.CompositingQuality = CompositingQuality.HighQuality;
+        e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+        e.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+
         DrawCustomScrollbar(e.Graphics);
     }
 
     private void DrawCustomScrollbar(Graphics g)
     {
-        int contentHeight = GetContentHeight();
-        int visibleHeight = ClientSize.Height;
+        var contentHeight = GetContentHeight();
+        var visibleHeight = ClientSize.Height;
 
         if (contentHeight <= visibleHeight)
+        {
             return;
+        }
 
-        int trackX = ClientSize.Width - ScrollBarWidth / 2 + 3;
-        int trackHeight = visibleHeight - ArrowHeight * 2;
+        var trackX = ClientSize.Width - ScrollBarWidth / 2 + 3 + ScrollBarXOffset;
+        var trackHeight = visibleHeight - ArrowHeight * 2;
 
-        int thumbHeight = Math.Max(20, (int)((float)visibleHeight / contentHeight * trackHeight));
-        int scrollMax = contentHeight - visibleHeight;
-        float scrollPercent = (float)_scrollOffset / scrollMax;
-        int thumbY = ArrowHeight + (int)((trackHeight - thumbHeight) * scrollPercent);
+        var thumbHeight = Math.Max(20, (int)((float)visibleHeight / contentHeight * trackHeight));
+        var scrollMax = contentHeight - visibleHeight;
+        var scrollPercent = (float)_scrollOffset / scrollMax;
+        var thumbY = ArrowHeight + (int)((trackHeight - thumbHeight) * scrollPercent);
 
-        int thumbX = trackX - ScrollBarWidth / 4;
-        int thumbWidth = ScrollBarWidth / 2;
+        var thumbX = trackX - ScrollBarWidth / 4;
+        var thumbWidth = ScrollBarWidth / 2;
 
-        using Pen trackPen = new(Color.FromArgb(64, 120, 255), 2);
-        using SolidBrush arrowBrush = new(Color.FromArgb(0, 122, 255));
-        using SolidBrush thumbBrush = new(Color.FromArgb(0, 122, 255));
+        using Pen trackPen = new(!_useAlt ? Color.FromArgb(64, 120, 255) : Color.FromArgb(191, 74, 56), 2);
+        using SolidBrush arrowBrush = new(!_useAlt ? Color.FromArgb(0, 122, 255) : Color.FromArgb(128, 0, 0));
+        using SolidBrush thumbBrush = new(!_useAlt ? Color.FromArgb(0, 122, 255) : Color.FromArgb(128, 0, 0));
 
         // Track
         g.DrawLine(trackPen, trackX, ArrowHeight, trackX, ClientSize.Height - ArrowHeight);
 
         // Up arrow
         _upArrowRect = new Rectangle(trackX - 6, 0, 12, ArrowHeight);
-        Point[] upArrow = {
+        Point[] upArrow =
+        [
             new(trackX, 4),
             new(trackX - 6, ArrowHeight - 4),
             new(trackX + 6, ArrowHeight - 4)
-        };
+        ];
         g.FillPolygon(arrowBrush, upArrow);
 
         // Down arrow
         _downArrowRect = new Rectangle(trackX - 6, ClientSize.Height - ArrowHeight, 12, ArrowHeight);
-        Point[] downArrow = {
+        Point[] downArrow =
+        [
             new(trackX, ClientSize.Height - 4),
             new(trackX - 6, ClientSize.Height - ArrowHeight + 4),
             new(trackX + 6, ClientSize.Height - ArrowHeight + 4)
-        };
+        ];
         g.FillPolygon(arrowBrush, downArrow);
 
         // Thumb
@@ -224,12 +254,10 @@ public sealed class ScrollPanelEx : Panel
 
     private int GetContentHeight()
     {
-        int maxBottom = 0;
-        foreach (Control ctrl in _innerPanel.Controls)
-        {
-            if (!ctrl.Visible) continue;
-            maxBottom = Math.Max(maxBottom, ctrl.Bottom);
-        }
+        var maxBottom = (from Control ctrl in InnerPanel.Controls where ctrl.Visible select ctrl.Bottom)
+            .Prepend(0)
+            .Max();
+        
         return maxBottom + 10;
     }
 }
