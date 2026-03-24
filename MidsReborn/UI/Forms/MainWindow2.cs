@@ -7129,10 +7129,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void UpdateColors(bool skipDraw = false)
         {
-            myDataView.DrawVillain = !MidsContext.Character.IsHero(); 
-            //var draw = I9Picker.ForeColor.R != 96; // Always true
-            BackColor = Color.FromArgb(0, 0, 0);
-            
+            BackColor = Color.Black;
+            myDataView.DrawVillain = !MidsContext.Character.IsHero();
+            myDataView.BackColor = BackColor;
+
             lblATLocked.BackColor = MidsContext.Character.IsHero()
                 ? MidsContext.Config.RtFont.ColorPowerTakenHero
                 : MidsContext.Config.RtFont.ColorPowerTakenVillain;
@@ -7146,9 +7146,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
             
             I9Picker.BackColor = BackColor;
+            
             I9Popup.BackColor = Color.Black;
             I9Popup.ForeColor = I9Picker.ForeColor;
-            myDataView.BackColor = BackColor;
+
+            poolsPanel.UseAlt = !MidsContext.Character.IsHero();
+            
             /*var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
             using var font = new Font(llPrimary.Font.FontFamily, MidsContext.Config.RtFont.PowersSelectBase, style, GraphicsUnit.Point);*/
             //using var font = new Font("Segoe UI", 12f, FontStyle.Bold, GraphicsUnit.Pixel);
