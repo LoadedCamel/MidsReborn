@@ -16,10 +16,20 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 {
     public partial class frmTemp : Form
     {
+        private enum ItemType
+        {
+            Any,
+            Encounters,
+            BaseBuffs,
+            DayJobs,
+            Misc
+        }
+
         private readonly MainWindow2 _myParent;
         private bool _locked;
-        private List<IPower?> _myPowers;
-        
+        private readonly List<IPower?> _myPowers;
+        private ItemType _itemFilter;
+
         public frmTemp(MainWindow2 parentForm, List<IPower?> powersList)
         {
             InitializeComponent();
@@ -29,6 +39,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             _myParent = parentForm;
             _myPowers = powersList;
             _myPowers = _myPowers.OrderBy(x => x?.DisplayName).ToList();
+            _itemFilter = ItemType.Any;
         }
 
         private void frmTemp_Load(object sender, EventArgs e)
@@ -37,19 +48,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             CenterToParent();
             // PopInfo.ForeColor = BackColor; // ??
 
-            ibClose.Images = new ImageButtonEx.BaseImages
-            {
-                Background = Resources.HeroButton,
-                Hover = Resources.HeroButtonHover
-            };
-
-            ibClose.ImagesAlt = new ImageButtonEx.AltImages
-            {
-                Background = Resources.VillainButton,
-                Hover = Resources.VillainButtonHover
-            };
-
             UpdateColorTheme();
+            UpdateButtons();
 
             var iPopup = new PopUp.PopupData();
             var index = iPopup.Add();
@@ -60,6 +60,34 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             PopInfo.SetPopup(iPopup);
             ChangedScrollFrameContents();
             FillLists();
+        }
+
+        private void UpdateButtons()
+        {
+            BtnTypeAll.ToggleState = _itemFilter == ItemType.Any
+                ? ImageButtonEx.States.ToggledOn
+                : ImageButtonEx.States.ToggledOff;
+            BtnTypeAll.Invalidate();
+
+            BtnTypeEncounters.ToggleState = _itemFilter == ItemType.Encounters
+                ? ImageButtonEx.States.ToggledOn
+                : ImageButtonEx.States.ToggledOff;
+            BtnTypeEncounters.Invalidate();
+
+            BtnTypeBaseBuffs.ToggleState = _itemFilter == ItemType.BaseBuffs
+                ? ImageButtonEx.States.ToggledOn
+                : ImageButtonEx.States.ToggledOff;
+            BtnTypeBaseBuffs.Invalidate();
+
+            BtnTypeDayJobs.ToggleState = _itemFilter == ItemType.DayJobs
+                ? ImageButtonEx.States.ToggledOn
+                : ImageButtonEx.States.ToggledOff;
+            BtnTypeDayJobs.Invalidate();
+
+            BtnTypeMisc.ToggleState = _itemFilter == ItemType.Misc
+                ? ImageButtonEx.States.ToggledOn
+                : ImageButtonEx.States.ToggledOff;
+            BtnTypeMisc.Invalidate();
         }
 
         public void UpdateFonts(Font font)
@@ -98,16 +126,83 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void FillLists()
         {
+            string[] filterPowers = _itemFilter switch
+            {
+                ItemType.Encounters => [
+                    "Temporary_Powers.Temporary_Powers.Anger_Monument",
+                    "Temporary_Powers.Temporary_Powers.Warburg_Biological",
+                    "Temporary_Powers.Temporary_Powers.Crystal_of_Resilience",
+                    "Temporary_Powers.Temporary_Powers.Mayhem_Increase_Movement_Speed",
+                    "Temporary_Powers.Temporary_Powers.Mayhem_Increase_Endurance",
+                    "Temporary_Powers.Temporary_Powers.Mayhem_Increase_Health",
+                    "Temporary_Powers.Temporary_Powers.Heart_of_a_Storm_Elemental",
+                    "Temporary_Powers.Temporary_Powers.Mayhem_Flight_Pack",
+                    "Temporary_Powers.Temporary_Powers.The_Perfect_Eye",
+                    "Temporary_Powers.Temporary_Powers.The_True_Furnace",
+                    "Temporary_Powers.Temporary_Powers.Wedding_Band",
+                    "Temporary_Powers.Temporary_Powers.Wedding_Band_FB",
+                    "Temporary_Powers.Temporary_Powers.Mayhem_Low-G_Pack"
+                ],
+
+                ItemType.BaseBuffs => [
+                    "Temporary_Powers.Temporary_Powers.Increase_Run_Speed",
+                    "Temporary_Powers.Temporary_Powers.Knockback_Increase",
+                    "Temporary_Powers.Temporary_Powers.Knockback_Protection",
+                    "Temporary_Powers.Temporary_Powers.Lethal_Resistance",
+                    "Temporary_Powers.Temporary_Powers.Confusion_Resistance",
+                    "Temporary_Powers.Temporary_Powers.Fear_Resistance",
+                    "Temporary_Powers.Temporary_Powers.Fire_Resistance",
+                    "Temporary_Powers.Temporary_Powers.Sleep_Resistance",
+                    "Temporary_Powers.Temporary_Powers.Slow_Resistance",
+                    "Temporary_Powers.Temporary_Powers.Smashing_Resistance",
+                    "Temporary_Powers.Temporary_Powers.Increase_Attack_Speed",
+                    "Temporary_Powers.Temporary_Powers.Increase_Flight_Speed",
+                    "Temporary_Powers.Temporary_Powers.Increase_Jump_Speed",
+                    "Temporary_Powers.Temporary_Powers.Increase_Perception",
+                    "Temporary_Powers.Temporary_Powers.Increase_Recovery"
+                ],
+
+                ItemType.Misc => [
+                    "Temporary_Powers.Temporary_Powers.Alt_Defense_Amplifier_1_hour",
+                    "Temporary_Powers.Temporary_Powers.Alt_Offense_Amplifier_1_hour",
+                    "Temporary_Powers.Temporary_Powers.GRHeroAlignmentPower", // Call to Justice
+                    "Temporary_Powers.Temporary_Powers.GRVillainAlignmentPower", // Frenzy
+                    "Temporary_Powers.Temporary_Powers.Mayhem_Store_Kinetic_Shield",
+                    "Temporary_Powers.Temporary_Powers.Cryonite_Armor",
+                    "Temporary_Powers.Temporary_Powers.Grant_Invisibility",
+                    "Temporary_Powers.Temporary_Powers.Alt_Survival_Amplifier_1_hour",
+                    "Temporary_Powers.Temporary_Powers.Soulbound_Armor"
+                ],
+
+                _ => []
+            };
+
             SkPairedList1.SuspendRedraw = true;
             SkPairedList1.ClearItems();
             var message = string.Empty; // Has to be initialized first
+            
             foreach (var p in _myPowers)
             {
                 if (p == null)
                 {
                     continue;
                 }
-                
+
+                if (_itemFilter == ItemType.DayJobs)
+                {
+                    if (!p.FullName.StartsWith("Temporary_Powers.Day_Job_Powers."))
+                    {
+                        continue;
+                    }
+                }
+                else if (filterPowers.Length > 0)
+                {
+                    if (!filterPowers.Contains(p.FullName))
+                    {
+                        continue;
+                    }
+                }
+
                 var item = new SkListItem(p.DisplayName, MainModule.MidsController.Toon.SkPowerState(p.PowerIndex, ref message), -1, -1, p.PowerIndex, p.FullName, EFontFlags.Bold)
                 {
                     Bold = MidsContext.Config.RtFont.PairedBold
@@ -140,9 +235,16 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void SetButtonColors(Enums.Alignment? alignment = null)
         {
-            ibClose.UseAlt = alignment == null
-                ? !MidsContext.Character.IsHero() // Automatic
-                : alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist; // Manual, parameter-driven;
+            var useAlt = alignment == null
+                ? MidsContext.Character?.IsHero() == false // Automatic
+                : alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist; // Manual, parameter-driven
+
+            ibClose.UseAlt = useAlt;
+            BtnTypeAll.UseAlt = useAlt;
+            BtnTypeEncounters.UseAlt = useAlt;
+            BtnTypeBaseBuffs.UseAlt = useAlt;
+            BtnTypeDayJobs.UseAlt = useAlt;
+            BtnTypeMisc.UseAlt = useAlt;
         }
 
         private void SetListColors(Enums.Alignment? alignment = null)
@@ -157,7 +259,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             SkPairedList1.ScrollBarColor = isHero
                 ? MidsContext.Config.RtFont.ColorPowerTakenHero
                 : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-            
+
             SkPairedList1.ScrollButtonColor = isHero
                 ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                 : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
@@ -166,12 +268,12 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 isHero
                     ? MidsContext.Config.RtFont.ColorPowerTakenHero
                     : MidsContext.Config.RtFont.ColorPowerTakenVillain);
-            
+
             SkPairedList1.UpdateTextColors(EItemState.SelectedDisabled,
                 isHero
                     ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                     : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-            
+
             SkPairedList1.HoverColor = isHero
                 ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
@@ -201,7 +303,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             if (button == MouseButtons.Right)
             {
                 _locked = false;
-                MiniPowerInfo(item.Index);
+                MiniPowerInfo(item.Tag);
                 lblLock.Visible = true;
                 _locked = true;
 
@@ -213,26 +315,32 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 return;
             }
 
-            if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[item.Index]))
+            var itemIndex = GetPowerIndexFromName(item.Tag);
+            if (itemIndex < 0)
             {
-                MidsContext.Character.CurrentBuild.RemovePower(_myPowers[item.Index]);
+                return;
+            }
+
+            if (MidsContext.Character.CurrentBuild.PowerUsed(_myPowers[itemIndex]))
+            {
+                MidsContext.Character.CurrentBuild.RemovePower(_myPowers[itemIndex]);
                 item.ItemState = EItemState.Enabled;
             }
             else
             {
-                MidsContext.Character.CurrentBuild.AddPower(_myPowers[item.Index], 0).StatInclude = true;
+                MidsContext.Character.CurrentBuild.AddPower(_myPowers[itemIndex], 0).StatInclude = true;
                 item.ItemState = EItemState.Selected;
             }
 
             SkPairedList1.Invalidate();
-            
+
             _myParent.PowerModified(false);
             _myParent.DoRefresh();
         }
 
         private void SkPairedList1_ItemHover(SkListItem item)
         {
-            MiniPowerInfo(item.Index);
+            MiniPowerInfo(item.Tag);
         }
 
         private void SkPairedList1_EmptyHover()
@@ -245,6 +353,16 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private void SkPairedList1_MouseLeave(object sender, EventArgs e)
         {
             MiniPowerInfo(-1);
+        }
+
+        private int GetPowerIndexFromName(string powerFullName)
+        {
+            return _myPowers.TryFindIndex(e => e?.FullName == powerFullName);
+        }
+
+        private void MiniPowerInfo(string powerFullName)
+        {
+            MiniPowerInfo(GetPowerIndexFromName(powerFullName));
         }
 
         private void MiniPowerInfo(int pIdx)
@@ -394,6 +512,66 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             }
 
             PopInfo.ScrollY = VScrollBar1.Value / (float)(VScrollBar1.Maximum - VScrollBar1.LargeChange) * (PopInfo.lHeight - Panel1.Height);
+        }
+
+        private void BtnTypeAll_Click(object sender, EventArgs e)
+        {
+            if (_itemFilter == ItemType.Any)
+            {
+                return;
+            }
+
+            _itemFilter = ItemType.Any;
+            UpdateButtons();
+            FillLists();
+        }
+
+        private void BtnTypeEncounters_Click(object sender, EventArgs e)
+        {
+            if (_itemFilter == ItemType.Encounters)
+            {
+                return;
+            }
+
+            _itemFilter = ItemType.Encounters;
+            UpdateButtons();
+            FillLists();
+        }
+
+        private void BtnTypeBaseBuffs_Click(object sender, EventArgs e)
+        {
+            if (_itemFilter == ItemType.BaseBuffs)
+            {
+                return;
+            }
+
+            _itemFilter = ItemType.BaseBuffs;
+            UpdateButtons();
+            FillLists();
+        }
+
+        private void BtnTypeDayJobs_Click(object sender, EventArgs e)
+        {
+            if (_itemFilter == ItemType.DayJobs)
+            {
+                return;
+            }
+
+            _itemFilter = ItemType.DayJobs;
+            UpdateButtons();
+            FillLists();
+        }
+
+        private void BtnTypeMisc_Click(object sender, EventArgs e)
+        {
+            if (_itemFilter == ItemType.Misc)
+            {
+                return;
+            }
+
+            _itemFilter = ItemType.Misc;
+            UpdateButtons();
+            FillLists();
         }
     }
 }

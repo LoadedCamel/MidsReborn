@@ -92,7 +92,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             var iPowers = DatabaseAPI.Database.Power.Where(pw => pw != null && pw.StaticIndex == staticIndex).ToList();
             LvItems = iPowers.Select(pw => new Power(pw))
-                .Select(pw => new[] { $"{pw.StaticIndex}", pw.DisplayName, pw.FullName })
+                .Select(pw => new[] { $"{pw.PowerIndex}", $"{pw.StaticIndex}", pw.DisplayName, pw.FullName })
                 .ToList();
             listView1.VirtualListSize = 0; // Force ListView to refresh items
             listView1.VirtualListSize = LvItems.Count;
@@ -118,7 +118,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 .Where(pw => pw != null && string.Equals(pw.DisplayName, pName, StringComparison.InvariantCultureIgnoreCase))
                 .ToList();
             LvItems = iPowers.Select(pw => new Power(pw))
-                .Select(pw => new[] { $"{pw.StaticIndex}", pw.DisplayName, pw.FullName })
+                .Select(pw => new[] { $"{pw.PowerIndex}", $"{pw.StaticIndex}", pw.DisplayName, pw.FullName })
                 .ToList();
             listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
@@ -134,8 +134,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             LvItems =
             [
-                new[] { $"{availableIndices[0]}", "First available", "" },
-                new[] { $"{DatabaseAPI.Database.Power.Length}", "Power DB Count", "" }
+                [$"{availableIndices[0]}", "First available", ""],
+                [$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""]
             ];
             listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
@@ -145,11 +145,11 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             var dbIndices = DatabaseAPI.Database.Power.Select(pw => pw?.StaticIndex ?? 0);
 
-            LvItems = new List<string[]>
-            {
-                new[] {$"{dbIndices.Max() + 1}", "Highest available", ""},
-                new[] {$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""}
-            };
+            LvItems =
+            [
+                [$"{dbIndices.Max() + 1}", "Highest available", ""],
+                [$"{DatabaseAPI.Database.Power.Length}", "Power DB Count", ""]
+            ];
             listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
@@ -175,7 +175,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             LvItems = DatabaseAPI.Database.Power
                 .Where(pw => pw != null)
-                .Select(pw => new[] { $"{pw!.StaticIndex}", pw.DisplayName, pw.FullName }).ToList();
+                .Select(pw => new[] { $"{pw!.PowerIndex}", $"{pw.StaticIndex}", pw.DisplayName, pw.FullName }).ToList();
             listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
@@ -185,9 +185,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var itemsList = DatabaseAPI.Database.Power
                 .Where(e => e != null)
                 .Select(e => new KeyValuePair<IPower?, List<IEffect>?>(e,
-                e?.Effects.Where(f => f.EffectType == Enums.eEffectType.EntCreate & f.nSummon < 0 & !string.IsNullOrEmpty(f.Summon)).ToList()));
+                e?.Effects.Where(f => (f.EffectType == Enums.eEffectType.EntCreate) & (f.nSummon < 0) & !string.IsNullOrEmpty(f.Summon)).ToList()));
 
-            LvItems = itemsList.SelectMany(e => e.Value!, (k, v) => new[] { $"{k.Key!.StaticIndex}", v.Summon, k.Key.FullName }).ToList();
+            LvItems = itemsList.SelectMany(e => e.Value!, (k, v) => new[] { $"{k.Key!.PowerIndex}", $"{k.Key.StaticIndex}", v.Summon, k.Key.FullName }).ToList();
             listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
@@ -208,8 +208,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 .ToList();
 
             LvItems = itemsList.Count > 0
-                ? itemsList.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, e.FullName }).ToList()
-                : [new[] { "", "Nothing found", "" }];
+                ? itemsList.Select(e => new[] { $"{e!.PowerIndex}", $"{e.StaticIndex}", e.DisplayName, e.FullName }).ToList()
+                : [["", "Nothing found", ""]];
             listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
@@ -217,12 +217,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private void GetBogusMaxRunSpeed()
         {
             var itemsList = DatabaseAPI.Database.Power
-                .Where(e => e != null && e.Effects.Any(f => f.EffectType == Enums.eEffectType.SpeedRunning & f.ToWho == Enums.eToWho.Target & f.PvMode == Enums.ePvX.PvE & !f.Buffable & f.Scale < 0))
+                .Where(e => e != null && e.Effects.Any(f => (f.EffectType == Enums.eEffectType.SpeedRunning) & (f.ToWho == Enums.eToWho.Target) & (f.PvMode == Enums.ePvX.PvE) & !f.Buffable & (f.Scale < 0)))
                 .ToList();
 
             LvItems = itemsList.Count > 0
                 ? itemsList.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, e.FullName }).ToList()
-                : [new[] { "", "Nothing found", "" }];
+                : [["", "Nothing found", ""]];
             listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
@@ -234,8 +234,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 .ToList();
 
             LvItems = itemsList.Count > 0
-                ? itemsList.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, e.FullName }).ToList()
-                : [new[] { "", "Nothing found", "" }];
+                ? itemsList.Select(e => new[] { $"{e!.PowerIndex}", $"{e.StaticIndex}", e.DisplayName, e.FullName }).ToList()
+                : [["", "Nothing found", ""]];
             listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
@@ -247,8 +247,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 .ToList();
 
             LvItems = itemsList.Count > 0
-                ? itemsList.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"{e.FullName} ({e.VariableName})" }).ToList()
-                : [new[] { "", "Nothing found", "" }];
+                ? itemsList.Select(e => new[] { $"{e!.PowerIndex}", $"{e.StaticIndex}", e.DisplayName, $"{e.FullName} ({e.VariableName})" }).ToList()
+                : [["", "Nothing found", ""]];
             listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }
@@ -272,15 +272,15 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 .Where(e => e != null && e.Effects.Any(f => f.ActiveConditionals != null && f.ActiveConditionals.Any(g => g.Key.Contains(pwName))))
                 .ToList();
 
-            var itemsList = itemsOverride.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"{e.FullName} (Override)" })
-                .Concat(itemsSummon.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"(Summon) {e.FullName}" }))
-                .Concat(itemsExpressions.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"(Expression) {e.FullName}" }))
-                .Concat(itemsConditionals.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"(Conditional) {e.FullName}" }))
+            var itemsList = itemsOverride.Select(e => new[] { $"{e!.PowerIndex}", $"{e.StaticIndex}", e.DisplayName, $"{e.FullName} (Override)" })
+                .Concat(itemsSummon.Select(e => new[] { $"{e!.PowerIndex}", $"{e.StaticIndex}", e.DisplayName, $"(Summon) {e.FullName}" }))
+                .Concat(itemsExpressions.Select(e => new[] { $"{e!.PowerIndex}", $"{e!.StaticIndex}", e.DisplayName, $"(Expression) {e.FullName}" }))
+                .Concat(itemsConditionals.Select(e => new[] { $"{e!.PowerIndex}", $"{e!.StaticIndex}", e.DisplayName, $"(Conditional) {e.FullName}" }))
                 .ToList();
 
             LvItems = itemsList.Count > 0
                 ? itemsList
-                : [new[] { "", "Nothing found", "" }];
+                : [["", "Nothing found", ""]];
             listView1.VirtualListSize = 0;
             listView1.VirtualListSize = LvItems.Count;
         }

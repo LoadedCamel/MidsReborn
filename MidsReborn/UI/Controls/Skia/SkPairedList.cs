@@ -64,7 +64,6 @@ public class SkPairedList : SKGLControl
     private const int ScrollBarGutter = 4;
     private const int MultilineTextInterline = 4;
     private const int BottomVisualPadding = 10;
-    private const string DesignerLabel = $"{nameof(SkPairedList)} (Design)";
 
     private int _scrollBarWidth = 11;
     private int _scrollOffset;
@@ -652,12 +651,12 @@ public class SkPairedList : SKGLControl
     #region Paint-specific event handlers
     protected override void OnPaint(PaintEventArgs e)
     {
-        base.OnPaint(e);
-
         if (!IsInDesignMode)
         {
             return;
         }
+
+        //base.OnPaint(e); // Will crash the designer if this is called
 
         using var background = new SolidBrush(Color.FromArgb(255, 30, 30, 30));
         e.Graphics.FillRectangle(background, ClientRectangle);
@@ -665,9 +664,9 @@ public class SkPairedList : SKGLControl
         using var pen = new Pen(Color.DodgerBlue);
         e.Graphics.DrawRectangle(pen, 0, 0, Width - 1, Height - 1);
 
-        using var font = new Font("Segoe UI", 10, FontStyle.Bold);
-        var size = e.Graphics.MeasureString(DesignerLabel, font);
-        e.Graphics.DrawString(DesignerLabel, font, Brushes.LightGray, (Width - size.Width) / 2, (Height - size.Height) / 2);
+        using var font = new Font("Segoe UI", 9, FontStyle.Bold);
+        var designerLabel = $"{(string.IsNullOrWhiteSpace(Name) ? $"{GetType().Name}" : $"{Name}\r\n{GetType().Name}")} (Design)";
+        e.Graphics.DrawString(designerLabel, font, Brushes.LightGray, Width / 2f, Height / 2f, new StringFormat {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center});
     }
 
     private void OnPaintSurfaceGL(object? sender, SKPaintGLSurfaceEventArgs e)

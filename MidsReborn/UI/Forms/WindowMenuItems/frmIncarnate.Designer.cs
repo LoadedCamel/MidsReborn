@@ -104,7 +104,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             PopInfo.SectionPadding = 8;
             PopInfo.Size = new Size(635, 177);
             PopInfo.TabIndex = 9;
-            PopInfo!.MouseWheel += PopInfo_MouseWheel;
+            PopInfo.MouseWheel += PopInfo_MouseWheel;
             PopInfo.MouseEnter += PopInfo_MouseEnter;
             // 
             // LblLock
