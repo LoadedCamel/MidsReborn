@@ -667,22 +667,22 @@ public class SkList : SKGLControl
 
     protected override void OnPaint(PaintEventArgs e)
     {
-        if (!IsInDesignMode)
+        if (IsInDesignMode)
         {
+            using var background = new SolidBrush(Color.FromArgb(255, 30, 30, 30));
+            e.Graphics.FillRectangle(background, ClientRectangle);
+
+            using var pen = new Pen(Color.DodgerBlue);
+            e.Graphics.DrawRectangle(pen, 0, 0, Width - 1, Height - 1);
+
+            using var font = new Font("Segoe UI", 9, FontStyle.Bold);
+            var label = $"{(string.IsNullOrWhiteSpace(Name) ? $"{GetType().Name}" : $"{Name}\r\n{GetType().Name}")} (Design)";
+            e.Graphics.DrawString(label, font, Brushes.LightGray, Width / 2f, Height / 2f, new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
+
             return;
         }
 
-        //base.OnPaint(e); // Will crash the designer if this is called
-
-        using var background = new SolidBrush(Color.FromArgb(255, 30, 30, 30));
-        e.Graphics.FillRectangle(background, ClientRectangle);
-
-        using var pen = new Pen(Color.DodgerBlue);
-        e.Graphics.DrawRectangle(pen, 0, 0, Width - 1, Height - 1);
-
-        using var font = new Font("Segoe UI", 9, FontStyle.Bold);
-        var label = $"{(string.IsNullOrWhiteSpace(Name) ? $"{GetType().Name}" : $"{Name}\r\n{GetType().Name}")} (Design)";
-        e.Graphics.DrawString(label, font, Brushes.LightGray, Width / 2f, Height / 2f, new StringFormat {Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center});
+        base.OnPaint(e); // Will crash the designer if this is called during design time
     }
 
     private void OnPaintSurfaceGL(object? sender, SKPaintGLSurfaceEventArgs e)
