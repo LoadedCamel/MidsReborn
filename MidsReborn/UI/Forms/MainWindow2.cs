@@ -2018,16 +2018,13 @@ namespace Mids_Reborn.UI.Forms
                     continue;
                 }
 
+
                 if (pe.Power.FullName.StartsWith("Temporary_Powers.Temporary_Powers."))
                 {
-                    pe.StatInclude = ibTempPowersEx.ToggleState switch
-                    {
-                        ImageButtonEx.States.ToggledOff => false,
-                        ImageButtonEx.States.ToggledOn => true,
-                        _ => pe.Power.AlwaysToggle
-                    };
+                    continue;
                 }
-                else if (pe.Power is not ({PowerType: Enums.ePowerType.Toggle} or {PowerType: Enums.ePowerType.GlobalBoost} or {PowerType: Enums.ePowerType.Auto_}) & // Not a toggle, global boost, auto
+                
+                if (pe.Power is not ({PowerType: Enums.ePowerType.Toggle} or {PowerType: Enums.ePowerType.GlobalBoost} or {PowerType: Enums.ePowerType.Auto_}) & // Not a toggle, global boost, auto
                          pe.Power is {ClickBuff: false} & // Not a click-buff
                          pe.Slots.Select(e => e.Enhancement.Enh).Any(e => e > -1)) // Has at least one enhancement slotted
                 {
