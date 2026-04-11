@@ -126,11 +126,11 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void btnImportJson_Click(object sender, EventArgs e)
         {
-            using var f = new OpenFileDialog()
+            using var f = new OpenFileDialog
             {
                 Title = "Select JSON source",
                 DefaultExt = "json",
-                Filter = "JSON files(*.json)|*.json|All files(*.*)|*.*",
+                Filter = "JSON files(*.json)|*.json|CSV files(*.csv)|*.csv|All files(*.*)|*.*",
                 FilterIndex = 0,
                 CheckFileExists = true,
                 CheckPathExists = true,
@@ -138,7 +138,91 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             };
 
             var r = f.ShowDialog();
-            if (r != DialogResult.OK) return;
+            if (r != DialogResult.OK)
+            {
+                return;
+            }
+
+            if (f.FileName.EndsWith(".csv", StringComparison.InvariantCultureIgnoreCase))
+            {
+                var modIdx = listBoxTables.SelectedIndex;
+                var atIdx = cbArchetype.SelectedIndex;
+
+                if (modIdx < 0)
+                {
+                    MessageBox.Show("CSV lists can only apply to current modifier table for the selected archetype,\r\nbut no modifier is selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    return;
+                }
+
+                if (atIdx < 0)
+                {
+                    MessageBox.Show("CSV lists can only apply to current modifier table for the selected archetype,\r\nbut no archetype is selected.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    return;
+                }
+
+                var fi = new FileInfo(f.FileName);
+                if (!fi.Exists)
+                {
+                    // You selected me?
+                    // Now you see me, now you don't.
+                    MessageBox.Show("The specified file does not exist.", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                    return;
+                }
+
+                if (fi.Length > 2097152)
+                {
+                    // Assuming past 2 MB size this isn't a CSV file.
+                    MessageBox.Show("File is over the size limit (2 MB) and will be ignored.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    return;
+                }
+
+                var cnt = File.ReadAllText(f.FileName);
+                cnt = cnt
+                    .Trim(' ', '\t', '\r', '\n', '\0', ',')
+                    .Replace(" ", "")
+                    .Replace("\t", "")
+                    .Replace("\0", "");
+
+                var vList = cnt.Split(',');
+                var vListF = new List<float>();
+                for (var i = 0; i < vList.Length; i++)
+                {
+                    var v = vList[i];
+                    if (!float.TryParse(v, out var fVal))
+                    {
+                        MessageBox.Show($"An error occured when trying to parse value #{i + 1}: invalid format (expected float value).", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+
+                        return;
+                    }
+
+                    vListF.Add(fVal);
+                }
+
+                if (vListF.Count < 50)
+                {
+                    MessageBox.Show($"Too few values: expected at least 50, got {vListF.Count}.", "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+
+                    return;
+                }
+
+                for (var i = 0; i < Math.Min(TempAttribMods.Modifier[modIdx].Table.Count, vListF.Count); i++)
+                {
+                    TempAttribMods.Modifier[modIdx].Table[i][atIdx] = vListF[i];
+                }
+
+                UpdateDataDisplay();
+
+                if (vListF.Count < TempAttribMods.Modifier[modIdx].Table.Count)
+                {
+                    MessageBox.Show($"{TempAttribMods.Modifier[modIdx].ID} ({DatabaseAPI.Database.Classes[atIdx].DisplayName}): {vListF.Count} table values updated out of {TempAttribMods.Modifier[modIdx].Table.Count}.", "Info", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                }
+
+                return;
+            }
 
             var m = new Modifiers();
             var src = File.ReadAllText(f.FileName);
@@ -149,9 +233,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 {
                     //Modifiers.ModifierTable[]? tables = JsonConvert.DeserializeObject<Modifiers.ModifierTable[]>(src, jsonOpt);
                     var tables = JsonConvert.DeserializeObject<List<Modifiers.ModifierTable>>(src, Serializer.SerializerSettings);
-                    if (tables == null) throw new FormatException("JSON file contains no modifier tables.");
+                    if (tables == null)
+                    {
+                        throw new FormatException("JSON file contains no modifier tables.");
+                    }
 
-                    m.Modifier = (List<Modifiers.ModifierTable>) tables.Clone();
+                    m.Modifier = tables.Clone();
                     m.Revision = Database.Instance.AttribMods.Revision + 1;
                     m.RevisionDate = DateTime.Now;
                     m.SourceIndex = string.Empty;
@@ -169,7 +256,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
             catch (JsonSerializationException ex)
             {
-                MessageBox.Show("[JsonSerializationException] Error deserializing JSON.\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                MessageBox.Show($"[JsonSerializationException] Error deserializing JSON.\r\n{ex.Message}\r\n{ex.StackTrace}");
                 return;
             }
             catch (JsonReaderException ex)
@@ -369,7 +456,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             int i;
             for (i = 0; i < dgCells.Length; i++)
             {
-                dgCells[i] = new Label()
+                dgCells[i] = new Label
                 {
                     BorderStyle = BorderStyle.FixedSingle,
                     Location = new Point(257 + 62 * (i % 10), 32 + 50 * Convert.ToInt32(Math.Floor(i / 10d))),
