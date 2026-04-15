@@ -98,7 +98,18 @@ namespace Mids_Reborn.UI.Forms.UpdateSystem
                 Converters = { new JsonStringEnumConverter() }
             };
 
-            File.WriteAllText(tempPath, JsonSerializer.Serialize(entries, options));
+            // Wrap entries in a Manifest-shaped object so MRBBootstrap can
+            // deserialize the file as MRB_Boostrap.Models.Manifest.
+            // Previously this serialized the bare List<ManifestEntryDto>,
+            // producing a JSON array that the bootstrapper could not parse.
+            var manifest = new
+            {
+                ManifestVersion = "3.0",
+                Updates = entries,
+                LastUpdated = DateTime.UtcNow.ToString("MM/dd/yyyy HH:mm:ss")
+            };
+
+            File.WriteAllText(tempPath, JsonSerializer.Serialize(manifest, options));
             return tempPath;
         }
 
