@@ -151,7 +151,17 @@ namespace Mids_Reborn.UI.Controls
 
         // Calculated read-only properties
         [Browsable(false)]
-        public int TotalContentHeight => _items.Sum(item => item.CalculatedHeight);
+        public int TotalContentHeight
+        {
+            get
+            {
+                if (_items.Count == 0) return 0;
+
+                int itemHeight = _items.Sum(item => item.CalculatedHeight);
+                int spacingHeight = DpiScale(_lineSpacing) * (_items.Count - 1);
+                return Math.Max(0, itemHeight + spacingHeight);
+            }
+        }
 
         [Browsable(false)]
         public bool ScrollVisible { get; private set; }
@@ -210,9 +220,11 @@ namespace Mids_Reborn.UI.Controls
         {
             base.OnHandleCreated(e);
 
-            //Font = new Font("Noto Sans", Font.Size, FontStyle.Bold);
-            // This is the correct, safe place for design-time initialization.
-            PopulateWithSampleData();
+            if (DesignMode)
+            {
+                PopulateWithSampleData();
+            }
+
             RecalculateLayout();
         }
 
@@ -305,6 +317,7 @@ namespace Mids_Reborn.UI.Controls
         {
             base.OnResize(e);
             RecalculateLayout();
+            Invalidate();
         }
 
         private void RecalculateLayout()
@@ -315,6 +328,7 @@ namespace Mids_Reborn.UI.Controls
             int padY = DpiScale(PaddingY);
 
             int scaledBarWidth = DpiScale(ScrollBarWidth);
+            int scaledLineSpacing = DpiScale(_lineSpacing);
             int fullTextWidth = Math.Max(0, Width - (padX * 2)); 
             int availableHeight = Math.Max(0, Height - padY - padY);
 
@@ -339,6 +353,8 @@ namespace Mids_Reborn.UI.Controls
 
                     totalHeightNoScroll += measured + (padY * 2);
                 }
+
+                totalHeightNoScroll = Math.Max(0, totalHeightNoScroll + scaledLineSpacing * (_items.Count - 1));
             }
 
             // Decide if a scrollbar will be visible based on PASS 1 result
@@ -372,9 +388,12 @@ namespace Mids_Reborn.UI.Controls
                 sumHeights += item.CalculatedHeight;
             }
 
+            int maxScroll = Math.Max(0, TotalContentHeight - _textArea.Height);
+            _scrollOffset = Math.Clamp(_scrollOffset, 0, maxScroll);
+
             // Keep an average line height for wheel scrolling granularity
             _actualLineHeight = _items.Count > 0
-                ? sumHeights / _items.Count
+                ? Math.Max(1, (sumHeights + scaledLineSpacing * (_items.Count - 1)) / _items.Count)
                 : DpiScale(Font.Height + PaddingY * 2);
         }
 
@@ -400,7 +419,7 @@ namespace Mids_Reborn.UI.Controls
             DrawItems(g);
 
             // 3. Draw Scrollbar (if needed)
-            if (Scrollable && TotalContentHeight > ClientRectangle.Height)
+            if (Scrollable && TotalContentHeight > _textArea.Height)
             {
                 DrawScrollBar(g);
             }
@@ -454,7 +473,7 @@ namespace Mids_Reborn.UI.Controls
                         itemFlags
                     );
                 }
-                currentY += item.CalculatedHeight;
+                currentY += item.CalculatedHeight + DpiScale(_lineSpacing);
             }
         }
 
@@ -506,12 +525,12 @@ namespace Mids_Reborn.UI.Controls
 
             // --- Draw Thumb ---
             int trackHeight = trackBottom - trackTop;
-            if (TotalContentHeight <= Height || trackHeight <= 0) return;
+            if (TotalContentHeight <= _textArea.Height || trackHeight <= 0) return;
 
-            float contentRatio = (float)Height / TotalContentHeight;
+            float contentRatio = (float)_textArea.Height / TotalContentHeight;
             int thumbHeight = Math.Max(DpiScale(10), (int)(trackHeight * contentRatio));
 
-            int scrollablePixels = TotalContentHeight - Height;
+            int scrollablePixels = TotalContentHeight - _textArea.Height;
             float scrollPercent = scrollablePixels > 0 ? (float)_scrollOffset / scrollablePixels : 0;
             int thumbY = trackTop + (int)((trackHeight - thumbHeight) * scrollPercent);
 
@@ -585,7 +604,7 @@ namespace Mids_Reborn.UI.Controls
                 {
                     return i;
                 }
-                currentY += _items[i].CalculatedHeight;
+                currentY += _items[i].CalculatedHeight + DpiScale(_lineSpacing);
             }
             return -1;
         }
@@ -596,7 +615,7 @@ namespace Mids_Reborn.UI.Controls
 
             int y = -_scrollOffset;
             for (int i = 0; i < index; i++)
-                y += _items[i].CalculatedHeight;
+                y += _items[i].CalculatedHeight + DpiScale(_lineSpacing);
 
             return new Rectangle(_textArea.X, y, _textArea.Width, _items[index].CalculatedHeight);
         }
@@ -680,7 +699,7 @@ namespace Mids_Reborn.UI.Controls
 
             if (_scrollDownButtonRect.Contains(e.Location) && Scrollable)
             {
-                int maxScroll = Math.Max(0, TotalContentHeight - Height);
+                int maxScroll = Math.Max(0, TotalContentHeight - _textArea.Height);
                 _scrollOffset = Math.Min(maxScroll, _scrollOffset + _actualLineHeight);
                 Invalidate();
                 return;

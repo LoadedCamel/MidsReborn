@@ -8,6 +8,7 @@ using System.Drawing.Imaging;
 using System.Drawing.Text;
 using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.UI.Renderer;
+using Mids_Reborn.UI.Theming;
 
 namespace Mids_Reborn.UI.Controls
 {
@@ -31,13 +32,15 @@ namespace Mids_Reborn.UI.Controls
         private const int PaddingOuter = 8;
         private const int HeaderBoxHeight = 25;
         private const int InfoBoxHeight = 50;
-        private const int FooterBoxHeight = 60;
-        private const int CornerRadius = 10;
+        private const int FooterBoxHeight = 64;
+        private const int CornerRadius = 8;
         private const int TypeIconCount = 5;
         private const int EnhGridCols = 4;
         private const int EnhGridRows = 5;
         private const int MaxVisibleGradeIcons = 4;
         private const int ArrowHeight = 12;
+        private const int RailExtraWidth = 4;
+        private const int IconInset = 3;
 
         #endregion
 
@@ -79,6 +82,8 @@ namespace Mids_Reborn.UI.Controls
         private Rectangle _lvlMinusRect = Rectangle.Empty;
 
         private int _scrollOffset;
+        private bool _themeHooked;
+        private Action? _themeChangedHandler;
 
         #endregion
 
@@ -109,7 +114,7 @@ namespace Mids_Reborn.UI.Controls
             _context = BufferedGraphicsManager.Current;
             Resize += (_, _) => RecreateBuffer();
             int maxHeight = CalculateMaxHeight();
-            Size = new Size(287, maxHeight);
+            Size = new Size(CalculateMaxWidth(), maxHeight);
             MouseWheel += I9Picker_MouseWheel;
             MouseMove += I9Picker_MouseMove;
             MouseDown += I9Picker_MouseDown;
@@ -123,6 +128,38 @@ namespace Mids_Reborn.UI.Controls
         #region Public Properties
 
         public EnhSelectorState View => _model.View;
+
+        #endregion
+
+        #region Theme
+
+        private DataViewTheme CurrentTheme
+        {
+            get
+            {
+                if (DesignMode)
+                {
+                    return ThemeManager.DesignTime.DataView;
+                }
+
+                return ThemeManager.CurrentTheme?.DataView ?? ThemeManager.DesignTime.DataView;
+            }
+        }
+
+        private I9PickerPalette CurrentPalette => I9PickerPalette.From(CurrentTheme, CurrentButtonTheme);
+
+        private ButtonTheme CurrentButtonTheme
+        {
+            get
+            {
+                if (DesignMode)
+                {
+                    return ThemeManager.DesignTime.Button;
+                }
+
+                return ThemeManager.CurrentTheme?.Button ?? ThemeManager.DesignTime.Button;
+            }
+        }
 
         #endregion
 
@@ -269,6 +306,20 @@ namespace Mids_Reborn.UI.Controls
             base.OnResize(e);
             using var path = RoundedRect(ClientRectangle, CornerRadius);
             Region = new Region(path);
+        }
+
+        protected override void OnHandleCreated(EventArgs e)
+        {
+            base.OnHandleCreated(e);
+
+            if (_themeHooked || DesignMode)
+            {
+                return;
+            }
+
+            _themeChangedHandler = Invalidate;
+            ThemeManager.ThemeChanged += _themeChangedHandler;
+            _themeHooked = true;
         }
 
         #endregion
@@ -621,8 +672,8 @@ namespace Mids_Reborn.UI.Controls
             DrawHeaderBox(g, out var headerBoxRect);
             DrawInfoBox(g, headerBoxRect, out var infoBoxRect);
             DefineHeaderRects(infoBoxRect, out var lastHeaderIcon);
-            DrawLShapedPanel(g, infoBoxRect, lastHeaderIcon); // NEW: after header icon rectangles
-            DrawTypeIcons(g, infoBoxRect);
+            DrawSelectorRailPanels(g, infoBoxRect, lastHeaderIcon);
+            DrawTypeIcons(g);
             DrawEnhancementGrid(g, lastHeaderIcon.Bottom + IconSpacing * 2, out var enhGridBounds);
             DrawGradeColumn(g, lastHeaderIcon.X, enhGridBounds.Top, enhGridBounds.Bottom);
             DrawFooterBox(g, out var leftTextRect);
@@ -635,7 +686,15 @@ namespace Mids_Reborn.UI.Controls
         {
             if (disposing)
             {
+                if (_themeHooked && _themeChangedHandler is not null)
+                {
+                    ThemeManager.ThemeChanged -= _themeChangedHandler;
+                    _themeHooked = false;
+                    _themeChangedHandler = null;
+                }
+
                 _buffer?.Dispose();
+                Region?.Dispose();
             }
 
             base.Dispose(disposing);
@@ -659,24 +718,26 @@ namespace Mids_Reborn.UI.Controls
         private void DrawOuterFrame(Graphics g)
         {
             var bounds = new Rectangle(0, 0, Width - 1, Height - 1);
+            var palette = CurrentPalette;
             using var path = RoundedRect(bounds, CornerRadius);
-            using var pen = new Pen(Color.FromArgb(60, 120, 220), 1.5f);
+            using var fill = new LinearGradientBrush(bounds, palette.BackgroundTop, palette.BackgroundBottom, LinearGradientMode.Vertical);
+            using var pen = new Pen(palette.Border, 1.5f);
+            g.FillPath(fill, path);
             g.DrawPath(pen, path);
         }
 
         private void DrawHeaderBox(Graphics g, out Rectangle rect)
         {
-            int totalWidth = PaddingOuter + TypeIconCount * (IconSize + IconSpacing) - IconSpacing;
+            int totalWidth = Width - PaddingOuter * 2;
             rect = new Rectangle(PaddingOuter, PaddingOuter, totalWidth, HeaderBoxHeight);
-            DrawRoundedBox(g, rect, CornerRadius,
-                Color.FromArgb(45, 45, 55),
-                Color.FromArgb(30, 30, 35),
-                Color.FromArgb(90, 140, 255));
+            var palette = CurrentPalette;
+            DrawRoundedBox(g, rect, CornerRadius, palette.HeaderTop, palette.HeaderBottom, palette.Border);
 
             using var font = new Font("Segoe UI", 9.5f, FontStyle.Bold);
+            using var textBrush = new SolidBrush(palette.Text);
 
             string title = _hoverTitle ?? "Enhancing...";
-            g.DrawString(title, font, Brushes.White, rect,
+            g.DrawString(title, font, textBrush, rect,
                 new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center });
         }
 
@@ -684,89 +745,60 @@ namespace Mids_Reborn.UI.Controls
         {
             int y = headerRect.Bottom + IconSpacing;
             infoBoxRect = new Rectangle(PaddingOuter, y, headerRect.Width, InfoBoxHeight);
+            var palette = CurrentPalette;
 
-            DrawRoundedBox(g, infoBoxRect, CornerRadius,
-                Color.FromArgb(38, 38, 44),
-                Color.FromArgb(30, 30, 35),
-                Color.FromArgb(85, 85, 100));
+            DrawRoundedBox(g, infoBoxRect, CornerRadius, palette.PanelTop, palette.PanelBottom, palette.Border);
 
             using var font = new Font("Segoe UI", 8.5f, FontStyle.Bold);
+            using var textBrush = new SolidBrush(palette.Text);
             var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
 
             string info = _hoverInfo ?? string.Empty;
-            g.DrawString(info, font, Brushes.White, infoBoxRect, sf);
+            g.DrawString(info, font, textBrush, infoBoxRect, sf);
         }
 
-        private void DrawLShapedPanel(Graphics g, Rectangle infoBoxRect, Rectangle lastHeaderIcon)
+        private void DrawSelectorRailPanels(Graphics g, Rectangle infoBoxRect, Rectangle lastHeaderIcon)
         {
-            int top = infoBoxRect.Bottom + IconSpacing;
-            int left = PaddingOuter;
-            int headerHeight = IconSize;
+            int top = infoBoxRect.Bottom + IconSpacing - 3;
+            int left = PaddingOuter - 2;
+            int railLeft = lastHeaderIcon.X - 3;
+            int railRight = lastHeaderIcon.Right + RailExtraWidth + 3;
+            int topRailBottom = top + IconSize + 6;
+            int railBottom = top + IconSize + IconSpacing * 2 +
+                             MaxVisibleGradeIcons * IconSize + (MaxVisibleGradeIcons - 1) * IconSpacing + 3;
+            var palette = CurrentPalette;
 
-            int lVerticalX = lastHeaderIcon.X; // Where vertical L column starts
-            int lVerticalWidth = IconSize;
+            var topRail = Rectangle.FromLTRB(left, top, railRight, topRailBottom);
+            var rightRail = Rectangle.FromLTRB(railLeft, top, railRight, railBottom);
 
-            int lVerticalHeight = EnhGridRows * IconSize + EnhGridRows * IconSpacing;
+            DrawRoundedBox(g, topRail, CornerRadius, palette.SelectorTop, palette.SelectorBottom, palette.SelectorBorder);
+            DrawRoundedBox(g, rightRail, CornerRadius, palette.SelectorTop, palette.SelectorBottom, palette.SelectorBorder);
 
-            // Header bar rectangle
-            Rectangle headerRect = new Rectangle(left, top, lVerticalX + IconSize - left, headerHeight);
-
-            // Grade column rectangle
-            Rectangle gradeRect = new Rectangle(lVerticalX, top, lVerticalWidth, lVerticalHeight);
-
-            using var path = new GraphicsPath();
-
-            // Header top bar: round top-left and top-right corners
-            path.AddArc(headerRect.Left, headerRect.Top, CornerRadius * 2, CornerRadius * 2, 180, 90);
-            path.AddArc(headerRect.Right - CornerRadius * 2, headerRect.Top, CornerRadius * 2, CornerRadius * 2, 270, 90);
-            path.AddLine(headerRect.Right, headerRect.Bottom, gradeRect.Right, gradeRect.Bottom - CornerRadius);
-
-            // Grade column: round bottom-right corner only
-            path.AddArc(gradeRect.Right - CornerRadius * 2, gradeRect.Bottom - CornerRadius * 2, CornerRadius * 2, CornerRadius * 2, 0, 90);
-            path.AddLine(gradeRect.Right - CornerRadius, gradeRect.Bottom, gradeRect.Left, gradeRect.Bottom);
-            path.AddLine(gradeRect.Left, gradeRect.Bottom, gradeRect.Left, headerRect.Bottom);
-            path.AddLine(gradeRect.Left, headerRect.Bottom, headerRect.Left, headerRect.Bottom);
-            path.CloseFigure();
-
-            using var fill = new LinearGradientBrush(headerRect,
-                Color.FromArgb(38, 38, 44),
-                Color.FromArgb(38, 38, 44),
-                LinearGradientMode.Vertical);
-
-            using var border = new Pen(Color.FromArgb(85, 85, 100), 1.0f);
-
-            g.FillPath(fill, path);
-            g.DrawPath(border, path);
+            using var separator = new Pen(Color.FromArgb(170, palette.RailBorder), 1f);
+            using var softSeparator = new Pen(Color.FromArgb(70, palette.RailBorder), 1f);
+            g.DrawLine(separator, railLeft - 3, topRailBottom + 1, railLeft - 3, railBottom - 2);
+            g.DrawLine(softSeparator, railLeft - 1, topRailBottom + 1, railLeft - 1, railBottom - 2);
         }
 
 
 
-        private void DrawTypeIcons(Graphics g, Rectangle previousRect)
+        private void DrawTypeIcons(Graphics g)
         {
-            int top = previousRect.Bottom + IconSpacing;
-            int left = PaddingOuter;
-
             foreach (var (bounds, index) in _headerRects)
             {
-                // Determine if a glow is needed and what color it should be.
-                Color? glow = null;
-                if (_model.View.TabId == (Enums.eType)index) // Prominent glow for selected
-                {
-                    glow = Color.FromArgb(220, 255, 225, 100);
-                }
-                else if (_hoverHeaderIndex == index) // Soft glow for hovered
-                {
-                    glow = Color.FromArgb(150, 255, 215, 0);
-                }
+                bool selected = _model.View.TabId == (Enums.eType)index;
+                bool hovered = _hoverHeaderIndex == index;
 
                 if (AssetManager.EnhTypes.TryGetValue(index, out var iconBitmap))
                 {
                     if (iconBitmap?.Bitmap != null)
                     {
                         // Draw the entire individual icon. No clipping is needed.
-                        g.DrawImage(iconBitmap.Bitmap, bounds);
+                        g.DrawImage(iconBitmap.Bitmap, IconContentRect(bounds));
                     }
                 }
+
+                DrawIconFrame(g, bounds, selected, hovered);
             }
         }
 
@@ -789,20 +821,23 @@ namespace Mids_Reborn.UI.Controls
                     var rect = new Rectangle(x, y, IconSize, IconSize);
 
                     _enhancementRects.Add((rect, i)); // Use the grid's rects list for sets temporarily
+                    bool hovered = _hoverEnhIndex == i;
 
                     // 1. Look up the specific "SetO" border from the Borders dictionary.
                     var borderKey = new Point(AssetManager.OriginIndex, (int)Origin.Grade.SetO);
                     if (AssetManager.Borders.TryGetValue(borderKey, out var borderImage) && borderImage?.Bitmap != null)
                     {
-                        g.DrawImage(borderImage.Bitmap, rect);
+                        g.DrawImage(borderImage.Bitmap, IconContentRect(rect));
                     }
 
                     // 2. Look up the specific Set icon from the Sets dictionary.
                     var setId = _model.SetIds[i];
                     if (AssetManager.Sets.TryGetValue(setId, out var setImage) && setImage?.Bitmap != null)
                     {
-                        g.DrawImage(setImage.Bitmap, rect);
+                        g.DrawImage(setImage.Bitmap, IconContentRect(rect));
                     }
+
+                    DrawIconFrame(g, rect, false, hovered);
                 }
                 return; // Stop here to prevent drawing enhancements underneath
             }
@@ -820,15 +855,18 @@ namespace Mids_Reborn.UI.Controls
                     var rect = new Rectangle(x, y, IconSize, IconSize);
 
                     _enhancementRects.Add((rect, index));
-                    
+                    bool selected = _model.View.PickerId == index;
+                    bool hovered = _hoverEnhIndex == index;
 
                     int enhId = _model.EnhancementIds[index];
                     int iconIndex = GetEnhImageIndex(enhId);
                     if (iconIndex >= 0 && iconIndex < AssetManager.Enhancements.Count)
                     {
                         var grade = GetGradeForEnhancement(enhId);
-                        var attr = GetImageAttributes(IsEnhancementGrayed(index));
-                        AssetManager.DrawEnhancementAt(g, rect, iconIndex, grade, attr);
+                        bool disabled = IsEnhancementGrayed(index);
+                        using var attr = GetImageAttributes(disabled);
+                        AssetManager.DrawEnhancementAt(g, IconContentRect(rect), iconIndex, grade, attr);
+                        DrawIconFrame(g, rect, selected, hovered, disabled);
                     }
                 }
             }
@@ -842,7 +880,7 @@ namespace Mids_Reborn.UI.Controls
             int availableHeight = bottom - top;
 
             // Set a clipping region to ensure icons don't draw outside their area during scroll.
-            var clipRect = new Rectangle(columnLeft, top, IconSize + 1, availableHeight);
+            var clipRect = new Rectangle(columnLeft - 1, top, IconSize + RailExtraWidth + 2, availableHeight);
             Region oldClip = g.Clip;
             g.SetClip(clipRect);
 
@@ -890,24 +928,18 @@ namespace Mids_Reborn.UI.Controls
                         // A real item exists: Draw it fully and make it clickable.
                         _gradeRects.Add((rect, dataIndex));
 
-                        Color? glow = null;
-                        if (_hoverSetIndex == dataIndex)
-                        {
-                            glow = Color.FromArgb(150, 255, 215, 0);
-                        }
+                        bool selected = IsSelectorIndexSelected(tabId, indices, dataIndex);
+                        bool hovered = _hoverSetIndex == dataIndex;
 
                         // Look up the specific icon from the correct dictionary
                         int iconKey = indices[dataIndex];
                         if (sourceDictionary.TryGetValue(iconKey, out var iconToDraw) && iconToDraw?.Bitmap != null)
                         {
                             // Draw the entire individual icon; no source rectangle needed.
-                            g.DrawImage(iconToDraw.Bitmap, rect);
+                            g.DrawImage(iconToDraw.Bitmap, IconContentRect(rect));
                         }
-                    }
-                    else
-                    {
-                        // No real item: Draw an empty placeholder box that is NOT clickable.
-                        //DrawIconBox(g, rect);
+
+                        DrawIconFrame(g, rect, selected, hovered);
                     }
                 }
             }
@@ -938,42 +970,49 @@ namespace Mids_Reborn.UI.Controls
 
         private void DrawFooterBox(Graphics g, out Rectangle leftTextBox)
         {
-            int totalWidth = PaddingOuter + TypeIconCount * (IconSize + IconSpacing + 2);
             int y = Height - PaddingOuter - FooterBoxHeight + 10;
-            int leftTextWidth = totalWidth - IconSize - PaddingOuter * 3;
+            int leftTextWidth = Width - IconSize - PaddingOuter * 3;
 
             leftTextBox = new Rectangle(PaddingOuter, y, leftTextWidth, FooterBoxHeight - PaddingOuter);
+            var palette = CurrentPalette;
 
-            DrawRoundedBox(g, leftTextBox, CornerRadius,
-                Color.FromArgb(38, 38, 44),
-                Color.FromArgb(30, 30, 35),
-                Color.FromArgb(85, 85, 100));
+            DrawRoundedBox(g, leftTextBox, CornerRadius, palette.PanelTop, palette.PanelBottom, palette.Border);
 
             using var font = new Font("Segoe UI", 8.5f);
+            using var textBrush = new SolidBrush(palette.Text);
+            using var sf = new StringFormat
+            {
+                Alignment = StringAlignment.Near,
+                LineAlignment = StringAlignment.Center,
+                Trimming = StringTrimming.EllipsisWord
+            };
 
             string footer = _hoverText ?? string.Empty;
-            g.DrawString(footer, font, Brushes.White, leftTextBox,
-                new StringFormat { Alignment = StringAlignment.Near, LineAlignment = StringAlignment.Center });
+            var textRect = Rectangle.Inflate(leftTextBox, -8, -5);
+            g.DrawString(footer, font, textBrush, textRect, sf);
         }
 
         private void DrawLevelBox(Graphics g, Rectangle leftTextBox)
         {
             int y = Height - PaddingOuter - FooterBoxHeight + 10;
             _levelBoxRect = new Rectangle(leftTextBox.Right + PaddingOuter, y, IconSize, FooterBoxHeight - PaddingOuter);
+            var palette = CurrentPalette;
 
             DrawRoundedBox(g, _levelBoxRect, CornerRadius,
-                Color.FromArgb(60, 100, 150),
-                Color.FromArgb(40, 60, 90),
-                Color.FromArgb(120, 170, 255));
+                palette.LevelTop,
+                palette.LevelBottom,
+                palette.LevelBorder);
 
             using var fontTitle = new Font("Segoe UI", 8.25f, FontStyle.Bold);
             using var fontValue = new Font("Segoe UI", 9.5f, FontStyle.Bold);
+            using var textBrush = new SolidBrush(palette.LevelText);
+            using var lockBrush = new SolidBrush(palette.MutedText);
             var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
 
             var titleRect = new Rectangle(_levelBoxRect.X, _levelBoxRect.Y, _levelBoxRect.Width, _levelBoxRect.Height / 3);
             var valueRect = new Rectangle(_levelBoxRect.X, _levelBoxRect.Y + titleRect.Height, _levelBoxRect.Width, titleRect.Height);
 
-            g.DrawString("LVL", fontTitle, Brushes.White, titleRect, sf);
+            g.DrawString("LVL", fontTitle, textBrush, titleRect, sf);
 
 
             string ioLevelText;
@@ -995,7 +1034,7 @@ namespace Mids_Reborn.UI.Controls
                 }
             }
 
-            g.DrawString(ioLevelText, fontValue, Brushes.White, valueRect, sf);
+            g.DrawString(ioLevelText, fontValue, textBrush, valueRect, sf);
 
             // Determine if enhancement is adjustable
             bool showAdjustmentButtons = false;
@@ -1021,14 +1060,14 @@ namespace Mids_Reborn.UI.Controls
 
             if (showAdjustmentButtons)
             {
-                g.DrawString("-", fontValue, Brushes.White, _lvlMinusRect, sf);
-                g.DrawString("+", fontValue, Brushes.White, _lvlPlusRect, sf);
+                g.DrawString("-", fontValue, textBrush, _lvlMinusRect, sf);
+                g.DrawString("+", fontValue, textBrush, _lvlPlusRect, sf);
             }
             else
             {
                 using var lockFont = new Font("Segoe MDL2 Assets", 10, FontStyle.Bold); // Modern icon font
-                g.DrawString("\uE72E", lockFont, Brushes.Gray, _lvlMinusRect, sf); // Unicode for 'Lock'
-                g.DrawString("\uE72E", lockFont, Brushes.Gray, _lvlPlusRect, sf);
+                g.DrawString("\uE72E", lockFont, lockBrush, _lvlMinusRect, sf); // Unicode for 'Lock'
+                g.DrawString("\uE72E", lockFont, lockBrush, _lvlPlusRect, sf);
             }
         }
 
@@ -1061,39 +1100,47 @@ namespace Mids_Reborn.UI.Controls
             }
         }
 
-        private static void DrawIconBox(Graphics g, Rectangle rect, bool darker = false, Color? glowColor = null)
+        private void DrawIconFrame(Graphics g, Rectangle rect, bool selected, bool hovered, bool disabled = false)
         {
-            // If a glow color is provided, draw the glow effect first.
-            if (glowColor.HasValue)
+            var palette = CurrentPalette;
+
+            if (disabled)
             {
-                using var glowPath = RoundedRect(rect, 6);
-                using var glowPen = new Pen(Color.FromArgb(200, glowColor.Value), 4f);
-                g.DrawPath(glowPen, glowPath);
+                using var disabledPath = RoundedRect(rect, 7);
+                using var disabledBrush = new SolidBrush(Color.FromArgb(72, palette.BackgroundTop));
+                g.FillPath(disabledBrush, disabledPath);
             }
 
-            // Draw the solid icon box on top of the glow.
-            using var path = RoundedRect(rect, 6);
-            using var bg = new SolidBrush(darker ? Color.FromArgb(50, 65, 85) : Color.FromArgb(60, 60, 70));
-            using var pen = new Pen(Color.FromArgb(100, 130, 180), 1.1f);
-            g.FillPath(bg, path);
+            if (!selected && !hovered)
+            {
+                return;
+            }
+
+            var borderRect = Rectangle.Inflate(rect, -1, -1);
+            using var path = RoundedRect(borderRect, 7);
+            using var pen = new Pen(selected ? palette.Accent : Color.FromArgb(190, palette.Accent), selected ? 2f : 1.4f);
             g.DrawPath(pen, path);
         }
 
-        private static void DrawHeaderIcon(Graphics g, Dictionary<int, ExtendedBitmap> icons, Rectangle destination, int index)
+        private bool IsSelectorIndexSelected(Enums.eType tabId, int[] indices, int dataIndex)
         {
-            if (icons.TryGetValue(index, out var bitmap) && bitmap.Bitmap is not null)
+            if (dataIndex < 0 || dataIndex >= indices.Length)
             {
-                g.DrawImage(bitmap.Bitmap, destination);
+                return false;
             }
+
+            return tabId switch
+            {
+                Enums.eType.Normal => (int)_model.View.GradeId == dataIndex,
+                Enums.eType.SpecialO => _model.View.SpecialId == indices[dataIndex],
+                Enums.eType.SetO => _model.View.SetTypeId == dataIndex,
+                _ => false
+            };
         }
 
-        private static void DrawShieldPlaceholder(Graphics g, Rectangle rect)
+        private static Rectangle IconContentRect(Rectangle rect)
         {
-            using var path = RoundedRect(rect, 6);
-            using var bg = new SolidBrush(Color.FromArgb(45, 45, 55));
-            using var pen = new Pen(Color.FromArgb(110, 110, 130), 1.0f);
-            g.FillPath(bg, path);
-            g.DrawPath(pen, path);
+            return Rectangle.Inflate(rect, -IconInset, -IconInset);
         }
 
         private static void DrawRoundedBox(Graphics g, Rectangle rect, int radius, Color innerColor, Color outerColor, Color border)
@@ -1105,14 +1152,14 @@ namespace Mids_Reborn.UI.Controls
             g.DrawPath(pen, path);
         }
 
-        private static void DrawArrow(Graphics g, Point center, bool up)
+        private void DrawArrow(Graphics g, Point center, bool up)
         {
             Point[] pts = up
                 ? [new Point(center.X, center.Y - 4), new Point(center.X - 5, center.Y + 4), new Point(center.X + 5, center.Y + 4)
                 ]
                 : [new Point(center.X, center.Y + 4), new Point(center.X - 5, center.Y - 4), new Point(center.X + 5, center.Y - 4)
                 ];
-            using var brush = new SolidBrush(Color.White);
+            using var brush = new SolidBrush(CurrentPalette.Accent);
             g.FillPolygon(brush, pts);
         }
 
@@ -1231,6 +1278,13 @@ namespace Mids_Reborn.UI.Controls
                               PaddingOuter;
 
             return totalHeight;
+        }
+
+        private static int CalculateMaxWidth()
+        {
+            var railLeft = PaddingOuter + (TypeIconCount - 1) * (IconSize + IconSpacing + 2);
+
+            return railLeft + IconSize + RailExtraWidth + PaddingOuter;
         }
 
         private void SetHoverText(string? info, string? text)
@@ -1455,6 +1509,50 @@ namespace Mids_Reborn.UI.Controls
         #endregion
 
         #region Nested Types
+
+        private sealed record I9PickerPalette(
+            Color BackgroundTop,
+            Color BackgroundBottom,
+            Color PanelTop,
+            Color PanelBottom,
+            Color Border,
+            Color HeaderTop,
+            Color HeaderBottom,
+            Color SelectorTop,
+            Color SelectorBottom,
+            Color SelectorBorder,
+            Color RailBorder,
+            Color Accent,
+            Color Text,
+            Color MutedText,
+            Color LevelTop,
+            Color LevelBottom,
+            Color LevelBorder,
+            Color LevelText)
+        {
+            public static I9PickerPalette From(DataViewTheme dataView, ButtonTheme button)
+            {
+                return new I9PickerPalette(
+                    dataView.Background,
+                    dataView.Card,
+                    dataView.Card,
+                    dataView.Background,
+                    dataView.Border,
+                    dataView.HeaderTop,
+                    dataView.HeaderBottom,
+                    Color.FromArgb(130, dataView.GridHeaderTop),
+                    Color.FromArgb(100, dataView.GridHeaderBottom),
+                    Color.FromArgb(150, dataView.GridHeaderBorder),
+                    dataView.GridHeaderBorder,
+                    dataView.Accent,
+                    dataView.Text,
+                    dataView.Muted,
+                    button.GradientTop,
+                    button.GradientBottom,
+                    button.Border,
+                    button.ForeColor);
+            }
+        }
 
         private sealed class EnhSelectorModel
         {

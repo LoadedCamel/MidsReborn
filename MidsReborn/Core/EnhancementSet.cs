@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using FastDeepCloner;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
@@ -280,6 +281,15 @@ namespace Mids_Reborn.Core
             }
             else
             {
+                if (!special && fromPopup && bonusSection)
+                {
+                    var groupedEffectString = GetGroupedBonusEffectString(bonusItemArray[index], effectsFilter);
+                    if (groupedEffectString != null)
+                    {
+                        return groupedEffectString;
+                    }
+                }
+
                 var effectList = new List<string>();
                 for (var index1 = 0; index1 < bonusItemArray[index].Name.Length; index1++)
                 {
@@ -345,6 +355,62 @@ namespace Mids_Reborn.Core
             }
 
             return str1;
+        }
+
+        private static string? GetGroupedBonusEffectString(BonusItem bonusItem, List<Enums.eEffectType>? effectsFilter)
+        {
+            if (MidsContext.Character?.CurrentBuild == null)
+            {
+                return null;
+            }
+
+            var fxFilter = effectsFilter ?? new List<Enums.eEffectType>
+            {
+                Enums.eEffectType.Null,
+                Enums.eEffectType.NullBool,
+                Enums.eEffectType.DesignerStatus
+            };
+
+            var effectList = new List<string>();
+            foreach (var powerIndex in bonusItem.Index)
+            {
+                if (powerIndex < 0 | powerIndex > DatabaseAPI.Database.Power.Length - 1)
+                {
+                    return string.Empty;
+                }
+
+                var power = new Power(DatabaseAPI.Database.Power[powerIndex]);
+                if (power.HasGrantPowerEffect)
+                {
+                    power.ApplyGrantPowerEffects();
+                }
+                else if (!power.AppliedExecutes)
+                {
+                    power.ProcessExecutes();
+                }
+
+                var groupedEffects = GroupedFx.AssembleGroupedEffects(power, true)
+                    .Where(g =>
+                    {
+                        var effect = g.GetEffectAt(power);
+                        return !fxFilter.Contains(effect.EffectType) &&
+                               effect.EffectClass != Enums.eEffectClass.Ignored &&
+                               effect.EffectType != Enums.eEffectType.GrantPower;
+                    })
+                    .Select(g => g.GetTooltip(power, true)
+                        .Replace("\r\n", ", ")
+                        .Replace("\n", ", ")
+                        .Replace("EndRec", "Recovery"))
+                    .Where(s => !string.IsNullOrWhiteSpace(s))
+                    .Distinct();
+
+                effectList.AddRange(groupedEffects);
+            }
+
+            var ret = string.Join(", ", effectList);
+            ret = Regex.Replace(ret, @"Knockback \(Mag -(?<mag>[\d.]+)\), Knockup \(Mag -\k<mag>\)", "Knockback Protection (Mag ${mag})");
+
+            return ret;
         }
 
         public void StoreTo(BinaryWriter writer)

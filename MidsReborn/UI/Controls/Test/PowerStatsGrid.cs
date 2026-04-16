@@ -163,6 +163,21 @@ public sealed class PowerStatsGrid : Control
 
     #endregion
 
+    #region Dispose
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            ThemeManager.ThemeChanged -= ThemeManagerOnThemeChanged;
+            _tooltip.Dispose();
+        }
+
+        base.Dispose(disposing);
+    }
+
+    #endregion
+
     #region Public API
 
     public void SetRows(IEnumerable<Row> rows)
@@ -298,44 +313,30 @@ public sealed class PowerStatsGrid : Control
 
     private static (string text, Color color) BuildValueCell(Row row, DataViewTheme theme)
     {
-        // Enhanced/Base already scaled for display upstream when needed (e.g., Accuracy%).
-        string main = FormatNorm(row.EnhancedValue, row.Unit);
+        string enhanced = FormatNorm(row.EnhancedValue, row.Unit);
+        string @base = FormatNorm(row.BaseValue, row.Unit);
+        bool changed = Math.Abs(row.EnhancedValue - row.BaseValue) >= Eps;
 
-        // Gain semantics: positive when beneficial (lower-is-better inverts)
-        double rawDelta = row.EnhancedValue - row.BaseValue;
-        double gain = row.HigherIsBetter ? rawDelta : -rawDelta;
+        var text = changed ? $"{enhanced} ({@base})" : enhanced;
 
-        bool noChange = Math.Abs(rawDelta) < Eps
-                        || (Math.Abs(row.BaseValue) < Eps && Math.Abs(row.EnhancedValue) < Eps);
-
-        // Color by ED band (if available) and improvement
-        var neutral = theme.GridNeutral;
-        var bandLow = theme.GridBandLow;
-        var bandMid = theme.GridBandMid;
-        var bandHigh = theme.GridBandHigh;
-
-        bool improved = row.HigherIsBetter ? rawDelta > 0.0 : rawDelta < 0.0;
-        Color valueColor = bandLow;
-        switch (row.Band)
+        if (!changed && row.NeutralWhenZero)
         {
-            case -1: valueColor = (noChange && row.NeutralWhenZero) ? neutral : (improved ? bandLow : neutral); break;
-            case 0: valueColor = (noChange && row.NeutralWhenZero) ? neutral : (improved ? bandLow : neutral); break;
-            case 1: valueColor = (noChange && row.NeutralWhenZero) ? neutral : (improved ? bandMid : neutral); break;
-            case 2: valueColor = (noChange && row.NeutralWhenZero) ? neutral : (improved ? bandHigh : neutral); break;
+            return (text, theme.GridNeutral);
         }
 
-        // Append inline signed absolute delta
-        string gainUnit = row.GainUnitOverride ?? row.Unit;
-        string inline = (noChange && row.NeutralWhenZero) ? string.Empty : $"  ({FormatNormSigned(gain, gainUnit)})";
+        var improved = row.HigherIsBetter
+            ? row.EnhancedValue > row.BaseValue
+            : row.EnhancedValue < row.BaseValue;
 
-        // Append % if requested and base != 0
-        if (!row.HideGainPercent && !noChange && Math.Abs(row.BaseValue) >= 1e-9)
+        var color = row.Band switch
         {
-            double pct = (gain / Math.Abs(row.BaseValue)) * 100.0;
-            inline += $"  ({pct:0.#} %)";
-        }
+            1 when improved => theme.GridBandMid,
+            2 when improved => theme.GridBandHigh,
+            _ when improved => theme.GridBandLow,
+            _ => theme.GridNeutral
+        };
 
-        return (main + inline, valueColor);
+        return (text, color);
     }
 
     private static string FormatNorm(double v, string unit, bool sign = false)

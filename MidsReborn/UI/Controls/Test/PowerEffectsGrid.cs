@@ -320,6 +320,21 @@ namespace Mids_Reborn.UI.Controls.Test
 
         #endregion
 
+        #region Dispose
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                ThemeManager.ThemeChanged -= ThemeManagerOnThemeChanged;
+                _tooltip.Dispose();
+            }
+
+            base.Dispose(disposing);
+        }
+
+        #endregion
+
         #region Public API
 
         public void SetGroups(IEnumerable<Group> groups)
@@ -491,11 +506,11 @@ namespace Mids_Reborn.UI.Controls.Test
                     {
                         case NumericRow:
                             {
-                                bool hasVectors = TrySplitVectorsSpecial(row.Label, out _, out _);
+                                var (_, chips) = SplitLabelChips(row.Label);
 
                                 int h = ScalePx(_rowHeight);
-                                if (hasVectors)
-                                    h += (int)Math.Round(ScalePx(_rowHeight) * 0.6); // space for smaller vector line
+                                if (chips.Length > 0)
+                                    h += ScalePx(18);
 
                                 var r = new Rectangle(gp, y, innerWidth, h);
                                 _layout.Add(RenderEntry.Num(gi, ri, r, row));
@@ -589,10 +604,8 @@ namespace Mids_Reborn.UI.Controls.Test
                                     g.FillRectangle(hov, rc);
                                 }
 
-                                var label = row.Label + (row.AffectedByEd ? "  ⓔ" : "");
-                                TextRenderer.DrawText(g, label, Font, cols.rcLabel,
-                                                      Color.FromArgb(200, theme.Accent), Color.Transparent,
-                                                      CellFlags | TextFormatFlags.Left);
+                                DrawLabelWithChips(g, row.Label, row.AffectedByEd, cols.rcLabel, theme,
+                                    Color.FromArgb(200, theme.Accent));
 
                                 // Compose Value cell = Enhanced + inline (Gain) + optional (%)
                                 bool noChange = row.GainText == "—" ||
@@ -723,9 +736,7 @@ namespace Mids_Reborn.UI.Controls.Test
                                     g.FillRectangle(hov, rc);
                                 }
 
-                                TextRenderer.DrawText(g, row.Label, Font, cols.rcLabel,
-                                                      theme.Text, Color.Transparent,
-                                                      CellFlags | TextFormatFlags.Left);
+                                DrawLabelWithChips(g, row.Label, false, cols.rcLabel, theme, theme.Text);
 
                                 // Value uses description if available; else the tag
                                 var valueText = !string.IsNullOrWhiteSpace(row.Description)
@@ -772,37 +783,91 @@ namespace Mids_Reborn.UI.Controls.Test
             return text;
         }
 
-        private static bool TrySplitVectorsSpecial(string label, out string main, out string? vectors)
+        private static (string Main, string[] Chips) SplitLabelChips(string label)
         {
-            main = label ?? string.Empty;
-            vectors = null;
-            if (string.IsNullOrWhiteSpace(label)) return false;
+            if (string.IsNullOrWhiteSpace(label)) return (string.Empty, []);
 
             int open = label.IndexOf(" (", StringComparison.Ordinal);
             int close = label.EndsWith(")", StringComparison.Ordinal) ? label.LastIndexOf(')') : -1;
-            if (open <= 0 || close <= open) return false;
+            if (open <= 0 || close <= open) return (label, []);
 
             string head = label.Substring(0, open);
             string inside = label.Substring(open + 2, close - (open + 2)); // no parentheses
 
-            if (inside.Equals("All", StringComparison.OrdinalIgnoreCase))
-            {
-                main = label; // unchanged, single-line
-                return false;
-            }
-
             if (inside.Equals("None", StringComparison.OrdinalIgnoreCase))
             {
-                if (head.StartsWith("Defense", StringComparison.OrdinalIgnoreCase)) main = "Base Defense";
-                else if (head.StartsWith("Resistance", StringComparison.OrdinalIgnoreCase)) main = "Base Resistance";
-                else main = $"Base {head}";
-                vectors = null;
-                return false;
+                if (head.StartsWith("Defense", StringComparison.OrdinalIgnoreCase)) return ("Base Defense", []);
+                if (head.StartsWith("Resistance", StringComparison.OrdinalIgnoreCase)) return ("Base Resistance", []);
+                return ($"Base {head}", []);
             }
 
-            main = head;
-            vectors = inside; // comma-separated list
-            return true;
+            var chips = inside
+                .Split([',', '/'], StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries)
+                .ToArray();
+
+            return (head, chips);
+        }
+
+        private void DrawLabelWithChips(Graphics g, string label, bool affectedByEd, Rectangle bounds,
+            DataViewTheme theme, Color labelColor)
+        {
+            var (main, chips) = SplitLabelChips(label);
+            if (affectedByEd)
+            {
+                main += "  ⓔ";
+            }
+
+            if (chips.Length == 0)
+            {
+                TextRenderer.DrawText(g, main, Font, bounds, labelColor, Color.Transparent,
+                    CellFlags | TextFormatFlags.Left);
+                return;
+            }
+
+            var mainRect = new Rectangle(bounds.X, bounds.Y + ScalePx(2), bounds.Width, Font.Height + ScalePx(2));
+            TextRenderer.DrawText(g, main, Font, mainRect, labelColor, Color.Transparent,
+                TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding);
+
+            var chipFont = Font;
+            var chipY = Math.Min(bounds.Bottom - ScalePx(17), mainRect.Bottom + ScalePx(1));
+            var x = bounds.X;
+            var maxX = bounds.Right;
+            using var chipBack = new SolidBrush(Color.FromArgb(42, theme.Accent));
+            using var chipBorder = new Pen(Color.FromArgb(95, theme.Accent));
+
+            foreach (var chip in chips)
+            {
+                var textSize = TextRenderer.MeasureText(g, chip, chipFont, new Size(int.MaxValue, int.MaxValue),
+                    TextFormatFlags.NoPadding);
+                var chipRect = new Rectangle(x, chipY, textSize.Width + ScalePx(10), ScalePx(16));
+                if (chipRect.Right > maxX)
+                {
+                    break;
+                }
+
+                using (var path = RoundedRect(chipRect, ScalePx(4)))
+                {
+                    g.FillPath(chipBack, path);
+                    g.DrawPath(chipBorder, path);
+                }
+
+                var textRect = Rectangle.Inflate(chipRect, -ScalePx(5), 0);
+                TextRenderer.DrawText(g, chip, chipFont, textRect, theme.Text, Color.Transparent,
+                    TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.NoPadding);
+                x = chipRect.Right + ScalePx(4);
+            }
+        }
+
+        private static GraphicsPath RoundedRect(Rectangle bounds, int radius)
+        {
+            var path = new GraphicsPath();
+            var d = Math.Max(1, radius * 2);
+            path.AddArc(bounds.X, bounds.Y, d, d, 180, 90);
+            path.AddArc(bounds.Right - d, bounds.Y, d, d, 270, 90);
+            path.AddArc(bounds.Right - d, bounds.Bottom - d, d, d, 0, 90);
+            path.AddArc(bounds.X, bounds.Bottom - d, d, d, 90, 90);
+            path.CloseFigure();
+            return path;
         }
 
         private void DrawScrollbar(Graphics g)

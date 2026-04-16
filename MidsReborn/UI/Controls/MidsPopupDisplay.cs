@@ -31,6 +31,9 @@ namespace Mids_Reborn.UI.Controls
             TextFormatFlags.Top | TextFormatFlags.Left | TextFormatFlags.NoClipping |
             TextFormatFlags.TextBoxControl;
 
+        private const int ColumnGap = 8;
+        private const int MinimumReadableWidth = 300;
+
         private PopUp.PopupData _popupData;
         private I9Picker.EnhUniqueStatus? _enhUniqueStatus;
 
@@ -228,7 +231,7 @@ namespace Mids_Reborn.UI.Controls
 
             // 3) If too wide for the chosen side, re-measure with a width cap
             var avail = GetAvailableWidth(client, anchor, bias, margin);
-            if (Width > avail) EnsureMeasuredToFit(avail);
+            if (Width > avail) EnsureMeasuredToFit(GetWidthCap(client, avail, margin));
 
             // 4) Compute preferred location using SAFE clamping (never throws)
             Point Preferred(Rectangle c, Rectangle a, PlacementBias b, int m, int w, int h)
@@ -268,7 +271,7 @@ namespace Mids_Reborn.UI.Controls
             if (flipped != bias)
             {
                 var availFlip = GetAvailableWidth(client, anchor, flipped, margin);
-                if (Width > availFlip) EnsureMeasuredToFit(availFlip);
+                if (Width > availFlip) EnsureMeasuredToFit(GetWidthCap(client, availFlip, margin));
                 loc = Preferred(client, anchor, flipped, margin, Width, Height);
                 bias = flipped;
             }
@@ -357,30 +360,48 @@ namespace Mids_Reborn.UI.Controls
 
                     // Measure bounded by width, with effectively unbounded height
                     var measured = TextRenderer.MeasureText(g, text, Font, new Size(layout.Width, int.MaxValue), flags);
+                    var lineHeight = measured.Height;
 
                     // Track widest unbounded width (like original)
                     var unbounded = TextRenderer.MeasureText(g, line.Text, Font);
                     maxWidth = maxWidth == -1 ? unbounded.Width : Math.Max(maxWidth, unbounded.Width);
-
-                    // Final height (+1 line spacing as in original)
-                    layout.Height = measured.Height + 1;
-
-                    // Draw main text
-                    TextRenderer.DrawText(g, line.Text, Font, layout, line.Color, flags);
 
                     // Column text (same baseline rect; right/left aligned as requested)
                     if (line.HasColumn)
                     {
                         int colX = _internalPadding + (int)Math.Round((Width - 2 * _internalPadding) * _columnPosition);
                         int colW = Math.Max(0, Width - colX - _internalPadding);
-                        var colRect = new Rectangle(colX, layout.Y, colW, layout.Height);
+                        var colRect = new Rectangle(colX, layout.Y, colW, Height);
 
-                        var colFlags = (BaseFlags | TextFormatFlags.WordBreak);
+                        var colSingleWidth = TextRenderer.MeasureText(g, line.TextColumn ?? string.Empty, Font, Size.Empty, MeasureTight).Width;
+                        var colFlags = (!_wrapColumnsThisLayout || colSingleWidth <= colW)
+                            ? (BaseFlags | TextFormatFlags.SingleLine)
+                            : (BaseFlags | TextFormatFlags.WordBreak);
+
+                        var colMeasured = TextRenderer.MeasureText(g, line.TextColumn ?? string.Empty, Font, new Size(colW, int.MaxValue), colFlags);
+                        lineHeight = Math.Max(lineHeight, colMeasured.Height);
+                    }
+
+                    // Final height (+1 line spacing as in original)
+                    layout.Height = lineHeight + 1;
+
+                    // Draw main text
+                    TextRenderer.DrawText(g, line.Text, Font, layout, line.Color, flags);
+
+                    if (line.HasColumn)
+                    {
+                        int colX = _internalPadding + (int)Math.Round((Width - 2 * _internalPadding) * _columnPosition);
+                        int colW = Math.Max(0, Width - colX - _internalPadding);
+                        var colRect = new Rectangle(colX, layout.Y, colW, layout.Height);
+                        var colSingleWidth = TextRenderer.MeasureText(g, line.TextColumn ?? string.Empty, Font, Size.Empty, MeasureTight).Width;
+                        var colFlags = (!_wrapColumnsThisLayout || colSingleWidth <= colW)
+                            ? (BaseFlags | TextFormatFlags.SingleLine)
+                            : (BaseFlags | TextFormatFlags.WordBreak);
 
                         TextRenderer.DrawText(g, line.TextColumn, Font, colRect, line.ColorColumn, colFlags);
                     }
 
-                    y += measured.Height + 1;
+                    y += lineHeight + 1;
                 }
 
                 y += _sectionPadding;
@@ -415,6 +436,17 @@ namespace Mids_Reborn.UI.Controls
                 PlacementBias.PreferLeft => Math.Max(0, (anchor.Left - margin) - (client.Left + margin)),
                 _ => Math.Max(0, client.Width - 2 * margin),
             };
+        }
+
+        private static int GetWidthCap(Rectangle client, int availableWidth, int margin)
+        {
+            var clientCap = Math.Max(1, client.Width - 2 * margin);
+            if (availableWidth >= MinimumReadableWidth || clientCap < MinimumReadableWidth)
+            {
+                return Math.Max(1, Math.Min(availableWidth, clientCap));
+            }
+
+            return Math.Min(MinimumReadableWidth, clientCap);
         }
 
         private void EnsureMeasuredToFit(int availableWidth)
@@ -462,9 +494,10 @@ namespace Mids_Reborn.UI.Controls
                         string col = line.TextColumn ?? string.Empty;
                         int colW = TextRenderer.MeasureText(g, col, Font, Size.Empty, MeasureTight).Width;
 
+                        int needMainBeforeColumn = 2 * p + (int)Math.Ceiling((indentPx + mainW + ColumnGap) / cp);
                         // width needed so that single-line column fits at ColumnPosition
                         int needCol = (int)Math.Ceiling((colW + 2 * p - 2 * p * cp) / (1f - cp));
-                        requiredWidth = Math.Max(requiredWidth, needCol);
+                        requiredWidth = Math.Max(requiredWidth, Math.Max(needMainBeforeColumn, needCol));
                     }
                 }
             }

@@ -98,48 +98,23 @@ public static class PowerEffects
         {
             var gre = kv.Key;
             var item = kv.Value;
+            var valueText = BuildBaseEnhancedText(item);
 
             switch (gre.EffectType)
             {
-                // --- Status (Mez) => split rows: Magnitude + Duration ---
+                // The list item produced by GroupedFx is the formatting authority.
+                // Keep the grid from recalculating percentages or deltas on top of it.
                 case Enums.eEffectType.Mez:
                 {
-                    // Sum magnitudes across the grouped effects
-                    var magSum = gre.GetMagSum(pBase, pEnh);
-                    double? bMag = magSum.Base;
-                    double? eMag = magSum.Enhanced;
-
-                    // Representative duration from the first ranked effect (as before)
-                    var idx = gre.GetRankedEffectIndex(rankedEffects, 0);
-                    double? bDur = null, eDur = null;
-                    if (idx >= 0 && idx < pBase.Effects.Length && idx < pEnh.Effects.Length)
-                    {
-                        bDur = pBase.Effects[idx].Duration;
-                        eDur = pEnh.Effects[idx].Duration;
-                    }
-
-                    // Decide if "higher is better" based on WHO is actually affected
-                    var cohort = TargetingExtensions.ResolveCohort(gre.ToWho, pEnh.EntitiesAffected, pEnh.EntitiesAutoHit);
-                    bool higherIsBetterForMez = cohort is TargetingExtensions.Cohort.Foe or TargetingExtensions.Cohort.Pet;
-
                     var ed = ComputeEdForFx(pEnh, gre, mezSubId: (int)gre.MezType);
-
-                    rows.Add(new PowerEffectsGrid.MezRow(
+                    rows.Add(new PowerEffectsGrid.NumericRow(
                         label: item.Label,
-                        baseMagnitude: bMag,
-                        enhancedMagnitude: eMag,
-                        baseDuration: bDur,
-                        enhancedDuration: eDur,
-                        higherIsBetterMagnitude: higherIsBetterForMez,
-                        higherIsBetterDuration: higherIsBetterForMez,
-                        affectedByEdMagnitude: false,
-                        affectedByEdDuration: ed.Active,
-                        neutralWhenZeroMagnitude: true,
-                        neutralWhenZeroDuration: true,
-                        hideGainPercentMagnitude: false,
-                        hideGainPercentDuration: false,
-                        bandMagnitude: -1,
-                        bandDuration: ed.BandIndex,
+                        baseText: item.AltValue ?? string.Empty,
+                        enhancedText: valueText,
+                        gainText: "—",
+                        gainPctText: "—",
+                        affectedByEd: ed.Active,
+                        band: ed.BandIndex,
                         tooltip: item.ToolTip));
                     break;
                 }
@@ -176,57 +151,18 @@ public static class PowerEffects
                 // --- Everything else => NumericRow using value (enh) and alt (base) from builder ---
                 default:
                 {
-                    // Base/enh texts are already formatted by the builder – keep them.
-                    var baseTxt = item.AltValue ?? "—";
-                    var enhTxt = item.Value;
-
-                    // Raw magnitude sums for correctness/banding
-                    var asPercent = AsPercent(gre.EffectType);
-                    var sum = gre.GetMagSum(pBase, pEnh);
-                    double bRaw = sum.Base;
-                    double eRaw = sum.Enhanced;
-
-                    // Scale for display
-                    double b = asPercent ? bRaw * 100.0 : bRaw;
-                    double e = asPercent ? eRaw * 100.0 : eRaw;
-
-                    // Cohort + semantics
-                    var cohort =
-                        TargetingExtensions.ResolveCohort(gre.ToWho, pEnh.EntitiesAffected, pEnh.EntitiesAutoHit);
-                    var semanticType = (gre.ETModifies != Enums.eEffectType.None) ? gre.ETModifies : gre.EffectType;
-
-                    bool higherIsBetter = IsHigherIsBetter(semanticType);
-                    bool lowerIsBetter = IsLowerIsBetter(semanticType);
-
-                    // Debuff detection for the aggregated row (enhanced value orientation is sufficient here)
-                    bool isDebuff = IsDebuffForGroup(semanticType, cohort, eRaw);
-
-                    // Does this benefit the player? (Self/Friend buff OR Foe/Pet debuff)
-                    bool benefitsPlayer = BenefitsPlayer(cohort, isDebuff);
-
-                    // Compute oriented gain: + always means "better for the player"
-                    double gain = ComputePlayerGain(b, e, higherIsBetter, benefitsPlayer);
-
-                    // % gain relative to base magnitude (use absolute to avoid sign illusion when base < 0)
-                    string unitSuffix = asPercent ? "%" : "";
-                    string gainTxt = FmtSigned(gain, unitSuffix);
-                    string pctTxt = (Math.Abs(b) > 1e-9)
-                        ? FmtSigned((gain / Math.Abs(b)) * 100.0, "%", showPlus: false)
-                        : "—";
-
                     // ED banding
                     var ed = ComputeEdForFx(pEnh, gre, -1);
 
                     rows.Add(new PowerEffectsGrid.NumericRow(
                         label: item.Label,
-                        baseText: baseTxt,
-                        enhancedText: enhTxt,
-                        gainText: (NearZero(gain) ? "—" : gainTxt),
-                        gainPctText: (NearZero(gain) ? "—" : pctTxt),
-                        higherIsBetter: higherIsBetter,
+                        baseText: item.AltValue ?? string.Empty,
+                        enhancedText: valueText,
+                        gainText: "—",
+                        gainPctText: "—",
                         affectedByEd: ed.Active,
                         neutralWhenZero: true,
-                        hideGainPercent: false,
+                        hideGainPercent: true,
                         band: ed.BandIndex,
                         tooltip: item.ToolTip));
                     break;
@@ -235,6 +171,16 @@ public static class PowerEffects
         }
 
         return new PowerEffectsGrid.Group(title, rows);
+    }
+
+    private static string BuildBaseEnhancedText(EffectListItem item)
+    {
+        if (string.IsNullOrWhiteSpace(item.AltValue) || string.Equals(item.Value, item.AltValue, StringComparison.Ordinal))
+        {
+            return item.Value;
+        }
+
+        return $"{item.Value} ({item.AltValue})";
     }
 
 

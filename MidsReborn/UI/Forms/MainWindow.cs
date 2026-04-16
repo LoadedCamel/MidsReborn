@@ -49,7 +49,7 @@ namespace Mids_Reborn.UI.Forms
         private long _popupLastOpenTime;
         private int _originalIndex = -1;
 
-        private int _baselineCanvasWidth;
+        private const int BaselineCanvasWidth = 610;
         private float _lastMasterScale = 1f;
         private int _lastCanvasWidth = -1;
 
@@ -232,6 +232,9 @@ namespace Mids_Reborn.UI.Forms
             ApplyTheme();
             InitializePopup();
             InitializePicker();
+            tmrGfx.Tick += tmrGfx_Tick;
+            dataView.SlotUpdate += DataView_SlotUpdate;
+            dataView.SlotFlip += DataView_SlotFlip;
         }
 
         private void OnResizeEnd(object? sender, EventArgs e)
@@ -831,13 +834,12 @@ namespace Mids_Reborn.UI.Forms
                 Grade = I9Picker.View.GradeId,
                 RelativeLevel = I9Picker.View.RelLevel
             };
-            dataView.SetEnhancementPicker(i9Slot);
+
             ShowPopup(PickerHID, -1, -1, new Point(), I9Picker.Bounds, i9Slot, -1, VerticalAlignment.Top, enhUniqueStatus);
         }
 
         private void I9Picker_HoverSet(int e)
         {
-            dataView.SetSetPicker(e);
             ShowPopup(PickerHID, -1, -1, new Point(), I9Picker.Bounds, null, e);
         }
 
@@ -3519,10 +3521,9 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            var point1 = new Point();
             var currentBuild = MidsContext.Character.CurrentBuild;
             var power = currentBuild.Powers[FlipPowerID];
-            var point2 = drawing.DrawPowerSlot(ref power);
+            drawing.DrawPowerSlot(ref power);
             var index = -1;
             var Enh1 = -1;
             var Enh2 = -1;
@@ -3532,16 +3533,12 @@ namespace Mids_Reborn.UI.Forms
             using var solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             var num1 = FlipSlotState.Length - 1;
             Rectangle rectangle1;
-            var slotId = -1;
             for (var i = 0; i <= num1; ++i)
             {
-                point1.X = (int)Math.Round(point2.X - 30 + (drawing.SzPower.Width - drawing.SzSlot.Width * 6) / 2.0);
-                point1.Y = point2.Y + drawing.OffsetY;
                 ++FlipSlotState[i];
                 var num2 = 1f;
                 var powerEntry = MidsContext.Character.CurrentBuild.Powers[FlipPowerID];
                 var slot = powerEntry.Slots[i];
-                slotId = i;
                 if (FlipSlotState[i] < 0)
                 {
                     index = slot.FlippedEnhancement.Enh;
@@ -3582,15 +3579,21 @@ namespace Mids_Reborn.UI.Forms
                     }
                 }
 
-                rectangle1 = new Rectangle(point1.X + 30 * i, point1.Y, 30, 30);
+                rectangle1 = drawing.GetEnhancementSlotRect(FlipPowerID, i);
                 if (!(num2 > 0.0))
                 {
                     continue;
                 }
 
-                var rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (30.0 - 30.0 * num2) / 2.0),
+                if (rectangle1.IsEmpty)
+                {
+                    continue;
+                }
+
+                var rectangle2 = new Rectangle((int)Math.Round(rectangle1.X + (rectangle1.Width - rectangle1.Width * num2) / 2.0),
                     rectangle1.Y,
-                    (int)Math.Round(30.0 * num2), 30);
+                    (int)Math.Round(rectangle1.Width * num2),
+                    rectangle1.Height);
                 if (index > -1)
                 {
                     var graphics = drawing.BxBuffer.Graphics;
@@ -3619,12 +3622,20 @@ namespace Mids_Reborn.UI.Forms
                 }
             }
 
-            rectangle1 = new Rectangle(point1.X - 1, point1.Y - 1, drawing.SzPower.Width + 1,
-                drawing.SzSlot.Height + 1);
+            rectangle1 = drawing.GetPowerAreaRect(FlipPowerID);
+            rectangle1.Inflate(2, 2);
             canvas.Invalidate(rectangle1);
             if (FlipSlotState[^1] >= FlipSteps)
             {
                 EndFlip();
+            }
+        }
+
+        private void tmrGfx_Tick(object? sender, EventArgs e)
+        {
+            if (FlipActive)
+            {
+                DoFlipStep();
             }
         }
 
@@ -3641,6 +3652,29 @@ namespace Mids_Reborn.UI.Forms
         {
             DoRedraw();
             RefreshInfo();
+        }
+
+        private void DataView_SlotFlip(int powerIndex)
+        {
+            StartFlip(powerIndex);
+        }
+
+        private void DataView_SlotUpdate(IPower? power, int val)
+        {
+            DoRedraw();
+            RefreshInfo();
+            if (_frmTeam?.Visible != true || power == null)
+            {
+                return;
+            }
+
+            var pKey = power.CSPrimaryKey;
+            if (pKey == null)
+            {
+                return;
+            }
+
+            _frmTeam.FeedbackUpdate(pKey, val);
         }
 
         internal void DoRedraw()
@@ -4303,8 +4337,7 @@ namespace Mids_Reborn.UI.Forms
             }
             else
             {
-                canvas.Reinit();
-                canvas.ResizeToContent();
+                UpdateUiLayout(true);
             }
 
             if (skipDraw) return;
@@ -4322,11 +4355,8 @@ namespace Mids_Reborn.UI.Forms
             int widthForLayout = canvas.ClientSize.Width;
             if (widthForLayout <= 0) return;
 
-            // Capture the real baseline once (designer says ~614 here, but we learn it at runtime)
-            if (_baselineCanvasWidth <= 0) _baselineCanvasWidth = widthForLayout;
-
             // Compute raw scale vs baseline
-            float rawScale = (float)widthForLayout / _baselineCanvasWidth;
+            float rawScale = (float)widthForLayout / BaselineCanvasWidth;
 
             // Tune how “eager” scaling feels: 0 = frozen, 1 = full raw scaling
             const float scalingIntensity = 0.5f;    // 50% dampening is a good default
@@ -4358,7 +4388,7 @@ namespace Mids_Reborn.UI.Forms
             {
                 _lastCanvasWidth = widthAfter;
 
-                rawScale = (float)widthAfter / _baselineCanvasWidth;
+                rawScale = (float)widthAfter / BaselineCanvasWidth;
                 master = 1f + (rawScale - 1f) * scalingIntensity;
                 master = Math.Clamp(master, 0.90f, 1.30f);
                 _lastMasterScale = master;
@@ -4636,7 +4666,7 @@ namespace Mids_Reborn.UI.Forms
                 ? MidsPopupDisplay.PlacementBias.PreferBelow
                 : MidsPopupDisplay.PlacementBias.PreferAbove;
 
-            if (picker || powerListing) bias = MidsPopupDisplay.PlacementBias.PreferRight;
+            if (sIdx > -1 || picker || powerListing) bias = MidsPopupDisplay.PlacementBias.PreferRight;
 
             // Show at anchor (client coords). Constrain to FORM so it auto-flips above when near bottom.
             Rectangle anchorFormRect =

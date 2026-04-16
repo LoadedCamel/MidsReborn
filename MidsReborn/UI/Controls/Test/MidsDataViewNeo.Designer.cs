@@ -16,13 +16,21 @@ namespace Mids_Reborn.UI.Controls
         /// <param name="disposing">true if managed resources should be disposed; otherwise, false.</param>
         protected override void Dispose(bool disposing)
         {
-            if (disposing && (components != null))
+            if (disposing)
             {
+                if (!DesignMode)
+                {
+                    ThemeManager.ThemeChanged -= ThemeManagerOnThemeChanged;
+                }
+
+                DisposeFlipBuffer();
+
                 if (!_isDocked)
                 {
                     try { Redock(); } catch { /* swallow on dispose */ }
                 }
-                components.Dispose();
+
+                components?.Dispose();
             }
             base.Dispose(disposing);
         }
@@ -43,6 +51,9 @@ namespace Mids_Reborn.UI.Controls
             title = new Label();
             dvPages = new FormPages();
             infoView = new Page();
+            infoDataList = new PairedListEx();
+            infoLDesc = new MidsRichTextView();
+            infoSDesc = new RichTextBox();
             powerStatsGrid = new Mids_Reborn.UI.Controls.Test.PowerStatsGrid();
             infoDamageDisplay = new ModernDamageDisplay();
             sliderHost = new Panel();
@@ -200,6 +211,8 @@ namespace Mids_Reborn.UI.Controls
             infoView.Controls.Add(powerStatsGrid);
             infoView.Controls.Add(infoDamageDisplay);
             infoView.Controls.Add(sliderHost);
+            infoView.Controls.Add(infoLDesc);
+            infoView.Controls.Add(infoSDesc);
             infoView.Dock = DockStyle.Fill;
             infoView.ForeColor = Color.WhiteSmoke;
             infoView.Location = new Point(0, 0);
@@ -207,6 +220,61 @@ namespace Mids_Reborn.UI.Controls
             infoView.Size = new Size(400, 351);
             infoView.TabIndex = 0;
             infoView.Title = "My First Page";
+            //
+            // infoDataList
+            //
+            infoDataList.AutoScroll = true;
+            infoDataList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            infoDataList.BackColor = Color.FromArgb(1, 7, 15);
+            infoDataList.Dock = DockStyle.Fill;
+            infoDataList.Font = new Font("Segoe UI", 9.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            infoDataList.HighlightColor = Color.FromArgb(128, 128, 255);
+            infoDataList.HighlightTextColor = Color.Black;
+            infoDataList.ItemColor = Color.WhiteSmoke;
+            infoDataList.Location = new Point(0, 137);
+            infoDataList.Margin = new Padding(0);
+            infoDataList.Name = "infoDataList";
+            infoDataList.SampleRowsPerColumn = 5;
+            infoDataList.SetItemsBold = false;
+            infoDataList.ShowRuntimeSamples = true;
+            infoDataList.Size = new Size(400, 137);
+            infoDataList.TabIndex = 83;
+            infoDataList.UseHighlighting = true;
+            infoDataList.ValueAlternateColor = Color.Chartreuse;
+            infoDataList.ValueColor = Color.WhiteSmoke;
+            infoDataList.ValueConditionColor = Color.Firebrick;
+            infoDataList.ValueSpecialColor = Color.SlateBlue;
+            //
+            // infoLDesc
+            //
+            infoLDesc.BackColor = Color.FromArgb(1, 7, 15);
+            infoLDesc.BorderStyle = BorderStyle.None;
+            infoLDesc.DetectUrls = false;
+            infoLDesc.Dock = DockStyle.Top;
+            infoLDesc.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            infoLDesc.ForeColor = Color.WhiteSmoke;
+            infoLDesc.Location = new Point(0, 44);
+            infoLDesc.Name = "infoLDesc";
+            infoLDesc.Size = new Size(400, 62);
+            infoLDesc.TabIndex = 84;
+            infoLDesc.Text = "";
+            infoLDesc.WheelScrollEnabled = true;
+            infoLDesc.WordWrap = true;
+            //
+            // infoSDesc
+            //
+            infoSDesc.BackColor = Color.FromArgb(1, 7, 15);
+            infoSDesc.BorderStyle = BorderStyle.None;
+            infoSDesc.Dock = DockStyle.Top;
+            infoSDesc.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            infoSDesc.ForeColor = Color.WhiteSmoke;
+            infoSDesc.Location = new Point(0, 0);
+            infoSDesc.Name = "infoSDesc";
+            infoSDesc.ReadOnly = true;
+            infoSDesc.ScrollBars = RichTextBoxScrollBars.None;
+            infoSDesc.Size = new Size(400, 44);
+            infoSDesc.TabIndex = 85;
+            infoSDesc.Text = "";
             // 
             // powerStatsGrid
             // 
@@ -660,6 +728,9 @@ namespace Mids_Reborn.UI.Controls
         private Panel pnlEnhActive;
         private Panel pnlEnhInactive;
         private FontAwesome.Sharp.IconButton LockButton;
+        private PairedListEx infoDataList;
+        internal MidsRichTextView infoLDesc;
+        private RichTextBox infoSDesc;
         private Test.PowerStatsGrid powerStatsGrid;
         internal ModernDamageDisplay infoDamageDisplay;
         private Test.MidsTrackBar midsTrackBar1;

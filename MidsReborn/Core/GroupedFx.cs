@@ -62,6 +62,21 @@ namespace Mids_Reborn.Core
     {
         private const float Tolerance = 1e-4f;
 
+        private static bool MagnitudesMatch(float left, float right)
+        {
+            if (float.IsNaN(left) || float.IsNaN(right))
+            {
+                return float.IsNaN(left) && float.IsNaN(right);
+            }
+
+            if (float.IsInfinity(left) || float.IsInfinity(right))
+            {
+                return left.Equals(right);
+            }
+
+            return Math.Abs(left - right) < Tolerance;
+        }
+
         private struct EnhanceableFxId : IEquatable<EnhanceableFxId>
         {
             public Enums.eEffectType EffectType;
@@ -614,7 +629,7 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.Enhancement when etModifies == Enums.eEffectType.Mez:
                     if (allMez.All(e => e.Value >= 0))
                     {
-                        cVectors.Add("Mez");
+                        cVectors.Add("All");
                         ignoredVectors.AddRangeUnique(allMez.Values.ToList());
                     }
 
@@ -690,7 +705,7 @@ namespace Mids_Reborn.Core
 
             if (allMez.All(e => e.Value >= 0))
             {
-                cVectors.Add("Mez");
+                cVectors.Add("All");
                 ignoredVectors.AddRangeUnique(allMez.Values.ToList());
             }
 
@@ -791,7 +806,10 @@ namespace Mids_Reborn.Core
 
                     Enums.eEffectType.Mez or Enums.eEffectType.MezResist => baseEffectString.Replace(
                         $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].MezType})",
-                        $"{power.Effects[IncludedEffects[i]].EffectType}({vectors})"),
+                        $"{power.Effects[IncludedEffects[i]].EffectType}({vectors})")
+                        .Replace(
+                            $"Mez Resistance ({power.Effects[IncludedEffects[i]].MezType})",
+                            $"Mez Resistance ({vectors})"),
 
                     Enums.eEffectType.Enhancement when power.Effects[IncludedEffects[i]].ETModifies is Enums.eEffectType
                             .Mez
@@ -956,7 +974,7 @@ namespace Mids_Reborn.Core
             string fmt(float v) => asPercent ? $"{Utilities.FixDP(v * 100)}%" : Utilities.FixDP(v);
 
             value = $"{fmt(enhMag)}";
-            var alt = baseMag is > Tolerance or < -Tolerance ? fmt(baseMag) : null;
+            var alt = Math.Abs(baseMag - enhMag) > Tolerance ? fmt(baseMag) : null;
 
             var tipTitle = BuildLabel(gre, pEnh);
             tip = $"{tipTitle}  Base: {fmt(baseMag)}  Enhanced: {fmt(enhMag)}";
@@ -1099,6 +1117,7 @@ namespace Mids_Reborn.Core
                 var eff = power.Effects[firstInBounds];
                 if (eff.EffectType is Enums.eEffectType.Defense
                     or Enums.eEffectType.Resistance
+                    or Enums.eEffectType.DamageBuff
                     or Enums.eEffectType.Elusivity
                     or Enums.eEffectType.Mez
                     or Enums.eEffectType.MezResist
@@ -1149,7 +1168,7 @@ namespace Mids_Reborn.Core
                         .Where(e =>
                             e.Value.EffectType is Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
                                 or Enums.eEffectType.SpeedRunning && e.Value.ToWho == fxIdentifier.ToWho &&
-                            Math.Abs(e.Value.BuffedMag - mag) < Tolerance &&
+                            MagnitudesMatch(e.Value.BuffedMag, mag) &&
                             e.Value.isEnhancementEffect == enhancementEffect &&
                             e.Value.PvMode == fxIdentifier.PvMode &&
                             e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
@@ -1161,7 +1180,7 @@ namespace Mids_Reborn.Core
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
                                 e.Value.ETModifies == fxIdentifier.ETModifies && e.Value.ToWho == fxIdentifier.ToWho &&
-                                Math.Abs(e.Value.BuffedMag - mag) < Tolerance &&
+                                MagnitudesMatch(e.Value.BuffedMag, mag) &&
                                 e.Value.isEnhancementEffect == enhancementEffect &&
                                 e.Value.PvMode == fxIdentifier.PvMode &&
                                 e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
@@ -1173,7 +1192,7 @@ namespace Mids_Reborn.Core
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
                                 e.Value.ETModifies is not Enums.eEffectType.Mez and not Enums.eEffectType.MezResist &&
                                 e.Value.ToWho == fxIdentifier.ToWho &&
-                                Math.Abs(e.Value.BuffedMag - mag) < Tolerance &&
+                                MagnitudesMatch(e.Value.BuffedMag, mag) &&
                                 e.Value.isEnhancementEffect == enhancementEffect &&
                                 e.Value.PvMode == fxIdentifier.PvMode &&
                                 e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
@@ -1185,7 +1204,7 @@ namespace Mids_Reborn.Core
                         .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                         .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
                                     e.Value.ToWho == fxIdentifier.ToWho &&
-                                    Math.Abs(e.Value.BuffedMag - mag) < Tolerance &&
+                                    MagnitudesMatch(e.Value.BuffedMag, mag) &&
                                     e.Value.isEnhancementEffect == enhancementEffect &&
                                     e.Value.PvMode == fxIdentifier.PvMode &&
                                     e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
@@ -1195,7 +1214,7 @@ namespace Mids_Reborn.Core
                 Enums.eEffectType.DamageBuff when specialCase == Enums.eSpecialCase.Defiance => power.Effects
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho &&
-                                Math.Abs(e.Value.BuffedMag - mag) < Tolerance &&
+                                MagnitudesMatch(e.Value.BuffedMag, mag) &&
                                 e.Value.SpecialCase == specialCase && e.Value.isEnhancementEffect == enhancementEffect &&
                                 e.Value.PvMode == fxIdentifier.PvMode &&
                                 e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
@@ -1205,7 +1224,7 @@ namespace Mids_Reborn.Core
                 Enums.eEffectType.DamageBuff => power.Effects
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho &&
-                                Math.Abs(e.Value.BuffedMag - mag) < Tolerance &&
+                                MagnitudesMatch(e.Value.BuffedMag, mag) &&
                                 e.Value.SpecialCase != Enums.eSpecialCase.Defiance &&
                                 e.Value.isEnhancementEffect == enhancementEffect &&
                                 e.Value.PvMode == fxIdentifier.PvMode &&
@@ -1216,7 +1235,7 @@ namespace Mids_Reborn.Core
                 Enums.eEffectType.Damage => power.Effects
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho &&
-                                Math.Abs(e.Value.BuffedMag - mag) < Tolerance &&
+                                MagnitudesMatch(e.Value.BuffedMag, mag) &&
                                 e.Value.DamageType == fxIdentifier.DamageType &&
                                 e.Value.SpecialCase == specialCase &&
                                 e.Value.isEnhancementEffect == enhancementEffect &&
@@ -1552,7 +1571,7 @@ namespace Mids_Reborn.Core
                 var similarGreList = groupedRankedEffects
                     .Select((e, id) => new KeyValuePair<int, GroupedFx>(id, e))
                     .Where(e => e.Value.FxIdentifier.Equals(groupedRankedEffects[i].FxIdentifier) &&
-                                Math.Abs(e.Value.Mag - groupedRankedEffects[i].Mag) < Tolerance &&
+                                MagnitudesMatch(e.Value.Mag, groupedRankedEffects[i].Mag) &&
                                 e.Value.EnhancementEffect == groupedRankedEffects[i].EnhancementEffect &&
                                 e.Value.SpecialCase == groupedRankedEffects[i].SpecialCase)
                     .ToList();
@@ -1904,7 +1923,7 @@ namespace Mids_Reborn.Core
                 var similarGreList = groupedRankedEffects
                     .Select((e, id) => new KeyValuePair<int, GroupedFx>(id, e))
                     .Where(e => e.Value.FxIdentifier.Equals(groupedRankedEffects[i].FxIdentifier) &&
-                                Math.Abs(e.Value.Mag - groupedRankedEffects[i].Mag) < Tolerance &&
+                                MagnitudesMatch(e.Value.Mag, groupedRankedEffects[i].Mag) &&
                                 e.Value.EnhancementEffect == groupedRankedEffects[i].EnhancementEffect &&
                                 e.Value.SpecialCase == groupedRankedEffects[i].SpecialCase)
                     .ToList();
@@ -1989,7 +2008,8 @@ namespace Mids_Reborn.Core
                     var fx1 = power.Effects[a];
                     var fx2 = power.Effects[b];
 
-                    return fx1.BuffedMag < fx2.BuffedMag ? 1 : -1;
+                    var magCompare = fx2.BuffedMag.CompareTo(fx1.BuffedMag);
+                    return magCompare != 0 ? magCompare : a.CompareTo(b);
                 });
             }
 

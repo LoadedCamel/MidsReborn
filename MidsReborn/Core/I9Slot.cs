@@ -363,6 +363,19 @@ namespace Mids_Reborn.Core
             }
             else
             {
+                var groupedGrantEffects = GetGroupedEffectsStringLong(enhBoostPower, true);
+                if (!string.IsNullOrWhiteSpace(groupedGrantEffects))
+                {
+                    if (stringBuilder.Length > 0)
+                    {
+                        stringBuilder.Append("\n");
+                    }
+
+                    stringBuilder.Append(groupedGrantEffects);
+                    str1 = stringBuilder.ToString().Replace("Slf", "Self").Replace("Tgt", "Target");
+                    return str1;
+                }
+
                 IPower power = new Power(enhBoostPower);
                 power.ApplyGrantPowerEffects();
                 var returnMask = Array.Empty<int>();
@@ -497,21 +510,44 @@ namespace Mids_Reborn.Core
             return str1;
         }
 
-        private string GetGroupedEffectsStringLong(IPower? enhBoostPower)
+        private string GetGroupedEffectsStringLong(IPower? enhBoostPower, bool absorbedGrantEffectsOnly = false)
         {
             if (enhBoostPower == null)
             {
                 return "";
             }
 
-            if (!enhBoostPower.AppliedExecutes)
+            var power = enhBoostPower;
+            if (enhBoostPower.HasGrantPowerEffect)
             {
-                enhBoostPower.ProcessExecutes();
+                power = new Power(enhBoostPower);
+                power.ApplyGrantPowerEffects();
             }
 
-            var groupedEffects = GroupedFx.AssembleGroupedEffects(enhBoostPower, true);
+            if (!power.AppliedExecutes)
+            {
+                power.ProcessExecutes();
+            }
 
-            return string.Join("\r\n", groupedEffects.Select(e => e.GetTooltip(enhBoostPower, true)));
+            var groupedEffects = GroupedFx.AssembleGroupedEffects(power, true)
+                .Where(g =>
+                {
+                    var effect = g.GetEffectAt(power);
+                    if (effect.EffectClass == Enums.eEffectClass.Ignored ||
+                        effect.EffectType == Enums.eEffectType.GrantPower)
+                    {
+                        return false;
+                    }
+
+                    return !absorbedGrantEffectsOnly ||
+                           effect.Absorbed_Effect ||
+                           effect.Absorbed_EffectID >= 0;
+                })
+                .Select(g => g.GetTooltip(power, true))
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Distinct();
+
+            return string.Join("\n", groupedEffects);
         }
 
         public string GetEnhancementStringLong()
@@ -541,14 +577,17 @@ namespace Mids_Reborn.Core
             foreach (var idx in setBonusesForEnh.Index)
             {
                 var power = DatabaseAPI.Database.Power[idx];
-                var effectList = power.Effects.Select(effect => effect.BuildEffectString(true, "", false, false, false, true, false, false, true)).Where(tEffectString => !string.IsNullOrEmpty(tEffectString)).ToList();
+                var effectList = GetGroupedEffectsStringLong(power);
 
-                result += effectList.Count switch // result = effectList.Count ?
+                if (!string.IsNullOrWhiteSpace(effectList))
                 {
-                    > 1 => string.Join("\n", effectList),
-                    1 => effectList[0],
-                    _ => ""
-                };
+                    if (!string.IsNullOrWhiteSpace(result))
+                    {
+                        result += "\n";
+                    }
+
+                    result += effectList;
+                }
             }
 
             return result;

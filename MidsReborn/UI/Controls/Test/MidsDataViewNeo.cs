@@ -9,7 +9,6 @@ using Mids_Reborn.UI.Controls.Test;
 using Mids_Reborn.UI.Renderer;
 using Mids_Reborn.UI.Theming;
 using System.Drawing.Drawing2D;
-using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Globalization;
 using System.Reflection;
@@ -72,6 +71,7 @@ namespace Mids_Reborn.UI.Controls
 
         private bool bFloating;
         private ExtendedBitmap? bxFlip;
+        private bool _updatingPowerScaler;
         private int HistoryIDX;
         private bool _isLocked;
         private IPower? pBase;
@@ -79,8 +79,8 @@ namespace Mids_Reborn.UI.Controls
         private IPower? rootPowerBase;
         private IPower? rootPowerEnh;
         private int pLastScaleVal;
-        private List<GroupedFx> GroupedRankedEffects;
-        private List<KeyValuePair<GroupedFx, PairedListEx.Item>> EffectsItemPairs;
+        private List<GroupedFx> GroupedRankedEffects = [];
+        private List<KeyValuePair<GroupedFx, PairedListEx.Item>> EffectsItemPairs = [];
 
         public PetInfo PetInfo;
 
@@ -143,10 +143,30 @@ namespace Mids_Reborn.UI.Controls
 
             _selectedTabIndex = 0;
             SelectTab(_selectedTabIndex);
-            //dvPages.SelectedIndexChanged += DvPages_SelectedIndexChanged;
+            dvPages.SelectedIndexChanged += DvPages_SelectedIndexChanged;
+            midsTrackBar1.ValueChanged += MidsTrackBar_ValueChanged;
+            enhanceView.Resize += EnhanceView_Resize;
+            pnlEnhActive.SizeChanged += EnhancementPanel_SizeChanged;
+            pnlEnhInactive.SizeChanged += EnhancementPanel_SizeChanged;
+            pnlEnhActive.Paint += pnlEnhActive_Paint;
+            pnlEnhInactive.Paint += pnlEnhInactive_Paint;
+            pnlEnhActive.MouseClick += pnlEnhActive_MouseClick;
+            pnlEnhInactive.MouseClick += pnlEnhInactive_MouseClick;
+            pnlEnhActive.MouseMove += pnlEnhActive_MouseMove;
+            pnlEnhInactive.MouseMove += pnlEnhInactive_MouseMove;
+            LayoutEnhancementPage();
 
             PetInfo = new PetInfo();
-            if (!DesignMode) ThemeManager.ThemeChanged += Invalidate;
+            if (!DesignMode) ThemeManager.ThemeChanged += ThemeManagerOnThemeChanged;
+        }
+
+        #endregion
+
+        #region Theme
+
+        private void ThemeManagerOnThemeChanged()
+        {
+            Invalidate(true);
         }
 
         #endregion
@@ -331,10 +351,15 @@ namespace Mids_Reborn.UI.Controls
         {
             if (basePower == null)
             {
+                if (!_isLocked)
+                {
+                    Clear();
+                }
+
                 return;
             }
 
-            IsLocked = locked;
+            SetLock(locked, false);
 
             var basePowerData = new Power(basePower);
             var enhancedPowerData = new Power(enhancedPower);
@@ -374,7 +399,8 @@ namespace Mids_Reborn.UI.Controls
             pEnh?.ProcessExecutes();
 
             GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
-            //EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh?.GetRankedEffects(true).ToList(), effectDataList1.Font.Size);
+            GroupedRankedEffects = GroupedFx.AggregateGroupedEffectsPass2(pEnh, GroupedRankedEffects);
+            EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh?.GetRankedEffects(true).ToList(), infoDataList.Font.Size);
 
             HistoryIDX = iHistoryIdx;
             SetDamageTip();
@@ -389,10 +415,40 @@ namespace Mids_Reborn.UI.Controls
             pEnh?.ProcessExecutes();
 
             GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
-            //EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh?.GetRankedEffects(true).ToList(), effectDataList1.Font.Size);
+            GroupedRankedEffects = GroupedFx.AggregateGroupedEffectsPass2(pEnh, GroupedRankedEffects);
+            EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh?.GetRankedEffects(true).ToList(), infoDataList.Font.Size);
 
             SetDamageTip();
             DisplayData();
+        }
+
+        public void Clear()
+        {
+            pBase = null;
+            pEnh = null;
+            rootPowerBase = null;
+            rootPowerEnh = null;
+            HistoryIDX = -1;
+            GroupedRankedEffects.Clear();
+            EffectsItemPairs.Clear();
+
+            title.Text = string.Empty;
+            subTitle.Text = string.Empty;
+            infoSDesc.Clear();
+            infoLDesc.Text = string.Empty;
+            powerStatsGrid.Clear();
+            effectsGrid.Clear();
+            enhDataList.Clear(true);
+            coreDataList.Clear(true);
+            sliderHost.Visible = false;
+
+            infoDamageDisplay.BaseValue = 0;
+            infoDamageDisplay.EnhancedValue = 0;
+            infoDamageDisplay.MaxEnhancedValue = 0;
+            infoDamageDisplay.HighestEnhancedValue = 0;
+            infoDamageDisplay.Text = string.Empty;
+
+            ClearEnhancementPanels();
         }
 
         public void SetEnhancement(I9Slot iEnh, int iLevel = -1)
@@ -413,7 +469,13 @@ namespace Mids_Reborn.UI.Controls
             }
             else
             {
-                str1 = pBase.DisplayName;
+                str1 = pBase?.DisplayName ?? string.Empty;
+                if (pBase != null)
+                {
+                    infoSDesc.Rtf = RTF.StartRTF(infoSDesc.Font) + pBase.DescShort + "\r\n" +
+                                     RTF.Color(RTF.ElementID.Faded) +
+                                     "Shift+Click to move slot. Right-Click to place enh." + RTF.EndRTF();
+                }
             }
 
             if (iLevel > -1 & !MidsContext.Config.ShowSlotLevels)
@@ -428,7 +490,7 @@ namespace Mids_Reborn.UI.Controls
             }
 
             var iStr1 = string.Empty;
-            var str2 = string.Empty;
+            var effectPrefixRtf = string.Empty;
             if (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.InventO | DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO)
             {
                 iStr1 = $"{RTF.Color(RTF.ElementID.Invention)}Invention Level: {iEnh.IOLevel + 1}{Enums.GetRelativeString(iEnh.RelativeLevel, false)}{RTF.Color(RTF.ElementID.Text)}";
@@ -445,7 +507,7 @@ namespace Mids_Reborn.UI.Controls
                     if (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance is < 1 and > 0)
                     {
 
-                        str2 += $"{RTF.Color(RTF.ElementID.Enhancement)}{DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100:#0.##)} % chance of ";
+                        effectPrefixRtf += $"{RTF.Color(RTF.ElementID.Enhancement)}{DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100:#0.##)} % chance of ";
                     }
 
                     break;
@@ -467,20 +529,23 @@ namespace Mids_Reborn.UI.Controls
             string iStr2;
             if (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID == Enums.eType.SetO)
             {
-                iStr2 = str2 + GetEnhancementStringLongRtf(iEnh) + "\r\n" + EnhancementSetCollection.GetSetInfoLongRTF(DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet);
+                iStr2 = effectPrefixRtf + GetEnhancementStringLongRtf(iEnh) + RTF.Crlf() + EnhancementSetCollection.GetSetInfoLongRTF(DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet);
             }
             else
             {
-                var str3 = str2 + DatabaseAPI.Database.Enhancements[iEnh.Enh].Desc;
-                if (str3 != string.Empty)
+                var str3 = DatabaseAPI.Database.Enhancements[iEnh.Enh].Desc;
+                if (!string.IsNullOrEmpty(str3))
                 {
-                    str3 += "\r\n";
+                    str3 = RTF.ToRTF(str3) + RTF.Crlf();
                 }
 
-                iStr2 = str3 + GetEnhancementStringLongRtf(iEnh);
+                iStr2 = effectPrefixRtf + str3 + GetEnhancementStringLongRtf(iEnh);
             }
 
-            //infoLDesc.Rtf = RTF.StartRTF() + RTF.ToRTF(iStr2) + RTF.EndRTF();
+            infoSDesc.Rtf = RTF.StartRTF(infoSDesc.Font) + iStr1 + RTF.Crlf() +
+                             RTF.Color(RTF.ElementID.Faded) +
+                             "Shift+Click to move slot. Right-Click to place enh." + RTF.EndRTF();
+            infoLDesc.Rtf = RTF.StartRTF(infoLDesc.Font) + iStr2 + RTF.EndRTF();
         }
 
         public void SetEnhancementPicker(I9Slot iEnh)
@@ -488,15 +553,14 @@ namespace Mids_Reborn.UI.Controls
             if (iEnh.Enh < 0)
             {
                 title.Text = "No Enhancement";
-            }
-
-            title.Text = DatabaseAPI.Database.Enhancements[iEnh.Enh].LongName;
-            if (iEnh.Enh < 0)
-            {
+                infoSDesc.Clear();
+                infoLDesc.Text = string.Empty;
                 return;
             }
 
-            var str1 = string.Empty;
+            title.Text = DatabaseAPI.Database.Enhancements[iEnh.Enh].LongName;
+
+            var effectPrefixRtf = string.Empty;
             var iStr1 = string.Empty;
             if (DatabaseAPI.Database.Enhancements[iEnh.Enh].TypeID is Enums.eType.InventO or Enums.eType.SetO)
             {
@@ -514,14 +578,14 @@ namespace Mids_Reborn.UI.Controls
 
                     if (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance is < 1 and > 0)
                     {
-                        str1 +=
+                        effectPrefixRtf +=
                             $"{RTF.Color(RTF.ElementID.Enhancement)}{DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100:#0.##)} % chance of ";
                     }
 
                     break;
 
                 case Enums.eType.SpecialO:
-                    iStr1 += "Hamidon/Synthetic Hamidon Origin Enhancement";
+                    iStr1 += RTF.Color(RTF.ElementID.Enhancement) + "Hamidon/Synthetic Hamidon Origin Enhancement" + RTF.Color(RTF.ElementID.Text);
                     break;
 
                 default:
@@ -541,21 +605,22 @@ namespace Mids_Reborn.UI.Controls
                 /*iStr2 = str1 + GetEnhancementStringLongRTF(iEnh) + RTF.Size(RTF.SizeID.Tiny) + "\r\n" +
                         EnhancementSetCollection.GetSetInfoLongRTF(DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet);*/
 
-                iStr2 = str1 + GetEnhancementStringLongRtf(iEnh) + "\r\n" +
+                iStr2 = effectPrefixRtf + GetEnhancementStringLongRtf(iEnh) + RTF.Crlf() +
                         EnhancementSetCollection.GetSetInfoLongRTF(DatabaseAPI.Database.Enhancements[iEnh.Enh].nIDSet);
             }
             else
             {
-                var str2 = str1 + DatabaseAPI.Database.Enhancements[iEnh.Enh].Desc;
-                if (str2 != string.Empty)
+                var str2 = DatabaseAPI.Database.Enhancements[iEnh.Enh].Desc;
+                if (!string.IsNullOrEmpty(str2))
                 {
-                    str2 += "\r\n";
+                    str2 = RTF.ToRTF(str2) + RTF.Crlf();
                 }
 
-                iStr2 = str2 + GetEnhancementStringLongRtf(iEnh);
+                iStr2 = effectPrefixRtf + str2 + GetEnhancementStringLongRtf(iEnh);
             }
 
-            //infoLDesc.Rtf = RTF.StartRTF() + RTF.ToRTF(iStr2) + RTF.EndRTF();
+            infoSDesc.Rtf = RTF.StartRTF(infoSDesc.Font) + iStr1 + RTF.Crlf() + RTF.EndRTF();
+            infoLDesc.Rtf = RTF.StartRTF(infoLDesc.Font) + iStr2 + RTF.EndRTF();
         }
 
         public void DisplayTotals()
@@ -680,19 +745,32 @@ namespace Mids_Reborn.UI.Controls
 
         public void FlipStage(int Index, int Enh1, int Enh2, float State, int PowerID, Enums.eEnhGrade Grade1, Enums.eEnhGrade Grade2)
         {
-            using var solidBrush1 = new SolidBrush(enhDataList.BackColor);
             if (pBase == null)
             {
+                if (_selectedTabIndex == 3)
+                {
+                    title.Text = string.Empty;
+                }
+
+                subTitle.Text = string.Empty;
+                ClearEnhancementPanels();
+                enhDataList.Clear(true);
                 return;
             }
 
-            var solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
-            if (PowerID != pBase.PowerIndex)
+            EnsureFlipBuffer();
+            if (bxFlip?.Graphics == null)
             {
                 return;
             }
 
-            ImageAttributes recolorIa = BuildRenderer.GetRecolorIa(MidsContext.Character.IsHero());
+            using var solidBrush1 = new SolidBrush(enhDataList.BackColor);
+            using var solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
+            if (!MatchesDisplayedPower(PowerID))
+            {
+                return;
+            }
+
             var rectangle1 = new Rectangle();
             ref var local1 = ref rectangle1;
             var size = bxFlip.Size;
@@ -717,7 +795,7 @@ namespace Mids_Reborn.UI.Controls
                 bxFlip.Graphics.DrawImage(AssetManager.EmptySlot.Bitmap, rectangle2);
             }
 
-            pnlEnhActive.CreateGraphics().DrawImage(bxFlip.Bitmap, destRect, rectangle1, GraphicsUnit.Pixel);
+            pnlEnhActive.Invalidate(destRect);
             ref var local2 = ref rectangle1;
             double y2 = rectangle1.Y;
             size = bxFlip.Size;
@@ -741,7 +819,7 @@ namespace Mids_Reborn.UI.Controls
 
             rectangle2.Inflate(2, 2);
             bxFlip.Graphics.FillEllipse(solidBrush2, rectangle2);
-            pnlEnhInactive.CreateGraphics().DrawImage(bxFlip.Bitmap, destRect, rectangle1, GraphicsUnit.Pixel);
+            pnlEnhInactive.Invalidate(destRect);
         }
 
         public void SetSetPicker(int iSet)
@@ -749,7 +827,8 @@ namespace Mids_Reborn.UI.Controls
             if (iSet < 0)
             {
                 title.Text = "No Enhancement";
-                //infoLDesc.Text = "";
+                infoSDesc.Clear();
+                infoLDesc.Text = string.Empty;
             }
             else
             {
@@ -760,7 +839,8 @@ namespace Mids_Reborn.UI.Controls
                            DatabaseAPI.Database.EnhancementSets[iSet].LevelMax
                     ? $"{DatabaseAPI.Database.EnhancementSets[iSet].LevelMin + 1} to {DatabaseAPI.Database.EnhancementSets[iSet].LevelMax + 1}"
                     : $"{DatabaseAPI.Database.EnhancementSets[iSet].LevelMin + 1}";
-                //infoLDesc.Rtf = $"{RTF.StartRTF()}{EnhancementSetCollection.GetSetInfoLongRTF(iSet)}{RTF.EndRTF()}";
+                infoSDesc.Rtf = RTF.StartRTF(infoSDesc.Font) + RTF.ToRTF($"{str1}, levels {str2}") + RTF.EndRTF();
+                infoLDesc.Rtf = $"{RTF.StartRTF(infoLDesc.Font)}{EnhancementSetCollection.GetSetInfoLongRTF(iSet)}{RTF.EndRTF()}";
             }
         }
 
@@ -902,15 +982,28 @@ namespace Mids_Reborn.UI.Controls
             enhDataList.Clear();
             if (MidsContext.Character == null)
             {
+                if (_selectedTabIndex == 3)
+                {
+                    title.Text = string.Empty;
+                }
+
+                subTitle.Text = string.Empty;
+                ClearEnhancementPanels();
                 enhDataList.Redraw();
 
                 return;
             }
 
-            var powerBase = rootPowerBase ?? pBase;
-            var buildHistoryIdx = MidsContext.Character.CurrentBuild.FindInToonHistory(powerBase.PowerIndex);
+            var buildHistoryIdx = ResolveDisplayedBuildHistoryIndex();
             if (buildHistoryIdx < 0)
             {
+                if (_selectedTabIndex == 3)
+                {
+                    title.Text = string.Empty;
+                }
+
+                subTitle.Text = string.Empty;
+                ClearEnhancementPanels();
                 enhDataList.Redraw();
 
                 return;
@@ -949,6 +1042,21 @@ namespace Mids_Reborn.UI.Controls
             }
 
             var buildPower = MidsContext.Character.CurrentBuild.Powers[buildHistoryIdx];
+            if (!HasSlottedEnhancements(buildPower))
+            {
+                if (_selectedTabIndex == 3)
+                {
+                    title.Text = string.Empty;
+                }
+
+                subTitle.Text = string.Empty;
+                ClearEnhancementPanels();
+                enhDataList.Redraw();
+                return;
+            }
+
+            subTitle.Text = "Enhancement Values";
+
             for (var i = 0; i < buildPower?.SlotCount; i++)
             {
                 var slot = buildPower.Slots[i];
@@ -1259,6 +1367,61 @@ namespace Mids_Reborn.UI.Controls
             return false;
         }
 
+        private static bool HasSlottedEnhancements(PowerEntry? power)
+        {
+            if (power?.Slots == null)
+            {
+                return false;
+            }
+
+            for (var i = 0; i < power.SlotCount; i++)
+            {
+                if (power.Slots[i].Enhancement.Enh > -1 || power.Slots[i].FlippedEnhancement.Enh > -1)
+                {
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private int ResolveDisplayedBuildHistoryIndex()
+        {
+            var build = MidsContext.Character?.CurrentBuild;
+            if (build == null)
+            {
+                return -1;
+            }
+
+            if (HistoryIDX >= 0 && HistoryIDX < build.Powers.Count && build.Powers[HistoryIDX] != null)
+            {
+                return HistoryIDX;
+            }
+
+            var powerBase = rootPowerBase ?? pBase;
+            return powerBase == null ? -1 : build.FindInToonHistory(powerBase.PowerIndex);
+        }
+
+        private bool MatchesDisplayedPower(int powerId)
+        {
+            if (powerId < 0)
+            {
+                return false;
+            }
+
+            if (pBase?.PowerIndex == powerId || rootPowerBase?.PowerIndex == powerId)
+            {
+                return true;
+            }
+
+            var build = MidsContext.Character?.CurrentBuild;
+            var historyIdx = ResolveDisplayedBuildHistoryIndex();
+            return build != null &&
+                   historyIdx >= 0 &&
+                   historyIdx < build.Powers.Count &&
+                   build.Powers[historyIdx]?.NIDPower == powerId;
+        }
+
         private List<PowerStatsGrid.Row> BuildCanonicalStatRows(IPower pBase, IPower pEnh)
         {
             const double eps = 1e-6;
@@ -1369,9 +1532,10 @@ namespace Mids_Reborn.UI.Controls
             if (pBase == null)
             {
                 powerStatsGrid.Clear();
+                infoSDesc.Clear();
+                infoLDesc.Text = string.Empty;
                 title.Text = string.Empty;
                 subTitle.Text = string.Empty;
-                //infoLDesc.Rtf = RTF.StartRTF() + RTF.EndRTF();
                 infoDamageDisplay.BaseValue = 0;
                 infoDamageDisplay.EnhancedValue = 0;
                 infoDamageDisplay.MaxEnhancedValue = 0;
@@ -1382,21 +1546,19 @@ namespace Mids_Reborn.UI.Controls
 
             var enhancedPower = (pEnh == null || pEnh.PowerIndex == -1) ? pBase : pEnh;
 
-            // Title + descriptions (unchanged)
             title.Text = !noLevel && pBase.Level > 0
                 ? $"[{(rootPowerBase?.Level ?? pBase.Level)}] {pBase.DisplayName}"
                 : pBase.DisplayName;
             if (iEnhLvl > -1) title.Text += $" (Slot Level {iEnhLvl + 1})";
             subTitle.Text = "Enhancement Values";
 
-            //var longInfo = Regex.Replace(pBase.DescLongFormatted.Trim().Replace("\0", "").Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
-            //infoLDesc.Rtf = RTF.StartRTF() + RTF.ToRTF(longInfo) + RTF.EndRTF();
+            var longInfo = Regex.Replace(pBase.DescLongFormatted.Trim().Replace("\0", "").Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
+            infoSDesc.Rtf = RTF.StartRTF(infoSDesc.Font) + RTF.ToRTF(pBase.DescShort.Trim()) + RTF.EndRTF();
+            infoLDesc.Rtf = RTF.StartRTF(infoLDesc.Font) + RTF.ToRTF(longInfo) + RTF.EndRTF();
 
-            // --- NEW: Canonical stats via PowerCanonicalStats → powerStatsGrid ---
             var statRows = PowerCanonicalStats.BuildRows(pBase, enhancedPower);
             powerStatsGrid.SetRows(statRows);
 
-            // --- Damage visualization (unchanged) ---
             var str1 = "Damage" + (MidsContext.Config.DamageMath.ReturnValue switch
             {
                 ConfigData.EDamageReturn.DPS => " Per Second",
@@ -1502,34 +1664,39 @@ namespace Mids_Reborn.UI.Controls
 
         private void DisplayFlippedEnhancements()
         {
-            Pen pen;
-            if (enhDataList.BackColor.B <= 10)
-            {
-                pen = new Pen(Color.FromArgb(byte.MaxValue, 0, 0));
-            }
-            else
-            {
-                pen = new Pen(Color.FromArgb(0, 0, byte.MaxValue));
-            }
+            using var pen = enhDataList.BackColor.B <= 10
+                ? new Pen(Color.FromArgb(byte.MaxValue, 0, 0))
+                : new Pen(Color.FromArgb(0, 0, byte.MaxValue));
 
-            bxFlip ??= new ExtendedBitmap(pnlEnhActive.Width, pnlEnhInactive.Height * 2);
-            bxFlip.Graphics.Clear(enhDataList.BackColor);
-            bxFlip.Graphics.DrawRectangle(pen, 0, 0, pnlEnhActive.Width - 1, pnlEnhInactive.Height - 1);
-            bxFlip.Graphics.DrawRectangle(pen, 0, pnlEnhInactive.Height, pnlEnhActive.Width - 1, pnlEnhInactive.Height - 1);
-            if (pBase == null)
+            EnsureFlipBuffer();
+            if (bxFlip?.Graphics == null)
             {
                 return;
             }
 
-            var powerBase = rootPowerBase ?? pBase;
+            bxFlip.Graphics.Clear(enhDataList.BackColor);
+            if (pBase == null)
+            {
+                RedrawFlip();
+                return;
+            }
 
-            var inToonHistory = MidsContext.Character.CurrentBuild.FindInToonHistory(powerBase.PowerIndex);
-            if (inToonHistory < 0)
+            var build = MidsContext.Character?.CurrentBuild;
+            if (build == null)
+            {
+                RedrawFlip();
+                return;
+            }
+
+            var inToonHistory = ResolveDisplayedBuildHistoryIndex();
+            if (inToonHistory < 0 || !HasSlottedEnhancements(build.Powers[inToonHistory]))
             {
                 RedrawFlip();
             }
             else
             {
+                bxFlip.Graphics.DrawRectangle(pen, 0, 0, pnlEnhActive.Width - 1, pnlEnhInactive.Height - 1);
+                bxFlip.Graphics.DrawRectangle(pen, 0, pnlEnhInactive.Height, pnlEnhActive.Width - 1, pnlEnhInactive.Height - 1);
                 using var format = new StringFormat();
                 var num1 = bxFlip.Size.Width - 188;
                 var rectangle1 = new Rectangle();
@@ -1546,7 +1713,7 @@ namespace Mids_Reborn.UI.Controls
                 bxFlip.Graphics.DrawString("Alternate:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
                 //ImageAttributes recolorIa = clsDrawX.GetRecolorIa(MidsContext.Character.IsHero());
                 using var solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
-                var power = MidsContext.Character.CurrentBuild.Powers[inToonHistory];
+                var power = build.Powers[inToonHistory];
                 for (var index = 0; index < power.SlotCount; index++)
                 {
                     var iDest = new Rectangle();
@@ -2092,16 +2259,64 @@ namespace Mids_Reborn.UI.Controls
 
         private void RedrawFlip()
         {
+            pnlEnhActive.Invalidate();
+            pnlEnhInactive.Invalidate();
+        }
+
+        private void ClearEnhancementPanels()
+        {
+            EnsureFlipBuffer();
+            if (bxFlip?.Graphics != null)
+            {
+                bxFlip.Graphics.Clear(enhDataList.BackColor);
+            }
+
+            RedrawFlip();
+        }
+
+        private void EnsureFlipBuffer()
+        {
+            var width = Math.Max(1, pnlEnhActive.Width);
+            var height = Math.Max(1, pnlEnhActive.Height + pnlEnhInactive.Height);
+
+            if (bxFlip?.Size == new Size(width, height))
+            {
+                return;
+            }
+
+            bxFlip?.Dispose();
+            bxFlip = new ExtendedBitmap(width, height);
+        }
+
+        private void DisposeFlipBuffer()
+        {
+            bxFlip?.Dispose();
+            bxFlip = null;
+        }
+
+        private void ResetFlipBuffer()
+        {
+            DisposeFlipBuffer();
+            RedrawFlip();
+        }
+
+        private void DrawFlipPanel(Graphics graphics, bool inactive)
+        {
             if (bxFlip == null)
             {
                 DisplayFlippedEnhancements();
             }
 
-            var srcRect = new Rectangle(0, 0, pnlEnhActive.Width, pnlEnhActive.Height);
-            var destRect = new Rectangle(0, 0, pnlEnhActive.Width, pnlEnhActive.Height);
-            pnlEnhActive.CreateGraphics().DrawImage(bxFlip.Bitmap, destRect, srcRect, GraphicsUnit.Pixel);
-            srcRect = new Rectangle(0, pnlEnhActive.Height, pnlEnhInactive.Width, pnlEnhInactive.Height);
-            pnlEnhInactive.CreateGraphics().DrawImage(bxFlip.Bitmap, destRect, srcRect, GraphicsUnit.Pixel);
+            if (bxFlip?.Bitmap == null)
+            {
+                return;
+            }
+
+            var target = inactive ? pnlEnhInactive : pnlEnhActive;
+            var sourceY = inactive ? pnlEnhActive.Height : 0;
+            var srcRect = new Rectangle(0, sourceY, target.Width, target.Height);
+            var destRect = new Rectangle(Point.Empty, target.Size);
+            graphics.DrawImage(bxFlip.Bitmap, destRect, srcRect, GraphicsUnit.Pixel);
         }
 
         private void SetDamageTip()
@@ -2147,27 +2362,37 @@ namespace Mids_Reborn.UI.Controls
 
         private void SetPowerScaler()
         {
-            /*if (pBase == null)
+            if (pBase == null || HistoryIDX < 0 || MidsContext.Character?.CurrentBuild == null)
             {
-                powerScaler.Visible = false;
+                sliderHost.Visible = false;
+                return;
             }
-            else if (pBase.VariableEnabled & HistoryIDX > -1)
+
+            if (pBase.VariableEnabled)
             {
                 var str = string.IsNullOrEmpty(pBase.VariableName) ? "Targets" : pBase.VariableName;
-                powerScaler.Visible = true;
-                powerScaler.BeginUpdate();
-                powerScaler.ForcedMax = pBase.VariableMax;
-                powerScaler.Clear();
-                powerScaler.AddItem(
-                    $"{str}:|{MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue}",
-                    MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue, 0,
-                    $"Use this slider to vary the power's effect.\r\nMin: {pBase.VariableMin}\r\nMax: {pBase.VariableMax}");
-                powerScaler.EndUpdate();
+                var currentValue = MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue;
+                currentValue = Math.Clamp(currentValue, pBase.VariableMin, pBase.VariableMax);
+
+                _updatingPowerScaler = true;
+                try
+                {
+                    midsTrackBar1.Text = $"{str}:";
+                    midsTrackBar1.Minimum = pBase.VariableMin;
+                    midsTrackBar1.Maximum = pBase.VariableMax;
+                    midsTrackBar1.Value = currentValue;
+                    pLastScaleVal = currentValue;
+                    sliderHost.Visible = true;
+                }
+                finally
+                {
+                    _updatingPowerScaler = false;
+                }
             }
             else
             {
-                powerScaler.Visible = false;
-            }*/
+                sliderHost.Visible = false;
+            }
         }
 
         private bool SFxCheck(Enums.ShortFX isFx)
@@ -2177,25 +2402,26 @@ namespace Mids_Reborn.UI.Controls
 
         private string ShortStr(string full, string brief)
         {
-            return powerStatsGrid.Font.Size <= 100f / full.Length ? full : brief;
+            return infoDataList.Font.Size <= 100f / full.Length ? full : brief;
         }
 
         private int MiniGetEnhIndex(int iX, int iY)
         {
             if (bxFlip == null) return -1;
             var num1 = bxFlip.Size.Width - 188;
-            if (pBase == null)
+            var build = MidsContext.Character?.CurrentBuild;
+            if (build == null)
             {
                 return -1;
             }
 
-            var inToonHistory = MidsContext.Character.CurrentBuild.FindInToonHistory(pBase.PowerIndex);
+            var inToonHistory = ResolveDisplayedBuildHistoryIndex();
             if (inToonHistory < 0)
             {
                 return -1;
             }
 
-            for (var index = 0; index < MidsContext.Character.CurrentBuild.Powers[inToonHistory].SlotCount; index++)
+            for (var index = 0; index < build.Powers[inToonHistory].SlotCount; index++)
             {
                 var rectangle = new Rectangle(num1 + 30 * index, (int)Math.Round((bxFlip.Size.Height / 2f - 30) / 2f), 30, 30);
                 if ((iX > rectangle.X) & (iX < rectangle.X + rectangle.Width) &&
@@ -2411,8 +2637,41 @@ namespace Mids_Reborn.UI.Controls
 
         private void MidsDataView_Resize(object? sender, EventArgs e)
         {
-            // Simple: just repaint; no buffer to rebuild
             headerPanel.Invalidate();
+            LayoutEnhancementPage();
+            ResetFlipBuffer();
+        }
+
+        private void EnhanceView_Resize(object? sender, EventArgs e)
+        {
+            LayoutEnhancementPage();
+        }
+
+        private void EnhancementPanel_SizeChanged(object? sender, EventArgs e)
+        {
+            ResetFlipBuffer();
+        }
+
+        private void LayoutEnhancementPage()
+        {
+            if (enhanceView.ClientSize.Width <= 0 || enhanceView.ClientSize.Height <= 0)
+            {
+                return;
+            }
+
+            const int slotPanelHeight = 50;
+            const int gap = 6;
+
+            var width = enhanceView.ClientSize.Width;
+            var subtitleBottom = enhanceSubtitlePanel.Bottom;
+            var inactiveTop = Math.Max(subtitleBottom, enhanceView.ClientSize.Height - slotPanelHeight - 3);
+            var activeTop = Math.Max(subtitleBottom, inactiveTop - slotPanelHeight - gap);
+            var listTop = subtitleBottom + 1;
+            var listHeight = Math.Max(0, activeTop - listTop - gap);
+
+            enhDataList.SetBounds(0, listTop, width, listHeight);
+            pnlEnhActive.SetBounds(0, activeTop, width, slotPanelHeight);
+            pnlEnhInactive.SetBounds(0, inactiveTop, width, slotPanelHeight);
         }
 
         private void Fx_ListItemClick(object? sender, PairedListEx.Item? item, MouseEventArgs e)
@@ -2526,14 +2785,14 @@ namespace Mids_Reborn.UI.Controls
 
         private void pnlEnhActive_MouseClick(object sender, MouseEventArgs e)
         {
-            var powerBase = rootPowerBase ?? pBase;
+            var build = MidsContext.Character?.CurrentBuild;
 
-            if (powerBase == null || e.Button != MouseButtons.Left)
+            if (build == null || e.Button != MouseButtons.Left)
             {
                 return;
             }
 
-            var inToonHistory = MidsContext.Character.CurrentBuild.FindInToonHistory(powerBase.PowerIndex);
+            var inToonHistory = ResolveDisplayedBuildHistoryIndex();
             if (inToonHistory <= -1)
             {
                 return;
@@ -2545,33 +2804,43 @@ namespace Mids_Reborn.UI.Controls
 
         private void pnlEnhActive_MouseMove(object sender, MouseEventArgs e)
         {
-            var powerBase = rootPowerBase ?? pBase;
-            var inToonHistory = MidsContext.Character.CurrentBuild.FindInToonHistory(powerBase.PowerIndex);
+            var build = MidsContext.Character?.CurrentBuild;
+            if (build == null)
+            {
+                return;
+            }
+
+            var inToonHistory = ResolveDisplayedBuildHistoryIndex();
+            if (inToonHistory <= -1)
+            {
+                return;
+            }
+
             var enhIndex = MiniGetEnhIndex(e.X, e.Y);
             if (enhIndex <= -1)
             {
                 return;
             }
 
-            SetEnhancement(MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[enhIndex].Enhancement,
-                MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[enhIndex].Level);
+            SetEnhancement(build.Powers[inToonHistory].Slots[enhIndex].Enhancement,
+                build.Powers[inToonHistory].Slots[enhIndex].Level);
         }
 
         private void pnlEnhActive_Paint(object sender, PaintEventArgs e)
         {
-            RedrawFlip();
+            DrawFlipPanel(e.Graphics, inactive: false);
         }
 
         private void pnlEnhInactive_MouseClick(object sender, MouseEventArgs e)
         {
-            var powerBase = rootPowerBase ?? pBase;
+            var build = MidsContext.Character?.CurrentBuild;
 
-            if (powerBase == null || e.Button != MouseButtons.Left)
+            if (build == null || e.Button != MouseButtons.Left)
             {
                 return;
             }
 
-            var inToonHistory = MidsContext.Character.CurrentBuild.FindInToonHistory(powerBase.PowerIndex);
+            var inToonHistory = ResolveDisplayedBuildHistoryIndex();
             if (inToonHistory <= -1)
             {
                 return;
@@ -2583,26 +2852,50 @@ namespace Mids_Reborn.UI.Controls
 
         private void pnlEnhInactive_MouseMove(object sender, MouseEventArgs e)
         {
-            var powerBase = rootPowerBase ?? pBase;
+            var build = MidsContext.Character?.CurrentBuild;
+            if (build == null)
+            {
+                return;
+            }
 
-            var inToonHistory = MidsContext.Character.CurrentBuild.FindInToonHistory(powerBase.PowerIndex);
+            var inToonHistory = ResolveDisplayedBuildHistoryIndex();
+            if (inToonHistory <= -1)
+            {
+                return;
+            }
+
             var enhIndex = MiniGetEnhIndex(e.X, e.Y);
             if (enhIndex <= -1)
             {
                 return;
             }
 
-            SetEnhancement(MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[enhIndex].FlippedEnhancement,
-                MidsContext.Character.CurrentBuild.Powers[inToonHistory].Slots[enhIndex].Level);
+            SetEnhancement(build.Powers[inToonHistory].Slots[enhIndex].FlippedEnhancement,
+                build.Powers[inToonHistory].Slots[enhIndex].Level);
         }
 
         private void pnlEnhInactive_Paint(object sender, PaintEventArgs e)
         {
-            RedrawFlip();
+            DrawFlipPanel(e.Graphics, inactive: true);
+        }
+
+        private void MidsTrackBar_ValueChanged(object? sender, EventArgs e)
+        {
+            if (_updatingPowerScaler)
+            {
+                return;
+            }
+
+            PowerScaler_BarClick(midsTrackBar1.Value);
         }
 
         private void PowerScaler_BarClick(float val)
         {
+            if (pBase == null || HistoryIDX < 0 || MidsContext.Character?.CurrentBuild == null)
+            {
+                return;
+            }
+
             var num = (int)Math.Round(val);
             if (num < pBase.VariableMin)
             {
