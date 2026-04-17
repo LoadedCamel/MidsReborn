@@ -226,13 +226,6 @@ namespace Mids_Reborn.UI.Forms.Controls
 
                 new()
                 {
-                    Label = "Modify Effect",
-                    Filter = e => e.EffectType == Enums.eEffectType.ModifyAttrib,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
-                },
-
-                new()
-                {
                     Label = "Elusivity",
                     Filter = e =>
                         (MidsContext.Config.Inc.DisablePvE) &

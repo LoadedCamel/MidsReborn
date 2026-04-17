@@ -602,12 +602,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         PEnhancementsList.Add(enhancement.UID);
                     }
                 }
-
-                if (!power.Power.HasAttribModEffects()) continue;
-                foreach (var effect in power.Power.Effects)
-                {
-                    effect.UpdateAttrib();
-                }
             }
 
             foreach (var power in CurrentBuild.Powers)

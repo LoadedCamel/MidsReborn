@@ -16,6 +16,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
     public partial class frmEditPower : Form
     {
         private readonly Requirement backup_Requires;
+        private readonly AdvancedConditionSet backup_AdvancedRequirements;
         private readonly int enhAcross;
         private readonly int enhPadding;
         private ExtendedBitmap bxEnhPicked;
@@ -42,6 +43,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             Name = nameof(frmEditPower);
             myPower = new Power(iPower);
             backup_Requires = new Requirement(myPower.Requires);
+            backup_AdvancedRequirements = myPower.AdvancedRequirements?.Clone() ??
+                                          AdvancedConditionSet.FromLegacyRequirement(myPower.Requires);
             EditMode = editMode;
             OrigStaticIndex = EditMode ? myPower.StaticIndex : -1;
 
@@ -414,7 +417,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             FormClosing -= frmEditPower_CancelClose;
 
             Array.Sort(myPower.UIDSubPower);
-            Store_Req_Classes();
+            CommitLegacyRequirementUiToAdvanced();
             myPower.IsModified = true;
             if (myPower.VariableEnabled)
             {
@@ -509,6 +512,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             FillTab_Req();
+            SyncAdvancedRequirementsFromLegacy();
             lvPrListing.Items[index2].Selected = true;
             lvPrListing.Items[index2].EnsureVisible();
         }
@@ -516,7 +520,10 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private void btnPrReset_Click(object sender, EventArgs e)
         {
             myPower.Requires = new Requirement(backup_Requires);
+            myPower.AdvancedRequirements = backup_AdvancedRequirements.Clone();
+            myPower.Requires = myPower.AdvancedRequirements.ToLegacyRequirement();
             FillTab_Req();
+            Filltab_ReqClasses();
         }
 
         private void btnPrSetNone_Click(object sender, EventArgs e)
@@ -544,6 +551,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             FillTab_Req();
+            SyncAdvancedRequirementsFromLegacy();
         }
 
         private void btnPrUp_Click(object sender, EventArgs e)
@@ -592,6 +600,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             FillTab_Req();
+            SyncAdvancedRequirementsFromLegacy();
             lvPrListing.Items[index2].Selected = true;
             lvPrListing.Items[index2].EnsureVisible();
         }
@@ -1014,7 +1023,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             udScaleMin.Enabled = myPower.VariableEnabled;
             overideScale.Enabled = myPower.VariableEnabled;
             txtScaleName.Enabled = myPower.VariableEnabled;
-            btnDynRecharge.Enabled = myPower.VariableEnabled;
         }
 
         private void overideScale_CheckedChanged(object sender, EventArgs e)
@@ -1609,6 +1617,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             lvPrListing.EndUpdate();
             ReqChanging = false;
+            RefreshRequirementRows();
             if (lvPrListing.Items.Count <= 0)
             {
                 return;
@@ -1697,7 +1706,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             udScaleStart.Enabled = myPower?.VariableEnabled == true;
             udScaleMin.Enabled = myPower?.VariableEnabled == true;
             udScaleMax.Enabled = myPower?.VariableEnabled == true;
-            btnDynRecharge.Enabled = myPower?.VariableEnabled == true;
 
             Updating = false;
             if (chkSubInclude.CheckState == CheckState.Checked)
@@ -2163,7 +2171,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void rbPrAdd_Click(object sender, EventArgs e)
         {
-            if (MessageBox.Show("If this power is required to be present, click 'Yes'.\r\nIf this power is NOT required to be present, click 'No'.", "Query", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
+            if (MessageBox.Show("Add this as a required power rule?\r\n\r\nChoose Yes for Required Power.\r\nChoose No for Excluded Power.", "Add Requirement Rule", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.No)
             {
                 // myPower.Requires.PowerIDNot = (string[][]) Utils.CopyArray(myPower.Requires.PowerIDNot, new string[myPower.Requires.PowerIDNot.Length + 1][]);
                 // myPower.Requires.PowerIDNot[myPower.Requires.PowerIDNot.Length - 1] = new string[2];
@@ -2171,6 +2179,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 // myPower.Requires.PowerIDNot[myPower.Requires.PowerIDNot.Length - 1][1] = "";
                 myPower.Requires.PowerIDNot = AddEmptyToJagged(myPower.Requires.PowerIDNot);
                 FillTab_Req();
+                SyncAdvancedRequirementsFromLegacy();
                 lvPrListing.Items[^1].Selected = true;
                 lvPrListing.Items[^1].EnsureVisible();
             }
@@ -2182,6 +2191,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 // myPower.Requires.PowerID[myPower.Requires.PowerID.Length - 1][1] = "";
                 myPower.Requires.PowerID = AddEmptyToJagged(myPower.Requires.PowerID);
                 FillTab_Req();
+                SyncAdvancedRequirementsFromLegacy();
                 lvPrListing.Items[myPower.Requires.PowerID.Length - 1].Selected = true;
                 lvPrListing.Items[myPower.Requires.PowerID.Length - 1].EnsureVisible();
             }
@@ -2189,12 +2199,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void rbPrPowerX_CheckedChanged(object sender, EventArgs e)
         {
-            if (sender.GetType() == rbPrPowerB.GetType() && ((Control)sender).Text == "Power B")
+            if (sender.GetType() == rbPrPowerB.GetType() && ((Control)sender).Text == "Second Power")
             {
                 return;
             }
 
-            btnPrSetNone.Text = rbPrPowerA.Checked ? "Set Power A to None" : "Set Power B to None";
+            btnPrSetNone.Text = rbPrPowerA.Checked ? "Clear First Power" : "Clear Second Power";
             Req_Listing_IndexChanged();
         }
 
@@ -2261,6 +2271,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             FillTab_Req();
+            SyncAdvancedRequirementsFromLegacy();
         }
 
         private void RedrawEnhList()
@@ -2483,6 +2494,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 myPower.Requires.PowerID[index][1] = str;
                 lvPrListing.SelectedItems[0].SubItems[2].Text = str;
             }
+
+            SyncAdvancedRequirementsFromLegacy();
         }
 
         private void ReqDisplayPower(string iPower)
@@ -2653,6 +2666,389 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 myPower.Requires.ClassNameNot[index] =
                     DatabaseAPI.Database.Classes[clbClassExclude.CheckedIndices[index]].ClassName;
             }
+        }
+
+        private void CommitLegacyRequirementUiToAdvanced()
+        {
+            Store_Req_Classes();
+            SyncAdvancedRequirementsFromLegacy();
+            myPower.Requires = myPower.AdvancedRequirements.ToLegacyRequirement();
+        }
+
+        private void SyncAdvancedRequirementsFromLegacy()
+        {
+            var preservedAdvancedRows = myPower.AdvancedRequirements?.Rows
+                .Where(r => r.Kind != AdvancedConditionKind.CharacterArchetype &&
+                            r.Kind != AdvancedConditionKind.PowerRequirementGroup)
+                .Select(r => r.Clone())
+                .ToList() ?? [];
+
+            myPower.AdvancedRequirements = AdvancedConditionSet.FromLegacyRequirement(myPower.Requires);
+            myPower.AdvancedRequirements.Rows.AddRange(preservedAdvancedRows);
+        }
+
+        private void PopulateRequirementBuilder()
+        {
+            if (myPower == null)
+            {
+                return;
+            }
+
+            if (myPower.AdvancedRequirements == null || myPower.AdvancedRequirements.Rows.Count == 0)
+            {
+                myPower.AdvancedRequirements = AdvancedConditionSet.FromLegacyRequirement(myPower.Requires);
+            }
+
+            cbReqKind.Items.Clear();
+            cbReqKind.Items.AddRange(new object[]
+            {
+                "Required Power",
+                "Excluded Power",
+                "Required Archetype",
+                "Excluded Archetype",
+                "Character Level",
+                "Advanced Expression"
+            });
+
+            if (cbReqKind.Items.Count > 0 && cbReqKind.SelectedIndex < 0)
+            {
+                cbReqKind.SelectedIndex = 0;
+            }
+
+            cbReqJoin.Items.Clear();
+            cbReqJoin.Items.AddRange(new object[] { "AND", "OR" });
+            if (cbReqJoin.SelectedIndex < 0)
+            {
+                cbReqJoin.SelectedIndex = 0;
+            }
+
+            RefreshRequirementChoices();
+            RefreshRequirementRows();
+        }
+
+        private void cbReqKind_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            tbReqFilter.Clear();
+            RefreshRequirementChoices();
+        }
+
+        private void tbReqFilter_TextChanged(object sender, EventArgs e) => RefreshRequirementChoices();
+
+        private void lvReqChoices_SelectedIndexChanged(object sender, EventArgs e) => RefreshRequirementValues();
+
+        private void btnReqAdd_Click(object sender, EventArgs e) => AddAdvancedRequirement();
+
+        private void btnReqRemove_Click(object sender, EventArgs e) => RemoveAdvancedRequirement();
+
+        private string SelectedRequirementKind => cbReqKind.SelectedItem?.ToString() ?? string.Empty;
+
+        private void RefreshRequirementChoices()
+        {
+            if (cbReqKind == null)
+            {
+                return;
+            }
+
+            lvReqChoices.BeginUpdate();
+            lvReqChoices.Items.Clear();
+            cbReqOperator.Items.Clear();
+            cbReqValue.Items.Clear();
+
+            var filter = tbReqFilter.Text.Trim();
+            var isExpression = SelectedRequirementKind == "Advanced Expression";
+            lvReqChoices.Visible = !isExpression;
+            tbReqFilter.Visible = !isExpression;
+            tbReqExpression.Visible = isExpression;
+            cbReqOperator.Enabled = !isExpression;
+            cbReqValue.Enabled = !isExpression;
+
+            switch (SelectedRequirementKind)
+            {
+                case "Required Power":
+                case "Excluded Power":
+                    lblReqChoice.Text = @"Power";
+                    cbReqOperator.Items.Add("Is Taken");
+                    foreach (var power in DatabaseAPI.Database.Power.Where(p => p is { HiddenPower: false }))
+                    {
+                        if (string.IsNullOrWhiteSpace(power.FullName))
+                        {
+                            continue;
+                        }
+
+                        var display = $"{power.DisplayName} [{power.GetPowerSet()?.FullName ?? "No powerset"}]";
+                        if (!string.IsNullOrWhiteSpace(filter) &&
+                            !display.Contains(filter, StringComparison.OrdinalIgnoreCase) &&
+                            !power.FullName.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        lvReqChoices.Items.Add(display).Name = power.FullName;
+                    }
+                    break;
+
+                case "Required Archetype":
+                case "Excluded Archetype":
+                    lblReqChoice.Text = @"Archetype";
+                    cbReqOperator.Items.Add("Is");
+                    foreach (var archetype in DatabaseAPI.Database.Classes.Where(c => c is { Playable: true }))
+                    {
+                        if (!string.IsNullOrWhiteSpace(filter) &&
+                            !archetype.DisplayName.Contains(filter, StringComparison.OrdinalIgnoreCase) &&
+                            !archetype.ClassName.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                        {
+                            continue;
+                        }
+
+                        lvReqChoices.Items.Add(archetype.DisplayName).Name = archetype.ClassName;
+                    }
+                    break;
+
+                case "Character Level":
+                    lblReqChoice.Text = @"Requirement";
+                    cbReqOperator.Items.AddRange(new object[] { "Equal To", "Greater Than", "Less Than" });
+                    lvReqChoices.Items.Add("Character Level").Name = "char>level";
+                    break;
+
+                case "Advanced Expression":
+                    lblReqChoice.Text = @"Expression";
+                    lblReqHint.Text = @"For Omni expressions that cannot be represented by friendly rows yet.";
+                    break;
+            }
+
+            if (SelectedRequirementKind != "Advanced Expression")
+            {
+                lblReqHint.Text = @"Build power-level requirements here. Existing legacy requirements are converted into these rows.";
+            }
+
+            if (cbReqOperator.Items.Count > 0)
+            {
+                cbReqOperator.SelectedIndex = 0;
+            }
+
+            lvReqChoices.EndUpdate();
+            if (lvReqChoices.Items.Count > 0)
+            {
+                lvReqChoices.Items[0].Selected = true;
+            }
+
+            RefreshRequirementValues();
+        }
+
+        private void RefreshRequirementValues()
+        {
+            cbReqValue.Items.Clear();
+            switch (SelectedRequirementKind)
+            {
+                case "Required Power":
+                case "Excluded Power":
+                case "Required Archetype":
+                case "Excluded Archetype":
+                    cbReqValue.Items.Add("True");
+                    break;
+                case "Character Level":
+                    foreach (var level in Enumerable.Range(1, 50))
+                    {
+                        cbReqValue.Items.Add(level.ToString(CultureInfo.InvariantCulture));
+                    }
+                    break;
+            }
+
+            if (cbReqValue.Items.Count > 0)
+            {
+                cbReqValue.SelectedIndex = 0;
+            }
+        }
+
+        private void AddAdvancedRequirement()
+        {
+            if (myPower == null)
+            {
+                return;
+            }
+
+            myPower.AdvancedRequirements ??= AdvancedConditionSet.FromLegacyRequirement(myPower.Requires);
+            var link = myPower.AdvancedRequirements.Rows.Count > 0 &&
+                       string.Equals(cbReqJoin.Text, "OR", StringComparison.OrdinalIgnoreCase)
+                ? AdvancedConditionLink.Or
+                : AdvancedConditionLink.And;
+
+            AdvancedConditionRow? row = null;
+            if (SelectedRequirementKind == "Advanced Expression")
+            {
+                var expression = tbReqExpression.Text.Trim();
+                if (string.IsNullOrWhiteSpace(expression))
+                {
+                    return;
+                }
+
+                row = AdvancedConditionRow.AdvancedExpression(link, expression, unsupported: true);
+                tbReqExpression.Clear();
+            }
+            else if (lvReqChoices.SelectedItems.Count <= 0)
+            {
+                return;
+            }
+            else
+            {
+                var selected = lvReqChoices.SelectedItems[0];
+                row = SelectedRequirementKind switch
+                {
+                    "Required Power" => new AdvancedConditionRow
+                    {
+                        Link = link,
+                        Kind = AdvancedConditionKind.PowerRequirementGroup,
+                        Subject = selected.Name,
+                        Operator = AdvancedConditionOperator.Equals
+                    },
+                    "Excluded Power" => new AdvancedConditionRow
+                    {
+                        Link = link,
+                        Kind = AdvancedConditionKind.PowerRequirementGroup,
+                        Subject = selected.Name,
+                        Operator = AdvancedConditionOperator.Equals,
+                        Negated = true
+                    },
+                    "Required Archetype" => new AdvancedConditionRow
+                    {
+                        Link = link,
+                        Kind = AdvancedConditionKind.CharacterArchetype,
+                        Subject = "class",
+                        Value = selected.Name,
+                        Operator = AdvancedConditionOperator.Equals
+                    },
+                    "Excluded Archetype" => new AdvancedConditionRow
+                    {
+                        Link = link,
+                        Kind = AdvancedConditionKind.CharacterArchetype,
+                        Subject = "class",
+                        Value = selected.Name,
+                        Operator = AdvancedConditionOperator.Equals,
+                        Negated = true
+                    },
+                    "Character Level" => new AdvancedConditionRow
+                    {
+                        Link = link,
+                        Kind = AdvancedConditionKind.CharacterLevel,
+                        Subject = "char>level",
+                        Value = cbReqValue.Text,
+                        Operator = ParseRequirementOperator(cbReqOperator.Text)
+                    },
+                    _ => null
+                };
+            }
+
+            if (row == null)
+            {
+                return;
+            }
+
+            myPower.AdvancedRequirements.Rows.Add(row);
+            CommitAdvancedRequirementsToLegacy();
+        }
+
+        private void RemoveAdvancedRequirement()
+        {
+            if (myPower?.AdvancedRequirements == null || lvReqRows.SelectedIndices.Count <= 0)
+            {
+                return;
+            }
+
+            var index = lvReqRows.SelectedIndices[0];
+            if (index < 0 || index >= myPower.AdvancedRequirements.Rows.Count)
+            {
+                return;
+            }
+
+            myPower.AdvancedRequirements.Rows.RemoveAt(index);
+            if (myPower.AdvancedRequirements.Rows.Count > 0)
+            {
+                myPower.AdvancedRequirements.Rows[0].Link = AdvancedConditionLink.And;
+            }
+
+            CommitAdvancedRequirementsToLegacy();
+        }
+
+        private void CommitAdvancedRequirementsToLegacy()
+        {
+            if (myPower == null)
+            {
+                return;
+            }
+
+            myPower.AdvancedRequirements ??= AdvancedConditionSet.FromLegacyRequirement(myPower.Requires);
+            myPower.Requires = myPower.AdvancedRequirements.ToLegacyRequirement();
+            FillTab_Req();
+            Filltab_ReqClasses();
+            RefreshRequirementRows();
+        }
+
+        private static AdvancedConditionOperator ParseRequirementOperator(string op)
+        {
+            return op switch
+            {
+                "Greater Than" => AdvancedConditionOperator.GreaterThan,
+                "Less Than" => AdvancedConditionOperator.LessThan,
+                _ => AdvancedConditionOperator.Equals
+            };
+        }
+
+        private void RefreshRequirementRows()
+        {
+            if (myPower?.AdvancedRequirements == null || lvReqRows == null)
+            {
+                return;
+            }
+
+            lvReqRows.BeginUpdate();
+            lvReqRows.Items.Clear();
+            for (var i = 0; i < myPower.AdvancedRequirements.Rows.Count; i++)
+            {
+                var row = myPower.AdvancedRequirements.Rows[i];
+                var item = new ListViewItem(i == 0 ? "" : row.Link == AdvancedConditionLink.Or ? "OR" : "AND");
+                item.SubItems.Add(GetRequirementDisplay(row));
+                item.SubItems.Add(AdvancedConditionSet.FormatOperator(row.Operator));
+                item.SubItems.Add(GetRequirementValue(row));
+                lvReqRows.Items.Add(item);
+            }
+
+            lvReqRows.EndUpdate();
+        }
+
+        private static string GetRequirementDisplay(AdvancedConditionRow row)
+        {
+            var suffix = row.Unsupported ? " (not simulated)" : "";
+            return row.Kind switch
+            {
+                AdvancedConditionKind.PowerRequirementGroup => $"{(row.Negated ? "Excluded Power" : "Required Power")}: {GetPowerDisplayName(row.Subject)}{suffix}",
+                AdvancedConditionKind.CharacterArchetype => $"{(row.Negated ? "Excluded Archetype" : "Required Archetype")}: {GetArchetypeDisplayName(row.Value)}{suffix}",
+                AdvancedConditionKind.CharacterLevel => "Character Level",
+                AdvancedConditionKind.AdvancedExpression => $"Advanced: {row.RawExpression}{suffix}",
+                _ => $"{row.Kind}: {row.Subject}{suffix}"
+            };
+        }
+
+        private static string GetRequirementValue(AdvancedConditionRow row)
+        {
+            return row.Kind switch
+            {
+                AdvancedConditionKind.PowerRequirementGroup => string.IsNullOrWhiteSpace(row.Value) ? "Taken" : $"Taken with {GetPowerDisplayName(row.Value)}",
+                AdvancedConditionKind.CharacterArchetype => GetArchetypeDisplayName(row.Value),
+                AdvancedConditionKind.CharacterLevel => row.Value,
+                _ => row.Value
+            };
+        }
+
+        private static string GetPowerDisplayName(string powerName)
+        {
+            return DatabaseAPI.GetPowerByFullName(powerName)?.DisplayName ?? powerName;
+        }
+
+        private static string GetArchetypeDisplayName(string className)
+        {
+            return DatabaseAPI.Database.Classes
+                .FirstOrDefault(c => string.Equals(c.ClassName, className, StringComparison.OrdinalIgnoreCase))
+                ?.DisplayName ?? className;
         }
 
         private void txtAcc_Leave(object sender, EventArgs e)
@@ -3439,52 +3835,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             {
                 cbInherentType.Enabled = true;
             }
-        }
-
-        private void btnDynRecharge_Click(object sender, EventArgs e)
-        {
-            if (myPower == null)
-            {
-                return;
-            }
-
-            if (myPower.VariableMin == myPower.VariableMax)
-            {
-                MessageBox.Show("Cannot be used if minimum and maximum scaling values are the same.", "Dang",
-                    MessageBoxButtons.OK, MessageBoxIcon.Error);
-
-                return;
-            }
-
-            using var frmDynRech = new frmDynRechIncrement();
-            frmDynRech.ShowDialog();
-
-            if (frmDynRech.DialogResult != DialogResult.OK)
-            {
-                return;
-            }
-
-            var fxList = myPower.Effects.ToList();
-            var scaleOffset = Math.Max(1, myPower.VariableMin) - 1;
-
-            for (var i = Math.Max(1, myPower.VariableMin); i < myPower.VariableMax; i++)
-            {
-                fxList.Add(Effect.GenerateModifyAttrib(myPower, Enums.ePowerAttribs.RechargeTime,
-                    myPower.RechargeTime + frmDynRech.IncrementValue * (i - scaleOffset),
-                    [new KeyValue<string, string>($"Stacks:{myPower.FullName}", $"= {i}")]));
-
-                if (i < myPower.VariableMax - 1)
-                {
-                    continue;
-                }
-
-                fxList.Add(Effect.GenerateModifyAttrib(myPower, Enums.ePowerAttribs.RechargeTime,
-                    myPower.RechargeTime + frmDynRech.IncrementValue * (i + 1 - scaleOffset),
-                    [new KeyValue<string, string>($"Stacks:{myPower.FullName}", $"> {i}")]));
-            }
-
-            myPower.Effects = fxList.ToArray();
-            RefreshFXData();
         }
 
         private void btnStacksUpdate_Click(object sender, EventArgs e)

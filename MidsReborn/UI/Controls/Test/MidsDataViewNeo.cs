@@ -805,7 +805,6 @@ namespace Mids_Reborn.UI.Controls
             }*/
 
             pBase?.ProcessExecutes();
-            pBase?.ApplyModifyEffects();
 
             // Do not run ApplyModifyEffects() on pEnh, this is done within totals calculations
             pEnh?.ProcessExecutes();
@@ -822,8 +821,6 @@ namespace Mids_Reborn.UI.Controls
         public void SetData()
         {
             pBase?.ProcessExecutes();
-            pBase?.ApplyModifyEffects();
-
             pEnh?.ProcessExecutes();
 
             GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
@@ -3322,11 +3319,7 @@ namespace Mids_Reborn.UI.Controls
 
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue = num;
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Stacks = num;
-            /*foreach (var effect in MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Effects)
-            {
-                effect.UpdateAttrib();
-                DisplayInfo();
-            }*/
+            
             if (num == pLastScaleVal)
             {
                 return;

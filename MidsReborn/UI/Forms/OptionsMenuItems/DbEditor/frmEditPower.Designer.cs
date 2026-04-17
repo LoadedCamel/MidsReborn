@@ -148,7 +148,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             tpEffects = new TabPage();
             lvFX = new ListBox();
             pnlFX = new Panel();
-            btnDynRecharge = new Button();
             cbCoDFormat = new CheckBox();
             btnSetDamage = new Button();
             btnFXEdit = new Button();
@@ -171,6 +170,30 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             pbInvSetList = new PictureBox();
             pbInvSetUsed = new PictureBox();
             tpPreReq = new TabPage();
+            reqBuilderPanel = new Panel();
+            lblReqTitle = new Label();
+            lblReqHint = new Label();
+            lblReqKind = new Label();
+            cbReqKind = new ComboBox();
+            lblReqJoin = new Label();
+            cbReqJoin = new ComboBox();
+            lblReqChoice = new Label();
+            tbReqFilter = new TextBox();
+            lvReqChoices = new ListView();
+            chReqChoice = new ColumnHeader();
+            tbReqExpression = new TextBox();
+            lblReqOperator = new Label();
+            cbReqOperator = new ComboBox();
+            lblReqValue = new Label();
+            cbReqValue = new ComboBox();
+            btnReqAdd = new Button();
+            btnReqRemove = new Button();
+            lblReqRows = new Label();
+            lvReqRows = new ListView();
+            chReqJoin = new ColumnHeader();
+            chReqCondition = new ColumnHeader();
+            chReqOperator = new ColumnHeader();
+            chReqValue = new ColumnHeader();
             GroupBox11 = new GroupBox();
             btnPrReset = new Button();
             btnPrSetNone = new Button();
@@ -245,6 +268,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             ((ISupportInitialize)pbInvSetList).BeginInit();
             ((ISupportInitialize)pbInvSetUsed).BeginInit();
             tpPreReq.SuspendLayout();
+            reqBuilderPanel.SuspendLayout();
             GroupBox11.SuspendLayout();
             GroupBox10.SuspendLayout();
             GroupBox8.SuspendLayout();
@@ -1545,7 +1569,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // pnlFX
             // 
             pnlFX.Controls.Add(btnStacksUpdate);
-            pnlFX.Controls.Add(btnDynRecharge);
             pnlFX.Controls.Add(cbCoDFormat);
             pnlFX.Controls.Add(btnSetDamage);
             pnlFX.Controls.Add(btnFXEdit);
@@ -1558,15 +1581,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             pnlFX.Name = "pnlFX";
             pnlFX.Size = new System.Drawing.Size(824, 383);
             pnlFX.TabIndex = 71;
-            // 
-            // btnDynRecharge
-            // 
-            btnDynRecharge.Location = new System.Drawing.Point(8, 351);
-            btnDynRecharge.Name = "btnDynRecharge";
-            btnDynRecharge.Size = new System.Drawing.Size(162, 28);
-            btnDynRecharge.TabIndex = 80;
-            btnDynRecharge.Text = "Set up dynamic recharge";
-            btnDynRecharge.Click += btnDynRecharge_Click;
             // 
             // cbCoDFormat
             // 
@@ -1781,6 +1795,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // tpPreReq
             // 
+            tpPreReq.Controls.Add(reqBuilderPanel);
             tpPreReq.Controls.Add(GroupBox11);
             tpPreReq.Controls.Add(GroupBox10);
             tpPreReq.Controls.Add(GroupBox8);
@@ -1791,6 +1806,241 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             tpPreReq.Text = "Requirements";
             tpPreReq.UseVisualStyleBackColor = true;
             tpPreReq.Visible = false;
+            // 
+            // reqBuilderPanel
+            // 
+            reqBuilderPanel.BackColor = System.Drawing.Color.FromArgb(48, 56, 62);
+            reqBuilderPanel.Controls.Add(lblReqTitle);
+            reqBuilderPanel.Controls.Add(lblReqHint);
+            reqBuilderPanel.Controls.Add(lblReqKind);
+            reqBuilderPanel.Controls.Add(cbReqKind);
+            reqBuilderPanel.Controls.Add(lblReqJoin);
+            reqBuilderPanel.Controls.Add(cbReqJoin);
+            reqBuilderPanel.Controls.Add(lblReqChoice);
+            reqBuilderPanel.Controls.Add(tbReqFilter);
+            reqBuilderPanel.Controls.Add(lvReqChoices);
+            reqBuilderPanel.Controls.Add(tbReqExpression);
+            reqBuilderPanel.Controls.Add(lblReqOperator);
+            reqBuilderPanel.Controls.Add(cbReqOperator);
+            reqBuilderPanel.Controls.Add(lblReqValue);
+            reqBuilderPanel.Controls.Add(cbReqValue);
+            reqBuilderPanel.Controls.Add(btnReqAdd);
+            reqBuilderPanel.Controls.Add(btnReqRemove);
+            reqBuilderPanel.Controls.Add(lblReqRows);
+            reqBuilderPanel.Controls.Add(lvReqRows);
+            reqBuilderPanel.Dock = DockStyle.Fill;
+            reqBuilderPanel.Location = new System.Drawing.Point(0, 0);
+            reqBuilderPanel.Name = "reqBuilderPanel";
+            reqBuilderPanel.Size = new System.Drawing.Size(832, 411);
+            reqBuilderPanel.TabIndex = 98;
+            reqBuilderPanel.Visible = false;
+            // 
+            // lblReqTitle
+            // 
+            lblReqTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+            lblReqTitle.ForeColor = System.Drawing.Color.White;
+            lblReqTitle.Location = new System.Drawing.Point(16, 12);
+            lblReqTitle.Name = "lblReqTitle";
+            lblReqTitle.Size = new System.Drawing.Size(260, 24);
+            lblReqTitle.TabIndex = 0;
+            lblReqTitle.Text = "Power Requirements";
+            // 
+            // lblReqHint
+            // 
+            lblReqHint.ForeColor = System.Drawing.Color.Gainsboro;
+            lblReqHint.Location = new System.Drawing.Point(16, 38);
+            lblReqHint.Name = "lblReqHint";
+            lblReqHint.Size = new System.Drawing.Size(720, 22);
+            lblReqHint.TabIndex = 1;
+            lblReqHint.Text = "Build power-level requirements here. Existing legacy requirements are converted into these rows.";
+            // 
+            // lblReqKind
+            // 
+            lblReqKind.ForeColor = System.Drawing.Color.White;
+            lblReqKind.Location = new System.Drawing.Point(16, 70);
+            lblReqKind.Name = "lblReqKind";
+            lblReqKind.Size = new System.Drawing.Size(140, 18);
+            lblReqKind.TabIndex = 2;
+            lblReqKind.Text = "Requirement";
+            // 
+            // cbReqKind
+            // 
+            cbReqKind.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbReqKind.FormattingEnabled = true;
+            cbReqKind.Location = new System.Drawing.Point(16, 91);
+            cbReqKind.Name = "cbReqKind";
+            cbReqKind.Size = new System.Drawing.Size(190, 23);
+            cbReqKind.TabIndex = 3;
+            cbReqKind.SelectedIndexChanged += cbReqKind_SelectedIndexChanged;
+            // 
+            // lblReqJoin
+            // 
+            lblReqJoin.ForeColor = System.Drawing.Color.White;
+            lblReqJoin.Location = new System.Drawing.Point(218, 70);
+            lblReqJoin.Name = "lblReqJoin";
+            lblReqJoin.Size = new System.Drawing.Size(80, 18);
+            lblReqJoin.TabIndex = 4;
+            lblReqJoin.Text = "Join";
+            // 
+            // cbReqJoin
+            // 
+            cbReqJoin.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbReqJoin.FormattingEnabled = true;
+            cbReqJoin.Location = new System.Drawing.Point(218, 91);
+            cbReqJoin.Name = "cbReqJoin";
+            cbReqJoin.Size = new System.Drawing.Size(78, 23);
+            cbReqJoin.TabIndex = 5;
+            // 
+            // lblReqChoice
+            // 
+            lblReqChoice.ForeColor = System.Drawing.Color.White;
+            lblReqChoice.Location = new System.Drawing.Point(16, 126);
+            lblReqChoice.Name = "lblReqChoice";
+            lblReqChoice.Size = new System.Drawing.Size(160, 18);
+            lblReqChoice.TabIndex = 6;
+            lblReqChoice.Text = "Power";
+            // 
+            // tbReqFilter
+            // 
+            tbReqFilter.Location = new System.Drawing.Point(16, 147);
+            tbReqFilter.Name = "tbReqFilter";
+            tbReqFilter.PlaceholderText = "Filter choices";
+            tbReqFilter.Size = new System.Drawing.Size(280, 23);
+            tbReqFilter.TabIndex = 7;
+            tbReqFilter.TextChanged += tbReqFilter_TextChanged;
+            // 
+            // lvReqChoices
+            // 
+            lvReqChoices.Columns.AddRange(new ColumnHeader[] { chReqChoice });
+            lvReqChoices.FullRowSelect = true;
+            lvReqChoices.HideSelection = false;
+            lvReqChoices.Location = new System.Drawing.Point(16, 176);
+            lvReqChoices.MultiSelect = false;
+            lvReqChoices.Name = "lvReqChoices";
+            lvReqChoices.Size = new System.Drawing.Size(320, 188);
+            lvReqChoices.TabIndex = 8;
+            lvReqChoices.UseCompatibleStateImageBehavior = false;
+            lvReqChoices.View = View.Details;
+            lvReqChoices.SelectedIndexChanged += lvReqChoices_SelectedIndexChanged;
+            // 
+            // chReqChoice
+            // 
+            chReqChoice.Text = "Choice";
+            chReqChoice.Width = 300;
+            // 
+            // tbReqExpression
+            // 
+            tbReqExpression.Location = new System.Drawing.Point(16, 176);
+            tbReqExpression.Multiline = true;
+            tbReqExpression.Name = "tbReqExpression";
+            tbReqExpression.ScrollBars = ScrollBars.Vertical;
+            tbReqExpression.Size = new System.Drawing.Size(320, 188);
+            tbReqExpression.TabIndex = 9;
+            tbReqExpression.Visible = false;
+            // 
+            // lblReqOperator
+            // 
+            lblReqOperator.ForeColor = System.Drawing.Color.White;
+            lblReqOperator.Location = new System.Drawing.Point(352, 126);
+            lblReqOperator.Name = "lblReqOperator";
+            lblReqOperator.Size = new System.Drawing.Size(120, 18);
+            lblReqOperator.TabIndex = 10;
+            lblReqOperator.Text = "Compare";
+            // 
+            // cbReqOperator
+            // 
+            cbReqOperator.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbReqOperator.FormattingEnabled = true;
+            cbReqOperator.Location = new System.Drawing.Point(352, 147);
+            cbReqOperator.Name = "cbReqOperator";
+            cbReqOperator.Size = new System.Drawing.Size(120, 23);
+            cbReqOperator.TabIndex = 11;
+            // 
+            // lblReqValue
+            // 
+            lblReqValue.ForeColor = System.Drawing.Color.White;
+            lblReqValue.Location = new System.Drawing.Point(486, 126);
+            lblReqValue.Name = "lblReqValue";
+            lblReqValue.Size = new System.Drawing.Size(120, 18);
+            lblReqValue.TabIndex = 12;
+            lblReqValue.Text = "Value";
+            // 
+            // cbReqValue
+            // 
+            cbReqValue.DropDownStyle = ComboBoxStyle.DropDownList;
+            cbReqValue.FormattingEnabled = true;
+            cbReqValue.Location = new System.Drawing.Point(486, 147);
+            cbReqValue.Name = "cbReqValue";
+            cbReqValue.Size = new System.Drawing.Size(120, 23);
+            cbReqValue.TabIndex = 13;
+            // 
+            // btnReqAdd
+            // 
+            btnReqAdd.BackColor = System.Drawing.Color.FromArgb(64, 78, 237);
+            btnReqAdd.FlatStyle = FlatStyle.Popup;
+            btnReqAdd.ForeColor = System.Drawing.Color.White;
+            btnReqAdd.Location = new System.Drawing.Point(352, 184);
+            btnReqAdd.Name = "btnReqAdd";
+            btnReqAdd.Size = new System.Drawing.Size(254, 32);
+            btnReqAdd.TabIndex = 14;
+            btnReqAdd.Text = "Add Requirement";
+            btnReqAdd.UseVisualStyleBackColor = false;
+            btnReqAdd.Click += btnReqAdd_Click;
+            // 
+            // btnReqRemove
+            // 
+            btnReqRemove.BackColor = System.Drawing.Color.FromArgb(88, 40, 18);
+            btnReqRemove.FlatStyle = FlatStyle.Popup;
+            btnReqRemove.ForeColor = System.Drawing.Color.White;
+            btnReqRemove.Location = new System.Drawing.Point(352, 224);
+            btnReqRemove.Name = "btnReqRemove";
+            btnReqRemove.Size = new System.Drawing.Size(254, 32);
+            btnReqRemove.TabIndex = 15;
+            btnReqRemove.Text = "Remove Selected";
+            btnReqRemove.UseVisualStyleBackColor = false;
+            btnReqRemove.Click += btnReqRemove_Click;
+            // 
+            // lblReqRows
+            // 
+            lblReqRows.ForeColor = System.Drawing.Color.White;
+            lblReqRows.Location = new System.Drawing.Point(620, 70);
+            lblReqRows.Name = "lblReqRows";
+            lblReqRows.Size = new System.Drawing.Size(160, 18);
+            lblReqRows.TabIndex = 16;
+            lblReqRows.Text = "Current Requirements";
+            // 
+            // lvReqRows
+            // 
+            lvReqRows.Columns.AddRange(new ColumnHeader[] { chReqJoin, chReqCondition, chReqOperator, chReqValue });
+            lvReqRows.FullRowSelect = true;
+            lvReqRows.HideSelection = false;
+            lvReqRows.Location = new System.Drawing.Point(620, 91);
+            lvReqRows.MultiSelect = false;
+            lvReqRows.Name = "lvReqRows";
+            lvReqRows.Size = new System.Drawing.Size(196, 273);
+            lvReqRows.TabIndex = 17;
+            lvReqRows.UseCompatibleStateImageBehavior = false;
+            lvReqRows.View = View.Details;
+            // 
+            // chReqJoin
+            // 
+            chReqJoin.Text = "";
+            chReqJoin.Width = 38;
+            // 
+            // chReqCondition
+            // 
+            chReqCondition.Text = "Condition";
+            chReqCondition.Width = 105;
+            // 
+            // chReqOperator
+            // 
+            chReqOperator.Text = "Op";
+            chReqOperator.Width = 0;
+            // 
+            // chReqValue
+            // 
+            chReqValue.Text = "Value";
+            chReqValue.Width = 49;
             // 
             // GroupBox11
             // 
@@ -1811,7 +2061,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             GroupBox11.Size = new System.Drawing.Size(611, 369);
             GroupBox11.TabIndex = 97;
             GroupBox11.TabStop = false;
-            GroupBox11.Text = "Required Powers";
+            GroupBox11.Text = "Power Requirement Rules";
             // 
             // btnPrReset
             // 
@@ -1829,7 +2079,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             btnPrSetNone.Name = "btnPrSetNone";
             btnPrSetNone.Size = new System.Drawing.Size(156, 26);
             btnPrSetNone.TabIndex = 14;
-            btnPrSetNone.Text = "Set Power A to None";
+            btnPrSetNone.Text = "Clear Selected Slot";
             btnPrSetNone.UseVisualStyleBackColor = true;
             btnPrSetNone.Click += btnPrSetNone_Click;
             // 
@@ -1859,7 +2109,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             rbPrRemove.Name = "rbPrRemove";
             rbPrRemove.Size = new System.Drawing.Size(156, 27);
             rbPrRemove.TabIndex = 11;
-            rbPrRemove.Text = "Remove Selected";
+            rbPrRemove.Text = "Remove Rule";
             rbPrRemove.UseVisualStyleBackColor = true;
             rbPrRemove.Click += rbPrRemove_Click;
             // 
@@ -1869,7 +2119,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             rbPrAdd.Name = "rbPrAdd";
             rbPrAdd.Size = new System.Drawing.Size(156, 26);
             rbPrAdd.TabIndex = 10;
-            rbPrAdd.Text = "Add New";
+            rbPrAdd.Text = "Add Rule...";
             rbPrAdd.UseVisualStyleBackColor = true;
             rbPrAdd.Click += rbPrAdd_Click;
             // 
@@ -1880,7 +2130,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             rbPrPowerB.Name = "rbPrPowerB";
             rbPrPowerB.Size = new System.Drawing.Size(75, 27);
             rbPrPowerB.TabIndex = 9;
-            rbPrPowerB.Text = "Power B";
+            rbPrPowerB.Text = "Second Power";
             rbPrPowerB.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             rbPrPowerB.UseVisualStyleBackColor = true;
             rbPrPowerB.CheckedChanged += rbPrPowerX_CheckedChanged;
@@ -1894,7 +2144,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             rbPrPowerA.Size = new System.Drawing.Size(75, 27);
             rbPrPowerA.TabIndex = 8;
             rbPrPowerA.TabStop = true;
-            rbPrPowerA.Text = "Power A";
+            rbPrPowerA.Text = "First Power";
             rbPrPowerA.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             rbPrPowerA.UseVisualStyleBackColor = true;
             rbPrPowerA.CheckedChanged += rbPrPowerX_CheckedChanged;
@@ -1972,7 +2222,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // ColumnHeader6
             // 
-            ColumnHeader6.Text = "Power A";
+            ColumnHeader6.Text = "First Power";
             ColumnHeader6.Width = 265;
             // 
             // ColumnHeader7
@@ -1983,7 +2233,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // ColumnHeader8
             // 
-            ColumnHeader8.Text = "Power B";
+            ColumnHeader8.Text = "Second Power";
             ColumnHeader8.Width = 265;
             // 
             // GroupBox10
@@ -1994,7 +2244,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             GroupBox10.Size = new System.Drawing.Size(207, 158);
             GroupBox10.TabIndex = 96;
             GroupBox10.TabStop = false;
-            GroupBox10.Text = "Excluded Classes";
+            GroupBox10.Text = "Excluded Archetypes";
             // 
             // clbClassExclude
             // 
@@ -2012,7 +2262,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             GroupBox8.Size = new System.Drawing.Size(207, 158);
             GroupBox8.TabIndex = 95;
             GroupBox8.TabStop = false;
-            GroupBox8.Text = "Reqired Classes";
+            GroupBox8.Text = "Required Archetypes";
             // 
             // clbClassReq
             // 
@@ -2359,6 +2609,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             tpSets.ResumeLayout(false);
             ((ISupportInitialize)pbInvSetList).EndInit();
             ((ISupportInitialize)pbInvSetUsed).EndInit();
+            reqBuilderPanel.ResumeLayout(false);
+            reqBuilderPanel.PerformLayout();
             tpPreReq.ResumeLayout(false);
             GroupBox11.ResumeLayout(false);
             GroupBox10.ResumeLayout(false);
@@ -2491,6 +2743,14 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         Label lblInvSet;
         Label lblNameFull;
         Label lblNameUnique;
+        Label lblReqChoice;
+        Label lblReqHint;
+        Label lblReqJoin;
+        Label lblReqKind;
+        Label lblReqOperator;
+        Label lblReqRows;
+        Label lblReqTitle;
+        Label lblReqValue;
         Label lblStaticIndex;
         ListBox lvDisablePass1;
         ListBox lvDisablePass4;
@@ -2499,6 +2759,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         ListView lvPrListing;
         ListView lvPrPower;
         ListView lvPrSet;
+        ListView lvReqChoices;
+        ListView lvReqRows;
         ListView lvSPGroup;
         ListView lvSPPower;
         ListView lvSPSelected;
@@ -2508,6 +2770,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         PictureBox pbInvSetList;
         PictureBox pbInvSetUsed;
         Panel pnlFX;
+        Panel reqBuilderPanel;
         RadioButton rbFlagAffected;
         RadioButton rbFlagAutoHit;
         RadioButton rbFlagCast;
@@ -2537,6 +2800,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         TextBox txtCastTime;
         TextBox txtDescLong;
         TextBox txtDescShort;
+        TextBox tbReqExpression;
+        TextBox tbReqFilter;
         TextBox txtEndCost;
         TextBox txtInterrupt;
         TextBox txtLevel;
@@ -2555,13 +2820,23 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         NumericUpDown udScaleMax;
         NumericUpDown udScaleMin;
         ComboBox cbInherentType;
+        ComboBox cbReqJoin;
+        ComboBox cbReqKind;
+        ComboBox cbReqOperator;
+        ComboBox cbReqValue;
         Label lblInherentType;
+        Button btnReqAdd;
+        Button btnReqRemove;
+        ColumnHeader chReqChoice;
+        ColumnHeader chReqCondition;
+        ColumnHeader chReqJoin;
+        ColumnHeader chReqOperator;
+        ColumnHeader chReqValue;
         private CheckBox overideScale;
         private NumericUpDown udScaleStart;
         private Label label19;
         private CheckBox cbCoDFormat;
         private Button btnJsonImport;
-        private Button btnDynRecharge;
         private Button btnStacksUpdate;
     }
 }

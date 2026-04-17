@@ -65,7 +65,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             InitSelectedItems();
             _loading = false;
             UpdateFxText();
-            UpdateModifyAttribTable();
 
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
         }
@@ -100,16 +99,17 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private void btnPaste_Click(object sender, EventArgs e)
         {
             FullPaste();
-            UpdateModifyAttribTable();
         }
 
         private void btnEditConditions_Click(object sender, EventArgs e)
         {
             var editConditions = new frmEffectConditionals(MyFx.ActiveConditionals);
+            editConditions.AdvancedConditions = MyFx.AdvancedConditions?.Clone() ?? AdvancedConditionSet.FromLegacyActiveConditionals(MyFx.ActiveConditionals);
             var result = editConditions.ShowDialog(this);
             if (result == DialogResult.OK)
             {
                 MyFx.ActiveConditionals = editConditions.Conditionals;
+                MyFx.AdvancedConditions = editConditions.AdvancedConditions.Clone();
             }
             editConditions.Dispose();
             UpdateFxText();
@@ -269,18 +269,18 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            if (MyFx.ActiveConditionals.Count > 0)
+            if (MyFx.AdvancedConditions is { Rows.Count: > 0 } || MyFx.ActiveConditionals.Count > 0)
             {
                 MessageBox.Show(@"You cannot use Special Cases when using Conditionals.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 MyFx.SpecialCase = Enums.eSpecialCase.None;
             }
             else switch (cbFXSpecialCase.SelectedIndex)
             {
-                case > 0 when MyFx.ActiveConditionals.Count == 0:
+                case > 0 when MyFx.AdvancedConditions is not { Rows.Count: > 0 } && MyFx.ActiveConditionals.Count == 0:
                     MyFx.SpecialCase = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
                     btnEditConditions.Enabled = false;
                     break;
-                case 0 when MyFx.ActiveConditionals.Count == 0:
+                case 0 when MyFx.AdvancedConditions is not { Rows.Count: > 0 } && MyFx.ActiveConditionals.Count == 0:
                     MyFx.SpecialCase = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
                     btnEditConditions.Enabled = true;
                     break;
@@ -316,7 +316,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             var power = MyFx.GetPower();
-            FillPowerAttribs();
             if (power != null && (power.EntitiesAutoHit & Enums.eEntity.Caster) > Enums.eEntity.None)
             {
                 lblAffectsCaster.Text = @"Power also affects Self";
@@ -338,6 +337,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 {
                     MyFx.ActiveConditionals.Clear();
                 }
+
+                MyFx.AdvancedConditions.Rows.Clear();
             }
             else
             {
@@ -462,10 +463,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             SelectItemByName(lvEffectType, MyFx.EffectType.ToString());
             switch (MyFx.EffectType)
             {
-                case Enums.eEffectType.ModifyAttrib:
-                    SelectItemByName(lvSubAttribute, MyFx.PowerAttribs.ToString());
-                    break;
-
                 case Enums.eEffectType.EntCreate:
                     SelectItemByName(lvSubAttribute, MyFx.Summon);
                     break;
@@ -513,104 +510,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        //change storing of Atr attributes from power to effect
-        private void FillPowerAttribs()
-        {
-            // look at possibly using class to set modified and original values
-            if (MyPower != null)
-            {
-                var power = MyPower;
-
-                if (Math.Abs(MyFx.AtrOrigAccuracy + 1) < float.Epsilon)
-                {
-                    MyFx.AtrOrigAccuracy = power.Accuracy;
-                    MyFx.AtrModAccuracy = power.Accuracy;
-                }
-
-                if (Math.Abs(MyFx.AtrOrigActivatePeriod + 1) < float.Epsilon)
-                {
-                    MyFx.AtrOrigActivatePeriod = power.ActivatePeriod;
-                    MyFx.AtrModActivatePeriod = power.ActivatePeriod;
-                }
-
-                if (MyFx.AtrOrigArc == -1)
-                {
-                    MyFx.AtrOrigArc = power.Arc;
-                    MyFx.AtrModArc = power.Arc;
-                }
-
-                if (Math.Abs(MyFx.AtrOrigCastTime + 1) < float.Epsilon)
-                {
-                    MyFx.AtrOrigCastTime = power.CastTime;
-                    MyFx.AtrModCastTime = power.CastTime;
-                }
-
-                if (MyFx.AtrOrigEffectArea == Enums.eEffectArea.None)
-                {
-                    MyFx.AtrOrigEffectArea = power.EffectArea;
-                    MyFx.AtrModEffectArea = power.EffectArea;
-                }
-
-                if (Math.Abs(MyFx.AtrOrigEnduranceCost + 1) < float.Epsilon)
-                {
-                    MyFx.AtrOrigEnduranceCost = power.EndCost;
-                    MyFx.AtrModEnduranceCost = power.EndCost;
-                }
-
-                if (Math.Abs(MyFx.AtrOrigInterruptTime + 1) < float.Epsilon)
-                {
-                    MyFx.AtrOrigInterruptTime = power.InterruptTime;
-                    MyFx.AtrModInterruptTime = power.InterruptTime;
-                }
-
-                if (MyFx.AtrOrigMaxTargets == -1)
-                {
-                    MyFx.AtrOrigMaxTargets = power.MaxTargets;
-                    MyFx.AtrModMaxTargets = power.MaxTargets;
-                }
-
-                if (Math.Abs(MyFx.AtrOrigRadius + 1) < float.Epsilon)
-                {
-                    MyFx.AtrOrigRadius = power.Radius;
-                    MyFx.AtrModRadius = power.Radius;
-                }
-
-                if (Math.Abs(MyFx.AtrOrigRange + 1) < float.Epsilon)
-                {
-                    MyFx.AtrOrigRange = power.Range;
-                    MyFx.AtrModRange = power.Range;
-                }
-
-                if (Math.Abs(MyFx.AtrOrigRechargeTime + 1) < float.Epsilon)
-                {
-                    MyFx.AtrOrigRechargeTime = power.RechargeTime;
-                    MyFx.AtrModRechargeTime = power.RechargeTime;
-                }
-
-                if (Math.Abs(MyFx.AtrOrigSecondaryRange + 1) < float.Epsilon)
-                {
-                    MyFx.AtrOrigSecondaryRange = power.RangeSecondary;
-                    MyFx.AtrModSecondaryRange = power.RangeSecondary;
-                }
-            }
-
-            txtFXAccuracy.Text = MyFx.AtrModAccuracy.ToString(CultureInfo.InvariantCulture);
-            txtFXActivateInterval.Text = MyFx.AtrModActivatePeriod.ToString(CultureInfo.InvariantCulture);
-            txtFXArc.Text = MyFx.AtrModArc.ToString();
-            txtFXCastTime.Text = MyFx.AtrModCastTime.ToString(CultureInfo.InvariantCulture);
-            cbFXEffectArea.BeginUpdate();
-            cbFXEffectArea.DataSource = Enum.GetValues(typeof(Enums.eEffectArea));
-            cbFXEffectArea.SelectedIndex = (int)MyFx.AtrModEffectArea;
-            cbFXEffectArea.EndUpdate();
-            txtFXEnduranceCost.Text = MyFx.AtrModEnduranceCost.ToString(CultureInfo.InvariantCulture);
-            txtFXInterruptTime.Text = MyFx.AtrModInterruptTime.ToString(CultureInfo.InvariantCulture);
-            txtFXMaxTargets.Text = MyFx.AtrModMaxTargets.ToString();
-            txtFXRadius.Text = MyFx.AtrModRadius.ToString(CultureInfo.InvariantCulture);
-            txtFXRange.Text = MyFx.AtrModRange.ToString(CultureInfo.InvariantCulture);
-            txtFXRechargeTime.Text = MyFx.AtrModRechargeTime.ToString(CultureInfo.InvariantCulture);
-            txtFXSecondaryRange.Text = MyFx.AtrModSecondaryRange.ToString(CultureInfo.InvariantCulture);
-        }
-
         private void FullCopy()
         {
             var data = Serializer.GetSerializer().Serialize(MyFx);
@@ -649,7 +548,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             MyFx.EffectType = (Enums.eEffectType)lvEffectType.SelectedIndices[0];
-            UpdateModifyAttribTable();
             UpdateEffectSubAttribList();
             UpdateFxText();
         }
@@ -695,13 +593,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 case Enums.eEffectType.GrantPower:
                 case Enums.eEffectType.ExecutePower:
                     MyFx.Summon = sText;
-                    break;
-
-                case Enums.eEffectType.ModifyAttrib:
-                    MyFx.PowerAttribs = (Enums.ePowerAttribs)sIndex;
-                    UpdateModifyAttribTable();
-
-                    //cbTarget.Enabled = true;
                     break;
             }
 
@@ -1027,204 +918,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        private void txtFXAccuracy_TextChanged(object sender, EventArgs e)
-        {
-            if (_loading)
-            {
-                return;
-            }
-
-            var ret = float.TryParse(txtFXAccuracy.Text, out var num);
-            if (!ret)
-            {
-                return;
-            }
-
-            MyFx.AtrModAccuracy = num;
-            UpdateFxText();
-        }
-
-        private void txtFXActivateInterval_TextChanged(object sender, EventArgs e)
-        {
-            if (_loading)
-            {
-                return;
-            }
-
-            var ret = float.TryParse(txtFXActivateInterval.Text, out var num);
-            if (!ret)
-            {
-                return;
-            }
-
-            MyFx.AtrModActivatePeriod = num;
-            UpdateFxText();
-        }
-
-        private void txtFXArc_TextChanged(object sender, EventArgs e)
-        {
-            if (_loading)
-            {
-                return;
-            }
-
-            var ret = int.TryParse(txtFXArc.Text, out var num);
-            if (!ret)
-            {
-                return;
-            }
-
-            MyFx.AtrModArc = num;
-            UpdateFxText();
-        }
-
-        private void txtFXCastTime_TextChanged(object sender, EventArgs e)
-        {
-            if (_loading)
-            {
-                return;
-            }
-
-            var ret = float.TryParse(txtFXCastTime.Text, out var num);
-            if (!ret)
-            {
-                return;
-            }
-
-            MyFx.AtrModCastTime = num;
-            UpdateFxText();
-        }
-
-        private void cbFXEffectArea_SelectedIndexChanged(object sender, EventArgs e)
-        {
-            if (_loading)
-            {
-                return;
-            }
-
-            MyFx.AtrModEffectArea = (Enums.eEffectArea)cbFXEffectArea.SelectedIndex;
-            UpdateFxText();
-        }
-
-        private void txtFXEnduranceCost_TextChanged(object sender, EventArgs e)
-        {
-            if (_loading)
-            {
-                return;
-            }
-
-            var ret = float.TryParse(txtFXEnduranceCost.Text, out var num);
-            if (!ret)
-            {
-                return;
-            }
-
-            MyFx.AtrModEnduranceCost = num;
-            UpdateFxText();
-        }
-
-        private void txtFXInterruptTime_TextChanged(object sender, EventArgs e)
-        {
-            if (_loading)
-            {
-                return;
-            }
-
-            var ret = float.TryParse(txtFXInterruptTime.Text, out var num);
-            if (!ret)
-            {
-                return;
-            }
-
-            MyFx.AtrModInterruptTime = num;
-            UpdateFxText();
-        }
-
-        private void txtFXMaxTargets_TextChanged(object sender, EventArgs e)
-        {
-            if (_loading)
-            {
-                return;
-            }
-
-            var ret = int.TryParse(txtFXMaxTargets.Text, out var num);
-            if (!ret)
-            {
-                return;
-            }
-
-            MyFx.AtrModMaxTargets = num;
-            UpdateFxText();
-        }
-
-        private void txtFXRadius_TextChanged(object sender, EventArgs e)
-        {
-            if (_loading)
-            {
-                return;
-            }
-
-            var ret = float.TryParse(txtFXRadius.Text, out var num);
-            if (!ret)
-            {
-                return;
-            }
-
-            MyFx.AtrModRadius = num;
-            UpdateFxText();
-        }
-
-        private void txtFXRange_TextChanged(object sender, EventArgs e)
-        {
-            if (_loading)
-            {
-                return;
-            }
-
-            var ret = float.TryParse(txtFXRange.Text, out var num);
-            if (!ret)
-            {
-                return;
-            }
-
-            MyFx.AtrModRange = num;
-            UpdateFxText();
-        }
-
-        private void txtFXRechargeTime_TextChanged(object sender, EventArgs e)
-        {
-            if (_loading)
-            {
-                return;
-            }
-
-            var ret = float.TryParse(txtFXRechargeTime.Text, out var num);
-            if (!ret)
-            {
-                return;
-            }
-
-            MyFx.AtrModRechargeTime = num;
-            UpdateFxText();
-        }
-
-        private void txtFXSecondaryRange_TextChanged(object sender, EventArgs e)
-        {
-            if (_loading)
-            {
-                return;
-            }
-
-            var ret = float.TryParse(txtFXSecondaryRange.Text, out var num);
-            if (!ret)
-            {
-                return;
-            }
-
-            MyFx.AtrModSecondaryRange = num;
-            UpdateFxText();
-        }
-
         private void ListView_Leave(object sender, EventArgs e)
         {
             try
@@ -1302,13 +995,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     strArray = Enum.GetNames<Enums.eMez>();
                     index1 = (int)MyFx.MezType;
                     lvSubAttribute.Columns[0].Text = "Mez Type";
-                    lvSubAttribute.Columns[0].Width = -2;
-                    break;
-
-                case Enums.eEffectType.ModifyAttrib:
-                    strArray = Enum.GetNames<Enums.ePowerAttribs>();
-                    index1 = (int)MyFx.PowerAttribs;
-                    lvSubAttribute.Columns[0].Text = "Power Attrib";
                     lvSubAttribute.Columns[0].Width = -2;
                     break;
 
@@ -1447,36 +1133,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
         }*/
 
-        private void UpdateModifyAttribTable()
-        {
-            if (MyFx.EffectType == Enums.eEffectType.ModifyAttrib)
-            {
-                tableLayoutPanel1.Enabled = false;
-                tpPowerAttribs.Visible = true;
-
-                if (lvSubAttribute.SelectedItems.Count <= 0)
-                {
-                    for (var rowIndex = 0; rowIndex < tpPowerAttribs.Controls.Count; rowIndex++)
-                    {
-                        tpPowerAttribs.Controls[rowIndex].Enabled = false;
-                    }
-
-                    return;
-                }
-
-                for (var rowIndex = 0; rowIndex < tpPowerAttribs.Controls.Count; rowIndex++)
-                {
-                    tpPowerAttribs.Controls[rowIndex].Enabled = tpPowerAttribs.Controls[rowIndex].Name.Contains(lvSubAttribute.SelectedItems[0].Text) &
-                                                                (MyFx.PowerAttribs != Enums.ePowerAttribs.Range | !tpPowerAttribs.Controls[rowIndex].Name.Contains($"{Enums.ePowerAttribs.SecondaryRange}"));
-                }
-
-                return;
-            }
-            
-            tableLayoutPanel1.Enabled = true;
-            tpPowerAttribs.Visible = false;
-        }
-
         private void UpdateFxText(string? senderName = "")
         {
             if (_loading)
@@ -1516,36 +1172,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 lblEffectDescription.Text = MyFx.BuildEffectString(false, string.Empty, false, false, false, false, true);
             }
         }
-
-        /*private bool IsValidExpression => ValidExpression();
-        private bool ValidExpression()
-        {
-            var returnedBool = true;
-            var returnData = string.Empty;
-
-            if (ExpressionParser.HasSeparator(MyFx))
-            {
-                ExpressionParser.ParseExpression(MyFx, out var data);
-                if (data.ErrorFound)
-                {
-                    returnData = $@"Expression Error: {data.ErrorString}";
-                    returnedBool = false;
-                }
-            }
-            else
-            {
-                ExpressionParser.ParseExpression(MyFx, out var data, 1);
-                if (data.ErrorFound)
-                {
-                    returnData = $@"Expression Error: {data.ErrorString}";
-                    returnedBool = false;
-                }
-            }
-
-            lblEffectDescription.Text = returnData;
-
-            return returnedBool;
-        }*/
 
         private void UpdateSubSubList()
         {

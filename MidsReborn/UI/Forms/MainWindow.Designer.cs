@@ -187,6 +187,7 @@ namespace Mids_Reborn.UI.Forms
             tsHelperShort = new ToolStripMenuItem();
             tsHelperLong = new ToolStripMenuItem();
             toolStripSeparator5 = new ToolStripSeparator();
+            tsChangeDb = new ToolStripMenuItem();
             tsConfig = new ToolStripMenuItem();
             tsAdvDBEdit = new ToolStripMenuItem();
             HelpToolStripMenuItem = new ToolStripMenuItem();
@@ -1744,7 +1745,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // WindowToolStripMenuItem
             // 
-            WindowToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tsViewSets, tsViewGraphs, tsViewSetCompare, tsViewData, tsSetFind, ToolStripSeparator18, tsRecipeViewer, tsRotationHelper, ToolStripSeparator19, InGameRespecHelperToolStripMenuItem, toolStripSeparator5, tsConfig, tsAdvDBEdit });
+            WindowToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tsViewSets, tsViewGraphs, tsViewSetCompare, tsViewData, tsSetFind, ToolStripSeparator18, tsRecipeViewer, tsRotationHelper, ToolStripSeparator19, InGameRespecHelperToolStripMenuItem, toolStripSeparator5, tsChangeDb, tsConfig, tsAdvDBEdit });
             WindowToolStripMenuItem.ForeColor = SystemColors.ControlText;
             WindowToolStripMenuItem.Name = "WindowToolStripMenuItem";
             WindowToolStripMenuItem.Size = new Size(49, 22);
@@ -1846,6 +1847,13 @@ namespace Mids_Reborn.UI.Forms
             // 
             toolStripSeparator5.Name = "toolStripSeparator5";
             toolStripSeparator5.Size = new Size(211, 6);
+            // 
+            // tsChangeDb
+            // 
+            tsChangeDb.Name = "tsChangeDb";
+            tsChangeDb.Size = new Size(166, 22);
+            tsChangeDb.Text = "&Change Database";
+            tsChangeDb.Click += tsChangeDb_Click;
             // 
             // tsConfig
             // 
@@ -2236,6 +2244,7 @@ namespace Mids_Reborn.UI.Forms
         private ToolStripMenuItem tsImportLegacyForumPost;
         private ToolStripMenuItem tsImportDataChunk;
         private ToolStripSeparator toolStripSeparator5;
+        private ToolStripMenuItem tsChangeDb;
         private ToolStripMenuItem tsConfig;
         private ToolStripMenuItem tsAdvDBEdit;
         private ToolStripMenuItem toolStripMenuItem7;

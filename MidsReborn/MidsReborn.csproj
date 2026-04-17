@@ -453,7 +453,7 @@
 		<RemoveDir Directories="$(WinARM)" />
 	</Target>
 
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
+	<!--<Target Name="PostBuild" AfterTargets="PostBuildEvent">
 	  <Exec Command="set Out=$(TargetDir)&#xD;&#xA;&#xD;&#xA;rename &quot;%25Out%25MRBBootstrap.exe&quot;                New_MRBBootstrap.exe&#xD;&#xA;rename &quot;%25Out%25MRBBootstrap.dll&quot;                New_MRBBootstrap.dll&#xD;&#xA;rename &quot;%25Out%25MRBBootstrap.pdb&quot;                New_MRBBootstrap.pdb&#xD;&#xA;rename &quot;%25Out%25MRBBootstrap.runtimeconfig.json&quot; New_MRBBootstrap.runtimeconfig.json&#xD;&#xA;rename &quot;%25Out%25MRBBootstrap.deps.json&quot;          New_MRBBootstrap.deps.json" />
-	</Target>						
+	</Target>	-->					
 </Project>

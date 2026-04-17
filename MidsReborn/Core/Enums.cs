@@ -493,7 +493,6 @@ namespace Mids_Reborn.Core
             Walk,
             XPDebt,
             ForceMove,
-            ModifyAttrib,
             ExecutePower
         }
 
@@ -583,25 +582,7 @@ namespace Mids_Reborn.Core
             Walk,           // Walk
             XPDebt,         // XPDebt
             ForceMove,      // ForceMove
-            ModAttrib,      // ModifyAttrib
             ExecPower       // ExecutePower
-        }
-
-        public enum ePowerAttribs
-        {
-            None,
-            Accuracy,
-            ActivateInterval,
-            Arc,
-            CastTime,
-            EffectArea,
-            EnduranceCost,
-            InterruptTime,
-            MaxTargets,
-            Radius,
-            Range,
-            RechargeTime,
-            SecondaryRange
         }
 
         public enum eEffMode

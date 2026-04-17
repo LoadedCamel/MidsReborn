@@ -1347,7 +1347,8 @@ namespace Mids_Reborn.Core
         {
             foreach (var power in Database.Power)
             {
-                if (power.GetPowerSet().SetType is Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary or Enums.ePowerSetType.Pool or Enums.ePowerSetType.Ancillary)
+                var powerset = power?.GetPowerSet();
+                if (powerset?.SetType is Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary or Enums.ePowerSetType.Pool or Enums.ePowerSetType.Ancillary)
                 {
                     var boosts = new List<string>();
                     if (power.BoostsAllowed.Length <= 0 && power.Enhancements.Length > 0)

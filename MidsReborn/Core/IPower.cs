@@ -54,6 +54,8 @@ namespace Mids_Reborn.Core
 
         Requirement Requires { get; set; }
 
+        AdvancedConditionSet AdvancedRequirements { get; set; }
+
         Enums.eModeFlags ModesRequired { get; set; }
 
         Enums.eModeFlags ModesDisallowed { get; set; }
@@ -257,8 +259,6 @@ namespace Mids_Reborn.Core
 
         bool HasDamageBuffEffects();
 
-        bool HasAttribModEffects();
-
         Enums.ShortFX GetEnhancementMagSum(Enums.eEffectType iEffect, int subType = 0);
 
         Enums.ShortFX GetEffectMagSum(Enums.eEffectType iEffect, bool includeDelayed = false, bool onlySelf = false, bool onlyTarget = false, bool maxMode = false);
@@ -326,8 +326,6 @@ namespace Mids_Reborn.Core
         Dictionary<int, string> GetEffectsInSummons();
 
         string GetDifferentAttributesSubPower(int fxIndex);
-
-        void ApplyModifyEffects();
 
         string ExportToJson();
 

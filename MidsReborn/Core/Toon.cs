@@ -1003,7 +1003,6 @@ namespace Mids_Reborn.Core
             power2.AbsorbPetEffects(hIDX, stackingOverride);
             power2.ApplyGrantPowerEffects();
             GBPA_AddSubPowerEffects(ref power2, hIDX);
-            power2.ApplyModifyEffects();
 
             return power2;
         }

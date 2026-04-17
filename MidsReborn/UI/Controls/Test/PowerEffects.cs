@@ -75,11 +75,6 @@ public static class PowerEffects
             pBase, pEnh, rankedEffects));
 
         groups.Add(MakeGroup(
-            "Modify Effect",
-            Filter(items, id => id.EffectType is Enums.eEffectType.ModifyAttrib),
-            pBase, pEnh, rankedEffects));
-
-        groups.Add(MakeGroup(
             "Elusivity",
             Filter(items, id => id.EffectType is Enums.eEffectType.Elusivity),
             pBase, pEnh, rankedEffects));
@@ -138,16 +133,6 @@ public static class PowerEffects
                         label: item.Label,
                         tag: TagForDescriptor(gre.EffectType),
                         description: item.Value,
-                        tooltip: item.ToolTip,
-                        targetChips: targetChips));
-                    break;
-                }
-                case Enums.eEffectType.ModifyAttrib:
-                {
-                    rows.Add(new PowerEffectsGrid.DescriptorRow(
-                        label: item.Label,
-                        tag: TagForDescriptor(gre.EffectType),
-                        description: item.ToolTip ?? item.Value,
                         tooltip: item.ToolTip,
                         targetChips: targetChips));
                     break;
@@ -241,7 +226,6 @@ public static class PowerEffects
     {
         Enums.eEffectType.EntCreate => "Summon",
         Enums.eEffectType.GrantPower => "Grant Power",
-        Enums.eEffectType.ModifyAttrib => "Modify Effect",
         _ => "Descriptor"
     };
 

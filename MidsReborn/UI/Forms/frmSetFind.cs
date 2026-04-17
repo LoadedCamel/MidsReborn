@@ -85,7 +85,6 @@ namespace Mids_Reborn.UI.Forms
                 Enums.eEffectType.Jumppack,
                 Enums.eEffectType.MagicCarpet,
                 Enums.eEffectType.Meter,
-                Enums.eEffectType.ModifyAttrib,
                 Enums.eEffectType.NinjaRun,
                 Enums.eEffectType.Null,
                 Enums.eEffectType.NullBool,

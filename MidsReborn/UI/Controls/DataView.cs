@@ -729,11 +729,6 @@ namespace Mids_Reborn.UI.Forms.Controls
                 }
             }
 
-            /*foreach (var effect in pBase.Effects)
-            {
-                effect.UpdateAttrib();
-                SetDamageTip();
-            }*/
             info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("End Cost", "End"), pBase.ToggleCost, enhancedPower.ToggleCost, suffix1, tip1));
             var absorbedEffectsFlag = pBase.HasAbsorbedEffects && pBase.PowerIndex > -1 && DatabaseAPI.Database.Power[pBase.PowerIndex]?.EntitiesAutoHit == Enums.eEntity.None;
             var requiresToHitCheckFlag = pBase.Effects.Any(t => t.RequiresToHitCheck);
@@ -881,7 +876,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                              or Enums.eEffectType.DesignerStatus or Enums.eEffectType.StealthRadiusPlayer
                              or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x
                              or Enums.eEffectType.MovementControl or Enums.eEffectType.MovementFriction
-                             or Enums.eEffectType.Rage or Enums.eEffectType.ModifyAttrib or Enums.eEffectType.LevelShift) ||
+                             or Enums.eEffectType.Rage or Enums.eEffectType.LevelShift) ||
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid))
                 : GroupedFx.FilterListItemsExt(EffectsItemPairs,
@@ -889,7 +884,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                              or Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.Mez
                              or Enums.eEffectType.DesignerStatus or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x
                              or Enums.eEffectType.MovementControl or Enums.eEffectType.MovementFriction
-                             or Enums.eEffectType.Rage or Enums.eEffectType.ModifyAttrib or Enums.eEffectType.LevelShift) ||
+                             or Enums.eEffectType.Rage or Enums.eEffectType.LevelShift) ||
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid));
 
@@ -1088,13 +1083,6 @@ namespace Mids_Reborn.UI.Forms.Controls
                 {
                     Label = "Granted Powers",
                     Filter = e => e.EffectType is Enums.eEffectType.GrantPower or Enums.eEffectType.LevelShift,
-                    ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
-                },
-
-                new()
-                {
-                    Label = "Modify Effect",
-                    Filter = e => e.EffectType == Enums.eEffectType.ModifyAttrib,
                     ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 },
 
@@ -2274,11 +2262,7 @@ namespace Mids_Reborn.UI.Forms.Controls
 
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue = num;
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Stacks = num;
-            /*foreach (var effect in MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Effects)
-            {
-                effect.UpdateAttrib();
-                DisplayInfo();
-            }*/
+            
             if (num == pLastScaleVal)
             {
                 return;
@@ -2533,7 +2517,6 @@ namespace Mids_Reborn.UI.Forms.Controls
             }*/
 
             pBase?.ProcessExecutes();
-            pBase?.ApplyModifyEffects();
 
             // Do not run ApplyModifyEffects() on pEnh, this is done within totals calculations
             pEnh?.ProcessExecutes();
@@ -2551,7 +2534,6 @@ namespace Mids_Reborn.UI.Forms.Controls
         public void SetData()
         {
             pBase?.ProcessExecutes();
-            pBase?.ApplyModifyEffects();
 
             pEnh?.ProcessExecutes();
 

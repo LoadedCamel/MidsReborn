@@ -952,6 +952,16 @@ namespace Mids_Reborn.Core
                 return false;
             }
 
+            if (power == null)
+            {
+                return false;
+            }
+
+            if (power.AdvancedRequirements is { Rows.Count: > 0 })
+            {
+                return AdvancedConditionEvaluator.EvaluatePowerRequirements(power, nLevel, skipIdx, this);
+            }
+
             var nIdSkip = -1;
             if (skipIdx > -1 & skipIdx < Powers.Count)
             {

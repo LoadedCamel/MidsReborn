@@ -12,6 +12,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 {
     public class Power : IPower, IComparable
     {
+        private const string AdvancedRequirementsMarker = "MRB_ADVANCED_POWER_REQUIREMENTS";
         private bool Contains;
         public bool AppliedPowersOverride { get; set; } = false;
         public bool AbsorbedPetEffects { get; set; } = false;
@@ -49,6 +50,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             SubIsAltColor = false;
             BoostsAllowed = [];
             Requires = new Requirement();
+            AdvancedRequirements = AdvancedConditionSet.FromLegacyRequirement(Requires);
             var num = -2;
             foreach (var p in DatabaseAPI.Database.Power)
             {
@@ -81,6 +83,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             TargetLoS = true;
             GroupMembership = [];
             Requires = new Requirement();
+            AdvancedRequirements = AdvancedConditionSet.FromLegacyRequirement(Requires);
             PowerName = string.Empty;
             SetName = string.Empty;
             GroupName = string.Empty;
@@ -120,6 +123,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             DisplayName = template.DisplayName;
             Available = template.Available;
             Requires = new Requirement(template.Requires);
+            AdvancedRequirements = template.AdvancedRequirements?.Clone() ??
+                                   AdvancedConditionSet.FromLegacyRequirement(Requires);
             ModesRequired = template.ModesRequired;
             ModesDisallowed = template.ModesDisallowed;
             PowerType = template.PowerType;
@@ -248,6 +253,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             DisplayName = reader.ReadString();
             Available = reader.ReadInt32();
             Requires = new Requirement(reader);
+            AdvancedRequirements = AdvancedConditionSet.FromLegacyRequirement(Requires);
             ModesRequired = (Enums.eModeFlags)reader.ReadInt32();
             ModesDisallowed = (Enums.eModeFlags)reader.ReadInt32();
             PowerType = (Enums.ePowerType)reader.ReadInt32();
@@ -374,6 +380,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Taken = reader.ReadBoolean();
             Stacks = reader.ReadInt32();
             VariableStart = reader.ReadInt32();
+            if (AdvancedConditionSet.TryReadMarked(reader, AdvancedRequirementsMarker, out var advancedRequirements))
+            {
+                AdvancedRequirements = advancedRequirements;
+                Requires = AdvancedRequirements.ToLegacyRequirement();
+            }
         }
 
         public IPowerset? GetPowerSet()
@@ -425,6 +436,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public int Available { get; set; }
 
         public Requirement Requires { get; set; }
+
+        public AdvancedConditionSet AdvancedRequirements { get; set; }
 
         public Enums.eModeFlags ModesRequired { get; set; }
 
@@ -733,7 +746,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(PowerName);
             writer.Write(DisplayName);
             writer.Write(Available);
-            Requires.StoreTo(writer);
+            var legacyRequirements = AdvancedRequirements is { Rows.Count: > 0 }
+                ? AdvancedRequirements.ToLegacyRequirement()
+                : Requires;
+            legacyRequirements.StoreTo(writer);
             writer.Write((int)ModesRequired);
             writer.Write((int)ModesDisallowed);
             writer.Write((int)PowerType);
@@ -845,6 +861,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(Taken);
             writer.Write(Stacks);
             writer.Write(VariableStart);
+            AdvancedConditionSet.StoreMarked(writer, AdvancedRequirementsMarker,
+                AdvancedRequirements is { Rows.Count: > 0 }
+                    ? AdvancedRequirements
+                    : AdvancedConditionSet.FromLegacyRequirement(Requires));
         }
 
         public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x is { Power: not null } && x.Power.DisplayName == DisplayName);
@@ -1212,7 +1232,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     Enums.eEffectType.None => -1000,
                     Enums.eEffectType.SetMode => -500,
-                    Enums.eEffectType.Damage => -300,  // not used for “buff headline” in Mids
+                    Enums.eEffectType.Damage => -300,  // not used for "buff headline" in Mids
                     Enums.eEffectType.GrantPower => -40,
                     Enums.eEffectType.RevokePower => -40,
                     Enums.eEffectType.Translucency => -20,
@@ -1242,7 +1262,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 int w = 0;
                 if (fx.ToWho == Enums.eToWho.Self && (fx.BuffedMag > 0 || fx.EffectType == Enums.eEffectType.Mez)) w += 10;
                 if (fx.ToWho == Enums.eToWho.Target && fx.BuffedMag < 0) w += 10;
-                if (fx.Absorbed_Effect) w += 10; // baked-in via pet/absorbed often “feels” primary
+                if (fx.Absorbed_Effect) w += 10; // baked-in via pet/absorbed often "feels" primary
                 return w;
             }
 
@@ -1277,7 +1297,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 var fx = Effects[i];
 
-                // Suppression: skip when current suppression overlaps effect’s suppression flags.
+                // Suppression: skip when current suppression overlaps effect's suppression flags.
                 if ((MidsContext.Config.Suppression & fx.Suppression) != Enums.eSuppress.None)
                     continue;
 
@@ -1304,7 +1324,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (fx.InherentSpecial) weight -= 80;
                 if (fx.InherentSpecial2) weight -= 80;
 
-                // Enhancement “carriers” less headline-worthy
+                // Enhancement "carriers" less headline-worthy
                 if (fx.isEnhancementEffect) weight -= 20;
 
                 // Variables pop a bit more
@@ -1325,7 +1345,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 .ThenBy(x => x.Index) // stable
                 .Select(x => x.Index);
 
-            // newMode => full list (modern surfaces). false => legacy “top two”.
+            // newMode => full list (modern surfaces). false => legacy "top two".
             return newMode ? ordered.ToArray() : ordered.Take(2).ToArray();
         }
 
@@ -1476,11 +1496,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public bool HasDamageEffects()
         {
             return Effects.Any(t => t.EffectType == Enums.eEffectType.Damage);
-        }
-
-        public bool HasAttribModEffects()
-        {
-            return Effects.Any(t => t.EffectType == Enums.eEffectType.ModifyAttrib);
         }
 
         public Enums.ShortFX GetEnhancementMagSum(Enums.eEffectType iEffect, int subType = 0)
@@ -3439,14 +3454,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return !string.IsNullOrEmpty(rootPowerName) && rootPowerBase != null && basePower.FullName != rootPowerName
                 ? rootPowerName
                 : null;
-        }
-
-        public void ApplyModifyEffects()
-        {
-            foreach (var fx in Effects)
-            {
-                fx.UpdateAttrib();
-            }
         }
 
         public string ExportToJson()

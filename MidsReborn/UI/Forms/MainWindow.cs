@@ -5928,6 +5928,26 @@ namespace Mids_Reborn.UI.Forms
             ch.Validate();
         }
 
+        private async void tsChangeDb_Click(object sender, EventArgs e)
+        {
+            using var dbSelector = new DatabaseSelector();
+            var result = dbSelector.ShowDialog();
+            if (result != DialogResult.OK)
+            {
+                return;
+            }
+
+            var dbSelected = dbSelector.SelectedDatabase;
+            MidsContext.Config.DataPath = dbSelected;
+            MidsContext.Config.SavePath = dbSelected;
+            MidsContext.Config.SaveConfig();
+            using var iFrm = new frmBusy();
+            _frmBusy = iFrm;
+            _frmBusy.SetTitle(@"Changing Database");
+            _frmBusy.Show();
+            await MainModule.MidsController.ChangeDatabase(_frmBusy);
+        }
+
         #endregion
 
         #region Public Methods

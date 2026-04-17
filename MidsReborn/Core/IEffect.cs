@@ -47,8 +47,6 @@ namespace Mids_Reborn.Core
 
         Enums.eEffectType EffectType { get; set; }
 
-        Enums.ePowerAttribs PowerAttribs { get; set; }
-
         Enums.eOverrideBoolean DisplayPercentageOverride { get; set; }
 
         Enums.eDamage DamageType { get; set; }
@@ -141,33 +139,8 @@ namespace Mids_Reborn.Core
 
         float ProcsPerMinute { get; set; }
 
-        float AtrOrigAccuracy { get; set; }
-        float AtrOrigActivatePeriod { get; set; }
-        int AtrOrigArc { get; set; }
-        float AtrOrigCastTime { get; set; }
-        Enums.eEffectArea AtrOrigEffectArea { get; set; }
-        float AtrOrigEnduranceCost { get; set; }
-        float AtrOrigInterruptTime { get; set; }
-        int AtrOrigMaxTargets { get; set; }
-        float AtrOrigRadius { get; set; }
-        float AtrOrigRange { get; set; }
-        float AtrOrigRechargeTime { get; set; }
-        float AtrOrigSecondaryRange { get; set; }
-
-        float AtrModAccuracy { get; set; }
-        float AtrModActivatePeriod { get; set; }
-        int AtrModArc { get; set; }
-        float AtrModCastTime { get; set; }
-        Enums.eEffectArea AtrModEffectArea { get; set; }
-        float AtrModEnduranceCost { get; set; }
-        float AtrModInterruptTime { get; set; }
-        int AtrModMaxTargets { get; set; }
-        float AtrModRadius { get; set; }
-        float AtrModRange { get; set; }
-        float AtrModRechargeTime { get; set; }
-        float AtrModSecondaryRange { get; set; }
-
         List<KeyValue<string, string>>? ActiveConditionals { get; set; }
+        AdvancedConditionSet AdvancedConditions { get; set; }
         bool Validated { get; set; }
         bool IsFromProc { get; }
         IPower? GetPower();
@@ -175,7 +148,6 @@ namespace Mids_Reborn.Core
 
         bool isDamage();
 
-        void UpdateAttrib();
         bool ValidateConditional();
         bool ValidateConditional(string powerName);
         bool ValidateConditional(string cType, string powerName);

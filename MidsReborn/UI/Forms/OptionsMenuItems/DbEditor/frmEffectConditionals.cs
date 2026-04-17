@@ -12,15 +12,31 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
     public sealed partial class frmEffectConditionals : Form
     {
         public readonly List<KeyValue<string, string>> Conditionals;
+        public AdvancedConditionSet AdvancedConditions { get; set; }
 
         private readonly List<string> _conditionalTypes;
         private readonly List<string> _conditionalOps;
+        private readonly TextBox _advancedExpressionText = new();
+        private readonly Label _builderHint = new();
         private Dictionary<string, string> _CSFieldsRev;
 
         public frmEffectConditionals(List<KeyValue<string, string>>? conditions)
         {
             InitializeComponent();
-            _conditionalTypes = ["Power Active", "Power Taken", "Stacks", "Team Members", "Combat Setting"];
+            _conditionalTypes =
+            [
+                "Power Active",
+                "Power Taken",
+                "Stacks",
+                "Team Members",
+                "Combat Setting",
+                "Source Mode",
+                "Target Entity Type",
+                "Target Mode",
+                "Character Archetype",
+                "Character Level",
+                "Advanced Expression"
+            ];
             _conditionalOps = ["Equal To", "Greater Than", "Less Than"];
             _CSFieldsRev = ConfigData.CombatContext.EnumerateFields(MidsContext.Config.CombatContextSettings)
                 .ToDictionary(ConfigData.CombatContext.FormatSettingName, e => e);
@@ -29,10 +45,18 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             {
                 Conditionals = conditions.Clone();
             }
+            else
+            {
+                Conditionals = [];
+            }
+
+            AdvancedConditions = AdvancedConditionSet.FromLegacyActiveConditionals(Conditionals);
 
             Text = @"Effect Conditions";
             Icon = Resources.MRB_Icon_Concept;
             Load += OnLoad;
+            ApplyConditionBuilderLayout();
+            BuildModernConditionEditor();
         }
 
         private async void OnLoad(object? sender, EventArgs e)
@@ -40,6 +64,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             CenterToParent();
             await UpdateConditionTypes();
             await UpdateConditionals();
+            PopulateModernTypes();
+            RefreshModernConditionRows();
         }
 
         private async Task UpdateConditionTypes()
@@ -63,6 +89,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             lvConditionalOp.Visible = false;
             lvConditionalBool.Visible = false;
+            _advancedExpressionText.Visible = false;
 
             /*if (lvConditionalOp.Items.Count != 0) return;
 
@@ -90,82 +117,470 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private async Task UpdateConditionals()
         {
-            lvActiveConditionals.BeginUpdate();
-            var getCondition = new Regex("(:.*)");
-            var getConditionPower = new Regex("(.*:)");
+            RefreshConditionRows();
 
-            var k = 0;
-            foreach (var cVp in Conditionals)
-            {
-                var condition = getCondition.Replace(cVp.Key, "");
-                var linkTypeLv = k > 0
-                    ? condition.StartsWith("OR ")
-                        ? "OR"
-                        : "AND"
-                    : "";
-
-                condition = condition.Replace("OR ", "");
-                var conditionPower = getConditionPower.Replace(cVp.Key, "").Replace(":", "");
-                var power = DatabaseAPI.GetPowerByFullName(conditionPower);
-                switch (condition)
-                {
-                    case "Active":
-                        var item = new ListViewItem { Text = linkTypeLv, Name = power?.FullName };
-                        item.SubItems.Add($@"{condition}:{power?.DisplayName}");
-                        item.SubItems.Add("");
-                        item.SubItems.Add(cVp.Value);
-                        lvActiveConditionals.Items.Add(item);
-                        break;
-                    
-                    case "Taken":
-                        item = new ListViewItem { Text = linkTypeLv, Name = power?.FullName };
-                        item.SubItems.Add($@"{condition}:{power?.DisplayName}");
-                        item.SubItems.Add("");
-                        item.SubItems.Add(cVp.Value);
-                        lvActiveConditionals.Items.Add(item);
-                        break;
-                    
-                    case "Stacks":
-                        item = new ListViewItem { Text = linkTypeLv, Name = power?.FullName };
-                        item.SubItems.Add($@"{condition}:{power?.DisplayName}");
-                        var cVSplit = cVp.Value.Split(' ');
-                        item.SubItems.Add(cVSplit[0]);
-                        item.SubItems.Add(cVSplit[1]);
-                        lvActiveConditionals.Items.Add(item);
-                        break;
-                    
-                    case "Team":
-                        item = new ListViewItem { Text = linkTypeLv, Name = conditionPower };
-                        item.SubItems.Add($@"{condition}:{conditionPower}");
-                        cVSplit = cVp.Value.Split(' ');
-                        item.SubItems.Add(cVSplit[0]);
-                        item.SubItems.Add(cVSplit[1]);
-                        lvActiveConditionals.Items.Add(item);
-                        break;
-
-                    case "Config":
-                        var cfgSetting = getConditionPower.Replace(":", "");
-                        item = new ListViewItem { Text = linkTypeLv, Name = cfgSetting };
-                        item.SubItems.Add($@"{condition}:{ConfigData.CombatContext.FormatSettingName(cfgSetting)}");
-                        item.SubItems.Add("");
-                        item.SubItems.Add(cVp.Value);
-                        lvActiveConditionals.Items.Add(item);
-                        break;
-                }
-
-                k++;
-            }
-
-            lvActiveConditionals.EndUpdate();
-
-            panelLinkType.Visible = Conditionals.Count > 0;
+            panelLinkType.Visible = AdvancedConditions.Rows.Count > 0;
             rbLinkTypeAnd.Checked = true;
 
             await Task.CompletedTask;
         }
 
+        private void RefreshConditionRows()
+        {
+            lvActiveConditionals.BeginUpdate();
+            lvActiveConditionals.Items.Clear();
+            for (var i = 0; i < AdvancedConditions.Rows.Count; i++)
+            {
+                lvActiveConditionals.Items.Add(BuildAdvancedConditionItem(AdvancedConditions.Rows[i], i));
+            }
+
+            lvActiveConditionals.EndUpdate();
+        }
+
+        private static bool IsLegacyCondition(AdvancedConditionRow row)
+        {
+            return row.Kind is AdvancedConditionKind.PowerActive
+                or AdvancedConditionKind.PowerTaken
+                or AdvancedConditionKind.PowerStacks
+                or AdvancedConditionKind.TeamMembers
+                or AdvancedConditionKind.CombatSetting;
+        }
+
+        private static ListViewItem BuildAdvancedConditionItem(AdvancedConditionRow row, int index)
+        {
+            var linkType = index > 0
+                ? row.Link == AdvancedConditionLink.Or ? "OR" : "AND"
+                : "";
+            var item = new ListViewItem { Text = linkType, Name = row.Subject };
+            item.SubItems.Add(GetAdvancedConditionDisplay(row));
+            item.SubItems.Add(AdvancedConditionSet.FormatOperator(row.Operator));
+            item.SubItems.Add(GetAdvancedConditionValue(row));
+            return item;
+        }
+
+        private static string GetAdvancedConditionDisplay(AdvancedConditionRow row)
+        {
+            var suffix = row.Unsupported ? " (not simulated)" : "";
+            return row.Kind switch
+            {
+                AdvancedConditionKind.SourceMode => $"Source Mode:{row.Subject}{suffix}",
+                AdvancedConditionKind.PowerActive => $"Power Active:{GetPowerDisplayName(row.Subject)}",
+                AdvancedConditionKind.PowerTaken => $"Power Taken:{GetPowerDisplayName(row.Subject)}",
+                AdvancedConditionKind.PowerStacks => $"Stacks:{GetPowerDisplayName(row.Subject)}",
+                AdvancedConditionKind.TeamMembers => $"Team Members:{row.Subject}",
+                AdvancedConditionKind.CombatSetting => $"Combat Setting:{ConfigData.CombatContext.FormatSettingName(row.Subject)}",
+                AdvancedConditionKind.TargetEntityType => $"Target Entity:{row.Value}",
+                AdvancedConditionKind.TargetMode => $"Target Mode:{row.Subject}{suffix}",
+                AdvancedConditionKind.CharacterArchetype => $"Character Archetype:{row.Value}",
+                AdvancedConditionKind.CharacterLevel => "Character Level",
+                AdvancedConditionKind.AdvancedExpression => $"Advanced:{row.RawExpression}{suffix}",
+                _ => $"{row.Kind}:{row.Subject}{suffix}"
+            };
+        }
+
+        private static string GetAdvancedConditionValue(AdvancedConditionRow row)
+        {
+            return row.Kind switch
+            {
+                AdvancedConditionKind.SourceMode or AdvancedConditionKind.TargetMode => (!row.Negated).ToString(),
+                AdvancedConditionKind.PowerActive or AdvancedConditionKind.PowerTaken => row.Value,
+                AdvancedConditionKind.TargetEntityType or AdvancedConditionKind.CharacterArchetype => row.Value,
+                AdvancedConditionKind.CharacterLevel => row.Value,
+                _ => row.Value
+            };
+        }
+
+        private static string GetPowerDisplayName(string powerName)
+        {
+            return DatabaseAPI.GetPowerByFullName(powerName)?.DisplayName ?? powerName;
+        }
+
+        private void ApplyConditionBuilderLayout()
+        {
+            Text = @"Effect Conditions";
+            groupBox2.Text = @"Build Conditions";
+            columnHeader3.Text = @"Condition";
+            columnHeader2.Text = @"Pick";
+            columnHeader7.Text = @"Compare";
+            columnHeader4.Text = @"Value";
+            columnHeader1.Text = @"";
+            columnHeader5.Text = @"Current Conditions";
+            columnHeader8.Text = @"";
+            columnHeader6.Text = @"Value";
+
+            lvConditionalType.SetBounds(12, 38, 172, 388);
+            lvSubConditional.SetBounds(194, 38, 420, 388);
+            lvConditionalOp.SetBounds(624, 38, 118, 118);
+            lvConditionalBool.SetBounds(752, 38, 112, 388);
+            lvActiveConditionals.SetBounds(874, 38, 396, 388);
+            panelLinkType.SetBounds(624, 164, 240, 62);
+            addConditional.SetBounds(624, 236, 240, 32);
+            removeConditional.SetBounds(624, 276, 240, 32);
+            tbFilter.SetBounds(207, 494, 300, 23);
+            btnClearFilter.SetBounds(515, 494, 112, 23);
+
+            addConditional.Text = @"Add Condition";
+            removeConditional.Text = @"Remove Selected";
+            label1.Text = @"Combine with previous row:";
+            rbLinkTypeAnd.Location = new Point(17, 34);
+            rbLinkTypeOr.Location = new Point(92, 34);
+
+            _builderHint.AutoSize = false;
+            _builderHint.Text = @"Choose a condition, pick a value, then add it to the list.";
+            _builderHint.ForeColor = Color.Azure;
+            _builderHint.Location = new Point(12, 18);
+            _builderHint.Size = new Size(520, 18);
+            groupBox2.Controls.Add(_builderHint);
+
+            _advancedExpressionText.Multiline = true;
+            _advancedExpressionText.ScrollBars = ScrollBars.Vertical;
+            _advancedExpressionText.Visible = false;
+            _advancedExpressionText.Location = lvSubConditional.Location;
+            _advancedExpressionText.Size = new Size(420, 388);
+            groupBox2.Controls.Add(_advancedExpressionText);
+
+            columnHeader3.Width = 148;
+            columnHeader2.Width = 390;
+            columnHeader7.Width = 92;
+            columnHeader4.Width = 86;
+            columnHeader1.Width = 48;
+            columnHeader5.Width = 254;
+            columnHeader8.Width = 42;
+            columnHeader6.Width = 70;
+        }
+
+        private void BuildModernConditionEditor()
+        {
+            groupBox2.Visible = false;
+            tbFilter.Visible = false;
+            btnClearFilter.Visible = false;
+            _modernPanel.BringToFront();
+            btnOkay.BringToFront();
+            btnCancel.BringToFront();
+        }
+
+        private void ModernSearchTextChanged(object? sender, EventArgs e) => PopulateModernChoices();
+
+        private void ModernChoiceSelectedIndexChanged(object? sender, EventArgs e) => PopulateModernValues();
+
+        private void AddModernCondition_Click(object? sender, EventArgs e) => AddModernCondition();
+
+        private void RemoveModernCondition_Click(object? sender, EventArgs e) => RemoveModernCondition();
+
+        private void PopulateModernTypes()
+        {
+            _conditionType.Items.Clear();
+            foreach (var type in _conditionalTypes)
+            {
+                _conditionType.Items.Add(type);
+            }
+
+            if (_conditionType.Items.Count > 0)
+            {
+                _conditionType.SelectedIndex = 0;
+            }
+        }
+
+        private void ModernConditionTypeChanged(object? sender, EventArgs e)
+        {
+            _search.Clear();
+            PopulateModernOperators();
+            PopulateModernChoices();
+            PopulateModernValues();
+        }
+
+        private string ModernType => _conditionType.SelectedItem?.ToString() ?? string.Empty;
+
+        private void PopulateModernOperators()
+        {
+            _operator.Items.Clear();
+            var ops = ModernType is "Power Active" or "Power Taken" or "Source Mode" or "Target Entity Type" or "Target Mode" or "Character Archetype" or "Advanced Expression"
+                ? new[] { "Is" }
+                : _conditionalOps.ToArray();
+
+            _operator.Items.AddRange(ops);
+            if (_operator.Items.Count > 0)
+            {
+                _operator.SelectedIndex = 0;
+            }
+        }
+
+        private void PopulateModernChoices()
+        {
+            _choices.BeginUpdate();
+            _choices.Items.Clear();
+            _choiceLabel.Text = @"Pick";
+            _choices.Visible = ModernType != "Advanced Expression";
+            _search.Visible = ModernType != "Advanced Expression";
+            _expression.Visible = ModernType == "Advanced Expression";
+            _operator.Enabled = ModernType != "Advanced Expression";
+            _value.Enabled = ModernType != "Advanced Expression";
+
+            var filter = _search.Text.Trim();
+            switch (ModernType)
+            {
+                case "Power Active":
+                    AddPowerChoices([6, 7, 8, 9, 10, 11], filter, p => p.PowerType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle || p.PowerType == Enums.ePowerType.Click && p.ClickBuff);
+                    break;
+                case "Power Taken":
+                    AddPowerChoices([6, 7, 8, 9, 10, 11], filter, p => p.PowerType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle || p.PowerType == Enums.ePowerType.Click && p.ClickBuff);
+                    break;
+                case "Stacks":
+                    AddPowerChoices([6, 8, 9, 10, 11], filter, p => p.VariableEnabled);
+                    break;
+                case "Team Members":
+                    _choiceLabel.Text = @"Archetype";
+                    _choices.Items.Add("Any").Name = "Any";
+                    foreach (var at in DatabaseAPI.Database.Classes.Where(x => x is { Playable: true }))
+                    {
+                        _choices.Items.Add(at.DisplayName).Name = at.DisplayName;
+                    }
+                    break;
+                case "Combat Setting":
+                    _choiceLabel.Text = @"Setting";
+                    foreach (var setting in ConfigData.CombatContext.EnumerateFields(MidsContext.Config.CombatContextSettings))
+                    {
+                        var display = ConfigData.CombatContext.FormatSettingName(setting);
+                        if (string.IsNullOrWhiteSpace(filter) || display.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                        {
+                            _choices.Items.Add(display).Name = setting;
+                        }
+                    }
+                    break;
+                case "Source Mode":
+                    AddNamedChoices(["kDefensiveAdaptation", "kEfficientAdaptation", "kOffensiveAdaptation", "kDomination", "kScourge", "kContainment", "kCriticalHit", "kAssassination"]);
+                    break;
+                case "Target Entity Type":
+                    _choices.Items.Add("Player").Name = "player";
+                    _choices.Items.Add("Critter").Name = "critter";
+                    break;
+                case "Target Mode":
+                    _note.Text = @"Target mode is stored for review, but Mids cannot simulate target mode state.";
+                    AddNamedChoices(["kWet", "kLevitated", "kOpportunityLock", "kOpportunitySustain", "kChain_Induction", "kMastermind_Upgrade_1", "kMastermind_Upgrade_2", "kFocusFire_Burst", "kFocusFire_Slug", "kFocusFire_M30"]);
+                    break;
+                case "Character Archetype":
+                    foreach (var at in DatabaseAPI.Database.Classes.Where(x => x is { Playable: true }))
+                    {
+                        _choices.Items.Add(at.DisplayName).Name = at.ClassName;
+                    }
+                    break;
+                case "Character Level":
+                    _choices.Items.Add("Character Level").Name = "char>level";
+                    break;
+                case "Advanced Expression":
+                    _note.Text = @"For Omni expressions that cannot be represented by friendly rows yet.";
+                    break;
+            }
+
+            if (ModernType != "Target Mode" && ModernType != "Advanced Expression")
+            {
+                _note.Text = @"Pick a condition type, choose its value, then add it to the list. Advanced rows are saved with the database.";
+            }
+
+            _choices.EndUpdate();
+            if (_choices.Items.Count > 0)
+            {
+                _choices.Items[0].Selected = true;
+            }
+        }
+
+        private void AddNamedChoices(IEnumerable<string> values)
+        {
+            foreach (var value in values)
+            {
+                _choices.Items.Add(value).Name = value;
+            }
+        }
+
+        private void AddPowerChoices(int[] excludedSetTypes, string filter, Func<IPower, bool> predicate)
+        {
+            foreach (var power in DatabaseAPI.Database.Power.Where(p => p != null))
+            {
+                if (!TryGetPowerConditionListParts(power, excludedSetTypes, out var parts, out var archetype) || !predicate(power))
+                {
+                    continue;
+                }
+
+                if (!string.IsNullOrWhiteSpace(filter) && !FilterMatch(filter, parts[2], archetype, parts[1]))
+                {
+                    continue;
+                }
+
+                _choices.Items.Add($"{parts[2]} [{archetype} / {parts[1]}]").Name = power.FullName;
+            }
+        }
+
+        private void PopulateModernValues()
+        {
+            _value.Items.Clear();
+            switch (ModernType)
+            {
+                case "Power Active":
+                case "Power Taken":
+                case "Source Mode":
+                case "Target Entity Type":
+                case "Target Mode":
+                case "Character Archetype":
+                    _value.Items.AddRange(["True", "False"]);
+                    break;
+                case "Stacks":
+                    var power = _choices.SelectedItems.Count > 0 ? DatabaseAPI.GetPowerByFullName(_choices.SelectedItems[0].Name) : null;
+                    if (power != null)
+                    {
+                        foreach (var stackNum in FloatRange(power.VariableMin, power.VariableMax + 1, 1).Where(x => x >= power.VariableMin && x <= power.VariableMax))
+                        {
+                            _value.Items.Add($"{stackNum}");
+                        }
+                    }
+                    break;
+                case "Team Members":
+                    foreach (var num in Enumerable.Range(1, 7))
+                    {
+                        _value.Items.Add($"{num}");
+                    }
+                    break;
+                case "Combat Setting":
+                    foreach (var num in Enumerable.Range(0, 101))
+                    {
+                        _value.Items.Add($"{num}");
+                    }
+                    break;
+                case "Character Level":
+                    foreach (var num in Enumerable.Range(1, 50))
+                    {
+                        _value.Items.Add($"{num}");
+                    }
+                    break;
+            }
+
+            if (_value.Items.Count > 0)
+            {
+                _value.SelectedIndex = 0;
+            }
+        }
+
+        private void AddModernCondition()
+        {
+            var conditionCount = AdvancedConditions.Rows.Count;
+            var link = conditionCount > 0 && string.Equals(_linkType.Text, "OR", StringComparison.OrdinalIgnoreCase)
+                ? AdvancedConditionLink.Or
+                : AdvancedConditionLink.And;
+
+            if (ModernType == "Advanced Expression")
+            {
+                var expression = _expression.Text.Trim();
+                if (string.IsNullOrWhiteSpace(expression))
+                {
+                    return;
+                }
+
+                AdvancedConditions.Rows.Add(AdvancedConditionRow.AdvancedExpression(link, expression, unsupported: true));
+                _expression.Clear();
+                CommitModernRows();
+                return;
+            }
+
+            if (_choices.SelectedItems.Count <= 0 || _value.SelectedItem == null)
+            {
+                return;
+            }
+
+            var choice = _choices.SelectedItems[0];
+            var value = _value.Text;
+            var op = ParseModernOperator(_operator.Text);
+
+            AdvancedConditionRow? row = ModernType switch
+            {
+                "Power Active" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.PowerActive, Subject = choice.Name, Value = value, Operator = AdvancedConditionOperator.Equals },
+                "Power Taken" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.PowerTaken, Subject = choice.Name, Value = value, Operator = AdvancedConditionOperator.Equals },
+                "Stacks" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.PowerStacks, Subject = choice.Name, Value = value, Operator = op },
+                "Team Members" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.TeamMembers, Subject = choice.Name, Value = value, Operator = op },
+                "Combat Setting" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.CombatSetting, Subject = choice.Name, Value = value, Operator = op },
+                "Source Mode" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.SourceMode, Subject = choice.Name, Negated = value == "False" },
+                "Target Entity Type" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.TargetEntityType, Value = choice.Name, Operator = value == "False" ? AdvancedConditionOperator.NotEquals : AdvancedConditionOperator.Equals },
+                "Target Mode" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.TargetMode, Subject = choice.Name, Negated = value == "False", Unsupported = true },
+                "Character Archetype" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.CharacterArchetype, Value = choice.Name, Operator = value == "False" ? AdvancedConditionOperator.NotEquals : AdvancedConditionOperator.Equals },
+                "Character Level" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.CharacterLevel, Value = value, Operator = op },
+                _ => null
+            };
+
+            if (row == null)
+            {
+                return;
+            }
+
+            AdvancedConditions.Rows.Add(row);
+            CommitModernRows();
+        }
+
+        private void RemoveModernCondition()
+        {
+            if (_conditionRows.SelectedIndices.Count <= 0)
+            {
+                return;
+            }
+
+            var index = _conditionRows.SelectedIndices[0];
+            if (index < 0 || index >= AdvancedConditions.Rows.Count)
+            {
+                return;
+            }
+
+            AdvancedConditions.Rows.RemoveAt(index);
+            if (AdvancedConditions.Rows.Count > 0)
+            {
+                AdvancedConditions.Rows[0].Link = AdvancedConditionLink.And;
+            }
+
+            CommitModernRows();
+        }
+
+        private void CommitModernRows()
+        {
+            SyncLegacyConditionalsFromAdvanced();
+            RefreshModernConditionRows();
+            panelLinkType.Visible = AdvancedConditions.Rows.Count > 0;
+        }
+
+        private static AdvancedConditionOperator ParseModernOperator(string op)
+        {
+            return op switch
+            {
+                "Greater Than" => AdvancedConditionOperator.GreaterThan,
+                "Less Than" => AdvancedConditionOperator.LessThan,
+                _ => AdvancedConditionOperator.Equals
+            };
+        }
+
+        private void RefreshModernConditionRows()
+        {
+            _conditionRows.BeginUpdate();
+            _conditionRows.Items.Clear();
+            for (var i = 0; i < AdvancedConditions.Rows.Count; i++)
+            {
+                var row = AdvancedConditions.Rows[i];
+                var item = new ListViewItem(i == 0 ? "" : row.Link == AdvancedConditionLink.Or ? "OR" : "AND");
+                item.SubItems.Add(GetAdvancedConditionDisplay(row));
+                item.SubItems.Add(AdvancedConditionSet.FormatOperator(row.Operator));
+                item.SubItems.Add(GetAdvancedConditionValue(row));
+                _conditionRows.Items.Add(item);
+            }
+
+            _conditionRows.EndUpdate();
+            RefreshConditionRows();
+        }
+
         private void lvConditionalType_SelectionChanged(object sender, ListViewItemSelectionChangedEventArgs e)
         {
+            if (lvConditionalType.SelectedItems.Count <= 0)
+            {
+                return;
+            }
+
+            _advancedExpressionText.Visible = false;
+            lvSubConditional.Visible = true;
+            _builderHint.Text = @"Choose a condition, pick a value, then add it to the list.";
+
             var lvBoolSizeStandAlone = new Size(112, 259);
             var lvBoolLocStandAlone = new Point(537, 16);
 
@@ -197,20 +612,19 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     var eArray = new[] { 6, 7, 8, 9, 10, 11 };
                     foreach (var power in pArray)
                     {
-                        var pSetType = power?.GetPowerSet()?.SetType;
-                        var pType = power?.PowerType;
-                        var isType = pType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle ||
-                                     pType == Enums.ePowerType.Click && power?.ClickBuff == true;
-                        var isUsable = !eArray.Contains((int)pSetType);
-                        if (!isUsable || !isType)
+                        if (!TryGetPowerConditionListParts(power, eArray, out var pStrings, out var pArchetype))
                         {
                             continue;
                         }
 
-                        var pItem = new Regex("[_]");
-                        var pStrings = pItem.Replace(power.FullName, " ").Split('.');
-                        var pMatch = new Regex("[ ].*");
-                        var pArchetype = pMatch.Replace(pStrings[0], "");
+                        var pType = power?.PowerType;
+                        var isType = pType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle ||
+                                     pType == Enums.ePowerType.Click && power?.ClickBuff == true;
+                        if (!isType)
+                        {
+                            continue;
+                        }
+
                         var textFilter = tbFilter.Text.Trim();
                         if (!string.IsNullOrEmpty(textFilter))
                         {
@@ -240,20 +654,19 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     eArray = [6, 7, 8, 9, 10, 11];
                     foreach (var power in pArray)
                     {
-                        var pSetType = power?.GetPowerSet()?.SetType;
-                        var pType = power?.PowerType;
-                        var isType = pType == Enums.ePowerType.Auto_ || pType == Enums.ePowerType.Toggle ||
-                                     (pType == Enums.ePowerType.Click && power?.ClickBuff == true);
-                        var isUsable = !eArray.Contains((int)pSetType);
-                        if (!isUsable && !isType)
+                        if (!TryGetPowerConditionListParts(power, eArray, out var pStrings, out var pArchetype))
                         {
                             continue;
                         }
 
-                        var pItem = new Regex("[_]");
-                        var pStrings = pItem.Replace(power.FullName, " ").Split('.');
-                        var pMatch = new Regex("[ ].*");
-                        var pArchetype = pMatch.Replace(pStrings[0], "");
+                        var pType = power?.PowerType;
+                        var isType = pType == Enums.ePowerType.Auto_ || pType == Enums.ePowerType.Toggle ||
+                                     (pType == Enums.ePowerType.Click && power?.ClickBuff == true);
+                        if (!isType)
+                        {
+                            continue;
+                        }
+
                         var textFilter = tbFilter.Text.Trim();
                         if (!string.IsNullOrEmpty(textFilter))
                         {
@@ -283,15 +696,14 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     eArray = [6, 8, 9, 10, 11];
                     foreach (var power in pArray)
                     {
-                        var pSetType = power?.GetPowerSet()?.SetType;
-                        var isType = power.VariableEnabled;
-                        var isUsable = !eArray.Contains((int)pSetType);
-                        if (!isUsable || !isType) continue;
+                        if (!TryGetPowerConditionListParts(power, eArray, out var pStrings, out var pArchetype))
+                        {
+                            continue;
+                        }
 
-                        var pItem = new Regex("[_]");
-                        var pStrings = pItem.Replace(power.FullName, " ").Split('.');
-                        var pMatch = new Regex("[ ].*");
-                        var pArchetype = pMatch.Replace(pStrings[0], "");
+                        var isType = power.VariableEnabled;
+                        if (!isType) continue;
+
                         lvConditionalBool.Size = lvBoolSizeSecondary;
                         lvConditionalBool.Location = lvBoolLocSecondary;
                         lvConditionalOp.Visible = true;
@@ -355,6 +767,115 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     lvSubConditional.EndUpdate();
 
                     break;
+
+                case "Source Mode":
+                    tbFilter.Visible = false;
+                    btnClearFilter.Visible = false;
+                    lvConditionalOp.Visible = false;
+                    lvConditionalBool.Visible = true;
+                    lvConditionalBool.Enabled = true;
+                    lvSubConditional.Columns[0].Text = @"Source Mode";
+                    lvSubConditional.BeginUpdate();
+                    lvSubConditional.Items.Clear();
+                    foreach (var mode in new[]
+                             {
+                                 "kDefensiveAdaptation",
+                                 "kEfficientAdaptation",
+                                 "kOffensiveAdaptation",
+                                 "kDomination",
+                                 "kScourge",
+                                 "kContainment",
+                                 "kCriticalHit",
+                                 "kAssassination"
+                             })
+                    {
+                        lvSubConditional.Items.Add(mode).Name = mode;
+                    }
+                    lvSubConditional.EndUpdate();
+                    break;
+
+                case "Target Entity Type":
+                    tbFilter.Visible = false;
+                    btnClearFilter.Visible = false;
+                    lvConditionalOp.Visible = false;
+                    lvConditionalBool.Visible = true;
+                    lvConditionalBool.Enabled = true;
+                    lvSubConditional.Columns[0].Text = @"Target Entity";
+                    lvSubConditional.BeginUpdate();
+                    lvSubConditional.Items.Clear();
+                    lvSubConditional.Items.Add("Player").Name = "player";
+                    lvSubConditional.Items.Add("Critter").Name = "critter";
+                    lvSubConditional.EndUpdate();
+                    break;
+
+                case "Target Mode":
+                    tbFilter.Visible = false;
+                    btnClearFilter.Visible = false;
+                    lvConditionalOp.Visible = false;
+                    lvConditionalBool.Visible = true;
+                    lvConditionalBool.Enabled = true;
+                    lvSubConditional.Columns[0].Text = @"Target Mode";
+                    lvSubConditional.BeginUpdate();
+                    lvSubConditional.Items.Clear();
+                    foreach (var mode in new[]
+                             {
+                                 "kWet",
+                                 "kLevitated",
+                                 "kOpportunityLock",
+                                 "kOpportunitySustain",
+                                 "kChain_Induction",
+                                 "kMastermind_Upgrade_1",
+                                 "kMastermind_Upgrade_2",
+                                 "kFocusFire_Burst",
+                                 "kFocusFire_Slug",
+                                 "kFocusFire_M30"
+                             })
+                    {
+                        lvSubConditional.Items.Add(mode).Name = mode;
+                    }
+                    lvSubConditional.EndUpdate();
+                    break;
+
+                case "Character Archetype":
+                    tbFilter.Visible = false;
+                    btnClearFilter.Visible = false;
+                    lvConditionalOp.Visible = false;
+                    lvConditionalBool.Visible = true;
+                    lvConditionalBool.Enabled = true;
+                    lvSubConditional.Columns[0].Text = @"Archetype";
+                    lvSubConditional.BeginUpdate();
+                    lvSubConditional.Items.Clear();
+                    foreach (var archetype in DatabaseAPI.Database.Classes.Where(x => x is { Playable: true }))
+                    {
+                        lvSubConditional.Items.Add(archetype.DisplayName).Name = archetype.ClassName;
+                    }
+                    lvSubConditional.EndUpdate();
+                    break;
+
+                case "Character Level":
+                    tbFilter.Visible = false;
+                    btnClearFilter.Visible = false;
+                    lvConditionalOp.Visible = true;
+                    lvConditionalBool.Visible = true;
+                    lvConditionalBool.Enabled = true;
+                    lvConditionalOp.Columns[0].Text = @"Level is?";
+                    lvSubConditional.Columns[0].Text = @"Character";
+                    lvSubConditional.BeginUpdate();
+                    lvSubConditional.Items.Clear();
+                    lvSubConditional.Items.Add("Character Level").Name = "char>level";
+                    lvSubConditional.EndUpdate();
+                    break;
+                
+                case "Advanced Expression":
+                    tbFilter.Visible = false;
+                    btnClearFilter.Visible = false;
+                    lvConditionalOp.Visible = false;
+                    lvConditionalBool.Visible = false;
+                    lvSubConditional.Visible = false;
+                    _advancedExpressionText.Visible = true;
+                    _advancedExpressionText.Focus();
+                    _builderHint.Text = @"For expressions that cannot be represented yet. Use sparingly.";
+                    break;
             }
         }
 
@@ -365,6 +886,11 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 : string.Empty;
 
             var selected = DatabaseAPI.GetPowerByFullName(powName);
+
+            if (lvConditionalType.SelectedItems.Count <= 0)
+            {
+                return;
+            }
 
             lvConditionalBool.Items.Clear();
             switch (lvConditionalType.SelectedItems[0].Text)
@@ -476,6 +1002,39 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     }
 
                     break;
+
+                case "Source Mode":
+                case "Target Entity Type":
+                case "Target Mode":
+                case "Character Archetype":
+                    lvConditionalBool.BeginUpdate();
+                    lvConditionalBool.Items.Clear();
+                    lvConditionalBool.Items.Add("True");
+                    lvConditionalBool.Items.Add("False");
+                    lvConditionalBool.Columns[0].Text = @"Condition is?";
+                    lvConditionalBool.EndUpdate();
+                    lvConditionalBool.Visible = true;
+                    break;
+
+                case "Character Level":
+                    lvConditionalOp.BeginUpdate();
+                    lvConditionalOp.Items.Clear();
+                    foreach (var op in _conditionalOps)
+                    {
+                        lvConditionalOp.Items.Add(op);
+                    }
+                    lvConditionalOp.EndUpdate();
+
+                    lvConditionalBool.BeginUpdate();
+                    lvConditionalBool.Items.Clear();
+                    foreach (var num in Enumerable.Range(1, 50))
+                    {
+                        lvConditionalBool.Items.Add($"{num}");
+                    }
+                    lvConditionalBool.Columns[0].Text = @"Level";
+                    lvConditionalBool.EndUpdate();
+                    lvConditionalBool.Visible = true;
+                    break;
             }
         }
 
@@ -536,12 +1095,14 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             IPower power;
             string value;
             ListViewItem item;
-            var linkPrefix = Conditionals.Count > 0 && rbLinkTypeOr.Checked ? "OR " : "";
-            var linkPrefixLv = Conditionals.Count > 0
+            var conditionCount = AdvancedConditions.Rows.Count;
+            var linkPrefix = conditionCount > 0 && rbLinkTypeOr.Checked ? "OR " : "";
+            var linkPrefixLv = conditionCount > 0
                 ? rbLinkTypeOr.Checked
                     ? "OR "
                     : "AND "
                 : "";
+            var advancedLink = conditionCount > 0 && rbLinkTypeOr.Checked ? AdvancedConditionLink.Or : AdvancedConditionLink.And;
 
             if (lvConditionalType.SelectedItems.Count <= 0)
             {
@@ -691,9 +1252,139 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     Conditionals.Add(new KeyValue<string, string>($"{linkPrefix}Config:{_CSFieldsRev[field]}", $"{cOp} {value}"));
 
                     break;
+
+                case "Source Mode":
+                    if (lvSubConditional.SelectedItems.Count <= 0 || lvConditionalBool.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
+                    value = lvConditionalBool.SelectedItems[0].Text;
+                    var sourceModeRow = new AdvancedConditionRow
+                    {
+                        Link = advancedLink,
+                        Kind = AdvancedConditionKind.SourceMode,
+                        Subject = lvSubConditional.SelectedItems[0].Name,
+                        Negated = value == "False"
+                    };
+                    AdvancedConditions.Rows.Add(sourceModeRow);
+                    item = BuildAdvancedConditionItem(sourceModeRow, conditionCount);
+                    lvActiveConditionals.Items.Add(item);
+                    break;
+
+                case "Target Entity Type":
+                    if (lvSubConditional.SelectedItems.Count <= 0 || lvConditionalBool.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
+                    value = lvConditionalBool.SelectedItems[0].Text;
+                    var targetEntityRow = new AdvancedConditionRow
+                    {
+                        Link = advancedLink,
+                        Kind = AdvancedConditionKind.TargetEntityType,
+                        Value = lvSubConditional.SelectedItems[0].Name,
+                        Operator = value == "False" ? AdvancedConditionOperator.NotEquals : AdvancedConditionOperator.Equals
+                    };
+                    AdvancedConditions.Rows.Add(targetEntityRow);
+                    item = BuildAdvancedConditionItem(targetEntityRow, conditionCount);
+                    lvActiveConditionals.Items.Add(item);
+                    break;
+
+                case "Target Mode":
+                    if (lvSubConditional.SelectedItems.Count <= 0 || lvConditionalBool.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
+                    value = lvConditionalBool.SelectedItems[0].Text;
+                    var targetModeRow = new AdvancedConditionRow
+                    {
+                        Link = advancedLink,
+                        Kind = AdvancedConditionKind.TargetMode,
+                        Subject = lvSubConditional.SelectedItems[0].Name,
+                        Negated = value == "False",
+                        Unsupported = true
+                    };
+                    AdvancedConditions.Rows.Add(targetModeRow);
+                    item = BuildAdvancedConditionItem(targetModeRow, conditionCount);
+                    lvActiveConditionals.Items.Add(item);
+                    break;
+
+                case "Character Archetype":
+                    if (lvSubConditional.SelectedItems.Count <= 0 || lvConditionalBool.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
+                    value = lvConditionalBool.SelectedItems[0].Text;
+                    var archetypeRow = new AdvancedConditionRow
+                    {
+                        Link = advancedLink,
+                        Kind = AdvancedConditionKind.CharacterArchetype,
+                        Value = lvSubConditional.SelectedItems[0].Name,
+                        Operator = value == "False" ? AdvancedConditionOperator.NotEquals : AdvancedConditionOperator.Equals
+                    };
+                    AdvancedConditions.Rows.Add(archetypeRow);
+                    item = BuildAdvancedConditionItem(archetypeRow, conditionCount);
+                    lvActiveConditionals.Items.Add(item);
+                    break;
+
+                case "Character Level":
+                    if (lvConditionalOp.SelectedItems.Count <= 0 || lvConditionalBool.SelectedItems.Count <= 0)
+                    {
+                        return;
+                    }
+
+                    cOp = lvConditionalOp.SelectedItems[0].Text switch
+                    {
+                        "Equal To" => "=",
+                        "Greater Than" => ">",
+                        "Less Than" => "<",
+                        _ => cOp
+                    };
+
+                    var levelRow = new AdvancedConditionRow
+                    {
+                        Link = advancedLink,
+                        Kind = AdvancedConditionKind.CharacterLevel,
+                        Operator = cOp switch
+                        {
+                            ">" => AdvancedConditionOperator.GreaterThan,
+                            "<" => AdvancedConditionOperator.LessThan,
+                            _ => AdvancedConditionOperator.Equals
+                        },
+                        Value = lvConditionalBool.SelectedItems[0].Text
+                    };
+                    AdvancedConditions.Rows.Add(levelRow);
+                    item = BuildAdvancedConditionItem(levelRow, conditionCount);
+                    lvActiveConditionals.Items.Add(item);
+                    break;
+
+                case "Advanced Expression":
+                    var expression = _advancedExpressionText.Text.Trim();
+                    if (string.IsNullOrWhiteSpace(expression))
+                    {
+                        return;
+                    }
+
+                    var advancedExpressionRow = AdvancedConditionRow.AdvancedExpression(advancedLink, expression, unsupported: true);
+                    AdvancedConditions.Rows.Add(advancedExpressionRow);
+                    _advancedExpressionText.Clear();
+                    break;
             }
 
-            panelLinkType.Visible = Conditionals.Count > 0;
+            foreach (var legacyRow in AdvancedConditionSet.FromLegacyActiveConditionals(Conditionals).Rows)
+            {
+                if (AdvancedConditions.Rows.All(row => row.Kind != legacyRow.Kind || row.Subject != legacyRow.Subject || row.Value != legacyRow.Value || row.Operator != legacyRow.Operator))
+                {
+                    AdvancedConditions.Rows.Add(legacyRow);
+                }
+            }
+
+            SyncLegacyConditionalsFromAdvanced();
+            RefreshConditionRows();
+            panelLinkType.Visible = AdvancedConditions.Rows.Count > 0;
             rbLinkTypeAnd.Checked = true;
         }
 
@@ -710,6 +1401,15 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 Conditionals.Remove(cVp);
             }
 
+            var selectedName = lvActiveConditionals.SelectedItems[0].Name;
+            var selectedCondition = lvActiveConditionals.SelectedItems[0].SubItems.Count > 1
+                ? lvActiveConditionals.SelectedItems[0].SubItems[1].Text
+                : "";
+            AdvancedConditions.Rows.RemoveAll(row =>
+                (!string.IsNullOrWhiteSpace(selectedName) &&
+                 string.Equals(row.Subject, selectedName, StringComparison.OrdinalIgnoreCase)) ||
+                string.Equals(GetAdvancedConditionDisplay(row), selectedCondition, StringComparison.OrdinalIgnoreCase));
+
             lvActiveConditionals.SelectedItems[0].Remove();
             if (Conditionals.Count == 1)
             {
@@ -717,7 +1417,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 lvActiveConditionals.Items[0].SubItems[0] = new ListViewItem.ListViewSubItem(lvActiveConditionals.Items[0], "");
             }
 
-            panelLinkType.Visible = Conditionals.Count > 0;
+            SyncLegacyConditionalsFromAdvanced();
+            RefreshConditionRows();
+            panelLinkType.Visible = AdvancedConditions.Rows.Count > 0;
             rbLinkTypeAnd.Checked = true;
         }
 
@@ -771,6 +1473,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void btnOkay_Click(object sender, EventArgs e)
         {
+            SyncLegacyConditionalsFromAdvanced();
             DialogResult = DialogResult.OK;
             Close();
         }
@@ -779,6 +1482,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             DialogResult = DialogResult.Cancel;
             Close();
+        }
+
+        private void SyncLegacyConditionalsFromAdvanced()
+        {
+            Conditionals.Clear();
+            Conditionals.AddRange(AdvancedConditions.ToLegacyActiveConditionals());
         }
 
         protected override void WndProc(ref Message m)
@@ -833,9 +1542,35 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             return validName & validArchetype & validPowerset;
         }
 
+        private static bool TryGetPowerConditionListParts(IPower? power, int[] excludedSetTypes, out string[] powerNameParts, out string archetype)
+        {
+            powerNameParts = [];
+            archetype = string.Empty;
+
+            if (power == null || string.IsNullOrWhiteSpace(power.FullName))
+            {
+                return false;
+            }
+
+            var powerset = power.GetPowerSet();
+            if (powerset == null || excludedSetTypes.Contains((int)powerset.SetType))
+            {
+                return false;
+            }
+
+            powerNameParts = new Regex("[_]").Replace(power.FullName, " ").Split('.');
+            if (powerNameParts.Length < 3)
+            {
+                return false;
+            }
+
+            archetype = new Regex("[ ].*").Replace(powerNameParts[0], "");
+            return true;
+        }
+
         private void tbFilter_TextChanged(object sender, EventArgs e)
         {
-            var conditionalType = lvConditionalType.SelectedIndices.Count < 0
+            var conditionalType = lvConditionalType.SelectedItems.Count <= 0
                 ? ""
                 : lvConditionalType.SelectedItems[0].Text;
 
@@ -850,20 +1585,19 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
                     foreach (var power in pArray)
                     {
-                        var pSetType = power?.GetPowerSet()?.SetType;
-                        var pType = power?.PowerType;
-                        var isType = pType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle ||
-                                     pType == Enums.ePowerType.Click && power?.ClickBuff == true;
-                        var isUsable = !eArray.Contains((int)pSetType);
-                        if (!isUsable || !isType)
+                        if (!TryGetPowerConditionListParts(power, eArray, out var pStrings, out var pArchetype))
                         {
                             continue;
                         }
 
-                        var pItem = new Regex("[_]");
-                        var pStrings = pItem.Replace(power.FullName, " ").Split('.');
-                        var pMatch = new Regex("[ ].*");
-                        var pArchetype = pMatch.Replace(pStrings[0], "");
+                        var pType = power?.PowerType;
+                        var isType = pType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle ||
+                                     pType == Enums.ePowerType.Click && power?.ClickBuff == true;
+                        if (!isType)
+                        {
+                            continue;
+                        }
+
                         var textFilter = tbFilter.Text.Trim();
                         if (!string.IsNullOrEmpty(textFilter))
                         {
@@ -888,20 +1622,19 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     eArray = [6, 7, 8, 9, 10, 11];
                     foreach (var power in pArray)
                     {
-                        var pSetType = power?.GetPowerSet()?.SetType;
-                        var pType = power?.PowerType;
-                        var isType = pType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle ||
-                                     pType == Enums.ePowerType.Click && power?.ClickBuff == true;
-                        var isUsable = !eArray.Contains((int)pSetType);
-                        if (!isUsable && !isType)
+                        if (!TryGetPowerConditionListParts(power, eArray, out var pStrings, out var pArchetype))
                         {
                             continue;
                         }
 
-                        var pItem = new Regex("[_]");
-                        var pStrings = pItem.Replace(power.FullName, " ").Split('.');
-                        var pMatch = new Regex("[ ].*");
-                        var pArchetype = pMatch.Replace(pStrings[0], "");
+                        var pType = power?.PowerType;
+                        var isType = pType is Enums.ePowerType.Auto_ or Enums.ePowerType.Toggle ||
+                                     pType == Enums.ePowerType.Click && power?.ClickBuff == true;
+                        if (!isType)
+                        {
+                            continue;
+                        }
+
                         var textFilter = tbFilter.Text.Trim();
                         if (!string.IsNullOrEmpty(textFilter))
                         {
@@ -953,18 +1686,17 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     eArray = [6, 8, 9, 10, 11];
                     foreach (var power in pArray)
                     {
-                        var pSetType = power?.GetPowerSet()?.SetType;
-                        var isType = power.VariableEnabled;
-                        var isUsable = !eArray.Contains((int)pSetType);
-                        if (!isUsable || !isType)
+                        if (!TryGetPowerConditionListParts(power, eArray, out var pStrings, out var pArchetype))
                         {
                             continue;
                         }
 
-                        var pItem = new Regex("[_]");
-                        var pStrings = pItem.Replace(power.FullName, " ").Split('.');
-                        var pMatch = new Regex("[ ].*");
-                        var pArchetype = pMatch.Replace(pStrings[0], "");
+                        var isType = power.VariableEnabled;
+                        if (!isType)
+                        {
+                            continue;
+                        }
+
                         var textFilter = tbFilter.Text.Trim();
                         if (!string.IsNullOrEmpty(textFilter))
                         {

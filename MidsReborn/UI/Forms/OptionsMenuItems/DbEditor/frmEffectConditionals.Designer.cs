@@ -58,9 +58,34 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             panel1 = new System.Windows.Forms.Panel();
             btnClearFilter = new System.Windows.Forms.Button();
             tbFilter = new System.Windows.Forms.TextBox();
+            _modernPanel = new System.Windows.Forms.Panel();
+            _titleLabel = new System.Windows.Forms.Label();
+            _note = new System.Windows.Forms.Label();
+            _conditionTypeLabel = new System.Windows.Forms.Label();
+            _conditionType = new System.Windows.Forms.ComboBox();
+            _linkTypeLabel = new System.Windows.Forms.Label();
+            _linkType = new System.Windows.Forms.ComboBox();
+            _choiceLabel = new System.Windows.Forms.Label();
+            _search = new System.Windows.Forms.TextBox();
+            _choices = new System.Windows.Forms.ListView();
+            _choicesColumn = new ColumnHeader();
+            _expression = new System.Windows.Forms.TextBox();
+            _operatorLabel = new System.Windows.Forms.Label();
+            _operator = new System.Windows.Forms.ComboBox();
+            _valueLabel = new System.Windows.Forms.Label();
+            _value = new System.Windows.Forms.ComboBox();
+            _addRow = new System.Windows.Forms.Button();
+            _removeRow = new System.Windows.Forms.Button();
+            _currentRowsLabel = new System.Windows.Forms.Label();
+            _conditionRows = new System.Windows.Forms.ListView();
+            _rowLinkColumn = new ColumnHeader();
+            _rowConditionColumn = new ColumnHeader();
+            _rowOperatorColumn = new ColumnHeader();
+            _rowValueColumn = new ColumnHeader();
             groupBox2.SuspendLayout();
             panelLinkType.SuspendLayout();
             panel1.SuspendLayout();
+            _modernPanel.SuspendLayout();
             SuspendLayout();
             // 
             // groupBox2
@@ -80,6 +105,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             groupBox2.Size = new System.Drawing.Size(1284, 483);
             groupBox2.TabIndex = 161;
             groupBox2.TabStop = false;
+            groupBox2.Visible = false;
             // 
             // panelLinkType
             // 
@@ -324,6 +350,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             panel1.Controls.Add(tbFilter);
             panel1.Controls.Add(btnCancel);
             panel1.Controls.Add(btnOkay);
+            panel1.Controls.Add(_modernPanel);
             panel1.Controls.Add(groupBox2);
             panel1.Dock = DockStyle.Fill;
             panel1.Location = new System.Drawing.Point(0, 0);
@@ -343,6 +370,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             btnClearFilter.TabIndex = 165;
             btnClearFilter.Text = "Clear Filter";
             btnClearFilter.UseVisualStyleBackColor = false;
+            btnClearFilter.Visible = false;
             btnClearFilter.Click += btnClearFilter_Click;
             // 
             // tbFilter
@@ -351,7 +379,244 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             tbFilter.Name = "tbFilter";
             tbFilter.Size = new System.Drawing.Size(380, 23);
             tbFilter.TabIndex = 164;
+            tbFilter.Visible = false;
             tbFilter.TextChanged += tbFilter_TextChanged;
+            // 
+            // _modernPanel
+            // 
+            _modernPanel.BackColor = System.Drawing.Color.FromArgb(48, 56, 62);
+            _modernPanel.Controls.Add(_titleLabel);
+            _modernPanel.Controls.Add(_note);
+            _modernPanel.Controls.Add(_conditionTypeLabel);
+            _modernPanel.Controls.Add(_conditionType);
+            _modernPanel.Controls.Add(_linkTypeLabel);
+            _modernPanel.Controls.Add(_linkType);
+            _modernPanel.Controls.Add(_choiceLabel);
+            _modernPanel.Controls.Add(_search);
+            _modernPanel.Controls.Add(_choices);
+            _modernPanel.Controls.Add(_expression);
+            _modernPanel.Controls.Add(_operatorLabel);
+            _modernPanel.Controls.Add(_operator);
+            _modernPanel.Controls.Add(_valueLabel);
+            _modernPanel.Controls.Add(_value);
+            _modernPanel.Controls.Add(_addRow);
+            _modernPanel.Controls.Add(_removeRow);
+            _modernPanel.Controls.Add(_currentRowsLabel);
+            _modernPanel.Controls.Add(_conditionRows);
+            _modernPanel.Dock = DockStyle.Fill;
+            _modernPanel.Location = new System.Drawing.Point(0, 0);
+            _modernPanel.Name = "_modernPanel";
+            _modernPanel.Size = new System.Drawing.Size(1306, 538);
+            _modernPanel.TabIndex = 166;
+            // 
+            // _titleLabel
+            // 
+            _titleLabel.Font = new System.Drawing.Font("Microsoft Sans Serif", 12F, System.Drawing.FontStyle.Bold);
+            _titleLabel.ForeColor = System.Drawing.Color.White;
+            _titleLabel.Location = new System.Drawing.Point(16, 14);
+            _titleLabel.Name = "_titleLabel";
+            _titleLabel.Size = new System.Drawing.Size(260, 24);
+            _titleLabel.TabIndex = 0;
+            _titleLabel.Text = "Effect Conditions";
+            // 
+            // _note
+            // 
+            _note.ForeColor = System.Drawing.Color.Gainsboro;
+            _note.Location = new System.Drawing.Point(16, 40);
+            _note.Name = "_note";
+            _note.Size = new System.Drawing.Size(850, 22);
+            _note.TabIndex = 1;
+            _note.Text = "Pick a condition type, choose its value, then add it to the list. Advanced rows are saved with the database.";
+            // 
+            // _conditionTypeLabel
+            // 
+            _conditionTypeLabel.ForeColor = System.Drawing.Color.White;
+            _conditionTypeLabel.Location = new System.Drawing.Point(16, 75);
+            _conditionTypeLabel.Name = "_conditionTypeLabel";
+            _conditionTypeLabel.Size = new System.Drawing.Size(140, 18);
+            _conditionTypeLabel.TabIndex = 2;
+            _conditionTypeLabel.Text = "Condition";
+            // 
+            // _conditionType
+            // 
+            _conditionType.DropDownStyle = ComboBoxStyle.DropDownList;
+            _conditionType.FormattingEnabled = true;
+            _conditionType.Location = new System.Drawing.Point(16, 96);
+            _conditionType.Name = "_conditionType";
+            _conditionType.Size = new System.Drawing.Size(210, 23);
+            _conditionType.TabIndex = 3;
+            _conditionType.SelectedIndexChanged += ModernConditionTypeChanged;
+            // 
+            // _linkTypeLabel
+            // 
+            _linkTypeLabel.ForeColor = System.Drawing.Color.White;
+            _linkTypeLabel.Location = new System.Drawing.Point(238, 75);
+            _linkTypeLabel.Name = "_linkTypeLabel";
+            _linkTypeLabel.Size = new System.Drawing.Size(140, 18);
+            _linkTypeLabel.TabIndex = 4;
+            _linkTypeLabel.Text = "Join";
+            // 
+            // _linkType
+            // 
+            _linkType.DropDownStyle = ComboBoxStyle.DropDownList;
+            _linkType.FormattingEnabled = true;
+            _linkType.Items.AddRange(new object[] { "AND", "OR" });
+            _linkType.Location = new System.Drawing.Point(238, 96);
+            _linkType.Name = "_linkType";
+            _linkType.SelectedIndex = 0;
+            _linkType.Size = new System.Drawing.Size(88, 23);
+            _linkType.TabIndex = 5;
+            // 
+            // _choiceLabel
+            // 
+            _choiceLabel.ForeColor = System.Drawing.Color.White;
+            _choiceLabel.Location = new System.Drawing.Point(16, 132);
+            _choiceLabel.Name = "_choiceLabel";
+            _choiceLabel.Size = new System.Drawing.Size(160, 18);
+            _choiceLabel.TabIndex = 6;
+            _choiceLabel.Text = "Pick";
+            // 
+            // _search
+            // 
+            _search.Location = new System.Drawing.Point(16, 153);
+            _search.Name = "_search";
+            _search.PlaceholderText = "Filter choices";
+            _search.Size = new System.Drawing.Size(310, 23);
+            _search.TabIndex = 7;
+            _search.TextChanged += ModernSearchTextChanged;
+            // 
+            // _choices
+            // 
+            _choices.Columns.AddRange(new ColumnHeader[] { _choicesColumn });
+            _choices.FullRowSelect = true;
+            _choices.HideSelection = false;
+            _choices.Location = new System.Drawing.Point(16, 182);
+            _choices.MultiSelect = false;
+            _choices.Name = "_choices";
+            _choices.Size = new System.Drawing.Size(430, 260);
+            _choices.TabIndex = 8;
+            _choices.UseCompatibleStateImageBehavior = false;
+            _choices.View = View.Details;
+            _choices.SelectedIndexChanged += ModernChoiceSelectedIndexChanged;
+            // 
+            // _choicesColumn
+            // 
+            _choicesColumn.Text = "Choice";
+            _choicesColumn.Width = 420;
+            // 
+            // _expression
+            // 
+            _expression.Location = new System.Drawing.Point(16, 182);
+            _expression.Multiline = true;
+            _expression.Name = "_expression";
+            _expression.ScrollBars = ScrollBars.Vertical;
+            _expression.Size = new System.Drawing.Size(430, 260);
+            _expression.TabIndex = 9;
+            _expression.Visible = false;
+            // 
+            // _operatorLabel
+            // 
+            _operatorLabel.ForeColor = System.Drawing.Color.White;
+            _operatorLabel.Location = new System.Drawing.Point(462, 132);
+            _operatorLabel.Name = "_operatorLabel";
+            _operatorLabel.Size = new System.Drawing.Size(140, 18);
+            _operatorLabel.TabIndex = 10;
+            _operatorLabel.Text = "Compare";
+            // 
+            // _operator
+            // 
+            _operator.DropDownStyle = ComboBoxStyle.DropDownList;
+            _operator.FormattingEnabled = true;
+            _operator.Location = new System.Drawing.Point(462, 153);
+            _operator.Name = "_operator";
+            _operator.Size = new System.Drawing.Size(130, 23);
+            _operator.TabIndex = 11;
+            // 
+            // _valueLabel
+            // 
+            _valueLabel.ForeColor = System.Drawing.Color.White;
+            _valueLabel.Location = new System.Drawing.Point(606, 132);
+            _valueLabel.Name = "_valueLabel";
+            _valueLabel.Size = new System.Drawing.Size(120, 18);
+            _valueLabel.TabIndex = 12;
+            _valueLabel.Text = "Value";
+            // 
+            // _value
+            // 
+            _value.DropDownStyle = ComboBoxStyle.DropDownList;
+            _value.FormattingEnabled = true;
+            _value.Location = new System.Drawing.Point(606, 153);
+            _value.Name = "_value";
+            _value.Size = new System.Drawing.Size(130, 23);
+            _value.TabIndex = 13;
+            // 
+            // _addRow
+            // 
+            _addRow.BackColor = System.Drawing.Color.FromArgb(64, 78, 237);
+            _addRow.FlatStyle = FlatStyle.Popup;
+            _addRow.ForeColor = System.Drawing.Color.White;
+            _addRow.Location = new System.Drawing.Point(462, 190);
+            _addRow.Name = "_addRow";
+            _addRow.Size = new System.Drawing.Size(274, 32);
+            _addRow.TabIndex = 14;
+            _addRow.Text = "Add";
+            _addRow.UseVisualStyleBackColor = false;
+            _addRow.Click += AddModernCondition_Click;
+            // 
+            // _removeRow
+            // 
+            _removeRow.BackColor = System.Drawing.Color.FromArgb(88, 40, 18);
+            _removeRow.FlatStyle = FlatStyle.Popup;
+            _removeRow.ForeColor = System.Drawing.Color.White;
+            _removeRow.Location = new System.Drawing.Point(462, 230);
+            _removeRow.Name = "_removeRow";
+            _removeRow.Size = new System.Drawing.Size(274, 32);
+            _removeRow.TabIndex = 15;
+            _removeRow.Text = "Remove Selected";
+            _removeRow.UseVisualStyleBackColor = false;
+            _removeRow.Click += RemoveModernCondition_Click;
+            // 
+            // _currentRowsLabel
+            // 
+            _currentRowsLabel.ForeColor = System.Drawing.Color.White;
+            _currentRowsLabel.Location = new System.Drawing.Point(760, 75);
+            _currentRowsLabel.Name = "_currentRowsLabel";
+            _currentRowsLabel.Size = new System.Drawing.Size(160, 18);
+            _currentRowsLabel.TabIndex = 16;
+            _currentRowsLabel.Text = "Current Conditions";
+            // 
+            // _conditionRows
+            // 
+            _conditionRows.Columns.AddRange(new ColumnHeader[] { _rowLinkColumn, _rowConditionColumn, _rowOperatorColumn, _rowValueColumn });
+            _conditionRows.FullRowSelect = true;
+            _conditionRows.HideSelection = false;
+            _conditionRows.Location = new System.Drawing.Point(760, 96);
+            _conditionRows.MultiSelect = false;
+            _conditionRows.Name = "_conditionRows";
+            _conditionRows.Size = new System.Drawing.Size(520, 346);
+            _conditionRows.TabIndex = 17;
+            _conditionRows.UseCompatibleStateImageBehavior = false;
+            _conditionRows.View = View.Details;
+            // 
+            // _rowLinkColumn
+            // 
+            _rowLinkColumn.Text = "";
+            _rowLinkColumn.Width = 48;
+            // 
+            // _rowConditionColumn
+            // 
+            _rowConditionColumn.Text = "Condition";
+            _rowConditionColumn.Width = 300;
+            // 
+            // _rowOperatorColumn
+            // 
+            _rowOperatorColumn.Text = "Op";
+            _rowOperatorColumn.Width = 45;
+            // 
+            // _rowValueColumn
+            // 
+            _rowValueColumn.Text = "Value";
+            _rowValueColumn.Width = 90;
             // 
             // frmEffectConditionals
             // 
@@ -371,6 +636,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             groupBox2.ResumeLayout(false);
             panelLinkType.ResumeLayout(false);
             panelLinkType.PerformLayout();
+            _modernPanel.ResumeLayout(false);
+            _modernPanel.PerformLayout();
             panel1.ResumeLayout(false);
             panel1.PerformLayout();
             ResumeLayout(false);
@@ -403,5 +670,29 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private ColumnHeader columnHeader1;
         private System.Windows.Forms.Button btnClearFilter;
         private System.Windows.Forms.TextBox tbFilter;
+        private System.Windows.Forms.Panel _modernPanel;
+        private System.Windows.Forms.Label _titleLabel;
+        private System.Windows.Forms.Label _note;
+        private System.Windows.Forms.Label _conditionTypeLabel;
+        private System.Windows.Forms.ComboBox _conditionType;
+        private System.Windows.Forms.Label _linkTypeLabel;
+        private System.Windows.Forms.ComboBox _linkType;
+        private System.Windows.Forms.Label _choiceLabel;
+        private System.Windows.Forms.TextBox _search;
+        private System.Windows.Forms.ListView _choices;
+        private ColumnHeader _choicesColumn;
+        private System.Windows.Forms.TextBox _expression;
+        private System.Windows.Forms.Label _operatorLabel;
+        private System.Windows.Forms.ComboBox _operator;
+        private System.Windows.Forms.Label _valueLabel;
+        private System.Windows.Forms.ComboBox _value;
+        private System.Windows.Forms.Button _addRow;
+        private System.Windows.Forms.Button _removeRow;
+        private System.Windows.Forms.Label _currentRowsLabel;
+        private System.Windows.Forms.ListView _conditionRows;
+        private ColumnHeader _rowLinkColumn;
+        private ColumnHeader _rowConditionColumn;
+        private ColumnHeader _rowOperatorColumn;
+        private ColumnHeader _rowValueColumn;
     }
 }

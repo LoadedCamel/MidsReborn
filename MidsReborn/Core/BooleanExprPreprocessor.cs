@@ -444,42 +444,8 @@ namespace Mids_Reborn.Core
         /// <returns>Result of expression, as boolean</returns>
         public static bool Parse(IEffect effect)
         {
-            var prefixExpr = Build(effect);
-            var mathEngine = CalculationEngine.New<double>();
-
-            mathEngine.AddFunction("AND", (a, b) => a > 0 & b > 0 ? 1 : 0);
-            mathEngine.AddFunction("OR", (a, b) => a > 0 | b > 0 ? 1 : 0);
-
-            if (string.IsNullOrWhiteSpace(prefixExpr))
-            {
-                return true;
-            }
-
-            var ret = false;
-            try
-            {
-                ret = mathEngine.Calculate(prefixExpr) > 0;
-            }
-            catch (ParseException ex)
-            {
-                Debug.WriteLine($"Conditional check failed in {prefixExpr}\nPower: {effect.GetPower()?.FullName}\r\n{ex.Message}");
-
-                return false;
-            }
-            catch (VariableNotDefinedException ex)
-            {
-                Debug.WriteLine($"Conditional check failed (variable not defined) in {prefixExpr}\nPower: {effect.GetPower()?.FullName}\r\n{ex.Message}");
-
-                return false;
-            }
-            catch (InvalidOperationException ex)
-            {
-                Debug.WriteLine($"Conditional check failed (invalid operation) in {prefixExpr}\nPower: {effect.GetPower()?.FullName}\r\n{ex.Message}");
-
-                return false;
-            }
-
-            return ret;
+            AdvancedConditionEvaluator.UpdateLegacyValidationFlags(effect);
+            return AdvancedConditionEvaluator.Evaluate(effect);
         }
 
         /// <summary>
@@ -493,48 +459,19 @@ namespace Mids_Reborn.Core
         /// <returns>Result of expression, as boolean</returns>
         public static bool Parse(IEffect effect, string cType, string cPowerName)
         {
-            if (effect.ActiveConditionals is {Count: <= 0})
+            var set = effect.AdvancedConditions is { Rows.Count: > 0 }
+                ? effect.AdvancedConditions
+                : AdvancedConditionSet.FromLegacyActiveConditionals(effect.ActiveConditionals);
+
+            var filtered = new AdvancedConditionSet
             {
-                return false;
-            }
+                Rows = set.Rows
+                    .Where(row => MatchesLegacyFilter(row, cType, cPowerName))
+                    .Select(row => row.Clone())
+                    .ToList()
+            };
 
-            var expr = BuildGlobalExpression(effect, cType, cPowerName);
-            var prefixExpr = Build(expr);
-            var mathEngine = CalculationEngine.New<double>();
-
-            mathEngine.AddFunction("AND", (a, b) => a > 0 & b > 0 ? 1 : 0);
-            mathEngine.AddFunction("OR", (a, b) => a > 0 | b > 0 ? 1 : 0);
-
-            if (string.IsNullOrWhiteSpace(prefixExpr))
-            {
-                return true;
-            }
-
-            var ret = false;
-            try
-            {
-                ret = mathEngine.Calculate(prefixExpr) > 0;
-            }
-            catch (ParseException ex)
-            {
-                Debug.WriteLine($"Conditional check failed in {prefixExpr}\nPower: {effect.GetPower()?.FullName}\r\n{ex.Message}");
-
-                return false;
-            }
-            catch (VariableNotDefinedException ex)
-            {
-                Debug.WriteLine($"Conditional check failed (variable not defined) in {prefixExpr}\nPower: {effect.GetPower()?.FullName}\r\n{ex.Message}");
-
-                return false;
-            }
-            catch (InvalidOperationException ex)
-            {
-                Debug.WriteLine($"Conditional check failed (invalid operation) in {prefixExpr}\nPower: {effect.GetPower()?.FullName}\r\n{ex.Message}");
-
-                return false;
-            }
-
-            return ret;
+            return filtered.Rows.Count > 0 && AdvancedConditionEvaluator.Evaluate(effect, filtered);
         }
 
         /// <summary>
@@ -547,48 +484,45 @@ namespace Mids_Reborn.Core
         /// <returns>Result of expression, as boolean</returns>
         public static bool Parse(IEffect effect, string cPowerName)
         {
-            if (effect.ActiveConditionals is { Count: <= 0 })
+            var set = effect.AdvancedConditions is { Rows.Count: > 0 }
+                ? effect.AdvancedConditions
+                : AdvancedConditionSet.FromLegacyActiveConditionals(effect.ActiveConditionals);
+
+            var filtered = new AdvancedConditionSet
             {
-                return false;
-            }
+                Rows = set.Rows
+                    .Where(row => MatchesLegacyPowerFilter(row, cPowerName))
+                    .Select(row => row.Clone())
+                    .ToList()
+            };
 
-            var expr = BuildGlobalExpression(effect, cPowerName);
-            var prefixExpr = Build(expr);
-            var mathEngine = CalculationEngine.New<double>();
+            return filtered.Rows.Count > 0 && AdvancedConditionEvaluator.Evaluate(effect, filtered);
+        }
 
-            mathEngine.AddFunction("AND", (a, b) => a > 0 & b > 0 ? 1 : 0);
-            mathEngine.AddFunction("OR", (a, b) => a > 0 | b > 0 ? 1 : 0);
+        private static bool MatchesLegacyFilter(AdvancedConditionRow row, string cType, string cPowerName)
+        {
+            var kindMatches = cType switch
+            {
+                "Active" => row.Kind == AdvancedConditionKind.PowerActive,
+                "Taken" => row.Kind == AdvancedConditionKind.PowerTaken || row.Kind == AdvancedConditionKind.SourceOwnPower,
+                "Stacks" => row.Kind == AdvancedConditionKind.PowerStacks,
+                "Team" => row.Kind == AdvancedConditionKind.TeamMembers,
+                "Config" => row.Kind == AdvancedConditionKind.CombatSetting,
+                _ => false
+            };
 
-            if (string.IsNullOrWhiteSpace(prefixExpr))
+            return kindMatches && MatchesLegacyPowerFilter(row, cPowerName);
+        }
+
+        private static bool MatchesLegacyPowerFilter(AdvancedConditionRow row, string cPowerName)
+        {
+            if (row.Kind is AdvancedConditionKind.TeamMembers or AdvancedConditionKind.CombatSetting)
             {
                 return true;
             }
 
-            var ret = false;
-            try
-            {
-                ret = mathEngine.Calculate(prefixExpr) > 0;
-            }
-            catch (ParseException ex)
-            {
-                Debug.WriteLine($"Conditional check failed in {prefixExpr}\nPower: {effect.GetPower()?.FullName}\r\n{ex.Message}");
-
-                return false;
-            }
-            catch (VariableNotDefinedException ex)
-            {
-                Debug.WriteLine($"Conditional check failed (variable not defined) in {prefixExpr}\nPower: {effect.GetPower()?.FullName}\r\n{ex.Message}");
-
-                return false;
-            }
-            catch (InvalidOperationException ex)
-            {
-                Debug.WriteLine($"Conditional check failed (invalid operation) in {prefixExpr}\nPower: {effect.GetPower()?.FullName}\r\n{ex.Message}");
-
-                return false;
-            }
-
-            return ret;
+            var power = DatabaseAPI.GetPowerByFullName(row.Subject);
+            return power?.DisplayName?.Contains(cPowerName, StringComparison.CurrentCultureIgnoreCase) == true;
         }
     }
 }
