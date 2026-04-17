@@ -481,6 +481,27 @@ namespace Mids_Reborn.Core
 
         private static List<string> CompactVectorsList(IReadOnlyList<string> vectors, Enums.eEffectType effectType, Enums.eEffectType etModifies)
         {
+            if (effectType == Enums.eEffectType.DamageBuff)
+            {
+                var allDamageBuffVectors = GetAllResistances()
+                    .Select(e => $"{e}")
+                    .ToList();
+                var damageVectors = vectors
+                    .Where(v => Enum.TryParse<Enums.eDamage>(v, out var damageType) &&
+                                GetAllResistances().Contains(damageType))
+                    .Distinct()
+                    .ToList();
+
+                if (damageVectors.ContainsAll(allDamageBuffVectors))
+                {
+                    return ["All"];
+                }
+
+                return damageVectors.Count > 0
+                    ? damageVectors
+                    : vectors.Distinct().ToList();
+            }
+
             var allDefensesEx = GetAllDefensesEx()
                 .ToDictionary(e => $"{e} Defense", _ => -1);
 
@@ -827,8 +848,11 @@ namespace Mids_Reborn.Core
                         $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].ETModifies})",
                         $"{power.Effects[IncludedEffects[i]].EffectType}({vectors})"),
 
-                    Enums.eEffectType.Resistance or Enums.eEffectType.Defense or Enums.eEffectType.Elusivity
-                        or Enums.eEffectType.DamageBuff => baseEffectString.Replace(
+                    Enums.eEffectType.DamageBuff => baseEffectString.Replace(
+                            $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].DamageType})",
+                            $"{power.Effects[IncludedEffects[i]].EffectType} ({vectors})"),
+
+                    Enums.eEffectType.Resistance or Enums.eEffectType.Defense or Enums.eEffectType.Elusivity => baseEffectString.Replace(
                             $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].DamageType})",
                             $"{power.Effects[IncludedEffects[i]].EffectType}({vectors})"),
 
@@ -970,8 +994,13 @@ namespace Mids_Reborn.Core
                                                   or Enums.eEffectType.DamageBuff or Enums.eEffectType.ToHit
                                                   or Enums.eEffectType.RechargeTime or Enums.eEffectType.Elusivity
                                                   or Enums.eEffectType.Enhancement or Enums.eEffectType.MezResist;
+            bool asMagnitude = gre.EffectType == Enums.eEffectType.Mez;
 
-            string fmt(float v) => asPercent ? $"{Utilities.FixDP(v * 100)}%" : Utilities.FixDP(v);
+            string fmt(float v) => asMagnitude
+                ? $"Mag {Utilities.FixDP(v)}"
+                : asPercent
+                    ? $"{Utilities.FixDP(v * 100)}%"
+                    : Utilities.FixDP(v);
 
             value = $"{fmt(enhMag)}";
             var alt = Math.Abs(baseMag - enhMag) > Tolerance ? fmt(baseMag) : null;
@@ -1187,10 +1216,24 @@ namespace Mids_Reborn.Core
                     .Select(e => e.Key)
                     .ToList(),
 
+                Enums.eEffectType.Enhancement when fxIdentifier.ETModifies is Enums.eEffectType.Defense
+                    or Enums.eEffectType.Resistance
+                    or Enums.eEffectType.Elusivity => power.Effects
+                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
+                                e.Value.ETModifies == fxIdentifier.ETModifies &&
+                                e.Value.ToWho == fxIdentifier.ToWho &&
+                                MagnitudesMatch(e.Value.BuffedMag, mag) &&
+                                e.Value.isEnhancementEffect == enhancementEffect &&
+                                e.Value.PvMode == fxIdentifier.PvMode &&
+                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
+                    .Select(e => e.Key)
+                    .ToList(),
+
                 Enums.eEffectType.Enhancement => power.Effects
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
-                                e.Value.ETModifies is not Enums.eEffectType.Mez and not Enums.eEffectType.MezResist &&
+                                e.Value.ETModifies == fxIdentifier.ETModifies &&
                                 e.Value.ToWho == fxIdentifier.ToWho &&
                                 MagnitudesMatch(e.Value.BuffedMag, mag) &&
                                 e.Value.isEnhancementEffect == enhancementEffect &&

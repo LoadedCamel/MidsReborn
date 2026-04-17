@@ -17,6 +17,14 @@
             {
                 components.Dispose();
             }
+
+            if (disposing)
+            {
+                Mids_Reborn.UI.Theming.ThemeManager.ThemeChanged -= ThemeManagerOnThemeChanged;
+                _scaledFont?.Dispose();
+                _baseFont?.Dispose();
+            }
+
             base.Dispose(disposing);
         }
 

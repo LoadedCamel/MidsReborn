@@ -1247,6 +1247,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private static string[] BreakByBracket(string iString)
         {
             string[] strArray1 = { iString, string.Empty };
+            if (ShouldKeepEffectVectorInline(iString))
+            {
+                return strArray1;
+            }
+
             var length = iString.IndexOf(" (", StringComparison.Ordinal);
             string[] strArray2;
             if (length < 0)
@@ -1265,6 +1270,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             return strArray2;
+        }
+
+        private static bool ShouldKeepEffectVectorInline(string value)
+        {
+            return value.Contains("DamageBuff (", StringComparison.Ordinal);
         }
 
         private static PopUp.Section? PopSetBonusListing(int sIdx, PowerEntry power)

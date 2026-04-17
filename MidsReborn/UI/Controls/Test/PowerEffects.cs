@@ -99,6 +99,7 @@ public static class PowerEffects
             var gre = kv.Key;
             var item = kv.Value;
             var valueText = BuildBaseEnhancedText(item);
+            var targetChips = BuildTargetChips(gre, pEnh);
 
             switch (gre.EffectType)
             {
@@ -115,7 +116,8 @@ public static class PowerEffects
                         gainPctText: "—",
                         affectedByEd: ed.Active,
                         band: ed.BandIndex,
-                        tooltip: item.ToolTip));
+                        tooltip: item.ToolTip,
+                        targetChips: targetChips));
                     break;
                 }
 
@@ -126,7 +128,8 @@ public static class PowerEffects
                         label: item.Label,
                         tag: TagForDescriptor(gre.EffectType),
                         description: item.Value,
-                        tooltip: item.ToolTip));
+                        tooltip: item.ToolTip,
+                        targetChips: targetChips));
                     break;
                 }
                 case Enums.eEffectType.GrantPower:
@@ -135,7 +138,8 @@ public static class PowerEffects
                         label: item.Label,
                         tag: TagForDescriptor(gre.EffectType),
                         description: item.Value,
-                        tooltip: item.ToolTip));
+                        tooltip: item.ToolTip,
+                        targetChips: targetChips));
                     break;
                 }
                 case Enums.eEffectType.ModifyAttrib:
@@ -144,7 +148,8 @@ public static class PowerEffects
                         label: item.Label,
                         tag: TagForDescriptor(gre.EffectType),
                         description: item.ToolTip ?? item.Value,
-                        tooltip: item.ToolTip));
+                        tooltip: item.ToolTip,
+                        targetChips: targetChips));
                     break;
                 }
 
@@ -164,13 +169,50 @@ public static class PowerEffects
                         neutralWhenZero: true,
                         hideGainPercent: true,
                         band: ed.BandIndex,
-                        tooltip: item.ToolTip));
+                        tooltip: item.ToolTip,
+                        targetChips: targetChips));
                     break;
                 }
             }
         }
 
         return new PowerEffectsGrid.Group(title, rows);
+    }
+
+    private static string[] BuildTargetChips(GroupedFx gre, IPower owner)
+    {
+        var chips = new List<string>();
+
+        switch (gre.ToWho)
+        {
+            case Enums.eToWho.Self:
+                chips.Add("Self");
+                break;
+
+            case Enums.eToWho.Target:
+                chips.Add("Target");
+                break;
+
+            case Enums.eToWho.All:
+                chips.Add("Self+Target");
+                break;
+        }
+
+        var cohorts = TargetingExtensions
+            .ResolveCohorts(owner.EntitiesAffected, owner.EntitiesAutoHit)
+            .ToCohortString();
+
+        if (!string.IsNullOrWhiteSpace(cohorts) &&
+            !cohorts.Equals("Any", StringComparison.OrdinalIgnoreCase) &&
+            gre.ToWho != Enums.eToWho.Self)
+        {
+            chips.Add(cohorts);
+        }
+
+        return chips
+            .Where(static c => !string.IsNullOrWhiteSpace(c))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
     }
 
     private static string BuildBaseEnhancedText(EffectListItem item)

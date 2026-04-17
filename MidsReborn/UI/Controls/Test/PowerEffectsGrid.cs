@@ -12,11 +12,17 @@ namespace Mids_Reborn.UI.Controls.Test
         {
             public string Label { get; }
             public string? Tooltip { get; }
+            public IReadOnlyList<string> TargetChips { get; }
 
-            protected Row(string? label, string? tooltip = null)
+            protected Row(string? label, string? tooltip = null, IEnumerable<string>? targetChips = null)
             {
                 Label = label ?? string.Empty;
                 Tooltip = tooltip;
+                TargetChips = targetChips?
+                    .Where(static c => !string.IsNullOrWhiteSpace(c))
+                    .Select(static c => c.Trim())
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray() ?? Array.Empty<string>();
             }
         }
 
@@ -36,8 +42,8 @@ namespace Mids_Reborn.UI.Controls.Test
                               string baseText, string enhancedText, string gainText, string gainPctText,
                               bool higherIsBetter = true, bool affectedByEd = false,
                               bool neutralWhenZero = true, bool hideGainPercent = false,
-                              int band = -1, string? tooltip = null)
-                : base(label, tooltip)
+                              int band = -1, string? tooltip = null, IEnumerable<string>? targetChips = null)
+                : base(label, tooltip, targetChips)
             {
                 BaseText = baseText;
                 EnhancedText = enhancedText;
@@ -82,8 +88,9 @@ namespace Mids_Reborn.UI.Controls.Test
                           bool hideGainPercentDuration = false,
                           int bandMagnitude = -1,
                           int bandDuration = -1,
-                          string? tooltip = null)
-                : base(label, tooltip)
+                          string? tooltip = null,
+                          IEnumerable<string>? targetChips = null)
+                : base(label, tooltip, targetChips)
             {
                 BaseMagnitude = baseMagnitude;
                 EnhancedMagnitude = enhancedMagnitude;
@@ -112,8 +119,9 @@ namespace Mids_Reborn.UI.Controls.Test
             public string Tag { get; }
             public string Description { get; }
 
-            public DescriptorRow(string label, string tag, string? description, string? tooltip = null)
-                : base(label, tooltip)
+            public DescriptorRow(string label, string tag, string? description, string? tooltip = null,
+                IEnumerable<string>? targetChips = null)
+                : base(label, tooltip, targetChips)
             {
                 Tag = string.IsNullOrWhiteSpace(tag) ? "Descriptor" : tag;
                 Description = description ?? string.Empty;
@@ -288,6 +296,12 @@ namespace Mids_Reborn.UI.Controls.Test
         private int PageStepMarginPx => (int)Math.Round(LogicalPageStepMarginPx * DpiScale);
 
         private int ContentViewportWidth => Math.Max(0, ClientSize.Width - (_scrollbarVisible ? ScrollBarWidth : 0));
+        private int ChipHeight => Math.Max(ScalePx(18), Font.Height + ScalePx(4));
+        private int ChipGap => ScalePx(4);
+        private int ChipTextPaddingX => ScalePx(5);
+        private int TargetChipHeight(Font chipFont) => Math.Max(ScalePx(15), chipFont.Height + ScalePx(2));
+        private int TargetChipTextPaddingX => ScalePx(4);
+        private int ChipMeasureSlack => ScalePx(2);
 
         #endregion
 
@@ -510,7 +524,7 @@ namespace Mids_Reborn.UI.Controls.Test
 
                                 int h = ScalePx(_rowHeight);
                                 if (chips.Length > 0)
-                                    h += ScalePx(18);
+                                    h += ChipHeight + ScalePx(3);
 
                                 var r = new Rectangle(gp, y, innerWidth, h);
                                 _layout.Add(RenderEntry.Num(gi, ri, r, row));
@@ -596,8 +610,6 @@ namespace Mids_Reborn.UI.Controls.Test
                                 var row = (NumericRow)entry.Row!;
                                 var cols = GetTwoColumns(rc);
 
-                                using (var zebra = new SolidBrush(stripeEven ? theme.GridRowEven : theme.GridRowOdd))
-                                    g.FillRectangle(zebra, rc);
                                 if (i == _hoverIndex)
                                 {
                                     using var hov = new SolidBrush(Color.FromArgb(18, 255, 255, 255));
@@ -605,7 +617,7 @@ namespace Mids_Reborn.UI.Controls.Test
                                 }
 
                                 DrawLabelWithChips(g, row.Label, row.AffectedByEd, cols.rcLabel, theme,
-                                    Color.FromArgb(200, theme.Accent));
+                                    Color.FromArgb(200, theme.Accent), row.TargetChips);
 
                                 // Compose Value cell = Enhanced + inline (Gain) + optional (%)
                                 bool noChange = row.GainText == "—" ||
@@ -637,7 +649,7 @@ namespace Mids_Reborn.UI.Controls.Test
                                 TextRenderer.DrawText(g, valueText, Font, cols.rcValue, valueColor,
                                                       Color.Transparent, CellFlags | TextFormatFlags.Right);
 
-                                using var pen = new Pen(Color.FromArgb(24, 255, 255, 255));
+                                using var pen = new Pen(theme.GridRowLine);
                                 g.DrawLine(pen, rc.Left, rc.Bottom, rc.Right, rc.Bottom);
 
                                 stripeEven = !stripeEven;
@@ -647,8 +659,6 @@ namespace Mids_Reborn.UI.Controls.Test
                         case RenderKind.MezLabel:
                             {
                                 var row = (MezRow)entry.Row!;
-                                using (var zebra = new SolidBrush(theme.GridRowOdd))
-                                    g.FillRectangle(zebra, rc);
                                 if (i == _hoverIndex)
                                 {
                                     using var hov = new SolidBrush(Color.FromArgb(18, 255, 255, 255));
@@ -659,12 +669,11 @@ namespace Mids_Reborn.UI.Controls.Test
                                 var label = row.Label + (anyEd ? "  ⓔ" : "");
                                 var cols = GetTwoColumns(rc);
 
-                                TextRenderer.DrawText(g, label, Font, cols.rcLabel, theme.Text, Color.Transparent,
-                                                      CellFlags | TextFormatFlags.Left);
+                                DrawLabelWithChips(g, label, false, cols.rcLabel, theme, theme.Text, row.TargetChips);
                                 TextRenderer.DrawText(g, "—", Font, cols.rcValue, theme.GridNeutral, Color.Transparent,
                                                       CellFlags | TextFormatFlags.Right);
 
-                                using var pen = new Pen(Color.FromArgb(24, 255, 255, 255));
+                                using var pen = new Pen(theme.GridRowLine);
                                 g.DrawLine(pen, rc.Left, rc.Bottom, rc.Right, rc.Bottom);
                                 break;
                             }
@@ -676,8 +685,6 @@ namespace Mids_Reborn.UI.Controls.Test
                                 var row = (MezRow)entry.Row!;
                                 var cols = GetTwoColumns(rc);
 
-                                using (var zebra = new SolidBrush(stripeEven ? theme.GridRowEven : theme.GridRowOdd))
-                                    g.FillRectangle(zebra, rc);
                                 if (i == _hoverIndex)
                                 {
                                     using var hov = new SolidBrush(Color.FromArgb(18, 255, 255, 255));
@@ -716,7 +723,7 @@ namespace Mids_Reborn.UI.Controls.Test
                                 TextRenderer.DrawText(g, valueText, Font, cols.rcValue, valueColor,
                                                       Color.Transparent, CellFlags | TextFormatFlags.Right);
 
-                                using var pen = new Pen(Color.FromArgb(24, 255, 255, 255));
+                                using var pen = new Pen(theme.GridRowLine);
                                 g.DrawLine(pen, rc.Left, rc.Bottom, rc.Right, rc.Bottom);
 
                                 stripeEven = !stripeEven;
@@ -728,15 +735,14 @@ namespace Mids_Reborn.UI.Controls.Test
                                 var row = (DescriptorRow)entry.Row!;
                                 var cols = GetTwoColumns(rc);
 
-                                using (var zebra = new SolidBrush(stripeEven ? theme.GridRowEven : theme.GridRowOdd))
-                                    g.FillRectangle(zebra, rc);
                                 if (i == _hoverIndex)
                                 {
                                     using var hov = new SolidBrush(Color.FromArgb(18, 255, 255, 255));
                                     g.FillRectangle(hov, rc);
                                 }
 
-                                DrawLabelWithChips(g, row.Label, false, cols.rcLabel, theme, theme.Text);
+                                DrawLabelWithChips(g, row.Label, false, cols.rcLabel, theme, theme.Text,
+                                    row.TargetChips);
 
                                 // Value uses description if available; else the tag
                                 var valueText = !string.IsNullOrWhiteSpace(row.Description)
@@ -747,7 +753,7 @@ namespace Mids_Reborn.UI.Controls.Test
                                                       theme.GridNeutral, Color.Transparent,
                                                       CellFlags | TextFormatFlags.Right);
 
-                                using var pen = new Pen(Color.FromArgb(24, 255, 255, 255));
+                                using var pen = new Pen(theme.GridRowLine);
                                 g.DrawLine(pen, rc.Left, rc.Bottom, rc.Right, rc.Bottom);
 
                                 stripeEven = !stripeEven;
@@ -809,7 +815,7 @@ namespace Mids_Reborn.UI.Controls.Test
         }
 
         private void DrawLabelWithChips(Graphics g, string label, bool affectedByEd, Rectangle bounds,
-            DataViewTheme theme, Color labelColor)
+            DataViewTheme theme, Color labelColor, IReadOnlyList<string>? targetChips = null)
         {
             var (main, chips) = SplitLabelChips(label);
             if (affectedByEd)
@@ -819,28 +825,94 @@ namespace Mids_Reborn.UI.Controls.Test
 
             if (chips.Length == 0)
             {
-                TextRenderer.DrawText(g, main, Font, bounds, labelColor, Color.Transparent,
+                DrawMainLabelWithTargetChips(g, main, targetChips, bounds, theme, labelColor,
                     CellFlags | TextFormatFlags.Left);
                 return;
             }
 
             var mainRect = new Rectangle(bounds.X, bounds.Y + ScalePx(2), bounds.Width, Font.Height + ScalePx(2));
-            TextRenderer.DrawText(g, main, Font, mainRect, labelColor, Color.Transparent,
+            DrawMainLabelWithTargetChips(g, main, targetChips, mainRect, theme, labelColor,
                 TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding);
 
-            var chipFont = Font;
-            var chipY = Math.Min(bounds.Bottom - ScalePx(17), mainRect.Bottom + ScalePx(1));
-            var x = bounds.X;
-            var maxX = bounds.Right;
-            using var chipBack = new SolidBrush(Color.FromArgb(42, theme.Accent));
-            using var chipBorder = new Pen(Color.FromArgb(95, theme.Accent));
+            var chipBounds = new Rectangle(bounds.X, mainRect.Bottom + ScalePx(1), bounds.Width,
+                Math.Max(0, bounds.Bottom - mainRect.Bottom - ScalePx(1)));
+            DrawChipRow(g, chips, chipBounds, theme);
+        }
+
+        private void DrawMainLabelWithTargetChips(Graphics g, string main, IReadOnlyList<string>? targetChips,
+            Rectangle bounds, DataViewTheme theme, Color labelColor, TextFormatFlags flags)
+        {
+            if (targetChips is not { Count: > 0 })
+            {
+                TextRenderer.DrawText(g, main, Font, bounds, labelColor, Color.Transparent, flags);
+                return;
+            }
+
+            using var targetFont = new Font(Font.FontFamily, Math.Max(6f, Font.SizeInPoints - 1f),
+                FontStyle.Regular, GraphicsUnit.Point);
+            int targetChipHeight = TargetChipHeight(targetFont);
+            var chipSizes = MeasureChips(g, targetChips, targetFont, TargetChipTextPaddingX);
+
+            int chipsWidth = chipSizes.Sum(c => c.Width) + ChipGap * Math.Max(0, chipSizes.Length - 1);
+            int reserve = Math.Min(bounds.Width / 2, chipsWidth + ScalePx(8));
+            var textRect = new Rectangle(bounds.X, bounds.Y, Math.Max(0, bounds.Width - reserve), bounds.Height);
+
+            TextRenderer.DrawText(g, main, Font, textRect, labelColor, Color.Transparent, flags);
+
+            var mainSize = TextRenderer.MeasureText(g, main, Font, new Size(int.MaxValue, int.MaxValue),
+                TextFormatFlags.NoPadding);
+            int x = Math.Max(bounds.X, Math.Min(bounds.X + Math.Min(mainSize.Width, textRect.Width) + ScalePx(6),
+                bounds.Right - chipsWidth));
+            int y = bounds.Y + Math.Max(0, (bounds.Height - targetChipHeight) / 2);
+
+            DrawChipRow(g, chipSizes, new Rectangle(x, y, bounds.Right - x, targetChipHeight), theme,
+                targetFont, targetChipHeight, Color.FromArgb(42, theme.GridNeutral),
+                Color.FromArgb(120, theme.GridNeutral), theme.Muted, TargetChipTextPaddingX);
+        }
+
+        private readonly record struct ChipMeasure(string Text, int Width);
+
+        private ChipMeasure[] MeasureChips(Graphics g, IEnumerable<string> chips)
+            => MeasureChips(g, chips, Font, ChipTextPaddingX);
+
+        private ChipMeasure[] MeasureChips(Graphics g, IEnumerable<string> chips, Font font, int textPaddingX)
+        {
+            return chips
+                .Where(static c => !string.IsNullOrWhiteSpace(c))
+                .Select(c =>
+                {
+                    var textSize = TextRenderer.MeasureText(g, c, font, new Size(int.MaxValue, int.MaxValue),
+                        TextFormatFlags.NoPadding);
+                    return new ChipMeasure(c, textSize.Width + textPaddingX * 2 + ChipMeasureSlack);
+                })
+                .ToArray();
+        }
+
+        private void DrawChipRow(Graphics g, IEnumerable<string> chips, Rectangle bounds, DataViewTheme theme)
+            => DrawChipRow(g, MeasureChips(g, chips), bounds, theme);
+
+        private void DrawChipRow(Graphics g, IReadOnlyList<ChipMeasure> chips, Rectangle bounds, DataViewTheme theme)
+            => DrawChipRow(g, chips, bounds, theme, Font, ChipHeight, Color.FromArgb(48, theme.Accent),
+                Color.FromArgb(128, theme.Accent), theme.Text, ChipTextPaddingX);
+
+        private void DrawChipRow(Graphics g, IReadOnlyList<ChipMeasure> chips, Rectangle bounds, DataViewTheme theme,
+            Font chipFont, int chipHeight, Color backColor, Color borderColor, Color textColor, int textPaddingX)
+        {
+            if (chips.Count == 0 || bounds.Width <= 0 || bounds.Height <= 0)
+            {
+                return;
+            }
+
+            int x = bounds.X;
+            int y = bounds.Y + Math.Max(0, (bounds.Height - chipHeight) / 2);
+
+            using var chipBack = new SolidBrush(backColor);
+            using var chipBorder = new Pen(borderColor);
 
             foreach (var chip in chips)
             {
-                var textSize = TextRenderer.MeasureText(g, chip, chipFont, new Size(int.MaxValue, int.MaxValue),
-                    TextFormatFlags.NoPadding);
-                var chipRect = new Rectangle(x, chipY, textSize.Width + ScalePx(10), ScalePx(16));
-                if (chipRect.Right > maxX)
+                var chipRect = new Rectangle(x, y, chip.Width, chipHeight);
+                if (chipRect.Right > bounds.Right)
                 {
                     break;
                 }
@@ -851,10 +923,11 @@ namespace Mids_Reborn.UI.Controls.Test
                     g.DrawPath(chipBorder, path);
                 }
 
-                var textRect = Rectangle.Inflate(chipRect, -ScalePx(5), 0);
-                TextRenderer.DrawText(g, chip, chipFont, textRect, theme.Text, Color.Transparent,
+                var textBounds = Rectangle.Inflate(chipRect, -textPaddingX, 0);
+                TextRenderer.DrawText(g, chip.Text, chipFont, textBounds, textColor, Color.Transparent,
                     TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.NoPadding);
-                x = chipRect.Right + ScalePx(4);
+
+                x = chipRect.Right + ChipGap;
             }
         }
 

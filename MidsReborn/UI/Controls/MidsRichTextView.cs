@@ -36,6 +36,7 @@ namespace Mids_Reborn.UI.Controls
         private int WheelStep => ScalePx(LogicalWheelStepPx);
         private int ArrowStep => ScalePx(LogicalArrowStepPx);
         private int PageMargin => ScalePx(LogicalPageStepMarginPx);
+        private int ViewportHeight => Math.Max(1, ClientSize.Height - Padding.Vertical);
         #endregion
 
         #region Fields
@@ -180,6 +181,13 @@ namespace Mids_Reborn.UI.Controls
             RecalcFromLayout();
         }
 
+        protected override void OnPaddingChanged(EventArgs e)
+        {
+            base.OnPaddingChanged(e);
+            LayoutEngineRects();
+            RecalcFromLayout();
+        }
+
         protected override void Dispose(bool disposing)
         {
             if (disposing && _themeHooked && _themeChangedHandler is not null)
@@ -195,13 +203,14 @@ namespace Mids_Reborn.UI.Controls
         {
             // Always reserve the bar strip so wrapping is stable (no reflow pop-in)
             int sbw = BarW;
+            var viewport = ContentViewportRect();
 
             // Width fixed to printable area; height will be set to content in RecalcAndApplyHeight
-            _rtb.Bounds = new Rectangle(0, 0, Math.Max(1, ClientSize.Width - sbw),
-                                        Math.Max(ClientSize.Height, _contentHeight));
+            _rtb.Bounds = new Rectangle(0, 0, Math.Max(1, viewport.Width - sbw),
+                                        Math.Max(viewport.Height, _contentHeight));
 
             // Scrollbar geometry
-            _sbBounds = new Rectangle(ClientSize.Width - BarW, 0, BarW, ClientSize.Height);
+            _sbBounds = new Rectangle(viewport.Right - BarW, viewport.Top, BarW, viewport.Height);
             _upRect = new Rectangle(_sbBounds.Left, _sbBounds.Top, _sbBounds.Width, ArrowH);
             _dnRect = new Rectangle(_sbBounds.Left, _sbBounds.Bottom - ArrowH, _sbBounds.Width, ArrowH);
             _track = Rectangle.FromLTRB(_sbBounds.Left, _upRect.Bottom, _sbBounds.Right, _dnRect.Top);
@@ -226,7 +235,7 @@ namespace Mids_Reborn.UI.Controls
             _contentHeight = Math.Max(1, desired);
 
             // CRITICAL: make the hidden RTB as tall as the content so there is something to scroll
-            int newH = Math.Max(ClientSize.Height, _contentHeight);
+            int newH = Math.Max(ViewportHeight, _contentHeight);
             if (_rtb.Height != newH) _rtb.Height = newH;
 
             ClampScroll();
@@ -234,11 +243,11 @@ namespace Mids_Reborn.UI.Controls
             Invalidate();
         }
 
-        private bool NeedsScrollbar() => _contentHeight > ClientSize.Height + 1;
+        private bool NeedsScrollbar() => _contentHeight > ViewportHeight + 1;
 
         private void ClampScroll()
         {
-            int max = Math.Max(0, _contentHeight - ClientSize.Height);
+            int max = Math.Max(0, _contentHeight - ViewportHeight);
             if (_scrollY > max) _scrollY = max;
             if (_scrollY < 0) _scrollY = 0;
         }
@@ -251,7 +260,7 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            int visible = ClientSize.Height;
+            int visible = ViewportHeight;
             int total = Math.Max(1, _contentHeight);
             int trackH = _track.Height;
 
@@ -270,6 +279,17 @@ namespace Mids_Reborn.UI.Controls
             int inset = Math.Max(1, (int)Math.Round(_sbBounds.Width * 0.25));
             _thumb = new Rectangle(_sbBounds.Left + inset, thumbY, Math.Max(1, _sbBounds.Width - inset * 2), thumbH);
         }
+
+        private Rectangle ContentViewportRect()
+        {
+            var rect = new Rectangle(
+                Padding.Left,
+                Padding.Top,
+                Math.Max(1, ClientSize.Width - Padding.Horizontal),
+                Math.Max(1, ClientSize.Height - Padding.Vertical));
+
+            return rect;
+        }
         #endregion
 
         #region Paint (WM_PRINTCLIENT + viewport shift)
@@ -278,18 +298,23 @@ namespace Mids_Reborn.UI.Controls
             base.OnPaint(e);
             var g = e.Graphics;
             g.Clear(BackColor);
+            var viewport = ContentViewportRect();
 
             // Shift the HDC upwards by _scrollY so RichEdit paints the scrolled viewport
+            var oldClip = g.Clip.Clone();
+            g.SetClip(new Rectangle(viewport.Left, viewport.Top, Math.Max(1, viewport.Width - BarW), viewport.Height));
             nint hdc = g.GetHdc();
             try
             {
-                SetViewportOrgEx(hdc, 0, -_scrollY, nint.Zero);
+                SetViewportOrgEx(hdc, viewport.Left, viewport.Top - _scrollY, nint.Zero);
                 SendMessage(_rtb.Handle, WM_PRINTCLIENT, hdc, PRF_CLIENT | PRF_ERASEBKGND);
                 SetViewportOrgEx(hdc, 0, 0, nint.Zero);
             }
             finally
             {
                 g.ReleaseHdc(hdc);
+                g.Clip = oldClip;
+                oldClip.Dispose();
             }
 
             DrawScrollbar(g);
@@ -446,7 +471,7 @@ namespace Mids_Reborn.UI.Controls
 
         private void ScrollPage(int dir)
         {
-            int page = Math.Max(0, ClientSize.Height - PageMargin);
+            int page = Math.Max(0, ViewportHeight - PageMargin);
             ScrollByPixels(dir * page);
         }
         #endregion

@@ -43,6 +43,7 @@ namespace Mids_Reborn.UI.Controls
         /// </summary>
         private void InitializeComponent()
         {
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MidsDataViewNeo));
             headerPanel = new Panel();
             LockButton = new FontAwesome.Sharp.IconButton();
             DockButton = new FontAwesome.Sharp.IconButton();
@@ -51,13 +52,12 @@ namespace Mids_Reborn.UI.Controls
             title = new Label();
             dvPages = new FormPages();
             infoView = new Page();
-            infoDataList = new PairedListEx();
-            infoLDesc = new MidsRichTextView();
-            infoSDesc = new RichTextBox();
             powerStatsGrid = new Mids_Reborn.UI.Controls.Test.PowerStatsGrid();
             infoDamageDisplay = new ModernDamageDisplay();
             sliderHost = new Panel();
             midsTrackBar1 = new Mids_Reborn.UI.Controls.Test.MidsTrackBar();
+            infoLDesc = new MidsRichTextView();
+            infoSDesc = new RichTextBox();
             effectView = new Page();
             effectsGrid = new Mids_Reborn.UI.Controls.Test.PowerEffectsGrid();
             totalView = new Page();
@@ -78,6 +78,7 @@ namespace Mids_Reborn.UI.Controls
             enhDataList = new PairedListEx();
             enhanceSubtitlePanel = new Panel();
             subTitle = new Label();
+            infoDataList = new PairedListEx();
             headerPanel.SuspendLayout();
             titlePanel.SuspendLayout();
             dvPages.SuspendLayout();
@@ -175,7 +176,7 @@ namespace Mids_Reborn.UI.Controls
             title.BackColor = Color.Transparent;
             title.Dock = DockStyle.Left;
             title.FlatStyle = FlatStyle.Flat;
-            title.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            title.Font = new Font("Segoe UI", 11.25F, FontStyle.Bold | FontStyle.Underline, GraphicsUnit.Point, 0);
             title.Location = new Point(0, 0);
             title.Name = "title";
             title.Size = new Size(252, 32);
@@ -220,61 +221,6 @@ namespace Mids_Reborn.UI.Controls
             infoView.Size = new Size(400, 351);
             infoView.TabIndex = 0;
             infoView.Title = "My First Page";
-            //
-            // infoDataList
-            //
-            infoDataList.AutoScroll = true;
-            infoDataList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            infoDataList.BackColor = Color.FromArgb(1, 7, 15);
-            infoDataList.Dock = DockStyle.Fill;
-            infoDataList.Font = new Font("Segoe UI", 9.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            infoDataList.HighlightColor = Color.FromArgb(128, 128, 255);
-            infoDataList.HighlightTextColor = Color.Black;
-            infoDataList.ItemColor = Color.WhiteSmoke;
-            infoDataList.Location = new Point(0, 137);
-            infoDataList.Margin = new Padding(0);
-            infoDataList.Name = "infoDataList";
-            infoDataList.SampleRowsPerColumn = 5;
-            infoDataList.SetItemsBold = false;
-            infoDataList.ShowRuntimeSamples = true;
-            infoDataList.Size = new Size(400, 137);
-            infoDataList.TabIndex = 83;
-            infoDataList.UseHighlighting = true;
-            infoDataList.ValueAlternateColor = Color.Chartreuse;
-            infoDataList.ValueColor = Color.WhiteSmoke;
-            infoDataList.ValueConditionColor = Color.Firebrick;
-            infoDataList.ValueSpecialColor = Color.SlateBlue;
-            //
-            // infoLDesc
-            //
-            infoLDesc.BackColor = Color.FromArgb(1, 7, 15);
-            infoLDesc.BorderStyle = BorderStyle.None;
-            infoLDesc.DetectUrls = false;
-            infoLDesc.Dock = DockStyle.Top;
-            infoLDesc.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
-            infoLDesc.ForeColor = Color.WhiteSmoke;
-            infoLDesc.Location = new Point(0, 44);
-            infoLDesc.Name = "infoLDesc";
-            infoLDesc.Size = new Size(400, 62);
-            infoLDesc.TabIndex = 84;
-            infoLDesc.Text = "";
-            infoLDesc.WheelScrollEnabled = true;
-            infoLDesc.WordWrap = true;
-            //
-            // infoSDesc
-            //
-            infoSDesc.BackColor = Color.FromArgb(1, 7, 15);
-            infoSDesc.BorderStyle = BorderStyle.None;
-            infoSDesc.Dock = DockStyle.Top;
-            infoSDesc.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            infoSDesc.ForeColor = Color.WhiteSmoke;
-            infoSDesc.Location = new Point(0, 0);
-            infoSDesc.Name = "infoSDesc";
-            infoSDesc.ReadOnly = true;
-            infoSDesc.ScrollBars = RichTextBoxScrollBars.None;
-            infoSDesc.Size = new Size(400, 44);
-            infoSDesc.TabIndex = 85;
-            infoSDesc.Text = "";
             // 
             // powerStatsGrid
             // 
@@ -282,9 +228,9 @@ namespace Mids_Reborn.UI.Controls
             powerStatsGrid.Dock = DockStyle.Fill;
             powerStatsGrid.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             powerStatsGrid.GridPadding = 6;
-            powerStatsGrid.Location = new Point(0, 31);
+            powerStatsGrid.Location = new Point(0, 137);
             powerStatsGrid.Name = "powerStatsGrid";
-            powerStatsGrid.Size = new Size(400, 243);
+            powerStatsGrid.Size = new Size(400, 137);
             powerStatsGrid.TabIndex = 79;
             powerStatsGrid.TabStop = false;
             // 
@@ -314,7 +260,7 @@ namespace Mids_Reborn.UI.Controls
             // 
             sliderHost.Controls.Add(midsTrackBar1);
             sliderHost.Dock = DockStyle.Top;
-            sliderHost.Location = new Point(0, 0);
+            sliderHost.Location = new Point(0, 106);
             sliderHost.Name = "sliderHost";
             sliderHost.Size = new Size(400, 31);
             sliderHost.TabIndex = 82;
@@ -333,6 +279,35 @@ namespace Mids_Reborn.UI.Controls
             midsTrackBar1.TextAlign = ContentAlignment.MiddleRight;
             midsTrackBar1.TextGap = 8;
             midsTrackBar1.TrackGap = 2;
+            // 
+            // infoLDesc
+            // 
+            infoLDesc.BackColor = Color.FromArgb(1, 7, 15);
+            infoLDesc.BorderStyle = BorderStyle.None;
+            infoLDesc.DetectUrls = false;
+            infoLDesc.Dock = DockStyle.Top;
+            infoLDesc.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            infoLDesc.ForeColor = Color.WhiteSmoke;
+            infoLDesc.Location = new Point(0, 44);
+            infoLDesc.Name = "infoLDesc";
+            infoLDesc.Rtf = resources.GetString("infoLDesc.Rtf");
+            infoLDesc.Size = new Size(400, 62);
+            infoLDesc.TabIndex = 84;
+            // 
+            // infoSDesc
+            // 
+            infoSDesc.BackColor = Color.FromArgb(1, 7, 15);
+            infoSDesc.BorderStyle = BorderStyle.None;
+            infoSDesc.Dock = DockStyle.Top;
+            infoSDesc.Font = new Font("Segoe UI Semibold", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            infoSDesc.ForeColor = Color.WhiteSmoke;
+            infoSDesc.Location = new Point(0, 0);
+            infoSDesc.Name = "infoSDesc";
+            infoSDesc.ReadOnly = true;
+            infoSDesc.ScrollBars = RichTextBoxScrollBars.None;
+            infoSDesc.Size = new Size(400, 44);
+            infoSDesc.TabIndex = 85;
+            infoSDesc.Text = "";
             // 
             // effectView
             // 
@@ -676,6 +651,30 @@ namespace Mids_Reborn.UI.Controls
             subTitle.TabIndex = 0;
             subTitle.Text = "Subtitle";
             subTitle.TextAlign = ContentAlignment.TopCenter;
+            // 
+            // infoDataList
+            // 
+            infoDataList.AutoScroll = true;
+            infoDataList.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            infoDataList.BackColor = Color.FromArgb(1, 7, 15);
+            infoDataList.Dock = DockStyle.Fill;
+            infoDataList.Font = new Font("Segoe UI", 9.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            infoDataList.HighlightColor = Color.FromArgb(128, 128, 255);
+            infoDataList.HighlightTextColor = Color.Black;
+            infoDataList.ItemColor = Color.WhiteSmoke;
+            infoDataList.Location = new Point(0, 137);
+            infoDataList.Margin = new Padding(0);
+            infoDataList.Name = "infoDataList";
+            infoDataList.SampleRowsPerColumn = 5;
+            infoDataList.SetItemsBold = false;
+            infoDataList.ShowRuntimeSamples = true;
+            infoDataList.Size = new Size(400, 137);
+            infoDataList.TabIndex = 83;
+            infoDataList.UseHighlighting = true;
+            infoDataList.ValueAlternateColor = Color.Chartreuse;
+            infoDataList.ValueColor = Color.WhiteSmoke;
+            infoDataList.ValueConditionColor = Color.Firebrick;
+            infoDataList.ValueSpecialColor = Color.SlateBlue;
             // 
             // MidsDataViewNeo
             // 

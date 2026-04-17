@@ -79,6 +79,7 @@ namespace Mids_Reborn.UI.Forms
         private BuildRenderer? drawing;
         internal BuildRenderer? Drawing => drawing;
         private int dvLastEnh;
+        private int dvLastHistoryIdx;
         private bool dvLastNoLev;
         private int dvLastPower;
 
@@ -213,6 +214,7 @@ namespace Mids_Reborn.UI.Forms
             LastEnhIndex = -1;
             dvLastPower = -1;
             dvLastEnh = -1;
+            dvLastHistoryIdx = -1;
             dvLastNoLev = true;
             LastState = FormWindowState.Normal;
             FlipSteps = 5;
@@ -648,6 +650,7 @@ namespace Mids_Reborn.UI.Forms
             //_popup.MouseMove += Popup_MouseMove;
 
             Controls.Add(_popupHost);
+            ApplyPopupScale(_lastMasterScale);
             _popupHost.BringToFront();
             _popupHost.Invalidate();
         }
@@ -966,7 +969,8 @@ namespace Mids_Reborn.UI.Forms
 
                 if (EnhancingPower > -1)
                 {
-                    RefreshTabs(MidsContext.Character.CurrentBuild.Powers[EnhancingPower].NIDPower, e);
+                    RefreshTabs(MidsContext.Character.CurrentBuild.Powers[EnhancingPower].NIDPower, e,
+                        buildHistoryIdx: EnhancingPower);
                 }
 
                 // if (!_dvAnchored.PetInfo.HasEmptyBasePower)
@@ -1325,11 +1329,13 @@ namespace Mids_Reborn.UI.Forms
                     {
                         RefreshTabs(MidsContext.Character.CurrentBuild.Powers[index].NIDPower,
                             MidsContext.Character.CurrentBuild.Powers[index].Slots[sIDX].Enhancement,
-                            MidsContext.Character.CurrentBuild.Powers[index].Slots[sIDX].Level);
+                            MidsContext.Character.CurrentBuild.Powers[index].Slots[sIDX].Level,
+                            buildHistoryIdx: index);
                     }
                     else
                     {
-                        RefreshTabs(MidsContext.Character.CurrentBuild.Powers[index].NIDPower, new I9Slot());
+                        RefreshTabs(MidsContext.Character.CurrentBuild.Powers[index].NIDPower, new I9Slot(),
+                            buildHistoryIdx: index);
                     }
                 }
             }
@@ -4564,6 +4570,7 @@ namespace Mids_Reborn.UI.Forms
 
             _lastMasterScale = master;
             _lastCanvasWidth = widthForLayout;
+            ApplyPopupScale(master);
 
             // --- First pass with current width ---
             drawing.MasterScale = master;
@@ -4583,6 +4590,7 @@ namespace Mids_Reborn.UI.Forms
                 master = 1f + (rawScale - 1f) * scalingIntensity;
                 master = Math.Clamp(master, 0.90f, 1.30f);
                 _lastMasterScale = master;
+                ApplyPopupScale(master);
 
                 drawing.MasterScale = master;
                 drawing.UpdateFontScale(master);
@@ -4590,6 +4598,17 @@ namespace Mids_Reborn.UI.Forms
                 drawing.ReInit(canvas);
                 canvas.ResizeToContent();
             }
+        }
+
+        private void ApplyPopupScale(float masterScale)
+        {
+            if (_popupHost is null)
+            {
+                return;
+            }
+
+            var popupScale = 1f + (masterScale - 1f) * 0.55f;
+            _popupHost.ContentScale = Math.Clamp(popupScale, 0.95f, 1.18f);
         }
 
         private void GetBestDamageValues()
@@ -4667,7 +4686,8 @@ namespace Mids_Reborn.UI.Forms
             dataView.SetEnhancement(iEnh, iLevel);
         }
 
-        private void Info_Power(int powerIdx, int iEnhLvl = -1, bool noLevel = false, bool @lock = false)
+        private void Info_Power(int powerIdx, int iEnhLvl = -1, bool noLevel = false, bool @lock = false,
+            int buildHistoryIdx = -1)
         {
             if (dataView is null) return;
 
@@ -4685,17 +4705,24 @@ namespace Mids_Reborn.UI.Forms
             dvLastPower = powerIdx;
             dvLastNoLev = noLevel;
             //fData?.UpdateData(dvLastPower);
-            var powIndex = -1;
-            if (MainModule.MidsController.Toon.Locked)
+            var build = MidsContext.Character?.CurrentBuild;
+            var powIndex = build != null &&
+                           buildHistoryIdx >= 0 &&
+                           buildHistoryIdx < build.Powers.Count &&
+                           build.Powers[buildHistoryIdx]?.NIDPower == powerIdx
+                ? buildHistoryIdx
+                : -1;
+
+            if (powIndex < 0 && build != null && MainModule.MidsController.Toon.Locked)
             {
-                for (var index = 0; index < MidsContext.Character.CurrentBuild.Powers.Count; index++)
+                for (var index = 0; index < build.Powers.Count; index++)
                 {
-                    if (MidsContext.Character.CurrentBuild.Powers[index] == null)
+                    if (build.Powers[index] == null)
                     {
                         continue;
                     }
 
-                    if (MidsContext.Character.CurrentBuild.Powers[index].NIDPower != powerIdx)
+                    if (build.Powers[index].NIDPower != powerIdx)
                     {
                         continue;
                     }
@@ -4705,6 +4732,7 @@ namespace Mids_Reborn.UI.Forms
                 }
             }
 
+            dvLastHistoryIdx = powIndex;
             dataView.IsLocked = @lock;
             if (powIndex > -1)
             {
@@ -4739,16 +4767,16 @@ namespace Mids_Reborn.UI.Forms
             FloatUpdate();
         }
 
-        private void RefreshTabs(int iPower, I9Slot? iEnh, int iLevel = -1)
+        private void RefreshTabs(int iPower, I9Slot? iEnh, int iLevel = -1, int buildHistoryIdx = -1)
         {
-            if (iEnh.Enh > -1)
+            if (iEnh?.Enh > -1)
             {
-                Info_Power(iPower, iLevel);
+                Info_Power(iPower, iLevel, buildHistoryIdx: buildHistoryIdx);
                 Info_Enhancement(iEnh, iLevel);
             }
             else
             {
-                Info_Power(iPower, iLevel, true);
+                Info_Power(iPower, iLevel, true, buildHistoryIdx: buildHistoryIdx);
             }
         }
 
@@ -5912,7 +5940,7 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            Info_Power(dvLastPower, dvLastEnh, dvLastNoLev, dataView.IsLocked);
+            Info_Power(dvLastPower, dvLastEnh, dvLastNoLev, dataView.IsLocked, dvLastHistoryIdx);
             if (FrmEntityDetails is not { Visible: true })
             {
                 return;

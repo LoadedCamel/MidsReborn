@@ -12,6 +12,7 @@ using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
 using System.Reflection;
+using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
 namespace Mids_Reborn.UI.Controls
@@ -24,7 +25,37 @@ namespace Mids_Reborn.UI.Controls
         private const int TabPaddingX = 16;     // reserved for future text padding if needed
         private const int TabHeight = 24;
         private const int TabSpacing = 4;
-        private const int CornerRadius = 2;
+        private const int CornerRadius = 4;
+        private const int FrameBorderWidth = 2;
+        private const int HeaderChromeHeight = 34;
+        private const int ContentInset = 8;
+        private const int InfoShortDescriptionMaxLines = 2;
+        private const int InfoLongDescriptionMinLines = 4;
+        private const int HeaderOuterInset = 6;
+        private const int HeaderActionGap = 3;
+        private const int EM_SETMARGINS = 0xD3;
+        private const int EM_SETRECT = 0xB3;
+        private const int EC_LEFTMARGIN = 0x1;
+        private const int EC_RIGHTMARGIN = 0x2;
+
+        #endregion
+
+        #region Win32
+
+        [StructLayout(LayoutKind.Sequential)]
+        private struct NativeRect
+        {
+            public int Left;
+            public int Top;
+            public int Right;
+            public int Bottom;
+        }
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern nint SendMessage(nint hWnd, int msg, nint wParam, nint lParam);
+
+        [DllImport("user32.dll", CharSet = CharSet.Auto)]
+        private static extern nint SendMessage(nint hWnd, int msg, nint wParam, ref NativeRect lParam);
 
         #endregion
 
@@ -139,6 +170,10 @@ namespace Mids_Reborn.UI.Controls
 
             // Ensure the header panel itself is double-buffered (prevents flicker)
             EnableDoubleBuffer(headerPanel);
+            ApplyShellLayout();
+            ApplyShellTheme();
+            infoSDesc.HandleCreated += (_, _) => ApplyShortDescriptionMargins();
+            infoSDesc.SizeChanged += (_, _) => ApplyShortDescriptionMargins();
 
             
             LockButton.Click += LockButton_Click;
@@ -169,6 +204,7 @@ namespace Mids_Reborn.UI.Controls
 
         private void ThemeManagerOnThemeChanged()
         {
+            ApplyShellTheme();
             Invalidate(true);
         }
 
@@ -180,8 +216,8 @@ namespace Mids_Reborn.UI.Controls
             _uiScale = scale;
 
             SuspendLayout();
+            ApplyShellLayout();
             ApplyFontScale(this, scale);
-            ScaleHeight(headerPanel, scale);
             ScaleHeight(titlePanel, scale);
             ScaleHeight(sliderHost, scale);
             ScaleHeight(infoDamageDisplay, scale);
@@ -198,6 +234,7 @@ namespace Mids_Reborn.UI.Controls
             DockButton.IconSize = Math.Max(18, ScalePx(24));
             LockButton.IconSize = Math.Max(18, ScalePx(24));
 
+            UpdateInfoDescriptionLayout();
             LayoutEnhancementPage();
             ResumeLayout(performLayout: true);
             headerPanel.Invalidate();
@@ -205,6 +242,12 @@ namespace Mids_Reborn.UI.Controls
         }
 
         private int ScalePx(int value) => Math.Max(1, (int)Math.Round(value * _uiScale));
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+            UpdateInfoDescriptionLayout();
+        }
 
         private void ScaleHeight(Control control, float scale)
         {
@@ -250,6 +293,244 @@ namespace Mids_Reborn.UI.Controls
 
         #endregion
 
+        #region Paint (Shell)
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            var g = e.Graphics;
+            var theme = CurrentTheme;
+
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+            g.PixelOffsetMode = PixelOffsetMode.HighQuality;
+
+            var bounds = ClientRectangle;
+            var stroke = ScalePx(FrameBorderWidth);
+            bounds.Inflate(-stroke / 2, -stroke / 2);
+            bounds.Width -= 1;
+            bounds.Height -= 1;
+
+            if (bounds.Width <= 0 || bounds.Height <= 0)
+            {
+                return;
+            }
+
+            var radius = ScalePx(6);
+            var headerHeight = Math.Min(ScalePx(HeaderChromeHeight), Math.Max(1, bounds.Height));
+            using var framePath = RoundedRect(bounds, radius);
+            using var frameBack = new SolidBrush(theme.Background);
+            using var frameBorder = new Pen(Blend(theme.Border, theme.TabActiveBottom, 0.55f), stroke);
+
+            g.FillPath(frameBack, framePath);
+
+            var headerRect = new Rectangle(bounds.Left, bounds.Top, bounds.Width, headerHeight);
+            using (var previousClip = g.Clip.Clone())
+            using (var headerBrush = new LinearGradientBrush(headerRect, theme.HeaderTop, theme.HeaderBottom, LinearGradientMode.Vertical))
+            {
+                g.SetClip(framePath);
+                g.FillRectangle(headerBrush, headerRect);
+                g.Clip = previousClip;
+            }
+
+            g.DrawPath(frameBorder, framePath);
+
+            var inner = Rectangle.Inflate(bounds, -1, -1);
+            if (inner.Width > 0 && inner.Height > 0)
+            {
+                using var innerPath = RoundedRect(inner, ScalePx(5));
+                using var innerBorder = new Pen(Color.FromArgb(110, theme.GridHeaderBorder));
+                g.DrawPath(innerBorder, innerPath);
+            }
+        }
+
+        private void ApplyShellTheme()
+        {
+            var theme = CurrentTheme;
+
+            BackColor = theme.Background;
+            ForeColor = theme.Text;
+
+            headerPanel.BackColor = Color.Transparent;
+            titlePanel.BackColor = theme.Background;
+            title.ForeColor = theme.Text;
+
+            dvPages.BackColor = theme.Background;
+            infoView.BackColor = theme.Background;
+            effectView.BackColor = theme.Background;
+            totalView.BackColor = theme.Background;
+            enhanceView.BackColor = theme.Background;
+
+            infoSDesc.BackColor = theme.Background;
+            infoSDesc.ForeColor = theme.Text;
+            infoLDesc.BackColor = theme.Background;
+            infoLDesc.ForeColor = theme.Text;
+            powerStatsGrid.BackColor = theme.Background;
+            effectsGrid.BackColor = theme.Background;
+
+            totalViewScrollPanel.BackColor = theme.Background;
+            totalViewScrollPanel.ContentPanel.BackColor = theme.Background;
+            coreDataList.BackColor = theme.Background;
+
+            ApplyPairedListTheme(infoDataList, theme);
+            ApplyPairedListTheme(coreDataList, theme);
+            ApplyPairedListTheme(enhDataList, theme);
+            ApplyEnhanceSurfaceTheme(theme);
+
+            sliderHost.BackColor = theme.Background;
+
+            ConfigureHeaderActionButton(LockButton, theme);
+            ConfigureHeaderActionButton(DockButton, theme);
+
+            headerPanel.Invalidate();
+        }
+
+        private void ApplyEnhanceSurfaceTheme(DataViewTheme theme)
+        {
+            var background = theme.Background;
+
+            enhanceView.BackColor = background;
+            enhanceSubtitlePanel.BackColor = background;
+            subTitle.BackColor = background;
+            enhDataList.BackColor = background;
+            pnlEnhActive.BackColor = background;
+            pnlEnhInactive.BackColor = background;
+
+            ResetFlipBuffer();
+            enhanceView.Invalidate(true);
+            enhDataList.Invalidate();
+        }
+
+        private void ConfigureHeaderActionButton(Button button, DataViewTheme theme)
+        {
+            button.BackColor = Color.Transparent;
+            button.FlatStyle = FlatStyle.Flat;
+            button.FlatAppearance.BorderSize = 0;
+            button.FlatAppearance.MouseDownBackColor = Blend(theme.TabActiveBottom, theme.Background, 0.35f);
+            button.FlatAppearance.MouseOverBackColor = Blend(theme.TabInactiveTop, theme.TabActiveTop, 0.35f);
+            button.UseVisualStyleBackColor = false;
+        }
+
+        private Rectangle HeaderActionBounds(Control button)
+        {
+            var inset = ScalePx(HeaderActionGap);
+            var height = Math.Min(ScalePx(TabHeight), Math.Max(1, headerPanel.ClientSize.Height - inset * 2));
+            var top = Math.Max(inset, (headerPanel.ClientSize.Height - height) / 2);
+            return new Rectangle(button.Left + inset, top, Math.Max(1, button.Width - inset * 2), height);
+        }
+
+        private void ApplyShellLayout()
+        {
+            var frameInset = ScalePx(FrameBorderWidth);
+            Padding = new Padding(frameInset, 0, frameInset, frameInset);
+            headerPanel.Height = ScalePx(HeaderChromeHeight);
+
+            var horizontalInset = ScalePx(ContentInset);
+            title.Padding = new Padding(horizontalInset + ScalePx(2), 0, 0, 0);
+            infoSDesc.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
+            infoLDesc.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
+            ApplyShortDescriptionMargins();
+
+            powerStatsGrid.GridPadding = Math.Max(6, ContentInset);
+            effectsGrid.GridPadding = Math.Max(6, ContentInset);
+            coreDataList.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
+            enhDataList.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
+            UpdateInfoDescriptionLayout();
+        }
+
+        private void UpdateInfoDescriptionLayout()
+        {
+            if (infoSDesc == null || infoLDesc == null || infoView == null)
+            {
+                return;
+            }
+
+            var shortHeight = MeasureShortDescriptionHeight();
+            var longHeight = string.IsNullOrWhiteSpace(infoLDesc.Text)
+                ? 0
+                : Math.Max(ScalePx(58), infoLDesc.Font.Height * InfoLongDescriptionMinLines + ScalePx(4));
+
+            if (infoSDesc.Height != shortHeight)
+            {
+                infoSDesc.Height = shortHeight;
+            }
+            else
+            {
+                ApplyShortDescriptionMargins();
+            }
+
+            if (infoLDesc.Height != longHeight)
+            {
+                infoLDesc.Height = longHeight;
+            }
+
+            infoView.PerformLayout();
+        }
+
+        private void ApplyShortDescriptionMargins()
+        {
+            if (infoSDesc == null || !infoSDesc.IsHandleCreated)
+            {
+                return;
+            }
+
+            var horizontalInset = Math.Max(0, ScalePx(ContentInset));
+            var packedMargins = PackRichEditMargins(horizontalInset, horizontalInset);
+            SendMessage(infoSDesc.Handle, EM_SETMARGINS, EC_LEFTMARGIN | EC_RIGHTMARGIN, packedMargins);
+
+            var formatRect = new NativeRect
+            {
+                Left = horizontalInset,
+                Top = 0,
+                Right = Math.Max(horizontalInset + 1, infoSDesc.ClientSize.Width - horizontalInset),
+                Bottom = Math.Max(1, infoSDesc.ClientSize.Height)
+            };
+
+            SendMessage(infoSDesc.Handle, EM_SETRECT, 0, ref formatRect);
+            infoSDesc.Invalidate();
+        }
+
+        private static nint PackRichEditMargins(int left, int right)
+        {
+            left = Math.Clamp(left, 0, ushort.MaxValue);
+            right = Math.Clamp(right, 0, ushort.MaxValue);
+            return (nint)((right << 16) | left);
+        }
+
+        private int MeasureShortDescriptionHeight()
+        {
+            var text = infoSDesc.Text.Trim();
+            if (string.IsNullOrEmpty(text))
+            {
+                return 0;
+            }
+
+            var contentWidth = Math.Max(1, infoSDesc.ClientSize.Width - infoSDesc.Padding.Horizontal - ScalePx(4));
+            var lineHeight = TextRenderer.MeasureText("Ag", infoSDesc.Font, new Size(contentWidth, int.MaxValue),
+                TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix).Height;
+            var measured = TextRenderer.MeasureText(text, infoSDesc.Font, new Size(contentWidth, int.MaxValue),
+                TextFormatFlags.WordBreak | TextFormatFlags.NoPadding | TextFormatFlags.NoPrefix).Height;
+
+            var minHeight = lineHeight + ScalePx(4);
+            var maxHeight = lineHeight * InfoShortDescriptionMaxLines + ScalePx(4);
+            return Math.Clamp(measured + ScalePx(4), minHeight, maxHeight);
+        }
+
+        private static void ApplyPairedListTheme(PairedListEx list, DataViewTheme theme)
+        {
+            list.ShowRuntimeSamples = false;
+            list.ItemColor = theme.Muted;
+            list.ValueColor = theme.Text;
+            list.ValueAlternateColor = theme.GridBandLow;
+            list.ValueConditionColor = theme.GridBandHigh;
+            list.ValueSpecialColor = theme.GridBandMid;
+            list.HighlightColor = theme.ChipActive;
+            list.HighlightTextColor = theme.Text;
+            list.Invalidate();
+        }
+
+        #endregion
+
         #region Paint (Header)
 
         private void HeaderPanel_Paint(object? sender, PaintEventArgs e)
@@ -262,28 +543,30 @@ namespace Mids_Reborn.UI.Controls
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
             g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
-            // Background
-            // using (var backgroundBrush = new SolidBrush(Color.FromArgb(32, 32, 32)))
-            // {
-            //     g.FillRectangle(backgroundBrush, headerPanel.ClientRectangle);
-            // }
-
             var hr = headerPanel.ClientRectangle;
-            using (var backgroundBrush = new LinearGradientBrush(hr, CurrentTheme.HeaderTop, CurrentTheme.HeaderBottom, LinearGradientMode.Vertical ))
+            if (hr.Width <= 0 || hr.Height <= 0)
             {
-                g.FillRectangle(backgroundBrush, hr);
+                return;
             }
 
-            // Effective tab area width (exclude right-side buttons and spacing)
-            var tabSpacing = ScalePx(TabSpacing);
-            var rightButtonsWidth = DockButton.Width + LockButton.Width;
-            var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - rightButtonsWidth - (tabSpacing * (_tabs.Length + 1)));
+            var theme = CurrentTheme;
+            using (var bottomPen = new Pen(theme.GridHeaderBorder))
+            {
+                g.DrawLine(bottomPen, hr.Left, hr.Bottom - 1, hr.Right, hr.Bottom - 1);
+            }
 
-            // Precompute tab rectangles (distributes remainder pixels evenly)
-            var tabRects = ComputeTabRects(availableWidth, _tabs.Length, new Point(tabSpacing, ScalePx(2)), ScalePx(TabHeight), tabSpacing);
+            var tabSpacing = ScalePx(TabSpacing);
+            var outerInset = ScalePx(HeaderOuterInset);
+            var actionWidth = DockButton.Width + LockButton.Width + tabSpacing;
+            var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - actionWidth - (outerInset * 2) - (tabSpacing * (_tabs.Length - 1)));
+            var tabTop = Math.Max(ScalePx(2), (hr.Height - ScalePx(TabHeight)) / 2);
+            var tabRects = ComputeTabRects(availableWidth, _tabs.Length, new Point(outerInset, tabTop), ScalePx(TabHeight), tabSpacing);
+
+            DrawHeaderActionWell(g, HeaderActionBounds(LockButton), theme, LockButton.ClientRectangle.Contains(LockButton.PointToClient(Cursor.Position)));
+            DrawHeaderActionWell(g, HeaderActionBounds(DockButton), theme, DockButton.ClientRectangle.Contains(DockButton.PointToClient(Cursor.Position)));
 
             // Draw tabs
-            using var hoverBrush = new SolidBrush(Color.FromArgb(40, 40, 60));
+            using var hoverBrush = new SolidBrush(Blend(theme.TabInactiveTop, theme.TabActiveTop, 0.24f));
             using var outlineColor = new SolidBrush(Color.Black); // for outline method
             using var font = new Font(Font.FontFamily, Font.Size, FontStyle.Bold);
 
@@ -291,12 +574,12 @@ namespace Mids_Reborn.UI.Controls
             {
                 var rect = tabRects[i];
 
-                using var path = RoundedRect(rect, CornerRadius);
+                using var path = RoundedRect(rect, ScalePx(CornerRadius));
 
                 if (i == _selectedTabIndex)
                 {
                     //using var selectedBrush = new SolidBrush(_tabSelectedColors[i]);
-                    using var selectedBrush = new LinearGradientBrush(rect, CurrentTheme.TabActiveTop, CurrentTheme.TabActiveBottom, LinearGradientMode.Vertical);
+                    using var selectedBrush = new LinearGradientBrush(rect, theme.TabActiveTop, theme.TabActiveBottom, LinearGradientMode.Vertical);
                     g.FillPath(selectedBrush, path);
                 }
                 else if (i == _hoveredTabIndex)
@@ -305,12 +588,32 @@ namespace Mids_Reborn.UI.Controls
                 }
                 else
                 {
-                    using var inactiveBrush = new LinearGradientBrush(rect, CurrentTheme.TabInactiveTop, CurrentTheme.TabInactiveBottom, LinearGradientMode.Vertical);
+                    using var inactiveBrush = new LinearGradientBrush(rect, theme.TabInactiveTop, theme.TabInactiveBottom, LinearGradientMode.Vertical);
                     g.FillPath(inactiveBrush, path);
                 }
 
-                DrawTextWithOutline(g, _tabs[i], font, rect, Color.White, Color.Black);
+                using var tabBorder = new Pen(i == _selectedTabIndex ? Blend(theme.Border, theme.TabActiveTop, 0.45f) : theme.TabBorder);
+                g.DrawPath(tabBorder, path);
+
+                var textColor = i == _selectedTabIndex ? theme.Text : Blend(theme.Muted, theme.Text, 0.24f);
+                DrawTextWithOutline(g, _tabs[i], font, rect, textColor, Color.Black);
             }
+        }
+
+        private void DrawHeaderActionWell(Graphics g, Rectangle bounds, DataViewTheme theme, bool hovered)
+        {
+            if (bounds.Width <= 0 || bounds.Height <= 0)
+            {
+                return;
+            }
+
+            using var path = RoundedRect(bounds, ScalePx(CornerRadius));
+            var top = hovered ? Blend(theme.TabInactiveTop, theme.TabActiveTop, 0.28f) : theme.TabInactiveTop;
+            var bottom = hovered ? Blend(theme.TabInactiveBottom, theme.TabActiveBottom, 0.22f) : theme.TabInactiveBottom;
+            using var fill = new LinearGradientBrush(bounds, top, bottom, LinearGradientMode.Vertical);
+            using var border = new Pen(theme.TabBorder);
+            g.FillPath(fill, path);
+            g.DrawPath(border, path);
         }
 
         private static Rectangle[] ComputeTabRects(int totalWidth, int count, Point origin, int height, int spacing)
@@ -352,6 +655,18 @@ namespace Mids_Reborn.UI.Controls
             TextRenderer.DrawText(g, text, font, bounds, foreColor, flags);
         }
 
+        private static Color Blend(Color first, Color second, float amountSecond)
+        {
+            amountSecond = Math.Clamp(amountSecond, 0f, 1f);
+            var amountFirst = 1f - amountSecond;
+
+            return Color.FromArgb(
+                255,
+                (int)Math.Round(first.R * amountFirst + second.R * amountSecond),
+                (int)Math.Round(first.G * amountFirst + second.G * amountSecond),
+                (int)Math.Round(first.B * amountFirst + second.B * amountSecond));
+        }
+
         #endregion
 
         #region Mouse (Header)
@@ -369,10 +684,12 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            // Hit-testing uses the same rect math as Paint
-            var rightButtonsWidth = DockButton.Width + LockButton.Width;
-            var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - rightButtonsWidth - (TabSpacing * (_tabs.Length + 1)));
-            var tabRects = ComputeTabRects(availableWidth, _tabs.Length, new Point(TabSpacing, 2), TabHeight, TabSpacing);
+            var tabSpacing = ScalePx(TabSpacing);
+            var outerInset = ScalePx(HeaderOuterInset);
+            var actionWidth = DockButton.Width + LockButton.Width + tabSpacing;
+            var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - actionWidth - (outerInset * 2) - (tabSpacing * (_tabs.Length - 1)));
+            var tabTop = Math.Max(ScalePx(2), (headerPanel.ClientSize.Height - ScalePx(TabHeight)) / 2);
+            var tabRects = ComputeTabRects(availableWidth, _tabs.Length, new Point(outerInset, tabTop), ScalePx(TabHeight), tabSpacing);
 
             int newHovered = -1;
             for (int i = 0; i < tabRects.Length; i++)
@@ -423,7 +740,22 @@ namespace Mids_Reborn.UI.Controls
                 _selectedTabIndex = index;
                 dvPages.SelectedIndex = _selectedTabIndex;
                 headerPanel.Invalidate();
+                RefreshSelectedTabHeader();
                 TabChanged?.Invoke(this, index);
+            }
+        }
+
+        private void RefreshSelectedTabHeader()
+        {
+            if (_selectedTabIndex == 3)
+            {
+                DisplayEdFigures();
+                return;
+            }
+
+            if (pBase != null)
+            {
+                DisplayInfo();
             }
         }
 
@@ -516,6 +848,7 @@ namespace Mids_Reborn.UI.Controls
             subTitle.Text = string.Empty;
             infoSDesc.Clear();
             infoLDesc.Text = string.Empty;
+            UpdateInfoDescriptionLayout();
             powerStatsGrid.Clear();
             effectsGrid.Clear();
             enhDataList.Clear(true);
@@ -555,6 +888,7 @@ namespace Mids_Reborn.UI.Controls
                     infoSDesc.Rtf = RTF.StartRTF(infoSDesc.Font) + pBase.DescShort + "\r\n" +
                                      RTF.Color(RTF.ElementID.Faded) +
                                      "Shift+Click to move slot. Right-Click to place enh." + RTF.EndRTF();
+                    UpdateInfoDescriptionLayout();
                 }
             }
 
@@ -566,6 +900,7 @@ namespace Mids_Reborn.UI.Controls
             title.Text = str1;
             if (_selectedTabIndex > 1 || iEnh.Enh < 0)
             {
+                UpdateInfoDescriptionLayout();
                 return;
             }
 
@@ -626,6 +961,7 @@ namespace Mids_Reborn.UI.Controls
                              RTF.Color(RTF.ElementID.Faded) +
                              "Shift+Click to move slot. Right-Click to place enh." + RTF.EndRTF();
             infoLDesc.Rtf = RTF.StartRTF(infoLDesc.Font) + iStr2 + RTF.EndRTF();
+            UpdateInfoDescriptionLayout();
         }
 
         public void SetEnhancementPicker(I9Slot iEnh)
@@ -635,6 +971,7 @@ namespace Mids_Reborn.UI.Controls
                 title.Text = "No Enhancement";
                 infoSDesc.Clear();
                 infoLDesc.Text = string.Empty;
+                UpdateInfoDescriptionLayout();
                 return;
             }
 
@@ -701,6 +1038,7 @@ namespace Mids_Reborn.UI.Controls
 
             infoSDesc.Rtf = RTF.StartRTF(infoSDesc.Font) + iStr1 + RTF.Crlf() + RTF.EndRTF();
             infoLDesc.Rtf = RTF.StartRTF(infoLDesc.Font) + iStr2 + RTF.EndRTF();
+            UpdateInfoDescriptionLayout();
         }
 
         public void DisplayTotals()
@@ -909,6 +1247,7 @@ namespace Mids_Reborn.UI.Controls
                 title.Text = "No Enhancement";
                 infoSDesc.Clear();
                 infoLDesc.Text = string.Empty;
+                UpdateInfoDescriptionLayout();
             }
             else
             {
@@ -921,6 +1260,7 @@ namespace Mids_Reborn.UI.Controls
                     : $"{DatabaseAPI.Database.EnhancementSets[iSet].LevelMin + 1}";
                 infoSDesc.Rtf = RTF.StartRTF(infoSDesc.Font) + RTF.ToRTF($"{str1}, levels {str2}") + RTF.EndRTF();
                 infoLDesc.Rtf = $"{RTF.StartRTF(infoLDesc.Font)}{EnhancementSetCollection.GetSetInfoLongRTF(iSet)}{RTF.EndRTF()}";
+                UpdateInfoDescriptionLayout();
             }
         }
 
@@ -1055,6 +1395,14 @@ namespace Mids_Reborn.UI.Controls
         {
             if (pBase == null)
             {
+                if (_selectedTabIndex == 3)
+                {
+                    title.Text = string.Empty;
+                }
+
+                subTitle.Text = string.Empty;
+                enhDataList.Clear(true);
+                ClearEnhancementPanels();
                 return;
             }
 
@@ -1074,7 +1422,7 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            var buildHistoryIdx = ResolveDisplayedBuildHistoryIndex();
+            var buildHistoryIdx = ResolveDisplayedBuildHistoryIndex(allowPowerLookup: false);
             if (buildHistoryIdx < 0)
             {
                 if (_selectedTabIndex == 3)
@@ -1465,7 +1813,7 @@ namespace Mids_Reborn.UI.Controls
             return false;
         }
 
-        private int ResolveDisplayedBuildHistoryIndex()
+        private int ResolveDisplayedBuildHistoryIndex(bool allowPowerLookup = true)
         {
             var build = MidsContext.Character?.CurrentBuild;
             if (build == null)
@@ -1476,6 +1824,11 @@ namespace Mids_Reborn.UI.Controls
             if (HistoryIDX >= 0 && HistoryIDX < build.Powers.Count && build.Powers[HistoryIDX] != null)
             {
                 return HistoryIDX;
+            }
+
+            if (!allowPowerLookup)
+            {
+                return -1;
             }
 
             var powerBase = rootPowerBase ?? pBase;
@@ -1614,6 +1967,7 @@ namespace Mids_Reborn.UI.Controls
                 powerStatsGrid.Clear();
                 infoSDesc.Clear();
                 infoLDesc.Text = string.Empty;
+                UpdateInfoDescriptionLayout();
                 title.Text = string.Empty;
                 subTitle.Text = string.Empty;
                 infoDamageDisplay.BaseValue = 0;
@@ -1635,6 +1989,7 @@ namespace Mids_Reborn.UI.Controls
             var longInfo = Regex.Replace(pBase.DescLongFormatted.Trim().Replace("\0", "").Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
             infoSDesc.Rtf = RTF.StartRTF(infoSDesc.Font) + RTF.ToRTF(pBase.DescShort.Trim()) + RTF.EndRTF();
             infoLDesc.Rtf = RTF.StartRTF(infoLDesc.Font) + RTF.ToRTF(longInfo) + RTF.EndRTF();
+            UpdateInfoDescriptionLayout();
 
             var statRows = PowerCanonicalStats.BuildRows(pBase, enhancedPower);
             powerStatsGrid.SetRows(statRows);
@@ -1768,7 +2123,7 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            var inToonHistory = ResolveDisplayedBuildHistoryIndex();
+            var inToonHistory = ResolveDisplayedBuildHistoryIndex(allowPowerLookup: false);
             if (inToonHistory < 0 || !HasSlottedEnhancements(build.Powers[inToonHistory]))
             {
                 RedrawFlip();
@@ -1811,55 +2166,12 @@ namespace Mids_Reborn.UI.Controls
                     var num4 = (size.Height / 2.0 - 30) / 2.0;
                     var y2 = (int)Math.Round(num3 + num4);
                     local3 = new Rectangle(x2, y2, 30, 30);
-                    RectangleF bounds;
                     Rectangle destRect;
                     if (power.Slots[index].Enhancement.Enh > -1)
                     {
                         var graphics1 = bxFlip.Graphics;
                         AssetManager.DrawEnhancementAt(graphics1, iDest, DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].ImageIdx, AssetManager.ToGfxGrade(DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID, power.Slots[index].Enhancement.Grade));
-                        if (power.Slots[index].Enhancement.Enh > -1)
-                        {
-                            if (!MidsContext.Config.I9.HideIOLevels & DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID is Enums.eType.SetO or Enums.eType.InventO)
-                            {
-                                bounds = iDest;
-                                bounds.Y -= 3f;
-                                bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
-                                var graphics2 = bxFlip.Graphics;
-                                BuildRenderer.DrawOutlineText($"{power.Slots[index].Enhancement.IOLevel + 1}", bounds, Color.Cyan, Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
-                            }
-                            else if (MidsContext.Config.ShowEnhRel & DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID is Enums.eType.Normal or Enums.eType.SpecialO)
-                            {
-                                bounds = iDest;
-                                bounds.Y -= 3f;
-                                bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
-                                Color text;
-                                if (power.Slots[index].Enhancement.RelativeLevel != Enums.eEnhRelative.None)
-                                {
-                                    if (power.Slots[index].Enhancement.RelativeLevel >= Enums.eEnhRelative.Even)
-                                    {
-                                        if (power.Slots[index].Enhancement.RelativeLevel <= Enums.eEnhRelative.Even)
-                                        {
-                                            text = Color.White;
-                                        }
-                                        else
-                                        {
-                                            text = Color.FromArgb(0, byte.MaxValue, byte.MaxValue);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        text = Color.Yellow;
-                                    }
-                                }
-                                else
-                                {
-                                    text = Color.Red;
-                                }
-
-                                var graphics2 = bxFlip.Graphics;
-                                BuildRenderer.DrawOutlineText(Enums.GetRelativeString(power.Slots[index].Enhancement.RelativeLevel, MidsContext.Config.ShowRelSymbols), bounds, text, Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
-                            }
-                        }
+                        DrawEnhancementLevelOverlay(bxFlip.Graphics, iDest, power.Slots[index].Enhancement);
                     }
                     else
                     {
@@ -1871,50 +2183,6 @@ namespace Mids_Reborn.UI.Controls
                     {
                         var graphics1 = bxFlip.Graphics;
                         AssetManager.DrawEnhancementAt(graphics1, rectangle2, DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].ImageIdx, AssetManager.ToGfxGrade(DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID, power.Slots[index].FlippedEnhancement.Grade));
-
-                        if (power.Slots[index].FlippedEnhancement.Enh > -1)
-                        {
-                            if (!MidsContext.Config.I9.HideIOLevels & DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID is Enums.eType.SetO or Enums.eType.InventO)
-                            {
-                                bounds = rectangle2;
-                                bounds.Y -= 3f;
-                                bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
-                                var graphics2 = bxFlip.Graphics;
-                                BuildRenderer.DrawOutlineText($"{power.Slots[index].FlippedEnhancement.IOLevel + 1}", bounds, Color.Cyan, Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
-                            }
-                            else if (MidsContext.Config.ShowEnhRel & DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID is Enums.eType.Normal or Enums.eType.SpecialO)
-                            {
-                                bounds = rectangle2;
-                                bounds.Y -= 3f;
-                                bounds.Height = DefaultFont.GetHeight(bxFlip.Graphics);
-                                Color text;
-                                if (power.Slots[index].FlippedEnhancement.RelativeLevel != Enums.eEnhRelative.None)
-                                {
-                                    if (power.Slots[index].FlippedEnhancement.RelativeLevel >= Enums.eEnhRelative.Even)
-                                    {
-                                        if (power.Slots[index].FlippedEnhancement.RelativeLevel <= Enums.eEnhRelative.Even)
-                                        {
-                                            text = Color.White;
-                                        }
-                                        else
-                                        {
-                                            text = Color.FromArgb(0, byte.MaxValue, byte.MaxValue);
-                                        }
-                                    }
-                                    else
-                                    {
-                                        text = Color.Yellow;
-                                    }
-                                }
-                                else
-                                {
-                                    text = Color.Red;
-                                }
-
-                                var graphics2 = bxFlip.Graphics;
-                                BuildRenderer.DrawOutlineText(Enums.GetRelativeString(power.Slots[index].FlippedEnhancement.RelativeLevel, MidsContext.Config.ShowRelSymbols), bounds, text, Color.FromArgb(128, 0, 0, 0), pnlEnhActive.Font, 1f, graphics2);
-                            }
-                        }
                     }
                     else
                     {
@@ -1924,10 +2192,73 @@ namespace Mids_Reborn.UI.Controls
 
                     rectangle2.Inflate(2, 2);
                     bxFlip.Graphics.FillEllipse(solidBrush2, rectangle2);
+                    DrawEnhancementLevelOverlay(bxFlip.Graphics, local3, power.Slots[index].FlippedEnhancement);
                 }
 
                 RedrawFlip();
             }
+        }
+
+        private void DrawEnhancementLevelOverlay(Graphics graphics, Rectangle slotBounds, I9Slot enhancement)
+        {
+            if (enhancement.Enh < 0)
+            {
+                return;
+            }
+
+            var enhancementDef = DatabaseAPI.Database.Enhancements[enhancement.Enh];
+            string overlayText;
+            Color overlayColor;
+
+            if (!MidsContext.Config.I9.HideIOLevels &&
+                enhancementDef.TypeID is Enums.eType.SetO or Enums.eType.InventO)
+            {
+                overlayText = $"{enhancement.IOLevel + 1}";
+                overlayColor = Color.Cyan;
+            }
+            else if (MidsContext.Config.ShowEnhRel &&
+                     enhancementDef.TypeID is Enums.eType.Normal or Enums.eType.SpecialO)
+            {
+                overlayText = Enums.GetRelativeString(enhancement.RelativeLevel, MidsContext.Config.ShowRelSymbols);
+                overlayColor = GetEnhancementRelativeLevelColor(enhancement.RelativeLevel);
+            }
+            else
+            {
+                return;
+            }
+
+            if (string.IsNullOrWhiteSpace(overlayText))
+            {
+                return;
+            }
+
+            var fontSize = Math.Max(6f, pnlEnhActive.Font.SizeInPoints - 3f);
+            using var overlayFont = new Font(pnlEnhActive.Font.FontFamily, fontSize, FontStyle.Bold, GraphicsUnit.Point);
+            var overlayBounds = new RectangleF(
+                slotBounds.X,
+                slotBounds.Y - ScalePx(1),
+                slotBounds.Width,
+                Math.Max(ScalePx(9), overlayFont.GetHeight(graphics) + 1));
+
+            BuildRenderer.DrawOutlineText(overlayText, overlayBounds, overlayColor,
+                Color.FromArgb(160, 0, 0, 0), overlayFont, 0.85f, graphics);
+        }
+
+        private static Color GetEnhancementRelativeLevelColor(Enums.eEnhRelative relativeLevel)
+        {
+            if (relativeLevel == Enums.eEnhRelative.None)
+            {
+                return Color.Red;
+            }
+
+            if (relativeLevel < Enums.eEnhRelative.Even)
+            {
+                return Color.Yellow;
+            }
+
+            return relativeLevel == Enums.eEnhRelative.Even
+                ? Color.White
+                : Color.FromArgb(0, byte.MaxValue, byte.MaxValue);
         }
 
         private string GetToWhoShort(IEffect fx)
@@ -2348,7 +2679,7 @@ namespace Mids_Reborn.UI.Controls
             EnsureFlipBuffer();
             if (bxFlip?.Graphics != null)
             {
-                bxFlip.Graphics.Clear(enhDataList.BackColor);
+                bxFlip.Graphics.Clear(CurrentTheme.Background);
             }
 
             RedrawFlip();
@@ -2382,6 +2713,8 @@ namespace Mids_Reborn.UI.Controls
 
         private void DrawFlipPanel(Graphics graphics, bool inactive)
         {
+            graphics.Clear(CurrentTheme.Background);
+
             if (bxFlip == null)
             {
                 DisplayFlippedEnhancements();
@@ -2495,7 +2828,7 @@ namespace Mids_Reborn.UI.Controls
                 return -1;
             }
 
-            var inToonHistory = ResolveDisplayedBuildHistoryIndex();
+            var inToonHistory = ResolveDisplayedBuildHistoryIndex(allowPowerLookup: false);
             if (inToonHistory < 0)
             {
                 return -1;
@@ -2872,7 +3205,7 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            var inToonHistory = ResolveDisplayedBuildHistoryIndex();
+            var inToonHistory = ResolveDisplayedBuildHistoryIndex(allowPowerLookup: false);
             if (inToonHistory <= -1)
             {
                 return;
@@ -2890,7 +3223,7 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            var inToonHistory = ResolveDisplayedBuildHistoryIndex();
+            var inToonHistory = ResolveDisplayedBuildHistoryIndex(allowPowerLookup: false);
             if (inToonHistory <= -1)
             {
                 return;
@@ -2920,7 +3253,7 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            var inToonHistory = ResolveDisplayedBuildHistoryIndex();
+            var inToonHistory = ResolveDisplayedBuildHistoryIndex(allowPowerLookup: false);
             if (inToonHistory <= -1)
             {
                 return;
@@ -2938,7 +3271,7 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            var inToonHistory = ResolveDisplayedBuildHistoryIndex();
+            var inToonHistory = ResolveDisplayedBuildHistoryIndex(allowPowerLookup: false);
             if (inToonHistory <= -1)
             {
                 return;

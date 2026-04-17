@@ -285,10 +285,6 @@ public sealed class PowerStatsGrid : Control
             var rc = GetRowBounds(i);
             var rcc = GetColumns(rc);
 
-            // zebra + hover
-            using (var zebra = new SolidBrush(i % 2 == 0 ? t.GridRowEven : t.GridRowOdd))
-                g.FillRectangle(zebra, rc);
-
             if (i == _hoverRow)
             {
                 using var hov = new SolidBrush(Color.FromArgb(18, 255, 255, 255));
@@ -306,7 +302,7 @@ public sealed class PowerStatsGrid : Control
             TextRenderer.DrawText(g, valueText, Font, rcc.rcValue, valueColor, Color.Transparent, CellFlags | TextFormatFlags.Right);
 
             // Row separator
-            using var pen = new Pen(Color.FromArgb(24, 255, 255, 255));
+            using var pen = new Pen(t.GridRowLine);
             g.DrawLine(pen, rc.Left, rc.Bottom, rc.Right, rc.Bottom);
         }
     }

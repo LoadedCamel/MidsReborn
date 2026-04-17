@@ -217,31 +217,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             };
         }
 
-        private void AssignExpression(string? magnitudeExpression)
-        {
-            if (MagnitudeExpression.Contains("///"))
-            {
-                var replaced = magnitudeExpression?.Replace("///", "®");
-                var splitExpr = replaced?.Split('®');
-                Expressions = new Expressions
-                {
-                    Duration = "",
-                    Magnitude = splitExpr?[0].Trim(),
-                    Probability = splitExpr?[1].Trim()
-                };
-            }
-            else
-            {
-                Expressions = new Expressions
-                {
-                    Duration = "",
-                    Magnitude = magnitudeExpression ?? "",
-                    Probability = ""
-                };
-            }
-
-        }
-
         private Effect(IEffect template) : this()
         {
             PowerFullName = template.PowerFullName;
@@ -2475,7 +2450,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 Enums.eEffectType.Damage => DamageType == Enums.eDamage.None
                                                     ? "Damage Str"
                                                     : $"{Enums.GetDamageNameShort(DamageType)} Dam Str",
-                _ => "Effect Str"
+                _ => $"{EnhancementTargetNameShort()} Str"
             };
         }
 
@@ -2498,7 +2473,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 Enums.eEffectType.Damage => DamageType == Enums.eDamage.None
                                                     ? "Damage Str Res"
                                                     : $"{Enums.GetDamageNameShort(DamageType)} Dam Str Res",
-                _ => "Status Eff Res"
+                _ => $"{EnhancementTargetNameShort()} Str Res"
             };
         }
 
@@ -2526,7 +2501,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 Enums.eEffectType.Damage => DamageType == Enums.eDamage.None
                                                     ? "Damage Strength"
                                                     : $"{Enums.GetDamageName(DamageType)} Damage Strength",
-                _ => "Effect Strength"
+                _ => $"{EnhancementTargetNameLong()} Strength"
             };
         }
 
@@ -2549,13 +2524,28 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 Enums.eEffectType.Damage => DamageType == Enums.eDamage.None
                                                     ? "Damage Strength Resistance"
                                                     : $"{Enums.GetDamageName(DamageType)} Damage Strength Resistance",
-                _ => "Status Effect Resistance"
+                _ => $"{EnhancementTargetNameLong()} Strength Resistance"
             };
         }
 
         private string MezResistLong()
         {
             return $"Mez Resistance ({Enums.GetMezName(MezType)})";
+        }
+
+
+        private string EnhancementTargetNameShort()
+        {
+            return ETModifies is Enums.eEffectType.None or Enums.eEffectType.Null or Enums.eEffectType.NullBool
+                ? "Effect"
+                : Enums.GetEffectNameShort(ETModifies);
+        }
+
+        private string EnhancementTargetNameLong()
+        {
+            return ETModifies is Enums.eEffectType.None or Enums.eEffectType.Null or Enums.eEffectType.NullBool
+                ? "Effect"
+                : Enums.GetEffectName(ETModifies);
         }
 
 
@@ -3678,7 +3668,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     if (ETModifies > effect.ETModifies)
                         return 1;
                     if (ETModifies < effect.ETModifies)
-                        return 1;
+                        return -1;
                     if (Mag > effect.Mag)
                         return 1;
                     if (Mag < effect.Mag)
