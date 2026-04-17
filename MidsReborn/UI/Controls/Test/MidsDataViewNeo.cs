@@ -50,6 +50,9 @@ namespace Mids_Reborn.UI.Controls
 
         private int _hoveredTabIndex = -1;
         private int _selectedTabIndex;
+        private float _uiScale = 1f;
+        private readonly Dictionary<Control, float> _baseFontSizes = new();
+        private readonly Dictionary<Control, int> _baseHeights = new();
 
         private Form? _floatingHostForm;
         private bool _isDocked = true;
@@ -169,6 +172,82 @@ namespace Mids_Reborn.UI.Controls
             Invalidate(true);
         }
 
+        public void ApplyUiScale(float scale)
+        {
+            scale = Math.Clamp(scale, 0.90f, 1.25f);
+            if (Math.Abs(scale - _uiScale) < 0.01f) return;
+
+            _uiScale = scale;
+
+            SuspendLayout();
+            ApplyFontScale(this, scale);
+            ScaleHeight(headerPanel, scale);
+            ScaleHeight(titlePanel, scale);
+            ScaleHeight(sliderHost, scale);
+            ScaleHeight(infoDamageDisplay, scale);
+            ScaleHeight(totalsDefenseLayoutPanel, scale);
+            ScaleHeight(totalsResistLayoutPanel, scale);
+            ScaleHeight(coreDataList, scale);
+            ScaleHeight(pnlEnhActive, scale);
+            ScaleHeight(pnlEnhInactive, scale);
+            ScaleHeight(enhanceSubtitlePanel, scale);
+
+            var buttonSize = Math.Max(22, ScalePx(29));
+            DockButton.Width = buttonSize;
+            LockButton.Width = buttonSize;
+            DockButton.IconSize = Math.Max(18, ScalePx(24));
+            LockButton.IconSize = Math.Max(18, ScalePx(24));
+
+            LayoutEnhancementPage();
+            ResumeLayout(performLayout: true);
+            headerPanel.Invalidate();
+            Invalidate(true);
+        }
+
+        private int ScalePx(int value) => Math.Max(1, (int)Math.Round(value * _uiScale));
+
+        private void ScaleHeight(Control control, float scale)
+        {
+            if (!_baseHeights.TryGetValue(control, out var height))
+            {
+                height = control.Height;
+                _baseHeights[control] = height;
+            }
+
+            control.Height = Math.Max(1, (int)Math.Round(height * scale));
+        }
+
+        private void ApplyFontScale(Control root, float scale)
+        {
+            foreach (var control in EnumerateControls(root))
+            {
+                if (control.Font is null) continue;
+                if (!_baseFontSizes.TryGetValue(control, out var baseSize))
+                {
+                    baseSize = control.Font.Size;
+                    _baseFontSizes[control] = baseSize;
+                }
+
+                var scaledSize = Math.Max(6f, baseSize * scale);
+                if (Math.Abs(control.Font.Size - scaledSize) < 0.05f) continue;
+
+                control.Font = new Font(control.Font.FontFamily, scaledSize, control.Font.Style, control.Font.Unit,
+                    control.Font.GdiCharSet, control.Font.GdiVerticalFont);
+            }
+        }
+
+        private static IEnumerable<Control> EnumerateControls(Control root)
+        {
+            yield return root;
+            foreach (Control child in root.Controls)
+            {
+                foreach (var descendant in EnumerateControls(child))
+                {
+                    yield return descendant;
+                }
+            }
+        }
+
         #endregion
 
         #region Paint (Header)
@@ -196,11 +275,12 @@ namespace Mids_Reborn.UI.Controls
             }
 
             // Effective tab area width (exclude right-side buttons and spacing)
+            var tabSpacing = ScalePx(TabSpacing);
             var rightButtonsWidth = DockButton.Width + LockButton.Width;
-            var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - rightButtonsWidth - (TabSpacing * (_tabs.Length + 1)));
+            var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - rightButtonsWidth - (tabSpacing * (_tabs.Length + 1)));
 
             // Precompute tab rectangles (distributes remainder pixels evenly)
-            var tabRects = ComputeTabRects(availableWidth, _tabs.Length, new Point(TabSpacing, 2), TabHeight, TabSpacing);
+            var tabRects = ComputeTabRects(availableWidth, _tabs.Length, new Point(tabSpacing, ScalePx(2)), ScalePx(TabHeight), tabSpacing);
 
             // Draw tabs
             using var hoverBrush = new SolidBrush(Color.FromArgb(40, 40, 60));

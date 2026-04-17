@@ -28,6 +28,8 @@ public class MidsDropDownList : ComboBox
     private bool _isLocked;
     private bool _isHovering;
     private int _iconSize = 16;
+    private int? _baseIconSize;
+    private int? _baseItemHeight;
     private readonly Dictionary<object, Bitmap?> _itemIcons = new();
     private string? _placeholderText;
 
@@ -134,6 +136,16 @@ public class MidsDropDownList : ComboBox
     {
         IsLocked = false;
         _lockedText = null;
+        Invalidate();
+    }
+
+    public void ApplyUiScale(float scale)
+    {
+        _baseIconSize ??= IconSize;
+        _baseItemHeight ??= ItemHeight;
+
+        IconSize = Math.Clamp((int)Math.Round(_baseIconSize.Value * scale), 8, 64);
+        ItemHeight = Math.Max(12, (int)Math.Round(_baseItemHeight.Value * scale));
         Invalidate();
     }
 

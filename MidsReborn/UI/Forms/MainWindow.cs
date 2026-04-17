@@ -50,8 +50,17 @@ namespace Mids_Reborn.UI.Forms
         private int _originalIndex = -1;
 
         private const int BaselineCanvasWidth = 610;
+        private const int BaselineFormWidth = 1280;
+        private const float BaselineMainLeftColumnWidth = 625f;
+        private const float BaselineLeftPowerColumnWidth = 410f;
         private float _lastMasterScale = 1f;
         private int _lastCanvasWidth = -1;
+        private float _lastLeftUiScale = 1f;
+        private Size _lastLeftUiClientSize;
+        private readonly Dictionary<Control, float> _leftUiFontSizes = new();
+        private readonly Dictionary<Control, Rectangle> _leftUiBounds = new();
+        private readonly Dictionary<MidsListView, (int ScrollBarWidth, int PaddingX, int PaddingY, int LineSpacing)> _leftListMetrics = new();
+        private readonly Dictionary<MidsVectorButton, int> _leftButtonCornerRadii = new();
 
         // Drag & drop / mouse tracking
         private readonly short[]? dragdropScenarioAction;
@@ -263,7 +272,187 @@ namespace Mids_Reborn.UI.Forms
         {
             base.OnSizeChanged(e);
             Invalidate(true);            // full form background
+            ApplyLeftUiScale();
             UpdateUiLayout();
+        }
+
+        private float ComputeLeftUiScale()
+        {
+            if (ClientSize.Width <= 0) return 1f;
+
+            var rawScale = (float)ClientSize.Width / BaselineFormWidth;
+            var scale = 1f + (rawScale - 1f) * 0.45f;
+            return Math.Clamp(scale, 0.90f, 1.25f);
+        }
+
+        private void ApplyLeftUiScale(bool force = false)
+        {
+            if (!IsHandleCreated && !force) return;
+
+            var scale = ComputeLeftUiScale();
+            var clientSize = ClientSize;
+            if (!force && Math.Abs(scale - _lastLeftUiScale) < 0.01f && clientSize == _lastLeftUiClientSize) return;
+
+            _lastLeftUiScale = scale;
+            _lastLeftUiClientSize = clientSize;
+
+            SuspendLayout();
+            mainLayoutPanel.SuspendLayout();
+            leftLayoutPanel.SuspendLayout();
+            leftInnerLayoutPanel.SuspendLayout();
+            rightInnerLayoutPanel.SuspendLayout();
+            characterLayoutPanel.SuspendLayout();
+            characterPanel.SuspendLayout();
+
+            var maximumLeftWidth = Math.Max(BaselineMainLeftColumnWidth, ClientSize.Width * 0.48f);
+            var leftWidth = Math.Clamp(BaselineMainLeftColumnWidth * scale, BaselineMainLeftColumnWidth, maximumLeftWidth);
+
+            mainLayoutPanel.ColumnStyles[0].Width = leftWidth;
+            mainLayoutPanel.RowStyles[0].Height = ScaleLayoutValue(72f, scale);
+
+            leftLayoutPanel.ColumnStyles[0].Width = ScaleLayoutValue(BaselineLeftPowerColumnWidth, scale);
+            leftLayoutPanel.RowStyles[0].Height = ScaleLayoutValue(110f, scale);
+            leftLayoutPanel.RowStyles[1].Height = ScaleLayoutValue(160f, scale);
+
+            characterLayoutPanel.ColumnStyles[0].Width = ScaleLayoutValue(90f, scale);
+            characterLayoutPanel.ColumnStyles[1].Width = ScaleLayoutValue(200f, scale);
+
+            leftInnerLayoutPanel.RowStyles[0].Height = ScaleLayoutValue(20f, scale);
+            leftInnerLayoutPanel.RowStyles[1].Height = ScaleLayoutValue(26f, scale);
+
+            for (var i = 0; i < rightInnerLayoutPanel.RowStyles.Count; i++)
+            {
+                if (rightInnerLayoutPanel.RowStyles[i].SizeType != SizeType.Absolute) continue;
+                rightInnerLayoutPanel.RowStyles[i].Height = ScaleLayoutValue(i % 3 == 0 ? 20f : 26f, scale);
+            }
+
+            ScaleLeftUiControlTree(leftLayoutPanel, scale);
+            ScaleLeftUiControlTree(buttonsLayoutPanel, scale);
+            ScaleCharacterPanelBounds(scale);
+            ApplyPoolStackLayout(scale);
+            dataView.ApplyUiScale(scale);
+            leftLayoutPanel.RefreshSmartLayout();
+
+            characterPanel.ResumeLayout(performLayout: true);
+            characterLayoutPanel.ResumeLayout(performLayout: true);
+            rightInnerLayoutPanel.ResumeLayout(performLayout: true);
+            leftInnerLayoutPanel.ResumeLayout(performLayout: true);
+            leftLayoutPanel.ResumeLayout(performLayout: true);
+            mainLayoutPanel.ResumeLayout(performLayout: true);
+            ResumeLayout(performLayout: true);
+        }
+
+        private static float ScaleLayoutValue(float value, float scale) => Math.Max(1f, (float)Math.Round(value * scale));
+
+        private int ScalePx(int value, float scale) => Math.Max(1, (int)Math.Round(value * scale));
+
+        private void ScaleLeftUiControlTree(Control root, float scale)
+        {
+            foreach (var control in EnumerateScaleControls(root))
+            {
+                ApplyScaledFont(control, scale);
+
+                switch (control)
+                {
+                    case MidsDropDownList dropDown:
+                        dropDown.ApplyUiScale(scale);
+                        break;
+
+                    case MidsListView listView:
+                        if (!_leftListMetrics.TryGetValue(listView, out var metrics))
+                        {
+                            metrics = (listView.ScrollBarWidth, listView.PaddingX, listView.PaddingY, listView.LineSpacing);
+                            _leftListMetrics[listView] = metrics;
+                        }
+
+                        listView.ScrollBarWidth = ScalePx(metrics.ScrollBarWidth, scale);
+                        listView.PaddingX = ScalePx(metrics.PaddingX, scale);
+                        listView.PaddingY = Math.Max(0, (int)Math.Round(metrics.PaddingY * scale));
+                        listView.LineSpacing = (int)Math.Round(metrics.LineSpacing * scale);
+                        listView.Invalidate();
+                        break;
+
+                    case MidsVectorButton button:
+                        if (!_leftButtonCornerRadii.TryGetValue(button, out var radius))
+                        {
+                            radius = button.CornerRadius;
+                            _leftButtonCornerRadii[button] = radius;
+                        }
+
+                        button.CornerRadius = ScalePx(radius, scale);
+                        break;
+                }
+            }
+        }
+
+        private void ApplyScaledFont(Control control, float scale)
+        {
+            if (control.Font is null) return;
+            if (!_leftUiFontSizes.TryGetValue(control, out var baseSize))
+            {
+                baseSize = control.Font.Size;
+                _leftUiFontSizes[control] = baseSize;
+            }
+
+            var scaledSize = Math.Max(6f, baseSize * scale);
+            if (Math.Abs(control.Font.Size - scaledSize) < 0.05f) return;
+
+            control.Font = new Font(control.Font.FontFamily, scaledSize, control.Font.Style, control.Font.Unit,
+                control.Font.GdiCharSet, control.Font.GdiVerticalFont);
+        }
+
+        private void ScaleCharacterPanelBounds(float scale)
+        {
+            foreach (Control control in characterPanel.Controls)
+            {
+                if (!_leftUiBounds.TryGetValue(control, out var bounds))
+                {
+                    bounds = control.Bounds;
+                    _leftUiBounds[control] = bounds;
+                }
+
+                control.Bounds = new Rectangle(
+                    ScalePx(bounds.X, scale),
+                    ScalePx(bounds.Y, scale),
+                    ScalePx(bounds.Width, scale),
+                    ScalePx(bounds.Height, scale));
+            }
+        }
+
+        private void ApplyPoolStackLayout(float scale)
+        {
+            midsvScrollPanel1.ScrollbarEnabled = false;
+            rightInnerLayoutPanel.AutoSize = false;
+            rightInnerLayoutPanel.AutoSizeMode = AutoSizeMode.GrowOnly;
+            rightInnerLayoutPanel.Width = Math.Max(0, midsvScrollPanel1.ClientSize.Width);
+            rightInnerLayoutPanel.Height = Math.Max(0, midsvScrollPanel1.ClientSize.Height);
+
+            foreach (var rowIndex in new[] { 2, 5, 8, 11, 14 })
+            {
+                if (rowIndex < 0 || rowIndex >= rightInnerLayoutPanel.RowStyles.Count) continue;
+                rightInnerLayoutPanel.RowStyles[rowIndex].SizeType = SizeType.Percent;
+                rightInnerLayoutPanel.RowStyles[rowIndex].Height = 20f;
+            }
+
+            midsvScrollPanel1.RecalculateLayout();
+        }
+
+        private static IEnumerable<Control> EnumerateScaleControls(Control root)
+        {
+            yield return root;
+
+            foreach (Control child in root.Controls)
+            {
+                if (child is MidsDataViewNeo)
+                {
+                    continue;
+                }
+
+                foreach (var descendant in EnumerateScaleControls(child))
+                {
+                    yield return descendant;
+                }
+            }
         }
 
         #endregion
@@ -4333,10 +4522,12 @@ namespace Mids_Reborn.UI.Forms
                 drawing = new BuildRenderer(canvas);
                 canvas.Renderer = drawing;           // <-- make the panel own the renderer immediately
                 canvas.ManageRendererOnSize = false;
+                ApplyLeftUiScale(true);
                 UpdateUiLayout(true); 
             }
             else
             {
+                ApplyLeftUiScale(true);
                 UpdateUiLayout(true);
             }
 

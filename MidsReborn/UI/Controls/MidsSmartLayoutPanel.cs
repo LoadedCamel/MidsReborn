@@ -94,6 +94,12 @@ public sealed class MidsSmartLayoutPanel : TableLayoutPanel
         ScheduleSmartLayout();
     }
 
+    public void RefreshSmartLayout()
+    {
+        ResetBaselines();
+        InvalidateSmartLayout();
+    }
+
     private void ResetBaselines()
     {
         _initialGrowPx = null;

@@ -109,6 +109,9 @@ public sealed class MidsVScrollPanel : Panel
 
     public event EventHandler<int>? AvailableClientWidthChanged;
 
+    [DefaultValue(true)]
+    public bool ScrollbarEnabled { get; set; } = true;
+
     #endregion
 
     #region Constructor / Dispose
@@ -279,7 +282,7 @@ public sealed class MidsVScrollPanel : Panel
         => contentHeight > visibleHeight;
 
     private bool NeedsScrollbar(int contentHeight)
-        => NeedsScrollbar(contentHeight, ClientSize.Height);
+        => ScrollbarEnabled && NeedsScrollbar(contentHeight, ClientSize.Height);
 
     private void SetScrollOffset(int value)
     {
