@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using Mids_Reborn.UI.Forms.WindowMenuItems;
 
 namespace Mids_Reborn.Core
 {
@@ -49,7 +50,13 @@ namespace Mids_Reborn.Core
             StatusProtection,
             StatusResistance,
             DebuffResistance,
-            Elusivity
+            Elusivity,
+
+            Fly,
+            MaxRunSpeed,
+            Recovery,
+
+            None
         }
 
         public enum eCustomGraphMode
@@ -68,7 +75,7 @@ namespace Mids_Reborn.Core
         /// Usable damage vectors (all available), as string
         /// </summary>
         private static readonly string[] DamageVectorsNames = Enum.GetNames<Enums.eDamage>();
-        
+
         /// <summary>
         /// Unused defense vectors
         /// </summary>
@@ -81,7 +88,7 @@ namespace Mids_Reborn.Core
             Enums.eDamage.Unique2,
             Enums.eDamage.Unique3
         }.Cast<int>().ToArray();
-        
+
         /// <summary>
         /// Unused resistance vectors
         /// </summary>
@@ -96,7 +103,7 @@ namespace Mids_Reborn.Core
             Enums.eDamage.Unique2,
             Enums.eDamage.Unique3
         }.Cast<int>().ToArray();
-        
+
         /// <summary>
         /// Unused elusivity vectors
         /// </summary>
@@ -192,6 +199,25 @@ namespace Mids_Reborn.Core
             };
         }
 
+        public static void SetGraphItemManual(this CtlMultiGraph ctl, eCustomGraphStat stat, eCustomGraphMode mode, frmBuffDebuff.ValueDisplayMode displayMode, float val, float duration, float rechargeTime, float endCost, string powerName, string unitSuffix = "", string labelOverride = "")
+        {
+            var longName = string.IsNullOrWhiteSpace(labelOverride)
+                ? Names.CustomStatNameLong(stat)
+                : labelOverride;
+
+            ctl.SuspendLayout();
+            ctl.Clear();
+
+            ctl.AddItemPair(longName,
+                $"{val:####0.##}{unitSuffix}",
+                0,
+                val,
+                BuffDataTooltip3(val, duration, rechargeTime, endCost, powerName, longName, displayMode)
+            );
+
+            ctl.ResumeLayout(true);
+        }
+
         /// <summary>
         /// Set up displayed item, values, tooltip
         /// </summary>
@@ -205,10 +231,10 @@ namespace Mids_Reborn.Core
             var atName = MidsContext.Character.Archetype.DisplayName;
 
             var longName = Names.CustomStatNameLong(stat);
-            
+
             float val;
             string suffix;
-            
+
             var hpValue = displayStats.HealthHitpointsNumeric(false);
             var hpValueUncapped = displayStats.HealthHitpointsNumeric(true);
             var hpBase = MidsContext.Character.Archetype.Hitpoints;
@@ -218,7 +244,7 @@ namespace Mids_Reborn.Core
             var regenValueUncapped = displayStats.HealthRegenPercent(true);
             var regenValueRaw = displayStats.HealthRegenHPPerSec;
             var regenValueRawUncapped = displayStats.HealthRegenHPPerSecUncapped;
-            
+
             var absorbValue = Math.Min(displayStats.Absorb, hpBase);
 
             var endRecValue = displayStats.EnduranceRecoveryNumeric;
@@ -342,7 +368,7 @@ namespace Mids_Reborn.Core
                         eCustomGraphMode.Average => "(average value)",
                         _ => "(max value)"
                     };
-                    
+
                     ctl.AddItemPair(longName,
                         $"{val:##0.##}%",
                         0,
@@ -639,7 +665,7 @@ namespace Mids_Reborn.Core
                         GenericDataTooltip3(displayStats.Distance(displayStats.Perception(false), MidsContext.Config.SpeedFormat), displayStats.Distance(Statistics.BasePerception, MidsContext.Config.SpeedFormat), displayStats.Distance(displayStats.Perception(true), MidsContext.Config.SpeedFormat), "Perception", "", movementUnitDistance)
                     );
                     break;
-                
+
                 case eCustomGraphStat.Recharge:
                     ctl.AddItemPair("Haste",
                         $"{displayStats.BuffHaste(false):##0.##}%",
@@ -725,7 +751,7 @@ namespace Mids_Reborn.Core
                         eCustomGraphMode.Single => cfgSettings.MezType != null ? $"{cfgSettings.MezType} Prot." : "Held Prot.",
                         eCustomGraphMode.Min => "Mez Prot. (Min)",
                         eCustomGraphMode.Average => "Mez Prot. (Avg)",
-                        _  => "Mez Prot. (Max)"
+                        _ => "Mez Prot. (Max)"
                     };
 
                     mezLabelLong = mode switch
@@ -901,6 +927,19 @@ namespace Mids_Reborn.Core
                        : "");
         }
 
+        public static string BuffDataTooltip3(float value, float duration, float rechargeTime, float endCost, string powerName, string statName, frmBuffDebuff.ValueDisplayMode displayMode, string unitSuffix = "%", bool plusSignEnabled = false)
+        {
+            var activationsPerMin = rechargeTime < float.Epsilon ? 1 : rechargeTime / 60f;
+            if (duration < float.Epsilon)
+            {
+                duration = float.MaxValue;
+            }
+
+            return $"{(plusSignEnabled && value > 0 ? "+" : "")}{value:####0.##}{unitSuffix} {statName}"
+                   + $"\r\nApplies {(Math.Abs(duration - float.MaxValue) < float.Epsilon ? "indefinitely" : duration >= rechargeTime ? $"permanently on same target (duration ({duration:####0.##}s) >= recharge ({rechargeTime:####0.##}s)" : $"for {duration:####0.##}s, every {rechargeTime:####0.##}s")}, from {endCost:##0.##} endurance{(activationsPerMin >= 1 ? $" (roughly {activationsPerMin:###0.#} activations/min)" : "")}"
+                   + $"\r\n\r\nFrom: {powerName}";
+        }
+
         public static class Names
         {
             /// <summary>
@@ -908,7 +947,7 @@ namespace Mids_Reborn.Core
             /// </summary>
             /// <param name="stat">Statistic name</param>
             /// <returns>Short name for specified statistic</returns>
-            public static string CustomStatNameShort(eCustomGraphStat stat)
+            public static string CustomStatNameShort(eCustomGraphStat stat, bool extended = false)
             {
                 return stat switch
                 {
@@ -950,6 +989,11 @@ namespace Mids_Reborn.Core
                     eCustomGraphStat.StatusResistance => "MezRes",
                     eCustomGraphStat.DebuffResistance => "DbfRes",
                     eCustomGraphStat.Elusivity => "Elsvt",
+
+                    eCustomGraphStat.Fly when extended => "Fly",
+                    eCustomGraphStat.MaxRunSpeed when extended => "MaxRunSpd",
+                    eCustomGraphStat.Recovery when extended => "Recv",
+
                     _ => ""
                 };
             }
@@ -959,7 +1003,7 @@ namespace Mids_Reborn.Core
             /// </summary>
             /// <param name="stat">Statistic name</param>
             /// <returns>Long name for specified statistic</returns>
-            public static string CustomStatNameLong(eCustomGraphStat stat)
+            public static string CustomStatNameLong(eCustomGraphStat stat, bool extended = false)
             {
                 return stat switch
                 {
@@ -1001,6 +1045,11 @@ namespace Mids_Reborn.Core
                     eCustomGraphStat.StatusResistance => "Mez Resistance",
                     eCustomGraphStat.DebuffResistance => "Debuff Resistance",
                     eCustomGraphStat.Elusivity => "Elusivity",
+
+                    eCustomGraphStat.Fly when extended => "Fly",
+                    eCustomGraphStat.MaxRunSpeed when extended => "Max Run Speed",
+                    eCustomGraphStat.Recovery when extended => "Recovery",
+
                     _ => ""
                 };
             }
@@ -1054,7 +1103,7 @@ namespace Mids_Reborn.Core
                         Border = Color.FromArgb(60, 109, 255),
                         Highlight = highlightColor
                     },
-                    
+
                     eCustomGraphStat.EnhEnduranceDiscount => new GraphColors
                     {
                         Enhanced = Color.FromArgb(65, 146, 255),
@@ -1070,7 +1119,7 @@ namespace Mids_Reborn.Core
                         Border = Color.FromArgb(0, 204, 173),
                         Highlight = highlightColor
                     },
-                    
+
                     eCustomGraphStat.EnhMez => new GraphColors
                     {
                         Enhanced = Color.FromArgb(95, 76, 217),
@@ -1094,7 +1143,7 @@ namespace Mids_Reborn.Core
                         Border = Color.FromArgb(201, 185, 101),
                         Highlight = highlightColor
                     },
-                    
+
                     eCustomGraphStat.EnhAbsorb => new GraphColors
                     {
                         Enhanced = Color.FromArgb(182, 182, 182),
@@ -1110,7 +1159,7 @@ namespace Mids_Reborn.Core
                         Border = Color.BlueViolet,
                         Highlight = highlightColor
                     },
-                    
+
                     eCustomGraphStat.Resistance => new GraphColors
                     {
                         Enhanced = Color.FromArgb(0, 192, 192),
@@ -1149,7 +1198,7 @@ namespace Mids_Reborn.Core
                         Highlight = highlightColor
                     },
 
-                    eCustomGraphStat.EndRec => new GraphColors
+                    eCustomGraphStat.EndRec or eCustomGraphStat.Recovery => new GraphColors
                     {
                         Base = Color.FromArgb(24, 114, 204),
                         Enhanced = Color.FromArgb(30, 144, 255),
@@ -1176,7 +1225,7 @@ namespace Mids_Reborn.Core
                         Highlight = highlightColor
                     },
 
-                    eCustomGraphStat.SpeedRunning or eCustomGraphStat.SpeedJumping or eCustomGraphStat.JumpHeight or eCustomGraphStat.SpeedFlying => new GraphColors
+                    eCustomGraphStat.SpeedRunning or eCustomGraphStat.SpeedJumping or eCustomGraphStat.JumpHeight or eCustomGraphStat.SpeedFlying or eCustomGraphStat.Fly or eCustomGraphStat.MaxRunSpeed => new GraphColors
                     {
                         Base = Color.FromArgb(0, 140, 94),
                         Enhanced = Color.FromArgb(0, 192, 128),
@@ -1462,12 +1511,12 @@ namespace Mids_Reborn.Core
             /// </summary>
             /// <param name="stat">Statistic name</param>
             /// <returns>A GraphSettings struct for matching statistic</returns>
-            public static GraphSettings Get(eCustomGraphStat stat)
+            public static GraphSettings Get(eCustomGraphStat stat, bool extended = false)
             {
                 var statNames = new StatNames
                 {
-                    ShortName = Names.CustomStatNameShort(stat),
-                    LongName = Names.CustomStatNameLong(stat)
+                    ShortName = Names.CustomStatNameShort(stat, extended),
+                    LongName = Names.CustomStatNameLong(stat, extended)
                 };
 
                 var colors = Colors.GetTemplate(stat);
@@ -1476,7 +1525,7 @@ namespace Mids_Reborn.Core
                 {
                     eCustomGraphStat.EnhEndurance => new GraphSettings { ValueNames = statNames, Style = GraphStyle.EnhOnly, Appearance = colors, UnitType = StatUnitType.Percentage, Max = 250 },
                     eCustomGraphStat.EnhSpeedRunning or eCustomGraphStat.EnhSpeedJumping or eCustomGraphStat.EnhSpeedFlying or eCustomGraphStat.EnhJumpHeight => new GraphSettings { ValueNames = statNames, Style = GraphStyle.EnhOnly, Appearance = colors, UnitType = StatUnitType.Percentage, Max = 300 },
-                    
+
                     eCustomGraphStat.Defense => new GraphSettings { ValueNames = statNames, Style = GraphStyle.EnhOnly, Appearance = colors, UnitType = StatUnitType.Percentage, Max = 100 },
                     eCustomGraphStat.Resistance => new GraphSettings { ValueNames = statNames, Style = GraphStyle.ThreeStatsStacked, Appearance = colors, UnitType = StatUnitType.Percentage, Max = 100 },
                     eCustomGraphStat.Regeneration => new GraphSettings { ValueNames = statNames, Style = GraphStyle.ThreeStatsStacked, Appearance = colors, UnitType = StatUnitType.Custom, UnitSuffix = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage ? "%" : "HP/s", Max = MidsContext.Config.RegenFormat == ConfigData.RegenerationFormat.Percentage ? 2500 : 250 },

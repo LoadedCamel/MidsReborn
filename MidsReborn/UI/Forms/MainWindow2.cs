@@ -570,6 +570,11 @@ namespace Mids_Reborn.UI.Forms
             {
                 fAccolade.UpdateColorTheme(e);
             }
+
+            if (fBuffDebuff is { Visible: true })
+            {
+                fBuffDebuff.UpdateColorTheme(e);
+            }
         }
 
         private void ibModeEx_OnClick(object sender, EventArgs eventArgs)
@@ -2210,6 +2215,20 @@ namespace Mids_Reborn.UI.Forms
                 fGraphStats.Hide();
                 fGraphStats.Dispose();
                 fGraphStats = null;
+            }
+        }
+
+        internal void FloatBuffsDebuffs(bool show)
+        {
+            if (show)
+            {
+                if (fBuffDebuff == null)
+                {
+                    fBuffDebuff = new frmBuffDebuff();
+                }
+
+                fBuffDebuff.Show();
+                fBuffDebuff.Activate();
             }
         }
 
@@ -7108,6 +7127,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
             FloatTotals(true, MidsContext.Config is { UseOldTotalsWindow: true });
         }
 
+        private void tsViewBuffsDebuffs_Click(object sender, EventArgs e)
+        {
+            FloatBuffsDebuffs(true);
+        }
+
         private void txtName_TextChanged(object sender, EventArgs e)
         {
             if (NoUpdate)
@@ -8409,6 +8433,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         private frmData? fData;
         private frmCompare? fGraphCompare;
         private frmStats? fGraphStats;
+        private frmBuffDebuff fBuffDebuff;
         private bool FileModified { get; set; }
         private FrmIncarnate? fIncarnate;
         private frmPrestige? fPrestige;

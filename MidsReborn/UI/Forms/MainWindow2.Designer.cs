@@ -172,6 +172,7 @@ namespace Mids_Reborn.UI.Forms
             this.tsViewSetCompare = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewData = new System.Windows.Forms.ToolStripMenuItem();
             this.tsViewTotals = new System.Windows.Forms.ToolStripMenuItem();
+            this.tsViewBuffsDebuffs = new System.Windows.Forms.ToolStripMenuItem();
             this.ToolStripSeparator18 = new System.Windows.Forms.ToolStripSeparator();
             this.tsRecipeViewer = new System.Windows.Forms.ToolStripMenuItem();
             this.tsRotationHelper = new System.Windows.Forms.ToolStripMenuItem();
@@ -1480,6 +1481,7 @@ namespace Mids_Reborn.UI.Forms
                 this.tsViewSetCompare,
                 this.tsViewData,
                 this.tsViewTotals,
+                this.tsViewBuffsDebuffs,
                 this.ToolStripSeparator18,
                 this.tsRecipeViewer,
                 this.tsRotationHelper,
@@ -1533,6 +1535,13 @@ namespace Mids_Reborn.UI.Forms
             this.tsViewTotals.Size = new System.Drawing.Size(232, 22);
             this.tsViewTotals.Text = "Advanced &Totals";
             this.tsViewTotals.Click += new System.EventHandler(this.tsViewTotals_Click);
+            //
+            // tsViewBuffsDebuffs
+            //
+            this.tsViewBuffsDebuffs.Name = "tsViewBuffsDebuffs";
+            this.tsViewBuffsDebuffs.Size = new System.Drawing.Size(232, 22);
+            this.tsViewBuffsDebuffs.Text = "Buffs/Debuffs summary";
+            this.tsViewBuffsDebuffs.Click += new System.EventHandler(this.tsViewBuffsDebuffs_Click);
             // 
             // ToolStripSeparator18
             // 
@@ -2485,6 +2494,7 @@ namespace Mids_Reborn.UI.Forms
         ToolStripMenuItem tsViewSets;
         ToolStripMenuItem tsViewSlotLevels;
         ToolStripMenuItem tsViewTotals;
+        ToolStripMenuItem tsViewBuffsDebuffs;
         ToolStripMenuItem AdvancedToolStripMenuItem1;
         ToolStripMenuItem AutoArrangeAllSlotsToolStripMenuItem;
         ToolStripMenuItem tsRunSythlinDpsTool;

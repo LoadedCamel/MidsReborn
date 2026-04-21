@@ -26,7 +26,9 @@ namespace Mids_Reborn.UI.Forms
 
             public void SetAvailableStats(IEnumerable<CustomGraphStat.eCustomGraphStat>? stats)
             {
-                AvailableStats = stats?.ToArray() ?? [];
+                AvailableStats = stats?.Where(e =>
+                    e is not (CustomGraphStat.eCustomGraphStat.Fly or CustomGraphStat.eCustomGraphStat.MaxRunSpeed
+                        or CustomGraphStat.eCustomGraphStat.Recovery or CustomGraphStat.eCustomGraphStat.None)).ToArray() ?? [];
                 AvailableItems.ReplaceWith(AvailableStats.Select(s => new AvailableItem(s)), raiseReset: false);
             }
 
