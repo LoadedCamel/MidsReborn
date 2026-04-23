@@ -28,7 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            PowerEffectsPanel = new Mids_Reborn.UI.Controls.ScrollPanelEx();
+            PowerEffectsPanel = new System.Windows.Forms.Panel();
             BtnClose = new Mids_Reborn.UI.Controls.ImageButtonEx();
             cbBuffType = new System.Windows.Forms.ComboBox();
             cbGroup = new System.Windows.Forms.ComboBox();
@@ -45,7 +45,6 @@
             PowerEffectsPanel.Name = "PowerEffectsPanel";
             PowerEffectsPanel.Size = new System.Drawing.Size(485, 387);
             PowerEffectsPanel.TabIndex = 0;
-            PowerEffectsPanel.UseAlt = false;
             // 
             // BtnClose
             // 
@@ -156,7 +155,7 @@
 
         #endregion
 
-        private Controls.ScrollPanelEx PowerEffectsPanel;
+        private System.Windows.Forms.Panel PowerEffectsPanel;
         private Controls.ImageButtonEx BtnClose;
         private System.Windows.Forms.ComboBox cbBuffType;
         private System.Windows.Forms.ComboBox cbGroup;

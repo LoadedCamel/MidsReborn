@@ -62,8 +62,12 @@ public partial class frmBuffDebuff : Form
     private ValueGroupMode _valueGroupMode = ValueGroupMode.None;
     private GroupMode _groupMode = GroupMode.Power;
 
-    #region FxId struct
-    private struct FxId : IEquatable<FxId>
+    private const int PreLabelGap = 6;
+    private const int LabelGap = 24;
+    private const int GraphGap = 22;
+
+    #region FxId class
+    private class FxId : IEquatable<FxId>
     {
         public Enums.eEffectType EffectType;
         public Enums.eMez? MezType;
@@ -74,22 +78,214 @@ public partial class frmBuffDebuff : Form
         public Enums.eAspect? Aspect;
         public string? Label;
 
-        public bool Equals(FxId other)
+        public bool Equals(FxId? other)
         {
-            return EffectType == other.EffectType && MezType == other.MezType && DamageType == other.DamageType &&
+            return EffectType == other?.EffectType && MezType == other.MezType && DamageType == other.DamageType &&
                    ETModifies == other.ETModifies && BuffType == other.BuffType && MagType == other.MagType &&
                    Aspect == other.Aspect && Label == other.Label;
         }
 
-        public override bool Equals(object? obj)
+        // Get group from FxId
+        // Equality comparisons only on non-null fields from both ends
+        public EffectGroup GetEffectGroup(Dictionary<EffectGroup, FxId[]> buffs)
         {
-            return obj is FxId other && Equals(other);
+            foreach (var g in buffs)
+            {
+                if ((from k in g.Value
+                        where k.EffectType == EffectType
+                        where !((k.MezType != null) & (MezType != null) & (k.MezType != MezType)) // Nullable
+                        where !((k.DamageType != null) & (DamageType != null) & (k.DamageType != DamageType)) // Nullable
+                        where !((k.ETModifies != null) & (ETModifies != null) & (k.ETModifies != ETModifies)) // Nullable
+                        where k.BuffType == BuffType
+                        where !((k.MagType != null) & (MagType != null) & (k.MagType != MagType)) // Nullable
+                        select k).Any(k => !((k.Aspect != null) & (Aspect != null) & (k.Aspect != Aspect)))) // Nullable
+                {
+                    return g.Key;
+                }
+            }
+
+            return EffectGroup.Misc;
         }
 
-        public override int GetHashCode()
+        // Get label from FxId
+        public string GetEffectLabel(Dictionary<EffectGroup, FxId[]> buffs)
         {
-            return HashCode.Combine((int)EffectType, MezType, DamageType, ETModifies, (int)BuffType, MagType, Aspect, Label);
+            foreach (var g in buffs)
+            {
+                foreach (var k in g.Value)
+                {
+                    if (k.EffectType != EffectType)
+                    {
+                        continue;
+                    }
+
+                    if ((k.MezType != null) & (MezType != null) & (k.MezType != MezType))
+                    {
+                        continue;
+                    }
+
+                    if ((k.DamageType != null) & (DamageType != null) & (k.DamageType != DamageType))
+                    {
+                        continue;
+                    }
+
+                    if ((k.ETModifies != null) & (ETModifies != null) & (k.ETModifies != ETModifies))
+                    {
+                        continue;
+                    }
+
+                    if (k.BuffType != BuffType)
+                    {
+                        continue;
+                    }
+
+                    if ((k.MagType != null) & (MagType != null) & (k.MagType != MagType))
+                    {
+                        continue;
+                    }
+
+                    if ((k.Aspect != null) & (Aspect != null) & (k.Aspect != Aspect))
+                    {
+                        continue;
+                    }
+
+                    return k.Label ?? k.EffectType switch
+                    {
+                        Enums.eEffectType.Mez when k.MagType == frmBuffDebuff.MagType.Positive => $"Mez ({k.MezType})",
+                        Enums.eEffectType.Mez => $"Mez Protection ({k.MezType})",
+                        Enums.eEffectType.Enhancement when k is { ETModifies: Enums.eEffectType.Mez, MagType: frmBuffDebuff.MagType.Positive } => $"Mez Boost ({k.MezType})",
+                        Enums.eEffectType.Heal when k.MagType == frmBuffDebuff.MagType.Positive => "Heal",
+                        Enums.eEffectType.Absorb when k.MagType == frmBuffDebuff.MagType.Positive => "Absorb",
+                        Enums.eEffectType.HitPoints when k is { MagType: frmBuffDebuff.MagType.Positive, Aspect: Enums.eAspect.Max } => "+MaxHP",
+                        Enums.eEffectType.Enhancement when k is { ETModifies: Enums.eEffectType.Accuracy, MagType: frmBuffDebuff.MagType.Positive } => "+Accuracy",
+                        Enums.eEffectType.Enhancement when k.ETModifies == Enums.eEffectType.Accuracy => "-Accuracy",
+                        Enums.eEffectType.ResEffect => $"{(k.MagType == frmBuffDebuff.MagType.Positive ? "+" : "-")}Res({k.ETModifies})",
+
+                        Enums.eEffectType.Enhancement when k.MagType == frmBuffDebuff.MagType.Positive => $"+{k.EffectType} Boost",
+                        Enums.eEffectType.Enhancement => $"-{k.EffectType} Debuff",
+                        _ when k.MagType == frmBuffDebuff.MagType.Positive => $"+{k.EffectType}",
+                        _ => $"-{k.EffectType}"
+                    };
+                }
+            }
+
+            return EffectType.ToString();
         }
+
+        // Get stat unit suffix
+        public string GetStatUnit() =>
+            EffectType switch
+            {
+                Enums.eEffectType.Mez or Enums.eEffectType.Fly => "",
+                Enums.eEffectType.Endurance when Aspect is Enums.eAspect.Max or Enums.eAspect.Abs => "",
+                Enums.eEffectType.Heal when Aspect == Enums.eAspect.Abs => " HP",
+                Enums.eEffectType.Absorb when Aspect == Enums.eAspect.Abs => " HP",
+                Enums.eEffectType.HitPoints when Aspect == Enums.eAspect.Abs => " HP",
+                Enums.eEffectType.PerceptionRadius => " ft",
+                Enums.eEffectType.Recovery => " end/s",
+                _ => "%"
+            };
+
+        // Converts FxId stat to eCustomGraphStat
+        public CustomGraphStat.eCustomGraphStat GetGraphStat() =>
+            EffectType switch
+            {
+                Enums.eEffectType.Enhancement => ETModifies switch
+                {
+                    Enums.eEffectType.Accuracy => CustomGraphStat.eCustomGraphStat.EnhAccuracy,
+                    Enums.eEffectType.Endurance => CustomGraphStat.eCustomGraphStat.EnhEndurance,
+                    Enums.eEffectType.EnduranceDiscount => CustomGraphStat.eCustomGraphStat.EnhEnduranceDiscount,
+                    Enums.eEffectType.SpeedFlying => CustomGraphStat.eCustomGraphStat.EnhSpeedFlying,
+                    Enums.eEffectType.JumpHeight => CustomGraphStat.eCustomGraphStat.EnhJumpHeight,
+                    Enums.eEffectType.SpeedJumping => CustomGraphStat.eCustomGraphStat.EnhSpeedJumping,
+                    Enums.eEffectType.Mez => CustomGraphStat.eCustomGraphStat.EnhMez,
+                    Enums.eEffectType.PerceptionRadius => CustomGraphStat.eCustomGraphStat.EnhPerceptionRadius,
+                    Enums.eEffectType.SpeedRunning => CustomGraphStat.eCustomGraphStat.EnhSpeedRunning,
+                    Enums.eEffectType.ToHit => CustomGraphStat.eCustomGraphStat.EnhToHit,
+                    Enums.eEffectType.Absorb => CustomGraphStat.eCustomGraphStat.EnhAbsorb,
+                    Enums.eEffectType.RechargeTime => CustomGraphStat.eCustomGraphStat.Recharge,
+                    Enums.eEffectType.Range => CustomGraphStat.eCustomGraphStat.Range
+                },
+
+                Enums.eEffectType.Defense => CustomGraphStat.eCustomGraphStat.Defense,
+                Enums.eEffectType.Resistance => CustomGraphStat.eCustomGraphStat.Resistance,
+                Enums.eEffectType.Regeneration => CustomGraphStat.eCustomGraphStat.Regeneration,
+                Enums.eEffectType.HitPoints => CustomGraphStat.eCustomGraphStat.MaxHP,
+                Enums.eEffectType.Heal => CustomGraphStat.eCustomGraphStat.Heal,
+                Enums.eEffectType.Absorb => CustomGraphStat.eCustomGraphStat.Absorb,
+                Enums.eEffectType.Endurance => CustomGraphStat.eCustomGraphStat.MaxEnd,
+                Enums.eEffectType.SpeedRunning => CustomGraphStat.eCustomGraphStat.SpeedRunning,
+                Enums.eEffectType.SpeedJumping => CustomGraphStat.eCustomGraphStat.SpeedJumping,
+                Enums.eEffectType.JumpHeight => CustomGraphStat.eCustomGraphStat.JumpHeight,
+                Enums.eEffectType.SpeedFlying => CustomGraphStat.eCustomGraphStat.SpeedFlying,
+                Enums.eEffectType.PerceptionRadius => CustomGraphStat.eCustomGraphStat.PerceptionRadius,
+                Enums.eEffectType.ToHit => CustomGraphStat.eCustomGraphStat.ToHit,
+                Enums.eEffectType.Accuracy => CustomGraphStat.eCustomGraphStat.Accuracy,
+                Enums.eEffectType.DamageBuff => CustomGraphStat.eCustomGraphStat.Damage,
+                Enums.eEffectType.EnduranceDiscount => CustomGraphStat.eCustomGraphStat.EndRdx,
+                Enums.eEffectType.Mez => CustomGraphStat.eCustomGraphStat.StatusProtection,
+                Enums.eEffectType.MezResist => CustomGraphStat.eCustomGraphStat.StatusResistance,
+                Enums.eEffectType.ResEffect => CustomGraphStat.eCustomGraphStat.DebuffResistance,
+                Enums.eEffectType.Elusivity => CustomGraphStat.eCustomGraphStat.Elusivity,
+
+                Enums.eEffectType.Fly => CustomGraphStat.eCustomGraphStat.Fly,
+                Enums.eEffectType.MaxRunSpeed => CustomGraphStat.eCustomGraphStat.MaxRunSpeed,
+                Enums.eEffectType.Recovery => CustomGraphStat.eCustomGraphStat.Recovery,
+
+                _ => CustomGraphStat.eCustomGraphStat.None // Neutral key
+            };
+
+        // Create FxId from IEffect
+        public static FxId CreateFxIdFromEffect(IEffect fx, Dictionary<EffectGroup, FxId[]> buffs)
+        {
+            var template = new FxId
+            {
+                EffectType = fx.EffectType,
+                MezType = fx.MezType == Enums.eMez.None ? null : fx.MezType,
+                DamageType = null, // None for everything
+                ETModifies = fx.ETModifies == Enums.eEffectType.None ? null : fx.ETModifies,
+                Aspect = fx.Aspect,
+                BuffType = GetBuffType(fx, buffs),
+                MagType = fx.BuffedMag >= 0 ? frmBuffDebuff.MagType.Positive : frmBuffDebuff.MagType.Negative
+            };
+
+            template.Label = template.GetEffectLabel(buffs);
+
+            return template;
+        }
+
+        // Get Buff/Debuff type from IEffect
+        private static EffectBuffType GetBuffType(IEffect fx, Dictionary<EffectGroup, FxId[]> buffs) =>
+            (from k in buffs
+             from id in k.Value
+             let effectType = fx.EffectType
+             let mezType = (Enums.eMez?)(fx.MezType == Enums.eMez.None ? null : fx.MezType)
+             let etModifies = (Enums.eEffectType?)(fx.ETModifies == Enums.eEffectType.None ? null : fx.ETModifies)
+             let aspect = (Enums.eAspect?)(fx.Aspect == Enums.eAspect.Max ? fx.Aspect : null)
+             let magType = fx.BuffedMag >= 0 ? frmBuffDebuff.MagType.Positive : frmBuffDebuff.MagType.Negative
+             where id.EffectType == effectType && id.MezType == mezType && id.ETModifies == etModifies &&
+                   id.Aspect == aspect && id.MagType == magType
+             select id.BuffType).FirstOrDefault();
+
+        // Get FxId label from Effect
+        // Possibly flawed and inaccurate
+        public static string GetFxIdLabelFromEffect(IEffect fx) =>
+            fx.EffectType switch
+            {
+                Enums.eEffectType.Mez when fx.BuffedMag >= 0 => "Mez",
+                Enums.eEffectType.Mez => "Mez Protection",
+                Enums.eEffectType.Enhancement when fx is { ETModifies: Enums.eEffectType.Mez, BuffedMag: > 0 } => "Mez Boost",
+                Enums.eEffectType.Heal when fx.BuffedMag >= 0 => "Heal",
+                Enums.eEffectType.Absorb when fx.BuffedMag >= 0 => "Absorb",
+                Enums.eEffectType.HitPoints when fx is { BuffedMag: >= 0, Aspect: Enums.eAspect.Max } => "+MaxHP",
+                Enums.eEffectType.Enhancement when fx is { ETModifies: Enums.eEffectType.Accuracy, BuffedMag: >= 0 } => "+Accuracy",
+                Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Accuracy => "-Accuracy",
+
+                Enums.eEffectType.Enhancement when fx.BuffedMag >= 0 => $"+{fx.EffectType} Boost",
+                Enums.eEffectType.Enhancement => $"-{fx.EffectType} Debuff",
+                _ when fx.BuffedMag >= 0 => $"+{fx.EffectType}",
+                _ => $"-{fx.EffectType}"
+            };
     }
     #endregion
 
@@ -349,7 +545,16 @@ public partial class frmBuffDebuff : Form
                     EffectType = Enums.eEffectType.Enhancement,
                     ETModifies = Enums.eEffectType.Range,
                     MagType = MagType.Positive,
-                    BuffType = EffectBuffType.Buff
+                    BuffType = EffectBuffType.Buff,
+                    Label = "+Range"
+                },
+                new()
+                {
+                    EffectType = Enums.eEffectType.Enhancement,
+                    ETModifies = Enums.eEffectType.Range,
+                    MagType = MagType.Negative,
+                    BuffType = EffectBuffType.Debuff,
+                    Label = "-Range"
                 }
             ]
         }
@@ -390,7 +595,7 @@ public partial class frmBuffDebuff : Form
         {
             if (g is CtlMultiGraph graph)
             {
-                graph.Refresh();
+                graph.Draw();
             }
         }
     }
@@ -424,9 +629,10 @@ public partial class frmBuffDebuff : Form
                     GroupedFx.AssembleGroupedEffects(enhPowers[e.Key]))))
             .Select(e => new KeyValuePair<int, List<KeyValuePair<FxId, GroupedFx>>>(e.Key,
                 e.Value.Value.Select(f =>
-                        new KeyValuePair<FxId, GroupedFx>(CreateFxIdFromEffect(f.GetEffectAt(enhPowers[e.Key])), f))
+                        new KeyValuePair<FxId, GroupedFx>(FxId.CreateFxIdFromEffect(f.GetEffectAt(enhPowers[e.Key]), Buffs), f))
+                    .Where(g => g.Key.GetGraphStat() != CustomGraphStat.eCustomGraphStat.None )
                     .Where(g => buffType == null || g.Key.BuffType == buffType)
-                    .Where(g => group == null || GetEffectGroup(g.Key) == group)
+                    .Where(g => group == null || g.Key.GetEffectGroup(Buffs) == group)
                     .Where(g => includeEnhFx | !g.Value.EnhancementEffect)
                     .ToList()))
             .ToList();
@@ -451,13 +657,18 @@ public partial class frmBuffDebuff : Form
             case GroupMode.Power:
                 foreach (var p in powerEffects)
                 {
+                    if (labelIndex > 1)
+                    {
+                        y += PreLabelGap;
+                    }
+
                     var lst = new List<Control>();
                     var lbl = new Label
                     {
                         AutoSize = true,
                         BackColor = Color.Transparent,
                         Font = new Font("Segoe UI", 11f, FontStyle.Bold),
-                        ForeColor = Color.Gainsboro,
+                        ForeColor = Color.Goldenrod,
                         Location = new Point(16, y),
                         Name = $"label{labelIndex}",
                         Text = @$"{enhPowers[p.Key].DisplayName}"
@@ -466,30 +677,34 @@ public partial class frmBuffDebuff : Form
                     lst.Add(lbl);
 
                     labelIndex++;
-                    y += 20;
+                    y += LabelGap;
 
                     foreach (var gre in p.Value)
                     {
-                        var stat = GetGraphStat(gre.Key);
+                        var stat = gre.Key.GetGraphStat();
                         var fxRef = gre.Value.GetEffectAt(enhPowers[p.Key]);
 
                         var graph = CustomGraphStat.GenerateGraph(stat, CustomGraphStat.eCustomGraphMode.Single, false, $"graph{graphIndex}");
                         graph.Location = new Point(4, y);
                         graph.Size = new Size(450, 20);
+
+                        var unit = gre.Key.GetStatUnit();
+                        var multiplier = unit.Contains('%') ? 100f : 1f;
                         var val = valueDisplayMode switch
                         {
                             ValueDisplayMode.Duration => fxRef.Duration,
                             ValueDisplayMode.ValuePerEnd => fxRef.BuffedMag / (enhPowers[p.Key].EndCost < float.Epsilon ? 1 : enhPowers[p.Key].EndCost),
                             ValueDisplayMode.ValuePerRecharge => fxRef.BuffedMag / (enhPowers[p.Key].RechargeTime < float.Epsilon ? 1 : enhPowers[p.Key].RechargeTime),
                             ValueDisplayMode.ValuePerRechargeEnd => fxRef.BuffedMag / (enhPowers[p.Key].EndCost < float.Epsilon ? 1 : enhPowers[p.Key].EndCost) / (enhPowers[p.Key].RechargeTime < float.Epsilon ? 1 : enhPowers[p.Key].RechargeTime),
-                            _ => fxRef.BuffedMag,
+                            _ => fxRef.BuffedMag * multiplier
                         };
-                        graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[p.Key].RechargeTime, enhPowers[p.Key].EndCost, enhPowers[p.Key].DisplayName, GetStatUnit(gre.Key));
+                        
+                        graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[p.Key].RechargeTime, enhPowers[p.Key].EndCost, enhPowers[p.Key].DisplayName, gre.Key.GetStatUnit());
 
                         lst.Add(graph);
 
                         graphIndex++;
-                        y += 22;
+                        y += GraphGap;
                     }
 
                     ret.Add(lst);
@@ -499,13 +714,18 @@ public partial class frmBuffDebuff : Form
             case GroupMode.Stat:
                 foreach (var s in statEffects)
                 {
+                    if (labelIndex > 1)
+                    {
+                        y += PreLabelGap;
+                    }
+
                     var lst = new List<Control>();
                     var lbl = new Label
                     {
                         AutoSize = true,
                         BackColor = Color.Transparent,
                         Font = new Font("Segoe UI", 11f, FontStyle.Bold),
-                        ForeColor = Color.Gainsboro,
+                        ForeColor = Color.Goldenrod,
                         Location = new Point(16, y),
                         Name = $"label{labelIndex}",
                         Text = @$"{s.Key.Label}"
@@ -514,32 +734,35 @@ public partial class frmBuffDebuff : Form
                     lst.Add(lbl);
 
                     labelIndex++;
-                    y += 20;
+                    y += LabelGap;
 
                     foreach (var g in s.Value)
                     {
                         foreach (var gre in g.Value)
                         {
-                            var stat = GetGraphStat(gre.Key);
+                            var stat = gre.Key.GetGraphStat();
                             var fxRef = gre.Value.GetEffectAt(enhPowers[g.Key]);
 
                             var graph = CustomGraphStat.GenerateGraph(stat, CustomGraphStat.eCustomGraphMode.Single, false);
                             graph.Location = new Point(4, y);
                             graph.Size = new Size(450, 20);
+
+                            var unit = gre.Key.GetStatUnit();
+                            var multiplier = unit.Contains('%') ? 100f : 1f;
                             var val = valueDisplayMode switch
                             {
                                 ValueDisplayMode.Duration => fxRef.Duration,
                                 ValueDisplayMode.ValuePerEnd => fxRef.BuffedMag / (enhPowers[g.Key].EndCost < float.Epsilon ? 1 : enhPowers[g.Key].EndCost),
                                 ValueDisplayMode.ValuePerRecharge => fxRef.BuffedMag / (enhPowers[g.Key].RechargeTime < float.Epsilon ? 1 : enhPowers[g.Key].RechargeTime),
                                 ValueDisplayMode.ValuePerRechargeEnd => fxRef.BuffedMag / (enhPowers[g.Key].EndCost < float.Epsilon ? 1 : enhPowers[g.Key].EndCost) / (enhPowers[g.Key].RechargeTime < float.Epsilon ? 1 : enhPowers[g.Key].RechargeTime),
-                                _ => fxRef.BuffedMag,
+                                _ => fxRef.BuffedMag * multiplier
                             };
-                            graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, fxRef.BuffedMag, fxRef.Duration, enhPowers[g.Key].RechargeTime, enhPowers[g.Key].EndCost, enhPowers[g.Key].DisplayName, GetStatUnit(gre.Key));
+                            graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[g.Key].RechargeTime, enhPowers[g.Key].EndCost, enhPowers[g.Key].DisplayName, gre.Key.GetStatUnit());
 
                             lst.Add(graph);
 
                             graphIndex++;
-                            y += 22;
+                            y += GraphGap;
                         }
                     }
 
@@ -552,202 +775,7 @@ public partial class frmBuffDebuff : Form
         return ret;
     }
 
-    // Get group from FxId
-    // Equality comparisons only on non-null fields from both ends
-    private EffectGroup GetEffectGroup(FxId fxId)
-    {
-        foreach (var g in Buffs)
-        {
-            if ((from k in g.Value
-                 where k.EffectType == fxId.EffectType
-                 where !((k.MezType != null) & (fxId.MezType != null) & (k.MezType != fxId.MezType)) // Nullable
-                 where !((k.DamageType != null) & (fxId.DamageType != null) & (k.DamageType != fxId.DamageType)) // Nullable
-                 where !((k.ETModifies != null) & (fxId.ETModifies != null) & (k.ETModifies != fxId.ETModifies)) // Nullable
-                 where k.BuffType == fxId.BuffType
-                 where !((k.MagType != null) & (fxId.MagType != null) & (k.MagType != fxId.MagType)) // Nullable
-                 select k).Any(k => !((k.Aspect != null) & (fxId.Aspect != null) & (k.Aspect != fxId.Aspect)))) // Nullable
-            {
-                return g.Key;
-            }
-        }
-
-        return EffectGroup.Misc;
-    }
-
-    // Get label from FxId
-    private string GetEffectLabel(FxId fxId)
-    {
-        foreach (var g in Buffs)
-        {
-            foreach (var k in g.Value)
-            {
-                if (k.EffectType != fxId.EffectType)
-                {
-                    continue;
-                }
-
-                if ((k.MezType != null) & (fxId.MezType != null) & (k.MezType != fxId.MezType))
-                {
-                    continue;
-                }
-
-                if ((k.DamageType != null) & (fxId.DamageType != null) & (k.DamageType != fxId.DamageType))
-                {
-                    continue;
-                }
-
-                if ((k.ETModifies != null) & (fxId.ETModifies != null) & (k.ETModifies != fxId.ETModifies))
-                {
-                    continue;
-                }
-
-                if (k.BuffType != fxId.BuffType)
-                {
-                    continue;
-                }
-
-                if ((k.MagType != null) & (fxId.MagType != null) & (k.MagType != fxId.MagType))
-                {
-                    continue;
-                }
-
-                if ((k.Aspect != null) & (fxId.Aspect != null) & (k.Aspect != fxId.Aspect))
-                {
-                    continue;
-                }
-
-                return k.Label ?? k.EffectType switch
-                {
-                    Enums.eEffectType.Mez when k.MagType == MagType.Positive => "Mez",
-                    Enums.eEffectType.Mez => "Mez Protection",
-                    Enums.eEffectType.Enhancement when k is { ETModifies: Enums.eEffectType.Mez, MagType: MagType.Positive } => "Mez Boost",
-                    Enums.eEffectType.Heal when k.MagType == MagType.Positive => "Heal",
-                    Enums.eEffectType.Absorb when k.MagType == MagType.Positive => "Absorb",
-                    Enums.eEffectType.HitPoints when k is { MagType: MagType.Positive, Aspect: Enums.eAspect.Max } => "+MaxHP",
-                    Enums.eEffectType.Enhancement when k is { ETModifies: Enums.eEffectType.Accuracy, MagType: MagType.Positive } => "+Accuracy",
-                    Enums.eEffectType.Enhancement when k.ETModifies == Enums.eEffectType.Accuracy => "-Accuracy",
-
-                    Enums.eEffectType.Enhancement when k.MagType == MagType.Positive => $"+{k.EffectType} Boost",
-                    Enums.eEffectType.Enhancement => $"-{k.EffectType} Debuff",
-                    _ when k.MagType == MagType.Positive => $"+{k.EffectType}",
-                    _ => $"-{k.EffectType}"
-                };
-            }
-        }
-
-        return fxId.EffectType.ToString();
-    }
-
-    // Get stat unit suffix
-    private static string GetStatUnit(FxId fxId, bool separator = false) =>
-        fxId.EffectType switch
-        {
-            Enums.eEffectType.Mez or Enums.eEffectType.Fly => "",
-            Enums.eEffectType.Endurance when fxId.Aspect is Enums.eAspect.Max or Enums.eAspect.Abs => "",
-            Enums.eEffectType.Absorb when fxId.Aspect is Enums.eAspect.Abs => $"{(separator ? " " : "")}HP",
-            Enums.eEffectType.HitPoints when fxId.Aspect == Enums.eAspect.Abs => $"{(separator ? " " : "")}HP",
-            Enums.eEffectType.PerceptionRadius => $"{(separator ? " " : "")}ft",
-            Enums.eEffectType.Recovery => $"{(separator ? " " : "")}end/s",
-            _ => $"{(separator ? " " : "")}%"
-        };
-
-    // Converts FxId stat to eCustomGraphStat
-    private static CustomGraphStat.eCustomGraphStat GetGraphStat(FxId fxId) =>
-        fxId.EffectType switch
-        {
-            Enums.eEffectType.Enhancement => fxId.ETModifies switch
-            {
-                Enums.eEffectType.Accuracy => CustomGraphStat.eCustomGraphStat.EnhAccuracy,
-                Enums.eEffectType.Endurance => CustomGraphStat.eCustomGraphStat.EnhEndurance,
-                Enums.eEffectType.EnduranceDiscount => CustomGraphStat.eCustomGraphStat.EnhEnduranceDiscount,
-                Enums.eEffectType.SpeedFlying => CustomGraphStat.eCustomGraphStat.EnhSpeedFlying,
-                Enums.eEffectType.JumpHeight => CustomGraphStat.eCustomGraphStat.EnhJumpHeight,
-                Enums.eEffectType.SpeedJumping => CustomGraphStat.eCustomGraphStat.EnhSpeedJumping,
-                Enums.eEffectType.Mez => CustomGraphStat.eCustomGraphStat.EnhMez,
-                Enums.eEffectType.PerceptionRadius => CustomGraphStat.eCustomGraphStat.EnhPerceptionRadius,
-                Enums.eEffectType.SpeedRunning => CustomGraphStat.eCustomGraphStat.EnhSpeedRunning,
-                Enums.eEffectType.ToHit => CustomGraphStat.eCustomGraphStat.EnhToHit,
-                Enums.eEffectType.Absorb => CustomGraphStat.eCustomGraphStat.EnhAbsorb,
-                Enums.eEffectType.RechargeTime => CustomGraphStat.eCustomGraphStat.Recharge,
-                Enums.eEffectType.Range => CustomGraphStat.eCustomGraphStat.Range
-            },
-
-            Enums.eEffectType.Defense => CustomGraphStat.eCustomGraphStat.Defense,
-            Enums.eEffectType.Resistance => CustomGraphStat.eCustomGraphStat.Resistance,
-            Enums.eEffectType.Regeneration => CustomGraphStat.eCustomGraphStat.Regeneration,
-            Enums.eEffectType.HitPoints => CustomGraphStat.eCustomGraphStat.MaxHP,
-            Enums.eEffectType.Absorb => CustomGraphStat.eCustomGraphStat.Absorb,
-            Enums.eEffectType.Endurance => CustomGraphStat.eCustomGraphStat.MaxEnd,
-            Enums.eEffectType.SpeedRunning => CustomGraphStat.eCustomGraphStat.SpeedRunning,
-            Enums.eEffectType.SpeedJumping => CustomGraphStat.eCustomGraphStat.SpeedJumping,
-            Enums.eEffectType.JumpHeight => CustomGraphStat.eCustomGraphStat.JumpHeight,
-            Enums.eEffectType.SpeedFlying => CustomGraphStat.eCustomGraphStat.SpeedFlying,
-            Enums.eEffectType.PerceptionRadius => CustomGraphStat.eCustomGraphStat.PerceptionRadius,
-            Enums.eEffectType.ToHit => CustomGraphStat.eCustomGraphStat.ToHit,
-            Enums.eEffectType.Accuracy => CustomGraphStat.eCustomGraphStat.Accuracy,
-            Enums.eEffectType.DamageBuff => CustomGraphStat.eCustomGraphStat.Damage,
-            Enums.eEffectType.EnduranceDiscount => CustomGraphStat.eCustomGraphStat.EndRdx,
-            Enums.eEffectType.Mez => CustomGraphStat.eCustomGraphStat.StatusProtection,
-            Enums.eEffectType.MezResist => CustomGraphStat.eCustomGraphStat.StatusResistance,
-            Enums.eEffectType.ResEffect => CustomGraphStat.eCustomGraphStat.DebuffResistance,
-            Enums.eEffectType.Elusivity => CustomGraphStat.eCustomGraphStat.Elusivity,
-
-            Enums.eEffectType.Fly => CustomGraphStat.eCustomGraphStat.Fly,
-            Enums.eEffectType.MaxRunSpeed => CustomGraphStat.eCustomGraphStat.MaxRunSpeed,
-            Enums.eEffectType.Recovery => CustomGraphStat.eCustomGraphStat.Recovery,
-
-            _ => CustomGraphStat.eCustomGraphStat.None // Neutral key
-        };
-
-    // Create FxId from IEffect
-    private FxId CreateFxIdFromEffect(IEffect fx)
-    {
-        var template = new FxId
-        {
-            EffectType = fx.EffectType,
-            MezType = fx.MezType == Enums.eMez.None ? null : fx.MezType,
-            DamageType = null, // None for everything
-            ETModifies = fx.ETModifies == Enums.eEffectType.None ? null : fx.ETModifies,
-            Aspect = fx.Aspect,
-            BuffType = GetBuffType(fx),
-            MagType = fx.BuffedMag >= 0 ? MagType.Positive : MagType.Negative
-        };
-
-        return template with { Label = GetEffectLabel(template) };
-    }
-
-    // Get Buff/Debuff type from IEffect
-    private EffectBuffType GetBuffType(IEffect fx) =>
-        (from k in Buffs
-         from id in k.Value
-         let effectType = fx.EffectType
-         let mezType = (Enums.eMez?)(fx.MezType == Enums.eMez.None ? null : fx.MezType)
-         let etModifies = (Enums.eEffectType?)(fx.ETModifies == Enums.eEffectType.None ? null : fx.ETModifies)
-         let aspect = (Enums.eAspect?)(fx.Aspect == Enums.eAspect.Max ? fx.Aspect : null)
-         let magType = fx.BuffedMag >= 0 ? MagType.Positive : MagType.Negative
-         where id.EffectType == effectType && id.MezType == mezType && id.ETModifies == etModifies &&
-               id.Aspect == aspect && id.MagType == magType
-         select id.BuffType).FirstOrDefault();
-
-    // Get FxId label from Effect
-    // Possibly flawed and inaccurate
-    private static string GetFxIdLabelFromEffect(IEffect fx) =>
-        fx.EffectType switch
-        {
-            Enums.eEffectType.Mez when fx.BuffedMag >= 0 => "Mez",
-            Enums.eEffectType.Mez => "Mez Protection",
-            Enums.eEffectType.Enhancement when fx is { ETModifies: Enums.eEffectType.Mez, BuffedMag: > 0 } => "Mez Boost",
-            Enums.eEffectType.Heal when fx.BuffedMag >= 0 => "Heal",
-            Enums.eEffectType.Absorb when fx.BuffedMag >= 0 => "Absorb",
-            Enums.eEffectType.HitPoints when fx is { BuffedMag: >= 0, Aspect: Enums.eAspect.Max } => "+MaxHP",
-            Enums.eEffectType.Enhancement when fx is { ETModifies: Enums.eEffectType.Accuracy, BuffedMag: >= 0 } => "+Accuracy",
-            Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Accuracy => "-Accuracy",
-
-            Enums.eEffectType.Enhancement when fx.BuffedMag >= 0 => $"+{fx.EffectType} Boost",
-            Enums.eEffectType.Enhancement => $"-{fx.EffectType} Debuff",
-            _ when fx.BuffedMag >= 0 => $"+{fx.EffectType}",
-            _ => $"-{fx.EffectType}"
-        };
+    
 
     public void UpdateColorTheme(Enums.Alignment e)
     {

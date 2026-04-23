@@ -4,12 +4,37 @@ using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
+using System.Text;
 using Mids_Reborn.UI.Forms.WindowMenuItems;
 
 namespace Mids_Reborn.Core
 {
     public static class CustomGraphStat
     {
+        public static readonly int[] Scales =
+        [
+            1,
+            2,
+            3,
+            5,
+            10,
+            25,
+            50,
+            75,
+            100,
+            150,
+            225,
+            300,
+            450,
+            600,
+            900,
+            1200,
+            2400,
+            3000,
+            3600,
+            4000
+        ];
+
         public enum eCustomGraphStat
         {
             EnhAccuracy,
@@ -202,17 +227,45 @@ namespace Mids_Reborn.Core
         public static void SetGraphItemManual(this CtlMultiGraph ctl, eCustomGraphStat stat, eCustomGraphMode mode, frmBuffDebuff.ValueDisplayMode displayMode, float val, float duration, float rechargeTime, float endCost, string powerName, string unitSuffix = "", string labelOverride = "")
         {
             var longName = string.IsNullOrWhiteSpace(labelOverride)
-                ? Names.CustomStatNameLong(stat)
+                ? Names.CustomStatNameLong(stat, true)
                 : labelOverride;
 
+            ctl.ForcedMax = 0;
+
+            if (val >= Scales[^1])
+            {
+                ctl.Max = Scales[^1];
+                
+            }
+            else if (val <= Scales[0])
+            {
+                ctl.Max = Scales[0];
+            }
+            else
+            {
+                for (var i = Scales.Length - 1; i > 0; i--)
+                {
+                    if (val > Scales[i])
+                    {
+                        continue;
+                    }
+
+                    ctl.Max = Scales[i];
+                    ctl.ForcedMax = Scales[i];
+
+                    break;
+                }
+            }
+
             ctl.SuspendLayout();
+            ctl.BarsAlignment = val < 0 ? CtlMultiGraph.BarAlignment.Right : CtlMultiGraph.BarAlignment.Left;
             ctl.Clear();
 
             ctl.AddItemPair(longName,
                 $"{val:####0.##}{unitSuffix}",
                 0,
                 val,
-                BuffDataTooltip3(val, duration, rechargeTime, endCost, powerName, longName, displayMode)
+                BuffDataTooltip3(val, duration, rechargeTime, endCost, powerName, longName, displayMode, unitSuffix)
             );
 
             ctl.ResumeLayout(true);
@@ -930,14 +983,30 @@ namespace Mids_Reborn.Core
         public static string BuffDataTooltip3(float value, float duration, float rechargeTime, float endCost, string powerName, string statName, frmBuffDebuff.ValueDisplayMode displayMode, string unitSuffix = "%", bool plusSignEnabled = false)
         {
             var activationsPerMin = rechargeTime < float.Epsilon ? 1 : rechargeTime / 60f;
-            if (duration < float.Epsilon)
+
+            var baseTip = $"{(plusSignEnabled && value > 0 ? "+" : "")}{value:####0.##}{unitSuffix} {statName}";
+            var appliesDurationStr = duration < float.Epsilon
+                ? statName == "Heal"
+                    ? ""
+                    : "Applies indefinitely"
+                : rechargeTime > 0
+                    ? duration >= rechargeTime
+                        ? $"Applies permanently on same target (duration ({duration:####0.##}s) >= recharge ({rechargeTime:####0.##}s)"
+                        : $"Applies for {duration:####0.##}s, every {rechargeTime:####0.##}s), from {endCost:##0.##} endurance{(activationsPerMin >= 1 ? $" (roughly {activationsPerMin:###0.#} activation{(activationsPerMin < 2 ? "s" : "")}/min)" : "")}"
+                    : "Can be applied permanently (no recharge)";
+            var powerSource = $"From {powerName}";
+
+            var sb = new StringBuilder();
+            sb.AppendLine(baseTip);
+            if (!string.IsNullOrWhiteSpace(appliesDurationStr))
             {
-                duration = float.MaxValue;
+                sb.AppendLine(appliesDurationStr);
             }
 
-            return $"{(plusSignEnabled && value > 0 ? "+" : "")}{value:####0.##}{unitSuffix} {statName}"
-                   + $"\r\nApplies {(Math.Abs(duration - float.MaxValue) < float.Epsilon ? "indefinitely" : duration >= rechargeTime ? $"permanently on same target (duration ({duration:####0.##}s) >= recharge ({rechargeTime:####0.##}s)" : $"for {duration:####0.##}s, every {rechargeTime:####0.##}s")}, from {endCost:##0.##} endurance{(activationsPerMin >= 1 ? $" (roughly {activationsPerMin:###0.#} activations/min)" : "")}"
-                   + $"\r\n\r\nFrom: {powerName}";
+            sb.AppendLine("");
+            sb.AppendLine(powerSource);
+
+            return sb.ToString();
         }
 
         public static class Names
