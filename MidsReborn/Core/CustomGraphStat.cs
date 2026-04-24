@@ -234,7 +234,12 @@ namespace Mids_Reborn.Core
                 .FirstOrDefault();
         }
 
-        public static void SetGraphItemManual(this CtlMultiGraph ctl, eCustomGraphStat stat, eCustomGraphMode mode, frmBuffDebuff.ValueDisplayMode displayMode, float val, float duration, float rechargeTime, float endCost, string powerName, string unitSuffix = "", string labelOverride = "")
+        public static int FindScaleIndex(int vMax) => Math.Max(0, Scales.TryFindIndex(e => e == vMax));
+        public static int FindScaleIndex(float vMax) => Math.Max(0, Scales.TryFindIndex(e => Math.Abs(e - vMax) < float.Epsilon));
+
+        public static void SetGraphItemManual(this CtlMultiGraph ctl, eCustomGraphStat stat, eCustomGraphMode mode,
+            frmBuffDebuff.ValueDisplayMode displayMode, float val, float duration, float rechargeTime, float endCost,
+            string powerName, float maxValueOverride = -1, string unitSuffix = "", string labelOverride = "")
         {
             var longName = string.IsNullOrWhiteSpace(labelOverride)
                 ? Names.CustomStatNameLong(stat, true)
@@ -244,9 +249,17 @@ namespace Mids_Reborn.Core
 
             ctl.ForcedMax = 0;
 
-            var vMax = FindScale(val);
-            ctl.ScaleIndex = vMax.Key;
-            ctl.Max = vMax.Value;
+            if (maxValueOverride < 0)
+            {
+                var vMax = FindScale(val);
+                ctl.ScaleIndex = vMax.Key;
+                ctl.Max = vMax.Value;
+            }
+            else
+            {
+                ctl.ScaleIndex = FindScaleIndex(maxValueOverride);
+                ctl.Max = maxValueOverride;
+            }
 
             ctl.BarsAlignment = val < 0 ? CtlMultiGraph.BarAlignment.Right : CtlMultiGraph.BarAlignment.Left;
             ctl.PaddingX = 2; // frmTotalsV2: 4
@@ -258,7 +271,9 @@ namespace Mids_Reborn.Core
                 $"{val:####0.##}{unitSuffix}",
                 0,
                 val,
-                BuffDataTooltip3(val, duration, rechargeTime, endCost, $"{powerName}\r\n\r\nValue: {val}\r\nMax: {ctl.Max} | Scale index: {ctl.ScaleIndex} | (Scales max: {Scales.Max()} | Alignment: {ctl.BarsAlignment}", longName, displayMode, unitSuffix)
+                BuffDataTooltip3(val, duration, rechargeTime, endCost,
+                    $"{powerName}\r\n\r\nValue: {val}\r\nMax: {ctl.Max} | Scale index: {ctl.ScaleIndex} | Alignment: {ctl.BarsAlignment}",
+                    longName, displayMode, unitSuffix)
             );
 
             ctl.ResumeLayout(true);

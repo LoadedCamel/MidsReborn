@@ -576,13 +576,13 @@ public partial class frmBuffDebuff : Form
         cbValueGroupMode.SelectedIndex = 0;
         cbValueGroupMode2.SelectedIndex = 0;
 
-        UpdateEffectsData();
+        UpdateData();
 
         _loading = false;
     }
 
     // Performs layout updates for effects data (Multiple Label + CtlMultiGraph)
-    private void UpdateEffectsData()
+    public void UpdateData()
     {
         var ctlList = GetValues(_effectBuffType, _effectGroup, _valueDisplayMode, _valueGroupMode, _groupMode);
         PowerEffectsPanel.SuspendLayout();
@@ -638,6 +638,7 @@ public partial class frmBuffDebuff : Form
                     .ToList()))
             .ToList();
 
+        // Unique FxId keys
         var fxIdList = powerEffects.SelectMany(e => e.Value.Select(f => f.Key))
             .Distinct()
             .ToArray();
@@ -649,13 +650,27 @@ public partial class frmBuffDebuff : Form
                     f.Value.Where(g => g.Key.Equals(e)).ToList())).ToList());
 
         // Max by stat (absolute values)
-        var statMax = statEffects
-            .ToDictionary(e => e.Key, e => e.Value.Select(f => new KeyValuePair<int, List<KeyValuePair<FxId, GroupedFx>>>(f.Key, f.Value.Where(g => Math.Abs(g.Value.GetEffectAt(enhPowers[f.Key]).BuffedMag) < CustomGraphStat.Scales[^1]).ToList())).ToList())
-            .ToDictionary(e => e.Key, e => e.Value.Select(f => f.Value.Select(g => Math.Abs(g.Value.GetEffectAt(enhPowers[f.Key]).BuffedMag * (g.Key.GetStatUnit().Contains('%') ? 100f : 1f))).Max()).Max());
+        var statMax = new Dictionary<FxId, float>();
+        foreach (var s in statEffects)
+        {
+            var items = s.Value.SelectMany(e => e.Value.Select(f =>
+                    f.Value.GetEffectAt(enhPowers[e.Key]).BuffedMag * (f.Key.GetStatUnit().Contains('%') ? 100f : 1f)))
+                .ToList();
+
+            // Consider very large values as outliers and ignore them,
+            // if smaller values are present
+            if (items.Any(e => e < CustomGraphStat.Scales[^1]))
+            {
+                items = items
+                    .Where(e => e < CustomGraphStat.Scales[^1])
+                    .ToList();
+            }
+
+            statMax.Add(s.Key, items.Max());
+        }
 
         // Max/scale by stat
-        var statScales = statMax
-            .ToDictionary(e => e.Key, e => CustomGraphStat.FindScale(e.Value));
+        // var statScales = statMax.ToDictionary(e => e.Key, e => CustomGraphStat.FindScale(e.Value));
 
         var ret = new List<List<Control>>();
         var labelIndex = 1;
@@ -698,6 +713,7 @@ public partial class frmBuffDebuff : Form
                         graph.Location = new Point(4, y);
                         graph.Size = new Size(450, 20);
 
+                        var vMax = statMax[gre.Key];
                         var unit = gre.Key.GetStatUnit();
                         var multiplier = unit.Contains('%') ? 100f : 1f;
                         var val = valueDisplayMode switch
@@ -715,7 +731,7 @@ public partial class frmBuffDebuff : Form
                                 : enhPowers[p.Key].EndCost / enhPowers[p.Key].ActivatePeriod
                             : enhPowers[p.Key].EndCost;
                         
-                        graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[p.Key].RechargeTime, endCost, enhPowers[p.Key].DisplayName, gre.Key.GetStatUnit());
+                        graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[p.Key].RechargeTime, endCost, enhPowers[p.Key].DisplayName, vMax, gre.Key.GetStatUnit());
 
                         lst.Add(graph);
 
@@ -763,6 +779,7 @@ public partial class frmBuffDebuff : Form
                             graph.Location = new Point(4, y);
                             graph.Size = new Size(450, 20);
 
+                            var vMax = statMax[gre.Key];
                             var unit = gre.Key.GetStatUnit();
                             var multiplier = unit.Contains('%') ? 100f : 1f;
                             var val = valueDisplayMode switch
@@ -780,7 +797,7 @@ public partial class frmBuffDebuff : Form
                                     : enhPowers[g.Key].EndCost / enhPowers[g.Key].ActivatePeriod
                                 : enhPowers[g.Key].EndCost;
 
-                            graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[g.Key].RechargeTime, endCost, enhPowers[g.Key].DisplayName, gre.Key.GetStatUnit());
+                            graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[g.Key].RechargeTime, endCost, enhPowers[g.Key].DisplayName, vMax, gre.Key.GetStatUnit());
 
                             lst.Add(graph);
 
@@ -819,7 +836,7 @@ public partial class frmBuffDebuff : Form
             _ => null
         };
 
-        UpdateEffectsData();
+        UpdateData();
     }
 
     private void cbGroup_SelectedIndexChanged(object sender, EventArgs e)
@@ -838,7 +855,7 @@ public partial class frmBuffDebuff : Form
             _ => null
         };
 
-        UpdateEffectsData();
+        UpdateData();
     }
 
     private void cbValueDisplayType_SelectedIndexChanged(object sender, EventArgs e)
@@ -857,7 +874,7 @@ public partial class frmBuffDebuff : Form
             _ => ValueDisplayMode.Raw
         };
 
-        UpdateEffectsData();
+        UpdateData();
     }
 
     private void cbValueGroupMode_SelectedIndexChanged(object sender, EventArgs e)
@@ -873,7 +890,7 @@ public partial class frmBuffDebuff : Form
             _ => ValueGroupMode.None
         };
 
-        UpdateEffectsData();
+        UpdateData();
     }
 
     private void cbValueGroupMode2_SelectedIndexChanged(object sender, EventArgs e)

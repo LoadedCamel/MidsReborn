@@ -2437,6 +2437,7 @@ namespace Mids_Reborn.UI.Forms
             fRotationHelper?.UpdateData();
             fData?.UpdateData(dvLastPower);
             fRotationHelper?.UpdateData();
+            fBuffDebuff?.UpdateData();
         }
 
         private void frmMain_Move(object? sender, EventArgs e)
