@@ -224,48 +224,41 @@ namespace Mids_Reborn.Core
             };
         }
 
+        public static KeyValuePair<int, int> FindScale(float val)
+        {
+            var vm = Math.Abs(val);
+            return Scales
+                .Select((e, i) => new KeyValuePair<int, int>(i, e))
+                .Where(e => e.Value > vm)
+                .DefaultIfEmpty(new KeyValuePair<int, int>(Scales.Length - 1, Scales[^1]))
+                .FirstOrDefault();
+        }
+
         public static void SetGraphItemManual(this CtlMultiGraph ctl, eCustomGraphStat stat, eCustomGraphMode mode, frmBuffDebuff.ValueDisplayMode displayMode, float val, float duration, float rechargeTime, float endCost, string powerName, string unitSuffix = "", string labelOverride = "")
         {
             var longName = string.IsNullOrWhiteSpace(labelOverride)
                 ? Names.CustomStatNameLong(stat, true)
                 : labelOverride;
 
+            ctl.SuspendLayout();
+
             ctl.ForcedMax = 0;
 
-            if (val >= Scales[^1])
-            {
-                ctl.Max = Scales[^1];
-                
-            }
-            else if (val <= Scales[0])
-            {
-                ctl.Max = Scales[0];
-            }
-            else
-            {
-                for (var i = Scales.Length - 1; i > 0; i--)
-                {
-                    if (val > Scales[i])
-                    {
-                        continue;
-                    }
+            var vMax = FindScale(val);
+            ctl.ScaleIndex = vMax.Key;
+            ctl.Max = vMax.Value;
 
-                    ctl.Max = Scales[i];
-                    ctl.ForcedMax = Scales[i];
-
-                    break;
-                }
-            }
-
-            ctl.SuspendLayout();
             ctl.BarsAlignment = val < 0 ? CtlMultiGraph.BarAlignment.Right : CtlMultiGraph.BarAlignment.Left;
+            ctl.PaddingX = 2; // frmTotalsV2: 4
+            ctl.PaddingY = 3; // frmTotalsV2: 6
+
             ctl.Clear();
 
             ctl.AddItemPair(longName,
                 $"{val:####0.##}{unitSuffix}",
                 0,
                 val,
-                BuffDataTooltip3(val, duration, rechargeTime, endCost, powerName, longName, displayMode, unitSuffix)
+                BuffDataTooltip3(val, duration, rechargeTime, endCost, $"{powerName}\r\n\r\nValue: {val}\r\nMax: {ctl.Max} | Scale index: {ctl.ScaleIndex} | (Scales max: {Scales.Max()} | Alignment: {ctl.BarsAlignment}", longName, displayMode, unitSuffix)
             );
 
             ctl.ResumeLayout(true);
@@ -991,8 +984,8 @@ namespace Mids_Reborn.Core
                     : "Applies indefinitely"
                 : rechargeTime > 0
                     ? duration >= rechargeTime
-                        ? $"Applies permanently on same target (duration ({duration:####0.##}s) >= recharge ({rechargeTime:####0.##}s)"
-                        : $"Applies for {duration:####0.##}s, every {rechargeTime:####0.##}s), from {endCost:##0.##} endurance{(activationsPerMin >= 1 ? $" (roughly {activationsPerMin:###0.#} activation{(activationsPerMin < 2 ? "s" : "")}/min)" : "")}"
+                        ? $"Applies permanently on same target (duration ({duration:####0.##}s) >= recharge ({rechargeTime:####0.##}s))"
+                        : $"Applies for {duration:####0.##}s, every {rechargeTime:####0.##}s, from {endCost:##0.##} endurance{(activationsPerMin >= 1 ? $" (roughly {activationsPerMin:###0.#} activation{(activationsPerMin < 2 ? "s" : "")}/min)" : "")}"
                     : "Can be applied permanently (no recharge)";
             var powerSource = $"From {powerName}";
 

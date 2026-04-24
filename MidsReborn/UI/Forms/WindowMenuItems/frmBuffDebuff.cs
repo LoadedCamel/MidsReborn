@@ -62,7 +62,7 @@ public partial class frmBuffDebuff : Form
     private ValueGroupMode _valueGroupMode = ValueGroupMode.None;
     private GroupMode _groupMode = GroupMode.Power;
 
-    private const int PreLabelGap = 6;
+    private const int PreLabelGap = 14;
     private const int LabelGap = 24;
     private const int GraphGap = 22;
 
@@ -565,6 +565,7 @@ public partial class frmBuffDebuff : Form
     public frmBuffDebuff()
     {
         InitializeComponent();
+        Icon = MRBResourceLib.Resources.MRB_Icon_Concept;
     }
 
     private void frmBuffDebuff_Load(object sender, EventArgs e)
@@ -647,6 +648,15 @@ public partial class frmBuffDebuff : Form
                 new KeyValuePair<int, List<KeyValuePair<FxId, GroupedFx>>>(f.Key,
                     f.Value.Where(g => g.Key.Equals(e)).ToList())).ToList());
 
+        // Max by stat (absolute values)
+        var statMax = statEffects
+            .ToDictionary(e => e.Key, e => e.Value.Select(f => new KeyValuePair<int, List<KeyValuePair<FxId, GroupedFx>>>(f.Key, f.Value.Where(g => Math.Abs(g.Value.GetEffectAt(enhPowers[f.Key]).BuffedMag) < CustomGraphStat.Scales[^1]).ToList())).ToList())
+            .ToDictionary(e => e.Key, e => e.Value.Select(f => f.Value.Select(g => Math.Abs(g.Value.GetEffectAt(enhPowers[f.Key]).BuffedMag * (g.Key.GetStatUnit().Contains('%') ? 100f : 1f))).Max()).Max());
+
+        // Max/scale by stat
+        var statScales = statMax
+            .ToDictionary(e => e.Key, e => CustomGraphStat.FindScale(e.Value));
+
         var ret = new List<List<Control>>();
         var labelIndex = 1;
         var graphIndex = 1;
@@ -698,8 +708,14 @@ public partial class frmBuffDebuff : Form
                             ValueDisplayMode.ValuePerRechargeEnd => fxRef.BuffedMag / (enhPowers[p.Key].EndCost < float.Epsilon ? 1 : enhPowers[p.Key].EndCost) / (enhPowers[p.Key].RechargeTime < float.Epsilon ? 1 : enhPowers[p.Key].RechargeTime),
                             _ => fxRef.BuffedMag * multiplier
                         };
+
+                        var endCost = enhPowers[p.Key].PowerType == Enums.ePowerType.Toggle
+                            ? enhPowers[p.Key].ActivatePeriod <= float.Epsilon
+                                ? enhPowers[p.Key].EndCost
+                                : enhPowers[p.Key].EndCost / enhPowers[p.Key].ActivatePeriod
+                            : enhPowers[p.Key].EndCost;
                         
-                        graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[p.Key].RechargeTime, enhPowers[p.Key].EndCost, enhPowers[p.Key].DisplayName, gre.Key.GetStatUnit());
+                        graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[p.Key].RechargeTime, endCost, enhPowers[p.Key].DisplayName, gre.Key.GetStatUnit());
 
                         lst.Add(graph);
 
@@ -757,7 +773,14 @@ public partial class frmBuffDebuff : Form
                                 ValueDisplayMode.ValuePerRechargeEnd => fxRef.BuffedMag / (enhPowers[g.Key].EndCost < float.Epsilon ? 1 : enhPowers[g.Key].EndCost) / (enhPowers[g.Key].RechargeTime < float.Epsilon ? 1 : enhPowers[g.Key].RechargeTime),
                                 _ => fxRef.BuffedMag * multiplier
                             };
-                            graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[g.Key].RechargeTime, enhPowers[g.Key].EndCost, enhPowers[g.Key].DisplayName, gre.Key.GetStatUnit());
+
+                            var endCost = enhPowers[g.Key].PowerType == Enums.ePowerType.Toggle
+                                ? enhPowers[g.Key].ActivatePeriod <= float.Epsilon
+                                    ? enhPowers[g.Key].EndCost
+                                    : enhPowers[g.Key].EndCost / enhPowers[g.Key].ActivatePeriod
+                                : enhPowers[g.Key].EndCost;
+
+                            graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[g.Key].RechargeTime, endCost, enhPowers[g.Key].DisplayName, gre.Key.GetStatUnit());
 
                             lst.Add(graph);
 

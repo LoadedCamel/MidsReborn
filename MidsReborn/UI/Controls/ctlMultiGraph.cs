@@ -667,13 +667,18 @@ namespace Mids_Reborn.UI.Controls
             {
                 Shader = _BarAlignment switch
                 {
-                    BarAlignment.Left or BarAlignment.Right => SKShader.CreateLinearGradient(
-                        new SKPoint(drawArea.Left, drawArea.Top), new SKPoint(drawArea.Right, drawArea.Top),
+                    BarAlignment.Left => SKShader.CreateLinearGradient(
+                        new SKPoint(drawArea.Left, drawArea.Top), new SKPoint(drawArea.Right, drawArea.Top), // Left to right gradient
+                        [_pBlendColor1.ToSKColor(), _pBlendColor1.ToSKColor(), _pBlendColor2.ToSKColor()],
+                        [0, _nameWidth / (float)Width, 1],
+                        SKShaderTileMode.Clamp),
+                    BarAlignment.Right => SKShader.CreateLinearGradient(
+                        new SKPoint(drawArea.Right, drawArea.Top), new SKPoint(drawArea.Left, drawArea.Top), // Right to left gradient
                         [_pBlendColor1.ToSKColor(), _pBlendColor1.ToSKColor(), _pBlendColor2.ToSKColor()],
                         [0, _nameWidth / (float)Width, 1],
                         SKShaderTileMode.Clamp),
                     _ => SKShader.CreateLinearGradient(
-                        new SKPoint(fullArea.Left, drawArea.Top), new SKPoint(drawArea.Right, drawArea.Top),
+                        new SKPoint(fullArea.Left, drawArea.Top), new SKPoint(drawArea.Right, drawArea.Top), // From center to both edges gradient
                         [_pBlendColor1.ToSKColor(), _pBlendColor1.ToSKColor(), _pBlendColor2.ToSKColor(), _pBlendColor1.ToSKColor(), _pBlendColor2.ToSKColor()],
                         [0, drawArea.Left / Width, drawArea.Left / Width + 1e-5f, (drawArea.Left + drawArea.Width / 2f) / Width, 1],
                         SKShaderTileMode.Clamp)
@@ -704,7 +709,7 @@ namespace Mids_Reborn.UI.Controls
                 StrokeCap = SKStrokeCap.Butt
             };
 
-            s.Canvas.DrawRect(fullArea, bgGradientBrush);
+            s.Canvas.DrawRect(_BarAlignment == BarAlignment.Right ? drawArea : fullArea, bgGradientBrush);
 
             var rulerYoffsetTop = 0;
             var rulerYoffsetBottom = 0;
@@ -1172,7 +1177,7 @@ namespace Mids_Reborn.UI.Controls
 
             var rect = _BarAlignment switch
             {
-                BarAlignment.Right => new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
+                BarAlignment.Right => new SKRect(bounds.Right - width, bounds.Top + ny, bounds.Right,
                     bounds.Top + ny + (Style == GraphStyle.Twin ? (int)Math.Round(_pItemHeight / 2f) : _pItemHeight)),
                 
                 BarAlignment.Center => new SKRect(bounds.Left + Math.Min(bounds.Width / 2f, (bounds.Width + width) / 2f), bounds.Top + ny,
@@ -1277,7 +1282,7 @@ namespace Mids_Reborn.UI.Controls
 
             var rect = _BarAlignment switch
             {
-                BarAlignment.Right => new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
+                BarAlignment.Right => new SKRect(bounds.Right - width, bounds.Top + ny, bounds.Right,
                     bounds.Top + ny + num),
                 
                 BarAlignment.Center => new SKRect(bounds.Left + Math.Min(bounds.Width / 2f, (bounds.Width + width) / 2f), bounds.Top + ny,
@@ -1340,11 +1345,11 @@ namespace Mids_Reborn.UI.Controls
 
             var rect = _BarAlignment switch
             {
+                BarAlignment.Right => new SKRect(bounds.Right - width, bounds.Top + ny, bounds.Right,
+                    bounds.Top + ny + (Style == GraphStyle.Twin ? (int)Math.Round(_pItemHeight / 2f) : _pItemHeight)),
+
                 BarAlignment.Center => new SKRect(bounds.Left + Math.Min(bounds.Width / 2f, (bounds.Width + width) / 2f), bounds.Top + ny,
                     bounds.Left + Math.Max(bounds.Width / 2f, (bounds.Width + width) / 2f),
-                    bounds.Top + ny + (Style == GraphStyle.Twin ? (int)Math.Round(_pItemHeight / 2f) : _pItemHeight)),
-                
-                BarAlignment.Right => new SKRect(bounds.Right, bounds.Top + ny, bounds.Right - width,
                     bounds.Top + ny + (Style == GraphStyle.Twin ? (int)Math.Round(_pItemHeight / 2f) : _pItemHeight)),
 
                 _ => new SKRect(bounds.Left, bounds.Top + ny, bounds.Left + width,
@@ -1387,7 +1392,7 @@ namespace Mids_Reborn.UI.Controls
 
             var rect = _BarAlignment switch
             {
-                BarAlignment.Right => new SKRect(bounds.Right, bounds.Top + ny, bounds.Right - width,
+                BarAlignment.Right => new SKRect(bounds.Right - width, bounds.Top + ny, bounds.Right,
                     bounds.Top + ny + (Style == GraphStyle.Twin ? (int)Math.Round(_pItemHeight / 2f) : _pItemHeight)),
                 
                 BarAlignment.Center => new SKRect(bounds.Left + Math.Min(bounds.Width / 2f, (bounds.Width + width) / 2f), bounds.Top + ny,
