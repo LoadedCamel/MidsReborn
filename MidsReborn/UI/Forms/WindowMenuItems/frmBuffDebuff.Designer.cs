@@ -28,14 +28,13 @@
         /// </summary>
         private void InitializeComponent()
         {
-            PowerEffectsPanel = new System.Windows.Forms.Panel();
+            PowerEffectsPanel = new Mids_Reborn.UI.Controls.StickyScrollPanel();
             BtnClose = new Mids_Reborn.UI.Controls.ImageButtonEx();
             cbBuffType = new System.Windows.Forms.ComboBox();
             cbGroup = new System.Windows.Forms.ComboBox();
             cbValueDisplayType = new System.Windows.Forms.ComboBox();
             cbValueGroupMode = new System.Windows.Forms.ComboBox();
             cbValueGroupMode2 = new System.Windows.Forms.ComboBox();
-            PowerEffectsPanel.SuspendLayout();
             SuspendLayout();
             // 
             // PowerEffectsPanel
@@ -149,13 +148,12 @@
             Name = "frmBuffDebuff";
             Text = "Buff/Debuffs summary";
             Load += frmBuffDebuff_Load;
-            PowerEffectsPanel.ResumeLayout(false);
             ResumeLayout(false);
         }
 
         #endregion
 
-        private System.Windows.Forms.Panel PowerEffectsPanel;
+        private Mids_Reborn.UI.Controls.StickyScrollPanel PowerEffectsPanel;
         private Controls.ImageButtonEx BtnClose;
         private System.Windows.Forms.ComboBox cbBuffType;
         private System.Windows.Forms.ComboBox cbGroup;

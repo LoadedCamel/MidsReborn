@@ -625,6 +625,11 @@ namespace Mids_Reborn.UI.Controls
             _items.Add(new GraphItem(sName, sName2, nBase, nEnh, iTip));
         }
 
+        public void AddItemPair(string sName, string sName2, string sNameShort, float nBase, float nEnh, string iTip = "")
+        {
+            _items.Add(new GraphItem(sName, sName2, sNameShort, nBase, nEnh, iTip));
+        }
+
         public void AddItemPair(string sName, string sName2, float nBase, float nEnh, float nOvercap, string iTip = "")
         {
             _items.Add(new GraphItem(sName, sName2, nBase, nEnh, nOvercap, iTip));
@@ -763,6 +768,7 @@ namespace Mids_Reborn.UI.Controls
                 var textRect2 = textRect with { Top = drawArea.Top + ny - _yPadding / 2f };
                 var separatorTextIndex = _items[i].Name.IndexOf('|', StringComparison.Ordinal);
                 var label1 = _items[i].Name;
+                var label1Short = string.IsNullOrWhiteSpace(_items[i].NameShort) ? _items[i].Name : _items[i].NameShort;
                 var label2 = _items[i].Name2;
                 if (separatorTextIndex >= 0)
                 {
@@ -780,6 +786,20 @@ namespace Mids_Reborn.UI.Controls
 
                     textRect = new SKRect(textRect.Left, drawArea.Top + ny, textRect.Right, drawArea.Top + ny + num);
                     textRect2 = new SKRect(textRect2.Left, drawArea.Top + ny2, textRect2.Right, drawArea.Top + ny2 + num);
+                }
+
+                using var font = new SKFont(SKTypeface.Default, fontSize);
+                using var textPaint = new SKPaint(font)
+                {
+                    IsAntialias = true,
+                    Color = ForeColor.ToSKColor()
+                };
+                
+                var l1Size = font.MeasureText(label1, textPaint);
+                var l2Size = label1 != label2 ? font.MeasureText(label2, textPaint) : 0;
+                if (textRect.Width - l1Size - l2Size - 6 < 0)
+                {
+                    label1 = label1Short;
                 }
 
                 s.Canvas.DrawOutlineText(label1, textRect, ForeColor.ToSKColor(), eHTextAlign.Left, eVTextAlign.Middle, 255, fontSize, 3, true);
@@ -1641,6 +1661,7 @@ namespace Mids_Reborn.UI.Controls
         {
             public string Name;
             public string Name2;
+            public string NameShort;
             public readonly string Tip;
             public readonly float ValueBase;
             public readonly float ValueEnh;
@@ -1655,6 +1676,7 @@ namespace Mids_Reborn.UI.Controls
                 ValueAbsorbed = 0;
                 Name = statName;
                 Name2 = "";
+                NameShort = Name;
                 Tip = tip;
             }
 
@@ -1666,6 +1688,7 @@ namespace Mids_Reborn.UI.Controls
                 ValueAbsorbed = 0;
                 Name = statName;
                 Name2 = "";
+                NameShort = Name;
                 Tip = tip;
             }
 
@@ -1675,6 +1698,18 @@ namespace Mids_Reborn.UI.Controls
                 ValueEnh = valueEnh;
                 ValueAbsorbed = 0;
                 Name = statName;
+                Name2 = statValue;
+                NameShort = Name;
+                Tip = tip;
+            }
+
+            public GraphItem(string statName, string statValue, string statNameShort, float valueBase, float valueEnh, string tip = "")
+            {
+                ValueBase = valueBase;
+                ValueEnh = valueEnh;
+                ValueAbsorbed = 0;
+                Name = statName;
+                NameShort = statNameShort;
                 Name2 = statValue;
                 Tip = tip;
             }
@@ -1687,6 +1722,7 @@ namespace Mids_Reborn.UI.Controls
                 ValueAbsorbed = 0;
                 Name = statName;
                 Name2 = statValue;
+                NameShort = Name;
                 Tip = tip;
             }
 
@@ -1698,6 +1734,7 @@ namespace Mids_Reborn.UI.Controls
                 ValueAbsorbed = valueAbsorbed;
                 Name = statName;
                 Name2 = statValue;
+                NameShort = Name;
                 Tip = tip;
             }
         }

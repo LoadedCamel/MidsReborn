@@ -239,11 +239,16 @@ namespace Mids_Reborn.Core
 
         public static void SetGraphItemManual(this CtlMultiGraph ctl, eCustomGraphStat stat, eCustomGraphMode mode,
             frmBuffDebuff.ValueDisplayMode displayMode, float val, float duration, float rechargeTime, float endCost,
-            string powerName, float maxValueOverride = -1, string unitSuffix = "", string labelOverride = "")
+            string powerName, bool isToggle, float maxValueOverride = -1, string unitSuffix = "", string labelOverride = "",
+            string shortLabelOverride = "")
         {
             var longName = string.IsNullOrWhiteSpace(labelOverride)
                 ? Names.CustomStatNameLong(stat, true)
                 : labelOverride;
+
+            var shortName = string.IsNullOrWhiteSpace(shortLabelOverride)
+                ? Names.CustomStatNameShort(stat, true)
+                : shortLabelOverride;
 
             ctl.SuspendLayout();
 
@@ -269,11 +274,12 @@ namespace Mids_Reborn.Core
 
             ctl.AddItemPair(longName,
                 $"{val:####0.##}{unitSuffix}",
+                shortName,
                 0,
                 val,
                 BuffDataTooltip3(val, duration, rechargeTime, endCost,
                     $"{powerName}\r\n\r\nValue: {val}\r\nMax: {ctl.Max} | Scale index: {ctl.ScaleIndex} | Alignment: {ctl.BarsAlignment}",
-                    longName, displayMode, unitSuffix)
+                    isToggle, longName, displayMode, unitSuffix)
             );
 
             ctl.ResumeLayout(true);
@@ -988,7 +994,7 @@ namespace Mids_Reborn.Core
                        : "");
         }
 
-        public static string BuffDataTooltip3(float value, float duration, float rechargeTime, float endCost, string powerName, string statName, frmBuffDebuff.ValueDisplayMode displayMode, string unitSuffix = "%", bool plusSignEnabled = false)
+        public static string BuffDataTooltip3(float value, float duration, float rechargeTime, float endCost, string powerName, bool isToggle, string statName, frmBuffDebuff.ValueDisplayMode displayMode, string unitSuffix = "%", bool plusSignEnabled = false)
         {
             var activationsPerMin = rechargeTime < float.Epsilon ? 1 : rechargeTime / 60f;
 
@@ -1000,7 +1006,7 @@ namespace Mids_Reborn.Core
                 : rechargeTime > 0
                     ? duration >= rechargeTime
                         ? $"Applies permanently on same target (duration ({duration:####0.##}s) >= recharge ({rechargeTime:####0.##}s))"
-                        : $"Applies for {duration:####0.##}s, every {rechargeTime:####0.##}s, from {endCost:##0.##} endurance{(activationsPerMin >= 1 ? $" (roughly {activationsPerMin:###0.#} activation{(activationsPerMin < 2 ? "s" : "")}/min)" : "")}"
+                        : $"Applies for {duration:####0.##}s, every {rechargeTime:####0.##}s, from {endCost:##0.##} endurance{(isToggle ? "/sec" : "")}{(activationsPerMin >= 1 ? $" (roughly {activationsPerMin:###0.#} activation{(activationsPerMin < 2 ? "s" : "")}/min)" : "")}"
                     : "Can be applied permanently (no recharge)";
             var powerSource = $"From {powerName}";
 

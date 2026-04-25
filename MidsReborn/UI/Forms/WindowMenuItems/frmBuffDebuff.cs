@@ -76,13 +76,20 @@ public partial class frmBuffDebuff : Form
         public EffectBuffType BuffType;
         public MagType? MagType;
         public Enums.eAspect? Aspect;
+        public Enums.eAspect[]? AllowedAspects;
         public string? Label;
+        public string? ShortLabel;
+
+        public override string ToString()
+        {
+            return $"<FxId>{{EffectType={EffectType}, MezType={(MezType == null ? "(null)" : MezType)}, ETModifies={(ETModifies == null ? "(null)" : ETModifies)}, BuffType={BuffType}, MagType={(MagType == null ? "(null)" : MagType)}, Aspect={(Aspect == null ? "(null)" : Aspect)}, AllowedAspects={(AllowedAspects == null ? "(null)" : string.Join(", ", AllowedAspects.Select(e => $"{e}")))}, Label={Label ?? "(null)"}, ShortLabel={ShortLabel ?? "(null)"}";
+        }
 
         public bool Equals(FxId? other)
         {
             return EffectType == other?.EffectType && MezType == other.MezType && DamageType == other.DamageType &&
                    ETModifies == other.ETModifies && BuffType == other.BuffType && MagType == other.MagType &&
-                   Aspect == other.Aspect && Label == other.Label;
+                   Aspect == other.Aspect && AllowedAspects == other.AllowedAspects;
         }
 
         // Get group from FxId
@@ -91,15 +98,48 @@ public partial class frmBuffDebuff : Form
         {
             foreach (var g in buffs)
             {
-                if ((from k in g.Value
-                        where k.EffectType == EffectType
-                        where !((k.MezType != null) & (MezType != null) & (k.MezType != MezType)) // Nullable
-                        where !((k.DamageType != null) & (DamageType != null) & (k.DamageType != DamageType)) // Nullable
-                        where !((k.ETModifies != null) & (ETModifies != null) & (k.ETModifies != ETModifies)) // Nullable
-                        where k.BuffType == BuffType
-                        where !((k.MagType != null) & (MagType != null) & (k.MagType != MagType)) // Nullable
-                        select k).Any(k => !((k.Aspect != null) & (Aspect != null) & (k.Aspect != Aspect)))) // Nullable
+                foreach (var k in g.Value)
                 {
+                    if (k.EffectType != EffectType)
+                    {
+                        continue;
+                    }
+
+                    if ((k.MezType != null) & (MezType != null) & (k.MezType != MezType))
+                    {
+                        continue;
+                    }
+
+                    if ((k.DamageType != null) & (DamageType != null) & (k.DamageType != DamageType))
+                    {
+                        continue;
+                    }
+
+                    if ((k.ETModifies != null) & (ETModifies != null) & (k.ETModifies != ETModifies))
+                    {
+                        continue;
+                    }
+
+                    if (k.BuffType != BuffType)
+                    {
+                        continue;
+                    }
+
+                    if ((k.MagType != null) & (MagType != null) & (k.MagType != MagType))
+                    {
+                        continue;
+                    }
+
+                    if ((k.Aspect != null) & (Aspect != null) & (k.Aspect != Aspect))
+                    {
+                        continue;
+                    }
+
+                    if ((k.AllowedAspects != null) & (AllowedAspects != null) & !(AllowedAspects ?? []).Intersect(k.AllowedAspects ?? []).Any())
+                    {
+                        continue;
+                    }
+                    
                     return g.Key;
                 }
             }
@@ -145,6 +185,11 @@ public partial class frmBuffDebuff : Form
                     }
 
                     if ((k.Aspect != null) & (Aspect != null) & (k.Aspect != Aspect))
+                    {
+                        continue;
+                    }
+
+                    if ((k.AllowedAspects != null) & (AllowedAspects != null) & !(AllowedAspects ?? []).Intersect(k.AllowedAspects ?? []).Any())
                     {
                         continue;
                     }
@@ -264,28 +309,8 @@ public partial class frmBuffDebuff : Form
              let aspect = (Enums.eAspect?)(fx.Aspect == Enums.eAspect.Max ? fx.Aspect : null)
              let magType = fx.BuffedMag >= 0 ? frmBuffDebuff.MagType.Positive : frmBuffDebuff.MagType.Negative
              where id.EffectType == effectType && id.MezType == mezType && id.ETModifies == etModifies &&
-                   id.Aspect == aspect && id.MagType == magType
+                   (id.Aspect == aspect) | (id.AllowedAspects ?? []).Contains(fx.Aspect) && id.MagType == magType
              select id.BuffType).FirstOrDefault();
-
-        // Get FxId label from Effect
-        // Possibly flawed and inaccurate
-        public static string GetFxIdLabelFromEffect(IEffect fx) =>
-            fx.EffectType switch
-            {
-                Enums.eEffectType.Mez when fx.BuffedMag >= 0 => "Mez",
-                Enums.eEffectType.Mez => "Mez Protection",
-                Enums.eEffectType.Enhancement when fx is { ETModifies: Enums.eEffectType.Mez, BuffedMag: > 0 } => "Mez Boost",
-                Enums.eEffectType.Heal when fx.BuffedMag >= 0 => "Heal",
-                Enums.eEffectType.Absorb when fx.BuffedMag >= 0 => "Absorb",
-                Enums.eEffectType.HitPoints when fx is { BuffedMag: >= 0, Aspect: Enums.eAspect.Max } => "+MaxHP",
-                Enums.eEffectType.Enhancement when fx is { ETModifies: Enums.eEffectType.Accuracy, BuffedMag: >= 0 } => "+Accuracy",
-                Enums.eEffectType.Enhancement when fx.ETModifies == Enums.eEffectType.Accuracy => "-Accuracy",
-
-                Enums.eEffectType.Enhancement when fx.BuffedMag >= 0 => $"+{fx.EffectType} Boost",
-                Enums.eEffectType.Enhancement => $"-{fx.EffectType} Debuff",
-                _ when fx.BuffedMag >= 0 => $"+{fx.EffectType}",
-                _ => $"-{fx.EffectType}"
-            };
     }
     #endregion
 
@@ -323,7 +348,19 @@ public partial class frmBuffDebuff : Form
                 {
                     EffectType = Enums.eEffectType.Endurance,
                     MagType = MagType.Negative,
-                    BuffType = EffectBuffType.Debuff
+                    AllowedAspects = [Enums.eAspect.Str, Enums.eAspect.Abs],
+                    BuffType = EffectBuffType.Debuff,
+                    Label = "Endurance",
+                    ShortLabel = "End"
+                },
+                new()
+                {
+                    EffectType = Enums.eEffectType.Endurance,
+                    MagType = MagType.Negative,
+                    Aspect = Enums.eAspect.Max,
+                    BuffType = EffectBuffType.Debuff,
+                    Label = "Max Endurance",
+                    ShortLabel = "Max End"
                 },
                 new()
                 {
@@ -336,14 +373,16 @@ public partial class frmBuffDebuff : Form
                     EffectType = Enums.eEffectType.Mez,
                     MagType = MagType.Positive,
                     BuffType = EffectBuffType.Buff,
-                    Label = "Mez"
+                    Label = "Mez",
+                    ShortLabel = "Mez"
                 },
                 new()
                 {
                     EffectType = Enums.eEffectType.Mez,
                     MagType = MagType.Negative,
                     BuffType = EffectBuffType.Buff,
-                    Label = "Mez Protection"
+                    Label = "Mez Protection",
+                    ShortLabel = "Mez Prot."
                 },
                 new()
                 {
@@ -351,7 +390,8 @@ public partial class frmBuffDebuff : Form
                     ETModifies = Enums.eEffectType.Mez,
                     MagType = MagType.Positive,
                     BuffType = EffectBuffType.Buff,
-                    Label = "Mez Boost"
+                    Label = "Mez Boost",
+                    ShortLabel = "Mez Boost"
                 }
             ]
         },
@@ -362,14 +402,17 @@ public partial class frmBuffDebuff : Form
                     EffectType = Enums.eEffectType.Heal,
                     MagType = MagType.Positive,
                     BuffType = EffectBuffType.Buff,
-                    Label = "Heal"
+                    Label = "Heal",
+                    ShortLabel = "Heal"
                 },
                 new()
                 {
                     EffectType = Enums.eEffectType.Absorb,
                     MagType = MagType.Positive,
                     BuffType = EffectBuffType.Buff,
-                    Label = "Absorb"
+                    Label = "Absorb",
+                    ShortLabel = "Absorb"
+
                 },
                 new()
                 {
@@ -383,13 +426,26 @@ public partial class frmBuffDebuff : Form
                     MagType = MagType.Positive,
                     Aspect = Enums.eAspect.Max,
                     BuffType = EffectBuffType.Buff,
-                    Label = "+MaxHP"
+                    Label = "+MaxHP",
+                    ShortLabel = "+MaxHP"
                 },
                 new()
                 {
                     EffectType = Enums.eEffectType.Endurance,
                     MagType = MagType.Positive,
-                    BuffType = EffectBuffType.Buff
+                    AllowedAspects = [Enums.eAspect.Str, Enums.eAspect.Abs],
+                    BuffType = EffectBuffType.Buff,
+                    Label = "Endurance",
+                    ShortLabel = "End"
+                },
+                new()
+                {
+                    EffectType = Enums.eEffectType.Endurance,
+                    MagType = MagType.Positive,
+                    Aspect = Enums.eAspect.Max,
+                    BuffType = EffectBuffType.Buff,
+                    Label = "Max Endurance",
+                    ShortLabel = "Max End"
                 },
                 new()
                 {
@@ -484,7 +540,8 @@ public partial class frmBuffDebuff : Form
                     ETModifies = Enums.eEffectType.Accuracy,
                     MagType = MagType.Positive,
                     BuffType = EffectBuffType.Buff,
-                    Label = "+Accuracy"
+                    Label = "Accuracy",
+                    ShortLabel = "Acc"
                 },
                 new()
                 {
@@ -492,7 +549,8 @@ public partial class frmBuffDebuff : Form
                     ETModifies = Enums.eEffectType.Accuracy,
                     MagType = MagType.Negative,
                     BuffType = EffectBuffType.Debuff,
-                    Label = "-Accuracy"
+                    Label = "Accuracy",
+                    ShortLabel = "Acc"
                 },
                 new()
                 {
@@ -530,7 +588,8 @@ public partial class frmBuffDebuff : Form
                     ETModifies = Enums.eEffectType.Heal,
                     MagType = MagType.Negative,
                     BuffType = EffectBuffType.Buff,
-                    Label = "Heal Increase"
+                    Label = "Heal Increase",
+                    ShortLabel = "Heal Boost"
                 },
                 new()
                 {
@@ -538,7 +597,8 @@ public partial class frmBuffDebuff : Form
                     ETModifies = Enums.eEffectType.Absorb,
                     MagType = MagType.Negative,
                     BuffType = EffectBuffType.Buff,
-                    Label = "Absorb Increase"
+                    Label = "Absorb Increase",
+                    ShortLabel = "Abs. boost"
                 },
                 new()
                 {
@@ -546,7 +606,8 @@ public partial class frmBuffDebuff : Form
                     ETModifies = Enums.eEffectType.Range,
                     MagType = MagType.Positive,
                     BuffType = EffectBuffType.Buff,
-                    Label = "+Range"
+                    Label = "Range",
+                    ShortLabel = "Range"
                 },
                 new()
                 {
@@ -554,7 +615,8 @@ public partial class frmBuffDebuff : Form
                     ETModifies = Enums.eEffectType.Range,
                     MagType = MagType.Negative,
                     BuffType = EffectBuffType.Debuff,
-                    Label = "-Range"
+                    Label = "Range",
+                    ShortLabel = "Range"
                 }
             ]
         }
@@ -631,7 +693,7 @@ public partial class frmBuffDebuff : Form
             .Select(e => new KeyValuePair<int, List<KeyValuePair<FxId, GroupedFx>>>(e.Key,
                 e.Value.Value.Select(f =>
                         new KeyValuePair<FxId, GroupedFx>(FxId.CreateFxIdFromEffect(f.GetEffectAt(enhPowers[e.Key]), Buffs), f))
-                    .Where(g => g.Key.GetGraphStat() != CustomGraphStat.eCustomGraphStat.None )
+                    .Where(g => g.Key.GetGraphStat() != CustomGraphStat.eCustomGraphStat.None)
                     .Where(g => buffType == null || g.Key.BuffType == buffType)
                     .Where(g => group == null || g.Key.GetEffectGroup(Buffs) == group)
                     .Where(g => includeEnhFx | !g.Value.EnhancementEffect)
@@ -666,7 +728,14 @@ public partial class frmBuffDebuff : Form
                     .ToList();
             }
 
-            statMax.Add(s.Key, items.Max());
+            if (items.Count > 0)
+            {
+                statMax.Add(s.Key, items.Max());
+            }
+            else
+            {
+                statMax.Add(s.Key, CustomGraphStat.Scales[^1]);
+            }
         }
 
         // Max/scale by stat
@@ -730,8 +799,50 @@ public partial class frmBuffDebuff : Form
                                 ? enhPowers[p.Key].EndCost
                                 : enhPowers[p.Key].EndCost / enhPowers[p.Key].ActivatePeriod
                             : enhPowers[p.Key].EndCost;
-                        
-                        graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[p.Key].RechargeTime, endCost, enhPowers[p.Key].DisplayName, vMax, gre.Key.GetStatUnit());
+
+                        var label = gre.Key.EffectType switch
+                        {
+                            Enums.eEffectType.Enhancement => gre.Key.ETModifies switch
+                            {
+                                Enums.eEffectType.Mez when gre.Key.MagType == MagType.Positive => $"{gre.Key.MezType} Boost",
+                                Enums.eEffectType.Mez when gre.Key.MagType == MagType.Negative => $"{gre.Key.MezType} Dampen",
+                                _ => ""
+                            },
+                            Enums.eEffectType.Mez => $"{gre.Key.MezType}{(gre.Key.MagType == MagType.Negative ? " Protection" : "")}",
+                            Enums.eEffectType.MezResist => $"{gre.Key.MezType} Resistance",
+                            Enums.eEffectType.ResEffect => $"{gre.Key.ETModifies} Resistance",
+                            Enums.eEffectType.Endurance => gre.Key.Label ?? "",
+                            _ => ""
+                        };
+
+                        var shortLabel = gre.Key.EffectType switch
+                        {
+                            Enums.eEffectType.Enhancement => gre.Key.ETModifies switch
+                            {
+                                Enums.eEffectType.Mez when gre.Key.MagType == MagType.Positive => $"{gre.Key.MezType} Boost",
+                                Enums.eEffectType.Mez when gre.Key.MagType == MagType.Negative => $"{gre.Key.MezType} Dampen",
+                                _ => ""
+                            },
+                            Enums.eEffectType.Mez => $"{gre.Key.MezType}{(gre.Key.MagType == MagType.Negative ? " Prot." : "")}",
+                            Enums.eEffectType.MezResist => $"{gre.Key.MezType} Res",
+                            Enums.eEffectType.ResEffect => $"{gre.Key.ETModifies} Res",
+                            Enums.eEffectType.Endurance => gre.Key.ShortLabel ?? "",
+                            _ => ""
+                        };
+
+                        if (gre.Key.EffectType == Enums.eEffectType.Mez)
+                        {
+                            val = Math.Abs(val);
+                        }
+
+                        // Clamp value to max visible amplitude
+                        val = val < -CustomGraphStat.Scales[^1]
+                            ? -CustomGraphStat.Scales[^1]
+                            : val > CustomGraphStat.Scales[^1]
+                                ? CustomGraphStat.Scales[^1]
+                                : val;
+
+                        graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[p.Key].RechargeTime, endCost, enhPowers[p.Key].DisplayName, enhPowers[p.Key].PowerType == Enums.ePowerType.Toggle, vMax, gre.Key.GetStatUnit(), label, shortLabel);
 
                         lst.Add(graph);
 
@@ -797,7 +908,7 @@ public partial class frmBuffDebuff : Form
                                     : enhPowers[g.Key].EndCost / enhPowers[g.Key].ActivatePeriod
                                 : enhPowers[g.Key].EndCost;
 
-                            graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[g.Key].RechargeTime, endCost, enhPowers[g.Key].DisplayName, vMax, gre.Key.GetStatUnit());
+                            graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[g.Key].RechargeTime, endCost, enhPowers[g.Key].DisplayName, enhPowers[g.Key].PowerType == Enums.ePowerType.Toggle, vMax, gre.Key.GetStatUnit());
 
                             lst.Add(graph);
 
@@ -815,7 +926,7 @@ public partial class frmBuffDebuff : Form
         return ret;
     }
 
-    
+
 
     public void UpdateColorTheme(Enums.Alignment e)
     {
