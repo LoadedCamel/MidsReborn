@@ -2222,7 +2222,7 @@ namespace Mids_Reborn.UI.Forms
         {
             if (show)
             {
-                if (fBuffDebuff == null)
+                if (fBuffDebuff == null || fBuffDebuff.IsDisposed)
                 {
                     fBuffDebuff = new frmBuffDebuff();
                 }
@@ -2230,7 +2230,17 @@ namespace Mids_Reborn.UI.Forms
                 fBuffDebuff.Show();
                 fBuffDebuff.Activate();
             }
+            else
+            {
+                if (fBuffDebuff == null)
+                    return;
+
+                fBuffDebuff.Hide();
+                fBuffDebuff.Dispose();
+                fBuffDebuff = null;
+            }
         }
+
 
         private void FloatTop(bool onTop)
         {

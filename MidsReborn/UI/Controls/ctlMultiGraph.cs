@@ -7,6 +7,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Mids_Reborn.Core;
 using Mids_Reborn.UI.Design.Extensions;
 using SkiaSharp;
 using SkiaSharp.Views.Desktop;
@@ -655,6 +656,21 @@ namespace Mids_Reborn.UI.Controls
             return Regex.IsMatch(text, @"[ypqgjQY]");
         }
 
+        private static float ClampValue(float val)
+        {
+            if (val < -CustomGraphStat.Scales[^1])
+            {
+                return -CustomGraphStat.Scales[^1];
+            }
+
+            if (val > CustomGraphStat.Scales[^1])
+            {
+                return CustomGraphStat.Scales[^1];
+            }
+
+            return val;
+        }
+
         public void Draw()
         {
             if (_noDraw)
@@ -1169,11 +1185,12 @@ namespace Mids_Reborn.UI.Controls
                 StrokeCap = SKStrokeCap.Butt
             };
 
-            var val = _BarAlignment switch
+            var val = ClampValue(_items[index].ValueBase);
+            val = _BarAlignment switch
             {
-                BarAlignment.Center => _items[index].ValueBase,
-                BarAlignment.Right => Math.Abs(_items[index].ValueBase),
-                _ => Math.Max(0, _items[index].ValueBase)
+                BarAlignment.Center => val,
+                BarAlignment.Right => Math.Abs(val),
+                _ => Math.Max(0, val)
             };
 
             var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0
@@ -1270,11 +1287,12 @@ namespace Mids_Reborn.UI.Controls
                 Color = ForeColor.ToSKColor()
             };*/
 
-            var val = _BarAlignment switch
+            var val = ClampValue(_items[index].ValueEnh);
+            val = _BarAlignment switch
             {
-                BarAlignment.Center => _items[index].ValueEnh,
-                BarAlignment.Right => Math.Abs(_items[index].ValueEnh),
-                _ => Math.Max(0, _items[index].ValueEnh)
+                BarAlignment.Center => val,
+                BarAlignment.Right => Math.Abs(val),
+                _ => Math.Max(0, val)
             };
 
             var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[index] : ScaleValue;
@@ -1339,11 +1357,12 @@ namespace Mids_Reborn.UI.Controls
                 StrokeCap = SKStrokeCap.Butt
             };
 
-            var val = _BarAlignment switch
+            var val = ClampValue(_items[index].ValueOvercap);
+            val = _BarAlignment switch
             {
-                BarAlignment.Center => _items[index].ValueOvercap,
-                BarAlignment.Right => Math.Abs(_items[index].ValueOvercap),
-                _ => Math.Max(0, _items[index].ValueOvercap)
+                BarAlignment.Center => val,
+                BarAlignment.Right => Math.Abs(val),
+                _ => Math.Max(0, val)
             };
 
             var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[index] : ScaleValue;
@@ -1394,11 +1413,12 @@ namespace Mids_Reborn.UI.Controls
                 StrokeCap = SKStrokeCap.Butt
             };
 
-            var val = _BarAlignment switch
+            var val = ClampValue(_items[index].ValueAbsorbed);
+            val = _BarAlignment switch
             {
-                BarAlignment.Center => _items[index].ValueAbsorbed,
-                BarAlignment.Right => Math.Abs(_items[index].ValueAbsorbed),
-                _ => Math.Max(0, _items[index].ValueAbsorbed)
+                BarAlignment.Center => val,
+                BarAlignment.Right => Math.Abs(val),
+                _ => Math.Max(0, val)
             };
 
             var itemScale = PerItemScales.Count == _items.Count && _items.Count > 0 ? PerItemScales[index] : ScaleValue;

@@ -835,13 +835,6 @@ public partial class frmBuffDebuff : Form
                             val = Math.Abs(val);
                         }
 
-                        // Clamp value to max visible amplitude
-                        val = val < -CustomGraphStat.Scales[^1]
-                            ? -CustomGraphStat.Scales[^1]
-                            : val > CustomGraphStat.Scales[^1]
-                                ? CustomGraphStat.Scales[^1]
-                                : val;
-
                         graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[p.Key].RechargeTime, endCost, enhPowers[p.Key].DisplayName, enhPowers[p.Key].PowerType == Enums.ePowerType.Toggle, vMax, gre.Key.GetStatUnit(), label, shortLabel);
 
                         lst.Add(graph);
