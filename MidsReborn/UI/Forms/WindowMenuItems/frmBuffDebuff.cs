@@ -777,6 +777,11 @@ public partial class frmBuffDebuff : Form
                     {
                         var stat = gre.Key.GetGraphStat();
                         var fxRef = gre.Value.GetEffectAt(enhPowers[p.Key]);
+                        var toWho = fxRef.ToWho switch
+                        {
+                            Enums.eToWho.Self or Enums.eToWho.Target => $"{fxRef.ToWho}",
+                            _ => ""
+                        };
 
                         var graph = CustomGraphStat.GenerateGraph(stat, CustomGraphStat.eCustomGraphMode.Single, false, $"graph{graphIndex}");
                         graph.Location = new Point(4, y);
@@ -835,7 +840,10 @@ public partial class frmBuffDebuff : Form
                             val = Math.Abs(val);
                         }
 
-                        graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[p.Key].RechargeTime, endCost, enhPowers[p.Key].DisplayName, enhPowers[p.Key].PowerType == Enums.ePowerType.Toggle, vMax, gre.Key.GetStatUnit(), label, shortLabel);
+                        graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val,
+                            fxRef.Duration, enhPowers[p.Key].RechargeTime, endCost, enhPowers[p.Key].DisplayName,
+                            enhPowers[p.Key].PowerType == Enums.ePowerType.Toggle, toWho, vMax, gre.Key.GetStatUnit(),
+                            label, shortLabel);
 
                         lst.Add(graph);
 
@@ -878,6 +886,11 @@ public partial class frmBuffDebuff : Form
                         {
                             var stat = gre.Key.GetGraphStat();
                             var fxRef = gre.Value.GetEffectAt(enhPowers[g.Key]);
+                            var toWho = fxRef.ToWho switch
+                            {
+                                Enums.eToWho.Self or Enums.eToWho.Target => $"{fxRef.ToWho}",
+                                _ => ""
+                            };
 
                             var graph = CustomGraphStat.GenerateGraph(stat, CustomGraphStat.eCustomGraphMode.Single, false);
                             graph.Location = new Point(4, y);
@@ -901,7 +914,45 @@ public partial class frmBuffDebuff : Form
                                     : enhPowers[g.Key].EndCost / enhPowers[g.Key].ActivatePeriod
                                 : enhPowers[g.Key].EndCost;
 
-                            graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val, fxRef.Duration, enhPowers[g.Key].RechargeTime, endCost, enhPowers[g.Key].DisplayName, enhPowers[g.Key].PowerType == Enums.ePowerType.Toggle, vMax, gre.Key.GetStatUnit());
+                            var label = gre.Key.EffectType switch
+                            {
+                                Enums.eEffectType.Enhancement => gre.Key.ETModifies switch
+                                {
+                                    Enums.eEffectType.Mez when gre.Key.MagType == MagType.Positive => $"{gre.Key.MezType} Boost",
+                                    Enums.eEffectType.Mez when gre.Key.MagType == MagType.Negative => $"{gre.Key.MezType} Dampen",
+                                    _ => ""
+                                },
+                                Enums.eEffectType.Mez => $"{gre.Key.MezType}{(gre.Key.MagType == MagType.Negative ? " Protection" : "")}",
+                                Enums.eEffectType.MezResist => $"{gre.Key.MezType} Resistance",
+                                Enums.eEffectType.ResEffect => $"{gre.Key.ETModifies} Resistance",
+                                Enums.eEffectType.Endurance => gre.Key.Label ?? "",
+                                _ => ""
+                            };
+
+                            var shortLabel = gre.Key.EffectType switch
+                            {
+                                Enums.eEffectType.Enhancement => gre.Key.ETModifies switch
+                                {
+                                    Enums.eEffectType.Mez when gre.Key.MagType == MagType.Positive => $"{gre.Key.MezType} Boost",
+                                    Enums.eEffectType.Mez when gre.Key.MagType == MagType.Negative => $"{gre.Key.MezType} Dampen",
+                                    _ => ""
+                                },
+                                Enums.eEffectType.Mez => $"{gre.Key.MezType}{(gre.Key.MagType == MagType.Negative ? " Prot." : "")}",
+                                Enums.eEffectType.MezResist => $"{gre.Key.MezType} Res",
+                                Enums.eEffectType.ResEffect => $"{gre.Key.ETModifies} Res",
+                                Enums.eEffectType.Endurance => gre.Key.ShortLabel ?? "",
+                                _ => ""
+                            };
+
+                            if (gre.Key.EffectType == Enums.eEffectType.Mez)
+                            {
+                                val = Math.Abs(val);
+                            }
+
+                            graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode,
+                                val, fxRef.Duration, enhPowers[g.Key].RechargeTime, endCost,
+                                enhPowers[g.Key].DisplayName, enhPowers[g.Key].PowerType == Enums.ePowerType.Toggle,
+                                toWho, vMax, gre.Key.GetStatUnit(), label, shortLabel);
 
                             lst.Add(graph);
 

@@ -239,7 +239,7 @@ namespace Mids_Reborn.Core
 
         public static void SetGraphItemManual(this CtlMultiGraph ctl, eCustomGraphStat stat, eCustomGraphMode mode,
             frmBuffDebuff.ValueDisplayMode displayMode, float val, float duration, float rechargeTime, float endCost,
-            string powerName, bool isToggle, float maxValueOverride = -1, string unitSuffix = "", string labelOverride = "",
+            string powerName, bool isToggle, string toWho = "", float maxValueOverride = -1, string unitSuffix = "", string labelOverride = "",
             string shortLabelOverride = "")
         {
             var longName = string.IsNullOrWhiteSpace(labelOverride)
@@ -279,7 +279,7 @@ namespace Mids_Reborn.Core
                 val,
                 BuffDataTooltip3(val, duration, rechargeTime, endCost,
                     $"{powerName}\r\n\r\nValue: {val}\r\nMax: {ctl.Max} | Scale index: {ctl.ScaleIndex} | Alignment: {ctl.BarsAlignment}",
-                    isToggle, longName, displayMode, unitSuffix)
+                    isToggle, longName, toWho, displayMode, unitSuffix)
             );
 
             ctl.ResumeLayout(true);
@@ -994,19 +994,19 @@ namespace Mids_Reborn.Core
                        : "");
         }
 
-        public static string BuffDataTooltip3(float value, float duration, float rechargeTime, float endCost, string powerName, bool isToggle, string statName, frmBuffDebuff.ValueDisplayMode displayMode, string unitSuffix = "%", bool plusSignEnabled = false)
+        public static string BuffDataTooltip3(float value, float duration, float rechargeTime, float endCost, string powerName, bool isToggle, string statName, string toWho, frmBuffDebuff.ValueDisplayMode displayMode, string unitSuffix = "%", bool plusSignEnabled = false)
         {
-            var activationsPerMin = rechargeTime < float.Epsilon ? 1 : rechargeTime / 60f;
+            var activationsPerMin = rechargeTime < float.Epsilon ? 1 : 60f / rechargeTime;
 
-            var baseTip = $"{(plusSignEnabled && value > 0 ? "+" : "")}{value:####0.##}{unitSuffix} {statName}";
+            var baseTip = $"{(plusSignEnabled && value > 0 ? "+" : "")}{value:####0.##}{unitSuffix} {statName}{(string.IsNullOrWhiteSpace(toWho) ? "" : $" to {toWho}")}";
             var appliesDurationStr = duration < float.Epsilon
-                ? statName == "Heal"
+                ? statName == "Heal" || (statName == "Endurance") & (duration < float.Epsilon)
                     ? ""
                     : "Applies indefinitely"
                 : rechargeTime > 0
                     ? duration >= rechargeTime
                         ? $"Applies permanently on same target (duration ({duration:####0.##}s) >= recharge ({rechargeTime:####0.##}s))"
-                        : $"Applies for {duration:####0.##}s, every {rechargeTime:####0.##}s, from {endCost:##0.##} endurance{(isToggle ? "/sec" : "")}{(activationsPerMin >= 1 ? $" (roughly {activationsPerMin:###0.#} activation{(activationsPerMin < 2 ? "s" : "")}/min)" : "")}"
+                        : $"Applies for {duration:####0.##}s, every {rechargeTime:####0.##}s{(endCost > 0 ? $", from {endCost:##0.##} endurance{(isToggle ? "/sec" : "")}": "")}{(activationsPerMin >= 1 ? $" (roughly {activationsPerMin:###0.#} activation{(activationsPerMin < 2 ? "s" : "")}/min)" : "")}"
                     : "Can be applied permanently (no recharge)";
             var powerSource = $"From {powerName}";
 
