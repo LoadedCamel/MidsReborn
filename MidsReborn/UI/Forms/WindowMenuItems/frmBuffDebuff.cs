@@ -841,7 +841,7 @@ public partial class frmBuffDebuff : Form
                         }
 
                         graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val,
-                            fxRef.Duration, enhPowers[p.Key].RechargeTime, endCost, enhPowers[p.Key].DisplayName,
+                            fxRef.Duration, fxRef.isEnhancementEffect, enhPowers[p.Key].RechargeTime, endCost, enhPowers[p.Key].DisplayName,
                             enhPowers[p.Key].PowerType == Enums.ePowerType.Toggle, toWho, vMax, gre.Key.GetStatUnit(),
                             label, shortLabel);
 
@@ -950,7 +950,7 @@ public partial class frmBuffDebuff : Form
                             }
 
                             graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode,
-                                val, fxRef.Duration, enhPowers[g.Key].RechargeTime, endCost,
+                                val, fxRef.Duration, fxRef.isEnhancementEffect, enhPowers[g.Key].RechargeTime, endCost,
                                 enhPowers[g.Key].DisplayName, enhPowers[g.Key].PowerType == Enums.ePowerType.Toggle,
                                 toWho, vMax, gre.Key.GetStatUnit(), label, shortLabel);
 
