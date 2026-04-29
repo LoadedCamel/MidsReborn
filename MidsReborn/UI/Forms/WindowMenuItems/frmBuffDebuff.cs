@@ -226,7 +226,6 @@ public partial class frmBuffDebuff : Form
                 Enums.eEffectType.Heal when Aspect == Enums.eAspect.Abs => " HP",
                 Enums.eEffectType.Absorb when Aspect == Enums.eAspect.Abs => " HP",
                 Enums.eEffectType.HitPoints when Aspect == Enums.eAspect.Abs => " HP",
-                Enums.eEffectType.PerceptionRadius => " ft",
                 Enums.eEffectType.Recovery => " end/s",
                 _ => "%"
             };
@@ -342,7 +341,9 @@ public partial class frmBuffDebuff : Form
                 {
                     EffectType = Enums.eEffectType.DamageBuff,
                     MagType = MagType.Negative,
-                    BuffType = EffectBuffType.Debuff
+                    BuffType = EffectBuffType.Debuff,
+                    Label = "Damage Buff",
+                    ShortLabel = "DmgBuff"
                 },
                 new()
                 {
@@ -473,7 +474,9 @@ public partial class frmBuffDebuff : Form
                 {
                     EffectType = Enums.eEffectType.DamageBuff,
                     MagType = MagType.Positive,
-                    BuffType = EffectBuffType.Buff
+                    BuffType = EffectBuffType.Buff,
+                    Label = "Damage Buff",
+                    ShortLabel = "DmgBuff"
                 },
                 new()
                 {
@@ -677,6 +680,50 @@ public partial class frmBuffDebuff : Form
                 .ToArray();
     }
 
+    private string GetGreLabel(KeyValuePair<FxId, GroupedFx> gre, IPower pw)
+    {
+        var greTip = gre.Value.GetTooltip(pw, true);
+
+        return gre.Key.EffectType switch
+        {
+            Enums.eEffectType.Enhancement when greTip.Contains(" slow", StringComparison.InvariantCultureIgnoreCase) => "Enhancement(Slow)",
+            Enums.eEffectType.Enhancement => gre.Key.ETModifies switch
+            {
+                Enums.eEffectType.Mez when gre.Key.MagType == MagType.Positive => $"{gre.Key.MezType} Boost",
+                Enums.eEffectType.Mez when gre.Key.MagType == MagType.Negative => $"{gre.Key.MezType} Dampen",
+                _ => ""
+            },
+            Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedFlying when greTip.Contains(" slow", StringComparison.InvariantCultureIgnoreCase) => "Slow",
+            Enums.eEffectType.Mez => $"{gre.Key.MezType}{(gre.Key.MagType == MagType.Negative ? " Protection" : "")}",
+            Enums.eEffectType.MezResist => $"{gre.Key.MezType} Resistance",
+            Enums.eEffectType.ResEffect => $"{gre.Key.ETModifies} Resistance",
+            Enums.eEffectType.Endurance => gre.Key.Label ?? "",
+            _ => ""
+        };
+    }
+
+    private string GetGreLabelShort(KeyValuePair<FxId, GroupedFx> gre, IPower pw)
+    {
+        var greTip = gre.Value.GetTooltip(pw, true);
+
+        return gre.Key.EffectType switch
+        {
+            Enums.eEffectType.Enhancement when greTip.Contains(" slow", StringComparison.InvariantCultureIgnoreCase) => "Enh(Slow)",
+            Enums.eEffectType.Enhancement => gre.Key.ETModifies switch
+            {
+                Enums.eEffectType.Mez when gre.Key.MagType == MagType.Positive => $"{gre.Key.MezType} Boost",
+                Enums.eEffectType.Mez when gre.Key.MagType == MagType.Negative => $"{gre.Key.MezType} Dampen",
+                _ => ""
+            },
+            Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedFlying when greTip.Contains(" slow", StringComparison.InvariantCultureIgnoreCase) => "Slow",
+            Enums.eEffectType.Mez => $"{gre.Key.MezType}{(gre.Key.MagType == MagType.Negative ? " Prot." : "")}",
+            Enums.eEffectType.MezResist => $"{gre.Key.MezType} Res",
+            Enums.eEffectType.ResEffect => $"{gre.Key.ETModifies} Res",
+            Enums.eEffectType.Endurance => gre.Key.ShortLabel ?? "",
+            _ => ""
+        };
+    }
+
     // Generate graph and label controls from powers according to filters and view mode
     // Partially implemented
     private List<List<Control>> GetValues(EffectBuffType? buffType, EffectGroup? group, ValueDisplayMode valueDisplayMode,
@@ -773,6 +820,7 @@ public partial class frmBuffDebuff : Form
                     labelIndex++;
                     y += LabelGap;
 
+                    p.Value.Sort((a, b) => string.Compare(GetGreLabel(a, enhPowers[p.Key]), GetGreLabel(b, enhPowers[p.Key]), StringComparison.InvariantCultureIgnoreCase));
                     foreach (var gre in p.Value)
                     {
                         var stat = gre.Key.GetGraphStat();
@@ -805,40 +853,8 @@ public partial class frmBuffDebuff : Form
                                 : enhPowers[p.Key].EndCost / enhPowers[p.Key].ActivatePeriod
                             : enhPowers[p.Key].EndCost;
 
-                        var greTip = gre.Value.GetTooltip(enhPowers[p.Key], true);
-                        var label = gre.Key.EffectType switch
-                        {
-                            Enums.eEffectType.Enhancement when greTip.Contains(" slow", StringComparison.InvariantCultureIgnoreCase) => "Enhancement(Slow)",
-                            Enums.eEffectType.Enhancement => gre.Key.ETModifies switch
-                            {
-                                Enums.eEffectType.Mez when gre.Key.MagType == MagType.Positive => $"{gre.Key.MezType} Boost",
-                                Enums.eEffectType.Mez when gre.Key.MagType == MagType.Negative => $"{gre.Key.MezType} Dampen",
-                                _ => ""
-                            },
-                            Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedFlying when greTip.Contains(" slow", StringComparison.InvariantCultureIgnoreCase) => "Slow",
-                            Enums.eEffectType.Mez => $"{gre.Key.MezType}{(gre.Key.MagType == MagType.Negative ? " Protection" : "")}",
-                            Enums.eEffectType.MezResist => $"{gre.Key.MezType} Resistance",
-                            Enums.eEffectType.ResEffect => $"{gre.Key.ETModifies} Resistance",
-                            Enums.eEffectType.Endurance => gre.Key.Label ?? "",
-                            _ => ""
-                        };
-
-                        var shortLabel = gre.Key.EffectType switch
-                        {
-                            Enums.eEffectType.Enhancement when greTip.Contains(" slow", StringComparison.InvariantCultureIgnoreCase) => "Enh(Slow)",
-                            Enums.eEffectType.Enhancement => gre.Key.ETModifies switch
-                            {
-                                Enums.eEffectType.Mez when gre.Key.MagType == MagType.Positive => $"{gre.Key.MezType} Boost",
-                                Enums.eEffectType.Mez when gre.Key.MagType == MagType.Negative => $"{gre.Key.MezType} Dampen",
-                                _ => ""
-                            },
-                            Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedFlying when greTip.Contains(" slow", StringComparison.InvariantCultureIgnoreCase) => "Slow",
-                            Enums.eEffectType.Mez => $"{gre.Key.MezType}{(gre.Key.MagType == MagType.Negative ? " Prot." : "")}",
-                            Enums.eEffectType.MezResist => $"{gre.Key.MezType} Res",
-                            Enums.eEffectType.ResEffect => $"{gre.Key.ETModifies} Res",
-                            Enums.eEffectType.Endurance => gre.Key.ShortLabel ?? "",
-                            _ => ""
-                        };
+                        var label = GetGreLabel(gre, enhPowers[p.Key]);
+                        var shortLabel = GetGreLabelShort(gre, enhPowers[p.Key]);
 
                         if (gre.Key.EffectType == Enums.eEffectType.Mez)
                         {
@@ -887,6 +903,7 @@ public partial class frmBuffDebuff : Form
 
                     foreach (var g in s.Value)
                     {
+                        g.Value.Sort((a, b) => string.Compare(GetGreLabel(a, enhPowers[g.Key]), GetGreLabel(b, enhPowers[g.Key]), StringComparison.InvariantCultureIgnoreCase));
                         foreach (var gre in g.Value)
                         {
                             var stat = gre.Key.GetGraphStat();
@@ -919,40 +936,8 @@ public partial class frmBuffDebuff : Form
                                     : enhPowers[g.Key].EndCost / enhPowers[g.Key].ActivatePeriod
                                 : enhPowers[g.Key].EndCost;
 
-                            var greTip = gre.Value.GetTooltip(enhPowers[g.Key], true);
-                            var label = gre.Key.EffectType switch
-                            {
-                                Enums.eEffectType.Enhancement when greTip.Contains(" slow", StringComparison.InvariantCultureIgnoreCase) => "Enhancement(Slow)",
-                                Enums.eEffectType.Enhancement => gre.Key.ETModifies switch
-                                {
-                                    Enums.eEffectType.Mez when gre.Key.MagType == MagType.Positive => $"{gre.Key.MezType} Boost",
-                                    Enums.eEffectType.Mez when gre.Key.MagType == MagType.Negative => $"{gre.Key.MezType} Dampen",
-                                    _ => ""
-                                },
-                                Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedFlying when greTip.Contains(" slow", StringComparison.InvariantCultureIgnoreCase) => "Slow",
-                                Enums.eEffectType.Mez => $"{gre.Key.MezType}{(gre.Key.MagType == MagType.Negative ? " Protection" : "")}",
-                                Enums.eEffectType.MezResist => $"{gre.Key.MezType} Resistance",
-                                Enums.eEffectType.ResEffect => $"{gre.Key.ETModifies} Resistance",
-                                Enums.eEffectType.Endurance => gre.Key.Label ?? "",
-                                _ => ""
-                            };
-
-                            var shortLabel = gre.Key.EffectType switch
-                            {
-                                Enums.eEffectType.Enhancement when greTip.Contains(" slow", StringComparison.InvariantCultureIgnoreCase) => "Enh(Slow)",
-                                Enums.eEffectType.Enhancement => gre.Key.ETModifies switch
-                                {
-                                    Enums.eEffectType.Mez when gre.Key.MagType == MagType.Positive => $"{gre.Key.MezType} Boost",
-                                    Enums.eEffectType.Mez when gre.Key.MagType == MagType.Negative => $"{gre.Key.MezType} Dampen",
-                                    _ => ""
-                                },
-                                Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedFlying when greTip.Contains(" slow", StringComparison.InvariantCultureIgnoreCase) => "Slow",
-                                Enums.eEffectType.Mez => $"{gre.Key.MezType}{(gre.Key.MagType == MagType.Negative ? " Prot." : "")}",
-                                Enums.eEffectType.MezResist => $"{gre.Key.MezType} Res",
-                                Enums.eEffectType.ResEffect => $"{gre.Key.ETModifies} Res",
-                                Enums.eEffectType.Endurance => gre.Key.ShortLabel ?? "",
-                                _ => ""
-                            };
+                            var label = GetGreLabel(gre, enhPowers[g.Key]);
+                            var shortLabel = GetGreLabelShort(gre, enhPowers[g.Key]);
 
                             if (gre.Key.EffectType == Enums.eEffectType.Mez)
                             {

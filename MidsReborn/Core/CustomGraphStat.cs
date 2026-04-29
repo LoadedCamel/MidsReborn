@@ -267,6 +267,7 @@ namespace Mids_Reborn.Core
             }
 
             ctl.BarsAlignment = val < 0 ? CtlMultiGraph.BarAlignment.Right : CtlMultiGraph.BarAlignment.Left;
+            ctl.ForeColor = isEnhancementEffect ? Color.Cyan : Color.WhiteSmoke;
 
             if (longName.Equals("slow", StringComparison.InvariantCultureIgnoreCase))
             {
@@ -1069,7 +1070,7 @@ namespace Mids_Reborn.Core
                     eCustomGraphStat.Recharge => "Haste",
                     eCustomGraphStat.ToHit => "ToHit",
                     eCustomGraphStat.Accuracy => "Acc",
-                    eCustomGraphStat.Damage => "Dmg",
+                    eCustomGraphStat.Damage => "DmgBuff",
                     eCustomGraphStat.Range => "Range",
                     eCustomGraphStat.EndRdx => "EndRdx",
                     eCustomGraphStat.Heal => "Heal",
@@ -1125,7 +1126,7 @@ namespace Mids_Reborn.Core
                     eCustomGraphStat.Recharge => "Haste",
                     eCustomGraphStat.ToHit => "ToHit",
                     eCustomGraphStat.Accuracy => "Accuracy",
-                    eCustomGraphStat.Damage => "Damage",
+                    eCustomGraphStat.Damage => "DamageBuff",
                     eCustomGraphStat.Range => "Range",
                     eCustomGraphStat.EndRdx => "Endurance Discount",
                     eCustomGraphStat.Heal => "Heal",
