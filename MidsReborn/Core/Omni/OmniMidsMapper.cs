@@ -173,13 +173,13 @@ public static class OmniMidsMapper
                 };
                 ApplyCombatModFlags(effect, template);
                 TrackPvTargetAudit(power, source, template, effect, pvModeSource, applyResult);
-                effect.nModifierTable = DatabaseAPI.NidFromUidAttribMod(effect.ModifierTable);
+                effect.nModifierTable = DatabaseAPI.GetRuntimeModifierTableLegacyId(effect.ModifierTable);
                 if (effect.nModifierTable < 0 && !DatabaseAPI.ModifierTableExists(effect.ModifierTable))
                 {
                     applyResult?.AddLimited(applyResult.UnknownAttribMappingDetails,
                         $"{power.FullName} modifier table '{effect.ModifierTable}' did not resolve.");
                     applyResult?.AddLimited(applyResult.MissingModifierTableReferenceDetails,
-                        $"{power.FullName}: modifier table '{effect.ModifierTable}' was not found in canonical class tables or legacy AttribMods.");
+                        $"{power.FullName}: modifier table '{effect.ModifierTable}' was not found in the active canonical or legacy modifier table source.");
                     if (applyResult != null)
                     {
                         applyResult.UnknownAttribMappings++;

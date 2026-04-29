@@ -281,15 +281,6 @@ namespace Mids_Reborn.Core
             }
             else
             {
-                if (!special && fromPopup && bonusSection)
-                {
-                    var groupedEffectString = GetGroupedBonusEffectString(bonusItemArray[index], effectsFilter);
-                    if (groupedEffectString != null)
-                    {
-                        return groupedEffectString;
-                    }
-                }
-
                 var effectList = new List<string>();
                 for (var index1 = 0; index1 < bonusItemArray[index].Name.Length; index1++)
                 {
@@ -352,6 +343,15 @@ namespace Mids_Reborn.Core
                 {
                     Utilities.ModifiedEffectString(ref str1, 2);
                 }
+
+                if (!special && fromPopup && bonusSection && string.IsNullOrWhiteSpace(str1))
+                {
+                    var groupedEffectString = GetGroupedBonusEffectString(bonusItemArray[index], effectsFilter);
+                    if (!string.IsNullOrWhiteSpace(groupedEffectString))
+                    {
+                        return groupedEffectString;
+                    }
+                }
             }
 
             return str1;
@@ -379,7 +379,16 @@ namespace Mids_Reborn.Core
                     return string.Empty;
                 }
 
-                var power = PlannerEffectResolver.ResolvePower(new Power(DatabaseAPI.Database.Power[powerIndex])).ResolvedPower;
+                var power = new Power(DatabaseAPI.Database.Power[powerIndex]);
+                if (power.HasGrantPowerEffect)
+                {
+                    power.ApplyGrantPowerEffects();
+                }
+
+                if (!power.AppliedExecutes)
+                {
+                    power.ProcessExecutes();
+                }
 
                 var groupedEffects = GroupedFx.AssembleGroupedEffects(power, true)
                     .Where(g =>

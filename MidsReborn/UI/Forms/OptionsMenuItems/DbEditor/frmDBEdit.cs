@@ -190,6 +190,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private void frmDBEdit_Load(object? sender, EventArgs e)
         {
             Text = $@"{DatabaseAPI.DatabaseName} Database Menu";
+            UpdateModifierUiMode();
             DisplayInfo();
         }
 
@@ -241,13 +242,19 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void btnAttribModEdit_Click(object sender, EventArgs e)
         {
+            if (!DatabaseAPI.UsesLegacyModifierTables())
+            {
+                using var form = new frmClassAttributes(initialGroup: "NamedTables");
+                form.ShowDialog(this);
+                return;
+            }
+
             using frmEditAttribMod f = new frmEditAttribMod();
             f.ShowDialog();
         }
 
         private void InitializeClassAttributesButton()
         {
-            btnAttribModEdit.Text = @"Legacy AttribMod Editor";
             btnClassAttributes = new Button
             {
                 BackColor = Color.FromArgb(255, 219, 102),
@@ -270,6 +277,17 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             using var form = new frmClassAttributes();
             form.ShowDialog(this);
+        }
+
+        private void UpdateModifierUiMode()
+        {
+            var legacyMode = DatabaseAPI.UsesLegacyModifierTables();
+            btnAttribModEdit.Visible = true;
+            btnAttribModEdit.Enabled = true;
+            btnAttribModEdit.Text = legacyMode
+                ? @"Legacy AttribMod Editor"
+                : @"Named Tables Viewer";
+            btnClassAttributes.Visible = DatabaseAPI.HasCanonicalModifierTables();
         }
 
         private void btnGCMIO_Click(object sender, EventArgs e)

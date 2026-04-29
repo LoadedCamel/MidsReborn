@@ -82,7 +82,6 @@ namespace Mids_Reborn.Core
                 RelativeLevel = Enums.eEnhRelative.PlusFive;
             }
 
-            var num1 = 0.0f;
             if (IOLevel <= 0)
             {
                 IOLevel = 0;
@@ -93,35 +92,7 @@ namespace Mids_Reborn.Core
                 IOLevel = DatabaseAPI.Database.MultIO.Length - 1;
             }
 
-            if (iSched == Enums.eSchedule.None || iSched == Enums.eSchedule.Multiple)
-            {
-                num1 = 0.0f;
-            }
-            else
-            {
-                switch (iType)
-                {
-                    case Enums.eType.Normal:
-                        num1 = Grade switch
-                        {
-                            Enums.eEnhGrade.None => 0.0f,
-                            Enums.eEnhGrade.TrainingO => DatabaseAPI.Database.MultTO[0][(int)iSched],
-                            Enums.eEnhGrade.DualO => DatabaseAPI.Database.MultDO[0][(int)iSched],
-                            Enums.eEnhGrade.SingleO => DatabaseAPI.Database.MultSO[0][(int)iSched],
-                            _ => num1
-                        };
-                        break;
-                    case Enums.eType.InventO:
-                        num1 = DatabaseAPI.Database.MultIO[IOLevel][(int)iSched];
-                        break;
-                    case Enums.eType.SpecialO:
-                        num1 = DatabaseAPI.Database.MultSO[0][(int)iSched];
-                        break;
-                    case Enums.eType.SetO:
-                        num1 = DatabaseAPI.Database.MultIO[IOLevel][(int)iSched];
-                        break;
-                }
-            }
+            var num1 = EnhancementScheduleMath.GetRuntimeScheduleBaseScale(iType, Grade, IOLevel, iSched);
 
             var num2 = num1 * GetRelativeLevelMultiplier();
             if (Enh > -1 && DatabaseAPI.Database.Enhancements[Enh].Superior)
@@ -313,52 +284,13 @@ namespace Mids_Reborn.Core
             var scheduleMult = GetScheduleMult(enhancementType, effect.Schedule);
             if (Math.Abs(effect.Multiplier) > float.Epsilon)
             {
-                scheduleMult *= NormalizeClassicOrSpecialMultiplier(enhancementType, effect.Schedule, effect.Multiplier);
+                scheduleMult *= EnhancementScheduleMath.NormalizeImportedScaleToMultiplier(
+                    enhancementType,
+                    effect.Schedule,
+                    effect.Multiplier);
             }
 
             return scheduleMult;
-        }
-
-        private float NormalizeClassicOrSpecialMultiplier(
-            Enums.eType enhancementType,
-            Enums.eSchedule schedule,
-            float multiplier)
-        {
-            if (enhancementType is not (Enums.eType.Normal or Enums.eType.SpecialO) ||
-                schedule is Enums.eSchedule.None or Enums.eSchedule.Multiple)
-            {
-                return multiplier;
-            }
-
-            var scheduleIndex = (int)schedule;
-            if (scheduleIndex < 0 || scheduleIndex > 3)
-            {
-                return multiplier;
-            }
-
-            var candidates = enhancementType == Enums.eType.SpecialO
-                ? new[]
-                {
-                    DatabaseAPI.Database.MultHO is { Length: > 0 } && DatabaseAPI.Database.MultHO[0].Length > scheduleIndex
-                        ? DatabaseAPI.Database.MultHO[0][scheduleIndex]
-                        : 0f
-                }
-                : new[]
-                {
-                    DatabaseAPI.Database.MultTO is { Length: > 0 } && DatabaseAPI.Database.MultTO[0].Length > scheduleIndex
-                        ? DatabaseAPI.Database.MultTO[0][scheduleIndex]
-                        : 0f,
-                    DatabaseAPI.Database.MultDO is { Length: > 0 } && DatabaseAPI.Database.MultDO[0].Length > scheduleIndex
-                        ? DatabaseAPI.Database.MultDO[0][scheduleIndex]
-                        : 0f,
-                    DatabaseAPI.Database.MultSO is { Length: > 0 } && DatabaseAPI.Database.MultSO[0].Length > scheduleIndex
-                        ? DatabaseAPI.Database.MultSO[0][scheduleIndex]
-                        : 0f
-                };
-
-            return candidates.Any(candidate => candidate > float.Epsilon && Math.Abs(Math.Abs(multiplier) - candidate) < 0.02f)
-                ? Math.Sign(multiplier == 0 ? 1 : multiplier)
-                : multiplier;
         }
 
         private bool TryGetBoostAttribScale(string boostAttribName, out float scale)
@@ -370,6 +302,20 @@ namespace Mids_Reborn.Core
             }
 
             var enhancement = DatabaseAPI.Database.Enhancements[Enh];
+            if (TryGetBoostAttribScaleFromEnhancementRows(enhancement, boostAttribName, out scale))
+            {
+                return true;
+            }
+
+            return TryGetBoostAttribScaleFromBoostPower(enhancement, enhancement.GetPower(), boostAttribName, out scale);
+        }
+
+        private bool TryGetBoostAttribScaleFromEnhancementRows(
+            IEnhancement enhancement,
+            string boostAttribName,
+            out float scale)
+        {
+            scale = 0f;
             foreach (var enhance in EnumerateBoostAttribCandidates(boostAttribName))
             {
                 var best = enhancement.Effect
@@ -388,6 +334,70 @@ namespace Mids_Reborn.Core
             }
 
             return false;
+        }
+
+        private bool TryGetBoostAttribScaleFromBoostPower(
+            IEnhancement enhancement,
+            IPower? boostPower,
+            string boostAttribName,
+            out float scale)
+        {
+            scale = 0f;
+            var preparedPower = PreparePopupBoostPower(boostPower);
+            if (preparedPower?.Effects == null || preparedPower.Effects.Length == 0)
+            {
+                return false;
+            }
+
+            foreach (var enhance in EnumerateBoostAttribCandidates(boostAttribName))
+            {
+                var best = preparedPower.Effects
+                    .Where(effect => effect != null && MapEnhanceFromEffect(effect) == enhance)
+                    .Select(effect => Math.Abs(GetScheduleValueFromBoostPowerEffect(enhancement.TypeID, effect)))
+                    .DefaultIfEmpty(0f)
+                    .Max();
+
+                if (best > float.Epsilon)
+                {
+                    scale = best;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private float GetScheduleValueFromBoostPowerEffect(Enums.eType enhancementType, IEffect effect)
+        {
+            var enhance = MapEnhanceFromEffect(effect);
+            if (enhance == Enums.eEnhance.None)
+            {
+                return 0f;
+            }
+
+            var schedule = Enhancement.GetSchedule(
+                enhance,
+                enhance == Enums.eEnhance.Mez ? (int)effect.MezType : -1);
+            var sourceScale = GetEffectSourceScale(effect);
+            if (sourceScale <= float.Epsilon)
+            {
+                return 0f;
+            }
+
+            var scheduleMult = GetScheduleMult(enhancementType, schedule);
+            var multiplier = EnhancementScheduleMath.NormalizeImportedScaleToMultiplier(
+                enhancementType,
+                schedule,
+                sourceScale);
+            return scheduleMult * multiplier;
+        }
+
+        private static float GetEffectSourceScale(IEffect effect)
+        {
+            var scale = Math.Abs(effect.Scale) > 0.0001f
+                ? effect.Scale
+                : effect.nMagnitude;
+            return Math.Abs(scale);
         }
 
         private static Enums.eEnhance[] EnumerateBoostAttribCandidates(string boostAttribName)
@@ -409,6 +419,370 @@ namespace Mids_Reborn.Core
                 "tohit" => [Enums.eEnhance.ToHit],
                 _ => []
             };
+        }
+
+        public string GetPopupEnhancementStringLong()
+        {
+            if (Enh < 0)
+            {
+                return string.Empty;
+            }
+
+            var enhancement = DatabaseAPI.Database.Enhancements[Enh];
+            var popupEffects = GetPopupEffectsStringLong(enhancement, enhancement.GetPower());
+            if (!string.IsNullOrWhiteSpace(popupEffects))
+            {
+                return popupEffects;
+            }
+
+            return enhancement.nIDSet < 0
+                ? string.Empty
+                : GetPopupSetBackedSpecialString(enhancement);
+        }
+
+        private string GetPopupEffectsStringLong(IEnhancement enhancement, IPower? enhBoostPower)
+        {
+            var stringBuilder = new StringBuilder();
+            var hasFxEffects = false;
+            var hasHealFamily = false;
+            var hasJumpFamily = false;
+            var hasEndFamily = false;
+            var hasSlowMovement = false;
+
+            foreach (var sEffect in enhancement.Effect)
+            {
+                switch (sEffect.Mode)
+                {
+                    case Enums.eEffMode.FX:
+                        hasFxEffects = true;
+                        break;
+                    case Enums.eEffMode.Enhancement when sEffect.Schedule != Enums.eSchedule.None:
+                    {
+                        var scheduleMult = (float)Math.Round(GetScheduleValue(enhancement.TypeID, sEffect) * 1000) / 1000;
+                        var label = GetPopupScheduledEffectLabel(
+                            enhancement,
+                            sEffect,
+                            ref hasHealFamily,
+                            ref hasJumpFamily,
+                            ref hasEndFamily,
+                            ref hasSlowMovement);
+
+                        if (string.IsNullOrEmpty(label))
+                        {
+                            break;
+                        }
+
+                        if (stringBuilder.Length > 0)
+                        {
+                            stringBuilder.Append("\n");
+                        }
+
+                        stringBuilder.Append(
+                            $"{label} enhancement (Sched. {Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule)}: {scheduleMult * 100:##0.###}%{(Math.Abs(sEffect.Multiplier) > float.Epsilon & sEffect.Multiplier != 1 & sEffect.Multiplier != 0.625 & sEffect.Multiplier != 0.5 & sEffect.Multiplier != 0.4375 ? $" [x{sEffect.Multiplier}]" : "")})");
+                        break;
+                    }
+                }
+            }
+
+            if (!hasFxEffects)
+            {
+                return stringBuilder.ToString();
+            }
+
+            var groupedGrantEffects = GetPopupGroupedEffectsStringLong(enhBoostPower, true);
+            if (!string.IsNullOrWhiteSpace(groupedGrantEffects))
+            {
+                if (stringBuilder.Length > 0)
+                {
+                    stringBuilder.Append("\n");
+                }
+
+                stringBuilder.Append(groupedGrantEffects);
+            }
+
+            var popupBoostPower = PreparePopupBoostPower(enhBoostPower);
+            if (popupBoostPower != null)
+            {
+                AppendPopupPowerEffects(stringBuilder, popupBoostPower);
+            }
+
+            if (stringBuilder.Length > 0)
+            {
+                return stringBuilder.ToString().Replace("Slf", "Self").Replace("Tgt", "Target");
+            }
+
+            return GetPopupGroupedEffectsStringLong(enhBoostPower);
+        }
+
+        private static string GetPopupScheduledEffectLabel(
+            IEnhancement enhancement,
+            Enums.sEffect sEffect,
+            ref bool hasHealFamily,
+            ref bool hasJumpFamily,
+            ref bool hasEndFamily,
+            ref bool hasSlowMovement)
+        {
+            var id = (Enums.eEnhance)sEffect.Enhance.ID;
+            string label;
+            if (id == Enums.eEnhance.Mez)
+            {
+                var subId = (Enums.eMez)sEffect.Enhance.SubID;
+                label = Enum.GetName(subId.GetType(), subId);
+            }
+            else
+            {
+                label = Enum.GetName(id.GetType(), id);
+            }
+
+            switch (sEffect.Enhance.ID)
+            {
+                case 7:
+                case 8:
+                case 17:
+                    label = !hasHealFamily ? "Heal" : string.Empty;
+                    hasHealFamily = true;
+                    break;
+                case 10:
+                case 11 when !hasSlowMovement:
+                    label = !hasJumpFamily ? "Jump" : string.Empty;
+                    hasJumpFamily = true;
+                    break;
+                case 5:
+                case 16:
+                    label = !hasEndFamily ? "EndMod" : string.Empty;
+                    hasEndFamily = true;
+                    break;
+                default:
+                    if (((enhancement.Name.IndexOf("Slow", StringComparison.Ordinal) > -1 ? 1 : 0) &
+                         (sEffect.BuffMode != Enums.eBuffDebuff.DeBuffOnly
+                             ? 0
+                             : sEffect.Enhance.ID == 6 || sEffect.Enhance.ID == 11
+                                 ? 1
+                                 : sEffect.Enhance.ID == 19
+                                     ? 1
+                                     : 0)) != 0 ||
+                        sEffect.Enhance.ID == 21)
+                    {
+                        label = !hasSlowMovement ? "Slow Movement" : string.Empty;
+                        hasSlowMovement = true;
+                    }
+
+                    break;
+            }
+
+            return label;
+        }
+
+        private void AppendPopupPowerEffects(StringBuilder stringBuilder, IPower popupBoostPower)
+        {
+            var returnMask = Array.Empty<int>();
+
+            for (var index1 = 0; index1 < popupBoostPower.Effects.Length; index1++)
+            {
+                if (popupBoostPower.Effects[index1].EffectType == Enums.eEffectType.GrantPower &&
+                    popupBoostPower.Effects[index1].CanGrantPower())
+                {
+                    if (stringBuilder.Length > 0)
+                    {
+                        stringBuilder.Append("\n");
+                    }
+
+                    stringBuilder.Append(popupBoostPower.Effects[index1].BuildEffectString(true, "", false, false, false, true, false, false, true));
+
+                    var empty = string.Empty;
+                    var groupedEffectsArray = popupBoostPower.Effects.Where(x =>
+                        x.EffectType.Equals(Enums.eEffectType.DamageBuff) ||
+                        x.EffectType.Equals(Enums.eEffectType.Defense) ||
+                        x.EffectType.Equals(Enums.eEffectType.Resistance) ||
+                        x.EffectType.Equals(Enums.eEffectType.Elusivity) ||
+                        x.EffectType.Equals(Enums.eEffectType.Mez)).ToArray();
+
+                    for (var effectId = 0; effectId < groupedEffectsArray.Length; effectId++)
+                    {
+                        if (popupBoostPower.Effects[index1] == groupedEffectsArray[effectId])
+                        {
+                            groupedEffectsArray[effectId].Stacking = Enums.eStacking.Yes;
+                            groupedEffectsArray[effectId].Buffable = true;
+                        }
+
+                        if (groupedEffectsArray[effectId].Absorbed_EffectID == index1)
+                        {
+                            popupBoostPower.GetEffectStringGrouped(effectId, ref empty, ref returnMask, false, false, false, true, true);
+                        }
+
+                        if (returnMask.Length <= 0)
+                        {
+                            continue;
+                        }
+
+                        if (stringBuilder.Length > 0)
+                        {
+                            stringBuilder.Append("\n");
+                        }
+
+                        stringBuilder.AppendFormat("  {0}", empty);
+                        break;
+                    }
+
+                    var empty2 = string.Empty;
+                    var groupedMezEffectsArray = popupBoostPower.Effects.Where(x => x.EffectType == Enums.eEffectType.MezResist).ToArray();
+                    if (groupedMezEffectsArray.Length > 0)
+                    {
+                        for (var effectId = 0; effectId < popupBoostPower.Effects.Length; effectId++)
+                        {
+                            var alreadyGrouped = returnMask.Any(m => m == effectId);
+                            if (popupBoostPower.Effects[effectId].Absorbed_EffectID != index1 || alreadyGrouped)
+                            {
+                                continue;
+                            }
+
+                            if (stringBuilder.Length > 0)
+                            {
+                                stringBuilder.Append("\n");
+                            }
+
+                            popupBoostPower.GetEffectStringGrouped(effectId, ref empty2, ref returnMask, false, false, false, true, true);
+                            stringBuilder.AppendFormat("  {0}", empty2);
+                            break;
+                        }
+                    }
+                    else
+                    {
+                        for (var index2 = 0; index2 < popupBoostPower.Effects.Length; index2++)
+                        {
+                            var alreadyGrouped = returnMask.Any(m => m == index2);
+                            if (popupBoostPower.Effects[index2].Absorbed_EffectID != index1 || alreadyGrouped)
+                            {
+                                continue;
+                            }
+
+                            if (stringBuilder.Length > 0)
+                            {
+                                stringBuilder.Append("\n");
+                            }
+
+                            popupBoostPower.Effects[index2].Stacking = Enums.eStacking.Yes;
+                            popupBoostPower.Effects[index2].Buffable = true;
+                            stringBuilder.AppendFormat("  {0}", popupBoostPower.Effects[index2].BuildEffectString(true, "", false, false, false, true, false, false, true));
+                        }
+                    }
+                }
+                else if (!popupBoostPower.Effects[index1].Absorbed_Effect)
+                {
+                    if (stringBuilder.Length > 0)
+                    {
+                        stringBuilder.Append("\n");
+                    }
+
+                    var effectString = popupBoostPower.Effects[index1].BuildEffectString(true, "", false, false, false, true).Trim();
+                    if (effectString.Contains("Null", StringComparison.Ordinal))
+                    {
+                        effectString = TryResolvePopupNullWrapperEffect(popupBoostPower.FullName);
+                    }
+
+                    if (!string.IsNullOrWhiteSpace(effectString) && !stringBuilder.ToString().Contains(effectString, StringComparison.Ordinal))
+                    {
+                        stringBuilder.Append(effectString);
+                    }
+                }
+            }
+        }
+
+        private static string TryResolvePopupNullWrapperEffect(string boostPowerFullName)
+        {
+            var enhId = DatabaseAPI.GetEnhancementByBoostName(boostPowerFullName);
+            if (enhId < 0)
+            {
+                return string.Empty;
+            }
+
+            var enhancement = DatabaseAPI.Database.Enhancements[enhId];
+            if (enhancement.nIDSet < 0)
+            {
+                return string.Empty;
+            }
+
+            var enhancementSet = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet];
+            var enhIndex = enhancementSet.Enhancements.TryFindIndex(e => e == enhId);
+            if (enhancementSet.SpecialBonus.Length <= 0)
+            {
+                return string.Empty;
+            }
+
+            var effectString = enhancementSet.SpecialBonus[^1].Index.Length switch
+            {
+                0 => enhancementSet.GetEffectString(enhancementSet.SpecialBonus.Length - 2, true, true, true, true),
+                _ => enhancementSet.GetEffectString(enhancementSet.SpecialBonus.Length - 1, true, true, true, true)
+            };
+
+            if (string.IsNullOrEmpty(effectString) && enhIndex > -1)
+            {
+                effectString = enhancementSet.GetEffectString(enhIndex, true, true, true, true);
+            }
+
+            return effectString.Replace(", ", "\n");
+        }
+
+        private string GetPopupGroupedEffectsStringLong(IPower? enhBoostPower, bool absorbedGrantEffectsOnly = false)
+        {
+            var power = PreparePopupBoostPower(enhBoostPower);
+            if (power == null)
+            {
+                return string.Empty;
+            }
+
+            var groupedEffects = GroupedFx.AssembleGroupedEffects(power, true)
+                .Where(g =>
+                {
+                    var effect = g.GetEffectAt(power);
+                    if (effect.EffectClass == Enums.eEffectClass.Ignored ||
+                        effect.EffectType == Enums.eEffectType.GrantPower)
+                    {
+                        return false;
+                    }
+
+                    return !absorbedGrantEffectsOnly ||
+                           effect.Absorbed_Effect ||
+                           effect.Absorbed_EffectID >= 0;
+                })
+                .Select(g => g.GetTooltip(power, true))
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .Distinct();
+
+            return string.Join("\n", groupedEffects);
+        }
+
+        private static Power? PreparePopupBoostPower(IPower? enhBoostPower)
+        {
+            if (enhBoostPower == null)
+            {
+                return null;
+            }
+
+            var power = new Power(enhBoostPower);
+            if (power.HasGrantPowerEffect)
+            {
+                power.ApplyGrantPowerEffects();
+            }
+
+            if (!power.AppliedExecutes)
+            {
+                power.ProcessExecutes();
+            }
+
+            return power;
+        }
+
+        private string GetPopupSetBackedSpecialString(IEnhancement enhancement)
+        {
+            var enhancementSet = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet];
+            var enhPosInSet = Array.IndexOf(enhancementSet.Enhancements, Enh);
+            if (enhPosInSet < 0)
+            {
+                return string.Empty;
+            }
+
+            return enhancementSet.GetEffectString(enhPosInSet, true, true, true, true);
         }
 
         private string GetEffectsStringLong(IEnhancement enhancement, IPower? enhBoostPower)

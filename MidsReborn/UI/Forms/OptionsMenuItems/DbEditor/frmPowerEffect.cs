@@ -177,7 +177,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             if (_loading || cbModifier.SelectedIndex < 0)
                 return;
             MyFx.ModifierTable = cbModifier.Text;
-            MyFx.nModifierTable = DatabaseAPI.NidFromUidAttribMod(MyFx.ModifierTable);
+            MyFx.nModifierTable = DatabaseAPI.GetRuntimeModifierTableLegacyId(MyFx.ModifierTable);
             UpdateFxText();
         }
 
@@ -309,7 +309,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             cbAttribute.SelectedIndex = (int)MyFx.AttribType;
             btnExprBuilder.Enabled = MyFx.AttribType == Enums.eAttribType.Expression;
             cbAspect.SelectedIndex = (int)MyFx.Aspect;
-            cbModifier.SelectedIndex = DatabaseAPI.NidFromUidAttribMod(MyFx.ModifierTable);
+            SelectModifierTable(MyFx.ModifierTable);
             lblAffectsCaster.Text = "";
             cbAffects.SelectedIndex = MyFx.ToWho == Enums.eToWho.All ? 1 : (int)MyFx.ToWho;
 
@@ -444,6 +444,24 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             cbModifier.EndUpdate();
             cbAffects.EndUpdate();
             lvSubAttribute.Enabled = true;
+        }
+
+        private void SelectModifierTable(string tableName)
+        {
+            if (string.IsNullOrWhiteSpace(tableName))
+            {
+                cbModifier.SelectedIndex = cbModifier.Items.Count > 0 ? 0 : -1;
+                return;
+            }
+
+            var index = cbModifier.FindStringExact(tableName);
+            if (index < 0)
+            {
+                cbModifier.Items.Add(tableName);
+                index = cbModifier.Items.Count - 1;
+            }
+
+            cbModifier.SelectedIndex = index;
         }
 
         private void SelectItemByName(ctlListViewColored lv, string itemName)

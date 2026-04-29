@@ -1105,50 +1105,31 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 popupData1.Sections[index1].Add("This enhancement is Unique. No more than one enhancement of this type can be slotted by a character.", PopUp.Colors.Text, 0.9f);
             }
 
-            switch (enhancement.TypeID)
+            var resolvedDescription = iSlot.GetResolvedEnhancementDescription();
+            if (!string.IsNullOrWhiteSpace(resolvedDescription))
             {
-                case Enums.eType.Normal:
-                case Enums.eType.InventO:
-                    if (!string.IsNullOrEmpty(enhancement.Desc))
-                    {
-                        popupData1.Sections[index1].Add(iSlot.GetResolvedEnhancementDescription(), PopUp.Colors.Title);
-                        break;
-                    }
+                popupData1.Sections[index1].Add(resolvedDescription, PopUp.Colors.Title);
+            }
 
-                    var index2 = popupData1.Add();
-                    var strArray1 = BreakByNewLine(iSlot.GetEnhancementStringLong());
-                    foreach (var s in strArray1)
-                    {
-                        var strArray2 = BreakByBracket(s);
-                        popupData1.Sections[index2].Add(strArray2[0], Color.FromArgb(0, 255, 0), strArray2[1], Color.FromArgb(0, 255, 0), 0.9f);
-                    }
+            var enhStringLong = iSlot.GetPopupEnhancementStringLong();
+            if (enhancement.UID.Contains("Assassins_Mark"))
+            {
+                enhStringLong = Regex.Replace(enhStringLong, @"(([\s]*)([0-9\.\%]+) RechargePower([0-9a-zA-Z\%\.\(\) ]+)[\r\n]*)+", "\r\n$2RechargePower(Stalker's Build Ups)\r\n");
+            }
 
-                    break;
-                case Enums.eType.SpecialO:
-                case Enums.eType.SetO:
-                    if (!string.IsNullOrEmpty(enhancement.Desc))
-                    {
-                        popupData1.Sections[index1].Add(iSlot.GetResolvedEnhancementDescription(), PopUp.Colors.Title);
-                    }
+            if (!string.IsNullOrWhiteSpace(enhStringLong))
+            {
+                var index4 = popupData1.Add();
+                var strArray3 = BreakByNewLine(enhStringLong);
 
-                    var index4 = popupData1.Add();
-                    var enhStringLong = iSlot.GetEnhancementStringLong();
-                    if (enhancement.UID.Contains("Assassins_Mark"))
-                    {
-                        enhStringLong = Regex.Replace(enhStringLong, @"(([\s]*)([0-9\.\%]+) RechargePower([0-9a-zA-Z\%\.\(\) ]+)[\r\n]*)+", "\r\n$2RechargePower(Stalker's Build Ups)\r\n");
-                    }
-                    var strArray3 = BreakByNewLine(enhStringLong);
+                foreach (var s in strArray3.Where(line => !string.IsNullOrWhiteSpace(line)))
+                {
+                    var strArray2 = !enhancement.HasPowerEffect
+                        ? BreakByBracket(s)
+                        : [s, string.Empty];
 
-                    foreach (var s in strArray3)
-                    {
-                        var strArray2 = !enhancement.HasPowerEffect
-                            ? BreakByBracket(s)
-                            : [s, string.Empty];
-
-                        popupData1.Sections[index4].Add(strArray2[0], Color.FromArgb(0, 255, 0), strArray2[1], Color.FromArgb(0, 255, 0), 0.9f);
-                    }
-
-                    break;
+                    popupData1.Sections[index4].Add(strArray2[0], Color.FromArgb(0, 255, 0), strArray2[1], Color.FromArgb(0, 255, 0), 0.9f);
+                }
             }
 
             if (!MidsContext.Config.PopupRecipes)
@@ -1281,7 +1262,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private static string[] BreakByBracket(string iString)
         {
             string[] strArray1 = { iString, string.Empty };
-            if (ShouldKeepEffectVectorInline(iString))
+            if (ShouldKeepEffectVectorInline(iString) || !ShouldSplitByBracket(iString))
             {
                 return strArray1;
             }
@@ -1391,6 +1372,22 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private static bool ShouldKeepEffectVectorInline(string value)
         {
             return value.Contains("DamageBuff (", StringComparison.Ordinal);
+        }
+
+        private static bool ShouldSplitByBracket(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return false;
+            }
+
+            if (!Regex.IsMatch(value, @"^[^(]+\([^()]+\)$"))
+            {
+                return false;
+            }
+
+            return value.Contains(" enhancement (Sched.", StringComparison.Ordinal) ||
+                   Regex.IsMatch(value, @"^[^:]+ \((?:Mag|PPM|Chance|[\d\.]+%|Sched\.)", RegexOptions.IgnoreCase);
         }
 
         private static PopUp.Section? PopSetBonusListing(int sIdx, PowerEntry power)
