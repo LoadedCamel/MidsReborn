@@ -43,7 +43,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             AttribType = Enums.eAttribType.Magnitude;
             Aspect = Enums.eAspect.Str;
             ModifierTable = "Melee_Ones";
-            nModifierTable = DatabaseAPI.GetRuntimeModifierTableLegacyId(ModifierTable);
             PowerFullName = string.Empty;
             Absorbed_PowerType = Enums.ePowerType.Auto_;
             Absorbed_Power_nID = -1;
@@ -97,7 +96,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             AttribType = (Enums.eAttribType)reader.ReadInt32();
             Aspect = (Enums.eAspect)reader.ReadInt32();
             ModifierTable = reader.ReadString();
-            nModifierTable = DatabaseAPI.GetRuntimeModifierTableLegacyId(ModifierTable);
             NearGround = reader.ReadBoolean();
             CancelOnMiss = reader.ReadBoolean();
             RequiresToHitCheck = reader.ReadBoolean();
@@ -178,7 +176,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             AttribType = template.AttribType;
             Aspect = template.Aspect;
             ModifierTable = template.ModifierTable;
-            nModifierTable = template.nModifierTable;
             NearGround = template.NearGround;
             CancelOnMiss = template.CancelOnMiss;
             ProcsPerMinute = template.ProcsPerMinute;
@@ -507,8 +504,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public Enums.eAspect Aspect { get; set; }
 
         public string ModifierTable { get; set; }
-
-        public int nModifierTable { get; set; }
 
         public string PowerFullName { get; set; }
 

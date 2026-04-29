@@ -3,7 +3,6 @@ using System.Globalization;
 using System.Runtime.CompilerServices;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
-using Mids_Reborn.UI.Forms.JsonImport;
 using MRBResourceLib;
 
 namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
@@ -48,7 +47,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private Label lblCountSalvage;
         private Label lblDate;
         private frmBusy? _frmBusy;
-        private Button btnClassAttributes;
 
         public frmDBEdit()
         {
@@ -58,7 +56,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var componentResourceManager = new ComponentResourceManager(typeof(frmDBEdit));
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmDBEdit);
-            InitializeClassAttributesButton();
         }
 
         private NumericUpDown UdIssue
@@ -230,8 +227,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void btnJsonImporter_Click(object sender, EventArgs e)
         {
-            using frmJsonImportMain f = new frmJsonImportMain();
-            f.ShowDialog();
+            using var form = new frmClassAttributes();
+            form.ShowDialog(this);
         }
 
         private void btnOmniImporter_Click(object sender, EventArgs e)
@@ -242,42 +239,14 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void btnAttribModEdit_Click(object sender, EventArgs e)
         {
-            if (!DatabaseAPI.UsesLegacyModifierTables())
-            {
-                using var form = new frmClassAttributes(initialGroup: "NamedTables");
-                form.ShowDialog(this);
-                return;
-            }
-
-            using frmEditAttribMod f = new frmEditAttribMod();
-            f.ShowDialog();
-        }
-
-        private void InitializeClassAttributesButton()
-        {
-            btnAttribModEdit.Text = @"Legacy AttribMod Editor";
-            btnClassAttributes = new Button
-            {
-                BackColor = Color.FromArgb(255, 219, 102),
-                FlatStyle = FlatStyle.Popup,
-                Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point),
-                ForeColor = Color.Black,
-                Location = new Point(583, 586),
-                Name = "btnClassAttributes",
-                Size = new Size(234, 31),
-                TabIndex = 45,
-                Text = @"Class Attributes",
-                UseVisualStyleBackColor = false
-            };
-            btnClassAttributes.Click += btnClassAttributes_Click;
-            Controls.Add(btnClassAttributes);
-            btnClassAttributes.BringToFront();
-        }
-
-        private void btnClassAttributes_Click(object sender, EventArgs e)
-        {
             using var form = new frmClassAttributes();
             form.ShowDialog(this);
+        }
+
+        private void UpdateModifierUiMode()
+        {
+            btnJsonImporter.Text = @"Named Tables Viewer";
+            btnAttribModEdit.Text = @"Class Attributes";
         }
 
         private void btnGCMIO_Click(object sender, EventArgs e)
@@ -329,7 +298,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             Directory.CreateDirectory(Path.Combine(path, "Assets", "Enhancements"));
             Directory.CreateDirectory(Path.Combine(path, "Assets", "Powersets"));
             Directory.CreateDirectory(Path.Combine(path, "Assets", "Sets"));
-            var files = Directory.GetFiles(Path.Combine(AppContext.BaseDirectory, AppDataPaths.ParentDatabaseFolder, "Generic"));
+            var files = Directory.GetFiles(Path.Combine(AppContext.BaseDirectory, AppDataPaths.ParentDatabaseFolder, "Homecoming"));
             foreach (var file in files)
             {
                 File.Copy(file, Path.Combine(path, Path.GetFileName(file)));

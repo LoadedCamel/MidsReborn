@@ -177,7 +177,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             if (_loading || cbModifier.SelectedIndex < 0)
                 return;
             MyFx.ModifierTable = cbModifier.Text;
-            MyFx.nModifierTable = DatabaseAPI.GetRuntimeModifierTableLegacyId(MyFx.ModifierTable);
             UpdateFxText();
         }
 

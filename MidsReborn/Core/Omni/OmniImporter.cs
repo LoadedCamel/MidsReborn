@@ -6857,7 +6857,7 @@ public sealed partial class OmniImporter
             {
                 result.Report.MissingModifierTableReferences++;
                 result.Report.AddLimited(result.Report.MissingModifierTableReferenceDetails,
-                    $"{powerFullName}: modifier table '{template.Table}' was not found in canonical class tables or legacy AttribMods.", 500);
+                    $"{powerFullName}: modifier table '{template.Table}' was not found in canonical class tables.", 500);
             }
         }
 

@@ -67,8 +67,6 @@ namespace Mids_Reborn.Core
         private const string SalvageName = "Mids Reborn Salvage Database";
         private const string EnhancementDbName = "Mids Reborn Enhancement Database";
 
-        private static IDictionary<string, int> AttribMod = new Dictionary<string, int>();
-
         private static readonly IDictionary<string, int> Classes = new Dictionary<string, int>();
 
         private static string[] WinterEventEnhancements = Array.Empty<string>();
@@ -88,59 +86,7 @@ namespace Mids_Reborn.Core
 
         private static void ClearLookups()
         {
-            AttribMod.Clear();
             Classes.Clear();
-        }
-
-        public static void ExportAttribMods()
-        {
-            var path = $"{Application.StartupPath}\\Data\\Export\\attribModTables.json";
-            var path2 = $"{Application.StartupPath}\\Data\\Export\\attribMod.json";
-            var path3 = $"{Application.StartupPath}\\Data\\Export\\attribModOrdered.json";
-            
-            File.WriteAllText(path, JsonConvert.SerializeObject(Database.AttribMods, Serializer.SerializerSettings));
-            File.WriteAllText(path2, JsonConvert.SerializeObject(AttribMod, Serializer.SerializerSettings));
-            var ordered = AttribMod.OrderBy(x => x.Value)
-                .ToDictionary(x => x.Key, x => x.Value);
-            File.WriteAllText(path3, JsonConvert.SerializeObject(ordered, Serializer.SerializerSettings));
-        }
-
-        public static void UpdateModifiersDict(Modifiers.ModifierTable[] mList)
-        {
-            AttribMod.Clear();
-            for (int i = 0; i < mList.Length; i++)
-            {
-                AttribMod.Add(mList[i].ID, i);
-            }
-        }
-
-        //Modifier Table
-        public static int NidFromUidAttribMod(string uID)
-        {
-            if (string.IsNullOrEmpty(uID))
-            {
-                return -1;
-            }
-
-            if (AttribMod.ContainsKey(uID))
-            {
-                return AttribMod[uID];
-            }
-
-            if (Database.AttribMods?.Modifier == null)
-            {
-                return -1;
-            }
-
-            for (var index = 0; index <= Database.AttribMods.Modifier.Count - 1; ++index)
-            {
-                if (!string.Equals(uID, Database.AttribMods.Modifier[index].ID, StringComparison.OrdinalIgnoreCase))
-                    continue;
-                AttribMod.Add(uID, index);
-                return index;
-            }
-
-            return -1;
         }
 
         public static IReadOnlyList<string> GetModifierTableNames()
@@ -160,14 +106,6 @@ namespace Mids_Reborn.Core
                 }
             }
 
-            foreach (var modifier in Database.AttribMods?.Modifier ?? [])
-            {
-                if (!string.IsNullOrWhiteSpace(modifier.ID))
-                {
-                    names.Add(modifier.ID);
-                }
-            }
-
             return names.ToArray();
         }
 
@@ -180,31 +118,49 @@ namespace Mids_Reborn.Core
 
             var canonicalName = NormalizeModifierTableName(tableName);
             return IsKnownServerFallbackModifierTable(canonicalName) ||
-                   (Database.ClassAttributes?.Values.Any(c => c.NamedTables.ContainsKey(canonicalName)) ?? false) ||
-                   NidFromUidAttribMod(canonicalName) >= 0;
+                   (Database.ClassAttributes?.Values.Any(c => c.NamedTables.ContainsKey(canonicalName)) ?? false);
+        }
+
+        public static bool HasCanonicalModifierTables(IDatabase? database = null)
+        {
+            var target = database ?? Database;
+            return target.ClassAttributes?.Count > 0 &&
+                   target.ClassAttributes.Values.Any(c => c.NamedTables.Count > 0);
+        }
+
+        public static void EnsureCanonicalModifierTablesLoaded(IDatabase? database = null)
+        {
+            var target = database ?? Database;
+            if (HasCanonicalModifierTables(target))
+            {
+                return;
+            }
+
+            var databaseName = ReferenceEquals(target, Database) ? DatabaseName : "selected";
+            throw new InvalidOperationException(
+                $"Database '{databaseName}' does not contain canonical class attribute tables. Legacy AttribMods are no longer supported; re-import or rebuild this database with canonical class attributes.");
         }
 
         public static bool TryGetClassModifier(string className, string tableName, int zeroBasedLevel, out float value)
         {
-            value = 0;
-            if (string.IsNullOrWhiteSpace(className) || string.IsNullOrWhiteSpace(tableName) ||
-                Database.ClassAttributes == null ||
-                !Database.ClassAttributes.TryGetValue(className, out var classAttributes))
+            value = 1.0f;
+            if (string.IsNullOrWhiteSpace(tableName))
             {
                 return false;
             }
 
             var canonicalName = NormalizeModifierTableName(tableName);
+            if (string.IsNullOrWhiteSpace(className) ||
+                Database.ClassAttributes == null ||
+                !Database.ClassAttributes.TryGetValue(className, out var classAttributes))
+            {
+                return true;
+            }
+
             var tableValue = classAttributes.GetNamedTableValueZeroBased(canonicalName, zeroBasedLevel);
             if (!tableValue.HasValue)
             {
-                if (IsKnownServerFallbackModifierTable(canonicalName))
-                {
-                    value = 1.0f;
-                    return true;
-                }
-
-                return false;
+                return true;
             }
 
             value = tableValue.Value;
@@ -643,13 +599,13 @@ namespace Mids_Reborn.Core
 
         public static void SaveJsonDatabase(ISerialize serializer, bool msgOnCompletion = true)
         {
+            EnsureCanonicalModifierTablesLoaded();
             //var jsonSerializer = new JsonSerializer();
 
             var zipContent = new MemoryStream();
             var archive = new ZipArchive(zipContent, ZipArchiveMode.Create);
             AddZipFileEntry("Database.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database)), archive);
             AddZipFileEntry("Archetypes.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Classes)), archive);
-            AddZipFileEntry("AttribMods.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.AttribMods)), archive);
             AddZipFileEntry("Enhancement.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Enhancements)), archive);
             AddZipFileEntry("EnhancementClasses.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.EnhancementClasses)), archive);
             AddZipFileEntry("Entities.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Entities)), archive);
@@ -670,6 +626,7 @@ namespace Mids_Reborn.Core
 
         public static void SaveJsonDatabaseProgress(ISerialize serializer, IntPtr frmProgressHandle, IWin32Window parent, bool msgOnCompletion = false)
         {
+            EnsureCanonicalModifierTablesLoaded();
             //var jsonSerializer = new JsonSerializer();
 
             Form prg = (Form)Control.FromHandle(frmProgressHandle);
@@ -691,38 +648,35 @@ namespace Mids_Reborn.Core
             prg.Text = "|15|Exporting Archetypes...";
             AddZipFileEntry("Archetypes.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Classes)), archive);
 
-            prg.Text = "|23|Exporting AttribMods database...";
-            AddZipFileEntry("AttribMods.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.AttribMods)), archive);
-
-            prg.Text = "|31|Exporting Enhancements database...";
+            prg.Text = "|23|Exporting Enhancements database...";
             AddZipFileEntry("Enhancement.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Enhancements)), archive);
 
-            prg.Text = "|38|Exporting Enhancement Classes...";
+            prg.Text = "|31|Exporting Enhancement Classes...";
             AddZipFileEntry("EnhancementClasses.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.EnhancementClasses)), archive);
 
-            prg.Text = "|46|Exporting Entities database...";
+            prg.Text = "|38|Exporting Entities database...";
             AddZipFileEntry("Entities.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Entities)), archive);
 
-            prg.Text = "|54|Exporting Levels database...";
+            prg.Text = "|46|Exporting Levels database...";
             AddZipFileEntry("Levels.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Levels)), archive);
 
-            prg.Text = "|62|Exporting Powers...";
+            prg.Text = "|54|Exporting Powers...";
             AddZipFileEntry("Powers.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Power)), archive);
 
-            prg.Text = "|69|Exporting Powersets...";
+            prg.Text = "|62|Exporting Powersets...";
             AddZipFileEntry("PowerSets.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Powersets)), archive);
 
-            prg.Text = "|77|Exporting Powersets groups...";
+            prg.Text = "|69|Exporting Powersets groups...";
             AddZipFileEntry("PowerSetGroups.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.PowersetGroups)), archive);
 
-            prg.Text = "|85|Exporting Recipes database...";
+            prg.Text = "|77|Exporting Recipes database...";
             AddZipFileEntry("Recipes.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Recipes)), archive);
 
-            prg.Text = "|92|Exporting Salvage database...";
+            prg.Text = "|85|Exporting Salvage database...";
             AddZipFileEntry("Salvage.json", Encoding.UTF8.GetBytes(serializer.Serialize(Database.Salvage)), archive);
             archive.Dispose();
 
-            prg.Text = "|99|Writing Zip archive to disk...";
+            prg.Text = "|92|Writing Zip archive to disk...";
             File.WriteAllBytes(Path.Combine(Application.StartupPath, @"Data\Mids.zip"), zipContent.ToArray());
 
             prg.Text = "|100|";
@@ -1954,6 +1908,7 @@ namespace Mids_Reborn.Core
 
         public static void SaveMainDatabase(ISerialize serializer, string? iPath)
         {
+            EnsureCanonicalModifierTablesLoaded();
             CheckEhcBoosts();
             var path = AppDataPaths.SelectDataFileSave(AppDataPaths.FileDb, iPath);
             FileStream fileStream;
@@ -2174,6 +2129,16 @@ namespace Mids_Reborn.Core
                 return false;
             }
 
+            try
+            {
+                EnsureCanonicalModifierTablesLoaded(database);
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message, @"Unsupported Database", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return false;
+            }
+
             return true;
         }
 
@@ -2304,6 +2269,16 @@ namespace Mids_Reborn.Core
                 reader.Close();
                 fileStream.Close();
                 MessageBox.Show($@"{e.Message}\r\n{e.StackTrace}");
+                return false;
+            }
+
+            try
+            {
+                EnsureCanonicalModifierTablesLoaded();
+            }
+            catch (InvalidOperationException ex)
+            {
+                MessageBox.Show(ex.Message, @"Unsupported Database", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
 
@@ -3466,26 +3441,17 @@ namespace Mids_Reborn.Core
 
         public static float GetModifier(IEffect iEffect)
         {
-            //Currently expects a zero-based level.
+            EnsureCanonicalModifierTablesLoaded();
+            if (string.IsNullOrWhiteSpace(iEffect.ModifierTable))
+            {
+                return 1.0f;
+            }
 
             var iLevel = MidsContext.MathLevelBase;
             var className = ResolveModifierClassName(iEffect);
-            if (TryGetClassModifier(className, iEffect.ModifierTable, iLevel, out var canonicalModifier))
-            {
-                return canonicalModifier;
-            }
-
-            // This value is returned as a modifier if a value is out of bounds.
-            var iClass = string.IsNullOrWhiteSpace(className) ? 0 : NidFromUidClass(className);
-            var effPower = iEffect.GetPower();
-            if (effPower == null)
-            {
-                return iEffect.Enhancement == null
-                    ? 1
-                    : GetModifier(iClass, iEffect.nModifierTable, iLevel);
-            }
-
-            return GetModifier(iClass, iEffect.nModifierTable, iLevel);
+            return TryGetClassModifier(className, iEffect.ModifierTable, iLevel, out var canonicalModifier)
+                ? canonicalModifier
+                : 1.0f;
         }
 
         public static string ResolveModifierClassName(IEffect iEffect)
@@ -3508,36 +3474,19 @@ namespace Mids_Reborn.Core
 
         public static float GetModifier(string tableName)
         {
+            EnsureCanonicalModifierTablesLoaded();
+            if (string.IsNullOrWhiteSpace(tableName))
+            {
+                return 1.0f;
+            }
+
             var className = MidsContext.Character?.Archetype?.ClassName ??
                             MidsContext.Archetype?.ClassName ??
                             string.Empty;
             var level = MidsContext.MathLevelBase;
-            if (TryGetClassModifier(className, tableName, level, out var canonicalModifier))
-            {
-                return canonicalModifier;
-            }
-
-            var tableIndex = NidFromUidAttribMod(tableName);
-            var classIndex = NidFromUidClass(className);
-            return GetModifier(classIndex, tableIndex, level);
-        }
-
-        private static float GetModifier(int iClass, int iTable, int iLevel)
-        {
-            //Warning: calling this method with iTable == 0 can lead to super weird return values.
-            if (iClass < 0) return 0;
-            if (iTable < 0) return 0;
-            if (iLevel < 0) return 0;
-            if (iClass > Database.Classes.Length - 1) return 0;
-
-            var iClassColumn = Database.Classes[iClass].Column;
-            if (iClassColumn < 0) return 0;
-            if (Database.AttribMods?.Modifier == null) return 0;
-            if (iTable > Database.AttribMods.Modifier.Count - 1) return 0;
-            if (iLevel > Database.AttribMods.Modifier[iTable].Table.Count - 1) return 0;
-            if (iClassColumn > Database.AttribMods.Modifier[iTable].Table[iLevel].Count - 1) return 0;
-
-            return Database.AttribMods.Modifier[iTable].Table[iLevel][iClassColumn];
+            return TryGetClassModifier(className, tableName, level, out var canonicalModifier)
+                ? canonicalModifier
+                : 1.0f;
         }
 
         public static void MatchAllIDs(IMessenger? messenger = null)
@@ -3554,8 +3503,6 @@ namespace Mids_Reborn.Core
             SetPowersetsFromGroups();
             UpdateMessage(messenger, "Matching Enhancement IDs...");
             MatchEnhancementIDs();
-            UpdateMessage(messenger, "Matching Modifier IDs...");
-            MatchModifierIDs();
             UpdateMessage(messenger, "Matching Entity IDs...");
             MatchSummonIDs();
         }
@@ -3568,7 +3515,6 @@ namespace Mids_Reborn.Core
             MatchPowerIDs();
             SetPowersetsFromGroups();
             MatchEnhancementIDs();
-            MatchModifierIDs();
             MatchSummonIDs();
         }
 
@@ -3902,17 +3848,6 @@ namespace Mids_Reborn.Core
             }
 
             return num;
-        }
-
-        public static void MatchModifierIDs()
-        {
-            foreach (var power in Database.Power)
-            {
-                foreach (var effect in power.Effects)
-                {
-                    effect.nModifierTable = GetRuntimeModifierTableLegacyId(effect.ModifierTable);
-                }
-            }
         }
 
         public static void MatchSummonIDs()

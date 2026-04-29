@@ -68,7 +68,9 @@ namespace Mids_Reborn
                     Application.Exit();
                 }
 
-                var defaultDatabase = installedDatabases.First(db => db.Key != "Generic");
+                var defaultDatabase = installedDatabases.TryGetValue("Homecoming", out var homecomingPath)
+                    ? new KeyValuePair<string, string>("Homecoming", homecomingPath)
+                    : installedDatabases.First();
                 if (MidsContext.Config == null) return;
                 MidsContext.Config.DataPath = defaultDatabase.Value;
                 MidsContext.Config.SavePath = defaultDatabase.Value;
@@ -88,10 +90,6 @@ namespace Mids_Reborn
                 }
                 messenger.SetMessage("Loading Build Preferences");
                 BuildPreferences.Load();
-                messenger.SetMessage("Loading Attribute Modifiers...");
-                DatabaseAPI.Database.AttribMods = new Modifiers();
-                if (!DatabaseAPI.Database.AttribMods.Load(path)) { }
-
                 DatabaseAPI.LoadTypeGrades(path);
                 messenger.SetMessage("Loading Main Data...");
                 if (!DatabaseAPI.LoadLevelsDatabase(path))

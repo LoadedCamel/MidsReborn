@@ -85,8 +85,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public EnhancementImportMetadata EnhancementImportMetadata { get; set; } = new();
 
-        public Modifiers AttribMods { get; set; }
-
         public LevelMap[] Levels { get; set; }
 
         public int[] Levels_MainPowers { get; set; }

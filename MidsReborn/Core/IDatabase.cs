@@ -46,8 +46,6 @@ namespace Mids_Reborn.Core
 
         Enums.VersionData IOAssignmentVersion { get; set; }
 
-        Modifiers AttribMods { get; set; }
-
         SummonedEntity[] Entities { get; set; }
 
         OmniDatabaseImportSource OmniImportSource { get; set; }

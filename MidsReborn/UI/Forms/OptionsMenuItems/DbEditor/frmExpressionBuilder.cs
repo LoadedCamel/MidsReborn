@@ -107,7 +107,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                         return;
                     }
 
-                    token = ((Modifiers.ModifierTable) mSelector.SelectedItem)?.ID;
+                    token = mSelector.SelectedItem as string;
 
                     break;
             }

@@ -17,13 +17,11 @@ namespace Mids_Reborn.Core
         public const string FileEnhDb = "EnhDB.mhd";
         public const string FileBbCodeUpdate = "BBCode.mhd";
         public const string FileOverrides = "Compare.mhd";
-        public const string FileModifiers = "AttribMod.mhd";
         public const string FileEffectIds = "GlobalMods.mhd";
         public const string FileGraphics = "I9.mhd";
         public const string FileSd = "SData.mhd";
 
         public const string ServerDataFile = "SData.json";
-        public const string JsonFileModifiers = "AttribMod.json";
         public const string JsonFileTypeGrades = "TypeGrades.json";
         private const string JsonFileConfig = "appSettings.json";
 

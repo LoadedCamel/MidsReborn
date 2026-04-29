@@ -225,7 +225,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                 return;
             }
 
-            SelectedItem = new Modifiers.ModifierTable { ID = cbModifier.Text };
+            SelectedItem = cbModifier.Text;
         }
 
         private void cbVectors_SelectedIndexChanged(object sender, EventArgs e)

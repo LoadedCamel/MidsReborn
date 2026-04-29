@@ -105,8 +105,6 @@ namespace Mids_Reborn.Core
 
         string ModifierTable { get; set; }
 
-        int nModifierTable { get; set; }
-
         string PowerFullName { get; set; }
 
         bool NearGround { get; set; }

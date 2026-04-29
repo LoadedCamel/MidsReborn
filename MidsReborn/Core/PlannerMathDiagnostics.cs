@@ -1462,7 +1462,7 @@ public static class PlannerMathDiagnostics
     {
         var className = DatabaseAPI.ResolveModifierClassName(effect);
         var canonical = DatabaseAPI.TryGetClassModifier(className, effect.ModifierTable, MidsContext.MathLevelBase, out var value);
-        var source = canonical ? "canonical" : effect.nModifierTable >= 0 ? "legacy" : "missing";
+        var source = canonical ? "canonical" : "fallback";
         return $"`{effect.ModifierTable}` {source}:{Format(value)}";
     }
 
