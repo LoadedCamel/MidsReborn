@@ -195,6 +195,9 @@ namespace Mids_Reborn.Core
                 try { SaveOverrides(Serializer.GetSerializer()); } catch { /* ignore */ }
             }
 
+            EnemyRelativeLevel = NormalizeEnemyRelativeLevel(EnemyRelativeLevel, ScalingToHit);
+            ScalingToHit = GetLegacyScalingToHitForRelativeLevel(EnemyRelativeLevel);
+
             IsInitialized = true;
         }
 
@@ -207,6 +210,93 @@ namespace Mids_Reborn.Core
                     Directory.CreateDirectory(path);
             }
             catch { /* non-fatal */ }
+        }
+
+        public static (int Min, int Max) GetEnemyRelativeLevelBounds(string? databaseName = null)
+        {
+            if (!string.IsNullOrWhiteSpace(databaseName))
+            {
+                return DatabaseAPI.ServerData.ResolveEnemyRelativeLevelBounds(databaseName);
+            }
+
+            if (_lazy.IsValueCreated)
+            {
+                var current = _lazy.Value;
+                if (!string.IsNullOrWhiteSpace(current.DataPath))
+                {
+                    return DatabaseAPI.ServerData.ResolveEnemyRelativeLevelBounds(new DirectoryInfo(current.DataPath).Name);
+                }
+            }
+
+            return DatabaseAPI.ServerData.ResolveEnemyRelativeLevelBounds();
+        }
+
+        public static int ClampEnemyRelativeLevel(int relativeLevel)
+        {
+            var (min, max) = GetEnemyRelativeLevelBounds();
+            return Math.Max(min, Math.Min(max, relativeLevel));
+        }
+
+        public static int FindNearestEnemyRelativeLevel(float scalingToHit)
+        {
+            var nearestRelativeLevel = 0;
+            var nearestDistance = float.MaxValue;
+            foreach (var (relativeLevel, scale) in EnumerateLegacyRelativeToHitScales())
+            {
+                var distance = Math.Abs(scale - scalingToHit);
+                if (!(distance < nearestDistance))
+                {
+                    continue;
+                }
+
+                nearestRelativeLevel = relativeLevel;
+                nearestDistance = distance;
+            }
+
+            return nearestRelativeLevel;
+        }
+
+        public static int NormalizeEnemyRelativeLevel(int storedRelativeLevel, float scalingToHit)
+        {
+            return storedRelativeLevel == int.MinValue
+                ? FindNearestEnemyRelativeLevel(scalingToHit)
+                : ClampEnemyRelativeLevel(storedRelativeLevel);
+        }
+
+        public static float GetLegacyScalingToHitForRelativeLevel(int relativeLevel)
+        {
+            return ClampEnemyRelativeLevel(relativeLevel) switch
+            {
+                -4 => 0.95f,
+                -3 => 0.90f,
+                -2 => 0.85f,
+                -1 => 0.80f,
+                0 => 0.75f,
+                1 => 0.65f,
+                2 => 0.56f,
+                3 => 0.48f,
+                4 => 0.39f,
+                5 => 0.30f,
+                6 => 0.20f,
+                7 => 0.08f,
+                _ => DatabaseAPI.ServerData.BaseToHit
+            };
+        }
+
+        private static IEnumerable<KeyValuePair<int, float>> EnumerateLegacyRelativeToHitScales()
+        {
+            yield return new KeyValuePair<int, float>(-4, 0.95f);
+            yield return new KeyValuePair<int, float>(-3, 0.90f);
+            yield return new KeyValuePair<int, float>(-2, 0.85f);
+            yield return new KeyValuePair<int, float>(-1, 0.80f);
+            yield return new KeyValuePair<int, float>(0, 0.75f);
+            yield return new KeyValuePair<int, float>(1, 0.65f);
+            yield return new KeyValuePair<int, float>(2, 0.56f);
+            yield return new KeyValuePair<int, float>(3, 0.48f);
+            yield return new KeyValuePair<int, float>(4, 0.39f);
+            yield return new KeyValuePair<int, float>(5, 0.30f);
+            yield return new KeyValuePair<int, float>(6, 0.20f);
+            yield return new KeyValuePair<int, float>(7, 0.08f);
         }
 
         #endregion
@@ -227,21 +317,25 @@ namespace Mids_Reborn.Core
         public Enums.eSpeedMeasure SpeedFormat = Enums.eSpeedMeasure.MilesPerHour;
         public bool CoDEffectFormat = false;
 
-        internal readonly List<KeyValuePair<string, float>> RelativeScales = new()
+        [JsonIgnore]
+        internal List<KeyValuePair<string, int>> RelativeLevels => GetRelativeLevels(
+            string.IsNullOrWhiteSpace(DataPath) ? null : new DirectoryInfo(DataPath).Name);
+
+        public static List<KeyValuePair<string, int>> GetRelativeLevels(string? databaseName = null)
         {
-            new("Enemy Relative Level: -4", 0.95f),
-            new("Enemy Relative Level: -3", 0.9f),
-            new("Enemy Relative Level: -2", 0.85f),
-            new("Enemy Relative Level: -1", 0.8f),
-            new("Enemy Relative Level: Default", 0.75f),
-            new("Enemy Relative Level: +1", 0.65f),
-            new("Enemy Relative Level: +2", 0.56f),
-            new("Enemy Relative Level: +3", 0.48f),
-            new("Enemy Relative Level: +4", 0.39f),
-            new("Enemy Relative Level: +5", 0.3f),
-            new("Enemy Relative Level: +6", 0.2f),
-            new("Enemy Relative Level: +7", 0.08f)
-        };
+            var (min, max) = GetEnemyRelativeLevelBounds(databaseName);
+            var levels = new List<KeyValuePair<string, int>>();
+            for (var relativeLevel = min; relativeLevel <= max; relativeLevel++)
+            {
+                levels.Add(new KeyValuePair<string, int>(
+                    relativeLevel == 0
+                        ? "Enemy Relative Level: Default"
+                        : $"Enemy Relative Level: {(relativeLevel > 0 ? "+" : string.Empty)}{relativeLevel}",
+                    relativeLevel));
+            }
+
+            return levels;
+        }
 
         public SDamageMath DamageMath { get; } = new();
         public IncludeExclude Inc { get; } = new();
@@ -253,6 +347,7 @@ namespace Mids_Reborn.Core
         public string? WindowState { get; set; }
         public Rectangle Bounds { get; set; }
         public bool UseOldTotalsWindow { get; set; }
+        public int EnemyRelativeLevel { get; set; } = int.MinValue;
         public float ScalingToHit { get; set; } = DatabaseAPI.ServerData.BaseToHit;
         public int ExempHigh { get; set; } = 50;
         public int TeamSize { get; set; } = 1;

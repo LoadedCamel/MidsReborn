@@ -541,9 +541,10 @@ namespace Mids_Reborn.UI.Forms
             }
             else
             {
-                IPower power1 = new Power(_myPowers[pIdx]);
-                power1.AbsorbPetEffects();
-                power1.ApplyGrantPowerEffects();
+                IPower power1 = PlannerEffectResolver.ResolvePower(new Power(_myPowers[pIdx]), new PlannerEffectResolutionContext
+                {
+                    AbsorbPetEffects = true
+                }).ResolvedPower;
                 var index1 = iPopup.Add();
                 var str1 = "";
                 switch (power1.PowerType)

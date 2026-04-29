@@ -1,4 +1,5 @@
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.PlannerRulesets;
 using System.Text.RegularExpressions;
 using static Mids_Reborn.Core.Expressions;
 
@@ -7,6 +8,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
     public class Effect : IEffect, IComparable, ICloneable
     {
         private const string AdvancedConditionsMarker = "MRB_ADVANCED_EFFECT_CONDITIONS";
+        private const string ModePayloadMarker = "MRB_EFFECT_MODE_PAYLOAD";
+        private const string EffectTagsMarker = "MRB_EFFECT_TAGS";
+        private const string OmniSourceMarker = "MRB_EFFECT_OMNI_SOURCE";
+        private const string CombatModFlagsMarker = "MRB_EFFECT_COMBAT_MOD_FLAGS";
         private static readonly Regex UidClassRegex = new("arch source(.owner)?> (Class_[^ ]*)", RegexOptions.IgnoreCase);
 
         private IPower? power;
@@ -48,6 +53,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             buffMode = Enums.eBuffMode.Normal;
             Special = string.Empty;
             EffectId = "Ones";
+            EffectTags = [];
+            OmniSource = string.Empty;
+            ModeName = string.Empty;
+            ModeId = -1;
+            ModeFlag = Enums.eModeFlags.None;
+            RevokedPower = string.Empty;
             ActiveConditionals = [];
             AdvancedConditions = new AdvancedConditionSet();
         }
@@ -124,6 +135,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 AdvancedConditions = advancedConditions;
                 ActiveConditionals = AdvancedConditions.ToLegacyActiveConditionals();
             }
+
+            TryReadModePayload(reader);
+            if (!TryReadEffectTags(reader) && !string.IsNullOrWhiteSpace(EffectId))
+            {
+                EffectTags = [EffectId];
+            }
+
+            TryReadOmniSource(reader);
+            TryReadCombatModFlags(reader);
         }
 
         private Effect(IEffect template) : this()
@@ -163,6 +183,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             CancelOnMiss = template.CancelOnMiss;
             ProcsPerMinute = template.ProcsPerMinute;
             Absorbed_Duration = template.Absorbed_Duration;
+            PseudoPetRecurrence = template.PseudoPetRecurrence;
             Absorbed_Effect = template.Absorbed_Effect;
             Absorbed_PowerType = template.Absorbed_PowerType;
             Absorbed_Class_nID = template.Absorbed_Class_nID;
@@ -180,8 +201,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Expressions = template.Expressions;
             Reward = template.Reward;
             EffectId = template.EffectId;
+            EffectTags = template.EffectTags?.ToList() ?? [];
+            OmniSource = template.OmniSource;
+            UseCombatModMagnitude = template.UseCombatModMagnitude;
+            UseCombatModDuration = template.UseCombatModDuration;
             IgnoreED = template.IgnoreED;
             Override = template.Override;
+            ModeName = template.ModeName;
+            ModeId = template.ModeId;
+            ModeFlag = template.ModeFlag;
+            RevokedPower = template.RevokedPower;
             ActiveConditionals = template.ActiveConditionals;
             AdvancedConditions = template.AdvancedConditions?.Clone() ?? AdvancedConditionSet.FromLegacyActiveConditionals(ActiveConditionals);
         }
@@ -195,6 +224,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public Expressions Expressions { get; set; }
 
         public AdvancedConditionSet AdvancedConditions { get; set; }
+
+        public string OmniSource { get; set; }
+        public bool UseCombatModMagnitude { get; set; }
+        public bool UseCombatModDuration { get; set; }
 
         public float ProcsPerMinute { get; set; }
 
@@ -210,31 +243,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 // preventing PPM calculation
                 if (ProcsPerMinute > 0 && power != null)
                 {
-                    var areaFactor = (float)(power.AoEModifier * 0.75 + 0.25);
-
-                    var globalRecharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
-                    var rechargeVal = Math.Abs(power.RechargeTime) < float.Epsilon
-                        ? 0
-                        : power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - globalRecharge);
-
-                    probability = power.PowerType == Enums.ePowerType.Click
-                        ? ProcsPerMinute * (rechargeVal + power.CastTimeReal) / (60f * areaFactor)
-                        : ProcsPerMinute * 10 / (60f * areaFactor);
-
-                    probability = Math.Max(MinProcChance, Math.Min(MaxProcChance, probability));
+                    probability = DatabaseAPI.GetPlannerRuleset()
+                        .CalculateProcProbability(power, ProcsPerMinute, probability);
                 }
 
-                if (MidsContext.Character != null && !string.IsNullOrEmpty(EffectId) && MidsContext.Character.ModifyEffects.ContainsKey(EffectId))
-                {
-                    probability += MidsContext.Character.ModifyEffects[EffectId];
-                }
+                probability = DatabaseAPI.GetPlannerRuleset()
+                    .ApplyChanceModifiers(MidsContext.Character, power, this, probability);
 
                 return Math.Max(0, Math.Min(1, probability));
             }
         }
 
-        public float MinProcChance => ProcsPerMinute > 0 ? ProcsPerMinute * 0.015f + 0.05f : 0.05f;
-        public const float MaxProcChance = 0.9f;
+        public float MinProcChance => DatabaseAPI.GetPlannerRuleset().GetMinProcChance(ProcsPerMinute);
+        public float MaxProcChance => DatabaseAPI.GetPlannerRuleset().GetMaxProcChance(ProcsPerMinute);
 
         public float Probability
         {
@@ -403,6 +424,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public string EffectId { get; set; }
 
+        public List<string> EffectTags { get; set; }
+
         public string Special { get; set; }
 
         public IPower GetPower()
@@ -511,11 +534,21 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int Absorbed_EffectID { get; set; }
 
+        public PseudoPetRecurrenceInfo? PseudoPetRecurrence { get; set; }
+
         public Enums.eBuffMode buffMode { get; set; }
 
         public int UniqueID { get; set; }
 
         public string Override { get; set; }
+
+        public string ModeName { get; set; }
+
+        public int ModeId { get; set; }
+
+        public Enums.eModeFlags ModeFlag { get; set; }
+
+        public string RevokedPower { get; set; }
 
         public List<KeyValue<string, string>> ActiveConditionals { get; set; }
         public bool Validated { get; set; }
@@ -643,6 +676,25 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         break;
                     }
 
+                case Enums.eEffectType.SetMode:
+                case Enums.eEffectType.UnsetMode:
+                    {
+                        var shown = FormatModePayload();
+                        result = string.IsNullOrWhiteSpace(shown)
+                            ? $"{effectLabel}{toWhoText}{trailing}"
+                            : $"{effectLabel} {shown}{toWhoText}{trailing}";
+                        break;
+                    }
+
+                case Enums.eEffectType.RevokePower:
+                    {
+                        var revoke = FormatPowerPayload(RevokedPower, Override);
+                        result = string.IsNullOrWhiteSpace(revoke)
+                            ? $"{effectLabel}{toWhoText}"
+                            : $"{effectLabel} {revoke}{toWhoText}";
+                        break;
+                    }
+
                 case Enums.eEffectType.Heal:
                 case Enums.eEffectType.HitPoints:
                     {
@@ -656,13 +708,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         else if (!DisplayPercentage)
                         {
                             // Non-% display: show (percent of Max HP) after raw value
-                            var pctOfMax = Utilities.FixDP((float)(BuffedMag / (double)MidsContext.Archetype.Hitpoints * 100));
+                            var baseHitPoints = DatabaseAPI.GetClassHitPoints(MidsContext.Archetype);
+                            var pctOfMax = Utilities.FixDP((float)(BuffedMag / (double)baseHitPoints * 100));
                             result = $"{magText} ({pctOfMax}%) {effectLabel}{toWhoText}{trailing}";
                         }
                         else
                         {
                             // % display: also show raw HP from %
-                            var rawHp = Utilities.FixDP(BuffedMag / 100f * MidsContext.Archetype.Hitpoints);
+                            var rawHp = Utilities.FixDP(BuffedMag / 100f * DatabaseAPI.GetClassHitPoints(MidsContext.Archetype));
                             result = $"{rawHp} ({magText}) {effectLabel}{toWhoText}{trailing}";
                         }
                         break;
@@ -693,7 +746,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         if (DisplayPercentage)
                         {
-                            var perSec = Utilities.FixDP(BuffedMag * (MidsContext.Archetype.BaseRecovery * Statistics.BaseMagic));
+                            var perSec = Utilities.FixDP(BuffedMag * (DatabaseAPI.GetClassBaseRecovery(MidsContext.Archetype) * Statistics.BaseMagic));
                             result = $"{magText} ({perSec} /s) {effectLabel}{toWhoText}{trailing}";
                         }
                         else
@@ -709,7 +762,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         if (DisplayPercentage)
                         {
-                            var hps = Utilities.FixDP((float)(MidsContext.Archetype.Hitpoints / 100.0 * (BuffedMag * (double)MidsContext.Archetype.BaseRegen * 1.66666662693024)));
+                            var hps = Utilities.FixDP((float)(DatabaseAPI.GetClassHitPoints(MidsContext.Archetype) / 100.0 * (BuffedMag * (double)DatabaseAPI.GetClassBaseRegen(MidsContext.Archetype) * 1.66666662693024)));
                             result = $"{magText} ({hps} HP/s) {effectLabel}{toWhoText}{trailing}";
                         }
                         else
@@ -806,9 +859,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             // Target & ToHit
             if (!simple)
             {
-                var aff = power?.EntitiesAffected ?? Enums.eEntity.None;
-                var aut = power?.EntitiesAutoHit ?? Enums.eEntity.None;
-                sTarget = ToWho.ToPhrase(aff, aut);
+                // var aff = power?.EntitiesAffected ?? Enums.eEntity.None;
+                // var aut = power?.EntitiesAutoHit ?? Enums.eEntity.None;
+                // sTarget = ToWho.ToPhrase(aff, aut);
+                sTarget = ToWho switch
+                {
+                    Enums.eToWho.Target => " to Target",
+                    Enums.eToWho.Self => " to Self",
+                    _ => sTarget
+                };
                 if (RequiresToHitCheck) sToHit = " requires ToHit check";
             }
 
@@ -910,7 +969,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (SpecialCase != Enums.eSpecialCase.None & SpecialCase != Enums.eSpecialCase.Defiance)
                     sSpecial = Enum.GetName(SpecialCase.GetType(), SpecialCase);
 
-                if (ActiveConditionals.Count > 0)
+                if (AdvancedConditions is { Rows.Count: > 0 })
+                {
+                    sConditional = FormatAdvancedConditionSummary(AdvancedConditions);
+                }
+                else if (ActiveConditionals.Count > 0)
                 {
                     var getCondition = new Regex("(:.*)");
                     var getConditionItem = new Regex("(.*:)");
@@ -1000,6 +1063,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (Absorbed_Interval > 0 & Absorbed_Interval < 900)
                     sDuration +=
                         $" every {Utilities.FixDP(Absorbed_Interval)} seconds{(EffectType == Enums.eEffectType.Mez && (MezType is Enums.eMez.Knockback or Enums.eMez.Knockup) ? ": " : "")}";
+
+                if (PseudoPetRecurrence is { IsValid: true } recurrence)
+                {
+                    sDuration += $" ({recurrence.ToDisplayText()})";
+                }
             }
 
             // Magnitude text (Variable/Expression aware)
@@ -1096,7 +1164,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         if (EffectType == Enums.eEffectType.Damage)
                         {
-                            if (Ticks > 0) sMag = $"{Ticks} x {sMag}";
+                            if (PseudoPetRecurrence is { IsValid: true } recurrence) sMag = $"{recurrence.TicksPerSpawn} x {sMag}";
+                            else if (Ticks > 0) sMag = $"{Ticks} x {sMag}";
                             sBuild = $"{sMag} {sSubEffect} {sEffect}{sTarget}{sDuration}";
                         }
                         else
@@ -1183,8 +1252,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         else
                         {
                             sBuild = DisplayPercentage
-                                ? $"{Utilities.FixDP(BuffedMag / 100 * MidsContext.Archetype.Hitpoints)} HP ({sMag}) {sEffect}{sTarget}{sDuration}"
-                                : $"{sMag} HP ({Utilities.FixDP(BuffedMag / MidsContext.Archetype.Hitpoints * 100)}%) {sEffect}{sTarget}{sDuration}";
+                                ? $"{Utilities.FixDP(BuffedMag / 100 * DatabaseAPI.GetClassHitPoints(MidsContext.Archetype))} HP ({sMag}) {sEffect}{sTarget}{sDuration}"
+                                : $"{sMag} HP ({Utilities.FixDP(BuffedMag / DatabaseAPI.GetClassHitPoints(MidsContext.Archetype) * 100)}%) {sEffect}{sTarget}{sDuration}";
                         }
                     }
                     else
@@ -1198,7 +1267,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eEffectType.Regeneration:
                     sBuild = !noMag
                         ? (DisplayPercentage
-                            ? $"{sMag} ({Utilities.FixDP(MidsContext.Archetype.Hitpoints / 100f * (BuffedMag * MidsContext.Archetype.BaseRegen * Statistics.BaseMagic))} HP/sec) {sEffect}{sTarget}{sDuration}"
+                            ? $"{sMag} ({Utilities.FixDP(DatabaseAPI.GetClassHitPoints(MidsContext.Archetype) / 100f * (BuffedMag * DatabaseAPI.GetClassBaseRegen(MidsContext.Archetype) * Statistics.BaseMagic))} HP/sec) {sEffect}{sTarget}{sDuration}"
                             : $"{sMag} {sEffect}{sTarget}{sDuration}")
                         : "+Regeneration";
                     break;
@@ -1206,7 +1275,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eEffectType.Recovery:
                     sBuild = !noMag
                         ? (DisplayPercentage
-                            ? $"{sMag} ({Utilities.FixDP(BuffedMag * (MidsContext.Archetype.BaseRecovery * Statistics.BaseMagic))} End/sec) {sEffect}{sTarget}{sDuration}"
+                            ? $"{sMag} ({Utilities.FixDP(BuffedMag * (DatabaseAPI.GetClassBaseRecovery(MidsContext.Archetype) * Statistics.BaseMagic))} End/sec) {sEffect}{sTarget}{sDuration}"
                             : $"{sMag} {sEffect}{sTarget}{sDuration}")
                         : "+Recovery";
                     break;
@@ -1253,8 +1322,27 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eEffectType.PowerRedirect:
                 {
                     sBuild = !string.IsNullOrWhiteSpace(Override)
-                        ? $"{sEffect}{sTarget} ({DatabaseAPI.GetPowerByFullName(Override).DisplayName})"
+                        ? $"{sEffect}{sTarget} ({DatabaseAPI.GetPowerByFullName(Override)?.DisplayName ?? Override})"
                         : $"{sEffect}{sTarget} ({Override})";
+                    break;
+                }
+
+                case Enums.eEffectType.SetMode:
+                case Enums.eEffectType.UnsetMode:
+                {
+                    var mode = FormatModePayload();
+                    sBuild = string.IsNullOrWhiteSpace(mode)
+                        ? $"{sEffect}{sTarget}{sDuration}"
+                        : $"{sEffect} {mode}{sTarget}{sDuration}";
+                    break;
+                }
+
+                case Enums.eEffectType.RevokePower:
+                {
+                    var revoke = FormatPowerPayload(RevokedPower, Override);
+                    sBuild = string.IsNullOrWhiteSpace(revoke)
+                        ? $"{sEffect}{sTarget}"
+                        : $"{sEffect} {revoke}{sTarget}";
                     break;
                 }
 
@@ -1328,6 +1416,188 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 .Replace("TargetFor ", "Target for ");
 
             return sFinal;
+        }
+
+        private static string FormatAdvancedConditionSummary(AdvancedConditionSet conditions)
+        {
+            var parts = new List<string>();
+            for (var i = 0; i < conditions.Rows.Count; i++)
+            {
+                var row = conditions.Rows[i];
+                var rowText = FormatAdvancedConditionRow(row);
+                if (string.IsNullOrWhiteSpace(rowText))
+                {
+                    continue;
+                }
+
+                var link = parts.Count == 0
+                    ? string.Empty
+                    : row.Link == AdvancedConditionLink.Or ? "OR " : "AND ";
+                parts.Add($"{link}{rowText}");
+            }
+
+            return string.Join(" ", parts);
+        }
+
+        private static string FormatAdvancedConditionRow(AdvancedConditionRow row)
+        {
+            return row.Kind switch
+            {
+                AdvancedConditionKind.PowerActive => FormatPowerCondition("Power active", row.Subject, row.Value, row.Negated),
+                AdvancedConditionKind.PowerTaken => FormatPowerCondition("Power taken", row.Subject, row.Value, row.Negated),
+                AdvancedConditionKind.SourceOwnPower => FormatOwnPowerCondition(row.Subject, row.Negated),
+                AdvancedConditionKind.SourceMode => $"Mode is {(row.Negated ? "not " : string.Empty)}{FormatModeName(row)}",
+                AdvancedConditionKind.TargetMode => $"Target mode is {(row.Negated ? "not " : string.Empty)}{FormatModeName(row)}",
+                AdvancedConditionKind.TargetEntityType when row.TargetScope != AdvancedConditionTargetScope.Unknown => $"Target is {FormatTargetScope(row.TargetScope)}",
+                AdvancedConditionKind.TargetEntityType => $"Target entity {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
+                AdvancedConditionKind.CharacterArchetype => $"Archetype {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
+                AdvancedConditionKind.CharacterLevel => $"Level {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
+                AdvancedConditionKind.PowerStacks => $"{FormatPowerName(row.Subject)} stacks {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
+                AdvancedConditionKind.TeamMembers => $"Team members {CleanConditionValue(row.Subject)} {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
+                AdvancedConditionKind.CombatSetting => $"{ConfigData.CombatContext.FormatSettingName(row.Subject)} {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
+                AdvancedConditionKind.PowerCount => $"{CleanConditionValue(row.Subject)} count {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
+                AdvancedConditionKind.PowerRequirementGroup => FormatPowerRequirementGroup(row),
+                AdvancedConditionKind.BoostsSlotted => $"Boosts slotted {CleanConditionValue(row.Subject)} {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
+                AdvancedConditionKind.AdvancedExpression => FormatRawAdvancedExpression(row.RawExpression),
+                _ => FormatRawAdvancedExpression(row.RawExpression)
+            };
+        }
+
+        private static string FormatPowerCondition(string label, string powerFullName, string value, bool negated)
+        {
+            var falseValue = bool.TryParse(value, out var boolValue) && !boolValue;
+            return $"{label} is {(negated ^ falseValue ? "not " : string.Empty)}{FormatPowerName(powerFullName)}";
+        }
+
+        private static string FormatOwnPowerCondition(string powerFullName, bool negated)
+        {
+            return $"{(negated ? "Does not have" : "Has")} {FormatPowerName(powerFullName)}";
+        }
+
+        private static string FormatPowerRequirementGroup(AdvancedConditionRow row)
+        {
+            var first = FormatPowerName(row.Subject);
+            if (string.IsNullOrWhiteSpace(row.Value))
+            {
+                return $"Requires {first}";
+            }
+
+            return $"Requires {first} and {FormatPowerName(row.Value)}";
+        }
+
+        private static string FormatPowerName(string powerFullName)
+        {
+            if (string.IsNullOrWhiteSpace(powerFullName))
+            {
+                return string.Empty;
+            }
+
+            return DatabaseAPI.GetPowerByFullName(powerFullName)?.DisplayName ?? powerFullName;
+        }
+
+        private static string FormatModeName(AdvancedConditionRow row)
+        {
+            var mode = row.Subject;
+            if (row.RawExpression.Contains("kEngaged", StringComparison.OrdinalIgnoreCase))
+            {
+                mode = "Engaged";
+            }
+
+            return CleanConditionValue(mode)
+                .Replace("FastSnipe", "Fast Snipe", StringComparison.OrdinalIgnoreCase)
+                .Replace("CriticalHit", "Critical Hit", StringComparison.OrdinalIgnoreCase)
+                .Replace("DefensiveAdaptation", "Defensive Adaptation", StringComparison.OrdinalIgnoreCase)
+                .Replace("EfficientAdaptation", "Efficient Adaptation", StringComparison.OrdinalIgnoreCase)
+                .Replace("OffensiveAdaptation", "Offensive Adaptation", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string FormatTargetScope(AdvancedConditionTargetScope scope)
+        {
+            return scope switch
+            {
+                AdvancedConditionTargetScope.Self => "Self",
+                AdvancedConditionTargetScope.Pet => "Pet",
+                AdvancedConditionTargetScope.Player => "Player",
+                AdvancedConditionTargetScope.Ally => "Ally",
+                AdvancedConditionTargetScope.Foe => "Foe",
+                _ => "Unknown"
+            };
+        }
+
+        private static string FormatOperatorPhrase(AdvancedConditionOperator op)
+        {
+            return op switch
+            {
+                AdvancedConditionOperator.NotEquals => "is not",
+                AdvancedConditionOperator.GreaterThan => ">",
+                AdvancedConditionOperator.LessThan => "<",
+                AdvancedConditionOperator.GreaterThanOrEqual => ">=",
+                AdvancedConditionOperator.LessThanOrEqual => "<=",
+                _ => "is"
+            };
+        }
+
+        private static string FormatRawAdvancedExpression(string expression)
+        {
+            if (string.IsNullOrWhiteSpace(expression))
+            {
+                return string.Empty;
+            }
+
+            var cleaned = expression.Trim();
+            if (cleaned.Equals("1", StringComparison.OrdinalIgnoreCase) ||
+                cleaned.Equals("true", StringComparison.OrdinalIgnoreCase))
+            {
+                return string.Empty;
+            }
+
+            cleaned = Regex.Replace(
+                cleaned,
+                @"(?:source\.)?Mode\?\(([^)]+)\)",
+                match => $"Mode is {FormatModeName(match.Groups[1].Value)}",
+                RegexOptions.IgnoreCase);
+            cleaned = Regex.Replace(
+                cleaned,
+                @"(?:source\.)?ownPower\?\(([^)]+)\)",
+                match => $"Has {FormatPowerName(match.Groups[1].Value)}",
+                RegexOptions.IgnoreCase);
+            cleaned = Regex.Replace(
+                cleaned,
+                @"\b([^\s()]+)\s+Mode\?",
+                match => $"Mode is {FormatModeName(match.Groups[1].Value)}",
+                RegexOptions.IgnoreCase);
+            cleaned = Regex.Replace(
+                cleaned,
+                @"\b([^\s()]+)\s+ownPower\?",
+                match => $"Has {FormatPowerName(match.Groups[1].Value)}",
+                RegexOptions.IgnoreCase);
+
+            return CleanConditionValue(cleaned)
+                .Replace("||", "OR", StringComparison.OrdinalIgnoreCase)
+                .Replace("&&", "AND", StringComparison.OrdinalIgnoreCase)
+                .Replace("( ", "(")
+                .Replace(" )", ")")
+                .Replace("  ", " ");
+        }
+
+        private static string FormatModeName(string mode)
+        {
+            return CleanConditionValue(mode)
+                .Replace("FastSnipe", "Fast Snipe", StringComparison.OrdinalIgnoreCase)
+                .Replace("CriticalHit", "Critical Hit", StringComparison.OrdinalIgnoreCase)
+                .Replace("DefensiveAdaptation", "Defensive Adaptation", StringComparison.OrdinalIgnoreCase)
+                .Replace("EfficientAdaptation", "Efficient Adaptation", StringComparison.OrdinalIgnoreCase)
+                .Replace("OffensiveAdaptation", "Offensive Adaptation", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string CleanConditionValue(string value)
+        {
+            return (value ?? string.Empty)
+                .Trim()
+                .Trim('\'', '"')
+                .Replace("kEngaged", "Engaged", StringComparison.OrdinalIgnoreCase)
+                .Replace("kFastSnipe", "Fast Snipe", StringComparison.OrdinalIgnoreCase)
+                .Replace('_', ' ');
         }
 
         private string GetEffectLabelShort()
@@ -1463,6 +1733,38 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 : Enums.GetEffectName(ETModifies);
         }
 
+        private string FormatModePayload()
+        {
+            if (!string.IsNullOrWhiteSpace(ModeName))
+            {
+                return ModeName;
+            }
+
+            if (ModeFlag != Enums.eModeFlags.None)
+            {
+                return ModeFlag.ToString();
+            }
+
+            return ModeId >= 0
+                ? $"Mode {ModeId}"
+                : string.Empty;
+        }
+
+        private static string FormatPowerPayload(params string?[] candidates)
+        {
+            foreach (var candidate in candidates)
+            {
+                if (string.IsNullOrWhiteSpace(candidate))
+                {
+                    continue;
+                }
+
+                return DatabaseAPI.GetPowerByFullName(candidate)?.DisplayName ?? candidate;
+            }
+
+            return string.Empty;
+        }
+
 
         public void StoreTo(ref BinaryWriter writer)
         {
@@ -1524,6 +1826,213 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 AdvancedConditions is { Rows.Count: > 0 }
                     ? AdvancedConditions
                     : AdvancedConditionSet.FromLegacyActiveConditionals(ActiveConditionals));
+            StoreModePayload(writer);
+            StoreEffectTags(writer);
+            StoreOmniSource(writer);
+            StoreCombatModFlags(writer);
+        }
+
+        private void StoreModePayload(BinaryWriter writer)
+        {
+            writer.Write(ModePayloadMarker);
+            writer.Write(1);
+            writer.Write(ModeName ?? string.Empty);
+            writer.Write(ModeId);
+            writer.Write((int)ModeFlag);
+            writer.Write(RevokedPower ?? string.Empty);
+        }
+
+        private void TryReadModePayload(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                return;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), ModePayloadMarker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return;
+                }
+
+                var version = reader.ReadInt32();
+                if (version > 1)
+                {
+                    throw new InvalidDataException($"Unsupported effect mode payload version {version}.");
+                }
+
+                ModeName = reader.ReadString();
+                ModeId = reader.ReadInt32();
+                ModeFlag = (Enums.eModeFlags)reader.ReadInt32();
+                RevokedPower = reader.ReadString();
+            }
+            catch (EndOfStreamException)
+            {
+                reader.BaseStream.Position = position;
+            }
+            catch (IOException)
+            {
+                reader.BaseStream.Position = position;
+            }
+        }
+
+        private void StoreEffectTags(BinaryWriter writer)
+        {
+            writer.Write(EffectTagsMarker);
+            writer.Write(1);
+            var tags = DistinctTags(EffectTags).ToArray();
+            writer.Write(tags.Length);
+            foreach (var tag in tags)
+            {
+                writer.Write(tag);
+            }
+        }
+
+        private bool TryReadEffectTags(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                return false;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), EffectTagsMarker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return false;
+                }
+
+                var version = reader.ReadInt32();
+                if (version > 1)
+                {
+                    throw new InvalidDataException($"Unsupported effect tags version {version}.");
+                }
+
+                var count = reader.ReadInt32();
+                EffectTags = [];
+                for (var index = 0; index < count; index++)
+                {
+                    var tag = reader.ReadString();
+                    if (!string.IsNullOrWhiteSpace(tag) &&
+                        !EffectTags.Contains(tag, StringComparer.OrdinalIgnoreCase))
+                    {
+                        EffectTags.Add(tag);
+                    }
+                }
+
+                return true;
+            }
+            catch (EndOfStreamException)
+            {
+                reader.BaseStream.Position = position;
+                return false;
+            }
+            catch (IOException)
+            {
+                reader.BaseStream.Position = position;
+                return false;
+            }
+        }
+
+        private void StoreOmniSource(BinaryWriter writer)
+        {
+            writer.Write(OmniSourceMarker);
+            writer.Write(1);
+            writer.Write(OmniSource ?? string.Empty);
+        }
+
+        private void TryReadOmniSource(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                return;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), OmniSourceMarker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return;
+                }
+
+                var version = reader.ReadInt32();
+                if (version > 1)
+                {
+                    throw new InvalidDataException($"Unsupported effect Omni source version {version}.");
+                }
+
+                OmniSource = reader.ReadString();
+            }
+            catch (EndOfStreamException)
+            {
+                reader.BaseStream.Position = position;
+            }
+            catch (IOException)
+            {
+                reader.BaseStream.Position = position;
+            }
+        }
+
+        private void StoreCombatModFlags(BinaryWriter writer)
+        {
+            writer.Write(CombatModFlagsMarker);
+            writer.Write(1);
+            writer.Write(UseCombatModMagnitude);
+            writer.Write(UseCombatModDuration);
+        }
+
+        private void TryReadCombatModFlags(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                return;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), CombatModFlagsMarker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return;
+                }
+
+                var version = reader.ReadInt32();
+                if (version > 1)
+                {
+                    throw new InvalidDataException($"Unsupported effect combat-mod flags version {version}.");
+                }
+
+                UseCombatModMagnitude = reader.ReadBoolean();
+                UseCombatModDuration = reader.ReadBoolean();
+            }
+            catch (EndOfStreamException)
+            {
+                reader.BaseStream.Position = position;
+            }
+            catch (IOException)
+            {
+                reader.BaseStream.Position = position;
+            }
+        }
+
+        private static IEnumerable<string> DistinctTags(IEnumerable<string>? tags)
+        {
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var tag in tags ?? [])
+            {
+                if (!string.IsNullOrWhiteSpace(tag) && seen.Add(tag.Trim()))
+                {
+                    yield return tag.Trim();
+                }
+            }
         }
 
         public int SetTicks(float iDuration, float iInterval)
@@ -1567,7 +2076,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool CanInclude()
         {
-            if (MidsContext.Character == null | ActiveConditionals == null | (ActiveConditionals?.Count == 0 && SpecialCase == Enums.eSpecialCase.None))
+            var hasAdvancedConditionals = AdvancedConditions is { Rows.Count: > 0 };
+            var hasLegacyConditionals = ActiveConditionals is { Count: > 0 };
+            if (MidsContext.Character == null ||
+                (!hasAdvancedConditionals && !hasLegacyConditionals && SpecialCase == Enums.eSpecialCase.None))
             {
                 return true;
             }
@@ -1811,7 +2323,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             #endregion
 
-            if (AdvancedConditions is { Rows.Count: > 0 } || ActiveConditionals is { Count: > 0 })
+            if (hasAdvancedConditionals || hasLegacyConditionals)
             {
                 Validated = BooleanExprPreprocessor.Parse(this);
                 return Validated;
@@ -1819,7 +2331,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             #region Conditional Processing
 
-            if (ActiveConditionals.Count > 0)
+            if (ActiveConditionals is { Count: > 0 })
             {
                 var getCondition = new Regex("(:.*)");
                 var getConditionItem = new Regex("(.*:)");
@@ -2333,10 +2845,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool PvXInclude()
         {
-            return MidsContext.Archetype == null ||
-                   (PvMode != Enums.ePvX.PvP && !MidsContext.Config.Inc.DisablePvE ||
-                    PvMode != Enums.ePvX.PvE && MidsContext.Config.Inc.DisablePvE) &&
-                   (nIDClassName == -1 || nIDClassName == MidsContext.Archetype.Idx);
+            return DatabaseAPI.GetPlannerRuleset().EffectMatchesCurrentMode(this);
         }
 
         public int CompareTo(object obj)
@@ -2494,39 +3003,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public Damage GetDamage()
         {
-            if (EffectType != Enums.eEffectType.Damage ||
-                MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum && !(Math.Abs(Probability) > 0.999000012874603) ||
-                EffectClass == Enums.eEffectClass.Ignored ||
-                this is { DamageType: Enums.eDamage.Special, ToWho: Enums.eToWho.Self } ||
-                Probability <= 0 ||
-                !CanInclude() ||
-                !PvXInclude())
+            if (!Power.ShouldIncludeDamageEffect(this))
             {
                 return new Damage { Type = Enums.eDamage.None, Value = 0 };
             }
 
-            var effectDmg = BuffedMag;
-
-            if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
+            var owner = power ?? GetPower();
+            return new Damage
             {
-                effectDmg *= Probability;
-            }
-
-            if (power.PowerType == Enums.ePowerType.Toggle && isEnhancementEffect)
-            {
-                effectDmg = (float)(effectDmg * power.ActivatePeriod / 10d);
-            }
-
-            if (Ticks > 1)
-            {
-                effectDmg *= CancelOnMiss &&
-                             MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average &&
-                             Probability < 1
-                    ? (float)((1 - Math.Pow(Probability, Ticks)) / (1 - Probability))
-                    : Ticks;
-            }
-
-            return new Damage { Type = DamageType, Value = effectDmg };
+                Type = DamageType,
+                Value = Power.GetDamageEffectTotal(this, owner, absolute: false, applyReturnScaling: false)
+            };
         }
 
         public object Clone()

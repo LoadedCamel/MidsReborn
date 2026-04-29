@@ -12,6 +12,8 @@ using Mids_Reborn.Core.Base;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
+using Mids_Reborn.Core.PlannerRulesets;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.UI.Forms.Controls;
 using Newtonsoft.Json;
@@ -125,6 +127,11 @@ namespace Mids_Reborn.Core
                 return AttribMod[uID];
             }
 
+            if (Database.AttribMods?.Modifier == null)
+            {
+                return -1;
+            }
+
             for (var index = 0; index <= Database.AttribMods.Modifier.Count - 1; ++index)
             {
                 if (!string.Equals(uID, Database.AttribMods.Modifier[index].ID, StringComparison.OrdinalIgnoreCase))
@@ -134,6 +141,323 @@ namespace Mids_Reborn.Core
             }
 
             return -1;
+        }
+
+        public static IReadOnlyList<string> GetModifierTableNames()
+        {
+            var names = new SortedSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (Database.ClassAttributes != null)
+            {
+                foreach (var classAttributes in Database.ClassAttributes.Values)
+                {
+                    foreach (var tableName in classAttributes.NamedTables.Keys)
+                    {
+                        if (!string.IsNullOrWhiteSpace(tableName))
+                        {
+                            names.Add(tableName);
+                        }
+                    }
+                }
+            }
+
+            foreach (var modifier in Database.AttribMods?.Modifier ?? [])
+            {
+                if (!string.IsNullOrWhiteSpace(modifier.ID))
+                {
+                    names.Add(modifier.ID);
+                }
+            }
+
+            return names.ToArray();
+        }
+
+        public static bool ModifierTableExists(string tableName)
+        {
+            if (string.IsNullOrWhiteSpace(tableName))
+            {
+                return false;
+            }
+
+            var canonicalName = NormalizeModifierTableName(tableName);
+            return IsKnownServerFallbackModifierTable(canonicalName) ||
+                   (Database.ClassAttributes?.Values.Any(c => c.NamedTables.ContainsKey(canonicalName)) ?? false) ||
+                   NidFromUidAttribMod(canonicalName) >= 0;
+        }
+
+        public static bool TryGetClassModifier(string className, string tableName, int zeroBasedLevel, out float value)
+        {
+            value = 0;
+            if (string.IsNullOrWhiteSpace(className) || string.IsNullOrWhiteSpace(tableName) ||
+                Database.ClassAttributes == null ||
+                !Database.ClassAttributes.TryGetValue(className, out var classAttributes))
+            {
+                return false;
+            }
+
+            var canonicalName = NormalizeModifierTableName(tableName);
+            var tableValue = classAttributes.GetNamedTableValueZeroBased(canonicalName, zeroBasedLevel);
+            if (!tableValue.HasValue)
+            {
+                if (IsKnownServerFallbackModifierTable(canonicalName))
+                {
+                    value = 1.0f;
+                    return true;
+                }
+
+                return false;
+            }
+
+            value = tableValue.Value;
+            return true;
+        }
+
+        public static bool TryGetClassAttributeTable(string className, out OmniClassAttributeTable classAttributes)
+        {
+            classAttributes = null!;
+            return !string.IsNullOrWhiteSpace(className) &&
+                   Database.ClassAttributes != null &&
+                   Database.ClassAttributes.TryGetValue(className, out classAttributes);
+        }
+
+        public static OmniDataProviderId GetDataProviderId()
+        {
+            return Database?.DataProviderId ?? OmniDataProviderId.Unknown;
+        }
+
+        public static PlannerRulesetId GetPlannerRulesetId()
+        {
+            return Database?.PlannerRulesetId ?? PlannerRulesetId.Legacy;
+        }
+
+        public static IPlannerRuleset GetPlannerRuleset()
+        {
+            return PlannerRulesetResolver.Resolve(GetPlannerRulesetId());
+        }
+
+        public static bool UsesCanonicalPlannerMath()
+        {
+            return GetPlannerRuleset().UsesCanonicalPlannerMath;
+        }
+
+        public static bool UsesCanonicalOmniPlannerMath()
+        {
+            return UsesCanonicalPlannerMath();
+        }
+
+        public static bool TryGetClassAttributeBase(string className, string attribute, out float value)
+        {
+            value = 0;
+            return TryGetClassAttributeTable(className, out var classAttributes) &&
+                   classAttributes.Base.TryGetValue(attribute, out value);
+        }
+
+        public static bool TryGetClassAttributeMin(string className, string attribute, out float value)
+        {
+            value = 0;
+            return TryGetClassAttributeTable(className, out var classAttributes) &&
+                   classAttributes.Min.TryGetValue(attribute, out value);
+        }
+
+        public static bool TryGetClassAttributeStrengthMin(string className, string attribute, out float value)
+        {
+            value = 0;
+            return TryGetClassAttributeTable(className, out var classAttributes) &&
+                   classAttributes.StrengthMin.TryGetValue(attribute, out value);
+        }
+
+        public static bool TryGetClassAttributeResistanceMin(string className, string attribute, out float value)
+        {
+            value = 0;
+            return TryGetClassAttributeTable(className, out var classAttributes) &&
+                   classAttributes.ResistanceMin.TryGetValue(attribute, out value);
+        }
+
+        public static bool TryGetClassAttributeDiminishingStrength(string className, string attribute, out float value)
+        {
+            value = 0;
+            return TryGetClassAttributeTable(className, out var classAttributes) &&
+                   classAttributes.DiminishingStrength.TryGetValue(attribute, out value);
+        }
+
+        public static bool TryGetClassAttributeDiminishingCurrent(string className, string attribute, out float value)
+        {
+            value = 0;
+            return TryGetClassAttributeTable(className, out var classAttributes) &&
+                   classAttributes.DiminishingCurrent.TryGetValue(attribute, out value);
+        }
+
+        public static bool TryGetClassAttributeMax(string className, string attribute, int zeroBasedLevel, out float value)
+        {
+            return TryGetClassLeveledAttribute(className, attribute, zeroBasedLevel, AttributeTableKind.Max, out value);
+        }
+
+        public static bool TryGetClassAttributeMaxMax(string className, string attribute, int zeroBasedLevel, out float value)
+        {
+            return TryGetClassLeveledAttribute(className, attribute, zeroBasedLevel, AttributeTableKind.MaxMax, out value);
+        }
+
+        public static bool TryGetClassAttributeStrengthMax(string className, string attribute, int zeroBasedLevel, out float value)
+        {
+            return TryGetClassLeveledAttribute(className, attribute, zeroBasedLevel, AttributeTableKind.StrengthMax, out value);
+        }
+
+        public static bool TryGetClassAttributeResistanceMax(string className, string attribute, int zeroBasedLevel, out float value)
+        {
+            return TryGetClassLeveledAttribute(className, attribute, zeroBasedLevel, AttributeTableKind.ResistanceMax, out value);
+        }
+
+        private static bool TryGetClassLeveledAttribute(string className, string attribute, int zeroBasedLevel, AttributeTableKind tableKind, out float value)
+        {
+            value = 0;
+            if (!TryGetClassAttributeTable(className, out var classAttributes))
+            {
+                return false;
+            }
+
+            var table = tableKind switch
+            {
+                AttributeTableKind.Max => classAttributes.Max,
+                AttributeTableKind.MaxMax => classAttributes.MaxMax,
+                AttributeTableKind.StrengthMax => classAttributes.StrengthMax,
+                AttributeTableKind.ResistanceMax => classAttributes.ResistanceMax,
+                _ => null
+            };
+
+            if (table == null || !table.TryGetValue(attribute, out var values) || values.Length == 0)
+            {
+                return false;
+            }
+
+            value = values[Math.Clamp(zeroBasedLevel, 0, values.Length - 1)];
+            return true;
+        }
+
+        public static string ResolveClassName(Archetype? archetype = null)
+        {
+            return archetype?.ClassName ??
+                   MidsContext.Character?.Archetype?.ClassName ??
+                   MidsContext.Archetype?.ClassName ??
+                   string.Empty;
+        }
+
+        public static int GetClassHitPoints(Archetype? archetype = null, int? zeroBasedLevel = null)
+        {
+            var fallback = archetype?.Hitpoints ?? MidsContext.Archetype?.Hitpoints ?? 0;
+            return TryGetClassAttributeMax(ResolveClassName(archetype), "hit_points", zeroBasedLevel ?? MidsContext.MathLevelBase, out var value)
+                ? (int)Math.Round(value)
+                : fallback;
+        }
+
+        public static float GetClassHitPointCap(Archetype? archetype = null, int? zeroBasedLevel = null)
+        {
+            var fallback = archetype?.HPCap ?? MidsContext.Archetype?.HPCap ?? 0;
+            return TryGetClassAttributeMaxMax(ResolveClassName(archetype), "hit_points", zeroBasedLevel ?? MidsContext.MathLevelBase, out var value)
+                ? value
+                : fallback;
+        }
+
+        public static float GetClassDamageCap(Archetype? archetype = null, int? zeroBasedLevel = null)
+        {
+            return GetClassMaxAttribute(archetype, "damage", archetype?.DamageCap ?? MidsContext.Archetype?.DamageCap ?? 0, zeroBasedLevel);
+        }
+
+        public static float GetClassRechargeCap(Archetype? archetype = null, int? zeroBasedLevel = null)
+        {
+            return GetClassMaxAttribute(archetype, "recharge_time", archetype?.RechargeCap ?? MidsContext.Archetype?.RechargeCap ?? 0, zeroBasedLevel);
+        }
+
+        public static float GetClassRegenCap(Archetype? archetype = null, int? zeroBasedLevel = null)
+        {
+            return GetClassMaxAttribute(archetype, "regeneration", archetype?.RegenCap ?? MidsContext.Archetype?.RegenCap ?? 0, zeroBasedLevel);
+        }
+
+        public static float GetClassRecoveryCap(Archetype? archetype = null, int? zeroBasedLevel = null)
+        {
+            return GetClassMaxAttribute(archetype, "recovery", archetype?.RecoveryCap ?? MidsContext.Archetype?.RecoveryCap ?? 0, zeroBasedLevel);
+        }
+
+        public static float GetClassResistanceCap(Archetype? archetype = null, int? zeroBasedLevel = null)
+        {
+            return GetClassMaxAttribute(archetype, "damage_resistance", archetype?.ResCap ?? MidsContext.Archetype?.ResCap ?? 0, zeroBasedLevel);
+        }
+
+        public static float GetClassPerceptionCap(Archetype? archetype = null, int? zeroBasedLevel = null)
+        {
+            var fallback = archetype?.PerceptionCap ?? MidsContext.Archetype?.PerceptionCap ?? 0;
+            return TryGetClassAttributeMaxMax(ResolveClassName(archetype), "perception_radius", zeroBasedLevel ?? MidsContext.MathLevelBase, out var value)
+                ? value
+                : fallback;
+        }
+
+        public static float GetClassBaseRecovery(Archetype? archetype = null)
+        {
+            return GetClassBaseAttribute(archetype, "recovery", archetype?.BaseRecovery ?? MidsContext.Archetype?.BaseRecovery ?? 1.67f);
+        }
+
+        public static float GetClassBaseRegen(Archetype? archetype = null)
+        {
+            return GetClassBaseAttribute(archetype, "regeneration", archetype?.BaseRegen ?? MidsContext.Archetype?.BaseRegen ?? 1f);
+        }
+
+        public static float GetClassBaseThreat(Archetype? archetype = null)
+        {
+            return GetClassBaseAttribute(archetype, "threat_level", archetype?.BaseThreat ?? MidsContext.Archetype?.BaseThreat ?? 1f);
+        }
+
+        private static float GetClassMaxAttribute(Archetype? archetype, string attribute, float fallback, int? zeroBasedLevel)
+        {
+            return TryGetClassAttributeMax(ResolveClassName(archetype), attribute, zeroBasedLevel ?? MidsContext.MathLevelBase, out var value)
+                ? value
+                : fallback;
+        }
+
+        private static float GetClassBaseAttribute(Archetype? archetype, string attribute, float fallback)
+        {
+            return TryGetClassAttributeBase(ResolveClassName(archetype), attribute, out var value)
+                ? value
+                : fallback;
+        }
+
+        private enum AttributeTableKind
+        {
+            Max,
+            MaxMax,
+            StrengthMax,
+            ResistanceMax
+        }
+
+        public static string NormalizeModifierTableName(string tableName)
+        {
+            if (string.IsNullOrWhiteSpace(tableName))
+            {
+                return string.Empty;
+            }
+
+            return tableName.Trim();
+        }
+
+        public static bool IsKnownServerFallbackModifierTable(string tableName)
+        {
+            if (string.IsNullOrWhiteSpace(tableName))
+            {
+                return false;
+            }
+
+            // The game source's class_GetNamedTableValue returns 1.0f when an
+            // exact named table is absent. These names appear in the export as
+            // missing table references, so preserve the source name while using
+            // the same constant fallback the server would use.
+            return tableName.Trim().ToLowerInvariant() switch
+            {
+                "ones" => true,
+                "melee_one" => true,
+                "ranged_one" => true,
+                "area_one" => true,
+                "melee_levels" => true,
+                "ranged_levels" => true,
+                "area_levels" => true,
+                _ => false
+            };
         }
 
         //Class/Archetype
@@ -1136,6 +1460,186 @@ namespace Mids_Reborn.Core
             return uidName;
         }
 
+        private static string ResolveCanonicalImportedEnhancementUid(string uidName)
+        {
+            var metadata = Database?.EnhancementImportMetadata;
+            if (metadata?.ClassicEnhancementCanonicalByName == null)
+            {
+                return uidName;
+            }
+
+            return metadata.ClassicEnhancementCanonicalByName.TryGetValue(uidName, out var canonicalName) &&
+                   !string.IsNullOrWhiteSpace(canonicalName)
+                ? canonicalName
+                : uidName;
+        }
+
+        public static bool ShouldSuppressImportedEnhancement(IEnhancement? enhancement)
+        {
+            if (enhancement == null || enhancement.TypeID == Enums.eType.None)
+            {
+                return true;
+            }
+
+            if (string.Equals(enhancement.Name, "OmniHack", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(enhancement.UID, "Yins_Omni", StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(enhancement.ShortName, "Yins_Omni", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
+            var metadata = Database?.EnhancementImportMetadata;
+            return metadata?.ClassicEnhancementCanonicalByName != null &&
+                   metadata.ClassicEnhancementCanonicalByName.TryGetValue(enhancement.UID ?? string.Empty, out var canonicalName) &&
+                   !string.IsNullOrWhiteSpace(canonicalName) &&
+                   !string.Equals(canonicalName, enhancement.UID, StringComparison.OrdinalIgnoreCase);
+        }
+
+        public static IReadOnlyList<ClassicEnhancementSourceVariantMetadata> GetClassicEnhancementSourceVariants(string? canonicalUid)
+        {
+            if (string.IsNullOrWhiteSpace(canonicalUid))
+            {
+                return Array.Empty<ClassicEnhancementSourceVariantMetadata>();
+            }
+
+            var metadata = Database?.EnhancementImportMetadata;
+            if (metadata?.ClassicEnhancementSourceNamesByCanonicalName == null ||
+                metadata.ClassicEnhancementSourcesByName == null ||
+                !metadata.ClassicEnhancementSourceNamesByCanonicalName.TryGetValue(canonicalUid, out var sourceNames))
+            {
+                return Array.Empty<ClassicEnhancementSourceVariantMetadata>();
+            }
+
+            return sourceNames
+                .Select(sourceName => metadata.ClassicEnhancementSourcesByName.TryGetValue(sourceName, out var variant) ? variant : null)
+                .Where(variant => variant != null)
+                .OrderBy(variant => GetClassicTierRank(variant!.Tier))
+                .ThenBy(variant => variant!.DisplayName, StringComparer.OrdinalIgnoreCase)
+                .Cast<ClassicEnhancementSourceVariantMetadata>()
+                .ToArray();
+        }
+
+        public static IReadOnlyList<ClassicEnhancementVariantView> GetClassicEnhancementVariants(string? canonicalUid, int enhancementIndex = -1)
+        {
+            var variants = GetClassicEnhancementSourceVariants(canonicalUid);
+            if (variants.Count == 0)
+            {
+                return Array.Empty<ClassicEnhancementVariantView>();
+            }
+
+            return variants
+                .Select(variant => ClassicEnhancementVariantResolver.CreateView(canonicalUid ?? string.Empty, enhancementIndex, variant))
+                .OrderBy(variant => GetClassicTierRank(variant.Tier))
+                .ThenBy(variant => variant.DisplayName, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+        }
+
+        public static ClassicEnhancementVariantView? ResolveClassicEnhancementVariant(
+            int enhancementIndex,
+            Enums.eEnhGrade grade,
+            int? buildOriginIndex = null,
+            string? preferredVariantName = null)
+        {
+            if (enhancementIndex < 0 || enhancementIndex >= Database.Enhancements.Length)
+            {
+                return null;
+            }
+
+            var enhancement = Database.Enhancements[enhancementIndex];
+            if (enhancement?.TypeID != Enums.eType.Normal)
+            {
+                return null;
+            }
+
+            var variants = GetClassicEnhancementVariants(enhancement.UID, enhancementIndex);
+            if (variants.Count <= 1)
+            {
+                return null;
+            }
+
+            var originName = GetOriginNameByIndex(buildOriginIndex ?? MidsContext.Character?.Origin ?? AssetManager.OriginIndex);
+            return ClassicEnhancementVariantResolver.ResolvePreferredVariant(variants, grade, originName, preferredVariantName);
+        }
+
+        public static ClassicEnhancementVariantView? ResolveClassicEnhancementVariant(
+            I9Slot slot,
+            int? buildOriginIndex = null,
+            string? preferredVariantName = null)
+        {
+            if (slot == null || slot.Enh < 0)
+            {
+                return null;
+            }
+
+            return ResolveClassicEnhancementVariant(slot.Enh, slot.Grade, buildOriginIndex, preferredVariantName);
+        }
+
+        public static string GetEnhancementDisplayName(
+            int enhancementIndex,
+            Enums.eType typeId,
+            Enums.eEnhGrade grade,
+            int? buildOriginIndex = null,
+            bool includeFlavor = true)
+        {
+            if (enhancementIndex < 0 || enhancementIndex >= Database.Enhancements.Length)
+            {
+                return string.Empty;
+            }
+
+            var enhancement = Database.Enhancements[enhancementIndex];
+            return enhancement.LongName ?? enhancement.Name ?? string.Empty;
+        }
+
+        public static string GetEnhancementDisplayName(I9Slot slot, int? buildOriginIndex = null, bool includeFlavor = true)
+        {
+            if (slot == null || slot.Enh < 0 || slot.Enh >= Database.Enhancements.Length)
+            {
+                return string.Empty;
+            }
+
+            var enhancement = Database.Enhancements[slot.Enh];
+            return GetEnhancementDisplayName(slot.Enh, enhancement.TypeID, slot.Grade, buildOriginIndex, includeFlavor);
+        }
+
+        public static string GetClassicEnhancementProvenance(string? canonicalUid, string separator = " | ")
+        {
+            var variants = GetClassicEnhancementSourceVariants(canonicalUid);
+            if (variants.Count <= 1)
+            {
+                return string.Empty;
+            }
+
+            return "Classic source variants: " + string.Join(separator, variants.Select(variant =>
+            {
+                var flavor = string.IsNullOrWhiteSpace(variant.Flavor) ? string.Empty : $" [{variant.Flavor}]";
+                var icon = string.IsNullOrWhiteSpace(variant.Icon) ? string.Empty : $" <{variant.Icon}>";
+                var tier = ClassicEnhancementVariantResolver.NormalizeTier(string.IsNullOrWhiteSpace(variant.NormalizedTier) ? variant.Tier : variant.NormalizedTier);
+                return $"{tier}: {variant.DisplayName}{flavor}{icon}";
+            }));
+        }
+
+        private static int GetClassicTierRank(string? tier)
+        {
+            return tier?.ToUpperInvariant() switch
+            {
+                "TO" => 0,
+                "TR" => 0,
+                "DO" => 1,
+                "SO" => 2,
+                _ => 3
+            };
+        }
+
+        public static string GetOriginNameByIndex(int originIndex)
+        {
+            if (Database?.Origins == null || originIndex < 0 || originIndex >= Database.Origins.Count)
+            {
+                return string.Empty;
+            }
+
+            return Database.Origins[originIndex].Name ?? string.Empty;
+        }
+
         public static int GetEnhancementByUIDName(string name)
         {
             if (string.IsNullOrWhiteSpace(name))
@@ -1144,6 +1648,7 @@ namespace Mids_Reborn.Core
             }
 
             name = EnhancementUidTranslation(name);
+            name = ResolveCanonicalImportedEnhancementUid(name);
 
             var e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(name));
             if (e >= 0)
@@ -1153,6 +1658,7 @@ namespace Mids_Reborn.Core
 
             // CaltoArm-+Def(Pets) through build recovery
             name = name.Replace("[", "(").Replace("]", ")");
+            name = ResolveCanonicalImportedEnhancementUid(name);
             e = Database.Enhancements.TryFindIndex(enh => enh.UID.Contains(name));
 
             return e >= 0
@@ -1312,6 +1818,7 @@ namespace Mids_Reborn.Core
 
         public static int NidFromUidEnh(string uidEnh)
         {
+            uidEnh = ResolveCanonicalImportedEnhancementUid(EnhancementUidTranslation(uidEnh));
             for (var index = 0; index < Database.Enhancements.Length; ++index)
                 if (string.Equals(Database.Enhancements[index].UID, uidEnh, StringComparison.OrdinalIgnoreCase))
                     return index;
@@ -1327,11 +1834,13 @@ namespace Mids_Reborn.Core
         {
             if (!uidEnh.StartsWith("BOOSTS", true, CultureInfo.CurrentCulture))
                 return NidFromUidEnh(uidEnh);
+            var boostUid = Regex.Replace(uidEnh, @"^BOOSTS\.(.+?)\..*$", "$1", RegexOptions.IgnoreCase);
+            boostUid = ResolveCanonicalImportedEnhancementUid(EnhancementUidTranslation(boostUid));
             for (var index = 0; index < Database.Enhancements.Length; ++index)
                 if (string.Equals("BOOSTS." + Database.Enhancements[index].UID + "." + Database.Enhancements[index].UID,
                     uidEnh, StringComparison.OrdinalIgnoreCase))
                     return index;
-            return -1;
+            return NidFromUidEnh(boostUid);
         }
 
         public static string DatabaseName
@@ -1500,6 +2009,7 @@ namespace Mids_Reborn.Core
 
                 writer.Write(AppDataPaths.Headers.Db.Summons);
                 Database.StoreEntities(writer);
+                Database.StoreOmniMetadata(writer);
                 writer.Close();
                 fileStream.Close();
             }
@@ -1651,6 +2161,7 @@ namespace Mids_Reborn.Core
                 }
 
                 database.LoadEntities(reader);
+                database.LoadOmniMetadata(reader);
                 reader.Close();
                 fileStream.Close();
             }
@@ -1784,6 +2295,7 @@ namespace Mids_Reborn.Core
                 }
 
                 Database.LoadEntities(reader);
+                Database.LoadOmniMetadata(reader);
                 reader.Close();
                 fileStream.Close();
             }
@@ -2672,20 +3184,22 @@ namespace Mids_Reborn.Core
                 Database.EnhGradeStringShort[1] = "TO";
                 Database.EnhGradeStringShort[2] = "DO";
                 Database.EnhGradeStringShort[3] = "SO";
-                Database.SpecialEnhStringLong = new string[5];
-                Database.SpecialEnhStringShort = new string[5];
+                Database.SpecialEnhStringLong = new string[7];
+                Database.SpecialEnhStringShort = new string[7];
                 Database.SpecialEnhStringLong[0] = "None";
                 Database.SpecialEnhStringLong[1] = "Hamidon Origin";
                 Database.SpecialEnhStringLong[2] = "Hydra Origin";
                 Database.SpecialEnhStringLong[3] = "Titan Origin";
                 Database.SpecialEnhStringLong[4] = "D-Sync Origin";
-                //Database.SpecialEnhStringLong[5] = "Yin's Talisman";
+                Database.SpecialEnhStringLong[5] = "Synthetic Hamidon Origin";
+                Database.SpecialEnhStringLong[6] = "Yin's Talisman";
                 Database.SpecialEnhStringShort[0] = "None";
                 Database.SpecialEnhStringShort[1] = "HO";
-                Database.SpecialEnhStringShort[2] = "TnO";
-                Database.SpecialEnhStringShort[3] = "HyO";
+                Database.SpecialEnhStringShort[2] = "HyO";
+                Database.SpecialEnhStringShort[3] = "TnO";
                 Database.SpecialEnhStringShort[4] = "DSyncO";
-                //Database.SpecialEnhStringShort[5] = "YinO";
+                Database.SpecialEnhStringShort[5] = "SynHO";
+                Database.SpecialEnhStringShort[6] = "Yin";
             }
             catch (Exception ex)
             {
@@ -2954,9 +3468,15 @@ namespace Mids_Reborn.Core
         {
             //Currently expects a zero-based level.
 
-            //This value is returned as a modifier if a value is out of bounds
-            var iClass = 0;
             var iLevel = MidsContext.MathLevelBase;
+            var className = ResolveModifierClassName(iEffect);
+            if (TryGetClassModifier(className, iEffect.ModifierTable, iLevel, out var canonicalModifier))
+            {
+                return canonicalModifier;
+            }
+
+            // This value is returned as a modifier if a value is out of bounds.
+            var iClass = string.IsNullOrWhiteSpace(className) ? 0 : NidFromUidClass(className);
             var effPower = iEffect.GetPower();
             if (effPower == null)
             {
@@ -2965,12 +3485,41 @@ namespace Mids_Reborn.Core
                     : GetModifier(iClass, iEffect.nModifierTable, iLevel);
             }
 
-            iClass = string.IsNullOrEmpty(effPower.ForcedClass)
-                ? iEffect.Absorbed_Class_nID <= -1 ? MidsContext.Archetype.Idx : iEffect.Absorbed_Class_nID
-                : NidFromUidClass(effPower.ForcedClass);
-
-            //Everything seems to be valid, return the modifier
             return GetModifier(iClass, iEffect.nModifierTable, iLevel);
+        }
+
+        public static string ResolveModifierClassName(IEffect iEffect)
+        {
+            var effPower = iEffect.GetPower();
+            if (!string.IsNullOrWhiteSpace(effPower?.ForcedClass))
+            {
+                return effPower.ForcedClass;
+            }
+
+            if (iEffect.Absorbed_Class_nID > -1)
+            {
+                return UidFromNidClass(iEffect.Absorbed_Class_nID);
+            }
+
+            return MidsContext.Archetype?.ClassName ??
+                   MidsContext.Character?.Archetype?.ClassName ??
+                   string.Empty;
+        }
+
+        public static float GetModifier(string tableName)
+        {
+            var className = MidsContext.Character?.Archetype?.ClassName ??
+                            MidsContext.Archetype?.ClassName ??
+                            string.Empty;
+            var level = MidsContext.MathLevelBase;
+            if (TryGetClassModifier(className, tableName, level, out var canonicalModifier))
+            {
+                return canonicalModifier;
+            }
+
+            var tableIndex = NidFromUidAttribMod(tableName);
+            var classIndex = NidFromUidClass(className);
+            return GetModifier(classIndex, tableIndex, level);
         }
 
         private static float GetModifier(int iClass, int iTable, int iLevel)
@@ -2983,6 +3532,7 @@ namespace Mids_Reborn.Core
 
             var iClassColumn = Database.Classes[iClass].Column;
             if (iClassColumn < 0) return 0;
+            if (Database.AttribMods?.Modifier == null) return 0;
             if (iTable > Database.AttribMods.Modifier.Count - 1) return 0;
             if (iLevel > Database.AttribMods.Modifier[iTable].Table.Count - 1) return 0;
             if (iClassColumn > Database.AttribMods.Modifier[iTable].Table[iLevel].Count - 1) return 0;

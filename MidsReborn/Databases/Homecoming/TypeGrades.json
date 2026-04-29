@@ -243,12 +243,12 @@
 		{
 			"Name": "Hamidon Origin",
 			"ShortName": "HO",
-			"Description": "Rewards from the Hamidon Raid."
+			"Description": "Rewards from the Hamidon Raid and Lady Grey Task Force (Advanced)."
 		},
 		{
 			"Name": "Hydra Origin",
 			"ShortName": "HyO",
-			"Description": "Rewards from the Sewer Trial."
+			"Description": "Rewards from the Abandoned Sewer Trial."
 		},
 		{
 			"Name": "Titan Origin",
@@ -258,7 +258,17 @@
 		{
 			"Name": "D-Sync Origin",
 			"ShortName": "DSyncO",
-			"Description": "Rewards from the Aeon Strike Force."
+			"Description": "Rewards from the Dr. Aeon Strike Force."
+		},
+		{
+			"Name": "Synthetic Hamidon Origin",
+			"ShortName": "SynHO",
+			"Description": "Rewards from the Ms. Liberty Task Force and Lord Recluse Strike Force."
+		},
+		{
+			"Name": "Yin's Talisman",
+			"ShortName": "Yin",
+			"Description": "Unlocked for purchase at Yin's Market after completing Penelope Yin's story arc."
 		}
 	]
 }

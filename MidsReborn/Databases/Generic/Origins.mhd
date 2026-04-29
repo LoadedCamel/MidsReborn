@@ -9,9 +9,9 @@ Used for graphics only
 						
 						
 Origin	DO	SO
-Magic	MagDO	MagSO
-Mutation	MutDO	MutSO
-Natural	NatDO	NatSO
-Science	SciDO	SciSO
-Technology	TechDO	TechSO
+Magic	magic_mutant	magic
+Mutation	mutation_science	mutant
+Natural	natural_magic	natural
+Science	tech_science	science
+Technology	natural_tech	tech
 End

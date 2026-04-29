@@ -72,6 +72,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             this.btnServerDataEdit = new System.Windows.Forms.Button();
             this.tableLayoutPanel3 = new System.Windows.Forms.TableLayoutPanel();
             this.btnGeneratePatch = new System.Windows.Forms.Button();
+            this.btnOmniImporter = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.udIssue)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.udPageVol)).BeginInit();
             this.tableLayoutPanel1.SuspendLayout();
@@ -610,7 +611,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             this.btnDbCreate.ForeColor = System.Drawing.Color.Black;
             this.btnDbCreate.Location = new System.Drawing.Point(17, 586);
             this.btnDbCreate.Name = "btnDbCreate";
-            this.btnDbCreate.Size = new System.Drawing.Size(234, 32);
+            this.btnDbCreate.Size = new System.Drawing.Size(234, 31);
             this.btnDbCreate.TabIndex = 39;
             this.btnDbCreate.Text = "Create New Database";
             this.btnDbCreate.UseVisualStyleBackColor = false;
@@ -675,11 +676,26 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             this.btnGeneratePatch.UseVisualStyleBackColor = false;
             this.btnGeneratePatch.Click += new System.EventHandler(this.btnGeneratePatch_Click);
             // 
+            // btnOmniImporter
+            // 
+            this.btnOmniImporter.BackColor = System.Drawing.Color.MediumSeaGreen;
+            this.btnOmniImporter.FlatStyle = System.Windows.Forms.FlatStyle.Popup;
+            this.btnOmniImporter.Font = new System.Drawing.Font("Segoe UI", 15.75F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point);
+            this.btnOmniImporter.ForeColor = System.Drawing.Color.Black;
+            this.btnOmniImporter.Location = new System.Drawing.Point(300, 586);
+            this.btnOmniImporter.Name = "btnOmniImporter";
+            this.btnOmniImporter.Size = new System.Drawing.Size(234, 31);
+            this.btnOmniImporter.TabIndex = 44;
+            this.btnOmniImporter.Text = "Database Import";
+            this.btnOmniImporter.UseVisualStyleBackColor = false;
+            this.btnOmniImporter.Click += new System.EventHandler(this.btnOmniImporter_Click);
+            // 
             // frmDBEdit
             // 
             this.AutoScaleBaseSize = new System.Drawing.Size(5, 13);
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(0)))), ((int)(((byte)(0)))), ((int)(((byte)(32)))));
             this.ClientSize = new System.Drawing.Size(837, 630);
+            this.Controls.Add(this.btnOmniImporter);
             this.Controls.Add(this.btnDbCreate);
             this.Controls.Add(this.tableLayoutPanel3);
             this.Controls.Add(this.tableLayoutPanel2);
@@ -720,5 +736,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private Button btnServerDataEdit;
         private TableLayoutPanel tableLayoutPanel3;
         private Button btnGeneratePatch;
+        private Button btnOmniImporter;
     }
 }

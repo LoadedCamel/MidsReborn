@@ -1061,7 +1061,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             _updating = false;
         }
 
-        private void List_Power_AddBlock(IReadOnlyList<int> iPowers, bool displayFullName)
+        private void List_Power_AddBlock(IReadOnlyList<int> iPowers, bool displayFullName, bool includeHiddenPowers)
         {
             var items = new string[4];
             if (iPowers.Count < 1)
@@ -1071,7 +1071,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             foreach (var p in iPowers)
             {
-                if (p <= -1 || DatabaseAPI.Database.Power[p].HiddenPower)
+                if (p <= -1 || DatabaseAPI.Database.Power[p].HiddenPower && !includeHiddenPowers)
                 {
                     continue;
                 }
@@ -1090,7 +1090,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
         }
 
-        private void List_Power_AddBlock(IReadOnlyList<string> iPowers, bool displayFullName)
+        private void List_Power_AddBlock(IReadOnlyList<string> iPowers, bool displayFullName, bool includeHiddenPowers)
         {
             var items = new string[4];
             if (iPowers.Count < 1)
@@ -1101,7 +1101,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             foreach (var p in iPowers)
             {
                 var index2 = DatabaseAPI.NidFromUidPower(p);
-                if (index2 <= -1 || DatabaseAPI.Database.Power[index2].HiddenPower)
+                if (index2 <= -1 || DatabaseAPI.Database.Power[index2].HiddenPower && !includeHiddenPowers)
                 {
                     continue;
                 }
@@ -1115,6 +1115,31 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 lvPower.Items.Add(new ListViewItem(items));
             }
         }
+
+        private bool ShouldIncludeHiddenPowersForSelectedSet()
+        {
+            if (lvSet.SelectedItems.Count == 0)
+            {
+                return false;
+            }
+
+            var item = lvSet.SelectedItems[0];
+            var powersetId = -1;
+            if (item.SubItems.Count > 4 &&
+                int.TryParse(item.SubItems[4].Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedId))
+            {
+                powersetId = parsedId;
+            }
+            else if (item.SubItems.Count > 3 && !string.IsNullOrWhiteSpace(item.SubItems[3].Text))
+            {
+                powersetId = DatabaseAPI.NidFromUidPowerset(item.SubItems[3].Text);
+            }
+
+        return powersetId > -1 &&
+               powersetId < DatabaseAPI.Database.Powersets.Length &&
+               (DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.Pet ||
+                DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.SetBonus);
+    }
 
         private void List_Powers(int selIdx)
         {
@@ -1195,13 +1220,14 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             lvPower.BeginUpdate();
             lvPower.Items.Clear();
+            var includeHiddenPowers = ShouldIncludeHiddenPowersForSelectedSet();
             if (iPowers2.Length > 0)
             {
-                List_Power_AddBlock(iPowers2, displayFullName);
+                List_Power_AddBlock(iPowers2, displayFullName, includeHiddenPowers);
             }
             else
             {
-                List_Power_AddBlock(iPowers1, displayFullName);
+                List_Power_AddBlock(iPowers1, displayFullName, includeHiddenPowers);
             }
 
             BusyHide();

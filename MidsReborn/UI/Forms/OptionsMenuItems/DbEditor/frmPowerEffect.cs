@@ -3,6 +3,7 @@ using System.Globalization;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
 using Mids_Reborn.UI.Controls;
 using MRBResourceLib;
 
@@ -296,7 +297,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             txtFXDuration.Text = $@"{MyFx.nDuration:####0.####}";
             txtFXMag.Text = $@"{MyFx.nMagnitude:####0.####}";
             txtFXTicks.Text = $@"{MyFx.Ticks:####0}";
-            txtOverride.Text = MyFx.Override;
+            txtOverride.Text = MyFx.EffectType switch
+            {
+                Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode => MyFx.ModeName,
+                Enums.eEffectType.RevokePower => string.IsNullOrWhiteSpace(MyFx.RevokedPower) ? MyFx.Override : MyFx.RevokedPower,
+                _ => MyFx.Override
+            };
             txtFXDelay.Text = $@"{MyFx.DelayedTime:####0.####}";
             txtFXProb.Text = $@"{MyFx.BaseProbability:####0.####}";
             txtPPM.Text = $@"{MyFx.ProcsPerMinute:####0.####}";
@@ -415,9 +421,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             cbAspect.DataSource = Enum.GetValues(typeof(Enums.eAspect));
             //cbAspect.Items.AddRange(Enum.GetNames(MyFx.Aspect.GetType()));
 
-            foreach (var m in DatabaseAPI.Database.AttribMods.Modifier)
+            foreach (var tableName in DatabaseAPI.GetModifierTableNames())
             {
-                cbModifier.Items.Add(m.ID);
+                cbModifier.Items.Add(tableName);
             }
 
             cbAffects.Items.Add("None");
@@ -493,6 +499,16 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                             SelectItemByName(lvSubAttribute, group[0]);
                             UpdateSubSubList();
                             SelectItemByName(lvSubSub, MyFx.Override);
+                            break;
+
+                        case Enums.eEffectType.SetMode:
+                        case Enums.eEffectType.UnsetMode:
+                            SelectItemByName(lvSubAttribute, MyFx.ModeName);
+                            break;
+
+                        case Enums.eEffectType.RevokePower:
+                            SelectItemByName(lvSubAttribute,
+                                string.IsNullOrWhiteSpace(MyFx.RevokedPower) ? MyFx.Override : MyFx.RevokedPower);
                             break;
                     }
 
@@ -593,6 +609,25 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 case Enums.eEffectType.GrantPower:
                 case Enums.eEffectType.ExecutePower:
                     MyFx.Summon = sText;
+                    break;
+
+                case Enums.eEffectType.SetMode:
+                case Enums.eEffectType.UnsetMode:
+                    MyFx.ModeName = OmniModeMapper.Normalize(sText);
+                    MyFx.ModeFlag = OmniModeMapper.TryToFlag(MyFx.ModeName, out var modeFlag)
+                        ? modeFlag
+                        : Enums.eModeFlags.None;
+                    MyFx.ModeId = OmniModeMapper.TryFromModeId(MyFx.ModeId, out var modeName, out _) &&
+                                  modeName.Equals(MyFx.ModeName, StringComparison.OrdinalIgnoreCase)
+                        ? MyFx.ModeId
+                        : -1;
+                    txtOverride.Text = MyFx.ModeName;
+                    break;
+
+                case Enums.eEffectType.RevokePower:
+                    MyFx.RevokedPower = sText;
+                    MyFx.Override = sText;
+                    txtOverride.Text = sText;
                     break;
             }
 
@@ -889,7 +924,23 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            MyFx.Override = txtOverride.Text;
+            if (MyFx.EffectType is Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode)
+            {
+                MyFx.ModeName = OmniModeMapper.Normalize(txtOverride.Text);
+                MyFx.ModeFlag = OmniModeMapper.TryToFlag(MyFx.ModeName, out var modeFlag)
+                    ? modeFlag
+                    : Enums.eModeFlags.None;
+            }
+            else if (MyFx.EffectType == Enums.eEffectType.RevokePower)
+            {
+                MyFx.RevokedPower = txtOverride.Text;
+                MyFx.Override = txtOverride.Text;
+            }
+            else
+            {
+                MyFx.Override = txtOverride.Text;
+            }
+
             UpdateFxText();
         }
 
@@ -1025,9 +1076,13 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
                 case Enums.eEffectType.GrantPower:
                 case Enums.eEffectType.ExecutePower:
+                case Enums.eEffectType.RevokePower:
                     {
                         strArray = new string[DatabaseAPI.Database.Power.Length];
-                        var lower = MyFx.Summon.ToLower();
+                        var selectedPower = MyFx.EffectType == Enums.eEffectType.RevokePower
+                            ? string.IsNullOrWhiteSpace(MyFx.RevokedPower) ? MyFx.Override : MyFx.RevokedPower
+                            : MyFx.Summon;
+                        var lower = selectedPower.ToLower();
                         for (var index2 = 0; index2 < DatabaseAPI.Database.Power.Length; index2++)
                         {
                             strArray[index2] = DatabaseAPI.Database.Power[index2].FullName;
@@ -1038,6 +1093,33 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                         }
 
                         lvSubAttribute.Columns[0].Text = "Power Name";
+                        lvSubAttribute.Columns[0].Width = -2;
+                        break;
+                    }
+
+                case Enums.eEffectType.SetMode:
+                case Enums.eEffectType.UnsetMode:
+                    {
+                        var modeNames = OmniModeMapper.KnownModeNames.ToList();
+                        if (!string.IsNullOrWhiteSpace(MyFx.ModeName) &&
+                            !modeNames.Contains(MyFx.ModeName, StringComparer.OrdinalIgnoreCase))
+                        {
+                            modeNames.Add(MyFx.ModeName);
+                        }
+
+                        strArray = modeNames
+                            .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
+                            .ToArray();
+                        var lower = MyFx.ModeName.ToLower();
+                        for (var index2 = 0; index2 < strArray.Length; index2++)
+                        {
+                            if (strArray[index2].ToLower() == lower)
+                            {
+                                index1 = index2;
+                            }
+                        }
+
+                        lvSubAttribute.Columns[0].Text = "Mode";
                         lvSubAttribute.Columns[0].Width = -2;
                         break;
                     }

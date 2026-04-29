@@ -530,8 +530,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
                 if (canvas.Graphics != null && imageToDraw?.Bitmap != null)
                 {
-                    var borderKey = new Point(AssetManager.OriginIndex, (int)Origin.Grade.SetO);
-                    if (AssetManager.Borders.TryGetValue(borderKey, out var borderImage) && borderImage?.Bitmap != null)
+                    if (AssetManager.TryGetSetBorderBitmap(MySet, out var borderImage) && borderImage?.Bitmap != null)
                     {
                         canvas.Graphics.DrawImage(borderImage.Bitmap, canvas.Graphics.ClipBounds);
                     }
@@ -547,8 +546,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 using var canvas = new ExtendedBitmap(48, 48);
                 if (canvas.Graphics == null) return;
 
-                var borderKey = new Point(AssetManager.OriginIndex, (int)Origin.Grade.SetO);
-                if (AssetManager.Borders.TryGetValue(borderKey, out var borderImage) && borderImage?.Bitmap != null)
+                if (AssetManager.TryGetSetBorderBitmap(MySet, out var borderImage) && borderImage?.Bitmap != null)
                 {
                     canvas.Graphics.DrawImage(borderImage.Bitmap, canvas.Graphics.ClipBounds);
                 }

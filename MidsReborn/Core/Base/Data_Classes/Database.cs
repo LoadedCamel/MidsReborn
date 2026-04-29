@@ -1,7 +1,9 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Mids_Reborn.Core.Omni;
 using Mids_Reborn.Core.Utils;
+using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
 {
@@ -69,6 +71,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public SummonedEntity[] Entities { get; set; } = new SummonedEntity[0];
 
+        public OmniDatabaseImportSource OmniImportSource { get; set; }
+
+        public OmniDataProviderId DataProviderId { get; set; }
+
+        public PlannerRulesetId PlannerRulesetId { get; set; }
+
+        public int PlannerRulesetVersion { get; set; }
+
+        public bool HasCanonicalOmniPlannerMath { get; set; }
+
+        public Dictionary<string, OmniClassAttributeTable> ClassAttributes { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+
+        public EnhancementImportMetadata EnhancementImportMetadata { get; set; } = new();
+
         public Modifiers AttribMods { get; set; }
 
         public LevelMap[] Levels { get; set; }
@@ -127,6 +143,106 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 ent.StoreTo(writer);
             }
+        }
+
+        public void LoadOmniMetadata(BinaryReader reader)
+        {
+            OmniImportSource = OmniDatabaseImportSource.Unknown;
+            DataProviderId = OmniDataProviderId.Unknown;
+            PlannerRulesetId = PlannerRulesetId.Legacy;
+            PlannerRulesetVersion = 0;
+            HasCanonicalOmniPlannerMath = false;
+            ClassAttributes = new Dictionary<string, OmniClassAttributeTable>(StringComparer.OrdinalIgnoreCase);
+            EnhancementImportMetadata = new EnhancementImportMetadata();
+            if (reader.BaseStream.Position >= reader.BaseStream.Length)
+            {
+                return;
+            }
+
+            var marker = reader.ReadString();
+            if (!string.Equals(marker, "MRB_OMNI_METADATA", StringComparison.Ordinal))
+            {
+                return;
+            }
+
+            var version = reader.ReadInt32();
+            if (version is not 1 and not 2 and not 3 and not 4)
+            {
+                return;
+            }
+
+            var json = reader.ReadString();
+            switch (version)
+            {
+                case 1:
+                {
+                    var legacy = JsonConvert.DeserializeObject<Dictionary<string, OmniClassAttributeTable>>(json);
+                    ClassAttributes = legacy == null
+                        ? new Dictionary<string, OmniClassAttributeTable>(StringComparer.OrdinalIgnoreCase)
+                        : new Dictionary<string, OmniClassAttributeTable>(legacy, StringComparer.OrdinalIgnoreCase);
+                    if (ClassAttributes.Count > 0)
+                    {
+                        OmniImportSource = OmniDatabaseImportSource.Omni;
+                        DataProviderId = OmniDataProviderId.OmniHomecoming;
+                    }
+
+                    break;
+                }
+                case 2:
+                {
+                    var metadata = JsonConvert.DeserializeObject<OmniDatabaseMetadata>(json) ?? new OmniDatabaseMetadata();
+                    OmniImportSource = metadata.ImportSource;
+                    DataProviderId = metadata.DataProviderId == OmniDataProviderId.Unknown &&
+                                     metadata.ImportSource == OmniDatabaseImportSource.Omni
+                        ? OmniDataProviderId.OmniHomecoming
+                        : metadata.DataProviderId;
+                    PlannerRulesetId = metadata.HasCanonicalOmniPlannerMath
+                        ? PlannerRulesetId.Homecoming
+                        : PlannerRulesetId.Legacy;
+                    PlannerRulesetVersion = metadata.PlannerRulesetVersion;
+                    HasCanonicalOmniPlannerMath = metadata.HasCanonicalOmniPlannerMath;
+                    ClassAttributes = metadata.ClassAttributes == null
+                        ? new Dictionary<string, OmniClassAttributeTable>(StringComparer.OrdinalIgnoreCase)
+                        : new Dictionary<string, OmniClassAttributeTable>(metadata.ClassAttributes, StringComparer.OrdinalIgnoreCase);
+                    break;
+                }
+                case 3:
+                case 4:
+                {
+                    var metadata = JsonConvert.DeserializeObject<OmniDatabaseMetadata>(json) ?? new OmniDatabaseMetadata();
+                    OmniImportSource = metadata.ImportSource;
+                    DataProviderId = metadata.DataProviderId;
+                    PlannerRulesetId = metadata.PlannerRulesetId;
+                    PlannerRulesetVersion = metadata.PlannerRulesetVersion;
+                    HasCanonicalOmniPlannerMath = metadata.HasCanonicalOmniPlannerMath;
+                    ClassAttributes = metadata.ClassAttributes == null
+                        ? new Dictionary<string, OmniClassAttributeTable>(StringComparer.OrdinalIgnoreCase)
+                        : new Dictionary<string, OmniClassAttributeTable>(metadata.ClassAttributes, StringComparer.OrdinalIgnoreCase);
+                    EnhancementImportMetadata = metadata.EnhancementImport ?? new EnhancementImportMetadata();
+                    break;
+                }
+            }
+
+            if (PlannerRulesetId == PlannerRulesetId.Legacy && HasCanonicalOmniPlannerMath)
+            {
+                PlannerRulesetId = PlannerRulesetId.Homecoming;
+            }
+        }
+
+        public void StoreOmniMetadata(BinaryWriter writer)
+        {
+            writer.Write("MRB_OMNI_METADATA");
+            writer.Write(4);
+            writer.Write(JsonConvert.SerializeObject(new OmniDatabaseMetadata
+            {
+                ImportSource = OmniImportSource,
+                DataProviderId = DataProviderId,
+                PlannerRulesetId = PlannerRulesetId,
+                PlannerRulesetVersion = PlannerRulesetVersion,
+                HasCanonicalOmniPlannerMath = HasCanonicalOmniPlannerMath,
+                ClassAttributes = new Dictionary<string, OmniClassAttributeTable>(ClassAttributes, StringComparer.OrdinalIgnoreCase),
+                EnhancementImport = EnhancementImportMetadata
+            }));
         }
 
     }

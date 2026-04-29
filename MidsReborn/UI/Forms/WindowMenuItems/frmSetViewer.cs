@@ -1262,7 +1262,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     Enums.eEffectType.Defense => displayStats.Defense((int) st.DamageType),
                     Enums.eEffectType.Regeneration => displayStats.HealthRegenPercent(false),
                     Enums.eEffectType.HitPoints => displayStats.HealthHitpointsNumeric(false),
-                    Enums.eEffectType.Absorb => Math.Min(displayStats.Absorb, MidsContext.Character.Archetype.Hitpoints),
+                    Enums.eEffectType.Absorb => Math.Min(displayStats.Absorb, DatabaseAPI.GetClassHitPoints(MidsContext.Character.Archetype)),
                     Enums.eEffectType.Recovery => displayStats.EnduranceRecoveryPercentage(false) - 100,
                     Enums.eEffectType.Endurance => displayStats.EnduranceMaxEnd - 100,
                     Enums.eEffectType.SpeedRunning => displayStats.MovementRunSpeed(Enums.eSpeedMeasure.FeetPerSecond, false),
@@ -1321,9 +1321,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
                 bar.MaximumBarValue = st.EffectType switch
                 {
-                    Enums.eEffectType.DamageBuff => MidsContext.Character.Archetype.DamageCap * 100 - 100,
-                    Enums.eEffectType.Regeneration => MidsContext.Character.Archetype.RegenCap * 100,
-                    Enums.eEffectType.HitPoints => MidsContext.Character.Archetype.HPCap,
+                    Enums.eEffectType.DamageBuff => DatabaseAPI.GetClassDamageCap(MidsContext.Character.Archetype) * 100 - 100,
+                    Enums.eEffectType.Regeneration => DatabaseAPI.GetClassRegenCap(MidsContext.Character.Archetype) * 100,
+                    Enums.eEffectType.HitPoints => DatabaseAPI.GetClassHitPointCap(MidsContext.Character.Archetype),
                     Enums.eEffectType.Recovery => GetMultiScaleMaxValue(Math.Max(fxMagAdjusted, totalsValue), new float[] {50, 100, 260, 510, 760}),
                     Enums.eEffectType.Endurance => 50,
                     Enums.eEffectType.SpeedRunning => MidsContext.Character.Totals.MaxRunSpd / Statistics.BaseRunSpeed * 100 + 25,

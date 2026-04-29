@@ -5,6 +5,7 @@ using System.Globalization;
 using System.Linq;
 using System.Text.RegularExpressions;
 using FastDeepCloner;
+using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 
@@ -391,29 +392,29 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 var flag2 = Powersets[0] != null && Powersets[0].nArchetype == Archetype.Idx;
                 if (!flag2)
-                    Powersets[0] = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Primary)[0];
+                    Powersets[0] = GetSafePowerset(Archetype, Enums.ePowerSetType.Primary, Powersets[0]);
                 var flag3 = Powersets[1] != null && Powersets[1].nArchetype == Archetype.Idx;
                 if (!flag3)
-                    Powersets[1] = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Secondary)[0];
+                    Powersets[1] = GetSafePowerset(Archetype, Enums.ePowerSetType.Secondary, Powersets[1]);
             }
             else
             {
-                Powersets[0] = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Primary)[0];
-                Powersets[1] = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Secondary)[0];
+                Powersets[0] = GetSafePowerset(Archetype, Enums.ePowerSetType.Primary, Powersets[0]);
+                Powersets[1] = GetSafePowerset(Archetype, Enums.ePowerSetType.Secondary, Powersets[1]);
             }
 
             var powersetIndexes1 = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Pool);
             var index = 0;
-            Powersets[3] = powersetIndexes1[index];
+            Powersets[3] = GetSafePowerset(powersetIndexes1, index, Powersets[3]);
             if (powersetIndexes1.Length - 1 > index)
                 ++index;
-            Powersets[4] = powersetIndexes1[index];
+            Powersets[4] = GetSafePowerset(powersetIndexes1, index, Powersets[4]);
             if (powersetIndexes1.Length - 1 > index)
                 ++index;
-            Powersets[5] = powersetIndexes1[index];
+            Powersets[5] = GetSafePowerset(powersetIndexes1, index, Powersets[5]);
             if (powersetIndexes1.Length - 1 > index)
                 ++index;
-            Powersets[6] = powersetIndexes1[index];
+            Powersets[6] = GetSafePowerset(powersetIndexes1, index, Powersets[6]);
             var powersetIndexes2 = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Ancillary);
             Powersets[7] = powersetIndexes2.Length <= 0 ? null : powersetIndexes2[0];
             ModifyEffects = new Dictionary<string, float>();
@@ -421,6 +422,35 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             NewBuild();
             Locked = false;
             LevelCache = -1;
+        }
+
+        private static IPowerset? GetSafePowerset(Archetype archetype, Enums.ePowerSetType setType, IPowerset? fallback)
+        {
+            return GetSafePowerset(DatabaseAPI.GetPowersetIndexes(archetype, setType), 0, fallback);
+        }
+
+        private static IPowerset? GetSafePowerset(IPowerset?[] powersets, int index, IPowerset? fallback)
+        {
+            if (powersets.Length == 0)
+            {
+                return fallback;
+            }
+
+            if (index >= 0 && index < powersets.Length)
+            {
+                return powersets[index];
+            }
+
+            if (fallback != null)
+            {
+                var match = powersets.FirstOrDefault(p => p?.nID == fallback.nID);
+                if (match != null)
+                {
+                    return match;
+                }
+            }
+
+            return powersets[0];
         }
 
         protected void NewBuild()
@@ -608,6 +638,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 if (power?.Power == null || !power.StatInclude) continue;
 
+                foreach (var effect in power.Power.Effects ?? [])
+                {
+                    ApplyPlannerModeEffect(effect);
+                }
+
                 switch (power.Power.PowerName.ToUpper())
                 {
                     case "TIME_CRAWL":
@@ -751,7 +786,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     InherentDisplayList.Add(new InherentDisplayItem(priority, inherent));
                 }
 
-                InherentDisplayList = new List<InherentDisplayItem>(InherentDisplayList.OrderBy(x => x.Priority));
+                InherentDisplayList = new List<InherentDisplayItem>(InherentDisplayList
+                    .OrderBy(x => x.Priority)
+                    .ThenBy(x => x.Power.Level)
+                    .ThenBy(x => x.Power.DisplayName, StringComparer.OrdinalIgnoreCase));
             }
 
             if (CurrentBuild == null) return;
@@ -1015,6 +1053,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             switch (enhancement.TypeID)
             {
                 case Enums.eType.Normal:
+                    popupData1.Sections[index1].Add(DatabaseAPI.GetEnhancementDisplayName(iSlot, includeFlavor: true), PopUp.Colors.Title, 1.25f);
+                    break;
                 case Enums.eType.SpecialO:
                     popupData1.Sections[index1].Add(enhancement.Name, PopUp.Colors.Title, 1.25f);
                     break;
@@ -1071,7 +1111,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eType.InventO:
                     if (!string.IsNullOrEmpty(enhancement.Desc))
                     {
-                        popupData1.Sections[index1].Add(enhancement.Desc, PopUp.Colors.Title);
+                        popupData1.Sections[index1].Add(iSlot.GetResolvedEnhancementDescription(), PopUp.Colors.Title);
                         break;
                     }
 
@@ -1088,7 +1128,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eType.SetO:
                     if (!string.IsNullOrEmpty(enhancement.Desc))
                     {
-                        popupData1.Sections[index1].Add(enhancement.Desc, PopUp.Colors.Title);
+                        popupData1.Sections[index1].Add(iSlot.GetResolvedEnhancementDescription(), PopUp.Colors.Title);
                     }
 
                     var index4 = popupData1.Add();
@@ -1264,6 +1304,88 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             return strArray2;
+        }
+
+        private void ApplyPlannerModeEffect(IEffect effect)
+        {
+            if (effect.EffectType is not (Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode))
+            {
+                return;
+            }
+
+            if (!PlannerModeMapper.TryGetPlannerMode(effect.ModeName, out var mode) &&
+                !PlannerModeMapper.TryGetPlannerMode(effect.ModeFlag.ToString(), out mode))
+            {
+                return;
+            }
+
+            ApplyPlannerMode(mode, effect.EffectType == Enums.eEffectType.SetMode);
+        }
+
+        private void ApplyPlannerMode(PlannerMode mode, bool enabled)
+        {
+            switch (mode)
+            {
+                case PlannerMode.FastSnipe:
+                    FastSnipe = enabled;
+                    NotFastSnipe = !enabled;
+                    break;
+                case PlannerMode.Containment:
+                    Containment = enabled;
+                    break;
+                case PlannerMode.Domination:
+                    Domination = enabled;
+                    break;
+                case PlannerMode.Scourge:
+                    Scourge = enabled;
+                    break;
+                case PlannerMode.CriticalHit:
+                    CriticalHits = enabled;
+                    break;
+                case PlannerMode.Assassination:
+                    Assassination = enabled;
+                    break;
+                case PlannerMode.Defiance:
+                    Defiance = enabled;
+                    break;
+                case PlannerMode.DefensiveAdaptation:
+                    DefensiveAdaptation = enabled;
+                    NotDefensiveAdaptation = !enabled;
+                    NotDefensiveNorOffensiveAdaptation = !enabled && !OffensiveAdaptation;
+                    break;
+                case PlannerMode.EfficientAdaptation:
+                    EfficientAdaptation = enabled;
+                    break;
+                case PlannerMode.OffensiveAdaptation:
+                    OffensiveAdaptation = enabled;
+                    NotDefensiveNorOffensiveAdaptation = !enabled && !DefensiveAdaptation;
+                    break;
+                case PlannerMode.ComboLevel1:
+                    ActiveComboLevel = enabled ? 1 : ActiveComboLevel == 1 ? 0 : ActiveComboLevel;
+                    break;
+                case PlannerMode.ComboLevel2:
+                    ActiveComboLevel = enabled ? 2 : ActiveComboLevel == 2 ? 0 : ActiveComboLevel;
+                    break;
+                case PlannerMode.ComboLevel3:
+                    ActiveComboLevel = enabled ? 3 : ActiveComboLevel == 3 ? 0 : ActiveComboLevel;
+                    break;
+                case PlannerMode.FastMode:
+                    FastModeActive = enabled;
+                    break;
+                case PlannerMode.PerfectionOfBody:
+                    PerfectionType = enabled ? "body" : PerfectionType == "body" ? string.Empty : PerfectionType;
+                    break;
+                case PlannerMode.PerfectionOfMind:
+                    PerfectionType = enabled ? "mind" : PerfectionType == "mind" ? string.Empty : PerfectionType;
+                    break;
+                case PlannerMode.PerfectionOfSoul:
+                    PerfectionType = enabled ? "soul" : PerfectionType == "soul" ? string.Empty : PerfectionType;
+                    break;
+                case PlannerMode.PackMentality:
+                    PackMentality = enabled;
+                    NotPackMentality = !enabled;
+                    break;
+            }
         }
 
         private static bool ShouldKeepEffectVectorInline(string value)

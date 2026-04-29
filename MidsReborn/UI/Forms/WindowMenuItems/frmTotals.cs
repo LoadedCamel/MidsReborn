@@ -505,7 +505,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphDef.Draw();
 
             graphRes.Clear();
-            var str1 = $"{MidsContext.Character.Archetype.DisplayName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:###0}%";
+            var resistanceCap = DatabaseAPI.GetClassResistanceCap(MidsContext.Character.Archetype);
+            var str1 = $"{MidsContext.Character.Archetype.DisplayName} resistance cap: {resistanceCap * 100:###0}%";
             for (var dType = 1; dType < 9; dType++)
             {
                 if (dType == 9)
@@ -582,14 +583,16 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphRegen.Draw();
 
             graphHP.Clear();
-            var iTip5 = $"Base HitPoints: {MidsContext.Character.Archetype.Hitpoints}\r\nCurrent HitPoints: {displayStats.HealthHitpointsNumeric(false)}";
+            var baseHitPoints = DatabaseAPI.GetClassHitPoints(MidsContext.Character.Archetype);
+            var hitPointCap = DatabaseAPI.GetClassHitPointCap(MidsContext.Character.Archetype);
+            var iTip5 = $"Base HitPoints: {baseHitPoints}\r\nCurrent HitPoints: {displayStats.HealthHitpointsNumeric(false)}";
             if (Math.Abs(displayStats.HealthHitpointsNumeric(false) - displayStats.HealthHitpointsNumeric(true)) > 0.01)
             {
                 iTip5 += $"\r\n(Capped from a total of: {displayStats.HealthHitpointsNumeric(true):###0.##})";
             }
 
             graphHP.AddItem($"Max HP|{displayStats.HealthHitpointsPercentage:###0.##}%", Math.Max(0, displayStats.HealthHitpointsPercentage), Math.Max(0, displayStats.HealthHitpointsPercentage), iTip5);
-            graphHP.Max = (float)(MidsContext.Character.Archetype.HPCap / (double)MidsContext.Character.Archetype.Hitpoints * 100);
+            graphHP.Max = (float)(hitPointCap / (double)baseHitPoints * 100);
             graphHP.MarkerValue = 100f;
             graphHP.Draw();
 
@@ -671,7 +674,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             }
 
             graphDam.AddItem($"Damage|{displayStats.BuffDamage(false) - 100:##0.##}%", Math.Max(0, displayStats.BuffDamage(false)), Math.Max(0, displayStats.BuffDamage(true)), $"This effect alters the damage dealt by all your attacks.\r\nAs some powers can reduce your damage output, this bar has your base damage (100%) included.{str7}");
-            graphDam.Max = MidsContext.Character.Archetype.DamageCap * 100f;
+            graphDam.Max = DatabaseAPI.GetClassDamageCap(MidsContext.Character.Archetype) * 100f;
             graphDam.MarkerValue = 100f;
             graphDam.Draw();
 
@@ -708,11 +711,12 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphStealth.AddItem($"Perception|{displayStats.Perception(false):###0} ft", displayStats.Perception(false), 0.0f, "This, minus a player's stealth radius, is the distance you can see it.");
             graphStealth.Max = graphStealth.GetMaxValue() * 1.01f;
             graphStealth.Draw();
-            var iTip10 = $"This affects how mobs prioritize you as a threat.\r\nLower values make you a less tempting target.\r\nThe {MidsContext.Character.Archetype.DisplayName} base Threat Level of {MidsContext.Character.Archetype.BaseThreat * 100.0:###}% is included in this figure.";
+            var baseThreat = DatabaseAPI.GetClassBaseThreat(MidsContext.Character.Archetype);
+            var iTip10 = $"This affects how mobs prioritize you as a threat.\r\nLower values make you a less tempting target.\r\nThe {MidsContext.Character.Archetype.DisplayName} base Threat Level of {baseThreat * 100.0:###}% is included in this figure.";
             var nBase = displayStats.ThreatLevel + 200;
             graphThreat.Clear();
             graphThreat.AddItem($"Threat Level|{displayStats.ThreatLevel:##0}%", nBase, 0, iTip10);
-            graphThreat.MarkerValue = MidsContext.Character.Archetype.BaseThreat * 100 + 200;
+            graphThreat.MarkerValue = baseThreat * 100 + 200;
             graphThreat.Max = 800;
             graphThreat.Draw();
 

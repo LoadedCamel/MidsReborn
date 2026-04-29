@@ -98,6 +98,9 @@ namespace Mids_Reborn.Core.Base
         {
             var itemsToRemove = new List<KeyValuePair<string, string>>();
             var counters = new Dictionary<string, int>();
+            var powers = (DatabaseAPI.Database.Power ?? [])
+                .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+                .ToDictionary(power => power!.FullName, power => power!, StringComparer.OrdinalIgnoreCase);
             foreach (var item in _table)
             {
                 if (!counters.ContainsKey(item.Key))
@@ -112,12 +115,8 @@ namespace Mids_Reborn.Core.Base
                         $"Warning: duplicate input power ID {item.Key} found.\r\nPlease ensure input IDs are unique.\r\nThe replacement pair <{item.Key}, {item.Value}> will be disabled.",
                         "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-                var power = DatabaseAPI.Database.Power
-                    .DefaultIfEmpty(new Power { StaticIndex = -1 })
-                    .FirstOrDefault(e => e.FullName == item.Key);
 
-                var powerName = power.StaticIndex == -1 ? "" : power.FullName;
-                if (powerName == "")
+                if (!powers.TryGetValue(item.Key, out var power) || power.StaticIndex == -1)
                 {
                     itemsToRemove.Add(item);
                     MessageBox.Show(
@@ -129,13 +128,14 @@ namespace Mids_Reborn.Core.Base
             if (itemsToRemove.Count <= 0) return;
 
             // Remove invalid items and reindex
+            var remove = itemsToRemove
+                .Distinct()
+                .ToHashSet();
             var tableTempCopy = new Dictionary<string, string>();
-            var j = 0;
             foreach (var e in _table)
             {
-                if (e.Key == itemsToRemove[j].Key & e.Value == itemsToRemove[j].Value)
+                if (remove.Contains(e))
                 {
-                    j++;
                     continue;
                 }
 

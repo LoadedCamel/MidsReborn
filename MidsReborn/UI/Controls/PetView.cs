@@ -482,7 +482,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                 info_Damage.nHighEnh = Math.Max(414, enhancedDamage * dmgMultiplier);
                 info_Damage.Text = Math.Abs(enhancedDamage - baseDamage) > float.Epsilon
                     ? $"{enhancedPower.FXGetDamageString(enhancedPower.PowerIndex == -1)} ({(hasPercentDamage ? $"{Utilities.FixDP(baseDamage * 100)}%" : Utilities.FixDP(baseDamage))})"
-                    : basePower.FXGetDamageString(basePower.PowerIndex > -1 && enhancedPower.PowerIndex > -1);
+                    : basePower.FXGetDamageString();
             }
 
             SetPowerScaler();
@@ -501,16 +501,6 @@ namespace Mids_Reborn.UI.Forms.Controls
             //     info_Damage.TextAlign = Enums.eDDAlign.Center;
             //     info_Damage.Style = Enums.eDDStyle.Text;
             // }
-
-            if (_basePower != null && _enhancedPower != null)
-            {
-                if (_basePower.Effects.Length > _enhancedPower.Effects.Length)
-                {
-                    var swappedFx = SwapExtraEffects(_basePower.Effects, _enhancedPower.Effects);
-                    _basePower.Effects = (IEffect[])swappedFx[0].Clone();
-                    _enhancedPower.Effects = (IEffect[])swappedFx[1].Clone();
-                }
-            }
 
             DisplayInfo(noLevel, iEnhLevel);
             DisplayEffects(noLevel, iEnhLevel);
@@ -1500,17 +1490,26 @@ namespace Mids_Reborn.UI.Forms.Controls
             }
             else
             {
-                _basePower = basePowerData.PowerIndex == -1 ? basePowerData : new Power(DatabaseAPI.Database.Power[basePowerData.PowerIndex]);
+                _basePower = basePowerData;
                 _enhancedPower = enhancedPowerData ?? new Power(basePower) { PowerIndex = -1 };
             }
 
             if (_basePower != null)
             {
-                _basePower.ProcessExecutes();
-                _basePower.AbsorbPetEffects();
+                _basePower = PlannerEffectResolver.ResolvePower(_basePower, new PlannerEffectResolutionContext
+                {
+                    HistoryIndex = historyIdx,
+                    AbsorbPetEffects = true
+                }).ResolvedPower;
             }
 
-            _enhancedPower?.ProcessExecutes();
+            if (_enhancedPower != null)
+            {
+                _enhancedPower = PlannerEffectResolver.ResolvePower(_enhancedPower, new PlannerEffectResolutionContext
+                {
+                    ApplyRedirects = false
+                }).ResolvedPower;
+            }
 
             _groupedRankedEffects = GroupedFx.AssembleGroupedEffects(_enhancedPower);
             _effectsItemPairs = GroupedFx.GenerateListItems(_groupedRankedEffects, _basePower, _enhancedPower, _enhancedPower?.GetRankedEffects(true).ToList() ?? throw new InvalidOperationException(), info_DataList.Font.Size);

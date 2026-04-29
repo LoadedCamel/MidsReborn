@@ -1,0 +1,7853 @@
+using Mids_Reborn.Core.Base.Data_Classes;
+using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using Mids_Reborn.Core;
+using System.Text.RegularExpressions;
+
+namespace Mids_Reborn.Core.Omni;
+
+public sealed class OmniImportResult
+{
+    public string ExportRoot { get; set; } = string.Empty;
+    public OmniImportReport Report { get; init; } = new();
+    public OmniImportScope Scope { get; init; } = new();
+    public Dictionary<string, OmniClassAttributeTable> ClassAttributes { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, OmniBuildActor> Actors { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+    public HashSet<string> ReferencedEntities { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+    public HashSet<string> GcmTags { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+    public HashSet<string> ScopedPowerFullNames { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+    public HashSet<string> ScopedPowersetFullNames { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+
+    public void TrimTransientData()
+    {
+        Actors.Clear();
+        ReferencedEntities.Clear();
+        GcmTags.Clear();
+        ScopedPowerFullNames.Clear();
+        ScopedPowersetFullNames.Clear();
+    }
+
+    public void TrimForApply()
+    {
+        TrimTransientData();
+        Report.TrimDetails();
+    }
+}
+
+public sealed partial class OmniImporter
+{
+    private static readonly string[] PetImportRoots =
+    [
+        "incarnate_pets",
+        "kheldian_pets",
+        "mastermind_pets",
+        "pets",
+        "villain_pets"
+    ];
+
+    private static readonly IReadOnlyDictionary<string, string> PowerNameAliases =
+        new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
+        {
+            ["boosts"] = "Boosts",
+            ["epic"] = "Epic",
+            ["incarnate_pets"] = "Incarnate_Pets",
+            ["incarnate"] = "Incarnate",
+            ["inherent"] = "Inherent",
+            ["kheldian_pets"] = "Kheldian_Pets",
+            ["mastermind_pets"] = "Mastermind_Pets",
+            ["pets"] = "Pets",
+            ["pool"] = "Pool",
+            ["prestige"] = "Prestige",
+            ["redirects"] = "Redirects",
+            ["set_bonus"] = "Set_Bonus",
+            ["temporary_powers"] = "Temporary_Powers",
+            ["villain_pets"] = "Villain_Pets",
+            ["Blaster_Support.Time_Manipulation"] = "Blaster_Support.Temporal_Manipulation",
+            ["Brute_Melee.Brawling"] = "Brute_Melee.Street_Justice",
+            ["Controller_Buff.Shock_Therapy"] = "Controller_Buff.Electrical_Affinity",
+            ["Corruptor_Buff.Shock_Therapy"] = "Corruptor_Buff.Electrical_Affinity",
+            ["Controller_Buff.Electrical_Affinity.Defibrilate"] = "Controller_Buff.Electrical_Affinity.Defibrillate",
+            ["Corruptor_Buff.Electrical_Affinity.Defibrilate"] = "Corruptor_Buff.Electrical_Affinity.Defibrillate",
+            ["Defender_Buff.Shock_Therapy.Defibrilate"] = "Defender_Buff.Shock_Therapy.Defibrillate",
+            ["Epic.Dark_Mastery_TankBrute"] = "Epic.Tank_Dark_Mastery",
+            ["Epic.Ice_Mastery_DefCorr"] = "Epic.Defender_Ice_Mastery",
+            ["Epic.Ice_Mastery_ScrapStalk"] = "Epic.Scrapper_Ice_Mastery",
+            ["Epic.Psionic_Mastery_ScrapStalk"] = "Epic.Melee_Psionic_Mastery",
+            ["Epic.Psionic_Mastery_TankBrute"] = "Epic.Tank_Psionic_Mastery",
+            ["Epic.Scrapper_Mace_Mastery"] = "Epic.Stalker_Mace_Mastery",
+            ["Mastermind_Buff.Shock_Therapy"] = "Mastermind_Buff.Electrical_Affinity",
+            ["Mastermind_Buff.Electrical_Affinity.Defibrilate"] = "Mastermind_Buff.Electrical_Affinity.Defibrillate",
+            ["Scrapper_Melee.Brawling"] = "Scrapper_Melee.Street_Justice",
+            ["Stalker_Melee.Brawling"] = "Stalker_Melee.Street_Justice",
+            ["Tanker_Melee.Brawling"] = "Tanker_Melee.Street_Justice"
+        };
+
+    private static readonly HashSet<string> StaffMasteryFullNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Brute_Melee.Staff_Fighting.Staff_Mastery",
+        "Scrapper_Melee.Staff_Fighting.Staff_Mastery",
+        "Tanker_Melee.Staff_Fighting.Staff_Mastery"
+    };
+
+    private static readonly HashSet<string> IgnoredPowerJsonFields = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "abusive_buff",
+        "ai_groups",
+        "cancelable",
+        "custom_fx",
+        "deletable",
+        "destroy_on_last_use",
+        "display_attacker_attack_floater",
+        "display_attacker_attack_floater_defense",
+        "display_confirm",
+        "display_target_hit_floater",
+        "display_victim_hit_floater",
+        "fx",
+        "fx_only_on_main_target",
+        "highlight_eval",
+        "highlight_icon",
+        "highlight_ring",
+        "icon",
+        "idea_cost",
+        "ignore_level_gained",
+        "ignore_stance",
+        "ignore_toggle_max_distance",
+        "instance_locked",
+        "message_attacker_attack",
+        "message_attacker_attack_floater",
+        "message_attacker_hit",
+        "message_attacker_hit_floater",
+        "message_attacker_miss",
+        "message_victim_hit",
+        "message_victim_hit_floater",
+        "message_victim_miss",
+        "position_center",
+        "position_distance_below",
+        "position_distance_left",
+        "position_distance_right",
+        "position_distance_up",
+        "position_height",
+        "position_yaw",
+        "server_tray_priority",
+        "show_in_inventory",
+        "target_untargetable",
+        "time_to_confirm",
+        "toggle_droppable",
+        "toggle_ignores",
+        "tradeable",
+        "tray_number",
+        "tray_placement",
+        "tray_slot",
+        "vec_box_max",
+        "vec_box_min",
+        "visibility",
+        "works_through_vision_phase"
+    };
+
+    private sealed record ImportIntegritySnapshot(
+        IReadOnlyDictionary<string, PowerIntegrityInfo> Powers,
+        IReadOnlyDictionary<string, PowersetIntegrityInfo> Powersets);
+
+    private sealed record PowerIntegrityInfo(
+        string FullName,
+        string FullSetName,
+        string GroupName,
+        string SetName,
+        string PowerName,
+        string DisplayName,
+        int PowerSetID,
+        int PowerSetIndex,
+        bool HiddenPower,
+        bool NeverAutoUpdate,
+        bool IsOrphan,
+        bool MissingFullSetName,
+        bool UnresolvedFullSetName);
+
+    private sealed record PowersetIntegrityInfo(
+        string CanonicalFullName,
+        string FullName,
+        string GroupName,
+        string SetName,
+        string DisplayName,
+        Enums.ePowerSetType SetType,
+        string ATClass);
+
+    private sealed record PowersetIconInfo(
+        string CanonicalFullName,
+        string GroupName,
+        string SetName,
+        string DisplayName,
+        string ImageName);
+
+    private readonly JsonSerializerSettings _settings = new()
+    {
+        MissingMemberHandling = MissingMemberHandling.Ignore,
+        NullValueHandling = NullValueHandling.Ignore
+    };
+
+    public OmniImportResult DryRun(string exportRoot)
+    {
+        return DryRun(exportRoot, null);
+    }
+
+    public OmniImportResult DryRun(string exportRoot, IProgress<OmniImportProgress>? progress)
+    {
+        if (string.IsNullOrWhiteSpace(exportRoot))
+        {
+            throw new ArgumentException("Omni export root is required.", nameof(exportRoot));
+        }
+
+        if (!Directory.Exists(exportRoot))
+        {
+            throw new DirectoryNotFoundException(exportRoot);
+        }
+
+        var result = new OmniImportResult();
+        result.ExportRoot = NormalizeRoot(exportRoot);
+        OmniModeMapper.LoadCatalog(result.ExportRoot);
+        result.Report.ModeCatalogEntriesLoaded = OmniModeMapper.ModeCatalogCount;
+        using var progressReporter = new ThrottledProgress(progress);
+        ReportProgress(progressReporter, 0, "Preparing dry run");
+        ScanGcmTags(result.ExportRoot, result);
+        LoadArchetypes(exportRoot, result, progressReporter);
+        LoadClassTables(exportRoot, result, progressReporter);
+        ScanPowers(exportRoot, result, progressReporter);
+        ScanPetImportManifest(result.ExportRoot, result.Report);
+        ScanEntities(exportRoot, result, progressReporter);
+        ScanEnhancementData(exportRoot, result, progressReporter);
+        ReportProgress(progressReporter, 100, "Dry run complete", $"{result.Report.PowersInScope:n0} scoped powers");
+        return result;
+    }
+
+    public void ApplyClassAttributesToDatabase(IDatabase database, OmniImportResult result)
+    {
+        ApplyClassAttributesToDatabase(database, result, null);
+    }
+
+    public OmniApplyResult ApplySafeImport(IDatabase database, string exportRoot, OmniImportResult dryRunResult)
+    {
+        return ApplySafeImport(database, exportRoot, dryRunResult, null);
+    }
+
+    public OmniApplyResult ApplySafeImport(
+        IDatabase database,
+        string exportRoot,
+        OmniImportResult dryRunResult,
+        IProgress<OmniImportProgress>? progress)
+    {
+        if (database == null)
+        {
+            throw new ArgumentNullException(nameof(database));
+        }
+
+        if (dryRunResult == null)
+        {
+            throw new ArgumentNullException(nameof(dryRunResult));
+        }
+
+        if (string.IsNullOrWhiteSpace(exportRoot))
+        {
+            throw new ArgumentException("Omni export root is required.", nameof(exportRoot));
+        }
+
+        var normalizedRoot = NormalizeRoot(exportRoot);
+        if (!Directory.Exists(normalizedRoot))
+        {
+            throw new DirectoryNotFoundException(normalizedRoot);
+        }
+
+        if (!string.Equals(normalizedRoot, dryRunResult.ExportRoot, StringComparison.OrdinalIgnoreCase))
+        {
+            throw new InvalidOperationException("Run a dry run for this Omni export folder before applying the import.");
+        }
+
+        var applyResult = new OmniApplyResult();
+        OmniModeMapper.LoadCatalog(normalizedRoot);
+        applyResult.ModeCatalogEntriesLoaded = OmniModeMapper.ModeCatalogCount;
+        using var progressReporter = new ThrottledProgress(progress);
+        ReportProgress(progressReporter, 0, "Preparing safe import");
+        var beforeIntegrity = CaptureImportIntegritySnapshot(database);
+        var powersetIcons = CapturePowersetIcons(database);
+        ApplyGcmTags(database, normalizedRoot, applyResult);
+        TrackApplyClassTables(dryRunResult, applyResult);
+        ApplyClassAttributesToDatabase(database, dryRunResult, applyResult);
+        ReportProgress(progressReporter, 5, "Stored class attributes", $"{applyResult.ClassAttributesStored:n0} tables");
+        RemoveExcludedOmniContent(database, applyResult);
+        RebuildSupportHeavyGroups(database, applyResult);
+        var strictSetBonusFamiliesInScope = LoadScopedPowersets(normalizedRoot, dryRunResult.Scope)
+            .Where(powerset => !string.IsNullOrWhiteSpace(powerset.FullName))
+            .Select(powerset => CanonicalizeOmniFullName(powerset.FullName))
+            .Where(IsStrictSetBonusPowerset)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        PurgeStrictSetBonusFamilies(database, strictSetBonusFamiliesInScope, applyResult);
+        ReportProgress(progressReporter, 8, "Rebuilt support-heavy groups",
+            $"{applyResult.SupportPowersRemoved:n0} powers removed");
+        EnsureScopedPowersets(database, normalizedRoot, dryRunResult.Scope, applyResult, progressReporter);
+        var scopedPowers = LoadScopedPowers(normalizedRoot, dryRunResult.Scope).ToList();
+        PurgeStrictSetBonusScopedPowers(database, scopedPowers, applyResult);
+        var petManifest = BuildPetImportManifest(normalizedRoot, applyResult);
+        var nonPetScopedPowers = scopedPowers
+            .Where(power => !IsPetPowerFullName(power.FullName))
+            .ToList();
+        var scopedPowersetLookup = LoadScopedPowersets(normalizedRoot, dryRunResult.Scope)
+            .Where(powerset => !string.IsNullOrWhiteSpace(powerset.FullName))
+            .GroupBy(powerset => CanonicalizeOmniFullName(powerset.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+        TrackBoostSetBonusScopeCoverage(
+            applyResult,
+            scopedPowersetLookup.Keys,
+            DeriveScopedPowersetFullNames(scopedPowers.Where(power => !string.IsNullOrWhiteSpace(power.FullName))
+                .Select(power => CanonicalizeOmniFullName(power.FullName))),
+            scopedPowers.Where(power => !string.IsNullOrWhiteSpace(power.FullName))
+                .Select(power => CanonicalizeOmniFullName(power.FullName)));
+        EnsurePowersetsForScopedPowers(database, scopedPowers, dryRunResult.Scope, applyResult);
+        var entityActors = LoadReferencedEntityActors(normalizedRoot, scopedPowers, applyResult);
+        UpsertReferencedEntities(database, entityActors, applyResult);
+        TrackStaffMasteryScope(scopedPowers, applyResult);
+        ReportProgress(progressReporter, 20, "Loaded scoped powers", $"{scopedPowers.Count:n0} powers");
+        var scopedPowerLookup = BuildScopedPowerLookup(scopedPowers);
+        var classifier = new OmniPowerClassifier();
+        var classifications = new Dictionary<string, OmniPowerClassification>(StringComparer.OrdinalIgnoreCase);
+
+        var existingPowers = (database.Power ?? [])
+            .Where(p => p != null && !string.IsNullOrWhiteSpace(p.FullName))
+            .ToList();
+        var midsPowers = existingPowers
+            .GroupBy(p => CanonicalizeOmniFullName(p.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+
+        var nextStaticIndex = (database.Power ?? [])
+            .Where(p => p != null)
+            .Select(p => p.StaticIndex)
+            .DefaultIfEmpty(-2)
+            .Max() + 1;
+
+        for (var powerIndex = 0; powerIndex < nonPetScopedPowers.Count; powerIndex++)
+        {
+            var omniPower = nonPetScopedPowers[powerIndex];
+            ReportProgress(
+                progressReporter,
+                ScaleProgress(powerIndex, nonPetScopedPowers.Count, 20, 90),
+                "Applying powers",
+                "",
+                powerIndex + 1,
+                nonPetScopedPowers.Count);
+            var midsFullName = CanonicalizeOmniFullName(omniPower.FullName);
+            var forceRecreateStrictSetBonus = IsStrictSetBonusPower(midsFullName);
+            if (forceRecreateStrictSetBonus)
+            {
+                RemoveStrictSetBonusExistingPower(database, existingPowers, midsPowers, midsFullName, applyResult);
+            }
+            var staffTrace = IsStaffMasteryFullName(midsFullName);
+            if (!forceRecreateStrictSetBonus &&
+                !midsPowers.TryGetValue(midsFullName, out var midsPower) &&
+                TryFindCompositePowerIdentityMatch(existingPowers, omniPower, midsFullName, scopedPowersetLookup, out midsPower))
+            {
+                midsPowers[midsFullName] = midsPower;
+                applyResult.PowersMatched++;
+                TrackBoostSetBonusPowerApply(midsFullName, "matched", applyResult);
+                TrackEpicPowerApply(midsFullName, applyResult, "matched",
+                    $"{midsFullName}: matched existing by composite identity");
+                TrackPetPowerApply(midsFullName, applyResult, "matched",
+                    $"{midsFullName}: matched existing by composite identity");
+                if (staffTrace)
+                {
+                    applyResult.AddLimited(applyResult.StaffMasteryTraceDetails,
+                        $"{midsFullName}: matched existing by composite identity: {DescribePowerIdentity(midsPower)}");
+                }
+
+                applyResult.AddLimited(applyResult.UpdatedPowers,
+                    $"{midsPower.FullName} display/internal-name match -> {FormatAliasForReport(omniPower.FullName, midsFullName)}");
+            }
+            else if (!midsPowers.TryGetValue(midsFullName, out midsPower))
+            {
+                midsPower = CreatePower(database, omniPower, nextStaticIndex++);
+                ApplyCanonicalPowerName(midsPower, midsFullName);
+                midsPowers[midsFullName] = midsPower;
+                existingPowers.Add(midsPower);
+                applyResult.PowersCreated++;
+                TrackBoostSetBonusPowerApply(midsFullName, "created", applyResult);
+                TrackEpicPowerApply(midsFullName, applyResult, "created",
+                    $"{midsFullName}: created new power");
+                TrackPetPowerApply(midsFullName, applyResult, "created",
+                    $"{midsFullName}: created new power");
+                if (staffTrace)
+                {
+                    applyResult.AddLimited(applyResult.StaffMasteryTraceDetails,
+                        $"{midsFullName}: created new power: {DescribePowerIdentity(midsPower)}");
+                }
+
+                applyResult.AddLimited(applyResult.CreatedPowers, FormatAliasForReport(omniPower.FullName, midsFullName));
+            }
+            else
+            {
+                applyResult.PowersMatched++;
+                TrackBoostSetBonusPowerApply(midsFullName, "matched", applyResult);
+                TrackEpicPowerApply(midsFullName, applyResult, "matched",
+                    $"{midsFullName}: matched existing by canonical name");
+                TrackPetPowerApply(midsFullName, applyResult, "matched",
+                    $"{midsFullName}: matched existing by canonical name");
+                if (staffTrace)
+                {
+                    applyResult.AddLimited(applyResult.StaffMasteryTraceDetails,
+                        $"{midsFullName}: matched existing by canonical name: {DescribePowerIdentity(midsPower)}");
+                }
+            }
+
+            var priorClickBuff = midsPower.ClickBuff;
+            var classification = classifier.Classify(omniPower, scopedPowerLookup);
+            classifications[midsFullName] = classification;
+
+            if (midsPower.NeverAutoUpdate)
+            {
+                if (classification.NormalBuildPick &&
+                    !string.Equals(midsPower.FullName, midsFullName, StringComparison.OrdinalIgnoreCase))
+                {
+                    var oldFullName = midsPower.FullName;
+                    ApplyCanonicalPowerName(midsPower, midsFullName);
+                    midsPower.IsModified = true;
+                    applyResult.ScopedPowerSetIdentityRepairs++;
+                    applyResult.AddLimited(applyResult.ScopedPowerSetIdentityRepairDetails,
+                        $"{oldFullName} -> {midsFullName}: canonical identity restored despite NeverAutoUpdate");
+                }
+
+                if (classification.NormalBuildPick && midsPower.HiddenPower)
+                {
+                    ApplyPowerClassification(midsPower, classification);
+                    midsPower.IsModified = true;
+                    applyResult.PowersUpdated++;
+                    applyResult.AddLimited(applyResult.UpdatedPowers,
+                        $"{FormatAliasForReport(omniPower.FullName, midsFullName)}: visibility/classification restored for normal build powerset pick despite NeverAutoUpdate");
+                }
+
+                applyResult.PowersSkippedNeverAutoUpdate++;
+                TrackEpicPowerApply(midsFullName, applyResult, "skipped",
+                    $"{midsFullName}: skipped by NeverAutoUpdate");
+                TrackPetPowerApply(midsFullName, applyResult, "skipped",
+                    $"{midsFullName}: skipped by NeverAutoUpdate");
+                applyResult.AddLimited(applyResult.SkippedPowers, $"{FormatAliasForReport(omniPower.FullName, midsFullName)}: NeverAutoUpdate");
+                if (staffTrace)
+                {
+                    applyResult.AddLimited(applyResult.StaffMasteryTraceDetails,
+                        $"{midsFullName}: skipped by NeverAutoUpdate after classification {classification.Summary(midsFullName)}; current {DescribePowerIdentity(midsPower)}");
+                }
+
+                continue;
+            }
+
+            var priorAttackTypes = midsPower.AttackTypes;
+            ApplyPowerMetadata(midsPower, omniPower);
+            TrackApplyPowerFieldCoverage(omniPower, applyResult);
+            ApplyCanonicalPowerName(midsPower, midsFullName);
+            ApplyPowerClassification(midsPower, classification);
+            ApplyPseudoPetAbsorptionFlags(midsPower, omniPower, entityActors, applyResult);
+            if (staffTrace)
+            {
+                applyResult.AddLimited(applyResult.StaffMasteryTraceDetails,
+                    $"{midsFullName}: metadata/classification applied: {classification.Summary(midsFullName)}; current {DescribePowerIdentity(midsPower)}");
+            }
+
+            TrackApplyClassification(midsFullName, classification, priorClickBuff, applyResult);
+            TrackApplyAttackVectors(midsFullName, priorAttackTypes, midsPower.AttackTypes, omniPower, applyResult);
+            TrackApplyModes(midsFullName, omniPower, classification, applyResult);
+            var effects = OmniMidsMapper.FlattenEffects(omniPower, applyResult).Cast<IEffect>().ToList();
+            var nextUniqueId = effects.Count == 0 ? 1 : effects.Max(e => e.UniqueID) + 1;
+            foreach (var redirect in omniPower.Redirects.Where(r => !string.IsNullOrWhiteSpace(r.Name)))
+            {
+                var redirectEffect = OmniMidsMapper.CreatePowerRedirectEffect(omniPower.FullName, redirect);
+                redirectEffect.UniqueID = nextUniqueId++;
+                redirectEffect.ActiveConditionals = redirectEffect.AdvancedConditions.ToLegacyActiveConditionals();
+                if (redirectEffect.AdvancedConditions.Rows.Any(row =>
+                        row.Kind == AdvancedConditionKind.SourceMode &&
+                        row.Subject.Equals("FastSnipe", StringComparison.OrdinalIgnoreCase) &&
+                        row.RawExpression.Contains("kEngaged", StringComparison.OrdinalIgnoreCase)))
+                {
+                    applyResult.SnipeEngagedAliases++;
+                    applyResult.AddLimited(applyResult.SnipeEngagedAliasDetails,
+                        $"{midsFullName}: {redirect.Requires} -> FastSnipe");
+                }
+
+                effects.Add(redirectEffect);
+                applyResult.RedirectEffectsAdded++;
+            }
+
+            foreach (var effect in effects)
+            {
+                effect.PowerFullName = midsPower.FullName;
+                effect.ActiveConditionals = effect.AdvancedConditions.ToLegacyActiveConditionals();
+            }
+
+            midsPower.Effects = effects.ToArray();
+            applyResult.EffectsReplaced += effects.Count;
+
+            if (midsPower.NeverAutoUpdateRequirements)
+            {
+                applyResult.RequirementsSkippedNeverAutoUpdateRequirements++;
+                applyResult.AddLimited(applyResult.RequirementSkips, $"{FormatAliasForReport(omniPower.FullName, midsFullName)}: NeverAutoUpdateRequirements");
+            }
+            else if (string.IsNullOrWhiteSpace(omniPower.Requires))
+            {
+                midsPower.AdvancedRequirements = new AdvancedConditionSet();
+                midsPower.Requires = midsPower.AdvancedRequirements.ToLegacyRequirement();
+                applyResult.RequirementsUpdated++;
+            }
+            else if (OmniExpressionConverter.TryConvertPowerRequirement(CanonicalizeOmniFullName(omniPower.Requires), out var requirements))
+            {
+                midsPower.AdvancedRequirements = requirements;
+                midsPower.Requires = requirements.ToLegacyRequirement();
+                applyResult.RequirementsUpdated++;
+            }
+            else
+            {
+                applyResult.RequirementsSkippedUnsupported++;
+                applyResult.AddLimited(applyResult.RequirementSkips, $"{FormatAliasForReport(omniPower.FullName, midsFullName)}: {omniPower.Requires}");
+            }
+
+            midsPower.IsModified = true;
+            applyResult.PowersUpdated++;
+            TrackBoostSetBonusPowerApply(midsFullName, "updated", applyResult);
+            TrackEpicPowerApply(midsFullName, applyResult, "updated",
+                $"{midsFullName}: metadata/effects/requirements updated");
+            TrackPetPowerApply(midsFullName, applyResult, "updated",
+                $"{midsFullName}: metadata/effects/requirements updated");
+            applyResult.AddLimited(applyResult.UpdatedPowers, FormatAliasForReport(omniPower.FullName, midsFullName));
+        }
+
+        ReportProgress(progressReporter, 92, "Linking support powers");
+        BuildSupportPowerLinks(scopedPowers, midsPowers, classifications, applyResult);
+        EnsurePlannerModeBindings(database, applyResult);
+        RepairAliasedPowersetIdentities(database, applyResult);
+        RepairAliasedPowerIdentities(database, applyResult);
+        RepairMalformedPowerNames(database, applyResult);
+        RepairSetBonusSiblingPowerIdentities(database, scopedPowers, applyResult);
+        UpsertPetSourceOfTruth(
+            database,
+            petManifest,
+            scopedPowerLookup,
+            midsPowers,
+            classifications,
+            classifier,
+            applyResult,
+            ref nextStaticIndex);
+        BuildSupportPowerLinks(scopedPowers, midsPowers, classifications, applyResult);
+        SortPowersByPowersetAndLevel(database, applyResult);
+        RestorePowersetIcons(database, powersetIcons);
+        RebuildScopedPowerEnhancementLegality(database, scopedPowers, applyResult);
+
+        if (ReferenceEquals(DatabaseAPI.Database, database))
+        {
+            ReportProgress(progressReporter, 95, "Importing enhancements");
+            ApplyEnhancementImportStage(database, normalizedRoot, applyResult);
+            ReportProgress(progressReporter, 96, "Resolving database IDs");
+            DatabaseAPI.MatchIds();
+        }
+        else
+        {
+            ApplyEnhancementImportStage(database, normalizedRoot, applyResult);
+        }
+
+        RepairImportedBoostAndSetBonusPowerEnhancementLegality(database, scopedPowers, applyResult);
+        TrackPoolImportIntegrity(database, applyResult);
+        TrackPetManifestLinkAudit(database, petManifest, applyResult);
+        TrackPetPowerLinkAudit(database, scopedPowers, applyResult);
+        TrackPseudoPetAbsorptionAudit(database, applyResult);
+        TrackEpicImportLinkAudit(database, scopedPowers, LoadScopedPowersets(normalizedRoot, dryRunResult.Scope).ToList(), applyResult);
+        TrackSorceryEnflameApplyTrace(database, applyResult);
+        TrackImportIntegrityAudit(database, scopedPowers, beforeIntegrity, applyResult);
+        TrackBoostSetBonusImportAudit(database, scopedPowers, scopedPowersetLookup.Keys, applyResult);
+        ReportProgress(progressReporter, 100, "Safe import complete", $"{applyResult.PowersUpdated:n0} powers updated");
+        return applyResult;
+    }
+
+    private Dictionary<string, OmniBuildActor> LoadReferencedEntityActors(
+        string exportRoot,
+        IEnumerable<OmniPowerDefinition> scopedPowers,
+        OmniApplyResult applyResult)
+    {
+        var refs = scopedPowers
+            .SelectMany(GetEntCreateEntityRefs)
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        var actors = new Dictionary<string, OmniBuildActor>(StringComparer.OrdinalIgnoreCase);
+        if (refs.Count == 0)
+        {
+            return actors;
+        }
+
+        var entitiesRoot = Path.Combine(exportRoot, "entities");
+        if (!Directory.Exists(entitiesRoot))
+        {
+            applyResult.AddLimited(applyResult.PseudoPetAbsorptionAuditDetails,
+                "Entity directory missing; pseudo-pet absorption cannot resolve EntCreate entities.");
+            applyResult.PseudoPetAbsorptionAuditFailures++;
+            return actors;
+        }
+
+        var entityFiles = Directory.EnumerateFiles(entitiesRoot, "*.json", SearchOption.TopDirectoryOnly)
+            .ToDictionary(
+                file => NormalizeEntityKey(Path.GetFileNameWithoutExtension(file)),
+                file => file,
+                StringComparer.OrdinalIgnoreCase);
+
+        foreach (var entityRef in refs)
+        {
+            if (!entityFiles.TryGetValue(NormalizeEntityKey(entityRef), out var file))
+            {
+                applyResult.PseudoPetAbsorptionAuditFailures++;
+                applyResult.AddLimited(applyResult.PseudoPetAbsorptionAuditDetails,
+                    $"{entityRef}: referenced by EntCreate but no matching entity file was found.");
+                continue;
+            }
+
+            var entity = ReadJson<OmniEntityDefinition>(file);
+            if (entity == null)
+            {
+                applyResult.PseudoPetAbsorptionAuditFailures++;
+                applyResult.AddLimited(applyResult.PseudoPetAbsorptionAuditDetails,
+                    $"{entityRef}: matching entity file could not be read.");
+                continue;
+            }
+
+            var actor = OmniPetClassifier.Classify(entity);
+            actors[actor.EntityName] = actor;
+        }
+
+        return actors;
+    }
+
+    private static void UpsertReferencedEntities(
+        IDatabase database,
+        IReadOnlyDictionary<string, OmniBuildActor> entityActors,
+        OmniApplyResult applyResult)
+    {
+        if (entityActors.Count == 0)
+        {
+            return;
+        }
+
+        var entities = database.Entities?.Where(entity => entity != null).ToList() ?? [];
+        var existing = entities
+            .Where(entity => !string.IsNullOrWhiteSpace(entity.UID))
+            .GroupBy(entity => entity.UID, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+
+        foreach (var actor in entityActors.Values)
+        {
+            var existed = existing.TryGetValue(actor.EntityName, out var entity);
+            if (!existed)
+            {
+                entity = SummonedEntity.AddEntity();
+                entity.UID = actor.EntityName;
+                entities.Add(entity);
+                existing[actor.EntityName] = entity;
+            }
+
+            entity.DisplayName = string.IsNullOrWhiteSpace(actor.DisplayName) ? actor.EntityName : actor.DisplayName;
+            entity.ClassName = string.IsNullOrWhiteSpace(actor.ClassName) ? "Class_Minion_Pets" : actor.ClassName;
+            entity.EntityType = actor.Kind == OmniBuildActorKind.PseudoPet
+                ? Enums.eSummonEntity.PseudoPet
+                : actor.ClassName.Contains("Henchman", StringComparison.OrdinalIgnoreCase)
+                    ? Enums.eSummonEntity.Henchman
+                    : Enums.eSummonEntity.Pet;
+            entity.PowersetFullName = actor.Powersets
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Select(CanonicalizeOmniFullName)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+            entity.UpgradePowerFullName = entity.UpgradePowerFullName ?? [];
+
+            if (actor.Kind == OmniBuildActorKind.PseudoPet)
+            {
+                if (existed)
+                {
+                    applyResult.PseudoPetEntitiesUpdated++;
+                }
+                else
+                {
+                    applyResult.PseudoPetEntitiesCreated++;
+                }
+            }
+            else if (existed)
+            {
+                applyResult.RealPetEntitiesUpdated++;
+            }
+            else
+            {
+                applyResult.RealPetEntitiesCreated++;
+            }
+
+            applyResult.AddLimited(applyResult.PseudoPetEntityDetails,
+                $"{actor.EntityName}: {actor.Kind}/{actor.ClassificationReason}, class={entity.ClassName}, powersets={string.Join(", ", entity.PowersetFullName)}");
+        }
+
+        database.Entities = entities.ToArray();
+    }
+
+    private static void ApplyPseudoPetAbsorptionFlags(
+        IPower midsPower,
+        OmniPowerDefinition omniPower,
+        IReadOnlyDictionary<string, OmniBuildActor> entityActors,
+        OmniApplyResult applyResult)
+    {
+        var pseudoRefs = GetEntCreateEntityRefs(omniPower)
+            .Where(entityRef => entityActors.TryGetValue(entityRef, out var actor) && actor.Kind == OmniBuildActorKind.PseudoPet)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        if (pseudoRefs.Count == 0)
+        {
+            return;
+        }
+
+        var changed = !midsPower.AbsorbSummonEffects || !midsPower.AbsorbSummonAttributes;
+        midsPower.AbsorbSummonEffects = true;
+        midsPower.AbsorbSummonAttributes = true;
+        if (changed)
+        {
+            applyResult.PseudoPetAbsorptionFlagsEnabled++;
+        }
+
+        applyResult.AddLimited(applyResult.PseudoPetAbsorptionFlagDetails,
+            $"{midsPower.FullName}: pseudo EntCreate {string.Join(", ", pseudoRefs)} -> AbsorbSummonEffects=true, AbsorbSummonAttributes=true");
+    }
+
+    private static IEnumerable<string> GetEntCreateEntityRefs(OmniPowerDefinition power)
+    {
+        foreach (var effect in power.Effects)
+        {
+            foreach (var entityRef in GetEntCreateEntityRefs(effect))
+            {
+                yield return entityRef;
+            }
+        }
+    }
+
+    private static IEnumerable<string> GetEntCreateEntityRefs(OmniEffectDefinition effect)
+    {
+        foreach (var template in effect.Templates)
+        {
+            var paramType = template.Params?.Value<string>("type") ?? string.Empty;
+            var entityDef = template.Params?.Value<string>("entity_def") ?? string.Empty;
+            if (paramType.Equals("EntCreate", StringComparison.OrdinalIgnoreCase) &&
+                !string.IsNullOrWhiteSpace(entityDef))
+            {
+                yield return entityDef;
+            }
+        }
+
+        foreach (var child in effect.ChildEffects)
+        {
+            foreach (var entityRef in GetEntCreateEntityRefs(child))
+            {
+                yield return entityRef;
+            }
+        }
+    }
+
+    private void EnsureScopedPowersets(
+        IDatabase database,
+        string exportRoot,
+        OmniImportScope scope,
+        OmniApplyResult applyResult,
+        IProgress<OmniImportProgress>? progress)
+    {
+        var existing = (database.Powersets ?? [])
+            .Where(p => p != null && !string.IsNullOrWhiteSpace(p.FullName))
+            .GroupBy(p => CanonicalizeOmniFullName(p.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(g => g.Key, g => g.First(), StringComparer.OrdinalIgnoreCase);
+
+        var scopedPowersets = LoadScopedPowersets(exportRoot, scope).ToList();
+        for (var powersetIndex = 0; powersetIndex < scopedPowersets.Count; powersetIndex++)
+        {
+            var omniPowerset = scopedPowersets[powersetIndex];
+            ReportProgress(
+                progress,
+                ScaleProgress(powersetIndex, scopedPowersets.Count, 10, 18),
+                "Applying powersets",
+                "",
+                powersetIndex + 1,
+                scopedPowersets.Count);
+            if (string.IsNullOrWhiteSpace(omniPowerset.FullName))
+            {
+                continue;
+            }
+
+            var midsFullName = CanonicalizeOmniFullName(omniPowerset.FullName);
+            TrackEpicPowersetScope(omniPowerset, midsFullName, applyResult);
+            if (existing.TryGetValue(midsFullName, out var midsPowerset) ||
+                TryFindPowersetIdentityMatch(database, omniPowerset, scope.GetPowersetType(omniPowerset.FullName), out midsPowerset))
+            {
+                existing[midsFullName] = midsPowerset;
+                applyResult.PowersetsMatched++;
+                TrackEpicPowersetApply(midsFullName, applyResult, "matched",
+                    $"{FormatAliasForReport(omniPowerset.FullName, midsFullName)}: matched {DescribePowersetIdentity(midsPowerset)}");
+                var scopedSetType = scope.GetPowersetType(omniPowerset.FullName);
+                ApplyPowersetMetadata(midsPowerset, omniPowerset, scopedSetType, preserveExistingValues: true);
+                ApplyCanonicalPowersetName(midsPowerset, midsFullName);
+                if (midsPowerset.SetType == Enums.ePowerSetType.None)
+                {
+                    midsPowerset.SetType = InferPowersetType(database, midsFullName);
+                }
+                ApplyPowersetIcon(midsPowerset, omniPowerset, applyResult);
+
+                midsPowerset.IsModified = true;
+                applyResult.PowersetsUpdated++;
+                TrackEpicPowersetApply(midsFullName, applyResult, "updated",
+                    $"{midsFullName}: updated {DescribePowersetIdentity(midsPowerset)}");
+                applyResult.AddLimited(applyResult.UpdatedPowersets, FormatAliasForReport(omniPowerset.FullName, midsFullName));
+                continue;
+            }
+
+            var created = CreatePowerset(omniPowerset);
+            ApplyCanonicalPowersetName(created, midsFullName);
+            var createdScopedSetType = scope.GetPowersetType(omniPowerset.FullName);
+            if (createdScopedSetType != Enums.ePowerSetType.None)
+            {
+                created.SetType = createdScopedSetType;
+            }
+
+            if (created.SetType == Enums.ePowerSetType.None)
+            {
+                created.SetType = InferPowersetType(database, midsFullName);
+            }
+            ApplyPowersetIcon(created, omniPowerset, applyResult);
+
+            var powersets = database.Powersets ?? [];
+            Array.Resize(ref powersets, powersets.Length + 1);
+            powersets[^1] = created;
+            database.Powersets = powersets;
+            existing[midsFullName] = created;
+            applyResult.PowersetsCreated++;
+            TrackEpicPowersetApply(midsFullName, applyResult, "created",
+                $"{FormatAliasForReport(omniPowerset.FullName, midsFullName)}: created {DescribePowersetIdentity(created)}");
+            applyResult.AddLimited(applyResult.CreatedPowersets, FormatAliasForReport(omniPowerset.FullName, midsFullName));
+        }
+    }
+
+    private static bool TryFindPowersetIdentityMatch(
+        IDatabase database,
+        OmniPowersetDefinition omniPowerset,
+        Enums.ePowerSetType scopedSetType,
+        out IPowerset matchedPowerset)
+    {
+        matchedPowerset = null!;
+        var omniFullName = CanonicalizeOmniFullName(omniPowerset.FullName);
+        var omniGroup = NormalizeName(GroupNamePart(omniFullName));
+        var omniSetName = NormalizeName(SetNamePart(omniFullName));
+        var omniDisplayName = NormalizeName(string.IsNullOrWhiteSpace(omniPowerset.DisplayName)
+            ? LastNamePart(omniFullName)
+            : omniPowerset.DisplayName);
+        var omniSetType = scopedSetType != Enums.ePowerSetType.None
+            ? scopedSetType
+            : MapPowersetType(omniPowerset.PowerCategory, omniPowerset.FullName);
+        var omniArchetypes = omniPowerset.Archetypes
+            .Where(a => !string.IsNullOrWhiteSpace(a))
+            .Select(NormalizeName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        if (string.IsNullOrWhiteSpace(omniGroup) || string.IsNullOrWhiteSpace(omniSetName) || string.IsNullOrWhiteSpace(omniDisplayName))
+        {
+            return false;
+        }
+
+        if (omniGroup.Equals("epic", StringComparison.OrdinalIgnoreCase))
+        {
+            return TryFindEpicPowersetIdentityMatch(
+                database,
+                omniPowerset,
+                omniFullName,
+                omniSetType,
+                out matchedPowerset);
+        }
+
+        if (IsStrictSetBonusPowerset(omniFullName))
+        {
+            return false;
+        }
+
+        var candidates = (database.Powersets ?? [])
+            .Where(powerset => powerset != null &&
+                               PowersetTypeMatches(powerset.SetType, omniSetType) &&
+                               NormalizeName(powerset.GroupName).Equals(omniGroup, StringComparison.OrdinalIgnoreCase) &&
+                               PowersetNameMatches(powerset, omniSetName, omniDisplayName) &&
+                               PowersetArchetypeMatches(powerset, omniArchetypes))
+            .Take(2)
+            .ToList();
+
+        if (candidates.Count != 1)
+        {
+            return false;
+        }
+
+        matchedPowerset = candidates[0];
+        return true;
+    }
+
+    private static bool PowersetTypeMatches(Enums.ePowerSetType existingType, Enums.ePowerSetType omniType)
+    {
+        return omniType == Enums.ePowerSetType.None || existingType == Enums.ePowerSetType.None || existingType == omniType;
+    }
+
+    private static bool PowersetNameMatches(IPowerset powerset, string omniSetName, string omniDisplayName)
+    {
+        return NormalizeName(powerset.SetName).Equals(omniSetName, StringComparison.OrdinalIgnoreCase) ||
+               NormalizeName(SetNamePart(powerset.FullName)).Equals(omniSetName, StringComparison.OrdinalIgnoreCase) ||
+               NormalizeName(powerset.DisplayName).Equals(omniDisplayName, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool PowersetArchetypeMatches(IPowerset powerset, IReadOnlySet<string> omniArchetypes)
+    {
+        if (omniArchetypes.Count == 0 || string.IsNullOrWhiteSpace(powerset.ATClass))
+        {
+            return true;
+        }
+
+        return omniArchetypes.Contains(NormalizeName(powerset.ATClass));
+    }
+
+    private static HashSet<string> EpicClassKeys(
+        string fullName,
+        IEnumerable<string> archetypes,
+        string atClass)
+    {
+        var keys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        AddEpicClassKey(keys, atClass);
+        foreach (var archetype in archetypes)
+        {
+            AddEpicClassKey(keys, archetype);
+        }
+
+        foreach (var token in SetNamePart(CanonicalizeOmniFullName(fullName))
+                     .Split('_', StringSplitOptions.RemoveEmptyEntries))
+        {
+            AddEpicClassKey(keys, token);
+        }
+
+        return keys;
+    }
+
+    private static void AddEpicClassKey(ISet<string> keys, string value)
+    {
+        switch (NormalizeName(value))
+        {
+            case "classblaster":
+            case "blaster":
+                keys.Add("Class_Blaster");
+                break;
+            case "classbrute":
+            case "brute":
+                keys.Add("Class_Brute");
+                break;
+            case "brutetanker":
+            case "brutetank":
+            case "tankbrute":
+            case "tankerbrute":
+                keys.Add("Class_Brute");
+                keys.Add("Class_Tanker");
+                break;
+            case "classcontroller":
+            case "controller":
+                keys.Add("Class_Controller");
+                break;
+            case "classcorruptor":
+            case "corruptor":
+            case "corr":
+                keys.Add("Class_Corruptor");
+                break;
+            case "classdefender":
+            case "defender":
+            case "def":
+                keys.Add("Class_Defender");
+                break;
+            case "defendercorruptor":
+            case "defendercorr":
+            case "corruptordefender":
+            case "corrdefender":
+            case "defcorr":
+            case "corrdef":
+                keys.Add("Class_Corruptor");
+                keys.Add("Class_Defender");
+                break;
+            case "classdominator":
+            case "dominator":
+            case "domingator":
+                keys.Add("Class_Dominator");
+                break;
+            case "controllerdominator":
+            case "controllerdom":
+            case "dominatorcontroller":
+            case "domcontroller":
+            case "controldom":
+            case "domcontrol":
+                keys.Add("Class_Controller");
+                keys.Add("Class_Dominator");
+                break;
+            case "classmastermind":
+            case "mastermind":
+                keys.Add("Class_Mastermind");
+                break;
+            case "classscrapper":
+            case "scrapper":
+                keys.Add("Class_Scrapper");
+                break;
+            case "scrapperstalker":
+            case "scrapperstalk":
+            case "stalkerscrapper":
+            case "stalkerscrap":
+            case "scrapstalk":
+            case "stalkscrap":
+                keys.Add("Class_Scrapper");
+                keys.Add("Class_Stalker");
+                break;
+            case "classsentinel":
+            case "sentinel":
+                keys.Add("Class_Sentinel");
+                break;
+            case "classstalker":
+            case "stalker":
+                keys.Add("Class_Stalker");
+                break;
+            case "classtanker":
+            case "tanker":
+            case "tank":
+                keys.Add("Class_Tanker");
+                break;
+            case "classarachnossoldier":
+            case "arachnossoldier":
+            case "classarachnoswidow":
+            case "arachnoswidow":
+            case "veat":
+                keys.Add("Class_Arachnos_Soldier");
+                keys.Add("Class_Arachnos_Widow");
+                break;
+        }
+    }
+
+    private static string EpicFamilyName(string setName, IReadOnlySet<string> classKeys)
+    {
+        var keptTokens = setName
+            .Split('_', StringSplitOptions.RemoveEmptyEntries)
+            .Where(token =>
+            {
+                var tokenKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                AddEpicClassKey(tokenKeys, token);
+                return tokenKeys.Count == 0 || !tokenKeys.Overlaps(classKeys);
+            });
+
+        return NormalizeName(string.Join("_", keptTokens));
+    }
+
+    private static bool TryFindEpicPowersetIdentityMatch(
+        IDatabase database,
+        OmniPowersetDefinition omniPowerset,
+        string omniFullName,
+        Enums.ePowerSetType omniSetType,
+        out IPowerset matchedPowerset)
+    {
+        matchedPowerset = null!;
+        var omniClassKeys = EpicClassKeys(omniPowerset.FullName, omniPowerset.Archetypes, string.Empty);
+        if (omniClassKeys.Count == 0)
+        {
+            return false;
+        }
+
+        var omniFamily = EpicFamilyName(SetNamePart(omniFullName), omniClassKeys);
+        var omniDisplayName = NormalizeName(string.IsNullOrWhiteSpace(omniPowerset.DisplayName)
+            ? SetNamePart(omniFullName)
+            : omniPowerset.DisplayName);
+
+        var candidates = (database.Powersets ?? [])
+            .Where(powerset => powerset != null &&
+                               PowersetTypeMatches(powerset.SetType, omniSetType) &&
+                               NormalizeName(powerset.GroupName).Equals("epic", StringComparison.OrdinalIgnoreCase))
+            .Where(powerset =>
+            {
+                var existingClassKeys = EpicClassKeys(powerset.FullName, [], powerset.ATClass);
+                if (!existingClassKeys.Overlaps(omniClassKeys))
+                {
+                    return false;
+                }
+
+                var existingFamily = EpicFamilyName(SetNamePart(powerset.FullName), existingClassKeys);
+                var existingDisplayName = NormalizeName(powerset.DisplayName);
+                return existingFamily.Equals(omniFamily, StringComparison.OrdinalIgnoreCase) ||
+                       existingDisplayName.Equals(omniDisplayName, StringComparison.OrdinalIgnoreCase);
+            })
+            .Take(2)
+            .ToList();
+
+        if (candidates.Count != 1)
+        {
+            return false;
+        }
+
+        matchedPowerset = candidates[0];
+        return true;
+    }
+
+    private IEnumerable<OmniPowersetDefinition> LoadScopedPowersets(
+        string exportRoot,
+        OmniImportScope scope,
+        OmniImportResult? dryRunResult = null)
+    {
+        var powersRoot = Path.Combine(exportRoot, "powers");
+        if (!Directory.Exists(powersRoot))
+        {
+            yield break;
+        }
+
+        foreach (var file in Directory.EnumerateFiles(powersRoot, "index.json", SearchOption.AllDirectories)
+                     .Where(f => !Path.GetFullPath(f).Equals(
+                         Path.GetFullPath(Path.Combine(powersRoot, "index.json")),
+                         StringComparison.OrdinalIgnoreCase)))
+        {
+            var relative = Path.GetRelativePath(powersRoot, file);
+            if (IsCategoryRootIndex(relative))
+            {
+                continue;
+            }
+
+            var powerset = ReadJson<OmniPowersetDefinition>(file);
+            if (powerset == null)
+            {
+                continue;
+            }
+
+            TrackPetPowersetDiscovery(relative, dryRunResult);
+            TrackEpicPowersetDiscovery(relative, powerset, dryRunResult);
+            if (scope.IsPowersetFileInScope(relative, powerset.FullName))
+            {
+                TrackPetPowersetInScope(relative, dryRunResult);
+                TrackEpicPowersetInScope(relative, powerset, dryRunResult);
+                TrackPowersetIconDryRun(powerset, scope.GetPowersetType(powerset.FullName), dryRunResult);
+                yield return powerset;
+            }
+        }
+    }
+
+    private static bool IsCategoryRootIndex(string relativePath)
+    {
+        var parts = relativePath
+            .Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length == 2 && parts[1].Equals("index.json", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static Powerset CreatePowerset(OmniPowersetDefinition source)
+    {
+        var powerset = new Powerset();
+        ApplyPowersetMetadata(powerset, source, Enums.ePowerSetType.None, preserveExistingValues: false);
+        powerset.IsNew = true;
+        powerset.IsModified = true;
+        return powerset;
+    }
+
+    private static void EnsurePowersetsForScopedPowers(
+        IDatabase database,
+        IReadOnlyCollection<OmniPowerDefinition> scopedPowers,
+        OmniImportScope scope,
+        OmniApplyResult applyResult)
+    {
+        if (scopedPowers.Count == 0)
+        {
+            return;
+        }
+
+        var powersets = database.Powersets ?? [];
+        var existing = powersets
+            .Where(powerset => powerset != null && !string.IsNullOrWhiteSpace(powerset.FullName))
+            .GroupBy(powerset => CanonicalizeOmniFullName(powerset.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+
+        foreach (var setFullName in scopedPowers
+                     .Select(power => CanonicalizeOmniFullName(string.IsNullOrWhiteSpace(power.Powerset)
+                         ? FullSetName(power.FullName)
+                         : power.Powerset))
+                     .Where(setName => !string.IsNullOrWhiteSpace(setName))
+                     .Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            if (existing.ContainsKey(setFullName))
+            {
+                continue;
+            }
+
+            var powerset = new Powerset
+            {
+                FullName = setFullName,
+                GroupName = GroupNamePart(setFullName),
+                SetName = SetNamePart(setFullName),
+                DisplayName = SetNamePart(setFullName).Replace("_", " ", StringComparison.Ordinal),
+                SetType = scope.GetPowersetType(setFullName),
+                IsNew = true,
+                IsModified = true
+            };
+
+            if (powerset.SetType == Enums.ePowerSetType.None)
+            {
+                powerset.SetType = InferPowersetType(database, setFullName);
+            }
+
+            Array.Resize(ref powersets, powersets.Length + 1);
+            powersets[^1] = powerset;
+            existing[setFullName] = powerset;
+            applyResult.MissingScopedPowersetsRepaired++;
+            applyResult.PowersetsCreated++;
+            applyResult.AddLimited(applyResult.MissingScopedPowersetRepairDetails, setFullName);
+            applyResult.AddLimited(applyResult.CreatedPowersets, $"{setFullName}: repaired missing scoped powerset from imported power references");
+        }
+
+        database.Powersets = powersets;
+    }
+
+    private static ImportIntegritySnapshot CaptureImportIntegritySnapshot(IDatabase database)
+    {
+        var powersets = database.Powersets ?? [];
+        var powersetNames = powersets
+            .Where(powerset => powerset != null && !string.IsNullOrWhiteSpace(powerset.FullName))
+            .Select(powerset => CanonicalizeOmniFullName(powerset.FullName))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var powersetInfos = powersets
+            .Where(powerset => powerset != null && !string.IsNullOrWhiteSpace(powerset.FullName))
+            .GroupBy(powerset => CanonicalizeOmniFullName(powerset.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => CreatePowersetIntegrityInfo(group.First()), StringComparer.OrdinalIgnoreCase);
+
+        var powerInfos = (database.Power ?? [])
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .Select(power => CreatePowerIntegrityInfo(power, powersetNames))
+            .GroupBy(info => info.FullName, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+
+        return new ImportIntegritySnapshot(powerInfos, powersetInfos);
+    }
+
+    private static List<PowersetIconInfo> CapturePowersetIcons(IDatabase database)
+    {
+        return (database.Powersets ?? [])
+            .Where(powerset => powerset != null &&
+                               !string.IsNullOrWhiteSpace(powerset.ImageName))
+            .Select(powerset => new PowersetIconInfo(
+                CanonicalizeOmniFullName(powerset.FullName),
+                NormalizeName(powerset.GroupName),
+                NormalizeName(powerset.SetName),
+                NormalizeName(powerset.DisplayName),
+                powerset.ImageName))
+            .ToList();
+    }
+
+    private static void RestorePowersetIcons(IDatabase database, IReadOnlyCollection<PowersetIconInfo> iconCache)
+    {
+        if (iconCache.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var powerset in database.Powersets ?? [])
+        {
+            if (powerset == null || !string.IsNullOrWhiteSpace(powerset.ImageName))
+            {
+                continue;
+            }
+
+            var canonicalFullName = CanonicalizeOmniFullName(powerset.FullName);
+            var groupName = NormalizeName(powerset.GroupName);
+            var setName = NormalizeName(powerset.SetName);
+            var displayName = NormalizeName(powerset.DisplayName);
+            var match = iconCache.FirstOrDefault(icon =>
+                            string.Equals(icon.CanonicalFullName, canonicalFullName, StringComparison.OrdinalIgnoreCase)) ??
+                        iconCache.FirstOrDefault(icon =>
+                            string.Equals(icon.GroupName, groupName, StringComparison.OrdinalIgnoreCase) &&
+                            (string.Equals(icon.SetName, setName, StringComparison.OrdinalIgnoreCase) ||
+                             string.Equals(icon.DisplayName, displayName, StringComparison.OrdinalIgnoreCase)));
+
+            if (match == null)
+            {
+                continue;
+            }
+
+            powerset.ImageName = match.ImageName;
+            powerset.IsModified = true;
+        }
+    }
+
+    private static void ApplyPowersetIcon(
+        IPowerset powerset,
+        OmniPowersetDefinition source,
+        OmniApplyResult applyResult)
+    {
+        if (!ShouldAssignPowersetIcon(source, powerset.SetType))
+        {
+            return;
+        }
+
+        if (TryResolvePowersetIcon(source, out var imageName, out var candidates))
+        {
+            if (string.Equals(powerset.ImageName, imageName, StringComparison.OrdinalIgnoreCase))
+            {
+                applyResult.PoolPowersetIconsPreserved++;
+                applyResult.AddLimited(applyResult.PoolPowersetIconAuditDetails,
+                    $"{CanonicalizeOmniFullName(source.FullName)}: kept icon {powerset.ImageName}; Omni icon={source.Icon}");
+                return;
+            }
+
+            var priorImageName = string.IsNullOrWhiteSpace(powerset.ImageName) ? "<blank>" : powerset.ImageName;
+            powerset.ImageName = imageName;
+            powerset.IsModified = true;
+            applyResult.PoolPowersetIconsAssigned++;
+            applyResult.AddLimited(applyResult.PoolIconAssignmentDetails,
+                $"{CanonicalizeOmniFullName(source.FullName)}: set icon {imageName} from Omni icon={source.Icon} (was {priorImageName})");
+            return;
+        }
+
+        applyResult.PoolPowersetIconsMissingAssets++;
+        applyResult.AddLimited(applyResult.MissingPoolIconAssetDetails,
+            $"{CanonicalizeOmniFullName(source.FullName)}: Omni icon={source.Icon}; candidates={string.Join(", ", candidates)}");
+    }
+
+    private static void TrackPowersetIconDryRun(
+        OmniPowersetDefinition source,
+        Enums.ePowerSetType scopedSetType,
+        OmniImportResult? dryRunResult)
+    {
+        if (dryRunResult == null)
+        {
+            return;
+        }
+
+        var powersetType = scopedSetType != Enums.ePowerSetType.None
+            ? scopedSetType
+            : MapPowersetType(source.PowerCategory, source.FullName);
+        if (!ShouldAssignPowersetIcon(source, powersetType))
+        {
+            return;
+        }
+
+        dryRunResult.Report.PoolPowersetIconAuditCount++;
+        if (TryResolvePowersetIcon(source, out var imageName, out var candidates))
+        {
+            dryRunResult.Report.PoolIconAssignmentsAvailableCount++;
+            dryRunResult.Report.AddLimited(dryRunResult.Report.PoolIconAssignments,
+                $"{CanonicalizeOmniFullName(source.FullName)}: Omni icon={source.Icon}; resolved asset={imageName}");
+        }
+        else
+        {
+            dryRunResult.Report.MissingPoolIconAssetCount++;
+            dryRunResult.Report.AddLimited(dryRunResult.Report.MissingPoolIconAssets,
+                $"{CanonicalizeOmniFullName(source.FullName)}: Omni icon={source.Icon}; candidates={string.Join(", ", candidates)}");
+        }
+
+        dryRunResult.Report.AddLimited(dryRunResult.Report.PoolPowersetIconAudit,
+            $"{CanonicalizeOmniFullName(source.FullName)}: display={source.DisplayName}, internal={source.Name}, icon={source.Icon}");
+    }
+
+    private static void TrackPoolImportIntegrity(IDatabase database, OmniApplyResult applyResult)
+    {
+        var poolPowersets = (database.Powersets ?? [])
+            .Where(powerset => powerset != null && powerset.SetType == Enums.ePowerSetType.Pool)
+            .OrderBy(powerset => powerset.DisplayName, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        foreach (var powerset in poolPowersets)
+        {
+            var powerNames = powerset.Powers?
+                .Where(power => power != null)
+                .Select(power => power.DisplayName)
+                .ToArray() ?? [];
+            var iconState = ResolveFinalIconState(powerset.ImageName);
+            if (string.IsNullOrWhiteSpace(powerset.ImageName) || !iconState.Resolved)
+            {
+                applyResult.PoolIconIntegrityIssues++;
+            }
+
+            applyResult.AddLimited(applyResult.PoolIconIntegrityDetails,
+                $"{powerset.FullName}: display={powerset.DisplayName}, nID={powerset.nID}, ImageName={(string.IsNullOrWhiteSpace(powerset.ImageName) ? "<blank>" : powerset.ImageName)}, asset={(iconState.Resolved ? iconState.FileName : "<missing>")}, powers={powerNames.Length} [{string.Join(", ", powerNames)}]");
+        }
+
+        var speed = poolPowersets.FirstOrDefault(powerset =>
+            powerset.FullName.Equals("Pool.Speed", StringComparison.OrdinalIgnoreCase));
+        var sorcery = poolPowersets.FirstOrDefault(powerset =>
+            powerset.FullName.Equals("Pool.Sorcery", StringComparison.OrdinalIgnoreCase));
+
+        if (speed != null)
+        {
+            foreach (var power in speed.Powers.Where(power => power != null &&
+                                                              power.FullSetName.Equals("Pool.Sorcery", StringComparison.OrdinalIgnoreCase)))
+            {
+                applyResult.PoolPowerLinkIntegrityIssues++;
+                applyResult.AddLimited(applyResult.PoolPowerLinkIntegrityDetails,
+                    $"Pool.Speed contains Sorcery-linked power {power.FullName} with FullSetName={power.FullSetName}, PowerSetID={power.PowerSetID}, PowerSetIndex={power.PowerSetIndex}");
+            }
+        }
+        else
+        {
+            applyResult.PoolPowerLinkIntegrityIssues++;
+            applyResult.AddLimited(applyResult.PoolPowerLinkIntegrityDetails, "Pool.Speed powerset is missing after import.");
+        }
+
+        if (sorcery == null)
+        {
+            applyResult.PoolPowerLinkIntegrityIssues++;
+            applyResult.AddLimited(applyResult.PoolPowerLinkIntegrityDetails, "Pool.Sorcery powerset is missing after import.");
+            return;
+        }
+
+        var expectedSorceryPowers = new[]
+        {
+            "Pool.Sorcery.Spirit_Ward",
+            "Pool.Sorcery.Arcane_Bolt",
+            "Pool.Sorcery.Mystic_Flight",
+            "Pool.Sorcery.Enflame",
+            "Pool.Sorcery.Rune_of_Protection"
+        };
+        var sorceryPowerNames = sorcery.Powers
+            .Where(power => power != null)
+            .Select(power => power.FullName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var expectedPower in expectedSorceryPowers)
+        {
+            if (sorceryPowerNames.Contains(expectedPower))
+            {
+                continue;
+            }
+
+            applyResult.PoolPowerLinkIntegrityIssues++;
+            applyResult.AddLimited(applyResult.PoolPowerLinkIntegrityDetails,
+                $"Pool.Sorcery missing expected power {expectedPower}; actual=[{string.Join(", ", sorceryPowerNames)}]");
+        }
+    }
+
+    private static (bool Resolved, string FileName) ResolveFinalIconState(string imageName)
+    {
+        if (string.IsNullOrWhiteSpace(imageName))
+        {
+            return (false, string.Empty);
+        }
+
+        return AssetManager.TryResolveImageFileName([imageName], out var fileName)
+            ? (true, fileName)
+            : (false, string.Empty);
+    }
+
+    private static bool TryResolvePowersetIcon(
+        OmniPowersetDefinition source,
+        out string imageName,
+        out IReadOnlyList<string> candidates)
+    {
+        candidates = BuildPowersetIconCandidates(source).ToArray();
+        return AssetManager.TryResolveImageFileName(candidates, out imageName);
+    }
+
+    private static IEnumerable<string> BuildPowersetIconCandidates(OmniPowersetDefinition source)
+    {
+        var icon = source.Icon?.Trim() ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(icon))
+        {
+            yield return icon;
+            yield return Path.ChangeExtension(icon, ".png") ?? icon;
+            var iconBase = Path.GetFileNameWithoutExtension(icon);
+            if (!string.IsNullOrWhiteSpace(iconBase))
+            {
+                yield return $"{iconBase}.png";
+                var withoutSetSuffix = iconBase.EndsWith("_set", StringComparison.OrdinalIgnoreCase)
+                    ? iconBase[..^"_set".Length]
+                    : iconBase;
+                yield return $"{withoutSetSuffix}.png";
+                yield return $"{withoutSetSuffix.Replace("_", string.Empty)}.png";
+            }
+        }
+
+        var displayName = source.DisplayName?.Trim() ?? string.Empty;
+        if (!string.IsNullOrWhiteSpace(displayName))
+        {
+            yield return $"{displayName.Replace(" ", string.Empty).Replace("_", string.Empty)}.png";
+        }
+
+        var internalName = string.IsNullOrWhiteSpace(source.Name)
+            ? LastNamePart(source.FullName)
+            : source.Name;
+        if (!string.IsNullOrWhiteSpace(internalName))
+        {
+            yield return $"{internalName.Replace("_", string.Empty)}.png";
+        }
+
+        if (icon.Equals("Speed_set.ico", StringComparison.OrdinalIgnoreCase))
+        {
+            yield return "SuperSpeed.png";
+        }
+    }
+
+    private static bool ShouldAssignPowersetIcon(OmniPowersetDefinition source, Enums.ePowerSetType setType)
+    {
+        if (string.IsNullOrWhiteSpace(source.Icon))
+        {
+            return false;
+        }
+
+        return setType is Enums.ePowerSetType.Primary
+            or Enums.ePowerSetType.Secondary
+            or Enums.ePowerSetType.Pool
+            or Enums.ePowerSetType.Ancillary
+            or Enums.ePowerSetType.Incarnate
+            or Enums.ePowerSetType.Redirect;
+    }
+
+    private static PowersetIntegrityInfo CreatePowersetIntegrityInfo(IPowerset powerset)
+    {
+        return new PowersetIntegrityInfo(
+            CanonicalizeOmniFullName(powerset.FullName),
+            powerset.FullName,
+            powerset.GroupName,
+            powerset.SetName,
+            powerset.DisplayName,
+            powerset.SetType,
+            powerset.ATClass);
+    }
+
+    private static PowerIntegrityInfo CreatePowerIntegrityInfo(IPower power, IReadOnlySet<string> powersetNames)
+    {
+        var fullSetName = power.FullSetName;
+        var missingFullSetName = string.IsNullOrWhiteSpace(fullSetName);
+        var unresolvedFullSetName = !missingFullSetName &&
+                                    !powersetNames.Contains(CanonicalizeOmniFullName(fullSetName));
+        var orphan = power.PowerSetID < 0 || missingFullSetName || unresolvedFullSetName;
+        return new PowerIntegrityInfo(
+            power.FullName,
+            fullSetName,
+            power.GroupName,
+            power.SetName,
+            power.PowerName,
+            power.DisplayName,
+            power.PowerSetID,
+            power.PowerSetIndex,
+            power.HiddenPower,
+            power.NeverAutoUpdate,
+            orphan,
+            missingFullSetName,
+            unresolvedFullSetName);
+    }
+
+    private static void TrackImportIntegrityAudit(
+        IDatabase database,
+        IReadOnlyCollection<OmniPowerDefinition> scopedPowers,
+        ImportIntegritySnapshot before,
+        OmniApplyResult applyResult)
+    {
+        var after = CaptureImportIntegritySnapshot(database);
+        var beforeOrphans = before.Powers.Values
+            .Where(power => power.IsOrphan)
+            .Select(power => power.FullName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var afterOrphans = after.Powers.Values
+            .Where(power => power.IsOrphan)
+            .ToList();
+
+        applyResult.OrphanPowersBeforeImport = beforeOrphans.Count;
+        applyResult.OrphanPowersAfterImport = afterOrphans.Count;
+
+        foreach (var orphan in afterOrphans.Where(power => !beforeOrphans.Contains(power.FullName)))
+        {
+            applyResult.NewOrphanPowersIntroduced++;
+            applyResult.AddLimited(applyResult.NewOrphanPowerDetails, DescribePowerIntegrity(orphan));
+        }
+
+        var scopedNames = scopedPowers
+            .Select(power => CanonicalizeOmniFullName(power.FullName))
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        foreach (var scopedName in scopedNames)
+        {
+            if (!after.Powers.TryGetValue(scopedName, out var powerInfo))
+            {
+                applyResult.OrphanedScopedOmniPowers++;
+                applyResult.AddLimited(applyResult.OrphanedScopedOmniPowerDetails, $"{scopedName}: imported scoped power not found in database.Power after import");
+                continue;
+            }
+
+            if (!powerInfo.IsOrphan)
+            {
+                continue;
+            }
+
+            applyResult.OrphanedScopedOmniPowers++;
+            applyResult.AddLimited(applyResult.OrphanedScopedOmniPowerDetails, DescribePowerIntegrity(powerInfo));
+        }
+
+        foreach (var beforePowerset in before.Powersets)
+        {
+            if (!after.Powersets.TryGetValue(beforePowerset.Key, out var afterPowerset))
+            {
+                continue;
+            }
+
+            var beforeValue = beforePowerset.Value;
+            if (PowersetIntegrityEquals(beforeValue, afterPowerset))
+            {
+                continue;
+            }
+
+            applyResult.PowersetIdentityChanges++;
+            applyResult.AddLimited(applyResult.PowersetIdentityChangeDetails,
+                $"{beforeValue.FullName}: {DescribePowersetIntegrity(beforeValue)} -> {DescribePowersetIntegrity(afterPowerset)}");
+        }
+
+        TrackDuplicateCompositePowerIdentities(database, applyResult);
+        TrackStaffMasteryFinalState(database, applyResult);
+
+        applyResult.AddLimited(applyResult.ImportIntegrityAuditDetails,
+            $"Orphans before={applyResult.OrphanPowersBeforeImport}, after={applyResult.OrphanPowersAfterImport}, new={applyResult.NewOrphanPowersIntroduced}, scoped orphaned/missing={applyResult.OrphanedScopedOmniPowers}");
+    }
+
+    private static void TrackBoostSetBonusScopeCoverage(
+        OmniImportReport report,
+        IEnumerable<string> explicitScopedPowersetFullNames,
+        IEnumerable<string> derivedScopedPowersetFullNames,
+        IEnumerable<string> scopedPowerFullNames)
+    {
+        var explicitPowersetNames = explicitScopedPowersetFullNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        var derivedPowersetNames = derivedScopedPowersetFullNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        var powersetNames = explicitPowersetNames
+            .Concat(derivedPowersetNames)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        var powerNames = scopedPowerFullNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        report.BoostPowersetsInScope = powersetNames.Count(IsBoostFullName);
+        report.SetBonusPowersetsInScope = powersetNames.Count(IsSetBonusFullName);
+        report.BoostExplicitPowersetsInScope = explicitPowersetNames.Count(IsBoostFullName);
+        report.BoostDerivedPowersetsInScope = derivedPowersetNames.Count(IsBoostFullName);
+        report.SetBonusExplicitPowersetsInScope = explicitPowersetNames.Count(IsSetBonusFullName);
+        report.SetBonusDerivedPowersetsInScope = derivedPowersetNames.Count(IsSetBonusFullName);
+        report.BoostPowersInScope = powerNames.Count(IsBoostFullName);
+        report.SetBonusPowersInScope = powerNames.Count(IsSetBonusFullName);
+        report.AddLimited(report.ScopedBoostSetBonusCoverage,
+            $"Boosts powersets/powers in scope: {report.BoostPowersetsInScope}/{report.BoostPowersInScope} (explicit={report.BoostExplicitPowersetsInScope}, derived={report.BoostDerivedPowersetsInScope}); Set_Bonus powersets/powers in scope: {report.SetBonusPowersetsInScope}/{report.SetBonusPowersInScope} (explicit={report.SetBonusExplicitPowersetsInScope}, derived={report.SetBonusDerivedPowersetsInScope})");
+    }
+
+    private static void TrackBoostSetBonusScopeCoverage(
+        OmniApplyResult applyResult,
+        IEnumerable<string> explicitScopedPowersetFullNames,
+        IEnumerable<string> derivedScopedPowersetFullNames,
+        IEnumerable<string> scopedPowerFullNames)
+    {
+        var explicitPowersetNames = explicitScopedPowersetFullNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        var derivedPowersetNames = derivedScopedPowersetFullNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        var powersetNames = explicitPowersetNames
+            .Concat(derivedPowersetNames)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        var powerNames = scopedPowerFullNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        applyResult.BoostPowersetsInScope = powersetNames.Count(IsBoostFullName);
+        applyResult.SetBonusPowersetsInScope = powersetNames.Count(IsSetBonusFullName);
+        applyResult.BoostExplicitPowersetsInScope = explicitPowersetNames.Count(IsBoostFullName);
+        applyResult.BoostDerivedPowersetsInScope = derivedPowersetNames.Count(IsBoostFullName);
+        applyResult.SetBonusExplicitPowersetsInScope = explicitPowersetNames.Count(IsSetBonusFullName);
+        applyResult.SetBonusDerivedPowersetsInScope = derivedPowersetNames.Count(IsSetBonusFullName);
+        applyResult.BoostPowersInScope = powerNames.Count(IsBoostFullName);
+        applyResult.SetBonusPowersInScope = powerNames.Count(IsSetBonusFullName);
+    }
+
+    private static void TrackBoostSetBonusPowerApply(string canonicalFullName, string action, OmniApplyResult applyResult)
+    {
+        if (IsBoostFullName(canonicalFullName))
+        {
+            switch (action)
+            {
+                case "matched":
+                    applyResult.BoostPowersMatched++;
+                    break;
+                case "created":
+                    applyResult.BoostPowersCreated++;
+                    break;
+                case "updated":
+                    applyResult.BoostPowersUpdated++;
+                    break;
+            }
+
+            return;
+        }
+
+        if (!IsSetBonusFullName(canonicalFullName))
+        {
+            return;
+        }
+
+        switch (action)
+        {
+            case "matched":
+                applyResult.SetBonusPowersMatched++;
+                break;
+            case "created":
+                applyResult.SetBonusPowersCreated++;
+                break;
+            case "updated":
+                applyResult.SetBonusPowersUpdated++;
+                break;
+        }
+    }
+
+    private static void TrackBoostSetBonusImportAudit(
+        IDatabase database,
+        IReadOnlyCollection<OmniPowerDefinition> scopedPowers,
+        IEnumerable<string> explicitScopedPowersetFullNames,
+        OmniApplyResult applyResult)
+    {
+        var scopedPowerNames = scopedPowers
+            .Where(power => !string.IsNullOrWhiteSpace(power.FullName))
+            .Select(power => CanonicalizeOmniFullName(power.FullName))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+        var derivedScopedPowersetFullNames = DeriveScopedPowersetFullNames(scopedPowerNames);
+        TrackBoostSetBonusScopeCoverage(applyResult, explicitScopedPowersetFullNames, derivedScopedPowersetFullNames, scopedPowerNames);
+
+        var dbPowerNames = (database.Power ?? [])
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .Select(power => CanonicalizeOmniFullName(power.FullName))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var normalizedDbPowerNames = (database.Power ?? [])
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .GroupBy(power => NormalizeLookupKey(power.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Select(power => CanonicalizeOmniFullName(power.FullName)).Distinct(StringComparer.OrdinalIgnoreCase).ToArray(),
+                StringComparer.OrdinalIgnoreCase);
+
+        foreach (var scopedPowerName in scopedPowerNames.Where(name => IsBoostFullName(name) || IsSetBonusFullName(name)))
+        {
+            if (dbPowerNames.Contains(scopedPowerName))
+            {
+                continue;
+            }
+
+            var isBoost = IsBoostFullName(scopedPowerName);
+            var normalizedKey = NormalizeLookupKey(scopedPowerName);
+            var classification = "import omission";
+            if (normalizedDbPowerNames.TryGetValue(normalizedKey, out var fallbackMatches) && fallbackMatches.Length > 0)
+            {
+                classification = fallbackMatches.Length == 1
+                    ? $"alias/name mismatch -> {fallbackMatches[0]}"
+                    : $"ambiguous alias/name mismatch -> {string.Join(", ", fallbackMatches)}";
+            }
+
+            if (isBoost)
+            {
+                applyResult.MissingBoostPowersAfterImport++;
+            }
+            else
+            {
+                applyResult.MissingSetBonusPowersAfterImport++;
+            }
+
+            applyResult.AddLimited(applyResult.BoostSetBonusImportAuditDetails,
+                $"{scopedPowerName}: missing after import ({classification})");
+        }
+
+        applyResult.AddLimited(applyResult.BoostSetBonusImportAuditDetails,
+            $"Boosts powersets/powers in scope={applyResult.BoostPowersetsInScope}/{applyResult.BoostPowersInScope} (explicit={applyResult.BoostExplicitPowersetsInScope}, derived={applyResult.BoostDerivedPowersetsInScope}), matched/created/updated={applyResult.BoostPowersMatched}/{applyResult.BoostPowersCreated}/{applyResult.BoostPowersUpdated}, missing after import={applyResult.MissingBoostPowersAfterImport}");
+        applyResult.AddLimited(applyResult.BoostSetBonusImportAuditDetails,
+            $"Set_Bonus powersets/powers in scope={applyResult.SetBonusPowersetsInScope}/{applyResult.SetBonusPowersInScope} (explicit={applyResult.SetBonusExplicitPowersetsInScope}, derived={applyResult.SetBonusDerivedPowersetsInScope}), matched/created/updated={applyResult.SetBonusPowersMatched}/{applyResult.SetBonusPowersCreated}/{applyResult.SetBonusPowersUpdated}, missing after import={applyResult.MissingSetBonusPowersAfterImport}");
+
+        TrackStrictSetBonusHierarchyAudit(database, scopedPowerNames, explicitScopedPowersetFullNames, applyResult);
+    }
+
+    private static IEnumerable<string> DeriveScopedPowersetFullNames(IEnumerable<string> scopedPowerFullNames)
+    {
+        return scopedPowerFullNames
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Select(FullSetName)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static bool IsBoostFullName(string fullName)
+    {
+        return GroupNamePart(CanonicalizeOmniFullName(fullName)).Equals("Boosts", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsSetBonusFullName(string fullName)
+    {
+        return GroupNamePart(CanonicalizeOmniFullName(fullName)).Equals("Set_Bonus", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static readonly string[] StrictSetBonusPowersetNames =
+    [
+        "Set_Bonus.Global_Bonus",
+        "Set_Bonus.Set_Bonus",
+        "Set_Bonus.PVP_Set_Bonus"
+    ];
+
+    private static bool IsStrictSetBonusPowerset(string fullSetName)
+    {
+        var canonical = CanonicalizeOmniFullName(fullSetName);
+        if (!GroupNamePart(canonical).Equals("Set_Bonus", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return StrictSetBonusPowersetNames.Contains(canonical, StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static bool IsStrictSetBonusPower(string fullName)
+    {
+        return IsSetBonusFullName(fullName) && IsStrictSetBonusPowerset(FullSetName(CanonicalizeOmniFullName(fullName)));
+    }
+
+    private static void PurgeStrictSetBonusFamilies(
+        IDatabase database,
+        IReadOnlyCollection<string> strictFamiliesInScope,
+        OmniApplyResult applyResult)
+    {
+        if (strictFamiliesInScope.Count == 0)
+        {
+            return;
+        }
+
+        var strictSetBonusFamilies = strictFamiliesInScope
+            .Select(CanonicalizeOmniFullName)
+            .Where(IsStrictSetBonusPowerset)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var powers = database.Power ?? [];
+        var keptPowers = powers
+            .Where(power => power == null ||
+                            (!strictSetBonusFamilies.Contains(CanonicalizeOmniFullName(power.FullSetName)) &&
+                             !IsStrictSetBonusPower(power.FullName)))
+            .ToArray();
+        applyResult.StrictSetBonusPowersPurged = powers.Length - keptPowers.Length;
+        foreach (var power in powers.Where(power =>
+                     power != null &&
+                     (strictSetBonusFamilies.Contains(CanonicalizeOmniFullName(power.FullSetName)) ||
+                      IsStrictSetBonusPower(power.FullName))))
+        {
+            applyResult.AddLimited(applyResult.BoostSetBonusImportAuditDetails,
+                $"{power.FullName}: purged before strict Set_Bonus rebuild ({CanonicalizeOmniFullName(power.FullSetName)})");
+        }
+
+        database.Power = keptPowers;
+
+        var powersets = database.Powersets ?? [];
+        var keptPowersets = powersets
+            .Where(powerset => powerset == null ||
+                               !strictSetBonusFamilies.Contains(CanonicalizeOmniFullName(powerset.FullName)))
+            .ToArray();
+        applyResult.StrictSetBonusPowersetsPurged = powersets.Length - keptPowersets.Length;
+        foreach (var powerset in powersets.Where(powerset =>
+                     powerset != null &&
+                     strictSetBonusFamilies.Contains(CanonicalizeOmniFullName(powerset.FullName))))
+        {
+            applyResult.AddLimited(applyResult.BoostSetBonusImportAuditDetails,
+                $"{powerset.FullName}: purged before strict Set_Bonus rebuild.");
+        }
+
+        database.Powersets = keptPowersets;
+    }
+
+    private static void PurgeStrictSetBonusScopedPowers(
+        IDatabase database,
+        IReadOnlyCollection<OmniPowerDefinition> scopedPowers,
+        OmniApplyResult applyResult)
+    {
+        var strictScopedPowerNames = scopedPowers
+            .Where(power => !string.IsNullOrWhiteSpace(power.FullName))
+            .Select(power => CanonicalizeOmniFullName(power.FullName))
+            .Where(IsStrictSetBonusPower)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        if (strictScopedPowerNames.Count == 0)
+        {
+            return;
+        }
+
+        var powers = database.Power ?? [];
+        var removed = powers
+            .Where(power => power != null &&
+                            strictScopedPowerNames.Contains(CanonicalizeOmniFullName(power.FullName)))
+            .ToArray();
+        if (removed.Length == 0)
+        {
+            return;
+        }
+
+        database.Power = powers
+            .Where(power => power == null ||
+                            !strictScopedPowerNames.Contains(CanonicalizeOmniFullName(power.FullName)))
+            .ToArray();
+
+        applyResult.StrictSetBonusPowersPurged += removed.Length;
+        foreach (var power in removed)
+        {
+            applyResult.AddLimited(applyResult.BoostSetBonusImportAuditDetails,
+                $"{power.FullName}: purged by strict Set_Bonus exact-full-name cleanup");
+        }
+    }
+
+    private static void RemoveStrictSetBonusExistingPower(
+        IDatabase database,
+        List<IPower?> existingPowers,
+        Dictionary<string, IPower?> midsPowers,
+        string canonicalFullName,
+        OmniApplyResult applyResult)
+    {
+        var normalizedFullName = NormalizeLookupKey(canonicalFullName);
+        var powers = database.Power ?? [];
+        var removed = powers
+            .Where(power => power != null &&
+                            (string.Equals(CanonicalizeOmniFullName(power.FullName), canonicalFullName, StringComparison.OrdinalIgnoreCase) ||
+                             string.Equals(NormalizeLookupKey(power.FullName), normalizedFullName, StringComparison.OrdinalIgnoreCase)))
+            .ToArray();
+        if (removed.Length == 0)
+        {
+            midsPowers.Remove(canonicalFullName);
+            return;
+        }
+
+        database.Power = powers
+            .Where(power => power == null || !removed.Any(candidate => ReferenceEquals(candidate, power)))
+            .ToArray();
+
+        foreach (var removedPower in removed)
+        {
+            existingPowers.RemoveAll(candidate => ReferenceEquals(candidate, removedPower));
+            applyResult.AddLimited(applyResult.BoostSetBonusImportAuditDetails,
+                $"{removedPower.FullName}: removed immediately before strict Set_Bonus authoritative recreate");
+        }
+
+        midsPowers.Remove(canonicalFullName);
+    }
+
+    private static void TrackStrictSetBonusHierarchyAudit(
+        IDatabase database,
+        IReadOnlyCollection<string> scopedPowerNames,
+        IEnumerable<string> explicitScopedPowersetFullNames,
+        OmniApplyResult applyResult)
+    {
+        var expectedPowersets = explicitScopedPowersetFullNames
+            .Select(CanonicalizeOmniFullName)
+            .Where(IsStrictSetBonusPowerset)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        if (expectedPowersets.Length == 0)
+        {
+            return;
+        }
+
+        var powersetsByName = (database.Powersets ?? [])
+            .Where(powerset => powerset != null && !string.IsNullOrWhiteSpace(powerset.FullName))
+            .GroupBy(powerset => CanonicalizeOmniFullName(powerset.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+        var powersByName = (database.Power ?? [])
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .GroupBy(power => CanonicalizeOmniFullName(power.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+        var strictDbPowerNames = powersByName.Keys
+            .Where(IsStrictSetBonusPower)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var expectedStrictPowerNames = scopedPowerNames
+            .Where(IsStrictSetBonusPower)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        applyResult.StrictSetBonusGlobalBonusAfterImport = strictDbPowerNames.Count(name =>
+            string.Equals(FullSetName(name), "Set_Bonus.Global_Bonus", StringComparison.OrdinalIgnoreCase));
+        applyResult.StrictSetBonusSetBonusAfterImport = strictDbPowerNames.Count(name =>
+            string.Equals(FullSetName(name), "Set_Bonus.Set_Bonus", StringComparison.OrdinalIgnoreCase));
+        applyResult.StrictSetBonusPvpSetBonusAfterImport = strictDbPowerNames.Count(name =>
+            string.Equals(FullSetName(name), "Set_Bonus.PVP_Set_Bonus", StringComparison.OrdinalIgnoreCase));
+        applyResult.StrictSetBonusDbOnlyExtrasAfterImport = strictDbPowerNames.Except(expectedStrictPowerNames, StringComparer.OrdinalIgnoreCase).Count();
+        applyResult.StrictSetBonusMissingFullNamesAfterImport = expectedStrictPowerNames.Except(strictDbPowerNames, StringComparer.OrdinalIgnoreCase).Count();
+        applyResult.StrictSetBonusCrossSiblingMismatchesAfterImport = 0;
+
+        foreach (var expectedPowerset in expectedPowersets)
+        {
+            applyResult.AddLimited(applyResult.BoostSetBonusImportAuditDetails,
+                powersetsByName.ContainsKey(expectedPowerset)
+                    ? $"{expectedPowerset}: strict set-bonus powerset present after import."
+                    : $"{expectedPowerset}: strict set-bonus powerset missing after import.");
+        }
+
+        foreach (var scopedPowerName in scopedPowerNames.Where(IsStrictSetBonusPower).OrderBy(name => name, StringComparer.OrdinalIgnoreCase))
+        {
+            if (!powersByName.TryGetValue(scopedPowerName, out var power))
+            {
+                continue;
+            }
+
+            var expectedFullSet = FullSetName(scopedPowerName);
+            var actualFullSet = CanonicalizeOmniFullName(power.GetPowerSet()?.FullName ?? power.FullSetName);
+            if (!string.Equals(expectedFullSet, actualFullSet, StringComparison.OrdinalIgnoreCase))
+            {
+                applyResult.StrictSetBonusCrossSiblingMismatchesAfterImport++;
+                applyResult.AddLimited(applyResult.BoostSetBonusImportAuditDetails,
+                    $"{scopedPowerName}: strict set-bonus hierarchy mismatch; expected powerset {expectedFullSet}, actual {actualFullSet}.");
+            }
+        }
+
+        applyResult.AddLimited(applyResult.BoostSetBonusImportAuditDetails,
+            $"Strict Set_Bonus rebuild purge powers/powersets={applyResult.StrictSetBonusPowersPurged}/{applyResult.StrictSetBonusPowersetsPurged}");
+        applyResult.AddLimited(applyResult.BoostSetBonusImportAuditDetails,
+            $"Strict Set_Bonus rebuilt counts Global/Set/PvP={applyResult.StrictSetBonusGlobalBonusAfterImport}/{applyResult.StrictSetBonusSetBonusAfterImport}/{applyResult.StrictSetBonusPvpSetBonusAfterImport}");
+        applyResult.AddLimited(applyResult.BoostSetBonusImportAuditDetails,
+            $"Strict Set_Bonus cross-sibling mismatches/extras/missing={applyResult.StrictSetBonusCrossSiblingMismatchesAfterImport}/{applyResult.StrictSetBonusDbOnlyExtrasAfterImport}/{applyResult.StrictSetBonusMissingFullNamesAfterImport}");
+    }
+
+    private static void TrackPetPowerLinkAudit(
+        IDatabase database,
+        IReadOnlyCollection<OmniPowerDefinition> scopedPowers,
+        OmniApplyResult applyResult)
+    {
+        var powers = database.Power ?? [];
+        var powersets = database.Powersets ?? [];
+        var powersByName = powers
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .GroupBy(power => CanonicalizeOmniFullName(power.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+        var powersetsByName = powersets
+            .Where(powerset => powerset != null && !string.IsNullOrWhiteSpace(powerset.FullName))
+            .GroupBy(powerset => CanonicalizeOmniFullName(powerset.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+
+        foreach (var omniPower in scopedPowers.Where(power => IsPetPowerFullName(power.FullName)))
+        {
+            var canonicalFullName = CanonicalizeOmniFullName(omniPower.FullName);
+            var canonicalPowerset = CanonicalizeOmniFullName(string.IsNullOrWhiteSpace(omniPower.Powerset)
+                ? FullSetName(canonicalFullName)
+                : omniPower.Powerset);
+            var root = GroupNamePart(canonicalFullName);
+
+            if (!powersByName.TryGetValue(canonicalFullName, out var midsPower) || midsPower == null)
+            {
+                applyResult.PetPowersMissingAfterImport++;
+                applyResult.AddLimited(applyResult.PetPowersMissingAfterImportDetails,
+                    $"{omniPower.FullName}: powerset={omniPower.Powerset}, canonical={canonicalFullName}");
+                continue;
+            }
+
+            var powersetExists = powersetsByName.TryGetValue(canonicalPowerset, out var owningPowerset);
+            if (!powersetExists || owningPowerset == null)
+            {
+                applyResult.PetPowersWithMissingPowerset++;
+                applyResult.AddLimited(applyResult.PetPowersWithMissingPowersetDetails,
+                    FormatPetPowerAuditLine(omniPower, canonicalFullName, canonicalPowerset, midsPower, null, false));
+                continue;
+            }
+
+            if (midsPower.PowerSetID < 0)
+            {
+                applyResult.PetPowersWithInvalidPowersetId++;
+                applyResult.AddLimited(applyResult.PetPowersWithInvalidPowersetIdDetails,
+                    FormatPetPowerAuditLine(omniPower, canonicalFullName, canonicalPowerset, midsPower, owningPowerset, false));
+                continue;
+            }
+
+            var inPowersetArray = owningPowerset.Powers.Any(power =>
+                power != null &&
+                string.Equals(CanonicalizeOmniFullName(power.FullName), canonicalFullName, StringComparison.OrdinalIgnoreCase));
+            if (!inPowersetArray)
+            {
+                applyResult.PetPowersNotInPowersetArray++;
+                applyResult.AddLimited(applyResult.PetPowersNotInPowersetArrayDetails,
+                    FormatPetPowerAuditLine(omniPower, canonicalFullName, canonicalPowerset, midsPower, owningPowerset, false));
+                continue;
+            }
+
+            applyResult.PetPowersLinkedAfterMatchIds++;
+            IncrementCount(applyResult.PetPowersLinkedByRoot, root);
+        }
+
+        applyResult.AddLimited(applyResult.PetImportDetails,
+            $"Pet link audit: linked={applyResult.PetPowersLinkedAfterMatchIds}, missing={applyResult.PetPowersMissingAfterImport}, missing powerset={applyResult.PetPowersWithMissingPowerset}, invalid PowerSetID={applyResult.PetPowersWithInvalidPowersetId}, not in powerset array={applyResult.PetPowersNotInPowersetArray}");
+    }
+
+    private static void TrackPetManifestLinkAudit(
+        IDatabase database,
+        IReadOnlyCollection<PetImportManifest> petManifests,
+        OmniApplyResult applyResult)
+    {
+        var powers = database.Power ?? [];
+        var powersets = database.Powersets ?? [];
+        var powersByName = powers
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .GroupBy(power => CanonicalizeOmniFullName(power.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+        var powersetsByName = powersets
+            .Where(powerset => powerset != null && !string.IsNullOrWhiteSpace(powerset.FullName))
+            .GroupBy(powerset => CanonicalizeOmniFullName(powerset.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+
+        foreach (var powersetManifest in petManifests.SelectMany(manifest => manifest.Powersets))
+        {
+            var expected = powersetManifest.ExpectedPowerNames
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+            var expectedSet = expected.ToHashSet(StringComparer.OrdinalIgnoreCase);
+            powersetsByName.TryGetValue(powersetManifest.CanonicalFullName, out var owningPowerset);
+            var linked = owningPowerset?.Powers
+                .Where(power => power != null && expectedSet.Contains(CanonicalizeOmniFullName(power.FullName)))
+                .Select(power => CanonicalizeOmniFullName(power.FullName))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Count() ?? 0;
+
+            applyResult.AddLimited(applyResult.PetImportManifestDetails,
+                $"{powersetManifest.CanonicalFullName}: expected={expected.Length}, linked={linked}, owning powerset={(owningPowerset?.FullName ?? "<missing>")}");
+
+            if (expected.Length > 0 && linked == 0)
+            {
+                applyResult.PetSourcePowersetsWithZeroLinkedPowers++;
+                applyResult.PetSourceIntegrityFailures++;
+                applyResult.AddLimited(applyResult.PetPowersetsWithZeroLinkedPowersDetails,
+                    $"{powersetManifest.CanonicalFullName}: expected {expected.Length} powers from {powersetManifest.SourcePath}, but none linked after MatchIds.");
+            }
+
+            if (owningPowerset == null)
+            {
+                if (expected.Length > 0)
+                {
+                    applyResult.PetSourceIntegrityFailures++;
+                    applyResult.AddLimited(applyResult.PetLinkIntegrityFailureDetails,
+                        $"{powersetManifest.CanonicalFullName}: owning pet powerset missing after import; source={powersetManifest.SourcePath}");
+                }
+
+                continue;
+            }
+
+            foreach (var expectedPowerName in expected)
+            {
+                if (!powersByName.TryGetValue(expectedPowerName, out var midsPower) || midsPower == null)
+                {
+                    applyResult.PetSourceIntegrityFailures++;
+                    applyResult.AddLimited(applyResult.PetLinkIntegrityFailureDetails,
+                        $"{expectedPowerName}: expected by {powersetManifest.CanonicalFullName} but not found in database.Power after import; source={powersetManifest.SourcePath}");
+                    continue;
+                }
+
+                if (midsPower.PowerSetID < 0)
+                {
+                    applyResult.PetSourceIntegrityFailures++;
+                    applyResult.AddLimited(applyResult.PetLinkIntegrityFailureDetails,
+                        $"{expectedPowerName}: PowerSetID={midsPower.PowerSetID}; final FullSetName={midsPower.FullSetName}; owning powerset={owningPowerset.FullName}");
+                    continue;
+                }
+
+                if (midsPower.PowerSetID != owningPowerset.nID)
+                {
+                    applyResult.PetSourceIntegrityFailures++;
+                    applyResult.AddLimited(applyResult.PetLinkIntegrityFailureDetails,
+                        $"{expectedPowerName}: linked to PowerSetID={midsPower.PowerSetID}, expected {owningPowerset.nID} for {owningPowerset.FullName}; final FullSetName={midsPower.FullSetName}");
+                    continue;
+                }
+
+                var inPowersetArray = owningPowerset.Powers.Any(power =>
+                    power != null &&
+                    string.Equals(CanonicalizeOmniFullName(power.FullName), expectedPowerName, StringComparison.OrdinalIgnoreCase));
+                if (!inPowersetArray)
+                {
+                    applyResult.PetSourceIntegrityFailures++;
+                    applyResult.AddLimited(applyResult.PetLinkIntegrityFailureDetails,
+                        $"{expectedPowerName}: PowerSetID points at {owningPowerset.FullName}, but the power is absent from powerset.Powers.");
+                }
+            }
+        }
+    }
+
+    private static void TrackPseudoPetAbsorptionAudit(IDatabase database, OmniApplyResult applyResult)
+    {
+        var powers = database.Power?
+            .Where(power => power != null && power.Effects.Any(effect => effect.EffectType == Enums.eEffectType.EntCreate))
+            .ToList() ?? [];
+        var wroteRealPetSample = false;
+
+        foreach (var power in powers)
+        {
+            var isFocused = power.FullName.Equals("Pool.Sorcery.Enflame", StringComparison.OrdinalIgnoreCase);
+            foreach (var effect in power.Effects.Where(effect => effect.EffectType == Enums.eEffectType.EntCreate))
+            {
+                var entity = effect.nSummon >= 0 && effect.nSummon < database.Entities.Length
+                    ? database.Entities[effect.nSummon]
+                    : null;
+                var entityType = entity?.EntityType.ToString() ?? "unresolved";
+                var powersets = entity?.GetNPowerset().ToArray() ?? [];
+                var linkedPowers = powersets
+                    .Where(index => index >= 0 && index < database.Powersets.Length)
+                    .Sum(index => database.Powersets[index].Powers.Length);
+                var shouldAudit = isFocused || entity is { IsPseudoPet: true } || (!wroteRealPetSample && entity is { IsRealPet: true });
+                if (!shouldAudit)
+                {
+                    continue;
+                }
+
+                var resolved = PlannerEffectResolver.ResolvePower(new Power(power), new PlannerEffectResolutionContext
+                {
+                    AbsorbPetEffects = power.AbsorbSummonEffects,
+                    IncludeTrace = true
+                });
+                var absorbedEffects = resolved.ResolvedPower.Effects.Count(absorbed => absorbed.Absorbed_Effect);
+                var recurrences = resolved.ResolvedPower.Effects
+                    .Where(absorbed => absorbed.PseudoPetRecurrence is { IsValid: true })
+                    .Select(absorbed => absorbed.PseudoPetRecurrence!)
+                    .GroupBy(recurrence => string.Join("|",
+                        recurrence.EntityName,
+                        recurrence.PetPowerName,
+                        recurrence.SourceUsageTime,
+                        recurrence.SourceActivatePeriod,
+                        recurrence.EntCreateDuration,
+                        recurrence.PetTickInterval,
+                        recurrence.SpawnCount,
+                        recurrence.TicksPerSpawn,
+                        recurrence.TotalExpectedTicks))
+                    .Select(group => group.First())
+                    .ToList();
+                var failure = string.Empty;
+                if (entity == null)
+                {
+                    failure = "unresolved entity";
+                }
+                else if (entity.IsPseudoPet && !power.AbsorbSummonEffects)
+                {
+                    failure = "absorption flags off";
+                }
+                else if (entity.IsPseudoPet && powersets.Length == 0)
+                {
+                    failure = "missing pet powerset";
+                }
+                else if (entity.IsPseudoPet && linkedPowers == 0)
+                {
+                    failure = "zero linked pet powers";
+                }
+                else if (entity.IsPseudoPet && absorbedEffects == 0)
+                {
+                    failure = "no absorbed effects";
+                }
+                else if (entity.IsPseudoPet && recurrences.Count == 0 && power.UsageTime <= 0)
+                {
+                    failure = "recurrence missing source usage time";
+                }
+                else if (entity.IsPseudoPet && recurrences.Count == 0 && power.ActivatePeriod <= 0)
+                {
+                    failure = "recurrence missing source activate period";
+                }
+                else if (entity.IsPseudoPet && recurrences.Count == 0 && effect.Duration <= 0)
+                {
+                    failure = "recurrence missing EntCreate duration";
+                }
+                else if (entity.IsPseudoPet && recurrences.Count == 0)
+                {
+                    failure = "recurrence not modeled";
+                }
+
+                if (!string.IsNullOrWhiteSpace(failure))
+                {
+                    applyResult.PseudoPetAbsorptionAuditFailures++;
+                }
+
+                var recurrenceNote = recurrences.Count > 0
+                    ? $", recurrence={string.Join("; ", recurrences.Select(recurrence => $"{recurrence.PetPowerName}: {recurrence.TicksPerSpawn} ticks/{recurrence.EntCreateDuration:0.###}s spawn, {recurrence.SpawnCount} spawns/{recurrence.SourceUsageTime:0.###}s, totalTicks={recurrence.TotalExpectedTicks}"))}"
+                    : string.Empty;
+                applyResult.AddLimited(applyResult.PseudoPetAbsorptionAuditDetails,
+                    $"{power.FullName}: UsageTime={power.UsageTime}, ActivatePeriod={power.ActivatePeriod}, EntCreate={effect.Summon}, EntCreateDuration={effect.Duration}, nSummon={effect.nSummon}, entityType={entityType}, entityPowersets={string.Join(", ", entity?.PowersetFullName ?? [])}, linkedPowers={linkedPowers}, AbsorbSummonEffects={power.AbsorbSummonEffects}, AbsorbSummonAttributes={power.AbsorbSummonAttributes}, absorbedEffects={absorbedEffects}{recurrenceNote}{(string.IsNullOrWhiteSpace(failure) ? "" : $", failure={failure}")}");
+
+                if (entity is { IsRealPet: true })
+                {
+                    wroteRealPetSample = true;
+                }
+            }
+        }
+    }
+
+    private static string FormatPetPowerAuditLine(
+        OmniPowerDefinition omniPower,
+        string canonicalFullName,
+        string canonicalPowerset,
+        IPower midsPower,
+        IPowerset? owningPowerset,
+        bool inPowersetArray)
+    {
+        return $"{omniPower.FullName}: omni powerset={omniPower.Powerset}, canonical={canonicalFullName}, canonical powerset={canonicalPowerset}, final FullName={midsPower.FullName}, final FullSetName={midsPower.FullSetName}, PowerSetID={midsPower.PowerSetID}, PowerSetIndex={midsPower.PowerSetIndex}, owning powerset={(owningPowerset?.FullName ?? "<missing>")}, in powerset array={inPowersetArray}";
+    }
+
+    private static bool PowersetIntegrityEquals(PowersetIntegrityInfo left, PowersetIntegrityInfo right)
+    {
+        return string.Equals(left.FullName, right.FullName, StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(left.GroupName, right.GroupName, StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(left.SetName, right.SetName, StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(left.DisplayName, right.DisplayName, StringComparison.OrdinalIgnoreCase) &&
+               left.SetType == right.SetType &&
+               string.Equals(left.ATClass, right.ATClass, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static void TrackDuplicateCompositePowerIdentities(IDatabase database, OmniApplyResult applyResult)
+    {
+        var duplicates = (database.Power ?? [])
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .GroupBy(power => CreateCompositePowerIdentityKey(database, power), StringComparer.OrdinalIgnoreCase)
+            .Where(group => group.Count() > 1)
+            .ToList();
+
+        foreach (var duplicate in duplicates)
+        {
+            applyResult.DuplicateCompositePowerIdentities++;
+            applyResult.AddLimited(applyResult.DuplicateCompositePowerIdentityDetails,
+                $"{duplicate.Key}: {string.Join(", ", duplicate.Select(power => power.FullName).Distinct(StringComparer.OrdinalIgnoreCase).Take(8))}");
+        }
+    }
+
+    private static string CreateCompositePowerIdentityKey(IDatabase database, IPower power)
+    {
+        var powerset = GetPowerSetSafe(database, power);
+        var group = NormalizeName(powerset?.GroupName ?? GroupNamePart(power.FullName));
+        var setInternal = NormalizeName(powerset?.SetName ?? SetNamePart(power.FullName));
+        var setDisplay = NormalizeName(powerset?.DisplayName ?? SetNamePart(power.FullName));
+        var powerInternal = NormalizeName(power.PowerName);
+        var powerDisplay = NormalizeName(power.DisplayName);
+        return $"{group}|{setInternal}|{setDisplay}|{powerInternal}|{powerDisplay}";
+    }
+
+    private static IPowerset? GetPowerSetSafe(IDatabase database, IPower power)
+    {
+        var powersets = database.Powersets ?? [];
+        return power.PowerSetID >= 0 && power.PowerSetID < powersets.Length
+            ? powersets[power.PowerSetID]
+            : null;
+    }
+
+    private static void TrackStaffMasteryScope(IReadOnlyCollection<OmniPowerDefinition> scopedPowers, OmniApplyResult applyResult)
+    {
+        foreach (var target in StaffMasteryFullNames)
+        {
+            var power = scopedPowers.FirstOrDefault(p =>
+                string.Equals(CanonicalizeOmniFullName(p.FullName), target, StringComparison.OrdinalIgnoreCase));
+            if (power == null)
+            {
+                applyResult.AddLimited(applyResult.StaffMasteryTraceDetails,
+                    $"{target}: not present in scoped Omni powers after LoadScopedPowers.");
+                continue;
+            }
+
+            applyResult.AddLimited(applyResult.StaffMasteryTraceDetails,
+                $"{target}: scoped from Omni powerset={power.Powerset}, name={power.Name}, display={power.DisplayName}, type={power.Type}, auto_issue={power.AutoIssue}, show_in_manage={power.ShowInManage}, requires='{power.Requires}', level={power.AvailableLevel}");
+        }
+    }
+
+    private static void TrackStaffMasteryFinalState(IDatabase database, OmniApplyResult applyResult)
+    {
+        foreach (var target in StaffMasteryFullNames)
+        {
+            var power = (database.Power ?? []).FirstOrDefault(p =>
+                p != null && string.Equals(CanonicalizeOmniFullName(p.FullName), target, StringComparison.OrdinalIgnoreCase));
+            if (power == null)
+            {
+                applyResult.AddLimited(applyResult.StaffMasteryTraceDetails, $"{target}: not found in database.Power after import.");
+                continue;
+            }
+
+            var powerset = GetPowerSetSafe(database, power);
+            var inPowersetArray = powerset?.Powers.Any(p => p != null &&
+                string.Equals(p.FullName, power.FullName, StringComparison.OrdinalIgnoreCase)) == true;
+            var dbEditorFilterReason = power.HiddenPower
+                ? "filtered by DB editor because HiddenPower=true"
+                : power.PowerSetID < 0
+                    ? "shown under orphan powers because PowerSetID<0"
+                    : !inPowersetArray
+                        ? "not listed under powerset because MatchIds did not place it in powerset.Powers"
+                        : "visible in powerset list";
+
+            applyResult.AddLimited(applyResult.StaffMasteryTraceDetails,
+                $"{target}: final {DescribePowerIdentity(power)}, powerset={(powerset?.FullName ?? "<null>")}, inPowersetArray={inPowersetArray}, editor={dbEditorFilterReason}");
+        }
+    }
+
+    private static bool IsStaffMasteryFullName(string fullName)
+    {
+        return StaffMasteryFullNames.Contains(CanonicalizeOmniFullName(fullName));
+    }
+
+    private static string DescribePowerIdentity(IPower power)
+    {
+        return $"FullName={power.FullName}, FullSetName={power.FullSetName}, Group={power.GroupName}, Set={power.SetName}, PowerName={power.PowerName}, Display={power.DisplayName}, Hidden={power.HiddenPower}, NeverAutoUpdate={power.NeverAutoUpdate}, PowerSetID={power.PowerSetID}, PowerSetIndex={power.PowerSetIndex}";
+    }
+
+    private static string DescribePowersetIdentity(IPowerset powerset)
+    {
+        var classSummary = powerset.SetType == Enums.ePowerSetType.Ancillary &&
+                           NormalizeName(powerset.GroupName).Equals("epic", StringComparison.OrdinalIgnoreCase)
+            ? $", Classes={FormatEffectivePowersetClasses(powerset)}"
+            : string.Empty;
+        return $"FullName={powerset.FullName}, Group={powerset.GroupName}, Set={powerset.SetName}, Display={powerset.DisplayName}, Type={powerset.SetType}, ATClass={powerset.ATClass}{classSummary}";
+    }
+
+    private static string DescribePowerIntegrity(PowerIntegrityInfo power)
+    {
+        return $"{power.FullName}: FullSetName={power.FullSetName}, Group={power.GroupName}, Set={power.SetName}, PowerName={power.PowerName}, Display={power.DisplayName}, PowerSetID={power.PowerSetID}, Hidden={power.HiddenPower}, NeverAutoUpdate={power.NeverAutoUpdate}, missingFullSet={power.MissingFullSetName}, unresolvedFullSet={power.UnresolvedFullSetName}";
+    }
+
+    private static string DescribePowersetIntegrity(PowersetIntegrityInfo powerset)
+    {
+        return $"FullName={powerset.FullName}, Group={powerset.GroupName}, Set={powerset.SetName}, Display={powerset.DisplayName}, Type={powerset.SetType}, ATClass={powerset.ATClass}";
+    }
+
+    private static void ApplyPowersetMetadata(
+        IPowerset powerset,
+        OmniPowersetDefinition source,
+        Enums.ePowerSetType scopedSetType,
+        bool preserveExistingValues)
+    {
+        powerset.FullName = source.FullName;
+        powerset.DisplayName = string.IsNullOrWhiteSpace(source.DisplayName) ? LastNamePart(source.FullName) : source.DisplayName;
+        powerset.SetName = string.IsNullOrWhiteSpace(source.Name) ? LastNamePart(source.FullName) : source.Name;
+        powerset.Description = source.DisplayHelp ?? string.Empty;
+        powerset.SubName = source.DisplayShortHelp ?? string.Empty;
+        var archetypes = source.Archetypes
+            .Where(archetype => !string.IsNullOrWhiteSpace(archetype))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        var mappedSetType = scopedSetType != Enums.ePowerSetType.None
+            ? scopedSetType
+            : MapPowersetType(source.PowerCategory, source.FullName);
+        if (!preserveExistingValues || mappedSetType != Enums.ePowerSetType.None)
+        {
+            powerset.SetType = mappedSetType;
+        }
+
+        powerset.GroupName = GroupNamePart(source.FullName);
+
+        if (!preserveExistingValues)
+        {
+            powerset.ATClass = string.Empty;
+            powerset.UIDTrunkSet = string.Empty;
+            powerset.UIDLinkSecondary = string.Empty;
+        }
+
+        if (archetypes.Length == 1)
+        {
+            powerset.ATClass = archetypes[0];
+        }
+        else if (archetypes.Length > 1)
+        {
+            powerset.ATClass = string.Empty;
+        }
+
+        powerset.UIDMutexSets ??= [];
+        powerset.nIDMutexSets ??= [];
+        powerset.Power ??= [];
+        powerset.Powers ??= [];
+    }
+
+    private static IPower CreatePower(IDatabase database, OmniPowerDefinition source, int staticIndex)
+    {
+        var power = new Power
+        {
+            IsNew = true,
+            StaticIndex = staticIndex
+        };
+        ApplyPowerMetadata(power, source);
+
+        var powers = database.Power ?? [];
+        Array.Resize(ref powers, powers.Length + 1);
+        powers[^1] = power;
+        database.Power = powers;
+        return power;
+    }
+
+    private static void ApplyPowerMetadata(IPower power, OmniPowerDefinition source)
+    {
+        power.FullName = source.FullName;
+        power.GroupName = GroupNamePart(source.FullName);
+        power.SetName = SetNamePart(source.FullName);
+        power.PowerName = string.IsNullOrWhiteSpace(source.Name) ? LastNamePart(source.FullName) : source.Name;
+        power.DisplayName = string.IsNullOrWhiteSpace(source.DisplayName) ? power.PowerName : source.DisplayName;
+        power.DescLong = source.DisplayHelp ?? string.Empty;
+        power.DescShort = source.DisplayShortHelp ?? string.Empty;
+        power.Available = source.AvailableLevel;
+        power.Level = source.AvailableLevel;
+        power.PowerType = MapPowerType(source.Type);
+        power.Accuracy = source.Accuracy;
+        power.AccuracyMult = 1f;
+        power.AttackTypes = MapAttackTypes(source.AttackTypes);
+        power.EntitiesAffected = MapEntities(source.TargetsAffected);
+        power.EntitiesAutoHit = MapEntities(source.TargetsAutoHit);
+        power.Target = MapEntity(source.TargetType);
+        power.TargetSecondary = MapEntity(source.TargetTypeSecondary);
+        power.TargetLoS = string.IsNullOrWhiteSpace(source.TargetVisibility) ||
+                          source.TargetVisibility.Contains("LineOfSight", StringComparison.OrdinalIgnoreCase);
+        power.ModesRequired = OmniModeMapper.ToFlags(source.ModesRequired, out _);
+        power.ModesDisallowed = OmniModeMapper.ToFlags(source.ModesDisallowed, out _);
+        power.Range = source.Range;
+        power.RangeSecondary = source.RangeSecondary;
+        power.EndCost = source.EnduranceCost;
+        power.InterruptTime = source.InterruptTime;
+        power.CastTime = source.ActivationTime;
+        power.RechargeTime = source.RechargeTime;
+        power.BaseRechargeTime = source.RechargeTime;
+        power.ActivatePeriod = source.ActivatePeriod;
+        power.EffectArea = MapEffectArea(source.EffectArea);
+        power.Radius = source.Radius;
+        power.Arc = source.Arc;
+        power.MaxTargets = source.MaxTargetsHit;
+        power.MaxBoosts = string.IsNullOrWhiteSpace(source.MaxBoosts) ? "0" : source.MaxBoosts;
+        power.NumAllowed = source.NumberAllowed;
+        power.NumCharges = ResolveNumberOfCharges(source);
+        power.UsageTime = ResolveUsageTime(source);
+        power.LifeTime = source.PowerLifetime;
+        power.LifeTimeInGame = source.PowerLifetimeInGame;
+        power.DoNotSave = source.DoNotSave;
+        power.BoostsAllowed = source.BoostsAllowed.ToArray();
+        power.GroupMembership = source.ExclusionGroups
+            .Where(group => !string.IsNullOrWhiteSpace(group))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        power.NGroupMembership = new int[power.GroupMembership.Length];
+        if (TryMapAiReport(source.NotifyAiWhen, out var aiReport))
+        {
+            power.AIReport = aiReport;
+        }
+
+        power.CastThroughHold = source.CastThrough.Any(IsHoldCastThroughToken);
+        power.IgnoreStrength = source.IgnoreStrength;
+        power.IsModified = true;
+    }
+
+    private static void RebuildScopedPowerEnhancementLegality(
+        IDatabase database,
+        IEnumerable<OmniPowerDefinition> scopedPowers,
+        OmniApplyResult applyResult)
+    {
+        var enhancementClasses = database.EnhancementClasses ?? Array.Empty<Enums.sEnhClass>();
+        if (enhancementClasses.Length == 0 || database.Power == null || database.Power.Length == 0)
+        {
+            return;
+        }
+
+        var enhancementClassLookup = BuildEnhancementClassLookup(database);
+        var powersByFullName = database.Power
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .GroupBy(power => CanonicalizeOmniFullName(power.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+
+        var scopedPowerDefinitions = scopedPowers
+            .Where(source => !string.IsNullOrWhiteSpace(source.FullName))
+            .GroupBy(source => CanonicalizeOmniFullName(source.FullName), StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First())
+            .Where(ShouldRebuildScopedPowerEnhancementLegality)
+            .ToList();
+
+        var enhancementClassesById = enhancementClasses
+            .Where(item => item.ID > 0)
+            .GroupBy(item => item.ID)
+            .ToDictionary(group => group.Key, group => group.First());
+        var unresolvedLabelsInScope = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var scopedPower in scopedPowerDefinitions)
+        {
+            var canonicalFullName = CanonicalizeOmniFullName(scopedPower.FullName);
+            if (!powersByFullName.TryGetValue(canonicalFullName, out var midsPower))
+            {
+                applyResult.ScopedPowerEnhancementLegalityUnresolvedAfterRebuild++;
+                applyResult.AddLimited(applyResult.ScopedPowerEnhancementLegalityDetails,
+                    $"{canonicalFullName}: scoped power was not present in the database after import, so enhancement legality could not be rebuilt.");
+                continue;
+            }
+
+            var prior = midsPower.Enhancements ?? Array.Empty<int>();
+            var resolved = new List<int>();
+            var unresolved = new List<string>();
+            var seen = new HashSet<int>();
+            foreach (var boostAllowed in scopedPower.BoostsAllowed.Where(value => !string.IsNullOrWhiteSpace(value)))
+            {
+                if (!TryResolvePowerBoostAllowedEnhancementClasses(
+                        boostAllowed,
+                        enhancementClassLookup,
+                        enhancementClasses,
+                        out var mappedClassIds) ||
+                    mappedClassIds.Length == 0)
+                {
+                    unresolved.Add(boostAllowed);
+                    var unresolvedKey = NormalizeLookupKey(boostAllowed);
+                    if (!string.IsNullOrWhiteSpace(unresolvedKey) && !unresolvedLabelsInScope.ContainsKey(unresolvedKey))
+                    {
+                        unresolvedLabelsInScope[unresolvedKey] = $"{boostAllowed} (sample: {canonicalFullName})";
+                    }
+
+                    continue;
+                }
+
+                foreach (var classId in mappedClassIds)
+                {
+                    if (seen.Add(classId))
+                    {
+                        resolved.Add(classId);
+                    }
+                }
+            }
+
+            var preservedExistingLegality = false;
+            if (scopedPower.BoostsAllowed.Count > 0 && resolved.Count == 0 && prior.Length > 0)
+            {
+                midsPower.Enhancements = prior.ToArray();
+                preservedExistingLegality = true;
+                applyResult.ScopedPowerEnhancementLegalityPreserved++;
+            }
+            else
+            {
+                midsPower.Enhancements = resolved.ToArray();
+            }
+
+            midsPower.IsModified = true;
+            applyResult.ScopedPowerEnhancementLegalityRebuilt++;
+
+            if (!prior.SequenceEqual(midsPower.Enhancements))
+            {
+                applyResult.ScopedPowerEnhancementLegalityChanged++;
+            }
+
+            if (scopedPower.BoostsAllowed.Count > 0 && midsPower.Enhancements.Length == 0)
+            {
+                applyResult.ScopedPowerEnhancementLegalityEmptyAfterRebuild++;
+            }
+
+            if (unresolved.Count == 0 && !(scopedPower.BoostsAllowed.Count > 0 && midsPower.Enhancements.Length == 0))
+            {
+                continue;
+            }
+
+            if (unresolved.Count > 0)
+            {
+                applyResult.ScopedPowerEnhancementLegalityUnresolvedAfterRebuild++;
+            }
+
+            var sourceSummary = scopedPower.BoostsAllowed.Count == 0
+                ? "<empty>"
+                : string.Join(", ", scopedPower.BoostsAllowed.Distinct(StringComparer.OrdinalIgnoreCase));
+            var priorSummary = FormatEnhancementLegalitySummary(prior, enhancementClassesById);
+            var currentSummary = FormatEnhancementLegalitySummary(midsPower.Enhancements, enhancementClassesById);
+            var unresolvedSummary = unresolved.Count == 0 ? "<none>" : string.Join(", ", unresolved.Distinct(StringComparer.OrdinalIgnoreCase));
+            applyResult.AddLimited(applyResult.ScopedPowerEnhancementLegalityDetails,
+                preservedExistingLegality
+                    ? $"{canonicalFullName}: source boosts_allowed=[{sourceSummary}], preserved existing legality=[{currentSummary}] because translation was incomplete (prior [{priorSummary}]), unresolved=[{unresolvedSummary}]"
+                    : $"{canonicalFullName}: source boosts_allowed=[{sourceSummary}], rebuilt legality -> [{currentSummary}] (was [{priorSummary}]), unresolved=[{unresolvedSummary}]");
+        }
+
+        applyResult.ScopedPowerEnhancementLegalityUnresolvedLabelCount = unresolvedLabelsInScope.Count;
+        foreach (var unresolvedLabel in unresolvedLabelsInScope.Values.OrderBy(value => value, StringComparer.OrdinalIgnoreCase))
+        {
+            applyResult.AddLimited(applyResult.ScopedPowerEnhancementLegalityUnknownLabelDetails, unresolvedLabel);
+        }
+    }
+
+    private static void RepairImportedBoostAndSetBonusPowerEnhancementLegality(
+        IDatabase database,
+        IEnumerable<OmniPowerDefinition> scopedPowers,
+        OmniApplyResult applyResult)
+    {
+        if (database?.Power == null || database.Power.Length == 0)
+        {
+            return;
+        }
+
+        var enhancementClasses = database.EnhancementClasses ?? Array.Empty<Enums.sEnhClass>();
+        var enhancementClassLookup = enhancementClasses.Length == 0
+            ? new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase)
+            : BuildEnhancementClassLookup(database);
+        var enhancementClassesById = enhancementClasses
+            .Where(item => item.ID > 0)
+            .GroupBy(item => item.ID)
+            .ToDictionary(group => group.Key, group => group.First());
+        var categoryOnlyBoostPowerFullNames = (database.EnhancementImportMetadata?.CategoryOnlyBoostPowerFullNames ?? [])
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(CanonicalizeOmniFullName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var powersByFullName = database.Power
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .GroupBy(power => CanonicalizeOmniFullName(power.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+        var linkedBoostLegality = BuildBoostPowerLinkedEnhancementLegalityLookup(database, enhancementClasses);
+        var scopedDefinitions = scopedPowers
+            .Where(source => !string.IsNullOrWhiteSpace(source.FullName))
+            .GroupBy(source => CanonicalizeOmniFullName(source.FullName), StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First())
+            .Where(source => IsBoostFullName(source.FullName) || IsSetBonusFullName(source.FullName))
+            .ToList();
+
+        foreach (var scopedPower in scopedDefinitions)
+        {
+            var canonicalFullName = CanonicalizeOmniFullName(scopedPower.FullName);
+            if (!powersByFullName.TryGetValue(canonicalFullName, out var midsPower))
+            {
+                continue;
+            }
+
+            var prior = midsPower.Enhancements ?? Array.Empty<int>();
+            var priorSummary = FormatEnhancementLegalitySummary(prior, enhancementClassesById);
+
+            if (IsSetBonusFullName(canonicalFullName))
+            {
+                applyResult.SetBonusPowerLegalityRepairInspected++;
+                if (prior.Length == 0)
+                {
+                    applyResult.SetBonusPowerLegalityRepairAlreadyEmpty++;
+                    continue;
+                }
+
+                midsPower.Enhancements = Array.Empty<int>();
+                midsPower.IsModified = true;
+                applyResult.SetBonusPowerLegalityRepairCleared++;
+                applyResult.BoostSetBonusPowerLegalityRepairChanged++;
+                applyResult.AddLimited(applyResult.BoostSetBonusPowerLegalityRepairDetails,
+                    $"{canonicalFullName}: cleared stale Set_Bonus legality -> [<empty>] (was [{priorSummary}]).");
+                continue;
+            }
+
+            applyResult.BoostPowerLegalityRepairInspected++;
+            if (TryResolveBoostPowerEnhancementLegality(
+                    canonicalFullName,
+                    midsPower,
+                    scopedPower,
+                    categoryOnlyBoostPowerFullNames,
+                    linkedBoostLegality,
+                    enhancementClassLookup,
+                    enhancementClasses,
+                    out var resolved,
+                    out var repairSource,
+                    out var unresolved))
+            {
+                if (prior.SequenceEqual(resolved))
+                {
+                    continue;
+                }
+
+                midsPower.Enhancements = resolved;
+                midsPower.IsModified = true;
+                applyResult.BoostPowerLegalityRepairRebuilt++;
+                applyResult.BoostSetBonusPowerLegalityRepairChanged++;
+                var currentSummary = FormatEnhancementLegalitySummary(resolved, enhancementClassesById);
+                var unresolvedSummary = unresolved.Length == 0
+                    ? "<none>"
+                    : string.Join(", ", unresolved.Distinct(StringComparer.OrdinalIgnoreCase));
+                applyResult.AddLimited(applyResult.BoostSetBonusPowerLegalityRepairDetails,
+                    $"{canonicalFullName}: repaired boost legality from {repairSource} -> [{currentSummary}] (was [{priorSummary}]), unresolved=[{unresolvedSummary}]");
+                continue;
+            }
+
+            applyResult.BoostPowerLegalityRepairUnresolved++;
+            var unresolvedDetail = unresolved.Length == 0
+                ? "<none>"
+                : string.Join(", ", unresolved.Distinct(StringComparer.OrdinalIgnoreCase));
+            if (prior.Length > 0)
+            {
+                applyResult.BoostPowerLegalityRepairPreserved++;
+                applyResult.AddLimited(applyResult.BoostSetBonusPowerLegalityRepairDetails,
+                    $"{canonicalFullName}: preserved existing boost legality [{priorSummary}] because no canonical repair source was available, unresolved=[{unresolvedDetail}]");
+                continue;
+            }
+
+            applyResult.AddLimited(applyResult.BoostSetBonusPowerLegalityRepairDetails,
+                $"{canonicalFullName}: no canonical boost legality source was available; leaving legality empty, unresolved=[{unresolvedDetail}]");
+        }
+    }
+
+    private static bool ShouldRebuildScopedPowerEnhancementLegality(OmniPowerDefinition source)
+    {
+        if (source == null || string.IsNullOrWhiteSpace(source.FullName))
+        {
+            return false;
+        }
+
+        if (source.Type.Equals("Enhancement", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (IsBoostFullName(source.FullName) || IsSetBonusFullName(source.FullName))
+        {
+            return false;
+        }
+
+        return TryGetPositiveMaxBoosts(source, out _);
+    }
+
+    private static bool TryGetPositiveMaxBoosts(OmniPowerDefinition source, out int maxBoosts)
+    {
+        maxBoosts = 0;
+        if (source == null || string.IsNullOrWhiteSpace(source.MaxBoosts))
+        {
+            return false;
+        }
+
+        if (!int.TryParse(source.MaxBoosts, out maxBoosts))
+        {
+            return false;
+        }
+
+        return maxBoosts > 0;
+    }
+
+    private static bool TryResolvePowerBoostAllowedEnhancementClasses(
+        string boostAllowed,
+        IReadOnlyDictionary<string, int> enhancementClassLookup,
+        Enums.sEnhClass[] enhancementClasses,
+        out int[] classIds)
+    {
+        var resolved = new List<int>();
+        var seen = new HashSet<int>();
+
+        foreach (var candidate in EnumeratePowerBoostAllowedLookupCandidates(boostAllowed))
+        {
+            if (!enhancementClassLookup.TryGetValue(NormalizeLookupKey(candidate), out var classIndex) ||
+                classIndex < 0 ||
+                classIndex >= enhancementClasses.Length)
+            {
+                continue;
+            }
+
+            var classId = enhancementClasses[classIndex].ID;
+            if (seen.Add(classId))
+            {
+                resolved.Add(classId);
+            }
+        }
+
+        classIds = resolved.ToArray();
+        return classIds.Length > 0;
+    }
+
+    private static Dictionary<string, int[]> BuildBoostPowerLinkedEnhancementLegalityLookup(
+        IDatabase database,
+        Enums.sEnhClass[] enhancementClasses)
+    {
+        var result = new Dictionary<string, List<int>>(StringComparer.OrdinalIgnoreCase);
+        foreach (var enhancement in (database.Enhancements ?? Array.Empty<IEnhancement>())
+                     .Where(enhancement => enhancement != null && enhancement.TypeID != Enums.eType.None))
+        {
+            var boostPower = enhancement.GetPower();
+            if (boostPower == null || !IsBoostFullName(boostPower.FullName))
+            {
+                continue;
+            }
+
+            var translated = TranslateEnhancementClassRefsToPowerEnhancementIds(enhancement.ClassID, enhancementClasses);
+            if (translated.Length == 0)
+            {
+                continue;
+            }
+
+            var canonicalFullName = CanonicalizeOmniFullName(boostPower.FullName);
+            if (!result.TryGetValue(canonicalFullName, out var values))
+            {
+                values = new List<int>();
+                result[canonicalFullName] = values;
+            }
+
+            foreach (var classId in translated)
+            {
+                if (!values.Contains(classId))
+                {
+                    values.Add(classId);
+                }
+            }
+        }
+
+        return result.ToDictionary(pair => pair.Key, pair => pair.Value.ToArray(), StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static int[] TranslateEnhancementClassRefsToPowerEnhancementIds(
+        IReadOnlyCollection<int>? classRefs,
+        Enums.sEnhClass[] enhancementClasses)
+    {
+        if (classRefs == null || classRefs.Count == 0 || enhancementClasses.Length == 0)
+        {
+            return Array.Empty<int>();
+        }
+
+        var ids = new List<int>();
+        var seen = new HashSet<int>();
+        var enhancementClassIds = enhancementClasses
+            .Where(item => item.ID > 0)
+            .Select(item => item.ID)
+            .ToHashSet();
+
+        foreach (var classRef in classRefs)
+        {
+            if (classRef >= 0 && classRef < enhancementClasses.Length)
+            {
+                var classId = enhancementClasses[classRef].ID;
+                if (classId > 0 && seen.Add(classId))
+                {
+                    ids.Add(classId);
+                }
+
+                continue;
+            }
+
+            if (enhancementClassIds.Contains(classRef) && seen.Add(classRef))
+            {
+                ids.Add(classRef);
+            }
+        }
+
+        return ids.ToArray();
+    }
+
+    private static bool TryResolveBoostPowerEnhancementLegality(
+        string canonicalFullName,
+        IPower midsPower,
+        OmniPowerDefinition scopedPower,
+        IReadOnlySet<string> categoryOnlyBoostPowerFullNames,
+        IReadOnlyDictionary<string, int[]> linkedBoostLegality,
+        IReadOnlyDictionary<string, int> enhancementClassLookup,
+        Enums.sEnhClass[] enhancementClasses,
+        out int[] resolved,
+        out string repairSource,
+        out string[] unresolved)
+    {
+        if (categoryOnlyBoostPowerFullNames.Contains(canonicalFullName))
+        {
+            resolved = Array.Empty<int>();
+            repairSource = "linked category-only enhancement";
+            unresolved = Array.Empty<string>();
+            return true;
+        }
+
+        if (linkedBoostLegality.TryGetValue(canonicalFullName, out var linked) && linked.Length > 0)
+        {
+            resolved = linked.ToArray();
+            repairSource = "linked enhancement";
+            unresolved = Array.Empty<string>();
+            return true;
+        }
+
+        var boostAllowed = scopedPower.BoostsAllowed.Count > 0
+            ? scopedPower.BoostsAllowed
+            : (midsPower.BoostsAllowed ?? Array.Empty<string>()).ToList();
+        var filtered = boostAllowed
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Where(value => !IsNonStatBoostPowerCompatibilityTag(value))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        var mapped = new List<int>();
+        var seen = new HashSet<int>();
+        var unresolvedLabels = new List<string>();
+        foreach (var boostAllowedLabel in filtered)
+        {
+            if (!TryResolvePowerBoostAllowedEnhancementClasses(
+                    boostAllowedLabel,
+                    enhancementClassLookup,
+                    enhancementClasses,
+                    out var mappedClassIds) ||
+                mappedClassIds.Length == 0)
+            {
+                unresolvedLabels.Add(boostAllowedLabel);
+                continue;
+            }
+
+            foreach (var classId in mappedClassIds)
+            {
+                if (seen.Add(classId))
+                {
+                    mapped.Add(classId);
+                }
+            }
+        }
+
+        unresolved = unresolvedLabels.ToArray();
+        if (mapped.Count > 0)
+        {
+            resolved = mapped.ToArray();
+            repairSource = "fallback concrete boost tags";
+            return true;
+        }
+
+        resolved = Array.Empty<int>();
+        repairSource = "unresolved";
+        return false;
+    }
+
+    private static bool IsNonStatBoostPowerCompatibilityTag(string boostAllowed)
+    {
+        var normalized = NormalizeLookupKey(boostAllowed);
+        return normalized == "enhancemultiple" || normalized.EndsWith("boost", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string FormatEnhancementLegalitySummary(
+        IReadOnlyCollection<int> classIds,
+        IReadOnlyDictionary<int, Enums.sEnhClass> enhancementClassesById)
+    {
+        if (classIds == null || classIds.Count == 0)
+        {
+            return "<empty>";
+        }
+
+        return string.Join(", ", classIds.Select(classId =>
+        {
+            if (enhancementClassesById.TryGetValue(classId, out var enhClass))
+            {
+                return $"{classId}:{enhClass.ClassID}";
+            }
+
+            return classId.ToString();
+        }));
+    }
+
+    private static IEnumerable<string> EnumeratePowerBoostAllowedLookupCandidates(string boostAllowed)
+    {
+        if (string.IsNullOrWhiteSpace(boostAllowed))
+        {
+            yield break;
+        }
+
+        yield return boostAllowed;
+
+        switch (NormalizeLookupKey(boostAllowed))
+        {
+            case "enhanceaccuracy":
+                yield return "Accuracy_Boost";
+                break;
+            case "reduceinterrupttime":
+                yield return "Interrupt_Boost";
+                break;
+            case "enhanceconfuse":
+                yield return "Confuse_Boost";
+                break;
+            case "enhancedamage":
+                yield return "Damage_Boost";
+                break;
+            case "enhancedefense":
+                yield return "Buff_Defense_Boost";
+                break;
+            case "enhancedefensedebuff":
+                yield return "Debuff_Defense_Boost";
+                break;
+            case "enhanceendurancemodification":
+                yield return "Recovery_Boost";
+                break;
+            case "reduceendurancecost":
+                yield return "EnduranceDiscount_Boost";
+                break;
+            case "enhancefear":
+                yield return "Fear_Boost";
+                break;
+            case "enhanceflyingspeed":
+                yield return "SpeedFlying_Boost";
+                break;
+            case "enhanceheal":
+                yield return "Heal_Boost";
+                break;
+            case "enhancehold":
+                yield return "Hold_Boost";
+                break;
+            case "enhanceimmobilization":
+                yield return "Immobilized_Boost";
+                break;
+            case "enhanceintangibility":
+                yield return "Intangible_Boost";
+                break;
+            case "enhancejump":
+                yield return "Jump_Boost";
+                break;
+            case "enhanceknockback":
+                yield return "Knockback_Boost";
+                break;
+            case "enhancerange":
+                yield return "Range_Boost";
+                break;
+            case "enhancerechargespeed":
+                yield return "Recharge_Boost";
+                break;
+            case "enhancedamageresistance":
+                yield return "Res_Damage_Boost";
+                break;
+            case "enhancerunningspeed":
+                yield return "SpeedRunning_Boost";
+                break;
+            case "enhancesleep":
+                yield return "Sleep_Boost";
+                break;
+            case "enhanceslowmovement":
+                yield return "Slow_Boost";
+                break;
+            case "enhancedisorient":
+                yield return "Stunned_Boost";
+                break;
+            case "enhancethreatduration":
+                yield return "Taunt_Boost";
+                break;
+            case "enhancetohitbuffs":
+                yield return "Buff_ToHit_Boost";
+                break;
+            case "enhancetohitdebuffs":
+                yield return "Debuff_ToHit_Boost";
+                break;
+            case "incarnatealphacapable":
+                yield return "Incarnate_Alpha_Boost";
+                break;
+            case "incarnatedestinycapable":
+                yield return "Incarnate_Destiny_Boost";
+                break;
+            case "incarnatehybridcapable":
+                yield return "Incarnate_Hybrid_Boost";
+                break;
+            case "incarnateinterfacecapable":
+                yield return "Incarnate_Interface_Boost";
+                break;
+            case "incarnatejudgementcapable":
+                yield return "Incarnate_Judgement_Boost";
+                break;
+            case "incarnatelorecapable":
+                yield return "Incarnate_Lore_Boost";
+                break;
+        }
+    }
+
+    private static int ResolveUsageTime(OmniPowerDefinition source)
+    {
+        return HasJsonValue(source.MaxToggleOnTimeValue)
+            ? source.MaxToggleOnTime
+            : source.UsageTime;
+    }
+
+    private static int ResolveNumberOfCharges(OmniPowerDefinition source)
+    {
+        if (source.NumberOfCharges > 0 || !HasJsonValue(source.MaxNumberOfChargesValue))
+        {
+            return source.NumberOfCharges;
+        }
+
+        return source.MaxNumberOfCharges;
+    }
+
+    private static bool TryMapAiReport(string value, out Enums.eNotify notify)
+    {
+        if (!string.IsNullOrWhiteSpace(value) &&
+            Enum.TryParse(value.Trim(), ignoreCase: true, out notify))
+        {
+            return true;
+        }
+
+        notify = Enums.eNotify.Always;
+        return false;
+    }
+
+    private static bool IsHoldCastThroughToken(string value)
+    {
+        return value.Equals("Hold", StringComparison.OrdinalIgnoreCase) ||
+               value.Equals("Held", StringComparison.OrdinalIgnoreCase) ||
+               value.Equals("kHeld", StringComparison.OrdinalIgnoreCase) ||
+               value.Contains("Hold", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool HasJsonValue(JToken? token)
+    {
+        return token is { Type: not JTokenType.Null };
+    }
+
+    private static void ApplyCanonicalPowerName(IPower power, string fullName)
+    {
+        power.FullName = fullName;
+        power.GroupName = GroupNamePart(fullName);
+        power.SetName = SetNamePart(fullName);
+    }
+
+    private static void ApplyCanonicalPowersetName(IPowerset powerset, string fullName)
+    {
+        powerset.FullName = fullName;
+        powerset.GroupName = GroupNamePart(fullName);
+        powerset.SetName = SetNamePart(fullName);
+    }
+
+    private static void ApplyPowerClassification(IPower power, OmniPowerClassification classification)
+    {
+        power.PowerType = classification.PowerType;
+        power.ClickBuff = classification.ClickBuff;
+        power.AlwaysToggle = classification.AlwaysToggle;
+        power.HiddenPower = classification.HiddenPower;
+        power.IncludeFlag = classification.IncludeFlag;
+        power.InherentType = classification.InherentType;
+    }
+
+    private static void TrackApplyClassification(
+        string fullName,
+        OmniPowerClassification classification,
+        bool priorClickBuff,
+        OmniApplyResult applyResult)
+    {
+        if (classification.HiddenPower)
+        {
+            applyResult.HiddenSupportPowers++;
+            applyResult.AddLimited(applyResult.HiddenSupportPowerDetails, classification.Summary(fullName));
+        }
+        else if (classification.Reasons.Any(r => r.Contains("visible gated", StringComparison.OrdinalIgnoreCase)))
+        {
+            applyResult.VisibleGatedPowers++;
+            applyResult.AddLimited(applyResult.VisibleGatedPowerDetails, classification.Summary(fullName));
+        }
+
+        if (classification.RedirectKind == OmniRedirectKind.ExecutionVariant)
+        {
+            applyResult.RedirectExecutionVariants++;
+            applyResult.AddLimited(applyResult.RedirectExecutionVariantDetails, classification.Summary(fullName));
+        }
+
+        if (priorClickBuff != classification.ClickBuff)
+        {
+            applyResult.ClickBuffClassificationChanges++;
+            applyResult.AddLimited(applyResult.ClickBuffClassificationChangeDetails,
+                $"{fullName}: ClickBuff {priorClickBuff} -> {classification.ClickBuff} ({string.Join("; ", classification.Reasons)})");
+        }
+
+        if (classification.ClassificationConfidence < 0.65f || classification.RedirectKind == OmniRedirectKind.Unknown)
+        {
+            applyResult.ManualClassificationReviews++;
+            applyResult.AddLimited(applyResult.ManualClassificationReviewDetails, classification.Summary(fullName));
+        }
+    }
+
+    private static void TrackApplyModes(
+        string fullName,
+        OmniPowerDefinition power,
+        OmniPowerClassification classification,
+        OmniApplyResult applyResult)
+    {
+        var requiredFlags = OmniModeMapper.ToFlags(power.ModesRequired, out var unknownRequired);
+        var disallowedFlags = OmniModeMapper.ToFlags(power.ModesDisallowed, out var unknownDisallowed);
+        if (requiredFlags != Enums.eModeFlags.None || disallowedFlags != Enums.eModeFlags.None)
+        {
+            applyResult.ModeFlagsAssigned++;
+            applyResult.AddLimited(applyResult.ModeFlagDetails,
+                $"{fullName}: required={requiredFlags}, disallowed={disallowedFlags}");
+        }
+
+        foreach (var mode in unknownRequired.Concat(unknownDisallowed).Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            applyResult.UnknownModesPreserved++;
+            applyResult.AddLimited(applyResult.UnknownModeDetails, $"{fullName}: {mode}");
+        }
+
+        if (classification.HiddenPower && power.ModesRequired.Count > 0)
+        {
+            applyResult.FormGatedPowersHidden++;
+            applyResult.AddLimited(applyResult.FormGatedPowerDetails, classification.Summary(fullName));
+        }
+
+        if (classification.InherentType == Enums.eGridType.Class && classification.IncludeFlag && !classification.HiddenPower)
+        {
+            applyResult.ClassInherentsImported++;
+            applyResult.AddLimited(applyResult.ClassInherentDetails, fullName);
+        }
+
+        if (IsSupportHeavyRebuildGroup(fullName))
+        {
+            applyResult.SupportHeavyPowersRecreated++;
+            TrackPetPowerApply(fullName, applyResult, "recreated",
+                $"{fullName}: support-heavy pet power recreated");
+        }
+    }
+
+    private sealed class PetImportManifest
+    {
+        public string Root { get; init; } = string.Empty;
+        public bool RootPresent { get; init; }
+        public List<PetPowersetManifest> Powersets { get; } = [];
+    }
+
+    private sealed class PetPowersetManifest
+    {
+        public string Root { get; init; } = string.Empty;
+        public string SourcePath { get; init; } = string.Empty;
+        public OmniPowersetDefinition Powerset { get; init; } = new();
+        public string CanonicalFullName { get; init; } = string.Empty;
+        public List<string> ExpectedPowerNames { get; init; } = [];
+        public Dictionary<string, OmniPowerDefinition> PowerFiles { get; init; } = new(StringComparer.OrdinalIgnoreCase);
+        public List<string> MissingPowerFiles { get; init; } = [];
+    }
+
+    private List<PetImportManifest> BuildPetImportManifest(string exportRoot, OmniApplyResult applyResult)
+    {
+        var manifests = new List<PetImportManifest>();
+        var powersRoot = Path.Combine(exportRoot, "powers");
+        foreach (var root in PetImportRoots)
+        {
+            var rootPath = Path.Combine(powersRoot, root);
+            var manifest = new PetImportManifest
+            {
+                Root = CanonicalizeOmniFullName(root),
+                RootPresent = Directory.Exists(rootPath)
+            };
+
+            if (!manifest.RootPresent)
+            {
+                applyResult.PetManifestRootsMissing++;
+                applyResult.AddLimited(applyResult.PetImportManifestDetails,
+                    $"{root}: root not present in export.");
+                manifests.Add(manifest);
+                continue;
+            }
+
+            applyResult.PetManifestRootsPresent++;
+            var indexFiles = Directory.EnumerateFiles(rootPath, "index.json", SearchOption.AllDirectories)
+                .Where(file => !Path.GetFullPath(file).Equals(
+                    Path.GetFullPath(Path.Combine(rootPath, "index.json")),
+                    StringComparison.OrdinalIgnoreCase))
+                .OrderBy(file => file, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            foreach (var indexFile in indexFiles)
+            {
+                var powerset = ReadJson<OmniPowersetDefinition>(indexFile);
+                if (powerset == null || string.IsNullOrWhiteSpace(powerset.FullName))
+                {
+                    continue;
+                }
+
+                var canonicalSet = CanonicalizeOmniFullName(powerset.FullName);
+                var setDirectory = Path.GetDirectoryName(indexFile) ?? rootPath;
+                var powerFiles = Directory.EnumerateFiles(setDirectory, "*.json", SearchOption.TopDirectoryOnly)
+                    .Where(file => !Path.GetFileName(file).Equals("index.json", StringComparison.OrdinalIgnoreCase))
+                    .Select(ReadJson<OmniPowerDefinition>)
+                    .OfType<OmniPowerDefinition>()
+                    .Where(power => !string.IsNullOrWhiteSpace(power.FullName))
+                    .GroupBy(power => CanonicalizeOmniFullName(power.FullName), StringComparer.OrdinalIgnoreCase)
+                    .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+
+                var expected = powerset.PowerNames
+                    .Concat(powerset.Powers.Select(power => power.Name))
+                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                    .Select(CanonicalizeOmniFullName)
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+                if (expected.Count == 0)
+                {
+                    expected = powerFiles.Keys.OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToList();
+                }
+
+                var missing = expected
+                    .Where(powerName => !powerFiles.ContainsKey(powerName))
+                    .OrderBy(powerName => powerName, StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+
+                var powersetManifest = new PetPowersetManifest
+                {
+                    Root = CanonicalizeOmniFullName(root),
+                    SourcePath = Path.GetRelativePath(powersRoot, indexFile),
+                    Powerset = powerset,
+                    CanonicalFullName = canonicalSet,
+                    ExpectedPowerNames = expected,
+                    PowerFiles = powerFiles,
+                    MissingPowerFiles = missing
+                };
+
+                manifest.Powersets.Add(powersetManifest);
+                applyResult.PetManifestPowersets++;
+                applyResult.PetManifestExpectedPowers += expected.Count;
+                applyResult.PetManifestPowerFiles += powerFiles.Count;
+                applyResult.PetManifestMissingPowerFiles += missing.Count;
+                applyResult.AddLimited(applyResult.PetImportManifestDetails,
+                    $"{powersetManifest.SourcePath}: expected={expected.Count}, files={powerFiles.Count}, missing files={missing.Count}");
+            }
+
+            manifests.Add(manifest);
+        }
+
+        return manifests;
+    }
+
+    private void ScanPetImportManifest(string exportRoot, OmniImportReport report)
+    {
+        var powersRoot = Path.Combine(exportRoot, "powers");
+        foreach (var root in PetImportRoots)
+        {
+            var rootPath = Path.Combine(powersRoot, root);
+            if (!Directory.Exists(rootPath))
+            {
+                report.PetManifestRootsMissing++;
+                report.AddLimited(report.PetImportManifestDetails, $"{root}: root not present in export.");
+                continue;
+            }
+
+            report.PetManifestRootsPresent++;
+            var indexFiles = Directory.EnumerateFiles(rootPath, "index.json", SearchOption.AllDirectories)
+                .Where(file => !Path.GetFullPath(file).Equals(
+                    Path.GetFullPath(Path.Combine(rootPath, "index.json")),
+                    StringComparison.OrdinalIgnoreCase))
+                .OrderBy(file => file, StringComparer.OrdinalIgnoreCase);
+
+            foreach (var indexFile in indexFiles)
+            {
+                var powerset = ReadJson<OmniPowersetDefinition>(indexFile);
+                if (powerset == null || string.IsNullOrWhiteSpace(powerset.FullName))
+                {
+                    continue;
+                }
+
+                var setDirectory = Path.GetDirectoryName(indexFile) ?? rootPath;
+                var powerFiles = Directory.EnumerateFiles(setDirectory, "*.json", SearchOption.TopDirectoryOnly)
+                    .Where(file => !Path.GetFileName(file).Equals("index.json", StringComparison.OrdinalIgnoreCase))
+                    .Select(ReadJson<OmniPowerDefinition>)
+                    .OfType<OmniPowerDefinition>()
+                    .Where(power => !string.IsNullOrWhiteSpace(power.FullName))
+                    .Select(power => CanonicalizeOmniFullName(power.FullName))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+                var expected = powerset.PowerNames
+                    .Concat(powerset.Powers.Select(power => power.Name))
+                    .Where(name => !string.IsNullOrWhiteSpace(name))
+                    .Select(CanonicalizeOmniFullName)
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList();
+                if (expected.Count == 0)
+                {
+                    expected = powerFiles.OrderBy(name => name, StringComparer.OrdinalIgnoreCase).ToList();
+                }
+
+                var missing = expected.Count(powerName => !powerFiles.Contains(powerName));
+                report.PetManifestPowersets++;
+                report.PetManifestExpectedPowers += expected.Count;
+                report.PetManifestPowerFiles += powerFiles.Count;
+                report.PetManifestMissingPowerFiles += missing;
+                report.AddLimited(report.PetImportManifestDetails,
+                    $"{Path.GetRelativePath(powersRoot, indexFile)}: expected={expected.Count}, files={powerFiles.Count}, missing files={missing}");
+            }
+        }
+    }
+
+    private static void UpsertPetSourceOfTruth(
+        IDatabase database,
+        IReadOnlyCollection<PetImportManifest> petManifests,
+        IReadOnlyDictionary<string, OmniPowerDefinition> scopedPowerLookup,
+        IDictionary<string, IPower> midsPowers,
+        IDictionary<string, OmniPowerClassification> classifications,
+        OmniPowerClassifier classifier,
+        OmniApplyResult applyResult,
+        ref int nextStaticIndex)
+    {
+        var powersetsByFullName = (database.Powersets ?? [])
+            .Where(powerset => powerset != null && !string.IsNullOrWhiteSpace(powerset.FullName))
+            .GroupBy(powerset => CanonicalizeOmniFullName(powerset.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+        var existingPowersForCompositeMatching = (database.Power ?? [])
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .ToList();
+        var consumedCompositeMatches = new List<IPower>();
+
+        foreach (var powersetManifest in petManifests.SelectMany(manifest => manifest.Powersets))
+        {
+            var setFullName = powersetManifest.CanonicalFullName;
+            if (!powersetsByFullName.TryGetValue(setFullName, out var midsPowerset) &&
+                !TryFindPowersetIdentityMatch(database, powersetManifest.Powerset, Enums.ePowerSetType.Pet, out midsPowerset))
+            {
+                midsPowerset = CreatePowerset(powersetManifest.Powerset);
+                ApplyCanonicalPowersetName(midsPowerset, setFullName);
+                midsPowerset.SetType = Enums.ePowerSetType.Pet;
+                var powersets = database.Powersets ?? [];
+                Array.Resize(ref powersets, powersets.Length + 1);
+                powersets[^1] = midsPowerset;
+                database.Powersets = powersets;
+                powersetsByFullName[setFullName] = midsPowerset;
+                applyResult.PowersetsCreated++;
+                applyResult.PetSourcePowersetsCreated++;
+                applyResult.AddLimited(applyResult.CreatedPowersets, FormatAliasForReport(powersetManifest.Powerset.FullName, setFullName));
+                applyResult.AddLimited(applyResult.PetSourceOfTruthUpsertDetails,
+                    $"{setFullName}: created pet powerset from {powersetManifest.SourcePath}");
+            }
+            else
+            {
+                powersetsByFullName[setFullName] = midsPowerset;
+                applyResult.PowersetsMatched++;
+                applyResult.PetSourcePowersetsMatched++;
+            }
+
+            ApplyPowersetMetadata(midsPowerset, powersetManifest.Powerset, Enums.ePowerSetType.Pet, preserveExistingValues: true);
+            ApplyCanonicalPowersetName(midsPowerset, setFullName);
+            midsPowerset.SetType = Enums.ePowerSetType.Pet;
+            midsPowerset.IsModified = true;
+            applyResult.PowersetsUpdated++;
+            applyResult.PetSourcePowersetsUpdated++;
+
+            foreach (var missingPower in powersetManifest.MissingPowerFiles)
+            {
+                applyResult.PetSourceIntegrityFailures++;
+                applyResult.AddLimited(applyResult.PetLinkIntegrityFailureDetails,
+                    $"{setFullName}: expected power listed in index but no JSON file was found: {missingPower}");
+            }
+
+            foreach (var expectedPowerName in powersetManifest.ExpectedPowerNames)
+            {
+                if (!powersetManifest.PowerFiles.TryGetValue(expectedPowerName, out var omniPower))
+                {
+                    continue;
+                }
+
+                var midsFullName = CanonicalizeOmniFullName(omniPower.FullName);
+                var localPowersetLookup = new Dictionary<string, OmniPowersetDefinition>(StringComparer.OrdinalIgnoreCase)
+                {
+                    [setFullName] = powersetManifest.Powerset
+                };
+                var compositeCandidates = existingPowersForCompositeMatching
+                    .Where(power => !consumedCompositeMatches.Any(consumed => ReferenceEquals(consumed, power)))
+                    .ToList();
+                if (!midsPowers.TryGetValue(midsFullName, out var midsPower) &&
+                    !TryFindCompositePowerIdentityMatch(compositeCandidates, omniPower, midsFullName, localPowersetLookup, out midsPower))
+                {
+                    midsPower = CreatePower(database, omniPower, nextStaticIndex++);
+                    ApplyCanonicalPowerName(midsPower, midsFullName);
+                    midsPowers[midsFullName] = midsPower;
+                    applyResult.PowersCreated++;
+                    applyResult.PetSourcePowersCreated++;
+                    TrackPetPowerApply(midsFullName, applyResult, "created",
+                        $"{midsFullName}: created from pet source-of-truth manifest");
+                    applyResult.AddLimited(applyResult.CreatedPowers, FormatAliasForReport(omniPower.FullName, midsFullName));
+                }
+                else
+                {
+                    midsPowers[midsFullName] = midsPower;
+                    if (!consumedCompositeMatches.Any(consumed => ReferenceEquals(consumed, midsPower)))
+                    {
+                        consumedCompositeMatches.Add(midsPower);
+                    }
+
+                    applyResult.PowersMatched++;
+                    applyResult.PetSourcePowersMatched++;
+                    TrackPetPowerApply(midsFullName, applyResult, "matched",
+                        $"{midsFullName}: matched from pet source-of-truth manifest");
+                }
+
+                ApplyPetPowerFromSource(
+                    midsPower,
+                    omniPower,
+                    midsFullName,
+                    scopedPowerLookup,
+                    classifications,
+                    classifier,
+                    applyResult);
+            }
+        }
+    }
+
+    private static void ApplyPetPowerFromSource(
+        IPower midsPower,
+        OmniPowerDefinition omniPower,
+        string midsFullName,
+        IReadOnlyDictionary<string, OmniPowerDefinition> scopedPowerLookup,
+        IDictionary<string, OmniPowerClassification> classifications,
+        OmniPowerClassifier classifier,
+        OmniApplyResult applyResult)
+    {
+        var priorClickBuff = midsPower.ClickBuff;
+        var priorAttackTypes = midsPower.AttackTypes;
+        var classification = classifier.Classify(omniPower, scopedPowerLookup);
+        ApplyPowerMetadata(midsPower, omniPower);
+        TrackApplyPowerFieldCoverage(omniPower, applyResult);
+        ApplyCanonicalPowerName(midsPower, midsFullName);
+        ApplyPowerClassification(midsPower, classification);
+        TrackApplyClassification(midsFullName, classification, priorClickBuff, applyResult);
+        TrackApplyAttackVectors(midsFullName, priorAttackTypes, midsPower.AttackTypes, omniPower, applyResult);
+        TrackApplyModes(midsFullName, omniPower, classification, applyResult);
+
+        var effects = OmniMidsMapper.FlattenEffects(omniPower, applyResult).Cast<IEffect>().ToList();
+        var nextUniqueId = effects.Count == 0 ? 1 : effects.Max(effect => effect.UniqueID) + 1;
+        foreach (var redirect in omniPower.Redirects.Where(redirect => !string.IsNullOrWhiteSpace(redirect.Name)))
+        {
+            var redirectEffect = OmniMidsMapper.CreatePowerRedirectEffect(omniPower.FullName, redirect);
+            redirectEffect.UniqueID = nextUniqueId++;
+            redirectEffect.ActiveConditionals = redirectEffect.AdvancedConditions.ToLegacyActiveConditionals();
+            effects.Add(redirectEffect);
+            applyResult.RedirectEffectsAdded++;
+        }
+
+        foreach (var effect in effects)
+        {
+            effect.PowerFullName = midsPower.FullName;
+            effect.ActiveConditionals = effect.AdvancedConditions.ToLegacyActiveConditionals();
+        }
+
+        midsPower.Effects = effects.ToArray();
+        applyResult.EffectsReplaced += effects.Count;
+
+        if (string.IsNullOrWhiteSpace(omniPower.Requires))
+        {
+            midsPower.AdvancedRequirements = new AdvancedConditionSet();
+            midsPower.Requires = midsPower.AdvancedRequirements.ToLegacyRequirement();
+            applyResult.RequirementsUpdated++;
+        }
+        else if (OmniExpressionConverter.TryConvertPowerRequirement(CanonicalizeOmniFullName(omniPower.Requires), out var requirements))
+        {
+            midsPower.AdvancedRequirements = requirements;
+            midsPower.Requires = requirements.ToLegacyRequirement();
+            applyResult.RequirementsUpdated++;
+        }
+        else
+        {
+            applyResult.RequirementsSkippedUnsupported++;
+            applyResult.AddLimited(applyResult.RequirementSkips,
+                $"{FormatAliasForReport(omniPower.FullName, midsFullName)}: {omniPower.Requires}");
+        }
+
+        midsPower.IsModified = true;
+        classifications[midsFullName] = classification;
+        applyResult.PowersUpdated++;
+        applyResult.PetSourcePowersUpdated++;
+        TrackPetPowerApply(midsFullName, applyResult, "updated",
+            $"{midsFullName}: updated from pet source-of-truth manifest");
+        applyResult.AddLimited(applyResult.UpdatedPowers, FormatAliasForReport(omniPower.FullName, midsFullName));
+        applyResult.AddLimited(applyResult.PetSourceOfTruthUpsertDetails,
+            $"{midsFullName}: updated; effects={midsPower.Effects.Length}, hidden={midsPower.HiddenPower}, type={midsPower.PowerType}");
+    }
+
+    private static void TrackPetPowerApply(
+        string fullName,
+        OmniApplyResult applyResult,
+        string action,
+        string detail)
+    {
+        if (!IsPetPowerFullName(fullName))
+        {
+            return;
+        }
+
+        var root = GroupNamePart(fullName);
+        switch (action)
+        {
+            case "created":
+                applyResult.PetPowersCreated++;
+                IncrementCount(applyResult.PetPowersCreatedByRoot, root);
+                break;
+            case "matched":
+                applyResult.PetPowersMatched++;
+                IncrementCount(applyResult.PetPowersMatchedByRoot, root);
+                break;
+            case "updated":
+                applyResult.PetPowersUpdated++;
+                IncrementCount(applyResult.PetPowersUpdatedByRoot, root);
+                break;
+            case "skipped":
+                applyResult.PetPowersSkipped++;
+                IncrementCount(applyResult.PetPowersSkippedByRoot, root);
+                break;
+            case "recreated":
+                applyResult.PetPowersRecreated++;
+                IncrementCount(applyResult.PetPowersRecreatedByRoot, root);
+                break;
+        }
+
+        applyResult.AddLimited(applyResult.PetImportDetails, detail);
+    }
+
+    private static void TrackEpicPowersetApply(
+        string fullName,
+        OmniApplyResult applyResult,
+        string action,
+        string detail)
+    {
+        if (!IsEpicPowersetFullName(fullName))
+        {
+            return;
+        }
+
+        switch (action)
+        {
+            case "created":
+                applyResult.EpicPowersetsCreated++;
+                break;
+            case "matched":
+                applyResult.EpicPowersetsMatched++;
+                break;
+            case "updated":
+                applyResult.EpicPowersetsUpdated++;
+                break;
+        }
+
+        applyResult.AddLimited(applyResult.EpicImportDetails, detail);
+    }
+
+    private static void TrackEpicPowerApply(
+        string fullName,
+        OmniApplyResult applyResult,
+        string action,
+        string detail)
+    {
+        if (!IsEpicPowerFullName(fullName))
+        {
+            return;
+        }
+
+        switch (action)
+        {
+            case "created":
+                applyResult.EpicPowersCreated++;
+                break;
+            case "matched":
+                applyResult.EpicPowersMatched++;
+                break;
+            case "updated":
+                applyResult.EpicPowersUpdated++;
+                break;
+            case "skipped":
+                applyResult.EpicPowersSkipped++;
+                break;
+        }
+
+        applyResult.AddLimited(applyResult.EpicImportDetails, detail);
+    }
+
+    private static Dictionary<string, OmniPowerDefinition> BuildScopedPowerLookup(IEnumerable<OmniPowerDefinition> powers)
+    {
+        var lookup = new Dictionary<string, OmniPowerDefinition>(StringComparer.OrdinalIgnoreCase);
+        foreach (var power in powers.Where(p => !string.IsNullOrWhiteSpace(p.FullName)))
+        {
+            AddLookup(power.FullName, power);
+            AddLookup(CanonicalizeOmniFullName(power.FullName), power);
+        }
+
+        return lookup;
+
+        void AddLookup(string key, OmniPowerDefinition power)
+        {
+            if (!string.IsNullOrWhiteSpace(key) && !lookup.ContainsKey(key))
+            {
+                lookup[key] = power;
+            }
+        }
+    }
+
+    private static void TrackEpicPowersetScope(
+        OmniPowersetDefinition powerset,
+        string canonicalFullName,
+        OmniApplyResult applyResult)
+    {
+        if (!IsEpicPowersetFullName(canonicalFullName))
+        {
+            return;
+        }
+
+        var classKeys = EpicClassKeys(canonicalFullName, powerset.Archetypes, string.Empty);
+        applyResult.AddLimited(applyResult.EpicPowersetIdentityDetails,
+            $"{FormatAliasForReport(powerset.FullName, canonicalFullName)}: display={powerset.DisplayName}, internal={powerset.Name}, category={powerset.PowerCategory}, archetypes={string.Join(", ", powerset.Archetypes)}, classes={FormatClassKeys(classKeys)}");
+        if (classKeys.Count > 0)
+        {
+            applyResult.AddLimited(applyResult.EpicPowersetPrefixSuffixCandidates,
+                $"{canonicalFullName}: class={FormatClassKeys(classKeys)}, family={EpicFamilyName(SetNamePart(canonicalFullName), classKeys)}");
+        }
+    }
+
+    private static void TrackEpicImportLinkAudit(
+        IDatabase database,
+        IReadOnlyCollection<OmniPowerDefinition> scopedPowers,
+        IReadOnlyCollection<OmniPowersetDefinition> scopedPowersets,
+        OmniApplyResult applyResult)
+    {
+        var powers = database.Power ?? [];
+        var powersets = database.Powersets ?? [];
+        var powersByName = powers
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .GroupBy(power => CanonicalizeOmniFullName(power.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+        var powersetsByName = powersets
+            .Where(powerset => powerset != null && !string.IsNullOrWhiteSpace(powerset.FullName))
+            .GroupBy(powerset => CanonicalizeOmniFullName(powerset.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+
+        foreach (var scopedPowerset in scopedPowersets.Where(powerset => IsEpicPowersetFullName(powerset.FullName)))
+        {
+            var canonicalFullName = CanonicalizeOmniFullName(scopedPowerset.FullName);
+            if (!powersetsByName.TryGetValue(canonicalFullName, out var midsPowerset) || midsPowerset == null)
+            {
+                applyResult.AddLimited(applyResult.EpicPowersetIdentityDetails,
+                    $"{scopedPowerset.FullName}: scoped Epic powerset not found after import; expected {canonicalFullName}");
+                continue;
+            }
+
+            var linkedCount = midsPowerset.Powers?.Length ?? 0;
+            applyResult.AddLimited(applyResult.EpicPowersetIdentityDetails,
+                $"{FormatAliasForReport(scopedPowerset.FullName, canonicalFullName)}: final {DescribePowersetIdentity(midsPowerset)}, linkedPowers={linkedCount}");
+            if (linkedCount == 0)
+            {
+                applyResult.EpicPowersetsWithZeroLinkedPowers++;
+                applyResult.AddLimited(applyResult.EpicPowersetsWithZeroLinkedPowersDetails,
+                    $"{canonicalFullName}: final {DescribePowersetIdentity(midsPowerset)}");
+            }
+        }
+
+        foreach (var collisionGroup in powersets
+                     .Where(powerset => powerset != null &&
+                                        powerset.SetType == Enums.ePowerSetType.Ancillary &&
+                                        NormalizeName(powerset.GroupName).Equals("epic", StringComparison.OrdinalIgnoreCase) &&
+                                        !string.IsNullOrWhiteSpace(powerset.DisplayName))
+                     .GroupBy(powerset => NormalizeName(powerset.DisplayName), StringComparer.OrdinalIgnoreCase)
+                     .Where(group => group.Count() > 1))
+        {
+            applyResult.AddLimited(applyResult.EpicPowersetDisplayNameCollisions,
+                $"{collisionGroup.First().DisplayName}: {string.Join(", ", collisionGroup.Select(powerset => $"{powerset.FullName}[{FormatEffectivePowersetClasses(powerset)}]"))}");
+        }
+
+        foreach (var omniPower in scopedPowers.Where(power => IsEpicPowerFullName(power.FullName)))
+        {
+            var canonicalFullName = CanonicalizeOmniFullName(omniPower.FullName);
+            var canonicalPowerset = CanonicalizeOmniFullName(string.IsNullOrWhiteSpace(omniPower.Powerset)
+                ? FullSetName(canonicalFullName)
+                : omniPower.Powerset);
+
+            if (!powersByName.TryGetValue(canonicalFullName, out var midsPower) || midsPower == null)
+            {
+                applyResult.EpicPowersMissingAfterImport++;
+                applyResult.AddLimited(applyResult.EpicPowersMissingAfterImportDetails,
+                    $"{omniPower.FullName}: powerset={omniPower.Powerset}, canonical={canonicalFullName}");
+                continue;
+            }
+
+            var powersetExists = powersetsByName.TryGetValue(canonicalPowerset, out var owningPowerset);
+            if (!powersetExists || owningPowerset == null)
+            {
+                applyResult.EpicPowersWithMissingPowerset++;
+                applyResult.AddLimited(applyResult.EpicPowersWithMissingPowersetDetails,
+                    FormatEpicPowerAuditLine(omniPower, canonicalFullName, canonicalPowerset, midsPower, null, false));
+                continue;
+            }
+
+            if (midsPower.PowerSetID < 0)
+            {
+                applyResult.EpicPowersWithInvalidPowersetId++;
+                applyResult.AddLimited(applyResult.EpicPowersWithInvalidPowersetIdDetails,
+                    FormatEpicPowerAuditLine(omniPower, canonicalFullName, canonicalPowerset, midsPower, owningPowerset, false));
+                continue;
+            }
+
+            var inPowersetArray = owningPowerset.Powers.Any(power =>
+                power != null &&
+                string.Equals(CanonicalizeOmniFullName(power.FullName), canonicalFullName, StringComparison.OrdinalIgnoreCase));
+            if (!inPowersetArray)
+            {
+                applyResult.EpicPowersNotInPowersetArray++;
+                applyResult.AddLimited(applyResult.EpicPowersNotInPowersetArrayDetails,
+                    FormatEpicPowerAuditLine(omniPower, canonicalFullName, canonicalPowerset, midsPower, owningPowerset, false));
+                continue;
+            }
+
+            if (midsPower.HiddenPower)
+            {
+                applyResult.EpicPowersHiddenInDbEditor++;
+                applyResult.AddLimited(applyResult.EpicPowersHiddenInDbEditorDetails,
+                    FormatEpicPowerAuditLine(omniPower, canonicalFullName, canonicalPowerset, midsPower, owningPowerset, true));
+            }
+
+            applyResult.EpicPowersLinkedAfterMatchIds++;
+        }
+
+        applyResult.AddLimited(applyResult.EpicImportDetails,
+            $"Epic link audit: linked={applyResult.EpicPowersLinkedAfterMatchIds}, zero powersets={applyResult.EpicPowersetsWithZeroLinkedPowers}, missing={applyResult.EpicPowersMissingAfterImport}, missing powerset={applyResult.EpicPowersWithMissingPowerset}, invalid PowerSetID={applyResult.EpicPowersWithInvalidPowersetId}, not in powerset array={applyResult.EpicPowersNotInPowersetArray}, hidden={applyResult.EpicPowersHiddenInDbEditor}");
+    }
+
+    private static string FormatEffectivePowersetClasses(IPowerset powerset)
+    {
+        var classKeys = EpicClassKeys(powerset.FullName, powerset.GetArchetypes(), powerset.ATClass);
+        return classKeys.Count == 0 ? powerset.ATClass : FormatClassKeys(classKeys);
+    }
+
+    private static string FormatEpicPowerAuditLine(
+        OmniPowerDefinition omniPower,
+        string canonicalFullName,
+        string canonicalPowerset,
+        IPower midsPower,
+        IPowerset? owningPowerset,
+        bool inPowersetArray)
+    {
+        return $"{omniPower.FullName}: powerset={omniPower.Powerset}, canonical={canonicalFullName}, canonicalPowerset={canonicalPowerset}, final={DescribePowerIdentity(midsPower)}, owner={(owningPowerset == null ? "<missing>" : DescribePowersetIdentity(owningPowerset))}, inPowersetArray={inPowersetArray}";
+    }
+
+    private static void RebuildSupportHeavyGroups(IDatabase database, OmniApplyResult applyResult)
+    {
+        var powers = database.Power ?? [];
+        var keptPowers = powers
+            .Where(power => power == null ||
+                            !IsSupportHeavyRebuildGroup(power.FullName) ||
+                            IsPlannerControlInherent(power))
+            .ToArray();
+        applyResult.SupportPowersRemoved = powers.Length - keptPowers.Length;
+        foreach (var power in keptPowers.Where(IsPlannerControlInherent))
+        {
+            applyResult.PlannerInherentsPreserved++;
+            applyResult.AddLimited(applyResult.PlannerInherentDetails, power.FullName);
+        }
+
+        database.Power = keptPowers;
+
+        var powersets = database.Powersets ?? [];
+        var keptPowersets = powersets
+            .Where(powerset => powerset == null || !IsSupportHeavyRebuildGroup(powerset.FullName))
+            .ToArray();
+        applyResult.SupportPowersetsRemoved = powersets.Length - keptPowersets.Length;
+        database.Powersets = keptPowersets;
+    }
+
+    private static void RemoveExcludedOmniContent(IDatabase database, OmniApplyResult applyResult)
+    {
+        var powers = database.Power ?? [];
+        var keptPowers = powers
+            .Where(power => power == null ||
+                            !OmniImportScope.IsExcludedPowerset(CanonicalizeOmniFullName(power.FullSetName)))
+            .ToArray();
+        applyResult.ExcludedPowersRemoved = powers.Length - keptPowers.Length;
+        foreach (var power in powers.Where(power =>
+                     power != null &&
+                     OmniImportScope.IsExcludedPowerset(CanonicalizeOmniFullName(power.FullSetName))))
+        {
+            applyResult.AddLimited(applyResult.ExcludedContentRemovalDetails,
+                $"{power.FullName}: removed because {power.FullSetName} is excluded from Homecoming import.");
+        }
+
+        database.Power = keptPowers;
+
+        var powersets = database.Powersets ?? [];
+        var keptPowersets = powersets
+            .Where(powerset => powerset == null ||
+                               !OmniImportScope.IsExcludedPowerset(CanonicalizeOmniFullName(powerset.FullName)))
+            .ToArray();
+        applyResult.ExcludedPowersetsRemoved = powersets.Length - keptPowersets.Length;
+        foreach (var powerset in powersets.Where(powerset =>
+                     powerset != null &&
+                     OmniImportScope.IsExcludedPowerset(CanonicalizeOmniFullName(powerset.FullName))))
+        {
+            applyResult.AddLimited(applyResult.ExcludedContentRemovalDetails,
+                $"{powerset.FullName}: removed because the powerset is excluded from Homecoming import.");
+        }
+
+        database.Powersets = keptPowersets;
+    }
+
+    private static bool IsSupportHeavyRebuildGroup(string fullName)
+    {
+        return NormalizeName(GroupNamePart(fullName)) is
+            "inherent" or
+            "pets" or
+            "temporarypowers" or
+            "incarnate" or
+            "incarnatepets" or
+            "kheldianpets" or
+            "mastermindpets" or
+            "villainpets";
+    }
+
+    private static bool IsPlannerControlInherent(IPower? power)
+    {
+        if (power == null || !string.Equals(GroupNamePart(power.FullName), "Inherent", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return TryGetPlannerModeFromPowerName(power, out var mode) && IsGlobalPlannerControlMode(mode);
+    }
+
+    private static readonly HashSet<PlannerMode> GlobalPlannerControlModes =
+    [
+        PlannerMode.FastSnipe,
+        PlannerMode.Defiance,
+        PlannerMode.Containment,
+        PlannerMode.CriticalHit,
+        PlannerMode.Domination,
+        PlannerMode.Scourge,
+        PlannerMode.Assassination
+    ];
+
+    private static void EnsurePlannerModeBindings(IDatabase database, OmniApplyResult applyResult)
+    {
+        var powers = database.Power ?? [];
+        var discoveredModes = DiscoverPlannerModes(powers, applyResult);
+        if (discoveredModes.Count == 0)
+        {
+            return;
+        }
+
+        var powersByName = powers
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .GroupBy(power => power.FullName, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+
+        var nextStaticIndex = powers
+            .Where(power => power != null)
+            .Select(power => power.StaticIndex)
+            .DefaultIfEmpty(-2)
+            .Max() + 1;
+
+        foreach (var mode in discoveredModes.OrderBy(mode => PlannerModeMapper.ToCanonicalName(mode), StringComparer.OrdinalIgnoreCase))
+        {
+            if (!IsGlobalPlannerControlMode(mode))
+            {
+                continue;
+            }
+
+            var powerName = PlannerModeMapper.ToPowerName(mode);
+            var fullName = $"Inherent.Inherent.{powerName}";
+            var createdPower = false;
+            if (!powersByName.TryGetValue(fullName, out var power))
+            {
+                power = CreateSyntheticPlannerPower(mode, nextStaticIndex++);
+                Array.Resize(ref powers, powers.Length + 1);
+                powers[^1] = power;
+                powersByName[power.FullName] = power;
+                applyResult.SyntheticPlannerInherentsCreated++;
+                createdPower = true;
+            }
+
+            var inherentType = GetPlannerModeInherentType(mode, power);
+            power.IncludeFlag = true;
+            power.HiddenPower = false;
+            power.InherentType = inherentType;
+            power.IsModified = true;
+            applyResult.AddLimited(applyResult.PlannerModeDetails,
+                $"{power.FullName}: planner control {PlannerModeMapper.ToCanonicalName(mode)}, InherentType={inherentType}");
+            if (createdPower)
+            {
+                applyResult.AddLimited(applyResult.SyntheticPlannerInherentDetails,
+                    $"{power.FullName}: InherentType={inherentType}");
+            }
+
+            AddPlannerModePayload(power, mode, applyResult);
+        }
+
+        database.Power = powers;
+    }
+
+    private static HashSet<PlannerMode> DiscoverPlannerModes(IEnumerable<IPower?> powers, OmniApplyResult applyResult)
+    {
+        var discovered = new HashSet<PlannerMode>();
+        foreach (var power in powers.Where(power => power != null))
+        {
+            if (TryGetPlannerModeFromPowerName(power!, out var powerNameMode))
+            {
+                AddDiscovered(powerNameMode, $"{power.FullName}: planner control power");
+            }
+
+            foreach (var effect in power.Effects ?? [])
+            {
+                if (effect == null)
+                {
+                    continue;
+                }
+
+                if (effect.EffectType is Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode &&
+                    PlannerModeMapper.TryGetPlannerMode(effect.ModeName, out var effectMode))
+                {
+                    AddDiscovered(effectMode, $"{power.FullName}: {effect.EffectType} {effect.ModeName}");
+                }
+
+                if (TryMapSpecialCaseToPlannerMode(effect.SpecialCase, out var bridgedMode))
+                {
+                    applyResult.SpecialCaseCompatibilityBridges++;
+                    applyResult.AddLimited(applyResult.SpecialCaseCompatibilityBridgeDetails,
+                        $"{power.FullName}: {effect.SpecialCase} -> {PlannerModeMapper.ToCanonicalName(bridgedMode)}");
+                    AddDiscovered(bridgedMode, $"{power.FullName}: legacy SpecialCase {effect.SpecialCase}");
+                }
+
+                foreach (var row in effect.AdvancedConditions?.Rows ?? [])
+                {
+                    if (row.Kind == AdvancedConditionKind.SourceMode &&
+                        row.EvaluationMode == AdvancedConditionEvaluationMode.BuildEvaluated &&
+                        OmniModeMapper.TryGetPlannerMode(row.Subject, out var conditionMode))
+                    {
+                        AddDiscovered(conditionMode, $"{power.FullName}: condition {row.Subject}");
+                    }
+                }
+            }
+        }
+
+        return discovered;
+
+        void AddDiscovered(PlannerMode mode, string detail)
+        {
+            if (mode == PlannerMode.None)
+            {
+                return;
+            }
+
+            if (discovered.Add(mode))
+            {
+                applyResult.PlannerModesDiscovered++;
+            }
+
+            applyResult.AddLimited(applyResult.PlannerModeDetails, detail);
+        }
+    }
+
+    private static bool TryGetPlannerModeFromPowerName(IPower power, out PlannerMode mode)
+    {
+        return PlannerModeMapper.TryGetPlannerMode(power.PowerName, out mode) ||
+               PlannerModeMapper.TryGetPlannerMode(LastNamePart(power.FullName), out mode);
+    }
+
+    private static bool IsGlobalPlannerControlMode(PlannerMode mode)
+    {
+        return GlobalPlannerControlModes.Contains(mode);
+    }
+
+    private static Enums.eGridType GetPlannerModeInherentType(PlannerMode mode, IPower? power)
+    {
+        if (power?.InherentType == Enums.eGridType.Class)
+        {
+            return Enums.eGridType.Class;
+        }
+
+        return IsClassPlannerControlMode(mode)
+            ? Enums.eGridType.Class
+            : Enums.eGridType.Power;
+    }
+
+    private static bool IsClassPlannerControlMode(PlannerMode mode)
+    {
+        return mode is PlannerMode.Defiance or
+            PlannerMode.Containment or
+            PlannerMode.Domination or
+            PlannerMode.Scourge or
+            PlannerMode.CriticalHit or
+            PlannerMode.Assassination;
+    }
+
+    private static Power CreateSyntheticPlannerPower(PlannerMode mode, int staticIndex)
+    {
+        var powerName = PlannerModeMapper.ToPowerName(mode);
+        var displayName = PlannerModeMapper.ToDisplayName(mode);
+        return new Power
+        {
+            FullName = $"Inherent.Inherent.{powerName}",
+            GroupName = "Inherent",
+            SetName = "Inherent",
+            PowerName = powerName,
+            DisplayName = displayName,
+            DescShort = $"Planner toggle for {displayName}.",
+            DescLong = $"Enables Mids planner effects that depend on {displayName}.",
+            PowerType = Enums.ePowerType.Auto_,
+            IncludeFlag = true,
+            HiddenPower = false,
+            InherentType = GetPlannerModeInherentType(mode, null),
+            Available = 1,
+            Level = 1,
+            StaticIndex = staticIndex,
+            IsNew = true,
+            IsModified = true,
+            Effects = []
+        };
+    }
+
+    private static void AddPlannerModePayload(IPower power, PlannerMode mode, OmniApplyResult applyResult)
+    {
+        var modeName = PlannerModeMapper.ToCanonicalName(mode);
+        if (string.IsNullOrWhiteSpace(modeName))
+        {
+            return;
+        }
+
+        if ((power.Effects ?? []).Any(effect =>
+                effect is { EffectType: Enums.eEffectType.SetMode } &&
+                PlannerModeMapper.TryGetPlannerMode(effect.ModeName, out var existingMode) &&
+                existingMode == mode))
+        {
+            return;
+        }
+
+        var effects = power.Effects ?? [];
+        var nextUniqueId = effects
+            .Where(effect => effect != null)
+            .Select(effect => effect.UniqueID)
+            .DefaultIfEmpty(0)
+            .Max() + 1;
+        var modeEffect = new Effect
+        {
+            PowerFullName = power.FullName,
+            UniqueID = nextUniqueId,
+            EffectClass = Enums.eEffectClass.Primary,
+            EffectType = Enums.eEffectType.SetMode,
+            ToWho = Enums.eToWho.Self,
+            BaseProbability = 1f,
+            nMagnitude = 1,
+            nDuration = 0,
+            ModeName = modeName,
+            ModeId = OmniModeMapper.TryFromModeName(modeName, out var modeId, out var modeFlag) ? modeId : -1,
+            ModeFlag = modeFlag,
+            AdvancedConditions = new AdvancedConditionSet()
+        };
+
+        Array.Resize(ref effects, effects.Length + 1);
+        effects[^1] = modeEffect;
+        power.Effects = effects;
+        power.IsModified = true;
+        applyResult.PlannerModePayloadsAdded++;
+        applyResult.AddLimited(applyResult.PlannerModePayloadDetails,
+            $"{power.FullName}: SetMode {modeName}, InherentType={power.InherentType}");
+    }
+
+    private static bool TryMapSpecialCaseToPlannerMode(Enums.eSpecialCase specialCase, out PlannerMode mode)
+    {
+        mode = specialCase switch
+        {
+            Enums.eSpecialCase.Domination => PlannerMode.Domination,
+            Enums.eSpecialCase.Scourge => PlannerMode.Scourge,
+            Enums.eSpecialCase.CriticalHit => PlannerMode.CriticalHit,
+            Enums.eSpecialCase.Assassination => PlannerMode.Assassination,
+            Enums.eSpecialCase.Containment => PlannerMode.Containment,
+            Enums.eSpecialCase.Defiance => PlannerMode.Defiance,
+            Enums.eSpecialCase.ComboLevel1 => PlannerMode.ComboLevel1,
+            Enums.eSpecialCase.ComboLevel2 => PlannerMode.ComboLevel2,
+            Enums.eSpecialCase.ComboLevel3 => PlannerMode.ComboLevel3,
+            Enums.eSpecialCase.FastMode => PlannerMode.FastMode,
+            Enums.eSpecialCase.PerfectionOfBody1 or Enums.eSpecialCase.PerfectionOfBody2 or Enums.eSpecialCase.PerfectionOfBody3 => PlannerMode.PerfectionOfBody,
+            Enums.eSpecialCase.PerfectionOfMind1 or Enums.eSpecialCase.PerfectionOfMind2 or Enums.eSpecialCase.PerfectionOfMind3 => PlannerMode.PerfectionOfMind,
+            Enums.eSpecialCase.PerfectionOfSoul1 or Enums.eSpecialCase.PerfectionOfSoul2 or Enums.eSpecialCase.PerfectionOfSoul3 => PlannerMode.PerfectionOfSoul,
+            Enums.eSpecialCase.DefensiveAdaptation => PlannerMode.DefensiveAdaptation,
+            Enums.eSpecialCase.EfficientAdaptation => PlannerMode.EfficientAdaptation,
+            Enums.eSpecialCase.OffensiveAdaptation => PlannerMode.OffensiveAdaptation,
+            Enums.eSpecialCase.PackMentality => PlannerMode.PackMentality,
+            Enums.eSpecialCase.FastSnipe => PlannerMode.FastSnipe,
+            _ => PlannerMode.None
+        };
+
+        return mode != PlannerMode.None;
+    }
+
+    private static void BuildSupportPowerLinks(
+        IEnumerable<OmniPowerDefinition> scopedPowers,
+        IReadOnlyDictionary<string, IPower> midsPowers,
+        IReadOnlyDictionary<string, OmniPowerClassification> classifications,
+        OmniApplyResult applyResult)
+    {
+        var scopedPowerList = scopedPowers.ToList();
+        var inherentGridControls = classifications
+            .Where(pair => pair.Value is { HiddenPower: true, IncludeFlag: true, InherentType: not Enums.eGridType.None })
+            .Select(pair => pair.Key)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        RemoveInherentGridControlsFromSubPowerLinks(midsPowers.Values, inherentGridControls, applyResult);
+
+        foreach (var omniPower in scopedPowerList)
+        {
+            var childFullName = CanonicalizeOmniFullName(omniPower.FullName);
+            if (!classifications.TryGetValue(childFullName, out var classification) || !classification.HiddenPower)
+            {
+                continue;
+            }
+
+            if (classification is { IncludeFlag: true, InherentType: not Enums.eGridType.None })
+            {
+                continue;
+            }
+
+            var parentFullName = ResolveSupportParent(omniPower, scopedPowerList);
+            if (string.IsNullOrWhiteSpace(parentFullName))
+            {
+                continue;
+            }
+
+            parentFullName = CanonicalizeOmniFullName(parentFullName);
+            if (!midsPowers.TryGetValue(parentFullName, out var parent) ||
+                !midsPowers.ContainsKey(childFullName))
+            {
+                applyResult.SupportPowerLinksUnresolved++;
+                applyResult.AddLimited(applyResult.SupportPowerLinkSkips,
+                    $"{childFullName}: parent {parentFullName} did not resolve.");
+                continue;
+            }
+
+            var subPowers = (parent.UIDSubPower ?? [])
+                .Where(s => !string.IsNullOrWhiteSpace(s))
+                .ToList();
+            if (!subPowers.Contains(childFullName, StringComparer.OrdinalIgnoreCase))
+            {
+                subPowers.Add(childFullName);
+                parent.UIDSubPower = subPowers.ToArray();
+                parent.IsModified = true;
+                applyResult.SupportPowerLinksCreated++;
+                applyResult.AddLimited(applyResult.SupportPowerLinks, $"{parentFullName} -> {childFullName}");
+            }
+        }
+    }
+
+    private static void RemoveInherentGridControlsFromSubPowerLinks(
+        IEnumerable<IPower> powers,
+        IReadOnlySet<string> inherentGridControls,
+        OmniApplyResult applyResult)
+    {
+        if (inherentGridControls.Count == 0)
+        {
+            return;
+        }
+
+        foreach (var parent in powers)
+        {
+            var subPowers = parent.UIDSubPower ?? [];
+            if (subPowers.Length == 0)
+            {
+                continue;
+            }
+
+            var cleaned = subPowers
+                .Where(subPower => !inherentGridControls.Contains(subPower))
+                .ToArray();
+            if (cleaned.Length == subPowers.Length)
+            {
+                continue;
+            }
+
+            parent.UIDSubPower = cleaned;
+            parent.IsModified = true;
+            applyResult.AddLimited(applyResult.SupportPowerLinkSkips,
+                $"{parent.FullName}: removed {subPowers.Length - cleaned.Length} planner control subpower link(s); these display in the inherent grid.");
+        }
+    }
+
+    private static string ResolveSupportParent(OmniPowerDefinition child, IReadOnlyCollection<OmniPowerDefinition> scopedPowers)
+    {
+        if (OmniPowerClassifier.TryGetSinglePowerRequirement(child, out var parentPowerName))
+        {
+            return parentPowerName;
+        }
+
+        var modeParentName = child.ModesRequired
+            .Select(ModeToParentFullName)
+            .FirstOrDefault(name => !string.IsNullOrWhiteSpace(name));
+        if (string.IsNullOrWhiteSpace(modeParentName))
+        {
+            return string.Empty;
+        }
+
+        if (modeParentName.Contains('.', StringComparison.Ordinal))
+        {
+            return modeParentName;
+        }
+
+        var childSet = $"{GroupNamePart(child.FullName)}.{SetNamePart(child.FullName)}";
+        return scopedPowers.FirstOrDefault(power =>
+                   string.Equals($"{GroupNamePart(power.FullName)}.{SetNamePart(power.FullName)}", childSet, StringComparison.OrdinalIgnoreCase) &&
+                   LastNamePart(power.FullName).Contains(modeParentName, StringComparison.OrdinalIgnoreCase) &&
+                   !string.Equals(power.FullName, child.FullName, StringComparison.OrdinalIgnoreCase))
+               ?.FullName ?? string.Empty;
+    }
+
+    private static string ModeToParentFullName(string mode)
+    {
+        var normalized = NormalizeName(mode);
+        if (normalized.Contains("brightnova", StringComparison.OrdinalIgnoreCase) ||
+            normalized.Contains("peacebringerblaster", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Peacebringer_Offensive.Luminous_Blast.Bright_Nova";
+        }
+
+        if (normalized.Contains("whitedwarf", StringComparison.OrdinalIgnoreCase) ||
+            normalized.Contains("peacebringertanker", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Peacebringer_Defensive.Luminous_Aura.White_Dwarf";
+        }
+
+        if (normalized.Contains("darknova", StringComparison.OrdinalIgnoreCase) ||
+            normalized.Contains("warshadeblaster", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Warshade_Offensive.Umbral_Blast.Dark_Nova";
+        }
+
+        if (normalized.Contains("blackdwarf", StringComparison.OrdinalIgnoreCase) ||
+            normalized.Contains("warshadetanker", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Warshade_Defensive.Umbral_Aura.Black_Dwarf";
+        }
+
+        return string.Empty;
+    }
+
+    private static string CanonicalizeOmniFullName(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return value;
+        }
+
+        var canonical = value;
+        foreach (var alias in PowerNameAliases)
+        {
+            if (canonical.Equals(alias.Key, StringComparison.OrdinalIgnoreCase))
+            {
+                return alias.Value;
+            }
+
+            canonical = ReplaceAliasToken(canonical, alias.Key, alias.Value);
+        }
+
+        return canonical;
+    }
+
+    private static string ReplaceAliasToken(string value, string alias, string replacement)
+    {
+        var index = value.IndexOf(alias, StringComparison.OrdinalIgnoreCase);
+        while (index >= 0)
+        {
+            var beforeOk = index == 0 || !IsPowerNameCharacter(value[index - 1]);
+            var afterIndex = index + alias.Length;
+            var afterOk = afterIndex >= value.Length || !IsPowerNameCharacter(value[afterIndex]);
+            if (beforeOk && afterOk)
+            {
+                value = value[..index] + replacement + value[afterIndex..];
+                index += replacement.Length;
+            }
+            else
+            {
+                index = afterIndex;
+            }
+
+            index = value.IndexOf(alias, index, StringComparison.OrdinalIgnoreCase);
+        }
+
+        return value;
+    }
+
+    private static bool IsPowerNameCharacter(char value)
+    {
+        return char.IsLetterOrDigit(value) || value == '_';
+    }
+
+    private static void RepairAliasedPowerIdentities(IDatabase database, OmniApplyResult applyResult)
+    {
+        var powersets = database.Powersets ?? [];
+        var powersetNames = powersets
+            .Where(powerset => powerset != null && !string.IsNullOrWhiteSpace(powerset.FullName))
+            .Select(powerset => CanonicalizeOmniFullName(powerset.FullName))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        if (powersetNames.Count == 0)
+        {
+            return;
+        }
+
+        var powers = (database.Power ?? [])
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .Cast<IPower>()
+            .ToList();
+        var canonicalPowers = powers
+            .Where(power => IsCanonicalPowerIdentity(power, powersetNames))
+            .GroupBy(power => CanonicalizeOmniFullName(power.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+        var remove = new List<IPower>();
+
+        foreach (var power in powers)
+        {
+            var canonicalFullName = CanonicalizeOmniFullName(power.FullName);
+            if (string.IsNullOrWhiteSpace(canonicalFullName))
+            {
+                continue;
+            }
+
+            var canonicalFullSetName = FullSetName(canonicalFullName);
+            if (string.IsNullOrWhiteSpace(canonicalFullSetName) ||
+                !powersetNames.Contains(canonicalFullSetName))
+            {
+                continue;
+            }
+
+            if (IsPowerIdentityCurrent(power, canonicalFullName))
+            {
+                canonicalPowers.TryAdd(canonicalFullName, power);
+                continue;
+            }
+
+            if (canonicalPowers.TryGetValue(canonicalFullName, out var existing) &&
+                !ReferenceEquals(existing, power))
+            {
+                if (CanRemoveAliasedDuplicate(power, existing, canonicalFullName))
+                {
+                    remove.Add(power);
+                    applyResult.AliasedPowerDuplicateRemovals++;
+                    applyResult.AddLimited(applyResult.AliasedPowerDuplicateRemovalDetails,
+                        $"{power.FullName} removed; canonical duplicate is {existing.FullName}");
+                }
+                else
+                {
+                    applyResult.AliasedPowerIdentityCollisions++;
+                    applyResult.AddLimited(applyResult.AliasedPowerIdentityCollisionDetails,
+                        $"{power.FullName} wanted {canonicalFullName}, but {existing.FullName} already exists and did not look like a duplicate");
+                }
+
+                continue;
+            }
+
+            var oldFullName = power.FullName;
+            ApplyCanonicalPowerName(power, canonicalFullName);
+            power.IsModified = true;
+            canonicalPowers[canonicalFullName] = power;
+            applyResult.AliasedPowerIdentityRepairs++;
+            applyResult.AddLimited(applyResult.AliasedPowerIdentityRepairDetails,
+                $"{oldFullName} -> {canonicalFullName}");
+        }
+
+        if (remove.Count == 0)
+        {
+            return;
+        }
+
+        database.Power = (database.Power ?? [])
+            .Where(power => power == null || !remove.Any(candidate => ReferenceEquals(candidate, power)))
+            .ToArray();
+    }
+
+    private static void RepairAliasedPowersetIdentities(IDatabase database, OmniApplyResult applyResult)
+    {
+        var powersets = (database.Powersets ?? [])
+            .Where(powerset => powerset != null && !string.IsNullOrWhiteSpace(powerset.FullName))
+            .Cast<IPowerset>()
+            .ToList();
+        var canonicalPowersets = powersets
+            .Where(powerset => IsPowersetIdentityCurrent(powerset, CanonicalizeOmniFullName(powerset.FullName)))
+            .GroupBy(powerset => CanonicalizeOmniFullName(powerset.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+        var remove = new List<IPowerset>();
+
+        foreach (var powerset in powersets)
+        {
+            var canonicalFullName = CanonicalizeOmniFullName(powerset.FullName);
+            if (string.IsNullOrWhiteSpace(canonicalFullName))
+            {
+                continue;
+            }
+
+            if (IsPowersetIdentityCurrent(powerset, canonicalFullName))
+            {
+                if (canonicalPowersets.TryGetValue(canonicalFullName, out var existing) &&
+                    !ReferenceEquals(existing, powerset))
+                {
+                    if (CanRemoveAliasedPowersetDuplicate(powerset, existing, canonicalFullName))
+                    {
+                        remove.Add(powerset);
+                        applyResult.AliasedPowersetDuplicateRemovals++;
+                        applyResult.AddLimited(applyResult.AliasedPowersetDuplicateRemovalDetails,
+                            $"{powerset.FullName} removed; canonical duplicate is {existing.FullName}");
+                    }
+                    else
+                    {
+                        applyResult.AliasedPowersetIdentityCollisions++;
+                        applyResult.AddLimited(applyResult.AliasedPowersetIdentityCollisionDetails,
+                            $"{powerset.FullName} duplicates {existing.FullName}, but did not look like a removable duplicate");
+                    }
+                }
+                else
+                {
+                    canonicalPowersets[canonicalFullName] = powerset;
+                }
+
+                continue;
+            }
+
+            if (canonicalPowersets.TryGetValue(canonicalFullName, out var canonicalExisting) &&
+                !ReferenceEquals(canonicalExisting, powerset))
+            {
+                if (CanRemoveAliasedPowersetDuplicate(powerset, canonicalExisting, canonicalFullName))
+                {
+                    if (ShouldPreferAliasedPowersetAsKeeper(powerset, canonicalExisting))
+                    {
+                        var aliasedFullName = powerset.FullName;
+                        ApplyCanonicalPowersetName(powerset, canonicalFullName);
+                        powerset.IsModified = true;
+                        canonicalPowersets[canonicalFullName] = powerset;
+                        remove.Add(canonicalExisting);
+                        applyResult.AliasedPowersetIdentityRepairs++;
+                        applyResult.AliasedPowersetDuplicateRemovals++;
+                        applyResult.AddLimited(applyResult.AliasedPowersetIdentityRepairDetails,
+                            $"{aliasedFullName} -> {canonicalFullName}; kept older/icon-bearing powerset and removed duplicate {canonicalExisting.FullName}");
+                        applyResult.AddLimited(applyResult.AliasedPowersetDuplicateRemovalDetails,
+                            $"{canonicalExisting.FullName} removed; canonical identity moved onto existing {aliasedFullName}");
+                    }
+                    else
+                    {
+                        remove.Add(powerset);
+                        applyResult.AliasedPowersetDuplicateRemovals++;
+                        applyResult.AddLimited(applyResult.AliasedPowersetDuplicateRemovalDetails,
+                            $"{powerset.FullName} removed; canonical duplicate is {canonicalExisting.FullName}");
+                    }
+                }
+                else
+                {
+                    applyResult.AliasedPowersetIdentityCollisions++;
+                    applyResult.AddLimited(applyResult.AliasedPowersetIdentityCollisionDetails,
+                        $"{powerset.FullName} wanted {canonicalFullName}, but {canonicalExisting.FullName} already exists and did not look like a duplicate");
+                }
+
+                continue;
+            }
+
+            var oldFullName = powerset.FullName;
+            ApplyCanonicalPowersetName(powerset, canonicalFullName);
+            powerset.IsModified = true;
+            canonicalPowersets[canonicalFullName] = powerset;
+            applyResult.AliasedPowersetIdentityRepairs++;
+            applyResult.AddLimited(applyResult.AliasedPowersetIdentityRepairDetails,
+                $"{oldFullName} -> {canonicalFullName}");
+        }
+
+        if (remove.Count == 0)
+        {
+            return;
+        }
+
+        database.Powersets = (database.Powersets ?? [])
+            .Where(powerset => powerset == null || !remove.Any(candidate => ReferenceEquals(candidate, powerset)))
+            .ToArray();
+    }
+
+    private static bool IsPowersetIdentityCurrent(IPowerset powerset, string canonicalFullName)
+    {
+        return string.Equals(powerset.FullName, canonicalFullName, StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(powerset.GroupName, GroupNamePart(canonicalFullName), StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(powerset.SetName, SetNamePart(canonicalFullName), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool CanRemoveAliasedPowersetDuplicate(
+        IPowerset powerset,
+        IPowerset existing,
+        string canonicalFullName)
+    {
+        if (!CanonicalizeOmniFullName(powerset.FullName).Equals(canonicalFullName, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (!PowersetTypeMatches(powerset.SetType, existing.SetType))
+        {
+            return false;
+        }
+
+        return NormalizeName(powerset.DisplayName).Equals(NormalizeName(existing.DisplayName), StringComparison.OrdinalIgnoreCase) ||
+               NormalizeName(powerset.GroupName).Equals(NormalizeName(existing.GroupName), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool ShouldPreferAliasedPowersetAsKeeper(IPowerset aliased, IPowerset canonical)
+    {
+        if (!string.IsNullOrWhiteSpace(aliased.ImageName) && string.IsNullOrWhiteSpace(canonical.ImageName))
+        {
+            return true;
+        }
+
+        if (aliased.nID >= 0 && canonical.nID >= 0 && aliased.nID < canonical.nID)
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static void SortPowersByPowersetAndLevel(IDatabase database, OmniApplyResult applyResult)
+    {
+        var before = BuildPowerOrderBySet(database.Power);
+        Array.Sort(database.Power);
+        var after = BuildPowerOrderBySet(database.Power);
+
+        foreach (var setName in after.Keys.OrderBy(key => key, StringComparer.OrdinalIgnoreCase))
+        {
+            if (!before.TryGetValue(setName, out var beforeOrder) ||
+                beforeOrder.SequenceEqual(after[setName], StringComparer.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            applyResult.PowersetsReorderedByPowerLevel++;
+            applyResult.AddLimited(applyResult.PowersetPowerOrderDetails,
+                $"{setName}: {FormatPowerOrder(beforeOrder)} -> {FormatPowerOrder(after[setName])}");
+        }
+    }
+
+    private static Dictionary<string, List<string>> BuildPowerOrderBySet(IEnumerable<IPower?> powers)
+    {
+        return powers
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .Cast<IPower>()
+            .GroupBy(power => power.FullSetName, StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                group => group.Select(power => $"{power.PowerName}@{power.Level}").ToList(),
+                StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static string FormatPowerOrder(IReadOnlyCollection<string> values)
+    {
+        const int max = 10;
+        var text = string.Join(", ", values.Take(max));
+        return values.Count > max ? $"{text}, ... +{values.Count - max}" : text;
+    }
+
+    private static void RepairMalformedPowerNames(IDatabase database, OmniApplyResult applyResult)
+    {
+        var powersets = database.Powersets ?? [];
+        var powersetNames = powersets
+            .Where(powerset => powerset != null && !string.IsNullOrWhiteSpace(powerset.FullName))
+            .Select(powerset => CanonicalizeOmniFullName(powerset.FullName))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        if (powersetNames.Count == 0)
+        {
+            return;
+        }
+
+        var powers = (database.Power ?? [])
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .Cast<IPower>()
+            .ToList();
+        var canonicalPowers = powers
+            .Where(power => IsCanonicalPowerIdentity(power, powersetNames))
+            .GroupBy(power => CanonicalizeOmniFullName(power.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+        var remove = new List<IPower>();
+
+        foreach (var power in powers)
+        {
+            var repairedFullName = RepairMalformedFullNamePrefix(power.FullName);
+            if (string.Equals(repairedFullName, power.FullName, StringComparison.Ordinal) ||
+                string.IsNullOrWhiteSpace(repairedFullName))
+            {
+                continue;
+            }
+
+            var canonicalFullName = CanonicalizeOmniFullName(repairedFullName);
+            var canonicalFullSetName = FullSetName(canonicalFullName);
+            if (string.IsNullOrWhiteSpace(canonicalFullSetName) ||
+                !powersetNames.Contains(canonicalFullSetName))
+            {
+                continue;
+            }
+
+            if (canonicalPowers.TryGetValue(canonicalFullName, out var existing) &&
+                !ReferenceEquals(existing, power))
+            {
+                if (CanRemoveMalformedDuplicate(power, existing, canonicalFullName))
+                {
+                    remove.Add(power);
+                    applyResult.MalformedPowerDuplicateRemovals++;
+                    applyResult.AddLimited(applyResult.MalformedPowerDuplicateRemovalDetails,
+                        $"{power.FullName} removed; canonical duplicate is {existing.FullName}");
+                }
+                else
+                {
+                    applyResult.MalformedPowerNameCollisions++;
+                    applyResult.AddLimited(applyResult.MalformedPowerNameCollisionDetails,
+                        $"{power.FullName} wanted {canonicalFullName}, but {existing.FullName} already exists and did not look like a duplicate");
+                }
+
+                continue;
+            }
+
+            var oldFullName = power.FullName;
+            ApplyCanonicalPowerName(power, canonicalFullName);
+            power.IsModified = true;
+            canonicalPowers[canonicalFullName] = power;
+            applyResult.MalformedPowerNameRepairs++;
+            applyResult.AddLimited(applyResult.MalformedPowerNameRepairDetails,
+                $"{oldFullName} -> {canonicalFullName}");
+        }
+
+        if (remove.Count == 0)
+        {
+            return;
+        }
+
+        database.Power = (database.Power ?? [])
+            .Where(power => power == null || !remove.Any(candidate => ReferenceEquals(candidate, power)))
+            .ToArray();
+    }
+
+    private static void RepairSetBonusSiblingPowerIdentities(
+        IDatabase database,
+        IReadOnlyCollection<OmniPowerDefinition> scopedPowers,
+        OmniApplyResult applyResult)
+    {
+        var targetSetBonusPowers = scopedPowers
+            .Where(power => !string.IsNullOrWhiteSpace(power.FullName) && IsStrictSetBonusPower(power.FullName))
+            .Select(power => CanonicalizeOmniFullName(power.FullName))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        if (targetSetBonusPowers.Length == 0)
+        {
+            return;
+        }
+
+        var dbPowers = (database.Power ?? [])
+            .Where(power => power != null && !string.IsNullOrWhiteSpace(power.FullName))
+            .Cast<IPower>()
+            .ToList();
+        var exactLookup = dbPowers
+            .GroupBy(power => CanonicalizeOmniFullName(power.FullName), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(group => group.Key, group => group.First(), StringComparer.OrdinalIgnoreCase);
+        var powersetNames = (database.Powersets ?? [])
+            .Where(powerset => powerset != null && !string.IsNullOrWhiteSpace(powerset.FullName))
+            .Select(powerset => CanonicalizeOmniFullName(powerset.FullName))
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var targetFullName in targetSetBonusPowers)
+        {
+            if (exactLookup.ContainsKey(targetFullName))
+            {
+                continue;
+            }
+
+            var targetFullSet = FullSetName(targetFullName);
+            if (string.IsNullOrWhiteSpace(targetFullSet) || !powersetNames.Contains(targetFullSet))
+            {
+                continue;
+            }
+
+            var targetLeaf = LastNamePart(targetFullName);
+            var candidates = dbPowers
+                .Where(power => IsStrictSetBonusPower(power.FullName) &&
+                                !string.Equals(CanonicalizeOmniFullName(power.FullName), targetFullName, StringComparison.OrdinalIgnoreCase) &&
+                                string.Equals(LastNamePart(CanonicalizeOmniFullName(power.FullName)), targetLeaf, StringComparison.OrdinalIgnoreCase))
+                .Take(2)
+                .ToList();
+
+            if (candidates.Count != 1)
+            {
+                if (candidates.Count > 1)
+                {
+                    applyResult.AddLimited(applyResult.BoostSetBonusImportAuditDetails,
+                        $"{targetFullName}: strict set-bonus sibling repair ambiguous; candidates={string.Join(", ", candidates.Select(power => power.FullName))}");
+                }
+
+                continue;
+            }
+
+            var candidate = candidates[0];
+            var oldFullName = candidate.FullName;
+            ApplyCanonicalPowerName(candidate, targetFullName);
+            candidate.IsModified = true;
+            exactLookup[targetFullName] = candidate;
+            applyResult.ScopedPowerSetIdentityRepairs++;
+            applyResult.AddLimited(applyResult.ScopedPowerSetIdentityRepairDetails,
+                $"{oldFullName} -> {targetFullName}: repaired strict set-bonus sibling misattachment");
+        }
+    }
+
+    private static string RepairMalformedFullNamePrefix(string fullName)
+    {
+        if (string.IsNullOrWhiteSpace(fullName) || IsValidFullNameStart(fullName[0]))
+        {
+            return fullName;
+        }
+
+        var index = 0;
+        while (index < fullName.Length && !IsValidFullNameStart(fullName[index]))
+        {
+            index++;
+        }
+
+        return index >= fullName.Length ? string.Empty : fullName[index..];
+    }
+
+    private static bool IsValidFullNameStart(char value)
+    {
+        return char.IsLetterOrDigit(value) || value == '_';
+    }
+
+    private static bool CanRemoveMalformedDuplicate(IPower malformedPower, IPower canonicalPower, string canonicalFullName)
+    {
+        if (!string.Equals(
+                CanonicalizeOmniFullName(RepairMalformedFullNamePrefix(malformedPower.FullName)),
+                canonicalFullName,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var malformedNames = new[]
+            {
+                malformedPower.PowerName,
+                malformedPower.DisplayName,
+                LastNamePart(RepairMalformedFullNamePrefix(malformedPower.FullName))
+            }
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(NormalizeName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var canonicalNames = new[]
+            {
+                canonicalPower.PowerName,
+                canonicalPower.DisplayName,
+                LastNamePart(canonicalPower.FullName),
+                LastNamePart(canonicalFullName)
+            }
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(NormalizeName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        return malformedNames.Overlaps(canonicalNames);
+    }
+
+    private static bool IsCanonicalPowerIdentity(IPower power, IReadOnlySet<string> canonicalPowersetNames)
+    {
+        var canonicalFullName = CanonicalizeOmniFullName(power.FullName);
+        return canonicalPowersetNames.Contains(FullSetName(canonicalFullName)) &&
+               IsPowerIdentityCurrent(power, canonicalFullName);
+    }
+
+    private static bool IsPowerIdentityCurrent(IPower power, string canonicalFullName)
+    {
+        return string.Equals(power.FullName, canonicalFullName, StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(power.GroupName, GroupNamePart(canonicalFullName), StringComparison.OrdinalIgnoreCase) &&
+               string.Equals(power.SetName, SetNamePart(canonicalFullName), StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool CanRemoveAliasedDuplicate(IPower stalePower, IPower canonicalPower, string canonicalFullName)
+    {
+        if (!string.Equals(CanonicalizeOmniFullName(stalePower.FullName), canonicalFullName, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var staleNames = new[]
+            {
+                stalePower.PowerName,
+                stalePower.DisplayName,
+                LastNamePart(stalePower.FullName)
+            }
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(NormalizeName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var canonicalNames = new[]
+            {
+                canonicalPower.PowerName,
+                canonicalPower.DisplayName,
+                LastNamePart(canonicalPower.FullName),
+                LastNamePart(canonicalFullName)
+            }
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(NormalizeName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        return staleNames.Overlaps(canonicalNames);
+    }
+
+    private static string FormatAliasForReport(string omniFullName, string midsFullName)
+    {
+        return string.Equals(omniFullName, midsFullName, StringComparison.OrdinalIgnoreCase)
+            ? omniFullName
+            : $"{omniFullName} -> {midsFullName}";
+    }
+
+    private static bool TryFindCompositePowerIdentityMatch(
+        IReadOnlyCollection<IPower?> existingPowers,
+        OmniPowerDefinition omniPower,
+        string midsFullName,
+        IReadOnlyDictionary<string, OmniPowersetDefinition> scopedPowersets,
+        out IPower matchedPower)
+    {
+        matchedPower = null!;
+        var setFullName = FullSetName(midsFullName);
+        var omniSetDefinition = scopedPowersets.TryGetValue(setFullName, out var powersetDefinition)
+            ? powersetDefinition
+            : null;
+        var omniDisplayName = string.IsNullOrWhiteSpace(omniPower.DisplayName)
+            ? LastNamePart(midsFullName)
+            : omniPower.DisplayName;
+        var omniPowerInternalName = string.IsNullOrWhiteSpace(omniPower.Name)
+            ? LastNamePart(midsFullName)
+            : omniPower.Name;
+        var normalizedDisplay = NormalizeName(omniDisplayName);
+        var normalizedInternal = NormalizeName(omniPowerInternalName);
+        if (string.IsNullOrWhiteSpace(setFullName) || string.IsNullOrWhiteSpace(normalizedDisplay))
+        {
+            return false;
+        }
+
+        var candidates = existingPowers
+            .Where(power => power != null &&
+                            PowerSetIdentityMatches(power, setFullName, omniSetDefinition) &&
+                            PowerNameIdentityMatches(power, normalizedInternal, normalizedDisplay))
+            .Cast<IPower>()
+            .Take(2)
+            .ToList();
+
+        if (candidates.Count != 1)
+        {
+            return false;
+        }
+
+        matchedPower = candidates[0];
+        return true;
+    }
+
+    private static bool PowerSetIdentityMatches(
+        IPower power,
+        string omniFullSetName,
+        OmniPowersetDefinition? omniPowerset)
+    {
+        var existingPowerset = power.GetPowerSet();
+        var existingFullSetName = existingPowerset?.FullName ?? power.FullSetName;
+        var existingCanonical = CanonicalizeOmniFullName(existingFullSetName);
+        var omniCanonical = CanonicalizeOmniFullName(omniFullSetName);
+        if (string.Equals(existingCanonical, omniCanonical, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (IsStrictSetBonusPowerset(omniCanonical) || IsStrictSetBonusPowerset(existingCanonical))
+        {
+            return false;
+        }
+
+        var existingGroup = NormalizeName(string.IsNullOrWhiteSpace(existingPowerset?.GroupName)
+            ? GroupNamePart(existingCanonical)
+            : existingPowerset.GroupName);
+        var omniGroup = NormalizeName(GroupNamePart(omniCanonical));
+        if (!existingGroup.Equals(omniGroup, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var existingSetNames = new[]
+            {
+                existingPowerset?.SetName,
+                SetNamePart(existingCanonical),
+                existingPowerset?.DisplayName
+            }
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(NormalizeName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        var omniSetNames = new[]
+            {
+                SetNamePart(omniCanonical),
+                omniPowerset?.Name,
+                omniPowerset?.DisplayName
+            }
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(NormalizeName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        return existingSetNames.Overlaps(omniSetNames);
+    }
+
+    private static bool PowerNameIdentityMatches(IPower power, string normalizedInternal, string normalizedDisplay)
+    {
+        var existingPowerNames = new[]
+            {
+                power.PowerName,
+                LastNamePart(power.FullName),
+                power.DisplayName
+            }
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(NormalizeName)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+
+        return existingPowerNames.Contains(normalizedInternal) ||
+               existingPowerNames.Contains(normalizedDisplay);
+    }
+
+    private static string FullSetName(string fullName)
+    {
+        var parts = (fullName ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length >= 2 ? $"{parts[0]}.{parts[1]}" : string.Empty;
+    }
+
+    private OmniDataProviderId DetectOmniDataProviderId(string exportRoot)
+    {
+        foreach (var hint in ReadProviderHintsFromManifest(exportRoot))
+        {
+            var providerId = DetectOmniDataProviderIdFromHint(hint);
+            if (providerId != OmniDataProviderId.Unknown)
+            {
+                return providerId;
+            }
+        }
+
+        return DetectOmniDataProviderIdFromHint(
+            Path.GetFileName(exportRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)));
+    }
+
+    private IEnumerable<string> ReadProviderHintsFromManifest(string exportRoot)
+    {
+        var manifestPath = Path.Combine(exportRoot, "assets", "manifest.json");
+        var manifest = TryReadJson<JObject>(manifestPath);
+        if (manifest == null)
+        {
+            yield break;
+        }
+
+        foreach (var sourceRoot in manifest["SourceRoots"]?.Values<string>() ?? [])
+        {
+            if (!string.IsNullOrWhiteSpace(sourceRoot))
+            {
+                yield return sourceRoot;
+            }
+        }
+
+        var dialect = manifest.Value<string>("Dialect");
+        if (!string.IsNullOrWhiteSpace(dialect))
+        {
+            yield return dialect;
+        }
+    }
+
+    private static OmniDataProviderId DetectOmniDataProviderIdFromHint(string? hint)
+    {
+        var normalized = (hint ?? string.Empty)
+            .Replace("_", string.Empty, StringComparison.Ordinal)
+            .Replace("-", string.Empty, StringComparison.Ordinal)
+            .Replace(" ", string.Empty, StringComparison.Ordinal)
+            .ToLowerInvariant();
+
+        if (normalized.Contains("homecoming", StringComparison.Ordinal))
+        {
+            return OmniDataProviderId.OmniHomecoming;
+        }
+
+        if (normalized.Contains("rebirth", StringComparison.Ordinal))
+        {
+            return OmniDataProviderId.OmniRebirth;
+        }
+
+        if (normalized.Contains("thunderspy", StringComparison.Ordinal) ||
+            normalized.Contains("tspy", StringComparison.Ordinal))
+        {
+            return OmniDataProviderId.OmniThunderspy;
+        }
+
+        return OmniDataProviderId.Unknown;
+    }
+
+    private static PlannerRulesetId ResolvePlannerRulesetId(
+        OmniDataProviderId providerId,
+        PlannerRulesetId existingRulesetId)
+    {
+        return providerId switch
+        {
+            OmniDataProviderId.OmniHomecoming => PlannerRulesetId.Homecoming,
+            OmniDataProviderId.OmniRebirth or OmniDataProviderId.OmniThunderspy => PlannerRulesetId.Ourodev,
+            _ => existingRulesetId
+        };
+    }
+
+    private static int ResolvePlannerRulesetVersion(PlannerRulesetId rulesetId)
+    {
+        return 3;
+    }
+
+    private void ApplyClassAttributesToDatabase(IDatabase database, OmniImportResult result, OmniApplyResult? applyResult)
+    {
+        var detectedProviderId = DetectOmniDataProviderId(result.ExportRoot);
+        var resolvedProviderId = detectedProviderId != OmniDataProviderId.Unknown
+            ? detectedProviderId
+            : database.DataProviderId;
+        var resolvedRulesetId = ResolvePlannerRulesetId(detectedProviderId, database.PlannerRulesetId);
+
+        database.ClassAttributes = result.ClassAttributes;
+        database.OmniImportSource = OmniDatabaseImportSource.Omni;
+        database.DataProviderId = resolvedProviderId;
+        database.PlannerRulesetId = resolvedRulesetId;
+        database.PlannerRulesetVersion = ResolvePlannerRulesetVersion(resolvedRulesetId);
+        database.HasCanonicalOmniPlannerMath = resolvedRulesetId != PlannerRulesetId.Legacy;
+        if (applyResult != null)
+        {
+            applyResult.ClassAttributesStored = result.ClassAttributes.Count;
+            applyResult.AddLimited(
+                applyResult.ClassTableFileDetails,
+                $"Planner provider/ruleset detected from export '{result.ExportRoot}': provider={database.DataProviderId}, ruleset={database.PlannerRulesetId}, version={database.PlannerRulesetVersion}.");
+        }
+        if (database.Classes == null)
+        {
+            return;
+        }
+
+        foreach (var archetype in database.Classes.OfType<Archetype>())
+        {
+            if (!database.ClassAttributes.TryGetValue(archetype.ClassName, out var table))
+            {
+                continue;
+            }
+
+            ApplyLegacyArchetypeSummary(archetype, table);
+            archetype.IsModified = true;
+            if (applyResult != null)
+            {
+                applyResult.ArchetypeSummariesUpdated++;
+            }
+        }
+    }
+
+    private static Enums.ePowerSetType MapPowersetType(string category, string fullName)
+    {
+        var normalizedCategory = NormalizeName(category);
+        var group = NormalizeName(GroupNamePart(fullName));
+        return normalizedCategory switch
+        {
+            "primary" => Enums.ePowerSetType.Primary,
+            "secondary" => Enums.ePowerSetType.Secondary,
+            "epic" or "ancillary" => Enums.ePowerSetType.Ancillary,
+            "pool" => Enums.ePowerSetType.Pool,
+            "inherent" => Enums.ePowerSetType.Inherent,
+            "temporarypowers" or "temporary" or "temp" => Enums.ePowerSetType.Temp,
+            "prestige" => Enums.ePowerSetType.Temp,
+            "setbonus" => Enums.ePowerSetType.SetBonus,
+            "boosts" or "boost" => Enums.ePowerSetType.Boost,
+            "incarnate" => Enums.ePowerSetType.Incarnate,
+            "redirects" or "redirect" => Enums.ePowerSetType.Redirect,
+            _ when group == "pool" => Enums.ePowerSetType.Pool,
+            _ when group == "inherent" => Enums.ePowerSetType.Inherent,
+            _ when group == "epic" => Enums.ePowerSetType.Ancillary,
+            _ when group == "temporarypowers" => Enums.ePowerSetType.Temp,
+            _ when group == "prestige" => Enums.ePowerSetType.Temp,
+            _ when group == "setbonus" => Enums.ePowerSetType.SetBonus,
+            _ when group == "boosts" => Enums.ePowerSetType.Boost,
+            _ when group == "incarnate" => Enums.ePowerSetType.Incarnate,
+            _ when group == "redirects" => Enums.ePowerSetType.Redirect,
+            _ when group.Contains("pets", StringComparison.OrdinalIgnoreCase) => Enums.ePowerSetType.Pet,
+            _ => Enums.ePowerSetType.None
+        };
+    }
+
+    private static Enums.ePowerSetType InferPowersetType(IDatabase database, string fullName)
+    {
+        var groupName = GroupNamePart(fullName);
+        if (string.IsNullOrWhiteSpace(groupName) || database.Classes == null)
+        {
+            return Enums.ePowerSetType.None;
+        }
+
+        foreach (var archetype in database.Classes.Where(a => a != null))
+        {
+            if (string.Equals(groupName, archetype.PrimaryGroup, StringComparison.OrdinalIgnoreCase))
+            {
+                return Enums.ePowerSetType.Primary;
+            }
+
+            if (string.Equals(groupName, archetype.SecondaryGroup, StringComparison.OrdinalIgnoreCase))
+            {
+                return Enums.ePowerSetType.Secondary;
+            }
+
+            if (string.Equals(groupName, archetype.EpicGroup, StringComparison.OrdinalIgnoreCase))
+            {
+                return Enums.ePowerSetType.Ancillary;
+            }
+        }
+
+        return Enums.ePowerSetType.None;
+    }
+
+    private static Enums.ePowerType MapPowerType(string type)
+    {
+        return OmniPowerClassifier.MapPowerType(type);
+    }
+
+    private static Enums.eEffectArea MapEffectArea(string area)
+    {
+        return NormalizeName(area) switch
+        {
+            "singletarget" or "character" => Enums.eEffectArea.Character,
+            "sphere" or "targetedaoe" or "pbaoe" => Enums.eEffectArea.Sphere,
+            "cone" => Enums.eEffectArea.Cone,
+            "location" or "locationaoe" => Enums.eEffectArea.Location,
+            "volume" => Enums.eEffectArea.Volume,
+            "map" => Enums.eEffectArea.Map,
+            "room" => Enums.eEffectArea.Room,
+            "touch" => Enums.eEffectArea.Touch,
+            _ => Enums.eEffectArea.None
+        };
+    }
+
+    private static Enums.eVector MapAttackTypes(IEnumerable<string> attackTypes)
+    {
+        var result = Enums.eVector.None;
+        foreach (var attackType in attackTypes)
+        {
+            result |= NormalizeName(attackType).ToLowerInvariant() switch
+            {
+                "melee" => Enums.eVector.Melee_Attack,
+                "ranged" => Enums.eVector.Ranged_Attack,
+                "aoe" or "areaofeffect" => Enums.eVector.AOE_Attack,
+                "smashing" or "smash" => Enums.eVector.Smashing_Attack,
+                "lethal" => Enums.eVector.Lethal_Attack,
+                "cold" => Enums.eVector.Cold_Attack,
+                "fire" => Enums.eVector.Fire_Attack,
+                "energy" => Enums.eVector.Energy_Attack,
+                "negativeenergy" or "negative" or "negativeenergydamage" => Enums.eVector.Negative_Energy_Attack,
+                "psionic" or "psi" => Enums.eVector.Psionic_Attack,
+                "toxic" => Enums.eVector.Toxic_Attack,
+                _ => Enums.eVector.None
+            };
+        }
+
+        return result;
+    }
+
+    private static void TrackApplyAttackVectors(
+        string fullName,
+        Enums.eVector prior,
+        Enums.eVector current,
+        OmniPowerDefinition source,
+        OmniApplyResult applyResult)
+    {
+        if (current == Enums.eVector.None || prior == current)
+        {
+            return;
+        }
+
+        applyResult.AttackVectorsMapped++;
+        applyResult.AddLimited(applyResult.AttackVectorDetails,
+            $"{fullName}: {prior} -> {current} from [{string.Join(", ", source.AttackTypes)}]");
+    }
+
+    private static Enums.eEntity MapEntities(IEnumerable<string> values)
+    {
+        var result = Enums.eEntity.None;
+        foreach (var value in values)
+        {
+            result |= MapEntity(value);
+        }
+
+        return result;
+    }
+
+    private static Enums.eEntity MapEntity(string value)
+    {
+        var normalized = NormalizeName(value);
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            return Enums.eEntity.None;
+        }
+
+        if (normalized.Contains("caster", StringComparison.OrdinalIgnoreCase) ||
+            normalized.Contains("self", StringComparison.OrdinalIgnoreCase))
+        {
+            return Enums.eEntity.Caster;
+        }
+
+        if (normalized.Contains("mypet", StringComparison.OrdinalIgnoreCase) ||
+            normalized.Contains("pet", StringComparison.OrdinalIgnoreCase))
+        {
+            return Enums.eEntity.MyPet;
+        }
+
+        if (normalized.Contains("player", StringComparison.OrdinalIgnoreCase))
+        {
+            return normalized.Contains("dead", StringComparison.OrdinalIgnoreCase)
+                ? Enums.eEntity.DeadPlayer
+                : Enums.eEntity.Player;
+        }
+
+        if (normalized.Contains("teammate", StringComparison.OrdinalIgnoreCase) ||
+            normalized.Contains("ally", StringComparison.OrdinalIgnoreCase))
+        {
+            return normalized.Contains("dead", StringComparison.OrdinalIgnoreCase)
+                ? Enums.eEntity.DeadTeammate
+                : Enums.eEntity.Teammate;
+        }
+
+        if (normalized.Contains("friend", StringComparison.OrdinalIgnoreCase))
+        {
+            return normalized.Contains("dead", StringComparison.OrdinalIgnoreCase)
+                ? Enums.eEntity.DeadFriend
+                : Enums.eEntity.Friend;
+        }
+
+        if (normalized.Contains("villain", StringComparison.OrdinalIgnoreCase) ||
+            normalized.Contains("foe", StringComparison.OrdinalIgnoreCase))
+        {
+            return normalized.Contains("dead", StringComparison.OrdinalIgnoreCase)
+                ? Enums.eEntity.DeadFoe
+                : Enums.eEntity.Foe;
+        }
+
+        if (normalized.Contains("location", StringComparison.OrdinalIgnoreCase))
+        {
+            return Enums.eEntity.Location;
+        }
+
+        if (normalized.Contains("any", StringComparison.OrdinalIgnoreCase))
+        {
+            return Enums.eEntity.Any;
+        }
+
+        return Enums.eEntity.None;
+    }
+
+    private static string GroupNamePart(string fullName)
+    {
+        var parts = (fullName ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length > 0 ? parts[0] : string.Empty;
+    }
+
+    private static string SetNamePart(string fullName)
+    {
+        var parts = (fullName ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length > 1 ? parts[1] : string.Empty;
+    }
+
+    private static string LastNamePart(string fullName)
+    {
+        var parts = (fullName ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length > 0 ? parts[^1] : string.Empty;
+    }
+
+    private static string NormalizeName(string value)
+    {
+        return (value ?? string.Empty)
+            .Replace("_", string.Empty, StringComparison.Ordinal)
+            .Replace("-", string.Empty, StringComparison.Ordinal)
+            .Replace(" ", string.Empty, StringComparison.Ordinal)
+            .Replace("(", string.Empty, StringComparison.Ordinal)
+            .Replace(")", string.Empty, StringComparison.Ordinal)
+            .Trim()
+            .ToLowerInvariant();
+    }
+
+    private void LoadArchetypes(string exportRoot, OmniImportResult result, IProgress<OmniImportProgress>? progress)
+    {
+        var archetypeRoot = Path.Combine(exportRoot, "archetypes");
+        if (!Directory.Exists(archetypeRoot))
+        {
+            result.Report.AddLimited(result.Report.UnresolvedEntities, "Missing archetypes directory.");
+            return;
+        }
+
+        var files = Directory.EnumerateFiles(archetypeRoot, "*.json", SearchOption.TopDirectoryOnly).ToList();
+        for (var index = 0; index < files.Count; index++)
+        {
+            var file = files[index];
+            ReportProgress(
+                progress,
+                ScaleProgress(index, files.Count, 5, 20),
+                "Reading archetypes",
+                "",
+                index + 1,
+                files.Count);
+            var archetype = ReadJson<OmniArchetypeDefinition>(file);
+            if (archetype == null)
+            {
+                continue;
+            }
+
+            result.Report.ArchetypesRead++;
+            if (archetype.Playable)
+            {
+                result.Report.PlayableArchetypesRead++;
+            }
+
+            result.Scope.AddPlayableArchetype(archetype);
+
+            var table = BuildClassAttributeTable(archetype);
+            if (table.HasAttributes)
+            {
+                result.ClassAttributes[table.ClassName] = table;
+                result.Report.ClassAttributeTablesImported++;
+            }
+
+            foreach (var powerset in archetype.PrimaryPowersets
+                         .Concat(archetype.SecondaryPowersets)
+                         .Concat(archetype.EpicPowersets)
+                         .Concat(archetype.Powersets))
+            {
+                if (OmniImportScope.IsExcludedPowerset(powerset))
+                {
+                    continue;
+                }
+
+                result.Report.AddLimited(result.Report.ImportedPowersets, powerset, 5000);
+            }
+        }
+    }
+
+    private void LoadClassTables(string exportRoot, OmniImportResult result, IProgress<OmniImportProgress>? progress)
+    {
+        var tableRoot = Path.Combine(exportRoot, "tables");
+        if (!Directory.Exists(tableRoot))
+        {
+            result.Report.AddLimited(result.Report.UnresolvedEntities, "Missing tables directory.");
+            return;
+        }
+
+        var files = Directory.EnumerateFiles(tableRoot, "class_*.json", SearchOption.TopDirectoryOnly).ToList();
+        for (var index = 0; index < files.Count; index++)
+        {
+            var file = files[index];
+            ReportProgress(
+                progress,
+                ScaleProgress(index, files.Count, 20, 25),
+                "Reading class tables",
+                "",
+                index + 1,
+                files.Count);
+            var table = ReadClassTable(file);
+            if (table == null || string.IsNullOrWhiteSpace(table.ClassName))
+            {
+                continue;
+            }
+
+            result.Report.ClassTableFilesRead++;
+            result.Report.AddLimited(result.Report.ClassTableFiles, Path.GetFileName(file), 500);
+            if (!result.ClassAttributes.TryGetValue(table.ClassName, out var existing))
+            {
+                existing = new OmniClassAttributeTable
+                {
+                    ClassName = table.ClassName
+                };
+                result.ClassAttributes[table.ClassName] = existing;
+            }
+
+            MergeClassTable(existing, table, result);
+        }
+
+        foreach (var classTable in result.ClassAttributes.Values.Where(c => c.NamedTables.Count == 0))
+        {
+            result.Report.MissingClassTableReferences++;
+            result.Report.AddLimited(result.Report.MissingClassTableReferenceDetails,
+                $"{classTable.ClassName}: no matching tables/class_*.json named_tables were loaded.", 500);
+        }
+    }
+
+    private static void TrackApplyClassTables(OmniImportResult dryRunResult, OmniApplyResult applyResult)
+    {
+        applyResult.ClassTableFilesRead = dryRunResult.Report.ClassTableFilesRead;
+        applyResult.CanonicalNamedTablesStored = dryRunResult.ClassAttributes.Values.Sum(c => c.NamedTables.Count);
+        foreach (var file in dryRunResult.Report.ClassTableFiles)
+        {
+            applyResult.AddLimited(applyResult.ClassTableFileDetails, file);
+        }
+    }
+
+    private OmniClassAttributeTable? ReadClassTable(string file)
+    {
+        try
+        {
+            var obj = ReadJson<JObject>(file);
+            if (obj == null)
+            {
+                return null;
+            }
+
+            var className = obj.Value<string>("name") ??
+                            obj.Value<string>("internal_name") ??
+                            Path.GetFileNameWithoutExtension(file);
+            return new OmniClassAttributeTable
+            {
+                ClassName = NormalizeClassName(className),
+                PrimaryCategory = obj.Value<string>("primary_category") ?? string.Empty,
+                SecondaryCategory = obj.Value<string>("secondary_category") ?? string.Empty,
+                NamedTables = ReadNamedTables(obj, "named_tables")
+            };
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static void MergeClassTable(
+        OmniClassAttributeTable target,
+        OmniClassAttributeTable source,
+        OmniImportResult result)
+    {
+        if (string.IsNullOrWhiteSpace(target.PrimaryCategory))
+        {
+            target.PrimaryCategory = source.PrimaryCategory;
+        }
+
+        if (string.IsNullOrWhiteSpace(target.SecondaryCategory))
+        {
+            target.SecondaryCategory = source.SecondaryCategory;
+        }
+
+        foreach (var namedTable in source.NamedTables)
+        {
+            if (target.NamedTables.TryGetValue(namedTable.Key, out var existingValues))
+            {
+                if (existingValues.Length == namedTable.Value.Length &&
+                    existingValues.SequenceEqual(namedTable.Value))
+                {
+                    continue;
+                }
+
+                result.Report.DuplicateCanonicalNamedTables++;
+                result.Report.AddLimited(result.Report.DuplicateNamedTables,
+                    $"{target.ClassName}: conflicting values for {namedTable.Key}", 500);
+            }
+
+            target.NamedTables[namedTable.Key] = namedTable.Value;
+            result.Report.CanonicalNamedTablesLoaded++;
+        }
+    }
+
+    private static string NormalizeClassName(string value)
+    {
+        if (string.IsNullOrWhiteSpace(value))
+        {
+            return string.Empty;
+        }
+
+        var name = value.Trim();
+        if (name.StartsWith("class_", StringComparison.OrdinalIgnoreCase))
+        {
+            return "Class_" + name["class_".Length..];
+        }
+
+        return name;
+    }
+
+    private void ScanPowers(string exportRoot, OmniImportResult result, IProgress<OmniImportProgress>? progress)
+    {
+        var powersRoot = Path.Combine(exportRoot, "powers");
+        if (!Directory.Exists(powersRoot))
+        {
+            result.Report.AddLimited(result.Report.UnresolvedEntities, "Missing powers directory.");
+            return;
+        }
+
+        ReportProgress(progress, 20, "Scanning powers");
+        var scopedPowersets = LoadScopedPowersets(exportRoot, result.Scope, result).ToList();
+        result.ScopedPowersetFullNames.Clear();
+        foreach (var scopedPowerset in scopedPowersets.Where(p => !string.IsNullOrWhiteSpace(p.FullName)))
+        {
+            result.ScopedPowersetFullNames.Add(CanonicalizeOmniFullName(scopedPowerset.FullName));
+        }
+        TrackEpicDryRunDisplayCollisions(scopedPowersets, result);
+        var scopedPowers = LoadScopedPowers(exportRoot, result.Scope, result, progress).ToList();
+        result.ScopedPowerFullNames.Clear();
+        foreach (var scopedPower in scopedPowers.Where(p => !string.IsNullOrWhiteSpace(p.FullName)))
+        {
+            result.ScopedPowerFullNames.Add(CanonicalizeOmniFullName(scopedPower.FullName));
+        }
+        TrackBoostSetBonusScopeCoverage(
+            result.Report,
+            result.ScopedPowersetFullNames,
+            DeriveScopedPowersetFullNames(result.ScopedPowerFullNames),
+            result.ScopedPowerFullNames);
+        var scopedPowerLookup = BuildScopedPowerLookup(scopedPowers);
+        var classifier = new OmniPowerClassifier();
+
+        for (var index = 0; index < scopedPowers.Count; index++)
+        {
+            var power = scopedPowers[index];
+            ReportProgress(
+                progress,
+                ScaleProgress(index, scopedPowers.Count, 55, 75),
+                "Classifying powers",
+                "",
+                index + 1,
+                scopedPowers.Count);
+            result.Report.PowersInScope++;
+            var classification = classifier.Classify(power, scopedPowerLookup);
+            TrackDryRunClassification(CanonicalizeOmniFullName(power.FullName), classification, result);
+            TrackSorceryEnflameDryRun(power, classification, result);
+            ScanPowerMetadata(power, result);
+        }
+    }
+
+    private IEnumerable<OmniPowerDefinition> LoadScopedPowers(
+        string exportRoot,
+        OmniImportScope scope,
+        OmniImportResult? dryRunResult = null,
+        IProgress<OmniImportProgress>? progress = null)
+    {
+        var powersRoot = Path.Combine(exportRoot, "powers");
+        if (!Directory.Exists(powersRoot))
+        {
+            yield break;
+        }
+
+        var files = Directory.EnumerateFiles(powersRoot, "*.json", SearchOption.AllDirectories)
+            .Where(f => !Path.GetFileName(f).Equals("index.json", StringComparison.OrdinalIgnoreCase))
+            .ToList();
+        for (var index = 0; index < files.Count; index++)
+        {
+            var file = files[index];
+            ReportProgress(
+                progress,
+                ScaleProgress(index, files.Count, 20, 55),
+                "Scanning power files",
+                "",
+                index + 1,
+                files.Count);
+            if (dryRunResult != null)
+            {
+                dryRunResult.Report.PowersConsidered++;
+            }
+
+            var power = ReadJson<OmniPowerDefinition>(file);
+            if (power == null)
+            {
+                continue;
+            }
+
+            var relative = Path.GetRelativePath(powersRoot, file);
+            TrackSupportHeavyDiscovery(relative, dryRunResult);
+            TrackPetPowerDiscovery(relative, dryRunResult);
+            TrackEpicPowerDiscovery(relative, dryRunResult);
+            if (ShouldSkipPowerDefinition(power))
+            {
+                if (dryRunResult != null)
+                {
+                    dryRunResult.Report.PowersSkippedOutOfScope++;
+                    dryRunResult.Report.AddLimited(dryRunResult.Report.SkippedPowerGroups,
+                        $"{power.FullName}: non-build temporary/costume power");
+                }
+
+                continue;
+            }
+
+            if (!scope.IsPowerFileInScope(relative, power.Powerset))
+            {
+                if (dryRunResult != null)
+                {
+                    dryRunResult.Report.PowersSkippedOutOfScope++;
+                    var group = relative.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar).FirstOrDefault() ?? relative;
+                    dryRunResult.Report.AddLimited(dryRunResult.Report.SkippedPowerGroups, group);
+                }
+
+                continue;
+            }
+
+            TrackSupportHeavyInScope(relative, power, dryRunResult);
+            TrackPetPowerInScope(relative, power, dryRunResult);
+            TrackEpicPowerInScope(relative, power, dryRunResult);
+            yield return power;
+        }
+    }
+
+    private static bool ShouldSkipPowerDefinition(OmniPowerDefinition power)
+    {
+        if (IsCostumeTemporaryPower(power))
+        {
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsCostumeTemporaryPower(OmniPowerDefinition power)
+    {
+        if (!GroupNamePart(power.FullName).Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase) ||
+            !SetNamePart(power.FullName).Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (ContainsCostumeToken(power.FullName) ||
+            ContainsCostumeToken(power.Name) ||
+            ContainsCostumeToken(power.DisplayName) ||
+            ContainsCostumeToken(power.DisplayShortHelp))
+        {
+            return true;
+        }
+
+        return power.Effects.Any(HasSetCostumeEffect);
+    }
+
+    private static bool ContainsCostumeToken(string value)
+    {
+        return !string.IsNullOrWhiteSpace(value) &&
+               value.Contains("costume", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool HasSetCostumeEffect(OmniEffectDefinition effect)
+    {
+        return effect.Templates.Any(template =>
+                   template.Attribs.Any(attrib => attrib.Equals("SetCostume", StringComparison.OrdinalIgnoreCase) ||
+                                                  attrib.Equals("Set_Costume", StringComparison.OrdinalIgnoreCase)) ||
+                   template.Type.Equals("SetCostume", StringComparison.OrdinalIgnoreCase) ||
+                   template.Type.Equals("Set_Costume", StringComparison.OrdinalIgnoreCase)) ||
+               effect.ChildEffects.Any(HasSetCostumeEffect);
+    }
+
+    private static void TrackPetPowersetDiscovery(string relativePath, OmniImportResult? dryRunResult)
+    {
+        if (dryRunResult == null)
+        {
+            return;
+        }
+
+        var root = RootPart(relativePath);
+        if (!IsPetRoot(root))
+        {
+            return;
+        }
+
+        IncrementCount(dryRunResult.Report.PetPowersetFilesDiscovered, root);
+        dryRunResult.Report.AddLimited(dryRunResult.Report.PetImportScopeDetails,
+            $"{root}: discovered powerset {relativePath}");
+    }
+
+    private static void TrackPetPowersetInScope(string relativePath, OmniImportResult? dryRunResult)
+    {
+        if (dryRunResult == null)
+        {
+            return;
+        }
+
+        var root = RootPart(relativePath);
+        if (!IsPetRoot(root))
+        {
+            return;
+        }
+
+        IncrementCount(dryRunResult.Report.PetPowersetFilesInScope, root);
+        dryRunResult.Report.AddLimited(dryRunResult.Report.PetImportScopeDetails,
+            $"{root}: scoped powerset {relativePath}");
+    }
+
+    private static void TrackEpicPowersetDiscovery(
+        string relativePath,
+        OmniPowersetDefinition powerset,
+        OmniImportResult? dryRunResult)
+    {
+        if (dryRunResult == null || !IsEpicRoot(RootPart(relativePath)))
+        {
+            return;
+        }
+
+        dryRunResult.Report.EpicPowersetFilesDiscovered++;
+        dryRunResult.Report.AddLimited(dryRunResult.Report.EpicImportScopeDetails,
+            $"discovered powerset {powerset.FullName} from {relativePath}");
+    }
+
+    private static void TrackEpicPowersetInScope(
+        string relativePath,
+        OmniPowersetDefinition powerset,
+        OmniImportResult? dryRunResult)
+    {
+        if (dryRunResult == null || !IsEpicRoot(RootPart(relativePath)))
+        {
+            return;
+        }
+
+        dryRunResult.Report.EpicPowersetFilesInScope++;
+        var canonicalFullName = CanonicalizeOmniFullName(powerset.FullName);
+        var classKeys = EpicClassKeys(canonicalFullName, powerset.Archetypes, string.Empty);
+        dryRunResult.Report.AddLimited(dryRunResult.Report.EpicImportScopeDetails,
+            $"scoped powerset {FormatAliasForReport(powerset.FullName, canonicalFullName)} display={powerset.DisplayName}, internal={powerset.Name}, classes={FormatClassKeys(classKeys)}, category={powerset.PowerCategory}");
+        dryRunResult.Report.AddLimited(dryRunResult.Report.EpicPowersetIdentityDetails,
+            $"{FormatAliasForReport(powerset.FullName, canonicalFullName)}: display={powerset.DisplayName}, internal={powerset.Name}, category={powerset.PowerCategory}, archetypes={string.Join(", ", powerset.Archetypes)}, classes={FormatClassKeys(classKeys)}");
+        if (classKeys.Count > 0)
+        {
+            var family = EpicFamilyName(SetNamePart(canonicalFullName), classKeys);
+            dryRunResult.Report.AddLimited(dryRunResult.Report.EpicPowersetPrefixSuffixCandidates,
+                $"{canonicalFullName}: class={FormatClassKeys(classKeys)}, family={family}");
+        }
+    }
+
+    private static void TrackEpicDryRunDisplayCollisions(
+        IReadOnlyCollection<OmniPowersetDefinition> scopedPowersets,
+        OmniImportResult result)
+    {
+        foreach (var collisionGroup in scopedPowersets
+                     .Where(powerset => IsEpicPowersetFullName(powerset.FullName) &&
+                                        !string.IsNullOrWhiteSpace(powerset.DisplayName))
+                     .GroupBy(powerset => NormalizeName(powerset.DisplayName), StringComparer.OrdinalIgnoreCase)
+                     .Where(group => group.Count() > 1))
+        {
+            result.Report.AddLimited(result.Report.EpicPowersetDisplayNameCollisions,
+                $"{collisionGroup.First().DisplayName}: {string.Join(", ", collisionGroup.Select(powerset => $"{powerset.FullName}[{FormatClassKeys(EpicClassKeys(powerset.FullName, powerset.Archetypes, string.Empty))}]"))}");
+        }
+    }
+
+    private static void TrackSorceryEnflameDryRun(
+        OmniPowerDefinition power,
+        OmniPowerClassification classification,
+        OmniImportResult result)
+    {
+        if (!power.FullName.Equals("Pool.Sorcery.Enflame", StringComparison.OrdinalIgnoreCase))
+        {
+            return;
+        }
+
+        result.Report.SorceryEnflameTraceCount++;
+        result.Report.AddLimited(result.Report.SorceryEnflamePickabilityTrace,
+            $"{power.FullName}: level={power.AvailableLevel}, type={power.Type}, show_in_manage={power.ShowInManage}, hidden={classification.HiddenPower}, include={classification.IncludeFlag}, normalBuildPick={classification.NormalBuildPick}, reasons={string.Join("; ", classification.Reasons)}");
+
+        if (OmniExpressionConverter.TryConvertPowerRequirement(CanonicalizeOmniFullName(power.Requires), out var requirements))
+        {
+            result.Report.AddLimited(result.Report.SorceryEnflamePickabilityTrace,
+                $"{power.FullName}: requirements={FormatAdvancedRequirementRows(requirements)}");
+        }
+        else
+        {
+            result.Report.PoolRequirementEvaluationFailureCount++;
+            result.Report.AddLimited(result.Report.PoolRequirementEvaluationFailures,
+                $"{power.FullName}: could not convert requirement '{power.Requires}'");
+        }
+    }
+
+    private static void TrackSorceryEnflameApplyTrace(IDatabase database, OmniApplyResult applyResult)
+    {
+        var power = (database.Power ?? [])
+            .FirstOrDefault(p => p != null && p.FullName.Equals("Pool.Sorcery.Enflame", StringComparison.OrdinalIgnoreCase));
+        applyResult.SorceryEnflameTraceCount++;
+        if (power == null)
+        {
+            applyResult.PoolRequirementEvaluationFailures++;
+            applyResult.AddLimited(applyResult.PoolRequirementEvaluationFailureDetails,
+                "Pool.Sorcery.Enflame: missing from database after safe import.");
+            return;
+        }
+
+        var owningPowerset = GetOwningPowerset(database, power);
+        var inPowersetArray = owningPowerset?.Powers?.Any(p =>
+            p != null &&
+            (ReferenceEquals(p, power) ||
+             p.PowerIndex == power.PowerIndex ||
+             p.FullName.Equals(power.FullName, StringComparison.OrdinalIgnoreCase))) == true;
+        var allowedClasses = (database.Classes ?? [])
+            .Where(cls => cls != null && cls.Playable)
+            .Select(cls => cls!)
+            .Where(cls => power.AllowedForClass(cls.Idx))
+            .Select(cls => cls.ClassName)
+            .ToArray();
+
+        applyResult.AddLimited(applyResult.SorceryEnflamePickabilityTraceDetails,
+            $"{power.FullName}: FullSetName={power.FullSetName}, PowerSetID={power.PowerSetID}, PowerSetIndex={power.PowerSetIndex}, owning={(owningPowerset?.FullName ?? "<missing>")}, inPowersetArray={inPowersetArray}, level={power.Level}, hidden={power.HiddenPower}, include={power.IncludeFlag}, allowedPlayableClasses={allowedClasses.Length}");
+        applyResult.AddLimited(applyResult.SorceryEnflamePickabilityTraceDetails,
+            $"{power.FullName}: advanced requirements={FormatAdvancedRequirementRows(power.AdvancedRequirements)}, legacy groups={FormatLegacyRequirementGroups(power.Requires)}");
+
+        if (power.HiddenPower || power.Level <= 0 || !inPowersetArray || owningPowerset == null || allowedClasses.Length == 0)
+        {
+            applyResult.PoolRequirementEvaluationFailures++;
+            applyResult.AddLimited(applyResult.PoolRequirementEvaluationFailureDetails,
+                $"{power.FullName}: picker-blocked; hidden={power.HiddenPower}, level={power.Level}, owning={(owningPowerset?.FullName ?? "<missing>")}, inPowersetArray={inPowersetArray}, allowedPlayableClasses={allowedClasses.Length}");
+        }
+    }
+
+    private static string FormatAdvancedRequirementRows(AdvancedConditionSet? set)
+    {
+        if (set is not { Rows.Count: > 0 })
+        {
+            return "<none>";
+        }
+
+        return string.Join(" | ", set.Rows.Select(row =>
+            $"{row.Link}:{row.Kind}:{row.Subject}{(string.IsNullOrWhiteSpace(row.Value) ? string.Empty : "+" + row.Value)}{(row.Negated ? "!" : string.Empty)}"));
+    }
+
+    private static string FormatLegacyRequirementGroups(Requirement? requirement)
+    {
+        if (requirement == null)
+        {
+            return "<none>";
+        }
+
+        var groups = requirement.PowerID
+            .Where(group => group.Any(value => !string.IsNullOrWhiteSpace(value)))
+            .Select(group => $"({string.Join(" + ", group.Where(value => !string.IsNullOrWhiteSpace(value)))})")
+            .ToArray();
+        return groups.Length == 0 ? "<none>" : string.Join(" OR ", groups);
+    }
+
+    private static IPowerset? GetOwningPowerset(IDatabase database, IPower power)
+    {
+        var powersets = database.Powersets ?? [];
+        if (power.PowerSetID >= 0 && power.PowerSetID < powersets.Length)
+        {
+            return powersets[power.PowerSetID];
+        }
+
+        var fullSetName = CanonicalizeOmniFullName(power.FullSetName);
+        return powersets.FirstOrDefault(powerset =>
+            powerset != null &&
+            CanonicalizeOmniFullName(powerset.FullName).Equals(fullSetName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static void TrackPetPowerDiscovery(string relativePath, OmniImportResult? dryRunResult)
+    {
+        if (dryRunResult == null)
+        {
+            return;
+        }
+
+        var root = RootPart(relativePath);
+        if (!IsPetRoot(root))
+        {
+            return;
+        }
+
+        IncrementCount(dryRunResult.Report.PetPowerFilesDiscovered, root);
+    }
+
+    private static void TrackEpicPowerDiscovery(string relativePath, OmniImportResult? dryRunResult)
+    {
+        if (dryRunResult == null || !IsEpicRoot(RootPart(relativePath)))
+        {
+            return;
+        }
+
+        dryRunResult.Report.EpicPowerFilesDiscovered++;
+    }
+
+    private static void TrackPetPowerInScope(
+        string relativePath,
+        OmniPowerDefinition power,
+        OmniImportResult? dryRunResult)
+    {
+        if (dryRunResult == null)
+        {
+            return;
+        }
+
+        var root = RootPart(relativePath);
+        if (!IsPetRoot(root))
+        {
+            return;
+        }
+
+        IncrementCount(dryRunResult.Report.PetPowerFilesInScope, root);
+        IncrementCount(dryRunResult.Report.PetPowersLoaded, root);
+        dryRunResult.Report.AddLimited(dryRunResult.Report.PetImportScopeDetails,
+            $"{root}: loaded power {power.FullName} from {relativePath}");
+    }
+
+    private static void TrackEpicPowerInScope(
+        string relativePath,
+        OmniPowerDefinition power,
+        OmniImportResult? dryRunResult)
+    {
+        if (dryRunResult == null || !IsEpicRoot(RootPart(relativePath)))
+        {
+            return;
+        }
+
+        dryRunResult.Report.EpicPowerFilesInScope++;
+        dryRunResult.Report.EpicPowersLoaded++;
+        dryRunResult.Report.AddLimited(dryRunResult.Report.EpicImportScopeDetails,
+            $"loaded power {power.FullName} powerset={power.Powerset} from {relativePath}");
+    }
+
+    private static void TrackSupportHeavyDiscovery(string relativePath, OmniImportResult? dryRunResult)
+    {
+        if (dryRunResult == null)
+        {
+            return;
+        }
+
+        var root = RootPart(relativePath);
+        switch (root)
+        {
+            case "temporary_powers":
+                dryRunResult.Report.TemporaryPowerFilesDiscovered++;
+                break;
+            case "inherent":
+                dryRunResult.Report.InherentPowerFilesDiscovered++;
+                break;
+        }
+
+        if (IsSupportHeavyRoot(root))
+        {
+            dryRunResult.Report.SupportHeavyFilesDiscovered++;
+            dryRunResult.Report.AddLimited(dryRunResult.Report.SupportHeavyFiles, relativePath, 500);
+        }
+    }
+
+    private static void TrackSupportHeavyInScope(string relativePath, OmniPowerDefinition power, OmniImportResult? dryRunResult)
+    {
+        if (dryRunResult == null)
+        {
+            return;
+        }
+
+        var root = RootPart(relativePath);
+        switch (root)
+        {
+            case "temporary_powers":
+                dryRunResult.Report.TemporaryPowerFilesInScope++;
+                break;
+            case "inherent":
+                dryRunResult.Report.InherentPowerFilesInScope++;
+                break;
+        }
+
+        if (IsSupportHeavyRoot(root))
+        {
+            dryRunResult.Report.SupportHeavyFilesInScope++;
+        }
+
+        TrackModes(power.FullName, power.ModesRequired, power.ModesDisallowed, dryRunResult);
+    }
+
+    private static void TrackModes(
+        string fullName,
+        IEnumerable<string> requiredModes,
+        IEnumerable<string> disallowedModes,
+        OmniImportResult dryRunResult)
+    {
+        var requiredFlags = OmniModeMapper.ToFlags(requiredModes, out var unknownRequired);
+        var disallowedFlags = OmniModeMapper.ToFlags(disallowedModes, out var unknownDisallowed);
+        var knownRequired = requiredModes
+            .Where(IsKnownMode)
+            .Select(OmniModeMapper.Normalize)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        var knownDisallowed = disallowedModes
+            .Where(IsKnownMode)
+            .Select(OmniModeMapper.Normalize)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        if (knownRequired.Length > 0 || knownDisallowed.Length > 0)
+        {
+            dryRunResult.Report.PowerLevelModeGateMappedCount++;
+            dryRunResult.Report.AddLimited(dryRunResult.Report.PowerLevelModeGates,
+                $"{fullName}: required={FormatMappedModes(knownRequired, requiredFlags)}, disallowed={FormatMappedModes(knownDisallowed, disallowedFlags)}", 500);
+        }
+
+        foreach (var mode in unknownRequired.Concat(unknownDisallowed).Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            dryRunResult.Report.UnknownModeCount++;
+            dryRunResult.Report.AddLimited(dryRunResult.Report.UnknownModes, $"{fullName}: {mode}", 500);
+        }
+    }
+
+    private static bool IsKnownMode(string mode)
+    {
+        if (string.IsNullOrWhiteSpace(mode))
+        {
+            return false;
+        }
+
+        var normalized = OmniModeMapper.Normalize(mode);
+        return OmniModeMapper.TryToFlag(normalized, out _) ||
+               OmniModeMapper.TryFromModeName(normalized, out _, out _) ||
+               OmniModeMapper.TryGetPlannerMode(normalized, out _);
+    }
+
+    private static string FormatMappedModes(IReadOnlyCollection<string> modes, Enums.eModeFlags flags)
+    {
+        if (modes.Count == 0)
+        {
+            return "None";
+        }
+
+        return flags == Enums.eModeFlags.None
+            ? string.Join(", ", modes)
+            : $"{flags} ({string.Join(", ", modes)})";
+    }
+
+    private static string RootPart(string relativePath)
+    {
+        return relativePath
+            .Replace('\\', '/')
+            .Split('/', StringSplitOptions.RemoveEmptyEntries)
+            .FirstOrDefault() ?? string.Empty;
+    }
+
+    private static bool IsSupportHeavyRoot(string root)
+    {
+        return NormalizeName(root) is
+            "inherent" or
+            "pets" or
+            "temporarypowers" or
+            "incarnate" or
+            "incarnatepets" or
+            "kheldianpets" or
+            "mastermindpets" or
+            "villainpets";
+    }
+
+    private static bool IsPetRoot(string root)
+    {
+        return NormalizeName(root) is
+            "incarnatepets" or
+            "kheldianpets" or
+            "mastermindpets" or
+            "pets" or
+            "villainpets";
+    }
+
+    private static bool IsPetPowerFullName(string fullName)
+    {
+        return IsPetRoot(GroupNamePart(fullName));
+    }
+
+    private static bool IsEpicRoot(string root)
+    {
+        return NormalizeName(root) == "epic";
+    }
+
+    private static bool IsEpicPowersetFullName(string fullName)
+    {
+        var parts = (fullName ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length == 2 && IsEpicRoot(parts[0]);
+    }
+
+    private static bool IsEpicPowerFullName(string fullName)
+    {
+        var parts = (fullName ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length >= 3 && IsEpicRoot(parts[0]);
+    }
+
+    private static string FormatClassKeys(IReadOnlyCollection<string> classKeys)
+    {
+        return classKeys.Count == 0
+            ? "<unknown>"
+            : string.Join(", ", classKeys.OrderBy(key => key, StringComparer.OrdinalIgnoreCase));
+    }
+
+    private static void IncrementCount(IDictionary<string, int> counts, string key)
+    {
+        if (string.IsNullOrWhiteSpace(key))
+        {
+            return;
+        }
+
+        counts.TryGetValue(key, out var count);
+        counts[key] = count + 1;
+    }
+
+    private static string NormalizeRoot(string exportRoot)
+    {
+        return Path.GetFullPath(exportRoot).TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+    }
+
+    private static void ScanGcmTags(string exportRoot, OmniImportResult result)
+    {
+        var gcm = ReadGcmTags(exportRoot);
+        result.Report.GcmBlankTagCount = gcm.BlankCount;
+        foreach (var duplicate in gcm.Duplicates)
+        {
+            result.Report.GcmDuplicateTagCount++;
+            result.Report.AddLimited(result.Report.GcmDuplicateTags, duplicate, 500);
+        }
+
+        var existing = DatabaseAPI.Database?.EffectIds ?? [];
+        var existingLookup = new HashSet<string>(existing.Where(e => !string.IsNullOrWhiteSpace(e)), StringComparer.OrdinalIgnoreCase);
+        foreach (var tag in gcm.Tags)
+        {
+            result.GcmTags.Add(tag);
+            result.Report.GcmTagsImportedCount++;
+            result.Report.AddLimited(result.Report.GcmTags, tag, 500);
+            if (existingLookup.Contains(tag))
+            {
+                result.Report.GcmTagsAlreadyKnownCount++;
+                result.Report.AddLimited(result.Report.GcmTagsAlreadyKnown, tag, 500);
+            }
+            else
+            {
+                result.Report.GcmTagsWouldAddCount++;
+                result.Report.AddLimited(result.Report.GcmTagsWouldAdd, tag, 500);
+            }
+        }
+    }
+
+    private static void ApplyGcmTags(IDatabase database, string exportRoot, OmniApplyResult applyResult)
+    {
+        var gcm = ReadGcmTags(exportRoot);
+        applyResult.GcmBlankTags = gcm.BlankCount;
+        applyResult.GcmDuplicateTags = gcm.Duplicates.Count;
+        foreach (var duplicate in gcm.Duplicates)
+        {
+            applyResult.AddLimited(applyResult.GcmDuplicateTagDetails, duplicate);
+        }
+
+        database.EffectIds ??= [];
+        var existing = new HashSet<string>(
+            database.EffectIds.Where(tag => !string.IsNullOrWhiteSpace(tag)),
+            StringComparer.OrdinalIgnoreCase);
+
+        foreach (var tag in gcm.Tags)
+        {
+            applyResult.GcmTagsRead++;
+            if (existing.Contains(tag))
+            {
+                applyResult.GcmTagsAlreadyKnown++;
+                applyResult.AddLimited(applyResult.GcmTagsAlreadyKnownDetails, tag);
+                continue;
+            }
+
+            database.EffectIds.Add(tag);
+            existing.Add(tag);
+            applyResult.GcmTagsAdded++;
+            applyResult.AddLimited(applyResult.GcmTagsAddedDetails, tag);
+        }
+    }
+
+    private static GcmTagLoadResult ReadGcmTags(string exportRoot)
+    {
+        var path = Path.Combine(exportRoot, "gcm.json");
+        var result = new GcmTagLoadResult();
+        if (!File.Exists(path))
+        {
+            return result;
+        }
+
+        var array = JArray.Parse(File.ReadAllText(path));
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var token in array)
+        {
+            var tag = token.Value<string>()?.Trim() ?? string.Empty;
+            if (string.IsNullOrWhiteSpace(tag))
+            {
+                result.BlankCount++;
+                continue;
+            }
+
+            if (!seen.Add(tag))
+            {
+                result.Duplicates.Add(tag);
+                continue;
+            }
+
+            result.Tags.Add(tag);
+        }
+
+        return result;
+    }
+
+    private sealed class GcmTagLoadResult
+    {
+        public List<string> Tags { get; } = [];
+        public List<string> Duplicates { get; } = [];
+        public int BlankCount { get; set; }
+    }
+
+    private static int ScaleProgress(int current, int total, int startPercent, int endPercent)
+    {
+        if (total <= 0)
+        {
+            return endPercent;
+        }
+
+        var ratio = Math.Clamp(current / (float)total, 0f, 1f);
+        return startPercent + (int)Math.Round((endPercent - startPercent) * ratio);
+    }
+
+    private static void ReportProgress(
+        IProgress<OmniImportProgress>? progress,
+        int percent,
+        string stage,
+        string detail = "",
+        int current = 0,
+        int total = 0)
+    {
+        if (progress == null)
+        {
+            return;
+        }
+
+        if (total > 0 && !ShouldReportProgressPoint(current, total))
+        {
+            return;
+        }
+
+        progress.Report(new OmniImportProgress(percent, stage, detail, current, total));
+    }
+
+    private static bool ShouldReportProgressPoint(int current, int total)
+    {
+        if (current <= 1 || current >= total)
+        {
+            return true;
+        }
+
+        var stride = Math.Max(1, total / 200);
+        return current % stride == 0;
+    }
+
+    private sealed class ThrottledProgress : IProgress<OmniImportProgress>, IDisposable
+    {
+        private const int MinimumUpdateMilliseconds = 200;
+        private readonly IProgress<OmniImportProgress>? _inner;
+        private readonly System.Diagnostics.Stopwatch _stopwatch = System.Diagnostics.Stopwatch.StartNew();
+        private OmniImportProgress? _pending;
+        private int _lastPercent = -1;
+        private string _lastStage = string.Empty;
+        private long _lastReportMilliseconds;
+
+        public ThrottledProgress(IProgress<OmniImportProgress>? inner)
+        {
+            _inner = inner;
+        }
+
+        public void Report(OmniImportProgress value)
+        {
+            if (_inner == null)
+            {
+                return;
+            }
+
+            _pending = value;
+            var elapsed = _stopwatch.ElapsedMilliseconds - _lastReportMilliseconds;
+            var force = value.ClampedPercent is 0 or 100;
+            var stageChanged = !string.Equals(value.Stage, _lastStage, StringComparison.Ordinal);
+            var percentChanged = value.ClampedPercent != _lastPercent;
+            if (!force && (!percentChanged && !stageChanged || elapsed < MinimumUpdateMilliseconds))
+            {
+                return;
+            }
+
+            Flush();
+        }
+
+        public void Dispose()
+        {
+            Flush();
+        }
+
+        private void Flush()
+        {
+            if (_inner == null || _pending == null)
+            {
+                return;
+            }
+
+            _inner.Report(_pending);
+            _lastPercent = _pending.ClampedPercent;
+            _lastStage = _pending.Stage;
+            _lastReportMilliseconds = _stopwatch.ElapsedMilliseconds;
+            _pending = null;
+        }
+    }
+
+    private static void TrackDryRunClassification(
+        string fullName,
+        OmniPowerClassification classification,
+        OmniImportResult result)
+    {
+        if (classification.HiddenPower)
+        {
+            result.Report.HiddenSupportPowerCount++;
+            result.Report.AddLimited(result.Report.HiddenSupportPowers, classification.Summary(fullName), 500);
+        }
+        else if (classification.Reasons.Any(r => r.Contains("visible gated", StringComparison.OrdinalIgnoreCase)))
+        {
+            result.Report.VisibleGatedPowerCount++;
+            result.Report.AddLimited(result.Report.VisibleGatedPowers, classification.Summary(fullName), 500);
+        }
+
+        if (classification.RedirectKind == OmniRedirectKind.ExecutionVariant)
+        {
+            result.Report.RedirectExecutionVariantCount++;
+            result.Report.AddLimited(result.Report.RedirectExecutionVariants, classification.Summary(fullName), 500);
+        }
+
+        if (classification.ClickBuff)
+        {
+            result.Report.ClickBuffPowerCount++;
+            result.Report.AddLimited(result.Report.ClickBuffClassifications, classification.Summary(fullName), 500);
+        }
+
+        if (classification.InherentType == Enums.eGridType.Class && classification.IncludeFlag && !classification.HiddenPower)
+        {
+            result.Report.ClassInherentPowerCount++;
+            result.Report.AddLimited(result.Report.ClassInherentPowers, classification.Summary(fullName), 500);
+        }
+
+        if (classification.HiddenPower && classification.Reasons.Any(r => r.Contains("mode-gated", StringComparison.OrdinalIgnoreCase)))
+        {
+            result.Report.HiddenByPowerLevelModeGateCount++;
+            result.Report.AddLimited(result.Report.HiddenByPowerLevelModeGates, classification.Summary(fullName), 500);
+        }
+
+        if (classification.ClassificationConfidence < 0.65f || classification.RedirectKind == OmniRedirectKind.Unknown)
+        {
+            result.Report.ManualClassificationReviewCount++;
+            result.Report.AddLimited(result.Report.ManualClassificationReviews, classification.Summary(fullName), 500);
+        }
+    }
+
+    private static void TrackPowerFieldCoverage(OmniPowerDefinition power, OmniImportReport report)
+    {
+        var owner = power.FullName;
+        if (HasJsonValue(power.MaxToggleOnTimeValue))
+        {
+            AddMappedPowerField(report, $"{owner}: max_toggle_on_time -> UsageTime = {power.MaxToggleOnTime}");
+        }
+        else if (HasJsonValue(power.UsageTimeValue))
+        {
+            AddMappedPowerField(report, $"{owner}: usage_time -> UsageTime = {power.UsageTime}");
+        }
+
+        TrackChargeFieldCoverage(power, report);
+
+        if (power.ExclusionGroups.Count > 0)
+        {
+            AddMappedPowerField(report, $"{owner}: exclusion_groups -> GroupMembership = {FormatStringList(power.ExclusionGroups)}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(power.NotifyAiWhen))
+        {
+            if (TryMapAiReport(power.NotifyAiWhen, out var mapped))
+            {
+                AddMappedPowerField(report, $"{owner}: notify_ai_when -> AIReport = {mapped}");
+            }
+            else
+            {
+                AddPowerFieldConflict(report, $"{owner}: notify_ai_when has no Mids eNotify mapping: {power.NotifyAiWhen}");
+            }
+        }
+
+        if (power.CastThrough.Count > 0)
+        {
+            if (power.CastThrough.Any(IsHoldCastThroughToken))
+            {
+                AddMappedPowerField(report, $"{owner}: cast_through -> CastThroughHold = true from {FormatStringList(power.CastThrough)}");
+            }
+
+            var nonHold = power.CastThrough.Where(value => !IsHoldCastThroughToken(value)).ToList();
+            if (nonHold.Count > 0)
+            {
+                AddDeferredPowerField(report, $"{owner}: cast_through values not represented by Mids boolean CastThroughHold: {FormatStringList(nonHold)}");
+            }
+        }
+
+        TrackDeferredPowerFields(power, report);
+        TrackExtensionPowerFields(power, report);
+    }
+
+    private static void TrackApplyPowerFieldCoverage(OmniPowerDefinition power, OmniApplyResult result)
+    {
+        var owner = power.FullName;
+        if (HasJsonValue(power.MaxToggleOnTimeValue))
+        {
+            AddMappedPowerField(result, $"{owner}: max_toggle_on_time -> UsageTime = {power.MaxToggleOnTime}");
+        }
+        else if (HasJsonValue(power.UsageTimeValue))
+        {
+            AddMappedPowerField(result, $"{owner}: usage_time -> UsageTime = {power.UsageTime}");
+        }
+
+        TrackChargeFieldCoverage(power, result);
+
+        if (power.ExclusionGroups.Count > 0)
+        {
+            AddMappedPowerField(result, $"{owner}: exclusion_groups -> GroupMembership = {FormatStringList(power.ExclusionGroups)}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(power.NotifyAiWhen))
+        {
+            if (TryMapAiReport(power.NotifyAiWhen, out var mapped))
+            {
+                AddMappedPowerField(result, $"{owner}: notify_ai_when -> AIReport = {mapped}");
+            }
+            else
+            {
+                AddPowerFieldConflict(result, $"{owner}: notify_ai_when has no Mids eNotify mapping: {power.NotifyAiWhen}");
+            }
+        }
+
+        if (power.CastThrough.Count > 0)
+        {
+            if (power.CastThrough.Any(IsHoldCastThroughToken))
+            {
+                AddMappedPowerField(result, $"{owner}: cast_through -> CastThroughHold = true from {FormatStringList(power.CastThrough)}");
+            }
+
+            var nonHold = power.CastThrough.Where(value => !IsHoldCastThroughToken(value)).ToList();
+            if (nonHold.Count > 0)
+            {
+                AddDeferredPowerField(result, $"{owner}: cast_through values not represented by Mids boolean CastThroughHold: {FormatStringList(nonHold)}");
+            }
+        }
+
+        TrackDeferredPowerFields(power, result);
+        TrackExtensionPowerFields(power, result);
+    }
+
+    private static void ScanPowerMetadata(OmniPowerDefinition power, OmniImportResult result)
+    {
+        TrackPowerFieldCoverage(power, result.Report);
+
+        if (!string.IsNullOrWhiteSpace(power.Requires))
+        {
+            result.Report.PowerRequirements++;
+            TrackPowerRequirement(power.FullName, power.Requires, result);
+        }
+
+        if (!string.IsNullOrWhiteSpace(power.TargetRequires))
+        {
+            result.Report.TargetRequirements++;
+            result.Report.AddLimited(result.Report.PowerTargetRequiresNotImported,
+                $"{power.FullName} target_requires ignored for build planner: {power.TargetRequires}");
+            if (LooksLikePlannerModeTargetRequires(power.TargetRequires))
+            {
+                result.Report.PowerTargetRequiresManualReviewCount++;
+                result.Report.AddLimited(result.Report.PowerTargetRequiresManualReview,
+                    $"{power.FullName} target_requires may contain source mode planner logic: {power.TargetRequires}");
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(power.ActivateRequires))
+        {
+            if (IsSustainedStatPower(power))
+            {
+                TrackExpression(power.FullName, power.ActivateRequires, result, AdvancedConditionEvaluationMode.ReportOnly);
+                result.Report.AddLimited(result.Report.RawAdvancedExpressions,
+                    $"{power.FullName} activate_requires retained for review: {power.ActivateRequires}");
+            }
+            else
+            {
+                result.Report.ActivateRequirementsIgnored++;
+                result.Report.AddLimited(result.Report.IgnoredFields,
+                    $"{power.FullName} activate_requires ignored: {power.ActivateRequires}");
+            }
+        }
+
+        AddIgnoredField(power.FullName, "server_tray_requires", power.ServerTrayRequires, result);
+        AddIgnoredField(power.FullName, "confirm_requires", power.ConfirmRequires, result);
+        if (!string.IsNullOrWhiteSpace(power.HighlightExpression) &&
+            power.HighlightExpression.Contains("kEngaged", StringComparison.OrdinalIgnoreCase) &&
+            OmniModeMapper.IsSnipePlannerContext(power.FullName))
+        {
+            result.Report.SnipeEngagedAliasCount++;
+            result.Report.AddLimited(result.Report.SnipeEngagedAliases,
+                $"{power.FullName}: highlight_expression kEngaged -> FastSnipe", 500);
+        }
+
+        AddIgnoredField(power.FullName, "highlight_expression", power.HighlightExpression, result);
+
+        if (!string.IsNullOrWhiteSpace(power.MaxTargetsExpression))
+        {
+            result.Report.DynamicMaxTargetExpressions++;
+            result.Report.AddLimited(result.Report.DynamicExpressionsNotEvaluated,
+                $"{power.FullName} max_targets_expression: {power.MaxTargetsExpression}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(power.ChainEffectExpression))
+        {
+            result.Report.ChainExpressions++;
+            result.Report.AddLimited(result.Report.DynamicExpressionsNotEvaluated,
+                $"{power.FullName} chain_effect_expr: {power.ChainEffectExpression}");
+        }
+
+        if (!string.IsNullOrWhiteSpace(power.ChainTargetExpression))
+        {
+            result.Report.ChainExpressions++;
+            result.Report.AddLimited(result.Report.DynamicExpressionsNotEvaluated,
+                $"{power.FullName} chain_target_expr: {power.ChainTargetExpression}");
+        }
+
+        foreach (var redirect in power.Redirects)
+        {
+            result.Report.RedirectRules++;
+            if (string.IsNullOrWhiteSpace(redirect.Name))
+            {
+                result.Report.AddLimited(result.Report.UnresolvedRedirects, $"{power.FullName} has redirect with no destination.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(redirect.Requires))
+            {
+                TrackExpression(power.FullName, redirect.Requires, result, AdvancedConditionEvaluationMode.ReportOnly);
+            }
+        }
+
+        foreach (var effect in power.Effects)
+        {
+            ScanEffect(power.FullName, effect, result);
+        }
+    }
+
+    private static bool LooksLikePlannerModeTargetRequires(string expression)
+    {
+        return !string.IsNullOrWhiteSpace(expression) &&
+               (expression.Contains("source.Mode?", StringComparison.OrdinalIgnoreCase) ||
+                expression.Contains("source>mode", StringComparison.OrdinalIgnoreCase) ||
+                expression.Contains("source.mode", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static void TrackPvTargetGating(
+        string powerFullName,
+        OmniEffectDefinition effect,
+        OmniEffectTemplate template,
+        OmniImportResult result)
+    {
+        var targetsPlayer = TargetsEntity(effect.RequiresExpression, "player") || TargetsEntity(template.JitRequires, "player");
+        var targetsCritter = TargetsEntity(effect.RequiresExpression, "critter") || TargetsEntity(template.JitRequires, "critter");
+        var table = template.Table ?? string.Empty;
+        var pvMode = "Any";
+        var inference = string.Empty;
+
+        if (targetsPlayer && !targetsCritter)
+        {
+            pvMode = "PvP";
+            inference = "target entity expression";
+            result.Report.PvModeInferredFromTargetEntityCount++;
+        }
+        else if (targetsCritter && !targetsPlayer)
+        {
+            pvMode = "PvE";
+            inference = "target entity expression";
+            result.Report.PvModeInferredFromTargetEntityCount++;
+        }
+        else if (targetsPlayer && targetsCritter)
+        {
+            inference = "ambiguous target entity expression";
+            result.Report.PvModeAmbiguousCount++;
+        }
+        else if (table.Contains("pvp", StringComparison.OrdinalIgnoreCase))
+        {
+            pvMode = "PvP";
+            inference = "modifier table";
+            result.Report.PvModeInferredFromTableCount++;
+        }
+        else if (table.Contains("pve", StringComparison.OrdinalIgnoreCase))
+        {
+            pvMode = "PvE";
+            inference = "modifier table";
+            result.Report.PvModeInferredFromTableCount++;
+        }
+
+        if ((targetsPlayer && pvMode != "PvP") || (targetsCritter && pvMode != "PvE"))
+        {
+            result.Report.PvTargetMappingMismatchCount++;
+            result.Report.AddLimited(result.Report.PvTargetMappingMismatches,
+                $"{powerFullName}: target_enttype player={targetsPlayer} critter={targetsCritter}, inferred PvMode={pvMode}, template.target='{template.Target}', requires='{effect.RequiresExpression}', jit='{template.JitRequires}'");
+        }
+
+        if (!IsFocusedPvTargetAuditPower(powerFullName))
+        {
+            return;
+        }
+
+        result.Report.PvTargetAuditCount++;
+        var rows = OmniExpressionConverter.ToConditionSet(
+            AdvancedConditionEvaluationMode.ReportOnly,
+            powerFullName,
+            effect.RequiresExpression,
+            template.JitRequires);
+        result.Report.AddLimited(result.Report.PvTargetGatingAudit,
+            $"{powerFullName}: template.target='{template.Target}', requires='{effect.RequiresExpression}', jit='{template.JitRequires}', inferred PvMode={pvMode} ({inference}), conditions={FormatConditionRows(rows)}");
+    }
+
+    private static bool IsFocusedPvTargetAuditPower(string fullName)
+    {
+        var normalized = (fullName ?? string.Empty)
+            .Replace("_", string.Empty, StringComparison.Ordinal)
+            .Replace(".", string.Empty, StringComparison.Ordinal)
+            .ToLowerInvariant();
+        return normalized.Contains("enflame", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("rainofarrows", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool TargetsEntity(string expression, string entity)
+    {
+        if (string.IsNullOrWhiteSpace(expression))
+        {
+            return false;
+        }
+
+        var escaped = Regex.Escape(entity);
+        return Regex.IsMatch(
+                   expression,
+                   $@"target\s*>\s*enttype\s*(?:eq|==)\s*['""]?{escaped}['""]?",
+                   RegexOptions.IgnoreCase | RegexOptions.CultureInvariant) ||
+               Regex.IsMatch(
+                   expression,
+                   $@"['""]?{escaped}['""]?\s+target\s*>\s*enttype\s*(?:eq|==)",
+                   RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+    }
+
+    private static string FormatConditionRows(AdvancedConditionSet conditions)
+    {
+        if (conditions.Rows.Count == 0)
+        {
+            return "none";
+        }
+
+        return string.Join("; ", conditions.Rows.Select(row =>
+            $"{row.Link}:{row.Kind}:{row.Subject}{row.Operator}{row.Value}:mode={row.EvaluationMode}:unsupported={row.Unsupported}"));
+    }
+
+    private static void ScanEffect(string powerFullName, OmniEffectDefinition effect, OmniImportResult result)
+    {
+        result.Report.EffectsVisited++;
+        TrackEffectGroupTags(powerFullName, effect.Tags, result);
+        if (!string.IsNullOrWhiteSpace(effect.RequiresExpression))
+        {
+            result.Report.EffectRequiresExpressions++;
+            TrackExpression(powerFullName, effect.RequiresExpression, result, AdvancedConditionEvaluationMode.ReportOnly);
+        }
+
+        foreach (var template in effect.Templates)
+        {
+            result.Report.EffectTemplatesVisited++;
+            TrackPvTargetGating(powerFullName, effect, template, result);
+            TrackTemplateFilterTags(powerFullName, template, result);
+            if (!string.IsNullOrWhiteSpace(template.JitRequires))
+            {
+                result.Report.JitRequiresExpressions++;
+                TrackExpression(powerFullName, template.JitRequires, result, AdvancedConditionEvaluationMode.ReportOnly);
+            }
+
+            if (template.Params != null)
+            {
+                result.Report.ParamsVisited++;
+                var paramType = template.Params.Value<string>("type") ?? string.Empty;
+                if (paramType.Equals("EntCreate", StringComparison.OrdinalIgnoreCase))
+                {
+                    result.Report.EntCreateParams++;
+                    var entityDef = template.Params.Value<string>("entity_def") ?? string.Empty;
+                    if (string.IsNullOrWhiteSpace(entityDef))
+                    {
+                        result.Report.PseudoEntCreatesWithoutEntityDef++;
+                        result.Report.PseudoPetActors++;
+                        result.Report.AddLimited(result.Report.PseudoPetClassifications,
+                            $"{powerFullName}: EntCreate has no entity_def; treating as flattened pseudo/delivery actor.");
+                    }
+                    else
+                    {
+                        result.ReferencedEntities.Add(entityDef);
+                    }
+                }
+                else if (paramType.Equals("EffectFilter", StringComparison.OrdinalIgnoreCase))
+                {
+                    TrackUnsupportedEffectFilterParams(powerFullName, template.Params, result);
+                }
+            }
+
+            foreach (var attrib in template.Attribs)
+            {
+                if (string.IsNullOrWhiteSpace(attrib))
+                {
+                    result.Report.AddLimited(result.Report.UnknownAttribMappings, $"{powerFullName} has blank attrib.");
+                }
+            }
+
+            if (template.Attribs.Any(attrib =>
+                    attrib.Equals("Set_Mode", StringComparison.OrdinalIgnoreCase) ||
+                    attrib.Equals("Unset_Mode", StringComparison.OrdinalIgnoreCase)))
+            {
+                var rawModeName = template.ModeName ?? string.Empty;
+                if (!string.IsNullOrWhiteSpace(rawModeName))
+                {
+                    var normalized = OmniModeMapper.Normalize(rawModeName);
+                    result.Report.EffectModePayloadMappedCount++;
+                    result.Report.AddLimited(result.Report.EffectModePayloads, $"{powerFullName}: {rawModeName} -> {normalized}");
+                    if (OmniModeMapper.TryGetPlannerMode(normalized, out var plannerMode))
+                    {
+                        result.Report.PlannerModeDiscoveredCount++;
+                        result.Report.AddLimited(result.Report.PlannerModesDiscovered,
+                            $"{powerFullName}: {normalized} -> {PlannerModeMapper.ToCanonicalName(plannerMode)}", 500);
+                    }
+                }
+                else
+                {
+                    var modeId = (int)MathF.Round(template.Magnitude);
+                    if (OmniModeMapper.TryFromModeId(modeId, out var mappedName, out var mappedFlag))
+                    {
+                        result.Report.EffectModePayloadMappedCount++;
+                        result.Report.AddLimited(result.Report.EffectModePayloads,
+                            $"{powerFullName}: mode id {modeId} -> {mappedName} ({mappedFlag})");
+                        if (OmniModeMapper.TryGetPlannerMode(mappedName, out var plannerMode))
+                        {
+                            result.Report.PlannerModeDiscoveredCount++;
+                            result.Report.AddLimited(result.Report.PlannerModesDiscovered,
+                                $"{powerFullName}: mode id {modeId} -> {PlannerModeMapper.ToCanonicalName(plannerMode)}", 500);
+                        }
+                    }
+                    else
+                    {
+                        result.Report.UnknownEffectModeCount++;
+                        result.Report.AddLimited(result.Report.UnknownEffectModes,
+                            $"{powerFullName}: {string.Join(",", template.Attribs)} mode id {modeId}");
+                    }
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(template.Type))
+            {
+                result.Report.AddLimited(result.Report.UnknownEffectMappings, $"{powerFullName} template has no type.");
+            }
+
+            if (!string.IsNullOrWhiteSpace(template.Table) && !CanonicalModifierTableExists(result, template.Table))
+            {
+                result.Report.MissingModifierTableReferences++;
+                result.Report.AddLimited(result.Report.MissingModifierTableReferenceDetails,
+                    $"{powerFullName}: modifier table '{template.Table}' was not found in canonical class tables or legacy AttribMods.", 500);
+            }
+        }
+
+        foreach (var childEffect in effect.ChildEffects)
+        {
+            result.Report.ChildEffectsVisited++;
+            if (!ChildEffectHasRepresentableSurface(childEffect))
+            {
+                result.Report.AddLimited(result.Report.ChildEffectsNotRepresented,
+                    $"{powerFullName}: child effect has no templates, params, or nested child effects.");
+            }
+
+            ScanEffect(powerFullName, childEffect, result);
+        }
+    }
+
+    private static bool ChildEffectHasRepresentableSurface(OmniEffectDefinition effect)
+    {
+        return effect.Templates.Any(template =>
+                   !string.IsNullOrWhiteSpace(template.Type) ||
+                   template.Attribs.Count > 0 ||
+                   template.Params != null) ||
+               effect.ChildEffects.Count > 0;
+    }
+
+    private static bool CanonicalModifierTableExists(OmniImportResult result, string tableName)
+    {
+        var canonicalName = DatabaseAPI.NormalizeModifierTableName(tableName);
+        if (result.ClassAttributes.Values.Any(classTable => classTable.NamedTables.ContainsKey(canonicalName)))
+        {
+            return true;
+        }
+
+        return DatabaseAPI.ModifierTableExists(canonicalName);
+    }
+
+    private static void TrackEffectGroupTags(string powerFullName, IEnumerable<string> tags, OmniImportResult result)
+    {
+        foreach (var tag in DistinctTags(tags))
+        {
+            result.Report.EffectGroupTagCount++;
+            result.Report.AddLimited(result.Report.EffectGroupTags, $"{powerFullName}: {tag}", 500);
+            TrackTagMissingFromGcm(powerFullName, tag, result);
+        }
+    }
+
+    private static void TrackTemplateFilterTags(string powerFullName, OmniEffectTemplate template, OmniImportResult result)
+    {
+        if (!IsChanceModTemplate(template))
+        {
+            return;
+        }
+
+        var powerLocal = IsPowerLocalChanceModTemplate(template);
+        var tags = GetEffectFilterTags(template).ToArray();
+        if (tags.Length == 0)
+        {
+            TrackChanceModReport(result, powerFullName, powerLocal, string.Empty);
+        }
+
+        foreach (var tag in tags)
+        {
+            result.Report.TemplateFilterTagCount++;
+            result.Report.AddLimited(result.Report.TemplateFilterTags, $"{powerFullName}: {tag}", 500);
+            TrackTagMissingFromGcm(powerFullName, tag, result);
+            TrackChanceModReport(result, powerFullName, powerLocal, tag);
+        }
+    }
+
+    private static void TrackUnsupportedEffectFilterParams(
+        string powerFullName,
+        JObject parameters,
+        OmniImportResult result)
+    {
+        var unsupportedKeys = new[]
+        {
+            "power_names",
+            "power_name",
+            "powers",
+            "powerset_names",
+            "powersets",
+            "category_names",
+            "categories"
+        };
+        var present = unsupportedKeys
+            .Where(key => parameters.TryGetValue(key, StringComparison.OrdinalIgnoreCase, out var token) &&
+                          token is { Type: not JTokenType.Null } &&
+                          !string.IsNullOrWhiteSpace(token.ToString()))
+            .ToArray();
+        if (present.Length == 0)
+        {
+            return;
+        }
+
+        result.Report.UnsupportedEffectFilterCount++;
+        result.Report.AddLimited(result.Report.UnsupportedEffectFilters,
+            $"{powerFullName}: EffectFilter has report-only filters {string.Join(", ", present)}", 500);
+    }
+
+    private static bool IsChanceModTemplate(OmniEffectTemplate template)
+    {
+        return IsGlobalChanceModTemplate(template) || IsPowerLocalChanceModTemplate(template);
+    }
+
+    private static bool IsGlobalChanceModTemplate(OmniEffectTemplate template)
+    {
+        return template.Attribs.Any(attrib =>
+                   attrib.Equals("Global_Chance_Mod", StringComparison.OrdinalIgnoreCase) ||
+                   attrib.Equals("GlobalChanceMod", StringComparison.OrdinalIgnoreCase)) ||
+               template.Type.Equals("Global_Chance_Mod", StringComparison.OrdinalIgnoreCase) ||
+               template.Type.Equals("GlobalChanceMod", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsPowerLocalChanceModTemplate(OmniEffectTemplate template)
+    {
+        return template.Attribs.Any(attrib =>
+                   attrib.Equals("Power_Chance_Mod", StringComparison.OrdinalIgnoreCase) ||
+                   attrib.Equals("PowerChanceMod", StringComparison.OrdinalIgnoreCase)) ||
+               template.Type.Equals("Power_Chance_Mod", StringComparison.OrdinalIgnoreCase) ||
+               template.Type.Equals("PowerChanceMod", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static void TrackChanceModReport(
+        OmniImportResult result,
+        string powerFullName,
+        bool powerLocal,
+        string reward)
+    {
+        if (powerLocal)
+        {
+            result.Report.PowerLocalChanceModsMappedCount++;
+        }
+        else
+        {
+            result.Report.GlobalChanceModsMappedCount++;
+        }
+
+        result.Report.AddLimited(
+            result.Report.ChanceModMappings,
+            $"{powerFullName}: mapped {(powerLocal ? "power-local" : "global")} chance mod reward '{(string.IsNullOrWhiteSpace(reward) ? "*" : reward)}'");
+    }
+
+    private static IEnumerable<string> GetEffectFilterTags(OmniEffectTemplate template)
+    {
+        if (template.Params != null &&
+            string.Equals(template.Params.Value<string>("type"), "EffectFilter", StringComparison.OrdinalIgnoreCase))
+        {
+            var paramTags = ReadStringArray(template.Params["tags"]).ToArray();
+            if (paramTags.Length > 0)
+            {
+                return DistinctTags(paramTags);
+            }
+        }
+
+        return DistinctTags(template.Tags);
+    }
+
+    private static IEnumerable<string> ReadStringArray(JToken? token)
+    {
+        if (token == null)
+        {
+            yield break;
+        }
+
+        if (token.Type == JTokenType.Array)
+        {
+            foreach (var value in token.Values<string>())
+            {
+                if (!string.IsNullOrWhiteSpace(value))
+                {
+                    yield return value.Trim();
+                }
+            }
+
+            yield break;
+        }
+
+        var scalar = token.Type == JTokenType.String
+            ? token.ToString()
+            : string.Empty;
+        if (!string.IsNullOrWhiteSpace(scalar))
+        {
+            yield return scalar.Trim();
+        }
+    }
+
+    private static IEnumerable<string> DistinctTags(IEnumerable<string>? tags)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var tag in tags ?? [])
+        {
+            var trimmed = tag.Trim();
+            if (!string.IsNullOrWhiteSpace(trimmed) && seen.Add(trimmed))
+            {
+                yield return trimmed;
+            }
+        }
+    }
+
+    private static void TrackTagMissingFromGcm(string powerFullName, string tag, OmniImportResult result)
+    {
+        if (result.GcmTags.Count == 0 || result.GcmTags.Contains(tag))
+        {
+            return;
+        }
+
+        result.Report.EffectTagMissingFromGcmCount++;
+        result.Report.AddLimited(result.Report.EffectTagsMissingFromGcm, $"{powerFullName}: {tag}", 500);
+    }
+
+    private void ScanEntities(string exportRoot, OmniImportResult result, IProgress<OmniImportProgress>? progress)
+    {
+        result.Report.EntityReferences = result.ReferencedEntities.Count;
+        if (result.ReferencedEntities.Count == 0)
+        {
+            ReportProgress(progress, 80, "Scanning entities", "No referenced entities");
+            return;
+        }
+
+        var entitiesRoot = Path.Combine(exportRoot, "entities");
+        if (!Directory.Exists(entitiesRoot))
+        {
+            result.Report.AddLimited(result.Report.UnresolvedEntities, "Missing entities directory.");
+            return;
+        }
+
+        var entityFiles = Directory.EnumerateFiles(entitiesRoot, "*.json", SearchOption.TopDirectoryOnly)
+            .ToDictionary(
+                f => NormalizeEntityKey(Path.GetFileNameWithoutExtension(f)),
+                f => f,
+                StringComparer.OrdinalIgnoreCase);
+
+        var entityRefs = result.ReferencedEntities.OrderBy(e => e, StringComparer.OrdinalIgnoreCase).ToList();
+        for (var index = 0; index < entityRefs.Count; index++)
+        {
+            var entityRef = entityRefs[index];
+            ReportProgress(
+                progress,
+                ScaleProgress(index, entityRefs.Count, 80, 92),
+                "Resolving entities",
+                "",
+                index + 1,
+                entityRefs.Count);
+            if (!entityFiles.TryGetValue(NormalizeEntityKey(entityRef), out var file))
+            {
+                result.Report.EntityReferencesUnresolved++;
+                result.Report.AddLimited(result.Report.UnresolvedEntities,
+                    $"{entityRef}: referenced by scoped EntCreate but no matching entity file was found.");
+                continue;
+            }
+
+            var entity = ReadJson<OmniEntityDefinition>(file);
+            if (entity == null)
+            {
+                result.Report.EntityReferencesUnresolved++;
+                result.Report.AddLimited(result.Report.UnresolvedEntities,
+                    $"{entityRef}: matching entity file could not be read.");
+                continue;
+            }
+
+            result.Report.EntitiesRead++;
+            result.Report.EntityReferencesResolved++;
+            var actor = OmniPetClassifier.Classify(entity);
+            result.Actors[actor.EntityName] = actor;
+            if (actor.Kind == OmniBuildActorKind.RealPet)
+            {
+                result.Report.RealPetActors++;
+            }
+            else
+            {
+                result.Report.PseudoPetActors++;
+                result.Report.AddLimited(result.Report.PseudoPetClassifications,
+                    $"{actor.EntityName}: {actor.ClassificationReason}");
+            }
+        }
+    }
+
+    private static string NormalizeEntityKey(string value)
+    {
+        return new string((value ?? string.Empty)
+            .Where(char.IsLetterOrDigit)
+            .Select(char.ToLowerInvariant)
+            .ToArray());
+    }
+
+    private void ScanEnhancementData(
+        string exportRoot,
+        OmniImportResult result,
+        IProgress<OmniImportProgress>? progress)
+    {
+        ReportProgress(progress, 94, "Checking enhancement inputs");
+        var report = result.Report;
+        var normalizedData = LoadNormalizedEnhancementImportData(exportRoot);
+        var enhancementDirs = new[]
+        {
+            "enhancements",
+            "enhancement_sets",
+            "salvage"
+        };
+
+        foreach (var directoryName in enhancementDirs)
+        {
+            var directory = Path.Combine(exportRoot, directoryName);
+            if (!Directory.Exists(directory))
+            {
+                report.AddLimited(report.IgnoredFields, $"Missing optional {directoryName} directory.");
+            }
+        }
+
+        if (!Directory.Exists(Path.Combine(exportRoot, "recipes")) &&
+            !Directory.Exists(Path.Combine(exportRoot, "base_recipes")))
+        {
+            report.AddLimited(report.IgnoredFields, "Missing optional recipes/ or base_recipes/ directory.");
+        }
+
+        var policyFiles = new[]
+        {
+            "enhancement_diversification.json",
+            "enhancement_effectiveness.json",
+            "enhancement_exemplar_scaling.json",
+            "enhancement_set_groups.json",
+            "set_bonuses.json",
+            "set_conversions.json"
+        };
+
+        foreach (var fileName in policyFiles)
+        {
+            if (File.Exists(Path.Combine(exportRoot, fileName)))
+            {
+                report.EnhancementPolicyFilesPresent++;
+            }
+            else
+            {
+                report.EnhancementPolicyFilesMissing++;
+                report.AddLimited(report.EnhancementMissingPolicyFiles, $"Missing optional {fileName}.");
+                report.AddLimited(report.IgnoredFields, $"Missing optional {fileName}.");
+            }
+        }
+
+        report.EnhancementRecipeSourceDirectory = normalizedData.RecipeSourceDirectoryName;
+        report.EnhancementDefinitionsDiscovered = normalizedData.EnhancementSourceRecordsDiscovered;
+        report.EnhancementSetsDiscovered = normalizedData.EnhancementSets.Count;
+        report.EnhancementRecordsExcludedByPolicy = normalizedData.EnhancementRecordsExcludedByPolicy;
+        report.ClassicEnhancementSourceVariantsDiscovered = normalizedData.ClassicEnhancementSourceVariantsDiscovered;
+        report.ClassicEnhancementLogicalRecords = normalizedData.ClassicEnhancementLogicalRecords;
+        report.ClassicEnhancementVariantsFolded = normalizedData.ClassicEnhancementVariantsFolded;
+        report.RecipeLevelFilesDiscovered = normalizedData.Recipes.Count;
+        report.FoldedEnhancementRecipeCount = normalizedData.Recipes.Count;
+        report.RecipeLevelVariantsDiscovered = normalizedData.RecipeLevelVariantsDiscovered;
+        report.RecipeRecordsExcludedByPolicy = normalizedData.RecipeRecordsExcludedByPolicy;
+        report.SalvageDefinitionsDiscovered = normalizedData.Salvage.Count;
+        report.EnhancementLevelVariantsDiscovered = normalizedData.Enhancements.Sum(definition => definition.LevelVariants.Count);
+        report.StructuredBoostsAllowedParsedCount = normalizedData.StructuredBoostsAllowedParsedCount;
+        report.EnhancementShapeCompatibilityFallbacks = normalizedData.ShapeCompatibilityFallbackCount;
+        report.InventionCraftedVariantsDiscovered = normalizedData.InventionCraftedVariantsDiscovered;
+        report.InventionAttunedVariantsDiscovered = normalizedData.InventionAttunedVariantsDiscovered;
+        report.InventionSuperiorVariantsDiscovered = normalizedData.InventionSuperiorVariantsDiscovered;
+        report.InventionSuperiorAttunedVariantsDiscovered = normalizedData.InventionSuperiorAttunedVariantsDiscovered;
+        report.InventionStandaloneCraftedVariantsDiscovered = normalizedData.InventionStandaloneCraftedVariantsDiscovered;
+        report.InventionStandaloneAttunedVariantsDiscovered = normalizedData.InventionStandaloneAttunedVariantsDiscovered;
+        report.InventionStandaloneSuperiorVariantsDiscovered = normalizedData.InventionStandaloneSuperiorVariantsDiscovered;
+        report.InventionStandaloneSuperiorAttunedVariantsDiscovered = normalizedData.InventionStandaloneSuperiorAttunedVariantsDiscovered;
+        report.IoSetFamiliesCraftedOnly = normalizedData.IoSetFamiliesCraftedOnly;
+        report.IoSetFamiliesAttunedOnly = normalizedData.IoSetFamiliesAttunedOnly;
+        report.IoSetFamiliesSuperiorOnly = normalizedData.IoSetFamiliesSuperiorOnly;
+        report.IoSetFamiliesSuperiorAttunedOnly = normalizedData.IoSetFamiliesSuperiorAttunedOnly;
+        report.IoSetFamiliesCraftedAndAttuned = normalizedData.IoSetFamiliesCraftedAndAttuned;
+        report.IoSetFamiliesCraftedAndSuperior = normalizedData.IoSetFamiliesCraftedAndSuperior;
+        report.IoSetFamiliesCraftedAndSuperiorAttuned = normalizedData.IoSetFamiliesCraftedAndSuperiorAttuned;
+        report.IoSetFamiliesAttunedAndSuperior = normalizedData.IoSetFamiliesAttunedAndSuperior;
+        report.IoSetFamiliesAttunedAndSuperiorAttuned = normalizedData.IoSetFamiliesAttunedAndSuperiorAttuned;
+        report.IoSetFamiliesSuperiorAndSuperiorAttuned = normalizedData.IoSetFamiliesSuperiorAndSuperiorAttuned;
+        report.IoSetFamiliesCraftedAttunedSuperior = normalizedData.IoSetFamiliesCraftedAttunedSuperior;
+        report.IoSetFamiliesCraftedAttunedSuperiorAttuned = normalizedData.IoSetFamiliesCraftedAttunedSuperiorAttuned;
+        report.IoSetFamiliesCraftedSuperiorSuperiorAttuned = normalizedData.IoSetFamiliesCraftedSuperiorSuperiorAttuned;
+        report.IoSetFamiliesAttunedSuperiorSuperiorAttuned = normalizedData.IoSetFamiliesAttunedSuperiorSuperiorAttuned;
+        report.IoSetFamiliesAllFourVariants = normalizedData.IoSetFamiliesAllFourVariants;
+        report.EnhancementMalformedRecordsSkipped =
+            normalizedData.EnhancementMalformedRecordsSkipped +
+            normalizedData.EnhancementSetMalformedRecordsSkipped +
+            normalizedData.RecipeMalformedRecordsSkipped +
+            normalizedData.SalvageMalformedRecordsSkipped;
+        foreach (var detail in normalizedData.ShapeValidationDetails)
+        {
+            report.AddLimited(report.EnhancementSourceShapeValidation, detail);
+        }
+        foreach (var detail in normalizedData.ClassicEnhancementFoldDetails)
+        {
+            report.AddLimited(report.ClassicEnhancementFoldingDetails, detail);
+        }
+        foreach (var detail in normalizedData.InventionVariantAuditDetails)
+        {
+            report.AddLimited(report.InventionVariantAudit, detail);
+        }
+
+        report.AddLimited(report.EnhancementImportScanDetails,
+            $"Classic variants discovered/logical/folded: {normalizedData.ClassicEnhancementSourceVariantsDiscovered}/{normalizedData.ClassicEnhancementLogicalRecords}/{normalizedData.ClassicEnhancementVariantsFolded}");
+        report.AddLimited(report.EnhancementImportScanDetails,
+            $"Invention variants discovered crafted/attuned/superior/superior-attuned: {normalizedData.InventionCraftedVariantsDiscovered}/{normalizedData.InventionAttunedVariantsDiscovered}/{normalizedData.InventionSuperiorVariantsDiscovered}/{normalizedData.InventionSuperiorAttunedVariantsDiscovered}");
+        report.AddLimited(report.EnhancementImportScanDetails,
+            $"IO set family coverage crafted-only/attuned-only/superior-attuned-only/crafted+attuned/crafted+superior-attuned: {normalizedData.IoSetFamiliesCraftedOnly}/{normalizedData.IoSetFamiliesAttunedOnly}/{normalizedData.IoSetFamiliesSuperiorAttunedOnly}/{normalizedData.IoSetFamiliesCraftedAndAttuned}/{normalizedData.IoSetFamiliesCraftedAndSuperiorAttuned}");
+
+        foreach (var definition in normalizedData.Enhancements)
+        {
+            report.AddLimited(report.EnhancementImportScanDetails,
+                $"{definition.Name}: type={definition.EnhancementType}, family={definition.EnhancementFamily}, levels={definition.LevelMin + 1}-{definition.LevelMax + 1}");
+
+            if (!string.IsNullOrWhiteSpace(definition.PowerFullName))
+            {
+                if (result.ScopedPowerFullNames.Contains(definition.PowerFullName))
+                {
+                    report.EnhancementBoostPowerLinksResolvedDryRun++;
+                }
+                else
+                {
+                    report.EnhancementBoostPowerLinksMissingDryRun++;
+                    report.AddLimited(report.EnhancementPowerLinkAudit,
+                        $"{definition.Name}: boost power '{definition.PowerFullName}' is missing from the scanned Omni power scope.");
+                }
+            }
+        }
+
+        foreach (var definition in normalizedData.EnhancementSets)
+        {
+            report.AddLimited(report.EnhancementImportScanDetails,
+                $"{definition.Name}: set group={definition.GroupName}, boost lists={definition.BoostLists.Count}");
+        }
+
+        foreach (var recipe in normalizedData.Recipes)
+        {
+            if (result.ScopedPowerFullNames.Contains(recipe.EnhancementReward))
+            {
+                report.RecipeRewardLinksResolvedDryRun++;
+            }
+            else
+            {
+                report.RecipeRewardLinksMissingDryRun++;
+                report.AddLimited(report.EnhancementPowerLinkAudit,
+                    $"{recipe.Name}: recipe reward power '{recipe.EnhancementReward}' is missing from the scanned Omni power scope.");
+            }
+        }
+
+        foreach (var setBonusSet in normalizedData.SetBonusDefinitions.Values)
+        {
+            foreach (var bonus in setBonusSet.Bonuses)
+            {
+                foreach (var powerName in bonus.AutoPowers
+                             .Concat(string.IsNullOrWhiteSpace(bonus.BonusPower) ? [] : [bonus.BonusPower])
+                             .Where(value => !string.IsNullOrWhiteSpace(value))
+                             .Select(CanonicalizeOmniFullName)
+                             .Distinct(StringComparer.OrdinalIgnoreCase))
+                {
+                    if (result.ScopedPowerFullNames.Contains(powerName))
+                    {
+                        report.EnhancementSetBonusLinksResolvedDryRun++;
+                    }
+                    else
+                    {
+                        report.EnhancementSetBonusLinksMissingDryRun++;
+                        report.AddLimited(report.EnhancementPowerLinkAudit,
+                            $"{setBonusSet.Name}: set bonus power '{powerName}' is missing from the scanned Omni power scope.");
+                    }
+                }
+            }
+        }
+
+        InspectEnhancementReconciliationDryRun(normalizedData, report);
+
+        ReportProgress(progress, 98, "Enhancement input check complete");
+    }
+
+    private T? TryReadJson<T>(string path) where T : class
+    {
+        if (!File.Exists(path))
+        {
+            return null;
+        }
+
+        return ReadJson<T>(path);
+    }
+
+    private static string FormatLevelBand(OmniEnhancementDefinition definition)
+    {
+        if (definition.LevelVariants.Count > 0)
+        {
+            return $"{definition.LevelVariants.Min()}-{definition.LevelVariants.Max()} ({definition.LevelVariants.Count} variants)";
+        }
+
+        return $"{definition.MinLevel}-{definition.MaxLevel}";
+    }
+
+    private static OmniClassAttributeTable BuildClassAttributeTable(OmniArchetypeDefinition archetype)
+    {
+        var table = new OmniClassAttributeTable
+        {
+            ClassName = archetype.InternalName,
+            DisplayName = archetype.DisplayName,
+            PrimaryCategory = archetype.PrimaryCategory,
+            SecondaryCategory = archetype.SecondaryCategory,
+            Playable = archetype.Playable
+        };
+
+        if (archetype.ExtensionData == null)
+        {
+            return table;
+        }
+
+        table.Base = ReadFloatMap(archetype.ExtensionData, "attrib_base");
+        table.Min = ReadFloatMap(archetype.ExtensionData, "attrib_min");
+        table.Max = ReadFloatArrayMap(archetype.ExtensionData, "attrib_max");
+        table.MaxMax = ReadFloatArrayMap(archetype.ExtensionData, "attrib_max_max");
+        table.StrengthMin = ReadFloatMap(archetype.ExtensionData, "attrib_strength_min");
+        table.StrengthMax = ReadFloatArrayMap(archetype.ExtensionData, "attrib_strength_max");
+        table.ResistanceMin = ReadFloatMap(archetype.ExtensionData, "attrib_resistance_min");
+        table.ResistanceMax = ReadFloatArrayMap(archetype.ExtensionData, "attrib_resistance_max");
+        table.DiminishingStrength = ReadFloatMap(archetype.ExtensionData, "attrib_diminishing_str");
+        table.DiminishingCurrent = ReadFloatMap(archetype.ExtensionData, "attrib_diminishing_cur");
+        table.NamedTables = new Dictionary<string, float[]>(StringComparer.OrdinalIgnoreCase);
+
+        return table;
+    }
+
+    private static void ApplyLegacyArchetypeSummary(Archetype archetype, OmniClassAttributeTable table)
+    {
+        archetype.DisplayName = string.IsNullOrWhiteSpace(table.DisplayName) ? archetype.DisplayName : table.DisplayName;
+        archetype.PrimaryGroup = string.IsNullOrWhiteSpace(table.PrimaryCategory) ? archetype.PrimaryGroup : table.PrimaryCategory;
+        archetype.SecondaryGroup = string.IsNullOrWhiteSpace(table.SecondaryCategory) ? archetype.SecondaryGroup : table.SecondaryCategory;
+        archetype.Playable = table.Playable;
+
+        archetype.Hitpoints = (int)Math.Round(table.GetMax("hit_points", 50) ?? archetype.Hitpoints);
+        archetype.HPCap = table.GetMaxMax("hit_points", 50) ?? archetype.HPCap;
+        archetype.PerceptionCap = table.GetMaxMax("perception_radius", 50) ?? archetype.PerceptionCap;
+        archetype.BaseRegen = table.GetBase("regeneration") ?? archetype.BaseRegen;
+        archetype.BaseRecovery = table.GetBase("recovery") ?? archetype.BaseRecovery;
+        archetype.BaseThreat = table.GetBase("threat_level") ?? archetype.BaseThreat;
+
+        archetype.RegenCap = table.GetMax("regeneration", 50) ?? archetype.RegenCap;
+        archetype.RecoveryCap = table.GetMax("recovery", 50) ?? archetype.RecoveryCap;
+        archetype.RechargeCap = table.GetMax("recharge_time", 50) ?? archetype.RechargeCap;
+        archetype.ResCap = table.GetMax("damage_resistance", 50) ?? archetype.ResCap;
+        archetype.DamageCap = table.GetMax("damage", 50) ?? archetype.DamageCap;
+    }
+
+    private static Dictionary<string, float> ReadFloatMap(IDictionary<string, JToken> data, string key)
+    {
+        var obj = FirstObject(data, key);
+        return obj?.Properties()
+                   .Where(p => p.Value.Type is JTokenType.Float or JTokenType.Integer)
+                   .ToDictionary(p => p.Name, p => p.Value.Value<float>(), StringComparer.OrdinalIgnoreCase)
+               ?? new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static Dictionary<string, float[]> ReadFloatArrayMap(IDictionary<string, JToken> data, string key)
+    {
+        var obj = FirstObject(data, key);
+        return obj?.Properties()
+                   .Where(p => p.Value is JArray)
+                   .ToDictionary(p => p.Name, p => p.Value.Values<float>().ToArray(), StringComparer.OrdinalIgnoreCase)
+               ?? new Dictionary<string, float[]>(StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static Dictionary<string, float[]> ReadNamedTables(IDictionary<string, JToken> data, string key)
+    {
+        if (!data.TryGetValue(key, out var token) || token is not JObject obj)
+        {
+            return new Dictionary<string, float[]>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        return ReadNamedTables(obj, key);
+    }
+
+    private static Dictionary<string, float[]> ReadNamedTables(JObject data, string key)
+    {
+        if (!data.TryGetValue(key, StringComparison.OrdinalIgnoreCase, out var token) || token is not JObject obj)
+        {
+            return new Dictionary<string, float[]>(StringComparer.OrdinalIgnoreCase);
+        }
+
+        return obj.Properties()
+            .Where(p => p.Value is JArray)
+            .ToDictionary(p => p.Name, p => p.Value.Values<float>().ToArray(), StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static JObject? FirstObject(IDictionary<string, JToken> data, string key)
+    {
+        if (!data.TryGetValue(key, out var token))
+        {
+            return null;
+        }
+
+        if (token is JArray { Count: > 0 } array && array[0] is JObject first)
+        {
+            return first;
+        }
+
+        return token as JObject;
+    }
+
+    private T? ReadJson<T>(string path) where T : class
+    {
+        try
+        {
+            using var stream = File.OpenRead(path);
+            using var streamReader = new StreamReader(stream);
+            using var jsonReader = new JsonTextReader(streamReader);
+            var serializer = JsonSerializer.Create(_settings);
+            return serializer.Deserialize<T>(jsonReader);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
+    private static void TrackPowerRequirement(string owner, string expression, OmniImportResult result)
+    {
+        var conversion = OmniExpressionConverter.ConvertPowerRequirement(expression);
+        TrackConditionSet(owner, expression, conversion.Requirements, result);
+
+        foreach (var row in conversion.ReportOnlyFragments.Rows)
+        {
+            result.Report.ReportOnlyPowerRequirementFragmentCount++;
+            result.Report.AddLimited(result.Report.ReportOnlyPowerRequirementFragments, $"{owner}: {row.RawExpression}", 500);
+            result.Report.ReportOnlyExpressionCount++;
+            result.Report.AddLimited(result.Report.ReportOnlyExpressions, $"{owner}: {row.RawExpression}", 500);
+        }
+
+        if (!conversion.Success)
+        {
+            result.Report.UnsupportedPowerRequirementCount++;
+            result.Report.AddLimited(result.Report.UnsupportedPowerRequirements, $"{owner}: {expression}");
+        }
+    }
+
+    private static void TrackExpression(
+        string owner,
+        string expression,
+        OmniImportResult result,
+        AdvancedConditionEvaluationMode fallbackMode)
+    {
+        var set = OmniExpressionConverter.ToConditionSet(fallbackMode, owner, expression);
+        TrackConditionSet(owner, expression, set, result);
+    }
+
+    private static void TrackConditionSet(
+        string owner,
+        string expression,
+        AdvancedConditionSet set,
+        OmniImportResult result)
+    {
+        foreach (var row in set.Rows)
+        {
+            TrackConditionMode(owner, row, result);
+            switch (row.EvaluationMode)
+            {
+                case AdvancedConditionEvaluationMode.BuildEvaluated:
+                    result.Report.BuildEvaluatedExpressionCount++;
+                    result.Report.AddLimited(result.Report.BuildEvaluatedExpressions, $"{owner}: {row.RawExpression}", 500);
+                    if (row.Kind == AdvancedConditionKind.SourceMode &&
+                        row.Subject.Equals("FastSnipe", StringComparison.OrdinalIgnoreCase) &&
+                        row.RawExpression.Contains("kEngaged", StringComparison.OrdinalIgnoreCase))
+                    {
+                        result.Report.SnipeEngagedAliasCount++;
+                        result.Report.AddLimited(result.Report.SnipeEngagedAliases,
+                            $"{owner}: {row.RawExpression} -> FastSnipe", 500);
+                    }
+
+                    if (row.Kind == AdvancedConditionKind.SourceMode &&
+                        OmniModeMapper.TryGetPlannerMode(row.Subject, out var plannerMode))
+                    {
+                        result.Report.PlannerModeDiscoveredCount++;
+                        result.Report.AddLimited(result.Report.PlannerModesDiscovered,
+                            $"{owner}: {row.Subject} -> {PlannerModeMapper.ToCanonicalName(plannerMode)}", 500);
+                    }
+
+                    break;
+                case AdvancedConditionEvaluationMode.RuntimeTargetOnly:
+                    result.Report.RuntimeTargetExpressionCount++;
+                    result.Report.AddLimited(result.Report.RuntimeTargetExpressions, $"{owner}: {row.RawExpression}", 500);
+                    break;
+                case AdvancedConditionEvaluationMode.ReportOnly:
+                    result.Report.ReportOnlyExpressionCount++;
+                    result.Report.AddLimited(result.Report.ReportOnlyExpressions, $"{owner}: {row.RawExpression}", 500);
+                    break;
+            }
+        }
+
+        if (set.Rows.Any(r => r.Kind == AdvancedConditionKind.AdvancedExpression || r.Unsupported))
+        {
+            result.Report.RawAdvancedExpressionCount++;
+            result.Report.AddLimited(result.Report.RawAdvancedExpressions, $"{owner}: {expression}");
+        }
+
+        var unsupportedBuildRows = set.Rows
+            .Where(r => r.Kind == AdvancedConditionKind.AdvancedExpression &&
+                        r.Unsupported &&
+                        r.EvaluationMode == AdvancedConditionEvaluationMode.BuildEvaluated)
+            .ToList();
+        foreach (var row in unsupportedBuildRows)
+        {
+            var rawExpression = string.IsNullOrWhiteSpace(row.RawExpression)
+                ? expression
+                : row.RawExpression;
+            result.Report.UnsupportedBuildExpressionCount++;
+            result.Report.AddLimited(result.Report.UnsupportedBuildExpressions, $"{owner}: {rawExpression}");
+
+            foreach (var token in OmniExpressionConverter.FindUnknownTokens(rawExpression))
+            {
+                result.Report.UnknownExpressionTokenCount++;
+                result.Report.AddLimited(result.Report.UnknownExpressionTokens, $"{owner}: {token}");
+            }
+        }
+    }
+
+    private static void TrackConditionMode(string owner, AdvancedConditionRow row, OmniImportResult result)
+    {
+        if (row.Kind is not (AdvancedConditionKind.SourceMode or AdvancedConditionKind.TargetMode) ||
+            string.IsNullOrWhiteSpace(row.Subject))
+        {
+            return;
+        }
+
+        var normalized = OmniModeMapper.Normalize(row.Subject);
+        if (!IsKnownMode(normalized))
+        {
+            return;
+        }
+
+        result.Report.ConditionModeMappedCount++;
+        var subject = row.Kind == AdvancedConditionKind.TargetMode ? "target" : "source";
+        var suffix = row.Negated ? " not" : string.Empty;
+        result.Report.AddLimited(result.Report.ConditionModes,
+            $"{owner}: {subject} mode{suffix} {row.Subject} -> {normalized}", 500);
+    }
+
+    private static void AddIgnoredField(string owner, string fieldName, string value, OmniImportResult result)
+    {
+        if (!string.IsNullOrWhiteSpace(value))
+        {
+            result.Report.AddLimited(result.Report.IgnoredFields, $"{owner} {fieldName}: {value}");
+            result.Report.ReportOnlyExpressionCount++;
+            result.Report.AddLimited(result.Report.ReportOnlyExpressions, $"{owner} {fieldName}: {value}", 500);
+        }
+    }
+
+    private static void TrackChargeFieldCoverage(OmniPowerDefinition power, OmniImportReport report)
+    {
+        var hasNumber = HasJsonValue(power.NumberOfChargesValue);
+        var hasMax = HasJsonValue(power.MaxNumberOfChargesValue);
+        if (hasNumber)
+        {
+            AddMappedPowerField(report, $"{power.FullName}: number_of_charges -> NumCharges = {power.NumberOfCharges}");
+        }
+
+        if (hasNumber && hasMax && power.NumberOfCharges > 0 && power.MaxNumberOfCharges > 0 &&
+            power.NumberOfCharges != power.MaxNumberOfCharges)
+        {
+            AddPowerFieldConflict(report,
+                $"{power.FullName}: number_of_charges={power.NumberOfCharges}, max_num_charges={power.MaxNumberOfCharges}; using number_of_charges");
+        }
+        else if ((!hasNumber || power.NumberOfCharges <= 0) && hasMax && power.MaxNumberOfCharges > 0)
+        {
+            AddMappedPowerFieldWithFallback(report,
+                $"{power.FullName}: max_num_charges -> NumCharges fallback = {power.MaxNumberOfCharges}");
+        }
+    }
+
+    private static void TrackChargeFieldCoverage(OmniPowerDefinition power, OmniApplyResult result)
+    {
+        var hasNumber = HasJsonValue(power.NumberOfChargesValue);
+        var hasMax = HasJsonValue(power.MaxNumberOfChargesValue);
+        if (hasNumber)
+        {
+            AddMappedPowerField(result, $"{power.FullName}: number_of_charges -> NumCharges = {power.NumberOfCharges}");
+        }
+
+        if (hasNumber && hasMax && power.NumberOfCharges > 0 && power.MaxNumberOfCharges > 0 &&
+            power.NumberOfCharges != power.MaxNumberOfCharges)
+        {
+            AddPowerFieldConflict(result,
+                $"{power.FullName}: number_of_charges={power.NumberOfCharges}, max_num_charges={power.MaxNumberOfCharges}; using number_of_charges");
+        }
+        else if ((!hasNumber || power.NumberOfCharges <= 0) && hasMax && power.MaxNumberOfCharges > 0)
+        {
+            AddMappedPowerFieldWithFallback(result,
+                $"{power.FullName}: max_num_charges -> NumCharges fallback = {power.MaxNumberOfCharges}");
+        }
+    }
+
+    private static void TrackDeferredPowerFields(OmniPowerDefinition power, OmniImportReport report)
+    {
+        foreach (var detail in GetDeferredPowerFieldDetails(power))
+        {
+            AddDeferredPowerField(report, detail);
+        }
+    }
+
+    private static void TrackDeferredPowerFields(OmniPowerDefinition power, OmniApplyResult result)
+    {
+        foreach (var detail in GetDeferredPowerFieldDetails(power))
+        {
+            AddDeferredPowerField(result, detail);
+        }
+    }
+
+    private static IEnumerable<string> GetDeferredPowerFieldDetails(OmniPowerDefinition power)
+    {
+        if (HasJsonValue(power.MaxPowerLifetimeValue) && power.MaxPowerLifetime != 0)
+        {
+            yield return $"{power.FullName}: max_power_lifetime preserved/report-only = {power.MaxPowerLifetime}";
+        }
+
+        if (HasJsonValue(power.MaxPowerLifetimeInGameValue) && power.MaxPowerLifetimeInGame != 0)
+        {
+            yield return $"{power.FullName}: max_power_lifetime_ingame preserved/report-only = {power.MaxPowerLifetimeInGame}";
+        }
+
+        if (power.AllowedBoostSetCats.Count > 0)
+        {
+            yield return $"{power.FullName}: allowed_boostset_cats deferred until enhancement set import = {FormatStringList(power.AllowedBoostSetCats)}";
+        }
+
+        if (power.StrengthsDisallowed.Count > 0)
+        {
+            yield return $"{power.FullName}: strengths_disallowed deferred until enhancement policy mapping = {FormatStringList(power.StrengthsDisallowed)}";
+        }
+
+        if (power.GlobalStrengthsDisallowed.Count > 0)
+        {
+            yield return $"{power.FullName}: global_strengths_disallowed deferred until enhancement policy mapping = {FormatStringList(power.GlobalStrengthsDisallowed)}";
+        }
+
+        if (HasJsonValue(power.BoostInfo))
+        {
+            yield return $"{power.FullName}: boost_info deferred until boost policy import = {FormatJson(power.BoostInfo)}";
+        }
+
+        if (HasJsonValue(power.ProcAllowedValue))
+        {
+            yield return $"{power.FullName}: proc_allowed preserved/report-only = {FormatJson(power.ProcAllowedValue)}";
+        }
+
+        if (power.ProcsOnlyOnMainTarget)
+        {
+            yield return $"{power.FullName}: procs_only_on_main_target preserved/report-only = true";
+        }
+
+        if (power.ProcIgnoreChainEffect)
+        {
+            yield return $"{power.FullName}: proc_ignore_chain_effect preserved/report-only = true";
+        }
+
+        if (power.ProcIgnoreOverCap)
+        {
+            yield return $"{power.FullName}: proc_ignore_over_cap preserved/report-only = true";
+        }
+    }
+
+    private static void TrackExtensionPowerFields(OmniPowerDefinition power, OmniImportReport report)
+    {
+        if (power.ExtensionData == null)
+        {
+            return;
+        }
+
+        foreach (var (field, value) in power.ExtensionData.OrderBy(pair => pair.Key, StringComparer.OrdinalIgnoreCase))
+        {
+            if (IgnoredPowerJsonFields.Contains(field))
+            {
+                AddIgnoredPowerField(report, $"{power.FullName}: {field} ignored = {FormatJson(value)}");
+            }
+            else
+            {
+                AddUnknownPowerField(report, $"{power.FullName}: {field} = {FormatJson(value)}");
+            }
+        }
+    }
+
+    private static void TrackExtensionPowerFields(OmniPowerDefinition power, OmniApplyResult result)
+    {
+        if (power.ExtensionData == null)
+        {
+            return;
+        }
+
+        foreach (var (field, value) in power.ExtensionData.OrderBy(pair => pair.Key, StringComparer.OrdinalIgnoreCase))
+        {
+            if (IgnoredPowerJsonFields.Contains(field))
+            {
+                AddIgnoredPowerField(result, $"{power.FullName}: {field} ignored = {FormatJson(value)}");
+            }
+            else
+            {
+                AddUnknownPowerField(result, $"{power.FullName}: {field} = {FormatJson(value)}");
+            }
+        }
+    }
+
+    private static void AddMappedPowerField(OmniImportReport report, string detail)
+    {
+        report.PowerFieldsMappedCount++;
+        report.AddLimited(report.MappedPowerFields, detail, 500);
+    }
+
+    private static void AddMappedPowerField(OmniApplyResult result, string detail)
+    {
+        result.PowerFieldsMapped++;
+        result.AddLimited(result.MappedPowerFieldDetails, detail, 500);
+    }
+
+    private static void AddMappedPowerFieldWithFallback(OmniImportReport report, string detail)
+    {
+        report.PowerFieldsMappedWithFallbackCount++;
+        report.AddLimited(report.PowerFieldsMappedWithFallback, detail, 500);
+    }
+
+    private static void AddMappedPowerFieldWithFallback(OmniApplyResult result, string detail)
+    {
+        result.PowerFieldsMappedWithFallback++;
+        result.AddLimited(result.PowerFieldFallbackDetails, detail, 500);
+    }
+
+    private static void AddPowerFieldConflict(OmniImportReport report, string detail)
+    {
+        report.PowerFieldConflictCount++;
+        report.AddLimited(report.PowerFieldConflicts, detail, 500);
+    }
+
+    private static void AddPowerFieldConflict(OmniApplyResult result, string detail)
+    {
+        result.PowerFieldConflicts++;
+        result.AddLimited(result.PowerFieldConflictDetails, detail, 500);
+    }
+
+    private static void AddDeferredPowerField(OmniImportReport report, string detail)
+    {
+        report.DeferredPowerFieldCount++;
+        report.AddLimited(report.DeferredPowerFields, detail, 500);
+    }
+
+    private static void AddDeferredPowerField(OmniApplyResult result, string detail)
+    {
+        result.DeferredPowerFields++;
+        result.AddLimited(result.DeferredPowerFieldDetails, detail, 500);
+    }
+
+    private static void AddIgnoredPowerField(OmniImportReport report, string detail)
+    {
+        report.IgnoredPowerFieldCount++;
+        report.AddLimited(report.IgnoredPowerFields, detail, 500);
+    }
+
+    private static void AddIgnoredPowerField(OmniApplyResult result, string detail)
+    {
+        result.IgnoredPowerFields++;
+        result.AddLimited(result.IgnoredPowerFieldDetails, detail, 500);
+    }
+
+    private static void AddUnknownPowerField(OmniImportReport report, string detail)
+    {
+        report.UnknownPowerFieldCount++;
+        report.AddLimited(report.UnknownPowerFields, detail, 500);
+    }
+
+    private static void AddUnknownPowerField(OmniApplyResult result, string detail)
+    {
+        result.UnknownPowerFields++;
+        result.AddLimited(result.UnknownPowerFieldDetails, detail, 500);
+    }
+
+    private static string FormatStringList(IEnumerable<string> values)
+    {
+        return string.Join(", ", values.Where(value => !string.IsNullOrWhiteSpace(value)).Distinct(StringComparer.OrdinalIgnoreCase));
+    }
+
+    private static string FormatJson(JToken? token)
+    {
+        if (!HasJsonValue(token))
+        {
+            return string.Empty;
+        }
+
+        var value = token!.ToString(Formatting.None);
+        return value.Length <= 180 ? value : $"{value[..180]}...";
+    }
+
+    private static bool IsSustainedStatPower(OmniPowerDefinition power)
+    {
+        return power.Type.Equals("Auto", StringComparison.OrdinalIgnoreCase) ||
+               power.Type.Equals("Toggle", StringComparison.OrdinalIgnoreCase) ||
+               power.Type.Equals("ClickBuff", StringComparison.OrdinalIgnoreCase);
+    }
+}

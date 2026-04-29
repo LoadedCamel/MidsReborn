@@ -58,13 +58,199 @@
     <Compile Update="UI\Controls\Test\MidsDataViewNeo.cs">
       <SubType>UserControl</SubType>
     </Compile>
+    <Content Include="Assets\Types\Grades\do.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Grades\io.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Grades\io_sets.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Grades\Normal.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Grades\so.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Grades\special.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Grades\to.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\accurate_defense_debuff.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\accurate_heal.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\accurate_tohit_debuff.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\arachnos.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\blaster.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\brute.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\confuse.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\controller.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\corruptor.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\damage.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\defender.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\defense.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\defense_debuff.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\dominator.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\end_mod.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\fear.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\flight.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\flight_no_sprint.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\hamidon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\heal.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\hold.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\hydra.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\immob.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\jump.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\jump_no_sprint.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\kheldian.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\knockback.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\mastermind.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\melee_aoe.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\melee_single_target.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\pets.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\pet_recharge.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\ranged_aoe.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\ranged_single_target.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\resistance.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\run.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\run_no_sprint.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\scrapper.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\sleep.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\slow.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\snipe.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\stalker.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\stun.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\synthetic_hamidon.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\tanker.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\taunt.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\teleport.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\teleport_no_sprint.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\titan.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\tohit.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\tohit_debuff.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\travel.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\universal_damage.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\untyped.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\Types\Sets\yin.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Databases\Generic\Example UpdateManifest.xml">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Databases\Homecoming\Images\*\*.png">
+    <Content Include="Databases\Homecoming\Assets\*\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Databases\Homecoming\Images\*.png">
+    <Content Include="Databases\Homecoming\Assets\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Databases\Rebirth\Images\*\*.png">
@@ -77,6 +263,13 @@
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Assets\*.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Databases\Homecoming\Assets\Types\Sets\D-Sync.png" />
+    <Content Include="Databases\Homecoming\Assets\Types\Sets\dsync.png">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Databases\Homecoming\Assets\Types\Sets\Sentinel.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
     <Content Include="Databases\Rebirth\SData.json">
@@ -339,7 +532,6 @@
       <Version>6.6.0</Version>
     </PackageReference>
     <PackageReference Include="Jace4fc" Version="1.0.2" />
-    <PackageReference Include="Microsoft.ML.OnnxRuntime.DirectML" Version="1.22.1" />
     <PackageReference Include="Microsoft.Web.WebView2">
       <Version>1.0.3405.78</Version>
     </PackageReference>
@@ -361,7 +553,7 @@
     <PackageReference Include="zlib.net-mutliplatform" Version="1.0.8" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="Databases\Homecoming\Images\Classes\" />
+    <Folder Include="Databases\Homecoming\Assets\Classes\" />
     <Folder Include="Databases\Rebirth\Images\Classes\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
@@ -374,6 +566,71 @@
     <EmbeddedResource Remove="frmImport_Powerset.resx" />
   </ItemGroup>
   <ItemGroup>
+    <None Remove="Assets\Types\Grades\do.png" />
+    <None Remove="Assets\Types\Grades\io.png" />
+    <None Remove="Assets\Types\Grades\io_sets.png" />
+    <None Remove="Assets\Types\Grades\Normal.png" />
+    <None Remove="Assets\Types\Grades\so.png" />
+    <None Remove="Assets\Types\Grades\special.png" />
+    <None Remove="Assets\Types\Grades\to.png" />
+    <None Remove="Assets\Types\Sets\accurate_defense_debuff.png" />
+    <None Remove="Assets\Types\Sets\accurate_heal.png" />
+    <None Remove="Assets\Types\Sets\accurate_tohit_debuff.png" />
+    <None Remove="Assets\Types\Sets\arachnos.png" />
+    <None Remove="Assets\Types\Sets\blaster.png" />
+    <None Remove="Assets\Types\Sets\brute.png" />
+    <None Remove="Assets\Types\Sets\confuse.png" />
+    <None Remove="Assets\Types\Sets\controller.png" />
+    <None Remove="Assets\Types\Sets\corruptor.png" />
+    <None Remove="Assets\Types\Sets\damage.png" />
+    <None Remove="Assets\Types\Sets\defender.png" />
+    <None Remove="Assets\Types\Sets\defense.png" />
+    <None Remove="Assets\Types\Sets\defense_debuff.png" />
+    <None Remove="Assets\Types\Sets\dominator.png" />
+    <None Remove="Assets\Types\Sets\end_mod.png" />
+    <None Remove="Assets\Types\Sets\fear.png" />
+    <None Remove="Assets\Types\Sets\flight.png" />
+    <None Remove="Assets\Types\Sets\flight_no_sprint.png" />
+    <None Remove="Assets\Types\Sets\hamidon.png" />
+    <None Remove="Assets\Types\Sets\heal.png" />
+    <None Remove="Assets\Types\Sets\hold.png" />
+    <None Remove="Assets\Types\Sets\hydra.png" />
+    <None Remove="Assets\Types\Sets\immob.png" />
+    <None Remove="Assets\Types\Sets\jump.png" />
+    <None Remove="Assets\Types\Sets\jump_no_sprint.png" />
+    <None Remove="Assets\Types\Sets\kheldian.png" />
+    <None Remove="Assets\Types\Sets\knockback.png" />
+    <None Remove="Assets\Types\Sets\mastermind.png" />
+    <None Remove="Assets\Types\Sets\melee_aoe.png" />
+    <None Remove="Assets\Types\Sets\melee_single_target.png" />
+    <None Remove="Assets\Types\Sets\pets.png" />
+    <None Remove="Assets\Types\Sets\pet_recharge.png" />
+    <None Remove="Assets\Types\Sets\RangedAoE.png" />
+    <None Remove="Assets\Types\Sets\RangedST.png" />
+    <None Remove="Assets\Types\Sets\ranged_aoe.png" />
+    <None Remove="Assets\Types\Sets\ranged_single_target.png" />
+    <None Remove="Assets\Types\Sets\resistance.png" />
+    <None Remove="Assets\Types\Sets\run.png" />
+    <None Remove="Assets\Types\Sets\run_no_sprint.png" />
+    <None Remove="Assets\Types\Sets\scrapper.png" />
+    <None Remove="Assets\Types\Sets\sleep.png" />
+    <None Remove="Assets\Types\Sets\slow.png" />
+    <None Remove="Assets\Types\Sets\snipe.png" />
+    <None Remove="Assets\Types\Sets\stalker.png" />
+    <None Remove="Assets\Types\Sets\stun.png" />
+    <None Remove="Assets\Types\Sets\synthetic_hamidon.png" />
+    <None Remove="Assets\Types\Sets\tanker.png" />
+    <None Remove="Assets\Types\Sets\taunt.png" />
+    <None Remove="Assets\Types\Sets\teleport.png" />
+    <None Remove="Assets\Types\Sets\teleport_no_sprint.png" />
+    <None Remove="Assets\Types\Sets\titan.png" />
+    <None Remove="Assets\Types\Sets\tohit.png" />
+    <None Remove="Assets\Types\Sets\tohit_debuff.png" />
+    <None Remove="Assets\Types\Sets\travel.png" />
+    <None Remove="Assets\Types\Sets\universal_damage.png" />
+    <None Remove="Assets\Types\Sets\untyped.png" />
+    <None Remove="Assets\Types\Sets\yin.png" />
+    <None Remove="Databases\Homecoming\Assets\Types\Sets\dsync.png" />
     <None Remove="Databases\Rebirth\SData.json" />
     <None Remove="Fonts\DejaVuSansMono-Bold.ttf" />
     <None Remove="Fonts\DejaVuSansMono-BoldOblique.ttf" />
@@ -408,9 +665,6 @@
     </None>
     <None Update="Databases\blank.html">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Models\RealESRGAN_x4plus.onnx">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <PropertyGroup Label="Globals">

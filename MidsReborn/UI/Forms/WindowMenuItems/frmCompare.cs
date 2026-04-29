@@ -482,9 +482,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 {
                     Powers[index][i] = new Power(DatabaseAPI.Database.Powersets[numArray[index]].Powers[i]);
                     ApplyPowerOverride(ref Powers[index][i]);
-                    Powers[index][i].AbsorbPetEffects();
-                    Powers[index][i].ApplyGrantPowerEffects();
-                    Powers[index][i].ProcessExecutes();
+                    Powers[index][i] = PlannerEffectResolver.ResolvePower(Powers[index][i], new PlannerEffectResolutionContext
+                    {
+                        AbsorbPetEffects = true
+                    }).ResolvedPower;
 
                     if (nIDClass <= -1)
                     {

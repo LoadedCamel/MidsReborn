@@ -19,5 +19,13 @@ namespace Mids_Reborn.Properties
                 return defaultInstance2;
             }
         }
+
+        [UserScopedSetting]
+        [DefaultSettingValue("")]
+        public string LastOmniExportRoot
+        {
+            get => (string) (this[nameof(LastOmniExportRoot)] ?? string.Empty);
+            set => this[nameof(LastOmniExportRoot)] = value ?? string.Empty;
+        }
     }
 }

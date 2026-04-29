@@ -205,9 +205,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         {
             if (Locked)
                 return;
-            IPower? power1 = new Power(myPowers[pIDX]);
-            power1.AbsorbPetEffects();
-            power1.ApplyGrantPowerEffects();
+            IPower? power1 = PlannerEffectResolver.ResolvePower(new Power(myPowers[pIDX]), new PlannerEffectResolutionContext
+            {
+                AbsorbPetEffects = true
+            }).ResolvedPower;
             var iPopup = new PopUp.PopupData();
             if (pIDX < 0)
             {

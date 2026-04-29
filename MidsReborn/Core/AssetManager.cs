@@ -18,9 +18,31 @@ namespace Mids_Reborn.Core
     /// </summary>
     public static class AssetManager
     {
-        private const int IconLarge = 128;
-        private const int IconSmall = 16;
+        private enum BorderState
+        {
+            Training = 0,
+            DualOrigin = 1,
+            SingleOrigin = 2,
+            Special = 3,
+            Invention = 4,
+            SetCrafted = 5,
+            SetAttuned = 6,
+            SetSuperiorAttuned = 7
+        }
+
+        private const int IconLarge = 64;
+        private const int IconSmall = 32;
         private const string ImageFilter = "*.png";
+        private const string BucketArchetypes = "archetypes";
+        private const string BucketClasses = "classes";
+        private const string BucketEnhancements = "enhancements";
+        private const string BucketOrigins = "origins";
+        private const string BucketOverlay = "overlay";
+        private const string BucketPowersets = "powersets";
+        private const string BucketSets = "sets";
+        private const string BucketTypesRoot = "types";
+        private const string BucketTypeGrades = "types/grades";
+        private const string BucketTypeSets = "types/sets";
 
         private static List<ImageInfo> Images { get; set; } = [];
         private static bool Initialized { get; set; }
@@ -38,6 +60,9 @@ namespace Mids_Reborn.Core
         public static Dictionary<int, ExtendedBitmap> Archetypes { get; private set; } = [];
         public static Dictionary<int, ExtendedBitmap> Origins { get; private set; } = [];
         public static Dictionary<int, ExtendedBitmap> Powersets { get; private set; } = [];
+        private static Dictionary<string, ExtendedBitmap> NamedEnhancementImages { get; } = new(StringComparer.OrdinalIgnoreCase);
+        private static Dictionary<string, ExtendedBitmap> NamedOverlayImages { get; } = new(StringComparer.OrdinalIgnoreCase);
+        private static List<ExtendedBitmap> RetiredPowersets { get; } = [];
         public static ExtendedBitmap UnknownIcon { get; private set; }
         public static ExtendedBitmap EmptySlot { get; private set; }
         public static ExtendedBitmap NewSlot { get; private set; }
@@ -58,6 +83,23 @@ namespace Mids_Reborn.Core
             Initialized = true;
         }
 
+        public static bool TryResolveImageFileName(IEnumerable<string> candidates, out string fileName)
+        {
+            fileName = string.Empty;
+            if (!Initialized)
+            {
+                return false;
+            }
+
+            if (!TryFindImagePath(Images, candidates, out var path))
+            {
+                return false;
+            }
+
+            fileName = Path.GetFileName(path);
+            return !string.IsNullOrWhiteSpace(fileName);
+        }
+
         /// <summary>
         /// Loads all images into memory. Should be called after Initialize().
         /// To run asynchronously and not block the UI, call this method with Task.Run(() => AssetManager.LoadImages());
@@ -71,18 +113,32 @@ namespace Mids_Reborn.Core
             }
 
             // Group images by directory for faster lookups
-            var imageGroups = Images.ToLookup(img => img.Directory);
+            var imageGroups = BuildImageGroups();
             var baseImages = Images.Where(x => x.IsBase).ToList();
 
             // Load common base images
-            EmptySlot = new ExtendedBitmap(Images.FirstOrDefault(x => x.FileName.Equals("none.png", StringComparison.OrdinalIgnoreCase)).Path);
-            NewSlot = new ExtendedBitmap(Images.FirstOrDefault(x => x.FileName.Equals("newslot.png", StringComparison.OrdinalIgnoreCase)).Path);
+            EmptySlot = new ExtendedBitmap(
+                TryFindImagePath(imageGroups[BucketTypesRoot], ["None.png"], out var emptySlotPath)
+                    ? emptySlotPath
+                    : string.Empty);
+            NewSlot = new ExtendedBitmap(
+                TryFindImagePath(Images, ["Newslot.png"], out var newSlotPath)
+                    ? newSlotPath
+                    : string.Empty);
 
             // Load recipe images
-            RecipeIcon = new ExtendedBitmap(Images.FirstOrDefault(x => x.FileName.Equals("Recipe.png", StringComparison.OrdinalIgnoreCase)).Path);
-            RecipeIconTransparent = new ExtendedBitmap(Images.FirstOrDefault(x => x.FileName.Equals("Recipe2.png", StringComparison.OrdinalIgnoreCase)).Path);
+            RecipeIcon = new ExtendedBitmap(
+                TryFindImagePath(Images, ["Recipe.png"], out var recipePath)
+                    ? recipePath
+                    : string.Empty);
+            RecipeIconTransparent = new ExtendedBitmap(
+                TryFindImagePath(Images, ["Recipe2.png"], out var recipeTransparentPath)
+                    ? recipeTransparentPath
+                    : string.Empty);
 
-            var unknownPath = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path ?? string.Empty;
+            var unknownPath = TryFindImagePath(Images, ["Unknown.png"], out var resolvedUnknownPath)
+                ? resolvedUnknownPath
+                : string.Empty;
             UnknownIcon = new ExtendedBitmap(unknownPath);
 
             // Load button images
@@ -93,15 +149,31 @@ namespace Mids_Reborn.Core
             }
 
             // Load all other image categories
-            LoadOriginImages(imageGroups["Origins"]);
-            LoadArchetypeImages(imageGroups["Archetypes"], baseImages);
-            LoadPowersetImages(imageGroups["Powersets"], baseImages);
-            LoadEnhancementImages(imageGroups["Enhancements"], baseImages);
-            LoadEnhancementSetImages(imageGroups["Enhancements"], baseImages);
-            LoadBorderImages(baseImages);
-            LoadSetTypeImages(imageGroups["Sets"], baseImages);
-            LoadEnhTypeImages(imageGroups["Sets"], baseImages);
-            LoadEnhancementClassImages(imageGroups["Classes"], baseImages);
+            LoadOriginImages(imageGroups[BucketOrigins]);
+            LoadArchetypeImages(imageGroups[BucketArchetypes], baseImages);
+            LoadPowersetImages(imageGroups[BucketPowersets], baseImages);
+            LoadEnhancementImages(imageGroups[BucketEnhancements], baseImages);
+            LoadEnhancementSetImages(imageGroups[BucketSets], imageGroups[BucketEnhancements], baseImages);
+            LoadBorderImages(imageGroups[BucketOverlay]);
+            LoadSetTypeImages(imageGroups[BucketTypeSets], baseImages);
+            LoadEnhTypeImages(imageGroups[BucketTypeGrades], imageGroups[BucketTypesRoot], baseImages);
+            LoadSpecialRailImages(imageGroups[BucketTypeSets], baseImages);
+            LoadEnhancementClassImages(imageGroups[BucketClasses], imageGroups[BucketOverlay]);
+        }
+
+        public static void RefreshPowersetImages()
+        {
+            if (!Initialized)
+            {
+                throw new InvalidOperationException("Attempted to access image assets before initialization.");
+            }
+
+            RetiredPowersets.AddRange(Powersets.Values.Where(img => img != null));
+            Powersets.Clear();
+
+            var imageGroups = BuildImageGroups();
+            var baseImages = Images.Where(x => x.IsBase).ToList();
+            LoadPowersetImages(imageGroups[BucketPowersets], baseImages);
         }
 
         /// <summary>
@@ -122,6 +194,9 @@ namespace Mids_Reborn.Core
             allImages.AddRange(Archetypes.Values);
             allImages.AddRange(Origins.Values);
             allImages.AddRange(Powersets.Values);
+            allImages.AddRange(NamedEnhancementImages.Values);
+            allImages.AddRange(NamedOverlayImages.Values);
+            allImages.AddRange(RetiredPowersets);
             allImages.Add(UnknownIcon);
             allImages.Add(RecipeIcon);
             allImages.Add(RecipeIconTransparent);
@@ -146,6 +221,9 @@ namespace Mids_Reborn.Core
             Archetypes.Clear();
             Origins.Clear();
             Powersets.Clear();
+            NamedEnhancementImages.Clear();
+            NamedOverlayImages.Clear();
+            RetiredPowersets.Clear();
         }
 
         #region Loading Methods
@@ -156,7 +234,9 @@ namespace Mids_Reborn.Core
             for (var index = 0; index < DatabaseAPI.Database.Classes.Length; index++)
             {
                 var className = DatabaseAPI.Database.Classes[index].ClassName;
-                var path = images.FirstOrDefault(i => i.FileName == $"{className}.png").Path ?? unknownPath;
+                var path = TryFindImagePath(images, BuildArchetypeImageCandidates(className), out var resolvedPath)
+                    ? resolvedPath
+                    : unknownPath;
                 using var original = new ExtendedBitmap(path);
                 Archetypes[index] = ResizeTo(original, IconSmall);
             }
@@ -169,7 +249,9 @@ namespace Mids_Reborn.Core
             for (var index = 0; index < DatabaseAPI.Database.Powersets.Length; index++)
             {
                 var ps = DatabaseAPI.Database.Powersets[index];
-                var path = images.FirstOrDefault(i => i.FileName == ps.ImageName).Path ?? unknownPath;
+                var path = TryFindImagePath(images, BuildPowersetImageCandidates(ps.ImageName), out var resolvedPath)
+                    ? resolvedPath
+                    : unknownPath;
                 using var original = new ExtendedBitmap(path);
                 Powersets[index] = ResizeTo(original, IconSmall);
             }
@@ -181,17 +263,23 @@ namespace Mids_Reborn.Core
             for (int index = 0; index < DatabaseAPI.Database.Origins.Count; index++)
             {
                 var origin = DatabaseAPI.Database.Origins[index];
-                var path = images.FirstOrDefault(i => i.FileName.Contains(origin.Name)).Path;
+                var path = TryFindImagePath(images, BuildOriginImageCandidates(origin.Name), out var resolvedPath)
+                    ? resolvedPath
+                    : string.Empty;
                 if (string.IsNullOrWhiteSpace(path)) continue;
                 using var original = new ExtendedBitmap(path);
                 Origins[index] = ResizeTo(original, IconSmall);
             }
         }
 
-        private static void LoadEnhancementClassImages(IEnumerable<ImageInfo> images, IEnumerable<ImageInfo> baseImages)
+        private static void LoadEnhancementClassImages(IEnumerable<ImageInfo> images, IEnumerable<ImageInfo> overlayImages)
         {
-            var classImagePath = baseImages.FirstOrDefault(i => i.FileName == "Class.png").Path;
-            var incImagePath = baseImages.FirstOrDefault(i => i.FileName == "Inc.png").Path;
+            var classImagePath = TryFindImagePath(overlayImages, ["uber.png"], out var resolvedClassOverlayPath)
+                ? resolvedClassOverlayPath
+                : string.Empty;
+            var incImagePath = TryFindImagePath(overlayImages, ["Inc.png"], out var resolvedIncOverlayPath)
+                ? resolvedIncOverlayPath
+                : string.Empty;
             Classes.Clear();
 
             for (int index = 0; index < DatabaseAPI.Database.EnhancementClasses.Length; index++)
@@ -229,13 +317,14 @@ namespace Mids_Reborn.Core
         {
             var unknownPath = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             Enhancements.Clear();
+            var preferredImages = images.OrderBy(i => i.IsBase ? 1 : 0).ToList();
 
             for (int index = 0; index < DatabaseAPI.Database.Enhancements.Length; index++)
             {
                 var enh = DatabaseAPI.Database.Enhancements[index];
                 if (!string.IsNullOrWhiteSpace(enh.Image))
                 {
-                    var path = images.FirstOrDefault(i => i.FileName == enh.Image).Path ?? unknownPath;
+                    var path = preferredImages.FirstOrDefault(i => i.FileName.Equals(enh.Image, StringComparison.OrdinalIgnoreCase)).Path ?? unknownPath;
                     using var original = new ExtendedBitmap(path);
                     Enhancements.Add(ResizeTo(original, IconLarge));
                     enh.ImageIdx = Enhancements.Count - 1;
@@ -248,16 +337,21 @@ namespace Mids_Reborn.Core
             }
         }
 
-        private static void LoadEnhancementSetImages(IEnumerable<ImageInfo> images, IEnumerable<ImageInfo> baseImages)
+        private static void LoadEnhancementSetImages(IEnumerable<ImageInfo> setImages, IEnumerable<ImageInfo> enhancementImages, IEnumerable<ImageInfo> baseImages)
         {
             var unknownPath = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             Sets.Clear();
+            var preferredImages = setImages
+                .Concat(enhancementImages)
+                .OrderBy(i => i.IsBase ? 1 : 0)
+                .ToList();
             for (int index = 0; index < DatabaseAPI.Database.EnhancementSets.Count; index++)
             {
                 var enhSet = DatabaseAPI.Database.EnhancementSets[index];
-                var path = images.FirstOrDefault(i => i.FileName == enhSet.Image).Path ?? unknownPath;
+                var path = preferredImages.FirstOrDefault(i => i.FileName.Equals(enhSet.Image, StringComparison.OrdinalIgnoreCase)).Path ?? unknownPath;
                 using var original = new ExtendedBitmap(path);
                 Sets[index] = ResizeTo(original, IconLarge);
+                enhSet.ImageIdx = index;
             }
         }
 
@@ -269,23 +363,28 @@ namespace Mids_Reborn.Core
             for (int index = 0; index < setTypes.Count; index++)
             {
                 var shortName = setTypes[index].ShortName;
-                var path = images.FirstOrDefault(i => i.FileName == $"{shortName}.png").Path ?? unknownPath;
+                var path = TryFindImagePath(images, BuildSetTypeImageCandidates(shortName), out var resolvedPath)
+                    ? resolvedPath
+                    : unknownPath;
                 using var original = new ExtendedBitmap(path);
                 SetTypes[index] = ResizeTo(original, IconLarge);
             }
         }
 
-        private static void LoadEnhTypeImages(IEnumerable<ImageInfo> images, IEnumerable<ImageInfo> baseImages)
+        private static void LoadEnhTypeImages(IEnumerable<ImageInfo> gradeImages, IEnumerable<ImageInfo> typeRootImages, IEnumerable<ImageInfo> baseImages)
         {
             var unknownPath = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             EnhTypes.Clear();
             EnhGrades.Clear();
-            EnhSpecials.Clear();
 
             var typeNames = Enum.GetNames(typeof(Enums.eType));
             for (int index = 0; index < typeNames.Length; index++)
             {
-                var path = images.FirstOrDefault(i => i.FileName == $"{typeNames[index]}.png").Path ?? unknownPath;
+                var type = (Enums.eType)index;
+                var candidateImages = type == Enums.eType.None ? typeRootImages : gradeImages;
+                var path = TryFindImagePath(candidateImages, BuildEnhancementTypeImageCandidates(type), out var resolvedPath)
+                    ? resolvedPath
+                    : unknownPath;
                 using var original = new ExtendedBitmap(path);
                 EnhTypes[index] = ResizeTo(original, IconLarge);
             }
@@ -293,15 +392,28 @@ namespace Mids_Reborn.Core
             var gradeNames = Enum.GetNames(typeof(Enums.eEnhGrade));
             for (int index = 0; index < gradeNames.Length; index++)
             {
-                var path = images.FirstOrDefault(i => i.FileName == $"{gradeNames[index]}.png").Path ?? unknownPath;
+                var grade = (Enums.eEnhGrade)index;
+                var candidateImages = grade == Enums.eEnhGrade.None ? typeRootImages : gradeImages;
+                var path = TryFindImagePath(candidateImages, BuildEnhancementGradeImageCandidates(grade), out var resolvedPath)
+                    ? resolvedPath
+                    : unknownPath;
                 using var original = new ExtendedBitmap(path);
                 EnhGrades[index] = ResizeTo(original, IconLarge);
             }
+        }
 
-            var specNames = DatabaseAPI.Database.SpecialEnhancements.Select(x => x.Name.Replace(" Origin", string.Empty)).ToArray();
-            for (int index = 0; index < specNames.Length; index++)
+        private static void LoadSpecialRailImages(IEnumerable<ImageInfo> images, IEnumerable<ImageInfo> baseImages)
+        {
+            var unknownPath = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
+            EnhSpecials.Clear();
+
+            var specialEnhancements = DatabaseAPI.Database.SpecialEnhancements;
+            for (int index = 0; index < specialEnhancements.Count; index++)
             {
-                var path = images.FirstOrDefault(i => i.FileName == $"{specNames[index]}.png").Path ?? unknownPath;
+                var specialEnhancement = specialEnhancements[index];
+                var path = TryFindImagePath(images, BuildSpecialRailImageCandidates(specialEnhancement), out var resolvedPath)
+                    ? resolvedPath
+                    : unknownPath;
                 using var original = new ExtendedBitmap(path);
                 EnhSpecials[index] = ResizeTo(original, IconLarge);
             }
@@ -313,13 +425,14 @@ namespace Mids_Reborn.Core
             var origins = DatabaseAPI.Database.Origins;
             for (int originIndex = 0; originIndex < origins.Count; originIndex++)
             {
-                for (int gradeIndex = 0; gradeIndex <= 5; gradeIndex++)
+                foreach (BorderState borderState in Enum.GetValues(typeof(BorderState)))
                 {
-                    string fileName = origins[originIndex].Grades[gradeIndex];
-                    var path = images.FirstOrDefault(i => i.FileName == $"{fileName}.png").Path;
+                    var path = TryFindImagePath(images, BuildBorderImageCandidates(origins[originIndex], borderState), out var resolvedPath)
+                        ? resolvedPath
+                        : string.Empty;
                     if (string.IsNullOrWhiteSpace(path)) continue;
                     using var original = new ExtendedBitmap(path);
-                    Borders[new Point(originIndex, gradeIndex)] = ResizeTo(original, IconLarge);
+                    Borders[new Point(originIndex, (int)borderState)] = ResizeTo(original, IconLarge);
                 }
             }
         }
@@ -338,8 +451,7 @@ namespace Mids_Reborn.Core
         {
             if (iImageIndex < 0 || iImageIndex >= Enhancements.Count || Enhancements[iImageIndex]?.Bitmap is null) return;
 
-            var borderKey = new Point(OriginIndex, (int)iGrade);
-            if (!Borders.TryGetValue(borderKey, out var borderImage) || borderImage?.Bitmap is null) return;
+            if (!TryGetBorderBitmap(OriginIndex, GetBorderState(iGrade), out var borderImage) || borderImage?.Bitmap is null) return;
 
             ConfigureGraphics(iTarget);
             iTarget.DrawImage(borderImage.Bitmap, iDest);
@@ -350,8 +462,28 @@ namespace Mids_Reborn.Core
         {
             if (iImageIndex < 0 || iImageIndex >= Enhancements.Count || Enhancements[iImageIndex]?.Bitmap is null) return;
 
-            var borderKey = new Point(OriginIndex, (int)iGrade);
-            if (!Borders.TryGetValue(borderKey, out var borderImage) || borderImage?.Bitmap is null) return;
+            if (!TryGetBorderBitmap(OriginIndex, GetBorderState(iGrade), out var borderImage) || borderImage?.Bitmap is null) return;
+
+            ConfigureGraphics(iTarget);
+            var srcRect = new Rectangle(0, 0, borderImage.Size.Width, borderImage.Size.Height);
+            iTarget.DrawImage(borderImage.Bitmap, iDest, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, imageAttributes);
+            iTarget.DrawImage(Enhancements[iImageIndex].Bitmap, iDest, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, imageAttributes);
+        }
+
+        public static void DrawEnhancementAt(Graphics iTarget, Rectangle iDest, int iImageIndex, int enhancementId, Enums.eType typeId, Enums.eEnhGrade grade)
+        {
+            if (iImageIndex < 0 || iImageIndex >= Enhancements.Count || Enhancements[iImageIndex]?.Bitmap is null) return;
+            if (!TryGetBorderBitmap(OriginIndex, ResolveBorderState(enhancementId, typeId, grade), out var borderImage) || borderImage?.Bitmap is null) return;
+
+            ConfigureGraphics(iTarget);
+            iTarget.DrawImage(borderImage.Bitmap, iDest);
+            iTarget.DrawImage(Enhancements[iImageIndex].Bitmap, iDest);
+        }
+
+        public static void DrawEnhancementAt(Graphics iTarget, Rectangle iDest, int iImageIndex, int enhancementId, Enums.eType typeId, Enums.eEnhGrade grade, ImageAttributes imageAttributes)
+        {
+            if (iImageIndex < 0 || iImageIndex >= Enhancements.Count || Enhancements[iImageIndex]?.Bitmap is null) return;
+            if (!TryGetBorderBitmap(OriginIndex, ResolveBorderState(enhancementId, typeId, grade), out var borderImage) || borderImage?.Bitmap is null) return;
 
             ConfigureGraphics(iTarget);
             var srcRect = new Rectangle(0, 0, borderImage.Size.Width, borderImage.Size.Height);
@@ -364,11 +496,10 @@ namespace Mids_Reborn.Core
             DrawEnhancementSet(iTarget, Rectangle.Truncate(iTarget.ClipBounds), iImageIndex);
         }
 
-        public static void DrawEnhancementSet(Graphics iTarget, Rectangle iDest, int iImageIndex)
+        public static void DrawEnhancementSet(Graphics iTarget, Rectangle iDest, int setId)
         {
-            var borderKey = new Point(OriginIndex, (int)Origin.Grade.SetO);
-            if (!Borders.TryGetValue(borderKey, out var borderImage) || borderImage?.Bitmap is null) return;
-            if (!Sets.TryGetValue(iImageIndex, out var setImage) || setImage?.Bitmap is null) return;
+            if (!TryGetSetBorderBitmap(setId, out var borderImage) || borderImage?.Bitmap is null) return;
+            if (!Sets.TryGetValue(setId, out var setImage) || setImage?.Bitmap is null) return;
 
             ConfigureGraphics(iTarget);
             iTarget.DrawImage(borderImage.Bitmap, iDest);
@@ -405,7 +536,121 @@ namespace Mids_Reborn.Core
 
         public static string GetDbEnhancementsPath()
         {
-            return Path.Combine(MidsContext.Config.DataPath, "Images", "Enhancements");
+            return Path.Combine(MidsContext.Config.DataPath, "Assets", "Enhancements");
+        }
+
+        public static string? ResolveNamedEnhancementImagePath(string? imageName)
+        {
+            if (string.IsNullOrWhiteSpace(imageName))
+            {
+                return null;
+            }
+
+            var basePath = Path.Combine(GetEnhancementsPath(), imageName);
+            if (File.Exists(basePath))
+            {
+                return basePath;
+            }
+
+            var dbPath = Path.Combine(GetDbEnhancementsPath(), imageName);
+            return File.Exists(dbPath) ? dbPath : null;
+        }
+
+        public static bool TryGetNamedEnhancementBitmap(string? imageName, out ExtendedBitmap enhancementImage)
+        {
+            enhancementImage = null;
+            if (string.IsNullOrWhiteSpace(imageName))
+            {
+                return false;
+            }
+
+            var imagePath = ResolveNamedEnhancementImagePath(imageName);
+            if (string.IsNullOrWhiteSpace(imagePath))
+            {
+                return false;
+            }
+
+            if (NamedEnhancementImages.TryGetValue(imagePath, out enhancementImage) && enhancementImage?.Bitmap != null)
+            {
+                return true;
+            }
+
+            if (!File.Exists(imagePath))
+            {
+                return false;
+            }
+
+            enhancementImage = new ExtendedBitmap(imagePath);
+            NamedEnhancementImages[imagePath] = enhancementImage;
+            return enhancementImage.Bitmap != null;
+        }
+
+        public static int ResolveBuildOriginIndex(int? preferredOriginIndex = null)
+        {
+            if (preferredOriginIndex.HasValue &&
+                DatabaseAPI.Database?.Origins != null &&
+                preferredOriginIndex.Value >= 0 &&
+                preferredOriginIndex.Value < DatabaseAPI.Database.Origins.Count)
+            {
+                return preferredOriginIndex.Value;
+            }
+
+            var characterOrigin = MidsContext.Character?.Origin ?? -1;
+            if (DatabaseAPI.Database?.Origins != null &&
+                characterOrigin >= 0 &&
+                characterOrigin < DatabaseAPI.Database.Origins.Count)
+            {
+                return characterOrigin;
+            }
+
+            if (DatabaseAPI.Database?.Origins != null &&
+                OriginIndex >= 0 &&
+                OriginIndex < DatabaseAPI.Database.Origins.Count)
+            {
+                return OriginIndex;
+            }
+
+            return 0;
+        }
+
+        public static string? ResolveNamedOverlayImagePath(string? imageName)
+        {
+            if (string.IsNullOrWhiteSpace(imageName))
+            {
+                return null;
+            }
+
+            var overlayImages = Images.Where(image => string.Equals(image.Bucket, BucketOverlay, StringComparison.OrdinalIgnoreCase));
+            return TryFindImagePath(overlayImages, [imageName], out var resolvedPath) ? resolvedPath : null;
+        }
+
+        public static bool TryGetNamedOverlayBitmap(string? imageName, out ExtendedBitmap overlayImage)
+        {
+            overlayImage = null;
+            if (string.IsNullOrWhiteSpace(imageName))
+            {
+                return false;
+            }
+
+            var imagePath = ResolveNamedOverlayImagePath(imageName);
+            if (string.IsNullOrWhiteSpace(imagePath))
+            {
+                return false;
+            }
+
+            if (NamedOverlayImages.TryGetValue(imagePath, out overlayImage) && overlayImage?.Bitmap != null)
+            {
+                return true;
+            }
+
+            if (!File.Exists(imagePath))
+            {
+                return false;
+            }
+
+            overlayImage = new ExtendedBitmap(imagePath);
+            NamedOverlayImages[imagePath] = overlayImage;
+            return overlayImage.Bitmap != null;
         }
 
         public static string GetPowersetsPath()
@@ -415,7 +660,112 @@ namespace Mids_Reborn.Core
 
         public static string GetDbPowerSetsPath()
         {
-            return Path.Combine(MidsContext.Config.DataPath, "Images", "Powersets");
+            return Path.Combine(MidsContext.Config.DataPath, "Assets", "Powersets");
+        }
+
+        public static bool TryGetBorderBitmap(IEnhancement enhancement, Enums.eEnhGrade grade, out ExtendedBitmap borderImage)
+        {
+            borderImage = null;
+            if (enhancement == null)
+            {
+                return false;
+            }
+
+            return TryGetBorderBitmap(OriginIndex, ResolveBorderState(enhancement, grade), out borderImage);
+        }
+
+        public static bool TryGetBorderBitmap(Origin.Grade grade, out ExtendedBitmap borderImage)
+        {
+            borderImage = null;
+            return TryGetBorderBitmap(OriginIndex, GetBorderState(grade), out borderImage);
+        }
+
+        public static bool TryGetSetBorderBitmap(int setId, out ExtendedBitmap borderImage)
+        {
+            borderImage = null;
+            if (setId < 0 || setId >= DatabaseAPI.Database.EnhancementSets.Count)
+            {
+                return TryGetBorderBitmap(OriginIndex, BorderState.SetCrafted, out borderImage);
+            }
+
+            return TryGetSetBorderBitmap(DatabaseAPI.Database.EnhancementSets[setId], out borderImage);
+        }
+
+        public static bool TryGetSetBorderBitmap(EnhancementSet enhancementSet, out ExtendedBitmap borderImage)
+        {
+            borderImage = null;
+            if (enhancementSet == null)
+            {
+                return false;
+            }
+
+            return TryGetBorderBitmap(OriginIndex, ResolveSetBorderState(enhancementSet), out borderImage);
+        }
+
+        public static bool TryGetClassicVariantBorderBitmap(
+            ClassicEnhancementVariantView? variant,
+            int buildOriginIndex,
+            out ExtendedBitmap borderImage)
+        {
+            borderImage = null;
+            if (variant == null)
+            {
+                return false;
+            }
+
+            var resolvedOriginIndex = ResolveBuildOriginIndex(buildOriginIndex);
+            foreach (var candidate in BuildClassicVariantBorderImageCandidates(variant, resolvedOriginIndex)
+                         .Where(candidate => !string.IsNullOrWhiteSpace(candidate))
+                         .Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                if (TryGetNamedOverlayBitmap(candidate, out borderImage) && borderImage?.Bitmap != null)
+                {
+                    return true;
+                }
+            }
+
+            // Final fallback for incomplete data packs: use the generic grade border.
+            var fallbackGrade = ToGfxGrade(Enums.eType.Normal, variant.DisplayGrade);
+            return TryGetBorderBitmap(resolvedOriginIndex, GetBorderState(fallbackGrade), out borderImage);
+        }
+
+        public static bool TryDrawClassicVariantAt(
+            Graphics iTarget,
+            Rectangle iDest,
+            ClassicEnhancementVariantView? variant,
+            int buildOriginIndex,
+            ImageAttributes? imageAttributes = null)
+        {
+            if (variant == null ||
+                !TryGetNamedEnhancementBitmap(variant.Icon, out var enhancementImage) ||
+                enhancementImage?.Bitmap == null)
+            {
+                return false;
+            }
+
+            ConfigureGraphics(iTarget);
+            var hasBorder = TryGetClassicVariantBorderBitmap(variant, buildOriginIndex, out var borderImage) &&
+                borderImage?.Bitmap != null;
+            if (imageAttributes == null)
+            {
+                if (hasBorder)
+                {
+                    iTarget.DrawImage(borderImage.Bitmap, iDest);
+                }
+
+                iTarget.DrawImage(enhancementImage.Bitmap, iDest);
+                return true;
+            }
+
+            var srcRect = new Rectangle(0, 0, enhancementImage.Size.Width, enhancementImage.Size.Height);
+            if (hasBorder)
+            {
+                var borderRect = new Rectangle(0, 0, borderImage.Size.Width, borderImage.Size.Height);
+                iTarget.DrawImage(borderImage.Bitmap, iDest, borderRect.X, borderRect.Y, borderRect.Width, borderRect.Height, GraphicsUnit.Pixel, imageAttributes);
+            }
+
+            iTarget.DrawImage(enhancementImage.Bitmap, iDest, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, imageAttributes);
+            return true;
         }
 
         #endregion
@@ -458,49 +808,662 @@ namespace Mids_Reborn.Core
                 default: return Origin.Grade.None;
             }
         }
+
+        private static bool TryGetBorderBitmap(int originIndex, BorderState borderState, out ExtendedBitmap borderImage)
+        {
+            borderImage = null;
+            return Borders.TryGetValue(new Point(originIndex, (int)borderState), out borderImage) && borderImage?.Bitmap is not null;
+        }
+
+        private static BorderState GetBorderState(Origin.Grade grade)
+        {
+            return grade switch
+            {
+                Origin.Grade.TrainingO => BorderState.Training,
+                Origin.Grade.DualO => BorderState.DualOrigin,
+                Origin.Grade.SingleO => BorderState.SingleOrigin,
+                Origin.Grade.HO => BorderState.Special,
+                Origin.Grade.IO => BorderState.Invention,
+                Origin.Grade.SetO => BorderState.SetCrafted,
+                Origin.Grade.Attuned => BorderState.SetAttuned,
+                _ => BorderState.Special
+            };
+        }
+
+        private static BorderState ResolveBorderState(int enhancementId, Enums.eType typeId, Enums.eEnhGrade grade)
+        {
+            if (typeId == Enums.eType.SetO)
+            {
+                return ResolveSetBorderState(enhancementId);
+            }
+
+            return typeId switch
+            {
+                Enums.eType.Normal => grade switch
+                {
+                    Enums.eEnhGrade.DualO => BorderState.DualOrigin,
+                    Enums.eEnhGrade.SingleO => BorderState.SingleOrigin,
+                    _ => BorderState.Training
+                },
+                Enums.eType.InventO => BorderState.Invention,
+                Enums.eType.SpecialO => BorderState.Special,
+                _ => BorderState.Special
+            };
+        }
+
+        private static BorderState ResolveBorderState(IEnhancement enhancement, Enums.eEnhGrade grade)
+        {
+            if (enhancement.TypeID == Enums.eType.SetO)
+            {
+                return ResolveSetBorderState(enhancement);
+            }
+
+            return enhancement.TypeID switch
+            {
+                Enums.eType.Normal => grade switch
+                {
+                    Enums.eEnhGrade.DualO => BorderState.DualOrigin,
+                    Enums.eEnhGrade.SingleO => BorderState.SingleOrigin,
+                    _ => BorderState.Training
+                },
+                Enums.eType.InventO => BorderState.Invention,
+                Enums.eType.SpecialO => BorderState.Special,
+                _ => BorderState.Special
+            };
+        }
+
+        private static BorderState ResolveSetBorderState(int enhancementId)
+        {
+            if (enhancementId < 0 || enhancementId >= DatabaseAPI.Database.Enhancements.Length)
+            {
+                return BorderState.SetCrafted;
+            }
+
+            var enhancement = DatabaseAPI.Database.Enhancements[enhancementId];
+            var attunedLike = DatabaseAPI.EnhIsNaturallyAttuned(enhancementId) || DatabaseAPI.EnhHasCatalyst(enhancement.UID);
+
+            if (attunedLike)
+            {
+                return enhancement.Superior ? BorderState.SetSuperiorAttuned : BorderState.SetAttuned;
+            }
+
+            return BorderState.SetCrafted;
+        }
+
+        private static BorderState ResolveSetBorderState(IEnhancement enhancement)
+        {
+            var enhancementId = enhancement.StaticIndex;
+            var attunedLike = enhancementId >= 0 && enhancementId < DatabaseAPI.Database.Enhancements.Length &&
+                DatabaseAPI.EnhIsNaturallyAttuned(enhancementId);
+
+            if (!attunedLike && !string.IsNullOrWhiteSpace(enhancement.UID))
+            {
+                attunedLike = DatabaseAPI.EnhHasCatalyst(enhancement.UID);
+            }
+
+            if (attunedLike)
+            {
+                return enhancement.Superior ? BorderState.SetSuperiorAttuned : BorderState.SetAttuned;
+            }
+
+            return BorderState.SetCrafted;
+        }
+
+        private static BorderState ResolveSetBorderState(EnhancementSet enhancementSet)
+        {
+            var resolvedState = BorderState.SetCrafted;
+            foreach (var enhancementId in enhancementSet.Enhancements)
+            {
+                var state = ResolveSetBorderState(enhancementId);
+                if (state == BorderState.SetSuperiorAttuned)
+                {
+                    return state;
+                }
+
+                if (state == BorderState.SetAttuned)
+                {
+                    resolvedState = state;
+                }
+            }
+
+            return resolvedState;
+        }
+
         #endregion
 
         #region File and Image Helpers
         private struct ImageInfo
         {
             public string FileName { get; set; }
-            public string Directory { get; set; }
+            public string RelativeDirectory { get; set; }
+            public string Bucket { get; set; }
             public string Path { get; set; }
             public bool IsBase { get; set; }
         }
 
         private static IEnumerable<ImageInfo> GetBaseImages()
         {
-            var retList = new List<ImageInfo>();
-            if (!Directory.Exists(AppDataPaths.BaseAssetsPath)) return retList;
-
-            var files = Directory.GetFiles(AppDataPaths.BaseAssetsPath, ImageFilter, SearchOption.AllDirectories);
-            foreach (var file in files)
-            {
-                var fInfo = new FileInfo(file);
-                if (fInfo.Directory != null)
-                {
-                    retList.Add(new ImageInfo { FileName = fInfo.Name, Directory = fInfo.Directory.Name, Path = file, IsBase = true });
-                }
-            }
-            return retList;
+            return GetImagesFromRoot(AppDataPaths.BaseAssetsPath, isBase: true);
         }
 
         private static IEnumerable<ImageInfo> GetExtendedImages(string path)
         {
-            var retList = new List<ImageInfo>();
-            if (string.IsNullOrWhiteSpace(path) || !Directory.Exists(path)) return retList;
+            if (string.IsNullOrWhiteSpace(path))
+            {
+                return [];
+            }
 
-            var files = Directory.GetFiles(path, ImageFilter, SearchOption.AllDirectories);
+            return GetImagesFromRoot(Path.Combine(path, "Assets"), isBase: false);
+        }
+
+        private static ILookup<string, ImageInfo> BuildImageGroups()
+        {
+            return Images.ToLookup(img => img.Bucket, StringComparer.OrdinalIgnoreCase);
+        }
+
+        private static IEnumerable<ImageInfo> GetImagesFromRoot(string rootPath, bool isBase)
+        {
+            var retList = new List<ImageInfo>();
+            if (!Directory.Exists(rootPath))
+            {
+                return retList;
+            }
+
+            var files = Directory.GetFiles(rootPath, ImageFilter, SearchOption.AllDirectories);
             foreach (var file in files)
             {
+                var relativePath = Path.GetRelativePath(rootPath, file);
+                var relativeDirectory = Path.GetDirectoryName(relativePath) ?? string.Empty;
                 var fInfo = new FileInfo(file);
-                if (fInfo.Directory != null)
+                retList.Add(new ImageInfo
                 {
-                    retList.Add(new ImageInfo { FileName = fInfo.Name, Directory = fInfo.Directory.Name, Path = file, IsBase = false });
+                    FileName = fInfo.Name,
+                    RelativeDirectory = relativeDirectory,
+                    Bucket = ClassifyImageBucket(relativeDirectory),
+                    Path = file,
+                    IsBase = isBase
+                });
+            }
+
+            return retList;
+        }
+
+        private static string ClassifyImageBucket(string relativeDirectory)
+        {
+            var key = NormalizeRelativePathKey(relativeDirectory);
+            return key switch
+            {
+                BucketArchetypes => BucketArchetypes,
+                BucketClasses => BucketClasses,
+                BucketEnhancements => BucketEnhancements,
+                BucketOrigins => BucketOrigins,
+                BucketOverlay => BucketOverlay,
+                BucketPowersets => BucketPowersets,
+                BucketSets => BucketSets,
+                BucketTypesRoot => BucketTypesRoot,
+                BucketTypeGrades => BucketTypeGrades,
+                BucketTypeSets => BucketTypeSets,
+                _ => string.Empty
+            };
+        }
+
+        private static string NormalizeRelativePathKey(string? relativeDirectory)
+        {
+            if (string.IsNullOrWhiteSpace(relativeDirectory))
+            {
+                return string.Empty;
+            }
+
+            var segments = relativeDirectory
+                .Split([Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar], StringSplitOptions.RemoveEmptyEntries)
+                .Select(NormalizeImageNameKey)
+                .Where(segment => !string.IsNullOrWhiteSpace(segment))
+                .ToArray();
+
+            return segments.Length == 0 ? string.Empty : string.Join("/", segments);
+        }
+
+        private static bool TryFindImagePath(IEnumerable<ImageInfo> images, IEnumerable<string> candidates, out string path)
+        {
+            path = string.Empty;
+            var orderedImages = images.OrderBy(i => i.IsBase ? 1 : 0).ToList();
+            foreach (var candidate in candidates.Where(c => !string.IsNullOrWhiteSpace(c)).Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                var exact = orderedImages.FirstOrDefault(i => i.FileName.Equals(candidate, StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrWhiteSpace(exact.Path))
+                {
+                    path = exact.Path;
+                    return true;
+                }
+
+                var normalizedCandidate = NormalizeImageNameKey(candidate);
+                if (string.IsNullOrWhiteSpace(normalizedCandidate))
+                {
+                    continue;
+                }
+
+                var normalized = orderedImages.FirstOrDefault(i =>
+                    NormalizeImageNameKey(i.FileName).Equals(normalizedCandidate, StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrWhiteSpace(normalized.Path))
+                {
+                    path = normalized.Path;
+                    return true;
                 }
             }
-            return retList;
+
+            return false;
+        }
+
+        private static string NormalizeImageNameKey(string? value)
+        {
+            var raw = Path.GetFileNameWithoutExtension(value ?? string.Empty);
+            if (string.IsNullOrWhiteSpace(raw))
+            {
+                return string.Empty;
+            }
+
+            return new string(raw.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
+        }
+
+        private static IEnumerable<string> BuildArchetypeImageCandidates(string className)
+        {
+            if (string.IsNullOrWhiteSpace(className))
+            {
+                yield break;
+            }
+
+            yield return $"{className}.png";
+
+            var trimmed = className.StartsWith("Class_", StringComparison.OrdinalIgnoreCase)
+                ? className["Class_".Length..]
+                : className;
+            yield return $"{trimmed}.png";
+            yield return $"archetypeicon_{trimmed.ToLowerInvariant()}.png";
+            yield return $"v_archetypeicon_{trimmed.ToLowerInvariant()}.png";
+        }
+
+        private static IEnumerable<string> BuildOriginImageCandidates(string originName)
+        {
+            if (string.IsNullOrWhiteSpace(originName))
+            {
+                yield break;
+            }
+
+            yield return $"{originName}.png";
+            yield return $"{originName.ToLowerInvariant()}.png";
+        }
+
+        private static IEnumerable<string> BuildPowersetImageCandidates(string imageName)
+        {
+            if (string.IsNullOrWhiteSpace(imageName))
+            {
+                yield break;
+            }
+
+            yield return imageName;
+            var fileName = Path.GetFileName(imageName);
+            if (!string.IsNullOrWhiteSpace(fileName))
+            {
+                yield return fileName;
+                yield return Path.ChangeExtension(fileName, ".png") ?? fileName;
+            }
+        }
+
+        private static IEnumerable<string> BuildEnhancementTypeImageCandidates(Enums.eType type)
+        {
+            switch (type)
+            {
+                case Enums.eType.None:
+                    yield return "None.png";
+                    break;
+                case Enums.eType.Normal:
+                    yield return "normal.png";
+                    break;
+                case Enums.eType.InventO:
+                    yield return "io.png";
+                    break;
+                case Enums.eType.SetO:
+                    yield return "io_sets.png";
+                    break;
+                case Enums.eType.SpecialO:
+                    yield return "special.png";
+                    break;
+            }
+        }
+
+        private static IEnumerable<string> BuildEnhancementGradeImageCandidates(Enums.eEnhGrade grade)
+        {
+            switch (grade)
+            {
+                case Enums.eEnhGrade.None:
+                    yield return "None.png";
+                    break;
+                case Enums.eEnhGrade.TrainingO:
+                    yield return "to.png";
+                    break;
+                case Enums.eEnhGrade.DualO:
+                    yield return "do.png";
+                    break;
+                case Enums.eEnhGrade.SingleO:
+                    yield return "so.png";
+                    break;
+            }
+        }
+
+        private static IEnumerable<string> BuildSetTypeImageCandidates(string? shortName)
+        {
+            if (string.IsNullOrWhiteSpace(shortName))
+            {
+                yield break;
+            }
+
+            switch (shortName)
+            {
+                case "Untyped":
+                    yield return "untyped.png";
+                    break;
+                case "MeleeAoE":
+                    yield return "melee_aoe.png";
+                    break;
+                case "MeleeST":
+                    yield return "melee_single_target.png";
+                    break;
+                case "RangedAoE":
+                    yield return "ranged_aoe.png";
+                    break;
+                case "RangedST":
+                    yield return "ranged_single_target.png";
+                    break;
+                case "PetRech":
+                    yield return "pet_recharge.png";
+                    break;
+                case "UniversalDamage":
+                    yield return "universal_damage.png";
+                    break;
+                case "DefDebuff":
+                    yield return "defense_debuff.png";
+                    break;
+                case "Threat":
+                    yield return "taunt.png";
+                    break;
+                case "ToHitDeb":
+                    yield return "tohit_debuff.png";
+                    break;
+                case "AccHeal":
+                    yield return "accurate_heal.png";
+                    break;
+                case "AccDefDeb":
+                    yield return "accurate_defense_debuff.png";
+                    break;
+                case "AccToHitDeb":
+                    yield return "accurate_tohit_debuff.png";
+                    break;
+                case "EndMod":
+                    yield return "end_mod.png";
+                    break;
+                case "RunNoSprint":
+                    yield return "run_no_sprint.png";
+                    break;
+                case "JumpNoSprint":
+                    yield return "jump_no_sprint.png";
+                    break;
+                case "FlightNoSprint":
+                    yield return "flight_no_sprint.png";
+                    break;
+                case "TeleportNoSprint":
+                    yield return "teleport_no_sprint.png";
+                    break;
+            }
+
+            yield return $"{shortName}.png";
+        }
+
+        private static IEnumerable<string> BuildSpecialRailImageCandidates(Mids_Reborn.Core.Utils.TypeGrade specialEnhancement)
+        {
+            if (!string.IsNullOrWhiteSpace(specialEnhancement.ShortName))
+            {
+                switch (specialEnhancement.ShortName)
+                {
+                    case "HO":
+                        yield return "hamidon.png";
+                        break;
+                    case "SynHO":
+                        yield return "synthetic_hamidon.png";
+                        break;
+                    case "HyO":
+                        yield return "hydra.png";
+                        break;
+                    case "TnO":
+                        yield return "titan.png";
+                        break;
+                    case "DSyncO":
+                        yield return "d-sync.png";
+                        yield return "dsync.png";
+                        break;
+                    case "Yin":
+                        yield return "yin.png";
+                        break;
+                }
+
+                yield return $"{specialEnhancement.ShortName}.png";
+            }
+
+            if (!string.IsNullOrWhiteSpace(specialEnhancement.Name))
+            {
+                switch (specialEnhancement.Name)
+                {
+                    case "Hamidon Origin":
+                    case "Hamidon":
+                        yield return "hamidon.png";
+                        break;
+                    case "Synthetic Hamidon":
+                        yield return "synthetic_hamidon.png";
+                        break;
+                    case "Hydra Origin":
+                    case "Hydra":
+                        yield return "hydra.png";
+                        break;
+                    case "Titan Origin":
+                    case "Titan":
+                        yield return "titan.png";
+                        break;
+                    case "D-Sync Origin":
+                    case "D-Sync":
+                        yield return "d-sync.png";
+                        yield return "dsync.png";
+                        break;
+                    case "Yin's Talisman":
+                        yield return "yin.png";
+                        break;
+                }
+
+                yield return $"{specialEnhancement.Name}.png";
+            }
+        }
+
+        private static IEnumerable<string> BuildBorderImageCandidates(Origin origin, BorderState borderState)
+        {
+            if (origin == null)
+            {
+                yield break;
+            }
+
+            switch (borderState)
+            {
+                case BorderState.Training:
+                    yield return "generic.png";
+                    break;
+                case BorderState.DualOrigin:
+                    yield return $"{origin.Grades[(int)Origin.Grade.DualO]}.png";
+                    break;
+                case BorderState.SingleOrigin:
+                    yield return $"{origin.Grades[(int)Origin.Grade.SingleO]}.png";
+                    break;
+                case BorderState.Special:
+                    yield return "uber.png";
+                    break;
+                case BorderState.Invention:
+                case BorderState.SetCrafted:
+                    yield return "invention.png";
+                    break;
+                case BorderState.SetAttuned:
+                    yield return "attuned.png";
+                    break;
+                case BorderState.SetSuperiorAttuned:
+                    yield return "superior_attuned.png";
+                    break;
+            }
+        }
+
+        private static IEnumerable<string> BuildClassicVariantBorderImageCandidates(
+            ClassicEnhancementVariantView variant,
+            int buildOriginIndex)
+        {
+            if (variant == null)
+            {
+                yield break;
+            }
+
+            switch (variant.DisplayGrade)
+            {
+                case Enums.eEnhGrade.TrainingO:
+                    yield return "generic.png";
+                    yield break;
+                case Enums.eEnhGrade.SingleO:
+                    foreach (var alias in BuildOriginOverlayAliases(variant.PrimaryOrigin))
+                    {
+                        yield return $"{alias}.png";
+                    }
+                    break;
+                case Enums.eEnhGrade.DualO:
+                    var primaryAliases = BuildOriginOverlayAliases(variant.PrimaryOrigin).ToArray();
+                    var secondaryAliases = BuildOriginOverlayAliases(variant.SecondaryOrigin).ToArray();
+                    if (primaryAliases.Length > 0 && secondaryAliases.Length > 0)
+                    {
+                        foreach (var primaryAlias in primaryAliases)
+                        {
+                            foreach (var secondaryAlias in secondaryAliases)
+                            {
+                                yield return $"{primaryAlias}_{secondaryAlias}.png";
+                            }
+                        }
+
+                        foreach (var secondaryAlias in secondaryAliases)
+                        {
+                            foreach (var primaryAlias in primaryAliases)
+                            {
+                                yield return $"{secondaryAlias}_{primaryAlias}.png";
+                            }
+                        }
+                    }
+                    else if (!string.IsNullOrWhiteSpace(variant.PrimaryOrigin))
+                    {
+                        foreach (var alias in BuildOriginOverlayAliases(variant.PrimaryOrigin))
+                        {
+                            yield return $"{alias}.png";
+                        }
+                    }
+
+                    if (DatabaseAPI.Database?.Origins != null &&
+                        buildOriginIndex >= 0 &&
+                        buildOriginIndex < DatabaseAPI.Database.Origins.Count)
+                    {
+                        var origin = DatabaseAPI.Database.Origins[buildOriginIndex];
+                        if (!string.IsNullOrWhiteSpace(origin?.Grades[(int)Origin.Grade.DualO]))
+                        {
+                            yield return $"{origin.Grades[(int)Origin.Grade.DualO]}.png";
+                        }
+                    }
+                    break;
+            }
+        }
+
+        private static IEnumerable<string> BuildOriginOverlayAliases(string? originName)
+        {
+            if (string.IsNullOrWhiteSpace(originName))
+            {
+                yield break;
+            }
+
+            foreach (var alias in BuildOverlayAliasesFromToken(originName))
+            {
+                yield return alias;
+            }
+
+            var originIndex = DatabaseAPI.GetOriginIDByName(originName);
+            if (DatabaseAPI.Database?.Origins == null ||
+                originIndex < 0 ||
+                originIndex >= DatabaseAPI.Database.Origins.Count)
+            {
+                yield break;
+            }
+
+            var origin = DatabaseAPI.Database.Origins[originIndex];
+            foreach (var token in new[]
+                     {
+                         origin?.Grades[(int)Origin.Grade.SingleO],
+                         origin?.Grades[(int)Origin.Grade.DualO]
+                     })
+            {
+                foreach (var alias in BuildOverlayAliasesFromToken(token))
+                {
+                    yield return alias;
+                }
+            }
+        }
+
+        private static IEnumerable<string> BuildOverlayAliasesFromToken(string? token)
+        {
+            if (string.IsNullOrWhiteSpace(token))
+            {
+                yield break;
+            }
+
+            var normalized = NormalizeImageNameKey(token);
+            if (string.IsNullOrWhiteSpace(normalized))
+            {
+                yield break;
+            }
+
+            switch (normalized)
+            {
+                case "magso":
+                case "magdo":
+                case "mag":
+                case "magic":
+                    yield return "magic";
+                    yield break;
+                case "mutso":
+                case "mutdo":
+                case "mut":
+                case "mutation":
+                case "mutant":
+                    yield return "mutant";
+                    yield return "mutation";
+                    yield break;
+                case "natso":
+                case "natdo":
+                case "nat":
+                case "natural":
+                    yield return "natural";
+                    yield break;
+                case "sciso":
+                case "scido":
+                case "sci":
+                case "science":
+                    yield return "science";
+                    yield break;
+                case "techso":
+                case "techdo":
+                case "tech":
+                case "technology":
+                    yield return "tech";
+                    yield return "technology";
+                    yield break;
+                default:
+                    yield return normalized;
+                    yield break;
+            }
         }
 
         private static ExtendedBitmap ResizeTo(ExtendedBitmap original, int targetSizeLogical)

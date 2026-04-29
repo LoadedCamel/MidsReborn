@@ -917,7 +917,7 @@ namespace Mids_Reborn.UI.Renderer
 
                     var enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
                     var clipRect3 = new Rectangle((int)slotRect.X, (int)slotRect.Y, (int)slotRect.Width, (int)slotRect.Height);
-                    AssetManager.DrawEnhancementAt(BxBuffer.Graphics, clipRect3, enhancement.ImageIdx, AssetManager.ToGfxGrade(enhancement.TypeID, slot.Enhancement.Grade));
+                    AssetManager.DrawEnhancementAt(BxBuffer.Graphics, clipRect3, enhancement.ImageIdx, slot.Enhancement.Enh, enhancement.TypeID, slot.Enhancement.Grade);
 
                     if (slot.Enhancement.RelativeLevel == 0 | slot.Level > MidsContext.Config.ForceLevel |
                         InterfaceMode == eInterfaceMode.PowerToggle & !powerEntry.StatInclude |
@@ -1761,12 +1761,12 @@ namespace Mids_Reborn.UI.Renderer
             if (powers is null || hIdx < 0 || hIdx >= powers.Count) return Rectangle.Empty;
 
             var powerEntry = powers[hIdx];
-            // Match PowerBounds’ “chosen/not chosen” location choice.
+            // Match PowerBoundsï¿½ ï¿½chosen/not chosenï¿½ location choice.
             var location = !powerEntry.Chosen && powerEntry.Power != null
                 ? PowerPosition(hIdx)
                 : PowerPosition(GetVisualIdx(hIdx));
 
-            // Must mirror DrawPowerImage’s dynamic width & centering.
+            // Must mirror DrawPowerImageï¿½s dynamic width & centering.
             const int horizontalPadding = 10;                           // keep in sync with DrawPowerImage
             int dynamicWidth = _calculatedCellWidth - ScaleLogical(25 + horizontalPadding);
             if (dynamicWidth < 1) dynamicWidth = 1;                     // guard
@@ -2634,7 +2634,7 @@ namespace Mids_Reborn.UI.Renderer
             int mainRows = Math.Max(1, _vcRowsPowers);
             int height = mainRows * cellCore;
 
-            // Stacked layouts reserve extra header room (matches CRtoXy’s Y-offset)
+            // Stacked layouts reserve extra header room (matches CRtoXyï¿½s Y-offset)
             if (_ColumnStackingMode != eColumnStacking.None)
                 height += (int)Math.Round(SzPower.Height / 2f);
 
@@ -2665,7 +2665,7 @@ namespace Mids_Reborn.UI.Renderer
             // Bottom padding
             height += PaddingY + SzSlot.Height;
 
-            // Width follows the hosting control’s client width
+            // Width follows the hosting controlï¿½s client width
             int width = Math.Max(1, _cTarget.ClientSize.Width);
             return new Size(width, Math.Max(1, height));
         }

@@ -451,9 +451,13 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 myPower.NGroupMembership[index] = clbMutex.CheckedIndices[index];
             }
 
-            myPower.BoostsAllowed = myPower.Enhancements
-                .Select(k => DatabaseAPI.Database.EnhancementClasses.First(c => c.ID == k).ClassID)
-                .ToArray();
+            if (!string.Equals(myPower.GroupName, "Boosts", StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(myPower.GroupName, "Set_Bonus", StringComparison.OrdinalIgnoreCase))
+            {
+                myPower.BoostsAllowed = myPower.Enhancements
+                    .Select(k => DatabaseAPI.Database.EnhancementClasses.First(c => c.ID == k).ClassID)
+                    .ToArray();
+            }
 
             DialogResult = DialogResult.OK;
             Hide();
@@ -2679,7 +2683,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             var preservedAdvancedRows = myPower.AdvancedRequirements?.Rows
                 .Where(r => r.Kind != AdvancedConditionKind.CharacterArchetype &&
-                            r.Kind != AdvancedConditionKind.PowerRequirementGroup)
+                            r.Kind != AdvancedConditionKind.PowerRequirementGroup &&
+                            r.Kind != AdvancedConditionKind.PowerCount)
                 .Select(r => r.Clone())
                 .ToList() ?? [];
 
@@ -3017,10 +3022,17 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private static string GetRequirementDisplay(AdvancedConditionRow row)
         {
-            var suffix = row.Unsupported ? " (not simulated)" : "";
+            var suffix = row.EvaluationMode switch
+            {
+                AdvancedConditionEvaluationMode.RuntimeTargetOnly => " (runtime target condition, not used for power legality)",
+                AdvancedConditionEvaluationMode.ReportOnly => " (report only, not used for power legality)",
+                _ => row.Unsupported ? " (not simulated)" : ""
+            };
+
             return row.Kind switch
             {
                 AdvancedConditionKind.PowerRequirementGroup => $"{(row.Negated ? "Excluded Power" : "Required Power")}: {GetPowerDisplayName(row.Subject)}{suffix}",
+                AdvancedConditionKind.PowerCount => $"Power Count: {row.Subject}{suffix}",
                 AdvancedConditionKind.CharacterArchetype => $"{(row.Negated ? "Excluded Archetype" : "Required Archetype")}: {GetArchetypeDisplayName(row.Value)}{suffix}",
                 AdvancedConditionKind.CharacterLevel => "Character Level",
                 AdvancedConditionKind.AdvancedExpression => $"Advanced: {row.RawExpression}{suffix}",
@@ -3033,6 +3045,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             return row.Kind switch
             {
                 AdvancedConditionKind.PowerRequirementGroup => string.IsNullOrWhiteSpace(row.Value) ? "Taken" : $"Taken with {GetPowerDisplayName(row.Value)}",
+                AdvancedConditionKind.PowerCount => $"{AdvancedConditionSet.FormatOperator(row.Operator)} {row.Value}",
                 AdvancedConditionKind.CharacterArchetype => GetArchetypeDisplayName(row.Value),
                 AdvancedConditionKind.CharacterLevel => row.Value,
                 _ => row.Value

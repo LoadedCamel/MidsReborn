@@ -379,15 +379,7 @@ namespace Mids_Reborn.Core
                     return string.Empty;
                 }
 
-                var power = new Power(DatabaseAPI.Database.Power[powerIndex]);
-                if (power.HasGrantPowerEffect)
-                {
-                    power.ApplyGrantPowerEffects();
-                }
-                else if (!power.AppliedExecutes)
-                {
-                    power.ProcessExecutes();
-                }
+                var power = PlannerEffectResolver.ResolvePower(new Power(DatabaseAPI.Database.Power[powerIndex])).ResolvedPower;
 
                 var groupedEffects = GroupedFx.AssembleGroupedEffects(power, true)
                     .Where(g =>

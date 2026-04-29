@@ -16,8 +16,8 @@ namespace Mids_Reborn.Core
 {
     public static class I9Gfx
     {
-        private const int IconLarge = 128;
-        private const int IconSmall = 16;
+        private const int IconLarge = 64;
+        private const int IconSmall = 32;
 
         private const string ImageFilter = "*.png";
         private static List<ImageInfo> Images { get; set; } = [];
@@ -115,6 +115,188 @@ namespace Mids_Reborn.Core
             return retList;
         }
 
+        private static string NormalizeImageBucket(string directory)
+        {
+            var key = NormalizeImageNameKey(directory);
+            return key switch
+            {
+                "archetypes" => "archetypes",
+                "origins" => "origins",
+                "powersets" => "powersets",
+                "enhancements" => "enhancements",
+                "classes" => "classes",
+                "sets" => "sets",
+                "overlay" => "enhancement_borders",
+                "border" => "enhancement_borders",
+                "borders" => "enhancement_borders",
+                "enhancementborder" => "enhancement_borders",
+                "enhancementborders" => "enhancement_borders",
+                "enhancementcategory" => "enhancement_categories",
+                "enhancementcategories" => "enhancement_categories",
+                _ => key
+            };
+        }
+
+        private static bool TryFindImagePath(IEnumerable<ImageInfo> images, IEnumerable<string> candidates, out string path)
+        {
+            path = string.Empty;
+            var orderedImages = images.OrderBy(i => i.IsBase ? 1 : 0).ToList();
+            foreach (var candidate in candidates.Where(c => !string.IsNullOrWhiteSpace(c)).Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                var exact = orderedImages.FirstOrDefault(i => i.FileName.Equals(candidate, StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrWhiteSpace(exact.Path))
+                {
+                    path = exact.Path!;
+                    return true;
+                }
+
+                var normalizedCandidate = NormalizeImageNameKey(candidate);
+                if (string.IsNullOrWhiteSpace(normalizedCandidate))
+                {
+                    continue;
+                }
+
+                var normalized = orderedImages.FirstOrDefault(i =>
+                    NormalizeImageNameKey(i.FileName).Equals(normalizedCandidate, StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrWhiteSpace(normalized.Path))
+                {
+                    path = normalized.Path!;
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static string NormalizeImageNameKey(string? value)
+        {
+            var raw = Path.GetFileNameWithoutExtension(value ?? string.Empty);
+            if (string.IsNullOrWhiteSpace(raw))
+            {
+                return string.Empty;
+            }
+
+            return new string(raw.Where(char.IsLetterOrDigit).Select(char.ToLowerInvariant).ToArray());
+        }
+
+        private static IEnumerable<string> BuildArchetypeImageCandidates(string className)
+        {
+            if (string.IsNullOrWhiteSpace(className))
+            {
+                yield break;
+            }
+
+            yield return $"{className}.png";
+
+            var trimmed = className.StartsWith("Class_", StringComparison.OrdinalIgnoreCase)
+                ? className["Class_".Length..]
+                : className;
+            yield return $"{trimmed}.png";
+            yield return $"archetypeicon_{trimmed.ToLowerInvariant()}.png";
+            yield return $"v_archetypeicon_{trimmed.ToLowerInvariant()}.png";
+        }
+
+        private static IEnumerable<string> BuildOriginImageCandidates(string originName)
+        {
+            if (string.IsNullOrWhiteSpace(originName))
+            {
+                yield break;
+            }
+
+            yield return $"{originName}.png";
+            yield return $"{originName.ToLowerInvariant()}.png";
+        }
+
+        private static IEnumerable<string> BuildPowersetImageCandidates(string imageName)
+        {
+            if (string.IsNullOrWhiteSpace(imageName))
+            {
+                yield break;
+            }
+
+            yield return imageName;
+            var fileName = Path.GetFileName(imageName);
+            if (!string.IsNullOrWhiteSpace(fileName))
+            {
+                yield return fileName;
+                yield return Path.ChangeExtension(fileName, ".png") ?? fileName;
+            }
+        }
+
+        private static IEnumerable<string> BuildEnhancementTypeImageCandidates(Enums.eType type)
+        {
+            yield return $"{type}.png";
+            switch (type)
+            {
+                case Enums.eType.Normal:
+                    yield return "normal.png";
+                    break;
+                case Enums.eType.InventO:
+                    yield return "io.png";
+                    break;
+                case Enums.eType.SetO:
+                    yield return "io_sets.png";
+                    break;
+                case Enums.eType.SpecialO:
+                    yield return "special.png";
+                    break;
+            }
+        }
+
+        private static IEnumerable<string> BuildEnhancementGradeImageCandidates(Enums.eEnhGrade grade)
+        {
+            yield return $"{grade}.png";
+            switch (grade)
+            {
+                case Enums.eEnhGrade.TrainingO:
+                    yield return "to.png";
+                    yield return "normal.png";
+                    break;
+                case Enums.eEnhGrade.DualO:
+                    yield return "do.png";
+                    break;
+                case Enums.eEnhGrade.SingleO:
+                    yield return "so.png";
+                    break;
+            }
+        }
+
+        private static IEnumerable<string> BuildBorderImageCandidates(Origin origin, int gradeIndex)
+        {
+            if (origin == null || gradeIndex < 0 || gradeIndex >= origin.Grades.Length)
+            {
+                yield break;
+            }
+
+            yield return $"{origin.Grades[gradeIndex]}.png";
+
+            switch (gradeIndex)
+            {
+                case 0:
+                    yield return "generic.png";
+                    break;
+                case 2:
+                    var originStem = origin.Name switch
+                    {
+                        "Technology" => "tech",
+                        "Mutation" => "mutant",
+                        _ => origin.Name.ToLowerInvariant()
+                    };
+                    yield return $"{originStem}.png";
+                    break;
+                case 3:
+                    yield return "uber.png";
+                    break;
+                case 4:
+                case 5:
+                    yield return "invention.png";
+                    break;
+                case 6:
+                    yield return "attuned.png";
+                    break;
+            }
+        }
+
         public static void SetOrigin(string iOrigin)
         {
             OriginIndex = DatabaseAPI.GetOriginIDByName(iOrigin);
@@ -138,12 +320,14 @@ namespace Mids_Reborn.Core
             }
 
             var baseImages = Images.Where(x => x.IsBase).ToList();
-            var archetypeImages = Images.Where(x => x.Directory == "Archetypes").ToList();
-            var classImages = Images.Where(x => x.Directory == "Classes").ToList();
-            var enhancementImages = Images.Where(x => x.Directory == "Enhancements").ToList();
-            var originImages = Images.Where(x => x.Directory == "Origins").ToList();
-            var powersetImages = Images.Where(x => x.Directory == "Powersets").ToList();
-            var setImages = Images.Where(x => x.Directory == "Sets").ToList();
+            var archetypeImages = Images.Where(x => NormalizeImageBucket(x.Directory) == "archetypes").ToList();
+            var classImages = Images.Where(x => NormalizeImageBucket(x.Directory) == "classes").ToList();
+            var enhancementImages = Images.Where(x => NormalizeImageBucket(x.Directory) == "enhancements").ToList();
+            var originImages = Images.Where(x => NormalizeImageBucket(x.Directory) == "origins").ToList();
+            var powersetImages = Images.Where(x => NormalizeImageBucket(x.Directory) == "powersets").ToList();
+            var setImages = Images.Where(x => NormalizeImageBucket(x.Directory) == "sets").ToList();
+            var categoryImages = Images.Where(x => NormalizeImageBucket(x.Directory) == "enhancement_categories").ToList();
+            var borderImages = Images.Where(x => NormalizeImageBucket(x.Directory) == "enhancement_borders").Concat(baseImages).ToList();
 
             var emptySlotPath = Images.FirstOrDefault(x => x.FileName.Equals("none.png", StringComparison.OrdinalIgnoreCase)).Path;
             if (emptySlotPath != null) EmptySlot = new Bitmap(emptySlotPath);
@@ -156,9 +340,9 @@ namespace Mids_Reborn.Core
             await LoadPowersetImages(powersetImages, baseImages);
             await LoadEnhancementImages(enhancementImages, baseImages);
             await LoadEnhancementSetImages(enhancementImages, baseImages);
-            await LoadBorderImages(baseImages);
+            await LoadBorderImages(borderImages);
             await LoadSetTypeImages(setImages, baseImages);
-            await LoadEnhTypeImages(setImages, baseImages);
+            await LoadEnhTypeImages(categoryImages, setImages, baseImages);
             await LoadEnhancementClassImages(classImages, baseImages);
 
             GC.Collect(GC.MaxGeneration, GCCollectionMode.Forced, blocking: false);
@@ -257,7 +441,7 @@ namespace Mids_Reborn.Core
         public static async Task LoadEnhancements()
         {
             var baseImages = Images.Where(x => x.IsBase).ToList();
-            var enhancmentImages = Images.Where(x => x.Directory == "Enhancements").ToList();
+            var enhancmentImages = Images.Where(x => NormalizeImageBucket(x.Directory) == "enhancements").ToList();
             await LoadEnhancementImages(enhancmentImages, baseImages);
             await Task.CompletedTask;
         }
@@ -267,13 +451,16 @@ namespace Mids_Reborn.Core
             var cSource = new TaskCompletionSource<List<string?>>();
             var retList = new List<string?>();
             var baseImages = Images.Where(x => x.IsBase).ToList();
-            var powersetImages = Images.Where(x => x.Directory == "Powersets").ToList();
+            var powersetImages = Images.Where(x => NormalizeImageBucket(x.Directory) == "powersets").OrderBy(i => i.IsBase ? 1 : 0).ToList();
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             if (retList.Any(p => p != unknown))
             {
                 if (unknown != null) retList.Add(unknown);
             }
-            retList.AddRange(DatabaseAPI.Database.Powersets.Select(ps => powersetImages.FirstOrDefault(i => ps != null && i.FileName == $"{ps.ImageName}").Path).Where(path => !string.IsNullOrWhiteSpace(path)));
+            retList.AddRange(DatabaseAPI.Database.Powersets.Select(ps =>
+                ps == null || !TryFindImagePath(powersetImages, BuildPowersetImageCandidates(ps.ImageName), out var resolvedPath)
+                    ? null
+                    : resolvedPath).Where(path => !string.IsNullOrWhiteSpace(path)));
 
             cSource.TrySetResult(retList);
 
@@ -285,12 +472,12 @@ namespace Mids_Reborn.Core
             var cSource = new TaskCompletionSource<List<string?>>();
             var retList = new List<string?>();
             var baseImages = Images.Where(x => x.IsBase).ToList();
-            var enhancementImages = Images.Where(x => x.Directory == "Enhancements").ToList();
+            var enhancementImages = Images.Where(x => NormalizeImageBucket(x.Directory) == "enhancements").OrderBy(i => i.IsBase ? 1 : 0).ToList();
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             foreach (var es in DatabaseAPI.Database.EnhancementSets)
             {
                 //Debug.WriteLine(DatabaseAPI.Database.EnhancementSets[index].Image);
-                var path = enhancementImages.FirstOrDefault(i => i.FileName == es.Image).Path;
+                var path = enhancementImages.FirstOrDefault(i => i.FileName.Equals(es.Image, StringComparison.OrdinalIgnoreCase)).Path;
                 if (string.IsNullOrWhiteSpace(path))
                 {
                     path = unknown;
@@ -325,7 +512,9 @@ namespace Mids_Reborn.Core
             for (var index = 0; index < count; index++)
             {
                 var className = DatabaseAPI.Database.Classes[index].ClassName;
-                var path = images.FirstOrDefault(i => i.FileName == $"{className}.png").Path ?? unknown;
+                var path = TryFindImagePath(images, BuildArchetypeImageCandidates(className), out var resolvedPath)
+                    ? resolvedPath
+                    : unknown;
 
                 using var originalBitmap = new Bitmap(path);
                 using var resized = ResizeTo(originalBitmap, IconSmall);
@@ -355,7 +544,9 @@ namespace Mids_Reborn.Core
             for (var index = 0; index < count; index++)
             {
                 var ps = DatabaseAPI.Database.Powersets[index];
-                var path = images.FirstOrDefault(i => i.FileName == ps.ImageName).Path ?? unknown;
+                var path = TryFindImagePath(images, BuildPowersetImageCandidates(ps.ImageName), out var resolvedPath)
+                    ? resolvedPath
+                    : unknown;
 
                 using var originalBitmap = new Bitmap(path);
                 using var resized = ResizeTo(originalBitmap, IconSmall);
@@ -384,7 +575,9 @@ namespace Mids_Reborn.Core
             for (int index = 0; index < count; index++)
             {
                 var origin = DatabaseAPI.Database.Origins[index];
-                var path = images.FirstOrDefault(i => i.FileName.Contains(origin.Name)).Path;
+                var path = TryFindImagePath(images, BuildOriginImageCandidates(origin.Name), out var resolvedPath)
+                    ? resolvedPath
+                    : string.Empty;
 
                 if (string.IsNullOrWhiteSpace(path))
                     continue;
@@ -440,6 +633,7 @@ namespace Mids_Reborn.Core
         {
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             Enhancements = new Bitmap[DatabaseAPI.Database.Enhancements.Length];
+            var preferredImages = images.OrderBy(i => i.IsBase ? 1 : 0).ToList();
 
             for (int index = 0; index < Enhancements.Length; index++)
             {
@@ -449,7 +643,7 @@ namespace Mids_Reborn.Core
                 {
                     try
                     {
-                        var path = images.FirstOrDefault(i => i.FileName == enh.Image).Path ?? unknown;
+                        var path = preferredImages.FirstOrDefault(i => i.FileName.Equals(enh.Image, StringComparison.OrdinalIgnoreCase)).Path ?? unknown;
 
                         using var original = new Bitmap(path);
                         Enhancements[index] = ResizeTo(original, IconLarge);
@@ -480,6 +674,7 @@ namespace Mids_Reborn.Core
         {
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
             int count = DatabaseAPI.Database.EnhancementSets.Count;
+            var preferredImages = images.OrderBy(i => i.IsBase ? 1 : 0).ToList();
 
             var scaledSize = GetDpiScaledSize(IconLarge);
             Sets = new ExtendedBitmap(count * scaledSize, scaledSize);
@@ -488,7 +683,7 @@ namespace Mids_Reborn.Core
             for (int index = 0; index < count; index++)
             {
                 var enhSet = DatabaseAPI.Database.EnhancementSets[index];
-                var path = images.FirstOrDefault(i => i.FileName == enhSet.Image).Path ?? unknown;
+                var path = preferredImages.FirstOrDefault(i => i.FileName.Equals(enhSet.Image, StringComparison.OrdinalIgnoreCase)).Path ?? unknown;
 
                 using var original = new Bitmap(path);
                 using var resized = ResizeTo(original, IconLarge);
@@ -525,7 +720,7 @@ namespace Mids_Reborn.Core
             await Task.CompletedTask;
         }
 
-        private static async Task LoadEnhTypeImages(IReadOnlyCollection<ImageInfo> images, IEnumerable<ImageInfo> baseImages)
+        private static async Task LoadEnhTypeImages(IReadOnlyCollection<ImageInfo> categoryImages, IReadOnlyCollection<ImageInfo> setImages, IEnumerable<ImageInfo> baseImages)
         {
             var unknown = baseImages.FirstOrDefault(i => i.FileName == "Unknown.png").Path;
 
@@ -539,8 +734,10 @@ namespace Mids_Reborn.Core
 
             for (int index = 0; index < typeNames.Length; index++)
             {
-                var fileName = $"{typeNames[index]}.png";
-                var path = images.FirstOrDefault(i => i.FileName == fileName).Path ?? unknown;
+                var type = (Enums.eType)index;
+                var path = TryFindImagePath(categoryImages, BuildEnhancementTypeImageCandidates(type), out var resolvedPath)
+                    ? resolvedPath
+                    : unknown;
 
                 using var original = new Bitmap(path);
                 using var resized = ResizeTo(original, IconLarge);
@@ -556,7 +753,10 @@ namespace Mids_Reborn.Core
 
             for (int index = 0; index < gradeNames.Length; index++)
             {
-                var path = images.FirstOrDefault(i => i.FileName == $"{gradeNames[index]}.png").Path ?? unknown;
+                var grade = (Enums.eEnhGrade)index;
+                var path = TryFindImagePath(categoryImages, BuildEnhancementGradeImageCandidates(grade), out var resolvedPath)
+                    ? resolvedPath
+                    : unknown;
 
                 using var original = new Bitmap(path);
                 using var resized = ResizeTo(original, IconLarge);
@@ -574,7 +774,9 @@ namespace Mids_Reborn.Core
 
             for (int index = 0; index < specNames.Length; index++)
             {
-                var path = images.FirstOrDefault(i => i.FileName == $"{specNames[index]}.png").Path ?? unknown;
+                var path = TryFindImagePath(setImages, [$"{specNames[index]}.png"], out var resolvedPath)
+                    ? resolvedPath
+                    : unknown;
 
                 using var original = new Bitmap(path);
                 using var resized = ResizeTo(original, IconLarge);
@@ -590,7 +792,7 @@ namespace Mids_Reborn.Core
         {
             var origins = DatabaseAPI.Database.Origins;
             int originCount = origins.Count;
-            int gradeCount = 6;
+            int gradeCount = DatabaseAPI.Database.Origins.FirstOrDefault()?.Grades.Length ?? 7;
 
             var scaledSize = GetDpiScaledSize(IconLarge);
             Borders = new ExtendedBitmap(originCount * scaledSize, gradeCount * scaledSize);
@@ -598,12 +800,13 @@ namespace Mids_Reborn.Core
 
             for (int originIndex = 0; originIndex < originCount; originIndex++)
             {
-                int x = originIndex * IconLarge;
+                int x = originIndex * scaledSize;
 
-                for (int gradeIndex = 0; gradeIndex <= 5; gradeIndex++) // explicitly match original
+                for (int gradeIndex = 0; gradeIndex < origins[originIndex].Grades.Length; gradeIndex++)
                 {
-                    string fileName = origins[originIndex].Grades[gradeIndex];
-                    var path = images.FirstOrDefault(i => i.FileName == $"{fileName}.png").Path;
+                    var path = TryFindImagePath(images, BuildBorderImageCandidates(origins[originIndex], gradeIndex), out var resolvedPath)
+                        ? resolvedPath
+                        : string.Empty;
 
                     if (string.IsNullOrWhiteSpace(path))
                         continue;

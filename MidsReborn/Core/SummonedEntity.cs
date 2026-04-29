@@ -59,6 +59,8 @@ namespace Mids_Reborn.Core
         public string[] UpgradePowerFullName { get; set; } = Array.Empty<string>();
         public string ClassName { get; set; } = string.Empty;
         public Enums.eSummonEntity EntityType { get; set; }
+        public bool IsPseudoPet => EntityType == Enums.eSummonEntity.PseudoPet;
+        public bool IsRealPet => EntityType is Enums.eSummonEntity.Pet or Enums.eSummonEntity.Henchman;
 
         // semi-props
         // would be properties, but shouldn't be serialized, and aren't outwardly mutable

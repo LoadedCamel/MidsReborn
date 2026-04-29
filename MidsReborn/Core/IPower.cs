@@ -313,7 +313,7 @@ namespace Mids_Reborn.Core
 
         bool IsEnhancementValid(int iEnh);
 
-        void AbsorbPetEffects(int hIdx = -1, int stackingOverride = -1);
+        void AbsorbPetEffects(int hIdx = -1, int stackingOverride = -1, bool pseudoOnly = false);
 
         bool AllowedForClass(int classId);
 

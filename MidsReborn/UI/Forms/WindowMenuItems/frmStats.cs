@@ -597,9 +597,13 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     }
                     else
                     {
-                        var pBase = p.Clone();
-                        pBase?.ProcessExecutes();
-                        pBase?.AbsorbPetEffects();
+                        var pClone = p.Clone();
+                        var pBase = pClone == null
+                            ? null
+                            : PlannerEffectResolver.ResolvePower(pClone, new PlannerEffectResolutionContext
+                            {
+                                AbsorbPetEffects = true
+                            }).ResolvedPower;
                         powersetsPowers.Add(k++, new KeyValuePair<IPower, IPower>(pBase, pBase));
                     }
                 }

@@ -1,0 +1,728 @@
+namespace Mids_Reborn.Core.Omni;
+
+public enum OmniRedirectKind
+{
+    None,
+    ExecutionVariant,
+    ModeVariant,
+    BuffVariant,
+    SummonDelivery,
+    Unknown
+}
+
+public sealed class OmniPowerClassification
+{
+    public Enums.ePowerType PowerType { get; set; } = Enums.ePowerType.Click;
+    public bool ClickBuff { get; set; }
+    public bool AlwaysToggle { get; set; }
+    public bool HiddenPower { get; set; }
+    public bool IncludeFlag { get; set; }
+    public Enums.eGridType InherentType { get; set; } = Enums.eGridType.None;
+    public bool ExecutionOnly { get; set; }
+    public bool GrantedSupportPower { get; set; }
+    public bool NormalBuildPick { get; set; }
+    public OmniRedirectKind RedirectKind { get; set; } = OmniRedirectKind.None;
+    public float ClassificationConfidence { get; set; } = 0.75f;
+    public List<string> Reasons { get; } = [];
+
+    public string Summary(string fullName)
+    {
+        var reasons = Reasons.Count == 0 ? "no specific reason recorded" : string.Join("; ", Reasons);
+        return $"{fullName}: PowerType={PowerType}, ClickBuff={ClickBuff}, HiddenPower={HiddenPower}, IncludeFlag={IncludeFlag}, InherentType={InherentType}, NormalBuildPick={NormalBuildPick}, RedirectKind={RedirectKind}, Confidence={ClassificationConfidence:0.00} ({reasons})";
+    }
+}
+
+public sealed class OmniPowerClassifier
+{
+    private static readonly HashSet<string> VisibleInherentNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Brawl",
+        "Sprint",
+        "Rest",
+        "Health",
+        "Hurdle",
+        "Swift",
+        "Stamina"
+    };
+
+    private static readonly HashSet<string> BuildRelevantClassInherents = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Defiance",
+        "Containment",
+        "Critical_Hit",
+        "Domination",
+        "Fury",
+        "Gauntlet",
+        "Inherent_Gauntlet",
+        "Scourge",
+        "Opportunity",
+        "Assassin_Strike_Inherent",
+        "Vigilance",
+        "Supremacy"
+    };
+
+    private static readonly string[] OffensiveAttribFragments =
+    [
+        "damage",
+        "smashing",
+        "lethal",
+        "fire",
+        "cold",
+        "energy",
+        "negative",
+        "psionic",
+        "toxic",
+        "taunt",
+        "knock",
+        "hold",
+        "sleep",
+        "stun",
+        "immobil",
+        "terror",
+        "confuse",
+        "placate"
+    ];
+
+    private static readonly string[] BuffAttribFragments =
+    [
+        "defense",
+        "resistance",
+        "damage",
+        "tohit",
+        "accuracy",
+        "recharge",
+        "recovery",
+        "regeneration",
+        "endurance",
+        "hit_points",
+        "absorb",
+        "movement",
+        "jump",
+        "fly",
+        "speed",
+        "perception",
+        "protection"
+    ];
+
+    public OmniPowerClassification Classify(
+        OmniPowerDefinition power,
+        IReadOnlyDictionary<string, OmniPowerDefinition> scopedPowersByFullName)
+    {
+        var classification = new OmniPowerClassification
+        {
+            PowerType = MapPowerType(power.Type),
+            HiddenPower = false,
+            IncludeFlag = false,
+            InherentType = Enums.eGridType.None
+        };
+
+        var group = GroupNamePart(power.FullName);
+        var set = SetNamePart(power.FullName);
+        var name = LastNamePart(power.FullName);
+        var isTemporaryPower = group.Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase);
+        var offensive = IsOffensivePower(power);
+        var hasModeRequirement = power.ModesRequired.Count > 0;
+        var sameSetPowerRequirement = TryGetSinglePowerRequirement(power, out var parentPowerName) &&
+                                      SamePowerset(power.FullName, parentPowerName);
+
+        classification.RedirectKind = ClassifyRedirects(power, scopedPowersByFullName);
+        classification.ExecutionOnly = classification.RedirectKind is OmniRedirectKind.ExecutionVariant or OmniRedirectKind.SummonDelivery;
+        var visibleInherent = IsVisibleInherent(power, name, set);
+        var normalBuildPick = IsNormalBuildPickCandidate(
+            group,
+            power,
+            hasModeRequirement,
+            sameSetPowerRequirement,
+            classification.ExecutionOnly);
+        classification.NormalBuildPick = normalBuildPick;
+        classification.GrantedSupportPower =
+            (power.AutoIssue && !power.ShowInManage && !visibleInherent) ||
+            (power.AutoIssue && !visibleInherent && !group.Equals("Inherent", StringComparison.OrdinalIgnoreCase) && !isTemporaryPower) ||
+            (power.AutoIssue && sameSetPowerRequirement) ||
+            (hasModeRequirement && power.AutoIssue);
+
+        if (classification.PowerType == Enums.ePowerType.Click)
+        {
+            classification.ClickBuff = IsClickBuff(power, scopedPowersByFullName, offensive);
+        }
+
+        if (offensive)
+        {
+            classification.ClickBuff = false;
+            classification.Reasons.Add("offensive target/effect profile");
+        }
+
+        if (classification.RedirectKind == OmniRedirectKind.ExecutionVariant)
+        {
+            classification.ClickBuff = false;
+            classification.Reasons.Add("redirects are execution variants, not buff state");
+        }
+
+        if (visibleInherent)
+        {
+            var classInherent = IsClassInherent(power, name);
+            classification.HiddenPower = false;
+            classification.GrantedSupportPower = false;
+            classification.IncludeFlag = true;
+            classification.InherentType = classInherent
+                ? Enums.eGridType.Class
+                : Enums.eGridType.Inherent;
+            if (classInherent)
+            {
+                classification.PowerType = Enums.ePowerType.Auto_;
+                classification.ClickBuff = false;
+                classification.AlwaysToggle = true;
+            }
+
+            classification.Reasons.Add("visible build inherent");
+        }
+        else if (group.Equals("Inherent", StringComparison.OrdinalIgnoreCase))
+        {
+            classification.HiddenPower = true;
+            classification.IncludeFlag = false;
+            classification.Reasons.Add("non-build inherent support/detail power");
+        }
+
+        if (classification.PowerType == Enums.ePowerType.Auto_)
+        {
+            classification.AlwaysToggle = true;
+        }
+        else if (classification.PowerType == Enums.ePowerType.Toggle)
+        {
+            classification.AlwaysToggle = !offensive && !classification.GrantedSupportPower;
+        }
+
+        if (!power.ShowInManage && !isTemporaryPower && !normalBuildPick)
+        {
+            classification.HiddenPower = !visibleInherent;
+            classification.Reasons.Add("show_in_manage=false");
+        }
+        else if (!power.ShowInManage && normalBuildPick)
+        {
+            classification.Reasons.Add("show_in_manage=false but normal build powerset pick");
+        }
+
+        if (classification.GrantedSupportPower && !visibleInherent)
+        {
+            classification.HiddenPower = true;
+            classification.IncludeFlag = power.AutoIssue && !group.Equals("Inherent", StringComparison.OrdinalIgnoreCase) && !isTemporaryPower;
+            classification.InherentType = classification.IncludeFlag && power.ShowInManage
+                ? Enums.eGridType.Powerset
+                : Enums.eGridType.None;
+            classification.Reasons.Add("auto-issued support/granted power");
+        }
+
+        if (hasModeRequirement && IsSupportHeavyGroup(group) && !visibleInherent)
+        {
+            classification.HiddenPower = true;
+            classification.IncludeFlag = false;
+            classification.Reasons.Add("mode-gated support power");
+        }
+
+        if (isTemporaryPower)
+        {
+            classification.InherentType = set.Equals("Accolades", StringComparison.OrdinalIgnoreCase)
+                ? Enums.eGridType.Accolade
+                : Enums.eGridType.Temp;
+            classification.HiddenPower = false;
+            classification.IncludeFlag = true;
+            classification.Reasons.Add("temporary/accolade database power");
+        }
+
+        if (IsPowersetGrantedTemporaryState(power, group, set, name))
+        {
+            classification.HiddenPower = true;
+            classification.IncludeFlag = true;
+            classification.InherentType = Enums.eGridType.Powerset;
+            classification.GrantedSupportPower = true;
+            classification.ExecutionOnly = false;
+            classification.NormalBuildPick = false;
+            classification.ClickBuff = false;
+            classification.Reasons.Add("powerset-granted temporary state shown in inherent grid");
+        }
+
+        if (string.Equals(power.Requires?.Trim(), "0", StringComparison.OrdinalIgnoreCase) &&
+            (power.AutoIssue || IsSupportHeavyGroup(group)) &&
+            !IsVisibleInherent(power, name, set))
+        {
+            classification.HiddenPower = true;
+            classification.IncludeFlag = false;
+            classification.Reasons.Add("disabled/manual support requirement");
+        }
+
+        if (IsRedirectOrPetExecutionGroup(group))
+        {
+            classification.HiddenPower = true;
+            classification.ExecutionOnly = true;
+            classification.IncludeFlag = false;
+            classification.Reasons.Add("execution/support powerset group");
+        }
+
+        if (!classification.HiddenPower && !classification.IncludeFlag && HasBuildPrerequisite(power))
+        {
+            classification.Reasons.Add("visible gated build pick");
+        }
+
+        if (classification.HiddenPower && classification.IncludeFlag && !classification.GrantedSupportPower)
+        {
+            classification.IncludeFlag = false;
+        }
+
+        if (normalBuildPick && classification.HiddenPower)
+        {
+            classification.HiddenPower = false;
+            classification.IncludeFlag = false;
+            classification.InherentType = Enums.eGridType.None;
+            classification.GrantedSupportPower = false;
+            classification.ExecutionOnly = false;
+            classification.Reasons.Add("restored visible normal build powerset pick");
+        }
+
+        if (IsPowersetPlannerControl(power, group, name))
+        {
+            classification.HiddenPower = true;
+            classification.IncludeFlag = true;
+            classification.InherentType = Enums.eGridType.Power;
+            classification.GrantedSupportPower = true;
+            classification.ExecutionOnly = false;
+            classification.NormalBuildPick = false;
+            classification.ClickBuff = false;
+            classification.Reasons.Add("power-dependent planner control shown in inherent grid");
+        }
+
+        if (!classification.HiddenPower && offensive && classification.PowerType == Enums.ePowerType.Click)
+        {
+            classification.ClassificationConfidence = 0.95f;
+        }
+        else if (classification.HiddenPower)
+        {
+            classification.ClassificationConfidence = 0.85f;
+        }
+
+        return classification;
+    }
+
+    public static Enums.ePowerType MapPowerType(string type)
+    {
+        return NormalizeName(type) switch
+        {
+            "auto" or "auto_" => Enums.ePowerType.Auto_,
+            "toggle" => Enums.ePowerType.Toggle,
+            "boost" => Enums.ePowerType.Boost,
+            "inspiration" => Enums.ePowerType.Inspiration,
+            "globalboost" => Enums.ePowerType.GlobalBoost,
+            _ => Enums.ePowerType.Click
+        };
+    }
+
+    public static bool TryGetSinglePowerRequirement(OmniPowerDefinition power, out string parentPowerName)
+    {
+        parentPowerName = string.Empty;
+        var requires = power.Requires?.Trim() ?? string.Empty;
+        if (string.IsNullOrWhiteSpace(requires) ||
+            requires.Contains(' ') ||
+            requires.Contains('(') ||
+            requires.Contains(')') ||
+            requires.Equals("0", StringComparison.OrdinalIgnoreCase) ||
+            requires.Equals("1", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (requires.Count(c => c == '.') != 2)
+        {
+            return false;
+        }
+
+        parentPowerName = requires;
+        return true;
+    }
+
+    private static bool IsClickBuff(
+        OmniPowerDefinition power,
+        IReadOnlyDictionary<string, OmniPowerDefinition> scopedPowersByFullName,
+        bool offensive)
+    {
+        if (offensive || !power.Type.Equals("Click", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (HasSustainedBuffSurface(power))
+        {
+            return true;
+        }
+
+        var redirectDestinations = power.Redirects
+            .Select(r => r.Name)
+            .Where(n => !string.IsNullOrWhiteSpace(n))
+            .Select(n => scopedPowersByFullName.TryGetValue(n, out var dest) ? dest : null)
+            .Where(dest => dest != null)
+            .Cast<OmniPowerDefinition>()
+            .ToList();
+
+        return redirectDestinations.Count > 0 &&
+               redirectDestinations.All(dest => !IsOffensivePower(dest)) &&
+               redirectDestinations.Any(HasSustainedBuffSurface);
+    }
+
+    private static OmniRedirectKind ClassifyRedirects(
+        OmniPowerDefinition power,
+        IReadOnlyDictionary<string, OmniPowerDefinition> scopedPowersByFullName)
+    {
+        if (power.Redirects.Count == 0)
+        {
+            return OmniRedirectKind.None;
+        }
+
+        var destinations = power.Redirects
+            .Select(r => r.Name)
+            .Where(n => !string.IsNullOrWhiteSpace(n))
+            .Select(n => scopedPowersByFullName.TryGetValue(n, out var dest) ? dest : null)
+            .Where(dest => dest != null)
+            .Cast<OmniPowerDefinition>()
+            .ToList();
+
+        if (destinations.Count == 0)
+        {
+            if (power.Redirects
+                .Select(r => r.Name)
+                .Where(n => !string.IsNullOrWhiteSpace(n))
+                .All(IsAuxExecutionRedirectName))
+            {
+                return OmniRedirectKind.ExecutionVariant;
+            }
+
+            return OmniRedirectKind.Unknown;
+        }
+
+        if (destinations.Any(dest => HasEntCreate(dest)))
+        {
+            return OmniRedirectKind.SummonDelivery;
+        }
+
+        if (destinations.All(IsOffensivePower))
+        {
+            return OmniRedirectKind.ExecutionVariant;
+        }
+
+        if (destinations.Any(dest => dest.ModesRequired.Count > 0 || dest.ModesDisallowed.Count > 0))
+        {
+            return OmniRedirectKind.ModeVariant;
+        }
+
+        if (destinations.Any(HasSustainedBuffSurface))
+        {
+            return OmniRedirectKind.BuffVariant;
+        }
+
+        return OmniRedirectKind.Unknown;
+    }
+
+    private static bool IsOffensivePower(OmniPowerDefinition power)
+    {
+        return HasFoeTarget(power) ||
+               power.AttackTypes.Any(IsAttackType) ||
+               power.Effects.Any(HasOffensiveEffect);
+    }
+
+    private static bool IsAuxExecutionRedirectName(string? powerName)
+    {
+        if (string.IsNullOrWhiteSpace(powerName))
+        {
+            return false;
+        }
+
+        var group = GroupNamePart(powerName);
+        return group.EndsWith("_Aux", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool HasFoeTarget(OmniPowerDefinition power)
+    {
+        return IsFoe(power.TargetType) ||
+               IsFoe(power.TargetTypeSecondary) ||
+               power.TargetsAffected.Any(IsFoe);
+    }
+
+    private static bool HasSustainedBuffSurface(OmniPowerDefinition power)
+    {
+        if (!TargetsSelfOrAlly(power))
+        {
+            return false;
+        }
+
+        return power.Effects.Any(effect => effect.Templates.Any(template =>
+            template.Duration > 0.25f &&
+            !IsFoe(template.Target) &&
+            (BuffAttribFragments.Any(f => template.Attribs.Any(a => NormalizeName(a).Contains(NormalizeName(f), StringComparison.OrdinalIgnoreCase))) ||
+             BuffAttribFragments.Any(f => NormalizeName(template.Table).Contains(NormalizeName(f), StringComparison.OrdinalIgnoreCase)))));
+    }
+
+    private static bool TargetsSelfOrAlly(OmniPowerDefinition power)
+    {
+        if (IsSelfOrAlly(power.TargetType) || IsSelfOrAlly(power.TargetTypeSecondary))
+        {
+            return true;
+        }
+
+        return power.TargetsAffected.Count == 0 || power.TargetsAffected.Any(IsSelfOrAlly);
+    }
+
+    private static bool HasOffensiveEffect(OmniEffectDefinition effect)
+    {
+        return effect.Templates.Any(template =>
+                   IsFoe(template.Target) && IsOffensiveTemplate(template)) ||
+               effect.ChildEffects.Any(HasOffensiveEffect);
+    }
+
+    private static bool IsOffensiveTemplate(OmniEffectTemplate template)
+    {
+        var normalizedType = NormalizeName(template.Type);
+        if (normalizedType is "damage" or "knock" or "entcreate")
+        {
+            return true;
+        }
+
+        return OffensiveAttribFragments.Any(fragment =>
+            template.Attribs.Any(attrib => NormalizeName(attrib).Contains(NormalizeName(fragment), StringComparison.OrdinalIgnoreCase)) ||
+            NormalizeName(template.Table).Contains(NormalizeName(fragment), StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool HasEntCreate(OmniPowerDefinition power)
+    {
+        return power.Effects.Any(HasEntCreate);
+    }
+
+    private static bool HasEntCreate(OmniEffectDefinition effect)
+    {
+        return effect.Templates.Any(t =>
+                   t.Params != null &&
+                   string.Equals(t.Params.Value<string>("type"), "EntCreate", StringComparison.OrdinalIgnoreCase)) ||
+               effect.ChildEffects.Any(HasEntCreate);
+    }
+
+    private static bool IsVisibleInherent(OmniPowerDefinition power, string name, string set)
+    {
+        if (!GroupNamePart(power.FullName).Equals("Inherent", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (set.Equals("Fitness", StringComparison.OrdinalIgnoreCase) && VisibleInherentNames.Contains(name))
+        {
+            return true;
+        }
+
+        if (VisibleInherentNames.Contains(name))
+        {
+            return true;
+        }
+
+        return IsClassInherent(power, name);
+    }
+
+    private static bool IsPowersetPlannerControl(OmniPowerDefinition power, string group, string name)
+    {
+        if (!IsPlayableBuildGroup(group) ||
+            string.Equals(power.Requires?.Trim(), "0", StringComparison.OrdinalIgnoreCase) ||
+            !PlannerModeMapper.TryGetPlannerMode(name, out var mode))
+        {
+            return false;
+        }
+
+        return mode is PlannerMode.DefensiveAdaptation or
+            PlannerMode.EfficientAdaptation or
+            PlannerMode.OffensiveAdaptation or
+            PlannerMode.ComboLevel1 or
+            PlannerMode.ComboLevel2 or
+            PlannerMode.ComboLevel3 or
+            PlannerMode.FastMode or
+            PlannerMode.PerfectionOfBody or
+            PlannerMode.PerfectionOfMind or
+            PlannerMode.PerfectionOfSoul or
+            PlannerMode.PackMentality;
+    }
+
+    private static bool IsPowersetGrantedTemporaryState(
+        OmniPowerDefinition power,
+        string group,
+        string set,
+        string name)
+    {
+        if (!group.Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase) ||
+            !set.Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var normalizedName = NormalizeName(name);
+        return normalizedName is "savagemeleebloodfrenzystalker" or
+            "savagemeleebloodfrenzy" or
+            "savagemeleeexhausted" ||
+            normalizedName.Contains("bloodfrenzy", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsClassInherent(OmniPowerDefinition power, string name)
+    {
+        return BuildRelevantClassInherents.Contains(name);
+    }
+
+    private static bool HasBuildPrerequisite(OmniPowerDefinition power)
+    {
+        return !string.IsNullOrWhiteSpace(power.Requires) &&
+               !power.Requires.Trim().Equals("0", StringComparison.OrdinalIgnoreCase) &&
+               !power.Requires.Trim().Equals("1", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool SamePowerset(string powerFullName, string otherPowerFullName)
+    {
+        return string.Equals(
+            $"{GroupNamePart(powerFullName)}.{SetNamePart(powerFullName)}",
+            $"{GroupNamePart(otherPowerFullName)}.{SetNamePart(otherPowerFullName)}",
+            StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsSupportHeavyGroup(string group)
+    {
+        return NormalizeName(group) is
+            "inherent" or
+            "pets" or
+            "temporarypowers" or
+            "incarnate" or
+            "incarnatepets" or
+            "kheldianpets" or
+            "mastermindpets" or
+            "villainpets";
+    }
+
+    private static bool IsRedirectOrPetExecutionGroup(string group)
+    {
+        return NormalizeName(group) is
+            "redirects" or
+            "pets" or
+            "kheldianpets" or
+            "mastermindpets" or
+            "villainpets" or
+            "incarnatepets";
+    }
+
+    private static bool IsNormalBuildPickCandidate(
+        string group,
+        OmniPowerDefinition power,
+        bool hasModeRequirement,
+        bool sameSetPowerRequirement,
+        bool executionOnly)
+    {
+        return IsPlayableBuildGroup(group) &&
+               !power.AutoIssue &&
+               !hasModeRequirement &&
+               !sameSetPowerRequirement &&
+               !executionOnly &&
+               !string.Equals(power.Requires?.Trim(), "0", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsPlayableBuildGroup(string group)
+    {
+        return NormalizeName(group) is
+            "arachnossoldiers" or
+            "arachnoswidow" or
+            "blasterranged" or
+            "blastersupport" or
+            "brutedefense" or
+            "brutemelee" or
+            "controllerbuff" or
+            "controllercontrol" or
+            "corruptorbuff" or
+            "corruptorranged" or
+            "defenderbuff" or
+            "defenderranged" or
+            "dominatorassault" or
+            "dominatorcontrol" or
+            "mastermindbuff" or
+            "mastermindsummon" or
+            "peacebringeroffensive" or
+            "peacebringerdefensive" or
+            "scrapperdefense" or
+            "scrappermelee" or
+            "sentineldefense" or
+            "sentinelranged" or
+            "stalkerdefense" or
+            "stalkermelee" or
+            "tankerdefense" or
+            "tankermelee" or
+            "warshadeoffensive" or
+            "warshadedefensive" or
+            "pool" or
+            "epic";
+    }
+
+    private static bool IsAttackType(string attackType)
+    {
+        return NormalizeName(attackType) is
+            "melee" or
+            "ranged" or
+            "aoe" or
+            "areaofeffect" or
+            "smashing" or
+            "smash" or
+            "lethal" or
+            "cold" or
+            "fire" or
+            "energy" or
+            "negativeenergy" or
+            "negative" or
+            "psionic" or
+            "psi" or
+            "toxic";
+    }
+
+    private static bool IsFoe(string value)
+    {
+        var normalized = NormalizeName(value);
+        return normalized.Contains("foe", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("villain", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("enemy", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsSelfOrAlly(string value)
+    {
+        var normalized = NormalizeName(value);
+        return string.IsNullOrWhiteSpace(normalized) ||
+               normalized.Contains("self", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("caster", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("ally", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("friend", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("teammate", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("player", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string GroupNamePart(string fullName)
+    {
+        var parts = (fullName ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length > 0 ? parts[0] : string.Empty;
+    }
+
+    private static string SetNamePart(string fullName)
+    {
+        var parts = (fullName ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length > 1 ? parts[1] : string.Empty;
+    }
+
+    private static string LastNamePart(string fullName)
+    {
+        var parts = (fullName ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length > 0 ? parts[^1] : string.Empty;
+    }
+
+    private static string NormalizeName(string value)
+    {
+        return (value ?? string.Empty)
+            .Replace("_", string.Empty, StringComparison.Ordinal)
+            .Replace("-", string.Empty, StringComparison.Ordinal)
+            .Replace(" ", string.Empty, StringComparison.Ordinal)
+            .Replace("(", string.Empty, StringComparison.Ordinal)
+            .Replace(")", string.Empty, StringComparison.Ordinal)
+            .Trim()
+            .ToLowerInvariant();
+    }
+}

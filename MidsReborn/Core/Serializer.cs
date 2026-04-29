@@ -135,6 +135,7 @@ namespace Mids_Reborn.Core
             private readonly string[] _math =
             {
                 "DamageMath",
+                "EnemyRelativeLevel",
                 "ScalingToHit",
                 "ExempHigh",
                 "ExempLow",
@@ -143,7 +144,7 @@ namespace Mids_Reborn.Core
                 "Inc",
                 "TeamMembers",
                 "CombatContextSettings",
-                "RelativeScales" // internal readonly; won’t serialize (non-public). Keeping here is harmless.
+                "RelativeLevels" // internal readonly; won’t serialize (non-public). Keeping here is harmless.
             };
 
             // Build / Editing UX

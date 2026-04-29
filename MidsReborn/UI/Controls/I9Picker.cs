@@ -9,6 +9,7 @@ using System.Drawing.Text;
 using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.UI.Renderer;
 using Mids_Reborn.UI.Theming;
+using Mids_Reborn.Core.Omni;
 
 namespace Mids_Reborn.UI.Controls
 {
@@ -27,20 +28,22 @@ namespace Mids_Reborn.UI.Controls
 
         #region Constants
 
-        private const int IconSize = 48;
-        private const int IconSpacing = 6;
-        private const int PaddingOuter = 8;
-        private const int HeaderBoxHeight = 25;
-        private const int InfoBoxHeight = 50;
-        private const int FooterBoxHeight = 64;
+        private const int IconSize = 64;
+        private const int IconSpacing = 8;
+        private const int PaddingOuter = 10;
+        private const int HeaderBoxHeight = IconSize / 2;
+        private const int InfoBoxHeight = IconSize - 4;
+        private const int FooterBoxHeight = IconSize + 16;
         private const int CornerRadius = 8;
         private const int TypeIconCount = 5;
         private const int EnhGridCols = 4;
         private const int EnhGridRows = 5;
-        private const int MaxVisibleGradeIcons = 4;
-        private const int ArrowHeight = 12;
-        private const int RailExtraWidth = 4;
-        private const int IconInset = 3;
+        private const int MaxVisibleGradeIcons = 5;
+        private const int RailExtraWidth = 8;
+        private const int IconInset = 2;
+        private const int RailScrollbarWidth = 14;
+        private const int RailScrollbarInset = 3;
+        private const int RailScrollbarThumbMinHeight = 24;
 
         #endregion
 
@@ -62,7 +65,6 @@ namespace Mids_Reborn.UI.Controls
         private int _powerId;
         private int[] _normalEnhs = [];
         private int[] _inventionEnhs = [];
-
         private Enums.eType _lastTab = Enums.eType.Normal;
         private Enums.eEnhGrade _lastGrade = Enums.eEnhGrade.SingleO;
         private Enums.eEnhRelative _lastRelativeLevel = Enums.eEnhRelative.Even;
@@ -80,8 +82,14 @@ namespace Mids_Reborn.UI.Controls
         private Rectangle _levelBoxRect = Rectangle.Empty;
         private Rectangle _lvlPlusRect = Rectangle.Empty;
         private Rectangle _lvlMinusRect = Rectangle.Empty;
+        private Rectangle _railScrollbarBounds = Rectangle.Empty;
+        private Rectangle _railScrollbarTrackBounds = Rectangle.Empty;
+        private Rectangle _railScrollbarThumbRect = Rectangle.Empty;
 
         private int _scrollOffset;
+        private bool _railDraggingThumb;
+        private int _railDragStartY;
+        private bool _railHoveringThumb;
         private bool _themeHooked;
         private Action? _themeChangedHandler;
 
@@ -118,6 +126,8 @@ namespace Mids_Reborn.UI.Controls
             MouseWheel += I9Picker_MouseWheel;
             MouseMove += I9Picker_MouseMove;
             MouseDown += I9Picker_MouseDown;
+            MouseUp += I9Picker_MouseUp;
+            MouseLeave += I9Picker_MouseLeave;
             KeyDown += I9Picker_KeyDown;
             TabStop = true;
             Focus();
@@ -161,6 +171,19 @@ namespace Mids_Reborn.UI.Controls
             }
         }
 
+        private ScrollPanelTheme CurrentScrollTheme
+        {
+            get
+            {
+                if (DesignMode)
+                {
+                    return ThemeManager.DesignTime.ScrollPanel;
+                }
+
+                return ThemeManager.CurrentTheme?.ScrollPanel ?? ThemeManager.DesignTime.ScrollPanel;
+            }
+        }
+
         #endregion
 
         #region Public Methods
@@ -179,8 +202,13 @@ namespace Mids_Reborn.UI.Controls
             _normalEnhs = GetValidEnhancements(iPower, Enums.eType.Normal).ToArray();
             _inventionEnhs = GetValidEnhancements(iPower, Enums.eType.InventO).ToArray();
             _model.SetTypes = GetValidSetTypes(iPower);
-            _model.NoGrades = (int[])Enum.GetValues(typeof(Enums.eEnhGrade));
-            _model.SpecialTypes = DatabaseAPI.Database.SpecialEnhancements.Select(x => x.Index).ToArray();
+            _model.NoGrades =
+            [
+                (int)Enums.eEnhGrade.TrainingO,
+                (int)Enums.eEnhGrade.DualO,
+                (int)Enums.eEnhGrade.SingleO
+            ];
+            _model.SpecialTypes = GetOrderedSpecialTypes();
 
             // 3. Determine the initial state based on the provided slot
             // Start with last-used or default values
@@ -328,38 +356,42 @@ namespace Mids_Reborn.UI.Controls
 
         private void I9Picker_MouseWheel(object? sender, MouseEventArgs e)
         {
-            int listLength = 0;
-            switch (_model.View.TabId)
-            {
-                case Enums.eType.Normal:
-                    listLength = _model.NoGrades.Length;
-                    break;
-                case Enums.eType.SpecialO:
-                    listLength = _model.SpecialTypes.Length;
-                    break;
-                case Enums.eType.SetO:
-                    // If a type isn't selected yet, we are viewing the list of types.
-                    listLength = _model.View.SetTypeId < 0 ? _model.SetTypes.Length : _model.SetIds.Length;
-                    break;
-            }
-
-            // Now, use the correct length in the guard clause.
+            int listLength = GetVisibleRailItemCount();
             if (listLength <= MaxVisibleGradeIcons)
             {
-                return; // This now correctly prevents scrolling.
+                return;
             }
 
             int step = IconSize + IconSpacing;
-            int maxScroll = (listLength - MaxVisibleGradeIcons) * step;
             _scrollOffset -= Math.Sign(e.Delta) * step;
-            _scrollOffset = Math.Clamp(_scrollOffset, 0, maxScroll);
-            _scrollOffset = _scrollOffset / step * step; // snap
+            _scrollOffset = ClampRailScrollOffset(_scrollOffset, listLength);
             Invalidate();
         }
 
         private void I9Picker_MouseMove(object? sender, MouseEventArgs e)
         {
             var pt = e.Location;
+
+            bool thumbHovered = _railScrollbarThumbRect.Contains(pt);
+            bool railHoverChanged = _railHoveringThumb != thumbHovered;
+            _railHoveringThumb = thumbHovered;
+
+            if (_railDraggingThumb)
+            {
+                DragRailScrollbar(e.Y);
+                return;
+            }
+
+            if (!_railScrollbarBounds.IsEmpty && _railScrollbarBounds.Contains(pt))
+            {
+                ClearHoverStateIfNeeded();
+                if (railHoverChanged)
+                {
+                    Invalidate(_railScrollbarBounds);
+                }
+
+                return;
+            }
 
             foreach (var (rect, i) in _headerRects)
             {
@@ -415,10 +447,7 @@ namespace Mids_Reborn.UI.Controls
                     if (i2 < _model.EnhancementIds.Length)
                     {
                         int enhId = _model.EnhancementIds[i2];
-                        if (_model.EnhancementNames.TryGetValue(enhId, out var name))
-                        {
-                            SetHoverText(name, _model.EnhancementDescriptions.GetValueOrDefault(enhId, ""));
-                        }
+                        SetHoverText(GetDisplayNameForEnhancement(enhId), GetHoverTextForEnhancement(enhId));
                         RaiseHoverEnhancementEvent(enhId);
                     }
                 }
@@ -440,8 +469,8 @@ namespace Mids_Reborn.UI.Controls
                     switch (_model.View.TabId)
                     {
                         case Enums.eType.Normal:
-                            var grade = (Enums.eEnhGrade)i3;
-                            _hoverInfo = grade.ToString().Replace("O", " Origin");
+                            var grade = (Enums.eEnhGrade)_model.NoGrades[i3];
+                            _hoverInfo = DatabaseAPI.Database.EnhGradeStringLong[(int)grade];
                             _hoverText = "";
                             break;
                         case Enums.eType.SpecialO:
@@ -460,6 +489,11 @@ namespace Mids_Reborn.UI.Controls
                     Invalidate();
                     return;
                 }
+            }
+
+            if (railHoverChanged)
+            {
+                Invalidate(_railScrollbarBounds);
             }
 
             if (!ClientRectangle.Contains(pt))
@@ -488,6 +522,11 @@ namespace Mids_Reborn.UI.Controls
             if (e.Button == MouseButtons.Right)
             {
                 EnhancementSelectionCancelled?.Invoke();
+                return;
+            }
+
+            if (TryHandleRailScrollbarMouseDown(e))
+            {
                 return;
             }
 
@@ -544,7 +583,7 @@ namespace Mids_Reborn.UI.Controls
                     switch (_model.View.TabId)
                     {
                         case Enums.eType.Normal:
-                            _model.View.GradeId = (Enums.eEnhGrade)index;
+                            _model.View.GradeId = (Enums.eEnhGrade)_model.NoGrades[index];
                             _lastGrade = _model.View.GradeId;
                             break;
                         case Enums.eType.SpecialO:
@@ -608,6 +647,34 @@ namespace Mids_Reborn.UI.Controls
             }
         }
 
+        private void I9Picker_MouseUp(object? sender, MouseEventArgs e)
+        {
+            if (_railDraggingThumb)
+            {
+                _railDraggingThumb = false;
+                Capture = false;
+                Invalidate(_railScrollbarBounds);
+            }
+        }
+
+        private void I9Picker_MouseLeave(object? sender, EventArgs e)
+        {
+            if (_railDraggingThumb)
+            {
+                _railDraggingThumb = false;
+                Capture = false;
+            }
+
+            if (_railHoveringThumb)
+            {
+                _railHoveringThumb = false;
+                if (!_railScrollbarBounds.IsEmpty)
+                {
+                    Invalidate(_railScrollbarBounds);
+                }
+            }
+        }
+
         private void I9Picker_KeyDown(object? sender, KeyEventArgs e)
         {
             switch (e.KeyCode)
@@ -654,6 +721,9 @@ namespace Mids_Reborn.UI.Controls
             _headerRects.Clear();
             _lvlPlusRect = Rectangle.Empty;
             _lvlMinusRect = Rectangle.Empty;
+            _railScrollbarBounds = Rectangle.Empty;
+            _railScrollbarTrackBounds = Rectangle.Empty;
+            _railScrollbarThumbRect = Rectangle.Empty;
 
             if (_buffer == null)
             {
@@ -759,13 +829,13 @@ namespace Mids_Reborn.UI.Controls
 
         private void DrawSelectorRailPanels(Graphics g, Rectangle infoBoxRect, Rectangle lastHeaderIcon)
         {
-            int top = infoBoxRect.Bottom + IconSpacing - 3;
+            int top = infoBoxRect.Bottom + IconSpacing - 2;
             int left = PaddingOuter - 2;
             int railLeft = lastHeaderIcon.X - 3;
-            int railRight = lastHeaderIcon.Right + RailExtraWidth + 3;
-            int topRailBottom = top + IconSize + 6;
+            int railRight = lastHeaderIcon.Right + RailExtraWidth + RailScrollbarWidth + 3;
+            int topRailBottom = top + IconSize + IconSpacing;
             int railBottom = top + IconSize + IconSpacing * 2 +
-                             MaxVisibleGradeIcons * IconSize + (MaxVisibleGradeIcons - 1) * IconSpacing + 3;
+                             MaxVisibleGradeIcons * IconSize + (MaxVisibleGradeIcons - 1) * IconSpacing + PaddingOuter / 2;
             var palette = CurrentPalette;
 
             var topRail = Rectangle.FromLTRB(left, top, railRight, topRailBottom);
@@ -823,19 +893,8 @@ namespace Mids_Reborn.UI.Controls
                     _enhancementRects.Add((rect, i)); // Use the grid's rects list for sets temporarily
                     bool hovered = _hoverEnhIndex == i;
 
-                    // 1. Look up the specific "SetO" border from the Borders dictionary.
-                    var borderKey = new Point(AssetManager.OriginIndex, (int)Origin.Grade.SetO);
-                    if (AssetManager.Borders.TryGetValue(borderKey, out var borderImage) && borderImage?.Bitmap != null)
-                    {
-                        g.DrawImage(borderImage.Bitmap, IconContentRect(rect));
-                    }
-
-                    // 2. Look up the specific Set icon from the Sets dictionary.
                     var setId = _model.SetIds[i];
-                    if (AssetManager.Sets.TryGetValue(setId, out var setImage) && setImage?.Bitmap != null)
-                    {
-                        g.DrawImage(setImage.Bitmap, IconContentRect(rect));
-                    }
+                    AssetManager.DrawEnhancementSet(g, IconContentRect(rect), setId);
 
                     DrawIconFrame(g, rect, false, hovered);
                 }
@@ -862,10 +921,9 @@ namespace Mids_Reborn.UI.Controls
                     int iconIndex = GetEnhImageIndex(enhId);
                     if (iconIndex >= 0 && iconIndex < AssetManager.Enhancements.Count)
                     {
-                        var grade = GetGradeForEnhancement(enhId);
                         bool disabled = IsEnhancementGrayed(index);
                         using var attr = GetImageAttributes(disabled);
-                        AssetManager.DrawEnhancementAt(g, IconContentRect(rect), iconIndex, grade, attr);
+                        AssetManager.DrawEnhancementAt(g, IconContentRect(rect), iconIndex, enhId, _model.View.TabId, _model.View.GradeId, attr);
                         DrawIconFrame(g, rect, selected, hovered, disabled);
                     }
                 }
@@ -874,13 +932,13 @@ namespace Mids_Reborn.UI.Controls
 
         private void DrawGradeColumn(Graphics g, int columnLeft, int topEnh, int bottomEnh)
         {
-            // Use the grid's boundaries directly for the icon area to ensure alignment.
             int top = topEnh;
             int bottom = bottomEnh;
             int availableHeight = bottom - top;
+            int iconLaneWidth = IconSize + RailExtraWidth;
+            int step = IconSize + IconSpacing;
 
-            // Set a clipping region to ensure icons don't draw outside their area during scroll.
-            var clipRect = new Rectangle(columnLeft - 1, top, IconSize + RailExtraWidth + 2, availableHeight);
+            var clipRect = new Rectangle(columnLeft - 1, top, iconLaneWidth + 2, availableHeight);
             Region oldClip = g.Clip;
             g.SetClip(clipRect);
 
@@ -890,7 +948,6 @@ namespace Mids_Reborn.UI.Controls
             int[]? indices = null;
             Dictionary<int, ExtendedBitmap>? sourceDictionary = null;
 
-            // Determine which set of icons to display in the column.
             if (tabId == Enums.eType.Normal)
             {
                 indices = _model.NoGrades;
@@ -903,39 +960,42 @@ namespace Mids_Reborn.UI.Controls
             }
             else if (tabId == Enums.eType.SetO)
             {
-                // When the "Set" tab is active, this column always shows the Set Types.
                 indices = _model.SetTypes;
                 sourceDictionary = AssetManager.SetTypes;
             }
 
+            int loopStart = tabId == Enums.eType.SpecialO ? 1 : 0;
+            int itemCount = Math.Max(0, (indices?.Length ?? 0) - loopStart);
+            _scrollOffset = ClampRailScrollOffset(_scrollOffset, itemCount);
+            int maxScrollRows = Math.Max(0, itemCount - MaxVisibleGradeIcons);
+            int scrollRows = Math.Min(_scrollOffset / step, maxScrollRows);
             if (indices != null && sourceDictionary != null)
             {
-                // For Normal/Special types, skip the first "None" entry.
-                int loopStart = tabId is Enums.eType.Normal or Enums.eType.SpecialO ? 1 : 0;
-                int itemCount = indices.Length - loopStart;
-
-                // Always loop four times to draw four boxes for a consistent UI.
                 for (int i = 0; i < MaxVisibleGradeIcons; i++)
                 {
-                    // The actual index into our data array, accounting for scrolling.
-                    int dataIndex = loopStart + i + _scrollOffset / (IconSize + IconSpacing);
-                    int y = top + i * (IconSize + IconSpacing);
+                    int dataIndex = loopStart + i + scrollRows;
+                    int y = top + i * step;
                     var rect = new Rectangle(columnLeft, y, IconSize, IconSize);
 
-                    // Check if a real item exists to be drawn in this slot.
-                    if (i < itemCount)
+                    if (dataIndex >= loopStart && dataIndex < indices.Length)
                     {
-                        // A real item exists: Draw it fully and make it clickable.
                         _gradeRects.Add((rect, dataIndex));
 
                         bool selected = IsSelectorIndexSelected(tabId, indices, dataIndex);
                         bool hovered = _hoverSetIndex == dataIndex;
 
-                        // Look up the specific icon from the correct dictionary
                         int iconKey = indices[dataIndex];
                         if (sourceDictionary.TryGetValue(iconKey, out var iconToDraw) && iconToDraw?.Bitmap != null)
                         {
-                            // Draw the entire individual icon; no source rectangle needed.
+                            if (tabId == Enums.eType.Normal)
+                            {
+                                var gradeBorder = AssetManager.ToGfxGrade(Enums.eType.Normal, (Enums.eEnhGrade)iconKey);
+                                if (AssetManager.TryGetBorderBitmap(gradeBorder, out var borderImage) && borderImage?.Bitmap != null)
+                                {
+                                    g.DrawImage(borderImage.Bitmap, IconContentRect(rect));
+                                }
+                            }
+
                             g.DrawImage(iconToDraw.Bitmap, IconContentRect(rect));
                         }
 
@@ -945,40 +1005,20 @@ namespace Mids_Reborn.UI.Controls
             }
 
             g.Clip = oldClip;
-
-            // Determine if scroll arrows are needed.
-            int finalItemCount = indices != null ? indices.Length - (tabId is Enums.eType.Normal or Enums.eType.SpecialO ? 1 : 0) : 0;
-            bool scrollable = finalItemCount > MaxVisibleGradeIcons;
-
-            if (scrollable)
-            {
-                // Draw arrows ABOVE and BELOW the aligned icon area.
-                if (_scrollOffset > 0)
-                {
-                    int upArrowY = topEnh - ArrowHeight / 2 - IconSpacing;
-                    DrawArrow(g, new Point(columnLeft + IconSize / 2, upArrowY), true);
-                }
-
-                int maxScrollOffset = (finalItemCount - MaxVisibleGradeIcons) * (IconSize + IconSpacing);
-                if (_scrollOffset < maxScrollOffset)
-                {
-                    int downArrowY = bottomEnh + ArrowHeight / 2 + IconSpacing;
-                    DrawArrow(g, new Point(columnLeft + IconSize / 2, downArrowY), false);
-                }
-            }
+            DrawRailScrollbar(g, new Rectangle(columnLeft + iconLaneWidth, topEnh, RailScrollbarWidth, availableHeight), itemCount, step);
         }
 
         private void DrawFooterBox(Graphics g, out Rectangle leftTextBox)
         {
-            int y = Height - PaddingOuter - FooterBoxHeight + 10;
+            int y = Height - PaddingOuter - FooterBoxHeight;
             int leftTextWidth = Width - IconSize - PaddingOuter * 3;
 
-            leftTextBox = new Rectangle(PaddingOuter, y, leftTextWidth, FooterBoxHeight - PaddingOuter);
+            leftTextBox = new Rectangle(PaddingOuter, y, leftTextWidth, FooterBoxHeight);
             var palette = CurrentPalette;
 
             DrawRoundedBox(g, leftTextBox, CornerRadius, palette.PanelTop, palette.PanelBottom, palette.Border);
 
-            using var font = new Font("Segoe UI", 8.5f);
+            using var font = new Font("Segoe UI", 9f);
             using var textBrush = new SolidBrush(palette.Text);
             using var sf = new StringFormat
             {
@@ -988,14 +1028,14 @@ namespace Mids_Reborn.UI.Controls
             };
 
             string footer = _hoverText ?? string.Empty;
-            var textRect = Rectangle.Inflate(leftTextBox, -8, -5);
+            var textRect = Rectangle.Inflate(leftTextBox, -PaddingOuter, -PaddingOuter / 2);
             g.DrawString(footer, font, textBrush, textRect, sf);
         }
 
         private void DrawLevelBox(Graphics g, Rectangle leftTextBox)
         {
-            int y = Height - PaddingOuter - FooterBoxHeight + 10;
-            _levelBoxRect = new Rectangle(leftTextBox.Right + PaddingOuter, y, IconSize, FooterBoxHeight - PaddingOuter);
+            int y = Height - PaddingOuter - FooterBoxHeight;
+            _levelBoxRect = new Rectangle(leftTextBox.Right + PaddingOuter, y, IconSize, FooterBoxHeight);
             var palette = CurrentPalette;
 
             DrawRoundedBox(g, _levelBoxRect, CornerRadius,
@@ -1003,8 +1043,8 @@ namespace Mids_Reborn.UI.Controls
                 palette.LevelBottom,
                 palette.LevelBorder);
 
-            using var fontTitle = new Font("Segoe UI", 8.25f, FontStyle.Bold);
-            using var fontValue = new Font("Segoe UI", 9.5f, FontStyle.Bold);
+            using var fontTitle = new Font("Segoe UI", 8.5f, FontStyle.Bold);
+            using var fontValue = new Font("Segoe UI", 10f, FontStyle.Bold);
             using var textBrush = new SolidBrush(palette.LevelText);
             using var lockBrush = new SolidBrush(palette.MutedText);
             var sf = new StringFormat { Alignment = StringAlignment.Center, LineAlignment = StringAlignment.Center };
@@ -1065,7 +1105,7 @@ namespace Mids_Reborn.UI.Controls
             }
             else
             {
-                using var lockFont = new Font("Segoe MDL2 Assets", 10, FontStyle.Bold); // Modern icon font
+                using var lockFont = new Font("Segoe MDL2 Assets", 10.5f, FontStyle.Bold); // Modern icon font
                 g.DrawString("\uE72E", lockFont, lockBrush, _lvlMinusRect, sf); // Unicode for 'Lock'
                 g.DrawString("\uE72E", lockFont, lockBrush, _lvlPlusRect, sf);
             }
@@ -1131,7 +1171,7 @@ namespace Mids_Reborn.UI.Controls
 
             return tabId switch
             {
-                Enums.eType.Normal => (int)_model.View.GradeId == dataIndex,
+                Enums.eType.Normal => _model.View.GradeId == (Enums.eEnhGrade)indices[dataIndex],
                 Enums.eType.SpecialO => _model.View.SpecialId == indices[dataIndex],
                 Enums.eType.SetO => _model.View.SetTypeId == dataIndex,
                 _ => false
@@ -1143,6 +1183,7 @@ namespace Mids_Reborn.UI.Controls
             return Rectangle.Inflate(rect, -IconInset, -IconInset);
         }
 
+
         private static void DrawRoundedBox(Graphics g, Rectangle rect, int radius, Color innerColor, Color outerColor, Color border)
         {
             using var path = RoundedRect(rect, radius);
@@ -1152,15 +1193,54 @@ namespace Mids_Reborn.UI.Controls
             g.DrawPath(pen, path);
         }
 
-        private void DrawArrow(Graphics g, Point center, bool up)
+        private void DrawRailScrollbar(Graphics g, Rectangle bounds, int itemCount, int step)
         {
-            Point[] pts = up
-                ? [new Point(center.X, center.Y - 4), new Point(center.X - 5, center.Y + 4), new Point(center.X + 5, center.Y + 4)
-                ]
-                : [new Point(center.X, center.Y + 4), new Point(center.X - 5, center.Y - 4), new Point(center.X + 5, center.Y - 4)
-                ];
-            using var brush = new SolidBrush(CurrentPalette.Accent);
-            g.FillPolygon(brush, pts);
+            _railScrollbarBounds = Rectangle.Empty;
+            _railScrollbarTrackBounds = Rectangle.Empty;
+            _railScrollbarThumbRect = Rectangle.Empty;
+
+            if (itemCount <= MaxVisibleGradeIcons || bounds.Width <= 0 || bounds.Height <= 0)
+            {
+                _railHoveringThumb = false;
+                return;
+            }
+
+            _railScrollbarBounds = bounds;
+            _railScrollbarTrackBounds = Rectangle.FromLTRB(
+                bounds.Left + RailScrollbarInset,
+                bounds.Top + RailScrollbarInset,
+                bounds.Right - RailScrollbarInset,
+                bounds.Bottom - RailScrollbarInset);
+
+            int scrollMax = Math.Max(0, (itemCount - MaxVisibleGradeIcons) * step);
+            int trackHeight = Math.Max(0, _railScrollbarTrackBounds.Height);
+            int thumbHeight = Math.Max(
+                RailScrollbarThumbMinHeight,
+                (int)Math.Round((double)MaxVisibleGradeIcons / itemCount * trackHeight));
+            thumbHeight = Math.Min(thumbHeight, trackHeight);
+
+            int available = Math.Max(0, trackHeight - thumbHeight);
+            int thumbY = _railScrollbarTrackBounds.Top;
+            if (available > 0 && scrollMax > 0)
+            {
+                double ratio = (double)_scrollOffset / scrollMax;
+                thumbY = _railScrollbarTrackBounds.Top + (int)Math.Round(available * ratio);
+            }
+
+            int inset = Math.Max(1, bounds.Width / 4);
+            _railScrollbarThumbRect = new Rectangle(
+                bounds.Left + inset,
+                thumbY,
+                Math.Max(1, bounds.Width - inset * 2),
+                thumbHeight);
+
+            var theme = CurrentScrollTheme;
+            using var trackPen = new Pen(theme.Track, 2f);
+            int centerX = bounds.Left + bounds.Width / 2;
+            g.DrawLine(trackPen, centerX, _railScrollbarTrackBounds.Top, centerX, _railScrollbarTrackBounds.Bottom);
+
+            using var thumbBrush = new SolidBrush(_railHoveringThumb || _railDraggingThumb ? theme.Hover : theme.Bar);
+            g.FillRectangle(thumbBrush, _railScrollbarThumbRect);
         }
 
         private static GraphicsPath RoundedRect(Rectangle bounds, int radius)
@@ -1284,7 +1364,103 @@ namespace Mids_Reborn.UI.Controls
         {
             var railLeft = PaddingOuter + (TypeIconCount - 1) * (IconSize + IconSpacing + 2);
 
-            return railLeft + IconSize + RailExtraWidth + PaddingOuter;
+            return railLeft + IconSize + RailExtraWidth + RailScrollbarWidth + PaddingOuter;
+        }
+
+        private int GetVisibleRailItemCount()
+        {
+            return _model.View.TabId switch
+            {
+                Enums.eType.Normal => _model.NoGrades.Length,
+                Enums.eType.SpecialO => Math.Max(0, _model.SpecialTypes.Length - 1),
+                Enums.eType.SetO => _model.SetTypes.Length,
+                _ => 0
+            };
+        }
+
+        private static int ClampRailScrollOffset(int offset, int itemCount)
+        {
+            int step = IconSize + IconSpacing;
+            int maxScroll = Math.Max(0, (itemCount - MaxVisibleGradeIcons) * step);
+            offset = Math.Clamp(offset, 0, maxScroll);
+            return step > 0 ? offset / step * step : offset;
+        }
+
+        private void ClearHoverStateIfNeeded()
+        {
+            if (_hoverHeaderIndex != -1 || _hoverEnhIndex != -1 || _hoverSetIndex != -1)
+            {
+                _hoverHeaderIndex = -1;
+                _hoverEnhIndex = -1;
+                _hoverSetIndex = -1;
+                _hoverInfo = string.Empty;
+                _hoverText = string.Empty;
+                Invalidate();
+            }
+        }
+
+        private bool TryHandleRailScrollbarMouseDown(MouseEventArgs e)
+        {
+            if (e.Button != MouseButtons.Left || _railScrollbarBounds.IsEmpty || !_railScrollbarBounds.Contains(e.Location))
+            {
+                return false;
+            }
+
+            Focus();
+            int itemCount = GetVisibleRailItemCount();
+            if (itemCount <= MaxVisibleGradeIcons)
+            {
+                return true;
+            }
+
+            if (_railScrollbarThumbRect.Contains(e.Location))
+            {
+                _railDraggingThumb = true;
+                _railDragStartY = e.Y - _railScrollbarThumbRect.Y;
+                Capture = true;
+                return true;
+            }
+
+            if (_railScrollbarTrackBounds.Contains(e.Location))
+            {
+                int pageStep = MaxVisibleGradeIcons * (IconSize + IconSpacing);
+                if (e.Y < _railScrollbarThumbRect.Top)
+                {
+                    _scrollOffset = ClampRailScrollOffset(_scrollOffset - pageStep, itemCount);
+                }
+                else if (e.Y > _railScrollbarThumbRect.Bottom)
+                {
+                    _scrollOffset = ClampRailScrollOffset(_scrollOffset + pageStep, itemCount);
+                }
+
+                Invalidate();
+                return true;
+            }
+
+            return true;
+        }
+
+        private void DragRailScrollbar(int mouseY)
+        {
+            if (_railScrollbarTrackBounds.IsEmpty || _railScrollbarThumbRect.IsEmpty)
+            {
+                return;
+            }
+
+            int itemCount = GetVisibleRailItemCount();
+            int step = IconSize + IconSpacing;
+            int maxScroll = Math.Max(0, (itemCount - MaxVisibleGradeIcons) * step);
+            int available = Math.Max(0, _railScrollbarTrackBounds.Height - _railScrollbarThumbRect.Height);
+            if (available <= 0 || maxScroll <= 0)
+            {
+                return;
+            }
+
+            int newThumbY = mouseY - _railDragStartY;
+            newThumbY = Math.Max(_railScrollbarTrackBounds.Top, Math.Min(newThumbY, _railScrollbarTrackBounds.Top + available));
+            double ratio = (double)(newThumbY - _railScrollbarTrackBounds.Top) / available;
+            _scrollOffset = ClampRailScrollOffset((int)Math.Round(ratio * maxScroll), itemCount);
+            Invalidate();
         }
 
         private void SetHoverText(string? info, string? text)
@@ -1319,6 +1495,30 @@ namespace Mids_Reborn.UI.Controls
             var enh = DatabaseAPI.Database.Enhancements[enhId];
 
             return enh.ImageIdx;
+        }
+
+        private string GetDisplayNameForEnhancement(int enhId)
+        {
+            if (enhId < 0 || enhId >= DatabaseAPI.Database.Enhancements.Length)
+            {
+                return string.Empty;
+            }
+
+            var enhancement = DatabaseAPI.Database.Enhancements[enhId];
+            return _model.EnhancementNames.TryGetValue(enhId, out var canonicalName)
+                ? canonicalName
+                : enhancement.Name;
+        }
+
+        private string GetHoverTextForEnhancement(int enhId)
+        {
+            if (enhId < 0 || enhId >= DatabaseAPI.Database.Enhancements.Length)
+            {
+                return string.Empty;
+            }
+
+            var enhancement = DatabaseAPI.Database.Enhancements[enhId];
+            return _model.EnhancementDescriptions.GetValueOrDefault(enhId, enhancement.ShortName ?? string.Empty);
         }
 
         private bool IsEnhancementGrayed(int index)
@@ -1432,6 +1632,30 @@ namespace Mids_Reborn.UI.Controls
         private static int[] GetValidSetTypes(int iPowerIdx)
         {
             return iPowerIdx < 0 ? [] : DatabaseAPI.Database.Power[iPowerIdx].SetTypes.ToArray();
+        }
+
+        private static int[] GetOrderedSpecialTypes()
+        {
+            var desiredOrder = new[]
+            {
+                "None",
+                "HO",
+                "SynHO",
+                "HyO",
+                "TnO",
+                "DSyncO",
+                "Yin"
+            };
+
+            var orderLookup = desiredOrder
+                .Select((shortName, index) => new { shortName, index })
+                .ToDictionary(x => x.shortName, x => x.index, StringComparer.OrdinalIgnoreCase);
+
+            return DatabaseAPI.Database.SpecialEnhancements
+                .OrderBy(x => orderLookup.TryGetValue(x.ShortName, out var index) ? index : int.MaxValue)
+                .ThenBy(x => x.Index)
+                .Select(x => x.Index)
+                .ToArray();
         }
 
         private static int[] GetSets(int iSetType)

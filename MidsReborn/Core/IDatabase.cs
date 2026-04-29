@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using Mids_Reborn.Core.Base;
 using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Omni;
 using Mids_Reborn.Core.Utils;
 
 namespace Mids_Reborn.Core
@@ -48,6 +49,20 @@ namespace Mids_Reborn.Core
         Modifiers AttribMods { get; set; }
 
         SummonedEntity[] Entities { get; set; }
+
+        OmniDatabaseImportSource OmniImportSource { get; set; }
+
+        OmniDataProviderId DataProviderId { get; set; }
+
+        PlannerRulesetId PlannerRulesetId { get; set; }
+
+        int PlannerRulesetVersion { get; set; }
+
+        bool HasCanonicalOmniPlannerMath { get; set; }
+
+        Dictionary<string, OmniClassAttributeTable> ClassAttributes { get; set; }
+
+        EnhancementImportMetadata EnhancementImportMetadata { get; set; }
 
         LevelMap[] Levels { get; set; }
 
@@ -114,5 +129,9 @@ namespace Mids_Reborn.Core
         void LoadEntities(BinaryReader reader);
 
         void StoreEntities(BinaryWriter writer);
+
+        void LoadOmniMetadata(BinaryReader reader);
+
+        void StoreOmniMetadata(BinaryWriter writer);
     }
 }
