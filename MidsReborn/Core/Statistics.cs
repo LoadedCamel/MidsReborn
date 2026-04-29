@@ -23,7 +23,6 @@ namespace Mids_Reborn.Core
         public static readonly float BasePerception = DatabaseAPI.ServerData.BasePerception;
         public const float MaxDefenseDebuffRes = 95f;
         public const float MaxGenericDebuffRes = 100f; // All but defense that has a specific value
-        public const float MaxHaste = 400f;
         private readonly Character _character;
 
         internal Statistics(Character character)
@@ -34,9 +33,17 @@ namespace Mids_Reborn.Core
 
         public float EnduranceMaxEnd => _character.Totals.EndMax + 100f;
 
-        public float EnduranceRecoveryNumeric => EnduranceRecovery(false) * (_character.Archetype.BaseRecovery * BaseMagic) * (_character.TotalsCapped.EndMax / 100 + 1);
+        private float BaseRecovery => DatabaseAPI.GetClassBaseRecovery(_character.Archetype);
 
-        public float EnduranceRecoveryNumericUncapped => EnduranceRecovery(true) * (_character.Archetype.BaseRecovery * BaseMagic) * (_character.Totals.EndMax / 100 + 1);
+        private float BaseRegen => DatabaseAPI.GetClassBaseRegen(_character.Archetype);
+
+        private float BaseThreat => DatabaseAPI.GetClassBaseThreat(_character.Archetype);
+
+        private int BaseHitPoints => DatabaseAPI.GetClassHitPoints(_character.Archetype);
+
+        public float EnduranceRecoveryNumeric => EnduranceRecovery(false) * (BaseRecovery * BaseMagic) * (_character.TotalsCapped.EndMax / 100 + 1);
+
+        public float EnduranceRecoveryNumericUncapped => EnduranceRecovery(true) * (BaseRecovery * BaseMagic) * (_character.Totals.EndMax / 100 + 1);
 
         public float EnduranceTimeToFull => EnduranceMaxEnd / EnduranceRecoveryNumeric;
 
@@ -50,13 +57,13 @@ namespace Mids_Reborn.Core
 
         public float EnduranceUsage => _character.Totals.EndUse;
 
-        public float HealthRegenHealthPerSec => (float) (HealthRegen(false) * (double) _character.Archetype.BaseRegen * 1.66666662693024);
+        public float HealthRegenHealthPerSec => (float) (HealthRegen(false) * (double) BaseRegen * 1.66666662693024);
 
-        public float HealthRegenHPPerSec => (float) (HealthRegen(false) * (double) _character.Archetype.BaseRegen * 1.66666662693024 * HealthHitpointsNumeric(false) / 100.0);
+        public float HealthRegenHPPerSec => (float) (HealthRegen(false) * (double) BaseRegen * 1.66666662693024 * HealthHitpointsNumeric(false) / 100.0);
 
         public float HealthRegenTimeToFull => HealthHitpointsNumeric(false) / HealthRegenHPPerSec;
 
-        public float HealthHitpointsPercentage => (float) (_character.TotalsCapped.HPMax / (double) _character.Archetype.Hitpoints * 100.0);
+        public float HealthHitpointsPercentage => (float) (_character.TotalsCapped.HPMax / (double) BaseHitPoints * 100.0);
 
         public float BuffToHit => _character.Totals.BuffToHit * 100f;
 
@@ -64,7 +71,7 @@ namespace Mids_Reborn.Core
 
         public float BuffEndRdx => _character.Totals.BuffEndRdx * 100f;
 
-        public float ThreatLevel => (float) ((_character.Totals.ThreatLevel + (double) _character.Archetype.BaseThreat) * 100.0);
+        public float ThreatLevel => (float) ((_character.Totals.ThreatLevel + (double) BaseThreat) * 100.0);
 
         private float EnduranceRecovery(bool uncapped)
         {
@@ -230,16 +237,14 @@ namespace Mids_Reborn.Core
 
         public float BuffHaste(bool uncapped)
         {
-            return !uncapped
-                ? Math.Min(MaxHaste, (_character.TotalsCapped.BuffHaste + 1) * 100)
-                : (_character.Totals.BuffHaste + 1) * 100;
+            return DatabaseAPI.GetPlannerRuleset()
+                .GetDisplayedBuffHastePercent(_character.Archetype, _character.Totals, _character.TotalsCapped, uncapped);
         }
 
         public float BuffDamage(bool uncapped)
         {
-            return !uncapped
-                ? Math.Min(_character.Archetype?.DamageCap * 100 ?? float.PositiveInfinity, (_character.TotalsCapped.BuffDam + 1) * 100)
-                : (_character.Totals.BuffDam + 1) * 100;
+            return DatabaseAPI.GetPlannerRuleset()
+                .GetDisplayedBuffDamagePercent(_character.Archetype, _character.Totals, _character.TotalsCapped, uncapped);
         }
     }
 }

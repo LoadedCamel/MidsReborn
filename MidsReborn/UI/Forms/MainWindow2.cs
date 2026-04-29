@@ -32,7 +32,7 @@ namespace Mids_Reborn.UI.Forms
 
         private const string UriScheme = "mrb";
         private frmBusy? _frmBusy;
-        private FrmTeam? _frmTeam;
+        private FrmCombatContext? _frmCombatContext;
         private bool _loading;
         private bool _gfxDrawing;
         private long _popupLastOpenTime;
@@ -194,15 +194,18 @@ namespace Mids_Reborn.UI.Forms
                 PowerModified(true);
 
 
-                var comboData = MidsContext.Config.RelativeScales;
+                var comboData = MidsContext.Config.RelativeLevels;
                 EnemyRelativeToolStripComboBox.ComboBox.DataSource = null;
                 EnemyRelativeToolStripComboBox.ComboBox.DisplayMember = "Key";
                 EnemyRelativeToolStripComboBox.ComboBox.ValueMember = "Value";
                 EnemyRelativeToolStripComboBox.ComboBox.DataSource = comboData;
 
-                var scalingToHitItem = comboData.FirstOrDefault(x => x.Value == MidsContext.Config.ScalingToHit);
-                var selectedIndex = comboData.IndexOf(scalingToHitItem);
-                //EnemyRelativeToolStripComboBox.SelectedIndex = selectedIndex;
+                var selectedLevel = ConfigData.NormalizeEnemyRelativeLevel(
+                    MidsContext.Config.EnemyRelativeLevel,
+                    MidsContext.Config.ScalingToHit);
+                var selectedLevelItem = comboData.FirstOrDefault(x => x.Value == selectedLevel);
+                var selectedIndex = comboData.IndexOf(selectedLevelItem);
+                EnemyRelativeToolStripComboBox.SelectedIndex = selectedIndex >= 0 ? selectedIndex : comboData.FindIndex(x => x.Value == 0);
 
                 _dvAnchored.Init();
                 cbAT.SelectedItem = MidsContext.Character.Archetype;
@@ -1021,7 +1024,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             DoRedraw();
             RefreshInfo();
-            if (_frmTeam?.Visible != true || power == null)
+            if (_frmCombatContext?.Visible != true || power == null)
             {
                 return;
             }
@@ -1032,7 +1035,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 return;
             }
 
-            _frmTeam.FeedbackUpdate(pKey, val);
+            _frmCombatContext.FeedbackUpdate(pKey, val);
         }
 
         private void dvAnchored_Float()
@@ -1312,12 +1315,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void ibTeamEx_OnClick(object? sender, EventArgs e)
         {
-            if (_frmTeam == null || _frmTeam.IsDisposed)
+            if (_frmCombatContext == null || _frmCombatContext.IsDisposed)
             {
-                _frmTeam = new FrmTeam(this);
+                _frmCombatContext = new FrmCombatContext(RefreshInfo);
             }
 
-            _frmTeam.Show();
+            _frmCombatContext.Show();
         }
 
         private void ibAlignmentEx_OnClick(object? sender, EventArgs e)
@@ -1967,7 +1970,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             if (EnemyRelativeToolStripComboBox.ComboBox != null && EnemyRelativeToolStripComboBox.ComboBox.SelectedIndex != _originalIndex)
             {
                 // If selection changed, update the value and refresh
-                MidsContext.Config.ScalingToHit = (float)EnemyRelativeToolStripComboBox.ComboBox.SelectedValue;
+                MidsContext.Config.EnemyRelativeLevel = (int)EnemyRelativeToolStripComboBox.ComboBox.SelectedValue;
                 RefreshInfo();
             }
             // Always return focus to the menu bar regardless of whether the selection changed
@@ -1989,7 +1992,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 return;
             }
 
-            MidsContext.Config.ScalingToHit = (float)EnemyRelativeToolStripComboBox.ComboBox.SelectedValue;
+            MidsContext.Config.EnemyRelativeLevel = (int)EnemyRelativeToolStripComboBox.ComboBox.SelectedValue;
             RefreshInfo();
         }
 

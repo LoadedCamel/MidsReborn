@@ -3,6 +3,7 @@ using System.IO;
 using System.Text.RegularExpressions;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
 
 namespace Mids_Reborn.Core;
 
@@ -29,7 +30,8 @@ public enum AdvancedConditionKind
     CharacterLevel,
     PowerRequirementGroup,
     BoostsSlotted,
-    AdvancedExpression
+    AdvancedExpression,
+    PowerCount
 }
 
 public enum AdvancedConditionOperator
@@ -42,9 +44,26 @@ public enum AdvancedConditionOperator
     LessThanOrEqual
 }
 
+public enum AdvancedConditionEvaluationMode
+{
+    BuildEvaluated,
+    RuntimeTargetOnly,
+    ReportOnly
+}
+
+public enum AdvancedConditionTargetScope
+{
+    Unknown,
+    Self,
+    Pet,
+    Player,
+    Ally,
+    Foe
+}
+
 public sealed class AdvancedConditionSet
 {
-    private const int SerializationVersion = 1;
+    private const int SerializationVersion = 3;
 
     public List<AdvancedConditionRow> Rows { get; set; } = [];
 
@@ -270,6 +289,8 @@ public sealed class AdvancedConditionSet
             writer.Write(row.Negated);
             writer.Write(row.RawExpression ?? string.Empty);
             writer.Write(row.Unsupported);
+            writer.Write((int)row.EvaluationMode);
+            writer.Write((int)row.TargetScope);
         }
     }
 
@@ -285,7 +306,7 @@ public sealed class AdvancedConditionSet
         var rowCount = reader.ReadInt32();
         for (var i = 0; i < rowCount; i++)
         {
-            set.Rows.Add(new AdvancedConditionRow
+            var row = new AdvancedConditionRow
             {
                 Link = (AdvancedConditionLink)reader.ReadInt32(),
                 Kind = (AdvancedConditionKind)reader.ReadInt32(),
@@ -295,7 +316,19 @@ public sealed class AdvancedConditionSet
                 Negated = reader.ReadBoolean(),
                 RawExpression = reader.ReadString(),
                 Unsupported = reader.ReadBoolean()
-            });
+            };
+
+            if (version >= 2)
+            {
+                row.EvaluationMode = (AdvancedConditionEvaluationMode)reader.ReadInt32();
+            }
+
+            if (version >= 3)
+            {
+                row.TargetScope = (AdvancedConditionTargetScope)reader.ReadInt32();
+            }
+
+            set.Rows.Add(row);
         }
 
         return set;
@@ -398,6 +431,8 @@ public sealed class AdvancedConditionRow
     public bool Negated { get; set; }
     public string RawExpression { get; set; } = string.Empty;
     public bool Unsupported { get; set; }
+    public AdvancedConditionEvaluationMode EvaluationMode { get; set; } = AdvancedConditionEvaluationMode.BuildEvaluated;
+    public AdvancedConditionTargetScope TargetScope { get; set; } = AdvancedConditionTargetScope.Unknown;
 
     public AdvancedConditionRow Clone()
     {
@@ -410,11 +445,17 @@ public sealed class AdvancedConditionRow
             Value = Value,
             Negated = Negated,
             RawExpression = RawExpression,
-            Unsupported = Unsupported
+            Unsupported = Unsupported,
+            EvaluationMode = EvaluationMode,
+            TargetScope = TargetScope
         };
     }
 
-    public static AdvancedConditionRow AdvancedExpression(AdvancedConditionLink link, string expression, bool unsupported = false)
+    public static AdvancedConditionRow AdvancedExpression(
+        AdvancedConditionLink link,
+        string expression,
+        bool unsupported = false,
+        AdvancedConditionEvaluationMode evaluationMode = AdvancedConditionEvaluationMode.BuildEvaluated)
     {
         return new AdvancedConditionRow
         {
@@ -422,7 +463,8 @@ public sealed class AdvancedConditionRow
             Kind = AdvancedConditionKind.AdvancedExpression,
             RawExpression = expression,
             Value = expression,
-            Unsupported = unsupported
+            Unsupported = unsupported,
+            EvaluationMode = evaluationMode
         };
     }
 }
@@ -455,6 +497,7 @@ public static class AdvancedConditionCompiler
             AdvancedConditionKind.CombatSetting => $"{row.Subject} {CompareText(row.Operator)} {row.Value}",
             AdvancedConditionKind.SourceOwnPower => $"source.ownPower?({row.Subject})",
             AdvancedConditionKind.SourceMode => $"Source.Mode?({row.Subject})",
+            AdvancedConditionKind.TargetEntityType when row.TargetScope != AdvancedConditionTargetScope.Unknown => $"target.scope {CompareText(row.Operator)} '{row.TargetScope}'",
             AdvancedConditionKind.TargetEntityType => $"target>enttype {CompareText(row.Operator)} '{row.Value}'",
             AdvancedConditionKind.TargetMode => $"target.mode?({row.Subject})",
             AdvancedConditionKind.TargetGroup => $"target>group {CompareText(row.Operator)} '{row.Value}'",
@@ -464,6 +507,7 @@ public static class AdvancedConditionCompiler
             AdvancedConditionKind.PowerRequirementGroup => CompilePowerRequirementGroup(row),
             AdvancedConditionKind.BoostsSlotted => $"BoostsSlotted>{row.Subject} {CompareText(row.Operator)} {row.Value}",
             AdvancedConditionKind.AdvancedExpression => row.RawExpression,
+            AdvancedConditionKind.PowerCount => $"source.ownPowerNum?({row.Subject}) {CompareText(row.Operator)} {row.Value}",
             _ => row.RawExpression
         };
 
@@ -529,6 +573,11 @@ public static class AdvancedConditionEvaluator
 
     public static bool EvaluateRow(IEffect effect, AdvancedConditionRow row)
     {
+        if (row.EvaluationMode is AdvancedConditionEvaluationMode.RuntimeTargetOnly or AdvancedConditionEvaluationMode.ReportOnly)
+        {
+            return true;
+        }
+
         var result = row.Kind switch
         {
             AdvancedConditionKind.PowerActive => EvaluatePowerActive(row),
@@ -547,6 +596,7 @@ public static class AdvancedConditionEvaluator
             AdvancedConditionKind.PowerRequirementGroup => EvaluatePowerRequirementGroup(row),
             AdvancedConditionKind.BoostsSlotted => CompareNumber(0, row.Operator, ParseNumber(row.Value)),
             AdvancedConditionKind.AdvancedExpression => EvaluateAdvancedExpression(row),
+            AdvancedConditionKind.PowerCount => EvaluateOwnedPowerCount(row),
             _ => false
         };
 
@@ -720,12 +770,18 @@ public static class AdvancedConditionEvaluator
 
     private static bool EvaluateRowForPower(AdvancedConditionRow row)
     {
+        if (row.EvaluationMode != AdvancedConditionEvaluationMode.BuildEvaluated)
+        {
+            return false;
+        }
+
         var result = row.Kind switch
         {
             AdvancedConditionKind.SourceOwnPower or AdvancedConditionKind.PowerTaken => EvaluateOwnPower(row.Subject),
             AdvancedConditionKind.SourceMode => EvaluateSourceMode(row),
             AdvancedConditionKind.CombatSetting => EvaluateCombatSetting(row),
             AdvancedConditionKind.CharacterLevel => CompareNumber(MidsContext.Character?.Level ?? 0, row.Operator, ParseNumber(row.Value)),
+            AdvancedConditionKind.PowerCount => EvaluateOwnedPowerCount(row),
             AdvancedConditionKind.AdvancedExpression => EvaluateAdvancedExpression(row),
             _ => EvaluateAdvancedExpression(new AdvancedConditionRow { Unsupported = true })
         };
@@ -749,6 +805,31 @@ public static class AdvancedConditionEvaluator
         return CompareNumber(stacks, row.Operator, ParseNumber(row.Value));
     }
 
+    private static bool EvaluateOwnedPowerCount(AdvancedConditionRow row)
+    {
+        var build = MidsContext.Character?.CurrentBuild;
+        if (build?.Powers == null)
+        {
+            return false;
+        }
+
+        var prefix = (row.Subject ?? string.Empty).Trim().Trim('.');
+        if (string.IsNullOrWhiteSpace(prefix))
+        {
+            return false;
+        }
+
+        var count = build.Powers.Count(powerEntry =>
+        {
+            var fullName = powerEntry?.Power?.FullName;
+            return !string.IsNullOrWhiteSpace(fullName) &&
+                   (fullName.Equals(prefix, StringComparison.OrdinalIgnoreCase) ||
+                    fullName.StartsWith(prefix + ".", StringComparison.OrdinalIgnoreCase));
+        });
+
+        return CompareNumber(count, row.Operator, ParseNumber(row.Value));
+    }
+
     private static bool EvaluateCombatSetting(AdvancedConditionRow row)
     {
         var value = GetConfigValue(row.Subject);
@@ -762,17 +843,44 @@ public static class AdvancedConditionEvaluator
 
     private static bool EvaluateSourceMode(AdvancedConditionRow row)
     {
-        var mode = row.Subject.Trim();
+        var mode = OmniModeMapper.Normalize(row.Subject);
+        if (PlannerModeMapper.TryGetPlannerMode(mode, out var plannerMode))
+        {
+            return plannerMode switch
+            {
+                PlannerMode.DefensiveAdaptation => MidsContext.Character?.DefensiveAdaptation == true,
+                PlannerMode.EfficientAdaptation => MidsContext.Character?.EfficientAdaptation == true,
+                PlannerMode.OffensiveAdaptation => MidsContext.Character?.OffensiveAdaptation == true,
+                PlannerMode.Domination => MidsContext.Character?.Domination == true,
+                PlannerMode.Scourge => MidsContext.Character?.Scourge == true,
+                PlannerMode.Containment => MidsContext.Character?.Containment == true,
+                PlannerMode.CriticalHit => MidsContext.Character?.CriticalHits == true,
+                PlannerMode.Assassination => MidsContext.Character?.Assassination == true,
+                PlannerMode.Defiance => MidsContext.Character?.Defiance == true,
+                PlannerMode.FastSnipe => MidsContext.Character?.FastSnipe == true,
+                PlannerMode.ComboLevel1 => MidsContext.Character?.ActiveComboLevel == 1,
+                PlannerMode.ComboLevel2 => MidsContext.Character?.ActiveComboLevel == 2,
+                PlannerMode.ComboLevel3 => MidsContext.Character?.ActiveComboLevel == 3,
+                PlannerMode.FastMode => MidsContext.Character?.FastModeActive == true,
+                PlannerMode.PerfectionOfBody => MidsContext.Character?.PerfectionOfBodyLevel > 0,
+                PlannerMode.PerfectionOfMind => MidsContext.Character?.PerfectionOfMindLevel > 0,
+                PlannerMode.PerfectionOfSoul => MidsContext.Character?.PerfectionOfSoulLevel > 0,
+                PlannerMode.PackMentality => MidsContext.Character?.PackMentality == true,
+                _ => false
+            };
+        }
+
         var result = mode switch
         {
-            "kDefensiveAdaptation" => MidsContext.Character?.DefensiveAdaptation == true,
-            "kEfficientAdaptation" => MidsContext.Character?.EfficientAdaptation == true,
-            "kOffensiveAdaptation" => MidsContext.Character?.OffensiveAdaptation == true,
-            "kDomination" => MidsContext.Character?.Domination == true,
-            "kScourge" => MidsContext.Character?.Scourge == true,
-            "kContainment" => MidsContext.Character?.Containment == true,
-            "kCriticalHit" => MidsContext.Character?.CriticalHits == true,
-            "kAssassination" => MidsContext.Character?.Assassination == true,
+            "DefensiveAdaptation" => MidsContext.Character?.DefensiveAdaptation == true,
+            "EfficientAdaptation" => MidsContext.Character?.EfficientAdaptation == true,
+            "OffensiveAdaptation" => MidsContext.Character?.OffensiveAdaptation == true,
+            "Domination" => MidsContext.Character?.Domination == true,
+            "Scourge" => MidsContext.Character?.Scourge == true,
+            "Containment" => MidsContext.Character?.Containment == true,
+            "CriticalHit" => MidsContext.Character?.CriticalHits == true,
+            "Assassination" => MidsContext.Character?.Assassination == true,
+            "FastSnipe" => MidsContext.Character?.FastSnipe == true,
             _ => false
         };
 
@@ -781,6 +889,11 @@ public static class AdvancedConditionEvaluator
 
     private static bool EvaluateTargetEntityType(AdvancedConditionRow row)
     {
+        if (row.TargetScope != AdvancedConditionTargetScope.Unknown)
+        {
+            return true;
+        }
+
         var value = row.Value.Trim('\'', '"').ToLowerInvariant();
         var targetIsPlayer = MidsContext.Config?.Inc.DisablePvE == true;
         var actual = targetIsPlayer ? "player" : "critter";
@@ -795,11 +908,16 @@ public static class AdvancedConditionEvaluator
 
     private static bool EvaluateUnsupportedTargetState(AdvancedConditionRow row)
     {
-        return false;
+        return row.EvaluationMode is AdvancedConditionEvaluationMode.RuntimeTargetOnly or AdvancedConditionEvaluationMode.ReportOnly;
     }
 
     private static bool EvaluateAdvancedExpression(AdvancedConditionRow row)
     {
+        if (row.EvaluationMode is AdvancedConditionEvaluationMode.RuntimeTargetOnly or AdvancedConditionEvaluationMode.ReportOnly)
+        {
+            return true;
+        }
+
         return !row.Unsupported;
     }
 
@@ -864,11 +982,21 @@ public static class AdvancedConditionEvaluator
     private static bool CompareString(string actual, AdvancedConditionOperator op, string expected)
     {
         expected = expected.Trim('\'', '"');
+        var normalizedActual = NormalizeClassToken(actual);
+        var normalizedExpected = NormalizeClassToken(expected);
         return op switch
         {
-            AdvancedConditionOperator.NotEquals => !string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase),
-            _ => string.Equals(actual, expected, StringComparison.OrdinalIgnoreCase)
+            AdvancedConditionOperator.NotEquals => !string.Equals(normalizedActual, normalizedExpected, StringComparison.OrdinalIgnoreCase),
+            _ => string.Equals(normalizedActual, normalizedExpected, StringComparison.OrdinalIgnoreCase)
         };
+    }
+
+    private static string NormalizeClassToken(string value)
+    {
+        value = value.Trim().Trim('\'', '"');
+        return value.StartsWith("Class_", StringComparison.OrdinalIgnoreCase)
+            ? value[6..]
+            : value;
     }
 
     private static bool CompareNumber(float actual, AdvancedConditionOperator op, float expected)

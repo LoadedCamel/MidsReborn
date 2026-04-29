@@ -127,8 +127,8 @@ namespace Mids_Reborn.UI.Forms.Controls
 
         private void FillModifiers()
         {
-            var modifiers = DatabaseAPI.Database.AttribMods.Modifier
-                .Select((e, i) => new KeyValue<int, string>(i, e.ID))
+            var modifiers = DatabaseAPI.GetModifierTableNames()
+                .Select((e, i) => new KeyValue<int, string>(i, e))
                 .ToList();
 
             cbModifier.BeginUpdate();
@@ -220,7 +220,12 @@ namespace Mids_Reborn.UI.Forms.Controls
                 return;
             }
 
-            SelectedItem = DatabaseAPI.Database.AttribMods.Modifier[cbModifier.SelectedIndex];
+            if (string.IsNullOrWhiteSpace(cbModifier.Text))
+            {
+                return;
+            }
+
+            SelectedItem = new Modifiers.ModifierTable { ID = cbModifier.Text };
         }
 
         private void cbVectors_SelectedIndexChanged(object sender, EventArgs e)

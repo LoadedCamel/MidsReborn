@@ -107,6 +107,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             IsModified = template.IsModified;
             IsNew = template.IsNew;
+            AppliedPowersOverride = template.AppliedPowersOverride;
+            AbsorbedPetEffects = template.AbsorbedPetEffects;
+            AppliedExecutes = template.AppliedExecutes;
+            AppliedSubPowers = template.AppliedSubPowers;
             PowerIndex = template.PowerIndex;
             PowerSetID = template.PowerSetID;
             PowerSetIndex = template.PowerSetIndex;
@@ -869,6 +873,153 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x is { Power: not null } && x.Power.DisplayName == DisplayName);
 
+        public static bool ShouldIncludeDamageEffect(IEffect effect)
+        {
+            return effect.EffectType == Enums.eEffectType.Damage &&
+                   (MidsContext.Config.DamageMath.Calculate != ConfigData.EDamageMath.Minimum ||
+                    Math.Abs(effect.Probability) > 0.999000012874603) &&
+                   effect.EffectClass != Enums.eEffectClass.Ignored &&
+                   effect is not { DamageType: Enums.eDamage.Special, ToWho: Enums.eToWho.Self } &&
+                   effect.Probability > 0 &&
+                   effect.CanInclude() &&
+                   effect.PvXInclude();
+        }
+
+        public static float GetDamageEffectBaseMagnitude(IEffect effect, IPower power, bool absolute, bool applyReturnScaling)
+        {
+            var effectMagnitude = absolute ? Math.Abs(effect.BuffedMag) : effect.BuffedMag;
+
+            if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
+            {
+                effectMagnitude *= effect.Probability;
+            }
+
+            var recurrence = effect.PseudoPetRecurrence;
+            if (recurrence is not { IsValid: true } && power.PowerType == Enums.ePowerType.Toggle && effect.isEnhancementEffect)
+            {
+                effectMagnitude = (float)(effectMagnitude * power.ActivatePeriod / 10d);
+            }
+
+            if (!applyReturnScaling)
+            {
+                return effectMagnitude;
+            }
+
+            switch (MidsContext.Config.DamageMath.ReturnValue)
+            {
+                case ConfigData.EDamageReturn.DPS:
+                    if (recurrence is { IsValid: true })
+                    {
+                        return effectMagnitude / recurrence.SourceUsageTime;
+                    }
+
+                    if (power is { PowerType: Enums.ePowerType.Toggle, ActivatePeriod: > 0 })
+                    {
+                        return effectMagnitude / power.ActivatePeriod;
+                    }
+
+                    if (power.RechargeTime + (double)power.CastTime + power.InterruptTime > 0)
+                    {
+                        return effectMagnitude / (power.RechargeTime + power.CastTime + power.InterruptTime);
+                    }
+
+                    break;
+
+                case ConfigData.EDamageReturn.DPA:
+                    if (recurrence is { IsValid: true })
+                    {
+                        return effectMagnitude / recurrence.SourceUsageTime;
+                    }
+
+                    if (power is { PowerType: Enums.ePowerType.Toggle, ActivatePeriod: > 0 })
+                    {
+                        return effectMagnitude / power.ActivatePeriod;
+                    }
+
+                    if (power.CastTime > 0)
+                    {
+                        return effectMagnitude / power.CastTime;
+                    }
+
+                    break;
+            }
+
+            return effectMagnitude;
+        }
+
+        public static float GetDamageEffectEffectiveTicks(IEffect effect)
+        {
+            var tickCount = effect.PseudoPetRecurrence is { IsValid: true } recurrence
+                ? recurrence.TotalExpectedTicks
+                : effect.Ticks;
+
+            if (tickCount <= 1)
+            {
+                return Math.Max(1, tickCount);
+            }
+
+            return effect.CancelOnMiss &&
+                   MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average &&
+                   effect.Probability < 1
+                ? (float)((1 - Math.Pow(effect.Probability, tickCount)) / (1 - effect.Probability))
+                : tickCount;
+        }
+
+        public static float GetDamageEffectTotal(IEffect effect, IPower power, bool absolute, bool applyReturnScaling)
+        {
+            var baseMagnitude = GetDamageEffectBaseMagnitude(effect, power, absolute, applyReturnScaling);
+            var ticks = GetDamageEffectEffectiveTicks(effect);
+            return ticks > 1 ? baseMagnitude * ticks : baseMagnitude;
+        }
+
+        public static IReadOnlyList<IEffect> GetIncludedDamageEffects(IPower power, bool absorb = false)
+        {
+            return PrepareDamagePower(power, absorb).Effects
+                .Where(ShouldIncludeDamageEffect)
+                .ToArray();
+        }
+
+        private static bool ShouldProcessExecutesForDamage(IPower power)
+        {
+            return DatabaseAPI.GetPlannerRuleset().ShouldProcessExecutesInDamageHelpers(power);
+        }
+
+        private static bool HasExistingSummonAbsorption(IPower power)
+        {
+            if (power.HasAbsorbedEffects)
+            {
+                return true;
+            }
+
+            if (power.Effects.Length == 0)
+            {
+                return false;
+            }
+
+            var summonEffectIndexes = power.Effects
+                .Select((effect, index) => new { effect, index })
+                .Where(entry => entry.effect.EffectType is Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x)
+                .Select(entry => entry.index)
+                .ToHashSet();
+
+            if (summonEffectIndexes.Count == 0)
+            {
+                return false;
+            }
+
+            var hasSummonAbsorption = power.Effects.Any(effect =>
+                effect.Absorbed_Effect &&
+                effect.Absorbed_EffectID >= 0 &&
+                summonEffectIndexes.Contains(effect.Absorbed_EffectID));
+
+            if (hasSummonAbsorption)
+            {
+                power.HasAbsorbedEffects = true;
+            }
+
+            return hasSummonAbsorption;
+        }
+
         public List<SummonedEntity>? GetEntities()
         {
             if (!IsSummonPower)
@@ -881,79 +1032,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public float FXGetDamageValue(bool absorb = false)
         {
             var totalDamage = 0f;
-            IPower power = new Power(this);
-            if (absorb)
-            {
-                power.AbsorbPetEffects();
-            }
-
-            if (!power.AppliedExecutes)
-            {
-                power.ProcessExecutes();
-            }
+            var power = PrepareDamagePower(this, absorb);
 
             foreach (var effect in power.Effects)
             {
-                if (effect.EffectType != Enums.eEffectType.Damage ||
-                    MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum && !(Math.Abs(effect.Probability) > 0.999000012874603) ||
-                    effect.EffectClass == Enums.eEffectClass.Ignored || effect is { DamageType: Enums.eDamage.Special, ToWho: Enums.eToWho.Self } || effect.Probability <= 0 || !effect.CanInclude() ||
-                    !effect.PvXInclude())
+                if (!ShouldIncludeDamageEffect(effect))
                 {
                     continue;
                 }
 
-                var effectDmg = effect.BuffedMag;
-
-                if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
-                {
-                    effectDmg *= effect.Probability;
-                }
-
-                if (power.PowerType == Enums.ePowerType.Toggle && effect.isEnhancementEffect)
-                {
-                    effectDmg = (float)(effectDmg * power.ActivatePeriod / 10d);
-                }
-
-                if (effect.Ticks > 1)
-                {
-                    effectDmg *= effect.CancelOnMiss &&
-                            MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average &&
-                            effect.Probability < 1
-                        ? (float)((1 - Math.Pow(effect.Probability, effect.Ticks)) / (1 - effect.Probability))
-                        : effect.Ticks;
-                }
-
-                totalDamage += effectDmg;
-            }
-
-            switch (MidsContext.Config.DamageMath.ReturnValue)
-            {
-                case ConfigData.EDamageReturn.DPS:
-                    if (power is { PowerType: Enums.ePowerType.Toggle, ActivatePeriod: > 0 })
-                    {
-                        totalDamage /= power.ActivatePeriod;
-                        break;
-                    }
-
-                    if (power.RechargeTime + (double)power.CastTime + power.InterruptTime > 0)
-                    {
-                        totalDamage /= power.RechargeTime + power.CastTime + power.InterruptTime;
-                    }
-
-                    break;
-                case ConfigData.EDamageReturn.DPA:
-                    if (power is { PowerType: Enums.ePowerType.Toggle, ActivatePeriod: > 0 })
-                    {
-                        totalDamage /= power.ActivatePeriod;
-                        break;
-                    }
-
-                    if (power.CastTime > 0)
-                    {
-                        totalDamage /= power.CastTime;
-                    }
-
-                    break;
+                totalDamage += GetDamageEffectTotal(effect, power, absolute: false, applyReturnScaling: true);
             }
 
             return totalDamage;
@@ -966,20 +1054,21 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var includedFxForToggle = -1;
             var hasPvePvpEffect = 0;
             var damageTotals = new Dictionary<Enums.eDamage, float>();
+            var power = PrepareDamagePower(this, absorbRequested: false);
 
-            if (Effects.Length <= 0)
+            if (power.Effects.Length <= 0)
             {
                 return "";
             }
 
-            foreach (var effect in Effects)
+            foreach (var effect in power.Effects)
             {
                 if (effect.EffectType != Enums.eEffectType.Damage)
                 {
                     continue;
                 }
 
-                if (effect.CanInclude() & effect.PvXInclude() & Math.Abs(effect.BuffedMag) >= 0.0001)
+                if (ShouldIncludeDamageEffect(effect) & Math.Abs(effect.BuffedMag) >= 0.0001)
                 {
                     if (tip != string.Empty)
                     {
@@ -989,16 +1078,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     var str = effect.BuildEffectString(false, "", false, false, false, false, false, true);
                     if (effect.EffectType == Enums.eEffectType.Damage)
                     {
-                        var fxDmg = effect.GetDamage();
-                        if (fxDmg.Type != Enums.eDamage.None & fxDmg.Value > float.Epsilon)
+                        var fxDmg = GetDamageEffectTotal(effect, power, absolute: false, applyReturnScaling: false);
+                        if (effect.DamageType != Enums.eDamage.None & fxDmg > float.Epsilon)
                         {
-                            if (damageTotals.ContainsKey(fxDmg.Type))
+                            if (damageTotals.ContainsKey(effect.DamageType))
                             {
-                                damageTotals[fxDmg.Type] += fxDmg.Value;
+                                damageTotals[effect.DamageType] += fxDmg;
                             }
                             else
                             {
-                                damageTotals.Add(fxDmg.Type, fxDmg.Value);
+                                damageTotals.Add(effect.DamageType, fxDmg);
                             }
                         }
                     }
@@ -1061,13 +1150,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var totalDamage = 0f;
 
             // Initialize the power object
-            IPower power = new Power(this);
-
-            // Absorb pet effects if requested
-            if (absorb)
-            {
-                power.AbsorbPetEffects();
-            }
+            var power = PrepareDamagePower(this, absorb);
 
             // Check if any effects display percentage damage or have Strength aspect
             var hasPercentDamage = power.Effects
@@ -1077,30 +1160,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             foreach (var effect in power.Effects)
             {
                 // Skip effects that do not meet various conditions
-                if (effect.EffectType != Enums.eEffectType.Damage ||
-                    MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Minimum &&
-                    !(Math.Abs(effect.Probability) > 0.999000012874603) ||
-                    effect.EffectClass == Enums.eEffectClass.Ignored ||
-                    effect is { DamageType: Enums.eDamage.Special, ToWho: Enums.eToWho.Self } ||
-                    !(effect.Probability > 0) || !effect.CanInclude() || !effect.PvXInclude())
+                if (!ShouldIncludeDamageEffect(effect))
                 {
                     continue;
                 }
 
-                // Get the absolute magnitude of the effect
-                var effectMagnitude = Math.Abs(effect.BuffedMag);
-
-                // Adjust for average damage calculation
-                if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
-                {
-                    effectMagnitude *= effect.Probability;
-                }
-
-                // Further adjust for toggle powers with enhancement effects
-                if (power.PowerType == Enums.ePowerType.Toggle && effect.isEnhancementEffect)
-                {
-                    effectMagnitude = (float)(effectMagnitude * power.ActivatePeriod / 10d);
-                }
+                var effectMagnitude = GetDamageEffectBaseMagnitude(effect, power, absolute: true, applyReturnScaling: true);
 
                 // Skip negligible effects
                 if (Math.Abs(effectMagnitude) < 0.0001)
@@ -1108,46 +1173,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     continue;
                 }
 
-                // Adjust effect magnitude for DPS or DPA based on power type and configuration
-                switch (MidsContext.Config.DamageMath.ReturnValue)
+                var tickCount = GetDamageEffectEffectiveTicks(effect);
+                if (tickCount > 1)
                 {
-                    case ConfigData.EDamageReturn.DPS:
-                        if (power.PowerType == Enums.ePowerType.Toggle && power.ActivatePeriod > 0)
-                        {
-                            effectMagnitude /= power.ActivatePeriod;
-                            break;
-                        }
-
-                        if (power.RechargeTime + (double)power.CastTime > 0)
-                        {
-                            effectMagnitude /= power.RechargeTime + power.CastTime;
-                        }
-
-                        break;
-                    case ConfigData.EDamageReturn.DPA:
-                        if (power.PowerType == Enums.ePowerType.Toggle && power.ActivatePeriod > 0)
-                        {
-                            effectMagnitude /= power.ActivatePeriod;
-                            break;
-                        }
-
-                        if (power.CastTime > 0)
-                        {
-                            effectMagnitude /= power.CastTime;
-                        }
-
-                        break;
-                }
-
-                // Handle effects with ticks
-                if (effect.Ticks != 0)
-                {
-                    var effectiveTicks = !effect.CancelOnMiss ||
-                                         MidsContext.Config.DamageMath.Calculate != ConfigData.EDamageMath.Average ||
-                                         effect.Probability >= 1
-                        ? effect.Ticks
-                        : (float)((1 - Math.Pow(effect.Probability, effect.Ticks)) / (1 - effect.Probability));
-
                     var index = 0;
                     if (Math.Abs(tickDamageArray[(int)effect.DamageType, 0]) > 0.01)
                     {
@@ -1155,8 +1183,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     }
 
                     tickDamageArray[(int)effect.DamageType, index] = effectMagnitude;
-                    tickCountArray[(int)effect.DamageType, index] = effectiveTicks;
-                    totalDamage += effectMagnitude * effectiveTicks;
+                    tickCountArray[(int)effect.DamageType, index] = tickCount;
+                    totalDamage += effectMagnitude * tickCount;
                 }
                 else
                 {
@@ -1214,6 +1242,23 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             // Return the final formatted damage string with total damage
             return
                 $"{damageString} = {(hasPercentDamage ? $"{Utilities.FixDP(totalDamage * 100)}% | {Utilities.FixDP(totalDamage * MidsContext.Character.Totals.HPMax)}" : Utilities.FixDP(totalDamage))}";
+        }
+
+        private static IPower PrepareDamagePower(IPower sourcePower, bool absorbRequested)
+        {
+            IPower power = new Power(sourcePower);
+            if (DatabaseAPI.GetPlannerRuleset().ShouldAbsorbPseudoPetEffectsForDamage(power, absorbRequested) &&
+                !HasExistingSummonAbsorption(power))
+            {
+                power.AbsorbPetEffects(pseudoOnly: true);
+            }
+
+            if (ShouldProcessExecutesForDamage(power))
+            {
+                power.ProcessExecutes();
+            }
+
+            return power;
         }
 
         public int[] GetRankedEffects(bool newMode)
@@ -1711,11 +1756,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                 if (Effects[iIndex].DisplayPercentage && Effects[iIndex].EffectType is Enums.eEffectType.Heal or Enums.eEffectType.HitPoints)
                 {
-                    shortFx.Add(iIndex, mag / 100f * MidsContext.Archetype.Hitpoints);
+                    shortFx.Add(iIndex, mag / 100f * DatabaseAPI.GetClassHitPoints(MidsContext.Archetype));
                 }
                 else if (Effects[iIndex].EffectType is Enums.eEffectType.Heal or Enums.eEffectType.HitPoints)
                 {
-                    shortFx.Add(iIndex, (float)(mag / (double)MidsContext.Archetype.Hitpoints * 100));
+                    shortFx.Add(iIndex, (float)(mag / (double)DatabaseAPI.GetClassHitPoints(MidsContext.Archetype) * 100));
                 }
                 else
                 {
@@ -2308,11 +2353,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                                 Effects[index2].ToWho = Enums.eToWho.Target;
                             }
 
-                            Effects[index2].isEnhancementEffect = Effects[array1[index1]].isEnhancementEffect;
-                            if (Effects[array1[index1]].EffectType != Enums.eEffectType.GrantPower && Effects[array1[index1]].Probability < 1)
-                            {
-                                Effects[index2].Probability *= Effects[array1[index1]].Probability;
-                            }
+                            PlannerEffectResolver.InheritEffectMetadata(Effects[array1[index1]], Effects[index2]);
                         }
                     }
                 }
@@ -2330,10 +2371,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     .Where(e => e.enhancement.TypeID == iType &&
                                 e.enhancement.ClassID.Any(classId =>
                                     Enhancements.Contains(DatabaseAPI.Database.EnhancementClasses[classId].ID)) &&
-                                (e.enhancement.SubTypeID == 0 || iSubType == 0 || e.enhancement.SubTypeID == iSubType))
+                                (e.enhancement.SubTypeID == 0 || iSubType == 0 || e.enhancement.SubTypeID == iSubType) &&
+                                !ShouldSuppressImportedEnhancement(e.enhancement))
                     .Select(e => e.index)
                     .ToList()
             };
+        }
+
+        private static bool ShouldSuppressImportedEnhancement(IEnhancement enhancement)
+        {
+            return DatabaseAPI.ShouldSuppressImportedEnhancement(enhancement);
         }
 
         public bool IsEnhancementValid(int iEnh)
@@ -2346,7 +2393,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return GetValidEnhancements(DatabaseAPI.Database.Enhancements[iEnh].TypeID).Any(validEnhancement => validEnhancement == iEnh);
         }
 
-        public void AbsorbPetEffects(int hIdx = -1, int stackingOverride = -1)
+        public void AbsorbPetEffects(int hIdx = -1, int stackingOverride = -1, bool pseudoOnly = false)
         {
             if (!AbsorbSummonAttributes && !AbsorbSummonEffects)
             {
@@ -2355,10 +2402,22 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var intList = new List<int>();
             for (var index = 0; index < Effects.Length; index++)
             {
-                if (Effects[index].EffectType == Enums.eEffectType.EntCreate && Effects[index].nSummon > -1 && Math.Abs(Effects[index].Probability - 1) < 0.01 && DatabaseAPI.Database.Entities.Length > Effects[index].nSummon)
+                if (Effects[index].EffectType != Enums.eEffectType.EntCreate ||
+                    Effects[index].nSummon < 0 ||
+                    Effects[index].nSummon >= DatabaseAPI.Database.Entities.Length ||
+                    Effects[index].Probability <= 0 ||
+                    (!pseudoOnly && Math.Abs(Effects[index].Probability - 1) >= 0.01))
                 {
-                    intList.Add(index);
+                    continue;
                 }
+
+                var entity = DatabaseAPI.Database.Entities[Effects[index].nSummon];
+                if (pseudoOnly && entity is not { IsPseudoPet: true })
+                {
+                    continue;
+                }
+
+                intList.Add(index);
             }
 
             if (intList.Count > 0)
@@ -2370,6 +2429,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 var effect = Effects[t];
                 var nSummon1 = effect.nSummon;
+                var absorbDuration = GetAbsorbedSummonDuration(effect, pseudoOnly);
                 var stacking = 1;
                 if (VariableEnabled && effect.VariableModified && hIdx > -1 && MidsContext.Character != null && MidsContext.Character.CurrentBuild.Powers[hIdx].VariableValue > stacking)
                 {
@@ -2433,23 +2493,112 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                     foreach (var power1 in DatabaseAPI.Database.Powersets[setIndex].Powers)
                     {
-                        foreach (var absorbEffect in AbsorbEffects(power1, effect.Duration, effect.DelayedTime, DatabaseAPI.Database.Classes[DatabaseAPI.Database.Entities[nSummon1].GetNClassId()], stacking))
+                        var startIndex = Effects.Length;
+                        var absorbedEntCreates = AbsorbEffects(power1, absorbDuration, effect.DelayedTime, DatabaseAPI.Database.Classes[DatabaseAPI.Database.Entities[nSummon1].GetNClassId()], stacking);
+                        ApplySummonWrapperMetadata(effect, startIndex, absorbDuration, CreatePseudoPetRecurrence(effect, DatabaseAPI.Database.Entities[nSummon1], power1, pseudoOnly));
+                        foreach (var absorbEffect in absorbedEntCreates)
                         {
                             var nSummon2 = power1.Effects[absorbEffect].nSummon;
-                            if (DatabaseAPI.Database.Entities[nSummon2].GetNPowerset()[0] < 0)
+                            if (nSummon2 < 0 ||
+                                nSummon2 >= DatabaseAPI.Database.Entities.Length ||
+                                DatabaseAPI.Database.Entities[nSummon2].GetNPowerset().Count == 0 ||
+                                DatabaseAPI.Database.Entities[nSummon2].GetNPowerset()[0] < 0)
                             {
                                 continue;
                             }
 
                             foreach (var power2 in DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Entities[nSummon2].GetNPowerset()[0]].Powers)
                             {
-                                AbsorbEffects(power2, effect.Duration, effect.DelayedTime, DatabaseAPI.Database.Classes[DatabaseAPI.Database.Entities[nSummon1].GetNClassId()], stacking);
+                                var nestedStartIndex = Effects.Length;
+                                AbsorbEffects(power2, absorbDuration, effect.DelayedTime, DatabaseAPI.Database.Classes[DatabaseAPI.Database.Entities[nSummon1].GetNClassId()], stacking);
+                                ApplySummonWrapperMetadata(effect, nestedStartIndex, absorbDuration, CreatePseudoPetRecurrence(effect, DatabaseAPI.Database.Entities[nSummon1], power2, pseudoOnly));
                             }
                         }
                     }
                 }
 
                 AbsorbedPetEffects = true;
+            }
+        }
+
+        private float GetAbsorbedSummonDuration(IEffect wrapper, bool pseudoOnly)
+        {
+            return wrapper.Duration;
+        }
+
+        private PseudoPetRecurrenceInfo? CreatePseudoPetRecurrence(IEffect wrapper, SummonedEntity entity, IPower petPower, bool pseudoOnly)
+        {
+            if (!pseudoOnly ||
+                PowerType != Enums.ePowerType.Toggle ||
+                UsageTime <= 0 ||
+                ActivatePeriod <= 0 ||
+                wrapper.Duration <= 0 ||
+                petPower.ActivatePeriod <= 0 ||
+                entity is not { IsPseudoPet: true })
+            {
+                return null;
+            }
+
+            var spawnCount = (int)Math.Floor(UsageTime / ActivatePeriod);
+            var ticksPerSpawn = 1 + (int)Math.Floor(wrapper.Duration / petPower.ActivatePeriod);
+            if (spawnCount <= 0 || ticksPerSpawn <= 0)
+            {
+                return null;
+            }
+
+            return new PseudoPetRecurrenceInfo
+            {
+                EntityName = string.IsNullOrWhiteSpace(entity.DisplayName) ? entity.UID : entity.DisplayName,
+                PetPowerName = string.IsNullOrWhiteSpace(petPower.DisplayName) ? petPower.FullName : petPower.DisplayName,
+                SourceUsageTime = UsageTime,
+                SourceActivatePeriod = ActivatePeriod,
+                EntCreateDuration = wrapper.Duration,
+                PetTickInterval = petPower.ActivatePeriod,
+                SpawnCount = spawnCount,
+                TicksPerSpawn = ticksPerSpawn,
+                TotalExpectedTicks = spawnCount * ticksPerSpawn
+            };
+        }
+
+        private void ApplySummonWrapperMetadata(IEffect wrapper, int startIndex, float absorbedDuration, PseudoPetRecurrenceInfo? recurrence = null)
+        {
+            for (var index = startIndex; index < Effects.Length; index++)
+            {
+                var child = Effects[index];
+                child.BaseProbability = Math.Max(0, Math.Min(1, child.BaseProbability * wrapper.BaseProbability));
+                if (wrapper.ProcsPerMinute > 0 && child.ProcsPerMinute <= 0)
+                {
+                    child.ProcsPerMinute = wrapper.ProcsPerMinute;
+                }
+
+                if (absorbedDuration > 0)
+                {
+                    child.Absorbed_Duration = absorbedDuration;
+                }
+
+                if (recurrence is { IsValid: true } && child.EffectType == Enums.eEffectType.Damage)
+                {
+                    child.PseudoPetRecurrence = recurrence;
+                }
+
+                if (wrapper.AdvancedConditions is { Rows.Count: > 0 })
+                {
+                    child.AdvancedConditions = PlannerEffectResolver.MergeConditions(wrapper.AdvancedConditions, child.AdvancedConditions);
+                    child.ActiveConditionals = child.AdvancedConditions.ToLegacyActiveConditionals();
+                }
+
+                foreach (var tag in wrapper.EffectTags.Where(tag => !string.IsNullOrWhiteSpace(tag)))
+                {
+                    if (!child.EffectTags.Contains(tag, StringComparer.OrdinalIgnoreCase))
+                    {
+                        child.EffectTags.Add(tag);
+                    }
+                }
+
+                if (!string.IsNullOrWhiteSpace(wrapper.EffectId) && string.IsNullOrWhiteSpace(child.EffectId))
+                {
+                    child.EffectId = wrapper.EffectId;
+                }
             }
         }
 
@@ -2917,13 +3066,21 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         ? fx.nDuration
                         : sFx.nDuration;
                     sFx.DelayedTime += fx.DelayedTime;
-                    sFx.Probability = fx.Probability is 0 or 1
-                        ? sFx.Probability
-                        : Math.Min(sFx.Probability, fx.Probability);
-                    sFx.ProcsPerMinute = fx.ProcsPerMinute;
+                    sFx.BaseProbability = Math.Max(0, Math.Min(1, sFx.BaseProbability * fx.BaseProbability));
+                    if (fx.ProcsPerMinute > 0)
+                    {
+                        sFx.ProcsPerMinute = fx.ProcsPerMinute;
+                    }
+
                     if (fx.ActiveConditionals is { Count: > 0 })
                     {
                         sFx.ActiveConditionals?.AddRange(fx.ActiveConditionals);
+                    }
+
+                    if (fx.AdvancedConditions is { Rows.Count: > 0 })
+                    {
+                        sFx.AdvancedConditions = PlannerEffectResolver.MergeConditions(fx.AdvancedConditions, sFx.AdvancedConditions);
+                        sFx.ActiveConditionals = sFx.AdvancedConditions.ToLegacyActiveConditionals();
                     }
 
                     if (fx.Ticks > 0 && sFx.Ticks == 0)
@@ -3052,7 +3209,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             var effects = activeOnly
                 ? Effects
-                    .Where(e => e.PvMode == Enums.ePvX.Any | (e.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE) | (e.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE))
+                    .Where(e => e.PvXInclude())
                     .ToArray()
                 : Effects;
             var effectsList = string.Empty;

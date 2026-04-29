@@ -37,6 +37,12 @@ namespace Mids_Reborn.Core
 
         string EffectId { get; set; }
 
+        List<string> EffectTags { get; set; }
+
+        string OmniSource { get; set; }
+        bool UseCombatModMagnitude { get; set; }
+        bool UseCombatModDuration { get; set; }
+
         string Special { get; set; }
 
         IEnhancement Enhancement { get; set; }
@@ -125,11 +131,21 @@ namespace Mids_Reborn.Core
 
         int Absorbed_EffectID { get; set; }
 
+        PseudoPetRecurrenceInfo? PseudoPetRecurrence { get; set; }
+
         Enums.eBuffMode buffMode { get; set; }
 
         string Override { get; set; }
 
         int nOverride { get; set; }
+
+        string ModeName { get; set; }
+
+        int ModeId { get; set; }
+
+        Enums.eModeFlags ModeFlag { get; set; }
+
+        string RevokedPower { get; set; }
 
         Expressions Expressions { get; set; }
 

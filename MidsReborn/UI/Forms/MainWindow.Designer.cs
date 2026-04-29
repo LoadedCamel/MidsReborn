@@ -214,6 +214,7 @@ namespace Mids_Reborn.UI.Forms
             titlePanel = new Panel();
             logoPanel = new MidsLogoPanel();
             titleLabel = new Label();
+            combatEx = new MidsVectorButton();
             mainLayoutPanel.SuspendLayout();
             canvasScrollPanel.ContentPanel.SuspendLayout();
             canvasScrollPanel.SuspendLayout();
@@ -883,9 +884,11 @@ namespace Mids_Reborn.UI.Forms
             leftInnerLayoutPanel.SetColumnSpan(dataView, 2);
             dataView.Dock = DockStyle.Fill;
             dataView.Font = new Font("Segoe UI", 9F);
+            dataView.ForeColor = Color.FromArgb(248, 241, 212);
             dataView.IsLocked = false;
             dataView.Location = new Point(3, 222);
             dataView.Name = "dataView";
+            dataView.Padding = new Padding(2, 0, 2, 2);
             dataView.Size = new Size(398, 340);
             dataView.TabIndex = 3;
             // 
@@ -996,6 +999,7 @@ namespace Mids_Reborn.UI.Forms
             buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
             buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
+            buttonsLayoutPanel.Controls.Add(combatEx, 0, 0);
             buttonsLayoutPanel.Controls.Add(tempPowersEx, 3, 1);
             buttonsLayoutPanel.Controls.Add(ibPrestigePowersEx, 2, 1);
             buttonsLayoutPanel.Controls.Add(incarnatesEx, 1, 1);
@@ -1851,7 +1855,7 @@ namespace Mids_Reborn.UI.Forms
             // tsChangeDb
             // 
             tsChangeDb.Name = "tsChangeDb";
-            tsChangeDb.Size = new Size(166, 22);
+            tsChangeDb.Size = new Size(214, 22);
             tsChangeDb.Text = "&Change Database";
             tsChangeDb.Click += tsChangeDb_Click;
             // 
@@ -2074,6 +2078,24 @@ namespace Mids_Reborn.UI.Forms
             titleLabel.TextAlign = ContentAlignment.MiddleCenter;
             titleLabel.MouseDown += Title_MouseDown;
             // 
+            // combatEx
+            // 
+            combatEx.BackColor = Color.Transparent;
+            combatEx.ButtonType = MidsVectorButton.ButtonTypes.Toggle;
+            combatEx.CornerRadius = 6;
+            combatEx.Dock = DockStyle.Fill;
+            combatEx.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold);
+            combatEx.Location = new Point(3, 4);
+            combatEx.Margin = new Padding(3, 4, 3, 4);
+            combatEx.Name = "combatEx";
+            combatEx.Size = new Size(151, 25);
+            combatEx.TabIndex = 131;
+            combatEx.Text = "Combat";
+            combatEx.ToggleText.Indeterminate = "Combat";
+            combatEx.ToggleText.ToggledOff = "Combat";
+            combatEx.ToggleText.ToggledOn = "Combat";
+            tTip.SetToolTip(combatEx, "Combat Context");
+            // 
             // MainWindow2
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -2292,5 +2314,6 @@ namespace Mids_Reborn.UI.Forms
         private MidsBufferedImagePanel canvas;
         private ToolStripMenuItem themeMenuItem;
         private ToolStripSeparator toolStripSeparator15;
+        private MidsVectorButton combatEx;
     }
 }

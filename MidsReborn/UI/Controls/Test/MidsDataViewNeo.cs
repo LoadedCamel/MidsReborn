@@ -773,62 +773,57 @@ namespace Mids_Reborn.UI.Controls
 
             SetLock(locked, false);
 
-            var basePowerData = new Power(basePower);
-            var enhancedPowerData = new Power(enhancedPower);
+            var snapshot = new PowerDisplaySnapshot(
+                new Power(basePower),
+                enhancedPower == null ? new Power(basePower) { PowerIndex = -1 } : new Power(enhancedPower),
+                string.IsNullOrEmpty(Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower))
+                    ? null
+                    : DatabaseAPI.GetPowerByFullName(Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower)),
+                string.IsNullOrEmpty(Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower))
+                    ? null
+                    : MainModule.MidsController.Toon?.GetEnhancedPower(iHistoryIdx),
+                iHistoryIdx,
+                false,
+                false,
+                false,
+                false);
 
-            // (Optional) show the redirect parent in the header if present
-            var rootPowerName = Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower);
-            rootPowerBase = string.IsNullOrEmpty(rootPowerName) ? null : DatabaseAPI.GetPowerByFullName(rootPowerName);
-            rootPowerEnh = string.IsNullOrEmpty(rootPowerName) ? null : MainModule.MidsController.Toon?.GetEnhancedPower(iHistoryIdx);
-
-            if ((enhancedPowerData?.PowerIndex ?? -1) == -1 && basePowerData.PowerIndex == -1)
-            {
-                pBase = null;
-            }
-            else
-            {
-                pBase = basePowerData;
-            }
-
-            // Build pEnh consistently: if none provided, synthesize from base
-            pEnh = (enhancedPowerData?.PowerIndex ?? -1) == -1
-                ? new Power(basePower) { PowerIndex = -1 }
-                : enhancedPowerData;
-
-            // Data sent to the Dataview may differ from DB.
-            // Not needed if ActivatePeriod absorb from summons is disabled in Power.AbsorbPetEffects()
-            /*var dbPower = DatabaseAPI.GetPowerByFullName(pBase.FullName);
-            if (dbPower != null)
-            {
-                pBase.ActivatePeriod = dbPower.ActivatePeriod;
-                pEnh.ActivatePeriod = dbPower.ActivatePeriod;
-            }*/
-
-            pBase?.ProcessExecutes();
-
-            // Do not run ApplyModifyEffects() on pEnh, this is done within totals calculations
-            pEnh?.ProcessExecutes();
-
-            GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
-            GroupedRankedEffects = GroupedFx.AggregateGroupedEffectsPass2(pEnh, GroupedRankedEffects);
-            EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh?.GetRankedEffects(true).ToList(), infoDataList.Font.Size);
-
-            HistoryIDX = iHistoryIdx;
-            SetDamageTip();
-            DisplayData(noLevel);
+            SetData(snapshot, noLevel, locked);
         }
 
-        public void SetData()
+        public void SetData(PowerDisplaySnapshot snapshot, bool noLevel = false, bool locked = false)
         {
-            pBase?.ProcessExecutes();
-            pEnh?.ProcessExecutes();
+            SetLock(locked, false);
+            pBase = snapshot.BasePower == null ? null : new Power(snapshot.BasePower);
+            pEnh = snapshot.EnhancedPower == null ? null : new Power(snapshot.EnhancedPower);
+            rootPowerBase = snapshot.RootPowerBase;
+            rootPowerEnh = snapshot.RootPowerEnh;
+            HistoryIDX = snapshot.HistoryIndex;
+
+            if (pBase == null)
+            {
+                if (!_isLocked)
+                {
+                    Clear();
+                }
+
+                return;
+            }
+
+            if (pEnh == null)
+            {
+                pEnh = new Power(pBase)
+                {
+                    PowerIndex = -1
+                };
+            }
 
             GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
             GroupedRankedEffects = GroupedFx.AggregateGroupedEffectsPass2(pEnh, GroupedRankedEffects);
-            EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh?.GetRankedEffects(true).ToList(), infoDataList.Font.Size);
+            EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh.GetRankedEffects(true).ToList(), infoDataList.Font.Size);
 
             SetDamageTip();
-            DisplayData();
+            DisplayData(noLevel);
         }
 
         public void Clear()
@@ -871,8 +866,11 @@ namespace Mids_Reborn.UI.Controls
             string str1;
             if (iEnh.Enh > -1)
             {
-                str1 = DatabaseAPI.Database.Enhancements[iEnh.Enh].LongName;
-                if (str1.Length > 38 & iLevel > -1)
+                var enhancement = DatabaseAPI.Database.Enhancements[iEnh.Enh];
+                str1 = enhancement.TypeID == Enums.eType.Normal
+                    ? DatabaseAPI.GetEnhancementDisplayName(iEnh, includeFlavor: true)
+                    : enhancement.LongName;
+                if (enhancement.TypeID != Enums.eType.Normal && str1.Length > 38 & iLevel > -1)
                 {
                     str1 = DatabaseAPI.GetEnhancementNameShortWSet(iEnh.Enh);
                 }
@@ -972,7 +970,7 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            title.Text = DatabaseAPI.Database.Enhancements[iEnh.Enh].LongName;
+            title.Text = DatabaseAPI.GetEnhancementDisplayName(iEnh, includeFlavor: true);
 
             var effectPrefixRtf = string.Empty;
             var iStr1 = string.Empty;
@@ -1088,7 +1086,7 @@ namespace Mids_Reborn.UI.Controls
             defenseGraph1.Draw();
             defenseGraph2.Draw();
 
-            var atResCap = $"{MidsContext.Character.Archetype.DisplayName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:0.##}%";
+            var atResCap = $"{MidsContext.Character.Archetype.DisplayName} resistance cap: {DatabaseAPI.GetClassResistanceCap(MidsContext.Character.Archetype) * 100:0.##}%";
             resistGraph1.Clear();
             resistGraph2.Clear();
             var numArray2 = new[]
@@ -1538,9 +1536,10 @@ namespace Mids_Reborn.UI.Controls
                     continue;
                 }
 
-                IPower power1 = new Power(p.Power);
-                power1.AbsorbPetEffects();
-                power1.ApplyGrantPowerEffects();
+                IPower power1 = PlannerEffectResolver.ResolvePower(new Power(p.Power), new PlannerEffectResolutionContext
+                {
+                    AbsorbPetEffects = true
+                }).ResolvedPower;
                 foreach (var effect in power1.Effects)
                 {
                     if (power1.PowerType != Enums.ePowerType.GlobalBoost & (!effect.Absorbed_Effect | effect.Absorbed_PowerType != Enums.ePowerType.GlobalBoost))
@@ -2022,7 +2021,7 @@ namespace Mids_Reborn.UI.Controls
                 infoDamageDisplay.HighestEnhancedValue = Math.Max(414, enhancedDamage * dmgMultiplier);
                 infoDamageDisplay.Text = Math.Abs(enhancedDamage - baseDamage) > float.Epsilon
                     ? $"{enhancedPower.FXGetDamageString(pEnh?.PowerIndex == -1)} ({(hasPercentDamage == true ? $"{Utilities.FixDP(baseDamage * 100)}%" : Utilities.FixDP(baseDamage))})"
-                    : pBase.FXGetDamageString(pBase.PowerIndex > -1 & pEnh?.PowerIndex > -1);
+                    : pBase.FXGetDamageString();
             }
 
             SetPowerScaler();
@@ -2047,17 +2046,6 @@ namespace Mids_Reborn.UI.Controls
             {
                 infoDamageDisplay.TextAlign = HorizontalAlignment.Center;
                 infoDamageDisplay.Style = Enums.MDmgDisplayStyle.TextOnly;
-            }
-
-            if (pBase != null && pEnh != null)
-            {
-                // Ensure pEnh has at least as many effects as pBase
-                if (pBase.Effects.Length > pEnh.Effects.Length)
-                {
-                    var swappedFx = SwapExtraEffects(pBase.Effects, pEnh.Effects);
-                    pBase.Effects = (IEffect[])swappedFx[0].Clone();
-                    pEnh.Effects = (IEffect[])swappedFx[1].Clone();
-                }
             }
 
             //lblLock.Visible = Lock & (_selectedTabIndex != 2);
@@ -2167,7 +2155,7 @@ namespace Mids_Reborn.UI.Controls
                     if (power.Slots[index].Enhancement.Enh > -1)
                     {
                         var graphics1 = bxFlip.Graphics;
-                        AssetManager.DrawEnhancementAt(graphics1, iDest, DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].ImageIdx, AssetManager.ToGfxGrade(DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID, power.Slots[index].Enhancement.Grade));
+                        AssetManager.DrawEnhancementAt(graphics1, iDest, DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].ImageIdx, power.Slots[index].Enhancement.Enh, DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].TypeID, power.Slots[index].Enhancement.Grade);
                         DrawEnhancementLevelOverlay(bxFlip.Graphics, iDest, power.Slots[index].Enhancement);
                     }
                     else
@@ -2179,7 +2167,7 @@ namespace Mids_Reborn.UI.Controls
                     if (power.Slots[index].FlippedEnhancement.Enh > -1)
                     {
                         var graphics1 = bxFlip.Graphics;
-                        AssetManager.DrawEnhancementAt(graphics1, rectangle2, DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].ImageIdx, AssetManager.ToGfxGrade(DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID, power.Slots[index].FlippedEnhancement.Grade));
+                        AssetManager.DrawEnhancementAt(graphics1, rectangle2, DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].ImageIdx, power.Slots[index].FlippedEnhancement.Enh, DatabaseAPI.Database.Enhancements[power.Slots[index].FlippedEnhancement.Enh].TypeID, power.Slots[index].FlippedEnhancement.Grade);
                     }
                     else
                     {
@@ -2420,8 +2408,9 @@ namespace Mids_Reborn.UI.Controls
                         shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget));
                         shortFxEnh.Assign(enhancedPower.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget));
                         tag2.Assign(shortFxBase);
-                        shortFxBase.Sum = (float)(shortFxBase.Sum / (double)MidsContext.Archetype.Hitpoints * 100);
-                        shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)MidsContext.Archetype.Hitpoints * 100);
+                        var baseHitPoints = DatabaseAPI.GetClassHitPoints(MidsContext.Archetype);
+                        shortFxBase.Sum = (float)(shortFxBase.Sum / (double)baseHitPoints * 100);
+                        shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)baseHitPoints * 100);
                         suffix = "%";
                         break;
                     case Enums.eEffectType.Heal:
@@ -2436,8 +2425,9 @@ namespace Mids_Reborn.UI.Controls
                         {
                             shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget));
                             shortFxEnh.Assign(enhancedPower.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget));
-                            shortFxBase.Sum = (float)(shortFxBase.Sum / (double)MidsContext.Archetype.Hitpoints * 100);
-                            shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)MidsContext.Archetype.Hitpoints * 100);
+                            var healBaseHitPoints = DatabaseAPI.GetClassHitPoints(MidsContext.Archetype);
+                            shortFxBase.Sum = (float)(shortFxBase.Sum / (double)healBaseHitPoints * 100);
+                            shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)healBaseHitPoints * 100);
                             tag2.Assign(shortFxBase);
                         }
                         suffix = "%";

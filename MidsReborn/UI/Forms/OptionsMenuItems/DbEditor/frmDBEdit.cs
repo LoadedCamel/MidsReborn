@@ -48,6 +48,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private Label lblCountSalvage;
         private Label lblDate;
         private frmBusy? _frmBusy;
+        private Button btnClassAttributes;
 
         public frmDBEdit()
         {
@@ -57,6 +58,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var componentResourceManager = new ComponentResourceManager(typeof(frmDBEdit));
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmDBEdit);
+            InitializeClassAttributesButton();
         }
 
         private NumericUpDown UdIssue
@@ -231,10 +233,43 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             f.ShowDialog();
         }
 
+        private void btnOmniImporter_Click(object sender, EventArgs e)
+        {
+            using var importForm = new frmOmniImport();
+            importForm.ShowDialog(this);
+        }
+
         private void btnAttribModEdit_Click(object sender, EventArgs e)
         {
             using frmEditAttribMod f = new frmEditAttribMod();
             f.ShowDialog();
+        }
+
+        private void InitializeClassAttributesButton()
+        {
+            btnAttribModEdit.Text = @"Legacy AttribMod Editor";
+            btnClassAttributes = new Button
+            {
+                BackColor = Color.FromArgb(255, 219, 102),
+                FlatStyle = FlatStyle.Popup,
+                Font = new Font("Segoe UI", 12F, FontStyle.Bold, GraphicsUnit.Point),
+                ForeColor = Color.Black,
+                Location = new Point(583, 586),
+                Name = "btnClassAttributes",
+                Size = new Size(234, 31),
+                TabIndex = 45,
+                Text = @"Class Attributes",
+                UseVisualStyleBackColor = false
+            };
+            btnClassAttributes.Click += btnClassAttributes_Click;
+            Controls.Add(btnClassAttributes);
+            btnClassAttributes.BringToFront();
+        }
+
+        private void btnClassAttributes_Click(object sender, EventArgs e)
+        {
+            using var form = new frmClassAttributes();
+            form.ShowDialog(this);
         }
 
         private void btnGCMIO_Click(object sender, EventArgs e)

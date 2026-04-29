@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using Jace;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.PlannerRulesets;
 using static Mids_Reborn.Core.Base.Data_Classes.Character;
 
 namespace Mids_Reborn.Core
@@ -478,7 +479,7 @@ namespace Mids_Reborn.Core
                 { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
                 { "base.kToHit", $"{MidsContext.Config.ScalingToHit}" },
                 { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" },
-                { "source>Base.kHitPoints", $"{(MidsContext.Character.Archetype == null ? 1000 : MidsContext.Character.Archetype.Hitpoints)}" },
+                { "source>Base.kHitPoints", $"{DatabaseAPI.GetClassHitPoints(MidsContext.Character.Archetype)}" },
                 { "source>cur.kMeter", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName, false))}" },
                 { "source>cur.kMeterAbs", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}" },
                 { "cfg>player>hp", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}" },
@@ -508,8 +509,8 @@ namespace Mids_Reborn.Core
                 { new Regex(@"source\.owner\>arch\(([a-zA-Z\s]+)\)"), e => MidsContext.Character?.Archetype == null ? "0" : MidsContext.Character.Archetype.DisplayName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
                 { new Regex(@"source\.owner\>archIn\(([a-zA-Z\s\,]+)\)"), e => MidsContext.Character?.Archetype == null ? "0" : Regex.Split(e.Groups[1].Value, @"(\s*)\,").Select(f => f.ToLowerInvariant().Trim()).Contains(MidsContext.Character.Archetype.DisplayName.ToLowerInvariant()) ? "1" : "0" },
                 { new Regex(@"caster\>modifier\(([a-zA-Z0-9_\-]+)\)"), e => ModifierCaster(e.Groups[1].Value) },
-                { new Regex(@"GCMActive\(([a-zA-Z0-9_\-]+)\)"), e => CheckGCM(e.Groups[1].Value) },
-                { new Regex(@"GCMScale\(([a-zA-Z0-9_\-]+)\)"), e => GCMScale(e.Groups[1].Value) },
+                { new Regex(@"GCMActive\(([a-zA-Z0-9_\-]+)\)"), e => CheckGCM(sourceFx, fxPower, e.Groups[1].Value) },
+                { new Regex(@"GCMScale\(([a-zA-Z0-9_\-]+)\)"), e => GCMScale(sourceFx, fxPower, e.Groups[1].Value) },
                 { new Regex(@"powerActive\(([a-zA-Z0-9_\-\.]+)\)"), e => IsPowerActive(e.Groups[1].Value) ? "1" : "0" }
             };
         }
@@ -520,14 +521,26 @@ namespace Mids_Reborn.Core
             return power != null ? "1" : "0";
         }
 
-        private static string CheckGCM(string gcm)
+        private static string CheckGCM(IEffect sourceFx, IPower? fxPower, string gcm)
         {
-            return MidsContext.Character.ModifyEffects.ContainsKey(gcm) ? "1" : "0";
+            return ChanceModifierSupport.TryGetChanceModifierScale(
+                MidsContext.Character,
+                fxPower ?? sourceFx.GetPower(),
+                gcm,
+                DatabaseAPI.GetPlannerRuleset().SupportsPowerLocalChanceMods,
+                out _)
+                ? "1"
+                : "0";
         }
 
-        private static string GCMScale(string gcm)
+        private static string GCMScale(IEffect sourceFx, IPower? fxPower, string gcm)
         {
-            return MidsContext.Character.ModifyEffects.TryGetValue(gcm, out var gcmScale)
+            return ChanceModifierSupport.TryGetChanceModifierScale(
+                MidsContext.Character,
+                fxPower ?? sourceFx.GetPower(),
+                gcm,
+                DatabaseAPI.GetPlannerRuleset().SupportsPowerLocalChanceMods,
+                out var gcmScale)
                 ? $"{gcmScale}"
                 : "0";
         }
@@ -539,32 +552,7 @@ namespace Mids_Reborn.Core
 
         private static string ModifierCaster(string modifier)
         {
-            const int maxPlayerLevel = 50;
-
-            var modifierData = DatabaseAPI.Database.AttribMods.Modifier
-                .DefaultIfEmpty(new Modifiers.ModifierTable())
-                .FirstOrDefault(e => string.Equals(e.ID, modifier, StringComparison.InvariantCultureIgnoreCase));
-
-            if (modifierData == null)
-            {
-                return "0";
-            }
-
-            if (modifierData.Table.Count <= 0)
-            {
-                return "0";
-            }
-
-            var archetypeNid = DatabaseAPI.Database.Classes
-                .Where(e => e is {Playable: true})
-                .Select((e, i) => new KeyValuePair<int, string>(i, e.DisplayName))
-                .DefaultIfEmpty(new KeyValuePair<int, string>(-1, ""))
-                .FirstOrDefault(e => e.Value == MidsContext.Character?.Archetype?.DisplayName)
-                .Key;
-            
-            return archetypeNid < 0
-                ? "0"
-                : Convert.ToString(modifierData.Table[maxPlayerLevel - 1][archetypeNid], CultureInfo.InvariantCulture);
+            return Convert.ToString(DatabaseAPI.GetModifier(modifier), CultureInfo.InvariantCulture);
         }
 
         private static string PowerVectorsContains(IPower? sourcePower, string vector)
@@ -626,11 +614,7 @@ namespace Mids_Reborn.Core
 
         private static string GetModifier(string modifierName)
         {
-            var modTable = DatabaseAPI.Database.AttribMods.Modifier.Where(e => e.ID == modifierName).ToList();
-
-            return modTable.Count <= 0 ?
-                "0" :
-                $"{modTable[0].Table[MidsContext.Character.Level][MidsContext.Character.Archetype.Column]}";
+            return Convert.ToString(DatabaseAPI.GetModifier(modifierName), CultureInfo.InvariantCulture);
         }
 
         private static string GetVariableValue(string powerName, bool absoluteValue = true)
@@ -651,10 +635,20 @@ namespace Mids_Reborn.Core
             switch (exprType)
             {
                 case ExpressionType.Duration:
+                    if (IsUnsupportedServerExpression(sourceFx.Expressions.Duration))
+                    {
+                        return sourceFx.nDuration;
+                    }
+
                     retValue = InternalParsing(sourceFx, exprType, out error);
                     break;
 
                 case ExpressionType.Probability:
+                    if (IsUnsupportedServerExpression(sourceFx.Expressions.Probability))
+                    {
+                        return sourceFx.BaseProbability;
+                    }
+
                     retValue = InternalParsing(sourceFx, exprType, out error);
                     break;
 
@@ -675,6 +669,11 @@ namespace Mids_Reborn.Core
                         return 0;
                     }
 
+                    if (IsUnsupportedServerExpression(sourceFx.Expressions.Magnitude))
+                    {
+                        return sourceFx.Scale * sourceFx.nMagnitude;
+                    }
+
                     var baseFx = sourceFx.Clone() as IEffect;
                     retValue = InternalParsing(baseFx, exprType, out error);
 
@@ -684,6 +683,16 @@ namespace Mids_Reborn.Core
             }
 
             return error.Found ? 0 : retValue;
+        }
+
+        private static bool IsUnsupportedServerExpression(string expression)
+        {
+            return !string.IsNullOrWhiteSpace(expression) &&
+                   (expression.Contains("source>", StringComparison.OrdinalIgnoreCase) ||
+                    expression.Contains("target>", StringComparison.OrdinalIgnoreCase) ||
+                    expression.Contains("power.base>", StringComparison.OrdinalIgnoreCase) ||
+                    expression.Contains("cur.", StringComparison.OrdinalIgnoreCase) ||
+                    expression.Contains("@", StringComparison.OrdinalIgnoreCase));
         }
 
         private static float InternalParsing(IEffect sourceFx, ExpressionType exprType, out ErrorData error)

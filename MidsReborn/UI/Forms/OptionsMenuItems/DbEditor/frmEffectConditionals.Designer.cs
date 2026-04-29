@@ -315,11 +315,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // btnOkay
             // 
+            btnOkay.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnOkay.BackColor = System.Drawing.Color.FromArgb(64, 78, 237);
             btnOkay.DialogResult = DialogResult.OK;
             btnOkay.FlatStyle = FlatStyle.Popup;
             btnOkay.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
-            btnOkay.Location = new System.Drawing.Point(1108, 490);
+            btnOkay.Location = new System.Drawing.Point(1308, 590);
             btnOkay.Margin = new Padding(4, 3, 4, 3);
             btnOkay.Name = "btnOkay";
             btnOkay.Size = new System.Drawing.Size(88, 43);
@@ -330,11 +331,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // btnCancel
             // 
+            btnCancel.Anchor = AnchorStyles.Bottom | AnchorStyles.Right;
             btnCancel.BackColor = System.Drawing.Color.FromArgb(88, 40, 18);
             btnCancel.DialogResult = DialogResult.Cancel;
             btnCancel.FlatStyle = FlatStyle.Popup;
             btnCancel.Font = new System.Drawing.Font("Microsoft Sans Serif", 9.75F, System.Drawing.FontStyle.Bold);
-            btnCancel.Location = new System.Drawing.Point(1203, 490);
+            btnCancel.Location = new System.Drawing.Point(1403, 590);
             btnCancel.Margin = new Padding(4, 3, 4, 3);
             btnCancel.Name = "btnCancel";
             btnCancel.Size = new System.Drawing.Size(88, 43);
@@ -356,7 +358,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             panel1.Location = new System.Drawing.Point(0, 0);
             panel1.Margin = new Padding(4, 3, 4, 3);
             panel1.Name = "panel1";
-            panel1.Size = new System.Drawing.Size(1310, 542);
+            panel1.Size = new System.Drawing.Size(1510, 642);
             panel1.TabIndex = 164;
             // 
             // btnClearFilter
@@ -406,7 +408,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             _modernPanel.Dock = DockStyle.Fill;
             _modernPanel.Location = new System.Drawing.Point(0, 0);
             _modernPanel.Name = "_modernPanel";
-            _modernPanel.Size = new System.Drawing.Size(1306, 538);
+            _modernPanel.Size = new System.Drawing.Size(1506, 638);
             _modernPanel.TabIndex = 166;
             // 
             // _titleLabel
@@ -421,10 +423,11 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // _note
             // 
+            _note.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             _note.ForeColor = System.Drawing.Color.Gainsboro;
             _note.Location = new System.Drawing.Point(16, 40);
             _note.Name = "_note";
-            _note.Size = new System.Drawing.Size(850, 22);
+            _note.Size = new System.Drawing.Size(1240, 22);
             _note.TabIndex = 1;
             _note.Text = "Pick a condition type, choose its value, then add it to the list. Advanced rows are saved with the database.";
             // 
@@ -487,13 +490,14 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // _choices
             // 
+            _choices.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             _choices.Columns.AddRange(new ColumnHeader[] { _choicesColumn });
             _choices.FullRowSelect = true;
             _choices.HideSelection = false;
             _choices.Location = new System.Drawing.Point(16, 182);
             _choices.MultiSelect = false;
             _choices.Name = "_choices";
-            _choices.Size = new System.Drawing.Size(430, 260);
+            _choices.Size = new System.Drawing.Size(430, 360);
             _choices.TabIndex = 8;
             _choices.UseCompatibleStateImageBehavior = false;
             _choices.View = View.Details;
@@ -506,11 +510,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // _expression
             // 
+            _expression.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left;
             _expression.Location = new System.Drawing.Point(16, 182);
             _expression.Multiline = true;
             _expression.Name = "_expression";
             _expression.ScrollBars = ScrollBars.Vertical;
-            _expression.Size = new System.Drawing.Size(430, 260);
+            _expression.Size = new System.Drawing.Size(430, 360);
             _expression.TabIndex = 9;
             _expression.Visible = false;
             // 
@@ -578,22 +583,24 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             // _currentRowsLabel
             // 
+            _currentRowsLabel.Anchor = AnchorStyles.Top | AnchorStyles.Left | AnchorStyles.Right;
             _currentRowsLabel.ForeColor = System.Drawing.Color.White;
             _currentRowsLabel.Location = new System.Drawing.Point(760, 75);
             _currentRowsLabel.Name = "_currentRowsLabel";
-            _currentRowsLabel.Size = new System.Drawing.Size(160, 18);
+            _currentRowsLabel.Size = new System.Drawing.Size(360, 18);
             _currentRowsLabel.TabIndex = 16;
             _currentRowsLabel.Text = "Current Conditions";
             // 
             // _conditionRows
             // 
+            _conditionRows.Anchor = AnchorStyles.Top | AnchorStyles.Bottom | AnchorStyles.Left | AnchorStyles.Right;
             _conditionRows.Columns.AddRange(new ColumnHeader[] { _rowLinkColumn, _rowConditionColumn, _rowOperatorColumn, _rowValueColumn });
             _conditionRows.FullRowSelect = true;
             _conditionRows.HideSelection = false;
             _conditionRows.Location = new System.Drawing.Point(760, 96);
             _conditionRows.MultiSelect = false;
             _conditionRows.Name = "_conditionRows";
-            _conditionRows.Size = new System.Drawing.Size(520, 346);
+            _conditionRows.Size = new System.Drawing.Size(720, 446);
             _conditionRows.TabIndex = 17;
             _conditionRows.UseCompatibleStateImageBehavior = false;
             _conditionRows.View = View.Details;
@@ -606,7 +613,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // _rowConditionColumn
             // 
             _rowConditionColumn.Text = "Condition";
-            _rowConditionColumn.Width = 300;
+            _rowConditionColumn.Width = 520;
             // 
             // _rowOperatorColumn
             // 
@@ -616,7 +623,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // _rowValueColumn
             // 
             _rowValueColumn.Text = "Value";
-            _rowValueColumn.Width = 90;
+            _rowValueColumn.Width = 130;
             // 
             // frmEffectConditionals
             // 
@@ -625,11 +632,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = System.Drawing.Color.FromArgb(153, 170, 181);
             CancelButton = btnCancel;
-            ClientSize = new System.Drawing.Size(1310, 542);
+            ClientSize = new System.Drawing.Size(1510, 642);
             Controls.Add(panel1);
             ForeColor = System.Drawing.Color.Azure;
-            FormBorderStyle = FormBorderStyle.FixedDialog;
+            FormBorderStyle = FormBorderStyle.Sizable;
             Margin = new Padding(4, 3, 4, 3);
+            MinimumSize = new System.Drawing.Size(1326, 581);
             Name = "frmEffectConditionals";
             ShowInTaskbar = false;
             Text = "Effect Conditions";

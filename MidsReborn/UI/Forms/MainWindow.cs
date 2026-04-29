@@ -46,6 +46,7 @@ namespace Mids_Reborn.UI.Forms
         private readonly EventSuppressionController _events = new();
 
         private bool _gfxDrawing;
+        private bool _isAppClosing;
         private long _popupLastOpenTime;
         private int _originalIndex = -1;
 
@@ -95,7 +96,7 @@ namespace Mids_Reborn.UI.Forms
         private EnhCheckMode? _enhCheckMode;
         private MidsPopupDisplay? _popupHost;
         private frmBusy? _frmBusy;
-        private FrmTeam? _frmTeam;
+        private FrmCombatContext? _frmCombatContext;
         private frmAccolade? fAccolade;
         private frmData? fData;
         private frmCompare? fGraphCompare;
@@ -246,6 +247,7 @@ namespace Mids_Reborn.UI.Forms
             tmrGfx.Tick += tmrGfx_Tick;
             dataView.SlotUpdate += DataView_SlotUpdate;
             dataView.SlotFlip += DataView_SlotFlip;
+            InitializeCombatContextEntryPoints();
         }
 
         private void OnResizeEnd(object? sender, EventArgs e)
@@ -506,6 +508,7 @@ namespace Mids_Reborn.UI.Forms
                 false => MidsVectorButton.States.ToggledOff
             };
             SetColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns, MidsContext.Config.Columns == 3 ? MidsContext.Config.ColumnStackingMode : Enums.eColumnStacking.None);
+            UpdateCombatContextSummary();
 
         }
 
@@ -571,6 +574,14 @@ namespace Mids_Reborn.UI.Forms
         private void MainWindow2_Closing(object? sender, CancelEventArgs e)
         {
             e.Cancel = ShouldCancelClose();
+            if (e.Cancel)
+            {
+                return;
+            }
+
+            _isAppClosing = true;
+            ShutdownCombatContextWindow();
+            SuppressMainWindowToolTips();
         }
 
         private void OnThemeChanged()
@@ -1505,13 +1516,12 @@ namespace Mids_Reborn.UI.Forms
                             (int)Math.Round(canvasScrollPanel.Left - canvasScrollPanel.HorizontalScroll.Value + e.X - I9Picker.Width / 2f),
                             (int)Math.Round(canvasScrollPanel.Top - canvasScrollPanel.VerticalScroll.Value + e.Y - I9Picker.Height / 2f));
 
-                        // Clamp picker to screen bounds
                         point.Y = Math.Max(MenuBar.Height, Math.Min(point.Y, ClientSize.Height - I9Picker.Height));
                         point.X = Math.Max(0, Math.Min(point.X, ClientSize.Width - I9Picker.Width));
 
+                        _popupLastOpenTime = DateTime.Now.Ticks;
                         I9Picker.Location = point;
                         I9Picker.BringToFront();
-                        _popupLastOpenTime = DateTime.Now.Ticks;
                         I9Picker.Visible = true;
                         I9Picker.Select();
                     }
@@ -2068,6 +2078,115 @@ namespace Mids_Reborn.UI.Forms
         private void tsHelperShort_Click(object? sender, EventArgs e)
         {
             new FrmInputLevel(this, false).ShowDialog(this);
+        }
+
+        private void InitializeCombatContextEntryPoints()
+        {
+            combatEx.ButtonType = MidsVectorButton.ButtonTypes.Toggle;
+            combatEx.Text = "Combat";
+            combatEx.ToggleText.ToggledOff = "Combat";
+            combatEx.ToggleText.ToggledOn = "Combat";
+            combatEx.ToggleState = MidsVectorButton.States.ToggledOff;
+            tTip.SetToolTip(combatEx, "Combat Context");
+            combatEx.Click += CombatEx_OnClick;
+
+            setEnemyRelativeLevelToolStripMenuItem.DropDownItems.Clear();
+            setEnemyRelativeLevelToolStripMenuItem.Text = "Combat Context...";
+            setEnemyRelativeLevelToolStripMenuItem.ToolTipText = "Open the combat-context planner window.";
+            setEnemyRelativeLevelToolStripMenuItem.Click += CombatContextMenuItemOnClick;
+        }
+
+        private void CombatEx_OnClick(object? sender, EventArgs e)
+        {
+            ToggleCombatContextWindow();
+        }
+
+        private void CombatContextMenuItemOnClick(object? sender, EventArgs e)
+        {
+            ShowCombatContextWindow();
+        }
+
+        private FrmCombatContext EnsureCombatContextWindow()
+        {
+            if (_frmCombatContext == null || _frmCombatContext.IsDisposed)
+            {
+                _frmCombatContext = new FrmCombatContext(RefreshInfo);
+                _frmCombatContext.VisibleChanged += CombatContextWindowOnVisibleChanged;
+                _frmCombatContext.Disposed += CombatContextWindowOnDisposed;
+            }
+
+            return _frmCombatContext;
+        }
+
+        private void ToggleCombatContextWindow()
+        {
+            var window = EnsureCombatContextWindow();
+            if (window.Visible)
+            {
+                window.Hide();
+            }
+            else
+            {
+                window.SelectContextSection();
+                window.Show(this);
+                window.BringToFront();
+                window.Focus();
+            }
+
+            UpdateCombatContextSummary();
+        }
+
+        private void ShowCombatContextWindow()
+        {
+            var window = EnsureCombatContextWindow();
+            window.SelectContextSection();
+
+            if (!window.Visible)
+            {
+                window.Show(this);
+            }
+
+            window.BringToFront();
+            window.Focus();
+            UpdateCombatContextSummary();
+        }
+
+        private void CombatContextWindowOnVisibleChanged(object? sender, EventArgs e)
+        {
+            if (_isAppClosing || IsDisposed || Disposing)
+            {
+                return;
+            }
+
+            if (IsHandleCreated)
+            {
+                BeginInvoke((Action)(() =>
+                {
+                    if (!IsDisposed && !Disposing)
+                    {
+                        UpdateCombatContextSummary();
+                    }
+                }));
+            }
+            else
+            {
+                UpdateCombatContextSummary();
+            }
+        }
+
+        private void CombatContextWindowOnDisposed(object? sender, EventArgs e)
+        {
+            if (_frmCombatContext != null)
+            {
+                _frmCombatContext.VisibleChanged -= CombatContextWindowOnVisibleChanged;
+                _frmCombatContext.Disposed -= CombatContextWindowOnDisposed;
+            }
+
+            _frmCombatContext = null;
+            if (!_isAppClosing)
+            {
+                UpdateCombatContextSummary();
+            }
         }
 
         private void tsAdvDBEdit_Click(object? sender, EventArgs e)
@@ -3801,7 +3920,7 @@ namespace Mids_Reborn.UI.Forms
                 }
                 else
                 {
-                    drawing.BxBuffer.Graphics?.DrawImage(AssetManager.EmptySlot.Bitmap, rectangle2, 0, 0, 128, 128,
+                    drawing.BxBuffer.Graphics?.DrawImage(AssetManager.EmptySlot.Bitmap, rectangle2, 0, 0, 64, 64,
                         GraphicsUnit.Pixel, recolorIa);
                 }
 
@@ -3858,7 +3977,7 @@ namespace Mids_Reborn.UI.Forms
         {
             DoRedraw();
             RefreshInfo();
-            if (_frmTeam?.Visible != true || power == null)
+            if (_frmCombatContext?.Visible != true || power == null)
             {
                 return;
             }
@@ -3869,7 +3988,7 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            _frmTeam.FeedbackUpdate(pKey, val);
+            _frmCombatContext.FeedbackUpdate(pKey, val);
         }
 
         internal void DoRedraw()
@@ -4117,23 +4236,27 @@ namespace Mids_Reborn.UI.Forms
                 }
 
                 LoadPrimary(atDropDown.SelectedItem);
-                primaryDropDown.SelectedIndex = AssignSetIndex(Enums.PowersetType.Primary, Enums.ePowerSetType.Primary);
+                SetSelectedIndexIfAvailable(primaryDropDown, AssignSetIndex(Enums.PowersetType.Primary, Enums.ePowerSetType.Primary));
 
                 LoadSecondary(atDropDown.SelectedItem);
-                secondaryDropDown.SelectedIndex = AssignSetIndex(Enums.PowersetType.Secondary, Enums.ePowerSetType.Secondary);
+                SetSelectedIndexIfAvailable(secondaryDropDown, AssignSetIndex(Enums.PowersetType.Secondary, Enums.ePowerSetType.Secondary));
 
                 LoadPools();
-                pool0DropDown.SelectedIndex = MainModule.MidsController.Toon.PoolToDropDownIndex(0, MidsContext.Character.Powersets[3]?.nID ?? -1);
-                pool1DropDown.SelectedIndex = MainModule.MidsController.Toon.PoolToDropDownIndex(1, MidsContext.Character.Powersets[4]?.nID ?? -1);
-                pool2DropDown.SelectedIndex = MainModule.MidsController.Toon.PoolToDropDownIndex(2, MidsContext.Character.Powersets[5]?.nID ?? -1);
-                pool3DropDown.SelectedIndex = MainModule.MidsController.Toon.PoolToDropDownIndex(3, MidsContext.Character.Powersets[6]?.nID ?? -1);
+                SelectPoolDropDown(pool0DropDown, MidsContext.Character.Powersets[3]);
+                SelectPoolDropDown(pool1DropDown, MidsContext.Character.Powersets[4]);
+                SelectPoolDropDown(pool2DropDown, MidsContext.Character.Powersets[5]);
+                SelectPoolDropDown(pool3DropDown, MidsContext.Character.Powersets[6]);
+                AuditPoolDropDownSelection(pool0DropDown, MidsContext.Character.Powersets[3], 0);
+                AuditPoolDropDownSelection(pool1DropDown, MidsContext.Character.Powersets[4], 1);
+                AuditPoolDropDownSelection(pool2DropDown, MidsContext.Character.Powersets[5], 2);
+                AuditPoolDropDownSelection(pool3DropDown, MidsContext.Character.Powersets[6], 3);
 
                 LoadAncillary();
                 var powersetIndexes = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, Enums.ePowerSetType.Ancillary);
                 if (MidsContext.Character.Powersets[7] != null)
-                    ancillaryDropDown.SelectedIndex = DatabaseAPI.ToDisplayIndex(MidsContext.Character.Powersets[7], powersetIndexes);
+                    SetSelectedIndexIfAvailable(ancillaryDropDown, DatabaseAPI.ToDisplayIndex(MidsContext.Character.Powersets[7], powersetIndexes));
                 else if (powersetIndexes.Length > 0)
-                    ancillaryDropDown.SelectedIndex = 0;
+                    SetSelectedIndexIfAvailable(ancillaryDropDown, 0);
                 else
                     ancillaryDropDown.SelectedIndex = -1;
 
@@ -4145,6 +4268,53 @@ namespace Mids_Reborn.UI.Forms
                     UpdateDmBuffer();
                 }
             }
+        }
+
+        private static void SetSelectedIndexIfAvailable(ComboBox dropDown, int selectedIndex)
+        {
+            if (dropDown.Items.Count == 0)
+            {
+                dropDown.SelectedIndex = -1;
+                return;
+            }
+
+            dropDown.SelectedIndex = selectedIndex >= 0 && selectedIndex < dropDown.Items.Count
+                ? selectedIndex
+                : 0;
+        }
+
+        private static void SelectPoolDropDown(ComboBox dropDown, IPowerset? selectedPowerset)
+        {
+            if (dropDown.Items.Count == 0)
+            {
+                dropDown.SelectedIndex = -1;
+                return;
+            }
+
+            var selectedIndex = -1;
+            for (var index = 0; index < dropDown.Items.Count; index++)
+            {
+                if (dropDown.Items[index] is IPowerset powerset && powerset.nID == (selectedPowerset?.nID ?? -1))
+                {
+                    selectedIndex = index;
+                    break;
+                }
+            }
+
+            dropDown.SelectedIndex = selectedIndex >= 0 ? selectedIndex : 0;
+        }
+
+        private static void AuditPoolDropDownSelection(ComboBox dropDown, IPowerset? characterPowerset, int poolSlot)
+        {
+            if (dropDown.SelectedItem is not IPowerset selectedPowerset ||
+                characterPowerset == null ||
+                selectedPowerset.nID == characterPowerset.nID)
+            {
+                return;
+            }
+
+            Debug.WriteLine(
+                $"Pool dropdown mismatch: slot {poolSlot}, dropdown={selectedPowerset.FullName} ({selectedPowerset.nID}), character={characterPowerset.FullName} ({characterPowerset.nID})");
         }
 
         private void ProcessLocks()
@@ -4266,6 +4436,7 @@ namespace Mids_Reborn.UI.Forms
                     {
                         var power = trunkPowers[i];
                         if (power is null) continue;
+                        if (power.HiddenPower) continue;
                         if (power.Level <= 0) continue;
 
                         var state = toon?.PowerState(power.PowerIndex, ref message) ?? MidsItemState.Enabled;
@@ -4288,6 +4459,7 @@ namespace Mids_Reborn.UI.Forms
             {
                 var power = powers[i];
                 if (power is null) continue;
+                if (power.HiddenPower) continue;
                 if (power.Level <= 0 || !power.AllowedForClass(MidsContext.Character.Archetype.Idx)) continue;
 
                 toon = MainModule.MidsController.Toon;
@@ -4371,8 +4543,9 @@ namespace Mids_Reborn.UI.Forms
 
         private void LoadPrimary(Archetype? selectedItem)
         {
-            var powerSets = selectedItem?.Primary
-                .Select(index => DatabaseAPI.Database.Powersets[index]).ToList();
+            var powerSets = selectedItem == null
+                ? []
+                : DatabaseAPI.GetPowersetIndexes(selectedItem, Enums.ePowerSetType.Primary).ToList();
 
             primaryDropDown.DisplayMember = "DisplayName";
             primaryDropDown.DataSource = powerSets;
@@ -4389,8 +4562,9 @@ namespace Mids_Reborn.UI.Forms
 
         private void LoadSecondary(Archetype? selectedItem)
         {
-            var powerSets = selectedItem?.Secondary
-                .Select(index => DatabaseAPI.Database.Powersets[index]).ToList();
+            var powerSets = selectedItem == null
+                ? []
+                : DatabaseAPI.GetPowersetIndexes(selectedItem, Enums.ePowerSetType.Secondary).ToList();
 
             secondaryDropDown.DisplayMember = "DisplayName";
             secondaryDropDown.DataSource = powerSets;
@@ -4736,20 +4910,13 @@ namespace Mids_Reborn.UI.Forms
             dataView.IsLocked = @lock;
             if (powIndex > -1)
             {
-                var basePower = MainModule.MidsController.Toon.GetBasePower(powIndex);
-                var enhancedPower = MainModule.MidsController.Toon.GetEnhancedPower(powIndex);
-                if (basePower != null && enhancedPower != null)
-                {
-                    dataView.SetData(basePower, enhancedPower, noLevel, dataView.IsLocked, powIndex);
-                }
-                else
-                {
-                    dataView.SetData(MainModule.MidsController.Toon.GetBasePower(powIndex, powerIdx), null, noLevel, dataView.IsLocked, powIndex);
-                }
+                var displaySnapshot = MainModule.MidsController.Toon.GetDisplayPowerSnapshot(powIndex, powerIdx);
+                dataView.SetData(displaySnapshot, noLevel, dataView.IsLocked);
             }
             else
             {
-                dataView.SetData(MainModule.MidsController.Toon.GetBasePower(powIndex, powerIdx), null, noLevel, dataView.IsLocked, powIndex);
+                var displaySnapshot = MainModule.MidsController.Toon.GetDisplayPowerSnapshot(powIndex, powerIdx);
+                dataView.SetData(displaySnapshot, noLevel, dataView.IsLocked);
             }
 
             //FloatingDataForm.Activate();
@@ -4765,6 +4932,33 @@ namespace Mids_Reborn.UI.Forms
             MainModule.MidsController.Toon?.GenerateBuffedPowerArray();
             dataView.DisplayTotals();
             FloatUpdate();
+        }
+
+        public DamageDisplayDebugSnapshot? CaptureUiDamageSnapshotForPower(int powerIdx, int buildHistoryIdx = -1)
+        {
+            if (dataView == null || IsDisposed)
+            {
+                return null;
+            }
+
+            var previousPower = dvLastPower;
+            var previousEnh = dvLastEnh;
+            var previousNoLev = dvLastNoLev;
+            var previousHistoryIdx = dvLastHistoryIdx;
+            var previousLock = dataView.IsLocked;
+
+            try
+            {
+                Info_Power(powerIdx, -1, false, previousLock, buildHistoryIdx);
+                return dataView.CreateDebugSnapshot();
+            }
+            finally
+            {
+                if (previousPower > -1)
+                {
+                    Info_Power(previousPower, previousEnh, previousNoLev, previousLock, previousHistoryIdx);
+                }
+            }
         }
 
         private void RefreshTabs(int iPower, I9Slot? iEnh, int iLevel = -1, int buildHistoryIdx = -1)
@@ -5877,7 +6071,13 @@ namespace Mids_Reborn.UI.Forms
         private void UpdateToon(Toon toon, Character? ch, int primaryIndex, int secondaryIndex, int pool0Index, int pool1Index, int pool2Index, int pool3Index, int ancillaryIndex, Func<Archetype, Enums.ePowerSetType, IPowerset[]> getPowerSets, Action lockSecondary)
         {
             var at = ch.Archetype;
-            var newPrimaryPowerset = getPowerSets(at, Enums.ePowerSetType.Primary)[primaryIndex];
+            var primaryPowersets = getPowerSets(at, Enums.ePowerSetType.Primary);
+            var newPrimaryPowerset = GetSelectedPowerset(primaryPowersets, primaryIndex, ch.Powersets[0]);
+            if (newPrimaryPowerset == null)
+            {
+                return;
+            }
+
             IPowerset?[] ancPowersets = getPowerSets(at, Enums.ePowerSetType.Ancillary);
             if (toon != null)
             {
@@ -5901,7 +6101,12 @@ namespace Mids_Reborn.UI.Forms
                     lockSecondary();
                     var powerset2 = ch.Powersets[1];
                     IPowerset?[] secondaryPowersets = getPowerSets(at, Enums.ePowerSetType.Secondary);
-                    var newPowerset2 = secondaryPowersets[secondaryIndex];
+                    var newPowerset2 = GetSelectedPowerset(secondaryPowersets, secondaryIndex, powerset2);
+                    if (newPowerset2 == null)
+                    {
+                        return;
+                    }
+
                     if (powerset2.nID != newPowerset2.nID)
                     {
                         toon.SwitchSets(newPowerset2, powerset2);
@@ -5912,20 +6117,50 @@ namespace Mids_Reborn.UI.Forms
             {
                 IPowerset?[] secondaryPowersets = getPowerSets(at, Enums.ePowerSetType.Secondary);
                 ch.Powersets[0] = newPrimaryPowerset;
-                ch.Powersets[1] = secondaryPowersets[secondaryIndex];
+                var newSecondaryPowerset = GetSelectedPowerset(secondaryPowersets, secondaryIndex, ch.Powersets[1]);
+                if (newSecondaryPowerset == null)
+                {
+                    return;
+                }
+
+                ch.Powersets[1] = newSecondaryPowerset;
             }
 
             IPowerset?[] poolPowersets = getPowerSets(at, Enums.ePowerSetType.Pool);
-            ch.Powersets[3] = poolPowersets[pool0Index];
-            ch.Powersets[4] = poolPowersets[pool1Index];
-            ch.Powersets[5] = poolPowersets[pool2Index];
-            ch.Powersets[6] = poolPowersets[pool3Index];
+            ch.Powersets[3] = GetSelectedPowerset(poolPowersets, pool0Index, ch.Powersets[3]);
+            ch.Powersets[4] = GetSelectedPowerset(poolPowersets, pool1Index, ch.Powersets[4]);
+            ch.Powersets[5] = GetSelectedPowerset(poolPowersets, pool2Index, ch.Powersets[5]);
+            ch.Powersets[6] = GetSelectedPowerset(poolPowersets, pool3Index, ch.Powersets[6]);
             if (ancPowersets.Length > 0)
             {
-                ch.Powersets[7] = ancPowersets[ancillaryIndex];
+                ch.Powersets[7] = GetSelectedPowerset(ancPowersets, ancillaryIndex, ch.Powersets[7]);
             }
 
             ch.Validate();
+        }
+
+        private static IPowerset? GetSelectedPowerset(IPowerset?[] powersets, int selectedIndex, IPowerset? fallback)
+        {
+            if (powersets.Length == 0)
+            {
+                return fallback;
+            }
+
+            if (selectedIndex >= 0 && selectedIndex < powersets.Length)
+            {
+                return powersets[selectedIndex];
+            }
+
+            if (fallback != null)
+            {
+                var fallbackMatch = powersets.FirstOrDefault(p => p?.nID == fallback.nID);
+                if (fallbackMatch != null)
+                {
+                    return fallbackMatch;
+                }
+            }
+
+            return powersets[0];
         }
 
         private async void tsChangeDb_Click(object sender, EventArgs e)
@@ -5955,6 +6190,8 @@ namespace Mids_Reborn.UI.Forms
         public void RefreshInfo()
         {
             Info_Totals();
+            _frmCombatContext?.RefreshFromConfig();
+            UpdateCombatContextSummary();
             if (dvLastPower <= -1)
             {
                 return;
@@ -5967,6 +6204,95 @@ namespace Mids_Reborn.UI.Forms
             }
 
             FrmEntityDetails.UpdateData(true);
+        }
+
+        private void UpdateCombatContextSummary()
+        {
+            if (_isAppClosing || MidsContext.Config is null)
+            {
+                return;
+            }
+
+            var selectedRelativeLevel = ConfigData.NormalizeEnemyRelativeLevel(
+                MidsContext.Config.EnemyRelativeLevel,
+                MidsContext.Config.ScalingToHit);
+            var tooltip = $"Enemy Relative Level: {FormatSignedValue(selectedRelativeLevel)}";
+
+            combatEx.ToggleState = _frmCombatContext?.Visible == true
+                ? MidsVectorButton.States.ToggledOn
+                : MidsVectorButton.States.ToggledOff;
+            TrySetCombatContextToolTip(tooltip);
+            setEnemyRelativeLevelToolStripMenuItem.ToolTipText = tooltip;
+        }
+
+        private void TrySetCombatContextToolTip(string tooltip)
+        {
+            if (_isAppClosing || IsDisposed || Disposing || combatEx.IsDisposed)
+            {
+                return;
+            }
+
+            try
+            {
+                tTip.SetToolTip(combatEx, tooltip);
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+            catch (NullReferenceException)
+            {
+            }
+        }
+
+        private void ShutdownCombatContextWindow()
+        {
+            if (_frmCombatContext == null)
+            {
+                return;
+            }
+
+            try
+            {
+                _frmCombatContext.VisibleChanged -= CombatContextWindowOnVisibleChanged;
+                _frmCombatContext.Disposed -= CombatContextWindowOnDisposed;
+                _frmCombatContext.PrepareForOwnerShutdown();
+
+                if (!_frmCombatContext.IsDisposed)
+                {
+                    _frmCombatContext.Hide();
+                    _frmCombatContext.Dispose();
+                }
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+            catch (NullReferenceException)
+            {
+            }
+            finally
+            {
+                _frmCombatContext = null;
+            }
+        }
+
+        private void SuppressMainWindowToolTips()
+        {
+            try
+            {
+                tTip.Active = false;
+                tTip.RemoveAll();
+            }
+            catch (ObjectDisposedException)
+            {
+            }
+            catch (NullReferenceException)
+            {
+            }
+        }
+
+        private static string FormatSignedValue(int value)
+        {
+            return value > 0 ? $"+{value}" : value.ToString();
         }
 
         #endregion

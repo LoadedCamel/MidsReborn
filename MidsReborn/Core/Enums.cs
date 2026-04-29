@@ -1129,7 +1129,8 @@ namespace Mids_Reborn.Core
         public enum eSummonEntity
         {
             Pet,
-            Henchman
+            Henchman,
+            PseudoPet
         }
 
         [Flags]

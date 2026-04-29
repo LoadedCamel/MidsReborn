@@ -72,6 +72,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private TextBox txtResCap;
         private NumericUpDown udColumn;
         private NumericUpDown udThreat;
+        private Button btnViewCanonicalAttributes;
 
         public frmEditArchetype(ref Archetype? iAT)
         {
@@ -83,6 +84,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var componentResourceManager = new ComponentResourceManager(typeof(frmEditArchetype));
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEditArchetype);
+            InitializeCanonicalAttributesButton();
             MyAT = new Archetype(iAT);
             OriginalName = MyAT.ClassName;
             var num = DatabaseAPI.Database.Classes.Length - 1;
@@ -321,6 +323,30 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             clbOrigin.EndUpdate();
             txtDescShort.Text = MyAT.DescShort;
             txtDescLong.Text = MyAT.DescLong;
+            btnViewCanonicalAttributes.Visible = DatabaseAPI.TryGetClassAttributeTable(MyAT.ClassName, out _);
+        }
+
+        private void InitializeCanonicalAttributesButton()
+        {
+            btnViewCanonicalAttributes = new Button
+            {
+                Location = new Point(12, 585),
+                Name = "btnViewCanonicalAttributes",
+                Size = new Size(240, 23),
+                TabIndex = 99,
+                Text = @"View Canonical Class Attributes",
+                UseVisualStyleBackColor = true,
+                Visible = false
+            };
+            btnViewCanonicalAttributes.Click += btnViewCanonicalAttributes_Click;
+            Controls.Add(btnViewCanonicalAttributes);
+            btnViewCanonicalAttributes.BringToFront();
+        }
+
+        private void btnViewCanonicalAttributes_Click(object sender, EventArgs e)
+        {
+            using var form = new frmClassAttributes(MyAT?.ClassName);
+            form.ShowDialog(this);
         }
 
         private void frmEditArchetype_Load(object sender, EventArgs e)

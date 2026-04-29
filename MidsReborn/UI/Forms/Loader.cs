@@ -1,7 +1,6 @@
 ﻿using System.Drawing.Drawing2D;
 using Microsoft.Web.WebView2.Core;
 using Mids_Reborn.Core;
-using Mids_Reborn.Core.Ai;
 using Mids_Reborn.Core.Base.IO_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
@@ -116,9 +115,6 @@ namespace Mids_Reborn.UI.Forms
             };
 
             if (MidsContext.Config is null) return;
-
-            SetMessage("Rebuilding icon cache...");
-            await IconCacheBuilder.RunAsync();
 
             switch (MidsContext.Config.FirstRun)
             {

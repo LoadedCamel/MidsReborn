@@ -1,4 +1,4 @@
-﻿using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.UI.Controls;
 using Mids_Reborn.UI.Controls.Test;
@@ -473,7 +473,7 @@ namespace Mids_Reborn.Core
                 return string.Join(", ", set);
             }
 
-            // For ETs that don’t use vectors (ToHit, RechargeTime, etc.)
+            // For ETs that don�t use vectors (ToHit, RechargeTime, etc.)
             return string.Empty;
         }
 
@@ -664,7 +664,7 @@ namespace Mids_Reborn.Core
 
         private static List<string> CompactVectorsList(IReadOnlyList<string> vectors)
         {
-            // (kept identical to your previous version except we don’t collapse to “All positions” anywhere)
+            // (kept identical to your previous version except we don�t collapse to �All positions� anywhere)
             var allDefensesEx = GetAllDefensesEx().ToDictionary(e => $"{e} Defense", _ => -1);
             var allDefenses = GetAllDefenses().ToDictionary(e => $"{e} Defense", _ => -1);
             var typedDefenses = GetTypedDefenses().ToDictionary(e => $"{e} Defense", _ => -1);
@@ -1072,9 +1072,9 @@ namespace Mids_Reborn.Core
                 {
                     var when = When(effects[i]);
                     if (count > 1)
-                        body.Append("• ").Append(Ordinal(i + 1)).Append(' ').Append(name).Append(' ').Append(when).AppendLine();
+                        body.Append("� ").Append(Ordinal(i + 1)).Append(' ').Append(name).Append(' ').Append(when).AppendLine();
                     else
-                        body.Append("• 1 ").Append(name).Append(' ').Append(when).AppendLine();
+                        body.Append("� 1 ").Append(name).Append(' ').Append(when).AppendLine();
                 }
             }
 
@@ -1176,9 +1176,9 @@ namespace Mids_Reborn.Core
         // ===== Grouping / assembly (unchanged) =====
 
         public static List<int> GetSimilarEffects(IPower power, FxId fxIdentifier, float mag,
-            Enums.eSpecialCase specialCase = Enums.eSpecialCase.None, bool enhancementEffect = false)
+            Enums.eSpecialCase specialCase = Enums.eSpecialCase.None, bool enhancementEffect = false, int seedIndex = -1)
         {
-            return fxIdentifier.EffectType switch
+            var candidates = fxIdentifier.EffectType switch
             {
                 Enums.eEffectType.EntCreate => power.Effects
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
@@ -1289,6 +1289,76 @@ namespace Mids_Reborn.Core
 
                 _ => []
             };
+
+            return candidates
+                .Where(index => IsEffectEligibleForGrouping(power.Effects[index]) &&
+                                HasSameConditionIdentity(power, seedIndex, index))
+                .ToList();
+        }
+
+        private static bool IsEffectEligibleForGrouping(IEffect effect)
+        {
+            return effect.Probability > 0 &&
+                   (MidsContext.Config?.Suppression & effect.Suppression) == Enums.eSuppress.None &&
+                   effect.CanInclude() &&
+                   effect.PvXInclude() &&
+                   effect.EffectClass != Enums.eEffectClass.Ignored;
+        }
+
+        private static bool HasSameConditionIdentity(IPower power, int seedIndex, int candidateIndex)
+        {
+            if (seedIndex < 0 ||
+                seedIndex >= power.Effects.Length ||
+                candidateIndex < 0 ||
+                candidateIndex >= power.Effects.Length)
+            {
+                return true;
+            }
+
+            return string.Equals(
+                GetConditionIdentity(power.Effects[seedIndex]),
+                GetConditionIdentity(power.Effects[candidateIndex]),
+                StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool HasSameGroupConditionIdentity(IPower power, GroupedFx left, GroupedFx right)
+        {
+            var leftIndex = left.IncludedEffects.FirstOrDefault(index => index >= 0 && index < power.Effects.Length, -1);
+            var rightIndex = right.IncludedEffects.FirstOrDefault(index => index >= 0 && index < power.Effects.Length, -1);
+            if (leftIndex < 0 || rightIndex < 0)
+            {
+                return true;
+            }
+
+            return string.Equals(
+                GetConditionIdentity(power.Effects[leftIndex]),
+                GetConditionIdentity(power.Effects[rightIndex]),
+                StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string GetConditionIdentity(IEffect effect)
+        {
+            var set = effect.AdvancedConditions is { Rows.Count: > 0 }
+                ? effect.AdvancedConditions
+                : AdvancedConditionSet.FromLegacyActiveConditionals(effect.ActiveConditionals);
+
+            if (set.Rows.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            return string.Join(";", set.Rows.Select(row => string.Join("|",
+                    row.Link,
+                    row.Kind,
+                    row.Subject,
+                    row.Operator,
+                    row.Value,
+                    row.Negated,
+                    row.EvaluationMode,
+                    row.Unsupported,
+                    row.TargetScope,
+                    AdvancedConditionCompiler.Compile(row)))
+                .OrderBy(value => value, StringComparer.OrdinalIgnoreCase));
         }
 
         public static List<GroupedFx> AssembleGroupedEffects(IPower? power, bool includeDamage = false)
@@ -1323,6 +1393,11 @@ namespace Mids_Reborn.Core
                 if (power.Effects[re].EffectType is Enums.eEffectType.Meter or Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode
                     or Enums.eEffectType.Null or Enums.eEffectType.NullBool or Enums.eEffectType.GlobalChanceMod
                     or Enums.eEffectType.ExecutePower)
+                {
+                    continue;
+                }
+
+                if (ShouldHideStatefulMezFromGroupedViews(power.Effects[re]))
                 {
                     continue;
                 }
@@ -1394,7 +1469,7 @@ namespace Mids_Reborn.Core
                                 IgnoreScaling = power.Effects[re].IgnoreScaling
                             }, power.Effects[re].BuffedMag,
                             power.Effects[re].SpecialCase,
-                            power.Effects[re].isEnhancementEffect);
+                            power.Effects[re].isEnhancementEffect, re);
 
                         ignoredEffects.AddRangeUnique(similarFxIds);
 
@@ -1433,7 +1508,7 @@ namespace Mids_Reborn.Core
                                 IgnoreScaling = power.Effects[re].IgnoreScaling
                             }, power.Effects[re].BuffedMag,
                             Enums.eSpecialCase.None,
-                            power.Effects[re].isEnhancementEffect);
+                            power.Effects[re].isEnhancementEffect, re);
 
                         ignoredEffects.AddRangeUnique(similarFxIds);
 
@@ -1474,7 +1549,7 @@ namespace Mids_Reborn.Core
                                 IgnoreScaling = power.Effects[re].IgnoreScaling
                             }, power.Effects[re].BuffedMag,
                             Enums.eSpecialCase.None,
-                            power.Effects[re].isEnhancementEffect);
+                            power.Effects[re].isEnhancementEffect, re);
 
                         ignoredEffects.AddRangeUnique(similarFxIds);
 
@@ -1517,7 +1592,7 @@ namespace Mids_Reborn.Core
                                 IgnoreScaling = power.Effects[re].IgnoreScaling
                             }, power.Effects[re].BuffedMag,
                             isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None,
-                            power.Effects[re].isEnhancementEffect);
+                            power.Effects[re].isEnhancementEffect, re);
 
                         ignoredEffects.AddRangeUnique(similarFxIds);
 
@@ -1563,7 +1638,7 @@ namespace Mids_Reborn.Core
                             },
                             power.Effects[re].BuffedMag,
                             Enums.eSpecialCase.None,
-                            power.Effects[re].isEnhancementEffect);
+                            power.Effects[re].isEnhancementEffect, re);
 
                         ignoredEffects.AddRangeUnique(similarFxIds);
 
@@ -1616,7 +1691,8 @@ namespace Mids_Reborn.Core
                     .Where(e => e.Value.FxIdentifier.Equals(groupedRankedEffects[i].FxIdentifier) &&
                                 MagnitudesMatch(e.Value.Mag, groupedRankedEffects[i].Mag) &&
                                 e.Value.EnhancementEffect == groupedRankedEffects[i].EnhancementEffect &&
-                                e.Value.SpecialCase == groupedRankedEffects[i].SpecialCase)
+                                e.Value.SpecialCase == groupedRankedEffects[i].SpecialCase &&
+                                HasSameGroupConditionIdentity(power, groupedRankedEffects[i], e.Value))
                     .ToList();
 
                 ignoredGroups.AddRangeUnique(similarGreList.Select(e => e.Key).ToList());
@@ -1638,6 +1714,15 @@ namespace Mids_Reborn.Core
             return greAggregated
                 .Where(e => Math.Abs(e.Mag) > Tolerance)
                 .ToList();
+        }
+
+        private static bool ShouldHideStatefulMezFromGroupedViews(IEffect effect)
+        {
+            return effect is
+            {
+                EffectType: Enums.eEffectType.Mez,
+                MezType: Enums.eMez.OnlyAffectsSelf or Enums.eMez.Untouchable or Enums.eMez.Intangible
+            };
         }
 
         public static List<GroupedFx> AssembleGroupedEffects(IPower? power, IEnumerable<int> includedEffects, bool includeDamage = false)
@@ -1675,6 +1760,11 @@ namespace Mids_Reborn.Core
                 if (pw.Effects[re].EffectType is Enums.eEffectType.Meter or Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode
                     or Enums.eEffectType.Null or Enums.eEffectType.NullBool or Enums.eEffectType.GlobalChanceMod
                     or Enums.eEffectType.ExecutePower)
+                {
+                    continue;
+                }
+
+                if (ShouldHideStatefulMezFromGroupedViews(pw.Effects[re]))
                 {
                     continue;
                 }
@@ -1746,7 +1836,7 @@ namespace Mids_Reborn.Core
                                 IgnoreScaling = pw.Effects[re].IgnoreScaling
                             }, pw.Effects[re].BuffedMag,
                             pw.Effects[re].SpecialCase,
-                            pw.Effects[re].isEnhancementEffect);
+                            pw.Effects[re].isEnhancementEffect, re);
 
                         ignoredEffects.AddRangeUnique(similarFxIds);
 
@@ -1785,7 +1875,7 @@ namespace Mids_Reborn.Core
                                 IgnoreScaling = pw.Effects[re].IgnoreScaling
                             }, pw.Effects[re].BuffedMag,
                             Enums.eSpecialCase.None,
-                            pw.Effects[re].isEnhancementEffect);
+                            pw.Effects[re].isEnhancementEffect, re);
 
                         ignoredEffects.AddRangeUnique(similarFxIds);
 
@@ -1826,7 +1916,7 @@ namespace Mids_Reborn.Core
                                 IgnoreScaling = pw.Effects[re].IgnoreScaling
                             }, pw.Effects[re].BuffedMag,
                             Enums.eSpecialCase.None,
-                            pw.Effects[re].isEnhancementEffect);
+                            pw.Effects[re].isEnhancementEffect, re);
 
                         ignoredEffects.AddRangeUnique(similarFxIds);
 
@@ -1869,7 +1959,7 @@ namespace Mids_Reborn.Core
                                 IgnoreScaling = pw.Effects[re].IgnoreScaling
                             }, pw.Effects[re].BuffedMag,
                             isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None,
-                            pw.Effects[re].isEnhancementEffect);
+                            pw.Effects[re].isEnhancementEffect, re);
 
                         ignoredEffects.AddRangeUnique(similarFxIds);
 
@@ -1915,7 +2005,7 @@ namespace Mids_Reborn.Core
                             },
                             pw.Effects[re].BuffedMag,
                             Enums.eSpecialCase.None,
-                            pw.Effects[re].isEnhancementEffect);
+                            pw.Effects[re].isEnhancementEffect, re);
 
                         ignoredEffects.AddRangeUnique(similarFxIds);
 
@@ -1968,7 +2058,8 @@ namespace Mids_Reborn.Core
                     .Where(e => e.Value.FxIdentifier.Equals(groupedRankedEffects[i].FxIdentifier) &&
                                 MagnitudesMatch(e.Value.Mag, groupedRankedEffects[i].Mag) &&
                                 e.Value.EnhancementEffect == groupedRankedEffects[i].EnhancementEffect &&
-                                e.Value.SpecialCase == groupedRankedEffects[i].SpecialCase)
+                                e.Value.SpecialCase == groupedRankedEffects[i].SpecialCase &&
+                                HasSameGroupConditionIdentity(pw, groupedRankedEffects[i], e.Value))
                     .ToList();
 
                 ignoredGroups.AddRangeUnique(similarGreList.Select(e => e.Key).ToList());
@@ -2062,7 +2153,14 @@ namespace Mids_Reborn.Core
         public static List<KeyValuePair<GroupedFx, PairedListEx.Item>> GenerateListItems(List<GroupedFx> groupedRankedEffects, IPower pBase, IPower pEnh, List<int> rankedEffects, float displayBlockFontSize)
         {
             var ret = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>();
-            var powerInBuild = MidsContext.Character.CurrentBuild.FindInToonHistory(DatabaseAPI.Database.Power.TryFindIndex(e => e?.FullName == pBase.FullName)) > -1;
+            if (pBase == null || pEnh == null || rankedEffects == null)
+            {
+                return ret;
+            }
+
+            var powerInBuild = MidsContext.Character?.CurrentBuild != null &&
+                               MidsContext.Character.CurrentBuild.FindInToonHistory(
+                                   DatabaseAPI.Database.Power.TryFindIndex(e => e?.FullName == pBase.FullName)) > -1;
 
             foreach (var gre in groupedRankedEffects)
             {
@@ -2081,8 +2179,14 @@ namespace Mids_Reborn.Core
         public static List<KeyValuePair<GroupedFx, EffectListItem>> GenerateEffectItems(List<GroupedFx> groupedRankedEffects, IPower pBase, IPower pEnh, List<int> rankedEffects)
         {
             var ret = new List<KeyValuePair<GroupedFx, EffectListItem>>();
-            var powerInBuild = MidsContext.Character.CurrentBuild
-                .FindInToonHistory(DatabaseAPI.Database.Power.TryFindIndex(e => e?.FullName == pBase.FullName)) > -1;
+            if (pBase == null || pEnh == null || rankedEffects == null)
+            {
+                return ret;
+            }
+
+            var powerInBuild = MidsContext.Character?.CurrentBuild != null &&
+                               MidsContext.Character.CurrentBuild
+                                   .FindInToonHistory(DatabaseAPI.Database.Power.TryFindIndex(e => e?.FullName == pBase.FullName)) > -1;
 
             foreach (var gre in groupedRankedEffects)
             {
@@ -2172,8 +2276,8 @@ namespace Mids_Reborn.Core
                             e.ETModifies is not (Enums.eEffectType.Null or Enums.eEffectType.NullBool) &&
                             e.ToWho != Enums.eToWho.Unspecified &&
                             Math.Abs(e.BuffedMag) >= Tolerance &&
-                            (e.PvMode == Enums.ePvX.Any || (e.PvMode == Enums.ePvX.PvE && !MidsContext.Config.Inc.DisablePvE) || (e.PvMode == Enums.ePvX.PvP && MidsContext.Config.Inc.DisablePvE)) &&
-                            (e.ActiveConditionals is { Count: <= 0 } || e.ValidateConditional()))
+                            e.PvXInclude() &&
+                            e.CanInclude())
                 .ToArray();
 
             for (var i = 0; i < effects.Length; i++)
@@ -2331,7 +2435,7 @@ namespace Mids_Reborn.Core
         {
             if (pBase.Effects.Any(e => e.EffectType == Enums.eEffectType.EntCreate) & pBase.AbsorbSummonEffects)
             {
-                pBase.AbsorbPetEffects();
+                pBase.AbsorbPetEffects(pseudoOnly: true);
             }
 
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
@@ -2506,10 +2610,7 @@ namespace Mids_Reborn.Core
                             effectSource.BuildEffectString(false, "", false, false, false, false, false, true);
                         var subEffectsTip = string.Join("\r\n",
                             DatabaseAPI.Database.Power[effectSource.nSummon].Effects
-                                .Where(e => (e.PvMode == Enums.ePvX.Any ||
-                                             (e.PvMode == Enums.ePvX.PvE && !MidsContext.Config.Inc.DisablePvE) ||
-                                             (e.PvMode == Enums.ePvX.PvP && MidsContext.Config.Inc.DisablePvE)) &
-                                            (e.ActiveConditionals.Count <= 0 || e.ValidateConditional()))
+                                .Where(e => e.PvXInclude() && e.CanInclude())
                                 .Select(e => e.BuildEffectString(false, "", false, false, false, false, false, true)
                                     .Replace("\r\n", "\n").Replace("\n", " -- ").Replace("  ", " ")));
                         rankedEffect.ToolTip = $"{mainEffectTip}\r\n----------\r\n{subEffectsTip}";
@@ -2663,21 +2764,18 @@ namespace Mids_Reborn.Core
                     break;
 
                 default:
-                    var configDisablePvE = MidsContext.Config != null && MidsContext.Config.Inc.DisablePvE;
-
                     rankedEffect.Value = $"{magSum:####0.##}{(effectSource.DisplayPercentage ? "%" : "")}{toWhoShort}";
                     rankedEffect.Name = FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                         Enums.GetEffectNameShort(effectSource.EffectType));
                     rankedEffect.ToolTip = string.Join("\r\n", pEnh.Effects
-                        .Where(e => configDisablePvE && (e.PvMode == Enums.ePvX.PvP) |
-                                    !configDisablePvE && (e.PvMode == Enums.ePvX.PvE) |
-                                    (e.PvMode == Enums.ePvX.Any) &&
+                        .Where(e => e.PvXInclude() &&
+                                    e.CanInclude() &&
                                     Math.Abs(e.BuffedMag) > Tolerance &&
                                     effectSource.ToWho == e.ToWho &&
                                     effectSource.EffectType == e.EffectType &&
                                     effectSource.MezType == e.MezType &&
                                     effectSource.ETModifies == e.ETModifies &&
-                                    (effectSource.PvMode == e.PvMode) | (e.PvMode == Enums.ePvX.Any) &&
+                                    (effectSource.PvMode == e.PvMode || e.PvMode == Enums.ePvX.Any) &&
                                     effectSource.IgnoreScaling == e.IgnoreScaling)
                         .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
 

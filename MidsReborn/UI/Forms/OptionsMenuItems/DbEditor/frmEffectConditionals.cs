@@ -4,6 +4,7 @@ using FastDeepCloner;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
 using Mids_Reborn.UI.Controls;
 using MRBResourceLib;
 
@@ -18,6 +19,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private readonly List<string> _conditionalOps;
         private readonly TextBox _advancedExpressionText = new();
         private readonly Label _builderHint = new();
+        private readonly Button _updateRow = new();
+        private bool _loadingModernRow;
         private Dictionary<string, string> _CSFieldsRev;
 
         public frmEffectConditionals(List<KeyValue<string, string>>? conditions)
@@ -160,7 +163,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private static string GetAdvancedConditionDisplay(AdvancedConditionRow row)
         {
-            var suffix = row.Unsupported ? " (not simulated)" : "";
+            var suffix = GetEvaluationModeSuffix(row);
             return row.Kind switch
             {
                 AdvancedConditionKind.SourceMode => $"Source Mode:{row.Subject}{suffix}",
@@ -169,12 +172,24 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 AdvancedConditionKind.PowerStacks => $"Stacks:{GetPowerDisplayName(row.Subject)}",
                 AdvancedConditionKind.TeamMembers => $"Team Members:{row.Subject}",
                 AdvancedConditionKind.CombatSetting => $"Combat Setting:{ConfigData.CombatContext.FormatSettingName(row.Subject)}",
-                AdvancedConditionKind.TargetEntityType => $"Target Entity:{row.Value}",
+                AdvancedConditionKind.TargetEntityType when row.TargetScope != AdvancedConditionTargetScope.Unknown => $"Target:{FormatTargetScope(row.TargetScope)}{suffix}",
+                AdvancedConditionKind.TargetEntityType => $"Target Entity:{row.Value}{suffix}",
                 AdvancedConditionKind.TargetMode => $"Target Mode:{row.Subject}{suffix}",
                 AdvancedConditionKind.CharacterArchetype => $"Character Archetype:{row.Value}",
                 AdvancedConditionKind.CharacterLevel => "Character Level",
+                AdvancedConditionKind.PowerCount => $"Power Count:{row.Subject}",
                 AdvancedConditionKind.AdvancedExpression => $"Advanced:{row.RawExpression}{suffix}",
                 _ => $"{row.Kind}:{row.Subject}{suffix}"
+            };
+        }
+
+        private static string GetEvaluationModeSuffix(AdvancedConditionRow row)
+        {
+            return row.EvaluationMode switch
+            {
+                AdvancedConditionEvaluationMode.RuntimeTargetOnly => " (runtime target condition, preserved but not evaluated by Mids)",
+                AdvancedConditionEvaluationMode.ReportOnly => " (report only, preserved but not evaluated by Mids)",
+                _ => row.Unsupported ? " (not simulated)" : ""
             };
         }
 
@@ -184,10 +199,48 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             {
                 AdvancedConditionKind.SourceMode or AdvancedConditionKind.TargetMode => (!row.Negated).ToString(),
                 AdvancedConditionKind.PowerActive or AdvancedConditionKind.PowerTaken => row.Value,
+                AdvancedConditionKind.TargetEntityType when row.TargetScope != AdvancedConditionTargetScope.Unknown => FormatTargetScope(row.TargetScope),
                 AdvancedConditionKind.TargetEntityType or AdvancedConditionKind.CharacterArchetype => row.Value,
                 AdvancedConditionKind.CharacterLevel => row.Value,
+                AdvancedConditionKind.PowerCount => $"{AdvancedConditionSet.FormatOperator(row.Operator)} {row.Value}",
                 _ => row.Value
             };
+        }
+
+        private static string FormatTargetScope(AdvancedConditionTargetScope scope)
+        {
+            return scope switch
+            {
+                AdvancedConditionTargetScope.Self => "Self",
+                AdvancedConditionTargetScope.Pet => "Pet",
+                AdvancedConditionTargetScope.Player => "Player",
+                AdvancedConditionTargetScope.Ally => "Ally",
+                AdvancedConditionTargetScope.Foe => "Foe",
+                _ => "Unknown"
+            };
+        }
+
+        private static AdvancedConditionTargetScope ParseTargetScope(string value)
+        {
+            return value.Trim().ToLowerInvariant() switch
+            {
+                "self" => AdvancedConditionTargetScope.Self,
+                "pet" => AdvancedConditionTargetScope.Pet,
+                "player" => AdvancedConditionTargetScope.Player,
+                "ally" => AdvancedConditionTargetScope.Ally,
+                "foe" => AdvancedConditionTargetScope.Foe,
+                "critter" => AdvancedConditionTargetScope.Foe,
+                _ => AdvancedConditionTargetScope.Unknown
+            };
+        }
+
+        private static void AddTargetScopeChoices(ListView listView)
+        {
+            listView.Items.Add("Self").Name = "Self";
+            listView.Items.Add("Pet").Name = "Pet";
+            listView.Items.Add("Player").Name = "Player";
+            listView.Items.Add("Ally").Name = "Ally";
+            listView.Items.Add("Foe").Name = "Foe";
         }
 
         private static string GetPowerDisplayName(string powerName)
@@ -254,9 +307,34 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             groupBox2.Visible = false;
             tbFilter.Visible = false;
             btnClearFilter.Visible = false;
+            ConfigureModernUpdateButton();
+            _conditionRows.SelectedIndexChanged -= ModernConditionRowsSelectedIndexChanged;
+            _conditionRows.SelectedIndexChanged += ModernConditionRowsSelectedIndexChanged;
             _modernPanel.BringToFront();
             btnOkay.BringToFront();
             btnCancel.BringToFront();
+        }
+
+        private void ConfigureModernUpdateButton()
+        {
+            if (_updateRow.Parent == null)
+            {
+                _updateRow.BackColor = Color.FromArgb(54, 96, 72);
+                _updateRow.FlatStyle = FlatStyle.Popup;
+                _updateRow.ForeColor = Color.White;
+                _updateRow.Name = "_updateRow";
+                _updateRow.Text = @"Update Selected";
+                _updateRow.UseVisualStyleBackColor = false;
+                _updateRow.Click += UpdateModernCondition_Click;
+                _modernPanel.Controls.Add(_updateRow);
+            }
+
+            _updateRow.Location = new Point(462, 230);
+            _updateRow.Size = new Size(274, 32);
+            _updateRow.TabIndex = 15;
+            _updateRow.Enabled = _conditionRows.SelectedIndices.Count > 0;
+            _removeRow.Location = new Point(462, 270);
+            _removeRow.TabIndex = 16;
         }
 
         private void ModernSearchTextChanged(object? sender, EventArgs e) => PopulateModernChoices();
@@ -265,7 +343,27 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void AddModernCondition_Click(object? sender, EventArgs e) => AddModernCondition();
 
+        private void UpdateModernCondition_Click(object? sender, EventArgs e) => UpdateModernCondition();
+
         private void RemoveModernCondition_Click(object? sender, EventArgs e) => RemoveModernCondition();
+
+        private void ModernConditionRowsSelectedIndexChanged(object? sender, EventArgs e)
+        {
+            ConfigureModernUpdateButton();
+            if (_conditionRows.SelectedIndices.Count <= 0)
+            {
+                _addRow.Text = @"Add";
+                return;
+            }
+
+            var index = _conditionRows.SelectedIndices[0];
+            if (index < 0 || index >= AdvancedConditions.Rows.Count)
+            {
+                return;
+            }
+
+            PopulateModernEditorFromRow(AdvancedConditions.Rows[index], index);
+        }
 
         private void PopulateModernTypes()
         {
@@ -283,6 +381,11 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void ModernConditionTypeChanged(object? sender, EventArgs e)
         {
+            if (_loadingModernRow)
+            {
+                return;
+            }
+
             _search.Clear();
             PopulateModernOperators();
             PopulateModernChoices();
@@ -348,11 +451,21 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     }
                     break;
                 case "Source Mode":
-                    AddNamedChoices(["kDefensiveAdaptation", "kEfficientAdaptation", "kOffensiveAdaptation", "kDomination", "kScourge", "kContainment", "kCriticalHit", "kAssassination"]);
+                    AddNamedChoices([
+                        "DefensiveAdaptation",
+                        "EfficientAdaptation",
+                        "OffensiveAdaptation",
+                        "Domination",
+                        "Scourge",
+                        "Containment",
+                        "CriticalHit",
+                        "Assassination",
+                        "FastSnipe",
+                        "Engaged"
+                    ]);
                     break;
                 case "Target Entity Type":
-                    _choices.Items.Add("Player").Name = "player";
-                    _choices.Items.Add("Critter").Name = "critter";
+                    AddTargetScopeChoices(_choices);
                     break;
                 case "Target Mode":
                     _note.Text = @"Target mode is stored for review, but Mids cannot simulate target mode state.";
@@ -466,51 +579,103 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 ? AdvancedConditionLink.Or
                 : AdvancedConditionLink.And;
 
-            if (ModernType == "Advanced Expression")
-            {
-                var expression = _expression.Text.Trim();
-                if (string.IsNullOrWhiteSpace(expression))
-                {
-                    return;
-                }
-
-                AdvancedConditions.Rows.Add(AdvancedConditionRow.AdvancedExpression(link, expression, unsupported: true));
-                _expression.Clear();
-                CommitModernRows();
-                return;
-            }
-
-            if (_choices.SelectedItems.Count <= 0 || _value.SelectedItem == null)
-            {
-                return;
-            }
-
-            var choice = _choices.SelectedItems[0];
-            var value = _value.Text;
-            var op = ParseModernOperator(_operator.Text);
-
-            AdvancedConditionRow? row = ModernType switch
-            {
-                "Power Active" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.PowerActive, Subject = choice.Name, Value = value, Operator = AdvancedConditionOperator.Equals },
-                "Power Taken" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.PowerTaken, Subject = choice.Name, Value = value, Operator = AdvancedConditionOperator.Equals },
-                "Stacks" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.PowerStacks, Subject = choice.Name, Value = value, Operator = op },
-                "Team Members" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.TeamMembers, Subject = choice.Name, Value = value, Operator = op },
-                "Combat Setting" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.CombatSetting, Subject = choice.Name, Value = value, Operator = op },
-                "Source Mode" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.SourceMode, Subject = choice.Name, Negated = value == "False" },
-                "Target Entity Type" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.TargetEntityType, Value = choice.Name, Operator = value == "False" ? AdvancedConditionOperator.NotEquals : AdvancedConditionOperator.Equals },
-                "Target Mode" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.TargetMode, Subject = choice.Name, Negated = value == "False", Unsupported = true },
-                "Character Archetype" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.CharacterArchetype, Value = choice.Name, Operator = value == "False" ? AdvancedConditionOperator.NotEquals : AdvancedConditionOperator.Equals },
-                "Character Level" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.CharacterLevel, Value = value, Operator = op },
-                _ => null
-            };
-
+            var row = BuildModernConditionRow(link);
             if (row == null)
             {
                 return;
             }
 
             AdvancedConditions.Rows.Add(row);
+            _conditionRows.SelectedIndices.Clear();
             CommitModernRows();
+        }
+
+        private void UpdateModernCondition()
+        {
+            if (_conditionRows.SelectedIndices.Count <= 0)
+            {
+                return;
+            }
+
+            var index = _conditionRows.SelectedIndices[0];
+            if (index < 0 || index >= AdvancedConditions.Rows.Count)
+            {
+                return;
+            }
+
+            var link = index == 0
+                ? AdvancedConditionLink.And
+                : string.Equals(_linkType.Text, "OR", StringComparison.OrdinalIgnoreCase)
+                    ? AdvancedConditionLink.Or
+                    : AdvancedConditionLink.And;
+            var row = BuildModernConditionRow(link);
+            if (row == null)
+            {
+                return;
+            }
+
+            AdvancedConditions.Rows[index] = row;
+            CommitModernRows(index);
+        }
+
+        private AdvancedConditionRow? BuildModernConditionRow(AdvancedConditionLink link)
+        {
+            if (ModernType == "Advanced Expression")
+            {
+                var expression = _expression.Text.Trim();
+                if (string.IsNullOrWhiteSpace(expression))
+                {
+                    return null;
+                }
+
+                return AdvancedConditionRow.AdvancedExpression(link, expression, unsupported: true);
+            }
+
+            if (_choices.SelectedItems.Count <= 0 || _value.SelectedItem == null)
+            {
+                return null;
+            }
+
+            var choice = _choices.SelectedItems[0];
+            var value = _value.Text;
+            var op = ParseModernOperator(_operator.Text);
+
+            return ModernType switch
+            {
+                "Power Active" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.PowerActive, Subject = choice.Name, Value = value, Operator = AdvancedConditionOperator.Equals },
+                "Power Taken" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.PowerTaken, Subject = choice.Name, Value = value, Operator = AdvancedConditionOperator.Equals },
+                "Stacks" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.PowerStacks, Subject = choice.Name, Value = value, Operator = op },
+                "Team Members" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.TeamMembers, Subject = choice.Name, Value = value, Operator = op },
+                "Combat Setting" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.CombatSetting, Subject = choice.Name, Value = value, Operator = op },
+                "Source Mode" when OmniModeMapper.IsKnownBuildSourceMode(choice.Name) => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.SourceMode, Subject = choice.Name, Negated = value == "False" },
+                "Source Mode" => AdvancedConditionRow.AdvancedExpression(
+                    link,
+                    $"source.Mode?({choice.Name})",
+                    unsupported: true,
+                    evaluationMode: AdvancedConditionEvaluationMode.RuntimeTargetOnly),
+                "Target Entity Type" => new AdvancedConditionRow
+                {
+                    Link = link,
+                    Kind = AdvancedConditionKind.TargetEntityType,
+                    Value = choice.Name,
+                    TargetScope = ParseTargetScope(choice.Name),
+                    Operator = value == "False" ? AdvancedConditionOperator.NotEquals : AdvancedConditionOperator.Equals,
+                    EvaluationMode = AdvancedConditionEvaluationMode.RuntimeTargetOnly,
+                    Unsupported = true
+                },
+                "Target Mode" => new AdvancedConditionRow
+                {
+                    Link = link,
+                    Kind = AdvancedConditionKind.TargetMode,
+                    Subject = choice.Name,
+                    Negated = value == "False",
+                    Unsupported = true,
+                    EvaluationMode = AdvancedConditionEvaluationMode.RuntimeTargetOnly
+                },
+                "Character Archetype" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.CharacterArchetype, Value = choice.Name, Operator = value == "False" ? AdvancedConditionOperator.NotEquals : AdvancedConditionOperator.Equals },
+                "Character Level" => new AdvancedConditionRow { Link = link, Kind = AdvancedConditionKind.CharacterLevel, Value = value, Operator = op },
+                _ => null
+            };
         }
 
         private void RemoveModernCondition()
@@ -535,11 +700,150 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             CommitModernRows();
         }
 
-        private void CommitModernRows()
+        private void CommitModernRows(int selectedIndex = -1)
         {
             SyncLegacyConditionalsFromAdvanced();
             RefreshModernConditionRows();
+            if (selectedIndex >= 0 && selectedIndex < _conditionRows.Items.Count)
+            {
+                _conditionRows.Items[selectedIndex].Selected = true;
+                _conditionRows.Items[selectedIndex].EnsureVisible();
+            }
+
             panelLinkType.Visible = AdvancedConditions.Rows.Count > 0;
+        }
+
+        private void PopulateModernEditorFromRow(AdvancedConditionRow row, int index)
+        {
+            _loadingModernRow = true;
+            try
+            {
+                var type = GetModernTypeForRow(row);
+                SelectComboText(_conditionType, type);
+                _search.Clear();
+                PopulateModernOperators();
+                PopulateModernChoices();
+                PopulateModernValues();
+
+                if (index > 0)
+                {
+                    SelectComboText(_linkType, row.Link == AdvancedConditionLink.Or ? "OR" : "AND");
+                }
+                else
+                {
+                    SelectComboText(_linkType, "AND");
+                }
+
+                SelectComboText(_operator, GetModernOperatorText(row.Operator));
+
+                if (type == "Advanced Expression")
+                {
+                    _expression.Text = string.IsNullOrWhiteSpace(row.RawExpression) ? row.Value : row.RawExpression;
+                }
+                else
+                {
+                    SelectModernChoiceForRow(row);
+                    PopulateModernValues();
+                    SelectComboText(_value, GetModernEditorValue(row));
+                }
+
+                _addRow.Text = @"Add New";
+                _builderHint.Text = @"Edit the selected condition, then click Update Selected. Add New keeps the existing row and adds another.";
+            }
+            finally
+            {
+                _loadingModernRow = false;
+            }
+        }
+
+        private static string GetModernTypeForRow(AdvancedConditionRow row)
+        {
+            return row.Kind switch
+            {
+                AdvancedConditionKind.PowerActive => "Power Active",
+                AdvancedConditionKind.PowerTaken => "Power Taken",
+                AdvancedConditionKind.PowerStacks => "Stacks",
+                AdvancedConditionKind.TeamMembers => "Team Members",
+                AdvancedConditionKind.CombatSetting => "Combat Setting",
+                AdvancedConditionKind.SourceMode => "Source Mode",
+                AdvancedConditionKind.TargetEntityType => "Target Entity Type",
+                AdvancedConditionKind.TargetMode => "Target Mode",
+                AdvancedConditionKind.CharacterArchetype => "Character Archetype",
+                AdvancedConditionKind.CharacterLevel => "Character Level",
+                _ => "Advanced Expression"
+            };
+        }
+
+        private void SelectModernChoiceForRow(AdvancedConditionRow row)
+        {
+            var choiceName = row.Kind switch
+            {
+                AdvancedConditionKind.TargetEntityType when row.TargetScope != AdvancedConditionTargetScope.Unknown => FormatTargetScope(row.TargetScope),
+                AdvancedConditionKind.TargetEntityType => row.Value,
+                AdvancedConditionKind.CharacterArchetype => row.Value,
+                AdvancedConditionKind.CharacterLevel => "char>level",
+                _ => row.Subject
+            };
+
+            if (string.IsNullOrWhiteSpace(choiceName))
+            {
+                return;
+            }
+
+            SelectListViewItemByName(_choices, choiceName);
+        }
+
+        private static string GetModernEditorValue(AdvancedConditionRow row)
+        {
+            return row.Kind switch
+            {
+                AdvancedConditionKind.SourceMode or AdvancedConditionKind.TargetMode => row.Negated ? "False" : "True",
+                AdvancedConditionKind.TargetEntityType => row.Operator == AdvancedConditionOperator.NotEquals ? "False" : "True",
+                AdvancedConditionKind.CharacterArchetype => row.Operator == AdvancedConditionOperator.NotEquals ? "False" : "True",
+                _ => row.Value
+            };
+        }
+
+        private static string GetModernOperatorText(AdvancedConditionOperator op)
+        {
+            return op switch
+            {
+                AdvancedConditionOperator.GreaterThan => "Greater Than",
+                AdvancedConditionOperator.LessThan => "Less Than",
+                _ => "Equal To"
+            };
+        }
+
+        private static void SelectComboText(ComboBox combo, string value)
+        {
+            for (var i = 0; i < combo.Items.Count; i++)
+            {
+                if (string.Equals(combo.Items[i]?.ToString(), value, StringComparison.OrdinalIgnoreCase))
+                {
+                    combo.SelectedIndex = i;
+                    return;
+                }
+            }
+        }
+
+        private static void SelectListViewItemByName(ListView listView, string name)
+        {
+            foreach (ListViewItem item in listView.Items)
+            {
+                if (!string.Equals(item.Name, name, StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                item.Selected = true;
+                item.EnsureVisible();
+                return;
+            }
+
+            var added = listView.Items.Add(name);
+            added.Name = name;
+            added.Selected = true;
+            added.EnsureVisible();
         }
 
         private static AdvancedConditionOperator ParseModernOperator(string op)
@@ -800,11 +1104,10 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     lvConditionalOp.Visible = false;
                     lvConditionalBool.Visible = true;
                     lvConditionalBool.Enabled = true;
-                    lvSubConditional.Columns[0].Text = @"Target Entity";
+                    lvSubConditional.Columns[0].Text = @"Target";
                     lvSubConditional.BeginUpdate();
                     lvSubConditional.Items.Clear();
-                    lvSubConditional.Items.Add("Player").Name = "player";
-                    lvSubConditional.Items.Add("Critter").Name = "critter";
+                    AddTargetScopeChoices(lvSubConditional);
                     lvSubConditional.EndUpdate();
                     break;
 
@@ -1284,7 +1587,10 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                         Link = advancedLink,
                         Kind = AdvancedConditionKind.TargetEntityType,
                         Value = lvSubConditional.SelectedItems[0].Name,
-                        Operator = value == "False" ? AdvancedConditionOperator.NotEquals : AdvancedConditionOperator.Equals
+                        TargetScope = ParseTargetScope(lvSubConditional.SelectedItems[0].Name),
+                        Operator = value == "False" ? AdvancedConditionOperator.NotEquals : AdvancedConditionOperator.Equals,
+                        EvaluationMode = AdvancedConditionEvaluationMode.RuntimeTargetOnly,
+                        Unsupported = true
                     };
                     AdvancedConditions.Rows.Add(targetEntityRow);
                     item = BuildAdvancedConditionItem(targetEntityRow, conditionCount);

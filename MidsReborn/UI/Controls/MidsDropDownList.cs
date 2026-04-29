@@ -288,7 +288,7 @@ public class MidsDropDownList : ComboBox
             if (_itemIcons.TryGetValue(SelectedItem, out var icon) && icon != null)
             {
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                g.DrawImage(icon, iconRect);
+                DrawIconIfValid(g, icon, iconRect);
             }
 
             TextRenderer.DrawText(
@@ -404,7 +404,7 @@ public class MidsDropDownList : ComboBox
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.CompositingQuality = CompositingQuality.HighQuality;
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            g.DrawImage(icon, iconRect);
+            DrawIconIfValid(g, icon, iconRect);
         }
 
         // Text draw
@@ -481,6 +481,27 @@ public class MidsDropDownList : ComboBox
     {
         if (_isLocked) return;
         base.OnDropDown(e);
+    }
+
+    private static void DrawIconIfValid(Graphics graphics, Image icon, Rectangle bounds)
+    {
+        try
+        {
+            if (icon.Width <= 0 || icon.Height <= 0)
+            {
+                return;
+            }
+
+            graphics.DrawImage(icon, bounds);
+        }
+        catch (ArgumentException)
+        {
+            // Shared icon caches can refresh while a dropdown still has an older bitmap reference.
+        }
+        catch (ObjectDisposedException)
+        {
+            // Draw text-only instead of letting a stale icon crash the UI.
+        }
     }
 
     #endregion

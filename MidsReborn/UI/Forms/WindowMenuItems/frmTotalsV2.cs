@@ -697,6 +697,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphDef.Draw();
 
             graphRes.Clear();
+            var resistanceCap = DatabaseAPI.GetClassResistanceCap(MidsContext.Character.Archetype);
             for (var i = 0; i < damageVectors.Length; i++)
             {
                 if (excludedResVectors.Contains(i))
@@ -711,8 +712,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     Math.Max(0, resValue),
                     Math.Max(0, resValueUncapped),
                     resValueUncapped > resValue & resValue > 0
-                        ? $"{resValueUncapped:##0.##}% {FormatVectorType(typeof(Enums.eDamage), i)} resistance (capped at {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)"
-                        : $"{resValue:##0.##}% {FormatVectorType(typeof(Enums.eDamage), i)} resistance ({atName} resistance cap: {MidsContext.Character.Archetype.ResCap * 100:##0.##}%)");
+                        ? $"{resValueUncapped:##0.##}% {FormatVectorType(typeof(Enums.eDamage), i)} resistance (capped at {resistanceCap * 100:##0.##}%)"
+                        : $"{resValue:##0.##}% {FormatVectorType(typeof(Enums.eDamage), i)} resistance ({atName} resistance cap: {resistanceCap * 100:##0.##}%)");
             }
 
             graphRes.Size = graphRes.Size with {Height = Math.Max(graphRes.Size.Height, graphRes.ContentHeight + graphBottomMargin)};
@@ -736,7 +737,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             var hpValue = displayStats.HealthHitpointsNumeric(false);
             var hpValueUncapped = displayStats.HealthHitpointsNumeric(true);
-            var hpBase = MidsContext.Character.Archetype.Hitpoints;
+            var hpBase = DatabaseAPI.GetClassHitPoints(MidsContext.Character.Archetype);
+            var hpCap = DatabaseAPI.GetClassHitPointCap(MidsContext.Character.Archetype);
             var absorbValue = Math.Min(displayStats.Absorb, hpBase);
             graphHP.AddItemPair("Max HP", $"{hpValue:###0.##}",
                 Math.Max(0, hpBase),
@@ -744,8 +746,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 Math.Max(0, hpValueUncapped),
                 Math.Max(0, absorbValue),
                 (hpValueUncapped > hpValue & hpValue > 0
-                    ? $"{hpValueUncapped:##0.##} HP, capped at {MidsContext.Character.Archetype.HPCap} HP"
-                    : $"{hpValue:##0.##} HP ({atName} HP cap: {MidsContext.Character.Archetype.HPCap} HP)"
+                    ? $"{hpValueUncapped:##0.##} HP, capped at {hpCap} HP"
+                    : $"{hpValue:##0.##} HP ({atName} HP cap: {hpCap} HP)"
 
                 ) +
                 $"\r\nBase: {hpBase:##0.##} HP" +
@@ -759,14 +761,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphEnd.Clear();
             var endRecValue = displayStats.EnduranceRecoveryNumeric;
             var endRecValueUncapped = displayStats.EnduranceRecoveryNumericUncapped;
-            var endRecBase = MidsContext.Character.Archetype.BaseRecovery * displayStats.EnduranceMaxEnd / 60f;
+            var recoveryCap = DatabaseAPI.GetClassRecoveryCap(MidsContext.Character.Archetype);
+            var endRecBase = DatabaseAPI.GetClassBaseRecovery(MidsContext.Character.Archetype) * displayStats.EnduranceMaxEnd / 60f;
             graphEnd.AddItemPair("End Rec", $"{endRecValue:##0.##}/s",
                 Math.Max(0, endRecBase),
                 Math.Max(0, endRecValue),
                 Math.Max(0, endRecValueUncapped),
                 (endRecValueUncapped > endRecValue & endRecValue > 0
-                    ? $"{endRecValueUncapped:##0.##}/s End. ({displayStats.EnduranceRecoveryPercentage(true):##0.##}%), capped at {MidsContext.Character.Archetype.RecoveryCap * 100:##0.##}%"
-                    : $"{endRecValue:##0.##}/s End. ({displayStats.EnduranceRecoveryPercentage(false):##0.##}%) ({atName} End. recovery cap: {MidsContext.Character.Archetype.RecoveryCap * 100:##0.##}%)"
+                    ? $"{endRecValueUncapped:##0.##}/s End. ({displayStats.EnduranceRecoveryPercentage(true):##0.##}%), capped at {recoveryCap * 100:##0.##}%"
+                    : $"{endRecValue:##0.##}/s End. ({displayStats.EnduranceRecoveryPercentage(false):##0.##}%) ({atName} End. recovery cap: {recoveryCap * 100:##0.##}%)"
                 ) +
                 $"\r\nBase: {endRecBase:##0.##}/s");
             
@@ -843,11 +846,12 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 GenericDataTooltip3(displayStats.BuffEndRdx, 0, displayStats.BuffEndRdx, "EndRdx"));
 
             graphThreat.Clear();
+            var baseThreat = DatabaseAPI.GetClassBaseThreat(MidsContext.Character.Archetype) * 100;
             graphThreat.AddItemPair("Threat",
                 $"{displayStats.ThreatLevel:##0.##}",
-                MidsContext.Character.Archetype.BaseThreat * 100,
+                baseThreat,
                 displayStats.ThreatLevel,
-                GenericDataTooltip3(displayStats.ThreatLevel, MidsContext.Character.Archetype.BaseThreat * 100, displayStats.ThreatLevel, "Threat"));
+                GenericDataTooltip3(displayStats.ThreatLevel, baseThreat, displayStats.ThreatLevel, "Threat"));
 
             graphHaste.Draw();
             graphToHit.Draw();

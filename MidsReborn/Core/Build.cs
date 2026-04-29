@@ -906,7 +906,8 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
-                if (power.Power.Level > maxLevel + 1 || !MeetsRequirement(power.Power, maxLevel) ||
+                if (power.Power is { HiddenPower: true, IncludeFlag: false } ||
+                    power.Power.Level > maxLevel + 1 || !MeetsRequirement(power.Power, maxLevel) ||
                     !power.Power.IncludeFlag)
                 {
                     power.Tag = true;
@@ -1097,7 +1098,8 @@ namespace Mids_Reborn.Core
             powersetList.AddRange(_character.Powersets);
             foreach (var powerset in DatabaseAPI.Database.Powersets)
             {
-                if (powerset.SetType == Enums.ePowerSetType.Inherent && !powersetList.Contains(powerset))
+                if ((powerset.SetType == Enums.ePowerSetType.Inherent || HasPowersetGrantedStatePowers(powerset)) &&
+                    !powersetList.Contains(powerset))
                 {
                     powersetList.Add(powerset);
                 }
@@ -1113,7 +1115,10 @@ namespace Mids_Reborn.Core
                 foreach (var power in powerset.Powers)
                 {
                     var val2 = 0;
-                    if (!power.IncludeFlag || power.Level > maxLevel + 1 || PowerUsed(power) || !MeetsRequirement(power, maxLevel + 1) || power.InherentType == Enums.eGridType.Prestige)
+                    if (!power.IncludeFlag || power.Level > maxLevel + 1 || PowerUsed(power) ||
+                        !ShouldIncludeAutomaticGrantedPower(powerset, power) ||
+                        ShouldDelayHiddenSetGrantUntilPrimaryOrSecondaryPowerTaken(powerset, power) ||
+                        !MeetsRequirement(power, maxLevel + 1) || power.InherentType == Enums.eGridType.Prestige)
                     {
                         continue;
                     }
@@ -1130,6 +1135,77 @@ namespace Mids_Reborn.Core
                     AddPower(power, Math.Max(power.Level - 1, val2));
                 }
             }
+        }
+
+        private bool ShouldDelayHiddenSetGrantUntilPrimaryOrSecondaryPowerTaken(IPowerset powerset, IPower power)
+        {
+            if (!power.HiddenPower || !power.IncludeFlag ||
+                powerset.SetType is not (Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary))
+            {
+                return false;
+            }
+
+            var primarySetId = _character.Powersets[0]?.nID ?? -1;
+            var secondarySetId = _character.Powersets[1]?.nID ?? -1;
+            if (powerset.nID != primarySetId && powerset.nID != secondarySetId)
+            {
+                return false;
+            }
+
+            return !Powers.Any(entry =>
+                entry is { Chosen: true, Power: not null } &&
+                (entry.NIDPowerset == primarySetId || entry.NIDPowerset == secondarySetId));
+        }
+
+        private static bool HasPowersetGrantedStatePowers(IPowerset powerset)
+        {
+            return powerset.Powers.Any(IsPowersetGrantedStatePower);
+        }
+
+        private static bool IsPowersetGrantedStatePower(IPower? power)
+        {
+            return power is { HiddenPower: true, IncludeFlag: true, InherentType: Enums.eGridType.Powerset } &&
+                   power.FullName.StartsWith("Temporary_Powers.Temporary_Powers.", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private bool ShouldIncludeAutomaticGrantedPower(IPowerset powerset, IPower power)
+        {
+            if (IsPowersetGrantedStatePower(power))
+            {
+                return ShouldIncludePowersetGrantedStatePower(power);
+            }
+
+            return powerset.SetType == Enums.ePowerSetType.Inherent ||
+                   _character.Powersets.Any(characterPowerset =>
+                       characterPowerset != null && characterPowerset.nID == powerset.nID);
+        }
+
+        private bool ShouldIncludePowersetGrantedStatePower(IPower power)
+        {
+            if (!IsPowersetGrantedStatePower(power))
+            {
+                return true;
+            }
+
+            var statePowerName = NormalizePowersetStateName(power.PowerName);
+            if (string.IsNullOrEmpty(statePowerName))
+            {
+                return false;
+            }
+
+            return _character.Powersets
+                .Where(powerset => powerset != null)
+                .Any(powerset =>
+                {
+                    var setName = NormalizePowersetStateName(powerset!.SetName);
+                    return !string.IsNullOrEmpty(setName) &&
+                           statePowerName.StartsWith(setName, StringComparison.OrdinalIgnoreCase);
+                });
+        }
+
+        private static string NormalizePowersetStateName(string value)
+        {
+            return Regex.Replace(value ?? string.Empty, "[^A-Za-z0-9]", string.Empty).ToLowerInvariant();
         }
 
         public bool EnhancementTest(int iSlotID, int hIdx, int iEnh, bool silent = false)
@@ -2092,9 +2168,10 @@ namespace Mids_Reborn.Core
                         continue;
                     }
 
-                    IPower power1 = new Power(powerEntry.Power);
-                    power1.AbsorbPetEffects();
-                    power1.ApplyGrantPowerEffects();
+                    IPower power1 = PlannerEffectResolver.ResolvePower(new Power(powerEntry.Power), new PlannerEffectResolutionContext
+                    {
+                        AbsorbPetEffects = true
+                    }).ResolvedPower;
                     foreach (var effect in power1.Effects)
                     {
                         if ((power1.PowerType != Enums.ePowerType.GlobalBoost) & (!effect.Absorbed_Effect | (effect.Absorbed_PowerType != Enums.ePowerType.GlobalBoost)))
