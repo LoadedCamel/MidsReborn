@@ -255,6 +255,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void InitializeClassAttributesButton()
         {
+            btnAttribModEdit.Text = @"Legacy AttribMod Editor";
             btnClassAttributes = new Button
             {
                 BackColor = Color.FromArgb(255, 219, 102),
@@ -277,17 +278,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             using var form = new frmClassAttributes();
             form.ShowDialog(this);
-        }
-
-        private void UpdateModifierUiMode()
-        {
-            var legacyMode = DatabaseAPI.UsesLegacyModifierTables();
-            btnAttribModEdit.Visible = true;
-            btnAttribModEdit.Enabled = true;
-            btnAttribModEdit.Text = legacyMode
-                ? @"Legacy AttribMod Editor"
-                : @"Named Tables Viewer";
-            btnClassAttributes.Visible = DatabaseAPI.HasCanonicalModifierTables();
         }
 
         private void btnGCMIO_Click(object sender, EventArgs e)

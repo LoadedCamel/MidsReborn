@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Globalization;
@@ -1108,8 +1108,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var resolvedDescription = iSlot.GetResolvedEnhancementDescription();
             if (!string.IsNullOrWhiteSpace(resolvedDescription))
             {
-                popupData1.Sections[index1].Add(resolvedDescription, PopUp.Colors.Title);
-            }
+                case Enums.eType.Normal:
+                case Enums.eType.InventO:
+                    if (!string.IsNullOrEmpty(enhancement.Desc))
+                    {
+                        popupData1.Sections[index1].Add(iSlot.GetResolvedEnhancementDescription(), PopUp.Colors.Title);
+                        break;
+                    }
 
             var enhStringLong = iSlot.GetPopupEnhancementStringLong();
             if (enhancement.UID.Contains("Assassins_Mark"))
@@ -1117,10 +1122,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 enhStringLong = Regex.Replace(enhStringLong, @"(([\s]*)([0-9\.\%]+) RechargePower([0-9a-zA-Z\%\.\(\) ]+)[\r\n]*)+", "\r\n$2RechargePower(Stalker's Build Ups)\r\n");
             }
 
-            if (!string.IsNullOrWhiteSpace(enhStringLong))
-            {
-                var index4 = popupData1.Add();
-                var strArray3 = BreakByNewLine(enhStringLong);
+                    break;
+                case Enums.eType.SpecialO:
+                case Enums.eType.SetO:
+                    if (!string.IsNullOrEmpty(enhancement.Desc))
+                    {
+                        popupData1.Sections[index1].Add(iSlot.GetResolvedEnhancementDescription(), PopUp.Colors.Title);
+                    }
 
                 foreach (var s in strArray3.Where(line => !string.IsNullOrWhiteSpace(line)))
                 {

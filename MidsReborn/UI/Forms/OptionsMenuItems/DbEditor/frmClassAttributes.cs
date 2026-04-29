@@ -1,5 +1,4 @@
 using System.Globalization;
-using System.Linq;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Omni;
@@ -10,7 +9,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor;
 public sealed class frmClassAttributes : Form
 {
     private readonly string? _initialClassName;
-    private readonly string? _initialGroup;
     private readonly TextBox _search = new();
     private readonly ListBox _classes = new();
     private readonly ComboBox _group = new();
@@ -32,10 +30,9 @@ public sealed class frmClassAttributes : Form
         "NamedTables"
     ];
 
-    public frmClassAttributes(string? initialClassName = null, string? initialGroup = null)
+    public frmClassAttributes(string? initialClassName = null)
     {
         _initialClassName = initialClassName;
-        _initialGroup = initialGroup;
         Text = @"Class Attributes";
         Icon = Resources.MRB_Icon_Concept;
         StartPosition = FormStartPosition.CenterParent;
@@ -172,15 +169,8 @@ public sealed class frmClassAttributes : Form
         _classes.SelectedIndex = selectedIndex;
         if (_group.SelectedIndex < 0)
         {
-            _group.SelectedItem = ResolveInitialGroup();
+            _group.SelectedItem = "NamedTables";
         }
-    }
-
-    private string ResolveInitialGroup()
-    {
-        return AttributeGroups.Contains(_initialGroup, StringComparer.OrdinalIgnoreCase)
-            ? AttributeGroups.First(group => string.Equals(group, _initialGroup, StringComparison.OrdinalIgnoreCase))
-            : "NamedTables";
     }
 
     private static bool MatchesFilter(OmniClassAttributeTable classAttributes, string filter)

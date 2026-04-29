@@ -2221,8 +2221,7 @@ public sealed partial class OmniImporter
                     changed = true;
                 }
 
-                if ((!existed || string.IsNullOrWhiteSpace(enhancement.Desc)) &&
-                    !string.IsNullOrWhiteSpace(powerResolution.Power.DescLong))
+                if (!string.IsNullOrWhiteSpace(powerResolution.Power.DescLong))
                 {
                     if (!string.Equals(enhancement.Desc, powerResolution.Power.DescLong, StringComparison.Ordinal))
                     {
@@ -2406,14 +2405,71 @@ public sealed partial class OmniImporter
                     SubID = mappedEnhance == Enums.eEnhance.Mez ? (int)effect.MezType : -1
                 },
                 Schedule = schedule,
-                Multiplier = EnhancementScheduleMath.NormalizeImportedScaleToMultiplier(
-                    enhancementType,
-                    schedule,
-                    Math.Abs(effect.Scale) > 0.0001f ? effect.Scale : effect.nMagnitude)
+                Multiplier = NormalizeEnhancementMultiplier(enhancementType, schedule, Math.Abs(effect.Scale) > 0.0001f ? effect.Scale : effect.nMagnitude)
             });
         }
 
         return results.ToArray();
+    }
+
+    private static float NormalizeEnhancementMultiplier(
+        Enums.eType enhancementType,
+        Enums.eSchedule schedule,
+        float sourceScale)
+    {
+        if (schedule == Enums.eSchedule.None ||
+            schedule == Enums.eSchedule.Multiple ||
+            enhancementType is Enums.eType.InventO or Enums.eType.SetO)
+        {
+            return sourceScale;
+        }
+
+        var baseScale = GetClosestClassicEnhancementBaseScale(enhancementType, schedule, sourceScale);
+        if (baseScale <= float.Epsilon)
+        {
+            return sourceScale;
+        }
+
+        var multiplier = sourceScale / baseScale;
+        return Math.Abs(multiplier - 1f) < 0.02f ? 1f : multiplier;
+    }
+
+    private static float GetClosestClassicEnhancementBaseScale(
+        Enums.eType enhancementType,
+        Enums.eSchedule schedule,
+        float sourceScale)
+    {
+        var scheduleIndex = (int)schedule;
+        if (scheduleIndex < 0 || scheduleIndex > 3)
+        {
+            return 0f;
+        }
+
+        if (enhancementType == Enums.eType.SpecialO)
+        {
+            return DatabaseAPI.Database.MultHO is { Length: > 0 } &&
+                   DatabaseAPI.Database.MultHO[0].Length > scheduleIndex
+                ? DatabaseAPI.Database.MultHO[0][scheduleIndex]
+                : 0f;
+        }
+
+        var candidates = new[]
+            {
+                DatabaseAPI.Database.MultTO is { Length: > 0 } && DatabaseAPI.Database.MultTO[0].Length > scheduleIndex
+                    ? DatabaseAPI.Database.MultTO[0][scheduleIndex]
+                    : 0f,
+                DatabaseAPI.Database.MultDO is { Length: > 0 } && DatabaseAPI.Database.MultDO[0].Length > scheduleIndex
+                    ? DatabaseAPI.Database.MultDO[0][scheduleIndex]
+                    : 0f,
+                DatabaseAPI.Database.MultSO is { Length: > 0 } && DatabaseAPI.Database.MultSO[0].Length > scheduleIndex
+                    ? DatabaseAPI.Database.MultSO[0][scheduleIndex]
+                    : 0f
+            }
+            .Where(value => value > float.Epsilon)
+            .OrderBy(value => Math.Abs(value - Math.Abs(sourceScale)))
+            .ToArray();
+
+        return candidates.FirstOrDefault();
     }
 
     private static bool TryResolveEnhancementClassRefsFromEffects(

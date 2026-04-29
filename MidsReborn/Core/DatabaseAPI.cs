@@ -160,39 +160,15 @@ namespace Mids_Reborn.Core
                 }
             }
 
-            if (UsesLegacyModifierTables())
+            foreach (var modifier in Database.AttribMods?.Modifier ?? [])
             {
-                foreach (var modifier in Database.AttribMods?.Modifier ?? [])
+                if (!string.IsNullOrWhiteSpace(modifier.ID))
                 {
-                    if (!string.IsNullOrWhiteSpace(modifier.ID))
-                    {
-                        names.Add(modifier.ID);
-                    }
+                    names.Add(modifier.ID);
                 }
             }
 
             return names.ToArray();
-        }
-
-        public static bool HasCanonicalModifierTables()
-        {
-            return (Database.ClassAttributes?.Count ?? 0) > 0 ||
-                   GetDataProviderId() != OmniDataProviderId.Unknown;
-        }
-
-        public static bool UsesCanonicalModifierTablesOnly()
-        {
-            return HasCanonicalModifierTables();
-        }
-
-        public static bool UsesLegacyModifierTables()
-        {
-            return !UsesCanonicalModifierTablesOnly();
-        }
-
-        public static int GetRuntimeModifierTableLegacyId(string tableName)
-        {
-            return UsesLegacyModifierTables() ? NidFromUidAttribMod(tableName) : -1;
         }
 
         public static bool ModifierTableExists(string tableName)
@@ -205,41 +181,22 @@ namespace Mids_Reborn.Core
             var canonicalName = NormalizeModifierTableName(tableName);
             return IsKnownServerFallbackModifierTable(canonicalName) ||
                    (Database.ClassAttributes?.Values.Any(c => c.NamedTables.ContainsKey(canonicalName)) ?? false) ||
-                   (UsesLegacyModifierTables() && NidFromUidAttribMod(canonicalName) >= 0);
+                   NidFromUidAttribMod(canonicalName) >= 0;
         }
 
         public static bool TryGetClassModifier(string className, string tableName, int zeroBasedLevel, out float value)
         {
             value = 0;
-            if (string.IsNullOrWhiteSpace(tableName))
+            if (string.IsNullOrWhiteSpace(className) || string.IsNullOrWhiteSpace(tableName) ||
+                Database.ClassAttributes == null ||
+                !Database.ClassAttributes.TryGetValue(className, out var classAttributes))
             {
                 return false;
             }
 
             var canonicalName = NormalizeModifierTableName(tableName);
-            if (!UsesLegacyModifierTables())
-            {
-                if (string.IsNullOrWhiteSpace(className) || Database.ClassAttributes == null ||
-                    !Database.ClassAttributes.TryGetValue(className, out var classAttributes))
-                {
-                    value = 1.0f;
-                    return true;
-                }
-
-                var tableValue = classAttributes.GetNamedTableValueZeroBased(canonicalName, zeroBasedLevel);
-                value = tableValue ?? 1.0f;
-                return true;
-            }
-
-            if (string.IsNullOrWhiteSpace(className) ||
-                Database.ClassAttributes == null ||
-                !Database.ClassAttributes.TryGetValue(className, out var legacyClassAttributes))
-            {
-                return false;
-            }
-
-            var legacyTableValue = legacyClassAttributes.GetNamedTableValueZeroBased(canonicalName, zeroBasedLevel);
-            if (!legacyTableValue.HasValue)
+            var tableValue = classAttributes.GetNamedTableValueZeroBased(canonicalName, zeroBasedLevel);
+            if (!tableValue.HasValue)
             {
                 if (IsKnownServerFallbackModifierTable(canonicalName))
                 {
@@ -250,7 +207,7 @@ namespace Mids_Reborn.Core
                 return false;
             }
 
-            value = legacyTableValue.Value;
+            value = tableValue.Value;
             return true;
         }
 
@@ -3518,11 +3475,6 @@ namespace Mids_Reborn.Core
                 return canonicalModifier;
             }
 
-            if (!UsesLegacyModifierTables())
-            {
-                return 1f;
-            }
-
             // This value is returned as a modifier if a value is out of bounds.
             var iClass = string.IsNullOrWhiteSpace(className) ? 0 : NidFromUidClass(className);
             var effPower = iEffect.GetPower();
@@ -3556,11 +3508,6 @@ namespace Mids_Reborn.Core
 
         public static float GetModifier(string tableName)
         {
-            if (string.IsNullOrWhiteSpace(tableName))
-            {
-                return 1f;
-            }
-
             var className = MidsContext.Character?.Archetype?.ClassName ??
                             MidsContext.Archetype?.ClassName ??
                             string.Empty;
@@ -3568,11 +3515,6 @@ namespace Mids_Reborn.Core
             if (TryGetClassModifier(className, tableName, level, out var canonicalModifier))
             {
                 return canonicalModifier;
-            }
-
-            if (!UsesLegacyModifierTables())
-            {
-                return 1f;
             }
 
             var tableIndex = NidFromUidAttribMod(tableName);
