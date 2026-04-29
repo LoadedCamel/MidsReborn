@@ -267,6 +267,12 @@ namespace Mids_Reborn.Core
             }
 
             ctl.BarsAlignment = val < 0 ? CtlMultiGraph.BarAlignment.Right : CtlMultiGraph.BarAlignment.Left;
+
+            if (longName.Equals("slow", StringComparison.InvariantCultureIgnoreCase))
+            {
+                val = Math.Abs(val);
+            }
+
             ctl.PaddingX = 2; // frmTotalsV2: 4
             ctl.PaddingY = 3; // frmTotalsV2: 6
 
