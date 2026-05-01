@@ -298,6 +298,24 @@ namespace Mids_Reborn.Core
             }
             else
             {
+                if (fromPopup && bonusSection)
+                {
+                    var groupedEffectString = GetGroupedBonusEffectString(bonusItemArray[index], effectsFilter);
+                    if (!string.IsNullOrWhiteSpace(groupedEffectString))
+                    {
+                        return groupedEffectString;
+                    }
+
+                    if (!special)
+                    {
+                        var fallbackEffectString = GetFallbackBonusEffectString(bonusItemArray[index]);
+                        if (!string.IsNullOrWhiteSpace(fallbackEffectString))
+                        {
+                            return fallbackEffectString;
+                        }
+                    }
+                }
+
                 var effectList = new List<string>();
                 for (var index1 = 0; index1 < bonusItemArray[index].Name.Length; index1++)
                 {
@@ -431,26 +449,22 @@ namespace Mids_Reborn.Core
 
                 var resolvedPower = PlannerEffectResolver.ResolvePower(new Power(DatabaseAPI.Database.Power[powerIndex])).ResolvedPower;
                 var power = OmniPowerRouting.CreateDisplayPower(resolvedPower);
+                var groupedEffects = GroupedFx.BuildPopupTooltipText(
+                        power,
+                        groupFilter: (_, effect) => !fxFilter.Contains(effect.EffectType) &&
+                                                    effect.EffectClass != Enums.eEffectClass.Ignored &&
+                                                    effect.EffectType != Enums.eEffectType.GrantPower)
+                    .Replace("\r\n", ", ")
+                    .Replace("\n", ", ")
+                    .Replace("EndRec", "Recovery");
 
-                var groupedEffects = GroupedFx.AssembleGroupedEffects(power, true)
-                    .Where(g =>
-                    {
-                        var effect = g.GetEffectAt(power);
-                        return !fxFilter.Contains(effect.EffectType) &&
-                               effect.EffectClass != Enums.eEffectClass.Ignored &&
-                               effect.EffectType != Enums.eEffectType.GrantPower;
-                    })
-                    .Select(g => g.GetTooltip(power, true)
-                        .Replace("\r\n", ", ")
-                        .Replace("\n", ", ")
-                        .Replace("EndRec", "Recovery"))
-                    .Where(s => !string.IsNullOrWhiteSpace(s))
-                    .Distinct();
-
-                effectList.AddRange(groupedEffects);
+                if (!string.IsNullOrWhiteSpace(groupedEffects))
+                {
+                    effectList.Add(groupedEffects);
+                }
             }
 
-            var ret = string.Join(", ", effectList);
+            var ret = string.Join(", ", effectList.Distinct(StringComparer.Ordinal));
             ret = Regex.Replace(ret, @"Knockback \(Mag -(?<mag>[\d.]+)\), Knockup \(Mag -\k<mag>\)", "Knockback Protection (Mag ${mag})");
 
             return ret;

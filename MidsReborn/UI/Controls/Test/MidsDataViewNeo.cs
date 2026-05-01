@@ -3386,55 +3386,22 @@ namespace Mids_Reborn.UI.Controls
 
         private void PairedList_Hover(object? sender, int index, Enums.ShortFX tag, string tooltip)
         {
-            var empty1 = string.Empty;
             var str1 = string.Empty;
             if (tag.Present)
             {
-                var empty2 = string.Empty;
-                IPower power = new Power(pEnh);
-                foreach (var t in tag.Index)
+                var selectedEffects = tag.Index
+                    .Where(t => t >= 0 && pEnh != null && t < pEnh.Effects.Length)
+                    .ToArray();
+
+                if (selectedEffects.Length > 0 && pEnh != null)
                 {
-                    if (t == -1 || power.Effects[t].EffectType == Enums.eEffectType.None)
-                    {
-                        continue;
-                    }
-
-                    var empty3 = string.Empty;
-                    var returnMask = Array.Empty<int>();
-                    power.GetEffectStringGrouped(t, ref empty3, ref returnMask, false, false);
-                    if (returnMask.Length <= 0)
-                    {
-                        continue;
-                    }
-
-                    if (empty2 != string.Empty)
-                    {
-                        empty2 += "\r\n";
-                    }
-
-                    empty2 += empty3;
-                    foreach (var m in returnMask)
-                    {
-                        power.Effects[m].EffectType = Enums.eEffectType.None;
-                    }
+                    str1 = GroupedFx.BuildPopupTooltipText(new Power(pEnh), selectedEffects);
                 }
 
-                foreach (var t in tag.Index)
+                if (string.IsNullOrWhiteSpace(str1))
                 {
-                    if (power.Effects[t].EffectType == Enums.eEffectType.None)
-                    {
-                        continue;
-                    }
-
-                    if (empty2 != string.Empty)
-                    {
-                        empty2 += "\r\n";
-                    }
-
-                    empty2 += power.Effects[t].BuildEffectString();
+                    str1 = tooltip;
                 }
-
-                str1 = empty1 + empty2;
             }
             else if (string.IsNullOrWhiteSpace(tooltip))
             {

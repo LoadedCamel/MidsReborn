@@ -741,7 +741,56 @@ namespace Mids_Reborn.Core
 
         // ===== Tooltip =====
 
-        public string GetTooltip(IPower power, bool simple = false)
+        internal static string BuildPopupTooltipText(IPower? power, IEnumerable<int>? includedEffects = null, Func<GroupedFx, IEffect, bool>? groupFilter = null)
+        {
+            if (power == null)
+            {
+                return string.Empty;
+            }
+
+            IPower renderPower = power;
+            if (includedEffects != null)
+            {
+                var selectedEffects = includedEffects
+                    .Where(index => index >= 0 && index < power.Effects.Length)
+                    .Distinct()
+                    .OrderBy(index => index)
+                    .ToArray();
+
+                if (selectedEffects.Length == 0)
+                {
+                    return string.Empty;
+                }
+
+                renderPower = power.Clone();
+                renderPower.Effects = renderPower.Effects
+                    .Where((_, index) => selectedEffects.Contains(index))
+                    .ToArray();
+            }
+
+            var seenLines = new HashSet<string>(StringComparer.Ordinal);
+            var popupLines = new List<string>();
+            foreach (var groupedEffect in AssembleGroupedEffects(renderPower, includeDamage: true))
+            {
+                var effect = groupedEffect.GetEffectAt(renderPower);
+                if (groupFilter != null && !groupFilter(groupedEffect, effect))
+                {
+                    continue;
+                }
+
+                var line = groupedEffect.GetTooltip(renderPower, simple: true, ignoreConditions: true).Trim();
+                if (string.IsNullOrWhiteSpace(line) || !seenLines.Add(line))
+                {
+                    continue;
+                }
+
+                popupLines.Add(line);
+            }
+
+            return string.Join("\n", popupLines);
+        }
+
+        public string GetTooltip(IPower power, bool simple = false, bool ignoreConditions = false)
         {
             var vectors = "";
             var statName = GetStatName(power);
@@ -814,7 +863,7 @@ namespace Mids_Reborn.Core
             for (var i = 0; i < maxRange; i++)
             {
                 var baseEffectString = power.Effects[IncludedEffects[i]]
-                    .BuildEffectString(simple, "", false, false, false, simple, false, true);
+                    .BuildEffectString(simple, "", false, false, false, simple, false, true, ignoreConditions);
 
                 var fxTip = power.Effects[IncludedEffects[i]].EffectType switch
                 {

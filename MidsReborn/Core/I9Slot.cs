@@ -395,30 +395,16 @@ namespace Mids_Reborn.Core
                 (effect.ProcsPerMinute > 0f || effect.Probability < 1f));
         }
 
-        private static bool TryBuildProcPowerEffectsString(IPower? enhBoostPower, out string effectList)
+        private bool TryBuildProcPowerEffectsString(IPower? enhBoostPower, out string effectList)
         {
-            effectList = string.Empty;
             if (!IsProcLikeBoostPower(enhBoostPower))
             {
+                effectList = string.Empty;
                 return false;
             }
 
-            var lines = enhBoostPower!.Effects
-                .Where(effect => effect is { Absorbed_Effect: false } &&
-                                 effect.EffectType != Enums.eEffectType.GrantPower &&
-                                 effect.EffectType != Enums.eEffectType.None)
-                .Select(effect => effect.BuildEffectString(true, "", false, false, false, true, false, false, true).Trim())
-                .Where(line => !string.IsNullOrWhiteSpace(line))
-                .Distinct(StringComparer.Ordinal)
-                .ToArray();
-
-            if (lines.Length == 0)
-            {
-                return false;
-            }
-
-            effectList = string.Join("\n", lines);
-            return true;
+            effectList = GetGroupedEffectsStringLong(enhBoostPower);
+            return !string.IsNullOrWhiteSpace(effectList);
         }
 
         private static void AppendTooltipLine(StringBuilder stringBuilder, HashSet<string> seenLines, string line)
@@ -545,6 +531,19 @@ namespace Mids_Reborn.Core
             }
             else
             {
+                var groupedPopupEffects = GetGroupedEffectsStringLong(enhBoostPower);
+                if (!string.IsNullOrWhiteSpace(groupedPopupEffects))
+                {
+                    if (stringBuilder.Length > 0)
+                    {
+                        stringBuilder.Append("\n");
+                    }
+
+                    stringBuilder.Append(groupedPopupEffects);
+                    str1 = stringBuilder.ToString().Replace("Slf", "Self").Replace("Tgt", "Target");
+                    return str1;
+                }
+
                 var groupedGrantEffects = GetGroupedEffectsStringLong(enhBoostPower, true);
                 if (!string.IsNullOrWhiteSpace(groupedGrantEffects))
                 {
@@ -656,7 +655,7 @@ namespace Mids_Reborn.Core
                             stringBuilder.Append("\n");
                         }
 
-                        var effectString = power.Effects[index1].BuildEffectString(true, "", false, false, false, true).Trim();
+                        var effectString = power.Effects[index1].BuildEffectString(true, "", false, false, false, true, false, false, true).Trim();
                         if (effectString.Contains("Null"))
                         {
                             var enhId = DatabaseAPI.GetEnhancementByBoostName(power.FullName);
@@ -698,25 +697,18 @@ namespace Mids_Reborn.Core
             var power = PlannerEffectResolver.ResolvePower(new Power(enhBoostPower)).ResolvedPower;
             ApplySlotEnhancementMagnitudes(power);
 
-            var groupedEffects = GroupedFx.AssembleGroupedEffects(power, true)
-                .Where(g =>
-                {
-                    var effect = g.GetEffectAt(power);
-                    if (effect.EffectClass == Enums.eEffectClass.Ignored ||
-                        effect.EffectType == Enums.eEffectType.GrantPower)
-                    {
-                        return false;
-                    }
+            IEnumerable<int>? includedEffects = absorbedGrantEffectsOnly
+                ? power.Effects
+                    .Select((effect, index) => new { effect, index })
+                    .Where(item => item.effect.Absorbed_Effect || item.effect.Absorbed_EffectID >= 0)
+                    .Select(item => item.index)
+                : null;
 
-                    return !absorbedGrantEffectsOnly ||
-                           effect.Absorbed_Effect ||
-                           effect.Absorbed_EffectID >= 0;
-                })
-                .Select(g => g.GetTooltip(power, true))
-                .Where(s => !string.IsNullOrWhiteSpace(s))
-                .Distinct();
-
-            return string.Join("\n", groupedEffects);
+            return GroupedFx.BuildPopupTooltipText(
+                power,
+                includedEffects,
+                static (_, effect) => effect.EffectClass != Enums.eEffectClass.Ignored &&
+                                      effect.EffectType != Enums.eEffectType.GrantPower);
         }
 
         private void ApplySlotEnhancementMagnitudes(IPower power)
