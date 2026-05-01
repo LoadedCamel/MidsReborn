@@ -271,6 +271,7 @@ public sealed partial class OmniImporter
         ApplyGcmTags(database, normalizedRoot, applyResult);
         TrackApplyClassTables(dryRunResult, applyResult);
         ApplyClassAttributesToDatabase(database, dryRunResult, applyResult);
+        ResetRuntimeImportMetadata(database);
         ReportProgress(progressReporter, 5, "Stored class attributes", $"{applyResult.ClassAttributesStored:n0} tables");
         RemoveExcludedOmniContent(database, applyResult);
         RebuildSupportHeavyGroups(database, applyResult);
@@ -304,6 +305,7 @@ public sealed partial class OmniImporter
         EnsurePowersetsForScopedPowers(database, scopedPowers, dryRunResult.Scope, applyResult);
         var entityActors = LoadReferencedEntityActors(normalizedRoot, scopedPowers, applyResult);
         UpsertReferencedEntities(database, entityActors, applyResult);
+        ApplyEntityImportMetadata(database, normalizedRoot, entityActors, applyResult);
         TrackStaffMasteryScope(scopedPowers, applyResult);
         ReportProgress(progressReporter, 20, "Loaded scoped powers", $"{scopedPowers.Count:n0} powers");
         var scopedPowerLookup = BuildScopedPowerLookup(scopedPowers);
@@ -433,6 +435,7 @@ public sealed partial class OmniImporter
                         $"{midsFullName}: skipped by NeverAutoUpdate after classification {classification.Summary(midsFullName)}; current {DescribePowerIdentity(midsPower)}");
                 }
 
+                CapturePowerImportMetadata(database, midsFullName, omniPower);
                 continue;
             }
 
@@ -442,6 +445,7 @@ public sealed partial class OmniImporter
             ApplyCanonicalPowerName(midsPower, midsFullName);
             ApplyPowerClassification(midsPower, classification);
             ApplyPseudoPetAbsorptionFlags(midsPower, omniPower, entityActors, applyResult);
+            CapturePowerImportMetadata(database, midsFullName, omniPower);
             if (staffTrace)
             {
                 applyResult.AddLimited(applyResult.StaffMasteryTraceDetails,
@@ -541,10 +545,12 @@ public sealed partial class OmniImporter
             ApplyEnhancementImportStage(database, normalizedRoot, applyResult);
             ReportProgress(progressReporter, 96, "Resolving database IDs");
             DatabaseAPI.MatchIds();
+            DatabaseAPI.HydrateOmniRuntimeMetadata();
         }
         else
         {
             ApplyEnhancementImportStage(database, normalizedRoot, applyResult);
+            DatabaseAPI.HydrateOmniRuntimeMetadata();
         }
 
         RepairImportedBoostAndSetBonusPowerEnhancementLegality(database, scopedPowers, applyResult);

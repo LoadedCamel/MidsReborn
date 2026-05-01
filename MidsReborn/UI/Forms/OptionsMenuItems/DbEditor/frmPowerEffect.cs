@@ -16,12 +16,23 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         public IEffect MyFx;
         private IPower? MyPower { get; set; }
         private readonly int _effectIndex;
+        private readonly PowerModifierDisplayContextResult? _modifierContext;
+        private readonly string _modifierContextClassName = string.Empty;
+        private Label? modifierContextLabel;
 
         public frmPowerEffect(ICloneable iFx, IPower? fxPower, int fxIndex = 0)
+            : this(iFx, fxPower, fxIndex, null)
+        {
+        }
+
+        internal frmPowerEffect(ICloneable iFx, IPower? fxPower, int fxIndex, PowerModifierDisplayContextResult? modifierContext)
         {
             _loading = true;
             MyPower = fxPower;
+            _modifierContext = modifierContext;
+            _modifierContextClassName = modifierContext?.SelectedClassName ?? string.Empty;
             InitializeComponent();
+            InitializeModifierContextLabel();
             Load += frmPowerEffect_Load;
             Icon = Resources.MRB_Icon_Concept;
             if (iFx != null)
@@ -36,6 +47,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             _loading = true;
             InitializeComponent();
+            InitializeModifierContextLabel();
             Load += frmPowerEffect_Load;
             Icon = Resources.MRB_Icon_Concept;
             if (iFx != null)
@@ -44,6 +56,29 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             _effectIndex = fxIndex;
+        }
+
+        private void InitializeModifierContextLabel()
+        {
+            if (_modifierContext == null)
+            {
+                return;
+            }
+
+            modifierContextLabel = new Label
+            {
+                AutoEllipsis = true,
+                BorderStyle = BorderStyle.Fixed3D,
+                Location = new Point(1326, 11),
+                Padding = new Padding(6, 4, 6, 4),
+                Size = new Size(284, 110),
+                Text = _modifierContext.DisplayText,
+                TextAlign = ContentAlignment.MiddleLeft,
+                UseMnemonic = false
+            };
+
+            Controls.Add(modifierContextLabel);
+            modifierContextLabel.BringToFront();
         }
 
         private void frmPowerEffect_Load(object sender, EventArgs e)
@@ -1232,6 +1267,30 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
         }*/
 
+        private string BuildPreviewEffectString(
+            bool simple,
+            string specialCat,
+            bool noMag,
+            bool grouped,
+            bool useBaseProbability,
+            bool fromPopup,
+            bool editorDisplay)
+        {
+            var previewEffect = PowerModifierDisplayContextResolver.CreateContextualEffectClone(
+                MyFx,
+                MyPower ?? MyFx.GetPower(),
+                _modifierContextClassName);
+
+            return previewEffect.BuildEffectString(
+                simple,
+                specialCat,
+                noMag,
+                grouped,
+                useBaseProbability,
+                fromPopup,
+                editorDisplay);
+        }
+
         private void UpdateFxText(string? senderName = "")
         {
             if (_loading)
@@ -1246,7 +1305,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 if (validationItems.All(x => x.Validated))
                 {
                     lblEffectDescription.ForeColor = SystemColors.ControlText;
-                    lblEffectDescription.Text = MyFx.BuildEffectString(false, string.Empty, false, false, false, false, true);
+                    lblEffectDescription.Text = BuildPreviewEffectString(false, string.Empty, false, false, false, false, true);
                 }
                 else
                 {
@@ -1268,7 +1327,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
             else
             {
-                lblEffectDescription.Text = MyFx.BuildEffectString(false, string.Empty, false, false, false, false, true);
+                lblEffectDescription.Text = BuildPreviewEffectString(false, string.Empty, false, false, false, false, true);
             }
         }
 

@@ -167,7 +167,8 @@ namespace Mids_Reborn.UI.Forms
         private bool ProcessedFromCommand { get; set; }
         private bool FileModified { get; set; }
 
-        private FrmEntityDetails? FrmEntityDetails { get; set; }
+        private FrmPetActorDetails? FrmPetActorDetailsWindow { get; set; }
+        private ToolStripMenuItem? TsViewPetActors { get; set; }
 
         private I9Picker I9Picker
         {
@@ -247,12 +248,20 @@ namespace Mids_Reborn.UI.Forms
             tmrGfx.Tick += tmrGfx_Tick;
             dataView.SlotUpdate += DataView_SlotUpdate;
             dataView.SlotFlip += DataView_SlotFlip;
+            dataView.EntityDetails += dvAnchored_EntityDetails;
+            PetView.SliderUpdated += OnPetViewSliderUpdated;
+            EnsurePetActorMenuItem();
             InitializeCombatContextEntryPoints();
         }
 
         private void OnResizeEnd(object? sender, EventArgs e)
         {
             Debug.WriteLine(ClientSize.ToString());
+        }
+
+        private void OnPetViewSliderUpdated()
+        {
+            FrmPetActorDetailsWindow?.UpdateData();
         }
 
         #endregion
@@ -587,6 +596,7 @@ namespace Mids_Reborn.UI.Forms
         private void OnThemeChanged()
         {
             ApplyTheme();
+            FrmPetActorDetailsWindow?.UpdateColorTheme(MidsContext.Character?.Alignment ?? Enums.Alignment.Hero);
             // Force the form to redraw its background and non-client areas
             Invalidate(true);
         }
@@ -3784,10 +3794,9 @@ namespace Mids_Reborn.UI.Forms
                 return LastEnhPlaced.Enh;
             }
 
-            var setEnhancements = DatabaseAPI.Database.EnhancementSets[nIdSet].Enhancements
-                .OrderBy(e => e < 0 ? "" : DatabaseAPI.Database.Enhancements[e].UID)
-                .ToArray();
-            for (var index = 0; index < DatabaseAPI.Database.EnhancementSets[nIdSet].Enhancements.Length; index++)
+            var variantKind = DatabaseAPI.GetSetVariantKind(LastEnhPlaced.Enh);
+            var setEnhancements = DatabaseAPI.GetOrderedRepeatSetEnhancementCandidates(nIdSet, LastEnhPlaced.Enh, variantKind);
+            for (var index = 0; index < setEnhancements.Count; index++)
             {
                 if (MidsContext.Character.CurrentBuild.EnhancementTest(slotIndex, hID, setEnhancements[index], true))
                 {
@@ -4681,9 +4690,9 @@ namespace Mids_Reborn.UI.Forms
                 fPrestige.Dispose();
             }
 
-            if (FrmEntityDetails is { IsDisposed: false })
+            if (FrmPetActorDetailsWindow is { IsDisposed: false })
             {
-                FrmEntityDetails.Dispose();
+                FrmPetActorDetailsWindow.Dispose();
             }
 
             NewDraw(skipDraw);
@@ -6190,6 +6199,7 @@ namespace Mids_Reborn.UI.Forms
         public void RefreshInfo()
         {
             Info_Totals();
+            UpdatePetActorMenuState();
             _frmCombatContext?.RefreshFromConfig();
             UpdateCombatContextSummary();
             if (dvLastPower <= -1)
@@ -6198,12 +6208,62 @@ namespace Mids_Reborn.UI.Forms
             }
 
             Info_Power(dvLastPower, dvLastEnh, dvLastNoLev, dataView.IsLocked, dvLastHistoryIdx);
-            if (FrmEntityDetails is not { Visible: true })
+            if (FrmPetActorDetailsWindow is not { Visible: true })
             {
                 return;
             }
 
-            FrmEntityDetails.UpdateData(true);
+            FrmPetActorDetailsWindow.UpdateData(true);
+        }
+
+        private void EnsurePetActorMenuItem()
+        {
+            TsViewPetActors = new ToolStripMenuItem
+            {
+                Name = "tsViewPetActors",
+                Text = "Pet Actors"
+            };
+            TsViewPetActors.Click += (_, _) => ShowPetActorDetails();
+
+            var insertIndex = Math.Max(0, WindowToolStripMenuItem.DropDownItems.IndexOf(tsViewData) + 1);
+            WindowToolStripMenuItem.DropDownItems.Insert(insertIndex, TsViewPetActors);
+            UpdatePetActorMenuState();
+        }
+
+        private void UpdatePetActorMenuState()
+        {
+            if (TsViewPetActors == null || MainModule.MidsController.Toon == null)
+            {
+                return;
+            }
+
+            var hasPetActors = MainModule.MidsController.Toon.GetRealPetActorRoster().Count > 0;
+            TsViewPetActors.Visible = hasPetActors;
+            TsViewPetActors.Enabled = hasPetActors;
+        }
+
+        private void ShowPetActorDetails(string? entityUid = null, int sourceHistoryIndex = -1)
+        {
+            if (MainModule.MidsController.Toon == null)
+            {
+                return;
+            }
+
+            if (FrmPetActorDetailsWindow is not { Visible: true })
+            {
+                FrmPetActorDetailsWindow = new FrmPetActorDetails(MainModule.MidsController.Toon, entityUid, sourceHistoryIndex);
+                FrmPetActorDetailsWindow.Show(this);
+            }
+            else
+            {
+                FrmPetActorDetailsWindow.UpdateData(entityUid, sourceHistoryIndex);
+                FrmPetActorDetailsWindow.Focus();
+            }
+        }
+
+        private void dvAnchored_EntityDetails(string entityUid, HashSet<string> powers, int basePowerHistoryIdx, PetInfo petInfo)
+        {
+            ShowPetActorDetails(entityUid, basePowerHistoryIdx);
         }
 
         private void UpdateCombatContextSummary()

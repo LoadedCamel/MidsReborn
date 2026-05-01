@@ -2,6 +2,7 @@ using System.Globalization;
 using System.Text.RegularExpressions;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
 using Mids_Reborn.Core.PlannerRulesets;
 
 namespace Mids_Reborn.Core;
@@ -10,6 +11,7 @@ internal sealed class PlannerPowerPipeline
 {
     private readonly Build _currentBuild;
     private readonly Archetype? _archetype;
+    private readonly PlannerBuildRecipientContext? _recipient;
     private IPower?[] _basePowers = Array.Empty<IPower?>();
     private IPower?[] _assembledBasePowers = Array.Empty<IPower?>();
     private IPower?[] _buffedPowers = Array.Empty<IPower?>();
@@ -26,10 +28,11 @@ internal sealed class PlannerPowerPipeline
         public Enums.eEffectType ETModifies;
     }
 
-    public PlannerPowerPipeline(Build currentBuild, Archetype? archetype)
+    public PlannerPowerPipeline(Build currentBuild, Archetype? archetype, PlannerBuildRecipientContext? recipient = null)
     {
         _currentBuild = currentBuild;
         _archetype = archetype;
+        _recipient = recipient;
         Result = new PlannerPowerPipelineResult();
         SyncResult();
     }
@@ -143,7 +146,20 @@ internal sealed class PlannerPowerPipeline
             }
 
             _basePowers[hIDX] = new Power(DatabaseAPI.Database.Power[powerEntry.NIDPower]);
+            if (_recipient != null && _basePowers[hIDX] is Power basePower)
+            {
+                basePower.OmniDisplayClassName = _recipient.ClassName;
+            }
+
             var assembledPower = GBPA_SubPass0_AssemblePowerEntry(powerEntry.NIDPower, hIDX);
+            if (_recipient != null && assembledPower != null)
+            {
+                assembledPower = OmniPowerRouting.CreatePlannerPower(
+                    assembledPower,
+                    _recipient,
+                    hIDX == _recipient.ActorSourceHistoryIndex);
+            }
+
             _assembledBasePowers[hIDX] = assembledPower == null ? null : new Power(assembledPower);
             _mathPowers[hIDX] = assembledPower == null ? null : new Power(assembledPower);
         }
@@ -318,7 +334,9 @@ internal sealed class PlannerPowerPipeline
                 }
                 else
                 {
-                    var enhancementIndex = enhancementSet.Enhancements.TryFindIndex(e => e == slotEntry.Enhancement.Enh);
+                    var enhancementIndex = DatabaseAPI.TryGetSetRawMemberPositionForEnhancement(slotEntry.Enhancement.Enh, out _, out var rawMemberPosition)
+                        ? rawMemberPosition
+                        : -1;
                     shouldAddEffect = enhancementIndex >= 0 &&
                                       enhancementSet.SpecialBonus[enhancementIndex].Index.Length <= 0 &&
                                       (enhancement.Effect.All(e => e.Mode != Enums.eEffMode.Enhancement) ||
@@ -1268,8 +1286,13 @@ internal sealed class PlannerPowerPipeline
             }
         }
 
-        var setBonusPower = _currentBuild.SetBonusVirtualPower;
-        DatabaseAPI.GetPlannerRuleset().AccumulateBuckets(setBonusPower, ref buckets, pass);
+        var setBonusPower = _recipient == null
+            ? _currentBuild.SetBonusVirtualPower
+            : _currentBuild.GetSetBonusVirtualPower(_recipient);
+        if (setBonusPower != null)
+        {
+            DatabaseAPI.GetPlannerRuleset().AccumulateBuckets(setBonusPower, ref buckets, pass);
+        }
 
         if (!plannerRuleset.IncludePvpResistanceBonusInBuckets(pass))
         {
@@ -1283,6 +1306,11 @@ internal sealed class PlannerPowerPipeline
         }
 
         IPower pvpResistPower = new Power(DatabaseAPI.Database.Power[pvpResistIndex]);
+        if (_recipient != null)
+        {
+            pvpResistPower = OmniPowerRouting.CreatePlannerPower(pvpResistPower, _recipient) ?? new Power();
+        }
+
         DatabaseAPI.GetPlannerRuleset().AccumulateBuckets(pvpResistPower, ref buckets, pass);
     }
 

@@ -382,19 +382,74 @@ namespace Mids_Reborn.Core
             };
         }
 
+        private static bool IsProcLikeBoostPower(IPower? enhBoostPower)
+        {
+            if (enhBoostPower == null)
+            {
+                return false;
+            }
+
+            return enhBoostPower.Effects.Any(effect =>
+                effect is { Absorbed_Effect: false } &&
+                effect.EffectType != Enums.eEffectType.GrantPower &&
+                (effect.ProcsPerMinute > 0f || effect.Probability < 1f));
+        }
+
+        private static bool TryBuildProcPowerEffectsString(IPower? enhBoostPower, out string effectList)
+        {
+            effectList = string.Empty;
+            if (!IsProcLikeBoostPower(enhBoostPower))
+            {
+                return false;
+            }
+
+            var lines = enhBoostPower!.Effects
+                .Where(effect => effect is { Absorbed_Effect: false } &&
+                                 effect.EffectType != Enums.eEffectType.GrantPower &&
+                                 effect.EffectType != Enums.eEffectType.None)
+                .Select(effect => effect.BuildEffectString(true, "", false, false, false, true, false, false, true).Trim())
+                .Where(line => !string.IsNullOrWhiteSpace(line))
+                .Distinct(StringComparer.Ordinal)
+                .ToArray();
+
+            if (lines.Length == 0)
+            {
+                return false;
+            }
+
+            effectList = string.Join("\n", lines);
+            return true;
+        }
+
+        private static void AppendTooltipLine(StringBuilder stringBuilder, HashSet<string> seenLines, string line)
+        {
+            if (string.IsNullOrWhiteSpace(line) || !seenLines.Add(line))
+            {
+                return;
+            }
+
+            if (stringBuilder.Length > 0)
+            {
+                stringBuilder.Append("\n");
+            }
+
+            stringBuilder.Append(line);
+        }
+
         private string GetEffectsStringLong(IEnhancement enhancement, IPower? enhBoostPower)
         {
             string str1;
             var stringBuilder = new StringBuilder();
+            var seenLines = new HashSet<string>(StringComparer.Ordinal);
             var flag1 = false;
             var flag2 = false;
             var flag3 = false;
             var flag4 = false;
             var flag5 = false;
 
-            if (enhBoostPower != null && enhBoostPower.Effects.All(e => e.EffectType != Enums.eEffectType.GrantPower))
+            if (TryBuildProcPowerEffectsString(enhBoostPower, out var procPowerEffects))
             {
-                return GetGroupedEffectsStringLong(enhBoostPower);
+                return procPowerEffects;
             }
 
             foreach (var sEffect in enhancement.Effect)
@@ -452,12 +507,8 @@ namespace Mids_Reborn.Core
 
                             if (!string.IsNullOrEmpty(str2))
                             {
-                                if (stringBuilder.Length > 0)
-                                {
-                                    stringBuilder.Append("\n");
-                                }
-
-                                stringBuilder.Append($"{str2} enhancement (Sched. {Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule)}: {scheduleMult * 100:##0.###}%{(Math.Abs(sEffect.Multiplier) > float.Epsilon & sEffect.Multiplier != 1 & sEffect.Multiplier != 0.625 & sEffect.Multiplier != 0.5 & sEffect.Multiplier != 0.4375 ? $" [x{sEffect.Multiplier}]" : "")})");
+                                var tooltipLine = $"{str2} enhancement (Sched. {Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule)}: {scheduleMult * 100:##0.###}%{(Math.Abs(sEffect.Multiplier) > float.Epsilon & sEffect.Multiplier != 1 & sEffect.Multiplier != 0.625 & sEffect.Multiplier != 0.5 & sEffect.Multiplier != 0.4375 ? $" [x{sEffect.Multiplier}]" : "")})";
+                                AppendTooltipLine(stringBuilder, seenLines, tooltipLine);
                             }
 
                             break;
@@ -470,9 +521,27 @@ namespace Mids_Reborn.Core
                 }
             }
 
+            if (stringBuilder.Length > 0 &&
+                enhBoostPower != null &&
+                enhBoostPower.Effects.All(effect => effect.EffectType != Enums.eEffectType.GrantPower))
+            {
+                return stringBuilder.ToString();
+            }
+
             if (!flag1)
             {
-                str1 = stringBuilder.ToString();
+                if (stringBuilder.Length > 0)
+                {
+                    str1 = stringBuilder.ToString();
+                }
+                else if (enhBoostPower != null && enhBoostPower.Effects.All(e => e.EffectType != Enums.eEffectType.GrantPower))
+                {
+                    str1 = GetGroupedEffectsStringLong(enhBoostPower);
+                }
+                else
+                {
+                    str1 = string.Empty;
+                }
             }
             else
             {
@@ -609,10 +678,7 @@ namespace Mids_Reborn.Core
                             }
                         }
 
-                        if (!stringBuilder.ToString().Contains(effectString))
-                        {
-                            stringBuilder.Append(effectString);
-                        }
+                        AppendTooltipLine(stringBuilder, seenLines, effectString);
                     }
                 }
 
@@ -730,7 +796,9 @@ namespace Mids_Reborn.Core
             }
 
             var enhSet = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet];
-            var enhPosInSet = Array.IndexOf(enhSet.Enhancements, Enh);
+            var enhPosInSet = DatabaseAPI.TryGetSetRawMemberPositionForEnhancement(Enh, out _, out var rawMemberPosition)
+                ? rawMemberPosition
+                : -1;
             if (enhPosInSet < 0)
             {
                 return string.Empty;

@@ -335,6 +335,9 @@ public sealed class OmniPowerDefinition
     [JsonProperty("effects")]
     public List<OmniEffectDefinition> Effects { get; set; } = [];
 
+    [JsonProperty("activation_effects")]
+    public List<OmniEffectDefinition> ActivationEffects { get; set; } = [];
+
     [JsonProperty("redirect")]
     public List<OmniRedirectDefinition> Redirects { get; set; } = [];
 

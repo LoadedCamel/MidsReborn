@@ -41,10 +41,19 @@ public static class OmniMidsMapper
 
     public static IEnumerable<Effect> FlattenEffects(OmniPowerDefinition power, OmniApplyResult? applyResult = null)
     {
+        return FlattenEffectGroups(power, power.Effects, "effect", applyResult);
+    }
+
+    public static IEnumerable<Effect> FlattenEffectGroups(
+        OmniPowerDefinition power,
+        IReadOnlyList<OmniEffectDefinition> effectGroups,
+        string sourcePrefix,
+        OmniApplyResult? applyResult = null)
+    {
         var uniqueId = 1;
-        for (var effectIndex = 0; effectIndex < power.Effects.Count; effectIndex++)
+        for (var effectIndex = 0; effectIndex < effectGroups.Count; effectIndex++)
         {
-            foreach (var flattened in FlattenEffect(power, power.Effects[effectIndex], ref uniqueId, applyResult, [], $"effect[{effectIndex}]"))
+            foreach (var flattened in FlattenEffect(power, effectGroups[effectIndex], ref uniqueId, applyResult, [], $"{sourcePrefix}[{effectIndex}]"))
             {
                 yield return flattened;
             }

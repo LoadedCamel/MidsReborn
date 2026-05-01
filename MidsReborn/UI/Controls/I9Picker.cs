@@ -24,6 +24,13 @@ namespace Mids_Reborn.UI.Controls
             public bool InAlternate;
         }
 
+        public enum SetPickerStage
+        {
+            SetFamilyGrid,
+            SetVariantGrid,
+            SetEnhancementGrid
+        }
+
         #endregion
 
         #region Constants
@@ -70,6 +77,7 @@ namespace Mids_Reborn.UI.Controls
         private Enums.eEnhRelative _lastRelativeLevel = Enums.eEnhRelative.Even;
         private int _lastSpecial = 1;
         private int _lastSet;
+        private int _initialEnhancementId = -1;
 
         private int[] _slotted = [];
 
@@ -194,6 +202,7 @@ namespace Mids_Reborn.UI.Controls
             _powerId = iPower;
             _hoverTitle = $"Enhancing: {DatabaseAPI.Database.Power[iPower].DisplayName}";
             _slotted = slotted;
+            _initialEnhancementId = iSlot.Enh;
 
             // 1. Reset the model to ensure a clean state
             _model = new EnhSelectorModel();
@@ -235,12 +244,10 @@ namespace Mids_Reborn.UI.Controls
                 {
                     int setType = DatabaseAPI.Database.EnhancementSets[enh.nIDSet].SetType;
                     _model.Initial.SetTypeId = SetTypeToId(setType);
-
-                    // IMPORTANT: Populate SetIds ONLY with sets of the correct type
                     _model.SetIds = GetSets(setType);
-
-                    // Find the local index of the specific set within that type
-                    _model.Initial.SetId = Array.IndexOf(_model.SetIds, enh.nIDSet);
+                    _model.Initial.SetId = enh.nIDSet;
+                    _model.Initial.SetVariant = DatabaseAPI.GetSetVariantKind(iSlot.Enh);
+                    _model.Initial.SetStage = SetPickerStage.SetEnhancementGrid;
                 }
             }
             else // Otherwise, the slot is empty
@@ -295,7 +302,7 @@ namespace Mids_Reborn.UI.Controls
                 case Enums.eType.SetO when _model.View.SetId > -1 && _model.View.SetTypeId > -1:
                     {
                         var setList = DatabaseAPI.Database.EnhancementSets;
-                        var setId = _model.SetIds.ElementAtOrDefault(_model.View.SetId);
+                        var setId = _model.View.SetId;
                         var set = setList.ElementAtOrDefault(setId);
                         if (set is not null)
                         {
@@ -429,7 +436,7 @@ namespace Mids_Reborn.UI.Controls
                 _hoverSetIndex = -1;
                 _hoverHeaderIndex = -1;
 
-                if (_model.View.TabId == Enums.eType.SetO && _model.View.SetId == -1)
+                if (_model.View.TabId == Enums.eType.SetO && _model.View.SetStage == SetPickerStage.SetFamilyGrid)
                 {
                     // Hovering a SET tile (not yet inside the set). Raise HoverSet with the concrete setId.
                     if (i2 < _model.SetIds.Length)
@@ -439,6 +446,14 @@ namespace Mids_Reborn.UI.Controls
                         var info = $"{setData.DisplayName}\nType: {Enum.GetName(typeof(Enums.eSetType), setData.SetType)}     Level Range: {setData.LevelMin + 1}-{setData.LevelMax + 1}";
                         SetHoverText(info, "Click to view enhancements in this set.");
                         RaiseHoverSetEvent(setId);
+                    }
+                }
+                else if (_model.View.TabId == Enums.eType.SetO && _model.View.SetStage == SetPickerStage.SetVariantGrid)
+                {
+                    if (i2 < _model.SetVariants.Length && _model.View.SetId > -1)
+                    {
+                        var variantKind = _model.SetVariants[i2];
+                        SetHoverText($"{DatabaseAPI.Database.EnhancementSets[_model.View.SetId].DisplayName} - {GetSetVariantDisplayName(variantKind)}", "Click to view the pieces in this variant.");
                     }
                 }
                 else
@@ -548,6 +563,12 @@ namespace Mids_Reborn.UI.Controls
                         _ => _model.View.TabId
                     };
 
+                    if (newTabId == Enums.eType.SetO && _model.View.TabId == Enums.eType.SetO && StepBackSetSelection())
+                    {
+                        Invalidate();
+                        return;
+                    }
+
                     _model.View.TabId = newTabId;
 
                     _model.View.RelLevel = ValidateRelativeLevel(_model.View.RelLevel, _model.View.TabId, -1);
@@ -564,8 +585,7 @@ namespace Mids_Reborn.UI.Controls
                     }
 
                     // Reset selection state
-                    _model.View.SetId = -1;
-                    _model.View.SetTypeId = -1;
+                    ResetSetSelection();
                     _hoverSetIndex = -1;
                     _scrollOffset = 0;
 
@@ -592,10 +612,8 @@ namespace Mids_Reborn.UI.Controls
                             SetActiveEnhancements(_powerId, -1, _normalEnhs, _inventionEnhs);
                             break;
                         case Enums.eType.SetO:
-                            _model.View.SetTypeId = index;
                             _lastSet = index;
-                            _model.View.SetId = -1;
-                            _model.SetIds = GetSets(_model.SetTypes[index]);
+                            EnterSetType(index);
                             break;
                     }
                     // The grid will now redraw showing the sets.
@@ -609,11 +627,16 @@ namespace Mids_Reborn.UI.Controls
             {
                 if (rect.Contains(pt))
                 {
-                    if (_model.View.TabId == Enums.eType.SetO && _model.View.SetId == -1)
+                    if (_model.View.TabId == Enums.eType.SetO && _model.View.SetStage == SetPickerStage.SetFamilyGrid)
                     {
-                        // We are selecting a SET from the grid.
-                        _model.View.SetId = index; // The 'index' corresponds to the set's position
-                        // Now load the enhancements for the selected set.
+                        _model.View.SetId = _model.SetIds[index];
+                        _model.View.SetVariant = null;
+                        OpenSelectedSetFamily(-1);
+                        Invalidate();
+                    }
+                    else if (_model.View.TabId == Enums.eType.SetO && _model.View.SetStage == SetPickerStage.SetVariantGrid)
+                    {
+                        _model.View.SetVariant = _model.SetVariants[index];
                         SetActiveEnhancements(_powerId, -1, _normalEnhs, _inventionEnhs);
                         Invalidate();
                     }
@@ -880,7 +903,7 @@ namespace Mids_Reborn.UI.Controls
             gridBounds = new Rectangle(left, top, width, height);
             _enhancementRects.Clear();
 
-            if (_model.View.TabId == Enums.eType.SetO && _model.View.SetId == -1 && _model.View.SetTypeId > -1)
+            if (_model.View.TabId == Enums.eType.SetO && _model.View.SetStage == SetPickerStage.SetFamilyGrid && _model.View.SetTypeId > -1)
             {
                 for (int i = 0; i < _model.SetIds.Length; i++)
                 {
@@ -899,6 +922,26 @@ namespace Mids_Reborn.UI.Controls
                     DrawIconFrame(g, rect, false, hovered);
                 }
                 return; // Stop here to prevent drawing enhancements underneath
+            }
+
+            if (_model.View.TabId == Enums.eType.SetO && _model.View.SetStage == SetPickerStage.SetVariantGrid && _model.View.SetId > -1)
+            {
+                for (int i = 0; i < _model.SetVariants.Length; i++)
+                {
+                    int col = i % EnhGridCols;
+                    int row = i / EnhGridCols;
+                    int x = gridBounds.Left + col * (IconSize + IconSpacing);
+                    int y = gridBounds.Top + row * (IconSize + IconSpacing);
+                    var rect = new Rectangle(x, y, IconSize, IconSize);
+
+                    _enhancementRects.Add((rect, i));
+                    bool selected = _model.View.SetVariant == _model.SetVariants[i];
+                    bool hovered = _hoverEnhIndex == i;
+
+                    AssetManager.DrawEnhancementSetVariant(g, IconContentRect(rect), _model.View.SetId, _model.SetVariants[i]);
+                    DrawIconFrame(g, rect, selected, hovered);
+                }
+                return;
             }
 
             for (int row = 0; row < EnhGridRows; row++)
@@ -1267,7 +1310,22 @@ namespace Mids_Reborn.UI.Controls
 
             bool InMain, InAlternate;
 
-            if (enhData.Unique)
+            if (enhData.TypeID == Enums.eType.SetO && DatabaseAPI.TryGetSetPieceIndexForEnhancement(enhId, out _, out _))
+            {
+                bool SamePower(PowerEntry? p) =>
+                    powerStatic is null || p?.Power?.StaticIndex == powerStatic;
+
+                InMain = (_slotted?.Any(s => DatabaseAPI.AreEnhancementsSameSetPiece(s, enhId)) == true)
+                         || MidsContext.Character.CurrentBuild.Powers
+                             .Where(p => p is { Power.Slottable: true } && SamePower(p))
+                             .Any(p => p?.Slots.Any(s => DatabaseAPI.AreEnhancementsSameSetPiece(s.Enhancement.Enh, enhId)) == true);
+
+                InAlternate = (_slotted?.Any(s => DatabaseAPI.AreEnhancementsSameSetPiece(s, enhId)) == true)
+                              || MidsContext.Character.CurrentBuild.Powers
+                                  .Where(p => p is { Power.Slottable: true } && SamePower(p))
+                                  .Any(p => p?.Slots.Any(s => DatabaseAPI.AreEnhancementsSameSetPiece(s.FlippedEnhancement.Enh, enhId)) == true);
+            }
+            else if (enhData.Unique)
             {
                 InMain = (_slotted?.Any(s => s == enhId) == true)
                          || MidsContext.Character.CurrentBuild.Powers
@@ -1527,17 +1585,23 @@ namespace Mids_Reborn.UI.Controls
             if (enhId < 0) return false;
 
             var enh = DatabaseAPI.Database.Enhancements[enhId];
+            if (enh.TypeID == Enums.eType.SetO && DatabaseAPI.TryGetSetPieceIndexForEnhancement(enhId, out _, out _))
+            {
+                var ignoredMatches = DatabaseAPI.AreEnhancementsSameSetPiece(_initialEnhancementId, enhId) ? 1 : 0;
+                var currentPowerMatches = _slotted?.Count(slottedEnhId => DatabaseAPI.AreEnhancementsSameSetPiece(slottedEnhId, enhId)) ?? 0;
+                return currentPowerMatches > ignoredMatches;
+            }
 
             if (!enh.Unique)
                 return false;
 
-            // Check if it's already slotted in any build slot
-            bool isAlreadyUsed = MidsContext.Character.CurrentBuild.Powers
+            var ignoredUniqueMatches = _initialEnhancementId == enhId ? 1 : 0;
+            var uniqueMatches = MidsContext.Character.CurrentBuild.Powers
                 .Where(p => p is not null)
                 .SelectMany(p => p!.Slots)
-                .Any(s => s.Enhancement.Enh == enhId);
+                .Count(s => s.Enhancement.Enh == enhId);
 
-            return isAlreadyUsed;
+            return uniqueMatches > ignoredUniqueMatches;
         }
 
         private static ImageAttributes GetImageAttributes(bool gray)
@@ -1602,8 +1666,14 @@ namespace Mids_Reborn.UI.Controls
 
         private Enums.eEnhRelative ValidateRelativeLevel(Enums.eEnhRelative current, Enums.eType tabId, int enhId)
         {
-            if (enhId > -1 && (_model.HasCatalyst(enhId) || _model.IsNaturallyAttuned(enhId)))
-                return Enums.eEnhRelative.Even; // lock to 0
+            if (enhId > -1)
+            {
+                if (tabId == Enums.eType.SetO && DatabaseAPI.IsAttunedSetVariant(enhId))
+                    return Enums.eEnhRelative.Even;
+
+                if (tabId != Enums.eType.SetO && (_model.HasCatalyst(enhId) || _model.IsNaturallyAttuned(enhId)))
+                    return Enums.eEnhRelative.Even;
+            }
 
             int val = current.ToInt(); // convert enum to -3 to +5
 
@@ -1684,6 +1754,189 @@ namespace Mids_Reborn.UI.Controls
             return -1;
         }
 
+        private void ResetSetSelection()
+        {
+            _model.View.SetTypeId = -1;
+            _model.View.SetId = -1;
+            _model.View.SetVariant = null;
+            _model.View.SetStage = SetPickerStage.SetFamilyGrid;
+            _model.View.PickerId = -1;
+            _model.SetIds = [];
+            _model.SetVariants = [];
+            _model.EnhancementIds = [];
+            _model.VisiblePieceIndexes = [];
+        }
+
+        private void EnterSetType(int setTypeIndex)
+        {
+            _model.View.SetTypeId = setTypeIndex;
+            _model.View.SetId = -1;
+            _model.View.SetVariant = null;
+            _model.View.SetStage = SetPickerStage.SetFamilyGrid;
+            _model.View.PickerId = -1;
+            _model.SetIds = setTypeIndex >= 0 && setTypeIndex < _model.SetTypes.Length
+                ? GetSets(_model.SetTypes[setTypeIndex])
+                : [];
+            _model.SetVariants = [];
+            _model.EnhancementIds = [];
+            _model.VisiblePieceIndexes = [];
+        }
+
+        private bool StepBackSetSelection()
+        {
+            if (_model.View.TabId != Enums.eType.SetO)
+            {
+                return false;
+            }
+
+            switch (_model.View.SetStage)
+            {
+                case SetPickerStage.SetEnhancementGrid when _model.SetVariants.Length > 1:
+                    _model.View.SetStage = SetPickerStage.SetVariantGrid;
+                    _model.View.SetVariant = null;
+                    _model.View.PickerId = -1;
+                    _model.EnhancementIds = [];
+                    _model.VisiblePieceIndexes = [];
+                    return true;
+                case SetPickerStage.SetEnhancementGrid:
+                    _model.View.SetStage = SetPickerStage.SetFamilyGrid;
+                    _model.View.SetId = -1;
+                    _model.View.SetVariant = null;
+                    _model.View.PickerId = -1;
+                    _model.SetVariants = [];
+                    _model.EnhancementIds = [];
+                    _model.VisiblePieceIndexes = [];
+                    return true;
+                case SetPickerStage.SetVariantGrid:
+                    _model.View.SetStage = SetPickerStage.SetFamilyGrid;
+                    _model.View.SetId = -1;
+                    _model.View.SetVariant = null;
+                    _model.View.PickerId = -1;
+                    _model.SetVariants = [];
+                    _model.EnhancementIds = [];
+                    _model.VisiblePieceIndexes = [];
+                    return true;
+                case SetPickerStage.SetFamilyGrid when _model.View.SetTypeId > -1:
+                    ResetSetSelection();
+                    return true;
+                default:
+                    return false;
+            }
+        }
+
+        private void OpenSelectedSetFamily(int initialEnhId)
+        {
+            if (initialEnhId > -1 && DatabaseAPI.Database.Enhancements[initialEnhId].nIDSet == _model.View.SetId)
+            {
+                _model.View.SetVariant = DatabaseAPI.GetSetVariantKind(initialEnhId);
+            }
+
+            SetActiveEnhancements(_powerId, initialEnhId, _normalEnhs, _inventionEnhs);
+        }
+
+        private static SetVariantKind[] GetOrderedSetVariants(int setId)
+        {
+            return DatabaseAPI.GetAvailableSetVariants(setId)
+                .OrderBy(DatabaseAPI.GetSetVariantSortKey)
+                .ToArray();
+        }
+
+        private static string GetSetVariantDisplayName(SetVariantKind variantKind)
+        {
+            return variantKind switch
+            {
+                SetVariantKind.Attuned => "Attuned",
+                SetVariantKind.Superior => "Superior",
+                SetVariantKind.SuperiorAttuned => "Superior Attuned",
+                _ => "Crafted"
+            };
+        }
+
+        private void ConfigureSetSelection(int initialEnhId)
+        {
+            _model.EnhancementIds = [];
+            _model.VisiblePieceIndexes = [];
+            _model.View.PickerId = -1;
+
+            if (_model.View.SetTypeId < 0 || _model.View.SetTypeId >= _model.SetTypes.Length)
+            {
+                _model.View.SetStage = SetPickerStage.SetFamilyGrid;
+                _model.View.SetId = -1;
+                _model.View.SetVariant = null;
+                return;
+            }
+
+            _model.SetIds = GetSets(_model.SetTypes[_model.View.SetTypeId]);
+            if (_model.View.SetId < 0 || !_model.SetIds.Contains(_model.View.SetId))
+            {
+                _model.View.SetId = -1;
+                _model.View.SetVariant = null;
+                _model.View.SetStage = SetPickerStage.SetFamilyGrid;
+                return;
+            }
+
+            var setId = _model.View.SetId;
+            var variants = GetOrderedSetVariants(setId);
+            _model.SetVariants = variants;
+
+            if (variants.Length == 1)
+            {
+                _model.View.SetVariant = variants[0];
+                _model.View.SetStage = SetPickerStage.SetEnhancementGrid;
+            }
+            else
+            {
+                if (!_model.View.SetVariant.HasValue || !variants.Contains(_model.View.SetVariant.Value))
+                {
+                    if (initialEnhId > -1 && DatabaseAPI.Database.Enhancements[initialEnhId].nIDSet == setId)
+                    {
+                        _model.View.SetVariant = DatabaseAPI.GetSetVariantKind(initialEnhId);
+                    }
+                    else
+                    {
+                        _model.View.SetVariant = null;
+                    }
+                }
+
+                _model.View.SetStage = _model.View.SetVariant.HasValue
+                    ? SetPickerStage.SetEnhancementGrid
+                    : SetPickerStage.SetVariantGrid;
+
+                if (_model.View.SetStage == SetPickerStage.SetVariantGrid)
+                {
+                    return;
+                }
+            }
+
+            if (!_model.View.SetVariant.HasValue)
+            {
+                return;
+            }
+
+            var projection = DatabaseAPI.GetEnhancementSetProjection(setId);
+            var visiblePieces = projection.VisiblePieces
+                .Select(piece => new
+                {
+                    piece.PieceIndex,
+                    piece.DisplayLabel,
+                    EnhancementId = DatabaseAPI.ResolveEnhancementVariantForSetPiece(setId, piece.PieceIndex, _model.View.SetVariant.Value)
+                })
+                .Where(piece => piece.EnhancementId >= 0)
+                .ToArray();
+
+            _model.EnhancementIds = visiblePieces.Select(piece => piece.EnhancementId).ToArray();
+            _model.VisiblePieceIndexes = visiblePieces.Select(piece => piece.PieceIndex).ToArray();
+            _model.EnhancementNames = visiblePieces.ToDictionary(piece => piece.EnhancementId, piece => piece.DisplayLabel);
+            _model.EnhancementDescriptions = visiblePieces.ToDictionary(piece => piece.EnhancementId, piece => DatabaseAPI.Database.Enhancements[piece.EnhancementId].ShortName);
+
+            if (initialEnhId > -1 &&
+                DatabaseAPI.TryGetSetPieceIndexForEnhancement(initialEnhId, out var initialSetId, out var initialPieceIndex) &&
+                initialSetId == setId)
+            {
+                _model.View.PickerId = Array.IndexOf(_model.VisiblePieceIndexes, initialPieceIndex);
+            }
+        }
+
         private void SetActiveEnhancements(int iPower, int initialEnhId, int[] normalEnhs, int[] inventionEnhs)
         {
             int[] enhIdList;
@@ -1692,6 +1945,8 @@ namespace Mids_Reborn.UI.Controls
 
             _model.EnhancementNames.Clear();
             _model.EnhancementDescriptions.Clear();
+            _model.VisiblePieceIndexes = [];
+            _model.SetVariants = [];
 
             switch (tab)
             {
@@ -1704,18 +1959,21 @@ namespace Mids_Reborn.UI.Controls
                 case Enums.eType.SpecialO:
                     enhIdList = GetValidEnhancements(iPower, tab, specialSubType).ToArray();
                     break;
-                case Enums.eType.SetO when _model.View.SetId > -1:
-                    var setId = _model.SetIds[_model.View.SetId];
-                    enhIdList = DatabaseAPI.Database.EnhancementSets[setId].Enhancements;
+                case Enums.eType.SetO:
+                    ConfigureSetSelection(initialEnhId);
+                    enhIdList = _model.EnhancementIds;
                     break;
                 default:
                     enhIdList = [];
                     break;
             }
 
-            _model.EnhancementIds = enhIdList;
+            if (tab != Enums.eType.SetO)
+            {
+                _model.EnhancementIds = enhIdList;
+            }
 
-            if (enhIdList.Length > 0 && enhIdList[0] > -1)
+            if (tab != Enums.eType.SetO && enhIdList.Length > 0 && enhIdList[0] > -1)
             {
                 // Repopulate the dictionaries only if we have enhancements to display.
                 _model.EnhancementNames = enhIdList.ToDictionary(id => id, id => DatabaseAPI.Database.Enhancements[id].Name);
@@ -1723,11 +1981,16 @@ namespace Mids_Reborn.UI.Controls
             }
 
             // Find the PickerId if the initial enhancement is in the current view
-            if (initialEnhId > -1 && _model.Initial.TabId == _model.View.TabId)
+            if (tab != Enums.eType.SetO && initialEnhId > -1 && _model.Initial.TabId == _model.View.TabId)
             {
                 _model.Initial.PickerId = Array.IndexOf(enhIdList, initialEnhId);
                 _model.View.PickerId = _model.Initial.PickerId;
             }
+
+            var focusEnhancementId = _model.View.PickerId >= 0 && _model.View.PickerId < enhIdList.Length
+                ? enhIdList[_model.View.PickerId]
+                : enhIdList.FirstOrDefault(-1);
+            _model.View.RelLevel = ValidateRelativeLevel(_model.View.RelLevel, _model.View.TabId, focusEnhancementId);
         }
 
         #endregion
@@ -1785,9 +2048,11 @@ namespace Mids_Reborn.UI.Controls
 
             public int[] EnhancementIds { get; set; } = [];
             public int[] SetIds { get; set; } = [];
+            public int[] VisiblePieceIndexes { get; set; } = [];
             public int[] NoGrades { get; set; } = [];
             public int[] SpecialTypes { get; set; } = [];
             public int[] SetTypes { get; set; } = [];
+            public SetVariantKind[] SetVariants { get; set; } = [];
 
             public Dictionary<int, string> EnhancementNames { get; set; } = new();
             public Dictionary<int, string> EnhancementDescriptions { get; set; } = new();
@@ -1813,6 +2078,8 @@ namespace Mids_Reborn.UI.Controls
             public int SetTypeId { get; set; } = -1;
             public int SetId { get; set; } = -1;
             public int SpecialId { get; set; } = -1;
+            public SetVariantKind? SetVariant { get; set; }
+            public SetPickerStage SetStage { get; set; } = SetPickerStage.SetFamilyGrid;
 
             public EnhSelectorState() { }
 
@@ -1827,6 +2094,8 @@ namespace Mids_Reborn.UI.Controls
                 IoLevel = iCl.IoLevel;
                 SpecialLevel = iCl.SpecialLevel;
                 RelLevel = iCl.RelLevel;
+                SetVariant = iCl.SetVariant;
+                SetStage = iCl.SetStage;
             }
         }
 

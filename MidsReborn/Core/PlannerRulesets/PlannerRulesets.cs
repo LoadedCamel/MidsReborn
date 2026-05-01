@@ -64,6 +64,7 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
 
         static bool IsGlobalAccuracySource(IPower src) =>
             ReferenceEquals(src, MidsContext.Character.CurrentBuild.SetBonusVirtualPower) ||
+            string.Equals(src.FullName, "Mids.SetBonus.Virtual", StringComparison.OrdinalIgnoreCase) ||
             src.PowerType == Enums.ePowerType.GlobalBoost;
 
         var shortFx = new Enums.ShortFX();

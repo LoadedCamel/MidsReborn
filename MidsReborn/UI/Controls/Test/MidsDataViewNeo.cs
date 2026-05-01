@@ -17,11 +17,25 @@ using System.Text.RegularExpressions;
 
 namespace Mids_Reborn.UI.Controls
 {
+    public enum MidsDataViewNeoPresentationMode
+    {
+        CharacterBuild,
+        ActorReadOnly
+    }
+
     public partial class MidsDataViewNeo : UserControl
     {
         #region Constants
 
-        private readonly string[] _tabs = ["INFO", "EFFECTS", "TOTALS", "ENHANCE"];
+        private readonly record struct TabDescriptor(string Title, int PageIndex);
+        private readonly TabDescriptor[] _allTabs =
+        [
+            new("INFO", 0),
+            new("EFFECTS", 1),
+            new("TOTALS", 2),
+            new("ENHANCE", 3),
+            new("BONUSES", 4)
+        ];
         private const int TabPaddingX = 16;     // reserved for future text padding if needed
         private const int TabHeight = 24;
         private const int TabSpacing = 4;
@@ -112,9 +126,15 @@ namespace Mids_Reborn.UI.Controls
         private IPower? pEnh;
         private IPower? rootPowerBase;
         private IPower? rootPowerEnh;
+        private ActorTotalsSnapshot? _actorTotalsSnapshot;
+        private string? _actorPowerSourceDescription;
+        private IReadOnlyList<PetAppliedBonusEntry> _actorAppliedBonuses = [];
         private int pLastScaleVal;
         private List<GroupedFx> GroupedRankedEffects = [];
         private List<KeyValuePair<GroupedFx, PairedListEx.Item>> EffectsItemPairs = [];
+        private MidsDataViewNeoPresentationMode _presentationMode = MidsDataViewNeoPresentationMode.CharacterBuild;
+        private Page? _bonusesView;
+        private PairedListEx? _bonusesDataList;
 
         public PetInfo PetInfo;
 
@@ -147,6 +167,8 @@ namespace Mids_Reborn.UI.Controls
             set => SetLock(value, true);
         }
 
+        public MidsDataViewNeoPresentationMode PresentationMode => _presentationMode;
+
         private DataViewTheme CurrentTheme
         {
             get
@@ -159,6 +181,12 @@ namespace Mids_Reborn.UI.Controls
             }
         }
 
+        private IReadOnlyList<TabDescriptor> VisibleTabs => _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly
+            ? _allTabs.Where(tab => tab.PageIndex != 3).ToArray()
+            : _allTabs.Where(tab => tab.PageIndex != 4).ToArray();
+
+        private bool HeaderActionsVisible => _presentationMode != MidsDataViewNeoPresentationMode.ActorReadOnly;
+
         #endregion
 
         #region Constructor
@@ -166,6 +194,7 @@ namespace Mids_Reborn.UI.Controls
         public MidsDataViewNeo()
         {
             InitializeComponent();
+            InitializeBonusesPage();
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
 
             // Ensure the header panel itself is double-buffered (prevents flicker)
@@ -196,6 +225,48 @@ namespace Mids_Reborn.UI.Controls
 
             PetInfo = new PetInfo();
             if (!DesignMode) ThemeManager.ThemeChanged += ThemeManagerOnThemeChanged;
+        }
+
+        private void InitializeBonusesPage()
+        {
+            _bonusesView = new Page
+            {
+                AccessibleRole = AccessibleRole.None,
+                Anchor = AnchorStyles.None,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                BackColor = Color.Transparent,
+                Dock = DockStyle.Fill,
+                ForeColor = Color.WhiteSmoke,
+                Name = "bonusesView",
+                Size = infoView.Size,
+                Title = "Actor Bonuses"
+            };
+
+            _bonusesDataList = new PairedListEx
+            {
+                AutoScroll = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                BackColor = Color.FromArgb(1, 7, 15),
+                Dock = DockStyle.Fill,
+                Font = new Font("Segoe UI", 9.25F, FontStyle.Regular, GraphicsUnit.Point, 0),
+                HighlightColor = Color.FromArgb(128, 128, 255),
+                HighlightTextColor = Color.Black,
+                ItemColor = Color.WhiteSmoke,
+                Margin = new Padding(0),
+                Name = "bonusDataList",
+                SampleRowsPerColumn = 5,
+                SetItemsBold = false,
+                ShowRuntimeSamples = true,
+                UseHighlighting = true,
+                ValueAlternateColor = Color.Chartreuse,
+                ValueColor = Color.WhiteSmoke,
+                ValueConditionColor = Color.Firebrick,
+                ValueSpecialColor = Color.SlateBlue
+            };
+
+            _bonusesView.Controls.Add(_bonusesDataList);
+            dvPages.Controls.Add(_bonusesView);
+            dvPages.Pages.Add(_bonusesView);
         }
 
         #endregion
@@ -360,6 +431,10 @@ namespace Mids_Reborn.UI.Controls
             effectView.BackColor = theme.Background;
             totalView.BackColor = theme.Background;
             enhanceView.BackColor = theme.Background;
+            if (_bonusesView != null)
+            {
+                _bonusesView.BackColor = theme.Background;
+            }
 
             infoSDesc.BackColor = theme.Background;
             infoSDesc.ForeColor = theme.Text;
@@ -375,6 +450,10 @@ namespace Mids_Reborn.UI.Controls
             ApplyPairedListTheme(infoDataList, theme);
             ApplyPairedListTheme(coreDataList, theme);
             ApplyPairedListTheme(enhDataList, theme);
+            if (_bonusesDataList != null)
+            {
+                ApplyPairedListTheme(_bonusesDataList, theme);
+            }
             ApplyEnhanceSurfaceTheme(theme);
 
             sliderHost.BackColor = theme.Background;
@@ -435,6 +514,10 @@ namespace Mids_Reborn.UI.Controls
             effectsGrid.GridPadding = Math.Max(6, ContentInset);
             coreDataList.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
             enhDataList.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
+            if (_bonusesDataList != null)
+            {
+                _bonusesDataList.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
+            }
             UpdateInfoDescriptionLayout();
         }
 
@@ -557,26 +640,31 @@ namespace Mids_Reborn.UI.Controls
 
             var tabSpacing = ScalePx(TabSpacing);
             var outerInset = ScalePx(HeaderOuterInset);
-            var actionWidth = DockButton.Width + LockButton.Width + tabSpacing;
-            var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - actionWidth - (outerInset * 2) - (tabSpacing * (_tabs.Length - 1)));
+            var visibleTabs = VisibleTabs;
+            var actionWidth = HeaderActionsVisible ? DockButton.Width + LockButton.Width + tabSpacing : 0;
+            var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - actionWidth - (outerInset * 2) - (tabSpacing * Math.Max(0, visibleTabs.Count - 1)));
             var tabTop = Math.Max(ScalePx(2), (hr.Height - ScalePx(TabHeight)) / 2);
-            var tabRects = ComputeTabRects(availableWidth, _tabs.Length, new Point(outerInset, tabTop), ScalePx(TabHeight), tabSpacing);
+            var tabRects = ComputeTabRects(availableWidth, visibleTabs.Count, new Point(outerInset, tabTop), ScalePx(TabHeight), tabSpacing);
 
-            DrawHeaderActionWell(g, HeaderActionBounds(LockButton), theme, LockButton.ClientRectangle.Contains(LockButton.PointToClient(Cursor.Position)));
-            DrawHeaderActionWell(g, HeaderActionBounds(DockButton), theme, DockButton.ClientRectangle.Contains(DockButton.PointToClient(Cursor.Position)));
+            if (HeaderActionsVisible)
+            {
+                DrawHeaderActionWell(g, HeaderActionBounds(LockButton), theme, LockButton.ClientRectangle.Contains(LockButton.PointToClient(Cursor.Position)));
+                DrawHeaderActionWell(g, HeaderActionBounds(DockButton), theme, DockButton.ClientRectangle.Contains(DockButton.PointToClient(Cursor.Position)));
+            }
 
             // Draw tabs
             using var hoverBrush = new SolidBrush(Blend(theme.TabInactiveTop, theme.TabActiveTop, 0.24f));
             using var outlineColor = new SolidBrush(Color.Black); // for outline method
             using var font = new Font(Font.FontFamily, Font.Size, FontStyle.Bold);
 
-            for (int i = 0; i < _tabs.Length; i++)
+            for (int i = 0; i < visibleTabs.Count; i++)
             {
                 var rect = tabRects[i];
+                var tab = visibleTabs[i];
 
                 using var path = RoundedRect(rect, ScalePx(CornerRadius));
 
-                if (i == _selectedTabIndex)
+                if (tab.PageIndex == _selectedTabIndex)
                 {
                     //using var selectedBrush = new SolidBrush(_tabSelectedColors[i]);
                     using var selectedBrush = new LinearGradientBrush(rect, theme.TabActiveTop, theme.TabActiveBottom, LinearGradientMode.Vertical);
@@ -592,11 +680,11 @@ namespace Mids_Reborn.UI.Controls
                     g.FillPath(inactiveBrush, path);
                 }
 
-                using var tabBorder = new Pen(i == _selectedTabIndex ? Blend(theme.Border, theme.TabActiveTop, 0.45f) : theme.TabBorder);
+                using var tabBorder = new Pen(tab.PageIndex == _selectedTabIndex ? Blend(theme.Border, theme.TabActiveTop, 0.45f) : theme.TabBorder);
                 g.DrawPath(tabBorder, path);
 
-                var textColor = i == _selectedTabIndex ? theme.Text : Blend(theme.Muted, theme.Text, 0.24f);
-                DrawTextWithOutline(g, _tabs[i], font, rect, textColor, Color.Black);
+                var textColor = tab.PageIndex == _selectedTabIndex ? theme.Text : Blend(theme.Muted, theme.Text, 0.24f);
+                DrawTextWithOutline(g, tab.Title, font, rect, textColor, Color.Black);
             }
         }
 
@@ -674,7 +762,7 @@ namespace Mids_Reborn.UI.Controls
         private void HeaderPanel_MouseMove(object? sender, MouseEventArgs e)
         {
             // Ignore hover when over either right-side button
-            if (DockButton.Bounds.Contains(e.Location) || LockButton.Bounds.Contains(e.Location))
+            if (HeaderActionsVisible && (DockButton.Bounds.Contains(e.Location) || LockButton.Bounds.Contains(e.Location)))
             {
                 if (_hoveredTabIndex != -1)
                 {
@@ -686,10 +774,11 @@ namespace Mids_Reborn.UI.Controls
 
             var tabSpacing = ScalePx(TabSpacing);
             var outerInset = ScalePx(HeaderOuterInset);
-            var actionWidth = DockButton.Width + LockButton.Width + tabSpacing;
-            var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - actionWidth - (outerInset * 2) - (tabSpacing * (_tabs.Length - 1)));
+            var visibleTabs = VisibleTabs;
+            var actionWidth = HeaderActionsVisible ? DockButton.Width + LockButton.Width + tabSpacing : 0;
+            var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - actionWidth - (outerInset * 2) - (tabSpacing * Math.Max(0, visibleTabs.Count - 1)));
             var tabTop = Math.Max(ScalePx(2), (headerPanel.ClientSize.Height - ScalePx(TabHeight)) / 2);
-            var tabRects = ComputeTabRects(availableWidth, _tabs.Length, new Point(outerInset, tabTop), ScalePx(TabHeight), tabSpacing);
+            var tabRects = ComputeTabRects(availableWidth, visibleTabs.Count, new Point(outerInset, tabTop), ScalePx(TabHeight), tabSpacing);
 
             int newHovered = -1;
             for (int i = 0; i < tabRects.Length; i++)
@@ -729,19 +818,36 @@ namespace Mids_Reborn.UI.Controls
 
         #region Public API
 
+        public void SetPresentationMode(MidsDataViewNeoPresentationMode mode)
+        {
+            if (_presentationMode == mode)
+            {
+                return;
+            }
+
+            _presentationMode = mode;
+            ApplyPresentationMode();
+        }
+
         public void SelectTab(int index)
         {
-            if (index < 0 || index > _tabs.Length - 1 || index == _selectedTabIndex)
+            var tabs = VisibleTabs;
+            if (index < 0 || index >= tabs.Count)
+            {
+                return;
+            }
+
+            var actualPageIndex = tabs[index].PageIndex;
+            if (actualPageIndex == _selectedTabIndex)
                 return;
 
-            // If it was already the selected index, ensure header state is consistent
-            if (_selectedTabIndex != index)
+            if (_selectedTabIndex != actualPageIndex)
             {
-                _selectedTabIndex = index;
+                _selectedTabIndex = actualPageIndex;
                 dvPages.SelectedIndex = _selectedTabIndex;
                 headerPanel.Invalidate();
                 RefreshSelectedTabHeader();
-                TabChanged?.Invoke(this, index);
+                TabChanged?.Invoke(this, _selectedTabIndex);
             }
         }
 
@@ -753,10 +859,36 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
+            if (_selectedTabIndex == 4)
+            {
+                DisplayBonuses();
+                return;
+            }
+
             if (pBase != null)
             {
                 DisplayInfo();
             }
+        }
+
+        private void ApplyPresentationMode()
+        {
+            var actorReadOnly = _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly;
+            DockButton.Visible = !actorReadOnly;
+            LockButton.Visible = !actorReadOnly;
+            if (actorReadOnly)
+            {
+                procToggle.Visible = false;
+            }
+
+            if ((actorReadOnly && _selectedTabIndex == 3) || (!actorReadOnly && _selectedTabIndex == 4))
+            {
+                _selectedTabIndex = 0;
+                dvPages.SelectedIndex = 0;
+            }
+
+            headerPanel.Invalidate();
+            RefreshSelectedTabHeader();
         }
 
         public void SetData(IPower? basePower, IPower? enhancedPower, bool noLevel = false, bool locked = false, int iHistoryIdx = -1)
@@ -791,9 +923,64 @@ namespace Mids_Reborn.UI.Controls
             SetData(snapshot, noLevel, locked);
         }
 
+        public void SetActorData(
+            IPower? basePower,
+            IPower? enhancedPower,
+            string actorClassName,
+            ActorTotalsSnapshot? actorTotals,
+            int iHistoryIdx = -1,
+            string? powerSourceDescription = null,
+            IReadOnlyList<PetAppliedBonusEntry>? appliedBonuses = null)
+        {
+            SetPresentationMode(MidsDataViewNeoPresentationMode.ActorReadOnly);
+            _actorTotalsSnapshot = actorTotals;
+            _actorPowerSourceDescription = powerSourceDescription;
+            _actorAppliedBonuses = appliedBonuses ?? [];
+
+            if (basePower == null)
+            {
+                Clear();
+                return;
+            }
+
+            var baseClone = new Power(basePower)
+            {
+                OmniDisplayClassName = actorClassName
+            };
+            var enhancedClone = enhancedPower == null
+                ? new Power(basePower)
+                {
+                    PowerIndex = -1,
+                    OmniDisplayClassName = actorClassName
+                }
+                : new Power(enhancedPower)
+                {
+                    OmniDisplayClassName = actorClassName
+                };
+
+            SetData(baseClone, enhancedClone, false, false, iHistoryIdx);
+        }
+
+        private int GetDisplayedBaseHitPoints()
+        {
+            if (_presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly && _actorTotalsSnapshot != null)
+            {
+                return DatabaseAPI.GetClassHitPoints(_actorTotalsSnapshot.ClassName);
+            }
+
+            return DatabaseAPI.GetClassHitPoints(MidsContext.Archetype);
+        }
+
         public void SetData(PowerDisplaySnapshot snapshot, bool noLevel = false, bool locked = false)
         {
             SetLock(locked, false);
+            if (_presentationMode != MidsDataViewNeoPresentationMode.ActorReadOnly)
+            {
+                _actorTotalsSnapshot = null;
+                _actorPowerSourceDescription = null;
+                _actorAppliedBonuses = [];
+            }
+
             pBase = snapshot.BasePower == null ? null : new Power(snapshot.BasePower);
             pEnh = snapshot.EnhancedPower == null ? null : new Power(snapshot.EnhancedPower);
             rootPowerBase = snapshot.RootPowerBase;
@@ -832,6 +1019,10 @@ namespace Mids_Reborn.UI.Controls
             pEnh = null;
             rootPowerBase = null;
             rootPowerEnh = null;
+            _actorTotalsSnapshot = null;
+            _actorPowerSourceDescription = null;
+            _actorAppliedBonuses = [];
+            _bonusesDataList?.Clear(true);
             HistoryIDX = -1;
             GroupedRankedEffects.Clear();
             EffectsItemPairs.Clear();
@@ -1038,13 +1229,42 @@ namespace Mids_Reborn.UI.Controls
 
         public void DisplayTotals()
         {
-            if (MidsContext.Character == null)
+            var actorMode = _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly && _actorTotalsSnapshot != null;
+            if (!actorMode && MidsContext.Character == null)
             {
                 return;
             }
 
             var dmgNames = Enum.GetNames(typeof(Enums.eDamage));
-            var displayStats = MidsContext.Character.DisplayStats;
+            var actorDisplayStats = actorMode ? _actorTotalsSnapshot!.DisplayStats : null;
+            var totals = actorMode ? _actorTotalsSnapshot!.Totals : MidsContext.Character.Totals;
+            var totalsCapped = actorMode ? _actorTotalsSnapshot!.TotalsCapped : MidsContext.Character.TotalsCapped;
+            var resistanceCapLabel = actorMode
+                ? $"{FormatActorClassName(_actorTotalsSnapshot!.ClassName)} resistance cap: {DatabaseAPI.GetClassResistanceCap(_actorTotalsSnapshot.ClassName) * 100:0.##}%"
+                : $"{MidsContext.Character.Archetype.DisplayName} resistance cap: {DatabaseAPI.GetClassResistanceCap(MidsContext.Character.Archetype) * 100:0.##}%";
+            float GetDefense(int damageType) => actorMode ? actorDisplayStats!.Defense(damageType) : MidsContext.Character.DisplayStats.Defense(damageType);
+            float GetResistance(int damageType, bool uncapped) => actorMode
+                ? actorDisplayStats!.DamageResistance(damageType, uncapped)
+                : MidsContext.Character.DisplayStats.DamageResistance(damageType, uncapped);
+            float GetRecoveryPct() => actorMode ? actorDisplayStats!.EnduranceRecoveryPercentage(false) : MidsContext.Character.DisplayStats.EnduranceRecoveryPercentage(false);
+            float GetRecoveryNumeric() => actorMode ? actorDisplayStats!.EnduranceRecoveryNumeric : MidsContext.Character.DisplayStats.EnduranceRecoveryNumeric;
+            float GetEndUsage() => actorMode ? actorDisplayStats!.EnduranceUsage : MidsContext.Character.DisplayStats.EnduranceUsage;
+            float GetEndTimeToFull() => actorMode ? actorDisplayStats!.EnduranceTimeToFull : MidsContext.Character.DisplayStats.EnduranceTimeToFull;
+            float GetEndRecoveryNet() => actorMode ? actorDisplayStats!.EnduranceRecoveryNet : MidsContext.Character.DisplayStats.EnduranceRecoveryNet;
+            float GetEndRecoveryLossNet() => actorMode ? actorDisplayStats!.EnduranceRecoveryLossNet : MidsContext.Character.DisplayStats.EnduranceRecoveryLossNet;
+            float GetEndTimeToZero() => actorMode ? actorDisplayStats!.EnduranceTimeToZero : MidsContext.Character.DisplayStats.EnduranceTimeToZero;
+            float GetEndTimeToFullNet() => actorMode ? actorDisplayStats!.EnduranceTimeToFullNet : MidsContext.Character.DisplayStats.EnduranceTimeToFullNet;
+            float GetHealthRegenTimeToFull() => actorMode ? actorDisplayStats!.HealthRegenTimeToFull : MidsContext.Character.DisplayStats.HealthRegenTimeToFull;
+            float GetHealthRegenPercent() => actorMode ? actorDisplayStats!.HealthRegenPercent(false) : MidsContext.Character.DisplayStats.HealthRegenPercent(false);
+            float GetHealthRegenHealthPerSec() => actorMode ? actorDisplayStats!.HealthRegenHealthPerSec : MidsContext.Character.DisplayStats.HealthRegenHealthPerSec;
+            float GetHealthRegenHpPerSec() => actorMode ? actorDisplayStats!.HealthRegenHPPerSec(false) : MidsContext.Character.DisplayStats.HealthRegenHPPerSec;
+            float GetBuffToHit() => actorMode ? actorDisplayStats!.BuffToHit : MidsContext.Character.DisplayStats.BuffToHit;
+            float GetBuffAccuracy() => actorMode ? actorDisplayStats!.BuffAccuracy : MidsContext.Character.DisplayStats.BuffAccuracy;
+            float GetBuffDamage() => actorMode ? actorDisplayStats!.BuffDamage(false) : MidsContext.Character.DisplayStats.BuffDamage(false);
+            float GetBuffEndRdx() => actorMode ? actorDisplayStats!.BuffEndRdx : MidsContext.Character.DisplayStats.BuffEndRdx;
+            float GetBuffHaste() => actorMode ? actorDisplayStats!.BuffHaste(false) : MidsContext.Character.DisplayStats.BuffHaste(false);
+            float GetRangePercent() => actorMode ? actorDisplayStats!.RangePercent : MidsContext.Character.DisplayStats.RangePercent;
+            float GetThreatLevel() => actorMode ? actorDisplayStats!.ThreatLevel : MidsContext.Character.DisplayStats.ThreatLevel;
             coreDataList.Clear(true);
             defenseGraph1.Clear();
             defenseGraph2.Clear();
@@ -1064,7 +1284,7 @@ namespace Mids_Reborn.UI.Controls
 
             for (var dType = 1; dType < dmgNames.Length; dType++)
             {
-                var iTip = $"{displayStats.Defense(dType):0.##}% {dmgNames[dType]} defense";
+                var iTip = $"{GetDefense(dType):0.##}% {dmgNames[dType]} defense";
                 if (dType == toxicVector && !DatabaseAPI.RealmUsesToxicDef())
                 {
                     continue;
@@ -1077,7 +1297,7 @@ namespace Mids_Reborn.UI.Controls
 
                 var targetGraph = numArray1[dType] == 0 ? defenseGraph1 : defenseGraph2;
                 //var targetGraph = dType % 2 == 1 ? gDef1 : gDef2;
-                targetGraph.AddItem($"{dmgNames[dType]}:|{displayStats.Defense(dType):0.#}%", Math.Max(0, displayStats.Defense(dType)), 0, iTip);
+                targetGraph.AddItem($"{dmgNames[dType]}:|{GetDefense(dType):0.#}%", Math.Max(0, GetDefense(dType)), 0, iTip);
             }
 
             var maxValue1 = Math.Max(defenseGraph1.GetMaxValue(), defenseGraph2.GetMaxValue());
@@ -1086,7 +1306,6 @@ namespace Mids_Reborn.UI.Controls
             defenseGraph1.Draw();
             defenseGraph2.Draw();
 
-            var atResCap = $"{MidsContext.Character.Archetype.DisplayName} resistance cap: {DatabaseAPI.GetClassResistanceCap(MidsContext.Character.Archetype) * 100:0.##}%";
             resistGraph1.Clear();
             resistGraph2.Clear();
             var numArray2 = new[]
@@ -1112,12 +1331,12 @@ namespace Mids_Reborn.UI.Controls
                     continue;
                 }
 
-                var iTip = MidsContext.Character.TotalsCapped.Res[dType] < MidsContext.Character.Totals.Res[dType]
-                    ? $"{displayStats.DamageResistance(dType, true):0.##}% {dmgNames[dType]} resistance capped at {displayStats.DamageResistance(dType, false):0.##}%"
-                    : $"{displayStats.DamageResistance(dType, true):0.##}% {dmgNames[dType]} resistance. ({atResCap})";
+                var iTip = totalsCapped.Res[dType] < totals.Res[dType]
+                    ? $"{GetResistance(dType, true):0.##}% {dmgNames[dType]} resistance capped at {GetResistance(dType, false):0.##}%"
+                    : $"{GetResistance(dType, true):0.##}% {dmgNames[dType]} resistance. ({resistanceCapLabel})";
 
                 var targetGraph = numArray2[dType] == 0 ? resistGraph1 : resistGraph2;
-                targetGraph.AddItem($"{dmgNames[dType]}:|{displayStats.DamageResistance(dType, false):0.#}%", Math.Max(0, displayStats.DamageResistance(dType, false)), Math.Max(0, displayStats.DamageResistance(dType, true)), iTip);
+                targetGraph.AddItem($"{dmgNames[dType]}:|{GetResistance(dType, false):0.#}%", Math.Max(0, GetResistance(dType, false)), Math.Max(0, GetResistance(dType, true)), iTip);
             }
 
             var maxValue2 = Math.Max(resistGraph1.GetMaxValue(), resistGraph2.GetMaxValue());
@@ -1127,33 +1346,71 @@ namespace Mids_Reborn.UI.Controls
             resistGraph2.Draw();
 
             var iTip1 = string.Empty;
-            var iTip2 = $"Time to go from 0-100% end: {Utilities.FixDP(displayStats.EnduranceTimeToFull)}s.\r\nHover the mouse over the End Drain stats for more info.";
-            switch (displayStats.EnduranceRecoveryNet)
+            var iTip2 = $"Time to go from 0-100% end: {Utilities.FixDP(GetEndTimeToFull())}s.\r\nHover the mouse over the End Drain stats for more info.";
+            switch (GetEndRecoveryNet())
             {
                 case > 0:
                     {
-                        iTip1 = $"Net Endurance Gain (Recovery - Drain): {Utilities.FixDP(displayStats.EnduranceRecoveryNet)}/s.";
-                        if (Math.Abs(displayStats.EnduranceRecoveryNet - displayStats.EnduranceRecoveryNumeric) > float.Epsilon)
+                        iTip1 = $"Net Endurance Gain (Recovery - Drain): {Utilities.FixDP(GetEndRecoveryNet())}/s.";
+                        if (Math.Abs(GetEndRecoveryNet() - GetRecoveryNumeric()) > float.Epsilon)
                         {
-                            iTip1 += $"\r\nTime to go from 0-100% end (using net gain): {Utilities.FixDP(displayStats.EnduranceTimeToFullNet)}s.";
+                            iTip1 += $"\r\nTime to go from 0-100% end (using net gain): {Utilities.FixDP(GetEndTimeToFullNet())}s.";
                         }
 
                         break;
                     }
                 case < 0:
-                    iTip1 = $"With current end drain, you will lose end at a rate of: {Utilities.FixDP(displayStats.EnduranceRecoveryLossNet)}/s.\r\nFrom 100% you would run out of end in: {Utilities.FixDP(displayStats.EnduranceTimeToZero)}s.";
+                    iTip1 = $"With current end drain, you will lose end at a rate of: {Utilities.FixDP(GetEndRecoveryLossNet())}/s.\r\nFrom 100% you would run out of end in: {Utilities.FixDP(GetEndTimeToZero())}s.";
                     break;
             }
 
-            var iTip3 = $"Time to go from 0-100% health: {Utilities.FixDP(displayStats.HealthRegenTimeToFull)}s.\r\nHealth regenerated per second: {Utilities.FixDP(displayStats.HealthRegenHealthPerSec)}%\r\nHitPoints regenerated per second at level 50: {Utilities.FixDP(displayStats.HealthRegenHPPerSec)} HP";
-            coreDataList.AddItem(new PairedListEx.Item("Recovery:", $"{displayStats.EnduranceRecoveryPercentage(false):0.##}% ({displayStats.EnduranceRecoveryNumeric:0.#}/s)", false, false, false, iTip2));
-            coreDataList.AddItem(new PairedListEx.Item("Regen:", $"{displayStats.HealthRegenPercent(false):0.##}%", false, false, false, iTip3));
-            coreDataList.AddItem(new PairedListEx.Item("EndDrain:", $"{displayStats.EnduranceUsage:0.##}/s", false, false, false, iTip1));
-            coreDataList.AddItem(new PairedListEx.Item("+ToHit:", $"{displayStats.BuffToHit:0.##}%", false, false, false, "This effect is increasing the accuracy of all your powers."));
-            coreDataList.AddItem(new PairedListEx.Item("+EndRdx:", $"{displayStats.BuffEndRdx:0.##}%", false, false, false, "The end cost of all your powers is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
-            coreDataList.AddItem(new PairedListEx.Item("+Recharge:", $"{displayStats.BuffHaste(false) - 100:0.#}%", false, false, false, "The recharge time of your powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
+            var iTip3 = $"Time to go from 0-100% health: {Utilities.FixDP(GetHealthRegenTimeToFull())}s.\r\nHealth regenerated per second: {Utilities.FixDP(GetHealthRegenHealthPerSec())}%\r\nHitPoints regenerated per second at level 50: {Utilities.FixDP(GetHealthRegenHpPerSec())} HP";
+            coreDataList.AddItem(new PairedListEx.Item("Recovery:", $"{GetRecoveryPct():0.##}% ({GetRecoveryNumeric():0.#}/s)", false, false, false, iTip2));
+            coreDataList.AddItem(new PairedListEx.Item("Regen:", $"{GetHealthRegenPercent():0.##}%", false, false, false, iTip3));
+            coreDataList.AddItem(new PairedListEx.Item("EndDrain:", $"{GetEndUsage():0.##}/s", false, false, false, iTip1));
+            coreDataList.AddItem(new PairedListEx.Item("+ToHit:", $"{GetBuffToHit():0.##}%", false, false, false, "This effect is increasing the accuracy of all powers on this actor."));
+            coreDataList.AddItem(new PairedListEx.Item("+Accuracy:", $"{GetBuffAccuracy():0.##}%", false, false, false, "This effect is increasing the accuracy scale of this actor's powers."));
+            coreDataList.AddItem(new PairedListEx.Item("+Damage:", $"{GetBuffDamage() - 100:0.##}%", false, false, false, "This effect is modifying the outgoing damage of this actor's attack powers."));
+            coreDataList.AddItem(new PairedListEx.Item("+EndRdx:", $"{GetBuffEndRdx():0.##}%", false, false, false, "The end cost of all powers on this actor is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
+            coreDataList.AddItem(new PairedListEx.Item("+Recharge:", $"{GetBuffHaste() - 100:0.#}%", false, false, false, "The recharge time of this actor's powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
+            coreDataList.AddItem(new PairedListEx.Item("+Range:", $"{GetRangePercent():0.##}%", false, false, false, "This effect is modifying the range of this actor's powers."));
+            coreDataList.AddItem(new PairedListEx.Item("Threat:", $"{GetThreatLevel():0.##}%", false, false, false, "This shows the actor's current threat modifier."));
             //total_Misc.Rows = 3;
             coreDataList.Redraw();
+        }
+
+        public void DisplayBonuses()
+        {
+            if (_bonusesDataList == null)
+            {
+                return;
+            }
+
+            _bonusesDataList.Clear(true);
+            if (_presentationMode != MidsDataViewNeoPresentationMode.ActorReadOnly)
+            {
+                return;
+            }
+
+            if (_actorAppliedBonuses.Count == 0)
+            {
+                _bonusesDataList.AddItem(new PairedListEx.Item("Applied Bonuses:", "No named actor bonuses are currently active.", false, false, false, string.Empty));
+                _bonusesDataList.Redraw();
+                return;
+            }
+
+            foreach (var entry in _actorAppliedBonuses.OrderBy(item => item.SourceType).ThenBy(item => item.SourceName, StringComparer.OrdinalIgnoreCase))
+            {
+                _bonusesDataList.AddItem(new PairedListEx.Item(
+                    $"{entry.SourceName}:",
+                    entry.Summary,
+                    false,
+                    false,
+                    false,
+                    entry.Tooltip));
+            }
+
+            _bonusesDataList.Redraw();
         }
 
         public void FlipStage(int Index, int Enh1, int Enh2, float State, int PowerID, Enums.eEnhGrade Grade1, Enums.eEnhGrade Grade2)
@@ -1272,7 +1529,7 @@ namespace Mids_Reborn.UI.Controls
         private void DvPages_SelectedIndexChanged(object? sender, int pageIndex)
         {
             // Reflect FormPages selection into header state and raise external event
-            if (pageIndex < 0 || pageIndex >= _tabs.Length)
+            if (pageIndex < 0 || pageIndex >= _allTabs.Length)
                 return;
 
             if (_selectedTabIndex != pageIndex)
@@ -1308,6 +1565,13 @@ namespace Mids_Reborn.UI.Controls
             path.AddArc(bounds.Left, bounds.Bottom - d, d, d, 90, 90);
             path.CloseFigure();
             return path;
+        }
+
+        private static string FormatActorClassName(string className)
+        {
+            return string.IsNullOrWhiteSpace(className)
+                ? "Actor"
+                : className.Replace('_', ' ').Trim();
         }
 
         private static void EnableDoubleBuffer(Control c)
@@ -1980,10 +2244,18 @@ namespace Mids_Reborn.UI.Controls
                 ? $"[{(rootPowerBase?.Level ?? pBase.Level)}] {pBase.DisplayName}"
                 : pBase.DisplayName;
             if (iEnhLvl > -1) title.Text += $" (Slot Level {iEnhLvl + 1})";
-            subTitle.Text = "Enhancement Values";
+            subTitle.Text = _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly && !string.IsNullOrWhiteSpace(_actorPowerSourceDescription)
+                ? $"Power Source: {_actorPowerSourceDescription}"
+                : "Enhancement Values";
 
             var longInfo = Regex.Replace(pBase.DescLongFormatted.Trim().Replace("\0", "").Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
-            infoSDesc.Rtf = RTF.StartRTF(infoSDesc.Font) + RTF.ToRTF(pBase.DescShort.Trim()) + RTF.EndRTF();
+            var shortDescription = pBase.DescShort.Trim();
+            if (_presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly && !string.IsNullOrWhiteSpace(_actorPowerSourceDescription))
+            {
+                shortDescription = $"Power Source: {_actorPowerSourceDescription}\r\n{shortDescription}";
+            }
+
+            infoSDesc.Rtf = RTF.StartRTF(infoSDesc.Font) + RTF.ToRTF(shortDescription) + RTF.EndRTF();
             infoLDesc.Rtf = RTF.StartRTF(infoLDesc.Font) + RTF.ToRTF(longInfo) + RTF.EndRTF();
             UpdateInfoDescriptionLayout();
 
@@ -2013,7 +2285,11 @@ namespace Mids_Reborn.UI.Controls
             {
                 var hasPercentDamage = pEnh?.Effects.Any(e =>
                     e.EffectType == Enums.eEffectType.Damage && (e.DisplayPercentage || e.Aspect == Enums.eAspect.Str));
-                var dmgMultiplier = hasPercentDamage == true ? MidsContext.Character.Totals.HPMax : 1;
+                var dmgMultiplier = hasPercentDamage == true
+                    ? (_presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly && _actorTotalsSnapshot != null
+                        ? _actorTotalsSnapshot.Totals.HPMax
+                        : MidsContext.Character.Totals.HPMax)
+                    : 1;
 
                 infoDamageDisplay.BaseValue = Math.Max(0, baseDamage * dmgMultiplier);
                 infoDamageDisplay.EnhancedValue = Math.Max(0, enhancedDamage * dmgMultiplier);
@@ -2051,6 +2327,7 @@ namespace Mids_Reborn.UI.Controls
             //lblLock.Visible = Lock & (_selectedTabIndex != 2);
             DisplayInfo(noLevel, iEnhLevel);
             DisplayEffects(noLevel, iEnhLevel);
+            DisplayBonuses();
             DisplayEdFigures();
         }
 
@@ -2408,7 +2685,7 @@ namespace Mids_Reborn.UI.Controls
                         shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget));
                         shortFxEnh.Assign(enhancedPower.GetEffectMagSum(Enums.eEffectType.HitPoints, false, onlySelf, onlyTarget));
                         tag2.Assign(shortFxBase);
-                        var baseHitPoints = DatabaseAPI.GetClassHitPoints(MidsContext.Archetype);
+                        var baseHitPoints = GetDisplayedBaseHitPoints();
                         shortFxBase.Sum = (float)(shortFxBase.Sum / (double)baseHitPoints * 100);
                         shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)baseHitPoints * 100);
                         suffix = "%";
@@ -2425,7 +2702,7 @@ namespace Mids_Reborn.UI.Controls
                         {
                             shortFxBase.Assign(pBase.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget));
                             shortFxEnh.Assign(enhancedPower.GetEffectMagSum(Enums.eEffectType.Heal, false, onlySelf, onlyTarget));
-                            var healBaseHitPoints = DatabaseAPI.GetClassHitPoints(MidsContext.Archetype);
+                            var healBaseHitPoints = GetDisplayedBaseHitPoints();
                             shortFxBase.Sum = (float)(shortFxBase.Sum / (double)healBaseHitPoints * 100);
                             shortFxEnh.Sum = (float)(shortFxEnh.Sum / (double)healBaseHitPoints * 100);
                             tag2.Assign(shortFxBase);

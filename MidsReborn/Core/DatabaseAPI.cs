@@ -21,7 +21,7 @@ using Newtonsoft.Json.Linq;
 
 namespace Mids_Reborn.Core
 {
-    public static class DatabaseAPI
+    public static partial class DatabaseAPI
     {
         //Naming Conventions:
         //   UID     =   Unique name in the form of [[[string].[string]].[string]]
@@ -87,6 +87,7 @@ namespace Mids_Reborn.Core
         private static void ClearLookups()
         {
             Classes.Clear();
+            ClearSetProjectionCache();
         }
 
         public static IReadOnlyList<string> GetModifierTableNames()
@@ -2513,9 +2514,16 @@ namespace Mids_Reborn.Core
 
         public static int IsSpecialEnh(int enhID)
         {
-            for (var index = 0; index < Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].Enhancements.Length; ++index)
-                if (enhID == Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].Enhancements[index] && Database.EnhancementSets[Database.Enhancements[enhID].nIDSet].SpecialBonus[index].Index.Length > 0)
-                    return index;
+            if (TryGetSetRawMemberPositionForEnhancement(enhID, out var setId, out var rawMemberPosition) &&
+                setId >= 0 &&
+                setId < Database.EnhancementSets.Count &&
+                rawMemberPosition >= 0 &&
+                rawMemberPosition < Database.EnhancementSets[setId].SpecialBonus.Length &&
+                Database.EnhancementSets[setId].SpecialBonus[rawMemberPosition].Index.Length > 0)
+            {
+                return rawMemberPosition;
+            }
+
             return -1;
         }
 
@@ -3462,6 +3470,11 @@ namespace Mids_Reborn.Core
                 return effPower.ForcedClass;
             }
 
+            if (effPower is Power concretePower && !string.IsNullOrWhiteSpace(concretePower.OmniDisplayClassName))
+            {
+                return concretePower.OmniDisplayClassName;
+            }
+
             if (iEffect.Absorbed_Class_nID > -1)
             {
                 return UidFromNidClass(iEffect.Absorbed_Class_nID);
@@ -3505,6 +3518,8 @@ namespace Mids_Reborn.Core
             MatchEnhancementIDs();
             UpdateMessage(messenger, "Matching Entity IDs...");
             MatchSummonIDs();
+            UpdateMessage(messenger, "Hydrating Omni runtime metadata...");
+            HydrateOmniRuntimeMetadata();
         }
 
         public static void MatchIds()
@@ -3516,6 +3531,7 @@ namespace Mids_Reborn.Core
             SetPowersetsFromGroups();
             MatchEnhancementIDs();
             MatchSummonIDs();
+            HydrateOmniRuntimeMetadata();
         }
 
         private static void UpdateMessage(IMessenger? messenger, string iMessage)

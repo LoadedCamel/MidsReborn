@@ -1074,7 +1074,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         };
                     }
 
-                    popupData1.Sections[index1].Add($"{DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName}: {enhancement.Name}", iColor, 1.25f);
+                    popupData1.Sections[index1].Add(BuildSetEnhancementPopupTitle(enhancement), iColor, 1.25f);
                     break;
             }
 
@@ -1099,13 +1099,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 popupData1.Sections[index1].Add($"Slot placed at level: {iLevel + 1}", PopUp.Colors.Text);
             }
 
-            if (enhancement.Unique)
+            var resolvedDescription = iSlot.GetResolvedEnhancementDescription();
+            if (enhancement.Unique && !ContainsUniqueRestrictionText(resolvedDescription))
             {
                 index1 = popupData1.Add();
                 popupData1.Sections[index1].Add("This enhancement is Unique. No more than one enhancement of this type can be slotted by a character.", PopUp.Colors.Text, 0.9f);
             }
 
-            var resolvedDescription = iSlot.GetResolvedEnhancementDescription();
             if (!string.IsNullOrWhiteSpace(resolvedDescription))
             {
                 popupData1.Sections[index1].Add(resolvedDescription, PopUp.Colors.Title);
@@ -1286,6 +1286,29 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return strArray2;
         }
 
+        private static string BuildSetEnhancementPopupTitle(IEnhancement enhancement)
+        {
+            var setName = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].DisplayName;
+            if (enhancement.Name.StartsWith($"{setName}:", StringComparison.OrdinalIgnoreCase))
+            {
+                return enhancement.Name;
+            }
+
+            return $"{setName}: {enhancement.Name}";
+        }
+
+        private static bool ContainsUniqueRestrictionText(string? description)
+        {
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                return false;
+            }
+
+            return description.Contains("UNIQUE", StringComparison.OrdinalIgnoreCase) ||
+                   description.Contains("No more than 1 enhancement of this type", StringComparison.OrdinalIgnoreCase) ||
+                   description.Contains("No more than one enhancement of this type", StringComparison.OrdinalIgnoreCase);
+        }
+
         private void ApplyPlannerModeEffect(IEffect effect)
         {
             if (effect.EffectType is not (Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode))
@@ -1393,7 +1416,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             var section1 = new PopUp.Section();
             section1.Add("Set Bonus:", PopUp.Colors.Title);
-            var num = 0;
+            var usedEnhancements = new List<int>();
             if (power != null)
             {
                 for (var index = 0; index < power.Slots.Length; index++)
@@ -1401,7 +1424,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     if (power.Slots[index].Enhancement.Enh > -1 &&
                         DatabaseAPI.Database.Enhancements[power.Slots[index].Enhancement.Enh].nIDSet == sIdx)
                     {
-                        ++num;
+                        usedEnhancements.Add(power.Slots[index].Enhancement.Enh);
                     }
                 }
             }
@@ -1412,6 +1435,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
+            var usedPieceCount = DatabaseAPI.CountDistinctVisibleSetPieces(sIdx, usedEnhancements);
             for (var index = 0; index < enhancementSet.Bonus.Length; index++)
             {
                 var effectString = enhancementSet.GetEffectString(index, false, true, true, true);
@@ -1425,7 +1449,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     effectString += " [PvP]";
                 }
 
-                if (num >= enhancementSet.Bonus[index].Slotted & (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any))
+                if (usedPieceCount >= enhancementSet.Bonus[index].Slotted & (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any))
                 {
                     section1.Add($"({enhancementSet.Bonus[index].Slotted}) {effectString}", PopUp.Colors.Effect, 0.9f);
                 }
@@ -1439,17 +1463,29 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
 
-            for (var index = 0; index < enhancementSet.SpecialBonus.Length; index++)
+            var projection = DatabaseAPI.GetEnhancementSetProjection(sIdx);
+            var usedPieceIndexes = new HashSet<int>();
+            foreach (var enhancementId in usedEnhancements)
             {
+                if (DatabaseAPI.TryGetSetPieceIndexForEnhancement(enhancementId, out _, out var pieceIndex))
+                {
+                    usedPieceIndexes.Add(pieceIndex);
+                }
+            }
+
+            for (var pieceIndex = 0; pieceIndex < projection.VisiblePieces.Count; pieceIndex++)
+            {
+                var rawMemberPosition = DatabaseAPI.GetSpecialRawMemberPositionForSetPiece(sIdx, pieceIndex);
+                if (rawMemberPosition < 0)
+                {
+                    continue;
+                }
+
                 var checkStatus = false;
                 List<Power> specialPowers = null;
-                if (enhancementSet.SpecialBonus.Length > 0)
+                if (enhancementSet.SpecialBonus.Length > rawMemberPosition)
                 {
-                    specialPowers = enhancementSet.SpecialBonus[^1].Index.Length switch
-                    {
-                        0 => enhancementSet.GetEnhancementSetLinkedPowers(enhancementSet.SpecialBonus.Length - 2, true),
-                        _ => enhancementSet.GetEnhancementSetLinkedPowers(enhancementSet.SpecialBonus.Length - 1, true)
-                    };
+                    specialPowers = enhancementSet.GetEnhancementSetLinkedPowers(rawMemberPosition, true);
                 }
 
                 if (specialPowers is { Count: 1 })
@@ -1457,23 +1493,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     if (specialPowers[0].FullName.Contains("Skin") || specialPowers[0].FullName.Contains("Aegis")) checkStatus = true;
                 }
 
-                var effectString = enhancementSet.GetEffectString(index, true, true, true, true, checkStatus);
+                var effectString = enhancementSet.GetEffectString(rawMemberPosition, true, true, true, true, checkStatus);
                 if (string.IsNullOrEmpty(effectString))
                 {
                     continue;
                 }
 
-                var flag = false;
-                if (power != null)
-                {
-                    foreach (var slot in power.Slots)
-                    {
-                        if (slot.Enhancement.Enh > -1 && enhancementSet.SpecialBonus[index].Special > -1 && slot.Enhancement.Enh == enhancementSet.Enhancements[enhancementSet.SpecialBonus[index].Special])
-                        {
-                            flag = true;
-                        }
-                    }
-                }
+                var flag = power != null && usedPieceIndexes.Contains(pieceIndex);
 
                 if (flag)
                 {
@@ -1670,8 +1696,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 return new PopUp.Section();
 
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
-            var setEnhUsed = new List<int>();
-            var setEnhObtained = new List<int>();
+            var setEnhUsed = new HashSet<int>();
+            var setEnhObtained = new HashSet<int>();
 
             if (powerEntry != null)
             {
@@ -1680,39 +1706,39 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     if (slot.Enhancement.Enh < 0) continue;
                     if (DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh].nIDSet != sIdx) continue;
 
-                    setEnhUsed.Add(slot.Enhancement.Enh);
-                    if (slot.Enhancement.Obtained) setEnhObtained.Add(slot.Enhancement.Enh);
+                    if (DatabaseAPI.TryGetSetPieceIndexForEnhancement(slot.Enhancement.Enh, out _, out var pieceIndex))
+                    {
+                        setEnhUsed.Add(pieceIndex);
+                        if (slot.Enhancement.Obtained)
+                        {
+                            setEnhObtained.Add(pieceIndex);
+                        }
+                    }
                 }
             }
 
             var section1 = new PopUp.Section();
+            var projection = DatabaseAPI.GetEnhancementSetProjection(sIdx);
             if (powerEntry != null)
-                section1.Add($"Set: {enhancementSet.DisplayName} ({setEnhUsed.Count}/{enhancementSet.Enhancements.Length})", PopUp.Colors.Title);
+                section1.Add($"Set: {enhancementSet.DisplayName} ({setEnhUsed.Count}/{projection.VisiblePieces.Count})", PopUp.Colors.Title);
 
             // FIX: explicit ToDictionary key/value selectors (was .ToDictionary() → runtime exception)
-            var setEnhancements = enhancementSet.Enhancements
-                .Select((e, i) => new KeyValuePair<int, int>(i, e))
-                .OrderBy(e => e.Value < 0 ? "" : DatabaseAPI.Database.Enhancements[e.Value].UID)
-                .ToDictionary(kvp => kvp.Key, kvp => kvp.Value);
+            var setEnhancements = projection.VisiblePieces;
 
-            foreach (var kv in setEnhancements)
+            foreach (var piece in setEnhancements)
             {
-                var indexInSet = kv.Key;
-                var enhId = kv.Value;
-
-                var enhUsed = setEnhUsed.Contains(indexInSet) || powerEntry == null;
+                var enhUsed = setEnhUsed.Contains(piece.PieceIndex) || powerEntry == null;
 
                 // FIX: bitwise '&' → logical '&&'
                 var color = true switch
                 {
                     _ when !MidsContext.EnhCheckMode && enhUsed => PopUp.Colors.Invention,
-                    _ when MidsContext.EnhCheckMode && enhUsed && setEnhObtained.Contains(indexInSet) => PopUp.Colors.Invention,
+                    _ when MidsContext.EnhCheckMode && enhUsed && setEnhObtained.Contains(piece.PieceIndex) => PopUp.Colors.Invention,
                     _ when MidsContext.EnhCheckMode && enhUsed => PopUp.Colors.UltraRare,
                     _ => PopUp.Colors.Disabled
                 };
 
-                var text = enhId >= 0 ? DatabaseAPI.Database.Enhancements[enhId].LongName : "(empty)";
-                section1.Add(text, color);
+                section1.Add(piece.DisplayLabel, color);
             }
 
             return section1;

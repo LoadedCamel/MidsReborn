@@ -7,6 +7,7 @@ using System.Text.RegularExpressions;
 using FastDeepCloner;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
 
 namespace Mids_Reborn.Core
 {
@@ -267,6 +268,22 @@ namespace Mids_Reborn.Core
 
         public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false, bool bonusSection = false, bool status = false, List<Enums.eEffectType>? effectsFilter = null)
         {
+            if (fromPopup && bonusSection)
+            {
+                return ExecuteWithPopupBonusFormattingContext(() =>
+                    GetEffectStringCore(index, special, longForm, fromPopup, bonusSection, status, effectsFilter));
+            }
+
+            return GetEffectStringCore(index, special, longForm, fromPopup, bonusSection, status, effectsFilter);
+        }
+
+        private string GetEffectStringCore(int index, bool special, bool longForm, bool fromPopup, bool bonusSection, bool status, List<Enums.eEffectType>? effectsFilter)
+        {
+            if (!special && fromPopup && bonusSection && TryBuildLegacyPopupBonusEffectString(index, out var legacyPopupBonus))
+            {
+                return legacyPopupBonus;
+            }
+
             BonusItem[] bonusItemArray;
             bonusItemArray = special ? SpecialBonus : Bonus;
 
@@ -288,18 +305,20 @@ namespace Mids_Reborn.Core
                     {
                         return string.Empty;
                     }
+
+                    var power = OmniPowerRouting.CreateDisplayPower(DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]]);
                     var empty2 = string.Empty;
                     var returnMask = Array.Empty<int>();
-                    DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].GetEffectStringGrouped(0, ref empty2, ref returnMask, !longForm, true, false, fromPopup, true);
+                    power.GetEffectStringGrouped(0, ref empty2, ref returnMask, !longForm, true, false, fromPopup, true);
                     if (!string.IsNullOrEmpty(empty2))
                     {
                         effectList.Add(empty2);
                     }
 
                     var fxFilter = effectsFilter ?? new List<Enums.eEffectType>{ Enums.eEffectType.Null, Enums.eEffectType.NullBool, Enums.eEffectType.DesignerStatus };
-                    for (var index2 = 0; index2 < DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects.Length; index2++)
+                    for (var index2 = 0; index2 < power.Effects.Length; index2++)
                     {
-                        if (fxFilter.Contains(DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].EffectType))
+                        if (fxFilter.Contains(power.Effects[index2].EffectType))
                         {
                             continue;
                         }
@@ -319,8 +338,8 @@ namespace Mids_Reborn.Core
                         }
 
                         var str2 = longForm
-                            ? DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].BuildEffectString(true, "", false, false, false, fromPopup, false, false, true)
-                            : DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].BuildEffectStringShort(false, true);
+                            ? power.Effects[index2].BuildEffectString(true, "", false, false, false, fromPopup, false, false, true)
+                            : power.Effects[index2].BuildEffectStringShort(false, true);
                         
 
                         if (effectList.Any(s => s == str2)) continue;
@@ -351,19 +370,50 @@ namespace Mids_Reborn.Core
                     {
                         return groupedEffectString;
                     }
+
+                    var fallbackEffectString = GetFallbackBonusEffectString(bonusItemArray[index]);
+                    if (!string.IsNullOrWhiteSpace(fallbackEffectString))
+                    {
+                        return fallbackEffectString;
+                    }
                 }
             }
 
             return str1;
         }
 
-        private static string? GetGroupedBonusEffectString(BonusItem bonusItem, List<Enums.eEffectType>? effectsFilter)
+        private bool TryBuildLegacyPopupBonusEffectString(int index, out string effectString)
         {
-            if (MidsContext.Character?.CurrentBuild == null)
+            effectString = string.Empty;
+            if (index < 0 || index >= Bonus.Length)
             {
-                return null;
+                return false;
             }
 
+            var bonusItem = Bonus[index];
+            if (!ShouldUseLegacyPopupBonusFormatting(bonusItem))
+            {
+                return false;
+            }
+
+            var parts = bonusItem.Index
+                .Where(powerIndex => powerIndex >= 0 && powerIndex < DatabaseAPI.Database.Power.Length)
+                .Select(powerIndex => TryBuildLegacyPopupBonusPowerString(OmniPowerRouting.CreateDisplayPower(DatabaseAPI.Database.Power[powerIndex])))
+                .Where(part => !string.IsNullOrWhiteSpace(part))
+                .Distinct(StringComparer.Ordinal)
+                .ToArray();
+
+            if (parts.Length == 0)
+            {
+                return false;
+            }
+
+            effectString = string.Join(", ", parts);
+            return true;
+        }
+
+        private static string? GetGroupedBonusEffectString(BonusItem bonusItem, List<Enums.eEffectType>? effectsFilter)
+        {
             var fxFilter = effectsFilter ?? new List<Enums.eEffectType>
             {
                 Enums.eEffectType.Null,
@@ -379,7 +429,8 @@ namespace Mids_Reborn.Core
                     return string.Empty;
                 }
 
-                var power = PlannerEffectResolver.ResolvePower(new Power(DatabaseAPI.Database.Power[powerIndex])).ResolvedPower;
+                var resolvedPower = PlannerEffectResolver.ResolvePower(new Power(DatabaseAPI.Database.Power[powerIndex])).ResolvedPower;
+                var power = OmniPowerRouting.CreateDisplayPower(resolvedPower);
 
                 var groupedEffects = GroupedFx.AssembleGroupedEffects(power, true)
                     .Where(g =>
@@ -403,6 +454,280 @@ namespace Mids_Reborn.Core
             ret = Regex.Replace(ret, @"Knockback \(Mag -(?<mag>[\d.]+)\), Knockup \(Mag -\k<mag>\)", "Knockback Protection (Mag ${mag})");
 
             return ret;
+        }
+
+        private static bool ShouldUseLegacyPopupBonusFormatting(BonusItem bonusItem)
+        {
+            return bonusItem.Index
+                .Where(powerIndex => powerIndex >= 0 && powerIndex < DatabaseAPI.Database.Power.Length)
+                .Select(powerIndex => OmniPowerRouting.CreateDisplayPower(DatabaseAPI.Database.Power[powerIndex]))
+                .Any(power => power.Effects.Any(effect =>
+                    effect.ModifierTable.Equals("SetBonusPetShare", StringComparison.OrdinalIgnoreCase) ||
+                    effect.ModifierTable.Equals("SetBonusPetShareHP", StringComparison.OrdinalIgnoreCase) ||
+                    effect.EffectType is Enums.eEffectType.Accuracy or Enums.eEffectType.RechargeTime ||
+                    (effect.EffectType == Enums.eEffectType.None && string.IsNullOrWhiteSpace(effect.Special))));
+        }
+
+        private static string? TryBuildLegacyPopupBonusPowerString(IPower power)
+        {
+            var effects = power.Effects
+                .Where(effect => effect is { EffectType: not Enums.eEffectType.NullBool and not Enums.eEffectType.DesignerStatus } &&
+                                 !effect.Absorbed_Effect)
+                .ToArray();
+            if (effects.Length == 0)
+            {
+                return null;
+            }
+
+            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.Regeneration))
+            {
+                var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.Regeneration);
+                var percent = GetLegacyPopupMagnitude(effect);
+                var hpPerSecond = Utilities.FixDP(DatabaseAPI.GetClassHitPoints() / 100f * ((percent / 100f) * DatabaseAPI.GetClassBaseRegen() * Statistics.BaseMagic));
+                return $"{Utilities.FixDP(percent)}% ({hpPerSecond} HP/sec) Regeneration";
+            }
+
+            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.HitPoints))
+            {
+                var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.HitPoints);
+                var percent = GetLegacyPopupMagnitude(effect, 0.1f);
+                var rawHp = Utilities.FixDP(DatabaseAPI.GetClassHitPoints() * (percent / 100f));
+                return $"{rawHp} HP ({Utilities.FixDP(percent)}%) HitPoints";
+            }
+
+            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.Accuracy))
+            {
+                var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.Accuracy);
+                return $"+{Utilities.FixDP(GetLegacyPopupMagnitude(effect))}% Enhancement(Accuracy)";
+            }
+
+            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.RechargeTime))
+            {
+                var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.RechargeTime);
+                return $"+{Utilities.FixDP(GetLegacyPopupMagnitude(effect))}% Enhancement(RechargeTime)";
+            }
+
+            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.DamageBuff))
+            {
+                var typedEffects = effects.Where(effect => effect.EffectType == Enums.eEffectType.DamageBuff).ToArray();
+                if (typedEffects.Length > 0)
+                {
+                    var percent = GetLegacyPopupMagnitude(typedEffects[0], 2.5f);
+                    var types = GroupDamageTypes(typedEffects.Select(effect => effect.DamageType));
+                    return $"{Utilities.FixDP(percent)}% DamageBuff({types})";
+                }
+            }
+
+            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.Resistance))
+            {
+                var typedEffects = effects
+                    .Where(effect => effect.EffectType == Enums.eEffectType.Resistance && effect.DamageType != Enums.eDamage.None)
+                    .ToArray();
+                var statusEffects = effects
+                    .Where(effect => effect.EffectType == Enums.eEffectType.Resistance && effect.DamageType == Enums.eDamage.None)
+                    .ToArray();
+
+                var parts = new List<string>();
+                if (typedEffects.Length > 0)
+                {
+                    var percent = GetLegacyPopupMagnitude(typedEffects[0]);
+                    parts.Add($"{Utilities.FixDP(percent)}% Resistance({GroupDamageTypes(typedEffects.Select(effect => effect.DamageType))})");
+                }
+
+                if (statusEffects.Length > 0)
+                {
+                    var percent = GetLegacyPopupMagnitude(statusEffects[0]);
+                    var label = power.FullName.Contains("_Mez_Res_", StringComparison.OrdinalIgnoreCase)
+                        ? "MezResist(All)"
+                        : "Resistance(None)";
+                    parts.Add($"{Utilities.FixDP(percent)}% {label}");
+                }
+
+                if (parts.Count > 0)
+                {
+                    return string.Join(", ", parts);
+                }
+            }
+
+            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.None))
+            {
+                var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.None);
+                var effectLabel = InferFallbackEffectLabel(power);
+                if (!string.IsNullOrWhiteSpace(effectLabel))
+                {
+                    var percent = GetLegacyPopupMagnitude(effect);
+                    var typeSuffix = effect.DamageType == Enums.eDamage.None
+                        ? string.Empty
+                        : $"({Enum.GetName(typeof(Enums.eDamage), effect.DamageType)})";
+                    return $"{Utilities.FixDP(percent)}% {effectLabel}{typeSuffix}";
+                }
+            }
+
+            return null;
+        }
+
+        private static float GetLegacyPopupMagnitude(IEffect effect, float magnitudeMultiplier = 1f)
+        {
+            var magnitude = Math.Abs(effect.BuffedMag) > float.Epsilon
+                ? effect.BuffedMag
+                : effect.Scale * effect.nMagnitude;
+            return magnitude * (effect.DisplayPercentage ? 100f : 1f) * magnitudeMultiplier;
+        }
+
+        private static string GroupDamageTypes(IEnumerable<Enums.eDamage> damageTypes)
+        {
+            var types = damageTypes
+                .Where(type => type != Enums.eDamage.None)
+                .Distinct()
+                .OrderBy(GetDamageDisplayOrder)
+                .ToArray();
+            if (types.Length == 0)
+            {
+                return "None";
+            }
+
+            var allPlayerDamageTypes = new[]
+            {
+                Enums.eDamage.Smashing,
+                Enums.eDamage.Lethal,
+                Enums.eDamage.Fire,
+                Enums.eDamage.Cold,
+                Enums.eDamage.Energy,
+                Enums.eDamage.Negative,
+                Enums.eDamage.Toxic,
+                Enums.eDamage.Psionic
+            };
+
+            if (types.SequenceEqual(allPlayerDamageTypes))
+            {
+                return "All";
+            }
+
+            return string.Join(",", types.Select(type => Enum.GetName(typeof(Enums.eDamage), type)));
+        }
+
+        private static int GetDamageDisplayOrder(Enums.eDamage damageType)
+        {
+            return damageType switch
+            {
+                Enums.eDamage.Smashing => 0,
+                Enums.eDamage.Lethal => 1,
+                Enums.eDamage.Fire => 2,
+                Enums.eDamage.Cold => 3,
+                Enums.eDamage.Energy => 4,
+                Enums.eDamage.Negative => 5,
+                Enums.eDamage.Toxic => 6,
+                Enums.eDamage.Psionic => 7,
+                _ => 100 + (int)damageType
+            };
+        }
+
+        private static string? GetFallbackBonusEffectString(BonusItem bonusItem)
+        {
+            var effectLines = bonusItem.Index
+                .Where(powerIndex => powerIndex >= 0 && powerIndex < DatabaseAPI.Database.Power.Length)
+                .Select(powerIndex => TryBuildFallbackEffectString(DatabaseAPI.Database.Power[powerIndex]))
+                .Where(line => !string.IsNullOrWhiteSpace(line))
+                .Distinct(StringComparer.Ordinal)
+                .ToArray();
+
+            return effectLines.Length == 0 ? null : string.Join(", ", effectLines!);
+        }
+
+        private static string? TryBuildFallbackEffectString(IPower power)
+        {
+            foreach (var effect in power.Effects)
+            {
+                if (effect.EffectType != Enums.eEffectType.None || !string.IsNullOrWhiteSpace(effect.Special))
+                {
+                    continue;
+                }
+
+                var effectLabel = InferFallbackEffectLabel(power);
+                if (string.IsNullOrWhiteSpace(effectLabel))
+                {
+                    continue;
+                }
+
+                var magnitudeValue = GetLegacyPopupMagnitude(effect);
+                var magnitude = $"{Utilities.FixDP(magnitudeValue)}%";
+                var typeSuffix = effect.DamageType == Enums.eDamage.None
+                    ? string.Empty
+                    : $"({Enum.GetName(typeof(Enums.eDamage), effect.DamageType)})";
+                return $"{magnitude} {effectLabel}{typeSuffix}";
+            }
+
+            return null;
+        }
+
+        private static string? InferFallbackEffectLabel(IPower power)
+        {
+            var lookup = $"{power.FullName} {power.DisplayName}";
+            if (lookup.Contains("Defense", StringComparison.OrdinalIgnoreCase) ||
+                Regex.IsMatch(lookup, @"(?:^|[_\.])Def(?:[_\.]|$)", RegexOptions.IgnoreCase))
+            {
+                return "Defense";
+            }
+
+            if (lookup.Contains("Resistance", StringComparison.OrdinalIgnoreCase) ||
+                Regex.IsMatch(lookup, @"(?:^|[_\.])Res(?:[_\.]|$)", RegexOptions.IgnoreCase))
+            {
+                return "Resistance";
+            }
+
+            if (lookup.Contains("Recharge", StringComparison.OrdinalIgnoreCase) ||
+                Regex.IsMatch(lookup, @"(?:^|[_\.])Rech(?:[_\.]|$)", RegexOptions.IgnoreCase))
+            {
+                return "RechargeTime";
+            }
+
+            if (lookup.Contains("Accuracy", StringComparison.OrdinalIgnoreCase) ||
+                Regex.IsMatch(lookup, @"(?:^|[_\.])Acc(?:[_\.]|$)", RegexOptions.IgnoreCase))
+            {
+                return "Accuracy";
+            }
+
+            if (lookup.Contains("ToHit", StringComparison.OrdinalIgnoreCase))
+            {
+                return "ToHit";
+            }
+
+            if (lookup.Contains("Damage", StringComparison.OrdinalIgnoreCase) ||
+                Regex.IsMatch(lookup, @"(?:^|[_\.])Dam(?:[_\.]|$)", RegexOptions.IgnoreCase))
+            {
+                return "DamageBuff";
+            }
+
+            return null;
+        }
+
+        private static T ExecuteWithPopupBonusFormattingContext<T>(Func<T> callback)
+        {
+            var savedCharacter = MidsContext.Character;
+            if (savedCharacter == null)
+            {
+                return callback();
+            }
+
+            var savedBuild = MidsContext.Build;
+            var savedArchetype = MidsContext.Archetype;
+            try
+            {
+                if (savedCharacter.Archetype != null)
+                {
+                    MidsContext.Archetype = savedCharacter.Archetype;
+                }
+
+                MidsContext.Character = null;
+                MidsContext.Build = null;
+                return callback();
+            }
+            finally
+            {
+                MidsContext.Character = savedCharacter;
+                MidsContext.Build = savedBuild;
+                MidsContext.Archetype = savedArchetype;
+            }
         }
 
         public void StoreTo(BinaryWriter writer)

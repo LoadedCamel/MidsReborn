@@ -85,6 +85,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public EnhancementImportMetadata EnhancementImportMetadata { get; set; } = new();
 
+        public PowerImportMetadata PowerImportMetadata { get; set; } = new();
+
+        public EntityImportMetadata EntityImportMetadata { get; set; } = new();
+
         public LevelMap[] Levels { get; set; }
 
         public int[] Levels_MainPowers { get; set; }
@@ -152,6 +156,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             HasCanonicalOmniPlannerMath = false;
             ClassAttributes = new Dictionary<string, OmniClassAttributeTable>(StringComparer.OrdinalIgnoreCase);
             EnhancementImportMetadata = new EnhancementImportMetadata();
+            PowerImportMetadata = new PowerImportMetadata();
+            EntityImportMetadata = new EntityImportMetadata();
             if (reader.BaseStream.Position >= reader.BaseStream.Length)
             {
                 return;
@@ -164,7 +170,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             var version = reader.ReadInt32();
-            if (version is not 1 and not 2 and not 3 and not 4)
+            if (version is not 1 and not 2 and not 3 and not 4 and not 5)
             {
                 return;
             }
@@ -206,6 +212,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
                 case 3:
                 case 4:
+                case 5:
                 {
                     var metadata = JsonConvert.DeserializeObject<OmniDatabaseMetadata>(json) ?? new OmniDatabaseMetadata();
                     OmniImportSource = metadata.ImportSource;
@@ -217,6 +224,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         ? new Dictionary<string, OmniClassAttributeTable>(StringComparer.OrdinalIgnoreCase)
                         : new Dictionary<string, OmniClassAttributeTable>(metadata.ClassAttributes, StringComparer.OrdinalIgnoreCase);
                     EnhancementImportMetadata = metadata.EnhancementImport ?? new EnhancementImportMetadata();
+                    PowerImportMetadata = metadata.PowerImport ?? new PowerImportMetadata();
+                    EntityImportMetadata = metadata.EntityImport ?? new EntityImportMetadata();
                     break;
                 }
             }
@@ -230,7 +239,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public void StoreOmniMetadata(BinaryWriter writer)
         {
             writer.Write("MRB_OMNI_METADATA");
-            writer.Write(4);
+            writer.Write(5);
             writer.Write(JsonConvert.SerializeObject(new OmniDatabaseMetadata
             {
                 ImportSource = OmniImportSource,
@@ -239,7 +248,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 PlannerRulesetVersion = PlannerRulesetVersion,
                 HasCanonicalOmniPlannerMath = HasCanonicalOmniPlannerMath,
                 ClassAttributes = new Dictionary<string, OmniClassAttributeTable>(ClassAttributes, StringComparer.OrdinalIgnoreCase),
-                EnhancementImport = EnhancementImportMetadata
+                EnhancementImport = EnhancementImportMetadata,
+                PowerImport = PowerImportMetadata,
+                EntityImport = EntityImportMetadata
             }));
         }
 

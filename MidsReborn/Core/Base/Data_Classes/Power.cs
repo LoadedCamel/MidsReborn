@@ -218,6 +218,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             SortOverride = template.SortOverride;
             BoostUsePlayerLevel = template.BoostUsePlayerLevel;
             BoostBoostable = template.BoostBoostable;
+            ActivationEffectsRuntime = template is Power concretePower && concretePower.ActivationEffectsRuntime.Length > 0
+                ? concretePower.ActivationEffectsRuntime.Select(effect => (IEffect)effect.Clone()).ToArray()
+                : [];
+            OmniTargetRequiresRaw = template is Power targetPower ? targetPower.OmniTargetRequiresRaw : string.Empty;
+            OmniDisplayClassName = template is Power displayPower ? displayPower.OmniDisplayClassName : string.Empty;
             HasAbsorbedEffects = template.HasAbsorbedEffects;
             HiddenPower = template.HiddenPower;
         }
@@ -580,6 +585,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public int ForcedClassID { get; set; }
 
         public IEffect[] Effects { get; set; }
+
+        public IEffect[] ActivationEffectsRuntime { get; set; } = [];
+
+        public string OmniTargetRequiresRaw { get; set; } = string.Empty;
+
+        public string OmniDisplayClassName { get; set; } = string.Empty;
 
         public Enums.eBuffMode BuffMode { get; set; }
 
@@ -1741,6 +1752,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public Enums.ShortFX GetEffectMag(Enums.eEffectType iEffect, Enums.eToWho iTarget = Enums.eToWho.Unspecified, bool allowDelay = false)
         {
             var shortFx = new Enums.ShortFX();
+            var displayClassName = string.IsNullOrWhiteSpace(OmniDisplayClassName)
+                ? DatabaseAPI.ResolveClassName()
+                : OmniDisplayClassName;
             for (var iIndex = 0; iIndex < Effects.Length; iIndex++)
             {
                 if (Effects[iIndex].EffectType != iEffect || Effects[iIndex].EffectClass == Enums.eEffectClass.Ignored || Effects[iIndex].InherentSpecial || Effects[iIndex].InherentSpecial2 || !Effects[iIndex].PvXInclude() || !(Effects[iIndex].DelayedTime <= 5) && !allowDelay || iTarget != Enums.eToWho.Unspecified && Effects[iIndex].ToWho != Enums.eToWho.All && iTarget != Effects[iIndex].ToWho)
@@ -1756,11 +1770,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                 if (Effects[iIndex].DisplayPercentage && Effects[iIndex].EffectType is Enums.eEffectType.Heal or Enums.eEffectType.HitPoints)
                 {
-                    shortFx.Add(iIndex, mag / 100f * DatabaseAPI.GetClassHitPoints(MidsContext.Archetype));
+                    shortFx.Add(iIndex, mag / 100f * DatabaseAPI.GetClassHitPoints(displayClassName));
                 }
                 else if (Effects[iIndex].EffectType is Enums.eEffectType.Heal or Enums.eEffectType.HitPoints)
                 {
-                    shortFx.Add(iIndex, (float)(mag / (double)DatabaseAPI.GetClassHitPoints(MidsContext.Archetype) * 100));
+                    shortFx.Add(iIndex, (float)(mag / (double)DatabaseAPI.GetClassHitPoints(displayClassName) * 100));
                 }
                 else
                 {

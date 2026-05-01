@@ -238,3 +238,12 @@ safe/\.fake/
 /Hero Designer/Data/*
 /MRBBootstrap/vcpkg_installed/x64-windows
 /MidsReborn/Docs/PlannerMathPipeline.md
+/Tests/MidsReborn.CompatibilityTests/MidsReborn.CompatibilityTests.csproj
+/Tests/MidsReborn.CompatibilityTests/PetActorPowerResolverTests.cs
+/Tests/MidsReborn.CompatibilityTests/PetActorRoutingTests.cs
+/Tests/MidsReborn.CompatibilityTests/PetActorSheetViewModelTests.cs
+/Tests/MidsReborn.CompatibilityTests/PopupFormattingFixture.cs
+/Tests/MidsReborn.CompatibilityTests/PopupFormattingTests.cs
+/Tests/MidsReborn.CompatibilityTests/SetVariantRepeatSlottingTests.cs
+/Tests/MidsReborn.CompatibilityTests/TestAssemblyInfo.cs
+/MidsReborn/Docs/SetVariantHandoff.md

@@ -29,6 +29,11 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private bool Updating;
         private bool EditMode;
         private int OrigStaticIndex;
+        private ComboBox? modifierContextPicker;
+        private Label? modifierContextLabel;
+        private PowerModifierDisplayContextResult? modifierContext;
+        private string selectedModifierContextClass = string.Empty;
+        private bool updatingModifierContext;
 
         public frmEditPower(IPower? iPower, bool editMode = false)
         {
@@ -42,6 +47,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEditPower);
             myPower = new Power(iPower);
+            InitializeModifierContextUi();
             backup_Requires = new Requirement(myPower.Requires);
             backup_AdvancedRequirements = myPower.AdvancedRequirements?.Clone() ??
                                           AdvancedConditionSet.FromLegacyRequirement(myPower.Requires);
@@ -63,6 +69,104 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             lvSPSet.DoubleBuffering();
             lvSPPower.DoubleBuffering();
             lvSPSelected.DoubleBuffering();
+        }
+
+        private void InitializeModifierContextUi()
+        {
+            modifierContextLabel = new Label
+            {
+                Location = new Point(8, 352),
+                Size = new Size(112, 23),
+                Text = @"Modifier context:",
+                TextAlign = ContentAlignment.MiddleRight
+            };
+
+            modifierContextPicker = new ComboBox
+            {
+                DropDownStyle = ComboBoxStyle.DropDownList,
+                FormattingEnabled = true,
+                Location = new Point(124, 350),
+                Size = new Size(428, 23)
+            };
+            modifierContextPicker.SelectedIndexChanged += modifierContextPicker_SelectedIndexChanged;
+
+            btnStacksUpdate.Location = new Point(580, 351);
+            pnlFX.Controls.Add(modifierContextLabel);
+            pnlFX.Controls.Add(modifierContextPicker);
+        }
+
+        private void modifierContextPicker_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (updatingModifierContext || modifierContextPicker?.SelectedItem is not PowerModifierDisplayContextCandidate candidate)
+            {
+                return;
+            }
+
+            selectedModifierContextClass = candidate.ClassName;
+            RefreshFXData(lvFX.SelectedIndex < 0 ? 0 : lvFX.SelectedIndex);
+        }
+
+        private PowerModifierDisplayContextResult RefreshModifierContext()
+        {
+            modifierContext = PowerModifierDisplayContextResolver.Resolve(myPower, selectedModifierContextClass);
+            selectedModifierContextClass = modifierContext.SelectedClassName;
+
+            if (modifierContextPicker == null || modifierContextLabel == null)
+            {
+                return modifierContext;
+            }
+
+            updatingModifierContext = true;
+            modifierContextPicker.BeginUpdate();
+            modifierContextPicker.Items.Clear();
+            foreach (var candidate in modifierContext.Candidates)
+            {
+                modifierContextPicker.Items.Add(candidate);
+            }
+
+            if (modifierContextPicker.Items.Count == 0)
+            {
+                modifierContextPicker.Items.Add(modifierContext.DisplayText);
+            }
+
+            var selectedIndex = 0;
+            for (var index = 0; index < modifierContextPicker.Items.Count; index++)
+            {
+                if (modifierContextPicker.Items[index] is PowerModifierDisplayContextCandidate candidate &&
+                    candidate.ClassName.Equals(selectedModifierContextClass, StringComparison.OrdinalIgnoreCase))
+                {
+                    selectedIndex = index;
+                    break;
+                }
+            }
+
+            modifierContextPicker.SelectedIndex = selectedIndex;
+            modifierContextPicker.Enabled = modifierContext.Candidates.Count > 1;
+            modifierContextPicker.BackColor = modifierContext.IsAmbiguous ? Color.MistyRose : SystemColors.Window;
+            modifierContextPicker.EndUpdate();
+
+            modifierContextLabel.Text = modifierContext.IsAmbiguous ? @"Ambiguous context:" : @"Modifier context:";
+            modifierContextLabel.ForeColor = modifierContext.IsAmbiguous ? Color.DarkRed : SystemColors.ControlText;
+            modifierContextPicker.Tag = modifierContext.DisplayText;
+            updatingModifierContext = false;
+
+            return modifierContext;
+        }
+
+        private void ResetModifierContextSelection()
+        {
+            selectedModifierContextClass = string.Empty;
+            modifierContext = null;
+        }
+
+        private string BuildEditorEffectPreviewString(IEffect effect)
+        {
+            var previewEffect = PowerModifierDisplayContextResolver.CreateContextualEffectClone(
+                effect,
+                myPower,
+                selectedModifierContextClass);
+
+            return previewEffect.BuildEffectString(false, "", false, false, true, false, true).Replace("\r\n", " - ");
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -116,6 +220,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 }
             }
             myPower = powerData;
+            ResetModifierContextSelection();
             SetFullName();
             RefreshPowerData();
         }
@@ -128,7 +233,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 nMagnitude = 1
             };
             iFX.SetPower(myPower);
-            using var frmPowerEffect = new frmPowerEffect(iFX, myPower, myPower.Effects.Length);
+            using var frmPowerEffect = new frmPowerEffect(iFX, myPower, myPower.Effects.Length, RefreshModifierContext());
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
             {
@@ -150,7 +255,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             var selectedIndex = lvFX.SelectedIndices[0];
-            using var frmPowerEffect = new frmPowerEffect(myPower.Effects[selectedIndex], myPower, selectedIndex);
+            using var frmPowerEffect = new frmPowerEffect(myPower.Effects[selectedIndex], myPower, selectedIndex, RefreshModifierContext());
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
             if (frmPowerEffect.ShowDialog(this) != DialogResult.OK)
             {
@@ -194,7 +299,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             var selectedEffect = (IEffect)myPower.Effects[lvFX.SelectedIndices[0]].Clone();
-            using var frmPowerEffect = new frmPowerEffect(selectedEffect, myPower, myPower.Effects.Length);
+            using var frmPowerEffect = new frmPowerEffect(selectedEffect, myPower, myPower.Effects.Length, RefreshModifierContext());
             cbCoDFormat.Checked = MidsContext.Config.CoDEffectFormat;
             if (frmPowerEffect.ShowDialog() != DialogResult.OK)
             {
@@ -695,6 +800,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             myPower.ForcedClass = !(index < 0 | index > DatabaseAPI.Database.Classes.Length - 1)
                 ? DatabaseAPI.Database.Classes[index].ClassName
                 : "";
+            ResetModifierContextSelection();
+            RefreshFXData(lvFX.SelectedIndex < 0 ? 0 : lvFX.SelectedIndex);
         }
 
         private void cbInherentType_SelectedIndexChanged(object sender, EventArgs e)
@@ -2373,12 +2480,13 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private void RefreshFXData(int Index = 0)
         {
             var power = myPower;
+            RefreshModifierContext();
             lvFX.BeginUpdate();
             lvFX.Items.Clear();
             var num = power.Effects.Length;
             for (var index = 0; index < num; index++)
             {
-                lvFX.Items.Add(power.Effects[index].BuildEffectString(false, "", false, false, true, false, true).Replace("\r\n", " - "));
+                lvFX.Items.Add(BuildEditorEffectPreviewString(power.Effects[index]));
             }
 
             lvFX.EndUpdate();
@@ -2577,6 +2685,13 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private void SetFullName()
         {
             myPower.FullName = $"{myPower.GroupName}.{myPower.SetName}.{myPower.PowerName}";
+            if (Updating)
+            {
+                return;
+            }
+
+            ResetModifierContextSelection();
+            RefreshFXData(lvFX.SelectedIndex < 0 ? 0 : lvFX.SelectedIndex);
         }
 
         private void SP_GroupList()
@@ -3812,6 +3927,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 var internalName = myPower.PowerName;
                 var staticIndex = myPower.StaticIndex;
                 myPower = obj.Clone();
+                ResetModifierContextSelection();
                 if (!dlgJsonOpen.OverrideStaticIndex)
                 {
                     myPower.StaticIndex = staticIndex;

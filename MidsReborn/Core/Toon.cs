@@ -6,6 +6,7 @@ using FastDeepCloner;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
 using Mids_Reborn.Core.PlannerRulesets;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.UI.Controls;
@@ -858,7 +859,9 @@ namespace Mids_Reborn.Core
                         //shouldAddEffect = enhEffect.IsFromProc;
 
                         // Find enhancement index in set
-                        var enhIndexSet = eSet.Enhancements.TryFindIndex(e => e == slotEntry.Enhancement.Enh);
+                        var enhIndexSet = DatabaseAPI.TryGetSetRawMemberPositionForEnhancement(slotEntry.Enhancement.Enh, out _, out var rawMemberPosition)
+                            ? rawMemberPosition
+                            : -1;
 
                         // Will include if there is no special bonus for this enhancement (at set level),
                         // and no regular buff is attached to this enhancement
@@ -1904,23 +1907,34 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public void GenerateBuffedPowerArray()
+        public void GenerateBuffedPowerArray(PlannerBuildRecipientContext? recipient = null)
         {
             CurrentBuild.GenerateSetBonusData();
 
-            ModifyEffects = new Dictionary<string, float>();
-            var pipeline = new PlannerPowerPipeline(CurrentBuild, Archetype);
+            if (recipient == null)
+            {
+                ModifyEffects = new Dictionary<string, float>();
+            }
+
+            var pipeline = new PlannerPowerPipeline(CurrentBuild, Archetype, recipient);
             pipeline.ExecuteAssemblyPhase();
             ApplyPipelineResult(pipeline.Result);
-            GenerateModifyEffectsArray();
+            if (recipient == null)
+            {
+                GenerateModifyEffectsArray();
+            }
+
             pipeline.ExecuteEnhancementBucketPhase();
             pipeline.ExecutePerPowerEnhancementMathPhase();
             pipeline.ExecuteSelfBuffBucketPhase();
             pipeline.ExecutePostBuffMultiplyPhase();
             ApplyPipelineResult(pipeline.Result);
 
-            ApplyGlobalEnhancements();
-            GBD_Totals();
+            if (recipient == null)
+            {
+                ApplyGlobalEnhancements();
+                GBD_Totals();
+            }
         }
 
         private void ApplyPipelineResult(PlannerPowerPipelineResult result)
@@ -2046,6 +2060,16 @@ namespace Mids_Reborn.Core
         /// <returns>KeyValuePair(keys=MathPower, values=BuffedPower</returns>
         public KeyValuePair<List<IPower>, List<IPower>>? GenerateBuffedPowers(List<IPower> powers, int basePowerHistoryIdx)
         {
+            return GenerateBuffedPowersInternal(powers, basePowerHistoryIdx, null);
+        }
+
+        public KeyValuePair<List<IPower>, List<IPower>>? GenerateBuffedPowers(List<IPower> powers, int basePowerHistoryIdx, PlannerBuildRecipientContext recipient)
+        {
+            return GenerateBuffedPowersInternal(powers, basePowerHistoryIdx, recipient);
+        }
+
+        private KeyValuePair<List<IPower>, List<IPower>>? GenerateBuffedPowersInternal(List<IPower> powers, int basePowerHistoryIdx, PlannerBuildRecipientContext? recipient)
+        {
             if (basePowerHistoryIdx < 0)
             {
                 // If root power is not picked in build, get unbuffed powers data from the db directly.
@@ -2053,6 +2077,13 @@ namespace Mids_Reborn.Core
                     .Select(e => DatabaseAPI.Database.Power.FirstOrDefault(f => f?.StaticIndex == e.StaticIndex) ?? new Power { StaticIndex = -1 })
                     .Cast<IPower>()
                     .ToList();
+                if (recipient != null)
+                {
+                    foreach (var power in powersList.OfType<Power>())
+                    {
+                        power.OmniDisplayClassName = recipient.ClassName;
+                    }
+                }
 
                 var clonedPowersList = powersList.Clone();
                 return new KeyValuePair<List<IPower>, List<IPower>>(clonedPowersList, clonedPowersList);
@@ -2060,27 +2091,409 @@ namespace Mids_Reborn.Core
 
             var mathPowers = new List<IPower>();
             var buffedPowers = new List<IPower>();
-            var basePower = CurrentBuild.Powers[basePowerHistoryIdx].Power.Clone();
-            powers.Add(basePower); // Restore original attached power
-
-            for (var i = 0; i < powers.Count; i++)
+            var basePower = CurrentBuild.Powers[basePowerHistoryIdx].Power?.Clone();
+            if (basePower == null)
             {
-                if (powers[i] == null)
+                return null;
+            }
+
+            var workingPowers = powers
+                .Where(power => power != null)
+                .Select(power => power.Clone())
+                .ToList();
+            workingPowers.Add(basePower);
+            var originalNidPower = CurrentBuild.Powers[basePowerHistoryIdx].NIDPower;
+
+            try
+            {
+                for (var i = 0; i < workingPowers.Count; i++)
+                {
+                    var workingPower = workingPowers[i];
+                    if (workingPower == null)
+                    {
+                        continue;
+                    }
+
+                    CurrentBuild.Powers[basePowerHistoryIdx].NIDPower =
+                        DatabaseAPI.Database.Power.TryFindIndex(e => e?.StaticIndex == workingPower.StaticIndex);
+                    GenerateBuffedPowerArray(recipient);
+
+                    if (i < workingPowers.Count - 1 &&
+                        _mathPowers[basePowerHistoryIdx] != null &&
+                        _buffedPowers[basePowerHistoryIdx] != null)
+                    {
+                        mathPowers.Add(_mathPowers[basePowerHistoryIdx].Clone());
+                        buffedPowers.Add(_buffedPowers[basePowerHistoryIdx].Clone());
+                    }
+                }
+            }
+            finally
+            {
+                CurrentBuild.Powers[basePowerHistoryIdx].NIDPower = originalNidPower;
+                GenerateBuffedPowerArray();
+            }
+
+            return new KeyValuePair<List<IPower>, List<IPower>>(mathPowers, buffedPowers);
+        }
+
+        public IReadOnlyList<RealPetActorRosterItem> GetRealPetActorRoster()
+        {
+            return CurrentBuild.GetRealPetActorRoster();
+        }
+
+        public KeyValuePair<List<IPower>, List<IPower>>? GenerateBuffedPetPowers(
+            IReadOnlyList<ResolvedPetPower> powers,
+            PlannerBuildRecipientContext recipient,
+            PetActorPreviewState? previewState = null)
+        {
+            if (powers.Count == 0)
+            {
+                return new KeyValuePair<List<IPower>, List<IPower>>(new List<IPower>(), new List<IPower>());
+            }
+
+            var mathPowers = Enumerable.Repeat<IPower?>(null, powers.Count).ToArray();
+            var buffedPowers = Enumerable.Repeat<IPower?>(null, powers.Count).ToArray();
+
+            foreach (var group in powers
+                         .Select((power, index) => new { Power = power, Index = index })
+                         .GroupBy(entry => entry.Power.SourceHistoryIndex))
+            {
+                var generated = GenerateBuffedPowers(
+                    group.Select(entry => entry.Power.Power).ToList(),
+                    group.Key,
+                    recipient);
+                if (generated == null)
+                {
+                    return null;
+                }
+
+                var groupEntries = group.ToArray();
+                for (var index = 0; index < groupEntries.Length; index++)
+                {
+                    mathPowers[groupEntries[index].Index] = generated.Value.Key[index];
+                    buffedPowers[groupEntries[index].Index] = generated.Value.Value[index];
+                }
+            }
+
+            if (previewState != null)
+            {
+                ApplySupplementalPetSelfBuffPreview(powers, previewState, mathPowers, buffedPowers);
+            }
+
+            var generatedMathPowers = mathPowers.Select(power => power ?? new Power()).ToList();
+            var generatedBuffedPowers = buffedPowers.Select(power => power ?? new Power()).ToList();
+
+            return new KeyValuePair<List<IPower>, List<IPower>>(
+                generatedMathPowers,
+                generatedBuffedPowers);
+        }
+
+        private void ApplySupplementalPetSelfBuffPreview(
+            IReadOnlyList<ResolvedPetPower> powers,
+            PetActorPreviewState previewState,
+            IPower?[] mathPowers,
+            IPower?[] buffedPowers)
+        {
+            var includedSelfBuffIndexes = powers
+                .Select((resolvedPower, index) => new { resolvedPower, index })
+                .Where(entry => entry.resolvedPower.IsSelfClickBuff &&
+                                PetActorPowerResolver.ShouldIncludeInTotals(entry.resolvedPower, previewState))
+                .Select(entry => entry.index)
+                .ToArray();
+            if (includedSelfBuffIndexes.Length == 0)
+            {
+                return;
+            }
+
+            var supplementalEnhance = new Enums.BuffsX();
+            supplementalEnhance.Reset();
+            var plannerRuleset = DatabaseAPI.GetPlannerRuleset();
+            foreach (var index in includedSelfBuffIndexes)
+            {
+                var sourcePower = buffedPowers[index] ?? mathPowers[index];
+                if (sourcePower == null)
                 {
                     continue;
                 }
 
-                CurrentBuild.Powers[basePowerHistoryIdx].NIDPower = DatabaseAPI.Database.Power.TryFindIndex(e => e?.StaticIndex == powers[i].StaticIndex);
-                GenerateBuffedPowerArray();
+                plannerRuleset.AccumulateBuckets(sourcePower, ref supplementalEnhance, PlannerBucketPass.Enhancement);
+            }
 
-                if (i < powers.Count - 1)
+            if (!HasSupplementalPetSelfBuffPreview(supplementalEnhance))
+            {
+                return;
+            }
+
+            var includedSelfBuffIndexSet = includedSelfBuffIndexes.ToHashSet();
+            for (var index = 0; index < mathPowers.Length && index < buffedPowers.Length; index++)
+            {
+                if (includedSelfBuffIndexSet.Contains(index))
                 {
-                    mathPowers.Add(_mathPowers[basePowerHistoryIdx].Clone());
-                    buffedPowers.Add(_buffedPowers[basePowerHistoryIdx].Clone());
+                    continue;
+                }
+
+                ApplySupplementalPetSelfBuffPreview(ref mathPowers[index], ref buffedPowers[index], supplementalEnhance);
+            }
+        }
+
+        private static bool HasSupplementalPetSelfBuffPreview(Enums.BuffsX buckets)
+        {
+            return buckets.Damage.Any(value => Math.Abs(value) > float.Epsilon) ||
+                   buckets.Defense.Any(value => Math.Abs(value) > float.Epsilon) ||
+                   buckets.Resistance.Any(value => Math.Abs(value) > float.Epsilon) ||
+                   buckets.Mez.Any(value => Math.Abs(value) > float.Epsilon) ||
+                   buckets.Effect.Any(value => Math.Abs(value) > float.Epsilon) ||
+                   buckets.EffectAux.Any(value => Math.Abs(value) > float.Epsilon);
+        }
+
+        private static void ApplySupplementalPetSelfBuffPreview(
+            ref IPower? powerMath,
+            ref IPower? powerBuffed,
+            Enums.BuffsX supplementalEnhance)
+        {
+            if (powerMath == null || powerBuffed == null)
+            {
+                return;
+            }
+
+            var oldAccuracy = powerMath.Accuracy;
+            var oldEndCost = powerMath.EndCost;
+            var oldInterruptTime = powerMath.InterruptTime;
+            var oldRange = powerMath.Range;
+            var oldRechargeTime = powerMath.RechargeTime;
+
+            var allowAccuracy = powerMath.IgnoreEnhancement(Enums.eEnhance.Accuracy);
+            var allowRecharge = powerMath.IgnoreEnhancement(Enums.eEnhance.RechargeTime);
+            var allowEnduranceDiscount = powerMath.IgnoreEnhancement(Enums.eEnhance.EnduranceDiscount);
+
+            for (var effectIndex = 0; effectIndex < supplementalEnhance.Effect.Length; effectIndex++)
+            {
+                var effectType = (Enums.eEffectType)effectIndex;
+                switch (effectType)
+                {
+                    case Enums.eEffectType.Accuracy:
+                        if (allowAccuracy)
+                        {
+                            powerMath.Accuracy += supplementalEnhance.Effect[effectIndex];
+                        }
+
+                        break;
+
+                    case Enums.eEffectType.EnduranceDiscount:
+                        if (allowEnduranceDiscount)
+                        {
+                            powerMath.EndCost += supplementalEnhance.Effect[effectIndex];
+                        }
+
+                        break;
+
+                    case Enums.eEffectType.InterruptTime:
+                        powerMath.InterruptTime += supplementalEnhance.Effect[effectIndex];
+                        break;
+
+                    case Enums.eEffectType.Range:
+                        powerMath.Range += supplementalEnhance.Effect[effectIndex];
+                        break;
+
+                    case Enums.eEffectType.RechargeTime:
+                        if (allowRecharge)
+                        {
+                            powerMath.RechargeTime += supplementalEnhance.Effect[effectIndex];
+                        }
+
+                        break;
+
+                    default:
+                        for (var powerEffectIndex = 0; powerEffectIndex < powerMath.Effects.Length && powerEffectIndex < powerBuffed.Effects.Length; powerEffectIndex++)
+                        {
+                            if (!powerMath.Effects[powerEffectIndex].Buffable || powerMath.Effects[powerEffectIndex].EffectType != effectType)
+                            {
+                                continue;
+                            }
+
+                            var mathEffect = powerMath.Effects[powerEffectIndex];
+                            var buffedEffect = powerBuffed.Effects[powerEffectIndex];
+                            var durationAdjustment = 0f;
+                            var magnitudeAdjustment = 0f;
+
+                            switch (effectType)
+                            {
+                                case Enums.eEffectType.Damage:
+                                    magnitudeAdjustment = supplementalEnhance.Damage[(int)mathEffect.DamageType];
+                                    break;
+
+                                case Enums.eEffectType.Defense:
+                                    magnitudeAdjustment = supplementalEnhance.Defense[(int)mathEffect.DamageType];
+                                    break;
+
+                                case Enums.eEffectType.Mez:
+                                    if (mathEffect.AttribType == Enums.eAttribType.Duration)
+                                    {
+                                        durationAdjustment = supplementalEnhance.Mez[(int)mathEffect.MezType];
+                                    }
+                                    else
+                                    {
+                                        magnitudeAdjustment = supplementalEnhance.Mez[(int)mathEffect.MezType];
+                                    }
+
+                                    break;
+
+                                case Enums.eEffectType.Resistance:
+                                    magnitudeAdjustment = supplementalEnhance.Resistance[(int)mathEffect.DamageType];
+                                    break;
+
+                                default:
+                                    if (mathEffect is { EffectType: Enums.eEffectType.Enhancement, ETModifies: Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedJumping or Enums.eEffectType.JumpHeight or Enums.eEffectType.SpeedFlying })
+                                    {
+                                        magnitudeAdjustment = buffedEffect.Mag > 0
+                                            ? supplementalEnhance.Effect[(int)mathEffect.ETModifies]
+                                            : supplementalEnhance.EffectAux[(int)mathEffect.ETModifies];
+                                    }
+                                    else if (mathEffect.EffectType is Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedJumping or Enums.eEffectType.JumpHeight or Enums.eEffectType.SpeedFlying)
+                                    {
+                                        magnitudeAdjustment = buffedEffect.Mag > 0
+                                            ? supplementalEnhance.Effect[(int)mathEffect.EffectType]
+                                            : supplementalEnhance.EffectAux[(int)mathEffect.EffectType];
+                                    }
+                                    else
+                                    {
+                                        magnitudeAdjustment = supplementalEnhance.Effect[effectIndex];
+                                    }
+
+                                    break;
+                            }
+
+                            mathEffect.Math_Mag += magnitudeAdjustment;
+                            mathEffect.Math_Duration += durationAdjustment;
+                            buffedEffect.Math_Mag = buffedEffect.Mag * mathEffect.Math_Mag;
+                            buffedEffect.Math_Duration = buffedEffect.Duration * mathEffect.Math_Duration;
+                        }
+
+                        break;
                 }
             }
 
-            return new KeyValuePair<List<IPower>, List<IPower>>(mathPowers, buffedPowers);
+            if (Math.Abs(oldAccuracy + 1f) > float.Epsilon && Math.Abs(powerMath.Accuracy + 1f) > float.Epsilon)
+            {
+                var accuracyRatio = (1f + powerMath.Accuracy) / (1f + oldAccuracy);
+                powerBuffed.Accuracy *= accuracyRatio;
+                powerBuffed.AccuracyMult *= accuracyRatio;
+            }
+
+            if (Math.Abs(oldEndCost) > float.Epsilon && Math.Abs(powerMath.EndCost) > float.Epsilon)
+            {
+                powerBuffed.EndCost *= oldEndCost / powerMath.EndCost;
+            }
+
+            if (Math.Abs(oldInterruptTime) > float.Epsilon && Math.Abs(powerMath.InterruptTime) > float.Epsilon)
+            {
+                powerBuffed.InterruptTime *= oldInterruptTime / powerMath.InterruptTime;
+            }
+
+            if (Math.Abs(oldRange) > float.Epsilon)
+            {
+                powerBuffed.Range *= powerMath.Range / oldRange;
+            }
+
+            if (Math.Abs(oldRechargeTime) > float.Epsilon && Math.Abs(powerMath.RechargeTime) > float.Epsilon)
+            {
+                powerBuffed.RechargeTime *= oldRechargeTime / powerMath.RechargeTime;
+            }
+        }
+
+        public PetActorSnapshot? GeneratePetActorSnapshot(RealPetActorRosterItem item, PetActorPreviewState? previewState = null)
+        {
+            return GeneratePetActorSnapshotCore(item, previewState, includeAppliedBonuses: true);
+        }
+
+        internal PetActorSnapshot? GeneratePetActorSnapshotForAnalysis(RealPetActorRosterItem item, PetActorPreviewState? previewState = null)
+        {
+            return GeneratePetActorSnapshotCore(item, previewState, includeAppliedBonuses: false);
+        }
+
+        private PetActorSnapshot? GeneratePetActorSnapshotCore(RealPetActorRosterItem item, PetActorPreviewState? previewState, bool includeAppliedBonuses)
+        {
+            var entity = DatabaseAPI.Database.Entities
+                .FirstOrDefault(candidate => candidate?.UID.Equals(item.EntityUid, StringComparison.OrdinalIgnoreCase) == true);
+            if (entity == null || !entity.IsRealPet)
+            {
+                return null;
+            }
+
+            var recipient = PlannerBuildRecipientContext.CreateOwnedPetRecipient(new SummonedEntity(entity), item.SourceHistoryIndex);
+            var (resolvedPowers, availableUpgrades, availableSelfClickBuffs, effectivePreviewState) =
+                PetActorPowerResolver.Resolve(CurrentBuild, new SummonedEntity(entity), item, previewState);
+
+            var generatedPowers = GenerateBuffedPetPowers(resolvedPowers, recipient, effectivePreviewState);
+            if (generatedPowers == null)
+            {
+                return null;
+            }
+
+            var basePowers = resolvedPowers
+                .Select(resolvedPower => resolvedPower.Power)
+                .Select(power =>
+                {
+                    var clone = power.Clone();
+                    if (clone is Power concretePower)
+                    {
+                        concretePower.OmniDisplayClassName = recipient.ClassName;
+                    }
+
+                    return clone;
+                })
+                .ToList();
+
+            var includedIndexes = resolvedPowers
+                .Select((resolvedPower, index) => new { resolvedPower, index })
+                .Where(entry => PetActorPowerResolver.ShouldIncludeInTotals(entry.resolvedPower, effectivePreviewState))
+                .Select(entry => entry.index)
+                .ToArray();
+
+            var includedMathPowers = includedIndexes
+                .Select(index => resolvedPowers[index].IsSelfClickBuff
+                    ? generatedPowers.Value.Value[index]
+                    : generatedPowers.Value.Key[index])
+                .ToArray();
+            var includedBuffedPowers = includedIndexes
+                .Select(index => generatedPowers.Value.Value[index])
+                .ToArray();
+
+            var totals = PetActorMath.Calculate(
+                recipient.ClassName,
+                includedMathPowers,
+                includedBuffedPowers,
+                CurrentBuild.GetSetBonusVirtualPower(recipient));
+
+            var appliedBonuses = includeAppliedBonuses
+                ? PetActorBonusAnalyzer.Build(
+                    this,
+                    item,
+                    recipient,
+                    totals,
+                    resolvedPowers,
+                    availableUpgrades,
+                    effectivePreviewState,
+                    generatedPowers.Value.Key,
+                    generatedPowers.Value.Value)
+                : Array.Empty<PetAppliedBonusEntry>();
+
+            return new PetActorSnapshot
+            {
+                RosterItem = item,
+                Entity = new SummonedEntity(entity),
+                Recipient = recipient,
+                ActorTags = recipient.Tags.ToArray(),
+                PreviewState = effectivePreviewState,
+                AvailableUpgrades = availableUpgrades,
+                AvailableSelfClickBuffs = availableSelfClickBuffs,
+                ResolvedPowers = resolvedPowers,
+                BasePowers = basePowers,
+                MathPowers = generatedPowers.Value.Key,
+                BuffedPowers = generatedPowers.Value.Value,
+                Totals = totals,
+                AppliedBonusEntries = appliedBonuses
+            };
         }
 
         private void GenerateModifyEffectsArray()
@@ -2676,7 +3089,7 @@ namespace Mids_Reborn.Core
 
                     var setInfo = sb.SetInfo;
                     var enhancementSet = DatabaseAPI.Database.EnhancementSets[sb.SetInfo[senInfoIdx].SetIDX];
-                    popupData.Sections[index1].Add($"{enhancementSet.DisplayName} ({setInfo[senInfoIdx].SlottedCount}/{enhancementSet.Enhancements.Length})", PopUp.Colors.Title);
+                    popupData.Sections[index1].Add($"{enhancementSet.DisplayName} ({setInfo[senInfoIdx].SlottedCount}/{DatabaseAPI.GetVisibleSetPieceCount(sb.SetInfo[senInfoIdx].SetIDX)})", PopUp.Colors.Title);
                     for (var bonusIdx = 0; bonusIdx < enhancementSet.Bonus.Length; bonusIdx++)
                     {
                         if (!(setInfo[senInfoIdx].SlottedCount >= enhancementSet.Bonus[bonusIdx].Slotted &
@@ -2694,9 +3107,9 @@ namespace Mids_Reborn.Core
                         }
                     }
 
-                    foreach (var enh in sb.SetInfo[senInfoIdx].EnhIndexes)
+                    foreach (var pieceIndex in (sb.SetInfo[senInfoIdx].PieceIndexes ?? Array.Empty<int>()).Where(index => index >= 0).Distinct())
                     {
-                        var isSpecial = DatabaseAPI.IsSpecialEnh(enh);
+                        var isSpecial = DatabaseAPI.GetSpecialRawMemberPositionForSetPiece(sb.SetInfo[senInfoIdx].SetIDX, pieceIndex);
                         if (isSpecial > -1)
                         {
                             popupData.Sections[index1].Add(enhancementSet.GetEffectString(isSpecial, true, true, true), PopUp.Colors.Effect, 0.9f, FontStyle.Bold, 1);

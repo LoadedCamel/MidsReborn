@@ -62,6 +62,10 @@ namespace Mids_Reborn.Core
 
         EnhancementImportMetadata EnhancementImportMetadata { get; set; }
 
+        PowerImportMetadata PowerImportMetadata { get; set; }
+
+        EntityImportMetadata EntityImportMetadata { get; set; }
+
         LevelMap[] Levels { get; set; }
 
         int[] Levels_MainPowers { get; set; }

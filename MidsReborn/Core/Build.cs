@@ -3,6 +3,7 @@ using FastDeepCloner;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
 using Mids_Reborn.UI.Forms.Controls;
 
 namespace Mids_Reborn.Core
@@ -15,6 +16,7 @@ namespace Mids_Reborn.Core
         public readonly List<I9SetData> SetBonuses;
 
         private IPower? _setBonusVirtualPower;
+        private readonly Dictionary<string, IPower> _setBonusVirtualPowersByRecipient = new(StringComparer.OrdinalIgnoreCase);
 
         private bool _isInitializingSetBonusPowers;
         private List<IPower> _setBonusPowers = new();
@@ -41,7 +43,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public IPower? SetBonusVirtualPower => _setBonusVirtualPower ??= GetSetBonusVirtualPower();
+        public IPower? SetBonusVirtualPower => _setBonusVirtualPower ??= GetSetBonusVirtualPower(OmniPowerRouting.CreatePlayerRecipient());
 
         public List<IPower> SetBonusPowers
         {
@@ -49,7 +51,7 @@ namespace Mids_Reborn.Core
             {
                 if (_setBonusPowers.Any() || _isInitializingSetBonusPowers) return _setBonusPowers;
                 _isInitializingSetBonusPowers = true;
-                _setBonusPowers = GetSetBonusPowers();
+                _setBonusPowers = GetSetBonusPowers(OmniPowerRouting.CreatePlayerRecipient());
                 _isInitializingSetBonusPowers = false;
 
                 return _setBonusPowers;
@@ -1306,7 +1308,8 @@ namespace Mids_Reborn.Core
                         }
                     }
 
-                    if (enhancement.nIDSet <= -1 || powerIdx != hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh != iEnh) continue;
+                    if (enhancement.nIDSet <= -1 || powerIdx != hIdx) continue;
+                    if (!DatabaseAPI.AreEnhancementsSameSetPiece(Powers[powerIdx].Slots[slotIndex].Enhancement.Enh, iEnh)) continue;
                     foundInPower = true;
                     break;
                 }
@@ -1368,29 +1371,27 @@ namespace Mids_Reborn.Core
                 .DefaultIfEmpty(null)
                 .FirstOrDefault(e => e.Power != null && e.Power.FullName == pName);
 
-            // PowerEntry -> PowerEntry.Slots -> Dictionary<int:Enhancement index, KeyValuePair<int:Enhancement set index, int:index of enhancement in set>>
-            var slottedInSets = pe == null
-                ? new Dictionary<int, KeyValuePair<int, int>>()
-                : pe.Slots.ToDictionary(
-                    e => e.Enhancement.Enh,
-                    e => new KeyValuePair<int, int>(
-                        e.Enhancement.Enh < 0
-                            ? -1
-                            : DatabaseAPI.Database.Enhancements[e.Enhancement.Enh].nIDSet,
-                        e.Enhancement.Enh < 0
-                            ? -1
-                            : DatabaseAPI.Database.Enhancements[e.Enhancement.Enh].nIDSet < 0
-                                ? -1
-                                : Array.FindIndex(
-                                    DatabaseAPI.Database
-                                        .EnhancementSets[DatabaseAPI.Database.Enhancements[e.Enhancement.Enh].nIDSet]
-                                        .Enhancements, enh => enh == e.Enhancement.Enh)
-                    ));
-
-            var activeSetBonuses = slottedInSets
-                .Where(e => e.Key >= 0 && e.Value.Key >= 0 && e.Value.Value >= 0)
-                .SelectMany(e => DatabaseAPI.Database.EnhancementSets[e.Value.Key].SpecialBonus[e.Value.Value].Index.Select(k => DatabaseAPI.Database.Power[k].Clone()))
-                .ToList();
+            var seenPieces = new HashSet<(int SetId, int PieceIndex)>();
+            var activeSetBonuses = pe == null
+                ? new List<IPower>()
+                : pe.Slots
+                    .Select(slot => slot.Enhancement.Enh)
+                    .Where(enhancementId =>
+                        DatabaseAPI.TryGetSetPieceIndexForEnhancement(enhancementId, out var setId, out var pieceIndex) &&
+                        seenPieces.Add((setId, pieceIndex)))
+                    .SelectMany(enhancementId =>
+                    {
+                        var setId = DatabaseAPI.Database.Enhancements[enhancementId].nIDSet;
+                        var pieceIndex = DatabaseAPI.TryGetSetPieceIndexForEnhancement(enhancementId, out _, out var resolvedPieceIndex)
+                            ? resolvedPieceIndex
+                            : -1;
+                        var rawMemberPosition = DatabaseAPI.GetSpecialRawMemberPositionForSetPiece(setId, pieceIndex);
+                        return rawMemberPosition < 0
+                            ? Enumerable.Empty<IPower>()
+                            : DatabaseAPI.Database.EnhancementSets[setId].SpecialBonus[rawMemberPosition].Index
+                                .Select(powerIndex => DatabaseAPI.Database.Power[powerIndex].Clone());
+                    })
+                    .ToList();
 
             // Mark all effects as from enhancement
             foreach (var s in activeSetBonuses)
@@ -1430,6 +1431,8 @@ namespace Mids_Reborn.Core
             }
 
             _setBonusVirtualPower = null;
+            _setBonusVirtualPowersByRecipient.Clear();
+            _setBonusPowers = new List<IPower>();
         }
 
         /*private IPower GetSetBonusVirtualPower()
@@ -1482,11 +1485,27 @@ namespace Mids_Reborn.Core
             return power1;
         }*/
 
-        private IPower GetSetBonusVirtualPower()
+        public IPower GetSetBonusVirtualPower(PlannerBuildRecipientContext recipient)
+        {
+            var cacheKey = CreateRecipientCacheKey(recipient);
+            if (_setBonusVirtualPowersByRecipient.TryGetValue(cacheKey, out var cachedPower))
+            {
+                return cachedPower;
+            }
+
+            var createdPower = CreateSetBonusVirtualPower(recipient);
+            _setBonusVirtualPowersByRecipient[cacheKey] = createdPower;
+            return createdPower;
+        }
+
+        private IPower CreateSetBonusVirtualPower(PlannerBuildRecipientContext recipient)
         {
             var virtualPower = new Power();
             if (MidsContext.Config.I9.IgnoreSetBonusFX)
                 return virtualPower;
+
+            virtualPower.FullName = "Mids.SetBonus.Virtual";
+            virtualPower.DisplayName = "Set Bonus Effects";
 
             var setBonusNids = DatabaseAPI.NidPowers("set_bonus");
             if (setBonusNids == null || setBonusNids.Length == 0)
@@ -1516,10 +1535,15 @@ namespace Mids_Reborn.Core
 
                         var dbPower = DatabaseAPI.Database.Power[nid];
                         if (dbPower == null) continue;
-                        if (ShouldSkipEffects(dbPower)) continue; // skip pet-only bonuses
+
+                        var routedPower = OmniPowerRouting.CreatePlannerPower(dbPower, recipient);
+                        if (routedPower == null)
+                        {
+                            continue;
+                        }
 
                         // No stacking cap here. We'll enforce the Law of Fives upon assignment to the container.
-                        var src = dbPower.Effects;
+                        var src = routedPower.Effects;
                         if (src == null || src.Length == 0) continue;
 
                         for (int i = 0; i < src.Length; i++)
@@ -1536,7 +1560,7 @@ namespace Mids_Reborn.Core
             return virtualPower;
         }
 
-        private List<IPower> GetSetBonusPowers()
+        public List<IPower> GetSetBonusPowers(PlannerBuildRecipientContext recipient)
         {
             var powerList = new List<IPower>();
             if (MidsContext.Config == null || MidsContext.Config.I9.IgnoreSetBonusFX)
@@ -1560,11 +1584,20 @@ namespace Mids_Reborn.Core
 
                         ++setCount[powerIndex];
 
-                        var power = DatabaseAPI.Database.Power[powerIndex];
-
                         if (setCount[powerIndex] >= 6) continue;
-                        if (power != null) powerList.Add(power.Clone());
-                    }
+
+                        var power = DatabaseAPI.Database.Power[powerIndex];
+                        if (power == null)
+                        {
+                            continue;
+                        }
+
+                          var routedPower = OmniPowerRouting.CreatePlannerPower(power, recipient);
+                          if (routedPower != null)
+                          {
+                              powerList.Add(routedPower);
+                          }
+                      }
                 }
             }
 
@@ -1589,6 +1622,71 @@ namespace Mids_Reborn.Core
             bool affectsPets = p.Target.HasFlag(pet) || p.EntitiesAffected.HasFlag(pet);
 
             return affectsPets && !affectsSelf;
+        }
+
+        public IReadOnlyList<RealPetActorRosterItem> GetRealPetActorRoster()
+        {
+            var roster = new Dictionary<string, RealPetActorRosterItem>(StringComparer.OrdinalIgnoreCase);
+
+            for (var historyIndex = 0; historyIndex < Powers.Count; historyIndex++)
+            {
+                var powerEntry = Powers[historyIndex];
+                if (powerEntry?.Power == null || powerEntry.NIDPower < 0)
+                {
+                    continue;
+                }
+
+                foreach (var effect in powerEntry.Power.Effects.Where(effect =>
+                             effect.EffectType == Enums.eEffectType.EntCreate &&
+                             effect.Probability > 0))
+                {
+                    var summonIndex = effect.nSummon > -1
+                        ? effect.nSummon
+                        : DatabaseAPI.NidFromUidEntity(effect.Summon);
+                    if (summonIndex < 0 || summonIndex >= DatabaseAPI.Database.Entities.Length)
+                    {
+                        continue;
+                    }
+
+                    var entity = DatabaseAPI.Database.Entities[summonIndex];
+                    if (entity == null || !entity.IsRealPet)
+                    {
+                        continue;
+                    }
+
+                    var rosterKey = $"{entity.UID}|{historyIndex}";
+                    if (roster.TryGetValue(rosterKey, out var existingItem))
+                    {
+                        existingItem.Count++;
+                        continue;
+                    }
+
+                    roster[rosterKey] = new RealPetActorRosterItem
+                    {
+                        EntityUid = entity.UID,
+                        EntityDisplayName = entity.DisplayName,
+                        EntityClassName = entity.ClassName,
+                        SourceHistoryIndex = historyIndex,
+                        SourcePowerFullName = powerEntry.Power.FullName,
+                        SourcePowerDisplayName = powerEntry.Power.DisplayName,
+                        Count = 1
+                    };
+                }
+            }
+
+            return roster.Values
+                .OrderBy(item => item.SourceHistoryIndex)
+                .ThenBy(item => item.EntityDisplayName, StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
+
+        private static string CreateRecipientCacheKey(PlannerBuildRecipientContext recipient)
+        {
+            return recipient.Kind switch
+            {
+                PlannerBuildRecipientKind.Player => "player",
+                _ => $"{recipient.Kind}:{recipient.Entity?.UID}:{recipient.ActorSourceHistoryIndex}"
+            };
         }
 
         public List<IEffect> GetCumulativeSetBonuses()
@@ -1849,10 +1947,15 @@ namespace Mids_Reborn.Core
                         }
                     }
 
-                    foreach (var si in s.SetInfo[i].EnhIndexes)
+                    foreach (var pieceIndex in (s.SetInfo[i].PieceIndexes ?? Array.Empty<int>()).Where(index => index >= 0).Distinct())
                     {
-                        var specialEnhIdx = DatabaseAPI.IsSpecialEnh(si);
+                        var specialEnhIdx = DatabaseAPI.GetSpecialRawMemberPositionForSetPiece(s.SetInfo[i].SetIDX, pieceIndex);
                         if (specialEnhIdx <= -1) continue;
+
+                        var representativeEnhancement = (s.SetInfo[i].EnhIndexes ?? Array.Empty<int>())
+                            .Zip(s.SetInfo[i].PieceIndexes ?? Array.Empty<int>(), (enhancementId, slottedPieceIndex) => new { enhancementId, slottedPieceIndex })
+                            .FirstOrDefault(entry => entry.slottedPieceIndex == pieceIndex)?.enhancementId ?? -1;
+                        if (representativeEnhancement < 0) continue;
 
                         var enhEffectsData = enhancementSet.GetEffectDetailedData2(specialEnhIdx, true);
                         var setLinkedPowers = enhancementSet.GetEnhancementSetLinkedPowers(specialEnhIdx, true);
@@ -1880,7 +1983,7 @@ namespace Mids_Reborn.Core
                                     IsFromEnh = true,
                                     AffectedEntity = p.EntitiesAffected,
                                     EntitiesAutoHit = p.EntitiesAutoHit,
-                                    Enhancement = DatabaseAPI.Database.Enhancements[si]
+                                    Enhancement = DatabaseAPI.Database.Enhancements[representativeEnhancement]
                                 });
                             }
                         }

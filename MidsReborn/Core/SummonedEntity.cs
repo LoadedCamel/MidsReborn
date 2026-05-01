@@ -51,6 +51,7 @@ namespace Mids_Reborn.Core
             _nPowerset = template._nPowerset.ToArray();
             UpgradePowerFullName = template.UpgradePowerFullName.ToArray();
             _nUpgradePower = template._nUpgradePower.ToArray();
+            ActorTags = template.ActorTags.ToList();
         }
 
         public string UID { get; set; } = string.Empty;
@@ -58,6 +59,7 @@ namespace Mids_Reborn.Core
         public string[] PowersetFullName { get; set; } = Array.Empty<string>();
         public string[] UpgradePowerFullName { get; set; } = Array.Empty<string>();
         public string ClassName { get; set; } = string.Empty;
+        public List<string> ActorTags { get; set; } = [];
         public Enums.eSummonEntity EntityType { get; set; }
         public bool IsPseudoPet => EntityType == Enums.eSummonEntity.PseudoPet;
         public bool IsRealPet => EntityType is Enums.eSummonEntity.Pet or Enums.eSummonEntity.Henchman;

@@ -34,6 +34,24 @@ public sealed class OmniDatabaseMetadata
     public bool HasCanonicalOmniPlannerMath { get; set; }
     public Dictionary<string, OmniClassAttributeTable> ClassAttributes { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public EnhancementImportMetadata EnhancementImport { get; set; } = new();
+    public PowerImportMetadata PowerImport { get; set; } = new();
+    public EntityImportMetadata EntityImport { get; set; } = new();
+}
+
+public sealed class PowerImportMetadata
+{
+    public Dictionary<string, ImportedPowerSemantics> Powers { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+}
+
+public sealed class ImportedPowerSemantics
+{
+    public string TargetRequires { get; set; } = string.Empty;
+    public List<OmniEffectDefinition> ActivationEffects { get; set; } = [];
+}
+
+public sealed class EntityImportMetadata
+{
+    public Dictionary<string, List<string>> EntityTagsByUid { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }
 
 public sealed class EnhancementImportMetadata

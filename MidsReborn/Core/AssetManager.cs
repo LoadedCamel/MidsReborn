@@ -505,6 +505,17 @@ namespace Mids_Reborn.Core
             iTarget.DrawImage(borderImage.Bitmap, iDest);
             iTarget.DrawImage(setImage.Bitmap, iDest);
         }
+
+        public static void DrawEnhancementSetVariant(Graphics iTarget, Rectangle iDest, int setId, SetVariantKind variantKind, string? badgeText = null)
+        {
+            if (!TryGetSetVariantBorderBitmap(variantKind, out var borderImage) || borderImage?.Bitmap is null) return;
+            if (!Sets.TryGetValue(setId, out var setImage) || setImage?.Bitmap is null) return;
+
+            ConfigureGraphics(iTarget);
+            iTarget.DrawImage(borderImage.Bitmap, iDest);
+            iTarget.DrawImage(setImage.Bitmap, iDest);
+            DrawSetVariantBadge(iTarget, iDest, badgeText);
+        }
         #endregion
 
         #region Retrieval Helpers
@@ -702,6 +713,12 @@ namespace Mids_Reborn.Core
             return TryGetBorderBitmap(OriginIndex, ResolveSetBorderState(enhancementSet), out borderImage);
         }
 
+        public static bool TryGetSetVariantBorderBitmap(SetVariantKind variantKind, out ExtendedBitmap borderImage)
+        {
+            borderImage = null;
+            return TryGetBorderBitmap(OriginIndex, ResolveSetBorderState(variantKind), out borderImage);
+        }
+
         public static bool TryGetClassicVariantBorderBitmap(
             ClassicEnhancementVariantView? variant,
             int buildOriginIndex,
@@ -879,54 +896,37 @@ namespace Mids_Reborn.Core
                 return BorderState.SetCrafted;
             }
 
-            var enhancement = DatabaseAPI.Database.Enhancements[enhancementId];
-            var attunedLike = DatabaseAPI.EnhIsNaturallyAttuned(enhancementId) || DatabaseAPI.EnhHasCatalyst(enhancement.UID);
-
-            if (attunedLike)
-            {
-                return enhancement.Superior ? BorderState.SetSuperiorAttuned : BorderState.SetAttuned;
-            }
-
-            return BorderState.SetCrafted;
+            return ResolveSetBorderState(DatabaseAPI.GetSetVariantKind(enhancementId));
         }
 
         private static BorderState ResolveSetBorderState(IEnhancement enhancement)
         {
-            var enhancementId = enhancement.StaticIndex;
-            var attunedLike = enhancementId >= 0 && enhancementId < DatabaseAPI.Database.Enhancements.Length &&
-                DatabaseAPI.EnhIsNaturallyAttuned(enhancementId);
+            return ResolveSetBorderState(enhancement.StaticIndex);
+        }
 
-            if (!attunedLike && !string.IsNullOrWhiteSpace(enhancement.UID))
+        private static BorderState ResolveSetBorderState(EnhancementSet enhancementSet)
+        {
+            var setId = DatabaseAPI.Database.EnhancementSets.TryFindIndex(set =>
+                ReferenceEquals(set, enhancementSet) ||
+                string.Equals(set?.Uid, enhancementSet.Uid, StringComparison.OrdinalIgnoreCase));
+            var variants = DatabaseAPI.GetAvailableSetVariants(setId);
+            if (variants.Count == 1)
             {
-                attunedLike = DatabaseAPI.EnhHasCatalyst(enhancement.UID);
-            }
-
-            if (attunedLike)
-            {
-                return enhancement.Superior ? BorderState.SetSuperiorAttuned : BorderState.SetAttuned;
+                return ResolveSetBorderState(variants[0]);
             }
 
             return BorderState.SetCrafted;
         }
 
-        private static BorderState ResolveSetBorderState(EnhancementSet enhancementSet)
+        private static BorderState ResolveSetBorderState(SetVariantKind variantKind)
         {
-            var resolvedState = BorderState.SetCrafted;
-            foreach (var enhancementId in enhancementSet.Enhancements)
+            return variantKind switch
             {
-                var state = ResolveSetBorderState(enhancementId);
-                if (state == BorderState.SetSuperiorAttuned)
-                {
-                    return state;
-                }
-
-                if (state == BorderState.SetAttuned)
-                {
-                    resolvedState = state;
-                }
-            }
-
-            return resolvedState;
+                SetVariantKind.Attuned => BorderState.SetAttuned,
+                SetVariantKind.Superior => BorderState.SetSuperiorAttuned,
+                SetVariantKind.SuperiorAttuned => BorderState.SetSuperiorAttuned,
+                _ => BorderState.SetCrafted
+            };
         }
 
         #endregion
@@ -1315,6 +1315,26 @@ namespace Mids_Reborn.Core
             }
         }
 
+        private static void DrawSetVariantBadge(Graphics target, Rectangle bounds, string? badgeText)
+        {
+            if (string.IsNullOrWhiteSpace(badgeText))
+            {
+                return;
+            }
+
+            var badgeBounds = new Rectangle(bounds.Right - 18, bounds.Bottom - 14, 16, 12);
+            using var backgroundBrush = new SolidBrush(Color.FromArgb(220, 16, 20, 28));
+            using var textBrush = new SolidBrush(Color.White);
+            using var badgeFont = new Font(SystemFonts.MessageBoxFont.FontFamily, 6.75f, FontStyle.Bold, GraphicsUnit.Point);
+            using var stringFormat = new StringFormat
+            {
+                Alignment = StringAlignment.Center,
+                LineAlignment = StringAlignment.Center
+            };
+
+            target.FillRectangle(backgroundBrush, badgeBounds);
+            target.DrawString(badgeText, badgeFont, textBrush, badgeBounds, stringFormat);
+        }
         private static IEnumerable<string> BuildClassicVariantBorderImageCandidates(
             ClassicEnhancementVariantView variant,
             int buildOriginIndex)

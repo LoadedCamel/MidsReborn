@@ -566,6 +566,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return EffectType is Enums.eEffectType.Defense or Enums.eEffectType.DamageBuff or Enums.eEffectType.Resistance or Enums.eEffectType.Damage or Enums.eEffectType.Elusivity;
         }
 
+        private string GetDisplayClassName()
+        {
+            if (power is Power concretePower && !string.IsNullOrWhiteSpace(concretePower.OmniDisplayClassName))
+            {
+                return concretePower.OmniDisplayClassName;
+            }
+
+            return DatabaseAPI.ResolveClassName();
+        }
+
         public string BuildEffectStringShort(bool noMag = false, bool simple = false, bool useBaseProbability = false)
         {
             // precompute commonly reused fragments 
@@ -703,14 +713,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         else if (!DisplayPercentage)
                         {
                             // Non-% display: show (percent of Max HP) after raw value
-                            var baseHitPoints = DatabaseAPI.GetClassHitPoints(MidsContext.Archetype);
+                            var baseHitPoints = DatabaseAPI.GetClassHitPoints(GetDisplayClassName());
                             var pctOfMax = Utilities.FixDP((float)(BuffedMag / (double)baseHitPoints * 100));
                             result = $"{magText} ({pctOfMax}%) {effectLabel}{toWhoText}{trailing}";
                         }
                         else
                         {
                             // % display: also show raw HP from %
-                            var rawHp = Utilities.FixDP(BuffedMag / 100f * DatabaseAPI.GetClassHitPoints(MidsContext.Archetype));
+                            var rawHp = Utilities.FixDP(BuffedMag / 100f * DatabaseAPI.GetClassHitPoints(GetDisplayClassName()));
                             result = $"{rawHp} ({magText}) {effectLabel}{toWhoText}{trailing}";
                         }
                         break;
@@ -741,7 +751,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         if (DisplayPercentage)
                         {
-                            var perSec = Utilities.FixDP(BuffedMag * (DatabaseAPI.GetClassBaseRecovery(MidsContext.Archetype) * Statistics.BaseMagic));
+                            var perSec = Utilities.FixDP(BuffedMag * (DatabaseAPI.GetClassBaseRecovery(GetDisplayClassName()) * Statistics.BaseMagic));
                             result = $"{magText} ({perSec} /s) {effectLabel}{toWhoText}{trailing}";
                         }
                         else
@@ -757,7 +767,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         if (DisplayPercentage)
                         {
-                            var hps = Utilities.FixDP((float)(DatabaseAPI.GetClassHitPoints(MidsContext.Archetype) / 100.0 * (BuffedMag * (double)DatabaseAPI.GetClassBaseRegen(MidsContext.Archetype) * 1.66666662693024)));
+                            var hps = Utilities.FixDP((float)(DatabaseAPI.GetClassHitPoints(GetDisplayClassName()) / 100.0 * (BuffedMag * (double)DatabaseAPI.GetClassBaseRegen(GetDisplayClassName()) * 1.66666662693024)));
                             result = $"{magText} ({hps} HP/s) {effectLabel}{toWhoText}{trailing}";
                         }
                         else
@@ -1247,8 +1257,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         else
                         {
                             sBuild = DisplayPercentage
-                                ? $"{Utilities.FixDP(BuffedMag / 100 * DatabaseAPI.GetClassHitPoints(MidsContext.Archetype))} HP ({sMag}) {sEffect}{sTarget}{sDuration}"
-                                : $"{sMag} HP ({Utilities.FixDP(BuffedMag / DatabaseAPI.GetClassHitPoints(MidsContext.Archetype) * 100)}%) {sEffect}{sTarget}{sDuration}";
+                                ? $"{Utilities.FixDP(BuffedMag / 100 * DatabaseAPI.GetClassHitPoints(GetDisplayClassName()))} HP ({sMag}) {sEffect}{sTarget}{sDuration}"
+                                : $"{sMag} HP ({Utilities.FixDP(BuffedMag / DatabaseAPI.GetClassHitPoints(GetDisplayClassName()) * 100)}%) {sEffect}{sTarget}{sDuration}";
                         }
                     }
                     else
@@ -1262,7 +1272,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eEffectType.Regeneration:
                     sBuild = !noMag
                         ? (DisplayPercentage
-                            ? $"{sMag} ({Utilities.FixDP(DatabaseAPI.GetClassHitPoints(MidsContext.Archetype) / 100f * (BuffedMag * DatabaseAPI.GetClassBaseRegen(MidsContext.Archetype) * Statistics.BaseMagic))} HP/sec) {sEffect}{sTarget}{sDuration}"
+                            ? $"{sMag} ({Utilities.FixDP(DatabaseAPI.GetClassHitPoints(GetDisplayClassName()) / 100f * (BuffedMag * DatabaseAPI.GetClassBaseRegen(GetDisplayClassName()) * Statistics.BaseMagic))} HP/sec) {sEffect}{sTarget}{sDuration}"
                             : $"{sMag} {sEffect}{sTarget}{sDuration}")
                         : "+Regeneration";
                     break;
@@ -1270,7 +1280,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eEffectType.Recovery:
                     sBuild = !noMag
                         ? (DisplayPercentage
-                            ? $"{sMag} ({Utilities.FixDP(BuffedMag * (DatabaseAPI.GetClassBaseRecovery(MidsContext.Archetype) * Statistics.BaseMagic))} End/sec) {sEffect}{sTarget}{sDuration}"
+                            ? $"{sMag} ({Utilities.FixDP(BuffedMag * (DatabaseAPI.GetClassBaseRecovery(GetDisplayClassName()) * Statistics.BaseMagic))} End/sec) {sEffect}{sTarget}{sDuration}"
                             : $"{sMag} {sEffect}{sTarget}{sDuration}")
                         : "+Recovery";
                     break;
