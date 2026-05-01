@@ -1108,7 +1108,7 @@ namespace Mids_Reborn.UI.Controls
                     if (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance is < 1 and > 0)
                     {
 
-                        effectPrefixRtf += $"{RTF.Color(RTF.ElementID.Enhancement)}{DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100:#0.##)} % chance of ";
+                        effectPrefixRtf += $"{RTF.Color(RTF.ElementID.Enhancement)}{DisplayValueFormatter.FormatPercentFromScale(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance, 2)}% chance of ";
                     }
 
                     break;
@@ -1182,7 +1182,7 @@ namespace Mids_Reborn.UI.Controls
                     if (DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance is < 1 and > 0)
                     {
                         effectPrefixRtf +=
-                            $"{RTF.Color(RTF.ElementID.Enhancement)}{DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance * 100:#0.##)} % chance of ";
+                            $"{RTF.Color(RTF.ElementID.Enhancement)}{DisplayValueFormatter.FormatPercentFromScale(DatabaseAPI.Database.Enhancements[iEnh.Enh].EffectChance, 2)}% chance of ";
                     }
 
                     break;
@@ -1239,9 +1239,11 @@ namespace Mids_Reborn.UI.Controls
             var actorDisplayStats = actorMode ? _actorTotalsSnapshot!.DisplayStats : null;
             var totals = actorMode ? _actorTotalsSnapshot!.Totals : MidsContext.Character.Totals;
             var totalsCapped = actorMode ? _actorTotalsSnapshot!.TotalsCapped : MidsContext.Character.TotalsCapped;
+            string FormatPercentValue(float value, int maxDecimal = 2) => $"{DisplayValueFormatter.FormatPercentValue(value, maxDecimal)}%";
+            string FormatPercentScale(float value, int maxDecimal = 2) => $"{DisplayValueFormatter.FormatPercentFromScale(value, maxDecimal)}%";
             var resistanceCapLabel = actorMode
-                ? $"{FormatActorClassName(_actorTotalsSnapshot!.ClassName)} resistance cap: {DatabaseAPI.GetClassResistanceCap(_actorTotalsSnapshot.ClassName) * 100:0.##}%"
-                : $"{MidsContext.Character.Archetype.DisplayName} resistance cap: {DatabaseAPI.GetClassResistanceCap(MidsContext.Character.Archetype) * 100:0.##}%";
+                ? $"{FormatActorClassName(_actorTotalsSnapshot!.ClassName)} resistance cap: {FormatPercentScale(DatabaseAPI.GetClassResistanceCap(_actorTotalsSnapshot.ClassName))}"
+                : $"{MidsContext.Character.Archetype.DisplayName} resistance cap: {FormatPercentScale(DatabaseAPI.GetClassResistanceCap(MidsContext.Character.Archetype))}";
             float GetDefense(int damageType) => actorMode ? actorDisplayStats!.Defense(damageType) : MidsContext.Character.DisplayStats.Defense(damageType);
             float GetResistance(int damageType, bool uncapped) => actorMode
                 ? actorDisplayStats!.DamageResistance(damageType, uncapped)
@@ -1284,7 +1286,7 @@ namespace Mids_Reborn.UI.Controls
 
             for (var dType = 1; dType < dmgNames.Length; dType++)
             {
-                var iTip = $"{GetDefense(dType):0.##}% {dmgNames[dType]} defense";
+                var iTip = $"{FormatPercentValue(GetDefense(dType))} {dmgNames[dType]} defense";
                 if (dType == toxicVector && !DatabaseAPI.RealmUsesToxicDef())
                 {
                     continue;
@@ -1297,7 +1299,7 @@ namespace Mids_Reborn.UI.Controls
 
                 var targetGraph = numArray1[dType] == 0 ? defenseGraph1 : defenseGraph2;
                 //var targetGraph = dType % 2 == 1 ? gDef1 : gDef2;
-                targetGraph.AddItem($"{dmgNames[dType]}:|{GetDefense(dType):0.#}%", Math.Max(0, GetDefense(dType)), 0, iTip);
+                targetGraph.AddItem($"{dmgNames[dType]}:|{FormatPercentValue(GetDefense(dType), 1)}", Math.Max(0, GetDefense(dType)), 0, iTip);
             }
 
             var maxValue1 = Math.Max(defenseGraph1.GetMaxValue(), defenseGraph2.GetMaxValue());
@@ -1332,11 +1334,11 @@ namespace Mids_Reborn.UI.Controls
                 }
 
                 var iTip = totalsCapped.Res[dType] < totals.Res[dType]
-                    ? $"{GetResistance(dType, true):0.##}% {dmgNames[dType]} resistance capped at {GetResistance(dType, false):0.##}%"
-                    : $"{GetResistance(dType, true):0.##}% {dmgNames[dType]} resistance. ({resistanceCapLabel})";
+                    ? $"{FormatPercentValue(GetResistance(dType, true))} {dmgNames[dType]} resistance capped at {FormatPercentValue(GetResistance(dType, false))}"
+                    : $"{FormatPercentValue(GetResistance(dType, true))} {dmgNames[dType]} resistance. ({resistanceCapLabel})";
 
                 var targetGraph = numArray2[dType] == 0 ? resistGraph1 : resistGraph2;
-                targetGraph.AddItem($"{dmgNames[dType]}:|{GetResistance(dType, false):0.#}%", Math.Max(0, GetResistance(dType, false)), Math.Max(0, GetResistance(dType, true)), iTip);
+                targetGraph.AddItem($"{dmgNames[dType]}:|{FormatPercentValue(GetResistance(dType, false), 1)}", Math.Max(0, GetResistance(dType, false)), Math.Max(0, GetResistance(dType, true)), iTip);
             }
 
             var maxValue2 = Math.Max(resistGraph1.GetMaxValue(), resistGraph2.GetMaxValue());
@@ -1346,35 +1348,35 @@ namespace Mids_Reborn.UI.Controls
             resistGraph2.Draw();
 
             var iTip1 = string.Empty;
-            var iTip2 = $"Time to go from 0-100% end: {Utilities.FixDP(GetEndTimeToFull())}s.\r\nHover the mouse over the End Drain stats for more info.";
+            var iTip2 = $"Time to go from 0-100% end: {DisplayValueFormatter.FormatSeconds(GetEndTimeToFull())}s.\r\nHover the mouse over the End Drain stats for more info.";
             switch (GetEndRecoveryNet())
             {
                 case > 0:
                     {
-                        iTip1 = $"Net Endurance Gain (Recovery - Drain): {Utilities.FixDP(GetEndRecoveryNet())}/s.";
+                        iTip1 = $"Net Endurance Gain (Recovery - Drain): {DisplayValueFormatter.FormatRate(GetEndRecoveryNet())}/s.";
                         if (Math.Abs(GetEndRecoveryNet() - GetRecoveryNumeric()) > float.Epsilon)
                         {
-                            iTip1 += $"\r\nTime to go from 0-100% end (using net gain): {Utilities.FixDP(GetEndTimeToFullNet())}s.";
+                            iTip1 += $"\r\nTime to go from 0-100% end (using net gain): {DisplayValueFormatter.FormatSeconds(GetEndTimeToFullNet())}s.";
                         }
 
                         break;
                     }
                 case < 0:
-                    iTip1 = $"With current end drain, you will lose end at a rate of: {Utilities.FixDP(GetEndRecoveryLossNet())}/s.\r\nFrom 100% you would run out of end in: {Utilities.FixDP(GetEndTimeToZero())}s.";
+                    iTip1 = $"With current end drain, you will lose end at a rate of: {DisplayValueFormatter.FormatRate(GetEndRecoveryLossNet())}/s.\r\nFrom 100% you would run out of end in: {DisplayValueFormatter.FormatSeconds(GetEndTimeToZero())}s.";
                     break;
             }
 
-            var iTip3 = $"Time to go from 0-100% health: {Utilities.FixDP(GetHealthRegenTimeToFull())}s.\r\nHealth regenerated per second: {Utilities.FixDP(GetHealthRegenHealthPerSec())}%\r\nHitPoints regenerated per second at level 50: {Utilities.FixDP(GetHealthRegenHpPerSec())} HP";
-            coreDataList.AddItem(new PairedListEx.Item("Recovery:", $"{GetRecoveryPct():0.##}% ({GetRecoveryNumeric():0.#}/s)", false, false, false, iTip2));
-            coreDataList.AddItem(new PairedListEx.Item("Regen:", $"{GetHealthRegenPercent():0.##}%", false, false, false, iTip3));
-            coreDataList.AddItem(new PairedListEx.Item("EndDrain:", $"{GetEndUsage():0.##}/s", false, false, false, iTip1));
-            coreDataList.AddItem(new PairedListEx.Item("+ToHit:", $"{GetBuffToHit():0.##}%", false, false, false, "This effect is increasing the accuracy of all powers on this actor."));
-            coreDataList.AddItem(new PairedListEx.Item("+Accuracy:", $"{GetBuffAccuracy():0.##}%", false, false, false, "This effect is increasing the accuracy scale of this actor's powers."));
-            coreDataList.AddItem(new PairedListEx.Item("+Damage:", $"{GetBuffDamage() - 100:0.##}%", false, false, false, "This effect is modifying the outgoing damage of this actor's attack powers."));
-            coreDataList.AddItem(new PairedListEx.Item("+EndRdx:", $"{GetBuffEndRdx():0.##}%", false, false, false, "The end cost of all powers on this actor is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
-            coreDataList.AddItem(new PairedListEx.Item("+Recharge:", $"{GetBuffHaste() - 100:0.#}%", false, false, false, "The recharge time of this actor's powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
-            coreDataList.AddItem(new PairedListEx.Item("+Range:", $"{GetRangePercent():0.##}%", false, false, false, "This effect is modifying the range of this actor's powers."));
-            coreDataList.AddItem(new PairedListEx.Item("Threat:", $"{GetThreatLevel():0.##}%", false, false, false, "This shows the actor's current threat modifier."));
+            var iTip3 = $"Time to go from 0-100% health: {DisplayValueFormatter.FormatSeconds(GetHealthRegenTimeToFull())}s.\r\nHealth regenerated per second: {FormatPercentValue(GetHealthRegenHealthPerSec())}\r\nHitPoints regenerated per second at level 50: {DisplayValueFormatter.FormatRate(GetHealthRegenHpPerSec())} HP";
+            coreDataList.AddItem(new PairedListEx.Item("Recovery:", $"{FormatPercentValue(GetRecoveryPct())} ({DisplayValueFormatter.FormatRate(GetRecoveryNumeric(), 1)}/s)", false, false, false, iTip2));
+            coreDataList.AddItem(new PairedListEx.Item("Regen:", FormatPercentValue(GetHealthRegenPercent()), false, false, false, iTip3));
+            coreDataList.AddItem(new PairedListEx.Item("EndDrain:", $"{DisplayValueFormatter.FormatRate(GetEndUsage())}/s", false, false, false, iTip1));
+            coreDataList.AddItem(new PairedListEx.Item("+ToHit:", FormatPercentValue(GetBuffToHit()), false, false, false, "This effect is increasing the accuracy of all powers on this actor."));
+            coreDataList.AddItem(new PairedListEx.Item("+Accuracy:", FormatPercentValue(GetBuffAccuracy()), false, false, false, "This effect is increasing the accuracy scale of this actor's powers."));
+            coreDataList.AddItem(new PairedListEx.Item("+Damage:", FormatPercentValue(GetBuffDamage() - 100), false, false, false, "This effect is modifying the outgoing damage of this actor's attack powers."));
+            coreDataList.AddItem(new PairedListEx.Item("+EndRdx:", FormatPercentValue(GetBuffEndRdx()), false, false, false, "The end cost of all powers on this actor is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
+            coreDataList.AddItem(new PairedListEx.Item("+Recharge:", FormatPercentValue(GetBuffHaste() - 100, 1), false, false, false, "The recharge time of this actor's powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
+            coreDataList.AddItem(new PairedListEx.Item("+Range:", FormatPercentValue(GetRangePercent()), false, false, false, "This effect is modifying the range of this actor's powers."));
+            coreDataList.AddItem(new PairedListEx.Item("Threat:", FormatPercentValue(GetThreatLevel()), false, false, false, "This shows the actor's current threat modifier."));
             //total_Misc.Rows = 3;
             coreDataList.Redraw();
         }
@@ -1600,37 +1602,37 @@ namespace Mids_Reborn.UI.Controls
                 var num3 = num2 + afterEd[index] * 100f;
                 var num4 = (float)Math.Round(num1 - (double)num2, 3);
 
-                var str1 = $"{num1:##0.00} %";
-                var str2 = $"{num4:##0.00} %";
-                var str3 = $"{num3:##0.00} %";
-                var str4 = $"Total Effect: {num1 + afterEd[index] * 100:0.##}%\r\nWith ED Applied: {str3}\r\n\r\n";
+                var str1 = $"{DisplayValueFormatter.FormatPercentValue(num1, 2)} %";
+                var str2 = $"{DisplayValueFormatter.FormatPercentValue(num4, 2)} %";
+                var str3 = $"{DisplayValueFormatter.FormatPercentValue(num3, 2)} %";
+                var str4 = $"Total Effect: {DisplayValueFormatter.FormatPercentValue(num1 + afterEd[index] * 100, 2)}%\r\nWith ED Applied: {str3}\r\n\r\n";
                 string iValue;
                 string iTip;
                 if (num4 > 0)
                 {
-                    iValue = $"{str3} (Pre-ED: {num1 + afterEd[index] * 100:0.##}%)";
+                    iValue = $"{str3} (Pre-ED: {DisplayValueFormatter.FormatPercentValue(num1 + afterEd[index] * 100, 2)}%)";
                     if (afterEd[index] > 0)
                     {
                         str4 += $"Amount from pre-ED sources: {str1}\r\n";
                     }
 
-                    iTip = $"{str4} ED reduction: {str2} ({num4 / (double)num1 * 100:0.##}% of total)\r\n";
+                    iTip = $"{str4} ED reduction: {str2} ({DisplayValueFormatter.FormatPercentValue(num4 / (double)num1 * 100, 2)}% of total)\r\n";
                     if (iSpecialCase)
                     {
-                        iTip = $"{iTip} The highest level of ED reduction is being applied.\r\nThreshold: {DatabaseAPI.Database.MultED[(int)schedule[index]][2] * 100:0.##} %\r\n";
+                        iTip = $"{iTip} The highest level of ED reduction is being applied.\r\nThreshold: {DisplayValueFormatter.FormatPercentValue(DatabaseAPI.Database.MultED[(int)schedule[index]][2] * 100, 2)} %\r\n";
                     }
                     else if (flag2)
                     {
-                        iTip = $"{iTip} The middle level of ED reduction is being applied.\r\nThreshold: {DatabaseAPI.Database.MultED[(int)schedule[index]][1] * 100:0.##} %\r\n";
+                        iTip = $"{iTip} The middle level of ED reduction is being applied.\r\nThreshold: {DisplayValueFormatter.FormatPercentValue(DatabaseAPI.Database.MultED[(int)schedule[index]][1] * 100, 2)} %\r\n";
                     }
                     else if (flag1)
                     {
-                        iTip = $"{iTip} The lowest level of ED reduction is being applied.\r\nThreshold: {DatabaseAPI.Database.MultED[(int)schedule[index]][0] * 100:0.##} %\r\n";
+                        iTip = $"{iTip} The lowest level of ED reduction is being applied.\r\nThreshold: {DisplayValueFormatter.FormatPercentValue(DatabaseAPI.Database.MultED[(int)schedule[index]][0] * 100, 2)} %\r\n";
                     }
 
                     if (afterEd[index] > 0)
                     {
-                        iTip = $"{iTip} Amount from post-ED sources: {afterEd[index] * 100:0.##} %\r\n";
+                        iTip = $"{iTip} Amount from post-ED sources: {DisplayValueFormatter.FormatPercentValue(afterEd[index] * 100, 2)} %\r\n";
                     }
                 }
                 else
@@ -1638,7 +1640,7 @@ namespace Mids_Reborn.UI.Controls
                     iValue = str3;
                     if (afterEd[index] > 0)
                     {
-                        str4 = $"{str4} Amount from post-ED sources: {afterEd[index] * 100:0.##} %\r\n";
+                        str4 = $"{str4} Amount from post-ED sources: {DisplayValueFormatter.FormatPercentValue(afterEd[index] * 100, 2)} %\r\n";
                     }
 
                     iTip = $"{str4}This effect has not been affected by ED.\r\n";
@@ -2296,7 +2298,7 @@ namespace Mids_Reborn.UI.Controls
                 infoDamageDisplay.MaxEnhancedValue = Math.Max(baseDamage * dmgMultiplier * (1 + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f)), enhancedDamage * dmgMultiplier);
                 infoDamageDisplay.HighestEnhancedValue = Math.Max(414, enhancedDamage * dmgMultiplier);
                 infoDamageDisplay.Text = Math.Abs(enhancedDamage - baseDamage) > float.Epsilon
-                    ? $"{enhancedPower.FXGetDamageString(pEnh?.PowerIndex == -1)} ({(hasPercentDamage == true ? $"{Utilities.FixDP(baseDamage * 100)}%" : Utilities.FixDP(baseDamage))})"
+                    ? $"{enhancedPower.FXGetDamageString(pEnh?.PowerIndex == -1)} ({(hasPercentDamage == true ? $"{DisplayValueFormatter.FormatPercentFromScale(baseDamage)}%" : DisplayValueFormatter.FormatNumber(baseDamage))})"
                     : pBase.FXGetDamageString();
             }
 

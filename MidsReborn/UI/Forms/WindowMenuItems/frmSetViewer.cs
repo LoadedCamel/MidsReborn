@@ -846,8 +846,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     }
                     var petSum = 0;
                     var selfSum = 0;
-                    fxBlockStr += $" ({(fxTypePercent ? fxSumMag * (fxGroup.Key.EffectType == Enums.eEffectType.Endurance ? 1 : 100) : fxSumMag):##0.##}{(fxTypePercent ? "%" : "")} Total)";
-
+                    var fxTotalText = fxTypePercent
+                        ? $"{DisplayValueFormatter.FormatPercentValue(fxSumMag * (fxGroup.Key.EffectType == Enums.eEffectType.Endurance ? 1 : 100), 2)}%"
+                        : DisplayValueFormatter.FormatNumber(fxSumMag, 2);
+                    fxBlockStr += $" ({fxTotalText} Total)";
                     foreach (var e in effectSources[fxGroup.Key])
                     {
                         //if ((e.AffectedEntity & Enums.eEntity.Caster) == Enums.eEntity.None) continue;
@@ -959,9 +961,12 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             }
 
             var ttext = $"{(overlayDmgType != "" ? overlayDmgType + " " : "")}{overlayVector}{overlayMezType}{overlayTargetEffect}";
+            string FormatOverlayValue(float value) => overlayValuePercent
+                ? $"{DisplayValueFormatter.FormatPercentValue(value, 2)}%"
+                : DisplayValueFormatter.FormatNumber(value, 2);
             if (barValues["setbuffs"] > 0)
             {
-                ttext += $"\r\nFrom Sets: {(plusSignEnabled ? "+" : "")}{barValues["setbuffs"]:##0.##}{(overlayValuePercent ? "%" : "")}";
+                ttext += $"\r\nFrom Sets: {(plusSignEnabled ? "+" : "")}{FormatOverlayValue(barValues["setbuffs"])}";
             }
 
             var fxPetMagSum = 0.0;
@@ -974,7 +979,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 
                 if (fxPetMagSum > 0)
                 {
-                    stext += $" (Pets: {fxPetMagSum:P0})";
+                    stext += $" (Pets: {DisplayValueFormatter.FormatPercentFromScale(fxPetMagSum, 0)}%)";
                 }
             }
 
@@ -985,7 +990,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             
             if (barValues["totalsvalue"] > 0) // & Math.Abs(barValues["setbuffs"] - barValues["totalsvalue"]) > float.Epsilon)
             {
-                ttext += $"\r\nTotal: {(plusSignEnabled ? "+" : "")}{barValues["totalsvalue"]:##0.##}{(overlayValuePercent ? "%" : "")}";
+                ttext += $"\r\nTotal: {(plusSignEnabled ? "+" : "")}{FormatOverlayValue(barValues["totalsvalue"])}";
             }
 
             bar.SetTip(ttext);
@@ -1344,8 +1349,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
                 var idk = st.GetIdentifierKey();
                 bar.AssignValues(new List<float> {fxMagAdjusted, totalsValue});
-                
-                bar.OverlayText = $"{fxMagAdjusted:##0.##}{(OverlayText.HasPercentage(idk) ? "%" : "")}";
+
+                bar.OverlayText = OverlayText.HasPercentage(idk)
+                    ? $"{DisplayValueFormatter.FormatPercentValue(fxMagAdjusted, 2)}%"
+                    : DisplayValueFormatter.FormatNumber(fxMagAdjusted, 2);
 
                 barLabel.Text = OverlayText.ShortLabel(idk);
                 panelBars.Controls.Add(bar);

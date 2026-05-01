@@ -84,23 +84,12 @@ namespace Mids_Reborn.Core.Base.Master_Classes
 
         public static string FixDP(float iNum)
         {
-            return iNum is < 100 and > -100 ? FixDP(iNum, 2) : FixDP(iNum, 1);
+            return DisplayValueFormatter.FormatNumber(iNum);
         }
 
         public static string FixDP(float iNum, int maxDecimal)
         {
-            var format = "0.";
-            if (iNum is >= 10 or <= -10)
-            {
-                format = "###0.";
-            }
-
-            for (var index = 0; index < maxDecimal; index++)
-            {
-                format += "#";
-            }
-
-            return iNum.ToString(format);
+            return DisplayValueFormatter.FormatNumber(iNum, maxDecimal);
         }
 
         public static TV ProperEnum<T, TV>(dynamic value) where TV : struct

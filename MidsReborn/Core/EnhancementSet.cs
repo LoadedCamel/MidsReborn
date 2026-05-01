@@ -497,28 +497,28 @@ namespace Mids_Reborn.Core
             {
                 var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.Regeneration);
                 var percent = GetLegacyPopupMagnitude(effect);
-                var hpPerSecond = Utilities.FixDP(DatabaseAPI.GetClassHitPoints() / 100f * ((percent / 100f) * DatabaseAPI.GetClassBaseRegen() * Statistics.BaseMagic));
-                return $"{Utilities.FixDP(percent)}% ({hpPerSecond} HP/sec) Regeneration";
+                var hpPerSecond = DisplayValueFormatter.FormatRate(DatabaseAPI.GetClassHitPoints() / 100f * ((percent / 100f) * DatabaseAPI.GetClassBaseRegen() * Statistics.BaseMagic));
+                return $"{DisplayValueFormatter.FormatPercentValue(percent)}% ({hpPerSecond} HP/sec) Regeneration";
             }
 
             if (effects.Any(effect => effect.EffectType == Enums.eEffectType.HitPoints))
             {
                 var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.HitPoints);
                 var percent = GetLegacyPopupMagnitude(effect, 0.1f);
-                var rawHp = Utilities.FixDP(DatabaseAPI.GetClassHitPoints() * (percent / 100f));
-                return $"{rawHp} HP ({Utilities.FixDP(percent)}%) HitPoints";
+                var rawHp = DisplayValueFormatter.FormatNumber(DatabaseAPI.GetClassHitPoints() * (percent / 100f));
+                return $"{rawHp} HP ({DisplayValueFormatter.FormatPercentValue(percent)}%) HitPoints";
             }
 
             if (effects.Any(effect => effect.EffectType == Enums.eEffectType.Accuracy))
             {
                 var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.Accuracy);
-                return $"+{Utilities.FixDP(GetLegacyPopupMagnitude(effect))}% Enhancement(Accuracy)";
+                return $"+{DisplayValueFormatter.FormatPercentValue(GetLegacyPopupMagnitude(effect))}% Enhancement(Accuracy)";
             }
 
             if (effects.Any(effect => effect.EffectType == Enums.eEffectType.RechargeTime))
             {
                 var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.RechargeTime);
-                return $"+{Utilities.FixDP(GetLegacyPopupMagnitude(effect))}% Enhancement(RechargeTime)";
+                return $"+{DisplayValueFormatter.FormatPercentValue(GetLegacyPopupMagnitude(effect))}% Enhancement(RechargeTime)";
             }
 
             if (effects.Any(effect => effect.EffectType == Enums.eEffectType.DamageBuff))
@@ -528,7 +528,7 @@ namespace Mids_Reborn.Core
                 {
                     var percent = GetLegacyPopupMagnitude(typedEffects[0], 2.5f);
                     var types = GroupDamageTypes(typedEffects.Select(effect => effect.DamageType));
-                    return $"{Utilities.FixDP(percent)}% DamageBuff({types})";
+                    return $"{DisplayValueFormatter.FormatPercentValue(percent)}% DamageBuff({types})";
                 }
             }
 
@@ -545,7 +545,7 @@ namespace Mids_Reborn.Core
                 if (typedEffects.Length > 0)
                 {
                     var percent = GetLegacyPopupMagnitude(typedEffects[0]);
-                    parts.Add($"{Utilities.FixDP(percent)}% Resistance({GroupDamageTypes(typedEffects.Select(effect => effect.DamageType))})");
+                    parts.Add($"{DisplayValueFormatter.FormatPercentValue(percent)}% Resistance({GroupDamageTypes(typedEffects.Select(effect => effect.DamageType))})");
                 }
 
                 if (statusEffects.Length > 0)
@@ -554,7 +554,7 @@ namespace Mids_Reborn.Core
                     var label = power.FullName.Contains("_Mez_Res_", StringComparison.OrdinalIgnoreCase)
                         ? "MezResist(All)"
                         : "Resistance(None)";
-                    parts.Add($"{Utilities.FixDP(percent)}% {label}");
+                    parts.Add($"{DisplayValueFormatter.FormatPercentValue(percent)}% {label}");
                 }
 
                 if (parts.Count > 0)
@@ -573,7 +573,7 @@ namespace Mids_Reborn.Core
                     var typeSuffix = effect.DamageType == Enums.eDamage.None
                         ? string.Empty
                         : $"({Enum.GetName(typeof(Enums.eDamage), effect.DamageType)})";
-                    return $"{Utilities.FixDP(percent)}% {effectLabel}{typeSuffix}";
+                    return $"{DisplayValueFormatter.FormatPercentValue(percent)}% {effectLabel}{typeSuffix}";
                 }
             }
 
@@ -664,7 +664,7 @@ namespace Mids_Reborn.Core
                 }
 
                 var magnitudeValue = GetLegacyPopupMagnitude(effect);
-                var magnitude = $"{Utilities.FixDP(magnitudeValue)}%";
+                var magnitude = $"{DisplayValueFormatter.FormatPercentValue(magnitudeValue)}%";
                 var typeSuffix = effect.DamageType == Enums.eDamage.None
                     ? string.Empty
                     : $"({Enum.GetName(typeof(Enums.eDamage), effect.DamageType)})";

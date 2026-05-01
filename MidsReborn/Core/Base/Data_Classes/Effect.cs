@@ -16,6 +16,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         private IPower? power;
 
+        private static string FormatChancePercent(float probability)
+        {
+            return $"{DisplayValueFormatter.FormatPercentFromScale(probability, probability >= 0.975f ? 1 : 0)}%";
+        }
+
         public double Rand => new Random().NextDouble();
 
         public Effect()
@@ -607,18 +612,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             if (useBaseProbability)
             {
                 if (BaseProbability < 1.0)
-                    chanceText = $"{(BaseProbability * 100f):#0}% chance";
+                    chanceText = $"{DisplayValueFormatter.FormatPercentFromScale(BaseProbability, 0)}% chance";
             }
             else
             {
                 if (Probability < 1.0)
-                    chanceText = $"{(Probability * 100f):#0}% chance";
+                    chanceText = $"{DisplayValueFormatter.FormatPercentFromScale(Probability, 0)}% chance";
             }
 
             // Magnitude (percent or raw) unless suppressed
             if (!noMag)
             {
-                magText = Utilities.FixDP(MagPercent);
+                magText = DisplayValueFormatter.FormatMagnitude(MagPercent);
                 if (DisplayPercentage)
                     magText += "%";
             }
@@ -651,8 +656,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             if (Ticks > 0)
                             {
                                 leadMag = $"{Ticks} * {leadMag}";
-                                if (Duration > 0.0) trailing = $" over {Utilities.FixDP(Duration)} seconds";
-                                else if (Absorbed_Duration > 0.0) trailing = $" over {Utilities.FixDP(Absorbed_Duration)} seconds";
+                                if (Duration > 0.0) trailing = $" over {DisplayValueFormatter.FormatSeconds(Duration)} seconds";
+                                else if (Absorbed_Duration > 0.0) trailing = $" over {DisplayValueFormatter.FormatSeconds(Absorbed_Duration)} seconds";
                             }
 
                             result = $"{leadMag} {dmgShort} {effectLabel}{toWhoText}{trailing}";
@@ -708,19 +713,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         if (Aspect == Enums.eAspect.Cur)
                         {
                             // Current-value heal uses % of HP directly
-                            result = $"{Utilities.FixDP(BuffedMag * 100)}% {effectLabel}{toWhoText}{trailing}";
+                            result = $"{DisplayValueFormatter.FormatPercentFromScale(BuffedMag)}% {effectLabel}{toWhoText}{trailing}";
                         }
                         else if (!DisplayPercentage)
                         {
                             // Non-% display: show (percent of Max HP) after raw value
                             var baseHitPoints = DatabaseAPI.GetClassHitPoints(GetDisplayClassName());
-                            var pctOfMax = Utilities.FixDP((float)(BuffedMag / (double)baseHitPoints * 100));
+                            var pctOfMax = DisplayValueFormatter.FormatPercentValue(BuffedMag / baseHitPoints * 100d);
                             result = $"{magText} ({pctOfMax}%) {effectLabel}{toWhoText}{trailing}";
                         }
                         else
                         {
                             // % display: also show raw HP from %
-                            var rawHp = Utilities.FixDP(BuffedMag / 100f * DatabaseAPI.GetClassHitPoints(GetDisplayClassName()));
+                            var rawHp = DisplayValueFormatter.FormatNumber(BuffedMag / 100f * DatabaseAPI.GetClassHitPoints(GetDisplayClassName()));
                             result = $"{rawHp} ({magText}) {effectLabel}{toWhoText}{trailing}";
                         }
                         break;
@@ -730,7 +735,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     {
                         var mezName = Enum.GetName(MezType.GetType(), MezType); // uses eMez long token
                         if (Duration > 0.0 && (!simple || (MezType != Enums.eMez.None && MezType != Enums.eMez.Knockback && MezType != Enums.eMez.Knockup)))
-                            trailing = $"{Utilities.FixDP(Duration)} second ";
+                            trailing = $"{DisplayValueFormatter.FormatSeconds(Duration)} second ";
 
                         var magPart = $" (Mag {magText})";
                         result = $"{trailing}{mezName}{magPart}{toWhoText}";
@@ -751,7 +756,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         if (DisplayPercentage)
                         {
-                            var perSec = Utilities.FixDP(BuffedMag * (DatabaseAPI.GetClassBaseRecovery(GetDisplayClassName()) * Statistics.BaseMagic));
+                            var perSec = DisplayValueFormatter.FormatRate(BuffedMag * (DatabaseAPI.GetClassBaseRecovery(GetDisplayClassName()) * Statistics.BaseMagic));
                             result = $"{magText} ({perSec} /s) {effectLabel}{toWhoText}{trailing}";
                         }
                         else
@@ -767,7 +772,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         if (DisplayPercentage)
                         {
-                            var hps = Utilities.FixDP((float)(DatabaseAPI.GetClassHitPoints(GetDisplayClassName()) / 100.0 * (BuffedMag * (double)DatabaseAPI.GetClassBaseRegen(GetDisplayClassName()) * 1.66666662693024)));
+                            var hps = DisplayValueFormatter.FormatRate(DatabaseAPI.GetClassHitPoints(GetDisplayClassName()) / 100.0 * (BuffedMag * DatabaseAPI.GetClassBaseRegen(GetDisplayClassName()) * 1.66666662693024));
                             result = $"{magText} ({hps} HP/s) {effectLabel}{toWhoText}{trailing}";
                         }
                         else
@@ -880,7 +885,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             if (AttribType == Enums.eAttribType.Expression && !string.IsNullOrWhiteSpace(Expressions.Probability))
             {
                 var pct = (decimal)Math.Max(0, Math.Min(100, Parse(this, ExpressionType.Probability, out _) * 100));
-                sChance = editorDisplay ? $"{decimal.Round(pct)}% Variable Chance" : $"{decimal.Round(pct)}% chance";
+                var formattedChance = DisplayValueFormatter.FormatPercentValue((double)pct, 0);
+                sChance = editorDisplay ? $"{formattedChance}% Variable Chance" : $"{formattedChance}% chance";
                 if (editorDisplay) sProbExp = $"Probability Expression: {Expressions.Probability}";
             }
 
@@ -894,32 +900,28 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     if (BaseProbability < 1 && BaseProbability >= 0)
                     {
-                        sChance = BaseProbability >= 0.975f
-                            ? $"{BaseProbability * 100:#0.0}% chance"
-                            : $"{BaseProbability * 100:#0}% chance";
+                        sChance = $"{FormatChancePercent(BaseProbability)} chance";
                         sChance += EffectId is "" or "Ones" ? "" : " ";
                         if (EffectId is not "" and not "Ones") sChance += $"when {EffectId}";
                         if (CancelOnMiss) sChance += ", Cancels on Miss";
                         if (ProcsPerMinute > 0)
                             sChance = fromPopup | editorDisplay
                                 ? $"{ProcsPerMinute} PPM"
-                                : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
+                                : $"{ProcsPerMinute} PPM/{DisplayValueFormatter.FormatPercentFromScale(Probability, 0)}% chance";
                     }
                 }
                 else
                 {
                     if (Probability < 1 && Probability >= 0)
                     {
-                        sChance = Probability >= 0.975f
-                            ? $"{Probability * 100:#0.0}% chance"
-                            : $"{Probability * 100:#0}% chance";
+                        sChance = $"{FormatChancePercent(Probability)} chance";
                         sChance += EffectId is "" or "Ones" ? "" : " ";
                         if (EffectId is not "" and not "Ones" && !fromPopup) sChance += $"when {EffectId}";
                         if (CancelOnMiss) sChance += ", Cancels on Miss";
                         if (ProcsPerMinute > 0)
                             sChance = fromPopup | editorDisplay
                                 ? $"{ProcsPerMinute} PPM"
-                                : $"{ProcsPerMinute} PPM/{Probability:P0} chance";
+                                : $"{ProcsPerMinute} PPM/{DisplayValueFormatter.FormatPercentFromScale(Probability, 0)}% chance";
                     }
                 }
             }
@@ -965,7 +967,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     sStack = "\n  Effect does not stack from same caster";
 
                 if (DelayedTime > 0)
-                    sDelay = $"after {Utilities.FixDP(DelayedTime)} seconds";
+                    sDelay = $"after {DisplayValueFormatter.FormatSeconds(DelayedTime)} seconds";
             }
 
             // Conditions / SpecialCase
@@ -1059,15 +1061,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 };
 
                 if (Duration > 0 & (EffectType != Enums.eEffectType.Damage | Ticks > 0))
-                    sDuration += $"{sForOver}{Utilities.FixDP(Duration)} seconds";
+                    sDuration += $"{sForOver}{DisplayValueFormatter.FormatSeconds(Duration)} seconds";
                 else if (Absorbed_Duration > 0 & (EffectType != Enums.eEffectType.Damage | Ticks > 0))
-                    sDuration += $"{sForOver}{Utilities.FixDP(Absorbed_Duration)} seconds";
+                    sDuration += $"{sForOver}{DisplayValueFormatter.FormatSeconds(Absorbed_Duration)} seconds";
                 else
                     sDuration += " ";
 
                 if (Absorbed_Interval > 0 & Absorbed_Interval < 900)
                     sDuration +=
-                        $" every {Utilities.FixDP(Absorbed_Interval)} seconds{(EffectType == Enums.eEffectType.Mez && (MezType is Enums.eMez.Knockback or Enums.eMez.Knockup) ? ": " : "")}";
+                        $" every {DisplayValueFormatter.FormatSeconds(Absorbed_Interval)} seconds{(EffectType == Enums.eEffectType.Mez && (MezType is Enums.eMez.Knockback or Enums.eMez.Knockup) ? ": " : "")}";
 
                 if (PseudoPetRecurrence is { IsValid: true } recurrence)
                 {
@@ -1090,16 +1092,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     if (editorDisplay)
                     {
                         sMag = mag > float.Epsilon && absAllowed.Any(x => x == EffectType)
-                            ? $"{Math.Abs(mag):####0.##}{(DisplayPercentage ? "%" : "")} Variable"
-                            : $"{mag:####0.##}{(DisplayPercentage ? "%" : "")} Variable";
+                            ? $"{DisplayValueFormatter.FormatNumber(Math.Abs(mag), 2)}{(DisplayPercentage ? "%" : "")} Variable"
+                            : $"{DisplayValueFormatter.FormatNumber(mag, 2)}{(DisplayPercentage ? "%" : "")} Variable";
 
                         sMagExp = $"Mag Expression: {Expressions.Magnitude.Replace("modifier>current", ModifierTable)}";
                     }
                     else
                     {
                         sMag = mag > float.Epsilon && absAllowed.Any(x => x == EffectType)
-                            ? $"{Math.Abs(mag):####0.##}{(DisplayPercentage ? "%" : "")}"
-                            : $"{mag:####0.#}{(DisplayPercentage ? "%" : "")}";
+                            ? $"{DisplayValueFormatter.FormatNumber(Math.Abs(mag), 2)}{(DisplayPercentage ? "%" : "")}"
+                            : $"{DisplayValueFormatter.FormatNumber(mag, 1)}{(DisplayPercentage ? "%" : "")}";
                     }
                 }
                 else if (EffectType == Enums.eEffectType.PerceptionRadius)
@@ -1108,14 +1110,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     sMag = MidsContext.Config.CoDEffectFormat & !fromPopup
                         ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1):####0.####} x {ModifierTable}){(DisplayPercentage ? "%" : "")} ({perceptionDistance}ft)"
                         : DisplayPercentage
-                            ? $"{Utilities.FixDP(BuffedMag * 100)}% ({perceptionDistance}ft)"
-                            : $"{perceptionDistance}ft";
+                            ? $"{DisplayValueFormatter.FormatPercentFromScale(BuffedMag)}% ({DisplayValueFormatter.FormatDistance(perceptionDistance)}ft)"
+                            : $"{DisplayValueFormatter.FormatDistance(perceptionDistance)}ft";
                 }
                 else
                 {
                     sMag = MidsContext.Config.CoDEffectFormat & EffectType != Enums.eEffectType.Mez & !fromPopup
                         ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1):####0.####} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
-                        : $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{Utilities.FixDP(BuffedMag * (DisplayPercentage ? 100 : 1))}{(DisplayPercentage ? "%" : "")}";
+                        : $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{DisplayValueFormatter.FormatNumber(BuffedMag * (DisplayPercentage ? 100 : 1))}{(DisplayPercentage ? "%" : "")}";
                 }
 
                 if (Expressions.Duration != "" & AttribType == Enums.eAttribType.Expression & editorDisplay)
@@ -1205,7 +1207,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         if (Duration > 0 & (!simple | (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback &
                                                        MezType != Enums.eMez.Knockup)))
                             sDuration =
-                                $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale:####0.####} x {ModifierTable})" : Utilities.FixDP(Duration))} second ";
+                                $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale:####0.####} x {ModifierTable})" : DisplayValueFormatter.FormatSeconds(Duration))} second ";
                         if (!noMag)
                             sMag =
                                 $" ({(MezType is Enums.eMez.Knockback or Enums.eMez.Knockup && MidsContext.Config.CoDEffectFormat ? $"{Scale * nMagnitude:####0.####} x {ModifierTable}" : $"Mag {sMag}")})";
@@ -1252,13 +1254,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         if (Ticks > 0) sMag = $"{Ticks} x {sMag}";
                         if (Aspect == Enums.eAspect.Cur)
                         {
-                            sBuild = $"{Utilities.FixDP(BuffedMag * 100)}% {sEffect}{sTarget}{sDuration}";
+                            sBuild = $"{DisplayValueFormatter.FormatPercentFromScale(BuffedMag)}% {sEffect}{sTarget}{sDuration}";
                         }
                         else
                         {
                             sBuild = DisplayPercentage
-                                ? $"{Utilities.FixDP(BuffedMag / 100 * DatabaseAPI.GetClassHitPoints(GetDisplayClassName()))} HP ({sMag}) {sEffect}{sTarget}{sDuration}"
-                                : $"{sMag} HP ({Utilities.FixDP(BuffedMag / DatabaseAPI.GetClassHitPoints(GetDisplayClassName()) * 100)}%) {sEffect}{sTarget}{sDuration}";
+                                ? $"{DisplayValueFormatter.FormatNumber(BuffedMag / 100 * DatabaseAPI.GetClassHitPoints(GetDisplayClassName()))} HP ({sMag}) {sEffect}{sTarget}{sDuration}"
+                                : $"{sMag} HP ({DisplayValueFormatter.FormatPercentValue(BuffedMag / DatabaseAPI.GetClassHitPoints(GetDisplayClassName()) * 100d)}%) {sEffect}{sTarget}{sDuration}";
                         }
                     }
                     else
@@ -1272,7 +1274,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eEffectType.Regeneration:
                     sBuild = !noMag
                         ? (DisplayPercentage
-                            ? $"{sMag} ({Utilities.FixDP(DatabaseAPI.GetClassHitPoints(GetDisplayClassName()) / 100f * (BuffedMag * DatabaseAPI.GetClassBaseRegen(GetDisplayClassName()) * Statistics.BaseMagic))} HP/sec) {sEffect}{sTarget}{sDuration}"
+                            ? $"{sMag} ({DisplayValueFormatter.FormatRate(DatabaseAPI.GetClassHitPoints(GetDisplayClassName()) / 100f * (BuffedMag * DatabaseAPI.GetClassBaseRegen(GetDisplayClassName()) * Statistics.BaseMagic))} HP/sec) {sEffect}{sTarget}{sDuration}"
                             : $"{sMag} {sEffect}{sTarget}{sDuration}")
                         : "+Regeneration";
                     break;
@@ -1280,7 +1282,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case Enums.eEffectType.Recovery:
                     sBuild = !noMag
                         ? (DisplayPercentage
-                            ? $"{sMag} ({Utilities.FixDP(BuffedMag * (DatabaseAPI.GetClassBaseRecovery(GetDisplayClassName()) * Statistics.BaseMagic))} End/sec) {sEffect}{sTarget}{sDuration}"
+                            ? $"{sMag} ({DisplayValueFormatter.FormatRate(BuffedMag * (DatabaseAPI.GetClassBaseRecovery(GetDisplayClassName()) * Statistics.BaseMagic))} End/sec) {sEffect}{sTarget}{sDuration}"
                             : $"{sMag} {sEffect}{sTarget}{sDuration}")
                         : "+Recovery";
                     break;
@@ -3118,7 +3120,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             var dmg = Value * (HasPercentage ? 100 : 1);
             dmg = Ticks <= 0 ? dmg : dmg / Ticks;
-            var dmgStr = $"{Utilities.FixDP(dmg)}{(HasPercentage ? "%" : "")}";
+            var dmgStr = $"{DisplayValueFormatter.FormatNumber(dmg)}{(HasPercentage ? "%" : "")}";
 
             return Ticks <= 0
                 ? dmgStr
@@ -3129,7 +3131,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             var dmg = Value * (HasPercentage ? 100 : 1);
             dmg = Ticks <= 0 ? dmg : dmg / Ticks;
-            var dmgStr = Utilities.FixDP(dmg);
+            var dmgStr = DisplayValueFormatter.FormatNumber(dmg);
             dmgStr = Ticks <= 0
                 ? dmgStr
                 : $"{Ticks}x{dmgStr}";

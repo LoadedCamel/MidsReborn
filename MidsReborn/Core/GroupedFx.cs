@@ -1046,10 +1046,10 @@ namespace Mids_Reborn.Core
             bool asMagnitude = gre.EffectType == Enums.eEffectType.Mez;
 
             string fmt(float v) => asMagnitude
-                ? $"Mag {Utilities.FixDP(v)}"
+                ? $"Mag {DisplayValueFormatter.FormatMagnitude(v)}"
                 : asPercent
-                    ? $"{Utilities.FixDP(v * 100)}%"
-                    : Utilities.FixDP(v);
+                    ? $"{DisplayValueFormatter.FormatPercentFromScale(v)}%"
+                    : DisplayValueFormatter.FormatNumber(v);
 
             value = $"{fmt(enhMag)}";
             var alt = Math.Abs(baseMag - enhMag) > Tolerance ? fmt(baseMag) : null;
@@ -2547,6 +2547,13 @@ namespace Mids_Reborn.Core
                 Enums.eToWho.All => " (All)",
                 _ => ""
             };
+            string FormatValueWithTarget(double value, bool asPercent)
+            {
+                var formatted = asPercent
+                    ? $"{DisplayValueFormatter.FormatPercentFromScale(value)}%"
+                    : DisplayValueFormatter.FormatNumber(value);
+                return $"{formatted}{toWhoShort}";
+            }
 
             rankedEffect.UseUniqueColor = effectSource.isEnhancementEffect;
             rankedEffect.UseAlternateColor = !effectSource.isEnhancementEffect &&
@@ -2558,9 +2565,7 @@ namespace Mids_Reborn.Core
             if (gre.IsAggregated && effectType is Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
                     or Enums.eEffectType.SpeedRunning or Enums.eEffectType.JumpHeight)
             {
-                rankedEffect.Value = effectSource.DisplayPercentage
-                    ? $"{magSum * 100:###0.##}%{toWhoShort}"
-                    : $"{magSum:###0.##}{toWhoShort}";
+                rankedEffect.Value = FormatValueWithTarget(magSum, effectSource.DisplayPercentage);
             }
 
             switch (effectType)
@@ -2570,9 +2575,7 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.MovementFriction:
                 case Enums.eEffectType.StealthRadius:
                 case Enums.eEffectType.StealthRadiusPlayer:
-                    rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{magSum * 100:###0.##}%{toWhoShort}"
-                        : $"{magSum:###0.##}{toWhoShort}";
+                    rankedEffect.Value = FormatValueWithTarget(magSum, effectSource.DisplayPercentage);
 
                     rankedEffect.ToolTip = greTooltip;
 
@@ -2582,9 +2585,7 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.Endurance:
                 case Enums.eEffectType.Regeneration:
                     rankedEffect.Name = $"{effectType}";
-                    rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{magSum * 100:###0.##}%{toWhoShort}"
-                        : $"{magSum:###0.##}{toWhoShort}";
+                    rankedEffect.Value = FormatValueWithTarget(magSum, effectSource.DisplayPercentage);
 
                     rankedEffect.ToolTip = greTooltip;
 
@@ -2592,7 +2593,7 @@ namespace Mids_Reborn.Core
 
                 case Enums.eEffectType.SilentKill when effectSource.ToWho == Enums.eToWho.Self:
                     rankedEffect.Name = "Lifespan";
-                    rankedEffect.Value = $"{Math.Max(effectSource.Duration, Math.Max(effectSource.DelayedTime, effectSource.Absorbed_Duration)):####0.##} s";
+                    rankedEffect.Value = $"{DisplayValueFormatter.FormatSeconds(Math.Max(effectSource.Duration, Math.Max(effectSource.DelayedTime, effectSource.Absorbed_Duration)))} s";
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
@@ -2669,7 +2670,7 @@ namespace Mids_Reborn.Core
 
                 case Enums.eEffectType.LevelShift:
                     rankedEffect.Name = "LvlShift";
-                    rankedEffect.Value = $"{(effectSource.Mag > 0 ? "+" : "")}{effectSource.Mag:##0.##}";
+                    rankedEffect.Value = $"{(effectSource.Mag > 0 ? "+" : "")}{DisplayValueFormatter.FormatNumber(effectSource.Mag, 2)}";
 
                     break;
 
@@ -2689,7 +2690,7 @@ namespace Mids_Reborn.Core
                         ? "Defiance"
                         : FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                             Enums.GetEffectNameShort(effectSource.EffectType));
-                    rankedEffect.Value = $"{effectSource.BuffedMag * 100:###0.##}%";
+                    rankedEffect.Value = $"{DisplayValueFormatter.FormatPercentFromScale(effectSource.BuffedMag)}%";
                     rankedEffect.ToolTip = isDefiance
                         ? effectSource.BuildEffectString(false, "DamageBuff (Defiance)", false, false, false, true)
                         : greTooltip;
@@ -2711,12 +2712,12 @@ namespace Mids_Reborn.Core
                     rankedEffect.Value = effectSource.ToWho switch
                     {
                         Enums.eToWho.Target => effectSource.MezType is Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Teleport
-                            ? $"{effectSource.BuffedMag:###0.##}{toWhoShort}"
-                            : $"{effectSource.Duration:###0.##}s (Mag {effectSource.BuffedMag:###0.##}){toWhoShort}",
+                            ? $"{DisplayValueFormatter.FormatMagnitude(effectSource.BuffedMag, 2)}{toWhoShort}"
+                            : $"{DisplayValueFormatter.FormatSeconds(effectSource.Duration, 2)}s (Mag {DisplayValueFormatter.FormatMagnitude(effectSource.BuffedMag, 2)}){toWhoShort}",
 
-                        Enums.eToWho.Self => $"{effectSource.BuffedMag:###0.##}{toWhoShort}",
+                        Enums.eToWho.Self => $"{DisplayValueFormatter.FormatMagnitude(effectSource.BuffedMag, 2)}{toWhoShort}",
 
-                        Enums.eToWho.All => $"{effectSource.Duration:###0.##}s (Mag {effectSource.BuffedMag:###0.##}){toWhoShort}",
+                        Enums.eToWho.All => $"{DisplayValueFormatter.FormatSeconds(effectSource.Duration, 2)}s (Mag {DisplayValueFormatter.FormatMagnitude(effectSource.BuffedMag, 2)}){toWhoShort}",
 
                         _ => rankedEffect.Value
                     };
@@ -2727,9 +2728,7 @@ namespace Mids_Reborn.Core
 
                 case Enums.eEffectType.Translucency:
                     rankedEffect.Name = "Trnslcncy";
-                    rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{effectSource.BuffedMag * 100:###0.##}%{toWhoShort}"
-                        : $"{effectSource.BuffedMag:###0.##}{toWhoShort}";
+                    rankedEffect.Value = FormatValueWithTarget(effectSource.BuffedMag, effectSource.DisplayPercentage);
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
@@ -2767,28 +2766,26 @@ namespace Mids_Reborn.Core
                             Enums.GetEffectName(effectSource.EffectType),
                             Enums.GetEffectNameShort(effectSource.EffectType));
 
-                    rankedEffect.Value = effectSource.DisplayPercentage
-                        ? $"{effectSource.BuffedMag * 100:###0.##}%{toWhoShort}"
-                        : $"{effectSource.BuffedMag:###0.##}{toWhoShort}";
+                    rankedEffect.Value = FormatValueWithTarget(effectSource.BuffedMag, effectSource.DisplayPercentage);
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
 
                 case Enums.eEffectType.PerceptionRadius:
                     rankedEffect.Name = $"Pceptn{toWhoShort}";
-                    rankedEffect.Value = $"{(effectSource.DisplayPercentage ? $"{magSum * 100:###0.##}%" : $"{magSum:###0.##}")} ({Statistics.BasePerception * magSum:###0.##}ft)";
+                    rankedEffect.Value = $"{(effectSource.DisplayPercentage ? $"{DisplayValueFormatter.FormatPercentFromScale(magSum)}%" : $"{DisplayValueFormatter.FormatNumber(magSum, 2)}")} ({DisplayValueFormatter.FormatDistance(Statistics.BasePerception * magSum, 2)}ft)";
 
                     break;
 
                 case Enums.eEffectType.ToHit:
                     rankedEffect.Name = "ToHit";
-                    rankedEffect.Value = $"{gre.Mag * 100:###0.##}%{toWhoShort}";
+                    rankedEffect.Value = $"{DisplayValueFormatter.FormatPercentFromScale(gre.Mag)}%{toWhoShort}";
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
 
                 case Enums.eEffectType.RechargeTime:
-                    rankedEffect.Value = $"{gre.Mag * 100:###0.##}%{toWhoShort}";
+                    rankedEffect.Value = $"{DisplayValueFormatter.FormatPercentFromScale(gre.Mag)}%{toWhoShort}";
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
@@ -2796,8 +2793,8 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.Heal:
                     rankedEffect.Name = $"Heal{toWhoShort}";
                     rankedEffect.Value = effectSource.DisplayPercentage & (effectSource.DisplayPercentageOverride == Enums.eOverrideBoolean.TrueOverride)
-                        ? $"{gre.Mag * 100:####0.##}% HP"
-                        : $"{gre.Mag:####0.##} HP ({gre.Mag / MidsContext.Character.DisplayStats.HealthHitpointsNumeric(false) * 100:###0.##}%)";
+                        ? $"{DisplayValueFormatter.FormatPercentFromScale(gre.Mag, 2)}% HP"
+                        : $"{DisplayValueFormatter.FormatNumber(gre.Mag, 2)} HP ({DisplayValueFormatter.FormatPercentValue(gre.Mag / MidsContext.Character.DisplayStats.HealthHitpointsNumeric(false) * 100d, 2)}%)";
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
@@ -2807,13 +2804,15 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.MaxFlySpeed:
                 case Enums.eEffectType.EnduranceDiscount:
                 case Enums.eEffectType.ThreatLevel:
-                    rankedEffect.Value = $"{gre.Mag * 100:###0.##}%{toWhoShort}";
+                    rankedEffect.Value = $"{DisplayValueFormatter.FormatPercentFromScale(gre.Mag)}%{toWhoShort}";
                     rankedEffect.ToolTip = greTooltip;
 
                     break;
 
                 default:
-                    rankedEffect.Value = $"{magSum:####0.##}{(effectSource.DisplayPercentage ? "%" : "")}{toWhoShort}";
+                    rankedEffect.Value = effectSource.DisplayPercentage
+                        ? $"{DisplayValueFormatter.FormatPercentValue(magSum, 2)}%{toWhoShort}"
+                        : $"{DisplayValueFormatter.FormatNumber(magSum, 2)}{toWhoShort}";
                     rankedEffect.Name = FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),
                         Enums.GetEffectNameShort(effectSource.EffectType));
                     rankedEffect.ToolTip = string.Join("\r\n", pEnh.Effects

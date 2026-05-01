@@ -313,12 +313,12 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     if (power1.ActivatePeriod > 0.0)
                     {
                         iPopup.Sections?[index2].Add("End Cost:", PopUp.Colors.Title,
-                            Utilities.FixDP(power1.EndCost / power1.ActivatePeriod) + "/s", PopUp.Colors.Title, 0.9f,
+                            DisplayValueFormatter.FormatRate(power1.EndCost / power1.ActivatePeriod) + "/s", PopUp.Colors.Title, 0.9f,
                             FontStyle.Bold, 1);
                     }
                     else
                     {
-                        iPopup.Sections?[index2].Add("End Cost:", PopUp.Colors.Title, Utilities.FixDP(power1.EndCost),
+                        iPopup.Sections?[index2].Add("End Cost:", PopUp.Colors.Title, DisplayValueFormatter.FormatNumber(power1.EndCost),
                             PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                     }
                 }
@@ -328,14 +328,14 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                                                                           Enums.eMez.Taunt)))
                 {
                     iPopup.Sections?[index2].Add("Accuracy:", PopUp.Colors.Title,
-                        Utilities.FixDP((float) (MidsContext.Config.ScalingToHit * (double) power1.Accuracy * 100.0)) + "%",
+                        DisplayValueFormatter.FormatPercentFromScale(MidsContext.Config.ScalingToHit * power1.Accuracy) + "%",
                         PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 }
 
                 if (power1.RechargeTime > 0.0)
                 {
                     iPopup.Sections?[index2].Add("Recharge:", PopUp.Colors.Title,
-                        Utilities.FixDP(power1.RechargeTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                        DisplayValueFormatter.FormatSeconds(power1.RechargeTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 }
 
                 var durationEffectId = power1.GetDurationEffectID();
@@ -348,13 +348,13 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 if ((power1.PowerType != Enums.ePowerType.Toggle) & (power1.PowerType != Enums.ePowerType.Auto_) &&
                     iNum > 0.0)
                 {
-                    iPopup.Sections?[index2].Add("Duration:", PopUp.Colors.Title, Utilities.FixDP(iNum) + "s",
+                    iPopup.Sections?[index2].Add("Duration:", PopUp.Colors.Title, DisplayValueFormatter.FormatSeconds(iNum) + "s",
                         PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 }
 
                 if (power1.Range > 0.0)
                 {
-                    iPopup.Sections?[index2].Add("Range:", PopUp.Colors.Title, Utilities.FixDP(power1.Range) + "ft",
+                    iPopup.Sections?[index2].Add("Range:", PopUp.Colors.Title, DisplayValueFormatter.FormatDistance(power1.Range) + "ft",
                         PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 }
 
@@ -366,14 +366,14 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 else if (power1.Radius > 0.0)
                 {
                     iPopup.Sections?[index2].Add("Radius:", PopUp.Colors.Title,
-                        Convert.ToString(power1.Radius, CultureInfo.InvariantCulture) + "ft", PopUp.Colors.Title, 0.9f,
+                        DisplayValueFormatter.FormatDistance(power1.Radius) + "ft", PopUp.Colors.Title, 0.9f,
                         FontStyle.Bold, 1);
                 }
 
                 if (power1.CastTime > 0.0)
                 {
                     iPopup.Sections?[index2].Add("Cast Time:", PopUp.Colors.Title,
-                        Utilities.FixDP(power1.CastTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
+                        DisplayValueFormatter.FormatSeconds(power1.CastTime) + "s", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
                 }
 
                 var power2 = power1;

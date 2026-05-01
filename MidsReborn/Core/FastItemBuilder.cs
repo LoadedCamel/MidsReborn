@@ -400,7 +400,7 @@ namespace Mids_Reborn.Core
             public static PairedListEx.Item FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix,
                 bool skipBase, bool alwaysShow, bool isChance, bool isSpecial, string tip)
             {
-                var iValue = Utilities.FixDP(s2.Sum) + suffix;
+                var iValue = DisplayValueFormatter.FormatNumber(s2.Sum) + suffix;
                 PairedListEx.Item iItem;
                 if ((Math.Abs(s1.Sum) < float.Epsilon) & !alwaysShow)
                 {
@@ -417,7 +417,7 @@ namespace Mids_Reborn.Core
                     {
                         if (!skipBase)
                         {
-                            var iValue2 = $"({Utilities.FixDP(s2.Sum)}{suffix})";
+                            var iValue2 = $"({DisplayValueFormatter.FormatNumber(s2.Sum)}{suffix})";
                             iValue += iValue2.Replace("%", "");
                         }
 
@@ -433,7 +433,7 @@ namespace Mids_Reborn.Core
             public static PairedListEx.Item FastItem(string title, Enums.ShortFX s1, Enums.ShortFX s2, string suffix,
                 bool skipBase, bool alwaysShow, bool isChance, bool isSpecial, Enums.ShortFX tag, IPower basePower)
             {
-                var iValue = Utilities.FixDP(s2.Sum) + suffix;
+                var iValue = DisplayValueFormatter.FormatNumber(s2.Sum) + suffix;
                 PairedListEx.Item itemPair;
                 if ((Math.Abs(s1.Sum) < float.Epsilon) & !alwaysShow)
                 {
@@ -450,7 +450,7 @@ namespace Mids_Reborn.Core
                     {
                         if (!skipBase)
                         {
-                            iValue += $" ({Utilities.FixDP(s1.Sum)})";
+                            iValue += $" ({DisplayValueFormatter.FormatNumber(s1.Sum)})";
                         }
 
                         iAlternate = true;
@@ -466,7 +466,7 @@ namespace Mids_Reborn.Core
             public static PairedListEx.Item FastItem(string title, float s1, float s2, string suffix, bool skipBase,
                 bool alwaysShow, bool isChance, bool isSpecial, string tip)
             {
-                var iValue = Utilities.FixDP(s2) + suffix;
+                var iValue = DisplayValueFormatter.FormatNumber(s2) + suffix;
                 PairedListEx.Item itemPair;
                 if ((Math.Abs(s1) < float.Epsilon) & !alwaysShow)
                 {
@@ -483,7 +483,7 @@ namespace Mids_Reborn.Core
                     {
                         if (!skipBase)
                         {
-                            iValue = $"{iValue} ({Utilities.FixDP(s1)}{(iValue.EndsWith("%") ? "%" : "")})";
+                            iValue = $"{iValue} ({DisplayValueFormatter.FormatNumber(s1)}{(iValue.EndsWith("%") ? "%" : "")})";
                         }
 
                         iAlternate = true;
@@ -499,7 +499,7 @@ namespace Mids_Reborn.Core
                 bool skipBase = false, bool alwaysShow = false, bool isChance = false, bool isSpecial = false,
                 int tagId = -1, int maxDecimal = -1)
             {
-                var iValue = maxDecimal < 0 ? Utilities.FixDP(s2) + suffix : Utilities.FixDP(s2, maxDecimal) + suffix;
+                var iValue = maxDecimal < 0 ? DisplayValueFormatter.FormatNumber(s2) + suffix : DisplayValueFormatter.FormatNumber(s2, maxDecimal) + suffix;
                 PairedListEx.Item itemPair;
                 if ((Math.Abs(s1) < float.Epsilon) & !alwaysShow)
                 {
@@ -512,7 +512,7 @@ namespace Mids_Reborn.Core
                     {
                         if (!skipBase)
                         {
-                            iValue = $"{iValue} ({Utilities.FixDP(s1)}{(iValue.EndsWith("%") ? "%" : "")})";
+                            iValue = $"{iValue} ({DisplayValueFormatter.FormatNumber(s1)}{(iValue.EndsWith("%") ? "%" : "")})";
                         }
 
                         iAlternate = true;
@@ -526,7 +526,7 @@ namespace Mids_Reborn.Core
 
             public static PairedListEx.Item FastItem(string title, float s1, float s2, string suffix, string tip, bool skipBase = false, bool alwaysShow = false, bool isChance = false, bool isSpecial = false, int maxDecimal = -1)
             {
-                var iValue = maxDecimal < 0 ? Utilities.FixDP(s2) + suffix : Utilities.FixDP(s2, maxDecimal) + suffix;
+                var iValue = maxDecimal < 0 ? DisplayValueFormatter.FormatNumber(s2) + suffix : DisplayValueFormatter.FormatNumber(s2, maxDecimal) + suffix;
                 PairedListEx.Item itemPair;
                 if ((Math.Abs(s1) < float.Epsilon) & !alwaysShow)
                 {
@@ -539,7 +539,7 @@ namespace Mids_Reborn.Core
                     {
                         if (!skipBase)
                         {
-                            iValue += $" ({Utilities.FixDP(s1)}{(iValue.EndsWith("%") ? "%" : "")})";
+                            iValue += $" ({DisplayValueFormatter.FormatNumber(s1)}{(iValue.EndsWith("%") ? "%" : "")})";
                         }
 
                         iAlternate = true;

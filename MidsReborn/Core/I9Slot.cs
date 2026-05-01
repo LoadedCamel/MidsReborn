@@ -210,7 +210,7 @@ namespace Mids_Reborn.Core
                 description,
                 @"\{Boost\.Attrib\.([A-Za-z0-9_]+)\.Scale\}",
                 match => TryGetBoostAttribScale(match.Groups[1].Value, out var scale)
-                    ? Utilities.FixDP(Math.Abs(scale) * 100f)
+                    ? DisplayValueFormatter.FormatPercentFromScale(Math.Abs(scale))
                     : match.Value,
                 RegexOptions.IgnoreCase);
         }
@@ -268,7 +268,7 @@ namespace Mids_Reborn.Core
                     item.Schedule,
                     RoundedValue = (float)Math.Round(item.Value, 5)
                 })
-                .Select(group => $"{group.Key.Schedule} ({group.Key.RoundedValue * 100:##0.###}%)")
+                .Select(group => $"{group.Key.Schedule} ({DisplayValueFormatter.FormatPercentFromScale(group.First().Value)}%)")
                 .ToArray();
 
             return scheduleValues.Length switch
@@ -447,7 +447,7 @@ namespace Mids_Reborn.Core
                         break;
                     case Enums.eEffMode.Enhancement when sEffect.Schedule != Enums.eSchedule.None:
                         {
-                            var scheduleMult = (float)Math.Round(GetScheduleValue(enhancement.TypeID, sEffect) * 1000) / 1000;
+                            var scheduleMult = GetScheduleValue(enhancement.TypeID, sEffect);
 
                             var id = (Enums.eEnhance)sEffect.Enhance.ID;
                             string str2;
@@ -493,7 +493,7 @@ namespace Mids_Reborn.Core
 
                             if (!string.IsNullOrEmpty(str2))
                             {
-                                var tooltipLine = $"{str2} enhancement (Sched. {Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule)}: {scheduleMult * 100:##0.###}%{(Math.Abs(sEffect.Multiplier) > float.Epsilon & sEffect.Multiplier != 1 & sEffect.Multiplier != 0.625 & sEffect.Multiplier != 0.5 & sEffect.Multiplier != 0.4375 ? $" [x{sEffect.Multiplier}]" : "")})";
+                                var tooltipLine = $"{str2} enhancement (Sched. {Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule)}: {DisplayValueFormatter.FormatPercentFromScale(scheduleMult)}%{(Math.Abs(sEffect.Multiplier) > float.Epsilon & sEffect.Multiplier != 1 & sEffect.Multiplier != 0.625 & sEffect.Multiplier != 0.5 & sEffect.Multiplier != 0.4375 ? $" [x{DisplayValueFormatter.FormatNumber(sEffect.Multiplier, 4)}]" : "")})";
                                 AppendTooltipLine(stringBuilder, seenLines, tooltipLine);
                             }
 

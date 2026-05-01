@@ -1227,8 +1227,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (totalDamageArray[index] > 0)
                 {
                     damageEntry += hasPercentDamage
-                        ? $"{Utilities.FixDP(totalDamageArray[index] * 100)}%"
-                        : Utilities.FixDP(totalDamageArray[index]);
+                        ? $"{DisplayValueFormatter.FormatPercentFromScale(totalDamageArray[index])}%"
+                        : DisplayValueFormatter.FormatNumber(totalDamageArray[index]);
                 }
 
                 if (Math.Abs(tickDamageArray[index, 0]) > 0.01)
@@ -1239,11 +1239,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     }
 
                     damageEntry +=
-                        $"{(hasPercentDamage ? $"{Utilities.FixDP(tickDamageArray[index, 0] * 100)}%" : Utilities.FixDP(tickDamageArray[index, 0]))}x{Utilities.FixDP(tickCountArray[index, 0])}";
+                        $"{(hasPercentDamage ? $"{DisplayValueFormatter.FormatPercentFromScale(tickDamageArray[index, 0])}%" : DisplayValueFormatter.FormatNumber(tickDamageArray[index, 0]))}x{DisplayValueFormatter.FormatNumber(tickCountArray[index, 0])}";
                     if (Math.Abs(tickDamageArray[index, 1]) > 0.01)
                     {
                         damageEntry +=
-                            $"+{(hasPercentDamage ? $"{Utilities.FixDP(tickDamageArray[index, 1] * 100)}%" : Utilities.FixDP(tickDamageArray[index, 1]))}x{Utilities.FixDP(tickCountArray[index, 1])}";
+                            $"+{(hasPercentDamage ? $"{DisplayValueFormatter.FormatPercentFromScale(tickDamageArray[index, 1])}%" : DisplayValueFormatter.FormatNumber(tickDamageArray[index, 1]))}x{DisplayValueFormatter.FormatNumber(tickCountArray[index, 1])}";
                     }
                 }
 
@@ -1252,7 +1252,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             // Return the final formatted damage string with total damage
             return
-                $"{damageString} = {(hasPercentDamage ? $"{Utilities.FixDP(totalDamage * 100)}% | {Utilities.FixDP(totalDamage * MidsContext.Character.Totals.HPMax)}" : Utilities.FixDP(totalDamage))}";
+                $"{damageString} = {(hasPercentDamage ? $"{DisplayValueFormatter.FormatPercentFromScale(totalDamage)}% | {DisplayValueFormatter.FormatNumber(totalDamage * MidsContext.Character.Totals.HPMax)}" : DisplayValueFormatter.FormatNumber(totalDamage))}";
         }
 
         private static IPower PrepareDamagePower(IPower sourcePower, bool absorbRequested)
@@ -3533,22 +3533,22 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             if (Math.Abs(subPower.Range - Range) > float.Epsilon && subPower.Range > float.Epsilon)
             {
-                extraAttribs.Add($"Range: {subPower.Range:###0.##}ft");
+                extraAttribs.Add($"Range: {DisplayValueFormatter.FormatDistance(subPower.Range, 2)}ft");
             }
 
             if (Math.Abs(subPower.RangeSecondary - RangeSecondary) > float.Epsilon && subPower.RangeSecondary > float.Epsilon)
             {
-                extraAttribs.Add($"Secondary Range: {subPower.RangeSecondary:###0.##}ft");
+                extraAttribs.Add($"Secondary Range: {DisplayValueFormatter.FormatDistance(subPower.RangeSecondary, 2)}ft");
             }
 
             if (Math.Abs(subPower.Radius - Radius) > float.Epsilon && subPower.Radius > float.Epsilon)
             {
-                extraAttribs.Add($"Radius: {subPower.Radius:###0.##}ft");
+                extraAttribs.Add($"Radius: {DisplayValueFormatter.FormatDistance(subPower.Radius, 2)}ft");
             }
 
             if (subPower.Arc != Arc && subPower.Arc > float.Epsilon)
             {
-                extraAttribs.Add($"Arc: {subPower.Arc:###0.##}deg");
+                extraAttribs.Add($"Arc: {DisplayValueFormatter.FormatNumber(subPower.Arc, 2)}deg");
             }
 
             if (subPower.MaxTargets != MaxTargets && subPower.MaxTargets > 0)
