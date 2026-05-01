@@ -680,6 +680,36 @@ public partial class frmBuffDebuff : Form
                 .ToArray();
     }
 
+    // Get base powers from build
+    private static IPower[] GetBasePowers()
+    {
+        return MidsContext.Character?.CurrentBuild == null
+            ? []
+            : MidsContext.Character.CurrentBuild.Powers
+                .Select((e, i) => new KeyValuePair<int, PowerEntry?>(i, e))
+                .Where(e => e.Value?.Power is { Slottable: true })
+                .Select(e => DatabaseAPI.Database.Power[e.Value!.Power!.PowerIndex].Clone())
+                .Where(e => e != null)
+                .Cast<IPower>()
+                .ToArray();
+    }
+
+    private static bool CheckEffectInPower(IEffect fx, IPower power) => GetEffectIndexInPower(fx, power) > -1;
+
+    private static int GetEffectIndexInPower(IEffect fx, IPower power) =>
+        power.Effects.TryFindIndex(e =>
+            e.EffectType == fx.EffectType &&
+            e.DamageType == fx.DamageType &&
+            e.MezType == fx.MezType &&
+            e.ETModifies == fx.ETModifies &&
+            e.Buffable == fx.Buffable &&
+            e.Stacking == fx.Stacking &&
+            Math.Abs(e.nMagnitude - fx.nMagnitude) < float.Epsilon &&
+            Math.Abs(e.Scale - fx.Scale) < float.Epsilon &&
+            e.ToWho == fx.ToWho &&
+            e.SpecialCase == fx.SpecialCase
+        );
+
     private string GetGreLabel(KeyValuePair<FxId, GroupedFx> gre, IPower pw)
     {
         var greTip = gre.Value.GetTooltip(pw, true);
@@ -724,13 +754,34 @@ public partial class frmBuffDebuff : Form
         };
     }
 
+    private int GetPowerSortOrderRef(IPower power)
+    {
+        var ps = power.GetPowerSet();
+
+        if (ps == null)
+        {
+            return 999;
+        }
+
+        return ps.SetType switch
+        {
+            Enums.ePowerSetType.Primary => 0,
+            Enums.ePowerSetType.Secondary => 1,
+            Enums.ePowerSetType.Pool => 2,
+            Enums.ePowerSetType.Ancillary => 3,
+            Enums.ePowerSetType.Inherent => 4,
+            _ => 5
+        };
+    }
+
     // Generate graph and label controls from powers according to filters and view mode
     // Partially implemented
     private List<List<Control>> GetValues(EffectBuffType? buffType, EffectGroup? group, ValueDisplayMode valueDisplayMode,
         ValueGroupMode valueGroupMode, GroupMode groupMode, bool includeEnhFx = true)
     {
+        //var basePowers = GetBasePowers();
         var enhPowers = GetEnhancedPowers();
-
+        
         // Effects by power, key 1 is index in enhPowers, key 2 is FxId for GroupedFx
         var powerEffects = enhPowers
             .Select((e, i) => new KeyValuePair<int, IPower>(i, e))
@@ -746,6 +797,24 @@ public partial class frmBuffDebuff : Form
                     .Where(g => includeEnhFx | !g.Value.EnhancementEffect)
                     .ToList()))
             .ToList();
+
+        powerEffects.Sort((a, b) =>
+        {
+            var s = int.Sign(GetPowerSortOrderRef(enhPowers[a.Key]) - GetPowerSortOrderRef(enhPowers[b.Key]));
+
+            if (s != 0)
+            {
+                return s;
+            }
+
+            var ps1 = enhPowers[a.Key].GetPowerSet()?.DisplayName;
+            var ps2 = enhPowers[b.Key].GetPowerSet()?.DisplayName;
+
+            var psCompare = string.Compare(ps1 ?? "", ps2 ?? "", StringComparison.InvariantCultureIgnoreCase);
+            return psCompare != 0
+                ? psCompare
+                : int.Sign(enhPowers[a.Key].PowerIndex - enhPowers[b.Key].PowerIndex);
+        });
 
         // Unique FxId keys
         var fxIdList = powerEffects.SelectMany(e => e.Value.Select(f => f.Key))
@@ -861,10 +930,13 @@ public partial class frmBuffDebuff : Form
                             val = Math.Abs(val);
                         }
 
+                        // fxRef.IsEnhancementEffect will fail with some.
+                        // E.g. DamageBuff in Set_Bonus.Set_Bonus.Boost_Up from either Decimation: Chance for Build Up or Gaussian's: Chance for Build Up.
+                        var enhancementEffect = fxRef.isEnhancementEffect;
                         graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val,
-                            fxRef.Duration, fxRef.isEnhancementEffect, enhPowers[p.Key].RechargeTime, endCost, enhPowers[p.Key].DisplayName,
-                            enhPowers[p.Key].PowerType == Enums.ePowerType.Toggle, toWho, vMax, gre.Key.GetStatUnit(),
-                            label, shortLabel);
+                            fxRef.Duration, enhancementEffect, enhPowers[p.Key].RechargeTime, endCost, enhPowers[p.Key].DisplayName,
+                            enhPowers[p.Key].PowerType == Enums.ePowerType.Toggle, gre.Value.GetEffectAt(enhPowers[p.Key]).Stacking == Enums.eStacking.Yes, toWho, vMax, gre.Key.GetStatUnit(),
+                            label, shortLabel); // , gre.Value.GetTooltip(enhPowers[p.Key])
 
                         lst.Add(graph);
 
@@ -947,7 +1019,8 @@ public partial class frmBuffDebuff : Form
                             graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode,
                                 val, fxRef.Duration, fxRef.isEnhancementEffect, enhPowers[g.Key].RechargeTime, endCost,
                                 enhPowers[g.Key].DisplayName, enhPowers[g.Key].PowerType == Enums.ePowerType.Toggle,
-                                toWho, vMax, gre.Key.GetStatUnit(), label, shortLabel);
+                                gre.Value.GetEffectAt(enhPowers[g.Key]).Stacking == Enums.eStacking.Yes, toWho, vMax,
+                                gre.Key.GetStatUnit(), label, shortLabel); // , gre.Value.GetTooltip(enhPowers[g.Key])
 
                             lst.Add(graph);
 

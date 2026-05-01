@@ -239,8 +239,8 @@ namespace Mids_Reborn.Core
 
         public static void SetGraphItemManual(this CtlMultiGraph ctl, eCustomGraphStat stat, eCustomGraphMode mode,
             frmBuffDebuff.ValueDisplayMode displayMode, float val, float duration, bool isEnhancementEffect, float rechargeTime, float endCost,
-            string powerName, bool isToggle, string toWho = "", float maxValueOverride = -1, string unitSuffix = "", string labelOverride = "",
-            string shortLabelOverride = "")
+            string powerName, bool isToggle, bool stackable, string toWho = "", float maxValueOverride = -1, string unitSuffix = "", string labelOverride = "",
+            string shortLabelOverride = "", string extraText = "")
         {
             var longName = string.IsNullOrWhiteSpace(labelOverride)
                 ? Names.CustomStatNameLong(stat, true)
@@ -285,8 +285,8 @@ namespace Mids_Reborn.Core
                 0,
                 val,
                 BuffDataTooltip3(val, duration, rechargeTime, endCost,
-                    $"{powerName}\r\n\r\nValue: {val}\r\nMax: {ctl.Max} | Scale index: {ctl.ScaleIndex} | Alignment: {ctl.BarsAlignment}",
-                    isToggle, isEnhancementEffect, longName, toWho, displayMode, unitSuffix)
+                    powerName, isToggle, isEnhancementEffect, stackable, longName,
+                    toWho, displayMode, unitSuffix, false, extraText)
             );
 
             ctl.ResumeLayout(true);
@@ -1001,20 +1001,27 @@ namespace Mids_Reborn.Core
                        : "");
         }
 
-        public static string BuffDataTooltip3(float value, float duration, float rechargeTime, float endCost, string powerName, bool isToggle, bool isEnhancementEffect, string statName, string toWho, frmBuffDebuff.ValueDisplayMode displayMode, string unitSuffix = "%", bool plusSignEnabled = false)
+        public static string BuffDataTooltip3(float value, float duration, float rechargeTime, float endCost,
+            string powerName, bool isToggle, bool isEnhancementEffect, bool stackable, string statName, string toWho,
+            frmBuffDebuff.ValueDisplayMode displayMode, string unitSuffix = "%", bool plusSignEnabled = false,
+            string extraText = "")
         {
             var activationsPerMin = rechargeTime < float.Epsilon ? 1 : 60f / rechargeTime;
-
             var baseTip = $"{(isEnhancementEffect ? "[From Enhancement] " : "")}{(plusSignEnabled && value > 0 ? "+" : "")}{value:####0.##}{unitSuffix} {statName}{(string.IsNullOrWhiteSpace(toWho) ? "" : $" to {toWho}")}";
-            var appliesDurationStr = duration < float.Epsilon
-                ? statName == "Heal" || (statName == "Endurance") & (duration < float.Epsilon)
-                    ? ""
-                    : "Applies indefinitely"
-                : rechargeTime > 0
-                    ? duration >= rechargeTime
-                        ? $"Applies permanently on same target (duration ({duration:####0.##}s) >= recharge ({rechargeTime:####0.##}s))"
-                        : $"Applies for {duration:####0.##}s, every {rechargeTime:####0.##}s{(endCost > 0 ? $", from {endCost:##0.##} endurance{(isToggle ? "/sec" : "")}": "")}{(activationsPerMin >= 1 ? $" (roughly {activationsPerMin:###0.#} activation{(activationsPerMin < 2 ? "s" : "")}/min)" : "")}"
-                    : "Can be applied permanently (no recharge)";
+            var appliesDurationStr = isToggle
+                ? ""
+                : duration < float.Epsilon
+                    ? statName == "Heal" || (statName == "Endurance") & (duration < float.Epsilon)
+                        ? ""
+                        : "Applies indefinitely"
+                    : rechargeTime > 0
+                        ? duration >= rechargeTime
+                            ? $"Applies permanently on same target (duration ({duration:####0.##}s) >= recharge ({rechargeTime:####0.##}s))"
+                            : $"Applies for {duration:####0.##}s, every {rechargeTime:####0.##}s{(endCost > 0 ? $", from {endCost:##0.##} endurance{(isToggle ? "/sec" : "")}" : "")}{(activationsPerMin >= 1 ? $" (roughly {activationsPerMin:###0.#} activation{(activationsPerMin < 2 ? "s" : "")}/min)" : "")}"
+                        : "Can be applied permanently (no recharge)";
+            var stacksStr = isToggle || duration < rechargeTime || rechargeTime < float.Epsilon || !stackable
+                ? ""
+                : $"Can stack up to {Math.Ceiling(duration / rechargeTime):####0} time{((int)Math.Ceiling(duration / rechargeTime) == 1 ? "" : "s")} on same target";
             var powerSource = $"From {powerName}";
 
             var sb = new StringBuilder();
@@ -1024,8 +1031,21 @@ namespace Mids_Reborn.Core
                 sb.AppendLine(appliesDurationStr);
             }
 
+            if (!string.IsNullOrWhiteSpace(stacksStr))
+            {
+                sb.AppendLine(stacksStr);
+            }
+
             sb.AppendLine("");
             sb.AppendLine(powerSource);
+
+            if (string.IsNullOrWhiteSpace(extraText))
+            {
+                return sb.ToString();
+            }
+
+            sb.AppendLine("");
+            sb.AppendLine(extraText);
 
             return sb.ToString();
         }
