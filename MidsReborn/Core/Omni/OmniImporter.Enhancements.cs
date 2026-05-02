@@ -105,6 +105,29 @@ public sealed partial class OmniImporter
         database.EnhancementImportMetadata = metadata;
     }
 
+    public OmniApplyResult RefreshEnhancementImport(IDatabase database, string exportRoot)
+    {
+        if (database == null)
+        {
+            throw new ArgumentNullException(nameof(database));
+        }
+
+        if (string.IsNullOrWhiteSpace(exportRoot))
+        {
+            throw new ArgumentException("Omni export root is required.", nameof(exportRoot));
+        }
+
+        var normalizedRoot = NormalizeRoot(exportRoot);
+        if (!Directory.Exists(normalizedRoot))
+        {
+            throw new DirectoryNotFoundException(normalizedRoot);
+        }
+
+        var applyResult = new OmniApplyResult();
+        ApplyEnhancementImportStage(database, normalizedRoot, applyResult);
+        return applyResult;
+    }
+
     private List<T> LoadJsonDirectory<T>(string directory) where T : class
     {
         if (!Directory.Exists(directory))
@@ -470,6 +493,7 @@ public sealed partial class OmniImporter
         public EntityReconciliationResult<Enhancement> ResolveEnhancement(NormalizedEnhancementSource source)
         {
             var mappedType = MapEnhancementType(source);
+            var setBackedSource = IsSetBackedEnhancementSource(source);
             var exact = _enhancements.FirstOrDefault(item => string.Equals(item.UID, source.Name, StringComparison.OrdinalIgnoreCase));
             if (exact != null)
             {
@@ -541,13 +565,37 @@ public sealed partial class OmniImporter
                 return Ambiguous(recipeCandidates, item => item.UID);
             }
 
+            var setMembershipCandidates = FindEnhancementCandidatesBySetMembership(source);
+            if (setMembershipCandidates.Count == 1)
+            {
+                return new EntityReconciliationResult<Enhancement>
+                {
+                    Kind = EnhancementReconciliationMatchKind.Fallback,
+                    Item = setMembershipCandidates[0],
+                    MatchedKey = setMembershipCandidates[0].UID
+                };
+            }
+
+            if (setMembershipCandidates.Count > 1)
+            {
+                return Ambiguous(setMembershipCandidates, item => item.UID);
+            }
+
             var setShortKey = BuildEnhancementSetShortKey(ResolveSetAlias(source.EnhancementSetName), source.Name);
-            var fallbackCandidates = UniqueFromCandidates(
+            var fallbackCandidateGroups = new List<IEnumerable<Enhancement>>
+            {
                 TryGetCandidates(_enhancementsBySetAndShortName, setShortKey),
                 TryGetCandidates(_enhancementsByTypeAndShortName, $"{(int)mappedType}|{NormalizeLookupKey(source.Name)}"),
-                TryGetCandidates(_enhancementsByNormalizedName, NormalizeLookupKey(source.Name)),
-                TryGetCandidates(_enhancementsByNormalizedName, NormalizeLookupKey(source.DisplayName)),
-                LegacyEnhancementCandidates(source, mappedType));
+                TryGetCandidates(_enhancementsByNormalizedName, NormalizeLookupKey(source.Name))
+            };
+
+            if (!setBackedSource)
+            {
+                fallbackCandidateGroups.Add(TryGetCandidates(_enhancementsByNormalizedName, NormalizeLookupKey(source.DisplayName)));
+                fallbackCandidateGroups.Add(LegacyEnhancementCandidates(source, mappedType));
+            }
+
+            var fallbackCandidates = UniqueFromCandidates(fallbackCandidateGroups.ToArray());
             return FinalizeFallback(fallbackCandidates, item => item.UID);
         }
 
@@ -911,7 +959,7 @@ public sealed partial class OmniImporter
             }
 
             var normalizedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-            foreach (var key in new[] { source.Name, source.DisplayName, source.StorageKey, source.CanonicalId })
+            foreach (var key in new[] { source.Name, source.StorageKey, source.CanonicalId })
             {
                 var normalized = NormalizeLookupKey(key);
                 if (!string.IsNullOrWhiteSpace(normalized))
@@ -922,12 +970,92 @@ public sealed partial class OmniImporter
 
             return _enhancements
                 .Where(item => normalizedSetKeys.Contains(NormalizeLookupKey(item.UIDSet)))
+                .Where(item => !IsSetBackedVariantMismatch(item, source))
                 .Where(item =>
                     normalizedNames.Contains(NormalizeLookupKey(item.UID)) ||
                     normalizedNames.Contains(NormalizeLookupKey(item.ShortName)) ||
                     normalizedNames.Contains(NormalizeLookupKey(item.Name)))
                 .Distinct()
                 .ToList();
+        }
+
+        private static bool IsSetBackedVariantMismatch(Enhancement candidate, NormalizedEnhancementSource source)
+        {
+            if (candidate == null || source == null || !IsSetBackedEnhancementSource(source))
+            {
+                return false;
+            }
+
+            return GetSourceVariantKind(source) != GetEnhancementVariantKind(candidate);
+        }
+
+        private static SetVariantKind GetSourceVariantKind(NormalizedEnhancementSource source)
+        {
+            if (source.SuperiorAttuned)
+            {
+                return SetVariantKind.SuperiorAttuned;
+            }
+
+            if (source.Attuned)
+            {
+                return SetVariantKind.Attuned;
+            }
+
+            var sourceIdentity = string.Join("|", new[]
+            {
+                source.Name,
+                source.StorageKey,
+                source.CanonicalId,
+                source.PowerFullName
+            });
+
+            if (sourceIdentity.Contains("superior_attuned", StringComparison.OrdinalIgnoreCase))
+            {
+                return SetVariantKind.SuperiorAttuned;
+            }
+
+            if (sourceIdentity.Contains("attuned", StringComparison.OrdinalIgnoreCase))
+            {
+                return SetVariantKind.Attuned;
+            }
+
+            if (sourceIdentity.Contains("superior", StringComparison.OrdinalIgnoreCase))
+            {
+                return SetVariantKind.Superior;
+            }
+
+            return SetVariantKind.Crafted;
+        }
+
+        private static SetVariantKind GetEnhancementVariantKind(Enhancement enhancement)
+        {
+            if (enhancement == null)
+            {
+                return SetVariantKind.Crafted;
+            }
+
+            var enhancementIdentity = string.Join("|", new[]
+            {
+                enhancement.UID,
+                enhancement.ShortName,
+                enhancement.Name,
+                enhancement.GetPower()?.FullName ?? string.Empty
+            });
+
+            var isAttuned = enhancement.GetPower()?.BoostUsePlayerLevel == true ||
+                            enhancementIdentity.Contains("superior_attuned", StringComparison.OrdinalIgnoreCase) ||
+                            enhancementIdentity.Contains("attuned", StringComparison.OrdinalIgnoreCase);
+            var isSuperior = enhancement.Superior ||
+                             enhancementIdentity.Contains("superior_attuned", StringComparison.OrdinalIgnoreCase) ||
+                             enhancementIdentity.Contains("superior", StringComparison.OrdinalIgnoreCase);
+
+            return (isSuperior, isAttuned) switch
+            {
+                (true, true) => SetVariantKind.SuperiorAttuned,
+                (true, false) => SetVariantKind.Superior,
+                (false, true) => SetVariantKind.Attuned,
+                _ => SetVariantKind.Crafted
+            };
         }
 
         private List<Recipe> FindRecipeCandidatesByReward(NormalizedRecipeSource source)
@@ -3545,13 +3673,13 @@ public sealed partial class OmniImporter
         {
             DatabaseAPI.AssignRecipeSalvageIDs();
             DatabaseAPI.AssignRecipeIDs();
-            AssignEnhancementSetMembership(database);
+            AssignEnhancementSetMembership(database, setDefinitions, metadata, applyResult);
         }
         else
         {
             AssignRecipeSalvageIds(database);
             AssignRecipeIds(database);
-            AssignEnhancementSetMembership(database);
+            AssignEnhancementSetMembership(database, setDefinitions, metadata, applyResult);
         }
 
         ApplyEnhancementSetSpecialBonuses(database, setDefinitions, metadata, reconciliationIndex, applyResult);
@@ -3859,17 +3987,87 @@ public sealed partial class OmniImporter
         }
     }
 
-    private static void AssignEnhancementSetMembership(IDatabase database)
+    private static void AssignEnhancementSetMembership(
+        IDatabase database,
+        IReadOnlyCollection<NormalizedEnhancementSetSource> setDefinitions,
+        EnhancementImportMetadata metadata,
+        OmniApplyResult applyResult)
     {
         foreach (var set in database.EnhancementSets)
         {
             set.Enhancements = Array.Empty<int>();
         }
 
+        foreach (var enhancement in database.Enhancements.Where(enhancement => enhancement != null))
+        {
+            enhancement.nIDSet = -1;
+        }
+
         var setIndexes = database.EnhancementSets
             .Select((set, index) => new { set, index })
             .Where(item => !string.IsNullOrWhiteSpace(item.set.Uid))
             .ToDictionary(item => item.set.Uid, item => item.index, StringComparer.OrdinalIgnoreCase);
+
+        var enhancementIndexes = database.Enhancements
+            .Select((enhancement, index) => new { enhancement, index })
+            .Where(item => item.enhancement != null && !string.IsNullOrWhiteSpace(item.enhancement.UID))
+            .ToDictionary(item => item.enhancement.UID, item => item.index, StringComparer.OrdinalIgnoreCase);
+
+        var sourceSetsByName = setDefinitions
+            .Where(source => !string.IsNullOrWhiteSpace(source.Name))
+            .ToDictionary(source => source.Name, StringComparer.OrdinalIgnoreCase);
+
+        foreach (var source in setDefinitions.Where(source => !string.IsNullOrWhiteSpace(source.Name)))
+        {
+            if (!setIndexes.TryGetValue(source.Name, out var setIndex))
+            {
+                continue;
+            }
+
+            var resolvedMembers = new List<int>();
+            var resolvedVariants = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            AddResolvedSetMembers(source.Members, "crafted", resolvedMembers, resolvedVariants);
+            AddResolvedSetMembers(source.AttunedMembers, "attuned", resolvedMembers, resolvedVariants);
+            AddResolvedSetMembers(source.SuperiorAttunedMembers, "superior-attuned", resolvedMembers, resolvedVariants);
+
+            var set = database.EnhancementSets[setIndex];
+            set.Enhancements = resolvedMembers.ToArray();
+
+            var declaredVariants = GetDeclaredVariantNames(source);
+            if (declaredVariants.Count > 1 && resolvedVariants.Count < declaredVariants.Count)
+            {
+                applyResult.AddLimited(
+                    applyResult.EnhancementReconciliationConflictDetails,
+                    $"{source.Name}: declared variant lanes [{string.Join(", ", declaredVariants)}] but runtime membership resolved only [{string.Join(", ", resolvedVariants.OrderBy(value => value, StringComparer.OrdinalIgnoreCase))}].");
+            }
+
+            continue;
+
+            void AddResolvedSetMembers(
+                IEnumerable<NormalizedEnhancementSetMemberSource> members,
+                string variantName,
+                List<int> target,
+                ISet<string> resolvedVariantNames)
+            {
+                var resolvedAny = false;
+                foreach (var member in members)
+                {
+                    if (!TryResolveSetMemberEnhancementIndex(member, metadata, enhancementIndexes, database, out var enhancementIndex))
+                    {
+                        continue;
+                    }
+
+                    database.Enhancements[enhancementIndex].nIDSet = setIndex;
+                    target.Add(enhancementIndex);
+                    resolvedAny = true;
+                }
+
+                if (resolvedAny)
+                {
+                    resolvedVariantNames.Add(variantName);
+                }
+            }
+        }
 
         for (var index = 0; index < database.Enhancements.Length; index++)
         {
@@ -3885,11 +4083,100 @@ public sealed partial class OmniImporter
                 continue;
             }
 
+            if (sourceSetsByName.ContainsKey(enhancement.UIDSet))
+            {
+                continue;
+            }
+
             enhancement.nIDSet = setIndex;
             var set = database.EnhancementSets[setIndex];
             Array.Resize(ref set.Enhancements, set.Enhancements.Length + 1);
             set.Enhancements[^1] = index;
         }
+    }
+
+    private static bool TryResolveSetMemberEnhancementIndex(
+        NormalizedEnhancementSetMemberSource member,
+        EnhancementImportMetadata metadata,
+        IReadOnlyDictionary<string, int> enhancementIndexes,
+        IDatabase database,
+        out int enhancementIndex)
+    {
+        enhancementIndex = -1;
+        foreach (var key in BuildSetMemberLookupKeys(member, metadata))
+        {
+            if (enhancementIndexes.TryGetValue(key, out enhancementIndex))
+            {
+                return true;
+            }
+        }
+
+        var exactCandidates = database.Enhancements
+            .Select((enhancement, index) => new { enhancement, index })
+            .Where(item => item.enhancement != null &&
+                           (string.Equals(item.enhancement.UID, member.Name, StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(item.enhancement.ShortName, member.Name, StringComparison.OrdinalIgnoreCase) ||
+                            string.Equals(item.enhancement.Name, member.Name, StringComparison.OrdinalIgnoreCase)))
+            .Select(item => item.index)
+            .Distinct()
+            .ToArray();
+
+        if (exactCandidates.Length == 1)
+        {
+            enhancementIndex = exactCandidates[0];
+            return true;
+        }
+
+        return false;
+    }
+
+    private static IEnumerable<string> BuildSetMemberLookupKeys(
+        NormalizedEnhancementSetMemberSource member,
+        EnhancementImportMetadata metadata)
+    {
+        if (!string.IsNullOrWhiteSpace(member.Name))
+        {
+            yield return member.Name;
+
+            if (metadata.EnhancementAliasCrosswalk.TryGetValue(member.Name, out var aliasedUid) &&
+                !string.IsNullOrWhiteSpace(aliasedUid))
+            {
+                yield return aliasedUid;
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(member.StorageKey))
+        {
+            yield return member.StorageKey;
+        }
+    }
+
+    private static List<string> GetDeclaredVariantNames(NormalizedEnhancementSetSource source)
+    {
+        var variants = new List<string>(3);
+        if (source.Members.Count > 0)
+        {
+            variants.Add("crafted");
+        }
+
+        if (source.AttunedMembers.Count > 0)
+        {
+            variants.Add("attuned");
+        }
+
+        if (source.SuperiorAttunedMembers.Count > 0)
+        {
+            variants.Add("superior-attuned");
+        }
+
+        return variants;
+    }
+
+    private static bool IsSetBackedEnhancementSource(NormalizedEnhancementSource source)
+    {
+        return !string.IsNullOrWhiteSpace(source.EnhancementSetName) ||
+               !string.IsNullOrWhiteSpace(source.EnhancementSetCanonicalId) ||
+               !string.IsNullOrWhiteSpace(source.EnhancementSetStorageKey);
     }
 
     private static Recipe.RecipeRarity MapRecipeRarity(string rarityName)

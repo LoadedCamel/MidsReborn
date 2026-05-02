@@ -237,24 +237,15 @@ namespace Mids_Reborn.UI.Controls
             // infoDamageDisplay
             // 
             infoDamageDisplay.BackColor = Color.Transparent;
-            infoDamageDisplay.BackgroundGradientEnd = Color.Transparent;
-            infoDamageDisplay.BackgroundGradientStart = Color.Transparent;
-            infoDamageDisplay.BarCornerRadius = 4;
-            infoDamageDisplay.BarHeight = 26;
-            infoDamageDisplay.BaseGradientEnd = Color.FromArgb(38, 252, 45);
-            infoDamageDisplay.BaseGradientStart = Color.Green;
             infoDamageDisplay.Dock = DockStyle.Bottom;
-            infoDamageDisplay.EnhancedGradientEnd = Color.FromArgb(252, 52, 38);
-            infoDamageDisplay.EnhancedGradientStart = Color.Red;
             infoDamageDisplay.Font = new Font("Segoe UI", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
             infoDamageDisplay.ForeColor = Color.WhiteSmoke;
-            infoDamageDisplay.Location = new Point(0, 274);
+            infoDamageDisplay.Location = new Point(0, 275);
             infoDamageDisplay.Name = "infoDamageDisplay";
-            infoDamageDisplay.PaddingV = 3;
-            infoDamageDisplay.Size = new Size(400, 77);
+            infoDamageDisplay.ShowGraph = true;
+            infoDamageDisplay.Size = new Size(400, 76);
             infoDamageDisplay.TabIndex = 78;
-            infoDamageDisplay.TextColor = Color.WhiteSmoke;
-            infoDamageDisplay.ToolTipText = "";
+            infoDamageDisplay.UseCompactCard = true;
             // 
             // sliderHost
             // 

@@ -1,4 +1,6 @@
-﻿namespace Mids_Reborn.UI.Controls
+using Mids_Reborn.UI.Theming;
+
+namespace Mids_Reborn.UI.Controls
 {
     sealed partial class ModernDamageDisplay
     {
@@ -15,9 +17,15 @@
         {
             if (disposing)
             {
+                if (!DesignMode)
+                {
+                    ThemeManager.ThemeChanged -= ThemeManagerOnThemeChanged;
+                }
+
                 _toolTip?.Dispose();
                 components?.Dispose();
             }
+
             base.Dispose(disposing);
         }
 

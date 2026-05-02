@@ -161,6 +161,17 @@ namespace Mids_Reborn.Core
             LoadEnhancementClassImages(imageGroups[BucketClasses], imageGroups[BucketOverlay]);
         }
 
+        public static void ReloadImages()
+        {
+            if (!Initialized)
+            {
+                return;
+            }
+
+            Shutdown();
+            LoadImages();
+        }
+
         public static void RefreshPowersetImages()
         {
             if (!Initialized)

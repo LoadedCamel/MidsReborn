@@ -65,10 +65,7 @@ public sealed partial class OmniImporter
             return;
         }
 
-        var entities = database.Entities?
-            .Where(entity => entity != null && !string.IsNullOrWhiteSpace(entity.UID))
-            .ToDictionary(entity => NormalizeEntityKey(entity.UID), entity => entity.UID, StringComparer.OrdinalIgnoreCase)
-            ?? new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        var entities = BuildEntityUidLookup(database.Entities, applyResult);
 
         foreach (var actor in entityActors.Values)
         {
@@ -131,5 +128,41 @@ public sealed partial class OmniImporter
         applyResult.AddLimited(
             applyResult.PseudoPetAbsorptionAuditDetails,
             $"Hydrated entity tags for {database.EntityImportMetadata.EntityTagsByUid.Count:n0} entities from export tags.");
+    }
+
+    private static Dictionary<string, string> BuildEntityUidLookup(
+        IEnumerable<SummonedEntity>? entities,
+        OmniApplyResult applyResult)
+    {
+        var lookup = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (entities == null)
+        {
+            return lookup;
+        }
+
+        foreach (var entity in entities.Where(entity => entity != null && !string.IsNullOrWhiteSpace(entity.UID)))
+        {
+            var normalizedKey = NormalizeEntityKey(entity.UID);
+            if (string.IsNullOrWhiteSpace(normalizedKey))
+            {
+                continue;
+            }
+
+            if (lookup.TryGetValue(normalizedKey, out var existingUid))
+            {
+                if (!string.Equals(existingUid, entity.UID, StringComparison.OrdinalIgnoreCase))
+                {
+                    applyResult.AddLimited(
+                        applyResult.PseudoPetAbsorptionAuditDetails,
+                        $"Entity tag lookup collision on '{normalizedKey}': keeping '{existingUid}', skipping duplicate '{entity.UID}'.");
+                }
+
+                continue;
+            }
+
+            lookup[normalizedKey] = entity.UID;
+        }
+
+        return lookup;
     }
 }

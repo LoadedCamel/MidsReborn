@@ -523,7 +523,7 @@ namespace Mids_Reborn.UI.Controls
 
         private void UpdateInfoDescriptionLayout()
         {
-            if (infoSDesc == null || infoLDesc == null || infoView == null)
+            if (infoSDesc == null || infoLDesc == null || infoView == null || infoDamageDisplay == null)
             {
                 return;
             }
@@ -547,7 +547,25 @@ namespace Mids_Reborn.UI.Controls
                 infoLDesc.Height = longHeight;
             }
 
+            var targetDamageHeight = CalculateInfoDamageDisplayHeight();
+            if (infoDamageDisplay.Height != targetDamageHeight)
+            {
+                infoDamageDisplay.Height = targetDamageHeight;
+            }
+
             infoView.PerformLayout();
+        }
+
+        private int CalculateInfoDamageDisplayHeight()
+        {
+            var graphEnabled = infoDamageDisplay.ShowGraph;
+            var minHeight = graphEnabled ? ScalePx(82) : ScalePx(50);
+            var maxHeight = graphEnabled ? ScalePx(116) : ScalePx(72);
+            var proportionalHeight = graphEnabled
+                ? (int)Math.Round(infoView.ClientSize.Height * 0.22f)
+                : (int)Math.Round(infoView.ClientSize.Height * 0.16f);
+
+            return Math.Clamp(proportionalHeight, minHeight, maxHeight);
         }
 
         private void ApplyShortDescriptionMargins()
@@ -1037,12 +1055,7 @@ namespace Mids_Reborn.UI.Controls
             enhDataList.Clear(true);
             coreDataList.Clear(true);
             sliderHost.Visible = false;
-
-            infoDamageDisplay.BaseValue = 0;
-            infoDamageDisplay.EnhancedValue = 0;
-            infoDamageDisplay.MaxEnhancedValue = 0;
-            infoDamageDisplay.HighestEnhancedValue = 0;
-            infoDamageDisplay.Text = string.Empty;
+            infoDamageDisplay.Clear();
 
             ClearEnhancementPanels();
         }
@@ -1520,8 +1533,8 @@ namespace Mids_Reborn.UI.Controls
 
         public void SetGraphType(Enums.MDmgGraphType graphType, Enums.MDmgDisplayStyle graphStyle)
         {
-            infoDamageDisplay.GraphType = graphType;
-            infoDamageDisplay.Style = graphStyle;
+            infoDamageDisplay.ShowGraph = graphStyle != Enums.MDmgDisplayStyle.TextOnly;
+            UpdateInfoDescriptionLayout();
         }
 
         #endregion
@@ -2075,6 +2088,58 @@ namespace Mids_Reborn.UI.Controls
             return false;
         }
 
+        private static (bool HasAny, bool HasNonProc, bool HasProc) GetActiveSlotDamageComposition(PowerEntry? power)
+        {
+            if (power?.Slots == null)
+            {
+                return (false, false, false);
+            }
+
+            var hasAny = false;
+            var hasNonProc = false;
+            var hasProc = false;
+
+            for (var i = 0; i < power.SlotCount; i++)
+            {
+                var enhancementId = power.Slots[i].Enhancement.Enh;
+                if (enhancementId <= -1)
+                {
+                    continue;
+                }
+
+                hasAny = true;
+
+                var enhancement = DatabaseAPI.Database.Enhancements[enhancementId];
+                if (enhancement.IsProc)
+                {
+                    hasProc = true;
+                }
+                else
+                {
+                    hasNonProc = true;
+                }
+            }
+
+            return (hasAny, hasNonProc, hasProc);
+        }
+
+        private PowerEntry? GetDisplayedBuildPowerEntry()
+        {
+            var build = MidsContext.Character?.CurrentBuild;
+            if (build == null)
+            {
+                return null;
+            }
+
+            var historyIndex = ResolveDisplayedBuildHistoryIndex();
+            if (historyIndex < 0 || historyIndex >= build.Powers.Count)
+            {
+                return null;
+            }
+
+            return build.Powers[historyIndex];
+        }
+
         private int ResolveDisplayedBuildHistoryIndex(bool allowPowerLookup = true)
         {
             var build = MidsContext.Character?.CurrentBuild;
@@ -2222,6 +2287,151 @@ namespace Mids_Reborn.UI.Controls
             return rows;
         }
 
+        private DamageCardPresentation BuildDamageCardPresentation(IPower basePower, IPower enhancedPower)
+        {
+            var baseSummary = Power.GetDamageBreakdown(basePower, basePower.PowerIndex > -1 && enhancedPower.PowerIndex > -1);
+            var enhancedSummary = Power.GetDamageBreakdown(enhancedPower);
+            var buildPowerEntry = GetDisplayedBuildPowerEntry();
+            var slotComposition = GetActiveSlotDamageComposition(buildPowerEntry);
+            var procsExcludedForPower = buildPowerEntry?.ProcInclude == true;
+            var canUseBuildSlotComposition = buildPowerEntry != null;
+
+            if (_presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly && _actorTotalsSnapshot != null)
+            {
+                var actorHpMax = Math.Max(1f, _actorTotalsSnapshot.Totals.HPMax);
+                baseSummary = baseSummary.ScaleToDisplayMultiplier(actorHpMax);
+                enhancedSummary = enhancedSummary.ScaleToDisplayMultiplier(actorHpMax);
+            }
+
+            if (basePower.NIDSubPower.Length > 0 &&
+                baseSummary.DisplayedTotal <= float.Epsilon &&
+                enhancedSummary.DisplayedTotal <= float.Epsilon)
+            {
+                return DamageCardPresentation.Empty;
+            }
+
+            var noProcCurrent = Math.Max(0f, enhancedSummary.TotalExcludingProc);
+            var currentValue = Math.Max(0f, enhancedSummary.DisplayedTotal);
+            var rawBaseValue = Math.Max(0f, baseSummary.DisplayedTotal);
+
+            float baseValue;
+            float enhancedValue;
+            float procValue;
+
+            if (!canUseBuildSlotComposition)
+            {
+                baseValue = rawBaseValue;
+                enhancedValue = Math.Max(0f, noProcCurrent - baseValue);
+                procValue = Math.Max(0f, currentValue - noProcCurrent);
+            }
+            else if (!slotComposition.HasAny)
+            {
+                baseValue = currentValue;
+                enhancedValue = 0f;
+                procValue = 0f;
+            }
+            else if (!slotComposition.HasNonProc)
+            {
+                baseValue = noProcCurrent;
+                enhancedValue = 0f;
+                procValue = procsExcludedForPower ? 0f : Math.Max(0f, currentValue - noProcCurrent);
+            }
+            else
+            {
+                baseValue = rawBaseValue;
+                enhancedValue = Math.Max(0f, noProcCurrent - baseValue);
+                procValue = procsExcludedForPower ? 0f : Math.Max(0f, currentValue - noProcCurrent);
+            }
+
+            var segments = new List<DamageSourceSegment>(3);
+            if (baseValue > float.Epsilon)
+            {
+                segments.Add(new DamageSourceSegment(DamageSourceSegmentKind.Base, "Base", baseValue));
+            }
+
+            if (enhancedValue > float.Epsilon)
+            {
+                segments.Add(new DamageSourceSegment(DamageSourceSegmentKind.Enhanced, "Enhanced", enhancedValue));
+            }
+
+            if (procValue > float.Epsilon)
+            {
+                segments.Add(new DamageSourceSegment(DamageSourceSegmentKind.Proc, "Proc", procValue));
+            }
+
+            return new DamageCardPresentation(
+                HeaderText: "Damage",
+                ModeBadgeText: GetDamageModeLabel(),
+                PrimaryText: DisplayValueFormatter.FormatNumber(currentValue),
+                SubtitleText: BuildDamageSubtitleText(enhancedSummary),
+                TooltipText: BuildDamageTooltipText(enhancedSummary),
+                Segments: segments);
+        }
+
+        private static string BuildDamageSubtitleText(DamageBreakdownSummary summary)
+        {
+            if (!summary.HasPercentDamage)
+            {
+                return string.Empty;
+            }
+
+            return $"{DisplayValueFormatter.FormatPercentValue(summary.PercentOfTargetHpTotal, 2)}% target HP";
+        }
+
+        private static string GetDamageModeLabel()
+        {
+            var chanceLabel = MidsContext.Config.DamageMath.Calculate switch
+            {
+                ConfigData.EDamageMath.Average => "Average",
+                ConfigData.EDamageMath.Max => "Maximum",
+                ConfigData.EDamageMath.Minimum => "Minimum",
+                _ => "Average"
+            };
+
+            var returnLabel = MidsContext.Config.DamageMath.ReturnValue switch
+            {
+                ConfigData.EDamageReturn.DPS => "DPS",
+                ConfigData.EDamageReturn.DPA => "DPA",
+                _ => "Damage"
+            };
+
+            return $"{chanceLabel} {returnLabel}";
+        }
+
+        private static string BuildDamageTooltipText(DamageBreakdownSummary summary)
+        {
+            if (summary.ByType.Count == 0)
+            {
+                return $"Total: {DisplayValueFormatter.FormatNumber(summary.DisplayedTotal)}";
+            }
+
+            var parts = summary.ByType
+                .Select(contribution => $"{contribution.Label}: {DisplayValueFormatter.FormatNumber(contribution.DisplayedTotal)}");
+
+            return $"{string.Join(", ", parts)} = {DisplayValueFormatter.FormatNumber(summary.DisplayedTotal)}";
+        }
+
+        private void RefreshDamageCardPresentation(IPower? basePower = null, IPower? enhancedPower = null)
+        {
+            var sourceBase = basePower ?? pBase;
+            var sourceEnhanced = enhancedPower ?? pEnh ?? sourceBase;
+            if (sourceBase == null || sourceEnhanced == null)
+            {
+                infoDamageDisplay.Clear();
+                return;
+            }
+
+            var presentation = BuildDamageCardPresentation(sourceBase, sourceEnhanced);
+            if (presentation.HasContent)
+            {
+                infoDamageDisplay.Presentation = presentation;
+            }
+            else
+            {
+                infoDamageDisplay.Clear();
+            }
+        }
+
         private void DisplayInfo(bool noLevel = false, int iEnhLvl = -1)
         {
             if (pBase == null)
@@ -2232,11 +2442,7 @@ namespace Mids_Reborn.UI.Controls
                 UpdateInfoDescriptionLayout();
                 title.Text = string.Empty;
                 subTitle.Text = string.Empty;
-                infoDamageDisplay.BaseValue = 0;
-                infoDamageDisplay.EnhancedValue = 0;
-                infoDamageDisplay.MaxEnhancedValue = 0;
-                infoDamageDisplay.HighestEnhancedValue = 0;
-                infoDamageDisplay.Text = string.Empty;
+                infoDamageDisplay.Clear();
                 return;
             }
 
@@ -2264,43 +2470,7 @@ namespace Mids_Reborn.UI.Controls
             var statRows = PowerCanonicalStats.BuildRows(pBase, enhancedPower);
             powerStatsGrid.SetRows(statRows);
 
-            var str1 = "Damage" + (MidsContext.Config.DamageMath.ReturnValue switch
-            {
-                ConfigData.EDamageReturn.DPS => " Per Second",
-                ConfigData.EDamageReturn.DPA => " Per Animation Second",
-                _ => ""
-            });
-            if (MidsContext.Config.DataDamageGraphPercentageOnly) str1 += " (% only)";
-
-            var baseDamage = Math.Abs(pBase.FXGetDamageValue(pBase.PowerIndex > -1 & pEnh?.PowerIndex > -1));
-            var enhancedDamage = Math.Abs(enhancedPower.FXGetDamageValue());
-
-            if (pBase.NIDSubPower.Length > 0 & baseDamage == 0 && enhancedDamage == 0)
-            {
-                infoDamageDisplay.BaseValue = 0;
-                infoDamageDisplay.EnhancedValue = 0;
-                infoDamageDisplay.MaxEnhancedValue = 0;
-                infoDamageDisplay.HighestEnhancedValue = 0;
-                infoDamageDisplay.Text = string.Empty;
-            }
-            else
-            {
-                var hasPercentDamage = pEnh?.Effects.Any(e =>
-                    e.EffectType == Enums.eEffectType.Damage && (e.DisplayPercentage || e.Aspect == Enums.eAspect.Str));
-                var dmgMultiplier = hasPercentDamage == true
-                    ? (_presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly && _actorTotalsSnapshot != null
-                        ? _actorTotalsSnapshot.Totals.HPMax
-                        : MidsContext.Character.Totals.HPMax)
-                    : 1;
-
-                infoDamageDisplay.BaseValue = Math.Max(0, baseDamage * dmgMultiplier);
-                infoDamageDisplay.EnhancedValue = Math.Max(0, enhancedDamage * dmgMultiplier);
-                infoDamageDisplay.MaxEnhancedValue = Math.Max(baseDamage * dmgMultiplier * (1 + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f)), enhancedDamage * dmgMultiplier);
-                infoDamageDisplay.HighestEnhancedValue = Math.Max(414, enhancedDamage * dmgMultiplier);
-                infoDamageDisplay.Text = Math.Abs(enhancedDamage - baseDamage) > float.Epsilon
-                    ? $"{enhancedPower.FXGetDamageString(pEnh?.PowerIndex == -1)} ({(hasPercentDamage == true ? $"{DisplayValueFormatter.FormatPercentFromScale(baseDamage)}%" : DisplayValueFormatter.FormatNumber(baseDamage))})"
-                    : pBase.FXGetDamageString();
-            }
+            RefreshDamageCardPresentation(pBase, enhancedPower);
 
             SetPowerScaler();
         }
@@ -2314,17 +2484,8 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            if (!MidsContext.Config.DisableDataDamageGraph)
-            {
-                infoDamageDisplay.GraphType = MidsContext.Config.DataGraphType;
-                infoDamageDisplay.TextAlign = HorizontalAlignment.Center;
-                infoDamageDisplay.Style = Enums.MDmgDisplayStyle.TextUnderGraph;
-            }
-            else
-            {
-                infoDamageDisplay.TextAlign = HorizontalAlignment.Center;
-                infoDamageDisplay.Style = Enums.MDmgDisplayStyle.TextOnly;
-            }
+            infoDamageDisplay.ShowGraph = !MidsContext.Config.DisableDataDamageGraph;
+            UpdateInfoDescriptionLayout();
 
             //lblLock.Visible = Lock & (_selectedTabIndex != 2);
             DisplayInfo(noLevel, iEnhLevel);
@@ -3000,8 +3161,7 @@ namespace Mids_Reborn.UI.Controls
 
         private void SetDamageTip()
         {
-            var iTip = pEnh == null ? "" : pEnh.GetDamageTip();
-            infoDamageDisplay.SetTip(iTip);
+            RefreshDamageCardPresentation();
         }
 
         private Power? GetPowerRedirectParent(IPower pSrc)

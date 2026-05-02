@@ -370,7 +370,7 @@ public sealed class frmOmniImport : Form
             // Safe import can change powerset, enhancement, enhancement-set, and picker-facing
             // image assignments. Refresh the full image cache so DB editors opened
             // immediately afterward see current ImageIdx values instead of stale blanks.
-            AssetManager.LoadImages();
+            AssetManager.ReloadImages();
 
             var fullReportTimer = Stopwatch.StartNew();
             var applyReport = applyResult.ToMarkdown();

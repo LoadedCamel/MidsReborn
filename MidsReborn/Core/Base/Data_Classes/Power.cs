@@ -10,6 +10,52 @@ using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
 {
+    internal sealed record DamageTypeContribution(Enums.eDamage DamageType, float DisplayedTotal)
+    {
+        public string Label => DamageType == Enums.eDamage.None ? "Untyped" : Enums.GetDamageName(DamageType);
+
+        public DamageTypeContribution Scale(float factor) => this with
+        {
+            DisplayedTotal = DisplayedTotal * factor
+        };
+    }
+
+    internal sealed record DamageBreakdownSummary(
+        float DisplayedTotal,
+        float TotalExcludingProc,
+        IReadOnlyList<DamageTypeContribution> ByType,
+        bool HasPercentDamage,
+        float PercentOfTargetHpTotal,
+        float DisplayMultiplier)
+    {
+        public static readonly DamageBreakdownSummary Empty =
+            new(0f, 0f, Array.Empty<DamageTypeContribution>(), false, 0f, 1f);
+
+        public DamageBreakdownSummary ScaleToDisplayMultiplier(float displayMultiplier)
+        {
+            if (!HasPercentDamage)
+            {
+                return this;
+            }
+
+            var safeCurrent = Math.Abs(DisplayMultiplier) < 0.0001f ? 1f : DisplayMultiplier;
+            var safeTarget = Math.Abs(displayMultiplier) < 0.0001f ? safeCurrent : displayMultiplier;
+            if (Math.Abs(safeCurrent - safeTarget) < 0.0001f)
+            {
+                return this with { DisplayMultiplier = safeTarget };
+            }
+
+            var factor = safeTarget / safeCurrent;
+            return this with
+            {
+                DisplayedTotal = DisplayedTotal * factor,
+                TotalExcludingProc = TotalExcludingProc * factor,
+                ByType = ByType.Select(contribution => contribution.Scale(factor)).ToArray(),
+                DisplayMultiplier = safeTarget
+            };
+        }
+    }
+
     public class Power : IPower, IComparable
     {
         private const string AdvancedRequirementsMarker = "MRB_ADVANCED_POWER_REQUIREMENTS";
@@ -990,6 +1036,102 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 .ToArray();
         }
 
+        private static bool HasPercentDamageDisplay(IPower power)
+        {
+            return power.Effects.Any(effect =>
+                effect.EffectType == Enums.eEffectType.Damage &&
+                (effect.DisplayPercentage || effect.Aspect == Enums.eAspect.Str));
+        }
+
+        private static float GetDamageDisplayMultiplier(IPower power)
+        {
+            if (!HasPercentDamageDisplay(power))
+            {
+                return 1f;
+            }
+
+            return Math.Max(1f, MidsContext.Character?.Totals.HPMax ?? 1f);
+        }
+
+        private static bool IsProcDamageEffect(IEffect effect)
+        {
+            return effect.isEnhancementEffect && (effect.IgnoreScaling || effect.IsFromProc);
+        }
+
+        internal static DamageBreakdownSummary GetDamageBreakdown(IPower sourcePower, bool absorb = false)
+        {
+            var power = PrepareDamagePower(sourcePower, absorb);
+            if (power.Effects.Length == 0)
+            {
+                return DamageBreakdownSummary.Empty;
+            }
+
+            var hasPercentDamage = HasPercentDamageDisplay(power);
+            var displayMultiplier = hasPercentDamage ? GetDamageDisplayMultiplier(power) : 1f;
+            var displayedTotal = 0f;
+            var totalExcludingProc = 0f;
+            var rawDisplayedTotal = 0f;
+            var damageTotals = new Dictionary<Enums.eDamage, float>();
+            var orderedDamageTypes = new List<Enums.eDamage>();
+
+            foreach (var effect in power.Effects)
+            {
+                if (!ShouldIncludeDamageEffect(effect))
+                {
+                    continue;
+                }
+
+                var effectTotal = GetDamageEffectTotal(effect, power, absolute: true, applyReturnScaling: true);
+                if (Math.Abs(effectTotal) < 0.0001f)
+                {
+                    continue;
+                }
+
+                rawDisplayedTotal += effectTotal;
+                displayedTotal += effectTotal;
+                if (!IsProcDamageEffect(effect))
+                {
+                    totalExcludingProc += effectTotal;
+                }
+
+                if (!damageTotals.ContainsKey(effect.DamageType))
+                {
+                    damageTotals[effect.DamageType] = 0f;
+                    orderedDamageTypes.Add(effect.DamageType);
+                }
+
+                damageTotals[effect.DamageType] += effectTotal;
+            }
+
+            if (hasPercentDamage)
+            {
+                displayedTotal *= displayMultiplier;
+                totalExcludingProc *= displayMultiplier;
+            }
+
+            var byType = orderedDamageTypes
+                .Select(damageType =>
+                {
+                    var total = damageTotals[damageType];
+                    if (hasPercentDamage)
+                    {
+                        total *= displayMultiplier;
+                    }
+
+                    return new DamageTypeContribution(damageType, total);
+                })
+                .Where(contribution => Math.Abs(contribution.DisplayedTotal) >= 0.0001f)
+                .ToArray();
+
+            return new DamageBreakdownSummary(
+                DisplayedTotal: displayedTotal,
+                TotalExcludingProc: totalExcludingProc,
+                ByType: byType,
+                HasPercentDamage: hasPercentDamage,
+                PercentOfTargetHpTotal: hasPercentDamage ? rawDisplayedTotal * 100f : 0f,
+                DisplayMultiplier: displayMultiplier);
+        }
+
         private static bool ShouldProcessExecutesForDamage(IPower power)
         {
             return DatabaseAPI.GetPlannerRuleset().ShouldProcessExecutesInDamageHelpers(power);
@@ -1056,6 +1198,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             return totalDamage;
+        }
+
+        internal DamageBreakdownSummary GetDamageBreakdown(bool absorb = false)
+        {
+            return GetDamageBreakdown((IPower)this, absorb);
         }
 
         public string GetDamageTip()

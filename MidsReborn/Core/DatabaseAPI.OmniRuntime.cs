@@ -1,11 +1,14 @@
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Omni;
+using System.Diagnostics;
 
 namespace Mids_Reborn.Core;
 
 public static partial class DatabaseAPI
 {
+    private static bool _omniEnhancementRefreshAttempted;
+
     public static int GetClassHitPoints(string className, int? zeroBasedLevel = null)
     {
         var resolvedClass = ResolveExplicitClassName(className);
@@ -200,5 +203,31 @@ public static partial class DatabaseAPI
         }
 
         return ResolveClassName();
+    }
+
+    private static void RefreshOmniEnhancementDataFromSourceIfAvailable()
+    {
+        if (_omniEnhancementRefreshAttempted || Database == null)
+        {
+            return;
+        }
+
+        _omniEnhancementRefreshAttempted = true;
+        var sourceRoot = Database.EnhancementImportMetadata?.SourceRoot;
+        if (string.IsNullOrWhiteSpace(sourceRoot) || !Directory.Exists(sourceRoot))
+        {
+            return;
+        }
+
+        try
+        {
+            new OmniImporter().RefreshEnhancementImport(Database, sourceRoot);
+            ClearSetProjectionCache();
+            AssetManager.ReloadImages();
+        }
+        catch (Exception ex)
+        {
+            Debug.WriteLine($"Omni enhancement refresh skipped: {ex.Message}");
+        }
     }
 }

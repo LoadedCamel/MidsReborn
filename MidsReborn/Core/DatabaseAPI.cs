@@ -88,6 +88,7 @@ namespace Mids_Reborn.Core
         {
             Classes.Clear();
             ClearSetProjectionCache();
+            _omniEnhancementRefreshAttempted = false;
         }
 
         public static IReadOnlyList<string> GetModifierTableNames()
@@ -3516,6 +3517,8 @@ namespace Mids_Reborn.Core
             SetPowersetsFromGroups();
             UpdateMessage(messenger, "Matching Enhancement IDs...");
             MatchEnhancementIDs();
+            UpdateMessage(messenger, "Refreshing Omni enhancement data...");
+            RefreshOmniEnhancementDataFromSourceIfAvailable();
             UpdateMessage(messenger, "Matching Entity IDs...");
             MatchSummonIDs();
             UpdateMessage(messenger, "Hydrating Omni runtime metadata...");
@@ -3530,6 +3533,7 @@ namespace Mids_Reborn.Core
             MatchPowerIDs();
             SetPowersetsFromGroups();
             MatchEnhancementIDs();
+            RefreshOmniEnhancementDataFromSourceIfAvailable();
             MatchSummonIDs();
             HydrateOmniRuntimeMetadata();
         }

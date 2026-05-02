@@ -4796,52 +4796,8 @@ namespace Mids_Reborn.UI.Forms
 
         private void GetBestDamageValues()
         {
-            if (MainModule.MidsController.Toon == null)
-            {
-                return;
-            }
-
-            var highBase = 0.0f;
-            for (var index = 0; index <= MidsContext.Character.Powersets[0].Powers.Length - 1; ++index)
-            {
-                var power = MidsContext.Character.Powersets[0].Powers[index];
-                if (power.SkipMax)
-                {
-                    continue;
-                }
-
-                var damageValue = power.FXGetDamageValue();
-                if (damageValue > (double)highBase)
-                {
-                    highBase = damageValue;
-                }
-            }
-
-
-            var ps1 = MainModule.MidsController.Toon.PickDefaultSecondaryPowerset();
-            foreach (var power in ps1.Powers)
-            {
-                if (power.SkipMax)
-                {
-                    continue;
-                }
-
-                var damageValue = power.FXGetDamageValue();
-                if (damageValue > (double)highBase)
-                {
-                    highBase = damageValue;
-                }
-            }
-
-            MainModule.MidsController.Toon.GenerateBuffedPowerArray();
-            var highEnh = highBase * (1f + MidsContext.Character.TotalsCapped.BuffDam + Enhancement.ApplyED(Enums.eSchedule.A, 2.277f));
-            if (MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPS | MidsContext.Config.DamageMath.ReturnValue == ConfigData.EDamageReturn.DPA)
-            {
-                highEnh *= 1.5f;
-            }
-
-            dataView.infoDamageDisplay.HighestBaseValue = highBase;
-            dataView.infoDamageDisplay.HighestEnhancedValue = highEnh;
+            // Neo now uses a composition bar for the selected power rather than
+            // build-relative "highest damage" scaling, so there is nothing to update here.
         }
 
         private void PowerPicked(Enums.PowersetType setId, int nIdPower)

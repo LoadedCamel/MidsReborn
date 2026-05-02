@@ -608,7 +608,29 @@ public sealed partial class OmniImporter
             {
                 set.LevelMax = enhancement.EnhancementSetMaxLevel;
             }
+
+            var memberIcon = FindSetMemberIcon(set, enhancement.Name);
+            if (!string.IsNullOrWhiteSpace(memberIcon))
+            {
+                enhancement.Icon = memberIcon;
+            }
         }
+    }
+
+    private static string FindSetMemberIcon(
+        NormalizedEnhancementSetSource set,
+        string enhancementName)
+    {
+        if (string.IsNullOrWhiteSpace(enhancementName))
+        {
+            return string.Empty;
+        }
+
+        return set.Members
+            .Concat(set.AttunedMembers)
+            .Concat(set.SuperiorAttunedMembers)
+            .FirstOrDefault(member => string.Equals(member.Name, enhancementName, StringComparison.OrdinalIgnoreCase))
+            ?.Icon ?? string.Empty;
     }
 
     private static void AuditInventionVariantMultiplicity(NormalizedEnhancementImportData data)

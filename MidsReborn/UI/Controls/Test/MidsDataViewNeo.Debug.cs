@@ -48,6 +48,9 @@ public partial class MidsDataViewNeo
         var enhancedDamageAbsorbTrue = enhancedPower == null
             ? 0f
             : Math.Abs(enhancedPower.FXGetDamageValue(absorb: true));
+        var displayText = infoDamageDisplay.Presentation.HasContent
+            ? $"{infoDamageDisplay.Presentation.PrimaryText} | {infoDamageDisplay.Presentation.ModeBadgeText} | {infoDamageDisplay.Presentation.SubtitleText}"
+            : string.Empty;
 
         return new DamageDisplayDebugSnapshot
         {
@@ -64,10 +67,10 @@ public partial class MidsDataViewNeo
             EnhancedDamageString = enhancedPower?.FXGetDamageString() ?? string.Empty,
             BaseDamageStringAbsorbTrue = pBase?.FXGetDamageString(absorb: true) ?? string.Empty,
             EnhancedDamageStringAbsorbTrue = enhancedPower?.FXGetDamageString(absorb: true) ?? string.Empty,
-            DisplayText = infoDamageDisplay.Text ?? string.Empty,
+            DisplayText = displayText,
             ToolTipText = infoDamageDisplay.ToolTipText ?? string.Empty,
             Branch = Math.Abs(enhancedDamage - baseDamage) > float.Epsilon ? "enhanced != base" : "enhanced == base",
-            DisplayContainsDuplicateIdenticalTerms = DamageDisplayDebugSnapshot.DetectDuplicateIdenticalDamageTerms(infoDamageDisplay.Text),
+            DisplayContainsDuplicateIdenticalTerms = DamageDisplayDebugSnapshot.DetectDuplicateIdenticalDamageTerms(infoDamageDisplay.ToolTipText),
             BaseHasAbsorbedRows = pBase?.Effects.Any(effect => effect.Absorbed_Effect) == true,
             EnhancedHasAbsorbedRows = enhancedPower?.Effects.Any(effect => effect.Absorbed_Effect) == true,
             DamageRowIdentities = enhancedPower == null
