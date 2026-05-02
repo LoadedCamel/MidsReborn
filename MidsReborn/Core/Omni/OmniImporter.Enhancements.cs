@@ -2501,6 +2501,7 @@ public sealed partial class OmniImporter
         }
 
         var results = new List<Enums.sEffect>();
+        var seenEnhancementEffects = new HashSet<(int EnhanceId, int SubId, int BuffMode, int Schedule, float Multiplier)>();
         foreach (var effect in power.Effects.Where(effect => effect != null))
         {
             var mappedEnhance = MapEnhanceFromEffect(effect);
@@ -2523,17 +2524,34 @@ public sealed partial class OmniImporter
             }
 
             var schedule = Enhancement.GetSchedule(mappedEnhance, mappedEnhance == Enums.eEnhance.Mez ? (int)effect.MezType : -1);
+            var subId = mappedEnhance == Enums.eEnhance.Mez ? (int)effect.MezType : -1;
+            var buffMode = MapBuffMode(effect);
+            var multiplier = NormalizeEnhancementMultiplier(
+                enhancementType,
+                schedule,
+                Math.Abs(effect.Scale) > 0.0001f ? effect.Scale : effect.nMagnitude);
+            var dedupeKey = (
+                EnhanceId: (int)mappedEnhance,
+                SubId: subId,
+                BuffMode: (int)buffMode,
+                Schedule: (int)schedule,
+                Multiplier: MathF.Round(multiplier, 5));
+            if (!seenEnhancementEffects.Add(dedupeKey))
+            {
+                continue;
+            }
+
             results.Add(new Enums.sEffect
             {
                 Mode = Enums.eEffMode.Enhancement,
-                BuffMode = MapBuffMode(effect),
+                BuffMode = buffMode,
                 Enhance = new Enums.sTwinID
                 {
                     ID = (int)mappedEnhance,
-                    SubID = mappedEnhance == Enums.eEnhance.Mez ? (int)effect.MezType : -1
+                    SubID = subId
                 },
                 Schedule = schedule,
-                Multiplier = NormalizeEnhancementMultiplier(enhancementType, schedule, Math.Abs(effect.Scale) > 0.0001f ? effect.Scale : effect.nMagnitude)
+                Multiplier = multiplier
             });
         }
 

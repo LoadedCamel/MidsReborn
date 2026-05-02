@@ -198,19 +198,24 @@ namespace Mids_Reborn.UI.Controls
 
         public void SetData(int iPower, I9Slot iSlot, int[] slotted)
         {
+            var validPowerId = IsValidPowerId(iPower) ? iPower : -1;
+            var initialEnhancementId = IsValidEnhancementId(iSlot.Enh) ? iSlot.Enh : -1;
+
             // 0. Store the power ID
-            _powerId = iPower;
-            _hoverTitle = $"Enhancing: {DatabaseAPI.Database.Power[iPower].DisplayName}";
-            _slotted = slotted;
-            _initialEnhancementId = iSlot.Enh;
+            _powerId = validPowerId;
+            _hoverTitle = validPowerId > -1
+                ? $"Enhancing: {DatabaseAPI.Database.Power[validPowerId].DisplayName}"
+                : "Enhancing";
+            _slotted = slotted?.Where(IsValidEnhancementId).ToArray() ?? [];
+            _initialEnhancementId = initialEnhancementId;
 
             // 1. Reset the model to ensure a clean state
             _model = new EnhSelectorModel();
 
             // 2. Fetch all possible enhancements and types for the power
-            _normalEnhs = GetValidEnhancements(iPower, Enums.eType.Normal).ToArray();
-            _inventionEnhs = GetValidEnhancements(iPower, Enums.eType.InventO).ToArray();
-            _model.SetTypes = GetValidSetTypes(iPower);
+            _normalEnhs = GetValidEnhancements(validPowerId, Enums.eType.Normal).ToArray();
+            _inventionEnhs = GetValidEnhancements(validPowerId, Enums.eType.InventO).ToArray();
+            _model.SetTypes = GetValidSetTypes(validPowerId);
             _model.NoGrades =
             [
                 (int)Enums.eEnhGrade.TrainingO,
@@ -226,9 +231,9 @@ namespace Mids_Reborn.UI.Controls
             _model.Initial.SpecialId = _lastSpecial > 0 ? _lastSpecial : 1;
 
             // If the slot is already filled, override defaults with its data
-            if (iSlot.Enh > -1)
+            if (initialEnhancementId > -1)
             {
-                var enh = DatabaseAPI.Database.Enhancements[iSlot.Enh];
+                var enh = DatabaseAPI.Database.Enhancements[initialEnhancementId];
                 _hoverText = enh.Desc;
 
                 _model.Initial.TabId = enh.TypeID;
@@ -237,16 +242,18 @@ namespace Mids_Reborn.UI.Controls
                 _model.Initial.IoLevel = iSlot.IOLevel + 1;
                 _model.Initial.SpecialId = enh.SubTypeID;
 
-                _model.Initial.RelLevel = ValidateRelativeLevel(_model.Initial.RelLevel, _model.Initial.TabId, iSlot.Enh);
+                _model.Initial.RelLevel = ValidateRelativeLevel(_model.Initial.RelLevel, _model.Initial.TabId, initialEnhancementId);
 
                 // Correctly handle pre-selected sets
-                if (enh.TypeID == Enums.eType.SetO)
+                if (enh.TypeID == Enums.eType.SetO &&
+                    enh.nIDSet >= 0 &&
+                    enh.nIDSet < DatabaseAPI.Database.EnhancementSets.Count)
                 {
                     int setType = DatabaseAPI.Database.EnhancementSets[enh.nIDSet].SetType;
                     _model.Initial.SetTypeId = SetTypeToId(setType);
                     _model.SetIds = GetSets(setType);
                     _model.Initial.SetId = enh.nIDSet;
-                    _model.Initial.SetVariant = DatabaseAPI.GetSetVariantKind(iSlot.Enh);
+                    _model.Initial.SetVariant = DatabaseAPI.GetSetVariantKind(initialEnhancementId);
                     _model.Initial.SetStage = SetPickerStage.SetEnhancementGrid;
                 }
             }
@@ -254,8 +261,7 @@ namespace Mids_Reborn.UI.Controls
             {
                 _hoverText = "";
 
-                _model.Initial.TabId = Enums.eType.None;
-                _model.Initial.IoLevel = LastLevel > 0 ? LastLevel : MidsContext.Config.I9.DefaultIOLevel + 1;
+                ApplyLastUsedStateForEmptySlot();
             }
 
             // 4. Set the final View state that the user will interact with
@@ -269,7 +275,7 @@ namespace Mids_Reborn.UI.Controls
             }
 
             // 5. Load the active data into the model based on the final view state
-            SetActiveEnhancements(iPower, iSlot.Enh, _normalEnhs, _inventionEnhs);
+            SetActiveEnhancements(validPowerId, initialEnhancementId, _normalEnhs, _inventionEnhs);
 
             // 6. Trigger a redraw of the control
             Invalidate();
@@ -1701,7 +1707,7 @@ namespace Mids_Reborn.UI.Controls
 
         private static int[] GetValidSetTypes(int iPowerIdx)
         {
-            return iPowerIdx < 0 ? [] : DatabaseAPI.Database.Power[iPowerIdx].SetTypes.ToArray();
+            return !IsValidPowerId(iPowerIdx) ? [] : DatabaseAPI.Database.Power[iPowerIdx].SetTypes.ToArray();
         }
 
         private static int[] GetOrderedSpecialTypes()
@@ -1739,7 +1745,22 @@ namespace Mids_Reborn.UI.Controls
 
         private static List<int> GetValidEnhancements(int iPowerIdx, Enums.eType iType, int iSubType = 0)
         {
-            return iPowerIdx < 0 ? [] : DatabaseAPI.Database.Power[iPowerIdx].GetValidEnhancements(iType, iSubType);
+            return !IsValidPowerId(iPowerIdx) ? [] : DatabaseAPI.Database.Power[iPowerIdx].GetValidEnhancements(iType, iSubType);
+        }
+
+        private static bool IsValidPowerId(int powerId)
+        {
+            return DatabaseAPI.Database?.Power != null &&
+                   powerId >= 0 &&
+                   powerId < DatabaseAPI.Database.Power.Length &&
+                   DatabaseAPI.Database.Power[powerId] != null;
+        }
+
+        private static bool IsValidEnhancementId(int enhancementId)
+        {
+            return DatabaseAPI.Database?.Enhancements != null &&
+                   enhancementId >= 0 &&
+                   enhancementId < DatabaseAPI.Database.Enhancements.Length;
         }
 
         private int SetTypeToId(int iSetType)
@@ -1752,6 +1773,22 @@ namespace Mids_Reborn.UI.Controls
                 }
             }
             return -1;
+        }
+
+        private void ApplyLastUsedStateForEmptySlot()
+        {
+            _model.Initial.TabId = _lastTab;
+            _model.Initial.IoLevel = LastLevel > 0 ? LastLevel : MidsContext.Config.I9.DefaultIOLevel + 1;
+            _model.Initial.SetTypeId = -1;
+            _model.Initial.SetId = -1;
+            _model.Initial.SetVariant = null;
+            _model.Initial.SetStage = SetPickerStage.SetFamilyGrid;
+
+            if (_lastTab == Enums.eType.SetO && _lastSet >= 0 && _lastSet < _model.SetTypes.Length)
+            {
+                _model.Initial.SetTypeId = _lastSet;
+                _model.SetIds = GetSets(_model.SetTypes[_lastSet]);
+            }
         }
 
         private void ResetSetSelection()

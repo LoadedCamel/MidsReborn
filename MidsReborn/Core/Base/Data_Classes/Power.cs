@@ -2530,13 +2530,36 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 Enums.eType.SetO => GetValidEnhancementsFromSets().ToList(),
                 _ => DatabaseAPI.Database.Enhancements.Select((enhancement, index) => new { enhancement, index })
                     .Where(e => e.enhancement.TypeID == iType &&
-                                e.enhancement.ClassID.Any(classId =>
-                                    Enhancements.Contains(DatabaseAPI.Database.EnhancementClasses[classId].ID)) &&
+                                MatchesAllowedEnhancementClass(e.enhancement) &&
                                 (e.enhancement.SubTypeID == 0 || iSubType == 0 || e.enhancement.SubTypeID == iSubType) &&
                                 !ShouldSuppressImportedEnhancement(e.enhancement))
                     .Select(e => e.index)
                     .ToList()
             };
+        }
+
+        private bool MatchesAllowedEnhancementClass(IEnhancement enhancement)
+        {
+            if (enhancement.ClassID == null || enhancement.ClassID.Length == 0)
+            {
+                return false;
+            }
+
+            var enhancementClasses = DatabaseAPI.Database.EnhancementClasses;
+            foreach (var classId in enhancement.ClassID)
+            {
+                if (classId < 0 || classId >= enhancementClasses.Length)
+                {
+                    continue;
+                }
+
+                if (Enhancements.Contains(enhancementClasses[classId].ID))
+                {
+                    return true;
+                }
+            }
+
+            return false;
         }
 
         private static bool ShouldSuppressImportedEnhancement(IEnhancement enhancement)
