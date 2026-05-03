@@ -35,6 +35,7 @@
             cbValueDisplayType = new System.Windows.Forms.ComboBox();
             cbValueGroupMode = new System.Windows.Forms.ComboBox();
             cbValueGroupMode2 = new System.Windows.Forms.ComboBox();
+            PowersSelectionPanel = new Mids_Reborn.UI.Controls.StickyScrollPanel();
             SuspendLayout();
             // 
             // PowerEffectsPanel
@@ -127,12 +128,21 @@
             cbValueGroupMode2.TabIndex = 6;
             cbValueGroupMode2.SelectedIndexChanged += cbValueGroupMode2_SelectedIndexChanged;
             // 
+            // PowersSelectionPanel
+            // 
+            PowersSelectionPanel.AutoScroll = true;
+            PowersSelectionPanel.Location = new System.Drawing.Point(516, 54);
+            PowersSelectionPanel.Name = "PowersSelectionPanel";
+            PowersSelectionPanel.Size = new System.Drawing.Size(272, 387);
+            PowersSelectionPanel.TabIndex = 7;
+            // 
             // frmBuffDebuff
             // 
             AutoScaleDimensions = new System.Drawing.SizeF(7F, 15F);
             AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             BackColor = System.Drawing.Color.Black;
             ClientSize = new System.Drawing.Size(800, 490);
+            Controls.Add(PowersSelectionPanel);
             Controls.Add(cbValueGroupMode2);
             Controls.Add(cbValueGroupMode);
             Controls.Add(cbValueDisplayType);
@@ -160,5 +170,6 @@
         private System.Windows.Forms.ComboBox cbValueDisplayType;
         private System.Windows.Forms.ComboBox cbValueGroupMode;
         private System.Windows.Forms.ComboBox cbValueGroupMode2;
+        private Controls.StickyScrollPanel PowersSelectionPanel;
     }
 }

@@ -1,12 +1,12 @@
 ﻿using FastDeepCloner;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.UI.Controls;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.Linq;
 using System.Windows.Forms;
-using Mids_Reborn.UI.Controls;
 
 namespace Mids_Reborn.UI.Forms.WindowMenuItems;
 
@@ -61,6 +61,7 @@ public partial class frmBuffDebuff : Form
     private ValueDisplayMode _valueDisplayMode = ValueDisplayMode.Raw;
     private ValueGroupMode _valueGroupMode = ValueGroupMode.None;
     private GroupMode _groupMode = GroupMode.Power;
+    private List<string> PowersExclusionsList = ["Inherent.Inherent.Rest"];
 
     private const int PreLabelGap = 14;
     private const int LabelGap = 24;
@@ -641,13 +642,13 @@ public partial class frmBuffDebuff : Form
         cbValueGroupMode.SelectedIndex = 0;
         cbValueGroupMode2.SelectedIndex = 0;
 
-        UpdateData();
+        UpdateData(true);
 
         _loading = false;
     }
 
     // Performs layout updates for effects data (Multiple Label + CtlMultiGraph)
-    public void UpdateData()
+    public void UpdateData(bool fullUpdate = false)
     {
         var ctlList = GetValues(_effectBuffType, _effectGroup, _valueDisplayMode, _valueGroupMode, _groupMode);
         PowerEffectsPanel.SuspendLayout();
@@ -664,6 +665,19 @@ public partial class frmBuffDebuff : Form
                 graph.Draw();
             }
         }
+
+        // ----------------
+
+        if (!fullUpdate)
+        {
+            return;
+        }
+
+        var pwSelectorsList = GetPowerSelectors();
+        PowersSelectionPanel.SuspendLayout();
+        PowersSelectionPanel.Controls.Clear();
+        PowersSelectionPanel.Controls.AddRange(pwSelectorsList.ToArray());
+        PowersSelectionPanel.ResumeLayout(true);
     }
 
     // Get enhanced powers from build
@@ -774,6 +788,87 @@ public partial class frmBuffDebuff : Form
         };
     }
 
+    private List<Control> GetPowerSelectors(IPower[]? enhPowers = null)
+    {
+        enhPowers ??= GetEnhancedPowers();
+        
+        // Bug: sorting enhPowers directly doesn't work
+        var enhPwList = enhPowers.ToList();
+        enhPwList.Sort((a, b) =>
+        {
+            var s = int.Sign(GetPowerSortOrderRef(a) - GetPowerSortOrderRef(b));
+
+            if (s != 0)
+            {
+                return s;
+            }
+
+            var ps1 = a.GetPowerSet()?.DisplayName;
+            var ps2 = b.GetPowerSet()?.DisplayName;
+
+            var psCompare = string.Compare(ps1 ?? "", ps2 ?? "", StringComparison.InvariantCultureIgnoreCase);
+
+            return psCompare != 0
+                ? psCompare
+                : int.Sign(a.PowerIndex - b.PowerIndex);
+        });
+
+        var ret = new List<Control>();
+        var y = 4;
+        var labelIndex = 1;
+        var cbIndex = 1;
+        var ps = "---";
+
+        foreach (var p in enhPwList)
+        {
+            var powersetName = p.GetPowerSet()?.DisplayName;
+            if (!string.IsNullOrWhiteSpace(powersetName))
+            {
+                if (powersetName != ps)
+                {
+                    var lbl = new Label
+                    {
+                        AutoSize = true,
+                        BackColor = Color.Transparent,
+                        Font = new Font("Segoe UI", 11f, FontStyle.Bold),
+                        ForeColor = Color.Goldenrod,
+                        Location = new Point(16, y),
+                        Name = $"psLabel{labelIndex}",
+                        Text = powersetName
+                    };
+
+                    ret.Add(lbl);
+
+                    labelIndex++;
+                    y += LabelGap;
+                    ps = powersetName;
+                }
+            }
+
+            var cb = new CheckBox
+            {
+                AutoSize = true,
+                BackColor = Color.Transparent,
+                Checked = !PowersExclusionsList.Contains(p.FullName),
+                Font = new Font("Segoe UI", 9f),
+                ForeColor = Color.WhiteSmoke,
+                Location = new Point(4, y),
+                Name = $"cb{cbIndex}",
+                Text = p.DisplayName,
+                Tag = p.FullName
+            };
+
+            cb.CheckedChanged += CbPowerSelection_CheckChanged;
+
+            ret.Add(cb);
+
+            cbIndex++;
+            y += GraphGap;
+        }
+
+        return ret;
+    }
+
     // Generate graph and label controls from powers according to filters and view mode
     // Partially implemented
     private List<List<Control>> GetValues(EffectBuffType? buffType, EffectGroup? group, ValueDisplayMode valueDisplayMode,
@@ -784,6 +879,7 @@ public partial class frmBuffDebuff : Form
         
         // Effects by power, key 1 is index in enhPowers, key 2 is FxId for GroupedFx
         var powerEffects = enhPowers
+            .Where(e => !PowersExclusionsList.Contains(e.FullName) )
             .Select((e, i) => new KeyValuePair<int, IPower>(i, e))
             .Select(e => new KeyValuePair<int, KeyValuePair<IPower, List<GroupedFx>>>(e.Key,
                 new KeyValuePair<IPower, List<GroupedFx>>(e.Value,
@@ -791,10 +887,10 @@ public partial class frmBuffDebuff : Form
             .Select(e => new KeyValuePair<int, List<KeyValuePair<FxId, GroupedFx>>>(e.Key,
                 e.Value.Value.Select(f =>
                         new KeyValuePair<FxId, GroupedFx>(FxId.CreateFxIdFromEffect(f.GetEffectAt(enhPowers[e.Key]), Buffs), f))
-                    .Where(g => g.Key.GetGraphStat() != CustomGraphStat.eCustomGraphStat.None)
-                    .Where(g => buffType == null || g.Key.BuffType == buffType)
-                    .Where(g => group == null || g.Key.GetEffectGroup(Buffs) == group)
-                    .Where(g => includeEnhFx | !g.Value.EnhancementEffect)
+                    .Where(g => (g.Key.GetGraphStat() != CustomGraphStat.eCustomGraphStat.None) &
+                                (buffType == null || g.Key.BuffType == buffType) &
+                                (group == null || g.Key.GetEffectGroup(Buffs) == group) &
+                                (includeEnhFx | !g.Value.EnhancementEffect))
                     .ToList()))
             .ToList();
 
@@ -811,6 +907,7 @@ public partial class frmBuffDebuff : Form
             var ps2 = enhPowers[b.Key].GetPowerSet()?.DisplayName;
 
             var psCompare = string.Compare(ps1 ?? "", ps2 ?? "", StringComparison.InvariantCultureIgnoreCase);
+            
             return psCompare != 0
                 ? psCompare
                 : int.Sign(enhPowers[a.Key].PowerIndex - enhPowers[b.Key].PowerIndex);
@@ -889,6 +986,7 @@ public partial class frmBuffDebuff : Form
                     labelIndex++;
                     y += LabelGap;
 
+                    // Bug: sorting ignores rewritten names for Mez/ResEffect? (See GetGreLabel())
                     p.Value.Sort((a, b) => string.Compare(GetGreLabel(a, enhPowers[p.Key]), GetGreLabel(b, enhPowers[p.Key]), StringComparison.InvariantCultureIgnoreCase));
                     foreach (var gre in p.Value)
                     {
@@ -930,7 +1028,7 @@ public partial class frmBuffDebuff : Form
                             val = Math.Abs(val);
                         }
 
-                        // fxRef.IsEnhancementEffect will fail with some.
+                        // Bug: fxRef.IsEnhancementEffect will fail with some.
                         // E.g. DamageBuff in Set_Bonus.Set_Bonus.Boost_Up from either Decimation: Chance for Build Up or Gaussian's: Chance for Build Up.
                         var enhancementEffect = fxRef.isEnhancementEffect;
                         graph.SetGraphItemManual(stat, CustomGraphStat.eCustomGraphMode.Single, valueDisplayMode, val,
@@ -1128,6 +1226,27 @@ public partial class frmBuffDebuff : Form
             1 => GroupMode.Stat,
             _ => GroupMode.Power
         };
+    }
+
+    private void CbPowerSelection_CheckChanged(object? sender, EventArgs e)
+    {
+        if (sender is not CheckBox cb)
+        {
+            return;
+        }
+
+        if (!cb.Checked)
+        {
+            PowersExclusionsList.Add($"{cb.Tag}");
+        }
+        else
+        {
+            PowersExclusionsList = PowersExclusionsList
+                .Where(f => f != $"{cb.Tag}")
+                .ToList();
+        }
+
+        UpdateData();
     }
 
     private void BtnClose_Click(object sender, EventArgs e)
