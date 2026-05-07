@@ -247,3 +247,10 @@ safe/\.fake/
 /Tests/MidsReborn.CompatibilityTests/SetVariantRepeatSlottingTests.cs
 /Tests/MidsReborn.CompatibilityTests/TestAssemblyInfo.cs
 /MidsReborn/Docs/SetVariantHandoff.md
+/Tests/MidsReborn.CompatibilityTests/OmniImportCompatibilityTests.cs
+/Tests/MidsReborn.CompatibilityTests/OmniImportSessionTests.cs
+/Tests/MidsReborn.CompatibilityTests/OmniReportFormattingTests.cs
+/Tests/MidsReborn.CompatibilityTests/OmniRuntimePersistenceTests.cs
+/Tests/MidsReborn.CompatibilityTests/RtfCompatibilityTests.cs
+/Tests/MidsReborn.CompatibilityTests/PlannerExpressionTests.cs
+/Tests/MidsReborn.CompatibilityTests/PowerEnhancementValidationTests.cs
