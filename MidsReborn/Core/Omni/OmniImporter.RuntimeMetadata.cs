@@ -2,13 +2,15 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Master_Classes;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.Omni;
 
 public sealed partial class OmniImporter
 {
-    private sealed class OmniTagDefinition
+    internal sealed class OmniTagDefinition
     {
         [JsonProperty("tag")]
         public string Tag { get; set; } = string.Empty;
@@ -44,6 +46,33 @@ public sealed partial class OmniImporter
         };
     }
 
+    private static void ApplyPlannerRuntimeMetadata(IPower power, OmniPowerDefinition source)
+    {
+        if (power is not Power midsPower)
+        {
+            return;
+        }
+
+        midsPower.OmniTargetRequiresRaw = source.TargetRequires ?? string.Empty;
+        if (source.ActivationEffects == null || source.ActivationEffects.Count == 0)
+        {
+            midsPower.ActivationEffectsRuntime = [];
+            return;
+        }
+
+        var activationEffects = OmniMidsMapper.FlattenEffectGroups(source, source.ActivationEffects, "activation_effect")
+            .Cast<IEffect>()
+            .ToArray();
+        foreach (var effect in activationEffects)
+        {
+            effect.PowerFullName = midsPower.FullName;
+            effect.ActiveConditionals = effect.AdvancedConditions.ToLegacyActiveConditionals();
+            effect.SetPower(midsPower);
+        }
+
+        midsPower.ActivationEffectsRuntime = activationEffects;
+    }
+
     private static OmniEffectDefinition CloneEffectGroup(OmniEffectDefinition source)
     {
         var serialized = JsonConvert.SerializeObject(source);
@@ -53,6 +82,7 @@ public sealed partial class OmniImporter
     private void ApplyEntityImportMetadata(
         IDatabase database,
         string exportRoot,
+        OmniExportManifest? manifest,
         IReadOnlyDictionary<string, OmniBuildActor> entityActors,
         OmniApplyResult applyResult)
     {
@@ -77,7 +107,13 @@ public sealed partial class OmniImporter
             entities[NormalizeEntityKey(actor.EntityName)] = actor.EntityName;
         }
 
-        foreach (var file in Directory.EnumerateFiles(tagsRoot, "*.json", SearchOption.TopDirectoryOnly))
+        var tagFiles = manifest?.TagFiles?.Count > 0
+            ? manifest.TagFiles
+            : Directory.EnumerateFiles(tagsRoot, "*.json", SearchOption.TopDirectoryOnly)
+                .OrderBy(file => file, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+        foreach (var file in tagFiles)
         {
             OmniTagDefinition? tagDefinition;
             try
@@ -123,6 +159,17 @@ public sealed partial class OmniImporter
         foreach (var pair in database.EntityImportMetadata.EntityTagsByUid)
         {
             pair.Value.Sort(StringComparer.OrdinalIgnoreCase);
+        }
+
+        foreach (var entity in database.Entities.Where(entity => entity != null))
+        {
+            entity.ActorTags = database.EntityImportMetadata.EntityTagsByUid.TryGetValue(entity.UID, out var tags)
+                ? tags
+                    .Where(tag => !string.IsNullOrWhiteSpace(tag))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .OrderBy(tag => tag, StringComparer.OrdinalIgnoreCase)
+                    .ToList()
+                : [];
         }
 
         applyResult.AddLimited(

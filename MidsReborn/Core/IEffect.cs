@@ -40,6 +40,7 @@ namespace Mids_Reborn.Core
         List<string> EffectTags { get; set; }
 
         string OmniSource { get; set; }
+        bool GrantBoosted { get; set; }
         bool UseCombatModMagnitude { get; set; }
         bool UseCombatModDuration { get; set; }
 

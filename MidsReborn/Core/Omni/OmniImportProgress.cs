@@ -5,7 +5,11 @@ public sealed record OmniImportProgress(
     string Stage,
     string Detail = "",
     int Current = 0,
-    int Total = 0)
+    int Total = 0,
+    string StageId = "",
+    TimeSpan? Elapsed = null,
+    TimeSpan? EstimatedRemaining = null,
+    double? GlobalPercent = null)
 {
     public int ClampedPercent => Math.Clamp(Percent, 0, 100);
 
@@ -14,7 +18,12 @@ public sealed record OmniImportProgress(
         get
         {
             var text = string.IsNullOrWhiteSpace(Detail) ? Stage : $"{Stage}: {Detail}";
-            return Total > 0 ? $"{text} ({Current:n0}/{Total:n0})" : text;
+            if (Total > 0)
+            {
+                text = $"{text} ({Current:n0}/{Total:n0})";
+            }
+
+            return text;
         }
     }
 }

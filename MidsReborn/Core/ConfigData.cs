@@ -456,7 +456,8 @@ namespace Mids_Reborn.Core
             { "cfg.player.hp", "Player HP %" },
             { "cfg.player.isAlive", "Player is Alive/Dead" },
             { "cfg.target.hp", "Target HP %" },
-            { "cfg.target.end", "Target Endurance %" }
+            { "cfg.target.end", "Target Endurance %" },
+            { "cfg.target.profileid", "Target Profile" }
         };
 
         public static string? GetCombatSettingName(string param, Dictionary<string, string> table) =>
@@ -655,6 +656,7 @@ namespace Mids_Reborn.Core
                 "target" => "TargetSettings",
                 "hp" => "HpPercent",
                 "end" => "EndPercent",
+                "profileid" => "ProfileId",
                 "isalive" => "IsAlive",
                 _ => ""
             };
@@ -672,7 +674,8 @@ namespace Mids_Reborn.Core
                         .Replace("settings", "")
                         .Replace("percent", "%")
                         .Replace('.', ' '))
-                    .Replace("Isalive", "IsAlive");
+                    .Replace("Isalive", "IsAlive")
+                    .Replace("Profileid", "ProfileId");
 
             public static List<string> EnumerateFields(object obj, string prefix = "cfg")
             {
@@ -692,7 +695,12 @@ namespace Mids_Reborn.Core
             }
 
             public class Player { public int HpPercent { get; set; } = 100; public int EndPercent { get; set; } = 100; public bool IsAlive { get; set; } = true; }
-            public class Target { public int HpPercent { get; set; } = 100; public int EndPercent { get; set; } = 100; }
+            public class Target
+            {
+                public int HpPercent { get; set; } = 100;
+                public int EndPercent { get; set; } = 100;
+                public int ProfileId { get; set; } = (int)CombatTargetProfileId.Boss;
+            }
 
             public Player PlayerSettings { get; set; } = new();
             public Target TargetSettings { get; set; } = new();

@@ -15,6 +15,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEditPower : Form
     {
+        private const int EditorGridIconSize = DbEditorIconLayout.MinimumIconSize;
         private readonly Requirement backup_Requires;
         private readonly AdvancedConditionSet backup_AdvancedRequirements;
         private readonly int enhAcross;
@@ -34,6 +35,15 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private PowerModifierDisplayContextResult? modifierContext;
         private string selectedModifierContextClass = string.Empty;
         private bool updatingModifierContext;
+        private int EnhancementCellSize => enhPadding + EditorGridIconSize;
+        private readonly Label lblRootTime = new();
+        private readonly TextBox txtRootTime = new();
+        private readonly Label lblRootTimeUnits = new();
+        private readonly TabPage tpSharedRecharge = new();
+        private readonly Label lblRechargeGroupHint = new();
+        private readonly ListBox lstRechargeGroups = new();
+        private readonly Button btnRechargeGroupAdd = new();
+        private readonly Button btnRechargeGroupRemove = new();
 
         public frmEditPower(IPower? iPower, bool editMode = false)
         {
@@ -43,6 +53,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             Updating = true;
             ReqChanging = false;
             InitializeComponent();
+            InitializePlannerMetadataUi();
             //var componentResourceManager = new ComponentResourceManager(typeof(frmEditPower));
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEditPower);
@@ -69,6 +80,91 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             lvSPSet.DoubleBuffering();
             lvSPPower.DoubleBuffering();
             lvSPSelected.DoubleBuffering();
+        }
+
+        private void InitializePlannerMetadataUi()
+        {
+            InitializeRootTimeUi();
+            InitializeSharedRechargeUi();
+        }
+
+        private void InitializeRootTimeUi()
+        {
+            foreach (var control in new Control[]
+                     {
+                         Label41, txtNumCharges, Label43, txtUseageTime, Label42,
+                         Label45, txtLifeTimeGame, Label44, Label47, txtLifeTimeReal, Label46
+                     })
+            {
+                control.Location = new Point(control.Location.X, control.Location.Y + 30);
+            }
+
+            lblRootTime.Location = new Point(256, 163);
+            lblRootTime.Name = nameof(lblRootTime);
+            lblRootTime.Size = new Size(124, 23);
+            lblRootTime.Text = @"Root Time:";
+            lblRootTime.TextAlign = ContentAlignment.MiddleRight;
+
+            txtRootTime.Location = new Point(384, 163);
+            txtRootTime.Name = nameof(txtRootTime);
+            txtRootTime.Size = new Size(57, 22);
+            txtRootTime.Text = @"0";
+            txtRootTime.TextAlign = HorizontalAlignment.Right;
+            txtRootTime.TextChanged += txtRootTime_TextChanged;
+            txtRootTime.Leave += txtRootTime_Leave;
+
+            lblRootTimeUnits.Location = new Point(447, 161);
+            lblRootTimeUnits.Name = nameof(lblRootTimeUnits);
+            lblRootTimeUnits.Size = new Size(20, 23);
+            lblRootTimeUnits.Text = @"s";
+            lblRootTimeUnits.TextAlign = ContentAlignment.MiddleLeft;
+
+            tpBasic.Controls.Add(lblRootTime);
+            tpBasic.Controls.Add(txtRootTime);
+            tpBasic.Controls.Add(lblRootTimeUnits);
+        }
+
+        private void InitializeSharedRechargeUi()
+        {
+            tpSharedRecharge.Location = new Point(4, 24);
+            tpSharedRecharge.Name = nameof(tpSharedRecharge);
+            tpSharedRecharge.Size = new Size(832, 411);
+            tpSharedRecharge.TabIndex = 9;
+            tpSharedRecharge.Text = @"Shared Recharge";
+            tpSharedRecharge.UseVisualStyleBackColor = true;
+
+            lblRechargeGroupHint.Location = new Point(12, 12);
+            lblRechargeGroupHint.Name = nameof(lblRechargeGroupHint);
+            lblRechargeGroupHint.Size = new Size(808, 38);
+            lblRechargeGroupHint.Text = @"Shared recharge groups model linked cooldown behavior such as Afterburner. These are planner-facing metadata groups, not mutual exclusivity groups.";
+
+            lstRechargeGroups.FormattingEnabled = true;
+            lstRechargeGroups.HorizontalScrollbar = true;
+            lstRechargeGroups.ItemHeight = 13;
+            lstRechargeGroups.Location = new Point(12, 56);
+            lstRechargeGroups.Name = nameof(lstRechargeGroups);
+            lstRechargeGroups.Size = new Size(642, 329);
+
+            btnRechargeGroupAdd.Location = new Point(673, 56);
+            btnRechargeGroupAdd.Name = nameof(btnRechargeGroupAdd);
+            btnRechargeGroupAdd.Size = new Size(147, 28);
+            btnRechargeGroupAdd.Text = @"Add Group...";
+            btnRechargeGroupAdd.UseVisualStyleBackColor = true;
+            btnRechargeGroupAdd.Click += btnRechargeGroupAdd_Click;
+
+            btnRechargeGroupRemove.Location = new Point(673, 90);
+            btnRechargeGroupRemove.Name = nameof(btnRechargeGroupRemove);
+            btnRechargeGroupRemove.Size = new Size(147, 28);
+            btnRechargeGroupRemove.Text = @"Remove Selected";
+            btnRechargeGroupRemove.UseVisualStyleBackColor = true;
+            btnRechargeGroupRemove.Click += btnRechargeGroupRemove_Click;
+
+            tpSharedRecharge.Controls.Add(lblRechargeGroupHint);
+            tpSharedRecharge.Controls.Add(lstRechargeGroups);
+            tpSharedRecharge.Controls.Add(btnRechargeGroupAdd);
+            tpSharedRecharge.Controls.Add(btnRechargeGroupRemove);
+            tcPower.Controls.Add(tpSharedRecharge);
+            tcPower.Controls.SetChildIndex(tpSharedRecharge, tcPower.TabPages.Count - 2);
         }
 
         private void InitializeModifierContextUi()
@@ -401,6 +497,18 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
         }
 
+        private static void inputBox_RechargeGroupValidating(object sender, InputBoxValidatingArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(e.Text))
+            {
+                e.Cancel = true;
+                e.Message = "Required";
+                return;
+            }
+
+            e.Cancel = false;
+        }
+
         private void btnMutexAdd_Click(object sender, EventArgs e)
         {
             var result = InputBox.Show("Enter a name for the new group.", "Add Mutex Group", false, "New Group", InputBox.InputBoxIcon.Info, inputBox_MutexValidating);
@@ -427,6 +535,46 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 clbMutex.Items.Add(b, true);
                 clbMutex.SelectedIndex = clbMutex.Items.Count - 1;
             }
+        }
+
+        private void btnRechargeGroupAdd_Click(object sender, EventArgs e)
+        {
+            var result = InputBox.Show("Enter a shared recharge group name.", "Add Shared Recharge Group", false, "New_Group", InputBox.InputBoxIcon.Info, inputBox_RechargeGroupValidating);
+            if (!result.OK)
+            {
+                return;
+            }
+
+            var group = result.Text.Replace(" ", "_").Trim();
+            if (lstRechargeGroups.Items.Cast<string>().Any(item => string.Equals(item, group, StringComparison.OrdinalIgnoreCase)))
+            {
+                MessageBox.Show($@"'{group}' is already present.", @"Unable to add", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            lstRechargeGroups.Items.Add(group);
+            lstRechargeGroups.SelectedIndex = lstRechargeGroups.Items.Count - 1;
+            StoreRechargeGroups();
+        }
+
+        private void btnRechargeGroupRemove_Click(object sender, EventArgs e)
+        {
+            if (lstRechargeGroups.SelectedIndex < 0)
+            {
+                return;
+            }
+
+            lstRechargeGroups.Items.RemoveAt(lstRechargeGroups.SelectedIndex);
+            StoreRechargeGroups();
+        }
+
+        private void StoreRechargeGroups()
+        {
+            myPower.RechargeGroups = lstRechargeGroups.Items
+                .Cast<string>()
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
         }
 
         private void frmEditPower_CancelClose(object? sender, FormClosingEventArgs e)
@@ -1341,7 +1489,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             bxSet.Graphics.FillRectangle(solidBrush3, bxSet.Graphics.ClipBounds);
             foreach (var pwSetType in myPower.SetTypes)
             {
-                var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
+                var destRect = new Rectangle(enhPadding2, enhPadding1, EditorGridIconSize, EditorGridIconSize);
 
                 // Look up the individual Set Type icon from the dictionary
                 if (AssetManager.SetTypes.TryGetValue(pwSetType, out var setTypeIcon) && setTypeIcon?.Bitmap != null)
@@ -1349,7 +1497,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     bxSet.Graphics.DrawImage(setTypeIcon.Bitmap, destRect);
                 }
 
-                enhPadding2 += 30 + enhPadding;
+                enhPadding2 += EnhancementCellSize;
             }
 
             pbInvSetUsed.CreateGraphics().DrawImageUnscaled(bxSet.Bitmap, 0, 0);
@@ -1375,7 +1523,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             //var num2 = names.Length - 1;
             for (var index = 0; index < setTypes.Count; index++)
             {
-                var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
+                var destRect = new Rectangle(enhPadding2, enhPadding1, EditorGridIconSize, EditorGridIconSize);
 
                 // Look up the individual Set Type icon from the dictionary
                 if (AssetManager.SetTypes.TryGetValue(index, out var setTypeIcon) && setTypeIcon?.Bitmap != null)
@@ -1383,7 +1531,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     bxSetList.Graphics.DrawImage(setTypeIcon.Bitmap, destRect);
                 }
 
-                enhPadding2 += 30 + enhPadding;
+                enhPadding2 += EnhancementCellSize;
                 ++num1;
                 if (num1 != enhAcross)
                 {
@@ -1392,7 +1540,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
                 num1 = 0;
                 enhPadding2 = enhPadding;
-                enhPadding1 += 30 + enhPadding;
+                enhPadding1 += EnhancementCellSize;
             }
 
             pbInvSetList.CreateGraphics().DrawImageUnscaled(bxSetList.Bitmap, 0, 0);
@@ -1570,6 +1718,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             txtLevel.Text = Convert.ToString(power.Level, CultureInfo.InvariantCulture);
             txtAcc.Text = $@"{Convert.ToDecimal(power.Accuracy):##0.###}";
             txtInterrupt.Text = $@"{Convert.ToDecimal(power.InterruptTime):##0.###}";
+            txtRootTime.Text = $@"{Convert.ToDecimal(power.RootTime):##0.###}";
             txtCastTime.Text = $@"{Convert.ToDecimal(power.CastTimeReal):##0.###}";
             txtRechargeTime.Text = $@"{Convert.ToDecimal(power.RechargeTime):##0.###}";
             txtActivate.Text = $@"{Convert.ToDecimal(power.ActivatePeriod):##0.###}";
@@ -1677,6 +1826,18 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             clbMutex.EndUpdate();
+        }
+
+        private void FillTab_SharedRecharge()
+        {
+            lstRechargeGroups.BeginUpdate();
+            lstRechargeGroups.Items.Clear();
+            foreach (var group in myPower.RechargeGroups.Where(value => !string.IsNullOrWhiteSpace(value)))
+            {
+                lstRechargeGroups.Items.Add(group);
+            }
+
+            lstRechargeGroups.EndUpdate();
         }
 
         private void FillTab_Req()
@@ -1838,7 +1999,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var num3 = 0;
             do
             {
-                if (e.X > (enhPadding + 30) * num3 & e.X < (enhPadding + 30) * (num3 + 1))
+                if (e.X > EnhancementCellSize * num3 & e.X < EnhancementCellSize * (num3 + 1))
                 {
                     num1 = num3;
                 }
@@ -1849,7 +2010,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var num4 = 0;
             do
             {
-                if (e.Y > (enhPadding + 30) * num4 & e.Y < (enhPadding + 30) * (num4 + 1))
+                if (e.Y > EnhancementCellSize * num4 & e.Y < EnhancementCellSize * (num4 + 1))
                 {
                     num2 = num4;
                 }
@@ -1866,7 +2027,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var num2 = -1;
             for (var index = 0; index < enhAcross; index++)
             {
-                if (e.X > (enhPadding + 30) * index & e.X < (enhPadding + 30) * (index + 1))
+                if (e.X > EnhancementCellSize * index & e.X < EnhancementCellSize * (index + 1))
                 {
                     num1 = index;
                 }
@@ -1875,7 +2036,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var num4 = 0;
             do
             {
-                if (e.Y > (enhPadding + 30) * num4 & e.Y < (enhPadding + 30) * (num4 + 1))
+                if (e.Y > EnhancementCellSize * num4 & e.Y < EnhancementCellSize * (num4 + 1))
                 {
                     num2 = num4;
                 }
@@ -2007,7 +2168,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var num2 = -1;
             for (var index = 0; index < enhAcross; index++)
             {
-                if (e.X > (enhPadding + 30) * index & e.X < (enhPadding + 30) * (index + 1))
+                if (e.X > EnhancementCellSize * index & e.X < EnhancementCellSize * (index + 1))
                 {
                     num1 = index;
                 }
@@ -2016,7 +2177,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var num4 = 0;
             do
             {
-                if (e.Y > (enhPadding + 30) * num4 & e.Y < (enhPadding + 30) * (num4 + 1))
+                if (e.Y > EnhancementCellSize * num4 & e.Y < EnhancementCellSize * (num4 + 1))
                 {
                     num2 = num4;
                 }
@@ -2041,7 +2202,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var num2 = -1;
             for (var index = 0; index < enhAcross; index++)
             {
-                if (!(e.X > (enhPadding + 30) * index & e.X < (enhPadding + 30) * (index + 1)))
+                if (!(e.X > EnhancementCellSize * index & e.X < EnhancementCellSize * (index + 1)))
                 {
                     continue;
                 }
@@ -2053,7 +2214,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var num4 = 0;
             do
             {
-                if (e.Y > (enhPadding + 30) * num4 & e.Y < (enhPadding + 30) * (num4 + 1))
+                if (e.Y > EnhancementCellSize * num4 & e.Y < EnhancementCellSize * (num4 + 1))
                 {
                     num2 = num4;
                 }
@@ -2104,7 +2265,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var num = -1;
             for (var index = 0; index < myPower.Enhancements.Length; index++)
             {
-                if (e.X > (enhPadding + 30) * index & e.X < (enhPadding + 30) * (index + 1))
+                if (e.X > EnhancementCellSize * index & e.X < EnhancementCellSize * (index + 1))
                 {
                     num = index;
                 }
@@ -2121,7 +2282,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var enhIdx = -1;
             for (var index = 0; index < myPower.Enhancements.Length; index++)
             {
-                if (!((e.X > (enhPadding + 30) * index) & (e.X < (enhPadding + 30) * (index + 1))))
+                if (!((e.X > EnhancementCellSize * index) & (e.X < EnhancementCellSize * (index + 1))))
                 {
                     continue;
                 }
@@ -2401,7 +2562,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             graphics.DrawRectangle(pen, 0, 0, width, height);
             foreach (var e in myPower.Enhancements)
             {
-                var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
+                var destRect = new Rectangle(enhPadding2, enhPadding1, EditorGridIconSize, EditorGridIconSize);
 
                 // Look up the individual Enhancement Class icon from the dictionary
                 var classId = Utilities.GetEnhClassById(e);
@@ -2410,7 +2571,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     bxEnhPicked.Graphics.DrawImage(classIcon.Bitmap, destRect);
                 }
 
-                enhPadding2 += 30 + enhPadding;
+                enhPadding2 += EnhancementCellSize;
             }
 
             pbEnhancements.CreateGraphics().DrawImageUnscaled(bxEnhPicked.Bitmap, 0, 0);
@@ -2418,8 +2579,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void RedrawEnhPicker()
         {
-            pbEnhancementList.Width = (enhPadding + 30) * enhAcross + enhPadding;
-            pbEnhancementList.Height = (enhPadding + 30) * 6 + enhPadding;
+            pbEnhancementList.Width = EnhancementCellSize * enhAcross + enhPadding;
+            pbEnhancementList.Height = EnhancementCellSize * 6 + enhPadding;
             bxEnhPicker = new ExtendedBitmap(pbEnhancementList.Width, pbEnhancementList.Height);
             var enhPadding1 = enhPadding;
             var enhPadding2 = enhPadding;
@@ -2435,7 +2596,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             graphics.DrawRectangle(pen, 0, 0, width, height);
             for (var ecIndex = 0; ecIndex < DatabaseAPI.Database.EnhancementClasses.Length; ecIndex++)
             {
-                var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
+                var destRect = new Rectangle(enhPadding2, enhPadding1, EditorGridIconSize, EditorGridIconSize);
 
                 // Look up the individual Enhancement Class icon from the dictionary
                 if (AssetManager.Classes.TryGetValue(ecIndex, out var classIcon) && classIcon?.Bitmap != null)
@@ -2443,7 +2604,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     bxEnhPicker.Graphics.DrawImage(classIcon.Bitmap, destRect);
                 }
 
-                enhPadding2 += 30 + enhPadding;
+                enhPadding2 += EnhancementCellSize;
                 ++num1;
                 if (num1 != enhAcross)
                 {
@@ -2452,7 +2613,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
                 num1 = 0;
                 enhPadding2 = enhPadding;
-                enhPadding1 += 30 + enhPadding;
+                enhPadding1 += EnhancementCellSize;
             }
 
             pbEnhancementList.CreateGraphics().DrawImageUnscaled(bxEnhPicker.Bitmap, 0, 0);
@@ -2474,6 +2635,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             Filltab_ReqClasses();
             FillTab_Disabling();
             FillTab_Mutex();
+            FillTab_SharedRecharge();
             SetDynamics();
         }
 
@@ -3414,6 +3576,37 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             if (num >= 0 & num <= 100)
             {
                 myPower.InterruptTime = num;
+            }
+        }
+
+        private void txtRootTime_Leave(object sender, EventArgs e)
+        {
+            txtRootTime_TextChanged(null, EventArgs.Empty);
+
+            if (Updating)
+            {
+                return;
+            }
+
+            txtRootTime.Text = Convert.ToString(myPower.RootTime, CultureInfo.InvariantCulture);
+        }
+
+        private void txtRootTime_TextChanged(object sender, EventArgs e)
+        {
+            if (Updating)
+            {
+                return;
+            }
+
+            var ret = float.TryParse(txtRootTime.Text, out var num);
+            if (!ret)
+            {
+                return;
+            }
+
+            if (num is >= 0 and <= 2147483904)
+            {
+                myPower.RootTime = num;
             }
         }
 

@@ -409,19 +409,30 @@ namespace Mids_Reborn.Core
             }
 
             var bonusItem = Bonus[index];
-            if (!ShouldUseLegacyPopupBonusFormatting(bonusItem))
+            var powerIndexes = bonusItem.Index
+                .Where(powerIndex => powerIndex >= 0 && powerIndex < DatabaseAPI.Database.Power.Length)
+                .ToArray();
+            if (powerIndexes.Length == 0)
             {
                 return false;
             }
 
-            var parts = bonusItem.Index
-                .Where(powerIndex => powerIndex >= 0 && powerIndex < DatabaseAPI.Database.Power.Length)
-                .Select(powerIndex => TryBuildLegacyPopupBonusPowerString(OmniPowerRouting.CreateDisplayPower(DatabaseAPI.Database.Power[powerIndex])))
-                .Where(part => !string.IsNullOrWhiteSpace(part))
-                .Distinct(StringComparer.Ordinal)
-                .ToArray();
+            var parts = new List<string>(powerIndexes.Length);
+            foreach (var powerIndex in powerIndexes)
+            {
+                var part = TryBuildLegacyPopupBonusPowerString(OmniPowerRouting.CreateDisplayPower(DatabaseAPI.Database.Power[powerIndex]));
+                if (string.IsNullOrWhiteSpace(part))
+                {
+                    return false;
+                }
 
-            if (parts.Length == 0)
+                if (!parts.Contains(part, StringComparer.Ordinal))
+                {
+                    parts.Add(part);
+                }
+            }
+
+            if (parts.Count == 0)
             {
                 return false;
             }
@@ -470,18 +481,6 @@ namespace Mids_Reborn.Core
             return ret;
         }
 
-        private static bool ShouldUseLegacyPopupBonusFormatting(BonusItem bonusItem)
-        {
-            return bonusItem.Index
-                .Where(powerIndex => powerIndex >= 0 && powerIndex < DatabaseAPI.Database.Power.Length)
-                .Select(powerIndex => OmniPowerRouting.CreateDisplayPower(DatabaseAPI.Database.Power[powerIndex]))
-                .Any(power => power.Effects.Any(effect =>
-                    effect.ModifierTable.Equals("SetBonusPetShare", StringComparison.OrdinalIgnoreCase) ||
-                    effect.ModifierTable.Equals("SetBonusPetShareHP", StringComparison.OrdinalIgnoreCase) ||
-                    effect.EffectType is Enums.eEffectType.Accuracy or Enums.eEffectType.RechargeTime ||
-                    (effect.EffectType == Enums.eEffectType.None && string.IsNullOrWhiteSpace(effect.Special))));
-        }
-
         private static string? TryBuildLegacyPopupBonusPowerString(IPower power)
         {
             var effects = power.Effects
@@ -504,7 +503,9 @@ namespace Mids_Reborn.Core
             if (effects.Any(effect => effect.EffectType == Enums.eEffectType.HitPoints))
             {
                 var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.HitPoints);
-                var percent = GetLegacyPopupMagnitude(effect, 0.1f);
+                var percent = effect.Aspect == Enums.eAspect.Max
+                    ? GetLegacyPopupMaximumHitPointsPercent(effect)
+                    : GetLegacyPopupMagnitude(effect, 0.1f);
                 var rawHp = DisplayValueFormatter.FormatNumber(DatabaseAPI.GetClassHitPoints() * (percent / 100f));
                 return $"{rawHp} HP ({DisplayValueFormatter.FormatPercentValue(percent)}%) HitPoints";
             }
@@ -526,7 +527,7 @@ namespace Mids_Reborn.Core
                 var typedEffects = effects.Where(effect => effect.EffectType == Enums.eEffectType.DamageBuff).ToArray();
                 if (typedEffects.Length > 0)
                 {
-                    var percent = GetLegacyPopupMagnitude(typedEffects[0], 2.5f);
+                    var percent = GetLegacyPopupMagnitude(typedEffects[0]);
                     var types = GroupDamageTypes(typedEffects.Select(effect => effect.DamageType));
                     return $"{DisplayValueFormatter.FormatPercentValue(percent)}% DamageBuff({types})";
                 }
@@ -535,10 +536,19 @@ namespace Mids_Reborn.Core
             if (effects.Any(effect => effect.EffectType == Enums.eEffectType.Resistance))
             {
                 var typedEffects = effects
-                    .Where(effect => effect.EffectType == Enums.eEffectType.Resistance && effect.DamageType != Enums.eDamage.None)
+                    .Where(effect => effect.EffectType == Enums.eEffectType.Resistance &&
+                                     effect.MezType == Enums.eMez.None &&
+                                     effect.DamageType != Enums.eDamage.None)
+                    .ToArray();
+                var mezEffects = effects
+                    .Where(effect => (effect.EffectType == Enums.eEffectType.Resistance ||
+                                      effect.EffectType == Enums.eEffectType.MezResist) &&
+                                     effect.MezType != Enums.eMez.None)
                     .ToArray();
                 var statusEffects = effects
-                    .Where(effect => effect.EffectType == Enums.eEffectType.Resistance && effect.DamageType == Enums.eDamage.None)
+                    .Where(effect => effect.EffectType == Enums.eEffectType.Resistance &&
+                                     effect.MezType == Enums.eMez.None &&
+                                     effect.DamageType == Enums.eDamage.None)
                     .ToArray();
 
                 var parts = new List<string>();
@@ -548,13 +558,15 @@ namespace Mids_Reborn.Core
                     parts.Add($"{DisplayValueFormatter.FormatPercentValue(percent)}% Resistance({GroupDamageTypes(typedEffects.Select(effect => effect.DamageType))})");
                 }
 
-                if (statusEffects.Length > 0)
+                if (mezEffects.Length > 0)
+                {
+                    var percent = GetLegacyPopupMagnitude(mezEffects[0]);
+                    parts.Add($"{DisplayValueFormatter.FormatPercentValue(percent)}% MezResist(All)");
+                }
+                else if (statusEffects.Length > 0)
                 {
                     var percent = GetLegacyPopupMagnitude(statusEffects[0]);
-                    var label = power.FullName.Contains("_Mez_Res_", StringComparison.OrdinalIgnoreCase)
-                        ? "MezResist(All)"
-                        : "Resistance(None)";
-                    parts.Add($"{DisplayValueFormatter.FormatPercentValue(percent)}% {label}");
+                    parts.Add($"{DisplayValueFormatter.FormatPercentValue(percent)}% Resistance(None)");
                 }
 
                 if (parts.Count > 0)
@@ -578,6 +590,14 @@ namespace Mids_Reborn.Core
             }
 
             return null;
+        }
+
+        private static float GetLegacyPopupMaximumHitPointsPercent(IEffect effect)
+        {
+            // Omni maximum-HP set bonuses now surface their self-target
+            // activation effects for planner math, but popup parity should use
+            // the exact percentage encoded by the template scale.
+            return effect.Scale * effect.nMagnitude * 10f;
         }
 
         private static float GetLegacyPopupMagnitude(IEffect effect, float magnitudeMultiplier = 1f)
@@ -612,7 +632,7 @@ namespace Mids_Reborn.Core
                 Enums.eDamage.Psionic
             };
 
-            if (types.SequenceEqual(allPlayerDamageTypes))
+            if (allPlayerDamageTypes.All(types.Contains))
             {
                 return "All";
             }

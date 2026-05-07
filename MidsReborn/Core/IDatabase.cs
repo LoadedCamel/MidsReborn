@@ -58,6 +58,8 @@ namespace Mids_Reborn.Core
 
         bool HasCanonicalOmniPlannerMath { get; set; }
 
+        bool HasPersistedOmniRuntimeMetadata { get; set; }
+
         Dictionary<string, OmniClassAttributeTable> ClassAttributes { get; set; }
 
         EnhancementImportMetadata EnhancementImportMetadata { get; set; }

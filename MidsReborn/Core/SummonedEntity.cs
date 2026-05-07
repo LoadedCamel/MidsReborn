@@ -7,6 +7,7 @@ namespace Mids_Reborn.Core
 {
     public class SummonedEntity
     {
+        private const string ActorTagsMarker = "MRB_SUMMONED_ENTITY_ACTOR_TAGS";
         private int _nClassID;
         private int _nID = -1;
         private int[] _nPowerset = Array.Empty<int>();
@@ -36,6 +37,7 @@ namespace Mids_Reborn.Core
             _nUpgradePower = new int[PowersetFullName.Length];
             for (var index = 0; index <= UpgradePowerFullName.Length - 1; ++index)
                 UpgradePowerFullName[index] = reader.ReadString();
+            TryReadActorTags(reader);
         }
 
         public SummonedEntity(SummonedEntity template, int? nIdOverride = null)
@@ -189,6 +191,62 @@ namespace Mids_Reborn.Core
             writer.Write(UpgradePowerFullName.Length);
             for (var index = 0; index <= UpgradePowerFullName.Length - 1; ++index)
                 writer.Write(UpgradePowerFullName[index]);
+            StoreActorTags(writer);
+        }
+
+        private void StoreActorTags(BinaryWriter writer)
+        {
+            var tags = ActorTags
+                .Where(tag => !string.IsNullOrWhiteSpace(tag))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(tag => tag, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+            writer.Write(ActorTagsMarker);
+            writer.Write(tags.Length);
+            foreach (var tag in tags)
+            {
+                writer.Write(tag);
+            }
+        }
+
+        private void TryReadActorTags(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                return;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), ActorTagsMarker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return;
+                }
+
+                var count = reader.ReadInt32();
+                var tags = new List<string>(Math.Max(0, count));
+                for (var index = 0; index < count; index++)
+                {
+                    var tag = reader.ReadString();
+                    if (string.IsNullOrWhiteSpace(tag) ||
+                        tags.Contains(tag, StringComparer.OrdinalIgnoreCase))
+                    {
+                        continue;
+                    }
+
+                    tags.Add(tag);
+                }
+
+                tags.Sort(StringComparer.OrdinalIgnoreCase);
+                ActorTags = tags;
+            }
+            catch
+            {
+                reader.BaseStream.Position = position;
+                ActorTags = [];
+            }
         }
 
         public static void Parse(int index, string powersetFullName, string displayName, string uidEntity)

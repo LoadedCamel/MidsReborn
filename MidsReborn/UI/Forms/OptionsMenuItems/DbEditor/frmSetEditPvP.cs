@@ -18,10 +18,17 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             _setBonusList = Array.Empty<int>();
             _loading = true;
             InitializeComponent();
+            ApplyMinimumIconLayout();
             Name = nameof(FrmSetEditPvP);
             Icon = Resources.MRB_Icon_Concept;
             btnImage.Image = Resources.enhData;
             MySet = new EnhancementSet(iSet);
+        }
+
+        private void ApplyMinimumIconLayout()
+        {
+            var iconSize = Math.Max(DbEditorIconLayout.MinimumIconSize, Math.Max(ilEnh.ImageSize.Width, ilEnh.ImageSize.Height));
+            ilEnh.ImageSize = new Size(iconSize, iconSize);
         }
 
         private int BonusId()
@@ -535,7 +542,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                         canvas.Graphics.DrawImage(borderImage.Bitmap, canvas.Graphics.ClipBounds);
                     }
 
-                    canvas.Graphics.DrawImage(imageToDraw.Bitmap, canvas.Graphics.ClipBounds, imageToDraw.Graphics.ClipBounds, GraphicsUnit.Pixel);
+                    DbEditorIconLayout.DrawImageAspectFit(canvas.Graphics, imageToDraw.Bitmap, Rectangle.Truncate(canvas.Graphics.ClipBounds));
                     btnImage.Image = new Bitmap(canvas.Bitmap);
                 }
                 btnImage.Text = MySet.Image;

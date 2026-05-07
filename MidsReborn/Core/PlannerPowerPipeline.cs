@@ -630,11 +630,11 @@ internal sealed class PlannerPowerPipeline
                         continue;
 
                     case Enums.eEffectType.InterruptTime:
-                        powerMath.InterruptTime += effect.BuffedMag;
+                        EnhancementPolicyAxes.ApplyInterruptEnhancement(powerMath, effect.BuffedMag);
                         continue;
 
                     case Enums.eEffectType.Range:
-                        powerMath.Range += effect.BuffedMag;
+                        EnhancementPolicyAxes.ApplyRangeEnhancement(powerMath, effect.BuffedMag);
                         continue;
 
                     case Enums.eEffectType.RechargeTime when includeRecharge:
@@ -835,8 +835,12 @@ internal sealed class PlannerPowerPipeline
                 powerMath.EndCost += enhancement.GetEnhancementEffect(Enums.eEnhance.EnduranceDiscount, -1, 1);
             }
 
-            powerMath.InterruptTime += enhancement.GetEnhancementEffect(Enums.eEnhance.Interrupt, -1, 1);
-            powerMath.Range += enhancement.GetEnhancementEffect(Enums.eEnhance.Range, -1, 1);
+            EnhancementPolicyAxes.ApplyInterruptEnhancement(
+                powerMath,
+                enhancement.GetEnhancementEffect(Enums.eEnhance.Interrupt, -1, 1));
+            EnhancementPolicyAxes.ApplyRangeEnhancement(
+                powerMath,
+                enhancement.GetEnhancementEffect(Enums.eEnhance.Range, -1, 1));
             if (isRecharge)
             {
                 powerMath.RechargeTime += enhancement.GetEnhancementEffect(Enums.eEnhance.RechargeTime, -1, 1);
@@ -1026,10 +1030,10 @@ internal sealed class PlannerPowerPipeline
 
                     break;
                 case Enums.eEffectType.InterruptTime:
-                    powerMath.InterruptTime += _selfEnhance.Effect[effectTypeIndex];
+                    EnhancementPolicyAxes.ApplyInterruptEnhancement(powerMath, _selfEnhance.Effect[effectTypeIndex]);
                     break;
                 case Enums.eEffectType.Range:
-                    powerMath.Range += _selfEnhance.Effect[effectTypeIndex];
+                    EnhancementPolicyAxes.ApplyRangeEnhancement(powerMath, _selfEnhance.Effect[effectTypeIndex]);
                     break;
                 case Enums.eEffectType.RechargeTime:
                     if (includeRecharge)

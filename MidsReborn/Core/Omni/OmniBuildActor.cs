@@ -34,6 +34,9 @@ public sealed class OmniBuildActor
     public string SummonedByPower { get; set; } = string.Empty;
     public List<string> Powersets { get; set; } = [];
     public List<string> Powers { get; set; } = [];
+    public string SyntheticPowersetFullName { get; set; } = string.Empty;
+    public string SyntheticPowersetDisplayName { get; set; } = string.Empty;
+    public Dictionary<string, string> SyntheticPowerAliasesBySource { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 }
 
 public static class OmniPetClassifier
@@ -73,13 +76,27 @@ public static class OmniPetClassifier
             DisplayName = entity.DisplayName,
             ClassName = entity.ClassId,
             SummonedByPower = summonedByPower,
-            Powers = entity.PowerIds.ToList(),
-            Powersets = entity.PowerReferences
-                .Select(p => $"{p.PowerCategory}.{p.PowerSet}")
-                .Where(p => !string.IsNullOrWhiteSpace(p) && !p.EndsWith(".", StringComparison.Ordinal))
+            Powers = entity.PowerIds
+                .Select(NormalizePowerId)
+                .Where(power => !string.IsNullOrWhiteSpace(power))
                 .Distinct(StringComparer.OrdinalIgnoreCase)
                 .ToList()
         };
+
+        actor.Powersets = actor.Powers
+            .Select(FullSetNameFromPower)
+            .Where(p => !string.IsNullOrWhiteSpace(p))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToList();
+
+        if (actor.Powersets.Count == 0)
+        {
+            actor.Powersets = entity.PowerReferences
+                .Select(p => $"{p.PowerCategory}.{p.PowerSet}")
+                .Where(p => !string.IsNullOrWhiteSpace(p) && !p.EndsWith(".", StringComparison.Ordinal))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+        }
 
         var loweredName = entity.InternalName.ToLowerInvariant();
         var loweredAi = entity.AiConfig.ToLowerInvariant();
@@ -140,5 +157,11 @@ public static class OmniPetClassifier
         return value.StartsWith(powerPrefix, StringComparison.OrdinalIgnoreCase)
             ? value[powerPrefix.Length..]
             : value;
+    }
+
+    private static string FullSetNameFromPower(string fullName)
+    {
+        var parts = (fullName ?? string.Empty).Split('.', StringSplitOptions.RemoveEmptyEntries);
+        return parts.Length >= 2 ? $"{parts[0]}.{parts[1]}" : string.Empty;
     }
 }

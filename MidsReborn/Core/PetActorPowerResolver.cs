@@ -406,7 +406,9 @@ public static class PetActorPowerResolver
             granted.Add(new PetUpgradeGrantedPower
             {
                 GrantedPowerFullName = effect.Summon,
-                GrantKind = PetGrantKind.Grant
+                GrantKind = effect.GrantBoosted
+                    ? PetGrantKind.GrantBoosted
+                    : PetGrantKind.Grant
             });
         }
 

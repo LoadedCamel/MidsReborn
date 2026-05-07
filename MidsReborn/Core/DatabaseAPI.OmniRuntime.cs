@@ -1,14 +1,11 @@
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Omni;
-using System.Diagnostics;
 
 namespace Mids_Reborn.Core;
 
 public static partial class DatabaseAPI
 {
-    private static bool _omniEnhancementRefreshAttempted;
-
     public static int GetClassHitPoints(string className, int? zeroBasedLevel = null)
     {
         var resolvedClass = ResolveExplicitClassName(className);
@@ -78,8 +75,6 @@ public static partial class DatabaseAPI
         {
             foreach (var dbPower in Database.Power.OfType<Power>())
             {
-                dbPower.ActivationEffectsRuntime = [];
-                dbPower.OmniTargetRequiresRaw = string.Empty;
                 dbPower.OmniDisplayClassName = string.Empty;
 
                 if (powerImport == null || !powerImport.TryGetValue(dbPower.FullName, out var semantics))
@@ -87,8 +82,14 @@ public static partial class DatabaseAPI
                     continue;
                 }
 
-                dbPower.OmniTargetRequiresRaw = semantics.TargetRequires ?? string.Empty;
-                if (semantics.ActivationEffects == null || semantics.ActivationEffects.Count == 0)
+                if (string.IsNullOrWhiteSpace(dbPower.OmniTargetRequiresRaw))
+                {
+                    dbPower.OmniTargetRequiresRaw = semantics.TargetRequires ?? string.Empty;
+                }
+
+                if (dbPower.ActivationEffectsRuntime.Length > 0 ||
+                    semantics.ActivationEffects == null ||
+                    semantics.ActivationEffects.Count == 0)
                 {
                     continue;
                 }
@@ -99,6 +100,7 @@ public static partial class DatabaseAPI
                 {
                     effect.PowerFullName = dbPower.FullName;
                     effect.ActiveConditionals = effect.AdvancedConditions.ToLegacyActiveConditionals();
+                    effect.SetPower(dbPower);
                 }
 
                 dbPower.ActivationEffectsRuntime = flattened;
@@ -113,6 +115,11 @@ public static partial class DatabaseAPI
 
         foreach (var entity in Database.Entities.Where(entity => entity != null))
         {
+            if (entity.ActorTags.Count > 0)
+            {
+                continue;
+            }
+
             entity.ActorTags = entityTags != null && entityTags.TryGetValue(entity.UID, out var tags)
                 ? tags
                     .Where(tag => !string.IsNullOrWhiteSpace(tag))
@@ -121,6 +128,8 @@ public static partial class DatabaseAPI
                     .ToList()
                 : [];
         }
+
+        Database.HasPersistedOmniRuntimeMetadata = true;
     }
 
     private static OmniPowerDefinition CreateHydrationPowerDefinition(IPower power)
@@ -203,31 +212,5 @@ public static partial class DatabaseAPI
         }
 
         return ResolveClassName();
-    }
-
-    private static void RefreshOmniEnhancementDataFromSourceIfAvailable()
-    {
-        if (_omniEnhancementRefreshAttempted || Database == null)
-        {
-            return;
-        }
-
-        _omniEnhancementRefreshAttempted = true;
-        var sourceRoot = Database.EnhancementImportMetadata?.SourceRoot;
-        if (string.IsNullOrWhiteSpace(sourceRoot) || !Directory.Exists(sourceRoot))
-        {
-            return;
-        }
-
-        try
-        {
-            new OmniImporter().RefreshEnhancementImport(Database, sourceRoot);
-            ClearSetProjectionCache();
-            AssetManager.ReloadImages();
-        }
-        catch (Exception ex)
-        {
-            Debug.WriteLine($"Omni enhancement refresh skipped: {ex.Message}");
-        }
     }
 }

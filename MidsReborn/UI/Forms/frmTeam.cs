@@ -21,6 +21,11 @@ namespace Mids_Reborn.UI.Forms
             public override string ToString() => Value == 0 ? "Default (0)" : $"{(Value > 0 ? "+" : string.Empty)}{Value}";
         }
 
+        private sealed record TargetProfileOption(CombatTargetProfileId Id, string DisplayName)
+        {
+            public override string ToString() => DisplayName;
+        }
+
         private sealed record TeamMemberDefinition(string Key, string DisplayName);
 
         private sealed class TeamRowControls
@@ -74,6 +79,9 @@ namespace Mids_Reborn.UI.Forms
         private Label? _targetHpValueLabel;
         private MidsTrackBar? _targetEndTrackBar;
         private Label? _targetEndValueLabel;
+        private MidsDropDownList? _targetProfileCombo;
+        private Label? _targetProfileSummaryValue;
+        private Label? _targetClassSummaryValue;
 
         private Label? _teamTotalMembersValue;
         private Label? _teamRemainingSlotsValue;
@@ -254,6 +262,10 @@ namespace Mids_Reborn.UI.Forms
 
                 case "cfg.target.end":
                     MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent = (int)Math.Round(val);
+                    break;
+
+                case "cfg.target.profileid":
+                    MidsContext.Config.CombatContextSettings.TargetSettings.ProfileId = (int)Math.Round(val);
                     break;
             }
 
@@ -496,7 +508,36 @@ namespace Mids_Reborn.UI.Forms
 
             layout.Controls.Add(CreatePageHeader(
                 "Target State",
-                "Target HP and endurance stay live too, which keeps combat-setting conditionals honest while you plan."));
+                "Target state now includes an explicit enemy profile, so planner expressions can reason about critter class tables and boss-grade tags."));
+
+            var summaryLayout = CreateSummaryLayout(2);
+            summaryLayout.Controls.Add(CreateSummaryCard("Target Profile", out _targetProfileSummaryValue), 0, 0);
+            summaryLayout.Controls.Add(CreateSummaryCard("Class Table", out _targetClassSummaryValue), 1, 0);
+            layout.Controls.Add(summaryLayout);
+
+            var profileCard = CreateAutoSizeCardPanel();
+            profileCard.Dock = DockStyle.Top;
+            profileCard.Padding = new Padding(18);
+            profileCard.Margin = new Padding(0, 0, 0, 14);
+
+            var profileLayout = CreateFieldGridLayout();
+            profileCard.Controls.Add(profileLayout);
+
+            _targetProfileCombo = new MidsDropDownList
+            {
+                Dock = DockStyle.Fill,
+                Margin = new Padding(0, 0, 0, 10),
+                Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold),
+                PlaceholderText = "Select a target profile"
+            };
+            PopulateTargetProfileOptions();
+            _targetProfileCombo.SelectedIndexChanged += TargetProfileComboOnSelectedIndexChanged;
+            SetToolTipSafe(_targetProfileCombo, "Choose the enemy profile used for target class-table and target-tag planner expressions.");
+
+            profileLayout.Controls.Add(CreateFieldLabel("Target Profile"), 0, 0);
+            profileLayout.Controls.Add(_targetProfileCombo, 1, 0);
+
+            layout.Controls.Add(profileCard);
 
             var statsCard = CreateAutoSizeCardPanel();
             statsCard.Dock = DockStyle.Top;
@@ -1077,6 +1118,28 @@ namespace Mids_Reborn.UI.Forms
             _targetEndTrackBar.Value = ClampPercent(targetSettings.EndPercent);
             _targetHpValueLabel.Text = $"{ClampPercent(targetSettings.HpPercent)}%";
             _targetEndValueLabel.Text = $"{ClampPercent(targetSettings.EndPercent)}%";
+
+            var profile = CombatTargetProfiles.Get(targetSettings.ProfileId);
+            if (_targetProfileCombo != null)
+            {
+                var selected = _targetProfileCombo.Items
+                    .OfType<TargetProfileOption>()
+                    .FirstOrDefault(option => option.Id == profile.Id);
+                if (selected != null && !ReferenceEquals(_targetProfileCombo.SelectedItem, selected))
+                {
+                    _targetProfileCombo.SelectedItem = selected;
+                }
+            }
+
+            if (_targetProfileSummaryValue != null)
+            {
+                _targetProfileSummaryValue.Text = profile.DisplayName;
+            }
+
+            if (_targetClassSummaryValue != null)
+            {
+                _targetClassSummaryValue.Text = profile.ClassName;
+            }
         }
 
         private void UpdateTeamControls()
@@ -1269,6 +1332,18 @@ namespace Mids_Reborn.UI.Forms
             MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent = value;
             UpdateTargetControls();
             BuildUpdate("cfg.target.end", value);
+        }
+
+        private void TargetProfileComboOnSelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (_suppressUiEvents || MidsContext.Config == null || _targetProfileCombo?.SelectedItem is not TargetProfileOption option)
+            {
+                return;
+            }
+
+            MidsContext.Config.CombatContextSettings.TargetSettings.ProfileId = (int)option.Id;
+            UpdateTargetControls();
+            BuildUpdate("cfg.target.profileid", (int)option.Id);
         }
 
         private void PlayerAliveButtonOnClick(object? sender, EventArgs e)
@@ -1496,9 +1571,11 @@ namespace Mids_Reborn.UI.Forms
 
             MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent = 100;
             MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent = 100;
+            MidsContext.Config.CombatContextSettings.TargetSettings.ProfileId = (int)CombatTargetProfileId.Boss;
             RefreshFromConfig();
             BuildUpdate("cfg.target.hp", 100);
             BuildUpdate("cfg.target.end", 100);
+            BuildUpdate("cfg.target.profileid", (int)CombatTargetProfileId.Boss);
         }
 
         private void ResetTeam()
@@ -1602,6 +1679,20 @@ namespace Mids_Reborn.UI.Forms
             return ConfigData.NormalizeEnemyRelativeLevel(
                 MidsContext.Config.EnemyRelativeLevel,
                 MidsContext.Config.ScalingToHit);
+        }
+
+        private void PopulateTargetProfileOptions()
+        {
+            if (_targetProfileCombo == null)
+            {
+                return;
+            }
+
+            _targetProfileCombo.Items.Clear();
+            foreach (var profile in CombatTargetProfiles.GetAll())
+            {
+                _targetProfileCombo.Items.Add(new TargetProfileOption(profile.Id, profile.DisplayName));
+            }
         }
 
         private void PopulateEnemyRelativeLevelOptions()

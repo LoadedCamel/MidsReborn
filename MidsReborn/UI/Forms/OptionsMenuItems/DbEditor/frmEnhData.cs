@@ -10,9 +10,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmEnhData : Form
     {
-        private readonly int ClassSize;
-        private readonly int EnhAcross;
-        private readonly int EnhPadding;
+        private const int ClassSize = DbEditorIconLayout.MinimumIconSize;
+        private const int EnhAcross = 5;
+        private const int EnhPadding = DbEditorIconLayout.GridPadding;
         public readonly IEnhancement myEnh;
         private ExtendedBitmap bxClass;
         private ExtendedBitmap bxClassList;
@@ -22,11 +22,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         public frmEnhData(ref IEnhancement iEnh, int newStaticIndex)
         {
             Load += frmEnhData_Load;
-            ClassSize = 15;
-            EnhPadding = 3;
-            EnhAcross = 5;
             Loading = true;
             InitializeComponent();
+            ApplyMinimumIconLayout();
             pnlClass.MouseMove += pnlClass_MouseMove;
             pnlClass.Paint += pnlClass_Paint;
             pnlClass.MouseDown += pnlClass_MouseDown;
@@ -43,7 +41,13 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             myEnh = new Enhancement(iEnh);
             if (newStaticIndex > 0)
                 myEnh.StaticIndex = newStaticIndex;
-            ClassSize = 22;
+        }
+
+        private void ApplyMinimumIconLayout()
+        {
+            pnlClassList.Width = (ClassSize + EnhPadding) * EnhAcross;
+            pnlClass.Width = ClassSize * 2 + EnhPadding * 3;
+            lblClass.Width = pnlClass.Width;
         }
 
         private int RecipeCbToIndex()
@@ -584,7 +588,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                         extendedBitmap2.Graphics.DrawImage(borderImage.Bitmap, extendedBitmap2.Graphics.ClipBounds);
                     }
 
-                    extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.Graphics.ClipBounds, extendedBitmap1.Graphics.ClipBounds, GraphicsUnit.Pixel);
+                    DbEditorIconLayout.DrawImageAspectFit(extendedBitmap2.Graphics, extendedBitmap1.Bitmap, Rectangle.Truncate(extendedBitmap2.Graphics.ClipBounds));
                     btnImage.Image = new Bitmap(extendedBitmap2.Bitmap);
                 }
                 btnImage.Text = myEnh.Image;
@@ -624,7 +628,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var path = Path.Combine(File.Exists(Path.Combine(AssetManager.GetEnhancementsPath(), img)) ? AssetManager.GetEnhancementsPath() : AssetManager.GetDbEnhancementsPath(), img);
 
             using var extendedBitmap1 = new ExtendedBitmap(path);
-            using var extendedBitmap2 = new ExtendedBitmap(30, 30);
+            using var extendedBitmap2 = new ExtendedBitmap(ClassSize, ClassSize);
 
             if (extendedBitmap2.Graphics == null) return;
 
@@ -635,7 +639,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 extendedBitmap2.Graphics.DrawImage(borderImage.Bitmap, extendedBitmap2.Graphics.ClipBounds);
             }
 
-            extendedBitmap2.Graphics.DrawImage(extendedBitmap1.Bitmap, extendedBitmap2.Graphics.ClipBounds, extendedBitmap1.Graphics.ClipBounds, GraphicsUnit.Pixel);
+            DbEditorIconLayout.DrawImageAspectFit(extendedBitmap2.Graphics, extendedBitmap1.Bitmap, Rectangle.Truncate(extendedBitmap2.Graphics.ClipBounds));
         }
 
         private void DrawClasses()
@@ -679,7 +683,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             bxClassList.Graphics.FillRectangle(solidBrush, bxClassList.Graphics.ClipBounds);
             for (var index = 0; index < DatabaseAPI.Database.EnhancementClasses.Length; index++)
             {
-                var destRect = new Rectangle(enhPadding2, enhPadding1, 30, 30);
+                var destRect = new Rectangle(enhPadding2, enhPadding1, ClassSize, ClassSize);
 
                 // Look up the individual class icon from the dictionary
                 if (AssetManager.Classes.TryGetValue(index, out var classIcon) && classIcon?.Bitmap != null)
@@ -687,13 +691,13 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     bxClassList.Graphics.DrawImage(classIcon.Bitmap, destRect);
                 }
 
-                enhPadding2 += 30 + EnhPadding;
+                enhPadding2 += ClassSize + EnhPadding;
                 ++num1;
                 if (num1 != EnhAcross)
                     continue;
                 num1 = 0;
                 enhPadding2 = EnhPadding;
-                enhPadding1 += 30 + EnhPadding;
+                enhPadding1 += ClassSize + EnhPadding;
             }
 
             pnlClassList.CreateGraphics().DrawImageUnscaled(bxClassList.Bitmap, 0, 0);
@@ -1057,12 +1061,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 var num2 = -1;
                 var num3 = EnhAcross - 1;
                 for (var index = 0; index <= num3; ++index)
-                    if ((e.X > (EnhPadding + 30) * index) & (e.X < (EnhPadding + 30) * (index + 1)))
+                    if ((e.X > (EnhPadding + ClassSize) * index) & (e.X < (EnhPadding + ClassSize) * (index + 1)))
                         num1 = index;
                 var num4 = 0;
                 do
                 {
-                    if ((e.Y > (EnhPadding + 30) * num4) & (e.Y < (EnhPadding + 30) * (num4 + 1)))
+                    if ((e.Y > (EnhPadding + ClassSize) * num4) & (e.Y < (EnhPadding + ClassSize) * (num4 + 1)))
                         num2 = num4;
                     ++num4;
                 } while (num4 <= 10);
@@ -1095,12 +1099,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var num2 = -1;
             var num3 = EnhAcross - 1;
             for (var index = 0; index <= num3; ++index)
-                if ((e.X > (EnhPadding + 30) * index) & (e.X < (EnhPadding + 30) * (index + 1)))
+                if ((e.X > (EnhPadding + ClassSize) * index) & (e.X < (EnhPadding + ClassSize) * (index + 1)))
                     num1 = index;
             var num4 = 0;
             do
             {
-                if ((e.Y > (EnhPadding + 30) * num4) & (e.Y < (EnhPadding + 30) * (num4 + 1)))
+                if ((e.Y > (EnhPadding + ClassSize) * num4) & (e.Y < (EnhPadding + ClassSize) * (num4 + 1)))
                     num2 = num4;
                 ++num4;
             } while (num4 <= 10);
@@ -1217,25 +1221,25 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // Regular
             extendedBitmap1.Graphics.Clear(Color.Transparent);
             DrawBorder(Enums.eType.Normal);
-            extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, extendedBitmap1.Graphics.ClipBounds, extendedBitmap2.Graphics.ClipBounds, GraphicsUnit.Pixel);
+            DbEditorIconLayout.DrawImageAspectFit(extendedBitmap1.Graphics, extendedBitmap2.Bitmap, Rectangle.Truncate(extendedBitmap1.Graphics.ClipBounds));
             typeRegular.Image = new Bitmap(extendedBitmap1.Bitmap);
 
             // InventO
             extendedBitmap1.Graphics.Clear(Color.Transparent);
             DrawBorder(Enums.eType.InventO);
-            extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, extendedBitmap1.Graphics.ClipBounds, extendedBitmap2.Graphics.ClipBounds, GraphicsUnit.Pixel);
+            DbEditorIconLayout.DrawImageAspectFit(extendedBitmap1.Graphics, extendedBitmap2.Bitmap, Rectangle.Truncate(extendedBitmap1.Graphics.ClipBounds));
             typeIO.Image = new Bitmap(extendedBitmap1.Bitmap);
 
             // SpecialO
             extendedBitmap1.Graphics.Clear(Color.Transparent);
             DrawBorder(Enums.eType.SpecialO);
-            extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, extendedBitmap1.Graphics.ClipBounds, extendedBitmap2.Graphics.ClipBounds, GraphicsUnit.Pixel);
+            DbEditorIconLayout.DrawImageAspectFit(extendedBitmap1.Graphics, extendedBitmap2.Bitmap, Rectangle.Truncate(extendedBitmap1.Graphics.ClipBounds));
             typeHO.Image = new Bitmap(extendedBitmap1.Bitmap);
 
             // SetO
             extendedBitmap1.Graphics.Clear(Color.Transparent);
             DrawBorder(Enums.eType.SetO);
-            extendedBitmap1.Graphics.DrawImage(extendedBitmap2.Bitmap, extendedBitmap1.Graphics.ClipBounds, extendedBitmap2.Graphics.ClipBounds, GraphicsUnit.Pixel);
+            DbEditorIconLayout.DrawImageAspectFit(extendedBitmap1.Graphics, extendedBitmap2.Bitmap, Rectangle.Truncate(extendedBitmap1.Graphics.ClipBounds));
             typeSet.Image = new Bitmap(extendedBitmap1.Bitmap);
         }
 

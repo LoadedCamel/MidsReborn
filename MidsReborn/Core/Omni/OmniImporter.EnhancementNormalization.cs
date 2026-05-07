@@ -1,10 +1,11 @@
+using System.Collections.Concurrent;
 using Newtonsoft.Json.Linq;
 
 namespace Mids_Reborn.Core.Omni;
 
 public sealed partial class OmniImporter
 {
-    private sealed class NormalizedEnhancementImportData
+    internal sealed class NormalizedEnhancementImportData
     {
         public string RecipeSourceDirectoryName { get; set; } = string.Empty;
         public int EnhancementSourceRecordsDiscovered { get; set; }
@@ -55,7 +56,7 @@ public sealed partial class OmniImporter
         public Dictionary<string, NormalizedSetBonusSource> SetBonusDefinitions { get; } = new(StringComparer.OrdinalIgnoreCase);
     }
 
-    private sealed class NormalizedEnhancementSource
+    internal sealed class NormalizedEnhancementSource
     {
         public string SourceKey { get; set; } = string.Empty;
         public string CanonicalId { get; set; } = string.Empty;
@@ -93,7 +94,7 @@ public sealed partial class OmniImporter
         public List<NormalizedEnhancementSource> FoldedClassicVariants { get; } = [];
     }
 
-    private sealed class NormalizedEnhancementSetSource
+    internal sealed class NormalizedEnhancementSetSource
     {
         public string SourceKey { get; set; } = string.Empty;
         public string CanonicalId { get; set; } = string.Empty;
@@ -114,7 +115,7 @@ public sealed partial class OmniImporter
         public List<NormalizedSetBonusEntry> Bonuses { get; } = [];
     }
 
-    private sealed class NormalizedEnhancementSetMemberSource
+    internal sealed class NormalizedEnhancementSetMemberSource
     {
         public string CanonicalId { get; set; } = string.Empty;
         public string StorageKey { get; set; } = string.Empty;
@@ -124,7 +125,7 @@ public sealed partial class OmniImporter
         public string Variant { get; set; } = string.Empty;
     }
 
-    private sealed class NormalizedRecipeSource
+    internal sealed class NormalizedRecipeSource
     {
         public string SourceKey { get; set; } = string.Empty;
         public string CanonicalId { get; set; } = string.Empty;
@@ -142,7 +143,7 @@ public sealed partial class OmniImporter
         public List<NormalizedRecipeLevelVariant> LevelVariants { get; } = [];
     }
 
-    private sealed class NormalizedRecipeLevelVariant
+    internal sealed class NormalizedRecipeLevelVariant
     {
         public int Level { get; set; }
         public int BuyFromVendor { get; set; }
@@ -157,7 +158,7 @@ public sealed partial class OmniImporter
         public List<string> AuctionRequires { get; } = [];
     }
 
-    private sealed class NormalizedSalvageSource
+    internal sealed class NormalizedSalvageSource
     {
         public string SourceKey { get; set; } = string.Empty;
         public string CanonicalId { get; set; } = string.Empty;
@@ -171,14 +172,14 @@ public sealed partial class OmniImporter
         public string TypeName { get; set; } = string.Empty;
     }
 
-    private sealed class NormalizedSetBonusSource
+    internal sealed class NormalizedSetBonusSource
     {
         public string CanonicalId { get; set; } = string.Empty;
         public string Name { get; set; } = string.Empty;
         public List<NormalizedSetBonusEntry> Bonuses { get; } = [];
     }
 
-    private enum NormalizedSetBonusKind
+    internal enum NormalizedSetBonusKind
     {
         Standard,
         MemberSpecific,
@@ -187,7 +188,7 @@ public sealed partial class OmniImporter
         OtherSpecial
     }
 
-    private sealed class NormalizedSetBonusEntry
+    internal sealed class NormalizedSetBonusEntry
     {
         public string DisplayName { get; set; } = string.Empty;
         public int MinimumBoosts { get; set; }
@@ -199,13 +200,16 @@ public sealed partial class OmniImporter
         public NormalizedSetBonusKind Kind { get; set; } = NormalizedSetBonusKind.Standard;
     }
 
-    private sealed class InventionVariantFamilyAudit
+    internal sealed class InventionVariantFamilyAudit
     {
         public string DisplayName { get; set; } = string.Empty;
         public string[] Variants { get; set; } = [];
     }
 
-    private NormalizedEnhancementImportData LoadNormalizedEnhancementImportData(string exportRoot)
+    private NormalizedEnhancementImportData LoadNormalizedEnhancementImportData(
+        string exportRoot,
+        OmniExportManifest? manifest = null,
+        IProgress<OmniImportProgress>? progress = null)
     {
         var data = new NormalizedEnhancementImportData();
 
@@ -213,49 +217,62 @@ public sealed partial class OmniImporter
         var enhancementSetsRoot = Path.Combine(exportRoot, "enhancement_sets");
         var recipesRoot = ResolveRecipeRoot(exportRoot, data);
         var salvageRoot = Path.Combine(exportRoot, "salvage");
+        var recipeFiles = recipesRoot.Equals(Path.Combine(exportRoot, "base_recipes"), StringComparison.OrdinalIgnoreCase)
+            ? manifest?.LegacyRecipeFiles
+            : manifest?.RecipeFiles;
 
         if (Directory.Exists(enhancementsRoot))
         {
-            foreach (var categoryDir in Directory.EnumerateDirectories(enhancementsRoot))
+            var enhancementFiles = manifest?.EnhancementFiles?.Count > 0
+                ? manifest.EnhancementFiles
+                : Directory.EnumerateDirectories(enhancementsRoot)
+                    .SelectMany(categoryDir => EnumerateJsonRecordFiles(categoryDir, recursive: false))
+                    .OrderBy(file => file, StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
+            var loadedEnhancements = LoadJsonRecordsParallel(
+                enhancementFiles,
+                file => ReadJson<OmniEnhancementDefinition>(file));
+
+            foreach (var (file, definition) in loadedEnhancements)
             {
-                foreach (var file in EnumerateJsonRecordFiles(categoryDir, recursive: false))
+                data.EnhancementSourceRecordsDiscovered++;
+                if (definition == null || string.IsNullOrWhiteSpace(definition.Name))
                 {
-                    data.EnhancementSourceRecordsDiscovered++;
-                    var definition = ReadJson<OmniEnhancementDefinition>(file);
-                    if (definition == null || string.IsNullOrWhiteSpace(definition.Name))
-                    {
-                        data.EnhancementMalformedRecordsSkipped++;
-                        data.ShapeValidationDetails.Add($"Enhancement record skipped: {Path.GetFileName(file)} could not be parsed.");
-                        continue;
-                    }
-
-                    if (ShouldExcludeEnhancementDefinition(definition, file))
-                    {
-                        data.EnhancementRecordsExcludedByPolicy++;
-                        data.ShapeValidationDetails.Add(
-                            $"Enhancement record excluded by policy: {Path.GetFileName(file)} ({FirstNonEmpty(definition.DisplayName, definition.Name)}).");
-                        continue;
-                    }
-
-                    var normalized = NormalizeEnhancementSource(definition, file, data);
-                    if (normalized == null)
-                    {
-                        data.EnhancementMalformedRecordsSkipped++;
-                        data.ShapeValidationDetails.Add($"Enhancement record skipped: {Path.GetFileName(file)} was missing required identity or power data.");
-                        continue;
-                    }
-
-                    data.Enhancements.Add(normalized);
-                    AddTargetedEnhancementClassificationAudit(data, normalized, "normalized");
+                    data.EnhancementMalformedRecordsSkipped++;
+                    data.ShapeValidationDetails.Add($"Enhancement record skipped: {Path.GetFileName(file)} could not be parsed.");
+                    continue;
                 }
+
+                if (ShouldExcludeEnhancementDefinition(definition, file))
+                {
+                    data.EnhancementRecordsExcludedByPolicy++;
+                    data.ShapeValidationDetails.Add(
+                        $"Enhancement record excluded by policy: {Path.GetFileName(file)} ({FirstNonEmpty(definition.DisplayName, definition.Name)}).");
+                    continue;
+                }
+
+                var normalized = NormalizeEnhancementSource(definition, file, data);
+                if (normalized == null)
+                {
+                    data.EnhancementMalformedRecordsSkipped++;
+                    data.ShapeValidationDetails.Add($"Enhancement record skipped: {Path.GetFileName(file)} was missing required identity or power data.");
+                    continue;
+                }
+
+                data.Enhancements.Add(normalized);
+                AddTargetedEnhancementClassificationAudit(data, normalized, "normalized");
             }
         }
 
         if (Directory.Exists(enhancementSetsRoot))
         {
-            foreach (var file in EnumerateJsonRecordFiles(enhancementSetsRoot, recursive: false))
+            var loadedSets = LoadJsonRecordsParallel(
+                manifest?.EnhancementSetFiles?.Count > 0
+                    ? manifest.EnhancementSetFiles
+                    : EnumerateJsonRecordFiles(enhancementSetsRoot, recursive: false),
+                file => ReadJson<OmniEnhancementSetDefinition>(file));
+            foreach (var (file, definition) in loadedSets)
             {
-                var definition = ReadJson<OmniEnhancementSetDefinition>(file);
                 if (definition == null || string.IsNullOrWhiteSpace(definition.Name))
                 {
                     data.EnhancementSetMalformedRecordsSkipped++;
@@ -292,9 +309,13 @@ public sealed partial class OmniImporter
 
         if (!string.IsNullOrWhiteSpace(recipesRoot) && Directory.Exists(recipesRoot))
         {
-            foreach (var file in EnumerateJsonRecordFiles(recipesRoot, recursive: true))
+            var loadedRecipes = LoadJsonRecordsParallel(
+                recipeFiles?.Count > 0
+                    ? recipeFiles
+                    : EnumerateJsonRecordFiles(recipesRoot, recursive: true),
+                file => ReadJson<OmniRecipeDefinition>(file));
+            foreach (var (file, definition) in loadedRecipes)
             {
-                var definition = ReadJson<OmniRecipeDefinition>(file);
                 if (definition == null || string.IsNullOrWhiteSpace(definition.Name))
                 {
                     data.RecipeMalformedRecordsSkipped++;
@@ -324,9 +345,13 @@ public sealed partial class OmniImporter
 
         if (Directory.Exists(salvageRoot))
         {
-            foreach (var file in EnumerateJsonRecordFiles(salvageRoot, recursive: false))
+            var loadedSalvage = LoadJsonRecordsParallel(
+                manifest?.SalvageFiles?.Count > 0
+                    ? manifest.SalvageFiles
+                    : EnumerateJsonRecordFiles(salvageRoot, recursive: false),
+                file => ReadJson<OmniSalvageDefinition>(file));
+            foreach (var (file, definition) in loadedSalvage)
             {
-                var definition = ReadJson<OmniSalvageDefinition>(file);
                 if (definition == null || string.IsNullOrWhiteSpace(definition.Name))
                 {
                     data.SalvageMalformedRecordsSkipped++;
@@ -377,6 +402,20 @@ public sealed partial class OmniImporter
         AuditInventionVariantMultiplicity(data);
 
         return data;
+    }
+
+    private List<(string File, T? Value)> LoadJsonRecordsParallel<T>(
+        IEnumerable<string> files,
+        Func<string, T?> loader) where T : class
+    {
+        var loaded = new ConcurrentBag<(string File, T? Value)>();
+        Parallel.ForEach(
+            files,
+            new ParallelOptions { MaxDegreeOfParallelism = GetAdaptiveParallelDegree(3) },
+            file => loaded.Add((file, loader(file))));
+        return loaded
+            .OrderBy(entry => entry.File, StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 
     private static void FoldClassicEnhancementVariants(NormalizedEnhancementImportData data)

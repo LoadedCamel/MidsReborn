@@ -32,6 +32,7 @@ public sealed class OmniDatabaseMetadata
     public PlannerRulesetId PlannerRulesetId { get; set; } = PlannerRulesetId.Legacy;
     public int PlannerRulesetVersion { get; set; }
     public bool HasCanonicalOmniPlannerMath { get; set; }
+    public bool HasPersistedOmniRuntimeMetadata { get; set; }
     public Dictionary<string, OmniClassAttributeTable> ClassAttributes { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public EnhancementImportMetadata EnhancementImport { get; set; } = new();
     public PowerImportMetadata PowerImport { get; set; } = new();

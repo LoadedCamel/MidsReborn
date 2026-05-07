@@ -155,6 +155,12 @@ public sealed class OmniPowerDefinition
     [JsonIgnore]
     public float InterruptTime => OmniScalar.AsFloat(InterruptTimeValue);
 
+    [JsonProperty("root_time")]
+    public JToken? RootTimeValue { get; set; }
+
+    [JsonIgnore]
+    public float RootTime => OmniScalar.AsFloat(RootTimeValue);
+
     [JsonProperty("number_allowed")]
     public JToken? NumberAllowedValue { get; set; }
 
@@ -227,6 +233,9 @@ public sealed class OmniPowerDefinition
     [JsonProperty("exclusion_groups")]
     public List<string> ExclusionGroups { get; set; } = [];
 
+    [JsonProperty("recharge_groups")]
+    public List<string> RechargeGroups { get; set; } = [];
+
     [JsonProperty("notify_ai_when")]
     public string NotifyAiWhen { get; set; } = string.Empty;
 
@@ -274,6 +283,24 @@ public sealed class OmniPowerDefinition
 
     [JsonProperty("target_visibility")]
     public string TargetVisibility { get; set; } = string.Empty;
+
+    [JsonProperty("cast_when_dead")]
+    public JToken? CastWhenDeadValue { get; set; }
+
+    [JsonIgnore]
+    public string CastWhenDead => OmniScalar.AsString(CastWhenDeadValue);
+
+    [JsonProperty("caster_near_ground")]
+    public JToken? CasterNearGroundValue { get; set; }
+
+    [JsonIgnore]
+    public bool CasterNearGround => OmniScalar.AsBool(CasterNearGroundValue);
+
+    [JsonProperty("target_near_ground")]
+    public JToken? TargetNearGroundValue { get; set; }
+
+    [JsonIgnore]
+    public bool TargetNearGround => OmniScalar.AsBool(TargetNearGroundValue);
 
     [JsonProperty("ignore_strength")]
     public bool IgnoreStrength { get; set; }
@@ -424,6 +451,9 @@ public sealed class OmniEffectDefinition
 {
     [JsonProperty("tags")]
     public List<string> Tags { get; set; } = [];
+
+    [JsonProperty("flags")]
+    public List<string> Flags { get; set; } = [];
 
     [JsonProperty("requires_expression")]
     public string RequiresExpression { get; set; } = string.Empty;

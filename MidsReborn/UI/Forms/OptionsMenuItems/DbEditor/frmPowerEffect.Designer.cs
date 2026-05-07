@@ -75,6 +75,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             chkCancelOnMiss = new System.Windows.Forms.CheckBox();
             flowLayoutPanel1 = new System.Windows.Forms.FlowLayoutPanel();
             chkRqToHitCheck = new System.Windows.Forms.CheckBox();
+            chkGrantBoosted = new System.Windows.Forms.CheckBox();
             chkIgnoreScale = new System.Windows.Forms.CheckBox();
             Label28 = new System.Windows.Forms.Label();
             cbFXClass = new System.Windows.Forms.ComboBox();
@@ -673,6 +674,21 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             chkRqToHitCheck.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
             chkRqToHitCheck.CheckedChanged += chkRqToHitCheck_CheckedChanged;
             // 
+            // chkGrantBoosted
+            // 
+            chkGrantBoosted.AutoSize = true;
+            chkGrantBoosted.CheckAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkGrantBoosted.Location = new System.Drawing.Point(493, 597);
+            chkGrantBoosted.Margin = new System.Windows.Forms.Padding(4);
+            chkGrantBoosted.Name = "chkGrantBoosted";
+            chkGrantBoosted.Size = new System.Drawing.Size(147, 19);
+            chkGrantBoosted.TabIndex = 176;
+            chkGrantBoosted.Text = "Inherit source slotting";
+            chkGrantBoosted.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+            chkGrantBoosted.UseVisualStyleBackColor = true;
+            chkGrantBoosted.Visible = false;
+            chkGrantBoosted.CheckedChanged += chkGrantBoosted_CheckedChanged;
+            // 
             // chkIgnoreScale
             // 
             chkIgnoreScale.Location = new System.Drawing.Point(1371, 86);
@@ -876,6 +892,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             ClientSize = new System.Drawing.Size(1623, 698);
             Controls.Add(btnExprBuilder);
             Controls.Add(btnEditConditions);
+            Controls.Add(chkGrantBoosted);
             Controls.Add(chkIgnoreScale);
             Controls.Add(btnCopy);
             Controls.Add(btnPaste);
@@ -1007,5 +1024,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private System.Windows.Forms.TextBox txtFXMaxTargets;
         private System.Windows.Forms.Label lblEffectDescription;
         private System.Windows.Forms.CheckBox chkRqToHitCheck;
+        private System.Windows.Forms.CheckBox chkGrantBoosted;
     }
 }

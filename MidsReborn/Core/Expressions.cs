@@ -135,6 +135,30 @@ namespace Mids_Reborn.Core
             },
             new ExprCommand
             {
+                Keyword = "@Scale",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "@Value",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "@Effectiveness",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
                 Keyword = "@Strength",
                 KeywordType = ExprKeywordType.Function,
                 InfixMode = ExprKeywordInfix.Atomic,
@@ -224,6 +248,38 @@ namespace Mids_Reborn.Core
             new ExprCommand
             {
                 Keyword = "source>Max.kHitPoints",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "source>kHitPoints%",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "target>kHitPoints%",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "source>kEndurance%",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "target>kEndurance%",
                 KeywordType = ExprKeywordType.Keyword,
                 InfixMode = ExprKeywordInfix.Atomic,
                 CommandTokenType = ExprCommandToken.None,
@@ -415,6 +471,38 @@ namespace Mids_Reborn.Core
             },
             new ExprCommand
             {
+                Keyword = "source>cur.kMeter",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "source>cur.kMeterAbs",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "source>cur.kToHit",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "source>base.kToHit",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
                 Keyword = "powerActive(",
                 KeywordType = ExprKeywordType.Function,
                 InfixMode = ExprKeywordInfix.Prefix,
@@ -424,6 +512,14 @@ namespace Mids_Reborn.Core
             new ExprCommand
             {
                 Keyword = "cfg>player>hp",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>player>end",
                 KeywordType = ExprKeywordType.Keyword,
                 InfixMode = ExprKeywordInfix.Atomic,
                 CommandTokenType = ExprCommandToken.None,
@@ -452,6 +548,14 @@ namespace Mids_Reborn.Core
                 InfixMode = ExprKeywordInfix.Atomic,
                 CommandTokenType = ExprCommandToken.None,
                 SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>target>profileid",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
             }
         };
 
@@ -468,8 +572,11 @@ namespace Mids_Reborn.Core
                 { "power.base>endcost", $"{(fxPower == null ? "0" : fxPower.EndCost)}" },
                 { "power.base>range", $"{(fxPower == null ? "0" : fxPower.Range)}" },
                 { "effect>scale", $"{sourceFx.Scale}" },
-                { "@StdResult", $"{sourceFx.Scale}" },
-                { "@Strength", $"{GetStrength(sourceFx)}"},
+                { "@StdResult", FormatNumeric(GetStandardResult(sourceFx)) },
+                { "@Scale", FormatNumeric(GetScale(sourceFx)) },
+                { "@Value", FormatNumeric(GetValue(sourceFx)) },
+                { "@Effectiveness", FormatNumeric(GetEffectiveness(sourceFx)) },
+                { "@Strength", FormatNumeric(GetStrength(sourceFx)) },
                 { "ifPvE", sourceFx.PvMode == Enums.ePvX.PvE ? "1" : "0" },
                 { "ifPvP", sourceFx.PvMode == Enums.ePvX.PvP ? "1" : "0" },
                 { "caster>modifier>current", ModifierCaster(sourceFx) },
@@ -478,15 +585,24 @@ namespace Mids_Reborn.Core
                 { "rand()", $"{sourceFx.Rand}" },
                 { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
                 { "base.kToHit", $"{MidsContext.Config.ScalingToHit}" },
+                { "source>cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}" },
+                { "source>base.kToHit", $"{MidsContext.Config.ScalingToHit}" },
                 { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" },
                 { "source>Base.kHitPoints", $"{DatabaseAPI.GetClassHitPoints(MidsContext.Character.Archetype)}" },
+                { "source>kHitPoints%", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}" },
+                { "target>kHitPoints%", $"{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent}" },
+                { "source>kEndurance%", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent}" },
+                { "target>kEndurance%", $"{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent}" },
+                { "source>kMeter", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName, false))}" },
+                { "source>kMeterAbs", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}" },
                 { "source>cur.kMeter", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName, false))}" },
                 { "source>cur.kMeterAbs", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}" },
                 { "cfg>player>hp", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}" },
                 { "cfg>player>end", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent}" },
                 { "cfg>player>isAlive", $"{(MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive ? "1" : "0")}" },
                 { "cfg>target>hp", $"{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent}" },
-                { "cfg>target>end", $"{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent}" }
+                { "cfg>target>end", $"{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent}" },
+                { "cfg>target>profileid", $"{GetTargetProfileId()}" }
             };
         }
 
@@ -511,8 +627,414 @@ namespace Mids_Reborn.Core
                 { new Regex(@"caster\>modifier\(([a-zA-Z0-9_\-]+)\)"), e => ModifierCaster(e.Groups[1].Value) },
                 { new Regex(@"GCMActive\(([a-zA-Z0-9_\-]+)\)"), e => CheckGCM(sourceFx, fxPower, e.Groups[1].Value) },
                 { new Regex(@"GCMScale\(([a-zA-Z0-9_\-]+)\)"), e => GCMScale(sourceFx, fxPower, e.Groups[1].Value) },
-                { new Regex(@"powerActive\(([a-zA-Z0-9_\-\.]+)\)"), e => IsPowerActive(e.Groups[1].Value) ? "1" : "0" }
+                { new Regex(@"powerActive\(([a-zA-Z0-9_\-\.]+)\)"), e => IsPowerActive(e.Groups[1].Value) ? "1" : "0" },
+                { new Regex(@"target\.HasTag\?\(([A-Za-z0-9_\-]+)\)", RegexOptions.IgnoreCase), e => TargetHasTag(e.Groups[1].Value) },
+                { new Regex(@"target\.isFriend\?", RegexOptions.IgnoreCase), _ => "0" },
+                { new Regex(@"target\>enttype\s*(?:eq|==)\s*['""]?([A-Za-z0-9_]+)['""]?", RegexOptions.IgnoreCase), e => TargetEntityTypeEquals(e.Groups[1].Value) },
+                { new Regex(@"target\>enttype\s*(?:ne|!=)\s*['""]?([A-Za-z0-9_]+)['""]?", RegexOptions.IgnoreCase), e => Negate(TargetEntityTypeEquals(e.Groups[1].Value)) },
+                { new Regex(@"enttype\s+target\>\s+([A-Za-z0-9_]+)\s+eq", RegexOptions.IgnoreCase), e => TargetEntityTypeEquals(e.Groups[1].Value) },
+                { new Regex(@"target\>arch\s*(?:eq|==)\s*['""]?([A-Za-z0-9_]+)['""]?", RegexOptions.IgnoreCase), e => TargetArchEquals(e.Groups[1].Value) },
+                { new Regex(@"target\>arch\s*(?:ne|!=)\s*['""]?([A-Za-z0-9_]+)['""]?", RegexOptions.IgnoreCase), e => Negate(TargetArchEquals(e.Groups[1].Value)) },
+                { new Regex(@"target\>(Base|Cur|Max|Str|Res)\.(k[A-Za-z0-9_]+)", RegexOptions.IgnoreCase), TargetAttributeEvaluator }
             };
+        }
+
+        private static Dictionary<string, string> ValidationCommandsDict()
+        {
+            return new Dictionary<string, string>
+            {
+                { "power.base>activateperiod", "5" },
+                { "power.base>activatetime", "2" },
+                { "power.base>areafactor", "1.5" },
+                { "power.base>rechargetime", "10" },
+                { "power.base>endcost", "10" },
+                { "power.base>range", "60" },
+                { "effect>scale", "1.25" },
+                { "@StdResult", "1.25" },
+                { "@Scale", "1.25" },
+                { "@Value", "1" },
+                { "@Effectiveness", "1" },
+                { "@Strength", "1" },
+                { "ifPvE", "1" },
+                { "ifPvP", "0" },
+                { "caster>modifier>current", "1" },
+                { "modifier>current", "1" },
+                { "maxEndurance", "100" },
+                { "rand()", "0.5" },
+                { "cur.kToHit", "0.9" },
+                { "base.kToHit", "0.75" },
+                { "source>cur.kToHit", "0.9" },
+                { "source>base.kToHit", "0.75" },
+                { "source>Max.kHitPoints", "1000" },
+                { "source>Base.kHitPoints", "1000" },
+                { "source>kHitPoints%", "75" },
+                { "target>kHitPoints%", "75" },
+                { "source>kEndurance%", "80" },
+                { "target>kEndurance%", "80" },
+                { "source>kMeter", "50" },
+                { "source>kMeterAbs", "50" },
+                { "source>cur.kMeter", "50" },
+                { "source>cur.kMeterAbs", "50" },
+                { "cfg>player>hp", "75" },
+                { "cfg>player>end", "80" },
+                { "cfg>player>isAlive", "1" },
+                { "cfg>target>hp", "75" },
+                { "cfg>target>end", "80" },
+                { "cfg>target>profileid", "0" }
+            };
+        }
+
+        private static Dictionary<Regex, MatchEvaluator> ValidationFunctionsDict()
+        {
+            return new Dictionary<Regex, MatchEvaluator>
+            {
+                { new Regex(@"source\.ownPower\?\(([a-zA-Z0-9_\-\.]+)\)"), _ => "1" },
+                { new Regex(@"source\.ownPowerNum\?\(([a-zA-Z0-9_\-\.]+)\)"), _ => "1" },
+                { new Regex(@"([a-zA-Z\-_\.]+)>variableVal"), _ => "50" },
+                { new Regex(@"([a-zA-Z\-_\.]+)>mag\(([0-9]+)\)"), _ => "1" },
+                { new Regex(@"modifier\>([a-zA-Z0-9_\-]+)"), _ => "1" },
+                { new Regex(@"powerGroupIn\(([a-zA-Z0-9_\-\.]+)\)"), _ => "1" },
+                { new Regex(@"powerGroupNotIn\(([a-zA-Z0-9_\-\.]+)\)"), _ => "1" },
+                { new Regex(@"powerIs\(([a-zA-Z0-9_\-\.]+)\)"), _ => "1" },
+                { new Regex(@"powerIsNot\(([a-zA-Z0-9_\-\.]+)\)"), _ => "1" },
+                { new Regex(@"powerVectorsContains\(([a-zA-Z0-9_\-\.]+)\)"), _ => "1" },
+                { new Regex(@"source\.owner\>arch\(([a-zA-Z\s]+)\)"), _ => "1" },
+                { new Regex(@"source\.owner\>archIn\(([a-zA-Z\s\,]+)\)"), _ => "1" },
+                { new Regex(@"caster\>modifier\(([a-zA-Z0-9_\-]+)\)"), _ => "1" },
+                { new Regex(@"GCMActive\(([a-zA-Z0-9_\-]+)\)"), _ => "1" },
+                { new Regex(@"GCMScale\(([a-zA-Z0-9_\-]+)\)"), _ => "1" },
+                { new Regex(@"powerActive\(([a-zA-Z0-9_\-\.]+)\)"), _ => "1" },
+                { new Regex(@"target\.HasTag\?\(([A-Za-z0-9_\-]+)\)", RegexOptions.IgnoreCase), _ => "1" },
+                { new Regex(@"target\.isFriend\?", RegexOptions.IgnoreCase), _ => "0" },
+                { new Regex(@"target\>enttype\s*(?:eq|==)\s*['""]?([A-Za-z0-9_]+)['""]?", RegexOptions.IgnoreCase), _ => "1" },
+                { new Regex(@"target\>enttype\s*(?:ne|!=)\s*['""]?([A-Za-z0-9_]+)['""]?", RegexOptions.IgnoreCase), _ => "0" },
+                { new Regex(@"enttype\s+target\>\s+([A-Za-z0-9_]+)\s+eq", RegexOptions.IgnoreCase), _ => "1" },
+                { new Regex(@"target\>arch\s*(?:eq|==)\s*['""]?([A-Za-z0-9_]+)['""]?", RegexOptions.IgnoreCase), _ => "1" },
+                { new Regex(@"target\>arch\s*(?:ne|!=)\s*['""]?([A-Za-z0-9_]+)['""]?", RegexOptions.IgnoreCase), _ => "0" },
+                { new Regex(@"target\>(Base|Cur|Max|Str|Res)\.(k[A-Za-z0-9_]+)", RegexOptions.IgnoreCase), ValidationTargetAttributeEvaluator }
+            };
+        }
+
+        private static string NormalizeExpressionSyntax(string expression)
+        {
+            if (string.IsNullOrWhiteSpace(expression))
+            {
+                return string.Empty;
+            }
+
+            expression = expression.Trim();
+            expression = Regex.Replace(expression, @"(?<![A-Za-z0-9_\.])([A-Za-z_][A-Za-z0-9_\.%]*)\s+power\.base>", "power.base>$1", RegexOptions.IgnoreCase);
+            expression = Regex.Replace(expression, @"(?<![A-Za-z0-9_\.])([A-Za-z_][A-Za-z0-9_\.%]*)\s+source>", "source>$1", RegexOptions.IgnoreCase);
+            expression = Regex.Replace(expression, @"(?<![A-Za-z0-9_\.])([A-Za-z_][A-Za-z0-9_\.%]*)\s+target>", "target>$1", RegexOptions.IgnoreCase);
+            expression = Regex.Replace(expression, @"(?<![A-Za-z0-9_\.])([A-Za-z_][A-Za-z0-9_\.%]*)\s+modifier>", "modifier>$1", RegexOptions.IgnoreCase);
+            expression = Regex.Replace(expression, @"(?<![A-Za-z0-9_\.])([A-Za-z_][A-Za-z0-9_\.%]*)\s+caster>", "caster>$1", RegexOptions.IgnoreCase);
+            expression = NormalizeLeadingStdResultMultiplier(expression);
+
+            return expression;
+        }
+
+        private static string NormalizeLeadingStdResultMultiplier(string expression)
+        {
+            const string prefix = "@StdResult * ";
+            if (!expression.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+            {
+                return expression;
+            }
+
+            var rhs = expression[prefix.Length..].Trim();
+            if (string.IsNullOrWhiteSpace(rhs) ||
+                rhs.StartsWith("(", StringComparison.Ordinal))
+            {
+                return expression;
+            }
+
+            return ContainsTopLevelAdditiveOperator(rhs)
+                ? $"{prefix}({rhs})"
+                : expression;
+        }
+
+        private static bool ContainsTopLevelAdditiveOperator(string expression)
+        {
+            var depth = 0;
+            var inSingleQuotes = false;
+            for (var index = 0; index < expression.Length; index++)
+            {
+                var ch = expression[index];
+                switch (ch)
+                {
+                    case '\'':
+                        inSingleQuotes = !inSingleQuotes;
+                        break;
+                    case '(' when !inSingleQuotes:
+                        depth++;
+                        break;
+                    case ')' when !inSingleQuotes && depth > 0:
+                        depth--;
+                        break;
+                    case '+' or '-' when !inSingleQuotes && depth == 0:
+                        return true;
+                }
+            }
+
+            return false;
+        }
+
+        private static string PrepareExpressionForValidation(string expression)
+        {
+            expression = NormalizeExpressionSyntax(expression);
+            expression = ValidationCommandsDict().Aggregate(expression, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
+            return ValidationFunctionsDict().Aggregate(expression, (current, cmd) => cmd.Key.Replace(current, cmd.Value));
+        }
+
+        private static ICalculationEngine<double> CreateMathEngine()
+        {
+            var mathEngine = CalculationEngine.New<double>();
+
+            // Numeric functions
+            mathEngine.AddFunction("eq", (a, b) => Math.Abs(a - b) < double.Epsilon ? 1 : 0);
+            mathEngine.AddFunction("ne", (a, b) => Math.Abs(a - b) > double.Epsilon ? 1 : 0);
+            mathEngine.AddFunction("gt", (a, b) => a > b ? 1 : 0);
+            mathEngine.AddFunction("gte", (a, b) => a >= b ? 1 : 0);
+            mathEngine.AddFunction("lt", (a, b) => a < b ? 1 : 0);
+            mathEngine.AddFunction("lte", (a, b) => a <= b ? 1 : 0);
+            mathEngine.AddFunction("pow", Math.Pow);
+            mathEngine.AddFunction("minmax", (a, b, c) => Math.Min(b > c ? b : c, Math.Max(b > c ? c : b, a)));
+
+            // Logical functions
+            mathEngine.AddFunction("and", (a, b) => (a != 0 && b != 0) ? 1 : 0);
+            mathEngine.AddFunction("or", (a, b) => (a != 0 || b != 0) ? 1 : 0);
+
+            return mathEngine;
+        }
+
+        private static bool TryEvaluatePreparedExpression(string expression, out float result, out Exception exception, out string evaluatedExpression)
+        {
+            result = 0;
+            exception = null;
+            evaluatedExpression = expression;
+            var mathEngine = CreateMathEngine();
+            if (TryConvertPostfixToInfix(expression, out var postfixExpression))
+            {
+                if (TryCalculate(mathEngine, postfixExpression, out result, out exception))
+                {
+                    evaluatedExpression = postfixExpression;
+                    return true;
+                }
+
+                return false;
+            }
+
+            if (TryCalculate(mathEngine, expression, out result, out exception))
+            {
+                return true;
+            }
+
+            if (exception is not (ParseException or VariableNotDefinedException) ||
+                !TryConvertPostfixToInfix(expression, out var infixExpression))
+            {
+                return false;
+            }
+
+            if (!TryCalculate(mathEngine, infixExpression, out result, out exception))
+            {
+                return false;
+            }
+
+            evaluatedExpression = infixExpression;
+            return true;
+        }
+
+        private static bool TryCalculate(ICalculationEngine<double> mathEngine, string expression, out float result, out Exception exception)
+        {
+            try
+            {
+                result = (float)mathEngine.Calculate(expression);
+                exception = null;
+                return true;
+            }
+            catch (ParseException ex)
+            {
+                result = 0;
+                exception = ex;
+                return false;
+            }
+            catch (VariableNotDefinedException ex)
+            {
+                result = 0;
+                exception = ex;
+                return false;
+            }
+            catch (InvalidOperationException ex)
+            {
+                result = 0;
+                exception = ex;
+                return false;
+            }
+        }
+
+        private static bool CanParsePlannerExpression(string expression)
+        {
+            var mathEngine = CreateMathEngine();
+            if (TryConvertPostfixToInfix(expression, out var postfixExpression))
+            {
+                return CanParseExpressionShape(mathEngine, postfixExpression);
+            }
+
+            if (CanParseExpressionShape(mathEngine, expression))
+            {
+                return true;
+            }
+
+            return TryConvertPostfixToInfix(expression, out var infixExpression) &&
+                   CanParseExpressionShape(mathEngine, infixExpression);
+        }
+
+        private static bool CanParseExpressionShape(ICalculationEngine<double> mathEngine, string expression)
+        {
+            try
+            {
+                _ = mathEngine.Calculate(expression);
+                return true;
+            }
+            catch (InvalidOperationException)
+            {
+                return true;
+            }
+            catch (ParseException)
+            {
+                return false;
+            }
+            catch (VariableNotDefinedException)
+            {
+                return false;
+            }
+        }
+
+        private static bool TryConvertPostfixToInfix(string expression, out string infixExpression)
+        {
+            infixExpression = string.Empty;
+            if (string.IsNullOrWhiteSpace(expression))
+            {
+                return false;
+            }
+
+            var stack = new Stack<string>();
+            var tokens = expression.Split(' ', StringSplitOptions.RemoveEmptyEntries);
+            foreach (var token in tokens)
+            {
+                switch (token.ToLowerInvariant())
+                {
+                    case "dup":
+                        if (stack.Count < 1)
+                        {
+                            return false;
+                        }
+
+                        stack.Push(stack.Peek());
+                        break;
+                    case "negate":
+                        if (stack.Count < 1)
+                        {
+                            return false;
+                        }
+
+                        stack.Push($"(-({stack.Pop()}))");
+                        break;
+                    case "minmax":
+                        if (stack.Count < 3)
+                        {
+                            return false;
+                        }
+
+                        var max = stack.Pop();
+                        var min = stack.Pop();
+                        var value = stack.Pop();
+                        stack.Push($"minmax({value}, {min}, {max})");
+                        break;
+                    case "pow":
+                        if (stack.Count < 2)
+                        {
+                            return false;
+                        }
+
+                        var exponent = stack.Pop();
+                        var baseValue = stack.Pop();
+                        stack.Push($"pow({baseValue}, {exponent})");
+                        break;
+                    case "eq":
+                    case "ne":
+                    case "gt":
+                    case "gte":
+                    case "lt":
+                    case "lte":
+                    case "and":
+                    case "or":
+                        if (stack.Count < 2)
+                        {
+                            return false;
+                        }
+
+                        var functionRight = stack.Pop();
+                        var functionLeft = stack.Pop();
+                        stack.Push($"{token.ToLowerInvariant()}({functionLeft}, {functionRight})");
+                        break;
+                    case "+":
+                    case "-":
+                    case "*":
+                    case "/":
+                    case ">":
+                    case ">=":
+                    case "<":
+                    case "<=":
+                    case "==":
+                    case "!=":
+                        if (stack.Count < 2)
+                        {
+                            return false;
+                        }
+
+                        var right = stack.Pop();
+                        var left = stack.Pop();
+                        stack.Push($"({left} {token} {right})");
+                        break;
+                    case "&&":
+                    case "||":
+                        if (stack.Count < 2)
+                        {
+                            return false;
+                        }
+
+                        var logicalRight = stack.Pop();
+                        var logicalLeft = stack.Pop();
+                        var logicalFunction = token == "&&" ? "and" : "or";
+                        stack.Push($"{logicalFunction}({logicalLeft}, {logicalRight})");
+                        break;
+                    default:
+                        stack.Push(token);
+                        break;
+                }
+            }
+
+            if (stack.Count != 1)
+            {
+                return false;
+            }
+
+            infixExpression = stack.Pop();
+            return true;
+        }
+
+        public static bool CanEvaluatePlannerExpression(string expression)
+        {
+            if (string.IsNullOrWhiteSpace(expression) ||
+                expression.Contains("rand()", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            var preparedExpression = PrepareExpressionForValidation(expression);
+            return TryEvaluatePreparedExpression(preparedExpression, out _, out _, out _) ||
+                   CanParsePlannerExpression(preparedExpression);
         }
 
         private static string OwnPowerNumCheck(string powerName)
@@ -573,14 +1095,183 @@ namespace Mids_Reborn.Core
             return power?.Power is { Active: true };
         }
 
-        private static float GetStrength(IEffect? sourceEffect)
+        private static string FormatNumeric(float value)
         {
-            if (sourceEffect is null)
+            return value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        private static int GetTargetProfileId()
+        {
+            return MidsContext.Config?.CombatContextSettings.TargetSettings.ProfileId ??
+                   (int)CombatTargetProfileId.Boss;
+        }
+
+        private static string Negate(string booleanResult)
+        {
+            return booleanResult == "0" ? "1" : "0";
+        }
+
+        private static string TargetHasTag(string tag)
+        {
+            return CombatTargetProfiles.HasTag(GetTargetProfileId(), tag) ? "1" : "0";
+        }
+
+        private static string TargetEntityTypeEquals(string entityType)
+        {
+            if (string.IsNullOrWhiteSpace(entityType))
             {
-                return 0;
+                return "0";
             }
 
-            return sourceEffect.Scale;
+            return entityType.Equals("critter", StringComparison.OrdinalIgnoreCase)
+                ? "1"
+                : entityType.Equals("player", StringComparison.OrdinalIgnoreCase)
+                    ? "0"
+                    : "0";
+        }
+
+        private static string TargetArchEquals(string className)
+        {
+            var profileClass = CombatTargetProfiles.GetClassName(GetTargetProfileId());
+            return profileClass.Equals(className, StringComparison.OrdinalIgnoreCase) ? "1" : "0";
+        }
+
+        private static string TargetAttributeEvaluator(Match match)
+        {
+            if (match.Groups.Count < 3 ||
+                !TryMapTargetExpressionAttribute(match.Groups[2].Value, out var attribute))
+            {
+                return match.Value;
+            }
+
+            var className = CombatTargetProfiles.GetClassName(GetTargetProfileId());
+            var value = GetTargetAttributeValue(className, match.Groups[1].Value, attribute);
+            return FormatNumeric(value);
+        }
+
+        private static float GetTargetAttributeValue(string className, string aspectToken, string attribute)
+        {
+            var normalizedAspect = aspectToken.ToLowerInvariant();
+            return normalizedAspect switch
+            {
+                "base" => DatabaseAPI.TryGetClassAttributeBase(className, attribute, out var baseValue)
+                    ? baseValue
+                    : 0f,
+                "max" => DatabaseAPI.TryGetClassAttributeMax(className, attribute, MidsContext.MathLevelBase, out var maxValue)
+                    ? maxValue
+                    : 0f,
+                "str" => DatabaseAPI.TryGetClassAttributeStrengthMax(className, attribute, MidsContext.MathLevelBase, out var strengthValue)
+                    ? strengthValue
+                    : 0f,
+                "res" => DatabaseAPI.TryGetClassAttributeResistanceMax(className, attribute, MidsContext.MathLevelBase, out var resistanceValue)
+                    ? resistanceValue
+                    : 0f,
+                "cur" => GetCurrentTargetAttributeValue(className, attribute),
+                _ => 0f
+            };
+        }
+
+        private static float GetCurrentTargetAttributeValue(string className, string attribute)
+        {
+            if (attribute.Equals("hit_points", StringComparison.OrdinalIgnoreCase) &&
+                DatabaseAPI.TryGetClassAttributeMax(className, attribute, MidsContext.MathLevelBase, out var maxHp))
+            {
+                return maxHp * (MidsContext.Config?.CombatContextSettings.TargetSettings.HpPercent ?? 100) / 100f;
+            }
+
+            if (attribute.Equals("endurance", StringComparison.OrdinalIgnoreCase))
+            {
+                var basis = DatabaseAPI.TryGetClassAttributeMax(className, attribute, MidsContext.MathLevelBase, out var maxEnd)
+                    ? maxEnd
+                    : DatabaseAPI.TryGetClassAttributeBase(className, attribute, out var baseEnd)
+                        ? baseEnd
+                        : 0f;
+                return basis * (MidsContext.Config?.CombatContextSettings.TargetSettings.EndPercent ?? 100) / 100f;
+            }
+
+            if (DatabaseAPI.TryGetClassAttributeBase(className, attribute, out var baseValue))
+            {
+                return baseValue;
+            }
+
+            return DatabaseAPI.TryGetClassAttributeMax(className, attribute, MidsContext.MathLevelBase, out var maxValue)
+                ? maxValue
+                : 0f;
+        }
+
+        private static bool TryMapTargetExpressionAttribute(string expressionToken, out string attribute)
+        {
+            attribute = NormalizeTargetAttributeToken(expressionToken) switch
+            {
+                "khitpoints" => "hit_points",
+                "kendurance" => "endurance",
+                "ktohit" => "to_hit",
+                "kdefense" => "defense",
+                "krecovery" => "recovery",
+                "kregeneration" => "regeneration",
+                "kthreatlevel" => "threat_level",
+                "krange" => "range",
+                "karc" => "arc",
+                "kradius" => "radius",
+                "kinterrupttime" => "interrupt_time",
+                "ktimetoactivate" => "time_to_activate",
+                "krechargetime" => "recharge_time",
+                "krunspeed" => "running_speed",
+                "kflyspeed" => "flying_speed",
+                "kspeedjumping" => "jumping_speed",
+                "kjumpheight" => "jump_height",
+                "kmovementcontrol" => "movement_control",
+                "kmovementfriction" => "movement_friction",
+                "kperceptionradius" => "perception_radius",
+                "kstealthradius" => "stealth_radius",
+                "kstealthradiusplayer" => "stealth_radius_player",
+                _ => string.Empty
+            };
+
+            return !string.IsNullOrWhiteSpace(attribute);
+        }
+
+        private static string NormalizeTargetAttributeToken(string token)
+        {
+            return (token ?? string.Empty)
+                .Replace("_", string.Empty, StringComparison.Ordinal)
+                .Replace(".", string.Empty, StringComparison.Ordinal)
+                .Trim()
+                .ToLowerInvariant();
+        }
+
+        private static string ValidationTargetAttributeEvaluator(Match match)
+        {
+            return match.Groups.Count >= 3 && TryMapTargetExpressionAttribute(match.Groups[2].Value, out _)
+                ? "100"
+                : match.Value;
+        }
+
+        private static float GetScale(IEffect? sourceEffect)
+        {
+            return sourceEffect?.Scale ?? 0;
+        }
+
+        private static float GetValue(IEffect? sourceEffect)
+        {
+            return sourceEffect == null ? 0 : DatabaseAPI.GetModifier(sourceEffect);
+        }
+
+        private static float GetEffectiveness(IEffect? sourceEffect)
+        {
+            _ = sourceEffect;
+            return 1;
+        }
+
+        private static float GetStrength(IEffect? sourceEffect)
+        {
+            _ = sourceEffect;
+            return 1;
+        }
+
+        private static float GetStandardResult(IEffect? sourceEffect)
+        {
+            return GetValue(sourceEffect) * GetEffectiveness(sourceEffect) * GetScale(sourceEffect) * GetStrength(sourceEffect);
         }
 
         private static string GetPowerMag(string targetPower, string effectIndex)
@@ -635,7 +1326,7 @@ namespace Mids_Reborn.Core
             switch (exprType)
             {
                 case ExpressionType.Duration:
-                    if (IsUnsupportedServerExpression(sourceFx.Expressions.Duration))
+                    if (IsUnsupportedPlannerExpression(sourceFx.Expressions.Duration))
                     {
                         return sourceFx.nDuration;
                     }
@@ -644,7 +1335,7 @@ namespace Mids_Reborn.Core
                     break;
 
                 case ExpressionType.Probability:
-                    if (IsUnsupportedServerExpression(sourceFx.Expressions.Probability))
+                    if (IsUnsupportedPlannerExpression(sourceFx.Expressions.Probability))
                     {
                         return sourceFx.BaseProbability;
                     }
@@ -653,23 +1344,12 @@ namespace Mids_Reborn.Core
                     break;
 
                 case ExpressionType.Magnitude:
-                    if (sourceFx.Expressions.Magnitude.IndexOf(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /", StringComparison.OrdinalIgnoreCase) > -1)
-                    {
-                        retValue = (float)((Math.Max(Math.Min(sourceFx.GetPower().RechargeTime, 30f), 0) * 0.800000011920929 + 1.79999995231628) / 5.0) / sourceFx.GetPower().AoEModifier * sourceFx.Scale;
-                        if (sourceFx.Expressions.Magnitude.Length > ".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 2)
-                        {
-                            retValue *= float.Parse(sourceFx.Expressions.Magnitude[(".8 rechargetime power.base> 1 30 minmax * 1.8 + 2 * @StdResult * 10 / areafactor power.base> /".Length + 1)..][..2]);
-                        }
-
-                        return retValue;
-                    }
-
                     if (string.IsNullOrWhiteSpace(sourceFx.Expressions.Magnitude))
                     {
                         return 0;
                     }
 
-                    if (IsUnsupportedServerExpression(sourceFx.Expressions.Magnitude))
+                    if (IsUnsupportedPlannerExpression(sourceFx.Expressions.Magnitude))
                     {
                         return sourceFx.Scale * sourceFx.nMagnitude;
                     }
@@ -685,14 +1365,9 @@ namespace Mids_Reborn.Core
             return error.Found ? 0 : retValue;
         }
 
-        private static bool IsUnsupportedServerExpression(string expression)
+        private static bool IsUnsupportedPlannerExpression(string expression)
         {
-            return !string.IsNullOrWhiteSpace(expression) &&
-                   (expression.Contains("source>", StringComparison.OrdinalIgnoreCase) ||
-                    expression.Contains("target>", StringComparison.OrdinalIgnoreCase) ||
-                    expression.Contains("power.base>", StringComparison.OrdinalIgnoreCase) ||
-                    expression.Contains("cur.", StringComparison.OrdinalIgnoreCase) ||
-                    expression.Contains("@", StringComparison.OrdinalIgnoreCase));
+            return !string.IsNullOrWhiteSpace(expression) && !CanEvaluatePlannerExpression(expression);
         }
 
         private static float InternalParsing(IEffect sourceFx, ExpressionType exprType, out ErrorData error)
@@ -700,7 +1375,6 @@ namespace Mids_Reborn.Core
             var pickedPowerNames = MidsContext.Character.CurrentBuild == null ? new List<string?>() : MidsContext.Character.CurrentBuild.Powers.Select(pe => pe?.Power?.FullName).ToList();
 
             error = new ErrorData();
-            var mathEngine = CalculationEngine.New<double>();
             var expr = exprType switch
             {
                 ExpressionType.Duration => sourceFx.Expressions.Duration,
@@ -709,18 +1383,7 @@ namespace Mids_Reborn.Core
                 _ => throw new ArgumentOutOfRangeException(nameof(exprType), exprType, null)
             };
 
-            // Numeric functions
-            mathEngine.AddFunction("eq", (a, b) => Math.Abs(a - b) < double.Epsilon ? 1 : 0);
-            mathEngine.AddFunction("ne", (a, b) => Math.Abs(a - b) > double.Epsilon ? 1 : 0);
-            mathEngine.AddFunction("gt", (a, b) => a > b ? 1 : 0);
-            mathEngine.AddFunction("gte", (a, b) => a >= b ? 1 : 0);
-            mathEngine.AddFunction("lt", (a, b) => a < b ? 1 : 0);
-            mathEngine.AddFunction("lte", (a, b) => a <= b ? 1 : 0);
-            mathEngine.AddFunction("minmax", (a, b, c) => Math.Min(b > c ? b : c, Math.Max(b > c ? c : b, a)));
-
-            // Logical functions
-            mathEngine.AddFunction("and", (a, b) => (a != 0 && b != 0) ? 1 : 0);
-            mathEngine.AddFunction("or", (a, b) => (a != 0 || b != 0) ? 1 : 0);
+            expr = NormalizeExpressionSyntax(expr);
 
             // Constants
             expr = CommandsDict(sourceFx).Aggregate(expr, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
@@ -728,40 +1391,28 @@ namespace Mids_Reborn.Core
             // Non-numeric functions
             expr = FunctionsDict(sourceFx, pickedPowerNames).Aggregate(expr, (current, f1) => f1.Key.Replace(current, f1.Value));
 
-            try
+            if (TryEvaluatePreparedExpression(expr, out var result, out var exception, out var evaluatedExpression))
             {
-                return (float)mathEngine.Calculate(expr);
+                return result;
             }
-            catch (ParseException ex)
+
+            Debug.WriteLine($"Expression failed in {evaluatedExpression}\n  Power: {sourceFx.GetPower()?.FullName}");
+
+            error.Type = exprType;
+            error.Found = true;
+            error.Message = exception?.Message ?? "Expression evaluation failed.";
+
+            switch (exception)
             {
-                Debug.WriteLine($"Expression failed in {expr}\n  Power: {sourceFx.GetPower()?.FullName}");
-
-                error.Type = exprType;
-                error.Found = true;
-                error.Message = ex.Message;
-
-                return 0;
+                case VariableNotDefinedException:
+                    Debug.WriteLine($"Expression failed (variable not defined) in {evaluatedExpression}\nPower: {sourceFx.GetPower()?.FullName}");
+                    break;
+                case InvalidOperationException:
+                    Debug.WriteLine($"Expression failed (invalid operation) in {evaluatedExpression}\nPower: {sourceFx.GetPower()?.FullName}");
+                    break;
             }
-            catch (VariableNotDefinedException ex)
-            {
-                Debug.WriteLine($"Expression failed (variable not defined) in {expr}\nPower: {sourceFx.GetPower()?.FullName}");
 
-                error.Type = exprType;
-                error.Found = true;
-                error.Message = ex.Message;
-
-                return 0;
-            }
-            catch (InvalidOperationException ex)
-            {
-                Debug.WriteLine($"Expression failed (invalid operation) in {expr}\nPower: {sourceFx.GetPower()?.FullName}");
-
-                error.Type = exprType;
-                error.Found = true;
-                error.Message = ex.Message;
-
-                return 0;
-            }
+            return 0;
         }
 
         public struct Validation

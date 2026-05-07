@@ -236,11 +236,17 @@ public static class PlannerEffectResolver
         return merged;
     }
 
-    public static void InheritEffectMetadata(IEffect parent, IEffect child, bool inheritToWho = true)
+    public static void InheritEffectMetadata(IEffect parent, IEffect child, bool inheritToWho = true, IPower? owner = null)
     {
         if (inheritToWho &&
             child.EffectType != Enums.eEffectType.GrantPower &&
-            child.ToWho == Enums.eToWho.Unspecified)
+            parent.EffectType == Enums.eEffectType.GrantPower)
+        {
+            child.ToWho = parent.ToWho;
+        }
+        else if (inheritToWho &&
+                 child.EffectType != Enums.eEffectType.GrantPower &&
+                 child.ToWho == Enums.eToWho.Unspecified)
         {
             child.ToWho = parent.ToWho;
         }
@@ -295,6 +301,19 @@ public static class PlannerEffectResolver
             var inherited = AdvancedConditionSet.FromLegacyActiveConditionals(parent.ActiveConditionals);
             child.AdvancedConditions = MergeConditions(inherited, child.AdvancedConditions);
             child.ActiveConditionals = child.AdvancedConditions.ToLegacyActiveConditionals();
+        }
+
+        if (owner != null &&
+            parent.EffectType == Enums.eEffectType.GrantPower &&
+            parent.GrantBoosted)
+        {
+            child.Absorbed_Effect = true;
+            child.Absorbed_Power_nID = owner.PowerIndex > -1 ? owner.PowerIndex : child.Absorbed_Power_nID;
+            child.Absorbed_PowerType = owner.PowerType;
+            if (child.Absorbed_Class_nID < 0 && owner.GetPowerSet() is { nArchetype: >= 0 } powerset)
+            {
+                child.Absorbed_Class_nID = powerset.nArchetype;
+            }
         }
     }
 
@@ -355,7 +374,7 @@ public static class PlannerEffectResolver
             childEffects = ExpandExecutePowerEffects(grantedPower, childEffects, context, trace, expansionEvents, depth + 1);
             foreach (var child in childEffects)
             {
-                InheritEffectMetadata(effect, child);
+                InheritEffectMetadata(effect, child, owner: owner);
                 child.SetPower(owner);
                 expanded.Add(child);
             }

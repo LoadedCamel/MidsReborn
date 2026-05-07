@@ -368,6 +368,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             chkNearGround.Checked = MyFx.NearGround;
             chkCancelOnMiss.Checked = MyFx.CancelOnMiss;
             chkRqToHitCheck.Checked = MyFx.RequiresToHitCheck;
+            chkGrantBoosted.Checked = MyFx.GrantBoosted;
             IgnoreED.Checked = MyFx.IgnoreED;
             cbFXSpecialCase.SelectedIndex = (int)MyFx.SpecialCase;
             if (MyFx.SpecialCase != Enums.eSpecialCase.None)
@@ -419,6 +420,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             lvEffectType.EndUpdate();
             UpdateEffectSubAttribList();
+            UpdateGrantBoostedUi();
         }
 
         private void FillComboBoxes()
@@ -617,6 +619,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             MyFx.EffectType = (Enums.eEffectType)lvEffectType.SelectedIndices[0];
             UpdateEffectSubAttribList();
+            UpdateGrantBoostedUi();
             UpdateFxText();
         }
 
@@ -1413,11 +1416,33 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             UpdateFxText();
         }
 
+        private void UpdateGrantBoostedUi()
+        {
+            var showBoostedGrant = MyFx.EffectType == Enums.eEffectType.GrantPower;
+            chkGrantBoosted.Visible = showBoostedGrant;
+            chkGrantBoosted.Enabled = showBoostedGrant;
+            if (showBoostedGrant)
+            {
+                chkGrantBoosted.Checked = MyFx.GrantBoosted;
+            }
+        }
+
         private void chkRqToHitCheck_CheckedChanged(object sender, EventArgs e)
         {
             if (_loading)
                 return;
             MyFx.RequiresToHitCheck = chkRqToHitCheck.Checked;
+            UpdateFxText();
+        }
+
+        private void chkGrantBoosted_CheckedChanged(object sender, EventArgs e)
+        {
+            if (_loading)
+            {
+                return;
+            }
+
+            MyFx.GrantBoosted = chkGrantBoosted.Checked;
             UpdateFxText();
         }
     }

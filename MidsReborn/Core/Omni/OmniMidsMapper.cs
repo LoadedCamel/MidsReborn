@@ -69,7 +69,7 @@ public static class OmniMidsMapper
         string sourcePath)
     {
         var effects = new List<Effect>();
-        var effectTags = MergeTags(inheritedTags, source.Tags).ToArray();
+        var effectTags = MergeTags(inheritedTags, source.Tags, source.Flags).ToArray();
         if (effectTags.Length > 0)
         {
             applyResult?.AddLimited(applyResult.EffectGroupTagDetails,
@@ -93,7 +93,7 @@ public static class OmniMidsMapper
             }
 
             var attribs = template.Attribs.Count == 0 ? [string.Empty] : template.Attribs;
-            var templateSemantic = ClassifyTemplateSemantic(source, template);
+            var templateSemantic = ClassifyTemplateSemantic(power, source, template, effectTags);
             if (applyResult != null && templateSemantic != TemplateSemantic.None)
             {
                 switch (templateSemantic)
@@ -117,7 +117,7 @@ public static class OmniMidsMapper
                 var normalizedAttrib = Normalize(attrib);
                 var mappedType = MapEffectType(power, template.Type, attrib, template.Aspect, template.Target, template.Table, templateSemantic);
                 if (mappedType == Enums.eEffectType.None &&
-                    IsKnownUnsupportedEffectAttrib(normalizedAttrib, template.Type))
+                    IsKnownUnsupportedEffectAttrib(power, source, template, normalizedAttrib, template.Type, effectTags))
                 {
                     applyResult?.AddLimited(
                         applyResult.KnownUnsupportedEffectMappingDetails,
@@ -171,6 +171,7 @@ public static class OmniMidsMapper
                     BaseProbability = source.Chance <= 0 ? 1f : source.Chance,
                     ProcsPerMinute = source.Ppm,
                     ModifierTable = modifierTable,
+                    GrantBoosted = IsGrantBoostedTemplate(template.Type, attrib),
                     EffectId = effectTags.FirstOrDefault() ?? "Ones",
                     EffectTags = effectTags.ToList(),
                     OmniSource = $"{power.FullName}:{sourcePath}:template[{templateIndex}]:attrib[{attribIndex}]={attrib}",
@@ -309,13 +310,11 @@ public static class OmniMidsMapper
 
     private static void ApplySupportedExpressions(Effect effect, OmniEffectTemplate template)
     {
-        // Omni uses the server expression language/RPN vocabulary. Mids' expression
-        // fields are evaluated by Jace, so copying Omni expressions directly causes
-        // repeated runtime failures for tokens like source>, cur.kToHit, minmax, and
-        // power.base>. Preserve the numeric fallback imported above until a dedicated
-        // Omni expression evaluator exists.
-        var durationCompatible = IsMidsExpressionCompatible(template.DurationExpression);
-        var magnitudeCompatible = IsMidsExpressionCompatible(template.MagnitudeExpression);
+        // Import only expressions that the planner can evaluate through the shared
+        // Mids expression pipeline. Runtime-only server expressions still fall back
+        // to the imported numeric values above.
+        var durationCompatible = Expressions.CanEvaluatePlannerExpression(template.DurationExpression);
+        var magnitudeCompatible = Expressions.CanEvaluatePlannerExpression(template.MagnitudeExpression);
         if (!durationCompatible && !magnitudeCompatible)
         {
             return;
@@ -332,21 +331,6 @@ public static class OmniMidsMapper
             effect.AttribType = Enums.eAttribType.Expression;
             effect.Expressions.Magnitude = template.MagnitudeExpression;
         }
-    }
-
-    private static bool IsMidsExpressionCompatible(string expression)
-    {
-        if (string.IsNullOrWhiteSpace(expression))
-        {
-            return false;
-        }
-
-        return !expression.Contains("source>", StringComparison.OrdinalIgnoreCase) &&
-               !expression.Contains("target>", StringComparison.OrdinalIgnoreCase) &&
-               !expression.Contains("power.base>", StringComparison.OrdinalIgnoreCase) &&
-               !expression.Contains("cur.", StringComparison.OrdinalIgnoreCase) &&
-               !expression.Contains("minmax", StringComparison.OrdinalIgnoreCase) &&
-               !expression.Contains("@", StringComparison.OrdinalIgnoreCase);
     }
 
     private static void ApplyParams(
@@ -368,7 +352,9 @@ public static class OmniMidsMapper
                 effect.Summon = template.Params.Value<string>("entity_def") ?? string.Empty;
                 break;
             case "grantpower":
+            case "grantboostedpower":
                 effect.EffectType = Enums.eEffectType.GrantPower;
+                effect.GrantBoosted |= type.Equals("grantboostedpower", StringComparison.OrdinalIgnoreCase);
                 effect.Summon = GetPowerParam(template.Params);
                 break;
             case "power" when effect.EffectType == Enums.eEffectType.RevokePower:
@@ -392,6 +378,11 @@ public static class OmniMidsMapper
                parameters.Value<string>("power_name") ??
                parameters.Value<string>("power_full_name") ??
                string.Empty;
+    }
+
+    private static bool IsGrantBoostedTemplate(string type, string attrib)
+    {
+        return Normalize(type) == "grantboostedpower" || Normalize(attrib) == "grantboostedpower";
     }
 
     private static IEnumerable<string> MergeTags(params IEnumerable<string>?[] tagSets)
@@ -500,6 +491,11 @@ public static class OmniMidsMapper
         }
     }
 
+    private static bool HasMeaningfulEffectFilterToken(Newtonsoft.Json.Linq.JToken? token)
+    {
+        return ReadStringArray(token).Any();
+    }
+
     private static void TrackUnsupportedEffectFilterParams(
         string powerFullName,
         Newtonsoft.Json.Linq.JObject parameters,
@@ -523,7 +519,7 @@ public static class OmniMidsMapper
         var present = unsupportedKeys
             .Where(key => parameters.TryGetValue(key, StringComparison.OrdinalIgnoreCase, out var token) &&
                           token is { Type: not Newtonsoft.Json.Linq.JTokenType.Null } &&
-                          !string.IsNullOrWhiteSpace(token.ToString()))
+                          HasMeaningfulEffectFilterToken(token))
             .ToArray();
         if (present.Length == 0)
         {
@@ -581,9 +577,10 @@ public static class OmniMidsMapper
         return aspect.ToLowerInvariant() switch
         {
             "cur" or "current" => Enums.eAspect.Cur,
-            "max" => Enums.eAspect.Max,
+            "max" or "maximum" => Enums.eAspect.Max,
             "res" or "resistance" => Enums.eAspect.Res,
             "abs" or "absolute" => Enums.eAspect.Abs,
+            "str" or "strength" => Enums.eAspect.Str,
             _ => Enums.eAspect.Str
         };
     }
@@ -764,12 +761,22 @@ public static class OmniMidsMapper
             return Enums.eEffectType.GrantPower;
         }
 
+        if (normalizedType == "grantboostedpower")
+        {
+            return Enums.eEffectType.GrantPower;
+        }
+
         if (normalizedType == "entcreate")
         {
             return Enums.eEffectType.EntCreate;
         }
 
         if (normalizedAttrib is "grantpower")
+        {
+            return Enums.eEffectType.GrantPower;
+        }
+
+        if (normalizedAttrib is "grantboostedpower")
         {
             return Enums.eEffectType.GrantPower;
         }
@@ -892,6 +899,7 @@ public static class OmniMidsMapper
         {
             "hitpoints" => Enums.eEffectType.HitPoints,
             "absorb" => Enums.eEffectType.Absorb,
+            "viewattributes" => Enums.eEffectType.ViewAttrib,
             "endurance" => Enums.eEffectType.Endurance,
             "endurancecost" or "endurancediscount" => Enums.eEffectType.EnduranceDiscount,
             "interrupttime" => Enums.eEffectType.InterruptTime,
@@ -900,6 +908,7 @@ public static class OmniMidsMapper
             "defense" => Enums.eEffectType.Defense,
             "damage" => Enums.eEffectType.Damage,
             "damagebuff" => Enums.eEffectType.DamageBuff,
+            "elusivitybase" => Enums.eEffectType.Elusivity,
             "levelshift" => Enums.eEffectType.LevelShift,
             "rechargetime" => Enums.eEffectType.RechargeTime,
             "recovery" => Enums.eEffectType.Recovery,
@@ -935,7 +944,13 @@ public static class OmniMidsMapper
             "setmode" => Enums.eEffectType.SetMode,
             "unsetmode" => Enums.eEffectType.UnsetMode,
             "meter" => Enums.eEffectType.Meter,
-            _ => Enum.TryParse<Enums.eEffectType>(type, true, out var parsed) ? parsed : Enums.eEffectType.None
+            "debtprotection" => Enums.eEffectType.XPDebtProtection,
+            "addtoken" => Enums.eEffectType.TokenAdd,
+            _ => Enum.TryParse<Enums.eEffectType>(normalizedAttrib, true, out var parsedAttrib)
+                ? parsedAttrib
+                : Enum.TryParse<Enums.eEffectType>(type, true, out var parsedType)
+                    ? parsedType
+                    : Enums.eEffectType.None
         };
     }
 
@@ -973,7 +988,42 @@ public static class OmniMidsMapper
 
     private static Enums.eDamage MapDamageType(string attrib, string table)
     {
-        var combined = $"{Normalize(attrib)} {Normalize(table)}";
+        var normalizedAttrib = Normalize(attrib);
+        if (normalizedAttrib is "basedefense" or "elusivitybase" or "baseresistance")
+        {
+            return Enums.eDamage.None;
+        }
+
+        switch (normalizedAttrib)
+        {
+            case "smashing":
+                return Enums.eDamage.Smashing;
+            case "lethal":
+                return Enums.eDamage.Lethal;
+            case "fire":
+                return Enums.eDamage.Fire;
+            case "cold":
+                return Enums.eDamage.Cold;
+            case "negativeenergy":
+            case "negative":
+                return Enums.eDamage.Negative;
+            case "energy":
+                return Enums.eDamage.Energy;
+            case "toxic":
+                return Enums.eDamage.Toxic;
+            case "psionic":
+            case "psi":
+                return Enums.eDamage.Psionic;
+            case "melee":
+                return Enums.eDamage.Melee;
+            case "ranged":
+                return Enums.eDamage.Ranged;
+            case "area":
+            case "aoe":
+                return Enums.eDamage.AoE;
+        }
+
+        var combined = $"{normalizedAttrib} {Normalize(table)}";
         if (combined.Contains("smashing", StringComparison.OrdinalIgnoreCase)) return Enums.eDamage.Smashing;
         if (combined.Contains("lethal", StringComparison.OrdinalIgnoreCase)) return Enums.eDamage.Lethal;
         if (combined.Contains("fire", StringComparison.OrdinalIgnoreCase)) return Enums.eDamage.Fire;
@@ -1017,10 +1067,22 @@ public static class OmniMidsMapper
         return Enums.eMez.None;
     }
 
-    private static bool IsKnownUnsupportedEffectAttrib(string normalizedAttrib, string templateType)
+    private static bool IsKnownUnsupportedEffectAttrib(
+        OmniPowerDefinition power,
+        OmniEffectDefinition source,
+        OmniEffectTemplate template,
+        string normalizedAttrib,
+        string templateType,
+        IReadOnlyCollection<string> effectTags)
     {
-        return normalizedAttrib is "elusivitybase" &&
-               !string.Equals(Normalize(templateType), "globalchancemod", StringComparison.OrdinalIgnoreCase);
+        if (normalizedAttrib is "scriptnotify" or "avoid" or "evade")
+        {
+            return true;
+        }
+
+        return IsHiddenStatefulVectorTemplate(power, source, template, effectTags) &&
+               (IsDamageCategory(normalizedAttrib) ||
+                IsVectorDefenseOrResistanceSelectorAttrib(normalizedAttrib));
     }
 
     private static bool IsKnownHiddenStatefulEffect(Effect effect)
@@ -1039,7 +1101,11 @@ public static class OmniMidsMapper
         return effect.EffectType.ToString();
     }
 
-    private static TemplateSemantic ClassifyTemplateSemantic(OmniEffectDefinition source, OmniEffectTemplate template)
+    private static TemplateSemantic ClassifyTemplateSemantic(
+        OmniPowerDefinition power,
+        OmniEffectDefinition source,
+        OmniEffectTemplate template,
+        IReadOnlyCollection<string> effectTags)
     {
         var normalizedAttribs = (template.Attribs.Count == 0 ? [string.Empty] : template.Attribs)
             .Select(Normalize)
@@ -1055,29 +1121,208 @@ public static class OmniMidsMapper
             return TemplateSemantic.None;
         }
 
-        var normalizedTags = source.Tags
-            .Select(Normalize)
-            .Where(static value => !string.IsNullOrWhiteSpace(value))
-            .ToArray();
-        var normalizedAspect = Normalize(template.Aspect);
-        var hasDefenseEvidence =
-            normalizedAttribs.Contains("basedefense", StringComparer.OrdinalIgnoreCase) ||
-            normalizedTags.Contains("defense", StringComparer.OrdinalIgnoreCase);
-        if (hasDefenseEvidence)
+        if (IsHiddenStatefulVectorTemplate(power, source, template, effectTags))
+        {
+            return TemplateSemantic.None;
+        }
+
+        if (HasDefenseEvidence(power, source, template, effectTags, normalizedAttribs))
         {
             return TemplateSemantic.VectorDefense;
         }
 
-        var hasResistanceEvidence =
-            normalizedAttribs.Contains("baseresistance", StringComparer.OrdinalIgnoreCase) ||
-            normalizedTags.Contains("resistance", StringComparer.OrdinalIgnoreCase) ||
-            normalizedAspect is "res" or "resistance";
-        if (hasResistanceEvidence)
+        if (HasResistanceEvidence(power, source, template, effectTags, normalizedAttribs))
         {
             return TemplateSemantic.VectorResistance;
         }
 
+        var normalizedAspect = Normalize(template.Aspect);
+        if (normalizedAttribs.Length > 1)
+        {
+            if (normalizedAspect is "cur" or "current")
+            {
+                return TemplateSemantic.VectorDefense;
+            }
+
+            if (normalizedAspect is "res" or "resistance")
+            {
+                return TemplateSemantic.VectorResistance;
+            }
+        }
+
         return TemplateSemantic.None;
+    }
+
+    private static bool HasPlannerDefenseOrResistanceEvidence(
+        OmniPowerDefinition power,
+        OmniEffectDefinition source,
+        OmniEffectTemplate template,
+        IReadOnlyCollection<string> effectTags,
+        IReadOnlyCollection<string> normalizedAttribs)
+    {
+        return HasDefenseEvidence(power, source, template, effectTags, normalizedAttribs) ||
+               HasResistanceEvidence(power, source, template, effectTags, normalizedAttribs);
+    }
+
+    private static bool HasDefenseEvidence(
+        OmniPowerDefinition power,
+        OmniEffectDefinition source,
+        OmniEffectTemplate template,
+        IReadOnlyCollection<string> effectTags,
+        IReadOnlyCollection<string> normalizedAttribs)
+    {
+        var plannerText = GetPlannerSemanticText(power);
+        if (normalizedAttribs.Contains("basedefense", StringComparer.OrdinalIgnoreCase) ||
+            normalizedAttribs.Contains("defense", StringComparer.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        if (CollectNormalizedTemplateTags(source, template, effectTags)
+            .Contains("defense", StringComparer.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        var normalizedTable = Normalize(template.Table);
+        if (normalizedTable.Contains("buffdef", StringComparison.OrdinalIgnoreCase) ||
+            normalizedTable.Contains("defense", StringComparison.OrdinalIgnoreCase) ||
+            normalizedTable.EndsWith("def", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return plannerText.Contains("defense", StringComparison.OrdinalIgnoreCase) ||
+               plannerText.Contains("def(", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool HasResistanceEvidence(
+        OmniPowerDefinition power,
+        OmniEffectDefinition source,
+        OmniEffectTemplate template,
+        IReadOnlyCollection<string> effectTags,
+        IReadOnlyCollection<string> normalizedAttribs)
+    {
+        var plannerText = GetPlannerSemanticText(power);
+        if (normalizedAttribs.Contains("baseresistance", StringComparer.OrdinalIgnoreCase) ||
+            normalizedAttribs.Contains("resistance", StringComparer.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        var normalizedAspect = Normalize(template.Aspect);
+        if (normalizedAspect is "res" or "resistance")
+        {
+            return true;
+        }
+
+        if (CollectNormalizedTemplateTags(source, template, effectTags)
+            .Contains("resistance", StringComparer.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        var normalizedTable = Normalize(template.Table);
+        if (normalizedTable.Contains("resdmg", StringComparison.OrdinalIgnoreCase) ||
+            normalizedTable.Contains("resistance", StringComparison.OrdinalIgnoreCase) ||
+            normalizedTable.EndsWith("res", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return plannerText.Contains("resistance", StringComparison.OrdinalIgnoreCase) ||
+               plannerText.Contains("resist", StringComparison.OrdinalIgnoreCase) ||
+               plannerText.Contains("res(", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static IReadOnlyCollection<string> CollectNormalizedTemplateTags(
+        OmniEffectDefinition source,
+        OmniEffectTemplate template,
+        IReadOnlyCollection<string> effectTags)
+    {
+        return MergeTags(source.Tags, source.Flags, template.Tags, effectTags)
+            .Select(Normalize)
+            .Where(static tag => !string.IsNullOrWhiteSpace(tag))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+    }
+
+    private static string GetPlannerSemanticText(OmniPowerDefinition power)
+    {
+        return Normalize(string.Join(" ",
+            power.FullName,
+            power.DisplayName,
+            power.DisplayShortHelp,
+            power.DisplayHelp));
+    }
+
+    private static bool IsHiddenStatefulVectorTemplate(
+        OmniPowerDefinition power,
+        OmniEffectDefinition source,
+        OmniEffectTemplate template,
+        IReadOnlyCollection<string> effectTags)
+    {
+        var normalizedFlagsAndTags = MergeTags(template.Flags, source.Tags, template.Tags, effectTags)
+            .Select(Normalize)
+            .Where(static value => !string.IsNullOrWhiteSpace(value))
+            .ToArray();
+        if (normalizedFlagsAndTags.Any(flag =>
+                flag.Contains("hidefrominfo", StringComparison.OrdinalIgnoreCase) ||
+                flag.Contains("placate", StringComparison.OrdinalIgnoreCase) ||
+                flag.Contains("scriptnotify", StringComparison.OrdinalIgnoreCase)))
+        {
+            return true;
+        }
+
+        var plannerText = GetPlannerSemanticText(power);
+        if (IsSupportOnlyStatefulVectorCarrier(power, plannerText))
+        {
+            return true;
+        }
+
+        var hasExplicitPlannerStatSemantic = plannerText.Contains("def(", StringComparison.OrdinalIgnoreCase) ||
+                                             plannerText.Contains("res(", StringComparison.OrdinalIgnoreCase) ||
+                                             plannerText.Contains("defense", StringComparison.OrdinalIgnoreCase) ||
+                                             plannerText.Contains("resistance", StringComparison.OrdinalIgnoreCase);
+        var normalizedTable = Normalize(template.Table);
+        var sourceAttribs = source.Templates
+            .SelectMany(item => item.Attribs)
+            .Select(Normalize)
+            .Where(static value => !string.IsNullOrWhiteSpace(value))
+            .ToArray();
+        var hasStealthRadiusSibling = sourceAttribs.Any(attrib => attrib.StartsWith("stealthradius", StringComparison.OrdinalIgnoreCase));
+        var hasTranslucencySibling = sourceAttribs.Contains("translucency", StringComparer.OrdinalIgnoreCase);
+        var hasSetModeSibling = sourceAttribs.Contains("setmode", StringComparer.OrdinalIgnoreCase);
+        var isStealthCarrierTable = normalizedTable.EndsWith("ones", StringComparison.OrdinalIgnoreCase);
+        if (isStealthCarrierTable && hasStealthRadiusSibling && (hasTranslucencySibling || hasSetModeSibling))
+        {
+            return true;
+        }
+
+        return !hasExplicitPlannerStatSemantic &&
+               (plannerText.Contains("placate", StringComparison.OrdinalIgnoreCase) ||
+                plannerText.Contains("avoid", StringComparison.OrdinalIgnoreCase) ||
+                plannerText.Contains("evade", StringComparison.OrdinalIgnoreCase) ||
+                plannerText.Contains("stealth", StringComparison.OrdinalIgnoreCase) ||
+                plannerText.Contains("hide", StringComparison.OrdinalIgnoreCase) ||
+                plannerText.Contains("transluc", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsSupportOnlyStatefulVectorCarrier(OmniPowerDefinition power, string plannerText)
+    {
+        var normalizedPowerName = Normalize(power.FullName);
+        return normalizedPowerName.Contains("battleeuphoria", StringComparison.OrdinalIgnoreCase) ||
+               normalizedPowerName.Contains("defianceold", StringComparison.OrdinalIgnoreCase) ||
+               normalizedPowerName.Contains("defiancebuff", StringComparison.OrdinalIgnoreCase) ||
+               normalizedPowerName.Contains("furybuff", StringComparison.OrdinalIgnoreCase) ||
+               normalizedPowerName.Contains("opportunitymeter", StringComparison.OrdinalIgnoreCase) ||
+               normalizedPowerName.Contains("primalenergymeter", StringComparison.OrdinalIgnoreCase) ||
+               normalizedPowerName.Contains("ragebuff", StringComparison.OrdinalIgnoreCase) ||
+               normalizedPowerName.Contains("supremacy", StringComparison.OrdinalIgnoreCase) ||
+               normalizedPowerName.Contains("teleportfoe", StringComparison.OrdinalIgnoreCase) ||
+               plannerText.Contains("opportunitymeter", StringComparison.OrdinalIgnoreCase) ||
+               plannerText.Contains("battleeuphoria", StringComparison.OrdinalIgnoreCase) ||
+               plannerText.Contains("primalenergy", StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool IsActualDamagePayloadAttrib(string normalizedAttrib)

@@ -1,5 +1,6 @@
 using System.Linq;
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.Omni;
 
@@ -7,6 +8,8 @@ public sealed class OmniImportReport
 {
     public int ArchetypesRead { get; set; }
     public int PlayableArchetypesRead { get; set; }
+    public int RetainedArchetypesRead { get; set; }
+    public int SkippedArchetypesRead { get; set; }
     public int ClassAttributeTablesImported { get; set; }
     public int PowersConsidered { get; set; }
     public int PowersInScope { get; set; }
@@ -76,6 +79,8 @@ public sealed class OmniImportReport
     public int UnsupportedEffectFilterCount { get; set; }
     public int EffectTagMissingFromGcmCount { get; set; }
     public int ClassTableFilesRead { get; set; }
+    public int RetainedClassTableFiles { get; set; }
+    public int SkippedClassTableFiles { get; set; }
     public int CanonicalNamedTablesLoaded { get; set; }
     public int DuplicateCanonicalNamedTables { get; set; }
     public int MissingClassTableReferences { get; set; }
@@ -83,6 +88,7 @@ public sealed class OmniImportReport
     public int PowerFieldsMappedCount { get; set; }
     public int PowerFieldsMappedWithFallbackCount { get; set; }
     public int PowerFieldConflictCount { get; set; }
+    public int KnownChargeCapacityExtensions { get; set; }
     public int DeferredPowerFieldCount { get; set; }
     public int IgnoredPowerFieldCount { get; set; }
     public int UnknownPowerFieldCount { get; set; }
@@ -202,6 +208,9 @@ public sealed class OmniImportReport
     public Dictionary<string, int> PetPowerFilesDiscovered { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, int> PetPowerFilesInScope { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, int> PetPowersLoaded { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, int> IgnoredPowerFieldOwnerKindCounts { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, int> IgnoredPowerFieldCategoryCounts { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, int> IgnoredPowerFieldNameCounts { get; } = new(StringComparer.OrdinalIgnoreCase);
     public int PetManifestRootsPresent { get; set; }
     public int PetManifestRootsMissing { get; set; }
     public int PetManifestPowersets { get; set; }
@@ -215,6 +224,8 @@ public sealed class OmniImportReport
     public int EpicPowersLoaded { get; set; }
 
     public List<string> ImportedPowersets { get; } = [];
+    public List<string> RetainedArchetypes { get; } = [];
+    public List<string> SkippedArchetypes { get; } = [];
     public List<string> SkippedPowerGroups { get; } = [];
     public List<string> IgnoredFields { get; } = [];
     public List<string> BuildEvaluatedExpressions { get; } = [];
@@ -255,12 +266,15 @@ public sealed class OmniImportReport
     public List<string> UnsupportedEffectFilters { get; } = [];
     public List<string> EffectTagsMissingFromGcm { get; } = [];
     public List<string> ClassTableFiles { get; } = [];
+    public List<string> RetainedClassTableFileDetails { get; } = [];
+    public List<string> SkippedClassTableFileDetails { get; } = [];
     public List<string> DuplicateNamedTables { get; } = [];
     public List<string> MissingClassTableReferenceDetails { get; } = [];
     public List<string> MissingModifierTableReferenceDetails { get; } = [];
     public List<string> MappedPowerFields { get; } = [];
     public List<string> PowerFieldsMappedWithFallback { get; } = [];
     public List<string> PowerFieldConflicts { get; } = [];
+    public List<string> KnownChargeCapacityDetailEntries { get; } = [];
     public List<string> DeferredPowerFields { get; } = [];
     public List<string> IgnoredPowerFields { get; } = [];
     public List<string> UnknownPowerFields { get; } = [];
@@ -293,6 +307,7 @@ public sealed class OmniImportReport
     public List<string> ScopedBoostSetBonusCoverage { get; } = [];
     public List<string> UnresolvedRedirects { get; } = [];
     public List<string> UnresolvedEntities { get; } = [];
+    public List<string> SkippedEntityReferences { get; } = [];
     public List<string> PseudoPetClassifications { get; } = [];
     public List<string> UnknownEffectMappings { get; } = [];
     public List<string> UnknownAttribMappings { get; } = [];
@@ -321,6 +336,8 @@ public sealed class OmniImportReport
     public void TrimDetails()
     {
         ImportedPowersets.Clear();
+        RetainedArchetypes.Clear();
+        SkippedArchetypes.Clear();
         SkippedPowerGroups.Clear();
         IgnoredFields.Clear();
         BuildEvaluatedExpressions.Clear();
@@ -361,12 +378,15 @@ public sealed class OmniImportReport
         UnsupportedEffectFilters.Clear();
         EffectTagsMissingFromGcm.Clear();
         ClassTableFiles.Clear();
+        RetainedClassTableFileDetails.Clear();
+        SkippedClassTableFileDetails.Clear();
         DuplicateNamedTables.Clear();
         MissingClassTableReferenceDetails.Clear();
         MissingModifierTableReferenceDetails.Clear();
         MappedPowerFields.Clear();
         PowerFieldsMappedWithFallback.Clear();
         PowerFieldConflicts.Clear();
+        KnownChargeCapacityDetailEntries.Clear();
         DeferredPowerFields.Clear();
         IgnoredPowerFields.Clear();
         UnknownPowerFields.Clear();
@@ -382,6 +402,9 @@ public sealed class OmniImportReport
         PetPowerFilesDiscovered.Clear();
         PetPowerFilesInScope.Clear();
         PetPowersLoaded.Clear();
+        IgnoredPowerFieldOwnerKindCounts.Clear();
+        IgnoredPowerFieldCategoryCounts.Clear();
+        IgnoredPowerFieldNameCounts.Clear();
         PetManifestRootsPresent = 0;
         PetManifestRootsMissing = 0;
         PetManifestPowersets = 0;
@@ -403,6 +426,7 @@ public sealed class OmniImportReport
         EnhancementCreateValidationSummary.Clear();
         UnresolvedRedirects.Clear();
         UnresolvedEntities.Clear();
+        SkippedEntityReferences.Clear();
         PseudoPetClassifications.Clear();
         UnknownEffectMappings.Clear();
         UnknownAttribMappings.Clear();
@@ -411,7 +435,110 @@ public sealed class OmniImportReport
         Samples.Clear();
     }
 
+    [JsonProperty("summary")]
+    public OmniReportSummary Summary => OmniReportLegibility.BuildSummary(this);
+
     public string ToMarkdown()
+    {
+        var summary = Summary;
+        var ignoredPowerFieldBreakdown = OmniReportLegibility.BuildIgnoredPowerFieldBreakdown(IgnoredPowerFieldCount, IgnoredPowerFieldNameCounts);
+        var builder = new StringBuilder();
+
+        builder.AppendLine("# Omni Import Dry Run");
+        builder.AppendLine();
+        OmniReportLegibility.AppendMarkdownSummary(builder, summary);
+        OmniReportLegibility.AppendMarkdownAppendixHeader(builder);
+
+        OmniReportLegibility.AppendMarkdownAppendixGroup(builder, "Raw Metric Snapshot");
+        builder.AppendLine($"- Archetypes read/playable/retained/skipped: {ArchetypesRead:n0}/{PlayableArchetypesRead:n0}/{RetainedArchetypesRead:n0}/{SkippedArchetypesRead:n0}");
+        builder.AppendLine($"- Powers considered/in scope/skipped: {PowersConsidered:n0}/{PowersInScope:n0}/{PowersSkippedOutOfScope:n0}");
+        builder.AppendLine($"- Effects/templates/child effects visited: {EffectsVisited:n0}/{EffectTemplatesVisited:n0}/{ChildEffectsVisited:n0}");
+        builder.AppendLine($"- Requirements visited/activate ignored: {PowerRequirements:n0}/{ActivateRequirementsIgnored:n0}");
+        builder.AppendLine($"- Entities read/real pets/pseudo pets: {EntitiesRead:n0}/{RealPetActors:n0}/{PseudoPetActors:n0}");
+        builder.AppendLine($"- GCM imported/already-known/would-add: {GcmTagsImportedCount:n0}/{GcmTagsAlreadyKnownCount:n0}/{GcmTagsWouldAddCount:n0}");
+        builder.AppendLine($"- Power fields mapped/fallback/conflicts/unknown: {PowerFieldsMappedCount:n0}/{PowerFieldsMappedWithFallbackCount:n0}/{PowerFieldConflictCount:n0}/{UnknownPowerFieldCount:n0}");
+        builder.AppendLine($"- Enhancement files/sets/recipes discovered: {EnhancementDefinitionsDiscovered:n0}/{EnhancementSetsDiscovered:n0}/{FoldedEnhancementRecipeCount:n0}");
+        builder.AppendLine($"- Enhancement reconciliation update/create/ambiguous: {EnhancementWouldUpdateDryRun:n0}/{EnhancementWouldCreateDryRun:n0}/{EnhancementAmbiguousMatchesDryRun:n0}");
+        builder.AppendLine($"- Recipe reconciliation update/create/ambiguous: {RecipeWouldUpdateDryRun:n0}/{RecipeWouldCreateDryRun:n0}/{RecipeAmbiguousMatchesDryRun:n0}");
+        builder.AppendLine($"- Salvage reconciliation update/create/ambiguous: {SalvageWouldUpdateDryRun:n0}/{SalvageWouldCreateDryRun:n0}/{SalvageAmbiguousMatchesDryRun:n0}");
+        builder.AppendLine($"- Pet manifest roots present/missing: {PetManifestRootsPresent:n0}/{PetManifestRootsMissing:n0}");
+
+        OmniReportLegibility.AppendMarkdownAppendixGroup(builder, "Needs Implementation / Manual Review");
+        AppendSection(builder, "Power Target Requires Not Imported", PowerTargetRequiresNotImported);
+        AppendSection(builder, "Power Target Requires Manual Review", PowerTargetRequiresManualReview);
+        AppendSection(builder, "Unsupported Build Expressions", UnsupportedBuildExpressions);
+        AppendSection(builder, "Unknown Expression Tokens", UnknownExpressionTokens);
+        AppendSection(builder, "Unsupported Power Requirements", UnsupportedPowerRequirements);
+        AppendSection(builder, "Manual Classification Review", ManualClassificationReviews);
+        AppendSection(builder, "Unknown Omni Modes", UnknownModes);
+        AppendSection(builder, "Unknown Effect Modes", UnknownEffectModes);
+        AppendSection(builder, "Unknown Effect Mappings", UnknownEffectMappings);
+        AppendSection(builder, "Unknown Attribute Mappings", UnknownAttribMappings);
+        AppendSection(builder, "Unknown Power Fields", UnknownPowerFields);
+        AppendSection(builder, "Missing Class Table References", MissingClassTableReferenceDetails);
+        AppendSection(builder, "Missing Modifier Table References", MissingModifierTableReferenceDetails);
+        AppendSection(builder, "Missing Powerset Icon Assets", MissingPoolIconAssets);
+        AppendSection(builder, "Pool Requirement Evaluation Failures", PoolRequirementEvaluationFailures);
+        AppendSection(builder, "Enhancement Missing Policy Files", EnhancementMissingPolicyFiles);
+        AppendSection(builder, "Enhancement Reconciliation Conflicts", EnhancementReconciliationConflicts);
+
+        OmniReportLegibility.AppendMarkdownAppendixGroup(builder, "Known Unsupported / Deferred");
+        AppendSection(builder, "Known Deferred Power Fields", DeferredPowerFields);
+        AppendSection(builder, "Known Charge-Capacity Extensions", KnownChargeCapacityDetailEntries);
+        AppendSection(builder, "Unsupported EffectFilter Fields", UnsupportedEffectFilters);
+        OmniReportLegibility.AppendIgnoredPowerFieldNarrative(
+            builder,
+            ignoredPowerFieldBreakdown.HarmlessSourceMetadataCount,
+            ignoredPowerFieldBreakdown.UiClientServerMetadataCount,
+            ignoredPowerFieldBreakdown.UnsupportedPlannerPolicyCount);
+
+        OmniReportLegibility.AppendMarkdownAppendixGroup(builder, "Informational / Report-Only");
+        AppendSection(builder, "Build-Evaluated Expressions", BuildEvaluatedExpressions);
+        AppendSection(builder, "Runtime-Target Expressions", RuntimeTargetExpressions);
+        AppendSection(builder, "Report-Only Expressions", ReportOnlyExpressions);
+        AppendSection(builder, "Report-Only Power Requirement Fragments", ReportOnlyPowerRequirementFragments);
+        AppendSection(builder, "Raw Advanced Expressions", RawAdvancedExpressions);
+        AppendSection(builder, "Ignored Source Directives / Report-Only Metadata", IgnoredFields);
+        AppendSection(builder, "Effect Tags Referenced Outside gcm.json", EffectTagsMissingFromGcm);
+        AppendSection(builder, "GCM Tags Imported", GcmTags);
+        AppendSection(builder, "GCM Tags Already Known", GcmTagsAlreadyKnown);
+        AppendSection(builder, "GCM Tags That Would Be Added", GcmTagsWouldAdd);
+        AppendSection(builder, "GCM Duplicate Tags", GcmDuplicateTags);
+        AppendSection(builder, "Effect Group Tags Preserved", EffectGroupTags);
+        AppendSection(builder, "Template / Filter Tags Mapped", TemplateFilterTags);
+        AppendSection(builder, "Chance Mod Mappings", ChanceModMappings);
+        AppendCountSection(builder, "Ignored Power Field Owner Kinds", IgnoredPowerFieldOwnerKindCounts);
+        AppendCountSection(builder, "Ignored Power Field Categories", IgnoredPowerFieldCategoryCounts);
+        AppendCountSection(builder, "Ignored Power Fields By Name", IgnoredPowerFieldNameCounts);
+        AppendSection(builder, "Ignored Power Field Samples", IgnoredPowerFields);
+        AppendSection(builder, "Powerset Icon Audit", PoolPowersetIconAudit);
+        AppendSection(builder, "Powerset Icon Assignments", PoolIconAssignments);
+        AppendSection(builder, "Sorcery Enflame Pickability Trace", SorceryEnflamePickabilityTrace);
+        AppendSection(builder, "PvX Target And Gating Audit", PvTargetGatingAudit);
+        AppendSection(builder, "PvX Target Mapping Mismatches", PvTargetMappingMismatches);
+
+        OmniReportLegibility.AppendMarkdownAppendixGroup(builder, "Implemented Coverage / Audit Trails");
+        AppendSection(builder, "Pet Import Scope", PetImportScopeDetails);
+        AppendSection(builder, "Pet Import Manifest", PetImportManifestDetails);
+        AppendSection(builder, "Power Field Mapping Coverage", MappedPowerFields);
+        AppendSection(builder, "Mapped With Fallback", PowerFieldsMappedWithFallback);
+        AppendSection(builder, "Enhancement Import Scan", EnhancementImportScanDetails);
+        AppendSection(builder, "Classic Enhancement Folding", ClassicEnhancementFoldingDetails);
+        AppendSection(builder, "Enhancement Source Shape Validation", EnhancementSourceShapeValidation);
+        AppendSection(builder, "Boosts And Set Bonus Scope Coverage", ScopedBoostSetBonusCoverage);
+        AppendSection(builder, "Enhancement Power Link Audit", EnhancementPowerLinkAudit);
+        AppendSection(builder, "Enhancement Reconciliation Audit", EnhancementReconciliationAudit);
+        AppendSection(builder, "Enhancement Create Validation", EnhancementCreateValidationSummary);
+        AppendSection(builder, "Invention Variant Audit", InventionVariantAudit);
+        AppendSection(builder, "Enhancement Identity Investigation", EnhancementIdentityInvestigation);
+        AppendSection(builder, "Enhancement Identity Likely New Samples", EnhancementIdentityLikelyNewSamples);
+        AppendSection(builder, "Recipe Identity Investigation", RecipeIdentityInvestigation);
+        AppendSection(builder, "Recipe Identity Likely New Samples", RecipeIdentityLikelyNewSamples);
+
+        return builder.ToString();
+    }
+
+    private string BuildLegacyMarkdown()
     {
         static string WithSample(int count, int sampleCount)
         {
@@ -425,6 +552,8 @@ public sealed class OmniImportReport
         builder.AppendLine();
         builder.AppendLine($"- Archetypes read: {ArchetypesRead}");
         builder.AppendLine($"- Playable archetypes read: {PlayableArchetypesRead}");
+        builder.AppendLine($"- Retained archetypes: {WithSample(RetainedArchetypesRead, RetainedArchetypes.Count)}");
+        builder.AppendLine($"- Skipped archetypes: {WithSample(SkippedArchetypesRead, SkippedArchetypes.Count)}");
         builder.AppendLine($"- Class attribute tables imported: {ClassAttributeTablesImported}");
         builder.AppendLine($"- Powers considered: {PowersConsidered}");
         builder.AppendLine($"- Powers in scope: {PowersInScope}");
@@ -494,6 +623,8 @@ public sealed class OmniImportReport
         builder.AppendLine($"- Unsupported EffectFilter fields preserved: {WithSample(UnsupportedEffectFilterCount, UnsupportedEffectFilters.Count)}");
         builder.AppendLine($"- Effect tags missing from gcm.json: {WithSample(EffectTagMissingFromGcmCount, EffectTagsMissingFromGcm.Count)}");
         builder.AppendLine($"- Class table files read: {WithSample(ClassTableFilesRead, ClassTableFiles.Count)}");
+        builder.AppendLine($"- Retained class table files: {WithSample(RetainedClassTableFiles, RetainedClassTableFileDetails.Count)}");
+        builder.AppendLine($"- Skipped class table files: {WithSample(SkippedClassTableFiles, SkippedClassTableFileDetails.Count)}");
         builder.AppendLine($"- Canonical named tables loaded: {CanonicalNamedTablesLoaded}");
         builder.AppendLine($"- Duplicate canonical named tables: {WithSample(DuplicateCanonicalNamedTables, DuplicateNamedTables.Count)}");
         builder.AppendLine($"- Missing class table references: {WithSample(MissingClassTableReferences, MissingClassTableReferenceDetails.Count)}");
@@ -501,8 +632,9 @@ public sealed class OmniImportReport
         builder.AppendLine($"- Power fields mapped: {WithSample(PowerFieldsMappedCount, MappedPowerFields.Count)}");
         builder.AppendLine($"- Power fields mapped with fallback: {WithSample(PowerFieldsMappedWithFallbackCount, PowerFieldsMappedWithFallback.Count)}");
         builder.AppendLine($"- Power field conflicts: {WithSample(PowerFieldConflictCount, PowerFieldConflicts.Count)}");
+        builder.AppendLine($"- Known charge-capacity extensions: {WithSample(KnownChargeCapacityExtensions, KnownChargeCapacityDetailEntries.Count)}");
         builder.AppendLine($"- Known deferred power fields: {WithSample(DeferredPowerFieldCount, DeferredPowerFields.Count)}");
-        builder.AppendLine($"- Ignored UI/client/server power fields: {WithSample(IgnoredPowerFieldCount, IgnoredPowerFields.Count)}");
+        builder.AppendLine($"- Ignored UI/client/server power fields: {IgnoredPowerFieldCount} across {IgnoredPowerFieldOwnerKindCounts.Count} owner kinds / {IgnoredPowerFieldCategoryCounts.Count} categories / {IgnoredPowerFieldNameCounts.Count} unique fields (sampled {IgnoredPowerFields.Count})");
         builder.AppendLine($"- Unknown power fields: {WithSample(UnknownPowerFieldCount, UnknownPowerFields.Count)}");
         builder.AppendLine($"- Powerset icon audits: {WithSample(PoolPowersetIconAuditCount, PoolPowersetIconAudit.Count)}");
         builder.AppendLine($"- Powerset icon assignments available: {WithSample(PoolIconAssignmentsAvailableCount, PoolIconAssignments.Count)}");
@@ -583,8 +715,12 @@ public sealed class OmniImportReport
         AppendSection(builder, "Power Field Mapping Coverage", MappedPowerFields);
         AppendSection(builder, "Mapped With Fallback", PowerFieldsMappedWithFallback);
         AppendSection(builder, "Field Conflicts", PowerFieldConflicts);
+        AppendSection(builder, "Known Charge-Capacity Extensions", KnownChargeCapacityDetailEntries);
         AppendSection(builder, "Known Deferred Power Fields", DeferredPowerFields);
-        AppendSection(builder, "Ignored UI/Client/Server Power Fields", IgnoredPowerFields);
+        AppendCountSection(builder, "Ignored Power Field Owner Kinds", IgnoredPowerFieldOwnerKindCounts);
+        AppendCountSection(builder, "Ignored Power Field Categories", IgnoredPowerFieldCategoryCounts);
+        AppendCountSection(builder, "Ignored Power Fields By Name", IgnoredPowerFieldNameCounts);
+        AppendSection(builder, "Ignored UI/Client/Server Power Field Samples", IgnoredPowerFields);
         AppendSection(builder, "Unknown Power Fields", UnknownPowerFields);
         AppendSection(builder, "Powerset Icon Audit", PoolPowersetIconAudit);
         AppendSection(builder, "Powerset Icon Assignments", PoolIconAssignments);
@@ -618,7 +754,9 @@ public sealed class OmniImportReport
         builder.AppendLine();
         builder.AppendLine($"- Export root: {exportRoot}");
         builder.AppendLine($"- Scoped powers: {PowersInScope:n0} of {PowersConsidered:n0}");
+        builder.AppendLine($"- Retained/skipped archetypes: {RetainedArchetypesRead:n0}/{SkippedArchetypesRead:n0}");
         builder.AppendLine($"- Class attributes loaded: {classAttributeCount:n0}");
+        builder.AppendLine($"- Retained/skipped class tables: {RetainedClassTableFiles:n0}/{SkippedClassTableFiles:n0}");
         builder.AppendLine($"- Actors classified: {actorCount:n0}");
         builder.AppendLine($"- Effects visited: {EffectsVisited:n0}");
         builder.AppendLine($"- Requirements visited: {PowerRequirements:n0}");
@@ -682,6 +820,11 @@ public sealed class OmniImportReport
         return builder.ToString();
     }
 
+    public string ToJson()
+    {
+        return JsonConvert.SerializeObject(this, Formatting.Indented);
+    }
+
     private static void AppendSection(StringBuilder builder, string title, IReadOnlyCollection<string> values)
     {
         if (values.Count == 0)
@@ -695,6 +838,22 @@ public sealed class OmniImportReport
         foreach (var value in values)
         {
             builder.AppendLine($"- {value}");
+        }
+    }
+
+    private static void AppendCountSection(StringBuilder builder, string title, IReadOnlyDictionary<string, int> values)
+    {
+        if (values.Count == 0)
+        {
+            return;
+        }
+
+        builder.AppendLine();
+        builder.AppendLine($"## {title}");
+        builder.AppendLine();
+        foreach (var pair in values.OrderByDescending(pair => pair.Value).ThenBy(pair => pair.Key, StringComparer.OrdinalIgnoreCase))
+        {
+            builder.AppendLine($"- {pair.Key}: {pair.Value}");
         }
     }
 

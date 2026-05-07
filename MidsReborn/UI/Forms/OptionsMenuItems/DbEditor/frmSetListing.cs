@@ -15,8 +15,15 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             Load += frmSetListing_Load;
             InitializeComponent();
+            ApplyMinimumIconLayout();
             Name = nameof(frmSetListing);
             Icon = Resources.MRB_Icon_Concept;
+        }
+
+        private void ApplyMinimumIconLayout()
+        {
+            var iconSize = Math.Max(DbEditorIconLayout.MinimumIconSize, Math.Max(ilSets.ImageSize.Width, ilSets.ImageSize.Height));
+            ilSets.ImageSize = new Size(iconSize, iconSize);
         }
 
         private void AddListItem(int idx)

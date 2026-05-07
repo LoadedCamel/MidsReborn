@@ -43,6 +43,7 @@ namespace Mids_Reborn.UI.Controls
         private const int FrameBorderWidth = 2;
         private const int HeaderChromeHeight = 34;
         private const int ContentInset = 8;
+        private const int InfoDescriptionDividerHeight = 2;
         private const int InfoShortDescriptionMaxLines = 2;
         private const int InfoLongDescriptionMinLines = 4;
         private const int HeaderOuterInset = 6;
@@ -440,6 +441,8 @@ namespace Mids_Reborn.UI.Controls
             infoSDesc.ForeColor = theme.Text;
             infoLDesc.BackColor = theme.Background;
             infoLDesc.ForeColor = theme.Text;
+            infoDescDivider.BackColor = theme.Background;
+            infoDescDivider.Invalidate();
             powerStatsGrid.BackColor = theme.Background;
             effectsGrid.BackColor = theme.Background;
 
@@ -508,6 +511,7 @@ namespace Mids_Reborn.UI.Controls
             title.Padding = new Padding(horizontalInset + ScalePx(2), 0, 0, 0);
             infoSDesc.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
             infoLDesc.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
+            infoDescDivider.Height = Math.Max(4, ScalePx(6));
             ApplyShortDescriptionMargins();
 
             powerStatsGrid.GridPadding = Math.Max(6, ContentInset);
@@ -529,9 +533,11 @@ namespace Mids_Reborn.UI.Controls
             }
 
             var shortHeight = MeasureShortDescriptionHeight();
-            var longHeight = string.IsNullOrWhiteSpace(infoLDesc.Text)
-                ? 0
-                : Math.Max(ScalePx(58), infoLDesc.Font.Height * InfoLongDescriptionMinLines + ScalePx(4));
+            var hasLongDescription = !string.IsNullOrWhiteSpace(infoLDesc.Text);
+            var dividerVisible = shortHeight > 0 && hasLongDescription;
+            var dividerHeight = dividerVisible ? Math.Max(4, ScalePx(6)) : 0;
+            var targetDamageHeight = CalculateInfoDamageDisplayHeight();
+            var longHeight = CalculateLongDescriptionHeight(shortHeight, dividerHeight, targetDamageHeight);
 
             if (infoSDesc.Height != shortHeight)
             {
@@ -542,12 +548,21 @@ namespace Mids_Reborn.UI.Controls
                 ApplyShortDescriptionMargins();
             }
 
+            if (infoDescDivider.Visible != dividerVisible)
+            {
+                infoDescDivider.Visible = dividerVisible;
+            }
+
+            if (infoDescDivider.Height != dividerHeight)
+            {
+                infoDescDivider.Height = dividerHeight;
+            }
+
             if (infoLDesc.Height != longHeight)
             {
                 infoLDesc.Height = longHeight;
             }
 
-            var targetDamageHeight = CalculateInfoDamageDisplayHeight();
             if (infoDamageDisplay.Height != targetDamageHeight)
             {
                 infoDamageDisplay.Height = targetDamageHeight;
@@ -566,6 +581,47 @@ namespace Mids_Reborn.UI.Controls
                 : (int)Math.Round(infoView.ClientSize.Height * 0.16f);
 
             return Math.Clamp(proportionalHeight, minHeight, maxHeight);
+        }
+
+        private int CalculateLongDescriptionHeight(int shortHeight, int dividerHeight, int damageHeight)
+        {
+            if (string.IsNullOrWhiteSpace(infoLDesc.Text))
+            {
+                return 0;
+            }
+
+            int minLongHeight = Math.Max(ScalePx(58), infoLDesc.Font.Height * InfoLongDescriptionMinLines + ScalePx(4));
+            int desiredLongHeight = Math.Max(minLongHeight, infoLDesc.ContentHeight + ScalePx(4));
+            int sliderHeight = sliderHost.Visible ? sliderHost.Height : 0;
+            int preferredStatsHeight = CalculatePowerStatsPreferredHeight();
+
+            int availableForLong = infoView.ClientSize.Height
+                                   - shortHeight
+                                   - dividerHeight
+                                   - sliderHeight
+                                   - damageHeight
+                                   - preferredStatsHeight;
+
+            int cappedLongHeight = Math.Max(minLongHeight, availableForLong);
+            return Math.Min(desiredLongHeight, cappedLongHeight);
+        }
+
+        private int CalculatePowerStatsPreferredHeight()
+        {
+            if (powerStatsGrid.Rows.Count == 0)
+            {
+                return 0;
+            }
+
+            double dpiScale = DeviceDpi / 96.0;
+            int ScaleGridPx(int value) => Math.Max(1, (int)Math.Round(value * dpiScale));
+
+            int gp = ScaleGridPx(powerStatsGrid.GridPadding);
+            int hh = ScaleGridPx(powerStatsGrid.HeaderHeight);
+            int rh = ScaleGridPx(powerStatsGrid.RowHeight);
+            int visualRows = (powerStatsGrid.Rows.Count + 1) / 2;
+
+            return gp + hh + (visualRows * rh) + gp;
         }
 
         private void ApplyShortDescriptionMargins()
@@ -633,6 +689,26 @@ namespace Mids_Reborn.UI.Controls
         #endregion
 
         #region Paint (Header)
+
+        private void InfoDescDivider_Paint(object? sender, PaintEventArgs e)
+        {
+            var bounds = infoDescDivider.ClientRectangle;
+            if (bounds.Width <= 0 || bounds.Height <= 0)
+            {
+                return;
+            }
+
+            var inset = ScalePx(ContentInset + 4);
+            var y = bounds.Height / 2;
+
+            using var pen = new Pen(CurrentTheme.GridRowLine);
+            e.Graphics.DrawLine(
+                pen,
+                inset,
+                y,
+                Math.Max(inset, bounds.Width - inset),
+                y);
+        }
 
         private void HeaderPanel_Paint(object? sender, PaintEventArgs e)
         {
@@ -2192,19 +2268,49 @@ namespace Mids_Reborn.UI.Controls
             // --- Shape: Arc/Radius + Range ---
             if (pBase.Arc > eps)
             {
-                rows.Add(new PowerStatsGrid.Row("Arc", pBase.Arc, pEnh.Arc, "°", higherIsBetter: false));
+                rows.Add(new PowerStatsGrid.Row(
+                    "Arc",
+                    pBase.Arc,
+                    pEnh.Arc,
+                    "°",
+                    higherIsBetter: false,
+                    tooltip: EnhancementPolicyAxes.GetStatPolicyTooltip(pBase, "Arc")));
                 if (pBase.Range > eps || pEnh.Range > eps)
-                    rows.Add(new PowerStatsGrid.Row("Range", pBase.Range, pEnh.Range, "ft", higherIsBetter: true));
+                    rows.Add(new PowerStatsGrid.Row(
+                        "Range",
+                        pBase.Range,
+                        pEnh.Range,
+                        "ft",
+                        higherIsBetter: true,
+                        tooltip: EnhancementPolicyAxes.GetStatPolicyTooltip(pBase, "Range")));
             }
             else if (pBase.Radius > eps)
             {
-                rows.Add(new PowerStatsGrid.Row("Radius", pBase.Radius, pEnh.Radius, "ft", higherIsBetter: true));
+                rows.Add(new PowerStatsGrid.Row(
+                    "Radius",
+                    pBase.Radius,
+                    pEnh.Radius,
+                    "ft",
+                    higherIsBetter: true,
+                    tooltip: EnhancementPolicyAxes.GetStatPolicyTooltip(pBase, "Radius")));
                 if (pBase.Range > eps || pEnh.Range > eps)
-                    rows.Add(new PowerStatsGrid.Row("Range", pBase.Range, pEnh.Range, "ft", higherIsBetter: true));
+                    rows.Add(new PowerStatsGrid.Row(
+                        "Range",
+                        pBase.Range,
+                        pEnh.Range,
+                        "ft",
+                        higherIsBetter: true,
+                        tooltip: EnhancementPolicyAxes.GetStatPolicyTooltip(pBase, "Range")));
             }
             else if (pBase.Range > eps || pEnh.Range > eps)
             {
-                rows.Add(new PowerStatsGrid.Row("Range", pBase.Range, pEnh.Range, "ft", higherIsBetter: true));
+                rows.Add(new PowerStatsGrid.Row(
+                    "Range",
+                    pBase.Range,
+                    pEnh.Range,
+                    "ft",
+                    higherIsBetter: true,
+                    tooltip: EnhancementPolicyAxes.GetStatPolicyTooltip(pBase, "Range")));
             }
 
             // --- Timing ---
@@ -2215,7 +2321,13 @@ namespace Mids_Reborn.UI.Controls
                         tooltip: $"CastTime: {pEnh.CastTimeBase:0.###}s\nArcana CastTime: {pEnh.ArcanaCastTime:0.###}s"));
 
                 if (!isToggle && (pBase.InterruptTime > eps || pEnh.InterruptTime > eps))
-                    rows.Add(new PowerStatsGrid.Row("Interrupt", pBase.InterruptTime, pEnh.InterruptTime, "s", higherIsBetter: false));
+                    rows.Add(new PowerStatsGrid.Row(
+                        "Interrupt",
+                        pBase.InterruptTime,
+                        pEnh.InterruptTime,
+                        "s",
+                        higherIsBetter: false,
+                        tooltip: EnhancementPolicyAxes.GetStatPolicyTooltip(pBase, "Interrupt")));
 
                 if (isToggle && (pBase.ActivatePeriod > eps || pEnh.ActivatePeriod > eps))
                     rows.Add(new PowerStatsGrid.Row("Activate", pBase.ActivatePeriod, pEnh.ActivatePeriod, "s", higherIsBetter: false,
@@ -2301,6 +2413,17 @@ namespace Mids_Reborn.UI.Controls
                 var actorHpMax = Math.Max(1f, _actorTotalsSnapshot.Totals.HPMax);
                 baseSummary = baseSummary.ScaleToDisplayMultiplier(actorHpMax);
                 enhancedSummary = enhancedSummary.ScaleToDisplayMultiplier(actorHpMax);
+            }
+
+            if (!baseSummary.HasDamageEffects && !enhancedSummary.HasDamageEffects)
+            {
+                return new DamageCardPresentation(
+                    HeaderText: string.Empty,
+                    ModeBadgeText: "Non-Damage",
+                    PrimaryText: string.Empty,
+                    SubtitleText: string.Empty,
+                    TooltipText: string.Empty,
+                    Segments: Array.Empty<DamageSourceSegment>());
             }
 
             if (basePower.NIDSubPower.Length > 0 &&
@@ -2456,19 +2579,26 @@ namespace Mids_Reborn.UI.Controls
                 ? $"Power Source: {_actorPowerSourceDescription}"
                 : "Enhancement Values";
 
-            var longInfo = Regex.Replace(pBase.DescLongFormatted.Trim().Replace("\0", "").Replace("<br>", RTF.Crlf()), @"\s{2,}", " ");
+            var longInfo = Regex.Replace(pBase.DescLongFormatted.Trim().Replace("\0", ""), @"[ \t]{2,}", " ");
             var shortDescription = pBase.DescShort.Trim();
             if (_presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly && !string.IsNullOrWhiteSpace(_actorPowerSourceDescription))
             {
                 shortDescription = $"Power Source: {_actorPowerSourceDescription}\r\n{shortDescription}";
             }
 
-            infoSDesc.Rtf = RTF.StartRTF(infoSDesc.Font) + RTF.ToRTF(shortDescription) + RTF.EndRTF();
-            infoLDesc.Rtf = RTF.StartRTF(infoLDesc.Font) + RTF.ToRTF(longInfo) + RTF.EndRTF();
-            UpdateInfoDescriptionLayout();
+            var sharedRechargeSummary = BuildSharedRechargeInfoSummary(pBase);
+            if (!string.IsNullOrWhiteSpace(sharedRechargeSummary))
+            {
+                shortDescription = string.IsNullOrWhiteSpace(shortDescription)
+                    ? sharedRechargeSummary
+                    : $"{sharedRechargeSummary}\r\n{shortDescription}";
+            }
 
             var statRows = PowerCanonicalStats.BuildRows(pBase, enhancedPower);
+            infoSDesc.Rtf = RTF.FormatMarkupDocument(shortDescription, infoSDesc.Font);
+            infoLDesc.Rtf = RTF.FormatMarkupDocument(longInfo, infoLDesc.Font);
             powerStatsGrid.SetRows(statRows);
+            UpdateInfoDescriptionLayout();
 
             RefreshDamageCardPresentation(pBase, enhancedPower);
 
@@ -2520,6 +2650,33 @@ namespace Mids_Reborn.UI.Controls
                 ranked = Enumerable.Range(0, n).ToList();
             }
             return ranked;
+        }
+
+        private static string BuildSharedRechargeInfoSummary(IPower power)
+        {
+            var groups = power.RechargeGroups
+                .Where(group => !string.IsNullOrWhiteSpace(group))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+            if (groups.Length == 0)
+            {
+                return string.Empty;
+            }
+
+            var linkedPowers = (DatabaseAPI.Database?.Power ?? Array.Empty<IPower>())
+                .Where(other => other != null &&
+                                !string.Equals(other.FullName, power.FullName, StringComparison.OrdinalIgnoreCase) &&
+                                other.RechargeGroups.Any(group => groups.Contains(group, StringComparer.OrdinalIgnoreCase)))
+                .Select(other => other.DisplayName)
+                .Where(name => !string.IsNullOrWhiteSpace(name))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
+                .Take(5)
+                .ToArray();
+
+            return linkedPowers.Length > 0
+                ? $"Shared Recharge: {string.Join(", ", linkedPowers)}"
+                : $"Shared Recharge Group{(groups.Length == 1 ? "" : "s")}: {string.Join(", ", groups.Select(group => group.Replace('_', ' ').Trim()))}";
         }
 
         private void DisplayFlippedEnhancements()

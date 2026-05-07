@@ -81,6 +81,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool HasCanonicalOmniPlannerMath { get; set; }
 
+        public bool HasPersistedOmniRuntimeMetadata { get; set; }
+
         public Dictionary<string, OmniClassAttributeTable> ClassAttributes { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
         public EnhancementImportMetadata EnhancementImportMetadata { get; set; } = new();
@@ -154,6 +156,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             PlannerRulesetId = PlannerRulesetId.Legacy;
             PlannerRulesetVersion = 0;
             HasCanonicalOmniPlannerMath = false;
+            HasPersistedOmniRuntimeMetadata = false;
             ClassAttributes = new Dictionary<string, OmniClassAttributeTable>(StringComparer.OrdinalIgnoreCase);
             EnhancementImportMetadata = new EnhancementImportMetadata();
             PowerImportMetadata = new PowerImportMetadata();
@@ -170,7 +173,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             var version = reader.ReadInt32();
-            if (version is not 1 and not 2 and not 3 and not 4 and not 5)
+            if (version is not 1 and not 2 and not 3 and not 4 and not 5 and not 6)
             {
                 return;
             }
@@ -205,6 +208,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         : PlannerRulesetId.Legacy;
                     PlannerRulesetVersion = metadata.PlannerRulesetVersion;
                     HasCanonicalOmniPlannerMath = metadata.HasCanonicalOmniPlannerMath;
+                    HasPersistedOmniRuntimeMetadata = false;
                     ClassAttributes = metadata.ClassAttributes == null
                         ? new Dictionary<string, OmniClassAttributeTable>(StringComparer.OrdinalIgnoreCase)
                         : new Dictionary<string, OmniClassAttributeTable>(metadata.ClassAttributes, StringComparer.OrdinalIgnoreCase);
@@ -213,6 +217,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case 3:
                 case 4:
                 case 5:
+                case 6:
                 {
                     var metadata = JsonConvert.DeserializeObject<OmniDatabaseMetadata>(json) ?? new OmniDatabaseMetadata();
                     OmniImportSource = metadata.ImportSource;
@@ -220,6 +225,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     PlannerRulesetId = metadata.PlannerRulesetId;
                     PlannerRulesetVersion = metadata.PlannerRulesetVersion;
                     HasCanonicalOmniPlannerMath = metadata.HasCanonicalOmniPlannerMath;
+                    HasPersistedOmniRuntimeMetadata = version >= 6 && metadata.HasPersistedOmniRuntimeMetadata;
                     ClassAttributes = metadata.ClassAttributes == null
                         ? new Dictionary<string, OmniClassAttributeTable>(StringComparer.OrdinalIgnoreCase)
                         : new Dictionary<string, OmniClassAttributeTable>(metadata.ClassAttributes, StringComparer.OrdinalIgnoreCase);
@@ -239,7 +245,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public void StoreOmniMetadata(BinaryWriter writer)
         {
             writer.Write("MRB_OMNI_METADATA");
-            writer.Write(5);
+            writer.Write(6);
             writer.Write(JsonConvert.SerializeObject(new OmniDatabaseMetadata
             {
                 ImportSource = OmniImportSource,
@@ -247,6 +253,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 PlannerRulesetId = PlannerRulesetId,
                 PlannerRulesetVersion = PlannerRulesetVersion,
                 HasCanonicalOmniPlannerMath = HasCanonicalOmniPlannerMath,
+                HasPersistedOmniRuntimeMetadata = HasPersistedOmniRuntimeMetadata,
                 ClassAttributes = new Dictionary<string, OmniClassAttributeTable>(ClassAttributes, StringComparer.OrdinalIgnoreCase),
                 EnhancementImport = EnhancementImportMetadata,
                 PowerImport = PowerImportMetadata,

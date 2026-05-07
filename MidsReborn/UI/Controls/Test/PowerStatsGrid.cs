@@ -78,11 +78,11 @@ public sealed class PowerStatsGrid : Control
     private int _rowHeight = 28;
     private int _gridPadding = 8;
     private int _colGap = 12;
-    private int _hoverRow = -1;
+    private int _hoverItem = -1;
 
-    // Column width ratio (Stat|Value)
-    private float _wLabel = 0.46f;   // stat column
-    private float _wValue = 0.54f;   // value column (right aligned)
+    // Column width ratio within a single Stat|Value pair.
+    private float _wLabel = 0.46f;
+    private float _wValue = 0.54f;
 
     #endregion
 
@@ -184,7 +184,7 @@ public sealed class PowerStatsGrid : Control
     {
         _rows.Clear();
         _rows.AddRange(rows);
-        _hoverRow = -1;
+        _hoverItem = -1;
         _tooltip.Hide(this);
         AutoSizeHeight();
         Invalidate();
@@ -193,7 +193,7 @@ public sealed class PowerStatsGrid : Control
     public void Clear()
     {
         _rows.Clear();
-        _hoverRow = -1;
+        _hoverItem = -1;
         _tooltip.Hide(this);
         AutoSizeHeight();
         Invalidate();
@@ -225,32 +225,71 @@ public sealed class PowerStatsGrid : Control
         int gp = ScalePx(_gridPadding);
         int hh = ScalePx(_headerHeight);
         int rh = ScalePx(_rowHeight);
-        int h = gp + hh + (_rows.Count * rh) + gp;
-        // Only grow if needed (don’t shrink layout unexpectedly)
-        Height = Math.Max(Height, h);
+        int visualRows = (_rows.Count + 1) / 2;
+        int h = gp + hh + (visualRows * rh) + gp;
+        Height = h;
     }
 
-    private (Rectangle rcLabel, Rectangle rcValue) GetColumns(Rectangle bounds)
+    private (Rectangle leftPair, Rectangle leftLabel, Rectangle leftValue, Rectangle rightPair, Rectangle rightLabel, Rectangle rightValue) GetColumns(Rectangle bounds)
     {
-        int gap = ScalePx(_colGap);
-        int wAvail = bounds.Width - gap;
+        int pairGap = ScalePx(_colGap);
+        int centerGap = ScalePx(_colGap + 6);
+        int itemInset = ScalePx(4);
 
-        int wLabel = (int)Math.Floor(wAvail * _wLabel);
-        int wValue = Math.Max(0, wAvail - wLabel);
+        int wAvail = Math.Max(0, bounds.Width - centerGap);
+        int leftPairWidth = wAvail / 2;
+        int rightPairWidth = wAvail - leftPairWidth;
 
-        int x = bounds.X;
-        var c0 = new Rectangle(x + 5, bounds.Y, wLabel, bounds.Height); x += wLabel + gap;
-        var c1 = new Rectangle(x, bounds.Y, wValue, bounds.Height);
+        var leftPair = new Rectangle(bounds.X, bounds.Y, leftPairWidth, bounds.Height);
+        var rightPair = new Rectangle(leftPair.Right + centerGap, bounds.Y, rightPairWidth, bounds.Height);
 
-        return (c0, c1);
+        var left = GetPairColumns(leftPair, pairGap, itemInset);
+        var right = GetPairColumns(rightPair, pairGap, itemInset);
+
+        return (leftPair, left.label, left.value, rightPair, right.label, right.value);
     }
 
-    private Rectangle GetRowBounds(int index)
+    private (Rectangle label, Rectangle value) GetPairColumns(Rectangle pairBounds, int pairGap, int itemInset)
+    {
+        int pairInnerWidth = Math.Max(0, pairBounds.Width - pairGap);
+        float totalWeight = Math.Max(0.01f, _wLabel + _wValue);
+        int wLabel = (int)Math.Floor(pairInnerWidth * (_wLabel / totalWeight));
+        int wValue = Math.Max(0, pairInnerWidth - wLabel);
+
+        var label = new Rectangle(
+            pairBounds.X + itemInset,
+            pairBounds.Y,
+            Math.Max(0, wLabel - itemInset),
+            pairBounds.Height);
+
+        var value = new Rectangle(
+            pairBounds.X + wLabel + pairGap,
+            pairBounds.Y,
+            Math.Max(0, wValue - itemInset),
+            pairBounds.Height);
+
+        return (label, value);
+    }
+
+    private Rectangle GetVisualRowBounds(int index)
     {
         int gp = ScalePx(_gridPadding);
         int hh = ScalePx(_headerHeight);
         int rh = ScalePx(_rowHeight);
         return new Rectangle(gp, gp + hh + index * rh, Width - gp * 2, rh);
+    }
+
+    private Rectangle GetItemBounds(int index)
+    {
+        if (index < 0 || index >= _rows.Count)
+        {
+            return Rectangle.Empty;
+        }
+
+        int visualRow = index / 2;
+        bool isRight = (index % 2) == 1;
+        var layout = GetColumns(GetVisualRowBounds(visualRow));
+        return isRight ? layout.rightPair : layout.leftPair;
     }
 
     #endregion
@@ -275,31 +314,24 @@ public sealed class PowerStatsGrid : Control
             g.FillRectangle(headerBrush, rcHeader);
 
         var cols = GetColumns(rcHeader);
-        TextRenderer.DrawText(g, "Stat", Font, cols.rcLabel, t.Text, Color.Transparent, HeaderFlags | TextFormatFlags.Left);
-        TextRenderer.DrawText(g, "Value", Font, cols.rcValue, t.Text, Color.Transparent, HeaderFlags | TextFormatFlags.Right);
-
         // Rows
-        for (int i = 0; i < _rows.Count; i++)
+        int visualRows = (_rows.Count + 1) / 2;
+        for (int i = 0; i < visualRows; i++)
         {
-            var row = _rows[i];
-            var rc = GetRowBounds(i);
+            int leftIndex = i * 2;
+            int rightIndex = leftIndex + 1;
+            var rc = GetVisualRowBounds(i);
             var rcc = GetColumns(rc);
 
-            if (i == _hoverRow)
+            if (leftIndex < _rows.Count)
             {
-                using var hov = new SolidBrush(Color.FromArgb(18, 255, 255, 255));
-                g.FillRectangle(hov, rc);
+                DrawRowItem(g, _rows[leftIndex], leftIndex, rcc.leftPair, rcc.leftLabel, rcc.leftValue, t);
             }
 
-            // Stat label (include ED marker)
-            var label = row.Label + (row.AffectedByEd ? "  ⓔ" : "");
-            TextRenderer.DrawText(g, label, Font, rcc.rcLabel, Color.FromArgb(200, t.Accent), Color.Transparent, CellFlags | TextFormatFlags.Left);
-
-            // Build value cell: Enhanced + inline delta (+/-) and optional %.
-            var (valueText, valueColor) = BuildValueCell(row, t);
-
-            // Right-align main value + inline delta
-            TextRenderer.DrawText(g, valueText, Font, rcc.rcValue, valueColor, Color.Transparent, CellFlags | TextFormatFlags.Right);
+            if (rightIndex < _rows.Count)
+            {
+                DrawRowItem(g, _rows[rightIndex], rightIndex, rcc.rightPair, rcc.rightLabel, rcc.rightValue, t);
+            }
 
             // Row separator
             using var pen = new Pen(t.GridRowLine);
@@ -307,13 +339,27 @@ public sealed class PowerStatsGrid : Control
         }
     }
 
+    private void DrawRowItem(Graphics g, Row row, int itemIndex, Rectangle pairBounds, Rectangle labelBounds, Rectangle valueBounds, DataViewTheme theme)
+    {
+        if (itemIndex == _hoverItem)
+        {
+            using var hov = new SolidBrush(Color.FromArgb(18, 255, 255, 255));
+            g.FillRectangle(hov, pairBounds);
+        }
+
+        string statLabel = row.Label.TrimEnd(':') + ":";
+        var label = statLabel + (row.AffectedByEd ? "  ⓔ" : "");
+        TextRenderer.DrawText(g, label, Font, labelBounds, Color.FromArgb(200, theme.Accent), Color.Transparent, CellFlags | TextFormatFlags.Right);
+
+        var (valueText, valueColor) = BuildValueCell(row, theme);
+        TextRenderer.DrawText(g, valueText, Font, valueBounds, valueColor, Color.Transparent, CellFlags | TextFormatFlags.Left);
+    }
+
     private static (string text, Color color) BuildValueCell(Row row, DataViewTheme theme)
     {
         string enhanced = FormatNorm(row.EnhancedValue, row.Unit);
-        string @base = FormatNorm(row.BaseValue, row.Unit);
         bool changed = Math.Abs(row.EnhancedValue - row.BaseValue) >= Eps;
-
-        var text = changed ? $"{enhanced} ({@base})" : enhanced;
+        var text = enhanced;
 
         if (!changed && row.NeutralWhenZero)
         {
@@ -369,19 +415,19 @@ public sealed class PowerStatsGrid : Control
     {
         base.OnMouseMove(e);
 
-        int rowIdx = HitTestRow(e.Location);
-        if (rowIdx != _hoverRow)
+        int itemIdx = HitTestItem(e.Location);
+        if (itemIdx != _hoverItem)
         {
-            _hoverRow = rowIdx;
+            _hoverItem = itemIdx;
             Invalidate(); // hover band
 
             _tooltip.Hide(this);
-            if (rowIdx >= 0)
+            if (itemIdx >= 0)
             {
-                var row = _rows[rowIdx];
+                var row = _rows[itemIdx];
                 if (!string.IsNullOrWhiteSpace(row.Tooltip))
                 {
-                    var rc = GetRowBounds(rowIdx);
+                    var rc = GetItemBounds(itemIdx);
                     _tooltip.ToolTipTitle = row.Label;
                     _tooltip.Show(row.Tooltip, this, rc.Left + 24, rc.Bottom);
                 }
@@ -400,18 +446,32 @@ public sealed class PowerStatsGrid : Control
     protected override void OnMouseLeave(EventArgs e)
     {
         base.OnMouseLeave(e);
-        _hoverRow = -1;
+        _hoverItem = -1;
         _tooltip.ToolTipTitle = string.Empty;
         _tooltip.Hide(this);
         Invalidate();
     }
 
-    private int HitTestRow(Point p)
+    private int HitTestItem(Point p)
     {
-        for (int i = 0; i < _rows.Count; i++)
+        int visualRows = (_rows.Count + 1) / 2;
+        for (int i = 0; i < visualRows; i++)
         {
-            if (GetRowBounds(i).Contains(p)) return i;
+            int leftIndex = i * 2;
+            int rightIndex = leftIndex + 1;
+            var layout = GetColumns(GetVisualRowBounds(i));
+
+            if (leftIndex < _rows.Count && layout.leftPair.Contains(p))
+            {
+                return leftIndex;
+            }
+
+            if (rightIndex < _rows.Count && layout.rightPair.Contains(p))
+            {
+                return rightIndex;
+            }
         }
+
         return -1;
     }
 

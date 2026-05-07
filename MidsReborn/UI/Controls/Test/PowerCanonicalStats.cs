@@ -96,6 +96,12 @@ public static class PowerCanonicalStats
             predicate: x => !isAuto && x.PowerType != Enums.ePowerType.Toggle && x.InterruptTime > Eps,
             select: x => x.InterruptTime);
 
+        yield return new StatDef(
+            label: "Root Time", unit: "s", higherIsBetter: false,
+            mode: ApplyMode.None, edKind: null,
+            predicate: x => !isAuto && x.RootTime > Eps,
+            select: x => x.RootTime);
+
         // Toggle tick period (no ED)
         yield return new StatDef(
             label: "Activate", unit: "s", higherIsBetter: false,
@@ -211,6 +217,17 @@ public static class PowerCanonicalStats
                     tip = tip + (string.IsNullOrEmpty(tip) ? "" : "\r\n\r\n") +
                           $"Details:\r\nCast Time: {pEnh.CastTimeBase:0.###} sec\r\nArcana Cast Time: {pEnh.ArcanaCastTime:0.###} sec";
                 }
+                else if (def.Label == "Root Time")
+                {
+                    tip = tip + (string.IsNullOrEmpty(tip) ? "" : "\r\n\r\n") +
+                          "Time the caster remains rooted while activating this power.";
+
+                    var policyTooltip = EnhancementPolicyAxes.GetStatPolicyTooltip(pBase, "Root Time");
+                    if (!string.IsNullOrWhiteSpace(policyTooltip))
+                    {
+                        tip = tip + "\r\n\r\n" + policyTooltip;
+                    }
+                }
             }
 
             bool isConeHere = IsCone(pBase);
@@ -233,6 +250,11 @@ public static class PowerCanonicalStats
                     shownLenFt: enhancedVal,
                     ed: ed,
                     mode: def.Mode); // MultiplyUp
+            }
+
+            if (def.Label == "Recharge")
+            {
+                tip = AppendSharedRechargeTooltip(pBase, tip);
             }
 
             // Grid display: convert to % only for stats flagged as DisplayIsPercent (e.g., Accuracy)
@@ -572,6 +594,61 @@ public static class PowerCanonicalStats
         sb.AppendLine($"• Coverage Area: ~{F0(areaShown)} ft²");
 
         return sb.ToString();
+    }
+
+    private static string AppendSharedRechargeTooltip(IPower power, string tooltip)
+    {
+        var sharedRechargeTooltip = BuildSharedRechargeTooltip(power);
+        if (string.IsNullOrWhiteSpace(sharedRechargeTooltip))
+        {
+            return tooltip;
+        }
+
+        return string.IsNullOrWhiteSpace(tooltip)
+            ? sharedRechargeTooltip
+            : $"{tooltip}\r\n\r\n{sharedRechargeTooltip}";
+    }
+
+    private static string BuildSharedRechargeTooltip(IPower power)
+    {
+        var groups = power.RechargeGroups
+            .Where(group => !string.IsNullOrWhiteSpace(group))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        if (groups.Length == 0)
+        {
+            return string.Empty;
+        }
+
+        var lines = new List<string>
+        {
+            $"Shared recharge groups: {string.Join(", ", groups.Select(HumanizeRechargeGroup))}"
+        };
+
+        var linkedPowers = (DatabaseAPI.Database?.Power ?? Array.Empty<IPower>())
+            .Where(other => other != null &&
+                            !string.Equals(other.FullName, power.FullName, StringComparison.OrdinalIgnoreCase) &&
+                            other.RechargeGroups.Any(group => groups.Contains(group, StringComparer.OrdinalIgnoreCase)))
+            .Select(other => other.DisplayName)
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(name => name, StringComparer.OrdinalIgnoreCase)
+            .Take(6)
+            .ToArray();
+
+        if (linkedPowers.Length > 0)
+        {
+            lines.Add($"Also linked to: {string.Join(", ", linkedPowers)}");
+        }
+
+        return string.Join("\r\n", lines);
+    }
+
+    private static string HumanizeRechargeGroup(string group)
+    {
+        return string.IsNullOrWhiteSpace(group)
+            ? string.Empty
+            : group.Replace('_', ' ').Trim();
     }
 
     private static bool IsCone(IPower p) => p.Arc > Eps && p.Range > Eps;

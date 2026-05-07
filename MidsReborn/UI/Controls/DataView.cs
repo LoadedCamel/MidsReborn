@@ -852,9 +852,33 @@ namespace Mids_Reborn.UI.Forms.Controls
                 info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Cast Time", "Cast"), enhancedPower.CastTime, pBase.CastTime, "s", $"CastTime: {enhancedPower.CastTimeBase:####0.###}s\r\nArcana CastTime: {enhancedPower.ArcanaCastTime:####0.###}s", false, true, false, false, 3));
             }
 
+            if (pBase.PowerType != Enums.ePowerType.Auto_ && pBase.RootTime > 0f)
+            {
+                var rootTimeTooltip = "Time the caster remains rooted while activating this power.";
+                var rootTimePolicyTooltip = EnhancementPolicyAxes.GetStatPolicyTooltip(pBase, "Root Time");
+                if (!string.IsNullOrWhiteSpace(rootTimePolicyTooltip))
+                {
+                    rootTimeTooltip += $"\r\n\r\n{rootTimePolicyTooltip}";
+                }
+
+                info_DataList.AddItem(FastItemBuilder.Fi.FastItem("Root Time", pBase.RootTime, enhancedPower.RootTime, "s", rootTimeTooltip));
+            }
+
             info_DataList.AddItem(pBase.PowerType == Enums.ePowerType.Toggle
                 ? FastItemBuilder.Fi.FastItem(ShortStr("Activate", "Act"), pBase.ActivatePeriod, enhancedPower.ActivatePeriod, "s", "The effects of this toggle power are applied at this interval.")
                 : FastItemBuilder.Fi.FastItem(ShortStr("Interrupt", "Intrpt"), enhancedPower.InterruptTime, pBase.InterruptTime, "s", "After activating this power, it can be interrupted for this amount of time."));
+
+            var enhancementPolicySummary = EnhancementPolicyAxes.BuildPolicySummary(pBase);
+            if (!string.IsNullOrWhiteSpace(enhancementPolicySummary))
+            {
+                info_DataList.AddItem(new PairedListEx.Item(
+                    ShortStr("Enhancement Policy", "EnhPol"),
+                    enhancementPolicySummary,
+                    false,
+                    true,
+                    false,
+                    EnhancementPolicyAxes.BuildPolicyTooltip(pBase)));
+            }
             
             if (validMez)
             {

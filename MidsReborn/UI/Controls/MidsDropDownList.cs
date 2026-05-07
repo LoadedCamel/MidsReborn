@@ -125,7 +125,7 @@ public class MidsDropDownList : ComboBox
         {
             SelectedItem = null;
             DataSource = null; 
-            _itemIcons.Clear();
+            DisposeItemIcons();
             RefreshIcons(); 
         }
 
@@ -210,9 +210,8 @@ public class MidsDropDownList : ComboBox
     /// </summary>
     public void RefreshIcons()
     {
+        DisposeItemIcons();
         if (IconProvider is null) return;
-
-        _itemIcons.Clear();
 
         // Note: Items enumerates display objects regardless of DataSource or manual adding.
         foreach (var obj in Items.Cast<object>())
@@ -221,7 +220,15 @@ public class MidsDropDownList : ComboBox
             {
                 var bmp = IconProvider(obj);
                 // Store even null results to avoid repeated calls for missing icons
-                _itemIcons[obj] = bmp;
+                _itemIcons[obj] = bmp != null ? new Bitmap(bmp) : null;
+            }
+            catch (ArgumentException)
+            {
+                _itemIcons[obj] = null;
+            }
+            catch (ObjectDisposedException)
+            {
+                _itemIcons[obj] = null;
             }
             catch
             {
@@ -278,6 +285,9 @@ public class MidsDropDownList : ComboBox
 
         if (SelectedItem != null)
         {
+            var selectedItem = SelectedIndex >= 0 && SelectedIndex < Items.Count
+                ? Items[SelectedIndex]
+                : SelectedItem;
             Rectangle iconRect = new Rectangle(rect.Left + IconPadding, rect.Top + (rect.Height - IconSize) / 2, IconSize, IconSize);
 
             Size textSize = TextRenderer.MeasureText(g, "Mg", Font, Size.Empty, TextFormatFlags.NoPadding);
@@ -285,7 +295,7 @@ public class MidsDropDownList : ComboBox
 
             Rectangle textRect = new Rectangle(iconRect.Right + IconPadding, textY, rect.Right - iconRect.Right - IconPadding * 2,textSize.Height);
 
-            if (_itemIcons.TryGetValue(SelectedItem, out var icon) && icon != null)
+            if (selectedItem != null && _itemIcons.TryGetValue(selectedItem, out var icon) && icon != null)
             {
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 DrawIconIfValid(g, icon, iconRect);
@@ -293,7 +303,7 @@ public class MidsDropDownList : ComboBox
 
             TextRenderer.DrawText(
                 g,
-                GetItemText(SelectedItem),
+                GetItemText(selectedItem),
                 Font,
                 textRect,
                 theme.ForeColor,
@@ -481,6 +491,31 @@ public class MidsDropDownList : ComboBox
     {
         if (_isLocked) return;
         base.OnDropDown(e);
+    }
+
+    protected override void Dispose(bool disposing)
+    {
+        if (disposing)
+        {
+            DetachListChanged();
+            DisposeItemIcons();
+            if (!DesignMode)
+            {
+                ThemeManager.ThemeChanged -= Invalidate;
+            }
+        }
+
+        base.Dispose(disposing);
+    }
+
+    private void DisposeItemIcons()
+    {
+        foreach (var icon in _itemIcons.Values.Where(icon => icon != null))
+        {
+            icon.Dispose();
+        }
+
+        _itemIcons.Clear();
     }
 
     private static void DrawIconIfValid(Graphics graphics, Image icon, Rectangle bounds)

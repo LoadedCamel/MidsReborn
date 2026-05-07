@@ -13,6 +13,9 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 {
     public partial class frmPowerBrowser : Form
     {
+        private const int BrowserGroupIconTargetPixels = 18;
+        private const int BrowserSetIconTargetPixels = 24;
+        private const int BrowserPowerIconTargetPixels = 20;
         private const int FILTER_ALL_POWERS = 3;
 
         private const int FILTER_ALL_SETS = 2;
@@ -36,9 +39,25 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             Load += frmPowerBrowser_Load;
             _updating = false;
             InitializeComponent();
+            ApplyMinimumIconLayout();
             Name = nameof(frmPowerBrowser);
             var componentResourceManager = new ComponentResourceManager(typeof(frmPowerBrowser));
             Icon = Resources.MRB_Icon_Concept;
+        }
+
+        private void ApplyMinimumIconLayout()
+        {
+            ilAT.ImageSize = CreateBrowserImageListSize(BrowserGroupIconTargetPixels);
+            ilPS.ImageSize = CreateBrowserImageListSize(BrowserSetIconTargetPixels);
+            ilPower.ImageSize = CreateBrowserImageListSize(BrowserPowerIconTargetPixels);
+        }
+
+        private Size CreateBrowserImageListSize(int targetPixels)
+        {
+            var dpi = DeviceDpi > 0 ? DeviceDpi : 96;
+            var scale = dpi / 96f;
+            var logicalSize = Math.Max(16, (int)Math.Round(targetPixels / scale));
+            return new Size(logicalSize, logicalSize);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -802,8 +821,10 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 Alignment = StringAlignment.Center
             };
 
-            using var font = new Font(Font, FontStyle.Bold);
-            var layoutRectangle = new RectangleF(17f, 0f, 16f, 18f);
+            using var font = new Font(Font.FontFamily, 6.75f, FontStyle.Bold, GraphicsUnit.Point);
+            var iconBounds = new Rectangle(0, 0, ilPS.ImageSize.Width, ilPS.ImageSize.Height);
+            var badgeSize = Math.Max(6, (int)Math.Round(ilPS.ImageSize.Width * 0.38f));
+            var badgeBounds = new Rectangle(iconBounds.Right - badgeSize - 2, iconBounds.Bottom - badgeSize - 2, badgeSize, badgeSize);
 
             foreach (var setIndex in iSets)
             {
@@ -886,12 +907,18 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                         break;
                 }
 
-                canvasBitmap.Graphics.Clear(backgroundColor);
+                canvasBitmap.Graphics.Clear(Color.Transparent);
                 if (powersetImage?.Bitmap != null)
                 {
-                    canvasBitmap.Graphics.DrawImageUnscaled(powersetImage.Bitmap, new Point(1, 1));
+                    DbEditorIconLayout.DrawImageAspectFit(canvasBitmap.Graphics, powersetImage.Bitmap, iconBounds);
                 }
-                canvasBitmap.Graphics.DrawString(label, font, labelBrush, layoutRectangle, format);
+
+                if (!string.IsNullOrWhiteSpace(label))
+                {
+                    using var badgeBrush = new SolidBrush(Color.FromArgb(224, backgroundColor));
+                    canvasBitmap.Graphics.FillRectangle(badgeBrush, badgeBounds);
+                    canvasBitmap.Graphics.DrawString(label, font, labelBrush, badgeBounds, format);
+                }
 
                 ilPS.Images.Add(new Bitmap(canvasBitmap.Bitmap));
             }
@@ -969,6 +996,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void frmPowerBrowser_Load(object sender, EventArgs e)
         {
+            ApplyMinimumIconLayout();
             lvGroup.EnableDoubleBuffer();
             lvSet.EnableDoubleBuffer();
             lvPower.EnableDoubleBuffer();
@@ -1135,11 +1163,14 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 powersetId = DatabaseAPI.NidFromUidPowerset(item.SubItems[3].Text);
             }
 
-        return powersetId > -1 &&
-               powersetId < DatabaseAPI.Database.Powersets.Length &&
-               (DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.Pet ||
-                DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.SetBonus);
-    }
+            return powersetId > -1 &&
+                   powersetId < DatabaseAPI.Database.Powersets.Length &&
+                   (DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.Pet ||
+                    DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.Redirect ||
+                    DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.SetBonus ||
+                    DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.Inherent ||
+                    DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.Incarnate);
+        }
 
         private void List_Powers(int selIdx)
         {
@@ -1220,6 +1251,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             lvPower.BeginUpdate();
             lvPower.Items.Clear();
+            lblPower.Text = string.Empty;
             var includeHiddenPowers = ShouldIncludeHiddenPowersForSelectedSet();
             if (iPowers2.Length > 0)
             {
@@ -1389,6 +1421,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             if (lvPower.SelectedItems.Count <= 0)
             {
+                lblPower.Text = string.Empty;
+                _selected[2] = -1;
                 return;
             }
 

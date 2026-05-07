@@ -314,7 +314,33 @@ namespace Mids_Reborn.UI.Forms.Controls
                 info_DataList.AddItem(FastItem(ShortStr("Cast Time", "Cast"), enhancedPower.CastTime, basePower.CastTime, "s",
                     $"CastTime: {basePower.CastTime}s\r\nArcana CastTime: {(Math.Ceiling(enhancedPower.CastTime / 0.132f) + 1) * 0.132:####0.###}s",
                     false, true, false, false, 3));
+
+                if (basePower.PowerType != Enums.ePowerType.Auto_ && basePower.RootTime > 0f)
+                {
+                    var rootTimeTooltip = "Time the caster remains rooted while activating this power.";
+                    var rootTimePolicyTooltip = EnhancementPolicyAxes.GetStatPolicyTooltip(basePower, "Root Time");
+                    if (!string.IsNullOrWhiteSpace(rootTimePolicyTooltip))
+                    {
+                        rootTimeTooltip += $"\r\n\r\n{rootTimePolicyTooltip}";
+                    }
+
+                    info_DataList.AddItem(FastItem("Root Time", basePower.RootTime, enhancedPower.RootTime, "s", rootTimeTooltip));
+                }
+
                 AddToggleOrInterruptItem(basePower, enhancedPower);
+
+                var enhancementPolicySummary = EnhancementPolicyAxes.BuildPolicySummary(basePower);
+                if (!string.IsNullOrWhiteSpace(enhancementPolicySummary))
+                {
+                    info_DataList.AddItem(new PairedListEx.Item(
+                        ShortStr("Enhancement Policy", "EnhPol"),
+                        enhancementPolicySummary,
+                        false,
+                        true,
+                        false,
+                        EnhancementPolicyAxes.BuildPolicyTooltip(basePower)));
+                }
+
                 AddEffectItems(basePower, enhancedPower);
 
                 var rankedEffectsExt = GroupedFx.FilterListItemsExt(_effectsItemPairs, e => e.EffectType is not (Enums.eEffectType.GrantPower or Enums.eEffectType.MaxRunSpeed

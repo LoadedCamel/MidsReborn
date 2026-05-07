@@ -919,7 +919,8 @@ namespace Mids_Reborn.Core
             return Regex.Replace(tip, @"(?<stat>[0-9A-Za-z\-]+)\(\k<stat>", "$1")
                 .Replace("((", "(")
                 .Replace("))", ")")
-                .Replace("None Defense", "Base Defense");
+                .Replace("None Defense", "Base Defense")
+                .Replace("None Elusivity", "Base Elusivity");
         }
 
         // ===== Label / Value =====

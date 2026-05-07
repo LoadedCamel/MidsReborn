@@ -20,5 +20,8 @@ internal sealed record DamageCardPresentation(
     public static readonly DamageCardPresentation Empty =
         new(string.Empty, string.Empty, string.Empty, string.Empty, string.Empty, Array.Empty<DamageSourceSegment>());
 
-    public bool HasContent => !string.IsNullOrWhiteSpace(PrimaryText);
+    public bool HasContent =>
+        !string.IsNullOrWhiteSpace(HeaderText) ||
+        !string.IsNullOrWhiteSpace(ModeBadgeText) ||
+        !string.IsNullOrWhiteSpace(PrimaryText);
 }

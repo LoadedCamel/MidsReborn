@@ -5,6 +5,7 @@ using System.Text;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Omni;
 using Mids_Reborn.Properties;
+using Newtonsoft.Json;
 
 namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor;
 
@@ -21,10 +22,14 @@ public sealed class frmOmniImport : Form
     private readonly ProgressBar _progress;
     private readonly Label _progressStage;
     private readonly Label _progressDetail;
+    private readonly Label _progressFooter;
     private readonly ToolTip _progressToolTip;
+    private OmniImportSession? _currentSession;
     private OmniImportResult? _lastDryRunResult;
+    private OmniApplyResult? _lastApplyResult;
     private string _lastExportRoot = string.Empty;
     private string _lastReport = string.Empty;
+    private string _lastReportJson = string.Empty;
     private string _lastPreviewReport = string.Empty;
     private string _lastReportFilePrefix = "omni-import-report";
     private bool _disposedState;
@@ -58,7 +63,7 @@ public sealed class frmOmniImport : Form
 
         var description = new Label
         {
-            Text = @"Run a dry run first, then optionally apply the safe import to the loaded database.",
+            Text = @"Analyze Export is optional. Apply Safe Import will analyze automatically when needed and reuse cached analysis for the current export.",
             Dock = DockStyle.Top,
             Height = 28,
             TextAlign = ContentAlignment.MiddleCenter
@@ -88,6 +93,7 @@ public sealed class frmOmniImport : Form
             Dock = DockStyle.Fill,
             Text = ResolveInitialExportRoot()
         };
+        _exportRoot.TextChanged += (_, _) => HandleExportRootChanged();
         rootPanel.Controls.Add(_exportRoot, 1, 0);
 
         _browse = new Button
@@ -110,7 +116,7 @@ public sealed class frmOmniImport : Form
 
         _dryRun = new Button
         {
-            Text = @"Run Dry Run",
+            Text = @"Analyze Export",
             Width = 150,
             Height = 32,
             BackColor = Color.MediumSeaGreen,
@@ -126,7 +132,7 @@ public sealed class frmOmniImport : Form
             Text = @"Apply Safe Import",
             Width = 160,
             Height = 32,
-            Enabled = false,
+            Enabled = Directory.Exists(_exportRoot.Text.Trim()),
             BackColor = Color.LightSkyBlue,
             ForeColor = Color.Black,
             FlatStyle = FlatStyle.Popup,
@@ -176,7 +182,7 @@ public sealed class frmOmniImport : Form
         var progressPanel = new Panel
         {
             Dock = DockStyle.Top,
-            Height = 90,
+            Height = 112,
             Padding = new Padding(12, 4, 12, 8)
         };
 
@@ -200,6 +206,15 @@ public sealed class frmOmniImport : Form
         };
         _progressToolTip.SetToolTip(_progressDetail, _progressDetail.Text);
 
+        _progressFooter = new Label
+        {
+            Text = string.Empty,
+            TextAlign = ContentAlignment.MiddleLeft,
+            ForeColor = Color.Silver,
+            AutoEllipsis = true,
+            UseMnemonic = false
+        };
+
         _progress = new ProgressBar
         {
             Minimum = 0,
@@ -209,6 +224,7 @@ public sealed class frmOmniImport : Form
         };
         progressPanel.Controls.Add(_progressStage);
         progressPanel.Controls.Add(_progressDetail);
+        progressPanel.Controls.Add(_progressFooter);
         progressPanel.Controls.Add(_progress);
         progressPanel.Resize += (_, _) => LayoutProgressPanel(progressPanel);
         LayoutProgressPanel(progressPanel);
@@ -251,40 +267,42 @@ public sealed class frmOmniImport : Form
 
     private async void DryRun_Click(object? sender, EventArgs e)
     {
-        var exportRoot = _exportRoot.Text.Trim();
+        var exportRoot = GetSelectedExportRoot();
         if (!Directory.Exists(exportRoot))
         {
-            MessageBox.Show(this, @"Select a valid Omni export folder first.", @"Omni Import", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            ShowInlineValidationFailure(@"Select a valid Omni export folder first.");
             return;
         }
 
         PersistExportRoot(exportRoot);
 
-        SetBusy(true, @"Scanning Omni export...");
-        RenderPreview(BuildRunningPreview("Dry Run", exportRoot));
-        _lastDryRunResult = null;
-        _lastExportRoot = string.Empty;
-        _applyImport.Enabled = false;
+        var previousSession = _currentSession;
+        SetBusy(true, @"Analyzing Omni export...");
+        RenderPreview(BuildRunningPreview(
+            "Analyze Export",
+            exportRoot,
+            _currentSession,
+            DescribeAnalyzeRunMode(previousSession, exportRoot)));
+        ResetRenderedArtifacts(keepSession: true);
 
         try
         {
             await using var progress = new UiProgressBridge(this, UpdateProgress);
 
             var importTimer = Stopwatch.StartNew();
-            var result = await RunImportWorkAsync(() => new OmniImporter().DryRun(exportRoot, progress));
+            var session = await RunImportWorkAsync(() => new OmniImporter().AnalyzeExport(exportRoot, _currentSession, progress));
             importTimer.Stop();
             await progress.FlushAsync();
-
-            var fullReportTimer = Stopwatch.StartNew();
-            var fullReport = BuildFullDryRunReport(exportRoot, result);
-            fullReportTimer.Stop();
+            var runMode = DescribeCompletedAnalyzeRunMode(previousSession, session);
+            _currentSession = session;
+            SyncLegacyStateFromSession(session, includeApplyResult: false);
 
             var previewBuildTimer = Stopwatch.StartNew();
-            var preview = BuildDryRunPreview(exportRoot, result, UiRenderMetrics.Pending(
+            var preview = BuildDryRunPreview(exportRoot, session.AnalysisResult, UiRenderMetrics.Pending(
                 importTimer.Elapsed,
-                fullReportTimer.Elapsed,
+                TimeSpan.Zero,
                 progress.AppliedCount,
-                fullReport.Length));
+                0), runMode);
             previewBuildTimer.Stop();
 
             var renderTimer = Stopwatch.StartNew();
@@ -293,30 +311,24 @@ public sealed class frmOmniImport : Form
 
             var finalMetrics = new UiRenderMetrics(
                 importTimer.Elapsed,
-                fullReportTimer.Elapsed,
+                TimeSpan.Zero,
                 previewBuildTimer.Elapsed,
                 renderTimer.Elapsed,
                 preview.Length,
-                fullReport.Length,
+                0,
                 progress.AppliedCount);
-            RenderPreview(BuildDryRunPreview(exportRoot, result, finalMetrics));
-
-            _lastDryRunResult = result;
-            _lastExportRoot = exportRoot;
-            _lastReport = fullReport;
+            var finalPreview = BuildDryRunPreview(exportRoot, session.AnalysisResult, finalMetrics, runMode);
+            RenderPreview(finalPreview);
+            CachePreview(finalPreview);
             _lastReportFilePrefix = "omni-import-dry-run";
-            result.TrimForApply();
-            _saveReport.Enabled = true;
-            _applyImport.Enabled = true;
-            _status.Text = @"Dry run complete. No database changes were made.";
+            _status.Text = @"Analysis complete. No database changes were made.";
             SetTerminalProgress(_status.Text, @"Preview updated.", succeeded: true);
         }
         catch (Exception ex)
         {
-            _status.Text = @"Dry run failed.";
-            RenderPreview(BuildFailurePreview("Dry run failed.", ex, !string.IsNullOrWhiteSpace(_lastReport)));
-            _saveReport.Enabled = !string.IsNullOrWhiteSpace(_lastReport);
-            _applyImport.Enabled = false;
+            _status.Text = @"Analyze export failed.";
+            RenderPreview(BuildFailurePreview("Analyze export failed.", ex, CanSaveReport()));
+            _saveReport.Enabled = CanSaveReport();
             SetTerminalProgress(_status.Text, @"See preview for failure details.", succeeded: false);
         }
         finally
@@ -327,64 +339,88 @@ public sealed class frmOmniImport : Form
 
     private async void ApplyImport_Click(object? sender, EventArgs e)
     {
-        if (_lastDryRunResult == null || string.IsNullOrWhiteSpace(_lastExportRoot))
+        var exportRoot = GetSelectedExportRoot();
+        if (!Directory.Exists(exportRoot))
         {
-            MessageBox.Show(this, @"Run a dry run before applying the import.", @"Omni Import", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            ShowInlineValidationFailure(@"Select a valid Omni export folder first.");
             return;
         }
 
-        var confirmation =
-            "Apply the safe Omni import to the loaded database?\r\n\r\n" +
-            "This replaces effects on matching existing powers, updates fully decompiled requirements, stores class attributes, and does not save the database file.\r\n\r\n" +
-            $"Scoped powers: {_lastDryRunResult.Report.PowersInScope}\r\n" +
-            $"Unsupported power requirements: {_lastDryRunResult.Report.UnsupportedPowerRequirementCount}\r\n" +
-            $"Unknown effect mappings: {_lastDryRunResult.Report.UnknownEffectMappings.Count}\r\n" +
-            $"Unknown attribute mappings: {_lastDryRunResult.Report.UnknownAttribMappings.Count}\r\n" +
-            $"Enhancements discovered: {_lastDryRunResult.Report.EnhancementDefinitionsDiscovered}\r\n" +
-            $"Enhancement sets discovered: {_lastDryRunResult.Report.EnhancementSetsDiscovered}\r\n" +
-            $"Boosts powersets/powers in scope: {_lastDryRunResult.Report.BoostPowersetsInScope}/{_lastDryRunResult.Report.BoostPowersInScope}\r\n" +
-            $"Set_Bonus powersets/powers in scope: {_lastDryRunResult.Report.SetBonusPowersetsInScope}/{_lastDryRunResult.Report.SetBonusPowersInScope}\r\n" +
-            $"Folded enhancement recipes: {_lastDryRunResult.Report.FoldedEnhancementRecipeCount}\r\n" +
-            $"Missing enhancement power links: {_lastDryRunResult.Report.EnhancementBoostPowerLinksMissingDryRun + _lastDryRunResult.Report.EnhancementSetBonusLinksMissingDryRun}";
+        PersistExportRoot(exportRoot);
+        var previousSession = _currentSession;
+        SetBusy(true, @"Analyzing Omni export...");
+        RenderPreview(BuildRunningPreview(
+            "Apply Safe Import",
+            exportRoot,
+            _currentSession,
+            DescribeApplyRunMode(previousSession, exportRoot, hasCachedApplyResult: previousSession?.ApplyResult != null)));
+        ResetRenderedArtifacts(keepSession: true);
 
-        if (MessageBox.Show(this, confirmation, @"Apply Safe Omni Import", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes)
+        OmniImportSession? session = null;
+        TimeSpan analysisElapsed = TimeSpan.Zero;
+
+        try
         {
+            var importer = new OmniImporter();
+            await using (var progress = new UiProgressBridge(this, UpdateProgress))
+            {
+                var analysisTimer = Stopwatch.StartNew();
+                session = await RunImportWorkAsync(() => importer.AnalyzeExport(exportRoot, _currentSession, progress));
+                analysisTimer.Stop();
+                analysisElapsed = analysisTimer.Elapsed;
+                await progress.FlushAsync();
+                var analyzeMode = DescribeCompletedApplyAnalyzeMode(previousSession, session);
+                _currentSession = session;
+                SyncLegacyStateFromSession(session, includeApplyResult: false);
+                RenderPreview(BuildRunningPreview(
+                    "Apply Safe Import",
+                    exportRoot,
+                    session,
+                    analyzeMode,
+                    session.AnalysisResult));
+            }
+        }
+        catch (Exception ex)
+        {
+            _status.Text = @"Analyze export failed.";
+            RenderPreview(BuildFailurePreview("Analyze export failed.", ex, CanSaveReport()));
+            SetTerminalProgress(_status.Text, @"See preview for failure details.", succeeded: false);
+            SetBusy(false, _status.Text);
             return;
         }
 
-        PersistExportRoot(_lastExportRoot);
-
+        var dryRunResult = session.AnalysisResult;
         SetBusy(true, @"Applying safe import...");
-        RenderPreview(BuildRunningPreview("Safe Import", _lastExportRoot));
+        RenderPreview(BuildRunningPreview(
+            "Apply Safe Import",
+            exportRoot,
+            session,
+            DescribeApplyExecutionMode(previousSession, session),
+            dryRunResult));
 
         try
         {
             await using var progress = new UiProgressBridge(this, UpdateProgress);
 
-            var importTimer = Stopwatch.StartNew();
+            var applyTimer = Stopwatch.StartNew();
             var applyResult = await RunImportWorkAsync(() =>
-                new OmniImporter().ApplySafeImport(DatabaseAPI.Database, _lastExportRoot, _lastDryRunResult, progress));
-            importTimer.Stop();
+                new OmniImporter().ApplySafeImport(DatabaseAPI.Database, session, progress));
+            applyTimer.Stop();
             await progress.FlushAsync();
+            _currentSession = session;
+            SyncLegacyStateFromSession(session, includeApplyResult: true);
 
             // Safe import can change powerset, enhancement, enhancement-set, and picker-facing
             // image assignments. Refresh the full image cache so DB editors opened
             // immediately afterward see current ImageIdx values instead of stale blanks.
             AssetManager.ReloadImages();
 
-            var fullReportTimer = Stopwatch.StartNew();
-            var applyReport = applyResult.ToMarkdown();
-            var fullReport = string.IsNullOrWhiteSpace(_lastReport)
-                ? applyReport
-                : $"{_lastReport}{Environment.NewLine}{Environment.NewLine}{applyReport}";
-            fullReportTimer.Stop();
-
             var previewBuildTimer = Stopwatch.StartNew();
-            var preview = BuildApplyPreview(_lastExportRoot, _lastDryRunResult, applyResult, UiRenderMetrics.Pending(
-                importTimer.Elapsed,
-                fullReportTimer.Elapsed,
+            var preview = BuildApplyPreview(exportRoot, dryRunResult, applyResult, UiRenderMetrics.Pending(
+                analysisElapsed + applyTimer.Elapsed,
+                TimeSpan.Zero,
                 progress.AppliedCount,
-                fullReport.Length));
+                0), DescribeApplyExecutionMode(previousSession, session));
             previewBuildTimer.Stop();
 
             var renderTimer = Stopwatch.StartNew();
@@ -392,68 +428,25 @@ public sealed class frmOmniImport : Form
             renderTimer.Stop();
 
             var finalMetrics = new UiRenderMetrics(
-                importTimer.Elapsed,
-                fullReportTimer.Elapsed,
+                analysisElapsed + applyTimer.Elapsed,
+                TimeSpan.Zero,
                 previewBuildTimer.Elapsed,
                 renderTimer.Elapsed,
                 preview.Length,
-                fullReport.Length,
+                0,
                 progress.AppliedCount);
-            RenderPreview(BuildApplyPreview(_lastExportRoot, _lastDryRunResult, applyResult, finalMetrics));
-
-            _lastReport = fullReport;
+            var finalPreview = BuildApplyPreview(exportRoot, dryRunResult, applyResult, finalMetrics, DescribeApplyExecutionMode(previousSession, session));
+            CachePreview(finalPreview);
+            RenderPreview(finalPreview);
             _lastReportFilePrefix = "omni-import-safe-import";
-            _saveReport.Enabled = true;
             _status.Text = @"Safe import applied. Save Report writes the dry-run plus apply report.";
             SetTerminalProgress(_status.Text, @"Preview updated.", succeeded: true);
-
-            MessageBox.Show(
-                this,
-                "Safe Omni import complete.\r\n\r\n" +
-                $"Powersets created: {applyResult.PowersetsCreated}\r\n" +
-                $"Powersets updated: {applyResult.PowersetsUpdated}\r\n" +
-                $"Powers matched: {applyResult.PowersMatched}\r\n" +
-                $"Powers created: {applyResult.PowersCreated}\r\n" +
-                $"Powers updated: {applyResult.PowersUpdated}\r\n" +
-                $"Effects replaced: {applyResult.EffectsReplaced}\r\n" +
-                $"Requirements updated: {applyResult.RequirementsUpdated}\r\n" +
-                $"Redirect effects added: {applyResult.RedirectEffectsAdded}\r\n" +
-                $"Powers missing from Mids: {applyResult.PowersMissingFromMids}\r\n\r\n" +
-                $"Salvage matched/created/updated: {applyResult.SalvageMatched}/{applyResult.SalvageCreated}/{applyResult.SalvageUpdated}\r\n" +
-                $"Recipes matched/created/updated: {applyResult.RecipesMatched}/{applyResult.RecipesCreated}/{applyResult.RecipesUpdated}\r\n" +
-                $"Enhancement sets matched/created/updated: {applyResult.EnhancementSetsMatched}/{applyResult.EnhancementSetsCreated}/{applyResult.EnhancementSetsUpdated}\r\n" +
-                $"Enhancements matched/created/updated: {applyResult.EnhancementsMatched}/{applyResult.EnhancementsCreated}/{applyResult.EnhancementsUpdated}\r\n" +
-                $"Classic enhancement variants discovered/logical/folded: {applyResult.ClassicEnhancementSourceVariantsDiscovered}/{applyResult.ClassicEnhancementLogicalRecords}/{applyResult.ClassicEnhancementVariantsFolded}\r\n" +
-                $"Classic enhancement editor rows expected: {applyResult.ClassicEnhancementEditorRowsExpected}\r\n" +
-                $"Enhancement class derivation effects/fallback/category-only/mismatch/unresolved: {applyResult.EnhancementClassIdsDerivedFromEffects}/{applyResult.EnhancementClassIdsFallbackUsed}/{applyResult.EnhancementClassIdsCategoryOnly}/{applyResult.EnhancementClassIdWrapperMismatches}/{applyResult.EnhancementClassIdsUnresolved}\r\n" +
-                $"Known hidden/stateful effect mappings: {applyResult.KnownHiddenStatefulEffectMappings}\r\n" +
-                $"Known unsupported effect mappings: {applyResult.KnownUnsupportedEffectMappings}\r\n" +
-                $"Global/power-local chance mods mapped: {applyResult.GlobalChanceModsMapped}/{applyResult.PowerLocalChanceModsMapped}\r\n" +
-                $"Vector defense/resistance template overrides: {applyResult.VectorDefenseTemplateOverrides}/{applyResult.VectorResistanceTemplateOverrides}\r\n" +
-                $"Boosts powers in scope matched/created/updated: {applyResult.BoostPowersInScope} -> {applyResult.BoostPowersMatched}/{applyResult.BoostPowersCreated}/{applyResult.BoostPowersUpdated}\r\n" +
-                $"Set_Bonus powers in scope matched/created/updated: {applyResult.SetBonusPowersInScope} -> {applyResult.SetBonusPowersMatched}/{applyResult.SetBonusPowersCreated}/{applyResult.SetBonusPowersUpdated}\r\n" +
-                $"Scoped power legality rebuilt/changed/preserved/empty/unresolved/unknown-labels: {applyResult.ScopedPowerEnhancementLegalityRebuilt}/{applyResult.ScopedPowerEnhancementLegalityChanged}/{applyResult.ScopedPowerEnhancementLegalityPreserved}/{applyResult.ScopedPowerEnhancementLegalityEmptyAfterRebuild}/{applyResult.ScopedPowerEnhancementLegalityUnresolvedAfterRebuild}/{applyResult.ScopedPowerEnhancementLegalityUnresolvedLabelCount}\r\n" +
-                $"Boost/Set_Bonus legality repair boosts inspected/rebuilt/preserved/unresolved: {applyResult.BoostPowerLegalityRepairInspected}/{applyResult.BoostPowerLegalityRepairRebuilt}/{applyResult.BoostPowerLegalityRepairPreserved}/{applyResult.BoostPowerLegalityRepairUnresolved}\r\n" +
-                $"Boost/Set_Bonus legality repair set-bonus inspected/cleared/already-empty/changed: {applyResult.SetBonusPowerLegalityRepairInspected}/{applyResult.SetBonusPowerLegalityRepairCleared}/{applyResult.SetBonusPowerLegalityRepairAlreadyEmpty}/{applyResult.BoostSetBonusPowerLegalityRepairChanged}\r\n" +
-                $"Boost power links resolved/missing: {applyResult.EnhancementBoostPowerLinksResolved}/{applyResult.EnhancementBoostPowerLinksMissing}\r\n" +
-                $"Set bonus links resolved/missing: {applyResult.EnhancementSetBonusLinksResolved}/{applyResult.EnhancementSetBonusLinksMissing}\r\n" +
-                $"Missing Boosts/Set_Bonus powers after import: {applyResult.MissingBoostPowersAfterImport}/{applyResult.MissingSetBonusPowersAfterImport}\r\n" +
-                $"Naming mismatch repairs (boost/set-bonus/enh/set/recipe/salvage): {applyResult.BoostPowerAliasRepairs}/{applyResult.SetBonusPowerAliasRepairs}/{applyResult.EnhancementAliasRepairs}/{applyResult.EnhancementSetAliasRepairs}/{applyResult.RecipeAliasRepairs}/{applyResult.SalvageAliasRepairs}\r\n" +
-                $"Enhancement icons preserved/assigned/missing: {applyResult.EnhancementIconsPreserved}/{applyResult.EnhancementIconsAssigned}/{applyResult.EnhancementIconsMissing}\r\n\r\n" +
-                "The loaded database has been changed in memory. Use the DB editor save button to persist it.\r\n\r\n" +
-                "Use Save Report... to write the combined dry-run and apply report.",
-                @"Apply Safe Omni Import",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
-
-            _lastDryRunResult = null;
-            _applyImport.Enabled = false;
         }
         catch (Exception ex)
         {
             _status.Text = @"Safe import failed.";
-            RenderPreview(BuildFailurePreview("Safe import failed.", ex, !string.IsNullOrWhiteSpace(_lastReport)));
-            _saveReport.Enabled = !string.IsNullOrWhiteSpace(_lastReport);
+            RenderPreview(BuildFailurePreview("Safe import failed.", ex, CanSaveReport()));
+            _saveReport.Enabled = CanSaveReport();
             SetTerminalProgress(_status.Text, @"See preview for failure details.", succeeded: false);
         }
         finally
@@ -462,23 +455,67 @@ public sealed class frmOmniImport : Form
         }
     }
 
-    private void SaveReport_Click(object? sender, EventArgs e)
+    private async void SaveReport_Click(object? sender, EventArgs e)
     {
-        if (string.IsNullOrWhiteSpace(_lastReport))
+        if (!CanSaveReport())
         {
             return;
         }
 
+        var hasJsonReport = CanBuildJsonReport();
         using var dialog = new SaveFileDialog
         {
             Title = @"Save Omni Import Report",
-            Filter = @"Markdown report (*.md)|*.md|Text report (*.txt)|*.txt|All files (*.*)|*.*",
-            FileName = $"{_lastReportFilePrefix}-{DateTime.Now:yyyyMMdd-HHmmss}.md"
+            Filter = hasJsonReport
+                ? @"JSON report (*.json)|*.json|Markdown report (*.md)|*.md|Text report (*.txt)|*.txt|All files (*.*)|*.*"
+                : @"Markdown report (*.md)|*.md|Text report (*.txt)|*.txt|All files (*.*)|*.*",
+            FileName = $"{_lastReportFilePrefix}-{DateTime.Now:yyyyMMdd-HHmmss}.{(hasJsonReport ? "json" : "md")}"
         };
 
         if (dialog.ShowDialog(this) == DialogResult.OK)
         {
-            File.WriteAllText(dialog.FileName, _lastReport, Encoding.UTF8);
+            var extension = Path.GetExtension(dialog.FileName);
+            var saveJson = string.Equals(extension, ".json", StringComparison.OrdinalIgnoreCase) ||
+                           (string.IsNullOrWhiteSpace(extension) && dialog.FilterIndex == 1);
+
+            try
+            {
+                SetBusy(true, @"Building report...");
+                _progress.Style = ProgressBarStyle.Marquee;
+                _progress.MarqueeAnimationSpeed = 30;
+                _progressStage.Text = saveJson ? @"Building JSON report..." : @"Building markdown report...";
+                _progressDetail.Text = @"Serializing report content...";
+                _progressFooter.Text = string.Empty;
+                _progressToolTip.SetToolTip(_progressDetail, _progressDetail.Text);
+                await Task.Yield();
+
+                var buildTimer = Stopwatch.StartNew();
+                var content = await Task.Run(() => GetOrBuildReport(saveJson));
+                buildTimer.Stop();
+
+                _progressStage.Text = @"Saving report...";
+                _progressDetail.Text = $@"Writing {content.Length:n0} characters to disk...";
+                _progressFooter.Text = string.Empty;
+                _progressToolTip.SetToolTip(_progressDetail, _progressDetail.Text);
+                await Task.Run(() => File.WriteAllText(dialog.FileName, content, Encoding.UTF8));
+                _status.Text = @"Report saved.";
+                SetTerminalProgress(
+                    _status.Text,
+                    $@"{(saveJson ? "JSON" : "Markdown")} report saved ({content.Length:n0} chars, build {buildTimer.Elapsed.TotalMilliseconds:n0} ms).",
+                    succeeded: true);
+            }
+            catch (Exception ex)
+            {
+                _status.Text = @"Report save failed.";
+                RenderPreview(BuildFailurePreview("Report save failed.", ex, CanSaveReport()));
+                SetTerminalProgress(_status.Text, @"See preview for failure details.", succeeded: false);
+            }
+            finally
+            {
+                _progress.Style = ProgressBarStyle.Continuous;
+                _progress.MarqueeAnimationSpeed = 0;
+                SetBusy(false, _status.Text);
+            }
         }
     }
 
@@ -508,18 +545,17 @@ public sealed class frmOmniImport : Form
             }));
 
             _lastReport = report;
+            _lastReportJson = string.Empty;
             _lastPreviewReport = report;
             _lastReportFilePrefix = "planner-math-report";
+            _currentSession = null;
+            _lastDryRunResult = null;
+            _lastApplyResult = null;
+            _lastExportRoot = string.Empty;
             RenderPreview(report);
             _saveReport.Enabled = true;
             _status.Text = @"Planner math report generated.";
             SetTerminalProgress(_status.Text, @"Report ready.", succeeded: true);
-            MessageBox.Show(
-                this,
-                $"Planner math diagnostic report saved.\r\n\r\n{dialog.FileName}",
-                @"Planner Math Report",
-                MessageBoxButtons.OK,
-                MessageBoxIcon.Information);
         }
         catch (Exception ex)
         {
@@ -538,25 +574,39 @@ public sealed class frmOmniImport : Form
         _dryRun.Enabled = !busy;
         _browse.Enabled = !busy;
         _mathReport.Enabled = !busy;
-        _applyImport.Enabled = !busy && _lastDryRunResult != null;
+        _applyImport.Enabled = !busy && Directory.Exists(GetSelectedExportRoot());
+        _saveReport.Enabled = !busy && CanSaveReport();
         UseWaitCursor = busy;
         _status.Text = status;
         if (busy)
         {
             _progress.Value = 0;
             _progressStage.Text = status;
-            _progressDetail.Text = @"Starting...";
+            _progressDetail.Text = @"Preparing import session...";
+            _progressFooter.Text = string.Empty;
             _progressToolTip.SetToolTip(_progressDetail, _progressDetail.Text);
         }
+    }
+
+    private void ShowInlineValidationFailure(string message)
+    {
+        _status.Text = message;
+        _progress.Value = 0;
+        RenderPreview(BuildStatusPreview("Omni Import", message, GetSelectedExportRoot(), _currentSession));
+        _saveReport.Enabled = CanSaveReport();
+        SetTerminalProgress(_status.Text, @"Correct the export path and try again.", succeeded: false);
     }
 
     private void ClearImportState(bool runCleanup)
     {
         PersistExportRoot(_exportRoot.Text.Trim());
 
+        _currentSession = null;
         _lastDryRunResult = null;
+        _lastApplyResult = null;
         _lastExportRoot = string.Empty;
         _lastReport = string.Empty;
+        _lastReportJson = string.Empty;
         _lastPreviewReport = string.Empty;
         _lastReportFilePrefix = "omni-import-report";
 
@@ -584,9 +634,10 @@ public sealed class frmOmniImport : Form
 
     private void UpdateProgress(OmniImportProgress progress)
     {
-        _progress.Value = Math.Max(_progress.Value, progress.ClampedPercent);
+        _progress.Value = progress.ClampedPercent;
         _progressStage.Text = ProgressStageText(progress);
         _progressDetail.Text = ProgressDetailText(progress);
+        _progressFooter.Text = ProgressFooterText(progress);
         _progressToolTip.SetToolTip(_progressDetail, progress.DisplayText);
         _status.Text = progress.Stage;
     }
@@ -600,25 +651,26 @@ public sealed class frmOmniImport : Form
         _progressStage.SetBounds(left, top, width, 22);
         top += 24;
         _progressDetail.SetBounds(left, top, width, 24);
-        top += 30;
+        top += 24;
+        _progressFooter.SetBounds(left, top, width, 18);
+        top += 24;
         _progress.SetBounds(left, top, width, 18);
     }
 
     private static string ProgressStageText(OmniImportProgress progress)
     {
-        var count = progress.Total > 0
-            ? $" - {progress.Current:n0}/{progress.Total:n0}"
-            : string.Empty;
-        return $"{progress.ClampedPercent}% - {progress.Stage}{count}";
+        return $"{progress.ClampedPercent}% - {progress.Stage}";
     }
 
     private static string ProgressDetailText(OmniImportProgress progress)
     {
-        if (!string.IsNullOrWhiteSpace(progress.Detail))
-        {
-            return progress.Detail;
-        }
+        return !string.IsNullOrWhiteSpace(progress.Detail)
+            ? progress.Detail
+            : "Working...";
+    }
 
+    private static string ProgressFooterText(OmniImportProgress progress)
+    {
         return progress.Total > 0
             ? $"{progress.Current:n0} of {progress.Total:n0}"
             : string.Empty;
@@ -626,20 +678,7 @@ public sealed class frmOmniImport : Form
 
     private static Task<T> RunImportWorkAsync<T>(Func<T> work)
     {
-        return Task.Factory.StartNew(() =>
-        {
-            var thread = Thread.CurrentThread;
-            var originalPriority = thread.Priority;
-            try
-            {
-                thread.Priority = ThreadPriority.AboveNormal;
-                return work();
-            }
-            finally
-            {
-                thread.Priority = originalPriority;
-            }
-        }, CancellationToken.None, TaskCreationOptions.LongRunning, TaskScheduler.Default);
+        return Task.Run(work);
     }
 
     private static void ReleaseImportMemory()
@@ -696,6 +735,7 @@ public sealed class frmOmniImport : Form
 
         _progressStage.Text = status;
         _progressDetail.Text = detail;
+        _progressFooter.Text = string.Empty;
         _progressToolTip.SetToolTip(_progressDetail, detail);
     }
 
@@ -705,14 +745,51 @@ public sealed class frmOmniImport : Form
         _report.Text = preview;
     }
 
-    private static string BuildRunningPreview(string operationName, string exportRoot)
+    private static string BuildRunningPreview(
+        string operationName,
+        string exportRoot,
+        OmniImportSession? session = null,
+        string runMode = "",
+        OmniImportResult? preflight = null)
     {
         var builder = new StringBuilder();
         builder.AppendLine($"# {operationName} Running");
         builder.AppendLine();
         builder.AppendLine($"- Export root: {exportRoot}");
-        builder.AppendLine("- Preview will refresh when the current run completes.");
-        builder.AppendLine("- Save Report keeps the last successful full report until this run succeeds.");
+        builder.AppendLine($"- Session state: {DescribeSessionState(session, exportRoot)}");
+        if (!string.IsNullOrWhiteSpace(runMode))
+        {
+            builder.AppendLine($"- Run mode: {runMode}");
+        }
+
+        if (preflight != null)
+        {
+            builder.AppendLine();
+            builder.AppendLine("## Preflight Summary");
+            builder.AppendLine($"- Scoped powers in scope: {preflight.Report.PowersInScope:n0}");
+            builder.AppendLine($"- Unsupported power requirements: {preflight.Report.UnsupportedPowerRequirementCount:n0}");
+            builder.AppendLine($"- Unknown effect mappings: {preflight.Report.UnknownEffectMappings.Count:n0}");
+            builder.AppendLine($"- Unknown attribute mappings: {preflight.Report.UnknownAttribMappings.Count:n0}");
+            builder.AppendLine($"- Enhancement definitions / sets discovered: {preflight.Report.EnhancementDefinitionsDiscovered:n0} / {preflight.Report.EnhancementSetsDiscovered:n0}");
+            builder.AppendLine($"- Missing enhancement power links: {(preflight.Report.EnhancementBoostPowerLinksMissingDryRun + preflight.Report.EnhancementSetBonusLinksMissingDryRun):n0}");
+        }
+
+        builder.AppendLine();
+        builder.AppendLine("## Status");
+        builder.AppendLine("- Progress and preview will refresh as the current run advances.");
+        builder.AppendLine("- Save Report reuses the last successful cached analysis/apply report until this run succeeds.");
+        return builder.ToString();
+    }
+
+    private static string BuildStatusPreview(string title, string status, string exportRoot, OmniImportSession? session = null)
+    {
+        var builder = new StringBuilder();
+        builder.AppendLine($"# {title}");
+        builder.AppendLine();
+        builder.AppendLine($"- Status: {status}");
+        builder.AppendLine($"- Export root: {exportRoot}");
+        builder.AppendLine($"- Session state: {DescribeSessionState(session, exportRoot)}");
+        builder.AppendLine("- Analyze Export and Apply Safe Import remain available after the path is corrected.");
         return builder.ToString();
     }
 
@@ -752,35 +829,303 @@ public sealed class frmOmniImport : Form
         return builder.ToString();
     }
 
-    private static string BuildDryRunPreview(string exportRoot, OmniImportResult result, UiRenderMetrics metrics)
+    private static string BuildDryRunJsonReport(string exportRoot, OmniImportResult result)
+    {
+        return JsonConvert.SerializeObject(new
+        {
+            report_type = "omni-import-dry-run",
+            export_root = exportRoot,
+            class_attributes_loaded = result.ClassAttributes.Count,
+            actors_classified = result.Actors.Count,
+            summary = result.Report.Summary,
+            report = result.Report
+        }, Formatting.Indented);
+    }
+
+    private static string BuildSafeImportMarkdownReport(string exportRoot, OmniImportResult dryRunResult, OmniApplyResult applyResult)
+    {
+        return $"{BuildFullDryRunReport(exportRoot, dryRunResult)}{Environment.NewLine}{Environment.NewLine}{applyResult.ToMarkdown()}";
+    }
+
+    private static string BuildSafeImportJsonReport(string exportRoot, OmniImportResult dryRunResult, OmniApplyResult applyResult)
+    {
+        return JsonConvert.SerializeObject(new
+        {
+            report_type = "omni-import-safe-import",
+            export_root = exportRoot,
+            summary = OmniReportLegibility.BuildSafeImportSummary(dryRunResult.Report, applyResult),
+            dry_run = new
+            {
+                report_type = "omni-import-dry-run",
+                export_root = exportRoot,
+                class_attributes_loaded = dryRunResult.ClassAttributes.Count,
+                actors_classified = dryRunResult.Actors.Count,
+                report = dryRunResult.Report
+            },
+            apply = applyResult
+        }, Formatting.Indented);
+    }
+
+    private static string BuildDryRunPreview(string exportRoot, OmniImportResult result, UiRenderMetrics metrics, string runMode = "")
     {
         var builder = new StringBuilder();
         builder.AppendLine(result.Report.ToPreviewMarkdown(exportRoot, result.ClassAttributes.Count, result.Actors.Count));
-        AppendPreviewDiagnostics(builder, metrics);
+        AppendPreviewSummary(builder, metrics, runMode);
         return builder.ToString();
     }
 
-    private static string BuildApplyPreview(string exportRoot, OmniImportResult dryRunResult, OmniApplyResult applyResult, UiRenderMetrics metrics)
+    private static string BuildApplyPreview(string exportRoot, OmniImportResult dryRunResult, OmniApplyResult applyResult, UiRenderMetrics metrics, string runMode = "")
     {
         var builder = new StringBuilder();
         builder.AppendLine(dryRunResult.Report.ToPreviewMarkdown(exportRoot, dryRunResult.ClassAttributes.Count, dryRunResult.Actors.Count));
         builder.AppendLine();
         builder.AppendLine(applyResult.ToPreviewMarkdown());
-        AppendPreviewDiagnostics(builder, metrics);
+        AppendPreviewSummary(builder, metrics, runMode);
         return builder.ToString();
     }
 
-    private static void AppendPreviewDiagnostics(StringBuilder builder, UiRenderMetrics metrics)
+    private static void AppendPreviewSummary(StringBuilder builder, UiRenderMetrics metrics, string runMode)
     {
         builder.AppendLine();
-        builder.AppendLine("## UI Diagnostics");
-        builder.AppendLine($"- Import elapsed: {metrics.ImportElapsed.TotalMilliseconds:n0} ms");
-        builder.AppendLine($"- Full report build: {metrics.FullReportBuildElapsed.TotalMilliseconds:n0} ms");
-        builder.AppendLine($"- Preview build: {metrics.PreviewBuildElapsed.TotalMilliseconds:n0} ms");
-        builder.AppendLine($"- Preview render: {metrics.PreviewRenderElapsed.TotalMilliseconds:n0} ms");
-        builder.AppendLine($"- Preview length: {metrics.PreviewLength:n0} chars");
-        builder.AppendLine($"- Full report length: {metrics.FullReportLength:n0} chars");
-        builder.AppendLine($"- Progress events applied: {metrics.ProgressEventsApplied:n0}");
+        builder.AppendLine("## Run Summary");
+        if (!string.IsNullOrWhiteSpace(runMode))
+        {
+            builder.AppendLine($"- Run mode: {runMode}");
+        }
+
+        builder.AppendLine($"- Total run time: {metrics.ImportElapsed:mm\\:ss}");
+        builder.AppendLine($"- Progress updates applied: {metrics.ProgressEventsApplied:n0}");
+        builder.AppendLine(metrics.FullReportLength > 0 || metrics.FullReportBuildElapsed > TimeSpan.Zero
+            ? $"- Full report: ready ({metrics.FullReportBuildElapsed.TotalMilliseconds:n0} ms build)"
+            : "- Full report: ready on demand through Save Report...");
+        builder.AppendLine("- Database changes are only persisted when you save from the DB editor.");
+    }
+
+    private bool CanSaveReport()
+    {
+        return (_currentSession != null && (_currentSession.AnalysisResult != null || _currentSession.ApplyResult != null)) ||
+               !string.IsNullOrWhiteSpace(_lastReport) ||
+               !string.IsNullOrWhiteSpace(_lastReportJson) ||
+               _lastDryRunResult != null ||
+               _lastApplyResult != null;
+    }
+
+    private bool CanBuildJsonReport()
+    {
+        return (_currentSession != null && (_currentSession.AnalysisResult != null || _currentSession.ApplyResult != null)) ||
+               !string.IsNullOrWhiteSpace(_lastReportJson) ||
+               _lastDryRunResult != null ||
+               _lastApplyResult != null;
+    }
+
+    private string GetOrBuildReport(bool json)
+    {
+        if (_currentSession != null)
+        {
+            if (json && !string.IsNullOrWhiteSpace(_currentSession.CachedJsonReport))
+            {
+                return _currentSession.CachedJsonReport;
+            }
+
+            if (!json && !string.IsNullOrWhiteSpace(_currentSession.CachedMarkdownReport))
+            {
+                return _currentSession.CachedMarkdownReport;
+            }
+
+            if (_currentSession.AnalysisResult != null && !string.IsNullOrWhiteSpace(_currentSession.ExportRoot))
+            {
+                var report = json
+                    ? _currentSession.ApplyResult == null
+                        ? BuildDryRunJsonReport(_currentSession.ExportRoot, _currentSession.AnalysisResult)
+                        : BuildSafeImportJsonReport(_currentSession.ExportRoot, _currentSession.AnalysisResult, _currentSession.ApplyResult)
+                    : _currentSession.ApplyResult == null
+                        ? BuildFullDryRunReport(_currentSession.ExportRoot, _currentSession.AnalysisResult)
+                        : BuildSafeImportMarkdownReport(_currentSession.ExportRoot, _currentSession.AnalysisResult, _currentSession.ApplyResult);
+                if (json)
+                {
+                    _currentSession.CachedJsonReport = report;
+                    _lastReportJson = report;
+                }
+                else
+                {
+                    _currentSession.CachedMarkdownReport = report;
+                    _lastReport = report;
+                }
+
+                return report;
+            }
+        }
+
+        if (json)
+        {
+            if (!string.IsNullOrWhiteSpace(_lastReportJson))
+            {
+                return _lastReportJson;
+            }
+
+            if (_lastDryRunResult != null && !string.IsNullOrWhiteSpace(_lastExportRoot))
+            {
+                _lastReportJson = _lastApplyResult == null
+                    ? BuildDryRunJsonReport(_lastExportRoot, _lastDryRunResult)
+                    : BuildSafeImportJsonReport(_lastExportRoot, _lastDryRunResult, _lastApplyResult);
+                return _lastReportJson;
+            }
+        }
+        else
+        {
+            if (!string.IsNullOrWhiteSpace(_lastReport))
+            {
+                return _lastReport;
+            }
+
+            if (_lastDryRunResult != null && !string.IsNullOrWhiteSpace(_lastExportRoot))
+            {
+                _lastReport = _lastApplyResult == null
+                    ? BuildFullDryRunReport(_lastExportRoot, _lastDryRunResult)
+                    : BuildSafeImportMarkdownReport(_lastExportRoot, _lastDryRunResult, _lastApplyResult);
+                return _lastReport;
+            }
+        }
+
+        return _lastReport;
+    }
+
+    private void HandleExportRootChanged()
+    {
+        if (_currentSession != null &&
+            !string.Equals(_currentSession.ExportRoot, GetSelectedExportRoot(), StringComparison.OrdinalIgnoreCase))
+        {
+            _currentSession = null;
+            _lastDryRunResult = null;
+            _lastApplyResult = null;
+            _lastExportRoot = string.Empty;
+            _lastReport = string.Empty;
+            _lastReportJson = string.Empty;
+        }
+
+        _applyImport.Enabled = Directory.Exists(GetSelectedExportRoot());
+        _saveReport.Enabled = CanSaveReport();
+    }
+
+    private string GetSelectedExportRoot()
+    {
+        return _exportRoot.Text.Trim();
+    }
+
+    private void ResetRenderedArtifacts(bool keepSession)
+    {
+        _lastReport = string.Empty;
+        _lastReportJson = string.Empty;
+        if (keepSession)
+        {
+            _currentSession?.ClearRenderedArtifacts();
+        }
+    }
+
+    private void SyncLegacyStateFromSession(OmniImportSession session, bool includeApplyResult)
+    {
+        _lastDryRunResult = session.AnalysisResult;
+        _lastApplyResult = includeApplyResult ? session.ApplyResult : null;
+        _lastExportRoot = session.ExportRoot;
+        _saveReport.Enabled = true;
+        _applyImport.Enabled = Directory.Exists(session.ExportRoot);
+    }
+
+    private void CachePreview(string preview)
+    {
+        _lastPreviewReport = preview;
+        if (_currentSession != null)
+        {
+            _currentSession.CachedPreviewReport = preview;
+        }
+    }
+
+    private static string DescribeSessionState(OmniImportSession? session, string exportRoot)
+    {
+        if (session == null)
+        {
+            return "No cached analysis";
+        }
+
+        if (!string.Equals(session.ExportRoot, exportRoot, StringComparison.OrdinalIgnoreCase))
+        {
+            return $"Cached analysis for {session.ExportRoot}";
+        }
+
+        return session.ApplyResult == null
+            ? "Analysis cached for current export"
+            : "Apply result available for current export";
+    }
+
+    private static string DescribeAnalyzeRunMode(OmniImportSession? previousSession, string exportRoot)
+    {
+        if (previousSession == null)
+        {
+            return "Building fresh analysis for the selected export.";
+        }
+
+        return string.Equals(previousSession.ExportRoot, exportRoot, StringComparison.OrdinalIgnoreCase)
+            ? "Checking cached analysis for the current export."
+            : $"Cached analysis belongs to {previousSession.ExportRoot}; rebuilding for the selected export.";
+    }
+
+    private static string DescribeCompletedAnalyzeRunMode(OmniImportSession? previousSession, OmniImportSession currentSession)
+    {
+        if (previousSession == null)
+        {
+            return "Fresh analysis completed for the selected export.";
+        }
+
+        return ReferenceEquals(previousSession, currentSession)
+            ? "Cached analysis was still current and has been reused."
+            : string.Equals(previousSession.ExportRoot, currentSession.ExportRoot, StringComparison.OrdinalIgnoreCase)
+                ? "Cached analysis was stale and has been refreshed."
+                : "Analysis was rebuilt for the selected export.";
+    }
+
+    private static string DescribeApplyRunMode(OmniImportSession? previousSession, string exportRoot, bool hasCachedApplyResult)
+    {
+        if (previousSession == null)
+        {
+            return "No cached analysis found. Apply Safe Import will analyze first, then continue automatically.";
+        }
+
+        if (!string.Equals(previousSession.ExportRoot, exportRoot, StringComparison.OrdinalIgnoreCase))
+        {
+            return $"Cached analysis belongs to {previousSession.ExportRoot}; refreshing analysis for the selected export before apply.";
+        }
+
+        return hasCachedApplyResult
+            ? "Using cached analysis for the current export before applying updated changes."
+            : "Checking cached analysis for the current export before applying.";
+    }
+
+    private static string DescribeCompletedApplyAnalyzeMode(OmniImportSession? previousSession, OmniImportSession currentSession)
+    {
+        if (previousSession == null)
+        {
+            return "Analysis prepared inline for this apply run.";
+        }
+
+        return ReferenceEquals(previousSession, currentSession)
+            ? "Using cached analysis for the current export."
+            : string.Equals(previousSession.ExportRoot, currentSession.ExportRoot, StringComparison.OrdinalIgnoreCase)
+                ? "Cached analysis was stale and has been refreshed."
+                : "Analysis was rebuilt for the selected export before apply.";
+    }
+
+    private static string DescribeApplyExecutionMode(OmniImportSession? previousSession, OmniImportSession currentSession)
+    {
+        if (previousSession == null)
+        {
+            return "Applying safe import after building fresh analysis.";
+        }
+
+        return ReferenceEquals(previousSession, currentSession)
+            ? "Applying safe import using cached analysis."
+            : string.Equals(previousSession.ExportRoot, currentSession.ExportRoot, StringComparison.OrdinalIgnoreCase)
+                ? "Applying safe import after refreshing stale cached analysis."
+                : "Applying safe import after rebuilding analysis for the selected export.";
     }
 
     private static string ResolveInitialExportRoot()

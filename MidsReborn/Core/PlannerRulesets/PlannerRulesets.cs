@@ -7,6 +7,35 @@ namespace Mids_Reborn.Core.PlannerRulesets;
 
 internal abstract class PlannerRulesetBase : IPlannerRuleset
 {
+    private static readonly Enums.eDamage[] SupportedDefenseVectors =
+    [
+        Enums.eDamage.Smashing,
+        Enums.eDamage.Lethal,
+        Enums.eDamage.Fire,
+        Enums.eDamage.Cold,
+        Enums.eDamage.Energy,
+        Enums.eDamage.Negative,
+        Enums.eDamage.Psionic,
+        Enums.eDamage.Melee,
+        Enums.eDamage.Ranged,
+        Enums.eDamage.AoE
+    ];
+
+    private static readonly Enums.eDamage[] SupportedDefenseVectorsWithToxic =
+    [
+        Enums.eDamage.Smashing,
+        Enums.eDamage.Lethal,
+        Enums.eDamage.Fire,
+        Enums.eDamage.Cold,
+        Enums.eDamage.Energy,
+        Enums.eDamage.Negative,
+        Enums.eDamage.Psionic,
+        Enums.eDamage.Toxic,
+        Enums.eDamage.Melee,
+        Enums.eDamage.Ranged,
+        Enums.eDamage.AoE
+    ];
+
     public abstract PlannerRulesetId Id { get; }
     public abstract bool UsesCanonicalPlannerMath { get; }
     public abstract bool AllowLegacyCrossPowerIncarnatePasses { get; }
@@ -66,6 +95,17 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
             ReferenceEquals(src, MidsContext.Character.CurrentBuild.SetBonusVirtualPower) ||
             string.Equals(src.FullName, "Mids.SetBonus.Virtual", StringComparison.OrdinalIgnoreCase) ||
             src.PowerType == Enums.ePowerType.GlobalBoost;
+
+        static ReadOnlySpan<Enums.eDamage> GetSupportedDefenseVectors() =>
+            DatabaseAPI.RealmUsesToxicDefense ? SupportedDefenseVectorsWithToxic : SupportedDefenseVectors;
+
+        static void ApplyAcrossDefenseVectors(float[] bucket, float value)
+        {
+            foreach (var damageType in GetSupportedDefenseVectors())
+            {
+                bucket[(int)damageType] += value;
+            }
+        }
 
         var shortFx = new Enums.ShortFX();
         var shortFxSelf = new Enums.ShortFX();
@@ -162,7 +202,7 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
                             }
                             else
                             {
-                                buckets.Effect[effectIndex] += value;
+                                ApplyAcrossDefenseVectors(buckets.Defense, value);
                             }
                             continue;
 
@@ -174,6 +214,17 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
                             else
                             {
                                 buckets.Effect[effectIndex] += value;
+                            }
+                            continue;
+
+                        case Enums.eEffectType.Elusivity:
+                            if (effect.DamageType != Enums.eDamage.None)
+                            {
+                                buckets.Elusivity[(int)effect.DamageType] += value;
+                            }
+                            else
+                            {
+                                ApplyAcrossDefenseVectors(buckets.Elusivity, value);
                             }
                             continue;
 
@@ -243,6 +294,12 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
                     continue;
                 }
 
+                if (!enhancementPass && effectType == Enums.eEffectType.Defense)
+                {
+                    ApplyAcrossDefenseVectors(buckets.Defense, value);
+                    continue;
+                }
+
                 if (!enhancementPass && effectType == Enums.eEffectType.Resistance && effect.DamageType != Enums.eDamage.None)
                 {
                     buckets.Resistance[(int)effect.DamageType] += value;
@@ -252,6 +309,12 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
                 if (!enhancementPass && effectType == Enums.eEffectType.Elusivity && effect.DamageType != Enums.eDamage.None)
                 {
                     buckets.Elusivity[(int)effect.DamageType] += value;
+                    continue;
+                }
+
+                if (!enhancementPass && effectType == Enums.eEffectType.Elusivity)
+                {
+                    ApplyAcrossDefenseVectors(buckets.Elusivity, value);
                     continue;
                 }
 

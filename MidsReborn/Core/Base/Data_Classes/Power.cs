@@ -24,12 +24,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         float DisplayedTotal,
         float TotalExcludingProc,
         IReadOnlyList<DamageTypeContribution> ByType,
+        bool HasDamageEffects,
         bool HasPercentDamage,
         float PercentOfTargetHpTotal,
         float DisplayMultiplier)
     {
         public static readonly DamageBreakdownSummary Empty =
-            new(0f, 0f, Array.Empty<DamageTypeContribution>(), false, 0f, 1f);
+            new(0f, 0f, Array.Empty<DamageTypeContribution>(), false, false, 0f, 1f);
 
         public DamageBreakdownSummary ScaleToDisplayMultiplier(float displayMultiplier)
         {
@@ -59,6 +60,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
     public class Power : IPower, IComparable
     {
         private const string AdvancedRequirementsMarker = "MRB_ADVANCED_POWER_REQUIREMENTS";
+        private const string OmniTargetRequiresMarker = "MRB_OMNI_POWER_TARGET_REQUIRES";
+        private const string ActivationEffectsRuntimeMarker = "MRB_OMNI_POWER_ACTIVATION_EFFECTS";
+        private const string RootTimeMarker = "MRB_POWER_ROOT_TIME";
+        private const string RechargeGroupsMarker = "MRB_POWER_RECHARGE_GROUPS";
+        private const string TypedEnhancementRestrictionsMarker = "MRB_POWER_TYPED_ENHANCEMENT_RESTRICTIONS";
+        private const string IgnoreEnhancementAxesMarker = "MRB_POWER_IGNORE_ENHANCEMENT_AXES";
+        private const string IgnoreBuffEnhancementAxesMarker = "MRB_POWER_IGNORE_BUFF_ENHANCEMENT_AXES";
         private bool Contains;
         public bool AppliedPowersOverride { get; set; } = false;
         public bool AbsorbedPetEffects { get; set; } = false;
@@ -74,6 +82,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             DisplayName = string.Empty;
             FullName = string.Empty;
             BoostsAllowed = [];
+            RechargeGroups = [];
             BuffMode = Enums.eBuffMode.Normal;
             Effects = [];
             ForcedClass = string.Empty;
@@ -93,6 +102,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             NIDSubPower = [];
             Ignore_Buff = [];
             IgnoreEnh = [];
+            TypedEnhancementRestrictions = [];
+            IgnoreEnhancementAxes = [];
+            IgnoreBuffEnhancementAxes = [];
             SubIsAltColor = false;
             BoostsAllowed = [];
             Requires = new Requirement();
@@ -122,6 +134,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             DisplayName = string.Empty;
             FullName = string.Empty;
             BoostsAllowed = [];
+            RechargeGroups = [];
             BuffMode = Enums.eBuffMode.Normal;
             Effects = [];
             ForcedClass = string.Empty;
@@ -145,6 +158,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             NIDSubPower = [];
             Ignore_Buff = [];
             IgnoreEnh = [];
+            TypedEnhancementRestrictions = [];
+            IgnoreEnhancementAxes = [];
+            IgnoreBuffEnhancementAxes = [];
             SubIsAltColor = false;
             if (template == null)
             {
@@ -192,6 +208,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             RangeSecondary = template.RangeSecondary;
             EndCost = template.EndCost;
             InterruptTime = template.InterruptTime;
+            RootTime = template.RootTime;
             CastTime = template.CastTimeReal;
             RechargeTime = template.RechargeTime;
             BaseRechargeTime = template.BaseRechargeTime;
@@ -211,6 +228,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             DoNotSave = template.DoNotSave;
             BoostsAllowed = new string[template.BoostsAllowed.Length];
             Array.Copy(template.BoostsAllowed, BoostsAllowed, BoostsAllowed.Length);
+            RechargeGroups = new string[template.RechargeGroups.Length];
+            Array.Copy(template.RechargeGroups, RechargeGroups, RechargeGroups.Length);
             Enhancements = new int[template.Enhancements.Length];
             Array.Copy(template.Enhancements, Enhancements, Enhancements.Length);
             CastThroughHold = template.CastThroughHold;
@@ -248,6 +267,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Array.Copy(template.IgnoreEnh, IgnoreEnh, IgnoreEnh.Length);
             Ignore_Buff = new Enums.eEnhance[template.Ignore_Buff.Length];
             Array.Copy(template.Ignore_Buff, Ignore_Buff, Ignore_Buff.Length);
+            TypedEnhancementRestrictions = template.TypedEnhancementRestrictions
+                .Where(restriction => restriction.IsValid)
+                .ToArray();
+            IgnoreEnhancementAxes = EnhancementPolicyAxes.Normalize(template.IgnoreEnhancementAxes);
+            IgnoreBuffEnhancementAxes = EnhancementPolicyAxes.Normalize(template.IgnoreBuffEnhancementAxes);
             SkipMax = template.SkipMax;
             InherentType = template.InherentType;
             LocationIndex = template.DisplayLocation;
@@ -267,6 +291,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             ActivationEffectsRuntime = template is Power concretePower && concretePower.ActivationEffectsRuntime.Length > 0
                 ? concretePower.ActivationEffectsRuntime.Select(effect => (IEffect)effect.Clone()).ToArray()
                 : [];
+            foreach (var effect in ActivationEffectsRuntime)
+            {
+                effect.SetPower(this);
+            }
             OmniTargetRequiresRaw = template is Power targetPower ? targetPower.OmniTargetRequiresRaw : string.Empty;
             OmniDisplayClassName = template is Power displayPower ? displayPower.OmniDisplayClassName : string.Empty;
             HasAbsorbedEffects = template.HasAbsorbedEffects;
@@ -298,8 +326,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             NIDSubPower = [];
             Ignore_Buff = [];
             IgnoreEnh = [];
+            TypedEnhancementRestrictions = [];
             SubIsAltColor = false;
             BoostsAllowed = [];
+            RechargeGroups = [];
             StaticIndex = reader.ReadInt32();
             FullName = reader.ReadString();
             GroupName = reader.ReadString();
@@ -330,6 +360,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             RangeSecondary = reader.ReadSingle();
             EndCost = reader.ReadSingle();
             InterruptTime = reader.ReadSingle();
+            RootTime = 0f;
             CastTime = reader.ReadSingle();
             RechargeTime = reader.ReadSingle();
             BaseRechargeTime = reader.ReadSingle();
@@ -403,6 +434,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 Ignore_Buff[index] = (Enums.eEnhance)reader.ReadInt32();
             }
 
+            IgnoreEnhancementAxes = [];
+            IgnoreBuffEnhancementAxes = [];
+
             SkipMax = reader.ReadBoolean();
             InherentType = (Enums.eGridType)reader.ReadInt32();
             DisplayLocation = reader.ReadInt32();
@@ -440,6 +474,32 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 AdvancedRequirements = advancedRequirements;
                 Requires = AdvancedRequirements.ToLegacyRequirement();
             }
+
+            if (TryReadMarkedString(reader, OmniTargetRequiresMarker, out var omniTargetRequires))
+            {
+                OmniTargetRequiresRaw = omniTargetRequires;
+            }
+            if (TryReadMarkedSingle(reader, RootTimeMarker, out var rootTime))
+            {
+                RootTime = rootTime;
+            }
+            if (TryReadMarkedStringArray(reader, RechargeGroupsMarker, out var rechargeGroups))
+            {
+                RechargeGroups = rechargeGroups;
+            }
+            if (TryReadMarkedStringArray(reader, TypedEnhancementRestrictionsMarker, out var typedEnhancementRestrictions))
+            {
+                TypedEnhancementRestrictions = TypedEnhancementLegality.Deserialize(typedEnhancementRestrictions);
+            }
+            if (TryReadMarkedStringArray(reader, IgnoreEnhancementAxesMarker, out var ignoreEnhancementAxes))
+            {
+                IgnoreEnhancementAxes = EnhancementPolicyAxes.Deserialize(ignoreEnhancementAxes);
+            }
+            if (TryReadMarkedStringArray(reader, IgnoreBuffEnhancementAxesMarker, out var ignoreBuffEnhancementAxes))
+            {
+                IgnoreBuffEnhancementAxes = EnhancementPolicyAxes.Deserialize(ignoreBuffEnhancementAxes);
+            }
+            TryReadActivationEffectsRuntime(reader);
         }
 
         public IPowerset? GetPowerSet()
@@ -526,6 +586,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public float InterruptTime { get; set; }
 
+        public float RootTime { get; set; }
+
         public float RechargeTime { get; set; }
 
         public float BaseRechargeTime { get; set; }
@@ -559,6 +621,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public bool DoNotSave { get; set; }
 
         public string[] BoostsAllowed { get; set; }
+
+        public string[] RechargeGroups { get; set; }
+
+        public TypedEnhancementRestriction[] TypedEnhancementRestrictions { get; set; }
+
+        public EnhancementPolicyAxis[] IgnoreEnhancementAxes { get; set; }
+
+        public EnhancementPolicyAxis[] IgnoreBuffEnhancementAxes { get; set; }
 
         public int[] Enhancements { get; set; }
 
@@ -926,6 +996,192 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 AdvancedRequirements is { Rows.Count: > 0 }
                     ? AdvancedRequirements
                     : AdvancedConditionSet.FromLegacyRequirement(Requires));
+            StoreMarkedString(writer, OmniTargetRequiresMarker, OmniTargetRequiresRaw);
+            StoreMarkedSingle(writer, RootTimeMarker, RootTime);
+            StoreMarkedStringArray(writer, RechargeGroupsMarker, RechargeGroups);
+            StoreMarkedStringArray(writer, TypedEnhancementRestrictionsMarker, TypedEnhancementLegality.Serialize(TypedEnhancementRestrictions));
+            StoreMarkedStringArray(writer, IgnoreEnhancementAxesMarker, EnhancementPolicyAxes.Serialize(IgnoreEnhancementAxes));
+            StoreMarkedStringArray(writer, IgnoreBuffEnhancementAxesMarker, EnhancementPolicyAxes.Serialize(IgnoreBuffEnhancementAxes));
+            StoreActivationEffectsRuntime(writer);
+        }
+
+        private static void StoreMarkedString(BinaryWriter writer, string marker, string value)
+        {
+            writer.Write(marker);
+            writer.Write(value ?? string.Empty);
+        }
+
+        private static void StoreMarkedSingle(BinaryWriter writer, string marker, float value)
+        {
+            writer.Write(marker);
+            writer.Write(value);
+        }
+
+        private static void StoreMarkedStringArray(BinaryWriter writer, string marker, IReadOnlyList<string>? values)
+        {
+            writer.Write(marker);
+            var safeValues = values?
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray() ?? [];
+            writer.Write(safeValues.Length);
+            foreach (var value in safeValues)
+            {
+                writer.Write(value);
+            }
+        }
+
+        private static bool TryReadMarkedString(BinaryReader reader, string marker, out string value)
+        {
+            value = string.Empty;
+            if (!reader.BaseStream.CanSeek)
+            {
+                return false;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), marker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return false;
+                }
+
+                value = reader.ReadString();
+                return true;
+            }
+            catch
+            {
+                reader.BaseStream.Position = position;
+                value = string.Empty;
+                return false;
+            }
+        }
+
+        private static bool TryReadMarkedSingle(BinaryReader reader, string marker, out float value)
+        {
+            value = 0f;
+            if (!reader.BaseStream.CanSeek)
+            {
+                return false;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), marker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return false;
+                }
+
+                value = reader.ReadSingle();
+                return true;
+            }
+            catch
+            {
+                reader.BaseStream.Position = position;
+                value = 0f;
+                return false;
+            }
+        }
+
+        private static bool TryReadMarkedStringArray(BinaryReader reader, string marker, out string[] values)
+        {
+            values = [];
+            if (!reader.BaseStream.CanSeek)
+            {
+                return false;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), marker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return false;
+                }
+
+                var count = reader.ReadInt32();
+                if (count <= 0)
+                {
+                    values = [];
+                    return true;
+                }
+
+                values = new string[count];
+                for (var index = 0; index < count; index++)
+                {
+                    values[index] = reader.ReadString();
+                }
+
+                values = values
+                    .Where(value => !string.IsNullOrWhiteSpace(value))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray();
+                return true;
+            }
+            catch
+            {
+                reader.BaseStream.Position = position;
+                values = [];
+                return false;
+            }
+        }
+
+        private void StoreActivationEffectsRuntime(BinaryWriter writer)
+        {
+            writer.Write(ActivationEffectsRuntimeMarker);
+            writer.Write(ActivationEffectsRuntime.Length);
+            foreach (var effect in ActivationEffectsRuntime)
+            {
+                effect.StoreTo(ref writer);
+            }
+        }
+
+        private void TryReadActivationEffectsRuntime(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                return;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), ActivationEffectsRuntimeMarker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return;
+                }
+
+                var count = reader.ReadInt32();
+                if (count <= 0)
+                {
+                    ActivationEffectsRuntime = [];
+                    return;
+                }
+
+                var effects = new IEffect[count];
+                for (var index = 0; index < count; index++)
+                {
+                    var effect = (IEffect)new Effect(reader)
+                    {
+                        nID = index
+                    };
+                    effect.SetPower(this);
+                    effects[index] = effect;
+                }
+
+                ActivationEffectsRuntime = effects;
+            }
+            catch
+            {
+                reader.BaseStream.Position = position;
+                ActivationEffectsRuntime = [];
+            }
         }
 
         public PowerEntry? GetPowerEntry() => MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x is { Power: not null } && x.Power.DisplayName == DisplayName);
@@ -1067,6 +1323,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             var hasPercentDamage = HasPercentDamageDisplay(power);
+            var hasDamageEffects = false;
             var displayMultiplier = hasPercentDamage ? GetDamageDisplayMultiplier(power) : 1f;
             var displayedTotal = 0f;
             var totalExcludingProc = 0f;
@@ -1080,6 +1337,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     continue;
                 }
+
+                hasDamageEffects = true;
 
                 var effectTotal = GetDamageEffectTotal(effect, power, absolute: true, applyReturnScaling: true);
                 if (Math.Abs(effectTotal) < 0.0001f)
@@ -1127,6 +1386,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 DisplayedTotal: displayedTotal,
                 TotalExcludingProc: totalExcludingProc,
                 ByType: byType,
+                HasDamageEffects: hasDamageEffects,
                 HasPercentDamage: hasPercentDamage,
                 PercentOfTargetHpTotal: hasPercentDamage ? rawDisplayedTotal * 100f : 0f,
                 DisplayMultiplier: displayMultiplier);
@@ -1959,6 +2219,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return Ignore_Buff.Length == 0 || Ignore_Buff.All(t => t != iEffect);
         }
 
+        public bool IgnoreEnhancementAxis(EnhancementPolicyAxis axis)
+        {
+            return IgnoreEnhancementAxes.Length == 0 || IgnoreEnhancementAxes.All(candidate => candidate != axis);
+        }
+
+        public bool IgnoreBuffAxis(EnhancementPolicyAxis axis)
+        {
+            return IgnoreBuffEnhancementAxes.Length == 0 || IgnoreBuffEnhancementAxes.All(candidate => candidate != axis);
+        }
+
         public int CompareTo(object? obj)
         {
             if (obj is not Power power)
@@ -2514,7 +2784,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                                 Effects[index2].ToWho = Enums.eToWho.Target;
                             }
 
-                            PlannerEffectResolver.InheritEffectMetadata(Effects[array1[index1]], Effects[index2]);
+                            PlannerEffectResolver.InheritEffectMetadata(Effects[array1[index1]], Effects[index2], owner: this);
                         }
                     }
                 }
@@ -2555,7 +2825,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                 if (Enhancements.Contains(enhancementClasses[classId].ID))
                 {
-                    return true;
+                    return TypedEnhancementLegality.AllowsEnhancement(this, enhancement);
                 }
             }
 
@@ -2648,11 +2918,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                             Ignore_Buff = power.Ignore_Buff;
                             IgnoreEnh = power.IgnoreEnh;
+                            IgnoreBuffEnhancementAxes = EnhancementPolicyAxes.Normalize(power.IgnoreBuffEnhancementAxes);
+                            IgnoreEnhancementAxes = EnhancementPolicyAxes.Normalize(power.IgnoreEnhancementAxes);
+                            TypedEnhancementRestrictions = power.TypedEnhancementRestrictions
+                                .Where(restriction => restriction.IsValid)
+                                .ToArray();
                             MaxTargets = power.MaxTargets;
                             Radius = power.Radius;
                             Target = power.Target;
                             //ActivatePeriod = power.ActivatePeriod;
-                            if (DatabaseAPI.Database.Power[PowerIndex].EntitiesAutoHit is Enums.eEntity.None or Enums.eEntity.Caster)
+                            if (PowerIndex < 0 ||
+                                PowerIndex >= DatabaseAPI.Database.Power.Length ||
+                                DatabaseAPI.Database.Power[PowerIndex].EntitiesAutoHit is Enums.eEntity.None or Enums.eEntity.Caster)
                             {
                                 continue;
                             }
@@ -2677,24 +2954,34 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                     foreach (var power1 in DatabaseAPI.Database.Powersets[setIndex].Powers)
                     {
+                        var classIndex = DatabaseAPI.Database.Entities[nSummon1].GetNClassId();
+                        if (classIndex < 0 || classIndex >= DatabaseAPI.Database.Classes.Length)
+                        {
+                            continue;
+                        }
+
                         var startIndex = Effects.Length;
-                        var absorbedEntCreates = AbsorbEffects(power1, absorbDuration, effect.DelayedTime, DatabaseAPI.Database.Classes[DatabaseAPI.Database.Entities[nSummon1].GetNClassId()], stacking);
+                        var absorbedEntCreates = AbsorbEffects(power1, absorbDuration, effect.DelayedTime, DatabaseAPI.Database.Classes[classIndex], stacking);
                         ApplySummonWrapperMetadata(effect, startIndex, absorbDuration, CreatePseudoPetRecurrence(effect, DatabaseAPI.Database.Entities[nSummon1], power1, pseudoOnly));
                         foreach (var absorbEffect in absorbedEntCreates)
                         {
                             var nSummon2 = power1.Effects[absorbEffect].nSummon;
+                            var nestedPowersetIndices = nSummon2 >= 0 && nSummon2 < DatabaseAPI.Database.Entities.Length
+                                ? DatabaseAPI.Database.Entities[nSummon2].GetNPowerset()
+                                : Array.Empty<int>();
                             if (nSummon2 < 0 ||
                                 nSummon2 >= DatabaseAPI.Database.Entities.Length ||
-                                DatabaseAPI.Database.Entities[nSummon2].GetNPowerset().Count == 0 ||
-                                DatabaseAPI.Database.Entities[nSummon2].GetNPowerset()[0] < 0)
+                                nestedPowersetIndices.Count == 0 ||
+                                nestedPowersetIndices[0] < 0 ||
+                                nestedPowersetIndices[0] >= DatabaseAPI.Database.Powersets.Length)
                             {
                                 continue;
                             }
 
-                            foreach (var power2 in DatabaseAPI.Database.Powersets[DatabaseAPI.Database.Entities[nSummon2].GetNPowerset()[0]].Powers)
+                            foreach (var power2 in DatabaseAPI.Database.Powersets[nestedPowersetIndices[0]].Powers)
                             {
                                 var nestedStartIndex = Effects.Length;
-                                AbsorbEffects(power2, absorbDuration, effect.DelayedTime, DatabaseAPI.Database.Classes[DatabaseAPI.Database.Entities[nSummon1].GetNClassId()], stacking);
+                                AbsorbEffects(power2, absorbDuration, effect.DelayedTime, DatabaseAPI.Database.Classes[classIndex], stacking);
                                 ApplySummonWrapperMetadata(effect, nestedStartIndex, absorbDuration, CreatePseudoPetRecurrence(effect, DatabaseAPI.Database.Entities[nSummon1], power2, pseudoOnly));
                             }
                         }
@@ -2713,19 +3000,37 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private PseudoPetRecurrenceInfo? CreatePseudoPetRecurrence(IEffect wrapper, SummonedEntity entity, IPower petPower, bool pseudoOnly)
         {
             if (!pseudoOnly ||
-                PowerType != Enums.ePowerType.Toggle ||
-                UsageTime <= 0 ||
-                ActivatePeriod <= 0 ||
-                wrapper.Duration <= 0 ||
-                petPower.ActivatePeriod <= 0 ||
                 entity is not { IsPseudoPet: true })
             {
                 return null;
             }
 
-            var spawnCount = (int)Math.Floor(UsageTime / ActivatePeriod);
-            var ticksPerSpawn = 1 + (int)Math.Floor(wrapper.Duration / petPower.ActivatePeriod);
+            var recurrenceWindow = wrapper.Duration > 0
+                ? wrapper.Duration
+                : petPower.ActivatePeriod > 0
+                    ? petPower.ActivatePeriod
+                    : 0f;
+            var spawnCount = PowerType == Enums.ePowerType.Toggle &&
+                             UsageTime > 0 &&
+                             ActivatePeriod > 0
+                ? (int)Math.Floor(UsageTime / ActivatePeriod)
+                : 1;
+            var sourceUsageTime = UsageTime > 0
+                ? UsageTime
+                : ActivatePeriod > 0
+                    ? ActivatePeriod
+                    : recurrenceWindow;
+            var sourceActivatePeriod = ActivatePeriod > 0 ? ActivatePeriod : recurrenceWindow;
+            var petTickInterval = petPower.ActivatePeriod > 0 ? petPower.ActivatePeriod : recurrenceWindow;
+            var ticksPerSpawn = petPower.ActivatePeriod > 0 && wrapper.Duration > 0
+                ? 1 + (int)Math.Floor(wrapper.Duration / petPower.ActivatePeriod)
+                : 1;
             if (spawnCount <= 0 || ticksPerSpawn <= 0)
+            {
+                return null;
+            }
+
+            if (sourceUsageTime <= 0 || sourceActivatePeriod <= 0 || petTickInterval <= 0)
             {
                 return null;
             }
@@ -2734,10 +3039,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 EntityName = string.IsNullOrWhiteSpace(entity.DisplayName) ? entity.UID : entity.DisplayName,
                 PetPowerName = string.IsNullOrWhiteSpace(petPower.DisplayName) ? petPower.FullName : petPower.DisplayName,
-                SourceUsageTime = UsageTime,
-                SourceActivatePeriod = ActivatePeriod,
-                EntCreateDuration = wrapper.Duration,
-                PetTickInterval = petPower.ActivatePeriod,
+                SourceUsageTime = sourceUsageTime,
+                SourceActivatePeriod = sourceActivatePeriod,
+                EntCreateDuration = wrapper.Duration > 0 ? wrapper.Duration : petTickInterval,
+                PetTickInterval = petTickInterval,
                 SpawnCount = spawnCount,
                 TicksPerSpawn = ticksPerSpawn,
                 TotalExpectedTicks = spawnCount * ticksPerSpawn
@@ -2760,7 +3065,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     child.Absorbed_Duration = absorbedDuration;
                 }
 
-                if (recurrence is { IsValid: true } && child.EffectType == Enums.eEffectType.Damage)
+                if (recurrence is { IsValid: true })
                 {
                     child.PseudoPetRecurrence = recurrence;
                 }

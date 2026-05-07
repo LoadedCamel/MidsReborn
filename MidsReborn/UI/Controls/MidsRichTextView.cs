@@ -43,6 +43,7 @@ namespace Mids_Reborn.UI.Controls
         private readonly RichTextBox _rtb; // hidden RichEdit host
         private int _contentHeight;        // total content height (px)
         private int _scrollY;              // viewport top (px)
+        private bool _showScrollbar;
 
         // scrollbar geometry
         private Rectangle _sbBounds, _track, _upRect, _dnRect, _thumb;
@@ -201,13 +202,23 @@ namespace Mids_Reborn.UI.Controls
         #region Layout + metrics
         private void LayoutEngineRects()
         {
-            // Always reserve the bar strip so wrapping is stable (no reflow pop-in)
-            int sbw = BarW;
+            int sbw = _showScrollbar ? BarW : 0;
             var viewport = ContentViewportRect();
 
             // Width fixed to printable area; height will be set to content in RecalcAndApplyHeight
             _rtb.Bounds = new Rectangle(0, 0, Math.Max(1, viewport.Width - sbw),
                                         Math.Max(viewport.Height, _contentHeight));
+
+            if (!_showScrollbar || sbw <= 0)
+            {
+                _sbBounds = Rectangle.Empty;
+                _upRect = Rectangle.Empty;
+                _dnRect = Rectangle.Empty;
+                _track = Rectangle.Empty;
+                _thumb = Rectangle.Empty;
+                Invalidate();
+                return;
+            }
 
             // Scrollbar geometry
             _sbBounds = new Rectangle(viewport.Right - BarW, viewport.Top, BarW, viewport.Height);
@@ -221,18 +232,29 @@ namespace Mids_Reborn.UI.Controls
 
         private void RecalcFromLayout()
         {
-            // Fallback calc works even when ContentsResized doesn’t fire
-            int last = Math.Max(0, _rtb.TextLength);           // after last char
-            var pt = _rtb.GetPositionFromCharIndex(last);    // client Y of last char
-            int line = Math.Max(1, _rtb.Font.Height);
-            int needed = Math.Max(line, pt.Y + line);
-
-            RecalcAndApplyHeight(needed);
+            RecalcAndApplyHeight(MeasureContentHeight());
         }
 
         private void RecalcAndApplyHeight(int desired)
         {
             _contentHeight = Math.Max(1, desired);
+
+            bool needsScrollbar = NeedsScrollbar();
+            if (_showScrollbar != needsScrollbar)
+            {
+                _showScrollbar = needsScrollbar;
+                LayoutEngineRects();
+
+                // Changing the available width changes wrapping, so measure once more.
+                _contentHeight = Math.Max(1, MeasureContentHeight());
+                needsScrollbar = NeedsScrollbar();
+                if (_showScrollbar != needsScrollbar)
+                {
+                    _showScrollbar = needsScrollbar;
+                }
+            }
+
+            LayoutEngineRects();
 
             // CRITICAL: make the hidden RTB as tall as the content so there is something to scroll
             int newH = Math.Max(ViewportHeight, _contentHeight);
@@ -244,6 +266,15 @@ namespace Mids_Reborn.UI.Controls
         }
 
         private bool NeedsScrollbar() => _contentHeight > ViewportHeight + 1;
+
+        private int MeasureContentHeight()
+        {
+            // Fallback calc works even when ContentsResized doesn’t fire.
+            int last = Math.Max(0, _rtb.TextLength);
+            var pt = _rtb.GetPositionFromCharIndex(last);
+            int line = Math.Max(1, _rtb.Font.Height);
+            return Math.Max(line, pt.Y + line);
+        }
 
         private void ClampScroll()
         {
@@ -299,10 +330,11 @@ namespace Mids_Reborn.UI.Controls
             var g = e.Graphics;
             g.Clear(BackColor);
             var viewport = ContentViewportRect();
+            int activeBarWidth = _showScrollbar ? BarW : 0;
 
             // Shift the HDC upwards by _scrollY so RichEdit paints the scrolled viewport
             var oldClip = g.Clip.Clone();
-            g.SetClip(new Rectangle(viewport.Left, viewport.Top, Math.Max(1, viewport.Width - BarW), viewport.Height));
+            g.SetClip(new Rectangle(viewport.Left, viewport.Top, Math.Max(1, viewport.Width - activeBarWidth), viewport.Height));
             nint hdc = g.GetHdc();
             try
             {
@@ -323,6 +355,11 @@ namespace Mids_Reborn.UI.Controls
 
         private void DrawScrollbar(Graphics g)
         {
+            if (!_showScrollbar || _sbBounds.IsEmpty)
+            {
+                return;
+            }
+
             var t = Theme;
 
             using (var trackPen = new Pen(t.Track, Math.Max(1, ScalePx(2))))

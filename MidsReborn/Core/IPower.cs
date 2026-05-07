@@ -88,6 +88,8 @@ namespace Mids_Reborn.Core
 
         float InterruptTime { get; set; }
 
+        float RootTime { get; set; }
+
         float RechargeTime { get; set; }
 
         float BaseRechargeTime { get; set; }
@@ -123,6 +125,14 @@ namespace Mids_Reborn.Core
         bool DoNotSave { get; set; }
 
         string[] BoostsAllowed { get; set; }
+
+        string[] RechargeGroups { get; set; }
+
+        TypedEnhancementRestriction[] TypedEnhancementRestrictions { get; set; }
+
+        EnhancementPolicyAxis[] IgnoreEnhancementAxes { get; set; }
+
+        EnhancementPolicyAxis[] IgnoreBuffEnhancementAxes { get; set; }
 
         int[] Enhancements { get; set; }
 
@@ -279,6 +289,10 @@ namespace Mids_Reborn.Core
         bool I9FXPresentP(Enums.eEffectType iEffect, Enums.eMez iMez = Enums.eMez.None);
 
         bool IgnoreEnhancement(Enums.eEnhance iEffect);
+
+        bool IgnoreEnhancementAxis(EnhancementPolicyAxis axis);
+
+        bool IgnoreBuffAxis(EnhancementPolicyAxis axis);
 
         bool IgnoreBuff(Enums.eEnhance iEffect);
 

@@ -17,11 +17,22 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             Load += frmEditPowerset_Load;
             _loading = true;
             InitializeComponent();
+            ApplyMinimumIconLayout();
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEditPowerset);
             MyPowerSet = new Powerset(iSet);
             _mutexUidSets = MyPowerSet.UIDMutexSets.ToList();
             _mutexNidSets = MyPowerSet.nIDMutexSets.ToList();
+        }
+
+        private void ApplyMinimumIconLayout()
+        {
+            var center = new Point(picIcon.Left + picIcon.Width / 2, picIcon.Top + picIcon.Height / 2);
+            var size = Math.Max(DbEditorIconLayout.MinimumIconSize, Math.Max(picIcon.Width, picIcon.Height));
+            picIcon.Size = new Size(size, size);
+            picIcon.Location = new Point(center.X - picIcon.Width / 2, center.Y - picIcon.Height / 2);
+            picIcon.SizeMode = PictureBoxSizeMode.Zoom;
+            btnIcon.Top = Math.Max(btnIcon.Top, picIcon.Bottom + 4);
         }
 
         private void AddListItem(int index)
@@ -263,7 +274,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 }
                 else
                 {
-                    picIcon.Image = new Bitmap(30, 30);
+                    picIcon.Image = new Bitmap(DbEditorIconLayout.MinimumIconSize, DbEditorIconLayout.MinimumIconSize);
                 }
                 btnIcon.Text = "Select Icon";
             }

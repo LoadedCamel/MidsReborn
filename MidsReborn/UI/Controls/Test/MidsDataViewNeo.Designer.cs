@@ -57,6 +57,7 @@ namespace Mids_Reborn.UI.Controls
             sliderHost = new Panel();
             midsTrackBar1 = new Mids_Reborn.UI.Controls.Test.MidsTrackBar();
             infoLDesc = new MidsRichTextView();
+            infoDescDivider = new Panel();
             infoSDesc = new RichTextBox();
             effectView = new Page();
             effectsGrid = new Mids_Reborn.UI.Controls.Test.PowerEffectsGrid();
@@ -213,6 +214,7 @@ namespace Mids_Reborn.UI.Controls
             infoView.Controls.Add(infoDamageDisplay);
             infoView.Controls.Add(sliderHost);
             infoView.Controls.Add(infoLDesc);
+            infoView.Controls.Add(infoDescDivider);
             infoView.Controls.Add(infoSDesc);
             infoView.Dock = DockStyle.Fill;
             infoView.ForeColor = Color.WhiteSmoke;
@@ -279,11 +281,20 @@ namespace Mids_Reborn.UI.Controls
             infoLDesc.Dock = DockStyle.Top;
             infoLDesc.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             infoLDesc.ForeColor = Color.WhiteSmoke;
-            infoLDesc.Location = new Point(0, 44);
+            infoLDesc.Location = new Point(0, 46);
             infoLDesc.Name = "infoLDesc";
             infoLDesc.Rtf = resources.GetString("infoLDesc.Rtf");
             infoLDesc.Size = new Size(400, 62);
             infoLDesc.TabIndex = 84;
+            // 
+            // infoDescDivider
+            // 
+            infoDescDivider.Dock = DockStyle.Top;
+            infoDescDivider.Location = new Point(0, 44);
+            infoDescDivider.Name = "infoDescDivider";
+            infoDescDivider.Size = new Size(400, 6);
+            infoDescDivider.TabIndex = 86;
+            infoDescDivider.Paint += InfoDescDivider_Paint;
             // 
             // infoSDesc
             // 
@@ -720,6 +731,7 @@ namespace Mids_Reborn.UI.Controls
         private FontAwesome.Sharp.IconButton LockButton;
         private PairedListEx infoDataList;
         internal MidsRichTextView infoLDesc;
+        private Panel infoDescDivider;
         private RichTextBox infoSDesc;
         private Test.PowerStatsGrid powerStatsGrid;
         internal ModernDamageDisplay infoDamageDisplay;

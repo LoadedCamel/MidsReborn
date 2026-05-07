@@ -640,6 +640,7 @@ namespace Mids_Reborn.UI.Controls
             var segments = _presentation.Segments.Where(segment => segment.Value > ZeroTol).ToArray();
             var drawGraph = _showGraph && segments.Length > 0;
             var hasSubtitle = !string.IsNullOrWhiteSpace(_presentation.SubtitleText);
+            var hasPrimary = !string.IsNullOrWhiteSpace(_presentation.PrimaryText);
             var compactTextLayout = !hasSubtitle;
             var fullMode = content.Height >= ScalePx(hasSubtitle ? 68 : 58);
             var condensedMode = !fullMode && content.Height >= ScalePx(hasSubtitle ? 54 : 48);
@@ -712,6 +713,11 @@ namespace Mids_Reborn.UI.Controls
             if (badgeRect != Rectangle.Empty)
             {
                 DrawBadge(g, badgeRect, badgeFont, _presentation.ModeBadgeText, theme);
+            }
+
+            if (!hasPrimary)
+            {
+                return;
             }
 
             var primaryTop = topRowRect.Bottom + topGap;

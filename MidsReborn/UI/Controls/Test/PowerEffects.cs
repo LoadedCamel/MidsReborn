@@ -244,32 +244,15 @@ public static class PowerEffects
     /// </summary>
     private static EdImpact ComputeEdForFx(IPower pEnh, GroupedFx gre, int mezSubId)
     {
-        // Try to map effect type to a matching eEnhance by name (DataView ED code uses the same mapping).
-        Enums.eEnhance? kind;
+        var kind = gre.EffectType == Enums.eEffectType.Mez
+            ? Enums.eEnhance.Mez
+            : EnhancementEffectMapper.MapEnhanceFromEffectType(gre.EffectType);
 
-        if (gre.EffectType == Enums.eEffectType.Mez)
-        {
-            kind = Enums.eEnhance.Mez;
-        }
-        else
-        {
-            try
-            {
-                // Most effect types that can be enhanced share names with eEnhance (e.g., Defense, Resistance, ToHit, RechargeTime, DamageBuff, etc.)
-                kind = (Enums.eEnhance)Enum.Parse(typeof(Enums.eEnhance), gre.EffectType.ToString());
-            }
-            catch
-            {
-                // Not an ED-governed type
-                kind = null;
-            }
-        }
-
-        if (kind == null) return new EdImpact { Active = false, Sched = Enums.eSchedule.None, BandIndex = -1 };
+        if (kind == Enums.eEnhance.None) return new EdImpact { Active = false, Sched = Enums.eSchedule.None, BandIndex = -1 };
 
         var pe = TryGetPowerEntry(pEnh);
 
-        return ComputeEdImpact(pe, kind.Value, (kind == Enums.eEnhance.Mez) ? mezSubId : -1);
+        return ComputeEdImpact(pe, kind, kind == Enums.eEnhance.Mez ? mezSubId : -1);
     }
 
     /// <summary>

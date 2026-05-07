@@ -19,10 +19,17 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             Load += frmEnhEdit_Load;
             InitializeComponent();
+            ApplyMinimumIconLayout();
             Name = nameof(frmEnhEdit);
             Icon = Resources.MRB_Icon_Concept;
             SpecialEnhTypes = DatabaseAPI.Database.SpecialEnhancements.Select(specEnh => specEnh.Name.Replace(" Origin", string.Empty)).ToList();
             LvKbHandler = lvEnh.AssignKeyboardNavHandler();
+        }
+
+        private void ApplyMinimumIconLayout()
+        {
+            var iconSize = Math.Max(DbEditorIconLayout.MinimumIconSize, Math.Max(ilEnh.ImageSize.Width, ilEnh.ImageSize.Height));
+            ilEnh.ImageSize = new Size(iconSize, iconSize);
         }
 
         private void btnAdd_Click(object sender, EventArgs e)

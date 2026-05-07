@@ -12,6 +12,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private const string EffectTagsMarker = "MRB_EFFECT_TAGS";
         private const string OmniSourceMarker = "MRB_EFFECT_OMNI_SOURCE";
         private const string CombatModFlagsMarker = "MRB_EFFECT_COMBAT_MOD_FLAGS";
+        private const string GrantBoostedMarker = "MRB_EFFECT_GRANT_BOOSTED";
         private static readonly Regex UidClassRegex = new("arch source(.owner)?> (Class_[^ ]*)", RegexOptions.IgnoreCase);
 
         private IPower? power;
@@ -59,6 +60,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             EffectId = "Ones";
             EffectTags = [];
             OmniSource = string.Empty;
+            GrantBoosted = false;
             ModeName = string.Empty;
             ModeId = -1;
             ModeFlag = Enums.eModeFlags.None;
@@ -147,6 +149,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             TryReadOmniSource(reader);
             TryReadCombatModFlags(reader);
+            TryReadGrantBoosted(reader);
         }
 
         private Effect(IEffect template) : this()
@@ -205,6 +208,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             EffectId = template.EffectId;
             EffectTags = template.EffectTags?.ToList() ?? [];
             OmniSource = template.OmniSource;
+            GrantBoosted = template.GrantBoosted;
             UseCombatModMagnitude = template.UseCombatModMagnitude;
             UseCombatModDuration = template.UseCombatModDuration;
             IgnoreED = template.IgnoreED;
@@ -228,6 +232,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public AdvancedConditionSet AdvancedConditions { get; set; }
 
         public string OmniSource { get; set; }
+        public bool GrantBoosted { get; set; }
         public bool UseCombatModMagnitude { get; set; }
         public bool UseCombatModDuration { get; set; }
 
@@ -682,7 +687,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     {
                         var pow = DatabaseAPI.GetPowerByFullName(Summon);
                         var shown = pow == null ? $" {Summon}" : $" {pow.DisplayName}";
-                        result = $"{effectLabel}{shown}{toWhoText}";
+                        result = $"{effectLabel}{shown}{FormatGrantBoostedSuffix()}{toWhoText}";
                         break;
                     }
 
@@ -1318,7 +1323,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         ? $" {(MidsContext.Config.CoDEffectFormat ? $"({pID.FullName})" : pID.DisplayName)}"
                         : $" {Summon}";
                     sBuild =
-                        $"{sEffect}{tGrant}{sTarget}{(Math.Abs(Duration) < float.Epsilon ? "" : $" for {Duration}s")}{(Ticks > 0 & EffectType == Enums.eEffectType.ExecutePower ? $" ({Ticks} tick{(Ticks == 1 ? "" : "s")})" : "")}";
+                        $"{sEffect}{tGrant}{FormatGrantBoostedSuffix()}{sTarget}{(Math.Abs(Duration) < float.Epsilon ? "" : $" for {Duration}s")}{(Ticks > 0 & EffectType == Enums.eEffectType.ExecutePower ? $" ({Ticks} tick{(Ticks == 1 ? "" : "s")})" : "")}";
                     break;
                 }
 
@@ -1772,6 +1777,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return string.Empty;
         }
 
+        private string FormatGrantBoostedSuffix()
+        {
+            return EffectType == Enums.eEffectType.GrantPower && GrantBoosted
+                ? " (inherits source slotting)"
+                : string.Empty;
+        }
+
 
         public void StoreTo(ref BinaryWriter writer)
         {
@@ -1837,6 +1849,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             StoreEffectTags(writer);
             StoreOmniSource(writer);
             StoreCombatModFlags(writer);
+            StoreGrantBoosted(writer);
         }
 
         private void StoreModePayload(BinaryWriter writer)
@@ -1995,6 +2008,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(UseCombatModDuration);
         }
 
+        private void StoreGrantBoosted(BinaryWriter writer)
+        {
+            writer.Write(GrantBoostedMarker);
+            writer.Write(1);
+            writer.Write(GrantBoosted);
+        }
+
         private void TryReadCombatModFlags(BinaryReader reader)
         {
             if (!reader.BaseStream.CanSeek)
@@ -2019,6 +2039,40 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                 UseCombatModMagnitude = reader.ReadBoolean();
                 UseCombatModDuration = reader.ReadBoolean();
+            }
+            catch (EndOfStreamException)
+            {
+                reader.BaseStream.Position = position;
+            }
+            catch (IOException)
+            {
+                reader.BaseStream.Position = position;
+            }
+        }
+
+        private void TryReadGrantBoosted(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                return;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), GrantBoostedMarker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return;
+                }
+
+                var version = reader.ReadInt32();
+                if (version > 1)
+                {
+                    throw new InvalidDataException($"Unsupported effect grant-boosted version {version}.");
+                }
+
+                GrantBoosted = reader.ReadBoolean();
             }
             catch (EndOfStreamException)
             {

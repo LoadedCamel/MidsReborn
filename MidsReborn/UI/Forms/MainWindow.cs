@@ -4518,6 +4518,32 @@ namespace Mids_Reborn.UI.Forms
             return DatabaseAPI.ToDisplayIndex(MidsContext.Character.Powersets[(int)setId], powersetIndexes);
         }
 
+        private static int ResolveArchetypeIconIndex(Archetype archetype)
+        {
+            if (archetype.Idx >= 0 && archetype.Idx < DatabaseAPI.Database.Classes.Length)
+            {
+                return archetype.Idx;
+            }
+
+            return Array.FindIndex(
+                DatabaseAPI.Database.Classes,
+                dbArchetype => dbArchetype != null &&
+                               string.Equals(dbArchetype.ClassName, archetype.ClassName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        private static int ResolvePowersetIconIndex(IPowerset powerset)
+        {
+            if (powerset.nID >= 0 && powerset.nID < DatabaseAPI.Database.Powersets.Length)
+            {
+                return powerset.nID;
+            }
+
+            return Array.FindIndex(
+                DatabaseAPI.Database.Powersets,
+                dbPowerset => dbPowerset != null &&
+                              string.Equals(dbPowerset.FullName, powerset.FullName, StringComparison.OrdinalIgnoreCase));
+        }
+
         private void Load_AtDropDown()
         {
             var ats = DatabaseAPI.Database.Classes.Where(at => at is not null && at.Playable).ToList();
@@ -4527,7 +4553,12 @@ namespace Mids_Reborn.UI.Forms
 
             atDropDown.IconProvider = item =>
             {
-                int index = Array.IndexOf(DatabaseAPI.Database.Classes, item);
+                if (item is not Archetype archetype)
+                {
+                    return null;
+                }
+
+                int index = ResolveArchetypeIconIndex(archetype);
                 if (index < 0) return null;
 
                 AssetManager.Archetypes.TryGetValue(index, out var icon);
@@ -4560,7 +4591,12 @@ namespace Mids_Reborn.UI.Forms
             primaryDropDown.DataSource = powerSets;
             primaryDropDown.IconProvider = item =>
             {
-                int index = Array.IndexOf(DatabaseAPI.Database.Powersets, item);
+                if (item is not IPowerset powerset)
+                {
+                    return null;
+                }
+
+                int index = ResolvePowersetIconIndex(powerset);
                 if (index < 0) return null;
 
                 AssetManager.Powersets.TryGetValue(index, out var icon);
@@ -4579,7 +4615,12 @@ namespace Mids_Reborn.UI.Forms
             secondaryDropDown.DataSource = powerSets;
             secondaryDropDown.IconProvider = item =>
             {
-                int index = Array.IndexOf(DatabaseAPI.Database.Powersets, item);
+                if (item is not IPowerset powerset)
+                {
+                    return null;
+                }
+
+                int index = ResolvePowersetIconIndex(powerset);
                 if (index < 0) return null;
 
                 AssetManager.Powersets.TryGetValue(index, out var icon);
@@ -4601,7 +4642,12 @@ namespace Mids_Reborn.UI.Forms
 
                 poolDropDown.IconProvider = item =>
                 {
-                    int index = Array.IndexOf(DatabaseAPI.Database.Powersets, item);
+                    if (item is not IPowerset powerset)
+                    {
+                        return null;
+                    }
+
+                    int index = ResolvePowersetIconIndex(powerset);
                     if (index < 0) return null;
                     AssetManager.Powersets.TryGetValue(index, out var icon);
                     return icon?.Bitmap;
@@ -4621,7 +4667,12 @@ namespace Mids_Reborn.UI.Forms
 
             ancillaryPool.IconProvider = item =>
             {
-                int index = Array.IndexOf(DatabaseAPI.Database.Powersets, item);
+                if (item is not IPowerset powerset)
+                {
+                    return null;
+                }
+
+                int index = ResolvePowersetIconIndex(powerset);
                 if (index < 0) return null;
                 AssetManager.Powersets.TryGetValue(index, out var icon);
                 return icon?.Bitmap;

@@ -1,10 +1,15 @@
 using System.Text;
+using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.Omni;
 
 public sealed class OmniApplyResult
 {
     public int ClassAttributesStored { get; set; }
+    public int ArchetypesRead { get; set; }
+    public int PlayableArchetypesRead { get; set; }
+    public int RetainedArchetypesRead { get; set; }
+    public int SkippedArchetypesRead { get; set; }
     public int ArchetypeSummariesUpdated { get; set; }
     public int PowersetsMatched { get; set; }
     public int PowersetsCreated { get; set; }
@@ -55,6 +60,8 @@ public sealed class OmniApplyResult
     public int PowerLocalChanceModsMapped { get; set; }
     public int UnsupportedEffectFilters { get; set; }
     public int ClassTableFilesRead { get; set; }
+    public int RetainedClassTableFiles { get; set; }
+    public int SkippedClassTableFiles { get; set; }
     public int CanonicalNamedTablesStored { get; set; }
     public int MissingModifierTableReferences { get; set; }
     public int AttackVectorsMapped { get; set; }
@@ -71,12 +78,19 @@ public sealed class OmniApplyResult
     public int MalformedPowerDuplicateRemovals { get; set; }
     public int MalformedPowerNameCollisions { get; set; }
     public int PowersetsReorderedByPowerLevel { get; set; }
+    public int ExcludedArchetypesRemoved { get; set; }
+    public int ExcludedClassPowersetsRemoved { get; set; }
+    public int ExcludedClassPowersRemoved { get; set; }
+    public int ExcludedClassEntitiesRemoved { get; set; }
     public int ExcludedPowersetsRemoved { get; set; }
     public int ExcludedPowersRemoved { get; set; }
     public int OrphanPowersBeforeImport { get; set; }
     public int OrphanPowersAfterImport { get; set; }
     public int NewOrphanPowersIntroduced { get; set; }
     public int OrphanedScopedOmniPowers { get; set; }
+    public int AcceptedCanonicalScopedPowerReplacements { get; set; }
+    public int ExcludedScopedOmniPowers { get; set; }
+    public int ManifestOwnedScopedOmniPowers { get; set; }
     public int PowersetIdentityChanges { get; set; }
     public int DuplicateCompositePowerIdentities { get; set; }
     public int EpicPowersetsCreated { get; set; }
@@ -121,6 +135,7 @@ public sealed class OmniApplyResult
     public int PowerFieldsMapped { get; set; }
     public int PowerFieldsMappedWithFallback { get; set; }
     public int PowerFieldConflicts { get; set; }
+    public int KnownChargeCapacityExtensions { get; set; }
     public int DeferredPowerFields { get; set; }
     public int IgnoredPowerFields { get; set; }
     public int UnknownPowerFields { get; set; }
@@ -137,6 +152,7 @@ public sealed class OmniApplyResult
     public int RealPetEntitiesUpdated { get; set; }
     public int PseudoPetAbsorptionFlagsEnabled { get; set; }
     public int PseudoPetAbsorptionAuditFailures { get; set; }
+    public int PseudoPetAbsorptionAuditSkipped { get; set; }
     public int PvModeInferredFromTargetEntity { get; set; }
     public int PvModeInferredFromTable { get; set; }
     public int PvModeAmbiguous { get; set; }
@@ -257,6 +273,9 @@ public sealed class OmniApplyResult
     public Dictionary<string, int> PetPowersRecreatedByRoot { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, int> PetPowersRepairedByRoot { get; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, int> PetPowersLinkedByRoot { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, int> IgnoredPowerFieldOwnerKindCounts { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, int> IgnoredPowerFieldCategoryCounts { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, int> IgnoredPowerFieldNameCounts { get; } = new(StringComparer.OrdinalIgnoreCase);
 
     public List<string> UpdatedPowers { get; } = [];
     public List<string> CreatedPowersets { get; } = [];
@@ -314,9 +333,13 @@ public sealed class OmniApplyResult
     public List<string> MalformedPowerNameCollisionDetails { get; } = [];
     public List<string> PowersetPowerOrderDetails { get; } = [];
     public List<string> ExcludedContentRemovalDetails { get; } = [];
+    public List<string> ExcludedClassContentRemovalDetails { get; } = [];
     public List<string> ImportIntegrityAuditDetails { get; } = [];
     public List<string> NewOrphanPowerDetails { get; } = [];
     public List<string> OrphanedScopedOmniPowerDetails { get; } = [];
+    public List<string> AcceptedCanonicalScopedPowerReplacementDetails { get; } = [];
+    public List<string> ExcludedScopedOmniPowerDetails { get; } = [];
+    public List<string> ManifestOwnedScopedOmniPowerDetails { get; } = [];
     public List<string> PowersetIdentityChangeDetails { get; } = [];
     public List<string> StaffMasteryTraceDetails { get; } = [];
     public List<string> DuplicateCompositePowerIdentityDetails { get; } = [];
@@ -343,6 +366,7 @@ public sealed class OmniApplyResult
     public List<string> MappedPowerFieldDetails { get; } = [];
     public List<string> PowerFieldFallbackDetails { get; } = [];
     public List<string> PowerFieldConflictDetails { get; } = [];
+    public List<string> KnownChargeCapacityDetailEntries { get; } = [];
     public List<string> DeferredPowerFieldDetails { get; } = [];
     public List<string> IgnoredPowerFieldDetails { get; } = [];
     public List<string> UnknownPowerFieldDetails { get; } = [];
@@ -356,6 +380,7 @@ public sealed class OmniApplyResult
     public List<string> PseudoPetEntityDetails { get; } = [];
     public List<string> PseudoPetAbsorptionFlagDetails { get; } = [];
     public List<string> PseudoPetAbsorptionAuditDetails { get; } = [];
+    public List<string> PseudoPetAbsorptionAuditSkippedDetails { get; } = [];
     public List<string> PvTargetGatingAuditDetails { get; } = [];
     public List<string> PvTargetMappingMismatchDetails { get; } = [];
     public List<string> EnhancementImportDetails { get; } = [];
@@ -380,12 +405,175 @@ public sealed class OmniApplyResult
         target.Add(value);
     }
 
+    [JsonProperty("summary")]
+    public OmniReportSummary Summary => OmniReportLegibility.BuildSummary(this);
+
     public string ToMarkdown()
+    {
+        var summary = Summary;
+        var ignoredPowerFieldBreakdown = OmniReportLegibility.BuildIgnoredPowerFieldBreakdown(IgnoredPowerFields, IgnoredPowerFieldNameCounts);
+        var builder = new StringBuilder();
+
+        builder.AppendLine("# Omni Safe Import Apply");
+        builder.AppendLine();
+        OmniReportLegibility.AppendMarkdownSummary(builder, summary);
+        OmniReportLegibility.AppendMarkdownAppendixHeader(builder);
+
+        OmniReportLegibility.AppendMarkdownAppendixGroup(builder, "Raw Metric Snapshot");
+        builder.AppendLine($"- Archetypes read/playable/retained/skipped: {ArchetypesRead:n0}/{PlayableArchetypesRead:n0}/{RetainedArchetypesRead:n0}/{SkippedArchetypesRead:n0}");
+        builder.AppendLine($"- Powersets matched/created/updated: {PowersetsMatched:n0}/{PowersetsCreated:n0}/{PowersetsUpdated:n0}");
+        builder.AppendLine($"- Powers matched/created/updated: {PowersMatched:n0}/{PowersCreated:n0}/{PowersUpdated:n0}");
+        builder.AppendLine($"- Requirements updated/skipped unsupported: {RequirementsUpdated:n0}/{RequirementsSkippedUnsupported:n0}");
+        builder.AppendLine($"- Unknown effect/attribute mappings: {UnknownEffectMappings:n0}/{UnknownAttribMappings:n0}");
+        builder.AppendLine($"- Orphan powers/scoped powers after import: {OrphanPowersAfterImport:n0}/{OrphanedScopedOmniPowers:n0}");
+        builder.AppendLine($"- Pet powers missing/source integrity failures: {PetPowersMissingAfterImport:n0}/{PetSourceIntegrityFailures:n0}");
+        builder.AppendLine($"- Power fields mapped/fallback/conflicts/unknown: {PowerFieldsMapped:n0}/{PowerFieldsMappedWithFallback:n0}/{PowerFieldConflicts:n0}/{UnknownPowerFields:n0}");
+        builder.AppendLine($"- Powerset icons preserved/assigned/missing: {PoolPowersetIconsPreserved:n0}/{PoolPowersetIconsAssigned:n0}/{PoolPowersetIconsMissingAssets:n0}");
+        builder.AppendLine($"- Pseudo-pet absorption enabled/skipped/failures: {PseudoPetAbsorptionFlagsEnabled:n0}/{PseudoPetAbsorptionAuditSkipped:n0}/{PseudoPetAbsorptionAuditFailures:n0}");
+        builder.AppendLine($"- Enhancements matched/created/updated: {EnhancementsMatched:n0}/{EnhancementsCreated:n0}/{EnhancementsUpdated:n0}");
+        builder.AppendLine($"- Enhancement links resolved/missing: {EnhancementBoostPowerLinksResolved + EnhancementSetBonusLinksResolved + RecipeRewardLinksResolved:n0}/{EnhancementBoostPowerLinksMissing + EnhancementSetBonusLinksMissing + RecipeRewardLinksMissing:n0}");
+
+        OmniReportLegibility.AppendMarkdownAppendixGroup(builder, "Needs Implementation / Manual Review");
+        AppendSection(builder, "Missing Powers", MissingPowers);
+        AppendSection(builder, "Requirement Skips", RequirementSkips);
+        AppendSection(builder, "Manual Classification Review", ManualClassificationReviewDetails);
+        AppendSection(builder, "Unknown Modes Preserved", UnknownModeDetails);
+        AppendSection(builder, "Import Integrity Audit", ImportIntegrityAuditDetails);
+        AppendSection(builder, "New Orphan Powers Introduced", NewOrphanPowerDetails);
+        AppendSection(builder, "Orphaned Scoped Omni Powers", OrphanedScopedOmniPowerDetails);
+        AppendSection(builder, "Epic Powersets With Zero Linked Powers", EpicPowersetsWithZeroLinkedPowersDetails);
+        AppendSection(builder, "Epic Powers Missing After Import", EpicPowersMissingAfterImportDetails);
+        AppendSection(builder, "Pet Powers Missing After Import", PetPowersMissingAfterImportDetails);
+        AppendSection(builder, "Pet Link Integrity Failures", PetLinkIntegrityFailureDetails);
+        AppendSection(builder, "Field Conflicts", PowerFieldConflictDetails);
+        AppendSection(builder, "Unknown Power Fields", UnknownPowerFieldDetails);
+        AppendSection(builder, "Missing Powerset Icon Assets", MissingPoolIconAssetDetails);
+        AppendSection(builder, "Pool Icon Integrity", PoolIconIntegrityDetails);
+        AppendSection(builder, "Pool Power Link Integrity", PoolPowerLinkIntegrityDetails);
+        AppendSection(builder, "Pool Requirement Evaluation Failures", PoolRequirementEvaluationFailureDetails);
+        AppendSection(builder, "Pseudo-Pet Absorption Audit Failures", PseudoPetAbsorptionAuditDetails);
+        AppendSection(builder, "PvX Target Mapping Mismatches", PvTargetMappingMismatchDetails);
+        AppendSection(builder, "Unresolved Enhancement Power Links", UnresolvedEnhancementPowerLinks);
+        AppendSection(builder, "Enhancement Class Derivation", EnhancementClassDerivationDetails);
+        AppendSection(builder, "Scoped Power Enhancement Legality", ScopedPowerEnhancementLegalityDetails);
+        AppendSection(builder, "Scoped Power Enhancement Legality Unknown Labels", ScopedPowerEnhancementLegalityUnknownLabelDetails);
+        AppendSection(builder, "Boosts And Set Bonus Legality Repair", BoostSetBonusPowerLegalityRepairDetails);
+        AppendSection(builder, "Enhancement Reconciliation Conflicts", EnhancementReconciliationConflictDetails);
+        AppendSection(builder, "Unknown Effect Mappings", UnknownEffectMappingDetails);
+        AppendSection(builder, "Unknown Attribute Mappings", UnknownAttribMappingDetails);
+
+        OmniReportLegibility.AppendMarkdownAppendixGroup(builder, "Known Unsupported / Deferred");
+        AppendSection(builder, "Known Charge-Capacity Extensions", KnownChargeCapacityDetailEntries);
+        AppendSection(builder, "Known Deferred Power Fields", DeferredPowerFieldDetails);
+        AppendSection(builder, "Known Unsupported Effect Mappings", KnownUnsupportedEffectMappingDetails);
+        OmniReportLegibility.AppendIgnoredPowerFieldNarrative(
+            builder,
+            ignoredPowerFieldBreakdown.HarmlessSourceMetadataCount,
+            ignoredPowerFieldBreakdown.UiClientServerMetadataCount,
+            ignoredPowerFieldBreakdown.UnsupportedPlannerPolicyCount);
+
+        OmniReportLegibility.AppendMarkdownAppendixGroup(builder, "Informational / Report-Only");
+        AppendSection(builder, "Hidden Support Powers", HiddenSupportPowerDetails);
+        AppendSection(builder, "Visible Gated Powers", VisibleGatedPowerDetails);
+        AppendSection(builder, "GCM Tags Added", GcmTagsAddedDetails);
+        AppendSection(builder, "GCM Tags Already Known", GcmTagsAlreadyKnownDetails);
+        AppendSection(builder, "GCM Duplicate Tags", GcmDuplicateTagDetails);
+        AppendSection(builder, "Effect Group Tags Preserved", EffectGroupTagDetails);
+        AppendSection(builder, "Template/Filter Tags Mapped", TemplateFilterTagDetails);
+        AppendSection(builder, "Chance Mod Mappings", ChanceModMappingDetails);
+        AppendCountSection(builder, "Ignored Power Field Owner Kinds", IgnoredPowerFieldOwnerKindCounts);
+        AppendCountSection(builder, "Ignored Power Field Categories", IgnoredPowerFieldCategoryCounts);
+        AppendCountSection(builder, "Ignored Power Fields By Name", IgnoredPowerFieldNameCounts);
+        AppendSection(builder, "Ignored Power Field Samples", IgnoredPowerFieldDetails);
+        AppendSection(builder, "Powerset Icon Audit", PoolPowersetIconAuditDetails);
+        AppendSection(builder, "Powerset Icon Assignments", PoolIconAssignmentDetails);
+        AppendSection(builder, "Sorcery Enflame Pickability Trace", SorceryEnflamePickabilityTraceDetails);
+        AppendSection(builder, "Pseudo-Pet Absorption Audit Skipped / Report-Only", PseudoPetAbsorptionAuditSkippedDetails);
+        AppendSection(builder, "PvX Target And Gating Audit", PvTargetGatingAuditDetails);
+        AppendSection(builder, "Vector Template Semantic Overrides", VectorTemplateSemanticOverrideDetails);
+        AppendSection(builder, "Classic Enhancement Presentation", ClassicEnhancementPresentationDetails);
+
+        OmniReportLegibility.AppendMarkdownAppendixGroup(builder, "Implemented Coverage / Audit Trails");
+        AppendSection(builder, "Created Powersets", CreatedPowersets);
+        AppendSection(builder, "Updated Powersets", UpdatedPowersets);
+        AppendSection(builder, "Created Powers", CreatedPowers);
+        AppendSection(builder, "Updated Powers", UpdatedPowers);
+        AppendSection(builder, "Skipped Powers", SkippedPowers);
+        AppendSection(builder, "Support Power Links", SupportPowerLinks);
+        AppendSection(builder, "Support Power Link Skips", SupportPowerLinkSkips);
+        AppendSection(builder, "Redirect Execution Variants", RedirectExecutionVariantDetails);
+        AppendSection(builder, "Click-Buff Classification Changes", ClickBuffClassificationChangeDetails);
+        AppendSection(builder, "Class Inherents Imported", ClassInherentDetails);
+        AppendSection(builder, "Form-Gated Powers Hidden", FormGatedPowerDetails);
+        AppendSection(builder, "Power-Level Mode Gates Assigned", ModeFlagDetails);
+        AppendSection(builder, "Planner Inherents Preserved", PlannerInherentDetails);
+        AppendSection(builder, "Synthetic Planner Inherents", SyntheticPlannerInherentDetails);
+        AppendSection(builder, "Planner Modes Discovered", PlannerModeDetails);
+        AppendSection(builder, "Planner Mode Payloads Added", PlannerModePayloadDetails);
+        AppendSection(builder, "SpecialCase Compatibility Bridges", SpecialCaseCompatibilityBridgeDetails);
+        AppendSection(builder, "kEngaged Snipe Aliases", SnipeEngagedAliasDetails);
+        AppendSection(builder, "Class Table Files", ClassTableFileDetails);
+        AppendSection(builder, "Missing Modifier Table References", MissingModifierTableReferenceDetails);
+        AppendSection(builder, "Attack Vectors Mapped", AttackVectorDetails);
+        AppendSection(builder, "Zero-Value Tag Carrier Effects Suppressed", ZeroValueTagCarrierDetails);
+        AppendSection(builder, "Missing Scoped Powersets Repaired", MissingScopedPowersetRepairDetails);
+        AppendSection(builder, "Scoped Power Identity Repairs", ScopedPowerSetIdentityRepairDetails);
+        AppendSection(builder, "Aliased Powerset Identity Repairs", AliasedPowersetIdentityRepairDetails);
+        AppendSection(builder, "Aliased Duplicate Powersets Removed", AliasedPowersetDuplicateRemovalDetails);
+        AppendSection(builder, "Aliased Powerset Identity Collisions", AliasedPowersetIdentityCollisionDetails);
+        AppendSection(builder, "Aliased Power Identity Repairs", AliasedPowerIdentityRepairDetails);
+        AppendSection(builder, "Aliased Duplicate Powers Removed", AliasedPowerDuplicateRemovalDetails);
+        AppendSection(builder, "Aliased Power Identity Collisions", AliasedPowerIdentityCollisionDetails);
+        AppendSection(builder, "Malformed Power Name Repairs", MalformedPowerNameRepairDetails);
+        AppendSection(builder, "Malformed Duplicate Powers Removed", MalformedPowerDuplicateRemovalDetails);
+        AppendSection(builder, "Malformed Power Name Collisions", MalformedPowerNameCollisionDetails);
+        AppendSection(builder, "Powersets Reordered By Power Level", PowersetPowerOrderDetails);
+        AppendSection(builder, "Excluded Content Removed", ExcludedContentRemovalDetails);
+        AppendSection(builder, "Accepted Canonical Scoped Power Replacements", AcceptedCanonicalScopedPowerReplacementDetails);
+        AppendSection(builder, "Excluded Scoped Omni Powers", ExcludedScopedOmniPowerDetails);
+        AppendSection(builder, "Manifest-Owned Scoped Omni Powers", ManifestOwnedScopedOmniPowerDetails);
+        AppendSection(builder, "Powerset Identity Changes", PowersetIdentityChangeDetails);
+        AppendSection(builder, "Staff Mastery Trace", StaffMasteryTraceDetails);
+        AppendSection(builder, "Duplicate Composite Power Identities", DuplicateCompositePowerIdentityDetails);
+        AppendSection(builder, "Epic Import Details", EpicImportDetails);
+        AppendSection(builder, "Epic Powerset Identity Details", EpicPowersetIdentityDetails);
+        AppendSection(builder, "Epic Powerset Prefix/Suffix Candidates", EpicPowersetPrefixSuffixCandidates);
+        AppendSection(builder, "Epic Powerset Display Name Collisions", EpicPowersetDisplayNameCollisions);
+        AppendSection(builder, "Epic Powers With Missing Powerset", EpicPowersWithMissingPowersetDetails);
+        AppendSection(builder, "Epic Powers With PowerSetID < 0", EpicPowersWithInvalidPowersetIdDetails);
+        AppendSection(builder, "Epic Powers Not In Powerset Array", EpicPowersNotInPowersetArrayDetails);
+        AppendSection(builder, "Epic Powers Hidden In DB Editor", EpicPowersHiddenInDbEditorDetails);
+        AppendSection(builder, "Pet Import Details", PetImportDetails);
+        AppendSection(builder, "Pet Powers Repaired Before Linking", PetPowersRepairedBeforeLinkingDetails);
+        AppendSection(builder, "Pet Powers With Missing Powerset", PetPowersWithMissingPowersetDetails);
+        AppendSection(builder, "Pet Powers With PowerSetID < 0", PetPowersWithInvalidPowersetIdDetails);
+        AppendSection(builder, "Pet Powers Not In Powerset Array", PetPowersNotInPowersetArrayDetails);
+        AppendSection(builder, "Pet Import Manifest", PetImportManifestDetails);
+        AppendSection(builder, "Pet Source-Of-Truth Upsert", PetSourceOfTruthUpsertDetails);
+        AppendSection(builder, "Pet Powersets With Zero Linked Powers", PetPowersetsWithZeroLinkedPowersDetails);
+        AppendSection(builder, "Power Field Mapping Coverage", MappedPowerFieldDetails);
+        AppendSection(builder, "Mapped With Fallback", PowerFieldFallbackDetails);
+        AppendSection(builder, "Pseudo-Pet Entities", PseudoPetEntityDetails);
+        AppendSection(builder, "Pseudo-Pet Absorption Flags", PseudoPetAbsorptionFlagDetails);
+        AppendSection(builder, "Enhancement Import", EnhancementImportDetails);
+        AppendSection(builder, "Classic Enhancement Folding", ClassicEnhancementFoldingDetails);
+        AppendSection(builder, "Enhancement Source Shape Validation", EnhancementSourceShapeDetails);
+        AppendSection(builder, "Enhancement Icon Decisions", EnhancementIconDetails);
+        AppendSection(builder, "Boosts And Set Bonus Import Audit", BoostSetBonusImportAuditDetails);
+        AppendSection(builder, "Enhancement Reconciliation Audit", EnhancementReconciliationAuditDetails);
+        AppendSection(builder, "Enhancement Naming Reconciliation", EnhancementNamingReconciliationDetails);
+        AppendSection(builder, "Known Hidden/Stateful Effect Mappings", KnownHiddenStatefulEffectMappingDetails);
+
+        return builder.ToString();
+    }
+
+    private string BuildLegacyMarkdown()
     {
         var builder = new StringBuilder();
         builder.AppendLine("# Omni Safe Import Apply");
         builder.AppendLine();
         builder.AppendLine($"- Class attributes stored: {ClassAttributesStored}");
+        builder.AppendLine($"- Archetypes read/playable/retained/skipped: {ArchetypesRead}/{PlayableArchetypesRead}/{RetainedArchetypesRead}/{SkippedArchetypesRead}");
         builder.AppendLine($"- Archetype summaries updated: {ArchetypeSummariesUpdated}");
         builder.AppendLine($"- Powersets matched: {PowersetsMatched}");
         builder.AppendLine($"- Powersets created: {PowersetsCreated}");
@@ -436,6 +624,7 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Power-local chance mods mapped: {PowerLocalChanceModsMapped}");
         builder.AppendLine($"- Unsupported EffectFilter fields preserved: {UnsupportedEffectFilters}");
         builder.AppendLine($"- Class table files read: {ClassTableFilesRead}");
+        builder.AppendLine($"- Retained/skipped class table files: {RetainedClassTableFiles}/{SkippedClassTableFiles}");
         builder.AppendLine($"- Canonical named tables stored: {CanonicalNamedTablesStored}");
         builder.AppendLine($"- Missing modifier table references: {MissingModifierTableReferences}");
         builder.AppendLine($"- Attack vectors mapped: {AttackVectorsMapped}");
@@ -452,12 +641,17 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Malformed duplicate powers removed: {MalformedPowerDuplicateRemovals}");
         builder.AppendLine($"- Malformed power name collisions: {MalformedPowerNameCollisions}");
         builder.AppendLine($"- Powersets reordered by power level: {PowersetsReorderedByPowerLevel}");
+        builder.AppendLine($"- Excluded archetypes removed: {ExcludedArchetypesRemoved}");
+        builder.AppendLine($"- Excluded class-owned powersets/powers/entities removed: {ExcludedClassPowersetsRemoved}/{ExcludedClassPowersRemoved}/{ExcludedClassEntitiesRemoved}");
         builder.AppendLine($"- Excluded powersets removed: {ExcludedPowersetsRemoved}");
         builder.AppendLine($"- Excluded powers removed: {ExcludedPowersRemoved}");
         builder.AppendLine($"- Orphan powers before import: {OrphanPowersBeforeImport}");
         builder.AppendLine($"- Orphan powers after import: {OrphanPowersAfterImport}");
         builder.AppendLine($"- New orphan powers introduced: {NewOrphanPowersIntroduced}");
         builder.AppendLine($"- Orphaned scoped Omni powers: {OrphanedScopedOmniPowers}");
+        builder.AppendLine($"- Accepted canonical scoped replacements: {AcceptedCanonicalScopedPowerReplacements}");
+        builder.AppendLine($"- Excluded scoped Omni powers: {ExcludedScopedOmniPowers}");
+        builder.AppendLine($"- Manifest-owned scoped Omni powers: {ManifestOwnedScopedOmniPowers}");
         builder.AppendLine($"- Powerset identity changes: {PowersetIdentityChanges}");
         builder.AppendLine($"- Duplicate composite power identities: {DuplicateCompositePowerIdentities}");
         builder.AppendLine($"- Epic powersets created: {EpicPowersetsCreated}");
@@ -502,8 +696,9 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Power fields mapped: {PowerFieldsMapped}");
         builder.AppendLine($"- Power fields mapped with fallback: {PowerFieldsMappedWithFallback}");
         builder.AppendLine($"- Power field conflicts: {PowerFieldConflicts}");
+        builder.AppendLine($"- Known charge-capacity extensions: {KnownChargeCapacityExtensions}");
         builder.AppendLine($"- Known deferred power fields: {DeferredPowerFields}");
-        builder.AppendLine($"- Ignored UI/client/server power fields: {IgnoredPowerFields}");
+        builder.AppendLine($"- Ignored UI/client/server power fields: {IgnoredPowerFields} across {IgnoredPowerFieldOwnerKindCounts.Count} owner kinds / {IgnoredPowerFieldCategoryCounts.Count} categories / {IgnoredPowerFieldNameCounts.Count} unique fields (sampled {IgnoredPowerFieldDetails.Count})");
         builder.AppendLine($"- Unknown power fields: {UnknownPowerFields}");
         builder.AppendLine($"- Powerset icons preserved: {PoolPowersetIconsPreserved}");
         builder.AppendLine($"- Powerset icons assigned: {PoolPowersetIconsAssigned}");
@@ -517,6 +712,7 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Real pet entities created: {RealPetEntitiesCreated}");
         builder.AppendLine($"- Real pet entities updated: {RealPetEntitiesUpdated}");
         builder.AppendLine($"- Pseudo-pet absorption flags enabled: {PseudoPetAbsorptionFlagsEnabled}");
+        builder.AppendLine($"- Pseudo-pet absorption audit skipped/report-only: {PseudoPetAbsorptionAuditSkipped}");
         builder.AppendLine($"- Pseudo-pet absorption audit failures: {PseudoPetAbsorptionAuditFailures}");
         builder.AppendLine($"- PvMode inferred from target entity expressions: {PvModeInferredFromTargetEntity}");
         builder.AppendLine($"- PvMode inferred from modifier tables: {PvModeInferredFromTable}");
@@ -615,6 +811,9 @@ public sealed class OmniApplyResult
         AppendSection(builder, "Import Integrity Audit", ImportIntegrityAuditDetails);
         AppendSection(builder, "New Orphan Powers Introduced", NewOrphanPowerDetails);
         AppendSection(builder, "Orphaned Scoped Omni Powers", OrphanedScopedOmniPowerDetails);
+        AppendSection(builder, "Accepted Canonical Scoped Power Replacements", AcceptedCanonicalScopedPowerReplacementDetails);
+        AppendSection(builder, "Excluded Scoped Omni Powers", ExcludedScopedOmniPowerDetails);
+        AppendSection(builder, "Manifest-Owned Scoped Omni Powers", ManifestOwnedScopedOmniPowerDetails);
         AppendSection(builder, "Powerset Identity Changes", PowersetIdentityChangeDetails);
         AppendSection(builder, "Staff Mastery Trace", StaffMasteryTraceDetails);
         AppendSection(builder, "Duplicate Composite Power Identities", DuplicateCompositePowerIdentityDetails);
@@ -641,8 +840,12 @@ public sealed class OmniApplyResult
         AppendSection(builder, "Power Field Mapping Coverage", MappedPowerFieldDetails);
         AppendSection(builder, "Mapped With Fallback", PowerFieldFallbackDetails);
         AppendSection(builder, "Field Conflicts", PowerFieldConflictDetails);
+        AppendSection(builder, "Known Charge-Capacity Extensions", KnownChargeCapacityDetailEntries);
         AppendSection(builder, "Known Deferred Power Fields", DeferredPowerFieldDetails);
-        AppendSection(builder, "Ignored UI/Client/Server Power Fields", IgnoredPowerFieldDetails);
+        AppendCountSection(builder, "Ignored Power Field Owner Kinds", IgnoredPowerFieldOwnerKindCounts);
+        AppendCountSection(builder, "Ignored Power Field Categories", IgnoredPowerFieldCategoryCounts);
+        AppendCountSection(builder, "Ignored Power Fields By Name", IgnoredPowerFieldNameCounts);
+        AppendSection(builder, "Ignored UI/Client/Server Power Field Samples", IgnoredPowerFieldDetails);
         AppendSection(builder, "Unknown Power Fields", UnknownPowerFieldDetails);
         AppendSection(builder, "Powerset Icon Audit", PoolPowersetIconAuditDetails);
         AppendSection(builder, "Powerset Icon Assignments", PoolIconAssignmentDetails);
@@ -653,7 +856,8 @@ public sealed class OmniApplyResult
         AppendSection(builder, "Pool Requirement Evaluation Failures", PoolRequirementEvaluationFailureDetails);
         AppendSection(builder, "Pseudo-Pet Entities", PseudoPetEntityDetails);
         AppendSection(builder, "Pseudo-Pet Absorption Flags", PseudoPetAbsorptionFlagDetails);
-        AppendSection(builder, "Pseudo-Pet Absorption Audit", PseudoPetAbsorptionAuditDetails);
+        AppendSection(builder, "Pseudo-Pet Absorption Audit Skipped / Report-Only", PseudoPetAbsorptionAuditSkippedDetails);
+        AppendSection(builder, "Pseudo-Pet Absorption Audit Failures", PseudoPetAbsorptionAuditDetails);
         AppendSection(builder, "PvX Target And Gating Audit", PvTargetGatingAuditDetails);
         AppendSection(builder, "PvX Target Mapping Mismatches", PvTargetMappingMismatchDetails);
         AppendSection(builder, "Enhancement Import", EnhancementImportDetails);
@@ -683,11 +887,15 @@ public sealed class OmniApplyResult
         var builder = new StringBuilder();
         builder.AppendLine("# Omni Safe Import Preview");
         builder.AppendLine();
+        builder.AppendLine($"- Archetypes read/playable/retained/skipped: {ArchetypesRead:n0}/{PlayableArchetypesRead:n0}/{RetainedArchetypesRead:n0}/{SkippedArchetypesRead:n0}");
+        builder.AppendLine($"- Retained/skipped class tables: {RetainedClassTableFiles:n0}/{SkippedClassTableFiles:n0}");
         builder.AppendLine($"- Powersets matched/created/updated: {PowersetsMatched:n0}/{PowersetsCreated:n0}/{PowersetsUpdated:n0}");
         builder.AppendLine($"- Powers matched/created/updated: {PowersMatched:n0}/{PowersCreated:n0}/{PowersUpdated:n0}");
         builder.AppendLine($"- Effects replaced: {EffectsReplaced:n0}");
         builder.AppendLine($"- Requirements updated/skipped unsupported: {RequirementsUpdated:n0}/{RequirementsSkippedUnsupported:n0}");
         builder.AppendLine($"- Redirect effects added: {RedirectEffectsAdded:n0}");
+        builder.AppendLine($"- Excluded archetypes/powersets/powers/entities removed: {ExcludedArchetypesRemoved:n0}/{ExcludedClassPowersetsRemoved:n0}/{ExcludedClassPowersRemoved:n0}/{ExcludedClassEntitiesRemoved:n0}");
+        builder.AppendLine($"- Scoped powers orphaned/accepted replacements/excluded/manifest-owned: {OrphanedScopedOmniPowers:n0}/{AcceptedCanonicalScopedPowerReplacements:n0}/{ExcludedScopedOmniPowers:n0}/{ManifestOwnedScopedOmniPowers:n0}");
         builder.AppendLine($"- Powers missing from Mids: {PowersMissingFromMids:n0}");
         builder.AppendLine($"- Known hidden/stateful effect mappings: {KnownHiddenStatefulEffectMappings:n0}");
         builder.AppendLine($"- Known unsupported effect mappings: {KnownUnsupportedEffectMappings:n0}");
@@ -696,6 +904,7 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Recipes matched/created/updated: {RecipesMatched:n0}/{RecipesCreated:n0}/{RecipesUpdated:n0}");
         builder.AppendLine($"- Enhancement sets matched/created/updated: {EnhancementSetsMatched:n0}/{EnhancementSetsCreated:n0}/{EnhancementSetsUpdated:n0}");
         builder.AppendLine($"- Enhancements matched/created/updated: {EnhancementsMatched:n0}/{EnhancementsCreated:n0}/{EnhancementsUpdated:n0}");
+        builder.AppendLine($"- Known charge-capacity extensions: {KnownChargeCapacityExtensions:n0}");
         builder.AppendLine($"- Enhancement files/recipe files/logical recipes/recipe variants: {EnhancementFilesProcessed:n0}/{RecipeFilesProcessed:n0}/{LogicalRecipesProcessed:n0}/{RecipeLevelVariantsProcessed:n0}");
         builder.AppendLine($"- Classic enhancement variants/logical/folded: {ClassicEnhancementSourceVariantsDiscovered:n0}/{ClassicEnhancementLogicalRecords:n0}/{ClassicEnhancementVariantsFolded:n0}");
         builder.AppendLine($"- Classic enhancement editor rows expected: {ClassicEnhancementEditorRowsExpected:n0}");
@@ -723,6 +932,7 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Strict Set_Bonus rebuilt counts Global/Set/PvP: {StrictSetBonusGlobalBonusAfterImport:n0}/{StrictSetBonusSetBonusAfterImport:n0}/{StrictSetBonusPvpSetBonusAfterImport:n0}");
         builder.AppendLine($"- Strict Set_Bonus cross-sibling mismatches/extras/missing: {StrictSetBonusCrossSiblingMismatchesAfterImport:n0}/{StrictSetBonusDbOnlyExtrasAfterImport:n0}/{StrictSetBonusMissingFullNamesAfterImport:n0}");
         builder.AppendLine($"- Naming repairs (boost/set-bonus/enh/set/recipe/salvage): {BoostPowerAliasRepairs:n0}/{SetBonusPowerAliasRepairs:n0}/{EnhancementAliasRepairs:n0}/{EnhancementSetAliasRepairs:n0}/{RecipeAliasRepairs:n0}/{SalvageAliasRepairs:n0}");
+        builder.AppendLine($"- Pseudo-pet audit skipped/failures: {PseudoPetAbsorptionAuditSkipped:n0}/{PseudoPetAbsorptionAuditFailures:n0}");
 
         AppendPreviewWarnings(builder, new[]
         {
@@ -763,6 +973,11 @@ public sealed class OmniApplyResult
         return builder.ToString();
     }
 
+    public string ToJson()
+    {
+        return JsonConvert.SerializeObject(this, Formatting.Indented);
+    }
+
     private static void AppendSection(StringBuilder builder, string title, IReadOnlyCollection<string> values)
     {
         if (values.Count == 0)
@@ -772,14 +987,25 @@ public sealed class OmniApplyResult
 
         builder.AppendLine();
         builder.AppendLine($"## {title}");
-        foreach (var value in values.Take(250))
+        foreach (var value in values)
         {
             builder.AppendLine($"- {value}");
         }
+    }
 
-        if (values.Count > 250)
+    private static void AppendCountSection(StringBuilder builder, string title, IReadOnlyDictionary<string, int> values)
+    {
+        if (values.Count == 0)
         {
-            builder.AppendLine($"- ... {values.Count - 250} more");
+            return;
+        }
+
+        builder.AppendLine();
+        builder.AppendLine($"## {title}");
+        builder.AppendLine();
+        foreach (var pair in values.OrderByDescending(pair => pair.Value).ThenBy(pair => pair.Key, StringComparer.OrdinalIgnoreCase))
+        {
+            builder.AppendLine($"- {pair.Key}: {pair.Value}");
         }
     }
 

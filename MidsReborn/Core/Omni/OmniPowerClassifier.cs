@@ -10,6 +10,14 @@ public enum OmniRedirectKind
     Unknown
 }
 
+public enum OmniScopedPowerDisposition
+{
+    MainImportVisible,
+    MainImportHidden,
+    PetManifestOwned,
+    Excluded
+}
+
 public sealed class OmniPowerClassification
 {
     public Enums.ePowerType PowerType { get; set; } = Enums.ePowerType.Click;
@@ -22,13 +30,14 @@ public sealed class OmniPowerClassification
     public bool GrantedSupportPower { get; set; }
     public bool NormalBuildPick { get; set; }
     public OmniRedirectKind RedirectKind { get; set; } = OmniRedirectKind.None;
+    public OmniScopedPowerDisposition ScopedDisposition { get; set; } = OmniScopedPowerDisposition.MainImportVisible;
     public float ClassificationConfidence { get; set; } = 0.75f;
     public List<string> Reasons { get; } = [];
 
     public string Summary(string fullName)
     {
         var reasons = Reasons.Count == 0 ? "no specific reason recorded" : string.Join("; ", Reasons);
-        return $"{fullName}: PowerType={PowerType}, ClickBuff={ClickBuff}, HiddenPower={HiddenPower}, IncludeFlag={IncludeFlag}, InherentType={InherentType}, NormalBuildPick={NormalBuildPick}, RedirectKind={RedirectKind}, Confidence={ClassificationConfidence:0.00} ({reasons})";
+        return $"{fullName}: PowerType={PowerType}, ClickBuff={ClickBuff}, HiddenPower={HiddenPower}, IncludeFlag={IncludeFlag}, InherentType={InherentType}, NormalBuildPick={NormalBuildPick}, RedirectKind={RedirectKind}, ScopedDisposition={ScopedDisposition}, Confidence={ClassificationConfidence:0.00} ({reasons})";
     }
 }
 
@@ -229,6 +238,29 @@ public sealed class OmniPowerClassifier
             classification.Reasons.Add("temporary/accolade database power");
         }
 
+        if (IsExplicitlyRetainedTemporaryVisiblePower(group, set, name))
+        {
+            classification.HiddenPower = false;
+            classification.IncludeFlag = true;
+            classification.InherentType = Enums.eGridType.Temp;
+            classification.GrantedSupportPower = false;
+            classification.ExecutionOnly = false;
+            classification.NormalBuildPick = false;
+            classification.Reasons.Add("retained temporary visible power");
+        }
+
+        if (IsExplicitlyRetainedTemporarySupportPower(group, set, name))
+        {
+            classification.HiddenPower = true;
+            classification.IncludeFlag = true;
+            classification.InherentType = Enums.eGridType.Temp;
+            classification.GrantedSupportPower = true;
+            classification.ExecutionOnly = false;
+            classification.NormalBuildPick = false;
+            classification.ClickBuff = false;
+            classification.Reasons.Add("retained temporary support/monitor power");
+        }
+
         if (IsPowersetGrantedTemporaryState(power, group, set, name))
         {
             classification.HiddenPower = true;
@@ -243,7 +275,8 @@ public sealed class OmniPowerClassifier
 
         if (string.Equals(power.Requires?.Trim(), "0", StringComparison.OrdinalIgnoreCase) &&
             (power.AutoIssue || IsSupportHeavyGroup(group)) &&
-            !IsVisibleInherent(power, name, set))
+            !IsVisibleInherent(power, name, set) &&
+            !IsExplicitlyRetainedTemporaryPower(group, set, name))
         {
             classification.HiddenPower = true;
             classification.IncludeFlag = false;
@@ -290,6 +323,40 @@ public sealed class OmniPowerClassifier
             classification.Reasons.Add("power-dependent planner control shown in inherent grid");
         }
 
+        if (IsIncarnateSilentPlannerControl(power, group, set))
+        {
+            classification.HiddenPower = true;
+            classification.IncludeFlag = true;
+            classification.InherentType = Enums.eGridType.Incarnate;
+            classification.GrantedSupportPower = true;
+            classification.ExecutionOnly = false;
+            classification.NormalBuildPick = false;
+            classification.Reasons.Add("planner-relevant incarnate silent control shown in incarnate grid");
+        }
+
+        if (IsIncarnateSocketPlannerControl(power, group, set))
+        {
+            classification.HiddenPower = true;
+            classification.IncludeFlag = true;
+            classification.InherentType = Enums.eGridType.Incarnate;
+            classification.GrantedSupportPower = true;
+            classification.ExecutionOnly = false;
+            classification.NormalBuildPick = false;
+            classification.ClickBuff = false;
+            classification.Reasons.Add("planner-relevant incarnate socket support shown hidden in incarnate grid");
+        }
+
+        if (IsTemporarySilentSupportPower(group, set))
+        {
+            classification.HiddenPower = true;
+            classification.IncludeFlag = true;
+            classification.InherentType = Enums.eGridType.Temp;
+            classification.GrantedSupportPower = true;
+            classification.ExecutionOnly = false;
+            classification.NormalBuildPick = false;
+            classification.Reasons.Add("planner-relevant temporary silent support/state power retained hidden");
+        }
+
         if (!classification.HiddenPower && offensive && classification.PowerType == Enums.ePowerType.Click)
         {
             classification.ClassificationConfidence = 0.95f;
@@ -298,6 +365,8 @@ public sealed class OmniPowerClassifier
         {
             classification.ClassificationConfidence = 0.85f;
         }
+
+        classification.ScopedDisposition = DetermineScopedDisposition(power, classification, group, set);
 
         return classification;
     }
@@ -543,6 +612,106 @@ public sealed class OmniPowerClassifier
             PlannerMode.PackMentality;
     }
 
+    private static bool IsIncarnateSilentPlannerControl(OmniPowerDefinition power, string group, string set)
+    {
+        if (!group.Equals("Incarnate", StringComparison.OrdinalIgnoreCase) ||
+            !set.EndsWith("_Silent", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return power.ShowInManage ||
+               power.ModesRequired.Count > 0 ||
+               power.ModesDisallowed.Count > 0 ||
+               !string.IsNullOrWhiteSpace(power.TargetRequires) ||
+               !string.IsNullOrWhiteSpace(power.Requires) ||
+               power.Effects.Count > 0;
+    }
+
+    private static bool IsIncarnateSocketPlannerControl(OmniPowerDefinition power, string group, string set)
+    {
+        if (!group.Equals("Incarnate", StringComparison.OrdinalIgnoreCase) ||
+            !set.Equals("Socket", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return power.DoNotSave ||
+               power.ModesRequired.Count > 0 ||
+               power.ModesDisallowed.Count > 0 ||
+               !string.IsNullOrWhiteSpace(power.TargetRequires) ||
+               !string.IsNullOrWhiteSpace(power.Requires) ||
+               power.Effects.Count > 0;
+    }
+
+    private static bool IsTemporarySilentSupportPower(string group, string set)
+    {
+        return group.Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase) &&
+               set.Equals("SilentPowers", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static OmniScopedPowerDisposition DetermineScopedDisposition(
+        OmniPowerDefinition power,
+        OmniPowerClassification classification,
+        string group,
+        string set)
+    {
+        if (IsExplicitlyExcludedScopedPower(power, group, set))
+        {
+            return OmniScopedPowerDisposition.Excluded;
+        }
+
+        if (IsPetManifestOwnedScopedPower(power, group, set))
+        {
+            return OmniScopedPowerDisposition.PetManifestOwned;
+        }
+
+        return classification.HiddenPower
+            ? OmniScopedPowerDisposition.MainImportHidden
+            : OmniScopedPowerDisposition.MainImportVisible;
+    }
+
+    private static bool IsExplicitlyExcludedScopedPower(
+        OmniPowerDefinition power,
+        string group,
+        string set)
+    {
+        return group.Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase) &&
+               set.Equals("Art_Test", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsPetManifestOwnedScopedPower(
+        OmniPowerDefinition power,
+        string group,
+        string set)
+    {
+        if (IsPetRootName(group))
+        {
+            return true;
+        }
+
+        if (group.Equals("Incarnate", StringComparison.OrdinalIgnoreCase))
+        {
+            return set.Equals("Destiny_Silent", StringComparison.OrdinalIgnoreCase) ||
+                   set.Contains("Lore_Pet", StringComparison.OrdinalIgnoreCase) ||
+                   set.Equals("Ion_Judgement", StringComparison.OrdinalIgnoreCase) ||
+                   set.Equals("AntiMatterRayBurn", StringComparison.OrdinalIgnoreCase) ||
+                   set.Equals("Barrier_Rez", StringComparison.OrdinalIgnoreCase);
+        }
+
+        return false;
+    }
+
+    private static bool IsPetRootName(string group)
+    {
+        return NormalizeName(group) is
+            "incarnatepets" or
+            "kheldianpets" or
+            "mastermindpets" or
+            "pets" or
+            "villainpets";
+    }
+
     private static bool IsPowersetGrantedTemporaryState(
         OmniPowerDefinition power,
         string group,
@@ -560,6 +729,55 @@ public sealed class OmniPowerClassifier
             "savagemeleebloodfrenzy" or
             "savagemeleeexhausted" ||
             normalizedName.Contains("bloodfrenzy", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsExplicitlyRetainedTemporaryPower(string group, string set, string name)
+    {
+        if (!group.Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase) ||
+            !set.Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return NormalizeName(name) is
+            "secondwind" or
+            "mementomoriexecute" or
+            "soultransferexecute" or
+            "streetcredmonitor" or
+            "streetcred" or
+            "mementomori" or
+            "revive" or
+            "soultransfer";
+    }
+
+    private static bool IsExplicitlyRetainedTemporaryVisiblePower(string group, string set, string name)
+    {
+        if (!group.Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase) ||
+            !set.Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return NormalizeName(name) is
+            "secondwind" or
+            "revive" or
+            "streetcred" or
+            "mementomori" or
+            "soultransfer";
+    }
+
+    private static bool IsExplicitlyRetainedTemporarySupportPower(string group, string set, string name)
+    {
+        if (!group.Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase) ||
+            !set.Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return NormalizeName(name) is
+            "streetcredmonitor" or
+            "mementomoriexecute" or
+            "soultransferexecute";
     }
 
     private static bool IsClassInherent(OmniPowerDefinition power, string name)
