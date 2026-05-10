@@ -133,6 +133,41 @@ namespace Mids_Reborn.UI.Renderer
             }
         }
 
+        internal enum BuildHitArea
+        {
+            None,
+            PowerBody,
+            EnhancementSlot,
+            NewSlot,
+            StatToggle,
+            ProcToggle
+        }
+
+        internal readonly record struct BuildHitTestResult(
+            BuildHitArea Area,
+            int PowerIndex,
+            int EnhancementIndex,
+            eToggleType ToggleType,
+            Rectangle AnchorRect)
+        {
+            public static BuildHitTestResult None { get; } =
+                new(BuildHitArea.None, -1, -1, eToggleType.None, Rectangle.Empty);
+
+            public bool HasPower => PowerIndex >= 0;
+        }
+
+        private sealed class BuildPowerGeometry
+        {
+            public required int PowerIndex { get; init; }
+            public required Rectangle PowerRect { get; init; }
+            public required Rectangle PowerAreaRect { get; init; }
+            public required Rectangle SlotHitRect { get; init; }
+            public required Rectangle[] EnhancementSlotRects { get; init; }
+            public required Rectangle NewSlotRect { get; init; }
+            public required Rectangle StatToggleRect { get; init; }
+            public required Rectangle ProcToggleRect { get; init; }
+        }
+
         public BuildRenderer(Control targetControl)
         {
             InterfaceMode = eInterfaceMode.Normal;
@@ -260,6 +295,220 @@ namespace Mids_Reborn.UI.Renderer
             var height = SzPower.Height + OffsetY + SzSlot.Height;
             if (isInherent) height += OffsetInherent;
             return height + PaddingY;
+        }
+
+        private Point GetCellLocation(PowerEntry powerEntry)
+        {
+            var location = PowerPosition(powerEntry);
+            if (_ColumnStackingMode != eColumnStacking.None)
+            {
+                location = location with { Y = location.Y + 18 };
+            }
+
+            return location;
+        }
+
+        private Rectangle GetPowerButtonRect(Point cellLocation)
+        {
+            const int horizontalPadding = 10;
+            int dynamicWidth = Math.Max(1, _calculatedCellWidth - ScaleLogical(25 + horizontalPadding));
+            int buttonX = cellLocation.X + (_calculatedCellWidth - dynamicWidth) / 2;
+            return new Rectangle(buttonX, cellLocation.Y, dynamicWidth, SzPower.Height);
+        }
+
+        private static Rectangle UnionNonEmpty(Rectangle left, Rectangle right)
+        {
+            if (left.IsEmpty) return right;
+            if (right.IsEmpty) return left;
+            return Rectangle.Union(left, right);
+        }
+
+        private bool CanOfferNewSlot(PowerEntry powerEntry)
+        {
+            return powerEntry.Power is { Slottable: true }
+                   && powerEntry.State != ePowerState.Empty
+                   && MidsContext.Character.CanPlaceSlot
+                   && powerEntry.Slots.Length < 6
+                   && InterfaceMode != eInterfaceMode.PowerToggle;
+        }
+
+        private (Rectangle StatToggleRect, Rectangle ProcToggleRect) GetToggleRects(PowerEntry powerEntry, Rectangle powerRect)
+        {
+            int toggleSize = ScaleLogical(15);
+            int padding = ScaleLogical(8);
+            int y = powerRect.Top + (powerRect.Height - toggleSize) / 2;
+
+            Rectangle statToggleRect = Rectangle.Empty;
+            Rectangle procToggleRect = Rectangle.Empty;
+
+            bool canShowStatToggle = powerEntry.CanIncludeForStats();
+            bool canShowProcToggle = powerEntry.HasProc();
+
+            if (canShowStatToggle)
+            {
+                int statToggleX = powerRect.Right - toggleSize - padding;
+                statToggleRect = new Rectangle(statToggleX, y, toggleSize, toggleSize);
+            }
+
+            if (canShowProcToggle)
+            {
+                int procToggleX = canShowStatToggle
+                    ? statToggleRect.Left - toggleSize - padding
+                    : powerRect.Right - toggleSize - padding;
+                procToggleRect = new Rectangle(procToggleX, y, toggleSize, toggleSize);
+            }
+
+            return (statToggleRect, procToggleRect);
+        }
+
+        private BuildPowerGeometry CreatePowerGeometry(int powerIndex, PowerEntry powerEntry, bool includeNewSlot)
+        {
+            Rectangle powerRect = GetPowerButtonRect(GetCellLocation(powerEntry));
+            var enhancementSlotRects = Array.Empty<Rectangle>();
+            Rectangle powerAreaRect = powerRect;
+            Rectangle slotHitRect = Rectangle.Empty;
+            Rectangle newSlotRect = Rectangle.Empty;
+
+            if (powerEntry.Slots.Length > 0 || (includeNewSlot && CanOfferNewSlot(powerEntry)))
+            {
+                int indent = ScaleLogical(5);
+                int spacing = ScaleLogical(2);
+                int edge = ComputeSlotEdge(powerRect);
+                int startX = powerRect.X + indent;
+                int y = powerRect.Y + OffsetY;
+
+                if (powerEntry.Slots.Length > 0)
+                {
+                    enhancementSlotRects = new Rectangle[powerEntry.Slots.Length];
+                    for (int i = 0; i < enhancementSlotRects.Length; i++)
+                    {
+                        enhancementSlotRects[i] = new Rectangle(
+                            startX + i * (edge + spacing),
+                            y,
+                            edge,
+                            edge);
+                    }
+                }
+
+                if (includeNewSlot && CanOfferNewSlot(powerEntry))
+                {
+                    newSlotRect = new Rectangle(
+                        startX + (edge + spacing) * powerEntry.Slots.Length,
+                        y,
+                        edge,
+                        edge);
+                }
+
+                int slotHitCount = powerEntry.Slots.Length + (newSlotRect.IsEmpty ? 0 : 1);
+                if (slotHitCount > 0)
+                {
+                    int slotBandWidth = slotHitCount * edge + Math.Max(0, slotHitCount - 1) * spacing;
+                    slotHitRect = new Rectangle(startX, y, slotBandWidth, SzSlot.Height);
+                }
+
+                Rectangle slotBandRect = Rectangle.Empty;
+                if (enhancementSlotRects.Length > 0)
+                {
+                    slotBandRect = enhancementSlotRects[0];
+                    slotBandRect = Rectangle.Union(slotBandRect, enhancementSlotRects[^1]);
+                }
+
+                slotBandRect = UnionNonEmpty(slotBandRect, newSlotRect);
+                powerAreaRect = UnionNonEmpty(powerAreaRect, slotBandRect);
+            }
+
+            var (statToggleRect, procToggleRect) = GetToggleRects(powerEntry, powerRect);
+
+            return new BuildPowerGeometry
+            {
+                PowerIndex = powerIndex,
+                PowerRect = powerRect,
+                PowerAreaRect = powerAreaRect,
+                SlotHitRect = slotHitRect,
+                EnhancementSlotRects = enhancementSlotRects,
+                NewSlotRect = newSlotRect,
+                StatToggleRect = statToggleRect,
+                ProcToggleRect = procToggleRect
+            };
+        }
+
+        private bool TryBuildPowerGeometry(int powerIndex, out BuildPowerGeometry? geometry, bool includeNewSlot = true)
+        {
+            geometry = null;
+
+            var powers = MidsContext.Character?.CurrentBuild?.Powers;
+            if (powers is null || powerIndex < 0 || powerIndex >= powers.Count)
+            {
+                return false;
+            }
+
+            var powerEntry = powers[powerIndex];
+            if (powerEntry == null)
+            {
+                return false;
+            }
+
+            geometry = CreatePowerGeometry(powerIndex, powerEntry, includeNewSlot);
+            return true;
+        }
+
+        internal BuildHitTestResult HitTest(Point clientPoint) => HitTest(clientPoint.X, clientPoint.Y);
+
+        internal BuildHitTestResult HitTest(int x, int y)
+        {
+            var powers = MidsContext.Character?.CurrentBuild?.Powers;
+            if (powers is null)
+            {
+                return BuildHitTestResult.None;
+            }
+
+            var point = new Point(x, y);
+            for (int i = 0; i < powers.Count; i++)
+            {
+                var powerEntry = powers[i];
+                if (powerEntry == null)
+                {
+                    continue;
+                }
+
+                var geometry = CreatePowerGeometry(i, powerEntry, includeNewSlot: true);
+
+                if (!geometry.StatToggleRect.IsEmpty && geometry.StatToggleRect.Contains(point))
+                {
+                    return new BuildHitTestResult(BuildHitArea.StatToggle, i, -1, eToggleType.Stat, geometry.PowerRect);
+                }
+
+                if (!geometry.ProcToggleRect.IsEmpty && geometry.ProcToggleRect.Contains(point))
+                {
+                    return new BuildHitTestResult(BuildHitArea.ProcToggle, i, -1, eToggleType.Proc, geometry.PowerRect);
+                }
+
+                for (int slotIndex = 0; slotIndex < geometry.EnhancementSlotRects.Length; slotIndex++)
+                {
+                    if (geometry.EnhancementSlotRects[slotIndex].Contains(point))
+                    {
+                        return new BuildHitTestResult(
+                            BuildHitArea.EnhancementSlot,
+                            i,
+                            slotIndex,
+                            eToggleType.None,
+                            geometry.EnhancementSlotRects[slotIndex]);
+                    }
+                }
+
+                if (!geometry.NewSlotRect.IsEmpty && geometry.NewSlotRect.Contains(point))
+                {
+                    return new BuildHitTestResult(BuildHitArea.NewSlot, i, -1, eToggleType.None, geometry.NewSlotRect);
+                }
+
+                if (geometry.PowerRect.Contains(point) ||
+                    (!geometry.SlotHitRect.IsEmpty && geometry.SlotHitRect.Contains(point)))
+                {
+                    return new BuildHitTestResult(BuildHitArea.PowerBody, i, -1, eToggleType.None, geometry.PowerRect);
+                }
+            }
+
+            return BuildHitTestResult.None;
         }
 
         public void ReInit(Control target)
@@ -533,39 +782,11 @@ namespace Mids_Reborn.UI.Renderer
             if (powerEntry == null || BxBuffer?.Graphics == null)
                 return Point.Empty;
 
-            // 1. Initialize all variables. This is fine.
             var drawVars = InitializeDrawVariables(powerEntry, singleDraw);
-
-            // 2. Determine the power's state (Used, Open, etc.).
             UpdatePowerState(ref drawVars, singleDraw);
-
-            // 3. Draw the main vector button. This is the MOST IMPORTANT step to do first.
-            //    It calculates and stores the button's final, correct rectangle in 'drawVars.PowerRect'.
-            UpdateImageAttributes(ref drawVars); // This calls DrawPowerImage internally
-
-            // 4. NOW that we know the button's true rectangle, calculate the positions
-            //    of the enhancement slots relative to it.
-            UpdateSlotLocation(ref drawVars);
-
-            // 5. Finally, draw the enhancement slots and the text, which will now be correctly aligned.
+            UpdateImageAttributes(ref drawVars);
             DrawPowerComponents(drawVars);
-
-            // The 'location' still refers to the top-left of the cell, which is fine to return.
             return drawVars.Location;
-        }
-
-        private void UpdateSlotLocation(ref DrawVariables drawVars)
-        {
-            Rectangle powerRect = drawVars.PowerRect;
-
-            // Define a small, fixed indentation from the left edge of the button.
-            const int indent = 8;
-
-            // The X position is now simply the button's left edge plus our indent.
-            int slotX = powerRect.X + ScaleLogical(indent);
-            int slotY = powerRect.Y + OffsetY;
-
-            drawVars.SlotLocation = new Point(slotX, slotY);
         }
 
         private void UpdatePowerState(ref DrawVariables drawVars, bool singleDraw)
@@ -639,10 +860,12 @@ namespace Mids_Reborn.UI.Renderer
                 imageAttr = GreySlot(grey);
             }
 
-            // Draw slot background image
-            drawVars.PowerRect = DrawPowerImage(
+            drawVars.Geometry = CreatePowerGeometry(drawVars.PowerIndex, drawVars.PowerEntry, drawVars.DrawNewSlot);
+            drawVars.PowerRect = drawVars.Geometry.PowerRect;
+
+            DrawPowerImage(
                 drawVars.PowerEntry,
-                drawVars.Location,
+                drawVars.PowerRect,
                 drawVars.PowerState,
                 toggling,
                 imageAttr,
@@ -652,16 +875,9 @@ namespace Mids_Reborn.UI.Renderer
 
         private void DrawPowerComponents(DrawVariables drawVars)
         {
-            // Draw stat/proc toggle dots
-            DrawToggles(drawVars.PowerEntry, drawVars.PowerRect, drawVars.Pen2);
-
-            // Draw enhancement slot icons (or empty slots)
-            DrawSlotsAndEnhancements(drawVars.PowerEntry, drawVars.PowerRect, drawVars.Pen, drawVars.Font);
-
-            // Draw new-slot hover effect (+1 slot)
-            DrawNewSlotHover(drawVars.PowerEntry, drawVars.PowerRect, drawVars.SlotLocation, drawVars.Font, drawVars.PowerState, drawVars.SlotCheck, drawVars.DrawNewSlot);
-
-            // Draw text label: (level) Name
+            DrawToggles(drawVars.Geometry, drawVars.Pen2);
+            DrawSlotsAndEnhancements(drawVars.PowerEntry, drawVars.Geometry, drawVars.Pen, drawVars.Font);
+            DrawNewSlotHover(drawVars.Geometry, drawVars.Font, drawVars.PowerState, drawVars.SlotCheck, drawVars.DrawNewSlot);
             DrawPowerText(drawVars.PowerEntry, drawVars.PowerRect, drawVars.Font, drawVars.PowerState);
         }
 
@@ -674,6 +890,7 @@ namespace Mids_Reborn.UI.Renderer
 
             var drawVars = new DrawVariables
             {
+                PowerIndex = MidsContext.Character.CurrentBuild.Powers.IndexOf(powerEntry),
                 PowerEntry = powerEntry!,
                 Pen = new Pen(Color.FromArgb(128, 0, 0, 0), 1f),
                 Pen2 = new Pen(Color.Black),
@@ -701,113 +918,56 @@ namespace Mids_Reborn.UI.Renderer
                 SingleDraw = singleDraw
             };
 
-            // Positioning
-            var baseLocation = PowerPosition(powerEntry);
-            if (_ColumnStackingMode != eColumnStacking.None)
-                baseLocation = baseLocation with { Y = baseLocation.Y + 18 };
-
-            drawVars.Location = baseLocation;
-            drawVars.SlotLocation = default;
-
+            drawVars.Location = GetCellLocation(powerEntry);
             return drawVars;
         }
 
-        private Rectangle DrawPowerImage(PowerEntry? iSlot, Point location, ePowerState ePowerState, bool toggling, ImageAttributes? imageAttr, bool grey)
+        private void DrawPowerImage(PowerEntry? iSlot, Rectangle powerRect, ePowerState ePowerState, bool toggling, ImageAttributes? imageAttr, bool grey)
         {
-            // The 'location' is the top-left of the entire cell.
-            const int horizontalPadding = 10; // 5px on each side
-
-            // Calculate the dynamic width and centered position for the button.
-            int dynamicWidth = _calculatedCellWidth - ScaleLogical(25 + horizontalPadding);
-            int buttonX = location.X + (_calculatedCellWidth - dynamicWidth) / 2;
-            var powerRect = new Rectangle(buttonX, location.Y, dynamicWidth, SzPower.Height);
-
-            // --- CORRECTED LOGIC FOR TOGGLE MODE ---
-            var effectiveState = ePowerState; // Start with the power's actual state.
+            var effectiveState = ePowerState;
 
             if (toggling && iSlot != null)
             {
-                // In toggle mode, if a power is included in stats, draw it
-                // with the "Open" appearance (thick border) for visual feedback.
                 if (iSlot.StatInclude && iSlot.State == ePowerState.Used)
                 {
                     effectiveState = ePowerState.Open;
                 }
-                // If it was going to be drawn as "Open" for another reason (like being the
-                // next available slot), but we're in toggle mode, just draw it as "Empty".
                 else if (effectiveState == ePowerState.Open)
                 {
                     effectiveState = ePowerState.Empty;
                 }
             }
 
-            // Select the theme based on alignment.
             var theme = CurrentTheme;
-
-            // Call the vector drawing method with the final, effective state.
             DrawVectorPowerSlot(BxBuffer.Graphics, powerRect, effectiveState, theme);
-
-            return powerRect;
         }
 
-        private void DrawToggles(PowerEntry powerEntry, Rectangle powerRect, Pen pen)
+        private void DrawToggles(BuildPowerGeometry geometry, Pen pen)
         {
-            // Define size and spacing for the dots
-            int toggleSize = ScaleLogical(15);
-            int padding = ScaleLogical(8); // Space from the edge and between dots
-
-            // Calculate the centered Y position, which is the same for all dots
-            int y = powerRect.Top + (powerRect.Height - toggleSize) / 2;
-
-            bool canShowStatToggle = powerEntry.CanIncludeForStats();
-            bool canShowProcToggle = powerEntry.HasProc();
-
-            // Case 1: Both toggles are visible
-            if (canShowStatToggle && canShowProcToggle)
+            var powerEntry = MidsContext.Character.CurrentBuild.Powers[geometry.PowerIndex];
+            if (powerEntry == null)
             {
-                // Draw the right-most dot (Stat/Power Toggle)
-                int statToggleX = powerRect.Right - toggleSize - padding;
-                var statToggleRect = new Rectangle(statToggleX, y, toggleSize, toggleSize);
-                var statCenter = new PointF(-0.25f, -0.33f);
-                var statBrush = powerEntry.StatInclude
-                    ? MakePathBrush(statToggleRect, statCenter, Color.FromArgb(96, 255, 96), Color.FromArgb(0, 32, 0))
-                    : MakePathBrush(statToggleRect, statCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
-                BxBuffer.Graphics.FillEllipse(statBrush, statToggleRect);
-                BxBuffer.Graphics.DrawEllipse(pen, statToggleRect);
-
-                // Draw the dot to its left (Proc Toggle)
-                int procToggleX = statToggleRect.Left - toggleSize - padding;
-                var procToggleRect = new Rectangle(procToggleX, y, toggleSize, toggleSize);
-                var pCenter = new PointF(-0.25f, -0.33f);
-                var procBrush = !powerEntry.ProcInclude
-                    ? MakePathBrush(procToggleRect, pCenter, Color.FromArgb(251, 255, 97), Color.FromArgb(91, 91, 0))
-                    : MakePathBrush(procToggleRect, pCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
-                BxBuffer.Graphics.FillEllipse(procBrush, procToggleRect);
-                BxBuffer.Graphics.DrawEllipse(pen, procToggleRect);
+                return;
             }
-            // Case 2: Only the Stat toggle is visible
-            else if (canShowStatToggle)
+
+            if (!geometry.StatToggleRect.IsEmpty)
             {
-                int statToggleX = powerRect.Right - toggleSize - padding;
-                var statToggleRect = new Rectangle(statToggleX, y, toggleSize, toggleSize);
                 var statCenter = new PointF(-0.25f, -0.33f);
-                var statBrush = powerEntry.StatInclude
-                    ? MakePathBrush(statToggleRect, statCenter, Color.FromArgb(96, 255, 96), Color.FromArgb(0, 32, 0))
-                    : MakePathBrush(statToggleRect, statCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
-                BxBuffer.Graphics.FillEllipse(statBrush, statToggleRect);
-                BxBuffer.Graphics.DrawEllipse(pen, statToggleRect);
+                using var statBrush = powerEntry.StatInclude
+                    ? MakePathBrush(geometry.StatToggleRect, statCenter, Color.FromArgb(96, 255, 96), Color.FromArgb(0, 32, 0))
+                    : MakePathBrush(geometry.StatToggleRect, statCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
+                BxBuffer.Graphics.FillEllipse(statBrush, geometry.StatToggleRect);
+                BxBuffer.Graphics.DrawEllipse(pen, geometry.StatToggleRect);
             }
-            // Case 3: Only the Proc toggle is visible
-            else if (canShowProcToggle)
+
+            if (!geometry.ProcToggleRect.IsEmpty)
             {
-                int procToggleX = powerRect.Right - toggleSize - padding;
-                var procToggleRect = new Rectangle(procToggleX, y, toggleSize, toggleSize);
-                var pCenter = new PointF(-0.25f, -0.33f);
-                var procBrush = !powerEntry.ProcInclude
-                    ? MakePathBrush(procToggleRect, pCenter, Color.FromArgb(251, 255, 97), Color.FromArgb(91, 91, 0))
-                    : MakePathBrush(procToggleRect, pCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
-                BxBuffer.Graphics.FillEllipse(procBrush, procToggleRect);
-                BxBuffer.Graphics.DrawEllipse(pen, procToggleRect);
+                var procCenter = new PointF(-0.25f, -0.33f);
+                using var procBrush = !powerEntry.ProcInclude
+                    ? MakePathBrush(geometry.ProcToggleRect, procCenter, Color.FromArgb(251, 255, 97), Color.FromArgb(91, 91, 0))
+                    : MakePathBrush(geometry.ProcToggleRect, procCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
+                BxBuffer.Graphics.FillEllipse(procBrush, geometry.ProcToggleRect);
+                BxBuffer.Graphics.DrawEllipse(pen, geometry.ProcToggleRect);
             }
         }
 
@@ -859,29 +1019,15 @@ namespace Mids_Reborn.UI.Renderer
             return Math.Clamp(edgeForSixSlots, minReadable, logicalBase);
         }
 
-        private void DrawSlotsAndEnhancements(PowerEntry powerEntry, Rectangle powerRect, Pen pen, Font font)
+        private void DrawSlotsAndEnhancements(PowerEntry powerEntry, BuildPowerGeometry geometry, Pen pen, Font font)
         {
             if (powerEntry.Slots.Length == 0) return;
 
-            // 1. Calculate the starting X coordinate to left-align the slots
-            //    with a small indent relative to the power button.
-            const int indent = 5;
-            int startX = powerRect.X + ScaleLogical(indent);
-            int startY = powerRect.Y + OffsetY;
-
-            // 2. Loop through and draw each slot at the correct, calculated position.
             for (var i = 0; i < powerEntry.Slots.Length; i++)
             {
                 var slot = powerEntry.Slots[i];
-
-                int edge = ComputeSlotEdge(powerRect);
-                var spacing = ScaleLogical(2);
-                // Create a new, clean rectangle for each slot.
-                var slotRect = new RectangleF(
-                    startX + i * (edge + spacing), // Add 2px spacing between slots
-                    startY,
-                    edge,
-                    edge);
+                var slotRect = geometry.EnhancementSlotRects[i];
+                var slotRectF = new RectangleF(slotRect.X, slotRect.Y, slotRect.Width, slotRect.Height);
 
                 
                 SolidBrush solidBrush;
@@ -892,10 +1038,10 @@ namespace Mids_Reborn.UI.Renderer
                     if (sourceImage is null) continue; // Safety check
 
                     var destRect = new Rectangle(
-                        (int)slotRect.X,
-                        (int)slotRect.Y,
-                        (int)slotRect.Width,
-                        (int)slotRect.Height);
+                        slotRect.X,
+                        slotRect.Y,
+                        slotRect.Width,
+                        slotRect.Height);
 
                     var srcRect = new Rectangle(0, 0, sourceImage.Width, sourceImage.Height);
 
@@ -906,8 +1052,8 @@ namespace Mids_Reborn.UI.Renderer
                         !powerEntry.AllowFrontLoading & slot.Level < powerEntry.Level)
                     {
                         solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
-                        BxBuffer.Graphics.FillEllipse(solidBrush, slotRect);
-                        BxBuffer.Graphics.DrawEllipse(pen, slotRect);
+                        BxBuffer.Graphics.FillEllipse(solidBrush, slotRectF);
+                        BxBuffer.Graphics.DrawEllipse(pen, slotRectF);
                     }
                 }
                 else
@@ -916,7 +1062,7 @@ namespace Mids_Reborn.UI.Renderer
                     if (IsInDesignMode) continue;
 
                     var enhancement = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
-                    var clipRect3 = new Rectangle((int)slotRect.X, (int)slotRect.Y, (int)slotRect.Width, (int)slotRect.Height);
+                    var clipRect3 = slotRect;
                     AssetManager.DrawEnhancementAt(BxBuffer.Graphics, clipRect3, enhancement.ImageIdx, slot.Enhancement.Enh, enhancement.TypeID, slot.Enhancement.Grade);
 
                     if (slot.Enhancement.RelativeLevel == 0 | slot.Level > MidsContext.Config.ForceLevel |
@@ -925,21 +1071,21 @@ namespace Mids_Reborn.UI.Renderer
                         MidsContext.EnhCheckMode & !slot.Enhancement.Obtained)
                     {
                         solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
-                        var iValue3 = slotRect;
+                        var iValue3 = slotRectF;
                         iValue3.Inflate(1f, 1f);
                         BxBuffer.Graphics.FillEllipse(solidBrush, iValue3);
                     }
 
                     if (slot.Enhancement.Enh > -1)
-                        DrawEnhancementLevel(slot, font, BxBuffer.Graphics, ref slotRect);
+                        DrawEnhancementLevel(slot, font, BxBuffer.Graphics, ref slotRectF);
                 }
 
                 if (!MidsContext.Config.ShowSlotLevels) continue;
 
                 var powerTextRect = new RectangleF(
-                    slotRect.X,                                  // Align horizontally with the slot icon.
-                    slotRect.Bottom + 2,                         // Position it 2 pixels below the icon.
-                    slotRect.Width,                              // Use the icon's width for centering.
+                    slotRectF.X,
+                    slotRectF.Bottom + 2,
+                    slotRectF.Width,
                     _defaultFont.GetHeight(BxBuffer.Graphics)
                 );
 
@@ -954,30 +1100,23 @@ namespace Mids_Reborn.UI.Renderer
             }
         }
 
-        private void DrawNewSlotHover(PowerEntry powerEntry, Rectangle powerRect, Point slotLocation, Font font, ePowerState powerState, int slotCheck, bool drawNewSlot)
+        private void DrawNewSlotHover(BuildPowerGeometry geometry, Font font, ePowerState powerState, int slotCheck, bool drawNewSlot)
         {
-            if (slotCheck > -1 && powerState is not ePowerState.Empty && drawNewSlot)
+            if (slotCheck > -1 && powerState is not ePowerState.Empty && drawNewSlot && !geometry.NewSlotRect.IsEmpty)
             {
-                int spacing = ScaleLogical(2);
-                int edge = ComputeSlotEdge(powerRect);
-
-                var slotHoverRect = new RectangleF(
-                    slotLocation.X + (edge + spacing) * powerEntry.Slots.Length,
-                    slotLocation.Y,
-                    edge,
-                    edge);
-
                 var sourceImage = AssetManager.NewSlot.Bitmap;
                 if (sourceImage is null) return;
 
                 var srcRect = new Rectangle(0, 0, sourceImage.Width, sourceImage.Height);
+                BxBuffer.Graphics.DrawImage(sourceImage, geometry.NewSlotRect, srcRect, GraphicsUnit.Pixel);
 
-                BxBuffer.Graphics.DrawImage(sourceImage, slotHoverRect, srcRect, GraphicsUnit.Pixel);
-
-                // center the number vertically within the (scaled) edge
-                var textRect = slotHoverRect;
+                var textRect = new RectangleF(
+                    geometry.NewSlotRect.X,
+                    geometry.NewSlotRect.Y,
+                    geometry.NewSlotRect.Width,
+                    geometry.NewSlotRect.Height);
                 textRect.Height = _defaultFont.GetHeight(BxBuffer.Graphics);
-                textRect.Y += (edge - textRect.Height) / 2f;
+                textRect.Y += (geometry.NewSlotRect.Height - textRect.Height) / 2f;
 
                 DrawOutlineText(Convert.ToString(slotCheck + 1), textRect,
                     Color.FromArgb(0, 255, 255), Color.FromArgb(192, 0, 0, 0),
@@ -1469,161 +1608,19 @@ namespace Mids_Reborn.UI.Renderer
 
         public eToggleType WhichToggle(int powerIndex, int clickX, int clickY)
         {
-            if (powerIndex < 0) return eToggleType.None;
-
-            var powerEntry = MidsContext.Character.CurrentBuild.Powers[powerIndex];
-            if (powerEntry?.IDXPower < 0) return eToggleType.None;
-
-            // Get the exact, dynamic rectangle of the power button
-            Point cellLocation = PowerPosition(powerEntry);
-            const int horizontalPadding = 10;
-            int dynamicWidth = _calculatedCellWidth - ScaleLogical(25 + horizontalPadding);
-            int buttonX = cellLocation.X + (_calculatedCellWidth - dynamicWidth) / 2;
-            var powerRect = new Rectangle(buttonX, cellLocation.Y, dynamicWidth, SzPower.Height);
-
-            // Replicate the exact positioning logic from DrawToggles
-            int toggleSize = ScaleLogical(15);
-            int padding = ScaleLogical(4);
-            int y = powerRect.Top + (powerRect.Height - toggleSize) / 2;
-
-            bool canShowStatToggle = powerEntry.CanIncludeForStats();
-            bool canShowProcToggle = powerEntry.HasProc();
-
-            // Check for Stat toggle first (it's the right-most)
-            if (canShowStatToggle)
-            {
-                int statToggleX = powerRect.Right - toggleSize - padding;
-                var statToggleRect = new Rectangle(statToggleX, y, toggleSize, toggleSize);
-                if (statToggleRect.Contains(clickX, clickY))
-                {
-                    return eToggleType.Stat;
-                }
-            }
-
-            // Check for Proc toggle
-            if (canShowProcToggle)
-            {
-                Rectangle procToggleRect;
-                if (canShowStatToggle)
-                {
-                    // It's the second button from the right
-                    int statToggleX = powerRect.Right - toggleSize - padding;
-                    int procToggleX = statToggleX - toggleSize - padding;
-                    procToggleRect = new Rectangle(procToggleX, y, toggleSize, toggleSize);
-                }
-                else
-                {
-                    // It's the only button, on the far right
-                    int procToggleX = powerRect.Right - toggleSize - padding;
-                    procToggleRect = new Rectangle(procToggleX, y, toggleSize, toggleSize);
-                }
-
-                if (procToggleRect.Contains(clickX, clickY))
-                {
-                    return eToggleType.Proc;
-                }
-            }
-
-            return eToggleType.None;
+            var hit = HitTest(clickX, clickY);
+            return hit.PowerIndex == powerIndex ? hit.ToggleType : eToggleType.None;
         }
 
         public int WhichSlot(int x, int y)
         {
-            for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
-            {
-                var powerEntry = MidsContext.Character.CurrentBuild.Powers[i];
-                if (powerEntry == null) continue;
-
-                // This part is correct: It finds the button's visual location and size.
-                Point cellLocation = PowerPosition(powerEntry);
-                const int horizontalPadding = 10;
-                int dynamicWidth = _calculatedCellWidth - ScaleLogical(25 + horizontalPadding);
-                int buttonX = cellLocation.X + (_calculatedCellWidth - dynamicWidth) / 2;
-                var powerRect = new Rectangle(buttonX, cellLocation.Y, dynamicWidth, SzPower.Height);
-
-                // First, check if the click is within the button's horizontal bounds.
-                bool isHorizontallyInside = x >= powerRect.Left && x < powerRect.Right;
-
-                if (isHorizontallyInside)
-                {
-                    // CORRECTED LOGIC: Check two separate vertical areas.
-
-                    // Area 1: Is the click inside the main power button?
-                    bool inPowerButton = y >= powerRect.Top && y < powerRect.Bottom;
-
-                    // Area 2: Is the click inside the enhancement slot row?
-                    int slotAreaTop = powerRect.Top + OffsetY;
-                    bool inEnhancementArea = y >= slotAreaTop && y < slotAreaTop + SzSlot.Height;
-
-                    // If the click is in either valid area, we have a match.
-                    if (inPowerButton || inEnhancementArea)
-                    {
-                        return i;
-                    }
-                }
-            }
-            return -1;
+            return HitTest(x, y).PowerIndex;
         }
 
         public int WhichEnh(int x, int y)
         {
-            // 1. Find which power the cursor is over. This part was correct.
-            int oPower = WhichSlot(x, y);
-            if (oPower <= -1)
-            {
-                return -1;
-            }
-
-            // 2. Get the specific power entry and its cell's top-left coordinates.
-            var powerEntry = MidsContext.Character.CurrentBuild.Powers[oPower];
-            if (powerEntry?.Slots.Length == 0)
-            {
-                return -1; // No slots to click.
-            }
-            Point cellLocation = PowerPosition(powerEntry);
-
-            // 3. Replicate the exact calculation used to determine the power button's rectangle during drawing.
-            // This is the crucial step to align hit detection with the visual layout.
-            const int horizontalPadding = 10;
-            int dynamicWidth = _calculatedCellWidth - ScaleLogical(25 + horizontalPadding);
-            int buttonX = cellLocation.X + (_calculatedCellWidth - dynamicWidth) / 2;
-            var powerRect = new Rectangle(buttonX, cellLocation.Y, dynamicWidth, SzPower.Height);
-
-            int edge = ComputeSlotEdge(powerRect);
-            int spacing = ScaleLogical(2);
-
-            // 4. Calculate the starting X and Y coordinates of the first enhancement slot,
-            // mirroring the logic from the DrawSlotsAndEnhancements method.
-            const int indent = 5;
-            int startX = powerRect.X + ScaleLogical(indent); //
-            int startY = powerRect.Y + OffsetY; //
-
-            // 5. Check if the cursor's Y-coordinate is within the vertical bounds of the slots.
-            if (y < startY || y >= startY + edge)
-            {
-                return -1;
-            }
-
-            // 6. Calculate the total width of the enhancement slot row for a horizontal bounds check.
-            int totalSlotRowWidth = powerEntry.Slots.Length * (edge + spacing);
-            if (x < startX || x >= startX + totalSlotRowWidth)
-            {
-                return -1;
-            }
-
-            // 7. Calculate the cursor's position relative to the start of the slots, then divide
-            // by the width of a single slot plus its spacing to find the index.
-            int relativeX = x - startX;
-            int slotAndGapWidth = edge + spacing;
-            int index = relativeX / slotAndGapWidth;
-
-            // 8. Final validation to ensure the calculated index is within the array's bounds.
-            if (index >= 0 && index < powerEntry.Slots.Length)
-            {
-                return index;
-            }
-
-            return -1;
+            var hit = HitTest(x, y);
+            return hit.Area == BuildHitArea.EnhancementSlot ? hit.EnhancementIndex : -1;
         }
 
         public bool HighlightSlot(int idx, bool force = false)
@@ -1757,120 +1754,40 @@ namespace Mids_Reborn.UI.Renderer
 
         public Rectangle GetPowerButtonRect(int hIdx)
         {
-            var powers = MidsContext.Character?.CurrentBuild?.Powers;
-            if (powers is null || hIdx < 0 || hIdx >= powers.Count) return Rectangle.Empty;
-
-            var powerEntry = powers[hIdx];
-            // Match PowerBounds� �chosen/not chosen� location choice.
-            var location = !powerEntry.Chosen && powerEntry.Power != null
-                ? PowerPosition(hIdx)
-                : PowerPosition(GetVisualIdx(hIdx));
-
-            // Must mirror DrawPowerImage�s dynamic width & centering.
-            const int horizontalPadding = 10;                           // keep in sync with DrawPowerImage
-            int dynamicWidth = _calculatedCellWidth - ScaleLogical(25 + horizontalPadding);
-            if (dynamicWidth < 1) dynamicWidth = 1;                     // guard
-
-            int buttonX = location.X + (_calculatedCellWidth - dynamicWidth) / 2;
-            return new Rectangle(buttonX, location.Y, dynamicWidth, SzPower.Height);
+            return TryBuildPowerGeometry(hIdx, out var geometry, includeNewSlot: false)
+                ? geometry!.PowerRect
+                : Rectangle.Empty;
         }
 
         public Rectangle GetPowerAreaRect(int hIdx)
         {
-            var btn = GetPowerButtonRect(hIdx);
-            if (btn.IsEmpty) return Rectangle.Empty;
-
-            var powers = MidsContext.Character.CurrentBuild.Powers;
-            int slotCount = powers[hIdx]?.Slots?.Length ?? 0;
-
-            if (slotCount <= 0)
-                return btn;
-
-            int edge = ComputeSlotEdge(btn);                            // same fit logic as drawing
-            int totalHeight = btn.Height + OffsetY + edge;
-            return new Rectangle(btn.X, btn.Y, btn.Width, totalHeight);
+            return TryBuildPowerGeometry(hIdx, out var geometry, includeNewSlot: false)
+                ? geometry!.PowerAreaRect
+                : Rectangle.Empty;
         }
 
         public Rectangle GetEnhancementSlotRect(int hIdx, int slotIndex)
         {
-            var powers = MidsContext.Character?.CurrentBuild?.Powers;
-            if (powers is null || hIdx < 0 || hIdx >= powers.Count) return Rectangle.Empty;
+            if (!TryBuildPowerGeometry(hIdx, out var geometry, includeNewSlot: false))
+                return Rectangle.Empty;
 
-            var entry = powers[hIdx];
-            var btn = GetPowerButtonRect(hIdx);
-            if (btn.IsEmpty || entry is null) return Rectangle.Empty;
-
-            int count = entry.Slots?.Length ?? 0;
-            if (slotIndex < 0 || slotIndex >= count) return Rectangle.Empty;
-
-            // Must mirror DrawSlotsAndEnhancements layout precisely.
-            int indent = ScaleLogical(5);
-            int spacing = ScaleLogical(2);
-            int edge = ComputeSlotEdge(btn);
-
-            int startX = btn.X + indent;
-            int y = btn.Y + OffsetY;
-            int x = startX + slotIndex * (edge + spacing);
-
-            return new Rectangle(x, y, edge, edge);
+            return slotIndex >= 0 && slotIndex < geometry!.EnhancementSlotRects.Length
+                ? geometry.EnhancementSlotRects[slotIndex]
+                : Rectangle.Empty;
         }
 
         public IReadOnlyList<Rectangle> GetEnhancementSlotRects(int hIdx)
         {
-            var powers = MidsContext.Character?.CurrentBuild?.Powers;
-            if (powers is null || hIdx < 0 || hIdx >= powers.Count) return Array.Empty<Rectangle>();
-
-            var entry = powers[hIdx];
-            var btn = GetPowerButtonRect(hIdx);
-            if (btn.IsEmpty || entry is null) return Array.Empty<Rectangle>();
-
-            int count = entry.Slots?.Length ?? 0;
-            if (count <= 0) return Array.Empty<Rectangle>();
-
-            int indent = ScaleLogical(5);
-            int spacing = ScaleLogical(2);
-            int edge = ComputeSlotEdge(btn);
-
-            int startX = btn.X + indent;
-            int y = btn.Y + OffsetY;
-
-            var result = new Rectangle[count];
-            for (int i = 0; i < count; i++)
-            {
-                int x = startX + i * (edge + spacing);
-                result[i] = new Rectangle(x, y, edge, edge);
-            }
-
-            return result;
+            return TryBuildPowerGeometry(hIdx, out var geometry, includeNewSlot: false)
+                ? geometry!.EnhancementSlotRects
+                : Array.Empty<Rectangle>();
         }
 
         public Rectangle GetNewSlotHoverRect(int hIdx)
         {
-            var powers = MidsContext.Character?.CurrentBuild?.Powers;
-            if (powers is null || hIdx < 0 || hIdx >= powers.Count) return Rectangle.Empty;
-
-            var entry = powers[hIdx];
-            if (entry?.Power is null || entry.State == ePowerState.Empty) return Rectangle.Empty;
-
-            // This mirrors the gating used where DrawNewSlotHover is called.
-            bool canShow = MidsContext.Character.CanPlaceSlot
-                           && entry.Slots.Length < 6
-                           && InterfaceMode != eInterfaceMode.PowerToggle;
-
-            if (!canShow) return Rectangle.Empty;
-
-            var btn = GetPowerButtonRect(hIdx);
-            if (btn.IsEmpty) return Rectangle.Empty;
-
-            int indent = ScaleLogical(5);
-            int spacing = ScaleLogical(2);
-            int edge = ComputeSlotEdge(btn);
-
-            int startX = btn.X + indent;
-            int y = btn.Y + OffsetY;
-
-            int x = startX + (edge + spacing) * entry.Slots.Length;
-            return new Rectangle(x, y, edge, edge);
+            return TryBuildPowerGeometry(hIdx, out var geometry, includeNewSlot: true)
+                ? geometry!.NewSlotRect
+                : Rectangle.Empty;
         }
 
         public Rectangle PowerBoundsUnscaled(int hIdx)
@@ -2689,6 +2606,7 @@ namespace Mids_Reborn.UI.Renderer
         private class DrawVariables
         {
             public PowerEntry PowerEntry { get; set; }
+            public int PowerIndex { get; set; }
             public Pen Pen { get; set; }
             public Pen Pen2 { get; set; }
             public RectangleF RectangleF { get; set; }
@@ -2700,6 +2618,7 @@ namespace Mids_Reborn.UI.Renderer
             public bool CanPlaceSlot { get; set; }
             public bool DrawNewSlot { get; set; }
             public Point Location { get; set; }
+            public BuildPowerGeometry Geometry { get; set; }
             public Rectangle PowerRect { get; set; }
             public Rectangle ToggleRect { get; set; }
             public Rectangle ProcRect { get; set; }

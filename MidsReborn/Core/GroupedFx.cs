@@ -1,5 +1,6 @@
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.PlannerRulesets;
 using Mids_Reborn.UI.Controls;
 using Mids_Reborn.UI.Controls.Test;
 using System.Text.RegularExpressions;
@@ -1130,7 +1131,7 @@ namespace Mids_Reborn.Core
 
             bool ignoresBuffs = effects.Any(e => !e.Buffable);
             bool ignoresED = effects.Any(e => e.IgnoreED);
-            bool noStackSameCaster = effects.Any(e => e.Stacking == Enums.eStacking.No);
+            bool noStackSameCaster = effects.Any(PlannerStackRules.ShouldFlagNoStackSameCaster);
 
             var flags = new System.Text.StringBuilder();
             if (ignoresBuffs) flags.AppendLine("[Ignores Enhancements & Buffs]");
@@ -2485,7 +2486,13 @@ namespace Mids_Reborn.Core
         {
             if (pBase.Effects.Any(e => e.EffectType == Enums.eEffectType.EntCreate) & pBase.AbsorbSummonEffects)
             {
-                pBase.AbsorbPetEffects(pseudoOnly: true);
+                pBase = PlannerEffectResolver.ResolvePower(new Power(pBase), new PlannerEffectResolutionContext
+                {
+                    ApplyRedirects = false,
+                    AbsorbPetEffects = true,
+                    ExpandGrantPowers = false,
+                    ExpandExecutePowers = false
+                }).ResolvedPower;
             }
 
             var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");

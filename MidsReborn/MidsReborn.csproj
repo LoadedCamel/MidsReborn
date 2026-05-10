@@ -437,12 +437,14 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="Databases\Homecoming\Assets\Classes\" />
+    <Folder Include="Databases\Homecoming\Assets\Powers\" />
     <Folder Include="Properties\PublishProfiles\" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="UI\Forms\frmUpdate.cs" />
     <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.cs" />
     <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.Designer.cs" />
+    <Compile Remove="MidsReborn.Tests\**\*.cs" />
     <Compile Remove="GlobalSuppressions.cs" />
     <Content Remove="Assets\unlocked.png" />
     <EmbeddedResource Remove="frmImport_Powerset.resx" />

@@ -2,6 +2,7 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 using Mids_Reborn.Core;
+using Mids_Reborn.Core.PlannerRulesets;
 using System.Collections.Concurrent;
 using System.Security.Cryptography;
 using System.Text;
@@ -197,7 +198,6 @@ public sealed partial class OmniImporter
         "highlight_eval",
         "highlight_icon",
         "highlight_ring",
-        "icon",
         "idea_cost",
         "ignore_level_gained",
         "ignore_stance",
@@ -270,6 +270,12 @@ public sealed partial class OmniImporter
             ["Temporary_Powers.Temporary_Powers.Soul_Transfer_Execute"] = "Temporary_Powers.Temporary_Powers.Soul_Transfer",
             ["Temporary_Powers.Temporary_Powers.Street_Cred_Monitor"] = "Temporary_Powers.Temporary_Powers.Street_Cred"
         };
+
+    private static readonly string[] RetainedTemporaryIntegrityPowersetNames =
+    [
+        "Temporary_Powers.Accolades",
+        "Temporary_Powers.SilentPowers"
+    ];
 
     private sealed record PowerIntegrityInfo(
         string FullName,
@@ -1374,6 +1380,14 @@ public sealed partial class OmniImporter
             entityActors,
             applyResult,
             ref nextStaticIndex);
+        VerifyAndRepairRetainedTemporaryPowerGraph(
+            database,
+            scopedPowers,
+            classifications,
+            scopedPowersetLookup,
+            entityActors,
+            applyResult,
+            ref nextStaticIndex);
         RebuildPowersetMembershipFromPowerGraph(database);
         RepairRequiredPseudoPetAbsorptionFlags(database, applyResult);
         ReportStageProgress(progressReporter, OmniImportStageId.LinkPlannerMetadata, markComplete: true);
@@ -1383,6 +1397,7 @@ public sealed partial class OmniImporter
         ReportStageProgress(progressReporter, OmniImportStageId.FinalAudits, "Running final audits");
         TrackPetManifestLinkAudit(database, petManifest, applyResult);
         TrackPetPowerLinkAudit(database, scopedPowers, dryRunResult.Scope, applyResult);
+        TrackRetainedTemporaryPowerIntegrity(database, scopedPowers, classifications, applyResult);
         TrackPseudoPetAbsorptionAudit(database, applyResult);
         TrackEpicImportLinkAudit(database, scopedPowers, scopedPowersets, applyResult);
         TrackSorceryEnflameApplyTrace(database, applyResult);
@@ -2618,6 +2633,10 @@ public sealed partial class OmniImporter
                 scopedPowersetLookup.TryGetValue(canonicalPowerset, out var scopedPowerset))
             {
                 var createdPowerset = CreatePowerset(scopedPowerset);
+                if (createdPowerset.SetType == Enums.ePowerSetType.None)
+                {
+                    createdPowerset.SetType = MapPowersetType(scopedPowerset.PowerCategory, scopedPowerset.FullName);
+                }
                 var powersets = database.Powersets ?? [];
                 Array.Resize(ref powersets, powersets.Length + 1);
                 powersets[^1] = createdPowerset;
@@ -2692,6 +2711,209 @@ public sealed partial class OmniImporter
         if (repaired)
         {
             SortPowersByPowersetAndLevel(database, applyResult);
+        }
+    }
+
+    private static void VerifyAndRepairRetainedTemporaryPowerGraph(
+        IDatabase database,
+        IReadOnlyCollection<OmniPowerDefinition> scopedPowers,
+        IReadOnlyDictionary<string, OmniPowerClassification> classifications,
+        IReadOnlyDictionary<string, OmniPowersetDefinition> scopedPowersetLookup,
+        IReadOnlyDictionary<string, OmniBuildActor> entityActors,
+        OmniApplyResult applyResult,
+        ref int nextStaticIndex)
+    {
+        var requiredTemporaryPowers = scopedPowers
+            .Where(power => !string.IsNullOrWhiteSpace(power.FullName) &&
+                            ShouldMainImportScopedPower(power, classifications) &&
+                            IsRetainedTemporaryIntegrityPowerset(PowerPowersetFullName(power)))
+            .ToList();
+        if (requiredTemporaryPowers.Count == 0)
+        {
+            return;
+        }
+
+        var existingPowers = GetCanonicalizableDatabasePowers(database);
+        var midsPowers = BuildCanonicalPowerLookup(existingPowers);
+        var powersetsByName = BuildCanonicalPowersetLookup(database);
+        var repaired = false;
+
+        foreach (var omniPower in requiredTemporaryPowers)
+        {
+            var midsFullName = CanonicalizeOmniFullName(omniPower.FullName);
+            var canonicalPowerset = PowerPowersetFullName(omniPower);
+            if (string.IsNullOrWhiteSpace(midsFullName) || string.IsNullOrWhiteSpace(canonicalPowerset))
+            {
+                continue;
+            }
+
+            if (!powersetsByName.TryGetValue(canonicalPowerset, out var owningPowerset) &&
+                scopedPowersetLookup.TryGetValue(canonicalPowerset, out var scopedPowerset))
+            {
+                var createdPowerset = CreatePowerset(scopedPowerset);
+                var powersets = database.Powersets ?? [];
+                Array.Resize(ref powersets, powersets.Length + 1);
+                powersets[^1] = createdPowerset;
+                database.Powersets = powersets;
+                powersetsByName[canonicalPowerset] = createdPowerset;
+                owningPowerset = createdPowerset;
+                repaired = true;
+                applyResult.PowersetsCreated++;
+                applyResult.AddLimited(applyResult.CreatedPowersets,
+                    $"{canonicalPowerset}: created during retained temporary power verification");
+                applyResult.AddLimited(applyResult.RetainedTemporaryIntegrityDetails,
+                    $"{canonicalPowerset}: created missing retained temporary powerset during final verification");
+            }
+
+            if (!midsPowers.TryGetValue(midsFullName, out var midsPower))
+            {
+                midsPower = CreatePower(database, omniPower, nextStaticIndex++);
+                ApplyCanonicalPowerName(midsPower, midsFullName);
+                ApplyImportedPowerState(
+                    database,
+                    midsPower,
+                    omniPower,
+                    classifications.TryGetValue(midsFullName, out var classification)
+                        ? classification
+                        : new OmniPowerClassification(),
+                    entityActors,
+                    applyResult);
+                midsPowers[midsFullName] = midsPower;
+                existingPowers.Add(midsPower);
+                repaired = true;
+                applyResult.PowersCreated++;
+                applyResult.PowersUpdated++;
+                applyResult.AddLimited(applyResult.CreatedPowers,
+                    $"{midsFullName}: created during retained temporary power verification");
+                applyResult.AddLimited(applyResult.UpdatedPowers,
+                    $"{midsFullName}: populated during retained temporary power verification");
+                applyResult.AddLimited(applyResult.RetainedTemporaryIntegrityDetails,
+                    $"{midsFullName}: created missing retained temporary power during final verification");
+            }
+            else if (classifications.TryGetValue(midsFullName, out var classification))
+            {
+                ApplyPowerClassification(midsPower, classification);
+                midsPower.IsModified = true;
+            }
+
+            if (owningPowerset == null)
+            {
+                continue;
+            }
+
+            if (!string.Equals(CanonicalizeOmniFullName(midsPower.FullSetName), canonicalPowerset, StringComparison.OrdinalIgnoreCase))
+            {
+                ApplyCanonicalPowerName(midsPower, midsFullName);
+                midsPower.PowerSetID = owningPowerset.nID;
+                midsPower.IsModified = true;
+                repaired = true;
+                applyResult.AddLimited(applyResult.RetainedTemporaryIntegrityDetails,
+                    $"{midsFullName}: restored owning powerset identity to {canonicalPowerset}");
+            }
+
+            var inPowersetArray = owningPowerset.Powers.Any(power =>
+                power != null &&
+                string.Equals(CanonicalizeOmniFullName(power.FullName), midsFullName, StringComparison.OrdinalIgnoreCase));
+            if (!inPowersetArray)
+            {
+                EnsurePowerAttachedToPowerset(database, owningPowerset, midsPower);
+                repaired = true;
+                applyResult.AddLimited(applyResult.RetainedTemporaryIntegrityDetails,
+                    $"{midsFullName}: restored final owning powerset attachment for {owningPowerset.FullName}");
+            }
+        }
+
+        if (repaired)
+        {
+            SortPowersByPowersetAndLevel(database, applyResult);
+        }
+    }
+
+    private static bool IsRetainedTemporaryIntegrityPowerset(string? fullSetName)
+    {
+        var canonical = CanonicalizeOmniFullName(fullSetName ?? string.Empty);
+        return RetainedTemporaryIntegrityPowersetNames.Contains(canonical, StringComparer.OrdinalIgnoreCase);
+    }
+
+    private static void TrackRetainedTemporaryPowerIntegrity(
+        IDatabase database,
+        IReadOnlyCollection<OmniPowerDefinition> scopedPowers,
+        IReadOnlyDictionary<string, OmniPowerClassification> classifications,
+        OmniApplyResult applyResult)
+    {
+        var expectedByPowerset = scopedPowers
+            .Where(power => !string.IsNullOrWhiteSpace(power.FullName) &&
+                            ShouldMainImportScopedPower(power, classifications) &&
+                            IsRetainedTemporaryIntegrityPowerset(PowerPowersetFullName(power)))
+            .GroupBy(power => PowerPowersetFullName(power), StringComparer.OrdinalIgnoreCase)
+            .ToDictionary(
+                group => group.Key,
+                group => group
+                    .Select(power => CanonicalizeOmniFullName(power.FullName))
+                    .Where(fullName => !string.IsNullOrWhiteSpace(fullName))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToList(),
+                StringComparer.OrdinalIgnoreCase);
+
+        applyResult.RetainedTemporaryPowersetsTracked = expectedByPowerset.Count;
+        applyResult.RetainedTemporaryPowersTracked = expectedByPowerset.Sum(entry => entry.Value.Count);
+        applyResult.RetainedTemporaryHiddenPowers = 0;
+        applyResult.RetainedTemporaryIntegrityFailures = 0;
+
+        if (expectedByPowerset.Count == 0)
+        {
+            return;
+        }
+
+        var powersetsByName = BuildCanonicalPowersetLookup(database);
+        var powersByName = BuildCanonicalPowerLookup(GetCanonicalizableDatabasePowers(database));
+
+        foreach (var (powersetFullName, expectedPowers) in expectedByPowerset.OrderBy(entry => entry.Key, StringComparer.OrdinalIgnoreCase))
+        {
+            powersetsByName.TryGetValue(powersetFullName, out var powerset);
+            var attachedPowers = powerset?.Powers
+                .Where(power => power != null)
+                .Select(power => CanonicalizeOmniFullName(power.FullName))
+                .Where(fullName => !string.IsNullOrWhiteSpace(fullName))
+                .ToHashSet(StringComparer.OrdinalIgnoreCase) ?? new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+            var hiddenCount = 0;
+            var missingCount = 0;
+            var detachedCount = 0;
+
+            foreach (var expectedPowerFullName in expectedPowers.OrderBy(value => value, StringComparer.OrdinalIgnoreCase))
+            {
+                if (!powersByName.TryGetValue(expectedPowerFullName, out var databasePower))
+                {
+                    missingCount++;
+                    applyResult.RetainedTemporaryIntegrityFailures++;
+                    applyResult.AddLimited(applyResult.RetainedTemporaryIntegrityDetails,
+                        $"{expectedPowerFullName}: missing from database.Power");
+                    continue;
+                }
+
+                if (databasePower.HiddenPower)
+                {
+                    hiddenCount++;
+                }
+
+                var canonicalSet = CanonicalizeOmniFullName(databasePower.FullSetName);
+                var attached = attachedPowers.Contains(expectedPowerFullName) &&
+                               string.Equals(canonicalSet, powersetFullName, StringComparison.OrdinalIgnoreCase) &&
+                               databasePower.PowerSetID > -1 &&
+                               databasePower.PowerSetIndex > -1;
+                if (!attached)
+                {
+                    detachedCount++;
+                    applyResult.RetainedTemporaryIntegrityFailures++;
+                    applyResult.AddLimited(applyResult.RetainedTemporaryIntegrityDetails,
+                        $"{expectedPowerFullName}: retained but detached from {powersetFullName} (FullSetName={databasePower.FullSetName}, PowerSetID={databasePower.PowerSetID}, PowerSetIndex={databasePower.PowerSetIndex})");
+                }
+            }
+
+            applyResult.RetainedTemporaryHiddenPowers += hiddenCount;
+            applyResult.AddLimited(applyResult.RetainedTemporaryIntegrityDetails,
+                $"{powersetFullName}: expected={expectedPowers.Count}, attached={expectedPowers.Count - missingCount - detachedCount}, hidden={hiddenCount}, missing={missingCount}, detached={detachedCount}");
         }
     }
 
@@ -3926,6 +4148,7 @@ public sealed partial class OmniImporter
         power.GroupName = GroupNamePart(source.FullName);
         power.SetName = SetNamePart(source.FullName);
         power.PowerName = string.IsNullOrWhiteSpace(source.Name) ? LastNamePart(source.FullName) : source.Name;
+        power.IconName = string.IsNullOrWhiteSpace(source.Icon) ? string.Empty : Path.GetFileName(source.Icon);
         power.DisplayName = string.IsNullOrWhiteSpace(source.DisplayName) ? power.PowerName : source.DisplayName;
         power.DescLong = source.DisplayHelp ?? string.Empty;
         power.DescShort = source.DisplayShortHelp ?? string.Empty;
@@ -5596,15 +5819,20 @@ public sealed partial class OmniImporter
         var powers = database.Power ?? [];
         var keptPowers = powers
             .Where(power => power == null ||
-                            !OmniImportScope.IsExcludedPowerset(CanonicalizeOmniFullName(power.FullSetName)))
+                            (!OmniImportScope.IsExcludedPowerset(CanonicalizeOmniFullName(power.FullSetName)) &&
+                             !OmniImportScope.IsExcludedPower(CanonicalizeOmniFullName(power.FullName))))
             .ToArray();
         applyResult.ExcludedPowersRemoved = powers.Length - keptPowers.Length;
         foreach (var power in powers.Where(power =>
                      power != null &&
-                     OmniImportScope.IsExcludedPowerset(CanonicalizeOmniFullName(power.FullSetName))))
+                     (OmniImportScope.IsExcludedPowerset(CanonicalizeOmniFullName(power.FullSetName)) ||
+                      OmniImportScope.IsExcludedPower(CanonicalizeOmniFullName(power.FullName)))))
         {
+            var reason = OmniImportScope.IsExcludedPowerset(CanonicalizeOmniFullName(power.FullSetName))
+                ? $"{power.FullSetName} is excluded from Homecoming import."
+                : "the individual power is excluded from Homecoming import.";
             applyResult.AddLimited(applyResult.ExcludedContentRemovalDetails,
-                $"{power.FullName}: removed because {power.FullSetName} is excluded from Homecoming import.");
+                $"{power.FullName}: removed because {reason}");
         }
 
         database.Power = keptPowers;
@@ -6960,14 +7188,14 @@ public sealed partial class OmniImporter
     {
         foreach (var hint in ReadProviderHintsFromManifest(exportRoot))
         {
-            var providerId = DetectOmniDataProviderIdFromHint(hint);
+            var providerId = ServerRulesProfileResolver.DetectProviderIdFromHint(hint);
             if (providerId != OmniDataProviderId.Unknown)
             {
                 return providerId;
             }
         }
 
-        return DetectOmniDataProviderIdFromHint(
+        return ServerRulesProfileResolver.DetectProviderIdFromHint(
             Path.GetFileName(exportRoot.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar)));
     }
 
@@ -6995,63 +7223,19 @@ public sealed partial class OmniImporter
         }
     }
 
-    private static OmniDataProviderId DetectOmniDataProviderIdFromHint(string? hint)
-    {
-        var normalized = (hint ?? string.Empty)
-            .Replace("_", string.Empty, StringComparison.Ordinal)
-            .Replace("-", string.Empty, StringComparison.Ordinal)
-            .Replace(" ", string.Empty, StringComparison.Ordinal)
-            .ToLowerInvariant();
-
-        if (normalized.Contains("homecoming", StringComparison.Ordinal))
-        {
-            return OmniDataProviderId.OmniHomecoming;
-        }
-
-        if (normalized.Contains("rebirth", StringComparison.Ordinal))
-        {
-            return OmniDataProviderId.OmniRebirth;
-        }
-
-        if (normalized.Contains("thunderspy", StringComparison.Ordinal) ||
-            normalized.Contains("tspy", StringComparison.Ordinal))
-        {
-            return OmniDataProviderId.OmniThunderspy;
-        }
-
-        return OmniDataProviderId.Unknown;
-    }
-
-    private static PlannerRulesetId ResolvePlannerRulesetId(
-        OmniDataProviderId providerId,
-        PlannerRulesetId existingRulesetId)
-    {
-        return providerId switch
-        {
-            OmniDataProviderId.OmniHomecoming => PlannerRulesetId.Homecoming,
-            OmniDataProviderId.OmniRebirth or OmniDataProviderId.OmniThunderspy => PlannerRulesetId.Ourodev,
-            _ => existingRulesetId
-        };
-    }
-
-    private static int ResolvePlannerRulesetVersion(PlannerRulesetId rulesetId)
-    {
-        return 3;
-    }
-
     private void ApplyClassAttributesToDatabase(IDatabase database, OmniImportResult result, OmniApplyResult? applyResult)
     {
         var detectedProviderId = DetectOmniDataProviderId(result.ExportRoot);
         var resolvedProviderId = detectedProviderId != OmniDataProviderId.Unknown
             ? detectedProviderId
             : database.DataProviderId;
-        var resolvedRulesetId = ResolvePlannerRulesetId(detectedProviderId, database.PlannerRulesetId);
+        var resolvedRulesetId = ServerRulesProfileResolver.ResolvePlannerRulesetId(detectedProviderId, database.PlannerRulesetId);
 
         database.ClassAttributes = result.ClassAttributes;
         database.OmniImportSource = OmniDatabaseImportSource.Omni;
         database.DataProviderId = resolvedProviderId;
         database.PlannerRulesetId = resolvedRulesetId;
-        database.PlannerRulesetVersion = ResolvePlannerRulesetVersion(resolvedRulesetId);
+        database.PlannerRulesetVersion = ServerRulesProfileResolver.ResolvePlannerRulesetVersion(resolvedRulesetId);
         database.HasCanonicalOmniPlannerMath = resolvedRulesetId != PlannerRulesetId.Legacy;
         if (applyResult != null)
         {
@@ -10125,60 +10309,17 @@ public sealed partial class OmniImporter
 
     private static void TrackDeferredPowerFields(OmniPowerDefinition power, OmniImportReport report)
     {
-        foreach (var detail in GetDeferredPowerFieldDetails(power))
+        foreach (var entry in ImportedPowerPolicyDiagnostics.DescribeSource(power))
         {
-            AddDeferredPowerField(report, detail);
+            AddPowerPolicyDiagnostic(report, power.FullName, entry);
         }
     }
 
     private static void TrackDeferredPowerFields(OmniPowerDefinition power, OmniApplyResult result)
     {
-        foreach (var detail in GetDeferredPowerFieldDetails(power))
+        foreach (var entry in ImportedPowerPolicyDiagnostics.DescribeSource(power))
         {
-            AddDeferredPowerField(result, detail);
-        }
-    }
-
-    private static IEnumerable<string> GetDeferredPowerFieldDetails(OmniPowerDefinition power)
-    {
-        if (HasJsonValue(power.MaxPowerLifetimeValue) && power.MaxPowerLifetime != 0)
-        {
-            yield return $"{power.FullName}: max_power_lifetime preserved/report-only = {power.MaxPowerLifetime}";
-        }
-
-        if (HasJsonValue(power.MaxPowerLifetimeInGameValue) && power.MaxPowerLifetimeInGame != 0)
-        {
-            yield return $"{power.FullName}: max_power_lifetime_ingame preserved/report-only = {power.MaxPowerLifetimeInGame}";
-        }
-
-        if (power.AllowedBoostSetCats.Count > 0)
-        {
-            yield return $"{power.FullName}: allowed_boostset_cats deferred until enhancement set import = {FormatStringList(power.AllowedBoostSetCats)}";
-        }
-
-        if (HasJsonValue(power.BoostInfo))
-        {
-            yield return $"{power.FullName}: boost_info deferred until boost policy import = {FormatJson(power.BoostInfo)}";
-        }
-
-        if (HasJsonValue(power.ProcAllowedValue))
-        {
-            yield return $"{power.FullName}: proc_allowed preserved/report-only = {FormatJson(power.ProcAllowedValue)}";
-        }
-
-        if (power.ProcsOnlyOnMainTarget)
-        {
-            yield return $"{power.FullName}: procs_only_on_main_target preserved/report-only = true";
-        }
-
-        if (power.ProcIgnoreChainEffect)
-        {
-            yield return $"{power.FullName}: proc_ignore_chain_effect preserved/report-only = true";
-        }
-
-        if (power.ProcIgnoreOverCap)
-        {
-            yield return $"{power.FullName}: proc_ignore_over_cap preserved/report-only = true";
+            AddPowerPolicyDiagnostic(result, power.FullName, entry);
         }
     }
 
@@ -10280,6 +10421,30 @@ public sealed partial class OmniImporter
     {
         result.DeferredPowerFields++;
         result.AddLimited(result.DeferredPowerFieldDetails, detail, 500);
+    }
+
+    private static void AddPowerPolicyDiagnostic(OmniImportReport report, string owner, ImportedPowerPolicyDiagnosticEntry entry)
+    {
+        var detail = ImportedPowerPolicyDiagnostics.FormatEntry(owner, entry);
+        if (entry.Category == ImportedPowerPolicyDiagnosticCategory.AppliedNow)
+        {
+            AddMappedPowerField(report, detail);
+            return;
+        }
+
+        AddDeferredPowerField(report, detail);
+    }
+
+    private static void AddPowerPolicyDiagnostic(OmniApplyResult result, string owner, ImportedPowerPolicyDiagnosticEntry entry)
+    {
+        var detail = ImportedPowerPolicyDiagnostics.FormatEntry(owner, entry);
+        if (entry.Category == ImportedPowerPolicyDiagnosticCategory.AppliedNow)
+        {
+            AddMappedPowerField(result, detail);
+            return;
+        }
+
+        AddDeferredPowerField(result, detail);
     }
 
     private static void AddIgnoredPowerField(

@@ -406,6 +406,67 @@ public static partial class OmniExpressionConverter
             };
         }
 
+        var targetGroup = TargetGroupRegex().Match(normalized);
+        if (targetGroup.Success)
+        {
+            return new AdvancedConditionRow
+            {
+                Link = link,
+                Kind = AdvancedConditionKind.TargetGroup,
+                Subject = "group",
+                Value = targetGroup.Groups[2].Value.Trim('\'', '"'),
+                Operator = targetGroup.Groups[1].Value.Equals("!=", StringComparison.Ordinal) ||
+                           targetGroup.Groups[1].Value.Equals("ne", StringComparison.OrdinalIgnoreCase) ||
+                           negated
+                    ? AdvancedConditionOperator.NotEquals
+                    : AdvancedConditionOperator.Equals,
+                RawExpression = expression,
+                Unsupported = true,
+                EvaluationMode = AdvancedConditionEvaluationMode.RuntimeTargetOnly
+            };
+        }
+
+        var reverseTargetGroup = ReverseTargetGroupRegex().Match(normalized);
+        if (reverseTargetGroup.Success)
+        {
+            return new AdvancedConditionRow
+            {
+                Link = link,
+                Kind = AdvancedConditionKind.TargetGroup,
+                Subject = "group",
+                Value = reverseTargetGroup.Groups[1].Value.Trim('\'', '"'),
+                Operator = reverseTargetGroup.Groups[2].Value.Equals("!=", StringComparison.Ordinal) ||
+                           reverseTargetGroup.Groups[2].Value.Equals("ne", StringComparison.OrdinalIgnoreCase) ||
+                           negated
+                    ? AdvancedConditionOperator.NotEquals
+                    : AdvancedConditionOperator.Equals,
+                RawExpression = expression,
+                Unsupported = true,
+                EvaluationMode = AdvancedConditionEvaluationMode.RuntimeTargetOnly
+            };
+        }
+
+        var infixSelf = InfixSelfTargetRegex().Match(normalized);
+        if (infixSelf.Success)
+        {
+            return new AdvancedConditionRow
+            {
+                Link = link,
+                Kind = AdvancedConditionKind.TargetEntityType,
+                Subject = "self",
+                Value = AdvancedConditionTargetScope.Self.ToString(),
+                TargetScope = AdvancedConditionTargetScope.Self,
+                Operator = infixSelf.Groups[1].Value.Equals("!=", StringComparison.Ordinal) ||
+                           infixSelf.Groups[1].Value.Equals("ne", StringComparison.OrdinalIgnoreCase) ||
+                           negated
+                    ? AdvancedConditionOperator.NotEquals
+                    : AdvancedConditionOperator.Equals,
+                RawExpression = expression,
+                Unsupported = true,
+                EvaluationMode = AdvancedConditionEvaluationMode.RuntimeTargetOnly
+            };
+        }
+
         var self = SelfTargetRegex().Match(normalized);
         if (self.Success)
         {
@@ -1175,6 +1236,15 @@ public static partial class OmniExpressionConverter
 
     [GeneratedRegex(@"^target\.isFriend\?$", RegexOptions.IgnoreCase)]
     private static partial Regex TargetFriendRegex();
+
+    [GeneratedRegex(@"^target>group\s+(eq|==|!=|ne)\s+(.+)$", RegexOptions.IgnoreCase)]
+    private static partial Regex TargetGroupRegex();
+
+    [GeneratedRegex(@"^group\s+target>\s+(.+?)\s+(eq|==|!=|ne)$", RegexOptions.IgnoreCase)]
+    private static partial Regex ReverseTargetGroupRegex();
+
+    [GeneratedRegex(@"^target>entref\s+(eq|==|!=|ne)\s+source>entref$", RegexOptions.IgnoreCase)]
+    private static partial Regex InfixSelfTargetRegex();
 
     [GeneratedRegex(@"^entref\s+target>\s+entref\s+source>\s+(eq|==|!=|ne)$", RegexOptions.IgnoreCase)]
     private static partial Regex SelfTargetRegex();

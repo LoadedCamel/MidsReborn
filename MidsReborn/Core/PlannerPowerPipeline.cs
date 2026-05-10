@@ -19,6 +19,8 @@ internal sealed class PlannerPowerPipeline
     private IPower?[] _preBuffPowers = Array.Empty<IPower?>();
     private Enums.BuffsX _selfBuffs;
     private Enums.BuffsX _selfEnhance;
+    private ActorPowerAssemblyResult? _actorAssembly;
+    private Dictionary<string, float> _chanceModifierCatalog = new(StringComparer.OrdinalIgnoreCase);
     private PlannerCombatContext _combatContext = PlannerCombatContext.Default;
 
     private struct FxIdShort
@@ -43,6 +45,8 @@ internal sealed class PlannerPowerPipeline
     {
         _selfBuffs.Reset();
         _selfEnhance.Reset();
+        _actorAssembly = null;
+        _chanceModifierCatalog = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
         _combatContext = PlannerCombatContext.Default;
         _basePowers = new IPower?[_currentBuild.Powers.Count];
         _assembledBasePowers = new IPower?[_currentBuild.Powers.Count];
@@ -50,12 +54,22 @@ internal sealed class PlannerPowerPipeline
         _mathPowers = new IPower?[_currentBuild.Powers.Count];
         _preBuffPowers = new IPower?[_currentBuild.Powers.Count];
         GBPA_Pass0_InitializePowerArray();
+        _actorAssembly = BuildActorAggregation(CreateActorAggregationContext(
+            buildChanceModifierCatalog: _recipient == null)).ActorAssembly;
+        if (_recipient == null)
+        {
+            _chanceModifierCatalog = new Dictionary<string, float>(
+                _actorAssembly.ChanceModifierCatalog,
+                StringComparer.OrdinalIgnoreCase);
+        }
+
         SyncResult();
     }
 
     public void ExecuteEnhancementBucketPhase()
     {
-        GenerateBuffData(ref _selfEnhance, PlannerBucketPass.Enhancement);
+        _actorAssembly = BuildActorAggregation(CreateActorAggregationContext(buildChanceModifierCatalog: false)).ActorAssembly;
+        _selfEnhance = _actorAssembly.SelfEnhanceBuckets;
         SyncResult();
     }
 
@@ -88,7 +102,8 @@ internal sealed class PlannerPowerPipeline
 
     public void ExecuteSelfBuffBucketPhase()
     {
-        GenerateBuffData(ref _selfBuffs, PlannerBucketPass.SelfBuff);
+        _actorAssembly = BuildActorAggregation(CreateActorAggregationContext(buildChanceModifierCatalog: false)).ActorAssembly;
+        _selfBuffs = _actorAssembly.SelfBuffBuckets;
         _combatContext = DatabaseAPI.GetPlannerRuleset()
             .ResolveCombatContext(MidsContext.Config);
         SyncResult();
@@ -109,12 +124,104 @@ internal sealed class PlannerPowerPipeline
             RemoveExactDuplicateAbsorbedEffects(ref _buffedPowers[index]);
         }
 
+        _actorAssembly = BuildActorAggregation(CreateActorAggregationContext(buildChanceModifierCatalog: false)).ActorAssembly;
         SyncResult();
+    }
+
+    public void ExecuteFinalizationPhase()
+    {
+        if (_recipient != null)
+        {
+            return;
+        }
+
+        var aggregation = BuildActorAggregation(CreateActorAggregationContext(
+            buildChanceModifierCatalog: false,
+            includeProcStateSupplemental: true),
+            finalize: true);
+        _actorAssembly = aggregation.ActorAssembly;
+        _selfEnhance = aggregation.FinalSelfEnhanceBuckets;
+        _selfBuffs = aggregation.FinalSelfBuffBuckets;
+        SyncResult();
+
+        var powerSnapshots = CalculationSnapshotFactory.CreatePowerSnapshots(
+            _basePowers,
+            _assembledBasePowers,
+            _mathPowers,
+            _preBuffPowers,
+            _buffedPowers);
+        var totalsSnapshot = aggregation.Totals!;
+        var actorSnapshot = CalculationSnapshotFactory.CreateActorSnapshot(
+            CalculationActorKind.Player,
+            _archetype?.ClassName ?? DatabaseAPI.ResolveClassName(_archetype),
+            _archetype,
+            _mathPowers.OfType<IPower>().ToArray(),
+            _buffedPowers.OfType<IPower>().ToArray(),
+            _selfEnhance,
+            _selfBuffs,
+            totalsSnapshot,
+            _chanceModifierCatalog,
+            aggregation.Contributions,
+            powerSnapshots,
+            aggregation.Aggregation);
+
+        Result.FinalTotalsSnapshot = totalsSnapshot;
+        Result.ActorSnapshot = actorSnapshot;
+        Result.CalculationSnapshot = CalculationSnapshotFactory.CreateBuildSnapshot(
+            _combatContext,
+            actorSnapshot,
+            powerSnapshots);
     }
 
     public IPower? AssemblePowerEntry(int nIDPower, int hIDX, int stackingOverride = -1)
     {
         return GBPA_SubPass0_AssemblePowerEntry(nIDPower, hIDX, stackingOverride);
+    }
+
+    private List<IPower> CollectActiveProcStatePowers(IReadOnlyList<IPower?> sourcePowers)
+    {
+        var activeProcStatePowers = new List<IPower>();
+        for (var index = 0; index < sourcePowers.Count && index < _currentBuild.Powers.Count; index++)
+        {
+            var sourcePower = sourcePowers[index];
+            var powerEntry = _currentBuild.Powers[index];
+            if (sourcePower == null || powerEntry == null || powerEntry.ProcInclude || powerEntry.StatInclude)
+            {
+                continue;
+            }
+
+            var procStateEffects = sourcePower.Effects
+                .Where(IsActiveProcStateEffect)
+                .Select(effect => (IEffect)effect.Clone())
+                .ToArray();
+            if (procStateEffects.Length == 0)
+            {
+                continue;
+            }
+
+            IPower clone = new Power(sourcePower);
+            clone.Effects = procStateEffects;
+            clone.PowerType = Enums.ePowerType.Auto_;
+            clone.HasGrantPowerEffect = false;
+            activeProcStatePowers.Add(clone);
+        }
+
+        return activeProcStatePowers;
+    }
+
+    private static bool IsActiveProcStateEffect(IEffect effect)
+    {
+        if (!effect.isEnhancementEffect || !effect.IsFromProc)
+        {
+            return false;
+        }
+
+        if (effect.EffectType == Enums.eEffectType.GrantPower || effect.ToWho == Enums.eToWho.Target)
+        {
+            return false;
+        }
+
+        return effect.ToWho == Enums.eToWho.Self || effect.ToWho == Enums.eToWho.All;
     }
 
     private void SyncResult()
@@ -127,6 +234,10 @@ internal sealed class PlannerPowerPipeline
         Result.SelfEnhanceBuckets = _selfEnhance;
         Result.SelfBuffBuckets = _selfBuffs;
         Result.CombatContext = _combatContext;
+        Result.ActorAssembly = _actorAssembly;
+        Result.FinalTotalsSnapshot = null;
+        Result.ActorSnapshot = null;
+        Result.CalculationSnapshot = null;
     }
 
     private bool GBPA_Pass0_InitializePowerArray()
@@ -228,9 +339,10 @@ internal sealed class PlannerPowerPipeline
     {
         power = PlannerEffectResolver.ApplyRedirect(power);
         GBPA_AddEnhFX(ref power, hIDX);
-        power.AbsorbPetEffects(hIDX, stackingOverride, pseudoOnly: true);
-        PlannerEffectResolver.ExpandEffects(power,
-            DatabaseAPI.GetPlannerRuleset().CreateAssemblyExpansionContext(hIDX, stackingOverride));
+        power = ResolveAssemblyEffects(power, hIDX, stackingOverride,
+            allowPseudoPetAbsorption: true,
+            allowGrantExpansion: true,
+            allowExecuteExpansion: true);
         GBPA_AddSubPowerEffects(ref power, hIDX);
 
         return power;
@@ -246,13 +358,10 @@ internal sealed class PlannerPowerPipeline
         }
 
         GBPA_AddEnhFX(ref power, hIDX);
-
-        if (plannerRuleset.AllowPseudoPetAbsorptionInAssembly && !power.AbsorbedPetEffects)
-        {
-            power.AbsorbPetEffects(hIDX, stackingOverride, pseudoOnly: true);
-        }
-
-        PlannerEffectResolver.ExpandEffects(power, plannerRuleset.CreateAssemblyExpansionContext(hIDX, stackingOverride));
+        power = ResolveAssemblyEffects(power, hIDX, stackingOverride,
+            plannerRuleset.AllowPseudoPetAbsorptionInAssembly,
+            plannerRuleset.AllowGrantPowerExpansionInAssembly,
+            plannerRuleset.AllowExecutePowerExpansionInAssembly);
 
         if (plannerRuleset.AllowSubPowerEffectsInAssembly && !power.AppliedSubPowers)
         {
@@ -263,103 +372,30 @@ internal sealed class PlannerPowerPipeline
         return power;
     }
 
+    private static IPower ResolveAssemblyEffects(
+        IPower power,
+        int historyIndex,
+        int stackingOverride,
+        bool allowPseudoPetAbsorption,
+        bool allowGrantExpansion,
+        bool allowExecuteExpansion)
+    {
+        return PlannerEffectResolver.ResolvePower(power, new PlannerEffectResolutionContext(useRulesetDefaults: false)
+        {
+            HistoryIndex = historyIndex,
+            StackingOverride = stackingOverride,
+            ApplyRedirects = false,
+            AbsorbPetEffects = allowPseudoPetAbsorption,
+            ExpandGrantPowers = allowGrantExpansion,
+            ExpandExecutePowers = allowExecuteExpansion,
+            IncludeTrace = false,
+            MaxExpansionDepth = PlannerEffectResolutionContext.DefaultMaxExpansionDepth
+        }).ResolvedPower;
+    }
+
     private void GBPA_AddEnhFX(ref IPower? power, int index)
     {
-        if (MidsContext.Config is null || MidsContext.Config.I9.IgnoreEnhFX || index < 0 || power is null)
-        {
-            return;
-        }
-
-        var currentPowerEntry = _currentBuild.Powers[index];
-        if (currentPowerEntry?.Power == null)
-        {
-            return;
-        }
-
-        var newEffects = new List<IEffect>();
-        foreach (var slotEntry in currentPowerEntry.Slots.Where(slot => slot.Enhancement.Enh >= 0))
-        {
-            var enhancement = DatabaseAPI.Database.Enhancements[slotEntry.Enhancement.Enh];
-            var enhancementPower = enhancement.GetPower();
-            if (enhancementPower == null)
-            {
-                continue;
-            }
-
-            if (currentPowerEntry.ProcInclude & enhancement.IsProc)
-            {
-                continue;
-            }
-
-            var enhancementSet = enhancement.GetEnhancementSet();
-            if (enhancementSet is null)
-            {
-                continue;
-            }
-
-            foreach (var enhancementEffect in enhancementPower.Effects)
-            {
-                var shouldAddEffect = false;
-                if (enhancementEffect.AffectsPetsOnly() && power.IsSummonPower)
-                {
-                    var uidEntity = power.Effects.FirstOrDefault(x => x.EffectType == Enums.eEffectType.EntCreate)?.Summon;
-                    if (uidEntity != null)
-                    {
-                        var summon = DatabaseAPI.NidFromUidEntity(uidEntity);
-                        var entitySetName = DatabaseAPI.Database.Entities[summon].PowersetFullName.FirstOrDefault();
-                        var entitySet = DatabaseAPI.GetPowersetByFullname(entitySetName);
-                        if (entitySet != null)
-                        {
-                            foreach (var entityPower in entitySet.Powers)
-                            {
-                                if (entityPower == null)
-                                {
-                                    continue;
-                                }
-
-                                shouldAddEffect = entityPower.Effects.Any(e => e.EffectType == enhancementEffect.EffectType);
-                                if (!shouldAddEffect)
-                                {
-                                    continue;
-                                }
-
-                                AddClonedEffectToList(newEffects, enhancementEffect, enhancement.IsProc);
-                                if (enhancementEffect.EffectType == Enums.eEffectType.GrantPower)
-                                {
-                                    entityPower.HasGrantPowerEffect = true;
-                                }
-                            }
-                        }
-                    }
-                }
-                else
-                {
-                    var enhancementIndex = DatabaseAPI.TryGetSetRawMemberPositionForEnhancement(slotEntry.Enhancement.Enh, out _, out var rawMemberPosition)
-                        ? rawMemberPosition
-                        : -1;
-                    shouldAddEffect = enhancementIndex >= 0 &&
-                                      enhancementSet.SpecialBonus[enhancementIndex].Index.Length <= 0 &&
-                                      (enhancement.Effect.All(e => e.Mode != Enums.eEffMode.Enhancement) ||
-                                       !Regex.IsMatch(enhancementEffect.ModifierTable, @"^(Melee|Ranged)_Boosts_"));
-                }
-
-                if (!shouldAddEffect)
-                {
-                    continue;
-                }
-
-                AddClonedEffectToList(newEffects, enhancementEffect, enhancement.IsProc);
-                if (enhancementEffect.EffectType == Enums.eEffectType.GrantPower)
-                {
-                    power.HasGrantPowerEffect = true;
-                }
-            }
-        }
-
-        if (newEffects.Count > 0)
-        {
-            power.Effects = power.Effects.Concat(newEffects).ToArray();
-        }
+        PlannerPowerAssembly.AddEnhancementEffects(_currentBuild, ref power, index);
     }
 
     private static void AddClonedEffectToList(ICollection<IEffect> effectsList, IEffect enhancementEffect, bool isProc, bool isEnhancementEffect = true)
@@ -380,39 +416,7 @@ internal sealed class PlannerPowerPipeline
 
     private bool GBPA_AddSubPowerEffects(ref IPower power, int hIDX)
     {
-        if (power.NIDSubPower.Length <= 0 || hIDX < 0)
-        {
-            return false;
-        }
-
-        var length = power.Effects.Length;
-        var effectCount = 0;
-        for (var index = 0; index < _currentBuild.Powers[hIDX].SubPowers.Length; index++)
-        {
-            if ((_currentBuild.Powers[hIDX].SubPowers[index].nIDPower > -1) &
-                _currentBuild.Powers[hIDX].SubPowers[index].StatInclude)
-            {
-                effectCount += DatabaseAPI.Database.Power[power.NIDSubPower[index]].Effects.Length;
-            }
-        }
-
-        var effectArray = new IEffect[power.Effects.Length + effectCount];
-        Array.Copy(power.Effects, effectArray, power.Effects.Length);
-        power.Effects = effectArray;
-        foreach (var subPower in _currentBuild.Powers[hIDX].SubPowers.Where(sp => sp is { nIDPower: > -1, StatInclude: true }))
-        {
-            for (var index = 0; index < DatabaseAPI.Database.Power[subPower.nIDPower].Effects.Length; index++)
-            {
-                power.Effects[length] = (IEffect)DatabaseAPI.Database.Power[subPower.nIDPower].Effects[index].Clone();
-                power.Effects[length].Absorbed_EffectID = index;
-                power.Effects[length].Absorbed_Effect = true;
-                power.Effects[length].Absorbed_Power_nID = subPower.nIDPower;
-                power.Effects[length].Absorbed_PowerType = DatabaseAPI.Database.Power[subPower.nIDPower].PowerType;
-                length++;
-            }
-        }
-
-        return true;
+        return PlannerPowerAssembly.AddSubPowerEffects(_currentBuild, ref power, hIDX);
     }
 
     private void GBPA_ApplyArchetypeCaps(ref IPower powerMath)
@@ -943,11 +947,11 @@ internal sealed class PlannerPowerPipeline
 
     private static bool GBPA_Pass2_ApplyED(ref IPower powerMath)
     {
-        powerMath.Accuracy = Enhancement.ApplyED(Enhancement.GetSchedule(Enums.eEnhance.Accuracy), powerMath.Accuracy);
-        powerMath.EndCost = Enhancement.ApplyED(Enhancement.GetSchedule(Enums.eEnhance.EnduranceDiscount), powerMath.EndCost);
-        powerMath.InterruptTime = Enhancement.ApplyED(Enhancement.GetSchedule(Enums.eEnhance.Interrupt), powerMath.InterruptTime);
-        powerMath.Range = Enhancement.ApplyED(Enhancement.GetSchedule(Enums.eEnhance.Range), powerMath.Range);
-        powerMath.RechargeTime = Enhancement.ApplyED(Enhancement.GetSchedule(Enums.eEnhance.RechargeTime), powerMath.RechargeTime);
+        powerMath.Accuracy = Enhancement.ApplyED(Enums.eEnhance.Accuracy, powerMath.Accuracy);
+        powerMath.EndCost = Enhancement.ApplyED(Enums.eEnhance.EnduranceDiscount, powerMath.EndCost);
+        powerMath.InterruptTime = Enhancement.ApplyED(Enums.eEnhance.Interrupt, powerMath.InterruptTime);
+        powerMath.Range = Enhancement.ApplyED(Enums.eEnhance.Range, powerMath.Range);
+        powerMath.RechargeTime = Enhancement.ApplyED(Enums.eEnhance.RechargeTime, powerMath.RechargeTime);
         foreach (var effect in powerMath.Effects)
         {
             if (effect.isEnhancementEffect)
@@ -987,17 +991,23 @@ internal sealed class PlannerPowerPipeline
                 var scheduleEnhance = !specialAccuracy
                     ? (Enums.eEnhance)Enums.StringToFlaggedEnum(Enum.GetName(effectType.GetType(), effectType), enhanceType)
                     : Enums.eEnhance.Accuracy;
+                var diversificationMode = effect.buffMode switch
+                {
+                    Enums.eBuffMode.Buff => Enums.eBuffDebuff.BuffOnly,
+                    Enums.eBuffMode.Debuff => Enums.eBuffDebuff.DeBuffOnly,
+                    _ => Enums.eBuffDebuff.Any
+                };
 
                 if (effectType == Enums.eEffectType.Mez)
                 {
-                    effect.Math_Mag = Enhancement.ApplyED(Enhancement.GetSchedule(scheduleEnhance, (int)effect.MezType), effect.Math_Mag);
-                    effect.Math_Duration = Enhancement.ApplyED(Enhancement.GetSchedule(scheduleEnhance, (int)effect.MezType), effect.Math_Duration);
+                    effect.Math_Mag = Enhancement.ApplyED(scheduleEnhance, effect.Math_Mag, diversificationMode, (int)effect.MezType);
+                    effect.Math_Duration = Enhancement.ApplyED(scheduleEnhance, effect.Math_Duration, diversificationMode, (int)effect.MezType);
                 }
                 else
                 {
                     effect.Math_Mag = !(effectType == Enums.eEffectType.ResEffect && effect.ETModifies == Enums.eEffectType.Defense)
-                        ? Enhancement.ApplyED(Enhancement.GetSchedule(scheduleEnhance), effect.Math_Mag)
-                        : Enhancement.ApplyED(Enhancement.GetSchedule(Enums.eEnhance.Defense), effect.Math_Mag);
+                        ? Enhancement.ApplyED(scheduleEnhance, effect.Math_Mag, diversificationMode)
+                        : Enhancement.ApplyED(Enums.eEnhance.Defense, effect.Math_Mag, diversificationMode);
                 }
             }
         }
@@ -1252,10 +1262,18 @@ internal sealed class PlannerPowerPipeline
         return true;
     }
 
-    private void GenerateBuffData(ref Enums.BuffsX buckets, PlannerBucketPass pass)
+    private PlannerActorAggregationResult BuildActorAggregation(PlannerActorAggregationContext context, bool finalize = false)
     {
-        var enhancementPass = pass == PlannerBucketPass.Enhancement;
+        return finalize
+            ? PlannerActorAggregationPhase.Finalize(context)
+            : PlannerActorAggregationPhase.Assemble(context);
+    }
+
+    private PlannerActorAggregationContext CreateActorAggregationContext(bool buildChanceModifierCatalog, bool includeProcStateSupplemental = false)
+    {
         var plannerRuleset = DatabaseAPI.GetPlannerRuleset();
+        var includedMathPowers = new List<IPower>();
+        var includedBuffedPowers = new List<IPower>();
         for (var index = 0; index < _currentBuild.Powers.Count; index++)
         {
             var powerEntry = _currentBuild.Powers[index];
@@ -1270,52 +1288,73 @@ internal sealed class PlannerPowerPipeline
                 continue;
             }
 
-            if (enhancementPass)
+            if (_mathPowers[index] != null)
             {
-                if (_mathPowers[index] == null)
-                {
-                    continue;
-                }
-
-                DatabaseAPI.GetPlannerRuleset().AccumulateBuckets(_mathPowers[index]!, ref buckets, pass);
+                includedMathPowers.Add(_mathPowers[index]!);
             }
-            else
-            {
-                if (_buffedPowers[index] == null)
-                {
-                    continue;
-                }
 
-                DatabaseAPI.GetPlannerRuleset().AccumulateBuckets(_buffedPowers[index]!, ref buckets, pass);
+            if (_buffedPowers[index] != null)
+            {
+                includedBuffedPowers.Add(_buffedPowers[index]!);
             }
         }
 
         var setBonusPower = _recipient == null
             ? _currentBuild.SetBonusVirtualPower
             : _currentBuild.GetSetBonusVirtualPower(_recipient);
+
+        var enhancementExternalPowers = new List<IPower>();
+        var selfBuffExternalPowers = new List<IPower>();
         if (setBonusPower != null)
         {
-            DatabaseAPI.GetPlannerRuleset().AccumulateBuckets(setBonusPower, ref buckets, pass);
+            enhancementExternalPowers.Add(setBonusPower);
+            selfBuffExternalPowers.Add(setBonusPower);
         }
 
-        if (!plannerRuleset.IncludePvpResistanceBonusInBuckets(pass))
+        if (plannerRuleset.IncludePvpResistanceBonusInBuckets(PlannerBucketPass.Enhancement) ||
+            plannerRuleset.IncludePvpResistanceBonusInBuckets(PlannerBucketPass.SelfBuff))
         {
-            return;
+            var pvpResistIndex = DatabaseAPI.NidFromUidPower("Temporary_Powers.Temporary_Powers.PVP_Resist_Bonus");
+            if (pvpResistIndex > -1)
+            {
+                IPower pvpResistPower = new Power(DatabaseAPI.Database.Power[pvpResistIndex]);
+                if (_recipient != null)
+                {
+                    pvpResistPower = OmniPowerRouting.CreatePlannerPower(pvpResistPower, _recipient) ?? new Power();
+                }
+
+                if (plannerRuleset.IncludePvpResistanceBonusInBuckets(PlannerBucketPass.Enhancement))
+                {
+                    enhancementExternalPowers.Add(pvpResistPower);
+                }
+
+                if (plannerRuleset.IncludePvpResistanceBonusInBuckets(PlannerBucketPass.SelfBuff))
+                {
+                    selfBuffExternalPowers.Add(pvpResistPower);
+                }
+            }
         }
 
-        var pvpResistIndex = DatabaseAPI.NidFromUidPower("Temporary_Powers.Temporary_Powers.PVP_Resist_Bonus");
-        if (pvpResistIndex <= -1)
+        return new PlannerActorAggregationContext
         {
-            return;
-        }
-
-        IPower pvpResistPower = new Power(DatabaseAPI.Database.Power[pvpResistIndex]);
-        if (_recipient != null)
-        {
-            pvpResistPower = OmniPowerRouting.CreatePlannerPower(pvpResistPower, _recipient) ?? new Power();
-        }
-
-        DatabaseAPI.GetPlannerRuleset().AccumulateBuckets(pvpResistPower, ref buckets, pass);
+            ClassName = _recipient?.ClassName ?? DatabaseAPI.ResolveClassName(_archetype),
+            Archetype = _recipient == null ? _archetype : DatabaseAPI.GetArchetypeByClassName(_recipient.ClassName),
+            MathPowers = _mathPowers.OfType<IPower>().ToArray(),
+            BuffedPowers = _buffedPowers.OfType<IPower>().ToArray(),
+            IncludedMathPowers = includedMathPowers,
+            IncludedBuffedPowers = includedBuffedPowers,
+            EnhancementExternalPowers = enhancementExternalPowers,
+            SelfBuffExternalPowers = selfBuffExternalPowers,
+            ChanceModifierSetBonusPower = setBonusPower,
+            BuildChanceModifierCatalog = buildChanceModifierCatalog,
+            ApplyPvpDiminishingReturns = _recipient == null,
+            SupplementalEnhancementSourcePowers = includeProcStateSupplemental
+                ? CollectActiveProcStatePowers(_mathPowers)
+                : Array.Empty<IPower>(),
+            SupplementalSelfBuffSourcePowers = includeProcStateSupplemental
+                ? CollectActiveProcStatePowers(_buffedPowers)
+                : Array.Empty<IPower>()
+        };
     }
 
     private static void RemoveExactDuplicateAbsorbedEffects(ref IPower? power)
@@ -1325,94 +1364,28 @@ internal sealed class PlannerPowerPipeline
             return;
         }
 
-        var filteredEffects = new List<IEffect>(power.Effects.Length);
-        var absorbedKeys = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-        foreach (var effect in power.Effects)
-        {
-            if (!effect.Absorbed_Effect)
-            {
-                filteredEffects.Add(effect);
-                continue;
-            }
-
-            var key = GetExactAbsorbedEffectKey(effect);
-            if (!absorbedKeys.Add(key))
-            {
-                continue;
-            }
-
-            filteredEffects.Add(effect);
-        }
-
-        if (filteredEffects.Count == power.Effects.Length)
+        var absorbedEffects = power.Effects
+            .Where(effect => effect.Absorbed_Effect)
+            .ToArray();
+        if (absorbedEffects.Length <= 1)
         {
             return;
         }
 
-        power.Effects = filteredEffects.ToArray();
+        var reducedAbsorbed = PlannerStackRules.ReducePlannerVisibleCopies(absorbedEffects);
+        if (reducedAbsorbed.Count == absorbedEffects.Length)
+        {
+            return;
+        }
+
+        var reducedSet = new HashSet<IEffect>(reducedAbsorbed);
+        power.Effects = power.Effects
+            .Where(effect => !effect.Absorbed_Effect || reducedSet.Remove(effect))
+            .ToArray();
         foreach (var effect in power.Effects)
         {
             effect.SetPower(power);
         }
-    }
-
-    private static string GetExactAbsorbedEffectKey(IEffect effect)
-    {
-        static string NormalizeConditionSet(AdvancedConditionSet? conditions)
-        {
-            if (conditions == null || conditions.Rows.Count == 0)
-            {
-                return string.Empty;
-            }
-
-            return string.Join(";",
-                conditions.Rows
-                    .Select(row => $"{row.EvaluationMode}|{row.Kind}|{row.Link}|{row.Negated}|{AdvancedConditionCompiler.Compile(row)}")
-                    .OrderBy(value => value, StringComparer.OrdinalIgnoreCase));
-        }
-
-        var tags = string.Join(",",
-            effect.EffectTags
-                .Where(tag => !string.IsNullOrWhiteSpace(tag))
-                .OrderBy(tag => tag, StringComparer.OrdinalIgnoreCase));
-
-        var recurrence = effect.PseudoPetRecurrence is { IsValid: true } info
-            ? $"{info.EntityName}|{info.PetPowerName}|{info.SourceUsageTime:0.####}|{info.SourceActivatePeriod:0.####}|{info.EntCreateDuration:0.####}|{info.PetTickInterval:0.####}|{info.SpawnCount}|{info.TicksPerSpawn}|{info.TotalExpectedTicks}"
-            : string.Empty;
-
-        return string.Join("|",
-            effect.EffectType,
-            effect.ToWho,
-            effect.PvMode,
-            effect.AttribType,
-            effect.Aspect,
-            effect.DamageType,
-            effect.MezType,
-            effect.ModifierTable ?? string.Empty,
-            effect.Scale.ToString("0.####", CultureInfo.InvariantCulture),
-            effect.nMagnitude.ToString("0.####", CultureInfo.InvariantCulture),
-            effect.Math_Mag.ToString("0.####", CultureInfo.InvariantCulture),
-            effect.nDuration.ToString("0.####", CultureInfo.InvariantCulture),
-            effect.Math_Duration.ToString("0.####", CultureInfo.InvariantCulture),
-            effect.BaseProbability.ToString("0.####", CultureInfo.InvariantCulture),
-            effect.ProcsPerMinute.ToString("0.####", CultureInfo.InvariantCulture),
-            effect.DelayedTime.ToString("0.####", CultureInfo.InvariantCulture),
-            effect.Ticks.ToString("0.####", CultureInfo.InvariantCulture),
-            effect.Absorbed_Interval.ToString("0.####", CultureInfo.InvariantCulture),
-            effect.EffectClass,
-            effect.Stacking,
-            effect.Absorbed_EffectID,
-            effect.Absorbed_Power_nID,
-            effect.Absorbed_Class_nID,
-            effect.OmniSource ?? string.Empty,
-            effect.EffectId ?? string.Empty,
-            tags,
-            recurrence,
-            NormalizeConditionSet(effect.AdvancedConditions),
-            effect.Summon ?? string.Empty,
-            effect.Override ?? string.Empty,
-            effect.Reward ?? string.Empty,
-            effect.ModeName ?? string.Empty);
     }
 
     private static bool PowerUsesEnemyCombatContext(IPower? power)

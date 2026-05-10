@@ -341,15 +341,18 @@ namespace Mids_Reborn.UI.Controls
                 foreach (var item in _items)
                 {
                     using var font = new Font(Font, (FontStyle)item.FontStyle);
+                    int contentIndent = GetItemContentIndent(item);
+                    int textWidth = Math.Max(1, fullTextWidth - contentIndent);
 
                     // Wrap into a temp string using the *probe* width
                     // so measurement matches the draw behavior. We don't assign it yet.
-                    string tempWrapped = WrapText(item.Text, item.State, item.FontStyle, fullTextWidth);
+                    string tempWrapped = WrapText(item.Text, item.State, item.FontStyle, textWidth);
 
                     // Measure height with word-wrap semantics (no padding to match DrawText usage)
-                    Size proposed = new Size(fullTextWidth, int.MaxValue);
+                    Size proposed = new Size(textWidth, int.MaxValue);
                     TextFormatFlags flags = TextFormatFlags.WordBreak | TextFormatFlags.NoPadding;
                     int measured = TextRenderer.MeasureText(tempWrapped, font, proposed, flags).Height;
+                    measured = Math.Max(measured, GetLeadingImageSize(item));
 
                     totalHeightNoScroll += measured + (padY * 2);
                 }
@@ -375,13 +378,17 @@ namespace Mids_Reborn.UI.Controls
             int sumHeights = 0;
             foreach (var item in _items)
             {
+                int contentIndent = GetItemContentIndent(item);
+                int textWidth = Math.Max(1, _textArea.Width - contentIndent);
+
                 // Wrap using the final width that *reserves* space for the scrollbar.
-                item.WrappedText = WrapText(item.Text, item.State, item.FontStyle, _textArea.Width);
+                item.WrappedText = WrapText(item.Text, item.State, item.FontStyle, textWidth);
 
                 using var font = new Font(Font, (FontStyle)item.FontStyle);
-                Size proposed = new Size(_textArea.Width, int.MaxValue);
+                Size proposed = new Size(textWidth, int.MaxValue);
                 TextFormatFlags flags = TextFormatFlags.WordBreak | TextFormatFlags.NoPadding;
                 int measured = TextRenderer.MeasureText(item.WrappedText, font, proposed, flags).Height;
+                measured = Math.Max(measured, GetLeadingImageSize(item));
 
                 // Store height (includes vertical padding)
                 item.CalculatedHeight = measured + (padY * 2);
@@ -463,18 +470,76 @@ namespace Mids_Reborn.UI.Controls
                     }
 
                     using var font = new Font(Font, (FontStyle)item.FontStyle);
+                    DrawLeadingImage(g, item, itemRect);
+                    var textRect = GetTextRect(itemRect, item);
 
                     TextRenderer.DrawText(
                         g,
                         item.WrappedText,
                         font,
-                        itemRect,
+                        textRect,
                         _stateColors[(int)item.State],
                         itemFlags
                     );
                 }
                 currentY += item.CalculatedHeight + DpiScale(_lineSpacing);
             }
+        }
+
+        private int GetLeadingImageSize(MidsListViewItem item)
+        {
+            return item.LeadingImage == null
+                ? 0
+                : Math.Max(DpiScale(18), Font.Height + DpiScale(2));
+        }
+
+        private int GetLeadingImageGap(MidsListViewItem item)
+        {
+            return item.LeadingImage == null ? 0 : DpiScale(6);
+        }
+
+        private int GetItemContentIndent(MidsListViewItem item)
+        {
+            return GetLeadingImageSize(item) + GetLeadingImageGap(item);
+        }
+
+        private Rectangle GetLeadingImageBounds(Rectangle itemRect, MidsListViewItem item)
+        {
+            int iconSize = GetLeadingImageSize(item);
+            if (iconSize <= 0)
+            {
+                return Rectangle.Empty;
+            }
+
+            int iconX = itemRect.Left;
+            int iconY = itemRect.Top + Math.Max(0, (itemRect.Height - iconSize) / 2);
+            return new Rectangle(iconX, iconY, iconSize, iconSize);
+        }
+
+        private Rectangle GetTextRect(Rectangle itemRect, MidsListViewItem item)
+        {
+            int indent = GetItemContentIndent(item);
+            return new Rectangle(
+                itemRect.Left + indent,
+                itemRect.Top,
+                Math.Max(0, itemRect.Width - indent),
+                itemRect.Height);
+        }
+
+        private void DrawLeadingImage(Graphics g, MidsListViewItem item, Rectangle itemRect)
+        {
+            if (item.LeadingImage == null)
+            {
+                return;
+            }
+
+            var imageBounds = GetLeadingImageBounds(itemRect, item);
+            if (imageBounds == Rectangle.Empty)
+            {
+                return;
+            }
+
+            g.DrawImage(item.LeadingImage, imageBounds);
         }
 
         private void DrawScrollBar(Graphics g)

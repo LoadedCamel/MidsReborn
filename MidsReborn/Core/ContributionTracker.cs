@@ -47,29 +47,46 @@ namespace Mids_Reborn.Core
         Enums.eAspect? Aspect);
 
     /// <summary>
-    /// Static, process-wide tracker (singleton) for accumulating per-source contributions
-    /// during a single <see cref="Toon.GenerateBuffedPowerArray"/> build.
+    /// Compatibility adapter for legacy UI surfaces that still read the historical tracker shape.
+    /// The planner snapshot/result model is the source of truth.
     /// </summary>
     public static class ContributionTracker
     {
         private static readonly object _gate = new();
         private static Dictionary<ContributionKey, List<Contribution>> _byKey = new();
+        private static CalculationContributionSnapshot? _snapshot;
         private static WeakReference<Character>? _character;
 
         /// <summary>
-        /// Clears previous contributions and associates the tracker with the current character.
-        /// Call once at the start of a build.
+        /// Clears any previously adapted contribution state for legacy callers.
+        /// New planner code should prefer snapshot/result data over tracker lifecycle APIs.
         /// </summary>
         public static void BeginBuild(Character? c)
         {
             lock (_gate)
             {
                 _byKey = new Dictionary<ContributionKey, List<Contribution>>(128);
+                _snapshot = null;
                 _character = c is null ? null : new WeakReference<Character>(c);
             }
         }
 
-        /// <summary>Record a contribution into a specific bucket/index.</summary>
+        /// <summary>
+        /// Compatibility bridge for UI paths that still read from the tracker shape.
+        /// The planner snapshot/result model is the source of truth.
+        /// </summary>
+        internal static void UseSnapshot(CalculationContributionSnapshot? snapshot)
+        {
+            lock (_gate)
+            {
+                _snapshot = snapshot;
+            }
+        }
+
+        /// <summary>
+        /// Legacy write surface retained for compatibility. Active planner flows should prefer
+        /// building <see cref="CalculationContributionSnapshot"/> records instead.
+        /// </summary>
         public static void Add(
             ContributionBucket bucket,
             int index,
@@ -140,6 +157,23 @@ namespace Mids_Reborn.Core
         {
             lock (_gate)
             {
+                if (_snapshot != null)
+                {
+                    return _snapshot.GetBucketRecords(bucket, index)
+                        .Where(record => record.Key.HasValue)
+                        .Select(record => new Contribution(
+                            record.Key!.Value,
+                            record.Value,
+                            record.Channel,
+                            record.Source,
+                            record.EffectType,
+                            record.ETModifies,
+                            record.DamageType,
+                            record.MezType,
+                            record.Aspect))
+                        .ToArray();
+                }
+
                 return _byKey.TryGetValue(new ContributionKey(bucket, index), out var list)
                     ? list.ToArray()
                     : Array.Empty<Contribution>();
@@ -150,6 +184,14 @@ namespace Mids_Reborn.Core
         public static IEnumerable<(ContributionSource Source, ContributionChannel Channel, double Total)>
             GetSummed(ContributionBucket bucket, int index)
         {
+            lock (_gate)
+            {
+                if (_snapshot != null)
+                {
+                    return _snapshot.GetSummed(bucket, index).ToArray();
+                }
+            }
+
             var list = Get(bucket, index);
             return list.GroupBy(c => (c.Source, c.Channel))
                        .Select(g => (g.Key.Source, g.Key.Channel, g.Sum(x => x.Value)));

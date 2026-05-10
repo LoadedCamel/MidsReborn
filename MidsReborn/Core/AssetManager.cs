@@ -60,6 +60,7 @@ namespace Mids_Reborn.Core
         public static Dictionary<int, ExtendedBitmap> Archetypes { get; private set; } = [];
         public static Dictionary<int, ExtendedBitmap> Origins { get; private set; } = [];
         public static Dictionary<int, ExtendedBitmap> Powersets { get; private set; } = [];
+        private static Dictionary<string, ExtendedBitmap> NamedPowerImages { get; } = new(StringComparer.OrdinalIgnoreCase);
         private static Dictionary<string, ExtendedBitmap> NamedEnhancementImages { get; } = new(StringComparer.OrdinalIgnoreCase);
         private static Dictionary<string, ExtendedBitmap> NamedOverlayImages { get; } = new(StringComparer.OrdinalIgnoreCase);
         private static List<ExtendedBitmap> RetiredPowersets { get; } = [];
@@ -205,6 +206,7 @@ namespace Mids_Reborn.Core
             allImages.AddRange(Archetypes.Values);
             allImages.AddRange(Origins.Values);
             allImages.AddRange(Powersets.Values);
+            allImages.AddRange(NamedPowerImages.Values);
             allImages.AddRange(NamedEnhancementImages.Values);
             allImages.AddRange(NamedOverlayImages.Values);
             allImages.AddRange(RetiredPowersets);
@@ -232,6 +234,7 @@ namespace Mids_Reborn.Core
             Archetypes.Clear();
             Origins.Clear();
             Powersets.Clear();
+            NamedPowerImages.Clear();
             NamedEnhancementImages.Clear();
             NamedOverlayImages.Clear();
             RetiredPowersets.Clear();
@@ -551,6 +554,19 @@ namespace Mids_Reborn.Core
             return extendedBitmap ?? UnknownIcon;
         }
 
+        public static ExtendedBitmap GetPowerImage(IPower? power)
+        {
+            return TryGetPowerBitmap(power, out var powerImage)
+                ? powerImage ?? UnknownIcon
+                : UnknownIcon;
+        }
+
+        public static bool TryGetPowerBitmap(IPower? power, out ExtendedBitmap powerImage)
+        {
+            powerImage = null;
+            return power != null && TryGetNamedPowerBitmap(power.IconName, out powerImage);
+        }
+
         public static string GetEnhancementsPath()
         {
             return Path.Combine(AppDataPaths.BaseAssetsPath, "Enhancements");
@@ -559,6 +575,35 @@ namespace Mids_Reborn.Core
         public static string GetDbEnhancementsPath()
         {
             return Path.Combine(MidsContext.Config.DataPath, "Assets", "Enhancements");
+        }
+
+        public static bool TryGetNamedPowerBitmap(string? imageName, out ExtendedBitmap powerImage)
+        {
+            powerImage = null;
+            if (string.IsNullOrWhiteSpace(imageName))
+            {
+                return false;
+            }
+
+            var imagePath = ResolveNamedPowerImagePath(imageName);
+            if (string.IsNullOrWhiteSpace(imagePath))
+            {
+                return false;
+            }
+
+            if (NamedPowerImages.TryGetValue(imagePath, out powerImage) && powerImage?.Bitmap != null)
+            {
+                return true;
+            }
+
+            if (!File.Exists(imagePath))
+            {
+                return false;
+            }
+
+            powerImage = new ExtendedBitmap(imagePath);
+            NamedPowerImages[imagePath] = powerImage;
+            return powerImage.Bitmap != null;
         }
 
         public static string? ResolveNamedEnhancementImagePath(string? imageName)
@@ -576,6 +621,26 @@ namespace Mids_Reborn.Core
 
             var dbPath = Path.Combine(GetDbEnhancementsPath(), imageName);
             return File.Exists(dbPath) ? dbPath : null;
+        }
+
+        private static string? ResolveNamedPowerImagePath(string? imageName)
+        {
+            foreach (var candidate in BuildPowerImageCandidates(imageName))
+            {
+                var dbPath = Path.Combine(GetDbPowersPath(), candidate);
+                if (File.Exists(dbPath))
+                {
+                    return dbPath;
+                }
+
+                var basePath = Path.Combine(GetPowersPath(), candidate);
+                if (File.Exists(basePath))
+                {
+                    return basePath;
+                }
+            }
+
+            return null;
         }
 
         public static bool TryGetNamedEnhancementBitmap(string? imageName, out ExtendedBitmap enhancementImage)
@@ -678,6 +743,16 @@ namespace Mids_Reborn.Core
         public static string GetPowersetsPath()
         {
             return Path.Combine(AppDataPaths.BaseAssetsPath, "Powersets");
+        }
+
+        public static string GetPowersPath()
+        {
+            return Path.Combine(AppDataPaths.BaseAssetsPath, "Powers");
+        }
+
+        public static string GetDbPowersPath()
+        {
+            return Path.Combine(MidsContext.Config.DataPath, "Assets", "Powers");
         }
 
         public static string GetDbPowerSetsPath()
@@ -1117,6 +1192,28 @@ namespace Mids_Reborn.Core
             {
                 yield return fileName;
                 yield return Path.ChangeExtension(fileName, ".png") ?? fileName;
+            }
+        }
+
+        private static IEnumerable<string> BuildPowerImageCandidates(string imageName)
+        {
+            if (string.IsNullOrWhiteSpace(imageName))
+            {
+                yield break;
+            }
+
+            foreach (var candidate in new[]
+                     {
+                         imageName.Trim(),
+                         Path.GetFileName(imageName.Trim())
+                     }.Where(candidate => !string.IsNullOrWhiteSpace(candidate))
+                     .Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                yield return candidate;
+                if (!candidate.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
+                {
+                    yield return $"{candidate}.png";
+                }
             }
         }
 

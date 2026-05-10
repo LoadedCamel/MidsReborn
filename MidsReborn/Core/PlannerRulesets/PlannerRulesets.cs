@@ -38,6 +38,7 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
 
     public abstract PlannerRulesetId Id { get; }
     public abstract bool UsesCanonicalPlannerMath { get; }
+    public virtual bool UsesToxicDefense => false;
     public abstract bool AllowLegacyCrossPowerIncarnatePasses { get; }
     public virtual bool AllowRedirectSelectionInAssembly => true;
     public virtual bool AllowPseudoPetAbsorptionInAssembly => true;
@@ -96,12 +97,13 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
             string.Equals(src.FullName, "Mids.SetBonus.Virtual", StringComparison.OrdinalIgnoreCase) ||
             src.PowerType == Enums.ePowerType.GlobalBoost;
 
-        static ReadOnlySpan<Enums.eDamage> GetSupportedDefenseVectors() =>
-            DatabaseAPI.RealmUsesToxicDefense ? SupportedDefenseVectorsWithToxic : SupportedDefenseVectors;
+        var supportedDefenseVectors = UsesToxicDefense
+            ? SupportedDefenseVectorsWithToxic
+            : SupportedDefenseVectors;
 
-        static void ApplyAcrossDefenseVectors(float[] bucket, float value)
+        void ApplyAcrossDefenseVectors(float[] bucket, float value)
         {
-            foreach (var damageType in GetSupportedDefenseVectors())
+            foreach (var damageType in supportedDefenseVectors)
             {
                 bucket[(int)damageType] += value;
             }
@@ -643,6 +645,7 @@ internal sealed class HomecomingPlannerRuleset : PlannerRulesetBase
 {
     public override PlannerRulesetId Id => PlannerRulesetId.Homecoming;
     public override bool UsesCanonicalPlannerMath => true;
+    public override bool UsesToxicDefense => true;
     public override bool AllowLegacyCrossPowerIncarnatePasses => false;
     public override bool SupportsPowerLocalChanceMods => true;
 

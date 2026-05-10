@@ -1,5 +1,7 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
+using Mids_Reborn.Core.PlannerRulesets;
 using Newtonsoft.Json.Linq;
 
 namespace Mids_Reborn.Core.Omni;
@@ -48,6 +50,57 @@ public sealed class ImportedPowerSemantics
 {
     public string TargetRequires { get; set; } = string.Empty;
     public List<OmniEffectDefinition> ActivationEffects { get; set; } = [];
+    public string ProcEligibility { get; set; } = nameof(ImportedProcEligibilityMode.Default);
+    public string ProcAllowance { get; set; } = nameof(ProcAllowanceMode.Default);
+    public string ProcEligibilityRaw { get; set; } = string.Empty;
+    public bool ProcMainTargetOnly { get; set; }
+    public bool ProcIgnoreChainEffect { get; set; }
+    public bool ProcIgnoreOverCap { get; set; }
+    public bool? StackingLifetime { get; set; }
+    public int? MaxPowerLifetime { get; set; }
+    public int? MaxPowerLifetimeInGame { get; set; }
+    public string BoostInfoJson { get; set; } = string.Empty;
+    public List<string> AllowedBoostSetCategories { get; set; } = [];
+
+    internal ImportedProcPolicy ProcPolicy
+    {
+        get => new(
+            ImportedProcPolicyNormalizer.ParseStoredEligibility(ProcEligibility, ProcAllowance),
+            ImportedProcPolicyNormalizer.ParseStoredAllowance(ProcAllowance),
+            ProcMainTargetOnly,
+            ProcIgnoreChainEffect,
+            ProcIgnoreOverCap,
+            ProcEligibilityRaw ?? string.Empty);
+        set
+        {
+            ProcEligibility = value.Eligibility.ToString();
+            ProcAllowance = value.Allowance.ToString();
+            ProcEligibilityRaw = value.RawEligibilityValue ?? string.Empty;
+            ProcMainTargetOnly = value.MainTargetOnly;
+            ProcIgnoreChainEffect = value.IgnoreChainEffect;
+            ProcIgnoreOverCap = value.IgnoreOverCap;
+        }
+    }
+
+    internal ImportedPowerLifetimeMetadata LifetimeMetadata
+    {
+        get => new(MaxPowerLifetime, MaxPowerLifetimeInGame);
+        set
+        {
+            MaxPowerLifetime = value.MaxPowerLifetime;
+            MaxPowerLifetimeInGame = value.MaxPowerLifetimeInGame;
+        }
+    }
+
+    internal ImportedBoostPolicyMetadata BoostPolicyMetadata
+    {
+        get => new(BoostInfoJson, AllowedBoostSetCategories);
+        set
+        {
+            BoostInfoJson = value.RawBoostInfoJson;
+            AllowedBoostSetCategories = value.AllowedBoostSetCategories.ToList();
+        }
+    }
 }
 
 public sealed class EntityImportMetadata

@@ -7,6 +7,7 @@ public interface IPlannerRuleset
 {
     PlannerRulesetId Id { get; }
     bool UsesCanonicalPlannerMath { get; }
+    bool UsesToxicDefense { get; }
     bool AllowLegacyCrossPowerIncarnatePasses { get; }
     bool AllowRedirectSelectionInAssembly { get; }
     bool AllowPseudoPetAbsorptionInAssembly { get; }

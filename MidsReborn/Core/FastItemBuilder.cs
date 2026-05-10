@@ -3,6 +3,7 @@ using System.Globalization;
 using System.Linq;
 using System;
 using System.Collections.Generic;
+using Mids_Reborn.Core.PlannerRulesets;
 using Mids_Reborn.UI.Controls;
 
 namespace Mids_Reborn.Core
@@ -324,9 +325,10 @@ namespace Mids_Reborn.Core
                         break;
                     case Enums.eEffectType.ToHit:
                         //Fixes the ToHit display to correctly show the percentage
-                        if (effect.Stacking == Enums.eStacking.Yes)
+                        var tickCopies = PlannerStackRules.GetPlannerVisibleCopyCount(effect, fx.Ticks);
+                        if (tickCopies > 1)
                         {
-                            var overage = fx.Ticks * 0.05f;
+                            var overage = tickCopies * 0.05f;
                             shortFxEnh.Sum -= overage;
                             shortFxEnh.Sum /= 2;
                         }

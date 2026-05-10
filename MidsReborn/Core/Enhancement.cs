@@ -2,6 +2,7 @@ using System;
 using System.IO;
 using System.Linq;
 using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.PlannerRulesets;
 
 namespace Mids_Reborn.Core
 {
@@ -470,30 +471,24 @@ namespace Mids_Reborn.Core
 
         public static float ApplyED(Enums.eSchedule iSched, float iVal)
         {
-            switch (iSched)
-            {
-                case Enums.eSchedule.None:
-                    return 0.0f;
-                case Enums.eSchedule.Multiple:
-                    return 0.0f;
-                default:
-                    var ed = new float[3];
-                    for (var index = 0; index <= 2; ++index)
-                        ed[index] = DatabaseAPI.Database.MultED[(int) iSched][index];
-                    if (iVal <= (double) ed[0])
-                        return iVal;
-                    float[] edm =
-                    {
-                        ed[0],
-                        ed[0] + (float) ((ed[1] - (double) ed[0]) * 0.899999976158142),
-                        (float) (ed[0] + (ed[1] - (double) ed[0]) * 0.899999976158142 +
-                                 (ed[2] - (double) ed[1]) * 0.699999988079071)
-                    };
-                    return iVal > (double) ed[1]
-                        ? iVal > (double) ed[2] ? edm[2] + (float) ((iVal - (double) ed[2]) * 0.150000005960464) :
-                        edm[1] + (float) ((iVal - (double) ed[1]) * 0.699999988079071)
-                        : edm[0] + (float) ((iVal - (double) ed[0]) * 0.899999976158142);
-            }
+            return DatabaseAPI.GetEnhancementMathPolicy().ApplyDiversification(iSched, iVal);
+        }
+
+        public static float ApplyED(Enums.eEnhance enhanceType, float value, Enums.eBuffDebuff buffMode = Enums.eBuffDebuff.Any, int subType = -1)
+        {
+            return DatabaseAPI.GetEnhancementMathPolicy()
+                .ApplyDiversification(GetSchedule(enhanceType, subType), value, enhanceType, subType, buffMode);
+        }
+
+        internal static EnhancementDiversificationInfo GetDiversificationInfo(
+            Enums.eSchedule schedule,
+            float value,
+            Enums.eEnhance enhanceType = Enums.eEnhance.None,
+            int subType = -1,
+            Enums.eBuffDebuff buffMode = Enums.eBuffDebuff.Any)
+        {
+            return DatabaseAPI.GetEnhancementMathPolicy()
+                .EvaluateDiversification(schedule, value, enhanceType, subType, buffMode);
         }
     }
 }

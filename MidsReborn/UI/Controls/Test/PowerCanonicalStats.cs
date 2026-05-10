@@ -137,7 +137,10 @@ public static class PowerCanonicalStats
     }
 
     // Public entrypoint — descriptor-driven
-    public static IEnumerable<PowerStatsGrid.Row> BuildRows(IPower? pBase, IPower? pEnh)
+    internal static IEnumerable<PowerStatsGrid.Row> BuildRows(
+        IPower? pBase,
+        IPower? pEnh,
+        CalculationContributionSnapshot? contributions = null)
     {
         if (pBase == null) yield break;
 
@@ -202,7 +205,8 @@ public static class PowerCanonicalStats
                 displayAsPercent: def.DisplayIsPercent,
                 mode: def.Mode,
                 higherIsBetter: def.HigherIsBetter,
-                ed: ed);
+                ed: ed,
+                contributions: contributions);
 
             // Friendly extras for non-ED stats
             if (!def.EdKind.HasValue)
@@ -367,7 +371,8 @@ public static class PowerCanonicalStats
     bool displayAsPercent,
     ApplyMode mode,
     bool higherIsBetter,
-    in EdImpact ed)
+    in EdImpact ed,
+    CalculationContributionSnapshot? contributions)
     {
 
         // ---- math helpers ----
@@ -437,8 +442,8 @@ public static class PowerCanonicalStats
         if (label == "Recharge")
         {
             // value = base / (1 + H). Merge Haste & RechargeTime.
-            var haste = ContributionTracker.GetSummed(ContributionBucket.Effect, (int)Enums.eStatType.Haste);
-            var rech = ContributionTracker.GetSummed(ContributionBucket.Effect, (int)Enums.eEffectType.RechargeTime);
+            var haste = GetSummedContributions(contributions, ContributionBucket.Effect, (int)Enums.eStatType.Haste);
+            var rech = GetSummedContributions(contributions, ContributionBucket.Effect, (int)Enums.eEffectType.RechargeTime);
             var items = SumBySource(haste, rech);
 
             if (items.Count > 0)
@@ -460,8 +465,8 @@ public static class PowerCanonicalStats
         else if (label == "End Cost")
         {
             // value = base * (1 − F). Merge BuffEndRdx & EnduranceDiscount.
-            var rdx = ContributionTracker.GetSummed(ContributionBucket.Effect, (int)Enums.eStatType.BuffEndRdx);
-            var endd = ContributionTracker.GetSummed(ContributionBucket.Effect, (int)Enums.eEffectType.EnduranceDiscount);
+            var rdx = GetSummedContributions(contributions, ContributionBucket.Effect, (int)Enums.eStatType.BuffEndRdx);
+            var endd = GetSummedContributions(contributions, ContributionBucket.Effect, (int)Enums.eEffectType.EnduranceDiscount);
             var items = SumBySource(rdx, endd);
 
             if (items.Count > 0)
@@ -477,8 +482,8 @@ public static class PowerCanonicalStats
         else if (label == "Accuracy")
         {
             // Show as *percentage points*. Merge BuffAcc & ToHit.
-            var acc = ContributionTracker.GetSummed(ContributionBucket.Effect, (int)Enums.eStatType.BuffAcc);
-            var tohit = ContributionTracker.GetSummed(ContributionBucket.Effect, (int)Enums.eStatType.ToHit);
+            var acc = GetSummedContributions(contributions, ContributionBucket.Effect, (int)Enums.eStatType.BuffAcc);
+            var tohit = GetSummedContributions(contributions, ContributionBucket.Effect, (int)Enums.eStatType.ToHit);
             var items = SumBySource(acc, tohit);
 
             if (items.Count > 0)
@@ -508,6 +513,15 @@ public static class PowerCanonicalStats
         }
 
         return string.Join("\r\n", lines);
+    }
+
+    private static IEnumerable<(ContributionSource Source, ContributionChannel Channel, double Total)> GetSummedContributions(
+        CalculationContributionSnapshot? contributions,
+        ContributionBucket bucket,
+        int index)
+    {
+        return contributions?.GetSummed(bucket, index) ??
+               ContributionTracker.GetSummed(bucket, index);
     }
 
     private static string F0(double v) => Math.Round(v).ToString("0");     // integers (ft², etc.)

@@ -6,6 +6,8 @@ using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FastDeepCloner;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
+using Mids_Reborn.Core.PlannerRulesets;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
@@ -61,12 +63,21 @@ namespace Mids_Reborn.Core.Base.Data_Classes
     {
         private const string AdvancedRequirementsMarker = "MRB_ADVANCED_POWER_REQUIREMENTS";
         private const string OmniTargetRequiresMarker = "MRB_OMNI_POWER_TARGET_REQUIRES";
+        private const string TargetRoutingPolicyMarker = "MRB_OMNI_POWER_TARGET_ROUTING";
+        private const string TargetRoutingSourceGatesMarker = "MRB_OMNI_POWER_TARGET_ROUTING_SOURCE_GATES";
+        private const string TargetRoutingDeferredTargetMarker = "MRB_OMNI_POWER_TARGET_ROUTING_DEFERRED_TARGET";
+        private const string TargetRoutingDeferredSourceMarker = "MRB_OMNI_POWER_TARGET_ROUTING_DEFERRED_SOURCE";
         private const string ActivationEffectsRuntimeMarker = "MRB_OMNI_POWER_ACTIVATION_EFFECTS";
+        private const string ProcPolicyMarker = "MRB_OMNI_POWER_PROC_POLICY";
+        private const string StackingLifetimeMarker = "MRB_OMNI_POWER_STACKING_LIFETIME";
+        private const string LifetimeMetadataMarker = "MRB_OMNI_POWER_LIFETIME_METADATA";
+        private const string BoostPolicyMetadataMarker = "MRB_OMNI_POWER_BOOST_POLICY";
         private const string RootTimeMarker = "MRB_POWER_ROOT_TIME";
         private const string RechargeGroupsMarker = "MRB_POWER_RECHARGE_GROUPS";
         private const string TypedEnhancementRestrictionsMarker = "MRB_POWER_TYPED_ENHANCEMENT_RESTRICTIONS";
         private const string IgnoreEnhancementAxesMarker = "MRB_POWER_IGNORE_ENHANCEMENT_AXES";
         private const string IgnoreBuffEnhancementAxesMarker = "MRB_POWER_IGNORE_BUFF_ENHANCEMENT_AXES";
+        private const string PowerIconNameMarker = "MRB_POWER_ICON_NAME";
         private bool Contains;
         public bool AppliedPowersOverride { get; set; } = false;
         public bool AbsorbedPetEffects { get; set; } = false;
@@ -90,6 +101,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             TargetLoS = true;
             GroupMembership = [];
             PowerName = string.Empty;
+            IconName = string.Empty;
             SetName = string.Empty;
             GroupName = string.Empty;
             NGroupMembership = [];
@@ -144,6 +156,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Requires = new Requirement();
             AdvancedRequirements = AdvancedConditionSet.FromLegacyRequirement(Requires);
             PowerName = string.Empty;
+            IconName = string.Empty;
             SetName = string.Empty;
             GroupName = string.Empty;
             NGroupMembership = [];
@@ -186,6 +199,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             GroupName = template.GroupName;
             SetName = template.SetName;
             PowerName = template.PowerName;
+            IconName = template.IconName;
             DisplayName = template.DisplayName;
             Available = template.Available;
             Requires = new Requirement(template.Requires);
@@ -296,7 +310,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 effect.SetPower(this);
             }
             OmniTargetRequiresRaw = template is Power targetPower ? targetPower.OmniTargetRequiresRaw : string.Empty;
+            TargetRoutingPolicy = template is Power routingPower
+                ? routingPower.TargetRoutingPolicy.Clone()
+                : PlannerTargetRoutingPolicy.Default;
             OmniDisplayClassName = template is Power displayPower ? displayPower.OmniDisplayClassName : string.Empty;
+            ProcPolicy = template is Power procPower ? procPower.ProcPolicy : ImportedProcPolicy.Default;
+            OmniStackingLifetime = template is Power stackPower ? stackPower.OmniStackingLifetime : null;
+            OmniLifetimeMetadata = template is Power lifetimePower
+                ? lifetimePower.OmniLifetimeMetadata.Clone()
+                : ImportedPowerLifetimeMetadata.Default;
+            OmniBoostPolicy = template is Power boostPower
+                ? boostPower.OmniBoostPolicy.Clone()
+                : ImportedBoostPolicyMetadata.Default;
             HasAbsorbedEffects = template.HasAbsorbedEffects;
             HiddenPower = template.HiddenPower;
         }
@@ -336,6 +361,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             SetName = reader.ReadString();
             PowerName = reader.ReadString();
             DisplayName = reader.ReadString();
+            IconName = string.Empty;
             Available = reader.ReadInt32();
             Requires = new Requirement(reader);
             AdvancedRequirements = AdvancedConditionSet.FromLegacyRequirement(Requires);
@@ -479,6 +505,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 OmniTargetRequiresRaw = omniTargetRequires;
             }
+            if (TryReadMarkedString(reader, PowerIconNameMarker, out var iconName))
+            {
+                IconName = iconName;
+            }
+            TryReadTargetRoutingPolicy(reader);
             if (TryReadMarkedSingle(reader, RootTimeMarker, out var rootTime))
             {
                 RootTime = rootTime;
@@ -500,6 +531,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 IgnoreBuffEnhancementAxes = EnhancementPolicyAxes.Deserialize(ignoreBuffEnhancementAxes);
             }
             TryReadActivationEffectsRuntime(reader);
+            TryReadProcPolicy(reader);
+            TryReadStackingLifetime(reader);
+            TryReadLifetimeMetadata(reader);
+            TryReadBoostPolicyMetadata(reader);
         }
 
         public IPowerset? GetPowerSet()
@@ -545,6 +580,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public string SetName { get; set; }
 
         public string PowerName { get; set; }
+
+        public string IconName { get; set; }
 
         public string DisplayName { get; set; }
 
@@ -705,8 +742,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public IEffect[] ActivationEffectsRuntime { get; set; } = [];
 
         public string OmniTargetRequiresRaw { get; set; } = string.Empty;
+        internal PlannerTargetRoutingPolicy TargetRoutingPolicy { get; set; } = PlannerTargetRoutingPolicy.Default;
 
         public string OmniDisplayClassName { get; set; } = string.Empty;
+
+        internal ImportedProcPolicy ProcPolicy { get; set; } = ImportedProcPolicy.Default;
+        internal bool? OmniStackingLifetime { get; set; }
+        internal ImportedPowerLifetimeMetadata OmniLifetimeMetadata { get; set; } = ImportedPowerLifetimeMetadata.Default;
+        internal ImportedBoostPolicyMetadata OmniBoostPolicy { get; set; } = ImportedBoostPolicyMetadata.Default;
 
         public Enums.eBuffMode BuffMode { get; set; }
 
@@ -997,12 +1040,21 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     ? AdvancedRequirements
                     : AdvancedConditionSet.FromLegacyRequirement(Requires));
             StoreMarkedString(writer, OmniTargetRequiresMarker, OmniTargetRequiresRaw);
+            if (!string.IsNullOrWhiteSpace(IconName))
+            {
+                StoreMarkedString(writer, PowerIconNameMarker, IconName);
+            }
+            StoreTargetRoutingPolicy(writer);
             StoreMarkedSingle(writer, RootTimeMarker, RootTime);
             StoreMarkedStringArray(writer, RechargeGroupsMarker, RechargeGroups);
             StoreMarkedStringArray(writer, TypedEnhancementRestrictionsMarker, TypedEnhancementLegality.Serialize(TypedEnhancementRestrictions));
             StoreMarkedStringArray(writer, IgnoreEnhancementAxesMarker, EnhancementPolicyAxes.Serialize(IgnoreEnhancementAxes));
             StoreMarkedStringArray(writer, IgnoreBuffEnhancementAxesMarker, EnhancementPolicyAxes.Serialize(IgnoreBuffEnhancementAxes));
             StoreActivationEffectsRuntime(writer);
+            StoreProcPolicy(writer);
+            StoreStackingLifetime(writer);
+            StoreLifetimeMetadata(writer);
+            StoreBoostPolicyMetadata(writer);
         }
 
         private static void StoreMarkedString(BinaryWriter writer, string marker, string value)
@@ -1181,6 +1233,290 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 reader.BaseStream.Position = position;
                 ActivationEffectsRuntime = [];
+            }
+        }
+
+        private void StoreProcPolicy(BinaryWriter writer)
+        {
+            writer.Write(ProcPolicyMarker);
+            writer.Write(1001);
+            writer.Write((int)ProcPolicy.Eligibility);
+            writer.Write((int)ProcPolicy.Allowance);
+            writer.Write(ProcPolicy.MainTargetOnly);
+            writer.Write(ProcPolicy.IgnoreChainEffect);
+            writer.Write(ProcPolicy.IgnoreOverCap);
+            writer.Write(ProcPolicy.RawEligibilityValue ?? string.Empty);
+        }
+
+        private void TryReadProcPolicy(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                return;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), ProcPolicyMarker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return;
+                }
+
+                var versionOrAllowance = reader.ReadInt32();
+                if (versionOrAllowance >= 1000)
+                {
+                    ProcPolicy = new ImportedProcPolicy(
+                        (ImportedProcEligibilityMode)reader.ReadInt32(),
+                        (ProcAllowanceMode)reader.ReadInt32(),
+                        reader.ReadBoolean(),
+                        reader.ReadBoolean(),
+                        reader.ReadBoolean(),
+                        reader.ReadString());
+                    return;
+                }
+
+                var legacyAllowance = (ProcAllowanceMode)versionOrAllowance;
+                ProcPolicy = new ImportedProcPolicy(
+                    ImportedProcPolicyNormalizer.ParseStoredEligibility(null, legacyAllowance.ToString()),
+                    legacyAllowance,
+                    reader.ReadBoolean(),
+                    reader.ReadBoolean(),
+                    reader.ReadBoolean(),
+                    string.Empty);
+            }
+            catch
+            {
+                reader.BaseStream.Position = position;
+                ProcPolicy = ImportedProcPolicy.Default;
+            }
+        }
+
+        private void StoreTargetRoutingPolicy(BinaryWriter writer)
+        {
+            writer.Write(TargetRoutingPolicyMarker);
+            writer.Write((int)TargetRoutingPolicy.AllowedRecipients);
+            writer.Write((int)TargetRoutingPolicy.SelfRequirement);
+            writer.Write(TargetRoutingPolicy.OriginalTargetRequires ?? string.Empty);
+            writer.Write(TargetRoutingPolicy.RecipientClauses.Count);
+            foreach (var clause in TargetRoutingPolicy.RecipientClauses)
+            {
+                writer.Write((int)clause.Link);
+                writer.Write((int)clause.Kind);
+                writer.Write(clause.Value ?? string.Empty);
+                writer.Write(clause.Negated);
+            }
+
+            AdvancedConditionSet.StoreMarked(writer, TargetRoutingSourceGatesMarker, TargetRoutingPolicy.BuildSourceGates);
+            AdvancedConditionSet.StoreMarked(writer, TargetRoutingDeferredTargetMarker, TargetRoutingPolicy.DeferredTargetRows);
+            AdvancedConditionSet.StoreMarked(writer, TargetRoutingDeferredSourceMarker, TargetRoutingPolicy.DeferredSourceRows);
+        }
+
+        private void TryReadTargetRoutingPolicy(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                TargetRoutingPolicy = PlannerTargetRoutingPolicy.Default;
+                return;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), TargetRoutingPolicyMarker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    TargetRoutingPolicy = PlannerTargetRoutingPolicy.Default;
+                    return;
+                }
+
+                var allowedRecipients = (PlannerRecipientFlags)reader.ReadInt32();
+                var selfRequirement = (PlannerSelfRequirement)reader.ReadInt32();
+                var originalTargetRequires = reader.ReadString();
+                var clauseCount = reader.ReadInt32();
+                var clauses = new List<PlannerRecipientClause>(clauseCount);
+                for (var index = 0; index < clauseCount; index++)
+                {
+                    clauses.Add(new PlannerRecipientClause
+                    {
+                        Link = (AdvancedConditionLink)reader.ReadInt32(),
+                        Kind = (PlannerRecipientClauseKind)reader.ReadInt32(),
+                        Value = reader.ReadString(),
+                        Negated = reader.ReadBoolean()
+                    });
+                }
+
+                var buildSourceGates = AdvancedConditionSet.TryReadMarked(reader, TargetRoutingSourceGatesMarker, out var sourceGates)
+                    ? sourceGates
+                    : new AdvancedConditionSet();
+                var deferredTargetRows = AdvancedConditionSet.TryReadMarked(reader, TargetRoutingDeferredTargetMarker, out var deferredTarget)
+                    ? deferredTarget
+                    : new AdvancedConditionSet();
+                var deferredSourceRows = AdvancedConditionSet.TryReadMarked(reader, TargetRoutingDeferredSourceMarker, out var deferredSource)
+                    ? deferredSource
+                    : new AdvancedConditionSet();
+
+                TargetRoutingPolicy = new PlannerTargetRoutingPolicy(
+                    allowedRecipients,
+                    selfRequirement,
+                    buildSourceGates,
+                    clauses,
+                    deferredTargetRows,
+                    deferredSourceRows,
+                    originalTargetRequires,
+                    hasImportedMetadata: !string.IsNullOrWhiteSpace(originalTargetRequires));
+            }
+            catch
+            {
+                reader.BaseStream.Position = position;
+                TargetRoutingPolicy = PlannerTargetRoutingPolicy.Default;
+            }
+        }
+
+        private void StoreStackingLifetime(BinaryWriter writer)
+        {
+            writer.Write(StackingLifetimeMarker);
+            writer.Write(1);
+            writer.Write(OmniStackingLifetime.HasValue);
+            if (OmniStackingLifetime.HasValue)
+            {
+                writer.Write(OmniStackingLifetime.Value);
+            }
+        }
+
+        private void TryReadStackingLifetime(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                return;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), StackingLifetimeMarker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return;
+                }
+
+                var version = reader.ReadInt32();
+                if (version > 1)
+                {
+                    throw new InvalidDataException($"Unsupported power stacking-lifetime version {version}.");
+                }
+
+                var hasValue = reader.ReadBoolean();
+                OmniStackingLifetime = hasValue ? reader.ReadBoolean() : null;
+            }
+            catch
+            {
+                reader.BaseStream.Position = position;
+                OmniStackingLifetime = null;
+            }
+        }
+
+        private void StoreLifetimeMetadata(BinaryWriter writer)
+        {
+            writer.Write(LifetimeMetadataMarker);
+            writer.Write(1);
+            writer.Write(OmniLifetimeMetadata.MaxPowerLifetime.HasValue);
+            if (OmniLifetimeMetadata.MaxPowerLifetime.HasValue)
+            {
+                writer.Write(OmniLifetimeMetadata.MaxPowerLifetime.Value);
+            }
+
+            writer.Write(OmniLifetimeMetadata.MaxPowerLifetimeInGame.HasValue);
+            if (OmniLifetimeMetadata.MaxPowerLifetimeInGame.HasValue)
+            {
+                writer.Write(OmniLifetimeMetadata.MaxPowerLifetimeInGame.Value);
+            }
+        }
+
+        private void TryReadLifetimeMetadata(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                return;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), LifetimeMetadataMarker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return;
+                }
+
+                var version = reader.ReadInt32();
+                if (version > 1)
+                {
+                    throw new InvalidDataException($"Unsupported power lifetime-metadata version {version}.");
+                }
+
+                var hasMaxLifetime = reader.ReadBoolean();
+                int? maxLifetime = hasMaxLifetime ? reader.ReadInt32() : null;
+                var hasMaxLifetimeInGame = reader.ReadBoolean();
+                int? maxLifetimeInGame = hasMaxLifetimeInGame ? reader.ReadInt32() : null;
+                OmniLifetimeMetadata = new ImportedPowerLifetimeMetadata(maxLifetime, maxLifetimeInGame);
+            }
+            catch
+            {
+                reader.BaseStream.Position = position;
+                OmniLifetimeMetadata = ImportedPowerLifetimeMetadata.Default;
+            }
+        }
+
+        private void StoreBoostPolicyMetadata(BinaryWriter writer)
+        {
+            writer.Write(BoostPolicyMetadataMarker);
+            writer.Write(1);
+            writer.Write(OmniBoostPolicy.RawBoostInfoJson ?? string.Empty);
+            writer.Write(OmniBoostPolicy.AllowedBoostSetCategories.Count);
+            foreach (var category in OmniBoostPolicy.AllowedBoostSetCategories)
+            {
+                writer.Write(category);
+            }
+        }
+
+        private void TryReadBoostPolicyMetadata(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                return;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), BoostPolicyMetadataMarker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return;
+                }
+
+                var version = reader.ReadInt32();
+                if (version > 1)
+                {
+                    throw new InvalidDataException($"Unsupported power boost-policy version {version}.");
+                }
+
+                var rawBoostInfoJson = reader.ReadString();
+                var count = reader.ReadInt32();
+                var allowedBoostSetCategories = new string[count];
+                for (var index = 0; index < count; index++)
+                {
+                    allowedBoostSetCategories[index] = reader.ReadString();
+                }
+
+                OmniBoostPolicy = new ImportedBoostPolicyMetadata(rawBoostInfoJson, allowedBoostSetCategories);
+            }
+            catch
+            {
+                reader.BaseStream.Position = position;
+                OmniBoostPolicy = ImportedBoostPolicyMetadata.Default;
             }
         }
 
@@ -1665,15 +2001,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private static IPower PrepareDamagePower(IPower sourcePower, bool absorbRequested)
         {
             IPower power = new Power(sourcePower);
-            if (DatabaseAPI.GetPlannerRuleset().ShouldAbsorbPseudoPetEffectsForDamage(power, absorbRequested) &&
-                !HasExistingSummonAbsorption(power))
+            var shouldAbsorbPseudoPets = DatabaseAPI.GetPlannerRuleset()
+                .ShouldAbsorbPseudoPetEffectsForDamage(power, absorbRequested) &&
+                !HasExistingSummonAbsorption(power);
+            if (shouldAbsorbPseudoPets || ShouldProcessExecutesForDamage(power))
             {
-                power.AbsorbPetEffects(pseudoOnly: true);
-            }
-
-            if (ShouldProcessExecutesForDamage(power))
-            {
-                power.ProcessExecutes();
+                power = PlannerEffectResolver.ResolvePower(power, new PlannerEffectResolutionContext(useRulesetDefaults: false)
+                {
+                    ApplyRedirects = false,
+                    AbsorbPetEffects = shouldAbsorbPseudoPets,
+                    ExpandGrantPowers = false,
+                    ExpandExecutePowers = ShouldProcessExecutesForDamage(power),
+                    IncludeTrace = false,
+                    MaxExpansionDepth = PlannerEffectResolutionContext.DefaultMaxExpansionDepth
+                }).ResolvedPower;
             }
 
             return power;
@@ -2041,9 +2382,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 var mag = Effects[iIndex].BuffedMag;
-                if (Effects[iIndex].Ticks > 1 && Effects[iIndex].Stacking == Enums.eStacking.Yes)
+                var tickCopies = PlannerStackRules.GetPlannerVisibleCopyCount(Effects[iIndex], Effects[iIndex].Ticks);
+                if (tickCopies > 1)
                 {
-                    mag *= Effects[iIndex].Ticks;
+                    mag *= tickCopies;
                 }
 
                 shortFx.Add(iIndex, mag);
@@ -2110,9 +2452,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }*/
 
                 var mag = fx.BuffedMag;
-                if (fx.Ticks > 1 && fx.Stacking == Enums.eStacking.Yes)
+                var tickCopies = PlannerStackRules.GetPlannerVisibleCopyCount(fx, fx.Ticks);
+                if (tickCopies > 1)
                 {
-                    mag *= fx.Ticks;
+                    mag *= tickCopies;
                 }
 
                 if (Math.Abs(mag) < float.Epsilon)
@@ -2619,6 +2962,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     Array.Resize(ref effects, num1 + length + 1);
                     Effects = effects;
                     var effect = (IEffect)source.Effects[index].Clone();
+                    effect.AddResolvedEffectKind(PlannerResolvedEffectKind.Base);
                     effect.Absorbed_Effect = true;
                     effect.Absorbed_PowerType = source.PowerType;
                     effect.Absorbed_Class_nID = archetype.Idx;
@@ -2632,18 +2976,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     if ((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend & (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
                     {
                         effect.ToWho = Enums.eToWho.Target;
-                        if (effect.Stacking == Enums.eStacking.Yes)
+                        var copyCount = PlannerStackRules.GetPlannerVisibleCopyCount(effect, stacking);
+                        if (copyCount > 1)
                         {
-                            effect.Scale *= stacking;
+                            effect.Scale *= copyCount;
                         }
                     }
 
                     if ((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet & (source.EntitiesAutoHit & Enums.eEntity.Caster) != Enums.eEntity.Caster)
                     {
                         effect.ToWho = Enums.eToWho.Target;
-                        if (effect.Stacking == Enums.eStacking.Yes)
+                        var copyCount = PlannerStackRules.GetPlannerVisibleCopyCount(effect, stacking);
+                        if (copyCount > 1)
                         {
-                            effect.Scale *= stacking;
+                            effect.Scale *= copyCount;
                         }
                     }
 
@@ -2679,6 +3025,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 Array.Resize(ref effects, num3 + length + 1);
                 Effects = effects;
                 var effect = (IEffect)source.Effects[effectId].Clone();
+                effect.AddResolvedEffectKind(PlannerResolvedEffectKind.Base);
                 effect.Absorbed_Effect = true;
                 effect.Absorbed_PowerType = source.PowerType;
                 effect.Absorbed_Class_nID = archetype.Idx;
@@ -2692,18 +3039,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if ((source.EntitiesAutoHit & Enums.eEntity.Friend) == Enums.eEntity.Friend)
                 {
                     effect.ToWho = Enums.eToWho.Target;
-                    if (effect.Stacking == Enums.eStacking.Yes)
+                    var copyCount = PlannerStackRules.GetPlannerVisibleCopyCount(effect, stacking);
+                    if (copyCount > 1)
                     {
-                        effect.Scale *= stacking;
+                        effect.Scale *= copyCount;
                     }
                 }
 
                 if ((source.EntitiesAutoHit & Enums.eEntity.MyPet) == Enums.eEntity.MyPet)
                 {
                     effect.ToWho = Enums.eToWho.Target;
-                    if (effect.Stacking == Enums.eStacking.Yes)
+                    var copyCount = PlannerStackRules.GetPlannerVisibleCopyCount(effect, stacking);
+                    if (copyCount > 1)
                     {
-                        effect.Scale *= stacking;
+                        effect.Scale *= copyCount;
                     }
                 }
 
@@ -2731,120 +3080,31 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public void ApplyGrantPowerEffects()
         {
-            var flag = true;
-            var num1 = 0;
-            var num2 = 0;
-            if (HasGrantPowerEffect)
+            PlannerEffectResolver.ExpandEffects(this, new PlannerEffectResolutionContext(useRulesetDefaults: false)
             {
-                for (; flag & (num1 < 100); num1++)
-                {
-                    flag = false;
-                    var array1 = Array.Empty<int>();
-                    var array2 = Array.Empty<int>();
-                    for (var index = num2; index < Effects.Length; index++)
-                    {
-                        if (Effects[index].EffectType != Enums.eEffectType.GrantPower || !Effects[index].CanGrantPower() || Effects[index].EffectClass == Enums.eEffectClass.Ignored || Effects[index].nSummon <= -1)
-                        {
-                            continue;
-                        }
-
-                        Array.Resize(ref array1, array1.Length + 1);
-                        Array.Resize(ref array2, array2.Length + 1);
-                        array1[^1] = index;
-                        array2[^1] = Effects[index].nSummon;
-                    }
-
-                    num2 = Effects.Length;
-                    for (var index1 = 0; index1 < array1.Length; index1++)
-                    {
-                        flag = true;
-                        Effects[array1[index1]].EffectClass = Enums.eEffectClass.Ignored;
-                        var length = Effects.Length;
-                        AbsorbEffects(DatabaseAPI.Database.Power[array2[index1]], Effects[array1[index1]].Duration, 0, MidsContext.Archetype, 1, true, array1[index1]);
-                        for (var index2 = length; index2 < Effects.Length; index2++)
-                        {
-                            if (Effects[array1[index1]].Absorbed_Power_nID > -1)
-                            {
-                                Effects[index2].Absorbed_PowerType = Effects[array1[index1]].Absorbed_PowerType;
-                            }
-
-                            if (Effects[index2].EffectType != Enums.eEffectType.GrantPower)
-                            {
-                                Effects[index2].ToWho = Effects[array1[index1]].ToWho;
-                            }
-
-                            if (Effects[index2].ToWho == Enums.eToWho.All && ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster || (EntitiesAffected & Enums.eEntity.Friend) != Enums.eEntity.Friend))
-                            {
-                                Effects[index2].ToWho = Enums.eToWho.Target;
-                            }
-                            else if (Effects[index2].ToWho == Enums.eToWho.All &&
-                                     ((EntitiesAffected & Enums.eEntity.Caster) != Enums.eEntity.Caster ||
-                                      (EntitiesAffected & Enums.eEntity.Foe) != Enums.eEntity.Foe))
-                            {
-                                Effects[index2].ToWho = Enums.eToWho.Target;
-                            }
-
-                            PlannerEffectResolver.InheritEffectMetadata(Effects[array1[index1]], Effects[index2], owner: this);
-                        }
-                    }
-                }
-            }
-
-            ProcessExecutes();
+                ApplyRedirects = false,
+                AbsorbPetEffects = false,
+                ExpandGrantPowers = true,
+                ExpandExecutePowers = true,
+                IncludeTrace = false,
+                MaxExpansionDepth = PlannerEffectResolutionContext.DefaultMaxExpansionDepth
+            });
         }
 
         public List<int> GetValidEnhancements(Enums.eType iType, int iSubType = 0)
         {
-            return iType switch
-            {
-                Enums.eType.SetO => GetValidEnhancementsFromSets().ToList(),
-                _ => DatabaseAPI.Database.Enhancements.Select((enhancement, index) => new { enhancement, index })
-                    .Where(e => e.enhancement.TypeID == iType &&
-                                MatchesAllowedEnhancementClass(e.enhancement) &&
-                                (e.enhancement.SubTypeID == 0 || iSubType == 0 || e.enhancement.SubTypeID == iSubType) &&
-                                !ShouldSuppressImportedEnhancement(e.enhancement))
-                    .Select(e => e.index)
-                    .ToList()
-            };
-        }
-
-        private bool MatchesAllowedEnhancementClass(IEnhancement enhancement)
-        {
-            if (enhancement.ClassID == null || enhancement.ClassID.Length == 0)
-            {
-                return false;
-            }
-
-            var enhancementClasses = DatabaseAPI.Database.EnhancementClasses;
-            foreach (var classId in enhancement.ClassID)
-            {
-                if (classId < 0 || classId >= enhancementClasses.Length)
-                {
-                    continue;
-                }
-
-                if (Enhancements.Contains(enhancementClasses[classId].ID))
-                {
-                    return TypedEnhancementLegality.AllowsEnhancement(this, enhancement);
-                }
-            }
-
-            return false;
-        }
-
-        private static bool ShouldSuppressImportedEnhancement(IEnhancement enhancement)
-        {
-            return DatabaseAPI.ShouldSuppressImportedEnhancement(enhancement);
+            return DatabaseAPI.Database.Enhancements
+                .Select((enhancement, index) => new { enhancement, index })
+                .Where(e => e.enhancement.TypeID == iType &&
+                            (e.enhancement.SubTypeID == 0 || iSubType == 0 || e.enhancement.SubTypeID == iSubType) &&
+                            DatabaseAPI.ValidateEnhancementForPower(this, e.index).IsValid)
+                .Select(e => e.index)
+                .ToList();
         }
 
         public bool IsEnhancementValid(int iEnh)
         {
-            if (iEnh < 0 || iEnh > DatabaseAPI.Database.Enhancements.Length - 1)
-            {
-                return false;
-            }
-
-            return GetValidEnhancements(DatabaseAPI.Database.Enhancements[iEnh].TypeID).Any(validEnhancement => validEnhancement == iEnh);
+            return DatabaseAPI.ValidateEnhancementForPower(this, iEnh).IsValid;
         }
 
         public void AbsorbPetEffects(int hIdx = -1, int stackingOverride = -1, bool pseudoOnly = false)
@@ -2962,7 +3222,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                         var startIndex = Effects.Length;
                         var absorbedEntCreates = AbsorbEffects(power1, absorbDuration, effect.DelayedTime, DatabaseAPI.Database.Classes[classIndex], stacking);
-                        ApplySummonWrapperMetadata(effect, startIndex, absorbDuration, CreatePseudoPetRecurrence(effect, DatabaseAPI.Database.Entities[nSummon1], power1, pseudoOnly));
+                        ApplySummonWrapperMetadata(
+                            effect,
+                            startIndex,
+                            absorbDuration,
+                            CreatePseudoPetRecurrence(effect, DatabaseAPI.Database.Entities[nSummon1], power1, pseudoOnly),
+                            pseudoOnly ? PlannerResolvedEffectKind.PseudoPetChild : PlannerResolvedEffectKind.None);
                         foreach (var absorbEffect in absorbedEntCreates)
                         {
                             var nSummon2 = power1.Effects[absorbEffect].nSummon;
@@ -2982,7 +3247,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             {
                                 var nestedStartIndex = Effects.Length;
                                 AbsorbEffects(power2, absorbDuration, effect.DelayedTime, DatabaseAPI.Database.Classes[classIndex], stacking);
-                                ApplySummonWrapperMetadata(effect, nestedStartIndex, absorbDuration, CreatePseudoPetRecurrence(effect, DatabaseAPI.Database.Entities[nSummon1], power2, pseudoOnly));
+                                ApplySummonWrapperMetadata(
+                                    effect,
+                                    nestedStartIndex,
+                                    absorbDuration,
+                                    CreatePseudoPetRecurrence(effect, DatabaseAPI.Database.Entities[nSummon1], power2, pseudoOnly),
+                                    pseudoOnly
+                                        ? PlannerResolvedEffectKind.PseudoPetChild | PlannerResolvedEffectKind.DeliveryChild
+                                        : PlannerResolvedEffectKind.None);
                             }
                         }
                     }
@@ -3049,11 +3321,21 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             };
         }
 
-        private void ApplySummonWrapperMetadata(IEffect wrapper, int startIndex, float absorbedDuration, PseudoPetRecurrenceInfo? recurrence = null)
+        private void ApplySummonWrapperMetadata(
+            IEffect wrapper,
+            int startIndex,
+            float absorbedDuration,
+            PseudoPetRecurrenceInfo? recurrence = null,
+            PlannerResolvedEffectKind resultKind = PlannerResolvedEffectKind.None)
         {
             for (var index = startIndex; index < Effects.Length; index++)
             {
                 var child = Effects[index];
+                if (resultKind != PlannerResolvedEffectKind.None)
+                {
+                    child.AddResolvedEffectKind(resultKind);
+                }
+
                 child.BaseProbability = Math.Max(0, Math.Min(1, child.BaseProbability * wrapper.BaseProbability));
                 if (wrapper.ProcsPerMinute > 0 && child.ProcsPerMinute <= 0)
                 {
@@ -3145,8 +3427,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                                iPower.Effects[array[index3].Index[0]].PvMode) &
                               (iPower.Effects[iSfx.Index[index1]].ToWho ==
                                iPower.Effects[array[index3].Index[0]].ToWho) &
-                              (iPower.Effects[iSfx.Index[index1]].Stacking ==
-                               iPower.Effects[array[index3].Index[0]].Stacking) &
+                              (PlannerStackRules.GetDisplayGroupingKey(iPower.Effects[iSfx.Index[index1]]) ==
+                               PlannerStackRules.GetDisplayGroupingKey(iPower.Effects[array[index3].Index[0]])) &
                               (iPower.Effects[iSfx.Index[index1]].Aspect ==
                                iPower.Effects[array[index3].Index[0]].Aspect) &
                               (iPower.Effects[iSfx.Index[index1]].Buffable ==
@@ -3486,111 +3768,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return requirement1;
         }
 
-        private int[] GetValidEnhancementsFromSets()
-        {
-            return DatabaseAPI.Database.EnhancementSets
-                .Where(e => SetTypes.Any(f => e.SetType == f))
-                .SelectMany(e => e.Enhancements)
-                .ToArray();
-        }
-
         public void ProcessExecutes()
         {
-            ProcessExecutesInner(this);
-            foreach (var fx in Effects)
+            PlannerEffectResolver.ExpandEffects(this, new PlannerEffectResolutionContext(useRulesetDefaults: false)
             {
-                fx.SetPower(this);
-            }
-
-            AppliedExecutes = true;
-        }
-
-        public List<IEffect>? ProcessExecutesInner(IPower? power = null, int rLevel = 0)
-        {
-            // Max recursion level
-            if (rLevel > 5)
-            {
-                return [];
-            }
-
-            power = power ??= this;
-            var pEffects = new List<IEffect>();
-            var k = 0;
-
-            foreach (var fx in power.Effects)
-            {
-                if (fx.EffectType != Enums.eEffectType.ExecutePower)
-                {
-                    pEffects.Add(fx.Clone<IEffect>());
-                    k++;
-                    continue;
-                }
-
-                if (string.IsNullOrEmpty(fx.Summon))
-                {
-                    continue;
-                }
-
-                var fxPower = DatabaseAPI.GetPowerByFullName(fx.Summon);
-                if (fxPower == null)
-                {
-                    continue;
-                }
-
-                var subEffects = ProcessExecutesInner(fxPower, rLevel + 1);
-                if (subEffects == null)
-                {
-                    continue;
-                }
-
-                pEffects.AddRange(subEffects.Select(t => t.Clone<IEffect>()));
-
-                for (var j = k; j < k + subEffects.Count; j++)
-                {
-                    var sFx = pEffects[j];
-
-                    // Cap effect duration to root power
-                    // Clone duration if caller has one > 0
-                    sFx.nDuration = fx.nDuration > 0
-                        ? fx.nDuration
-                        : sFx.nDuration;
-                    sFx.DelayedTime += fx.DelayedTime;
-                    sFx.BaseProbability = Math.Max(0, Math.Min(1, sFx.BaseProbability * fx.BaseProbability));
-                    if (fx.ProcsPerMinute > 0)
-                    {
-                        sFx.ProcsPerMinute = fx.ProcsPerMinute;
-                    }
-
-                    if (fx.ActiveConditionals is { Count: > 0 })
-                    {
-                        sFx.ActiveConditionals?.AddRange(fx.ActiveConditionals);
-                    }
-
-                    if (fx.AdvancedConditions is { Rows.Count: > 0 })
-                    {
-                        sFx.AdvancedConditions = PlannerEffectResolver.MergeConditions(fx.AdvancedConditions, sFx.AdvancedConditions);
-                        sFx.ActiveConditionals = sFx.AdvancedConditions.ToLegacyActiveConditionals();
-                    }
-
-                    if (fx.Ticks > 0 && sFx.Ticks == 0)
-                    {
-                        sFx.Ticks = fx.Ticks;
-                    }
-
-                    sFx.SetPower(this);
-                }
-
-                k += subEffects.Count;
-            }
-
-            if (rLevel > 0)
-            {
-                return pEffects;
-            }
-
-            Effects = pEffects.ToArray();
-
-            return null;
+                ApplyRedirects = false,
+                AbsorbPetEffects = false,
+                ExpandGrantPowers = false,
+                ExpandExecutePowers = true,
+                IncludeTrace = false,
+                MaxExpansionDepth = PlannerEffectResolutionContext.DefaultMaxExpansionDepth
+            });
         }
 
         /// <summary>

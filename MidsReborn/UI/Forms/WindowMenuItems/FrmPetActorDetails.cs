@@ -808,14 +808,15 @@ public sealed class FrmPetActorDetails : Form
         }
 
         var sourceDescription = PetActorPowerResolver.DescribePowerSource(_currentSnapshot.ResolvedPowers[_selectedPowerIndex]);
-        _detailView.SetActorData(
+        _detailView.SetActorDataInternal(
             _currentSnapshot.BasePowers[_selectedPowerIndex],
             _currentSnapshot.BuffedPowers[_selectedPowerIndex],
             _currentSnapshot.Recipient.ClassName,
             _currentSnapshot.Totals,
             _currentSnapshot.ResolvedPowers[_selectedPowerIndex].SourceHistoryIndex,
             sourceDescription,
-            _currentSnapshot.AppliedBonusEntries);
+            _currentSnapshot.AppliedBonusEntries,
+            _currentSnapshot.CalculationSnapshot);
         _detailView.DisplayTotals();
         _detailView.DisplayBonuses();
     }

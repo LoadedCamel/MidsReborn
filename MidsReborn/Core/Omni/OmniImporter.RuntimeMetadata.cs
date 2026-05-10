@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.PlannerRulesets;
 using Newtonsoft.Json;
 
 namespace Mids_Reborn.Core.Omni;
@@ -32,8 +33,21 @@ public sealed partial class OmniImporter
             database.PowerImportMetadata = new PowerImportMetadata();
         }
 
+        var procPolicy = ImportedProcPolicyNormalizer.Normalize(
+            source.ProcAllowedValue,
+            source.ProcsOnlyOnMainTarget,
+            source.ProcIgnoreChainEffect,
+            source.ProcIgnoreOverCap,
+            out _);
+        var lifetimeMetadata = ImportedPowerPolicyDiagnostics.BuildLifetimeMetadata(source);
+        var boostPolicyMetadata = ImportedPowerPolicyDiagnostics.BuildBoostPolicyMetadata(source);
+
         if (string.IsNullOrWhiteSpace(source.TargetRequires) &&
-            (source.ActivationEffects == null || source.ActivationEffects.Count == 0))
+            (source.ActivationEffects == null || source.ActivationEffects.Count == 0) &&
+            procPolicy.IsDefault &&
+            source.StackingLifetime == null &&
+            !lifetimeMetadata.HasValue &&
+            !boostPolicyMetadata.HasValue)
         {
             database.PowerImportMetadata.Powers.Remove(powerFullName);
             return;
@@ -42,7 +56,11 @@ public sealed partial class OmniImporter
         database.PowerImportMetadata.Powers[powerFullName] = new ImportedPowerSemantics
         {
             TargetRequires = source.TargetRequires ?? string.Empty,
-            ActivationEffects = source.ActivationEffects?.Select(CloneEffectGroup).ToList() ?? []
+            ActivationEffects = source.ActivationEffects?.Select(CloneEffectGroup).ToList() ?? [],
+            ProcPolicy = procPolicy,
+            StackingLifetime = source.StackingLifetime,
+            LifetimeMetadata = lifetimeMetadata,
+            BoostPolicyMetadata = boostPolicyMetadata
         };
     }
 
@@ -54,6 +72,18 @@ public sealed partial class OmniImporter
         }
 
         midsPower.OmniTargetRequiresRaw = source.TargetRequires ?? string.Empty;
+        midsPower.TargetRoutingPolicy = PlannerConditionRoutingAnalyzer.Analyze(
+            midsPower.OmniTargetRequiresRaw,
+            midsPower.FullName);
+        midsPower.ProcPolicy = ImportedProcPolicyNormalizer.Normalize(
+            source.ProcAllowedValue,
+            source.ProcsOnlyOnMainTarget,
+            source.ProcIgnoreChainEffect,
+            source.ProcIgnoreOverCap,
+            out _);
+        midsPower.OmniStackingLifetime = source.StackingLifetime;
+        midsPower.OmniLifetimeMetadata = ImportedPowerPolicyDiagnostics.BuildLifetimeMetadata(source);
+        midsPower.OmniBoostPolicy = ImportedPowerPolicyDiagnostics.BuildBoostPolicyMetadata(source);
         if (source.ActivationEffects == null || source.ActivationEffects.Count == 0)
         {
             midsPower.ActivationEffectsRuntime = [];

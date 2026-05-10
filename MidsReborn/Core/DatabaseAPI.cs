@@ -186,14 +186,44 @@ namespace Mids_Reborn.Core
             return Database?.PlannerRulesetId ?? PlannerRulesetId.Legacy;
         }
 
+        public static ServerRulesProfile GetServerRulesProfile()
+        {
+            return ServerRulesProfileResolver.Resolve(GetDataProviderId(), GetPlannerRulesetId());
+        }
+
+        internal static EnhancementMathPolicy GetEnhancementMathPolicy()
+        {
+            return GetServerRulesProfile().GetEnhancementMathPolicy(Database?.EnhancementImportMetadata);
+        }
+
+        internal static ProcRulesPolicy GetProcRulesPolicy()
+        {
+            return GetServerRulesProfile().ProcRulesPolicy;
+        }
+
+        internal static SlottingRulesPolicy GetSlottingRulesPolicy()
+        {
+            return GetServerRulesProfile().SlottingRulesPolicy;
+        }
+
+        internal static SlottingValidationResult ValidateEnhancementForPower(IPower? power, int enhancementId)
+        {
+            return GetServerRulesProfile().ValidateEnhancementForPower(power, enhancementId);
+        }
+
+        internal static SlottingValidationResult ValidateEnhancementSlot(Build? build, int powerIndex, int slotIndex, int enhancementId)
+        {
+            return GetServerRulesProfile().ValidateEnhancementSlot(build, powerIndex, slotIndex, enhancementId);
+        }
+
         public static IPlannerRuleset GetPlannerRuleset()
         {
-            return PlannerRulesetResolver.Resolve(GetPlannerRulesetId());
+            return GetServerRulesProfile().Ruleset;
         }
 
         public static bool UsesCanonicalPlannerMath()
         {
-            return GetPlannerRuleset().UsesCanonicalPlannerMath;
+            return GetServerRulesProfile().UsesCanonicalPlannerMath;
         }
 
         public static bool UsesCanonicalOmniPlannerMath()
@@ -1828,9 +1858,15 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static bool RealmUsesToxicDef() => DatabaseName.Equals("Homecoming");
+        public static bool RealmUsesToxicDef() => RealmUsesToxicDefense;
 
-        public static bool RealmUsesToxicDefense => DatabaseName.Equals("Homecoming"); //  This is new
+        public static bool RealmUsesToxicDefense
+        {
+            get
+            {
+                return GetServerRulesProfile().UsesToxicDefense;
+            }
+        }
 
         public static void SaveServerData(string? iPath)
         {

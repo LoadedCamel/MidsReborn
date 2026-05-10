@@ -198,6 +198,10 @@ public sealed class MidsBufferedImagePanel : Control
     /// </summary>
     public int WhichEnh(int x, int y) => Renderer?.WhichEnh(x, y) ?? -1;
 
+    internal BuildRenderer.BuildHitTestResult HitTest(Point clientPt) => Renderer?.HitTest(clientPt) ?? BuildRenderer.BuildHitTestResult.None;
+
+    internal BuildRenderer.BuildHitTestResult HitTest(int x, int y) => Renderer?.HitTest(x, y) ?? BuildRenderer.BuildHitTestResult.None;
+
     /// <summary>
     /// Enhancement hit-test in *screen* coordinates. Returns sIdx or -1.
     /// </summary>

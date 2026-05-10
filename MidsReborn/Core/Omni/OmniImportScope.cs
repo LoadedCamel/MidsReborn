@@ -30,7 +30,20 @@ public sealed class OmniImportScope
     {
         "Inherent.Inherent.Walk",
         "Inherent.Inherent.HAC_Rez",
-        "Inherent.Inherent.HAC__Standard"
+        "Inherent.Inherent.HAC__Standard",
+        "Prestige.Prestige_Travel.prestige_Pocket_D_VIP_Pass",
+        "Prestige.Prestige_Travel.prestige_Base_Teleport",
+        "Prestige.Prestige_Travel.prestige_Base_Portal",
+        "Prestige.Prestige_Travel.prestige_Mission_Teleport",
+        "Prestige.Prestige_Travel.Team_Transporter",
+        "Prestige.Prestige_Travel.prestige_Team_Recall",
+        "Prestige.Prestige_Utility.Disable_All_Powers",
+        "Prestige.Prestige_Utility.prestige_InspirationGrant",
+        "Prestige.Prestige_Utility.Only_Affect_Self",
+        "Prestige.Prestige_Utility.Portable_Workbench",
+        "Prestige.Prestige_Utility.prestige_SelfRez",
+        "Prestige.Prestige_Utility.prestige_reveal",
+        "Prestige.Prestige_Utility.prestige_Permanent_SelfDestruction"
     };
 
     private static readonly HashSet<string> ExcludedPowersetFullNames = new(StringComparer.OrdinalIgnoreCase)
@@ -38,7 +51,11 @@ public sealed class OmniImportScope
         "Controller_Control.Wind_Control",
         "Dominator_Control.Wind_Control",
         "Pool.Fitness",
-        "Temporary_Powers.Art_Test"
+        "Temporary_Powers.Art_Test",
+        "Prestige.Combat_Dummy",
+        "Prestige.Prestige_Costumes",
+        "Prestige.Fun",
+        "Prestige.Vanity_Pets"
     };
 
     private readonly HashSet<string> _includedPowerRoots = new(StringComparer.OrdinalIgnoreCase)
@@ -55,6 +72,7 @@ public sealed class OmniImportScope
         "prestige",
         "redirects",
         "set_bonus",
+        "temporary_powers",
         "villain_pets",
         "arachnos_soldiers",
         "arachnos_widow",
@@ -467,6 +485,12 @@ public sealed class OmniImportScope
     {
         return !string.IsNullOrWhiteSpace(powersetFullName) &&
                ExcludedPowersetFullNames.Contains(powersetFullName);
+    }
+
+    public static bool IsExcludedPower(string powerFullName)
+    {
+        return !string.IsNullOrWhiteSpace(powerFullName) &&
+               ExcludedPowerFullNames.Contains(powerFullName);
     }
 
     private static string PowerFullNameFromParts(IReadOnlyList<string> parts)

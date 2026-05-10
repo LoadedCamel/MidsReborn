@@ -35,4 +35,7 @@ public sealed class PowerDisplaySnapshot
     public bool EnhancedWasResolvedForDisplay { get; }
     public bool BaseWasPaddedOrRepaired { get; }
     public bool EnhancedWasPaddedOrRepaired { get; }
+    internal ActorCalculationSnapshot? ActorCalculationSnapshot { get; init; }
+    internal PowerCalculationSnapshot? PowerCalculationSnapshot { get; init; }
+    internal CalculationContributionSnapshot? ContributionSnapshot { get; init; }
 }

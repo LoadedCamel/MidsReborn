@@ -1,5 +1,6 @@
 using System.Text;
 using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.PlannerRulesets;
 
 namespace Mids_Reborn.Core;
 
@@ -172,6 +173,8 @@ public static class PlannerEffectResolver
             resolvedPower.AppliedPowersOverride = true;
         }
 
+        PlannerResolvedEffectSemantics.MarkBaseEffects(resolvedPower.Effects);
+
         if (context.AbsorbPetEffects && !resolvedPower.AbsorbedPetEffects)
         {
             trace.Add(new PlannerEffectTraceEntry("EntCreate", $"Absorbing pseudo pet effects for {resolvedPower.FullName}."));
@@ -214,6 +217,7 @@ public static class PlannerEffectResolver
         context ??= new PlannerEffectResolutionContext();
 
         var expanded = power.Effects.Select(CloneEffect).ToList();
+        PlannerResolvedEffectSemantics.MarkBaseEffects(expanded);
         if (context.ExpandGrantPowers)
         {
             expanded = ExpandGrantPowerEffects(power, expanded, context, trace, expansionEvents, 0);
@@ -225,7 +229,9 @@ public static class PlannerEffectResolver
         }
 
         power.Effects = expanded.ToArray();
+        power.HasGrantPowerEffect = power.Effects.Any(effect => effect.EffectType == Enums.eEffectType.GrantPower);
         power.AppliedExecutes = context.ExpandExecutePowers;
+        SetEffectPower(power);
     }
 
     public static AdvancedConditionSet MergeConditions(AdvancedConditionSet? parent, AdvancedConditionSet? child)
@@ -266,6 +272,18 @@ public static class PlannerEffectResolver
         if (parent.ProcsPerMinute > 0 && child.ProcsPerMinute <= 0)
         {
             child.ProcsPerMinute = parent.ProcsPerMinute;
+        }
+
+        if (parent.isEnhancementEffect &&
+            (parent.IgnoreScaling || parent.IsFromProc) &&
+            child is Effect childEffect)
+        {
+            childEffect.ProcContributionFlags |= ProcContributionFlags.InheritedFromProcWrapper |
+                                                 ProcContributionFlags.ChildResultView;
+            if (parent.EffectType == Enums.eEffectType.ExecutePower)
+            {
+                childEffect.ProcContributionFlags |= ProcContributionFlags.ChainExpandedView;
+            }
         }
 
         if (!string.IsNullOrWhiteSpace(parent.EffectId) && string.IsNullOrWhiteSpace(child.EffectId))
@@ -375,6 +393,7 @@ public static class PlannerEffectResolver
             foreach (var child in childEffects)
             {
                 InheritEffectMetadata(effect, child, owner: owner);
+                child.AddResolvedEffectKind(PlannerResolvedEffectKind.GrantChild);
                 child.SetPower(owner);
                 expanded.Add(child);
             }
@@ -436,6 +455,7 @@ public static class PlannerEffectResolver
             foreach (var child in childEffects)
             {
                 InheritEffectMetadata(effect, child);
+                child.AddResolvedEffectKind(PlannerResolvedEffectKind.ExecuteChild);
                 child.SetPower(owner);
                 expanded.Add(child);
             }

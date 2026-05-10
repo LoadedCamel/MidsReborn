@@ -4,6 +4,7 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Omni;
+using Mids_Reborn.Core.PlannerRulesets;
 using Mids_Reborn.UI.Forms.Controls;
 
 namespace Mids_Reborn.Core
@@ -694,65 +695,89 @@ namespace Mids_Reborn.Core
 
         private void CheckAndFixAllEnhancements()
         {
+            var primaryAssignments = new List<(PowerEntry power, int powerIndex, int slotIndex, I9Slot slot)>();
+            for (var powerIndex = 0; powerIndex < Powers.Count; powerIndex++)
+            {
+                var power = Powers[powerIndex];
+                if (power == null)
+                {
+                    continue;
+                }
+
+                for (var slotIndex = 0; slotIndex < power.Slots.Length; slotIndex++)
+                {
+                    if (power.Power == null)
+                    {
+                        power.Slots[slotIndex].Enhancement = new I9Slot();
+                        power.Slots[slotIndex].FlippedEnhancement = new I9Slot();
+                        continue;
+                    }
+
+                    if (power.Slots[slotIndex].Enhancement.Enh > -1)
+                    {
+                        primaryAssignments.Add((power, powerIndex, slotIndex, (I9Slot)power.Slots[slotIndex].Enhancement.Clone()!));
+                        power.Slots[slotIndex].Enhancement = new I9Slot();
+                    }
+                }
+            }
+
+            foreach (var assignment in primaryAssignments)
+            {
+                if (!DatabaseAPI.ValidateEnhancementSlot(this, assignment.powerIndex, assignment.slotIndex, assignment.slot.Enh).IsValid)
+                {
+                    continue;
+                }
+
+                assignment.power.Slots[assignment.slotIndex].Enhancement = assignment.slot;
+                NormalizeEnhancementLevel(assignment.power.Slots[assignment.slotIndex].Enhancement);
+            }
+
             foreach (var power in Powers.Where(p => p != null))
             {
-                foreach (var slot in power.Slots)
+                for (var slotIndex = 0; slotIndex < power.Slots.Length; slotIndex++)
                 {
-                    if (power.Power != null)
+                    var slot = power.Slots[slotIndex];
+                    if (power.Power == null)
                     {
-                        if (slot.Enhancement.Enh > -1)
-                        {
-                            if (!power.Power.IsEnhancementValid(slot.Enhancement.Enh))
-                            {
-                                slot.Enhancement.Enh = -1;
-                            }
-                            else
-                            {
-                                var enh = DatabaseAPI.Database.Enhancements[slot.Enhancement.Enh];
-                                if (enh.TypeID is Enums.eType.SpecialO)
-                                {
-                                    slot.Enhancement.IOLevel = enh.GetFixedSpecialLevel(slot.Enhancement.IOLevel);
-                                }
-                                else
-                                {
-                                    slot.Enhancement.IOLevel = enh.CheckAndFixIOLevel(slot.Enhancement.IOLevel);
-                                }
-                            }
-                        }
+                        power.Slots[slotIndex].FlippedEnhancement = new I9Slot();
+                        continue;
+                    }
 
-                        if (slot.FlippedEnhancement.Enh <= -1)
-                        {
-                            continue;
-                        }
+                    if (slot.FlippedEnhancement.Enh <= -1)
+                    {
+                        continue;
+                    }
 
-                        if (!power.Power.IsEnhancementValid(slot.FlippedEnhancement.Enh))
-                        {
-                            slot.FlippedEnhancement.Enh = -1;
-                        }
-                        else
-                        {
-                            var enh = DatabaseAPI.Database.Enhancements[slot.FlippedEnhancement.Enh];
-                            if (enh.TypeID is Enums.eType.SpecialO)
-                            {
-                                slot.FlippedEnhancement.IOLevel = enh.GetFixedSpecialLevel(slot.FlippedEnhancement.IOLevel);
-                            }
-                            else
-                            {
-                                slot.FlippedEnhancement.IOLevel = enh.CheckAndFixIOLevel(slot.FlippedEnhancement.IOLevel);
-                            }
-                        }
+                    if (!DatabaseAPI.ValidateEnhancementForPower(power.Power, slot.FlippedEnhancement.Enh).IsValid)
+                    {
+                        power.Slots[slotIndex].FlippedEnhancement = new I9Slot();
                     }
                     else
                     {
-                        slot.Enhancement.Enh = -1;
-                        slot.Enhancement.IOLevel = 0;
-                        slot.FlippedEnhancement.Enh = -1;
-                        slot.FlippedEnhancement.IOLevel = 0;
+                        NormalizeEnhancementLevel(power.Slots[slotIndex].FlippedEnhancement);
                     }
                 }
             }
 
             ValidateEnhancements();
+        }
+
+        private static void NormalizeEnhancementLevel(I9Slot slot)
+        {
+            if (slot.Enh <= -1)
+            {
+                return;
+            }
+
+            var enh = DatabaseAPI.Database.Enhancements[slot.Enh];
+            if (enh.TypeID is Enums.eType.SpecialO)
+            {
+                slot.IOLevel = enh.GetFixedSpecialLevel(slot.IOLevel);
+            }
+            else
+            {
+                slot.IOLevel = enh.CheckAndFixIOLevel(slot.IOLevel);
+            }
         }
 
         private void CheckAllVariableBounds()
@@ -1212,136 +1237,69 @@ namespace Mids_Reborn.Core
 
         public bool EnhancementTest(int iSlotID, int hIdx, int iEnh, bool silent = false)
         {
-            if (iEnh < 0 || iSlotID < 0) return false;
-
-            var enhancement = DatabaseAPI.Database.Enhancements[iEnh];
-            var foundMutex = false;
-            var foundInPower = false;
-            var foundEnh = string.Empty;
-            var mutexType = -1;
-            if (enhancement.TypeID == Enums.eType.SetO && enhancement.nIDSet > -1 && hIdx > -1 && Powers[hIdx].Power != null)
+            if (iEnh < 0 || iSlotID < 0 || hIdx < 0 || hIdx >= Powers.Count)
             {
-                var allowedSet = false;
-                var setType = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].SetType;
-                for (var index = 0; index <= Powers[hIdx].Power.SetTypes.Count - 1; ++index)
-                {
-                    if (Powers[hIdx].Power.SetTypes[index] != setType)
-                    {
-                        continue;
-                    }
-
-                    allowedSet = true;
-                    break;
-                }
-
-                if (!allowedSet)
-                {
-                    return false;
-                }
+                return false;
             }
 
-            for (var powerIdx = 0; powerIdx < Powers.Count; powerIdx++)
-            {
-                if (Powers[powerIdx] == null)
-                {
-                    continue;
-                }
-
-                var power = Powers[powerIdx];
-                for (var slotIndex = 0; slotIndex < power.Slots.Length; slotIndex++)
-                {
-                    if (slotIndex == iSlotID && powerIdx == hIdx || Powers[powerIdx].Slots[slotIndex].Enhancement.Enh <= -1)
-                    {
-                        continue;
-                    }
-
-                    if (enhancement.Unique && Powers[powerIdx].Slots[slotIndex].Enhancement.Enh == iEnh)
-                    {
-                        if (!silent)
-                        {
-                            // Standard MessageBox may spawn behind TopMost controls like the totals or sets windows.
-                            //MessageBox.Show($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", @"Unable To Slot Enhancement");
-                            using var msgBox = new MessageBoxEx($@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.", MessageBoxEx.MessageBoxExButtons.Ok, MessageBoxEx.MessageBoxExIcon.Warning);
-                            msgBox.ShowDialog();
-                        }
-
-                        return false;
-                    }
-
-                    if (enhancement.Superior && enhancement.MutExID != Enums.eEnhMutex.None)
-                    {
-                        //Debug.WriteLine(enhancement.UID);
-                        var nVersion = Regex.Replace(enhancement.UID, @"(Attuned_|Superior_)", "");
-                        foreach (var item in MidsContext.Character.PEnhancementsList)
-                        {
-                            if (item.Contains(nVersion))
-                            {
-                                foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
-                                mutexType = 0;
-                                foundMutex = true;
-                            }
-                        }
-                    }
-                    else if (!enhancement.Superior && enhancement.MutExID != Enums.eEnhMutex.None && enhancement.MutExID != Enums.eEnhMutex.Stealth)
-                    {
-                        var nVersion = Regex.Replace(enhancement.UID, @"(Attuned_|Superior_)", "");
-                        foreach (var item in MidsContext.Character.PEnhancementsList)
-                        {
-                            if (item.Contains($"Superior_Attuned_{nVersion}") || item.Contains($"Superior_Attuned_Superior_{nVersion}"))
-                            {
-                                foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
-                                mutexType = 0;
-                                foundMutex = true;
-                            }
-                        }
-                    }
-                    else if (enhancement.MutExID == Enums.eEnhMutex.Stealth)
-                    {
-                        foreach (var item in MidsContext.Character.PEnhancementsList)
-                        {
-                            if (DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].MutExID == Enums.eEnhMutex.Stealth)
-                            {
-                                foundEnh = DatabaseAPI.Database.Enhancements[DatabaseAPI.GetEnhancementByUIDName(item)].LongName;
-                                mutexType = 1;
-                                foundMutex = true;
-                            }
-                        }
-                    }
-
-                    if (enhancement.nIDSet <= -1 || powerIdx != hIdx) continue;
-                    if (!DatabaseAPI.AreEnhancementsSameSetPiece(Powers[powerIdx].Slots[slotIndex].Enhancement.Enh, iEnh)) continue;
-                    foundInPower = true;
-                    break;
-                }
-            }
-
-            if (foundMutex)
-            {
-                if (!silent)
-                {
-                    switch (mutexType)
-                    {
-                        case 0:
-                            MessageBox.Show(@$"{enhancement.LongName} is mutually exclusive with {foundEnh}. You can only slot one type of this enhancement across your entire build.", @"Unable To Slot Enhancement");
-                            break;
-                        case 1:
-                            MessageBox.Show(@$"{enhancement.LongName} is mutually exclusive with {foundEnh}. You can only slot one stealth proc across your entire build.", @"Unable To Slot Enhancement");
-                            break;
-                    }
-
-                    return false;
-                }
-            }
-            if (!foundInPower)
+            var result = DatabaseAPI.ValidateEnhancementSlot(this, hIdx, iSlotID, iEnh);
+            if (result.IsValid)
             {
                 return true;
             }
 
             if (!silent)
             {
-                MessageBox.Show(@$"{enhancement.LongName} is already slotted in this power. You can only slot one of each enhancement from the set in a given power.", @"Unable To Slot Enhancement");
+                ShowEnhancementValidationMessage(iEnh, result);
             }
+
             return false;
+        }
+
+        private static void ShowEnhancementValidationMessage(int enhancementId, SlottingValidationResult result)
+        {
+            if (enhancementId < 0 || enhancementId >= DatabaseAPI.Database.Enhancements.Length)
+            {
+                return;
+            }
+
+            var enhancement = DatabaseAPI.Database.Enhancements[enhancementId];
+            switch (result.Reason)
+            {
+                case SlottingValidationReason.UniqueConflict:
+                    using (var msgBox = new MessageBoxEx(
+                               $@"{enhancement.LongName} is a unique enhancement. You can only slot one of these across your entire build.",
+                               MessageBoxEx.MessageBoxExButtons.Ok,
+                               MessageBoxEx.MessageBoxExIcon.Warning))
+                    {
+                        msgBox.ShowDialog();
+                    }
+
+                    break;
+
+                case SlottingValidationReason.MutexConflict:
+                    if (result.ConflictingEnhancementId < 0 ||
+                        result.ConflictingEnhancementId >= DatabaseAPI.Database.Enhancements.Length)
+                    {
+                        return;
+                    }
+
+                    var conflictingEnhancement = DatabaseAPI.Database.Enhancements[result.ConflictingEnhancementId];
+                    var conflictType = enhancement.MutExID == Enums.eEnhMutex.Stealth ||
+                                       conflictingEnhancement.MutExID == Enums.eEnhMutex.Stealth
+                        ? 1
+                        : 0;
+                    MessageBox.Show(
+                        conflictType == 0
+                            ? @$"{enhancement.LongName} is mutually exclusive with {conflictingEnhancement.LongName}. You can only slot one type of this enhancement across your entire build."
+                            : @$"{enhancement.LongName} is mutually exclusive with {conflictingEnhancement.LongName}. You can only slot one stealth proc across your entire build.",
+                        @"Unable To Slot Enhancement");
+                    break;
+
+                case SlottingValidationReason.DuplicateSetPiece:
+                    MessageBox.Show(@$"{enhancement.LongName} is already slotted in this power. You can only slot one of each enhancement from the set in a given power.", @"Unable To Slot Enhancement");
+                    break;
+            }
         }
 
         /// <summary>
@@ -2047,11 +2005,20 @@ namespace Mids_Reborn.Core
                 public bool Valid;
             }
 
-            private static EDValueSettings BuildEDItem(float value, Enums.eSchedule schedule, string name, float afterED, bool useRtf = false)
+            private static EDValueSettings BuildEDItem(
+                float value,
+                Enums.eSchedule schedule,
+                string name,
+                float afterED,
+                Enums.eEnhance enhanceType = Enums.eEnhance.None,
+                int subType = -1,
+                Enums.eBuffDebuff buffMode = Enums.eBuffDebuff.Any,
+                bool useRtf = false)
             {
-                var flag1 = value > (double)DatabaseAPI.Database.MultED[(int)schedule][0];
-                var flag2 = value > (double)DatabaseAPI.Database.MultED[(int)schedule][1];
-                var specialCase = value > (double)DatabaseAPI.Database.MultED[(int)schedule][2];
+                var edInfo = Enhancement.GetDiversificationInfo(schedule, value, enhanceType, subType, buffMode);
+                var flag1 = value > edInfo.FirstThreshold;
+                var flag2 = value > edInfo.SecondThreshold;
+                var specialCase = value > edInfo.ThirdThreshold;
 
                 var ret = new EDValueSettings
                 {
@@ -2071,7 +2038,7 @@ namespace Mids_Reborn.Core
                 }
 
                 var valuePercent = value * 100;
-                var valuePercentAfterED = Enhancement.ApplyED(schedule, value) * 100;
+                var valuePercentAfterED = edInfo.AppliedValue * 100;
                 var postEDValue = valuePercentAfterED + afterED * 100;
                 var valueDiff = (float)Math.Round(valuePercent - valuePercentAfterED, 3);
                 var preEDValue = valuePercent + afterED * 100;
@@ -2093,17 +2060,17 @@ namespace Mids_Reborn.Core
 
                     if (specialCase)
                     {
-                        tooltipText += $" The highest level of ED reduction is being applied.\r\nThreshold: {DatabaseAPI.Database.MultED[(int)schedule][2] * 100:P2}\r\n";
+                        tooltipText += $" The highest level of ED reduction is being applied.\r\nThreshold: {edInfo.ThirdThreshold * 100:P2}\r\n";
                         edStrength = EDStrength.Strong;
                     }
                     else if (flag2)
                     {
-                        tooltipText += $" The middle level of ED reduction is being applied.\r\nThreshold: {(DatabaseAPI.Database.MultED[(int)schedule][1] * 100):P2}\r\n";
+                        tooltipText += $" The middle level of ED reduction is being applied.\r\nThreshold: {(edInfo.SecondThreshold * 100):P2}\r\n";
                         edStrength = EDStrength.Medium;
                     }
                     else if (flag1)
                     {
-                        tooltipText += $" The lowest level of ED reduction is being applied.\r\nThreshold: {(DatabaseAPI.Database.MultED[(int)schedule][0] * 100):P2}\r\n";
+                        tooltipText += $" The lowest level of ED reduction is being applied.\r\nThreshold: {(edInfo.FirstThreshold * 100):P2}\r\n";
                         edStrength = EDStrength.Light;
                     }
 
@@ -2439,7 +2406,14 @@ namespace Mids_Reborn.Core
                 {
                     if (Math.Abs(buffValues[i]) > float.Epsilon)
                     {
-                        var edSettings = BuildEDItem(buffValues[i], buffSchedules[i], statNames[i], buffValuesAfterED[i]);
+                        var edSettings = BuildEDItem(
+                            buffValues[i],
+                            buffSchedules[i],
+                            statNames[i],
+                            buffValuesAfterED[i],
+                            (Enums.eEnhance)i,
+                            -1,
+                            Enums.eBuffDebuff.BuffOnly);
                         ret.Buffs.Add(new EDWeightedItem
                         {
                             StatName = statNames[i],
@@ -2453,7 +2427,14 @@ namespace Mids_Reborn.Core
 
                     if (Math.Abs(debuffValues[i]) > float.Epsilon)
                     {
-                        var edSettings = BuildEDItem(debuffValues[i], debuffSchedules[i], statNames[i], debuffValuesAfterED[i]);
+                        var edSettings = BuildEDItem(
+                            debuffValues[i],
+                            debuffSchedules[i],
+                            statNames[i],
+                            debuffValuesAfterED[i],
+                            (Enums.eEnhance)i,
+                            -1,
+                            Enums.eBuffDebuff.DeBuffOnly);
                         ret.Debuffs.Add(new EDWeightedItem
                         {
                             StatName = statNames[i],
@@ -2467,7 +2448,12 @@ namespace Mids_Reborn.Core
 
                     if (Math.Abs(buffDebuffValues[i]) > float.Epsilon)
                     {
-                        var edSettings = BuildEDItem(buffDebuffValues[i], buffDebuffSchedules[i], statNames[i], buffDebuffValuesAfterED[i]);
+                        var edSettings = BuildEDItem(
+                            buffDebuffValues[i],
+                            buffDebuffSchedules[i],
+                            statNames[i],
+                            buffDebuffValuesAfterED[i],
+                            (Enums.eEnhance)i);
                         ret.BuffDebuffs.Add(new EDWeightedItem
                         {
                             StatName = statNames[i],
@@ -2485,7 +2471,13 @@ namespace Mids_Reborn.Core
                 {
                     if (Math.Abs(mezValues[i]) > float.Epsilon)
                     {
-                        var edSettings = BuildEDItem(mezValues[i], mezSchedules[i], statNames[i], mezValuesAfterED[i]);
+                        var edSettings = BuildEDItem(
+                            mezValues[i],
+                            mezSchedules[i],
+                            statNames[i],
+                            mezValuesAfterED[i],
+                            Enums.eEnhance.Mez,
+                            i);
                         ret.Mez.Add(new EDWeightedItem
                         {
                             StatName = statNames[i],

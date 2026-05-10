@@ -75,7 +75,6 @@ internal static class OmniReportLegibility
         "display_help",
         "display_short_help",
         "display_name",
-        "icon",
         "short_name"
     };
 
@@ -361,6 +360,24 @@ internal static class OmniReportLegibility
             highlights:
             [
                 "Accepted canonical scoped replacements and manifest-owned scoped powers are compatibility/accounting paths, not failures by themselves."
+            ]));
+
+        buckets.Add(CreateBucket(
+            key: "retained-temporary-powers",
+            label: "Retained temporary powers",
+            status: result.RetainedTemporaryIntegrityFailures > 0
+                ? OmniReportBucketStatusKind.NeedsImplementation
+                : result.RetainedTemporaryPowersTracked > 0
+                    ? OmniReportBucketStatusKind.HealthyImplemented
+                    : OmniReportBucketStatusKind.InformationalReportOnly,
+            meaning: "This bucket verifies that retained temporary families such as Accolades and SilentPowers survived the final import graph and remained attached to their owning powersets.",
+            actionable: result.RetainedTemporaryIntegrityFailures > 0,
+            recommendedAction: "Repair any missing or detached retained temporary powers before trusting the editor view for Accolades or SilentPowers.",
+            snapshot: $"Powersets tracked={result.RetainedTemporaryPowersetsTracked:n0}, powers tracked={result.RetainedTemporaryPowersTracked:n0}, hidden={result.RetainedTemporaryHiddenPowers:n0}, failures={result.RetainedTemporaryIntegrityFailures:n0}",
+            highlights:
+            [
+                "Hidden retained temporary powers are expected for runtime semantics and are not failures by themselves.",
+                "An empty retained temporary powerset in the editor should now indicate a real import/link problem, not browser filtering."
             ]));
 
         buckets.Add(CreateBucket(
@@ -651,7 +668,7 @@ internal static class OmniReportLegibility
         builder.AppendLine("#### Ignored Power Field Meaning");
         builder.AppendLine();
         builder.AppendLine($"- Harmless source/export metadata: {harmlessCount:n0}");
-        builder.AppendLine("- These entries include cached or display-oriented fields such as attrib_cache, display_fullname, icon, and short_name.");
+        builder.AppendLine("- These entries include cached or display-oriented fields such as attrib_cache, display_fullname, and short_name.");
         builder.AppendLine("- attrib_cache entries containing names like Lethal_Dmg or Smashing_Dmg are cached source hints, not dropped combat math.");
         builder.AppendLine($"- UI / client / server behavior not modeled by planner: {uiClientServerCount:n0}");
         builder.AppendLine("- These entries cover tray, highlight, message, confirmation, stance, and similar behavior that the planner intentionally does not model.");

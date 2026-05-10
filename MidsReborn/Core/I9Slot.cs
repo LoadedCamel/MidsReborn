@@ -92,15 +92,14 @@ namespace Mids_Reborn.Core
                 IOLevel = DatabaseAPI.Database.MultIO.Length - 1;
             }
 
-            var num1 = EnhancementScheduleMath.GetRuntimeScheduleBaseScale(iType, Grade, IOLevel, iSched);
-
-            var num2 = num1 * GetRelativeLevelMultiplier();
-            if (Enh > -1 && DatabaseAPI.Database.Enhancements[Enh].Superior)
-            {
-                num2 *= 1.25f;
-            }
-
-            return num2;
+            return DatabaseAPI.GetEnhancementMathPolicy()
+                .GetScheduleScale(
+                    this,
+                    iType,
+                    Grade,
+                    IOLevel,
+                    iSched,
+                    Enh > -1 && DatabaseAPI.Database.Enhancements[Enh].Superior);
         }
 
         private float GetRelativeLevelMultiplier()
@@ -287,7 +286,7 @@ namespace Mids_Reborn.Core
                 scheduleMult *= NormalizeClassicOrSpecialMultiplier(enhancementType, effect.Schedule, effect.Multiplier);
             }
 
-            return scheduleMult;
+            return DatabaseAPI.GetEnhancementMathPolicy().ApplyCurrentExemplarScaling(scheduleMult);
         }
 
         private float NormalizeClassicOrSpecialMultiplier(
@@ -578,7 +577,6 @@ namespace Mids_Reborn.Core
                         {
                             if (power.Effects[index1] == groupedEffectsArray[effectId])
                             {
-                                groupedEffectsArray[effectId].Stacking = Enums.eStacking.Yes;
                                 groupedEffectsArray[effectId].Buffable = true;
                             }
 
@@ -641,10 +639,9 @@ namespace Mids_Reborn.Core
                                     stringBuilder.Append("\n");
                                 }
 
-                                power.Effects[index2].Stacking = Enums.eStacking.Yes;
-                                power.Effects[index2].Buffable = true;
-
-                                stringBuilder.AppendFormat("  {0}", power.Effects[index2].BuildEffectString(true, "", false, false, false, true, false, false, true));
+                                var displayEffect = (IEffect)power.Effects[index2].Clone();
+                                displayEffect.Buffable = true;
+                                stringBuilder.AppendFormat("  {0}", displayEffect.BuildEffectString(true, "", false, false, false, true, false, false, true));
                             }
                         }
                     }

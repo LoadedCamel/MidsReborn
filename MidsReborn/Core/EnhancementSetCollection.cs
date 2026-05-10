@@ -1,4 +1,5 @@
 using System.Collections.Generic;
+using System.Linq;
 using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Core
@@ -44,11 +45,28 @@ namespace Mids_Reborn.Core
                 str3 += $"{RTF.Crlf()}{RTF.Bold(RTF.Color(RTF.ElementID.Text))}  {DatabaseAPI.Database.EnhancementSets[iSet].Bonus[index].Slotted} Slotted: {RTF.Color(fxColor)}{effectString}{RTF.Color(RTF.ElementID.Text)}";
             }
 
-            for (var index = 0; index <= DatabaseAPI.Database.EnhancementSets[iSet].SpecialBonus.Length - 1; ++index)
+            var projection = DatabaseAPI.GetEnhancementSetProjection(iSet);
+            var renderedSpecialRawMembers = new HashSet<int>();
+            for (var pieceIndex = 0; pieceIndex < projection.VisiblePieces.Count; pieceIndex++)
             {
-                var effectString = DatabaseAPI.Database.EnhancementSets[iSet].GetEffectString(index, true);
-                if (!string.IsNullOrEmpty(effectString))
-                    str3 += $"{RTF.Crlf()}{RTF.Color(RTF.ElementID.Enhancement)}{RTF.Bold($"  {DatabaseAPI.Database.Enhancements[DatabaseAPI.Database.EnhancementSets[iSet].Enhancements[index]].Name}: ")}{RTF.Color(RTF.ElementID.Faded)}{effectString}{RTF.Color(RTF.ElementID.Text)}";
+                var specialRawMemberPosition = DatabaseAPI.GetSpecialRawMemberPositionForSetPiece(iSet, pieceIndex);
+                if (specialRawMemberPosition < 0 || !renderedSpecialRawMembers.Add(specialRawMemberPosition))
+                {
+                    continue;
+                }
+
+                var effectString = DatabaseAPI.Database.EnhancementSets[iSet].GetEffectString(specialRawMemberPosition, true);
+                if (string.IsNullOrEmpty(effectString))
+                {
+                    continue;
+                }
+
+                var enhancementId = DatabaseAPI.Database.EnhancementSets[iSet].Enhancements.ElementAtOrDefault(specialRawMemberPosition);
+                var enhancementName = enhancementId >= 0 && enhancementId < DatabaseAPI.Database.Enhancements.Length
+                    ? DatabaseAPI.Database.Enhancements[enhancementId].Name
+                    : projection.VisiblePieces[pieceIndex].DisplayLabel;
+
+                str3 += $"{RTF.Crlf()}{RTF.Color(RTF.ElementID.Enhancement)}{RTF.Bold($"  {enhancementName}: ")}{RTF.Color(RTF.ElementID.Faded)}{effectString}{RTF.Color(RTF.ElementID.Text)}";
             }
 
             return str3;

@@ -150,6 +150,7 @@ public static class OmniMidsMapper
                     ? "Melee_Ones"
                     : DatabaseAPI.NormalizeModifierTableName(template.Table);
                 var pvMode = MapPvMode(mappedType, source.RequiresExpression, template, out var pvModeSource);
+                var stackPolicy = ImportedStackPolicyNormalizer.FromTemplate(template);
                 var effect = new Effect
                 {
                     PowerFullName = power.FullName,
@@ -159,7 +160,8 @@ public static class OmniMidsMapper
                     DamageType = MapDamageType(attrib, template.Table),
                     MezType = MapMezType(attrib, template.Type),
                     ToWho = MapToWho(power, template.Target),
-                    Stacking = MapStacking(template.Stack),
+                    Stacking = ImportedStackPolicyNormalizer.ToCompatibilityStacking(stackPolicy),
+                    StackPolicy = stackPolicy,
                     SpecialCase = MapSpecialCase(power, template, attrib, mappedType),
                     AttribType = MapAttribType(template.Type),
                     Aspect = MapAspect(template.Aspect),
@@ -1466,13 +1468,6 @@ public static class OmniMidsMapper
                 power.TargetsAffected.All(t =>
                     Normalize(t).Contains("self", StringComparison.OrdinalIgnoreCase) ||
                     Normalize(t).Contains("caster", StringComparison.OrdinalIgnoreCase)));
-    }
-
-    private static Enums.eStacking MapStacking(string stack)
-    {
-        return stack.Equals("Stack", StringComparison.OrdinalIgnoreCase)
-            ? Enums.eStacking.Yes
-            : Enums.eStacking.No;
     }
 
     private static string Normalize(string value)

@@ -147,6 +147,10 @@ namespace Mids_Reborn.Core
         {
             var itemsToRemove = new List<AlternateEntry>();
             var counters = new Dictionary<int, int>();
+            var powersByStaticIndex = (DatabaseAPI.Database.Power ?? [])
+                .Where(power => power != null)
+                .GroupBy(power => power!.StaticIndex)
+                .ToDictionary(group => group.Key, group => group.First()!);
             foreach (var item in _table)
             {
                 if (!counters.ContainsKey(item.SourcePowerId))
@@ -161,12 +165,12 @@ namespace Mids_Reborn.Core
                         $"Warning: duplicate input power ID {item.SourcePowerId} found.\r\nPlease ensure input IDs are unique.\r\nThe replacement pair <{item.SourcePowerId}, {item.TargetPowerId}> {(item.Archetype == "" ? "" : $"({FirstCharToUpper(item.Archetype)}) ")}will be disabled.",
                         "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
-                var power = DatabaseAPI.Database.Power
-                    .DefaultIfEmpty(new Power { StaticIndex = -1 })
-                    .FirstOrDefault(e => e.StaticIndex == item.TargetPowerId);
-
-                var powerName = power.StaticIndex == -1 ? "" : power.FullName;
-                if (powerName != "") continue;
+                
+                if (powersByStaticIndex.TryGetValue(item.TargetPowerId, out var power) &&
+                    !string.IsNullOrWhiteSpace(power.FullName))
+                {
+                    continue;
+                }
 
                 itemsToRemove.Add(item);
                 MessageBox.Show(
@@ -177,13 +181,14 @@ namespace Mids_Reborn.Core
             if (itemsToRemove.Count <= 0) return;
 
             // Remove invalid items and reindex
+            var remove = itemsToRemove
+                .Distinct()
+                .ToHashSet();
             var tableTempCopy = new List<AlternateEntry>();
-            var j = 0;
             foreach (var e in _table)
             {
-                if (e.SourcePowerId == itemsToRemove[j].SourcePowerId & e.TargetPowerId == itemsToRemove[j].TargetPowerId)
+                if (remove.Contains(e))
                 {
-                    j++;
                     continue;
                 }
 
@@ -197,14 +202,16 @@ namespace Mids_Reborn.Core
         {
             if (!Debugger.IsAttached && !Process.GetCurrentProcess().ProcessName.ToLowerInvariant().Contains("devenv")) return;
 
+            var powersByStaticIndex = (DatabaseAPI.Database.Power ?? [])
+                .Where(power => power != null)
+                .GroupBy(power => power!.StaticIndex)
+                .ToDictionary(group => group.Key, group => group.First()!);
             Debug.WriteLine($"Dump() - PowersReplTable Count: {_table.Count}");
             foreach (var item in _table)
             {
-                var power = DatabaseAPI.Database.Power
-                    .DefaultIfEmpty(new Power { StaticIndex = -1 })
-                    .FirstOrDefault(e => e.StaticIndex == item.TargetPowerId);
-
-                var powerName = power.StaticIndex == -1 ? "" : power.FullName;
+                var powerName = powersByStaticIndex.TryGetValue(item.TargetPowerId, out var power)
+                    ? power.FullName
+                    : "";
 
                 Debug.WriteLine($"{item.SourcePowerId} --> {item.TargetPowerId} {(item.Archetype == "" ? "(Global)" : $"({FirstCharToUpper(item.Archetype)})")} [{(powerName == "" ? "<null>" : powerName)}]");
             }

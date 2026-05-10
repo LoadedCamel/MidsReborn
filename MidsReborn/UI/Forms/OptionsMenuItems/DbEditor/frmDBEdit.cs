@@ -296,6 +296,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             Directory.CreateDirectory(Path.Combine(path, "Assets"));
             Directory.CreateDirectory(Path.Combine(path, "Assets", "Archetypes"));
             Directory.CreateDirectory(Path.Combine(path, "Assets", "Enhancements"));
+            Directory.CreateDirectory(Path.Combine(path, "Assets", "Powers"));
             Directory.CreateDirectory(Path.Combine(path, "Assets", "Powersets"));
             Directory.CreateDirectory(Path.Combine(path, "Assets", "Sets"));
             var files = Directory.GetFiles(Path.Combine(AppContext.BaseDirectory, AppDataPaths.ParentDatabaseFolder, "Homecoming"));

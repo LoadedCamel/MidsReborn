@@ -1,4 +1,3 @@
-using System.Text.RegularExpressions;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 
@@ -44,8 +43,6 @@ public sealed class PlannerBuildRecipientContext
 
 public static partial class OmniPowerRouting
 {
-    private static readonly Regex TargetHasTagRegex = new(@"^target\.HasTag\?\(([^)]+)\)$", RegexOptions.IgnoreCase | RegexOptions.Compiled);
-
     public static PlannerBuildRecipientContext CreatePlayerRecipient() =>
         PlannerBuildRecipientContext.CreatePlayerRecipient();
 
@@ -136,93 +133,85 @@ public static partial class OmniPowerRouting
 
     private static bool TargetRequiresMatches(IPower sourcePower, PlannerBuildRecipientContext recipient)
     {
-        if (sourcePower is not Power concretePower || string.IsNullOrWhiteSpace(concretePower.OmniTargetRequiresRaw))
+        if (sourcePower is not Power concretePower)
         {
             return true;
         }
 
-        return EvaluateTargetRequires(concretePower.OmniTargetRequiresRaw, recipient);
+        return EvaluateTargetRoutingPolicy(concretePower.TargetRoutingPolicy, recipient);
     }
 
-    private static bool EvaluateTargetRequires(string expression, PlannerBuildRecipientContext recipient)
+    private static bool EvaluateTargetRoutingPolicy(
+        PlannerTargetRoutingPolicy policy,
+        PlannerBuildRecipientContext recipient)
     {
-        if (string.IsNullOrWhiteSpace(expression))
-        {
-            return true;
-        }
-
-        var tokens = expression.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
-        if (tokens.Length == 1)
-        {
-            return EvaluateTargetToken(tokens[0], recipient);
-        }
-
-        var stack = new Stack<bool>();
-        foreach (var token in tokens)
-        {
-            if (token.Equals("AND", StringComparison.OrdinalIgnoreCase))
-            {
-                if (stack.Count < 2)
-                {
-                    return false;
-                }
-
-                var right = stack.Pop();
-                var left = stack.Pop();
-                stack.Push(left && right);
-                continue;
-            }
-
-            if (token.Equals("OR", StringComparison.OrdinalIgnoreCase))
-            {
-                if (stack.Count < 2)
-                {
-                    return false;
-                }
-
-                var right = stack.Pop();
-                var left = stack.Pop();
-                stack.Push(left || right);
-                continue;
-            }
-
-            if (token is "!" or "NOT")
-            {
-                if (stack.Count < 1)
-                {
-                    return false;
-                }
-
-                stack.Push(!stack.Pop());
-                continue;
-            }
-
-            stack.Push(EvaluateTargetToken(token, recipient));
-        }
-
-        return stack.Count == 1 && stack.Pop();
-    }
-
-    private static bool EvaluateTargetToken(string token, PlannerBuildRecipientContext recipient)
-    {
-        if (token.Equals("true", StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        if (token.Equals("false", StringComparison.OrdinalIgnoreCase))
+        if (!EvaluateBuildSourceGates(policy.BuildSourceGates))
         {
             return false;
         }
 
-        var match = TargetHasTagRegex.Match(token);
-        if (!match.Success)
+        if (recipient.Kind == PlannerBuildRecipientKind.Player &&
+            !policy.AllowedRecipients.HasFlag(PlannerRecipientFlags.Player))
         {
             return false;
         }
 
-        var tag = match.Groups[1].Value.Trim();
-        return recipient.Tags.Any(value => value.Equals(tag, StringComparison.OrdinalIgnoreCase));
+        if (recipient.Kind == PlannerBuildRecipientKind.OwnedRealPet &&
+            !policy.AllowedRecipients.HasFlag(PlannerRecipientFlags.OwnedRealPet))
+        {
+            return false;
+        }
+
+        return EvaluateRecipientClauses(policy.RecipientClauses, recipient);
+    }
+
+    private static bool EvaluateBuildSourceGates(AdvancedConditionSet gates)
+    {
+        if (gates.Rows.Count == 0)
+        {
+            return true;
+        }
+
+        var probe = new Effect();
+        return AdvancedConditionEvaluator.Evaluate(probe, gates);
+    }
+
+    private static bool EvaluateRecipientClauses(
+        IReadOnlyList<PlannerRecipientClause> clauses,
+        PlannerBuildRecipientContext recipient)
+    {
+        if (clauses.Count == 0)
+        {
+            return true;
+        }
+
+        var result = EvaluateRecipientClause(clauses[0], recipient);
+        for (var index = 1; index < clauses.Count; index++)
+        {
+            var clauseResult = EvaluateRecipientClause(clauses[index], recipient);
+            result = clauses[index].Link == AdvancedConditionLink.Or
+                ? result || clauseResult
+                : result && clauseResult;
+        }
+
+        return result;
+    }
+
+    private static bool EvaluateRecipientClause(
+        PlannerRecipientClause clause,
+        PlannerBuildRecipientContext recipient)
+    {
+        var result = clause.Kind switch
+        {
+            PlannerRecipientClauseKind.PlayerRecipient => recipient.Kind == PlannerBuildRecipientKind.Player,
+            PlannerRecipientClauseKind.OwnedRealPetRecipient => recipient.Kind == PlannerBuildRecipientKind.OwnedRealPet,
+            PlannerRecipientClauseKind.SelfRecipient => recipient.Kind == PlannerBuildRecipientKind.Player,
+            PlannerRecipientClauseKind.TargetTag => recipient.Tags.Any(tag => tag.Equals(clause.Value, StringComparison.OrdinalIgnoreCase)),
+            PlannerRecipientClauseKind.Never => false,
+            _ => true
+        };
+
+        return clause.Negated ? !result : result;
     }
 
     private static IEffect[] CloneEffects(IEnumerable<IEffect> effects, bool rewriteTargetToSelf)

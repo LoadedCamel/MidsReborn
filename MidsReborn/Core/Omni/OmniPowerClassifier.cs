@@ -357,6 +357,17 @@ public sealed class OmniPowerClassifier
             classification.Reasons.Add("planner-relevant temporary silent support/state power retained hidden");
         }
 
+        if (IsRetainedPrestigeVisiblePower(group, set))
+        {
+            classification.HiddenPower = false;
+            classification.IncludeFlag = true;
+            classification.InherentType = Enums.eGridType.Temp;
+            classification.GrantedSupportPower = false;
+            classification.ExecutionOnly = false;
+            classification.NormalBuildPick = false;
+            classification.Reasons.Add("retained prestige database power");
+        }
+
         if (!classification.HiddenPower && offensive && classification.PowerType == Enums.ePowerType.Click)
         {
             classification.ClassificationConfidence = 0.95f;
@@ -650,6 +661,21 @@ public sealed class OmniPowerClassifier
                set.Equals("SilentPowers", StringComparison.OrdinalIgnoreCase);
     }
 
+    private static bool IsRetainedPrestigeVisiblePower(string group, string set)
+    {
+        if (!group.Equals("Prestige", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return NormalizeName(set) is
+            "combatpets" or
+            "prestigeattacks" or
+            "prestigesprints" or
+            "prestigetravel" or
+            "prestigeutility";
+    }
+
     private static OmniScopedPowerDisposition DetermineScopedDisposition(
         OmniPowerDefinition power,
         OmniPowerClassification classification,
@@ -676,6 +702,20 @@ public sealed class OmniPowerClassifier
         string group,
         string set)
     {
+        if (OmniImportScope.IsExcludedPower(power.FullName))
+        {
+            return true;
+        }
+
+        if (group.Equals("Prestige", StringComparison.OrdinalIgnoreCase))
+        {
+            return NormalizeName(set) is
+                "combatdummy" or
+                "prestigecostumes" or
+                "fun" or
+                "vanitypets";
+        }
+
         return group.Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase) &&
                set.Equals("Art_Test", StringComparison.OrdinalIgnoreCase);
     }

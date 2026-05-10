@@ -245,17 +245,12 @@ namespace Mids_Reborn.Core
 
         public bool CanIncludeForStats()
         {
-            if (NIDPowerset <= -1)
+            var power = Power;
+            if (power == null)
             {
                 return false;
             }
 
-            if (IDXPower <= -1)
-            {
-                return false;
-            }
-
-            var power = DatabaseAPI.Database.Powersets[NIDPowerset]?.Powers[IDXPower];
             return power?.PowerType switch
             {
                 Enums.ePowerType.Auto_ => true,
@@ -287,12 +282,12 @@ namespace Mids_Reborn.Core
         {
             for (var index = 0; index < Slots.Length; index++)
             {
-                if (!Power.IsEnhancementValid(Slots[index].Enhancement.Enh))
+                if (!DatabaseAPI.ValidateEnhancementForPower(Power, Slots[index].Enhancement.Enh).IsValid)
                 {
                     Slots[index].Enhancement = new I9Slot();
                 }
 
-                if (!Power.IsEnhancementValid(Slots[index].FlippedEnhancement.Enh))
+                if (!DatabaseAPI.ValidateEnhancementForPower(Power, Slots[index].FlippedEnhancement.Enh).IsValid)
                 {
                     Slots[index].FlippedEnhancement = new I9Slot();
                 }

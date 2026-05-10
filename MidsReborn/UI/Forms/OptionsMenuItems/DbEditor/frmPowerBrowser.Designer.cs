@@ -35,6 +35,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             ColumnHeader3 = new ColumnHeader();
             ColumnHeader5 = new ColumnHeader();
             ColumnHeader7 = new ColumnHeader();
+            ColumnHeader8 = new ColumnHeader();
             lvSet = new ListView();
             ColumnHeader1 = new ColumnHeader();
             ColumnHeader4 = new ColumnHeader();
@@ -83,7 +84,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // lvPower
             // 
             lvPower.BorderStyle = BorderStyle.FixedSingle;
-            lvPower.Columns.AddRange(new ColumnHeader[] { ColumnHeader3, ColumnHeader5, ColumnHeader7 });
+            lvPower.Columns.AddRange(new ColumnHeader[] { ColumnHeader3, ColumnHeader5, ColumnHeader7, ColumnHeader8 });
             lvPower.FullRowSelect = true;
             lvPower.HeaderStyle = ColumnHeaderStyle.Nonclickable;
             lvPower.Location = new System.Drawing.Point(802, 37);
@@ -110,6 +111,11 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             // 
             ColumnHeader7.Text = "Level";
             ColumnHeader7.Width = 63;
+            // 
+            // ColumnHeader8
+            // 
+            ColumnHeader8.Text = "Flags";
+            ColumnHeader8.Width = 45;
             // 
             // lvSet
             // 
@@ -560,6 +566,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         ColumnHeader ColumnHeader5;
         ColumnHeader ColumnHeader6;
         ColumnHeader ColumnHeader7;
+        ColumnHeader ColumnHeader8;
         ImageList ilAT;
         ImageList ilPower;
         ImageList ilPS;

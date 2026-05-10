@@ -1900,6 +1900,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     continue;
                 }
 
+                var powerIndex = CurrentBuild.Powers.IndexOf(power);
                 var idxPower = power.IDXPower;
                 if (power.NIDPowerset == oldTrunk)
                 {
@@ -1984,7 +1985,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     for (var index4 = 0; index4 < power.SlotCount; index4++)
                     {
-                        if (!power.PowerSet.Powers[idxPower].IsEnhancementValid(power.Slots[index4].Enhancement.Enh))
+                        if (!DatabaseAPI.ValidateEnhancementSlot(CurrentBuild, powerIndex, index4, power.Slots[index4].Enhancement.Enh).IsValid)
                         {
                             power.Slots[index4].Enhancement = new I9Slot();
                         }

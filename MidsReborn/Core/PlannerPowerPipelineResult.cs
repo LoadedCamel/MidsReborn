@@ -14,4 +14,8 @@ public sealed class PlannerPowerPipelineResult
     public Enums.BuffsX SelfEnhanceBuckets { get; internal set; }
     public Enums.BuffsX SelfBuffBuckets { get; internal set; }
     public PlannerCombatContext CombatContext { get; internal set; } = PlannerCombatContext.Default;
+    internal ActorTotalsSnapshot? FinalTotalsSnapshot { get; set; }
+    internal ActorCalculationSnapshot? ActorSnapshot { get; set; }
+    internal BuildCalculationSnapshot? CalculationSnapshot { get; set; }
+    internal ActorPowerAssemblyResult? ActorAssembly { get; set; }
 }

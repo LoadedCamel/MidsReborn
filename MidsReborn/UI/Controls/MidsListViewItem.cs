@@ -1,5 +1,7 @@
 ﻿using System;
 
+using System.Drawing;
+
 namespace Mids_Reborn.UI.Controls;
 
 [Flags]
@@ -57,6 +59,7 @@ public class MidsListViewItem
     public MidsItemAlign Alignment { get; set; }
 
     public object? Tag { get; set; } // For associating custom data
+    public Image? LeadingImage { get; set; }
 
     public bool Bold
     {

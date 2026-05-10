@@ -44,6 +44,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private readonly ListBox lstRechargeGroups = new();
         private readonly Button btnRechargeGroupAdd = new();
         private readonly Button btnRechargeGroupRemove = new();
+        private readonly Label lblPowerIconName = new();
+        private readonly TextBox txtPowerIconName = new();
+        private readonly PictureBox picPowerIcon = new();
+        private readonly Button btnPowerIconBrowse = new();
+        private readonly Button btnPowerIconClear = new();
+        private readonly OpenFileDialog powerIconPicker = new();
 
         public frmEditPower(IPower? iPower, bool editMode = false)
         {
@@ -86,6 +92,55 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             InitializeRootTimeUi();
             InitializeSharedRechargeUi();
+            InitializePowerIconUi();
+        }
+
+        private void InitializePowerIconUi()
+        {
+            txtDescShort.Width = 225;
+            txtDescLong.Width = 225;
+
+            lblPowerIconName.Location = new Point(289, 18);
+            lblPowerIconName.Name = nameof(lblPowerIconName);
+            lblPowerIconName.Size = new Size(38, 23);
+            lblPowerIconName.Text = @"Icon:";
+            lblPowerIconName.TextAlign = ContentAlignment.MiddleRight;
+
+            txtPowerIconName.Location = new Point(331, 18);
+            txtPowerIconName.Name = nameof(txtPowerIconName);
+            txtPowerIconName.Size = new Size(152, 22);
+            txtPowerIconName.TextChanged += txtPowerIconName_TextChanged;
+            txtPowerIconName.Leave += txtPowerIconName_Leave;
+
+            picPowerIcon.BorderStyle = BorderStyle.FixedSingle;
+            picPowerIcon.Location = new Point(289, 48);
+            picPowerIcon.Name = nameof(picPowerIcon);
+            picPowerIcon.Size = new Size(48, 48);
+            picPowerIcon.SizeMode = PictureBoxSizeMode.Zoom;
+            picPowerIcon.TabStop = false;
+
+            btnPowerIconBrowse.Location = new Point(343, 48);
+            btnPowerIconBrowse.Name = nameof(btnPowerIconBrowse);
+            btnPowerIconBrowse.Size = new Size(140, 23);
+            btnPowerIconBrowse.Text = @"Browse...";
+            btnPowerIconBrowse.UseVisualStyleBackColor = true;
+            btnPowerIconBrowse.Click += btnPowerIconBrowse_Click;
+
+            btnPowerIconClear.Location = new Point(343, 73);
+            btnPowerIconClear.Name = nameof(btnPowerIconClear);
+            btnPowerIconClear.Size = new Size(140, 23);
+            btnPowerIconClear.Text = @"Clear Icon";
+            btnPowerIconClear.UseVisualStyleBackColor = true;
+            btnPowerIconClear.Click += btnPowerIconClear_Click;
+
+            powerIconPicker.Filter = @"PNG Images|*.png";
+            powerIconPicker.Title = @"Select Power Icon";
+
+            GroupBox5.Controls.Add(lblPowerIconName);
+            GroupBox5.Controls.Add(txtPowerIconName);
+            GroupBox5.Controls.Add(picPowerIcon);
+            GroupBox5.Controls.Add(btnPowerIconBrowse);
+            GroupBox5.Controls.Add(btnPowerIconClear);
         }
 
         private void InitializeRootTimeUi()
@@ -1474,6 +1529,20 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
         }
 
+        private void DisplayPowerIcon()
+        {
+            if (picPowerIcon.Image is Image existingImage)
+            {
+                picPowerIcon.Image = null;
+                existingImage.Dispose();
+            }
+
+            var powerIcon = AssetManager.GetPowerImage(myPower);
+            picPowerIcon.Image = powerIcon?.Bitmap != null
+                ? new Bitmap(powerIcon.Bitmap)
+                : new Bitmap(DbEditorIconLayout.MinimumIconSize, DbEditorIconLayout.MinimumIconSize);
+        }
+
         private void DrawAcceptedSets()
         {
             bxSet = new ExtendedBitmap(pbInvSetUsed.Width, pbInvSetUsed.Height);
@@ -1754,6 +1823,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             cbNameGroup.Text = myPower.GroupName;
             cbNameSet.Text = myPower.SetName;
             DisplayNameData();
+            txtPowerIconName.Text = myPower.IconName;
+            DisplayPowerIcon();
             txtDescLong.Text = myPower.DescLong;
             txtDescShort.Text = myPower.DescShort;
             udScaleStart.Value = new decimal(myPower.VariableStart);
@@ -1776,7 +1847,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             chkNoAUReq.Checked = myPower.NeverAutoUpdateRequirements;
             cbForcedClass.SelectedIndex = DatabaseAPI.NidFromUidClass(myPower.ForcedClass) + 1;
             chkNoAutoUpdate.Checked = myPower.NeverAutoUpdate;
-            chkHidden.Visible = MidsContext.Config.MasterMode;
+            chkHidden.Visible = true;
             chkHidden.Checked = myPower.HiddenPower;
         }
 
@@ -3752,6 +3823,63 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             myPower.PowerName = txtNamePower.Text;
             SetFullName();
             Text = $"Edit {(EditMode ? "" : "New ")}Power ({myPower.GroupName}.{myPower.SetName}.{myPower.PowerName})";
+        }
+
+        private void txtPowerIconName_Leave(object sender, EventArgs e)
+        {
+            if (Updating)
+            {
+                return;
+            }
+
+            var normalized = FileIO.StripPath(txtPowerIconName.Text.Trim());
+            if (!string.Equals(txtPowerIconName.Text, normalized, StringComparison.Ordinal))
+            {
+                Updating = true;
+                txtPowerIconName.Text = normalized;
+                Updating = false;
+            }
+
+            myPower.IconName = normalized;
+            DisplayPowerIcon();
+        }
+
+        private void txtPowerIconName_TextChanged(object sender, EventArgs e)
+        {
+            if (Updating)
+            {
+                return;
+            }
+
+            myPower.IconName = txtPowerIconName.Text.Trim();
+            DisplayPowerIcon();
+        }
+
+        private void btnPowerIconBrowse_Click(object sender, EventArgs e)
+        {
+            if (Updating)
+            {
+                return;
+            }
+
+            powerIconPicker.InitialDirectory = AssetManager.GetDbPowersPath();
+            powerIconPicker.FileName = myPower.IconName;
+            if (powerIconPicker.ShowDialog(this) != DialogResult.OK)
+            {
+                return;
+            }
+
+            txtPowerIconName.Text = FileIO.StripPath(powerIconPicker.FileName);
+        }
+
+        private void btnPowerIconClear_Click(object sender, EventArgs e)
+        {
+            if (Updating)
+            {
+                return;
+            }
+
+            txtPowerIconName.Text = string.Empty;
         }
 
         private void txtNumCharges_Leave(object sender, EventArgs e)

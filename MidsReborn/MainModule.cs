@@ -131,11 +131,11 @@ namespace Mids_Reborn
                 DatabaseAPI.LoadSalvage(path);
                 DatabaseAPI.LoadRecipes(path);
 
-                if (File.Exists(AppDataPaths.CrypticPowersRepl))
-                {
-                    messenger.SetMessage("Loading Powers Replacement Table...");
-                    DatabaseAPI.LoadReplacementTable();
-                }
+                // if (File.Exists(AppDataPaths.CrypticPowersRepl))
+                // {
+                //     messenger.SetMessage("Loading Powers Replacement Table...");
+                //     DatabaseAPI.LoadReplacementTable();
+                // }
 
                 messenger.SetMessage("Loading Cryptic-specific power names translation table");
                 DatabaseAPI.LoadCrypticReplacementTable();

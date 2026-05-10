@@ -79,6 +79,14 @@ public static partial class DatabaseAPI
 
                 if (powerImport == null || !powerImport.TryGetValue(dbPower.FullName, out var semantics))
                 {
+                    if (!string.IsNullOrWhiteSpace(dbPower.OmniTargetRequiresRaw) &&
+                        dbPower.TargetRoutingPolicy.IsDefault)
+                    {
+                        dbPower.TargetRoutingPolicy = PlannerConditionRoutingAnalyzer.Analyze(
+                            dbPower.OmniTargetRequiresRaw,
+                            dbPower.FullName);
+                    }
+
                     continue;
                 }
 
@@ -86,6 +94,8 @@ public static partial class DatabaseAPI
                 {
                     dbPower.OmniTargetRequiresRaw = semantics.TargetRequires ?? string.Empty;
                 }
+
+                ApplyImportedPowerRuntimeMetadata(dbPower, semantics);
 
                 if (dbPower.ActivationEffectsRuntime.Length > 0 ||
                     semantics.ActivationEffects == null ||
@@ -130,6 +140,33 @@ public static partial class DatabaseAPI
         }
 
         Database.HasPersistedOmniRuntimeMetadata = true;
+    }
+
+    internal static void ApplyImportedPowerRuntimeMetadata(Power dbPower, ImportedPowerSemantics semantics)
+    {
+        dbPower.TargetRoutingPolicy = PlannerConditionRoutingAnalyzer.Analyze(
+            dbPower.OmniTargetRequiresRaw,
+            dbPower.FullName);
+
+        if (dbPower.ProcPolicy.IsDefault || !semantics.ProcPolicy.IsDefault)
+        {
+            dbPower.ProcPolicy = semantics.ProcPolicy;
+        }
+
+        if (dbPower.OmniStackingLifetime == null || semantics.StackingLifetime != null)
+        {
+            dbPower.OmniStackingLifetime = semantics.StackingLifetime;
+        }
+
+        if (!dbPower.OmniLifetimeMetadata.HasValue || semantics.LifetimeMetadata.HasValue)
+        {
+            dbPower.OmniLifetimeMetadata = semantics.LifetimeMetadata;
+        }
+
+        if (!dbPower.OmniBoostPolicy.HasValue || semantics.BoostPolicyMetadata.HasValue)
+        {
+            dbPower.OmniBoostPolicy = semantics.BoostPolicyMetadata;
+        }
     }
 
     private static OmniPowerDefinition CreateHydrationPowerDefinition(IPower power)

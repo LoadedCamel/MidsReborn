@@ -91,6 +91,10 @@ public sealed class OmniApplyResult
     public int AcceptedCanonicalScopedPowerReplacements { get; set; }
     public int ExcludedScopedOmniPowers { get; set; }
     public int ManifestOwnedScopedOmniPowers { get; set; }
+    public int RetainedTemporaryPowersetsTracked { get; set; }
+    public int RetainedTemporaryPowersTracked { get; set; }
+    public int RetainedTemporaryHiddenPowers { get; set; }
+    public int RetainedTemporaryIntegrityFailures { get; set; }
     public int PowersetIdentityChanges { get; set; }
     public int DuplicateCompositePowerIdentities { get; set; }
     public int EpicPowersetsCreated { get; set; }
@@ -340,6 +344,7 @@ public sealed class OmniApplyResult
     public List<string> AcceptedCanonicalScopedPowerReplacementDetails { get; } = [];
     public List<string> ExcludedScopedOmniPowerDetails { get; } = [];
     public List<string> ManifestOwnedScopedOmniPowerDetails { get; } = [];
+    public List<string> RetainedTemporaryIntegrityDetails { get; } = [];
     public List<string> PowersetIdentityChangeDetails { get; } = [];
     public List<string> StaffMasteryTraceDetails { get; } = [];
     public List<string> DuplicateCompositePowerIdentityDetails { get; } = [];
@@ -424,6 +429,7 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Powersets matched/created/updated: {PowersetsMatched:n0}/{PowersetsCreated:n0}/{PowersetsUpdated:n0}");
         builder.AppendLine($"- Powers matched/created/updated: {PowersMatched:n0}/{PowersCreated:n0}/{PowersUpdated:n0}");
         builder.AppendLine($"- Requirements updated/skipped unsupported: {RequirementsUpdated:n0}/{RequirementsSkippedUnsupported:n0}");
+        builder.AppendLine($"- Retained temp powersets/powers/hidden/failures: {RetainedTemporaryPowersetsTracked:n0}/{RetainedTemporaryPowersTracked:n0}/{RetainedTemporaryHiddenPowers:n0}/{RetainedTemporaryIntegrityFailures:n0}");
         builder.AppendLine($"- Unknown effect/attribute mappings: {UnknownEffectMappings:n0}/{UnknownAttribMappings:n0}");
         builder.AppendLine($"- Orphan powers/scoped powers after import: {OrphanPowersAfterImport:n0}/{OrphanedScopedOmniPowers:n0}");
         builder.AppendLine($"- Pet powers missing/source integrity failures: {PetPowersMissingAfterImport:n0}/{PetSourceIntegrityFailures:n0}");
@@ -532,6 +538,7 @@ public sealed class OmniApplyResult
         AppendSection(builder, "Accepted Canonical Scoped Power Replacements", AcceptedCanonicalScopedPowerReplacementDetails);
         AppendSection(builder, "Excluded Scoped Omni Powers", ExcludedScopedOmniPowerDetails);
         AppendSection(builder, "Manifest-Owned Scoped Omni Powers", ManifestOwnedScopedOmniPowerDetails);
+        AppendSection(builder, "Retained Temporary Power Integrity", RetainedTemporaryIntegrityDetails);
         AppendSection(builder, "Powerset Identity Changes", PowersetIdentityChangeDetails);
         AppendSection(builder, "Staff Mastery Trace", StaffMasteryTraceDetails);
         AppendSection(builder, "Duplicate Composite Power Identities", DuplicateCompositePowerIdentityDetails);

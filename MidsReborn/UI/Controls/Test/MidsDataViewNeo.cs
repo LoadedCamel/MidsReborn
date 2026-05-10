@@ -128,6 +128,8 @@ namespace Mids_Reborn.UI.Controls
         private IPower? rootPowerBase;
         private IPower? rootPowerEnh;
         private ActorTotalsSnapshot? _actorTotalsSnapshot;
+        private ActorCalculationSnapshot? _actorCalculationSnapshot;
+        private CalculationContributionSnapshot? _displayContributions;
         private string? _actorPowerSourceDescription;
         private IReadOnlyList<PetAppliedBonusEntry> _actorAppliedBonuses = [];
         private int pLastScaleVal;
@@ -1012,7 +1014,22 @@ namespace Mids_Reborn.UI.Controls
                 false,
                 false,
                 false,
-                false);
+                false)
+            {
+                ActorCalculationSnapshot = _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly
+                    ? _actorCalculationSnapshot
+                    : MainModule.MidsController.Toon?.LastCalculationSnapshot?.PlayerActorSnapshot,
+                PowerCalculationSnapshot = _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly
+                    ? (_actorCalculationSnapshot?.PowerSnapshots.Count > iHistoryIdx && iHistoryIdx >= 0
+                        ? _actorCalculationSnapshot.PowerSnapshots[iHistoryIdx]
+                        : null)
+                    : (MainModule.MidsController.Toon?.LastCalculationSnapshot?.PowerSnapshots.Count > iHistoryIdx && iHistoryIdx >= 0
+                        ? MainModule.MidsController.Toon.LastCalculationSnapshot.PowerSnapshots[iHistoryIdx]
+                        : null),
+                ContributionSnapshot = _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly
+                    ? _actorCalculationSnapshot?.Contributions
+                    : MainModule.MidsController.Toon?.LastCalculationSnapshot?.PlayerActorSnapshot.Contributions
+            };
 
             SetData(snapshot, noLevel, locked);
         }
@@ -1026,8 +1043,22 @@ namespace Mids_Reborn.UI.Controls
             string? powerSourceDescription = null,
             IReadOnlyList<PetAppliedBonusEntry>? appliedBonuses = null)
         {
+            SetActorDataInternal(basePower, enhancedPower, actorClassName, actorTotals, iHistoryIdx, powerSourceDescription, appliedBonuses, null);
+        }
+
+        internal void SetActorDataInternal(
+            IPower? basePower,
+            IPower? enhancedPower,
+            string actorClassName,
+            ActorTotalsSnapshot? actorTotals,
+            int iHistoryIdx,
+            string? powerSourceDescription,
+            IReadOnlyList<PetAppliedBonusEntry>? appliedBonuses,
+            ActorCalculationSnapshot? actorCalculationSnapshot)
+        {
             SetPresentationMode(MidsDataViewNeoPresentationMode.ActorReadOnly);
             _actorTotalsSnapshot = actorTotals;
+            _actorCalculationSnapshot = actorCalculationSnapshot;
             _actorPowerSourceDescription = powerSourceDescription;
             _actorAppliedBonuses = appliedBonuses ?? [];
 
@@ -1052,7 +1083,26 @@ namespace Mids_Reborn.UI.Controls
                     OmniDisplayClassName = actorClassName
                 };
 
-            SetData(baseClone, enhancedClone, false, false, iHistoryIdx);
+            var snapshot = new PowerDisplaySnapshot(
+                baseClone,
+                enhancedClone,
+                string.IsNullOrEmpty(Power.GetRootPowerName(iHistoryIdx, baseClone, enhancedClone))
+                    ? null
+                    : DatabaseAPI.GetPowerByFullName(Power.GetRootPowerName(iHistoryIdx, baseClone, enhancedClone)),
+                null,
+                iHistoryIdx,
+                false,
+                false,
+                false,
+                false)
+            {
+                ActorCalculationSnapshot = actorCalculationSnapshot,
+                PowerCalculationSnapshot = actorCalculationSnapshot?.PowerSnapshots.Count > iHistoryIdx && iHistoryIdx >= 0
+                    ? actorCalculationSnapshot.PowerSnapshots[iHistoryIdx]
+                    : null,
+                ContributionSnapshot = actorCalculationSnapshot?.Contributions
+            };
+            SetData(snapshot, false, false);
         }
 
         private int GetDisplayedBaseHitPoints()
@@ -1071,9 +1121,14 @@ namespace Mids_Reborn.UI.Controls
             if (_presentationMode != MidsDataViewNeoPresentationMode.ActorReadOnly)
             {
                 _actorTotalsSnapshot = null;
+                _actorCalculationSnapshot = null;
+                _displayContributions = null;
                 _actorPowerSourceDescription = null;
                 _actorAppliedBonuses = [];
             }
+
+            _actorCalculationSnapshot = snapshot.ActorCalculationSnapshot;
+            _displayContributions = snapshot.ContributionSnapshot ?? snapshot.ActorCalculationSnapshot?.Contributions;
 
             pBase = snapshot.BasePower == null ? null : new Power(snapshot.BasePower);
             pEnh = snapshot.EnhancedPower == null ? null : new Power(snapshot.EnhancedPower);
@@ -1114,6 +1169,7 @@ namespace Mids_Reborn.UI.Controls
             rootPowerBase = null;
             rootPowerEnh = null;
             _actorTotalsSnapshot = null;
+            _actorCalculationSnapshot = null;
             _actorPowerSourceDescription = null;
             _actorAppliedBonuses = [];
             _bonusesDataList?.Clear(true);
@@ -2594,7 +2650,7 @@ namespace Mids_Reborn.UI.Controls
                     : $"{sharedRechargeSummary}\r\n{shortDescription}";
             }
 
-            var statRows = PowerCanonicalStats.BuildRows(pBase, enhancedPower);
+            var statRows = PowerCanonicalStats.BuildRows(pBase, enhancedPower, _displayContributions);
             infoSDesc.Rtf = RTF.FormatMarkupDocument(shortDescription, infoSDesc.Font);
             infoLDesc.Rtf = RTF.FormatMarkupDocument(longInfo, infoLDesc.Font);
             powerStatsGrid.SetRows(statRows);

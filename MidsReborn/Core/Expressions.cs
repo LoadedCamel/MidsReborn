@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Globalization;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using Jace;
 using Mids_Reborn.Core.Base.Data_Classes;
@@ -562,6 +563,10 @@ namespace Mids_Reborn.Core
         private static Dictionary<string, string> CommandsDict(IEffect sourceFx)
         {
             var fxPower = sourceFx.GetPower();
+            var currentCharacter = MidsContext.Character;
+            var currentArchetype = currentCharacter?.Archetype ?? MidsContext.Archetype;
+            var currentDisplayStats = currentCharacter?.DisplayStats;
+            var currentTotals = currentCharacter?.Totals;
 
             return new Dictionary<string, string>
             {
@@ -581,14 +586,14 @@ namespace Mids_Reborn.Core
                 { "ifPvP", sourceFx.PvMode == Enums.ePvX.PvP ? "1" : "0" },
                 { "caster>modifier>current", ModifierCaster(sourceFx) },
                 { "modifier>current", $"{DatabaseAPI.GetModifier(sourceFx)}" },
-                { "maxEndurance", $"{MidsContext.Character.DisplayStats.EnduranceMaxEnd}" },
+                { "maxEndurance", $"{currentDisplayStats?.EnduranceMaxEnd ?? 0}" },
                 { "rand()", $"{sourceFx.Rand}" },
-                { "cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}"},
+                { "cur.kToHit", $"{currentDisplayStats?.BuffToHit ?? 0}"},
                 { "base.kToHit", $"{MidsContext.Config.ScalingToHit}" },
-                { "source>cur.kToHit", $"{MidsContext.Character.DisplayStats.BuffToHit}" },
+                { "source>cur.kToHit", $"{currentDisplayStats?.BuffToHit ?? 0}" },
                 { "source>base.kToHit", $"{MidsContext.Config.ScalingToHit}" },
-                { "source>Max.kHitPoints", $"{MidsContext.Character.Totals.HPMax}" },
-                { "source>Base.kHitPoints", $"{DatabaseAPI.GetClassHitPoints(MidsContext.Character.Archetype)}" },
+                { "source>Max.kHitPoints", $"{currentTotals?.HPMax ?? 0}" },
+                { "source>Base.kHitPoints", $"{(currentArchetype == null ? 0 : DatabaseAPI.GetClassHitPoints(currentArchetype))}" },
                 { "source>kHitPoints%", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}" },
                 { "target>kHitPoints%", $"{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent}" },
                 { "source>kEndurance%", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent}" },
@@ -622,8 +627,8 @@ namespace Mids_Reborn.Core
                 { new Regex(@"powerIs\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
                 { new Regex(@"powerIsNot\(([a-zA-Z0-9_\-\.]+)\)"), e => fxPower == null ? "0" : fxPower.FullName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "0" : "1" },
                 { new Regex(@"powerVectorsContains\(([a-zA-Z0-9_\-\.]+)\)"), e => PowerVectorsContains(sourceFx.GetPower(), e.Groups[1].Value) },
-                { new Regex(@"source\.owner\>arch\(([a-zA-Z\s]+)\)"), e => MidsContext.Character?.Archetype == null ? "0" : MidsContext.Character.Archetype.DisplayName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
-                { new Regex(@"source\.owner\>archIn\(([a-zA-Z\s\,]+)\)"), e => MidsContext.Character?.Archetype == null ? "0" : Regex.Split(e.Groups[1].Value, @"(\s*)\,").Select(f => f.ToLowerInvariant().Trim()).Contains(MidsContext.Character.Archetype.DisplayName.ToLowerInvariant()) ? "1" : "0" },
+                { new Regex(@"source\.owner\>arch\(([a-zA-Z\s]+)\)"), e => (MidsContext.Character?.Archetype ?? MidsContext.Archetype) == null ? "0" : (MidsContext.Character?.Archetype ?? MidsContext.Archetype).DisplayName.Equals(e.Groups[1].Value, StringComparison.InvariantCultureIgnoreCase) ? "1" : "0" },
+                { new Regex(@"source\.owner\>archIn\(([a-zA-Z\s\,]+)\)"), e => (MidsContext.Character?.Archetype ?? MidsContext.Archetype) == null ? "0" : Regex.Split(e.Groups[1].Value, @"(\s*)\,").Select(f => f.ToLowerInvariant().Trim()).Contains((MidsContext.Character?.Archetype ?? MidsContext.Archetype).DisplayName.ToLowerInvariant()) ? "1" : "0" },
                 { new Regex(@"caster\>modifier\(([a-zA-Z0-9_\-]+)\)"), e => ModifierCaster(e.Groups[1].Value) },
                 { new Regex(@"GCMActive\(([a-zA-Z0-9_\-]+)\)"), e => CheckGCM(sourceFx, fxPower, e.Groups[1].Value) },
                 { new Regex(@"GCMScale\(([a-zA-Z0-9_\-]+)\)"), e => GCMScale(sourceFx, fxPower, e.Groups[1].Value) },
@@ -822,6 +827,13 @@ namespace Mids_Reborn.Core
                 }
 
                 return false;
+            }
+
+            if (TryBuildLegacyLeftAssociativeExpression(expression, out var legacyExpression) &&
+                TryCalculate(mathEngine, legacyExpression, out result, out exception))
+            {
+                evaluatedExpression = legacyExpression;
+                return true;
             }
 
             if (TryCalculate(mathEngine, expression, out result, out exception))
@@ -1024,6 +1036,147 @@ namespace Mids_Reborn.Core
             return true;
         }
 
+        private static bool TryBuildLegacyLeftAssociativeExpression(string expression, out string rewrittenExpression)
+        {
+            rewrittenExpression = string.Empty;
+            if (string.IsNullOrWhiteSpace(expression))
+            {
+                return false;
+            }
+
+            var operands = new List<string>();
+            var operators = new List<char>();
+            var current = new StringBuilder();
+            var depth = 0;
+            var inSingleQuotes = false;
+            var inDoubleQuotes = false;
+            var seenMultiplyOrDivide = false;
+            var seenAddOrSubtract = false;
+
+            for (var index = 0; index < expression.Length; index++)
+            {
+                var ch = expression[index];
+
+                switch (ch)
+                {
+                    case '\'' when !inDoubleQuotes:
+                        inSingleQuotes = !inSingleQuotes;
+                        current.Append(ch);
+                        continue;
+                    case '"' when !inSingleQuotes:
+                        inDoubleQuotes = !inDoubleQuotes;
+                        current.Append(ch);
+                        continue;
+                }
+
+                if (inSingleQuotes || inDoubleQuotes)
+                {
+                    current.Append(ch);
+                    continue;
+                }
+
+                if (ch == '(')
+                {
+                    depth++;
+                    current.Append(ch);
+                    continue;
+                }
+
+                if (ch == ')')
+                {
+                    if (depth > 0)
+                    {
+                        depth--;
+                    }
+
+                    current.Append(ch);
+                    continue;
+                }
+
+                if (depth == 0 && IsTopLevelBinaryArithmeticOperator(expression, index))
+                {
+                    var operand = current.ToString().Trim();
+                    if (string.IsNullOrWhiteSpace(operand))
+                    {
+                        return false;
+                    }
+
+                    operands.Add(operand);
+                    operators.Add(ch);
+                    seenMultiplyOrDivide |= ch is '*' or '/';
+                    seenAddOrSubtract |= ch is '+' or '-';
+                    current.Clear();
+                    continue;
+                }
+
+                if (depth == 0 && IsUnsupportedTopLevelOperatorStart(ch))
+                {
+                    return false;
+                }
+
+                current.Append(ch);
+            }
+
+            var finalOperand = current.ToString().Trim();
+            if (string.IsNullOrWhiteSpace(finalOperand))
+            {
+                return false;
+            }
+
+            operands.Add(finalOperand);
+
+            if (operators.Count == 0 ||
+                operands.Count != operators.Count + 1 ||
+                !(seenMultiplyOrDivide && seenAddOrSubtract))
+            {
+                return false;
+            }
+
+            rewrittenExpression = $"({operands[0]} {operators[0]} {operands[1]})";
+            for (var index = 1; index < operators.Count; index++)
+            {
+                rewrittenExpression = $"({rewrittenExpression} {operators[index]} {operands[index + 1]})";
+            }
+
+            return true;
+        }
+
+        private static bool IsTopLevelBinaryArithmeticOperator(string expression, int index)
+        {
+            var ch = expression[index];
+            if (ch is not ('+' or '-' or '*' or '/'))
+            {
+                return false;
+            }
+
+            if (ch is '*' or '/')
+            {
+                return true;
+            }
+
+            for (var prevIndex = index - 1; prevIndex >= 0; prevIndex--)
+            {
+                var prev = expression[prevIndex];
+                if (char.IsWhiteSpace(prev))
+                {
+                    continue;
+                }
+
+                return prev is not ('+' or '-' or '*' or '/' or '(' or ',' or '>' or '<' or '=' or '!' or '&' or '|');
+            }
+
+            return false;
+        }
+
+        private static bool IsUnsupportedTopLevelOperatorStart(char ch)
+        {
+            return ch switch
+            {
+                '>' or '<' or '=' or '!' or '&' or '|' => true,
+                _ => false
+            };
+        }
+
         public static bool CanEvaluatePlannerExpression(string expression)
         {
             if (string.IsNullOrWhiteSpace(expression) ||
@@ -1039,17 +1192,16 @@ namespace Mids_Reborn.Core
 
         private static string OwnPowerNumCheck(string powerName)
         {
-            var power = MidsContext.Character.CurrentBuild?.Powers.FirstOrDefault(p => p is { Power: not null } && p.Power.FullName.Equals(powerName, StringComparison.InvariantCultureIgnoreCase));
+            var power = MidsContext.Character?.CurrentBuild?.Powers.FirstOrDefault(p => p is { Power: not null } && p.Power.FullName.Equals(powerName, StringComparison.InvariantCultureIgnoreCase));
             return power != null ? "1" : "0";
         }
 
         private static string CheckGCM(IEffect sourceFx, IPower? fxPower, string gcm)
         {
-            return ChanceModifierSupport.TryGetChanceModifierScale(
+            return DatabaseAPI.GetServerRulesProfile().TryGetChanceModifierScale(
                 MidsContext.Character,
                 fxPower ?? sourceFx.GetPower(),
                 gcm,
-                DatabaseAPI.GetPlannerRuleset().SupportsPowerLocalChanceMods,
                 out _)
                 ? "1"
                 : "0";
@@ -1057,11 +1209,10 @@ namespace Mids_Reborn.Core
 
         private static string GCMScale(IEffect sourceFx, IPower? fxPower, string gcm)
         {
-            return ChanceModifierSupport.TryGetChanceModifierScale(
+            return DatabaseAPI.GetServerRulesProfile().TryGetChanceModifierScale(
                 MidsContext.Character,
                 fxPower ?? sourceFx.GetPower(),
                 gcm,
-                DatabaseAPI.GetPlannerRuleset().SupportsPowerLocalChanceMods,
                 out var gcmScale)
                 ? $"{gcmScale}"
                 : "0";
@@ -1081,7 +1232,7 @@ namespace Mids_Reborn.Core
         {
             var ret = Enum.TryParse(typeof(Enums.eVector), vector, out var eValue);
 
-            return !ret
+            return !ret || sourcePower == null
                 ? "0"
                 : (sourcePower.AttackTypes & (Enums.eVector) eValue) == Enums.eVector.None
                     ? "0"
@@ -1090,7 +1241,7 @@ namespace Mids_Reborn.Core
 
         private static bool IsPowerActive(string powerName)
         {
-            var power = MidsContext.Character.CurrentBuild?.Powers.FirstOrDefault(p => p?.Power != null && p.Power.FullName.Equals(powerName, StringComparison.InvariantCultureIgnoreCase));
+            var power = MidsContext.Character?.CurrentBuild?.Powers.FirstOrDefault(p => p?.Power != null && p.Power.FullName.Equals(powerName, StringComparison.InvariantCultureIgnoreCase));
             
             return power?.Power is { Active: true };
         }
@@ -1310,7 +1461,7 @@ namespace Mids_Reborn.Core
 
         private static string GetVariableValue(string powerName, bool absoluteValue = true)
         {
-            var target = MidsContext.Character.CurrentBuild.Powers.FirstOrDefault(x => x is {Power: not null} && x.Power.FullName == powerName);
+            var target = MidsContext.Character?.CurrentBuild?.Powers.FirstOrDefault(x => x is { Power: not null } && x.Power.FullName == powerName);
 
             return target == null
                 ? "0"
@@ -1372,7 +1523,8 @@ namespace Mids_Reborn.Core
 
         private static float InternalParsing(IEffect sourceFx, ExpressionType exprType, out ErrorData error)
         {
-            var pickedPowerNames = MidsContext.Character.CurrentBuild == null ? new List<string?>() : MidsContext.Character.CurrentBuild.Powers.Select(pe => pe?.Power?.FullName).ToList();
+            var currentBuild = MidsContext.Character?.CurrentBuild;
+            var pickedPowerNames = currentBuild?.Powers.Select(pe => pe?.Power?.FullName).ToList() ?? new List<string?>();
 
             error = new ErrorData();
             var expr = exprType switch

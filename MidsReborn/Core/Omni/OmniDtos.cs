@@ -68,6 +68,9 @@ public sealed class OmniPowerDefinition
     [JsonProperty("display_short_help")]
     public string DisplayShortHelp { get; set; } = string.Empty;
 
+    [JsonProperty("icon")]
+    public string Icon { get; set; } = string.Empty;
+
     [JsonProperty("available_level")]
     public JToken? AvailableLevelValue { get; set; }
 
@@ -214,6 +217,12 @@ public sealed class OmniPowerDefinition
 
     [JsonIgnore]
     public int MaxPowerLifetimeInGame => OmniScalar.AsInt(MaxPowerLifetimeInGameValue);
+
+    [JsonProperty("stacking_lifetime")]
+    public JToken? StackingLifetimeValue { get; set; }
+
+    [JsonIgnore]
+    public bool? StackingLifetime => OmniScalar.AsNullableBool(StackingLifetimeValue);
 
     [JsonProperty("max_boosts")]
     public JToken? MaxBoostsValue { get; set; }
@@ -551,6 +560,18 @@ public sealed class OmniEffectTemplate
     [JsonProperty("caster_stack")]
     public string CasterStack { get; set; } = string.Empty;
 
+    [JsonProperty("stack_limit")]
+    public JToken? StackLimitValue { get; set; }
+
+    [JsonIgnore]
+    public int StackLimit => OmniScalar.AsInt(StackLimitValue);
+
+    [JsonProperty("stack_key")]
+    public string StackKey { get; set; } = string.Empty;
+
+    [JsonProperty("suppress_events")]
+    public List<string> SuppressEvents { get; set; } = [];
+
     [JsonProperty("flags")]
     public List<string> Flags { get; set; } = [];
 
@@ -746,5 +767,15 @@ internal static class OmniScalar
         }
 
         return defaultValue;
+    }
+
+    public static bool? AsNullableBool(JToken? token)
+    {
+        if (token == null || token.Type == JTokenType.Null)
+        {
+            return null;
+        }
+
+        return AsBool(token);
     }
 }

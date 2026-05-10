@@ -2,6 +2,8 @@ using System.Globalization;
 using System.Text;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
+using Mids_Reborn.Core.PlannerRulesets;
 using Mids_Reborn.UI.Controls;
 using Mids_Reborn.UI.Forms;
 using System.Windows.Forms;
@@ -273,7 +275,7 @@ public static class PlannerMathDiagnostics
         return effects
             .Where(IsOverlapRelevant)
             .GroupBy(GetExactDuplicateKey, StringComparer.OrdinalIgnoreCase)
-            .Count(g => g.Count() > 1);
+            .Count(g => g.Count() > 1 && PlannerStackRules.ShouldFlagDuplicateLookingGroup(g.Select(item => item).ToArray()));
     }
 
     public static PlannerMathDiagnosticReport ResolvePower(string powerFullName)
@@ -492,6 +494,8 @@ public static class PlannerMathDiagnostics
     {
         builder.AppendLine("### Condition Audit");
         builder.AppendLine();
+        AppendTargetRoutingAudit(builder, rawPower);
+        AppendImportedPowerPolicyAudit(builder, rawPower);
         AppendConditionBucket(builder, "Power Requirements", rawPower.AdvancedRequirements.Rows);
         AppendConditionBucket(builder, "Build-Evaluated Effect Conditions", resolvedPower.Effects.SelectMany(e => e.AdvancedConditions.Rows).Where(r => r.EvaluationMode == AdvancedConditionEvaluationMode.BuildEvaluated));
         AppendConditionBucket(builder, "Runtime Target-Only Effect Conditions", resolvedPower.Effects.SelectMany(e => e.AdvancedConditions.Rows).Where(r => r.EvaluationMode == AdvancedConditionEvaluationMode.RuntimeTargetOnly));
@@ -509,6 +513,69 @@ public static class PlannerMathDiagnostics
         AppendRuntimeConditionSummary(builder, runtimeRows);
         AppendConditionBucket(builder, "Runtime-only Conditions Preserved", runtimeRows);
         builder.AppendLine();
+    }
+
+    private static void AppendTargetRoutingAudit(StringBuilder builder, IPower rawPower)
+    {
+        builder.AppendLine("#### Target Routing");
+        if (rawPower is not Power power ||
+            (power.TargetRoutingPolicy.IsDefault && string.IsNullOrWhiteSpace(power.OmniTargetRequiresRaw)))
+        {
+            builder.AppendLine("- None.");
+            return;
+        }
+
+        var policy = power.TargetRoutingPolicy;
+        var original = string.IsNullOrWhiteSpace(policy.OriginalTargetRequires)
+            ? power.OmniTargetRequiresRaw
+            : policy.OriginalTargetRequires;
+        builder.AppendLine($"- Raw `target_requires`: {PlannerMathDiagnosticRunner.Escape(string.IsNullOrWhiteSpace(original) ? "(none)" : original)}");
+        builder.AppendLine($"- Applied recipient scope: recipients=`{policy.AllowedRecipients}` self=`{policy.SelfRequirement}`");
+
+        if (policy.RecipientClauses.Count == 0)
+        {
+            builder.AppendLine("- Applied recipient clauses: none.");
+        }
+        else
+        {
+            foreach (var group in policy.RecipientClauses
+                         .GroupBy(GetRecipientClauseDiagnosticKey, StringComparer.OrdinalIgnoreCase)
+                         .Take(20))
+            {
+                var clause = group.First();
+                var countText = group.Count() > 1 ? $" x{group.Count()}" : string.Empty;
+                builder.AppendLine($"- Applied recipient clause{countText}: `{clause.Link}` {PlannerConditionRoutingAnalyzer.DescribeRecipientClause(clause)}");
+            }
+        }
+
+        AppendConditionBucket(builder, "Applied Build Source Gates", policy.BuildSourceGates.Rows);
+        AppendConditionBucket(builder, "Deferred Target Routing Fragments", policy.DeferredTargetRows.Rows);
+        AppendConditionBucket(builder, "Deferred Source Routing Fragments", policy.DeferredSourceRows.Rows);
+    }
+
+    private static void AppendImportedPowerPolicyAudit(StringBuilder builder, IPower rawPower)
+    {
+        builder.AppendLine("#### Imported Power Policies");
+        if (rawPower is not Power power)
+        {
+            builder.AppendLine("- None.");
+            return;
+        }
+
+        var entries = ImportedPowerPolicyDiagnostics
+            .DescribeRuntime(power, DatabaseAPI.GetServerRulesProfile())
+            .Take(20)
+            .ToList();
+        if (entries.Count == 0)
+        {
+            builder.AppendLine("- None.");
+            return;
+        }
+
+        foreach (var entry in entries)
+        {
+            builder.AppendLine($"- `{entry.Category}` `{entry.FieldName}`: {PlannerMathDiagnosticRunner.Escape(entry.Detail)}");
+        }
     }
 
     private static void AppendConditionBucket(StringBuilder builder, string title, IEnumerable<AdvancedConditionRow> rows)
@@ -557,6 +624,11 @@ public static class PlannerMathDiagnostics
     private static string GetConditionDiagnosticKey(AdvancedConditionRow row)
     {
         return $"{row.EvaluationMode}|{row.Kind}|{row.Link}|{row.Negated}|{AdvancedConditionCompiler.Compile(row)}";
+    }
+
+    private static string GetRecipientClauseDiagnosticKey(PlannerRecipientClause clause)
+    {
+        return $"{clause.Link}|{clause.Kind}|{clause.Negated}|{clause.Value}";
     }
 
     private static void AppendExpansionAudit(StringBuilder builder, PlannerEffectResolution resolution)
@@ -608,7 +680,8 @@ public static class PlannerMathDiagnostics
         foreach (var group in overlapGroups)
         {
             var first = group.First().Effect;
-            var exactDuplicateGroups = group.GroupBy(item => GetExactDuplicateKey(item.Effect), StringComparer.OrdinalIgnoreCase).Count(g => g.Count() > 1);
+            var exactDuplicateGroups = group.GroupBy(item => GetExactDuplicateKey(item.Effect), StringComparer.OrdinalIgnoreCase)
+                .Count(g => g.Count() > 1 && PlannerStackRules.ShouldFlagDuplicateLookingGroup(g.Select(item => item.Effect).ToArray()));
             var sources = group
                 .Select(i => i.Effect.OmniSource)
                 .Where(s => !string.IsNullOrWhiteSpace(s))
@@ -1349,6 +1422,7 @@ public static class PlannerMathDiagnostics
     {
         return GetIncludedDamageRows(power)
             .GroupBy(GetExactDuplicateKey, StringComparer.OrdinalIgnoreCase)
+            .Where(group => PlannerStackRules.ShouldFlagDuplicateLookingGroup(group.ToArray()))
             .Sum(group => Math.Max(0, group.Count() - 1));
     }
 
@@ -1529,24 +1603,13 @@ public static class PlannerMathDiagnostics
             Format(effect.nDuration),
             Format(effect.DelayedTime),
             NormalizeConditionSet(effect.AdvancedConditions),
-            string.Join(",", GetEffectTags(effect).OrderBy(v => v, StringComparer.OrdinalIgnoreCase)));
+            string.Join(",", GetEffectTags(effect).OrderBy(v => v, StringComparer.OrdinalIgnoreCase)),
+            PlannerStackRules.GetDiagnosticPolicyKey(effect));
     }
 
     private static string GetExactDuplicateKey(IEffect effect)
     {
-        return string.Join("|",
-            GetOverlapKey(effect),
-            Format(effect.Scale),
-            Format(effect.nMagnitude),
-            Format(effect.BaseProbability),
-            Format(effect.ProcsPerMinute),
-            Format(effect.Ticks),
-            Format(effect.Absorbed_Interval),
-            effect.PvMode,
-            effect.EffectClass,
-            effect.Stacking,
-            effect.Absorbed_EffectID,
-            effect.OmniSource ?? string.Empty);
+        return PlannerStackRules.GetPlannerExactKey(effect);
     }
 
     private static string FormatOverlapLabel(IEffect effect)
@@ -1558,7 +1621,7 @@ public static class PlannerMathDiagnostics
             _ => effect.AttribType.ToString()
         };
 
-        return $"`{effect.EffectType}` `{subtype}` target=`{effect.ToWho}` table=`{effect.ModifierTable}` duration={Format(effect.nDuration)}";
+        return $"`{effect.EffectType}` `{subtype}` target=`{effect.ToWho}` table=`{effect.ModifierTable}` duration={Format(effect.nDuration)} stack=`{EscapeTable(PlannerStackRules.GetDiagnosticDescription(effect))}`";
     }
 
     private static string FormatOmniSource(IEffect effect)

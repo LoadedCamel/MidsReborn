@@ -48,6 +48,8 @@ namespace Mids_Reborn.Core
 
         string PowerName { get; set; }
 
+        string IconName { get; set; }
+
         string DisplayName { get; set; }
 
         int Available { get; set; }

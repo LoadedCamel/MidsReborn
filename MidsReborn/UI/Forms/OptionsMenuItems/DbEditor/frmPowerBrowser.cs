@@ -16,6 +16,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private const int BrowserGroupIconTargetPixels = 18;
         private const int BrowserSetIconTargetPixels = 24;
         private const int BrowserPowerIconTargetPixels = 20;
+        private const int BrowserPowerFullNameSubItemIndex = 4;
         private const int FILTER_ALL_POWERS = 3;
 
         private const int FILTER_ALL_SETS = 2;
@@ -50,6 +51,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             ilAT.ImageSize = CreateBrowserImageListSize(BrowserGroupIconTargetPixels);
             ilPS.ImageSize = CreateBrowserImageListSize(BrowserSetIconTargetPixels);
             ilPower.ImageSize = CreateBrowserImageListSize(BrowserPowerIconTargetPixels);
+            lvPower.SmallImageList = ilPower;
         }
 
         private Size CreateBrowserImageListSize(int targetPixels)
@@ -58,6 +60,18 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var scale = dpi / 96f;
             var logicalSize = Math.Max(16, (int)Math.Round(targetPixels / scale));
             return new Size(logicalSize, logicalSize);
+        }
+
+        internal static string GetPowerEditorFlags(IPower? power)
+        {
+            return power?.HiddenPower == true ? "H" : string.Empty;
+        }
+
+        private static string GetPowerBrowserFullName(ListViewItem item)
+        {
+            return item.SubItems.Count > BrowserPowerFullNameSubItemIndex
+                ? item.SubItems[BrowserPowerFullNameSubItemIndex].Text
+                : string.Empty;
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -369,7 +383,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void btnPowerClone_Click(object sender, EventArgs e)
         {
-            var index = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
+            var index = DatabaseAPI.NidFromUidPower(GetPowerBrowserFullName(lvPower.SelectedItems[0]));
             if (index < 0)
             {
                 MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -417,10 +431,10 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void btnPowerDelete_Click(object sender, EventArgs e)
         {
-            if (lvPower.SelectedIndices.Count <= 0 || MessageBox.Show($@"Really delete Power: {lvPower.SelectedItems[0].SubItems[3].Text}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (lvPower.SelectedIndices.Count <= 0 || MessageBox.Show($@"Really delete Power: {GetPowerBrowserFullName(lvPower.SelectedItems[0])}?", @"Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
                 return;
             IPower?[] powerArray = new IPower[DatabaseAPI.Database.Power.Length];
-            var num1 = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
+            var num1 = DatabaseAPI.NidFromUidPower(GetPowerBrowserFullName(lvPower.SelectedItems[0]));
             if (num1 < 0)
             {
                 MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -469,8 +483,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             var selIdx = lvPower.SelectedIndices[0] + 1;
-            var index1 = DatabaseAPI.NidFromUidPower(lvPower.Items[selectedIndex].SubItems[3].Text);
-            var index2 = DatabaseAPI.NidFromUidPower(lvPower.Items[selIdx].SubItems[3].Text);
+            var index1 = DatabaseAPI.NidFromUidPower(GetPowerBrowserFullName(lvPower.Items[selectedIndex]));
+            var index2 = DatabaseAPI.NidFromUidPower(GetPowerBrowserFullName(lvPower.Items[selIdx]));
             if (index1 < 0 | index2 < 0)
             {
                 MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -494,8 +508,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            var text = lvPower.SelectedItems[0].SubItems[3].Text;
-            var index1 = DatabaseAPI.NidFromUidPower(lvPower.SelectedItems[0].SubItems[3].Text);
+            var text = GetPowerBrowserFullName(lvPower.SelectedItems[0]);
+            var index1 = DatabaseAPI.NidFromUidPower(text);
             if (index1 < 0)
             {
                 MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -555,8 +569,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             var selIdx = lvPower.SelectedIndices[0] - 1;
-            var index1 = DatabaseAPI.NidFromUidPower(lvPower.Items[selectedIndex].SubItems[3].Text);
-            var index2 = DatabaseAPI.NidFromUidPower(lvPower.Items[selIdx].SubItems[3].Text);
+            var index1 = DatabaseAPI.NidFromUidPower(GetPowerBrowserFullName(lvPower.Items[selectedIndex]));
+            var index2 = DatabaseAPI.NidFromUidPower(GetPowerBrowserFullName(lvPower.Items[selIdx]));
             if (index1 < 0 | index2 < 0)
             {
                 MessageBox.Show(@"An unknown error caused an invalid PowerIndex return value.", @"Wha?", MessageBoxButtons.OK, MessageBoxIcon.Exclamation);
@@ -1089,9 +1103,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             _updating = false;
         }
 
-        private void List_Power_AddBlock(IReadOnlyList<int> iPowers, bool displayFullName, bool includeHiddenPowers)
+        private void List_Power_AddBlock(IReadOnlyList<int> iPowers, bool displayFullName)
         {
-            var items = new string[4];
             if (iPowers.Count < 1)
             {
                 return;
@@ -1099,28 +1112,17 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             foreach (var p in iPowers)
             {
-                if (p <= -1 || DatabaseAPI.Database.Power[p].HiddenPower && !includeHiddenPowers)
+                if (p <= -1)
                 {
                     continue;
                 }
 
-                items[0] = !displayFullName
-                    ? DatabaseAPI.Database.Power[p].PowerName
-                    : DatabaseAPI.Database.Power[p].FullName;
-                items[1] = DatabaseAPI.Database.Power[p].DisplayName;
-                items[2] = Convert.ToString(DatabaseAPI.Database.Power[p].Level,
-                    CultureInfo.InvariantCulture);
-                items[3] = DatabaseAPI.Database.Power[p].FullName;
-                lvPower.Items.Add(new ListViewItem(items)
-                {
-                    Tag = p
-                });
+                AddPowerListItem(DatabaseAPI.Database.Power[p], p, displayFullName);
             }
         }
 
-        private void List_Power_AddBlock(IReadOnlyList<string> iPowers, bool displayFullName, bool includeHiddenPowers)
+        private void List_Power_AddBlock(IReadOnlyList<string> iPowers, bool displayFullName)
         {
-            var items = new string[4];
             if (iPowers.Count < 1)
             {
                 return;
@@ -1129,47 +1131,37 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             foreach (var p in iPowers)
             {
                 var index2 = DatabaseAPI.NidFromUidPower(p);
-                if (index2 <= -1 || DatabaseAPI.Database.Power[index2].HiddenPower && !includeHiddenPowers)
+                if (index2 <= -1)
                 {
                     continue;
                 }
 
-                items[0] = !displayFullName
-                    ? DatabaseAPI.Database.Power[index2].PowerName
-                    : DatabaseAPI.Database.Power[index2].FullName;
-                items[1] = DatabaseAPI.Database.Power[index2].DisplayName;
-                items[2] = Convert.ToString(DatabaseAPI.Database.Power[index2].Level, CultureInfo.InvariantCulture);
-                items[3] = DatabaseAPI.Database.Power[index2].FullName;
-                lvPower.Items.Add(new ListViewItem(items));
+                AddPowerListItem(DatabaseAPI.Database.Power[index2], index2, displayFullName);
             }
         }
 
-        private bool ShouldIncludeHiddenPowersForSelectedSet()
+        private void AddPowerListItem(IPower power, int powerIndex, bool displayFullName)
         {
-            if (lvSet.SelectedItems.Count == 0)
+            var items = new string[5];
+            items[0] = !displayFullName ? power.PowerName : power.FullName;
+            items[1] = power.DisplayName;
+            items[2] = Convert.ToString(power.Level, CultureInfo.InvariantCulture);
+            items[3] = GetPowerEditorFlags(power);
+            items[4] = power.FullName;
+
+            var item = new ListViewItem(items)
             {
-                return false;
+                Tag = powerIndex
+            };
+
+            var powerImage = AssetManager.GetPowerImage(power);
+            if (powerImage?.Bitmap != null)
+            {
+                ilPower.Images.Add(new Bitmap(powerImage.Bitmap));
+                item.ImageIndex = ilPower.Images.Count - 1;
             }
 
-            var item = lvSet.SelectedItems[0];
-            var powersetId = -1;
-            if (item.SubItems.Count > 4 &&
-                int.TryParse(item.SubItems[4].Text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsedId))
-            {
-                powersetId = parsedId;
-            }
-            else if (item.SubItems.Count > 3 && !string.IsNullOrWhiteSpace(item.SubItems[3].Text))
-            {
-                powersetId = DatabaseAPI.NidFromUidPowerset(item.SubItems[3].Text);
-            }
-
-            return powersetId > -1 &&
-                   powersetId < DatabaseAPI.Database.Powersets.Length &&
-                   (DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.Pet ||
-                    DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.Redirect ||
-                    DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.SetBonus ||
-                    DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.Inherent ||
-                    DatabaseAPI.Database.Powersets[powersetId].SetType == Enums.ePowerSetType.Incarnate);
+            lvPower.Items.Add(item);
         }
 
         private void List_Powers(int selIdx)
@@ -1251,15 +1243,15 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             lvPower.BeginUpdate();
             lvPower.Items.Clear();
+            ilPower.Images.Clear();
             lblPower.Text = string.Empty;
-            var includeHiddenPowers = ShouldIncludeHiddenPowersForSelectedSet();
             if (iPowers2.Length > 0)
             {
-                List_Power_AddBlock(iPowers2, displayFullName, includeHiddenPowers);
+                List_Power_AddBlock(iPowers2, displayFullName);
             }
             else
             {
-                List_Power_AddBlock(iPowers1, displayFullName, includeHiddenPowers);
+                List_Power_AddBlock(iPowers1, displayFullName);
             }
 
             BusyHide();
@@ -1426,7 +1418,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            lblPower.Text = lvPower.SelectedItems[0].SubItems[3].Text;
+            lblPower.Text = GetPowerBrowserFullName(lvPower.SelectedItems[0]);
             _selected[2] = lvPower.SelectedIndices[0];
         }
 

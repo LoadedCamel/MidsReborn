@@ -1,3 +1,4 @@
+using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.PlannerRulesets;
 using System.Text.RegularExpressions;
@@ -13,6 +14,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private const string OmniSourceMarker = "MRB_EFFECT_OMNI_SOURCE";
         private const string CombatModFlagsMarker = "MRB_EFFECT_COMBAT_MOD_FLAGS";
         private const string GrantBoostedMarker = "MRB_EFFECT_GRANT_BOOSTED";
+        private const string StackPolicyMarker = "MRB_EFFECT_STACK_POLICY";
         private static readonly Regex UidClassRegex = new("arch source(.owner)?> (Class_[^ ]*)", RegexOptions.IgnoreCase);
 
         private IPower? power;
@@ -61,6 +63,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             EffectTags = [];
             OmniSource = string.Empty;
             GrantBoosted = false;
+            StackPolicy = ImportedStackPolicy.Default;
             ModeName = string.Empty;
             ModeId = -1;
             ModeFlag = Enums.eModeFlags.None;
@@ -150,6 +153,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             TryReadOmniSource(reader);
             TryReadCombatModFlags(reader);
             TryReadGrantBoosted(reader);
+            TryReadStackPolicy(reader);
         }
 
         private Effect(IEffect template) : this()
@@ -209,8 +213,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             EffectTags = template.EffectTags?.ToList() ?? [];
             OmniSource = template.OmniSource;
             GrantBoosted = template.GrantBoosted;
+            StackPolicy = template is Effect stackEffect
+                ? stackEffect.StackPolicy
+                : ImportedStackPolicy.Default;
             UseCombatModMagnitude = template.UseCombatModMagnitude;
             UseCombatModDuration = template.UseCombatModDuration;
+            ProcContributionFlags = template is Effect concreteEffect
+                ? concreteEffect.ProcContributionFlags
+                : ProcContributionFlags.None;
+            ResolvedEffectKind = template is Effect resolvedEffect
+                ? resolvedEffect.ResolvedEffectKind
+                : PlannerResolvedEffectKind.None;
             IgnoreED = template.IgnoreED;
             Override = template.Override;
             ModeName = template.ModeName;
@@ -233,8 +246,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public string OmniSource { get; set; }
         public bool GrantBoosted { get; set; }
+        internal ImportedStackPolicy StackPolicy { get; set; }
         public bool UseCombatModMagnitude { get; set; }
         public bool UseCombatModDuration { get; set; }
+        internal ProcContributionFlags ProcContributionFlags { get; set; }
+        internal PlannerResolvedEffectKind ResolvedEffectKind { get; set; }
 
         public float ProcsPerMinute { get; set; }
 
@@ -244,30 +260,23 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             get
             {
-                var probability = BaseProbability;
-
-                // Sometimes BaseProbability sticks at 0.75 when PPM is > 0,
-                // preventing PPM calculation
-                if (ProcsPerMinute > 0 && power != null)
-                {
-                    probability = DatabaseAPI.GetPlannerRuleset()
-                        .CalculateProcProbability(power, ProcsPerMinute, probability);
-                }
-
-                probability = DatabaseAPI.GetPlannerRuleset()
-                    .ApplyChanceModifiers(MidsContext.Character, power, this, probability);
-
-                return Math.Max(0, Math.Min(1, probability));
+                return DatabaseAPI.GetServerRulesProfile()
+                    .EvaluateProcProbability(MidsContext.Character, power, this, BaseProbability);
             }
         }
 
-        public float MinProcChance => DatabaseAPI.GetPlannerRuleset().GetMinProcChance(ProcsPerMinute);
-        public float MaxProcChance => DatabaseAPI.GetPlannerRuleset().GetMaxProcChance(ProcsPerMinute);
+        public float MinProcChance => DatabaseAPI.GetServerRulesProfile().GetMinProcChance(ProcsPerMinute);
+        public float MaxProcChance => DatabaseAPI.GetServerRulesProfile().GetMaxProcChance(ProcsPerMinute);
 
         public float Probability
         {
             get
             {
+                if (!DatabaseAPI.GetServerRulesProfile().ShouldIncludePlannerEffect(power, this))
+                {
+                    return 0f;
+                }
+
                 switch (AttribType)
                 {
                     case Enums.eAttribType.Expression when !string.IsNullOrWhiteSpace(Expressions.Probability):
@@ -382,11 +391,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             return false;
                         }
 
-                    if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target) & (Stacking == Enums.eStacking.Yes) & !IgnoreScaling)
+                    if ((EffectType == Enums.eEffectType.EntCreate) & (ToWho == Enums.eToWho.Target) & PlannerStackRules.SupportsVariableCopyScaling(this) & !IgnoreScaling)
                     {
                         flag = true;
                     }
-                    else if ((EffectType == Enums.eEffectType.DamageBuff) & (ToWho == Enums.eToWho.Target) & (Stacking == Enums.eStacking.Yes) & !IgnoreScaling)
+                    else if ((EffectType == Enums.eEffectType.DamageBuff) & (ToWho == Enums.eToWho.Target) & PlannerStackRules.SupportsVariableCopyScaling(this) & !IgnoreScaling)
                     {
                         flag = true;
                     }
@@ -396,14 +405,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         {
                             for (var index = 0; index <= power.Effects.Length - 1; ++index)
                             {
-                                if ((power.Effects[index].EffectType == Enums.eEffectType.EntCreate) & (power.Effects[index].ToWho == Enums.eToWho.Target) & (power.Effects[index].Stacking == Enums.eStacking.Yes))
+                                if ((power.Effects[index].EffectType == Enums.eEffectType.EntCreate) & (power.Effects[index].ToWho == Enums.eToWho.Target) & PlannerStackRules.SupportsVariableCopyScaling(power.Effects[index]))
                                 {
                                     return false;
                                 }
                             }
                         }
 
-                        flag = ToWho == Enums.eToWho.Self && Stacking == Enums.eStacking.Yes;
+                        flag = ToWho == Enums.eToWho.Self && PlannerStackRules.SupportsVariableCopyScaling(this);
                     }
                 }
 
@@ -968,8 +977,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (!Buffable & EffectType != Enums.eEffectType.DamageBuff)
                     sBuff = IgnoreED ? " [Ignores Enhancements, Buffs & ED]" : " [Ignores Enhancements & Buffs]";
 
-                if (Stacking == Enums.eStacking.No)
-                    sStack = "\n  Effect does not stack from same caster";
+                var stackDescription = PlannerStackRules.GetDiagnosticDescription(this);
+                if (PlannerStackRules.ShouldFlagNoStackSameCaster(this))
+                {
+                    sStack = PlannerStackRules.HasExplicitImportedPolicy(this)
+                        ? $"\n  Stack: {stackDescription}"
+                        : "\n  Effect does not stack from same caster";
+                }
+                else if (PlannerStackRules.HasExplicitImportedPolicy(this))
+                {
+                    sStack = $"\n  Stack: {stackDescription}";
+                }
 
                 if (DelayedTime > 0)
                     sDelay = $"after {DisplayValueFormatter.FormatSeconds(DelayedTime)} seconds";
@@ -1850,6 +1868,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             StoreOmniSource(writer);
             StoreCombatModFlags(writer);
             StoreGrantBoosted(writer);
+            StoreStackPolicy(writer);
         }
 
         private void StoreModePayload(BinaryWriter writer)
@@ -2015,6 +2034,24 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(GrantBoosted);
         }
 
+        private void StoreStackPolicy(BinaryWriter writer)
+        {
+            writer.Write(StackPolicyMarker);
+            writer.Write(1);
+            writer.Write((int)StackPolicy.Mode);
+            writer.Write((int)StackPolicy.CasterMode);
+            writer.Write(StackPolicy.StackLimit);
+            writer.Write(StackPolicy.StackKey ?? string.Empty);
+            writer.Write(StackPolicy.RawStack ?? string.Empty);
+            writer.Write(StackPolicy.RawCasterStack ?? string.Empty);
+            writer.Write(StackPolicy.HasImportedMetadata);
+            writer.Write(StackPolicy.SuppressEvents.Length);
+            foreach (var value in StackPolicy.SuppressEvents)
+            {
+                writer.Write(value ?? string.Empty);
+            }
+        }
+
         private void TryReadCombatModFlags(BinaryReader reader)
         {
             if (!reader.BaseStream.CanSeek)
@@ -2073,6 +2110,62 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 GrantBoosted = reader.ReadBoolean();
+            }
+            catch (EndOfStreamException)
+            {
+                reader.BaseStream.Position = position;
+            }
+            catch (IOException)
+            {
+                reader.BaseStream.Position = position;
+            }
+        }
+
+        private void TryReadStackPolicy(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                return;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), StackPolicyMarker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return;
+                }
+
+                var version = reader.ReadInt32();
+                if (version > 1)
+                {
+                    throw new InvalidDataException($"Unsupported effect stack policy version {version}.");
+                }
+
+                var mode = (ImportedStackMode)reader.ReadInt32();
+                var casterMode = (ImportedCasterStackMode)reader.ReadInt32();
+                var stackLimit = reader.ReadInt32();
+                var stackKey = reader.ReadString();
+                var rawStack = reader.ReadString();
+                var rawCasterStack = reader.ReadString();
+                var hasImportedMetadata = reader.ReadBoolean();
+                var count = reader.ReadInt32();
+                var suppressEvents = new string[Math.Max(0, count)];
+                for (var index = 0; index < suppressEvents.Length; index++)
+                {
+                    suppressEvents[index] = reader.ReadString();
+                }
+
+                StackPolicy = new ImportedStackPolicy(
+                    mode,
+                    casterMode,
+                    stackLimit,
+                    stackKey,
+                    suppressEvents,
+                    rawStack,
+                    rawCasterStack,
+                    hasImportedMetadata);
             }
             catch (EndOfStreamException)
             {

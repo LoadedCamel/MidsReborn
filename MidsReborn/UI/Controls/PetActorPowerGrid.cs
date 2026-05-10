@@ -291,7 +291,6 @@ public sealed class PetActorPowerGrid : Control
             badgeBounds,
             dataTheme.ValueText,
             TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis);
-
         return badgeWidth + 12;
     }
 
