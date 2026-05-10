@@ -254,3 +254,9 @@ safe/\.fake/
 /Tests/MidsReborn.CompatibilityTests/RtfCompatibilityTests.cs
 /Tests/MidsReborn.CompatibilityTests/PlannerExpressionTests.cs
 /Tests/MidsReborn.CompatibilityTests/PowerEnhancementValidationTests.cs
+/.codex_obj/test
+/.codex_obj/test/MidsReborn.Tests.csproj.nuget.dgspec.json
+/.codex_obj/test/MidsReborn.Tests.csproj.nuget.g.props
+/.codex_obj/test/MidsReborn.Tests.csproj.nuget.g.targets
+/.codex_obj/test/project.assets.json
+/MidsReborn/Docs
