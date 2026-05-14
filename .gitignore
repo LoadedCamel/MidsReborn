@@ -260,3 +260,13 @@ safe/\.fake/
 /.codex_obj/test/MidsReborn.Tests.csproj.nuget.g.targets
 /.codex_obj/test/project.assets.json
 /MidsReborn/Docs
+/MidsReborn/MidsReborn.Tests
+/MidsReborn/MidsReborn.Tests/MidsReborn.Tests.csproj
+/MidsReborn/MidsReborn.Tests/PlannerPowerPipelineTests.cs
+/MidsReborn/MidsReborn.Tests/PlannerStateCatalogTests.cs
+/MidsReborn/MidsReborn.Tests/PlannerStateCharacterTests.cs
+/MidsReborn/MidsReborn.Tests/PlannerStateTestCollection.cs
+/MidsReborn/MidsReborn.Tests/PopupRarityResolutionTests.cs
+/MidsReborn/MidsReborn.Tests/SpecialPowerPickerVisibilityTests.cs
+/MidsReborn/MidsReborn.Tests/StreetJusticePlannerStateTests.cs
+/.codex_tmp
