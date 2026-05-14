@@ -202,6 +202,10 @@ namespace Mids_Reborn.Core
 
         bool IncludeFlag { get; set; }
 
+        bool ShowInSpecialPowerPicker { get; set; }
+
+        bool ShowStatToggle { get; set; }
+
         bool BoostBoostable { get; set; }
 
         bool BoostUsePlayerLevel { get; set; }

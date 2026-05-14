@@ -251,6 +251,11 @@ namespace Mids_Reborn.Core
                 return false;
             }
 
+            if (!power.ShowStatToggle)
+            {
+                return false;
+            }
+
             return power?.PowerType switch
             {
                 Enums.ePowerType.Auto_ => true,

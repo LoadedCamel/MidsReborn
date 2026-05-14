@@ -124,6 +124,7 @@ public sealed class EnhancementImportMetadata
     public Dictionary<string, string> EnhancementSetSourceKeys { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, string> EnhancementSetSourceGroups { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, string> EnhancementSetSourceIcons { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public Dictionary<string, string> EnhancementSetSourceRarityNames { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, string> SpecialFamilyCrosswalk { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, string> BoostPowerAliasCrosswalk { get; set; } = new(StringComparer.OrdinalIgnoreCase);
     public Dictionary<string, string> SetBonusPowerAliasCrosswalk { get; set; } = new(StringComparer.OrdinalIgnoreCase);

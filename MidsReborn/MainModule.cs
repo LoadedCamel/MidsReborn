@@ -138,7 +138,7 @@ namespace Mids_Reborn
                 // }
 
                 messenger.SetMessage("Loading Cryptic-specific power names translation table");
-                DatabaseAPI.LoadCrypticReplacementTable();
+                //DatabaseAPI.LoadCrypticReplacementTable();
 
                 messenger.SetMessage("Loading Graphics...");
                 await LoadGraphics(path);

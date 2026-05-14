@@ -1239,6 +1239,8 @@ internal sealed class PlannerPowerPipeline
         var combatMagnitudeScale = plannerRuleset.GetCombatModMagnitudeScale(_combatContext);
         var combatDurationScale = plannerRuleset.GetCombatModDurationScale(_combatContext);
 
+        ApplyDisplayedSelfBuffScalars(powerMath, powerBuffed, _selfBuffs);
+
         powerBuffed.Accuracy = powerBuffed.Accuracy * (1 + powerMath.Accuracy + accuracy) * combatAccuracyScale *
                                (combatToHitScale + toHit);
         powerBuffed.AccuracyMult = powerBuffed.Accuracy * (1 + powerMath.Accuracy + accuracy) * combatAccuracyScale;
@@ -1260,6 +1262,28 @@ internal sealed class PlannerPowerPipeline
         }
 
         return true;
+    }
+
+    internal static void ApplyDisplayedSelfBuffScalars(IPower powerMath, IPower powerBuffed, Enums.BuffsX selfBuffs)
+    {
+        if (powerMath.IgnoreBuff(Enums.eEnhance.EnduranceDiscount))
+        {
+            var endDiscount = selfBuffs.Effect[(int)Enums.eStatType.BuffEndRdx];
+            if (Math.Abs(endDiscount) > float.Epsilon)
+            {
+                powerBuffed.EndCost *= Math.Max(0f, 1f - endDiscount);
+            }
+        }
+
+        if (powerMath.IgnoreBuff(Enums.eEnhance.RechargeTime))
+        {
+            var rechargeBuff = selfBuffs.Effect[(int)Enums.eStatType.Haste];
+            var divisor = 1f + rechargeBuff;
+            if (Math.Abs(divisor) > float.Epsilon)
+            {
+                powerBuffed.RechargeTime /= divisor;
+            }
+        }
     }
 
     private PlannerActorAggregationResult BuildActorAggregation(PlannerActorAggregationContext context, bool finalize = false)

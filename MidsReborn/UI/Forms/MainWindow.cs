@@ -62,6 +62,8 @@ namespace Mids_Reborn.UI.Forms
         private readonly Dictionary<Control, Rectangle> _leftUiBounds = new();
         private readonly Dictionary<MidsListView, (int ScrollBarWidth, int PaddingX, int PaddingY, int LineSpacing)> _leftListMetrics = new();
         private readonly Dictionary<MidsVectorButton, int> _leftButtonCornerRadii = new();
+        private System.Drawing.Icon? _shellLargeIcon;
+        private System.Drawing.Icon? _shellSmallIcon;
 
         // Drag & drop / mouse tracking
         private readonly short[]? dragdropScenarioAction;
@@ -137,6 +139,7 @@ namespace Mids_Reborn.UI.Forms
         private string? LastFileName;
         private int LastIndex;
         private FormWindowState LastState;
+        private bool _canvasLayoutSettleQueued;
         private bool NoResizeEvent;
         private bool NoUpdate;
         private Rectangle oldDragRect;
@@ -245,6 +248,7 @@ namespace Mids_Reborn.UI.Forms
             ApplyTheme();
             InitializePopup();
             InitializePicker();
+            InitializeSpecialPowerFlyout();
             tmrGfx.Tick += tmrGfx_Tick;
             dataView.SlotUpdate += DataView_SlotUpdate;
             dataView.SlotFlip += DataView_SlotFlip;
@@ -273,12 +277,42 @@ namespace Mids_Reborn.UI.Forms
             WinApi.DisableSystemCaptionAndBorder(Handle);
             WinApi.SetWindowCornerPreference(Handle, WinApi.CornerPreference.Round);
             WinApi.SetWindowBackdropType(Handle, WinApi.BackdropTypes.MainWindow);
+            ApplyShellIcon();
+        }
+
+        private void ApplyShellIcon()
+        {
+            if (!IsHandleCreated)
+            {
+                return;
+            }
+
+            _shellLargeIcon?.Dispose();
+            _shellSmallIcon?.Dispose();
+
+            var baseIcon = Resources.MRB_Icon_Concept;
+            _shellLargeIcon = new System.Drawing.Icon(baseIcon, SystemInformation.IconSize);
+            _shellSmallIcon = new System.Drawing.Icon(baseIcon, SystemInformation.SmallIconSize);
+
+            ShowIcon = true;
+            ShowInTaskbar = true;
+            Icon = baseIcon;
+            WinApi.SetWindowShellIcon(Handle, _shellSmallIcon.Handle, _shellLargeIcon.Handle);
         }
 
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
             ApplyWindowEffects();
+        }
+
+        protected override void OnHandleDestroyed(EventArgs e)
+        {
+            _shellLargeIcon?.Dispose();
+            _shellLargeIcon = null;
+            _shellSmallIcon?.Dispose();
+            _shellSmallIcon = null;
+            base.OnHandleDestroyed(e);
         }
 
         protected override void OnSizeChanged(EventArgs e)
@@ -524,6 +558,7 @@ namespace Mids_Reborn.UI.Forms
         private void MainWindow2_Shown(object? sender, EventArgs e)
         {
             NewDraw();
+            QueueDeferredCanvasLayoutSettle();
 
             var comLoad = false;
             var prevLastFileNameCfg = MidsContext.Config.LastFileName;
@@ -578,6 +613,30 @@ namespace Mids_Reborn.UI.Forms
                         break;
                 }
             }
+        }
+
+        private void QueueDeferredCanvasLayoutSettle()
+        {
+            if (_canvasLayoutSettleQueued)
+            {
+                return;
+            }
+
+            _canvasLayoutSettleQueued = true;
+            BeginInvoke(new Action(() =>
+            {
+                _canvasLayoutSettleQueued = false;
+
+                if (IsDisposed || !IsHandleCreated || drawing is null || canvas.IsDisposed)
+                {
+                    return;
+                }
+
+                ApplyLeftUiScale(true);
+                UpdateUiLayout(true);
+                canvas.RequestFullRedraw();
+                canvas.ResizeToContent();
+            }));
         }
 
         private void MainWindow2_Closing(object? sender, CancelEventArgs e)
@@ -724,6 +783,7 @@ namespace Mids_Reborn.UI.Forms
             if (_events.IsSuppressed) return;
             ChangeSets();
             UpdatePowerLists();
+            ProcessLocks();
         }
 
         private void SecondaryDropDown_SelectedIndexChanged(object? sender, EventArgs e)
@@ -731,6 +791,7 @@ namespace Mids_Reborn.UI.Forms
             if (_events.IsSuppressed) return;
             ChangeSets();
             UpdatePowerLists();
+            ProcessLocks();
         }
 
         private void PoolsDropDown_SelectedIndexChanged(object? sender, EventArgs e)
@@ -738,6 +799,7 @@ namespace Mids_Reborn.UI.Forms
             if (_events.IsSuppressed) return;
             ChangeSets();
             UpdatePowerLists();
+            ProcessLocks();
         }
 
         private void AncillaryDropDown_SelectedIndexChanged(object? sender, EventArgs e)
@@ -745,6 +807,7 @@ namespace Mids_Reborn.UI.Forms
             if (_events.IsSuppressed) return;
             ChangeSets();
             UpdatePowerLists();
+            ProcessLocks();
         }
 
         private void MListView_ItemHovered(object? sender, MidsListViewItemHoverEventArgs e)
@@ -1326,12 +1389,10 @@ namespace Mids_Reborn.UI.Forms
                     var anchorRect = sIDX > -1 ? enhRect : powerRect;
                     ShowPopup(index, -1, sIDX, e.Location, anchorRect);
                     
-                    if (MidsContext.Character.CanPlaceSlot & MainModule.MidsController.Toon.SlotCheck(MidsContext.Character.CurrentBuild.Powers[index]) > -1)
+                    if (drawing.InterfaceMode != Enums.eInterfaceMode.PowerToggle)
                     {
                         drawing.HighlightSlot(index);
-                        canvas.Cursor = index > -1 & drawing.InterfaceMode != Enums.eInterfaceMode.PowerToggle
-                            ? Cursors.Hand
-                            : Cursors.Default;
+                        canvas.Cursor = index > -1 ? Cursors.Hand : Cursors.Default;
                     }
                     else
                     {
@@ -1487,6 +1548,7 @@ namespace Mids_Reborn.UI.Forms
 
                 if (!isPowerChosen && powerEntry.Level > -1)
                 {
+                    drawing.SelectedPowerIndex = hIDPower;
                     MainModule.MidsController.Toon.RequestedLevel = powerEntry.Level;
                     UpdatePowerLists();
                     canvas.RequestFullRedraw();
@@ -1560,32 +1622,7 @@ namespace Mids_Reborn.UI.Forms
 
         private void IncarnatesEx_OnClick(object? sender, EventArgs e)
         {
-            var flag = false;
-            if (fIncarnate == null)
-            {
-                flag = true;
-            }
-            else if (fIncarnate.IsDisposed)
-            {
-                flag = true;
-            }
-
-            if (flag)
-            {
-                var iParent = this;
-                fIncarnate = new FrmIncarnate(ref iParent);
-            }
-
-            if (fIncarnate is { Visible: false })
-            {
-                incarnatesEx.ToggleState = MidsVectorButton.States.ToggledOn;
-                fIncarnate.Show(this);
-            }
-            else
-            {
-                incarnatesEx.ToggleState = MidsVectorButton.States.ToggledOff;
-                fIncarnate?.Close();
-            }
+            ToggleSpecialPowerFlyout(incarnatesEx, SpecialPowerCategory.Incarnate);
         }
 
         private void PvXEx_OnClick(object? sender, EventArgs e)
@@ -2251,6 +2288,7 @@ namespace Mids_Reborn.UI.Forms
 
             //dataView?.Clear();
             PowerModified(false);
+            SyncLoadedBuildUi();
         }
 
         private void tsImportChunk_Click(object? sender, EventArgs e)
@@ -2281,6 +2319,7 @@ namespace Mids_Reborn.UI.Forms
 
             //dataView?.Clear();
             PowerModified(false);
+            SyncLoadedBuildUi();
         }
 
         private void tsImportLegacyForumPost_Click(object? sender, EventArgs e)
@@ -2346,6 +2385,7 @@ namespace Mids_Reborn.UI.Forms
                         NewDraw();
                         //dataView.Clear();
                         PowerModified(true);
+                        SyncLoadedBuildUi();
                         //UpdateControls(true, true);
                     }
                     else
@@ -2389,74 +2429,17 @@ namespace Mids_Reborn.UI.Forms
 
         private void TempPowersEx_OnClick(object? sender, EventArgs e)
         {
-            if (fTemp == null || fTemp.IsDisposed)
-            {
-                // Inherent.Inherent.MxD_Temps
-                var power = DatabaseAPI.Database.Power[DatabaseAPI.NidFromStaticIndexPower(3259)];
-                var iPowers = new List<IPower?>();
-                if (power != null)
-                {
-                    iPowers.AddRange(power.NIDSubPower.Select(t => DatabaseAPI.Database.Power[t]).OfType<IPower>().Where(p => p.ClickBuff || p.PowerType == Enums.ePowerType.Auto_ | p.PowerType == Enums.ePowerType.Toggle));
-                }
-
-                fTemp = new frmTemp(this, iPowers)
-                {
-                    Text = @"Temporary Powers"
-                };
-            }
-
-            if (!fTemp.Visible)
-            {
-                fTemp.Show(this);
-            }
+            ToggleSpecialPowerFlyout(tempPowersEx, SpecialPowerCategory.Temp);
         }
 
         private void ibPrestigePowersEx_OnClick(object? sender, EventArgs e)
         {
-            var flag = false;
-            if (fPrestige == null)
-            {
-                flag = true;
-            }
-            else if (fPrestige.IsDisposed)
-            {
-                flag = true;
-            }
-
-            if (flag)
-            {
-                var iParent = this;
-                var iPowers = DatabaseAPI.Database.Power.Where(power => power is { InherentType: Enums.eGridType.Prestige, PowerType: Enums.ePowerType.Toggle }).ToList();
-                fPrestige = new frmPrestige(iParent, iPowers);
-            }
-
-            if (fPrestige is { Visible: false })
-            {
-                ibPrestigePowersEx.ToggleState = MidsVectorButton.States.ToggledOn;
-                fPrestige.Show(this);
-            }
-            else
-            {
-                ibPrestigePowersEx.ToggleState = MidsVectorButton.States.ToggledOff;
-                fPrestige?.Close();
-            }
+            ToggleSpecialPowerFlyout(ibPrestigePowersEx, SpecialPowerCategory.Prestige);
         }
 
         private void ibAccoladesEx_OnClick(object? sender, EventArgs e)
         {
-            if (fAccolade == null || fAccolade.IsDisposed)
-            {
-                fAccolade = new frmAccolade(this);
-            }
-
-            if (fAccolade is { Visible: false })
-            {
-                fAccolade.Show(this);
-            }
-            else
-            {
-                fAccolade?.Close();
-            }
+            ToggleSpecialPowerFlyout(accoladesEx, SpecialPowerCategory.Accolade);
         }
 
         private void ibModeEx_OnClick(object sender, EventArgs eventArgs)
@@ -2599,11 +2582,18 @@ namespace Mids_Reborn.UI.Forms
                 MidsContext.Character.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[index].Level;
             }
 
+            if (drawing != null)
+            {
+                drawing.SelectedPowerIndex = index;
+            }
+
             MidsContext.Character?.Validate();
+            ProcessLocks();
             if (redraw)
             {
                 canvas.RequestFullRedraw();
                 canvas.ResizeToContent();
+                QueueDeferredCanvasLayoutSettle();
             }
 
             // if (redraw)
@@ -2620,6 +2610,29 @@ namespace Mids_Reborn.UI.Forms
             // RefreshInfo();
             UpdateModeInfo();
             RefreshInfo();
+        }
+
+        private int GetSelectedBuildTargetIndex()
+        {
+            if (drawing == null || MidsContext.Character?.CurrentBuild == null)
+            {
+                return -1;
+            }
+
+            int targetIndex = drawing.SelectedPowerIndex;
+            if (targetIndex < 0 || targetIndex >= MidsContext.Character.CurrentBuild.Powers.Count)
+            {
+                return -1;
+            }
+
+            var targetPower = MidsContext.Character.CurrentBuild.Powers[targetIndex];
+            return targetPower is { Chosen: false, Level: > -1 } ? targetIndex : -1;
+        }
+
+        private void SyncLoadedBuildUi(bool skipResize = false)
+        {
+            SetLockedPoolsState();
+            UpdateUiControls(suppressDuringSetup: true, skipResize: skipResize);
         }
 
         internal void FloatCompareGraph(bool show)
@@ -3056,6 +3069,7 @@ namespace Mids_Reborn.UI.Forms
             //dataView?.Clear();
             MidsContext.Character?.ResetLevel();
             PowerModified(false);
+            SyncLoadedBuildUi();
             //UpdateControls(true);
             //SetTitleBar();
             Application.DoEvents();
@@ -3095,7 +3109,7 @@ namespace Mids_Reborn.UI.Forms
             //dataView?.Clear();
             MidsContext.Character?.ResetLevel();
             PowerModified(false);
-            SetLockedPoolsState();
+            SyncLoadedBuildUi();
             //UpdateControls(true);
             //SetTitleBar();
             Application.DoEvents();
@@ -3440,6 +3454,7 @@ namespace Mids_Reborn.UI.Forms
             RearrangeAllSlotsInBuild(powerEntryArray, true);
             ShallowCopyPowerList(powerEntryArray);
             PowerModified(false);
+            SyncLoadedBuildUi();
             DoRedraw();
 
             MidsContext.Config.BuildMode = buildMode;
@@ -3475,6 +3490,7 @@ namespace Mids_Reborn.UI.Forms
 
             //dataView?.Clear();
             PowerModified(false);
+            SyncLoadedBuildUi();
             return ret;
         }
 
@@ -3661,10 +3677,18 @@ namespace Mids_Reborn.UI.Forms
             var iPowers = MidsContext.Character.CurrentBuild.Powers[hIdPower].SubPowers
                 .Select(t => DatabaseAPI.Database.Power[t.nIDPower])
                 .ToList();
-            using var frmAccolade = new frmAccolade(this, iPowers);
-            frmAccolade.Text = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIdPower].NIDPower].DisplayName;
-            frmAccolade.ShowDialog(this);
-            EnhancementModified();
+            var title = DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[hIdPower].NIDPower].DisplayName;
+            var powerAnchor = drawing?.GetPowerButtonRect(hIdPower) ?? Rectangle.Empty;
+            var anchorBounds = powerAnchor == Rectangle.Empty
+                ? Rectangle.Empty
+                : ToFormClientRect(canvas, powerAnchor);
+
+            ShowSpecialPowerFlyout(
+                anchorControl: null,
+                category: SpecialPowerCategory.Subset,
+                explicitPowers: iPowers.OfType<IPower>().ToList(),
+                title: title,
+                anchorOverride: anchorBounds);
             LastClickPlacedSlot = false;
         }
 
@@ -4053,12 +4077,7 @@ namespace Mids_Reborn.UI.Forms
 
                 if (pe.Power.FullName.StartsWith("Temporary_Powers.Temporary_Powers."))
                 {
-                    pe.StatInclude = tempPowersEx.ToggleState switch
-                    {
-                        MidsVectorButton.States.ToggledOff => false,
-                        MidsVectorButton.States.ToggledOn => true,
-                        _ => pe.Power.AlwaysToggle
-                    };
+                    pe.StatInclude |= pe.Power.AlwaysToggle;
                 }
                 else if (pe.Power is not ({ PowerType: Enums.ePowerType.Toggle } or { PowerType: Enums.ePowerType.GlobalBoost } or { PowerType: Enums.ePowerType.Auto_ }) & // Not a toggle, global boost, auto
                          pe.Power is { ClickBuff: false } & // Not a click-buff
@@ -4326,26 +4345,65 @@ namespace Mids_Reborn.UI.Forms
                 $"Pool dropdown mismatch: slot {poolSlot}, dropdown={selectedPowerset.FullName} ({selectedPowerset.nID}), character={characterPowerset.FullName} ({characterPowerset.nID})");
         }
 
+        private static bool IsPowersetUsed(IPowerset? powerset)
+        {
+            var build = MidsContext.Character?.CurrentBuild;
+            return powerset is not null &&
+                   build?.Powers.Any(power => power is not null &&
+                                              power.NIDPowerset == powerset.nID &&
+                                              power.IDXPower > -1) == true;
+        }
+
+        private static string GetDropDownLockText(MidsDropDownList dropDown)
+        {
+            return dropDown.SelectedItem switch
+            {
+                Archetype archetype when !string.IsNullOrWhiteSpace(archetype.DisplayName) => archetype.DisplayName,
+                IPowerset powerset when !string.IsNullOrWhiteSpace(powerset.DisplayName) => powerset.DisplayName,
+                string text when !string.IsNullOrWhiteSpace(text) => text,
+                _ when !string.IsNullOrWhiteSpace(dropDown.Text) => dropDown.Text,
+                _ => "Locked"
+            };
+        }
+
+        private static void ApplyDropDownLock(MidsDropDownList dropDown, bool isLocked)
+        {
+            if (isLocked)
+            {
+                dropDown.Lock(GetDropDownLockText(dropDown));
+            }
+            else
+            {
+                dropDown.Unlock();
+            }
+        }
+
         private void ProcessLocks()
         {
-            primaryDropDown.IsLocked = MainModule.MidsController.Toon.Locked;
-            secondaryDropDown.IsLocked = MidsContext.Character.Powersets[0].nIDLinkSecondary > -1;
-            pool0DropDown.IsLocked = MainModule.MidsController.Toon.PoolLocked[0];
-            pool1DropDown.IsLocked = MainModule.MidsController.Toon.PoolLocked[1];
-            pool2DropDown.IsLocked = MainModule.MidsController.Toon.PoolLocked[2];
-            pool3DropDown.IsLocked = MainModule.MidsController.Toon.PoolLocked[3];
-
-            if (MainModule.MidsController.Toon.PoolLocked[4])
+            if (MidsContext.Character == null)
             {
-                ancillaryDropDown.Lock();
+                return;
             }
-            else if (ancillaryDropDown.Items.Count is 0)
+
+            var primaryUsed = IsPowersetUsed(MidsContext.Character.Powersets[0]);
+            var secondaryUsed = IsPowersetUsed(MidsContext.Character.Powersets[1]);
+            var secondaryLinked = MidsContext.Character.Powersets[0].nIDLinkSecondary > -1;
+
+            ApplyDropDownLock(atDropDown, primaryUsed || secondaryUsed);
+            ApplyDropDownLock(primaryDropDown, primaryUsed);
+            ApplyDropDownLock(secondaryDropDown, secondaryUsed || secondaryLinked);
+            ApplyDropDownLock(pool0DropDown, IsPowersetUsed(MidsContext.Character.Powersets[3]));
+            ApplyDropDownLock(pool1DropDown, IsPowersetUsed(MidsContext.Character.Powersets[4]));
+            ApplyDropDownLock(pool2DropDown, IsPowersetUsed(MidsContext.Character.Powersets[5]));
+            ApplyDropDownLock(pool3DropDown, IsPowersetUsed(MidsContext.Character.Powersets[6]));
+
+            if (ancillaryDropDown.Items.Count is 0)
             {
                 ancillaryDropDown.Lock("Not Available", true);
             }
             else
             {
-                ancillaryDropDown.Unlock();
+                ApplyDropDownLock(ancillaryDropDown, IsPowersetUsed(MidsContext.Character.Powersets[7]));
             }
         }
 
@@ -4693,7 +4751,7 @@ namespace Mids_Reborn.UI.Forms
                 pool3DropDown.SelectedIndex, 
                 ancillaryDropDown.SelectedIndex, 
                 DatabaseAPI.GetPowersetIndexes,
-                () => secondaryDropDown.IsLocked = false);
+                () => secondaryDropDown.Unlock());
         }
 
         private void NewToon(bool reinit = true, bool skipDraw = false)
@@ -4853,7 +4911,7 @@ namespace Mids_Reborn.UI.Forms
 
         private void PowerPicked(Enums.PowersetType setId, int nIdPower)
         {
-            MainModule.MidsController.Toon.BuildPower(MidsContext.Character.Powersets[(int)setId].nID, nIdPower);
+            MainModule.MidsController.Toon.BuildPower(MidsContext.Character.Powersets[(int)setId].nID, nIdPower, GetSelectedBuildTargetIndex());
             PowerModified(true);
             //MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
             canvas.RequestFullRedraw();
@@ -4863,7 +4921,7 @@ namespace Mids_Reborn.UI.Forms
 
         private void PowerPicked(int nIdPowerset, int nIdPower)
         {
-            MainModule.MidsController.Toon.BuildPower(nIdPowerset, nIdPower);
+            MainModule.MidsController.Toon.BuildPower(nIdPowerset, nIdPower, GetSelectedBuildTargetIndex());
             PowerModified(true);
             //MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
             canvas.RequestFullRedraw();
@@ -5023,7 +5081,7 @@ namespace Mids_Reborn.UI.Forms
             _popupHost.PsIdx = (nIdPowerset < 0 ? nIdClass : nIdPowerset);
         }
 
-        private void ShowPopup(int hIdx, int pIdx, int sIdx, Point e, Rectangle rBounds, I9Slot? eSlot = null, int setIdx = -1, VerticalAlignment vAlign = VerticalAlignment.Bottom, I9Picker.EnhUniqueStatus? enhUniqueStatus = null)
+        private void ShowPopup(int hIdx, int pIdx, int sIdx, Point e, Rectangle rBounds, I9Slot? eSlot = null, int setIdx = -1, VerticalAlignment vAlign = VerticalAlignment.Bottom, I9Picker.EnhUniqueStatus? enhUniqueStatus = null, bool includePowerKindLabel = false)
         {
             if (MidsContext.Config.DisableShowPopup) { HidePopup(); return; }
 
@@ -5052,7 +5110,7 @@ namespace Mids_Reborn.UI.Forms
                 // hovering a power button area (rBounds from caller)
                 if (canvas.IsWithinBounds(e, rBounds) && powerEntry?.NIDPower > -1)
                 {
-                    data = MainModule.MidsController.Toon.PopPowerInfo(hIdx, powerEntry.NIDPower);
+                    data = MainModule.MidsController.Toon.PopPowerInfo(hIdx, powerEntry.NIDPower, includePowerKindLabel);
                     flag = true;
                 }
             }
@@ -5068,7 +5126,7 @@ namespace Mids_Reborn.UI.Forms
             else if (pIdx > -1)
             {
                 // power listing item
-                data = MainModule.MidsController.Toon.PopPowerInfo(hIdx, pIdx);
+                data = MainModule.MidsController.Toon.PopPowerInfo(hIdx, pIdx, includePowerKindLabel);
                 flag = true; powerListing = true;
             }
             else if (eSlot != null && setIdx < 0)

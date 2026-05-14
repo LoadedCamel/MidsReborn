@@ -87,11 +87,12 @@
   },
   "PowerSlot": {
     "Border": "#D400FF",
-    "GradientTop": "#2D004D",
-    "GradientBottom": "#11001C",
-    "OpenBorder": "#00FFD8",
-    "EmptyFill": "#444444",
-    "DisabledFill": "#303030"
+    "GradientTop": "#8F63FF",
+    "GradientBottom": "#2A0F5E",
+    "OpenBorder": "#D400FF",
+    "EmptyFill": "#24133A",
+    "DisabledFill": "#160B24",
+    "ForeColor": "#F3EEFF"
   },
   "ScrollPanel": {
     "Track": "#11001C",

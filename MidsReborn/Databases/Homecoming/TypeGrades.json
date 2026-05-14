@@ -7,55 +7,55 @@
 		},
 		{
 			"Name": "Melee Damage",
-			"ShortName": "MeleeST"
+			"ShortName": "MeleeDamage"
 		},
 		{
 			"Name": "Ranged Damage",
-			"ShortName": "RangedST"
+			"ShortName": "RangedDamage"
 		},
 		{
-			"Name": "Targeted AoE Damage",
-			"ShortName": "RangedAoE"
+			"Name": "Ranged AoE Damage",
+			"ShortName": "RangedAoEDamage"
 		},
 		{
-			"Name": "PBAoE Damage",
-			"ShortName": "MeleeAoE"
+			"Name": "Melee AoE Damage",
+			"ShortName": "MeleeAoEDamage"
 		},
 		{
 			"Name": "Sniper Attacks",
-			"ShortName": "Snipe"
+			"ShortName": "SniperAttacks"
 		},
 		{
 			"Name": "Pet Damage",
-			"ShortName": "Pets"
+			"ShortName": "PetDamage"
 		},
 		{
 			"Name": "Defense Sets",
-			"ShortName": "Defense"
+			"ShortName": "DefenseSets"
 		},
 		{
 			"Name": "Resist Damage",
-			"ShortName": "Resistance"
+			"ShortName": "ResistDamage"
 		},
 		{
 			"Name": "Healing",
-			"ShortName": "Heal"
+			"ShortName": "Healing"
 		},
 		{
 			"Name": "Holds",
-			"ShortName": "Hold"
+			"ShortName": "Holds"
 		},
 		{
 			"Name": "Stuns",
-			"ShortName": "Stun"
+			"ShortName": "Stuns"
 		},
 		{
 			"Name": "Immobilize",
-			"ShortName": "Immob"
+			"ShortName": "Immobilize"
 		},
 		{
 			"Name": "Slow Movement",
-			"ShortName": "Slow"
+			"ShortName": "SlowMovement"
 		},
 		{
 			"Name": "Sleep",
@@ -75,11 +75,11 @@
 		},
 		{
 			"Name": "Leaping",
-			"ShortName": "Jump"
+			"ShortName": "Leaping"
 		},
 		{
 			"Name": "Running",
-			"ShortName": "Run"
+			"ShortName": "Running"
 		},
 		{
 			"Name": "Teleport",
@@ -87,11 +87,11 @@
 		},
 		{
 			"Name": "Defense Debuff",
-			"ShortName": "DefDebuff"
+			"ShortName": "DefenseDebuff"
 		},
 		{
 			"Name": "Endurance Modification",
-			"ShortName": "EndMod"
+			"ShortName": "EnduranceModification"
 		},
 		{
 			"Name": "Knockback",
@@ -99,83 +99,83 @@
 		},
 		{
 			"Name": "Threat Duration",
-			"ShortName": "Threat"
+			"ShortName": "ThreatDuration"
 		},
 		{
 			"Name": "To Hit Buff",
-			"ShortName": "ToHit"
+			"ShortName": "ToHitBuff"
 		},
 		{
 			"Name": "To Hit Debuff",
-			"ShortName": "ToHitDeb"
+			"ShortName": "ToHitDebuff"
 		},
 		{
 			"Name": "Recharge Intensive Pets",
-			"ShortName": "PetRech"
+			"ShortName": "RechargeIntensivePets"
 		},
 		{
-			"Name": "Travel",
-			"ShortName": "Travel"
+			"Name": "Universal Travel",
+			"ShortName": "UniversalTravel"
 		},
 		{
 			"Name": "Accurate Healing",
-			"ShortName": "AccHeal"
+			"ShortName": "AccurateHealing"
 		},
 		{
 			"Name": "Accurate Defense Debuff",
-			"ShortName": "AccDefDeb"
+			"ShortName": "AccurateDefenseDebuff"
 		},
 		{
 			"Name": "Accurate To-Hit Debuff",
-			"ShortName": "AccToHitDeb"
+			"ShortName": "AccurateToHitDebuff"
 		},
 		{
 			"Name": "Soldiers of Arachnos Archetype Sets",
-			"ShortName": "Arachnos"
+			"ShortName": "SoldiersOfArachnosArchetypeSets"
 		},
 		{
 			"Name": "Blaster Archetype Sets",
-			"ShortName": "Blaster"
+			"ShortName": "BlasterArchetypeSets"
 		},
 		{
 			"Name": "Brute Archetype Sets",
-			"ShortName": "Brute"
+			"ShortName": "BruteArchetypeSets"
 		},
 		{
 			"Name": "Controller Archetype Sets",
-			"ShortName": "Controller"
+			"ShortName": "ControllerArchetypeSets"
 		},
 		{
 			"Name": "Corruptor Archetype Sets",
-			"ShortName": "Corruptor"
+			"ShortName": "CorruptorArchetypeSets"
 		},
 		{
 			"Name": "Defender Archetype Sets",
-			"ShortName": "Defender"
+			"ShortName": "DefenderArchetypeSets"
 		},
 		{
 			"Name": "Dominator Archetype Sets",
-			"ShortName": "Dominator"
+			"ShortName": "DominatorArchetypeSets"
 		},
 		{
 			"Name": "Kheldian Archetype Sets",
-			"ShortName": "Kheldian"
+			"ShortName": "KheldianArchetypeSets"
 		},
 		{
 			"Name": "Mastermind Archetype Sets",
-			"ShortName": "Mastermind"
+			"ShortName": "MastermindArchetypeSets"
 		},
 		{
 			"Name": "Scrapper Archetype Sets",
-			"ShortName": "Scrapper"
+			"ShortName": "ScrapperArchetypeSets"
 		},
 		{
 			"Name": "Stalker Archetype Sets",
-			"ShortName": "Stalker"
+			"ShortName": "StalkerArchetypeSets"
 		},
 		{
 			"Name": "Tanker Archetype Sets",
-			"ShortName": "Tanker"
+			"ShortName": "TankerArchetypeSets"
 		},
 		{
 			"Name": "Universal Damage",
@@ -183,23 +183,7 @@
 		},
 		{
 			"Name": "Sentinel Archetype Sets",
-			"ShortName": "Sentinel"
-		},
-		{
-			"Name": "Run (No Sprint)",
-			"ShortName": "RunNoSprint"
-		},
-		{
-			"Name": "Jump (No Sprint)",
-			"ShortName": "JumpNoSprint"
-		},
-		{
-			"Name": "Flight (No Sprint)",
-			"ShortName": "FlightNoSprint"
-		},
-		{
-			"Name": "Teleport (No Sprint)",
-			"ShortName": "TeleportNoSprint"
+			"ShortName": "SentinelArchetypeSets"
 		}
 	],
 	"EnhancementGrades": [

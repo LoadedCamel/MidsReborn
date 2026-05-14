@@ -53,7 +53,14 @@ public static class OmniMidsMapper
         var uniqueId = 1;
         for (var effectIndex = 0; effectIndex < effectGroups.Count; effectIndex++)
         {
-            foreach (var flattened in FlattenEffect(power, effectGroups[effectIndex], ref uniqueId, applyResult, [], $"{sourcePrefix}[{effectIndex}]"))
+            foreach (var flattened in FlattenEffect(
+                         power,
+                         effectGroups[effectIndex],
+                         ref uniqueId,
+                         applyResult,
+                         [],
+                         [],
+                         $"{sourcePrefix}[{effectIndex}]"))
             {
                 yield return flattened;
             }
@@ -66,10 +73,13 @@ public static class OmniMidsMapper
         ref int uniqueId,
         OmniApplyResult? applyResult,
         IReadOnlyCollection<string> inheritedTags,
+        IReadOnlyCollection<string> inheritedRequiresExpressions,
         string sourcePath)
     {
         var effects = new List<Effect>();
         var effectTags = MergeTags(inheritedTags, source.Tags, source.Flags).ToArray();
+        var requiresExpressions = MergeRequiresExpressions(inheritedRequiresExpressions, source.RequiresExpression).ToArray();
+        var combinedSourceRequires = JoinRequiresExpressions(requiresExpressions);
         if (effectTags.Length > 0)
         {
             applyResult?.AddLimited(applyResult.EffectGroupTagDetails,
@@ -149,7 +159,10 @@ public static class OmniMidsMapper
                 var modifierTable = string.IsNullOrWhiteSpace(template.Table)
                     ? "Melee_Ones"
                     : DatabaseAPI.NormalizeModifierTableName(template.Table);
-                var pvMode = MapPvMode(mappedType, source.RequiresExpression, template, out var pvModeSource);
+                var conditionExpressions = requiresExpressions
+                    .Concat(string.IsNullOrWhiteSpace(template.JitRequires) ? [] : [template.JitRequires])
+                    .ToArray();
+                var pvMode = MapPvMode(mappedType, combinedSourceRequires, template, out var pvModeSource);
                 var stackPolicy = ImportedStackPolicyNormalizer.FromTemplate(template);
                 var effect = new Effect
                 {
@@ -180,11 +193,10 @@ public static class OmniMidsMapper
                     AdvancedConditions = OmniExpressionConverter.ToConditionSet(
                         AdvancedConditionEvaluationMode.ReportOnly,
                         power.FullName,
-                        source.RequiresExpression,
-                        template.JitRequires)
+                        conditionExpressions)
                 };
                 ApplyCombatModFlags(effect, template);
-                TrackPvTargetAudit(power, source, template, effect, pvModeSource, applyResult);
+                TrackPvTargetAudit(power, combinedSourceRequires, template, effect, pvModeSource, applyResult);
                 if (!DatabaseAPI.ModifierTableExists(effect.ModifierTable))
                 {
                     applyResult?.AddLimited(applyResult.UnknownAttribMappingDetails,
@@ -261,7 +273,14 @@ public static class OmniMidsMapper
 
         for (var childIndex = 0; childIndex < source.ChildEffects.Count; childIndex++)
         {
-            foreach (var flattened in FlattenEffect(power, source.ChildEffects[childIndex], ref uniqueId, applyResult, effectTags, $"{sourcePath}:child[{childIndex}]"))
+            foreach (var flattened in FlattenEffect(
+                         power,
+                         source.ChildEffects[childIndex],
+                         ref uniqueId,
+                         applyResult,
+                         effectTags,
+                         requiresExpressions,
+                         $"{sourcePath}:child[{childIndex}]"))
             {
                 effects.Add(flattened);
             }
@@ -449,6 +468,32 @@ public static class OmniMidsMapper
         return scope == ChanceModScope.PowerLocal ? "power-local" : "global";
     }
 
+    private static IEnumerable<string> MergeRequiresExpressions(
+        IEnumerable<string>? inheritedExpressions,
+        params string?[] currentExpressions)
+    {
+        foreach (var expression in inheritedExpressions ?? [])
+        {
+            if (!string.IsNullOrWhiteSpace(expression))
+            {
+                yield return expression.Trim();
+            }
+        }
+
+        foreach (var expression in currentExpressions)
+        {
+            if (!string.IsNullOrWhiteSpace(expression))
+            {
+                yield return expression.Trim();
+            }
+        }
+    }
+
+    private static string JoinRequiresExpressions(IEnumerable<string> expressions)
+    {
+        return string.Join(" && ", expressions.Where(static expression => !string.IsNullOrWhiteSpace(expression)));
+    }
+
     private static IEnumerable<string> GetEffectFilterTags(OmniEffectTemplate template)
     {
         if (template.Params != null &&
@@ -589,7 +634,7 @@ public static class OmniMidsMapper
 
     private static void TrackPvTargetAudit(
         OmniPowerDefinition power,
-        OmniEffectDefinition source,
+        string combinedSourceRequires,
         OmniEffectTemplate template,
         Effect effect,
         string pvModeSource,
@@ -600,8 +645,8 @@ public static class OmniMidsMapper
             return;
         }
 
-        var targetsPlayer = TargetsEntity(source.RequiresExpression, "player") || TargetsEntity(template.JitRequires, "player");
-        var targetsCritter = TargetsEntity(source.RequiresExpression, "critter") || TargetsEntity(template.JitRequires, "critter");
+        var targetsPlayer = TargetsEntity(combinedSourceRequires, "player") || TargetsEntity(template.JitRequires, "player");
+        var targetsCritter = TargetsEntity(combinedSourceRequires, "critter") || TargetsEntity(template.JitRequires, "critter");
 
         switch (pvModeSource)
         {
@@ -621,7 +666,7 @@ public static class OmniMidsMapper
         {
             applyResult.PvTargetMappingMismatches++;
             applyResult.AddLimited(applyResult.PvTargetMappingMismatchDetails,
-                $"{effect.OmniSource}: target_enttype player={targetsPlayer} critter={targetsCritter}, PvMode={effect.PvMode}, ToWho={effect.ToWho}, requires='{source.RequiresExpression}', jit='{template.JitRequires}'");
+                $"{effect.OmniSource}: target_enttype player={targetsPlayer} critter={targetsCritter}, PvMode={effect.PvMode}, ToWho={effect.ToWho}, requires='{combinedSourceRequires}', jit='{template.JitRequires}'");
         }
 
         if (!IsFocusedPvTargetAuditPower(power.FullName))
@@ -631,7 +676,7 @@ public static class OmniMidsMapper
 
         applyResult.PvTargetAuditEntries++;
         applyResult.AddLimited(applyResult.PvTargetGatingAuditDetails,
-            $"{effect.OmniSource}: template.target='{template.Target}', targets_affected='{string.Join(", ", power.TargetsAffected)}', requires='{source.RequiresExpression}', jit='{template.JitRequires}', ToWho={effect.ToWho}, PvMode={effect.PvMode} ({pvModeSource}), conditions={FormatConditionRows(effect.AdvancedConditions)}");
+            $"{effect.OmniSource}: template.target='{template.Target}', targets_affected='{string.Join(", ", power.TargetsAffected)}', requires='{combinedSourceRequires}', jit='{template.JitRequires}', ToWho={effect.ToWho}, PvMode={effect.PvMode} ({pvModeSource}), conditions={FormatConditionRows(effect.AdvancedConditions)}");
     }
 
     private static bool IsFocusedPvTargetAuditPower(string fullName)

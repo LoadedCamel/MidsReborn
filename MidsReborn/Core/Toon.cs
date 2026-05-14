@@ -108,6 +108,11 @@ namespace Mids_Reborn.Core
 
         public void BuildPower(int iSet, int powerID, bool noPoolShuffle = false)
         {
+            BuildPower(iSet, powerID, -1, noPoolShuffle);
+        }
+
+        public void BuildPower(int iSet, int powerID, int preferredHistoryIndex, bool noPoolShuffle = false)
+        {
             if (iSet < 0 || powerID < 0)
             {
                 return;
@@ -176,7 +181,12 @@ namespace Mids_Reborn.Core
                     case Enums.dmModes.Normal:
                     case Enums.dmModes.Respec:
                         {
-                            i = GetFirstAvailablePowerIndex(Math.Max(RequestedLevel, DatabaseAPI.Database.Power[powerID].Level - 1));
+                            int minimumLevel = Math.Max(RequestedLevel, DatabaseAPI.Database.Power[powerID].Level - 1);
+                            i = GetPreferredBuildPowerIndex(preferredHistoryIndex, minimumLevel);
+                            if (i < 0)
+                            {
+                                i = GetFirstAvailablePowerIndex(minimumLevel);
+                            }
                             break;
                         }
                 }
@@ -268,6 +278,22 @@ namespace Mids_Reborn.Core
             }
 
             ResetLevel();
+        }
+
+        private int GetPreferredBuildPowerIndex(int preferredHistoryIndex, int minimumLevel)
+        {
+            if (preferredHistoryIndex < 0 || preferredHistoryIndex >= CurrentBuild.Powers.Count)
+            {
+                return -1;
+            }
+
+            var targetPower = CurrentBuild.Powers[preferredHistoryIndex];
+            if (targetPower == null || targetPower.Chosen || targetPower.NIDPowerset > -1)
+            {
+                return -1;
+            }
+
+            return targetPower.Level >= minimumLevel ? preferredHistoryIndex : -1;
         }
 
         public int BuildSlot(int powerIDX, int slotIDX = -1)
@@ -1193,7 +1219,7 @@ namespace Mids_Reborn.Core
             return flag;
         }
 
-        public PopUp.PopupData PopPowerInfo(int hIDX, int pIDX)
+        public PopUp.PopupData PopPowerInfo(int hIDX, int pIDX, bool includePowerKindLabel = false)
         {
             var popupData = new PopUp.PopupData();
             if (pIDX < 0)
@@ -1231,7 +1257,7 @@ namespace Mids_Reborn.Core
                 popupData.Sections[index1].Add($"Available: Level {power.Level}", PopUp.Colors.Title, 0.9f, FontStyle.Bold, 1);
             }
 
-            popupData.Sections[index1].Add(power.DescShort, PopUp.Colors.Text);
+            popupData.Sections[index1].Add(BuildPopupDescription(power, includePowerKindLabel), PopUp.Colors.Text);
             var flag1 = false;
             if (hIDX < 0 & pIDX > -1)
             {
@@ -1369,6 +1395,96 @@ namespace Mids_Reborn.Core
             popupData.Sections[index5].Add($"You cannot take this power because you are a {Archetype.DisplayName}.", PopUp.Colors.Alert, 1f, FontStyle.Bold, 1);
 
             return popupData;
+        }
+
+        internal static string BuildPopupDescription(IPower power, bool includePowerKindLabel)
+        {
+            var description = power.DescShort?.Trim() ?? string.Empty;
+
+            if (!includePowerKindLabel)
+            {
+                return description;
+            }
+
+            var typeLabel = GetPopupPowerKindLabel(power);
+            if (TryNormalizeExistingPopupDescription(description, typeLabel, out var normalizedDescription))
+            {
+                return normalizedDescription;
+            }
+
+            if (string.IsNullOrWhiteSpace(typeLabel))
+            {
+                return description;
+            }
+
+            return string.IsNullOrWhiteSpace(description)
+                ? typeLabel
+                : $"{typeLabel}: {description}";
+        }
+
+        private static string GetPopupPowerKindLabel(IPower power)
+        {
+            return power.PowerType switch
+            {
+                Enums.ePowerType.Click when power.ClickBuff => "Click-Buff",
+                Enums.ePowerType.Auto_ => "Auto",
+                Enums.ePowerType.Toggle => "Toggle",
+                Enums.ePowerType.Click => "Click",
+                _ => string.Empty
+            };
+        }
+
+        private static bool TryNormalizeExistingPopupDescription(
+            string description,
+            string computedTypeLabel,
+            out string normalizedDescription)
+        {
+            normalizedDescription = description;
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                return false;
+            }
+
+            foreach (var knownLabel in new[] { "Click-Buff", "Toggle", "Auto", "Click" })
+            {
+                var canonicalPrefix = $"{knownLabel}:";
+                if (description.StartsWith(canonicalPrefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    normalizedDescription = $"{knownLabel}: {description[canonicalPrefix.Length..].TrimStart()}";
+                    return true;
+                }
+            }
+
+            if (description.StartsWith("(Toggle)", StringComparison.OrdinalIgnoreCase))
+            {
+                normalizedDescription = NormalizeLegacyParentheticalPrefix("Toggle", description, "(Toggle)");
+                return true;
+            }
+
+            if (description.StartsWith("(Auto)", StringComparison.OrdinalIgnoreCase))
+            {
+                normalizedDescription = NormalizeLegacyParentheticalPrefix("Auto", description, "(Auto)");
+                return true;
+            }
+
+            if (description.StartsWith("(Click)", StringComparison.OrdinalIgnoreCase))
+            {
+                normalizedDescription = NormalizeLegacyParentheticalPrefix(
+                    string.IsNullOrWhiteSpace(computedTypeLabel) ? "Click" : computedTypeLabel,
+                    description,
+                    "(Click)");
+                return true;
+            }
+
+            return false;
+        }
+
+        private static string NormalizeLegacyParentheticalPrefix(string label, string description, string legacyPrefix)
+        {
+            var remainder = description[legacyPrefix.Length..].TrimStart();
+            return string.IsNullOrWhiteSpace(remainder)
+                ? label
+                : $"{label}: {remainder}";
         }
 
         public PopUp.PopupData PopPowersetInfo(int nIDPowerset, string extraString = "")

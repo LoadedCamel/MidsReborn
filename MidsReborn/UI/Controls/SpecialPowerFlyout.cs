@@ -346,7 +346,6 @@ public sealed class SpecialPowerFlyout : UserControl
     {
         var pairedBold = MidsContext.Config?.RtFont.PairedBold ?? false;
         var toon = MidsContext.Character as Toon ?? MainModule.MidsController.Toon;
-        var useLeadingIcons = request.Category == SpecialPowerCategory.Incarnate;
 
         var items = new List<MidsListViewItem>(request.Powers.Count);
         foreach (var power in request.Powers)
@@ -364,14 +363,25 @@ public sealed class SpecialPowerFlyout : UserControl
                 Bold = pairedBold,
                 Italic = state == MidsItemState.Invalid
             };
-            item.LeadingImage = useLeadingIcons
-                ? AssetManager.GetPowerImage(power)?.Bitmap
-                : null;
+            item.LeadingImage = ResolveLeadingImage(power);
 
             items.Add(item);
         }
 
         _powerList.Items = items;
+    }
+
+    private static Image? ResolveLeadingImage(IPower power)
+    {
+        var icon = AssetManager.GetPowerImage(power);
+        if (icon == AssetManager.UnknownIcon)
+        {
+            icon = AssetManager.GetPowersetImage(power);
+        }
+
+        return icon == AssetManager.UnknownIcon
+            ? null
+            : icon?.Bitmap;
     }
 
     private static MidsItemState ResolvePowerState(Toon? toon, IPower power)

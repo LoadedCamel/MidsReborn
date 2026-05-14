@@ -61,6 +61,7 @@ public static class ThemeManager
 
                 if (customTheme != null && !string.IsNullOrWhiteSpace(customTheme.Name))
                 {
+                    customTheme = NormalizeTheme(customTheme);
                     if (!_runtimeThemes.TryAdd(customTheme.Name, customTheme))
                     {
                         Debug.WriteLine($"Custom theme '{customTheme.Name}' conflicts with a built-in theme and was ignored.");
@@ -122,6 +123,7 @@ public static class ThemeManager
                     continue;
                 }
 
+                customTheme = NormalizeTheme(customTheme);
                 seenUserNames.Add(customTheme.Name);
                 _runtimeThemes[customTheme.Name] = customTheme; // add or update
             }
@@ -147,6 +149,75 @@ public static class ThemeManager
             if (CurrentTheme is not null && !string.Equals(previous, CurrentTheme.Name, StringComparison.OrdinalIgnoreCase))
                 ThemeChanged?.Invoke();
         }
+    }
+
+    private static ApplicationTheme NormalizeTheme(ApplicationTheme theme)
+    {
+        theme.PowerSlot = NormalizePowerSlotTheme(theme, theme.PowerSlot);
+        return theme;
+    }
+
+    private static PowerSlotTheme NormalizePowerSlotTheme(ApplicationTheme theme, PowerSlotTheme? powerSlotTheme)
+    {
+        PowerSlotTheme derived = CreateDerivedPowerSlotTheme(theme);
+        powerSlotTheme ??= new PowerSlotTheme();
+
+        powerSlotTheme.Border = ResolveThemeColor(powerSlotTheme.Border, derived.Border);
+        powerSlotTheme.GradientTop = ResolveThemeColor(powerSlotTheme.GradientTop, derived.GradientTop);
+        powerSlotTheme.GradientBottom = ResolveThemeColor(powerSlotTheme.GradientBottom, derived.GradientBottom);
+        powerSlotTheme.HoverGradientTop = ResolveThemeColor(powerSlotTheme.HoverGradientTop, derived.HoverGradientTop);
+        powerSlotTheme.HoverGradientBottom = ResolveThemeColor(powerSlotTheme.HoverGradientBottom, derived.HoverGradientBottom);
+        powerSlotTheme.OpenBorder = ResolveThemeColor(powerSlotTheme.OpenBorder, derived.OpenBorder);
+        powerSlotTheme.EmptyFill = ResolveThemeColor(powerSlotTheme.EmptyFill, derived.EmptyFill);
+        powerSlotTheme.DisabledFill = ResolveThemeColor(powerSlotTheme.DisabledFill, derived.DisabledFill);
+        powerSlotTheme.ForeColor = ResolveThemeColor(powerSlotTheme.ForeColor, derived.ForeColor);
+        return powerSlotTheme;
+    }
+
+    private static PowerSlotTheme CreateDerivedPowerSlotTheme(ApplicationTheme theme)
+    {
+        Color accent = ResolveThemeColor(theme.DataView.Accent, Color.FromArgb(32, 88, 182));
+        Color accentLight = ResolveThemeColor(theme.MenuStrip.AccentLightColor, ResolveThemeColor(theme.DropDownList.HoverBorder, Color.FromArgb(126, 207, 255)));
+        Color buttonTop = ResolveThemeColor(theme.Button.GradientTop, accent);
+        Color buttonBottom = ResolveThemeColor(theme.Button.GradientBottom, Blend(buttonTop, Color.Black, 0.42f));
+        Color headerDark = ResolveThemeColor(theme.Header.HeaderDark, buttonBottom);
+        Color dataCard = ResolveThemeColor(theme.DataView.Card, headerDark);
+        Color border = Blend(ResolveThemeColor(theme.Button.Border, accent), accent, 0.36f);
+        Color gradientTop = Blend(buttonTop, accentLight, 0.14f);
+        Color gradientBottom = Blend(buttonBottom, headerDark, 0.26f);
+        Color openBorder = Blend(accentLight, accent, 0.18f);
+        Color emptyFill = Blend(dataCard, headerDark, 0.34f);
+        Color disabledFill = Blend(emptyFill, Color.Black, 0.24f);
+        Color foreColor = ResolveThemeColor(theme.DataView.Text, ResolveThemeColor(theme.Button.ForeColor, Color.WhiteSmoke));
+
+        return new PowerSlotTheme
+        {
+            Border = border,
+            GradientTop = gradientTop,
+            GradientBottom = gradientBottom,
+            HoverGradientTop = Blend(gradientTop, Color.White, 0.10f),
+            HoverGradientBottom = Blend(gradientBottom, Color.White, 0.06f),
+            OpenBorder = openBorder,
+            EmptyFill = emptyFill,
+            DisabledFill = disabledFill,
+            ForeColor = foreColor
+        };
+    }
+
+    private static Color ResolveThemeColor(Color candidate, Color fallback)
+    {
+        return candidate.IsEmpty ? fallback : candidate;
+    }
+
+    private static Color Blend(Color first, Color second, float amountSecond)
+    {
+        amountSecond = Math.Clamp(amountSecond, 0f, 1f);
+        float amountFirst = 1f - amountSecond;
+        return Color.FromArgb(
+            (int)Math.Round(first.A * amountFirst + second.A * amountSecond),
+            (int)Math.Round(first.R * amountFirst + second.R * amountSecond),
+            (int)Math.Round(first.G * amountFirst + second.G * amountSecond),
+            (int)Math.Round(first.B * amountFirst + second.B * amountSecond));
     }
 
     private static Dictionary<string, ApplicationTheme> CreateBuiltInThemes()
@@ -255,12 +326,13 @@ public static class ThemeManager
             },
             PowerSlot = new PowerSlotTheme
             {
-                Border = Color.FromArgb(255, 173, 35),
-                GradientTop = Color.FromArgb(70, 120, 180),
-                GradientBottom = Color.FromArgb(25, 60, 110),
-                OpenBorder = Color.FromArgb(255, 192, 0),
-                EmptyFill = Color.FromArgb(68, 68, 68),
-                DisabledFill = Color.FromArgb(48, 48, 48)
+                Border = Color.FromArgb(32, 88, 182),
+                GradientTop = Color.FromArgb(100, 165, 238),
+                GradientBottom = Color.FromArgb(11, 65, 149),
+                OpenBorder = Color.FromArgb(126, 207, 255),
+                EmptyFill = Color.FromArgb(34, 48, 68),
+                DisabledFill = Color.FromArgb(24, 34, 50),
+                ForeColor = Color.FromArgb(245, 247, 252)
             },
             ScrollPanel = new ScrollPanelTheme
             {
@@ -372,12 +444,13 @@ public static class ThemeManager
             },
             PowerSlot = new PowerSlotTheme
             {
-                Border = Color.FromArgb(255, 173, 35),
-                GradientTop = Color.FromArgb(190, 90, 90),
-                GradientBottom = Color.FromArgb(101, 28, 28),
-                OpenBorder = Color.FromArgb(255, 192, 0),
-                EmptyFill = Color.FromArgb(68, 68, 68),
-                DisabledFill = Color.FromArgb(48, 48, 48)
+                Border = Color.FromArgb(138, 30, 40),
+                GradientTop = Color.FromArgb(214, 100, 112),
+                GradientBottom = Color.FromArgb(109, 17, 27),
+                OpenBorder = Color.FromArgb(255, 141, 92),
+                EmptyFill = Color.FromArgb(72, 40, 44),
+                DisabledFill = Color.FromArgb(48, 28, 32),
+                ForeColor = Color.FromArgb(248, 243, 244)
             },
             ScrollPanel = new ScrollPanelTheme
             {
@@ -489,12 +562,13 @@ public static class ThemeManager
             },
             PowerSlot = new PowerSlotTheme
             {
-                Border = Color.FromArgb(255, 173, 35),
-                GradientTop = Color.FromArgb(220, 190, 60),
-                GradientBottom = Color.FromArgb(120, 100, 20),
-                OpenBorder = Color.FromArgb(255, 192, 0),
-                EmptyFill = Color.FromArgb(68, 68, 68),
-                DisabledFill = Color.FromArgb(48, 48, 48)
+                Border = Color.FromArgb(150, 114, 24),
+                GradientTop = Color.FromArgb(230, 196, 76),
+                GradientBottom = Color.FromArgb(124, 93, 18),
+                OpenBorder = Color.FromArgb(255, 233, 148),
+                EmptyFill = Color.FromArgb(70, 60, 30),
+                DisabledFill = Color.FromArgb(46, 38, 20),
+                ForeColor = Color.FromArgb(248, 244, 231)
             },
             ScrollPanel = new ScrollPanelTheme
             {
@@ -606,12 +680,13 @@ public static class ThemeManager
             },
             PowerSlot = new PowerSlotTheme
             {
-                Border = Color.FromArgb(255, 173, 35),
-                GradientTop = Color.FromArgb(60, 220, 220),
-                GradientBottom = Color.FromArgb(20, 110, 110),
-                OpenBorder = Color.FromArgb(255, 192, 0),
-                EmptyFill = Color.FromArgb(68, 68, 68),
-                DisabledFill = Color.FromArgb(48, 48, 48)
+                Border = Color.FromArgb(0, 120, 126),
+                GradientTop = Color.FromArgb(92, 226, 226),
+                GradientBottom = Color.FromArgb(14, 118, 126),
+                OpenBorder = Color.FromArgb(164, 255, 241),
+                EmptyFill = Color.FromArgb(26, 68, 70),
+                DisabledFill = Color.FromArgb(18, 44, 46),
+                ForeColor = Color.FromArgb(239, 248, 248)
             },
             ScrollPanel = new ScrollPanelTheme
             {
@@ -723,12 +798,13 @@ public static class ThemeManager
             },
             PowerSlot = new PowerSlotTheme
             {
-                Border = Color.FromArgb(255, 0, 0),
-                GradientTop = Color.FromArgb(192, 192, 192),
-                GradientBottom = Color.FromArgb(80, 80, 80),
-                OpenBorder = Color.FromArgb(255, 80, 0),
-                EmptyFill = Color.FromArgb(68, 68, 68),
-                DisabledFill = Color.FromArgb(48, 48, 48)
+                Border = Color.FromArgb(150, 38, 56),
+                GradientTop = Color.FromArgb(205, 205, 212),
+                GradientBottom = Color.FromArgb(90, 90, 98),
+                OpenBorder = Color.FromArgb(244, 96, 110),
+                EmptyFill = Color.FromArgb(58, 58, 64),
+                DisabledFill = Color.FromArgb(36, 36, 40),
+                ForeColor = Color.FromArgb(245, 245, 248)
             },
             ScrollPanel = new ScrollPanelTheme
             {
@@ -840,12 +916,13 @@ public static class ThemeManager
             },
             PowerSlot = new PowerSlotTheme
             {
-                Border = Color.FromArgb(255, 173, 35),
-                GradientTop = Color.FromArgb(180, 120, 60),
-                GradientBottom = Color.FromArgb(90, 60, 30),
-                OpenBorder = Color.FromArgb(255, 192, 0),
-                EmptyFill = Color.FromArgb(68, 68, 68),
-                DisabledFill = Color.FromArgb(48, 48, 48)
+                Border = Color.FromArgb(128, 82, 28),
+                GradientTop = Color.FromArgb(204, 143, 76),
+                GradientBottom = Color.FromArgb(87, 51, 24),
+                OpenBorder = Color.FromArgb(255, 204, 124),
+                EmptyFill = Color.FromArgb(72, 50, 30),
+                DisabledFill = Color.FromArgb(48, 32, 20),
+                ForeColor = Color.FromArgb(248, 239, 229)
             },
             ScrollPanel = new ScrollPanelTheme
             {

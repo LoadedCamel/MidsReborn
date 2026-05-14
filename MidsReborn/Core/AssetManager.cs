@@ -1210,6 +1210,19 @@ namespace Mids_Reborn.Core
                      .Distinct(StringComparer.OrdinalIgnoreCase))
             {
                 yield return candidate;
+                var pngCandidate = Path.ChangeExtension(candidate, ".png");
+                if (!string.IsNullOrWhiteSpace(pngCandidate))
+                {
+                    yield return pngCandidate;
+                }
+
+                var baseName = Path.GetFileNameWithoutExtension(candidate);
+                if (!string.IsNullOrWhiteSpace(baseName))
+                {
+                    yield return baseName;
+                    yield return $"{baseName}.png";
+                }
+
                 if (!candidate.EndsWith(".png", StringComparison.OrdinalIgnoreCase))
                 {
                     yield return $"{candidate}.png";
@@ -1258,72 +1271,67 @@ namespace Mids_Reborn.Core
             }
         }
 
-        private static IEnumerable<string> BuildSetTypeImageCandidates(string? shortName)
+        internal static IEnumerable<string> BuildSetTypeImageCandidates(string? shortName)
         {
-            if (string.IsNullOrWhiteSpace(shortName))
+            var canonicalShortName = DatabaseAPI.CanonicalizeSetTypeShortName(shortName);
+            if (string.IsNullOrWhiteSpace(canonicalShortName))
             {
                 yield break;
             }
 
-            switch (shortName)
+            switch (canonicalShortName)
             {
                 case "Untyped":
                     yield return "untyped.png";
                     break;
-                case "MeleeAoE":
+                case "MeleeAoEDamage":
                     yield return "melee_aoe.png";
                     break;
-                case "MeleeST":
+                case "MeleeDamage":
                     yield return "melee_single_target.png";
                     break;
-                case "RangedAoE":
+                case "RangedAoEDamage":
                     yield return "ranged_aoe.png";
                     break;
-                case "RangedST":
+                case "RangedDamage":
                     yield return "ranged_single_target.png";
                     break;
-                case "PetRech":
+                case "RechargeIntensivePets":
                     yield return "pet_recharge.png";
                     break;
                 case "UniversalDamage":
                     yield return "universal_damage.png";
                     break;
-                case "DefDebuff":
+                case "DefenseDebuff":
                     yield return "defense_debuff.png";
                     break;
-                case "Threat":
+                case "ThreatDuration":
                     yield return "taunt.png";
                     break;
-                case "ToHitDeb":
+                case "ToHitDebuff":
                     yield return "tohit_debuff.png";
                     break;
-                case "AccHeal":
+                case "AccurateHealing":
                     yield return "accurate_heal.png";
                     break;
-                case "AccDefDeb":
+                case "AccurateDefenseDebuff":
                     yield return "accurate_defense_debuff.png";
                     break;
-                case "AccToHitDeb":
+                case "AccurateToHitDebuff":
                     yield return "accurate_tohit_debuff.png";
                     break;
-                case "EndMod":
+                case "EnduranceModification":
                     yield return "end_mod.png";
                     break;
-                case "RunNoSprint":
-                    yield return "run_no_sprint.png";
-                    break;
-                case "JumpNoSprint":
-                    yield return "jump_no_sprint.png";
-                    break;
-                case "FlightNoSprint":
-                    yield return "flight_no_sprint.png";
-                    break;
-                case "TeleportNoSprint":
-                    yield return "teleport_no_sprint.png";
+                case "UniversalTravel":
+                    yield return "travel.png";
                     break;
             }
 
-            yield return $"{shortName}.png";
+            foreach (var candidateShortName in DatabaseAPI.GetSetTypeShortNameVariants(canonicalShortName).Distinct(StringComparer.OrdinalIgnoreCase))
+            {
+                yield return $"{candidateShortName}.png";
+            }
         }
 
         private static IEnumerable<string> BuildSpecialRailImageCandidates(Mids_Reborn.Core.Utils.TypeGrade specialEnhancement)

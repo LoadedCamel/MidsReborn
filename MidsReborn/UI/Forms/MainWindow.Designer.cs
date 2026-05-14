@@ -34,6 +34,7 @@ namespace Mids_Reborn.UI.Forms
         private void InitializeComponent()
         {
             components = new System.ComponentModel.Container();
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow2));
             mainLayoutPanel = new TableLayoutPanel();
             canvasScrollPanel = new MidsVScrollPanel();
             canvas = new MidsBufferedImagePanel();
@@ -78,6 +79,7 @@ namespace Mids_Reborn.UI.Forms
             primaryList = new MidsListView();
             primaryDropDown = new PowersetDropDownList();
             buttonsLayoutPanel = new TableLayoutPanel();
+            combatEx = new MidsVectorButton();
             tempPowersEx = new MidsVectorButton();
             ibPrestigePowersEx = new MidsVectorButton();
             incarnatesEx = new MidsVectorButton();
@@ -214,7 +216,6 @@ namespace Mids_Reborn.UI.Forms
             titlePanel = new Panel();
             logoPanel = new MidsLogoPanel();
             titleLabel = new Label();
-            combatEx = new MidsVectorButton();
             mainLayoutPanel.SuspendLayout();
             canvasScrollPanel.ContentPanel.SuspendLayout();
             canvasScrollPanel.SuspendLayout();
@@ -1017,6 +1018,24 @@ namespace Mids_Reborn.UI.Forms
             buttonsLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             buttonsLayoutPanel.Size = new Size(629, 66);
             buttonsLayoutPanel.TabIndex = 46;
+            // 
+            // combatEx
+            // 
+            combatEx.BackColor = Color.Transparent;
+            combatEx.ButtonType = MidsVectorButton.ButtonTypes.Toggle;
+            combatEx.CornerRadius = 6;
+            combatEx.Dock = DockStyle.Fill;
+            combatEx.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold);
+            combatEx.Location = new Point(3, 4);
+            combatEx.Margin = new Padding(3, 4, 3, 4);
+            combatEx.Name = "combatEx";
+            combatEx.Size = new Size(151, 25);
+            combatEx.TabIndex = 131;
+            combatEx.Text = "Combat";
+            combatEx.ToggleText.Indeterminate = "Combat";
+            combatEx.ToggleText.ToggledOff = "Combat";
+            combatEx.ToggleText.ToggledOn = "Combat";
+            tTip.SetToolTip(combatEx, "Combat Context");
             // 
             // tempPowersEx
             // 
@@ -2078,24 +2097,6 @@ namespace Mids_Reborn.UI.Forms
             titleLabel.TextAlign = ContentAlignment.MiddleCenter;
             titleLabel.MouseDown += Title_MouseDown;
             // 
-            // combatEx
-            // 
-            combatEx.BackColor = Color.Transparent;
-            combatEx.ButtonType = MidsVectorButton.ButtonTypes.Toggle;
-            combatEx.CornerRadius = 6;
-            combatEx.Dock = DockStyle.Fill;
-            combatEx.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold);
-            combatEx.Location = new Point(3, 4);
-            combatEx.Margin = new Padding(3, 4, 3, 4);
-            combatEx.Name = "combatEx";
-            combatEx.Size = new Size(151, 25);
-            combatEx.TabIndex = 131;
-            combatEx.Text = "Combat";
-            combatEx.ToggleText.Indeterminate = "Combat";
-            combatEx.ToggleText.ToggledOff = "Combat";
-            combatEx.ToggleText.ToggledOn = "Combat";
-            tTip.SetToolTip(combatEx, "Combat Context");
-            // 
             // MainWindow2
             // 
             AutoScaleDimensions = new SizeF(96F, 96F);
@@ -2108,6 +2109,7 @@ namespace Mids_Reborn.UI.Forms
             DoubleBuffered = true;
             ForeColor = Color.WhiteSmoke;
             FormBorderStyle = FormBorderStyle.None;
+            Icon = (Icon)resources.GetObject("$this.Icon");
             MinimumSize = new Size(1280, 768);
             Name = "MainWindow2";
             Padding = new Padding(10);

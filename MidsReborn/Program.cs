@@ -5,6 +5,8 @@ namespace Mids_Reborn
 {
     internal static class Program
     {
+        private const string TaskbarAppUserModelId = "Crytilis.MidsReborn";
+
         /// <summary>
         ///     The main entry point for the application.
         /// </summary>
@@ -14,6 +16,7 @@ namespace Mids_Reborn
             Thread.CurrentThread.CurrentCulture = CultureInfo.InvariantCulture;
             Thread.CurrentThread.CurrentUICulture = CultureInfo.InvariantCulture;
 
+            WinApi.SetCurrentProcessAppUserModelId(TaskbarAppUserModelId);
             Fonts.BuildFontCollection();
             StrapUpdater.Run();
 

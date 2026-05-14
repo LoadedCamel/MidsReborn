@@ -15,6 +15,7 @@ namespace Mids_Reborn.UI.Forms
         private string? _activeSpecialPowerTitle;
         private string? _activeSpecialPowerChipKey;
         private string? _rememberedPrestigeChipKey;
+        private string? _rememberedTempChipKey;
 
         private bool IsSpecialPowerFlyoutOpen => _specialPowerFlyout is { IsOpen: true };
 
@@ -93,6 +94,8 @@ namespace Mids_Reborn.UI.Forms
             _activeSpecialPowerTitle = request.Title;
             _activeSpecialPowerChipKey = request.SelectedChipKey;
 
+            CloseLegacySpecialPowerWindows();
+            UpdateSpecialPowerButtonStates(category);
             HidePopup();
             UpdateSpecialPowerFlyoutLayout(repositionIfOpen: false);
             _specialPowerFlyout.Open(request);
@@ -164,6 +167,32 @@ namespace Mids_Reborn.UI.Forms
                 var selectedGroup = prestigeGroups.FirstOrDefault(group =>
                     string.Equals(group.Key, resolvedChipKey, StringComparison.OrdinalIgnoreCase))
                     ?? prestigeGroups.FirstOrDefault();
+
+                return new SpecialPowerFlyoutRequest(
+                    category,
+                    title ?? GetSpecialPowerFlyoutTitle(category),
+                    anchorBounds,
+                    selectedGroup?.Powers ?? [],
+                    chipOptions,
+                    selectedGroup?.Key);
+            }
+
+            if (category == SpecialPowerCategory.Temp)
+            {
+                var tempGroups = SpecialPowerCatalog.GetTempPowerGroups(classId);
+                var chipOptions = tempGroups.Count > 1
+                    ? tempGroups.Select(group => new SpecialPowerChipOption(group.Key, group.Label)).ToList()
+                    : [];
+                var preferredChipKey = !string.IsNullOrWhiteSpace(selectedChipKey)
+                    ? selectedChipKey
+                    : _rememberedTempChipKey;
+                var resolvedChipKey = SpecialPowerChipStateResolver.ResolveSelectedChipKey(
+                    preferredChipKey,
+                    chipOptions,
+                    SpecialPowerCatalog.TempPowersChipKey);
+                var selectedGroup = tempGroups.FirstOrDefault(group =>
+                    string.Equals(group.Key, resolvedChipKey, StringComparison.OrdinalIgnoreCase))
+                    ?? tempGroups.FirstOrDefault();
 
                 return new SpecialPowerFlyoutRequest(
                     category,
@@ -261,6 +290,45 @@ namespace Mids_Reborn.UI.Forms
             _specialPowerFlyout?.CloseFlyout();
         }
 
+        private void CloseLegacySpecialPowerWindows()
+        {
+            if (fAccolade is { IsDisposed: false, Visible: true })
+            {
+                fAccolade.Close();
+            }
+
+            if (fPrestige is { IsDisposed: false, Visible: true })
+            {
+                fPrestige.Close();
+            }
+
+            if (fTemp is { IsDisposed: false, Visible: true })
+            {
+                fTemp.Close();
+            }
+
+            if (fIncarnate is { IsDisposed: false, Visible: true })
+            {
+                fIncarnate.Close();
+            }
+        }
+
+        private void UpdateSpecialPowerButtonStates(SpecialPowerCategory? activeCategory)
+        {
+            accoladesEx.ToggleState = activeCategory == SpecialPowerCategory.Accolade
+                ? MidsVectorButton.States.ToggledOn
+                : MidsVectorButton.States.ToggledOff;
+            ibPrestigePowersEx.ToggleState = activeCategory == SpecialPowerCategory.Prestige
+                ? MidsVectorButton.States.ToggledOn
+                : MidsVectorButton.States.ToggledOff;
+            incarnatesEx.ToggleState = activeCategory == SpecialPowerCategory.Incarnate
+                ? MidsVectorButton.States.ToggledOn
+                : MidsVectorButton.States.ToggledOff;
+            tempPowersEx.ToggleState = activeCategory == SpecialPowerCategory.Temp
+                ? MidsVectorButton.States.ToggledOn
+                : MidsVectorButton.States.ToggledOff;
+        }
+
         private bool ShouldKeepSpecialPowerFlyoutOpen(Point screenPoint)
         {
             if (_specialPowerFlyout is null || !_specialPowerFlyout.Visible)
@@ -311,7 +379,7 @@ namespace Mids_Reborn.UI.Forms
             }
 
             var anchorInForm = new Rectangle(PointToClient(e.ScreenBounds.Location), e.ScreenBounds.Size);
-            ShowPopup(-1, e.Power.PowerIndex, -1, Point.Empty, anchorInForm);
+            ShowPopup(-1, e.Power.PowerIndex, -1, Point.Empty, anchorInForm, includePowerKindLabel: true);
         }
 
         private void SpecialPowerFlyout_ChipChanged(object? sender, SpecialPowerChipChangedEventArgs e)
@@ -320,6 +388,10 @@ namespace Mids_Reborn.UI.Forms
             if (_activeSpecialPowerCategory == SpecialPowerCategory.Prestige)
             {
                 _rememberedPrestigeChipKey = e.Key;
+            }
+            else if (_activeSpecialPowerCategory == SpecialPowerCategory.Temp)
+            {
+                _rememberedTempChipKey = e.Key;
             }
 
             RefreshActiveSpecialPowerFlyout();
@@ -333,6 +405,7 @@ namespace Mids_Reborn.UI.Forms
             _activeSpecialPowerSubsetPowers = null;
             _activeSpecialPowerTitle = null;
             _activeSpecialPowerChipKey = null;
+            UpdateSpecialPowerButtonStates(null);
             HidePopup();
         }
 

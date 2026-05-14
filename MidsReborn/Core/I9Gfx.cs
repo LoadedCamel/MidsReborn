@@ -708,7 +708,9 @@ namespace Mids_Reborn.Core
             for (int index = 0; index < count; index++)
             {
                 var shortName = setTypes[index].ShortName;
-                var path = images.FirstOrDefault(i => i.FileName == $"{shortName}.png").Path ?? unknown;
+                var path = TryFindImagePath(images, AssetManager.BuildSetTypeImageCandidates(shortName), out var resolvedPath)
+                    ? resolvedPath
+                    : unknown;
 
                 using var original = new Bitmap(path);
                 using var resized = ResizeTo(original, IconLarge);

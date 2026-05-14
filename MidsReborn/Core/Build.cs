@@ -928,14 +928,21 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
-                if (power.Chosen || power.PowerSet.SetType != Enums.ePowerSetType.Inherent && power.PowerSet.SetType != Enums.ePowerSetType.Primary && power.PowerSet.SetType != Enums.ePowerSetType.Secondary && power.PowerSet.SetType != Enums.ePowerSetType.Pool)
+                var isCatalogedPlannerPower = PlannerStateCatalog.IsAutoGrantedPlannerStatePower(power.Power.FullName);
+                if (power.Chosen ||
+                    !isCatalogedPlannerPower &&
+                    power.PowerSet.SetType != Enums.ePowerSetType.Inherent &&
+                    power.PowerSet.SetType != Enums.ePowerSetType.Primary &&
+                    power.PowerSet.SetType != Enums.ePowerSetType.Secondary &&
+                    power.PowerSet.SetType != Enums.ePowerSetType.Pool)
                 {
                     continue;
                 }
 
                 if (power.Power is { HiddenPower: true, IncludeFlag: false } ||
                     power.Power.Level > maxLevel + 1 || !MeetsRequirement(power.Power, maxLevel) ||
-                    !power.Power.IncludeFlag)
+                    !power.Power.IncludeFlag ||
+                    !ShouldIncludeAutomaticGrantedPower(power.PowerSet, power.Power))
                 {
                     power.Tag = true;
                     flag = true;
@@ -1125,7 +1132,9 @@ namespace Mids_Reborn.Core
             powersetList.AddRange(_character.Powersets);
             foreach (var powerset in DatabaseAPI.Database.Powersets)
             {
-                if ((powerset.SetType == Enums.ePowerSetType.Inherent || HasPowersetGrantedStatePowers(powerset)) &&
+                if ((powerset.SetType == Enums.ePowerSetType.Inherent ||
+                     HasPowersetGrantedStatePowers(powerset) ||
+                     PlannerStateCatalog.HasCatalogAutoGrantedPowers(powerset)) &&
                     !powersetList.Contains(powerset))
                 {
                     powersetList.Add(powerset);
@@ -1197,6 +1206,11 @@ namespace Mids_Reborn.Core
 
         private bool ShouldIncludeAutomaticGrantedPower(IPowerset powerset, IPower power)
         {
+            if (PlannerStateCatalog.IsAutoGrantedPlannerStatePower(power.FullName))
+            {
+                return PlannerStateCatalog.ShouldAutoGrantPower(this, power);
+            }
+
             if (IsPowersetGrantedStatePower(power))
             {
                 return ShouldIncludePowersetGrantedStatePower(power);

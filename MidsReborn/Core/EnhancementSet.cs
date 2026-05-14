@@ -150,9 +150,14 @@ namespace Mids_Reborn.Core
 
         public string GetEnhancementSetRarity()
         {
-            var enhIdx = Enhancements[0];
-            var recipeIdx = DatabaseAPI.Database.Enhancements[enhIdx].RecipeIDX;
-            return DatabaseAPI.Database.Recipes[recipeIdx].Rarity.ToString();
+            var setId = Enhancements
+                .Where(enhIdx => enhIdx >= 0 && enhIdx < DatabaseAPI.Database.Enhancements.Length)
+                .Select(enhIdx => DatabaseAPI.Database.Enhancements[enhIdx].nIDSet)
+                .FirstOrDefault(candidateSetId => candidateSetId >= 0);
+
+            return setId >= 0 && DatabaseAPI.TryGetEnhancementSetResolvedRarity(setId, out var rarity)
+                ? rarity.ToString()
+                : Recipe.RecipeRarity.Common.ToString();
         }
 
         public List<IEffect> GetEffectDetailedData(int index, bool special)

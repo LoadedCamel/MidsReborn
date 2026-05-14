@@ -144,6 +144,14 @@ public sealed class OmniPowerClassifier
             sameSetPowerRequirement,
             classification.ExecutionOnly);
         classification.NormalBuildPick = normalBuildPick;
+        var grantedInherentType = DetermineGrantedSupportInherentType(
+            group,
+            power,
+            sameSetPowerRequirement,
+            visibleInherent,
+            isTemporaryPower,
+            hasModeRequirement,
+            classification.ExecutionOnly);
         classification.GrantedSupportPower =
             (power.AutoIssue && !power.ShowInManage && !visibleInherent) ||
             (power.AutoIssue && !visibleInherent && !group.Equals("Inherent", StringComparison.OrdinalIgnoreCase) && !isTemporaryPower) ||
@@ -215,10 +223,19 @@ public sealed class OmniPowerClassifier
         {
             classification.HiddenPower = true;
             classification.IncludeFlag = power.AutoIssue && !group.Equals("Inherent", StringComparison.OrdinalIgnoreCase) && !isTemporaryPower;
-            classification.InherentType = classification.IncludeFlag && power.ShowInManage
-                ? Enums.eGridType.Powerset
+            classification.InherentType = classification.IncludeFlag
+                ? grantedInherentType != Enums.eGridType.None
+                    ? grantedInherentType
+                    : power.ShowInManage
+                        ? Enums.eGridType.Powerset
+                        : Enums.eGridType.None
                 : Enums.eGridType.None;
-            classification.Reasons.Add("auto-issued support/granted power");
+            classification.Reasons.Add(classification.InherentType switch
+            {
+                Enums.eGridType.Power => "auto-issued power-granted support shown in inherent grid",
+                Enums.eGridType.Powerset => "auto-issued powerset-granted support shown in inherent grid",
+                _ => "auto-issued support/granted power"
+            });
         }
 
         if (hasModeRequirement && IsSupportHeavyGroup(group) && !visibleInherent)
@@ -346,6 +363,17 @@ public sealed class OmniPowerClassifier
             classification.Reasons.Add("planner-relevant incarnate socket support shown hidden in incarnate grid");
         }
 
+        if (IsVisibleIncarnateBuildChoice(power, classification, group, set, name))
+        {
+            classification.HiddenPower = false;
+            classification.IncludeFlag = true;
+            classification.InherentType = Enums.eGridType.Incarnate;
+            classification.GrantedSupportPower = false;
+            classification.ExecutionOnly = false;
+            classification.NormalBuildPick = false;
+            classification.Reasons.Add("visible incarnate build choice shown in incarnate grid");
+        }
+
         if (IsTemporarySilentSupportPower(group, set))
         {
             classification.HiddenPower = true;
@@ -361,7 +389,7 @@ public sealed class OmniPowerClassifier
         {
             classification.HiddenPower = false;
             classification.IncludeFlag = true;
-            classification.InherentType = Enums.eGridType.Temp;
+            classification.InherentType = Enums.eGridType.Prestige;
             classification.GrantedSupportPower = false;
             classification.ExecutionOnly = false;
             classification.NormalBuildPick = false;
@@ -400,21 +428,49 @@ public sealed class OmniPowerClassifier
         parentPowerName = string.Empty;
         var requires = power.Requires?.Trim() ?? string.Empty;
         if (string.IsNullOrWhiteSpace(requires) ||
-            requires.Contains(' ') ||
-            requires.Contains('(') ||
-            requires.Contains(')') ||
             requires.Equals("0", StringComparison.OrdinalIgnoreCase) ||
             requires.Equals("1", StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
 
-        if (requires.Count(c => c == '.') != 2)
+        if (!requires.Contains(' ') &&
+            !requires.Contains('(') &&
+            !requires.Contains(')') &&
+            requires.Count(c => c == '.') == 2)
+        {
+            parentPowerName = requires;
+            return true;
+        }
+
+        if (TryExtractWrappedOwnPowerRequirement(requires, out parentPowerName))
+        {
+            return true;
+        }
+
+        if (!OmniExpressionConverter.TryConvertPowerRequirement(requires, out var convertedRequirements))
         {
             return false;
         }
 
-        parentPowerName = requires;
+        var candidateRows = convertedRequirements.Rows
+            .Where(row => !row.Negated &&
+                          row.EvaluationMode == AdvancedConditionEvaluationMode.BuildEvaluated)
+            .ToList();
+        if (candidateRows.Count != 1)
+        {
+            return false;
+        }
+
+        var candidate = candidateRows[0];
+        if (candidate.Kind is not (AdvancedConditionKind.PowerTaken or AdvancedConditionKind.SourceOwnPower) ||
+            string.IsNullOrWhiteSpace(candidate.Subject) ||
+            candidate.Subject.Count(c => c == '.') != 2)
+        {
+            return false;
+        }
+
+        parentPowerName = candidate.Subject.Trim();
         return true;
     }
 
@@ -655,6 +711,26 @@ public sealed class OmniPowerClassifier
                power.Effects.Count > 0;
     }
 
+    private static bool IsVisibleIncarnateBuildChoice(
+        OmniPowerDefinition power,
+        OmniPowerClassification classification,
+        string group,
+        string set,
+        string name)
+    {
+        if (!group.Equals("Incarnate", StringComparison.OrdinalIgnoreCase) ||
+            classification.HiddenPower ||
+            string.Equals(name, "Nothing", StringComparison.OrdinalIgnoreCase) ||
+            IsIncarnateSilentPlannerControl(power, group, set) ||
+            IsIncarnateSocketPlannerControl(power, group, set) ||
+            IsPetManifestOwnedScopedPower(power, group, set))
+        {
+            return false;
+        }
+
+        return power.ShowInManage || !power.DoNotSave;
+    }
+
     private static bool IsTemporarySilentSupportPower(string group, string set)
     {
         return group.Equals("Temporary_Powers", StringComparison.OrdinalIgnoreCase) &&
@@ -830,6 +906,81 @@ public sealed class OmniPowerClassifier
         return !string.IsNullOrWhiteSpace(power.Requires) &&
                !power.Requires.Trim().Equals("0", StringComparison.OrdinalIgnoreCase) &&
                !power.Requires.Trim().Equals("1", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static Enums.eGridType DetermineGrantedSupportInherentType(
+        string group,
+        OmniPowerDefinition power,
+        bool sameSetPowerRequirement,
+        bool visibleInherent,
+        bool isTemporaryPower,
+        bool hasModeRequirement,
+        bool executionOnly)
+    {
+        if (!power.AutoIssue ||
+            power.AvailableLevel != 0 ||
+            visibleInherent ||
+            isTemporaryPower ||
+            executionOnly ||
+            !IsPlayableBuildGroup(group))
+        {
+            return Enums.eGridType.None;
+        }
+
+        if (sameSetPowerRequirement)
+        {
+            return Enums.eGridType.Power;
+        }
+
+        if (hasModeRequirement)
+        {
+            return Enums.eGridType.None;
+        }
+
+        return Enums.eGridType.Powerset;
+    }
+
+    private static bool TryExtractWrappedOwnPowerRequirement(string requires, out string parentPowerName)
+    {
+        parentPowerName = string.Empty;
+        var candidate = requires.Trim();
+        while (candidate.StartsWith("!", StringComparison.Ordinal))
+        {
+            candidate = candidate[1..].TrimStart();
+        }
+
+        const string sourceOwnPowerPrefix = "source.ownPower?(";
+        const string ownPowerPrefix = "ownPower?(";
+        if (candidate.StartsWith(sourceOwnPowerPrefix, StringComparison.OrdinalIgnoreCase))
+        {
+            candidate = candidate[sourceOwnPowerPrefix.Length..];
+        }
+        else if (candidate.StartsWith(ownPowerPrefix, StringComparison.OrdinalIgnoreCase))
+        {
+            candidate = candidate[ownPowerPrefix.Length..];
+        }
+        else
+        {
+            return false;
+        }
+
+        if (!candidate.EndsWith(")", StringComparison.Ordinal))
+        {
+            return false;
+        }
+
+        candidate = candidate[..^1].Trim();
+        if (string.IsNullOrWhiteSpace(candidate) ||
+            candidate.Contains(' ') ||
+            candidate.Contains('(') ||
+            candidate.Contains(')') ||
+            candidate.Count(c => c == '.') != 2)
+        {
+            return false;
+        }
+
+        parentPowerName = candidate;
+        return true;
     }
 
     private static bool SamePowerset(string powerFullName, string otherPowerFullName)

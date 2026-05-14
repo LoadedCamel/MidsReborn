@@ -268,15 +268,56 @@ public class MidsDropDownList : ComboBox
 
         if (locked && !string.IsNullOrWhiteSpace(_lockedText))
         {
-            // Draw centered, subdued text; ignore icon and arrow
-            Size textSize = TextRenderer.MeasureText(g, "Mg", Font, Size.Empty, TextFormatFlags.NoPadding);
-            int textY = rect.Top + (rect.Height - textSize.Height) / 2 - 1;
-            Rectangle textRect = new Rectangle(rect.Left + IconPadding, textY, rect.Right - IconPadding * 2, textSize.Height);
+            Font? lockedFont = null;
+            var drawFont = Font;
+            if ((Font.Style & FontStyle.Bold) == 0)
+            {
+                lockedFont = new Font(Font, Font.Style | FontStyle.Bold);
+                drawFont = lockedFont;
+            }
 
-            // Slightly dimmed color to signal locked state (but readable)
+            var selectedItem = SelectedIndex >= 0 && SelectedIndex < Items.Count
+                ? Items[SelectedIndex]
+                : SelectedItem;
+            Bitmap? selectedIcon = null;
+            var hasIcon = selectedItem != null &&
+                          _itemIcons.TryGetValue(selectedItem, out selectedIcon) &&
+                          selectedIcon != null;
+
+            Size textSize = TextRenderer.MeasureText(g, "Mg", drawFont, Size.Empty, TextFormatFlags.NoPadding);
+            Size textMeasure = TextRenderer.MeasureText(g, _lockedText, drawFont, Size.Empty, TextFormatFlags.NoPadding);
+            int textY = rect.Top + (rect.Height - textSize.Height) / 2 - 1;
+
+            var contentWidth = Math.Max(0, rect.Width - IconPadding * 2);
+            var iconBlockWidth = hasIcon ? IconSize + IconPadding : 0;
+            var availableTextWidth = Math.Max(0, contentWidth - iconBlockWidth);
+            var desiredTextWidth = Math.Min(textMeasure.Width, availableTextWidth);
+            var totalWidth = hasIcon
+                ? Math.Min(contentWidth, iconBlockWidth + desiredTextWidth)
+                : Math.Min(contentWidth, desiredTextWidth);
+            var contentLeft = rect.Left + Math.Max(IconPadding, (rect.Width - totalWidth) / 2);
+            var textLeft = contentLeft;
+
+            if (hasIcon)
+            {
+                var iconRect = new Rectangle(contentLeft, rect.Top + (rect.Height - IconSize) / 2, IconSize, IconSize);
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                DrawIconIfValid(g, selectedIcon!, iconRect);
+                textLeft = iconRect.Right + IconPadding;
+            }
+
+            var textRect = new Rectangle(
+                textLeft,
+                textY,
+                Math.Max(0, rect.Right - IconPadding - textLeft),
+                textSize.Height);
+
             var color = Color.FromArgb(200, theme.ForeColor);
-            TextRenderer.DrawText(g, _lockedText, Font, textRect,
-                color, TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter | TextFormatFlags.EndEllipsis);
+            var flags = hasIcon
+                ? TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis
+                : TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter | TextFormatFlags.EndEllipsis;
+            TextRenderer.DrawText(g, _lockedText, drawFont, textRect, color, flags);
+            lockedFont?.Dispose();
 
             ControlPaint.DrawBorder(g, rect, borderColor, ButtonBorderStyle.Solid);
             // Arrow is intentionally not drawn when locked (matches your current behavior)

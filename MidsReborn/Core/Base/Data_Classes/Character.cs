@@ -8,6 +8,7 @@ using FastDeepCloner;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
 
 namespace Mids_Reborn.Core.Base.Data_Classes
 {
@@ -130,13 +131,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int ActiveComboLevel { get; private set; }
 
-        public int PerfectionOfBodyLevel => IsStalker || PerfectionType == "body" ? ActiveComboLevel : 0;
+        public int ActivePerfectionLevel { get; private set; }
 
-        public int PerfectionOfMindLevel => !IsStalker && PerfectionType == "mind" ? ActiveComboLevel : 0;
+        private readonly HashSet<PlannerMode> _activePlannerModes = [];
+        private readonly Dictionary<string, int> _plannerStateStacks = new(StringComparer.OrdinalIgnoreCase);
+        public IReadOnlyCollection<PlannerMode> ActivePlannerModes => _activePlannerModes;
+        public IReadOnlyDictionary<string, int> PlannerStateStacks => _plannerStateStacks;
 
-        public int PerfectionOfSoulLevel => !IsStalker && PerfectionType == "soul" ? ActiveComboLevel : 0;
+        public int PerfectionOfBodyLevel => IsStalker || PerfectionType == "body" ? ActivePerfectionLevel : 0;
 
-        private string? PerfectionType { get; set; }
+        public int PerfectionOfMindLevel => !IsStalker && PerfectionType == "mind" ? ActivePerfectionLevel : 0;
+
+        public int PerfectionOfSoulLevel => !IsStalker && PerfectionType == "soul" ? ActivePerfectionLevel : 0;
+
+        public string? PerfectionType { get; private set; }
 
         public bool AcceleratedActive { get; private set; }
 
@@ -157,6 +165,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public bool CriticalHits { get; private set; }
 
         public bool FastModeActive { get; private set; }
+
+        public bool Insight { get; private set; }
+
+        public bool Exhausted { get; private set; }
 
         public bool Defiance { get; private set; }
 
@@ -378,7 +390,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public void LoadPowerSetsByName(IEnumerable<string> sets)
         {
-            Powersets = sets.Select(set => DatabaseAPI.Database.Powersets.FirstOrDefault(ps => ps?.FullName == set)).Select(powerSet => powerSet ?? new Powerset()).ToArray();
+            Powersets = sets
+                .Select(DatabaseAPI.GetPowersetByFullname)
+                .Select(powerSet => powerSet ?? new Powerset())
+                .ToArray();
         }
 
         public void Reset(Archetype? iArchetype = null, int iOrigin = 0)
@@ -458,10 +473,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Builds[0] = new Build(this, DatabaseAPI.Database.Levels);
             AcceleratedActive = false;
             ActiveComboLevel = 0;
+            ActivePerfectionLevel = 0;
             DelayedActive = false;
             DisintegrateActive = false;
             TargetDroneActive = false;
             FastModeActive = false;
+            Insight = false;
+            Exhausted = false;
             Assassination = false;
             CriticalHits = false;
             Containment = false;
@@ -491,6 +509,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             TotalsCapped.Init();
             RequestedLevel = -1;
             PEnhancementsList = new List<string>();
+            _activePlannerModes.Clear();
+            _plannerStateStacks.Clear();
         }
 
         public void ClearInvalidInherentSlots()
@@ -557,11 +577,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private void RefreshActiveSpecial()
         {
             ActiveComboLevel = 0;
+            ActivePerfectionLevel = 0;
             AcceleratedActive = false;
             DelayedActive = false;
             DisintegrateActive = false;
             TargetDroneActive = false;
             FastModeActive = false;
+            Insight = false;
+            Exhausted = false;
             Assassination = false;
             Domination = false;
             Containment = false;
@@ -588,6 +611,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             NotPackMentality = true;
             FastSnipe = false;
             NotFastSnipe = true;
+            _activePlannerModes.Clear();
+            _plannerStateStacks.Clear();
             InherentDisplayList = new List<InherentDisplayItem>();
             PEnhancementsList = new List<string>();
             if (CurrentBuild?.Powers == null) return;
@@ -613,11 +638,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             power.Power.Taken = true;
                         }
 
-                        power.Power.Active = power.StatInclude switch
-                        {
-                            false => false,
-                            true => true
-                        };
+                        power.Power.Active = power.StatInclude &&
+                                            CurrentBuild.MeetsRequirement(power.Power, CurrentBuild.GetMaxLevel());
 
                         break;
                 }
@@ -636,11 +658,29 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             foreach (var power in CurrentBuild.Powers)
             {
-                if (power?.Power == null || !power.StatInclude) continue;
+                if (power?.Power == null || !power.Power.Active) continue;
+
+                if (power.Power.VariableEnabled && power.VariableValue > 0)
+                {
+                    _plannerStateStacks[power.Power.FullName] = power.VariableValue;
+                    if (power.Power.FullName.Equals(PlannerStateCatalog.PackMentalityMarker, StringComparison.OrdinalIgnoreCase))
+                    {
+                        PackMentality = true;
+                        NotPackMentality = false;
+                        ApplyPlannerMode(PlannerMode.PackMentality, true);
+                    }
+                }
 
                 foreach (var effect in power.Power.Effects ?? [])
                 {
                     ApplyPlannerModeEffect(effect);
+                }
+
+                if (power.Power.ShowStatToggle &&
+                    (PlannerModeMapper.TryGetPlannerMode(power.Power.PowerName, out var plannerMode) ||
+                     PlannerModeMapper.TryGetPlannerMode(power.Power.FullName?.Split('.').LastOrDefault(), out plannerMode)))
+                {
+                    ApplyPlannerMode(plannerMode, true);
                 }
 
                 switch (power.Power.PowerName.ToUpper())
@@ -656,57 +696,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         break;
                     case "DISINTEGRATE":
                         DisintegrateActive = true;
-                        break;
-                    case "COMBO_LEVEL_1":
-                        ActiveComboLevel = 1;
-                        break;
-                    case "COMBO_LEVEL_2":
-                        ActiveComboLevel = 2;
-                        break;
-                    case "COMBO_LEVEL_3":
-                        ActiveComboLevel = 3;
-                        break;
-                    case "FAST_MODE":
-                        FastModeActive = true;
-                        break;
-                    case "DEFIANCE":
-                        Defiance = true;
-                        break;
-                    case "ASSASSINATION":
-                        Assassination = true;
-                        break;
-                    case "DOMINATION":
-                        Domination = true;
-                        break;
-                    case "CRITICAL_HIT":
-                        CriticalHits = true;
-                        break;
-                    case "CONTAINMENT":
-                        Containment = true;
-                        break;
-                    case "SCOURGE":
-                        Scourge = true;
-                        break;
-                    case "FORM_OF_THE_BODY":
-                        PerfectionType = "body";
-                        break;
-                    case "FORM_OF_THE_MIND":
-                        PerfectionType = "mind";
-                        break;
-                    case "FORM_OF_THE_SOUL":
-                        PerfectionType = "soul";
-                        break;
-                    case "DEFENSIVE_ADAPTATION":
-                        DefensiveAdaptation = true;
-                        NotDefensiveAdaptation = false;
-                        NotDefensiveNorOffensiveAdaptation = false;
-                        break;
-                    case "EFFICIENT_ADAPTATION":
-                        EfficientAdaptation = true;
-                        break;
-                    case "OFFENSIVE_ADAPTATION":
-                        OffensiveAdaptation = true;
-                        NotDefensiveNorOffensiveAdaptation = false;
                         break;
                     case "SUPREMACY":
                         Supremacy = true;
@@ -753,15 +742,21 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     case "UPGRADE_EQUIPMENT":
                         PetTier3 = true;
                         break;
-                    case "PACK_MENTALITY":
-                        PackMentality = true;
-                        NotPackMentality = false;
-                        break;
-                    case "FAST_SNIPE":
-                        FastSnipe = true;
-                        NotFastSnipe = false;
-                        break;
                 }
+            }
+
+            var impliedPlannerModes = CurrentBuild.Powers
+                .Where(power => power?.Power is not null && power.Power.Active)
+                .SelectMany(power =>
+                    PlannerStateCatalog.TryGetImpliedPlannerModes(power!.Power.FullName, out var modes)
+                        ? modes
+                        : Array.Empty<PlannerMode>())
+                .Distinct()
+                .ToArray();
+
+            foreach (var impliedMode in impliedPlannerModes)
+            {
+                ApplyPlannerMode(impliedMode, true);
             }
 
             var inherentPowersList = CurrentBuild?.Powers
@@ -1063,15 +1058,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     break;
                 case Enums.eType.SetO:
                     var iColor = PopUp.Colors.Title;
-                    if (enhancement.RecipeIDX > -1)
+                    if (DatabaseAPI.TryGetEnhancementResolvedRarity(iSlot.Enh, out var enhancementRarity))
                     {
-                        iColor = DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity switch
-                        {
-                            Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
-                            Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
-                            Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
-                            _ => iColor
-                        };
+                        iColor = GetPopupRarityColor(enhancementRarity);
                     }
 
                     popupData1.Sections[index1].Add(BuildSetEnhancementPopupTitle(enhancement), iColor, 1.25f);
@@ -1297,6 +1286,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return $"{setName}: {enhancement.Name}";
         }
 
+        private static Color GetPopupRarityColor(Recipe.RecipeRarity rarity)
+        {
+            return rarity switch
+            {
+                Recipe.RecipeRarity.Common => PopUp.Colors.Common,
+                Recipe.RecipeRarity.Uncommon => PopUp.Colors.Uncommon,
+                Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
+                Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
+                _ => PopUp.Colors.Title
+            };
+        }
+
         private static bool ContainsUniqueRestrictionText(string? description)
         {
             if (string.IsNullOrWhiteSpace(description))
@@ -1327,6 +1328,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         private void ApplyPlannerMode(PlannerMode mode, bool enabled)
         {
+            if (enabled)
+            {
+                ClearExclusivePlannerModeFamily(mode);
+            }
+
+            if (enabled)
+            {
+                _activePlannerModes.Add(mode);
+            }
+            else
+            {
+                _activePlannerModes.Remove(mode);
+            }
+
             switch (mode)
             {
                 case PlannerMode.FastSnipe:
@@ -1375,19 +1390,86 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 case PlannerMode.FastMode:
                     FastModeActive = enabled;
                     break;
+                case PlannerMode.Insight:
+                    Insight = enabled;
+                    break;
+                case PlannerMode.Exhausted:
+                    Exhausted = enabled;
+                    break;
+                case PlannerMode.PerfectionLevel1:
+                    ActivePerfectionLevel = enabled ? 1 : ActivePerfectionLevel == 1 ? 0 : ActivePerfectionLevel;
+                    break;
+                case PlannerMode.PerfectionLevel2:
+                    ActivePerfectionLevel = enabled ? 2 : ActivePerfectionLevel == 2 ? 0 : ActivePerfectionLevel;
+                    break;
+                case PlannerMode.PerfectionLevel3:
+                    ActivePerfectionLevel = enabled ? 3 : ActivePerfectionLevel == 3 ? 0 : ActivePerfectionLevel;
+                    break;
                 case PlannerMode.PerfectionOfBody:
                     PerfectionType = enabled ? "body" : PerfectionType == "body" ? string.Empty : PerfectionType;
+                    break;
+                case PlannerMode.PerfectionOfBody1:
+                    PerfectionType = enabled ? "body" : PerfectionType == "body" && ActivePerfectionLevel == 1 ? string.Empty : PerfectionType;
+                    ActivePerfectionLevel = enabled ? 1 : ActivePerfectionLevel == 1 ? 0 : ActivePerfectionLevel;
+                    break;
+                case PlannerMode.PerfectionOfBody2:
+                    PerfectionType = enabled ? "body" : PerfectionType == "body" && ActivePerfectionLevel == 2 ? string.Empty : PerfectionType;
+                    ActivePerfectionLevel = enabled ? 2 : ActivePerfectionLevel == 2 ? 0 : ActivePerfectionLevel;
+                    break;
+                case PlannerMode.PerfectionOfBody3:
+                    PerfectionType = enabled ? "body" : PerfectionType == "body" && ActivePerfectionLevel == 3 ? string.Empty : PerfectionType;
+                    ActivePerfectionLevel = enabled ? 3 : ActivePerfectionLevel == 3 ? 0 : ActivePerfectionLevel;
                     break;
                 case PlannerMode.PerfectionOfMind:
                     PerfectionType = enabled ? "mind" : PerfectionType == "mind" ? string.Empty : PerfectionType;
                     break;
+                case PlannerMode.PerfectionOfMind1:
+                    PerfectionType = enabled ? "mind" : PerfectionType == "mind" && ActivePerfectionLevel == 1 ? string.Empty : PerfectionType;
+                    ActivePerfectionLevel = enabled ? 1 : ActivePerfectionLevel == 1 ? 0 : ActivePerfectionLevel;
+                    break;
+                case PlannerMode.PerfectionOfMind2:
+                    PerfectionType = enabled ? "mind" : PerfectionType == "mind" && ActivePerfectionLevel == 2 ? string.Empty : PerfectionType;
+                    ActivePerfectionLevel = enabled ? 2 : ActivePerfectionLevel == 2 ? 0 : ActivePerfectionLevel;
+                    break;
+                case PlannerMode.PerfectionOfMind3:
+                    PerfectionType = enabled ? "mind" : PerfectionType == "mind" && ActivePerfectionLevel == 3 ? string.Empty : PerfectionType;
+                    ActivePerfectionLevel = enabled ? 3 : ActivePerfectionLevel == 3 ? 0 : ActivePerfectionLevel;
+                    break;
                 case PlannerMode.PerfectionOfSoul:
                     PerfectionType = enabled ? "soul" : PerfectionType == "soul" ? string.Empty : PerfectionType;
+                    break;
+                case PlannerMode.PerfectionOfSoul1:
+                    PerfectionType = enabled ? "soul" : PerfectionType == "soul" && ActivePerfectionLevel == 1 ? string.Empty : PerfectionType;
+                    ActivePerfectionLevel = enabled ? 1 : ActivePerfectionLevel == 1 ? 0 : ActivePerfectionLevel;
+                    break;
+                case PlannerMode.PerfectionOfSoul2:
+                    PerfectionType = enabled ? "soul" : PerfectionType == "soul" && ActivePerfectionLevel == 2 ? string.Empty : PerfectionType;
+                    ActivePerfectionLevel = enabled ? 2 : ActivePerfectionLevel == 2 ? 0 : ActivePerfectionLevel;
+                    break;
+                case PlannerMode.PerfectionOfSoul3:
+                    PerfectionType = enabled ? "soul" : PerfectionType == "soul" && ActivePerfectionLevel == 3 ? string.Empty : PerfectionType;
+                    ActivePerfectionLevel = enabled ? 3 : ActivePerfectionLevel == 3 ? 0 : ActivePerfectionLevel;
                     break;
                 case PlannerMode.PackMentality:
                     PackMentality = enabled;
                     NotPackMentality = !enabled;
                     break;
+            }
+        }
+
+        private void ClearExclusivePlannerModeFamily(PlannerMode activeMode)
+        {
+            if (!PlannerStateCatalog.TryGetExclusiveModeFamily(activeMode, out var familyModes))
+            {
+                return;
+            }
+
+            foreach (var siblingMode in familyModes)
+            {
+                if (siblingMode != activeMode)
+                {
+                    _activePlannerModes.Remove(siblingMode);
+                }
             }
         }
 
@@ -1655,27 +1737,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             var enhancementSet = DatabaseAPI.Database.EnhancementSets[sIdx];
-            var iColor = PopUp.Colors.Uncommon;
-            for (var index = 0; index < enhancementSet.Enhancements.Length; index++)
-            {
-                var enhancement = DatabaseAPI.Database.Enhancements[enhancementSet.Enhancements[index]];
-                if (enhancement.RecipeIDX <= -1)
-                {
-                    continue;
-                }
-
-                iColor = DatabaseAPI.Database.Recipes[enhancement.RecipeIDX].Rarity switch
-                {
-                    Recipe.RecipeRarity.Rare => PopUp.Colors.Rare,
-                    Recipe.RecipeRarity.UltraRare => PopUp.Colors.UltraRare,
-                    _ => iColor
-                };
-
-                if (index > 2)
-                {
-                    break;
-                }
-            }
+            var iColor = DatabaseAPI.TryGetEnhancementSetResolvedRarity(sIdx, out var setRarity)
+                ? GetPopupRarityColor(setRarity)
+                : PopUp.Colors.Title;
 
             var popupData1 = new PopUp.PopupData();
             var index1 = popupData1.Add();

@@ -78,6 +78,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private const string IgnoreEnhancementAxesMarker = "MRB_POWER_IGNORE_ENHANCEMENT_AXES";
         private const string IgnoreBuffEnhancementAxesMarker = "MRB_POWER_IGNORE_BUFF_ENHANCEMENT_AXES";
         private const string PowerIconNameMarker = "MRB_POWER_ICON_NAME";
+        private const string ShowInSpecialPowerPickerMarker = "MRB_POWER_SHOW_IN_SPECIAL_POWER_PICKER";
+        private const string ShowStatToggleMarker = "MRB_POWER_SHOW_STAT_TOGGLE";
         private bool Contains;
         public bool AppliedPowersOverride { get; set; } = false;
         public bool AbsorbedPetEffects { get; set; } = false;
@@ -297,6 +299,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             NeverAutoUpdate = template.NeverAutoUpdate;
             NeverAutoUpdateRequirements = template.NeverAutoUpdateRequirements;
             IncludeFlag = template.IncludeFlag;
+            ShowInSpecialPowerPicker = template.ShowInSpecialPowerPicker;
+            ShowStatToggle = template.ShowStatToggle;
             ForcedClass = template.ForcedClass;
             ForcedClassID = template.ForcedClassID;
             SortOverride = template.SortOverride;
@@ -535,6 +539,23 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             TryReadStackingLifetime(reader);
             TryReadLifetimeMetadata(reader);
             TryReadBoostPolicyMetadata(reader);
+            if (!TryReadMarkedBoolean(reader, ShowInSpecialPowerPickerMarker, out var showInSpecialPowerPicker))
+            {
+                ShowInSpecialPowerPicker = SpecialPowerCatalog.ShouldBackfillSpecialPowerPicker(this);
+            }
+            else
+            {
+                ShowInSpecialPowerPicker = showInSpecialPowerPicker;
+            }
+
+            if (!TryReadMarkedBoolean(reader, ShowStatToggleMarker, out var showStatToggle))
+            {
+                ShowStatToggle = true;
+            }
+            else
+            {
+                ShowStatToggle = showStatToggle;
+            }
         }
 
         public IPowerset? GetPowerSet()
@@ -730,6 +751,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public bool NeverAutoUpdateRequirements { get; set; }
 
         public bool IncludeFlag { get; set; }
+
+        public bool ShowInSpecialPowerPicker { get; set; }
+
+        public bool ShowStatToggle { get; set; } = true;
 
         public string ForcedClass { get; set; }
 
@@ -1055,6 +1080,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             StoreStackingLifetime(writer);
             StoreLifetimeMetadata(writer);
             StoreBoostPolicyMetadata(writer);
+            StoreMarkedBoolean(writer, ShowInSpecialPowerPickerMarker, ShowInSpecialPowerPicker);
+            StoreMarkedBoolean(writer, ShowStatToggleMarker, ShowStatToggle);
         }
 
         private static void StoreMarkedString(BinaryWriter writer, string marker, string value)
@@ -1064,6 +1091,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         }
 
         private static void StoreMarkedSingle(BinaryWriter writer, string marker, float value)
+        {
+            writer.Write(marker);
+            writer.Write(value);
+        }
+
+        private static void StoreMarkedBoolean(BinaryWriter writer, string marker, bool value)
         {
             writer.Write(marker);
             writer.Write(value);
@@ -1135,6 +1168,34 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 reader.BaseStream.Position = position;
                 value = 0f;
+                return false;
+            }
+        }
+
+        private static bool TryReadMarkedBoolean(BinaryReader reader, string marker, out bool value)
+        {
+            value = false;
+            if (!reader.BaseStream.CanSeek)
+            {
+                return false;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!string.Equals(reader.ReadString(), marker, StringComparison.Ordinal))
+                {
+                    reader.BaseStream.Position = position;
+                    return false;
+                }
+
+                value = reader.ReadBoolean();
+                return true;
+            }
+            catch
+            {
+                reader.BaseStream.Position = position;
+                value = false;
                 return false;
             }
         }

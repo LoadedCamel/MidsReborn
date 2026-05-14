@@ -61,6 +61,7 @@ public static class OmniModeMapper
     {
         ["kDefensiveAdaptation"] = "DefensiveAdaptation",
         ["kEfficientAdaptation"] = "EfficientAdaptation",
+        ["kRestedAdaptation"] = "EfficientAdaptation",
         ["kOffensiveAdaptation"] = "OffensiveAdaptation",
         ["kDomination"] = "Domination",
         ["kScourge"] = "Scourge",

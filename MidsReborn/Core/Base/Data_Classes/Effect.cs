@@ -1533,6 +1533,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 mode = "Engaged";
             }
 
+            if (PlannerModeMapper.TryGetPlannerMode(mode, out var plannerMode))
+            {
+                return PlannerModeMapper.ToDisplayName(plannerMode);
+            }
+
             return CleanConditionValue(mode)
                 .Replace("FastSnipe", "Fast Snipe", StringComparison.OrdinalIgnoreCase)
                 .Replace("CriticalHit", "Critical Hit", StringComparison.OrdinalIgnoreCase)

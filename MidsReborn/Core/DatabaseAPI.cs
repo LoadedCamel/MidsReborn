@@ -2176,6 +2176,7 @@ namespace Mids_Reborn.Core
                 return false;
             }
 
+            NormalizeSetTypeTaxonomy(Database);
             return true;
         }
 
@@ -3004,6 +3005,7 @@ namespace Mids_Reborn.Core
                     Application.DoEvents();
                 }
 
+                NormalizeSetTypeTaxonomy(Database);
                 reader.Close();
                 fileStream.Close();
             }
@@ -3122,21 +3124,27 @@ namespace Mids_Reborn.Core
             Database.EnhGradeStringShort[1] = "TO";
             Database.EnhGradeStringShort[2] = "DO";
             Database.EnhGradeStringShort[3] = "SO";
+            NormalizeSetTypeTaxonomy(Database);
         }
 
         public static TypeGrade GetSetTypeByName(string name)
         {
-            return Database.SetTypes.FirstOrDefault(x => x.Name == name);
+            return TryResolveSetType(Database, name, out var setType)
+                ? setType
+                : default;
         }
 
         public static TypeGrade GetSetTypeByShortName(string shortName)
         {
-            return Database.SetTypes.FirstOrDefault(x => x.ShortName == shortName);
+            return TryResolveSetType(Database, shortName, out var setType)
+                ? setType
+                : default;
         }
 
         public static TypeGrade GetSetTypeByIndex(int index)
         {
-            return Database.SetTypes.FirstOrDefault(x => x.Index == index);
+            var normalizedIndex = NormalizeSetTypeIndex(index);
+            return Database.SetTypes.FirstOrDefault(x => x.Index == normalizedIndex);
         }
 
         public static TypeGrade GetSpecialEnhByIndex(int index)

@@ -18,8 +18,14 @@ namespace Mids_Reborn.Core.Utils
         [LibraryImport("uxtheme.dll")]
         internal static partial int SetWindowTheme(IntPtr hWnd, [MarshalAs(UnmanagedType.LPWStr)] string pszSubAppName, [MarshalAs(UnmanagedType.LPWStr)] string? pszSubIdList);
 
+        [LibraryImport("shell32.dll", StringMarshalling = StringMarshalling.Utf16)]
+        private static partial int SetCurrentProcessExplicitAppUserModelID(string appId);
+
         [LibraryImport("user32.dll", EntryPoint = "SendMessageW")]
         internal static partial int SendMessage(IntPtr hWnd, int msg, int wParam, int lParam);
+
+        [LibraryImport("user32.dll", EntryPoint = "SendMessageW")]
+        internal static partial IntPtr SendMessage(IntPtr hWnd, int msg, IntPtr wParam, IntPtr lParam);
 
         [LibraryImport("user32.dll")]
         [return: MarshalAs(UnmanagedType.Bool)]
@@ -55,6 +61,12 @@ namespace Mids_Reborn.Core.Utils
         [LibraryImport("uxtheme.dll")]
         private static partial int SetWindowThemeAttribute(IntPtr hWnd, WindowThemeAttributeType attribute, ref WindowThemeAttributeOptions options, uint size);
 
+        [LibraryImport("user32.dll", EntryPoint = "SetClassLongPtrW", SetLastError = true)]
+        private static partial IntPtr SetClassLongPtr64(IntPtr hWnd, int nIndex, IntPtr dwNewLong);
+
+        [LibraryImport("user32.dll", EntryPoint = "SetClassLongW", SetLastError = true)]
+        private static partial uint SetClassLong32(IntPtr hWnd, int nIndex, uint dwNewLong);
+
         #endregion
 
         #region Constants
@@ -68,6 +80,11 @@ namespace Mids_Reborn.Core.Utils
         private const int SmCySizeFrame = 33;
         private const int SmCxPaddedBorder = 92;
         private const int SmCyPaddedBorder = 93;
+        private const int WmSetIcon = 0x0080;
+        private const int IconSmall = 0;
+        private const int IconBig = 1;
+        private const int GclpHIcon = -14;
+        private const int GclpHIconSm = -34;
 
         #endregion
 
@@ -219,6 +236,33 @@ namespace Mids_Reborn.Core.Utils
 
         private static string GetRgb(Color color) => $"{color.B:X2}{color.G:X2}{color.R:X2}";
 
+        private static IntPtr SetClassLongPtrCompat(IntPtr hWnd, int nIndex, IntPtr value)
+        {
+            if (IntPtr.Size == 8)
+            {
+                return SetClassLongPtr64(hWnd, nIndex, value);
+            }
+
+            return new IntPtr(unchecked((int)SetClassLong32(hWnd, nIndex, unchecked((uint)value.ToInt32()))));
+        }
+
+        public static void SetCurrentProcessAppUserModelId(string appId)
+        {
+            if (string.IsNullOrWhiteSpace(appId))
+            {
+                return;
+            }
+
+            try
+            {
+                _ = SetCurrentProcessExplicitAppUserModelID(appId);
+            }
+            catch
+            {
+                // Best-effort shell hint only.
+            }
+        }
+
         public static void StylizeWindow(IntPtr handle, Color borderColor, Color? captionColor = null, Color? textColor = null)
         {
             var border = int.Parse(GetRgb(borderColor), NumberStyles.HexNumber);
@@ -299,9 +343,7 @@ namespace Mids_Reborn.Core.Utils
 
         public static void DisableSystemCaptionAndBorder(IntPtr handle)
         {
-            var flags = NonClientAreaOptions.NoDrawCaption |
-                        NonClientAreaOptions.NoDrawIcon |
-                        NonClientAreaOptions.NoSysMenu;
+            var flags = NonClientAreaOptions.NoDrawCaption;
 
             var opts = new WindowThemeAttributeOptions
             {
@@ -311,6 +353,19 @@ namespace Mids_Reborn.Core.Utils
 
             _ = SetWindowThemeAttribute(handle, WindowThemeAttributeType.NonClient, ref opts,
                 (uint)Marshal.SizeOf<WindowThemeAttributeOptions>());
+        }
+
+        public static void SetWindowShellIcon(IntPtr handle, IntPtr smallIconHandle, IntPtr largeIconHandle)
+        {
+            if (handle == IntPtr.Zero)
+            {
+                return;
+            }
+
+            _ = SendMessage(handle, WmSetIcon, new IntPtr(IconSmall), smallIconHandle);
+            _ = SendMessage(handle, WmSetIcon, new IntPtr(IconBig), largeIconHandle);
+            _ = SetClassLongPtrCompat(handle, GclpHIconSm, smallIconHandle);
+            _ = SetClassLongPtrCompat(handle, GclpHIcon, largeIconHandle);
         }
 
         public static int GetResizeBorderThicknessPx(IntPtr hWnd)

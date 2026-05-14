@@ -449,7 +449,8 @@ namespace Mids_Reborn.UI.Controls
                     {
                         int setId = _model.SetIds[i2];
                         var setData = DatabaseAPI.Database.EnhancementSets[setId];
-                        var info = $"{setData.DisplayName}\nType: {Enum.GetName(typeof(Enums.eSetType), setData.SetType)}     Level Range: {setData.LevelMin + 1}-{setData.LevelMax + 1}";
+                        var setTypeName = DatabaseAPI.GetSetTypeByIndex(setData.SetType).Name;
+                        var info = $"{setData.DisplayName}\nType: {setTypeName}     Level Range: {setData.LevelMin + 1}-{setData.LevelMax + 1}";
                         SetHoverText(info, "Click to view enhancements in this set.");
                         RaiseHoverSetEvent(setId);
                     }

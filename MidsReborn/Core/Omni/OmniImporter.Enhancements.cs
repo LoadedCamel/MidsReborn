@@ -226,6 +226,7 @@ public sealed partial class OmniImporter
             EnhancementSetSourceKeys = new Dictionary<string, string>(source.EnhancementSetSourceKeys, StringComparer.OrdinalIgnoreCase),
             EnhancementSetSourceGroups = new Dictionary<string, string>(source.EnhancementSetSourceGroups, StringComparer.OrdinalIgnoreCase),
             EnhancementSetSourceIcons = new Dictionary<string, string>(source.EnhancementSetSourceIcons, StringComparer.OrdinalIgnoreCase),
+            EnhancementSetSourceRarityNames = new Dictionary<string, string>(source.EnhancementSetSourceRarityNames, StringComparer.OrdinalIgnoreCase),
             SpecialFamilyCrosswalk = new Dictionary<string, string>(source.SpecialFamilyCrosswalk, StringComparer.OrdinalIgnoreCase),
             BoostPowerAliasCrosswalk = new Dictionary<string, string>(source.BoostPowerAliasCrosswalk, StringComparer.OrdinalIgnoreCase),
             SetBonusPowerAliasCrosswalk = new Dictionary<string, string>(source.SetBonusPowerAliasCrosswalk, StringComparer.OrdinalIgnoreCase),
@@ -1778,6 +1779,7 @@ public sealed partial class OmniImporter
             metadata.EnhancementSetSourceKeys[source.Name] = source.SourceKey;
             metadata.EnhancementSetSourceGroups[source.Name] = source.GroupName;
             metadata.EnhancementSetSourceIcons[source.Name] = source.Icon;
+            SetEnhancementSetSourceRarityName(metadata, source);
 
             var changed = false;
             changed |= AssignIfChanged(ref set.Uid, source.Name);
@@ -1793,7 +1795,7 @@ public sealed partial class OmniImporter
                     $"Enhancement set {source.Name}: refreshed icon to '{source.Icon}'.");
             }
             {
-                var mappedSetType = MapSetType(database, source);
+                var mappedSetType = MapSetType(database, source, applyResult);
                 if (mappedSetType != set.SetType)
                 {
                     set.SetType = mappedSetType;
@@ -4169,18 +4171,98 @@ public sealed partial class OmniImporter
 
     private static Recipe.RecipeRarity MapRecipeRarity(string rarityName)
     {
-        return rarityName.Trim().ToLowerInvariant() switch
+        var normalized = Regex.Replace(rarityName ?? string.Empty, "[^a-zA-Z0-9]+", string.Empty)
+            .ToLowerInvariant();
+
+        return normalized switch
         {
             "common" => Recipe.RecipeRarity.Common,
             "uncommon" => Recipe.RecipeRarity.Uncommon,
             "rare" => Recipe.RecipeRarity.Rare,
-            "very rare" => Recipe.RecipeRarity.UltraRare,
+            "veryrare" => Recipe.RecipeRarity.UltraRare,
             "ultrarare" => Recipe.RecipeRarity.UltraRare,
-            "ultra rare" => Recipe.RecipeRarity.UltraRare,
-            "archetype" => Recipe.RecipeRarity.UltraRare,
-            "superior archetype" => Recipe.RecipeRarity.UltraRare,
+            "archetype" => Recipe.RecipeRarity.Rare,
+            "superiorarchetype" => Recipe.RecipeRarity.UltraRare,
+            "winterpackseries" => Recipe.RecipeRarity.Rare,
+            "superiorwinterpackseries" => Recipe.RecipeRarity.UltraRare,
             _ => Recipe.RecipeRarity.Common
         };
+    }
+
+    private static void SetEnhancementSetSourceRarityName(
+        EnhancementImportMetadata metadata,
+        NormalizedEnhancementSetSource source)
+    {
+        if (!TryGetSetRarityLabel(source.ConversionGroups, out var rarityLabel))
+        {
+            metadata.EnhancementSetSourceRarityNames.Remove(source.Name);
+            if (!string.IsNullOrWhiteSpace(source.DisplayName))
+            {
+                metadata.EnhancementSetSourceRarityNames.Remove(source.DisplayName);
+            }
+
+            return;
+        }
+
+        metadata.EnhancementSetSourceRarityNames[source.Name] = rarityLabel;
+        if (!string.IsNullOrWhiteSpace(source.DisplayName))
+        {
+            metadata.EnhancementSetSourceRarityNames[source.DisplayName] = rarityLabel;
+        }
+    }
+
+    private static bool TryGetSetRarityLabel(IEnumerable<string> conversionGroups, out string rarityLabel)
+    {
+        rarityLabel = string.Empty;
+        if (conversionGroups == null)
+        {
+            return false;
+        }
+
+        var normalizedGroups = conversionGroups
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .Select(value => value.Trim())
+            .ToArray();
+
+        if (TryInferRarityLabelFromConversionGroups(normalizedGroups, out rarityLabel))
+        {
+            return true;
+        }
+
+        foreach (var conversionGroup in normalizedGroups)
+        {
+            if (!conversionGroup.StartsWith("Rarity:", StringComparison.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            rarityLabel = conversionGroup[(conversionGroup.IndexOf(':') + 1)..].Trim();
+            return !string.IsNullOrWhiteSpace(rarityLabel);
+        }
+
+        return false;
+    }
+
+    private static bool TryInferRarityLabelFromConversionGroups(
+        IEnumerable<string> conversionGroups,
+        out string rarityLabel)
+    {
+        rarityLabel = string.Empty;
+        if (conversionGroups == null)
+        {
+            return false;
+        }
+
+        foreach (var conversionGroup in conversionGroups)
+        {
+            if (string.Equals(conversionGroup, "Category: Universal Damage", StringComparison.OrdinalIgnoreCase))
+            {
+                rarityLabel = "Rare";
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static Salvage.SalvageOrigin MapSalvageOrigin(IEnumerable<string> workshops)
@@ -4277,7 +4359,7 @@ public sealed partial class OmniImporter
         };
     }
 
-    private static int MapSetType(IDatabase database, NormalizedEnhancementSetSource source)
+    private static int MapSetType(IDatabase database, NormalizedEnhancementSetSource source, OmniApplyResult applyResult)
     {
         if (database.SetTypes == null || database.SetTypes.Count == 0)
         {
@@ -4295,16 +4377,17 @@ public sealed partial class OmniImporter
 
         foreach (var candidate in candidates)
         {
-            var normalized = NormalizeLookupKey(candidate);
-            var match = database.SetTypes.FirstOrDefault(type =>
-                NormalizeLookupKey(type.Name) == normalized ||
-                NormalizeLookupKey(type.ShortName) == normalized);
-            if (match.Index != 0 || !string.IsNullOrWhiteSpace(match.Name))
+            if (DatabaseAPI.TryResolveSetType(database, candidate, out var match))
             {
                 return match.Index;
             }
         }
 
+        var candidateLabel = candidates.Length == 0 ? "<none>" : string.Join(", ", candidates);
+        var conversionGroups = source.ConversionGroups.Count == 0 ? "<none>" : string.Join(", ", source.ConversionGroups);
+        applyResult.AddLimited(
+            applyResult.EnhancementImportDetails,
+            $"Enhancement set {source.Name}: unresolved set type candidates [{candidateLabel}] (group '{source.GroupName}', conversion groups [{conversionGroups}]); defaulted to Untyped.");
         return 0;
     }
 

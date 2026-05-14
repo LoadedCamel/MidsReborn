@@ -18,6 +18,7 @@ public sealed class frmOmniImport : Form
     private readonly Button _applyImport;
     private readonly Button _saveReport;
     private readonly Button _mathReport;
+    private readonly CheckBox _freshScopedImport;
     private readonly Label _status;
     private readonly ProgressBar _progress;
     private readonly Label _progressStage;
@@ -105,6 +106,24 @@ public sealed class frmOmniImport : Form
         };
         _browse.Click += Browse_Click;
         rootPanel.Controls.Add(_browse, 2, 0);
+
+        var optionsPanel = new FlowLayoutPanel
+        {
+            Dock = DockStyle.Top,
+            Height = 30,
+            Padding = new Padding(12, 0, 12, 0),
+            FlowDirection = FlowDirection.LeftToRight,
+            WrapContents = false
+        };
+
+        _freshScopedImport = new CheckBox
+        {
+            AutoSize = true,
+            ForeColor = Color.White,
+            Text = @"Fresh scoped import (replace in-scope powers and powersets before apply)",
+            UseVisualStyleBackColor = true
+        };
+        optionsPanel.Controls.Add(_freshScopedImport);
 
         var actionPanel = new FlowLayoutPanel
         {
@@ -244,6 +263,7 @@ public sealed class frmOmniImport : Form
         Controls.Add(_report);
         Controls.Add(progressPanel);
         Controls.Add(actionPanel);
+        Controls.Add(optionsPanel);
         Controls.Add(rootPanel);
         Controls.Add(description);
         Controls.Add(title);
@@ -340,6 +360,7 @@ public sealed class frmOmniImport : Form
     private async void ApplyImport_Click(object? sender, EventArgs e)
     {
         var exportRoot = GetSelectedExportRoot();
+        var freshScopedImport = _freshScopedImport.Checked;
         if (!Directory.Exists(exportRoot))
         {
             ShowInlineValidationFailure(@"Select a valid Omni export folder first.");
@@ -353,7 +374,7 @@ public sealed class frmOmniImport : Form
             "Apply Safe Import",
             exportRoot,
             _currentSession,
-            DescribeApplyRunMode(previousSession, exportRoot, hasCachedApplyResult: previousSession?.ApplyResult != null)));
+            DescribeApplyRunMode(previousSession, exportRoot, hasCachedApplyResult: previousSession?.ApplyResult != null, freshScopedImport)));
         ResetRenderedArtifacts(keepSession: true);
 
         OmniImportSession? session = null;
@@ -369,7 +390,7 @@ public sealed class frmOmniImport : Form
                 analysisTimer.Stop();
                 analysisElapsed = analysisTimer.Elapsed;
                 await progress.FlushAsync();
-                var analyzeMode = DescribeCompletedApplyAnalyzeMode(previousSession, session);
+                var analyzeMode = DescribeCompletedApplyAnalyzeMode(previousSession, session, freshScopedImport);
                 _currentSession = session;
                 SyncLegacyStateFromSession(session, includeApplyResult: false);
                 RenderPreview(BuildRunningPreview(
@@ -395,7 +416,7 @@ public sealed class frmOmniImport : Form
             "Apply Safe Import",
             exportRoot,
             session,
-            DescribeApplyExecutionMode(previousSession, session),
+            DescribeApplyExecutionMode(previousSession, session, freshScopedImport),
             dryRunResult));
 
         try
@@ -404,7 +425,7 @@ public sealed class frmOmniImport : Form
 
             var applyTimer = Stopwatch.StartNew();
             var applyResult = await RunImportWorkAsync(() =>
-                new OmniImporter().ApplySafeImport(DatabaseAPI.Database, session, progress));
+                new OmniImporter().ApplySafeImport(DatabaseAPI.Database, session, progress, freshScopedImport));
             applyTimer.Stop();
             await progress.FlushAsync();
             _currentSession = session;
@@ -420,7 +441,7 @@ public sealed class frmOmniImport : Form
                 analysisElapsed + applyTimer.Elapsed,
                 TimeSpan.Zero,
                 progress.AppliedCount,
-                0), DescribeApplyExecutionMode(previousSession, session));
+                0), DescribeApplyExecutionMode(previousSession, session, freshScopedImport));
             previewBuildTimer.Stop();
 
             var renderTimer = Stopwatch.StartNew();
@@ -435,11 +456,13 @@ public sealed class frmOmniImport : Form
                 preview.Length,
                 0,
                 progress.AppliedCount);
-            var finalPreview = BuildApplyPreview(exportRoot, dryRunResult, applyResult, finalMetrics, DescribeApplyExecutionMode(previousSession, session));
+            var finalPreview = BuildApplyPreview(exportRoot, dryRunResult, applyResult, finalMetrics, DescribeApplyExecutionMode(previousSession, session, freshScopedImport));
             CachePreview(finalPreview);
             RenderPreview(finalPreview);
             _lastReportFilePrefix = "omni-import-safe-import";
-            _status.Text = @"Safe import applied. Save Report writes the dry-run plus apply report.";
+            _status.Text = freshScopedImport
+                ? @"Fresh scoped import applied. Save Report writes the dry-run plus apply report."
+                : @"Safe import applied. Save Report writes the dry-run plus apply report.";
             SetTerminalProgress(_status.Text, @"Preview updated.", succeeded: true);
         }
         catch (Exception ex)
@@ -1083,49 +1106,70 @@ public sealed class frmOmniImport : Form
                 : "Analysis was rebuilt for the selected export.";
     }
 
-    private static string DescribeApplyRunMode(OmniImportSession? previousSession, string exportRoot, bool hasCachedApplyResult)
+    private static string DescribeApplyRunMode(OmniImportSession? previousSession, string exportRoot, bool hasCachedApplyResult, bool freshScopedImport)
     {
+        var description = string.Empty;
         if (previousSession == null)
         {
-            return "No cached analysis found. Apply Safe Import will analyze first, then continue automatically.";
+            description = "No cached analysis found. Apply Safe Import will analyze first, then continue automatically.";
         }
-
-        if (!string.Equals(previousSession.ExportRoot, exportRoot, StringComparison.OrdinalIgnoreCase))
+        else if (!string.Equals(previousSession.ExportRoot, exportRoot, StringComparison.OrdinalIgnoreCase))
         {
-            return $"Cached analysis belongs to {previousSession.ExportRoot}; refreshing analysis for the selected export before apply.";
+            description = $"Cached analysis belongs to {previousSession.ExportRoot}; refreshing analysis for the selected export before apply.";
+        }
+        else
+        {
+            description = hasCachedApplyResult
+                ? "Using cached analysis for the current export before applying updated changes."
+                : "Checking cached analysis for the current export before applying.";
         }
 
-        return hasCachedApplyResult
-            ? "Using cached analysis for the current export before applying updated changes."
-            : "Checking cached analysis for the current export before applying.";
+        return AppendApplyMode(description, freshScopedImport);
     }
 
-    private static string DescribeCompletedApplyAnalyzeMode(OmniImportSession? previousSession, OmniImportSession currentSession)
+    private static string DescribeCompletedApplyAnalyzeMode(OmniImportSession? previousSession, OmniImportSession currentSession, bool freshScopedImport)
     {
+        var description = string.Empty;
         if (previousSession == null)
         {
-            return "Analysis prepared inline for this apply run.";
+            description = "Analysis prepared inline for this apply run.";
+        }
+        else
+        {
+            description = ReferenceEquals(previousSession, currentSession)
+                ? "Using cached analysis for the current export."
+                : string.Equals(previousSession.ExportRoot, currentSession.ExportRoot, StringComparison.OrdinalIgnoreCase)
+                    ? "Cached analysis was stale and has been refreshed."
+                    : "Analysis was rebuilt for the selected export before apply.";
         }
 
-        return ReferenceEquals(previousSession, currentSession)
-            ? "Using cached analysis for the current export."
-            : string.Equals(previousSession.ExportRoot, currentSession.ExportRoot, StringComparison.OrdinalIgnoreCase)
-                ? "Cached analysis was stale and has been refreshed."
-                : "Analysis was rebuilt for the selected export before apply.";
+        return AppendApplyMode(description, freshScopedImport);
     }
 
-    private static string DescribeApplyExecutionMode(OmniImportSession? previousSession, OmniImportSession currentSession)
+    private static string DescribeApplyExecutionMode(OmniImportSession? previousSession, OmniImportSession currentSession, bool freshScopedImport)
     {
+        var description = string.Empty;
         if (previousSession == null)
         {
-            return "Applying safe import after building fresh analysis.";
+            description = "Applying safe import after building fresh analysis.";
+        }
+        else
+        {
+            description = ReferenceEquals(previousSession, currentSession)
+                ? "Applying safe import using cached analysis."
+                : string.Equals(previousSession.ExportRoot, currentSession.ExportRoot, StringComparison.OrdinalIgnoreCase)
+                    ? "Applying safe import after refreshing stale cached analysis."
+                    : "Applying safe import after rebuilding analysis for the selected export.";
         }
 
-        return ReferenceEquals(previousSession, currentSession)
-            ? "Applying safe import using cached analysis."
-            : string.Equals(previousSession.ExportRoot, currentSession.ExportRoot, StringComparison.OrdinalIgnoreCase)
-                ? "Applying safe import after refreshing stale cached analysis."
-                : "Applying safe import after rebuilding analysis for the selected export.";
+        return AppendApplyMode(description, freshScopedImport);
+    }
+
+    private static string AppendApplyMode(string description, bool freshScopedImport)
+    {
+        return freshScopedImport
+            ? $"{description} Fresh scoped import is enabled, so current in-scope powers and powersets will be replaced before apply."
+            : $"{description} Incremental mode is enabled, so existing in-scope content will be updated in place.";
     }
 
     private static string ResolveInitialExportRoot()

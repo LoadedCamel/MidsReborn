@@ -379,13 +379,14 @@ public sealed partial class OmniImporter
 
     public OmniApplyResult ApplySafeImport(IDatabase database, OmniImportSession session)
     {
-        return ApplySafeImport(database, session, null);
+        return ApplySafeImport(database, session, null, replaceScopedContent: false);
     }
 
     public OmniApplyResult ApplySafeImport(
         IDatabase database,
         OmniImportSession session,
-        IProgress<OmniImportProgress>? progress)
+        IProgress<OmniImportProgress>? progress,
+        bool replaceScopedContent = false)
     {
         if (session == null)
         {
@@ -408,7 +409,14 @@ public sealed partial class OmniImporter
                 session.ClearRenderedArtifacts();
             }
 
-            var applyResult = ApplySafeImport(database, normalizedRoot, session.AnalysisResult, session.Manifest, progressReporter, manifestIndexed: true);
+            var applyResult = ApplySafeImport(
+                database,
+                normalizedRoot,
+                session.AnalysisResult,
+                session.Manifest,
+                progressReporter,
+                manifestIndexed: true,
+                replaceScopedContent: replaceScopedContent);
             session.ApplyResult = applyResult;
             session.ClearRenderedArtifacts();
             return applyResult;
@@ -1000,16 +1008,17 @@ public sealed partial class OmniImporter
 
     public OmniApplyResult ApplySafeImport(IDatabase database, string exportRoot, OmniImportResult dryRunResult)
     {
-        return ApplySafeImport(database, exportRoot, dryRunResult, null, null);
+        return ApplySafeImport(database, exportRoot, dryRunResult, null, null, replaceScopedContent: false);
     }
 
     public OmniApplyResult ApplySafeImport(
         IDatabase database,
         string exportRoot,
         OmniImportResult dryRunResult,
-        IProgress<OmniImportProgress>? progress)
+        IProgress<OmniImportProgress>? progress,
+        bool replaceScopedContent = false)
     {
-        return ApplySafeImport(database, exportRoot, dryRunResult, null, progress);
+        return ApplySafeImport(database, exportRoot, dryRunResult, null, progress, replaceScopedContent: replaceScopedContent);
     }
 
     private OmniApplyResult ApplySafeImport(
@@ -1018,7 +1027,8 @@ public sealed partial class OmniImporter
         OmniImportResult dryRunResult,
         OmniExportManifest? manifest,
         IProgress<OmniImportProgress>? progress,
-        bool manifestIndexed = false)
+        bool manifestIndexed = false,
+        bool replaceScopedContent = false)
     {
         if (database == null)
         {
@@ -1056,7 +1066,9 @@ public sealed partial class OmniImporter
         }
         ReportStageProgress(progressReporter, OmniImportStageId.PrepareApply, "Preparing safe import");
         var beforeIntegrity = CaptureImportIntegritySnapshot(database);
-        var powersetIcons = CapturePowersetIcons(database);
+        IReadOnlyCollection<PowersetIconInfo> powersetIcons = replaceScopedContent
+            ? Array.Empty<PowersetIconInfo>()
+            : CapturePowersetIcons(database);
         ApplyGcmTags(database, normalizedRoot, applyResult);
         TrackApplyClassTables(dryRunResult, applyResult);
         ApplyClassAttributesToDatabase(database, dryRunResult, applyResult);
@@ -1068,6 +1080,14 @@ public sealed partial class OmniImporter
         var scopedPowersets = dryRunResult.CachedScopedPowersets.Count > 0
             ? dryRunResult.CachedScopedPowersets
             : LoadScopedPowersets(normalizedRoot, dryRunResult.Scope, manifest: manifest).ToList();
+        var scopedPowers = dryRunResult.CachedScopedPowers.Count > 0
+            ? dryRunResult.CachedScopedPowers
+            : LoadScopedPowers(normalizedRoot, dryRunResult.Scope, progress: null, manifest: manifest).ToList();
+        if (replaceScopedContent)
+        {
+            RemoveScopedContentForFreshImport(database, scopedPowersets, scopedPowers, applyResult);
+        }
+
         var strictSetBonusFamiliesInScope = scopedPowersets
             .Where(powerset => !string.IsNullOrWhiteSpace(powerset.FullName))
             .Select(powerset => CanonicalizeOmniFullName(powerset.FullName))
@@ -1078,9 +1098,6 @@ public sealed partial class OmniImporter
         ReportStageProgress(progressReporter, OmniImportStageId.PrepareApply,
             $"{applyResult.SupportPowersRemoved:n0} support-heavy powers removed", markComplete: true);
         EnsureScopedPowersets(database, normalizedRoot, dryRunResult.Scope, applyResult, progressReporter, manifest);
-        var scopedPowers = dryRunResult.CachedScopedPowers.Count > 0
-            ? dryRunResult.CachedScopedPowers
-            : LoadScopedPowers(normalizedRoot, dryRunResult.Scope, progress: null, manifest: manifest).ToList();
         RemoveStaleRedirectScopedContent(database, scopedPowersets, scopedPowers, applyResult);
         PurgeStrictSetBonusScopedPowers(database, scopedPowers, applyResult);
         var scopedPowerLookup = BuildScopedPowerLookup(scopedPowers);
@@ -1333,6 +1350,7 @@ public sealed partial class OmniImporter
 
         ReportStageProgress(progressReporter, OmniImportStageId.LinkPlannerMetadata, "Linking support powers");
         BuildSupportPowerLinks(scopedPowers, midsPowers, classifications, applyResult);
+        RemodelPlannerStateFamilies(database, applyResult);
         EnsurePlannerModeBindings(database, applyResult);
         RepairAliasedPowersetIdentities(database, applyResult);
         RepairAliasedPowerIdentities(database, applyResult);
@@ -1360,6 +1378,7 @@ public sealed partial class OmniImporter
         if (ReferenceEquals(DatabaseAPI.Database, database))
         {
             ApplyEnhancementImportStage(database, normalizedRoot, manifest, dryRunResult, applyResult);
+            DatabaseAPI.NormalizeSetTypeTaxonomy(database);
             ReportStageProgress(progressReporter, OmniImportStageId.RebuildIds, "Resolving database IDs");
             DatabaseAPI.MatchIds();
             ReportStageProgress(progressReporter, OmniImportStageId.RebuildIds, markComplete: true);
@@ -1367,6 +1386,7 @@ public sealed partial class OmniImporter
         else
         {
             ApplyEnhancementImportStage(database, normalizedRoot, manifest, dryRunResult, applyResult);
+            DatabaseAPI.NormalizeSetTypeTaxonomy(database);
         }
         ReportStageProgress(progressReporter, OmniImportStageId.ImportEnhancements, markComplete: true);
 
@@ -4914,6 +4934,10 @@ public sealed partial class OmniImporter
         power.HiddenPower = classification.HiddenPower;
         power.IncludeFlag = classification.IncludeFlag;
         power.InherentType = classification.InherentType;
+        if (power.IsNew)
+        {
+            power.ShowInSpecialPowerPicker = SpecialPowerCatalog.ShouldBackfillSpecialPowerPicker(power);
+        }
     }
 
     private static void TrackApplyClassification(
@@ -5854,6 +5878,84 @@ public sealed partial class OmniImporter
         database.Powersets = keptPowersets;
     }
 
+    private static void RemoveScopedContentForFreshImport(
+        IDatabase database,
+        IReadOnlyCollection<OmniPowersetDefinition> scopedPowersets,
+        IReadOnlyCollection<OmniPowerDefinition> scopedPowers,
+        OmniApplyResult applyResult)
+    {
+        var scopedPowersetNames = scopedPowersets
+            .Where(powerset => !string.IsNullOrWhiteSpace(powerset.FullName))
+            .Select(powerset => CanonicalizeOmniFullName(powerset.FullName))
+            .Concat(scopedPowers
+                .Where(power => !string.IsNullOrWhiteSpace(power.FullName))
+                .Select(PowerPowersetFullName))
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        var scopedPowerNames = scopedPowers
+            .Where(power => !string.IsNullOrWhiteSpace(power.FullName))
+            .Select(power => CanonicalizeOmniFullName(power.FullName))
+            .Where(name => !string.IsNullOrWhiteSpace(name))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToHashSet(StringComparer.OrdinalIgnoreCase);
+        if (scopedPowersetNames.Count == 0 && scopedPowerNames.Count == 0)
+        {
+            return;
+        }
+
+        var removedPowers = 0;
+        var keptPowers = new List<IPower?>(database.Power?.Length ?? 0);
+        foreach (var power in database.Power ?? [])
+        {
+            if (power == null)
+            {
+                keptPowers.Add(null);
+                continue;
+            }
+
+            var canonicalFullName = CanonicalizeOmniFullName(power.FullName);
+            var canonicalFullSetName = CanonicalizeOmniFullName(power.FullSetName);
+            var remove = (!string.IsNullOrWhiteSpace(canonicalFullName) && scopedPowerNames.Contains(canonicalFullName)) ||
+                         (!string.IsNullOrWhiteSpace(canonicalFullSetName) && scopedPowersetNames.Contains(canonicalFullSetName));
+            if (!remove)
+            {
+                keptPowers.Add(power);
+                continue;
+            }
+
+            removedPowers++;
+        }
+
+        database.Power = keptPowers.ToArray();
+
+        var removedPowersets = 0;
+        var keptPowersets = new List<IPowerset?>(database.Powersets?.Length ?? 0);
+        foreach (var powerset in database.Powersets ?? [])
+        {
+            if (powerset == null)
+            {
+                keptPowersets.Add(null);
+                continue;
+            }
+
+            var canonicalFullName = CanonicalizeOmniFullName(powerset.FullName);
+            if (string.IsNullOrWhiteSpace(canonicalFullName) || !scopedPowersetNames.Contains(canonicalFullName))
+            {
+                keptPowersets.Add(powerset);
+                continue;
+            }
+
+            removedPowersets++;
+        }
+
+        database.Powersets = keptPowersets.ToArray();
+
+        applyResult.AddLimited(
+            applyResult.ImportIntegrityAuditDetails,
+            $"Fresh scoped import: removed {removedPowers:n0} scoped powers and {removedPowersets:n0} scoped powersets before apply.");
+    }
+
     private static void RemoveStaleRedirectScopedContent(
         IDatabase database,
         IReadOnlyCollection<OmniPowersetDefinition> scopedPowersets,
@@ -5961,14 +6063,13 @@ public sealed partial class OmniImporter
 
     private static readonly HashSet<PlannerMode> GlobalPlannerControlModes =
     [
-        PlannerMode.FastSnipe,
-        PlannerMode.Defiance,
-        PlannerMode.Containment,
-        PlannerMode.CriticalHit,
         PlannerMode.Domination,
-        PlannerMode.Scourge,
         PlannerMode.Assassination
     ];
+
+    private const string FastSnipePlannerPowerFullName = "Inherent.Inherent.Fast_Snipe";
+    private const string FastSnipePlannerClassName = "Class_Blaster";
+    private const string FastSnipePlannerIconName = "fast_snipe.png";
 
     private static void EnsurePlannerModeBindings(IDatabase database, OmniApplyResult applyResult)
     {
@@ -6029,7 +6130,147 @@ public sealed partial class OmniImporter
             AddPlannerModePayload(power, mode, applyResult);
         }
 
+        EnsureFastSnipePlannerBinding(
+            database,
+            ref powers,
+            powersByName,
+            ref nextStaticIndex,
+            applyResult);
+
         database.Power = powers;
+    }
+
+    private static void EnsureFastSnipePlannerBinding(
+        IDatabase database,
+        ref IPower?[] powers,
+        IDictionary<string, IPower?> powersByName,
+        ref int nextStaticIndex,
+        OmniApplyResult applyResult)
+    {
+        var sourcePowers = FindFastSnipeSourcePowers(powers);
+        var createdPower = false;
+        if (!powersByName.TryGetValue(FastSnipePlannerPowerFullName, out var power) || power == null)
+        {
+            if (sourcePowers.Count == 0)
+            {
+                return;
+            }
+
+            power = CreateSyntheticPlannerPower(PlannerMode.FastSnipe, nextStaticIndex++);
+            Array.Resize(ref powers, powers.Length + 1);
+            powers[^1] = power;
+            powersByName[power.FullName] = power;
+            applyResult.SyntheticPlannerInherentsCreated++;
+            createdPower = true;
+        }
+
+        power.HiddenPower = true;
+        power.IncludeFlag = sourcePowers.Count > 0;
+        power.InherentType = Enums.eGridType.Power;
+        power.PowerType = Enums.ePowerType.Auto_;
+        power.AlwaysToggle = sourcePowers.Count > 0;
+        power.Available = 1;
+        power.Level = 1;
+        power.IconName = FastSnipePlannerIconName;
+        power.Requires = BuildFastSnipePlannerRequirement(database, sourcePowers);
+        power.AdvancedRequirements = AdvancedConditionSet.FromLegacyRequirement(power.Requires);
+        power.IsModified = true;
+
+        AddPlannerModePayload(power, PlannerMode.FastSnipe, applyResult);
+
+        if (sourcePowers.Count == 0)
+        {
+            applyResult.AddLimited(
+                applyResult.PlannerModeDetails,
+                $"{power.FullName}: disabled FastSnipe auto-grant because no qualifying Blaster sniper powers were found.");
+            return;
+        }
+
+        applyResult.AddLimited(
+            applyResult.PlannerModeDetails,
+            $"{power.FullName}: auto-granted FastSnipe for {FastSnipePlannerClassName} when any qualifying sniper power is chosen ({sourcePowers.Count} source(s)).");
+
+        if (createdPower)
+        {
+            applyResult.AddLimited(
+                applyResult.SyntheticPlannerInherentDetails,
+                $"{power.FullName}: hidden auto-granted planner state for Blaster sniper powers.");
+        }
+    }
+
+    private static Requirement BuildFastSnipePlannerRequirement(
+        IDatabase database,
+        IReadOnlyList<IPower> sourcePowers)
+    {
+        var classes = database.Classes ?? [];
+        var blasterClassIndex = classes.TryFindIndex(cls =>
+            string.Equals(cls?.ClassName, FastSnipePlannerClassName, StringComparison.OrdinalIgnoreCase));
+
+        return new Requirement
+        {
+            ClassName = blasterClassIndex >= 0 ? [FastSnipePlannerClassName] : [],
+            NClassName = blasterClassIndex >= 0 ? [blasterClassIndex] : [],
+            PowerID = sourcePowers.Select(power => new[] { power.FullName, string.Empty }).ToArray(),
+            NPowerID = sourcePowers.Select(power => new[] { power.PowerIndex, -1 }).ToArray()
+        };
+    }
+
+    private static List<IPower> FindFastSnipeSourcePowers(IEnumerable<IPower?> powers)
+    {
+        return powers
+            .Where(IsFastSnipeSourcePower)
+            .Cast<IPower>()
+            .GroupBy(power => power.FullName, StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First())
+            .OrderBy(power => power.FullName, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    private static bool IsFastSnipeSourcePower(IPower? power)
+    {
+        if (power == null ||
+            power.HiddenPower ||
+            power.InherentType != Enums.eGridType.None ||
+            string.IsNullOrWhiteSpace(power.FullName) ||
+            !OmniModeMapper.IsSnipePlannerContext(power.FullName))
+        {
+            return false;
+        }
+
+        return IsBlasterPlannerSourcePower(power) && ReferencesPlannerMode(power, PlannerMode.FastSnipe);
+    }
+
+    private static bool IsBlasterPlannerSourcePower(IPower power)
+    {
+        if (power.FullName.StartsWith("Blaster_", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return string.Equals(
+            power.GetPowerSet()?.ATClass,
+            FastSnipePlannerClassName,
+            StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool ReferencesPlannerMode(IPower power, PlannerMode mode)
+    {
+        if (HasCanonicalPlannerModeCoverage(power, mode))
+        {
+            return true;
+        }
+
+        foreach (var effect in power.Effects ?? [])
+        {
+            if (effect != null &&
+                TryMapSpecialCaseToPlannerMode(effect.SpecialCase, out var bridgedMode) &&
+                bridgedMode == mode)
+            {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static HashSet<PlannerMode> DiscoverPlannerModes(IEnumerable<IPower?> powers, OmniApplyResult applyResult)
@@ -6163,11 +6404,7 @@ public sealed partial class OmniImporter
 
     private static bool IsClassPlannerControlMode(PlannerMode mode)
     {
-        return mode is PlannerMode.Defiance or
-            PlannerMode.Containment or
-            PlannerMode.Domination or
-            PlannerMode.Scourge or
-            PlannerMode.CriticalHit or
+        return mode is PlannerMode.Domination or
             PlannerMode.Assassination;
     }
 
@@ -6181,6 +6418,7 @@ public sealed partial class OmniImporter
             GroupName = "Inherent",
             SetName = "Inherent",
             PowerName = powerName,
+            IconName = mode == PlannerMode.FastSnipe ? FastSnipePlannerIconName : string.Empty,
             DisplayName = displayName,
             DescShort = $"Planner toggle for {displayName}.",
             DescLong = $"Enables Mids planner effects that depend on {displayName}.",
@@ -6258,9 +6496,15 @@ public sealed partial class OmniImporter
             Enums.eSpecialCase.ComboLevel2 => PlannerMode.ComboLevel2,
             Enums.eSpecialCase.ComboLevel3 => PlannerMode.ComboLevel3,
             Enums.eSpecialCase.FastMode => PlannerMode.FastMode,
-            Enums.eSpecialCase.PerfectionOfBody1 or Enums.eSpecialCase.PerfectionOfBody2 or Enums.eSpecialCase.PerfectionOfBody3 => PlannerMode.PerfectionOfBody,
-            Enums.eSpecialCase.PerfectionOfMind1 or Enums.eSpecialCase.PerfectionOfMind2 or Enums.eSpecialCase.PerfectionOfMind3 => PlannerMode.PerfectionOfMind,
-            Enums.eSpecialCase.PerfectionOfSoul1 or Enums.eSpecialCase.PerfectionOfSoul2 or Enums.eSpecialCase.PerfectionOfSoul3 => PlannerMode.PerfectionOfSoul,
+            Enums.eSpecialCase.PerfectionOfBody1 => PlannerMode.PerfectionOfBody1,
+            Enums.eSpecialCase.PerfectionOfBody2 => PlannerMode.PerfectionOfBody2,
+            Enums.eSpecialCase.PerfectionOfBody3 => PlannerMode.PerfectionOfBody3,
+            Enums.eSpecialCase.PerfectionOfMind1 => PlannerMode.PerfectionOfMind1,
+            Enums.eSpecialCase.PerfectionOfMind2 => PlannerMode.PerfectionOfMind2,
+            Enums.eSpecialCase.PerfectionOfMind3 => PlannerMode.PerfectionOfMind3,
+            Enums.eSpecialCase.PerfectionOfSoul1 => PlannerMode.PerfectionOfSoul1,
+            Enums.eSpecialCase.PerfectionOfSoul2 => PlannerMode.PerfectionOfSoul2,
+            Enums.eSpecialCase.PerfectionOfSoul3 => PlannerMode.PerfectionOfSoul3,
             Enums.eSpecialCase.DefensiveAdaptation => PlannerMode.DefensiveAdaptation,
             Enums.eSpecialCase.EfficientAdaptation => PlannerMode.EfficientAdaptation,
             Enums.eSpecialCase.OffensiveAdaptation => PlannerMode.OffensiveAdaptation,
@@ -7083,6 +7327,11 @@ public sealed partial class OmniImporter
             return false;
         }
 
+        if (IsEpicPowersetFullName(existingCanonical) || IsEpicPowersetFullName(omniCanonical))
+        {
+            return EpicPowerSetIdentityMatches(existingPowerset, existingCanonical, omniPowerset, omniCanonical);
+        }
+
         var existingGroup = NormalizeName(string.IsNullOrWhiteSpace(existingPowerset?.GroupName)
             ? GroupNamePart(existingCanonical)
             : existingPowerset.GroupName);
@@ -7113,6 +7362,48 @@ public sealed partial class OmniImporter
             .ToHashSet(StringComparer.OrdinalIgnoreCase);
 
         return existingSetNames.Overlaps(omniSetNames);
+    }
+
+    private static bool EpicPowerSetIdentityMatches(
+        IPowerset? existingPowerset,
+        string existingCanonicalFullSetName,
+        OmniPowersetDefinition? omniPowerset,
+        string omniCanonicalFullSetName)
+    {
+        if (!IsEpicPowersetFullName(existingCanonicalFullSetName) || !IsEpicPowersetFullName(omniCanonicalFullSetName))
+        {
+            return false;
+        }
+
+        IEnumerable<string> existingArchetypes = existingPowerset?.GetArchetypes() ?? Enumerable.Empty<string>();
+        IEnumerable<string> omniArchetypes = omniPowerset?.Archetypes ?? Enumerable.Empty<string>();
+        var existingClassKeys = EpicClassKeys(
+            existingCanonicalFullSetName,
+            existingArchetypes,
+            existingPowerset?.ATClass ?? string.Empty);
+        var omniClassKeys = EpicClassKeys(
+            omniCanonicalFullSetName,
+            omniArchetypes,
+            string.Empty);
+        if (existingClassKeys.Count == 0 || omniClassKeys.Count == 0 || !existingClassKeys.Overlaps(omniClassKeys))
+        {
+            return false;
+        }
+
+        var existingFamily = EpicFamilyName(SetNamePart(existingCanonicalFullSetName), existingClassKeys);
+        var omniFamily = EpicFamilyName(SetNamePart(omniCanonicalFullSetName), omniClassKeys);
+        if (existingFamily.Equals(omniFamily, StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        var existingDisplayName = NormalizeName(existingPowerset?.DisplayName);
+        var omniDisplayName = NormalizeName(string.IsNullOrWhiteSpace(omniPowerset?.DisplayName)
+            ? SetNamePart(omniCanonicalFullSetName)
+            : omniPowerset.DisplayName);
+        return !string.IsNullOrWhiteSpace(existingDisplayName) &&
+               !string.IsNullOrWhiteSpace(omniDisplayName) &&
+               existingDisplayName.Equals(omniDisplayName, StringComparison.OrdinalIgnoreCase);
     }
 
     private static bool PowerInternalIdentityMatches(IPower power, string normalizedInternal)

@@ -2,6 +2,7 @@ using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Extensions;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
 using Mids_Reborn.Core.Theming;
 using Mids_Reborn.Core.Utils;
 using Mids_Reborn.UI.Theming;
@@ -24,14 +25,20 @@ namespace Mids_Reborn.UI.Renderer
         private const int BasePaddingX = 15;
         private const int BasePaddingY = 32;
         private const int BaseOffsetX = 30;
-        private const int BaseOffsetY = 23;
+        private const int BasePowerSlotOverlap = 8;
+        private const int BaseEnhancementSlotStartGap = 2;
+        private const int BaseEnhancementSlotGap = 0;
+        private const int BaseEnhancementSlotRightPad = 2;
         private const int BaseOffsetInherent = 10;
+        private const float IconWellContentFill = 0.92f;
+        private const byte IconVisibleAlphaThreshold = 8;
 
         private readonly Size _baseSzPower = new(184, 30);
         private readonly Size _baseSzSlot = new Size(32, 32);
 
         private int _calculatedCellWidth;
         private int _calculatedIconXOffset;
+        private readonly Dictionary<Bitmap, Rectangle> _iconVisibleBoundsCache = new();
 
 
         public Size SzPower => new Size(ScaleLogical(_baseSzPower.Width), ScaleLogical(_baseSzPower.Height));
@@ -39,7 +46,11 @@ namespace Mids_Reborn.UI.Renderer
         public Size SzSlot => new(ScaleLogical(_baseSzSlot.Width), ScaleLogical(_baseSzSlot.Height));
 
         private int PaddingY => ScaleLogical(BasePaddingY);
-        public int OffsetY => ScaleLogical(BaseOffsetY);
+        private int PowerSlotOverlap => ScaleLogical(BasePowerSlotOverlap);
+        private int EnhancementSlotStartGap => ScaleLogical(BaseEnhancementSlotStartGap);
+        private int EnhancementSlotSpacing => Math.Max(0, ScaleLogical(BaseEnhancementSlotGap));
+        private int EnhancementSlotRightPad => ScaleLogical(BaseEnhancementSlotRightPad);
+        public int OffsetY => Math.Max(0, SzPower.Height - PowerSlotOverlap);
 
         private int PaddingX => ScaleLogical(BasePaddingX);
         private int OffsetX => ScaleLogical(BaseOffsetX);
@@ -115,6 +126,7 @@ namespace Mids_Reborn.UI.Renderer
         private Color _backColor;
         private Control _cTarget;
         public int Highlight;
+        public int SelectedPowerIndex = -1;
         public eInterfaceMode InterfaceMode;
 
         private bool IsInDesignMode =>
@@ -130,6 +142,19 @@ namespace Mids_Reborn.UI.Renderer
                     return ThemeManager.DesignTime.PowerSlot;
                 }
                 return ThemeManager.CurrentTheme?.PowerSlot ?? ThemeManager.DesignTime.PowerSlot;
+            }
+        }
+
+        private ApplicationTheme CurrentApplicationTheme
+        {
+            get
+            {
+                if (IsInDesignMode)
+                {
+                    return ThemeManager.DesignTime;
+                }
+
+                return ThemeManager.CurrentTheme ?? ThemeManager.DesignTime;
             }
         }
 
@@ -161,12 +186,25 @@ namespace Mids_Reborn.UI.Renderer
             public required int PowerIndex { get; init; }
             public required Rectangle PowerRect { get; init; }
             public required Rectangle PowerAreaRect { get; init; }
+            public required Rectangle IconWellRect { get; init; }
             public required Rectangle SlotHitRect { get; init; }
             public required Rectangle[] EnhancementSlotRects { get; init; }
             public required Rectangle NewSlotRect { get; init; }
             public required Rectangle StatToggleRect { get; init; }
             public required Rectangle ProcToggleRect { get; init; }
         }
+
+        private readonly record struct PowerSlotPalette(
+            Color OuterStroke,
+            Color RimTop,
+            Color RimBottom,
+            Color FillTop,
+            Color FillMid,
+            Color FillBottom,
+            Color GlossTop,
+            Color GlossBottom,
+            Color InnerShadow,
+            Color HighlightStroke);
 
         public BuildRenderer(Control targetControl)
         {
@@ -310,8 +348,8 @@ namespace Mids_Reborn.UI.Renderer
 
         private Rectangle GetPowerButtonRect(Point cellLocation)
         {
-            const int horizontalPadding = 10;
-            int dynamicWidth = Math.Max(1, _calculatedCellWidth - ScaleLogical(25 + horizontalPadding));
+            const int interColumnGap = 7;
+            int dynamicWidth = Math.Max(1, _calculatedCellWidth - ScaleLogical(interColumnGap));
             int buttonX = cellLocation.X + (_calculatedCellWidth - dynamicWidth) / 2;
             return new Rectangle(buttonX, cellLocation.Y, dynamicWidth, SzPower.Height);
         }
@@ -361,9 +399,144 @@ namespace Mids_Reborn.UI.Renderer
             return (statToggleRect, procToggleRect);
         }
 
+        private Rectangle GetIconWellRect(Rectangle powerRect)
+        {
+            int extra = Math.Max(8, (int)Math.Round(powerRect.Height * 0.42f));
+            int diameter = Math.Max(1, powerRect.Height + extra);
+            int y = powerRect.Y - extra / 2;
+            return new Rectangle(powerRect.X, y, diameter, diameter);
+        }
+
+        private Rectangle GetPowerBodyRect(Rectangle powerRect, Rectangle iconWellRect)
+        {
+            int overlapStart = (int)Math.Round(iconWellRect.Width * 0.44f);
+            int bodyLeft = iconWellRect.Left + overlapStart;
+            return new Rectangle(
+                bodyLeft,
+                powerRect.Y,
+                Math.Max(1, powerRect.Right - bodyLeft),
+                powerRect.Height);
+        }
+
+        private int GetEnhancementSlotStartX(Rectangle powerRect, Rectangle iconWellRect)
+        {
+            int legacyIndent = powerRect.X + ScaleLogical(5);
+            Rectangle iconSocketRect = GetIconSocketRect(iconWellRect);
+            int iconAnchoredStart = iconSocketRect.Right + EnhancementSlotStartGap;
+            return Math.Max(legacyIndent, iconAnchoredStart);
+        }
+
+        private static Rectangle GetSocketRect(Rectangle outerRect, float insetRatio, int minInset)
+        {
+            int inset = Math.Max(minInset, (int)Math.Round(outerRect.Width * insetRatio));
+            return DeflateRect(outerRect, inset);
+        }
+
+        private Rectangle GetIconSocketRect(Rectangle iconWellRect)
+        {
+            return GetSocketRect(iconWellRect, 0.16f, 3);
+        }
+
+        private Rectangle GetVisibleBitmapBounds(Bitmap bitmap)
+        {
+            if (_iconVisibleBoundsCache.TryGetValue(bitmap, out Rectangle cachedBounds))
+            {
+                return cachedBounds;
+            }
+
+            Rectangle fullBounds = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            if (bitmap.Width <= 0 || bitmap.Height <= 0)
+            {
+                return fullBounds;
+            }
+
+            try
+            {
+                int left = bitmap.Width;
+                int top = bitmap.Height;
+                int right = -1;
+                int bottom = -1;
+
+                for (int y = 0; y < bitmap.Height; y++)
+                {
+                    for (int x = 0; x < bitmap.Width; x++)
+                    {
+                        if (bitmap.GetPixel(x, y).A <= IconVisibleAlphaThreshold)
+                        {
+                            continue;
+                        }
+
+                        left = Math.Min(left, x);
+                        top = Math.Min(top, y);
+                        right = Math.Max(right, x);
+                        bottom = Math.Max(bottom, y);
+                    }
+                }
+
+                if (right >= left && bottom >= top)
+                {
+                    cachedBounds = Rectangle.FromLTRB(left, top, right + 1, bottom + 1);
+                }
+                else
+                {
+                    cachedBounds = fullBounds;
+                }
+            }
+            catch
+            {
+                cachedBounds = fullBounds;
+            }
+
+            _iconVisibleBoundsCache[bitmap] = cachedBounds;
+            return cachedBounds;
+        }
+
+        private Rectangle GetSocketIconDestinationRect(Bitmap bitmap, Rectangle socketRect)
+        {
+            if (bitmap.Width <= 0 || bitmap.Height <= 0 || socketRect.Width <= 0 || socketRect.Height <= 0)
+            {
+                return socketRect;
+            }
+
+            Rectangle visibleBounds = GetVisibleBitmapBounds(bitmap);
+            if (visibleBounds.Width <= 0 || visibleBounds.Height <= 0)
+            {
+                visibleBounds = new Rectangle(0, 0, bitmap.Width, bitmap.Height);
+            }
+
+            float targetWidth = socketRect.Width * IconWellContentFill;
+            float targetHeight = socketRect.Height * IconWellContentFill;
+            float scale = Math.Min(targetWidth / visibleBounds.Width, targetHeight / visibleBounds.Height);
+            scale = Math.Max(scale, 0.01f);
+
+            float destWidth = bitmap.Width * scale;
+            float destHeight = bitmap.Height * scale;
+            float socketCenterX = socketRect.X + socketRect.Width / 2f;
+            float socketCenterY = socketRect.Y + socketRect.Height / 2f;
+            float visibleCenterX = visibleBounds.X + visibleBounds.Width / 2f;
+            float visibleCenterY = visibleBounds.Y + visibleBounds.Height / 2f;
+            float x = socketCenterX - visibleCenterX * scale;
+            float y = socketCenterY - visibleCenterY * scale;
+
+            int left = (int)Math.Round(x);
+            int top = (int)Math.Round(y);
+            int right = (int)Math.Round(x + destWidth);
+            int bottom = (int)Math.Round(y + destHeight);
+            return Rectangle.FromLTRB(left, top, Math.Max(left + 1, right), Math.Max(top + 1, bottom));
+        }
+
+        private int GetPowerTopInset()
+        {
+            Rectangle samplePowerRect = new Rectangle(0, 0, SzPower.Width, SzPower.Height);
+            Rectangle iconWellRect = GetIconWellRect(samplePowerRect);
+            return Math.Max(0, -iconWellRect.Top + Math.Max(1, ScaleLogical(1)));
+        }
+
         private BuildPowerGeometry CreatePowerGeometry(int powerIndex, PowerEntry powerEntry, bool includeNewSlot)
         {
             Rectangle powerRect = GetPowerButtonRect(GetCellLocation(powerEntry));
+            Rectangle iconWellRect = GetIconWellRect(powerRect);
+            Rectangle bodyRect = GetPowerBodyRect(powerRect, iconWellRect);
             var enhancementSlotRects = Array.Empty<Rectangle>();
             Rectangle powerAreaRect = powerRect;
             Rectangle slotHitRect = Rectangle.Empty;
@@ -371,10 +544,8 @@ namespace Mids_Reborn.UI.Renderer
 
             if (powerEntry.Slots.Length > 0 || (includeNewSlot && CanOfferNewSlot(powerEntry)))
             {
-                int indent = ScaleLogical(5);
-                int spacing = ScaleLogical(2);
-                int edge = ComputeSlotEdge(powerRect);
-                int startX = powerRect.X + indent;
+                int startX = GetEnhancementSlotStartX(powerRect, iconWellRect);
+                var (edge, spacing) = ComputeEnhancementSlotLayout(powerRect, startX);
                 int y = powerRect.Y + OffsetY;
 
                 if (powerEntry.Slots.Length > 0)
@@ -403,7 +574,7 @@ namespace Mids_Reborn.UI.Renderer
                 if (slotHitCount > 0)
                 {
                     int slotBandWidth = slotHitCount * edge + Math.Max(0, slotHitCount - 1) * spacing;
-                    slotHitRect = new Rectangle(startX, y, slotBandWidth, SzSlot.Height);
+                    slotHitRect = new Rectangle(startX, y, slotBandWidth, edge);
                 }
 
                 Rectangle slotBandRect = Rectangle.Empty;
@@ -417,6 +588,9 @@ namespace Mids_Reborn.UI.Renderer
                 powerAreaRect = UnionNonEmpty(powerAreaRect, slotBandRect);
             }
 
+            powerAreaRect = UnionNonEmpty(powerAreaRect, iconWellRect);
+            powerAreaRect = UnionNonEmpty(powerAreaRect, bodyRect);
+
             var (statToggleRect, procToggleRect) = GetToggleRects(powerEntry, powerRect);
 
             return new BuildPowerGeometry
@@ -424,6 +598,7 @@ namespace Mids_Reborn.UI.Renderer
                 PowerIndex = powerIndex,
                 PowerRect = powerRect,
                 PowerAreaRect = powerAreaRect,
+                IconWellRect = iconWellRect,
                 SlotHitRect = slotHitRect,
                 EnhancementSlotRects = enhancementSlotRects,
                 NewSlotRect = newSlotRect,
@@ -448,8 +623,42 @@ namespace Mids_Reborn.UI.Renderer
                 return false;
             }
 
+            if (ShouldSuppressHiddenSupportPower(powerEntry))
+            {
+                return false;
+            }
+
             geometry = CreatePowerGeometry(powerIndex, powerEntry, includeNewSlot);
             return true;
+        }
+
+        private static bool ShouldSuppressHiddenSupportPower(PowerEntry? powerEntry)
+        {
+            return powerEntry is
+            {
+                Chosen: false,
+                Power:
+                {
+                    HiddenPower: true,
+                    InherentType: eGridType.None
+                }
+            };
+        }
+
+        private static bool IsEffectivelyStatIncluded(PowerEntry? powerEntry)
+        {
+            if (powerEntry?.Power == null)
+            {
+                return false;
+            }
+
+            if (PlannerStateCatalog.TryGetDefinition(powerEntry.Power.FullName, out var definition) &&
+                definition.IsModeControl)
+            {
+                return MidsContext.Character?.ActivePlannerModes.Contains(definition.Mode) == true;
+            }
+
+            return powerEntry.StatInclude;
         }
 
         internal BuildHitTestResult HitTest(Point clientPoint) => HitTest(clientPoint.X, clientPoint.Y);
@@ -467,6 +676,11 @@ namespace Mids_Reborn.UI.Renderer
             {
                 var powerEntry = powers[i];
                 if (powerEntry == null)
+                {
+                    continue;
+                }
+
+                if (ShouldSuppressHiddenSupportPower(powerEntry))
                 {
                     continue;
                 }
@@ -501,7 +715,7 @@ namespace Mids_Reborn.UI.Renderer
                     return new BuildHitTestResult(BuildHitArea.NewSlot, i, -1, eToggleType.None, geometry.NewSlotRect);
                 }
 
-                if (geometry.PowerRect.Contains(point) ||
+                if (geometry.PowerAreaRect.Contains(point) ||
                     (!geometry.SlotHitRect.IsEmpty && geometry.SlotHitRect.Contains(point)))
                 {
                     return new BuildHitTestResult(BuildHitArea.PowerBody, i, -1, eToggleType.None, geometry.PowerRect);
@@ -579,17 +793,35 @@ namespace Mids_Reborn.UI.Renderer
             // --- Calculate the midpoint and draw ---
             int y = mainGridBottom + (inherentGridTop - mainGridBottom) / 2 + ScaleLogical(30);
 
-            using var pen = new Pen(Color.Goldenrod, 2f);
-            using var font = new Font("Segoe UI", 13f, FontStyle.Regular, GraphicsUnit.Pixel);
-            var brush = MidsContext.Character.IsHero() ? Brushes.DodgerBlue : Brushes.Red;
+            using var pen = new Pen(Color.Goldenrod, Math.Max(1.5f, EffectiveScale * 1.6f));
+            using var font = new Font("Segoe UI", 14f, FontStyle.Bold, GraphicsUnit.Pixel);
 
             string label = "Inherent Powers";
             SizeF textSize = BxBuffer.Graphics.MeasureString(label, font);
-            float textY = y + 2f;
+            float lineGap = ScaleLogical(12);
+            float textHeight = font.GetHeight(BxBuffer.Graphics) + ScaleLogical(2);
             float textX = (BxBuffer.Size.Width - textSize.Width) / 2f;
+            float textY = y - textHeight / 2f - ScaleLogical(1);
+            var textBounds = new RectangleF(textX, textY, textSize.Width, textHeight);
 
-            BxBuffer.Graphics.DrawLine(pen, 2, y, BxBuffer.Size.Width, y);
-            BxBuffer.Graphics.DrawString(label, font, brush, textX, textY);
+            float leftLineEnd = textBounds.Left - lineGap;
+            float rightLineStart = textBounds.Right + lineGap;
+
+            if (leftLineEnd > 2f)
+            {
+                BxBuffer.Graphics.DrawLine(pen, 2f, y, leftLineEnd, y);
+            }
+
+            if (rightLineStart < BxBuffer.Size.Width)
+            {
+                BxBuffer.Graphics.DrawLine(pen, rightLineStart, y, BxBuffer.Size.Width, y);
+            }
+
+            Color headerFill = MidsContext.Character.IsHero()
+                ? Color.FromArgb(166, 224, 255)
+                : Color.FromArgb(255, 178, 178);
+            DrawOutlineText(label, textBounds, headerFill, Color.FromArgb(228, 0, 0, 0), font,
+                Math.Max(2.4f, EffectiveScale * 2.1f), BxBuffer.Graphics);
         }
 
         private Dictionary<int, Point> LayoutToGridPos(List<List<int>> powersLayout)
@@ -616,11 +848,16 @@ namespace Mids_Reborn.UI.Renderer
                 if (power == null)
                     continue;
 
+                if (ShouldSuppressHiddenSupportPower(power))
+                    continue;
+
                 bool isHighlighted = Highlight == i;
+                bool isSelected = SelectedPowerIndex == i;
+                bool isEmphasized = isHighlighted || isSelected;
 
                 // Define what needs to be drawn. A power should be drawn if it's
                 // chosen, part of the Incarnate system, or currently highlighted.
-                bool shouldDraw = isHighlighted || power.Chosen ||
+                bool shouldDraw = isEmphasized || power.Chosen ||
                                   power.Power != null && (power.Power.GroupName == "Incarnate" || power.Power.IncludeFlag);
 
                 if (!shouldDraw)
@@ -630,7 +867,7 @@ namespace Mids_Reborn.UI.Renderer
                 var slotToDraw = power;
 
                 // The 'isHighlighted' flag serves the role of the original 'singleDraw'.
-                DrawPowerSlot(ref slotToDraw, isHighlighted);
+                DrawPowerSlot(ref slotToDraw, isEmphasized);
 
                 // A struct was passed by ref, so we ensure the main list is updated if needed.
                 powers[i] = slotToDraw;
@@ -869,7 +1106,8 @@ namespace Mids_Reborn.UI.Renderer
                 drawVars.PowerState,
                 toggling,
                 imageAttr,
-                grey
+                grey,
+                drawVars.SingleDraw
             );
         }
 
@@ -922,13 +1160,14 @@ namespace Mids_Reborn.UI.Renderer
             return drawVars;
         }
 
-        private void DrawPowerImage(PowerEntry? iSlot, Rectangle powerRect, ePowerState ePowerState, bool toggling, ImageAttributes? imageAttr, bool grey)
+        private void DrawPowerImage(PowerEntry? iSlot, Rectangle powerRect, ePowerState ePowerState, bool toggling, ImageAttributes? imageAttr, bool grey, bool emphasized)
         {
             var effectiveState = ePowerState;
+            var statIncluded = IsEffectivelyStatIncluded(iSlot);
 
             if (toggling && iSlot != null)
             {
-                if (iSlot.StatInclude && iSlot.State == ePowerState.Used)
+                if (statIncluded && iSlot.State == ePowerState.Used)
                 {
                     effectiveState = ePowerState.Open;
                 }
@@ -939,7 +1178,11 @@ namespace Mids_Reborn.UI.Renderer
             }
 
             var theme = CurrentTheme;
-            DrawVectorPowerSlot(BxBuffer.Graphics, powerRect, effectiveState, theme);
+            PowerSlotPalette palette = GetPowerSlotPalette(effectiveState, theme);
+            DrawVectorPowerSlot(BxBuffer.Graphics, powerRect, effectiveState, theme, emphasized);
+            Rectangle iconWellRect = GetIconWellRect(powerRect);
+            DrawPowerIcon(iSlot, iconWellRect, grey, palette);
+            DrawIconWellOverlay(BxBuffer.Graphics, iconWellRect, palette);
         }
 
         private void DrawToggles(BuildPowerGeometry geometry, Pen pen)
@@ -953,7 +1196,7 @@ namespace Mids_Reborn.UI.Renderer
             if (!geometry.StatToggleRect.IsEmpty)
             {
                 var statCenter = new PointF(-0.25f, -0.33f);
-                using var statBrush = powerEntry.StatInclude
+                using var statBrush = IsEffectivelyStatIncluded(powerEntry)
                     ? MakePathBrush(geometry.StatToggleRect, statCenter, Color.FromArgb(96, 255, 96), Color.FromArgb(0, 32, 0))
                     : MakePathBrush(geometry.StatToggleRect, statCenter, Color.FromArgb(96, 96, 96), Color.FromArgb(0, 0, 0));
                 BxBuffer.Graphics.FillEllipse(statBrush, geometry.StatToggleRect);
@@ -989,34 +1232,20 @@ namespace Mids_Reborn.UI.Renderer
             return Math.Clamp(maxEdgeToFit, minReadable, logicalBase);
         }*/
 
-        private int ComputeSlotEdge(Rectangle powerRect)
+        private (int Edge, int Spacing) ComputeEnhancementSlotLayout(Rectangle powerRect, int startX)
         {
-            // Always calculate the size based on the maximum possible number of slots (6).
             const int maxSlots = 6;
-
-            // Define constants for padding and spacing.
-            int indent = ScaleLogical(5);
-            int rightPad = ScaleLogical(10);
-            int spacing = ScaleLogical(2);
-
-            // Calculate the total horizontal space available for slots within the power button.
-            int availableWidth = powerRect.Width - indent - rightPad;
-
-            // If there's no space, return a default fallback size.
+            int availableWidth = powerRect.Right - startX - EnhancementSlotRightPad;
             if (availableWidth <= 0)
             {
-                return ScaleLogical(26); // Return the minimum readable size
+                return (1, EnhancementSlotSpacing);
             }
 
-            // Calculate the size for each slot as if there were always six.
-            int edgeForSixSlots = (availableWidth - (maxSlots - 1) * spacing) / maxSlots;
-
-            // Define the absolute min/max bounds for the slot size.
-            int minReadable = ScaleLogical(26);
-            int logicalBase = ScaleLogical(_baseSzSlot.Width); // Don't allow slots to be bigger than their base asset size.
-
-            // Clamp the result to ensure it stays within the desired min/max range.
-            return Math.Clamp(edgeForSixSlots, minReadable, logicalBase);
+            int spacing = EnhancementSlotSpacing;
+            int logicalBase = ScaleLogical(_baseSzSlot.Width);
+            int edge = Math.Max(1, (availableWidth - (maxSlots - 1) * spacing) / maxSlots);
+            edge = Math.Min(edge, logicalBase);
+            return (edge, spacing);
         }
 
         private void DrawSlotsAndEnhancements(PowerEntry powerEntry, BuildPowerGeometry geometry, Pen pen, Font font)
@@ -1033,19 +1262,7 @@ namespace Mids_Reborn.UI.Renderer
                 SolidBrush solidBrush;
                 if (slot.Enhancement.Enh < 0)
                 {
-                    // Use the .Bitmap property of the ExtendedBitmap from AssetManager
-                    var sourceImage = AssetManager.EmptySlot.Bitmap;
-                    if (sourceImage is null) continue; // Safety check
-
-                    var destRect = new Rectangle(
-                        slotRect.X,
-                        slotRect.Y,
-                        slotRect.Width,
-                        slotRect.Height);
-
-                    var srcRect = new Rectangle(0, 0, sourceImage.Width, sourceImage.Height);
-
-                    BxBuffer.Graphics.DrawImage(sourceImage, destRect, srcRect.X, srcRect.Y, srcRect.Width, srcRect.Height, GraphicsUnit.Pixel, PImageAttributes);
+                    DrawEmptyEnhancementSlot(BxBuffer.Graphics, slotRect);
 
                     if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level > MidsContext.Config.ForceLevel |
                         InterfaceMode == eInterfaceMode.PowerToggle & !powerEntry.StatInclude |
@@ -1100,15 +1317,115 @@ namespace Mids_Reborn.UI.Renderer
             }
         }
 
+        private static PowerSlotPalette GetDefaultEnhancementSlotPalette()
+        {
+            return CreatePowerSlotPalette(
+                Color.FromArgb(20, 96, 232),
+                Color.FromArgb(104, 188, 255),
+                Color.FromArgb(6, 52, 156),
+                Color.FromArgb(132, 226, 255));
+        }
+
+        private PowerSlotPalette GetEmptyEnhancementSlotPalette(PowerSlotTheme theme)
+        {
+            if (theme == null)
+            {
+                return GetDefaultEnhancementSlotPalette();
+            }
+
+            Color border = ResolveColor(theme.Border, Color.FromArgb(32, 88, 182));
+            Color openBorder = ResolveColor(theme.OpenBorder, Blend(border, Color.White, 0.32f));
+            Color gradientTop = ResolveColor(theme.GradientTop, border);
+            Color gradientBottom = ResolveColor(theme.GradientBottom, Blend(border, Color.Black, 0.42f));
+            Color emptyFill = ResolveColor(theme.EmptyFill, Blend(gradientBottom, Color.Black, 0.18f));
+
+            Color rimBase = Blend(border, openBorder, 0.40f);
+            Color fillTop = Blend(gradientTop, Color.White, 0.16f);
+            Color fillBottom = Blend(gradientBottom, emptyFill, 0.45f);
+            Color highlightBase = Blend(openBorder, gradientTop, 0.28f);
+            return CreatePowerSlotPalette(rimBase, fillTop, fillBottom, highlightBase);
+        }
+
+        private PowerSlotPalette GetNewSlotHoverPalette(ApplicationTheme theme)
+        {
+            if (theme == null)
+            {
+                return CreatePowerSlotPalette(
+                    Color.FromArgb(196, 154, 42),
+                    Color.FromArgb(62, 78, 112),
+                    Color.FromArgb(14, 24, 44),
+                    Color.FromArgb(255, 240, 188));
+            }
+
+            PowerSlotTheme slotTheme = theme.PowerSlot ?? ThemeManager.DesignTime.PowerSlot;
+            PowerSlotPalette emptyPalette = GetEmptyEnhancementSlotPalette(slotTheme);
+
+            Color accent = ResolveColor(theme.MenuStrip.AccentColor,
+                ResolveColor(theme.DropDownList.HoverBorder,
+                    ResolveColor(theme.DataView.Accent, Color.FromArgb(196, 154, 42))));
+            Color accentLight = ResolveColor(theme.MenuStrip.AccentLightColor,
+                ResolveColor(theme.DropDownList.HoverBorder, Blend(accent, Color.White, 0.38f)));
+
+            if (accentLight.GetBrightness() < 0.22f)
+            {
+                accentLight = Blend(accent, Color.White, 0.42f);
+            }
+
+            Color hoverTop = ResolveColor(slotTheme.HoverGradientTop,
+                Blend(ResolveColor(slotTheme.GradientTop, accent), accentLight, 0.16f));
+            Color hoverBottom = ResolveColor(slotTheme.HoverGradientBottom,
+                Blend(ResolveColor(slotTheme.GradientBottom, accent), accent, 0.14f));
+            Color rimBase = Blend(ResolveColor(slotTheme.Border, accent), accent, 0.72f);
+            Color fillTop = Blend(emptyPalette.FillTop, hoverTop, 0.38f);
+            Color fillBottom = Blend(emptyPalette.FillBottom, hoverBottom, 0.34f);
+            Color highlightBase = Blend(accentLight, hoverTop, 0.24f);
+            return CreatePowerSlotPalette(rimBase, fillTop, fillBottom, highlightBase);
+        }
+
+        private void DrawVectorEnhancementSocket(Graphics g, Rectangle slotRect, PowerSlotPalette palette)
+        {
+            if (slotRect.Width <= 0 || slotRect.Height <= 0)
+            {
+                return;
+            }
+
+            Rectangle drawRect = slotRect;
+            Rectangle socketRect = GetSocketRect(drawRect, 0.10f, 2);
+            Rectangle shadowRect = drawRect;
+            shadowRect.Offset(Math.Max(1, ScaleLogical(1)), Math.Max(1, ScaleLogical(1)));
+            shadowRect.Inflate(Math.Max(1, ScaleLogical(1)), Math.Max(1, ScaleLogical(1)));
+
+            using (var shadowPath = new GraphicsPath())
+            {
+                shadowPath.AddEllipse(shadowRect);
+                using var shadowBrush = new PathGradientBrush(shadowPath)
+                {
+                    CenterColor = Color.FromArgb(54, 0, 0, 0),
+                    CenterPoint = new PointF(
+                        shadowRect.X + shadowRect.Width * 0.52f,
+                        shadowRect.Y + shadowRect.Height * 0.55f),
+                    SurroundColors = Enumerable.Repeat(Color.FromArgb(0, 0, 0, 0), shadowPath.PathPoints.Length).ToArray(),
+                    FocusScales = new PointF(0.38f, 0.38f)
+                };
+                g.FillPath(shadowBrush, shadowPath);
+            }
+
+            DrawIconWell(g, drawRect, palette, socketRect);
+            DrawIconWellOverlay(g, drawRect, palette, socketRect);
+        }
+
+        private void DrawEmptyEnhancementSlot(Graphics g, Rectangle slotRect)
+        {
+            var palette = GetEmptyEnhancementSlotPalette(CurrentTheme);
+            DrawVectorEnhancementSocket(g, slotRect, palette);
+        }
+
         private void DrawNewSlotHover(BuildPowerGeometry geometry, Font font, ePowerState powerState, int slotCheck, bool drawNewSlot)
         {
             if (slotCheck > -1 && powerState is not ePowerState.Empty && drawNewSlot && !geometry.NewSlotRect.IsEmpty)
             {
-                var sourceImage = AssetManager.NewSlot.Bitmap;
-                if (sourceImage is null) return;
-
-                var srcRect = new Rectangle(0, 0, sourceImage.Width, sourceImage.Height);
-                BxBuffer.Graphics.DrawImage(sourceImage, geometry.NewSlotRect, srcRect, GraphicsUnit.Pixel);
+                var palette = GetNewSlotHoverPalette(CurrentApplicationTheme);
+                DrawVectorEnhancementSocket(BxBuffer.Graphics, geometry.NewSlotRect, palette);
 
                 var textRect = new RectangleF(
                     geometry.NewSlotRect.X,
@@ -1118,17 +1435,24 @@ namespace Mids_Reborn.UI.Renderer
                 textRect.Height = _defaultFont.GetHeight(BxBuffer.Graphics);
                 textRect.Y += (geometry.NewSlotRect.Height - textRect.Height) / 2f;
 
+                Color accentLight = ResolveColor(CurrentApplicationTheme.MenuStrip.AccentLightColor,
+                    ResolveColor(CurrentApplicationTheme.PowerSlot.ForeColor, Color.WhiteSmoke));
+                if (accentLight.GetBrightness() < 0.22f)
+                {
+                    accentLight = Blend(accentLight, Color.White, 0.58f);
+                }
+
                 DrawOutlineText(Convert.ToString(slotCheck + 1), textRect,
-                    Color.FromArgb(0, 255, 255), Color.FromArgb(192, 0, 0, 0),
+                    accentLight, Color.FromArgb(216, 0, 0, 0),
                     font, 2f, BxBuffer.Graphics);
             }
         }
 
         private void DrawPowerText(PowerEntry powerEntry, Rectangle powerRect, Font font, ePowerState powerState)
         {
-            // Determine the text content and color based on the power's state
             string text;
-            SolidBrush textBrush;
+            bool omitLevelPrefix = ShouldOmitPowerLevelPrefix(powerEntry);
+            string powerName = powerEntry.Name ?? string.Empty;
 
             ePowerState displayState = powerEntry.State == ePowerState.Empty && powerState == ePowerState.Open ? powerState : powerEntry.State;
 
@@ -1136,94 +1460,652 @@ namespace Mids_Reborn.UI.Renderer
             {
                 case ePowerState.Empty:
                 case ePowerState.Open:
-                    textBrush = new SolidBrush(Color.WhiteSmoke);
-                    text = $"({powerEntry.Level + 1})";
+                    text = omitLevelPrefix && !string.IsNullOrWhiteSpace(powerName)
+                        ? powerName
+                        : $"({powerEntry.Level + 1})";
                     break;
 
                 case ePowerState.Used:
                 default:
-                    textBrush = !MidsContext.Character.IsHero() ? new SolidBrush(Color.White) : new SolidBrush(Color.Black);
-                    text = $"({powerEntry.Level + 1}) {powerEntry.Name}";
+                    text = omitLevelPrefix
+                        ? powerName
+                        : $"({powerEntry.Level + 1}) {powerName}";
                     break;
             }
 
-            // Adjust for toggle mode visuals
-            if (InterfaceMode == eInterfaceMode.PowerToggle && textBrush.Color == Color.Black && !powerEntry.CanIncludeForStats())
+            var textColor = CurrentTheme.ForeColor.IsEmpty ? Color.WhiteSmoke : CurrentTheme.ForeColor;
+            if (displayState is ePowerState.Empty or ePowerState.Open)
             {
-                textBrush = new SolidBrush(Color.FromArgb(128, 0, 0, 0));
+                textColor = Blend(textColor, Color.White, 0.12f);
             }
 
-            // Define the rectangle for the text, indented inside the button
+            if (InterfaceMode == eInterfaceMode.PowerToggle && !powerEntry.CanIncludeForStats())
+            {
+                textColor = Color.FromArgb(168, Blend(textColor, Color.Black, 0.30f));
+            }
+
+            var (statToggleRect, procToggleRect) = GetToggleRects(powerEntry, powerRect);
+            Rectangle toggleBounds = UnionNonEmpty(statToggleRect, procToggleRect);
+            int leftPadding = ScaleLogical(12);
+            int rightPadding = ScaleLogical(12);
+            Rectangle iconWellRect = GetIconWellRect(powerRect);
+
+            leftPadding = Math.Max(leftPadding, iconWellRect.Right - powerRect.X + ScaleLogical(1));
+
+            if (!toggleBounds.IsEmpty)
+            {
+                rightPadding = Math.Max(rightPadding, powerRect.Right - toggleBounds.Left + ScaleLogical(6));
+            }
+
             var textRect = new RectangleF
             {
-                X = powerRect.X + ScaleLogical(10),
-                Y = powerRect.Y + ScaleLogical(4),
-                Width = powerRect.Width - ScaleLogical(20), // Use the button's dynamic width
-                Height = powerRect.Height - ScaleLogical(8)
+                X = powerRect.X + leftPadding,
+                Y = powerRect.Y,
+                Width = Math.Max(1, powerRect.Width - leftPadding - rightPadding),
+                Height = powerRect.Height - ScaleLogical(3)
             };
 
-            // Draw the text
-            using var stringFormat = new StringFormat { FormatFlags = StringFormatFlags.NoWrap, LineAlignment = StringAlignment.Center };
+            float outlineThickness = MidsContext.Config.EnhanceVisibility
+                ? Math.Max(2.4f, EffectiveScale * 2.6f)
+                : Math.Max(1.9f, EffectiveScale * 2.1f);
+            DrawPowerLabelText(text, textRect, textColor, font, outlineThickness);
+        }
 
-            if (MidsContext.Config.EnhanceVisibility)
+        private bool ShouldOmitPowerLevelPrefix(PowerEntry powerEntry)
+        {
+            var powers = MidsContext.Character?.CurrentBuild?.Powers;
+            if (powers == null || powers.Count == 0)
             {
-                DrawOutlineText(text, textRect, Color.WhiteSmoke, Color.Black, font, 3f, BxBuffer.Graphics, false, true);
+                return false;
+            }
+
+            int powerIndex = powers.IndexOf(powerEntry);
+            if (powerIndex == -1 && powerEntry.Power != null)
+            {
+                for (int i = 0; i < powers.Count; i++)
+                {
+                    if (powers[i] == null)
+                    {
+                        continue;
+                    }
+
+                    if (powers[i].Power != null &&
+                        powers[i].Power.PowerIndex == powerEntry.Power.PowerIndex &&
+                        powers[i].Level == powerEntry.Level)
+                    {
+                        powerIndex = i;
+                        break;
+                    }
+                }
+            }
+
+            if (powerIndex >= VcPowers && powerIndex > -1)
+            {
+                return true;
+            }
+
+            var position = PowerPositionCr(powerEntry, powerEntry.Power?.DisplayLocation ?? -1);
+            return position.Y >= _vcRowsPowers;
+        }
+
+        private void DrawPowerLabelText(string text, RectangleF bounds, Color fillColor, Font baseFont, float outlineThickness)
+        {
+            if (BxBuffer?.Graphics == null || string.IsNullOrWhiteSpace(text) || bounds.Width <= 0f || bounds.Height <= 0f)
+            {
+                return;
+            }
+
+            BxBuffer.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            BxBuffer.Graphics.TextRenderingHint = TextRenderingHint.AntiAliasGridFit;
+
+            using var powerFont = CreatePowerLabelFont(baseFont);
+            using var format = new StringFormat(StringFormatFlags.NoWrap)
+            {
+                Alignment = StringAlignment.Near,
+                LineAlignment = StringAlignment.Center,
+                Trimming = StringTrimming.EllipsisCharacter
+            };
+
+            float emSize = powerFont.SizeInPoints * BxBuffer.Graphics.DpiY / 72f;
+            using var textPath = new GraphicsPath();
+            textPath.AddString(text, powerFont.FontFamily, (int)powerFont.Style, emSize, bounds, format);
+            ApplyPowerLabelShear(textPath, bounds);
+
+            Color actualFillColor = Blend(fillColor, Color.White, 0.18f);
+
+            using (var shadowPath = (GraphicsPath)textPath.Clone())
+            using (var shadowMatrix = new Matrix())
+            using (var shadowBrush = new SolidBrush(Color.FromArgb(182, 0, 0, 0)))
+            {
+                shadowMatrix.Translate(Math.Max(1f, EffectiveScale * 1.05f), Math.Max(1f, EffectiveScale));
+                shadowPath.Transform(shadowMatrix);
+                BxBuffer.Graphics.FillPath(shadowBrush, shadowPath);
+            }
+
+            using (var outlinePen = new Pen(Color.FromArgb(240, 0, 0, 0), outlineThickness + Math.Max(0.2f, EffectiveScale * 0.15f)))
+            {
+                outlinePen.LineJoin = LineJoin.Round;
+                BxBuffer.Graphics.DrawPath(outlinePen, textPath);
+            }
+
+            using (var fillBrush = new SolidBrush(actualFillColor))
+            {
+                BxBuffer.Graphics.FillPath(fillBrush, textPath);
+            }
+
+            var highlightState = BxBuffer.Graphics.Save();
+            BxBuffer.Graphics.SetClip(new RectangleF(
+                bounds.X,
+                bounds.Y,
+                bounds.Width,
+                Math.Max(2f, bounds.Height * 0.44f)));
+            using (var highlightBrush = new SolidBrush(Color.FromArgb(56, 255, 255, 255)))
+            {
+                BxBuffer.Graphics.FillPath(highlightBrush, textPath);
+            }
+            BxBuffer.Graphics.Restore(highlightState);
+        }
+
+        private void ApplyPowerLabelShear(GraphicsPath textPath, RectangleF bounds)
+        {
+            if (textPath.PointCount == 0)
+            {
+                return;
+            }
+
+            using var shearMatrix = new Matrix();
+            float shear = -0.18f;
+            float xCompensation = Math.Max(0.5f, bounds.Height * 0.10f);
+            shearMatrix.Translate(-bounds.X, -bounds.Y, MatrixOrder.Append);
+            shearMatrix.Shear(shear, 0f, MatrixOrder.Append);
+            shearMatrix.Translate(bounds.X + xCompensation, bounds.Y, MatrixOrder.Append);
+            textPath.Transform(shearMatrix);
+        }
+
+        private Font CreatePowerLabelFont(Font baseFont)
+        {
+            float size = baseFont.Size + Math.Max(0.15f, EffectiveScale * 0.20f);
+            const FontStyle style = FontStyle.Bold;
+
+            foreach (string familyName in new[] { "Arial Black", "Arial", "Tahoma", baseFont.FontFamily.Name })
+            {
+                try
+                {
+                    return new Font(familyName, size, style, GraphicsUnit.Pixel);
+                }
+                catch
+                {
+                    // Try the next family.
+                }
+            }
+
+            return new Font(baseFont.FontFamily, size, style, GraphicsUnit.Pixel);
+        }
+
+        private void DrawVectorPowerSlot(Graphics g, Rectangle bounds, ePowerState state, PowerSlotTheme theme, bool emphasized)
+        {
+            if (bounds.Width <= 0 || bounds.Height <= 0)
+            {
+                return;
+            }
+
+            g.SmoothingMode = SmoothingMode.AntiAlias;
+
+            PowerSlotPalette palette = GetPowerSlotPalette(state, theme);
+            Rectangle iconWellRect = GetIconWellRect(bounds);
+            Rectangle bodyRect = GetPowerBodyRect(bounds, iconWellRect);
+            Rectangle mergedBounds = Rectangle.Union(bodyRect, iconWellRect);
+            Rectangle rimBounds = DeflateRect(bodyRect, 1);
+            Rectangle rimWellRect = DeflateRect(iconWellRect, 1);
+            Rectangle mergedRimBounds = Rectangle.Union(rimBounds, rimWellRect);
+            Rectangle faceBounds = DeflateRect(bodyRect, Math.Max(1, ScaleLogical(1)));
+            Rectangle glossBounds = new(faceBounds.X, faceBounds.Y, faceBounds.Width, Math.Max(2, faceBounds.Height / 2 + 1));
+            Rectangle shadowBounds = new(faceBounds.X, faceBounds.Y + faceBounds.Height / 2, faceBounds.Width, Math.Max(2, faceBounds.Height / 2 + 1));
+
+            using var outerPath = CreateMergedPowerSlotPath(bodyRect, iconWellRect);
+            using var outerBrush = new SolidBrush(palette.OuterStroke);
+            g.FillPath(outerBrush, outerPath);
+
+            if (rimBounds.Width <= 0 || rimBounds.Height <= 0 || rimWellRect.Width <= 0 || rimWellRect.Height <= 0)
+            {
+                return;
+            }
+
+            using var rimPath = CreateMergedPowerSlotPath(rimBounds, rimWellRect);
+            using var rimBrush = CreateThreeStopBrush(mergedRimBounds, palette.RimTop, Blend(palette.RimTop, palette.RimBottom, 0.45f), palette.RimBottom);
+            g.FillPath(rimBrush, rimPath);
+
+            if (faceBounds.Width <= 0 || faceBounds.Height <= 0)
+            {
+                return;
+            }
+
+            using var facePath = CreateCapsulePath(faceBounds);
+            using var faceBrush = CreateThreeStopBrush(faceBounds, palette.FillTop, palette.FillMid, palette.FillBottom);
+            g.FillPath(faceBrush, facePath);
+
+            var glossState = g.Save();
+            g.SetClip(new Rectangle(faceBounds.X, faceBounds.Y, faceBounds.Width, Math.Max(2, faceBounds.Height / 2 + 1)), CombineMode.Intersect);
+            using (var glossBrush = CreateThreeStopBrush(glossBounds, palette.GlossTop, Blend(palette.GlossTop, palette.GlossBottom, 0.55f), palette.GlossBottom))
+            {
+                g.FillPath(glossBrush, facePath);
+            }
+            g.Restore(glossState);
+
+            var shadowState = g.Save();
+            g.SetClip(new Rectangle(faceBounds.X, faceBounds.Y + faceBounds.Height / 2, faceBounds.Width, Math.Max(2, faceBounds.Height / 2 + 1)), CombineMode.Intersect);
+            using (var shadowBrush = new LinearGradientBrush(shadowBounds,
+                       Color.FromArgb(0, palette.InnerShadow),
+                       palette.InnerShadow,
+                       90f))
+            {
+                g.FillPath(shadowBrush, facePath);
+            }
+            g.Restore(shadowState);
+
+            var highlightState = g.Save();
+            g.SetClip(new Rectangle(mergedRimBounds.X, mergedRimBounds.Y, mergedRimBounds.Width, Math.Max(2, mergedRimBounds.Height / 2)), CombineMode.Intersect);
+            using (var highlightPen = new Pen(palette.HighlightStroke, Math.Max(1.1f, EffectiveScale)))
+            {
+                highlightPen.LineJoin = LineJoin.Round;
+                g.DrawPath(highlightPen, rimPath);
+            }
+            g.Restore(highlightState);
+
+            using var faceOutlinePen = new Pen(Color.FromArgb(92, palette.HighlightStroke));
+            using var outerOutlinePen = new Pen(Color.FromArgb(124, palette.OuterStroke));
+            g.DrawPath(faceOutlinePen, facePath);
+            g.DrawPath(outerOutlinePen, outerPath);
+
+            if (emphasized)
+            {
+                Color selectionAccent = GetPowerSelectionAccentColor(CurrentApplicationTheme, theme);
+                using var selectionGlowPen = new Pen(Color.FromArgb(82, selectionAccent), Math.Max(1.8f, EffectiveScale * 1.8f));
+                using var selectionStrokePen = new Pen(Color.FromArgb(184, Blend(selectionAccent, Color.White, 0.18f)), Math.Max(1.0f, EffectiveScale * 1.05f));
+                selectionGlowPen.LineJoin = LineJoin.Round;
+                selectionStrokePen.LineJoin = LineJoin.Round;
+                g.DrawPath(selectionGlowPen, outerPath);
+                g.DrawPath(selectionStrokePen, rimPath);
+            }
+
+            Rectangle topLineBounds = DeflateRect(mergedRimBounds, Math.Max(1, ScaleLogical(1)));
+            if (topLineBounds.Width > 0 && topLineBounds.Height > 0)
+            {
+                var lineState = g.Save();
+                g.SetClip(new Rectangle(topLineBounds.X, topLineBounds.Y, topLineBounds.Width, Math.Max(2, topLineBounds.Height / 3)), CombineMode.Intersect);
+                using var topLinePen = new Pen(Color.FromArgb(140, Blend(palette.HighlightStroke, Color.White, 0.25f)), Math.Max(1f, EffectiveScale));
+                g.DrawPath(topLinePen, rimPath);
+                g.Restore(lineState);
+            }
+
+            DrawIconWell(g, iconWellRect, palette);
+        }
+
+        private void DrawPowerIcon(PowerEntry? powerEntry, Rectangle iconWellRect, bool grey, PowerSlotPalette palette)
+        {
+            if (BxBuffer?.Graphics == null || powerEntry?.Power == null || iconWellRect.Width <= 0 || iconWellRect.Height <= 0)
+            {
+                return;
+            }
+
+            var icon = AssetManager.GetPowerImage(powerEntry.Power);
+            if (icon == AssetManager.UnknownIcon)
+            {
+                icon = AssetManager.GetPowersetImage(powerEntry.Power);
+            }
+
+            var bitmap = icon?.Bitmap;
+            if (bitmap == null || icon == AssetManager.UnknownIcon)
+            {
+                return;
+            }
+
+            Rectangle socketRect = GetIconSocketRect(iconWellRect);
+            if (socketRect.Width <= 0 || socketRect.Height <= 0)
+            {
+                return;
+            }
+
+            Rectangle destRect = GetSocketIconDestinationRect(bitmap, socketRect);
+            using var clipPath = new GraphicsPath();
+            clipPath.AddEllipse(socketRect);
+
+            GraphicsState priorState = BxBuffer.Graphics.Save();
+            BxBuffer.Graphics.SetClip(clipPath);
+
+            if (grey)
+            {
+                using var greyIa = Desaturate(true, true);
+                BxBuffer.Graphics.DrawImage(bitmap, destRect, 0, 0, bitmap.Width, bitmap.Height, GraphicsUnit.Pixel, greyIa);
             }
             else
             {
-                BxBuffer.Graphics.DrawString(text, font, textBrush, textRect, stringFormat);
+                BxBuffer.Graphics.DrawImage(bitmap, destRect);
             }
 
-            textBrush.Dispose();
+            BxBuffer.Graphics.Restore(priorState);
+
+            if (grey)
+            {
+                using var dimmer = new SolidBrush(Color.FromArgb(72, 0, 0, 0));
+                BxBuffer.Graphics.FillEllipse(dimmer, socketRect);
+            }
         }
 
-        private void DrawVectorPowerSlot(Graphics g, Rectangle bounds, ePowerState state, PowerSlotTheme theme)
+        private void DrawIconWellOverlay(Graphics g, Rectangle wellRect, PowerSlotPalette palette, Rectangle? customSocketRect = null)
         {
-            g.SmoothingMode = SmoothingMode.HighQuality;
+            if (wellRect.Width <= 0 || wellRect.Height <= 0)
+            {
+                return;
+            }
 
-            using var path = new GraphicsPath();
+            Rectangle socketRect = customSocketRect ?? GetIconSocketRect(wellRect);
+            if (socketRect.Width <= 0 || socketRect.Height <= 0)
+            {
+                return;
+            }
+
+            using var socketPath = new GraphicsPath();
+            socketPath.AddEllipse(socketRect);
+
+            Color cavityShadow = Blend(palette.FillBottom, Color.Black, 0.82f);
+            Color deepShadow = Blend(cavityShadow, Color.Black, 0.26f);
+            Color upperShadow = Blend(palette.InnerShadow, Color.Black, 0.64f);
+
+            var upperLeftShadeState = g.Save();
+            g.SetClip(socketPath, CombineMode.Intersect);
+            using (var upperLeftShadeBrush = new LinearGradientBrush(
+                       new PointF(socketRect.Left, socketRect.Top),
+                       new PointF(socketRect.Right, socketRect.Bottom),
+                       Color.FromArgb(72, upperShadow),
+                       Color.FromArgb(0, upperShadow)))
+            {
+                g.FillPath(upperLeftShadeBrush, socketPath);
+            }
+            g.Restore(upperLeftShadeState);
+
+            float aoWidth = Math.Max(2.0f, EffectiveScale * 2.2f);
+            var ambientOcclusionState = g.Save();
+            g.SetClip(socketPath, CombineMode.Intersect);
+            using (var aoPen = new Pen(Color.FromArgb(60, upperShadow), aoWidth))
+            {
+                g.DrawEllipse(aoPen, socketRect);
+            }
+            g.Restore(ambientOcclusionState);
+
+            var upperArcState = g.Save();
+            g.SetClip(socketPath, CombineMode.Intersect);
+            g.SetClip(new Rectangle(
+                socketRect.X,
+                socketRect.Y,
+                Math.Max(2, (int)Math.Round(socketRect.Width * 0.68f)),
+                Math.Max(2, (int)Math.Round(socketRect.Height * 0.62f))),
+                CombineMode.Intersect);
+            using (var upperArcPen = new Pen(Color.FromArgb(92, Blend(upperShadow, Color.Black, 0.24f)), Math.Max(2.2f, EffectiveScale * 2.4f)))
+            {
+                g.DrawEllipse(upperArcPen, socketRect);
+            }
+            g.Restore(upperArcState);
+
+            Rectangle innerOcclusionRect = DeflateRect(socketRect, Math.Max(1, ScaleLogical(1)));
+            if (innerOcclusionRect.Width > 0 && innerOcclusionRect.Height > 0)
+            {
+                var innerOcclusionState = g.Save();
+                g.SetClip(socketPath, CombineMode.Intersect);
+                g.SetClip(new Rectangle(
+                    innerOcclusionRect.X,
+                    innerOcclusionRect.Y,
+                    Math.Max(2, (int)Math.Round(innerOcclusionRect.Width * 0.76f)),
+                    Math.Max(2, (int)Math.Round(innerOcclusionRect.Height * 0.72f))),
+                    CombineMode.Intersect);
+                using (var innerOcclusionPen = new Pen(Color.FromArgb(70, deepShadow), Math.Max(1.2f, EffectiveScale * 1.45f)))
+                {
+                    g.DrawEllipse(innerOcclusionPen, innerOcclusionRect);
+                }
+                g.Restore(innerOcclusionState);
+            }
+
+            Rectangle innerStrokeRect = DeflateRect(socketRect, Math.Max(1, ScaleLogical(1)));
+            if (innerStrokeRect.Width > 0 && innerStrokeRect.Height > 0)
+            {
+                using var socketInnerShadowStroke = new Pen(Color.FromArgb(56, Blend(palette.OuterStroke, Color.Black, 0.24f)));
+                g.DrawEllipse(socketInnerShadowStroke, innerStrokeRect);
+            }
+        }
+
+        private void DrawIconWell(Graphics g, Rectangle wellRect, PowerSlotPalette palette, Rectangle? customSocketRect = null)
+        {
+            if (wellRect.Width <= 0 || wellRect.Height <= 0)
+            {
+                return;
+            }
+
+            Rectangle ringRect = DeflateRect(wellRect, Math.Max(2, ScaleLogical(2)));
+            Rectangle midRingRect = DeflateRect(wellRect, Math.Max(3, ScaleLogical(3)));
+            Rectangle innerBevelRect = DeflateRect(wellRect, Math.Max(4, ScaleLogical(4)));
+            Rectangle socketRect = customSocketRect ?? GetIconSocketRect(wellRect);
+
+            if (ringRect.Width <= 0 || ringRect.Height <= 0)
+            {
+                return;
+            }
+
+            using var ringPath = new GraphicsPath();
+            ringPath.AddEllipse(ringRect);
+            using var ringBrush = CreateThreeStopBrush(ringRect, palette.RimTop, Blend(palette.RimTop, palette.RimBottom, 0.45f), palette.RimBottom);
+            g.FillPath(ringBrush, ringPath);
+
+            if (midRingRect.Width > 0 && midRingRect.Height > 0)
+            {
+                using var midRingPath = new GraphicsPath();
+                midRingPath.AddEllipse(midRingRect);
+                using var midRingBrush = CreateThreeStopBrush(
+                    midRingRect,
+                    Blend(palette.RimTop, Color.White, 0.20f),
+                    Blend(palette.RimTop, palette.FillTop, 0.28f),
+                    Blend(palette.RimBottom, Color.Black, 0.10f));
+                g.FillPath(midRingBrush, midRingPath);
+            }
+
+            if (innerBevelRect.Width > 0 && innerBevelRect.Height > 0)
+            {
+                using var innerBevelPath = new GraphicsPath();
+                innerBevelPath.AddEllipse(innerBevelRect);
+                using var innerBevelBrush = CreateThreeStopBrush(
+                    innerBevelRect,
+                    Blend(palette.RimTop, palette.FillTop, 0.16f),
+                    Blend(palette.RimBottom, palette.FillBottom, 0.34f),
+                    Blend(palette.RimBottom, Color.Black, 0.36f));
+                g.FillPath(innerBevelBrush, innerBevelPath);
+            }
+
+            if (socketRect.Width <= 0 || socketRect.Height <= 0)
+            {
+                return;
+            }
+
+            using var socketPath = new GraphicsPath();
+            socketPath.AddEllipse(socketRect);
+            Color cavityBase = Blend(palette.FillBottom, Color.Black, 0.66f);
+            using (var socketBaseBrush = new SolidBrush(cavityBase))
+            {
+                g.FillPath(socketBaseBrush, socketPath);
+            }
+
+            using (var cavityDepthBrush = new PathGradientBrush(socketPath)
+            {
+                CenterColor = Color.FromArgb(216, Color.Black),
+                CenterPoint = new PointF(socketRect.X + socketRect.Width * 0.50f, socketRect.Y + socketRect.Height * 0.50f),
+                SurroundColors = Enumerable.Repeat(Color.FromArgb(0, Color.Black), socketPath.PathPoints.Length).ToArray(),
+                FocusScales = new PointF(0.28f, 0.28f)
+            })
+            {
+                g.FillPath(cavityDepthBrush, socketPath);
+            }
+
+            var ringHighlightState = g.Save();
+            g.SetClip(new Rectangle(ringRect.X, ringRect.Y, ringRect.Width, Math.Max(2, ringRect.Height / 2)), CombineMode.Intersect);
+            using (var ringHighlightPen = new Pen(Color.FromArgb(88, palette.HighlightStroke), Math.Max(1.0f, EffectiveScale)))
+            {
+                g.DrawPath(ringHighlightPen, ringPath);
+            }
+            g.Restore(ringHighlightState);
+
+        }
+
+        private PowerSlotPalette GetPowerSlotPalette(ePowerState state, PowerSlotTheme theme)
+        {
+            Color gradientTop = ResolveColor(theme.GradientTop, Color.FromArgb(84, 140, 220));
+            Color gradientBottom = ResolveColor(theme.GradientBottom, Color.FromArgb(18, 72, 138));
+            Color border = ResolveColor(theme.Border, gradientBottom);
+            Color openBorder = ResolveColor(theme.OpenBorder, Blend(border, Color.White, 0.35f));
+            Color emptyFill = ResolveColor(theme.EmptyFill, Color.FromArgb(54, 58, 68));
+            Color disabledFill = ResolveColor(theme.DisabledFill, Color.FromArgb(36, 38, 44));
+
+            return state switch
+            {
+                ePowerState.Disabled => CreatePowerSlotPalette(
+                    Blend(disabledFill, border, 0.10f),
+                    Blend(disabledFill, Color.White, 0.08f),
+                    Blend(disabledFill, Color.Black, 0.40f),
+                    Blend(disabledFill, Color.White, 0.10f)),
+                ePowerState.Empty => CreatePowerSlotPalette(
+                    Blend(emptyFill, border, 0.24f),
+                    Blend(emptyFill, gradientTop, 0.18f),
+                    Blend(emptyFill, Color.Black, 0.28f),
+                    Blend(emptyFill, Color.White, 0.16f)),
+                ePowerState.Open => CreatePowerSlotPalette(
+                    border,
+                    Blend(gradientTop, Color.White, 0.10f),
+                    Blend(gradientBottom, Color.Black, 0.05f),
+                    Blend(openBorder, gradientTop, 0.28f)),
+                ePowerState.Used => CreatePowerSlotPalette(
+                    Blend(border, Color.Black, 0.08f),
+                    Blend(gradientTop, Color.White, 0.06f),
+                    Blend(gradientBottom, Color.Black, 0.09f),
+                    Blend(openBorder, gradientTop, 0.22f)),
+                _ => CreatePowerSlotPalette(
+                    Blend(emptyFill, border, 0.24f),
+                    Blend(emptyFill, gradientTop, 0.18f),
+                    Blend(emptyFill, Color.Black, 0.28f),
+                    Blend(emptyFill, Color.White, 0.16f))
+            };
+        }
+
+        private Color GetPowerSelectionAccentColor(ApplicationTheme applicationTheme, PowerSlotTheme slotTheme)
+        {
+            Color menuAccent = applicationTheme == null ? Color.Empty : applicationTheme.MenuStrip.AccentColor;
+            Color hoverBorder = applicationTheme == null ? Color.Empty : applicationTheme.DropDownList.HoverBorder;
+            Color openBorder = slotTheme == null ? Color.Empty : slotTheme.OpenBorder;
+
+            return ResolveColor(menuAccent,
+                ResolveColor(hoverBorder,
+                    ResolveColor(openBorder, Color.Gold)));
+        }
+
+        private static PowerSlotPalette CreatePowerSlotPalette(Color rimBase, Color fillTop, Color fillBottom, Color highlightBase)
+        {
+            Color outerStroke = Blend(rimBase, Color.Black, 0.52f);
+            Color rimTop = Blend(rimBase, Color.White, 0.18f);
+            Color rimBottom = Blend(rimBase, Color.Black, 0.22f);
+            Color fillMid = Blend(fillTop, fillBottom, 0.56f);
+            Color glossTop = Color.FromArgb(92, highlightBase);
+            Color glossBottom = Color.FromArgb(0, highlightBase);
+            Color innerShadow = Color.FromArgb(104, Blend(fillBottom, Color.Black, 0.58f));
+            Color highlightStroke = Color.FromArgb(122, Blend(highlightBase, Color.White, 0.14f));
+            return new PowerSlotPalette(outerStroke, rimTop, rimBottom, fillTop, fillMid, fillBottom, glossTop, glossBottom, innerShadow, highlightStroke);
+        }
+
+        private static Rectangle DeflateRect(Rectangle rect, int amount)
+        {
+            return new Rectangle(
+                rect.X + amount,
+                rect.Y + amount,
+                Math.Max(0, rect.Width - amount * 2),
+                Math.Max(0, rect.Height - amount * 2));
+        }
+
+        private static GraphicsPath CreateCapsulePath(Rectangle bounds)
+        {
+            var path = new GraphicsPath();
+            if (bounds.Width <= 0 || bounds.Height <= 0)
+            {
+                return path;
+            }
+
+            if (bounds.Width <= bounds.Height)
+            {
+                path.AddEllipse(bounds);
+                return path;
+            }
+
             path.AddArc(bounds.X, bounds.Y, bounds.Height, bounds.Height, 90, 180);
             path.AddArc(bounds.Right - bounds.Height, bounds.Y, bounds.Height, bounds.Height, 270, 180);
             path.CloseFigure();
+            return path;
+        }
 
-            switch (state)
+        private static GraphicsPath CreateMergedPowerSlotPath(Rectangle bodyBounds, Rectangle wellBounds)
+        {
+            var path = new GraphicsPath
             {
-                case ePowerState.Disabled: // pSlot0.png
-                    g.FillPath(new SolidBrush(theme.DisabledFill), path);
-                    using (var pen = new Pen(Color.FromArgb(60, 60, 60)))
-                        g.DrawPath(pen, path);
-                    break;
+                FillMode = FillMode.Winding
+            };
 
-                case ePowerState.Empty: // pSlot1.png
-                    g.FillPath(new SolidBrush(theme.EmptyFill), path);
-                    break;
-
-                case ePowerState.Open: // pSlot3.png and pSlot5.png
-                    g.FillPath(new SolidBrush(theme.OpenBorder), path);
-                    Rectangle innerBounds = bounds;
-                    innerBounds.Inflate(-3, -3); // Create the thick border effect
-                    using (var innerPath = new GraphicsPath())
-                    {
-                        innerPath.AddArc(innerBounds.X, innerBounds.Y, innerBounds.Height, innerBounds.Height, 90, 180);
-                        innerPath.AddArc(innerBounds.Right - innerBounds.Height, innerBounds.Y, innerBounds.Height, innerBounds.Height, 270, 180);
-                        innerPath.CloseFigure();
-                        using var fillBrush = new LinearGradientBrush(bounds, theme.GradientTop, theme.GradientBottom, 90f);
-                        g.FillPath(fillBrush, innerPath);
-                    }
-                    break;
-
-                case ePowerState.Used: // pSlot2.png and pSlot4.png
-                default:
-                    using (var fillBrush = new LinearGradientBrush(bounds, theme.GradientTop, theme.GradientBottom, 90f))
-                    {
-                        g.FillPath(fillBrush, path);
-                    }
-                    using (var borderPen = new Pen(theme.Border, 1.5f))
-                    {
-                        g.DrawPath(borderPen, path);
-                    }
-                    break;
+            if (bodyBounds.Width > 0 && bodyBounds.Height > 0)
+            {
+                using var bodyPath = CreateCapsulePath(bodyBounds);
+                path.AddPath(bodyPath, false);
             }
+
+            if (wellBounds.Width > 0 && wellBounds.Height > 0)
+            {
+                path.AddEllipse(wellBounds);
+            }
+
+            return path;
+        }
+
+        private static LinearGradientBrush CreateThreeStopBrush(Rectangle bounds, Color top, Color middle, Color bottom)
+        {
+            var brush = new LinearGradientBrush(bounds, top, bottom, 90f);
+            brush.InterpolationColors = new ColorBlend
+            {
+                Colors = [top, middle, bottom],
+                Positions = [0f, 0.52f, 1f]
+            };
+            return brush;
+        }
+
+        private static Rectangle GetAspectFitBounds(Size sourceSize, Rectangle bounds)
+        {
+            if (sourceSize.Width <= 0 || sourceSize.Height <= 0 || bounds.Width <= 0 || bounds.Height <= 0)
+            {
+                return bounds;
+            }
+
+            float scale = Math.Min((float)bounds.Width / sourceSize.Width, (float)bounds.Height / sourceSize.Height);
+            int width = Math.Max(1, (int)Math.Round(sourceSize.Width * scale));
+            int height = Math.Max(1, (int)Math.Round(sourceSize.Height * scale));
+            int x = bounds.X + (bounds.Width - width) / 2;
+            int y = bounds.Y + (bounds.Height - height) / 2;
+            return new Rectangle(x, y, width, height);
+        }
+
+        private static Color ResolveColor(Color candidate, Color fallback)
+        {
+            return candidate.IsEmpty ? fallback : candidate;
+        }
+
+        private static Color Blend(Color first, Color second, float amountSecond)
+        {
+            amountSecond = Math.Clamp(amountSecond, 0f, 1f);
+            float amountFirst = 1f - amountSecond;
+            return Color.FromArgb(
+                (int)Math.Round(first.A * amountFirst + second.A * amountSecond),
+                (int)Math.Round(first.R * amountFirst + second.R * amountSecond),
+                (int)Math.Round(first.G * amountFirst + second.G * amountSecond),
+                (int)Math.Round(first.B * amountFirst + second.B * amountSecond));
         }
 
         public void GetPowersLayout()
@@ -1796,6 +2678,9 @@ namespace Mids_Reborn.UI.Renderer
                 return new Rectangle(0, 0, 1, 1);
 
             var powerEntry = MidsContext.Character.CurrentBuild.Powers[hIdx];
+            if (ShouldSuppressHiddenSupportPower(powerEntry))
+                return Rectangle.Empty;
+
             var location = !powerEntry.Chosen && powerEntry.Power != null
                 ? PowerPosition(hIdx)
                 : PowerPosition(GetVisualIdx(hIdx));
@@ -2493,8 +3378,8 @@ namespace Mids_Reborn.UI.Renderer
             // This now returns the top-left coordinate of the CELL.
             int x = col * _calculatedCellWidth;
 
-            // The Y calculation remains correct.
-            int y = row * (SzPower.Height + ScaleLogical(2) + SzSlot.Height);
+            int y = ignorePadding ? 0 : GetPowerTopInset();
+            y += row * (SzPower.Height + ScaleLogical(2) + SzSlot.Height);
             if (row >= _vcRowsPowers)
                 y += OffsetInherent;
             if (_ColumnStackingMode != eColumnStacking.None)
@@ -2520,6 +3405,9 @@ namespace Mids_Reborn.UI.Renderer
                 result.Height = result.Height + SzPower.Height + PaddingY;
                 for (var i = 0; i < MidsContext.Character.CurrentBuild.Powers.Count; i++)
                 {
+                    if (ShouldSuppressHiddenSupportPower(MidsContext.Character.CurrentBuild.Powers[i]))
+                        continue;
+
                     if (MidsContext.Character.CurrentBuild.Powers[i] != null && (MidsContext.Character.CurrentBuild.Powers[i].Power == null || MidsContext.Character.CurrentBuild.Powers[i].Chosen && i > MidsContext.Character.CurrentBuild.LastPower))
                         continue;
                     var size = new Size(result.Width, PowerPosition(i).Y + SzPower.Height + PaddingY);
@@ -2549,7 +3437,7 @@ namespace Mids_Reborn.UI.Renderer
 
             // --- Main grid height (24 picks across _vcCols/_vcRowsPowers) ---
             int mainRows = Math.Max(1, _vcRowsPowers);
-            int height = mainRows * cellCore;
+            int height = GetPowerTopInset() + mainRows * cellCore;
 
             // Stacked layouts reserve extra header room (matches CRtoXy�s Y-offset)
             if (_ColumnStackingMode != eColumnStacking.None)
@@ -2570,6 +3458,9 @@ namespace Mids_Reborn.UI.Renderer
                 var rows = new HashSet<int>();
                 for (int i = 0; i < powers.Count; i++)
                 {
+                    if (ShouldSuppressHiddenSupportPower(powers[i]))
+                        continue;
+
                     var cr = PowerPositionCr(powers[i], -1);
                     if (cr.Y >= _vcRowsPowers)
                         rows.Add(cr.Y);

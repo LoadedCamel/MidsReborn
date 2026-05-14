@@ -50,6 +50,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private readonly Button btnPowerIconBrowse = new();
         private readonly Button btnPowerIconClear = new();
         private readonly OpenFileDialog powerIconPicker = new();
+        private readonly CheckBox chkShowInSpecialPowerPicker = new();
+        private readonly Label lblSpecialPowerPickerDestination = new();
 
         public frmEditPower(IPower? iPower, bool editMode = false)
         {
@@ -60,6 +62,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             ReqChanging = false;
             InitializeComponent();
             InitializePlannerMetadataUi();
+            InitializeSpecialPowerPickerUi();
             //var componentResourceManager = new ComponentResourceManager(typeof(frmEditPower));
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEditPower);
@@ -93,6 +96,30 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             InitializeRootTimeUi();
             InitializeSharedRechargeUi();
             InitializePowerIconUi();
+        }
+
+        private void InitializeSpecialPowerPickerUi()
+        {
+            GroupBox4.Size = new Size(GroupBox4.Width, 272);
+
+            chkShowInSpecialPowerPicker.Location = new Point(6, 198);
+            chkShowInSpecialPowerPicker.Name = nameof(chkShowInSpecialPowerPicker);
+            chkShowInSpecialPowerPicker.Size = new Size(202, 23);
+            chkShowInSpecialPowerPicker.TabIndex = 45;
+            chkShowInSpecialPowerPicker.Text = @"Show in Special Power Picker";
+            chkShowInSpecialPowerPicker.UseVisualStyleBackColor = true;
+            chkShowInSpecialPowerPicker.CheckedChanged += chkShowInSpecialPowerPicker_CheckedChanged;
+
+            lblSpecialPowerPickerDestination.Location = new Point(6, 222);
+            lblSpecialPowerPickerDestination.Name = nameof(lblSpecialPowerPickerDestination);
+            lblSpecialPowerPickerDestination.Size = new Size(202, 27);
+            lblSpecialPowerPickerDestination.Text = @"Picker Destination: N/A";
+
+            Label21.Location = new Point(8, 252);
+            txtVisualLocation.Location = new Point(87, 249);
+
+            GroupBox4.Controls.Add(chkShowInSpecialPowerPicker);
+            GroupBox4.Controls.Add(lblSpecialPowerPickerDestination);
         }
 
         private void InitializePowerIconUi()
@@ -1015,6 +1042,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             myPower.InherentType = (Enums.eGridType)cbInherentType.SelectedIndex;
+            UpdateSpecialPowerPickerUi();
         }
 
         private void cbNameGroup_Leave(object sender, EventArgs e)
@@ -1368,6 +1396,17 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             cbInherentType.Enabled = chkSubInclude.CheckState == CheckState.Checked;
             myPower.IncludeFlag = chkSubInclude.Checked;
+            UpdateSpecialPowerPickerUi();
+        }
+
+        private void chkShowInSpecialPowerPicker_CheckedChanged(object? sender, EventArgs e)
+        {
+            if (Updating)
+            {
+                return;
+            }
+
+            myPower.ShowInSpecialPowerPicker = chkShowInSpecialPowerPicker.Checked;
         }
 
         private void chkSummonDisplayEntity_CheckedChanged(object sender, EventArgs e)
@@ -1839,6 +1878,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             cbInherentType.SelectedIndex = (int)myPower.InherentType;
             //chkAltSub.Checked = power.SubIsAltColor;
             chkSubInclude.Checked = myPower.IncludeFlag;
+            chkShowInSpecialPowerPicker.Checked = myPower.ShowInSpecialPowerPicker;
             chkSortOverride.Checked = myPower.SortOverride;
             txtVisualLocation.Text = $"{myPower.DisplayLocation}";
             chkSummonStealEffects.Checked = myPower.AbsorbSummonEffects;
@@ -1849,6 +1889,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             chkNoAutoUpdate.Checked = myPower.NeverAutoUpdate;
             chkHidden.Visible = true;
             chkHidden.Checked = myPower.HiddenPower;
+            UpdateSpecialPowerPickerUi();
         }
 
         private void FillTab_Disabling()
@@ -2055,6 +2096,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             {
                 cbInherentType.Enabled = true;
             }
+
+            UpdateSpecialPowerPickerUi();
 
             /*foreach (var boost in myPower.BoostsAllowed)
             {
@@ -2918,6 +2961,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private void SetFullName()
         {
             myPower.FullName = $"{myPower.GroupName}.{myPower.SetName}.{myPower.PowerName}";
+            UpdateSpecialPowerPickerUi();
             if (Updating)
             {
                 return;
@@ -2925,6 +2969,24 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             ResetModifierContextSelection();
             RefreshFXData(lvFX.SelectedIndex < 0 ? 0 : lvFX.SelectedIndex);
+        }
+
+        private void UpdateSpecialPowerPickerUi()
+        {
+            var destinationLabel = SpecialPowerCatalog.GetSpecialPowerPickerDestinationLabel(myPower);
+            var canAssignToPicker = SpecialPowerCatalog.CanAssignToSpecialPowerPicker(myPower);
+
+            lblSpecialPowerPickerDestination.Text = $@"Picker Destination: {destinationLabel}";
+            chkShowInSpecialPowerPicker.Enabled = canAssignToPicker;
+
+            if (!canAssignToPicker)
+            {
+                myPower.ShowInSpecialPowerPicker = false;
+                chkShowInSpecialPowerPicker.Checked = false;
+                return;
+            }
+
+            chkShowInSpecialPowerPicker.Checked = myPower.ShowInSpecialPowerPicker;
         }
 
         private void SP_GroupList()

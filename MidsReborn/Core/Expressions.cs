@@ -8,6 +8,7 @@ using System.Text.RegularExpressions;
 using Jace;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
 using Mids_Reborn.Core.PlannerRulesets;
 using static Mids_Reborn.Core.Base.Data_Classes.Character;
 
@@ -557,7 +558,7 @@ namespace Mids_Reborn.Core
                 InfixMode = ExprKeywordInfix.Atomic,
                 CommandTokenType = ExprCommandToken.None,
                 SingleToken = true
-            }
+            },
         };
 
         private static Dictionary<string, string> CommandsDict(IEffect sourceFx)
@@ -1192,6 +1193,16 @@ namespace Mids_Reborn.Core
 
         private static string OwnPowerNumCheck(string powerName)
         {
+            if (PlannerStateCatalog.TryEvaluatePlannerPowerCount(
+                    powerName,
+                    mode => MidsContext.Character?.ActivePlannerModes.Contains(mode) == true,
+                    fullName => MidsContext.Character?.PlannerStateStacks.TryGetValue(fullName, out var stacks) == true ? stacks : 0,
+                    MidsContext.Character?.IsStalker == true,
+                    out var plannerCount))
+            {
+                return $"{plannerCount}";
+            }
+
             var power = MidsContext.Character?.CurrentBuild?.Powers.FirstOrDefault(p => p is { Power: not null } && p.Power.FullName.Equals(powerName, StringComparison.InvariantCultureIgnoreCase));
             return power != null ? "1" : "0";
         }
@@ -1461,7 +1472,13 @@ namespace Mids_Reborn.Core
 
         private static string GetVariableValue(string powerName, bool absoluteValue = true)
         {
-            var target = MidsContext.Character?.CurrentBuild?.Powers.FirstOrDefault(x => x is { Power: not null } && x.Power.FullName == powerName);
+            var resolvedPowerName = PlannerStateCatalog.ResolveVariableSourcePower(powerName);
+            var target = MidsContext.Character?.CurrentBuild?.Powers.FirstOrDefault(x => x is { Power: not null } && x.Power.FullName.Equals(resolvedPowerName, StringComparison.OrdinalIgnoreCase));
+            if (target is { StatInclude: false } &&
+                PlannerStateCatalog.IsVariablePlannerPower(resolvedPowerName))
+            {
+                return "0";
+            }
 
             return target == null
                 ? "0"

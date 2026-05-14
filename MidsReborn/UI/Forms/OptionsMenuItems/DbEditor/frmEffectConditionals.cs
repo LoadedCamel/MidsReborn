@@ -166,7 +166,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             var suffix = GetEvaluationModeSuffix(row);
             return row.Kind switch
             {
-                AdvancedConditionKind.SourceMode => $"Source Mode:{row.Subject}{suffix}",
+                AdvancedConditionKind.SourceMode => $"Source Mode:{FormatModeSubject(row.Subject)}{suffix}",
                 AdvancedConditionKind.PowerActive => $"Power Active:{GetPowerDisplayName(row.Subject)}",
                 AdvancedConditionKind.PowerTaken => $"Power Taken:{GetPowerDisplayName(row.Subject)}",
                 AdvancedConditionKind.PowerStacks => $"Stacks:{GetPowerDisplayName(row.Subject)}",
@@ -181,6 +181,13 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 AdvancedConditionKind.AdvancedExpression => $"Advanced:{row.RawExpression}{suffix}",
                 _ => $"{row.Kind}:{row.Subject}{suffix}"
             };
+        }
+
+        private static string FormatModeSubject(string modeName)
+        {
+            return PlannerModeMapper.TryGetPlannerMode(modeName, out var plannerMode)
+                ? PlannerModeMapper.ToDisplayName(plannerMode)
+                : modeName;
         }
 
         private static string GetEvaluationModeSuffix(AdvancedConditionRow row)
@@ -451,18 +458,14 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     }
                     break;
                 case "Source Mode":
-                    AddNamedChoices([
-                        "DefensiveAdaptation",
-                        "EfficientAdaptation",
-                        "OffensiveAdaptation",
-                        "Domination",
-                        "Scourge",
-                        "Containment",
-                        "CriticalHit",
-                        "Assassination",
-                        "FastSnipe",
-                        "Engaged"
-                    ]);
+                    AddNamedChoices(
+                        Enum.GetValues(typeof(PlannerMode))
+                            .Cast<PlannerMode>()
+                            .Where(mode => mode != PlannerMode.None)
+                            .Select(PlannerModeMapper.ToCanonicalName)
+                            .Where(name => !string.IsNullOrWhiteSpace(name))
+                            .Distinct(StringComparer.OrdinalIgnoreCase)
+                            .OrderBy(name => name, StringComparer.OrdinalIgnoreCase));
                     break;
                 case "Target Entity Type":
                     AddTargetScopeChoices(_choices);
