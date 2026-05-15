@@ -625,6 +625,7 @@ public sealed partial class OmniImporter
         var powerFilesByFullName = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         var temporaryPowerFiles = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         var cachedTemporaryPowerRefsByFile = new Dictionary<string, IReadOnlyList<string>>(StringComparer.OrdinalIgnoreCase);
+        var pendingReferencedPowers = new Queue<string>();
         var pendingTemporaryPowers = new Queue<string>();
         var pendingEntities = new Queue<string>();
         var initialPetPowersets = result.Scope.RetainedPowersets
@@ -637,11 +638,15 @@ public sealed partial class OmniImporter
         var processedTemporaryPowers = new HashSet<string>(
             result.Scope.RetainedPowerFullNames.Where(IsTemporaryPowerFullName),
             StringComparer.OrdinalIgnoreCase);
+        var processedReferencedPowers = new HashSet<string>(
+            result.Scope.RetainedPowerFullNames.Where(fullName => !IsTemporaryPowerFullName(fullName)),
+            StringComparer.OrdinalIgnoreCase);
         var processedEntities = new HashSet<string>(
             result.Scope.RetainedEntityIds.Select(NormalizeEntityKey),
             StringComparer.OrdinalIgnoreCase);
         var processedPetPowersets = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var queuedTemporaryPowers = new HashSet<string>(processedTemporaryPowers, StringComparer.OrdinalIgnoreCase);
+        var queuedReferencedPowers = new HashSet<string>(processedReferencedPowers, StringComparer.OrdinalIgnoreCase);
         var queuedEntities = new HashSet<string>(processedEntities, StringComparer.OrdinalIgnoreCase);
         var queuedPetPowersets = new HashSet<string>(initialPetPowersets, StringComparer.OrdinalIgnoreCase);
 
@@ -706,14 +711,47 @@ public sealed partial class OmniImporter
 
             EnqueueReferencedEntities(power, result, pendingEntities, queuedEntities);
             EnqueueReferencedTemporaryPowers(file, pendingTemporaryPowers, queuedTemporaryPowers, cachedTemporaryPowerRefsByFile);
+            EnqueueReferencedRedirectPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
         }
 
         var processedClosureItems = 0;
-        var observedClosureItems = Math.Max(1, pendingTemporaryPowers.Count + pendingEntities.Count + pendingPetPowersets.Count);
+        var observedClosureItems = Math.Max(1, pendingReferencedPowers.Count + pendingTemporaryPowers.Count + pendingEntities.Count + pendingPetPowersets.Count);
         ReportClosureProgress();
 
-        while (pendingTemporaryPowers.Count > 0 || pendingEntities.Count > 0 || pendingPetPowersets.Count > 0)
+        while (pendingReferencedPowers.Count > 0 || pendingTemporaryPowers.Count > 0 || pendingEntities.Count > 0 || pendingPetPowersets.Count > 0)
         {
+            while (pendingReferencedPowers.Count > 0)
+            {
+                processedClosureItems++;
+                var canonicalPower = CanonicalizeOmniFullName(pendingReferencedPowers.Dequeue());
+                if (string.IsNullOrWhiteSpace(canonicalPower) ||
+                    IsTemporaryPowerFullName(canonicalPower) ||
+                    !processedReferencedPowers.Add(canonicalPower))
+                {
+                    ReportClosureProgress();
+                    continue;
+                }
+
+                result.Scope.AddRetainedPower(canonicalPower);
+                if (!powerFilesByFullName.TryGetValue(canonicalPower, out var file))
+                {
+                    ReportClosureProgress();
+                    continue;
+                }
+
+                var power = ReadJson<OmniPowerDefinition>(file);
+                if (power == null || ShouldSkipPowerDefinition(power))
+                {
+                    ReportClosureProgress();
+                    continue;
+                }
+
+                EnqueueReferencedEntities(power, result, pendingEntities, queuedEntities);
+                EnqueueReferencedTemporaryPowers(file, pendingTemporaryPowers, queuedTemporaryPowers, cachedTemporaryPowerRefsByFile);
+                EnqueueReferencedRedirectPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
+                ReportClosureProgress();
+            }
+
             while (pendingTemporaryPowers.Count > 0)
             {
                 processedClosureItems++;
@@ -740,6 +778,7 @@ public sealed partial class OmniImporter
 
                 EnqueueReferencedEntities(power, result, pendingEntities, queuedEntities);
                 EnqueueReferencedTemporaryPowers(file, pendingTemporaryPowers, queuedTemporaryPowers, cachedTemporaryPowerRefsByFile);
+                EnqueueReferencedRedirectPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
                 ReportClosureProgress();
             }
 
@@ -774,8 +813,10 @@ public sealed partial class OmniImporter
                     powerFilesByFullName,
                     result.Scope,
                     result,
+                    pendingReferencedPowers,
                     pendingEntities,
                     pendingTemporaryPowers,
+                    queuedReferencedPowers,
                     queuedEntities,
                     queuedTemporaryPowers,
                     cachedTemporaryPowerRefsByFile);
@@ -828,6 +869,7 @@ public sealed partial class OmniImporter
 
                     EnqueueReferencedEntities(power, result, pendingEntities, queuedEntities);
                     EnqueueReferencedTemporaryPowers(file, pendingTemporaryPowers, queuedTemporaryPowers, cachedTemporaryPowerRefsByFile);
+                    EnqueueReferencedRedirectPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
                 }
 
                 ReportClosureProgress();
@@ -836,12 +878,12 @@ public sealed partial class OmniImporter
 
         void ReportClosureProgress()
         {
-            var pendingCount = pendingTemporaryPowers.Count + pendingEntities.Count + pendingPetPowersets.Count;
+            var pendingCount = pendingReferencedPowers.Count + pendingTemporaryPowers.Count + pendingEntities.Count + pendingPetPowersets.Count;
             observedClosureItems = Math.Max(observedClosureItems, processedClosureItems + pendingCount);
             ReportStageProgress(
                 progress,
                 OmniImportStageId.ExpandScopedReferences,
-                $"Queued temp/entity/pet: {pendingTemporaryPowers.Count:n0}/{pendingEntities.Count:n0}/{pendingPetPowersets.Count:n0}",
+                $"Queued power/temp/entity/pet: {pendingReferencedPowers.Count:n0}/{pendingTemporaryPowers.Count:n0}/{pendingEntities.Count:n0}/{pendingPetPowersets.Count:n0}",
                 processedClosureItems,
                 observedClosureItems,
                 markComplete: pendingCount == 0 && processedClosureItems >= observedClosureItems);
@@ -885,13 +927,47 @@ public sealed partial class OmniImporter
         }
     }
 
+    private static void EnqueueReferencedRedirectPowers(
+        OmniPowerDefinition power,
+        Queue<string> pendingReferencedPowers,
+        Queue<string> pendingTemporaryPowers,
+        ISet<string> queuedReferencedPowers,
+        ISet<string> queuedTemporaryPowers)
+    {
+        foreach (var redirect in power.Redirects)
+        {
+            var targetFullName = CanonicalizeOmniFullName(redirect.Name);
+            if (string.IsNullOrWhiteSpace(targetFullName))
+            {
+                continue;
+            }
+
+            if (IsTemporaryPowerFullName(targetFullName))
+            {
+                if (queuedTemporaryPowers.Add(targetFullName))
+                {
+                    pendingTemporaryPowers.Enqueue(targetFullName);
+                }
+
+                continue;
+            }
+
+            if (queuedReferencedPowers.Add(targetFullName))
+            {
+                pendingReferencedPowers.Enqueue(targetFullName);
+            }
+        }
+    }
+
     private void EnqueueActorReferencedPowerContent(
         OmniBuildActor actor,
         IReadOnlyDictionary<string, string> powerFilesByFullName,
         OmniImportScope scope,
         OmniImportResult result,
+        Queue<string> pendingReferencedPowers,
         Queue<string> pendingEntities,
         Queue<string> pendingTemporaryPowers,
+        ISet<string> queuedReferencedPowers,
         ISet<string> queuedEntities,
         ISet<string> queuedTemporaryPowers,
         IDictionary<string, IReadOnlyList<string>> cachedTemporaryPowerRefsByFile)
@@ -915,6 +991,7 @@ public sealed partial class OmniImporter
 
             EnqueueReferencedEntities(power, result, pendingEntities, queuedEntities);
             EnqueueReferencedTemporaryPowers(file, pendingTemporaryPowers, queuedTemporaryPowers, cachedTemporaryPowerRefsByFile);
+            EnqueueReferencedRedirectPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
         }
     }
 
@@ -1263,7 +1340,7 @@ public sealed partial class OmniImporter
                 }
 
                 ApplyPlannerRuntimeMetadata(midsPower, omniPower);
-                CapturePowerImportMetadata(database, midsFullName, omniPower);
+                CapturePowerImportMetadata(database, midsPower, midsFullName, omniPower);
                 continue;
             }
 
@@ -1274,7 +1351,7 @@ public sealed partial class OmniImporter
             ApplyPowerClassification(midsPower, classification);
             ApplyPseudoPetAbsorptionFlags(midsPower, omniPower, entityActors, applyResult);
             ApplyPlannerRuntimeMetadata(midsPower, omniPower);
-            CapturePowerImportMetadata(database, midsFullName, omniPower);
+            CapturePowerImportMetadata(database, midsPower, midsFullName, omniPower);
             if (staffTrace)
             {
                 applyResult.AddLimited(applyResult.StaffMasteryTraceDetails,
@@ -1313,6 +1390,8 @@ public sealed partial class OmniImporter
 
             ApplyStrengthsDisallowedToEffects(effects, midsPower.IgnoreEnh, midsPower.TypedEnhancementRestrictions);
             midsPower.Effects = effects.ToArray();
+            midsPower.HasGrantPowerEffect = effects.Any(effect => effect.EffectType == Enums.eEffectType.GrantPower);
+            midsPower.HasPowerOverrideEffect = effects.Any(effect => effect.EffectType == Enums.eEffectType.PowerRedirect);
             applyResult.EffectsReplaced += effects.Count;
 
             if (midsPower.NeverAutoUpdateRequirements)
@@ -1351,6 +1430,7 @@ public sealed partial class OmniImporter
         ReportStageProgress(progressReporter, OmniImportStageId.LinkPlannerMetadata, "Linking support powers");
         BuildSupportPowerLinks(scopedPowers, midsPowers, classifications, applyResult);
         RemodelPlannerStateFamilies(database, applyResult);
+        RemodelTierOneArchetypeInherents(database, applyResult);
         EnsurePlannerModeBindings(database, applyResult);
         RepairAliasedPowersetIdentities(database, applyResult);
         RepairAliasedPowerIdentities(database, applyResult);
@@ -2996,7 +3076,7 @@ public sealed partial class OmniImporter
         ApplyPowerClassification(midsPower, classification);
         ApplyPseudoPetAbsorptionFlags(midsPower, omniPower, entityActors, applyResult);
         ApplyPlannerRuntimeMetadata(midsPower, omniPower);
-        CapturePowerImportMetadata(database, midsFullName, omniPower);
+        CapturePowerImportMetadata(database, midsPower, midsFullName, omniPower);
         TrackApplyClassification(midsFullName, classification, priorClickBuff, applyResult);
         TrackApplyAttackVectors(midsFullName, priorAttackTypes, midsPower.AttackTypes, omniPower, applyResult);
         TrackApplyModes(midsFullName, omniPower, classification, applyResult);
@@ -3030,6 +3110,8 @@ public sealed partial class OmniImporter
 
         ApplyStrengthsDisallowedToEffects(effects, midsPower.IgnoreEnh, midsPower.TypedEnhancementRestrictions);
         midsPower.Effects = effects.ToArray();
+        midsPower.HasGrantPowerEffect = effects.Any(effect => effect.EffectType == Enums.eEffectType.GrantPower);
+        midsPower.HasPowerOverrideEffect = effects.Any(effect => effect.EffectType == Enums.eEffectType.PowerRedirect);
         applyResult.EffectsReplaced += effects.Count;
 
         if (midsPower.NeverAutoUpdateRequirements)
@@ -5394,6 +5476,8 @@ public sealed partial class OmniImporter
 
         ApplyStrengthsDisallowedToEffects(effects, midsPower.IgnoreEnh, midsPower.TypedEnhancementRestrictions);
         midsPower.Effects = effects.ToArray();
+        midsPower.HasGrantPowerEffect = effects.Any(effect => effect.EffectType == Enums.eEffectType.GrantPower);
+        midsPower.HasPowerOverrideEffect = effects.Any(effect => effect.EffectType == Enums.eEffectType.PowerRedirect);
         applyResult.EffectsReplaced += effects.Count;
 
         if (string.IsNullOrWhiteSpace(omniPower.Requires))
@@ -6061,11 +6145,7 @@ public sealed partial class OmniImporter
         return TryGetPlannerModeFromPowerName(power, out var mode) && IsGlobalPlannerControlMode(mode);
     }
 
-    private static readonly HashSet<PlannerMode> GlobalPlannerControlModes =
-    [
-        PlannerMode.Domination,
-        PlannerMode.Assassination
-    ];
+    private static readonly HashSet<PlannerMode> GlobalPlannerControlModes = [];
 
     private const string FastSnipePlannerPowerFullName = "Inherent.Inherent.Fast_Snipe";
     private const string FastSnipePlannerClassName = "Class_Blaster";
@@ -6404,8 +6484,7 @@ public sealed partial class OmniImporter
 
     private static bool IsClassPlannerControlMode(PlannerMode mode)
     {
-        return mode is PlannerMode.Domination or
-            PlannerMode.Assassination;
+        return false;
     }
 
     private static Power CreateSyntheticPlannerPower(PlannerMode mode, int staticIndex)

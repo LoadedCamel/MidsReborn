@@ -549,13 +549,17 @@ public static class PlannerEffectResolver
 
     private static IPower? ResolveRedirect(IPower sourcePower, List<PlannerEffectTraceEntry>? trace)
     {
-        if (!sourcePower.HasPowerOverrideEffect)
+        var hasResolvableRedirect = sourcePower.Effects.Any(fx =>
+            fx.EffectType == Enums.eEffectType.PowerRedirect &&
+            (fx.nOverride > -1 || !string.IsNullOrWhiteSpace(fx.Override)));
+        if (!sourcePower.HasPowerOverrideEffect && !hasResolvableRedirect)
         {
             return null;
         }
 
         var candidates = sourcePower.Effects
-            .Where(fx => fx.EffectType == Enums.eEffectType.PowerRedirect && fx.nOverride > -1)
+            .Where(fx => fx.EffectType == Enums.eEffectType.PowerRedirect &&
+                         (fx.nOverride > -1 || !string.IsNullOrWhiteSpace(fx.Override)))
             .ToList();
 
         if (candidates.Count == 0)
@@ -565,7 +569,7 @@ public static class PlannerEffectResolver
         }
 
         var active = candidates
-            .Where(fx => fx.PvXInclude() && AdvancedConditionEvaluator.Evaluate(fx))
+            .Where(CanSelectRedirectCandidate)
             .ToList();
 
         IEffect? selected = null;
@@ -592,7 +596,12 @@ public static class PlannerEffectResolver
             }
         }
 
-        var redirectPower = DatabaseAPI.Database.Power[selected.nOverride];
+        if (!TryResolveReferencedPower(selected, out var redirectPower))
+        {
+            trace?.Add(new PlannerEffectTraceEntry("Redirect", $"{sourcePower.FullName} selected redirect {selected.Override}, but the target could not be resolved."));
+            return null;
+        }
+
         trace?.Add(new PlannerEffectTraceEntry("Redirect", $"{sourcePower.FullName} resolves to {redirectPower.FullName}."));
         return redirectPower;
     }
@@ -619,6 +628,11 @@ public static class PlannerEffectResolver
     private static float ClampProbability(float value)
     {
         return Math.Max(0, Math.Min(1, value));
+    }
+
+    private static bool CanSelectRedirectCandidate(IEffect effect)
+    {
+        return effect.PvXInclude() && effect.CanInclude();
     }
 
     private static void SetEffectPower(IPower power)

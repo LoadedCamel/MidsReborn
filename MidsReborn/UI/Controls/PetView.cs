@@ -1455,7 +1455,6 @@ namespace Mids_Reborn.UI.Forms.Controls
             var currentBuild = MidsContext.Character.CurrentBuild;
             var powerEntry = currentBuild.Powers[_entryIndex];
             powerEntry.VariableValue = num;
-            powerEntry.Power.Stacks = num;
 
             if (num == _lastScaleVal)
             {

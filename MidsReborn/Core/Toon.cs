@@ -262,7 +262,6 @@ namespace Mids_Reborn.Core
                     {
                         var initialVariableValue = Math.Max(MidsContext.Character.CurrentBuild.Powers[i].Power.VariableMin, MidsContext.Character.CurrentBuild.Powers[i].Power.VariableStart);
                         MidsContext.Character.CurrentBuild.Powers[i].VariableValue = initialVariableValue;
-                        MidsContext.Character.CurrentBuild.Powers[i].Power.Stacks = initialVariableValue;
                     }
                 }
                 else if (!string.IsNullOrEmpty(message))
@@ -859,6 +858,27 @@ namespace Mids_Reborn.Core
                 .FirstOrDefault(e => e != null && e.FullName == power.FullName);
         }
 
+        internal IPower? TryGetAssembledBasePower(int historyIndex)
+        {
+            if (historyIndex < 0)
+            {
+                return null;
+            }
+
+            if (historyIndex < _assembledBasePowers.Length && _assembledBasePowers[historyIndex] != null)
+            {
+                return new Power(_assembledBasePowers[historyIndex]!);
+            }
+
+            if (LastCalculationSnapshot?.PowerSnapshots.Count > historyIndex &&
+                LastCalculationSnapshot.PowerSnapshots[historyIndex].AssembledBasePower != null)
+            {
+                return new Power(LastCalculationSnapshot.PowerSnapshots[historyIndex].AssembledBasePower!);
+            }
+
+            return null;
+        }
+
         public PowerDisplaySnapshot GetDisplayPowerSnapshot(int iPower, int nIDPower = -1)
         {
             IPower? basePower = null;
@@ -891,7 +911,22 @@ namespace Mids_Reborn.Core
             var baseWasResolvedForDisplay = false;
             var enhancedWasResolvedForDisplay = false;
 
-            if (historyIndex < 0 && basePower != null)
+            if (historyIndex >= 0)
+            {
+                if ((_assembledBasePowers.Length <= historyIndex || _assembledBasePowers[historyIndex] == null) &&
+                    historyIndex < CurrentBuild.Powers.Count &&
+                    CurrentBuild.Powers[historyIndex]?.NIDPower > -1)
+                {
+                    GenerateBuffedPowerArray();
+                }
+
+                if (historyIndex < _assembledBasePowers.Length && _assembledBasePowers[historyIndex] != null)
+                {
+                    displayBase = new Power(_assembledBasePowers[historyIndex]!);
+                    baseWasResolvedForDisplay = true;
+                }
+            }
+            else if (basePower != null)
             {
                 var previewResolvedPower = AssembleDisplayPreviewPower(basePower.PowerIndex, historyIndex);
                 if (previewResolvedPower != null)

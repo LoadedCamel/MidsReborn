@@ -1,3 +1,4 @@
+using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.UI.Forms;
 using System;
 using System.Collections.Generic;
@@ -14,6 +15,19 @@ using Rectangle = System.Drawing.Rectangle;
 
 namespace Mids_Reborn.Core
 {
+    public enum CombatTargetOpportunityState
+    {
+        None = 0,
+        Offensive = 1,
+        Defensive = 2
+    }
+
+    public static class TeamContextDefaults
+    {
+        public const int MaxTeammates = 7;
+        public const string UnknownArchetype = "Unknown";
+    }
+
     public interface ISerialize
     {
         string Extension { get; }
@@ -97,6 +111,7 @@ namespace Mids_Reborn.Core
             Export = new ExportConfig();
             CompOverride = Array.Empty<Enums.CompOverride>();
             TeamMembers = new Dictionary<string, int>();
+            TeamRoster = [];
             ShowSelfBuffsAny = false;
             WarnOnOldDbMbd = true;
             DimWindowStyleColors = true;
@@ -197,8 +212,57 @@ namespace Mids_Reborn.Core
 
             EnemyRelativeLevel = NormalizeEnemyRelativeLevel(EnemyRelativeLevel, ScalingToHit);
             ScalingToHit = GetLegacyScalingToHitForRelativeLevel(EnemyRelativeLevel);
+            NormalizeCombatContextSettings();
+            NormalizeTeamContext();
 
             IsInitialized = true;
+        }
+
+        private void NormalizeCombatContextSettings()
+        {
+            _combatContextSettings = CombatContextState.CloneCombatContext(_combatContextSettings);
+        }
+
+        private void NormalizeTeamContext()
+        {
+            var snapshot = new BuildCombatContextState
+            {
+                EnemyRelativeLevel = _enemyRelativeLevel,
+                TeamMembers = CombatContextState.CloneTeamMembers(_teamMembers),
+                TeamRoster = CombatContextState.CloneTeamRoster(_teamRoster),
+                CombatContextSettings = CombatContextState.CloneCombatContext(_combatContextSettings)
+            };
+
+            CombatContextState.Normalize(snapshot);
+
+            _enemyRelativeLevel = snapshot.EnemyRelativeLevel;
+            _teamMembers = snapshot.TeamMembers;
+            _teamRoster = snapshot.TeamRoster;
+            _combatContextSettings = snapshot.CombatContextSettings;
+            _teamSize = CombatContextState.GetDerivedTeamSize(snapshot);
+        }
+
+        public void RebuildLegacyTeamMembersFromRoster()
+        {
+            TeamMembers = CombatContextState.BuildTeamMembersFromRoster(TeamRoster, inRangeOnly: true);
+        }
+
+        public void SynchronizeTeamRosterFromTeamMembers()
+        {
+            if (TryGetBuildScopedCombatState(out var state))
+            {
+                CombatContextState.Normalize(state);
+                return;
+            }
+
+            NormalizeTeamContext();
+        }
+
+        public static string NormalizeTeammateArchetype(string? archetype)
+        {
+            return string.IsNullOrWhiteSpace(archetype)
+                ? string.Empty
+                : archetype.Trim();
         }
 
         private static void TryEnsureDir(string? path)
@@ -341,16 +405,73 @@ namespace Mids_Reborn.Core
         public IncludeExclude Inc { get; } = new();
         public Si9 I9 { get; } = new();
         public FontSettings RtFont { get; } = new();
-        public Dictionary<string, int> TeamMembers { get; }
+        private Dictionary<string, int> _teamMembers = new(StringComparer.OrdinalIgnoreCase);
+        private List<TeammateSlot> _teamRoster = [];
+        private int _enemyRelativeLevel = int.MinValue;
+        private int _teamSize = 1;
+        private CombatContext _combatContextSettings = new();
+
+        public Dictionary<string, int> TeamMembers
+        {
+            get => TryGetBuildScopedCombatState(out var state) ? state.TeamMembers : _teamMembers;
+            set
+            {
+                var normalized = CombatContextState.CloneTeamMembers(value);
+                if (TryGetBuildScopedCombatState(out var state))
+                {
+                    state.TeamMembers = normalized;
+                    CombatContextState.Normalize(state);
+                    return;
+                }
+
+                _teamMembers = normalized;
+            }
+        }
+
+        public List<TeammateSlot> TeamRoster
+        {
+            get => TryGetBuildScopedCombatState(out var state) ? state.TeamRoster : _teamRoster;
+            set
+            {
+                var cloned = CombatContextState.CloneTeamRoster(value);
+                if (TryGetBuildScopedCombatState(out var state))
+                {
+                    state.TeamRoster = cloned;
+                    state.TeamMembers = CombatContextState.BuildTeamMembersFromRoster(cloned, inRangeOnly: false);
+                    CombatContextState.Normalize(state);
+                    return;
+                }
+
+                _teamRoster = cloned;
+            }
+        }
 
         public string SelectedTheme { get; set; } = "Hero";
         public string? WindowState { get; set; }
         public Rectangle Bounds { get; set; }
         public bool UseOldTotalsWindow { get; set; }
-        public int EnemyRelativeLevel { get; set; } = int.MinValue;
+        public int EnemyRelativeLevel
+        {
+            get => TryGetBuildScopedCombatState(out var state) ? state.EnemyRelativeLevel : _enemyRelativeLevel;
+            set
+            {
+                var normalized = NormalizeEnemyRelativeLevel(value, ScalingToHit);
+                if (TryGetBuildScopedCombatState(out var state))
+                {
+                    state.EnemyRelativeLevel = normalized;
+                    return;
+                }
+
+                _enemyRelativeLevel = normalized;
+            }
+        }
         public float ScalingToHit { get; set; } = DatabaseAPI.ServerData.BaseToHit;
         public int ExempHigh { get; set; } = 50;
-        public int TeamSize { get; set; } = 1;
+        public int TeamSize
+        {
+            get => TryGetBuildScopedCombatState(out var state) ? CombatContextState.GetDerivedTeamSize(state) : _teamSize;
+            set => _teamSize = Math.Max(1, value);
+        }
         public int ExempLow { get; set; } = 30;
         public int ForceLevel { get; set; } = 50;
         public int ExportScheme { get; set; } = 1;
@@ -400,7 +521,22 @@ namespace Mids_Reborn.Core
         public bool LongExport { get; set; }
         public Point? RotationHelperLocation { get; set; }
         public Enums.WordwrapMode PowerListsWordwrapMode { get; set; }
-        public CombatContext CombatContextSettings { get; set; }
+        public CombatContext CombatContextSettings
+        {
+            get => TryGetBuildScopedCombatState(out var state) ? state.CombatContextSettings : _combatContextSettings;
+            set
+            {
+                var cloned = CombatContextState.CloneCombatContext(value);
+                if (TryGetBuildScopedCombatState(out var state))
+                {
+                    state.CombatContextSettings = cloned;
+                    CombatContextState.Normalize(state);
+                    return;
+                }
+
+                _combatContextSettings = cloned;
+            }
+        }
         public Modes Mode { get; set; }
         public bool ShrinkFrmSets { get; set; }
         public bool WarnOnOldDbMbd { get; set; }
@@ -445,6 +581,19 @@ namespace Mids_Reborn.Core
         public Point? EntityDetailsLocation { get; set; }
         public bool DisableTips { get; set; } = false;
 
+        private bool TryGetBuildScopedCombatState(out BuildCombatContextState state)
+        {
+            state = null!;
+
+            if (!_lazy.IsValueCreated || !ReferenceEquals(this, _lazy.Value))
+            {
+                return false;
+            }
+
+            state = CombatContextState.TryGetActiveBuildState()!;
+            return state != null;
+        }
+
         #endregion
 
         #region Public helpers
@@ -457,7 +606,13 @@ namespace Mids_Reborn.Core
             { "cfg.player.isAlive", "Player is Alive/Dead" },
             { "cfg.target.hp", "Target HP %" },
             { "cfg.target.end", "Target Endurance %" },
-            { "cfg.target.profileid", "Target Profile" }
+            { "cfg.target.profileid", "Target Profile" },
+            { "cfg.target.held", "Target Held" },
+            { "cfg.target.immobilized", "Target Immobilized" },
+            { "cfg.target.stunned", "Target Stunned" },
+            { "cfg.target.terrorized", "Target Terrorized" },
+            { "cfg.target.sleptrecently", "Target Slept Recently" },
+            { "cfg.target.vulnerabilityactive", "Target Vulnerability Active" }
         };
 
         public static string? GetCombatSettingName(string param, Dictionary<string, string> table) =>
@@ -657,12 +812,25 @@ namespace Mids_Reborn.Core
                 "hp" => "HpPercent",
                 "end" => "EndPercent",
                 "profileid" => "ProfileId",
+                "held" => "Held",
+                "immobilized" => "Immobilized",
+                "stunned" => "Stunned",
+                "terrorized" => "Terrorized",
+                "sleptrecently" => "SleptRecently",
+                "vulnerabilityactive" => "VulnerabilityActive",
+                "opportunitystate" => "OpportunityState",
                 "isalive" => "IsAlive",
                 _ => ""
             };
 
             public static string ConfigChunkType(string condChunk) => condChunk.ToLowerInvariant() switch
             {
+                "held" => "bool",
+                "immobilized" => "bool",
+                "stunned" => "bool",
+                "terrorized" => "bool",
+                "sleptrecently" => "bool",
+                "vulnerabilityactive" => "bool",
                 "isalive" => "bool",
                 _ => "int"
             };
@@ -675,7 +843,10 @@ namespace Mids_Reborn.Core
                         .Replace("percent", "%")
                         .Replace('.', ' '))
                     .Replace("Isalive", "IsAlive")
-                    .Replace("Profileid", "ProfileId");
+                    .Replace("Profileid", "ProfileId")
+                    .Replace("Sleptrecently", "SleptRecently")
+                    .Replace("Vulnerabilityactive", "VulnerabilityActive")
+                    .Replace("Opportunitystate", "OpportunityState");
 
             public static List<string> EnumerateFields(object obj, string prefix = "cfg")
             {
@@ -700,10 +871,37 @@ namespace Mids_Reborn.Core
                 public int HpPercent { get; set; } = 100;
                 public int EndPercent { get; set; } = 100;
                 public int ProfileId { get; set; } = (int)CombatTargetProfileId.Boss;
+                public bool Held { get; set; }
+                public bool Immobilized { get; set; }
+                public bool Stunned { get; set; }
+                public bool Terrorized { get; set; }
+                public bool SleptRecently { get; set; }
+                public bool VulnerabilityActive { get; set; }
+                public int OpportunityState { get; set; } = (int)CombatTargetOpportunityState.None;
+            }
+
+            public class DefianceContributorSelection
+            {
+                public string SourcePowerFullName { get; set; } = string.Empty;
+                public string ResolvedPowerFullName { get; set; } = string.Empty;
+                public int ActiveCount { get; set; }
+            }
+
+            public class DefianceSettings
+            {
+                public List<DefianceContributorSelection> Contributors { get; set; } = [];
             }
 
             public Player PlayerSettings { get; set; } = new();
             public Target TargetSettings { get; set; } = new();
+            public DefianceSettings Defiance { get; set; } = new();
+        }
+
+        public class TeammateSlot
+        {
+            public string Archetype { get; set; } = string.Empty;
+            public bool InRange { get; set; } = true;
+            public int HpPercent { get; set; } = 100;
         }
 
         public class FontSettings

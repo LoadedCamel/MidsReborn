@@ -1,3 +1,4 @@
+using System;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Omni;
@@ -107,7 +108,7 @@ internal static class PetActorBonusAnalyzer
             }
         }
 
-        foreach (var ownerSource in GetOwnerExternalSources(toon, rosterItem, recipient, availableUpgrades))
+        foreach (var ownerSource in GetOwnerExternalSources(toon, rosterItem, recipient, availableUpgrades, previewState))
         {
             var withSource = PetActorMath.Calculate(recipient.ClassName, Array.Empty<IPower>(), Array.Empty<IPower>(), ownerSource.Powers);
             var entry = CreateEntry(ownerSource.SourceName, ownerSource.SourceFullName, PetAppliedBonusSourceType.OwnerAuraOrBuff, withSource, directExternalBaseline);
@@ -147,7 +148,8 @@ internal static class PetActorBonusAnalyzer
         Toon toon,
         RealPetActorRosterItem rosterItem,
         PlannerBuildRecipientContext recipient,
-        IReadOnlyList<PetUpgradeOverlay> availableUpgrades)
+        IReadOnlyList<PetUpgradeOverlay> availableUpgrades,
+        PetActorPreviewState previewState)
     {
         var excludedUpgradePowerNames = new HashSet<string>(
             availableUpgrades.Select(overlay => overlay.UpgradePowerFullName),
@@ -164,6 +166,12 @@ internal static class PetActorBonusAnalyzer
 
             var power = entry.powerEntry!.Power!;
             if (excludedUpgradePowerNames.Contains(power.FullName))
+            {
+                continue;
+            }
+
+            if (!previewState.InRange &&
+                power.FullName.Equals("Inherent.Inherent.Supremacy", StringComparison.OrdinalIgnoreCase))
             {
                 continue;
             }

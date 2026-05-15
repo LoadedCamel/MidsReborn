@@ -1,5 +1,6 @@
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
 using Mids_Reborn.Core.PlannerRulesets;
 using System.Text.RegularExpressions;
 using static Mids_Reborn.Core.Expressions;
@@ -380,13 +381,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 else
                 {
                     var ps = power?.GetPowerSet();
+                    var isPlannerVariablePower = power != null &&
+                                                 PlannerStateCatalog.IsVariablePlannerPower(power.FullName);
                     if (ps != null)
                         if (ps.nArchetype > -1)
                         {
                             if (!DatabaseAPI.Database.Classes[ps.nArchetype].Playable)
                                 return false;
                         }
-                        else if (ps.SetType is Enums.ePowerSetType.None or Enums.ePowerSetType.Accolade or Enums.ePowerSetType.Pet or Enums.ePowerSetType.SetBonus or Enums.ePowerSetType.Temp)
+                        else if (ps.SetType is Enums.ePowerSetType.None or Enums.ePowerSetType.Accolade or Enums.ePowerSetType.Pet or Enums.ePowerSetType.SetBonus ||
+                                 (ps.SetType == Enums.ePowerSetType.Temp && !isPlannerVariablePower))
                         {
                             return false;
                         }
@@ -1480,6 +1484,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 AdvancedConditionKind.TargetMode => $"Target mode is {(row.Negated ? "not " : string.Empty)}{FormatModeName(row)}",
                 AdvancedConditionKind.TargetEntityType when row.TargetScope != AdvancedConditionTargetScope.Unknown => $"Target is {FormatTargetScope(row.TargetScope)}",
                 AdvancedConditionKind.TargetEntityType => $"Target entity {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
+                AdvancedConditionKind.TargetGroup when row.Subject.Equals("tag", StringComparison.OrdinalIgnoreCase) => $"Target {(row.Negated ? "does not have" : "has")} tag {CleanConditionValue(row.Value)}",
                 AdvancedConditionKind.CharacterArchetype => $"Archetype {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
                 AdvancedConditionKind.CharacterLevel => $"Level {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
                 AdvancedConditionKind.PowerStacks => $"{FormatPowerName(row.Subject)} stacks {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
@@ -2245,7 +2250,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             #region SpecialCase Processing
 
-            if (SpecialCase != Enums.eSpecialCase.None)
+            /*if (SpecialCase != Enums.eSpecialCase.None)
             {
                 switch (SpecialCase)
                 {
@@ -2478,7 +2483,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             return true;
                         break;
                 }
-            }
+            }*/
 
             #endregion
 
@@ -2628,7 +2633,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             #region SpecialCase Processing
 
-            if (SpecialCase != Enums.eSpecialCase.None)
+            /*if (SpecialCase != Enums.eSpecialCase.None)
             {
                 switch (SpecialCase)
                 {
@@ -2861,7 +2866,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             return true;
                         break;
                 }
-            }
+            }*/
 
             #endregion
 

@@ -121,6 +121,9 @@ namespace Mids_Reborn.UI.Controls
         private bool bFloating;
         private ExtendedBitmap? bxFlip;
         private bool _updatingPowerScaler;
+        private bool _powerScalerPreviewApplying;
+        private readonly System.Windows.Forms.Timer _powerScalerDragTimer = new() { Interval = 33 };
+        private int _pendingPowerScaleValue = -1;
         private int HistoryIDX;
         private bool _isLocked;
         private IPower? pBase;
@@ -215,6 +218,8 @@ namespace Mids_Reborn.UI.Controls
             SelectTab(_selectedTabIndex);
             dvPages.SelectedIndexChanged += DvPages_SelectedIndexChanged;
             midsTrackBar1.ValueChanged += MidsTrackBar_ValueChanged;
+            midsTrackBar1.InteractionCompleted += MidsTrackBar_InteractionCompleted;
+            _powerScalerDragTimer.Tick += PowerScalerDragTimer_Tick;
             enhanceView.Resize += EnhanceView_Resize;
             pnlEnhActive.SizeChanged += EnhancementPanel_SizeChanged;
             pnlEnhInactive.SizeChanged += EnhancementPanel_SizeChanged;
@@ -1001,35 +1006,44 @@ namespace Mids_Reborn.UI.Controls
 
             SetLock(locked, false);
 
-            var snapshot = new PowerDisplaySnapshot(
-                new Power(basePower),
-                enhancedPower == null ? new Power(basePower) { PowerIndex = -1 } : new Power(enhancedPower),
-                string.IsNullOrEmpty(Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower))
-                    ? null
-                    : DatabaseAPI.GetPowerByFullName(Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower)),
-                string.IsNullOrEmpty(Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower))
-                    ? null
-                    : MainModule.MidsController.Toon?.GetEnhancedPower(iHistoryIdx),
-                iHistoryIdx,
-                false,
-                false,
-                false,
-                false)
+            PowerDisplaySnapshot snapshot;
+            if (_presentationMode != MidsDataViewNeoPresentationMode.ActorReadOnly &&
+                MainModule.MidsController.Toon != null)
             {
-                ActorCalculationSnapshot = _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly
-                    ? _actorCalculationSnapshot
-                    : MainModule.MidsController.Toon?.LastCalculationSnapshot?.PlayerActorSnapshot,
-                PowerCalculationSnapshot = _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly
-                    ? (_actorCalculationSnapshot?.PowerSnapshots.Count > iHistoryIdx && iHistoryIdx >= 0
-                        ? _actorCalculationSnapshot.PowerSnapshots[iHistoryIdx]
-                        : null)
-                    : (MainModule.MidsController.Toon?.LastCalculationSnapshot?.PowerSnapshots.Count > iHistoryIdx && iHistoryIdx >= 0
-                        ? MainModule.MidsController.Toon.LastCalculationSnapshot.PowerSnapshots[iHistoryIdx]
-                        : null),
-                ContributionSnapshot = _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly
-                    ? _actorCalculationSnapshot?.Contributions
-                    : MainModule.MidsController.Toon?.LastCalculationSnapshot?.PlayerActorSnapshot.Contributions
-            };
+                snapshot = MainModule.MidsController.Toon.GetDisplayPowerSnapshot(iHistoryIdx, basePower.PowerIndex);
+            }
+            else
+            {
+                snapshot = new PowerDisplaySnapshot(
+                    new Power(basePower),
+                    enhancedPower == null ? new Power(basePower) { PowerIndex = -1 } : new Power(enhancedPower),
+                    string.IsNullOrEmpty(Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower))
+                        ? null
+                        : DatabaseAPI.GetPowerByFullName(Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower)),
+                    string.IsNullOrEmpty(Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower))
+                        ? null
+                        : MainModule.MidsController.Toon?.GetEnhancedPower(iHistoryIdx),
+                    iHistoryIdx,
+                    false,
+                    false,
+                    false,
+                    false)
+                {
+                    ActorCalculationSnapshot = _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly
+                        ? _actorCalculationSnapshot
+                        : MainModule.MidsController.Toon?.LastCalculationSnapshot?.PlayerActorSnapshot,
+                    PowerCalculationSnapshot = _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly
+                        ? (_actorCalculationSnapshot?.PowerSnapshots.Count > iHistoryIdx && iHistoryIdx >= 0
+                            ? _actorCalculationSnapshot.PowerSnapshots[iHistoryIdx]
+                            : null)
+                        : (MainModule.MidsController.Toon?.LastCalculationSnapshot?.PowerSnapshots.Count > iHistoryIdx && iHistoryIdx >= 0
+                            ? MainModule.MidsController.Toon.LastCalculationSnapshot.PowerSnapshots[iHistoryIdx]
+                            : null),
+                    ContributionSnapshot = _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly
+                        ? _actorCalculationSnapshot?.Contributions
+                        : MainModule.MidsController.Toon?.LastCalculationSnapshot?.PlayerActorSnapshot.Contributions
+                };
+            }
 
             SetData(snapshot, noLevel, locked);
         }
@@ -3429,9 +3443,21 @@ namespace Mids_Reborn.UI.Controls
                 _updatingPowerScaler = true;
                 try
                 {
+                    var rawDisplayStep = Math.Max(1, (int)Math.Round(
+                        pBase.VariableDisplayStep * pBase.VariableDisplayDivisor,
+                        MidpointRounding.AwayFromZero));
                     midsTrackBar1.Text = $"{str}:";
                     midsTrackBar1.Minimum = pBase.VariableMin;
                     midsTrackBar1.Maximum = pBase.VariableMax;
+                    midsTrackBar1.DisplayDivisor = pBase.VariableDisplayDivisor;
+                    midsTrackBar1.DisplayPrecision = pBase.VariableDisplayPrecision;
+                    midsTrackBar1.DisplayStep = pBase.VariableDisplayStep;
+                    midsTrackBar1.SmallChange = rawDisplayStep;
+                    midsTrackBar1.LargeChange = pBase.VariableDisplayPrecision > 0
+                        ? rawDisplayStep * 10
+                        : Math.Max(rawDisplayStep, (pBase.VariableMax - pBase.VariableMin) / 10);
+                    midsTrackBar1.ValueTextFormat = "{0}";
+                    midsTrackBar1.ShowValue = true;
                     midsTrackBar1.Value = currentValue;
                     pLastScaleVal = currentValue;
                     sliderHost.Visible = true;
@@ -3905,10 +3931,63 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            PowerScaler_BarClick(midsTrackBar1.Value);
+            if (midsTrackBar1.IsInteracting)
+            {
+                midsTrackBar1.Invalidate();
+                midsTrackBar1.Update();
+                _pendingPowerScaleValue = midsTrackBar1.Value;
+                if (!_powerScalerDragTimer.Enabled)
+                {
+                    _powerScalerDragTimer.Start();
+                }
+                return;
+            }
+
+            PowerScaler_BarClick(midsTrackBar1.Value, notifyHost: true);
         }
 
-        private void PowerScaler_BarClick(float val)
+        private void MidsTrackBar_InteractionCompleted(object? sender, EventArgs e)
+        {
+            _powerScalerDragTimer.Stop();
+            if (_pendingPowerScaleValue > -1)
+            {
+                var pending = _pendingPowerScaleValue;
+                _pendingPowerScaleValue = -1;
+                PowerScaler_BarClick(pending, notifyHost: true);
+            }
+        }
+
+        private void PowerScalerDragTimer_Tick(object? sender, EventArgs e)
+        {
+            if (_powerScalerPreviewApplying)
+            {
+                return;
+            }
+
+            if (_pendingPowerScaleValue > -1)
+            {
+                var pending = _pendingPowerScaleValue;
+                _pendingPowerScaleValue = -1;
+
+                try
+                {
+                    _powerScalerPreviewApplying = true;
+                    midsTrackBar1.Update();
+                    PowerScaler_BarClick(pending, notifyHost: false);
+                }
+                finally
+                {
+                    _powerScalerPreviewApplying = false;
+                }
+            }
+
+            if (!midsTrackBar1.IsInteracting && _pendingPowerScaleValue < 0)
+            {
+                _powerScalerDragTimer.Stop();
+            }
+        }
+
+        private void PowerScaler_BarClick(float val, bool notifyHost)
         {
             if (pBase == null || HistoryIDX < 0 || MidsContext.Character?.CurrentBuild == null)
             {
@@ -3927,17 +4006,64 @@ namespace Mids_Reborn.UI.Controls
             }
 
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue = num;
-            MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Stacks = num;
             
             if (num == pLastScaleVal)
+            {
+                if (notifyHost)
+                {
+                    SlotUpdate?.Invoke(pBase, num);
+                }
+                return;
+            }
+
+            pLastScaleVal = num;
+            MainModule.MidsController.Toon?.GenerateBuffedPowerArray();
+            RefreshCurrentPowerDisplaySnapshot(updateStatRows: notifyHost);
+
+            if (notifyHost)
+            {
+                SlotUpdate?.Invoke(pBase, num);
+            }
+        }
+
+        private void RefreshCurrentPowerDisplaySnapshot(bool updateStatRows)
+        {
+            if (HistoryIDX < 0)
             {
                 return;
             }
 
-            SetPowerScaler();
-            pLastScaleVal = num;
-            MainModule.MidsController.Toon?.GenerateBuffedPowerArray();
-            SlotUpdate?.Invoke(pBase, num);
+            var snapshot = MainModule.MidsController.Toon?.GetDisplayPowerSnapshot(HistoryIDX);
+            if (snapshot == null)
+            {
+                return;
+            }
+
+            pBase = snapshot.BasePower == null ? null : new Power(snapshot.BasePower);
+            pEnh = snapshot.EnhancedPower == null ? null : new Power(snapshot.EnhancedPower);
+            rootPowerBase = snapshot.RootPowerBase;
+            rootPowerEnh = snapshot.RootPowerEnh;
+
+            if (pBase == null)
+            {
+                infoDamageDisplay.Clear();
+                return;
+            }
+
+            if (pEnh == null)
+            {
+                pEnh = new Power(pBase)
+                {
+                    PowerIndex = -1
+                };
+            }
+
+            if (updateStatRows)
+            {
+                var statRows = PowerCanonicalStats.BuildRows(pBase, pEnh, _displayContributions);
+                powerStatsGrid.SetRows(statRows);
+            }
+            RefreshDamageCardPresentation(pBase, pEnh);
         }
 
         #endregion

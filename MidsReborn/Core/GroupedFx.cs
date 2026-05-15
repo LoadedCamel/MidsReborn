@@ -1309,7 +1309,8 @@ namespace Mids_Reborn.Core
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho &&
                                 MagnitudesMatch(e.Value.BuffedMag, mag) &&
-                                e.Value.SpecialCase == specialCase && e.Value.isEnhancementEffect == enhancementEffect &&
+                                IsModernDefianceDisplayEffect(e.Value) &&
+                                e.Value.isEnhancementEffect == enhancementEffect &&
                                 e.Value.PvMode == fxIdentifier.PvMode &&
                                 e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
                     .Select(e => e.Key)
@@ -1319,7 +1320,7 @@ namespace Mids_Reborn.Core
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho &&
                                 MagnitudesMatch(e.Value.BuffedMag, mag) &&
-                                e.Value.SpecialCase != Enums.eSpecialCase.Defiance &&
+                                !IsModernDefianceDisplayEffect(e.Value) &&
                                 e.Value.isEnhancementEffect == enhancementEffect &&
                                 e.Value.PvMode == fxIdentifier.PvMode &&
                                 e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
@@ -1351,9 +1352,14 @@ namespace Mids_Reborn.Core
         {
             return effect.Probability > 0 &&
                    (MidsContext.Config?.Suppression & effect.Suppression) == Enums.eSuppress.None &&
-                   effect.CanInclude() &&
+                   (effect.CanInclude() || IsModernDefianceDisplayEffect(effect)) &&
                    effect.PvXInclude() &&
                    effect.EffectClass != Enums.eEffectClass.Ignored;
+        }
+
+        private static bool IsModernDefianceDisplayEffect(IEffect effect)
+        {
+            return DefiancePlanner.IsModernContributorEffect(effect);
         }
 
         private static bool HasSameConditionIdentity(IPower power, int seedIndex, int candidateIndex)
@@ -1459,9 +1465,11 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
+                var isDefianceDisplayEffect = IsModernDefianceDisplayEffect(power.Effects[re]);
                 if (!(power.Effects[re].Probability > 0 &&
                       (MidsContext.Config?.Suppression & power.Effects[re].Suppression) ==
-                      Enums.eSuppress.None & power.Effects[re].CanInclude()))
+                      Enums.eSuppress.None &
+                      (power.Effects[re].CanInclude() || isDefianceDisplayEffect)))
                 {
                     continue;
                 }
@@ -1485,7 +1493,7 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
-                if (power.Effects[re].ActiveConditionals is { Count: > 0 })
+                if (power.Effects[re].ActiveConditionals is { Count: > 0 } && !isDefianceDisplayEffect)
                 {
                     if (!power.Effects[re].ValidateConditional())
                     {
@@ -1625,9 +1633,7 @@ namespace Mids_Reborn.Core
                         break;
 
                     case Enums.eEffectType.DamageBuff:
-                        var isDefiance = power.Effects[re].SpecialCase == Enums.eSpecialCase.Defiance &&
-                                         power.Effects[re].ValidateConditional("Active", "Defiance") |
-                                         MidsContext.Character.CurrentBuild.PowerActive(defiancePower);
+                        var isDefiance = IsModernDefianceDisplayEffect(power.Effects[re]);
 
                         similarFxIds = GetSimilarEffects(power,
                             new FxId
@@ -1664,7 +1670,7 @@ namespace Mids_Reborn.Core
                                 isDefiance ? "Defiance" : $"{power.Effects[re].EffectType}",
                                 similarFxIds,
                                 !isDefiance && power.Effects[re].isEnhancementEffect,
-                                Enums.eSpecialCase.Defiance));
+                                isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None));
 
                         break;
 
@@ -1826,9 +1832,10 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
+                var isDefianceDisplayEffect = IsModernDefianceDisplayEffect(pw.Effects[re]);
                 if (!(pw.Effects[re].Probability > 0 &&
                       ((MidsContext.Config?.Suppression & pw.Effects[re].Suppression) == Enums.eSuppress.None) &
-                      pw.Effects[re].CanInclude()))
+                      (pw.Effects[re].CanInclude() || isDefianceDisplayEffect)))
                 {
                     continue;
                 }
@@ -1852,7 +1859,7 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
-                if (pw.Effects[re].ActiveConditionals is { Count: > 0 })
+                if (pw.Effects[re].ActiveConditionals is { Count: > 0 } && !isDefianceDisplayEffect)
                 {
                     if (!pw.Effects[re].ValidateConditional())
                     {
@@ -1992,9 +1999,7 @@ namespace Mids_Reborn.Core
                         break;
 
                     case Enums.eEffectType.DamageBuff:
-                        var isDefiance = pw.Effects[re].SpecialCase == Enums.eSpecialCase.Defiance &&
-                                         pw.Effects[re].ValidateConditional("Active", "Defiance") |
-                                         MidsContext.Character.CurrentBuild.PowerActive(defiancePower);
+                        var isDefiance = IsModernDefianceDisplayEffect(pw.Effects[re]);
 
                         similarFxIds = GetSimilarEffects(pw,
                             new FxId
@@ -2031,7 +2036,7 @@ namespace Mids_Reborn.Core
                                 isDefiance ? "Defiance" : $"{pw.Effects[re].EffectType}",
                                 similarFxIds,
                                 !isDefiance && pw.Effects[re].isEnhancementEffect,
-                                Enums.eSpecialCase.Defiance));
+                                isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None));
 
                         break;
 
@@ -2691,9 +2696,7 @@ namespace Mids_Reborn.Core
                     break;
 
                 case Enums.eEffectType.DamageBuff:
-                    var isDefiance = effectSource.SpecialCase == Enums.eSpecialCase.Defiance &&
-                                     effectSource.ValidateConditional("Active", "Defiance") |
-                                     MidsContext.Character.CurrentBuild.PowerActive(defiancePower);
+                    var isDefiance = IsModernDefianceDisplayEffect(effectSource);
                     rankedEffect.Name = isDefiance
                         ? "Defiance"
                         : FastItemBuilder.Str.ShortStr(displayBlockFontSize, Enums.GetEffectName(effectSource.EffectType),

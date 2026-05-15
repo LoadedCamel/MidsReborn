@@ -13,6 +13,7 @@ namespace Mids_Reborn.UI.Forms
             Context,
             Player,
             Target,
+            Defiance,
             Team
         }
 
@@ -26,20 +27,37 @@ namespace Mids_Reborn.UI.Forms
             public override string ToString() => DisplayName;
         }
 
-        private sealed record TeamMemberDefinition(string Key, string DisplayName);
-
-        private sealed class TeamRowControls
+        private sealed record TeammateArchetypeOption(string Value, string DisplayName)
         {
-            public required Label ValueLabel { get; init; }
+            public override string ToString() => DisplayName;
         }
 
-        private const int MaxMembers = 7;
+        private sealed record DefianceCountOption(int Value)
+        {
+            public override string ToString() => Value.ToString();
+        }
+
+        private sealed class TeamCountRowControls
+        {
+            public required NumericUpDown CountUpDown { get; init; }
+        }
+
+        private sealed class VigilanceRowControls
+        {
+            public required Label NameLabel { get; init; }
+            public required MidsTrackBar HpTrackBar { get; init; }
+            public required Label HpValueLabel { get; init; }
+            public required CheckBox InRangeCheckBox { get; init; }
+        }
+
+        private const int MaxMembers = TeamContextDefaults.MaxTeammates;
 
         private readonly Action _refreshInfo;
         private readonly Dictionary<CombatSection, MidsVectorButton> _sectionButtons = new();
         private readonly Dictionary<CombatSection, Panel> _sectionPanels = new();
-        private readonly Dictionary<string, TeamRowControls> _teamRows = new(StringComparer.OrdinalIgnoreCase);
-        private readonly List<TeamMemberDefinition> _teamDefinitions = [];
+        private readonly List<TeammateArchetypeOption> _teamArchetypeOptions = [];
+        private readonly Dictionary<string, TeamCountRowControls> _teamCountRows = new(StringComparer.OrdinalIgnoreCase);
+        private readonly Dictionary<int, VigilanceRowControls> _vigilanceRows = new();
         private readonly ToolTip _toolTip = new();
 
         private CombatSection _selectedSection = CombatSection.Context;
@@ -57,11 +75,13 @@ namespace Mids_Reborn.UI.Forms
         private MidsVectorButton? _contextButton;
         private MidsVectorButton? _playerButton;
         private MidsVectorButton? _targetButton;
+        private MidsVectorButton? _defianceButton;
         private MidsVectorButton? _teamButton;
 
         private Panel? _contextPage;
         private Panel? _playerPage;
         private Panel? _targetPage;
+        private Panel? _defiancePage;
         private Panel? _teamPage;
 
         private Label? _selectedRelativeLevelValue;
@@ -82,12 +102,22 @@ namespace Mids_Reborn.UI.Forms
         private MidsDropDownList? _targetProfileCombo;
         private Label? _targetProfileSummaryValue;
         private Label? _targetClassSummaryValue;
+        private CheckBox? _targetHeldCheckBox;
+        private CheckBox? _targetImmobilizedCheckBox;
+        private CheckBox? _targetStunnedCheckBox;
+        private CheckBox? _targetTerrorizedCheckBox;
+        private CheckBox? _targetSleptRecentlyCheckBox;
+
+        private Label? _defianceTotalBonusValue;
+        private Label? _defianceActiveSourcesValue;
+        private Panel? _defianceCard;
+        private TableLayoutPanel? _defianceGrid;
 
         private Label? _teamTotalMembersValue;
         private Label? _teamRemainingSlotsValue;
         private TableLayoutPanel? _teamMembersGrid;
-        private int _teamGridColumnCount = 2;
-
+        private Panel? _vigilanceCard;
+        private TableLayoutPanel? _vigilanceGrid;
         private MidsVectorButton? _topMostButton;
         private MidsVectorButton? _resetSectionButton;
         private MidsVectorButton? _resetAllButton;
@@ -219,7 +249,9 @@ namespace Mids_Reborn.UI.Forms
                 UpdateContextControls();
                 UpdatePlayerControls();
                 UpdateTargetControls();
+                UpdateDefianceControls();
                 UpdateTeamControls();
+                UpdateSectionVisibility();
                 UpdateTopMostButtonState();
                 UpdateResetButtonTooltip();
             }
@@ -266,6 +298,30 @@ namespace Mids_Reborn.UI.Forms
 
                 case "cfg.target.profileid":
                     MidsContext.Config.CombatContextSettings.TargetSettings.ProfileId = (int)Math.Round(val);
+                    break;
+                case "cfg.target.held":
+                    MidsContext.Config.CombatContextSettings.TargetSettings.Held = val > 0.5f;
+                    break;
+                case "cfg.target.immobilized":
+                    MidsContext.Config.CombatContextSettings.TargetSettings.Immobilized = val > 0.5f;
+                    break;
+                case "cfg.target.stunned":
+                    MidsContext.Config.CombatContextSettings.TargetSettings.Stunned = val > 0.5f;
+                    break;
+                case "cfg.target.terrorized":
+                    MidsContext.Config.CombatContextSettings.TargetSettings.Terrorized = val > 0.5f;
+                    break;
+                case "cfg.target.sleptrecently":
+                    MidsContext.Config.CombatContextSettings.TargetSettings.SleptRecently = val > 0.5f;
+                    break;
+                case "cfg.target.vulnerabilityactive":
+                    MidsContext.Config.CombatContextSettings.TargetSettings.VulnerabilityActive = val > 0.5f;
+                    break;
+
+                case "cfg.target.opportunitystate":
+                    MidsContext.Config.CombatContextSettings.TargetSettings.OpportunityState = (int)Math.Round(val);
+                    MidsContext.Config.CombatContextSettings.TargetSettings.VulnerabilityActive =
+                        MidsContext.Config.CombatContextSettings.TargetSettings.OpportunityState != (int)CombatTargetOpportunityState.None;
                     break;
             }
 
@@ -315,9 +371,10 @@ namespace Mids_Reborn.UI.Forms
             _contextButton = CreateSectionButton("Context", CombatSection.Context);
             _playerButton = CreateSectionButton("Player", CombatSection.Player);
             _targetButton = CreateSectionButton("Target", CombatSection.Target);
+            _defianceButton = CreateSectionButton("Defiance", CombatSection.Defiance);
             _teamButton = CreateSectionButton("Team", CombatSection.Team);
 
-            _navigationRail.Controls.AddRange([_contextButton, _playerButton, _targetButton, _teamButton]);
+            _navigationRail.Controls.AddRange([_contextButton, _playerButton, _targetButton, _defianceButton, _teamButton]);
             _navigationSurface.Controls.Add(_navigationRail);
 
             _contentHost = new Panel
@@ -330,12 +387,13 @@ namespace Mids_Reborn.UI.Forms
             _contextPage = CreateContextPage();
             _playerPage = CreatePlayerPage();
             _targetPage = CreateTargetPage();
+            _defiancePage = CreateDefiancePage();
             _teamPage = CreateTeamPage();
-            _teamPage.Resize += (_, _) => UpdateTeamGridLayout();
 
             _sectionPanels[CombatSection.Context] = _contextPage;
             _sectionPanels[CombatSection.Player] = _playerPage;
             _sectionPanels[CombatSection.Target] = _targetPage;
+            _sectionPanels[CombatSection.Defiance] = _defiancePage;
             _sectionPanels[CombatSection.Team] = _teamPage;
 
             foreach (var panel in _sectionPanels.Values)
@@ -379,7 +437,7 @@ namespace Mids_Reborn.UI.Forms
         {
             var page = CreatePageHost();
             var layout = CreatePageLayout();
-            page.Controls.Add(layout);
+            page.ContentPanel.Controls.Add(layout);
 
             layout.Controls.Add(CreatePageHeader(
                 "Combat Context",
@@ -439,7 +497,7 @@ namespace Mids_Reborn.UI.Forms
         {
             var page = CreatePageHost();
             var layout = CreatePageLayout();
-            page.Controls.Add(layout);
+            page.ContentPanel.Controls.Add(layout);
 
             layout.Controls.Add(CreatePageHeader(
                 "Player State",
@@ -504,7 +562,7 @@ namespace Mids_Reborn.UI.Forms
         {
             var page = CreatePageHost();
             var layout = CreatePageLayout();
-            page.Controls.Add(layout);
+            page.ContentPanel.Controls.Add(layout);
 
             layout.Controls.Add(CreatePageHeader(
                 "Target State",
@@ -555,6 +613,39 @@ namespace Mids_Reborn.UI.Forms
 
             layout.Controls.Add(statsCard);
 
+            var stateCard = CreateAutoSizeCardPanel();
+            stateCard.Dock = DockStyle.Top;
+            stateCard.Padding = new Padding(18);
+            stateCard.Margin = new Padding(0, 0, 0, 14);
+
+            var stateLayout = CreateFieldGridLayout();
+            stateCard.Controls.Add(stateLayout);
+
+            var statusPanel = new FlowLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                FlowDirection = FlowDirection.LeftToRight,
+                WrapContents = true,
+                Margin = new Padding(0, 0, 0, 6),
+                Padding = Padding.Empty,
+                BackColor = Color.Transparent
+            };
+            statusPanel.Controls.AddRange(
+            [
+                CreateTargetStateCheckBox("Held", TargetHeldCheckBoxOnCheckedChanged, out _targetHeldCheckBox),
+                CreateTargetStateCheckBox("Immobilized", TargetImmobilizedCheckBoxOnCheckedChanged, out _targetImmobilizedCheckBox),
+                CreateTargetStateCheckBox("Stunned", TargetStunnedCheckBoxOnCheckedChanged, out _targetStunnedCheckBox),
+                CreateTargetStateCheckBox("Terrorized", TargetTerrorizedCheckBoxOnCheckedChanged, out _targetTerrorizedCheckBox),
+                CreateTargetStateCheckBox("Slept Recently", TargetSleptRecentlyCheckBoxOnCheckedChanged, out _targetSleptRecentlyCheckBox)
+            ]);
+
+            stateLayout.Controls.Add(CreateFieldLabel("Target Status"), 0, 0);
+            stateLayout.Controls.Add(statusPanel, 1, 0);
+
+            layout.Controls.Add(stateCard);
+
             return page;
         }
 
@@ -562,11 +653,11 @@ namespace Mids_Reborn.UI.Forms
         {
             var page = CreatePageHost();
             var layout = CreatePageLayout();
-            page.Controls.Add(layout);
+            page.ContentPanel.Controls.Add(layout);
 
             layout.Controls.Add(CreatePageHeader(
                 "Team Context",
-                "Adjust teammate counts here. The planner uses these counts for conditional effects and team-size-sensitive combat math."));
+                "Adjust explicit teammate archetype counts here. Team-based inherents read these counts, and Defender Vigilance expands them into per-teammate HP and range assumptions."));
 
             var summaryLayout = CreateSummaryLayout(2);
             summaryLayout.Controls.Add(CreateSummaryCard("Total Members", out _teamTotalMembersValue), 0, 0);
@@ -596,122 +687,417 @@ namespace Mids_Reborn.UI.Forms
             teamCard.Controls.Add(_teamMembersGrid);
             layout.Controls.Add(teamCard);
 
+            _vigilanceCard = CreateAutoSizeCardPanel();
+            _vigilanceCard.Dock = DockStyle.Top;
+            _vigilanceCard.Padding = new Padding(18);
+            _vigilanceCard.Margin = new Padding(0, 0, 0, 14);
+
+            var vigilanceLayout = CreatePageLayout();
+            _vigilanceCard.Controls.Add(vigilanceLayout);
+            vigilanceLayout.Controls.Add(CreatePageHeader(
+                "Vigilance",
+                "For Defenders, each teammate can contribute endurance discount based on missing HP while they are in range."));
+
+            _vigilanceGrid = new TableLayoutPanel
+            {
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = 1,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty,
+                BackColor = Color.Transparent
+            };
+            _vigilanceGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            vigilanceLayout.Controls.Add(_vigilanceGrid);
+
+            layout.Controls.Add(_vigilanceCard);
+
+            return page;
+        }
+
+        private Panel CreateDefiancePage()
+        {
+            var page = CreatePageHost();
+            var layout = CreatePageLayout();
+            page.ContentPanel.Controls.Add(layout);
+
+            layout.Controls.Add(CreatePageHeader(
+                "Defiance",
+                "For Blasters, choose which taken powers are currently feeding Defiance. The total bonus is computed from the real imported grant rows on the active payload path."));
+
+            var summaryLayout = CreateSummaryLayout(2);
+            summaryLayout.Controls.Add(CreateSummaryCard("Current Bonus", out _defianceTotalBonusValue), 0, 0);
+            summaryLayout.Controls.Add(CreateSummaryCard("Active Sources", out _defianceActiveSourcesValue), 1, 0);
+            layout.Controls.Add(summaryLayout);
+
+            _defianceCard = CreateAutoSizeCardPanel();
+            _defianceCard.Dock = DockStyle.Top;
+            _defianceCard.Padding = new Padding(18);
+            _defianceCard.Margin = new Padding(0, 0, 0, 14);
+
+            var defianceLayout = CreatePageLayout();
+            _defianceCard.Controls.Add(defianceLayout);
+            defianceLayout.Controls.Add(CreatePageHeader(
+                "Active Contributors",
+                "Each row represents one taken build power after redirect resolution. Set how many live Defiance grants from that power you want the planner to assume are currently active."));
+
+            _defianceGrid = new TableLayoutPanel
+            {
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = 1,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty,
+                BackColor = Color.Transparent
+            };
+            _defianceGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            defianceLayout.Controls.Add(_defianceGrid);
+
+            layout.Controls.Add(_defianceCard);
+
             return page;
         }
 
         private void BuildTeamRows()
         {
-            if (_teamMembersGrid == null)
+            if (_teamMembersGrid == null || MidsContext.Config == null)
             {
                 return;
             }
 
-            _teamDefinitions.Clear();
-            _teamDefinitions.AddRange(GetTeamMemberDefinitions());
-            var availableWidth = _teamPage?.ClientSize.Width > 0 ? _teamPage.ClientSize.Width : ClientSize.Width;
-            _teamGridColumnCount = availableWidth >= 720 ? 2 : 1;
-
-            _teamRows.Clear();
+            _teamArchetypeOptions.Clear();
+            _teamArchetypeOptions.AddRange(GetTeamMemberDefinitions());
+            _teamCountRows.Clear();
             _teamMembersGrid.Controls.Clear();
             _teamMembersGrid.ColumnStyles.Clear();
             _teamMembersGrid.RowStyles.Clear();
+            _teamMembersGrid.ColumnCount = 2;
+            _teamMembersGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            _teamMembersGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
 
-            _teamMembersGrid.ColumnCount = _teamGridColumnCount;
-            for (var column = 0; column < _teamGridColumnCount; column++)
-            {
-                _teamMembersGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F / _teamGridColumnCount));
-            }
-
-            var rowCount = (int)Math.Ceiling(_teamDefinitions.Count / (float)_teamGridColumnCount);
+            var rowCount = (int)Math.Ceiling(_teamArchetypeOptions.Count / 2f);
             _teamMembersGrid.RowCount = rowCount;
-
             for (var row = 0; row < rowCount; row++)
             {
                 _teamMembersGrid.RowStyles.Add(new RowStyle(SizeType.AutoSize));
             }
 
-            for (var index = 0; index < _teamDefinitions.Count; index++)
+            for (var index = 0; index < _teamArchetypeOptions.Count; index++)
             {
-                var row = index / _teamGridColumnCount;
-                var column = index % _teamGridColumnCount;
-                var definition = _teamDefinitions[index];
-                var rowPanel = CreateTeamRow(definition);
-                _teamMembersGrid.Controls.Add(rowPanel, column, row);
+                var row = index / 2;
+                var column = index % 2;
+                _teamMembersGrid.Controls.Add(CreateTeamCountRow(_teamArchetypeOptions[index]), column, row);
             }
+
+            RebuildVigilanceRows();
         }
 
-        private Panel CreateTeamRow(TeamMemberDefinition definition)
+        private void UpdateTeamGridLayout()
+        {
+            _teamMembersGrid?.PerformLayout();
+            _vigilanceGrid?.PerformLayout();
+            _vigilanceCard?.PerformLayout();
+            _teamPage?.PerformLayout();
+        }
+
+        private Panel CreateTeamCountRow(TeammateArchetypeOption definition)
         {
             var rowPanel = new Panel
             {
                 Dock = DockStyle.Top,
-                Height = 36,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 Margin = new Padding(0, 0, 10, 8),
-                Padding = new Padding(0),
+                Padding = Padding.Empty,
                 BackColor = Color.Transparent
             };
-
             rowPanel.Paint += CardBorderPaint;
 
             var rowLayout = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
-                ColumnCount = 4,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = 2,
                 Margin = Padding.Empty,
                 Padding = new Padding(10, 5, 10, 5),
                 BackColor = Color.Transparent
             };
             rowLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            rowLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 34F));
-            rowLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 46F));
-            rowLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 34F));
+            rowLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 70F));
+            rowLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
             var nameLabel = CreateFieldLabel(definition.DisplayName);
             nameLabel.Dock = DockStyle.Fill;
             nameLabel.TextAlign = ContentAlignment.MiddleLeft;
+            nameLabel.AutoSize = false;
+            nameLabel.Margin = new Padding(0, 2, 12, 2);
+            nameLabel.MinimumSize = new Size(0, 26);
 
-            var decrementButton = CreateTinyTeamButton("-");
-            decrementButton.Tag = definition.Key;
-            decrementButton.Click += TeamDecrementButtonOnClick;
-
-            var incrementButton = CreateTinyTeamButton("+");
-            incrementButton.Tag = definition.Key;
-            incrementButton.Click += TeamIncrementButtonOnClick;
-
-            var valueLabel = CreateChipLabel("0");
-            valueLabel.Dock = DockStyle.Fill;
+            var countUpDown = new NumericUpDown
+            {
+                Dock = DockStyle.Fill,
+                Margin = new Padding(10, 0, 0, 0),
+                Minimum = 0,
+                Maximum = MaxMembers,
+                DecimalPlaces = 0,
+                TextAlign = HorizontalAlignment.Center,
+                Font = new Font("Noto Sans SemiBold", 10F, FontStyle.Bold),
+                Tag = definition.Value,
+                Height = 26
+            };
+            countUpDown.ValueChanged += TeamCountUpDownOnValueChanged;
+            SetToolTipSafe(countUpDown, $"How many {definition.DisplayName} teammates to assume are currently on the team.");
 
             rowLayout.Controls.Add(nameLabel, 0, 0);
-            rowLayout.Controls.Add(decrementButton, 1, 0);
-            rowLayout.Controls.Add(valueLabel, 2, 0);
-            rowLayout.Controls.Add(incrementButton, 3, 0);
+            rowLayout.Controls.Add(countUpDown, 1, 0);
 
             rowPanel.Controls.Add(rowLayout);
-
-            _teamRows[definition.Key] = new TeamRowControls
+            _teamCountRows[definition.Value] = new TeamCountRowControls
             {
-                ValueLabel = valueLabel
+                CountUpDown = countUpDown
             };
 
             return rowPanel;
         }
 
-        private void UpdateTeamGridLayout()
+        private void RebuildVigilanceRows()
         {
-            if (_teamMembersGrid == null)
+            if (_vigilanceCard == null || _vigilanceGrid == null || MidsContext.Config == null)
             {
                 return;
             }
 
-            var availableWidth = _teamPage?.ClientSize.Width > 0 ? _teamPage.ClientSize.Width : ClientSize.Width;
-            var desiredColumnCount = availableWidth >= 720 ? 2 : 1;
-            if (desiredColumnCount == _teamGridColumnCount && _teamRows.Count > 0)
+            EnsureTeamRosterSlots();
+
+            var activeSlots = MidsContext.Config.TeamRoster
+                .Select((slot, index) => new { Slot = slot, Index = index })
+                .Where(entry => !string.IsNullOrWhiteSpace(entry.Slot.Archetype))
+                .ToArray();
+
+            var shouldShow = IsDefenderArchetype() && activeSlots.Length > 0;
+            if (!shouldShow)
+            {
+                _vigilanceCard.Visible = false;
+                if (_vigilanceRows.Count == 0 && _vigilanceGrid.Controls.Count == 0 && _vigilanceGrid.RowCount == 0)
+                {
+                    return;
+                }
+
+                _vigilanceRows.Clear();
+                _vigilanceGrid.Controls.Clear();
+                _vigilanceGrid.RowStyles.Clear();
+                _vigilanceGrid.RowCount = 0;
+                return;
+            }
+
+            var activeIndexes = activeSlots.Select(entry => entry.Index).ToArray();
+            var existingIndexes = _vigilanceRows.Keys.OrderBy(index => index).ToArray();
+            _vigilanceCard.Visible = true;
+
+            if (existingIndexes.SequenceEqual(activeIndexes))
             {
                 return;
             }
 
-            BuildTeamRows();
-            UpdateTeamControls();
+            _vigilanceGrid.SuspendLayout();
+            try
+            {
+                _vigilanceRows.Clear();
+                _vigilanceGrid.Controls.Clear();
+                _vigilanceGrid.RowStyles.Clear();
+                _vigilanceGrid.RowCount = activeSlots.Length;
+                for (var row = 0; row < activeSlots.Length; row++)
+                {
+                    _vigilanceGrid.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                    _vigilanceGrid.Controls.Add(CreateVigilanceRow(activeSlots[row].Index), 0, row);
+                }
+            }
+            finally
+            {
+                _vigilanceGrid.ResumeLayout(true);
+            }
+        }
+
+        private Panel CreateVigilanceRow(int slotIndex)
+        {
+            var rowPanel = new Panel
+            {
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                Margin = new Padding(0, 0, 0, 8),
+                Padding = Padding.Empty,
+                BackColor = Color.Transparent
+            };
+            rowPanel.Paint += CardBorderPaint;
+
+            var rowLayout = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = 3,
+                Margin = Padding.Empty,
+                Padding = new Padding(10, 5, 10, 5),
+                BackColor = Color.Transparent
+            };
+            rowLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 160F));
+            rowLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            rowLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 110F));
+            rowLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+
+            var nameLabel = CreateFieldLabel($"Teammate {slotIndex + 1}");
+            nameLabel.Dock = DockStyle.Fill;
+            nameLabel.TextAlign = ContentAlignment.MiddleLeft;
+            nameLabel.AutoSize = false;
+            nameLabel.Margin = new Padding(0, 2, 12, 2);
+            nameLabel.MinimumSize = new Size(0, 28);
+
+            var hpRow = CreateSliderRow(out var hpTrackBar, out var hpValueLabel, VigilanceHpTrackBarOnValueChanged, compact: true);
+            hpTrackBar.Tag = slotIndex;
+            hpValueLabel.Text = "100%";
+
+            var inRangeCheckBox = new CheckBox
+            {
+                AutoSize = true,
+                Text = "In Range",
+                Margin = new Padding(0, 5, 0, 0),
+                Padding = Padding.Empty,
+                BackColor = Color.Transparent,
+                Tag = slotIndex
+            };
+            inRangeCheckBox.CheckedChanged += VigilanceInRangeCheckBoxOnCheckedChanged;
+
+            rowLayout.Controls.Add(nameLabel, 0, 0);
+            rowLayout.Controls.Add(hpRow, 1, 0);
+            rowLayout.Controls.Add(inRangeCheckBox, 2, 0);
+
+            rowPanel.Controls.Add(rowLayout);
+            _vigilanceRows[slotIndex] = new VigilanceRowControls
+            {
+                NameLabel = nameLabel,
+                HpTrackBar = hpTrackBar,
+                HpValueLabel = hpValueLabel,
+                InRangeCheckBox = inRangeCheckBox
+            };
+
+            return rowPanel;
+        }
+
+        private void RebuildDefianceRows(DefianceResolution resolution)
+        {
+            if (_defianceGrid == null)
+            {
+                return;
+            }
+
+            _defianceGrid.Controls.Clear();
+            _defianceGrid.RowStyles.Clear();
+            _defianceGrid.RowCount = 0;
+
+            if (resolution.Contributors.Count == 0)
+            {
+                var emptyLabel = CreateMutedLabel("No taken build powers currently grant modern Defiance.");
+                emptyLabel.Margin = new Padding(0, 0, 0, 8);
+                _defianceGrid.RowCount = 1;
+                _defianceGrid.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                _defianceGrid.Controls.Add(emptyLabel, 0, 0);
+                return;
+            }
+
+            _defianceGrid.RowCount = resolution.Contributors.Count;
+            for (var row = 0; row < resolution.Contributors.Count; row++)
+            {
+                _defianceGrid.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+                _defianceGrid.Controls.Add(CreateDefianceContributorRow(resolution.Contributors[row]), 0, row);
+            }
+        }
+
+        private Panel CreateDefianceContributorRow(DefianceContributorState contributor)
+        {
+            var rowPanel = new Panel
+            {
+                Dock = DockStyle.Top,
+                Height = 56,
+                Margin = new Padding(0, 0, 0, 8),
+                Padding = Padding.Empty,
+                BackColor = Color.Transparent
+            };
+            rowPanel.Paint += CardBorderPaint;
+
+            var rowLayout = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                ColumnCount = 2,
+                Margin = Padding.Empty,
+                Padding = new Padding(10, 6, 10, 6),
+                BackColor = Color.Transparent
+            };
+            rowLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            rowLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 96F));
+
+            var descriptor = contributor.Descriptor;
+            var titleLabel = CreateFieldLabel(descriptor.SourceDisplayName);
+            titleLabel.Margin = new Padding(0, 0, 0, 2);
+
+            var summaryLabel = CreateMutedLabel(BuildDefianceContributorSummary(descriptor));
+            summaryLabel.Margin = new Padding(0);
+            summaryLabel.MaximumSize = new Size(480, 0);
+
+            var textPanel = new TableLayoutPanel
+            {
+                Dock = DockStyle.Fill,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = 1,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty,
+                BackColor = Color.Transparent
+            };
+            textPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            textPanel.Controls.Add(titleLabel, 0, 0);
+            textPanel.Controls.Add(summaryLabel, 0, 1);
+
+            var countCombo = new MidsDropDownList
+            {
+                Dock = DockStyle.Fill,
+                Margin = new Padding(12, 4, 0, 0),
+                Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold),
+                Tag = descriptor
+            };
+            for (var count = 0; count <= descriptor.MaxActiveCount; count++)
+            {
+                countCombo.Items.Add(new DefianceCountOption(count));
+            }
+
+            var selectedCount = countCombo.Items
+                .OfType<DefianceCountOption>()
+                .FirstOrDefault(option => option.Value == contributor.ActiveCount)
+                ?? new DefianceCountOption(0);
+            countCombo.SelectedItem = selectedCount;
+            countCombo.SelectedIndexChanged += DefianceCountComboOnSelectedIndexChanged;
+            SetToolTipSafe(countCombo, "How many active Defiance grants from this power should the planner assume are currently contributing.");
+
+            rowLayout.Controls.Add(textPanel, 0, 0);
+            rowLayout.Controls.Add(countCombo, 1, 0);
+
+            rowPanel.Controls.Add(rowLayout);
+            return rowPanel;
+        }
+
+        private static string BuildDefianceContributorSummary(DefianceContributorDescriptor descriptor)
+        {
+            var payloadText = string.Equals(
+                descriptor.SourceDisplayName,
+                descriptor.ResolvedDisplayName,
+                StringComparison.OrdinalIgnoreCase)
+                ? string.Empty
+                : $"{descriptor.ResolvedDisplayName} · ";
+
+            return $"{payloadText}+{DisplayValueFormatter.FormatPercentFromScale(descriptor.Magnitude, 1)}% for {DisplayValueFormatter.FormatNumber(descriptor.Duration, 2)}s";
         }
 
         private static TableLayoutPanel CreatePageLayout()
@@ -768,11 +1154,10 @@ namespace Mids_Reborn.UI.Forms
             return layout;
         }
 
-        private static Panel CreatePageHost()
+        private static MidsVScrollPanel CreatePageHost()
         {
-            return new Panel
+            return new MidsVScrollPanel
             {
-                AutoScroll = true,
                 BackColor = Color.Transparent,
                 Padding = Padding.Empty,
                 Margin = Padding.Empty
@@ -838,11 +1223,17 @@ namespace Mids_Reborn.UI.Forms
             return card;
         }
 
-        private Panel CreateSliderRow(out MidsTrackBar trackBar, out Label valueLabel, EventHandler valueChangedHandler)
+        private Panel CreateSliderRow(
+            out MidsTrackBar trackBar,
+            out Label valueLabel,
+            EventHandler valueChangedHandler,
+            bool compact = false)
         {
             var rowLayout = new TableLayoutPanel
             {
                 Dock = DockStyle.Fill,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 ColumnCount = 2,
                 Margin = Padding.Empty,
                 Padding = Padding.Empty,
@@ -850,6 +1241,7 @@ namespace Mids_Reborn.UI.Forms
             };
             rowLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             rowLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 64F));
+            rowLayout.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
             trackBar = new MidsTrackBar
             {
@@ -859,14 +1251,14 @@ namespace Mids_Reborn.UI.Forms
                 SmallChange = 1,
                 LargeChange = 10,
                 Height = 30,
-                Margin = new Padding(0, 0, 12, 10),
+                Margin = compact ? new Padding(0, 0, 12, 0) : new Padding(0, 0, 12, 10),
                 ShowText = false,
                 ShowValue = false
             };
             trackBar.ValueChanged += valueChangedHandler;
 
             valueLabel = CreateChipLabel("100%");
-            valueLabel.Margin = new Padding(0, 0, 0, 10);
+            valueLabel.Margin = compact ? Padding.Empty : new Padding(0, 0, 0, 10);
 
             rowLayout.Controls.Add(trackBar, 0, 0);
             rowLayout.Controls.Add(valueLabel, 1, 0);
@@ -909,6 +1301,22 @@ namespace Mids_Reborn.UI.Forms
                 Margin = Padding.Empty,
                 Tag = "chip"
             };
+        }
+
+        private CheckBox CreateTargetStateCheckBox(string text, EventHandler handler, out CheckBox checkBox)
+        {
+            checkBox = new CheckBox
+            {
+                AutoSize = true,
+                Text = text,
+                Margin = new Padding(0, 0, 12, 8),
+                Padding = Padding.Empty,
+                BackColor = Color.Transparent,
+                Tag = "text"
+            };
+            checkBox.CheckedChanged += handler;
+            SetToolTipSafe(checkBox, $"Assume the target is currently {text.ToLowerInvariant()} for planner-only combat math.");
+            return checkBox;
         }
 
         private Panel CreateCardPanel()
@@ -999,21 +1407,13 @@ namespace Mids_Reborn.UI.Forms
             return button;
         }
 
-        private static MidsVectorButton CreateTinyTeamButton(string text)
-        {
-            return new MidsVectorButton
-            {
-                Text = text,
-                Width = 28,
-                Height = 24,
-                Margin = Padding.Empty,
-                Font = new Font("Noto Sans SemiBold", 10F, FontStyle.Bold),
-                CornerRadius = 6
-            };
-        }
-
         private void SetSelectedSection(CombatSection section)
         {
+            if (section == CombatSection.Defiance && !IsBlasterArchetype())
+            {
+                section = CombatSection.Context;
+            }
+
             _selectedSection = section;
 
             foreach (var (currentSection, button) in _sectionButtons)
@@ -1032,6 +1432,10 @@ namespace Mids_Reborn.UI.Forms
             {
                 UpdateTeamGridLayout();
             }
+            else if (section == CombatSection.Defiance)
+            {
+                UpdateDefianceControls();
+            }
 
             UpdateResetButtonTooltip();
         }
@@ -1048,6 +1452,7 @@ namespace Mids_Reborn.UI.Forms
                 CombatSection.Context => "Context",
                 CombatSection.Player => "Player",
                 CombatSection.Target => "Target",
+                CombatSection.Defiance => "Defiance",
                 CombatSection.Team => "Team",
                 _ => "Current"
             };
@@ -1140,25 +1545,166 @@ namespace Mids_Reborn.UI.Forms
             {
                 _targetClassSummaryValue.Text = profile.ClassName;
             }
+
+            if (_targetHeldCheckBox != null)
+            {
+                _targetHeldCheckBox.Checked = targetSettings.Held;
+            }
+
+            if (_targetImmobilizedCheckBox != null)
+            {
+                _targetImmobilizedCheckBox.Checked = targetSettings.Immobilized;
+            }
+
+            if (_targetStunnedCheckBox != null)
+            {
+                _targetStunnedCheckBox.Checked = targetSettings.Stunned;
+            }
+
+            if (_targetTerrorizedCheckBox != null)
+            {
+                _targetTerrorizedCheckBox.Checked = targetSettings.Terrorized;
+            }
+
+            if (_targetSleptRecentlyCheckBox != null)
+            {
+                _targetSleptRecentlyCheckBox.Checked = targetSettings.SleptRecently;
+            }
         }
 
         private void UpdateTeamControls()
         {
-            if (_teamTotalMembersValue == null || _teamRemainingSlotsValue == null)
+            if (_teamTotalMembersValue == null || _teamRemainingSlotsValue == null || MidsContext.Config == null)
             {
                 return;
             }
 
-            foreach (var (key, row) in _teamRows)
+            _teamPage?.SuspendLayout();
+            _teamMembersGrid?.SuspendLayout();
+            _vigilanceCard?.SuspendLayout();
+            _vigilanceGrid?.SuspendLayout();
+            try
             {
-                row.ValueLabel.Text = GetTeamMemberCount(key).ToString();
+                EnsureTeamRosterSlots();
+
+                foreach (var option in _teamArchetypeOptions)
+                {
+                    if (!_teamCountRows.TryGetValue(option.Value, out var row))
+                    {
+                        continue;
+                    }
+
+                    var count = MidsContext.Config.TeamMembers.TryGetValue(option.Value, out var configured)
+                        ? configured
+                        : 0;
+                    if ((int)row.CountUpDown.Value != count)
+                    {
+                        row.CountUpDown.Value = count;
+                    }
+                }
+
+                RebuildVigilanceRows();
+
+                var countsByArchetype = CombatContextState.NormalizeTeamMembers(MidsContext.Config.TeamMembers);
+                var ordinalByArchetype = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+                for (var index = 0; index < MidsContext.Config.TeamRoster.Count; index++)
+                {
+                    var slot = MidsContext.Config.TeamRoster[index];
+                    if (_vigilanceRows.TryGetValue(index, out var vigilanceRow))
+                    {
+                        var clampedHp = ClampPercent(slot.HpPercent);
+                        var ordinal = ordinalByArchetype.TryGetValue(slot.Archetype, out var currentOrdinal)
+                            ? currentOrdinal + 1
+                            : 1;
+                        ordinalByArchetype[slot.Archetype] = ordinal;
+                        var totalForArchetype = countsByArchetype.TryGetValue(slot.Archetype, out var count)
+                            ? count
+                            : 1;
+                        vigilanceRow.NameLabel.Text = BuildVigilanceLabel(slot.Archetype, ordinal, totalForArchetype);
+                        if (vigilanceRow.HpTrackBar.Value != clampedHp)
+                        {
+                            vigilanceRow.HpTrackBar.Value = clampedHp;
+                        }
+
+                        vigilanceRow.HpValueLabel.Text = $"{clampedHp}%";
+                        if (vigilanceRow.InRangeCheckBox.Checked != slot.InRange)
+                        {
+                            vigilanceRow.InRangeCheckBox.Checked = slot.InRange;
+                        }
+                    }
+                }
+
+                var totalMembers = countsByArchetype.Values.Sum();
+
+                _teamTotalMembersValue.Text = totalMembers.ToString();
+                _teamRemainingSlotsValue.Text = Math.Max(0, MaxMembers - totalMembers).ToString();
+            }
+            finally
+            {
+                _vigilanceGrid?.ResumeLayout(true);
+                _vigilanceCard?.ResumeLayout(true);
+                _teamMembersGrid?.ResumeLayout(true);
+                _teamPage?.ResumeLayout(true);
+            }
+        }
+
+        private void UpdateDefianceControls()
+        {
+            if (_defianceTotalBonusValue == null || _defianceActiveSourcesValue == null || _defianceCard == null || _defianceGrid == null)
+            {
+                return;
             }
 
-            var totalMembers = MidsContext.Config.TeamMembers.Values.Sum();
-            MidsContext.Config.TeamSize = Math.Max(1, totalMembers + 1);
+            var resolution = DefiancePlanner.Resolve(
+                MidsContext.Character?.CurrentBuild,
+                MidsContext.Config?.CombatContextSettings.Defiance);
 
-            _teamTotalMembersValue.Text = totalMembers.ToString();
-            _teamRemainingSlotsValue.Text = Math.Max(0, MaxMembers - totalMembers).ToString();
+            UpdateDefianceSummary(resolution);
+            _defianceCard.Visible = IsBlasterArchetype();
+            if (_defianceCard.Visible)
+            {
+                _defianceGrid.SuspendLayout();
+                try
+                {
+                    RebuildDefianceRows(resolution);
+                }
+                finally
+                {
+                    _defianceGrid.ResumeLayout(true);
+                }
+            }
+            else
+            {
+                _defianceGrid.Controls.Clear();
+                _defianceGrid.RowStyles.Clear();
+                _defianceGrid.RowCount = 0;
+            }
+        }
+
+        private void UpdateDefianceSummary(DefianceResolution resolution)
+        {
+            if (_defianceTotalBonusValue == null || _defianceActiveSourcesValue == null)
+            {
+                return;
+            }
+
+            _defianceTotalBonusValue.Text = $"+{DisplayValueFormatter.FormatPercentFromScale(resolution.TotalMagnitude, 1)}%";
+            _defianceActiveSourcesValue.Text = resolution.ActiveContributorCount.ToString();
+        }
+
+        private void UpdateSectionVisibility()
+        {
+            var showDefiance = IsBlasterArchetype();
+            if (_defianceButton != null)
+            {
+                _defianceButton.Visible = showDefiance;
+            }
+
+            if (!showDefiance && _selectedSection == CombatSection.Defiance)
+            {
+                SetSelectedSection(CombatSection.Context);
+                return;
+            }
         }
 
         private void UpdateTopMostButtonState()
@@ -1346,6 +1892,31 @@ namespace Mids_Reborn.UI.Forms
             BuildUpdate("cfg.target.profileid", (int)option.Id);
         }
 
+        private void TargetHeldCheckBoxOnCheckedChanged(object? sender, EventArgs e)
+        {
+            UpdateTargetStateToggle("cfg.target.held", _targetHeldCheckBox?.Checked == true, settings => settings.Held = _targetHeldCheckBox?.Checked == true);
+        }
+
+        private void TargetImmobilizedCheckBoxOnCheckedChanged(object? sender, EventArgs e)
+        {
+            UpdateTargetStateToggle("cfg.target.immobilized", _targetImmobilizedCheckBox?.Checked == true, settings => settings.Immobilized = _targetImmobilizedCheckBox?.Checked == true);
+        }
+
+        private void TargetStunnedCheckBoxOnCheckedChanged(object? sender, EventArgs e)
+        {
+            UpdateTargetStateToggle("cfg.target.stunned", _targetStunnedCheckBox?.Checked == true, settings => settings.Stunned = _targetStunnedCheckBox?.Checked == true);
+        }
+
+        private void TargetTerrorizedCheckBoxOnCheckedChanged(object? sender, EventArgs e)
+        {
+            UpdateTargetStateToggle("cfg.target.terrorized", _targetTerrorizedCheckBox?.Checked == true, settings => settings.Terrorized = _targetTerrorizedCheckBox?.Checked == true);
+        }
+
+        private void TargetSleptRecentlyCheckBoxOnCheckedChanged(object? sender, EventArgs e)
+        {
+            UpdateTargetStateToggle("cfg.target.sleptrecently", _targetSleptRecentlyCheckBox?.Checked == true, settings => settings.SleptRecently = _targetSleptRecentlyCheckBox?.Checked == true);
+        }
+
         private void PlayerAliveButtonOnClick(object? sender, EventArgs e)
         {
             if (_suppressUiEvents || MidsContext.Config == null)
@@ -1377,40 +1948,97 @@ namespace Mids_Reborn.UI.Forms
             BuildUpdate("cfg.player.hp", 0);
         }
 
-        private void TeamIncrementButtonOnClick(object? sender, EventArgs e)
+        private void TeamCountUpDownOnValueChanged(object? sender, EventArgs e)
         {
-            if (MidsContext.Config == null || sender is not MidsVectorButton button || button.Tag is not string key)
+            if (_suppressUiEvents || MidsContext.Config == null || sender is not NumericUpDown countUpDown || countUpDown.Tag is not string archetype)
             {
                 return;
             }
 
-            var totalMembers = MidsContext.Config.TeamMembers.Values.Sum();
-            if (totalMembers >= MaxMembers)
+            var count = (int)countUpDown.Value;
+            if (count <= 0)
             {
-                return;
+                MidsContext.Config.TeamMembers.Remove(archetype);
+            }
+            else
+            {
+                MidsContext.Config.TeamMembers[archetype] = count;
             }
 
-            SetTeamMemberCount(key, GetTeamMemberCount(key) + 1);
+            MidsContext.Config.SynchronizeTeamRosterFromTeamMembers();
             UpdateTeamControls();
             _refreshInfo();
         }
 
-        private void TeamDecrementButtonOnClick(object? sender, EventArgs e)
+        private void VigilanceHpTrackBarOnValueChanged(object? sender, EventArgs e)
         {
-            if (MidsContext.Config == null || sender is not MidsVectorButton button || button.Tag is not string key)
+            if (_suppressUiEvents || MidsContext.Config == null || sender is not MidsTrackBar trackBar || trackBar.Tag is not int slotIndex)
             {
                 return;
             }
 
-            var current = GetTeamMemberCount(key);
-            if (current <= 0)
+            EnsureTeamRosterSlots();
+            if (slotIndex < 0 || slotIndex >= MidsContext.Config.TeamRoster.Count)
             {
                 return;
             }
 
-            SetTeamMemberCount(key, current - 1);
+            MidsContext.Config.TeamRoster[slotIndex].HpPercent = ClampPercent(trackBar.Value);
             UpdateTeamControls();
             _refreshInfo();
+        }
+
+        private void VigilanceInRangeCheckBoxOnCheckedChanged(object? sender, EventArgs e)
+        {
+            if (_suppressUiEvents || MidsContext.Config == null || sender is not CheckBox checkBox || checkBox.Tag is not int slotIndex)
+            {
+                return;
+            }
+
+            EnsureTeamRosterSlots();
+            if (slotIndex < 0 || slotIndex >= MidsContext.Config.TeamRoster.Count)
+            {
+                return;
+            }
+
+            MidsContext.Config.TeamRoster[slotIndex].InRange = checkBox.Checked;
+            UpdateTeamControls();
+            _refreshInfo();
+        }
+
+        private void DefianceCountComboOnSelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (_suppressUiEvents ||
+                MidsContext.Config == null ||
+                sender is not MidsDropDownList combo ||
+                combo.Tag is not DefianceContributorDescriptor descriptor ||
+                combo.SelectedItem is not DefianceCountOption option)
+            {
+                return;
+            }
+
+            DefiancePlanner.SetActiveCount(
+                MidsContext.Config.CombatContextSettings.Defiance,
+                descriptor,
+                option.Value);
+
+            var resolution = DefiancePlanner.Resolve(
+                MidsContext.Character?.CurrentBuild,
+                MidsContext.Config.CombatContextSettings.Defiance);
+            UpdateDefianceSummary(resolution);
+            _refreshInfo();
+        }
+
+        private void UpdateTargetStateToggle(string settingName, bool enabled, Action<ConfigData.CombatContext.Target> updateAction)
+        {
+            if (_suppressUiEvents || MidsContext.Config == null)
+            {
+                return;
+            }
+
+            updateAction(MidsContext.Config.CombatContextSettings.TargetSettings);
+            UpdateTargetControls();
+            BuildUpdate(settingName, enabled ? 1 : 0);
         }
 
         private void TopMostButtonOnClick(object? sender, EventArgs e)
@@ -1432,6 +2060,9 @@ namespace Mids_Reborn.UI.Forms
                 case CombatSection.Target:
                     ResetTarget();
                     break;
+                case CombatSection.Defiance:
+                    ResetDefiance();
+                    break;
                 case CombatSection.Team:
                     ResetTeam();
                     break;
@@ -1443,6 +2074,7 @@ namespace Mids_Reborn.UI.Forms
             ResetContext();
             ResetPlayer();
             ResetTarget();
+            ResetDefiance();
             ResetTeam();
             RefreshFromConfig();
             _refreshInfo();
@@ -1572,10 +2204,23 @@ namespace Mids_Reborn.UI.Forms
             MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent = 100;
             MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent = 100;
             MidsContext.Config.CombatContextSettings.TargetSettings.ProfileId = (int)CombatTargetProfileId.Boss;
+            MidsContext.Config.CombatContextSettings.TargetSettings.Held = false;
+            MidsContext.Config.CombatContextSettings.TargetSettings.Immobilized = false;
+            MidsContext.Config.CombatContextSettings.TargetSettings.Stunned = false;
+            MidsContext.Config.CombatContextSettings.TargetSettings.Terrorized = false;
+            MidsContext.Config.CombatContextSettings.TargetSettings.SleptRecently = false;
+            MidsContext.Config.CombatContextSettings.TargetSettings.VulnerabilityActive = false;
+            MidsContext.Config.CombatContextSettings.TargetSettings.OpportunityState = (int)CombatTargetOpportunityState.None;
             RefreshFromConfig();
             BuildUpdate("cfg.target.hp", 100);
             BuildUpdate("cfg.target.end", 100);
             BuildUpdate("cfg.target.profileid", (int)CombatTargetProfileId.Boss);
+            BuildUpdate("cfg.target.held", 0);
+            BuildUpdate("cfg.target.immobilized", 0);
+            BuildUpdate("cfg.target.stunned", 0);
+            BuildUpdate("cfg.target.terrorized", 0);
+            BuildUpdate("cfg.target.sleptrecently", 0);
+            BuildUpdate("cfg.target.vulnerabilityactive", 0);
         }
 
         private void ResetTeam()
@@ -1586,7 +2231,20 @@ namespace Mids_Reborn.UI.Forms
             }
 
             MidsContext.Config.TeamMembers.Clear();
-            MidsContext.Config.TeamSize = 1;
+            MidsContext.Config.TeamRoster.Clear();
+            MidsContext.Config.SynchronizeTeamRosterFromTeamMembers();
+            RefreshFromConfig();
+            _refreshInfo();
+        }
+
+        private void ResetDefiance()
+        {
+            if (MidsContext.Config == null)
+            {
+                return;
+            }
+
+            MidsContext.Config.CombatContextSettings.Defiance.Contributors.Clear();
             RefreshFromConfig();
             _refreshInfo();
         }
@@ -1625,48 +2283,16 @@ namespace Mids_Reborn.UI.Forms
                 }
 
                 powerEntry.VariableValue = value;
-                power.Stacks = value;
             }
 
             _refreshInfo();
         }
 
-        private List<TeamMemberDefinition> GetTeamMemberDefinitions()
+        private List<TeammateArchetypeOption> GetTeamMemberDefinitions()
         {
-            var definitions = new List<TeamMemberDefinition>
-            {
-                new("Any", "Any"),
-                new("Blaster", "Blaster"),
-                new("Controller", "Controller"),
-                new("Defender", "Defender"),
-                new("Scrapper", "Scrapper"),
-                new("Tanker", "Tanker"),
-                new("Peacebringer", "Peacebringer"),
-                new("Warshade", "Warshade")
-            };
-
-            switch (DatabaseAPI.DatabaseName)
-            {
-                case "Homecoming":
-                    definitions.Add(new TeamMemberDefinition("Sentinel", "Sentinel"));
-                    break;
-                case "Rebirth":
-                    definitions.Add(new TeamMemberDefinition("Guardian", "Guardian"));
-                    break;
-            }
-
-            definitions.AddRange(
-            [
-                new TeamMemberDefinition("Brute", "Brute"),
-                new TeamMemberDefinition("Stalker", "Stalker"),
-                new TeamMemberDefinition("Mastermind", "Mastermind"),
-                new TeamMemberDefinition("Dominator", "Dominator"),
-                new TeamMemberDefinition("Corruptor", "Corruptor"),
-                new TeamMemberDefinition("Arachnos Soldier", "Arachnos Soldier"),
-                new TeamMemberDefinition("Arachnos Widow", "Arachnos Widow")
-            ]);
-
-            return definitions;
+            return CombatContextState.GetAvailableTeammateArchetypes()
+                .Select(definition => new TeammateArchetypeOption(definition.Key, definition.DisplayName))
+                .ToList();
         }
 
         private static int ClampPercent(int value)
@@ -1731,22 +2357,63 @@ namespace Mids_Reborn.UI.Forms
             }
         }
 
-        private int GetTeamMemberCount(string key)
+        private void EnsureTeamRosterSlots()
         {
-            return MidsContext.Config.TeamMembers.TryGetValue(key, out var value)
-                ? value
-                : 0;
-        }
-
-        private void SetTeamMemberCount(string key, int value)
-        {
-            if (value <= 0)
+            if (MidsContext.Config == null)
             {
-                MidsContext.Config.TeamMembers.Remove(key);
                 return;
             }
 
-            MidsContext.Config.TeamMembers[key] = value;
+            MidsContext.Config.SynchronizeTeamRosterFromTeamMembers();
+        }
+
+        private bool IsDefenderArchetype()
+        {
+            var archetype = MidsContext.Character?.Archetype ?? MidsContext.Archetype;
+            if (archetype == null)
+            {
+                return false;
+            }
+
+            return archetype.DisplayName.Equals("Defender", StringComparison.OrdinalIgnoreCase) ||
+                   archetype.ClassName.Equals("Class_Defender", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private bool IsBlasterArchetype()
+        {
+            var archetype = MidsContext.Character?.Archetype ?? MidsContext.Archetype;
+            if (archetype == null)
+            {
+                return false;
+            }
+
+            return archetype.DisplayName.Equals("Blaster", StringComparison.OrdinalIgnoreCase) ||
+                   archetype.ClassName.Equals("Class_Blaster", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private string GetTeammateDisplayName(string? archetype)
+        {
+            if (string.IsNullOrWhiteSpace(archetype))
+            {
+                return string.Empty;
+            }
+
+            return _teamArchetypeOptions
+                .FirstOrDefault(option => option.Value.Equals(archetype, StringComparison.OrdinalIgnoreCase))
+                ?.DisplayName ?? archetype;
+        }
+
+        private string BuildVigilanceLabel(string? archetype, int ordinal, int totalForArchetype)
+        {
+            var displayName = GetTeammateDisplayName(archetype);
+            if (string.IsNullOrWhiteSpace(displayName))
+            {
+                return $"Teammate {ordinal}";
+            }
+
+            return totalForArchetype > 1
+                ? $"{displayName} {ordinal}"
+                : displayName;
         }
 
         private static string FormatSignedValue(int value)

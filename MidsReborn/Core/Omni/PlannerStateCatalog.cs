@@ -7,7 +7,13 @@ internal enum PlannerStateFamily
 {
     StreetJusticeCombo,
     StaffPerfection,
+    Assassination,
     AssassinsFocus,
+    Opportunity,
+    Domination,
+    Fury,
+    Containment,
+    Defiance,
     BloodFrenzy,
     SavageExhausted,
     PackMentality,
@@ -43,6 +49,13 @@ internal enum PlannerStateStackMode
     VariableCount
 }
 
+internal enum PlannerVariableSemantic
+{
+    Count,
+    MeterPercent,
+    PercentScalar
+}
+
 internal sealed class PlannerStateControlDefinition
 {
     public required PlannerStateFamily Family { get; init; }
@@ -59,10 +72,17 @@ internal sealed class PlannerStateControlDefinition
     public int VariableMin { get; init; }
     public int VariableMax { get; init; }
     public int VariableStart { get; init; }
+    public double VariableDisplayDivisor { get; init; } = 1d;
+    public int VariableDisplayPrecision { get; init; }
+    public double VariableDisplayStep { get; init; } = 1d;
+    public PlannerVariableSemantic VariableSemantic { get; init; } = PlannerVariableSemantic.Count;
     public string[] OwningSetTokens { get; init; } = [];
     public string[] RequiredPowerNames { get; init; } = [];
     public string[] ArchetypeTokens { get; init; } = [];
+    public string[] VariableSyncTargets { get; init; } = [];
     public bool VisibleInInherentGrid { get; init; } = true;
+    public bool ApplyVariableScalingModel { get; init; } = true;
+    public Enums.eGridType VisibleGridType { get; init; } = Enums.eGridType.Power;
 
     public bool IsVariableControl => StackMode == PlannerStateStackMode.VariableCount;
     public bool IsModeControl => Mode != PlannerMode.None;
@@ -91,6 +111,24 @@ internal static class PlannerStateCatalog
     internal const string PackMentalityMarker = "Temporary_Powers.Temporary_Powers.Pack_Mentality";
     internal const string InsightMarker = "Temporary_Powers.Temporary_Powers.Psionic_Melee_Insight";
     internal const string AssassinsFocusMarker = "Temporary_Powers.Temporary_Powers.Assassins_Focus";
+    internal const string AssassinationPowerFullName = "Inherent.Inherent.Assassination";
+    internal const string FromHidePowerFullName = "Inherent.Inherent.Stalker_Hidden";
+    internal const string OpportunityPowerFullName = "Inherent.Inherent.Opportunity";
+    internal const string OpportunityMeterPowerFullName = "Inherent.Inherent.Opportunity_Meter";
+    internal const string DominationPowerFullName = "Inherent.Inherent.Domination";
+    internal const string DominationMeterPowerFullName = "Inherent.Inherent.Domination_Meter";
+    internal const string DominationModePowerFullName = "Inherent.Inherent.Domination_Mode";
+    internal const string FuryPowerFullName = "Inherent.Inherent.Rage";
+    internal const string FuryBuffPowerFullName = "Inherent.Inherent.Rage_Buff";
+    internal const string DefiancePowerFullName = "Inherent.Inherent.Defiance";
+    internal const string ContainmentPowerFullName = "Inherent.Inherent.Containment";
+    internal const string ComboLevel1PowerFullName = "Inherent.Inherent.Combo_Level_1";
+    internal const string ComboLevel2PowerFullName = "Inherent.Inherent.Combo_Level_2";
+    internal const string ComboLevel3PowerFullName = "Inherent.Inherent.Combo_Level_3";
+    internal const string BloodFrenzyPowerFullName = "Inherent.Inherent.Blood_Frenzy";
+    internal const string ExhaustedPowerFullName = "Inherent.Inherent.Exhausted";
+    internal const string PackMentalityPowerFullName = "Inherent.Inherent.Pack_Mentality";
+    internal const string InsightPowerFullName = "Inherent.Inherent.Insight";
 
     internal const string MomentumPowerFullName = "Inherent.Inherent.Fast_Mode";
     internal const string PerfectionLevel1PowerFullName = "Inherent.Inherent.Perfection_Level_1";
@@ -115,41 +153,83 @@ internal static class PlannerStateCatalog
         new PlannerStateControlDefinition
         {
             Family = PlannerStateFamily.StreetJusticeCombo,
-            FullName = ComboLevel1Marker,
+            FullName = ComboLevel1PowerFullName,
             DisplayName = "Combo 1",
-            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PresentationType = PlannerStatePresentationType.SyntheticMarkerControl,
             PayloadType = PlannerStatePayloadType.MarkerOnly,
             VisibilityRule = PlannerStateVisibilityRule.AnyPowerInOwningSet,
             StackMode = PlannerStateStackMode.DiscreteMutex,
             Mode = PlannerMode.ComboLevel1,
             MutexGroup = ComboMutexGroup,
+            IconName = "brawling_combolevel1.png",
+            VisibleGridType = Enums.eGridType.Powerset,
             OwningSetTokens = ["streetjustice"]
         },
         new PlannerStateControlDefinition
         {
             Family = PlannerStateFamily.StreetJusticeCombo,
-            FullName = ComboLevel2Marker,
+            FullName = ComboLevel2PowerFullName,
             DisplayName = "Combo 2",
-            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PresentationType = PlannerStatePresentationType.SyntheticMarkerControl,
             PayloadType = PlannerStatePayloadType.MarkerOnly,
             VisibilityRule = PlannerStateVisibilityRule.AnyPowerInOwningSet,
             StackMode = PlannerStateStackMode.DiscreteMutex,
             Mode = PlannerMode.ComboLevel2,
             MutexGroup = ComboMutexGroup,
+            IconName = "brawling_combolevel2.png",
+            VisibleGridType = Enums.eGridType.Powerset,
             OwningSetTokens = ["streetjustice"]
         },
         new PlannerStateControlDefinition
         {
             Family = PlannerStateFamily.StreetJusticeCombo,
-            FullName = ComboLevel3Marker,
+            FullName = ComboLevel3PowerFullName,
             DisplayName = "Combo 3",
-            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PresentationType = PlannerStatePresentationType.SyntheticMarkerControl,
             PayloadType = PlannerStatePayloadType.MarkerOnly,
             VisibilityRule = PlannerStateVisibilityRule.AnyPowerInOwningSet,
             StackMode = PlannerStateStackMode.DiscreteMutex,
             Mode = PlannerMode.ComboLevel3,
             MutexGroup = ComboMutexGroup,
+            IconName = "brawling_combolevel3.png",
+            VisibleGridType = Enums.eGridType.Powerset,
             OwningSetTokens = ["streetjustice"]
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.StreetJusticeCombo,
+            FullName = ComboLevel1Marker,
+            DisplayName = "Combo Level 1",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.HiddenPayload,
+            VisibilityRule = PlannerStateVisibilityRule.AnyPowerInOwningSet,
+            StackMode = PlannerStateStackMode.None,
+            OwningSetTokens = ["streetjustice"],
+            VisibleInInherentGrid = false
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.StreetJusticeCombo,
+            FullName = ComboLevel2Marker,
+            DisplayName = "Combo Level 2",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.HiddenPayload,
+            VisibilityRule = PlannerStateVisibilityRule.AnyPowerInOwningSet,
+            StackMode = PlannerStateStackMode.None,
+            OwningSetTokens = ["streetjustice"],
+            VisibleInInherentGrid = false
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.StreetJusticeCombo,
+            FullName = ComboLevel3Marker,
+            DisplayName = "Combo Level 3",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.HiddenPayload,
+            VisibilityRule = PlannerStateVisibilityRule.AnyPowerInOwningSet,
+            StackMode = PlannerStateStackMode.None,
+            OwningSetTokens = ["streetjustice"],
+            VisibleInInherentGrid = false
         },
         new PlannerStateControlDefinition
         {
@@ -163,6 +243,7 @@ internal static class PlannerStateCatalog
             Mode = PlannerMode.PerfectionLevel1,
             MutexGroup = StaffPerfectionMutexGroup,
             IconName = "stafffighting_perfectionofbodylevel1.png",
+            VisibleGridType = Enums.eGridType.Powerset,
             OwningSetTokens = ["stafffighting"],
             RequiredPowerNames = ["staffmastery"]
         },
@@ -178,6 +259,7 @@ internal static class PlannerStateCatalog
             Mode = PlannerMode.PerfectionLevel2,
             MutexGroup = StaffPerfectionMutexGroup,
             IconName = "stafffighting_perfectionofbodylevel2.png",
+            VisibleGridType = Enums.eGridType.Powerset,
             OwningSetTokens = ["stafffighting"],
             RequiredPowerNames = ["staffmastery"]
         },
@@ -193,6 +275,7 @@ internal static class PlannerStateCatalog
             Mode = PlannerMode.PerfectionLevel3,
             MutexGroup = StaffPerfectionMutexGroup,
             IconName = "stafffighting_perfectionofbodylevel3.png",
+            VisibleGridType = Enums.eGridType.Powerset,
             OwningSetTokens = ["stafffighting"],
             RequiredPowerNames = ["staffmastery"]
         },
@@ -315,6 +398,38 @@ internal static class PlannerStateCatalog
         },
         new PlannerStateControlDefinition
         {
+            Family = PlannerStateFamily.Assassination,
+            FullName = AssassinationPowerFullName,
+            DisplayName = "Assassination",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.MarkerOnly,
+            VisibilityRule = PlannerStateVisibilityRule.SpecificArchetype,
+            StackMode = PlannerStateStackMode.VariableCount,
+            VariableMin = 0,
+            VariableMax = 3,
+            VariableStart = 0,
+            VariableName = "Stacks",
+            VariableSemantic = PlannerVariableSemantic.Count,
+            ArchetypeTokens = ["stalker"],
+            VisibleGridType = Enums.eGridType.Class,
+            VariableSyncTargets = [AssassinsFocusMarker],
+            ApplyVariableScalingModel = false
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.Assassination,
+            FullName = FromHidePowerFullName,
+            DisplayName = "From Hide",
+            PresentationType = PlannerStatePresentationType.SyntheticMarkerControl,
+            PayloadType = PlannerStatePayloadType.MarkerOnly,
+            VisibilityRule = PlannerStateVisibilityRule.SpecificArchetype,
+            StackMode = PlannerStateStackMode.None,
+            Mode = PlannerMode.StalkerHidden,
+            IconName = "brawling_placate.png",
+            ArchetypeTokens = ["stalker"]
+        },
+        new PlannerStateControlDefinition
+        {
             Family = PlannerStateFamily.AssassinsFocus,
             FullName = AssassinsFocusMarker,
             DisplayName = "Assassin's Focus",
@@ -326,7 +441,221 @@ internal static class PlannerStateCatalog
             VariableMax = 3,
             VariableStart = 0,
             VariableName = "Stacks",
-            ArchetypeTokens = ["stalker"]
+            VariableSemantic = PlannerVariableSemantic.Count,
+            ArchetypeTokens = ["stalker"],
+            VisibleInInherentGrid = false
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.Opportunity,
+            FullName = OpportunityPowerFullName,
+            DisplayName = "Opportunity",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.RealPayload,
+            VisibilityRule = PlannerStateVisibilityRule.SpecificArchetype,
+            StackMode = PlannerStateStackMode.VariableCount,
+            VariableMin = 0,
+            VariableMax = 100,
+            VariableStart = 0,
+            VariableName = "Meter",
+            VariableSemantic = PlannerVariableSemantic.MeterPercent,
+            IconName = "inherent_targetlock",
+            ArchetypeTokens = ["sentinel"],
+            VisibleGridType = Enums.eGridType.Class,
+            VariableSyncTargets = [OpportunityMeterPowerFullName],
+            ApplyVariableScalingModel = false
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.Opportunity,
+            FullName = OpportunityMeterPowerFullName,
+            DisplayName = "Opportunity Meter",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.RealPayload,
+            VisibilityRule = PlannerStateVisibilityRule.SpecificArchetype,
+            StackMode = PlannerStateStackMode.VariableCount,
+            VariableMin = 0,
+            VariableMax = 100,
+            VariableStart = 0,
+            VariableName = "Meter",
+            VariableSemantic = PlannerVariableSemantic.MeterPercent,
+            ArchetypeTokens = ["sentinel"],
+            VisibleInInherentGrid = false,
+            ApplyVariableScalingModel = false
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.Domination,
+            FullName = DominationPowerFullName,
+            DisplayName = "Domination",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.MarkerOnly,
+            VisibilityRule = PlannerStateVisibilityRule.SpecificArchetype,
+            StackMode = PlannerStateStackMode.None,
+            Mode = PlannerMode.DominationActive,
+            IconName = "inherent_buffeffects.png",
+            ArchetypeTokens = ["dominator"],
+            VisibleGridType = Enums.eGridType.Class
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.Domination,
+            FullName = DominationMeterPowerFullName,
+            DisplayName = "Domination Meter",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.RealPayload,
+            VisibilityRule = PlannerStateVisibilityRule.SpecificArchetype,
+            StackMode = PlannerStateStackMode.VariableCount,
+            VariableMin = 0,
+            VariableMax = 100,
+            VariableStart = 0,
+            VariableName = "Meter",
+            VariableSemantic = PlannerVariableSemantic.MeterPercent,
+            IconName = "inherent_buffeffects.png",
+            ArchetypeTokens = ["dominator"],
+            VisibleGridType = Enums.eGridType.Class,
+            ApplyVariableScalingModel = false
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.Domination,
+            FullName = DominationModePowerFullName,
+            DisplayName = "Domination Mode",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.HiddenPayload,
+            VisibilityRule = PlannerStateVisibilityRule.SpecificArchetype,
+            StackMode = PlannerStateStackMode.None,
+            ArchetypeTokens = ["dominator"],
+            VisibleInInherentGrid = false
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.Fury,
+            FullName = FuryPowerFullName,
+            DisplayName = "Fury",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.MarkerOnly,
+            VisibilityRule = PlannerStateVisibilityRule.SpecificArchetype,
+            StackMode = PlannerStateStackMode.VariableCount,
+            VariableMin = 0,
+            VariableMax = 100,
+            VariableStart = 0,
+            VariableName = "Meter",
+            VariableSemantic = PlannerVariableSemantic.MeterPercent,
+            ArchetypeTokens = ["brute"],
+            VisibleGridType = Enums.eGridType.Class,
+            VariableSyncTargets = [FuryBuffPowerFullName],
+            ApplyVariableScalingModel = false
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.Fury,
+            FullName = FuryBuffPowerFullName,
+            DisplayName = "Fury Buff",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.RealPayload,
+            VisibilityRule = PlannerStateVisibilityRule.SpecificArchetype,
+            StackMode = PlannerStateStackMode.VariableCount,
+            VariableMin = 0,
+            VariableMax = 100,
+            VariableStart = 0,
+            VariableName = "Meter",
+            VariableSemantic = PlannerVariableSemantic.MeterPercent,
+            ArchetypeTokens = ["brute"],
+            VisibleInInherentGrid = false,
+            ApplyVariableScalingModel = false
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.Containment,
+            FullName = ContainmentPowerFullName,
+            DisplayName = "Containment",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.MarkerOnly,
+            VisibilityRule = PlannerStateVisibilityRule.SpecificArchetype,
+            StackMode = PlannerStateStackMode.None,
+            Mode = PlannerMode.Containment,
+            ArchetypeTokens = ["controller"],
+            VisibleGridType = Enums.eGridType.Class
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.Defiance,
+            FullName = DefiancePowerFullName,
+            DisplayName = "Defiance",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.MarkerOnly,
+            VisibilityRule = PlannerStateVisibilityRule.SpecificArchetype,
+            StackMode = PlannerStateStackMode.None,
+            ArchetypeTokens = ["blaster"],
+            VisibleGridType = Enums.eGridType.Class,
+            ApplyVariableScalingModel = false
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.BloodFrenzy,
+            FullName = BloodFrenzyPowerFullName,
+            DisplayName = "Blood Frenzy",
+            PresentationType = PlannerStatePresentationType.SyntheticWrapperControl,
+            PayloadType = PlannerStatePayloadType.MarkerOnly,
+            VisibilityRule = PlannerStateVisibilityRule.AnyPowerInOwningSet,
+            StackMode = PlannerStateStackMode.VariableCount,
+            VariableMin = 0,
+            VariableMax = 5,
+            VariableStart = 0,
+            VariableName = "Stacks",
+            VariableSemantic = PlannerVariableSemantic.Count,
+            IconName = "savagemelee_bloodfrenzy.png",
+            VisibleGridType = Enums.eGridType.Powerset,
+            OwningSetTokens = ["savagemelee"],
+            VariableSyncTargets = [BloodFrenzyMarker]
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.SavageExhausted,
+            FullName = ExhaustedPowerFullName,
+            DisplayName = "Exhausted",
+            PresentationType = PlannerStatePresentationType.SyntheticMarkerControl,
+            PayloadType = PlannerStatePayloadType.MarkerOnly,
+            VisibilityRule = PlannerStateVisibilityRule.AnyPowerInOwningSet,
+            StackMode = PlannerStateStackMode.None,
+            Mode = PlannerMode.Exhausted,
+            IconName = "savagemelee_exhaustion.png",
+            VisibleGridType = Enums.eGridType.Powerset,
+            OwningSetTokens = ["savagemelee"]
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.PackMentality,
+            FullName = PackMentalityPowerFullName,
+            DisplayName = "Pack Mentality",
+            PresentationType = PlannerStatePresentationType.SyntheticWrapperControl,
+            PayloadType = PlannerStatePayloadType.MarkerOnly,
+            VisibilityRule = PlannerStateVisibilityRule.AnyPowerInOwningSet,
+            StackMode = PlannerStateStackMode.VariableCount,
+            VariableMin = 0,
+            VariableMax = 10,
+            VariableStart = 0,
+            VariableName = "Stacks",
+            VariableSemantic = PlannerVariableSemantic.Count,
+            IconName = "beastmastery_petwillofthewild.png",
+            VisibleGridType = Enums.eGridType.Powerset,
+            OwningSetTokens = ["beastmastery"],
+            VariableSyncTargets = [PackMentalityMarker]
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.Insight,
+            FullName = InsightPowerFullName,
+            DisplayName = "Insight",
+            PresentationType = PlannerStatePresentationType.SyntheticMarkerControl,
+            PayloadType = PlannerStatePayloadType.MarkerOnly,
+            VisibilityRule = PlannerStateVisibilityRule.AnyPowerInOwningSet,
+            StackMode = PlannerStateStackMode.None,
+            Mode = PlannerMode.Insight,
+            IconName = "psionicmelee_insight.png",
+            VisibleGridType = Enums.eGridType.Powerset,
+            OwningSetTokens = ["psionicmelee"]
         },
         new PlannerStateControlDefinition
         {
@@ -341,7 +670,9 @@ internal static class PlannerStateCatalog
             VariableMax = 5,
             VariableStart = 0,
             VariableName = "Stacks",
-            OwningSetTokens = ["savagemelee"]
+            VariableSemantic = PlannerVariableSemantic.Count,
+            OwningSetTokens = ["savagemelee"],
+            VisibleInInherentGrid = false
         },
         new PlannerStateControlDefinition
         {
@@ -349,11 +680,11 @@ internal static class PlannerStateCatalog
             FullName = SavageExhaustedMarker,
             DisplayName = "Exhausted",
             PresentationType = PlannerStatePresentationType.ReuseImportedPower,
-            PayloadType = PlannerStatePayloadType.MarkerOnly,
+            PayloadType = PlannerStatePayloadType.HiddenPayload,
             VisibilityRule = PlannerStateVisibilityRule.AnyPowerInOwningSet,
             StackMode = PlannerStateStackMode.None,
-            Mode = PlannerMode.Exhausted,
-            OwningSetTokens = ["savagemelee"]
+            OwningSetTokens = ["savagemelee"],
+            VisibleInInherentGrid = false
         },
         new PlannerStateControlDefinition
         {
@@ -368,7 +699,9 @@ internal static class PlannerStateCatalog
             VariableMax = 10,
             VariableStart = 0,
             VariableName = "Stacks",
-            OwningSetTokens = ["beastmastery"]
+            VariableSemantic = PlannerVariableSemantic.Count,
+            OwningSetTokens = ["beastmastery"],
+            VisibleInInherentGrid = false
         },
         new PlannerStateControlDefinition
         {
@@ -376,11 +709,11 @@ internal static class PlannerStateCatalog
             FullName = InsightMarker,
             DisplayName = "Insight",
             PresentationType = PlannerStatePresentationType.ReuseImportedPower,
-            PayloadType = PlannerStatePayloadType.MarkerOnly,
+            PayloadType = PlannerStatePayloadType.HiddenPayload,
             VisibilityRule = PlannerStateVisibilityRule.AnyPowerInOwningSet,
             StackMode = PlannerStateStackMode.None,
-            Mode = PlannerMode.Insight,
-            OwningSetTokens = ["psionicmelee"]
+            OwningSetTokens = ["psionicmelee"],
+            VisibleInInherentGrid = false
         },
         new PlannerStateControlDefinition
         {
@@ -393,6 +726,7 @@ internal static class PlannerStateCatalog
             StackMode = PlannerStateStackMode.None,
             Mode = PlannerMode.FastMode,
             IconName = "titanweapons_buildup.png",
+            VisibleGridType = Enums.eGridType.Powerset,
             OwningSetTokens = ["titanweapons"]
         }
     ];
@@ -420,7 +754,12 @@ internal static class PlannerStateCatalog
         [PlannerModeMapper.ToCanonicalName(PlannerMode.PerfectionOfSoul1)] = PlannerStateFamily.StaffPerfection,
         [PlannerModeMapper.ToCanonicalName(PlannerMode.PerfectionOfSoul2)] = PlannerStateFamily.StaffPerfection,
         [PlannerModeMapper.ToCanonicalName(PlannerMode.PerfectionOfSoul3)] = PlannerStateFamily.StaffPerfection,
-        [PlannerModeMapper.ToCanonicalName(PlannerMode.Assassination)] = PlannerStateFamily.AssassinsFocus,
+        [PlannerModeMapper.ToCanonicalName(PlannerMode.StalkerHidden)] = PlannerStateFamily.Assassination,
+        [PlannerModeMapper.ToCanonicalName(PlannerMode.Assassination)] = PlannerStateFamily.Assassination,
+        [PlannerModeMapper.ToCanonicalName(PlannerMode.Domination)] = PlannerStateFamily.Domination,
+        [PlannerModeMapper.ToCanonicalName(PlannerMode.DominationActive)] = PlannerStateFamily.Domination,
+        [PlannerModeMapper.ToCanonicalName(PlannerMode.Containment)] = PlannerStateFamily.Containment,
+        [PlannerModeMapper.ToCanonicalName(PlannerMode.Defiance)] = PlannerStateFamily.Defiance,
         [PlannerModeMapper.ToCanonicalName(PlannerMode.Exhausted)] = PlannerStateFamily.SavageExhausted,
         [PlannerModeMapper.ToCanonicalName(PlannerMode.Insight)] = PlannerStateFamily.Insight,
         [PlannerModeMapper.ToCanonicalName(PlannerMode.FastMode)] = PlannerStateFamily.FastMode
@@ -446,6 +785,9 @@ internal static class PlannerStateCatalog
 
     private static readonly HashSet<string> SelfStateMarkers =
     [
+        ComboLevel1PowerFullName,
+        ComboLevel2PowerFullName,
+        ComboLevel3PowerFullName,
         ComboLevel1Marker,
         ComboLevel2Marker,
         ComboLevel3Marker,
@@ -459,11 +801,26 @@ internal static class PlannerStateCatalog
         PerfectionSoul2Marker,
         PerfectionSoul3Marker,
         StaffPerfectionRedirect,
+        DominationModePowerFullName,
         BloodFrenzyMarker,
         SavageExhaustedMarker,
         PackMentalityMarker,
         InsightMarker,
-        AssassinsFocusMarker
+        AssassinationPowerFullName,
+        FromHidePowerFullName,
+        OpportunityPowerFullName,
+        OpportunityMeterPowerFullName,
+        DominationPowerFullName,
+        DominationMeterPowerFullName,
+        AssassinsFocusMarker,
+        BloodFrenzyPowerFullName,
+        ExhaustedPowerFullName,
+        PackMentalityPowerFullName,
+        InsightPowerFullName,
+        FuryPowerFullName,
+        FuryBuffPowerFullName,
+        DefiancePowerFullName,
+        ContainmentPowerFullName
     ];
 
     internal static IReadOnlyList<PlannerStateControlDefinition> Definitions => ControlDefinitions;
@@ -535,27 +892,60 @@ internal static class PlannerStateCatalog
 
         switch (powerFullName)
         {
+            case ComboLevel1PowerFullName:
             case ComboLevel1Marker:
                 isActive = isModeActive(PlannerMode.ComboLevel1);
                 return true;
+            case ComboLevel2PowerFullName:
             case ComboLevel2Marker:
                 isActive = isModeActive(PlannerMode.ComboLevel2);
                 return true;
+            case ComboLevel3PowerFullName:
             case ComboLevel3Marker:
                 isActive = isModeActive(PlannerMode.ComboLevel3);
                 return true;
+            case InsightPowerFullName:
             case InsightMarker:
                 isActive = isModeActive(PlannerMode.Insight);
                 return true;
+            case ExhaustedPowerFullName:
             case SavageExhaustedMarker:
                 isActive = isModeActive(PlannerMode.Exhausted);
+                return true;
+            case AssassinationPowerFullName:
+                isActive = getStacks(AssassinsFocusMarker) > 0;
+                return true;
+            case FromHidePowerFullName:
+                isActive = isModeActive(PlannerMode.StalkerHidden) || isModeActive(PlannerMode.Assassination);
                 return true;
             case AssassinsFocusMarker:
                 isActive = getStacks(AssassinsFocusMarker) > 0;
                 return true;
+            case ContainmentPowerFullName:
+                isActive = isModeActive(PlannerMode.Containment);
+                return true;
+            case FuryPowerFullName:
+            case FuryBuffPowerFullName:
+                isActive = getStacks(FuryPowerFullName) > 0;
+                return true;
+            case BloodFrenzyPowerFullName:
             case BloodFrenzyMarker:
+                isActive = getStacks(BloodFrenzyMarker) > 0;
+                return true;
+            case PackMentalityPowerFullName:
             case PackMentalityMarker:
-                isActive = getStacks(powerFullName) > 0;
+                isActive = getStacks(PackMentalityMarker) > 0;
+                return true;
+            case OpportunityPowerFullName:
+            case OpportunityMeterPowerFullName:
+                isActive = getStacks(OpportunityMeterPowerFullName) > 0;
+                return true;
+            case DominationPowerFullName:
+            case DominationModePowerFullName:
+                isActive = isModeActive(PlannerMode.DominationActive) || isModeActive(PlannerMode.Domination);
+                return true;
+            case DominationMeterPowerFullName:
+                isActive = getStacks(DominationMeterPowerFullName) > 0;
                 return true;
             case PerfectionBody1Marker:
                 isActive = (isStalker || isModeActive(PlannerMode.PerfectionOfBody)) &&
@@ -619,7 +1009,14 @@ internal static class PlannerStateCatalog
 
         count = powerFullName switch
         {
-            BloodFrenzyMarker or PackMentalityMarker or AssassinsFocusMarker => getStacks(powerFullName!),
+            AssassinationPowerFullName or AssassinsFocusMarker => getStacks(AssassinsFocusMarker),
+            BloodFrenzyPowerFullName or BloodFrenzyMarker => getStacks(BloodFrenzyMarker),
+            PackMentalityPowerFullName or PackMentalityMarker => getStacks(PackMentalityMarker),
+            OpportunityMeterPowerFullName => getStacks(OpportunityMeterPowerFullName),
+            OpportunityPowerFullName => getStacks(OpportunityMeterPowerFullName),
+            FuryPowerFullName or FuryBuffPowerFullName => getStacks(FuryPowerFullName),
+            DominationMeterPowerFullName => getStacks(DominationMeterPowerFullName),
+            DominationPowerFullName or DominationModePowerFullName => getStacks(DominationMeterPowerFullName),
             _ => isActive ? 1 : 0
         };
 
@@ -630,6 +1027,67 @@ internal static class PlannerStateCatalog
     {
         return TryGetDefinition(powerFullName, out var definition) &&
                definition.IsVariableControl;
+    }
+
+    internal static PlannerVariableSemantic GetVariableSemantic(IPower? power)
+    {
+        if (power == null || !power.VariableEnabled)
+        {
+            return PlannerVariableSemantic.Count;
+        }
+
+        if (TryGetDefinition(power.FullName, out var definition) && definition.IsVariableControl)
+        {
+            return definition.VariableSemantic;
+        }
+
+        if (string.Equals(power.VariableName, "Meter", StringComparison.OrdinalIgnoreCase))
+        {
+            return PlannerVariableSemantic.MeterPercent;
+        }
+
+        if (power.VariableDisplayPrecision > 0 ||
+            Math.Abs(power.VariableDisplayDivisor - 1d) > 0.0000001d)
+        {
+            return PlannerVariableSemantic.PercentScalar;
+        }
+
+        return PlannerVariableSemantic.Count;
+    }
+
+    internal static bool ShouldMirrorVariableValueToStacks(IPower? power)
+    {
+        return GetVariableSemantic(power) == PlannerVariableSemantic.Count;
+    }
+
+    internal static int GetMirroredStackValue(IPower? power, int variableValue)
+    {
+        return ShouldMirrorVariableValueToStacks(power)
+            ? Math.Max(0, variableValue)
+            : 0;
+    }
+
+    internal static double GetExpressionVariableValue(IPower? power, int variableValue, bool absoluteValue)
+    {
+        if (power == null)
+        {
+            return 0d;
+        }
+
+        if (absoluteValue)
+        {
+            return variableValue;
+        }
+
+        return GetVariableSemantic(power) switch
+        {
+            PlannerVariableSemantic.Count => variableValue,
+            PlannerVariableSemantic.MeterPercent or PlannerVariableSemantic.PercentScalar =>
+                power.VariableMax <= power.VariableMin
+                    ? 0d
+                    : (variableValue - power.VariableMin) * 100d / (power.VariableMax - power.VariableMin),
+            _ => variableValue
+        };
     }
 
     internal static bool IsSyntheticStackPlannerPower(string? powerFullName)
@@ -685,34 +1143,76 @@ internal static class PlannerStateCatalog
 
         switch (subject)
         {
+            case AssassinationPowerFullName:
+                family = PlannerStateFamily.Assassination;
+                rewrittenRows.Add(CloneAsPowerStacks(row, AssassinsFocusMarker));
+                return true;
+            case ComboLevel1PowerFullName:
             case ComboLevel1Marker:
                 family = PlannerStateFamily.StreetJusticeCombo;
                 rewrittenRows.Add(CloneAsSourceMode(row, PlannerMode.ComboLevel1));
                 return true;
+            case ComboLevel2PowerFullName:
             case ComboLevel2Marker:
                 family = PlannerStateFamily.StreetJusticeCombo;
                 rewrittenRows.Add(CloneAsSourceMode(row, PlannerMode.ComboLevel2));
                 return true;
+            case ComboLevel3PowerFullName:
             case ComboLevel3Marker:
                 family = PlannerStateFamily.StreetJusticeCombo;
                 rewrittenRows.Add(CloneAsSourceMode(row, PlannerMode.ComboLevel3));
                 return true;
+            case InsightPowerFullName:
             case InsightMarker:
                 family = PlannerStateFamily.Insight;
                 rewrittenRows.Add(CloneAsSourceMode(row, PlannerMode.Insight));
                 return true;
+            case ExhaustedPowerFullName:
             case SavageExhaustedMarker:
                 family = PlannerStateFamily.SavageExhausted;
                 rewrittenRows.Add(CloneAsSourceMode(row, PlannerMode.Exhausted));
+                return true;
+            case FromHidePowerFullName:
+                family = PlannerStateFamily.Assassination;
+                rewrittenRows.Add(CloneAsSourceMode(row, PlannerMode.StalkerHidden));
+                return true;
+            case ContainmentPowerFullName:
+                family = PlannerStateFamily.Containment;
+                rewrittenRows.Add(CloneAsSourceMode(row, PlannerMode.Containment));
                 return true;
             case AssassinsFocusMarker:
                 family = PlannerStateFamily.AssassinsFocus;
                 rewrittenRows.Add(CloneAsPowerStacks(row, AssassinsFocusMarker));
                 return true;
+            case FuryPowerFullName:
+            case FuryBuffPowerFullName:
+                family = PlannerStateFamily.Fury;
+                rewrittenRows.Add(CloneAsPowerStacks(row, FuryPowerFullName));
+                return true;
+            case DefiancePowerFullName:
+                family = PlannerStateFamily.Defiance;
+                rewrittenRows.Add(CloneAsPowerStacks(row, DefiancePowerFullName));
+                return true;
+            case OpportunityPowerFullName:
+            case OpportunityMeterPowerFullName:
+                family = PlannerStateFamily.Opportunity;
+                rewrittenRows.Add(CloneAsPowerStacks(row, OpportunityMeterPowerFullName));
+                return true;
+            case DominationPowerFullName:
+            case DominationModePowerFullName:
+                family = PlannerStateFamily.Domination;
+                rewrittenRows.Add(CloneAsSourceMode(row, PlannerMode.DominationActive));
+                return true;
+            case DominationMeterPowerFullName:
+                family = PlannerStateFamily.Domination;
+                rewrittenRows.Add(CloneAsPowerStacks(row, DominationMeterPowerFullName));
+                return true;
+            case BloodFrenzyPowerFullName:
             case BloodFrenzyMarker:
                 family = PlannerStateFamily.BloodFrenzy;
                 rewrittenRows.Add(CloneAsPowerStacks(row, BloodFrenzyMarker));
                 return true;
+            case PackMentalityPowerFullName:
             case PackMentalityMarker:
                 family = PlannerStateFamily.PackMentality;
                 rewrittenRows.Add(CloneAsPowerStacks(row, PackMentalityMarker));
@@ -791,20 +1291,51 @@ internal static class PlannerStateCatalog
         var subject = row.Subject?.Trim() ?? string.Empty;
         switch (subject)
         {
+            case AssassinationPowerFullName:
+                family = PlannerStateFamily.Assassination;
+                rewrittenRow.Kind = AdvancedConditionKind.PowerStacks;
+                rewrittenRow.Subject = AssassinsFocusMarker;
+                return true;
             case AssassinsFocusMarker:
                 family = PlannerStateFamily.AssassinsFocus;
                 rewrittenRow.Kind = AdvancedConditionKind.PowerStacks;
                 rewrittenRow.Subject = AssassinsFocusMarker;
                 return true;
+            case BloodFrenzyPowerFullName:
             case BloodFrenzyMarker:
                 family = PlannerStateFamily.BloodFrenzy;
                 rewrittenRow.Kind = AdvancedConditionKind.PowerStacks;
                 rewrittenRow.Subject = BloodFrenzyMarker;
                 return true;
+            case PackMentalityPowerFullName:
             case PackMentalityMarker:
                 family = PlannerStateFamily.PackMentality;
                 rewrittenRow.Kind = AdvancedConditionKind.PowerStacks;
                 rewrittenRow.Subject = PackMentalityMarker;
+                return true;
+            case OpportunityPowerFullName:
+            case OpportunityMeterPowerFullName:
+                family = PlannerStateFamily.Opportunity;
+                rewrittenRow.Kind = AdvancedConditionKind.PowerStacks;
+                rewrittenRow.Subject = OpportunityMeterPowerFullName;
+                return true;
+            case FuryPowerFullName:
+            case FuryBuffPowerFullName:
+                family = PlannerStateFamily.Fury;
+                rewrittenRow.Kind = AdvancedConditionKind.PowerStacks;
+                rewrittenRow.Subject = FuryPowerFullName;
+                return true;
+            case DefiancePowerFullName:
+                family = PlannerStateFamily.Defiance;
+                rewrittenRow.Kind = AdvancedConditionKind.PowerStacks;
+                rewrittenRow.Subject = DefiancePowerFullName;
+                return true;
+            case DominationPowerFullName:
+            case DominationModePowerFullName:
+            case DominationMeterPowerFullName:
+                family = PlannerStateFamily.Domination;
+                rewrittenRow.Kind = AdvancedConditionKind.PowerStacks;
+                rewrittenRow.Subject = DominationMeterPowerFullName;
                 return true;
             default:
                 return false;
@@ -832,14 +1363,34 @@ internal static class PlannerStateCatalog
                     referencedFamilies?.Add(PlannerStateFamily.AssassinsFocus);
                     rewritten = true;
                     return $"{AssassinsFocusMarker}>variableVal";
+                case AssassinationPowerFullName:
+                    referencedFamilies?.Add(PlannerStateFamily.Assassination);
+                    rewritten = true;
+                    return $"{AssassinsFocusMarker}>variableVal";
+                case BloodFrenzyPowerFullName:
                 case BloodFrenzyMarker:
                     referencedFamilies?.Add(PlannerStateFamily.BloodFrenzy);
                     rewritten = true;
                     return $"{BloodFrenzyMarker}>variableVal";
+                case PackMentalityPowerFullName:
                 case PackMentalityMarker:
                     referencedFamilies?.Add(PlannerStateFamily.PackMentality);
                     rewritten = true;
                     return $"{PackMentalityMarker}>variableVal";
+                case OpportunityPowerFullName:
+                case OpportunityMeterPowerFullName:
+                    referencedFamilies?.Add(PlannerStateFamily.Opportunity);
+                    rewritten = true;
+                    return $"{OpportunityMeterPowerFullName}>variableVal";
+                case FuryPowerFullName:
+                case FuryBuffPowerFullName:
+                    referencedFamilies?.Add(PlannerStateFamily.Fury);
+                    rewritten = true;
+                    return $"{FuryPowerFullName}>variableVal";
+                case DefiancePowerFullName:
+                    referencedFamilies?.Add(PlannerStateFamily.Defiance);
+                    rewritten = true;
+                    return $"{DefiancePowerFullName}>variableVal";
                 default:
                     return match.Value;
             }
@@ -885,9 +1436,29 @@ internal static class PlannerStateCatalog
 
     internal static string ResolveVariableSourcePower(string? powerFullName)
     {
-        return string.IsNullOrWhiteSpace(powerFullName)
-            ? string.Empty
-            : powerFullName;
+        if (string.IsNullOrWhiteSpace(powerFullName))
+        {
+            return string.Empty;
+        }
+
+        return powerFullName switch
+        {
+            AssassinationPowerFullName or AssassinsFocusMarker => AssassinsFocusMarker,
+            BloodFrenzyPowerFullName or BloodFrenzyMarker => BloodFrenzyMarker,
+            PackMentalityPowerFullName or PackMentalityMarker => PackMentalityMarker,
+            OpportunityPowerFullName or OpportunityMeterPowerFullName => OpportunityMeterPowerFullName,
+            FuryPowerFullName or FuryBuffPowerFullName => FuryPowerFullName,
+            DominationPowerFullName or DominationMeterPowerFullName or DominationModePowerFullName => DominationMeterPowerFullName,
+            _ => powerFullName
+        };
+    }
+
+    internal static bool TryGetVariableSyncTargets(string? powerFullName, out string[] targets)
+    {
+        targets = [];
+        return TryGetDefinition(powerFullName, out var definition) &&
+               definition.VariableSyncTargets.Length > 0 &&
+               (targets = definition.VariableSyncTargets).Length > 0;
     }
 
     private static bool HasChosenPowerInOwningSet(Build build, IEnumerable<string> setTokens)

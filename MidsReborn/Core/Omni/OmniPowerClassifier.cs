@@ -56,10 +56,16 @@ public sealed class OmniPowerClassifier
 
     private static readonly HashSet<string> BuildRelevantClassInherents = new(StringComparer.OrdinalIgnoreCase)
     {
+        "Assassination",
+        "Spider_Conditioning",
+        "Widow_Conditioning",
         "Defiance",
         "Containment",
+        "Cosmic_Balance",
         "Critical_Hit",
+        "Dark_Sustenance",
         "Domination",
+        "Rage",
         "Fury",
         "Gauntlet",
         "Inherent_Gauntlet",
@@ -801,11 +807,6 @@ public sealed class OmniPowerClassifier
         string group,
         string set)
     {
-        if (IsPetRootName(group))
-        {
-            return true;
-        }
-
         if (group.Equals("Incarnate", StringComparison.OrdinalIgnoreCase))
         {
             return set.Equals("Destiny_Silent", StringComparison.OrdinalIgnoreCase) ||

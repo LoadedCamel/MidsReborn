@@ -143,6 +143,7 @@ namespace Mids_Reborn.Core
                 "TeamSize",
                 "Inc",
                 "TeamMembers",
+                "TeamRoster",
                 "CombatContextSettings",
                 "RelativeLevels" // internal readonly; won’t serialize (non-public). Keeping here is harmless.
             };
@@ -240,12 +241,25 @@ namespace Mids_Reborn.Core
                 "DragDropScenarioAction"
             };
 
+            private static readonly HashSet<string> ExcludedBuildScopedCombatContextProperties =
+            [
+                "EnemyRelativeLevel",
+                "TeamSize",
+                "TeamMembers",
+                "TeamRoster",
+                "CombatContextSettings"
+            ];
+
             protected override IList<JsonProperty> CreateProperties(Type type, MemberSerialization memberSerialization)
             {
                 var props = base.CreateProperties(type, memberSerialization);
 
                 if (type.Name != nameof(ConfigData))
                     return props;
+
+                props = props
+                    .Where(prop => !ExcludedBuildScopedCombatContextProperties.Contains(prop.PropertyName))
+                    .ToList();
 
                 foreach (var prop in props)
                 {

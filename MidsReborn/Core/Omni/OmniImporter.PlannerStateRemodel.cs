@@ -6,6 +6,8 @@ namespace Mids_Reborn.Core.Omni;
 
 public sealed partial class OmniImporter
 {
+    private const string VigilanceEndAdjustmentPowerFullName = "Inherent.Inherent.Vigilance_PerTeamEndAdjustment";
+
     private static void RemodelPlannerStateFamilies(IDatabase database, OmniApplyResult applyResult)
     {
         database.MutexList = PlannerStateCatalog.MergePlannerMutexGroups(
@@ -35,6 +37,108 @@ public sealed partial class OmniImporter
         database.Power = powers;
     }
 
+    private static void RemodelTierOneArchetypeInherents(IDatabase database, OmniApplyResult applyResult)
+    {
+        foreach (var power in database.Power?.Where(power => power != null) ?? [])
+        {
+            var changed = false;
+            var strippedRows = 0;
+            var strippedEffects = 0;
+
+            if (StripTierOneRuntimeRows(power!.AdvancedRequirements, power.FullName, out var rewrittenRequirements, out var removedRequirementRows))
+            {
+                power.AdvancedRequirements = rewrittenRequirements;
+                power.Requires = rewrittenRequirements.ToLegacyRequirement();
+                strippedRows += removedRequirementRows;
+                changed = true;
+            }
+
+            if (ArchetypeInherentCatalog.TryAppendTierOnePowerRequirements(power, power.AdvancedRequirements))
+            {
+                power.Requires = power.AdvancedRequirements.ToLegacyRequirement();
+                changed = true;
+            }
+
+            var rewrittenEffects = new List<IEffect>(power.Effects?.Length ?? 0);
+            foreach (var effect in power.Effects ?? [])
+            {
+                if (effect == null)
+                {
+                    continue;
+                }
+
+                if (effect.AdvancedConditions.Rows.Count == 0 &&
+                    effect.ActiveConditionals is { Count: > 0 })
+                {
+                    effect.AdvancedConditions = AdvancedConditionSet.FromLegacyActiveConditionals(effect.ActiveConditionals);
+                }
+
+                if (!StripTierOneRuntimeRows(effect.AdvancedConditions, power.FullName, out var rewrittenConditions, out var removedEffectRows))
+                {
+                    rewrittenEffects.Add(effect);
+                    continue;
+                }
+
+                strippedRows += removedEffectRows;
+                changed = true;
+                if (rewrittenConditions.Rows.Count == 0 && effect.AdvancedConditions.Rows.Count > 0)
+                {
+                    strippedEffects++;
+                    applyResult.AddLimited(
+                        applyResult.ImportIntegrityAuditDetails,
+                        $"{power.FullName}: removed an active effect branch because tier-1 runtime conditions remained unresolved ({effect.AdvancedConditions.Rows[0].RawExpression}).");
+                    continue;
+                }
+
+                effect.AdvancedConditions = rewrittenConditions;
+                effect.ActiveConditionals = rewrittenConditions.ToLegacyActiveConditionals();
+                rewrittenEffects.Add(effect);
+            }
+
+            if (!changed)
+            {
+                continue;
+            }
+
+            power.Effects = rewrittenEffects.ToArray();
+            power.IsModified = true;
+            applyResult.AddLimited(
+                applyResult.ImportIntegrityAuditDetails,
+                $"{power.FullName}: tier-1 inherent remodel stripped {strippedRows} unresolved runtime row(s) and removed {strippedEffects} effect branch(es).");
+        }
+    }
+
+    private static bool StripTierOneRuntimeRows(
+        AdvancedConditionSet? source,
+        string ownerFullName,
+        out AdvancedConditionSet rewrittenSet,
+        out int removedRows)
+    {
+        rewrittenSet = source?.Clone() ?? new AdvancedConditionSet();
+        removedRows = 0;
+        if (source is not { Rows.Count: > 0 })
+        {
+            return false;
+        }
+
+        rewrittenSet = new AdvancedConditionSet();
+        foreach (var row in source.Rows)
+        {
+            if ((row.EvaluationMode is AdvancedConditionEvaluationMode.RuntimeTargetOnly or AdvancedConditionEvaluationMode.ReportOnly) &&
+                ArchetypeInherentCatalog.ShouldStripUnrewrittenRuntimeExpression(ownerFullName, row.RawExpression))
+            {
+                removedRows++;
+                continue;
+            }
+
+            var clone = row.Clone();
+            clone.Link = rewrittenSet.Rows.Count == 0 ? AdvancedConditionLink.And : row.Link;
+            rewrittenSet.Rows.Add(clone);
+        }
+
+        return removedRows > 0;
+    }
+
     private static void RewritePlannerStatePower(IDatabase database, IPower power, OmniApplyResult applyResult)
     {
         var powerChanged = false;
@@ -48,6 +152,11 @@ public sealed partial class OmniImporter
             powerChanged = true;
         }
         else if (TryConfigureImportedStaffFormPower(database, power))
+        {
+            powerChanged = true;
+        }
+
+        if (TryConfigureComputedInherentSupportPower(power))
         {
             powerChanged = true;
         }
@@ -331,15 +440,38 @@ public sealed partial class OmniImporter
             return;
         }
 
-        power.HiddenPower = false;
-        power.InherentType = Enums.eGridType.Power;
+        power.HiddenPower = !definition.VisibleInInherentGrid;
+        power.InherentType = definition.VisibleInInherentGrid ? definition.VisibleGridType : Enums.eGridType.None;
+        if (definition.VisibleInInherentGrid)
+        {
+            power.GroupName = "Inherent";
+            power.SetName = "Inherent";
+        }
         power.PowerType = Enums.ePowerType.Auto_;
-        power.AlwaysToggle = definition.IsVariableControl;
-        power.ShowStatToggle = !definition.IsVariableControl;
-        power.DescShort = $"Planner state for {definition.DisplayName}.";
-        power.DescLong = definition.IsVariableControl
-            ? $"Use the planner slider to pick the {definition.DisplayName} stack count for Mids calculations."
-            : $"Turn this on to make Mids assume {definition.DisplayName} is active.";
+        var isPassiveComputedInherent = definition.FullName.Equals(PlannerStateCatalog.DefiancePowerFullName, StringComparison.OrdinalIgnoreCase);
+        power.AlwaysToggle = definition.IsVariableControl || isPassiveComputedInherent;
+        power.ShowStatToggle = definition.VisibleInInherentGrid && !definition.IsVariableControl && !isPassiveComputedInherent;
+        if (definition.PresentationType != PlannerStatePresentationType.ReuseImportedPower)
+        {
+            power.DescShort = $"Planner state for {definition.DisplayName}.";
+            power.DescLong = definition.IsVariableControl
+                ? $"Use the planner slider to pick the {definition.DisplayName} stack count for Mids calculations."
+                : $"Turn this on to make Mids assume {definition.DisplayName} is active.";
+        }
+        else
+        {
+            if (string.IsNullOrWhiteSpace(power.DescShort))
+            {
+                power.DescShort = $"Planner state for {definition.DisplayName}.";
+            }
+
+            if (string.IsNullOrWhiteSpace(power.DescLong))
+            {
+                power.DescLong = definition.IsVariableControl
+                    ? $"Use the planner slider to pick the {definition.DisplayName} stack count for Mids calculations."
+                    : $"Turn this on to make Mids assume {definition.DisplayName} is active.";
+            }
+        }
         power.AdvancedRequirements = new AdvancedConditionSet();
         power.Requires = power.AdvancedRequirements.ToLegacyRequirement();
         power.VariableEnabled = definition.IsVariableControl;
@@ -347,13 +479,16 @@ public sealed partial class OmniImporter
         power.VariableMax = definition.VariableMax;
         power.VariableStart = definition.VariableStart;
         power.VariableName = definition.IsVariableControl ? definition.VariableName : power.VariableName;
+        power.VariableDisplayDivisor = definition.VariableDisplayDivisor;
+        power.VariableDisplayPrecision = definition.VariableDisplayPrecision;
+        power.VariableDisplayStep = definition.VariableDisplayStep;
 
         if (definition.IsModeControl)
         {
             AddPlannerModePayload(power, definition.Mode, applyResult);
         }
 
-        if (definition.IsVariableControl)
+        if (definition.IsVariableControl && definition.ApplyVariableScalingModel)
         {
             ApplyVariableScalingModel(power);
         }
@@ -406,11 +541,6 @@ public sealed partial class OmniImporter
 
     private static AdvancedConditionSet BuildHiddenPayloadRequirements(PlannerStateControlDefinition definition)
     {
-        if (definition.Family != PlannerStateFamily.StaffPerfection)
-        {
-            return new AdvancedConditionSet();
-        }
-
         var requirements = new AdvancedConditionSet();
         switch (definition.FullName)
         {
@@ -450,6 +580,9 @@ public sealed partial class OmniImporter
                 requirements.Rows.Add(SourceModeRequirement(PlannerMode.PerfectionOfSoul));
                 requirements.Rows.Add(SourceModeRequirement(PlannerMode.PerfectionLevel3));
                 break;
+            case PlannerStateCatalog.DominationModePowerFullName:
+                requirements.Rows.Add(SourceModeRequirement(PlannerMode.DominationActive));
+                break;
         }
 
         return requirements;
@@ -488,5 +621,53 @@ public sealed partial class OmniImporter
 
             effect.VariableModifiedOverride = true;
         }
+    }
+
+    private static bool TryConfigureComputedInherentSupportPower(IPower power)
+    {
+        if (power.FullName.Equals(VigilanceEndAdjustmentPowerFullName, StringComparison.OrdinalIgnoreCase))
+        {
+            return ConfigureVigilanceEndAdjustmentPower(power);
+        }
+
+        return false;
+    }
+
+    private static bool ConfigureVigilanceEndAdjustmentPower(IPower power)
+    {
+        var changed = false;
+        foreach (var effect in power.Effects ?? [])
+        {
+            if (effect == null)
+            {
+                continue;
+            }
+
+            var hadPlayerTargetRows = effect.AdvancedConditions.Rows.Any(row =>
+                row.RawExpression.Contains("target>enttype", StringComparison.OrdinalIgnoreCase));
+            if (hadPlayerTargetRows)
+            {
+                effect.AdvancedConditions = new AdvancedConditionSet();
+                effect.ActiveConditionals = [];
+                changed = true;
+            }
+
+            effect.Expressions ??= new Expressions();
+            if (!string.Equals(effect.Expressions.Magnitude, "cfg>team>vigilanceenddiscount", StringComparison.OrdinalIgnoreCase))
+            {
+                effect.Expressions.Magnitude = "cfg>team>vigilanceenddiscount";
+                effect.MagnitudeExpression = "cfg>team>vigilanceenddiscount";
+                effect.AttribType = Enums.eAttribType.Expression;
+                changed = true;
+            }
+
+            if (effect.PvMode != Enums.ePvX.Any)
+            {
+                effect.PvMode = Enums.ePvX.Any;
+                changed = true;
+            }
+        }
+
+        return changed;
     }
 }

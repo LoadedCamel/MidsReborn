@@ -1,6 +1,7 @@
 using Mids_Reborn.UI.Theming;
 using System.ComponentModel;
 using System.Drawing.Drawing2D;
+using System.Globalization;
 
 namespace Mids_Reborn.UI.Controls;
 
@@ -18,8 +19,20 @@ public class MidsTrackBar : Control
     private int _textGap = 6;
     private int _trackGap = 8;
     private string _valueTextFormat = "{0}";
+    private double _displayDivisor = 1d;
+    private int _displayPrecision;
+    private double _displayStep = 1d;
+    private bool _draggingThumb;
+    private bool _mouseInteracting;
+    private int _dragStartValue;
+    private Point _dragStartPoint;
+    private Rectangle _dragStartTrackRect;
 
     public event EventHandler? ValueChanged;
+    public event EventHandler? InteractionCompleted;
+
+    [Browsable(false)]
+    public bool IsInteracting => _mouseInteracting;
 
     [Category("Behavior")]
     [DefaultValue(1)]
@@ -58,7 +71,7 @@ public class MidsTrackBar : Control
         get => _value;
         set
         {
-            var v = Clamp(value);
+            var v = SnapToDisplayStep(value);
             if (v == _value) return;
             _value = v;
             ValueChanged?.Invoke(this, EventArgs.Empty);
@@ -154,6 +167,42 @@ public class MidsTrackBar : Control
         }
     }
 
+    [Category("Data")]
+    [DefaultValue(1d)]
+    public double DisplayDivisor
+    {
+        get => _displayDivisor;
+        set
+        {
+            _displayDivisor = Math.Abs(value) < 0.0000001d ? 1d : Math.Abs(value);
+            Invalidate();
+        }
+    }
+
+    [Category("Data")]
+    [DefaultValue(0)]
+    public int DisplayPrecision
+    {
+        get => _displayPrecision;
+        set
+        {
+            _displayPrecision = Math.Max(0, value);
+            Invalidate();
+        }
+    }
+
+    [Category("Data")]
+    [DefaultValue(1d)]
+    public double DisplayStep
+    {
+        get => _displayStep;
+        set
+        {
+            _displayStep = value <= 0d ? 1d : value;
+            Invalidate();
+        }
+    }
+
     [Category("Layout")]
     [DefaultValue(8)]
     public int TrackGap
@@ -221,7 +270,24 @@ public class MidsTrackBar : Control
     {
         if (e.Button == MouseButtons.Left)
         {
-            SetFromPoint(e.Location);
+            Focus();
+            _mouseInteracting = true;
+            Capture = true;
+
+            var track = GetTrackRect();
+            var thumb = GetThumbRect(track);
+            if (SupportsFineThumbDragging() && thumb.Contains(e.Location))
+            {
+                _draggingThumb = true;
+                _dragStartPoint = e.Location;
+                _dragStartValue = _value;
+                _dragStartTrackRect = track;
+                Capture = true;
+            }
+            else
+            {
+                SetFromPoint(e.Location);
+            }
         }
 
         base.OnMouseDown(e);
@@ -229,12 +295,40 @@ public class MidsTrackBar : Control
 
     protected override void OnMouseMove(MouseEventArgs e)
     {
-        if (e.Button == MouseButtons.Left)
+        if (_draggingThumb)
+        {
+            SetFromThumbDrag(e.Location);
+        }
+        else if (e.Button == MouseButtons.Left)
         {
             SetFromPoint(e.Location);
         }
 
         base.OnMouseMove(e);
+    }
+
+    protected override void OnMouseUp(MouseEventArgs e)
+    {
+        if (e.Button == MouseButtons.Left && _mouseInteracting)
+        {
+            _draggingThumb = false;
+            _mouseInteracting = false;
+            Capture = false;
+            InteractionCompleted?.Invoke(this, EventArgs.Empty);
+        }
+
+        base.OnMouseUp(e);
+    }
+
+    protected override void OnMouseCaptureChanged(EventArgs e)
+    {
+        if (!Capture)
+        {
+            _draggingThumb = false;
+            _mouseInteracting = false;
+        }
+
+        base.OnMouseCaptureChanged(e);
     }
 
     protected override void OnMouseWheel(MouseEventArgs e)
@@ -245,7 +339,8 @@ public class MidsTrackBar : Control
             return;
         }
 
-        Value += e.Delta > 0 ? SmallChange : -SmallChange;
+        var change = NormalizeChange(SmallChange);
+        Value += e.Delta > 0 ? change : -change;
         base.OnMouseWheel(e);
     }
 
@@ -261,20 +356,20 @@ public class MidsTrackBar : Control
         {
             case Keys.Left:
             case Keys.Down:
-                Value -= SmallChange;
+                Value -= NormalizeChange(SmallChange);
                 e.Handled = true;
                 break;
             case Keys.Right:
             case Keys.Up:
-                Value += SmallChange;
+                Value += NormalizeChange(SmallChange);
                 e.Handled = true;
                 break;
             case Keys.PageDown:
-                Value -= LargeChange;
+                Value -= NormalizeChange(LargeChange);
                 e.Handled = true;
                 break;
             case Keys.PageUp:
-                Value += LargeChange;
+                Value += NormalizeChange(LargeChange);
                 e.Handled = true;
                 break;
             case Keys.Home:
@@ -437,7 +532,11 @@ public class MidsTrackBar : Control
             : TextRenderer.MeasureText(measure, Font, new Size(int.MaxValue, int.MaxValue), FormatFlags);
     }
 
-    private int GetValueMeasureSample() => _value >= 1 && _value <= 9 ? 50 : _value;
+    private int GetValueMeasureSample()
+    {
+        var candidates = new[] { _minimum, _maximum, _value, 0, 50, 100, 1000 };
+        return candidates.OrderByDescending(candidate => FormatValueText(candidate).Length).First();
+    }
 
     private int ScalePx(int value) => (int)Math.Round(value * DpiScale);
 
@@ -449,6 +548,38 @@ public class MidsTrackBar : Control
             r.Top + Padding.Top,
             Math.Max(0, r.Width - Padding.Horizontal),
             Math.Max(0, r.Height - Padding.Vertical));
+    }
+
+    private Rectangle GetTrackRect()
+    {
+        var content = GetContentRect();
+        var labelSize = GetLabelSizeForLayout();
+        var valueSize = GetValueSizeForLayout();
+
+        var x = content.Left;
+        if (!labelSize.IsEmpty) x += labelSize.Width;
+        if (!valueSize.IsEmpty)
+        {
+            if (!labelSize.IsEmpty) x += ScalePx(_textGap);
+            x += valueSize.Width;
+        }
+
+        if (!labelSize.IsEmpty || !valueSize.IsEmpty)
+        {
+            x += ScalePx(_trackGap);
+        }
+
+        var thickness = ScalePx(_trackThickness);
+        var pad = ScalePx(_horizontalPadding);
+        var trackOuterLeft = x;
+        var trackOuterWidth = Math.Max(0, content.Right - trackOuterLeft);
+        var trackInnerWidth = Math.Max(1, trackOuterWidth - pad * 2);
+
+        return new Rectangle(
+            trackOuterLeft + pad,
+            content.Top + (content.Height - thickness) / 2,
+            trackInnerWidth,
+            thickness);
     }
 
     private Rectangle GetThumbRect(Rectangle track)
@@ -470,14 +601,19 @@ public class MidsTrackBar : Control
 
     private string FormatValueText(int value)
     {
+        var displayValue = value / _displayDivisor;
         try
         {
-            return string.Format(ValueTextFormat, value);
+            if (!string.IsNullOrWhiteSpace(ValueTextFormat) && ValueTextFormat != "{0}")
+            {
+                return string.Format(CultureInfo.InvariantCulture, ValueTextFormat, displayValue);
+            }
         }
         catch
         {
-            return value.ToString();
         }
+
+        return displayValue.ToString($"F{_displayPrecision}", CultureInfo.InvariantCulture);
     }
 
     private int Clamp(int value)
@@ -485,35 +621,64 @@ public class MidsTrackBar : Control
         return Math.Max(_minimum, Math.Min(_maximum, value));
     }
 
+    private int GetRawDisplayStep()
+    {
+        var rawStep = (int)Math.Round(_displayStep * _displayDivisor, MidpointRounding.AwayFromZero);
+        return Math.Max(1, rawStep);
+    }
+
+    private int NormalizeChange(int requestedChange)
+    {
+        var rawStep = GetRawDisplayStep();
+        if (requestedChange <= 0)
+        {
+            return rawStep;
+        }
+
+        var snapped = (int)Math.Round(requestedChange / (double)rawStep, MidpointRounding.AwayFromZero) * rawStep;
+        return Math.Max(rawStep, snapped);
+    }
+
+    private int SnapToDisplayStep(int value)
+    {
+        var clamped = Clamp(value);
+        var rawStep = GetRawDisplayStep();
+        if (rawStep <= 1)
+        {
+            return clamped;
+        }
+
+        var snapped = _minimum + (int)Math.Round((clamped - _minimum) / (double)rawStep, MidpointRounding.AwayFromZero) * rawStep;
+        return Clamp(snapped);
+    }
+
+    private bool SupportsFineThumbDragging()
+    {
+        return _displayPrecision > 0 || Math.Abs(_displayDivisor - 1d) > 0.0000001d;
+    }
+
     private void SetFromPoint(Point clientPoint)
     {
         Focus();
-
-        var content = GetContentRect();
-        var labelSize = GetLabelSizeForLayout();
-        var valueSize = GetValueSizeForLayout();
-
-        var x = content.Left;
-        if (!labelSize.IsEmpty) x += labelSize.Width;
-        if (!valueSize.IsEmpty)
-        {
-            if (!labelSize.IsEmpty) x += ScalePx(_textGap);
-            x += valueSize.Width;
-        }
-
-        if (!labelSize.IsEmpty || !valueSize.IsEmpty)
-        {
-            x += ScalePx(_trackGap);
-        }
-
-        var pad = ScalePx(_horizontalPadding);
-        var trackLeft = x + pad;
-        var trackRight = content.Right - pad;
+        var track = GetTrackRect();
+        var trackLeft = track.Left;
+        var trackRight = track.Right;
         var trackWidth = Math.Max(1, trackRight - trackLeft);
 
         var px = Math.Max(trackLeft, Math.Min(trackRight, clientPoint.X));
         var t = (px - trackLeft) / (float)trackWidth;
         var newValue = _minimum + (int)Math.Round((_maximum - _minimum) * t);
-        Value = Clamp(newValue);
+        Value = SnapToDisplayStep(newValue);
+    }
+
+    private void SetFromThumbDrag(Point clientPoint)
+    {
+        Focus();
+
+        var trackWidth = Math.Max(1, _dragStartTrackRect.Width);
+        var logicalDeltaX = (clientPoint.X - _dragStartPoint.X) / Math.Max(0.01f, DpiScale);
+        var fraction = logicalDeltaX / trackWidth;
+        var newValue = _dragStartValue + (int)Math.Round((_maximum - _minimum) * fraction, MidpointRounding.AwayFromZero);
+        Value = SnapToDisplayStep(newValue);
     }
 }

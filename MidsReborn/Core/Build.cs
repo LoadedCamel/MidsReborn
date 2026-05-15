@@ -15,6 +15,7 @@ namespace Mids_Reborn.Core
 
         public readonly List<PowerEntry?> Powers;
         public readonly List<I9SetData> SetBonuses;
+        public BuildCombatContextState CombatContextState { get; set; }
 
         private IPower? _setBonusVirtualPower;
         private readonly Dictionary<string, IPower> _setBonusVirtualPowersByRecipient = new(StringComparer.OrdinalIgnoreCase);
@@ -28,6 +29,7 @@ namespace Mids_Reborn.Core
         public Build(Character owner, IList<LevelMap> iLevels)
         {
             _character = owner;
+            CombatContextState = global::Mids_Reborn.Core.CombatContextState.CreateDefault();
             Powers = new List<PowerEntry?>
             {
                 new PowerEntry(0, null, true)

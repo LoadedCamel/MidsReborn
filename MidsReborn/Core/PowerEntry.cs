@@ -3,6 +3,7 @@ using System.Drawing;
 using System.Linq;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
 
 namespace Mids_Reborn.Core
 {
@@ -93,7 +94,6 @@ namespace Mids_Reborn.Core
             if (Power != null && Power.VariableStart > Power.VariableMin && Power.VariableStart <= Power.VariableMax)
             {
                 VariableValue = Power.VariableStart;
-                Power.Stacks = VariableValue;
             }
             else
             {
@@ -126,6 +126,10 @@ namespace Mids_Reborn.Core
             {
                 _VirtualVariableValue = value;
                 _VariableValue = value;
+                if (Power != null)
+                {
+                    Power.Stacks = PlannerStateCatalog.GetMirroredStackValue(Power, value);
+                }
             }
         }
 

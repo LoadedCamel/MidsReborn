@@ -863,7 +863,6 @@ namespace Mids_Reborn.UI.Controls
 
                     var activeCount = GetActiveBoostsCount(timelinePower, p);
                     pe.VariableValue = activeCount;
-                    pe.Power.Stacks = activeCount;
                 }
             }
 
@@ -920,7 +919,6 @@ namespace Mids_Reborn.UI.Controls
                 MidsContext.Character.CurrentBuild.Powers[i].ProcInclude = originalPeStatus[i].ProcInclude;
                 MidsContext.Character.CurrentBuild.Powers[i].StatInclude = originalPeStatus[i].StatInclude;
                 MidsContext.Character.CurrentBuild.Powers[i].VariableValue = originalPeStatus[i].VariableValue;
-                MidsContext.Character.CurrentBuild.Powers[i].Power.Stacks = originalPeStatus[i].VariableValue;
             }
 
             RecalcTotals();

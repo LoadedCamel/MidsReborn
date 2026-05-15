@@ -14,6 +14,7 @@ internal sealed class PlannerActorAggregationContext
     public IReadOnlyList<IPower>? IncludedBuffedPowers { get; init; }
     public IReadOnlyList<IPower> EnhancementExternalPowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyList<IPower> SelfBuffExternalPowers { get; init; } = Array.Empty<IPower>();
+    public float ComputedDefianceMagnitude { get; init; }
     public IReadOnlyList<IPower> SupplementalEnhancementSourcePowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyList<IPower> SupplementalSelfBuffSourcePowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyCollection<int> SupplementalEnhancementExcludedIndexes { get; init; } = Array.Empty<int>();
@@ -46,6 +47,7 @@ internal static class PlannerActorAggregationPhase
             IncludedBuffedPowers = context.IncludedBuffedPowers,
             EnhancementExternalPowers = context.EnhancementExternalPowers,
             SelfBuffExternalPowers = context.SelfBuffExternalPowers,
+            ComputedDefianceMagnitude = context.ComputedDefianceMagnitude,
             ChanceModifierSetBonusPower = context.ChanceModifierSetBonusPower,
             BuildChanceModifierCatalog = context.BuildChanceModifierCatalog
         });

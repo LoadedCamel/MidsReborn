@@ -172,6 +172,12 @@ namespace Mids_Reborn.Core
 
         int VariableStart { get; set; }
 
+        double VariableDisplayDivisor { get; set; }
+
+        int VariableDisplayPrecision { get; set; }
+
+        double VariableDisplayStep { get; set; }
+
         int[] NIDSubPower { get; set; }
 
         string[] UIDSubPower { get; set; }

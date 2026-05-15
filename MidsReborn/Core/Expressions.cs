@@ -559,6 +559,70 @@ namespace Mids_Reborn.Core
                 CommandTokenType = ExprCommandToken.None,
                 SingleToken = true
             },
+            new ExprCommand
+            {
+                Keyword = "cfg>target>held",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>target>immobilized",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>target>stunned",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>target>terrorized",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>target>sleptrecently",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>target>vulnerabilityactive",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>target>opportunitystate",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
+            new ExprCommand
+            {
+                Keyword = "cfg>team>vigilanceenddiscount",
+                KeywordType = ExprKeywordType.Keyword,
+                InfixMode = ExprKeywordInfix.Atomic,
+                CommandTokenType = ExprCommandToken.None,
+                SingleToken = true
+            },
         };
 
         private static Dictionary<string, string> CommandsDict(IEffect sourceFx)
@@ -568,6 +632,8 @@ namespace Mids_Reborn.Core
             var currentArchetype = currentCharacter?.Archetype ?? MidsContext.Archetype;
             var currentDisplayStats = currentCharacter?.DisplayStats;
             var currentTotals = currentCharacter?.Totals;
+            var baseToHitScale = MidsContext.Config?.ScalingToHit ?? DatabaseAPI.ServerData.BaseToHit;
+            var currentToHitScale = baseToHitScale + (currentTotals?.BuffToHit ?? 0f);
 
             return new Dictionary<string, string>
             {
@@ -589,10 +655,10 @@ namespace Mids_Reborn.Core
                 { "modifier>current", $"{DatabaseAPI.GetModifier(sourceFx)}" },
                 { "maxEndurance", $"{currentDisplayStats?.EnduranceMaxEnd ?? 0}" },
                 { "rand()", $"{sourceFx.Rand}" },
-                { "cur.kToHit", $"{currentDisplayStats?.BuffToHit ?? 0}"},
-                { "base.kToHit", $"{MidsContext.Config.ScalingToHit}" },
-                { "source>cur.kToHit", $"{currentDisplayStats?.BuffToHit ?? 0}" },
-                { "source>base.kToHit", $"{MidsContext.Config.ScalingToHit}" },
+                { "cur.kToHit", FormatNumeric(currentToHitScale) },
+                { "base.kToHit", FormatNumeric(baseToHitScale) },
+                { "source>cur.kToHit", FormatNumeric(currentToHitScale) },
+                { "source>base.kToHit", FormatNumeric(baseToHitScale) },
                 { "source>Max.kHitPoints", $"{currentTotals?.HPMax ?? 0}" },
                 { "source>Base.kHitPoints", $"{(currentArchetype == null ? 0 : DatabaseAPI.GetClassHitPoints(currentArchetype))}" },
                 { "source>kHitPoints%", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}" },
@@ -603,12 +669,24 @@ namespace Mids_Reborn.Core
                 { "source>kMeterAbs", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}" },
                 { "source>cur.kMeter", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName, false))}" },
                 { "source>cur.kMeterAbs", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}" },
+                { "source>kRage", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName, false))}" },
+                { "source>kRageAbs", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}" },
+                { "source>cur.kRage", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName, false))}" },
+                { "source>cur.kRageAbs", $"{(fxPower == null ? "0" : GetVariableValue(fxPower.FullName))}" },
                 { "cfg>player>hp", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.HpPercent}" },
                 { "cfg>player>end", $"{MidsContext.Config.CombatContextSettings.PlayerSettings.EndPercent}" },
                 { "cfg>player>isAlive", $"{(MidsContext.Config.CombatContextSettings.PlayerSettings.IsAlive ? "1" : "0")}" },
                 { "cfg>target>hp", $"{MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent}" },
                 { "cfg>target>end", $"{MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent}" },
-                { "cfg>target>profileid", $"{GetTargetProfileId()}" }
+                { "cfg>target>profileid", $"{GetTargetProfileId()}" },
+                { "cfg>target>held", $"{(MidsContext.Config.CombatContextSettings.TargetSettings.Held ? "1" : "0")}" },
+                { "cfg>target>immobilized", $"{(MidsContext.Config.CombatContextSettings.TargetSettings.Immobilized ? "1" : "0")}" },
+                { "cfg>target>stunned", $"{(MidsContext.Config.CombatContextSettings.TargetSettings.Stunned ? "1" : "0")}" },
+                { "cfg>target>terrorized", $"{(MidsContext.Config.CombatContextSettings.TargetSettings.Terrorized ? "1" : "0")}" },
+                { "cfg>target>sleptrecently", $"{(MidsContext.Config.CombatContextSettings.TargetSettings.SleptRecently ? "1" : "0")}" },
+                { "cfg>target>vulnerabilityactive", $"{(MidsContext.Config.CombatContextSettings.TargetSettings.VulnerabilityActive ? "1" : "0")}" },
+                { "cfg>target>opportunitystate", $"{MidsContext.Config.CombatContextSettings.TargetSettings.OpportunityState}" },
+                { "cfg>team>vigilanceenddiscount", FormatNumeric((float)GetVigilanceEndDiscount()) }
             };
         }
 
@@ -681,12 +759,23 @@ namespace Mids_Reborn.Core
                 { "source>kMeterAbs", "50" },
                 { "source>cur.kMeter", "50" },
                 { "source>cur.kMeterAbs", "50" },
+                { "source>kRage", "50" },
+                { "source>kRageAbs", "50" },
+                { "source>cur.kRage", "50" },
+                { "source>cur.kRageAbs", "50" },
                 { "cfg>player>hp", "75" },
                 { "cfg>player>end", "80" },
                 { "cfg>player>isAlive", "1" },
                 { "cfg>target>hp", "75" },
                 { "cfg>target>end", "80" },
-                { "cfg>target>profileid", "0" }
+                { "cfg>target>profileid", "0" },
+                { "cfg>target>held", "0" },
+                { "cfg>target>immobilized", "0" },
+                { "cfg>target>stunned", "0" },
+                { "cfg>target>terrorized", "0" },
+                { "cfg>target>sleptrecently", "0" },
+                { "cfg>target>opportunitystate", "0" },
+                { "cfg>team>vigilanceenddiscount", "0.75" }
             };
         }
 
@@ -719,6 +808,28 @@ namespace Mids_Reborn.Core
                 { new Regex(@"target\>arch\s*(?:ne|!=)\s*['""]?([A-Za-z0-9_]+)['""]?", RegexOptions.IgnoreCase), _ => "0" },
                 { new Regex(@"target\>(Base|Cur|Max|Str|Res)\.(k[A-Za-z0-9_]+)", RegexOptions.IgnoreCase), ValidationTargetAttributeEvaluator }
             };
+        }
+
+        private static double GetVigilanceEndDiscount()
+        {
+            if (MidsContext.Config?.TeamRoster is not { Count: > 0 } roster)
+            {
+                return 0d;
+            }
+
+            var total = 0d;
+            foreach (var slot in roster)
+            {
+                if (!slot.InRange || string.IsNullOrWhiteSpace(slot.Archetype))
+                {
+                    continue;
+                }
+
+                var missingHealth = 100d - Math.Clamp(slot.HpPercent, 0, 100);
+                total += missingHealth / 100d * 0.75d;
+            }
+
+            return total;
         }
 
         private static string NormalizeExpressionSyntax(string expression)
@@ -788,7 +899,9 @@ namespace Mids_Reborn.Core
         private static string PrepareExpressionForValidation(string expression)
         {
             expression = NormalizeExpressionSyntax(expression);
-            expression = ValidationCommandsDict().Aggregate(expression, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
+            expression = ValidationCommandsDict()
+                .OrderByDescending(cmd => cmd.Key.Length)
+                .Aggregate(expression, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
             return ValidationFunctionsDict().Aggregate(expression, (current, cmd) => cmd.Key.Replace(current, cmd.Value));
         }
 
@@ -1484,7 +1597,7 @@ namespace Mids_Reborn.Core
                 ? "0"
                 : absoluteValue
                     ? $"{target.VariableValue}"
-                    : $"{target.VariableValue * target.Power.VariableMax / 100.0}";
+                    : $"{PlannerStateCatalog.GetExpressionVariableValue(target.Power, target.VariableValue, absoluteValue):G17}";
         }
 
         public static float Parse(IEffect sourceFx, ExpressionType exprType, out ErrorData error)
@@ -1555,7 +1668,9 @@ namespace Mids_Reborn.Core
             expr = NormalizeExpressionSyntax(expr);
 
             // Constants
-            expr = CommandsDict(sourceFx).Aggregate(expr, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
+            expr = CommandsDict(sourceFx)
+                .OrderByDescending(cmd => cmd.Key.Length)
+                .Aggregate(expr, (current, cmd) => current.Replace(cmd.Key, cmd.Value));
 
             // Non-numeric functions
             expr = FunctionsDict(sourceFx, pickedPowerNames).Aggregate(expr, (current, f1) => f1.Key.Replace(current, f1.Value));

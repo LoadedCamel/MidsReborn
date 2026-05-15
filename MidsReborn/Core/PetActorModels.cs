@@ -64,6 +64,7 @@ public sealed class PetActorPreviewState
 {
     public PetUpgradePreviewState Upgrades { get; init; } = new();
     public PetClickPreviewState ClickBuffs { get; init; } = new();
+    public bool InRange { get; set; } = true;
 
     public bool IsUpgradeApplied(string? powerFullName)
     {
@@ -82,7 +83,8 @@ public sealed class PetActorPreviewState
         return new PetActorPreviewState
         {
             Upgrades = Upgrades.Clone(),
-            ClickBuffs = ClickBuffs.Clone()
+            ClickBuffs = ClickBuffs.Clone(),
+            InRange = InRange
         };
     }
 }

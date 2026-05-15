@@ -227,6 +227,17 @@ public static partial class OmniExpressionConverter
             normalized = NormalizeOuter(normalized[1..]);
         }
 
+        if (ArchetypeInherentCatalog.TryRewriteTierOneCondition(
+                ownerFullName,
+                normalized,
+                negated,
+                link,
+                expression,
+                out var tierOneRow))
+        {
+            return tierOneRow;
+        }
+
         var targetOwnPower = TargetOwnPowerRegex().Match(normalized);
         if (targetOwnPower.Success)
         {
@@ -385,6 +396,44 @@ public static partial class OmniExpressionConverter
                 RawExpression = expression,
                 Unsupported = true,
                 EvaluationMode = AdvancedConditionEvaluationMode.RuntimeTargetOnly
+            };
+        }
+
+        var targetArchetype = TargetArchetypeRegex().Match(normalized);
+        if (targetArchetype.Success)
+        {
+            return new AdvancedConditionRow
+            {
+                Link = link,
+                Kind = AdvancedConditionKind.TargetArchetype,
+                Subject = "arch",
+                Value = targetArchetype.Groups[2].Value.Trim('\'', '"'),
+                Operator = targetArchetype.Groups[1].Value.Equals("!=", StringComparison.Ordinal) ||
+                           targetArchetype.Groups[1].Value.Equals("ne", StringComparison.OrdinalIgnoreCase) ||
+                           negated
+                    ? AdvancedConditionOperator.NotEquals
+                    : AdvancedConditionOperator.Equals,
+                RawExpression = expression,
+                EvaluationMode = AdvancedConditionEvaluationMode.BuildEvaluated
+            };
+        }
+
+        var reverseTargetArchetype = ReverseTargetArchetypeRegex().Match(normalized);
+        if (reverseTargetArchetype.Success)
+        {
+            return new AdvancedConditionRow
+            {
+                Link = link,
+                Kind = AdvancedConditionKind.TargetArchetype,
+                Subject = "arch",
+                Value = reverseTargetArchetype.Groups[1].Value.Trim('\'', '"'),
+                Operator = reverseTargetArchetype.Groups[2].Value.Equals("!=", StringComparison.Ordinal) ||
+                           reverseTargetArchetype.Groups[2].Value.Equals("ne", StringComparison.OrdinalIgnoreCase) ||
+                           negated
+                    ? AdvancedConditionOperator.NotEquals
+                    : AdvancedConditionOperator.Equals,
+                RawExpression = expression,
+                EvaluationMode = AdvancedConditionEvaluationMode.BuildEvaluated
             };
         }
 
@@ -1233,6 +1282,12 @@ public static partial class OmniExpressionConverter
 
     [GeneratedRegex(@"^enttype\s+target>\s+(.+?)\s+(eq|==|!=|ne)$", RegexOptions.IgnoreCase)]
     private static partial Regex ReverseTargetEntityRegex();
+
+    [GeneratedRegex(@"^target>arch\s+(eq|==|!=|ne)\s+['""]?@?(.+?)['""]?$", RegexOptions.IgnoreCase)]
+    private static partial Regex TargetArchetypeRegex();
+
+    [GeneratedRegex(@"^arch\s+target>\s+@?(.+?)\s+(eq|==|!=|ne)$", RegexOptions.IgnoreCase)]
+    private static partial Regex ReverseTargetArchetypeRegex();
 
     [GeneratedRegex(@"^target\.isFriend\?$", RegexOptions.IgnoreCase)]
     private static partial Regex TargetFriendRegex();

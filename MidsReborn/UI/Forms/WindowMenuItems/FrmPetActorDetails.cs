@@ -20,6 +20,7 @@ public sealed class FrmPetActorDetails : Form
     private readonly TableLayoutPanel _summaryMetrics;
     private readonly TableLayoutPanel _previewStatePanel;
     private readonly FlowLayoutPanel _upgradeFlow;
+    private readonly FlowLayoutPanel _proximityFlow;
     private readonly SplitContainer _bodySplit;
     private readonly SplitContainer _detailTotalsSplit;
     private readonly Panel _emptyStatePanel;
@@ -169,14 +170,18 @@ public sealed class FrmPetActorDetails : Form
         {
             Dock = DockStyle.Fill,
             ColumnCount = 1,
-            RowCount = 1,
+            RowCount = 2,
             Margin = new Padding(0, 0, 0, 8),
             BackColor = Color.Black
         };
         _previewStatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+        _previewStatePanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _previewStatePanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
 
         _upgradeFlow = CreatePreviewStateFlow();
+        _proximityFlow = CreatePreviewStateFlow();
         _previewStatePanel.Controls.Add(CreatePreviewStateGroup("Applied Upgrades", _upgradeFlow), 0, 0);
+        _previewStatePanel.Controls.Add(CreatePreviewStateGroup("Pet Context", _proximityFlow), 0, 1);
 
         var ribbonHost = new TableLayoutPanel
         {
@@ -827,6 +832,7 @@ public sealed class FrmPetActorDetails : Form
         try
         {
             _upgradeFlow.Controls.Clear();
+            _proximityFlow.Controls.Clear();
 
             if (_currentSnapshot == null)
             {
@@ -849,6 +855,13 @@ public sealed class FrmPetActorDetails : Form
                     _upgradeFlow.Controls.Add(checkBox);
                 }
             }
+
+            var inRangeToggle = CreatePreviewToggle(
+                "In Range of Owner",
+                _currentSnapshot.PreviewState.InRange,
+                "__pet_in_range__",
+                PetInRangeToggleOnCheckedChanged);
+            _proximityFlow.Controls.Add(inRangeToggle);
         }
         finally
         {
@@ -906,6 +919,18 @@ public sealed class FrmPetActorDetails : Form
             state.Upgrades.AppliedUpgradePowerFullNames.Remove(fullName);
         }
 
+        RefreshCurrentActorSnapshot();
+    }
+
+    private void PetInRangeToggleOnCheckedChanged(object? sender, EventArgs e)
+    {
+        if (_suppressPreviewStateEvents || _currentSnapshot == null || sender is not CheckBox checkBox)
+        {
+            return;
+        }
+
+        var state = GetMutablePreviewState(_currentSnapshot.RosterItem);
+        state.InRange = checkBox.Checked;
         RefreshCurrentActorSnapshot();
     }
 

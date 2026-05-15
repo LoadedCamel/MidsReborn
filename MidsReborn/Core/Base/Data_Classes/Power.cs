@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -80,6 +81,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private const string PowerIconNameMarker = "MRB_POWER_ICON_NAME";
         private const string ShowInSpecialPowerPickerMarker = "MRB_POWER_SHOW_IN_SPECIAL_POWER_PICKER";
         private const string ShowStatToggleMarker = "MRB_POWER_SHOW_STAT_TOGGLE";
+        private const string VariableDisplayMetadataMarker = "MRB_POWER_VARIABLE_DISPLAY";
         private bool Contains;
         public bool AppliedPowersOverride { get; set; } = false;
         public bool AbsorbedPetEffects { get; set; } = false;
@@ -112,6 +114,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             PowerIndex = -1;
             SetTypes = [];
             VariableName = string.Empty;
+            VariableDisplayDivisor = 1d;
+            VariableDisplayPrecision = 0;
+            VariableDisplayStep = 1d;
             UIDSubPower = [];
             NIDSubPower = [];
             Ignore_Buff = [];
@@ -169,6 +174,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             //SetTypes = new Enums.eSetType[0];
             SetTypes = [];
             VariableName = string.Empty;
+            VariableDisplayDivisor = 1d;
+            VariableDisplayPrecision = 0;
+            VariableDisplayStep = 1d;
             UIDSubPower = [];
             NIDSubPower = [];
             Ignore_Buff = [];
@@ -274,6 +282,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             VariableMin = template.VariableMin;
             VariableMax = template.VariableMax;
             VariableStart = template.VariableStart;
+            VariableDisplayDivisor = template.VariableDisplayDivisor;
+            VariableDisplayPrecision = template.VariableDisplayPrecision;
+            VariableDisplayStep = template.VariableDisplayStep;
             NIDSubPower = new int[template.NIDSubPower.Length];
             Array.Copy(template.NIDSubPower, NIDSubPower, NIDSubPower.Length);
             UIDSubPower = new string[template.UIDSubPower.Length];
@@ -351,6 +362,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             SetTypes = [];
 
             VariableName = string.Empty;
+            VariableDisplayDivisor = 1d;
+            VariableDisplayPrecision = 0;
+            VariableDisplayStep = 1d;
             UIDSubPower = [];
             NIDSubPower = [];
             Ignore_Buff = [];
@@ -556,6 +570,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 ShowStatToggle = showStatToggle;
             }
+
+            TryReadVariableDisplayMetadata(reader);
         }
 
         public IPowerset? GetPowerSet()
@@ -723,6 +739,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public int VariableMax { get; set; }
 
         public int VariableStart { get; set; }
+
+        public double VariableDisplayDivisor { get; set; } = 1d;
+
+        public int VariableDisplayPrecision { get; set; }
+
+        public double VariableDisplayStep { get; set; } = 1d;
 
         public int[] NIDSubPower { get; set; }
 
@@ -1082,12 +1104,29 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             StoreBoostPolicyMetadata(writer);
             StoreMarkedBoolean(writer, ShowInSpecialPowerPickerMarker, ShowInSpecialPowerPicker);
             StoreMarkedBoolean(writer, ShowStatToggleMarker, ShowStatToggle);
+            StoreVariableDisplayMetadata(writer);
         }
 
         private static void StoreMarkedString(BinaryWriter writer, string marker, string value)
         {
             writer.Write(marker);
             writer.Write(value ?? string.Empty);
+        }
+
+        private void StoreVariableDisplayMetadata(BinaryWriter writer)
+        {
+            if (Math.Abs(VariableDisplayDivisor - 1d) < 0.0000001d &&
+                VariableDisplayPrecision == 0 &&
+                Math.Abs(VariableDisplayStep - 1d) < 0.0000001d)
+            {
+                return;
+            }
+
+            writer.Write(VariableDisplayMetadataMarker);
+            writer.Write(string.Join("|",
+                VariableDisplayDivisor.ToString(CultureInfo.InvariantCulture),
+                VariableDisplayPrecision.ToString(CultureInfo.InvariantCulture),
+                VariableDisplayStep.ToString(CultureInfo.InvariantCulture)));
         }
 
         private static void StoreMarkedSingle(BinaryWriter writer, string marker, float value)
@@ -1141,6 +1180,36 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 reader.BaseStream.Position = position;
                 value = string.Empty;
                 return false;
+            }
+        }
+
+        private void TryReadVariableDisplayMetadata(BinaryReader reader)
+        {
+            if (!TryReadMarkedString(reader, VariableDisplayMetadataMarker, out var rawMetadata) ||
+                string.IsNullOrWhiteSpace(rawMetadata))
+            {
+                return;
+            }
+
+            var pieces = rawMetadata.Split('|');
+            if (pieces.Length > 0 &&
+                double.TryParse(pieces[0], NumberStyles.Float, CultureInfo.InvariantCulture, out var divisor) &&
+                Math.Abs(divisor) > 0.0000001d)
+            {
+                VariableDisplayDivisor = divisor;
+            }
+
+            if (pieces.Length > 1 &&
+                int.TryParse(pieces[1], NumberStyles.Integer, CultureInfo.InvariantCulture, out var precision))
+            {
+                VariableDisplayPrecision = Math.Max(0, precision);
+            }
+
+            if (pieces.Length > 2 &&
+                double.TryParse(pieces[2], NumberStyles.Float, CultureInfo.InvariantCulture, out var step) &&
+                step > 0d)
+            {
+                VariableDisplayStep = step;
             }
         }
 
@@ -2062,17 +2131,34 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private static IPower PrepareDamagePower(IPower sourcePower, bool absorbRequested)
         {
             IPower power = new Power(sourcePower);
+            var hasRedirectEffects = power.Effects.Any(effect =>
+                effect.EffectType == Enums.eEffectType.PowerRedirect &&
+                (effect.nOverride > -1 || !string.IsNullOrWhiteSpace(effect.Override)));
+            if ((power.HasPowerOverrideEffect || hasRedirectEffects) && !power.AppliedPowersOverride)
+            {
+                power = PlannerEffectResolver.ResolvePower(power, new PlannerEffectResolutionContext(useRulesetDefaults: false)
+                {
+                    ApplyRedirects = true,
+                    AbsorbPetEffects = false,
+                    ExpandGrantPowers = false,
+                    ExpandExecutePowers = false,
+                    IncludeTrace = false,
+                    MaxExpansionDepth = PlannerEffectResolutionContext.DefaultMaxExpansionDepth
+                }).ResolvedPower;
+            }
+
             var shouldAbsorbPseudoPets = DatabaseAPI.GetPlannerRuleset()
                 .ShouldAbsorbPseudoPetEffectsForDamage(power, absorbRequested) &&
                 !HasExistingSummonAbsorption(power);
-            if (shouldAbsorbPseudoPets || ShouldProcessExecutesForDamage(power))
+            var shouldProcessExecutes = ShouldProcessExecutesForDamage(power);
+            if (shouldAbsorbPseudoPets || shouldProcessExecutes)
             {
                 power = PlannerEffectResolver.ResolvePower(power, new PlannerEffectResolutionContext(useRulesetDefaults: false)
                 {
                     ApplyRedirects = false,
                     AbsorbPetEffects = shouldAbsorbPseudoPets,
                     ExpandGrantPowers = false,
-                    ExpandExecutePowers = ShouldProcessExecutesForDamage(power),
+                    ExpandExecutePowers = shouldProcessExecutes,
                     IncludeTrace = false,
                     MaxExpansionDepth = PlannerEffectResolutionContext.DefaultMaxExpansionDepth
                 }).ResolvedPower;
@@ -2249,7 +2335,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         e.Value.EffectClass != Enums.eEffectClass.Ignored & e.Value.Duration > 0 &
                         e.Value.ValidateConditional() &
                         e.Value.Probability > float.Epsilon &
-                        e.Value.SpecialCase != Enums.eSpecialCase.Defiance)
+                        e.Value.SpecialCase != Enums.eSpecialCase.Defiance &&
+                        !DefiancePlanner.IsModernContributorEffect(e.Value))
                     .OrderByDescending(e => e.Value, new EffectDurationComparer())
                     .DefaultIfEmpty(new KeyValuePair<int, IEffect>(-1, new Effect()))
                     .FirstOrDefault()
@@ -2263,7 +2350,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         e.Value.EffectClass != Enums.eEffectClass.Ignored & e.Value.Duration > 0 &
                         e.Value.ValidateConditional() &
                         e.Value.Probability > float.Epsilon &
-                        e.Value.SpecialCase != Enums.eSpecialCase.Defiance)
+                        e.Value.SpecialCase != Enums.eSpecialCase.Defiance &&
+                        !DefiancePlanner.IsModernContributorEffect(e.Value))
                     .OrderByDescending(e => e.Value, new EffectDurationComparer())
                     .DefaultIfEmpty(new KeyValuePair<int, IEffect>(-1, new Effect()))
                     .FirstOrDefault()
@@ -2360,6 +2448,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool HasDamageEffects()
         {
+            if (Effects.Any(effect => effect.EffectType == Enums.eEffectType.PowerRedirect))
+            {
+                return GetIncludedDamageEffects(this).Count > 0;
+            }
+
             return Effects.Any(t => t.EffectType == Enums.eEffectType.Damage);
         }
 

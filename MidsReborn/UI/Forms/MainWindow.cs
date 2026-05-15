@@ -769,6 +769,10 @@ namespace Mids_Reborn.UI.Forms
             if (_events.IsSuppressed) return;
             NewToon(false);
             GetBestDamageValues();
+            if (_frmCombatContext?.Visible == true)
+            {
+                _frmCombatContext.RefreshFromConfig();
+            }
         }
 
         private void OriginDropDown_SelectedIndexChanged(object? sender, EventArgs e)
@@ -3363,7 +3367,6 @@ namespace Mids_Reborn.UI.Forms
                             Math.Min(DatabaseAPI.Database.Power[pe.NIDPower].VariableMax,
                                 DatabaseAPI.Database.Power[pe.NIDPower].VariableStart));
                         pe.VariableValue = initialStacks;
-                        pe.Power.Stacks = initialStacks;
                     }
 
                     var p = pList.First();

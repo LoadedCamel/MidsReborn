@@ -468,7 +468,7 @@ public sealed class OmniImportScope
                                               _retainedPowerPowersets.Contains(powersetFullName);
         var explicitlyRetainedPowerset = !string.IsNullOrWhiteSpace(powersetFullName) &&
                                          _retainedPowersets.Contains(powersetFullName);
-        if (IsPetRoot(root) && !explicitlyRetainedPowerset)
+        if (IsPetRoot(root) && !explicitlyRetainedPowerset && !explicitlyRetainedPowerPowerset)
         {
             return false;
         }

@@ -120,7 +120,8 @@ public static class PetActorPowerResolver
                     AppliedUpgradePowerFullNames = new HashSet<string>(effective.Upgrades.AppliedUpgradePowerFullNames, StringComparer.OrdinalIgnoreCase),
                     DefaultsInitialized = true
                 },
-                ClickBuffs = effective.ClickBuffs.Clone()
+                ClickBuffs = effective.ClickBuffs.Clone(),
+                InRange = effective.InRange
             };
         }
 

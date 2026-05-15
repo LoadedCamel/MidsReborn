@@ -251,9 +251,9 @@ internal sealed class PlannerPowerPipeline
                 continue;
             }
 
-            if (powerEntry.Power != null && powerEntry.Power.Stacks < powerEntry.VariableValue)
+            if (powerEntry.Power != null)
             {
-                powerEntry.Power.Stacks = powerEntry.VariableValue;
+                powerEntry.Power.Stacks = PlannerStateCatalog.GetMirroredStackValue(powerEntry.Power, powerEntry.VariableValue);
             }
 
             _basePowers[hIDX] = new Power(DatabaseAPI.Database.Power[powerEntry.NIDPower]);
@@ -327,7 +327,7 @@ internal sealed class PlannerPowerPipeline
         }
         else if (hIDX >= 0 && hIDX < _currentBuild.Powers.Count && _currentBuild.Powers[hIDX] != null)
         {
-            power.Stacks = _currentBuild.Powers[hIDX]!.VariableValue;
+            power.Stacks = PlannerStateCatalog.GetMirroredStackValue(power, _currentBuild.Powers[hIDX]!.VariableValue);
         }
 
         return DatabaseAPI.GetPlannerRuleset().UsesCanonicalPlannerMath
@@ -1266,6 +1266,29 @@ internal sealed class PlannerPowerPipeline
 
     internal static void ApplyDisplayedSelfBuffScalars(IPower powerMath, IPower powerBuffed, Enums.BuffsX selfBuffs)
     {
+        if (powerMath.IgnoreBuff(Enums.eEnhance.Damage))
+        {
+            foreach (var effect in powerBuffed.Effects)
+            {
+                if (effect.EffectType != Enums.eEffectType.Damage)
+                {
+                    continue;
+                }
+
+                var damageIndex = (int)effect.DamageType;
+                if (damageIndex < 0 || damageIndex >= selfBuffs.Damage.Length)
+                {
+                    continue;
+                }
+
+                var damageBuff = selfBuffs.Damage[damageIndex];
+                if (Math.Abs(damageBuff) > float.Epsilon)
+                {
+                    effect.Math_Mag *= 1f + damageBuff;
+                }
+            }
+        }
+
         if (powerMath.IgnoreBuff(Enums.eEnhance.EnduranceDiscount))
         {
             var endDiscount = selfBuffs.Effect[(int)Enums.eStatType.BuffEndRdx];
@@ -1329,6 +1352,7 @@ internal sealed class PlannerPowerPipeline
 
         var enhancementExternalPowers = new List<IPower>();
         var selfBuffExternalPowers = new List<IPower>();
+        var computedDefianceMagnitude = 0f;
         if (setBonusPower != null)
         {
             enhancementExternalPowers.Add(setBonusPower);
@@ -1359,6 +1383,13 @@ internal sealed class PlannerPowerPipeline
             }
         }
 
+        if (_recipient is null or { Kind: PlannerBuildRecipientKind.Player })
+        {
+            computedDefianceMagnitude = DefiancePlanner.Resolve(
+                _currentBuild,
+                MidsContext.Config?.CombatContextSettings.Defiance).TotalMagnitude;
+        }
+
         return new PlannerActorAggregationContext
         {
             ClassName = _recipient?.ClassName ?? DatabaseAPI.ResolveClassName(_archetype),
@@ -1369,6 +1400,7 @@ internal sealed class PlannerPowerPipeline
             IncludedBuffedPowers = includedBuffedPowers,
             EnhancementExternalPowers = enhancementExternalPowers,
             SelfBuffExternalPowers = selfBuffExternalPowers,
+            ComputedDefianceMagnitude = computedDefianceMagnitude,
             ChanceModifierSetBonusPower = setBonusPower,
             BuildChanceModifierCatalog = buildChanceModifierCatalog,
             ApplyPvpDiminishingReturns = _recipient == null,

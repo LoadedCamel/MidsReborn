@@ -660,9 +660,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 if (power?.Power == null || !power.Power.Active) continue;
 
-                if (power.Power.VariableEnabled && power.VariableValue > 0)
+                if (power.Power.VariableEnabled)
                 {
-                    _plannerStateStacks[power.Power.FullName] = power.VariableValue;
+                    SyncPlannerVariableTargets(power);
+                    if (power.VariableValue > 0)
+                    {
+                        _plannerStateStacks[power.Power.FullName] = power.VariableValue;
+                    }
                     if (power.Power.FullName.Equals(PlannerStateCatalog.PackMentalityMarker, StringComparison.OrdinalIgnoreCase))
                     {
                         PackMentality = true;
@@ -683,7 +687,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     ApplyPlannerMode(plannerMode, true);
                 }
 
-                switch (power.Power.PowerName.ToUpper())
+                /*switch (power.Power.PowerName.ToUpper())
                 {
                     case "TIME_CRAWL":
                         DelayedActive = true;
@@ -742,7 +746,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     case "UPGRADE_EQUIPMENT":
                         PetTier3 = true;
                         break;
-                }
+                }*/
             }
 
             var impliedPlannerModes = CurrentBuild.Powers
@@ -758,6 +762,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 ApplyPlannerMode(impliedMode, true);
             }
+
+            SyncForcedPlannerStateValues();
 
             var inherentPowersList = CurrentBuild?.Powers
                 .Where(p => p is { Chosen: false, Power: not null } && CurrentBuild.PowerUsed(p.Power)).Select(p => p.Power)
@@ -791,7 +797,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 foreach (var power in CurrentBuild.Powers.Where(power => power?.Power != null))
                 {
-                    switch (power.Power.PowerName.ToUpper())
+                    /*switch (power.Power.PowerName.ToUpper())
                     {
                         case "BOXING":
                             BoxingBuff = true;
@@ -805,7 +811,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             CrossPunchBuff = true;
                             NotCrossPunchBuff = false;
                             break;
-                    }
+                    }*/
 
                     if (CurrentBuild != null && (power.Chosen || !CurrentBuild.PowerUsed(power.Power))) continue;
                     var displayItem = InherentDisplayList.FirstOrDefault(x => x.Power.FullName == power.Power.FullName);
@@ -1352,6 +1358,25 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     Containment = enabled;
                     break;
                 case PlannerMode.Domination:
+                    if (enabled)
+                    {
+                        _activePlannerModes.Add(PlannerMode.DominationActive);
+                    }
+                    else
+                    {
+                        _activePlannerModes.Remove(PlannerMode.DominationActive);
+                    }
+                    Domination = enabled;
+                    break;
+                case PlannerMode.DominationActive:
+                    if (enabled)
+                    {
+                        _activePlannerModes.Add(PlannerMode.Domination);
+                    }
+                    else
+                    {
+                        _activePlannerModes.Remove(PlannerMode.Domination);
+                    }
                     Domination = enabled;
                     break;
                 case PlannerMode.Scourge:
@@ -1361,6 +1386,25 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     CriticalHits = enabled;
                     break;
                 case PlannerMode.Assassination:
+                    if (enabled)
+                    {
+                        _activePlannerModes.Add(PlannerMode.StalkerHidden);
+                    }
+                    else
+                    {
+                        _activePlannerModes.Remove(PlannerMode.StalkerHidden);
+                    }
+                    Assassination = enabled;
+                    break;
+                case PlannerMode.StalkerHidden:
+                    if (enabled)
+                    {
+                        _activePlannerModes.Add(PlannerMode.Assassination);
+                    }
+                    else
+                    {
+                        _activePlannerModes.Remove(PlannerMode.Assassination);
+                    }
                     Assassination = enabled;
                     break;
                 case PlannerMode.Defiance:
@@ -1454,6 +1498,56 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     PackMentality = enabled;
                     NotPackMentality = !enabled;
                     break;
+            }
+        }
+
+        private void SyncForcedPlannerStateValues()
+        {
+            if (CurrentBuild?.Powers == null ||
+                !_activePlannerModes.Contains(PlannerMode.DominationActive))
+            {
+                return;
+            }
+
+            var meterEntry = CurrentBuild.Powers.FirstOrDefault(entry =>
+                entry?.Power?.FullName.Equals(PlannerStateCatalog.DominationMeterPowerFullName, StringComparison.OrdinalIgnoreCase) == true);
+            if (meterEntry?.Power == null)
+            {
+                return;
+            }
+
+            var forcedMeterValue = meterEntry.Power.VariableMax > 0
+                ? meterEntry.Power.VariableMax
+                : 100;
+            meterEntry.StatInclude = true;
+            meterEntry.VariableValue = Math.Max(meterEntry.VariableValue, forcedMeterValue);
+            meterEntry.Power.Active = meterEntry.StatInclude &&
+                                      CurrentBuild.MeetsRequirement(meterEntry.Power, CurrentBuild.GetMaxLevel());
+            _plannerStateStacks[meterEntry.Power.FullName] = meterEntry.VariableValue;
+        }
+
+        private void SyncPlannerVariableTargets(PowerEntry powerEntry)
+        {
+            if (CurrentBuild?.Powers == null ||
+                powerEntry?.Power == null ||
+                !PlannerStateCatalog.TryGetVariableSyncTargets(powerEntry.Power.FullName, out var syncTargets))
+            {
+                return;
+            }
+
+            foreach (var targetFullName in syncTargets)
+            {
+                var targetEntry = CurrentBuild.Powers.FirstOrDefault(entry =>
+                    entry?.Power?.FullName.Equals(targetFullName, StringComparison.OrdinalIgnoreCase) == true);
+
+                if (targetEntry?.Power == null)
+                {
+                    continue;
+                }
+
+                targetEntry.VariableValue = powerEntry.VariableValue;
+                targetEntry.StatInclude = powerEntry.VariableValue > 0 || targetEntry.Power.AlwaysToggle;
+                _plannerStateStacks[targetEntry.Power.FullName] = powerEntry.VariableValue;
             }
         }
 

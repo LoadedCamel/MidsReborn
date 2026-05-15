@@ -2277,7 +2277,6 @@ namespace Mids_Reborn.UI.Forms.Controls
             }
 
             MidsContext.Character.CurrentBuild.Powers[HistoryIDX].VariableValue = num;
-            MidsContext.Character.CurrentBuild.Powers[HistoryIDX].Power.Stacks = num;
             
             if (num == pLastScaleVal)
             {
@@ -2494,34 +2493,45 @@ namespace Mids_Reborn.UI.Forms.Controls
 
             Lock = locked;
 
-            var basePowerData = new Power(basePower);
-            var enhancedPowerData = new Power(enhancedPower);
-            var rootPowerName = Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower);
-
-            rootPowerBase = string.IsNullOrEmpty(rootPowerName)
-                ? null
-                : DatabaseAPI.GetPowerByFullName(rootPowerName);
-
-            rootPowerEnh = string.IsNullOrEmpty(rootPowerName)
-                ? null
-                : MainModule.MidsController.Toon?.GetEnhancedPower(iHistoryIdx);
-
-            if (enhancedPowerData.PowerIndex == -1 & basePowerData.PowerIndex == -1)
+            if (MainModule.MidsController.Toon != null)
             {
-                pBase = null;
-            }
-            else if (enhancedPowerData.PowerIndex == -1 & basePowerData.PowerIndex > -1)
-            {
-                pBase = basePowerData;
+                var snapshot = MainModule.MidsController.Toon.GetDisplayPowerSnapshot(iHistoryIdx, basePower.PowerIndex);
+                pBase = snapshot.BasePower == null ? null : new Power(snapshot.BasePower);
+                pEnh = snapshot.EnhancedPower == null ? null : new Power(snapshot.EnhancedPower);
+                rootPowerBase = snapshot.RootPowerBase;
+                rootPowerEnh = snapshot.RootPowerEnh;
             }
             else
             {
-                pBase = basePowerData;
-            }
+                var basePowerData = new Power(basePower);
+                var enhancedPowerData = new Power(enhancedPower);
+                var rootPowerName = Power.GetRootPowerName(iHistoryIdx, basePower, enhancedPower);
 
-            pEnh = enhancedPowerData.PowerIndex == -1
-                ? new Power(basePower) {PowerIndex = -1}
-                : enhancedPowerData;
+                rootPowerBase = string.IsNullOrEmpty(rootPowerName)
+                    ? null
+                    : DatabaseAPI.GetPowerByFullName(rootPowerName);
+
+                rootPowerEnh = string.IsNullOrEmpty(rootPowerName)
+                    ? null
+                    : MainModule.MidsController.Toon?.GetEnhancedPower(iHistoryIdx);
+
+                if (enhancedPowerData.PowerIndex == -1 & basePowerData.PowerIndex == -1)
+                {
+                    pBase = null;
+                }
+                else if (enhancedPowerData.PowerIndex == -1 & basePowerData.PowerIndex > -1)
+                {
+                    pBase = basePowerData;
+                }
+                else
+                {
+                    pBase = basePowerData;
+                }
+
+                pEnh = enhancedPowerData.PowerIndex == -1
+                    ? new Power(basePower) {PowerIndex = -1}
+                    : enhancedPowerData;
+            }
 
             // Data sent to the Dataview may differ from DB.
             // Not needed if ActivatePeriod absorb from summons is disabled in Power.AbsorbPetEffects()

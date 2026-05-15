@@ -233,7 +233,18 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
                         default:
                             if (effectType == Enums.eEffectType.DamageBuff)
                             {
+                                if (DefiancePlanner.IsComputedCurrentBuffEffect(effect))
+                                {
+                                    foreach (var damageType in DefiancePlanner.ComputedBuffDamageTypes)
+                                    {
+                                        buckets.Damage[(int)damageType] += value;
+                                    }
+
+                                    continue;
+                                }
+
                                 var isDefiance =
+                                    DefiancePlanner.IsModernContributorEffect(effect) ||
                                     (effect.isEnhancementEffect && effect.EffectClass == Enums.eEffectClass.Tertiary) ||
                                     effect.ValidateConditional("Active", "Defiance") ||
                                     effect.SpecialCase == Enums.eSpecialCase.Defiance;

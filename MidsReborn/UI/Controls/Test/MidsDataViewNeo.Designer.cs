@@ -230,9 +230,9 @@ namespace Mids_Reborn.UI.Controls
             powerStatsGrid.Dock = DockStyle.Fill;
             powerStatsGrid.Font = new Font("Segoe UI", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             powerStatsGrid.GridPadding = 6;
-            powerStatsGrid.Location = new Point(0, 137);
+            powerStatsGrid.Location = new Point(0, 143);
             powerStatsGrid.Name = "powerStatsGrid";
-            powerStatsGrid.Size = new Size(400, 137);
+            powerStatsGrid.Size = new Size(400, 132);
             powerStatsGrid.TabIndex = 79;
             powerStatsGrid.TabStop = false;
             // 
@@ -244,16 +244,16 @@ namespace Mids_Reborn.UI.Controls
             infoDamageDisplay.ForeColor = Color.WhiteSmoke;
             infoDamageDisplay.Location = new Point(0, 275);
             infoDamageDisplay.Name = "infoDamageDisplay";
-            infoDamageDisplay.ShowGraph = true;
             infoDamageDisplay.Size = new Size(400, 76);
             infoDamageDisplay.TabIndex = 78;
+            infoDamageDisplay.ToolTipText = "";
             infoDamageDisplay.UseCompactCard = true;
             // 
             // sliderHost
             // 
             sliderHost.Controls.Add(midsTrackBar1);
             sliderHost.Dock = DockStyle.Top;
-            sliderHost.Location = new Point(0, 106);
+            sliderHost.Location = new Point(0, 112);
             sliderHost.Name = "sliderHost";
             sliderHost.Size = new Size(400, 31);
             sliderHost.TabIndex = 82;
@@ -262,11 +262,12 @@ namespace Mids_Reborn.UI.Controls
             // midsTrackBar1
             // 
             midsTrackBar1.BackColor = Color.Transparent;
+            midsTrackBar1.Dock = DockStyle.Fill;
             midsTrackBar1.ForeColor = Color.WhiteSmoke;
-            midsTrackBar1.Location = new Point(91, 6);
+            midsTrackBar1.Location = new Point(0, 0);
             midsTrackBar1.Name = "midsTrackBar1";
             midsTrackBar1.ShowValue = true;
-            midsTrackBar1.Size = new Size(218, 18);
+            midsTrackBar1.Size = new Size(400, 31);
             midsTrackBar1.TabIndex = 81;
             midsTrackBar1.Text = "Targets:";
             midsTrackBar1.TextAlign = ContentAlignment.MiddleRight;
@@ -281,7 +282,7 @@ namespace Mids_Reborn.UI.Controls
             infoLDesc.Dock = DockStyle.Top;
             infoLDesc.Font = new Font("Segoe UI", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
             infoLDesc.ForeColor = Color.WhiteSmoke;
-            infoLDesc.Location = new Point(0, 46);
+            infoLDesc.Location = new Point(0, 50);
             infoLDesc.Name = "infoLDesc";
             infoLDesc.Rtf = resources.GetString("infoLDesc.Rtf");
             infoLDesc.Size = new Size(400, 62);

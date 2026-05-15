@@ -14,6 +14,7 @@ internal sealed class ActorPowerAssemblyContext
     public IReadOnlyList<IPower>? IncludedBuffedPowers { get; init; }
     public IReadOnlyList<IPower> EnhancementExternalPowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyList<IPower> SelfBuffExternalPowers { get; init; } = Array.Empty<IPower>();
+    public float ComputedDefianceMagnitude { get; init; }
     public IPower? ChanceModifierSetBonusPower { get; init; }
     public bool BuildChanceModifierCatalog { get; init; } = true;
 }
@@ -74,6 +75,14 @@ internal static class ActorPowerAssembly
         foreach (var power in selfBuffExternalPowers)
         {
             ContributionCapture.AccumulateBuckets(ruleset, power, ref selfBuffs, PlannerBucketPass.SelfBuff, contributionCollector);
+        }
+
+        if (context.ComputedDefianceMagnitude > float.Epsilon)
+        {
+            foreach (var damageType in DefiancePlanner.ComputedBuffDamageTypes)
+            {
+                selfBuffs.Damage[(int)damageType] += context.ComputedDefianceMagnitude;
+            }
         }
 
         return new ActorPowerAssemblyResult

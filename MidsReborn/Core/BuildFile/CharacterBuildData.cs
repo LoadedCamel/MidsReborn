@@ -70,6 +70,9 @@ namespace Mids_Reborn.Core.BuildFile
         [JsonProperty]
         public List<PowerData?> PowerEntries { get; set; } = new();
 
+        [JsonProperty]
+        public BuildCombatContextState? CombatContext { get; set; }
+
         private static List<PowerEntry> InherentPowers { get; set; } = new();
 
         internal void Update(Character? characterData)
@@ -89,6 +92,7 @@ namespace Mids_Reborn.Core.BuildFile
                 Comment = characterData.Comment;
                 PowerSets = new List<string>();
                 PowerEntries = new List<PowerData?>();
+                CombatContext = CombatContextState.Clone(characterData.CurrentBuild.CombatContextState);
 
                 foreach (var powerSet in characterData.Powersets)
                 {
@@ -282,6 +286,7 @@ namespace Mids_Reborn.Core.BuildFile
             MidsContext.Character.Comment = Comment ?? string.Empty;
             MidsContext.Character.LoadPowerSetsByName(PowerSets);
             MidsContext.Character.CurrentBuild!.LastPower = LastPower;
+            MidsContext.Character.CurrentBuild.CombatContextState = CombatContextState.Clone(CombatContext);
 
             try
             {

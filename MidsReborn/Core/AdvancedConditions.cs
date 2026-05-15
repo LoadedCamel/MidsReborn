@@ -500,6 +500,7 @@ public static class AdvancedConditionCompiler
             AdvancedConditionKind.TargetEntityType when row.TargetScope != AdvancedConditionTargetScope.Unknown => $"target.scope {CompareText(row.Operator)} '{row.TargetScope}'",
             AdvancedConditionKind.TargetEntityType => $"target>enttype {CompareText(row.Operator)} '{row.Value}'",
             AdvancedConditionKind.TargetMode => $"target.mode?({row.Subject})",
+            AdvancedConditionKind.TargetGroup when row.Subject.Equals("tag", StringComparison.OrdinalIgnoreCase) => $"target.HasTag?({row.Value})",
             AdvancedConditionKind.TargetGroup => $"target>group {CompareText(row.Operator)} '{row.Value}'",
             AdvancedConditionKind.TargetArchetype => $"target>arch {CompareText(row.Operator)} '{row.Value}'",
             AdvancedConditionKind.CharacterArchetype => $"char>arch {CompareText(row.Operator)} '{row.Value}'",
@@ -624,6 +625,22 @@ public static class AdvancedConditionEvaluator
 
         private static void DeriveCompatibilityModes(PlannerBuildStateSnapshot snapshot)
         {
+            if (snapshot.ActiveModes.Contains(PlannerMode.StalkerHidden) ||
+                snapshot.ActiveModes.Contains(PlannerMode.Assassination))
+            {
+                snapshot.ActiveModes.Add(PlannerMode.StalkerHidden);
+                snapshot.ActiveModes.Add(PlannerMode.Assassination);
+            }
+
+            if (snapshot.ActiveModes.Contains(PlannerMode.DominationActive) ||
+                snapshot.ActiveModes.Contains(PlannerMode.Domination))
+            {
+                snapshot.ActiveModes.Add(PlannerMode.DominationActive);
+                snapshot.ActiveModes.Add(PlannerMode.Domination);
+                snapshot.StackCounts[PlannerStateCatalog.DominationMeterPowerFullName] =
+                    Math.Max(100, snapshot.GetStacks(PlannerStateCatalog.DominationMeterPowerFullName));
+            }
+
             if (snapshot.GetStacks(PlannerStateCatalog.PackMentalityMarker) > 0)
             {
                 snapshot.ActiveModes.Add(PlannerMode.PackMentality);
@@ -704,7 +721,7 @@ public static class AdvancedConditionEvaluator
             AdvancedConditionKind.TargetEntityType => EvaluateTargetEntityType(row),
             AdvancedConditionKind.TargetMode => EvaluateUnsupportedTargetState(row),
             AdvancedConditionKind.TargetGroup => EvaluateTargetGroup(row),
-            AdvancedConditionKind.TargetArchetype => EvaluateUnsupportedTargetState(row),
+            AdvancedConditionKind.TargetArchetype => EvaluateTargetArchetype(row),
             AdvancedConditionKind.CharacterArchetype => CompareString(GetCharacterArchetype(), row.Operator, row.Value),
             AdvancedConditionKind.CharacterLevel => CompareNumber(MidsContext.Character?.Level ?? 0, row.Operator, ParseNumber(row.Value)),
             AdvancedConditionKind.PowerRequirementGroup => EvaluatePowerRequirementGroup(row),
@@ -909,6 +926,9 @@ public static class AdvancedConditionEvaluator
             AdvancedConditionKind.PowerActive => EvaluatePowerActive(row, build),
             AdvancedConditionKind.SourceMode => EvaluateSourceMode(row, snapshot),
             AdvancedConditionKind.CombatSetting => EvaluateCombatSetting(row),
+            AdvancedConditionKind.TargetEntityType => EvaluateTargetEntityType(row),
+            AdvancedConditionKind.TargetGroup => EvaluateTargetGroup(row),
+            AdvancedConditionKind.TargetArchetype => EvaluateTargetArchetype(row),
             AdvancedConditionKind.CharacterLevel => CompareNumber(MidsContext.Character?.Level ?? 0, row.Operator, ParseNumber(row.Value)),
             AdvancedConditionKind.PowerCount => EvaluateOwnedPowerCount(row, build, snapshot),
             AdvancedConditionKind.PowerStacks => EvaluatePowerStacks(row, build, snapshot),
@@ -1152,21 +1172,47 @@ public static class AdvancedConditionEvaluator
 
     private static bool EvaluateTargetEntityType(AdvancedConditionRow row)
     {
+        var actualScope = MidsContext.Config?.Inc.DisablePvE == true
+            ? AdvancedConditionTargetScope.Player
+            : AdvancedConditionTargetScope.Foe;
+
         if (row.TargetScope != AdvancedConditionTargetScope.Unknown)
         {
-            return true;
+            return row.Operator switch
+            {
+                AdvancedConditionOperator.NotEquals => actualScope != row.TargetScope,
+                _ => actualScope == row.TargetScope
+            };
         }
 
         var value = row.Value.Trim('\'', '"').ToLowerInvariant();
-        var targetIsPlayer = MidsContext.Config?.Inc.DisablePvE == true;
-        var actual = targetIsPlayer ? "player" : "critter";
+        var actual = actualScope == AdvancedConditionTargetScope.Player ? "player" : "critter";
 
         return CompareString(actual, row.Operator, value);
     }
 
     private static bool EvaluateTargetGroup(AdvancedConditionRow row)
     {
+        if (row.Subject.Equals("tag", StringComparison.OrdinalIgnoreCase))
+        {
+            var actual = CombatTargetProfiles.HasTag(
+                MidsContext.Config?.CombatContextSettings.TargetSettings.ProfileId ?? (int)CombatTargetProfileId.Boss,
+                row.Value);
+            return CompareBool(actual, row.Operator, true);
+        }
+
         return EvaluateUnsupportedTargetState(row);
+    }
+
+    private static bool EvaluateTargetArchetype(AdvancedConditionRow row)
+    {
+        var normalized = ConfigData.NormalizeTeammateArchetype(row.Value);
+        var present = GetTeamMembers(normalized) > 0;
+        return row.Operator switch
+        {
+            AdvancedConditionOperator.NotEquals => !present,
+            _ => present
+        };
     }
 
     private static bool EvaluateUnsupportedTargetState(AdvancedConditionRow row)
@@ -1210,9 +1256,18 @@ public static class AdvancedConditionEvaluator
 
     private static int GetTeamMembers(string archetype)
     {
-        if (MidsContext.Config?.TeamMembers == null)
+        if (MidsContext.Config == null)
         {
             return 0;
+        }
+
+        if (MidsContext.Config.TeamRoster is { Count: > 0 })
+        {
+            var normalized = ConfigData.NormalizeTeammateArchetype(archetype);
+            return MidsContext.Config.TeamRoster.Count(slot =>
+                slot.InRange &&
+                !string.IsNullOrWhiteSpace(slot.Archetype) &&
+                slot.Archetype.Equals(normalized, StringComparison.OrdinalIgnoreCase));
         }
 
         return MidsContext.Config.TeamMembers.TryGetValue(archetype, out var count)

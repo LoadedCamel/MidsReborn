@@ -26,13 +26,29 @@ public sealed partial class OmniImporter
         database.EntityImportMetadata = new EntityImportMetadata();
     }
 
-    private static void CapturePowerImportMetadata(IDatabase database, string powerFullName, OmniPowerDefinition source)
+    private static void CapturePowerImportMetadata(IDatabase database, IPower midsPower, string powerFullName, OmniPowerDefinition source)
     {
         if (database.PowerImportMetadata?.Powers == null)
         {
             database.PowerImportMetadata = new PowerImportMetadata();
         }
 
+        var semantics = BuildPowerImportSemantics(database, midsPower, powerFullName, source);
+        if (semantics == null)
+        {
+            database.PowerImportMetadata.Powers.Remove(powerFullName);
+            return;
+        }
+
+        database.PowerImportMetadata.Powers[powerFullName] = semantics;
+    }
+
+    internal static ImportedPowerSemantics? BuildPowerImportSemantics(
+        IDatabase database,
+        IPower midsPower,
+        string powerFullName,
+        OmniPowerDefinition source)
+    {
         var procPolicy = ImportedProcPolicyNormalizer.Normalize(
             source.ProcAllowedValue,
             source.ProcsOnlyOnMainTarget,
@@ -41,26 +57,34 @@ public sealed partial class OmniImporter
             out _);
         var lifetimeMetadata = ImportedPowerPolicyDiagnostics.BuildLifetimeMetadata(source);
         var boostPolicyMetadata = ImportedPowerPolicyDiagnostics.BuildBoostPolicyMetadata(source);
+        var archetypeInherent = ArchetypeInherentCatalog.TryCreateBinding(
+            database.DataProviderId,
+            powerFullName,
+            ResolveOwningClassNames(database, midsPower),
+            out var binding)
+            ? binding
+            : null;
 
         if (string.IsNullOrWhiteSpace(source.TargetRequires) &&
             (source.ActivationEffects == null || source.ActivationEffects.Count == 0) &&
             procPolicy.IsDefault &&
             source.StackingLifetime == null &&
             !lifetimeMetadata.HasValue &&
-            !boostPolicyMetadata.HasValue)
+            !boostPolicyMetadata.HasValue &&
+            archetypeInherent == null)
         {
-            database.PowerImportMetadata.Powers.Remove(powerFullName);
-            return;
+            return null;
         }
 
-        database.PowerImportMetadata.Powers[powerFullName] = new ImportedPowerSemantics
+        return new ImportedPowerSemantics
         {
             TargetRequires = source.TargetRequires ?? string.Empty,
             ActivationEffects = source.ActivationEffects?.Select(CloneEffectGroup).ToList() ?? [],
             ProcPolicy = procPolicy,
             StackingLifetime = source.StackingLifetime,
             LifetimeMetadata = lifetimeMetadata,
-            BoostPolicyMetadata = boostPolicyMetadata
+            BoostPolicyMetadata = boostPolicyMetadata,
+            ArchetypeInherent = archetypeInherent
         };
     }
 
@@ -107,6 +131,35 @@ public sealed partial class OmniImporter
     {
         var serialized = JsonConvert.SerializeObject(source);
         return JsonConvert.DeserializeObject<OmniEffectDefinition>(serialized) ?? new OmniEffectDefinition();
+    }
+
+    private static IReadOnlyCollection<string> ResolveOwningClassNames(IDatabase database, IPower power)
+    {
+        var classNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+
+        foreach (var className in power.Requires.ClassName.Where(className => !string.IsNullOrWhiteSpace(className)))
+        {
+            classNames.Add(OmniImportScope.NormalizeClassName(className));
+        }
+
+        if (database.Classes != null)
+        {
+            foreach (var classIndex in power.Requires.NClassName.Where(index => index >= 0 && index < database.Classes.Length))
+            {
+                var className = database.Classes[classIndex]?.ClassName;
+                if (!string.IsNullOrWhiteSpace(className))
+                {
+                    classNames.Add(OmniImportScope.NormalizeClassName(className));
+                }
+            }
+        }
+
+        if (!string.IsNullOrWhiteSpace(power.ForcedClass))
+        {
+            classNames.Add(OmniImportScope.NormalizeClassName(power.ForcedClass));
+        }
+
+        return classNames.ToArray();
     }
 
     private void ApplyEntityImportMetadata(

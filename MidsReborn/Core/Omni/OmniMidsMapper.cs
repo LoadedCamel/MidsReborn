@@ -308,6 +308,13 @@ public static class OmniMidsMapper
             return false;
         }
 
+        if (effect.AttribType == Enums.eAttribType.Expression &&
+            (!string.IsNullOrWhiteSpace(effect.Expressions.Magnitude) ||
+             !string.IsNullOrWhiteSpace(effect.Expressions.Duration)))
+        {
+            return false;
+        }
+
         if (Math.Abs(effect.Scale) > 0.0001f || Math.Abs(effect.nMagnitude) > 0.0001f || effect.nDuration > 0)
         {
             return false;

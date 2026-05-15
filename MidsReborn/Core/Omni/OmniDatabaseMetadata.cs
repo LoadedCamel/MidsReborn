@@ -61,6 +61,7 @@ public sealed class ImportedPowerSemantics
     public int? MaxPowerLifetimeInGame { get; set; }
     public string BoostInfoJson { get; set; } = string.Empty;
     public List<string> AllowedBoostSetCategories { get; set; } = [];
+    public ImportedArchetypeInherentBinding? ArchetypeInherent { get; set; }
 
     internal ImportedProcPolicy ProcPolicy
     {
@@ -101,6 +102,18 @@ public sealed class ImportedPowerSemantics
             AllowedBoostSetCategories = value.AllowedBoostSetCategories.ToList();
         }
     }
+}
+
+public sealed class ImportedArchetypeInherentBinding
+{
+    public string CatalogKey { get; set; } = string.Empty;
+    public OmniDataProviderId ProviderId { get; set; } = OmniDataProviderId.Unknown;
+    public string OwningClassName { get; set; } = string.Empty;
+    public string PowerFullName { get; set; } = string.Empty;
+    public ArchetypeInherentPresentationType PresentationType { get; set; } = ArchetypeInherentPresentationType.InfoOnly;
+    public ArchetypeInherentBehaviorModel BehaviorModel { get; set; } = ArchetypeInherentBehaviorModel.None;
+    public ArchetypeInherentVisibilityRule VisibilityRule { get; set; } = ArchetypeInherentVisibilityRule.OnlyIfPresentInActiveDatabase;
+    public ArchetypeInherentFallbackBehavior FallbackBehavior { get; set; } = ArchetypeInherentFallbackBehavior.InformationalOnly;
 }
 
 public sealed class EntityImportMetadata
