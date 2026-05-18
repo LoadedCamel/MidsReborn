@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text.RegularExpressions;
 using Mids_Reborn.Core.Base.Data_Classes;
@@ -111,11 +112,12 @@ namespace Mids_Reborn.Core
         private struct DelayedVector
         {
             public string Vector;
+            public int? Index;
             public float Delay;
 
             public override string ToString()
             {
-                return $"<DelayedVector> {{Vector: {Vector}, Delay: {Delay}}}";
+                return $"<DelayedVector> {{Vector: {Vector}, Index: {(Index == null ? "<null>" : Index)}, Delay: {Delay}}}";
             }
         }
 
@@ -1090,11 +1092,11 @@ namespace Mids_Reborn.Core
                 var vectorsChunks = power.Effects[IncludedEffects[0]].EffectType switch
                 {
                     Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning => IncludedEffects
-                            .Select(e => new DelayedVector { Vector = $"{power.Effects[e].EffectType}", Delay = power.Effects[e].DelayedTime })
+                            .Select(e => new DelayedVector { Vector = $"{power.Effects[e].EffectType}", Index = (int)power.Effects[e].EffectType, Delay = power.Effects[e].DelayedTime })
                             .ToList(),
 
                     Enums.eEffectType.Mez or Enums.eEffectType.MezResist => IncludedEffects
-                        .Select(e => new DelayedVector { Vector = $"{power.Effects[e].MezType}", Delay = power.Effects[e].DelayedTime })
+                        .Select(e => new DelayedVector { Vector = $"{power.Effects[e].MezType}", Index = (int)power.Effects[e].MezType, Delay = power.Effects[e].DelayedTime })
                         .ToList(),
 
                     Enums.eEffectType.Enhancement when
@@ -1102,31 +1104,31 @@ namespace Mids_Reborn.Core
                             or Enums.eEffectType.MezResist => !string.IsNullOrEmpty(groupedVector)
                             ? [new DelayedVector { Vector = $"{groupedVector}", Delay = power.Effects[IncludedEffects[0]].DelayedTime }]
                             : IncludedEffects
-                                .Select(e => new DelayedVector { Vector = $"{power.Effects[e].MezType}", Delay = power.Effects[e].DelayedTime })
+                                .Select(e => new DelayedVector { Vector = $"{power.Effects[e].MezType}", Index = (int)power.Effects[e].MezType, Delay = power.Effects[e].DelayedTime })
                                 .ToList(),
 
                     Enums.eEffectType.Enhancement =>
                         power.Effects[IncludedEffects[0]].ETModifies is Enums.eEffectType.Defense
                             or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity &&
                         !string.IsNullOrEmpty(groupedVector)
-                            ? [new DelayedVector { Vector = $"{groupedVector} {power.Effects[IncludedEffects[0]].ETModifies}", Delay = power.Effects[IncludedEffects[0]].DelayedTime }]
+                            ? [new DelayedVector { Vector = $"{groupedVector} {power.Effects[IncludedEffects[0]].ETModifies}", Index = (int)power.Effects[IncludedEffects[0]].ETModifies, Delay = power.Effects[IncludedEffects[0]].DelayedTime }]
                             : IncludedEffects
                                 .Select(e =>
                                     power.Effects[e].ETModifies is Enums.eEffectType.Defense
                                         or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity
-                                        ? new DelayedVector { Vector = $"{power.Effects[e].DamageType} {power.Effects[e].ETModifies}", Delay = power.Effects[e].DelayedTime }
-                                        : new DelayedVector { Vector = $"{power.Effects[e].ETModifies}", Delay = power.Effects[e].DelayedTime })
+                                        ? new DelayedVector { Vector = $"{power.Effects[e].DamageType} {power.Effects[e].ETModifies}", Index = (int)power.Effects[e].DamageType * 1000 + (int)power.Effects[e].ETModifies, Delay = power.Effects[e].DelayedTime }
+                                        : new DelayedVector { Vector = $"{power.Effects[e].ETModifies}", Index = (int)power.Effects[e].ETModifies, Delay = power.Effects[e].DelayedTime })
                                 .ToList(),
 
                     Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity
                         or Enums.eEffectType.DamageBuff => !string.IsNullOrEmpty(groupedVector)
                             ? [new DelayedVector { Vector = $"{power.Effects[IncludedEffects[0]].EffectType}({groupedVector})", Delay = power.Effects[IncludedEffects[0]].DelayedTime }]
                             : IncludedEffects
-                                .Select(e => new DelayedVector { Vector = $"{power.Effects[e].DamageType}", Delay = power.Effects[e].DelayedTime })
+                                .Select(e => new DelayedVector { Vector = $"{power.Effects[e].DamageType}", Index = (int)power.Effects[e].DamageType, Delay = power.Effects[e].DelayedTime })
                                 .ToList(),
 
                     Enums.eEffectType.ResEffect => IncludedEffects
-                        .Select(e => new DelayedVector { Vector = $"{power.Effects[e].ETModifies}", Delay = power.Effects[e].DelayedTime })
+                        .Select(e => new DelayedVector { Vector = $"{power.Effects[e].ETModifies}", Index = (int)power.Effects[e].ETModifies, Delay = power.Effects[e].DelayedTime })
                         .ToList(),
 
                     _ => []
@@ -1134,6 +1136,8 @@ namespace Mids_Reborn.Core
 
                 uniqueVectors.AddRangeUnique(vectorsChunks);
                 uniqueVectors = CompactVectorsList(uniqueVectors, power.Effects[IncludedEffects[0]].EffectType, power.Effects[IncludedEffects[0]].ETModifies);
+                uniqueVectors.Sort((a, b) => (a.Index ?? 0) - (b.Index ?? 0));
+
                 vectors = string.Join(", ", uniqueVectors.Select(e => e.Vector));
                 numDelays = Math.Max(1, uniqueVectors.Select(e => e.Delay).Distinct().Count()); // Some effect types can return count == 0
             }

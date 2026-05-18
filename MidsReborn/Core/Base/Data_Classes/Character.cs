@@ -1273,11 +1273,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     effectString += " [PvP]";
                 }
 
-                if (num >= enhancementSet.Bonus[index].Slotted & (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any))
-                {
-                    section1.Add($"({enhancementSet.Bonus[index].Slotted}) {effectString}", PopUp.Colors.Effect, 0.9f);
-                }
-                else if (power == null)
+                if ((num >= enhancementSet.Bonus[index].Slotted) & (((enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) | ((enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE) | (enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any)) || power == null)
                 {
                     section1.Add($"({enhancementSet.Bonus[index].Slotted}) {effectString}", PopUp.Colors.Effect, 0.9f);
                 }

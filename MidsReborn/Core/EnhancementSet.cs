@@ -2,10 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using FastDeepCloner;
 using Mids_Reborn.Core.Base.Data_Classes;
-using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Core
 {
@@ -235,85 +233,69 @@ namespace Mids_Reborn.Core
 
         public string GetEffectString(int index, bool special, bool longForm = false, bool fromPopup = false, bool bonusSection = false, bool status = false, List<Enums.eEffectType>? effectsFilter = null)
         {
-            BonusItem[] bonusItemArray;
-            bonusItemArray = special ? SpecialBonus : Bonus;
+            var bonusItemArray = special ? SpecialBonus : Bonus;
 
-            string str1;
             if ((index < 0) | (index > bonusItemArray.Length - 1))
             {
-                str1 = string.Empty;
+                return string.Empty;
             }
-            else if (!string.IsNullOrEmpty(bonusItemArray[index].AltString))
+            
+            if (!string.IsNullOrEmpty(bonusItemArray[index].AltString))
             {
-                str1 = $"+{bonusItemArray[index].AltString}";
+                return $"+{bonusItemArray[index].AltString}".Replace("  ", " ");
             }
-            else
+
+            var fxFilter = effectsFilter ?? [Enums.eEffectType.Null, Enums.eEffectType.NullBool, Enums.eEffectType.DesignerStatus];
+            var p = new Power();
+            var fxList = new List<IEffect>();
+            foreach (var bpIdx in bonusItemArray[index].Index)
             {
-                var effectList = new List<string>();
-                for (var index1 = 0; index1 < bonusItemArray[index].Name.Length; index1++)
+                if ((bpIdx < 0) | (bpIdx >= DatabaseAPI.Database.Power.Length))
                 {
-                    if ((bonusItemArray[index].Index[index1] < 0) | (bonusItemArray[index].Index[index1] > DatabaseAPI.Database.Power.Length - 1))
-                    {
-                        return string.Empty;
-                    }
-                    var empty2 = string.Empty;
-                    var returnMask = Array.Empty<int>();
-                    DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].GetEffectStringGrouped(0, ref empty2, ref returnMask, !longForm, true, false, fromPopup, true);
-                    if (!string.IsNullOrEmpty(empty2))
-                    {
-                        effectList.Add(empty2);
-                    }
-
-                    var fxFilter = effectsFilter ?? new List<Enums.eEffectType>{ Enums.eEffectType.Null, Enums.eEffectType.NullBool, Enums.eEffectType.DesignerStatus };
-                    for (var index2 = 0; index2 < DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects.Length; index2++)
-                    {
-                        if (fxFilter.Contains(DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].EffectType))
-                        {
-                            continue;
-                        }
-
-                        var flag = false;
-                        foreach (var m in returnMask)
-                        {
-                            if (index2 == m)
-                            {
-                                flag = true;
-                            }
-                        }
-
-                        if (flag)
-                        {
-                            continue;
-                        }
-
-                        var str2 = longForm
-                            ? DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].BuildEffectString(true, "", false, false, false, fromPopup, false, false, true)
-                            : DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]].Effects[index2].BuildEffectStringShort(false, true);
-                        
-
-                        if (effectList.Any(s => s == str2)) continue;
-                        
-                        if (str2.Contains("EndRec"))
-                        {
-                            str2 = str2.Replace("EndRec", "Recovery");
-                        }
-
-                        effectList.Add(str2);
-                    }
+                    continue;
                 }
 
-                str1 = string.Join(", ", effectList.ToArray());
-                if (bonusSection && !status)
+                // Bug: will backreference DatabaseAPI.Database.Power[bpIdx],
+                // and keep updating it on each call if not Cloned.
+                var bp = DatabaseAPI.Database.Power[bpIdx].Clone();
+                if (bp == null)
                 {
-                    Utilities.ModifiedEffectString(ref str1, 1);
+                    continue;
                 }
-                else
+
+                var subFxArr = bp.Effects.Where(e => !fxFilter.Contains(e.EffectType)).ToArray();
+                foreach (var fx in subFxArr)
                 {
-                    Utilities.ModifiedEffectString(ref str1, 2);
+                    var similarFxIdx = fxList.TryFindIndex(e => e.EffectType == fx.EffectType &&
+                                                                   e.MezType == fx.MezType &&
+                                                                   e.DamageType == fx.DamageType &&
+                                                                   e.ETModifies == fx.ETModifies &&
+                                                                   e.ToWho == fx.ToWho &&
+                                                                   e.nSummon == fx.nSummon &&
+                                                                   Math.Abs(e.nDuration - fx.nDuration) < float.Epsilon &&
+                                                                   e.Buffable == fx.Buffable &&
+                                                                   e.Stacking == fx.Stacking &&
+                                                                   e.IgnoreED == fx.IgnoreED &&
+                                                                   e.IgnoreScaling == fx.IgnoreScaling &&
+                                                                   e.SpecialCase == fx.SpecialCase);
+
+                    if (similarFxIdx >= 0)
+                    {
+                        fxList[similarFxIdx].Scale += fxList[similarFxIdx].AttribType == Enums.eAttribType.Duration
+                            ? fx.Scale
+                            : fx.Scale * fx.nMagnitude;
+
+                        continue;
+                    }
+
+                    fxList.Add(fx);
                 }
             }
 
-            return str1.Replace("  ", " ");
+            p.Effects = fxList.ToArray();
+            var gre = GroupedFx.AssembleGroupedEffects(p, true);
+
+            return string.Join(", ", gre.Select(e => e.GetTooltip(p, true)));
         }
 
         public void StoreTo(BinaryWriter writer)
