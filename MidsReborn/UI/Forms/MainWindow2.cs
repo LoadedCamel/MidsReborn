@@ -115,6 +115,7 @@ namespace Mids_Reborn.UI.Forms
             DoneDblClick = false;
             DbChangeRequested = false;
             InitializeComponent();
+            ConfigurePowerListHeadings();
             KeyPreview = true;
 
             InitializePopup(); // Initializes the popup (used to be i9Popup)
@@ -130,6 +131,17 @@ namespace Mids_Reborn.UI.Forms
             PetView.SliderUpdated += OnPetViewSliderUpdated;
             Icon = Resources.MRB_Icon_Concept;
             LogManager.Configure("Logs\\mids.log", "MidsReborn");
+        }
+
+        private void ConfigurePowerListHeadings()
+        {
+            foreach (var list in new[]
+                     {
+                         llPrimary, llSecondary, llPool0, llPool1, llPool2, llPool3, llAncillary
+                     })
+            {
+                list.DecorateHeadings = false;
+            }
         }
 
         #region Override Methods
@@ -3834,73 +3846,78 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void AssemblePowerList(ListLabel llPower, IPowerset? iPowerset)
         {
-            if (iPowerset == null || iPowerset.Powers?.Length < 1)
+            llPower.SuspendRedraw = true;
+            llPower.ClearItems();
+
+            if (iPowerset != null && iPowerset.Powers?.Length > 0)
             {
-                llPower.SuspendRedraw = true;
-                llPower.ClearItems();
-                llPower.SuspendRedraw = false;
+                var sections = CompositePowersetRules.GetDisplaySections(iPowerset);
+                var showHeadings = sections.Length > 1;
+                foreach (var section in sections)
+                {
+                    AddPowersetSectionItems(llPower, section, showHeadings);
+                }
             }
-            else
+
+            llPower.SuspendRedraw = false;
+        }
+
+        private void AddPowersetSectionItems(ListLabel list, IPowerset sectionPowerset, bool showHeading)
+        {
+            if (showHeading)
             {
-                llPower.SuspendRedraw = true;
-                llPower.ClearItems();
-                string message;
-                if (iPowerset.nIDTrunkSet > -1)
+                list.AddItem(new ListLabel.ListLabelItem(
+                    CompositePowersetRules.FormatDisplaySectionHeading(sectionPowerset.DisplayName),
+                    ListLabel.LlItemState.Heading,
+                    sectionPowerset.nID,
+                    -1,
+                    -1,
+                    "",
+                    ListLabel.LlFontFlags.Bold,
+                    ListLabel.LlTextAlign.Center)
                 {
-                    var powerset = DatabaseAPI.Database.Powersets[iPowerset.nIDTrunkSet];
-                    var iItem1 = new ListLabel.ListLabelItem(powerset.DisplayName, ListLabel.LlItemState.Heading, iPowerset.nIDTrunkSet, -1, -1, "", ListLabel.LlFontFlags.Bold, ListLabel.LlTextAlign.Center);
-                    llPower.AddItem(iItem1);
-                    for (var iIDXPower = 0; iIDXPower < powerset.Powers.Length; iIDXPower++)
-                    {
-                        if (powerset.Powers[iIDXPower].Level <= 0)
-                        {
-                            continue;
-                        }
-
-                        message = "";
-                        // var iItem2 = new ListLabel.ListLabelItem(iText: powerset.Powers[iIDXPower].DisplayName, iState: MainModule.MidsController.Toon.PowerState(powerset.Powers[iIDXPower].PowerIndex, ref message), inIdSet: iPowerset.nIDTrunkSet, iIdxPower: iIDXPower, inIdPower: powerset.Powers[iIDXPower].PowerIndex, iStringTag: "", iFont: ListLabel.LlFontFlags.Bold)
-                        // {
-                        //     Bold = MidsContext.Config.RtFont.PairedBold
-                        // };
-                        // if (iItem2.ItemState == ListLabel.LlItemState.Invalid)
-                        // {
-                        //     iItem2.Italic = true;
-                        // }
-                        //
-                        // llPower.AddItem(iItem2);
-                    }
-
-                    var iItem = new ListLabel.ListLabelItem(iPowerset.DisplayName, ListLabel.LlItemState.Heading, iPowerset.nID, -1, -1, "", ListLabel.LlFontFlags.Bold, ListLabel.LlTextAlign.Center);
-                    llPower.AddItem(iItem);
-                }
-
-                if (iPowerset.Powers != null)
-                {
-                    for (var iIDXPower = 0; iIDXPower < iPowerset.Powers.Length; iIDXPower++)
-                    {
-                        if (iPowerset.Powers[iIDXPower].Level <= 0 || !iPowerset.Powers[iIDXPower].AllowedForClass(MidsContext.Character.Archetype.Idx))
-                        {
-                            continue;
-                        }
-
-                        message = "";
-                        /*var targetPs = MainModule.MidsController.Toon.PowerState(iPowerset.Powers[iIDXPower].PowerIndex, ref message);
-                        var power = iPowerset.Powers[iIDXPower];
-                        var iItem = new ListLabel.ListLabelItem(iText: iPowerset.Powers[iIDXPower].DisplayName, iState: targetPs, inIdSet: iPowerset.nID, iIdxPower: iIDXPower, inIdPower: power.PowerIndex, iStringTag: "", iFont: ListLabel.LlFontFlags.Bold)
-                        {
-                            Bold = MidsContext.Config.RtFont.PairedBold
-                        };
-                        if (iItem.ItemState == ListLabel.LlItemState.Invalid)
-                        {
-                            iItem.Italic = true;
-                        }
-
-                        llPower.AddItem(iItem);*/
-                    }
-                }
-
-                llPower.SuspendRedraw = false;
+                    Bold = MidsContext.Config.RtFont.PairedBold
+                });
             }
+
+            var toon = MainModule.MidsController.Toon;
+            var powers = sectionPowerset.Powers ?? [];
+            for (var i = 0; i < powers.Length; i++)
+            {
+                var power = powers[i];
+                if (power == null) continue;
+                if (power.HiddenPower) continue;
+                if (power.Level <= 0) continue;
+                if (!power.AllowedForClass(MidsContext.Character.Archetype.Idx)) continue;
+
+                var message = "";
+                var mappedState = MapListLabelItemState(toon?.PowerState(power.PowerIndex, ref message) ?? MidsItemState.Enabled);
+                list.AddItem(new ListLabel.ListLabelItem(
+                    power.DisplayName,
+                    mappedState,
+                    sectionPowerset.nID,
+                    i,
+                    power.PowerIndex,
+                    "",
+                    ListLabel.LlFontFlags.Bold)
+                {
+                    Bold = MidsContext.Config.RtFont.PairedBold,
+                    Italic = mappedState == ListLabel.LlItemState.Invalid
+                });
+            }
+        }
+
+        private static ListLabel.LlItemState MapListLabelItemState(MidsItemState state)
+        {
+            return state switch
+            {
+                MidsItemState.Selected => ListLabel.LlItemState.Selected,
+                MidsItemState.Disabled => ListLabel.LlItemState.Disabled,
+                MidsItemState.SelectedDisabled => ListLabel.LlItemState.SelectedDisabled,
+                MidsItemState.Invalid => ListLabel.LlItemState.Invalid,
+                MidsItemState.Heading => ListLabel.LlItemState.Heading,
+                _ => ListLabel.LlItemState.Enabled
+            };
         }
 
         private void SetEnhCheckModePosition()
@@ -7919,9 +7936,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 }
 
                 var message = "";
-                // listLabelItemV3.ItemState = MainModule.MidsController.Toon.PowerState(listLabelItemV3.NIdPower, ref message);
-                // listLabelItemV3.Italic = listLabelItemV3.ItemState == ListLabel.LlItemState.Invalid;
-                // listLabelItemV3.Bold = MidsContext.Config.RtFont.PairedBold;
+                var state = MapListLabelItemState(MainModule.MidsController.Toon?.PowerState(listLabelItemV3.NIdPower, ref message) ?? MidsItemState.Enabled);
+                listLabelItemV3.ItemState = state;
+                listLabelItemV3.Italic = state == ListLabel.LlItemState.Invalid;
+                listLabelItemV3.Bold = MidsContext.Config.RtFont.PairedBold;
             }
 
             llPower.SuspendRedraw = false;

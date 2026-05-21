@@ -198,6 +198,7 @@ public sealed partial class OmniImporter
         public List<string> RequiresTokens { get; } = [];
         public List<string> TargetEnhancementNames { get; } = [];
         public NormalizedSetBonusKind Kind { get; set; } = NormalizedSetBonusKind.Standard;
+        public Enums.ePvX PvMode { get; set; } = Enums.ePvX.Any;
     }
 
     internal sealed class InventionVariantFamilyAudit
@@ -905,15 +906,15 @@ public sealed partial class OmniImporter
         var usedCompatibilityLevelFallback = false;
         int levelMin;
         int levelMax;
-        if (levelVariants.Count > 0)
-        {
-            levelMin = Math.Max(0, levelVariants.Min() - 1);
-            levelMax = Math.Max(levelMin, levelVariants.Max() - 1);
-        }
-        else if (definition.MinLevel.HasValue || definition.MaxLevel.HasValue)
+        if (definition.MinLevel.HasValue || definition.MaxLevel.HasValue)
         {
             levelMin = Math.Max(0, (definition.MinLevel ?? definition.MaxLevel ?? 1) - 1);
             levelMax = Math.Max(levelMin, (definition.MaxLevel ?? definition.MinLevel ?? 1) - 1);
+        }
+        else if (levelVariants.Count > 0)
+        {
+            levelMin = Math.Max(0, levelVariants.Min() - 1);
+            levelMax = Math.Max(levelMin, levelVariants.Max() - 1);
         }
         else if (definition.MinSlotLevel.HasValue || definition.MaxSlotLevel.HasValue)
         {
@@ -947,10 +948,11 @@ public sealed partial class OmniImporter
             data.StructuredBoostsAllowedParsedCount++;
         }
 
-        var minimumUseLevel = definition.MinimumUseLevel ?? definition.MinimumUseLevelRaw ?? levelMin;
-        var maximumUseLevel = definition.MaximumUseLevel ?? definition.MaximumUseLevelRaw ?? levelMax;
-        var minimumSlotLevel = definition.MinSlotLevel ?? definition.MinSlotLevelRaw ?? levelMin;
-        var maximumSlotLevel = definition.MaxSlotLevel ?? definition.MaxSlotLevelRaw ?? levelMax;
+        var minimumUseLevel = Math.Max(0, (definition.MinimumUseLevel ?? definition.MinimumUseLevelRaw ?? (levelMin + 1)) - 1);
+        var maximumUseLevel = Math.Max(minimumUseLevel, (definition.MaximumUseLevel ?? definition.MaximumUseLevelRaw ?? (levelMax + 1)) - 1);
+        var minimumSlotLevel = Math.Max(0, (definition.MinSlotLevel ?? definition.MinSlotLevelRaw ?? (levelMin + 1)) - 1);
+        var maximumSlotLevel = Math.Max(minimumSlotLevel, (definition.MaxSlotLevel ?? definition.MaxSlotLevelRaw ?? (levelMax + 1)) - 1);
+        var maxBoostLevel = Math.Max(maximumSlotLevel, (definition.MaxBoostLevel ?? (maximumSlotLevel + 1)) - 1);
 
         var normalized = new NormalizedEnhancementSource
         {
@@ -982,7 +984,7 @@ public sealed partial class OmniImporter
             MaximumUseLevel = maximumUseLevel,
             MinimumSlotLevel = minimumSlotLevel,
             MaximumSlotLevel = maximumSlotLevel,
-            MaxBoostLevel = definition.MaxBoostLevel ?? Math.Max(levelMax, maximumSlotLevel)
+            MaxBoostLevel = maxBoostLevel
         };
         normalized.IsClassicOriginVariant = IsClassicEnhancementVariant(normalized.EnhancementType, normalized.EnhancementFamily);
         normalized.ClassicFoldKey = normalized.IsClassicOriginVariant ? BuildClassicEnhancementFoldKey(normalized) : string.Empty;
@@ -1155,6 +1157,7 @@ public sealed partial class OmniImporter
             normalized.RequiresTokens.AddRange(bonus.Requires.Where(value => !string.IsNullOrWhiteSpace(value)));
             normalized.TargetEnhancementNames.AddRange(ExtractTargetEnhancementNames(normalized.RequiresTokens, memberNames));
             normalized.Kind = DetermineSetBonusKind(normalized, groupName);
+            normalized.PvMode = DetermineSetBonusPvMode(normalized);
             yield return normalized;
         }
     }
@@ -1206,6 +1209,34 @@ public sealed partial class OmniImporter
     {
         return !string.IsNullOrWhiteSpace(groupName) &&
                groupName.Contains("Pet", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static Enums.ePvX DetermineSetBonusPvMode(NormalizedSetBonusEntry bonus)
+    {
+        var powerNames = bonus.AutoPowers
+            .Concat(string.IsNullOrWhiteSpace(bonus.BonusPower) ? [] : [bonus.BonusPower])
+            .Where(value => !string.IsNullOrWhiteSpace(value))
+            .ToArray();
+        if (powerNames.Length == 0)
+        {
+            return Enums.ePvX.Any;
+        }
+
+        var sawPvpOnlyPower = false;
+        var sawNonPvpPower = false;
+        foreach (var powerName in powerNames)
+        {
+            if (powerName.StartsWith("Set_Bonus.PVP_Set_Bonus.", StringComparison.OrdinalIgnoreCase))
+            {
+                sawPvpOnlyPower = true;
+            }
+            else
+            {
+                sawNonPvpPower = true;
+            }
+        }
+
+        return sawPvpOnlyPower && !sawNonPvpPower ? Enums.ePvX.PvP : Enums.ePvX.Any;
     }
 
     private static string ChooseSourceKey(params string?[] values)

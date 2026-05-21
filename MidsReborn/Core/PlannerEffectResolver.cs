@@ -312,13 +312,7 @@ public static class PlannerEffectResolver
         if (parent.AdvancedConditions is { Rows.Count: > 0 })
         {
             child.AdvancedConditions = MergeConditions(parent.AdvancedConditions, child.AdvancedConditions);
-            child.ActiveConditionals = child.AdvancedConditions.ToLegacyActiveConditionals();
-        }
-        else if (parent.ActiveConditionals is { Count: > 0 })
-        {
-            var inherited = AdvancedConditionSet.FromLegacyActiveConditionals(parent.ActiveConditionals);
-            child.AdvancedConditions = MergeConditions(inherited, child.AdvancedConditions);
-            child.ActiveConditionals = child.AdvancedConditions.ToLegacyActiveConditionals();
+            child.NormalizeConditionState();
         }
 
         if (owner != null &&
@@ -586,8 +580,7 @@ public static class PlannerEffectResolver
         {
             selected = candidates.FirstOrDefault(fx =>
                 fx.AdvancedConditions.Rows.Count == 0 &&
-                (fx.ActiveConditionals == null || fx.ActiveConditionals.Count == 0) &&
-                fx.SpecialCase == Enums.eSpecialCase.None);
+                !fx.HasConditions);
 
             if (selected == null)
             {

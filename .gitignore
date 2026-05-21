@@ -243,5 +243,11 @@ safe/\.fake/
 [Tt]ests/
 *.[Tt]ests/
 *.[Tt]est/
+/[Tt]ests/
+!/Tests/
+!/Tests/MidsReborn.PresentationTests/
+!/Tests/MidsReborn.PresentationTests/**
+/Tests/MidsReborn.PresentationTests/bin/
+/Tests/MidsReborn.PresentationTests/obj/
 
 [Mm]ids[Rr]eborn/[Dd]ocs/

@@ -17,6 +17,7 @@ namespace Mids_Reborn.UI.Controls
         private const int DefaultBxHeight = 675;
         private const int MinBxHeight = 300;
         private const float DefaultColumnPosition = 0.5f;
+        private const float ColumnGap = 12f;
 
         #endregion
 
@@ -309,9 +310,14 @@ namespace Mids_Reborn.UI.Controls
                 foreach (var line in section.Content)
                 {
                     RectangleF layout = new(_internalPadding + line.Indent * Font.Size, y + _internalPadding, Width - (2 * _internalPadding + line.Indent * Font.Size), _bxHeight);
+                    float columnX = 0f;
 
                     if (line.HasColumn)
+                    {
+                        columnX = CalculateColumnStart(g, layout.X, line.Text, line.TextColumn);
+                        layout.Width = Math.Max(1f, columnX - layout.X - ColumnGap);
                         fmt.FormatFlags |= StringFormatFlags.NoWrap;
+                    }
 
                     SizeF size = g.MeasureString(string.IsNullOrWhiteSpace(line.Text) ? "Null String" : line.Text, _font, layout.Size, fmt);
                     Size textSize = TextRenderer.MeasureText(g, line.Text, _font);
@@ -327,7 +333,7 @@ namespace Mids_Reborn.UI.Controls
                     {
                         fmt.Alignment = _columnRight ? StringAlignment.Far : StringAlignment.Near;
 
-                        layout.X = _internalPadding + (Width - 2 * _internalPadding) * _columnPosition;
+                        layout.X = columnX;
                         layout.Width = Width - layout.X - _internalPadding;
 
                         using SolidBrush brush2 = new(line.ColorColumn);
@@ -358,6 +364,16 @@ namespace Mids_Reborn.UI.Controls
                 using SolidBrush brush = new(color);
                 g.DrawString(msg, _font, brush, new PointF(Width - _internalPadding - sz.Width, _internalPadding), fmt);
             }
+        }
+
+        private float CalculateColumnStart(Graphics graphics, float leftX, string text, string columnText)
+        {
+            var defaultColumnX = _internalPadding + (Width - 2 * _internalPadding) * _columnPosition;
+            var leftTextWidth = TextRenderer.MeasureText(graphics, text ?? string.Empty, _font).Width;
+            var columnTextWidth = TextRenderer.MeasureText(graphics, columnText ?? string.Empty, _font).Width;
+            var preferredColumnX = Math.Max(defaultColumnX, leftX + leftTextWidth + ColumnGap);
+            var maxColumnX = Math.Max(defaultColumnX, Width - _internalPadding - columnTextWidth);
+            return Math.Min(preferredColumnX, maxColumnX);
         }
 
         #endregion

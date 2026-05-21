@@ -550,48 +550,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 return str2;
             }
 
-            var str3 = "";
-            IPower power = new Power(iPower);
-            foreach (var sfx in iSFX.Index)
+            var str3 = GroupedFx.BuildPopupTooltipText(new Power(iPower), iSFX.Index);
+            if (!string.IsNullOrWhiteSpace(str3))
             {
-                if (sfx == -1 || power.Effects[sfx].EffectType == Enums.eEffectType.None)
-                {
-                    continue;
-                }
-
-                var returnString = "";
-                var returnMask = Array.Empty<int>();
-                power.GetEffectStringGrouped(sfx, ref returnString, ref returnMask, false, false);
-                if (returnMask.Length <= 0)
-                {
-                    continue;
-                }
-
-                if (str3 != "")
-                {
-                    str3 += "\r\n  ";
-                }
-
-                str3 += returnString.Replace("\r\n", "\r\n  ");
-                foreach (var m in returnMask)
-                {
-                    power.Effects[m].EffectType = Enums.eEffectType.None;
-                }
-            }
-
-            foreach (var sfx in iSFX.Index)
-            {
-                if (power.Effects[sfx].EffectType == Enums.eEffectType.None)
-                {
-                    continue;
-                }
-
-                if (str3 != "")
-                {
-                    str3 += "\r\n  ";
-                }
-
-                str3 += power.Effects[sfx].BuildEffectString().Replace("\r\n", "\r\n  ");
+                str3 = "  " + str3.Replace("\r\n", "\r\n  ").Replace("\n", "\r\n  ");
             }
 
             return str1 + str3;

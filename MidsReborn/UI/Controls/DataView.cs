@@ -1982,14 +1982,9 @@ namespace Mids_Reborn.UI.Forms.Controls
                 pEnh.Effects[shortFxEnh.Index[0]].ETModifies, pEnh.Effects[shortFxEnh.Index[0]].DamageType,
                 pEnh.Effects[shortFxEnh.Index[0]].MezType);
 
-            if (fx.ActiveConditionals.Count > 0)
+            if (fx.HasConditions)
             {
-                return FastItemBuilder.Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, fx.ActiveConditionals.Count > 0, tip);
-            }
-
-            if (fx.SpecialCase != Enums.eSpecialCase.None)
-            {
-                return FastItemBuilder.Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, fx.SpecialCase != Enums.eSpecialCase.None, tip);
+                return FastItemBuilder.Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, fx.HasConditions, tip);
             }
 
             return FastItemBuilder.Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, false, tip);
@@ -2079,51 +2074,7 @@ namespace Mids_Reborn.UI.Forms.Controls
             var str1 = string.Empty;
             if (tag.Present)
             {
-                var empty2 = string.Empty;
-                IPower power = new Power(pEnh);
-                foreach (var t in tag.Index)
-                {
-                    if (t == -1 || power.Effects[t].EffectType == Enums.eEffectType.None)
-                    {
-                        continue;
-                    }
-
-                    var empty3 = string.Empty;
-                    var returnMask = Array.Empty<int>();
-                    power.GetEffectStringGrouped(t, ref empty3, ref returnMask, false, false);
-                    if (returnMask.Length <= 0)
-                    {
-                        continue;
-                    }
-
-                    if (empty2 != string.Empty)
-                    {
-                        empty2 += "\r\n";
-                    }
-
-                    empty2 += empty3;
-                    foreach (var m in returnMask)
-                    {
-                        power.Effects[m].EffectType = Enums.eEffectType.None;
-                    }
-                }
-
-                foreach (var t in tag.Index)
-                {
-                    if (power.Effects[t].EffectType == Enums.eEffectType.None)
-                    {
-                        continue;
-                    }
-
-                    if (empty2 != string.Empty)
-                    {
-                        empty2 += "\r\n";
-                    }
-
-                    empty2 += power.Effects[t].BuildEffectString();
-                }
-
-                str1 = empty1 + empty2;
+                str1 = empty1 + GroupedFx.BuildPopupTooltipText(new Power(pEnh), tag.Index);
             }
             else if (string.IsNullOrWhiteSpace(tooltip))
             {
@@ -2983,7 +2934,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                     s2 = 0;
                 }
 
-                iList.AddItem(FastItemBuilder.Fi.FastItem(title, s1, s2, Suffix, false, false, pEnh.Effects[shortFxArray1[index].Index[0]].Probability < 1.0, pEnh.Effects[shortFxArray1[index].Index[0]].ActiveConditionals.Count > 0, Power.SplitFXGroupTip(ref shortFxArray1[index], ref pEnh, false)));
+                iList.AddItem(FastItemBuilder.Fi.FastItem(title, s1, s2, Suffix, false, false, pEnh.Effects[shortFxArray1[index].Index[0]].Probability < 1.0, pEnh.Effects[shortFxArray1[index].Index[0]].HasConditions, Power.SplitFXGroupTip(ref shortFxArray1[index], ref pEnh, false)));
                 if (pEnh.Effects[shortFxArray1[index].Index[0]].isEnhancementEffect)
                 {
                     iList.SetUnique();

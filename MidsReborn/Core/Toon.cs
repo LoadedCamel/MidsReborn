@@ -98,12 +98,7 @@ namespace Mids_Reborn.Core
 
         public IPowerset? PickDefaultSecondaryPowerset()
         {
-            return Powersets[1] == null || Powersets[1].nID < 0
-                ? DatabaseAPI.Database.Powersets
-                    .First(ps =>
-                        ps.ATClass == MidsContext.Character.Archetype.ClassName &
-                        ps.SetType == Enums.ePowerSetType.Secondary)
-                : Powersets[1];
+            return ResolveSelectedSecondaryPowersetOrDefault();
         }
 
         public void BuildPower(int iSet, int powerID, bool noPoolShuffle = false)
@@ -118,11 +113,8 @@ namespace Mids_Reborn.Core
                 return;
             }
 
-            var ps1 = PickDefaultSecondaryPowerset();
             var inToonHistory = CurrentBuild.FindInToonHistory(powerID);
             ResetLevel();
-            var numArray = DatabaseAPI.NidPowersAtLevelBranch(0, ps1.nID);
-            var flag1 = numArray.Length > 1;
             var message = "";
             if (inToonHistory > -1)
             {
@@ -145,11 +137,6 @@ namespace Mids_Reborn.Core
             }
             else
             {
-                if (DatabaseAPI.Database.Powersets[iSet].SetType != Enums.ePowerSetType.Secondary & !flag1 && CurrentBuild.Powers[1].NIDPowerset < 0 & !CurrentBuild.PowerUsed(ps1.Powers[0]) && numArray.Length > 0)
-                {
-                    SetPower_NID(1, numArray[0]);
-                }
-
                 var i = -1;
                 switch (MidsContext.Config.BuildMode)
                 {
@@ -1045,7 +1032,7 @@ namespace Mids_Reborn.Core
                     offset += 1;
                     indexLookup[index2] = tPower.NIDPower;
                     if (tPower.PowerSet.SetType == Enums.ePowerSetType.Inherent ||
-                        (tPower.NIDPowerset == Powersets[1].nID) & (tPower.IDXPower == 0))
+                        IsRequiredSecondaryStarterPower(tPower.NIDPower))
                         continue;
                     RequestedLevel = tPower.Level;
                     BuildPower(tPower.NIDPowerset, tPower.NIDPower, true);
@@ -1382,9 +1369,7 @@ namespace Mids_Reborn.Core
                     for (var bonusIdx = 0; bonusIdx < enhancementSet.Bonus.Length; bonusIdx++)
                     {
                         if (!(setInfo[senInfoIdx].SlottedCount >= enhancementSet.Bonus[bonusIdx].Slotted &
-                              (enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE |
-                               enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE |
-                               enhancementSet.Bonus[bonusIdx].PvMode == Enums.ePvX.Any)))
+                              enhancementSet.BonusAppliesInContext(bonusIdx, false, MidsContext.Config.Inc.DisablePvE)))
                         {
                             continue;
                         }

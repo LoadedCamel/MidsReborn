@@ -74,7 +74,6 @@ namespace Mids_Reborn.UI.Controls
         private int[] _inventionEnhs = [];
         private Enums.eType _lastTab = Enums.eType.Normal;
         private Enums.eEnhGrade _lastGrade = Enums.eEnhGrade.SingleO;
-        private Enums.eEnhRelative _lastRelativeLevel = Enums.eEnhRelative.Even;
         private int _lastSpecial = 1;
         private int _lastSet;
         private int _initialEnhancementId = -1;
@@ -227,7 +226,7 @@ namespace Mids_Reborn.UI.Controls
             // 3. Determine the initial state based on the provided slot
             // Start with last-used or default values
             _model.Initial.GradeId = _lastGrade;
-            _model.Initial.RelLevel = _lastRelativeLevel;
+            _model.Initial.RelLevel = Enums.eEnhRelative.Even;
             _model.Initial.SpecialId = _lastSpecial > 0 ? _lastSpecial : 1;
 
             // If the slot is already filled, override defaults with its data
@@ -281,39 +280,49 @@ namespace Mids_Reborn.UI.Controls
             Invalidate();
         }
 
-        public int CheckAndReturnIoLevel()
+        public int CheckAndReturnIoLevel(int enhancementId = -1)
         {
             var ioMax = 50;
             var ioMin = 10;
             var fixedLevel = _model.View.IoLevel;
+            var resolvedEnhancementId = enhancementId;
+
+            if (!IsValidEnhancementId(resolvedEnhancementId) &&
+                _model.View.PickerId > -1 &&
+                _model.View.PickerId < _model.EnhancementIds.Length)
+            {
+                resolvedEnhancementId = _model.EnhancementIds[_model.View.PickerId];
+            }
 
             switch (_model.View.TabId)
             {
                 case Enums.eType.InventO:
                     {
-                        if (_model.Initial.TabId == _model.View.TabId &&
-                            _model.Initial.PickerId == _model.View.PickerId &&
-                            _model.View.PickerId > -1)
+                        if (TryGetEnhancementDisplayLevelRange(resolvedEnhancementId, out var enhIoMin, out var enhIoMax))
                         {
-                            var enh = DatabaseAPI.Database.Enhancements.ElementAtOrDefault(_model.EnhancementIds[_model.View.PickerId]);
-                            if (enh is not null)
-                            {
-                                ioMax = enh.LevelMax + 1;
-                                ioMin = enh.LevelMin + 1;
-                            }
+                            ioMax = enhIoMax;
+                            ioMin = enhIoMin;
                         }
 
                         break;
                     }
-                case Enums.eType.SetO when _model.View.SetId > -1 && _model.View.SetTypeId > -1:
+                case Enums.eType.SetO:
                     {
-                        var setList = DatabaseAPI.Database.EnhancementSets;
-                        var setId = _model.View.SetId;
-                        var set = setList.ElementAtOrDefault(setId);
-                        if (set is not null)
+                        if (TryGetEnhancementDisplayLevelRange(resolvedEnhancementId, out var enhIoMin, out var enhIoMax))
                         {
-                            ioMax = set.LevelMax + 1;
-                            ioMin = set.LevelMin + 1;
+                            ioMax = enhIoMax;
+                            ioMin = enhIoMin;
+                        }
+                        else if (_model.View.SetId > -1 && _model.View.SetTypeId > -1)
+                        {
+                            var setList = DatabaseAPI.Database.EnhancementSets;
+                            var setId = _model.View.SetId;
+                            var set = setList.ElementAtOrDefault(setId);
+                            if (set is not null)
+                            {
+                                ioMax = set.LevelMax + 1;
+                                ioMin = set.LevelMin + 1;
+                            }
                         }
 
                         break;
@@ -331,6 +340,38 @@ namespace Mids_Reborn.UI.Controls
             }
 
             return fixedLevel;
+        }
+
+        private static bool TryGetEnhancementDisplayLevelRange(int enhancementId, out int ioMin, out int ioMax)
+        {
+            ioMin = 10;
+            ioMax = 50;
+            if (!IsValidEnhancementId(enhancementId))
+            {
+                return false;
+            }
+
+            var enhancement = DatabaseAPI.Database.Enhancements.ElementAtOrDefault(enhancementId);
+            if (enhancement is null)
+            {
+                return false;
+            }
+
+            if (enhancement.TypeID == Enums.eType.SetO &&
+                enhancement.nIDSet > -1 &&
+                DatabaseAPI.IsAttunedSetVariant(enhancementId))
+            {
+                var boostPower = enhancement.GetPower() as Power;
+                ioMin = enhancement.LevelMin + 1;
+                ioMax = (boostPower?.ImportedMaxBoostLevelZeroBased ?? enhancement.LevelMax) + 1;
+            }
+            else
+            {
+                ioMin = enhancement.LevelMin + 1;
+                ioMax = enhancement.LevelMax + 1;
+            }
+
+            return true;
         }
 
         #endregion
@@ -1384,12 +1425,10 @@ namespace Mids_Reborn.UI.Controls
             {
                 case Enums.eType.Normal:
                     _lastGrade = _model.View.GradeId;
-                    _lastRelativeLevel = _model.View.RelLevel;
                     break;
 
                 case Enums.eType.SpecialO:
                     _lastSpecial = _model.View.SpecialId;
-                    _lastRelativeLevel = _model.View.RelLevel;
                     break;
 
                 case Enums.eType.SetO:

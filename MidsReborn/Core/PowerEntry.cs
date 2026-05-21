@@ -238,8 +238,7 @@ namespace Mids_Reborn.Core
             {
                 if (Slots[index].Enhancement.Enh < 0) continue;
                 var enh = DatabaseAPI.Database.Enhancements[Slots[index].Enhancement.Enh];
-                var power = enh.GetPower();
-                if (DatabaseAPI.Database.Enhancements[Slots[index].Enhancement.Enh].IsProc && power != null)
+                if (EnhancementProcRules.IsProcToggleEligible(enh))
                 {
                     return true;
                 }
@@ -256,6 +255,11 @@ namespace Mids_Reborn.Core
             }
 
             if (!power.ShowStatToggle)
+            {
+                return false;
+            }
+
+            if (MidsContext.Character?.IsPlannerToggleLocked(power) == true)
             {
                 return false;
             }

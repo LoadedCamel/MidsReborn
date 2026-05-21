@@ -227,6 +227,25 @@ namespace Mids_Reborn.Core
             return ret;
         }
 
+        public Enums.ePvX GetEffectiveBonusPvMode(int index, bool special = false)
+        {
+            var bonusItemArray = special ? SpecialBonus : Bonus;
+            if (index < 0 || index >= bonusItemArray.Length)
+            {
+                return Enums.ePvX.Any;
+            }
+
+            return ResolveEffectiveBonusPvMode(bonusItemArray[index], special);
+        }
+
+        public bool BonusAppliesInContext(int index, bool special, bool pvpContext)
+        {
+            var pvMode = GetEffectiveBonusPvMode(index, special);
+            return pvMode == Enums.ePvX.Any ||
+                   (pvMode == Enums.ePvX.PvP && pvpContext) ||
+                   (pvMode == Enums.ePvX.PvE && !pvpContext);
+        }
+
         public IPower? GetLinkedPower(int index, bool special)
         {
             IPower? power = null;
@@ -282,171 +301,99 @@ namespace Mids_Reborn.Core
             return GetEffectStringCore(index, special, longForm, fromPopup, bonusSection, status, effectsFilter);
         }
 
+        public IReadOnlyList<string> GetPopupEffectStrings(int index, bool special, bool longForm = false, bool status = false, List<Enums.eEffectType>? effectsFilter = null)
+        {
+            var bonusItemArray = special ? SpecialBonus : Bonus;
+            if (index < 0 || index >= bonusItemArray.Length)
+            {
+                return Array.Empty<string>();
+            }
+
+            var bonusItem = bonusItemArray[index];
+            if (!string.IsNullOrWhiteSpace(bonusItem.AltString))
+            {
+                return [GroupedFx.FormatPresentationText($"+{bonusItem.AltString}")];
+            }
+
+            var effectLines = BuildBonusEffectLines(bonusItem, longForm, effectsFilter);
+            if (effectLines.Count > 0)
+            {
+                return effectLines;
+            }
+
+            var effectString = GetEffectString(index, special, longForm, true, true, status, effectsFilter);
+            return string.IsNullOrWhiteSpace(effectString) ? Array.Empty<string>() : [effectString];
+        }
+
         private string GetEffectStringCore(int index, bool special, bool longForm, bool fromPopup, bool bonusSection, bool status, List<Enums.eEffectType>? effectsFilter)
         {
-            if (!special && fromPopup && bonusSection && TryBuildLegacyPopupBonusEffectString(index, out var legacyPopupBonus))
+            var bonusItemArray = special ? SpecialBonus : Bonus;
+            if (index < 0 || index >= bonusItemArray.Length)
             {
-                return legacyPopupBonus;
+                return string.Empty;
             }
 
-            BonusItem[] bonusItemArray;
-            bonusItemArray = special ? SpecialBonus : Bonus;
-
-            string str1;
-            if (index < 0 | index > bonusItemArray.Length - 1)
+            var bonusItem = bonusItemArray[index];
+            if (!string.IsNullOrWhiteSpace(bonusItem.AltString))
             {
-                str1 = string.Empty;
-            }
-            else if (!string.IsNullOrEmpty(bonusItemArray[index].AltString))
-            {
-                str1 = $"+{bonusItemArray[index].AltString}";
-            }
-            else
-            {
-                if (fromPopup && bonusSection)
-                {
-                    var groupedEffectString = GetGroupedBonusEffectString(bonusItemArray[index], effectsFilter);
-                    if (!string.IsNullOrWhiteSpace(groupedEffectString))
-                    {
-                        return groupedEffectString;
-                    }
-
-                    if (!special)
-                    {
-                        var fallbackEffectString = GetFallbackBonusEffectString(bonusItemArray[index]);
-                        if (!string.IsNullOrWhiteSpace(fallbackEffectString))
-                        {
-                            return fallbackEffectString;
-                        }
-                    }
-                }
-
-                var effectList = new List<string>();
-                for (var index1 = 0; index1 < bonusItemArray[index].Name.Length; index1++)
-                {
-                    if (bonusItemArray[index].Index[index1] < 0 | bonusItemArray[index].Index[index1] > DatabaseAPI.Database.Power.Length - 1)
-                    {
-                        return string.Empty;
-                    }
-
-                    var power = OmniPowerRouting.CreateDisplayPower(DatabaseAPI.Database.Power[bonusItemArray[index].Index[index1]]);
-                    var empty2 = string.Empty;
-                    var returnMask = Array.Empty<int>();
-                    power.GetEffectStringGrouped(0, ref empty2, ref returnMask, !longForm, true, false, fromPopup, true);
-                    if (!string.IsNullOrEmpty(empty2))
-                    {
-                        effectList.Add(empty2);
-                    }
-
-                    var fxFilter = effectsFilter ?? new List<Enums.eEffectType>{ Enums.eEffectType.Null, Enums.eEffectType.NullBool, Enums.eEffectType.DesignerStatus };
-                    for (var index2 = 0; index2 < power.Effects.Length; index2++)
-                    {
-                        if (fxFilter.Contains(power.Effects[index2].EffectType))
-                        {
-                            continue;
-                        }
-
-                        var flag = false;
-                        foreach (var m in returnMask)
-                        {
-                            if (index2 == m)
-                            {
-                                flag = true;
-                            }
-                        }
-
-                        if (flag)
-                        {
-                            continue;
-                        }
-
-                        var str2 = longForm
-                            ? power.Effects[index2].BuildEffectString(true, "", false, false, false, fromPopup, false, false, true)
-                            : power.Effects[index2].BuildEffectStringShort(false, true);
-                        
-
-                        if (effectList.Any(s => s == str2)) continue;
-                        
-                        if (str2.Contains("EndRec"))
-                        {
-                            str2 = str2.Replace("EndRec", "Recovery");
-                        }
-
-                        effectList.Add(str2);
-                    }
-                }
-
-                str1 = string.Join(", ", effectList.ToArray());
-                if (bonusSection && !status)
-                {
-                    Utilities.ModifiedEffectString(ref str1, 1);
-                }
-                else
-                {
-                    Utilities.ModifiedEffectString(ref str1, 2);
-                }
-
-                if (!special && fromPopup && bonusSection && string.IsNullOrWhiteSpace(str1))
-                {
-                    var groupedEffectString = GetGroupedBonusEffectString(bonusItemArray[index], effectsFilter);
-                    if (!string.IsNullOrWhiteSpace(groupedEffectString))
-                    {
-                        return groupedEffectString;
-                    }
-
-                    var fallbackEffectString = GetFallbackBonusEffectString(bonusItemArray[index]);
-                    if (!string.IsNullOrWhiteSpace(fallbackEffectString))
-                    {
-                        return fallbackEffectString;
-                    }
-                }
+                return GroupedFx.FormatPresentationText($"+{bonusItem.AltString}");
             }
 
-            return str1;
+            var effectLines = BuildBonusEffectLines(bonusItem, longForm, effectsFilter);
+            if (effectLines.Count > 0)
+            {
+                return string.Join(", ", effectLines);
+            }
+
+            var fallbackEffectString = GetFallbackBonusEffectString(bonusItem);
+            return string.IsNullOrWhiteSpace(fallbackEffectString)
+                ? string.Empty
+                : GroupedFx.FormatPresentationText(fallbackEffectString);
         }
 
-        private bool TryBuildLegacyPopupBonusEffectString(int index, out string effectString)
+        private static IReadOnlyList<string> BuildBonusEffectLines(BonusItem bonusItem, bool longForm, List<Enums.eEffectType>? effectsFilter)
         {
-            effectString = string.Empty;
-            if (index < 0 || index >= Bonus.Length)
+            return ExecuteWithPopupBonusFormattingContext(() =>
             {
-                return false;
-            }
-
-            var bonusItem = Bonus[index];
-            var powerIndexes = bonusItem.Index
-                .Where(powerIndex => powerIndex >= 0 && powerIndex < DatabaseAPI.Database.Power.Length)
-                .ToArray();
-            if (powerIndexes.Length == 0)
-            {
-                return false;
-            }
-
-            var parts = new List<string>(powerIndexes.Length);
-            foreach (var powerIndex in powerIndexes)
-            {
-                var part = TryBuildLegacyPopupBonusPowerString(OmniPowerRouting.CreateDisplayPower(DatabaseAPI.Database.Power[powerIndex]));
-                if (string.IsNullOrWhiteSpace(part))
+                var lines = new List<string>();
+                foreach (var powerIndex in bonusItem.Index.Where(powerIndex => powerIndex >= 0 && powerIndex < DatabaseAPI.Database.Power.Length))
                 {
-                    return false;
+                    var line = BuildBonusPowerLine(powerIndex, longForm, effectsFilter);
+                    if (!string.IsNullOrWhiteSpace(line) && !lines.Contains(line, StringComparer.Ordinal))
+                    {
+                        lines.Add(line);
+                    }
                 }
 
-                if (!parts.Contains(part, StringComparer.Ordinal))
-                {
-                    parts.Add(part);
-                }
-            }
-
-            if (parts.Count == 0)
-            {
-                return false;
-            }
-
-            effectString = string.Join(", ", parts);
-            return true;
+                return (IReadOnlyList<string>)lines;
+            });
         }
 
-        private static string? GetGroupedBonusEffectString(BonusItem bonusItem, List<Enums.eEffectType>? effectsFilter)
+        private static string? BuildBonusPowerLine(int powerIndex, bool longForm, List<Enums.eEffectType>? effectsFilter)
+        {
+            if (powerIndex < 0 || powerIndex >= DatabaseAPI.Database.Power.Length)
+            {
+                return null;
+            }
+
+            var power = Omni.OmniPowerRouting.CreateDisplayPower(
+                PlannerEffectResolver.ResolvePower(new Power(DatabaseAPI.Database.Power[powerIndex])).ResolvedPower);
+
+            var groupedLines = GroupedFx.BuildPopupTooltipLines(
+                power,
+                groupFilter: BuildBonusGroupFilter(effectsFilter),
+                lineJoinMode: GroupedFx.GroupedFxLineJoinMode.MultiLine);
+            var groupedText = string.Join(", ", groupedLines);
+
+            if (!string.IsNullOrWhiteSpace(groupedText))
+            {
+                return groupedText;
+            }
+
+            return TryBuildFallbackEffectString(DatabaseAPI.Database.Power[powerIndex]);
+        }
+
+        private static Func<GroupedFx, IEffect, bool> BuildBonusGroupFilter(List<Enums.eEffectType>? effectsFilter)
         {
             var fxFilter = effectsFilter ?? new List<Enums.eEffectType>
             {
@@ -455,154 +402,9 @@ namespace Mids_Reborn.Core
                 Enums.eEffectType.DesignerStatus
             };
 
-            var effectList = new List<string>();
-            foreach (var powerIndex in bonusItem.Index)
-            {
-                if (powerIndex < 0 | powerIndex > DatabaseAPI.Database.Power.Length - 1)
-                {
-                    return string.Empty;
-                }
-
-                var resolvedPower = PlannerEffectResolver.ResolvePower(new Power(DatabaseAPI.Database.Power[powerIndex])).ResolvedPower;
-                var power = OmniPowerRouting.CreateDisplayPower(resolvedPower);
-                var groupedEffects = GroupedFx.BuildPopupTooltipText(
-                        power,
-                        groupFilter: (_, effect) => !fxFilter.Contains(effect.EffectType) &&
-                                                    effect.EffectClass != Enums.eEffectClass.Ignored &&
-                                                    effect.EffectType != Enums.eEffectType.GrantPower)
-                    .Replace("\r\n", ", ")
-                    .Replace("\n", ", ")
-                    .Replace("EndRec", "Recovery");
-
-                if (!string.IsNullOrWhiteSpace(groupedEffects))
-                {
-                    effectList.Add(groupedEffects);
-                }
-            }
-
-            var ret = string.Join(", ", effectList.Distinct(StringComparer.Ordinal));
-            ret = Regex.Replace(ret, @"Knockback \(Mag -(?<mag>[\d.]+)\), Knockup \(Mag -\k<mag>\)", "Knockback Protection (Mag ${mag})");
-
-            return ret;
-        }
-
-        private static string? TryBuildLegacyPopupBonusPowerString(IPower power)
-        {
-            var effects = power.Effects
-                .Where(effect => effect is { EffectType: not Enums.eEffectType.NullBool and not Enums.eEffectType.DesignerStatus } &&
-                                 !effect.Absorbed_Effect)
-                .ToArray();
-            if (effects.Length == 0)
-            {
-                return null;
-            }
-
-            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.Regeneration))
-            {
-                var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.Regeneration);
-                var percent = GetLegacyPopupMagnitude(effect);
-                var hpPerSecond = DisplayValueFormatter.FormatRate(DatabaseAPI.GetClassHitPoints() / 100f * ((percent / 100f) * DatabaseAPI.GetClassBaseRegen() * Statistics.BaseMagic));
-                return $"{DisplayValueFormatter.FormatPercentValue(percent)}% ({hpPerSecond} HP/sec) Regeneration";
-            }
-
-            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.HitPoints))
-            {
-                var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.HitPoints);
-                var percent = effect.Aspect == Enums.eAspect.Max
-                    ? GetLegacyPopupMaximumHitPointsPercent(effect)
-                    : GetLegacyPopupMagnitude(effect, 0.1f);
-                var rawHp = DisplayValueFormatter.FormatNumber(DatabaseAPI.GetClassHitPoints() * (percent / 100f));
-                return $"{rawHp} HP ({DisplayValueFormatter.FormatPercentValue(percent)}%) HitPoints";
-            }
-
-            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.Accuracy))
-            {
-                var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.Accuracy);
-                return $"+{DisplayValueFormatter.FormatPercentValue(GetLegacyPopupMagnitude(effect))}% Enhancement(Accuracy)";
-            }
-
-            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.RechargeTime))
-            {
-                var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.RechargeTime);
-                return $"+{DisplayValueFormatter.FormatPercentValue(GetLegacyPopupMagnitude(effect))}% Enhancement(RechargeTime)";
-            }
-
-            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.DamageBuff))
-            {
-                var typedEffects = effects.Where(effect => effect.EffectType == Enums.eEffectType.DamageBuff).ToArray();
-                if (typedEffects.Length > 0)
-                {
-                    var percent = GetLegacyPopupMagnitude(typedEffects[0]);
-                    var types = GroupDamageTypes(typedEffects.Select(effect => effect.DamageType));
-                    return $"{DisplayValueFormatter.FormatPercentValue(percent)}% DamageBuff({types})";
-                }
-            }
-
-            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.Resistance))
-            {
-                var typedEffects = effects
-                    .Where(effect => effect.EffectType == Enums.eEffectType.Resistance &&
-                                     effect.MezType == Enums.eMez.None &&
-                                     effect.DamageType != Enums.eDamage.None)
-                    .ToArray();
-                var mezEffects = effects
-                    .Where(effect => (effect.EffectType == Enums.eEffectType.Resistance ||
-                                      effect.EffectType == Enums.eEffectType.MezResist) &&
-                                     effect.MezType != Enums.eMez.None)
-                    .ToArray();
-                var statusEffects = effects
-                    .Where(effect => effect.EffectType == Enums.eEffectType.Resistance &&
-                                     effect.MezType == Enums.eMez.None &&
-                                     effect.DamageType == Enums.eDamage.None)
-                    .ToArray();
-
-                var parts = new List<string>();
-                if (typedEffects.Length > 0)
-                {
-                    var percent = GetLegacyPopupMagnitude(typedEffects[0]);
-                    parts.Add($"{DisplayValueFormatter.FormatPercentValue(percent)}% Resistance({GroupDamageTypes(typedEffects.Select(effect => effect.DamageType))})");
-                }
-
-                if (mezEffects.Length > 0)
-                {
-                    var percent = GetLegacyPopupMagnitude(mezEffects[0]);
-                    parts.Add($"{DisplayValueFormatter.FormatPercentValue(percent)}% MezResist(All)");
-                }
-                else if (statusEffects.Length > 0)
-                {
-                    var percent = GetLegacyPopupMagnitude(statusEffects[0]);
-                    parts.Add($"{DisplayValueFormatter.FormatPercentValue(percent)}% Resistance(None)");
-                }
-
-                if (parts.Count > 0)
-                {
-                    return string.Join(", ", parts);
-                }
-            }
-
-            if (effects.Any(effect => effect.EffectType == Enums.eEffectType.None))
-            {
-                var effect = effects.First(effect => effect.EffectType == Enums.eEffectType.None);
-                var effectLabel = InferFallbackEffectLabel(power);
-                if (!string.IsNullOrWhiteSpace(effectLabel))
-                {
-                    var percent = GetLegacyPopupMagnitude(effect);
-                    var typeSuffix = effect.DamageType == Enums.eDamage.None
-                        ? string.Empty
-                        : $"({Enum.GetName(typeof(Enums.eDamage), effect.DamageType)})";
-                    return $"{DisplayValueFormatter.FormatPercentValue(percent)}% {effectLabel}{typeSuffix}";
-                }
-            }
-
-            return null;
-        }
-
-        private static float GetLegacyPopupMaximumHitPointsPercent(IEffect effect)
-        {
-            // Omni maximum-HP set bonuses now surface their self-target
-            // activation effects for planner math, but popup parity should use
-            // the exact percentage encoded by the template scale.
-            return effect.Scale * effect.nMagnitude * 10f;
+            return (_, effect) => !fxFilter.Contains(effect.EffectType) &&
+                                  effect.EffectClass != Enums.eEffectClass.Ignored &&
+                                  effect.EffectType != Enums.eEffectType.GrantPower;
         }
 
         private static float GetLegacyPopupMagnitude(IEffect effect, float magnitudeMultiplier = 1f)
@@ -611,54 +413,6 @@ namespace Mids_Reborn.Core
                 ? effect.BuffedMag
                 : effect.Scale * effect.nMagnitude;
             return magnitude * (effect.DisplayPercentage ? 100f : 1f) * magnitudeMultiplier;
-        }
-
-        private static string GroupDamageTypes(IEnumerable<Enums.eDamage> damageTypes)
-        {
-            var types = damageTypes
-                .Where(type => type != Enums.eDamage.None)
-                .Distinct()
-                .OrderBy(GetDamageDisplayOrder)
-                .ToArray();
-            if (types.Length == 0)
-            {
-                return "None";
-            }
-
-            var allPlayerDamageTypes = new[]
-            {
-                Enums.eDamage.Smashing,
-                Enums.eDamage.Lethal,
-                Enums.eDamage.Fire,
-                Enums.eDamage.Cold,
-                Enums.eDamage.Energy,
-                Enums.eDamage.Negative,
-                Enums.eDamage.Toxic,
-                Enums.eDamage.Psionic
-            };
-
-            if (allPlayerDamageTypes.All(types.Contains))
-            {
-                return "All";
-            }
-
-            return string.Join(",", types.Select(type => Enum.GetName(typeof(Enums.eDamage), type)));
-        }
-
-        private static int GetDamageDisplayOrder(Enums.eDamage damageType)
-        {
-            return damageType switch
-            {
-                Enums.eDamage.Smashing => 0,
-                Enums.eDamage.Lethal => 1,
-                Enums.eDamage.Fire => 2,
-                Enums.eDamage.Cold => 3,
-                Enums.eDamage.Energy => 4,
-                Enums.eDamage.Negative => 5,
-                Enums.eDamage.Toxic => 6,
-                Enums.eDamage.Psionic => 7,
-                _ => 100 + (int)damageType
-            };
         }
 
         private static string? GetFallbackBonusEffectString(BonusItem bonusItem)
@@ -693,7 +447,7 @@ namespace Mids_Reborn.Core
                 var typeSuffix = effect.DamageType == Enums.eDamage.None
                     ? string.Empty
                     : $"({Enum.GetName(typeof(Enums.eDamage), effect.DamageType)})";
-                return $"{magnitude} {effectLabel}{typeSuffix}";
+                return GroupedFx.FormatPresentationText($"{magnitude} {effectLabel}{typeSuffix}");
             }
 
             return null;
@@ -767,6 +521,57 @@ namespace Mids_Reborn.Core
                 MidsContext.Build = savedBuild;
                 MidsContext.Archetype = savedArchetype;
             }
+        }
+
+        private static Enums.ePvX ResolveEffectiveBonusPvMode(BonusItem bonusItem, bool special)
+        {
+            if (!special && bonusItem.PvMode != Enums.ePvX.Any)
+            {
+                return bonusItem.PvMode;
+            }
+
+            var sawPvpOnlyPower = false;
+            var sawNonPvpPower = false;
+
+            foreach (var powerIndex in bonusItem.Index)
+            {
+                var linkedPowerPvMode = InferLinkedPowerPvMode(powerIndex);
+                if (linkedPowerPvMode == Enums.ePvX.PvP)
+                {
+                    sawPvpOnlyPower = true;
+                }
+                else
+                {
+                    sawNonPvpPower = true;
+                }
+            }
+
+            if (sawPvpOnlyPower && !sawNonPvpPower)
+            {
+                return Enums.ePvX.PvP;
+            }
+
+            return special ? Enums.ePvX.Any : bonusItem.PvMode;
+        }
+
+        private static Enums.ePvX InferLinkedPowerPvMode(int powerIndex)
+        {
+            if (powerIndex < 0 || powerIndex >= DatabaseAPI.Database.Power.Length)
+            {
+                return Enums.ePvX.Any;
+            }
+
+            var linkedPower = DatabaseAPI.Database.Power[powerIndex];
+            var fullSetName = linkedPower.FullSetName ?? string.Empty;
+            var fullName = linkedPower.FullName ?? string.Empty;
+
+            if (string.Equals(fullSetName, "Set_Bonus.PVP_Set_Bonus", StringComparison.OrdinalIgnoreCase) ||
+                fullName.StartsWith("Set_Bonus.PVP_Set_Bonus.", StringComparison.OrdinalIgnoreCase))
+            {
+                return Enums.ePvX.PvP;
+            }
+
+            return Enums.ePvX.Any;
         }
 
         public void StoreTo(BinaryWriter writer)

@@ -246,8 +246,7 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
                                 var isDefiance =
                                     DefiancePlanner.IsModernContributorEffect(effect) ||
                                     (effect.isEnhancementEffect && effect.EffectClass == Enums.eEffectClass.Tertiary) ||
-                                    effect.ValidateConditional("Active", "Defiance") ||
-                                    effect.SpecialCase == Enums.eSpecialCase.Defiance;
+                                    effect.ValidateConditional("Active", "Defiance");
 
                                 if (!isDefiance)
                                 {

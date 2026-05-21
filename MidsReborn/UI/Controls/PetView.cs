@@ -601,7 +601,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                     continue;
                 }
 
-                if (sourcePower.Effects[tagId].ActiveConditionals?.Count > 0 &&
+                if (sourcePower.Effects[tagId].HasConditions &&
                     !sourcePower.Effects[tagId].ValidateConditional())
                 {
                     continue;
@@ -624,10 +624,9 @@ namespace Mids_Reborn.UI.Forms.Controls
                     if (enhancedPower != null)
                     {
                         var tip = GenerateTipFromEffect(enhancedPower, enhancedPower.Effects[tagId]);
-                        var activeConditionals = sourcePower.Effects[tagId].ActiveConditionals;
                         var iItem = new PairedListEx.Item($"{CapString(names[(int)sourcePower.Effects[tagId].MezType], 7)}:", iValue, iAlternate2,
                             sourcePower.Effects[tagId].Probability < 1 || sourcePower.Effects[tagId].ValidateConditional("Active", "Combo"),
-                            activeConditionals?.Count > 0, tip);
+                            sourcePower.Effects[tagId].HasConditions, tip);
                         iList.AddItem(iItem);
                     }
 
@@ -645,10 +644,9 @@ namespace Mids_Reborn.UI.Forms.Controls
                     if (enhancedPower != null)
                     {
                         var tip = GenerateTipFromEffect(enhancedPower, enhancedPower.Effects[tagId]);
-                        var activeConditionals = sourcePower.Effects[tagId].ActiveConditionals;
                         var iItem = new PairedListEx.Item($"{CapString(names[(int)sourcePower.Effects[tagId].MezType], 7)}:", iValue, false,
                             sourcePower.Effects[tagId].Probability < 1 || sourcePower.Effects[tagId].ValidateConditional("Active", "Combo"),
-                            activeConditionals?.Count > 0, tip);
+                            sourcePower.Effects[tagId].HasConditions, tip);
                         iList.AddItem(iItem);
                     }
 
@@ -671,7 +669,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                     var iItem = new PairedListEx.Item(
                         $"{CapString(names[(int)sourcePower.Effects[tagId].MezType], 7)}:", iValue, iAlternate2,
                         sourcePower.Effects[tagId].Probability < 1,
-                        sourcePower.Effects[tagId].ActiveConditionals.Count > 0, tip);
+                        sourcePower.Effects[tagId].HasConditions, tip);
                     iList.AddItem(iItem);
 
                     if (sourcePower.Effects[tagId].isEnhancementEffect)
@@ -701,7 +699,7 @@ namespace Mids_Reborn.UI.Forms.Controls
 
                 if (sourcePower.Effects[tagId].ETModifies == Enums.eEffectType.Null) continue;
 
-                if (sourcePower.Effects[tagId].ActiveConditionals?.Count > 0 &&
+                if (sourcePower.Effects[tagId].HasConditions &&
                     !sourcePower.Effects[tagId].ValidateConditional())
                 {
                     continue;
@@ -794,7 +792,7 @@ namespace Mids_Reborn.UI.Forms.Controls
             {
                 if (!(_basePower.Effects[index].EffectType == Enums.eEffectType.EntCreate && _basePower.Effects[index].Probability > 0) ||
                     _basePower.AbsorbSummonEffects && _basePower.AbsorbSummonAttributes ||
-                    _basePower.Effects[index].ActiveConditionals?.Count > 0 && !_basePower.Effects[index].ValidateConditional())
+                    _basePower.Effects[index].HasConditions && !_basePower.Effects[index].ValidateConditional())
                 {
                     continue;
                 }
@@ -1414,14 +1412,9 @@ namespace Mids_Reborn.UI.Forms.Controls
                 _enhancedPower.Effects[shortFxEnh.Index[0]].ETModifies, _enhancedPower.Effects[shortFxEnh.Index[0]].DamageType,
                 _enhancedPower.Effects[shortFxEnh.Index[0]].MezType);
 
-            if (_basePower.Effects[index[id]].ActiveConditionals.Count > 0)
+            if (_basePower.Effects[index[id]].HasConditions)
             {
-                return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, _basePower.Effects[index[id]].Probability < 1, _basePower.Effects[index[id]].ActiveConditionals.Count > 0, tip);
-            }
-
-            if (_basePower.Effects[index[id]].SpecialCase != Enums.eSpecialCase.None)
-            {
-                return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, _basePower.Effects[index[id]].Probability < 1, _basePower.Effects[index[id]].SpecialCase != Enums.eSpecialCase.None, tip);
+                return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, _basePower.Effects[index[id]].Probability < 1, _basePower.Effects[index[id]].HasConditions, tip);
             }
 
             return FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, _basePower.Effects[index[id]].Probability < 1, false, tip);
@@ -1614,7 +1607,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                     s2 = 0.0f;
                 }
 
-                iList.AddItem(FastItem(title, s1, s2, suffix, false, false, _enhancedPower.Effects[shortFxArray1[index].Index[0]].Probability < 1.0, _enhancedPower.Effects[shortFxArray1[index].Index[0]].ActiveConditionals.Count > 0, Power.SplitFXGroupTip(ref shortFxArray1[index], ref _enhancedPower, false)));
+                iList.AddItem(FastItem(title, s1, s2, suffix, false, false, _enhancedPower.Effects[shortFxArray1[index].Index[0]].Probability < 1.0, _enhancedPower.Effects[shortFxArray1[index].Index[0]].HasConditions, Power.SplitFXGroupTip(ref shortFxArray1[index], ref _enhancedPower, false)));
                 if (_enhancedPower.Effects[shortFxArray1[index].Index[0]].isEnhancementEffect)
                     iList.SetUnique();
             }
@@ -1642,40 +1635,7 @@ namespace Mids_Reborn.UI.Forms.Controls
             {
                 IPower power = new Power(_enhancedPower);
 
-                foreach (var t in tag.Index)
-                {
-                    if (t == -1 || power.Effects[t].EffectType == Enums.eEffectType.None) continue;
-
-                    var empty2 = string.Empty;
-                    var returnMask = Array.Empty<int>();
-                    power.GetEffectStringGrouped(t, ref empty2, ref returnMask, false, false);
-                    if (returnMask.Length <= 0) continue;
-
-                    if (empty1 != string.Empty)
-                    {
-                        empty1 += "\r\n";
-                    }
-
-                    empty1 += empty2;
-                    foreach (var m in returnMask)
-                    {
-                        power.Effects[m].EffectType = Enums.eEffectType.None;
-                    }
-                }
-
-                foreach (var t in tag.Index)
-                {
-                    if (power.Effects[t].EffectType == Enums.eEffectType.None) continue;
-
-                    if (empty1 != string.Empty)
-                    {
-                        empty1 += "\r\n";
-                    }
-
-                    empty1 += power.Effects[t].BuildEffectString();
-                }
-
-                str2 = empty1;
+                str2 = GroupedFx.BuildPopupTooltipText(power, tag.Index);
             }
 
             str1 = empty1 + str2;

@@ -17,6 +17,16 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private const string GrantBoostedMarker = "MRB_EFFECT_GRANT_BOOSTED";
         private const string StackPolicyMarker = "MRB_EFFECT_STACK_POLICY";
         private static readonly Regex UidClassRegex = new("arch source(.owner)?> (Class_[^ ]*)", RegexOptions.IgnoreCase);
+        private static readonly PlannerMode[] InherentPlannerModes =
+        [
+            PlannerMode.Assassination,
+            PlannerMode.StalkerHidden,
+            PlannerMode.Containment,
+            PlannerMode.CriticalHit,
+            PlannerMode.Domination,
+            PlannerMode.Scourge,
+            PlannerMode.PackMentality
+        ];
 
         private IPower? power;
 
@@ -44,7 +54,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Suppression = Enums.eSuppress.None;
             Buffable = true;
             Resistible = true;
-            SpecialCase = Enums.eSpecialCase.None;
             UIDClassName = string.Empty;
             nIDClassName = -1;
             PvMode = Enums.ePvX.Any;
@@ -69,7 +78,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             ModeId = -1;
             ModeFlag = Enums.eModeFlags.None;
             RevokedPower = string.Empty;
-            ActiveConditionals = [];
             AdvancedConditions = new AdvancedConditionSet();
         }
 
@@ -95,7 +103,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Suppression = (Enums.eSuppress)reader.ReadInt32();
             Buffable = reader.ReadBoolean();
             Resistible = reader.ReadBoolean();
-            SpecialCase = (Enums.eSpecialCase)reader.ReadInt32();
+            _ = (Enums.eSpecialCase)reader.ReadInt32();
             VariableModifiedOverride = reader.ReadBoolean();
             IgnoreScaling = reader.ReadBoolean();
             PvMode = (Enums.ePvX)reader.ReadInt32();
@@ -133,16 +141,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var conditionalCount = reader.ReadInt32();
             for (var cIndex = 0; cIndex < conditionalCount; cIndex++)
             {
-                var cKey = reader.ReadString();
-                var cValue = reader.ReadString();
-                ActiveConditionals.Add(new KeyValue<string, string>(cKey, cValue));
+                _ = reader.ReadString();
+                _ = reader.ReadString();
             }
 
-            AdvancedConditions = AdvancedConditionSet.FromLegacyActiveConditionals(ActiveConditionals);
+            AdvancedConditions = new AdvancedConditionSet();
             if (AdvancedConditionSet.TryReadMarked(reader, AdvancedConditionsMarker, out var advancedConditions))
             {
                 AdvancedConditions = advancedConditions;
-                ActiveConditionals = AdvancedConditions.ToLegacyActiveConditionals();
             }
 
             TryReadModePayload(reader);
@@ -155,6 +161,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             TryReadCombatModFlags(reader);
             TryReadGrantBoosted(reader);
             TryReadStackPolicy(reader);
+            NormalizeConditionState();
         }
 
         private Effect(IEffect template) : this()
@@ -177,7 +184,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Suppression = template.Suppression;
             Buffable = template.Buffable;
             Resistible = template.Resistible;
-            SpecialCase = template.SpecialCase;
             VariableModifiedOverride = template.VariableModifiedOverride;
             IgnoreScaling = template.IgnoreScaling;
             isEnhancementEffect = template.isEnhancementEffect;
@@ -231,8 +237,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             ModeId = template.ModeId;
             ModeFlag = template.ModeFlag;
             RevokedPower = template.RevokedPower;
-            ActiveConditionals = template.ActiveConditionals;
-            AdvancedConditions = template.AdvancedConditions?.Clone() ?? AdvancedConditionSet.FromLegacyActiveConditionals(ActiveConditionals);
+            AdvancedConditions = template.AdvancedConditions?.Clone() ?? new AdvancedConditionSet();
+            NormalizeConditionState();
         }
 
         private int? SummonId { get; set; }
@@ -425,14 +431,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             set { }
         }
 
-        public bool InherentSpecial => SpecialCase is Enums.eSpecialCase.Assassination or Enums.eSpecialCase.Hidden or Enums.eSpecialCase.Containment or Enums.eSpecialCase.CriticalHit or Enums.eSpecialCase.Domination or Enums.eSpecialCase.Scourge or Enums.eSpecialCase.Supremacy;
+        public bool InherentSpecial => InherentPlannerModes.Any(HasSourceModeCondition);
 
-        public bool InherentSpecial2 => ValidateConditional("active", "Assassination") ||
-                                        ValidateConditional("active", "Containment") ||
-                                        ValidateConditional("active", "CriticalHit") ||
-                                        ValidateConditional("active", "Domination") ||
-                                        ValidateConditional("active", "Scourge") ||
-                                        ValidateConditional("active", "Supremacy");
+        public bool InherentSpecial2 => HasSourceModeCondition(PlannerMode.Assassination) ||
+                                        HasSourceModeCondition(PlannerMode.Containment) ||
+                                        HasSourceModeCondition(PlannerMode.CriticalHit) ||
+                                        HasSourceModeCondition(PlannerMode.Domination) ||
+                                        HasSourceModeCondition(PlannerMode.Scourge) ||
+                                        HasSourceModeCondition(PlannerMode.PackMentality);
+
+        public bool HasConditions => AdvancedConditions is { Rows.Count: > 0 };
+
+        public string ConditionIdentity => HasConditions
+            ? AdvancedConditionCompiler.Compile(AdvancedConditions)
+            : string.Empty;
 
         public bool IgnoreScaling { get; set; }
 
@@ -502,8 +514,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool Resistible { get; set; }
 
-        public Enums.eSpecialCase SpecialCase { get; set; }
-
         public string UIDClassName { get; set; }
 
         public int nIDClassName { get; set; }
@@ -568,10 +578,25 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public string RevokedPower { get; set; }
 
-        public List<KeyValue<string, string>> ActiveConditionals { get; set; }
         public bool Validated { get; set; }
 
         public bool IsFromProc => ProcsPerMinute > 0.0f;
+
+        public void NormalizeConditionState()
+        {
+            AdvancedConditions ??= new AdvancedConditionSet();
+        }
+
+        private bool HasSourceModeCondition(PlannerMode mode)
+        {
+            return AdvancedConditions is { Rows.Count: > 0 } &&
+                   AdvancedConditions.Rows.Any(row =>
+                       row.Kind == AdvancedConditionKind.SourceMode &&
+                       !row.Negated &&
+                       row.EvaluationMode == AdvancedConditionEvaluationMode.BuildEvaluated &&
+                       OmniModeMapper.TryGetPlannerMode(row.Subject, out var plannerMode) &&
+                       plannerMode == mode);
+        }
 
         public int nOverride
         {
@@ -981,95 +1006,22 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (!Buffable & EffectType != Enums.eEffectType.DamageBuff)
                     sBuff = IgnoreED ? " [Ignores Enhancements, Buffs & ED]" : " [Ignores Enhancements & Buffs]";
 
-                var stackDescription = PlannerStackRules.GetDiagnosticDescription(this);
-                if (PlannerStackRules.ShouldFlagNoStackSameCaster(this))
+                var stackDescription = PlannerStackRules.GetDisplayDescription(this);
+                if (!string.IsNullOrWhiteSpace(stackDescription))
                 {
-                    sStack = PlannerStackRules.HasExplicitImportedPolicy(this)
-                        ? $"\n  Stack: {stackDescription}"
-                        : "\n  Effect does not stack from same caster";
-                }
-                else if (PlannerStackRules.HasExplicitImportedPolicy(this))
-                {
-                    sStack = $"\n  Stack: {stackDescription}";
+                    sStack = $"\n  {stackDescription}";
                 }
 
                 if (DelayedTime > 0)
                     sDelay = $"after {DisplayValueFormatter.FormatSeconds(DelayedTime)} seconds";
             }
 
-            // Conditions / SpecialCase
+            // Conditions
             if (!ignoreConditions)
             {
-                if (SpecialCase != Enums.eSpecialCase.None & SpecialCase != Enums.eSpecialCase.Defiance)
-                    sSpecial = Enum.GetName(SpecialCase.GetType(), SpecialCase);
-
                 if (AdvancedConditions is { Rows.Count: > 0 })
                 {
                     sConditional = FormatAdvancedConditionSummary(AdvancedConditions);
-                }
-                else if (ActiveConditionals.Count > 0)
-                {
-                    var getCondition = new Regex("(:.*)");
-                    var getConditionItem = new Regex("(.*:)");
-                    var conList = new List<string>();
-
-                    foreach (var cVp in ActiveConditionals)
-                    {
-                        var condition = getCondition.Replace(cVp.Key, "").Replace(":", "");
-                        var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
-                        var conditionPower = condition == "Config"
-                            ? null
-                            : DatabaseAPI.GetPowerByFullName(conditionItemName);
-                        var conditionOperator = cVp.Value switch
-                        {
-                            "True" => "is ",
-                            "False" => "not ",
-                            _ => ""
-                        };
-
-                        switch (condition)
-                        {
-                            case "Stacks":
-                                conList.Add(
-                                    $"{(MidsContext.Config.CoDEffectFormat ? conditionPower?.FullName : conditionPower?.DisplayName)} {condition} {cVp.Value}");
-                                break;
-                            case "Team":
-                                conList.Add($"{conditionItemName}s on {condition} {cVp.Value}");
-                                break;
-                            case "Config":
-                            {
-                                var cfgKey = MidsContext.Config.CoDEffectFormat
-                                    ? conditionItemName.Replace("PlayerSettings", "player")
-                                        .Replace("TargetSettings", "target")
-                                    : conditionItemName;
-                                var cfgText =
-                                    $"{condition}:{(MidsContext.Config.CoDEffectFormat ? cfgKey : ConfigData.CombatContext.FormatSettingName(conditionItemName))} {conditionOperator} {cVp.Value}"
-                                        .Replace("  ", " ")
-                                        .Replace("Player IsAlive = True", "Player is Alive",
-                                            StringComparison.InvariantCultureIgnoreCase)
-                                        .Replace("Player IsAlive = False", "Player is Dead",
-                                            StringComparison.InvariantCultureIgnoreCase)
-                                        .Replace("Target IsAlive = True", "Target is Alive",
-                                            StringComparison.InvariantCultureIgnoreCase)
-                                        .Replace("Target IsAlive = False", "Target is Dead",
-                                            StringComparison.InvariantCultureIgnoreCase);
-                                conList.Add(cfgText);
-                                break;
-                            }
-                            default:
-                                conList.Add(
-                                    $"{(MidsContext.Config.CoDEffectFormat ? conditionPower?.FullName : conditionPower?.DisplayName)} {conditionOperator}{condition}");
-                                break;
-                        }
-                    }
-
-                    sConditional = string.Empty;
-                    foreach (var c in conList)
-                    {
-                        if (sConditional == string.Empty) sConditional += c.Replace(" OR ", " ");
-                        else if (c.Contains("OR ")) sConditional += $" OR {c.Replace(" OR ", " ")}";
-                        else sConditional += $" AND {c}";
-                    }
                 }
             }
 
@@ -1830,7 +1782,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write((int)Suppression);
             writer.Write(Buffable);
             writer.Write(Resistible);
-            writer.Write((int)SpecialCase);
+            writer.Write((int)Enums.eSpecialCase.None);
             writer.Write(VariableModifiedOverride);
             writer.Write(IgnoreScaling);
             writer.Write((int)PvMode);
@@ -1859,20 +1811,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(Override);
             writer.Write(ProcsPerMinute);
 
-            var legacyConditionals = AdvancedConditions is { Rows.Count: > 0 }
-                ? AdvancedConditions.ToLegacyActiveConditionals()
-                : ActiveConditionals;
-            writer.Write(legacyConditionals.Count);
-            foreach (var cVp in legacyConditionals)
-            {
-                writer.Write(cVp.Key);
-                writer.Write(cVp.Value);
-            }
+            writer.Write(0);
 
             AdvancedConditionSet.StoreMarked(writer, AdvancedConditionsMarker,
-                AdvancedConditions is { Rows.Count: > 0 }
-                    ? AdvancedConditions
-                    : AdvancedConditionSet.FromLegacyActiveConditionals(ActiveConditionals));
+                AdvancedConditions);
             StoreModePayload(writer);
             StoreEffectTags(writer);
             StoreOmniSource(writer);
@@ -2222,15 +2164,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool ValidateConditional(int index)
         {
-            if (ActiveConditionals is not { Count: > 0 })
+            if (AdvancedConditions is not { Rows.Count: > 0 })
             {
                 return true;
             }
 
-            var set = AdvancedConditionSet.FromLegacyActiveConditionals(ActiveConditionals);
-            ActiveConditionals[index].Validated = index < set.Rows.Count && AdvancedConditionEvaluator.EvaluateRow(this, set.Rows[index]);
-
-            return ActiveConditionals[index].Validated;
+            return index >= 0 &&
+                   index < AdvancedConditions.Rows.Count &&
+                   AdvancedConditionEvaluator.EvaluateRow(this, AdvancedConditions.Rows[index]);
         }
 
         public bool ValidateConditional()
@@ -2240,771 +2181,22 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool CanInclude()
         {
-            var hasAdvancedConditionals = AdvancedConditions is { Rows.Count: > 0 };
-            var hasLegacyConditionals = ActiveConditionals is { Count: > 0 };
-            if (MidsContext.Character == null ||
-                (!hasAdvancedConditionals && !hasLegacyConditionals && SpecialCase == Enums.eSpecialCase.None))
+            if (MidsContext.Character == null || !HasConditions)
             {
                 return true;
             }
-
-            #region SpecialCase Processing
-
-            /*if (SpecialCase != Enums.eSpecialCase.None)
-            {
-                switch (SpecialCase)
-                {
-                    case Enums.eSpecialCase.Hidden:
-                        if (MidsContext.Character.IsStalker || MidsContext.Character.IsArachnos)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Domination:
-                        if (MidsContext.Character.Domination)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Scourge:
-                        if (MidsContext.Character.Scourge)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.CriticalHit:
-                        if (MidsContext.Character.CriticalHits || MidsContext.Character.IsStalker)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.CriticalBoss:
-                        if (MidsContext.Character.CriticalHits)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Assassination:
-                        if (MidsContext.Character.IsStalker && MidsContext.Character.Assassination)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Containment:
-                        if (MidsContext.Character.Containment)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Defiance:
-                        if (MidsContext.Character.Defiance)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.TargetDroneActive:
-                        if (MidsContext.Character.IsBlaster && MidsContext.Character.TargetDroneActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotDisintegrated:
-                        if (!MidsContext.Character.DisintegrateActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Disintegrated:
-                        if (MidsContext.Character.DisintegrateActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotAccelerated:
-                        if (!MidsContext.Character.AcceleratedActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Accelerated:
-                        if (MidsContext.Character.AcceleratedActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotDelayed:
-                        if (!MidsContext.Character.DelayedActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Delayed:
-                        if (MidsContext.Character.DelayedActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.ComboLevel0:
-                        if (MidsContext.Character.ActiveComboLevel == 0)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.ComboLevel1:
-                        if (MidsContext.Character.ActiveComboLevel == 1)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.ComboLevel2:
-                        if (MidsContext.Character.ActiveComboLevel == 2)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.ComboLevel3:
-                        if (MidsContext.Character.ActiveComboLevel == 3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.FastMode:
-                        if (MidsContext.Character.FastModeActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotAssassination:
-                        if (!MidsContext.Character.Assassination)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfBody0:
-                        if (MidsContext.Character.PerfectionOfBodyLevel == 0)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfBody1:
-                        if (MidsContext.Character.PerfectionOfBodyLevel == 1)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfBody2:
-                        if (MidsContext.Character.PerfectionOfBodyLevel == 2)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfBody3:
-                        if (MidsContext.Character.PerfectionOfBodyLevel == 3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfMind0:
-                        if (MidsContext.Character.PerfectionOfMindLevel == 0)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfMind1:
-                        if (MidsContext.Character.PerfectionOfMindLevel == 1)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfMind2:
-                        if (MidsContext.Character.PerfectionOfMindLevel == 2)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfMind3:
-                        if (MidsContext.Character.PerfectionOfMindLevel == 3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfSoul0:
-                        if (MidsContext.Character.PerfectionOfSoulLevel == 0)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfSoul1:
-                        if (MidsContext.Character.PerfectionOfSoulLevel == 1)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfSoul2:
-                        if (MidsContext.Character.PerfectionOfSoulLevel == 2)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfSoul3:
-                        if (MidsContext.Character.PerfectionOfSoulLevel == 3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.TeamSize1:
-                        if (MidsContext.Config.TeamSize > 1)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.TeamSize2:
-                        if (MidsContext.Config.TeamSize > 2)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.TeamSize3:
-                        if (MidsContext.Config.TeamSize > 3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotComboLevel3:
-                        if (MidsContext.Character.ActiveComboLevel != 3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.ToHit97:
-                        if (MidsContext.Character.DisplayStats.BuffToHit >= 22.0)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.DefensiveAdaptation:
-                        if (MidsContext.Character.DefensiveAdaptation)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.EfficientAdaptation:
-                        if (MidsContext.Character.EfficientAdaptation)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.OffensiveAdaptation:
-                        if (MidsContext.Character.OffensiveAdaptation)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotDefensiveAdaptation:
-                        if (!MidsContext.Character.DefensiveAdaptation)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotDefensiveNorOffensiveAdaptation:
-                        if (!MidsContext.Character.OffensiveAdaptation && !MidsContext.Character.DefensiveAdaptation)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.BoxingBuff:
-                        if (MidsContext.Character.BoxingBuff)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotBoxingBuff:
-                        if (MidsContext.Character.NotBoxingBuff)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.KickBuff:
-                        if (MidsContext.Character.KickBuff)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotKickBuff:
-                        if (MidsContext.Character.NotKickBuff)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.CrossPunchBuff:
-                        if (MidsContext.Character.CrossPunchBuff)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotCrossPunchBuff:
-                        if (MidsContext.Character.NotCrossPunchBuff)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Supremacy:
-                        if (MidsContext.Character.Supremacy && !MidsContext.Character.PackMentality)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.SupremacyAndBuffPwr:
-                        if (MidsContext.Character.Supremacy && MidsContext.Character.PackMentality)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PetTier2:
-                        if (MidsContext.Character.PetTier2)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PetTier3:
-                        if (MidsContext.Character.PetTier3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PackMentality:
-                        if (MidsContext.Character.PackMentality)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotPackMentality:
-                        if (!MidsContext.Character.PackMentality)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.FastSnipe:
-                        if (MidsContext.Character.FastSnipe)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotFastSnipe:
-                        if (!MidsContext.Character.FastSnipe)
-                            return true;
-                        break;
-                }
-            }*/
-
-            #endregion
-
-            if (hasAdvancedConditionals || hasLegacyConditionals)
-            {
-                Validated = BooleanExprPreprocessor.Parse(this);
-                return Validated;
-            }
-
-            #region Conditional Processing
-
-            if (ActiveConditionals is { Count: > 0 })
-            {
-                var getCondition = new Regex("(:.*)");
-                var getConditionItem = new Regex("(.*:)");
-                foreach (var cVp in ActiveConditionals)
-                {
-                    var condition = getCondition.Replace(cVp.Key, "");
-                    var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
-                    var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
-                    var cVal = cVp.Value.Split(' ');
-                    switch (condition)
-                    {
-                        case "Active":
-                            if (conditionPower != null)
-                            {
-                                bool? boolVal = Convert.ToBoolean(cVp.Value);
-                                if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
-                                {
-                                    cVp.Validated = true;
-                                }
-                                else
-                                {
-                                    cVp.Validated = false;
-                                }
-                            }
-
-                            break;
-                        case "Taken":
-                            if (conditionPower != null)
-                            {
-                                cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower)
-                                    .Equals(Convert.ToBoolean(cVp.Value));
-                            }
-
-                            break;
-                        case "Stacks":
-                            if (conditionPower != null)
-                            {
-                                switch (cVal[0])
-                                {
-                                    case "=":
-
-                                        cVp.Validated = conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
-
-                                        break;
-                                    case ">":
-                                        cVp.Validated = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
-
-                                        break;
-                                    case "<":
-                                        cVp.Validated = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
-
-                                        break;
-                                }
-                            }
-
-                            break;
-                        case "Team":
-                            switch (cVal[0])
-                            {
-                                case "=":
-                                    if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext
-                                        .Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
-                                    {
-                                        cVp.Validated = true;
-                                    }
-                                    else
-                                    {
-                                        cVp.Validated = false;
-                                    }
-
-                                    break;
-                                case ">":
-                                    if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                        MidsContext.Config.TeamMembers[conditionItemName] >
-                                        Convert.ToInt32(cVal[1]))
-                                    {
-                                        cVp.Validated = true;
-                                    }
-                                    else
-                                    {
-                                        cVp.Validated = false;
-                                    }
-
-                                    break;
-                                case "<":
-                                    if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                        MidsContext.Config.TeamMembers[conditionItemName] <
-                                        Convert.ToInt32(cVal[1]))
-                                    {
-                                        cVp.Validated = true;
-                                    }
-                                    else
-                                    {
-                                        cVp.Validated = false;
-                                    }
-
-                                    break;
-                            }
-
-                            break;
-                    }
-                }
-
-                int allValid = ActiveConditionals.Count;
-                foreach (var condition in ActiveConditionals)
-                {
-                    if (!condition.Validated)
-                        allValid -= 1;
-                }
-
-                if (allValid == ActiveConditionals.Count)
-                {
-                    Validated = true;
-                }
-                else
-                {
-                    Validated = false;
-                }
-
-                return Validated;
-
-            }
-
-            #endregion
-
-            return false;
+            Validated = BooleanExprPreprocessor.Parse(this);
+            return Validated;
         }
 
         public bool CanGrantPower()
         {
-            if (MidsContext.Character == null | ActiveConditionals == null | (ActiveConditionals?.Count == 0 && SpecialCase == Enums.eSpecialCase.None))
+            if (MidsContext.Character == null || !HasConditions)
             {
                 return true;
             }
-
-            #region SpecialCase Processing
-
-            /*if (SpecialCase != Enums.eSpecialCase.None)
-            {
-                switch (SpecialCase)
-                {
-                    case Enums.eSpecialCase.Hidden:
-                        if (MidsContext.Character.IsStalker || MidsContext.Character.IsArachnos)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Domination:
-                        if (MidsContext.Character.Domination)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Scourge:
-                        if (MidsContext.Character.Scourge)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.CriticalHit:
-                        if (MidsContext.Character.CriticalHits || MidsContext.Character.IsStalker)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.CriticalBoss:
-                        if (MidsContext.Character.CriticalHits)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Assassination:
-                        if (MidsContext.Character.IsStalker && MidsContext.Character.Assassination)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Containment:
-                        if (MidsContext.Character.Containment)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Defiance:
-                        if (MidsContext.Character.Defiance)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.TargetDroneActive:
-                        if (MidsContext.Character.IsBlaster && MidsContext.Character.TargetDroneActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotDisintegrated:
-                        if (!MidsContext.Character.DisintegrateActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Disintegrated:
-                        if (MidsContext.Character.DisintegrateActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotAccelerated:
-                        if (!MidsContext.Character.AcceleratedActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Accelerated:
-                        if (MidsContext.Character.AcceleratedActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotDelayed:
-                        if (!MidsContext.Character.DelayedActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Delayed:
-                        if (MidsContext.Character.DelayedActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.ComboLevel0:
-                        if (MidsContext.Character.ActiveComboLevel == 0)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.ComboLevel1:
-                        if (MidsContext.Character.ActiveComboLevel == 1)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.ComboLevel2:
-                        if (MidsContext.Character.ActiveComboLevel == 2)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.ComboLevel3:
-                        if (MidsContext.Character.ActiveComboLevel == 3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.FastMode:
-                        if (MidsContext.Character.FastModeActive)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotAssassination:
-                        if (!MidsContext.Character.Assassination)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfBody0:
-                        if (MidsContext.Character.PerfectionOfBodyLevel == 0)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfBody1:
-                        if (MidsContext.Character.PerfectionOfBodyLevel == 1)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfBody2:
-                        if (MidsContext.Character.PerfectionOfBodyLevel == 2)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfBody3:
-                        if (MidsContext.Character.PerfectionOfBodyLevel == 3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfMind0:
-                        if (MidsContext.Character.PerfectionOfMindLevel == 0)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfMind1:
-                        if (MidsContext.Character.PerfectionOfMindLevel == 1)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfMind2:
-                        if (MidsContext.Character.PerfectionOfMindLevel == 2)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfMind3:
-                        if (MidsContext.Character.PerfectionOfMindLevel == 3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfSoul0:
-                        if (MidsContext.Character.PerfectionOfSoulLevel == 0)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfSoul1:
-                        if (MidsContext.Character.PerfectionOfSoulLevel == 1)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfSoul2:
-                        if (MidsContext.Character.PerfectionOfSoulLevel == 2)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PerfectionOfSoul3:
-                        if (MidsContext.Character.PerfectionOfSoulLevel == 3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.TeamSize1:
-                        if (MidsContext.Config.TeamSize > 1)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.TeamSize2:
-                        if (MidsContext.Config.TeamSize > 2)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.TeamSize3:
-                        if (MidsContext.Config.TeamSize > 3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotComboLevel3:
-                        if (MidsContext.Character.ActiveComboLevel != 3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.ToHit97:
-                        if (MidsContext.Character.DisplayStats.BuffToHit >= 22.0)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.DefensiveAdaptation:
-                        if (MidsContext.Character.DefensiveAdaptation)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.EfficientAdaptation:
-                        if (MidsContext.Character.EfficientAdaptation)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.OffensiveAdaptation:
-                        if (MidsContext.Character.OffensiveAdaptation)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotDefensiveAdaptation:
-                        if (!MidsContext.Character.DefensiveAdaptation)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotDefensiveNorOffensiveAdaptation:
-                        if (!MidsContext.Character.OffensiveAdaptation && !MidsContext.Character.DefensiveAdaptation)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.BoxingBuff:
-                        if (MidsContext.Character.BoxingBuff)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotBoxingBuff:
-                        if (MidsContext.Character.NotBoxingBuff)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.KickBuff:
-                        if (MidsContext.Character.KickBuff)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotKickBuff:
-                        if (MidsContext.Character.NotKickBuff)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.CrossPunchBuff:
-                        if (MidsContext.Character.CrossPunchBuff)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotCrossPunchBuff:
-                        if (MidsContext.Character.NotCrossPunchBuff)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.Supremacy:
-                        if (MidsContext.Character.Supremacy && !MidsContext.Character.PackMentality)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.SupremacyAndBuffPwr:
-                        if (MidsContext.Character.Supremacy && MidsContext.Character.PackMentality)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PetTier2:
-                        if (MidsContext.Character.PetTier2)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PetTier3:
-                        if (MidsContext.Character.PetTier3)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.PackMentality:
-                        if (MidsContext.Character.PackMentality)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotPackMentality:
-                        if (!MidsContext.Character.PackMentality)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.FastSnipe:
-                        if (MidsContext.Character.FastSnipe)
-                            return true;
-                        break;
-                    case Enums.eSpecialCase.NotFastSnipe:
-                        if (!MidsContext.Character.FastSnipe)
-                            return true;
-                        break;
-                }
-            }*/
-
-            #endregion
-
-            if (AdvancedConditions is { Rows.Count: > 0 } || ActiveConditionals is { Count: > 0 })
-            {
-                Validated = BooleanExprPreprocessor.Parse(this);
-                return Validated;
-            }
-
-            #region Conditional Processing
-
-            if (ActiveConditionals.Count > 0)
-            {
-                var getCondition = new Regex("(:.*)");
-                var getConditionItem = new Regex("(.*:)");
-                foreach (var cVp in ActiveConditionals)
-                {
-                    var condition = getCondition.Replace(cVp.Key, "");
-                    var conditionItemName = getConditionItem.Replace(cVp.Key, "").Replace(":", "");
-                    var conditionPower = DatabaseAPI.GetPowerByFullName(conditionItemName);
-                    var cVal = cVp.Value.Split(' ');
-                    switch (condition)
-                    {
-                        case "Active":
-                            if (conditionPower != null)
-                            {
-                                bool? boolVal = Convert.ToBoolean(cVp.Value);
-                                if (MidsContext.Character.CurrentBuild.PowerActive(conditionPower) == boolVal)
-                                {
-                                    cVp.Validated = true;
-                                }
-                                else
-                                {
-                                    cVp.Validated = false;
-                                }
-                            }
-
-                            break;
-                        case "Taken":
-                            if (conditionPower != null)
-                            {
-                                cVp.Validated = MidsContext.Character.CurrentBuild.PowerUsed(conditionPower)
-                                    .Equals(Convert.ToBoolean(cVp.Value));
-                            }
-
-                            break;
-                        case "Stacks":
-                            if (conditionPower != null)
-                            {
-                                switch (cVal[0])
-                                {
-                                    case "=":
-
-                                        cVp.Validated = conditionPower.Stacks.Equals(Convert.ToInt32(cVal[1]));
-
-                                        break;
-                                    case ">":
-                                        cVp.Validated = conditionPower.Stacks > Convert.ToInt32(cVal[1]);
-
-                                        break;
-                                    case "<":
-                                        cVp.Validated = conditionPower.Stacks < Convert.ToInt32(cVal[1]);
-
-                                        break;
-                                }
-                            }
-
-                            break;
-                        case "Team":
-                            switch (cVal[0])
-                            {
-                                case "=":
-                                    if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) && MidsContext
-                                        .Config.TeamMembers[conditionItemName].Equals(Convert.ToInt32(cVal[1])))
-                                    {
-                                        cVp.Validated = true;
-                                    }
-                                    else
-                                    {
-                                        cVp.Validated = false;
-                                    }
-
-                                    break;
-                                case ">":
-                                    if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                        MidsContext.Config.TeamMembers[conditionItemName] >
-                                        Convert.ToInt32(cVal[1]))
-                                    {
-                                        cVp.Validated = true;
-                                    }
-                                    else
-                                    {
-                                        cVp.Validated = false;
-                                    }
-
-                                    break;
-                                case "<":
-                                    if (MidsContext.Config.TeamMembers.ContainsKey(conditionItemName) &&
-                                        MidsContext.Config.TeamMembers[conditionItemName] <
-                                        Convert.ToInt32(cVal[1]))
-                                    {
-                                        cVp.Validated = true;
-                                    }
-                                    else
-                                    {
-                                        cVp.Validated = false;
-                                    }
-
-                                    break;
-                            }
-
-                            break;
-                    }
-                }
-
-                int allValid = ActiveConditionals.Count;
-                foreach (var condition in ActiveConditionals)
-                {
-                    if (!condition.Validated)
-                        allValid -= 1;
-                }
-
-                if (allValid == ActiveConditionals.Count)
-                {
-                    Validated = true;
-                }
-                else
-                {
-                    Validated = false;
-                }
-
-                return Validated;
-
-            }
-
-            #endregion
-
-            return false;
+            Validated = BooleanExprPreprocessor.Parse(this);
+            return Validated;
         }
 
         public bool PvXInclude()
@@ -3158,11 +2350,27 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool AffectsPetsOnly()
         {
-            var isSetBonusEffect = Reward.Contains("Set_Bonus");
-            var effectPower = GetPower();
-            var enhSet = DatabaseAPI.GetEnhancementSetByBoostName(effectPower.SetName);
-            var isPetEnh = DatabaseAPI.GetSetTypeByIndex(enhSet.SetType).Name.Contains("Pet");
-            return isSetBonusEffect && isPetEnh;
+            if (string.IsNullOrWhiteSpace(Reward) ||
+                Reward.IndexOf("Set_Bonus", StringComparison.OrdinalIgnoreCase) < 0)
+            {
+                return false;
+            }
+
+            var effectPower = power ?? GetPower();
+            if (effectPower == null || string.IsNullOrWhiteSpace(effectPower.SetName))
+            {
+                return false;
+            }
+
+            var enhancementSet = DatabaseAPI.GetEnhancementSetByBoostName(effectPower.SetName);
+            if (enhancementSet == null)
+            {
+                return false;
+            }
+
+            var setTypeName = DatabaseAPI.GetSetTypeByIndex(enhancementSet.SetType).Name;
+            return !string.IsNullOrWhiteSpace(setTypeName) &&
+                   setTypeName.IndexOf("Pet", StringComparison.OrdinalIgnoreCase) >= 0;
         }
 
         public Damage GetDamage()
@@ -3242,14 +2450,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 ToWho = ToWho,
                 PvMode = PvMode,
                 Suppression = Suppression,
-                Conditionals = ActiveConditionals,
+                ConditionIdentity = ConditionIdentity,
                 IgnoreScaling = IgnoreScaling,
                 IgnoreED = IgnoreED,
                 Buffable = Buffable,
                 Probability = Probability,
                 Duration = Duration,
                 Ticks = Ticks,
-                SpecialCase = SpecialCase,
                 Stacking = Stacking,
                 RequiresToHitCheck = RequiresToHitCheck,
                 CancelOnMiss = CancelOnMiss,
@@ -3324,14 +2531,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public Enums.eToWho ToWho;
         public Enums.ePvX PvMode;
         public Enums.eSuppress Suppression;
-        public List<KeyValue<string, string>> Conditionals;
+        public string ConditionIdentity;
         public bool IgnoreScaling;
         public bool IgnoreED;
         public bool Buffable;
         public float Probability;
         public float Duration;
         public int Ticks;
-        public Enums.eSpecialCase SpecialCase;
         public Enums.eStacking Stacking;
         public bool RequiresToHitCheck;
         public bool CancelOnMiss;
@@ -3353,13 +2559,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                    ToWho == target.ToWho &
                    PvMode == target.PvMode &
                    Suppression == target.Suppression &
+                   string.Equals(ConditionIdentity, target.ConditionIdentity, StringComparison.OrdinalIgnoreCase) &
                    IgnoreScaling == target.IgnoreScaling &
                    IgnoreED == target.IgnoreED &
                    Buffable == target.Buffable &
                    Math.Abs(Probability - target.Probability) < float.Epsilon &
                    Math.Abs(Duration - target.Duration) < float.Epsilon &
                    Ticks == target.Ticks &
-                   SpecialCase == target.SpecialCase &
                    Stacking == target.Stacking &
                    RequiresToHitCheck == target.RequiresToHitCheck &
                    CancelOnMiss == target.CancelOnMiss &

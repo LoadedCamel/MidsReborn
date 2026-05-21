@@ -670,11 +670,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                     for (var index4 = 0; index4 < enhancementSet.Bonus.Length; index4++)
                     {
                         if (!((setInfo[index2].SlottedCount >= enhancementSet.Bonus[index4].Slotted) &
-                              ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.Any) |
-                               ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvE) &
-                                !MidsContext.Config.Inc.DisablePvE) |
-                               ((enhancementSet.Bonus[index4].PvMode == Enums.ePvX.PvP) &
-                                MidsContext.Config.Inc.DisablePvE))))
+                              enhancementSet.BonusAppliesInContext(index4, false, MidsContext.Config.Inc.DisablePvE)))
                         {
                             continue;
                         }

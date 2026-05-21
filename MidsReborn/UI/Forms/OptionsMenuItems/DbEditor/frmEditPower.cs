@@ -4365,25 +4365,24 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            var r = new Regex(@"^Stacks\:([a-zA-Z0-9\-\:_]+\.[a-zA-Z0-9\-\:_]+\.[a-zA-Z0-9\-\:_]+)$");
             var k = 0;
             var l = 0;
             for (var i = 0; i < myPower?.Effects.Length; i++)
             {
-                for (var j = 0; j < myPower?.Effects[i].ActiveConditionals?.Count; j++)
+                for (var j = 0; j < myPower.Effects[i].AdvancedConditions.Rows.Count; j++)
                 {
-                    if (myPower?.Effects[i].ActiveConditionals?[j] == null ||
-                        !r.IsMatch(myPower?.Effects[i].ActiveConditionals?[j].Key ?? ""))
+                    var row = myPower.Effects[i].AdvancedConditions.Rows[j];
+                    if (row.Kind != AdvancedConditionKind.PowerStacks)
                     {
                         continue;
                     }
 
                     k++;
 
-                    var origValue = myPower?.Effects[i].ActiveConditionals?[j].Key;
-                    var newValue = $"Stacks:{myPower?.FullName}";
-                    myPower.Effects[i].ActiveConditionals[j] = new KeyValue<string, string>(newValue, myPower?.Effects[i].ActiveConditionals?[j].Value);
-                    if (origValue != newValue)
+                    var origValue = row.Subject;
+                    var newValue = myPower.FullName;
+                    myPower.Effects[i].AdvancedConditions.Rows[j].Subject = newValue;
+                    if (!string.Equals(origValue, newValue, StringComparison.OrdinalIgnoreCase))
                     {
                         l++;
                     }

@@ -516,7 +516,6 @@ public sealed class OmniApplyResult
         AppendSection(builder, "Synthetic Planner Inherents", SyntheticPlannerInherentDetails);
         AppendSection(builder, "Planner Modes Discovered", PlannerModeDetails);
         AppendSection(builder, "Planner Mode Payloads Added", PlannerModePayloadDetails);
-        AppendSection(builder, "SpecialCase Compatibility Bridges", SpecialCaseCompatibilityBridgeDetails);
         AppendSection(builder, "kEngaged Snipe Aliases", SnipeEngagedAliasDetails);
         AppendSection(builder, "Class Table Files", ClassTableFileDetails);
         AppendSection(builder, "Missing Modifier Table References", MissingModifierTableReferenceDetails);
@@ -618,7 +617,6 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Mode catalog entries loaded: {ModeCatalogEntriesLoaded}");
         builder.AppendLine($"- Planner modes discovered: {PlannerModesDiscovered}");
         builder.AppendLine($"- Planner mode payloads added: {PlannerModePayloadsAdded}");
-        builder.AppendLine($"- SpecialCase compatibility bridges used: {SpecialCaseCompatibilityBridges}");
         builder.AppendLine($"- kEngaged snipe aliases: {SnipeEngagedAliases}");
         builder.AppendLine($"- GCM tags read: {GcmTagsRead}");
         builder.AppendLine($"- GCM tags already known: {GcmTagsAlreadyKnown}");
@@ -789,7 +787,6 @@ public sealed class OmniApplyResult
         AppendSection(builder, "Synthetic Planner Inherents", SyntheticPlannerInherentDetails);
         AppendSection(builder, "Planner Modes Discovered", PlannerModeDetails);
         AppendSection(builder, "Planner Mode Payloads Added", PlannerModePayloadDetails);
-        AppendSection(builder, "SpecialCase Compatibility Bridges", SpecialCaseCompatibilityBridgeDetails);
         AppendSection(builder, "kEngaged Snipe Aliases", SnipeEngagedAliasDetails);
         AppendSection(builder, "GCM Tags Added", GcmTagsAddedDetails);
         AppendSection(builder, "GCM Tags Already Known", GcmTagsAlreadyKnownDetails);

@@ -349,16 +349,10 @@ namespace Mids_Reborn.Core
                 ? ""
                 : BuildTooltipForEffectIndex(shortFxEnh.Index[0], pBase, pEnh);
 
-            if (fx.ActiveConditionals.Count > 0)
+            if (fx.HasConditions)
             {
                 return Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1,
-                    fx.ActiveConditionals.Count > 0, tip);
-            }
-
-            if (fx.SpecialCase != Enums.eSpecialCase.None)
-            {
-                return Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1,
-                    fx.SpecialCase != Enums.eSpecialCase.None, tip);
+                    fx.HasConditions, tip);
             }
 
             return Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, false, tip);

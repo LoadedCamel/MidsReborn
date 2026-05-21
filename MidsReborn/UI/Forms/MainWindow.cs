@@ -202,6 +202,7 @@ namespace Mids_Reborn.UI.Forms
         {
             FormBorderStyle = FormBorderStyle.None;
             InitializeComponent();
+            ConfigurePowerListHeadings();
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
             UpdateStyles();
 
@@ -256,6 +257,17 @@ namespace Mids_Reborn.UI.Forms
             PetView.SliderUpdated += OnPetViewSliderUpdated;
             EnsurePetActorMenuItem();
             InitializeCombatContextEntryPoints();
+        }
+
+        private void ConfigurePowerListHeadings()
+        {
+            foreach (var list in new[]
+                     {
+                         primaryList, secondaryList, pool0List, pool1List, pool2List, pool3List, ancillaryList
+                     })
+            {
+                list.DecorateHeadings = false;
+            }
         }
 
         private void OnResizeEnd(object? sender, EventArgs e)
@@ -1111,7 +1123,7 @@ namespace Mids_Reborn.UI.Forms
             var i9Slot = new I9Slot
             {
                 Enh = e,
-                IOLevel = I9Picker.CheckAndReturnIoLevel() - 1,
+                IOLevel = I9Picker.CheckAndReturnIoLevel(e) - 1,
                 Grade = I9Picker.View.GradeId,
                 RelativeLevel = I9Picker.View.RelLevel
             };
@@ -4486,65 +4498,65 @@ namespace Mids_Reborn.UI.Forms
             if (powerset is null) return result;
 
             bool pairedBold = MidsContext.Config?.RtFont.PairedBold ?? false;
-            string message = string.Empty;
+            var sections = CompositePowersetRules.GetDisplaySections(powerset);
+            var showHeadings = sections.Length > 1;
 
-            var toon = MainModule.MidsController.Toon;
-
-            if (powerset.nIDTrunkSet > -1)
+            foreach (var section in sections)
             {
-                var db = DatabaseAPI.Database;
-
-                var trunkSet = db.Powersets[powerset.nIDTrunkSet];
-
-                if (trunkSet != null)
-                {
-                    result.Add(new PowerListViewItem(trunkSet) { Bold = pairedBold });
-
-                    var trunkPowers = trunkSet.Powers ?? [];
-                    // If the trunk set has powers, add them first
-                    for (var i = 0; i < trunkPowers.Length; i++)
-                    {
-                        var power = trunkPowers[i];
-                        if (power is null) continue;
-                        if (power.HiddenPower) continue;
-                        if (power.Level <= 0) continue;
-
-                        var state = toon?.PowerState(power.PowerIndex, ref message) ?? MidsItemState.Enabled;
-
-                        var item = new PowerListViewItem(power.DisplayName, state, nidSet: trunkSet.nIDTrunkSet, idxPower: i, nidPower: power.PowerIndex, tag: power, style: MidsItemFontStyles.Bold)
-                        {
-                            Bold = pairedBold,
-                            Italic = state == MidsItemState.Invalid
-                        };
-
-                        result.Add(item);
-                    }
-
-                    result.Add(new PowerListViewItem(displayName: powerset.DisplayName, state: MidsItemState.Heading, nidSet: powerset.nID, idxPower: -1, nidPower: -1, tag: powerset, style: MidsItemFontStyles.Bold, alignment: MidsItemAlign.Center) { Bold = pairedBold });
-                }
+                AddPowersetSectionItems(result, section, pairedBold, showHeadings);
             }
 
-            var powers = powerset.Powers ?? [];
+            return result;
+        }
+
+        private void AddPowersetSectionItems(
+            List<PowerListViewItem> items,
+            IPowerset sectionPowerset,
+            bool pairedBold,
+            bool showHeading)
+        {
+            if (showHeading)
+            {
+                items.Add(new PowerListViewItem(
+                    displayName: CompositePowersetRules.FormatDisplaySectionHeading(sectionPowerset.DisplayName),
+                    state: MidsItemState.Heading,
+                    nidSet: sectionPowerset.nID,
+                    idxPower: -1,
+                    nidPower: -1,
+                    tag: sectionPowerset,
+                    style: MidsItemFontStyles.Bold,
+                    alignment: MidsItemAlign.Center)
+                {
+                    Bold = pairedBold
+                });
+            }
+
+            var toon = MainModule.MidsController.Toon;
+            var powers = sectionPowerset.Powers ?? [];
+
             for (var i = 0; i < powers.Length; i++)
             {
                 var power = powers[i];
                 if (power is null) continue;
                 if (power.HiddenPower) continue;
-                if (power.Level <= 0 || !power.AllowedForClass(MidsContext.Character.Archetype.Idx)) continue;
+                if (power.Level <= 0) continue;
+                if (!power.AllowedForClass(MidsContext.Character.Archetype.Idx)) continue;
 
-                toon = MainModule.MidsController.Toon;
+                var message = string.Empty;
                 var state = toon?.PowerState(power.PowerIndex, ref message) ?? MidsItemState.Enabled;
-
-                var item = new PowerListViewItem(power.DisplayName, state, nidSet: powerset.nID, idxPower: i, nidPower: power.PowerIndex, tag: power, style: MidsItemFontStyles.Bold)
+                items.Add(new PowerListViewItem(
+                    power.DisplayName,
+                    state,
+                    nidSet: sectionPowerset.nID,
+                    idxPower: i,
+                    nidPower: power.PowerIndex,
+                    tag: power,
+                    style: MidsItemFontStyles.Bold)
                 {
                     Bold = pairedBold,
                     Italic = state == MidsItemState.Invalid
-                };
-
-                result.Add(item);
+                });
             }
-
-            return result;
         }
 
         private void RefreshItemStates(MidsListView list)

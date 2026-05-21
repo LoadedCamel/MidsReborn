@@ -444,7 +444,6 @@
     <Compile Remove="UI\Forms\frmUpdate.cs" />
     <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.cs" />
     <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.Designer.cs" />
-    <Compile Remove="MidsReborn.Tests\**\*.cs" />
     <Compile Remove="GlobalSuppressions.cs" />
     <Content Remove="Assets\unlocked.png" />
     <EmbeddedResource Remove="frmImport_Powerset.resx" />

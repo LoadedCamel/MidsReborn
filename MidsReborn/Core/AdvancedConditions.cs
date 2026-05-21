@@ -77,114 +77,6 @@ public sealed class AdvancedConditionSet
         };
     }
 
-    public static AdvancedConditionSet FromLegacyActiveConditionals(List<KeyValue<string, string>>? conditionals)
-    {
-        var set = new AdvancedConditionSet();
-        if (conditionals is not { Count: > 0 })
-        {
-            return set;
-        }
-
-        foreach (var conditional in conditionals)
-        {
-            var key = conditional.Key ?? string.Empty;
-            var link = key.StartsWith("OR ", StringComparison.OrdinalIgnoreCase)
-                ? AdvancedConditionLink.Or
-                : AdvancedConditionLink.And;
-
-            key = key.Replace("AND ", "", StringComparison.OrdinalIgnoreCase)
-                .Replace("OR ", "", StringComparison.OrdinalIgnoreCase);
-
-            var splitAt = key.IndexOf(':');
-            if (splitAt < 0)
-            {
-                set.Rows.Add(AdvancedConditionRow.AdvancedExpression(link, key, unsupported: true));
-                continue;
-            }
-
-            var conditionType = key[..splitAt];
-            var subject = key[(splitAt + 1)..];
-            var valueParts = (conditional.Value ?? string.Empty).Split(' ', StringSplitOptions.RemoveEmptyEntries);
-            var row = conditionType switch
-            {
-                "Active" => new AdvancedConditionRow
-                {
-                    Link = link,
-                    Kind = AdvancedConditionKind.PowerActive,
-                    Subject = subject,
-                    Value = conditional.Value,
-                    Operator = AdvancedConditionOperator.Equals
-                },
-                "Taken" => new AdvancedConditionRow
-                {
-                    Link = link,
-                    Kind = AdvancedConditionKind.PowerTaken,
-                    Subject = subject,
-                    Value = conditional.Value,
-                    Operator = AdvancedConditionOperator.Equals
-                },
-                "Stacks" => new AdvancedConditionRow
-                {
-                    Link = link,
-                    Kind = AdvancedConditionKind.PowerStacks,
-                    Subject = subject,
-                    Value = valueParts.Length > 1 ? valueParts[1] : "0",
-                    Operator = ParseOperator(valueParts.Length > 0 ? valueParts[0] : "=")
-                },
-                "Team" => new AdvancedConditionRow
-                {
-                    Link = link,
-                    Kind = AdvancedConditionKind.TeamMembers,
-                    Subject = subject,
-                    Value = valueParts.Length > 1 ? valueParts[1] : "0",
-                    Operator = ParseOperator(valueParts.Length > 0 ? valueParts[0] : "=")
-                },
-                "Config" => new AdvancedConditionRow
-                {
-                    Link = link,
-                    Kind = AdvancedConditionKind.CombatSetting,
-                    Subject = subject,
-                    Value = valueParts.Length > 1 ? valueParts[1] : conditional.Value,
-                    Operator = ParseOperator(valueParts.Length > 0 ? valueParts[0] : "=")
-                },
-                _ => AdvancedConditionRow.AdvancedExpression(link, $"{conditionType}:{subject} {conditional.Value}", unsupported: true)
-            };
-
-            set.Rows.Add(row);
-        }
-
-        return set;
-    }
-
-    public List<KeyValue<string, string>> ToLegacyActiveConditionals()
-    {
-        var conditionals = new List<KeyValue<string, string>>();
-        foreach (var row in Rows)
-        {
-            var prefix = conditionals.Count > 0 && row.Link == AdvancedConditionLink.Or ? "OR " : string.Empty;
-            switch (row.Kind)
-            {
-                case AdvancedConditionKind.PowerActive:
-                    conditionals.Add(new KeyValue<string, string>($"{prefix}Active:{row.Subject}", row.Value));
-                    break;
-                case AdvancedConditionKind.PowerTaken:
-                    conditionals.Add(new KeyValue<string, string>($"{prefix}Taken:{row.Subject}", row.Value));
-                    break;
-                case AdvancedConditionKind.PowerStacks:
-                    conditionals.Add(new KeyValue<string, string>($"{prefix}Stacks:{row.Subject}", $"{FormatOperator(row.Operator)} {row.Value}"));
-                    break;
-                case AdvancedConditionKind.TeamMembers:
-                    conditionals.Add(new KeyValue<string, string>($"{prefix}Team:{row.Subject}", $"{FormatOperator(row.Operator)} {row.Value}"));
-                    break;
-                case AdvancedConditionKind.CombatSetting:
-                    conditionals.Add(new KeyValue<string, string>($"{prefix}Config:{row.Subject}", $"{FormatOperator(row.Operator)} {row.Value}"));
-                    break;
-            }
-        }
-
-        return conditionals;
-    }
-
     public static AdvancedConditionSet FromLegacyRequirement(Requirement? requirement)
     {
         var set = new AdvancedConditionSet();
@@ -676,11 +568,7 @@ public static class AdvancedConditionEvaluator
 
     public static bool Evaluate(IEffect effect)
     {
-        var set = effect.AdvancedConditions is { Rows.Count: > 0 }
-            ? effect.AdvancedConditions
-            : AdvancedConditionSet.FromLegacyActiveConditionals(effect.ActiveConditionals);
-
-        return Evaluate(effect, set);
+        return Evaluate(effect, effect.AdvancedConditions);
     }
 
     public static bool Evaluate(IEffect effect, AdvancedConditionSet? set)
@@ -806,16 +694,7 @@ public static class AdvancedConditionEvaluator
 
     public static void UpdateLegacyValidationFlags(IEffect effect)
     {
-        if (effect.ActiveConditionals is not { Count: > 0 })
-        {
-            return;
-        }
-
-        var set = AdvancedConditionSet.FromLegacyActiveConditionals(effect.ActiveConditionals);
-        for (var i = 0; i < effect.ActiveConditionals.Count && i < set.Rows.Count; i++)
-        {
-            effect.ActiveConditionals[i].Validated = EvaluateRow(effect, set.Rows[i]);
-        }
+        _ = effect;
     }
 
     private static bool EvaluatePowerActive(AdvancedConditionRow row)
@@ -845,8 +724,7 @@ public static class AdvancedConditionEvaluator
             return plannerActive;
         }
 
-        var power = DatabaseAPI.GetPowerByFullName(powerName);
-        return power != null && MidsContext.Character?.CurrentBuild?.PowerUsed(power) == true;
+        return BuildOwnsPower(MidsContext.Character?.CurrentBuild, powerName);
     }
 
     private static bool EvaluatePowerRequirementClassRow(AdvancedConditionRow row)
@@ -965,8 +843,7 @@ public static class AdvancedConditionEvaluator
             return plannerActive;
         }
 
-        var power = DatabaseAPI.GetPowerByFullName(powerName);
-        return power != null && build?.PowerUsed(power) == true;
+        return BuildOwnsPower(build, powerName);
     }
 
     private static bool EvaluatePowerStacks(AdvancedConditionRow row, Build? build, PlannerBuildStateSnapshot snapshot)
@@ -1014,13 +891,7 @@ public static class AdvancedConditionEvaluator
             return false;
         }
 
-        var count = build.Powers.Count(powerEntry =>
-        {
-            var fullName = powerEntry?.Power?.FullName;
-            return !string.IsNullOrWhiteSpace(fullName) &&
-                   (fullName.Equals(prefix, StringComparison.OrdinalIgnoreCase) ||
-                    fullName.StartsWith(prefix + ".", StringComparison.OrdinalIgnoreCase));
-        });
+        var count = CountOwnedPowers(build, prefix);
 
         return CompareNumber(count, row.Operator, ParseNumber(row.Value));
     }
@@ -1082,15 +953,19 @@ public static class AdvancedConditionEvaluator
             return false;
         }
 
-        var count = build.Powers.Count(powerEntry =>
-        {
-            var fullName = powerEntry?.Power?.FullName;
-            return !string.IsNullOrWhiteSpace(fullName) &&
-                   (fullName.Equals(prefix, StringComparison.OrdinalIgnoreCase) ||
-                    fullName.StartsWith(prefix + ".", StringComparison.OrdinalIgnoreCase));
-        });
+        var count = CountOwnedPowers(build, prefix);
 
         return CompareNumber(count, row.Operator, ParseNumber(row.Value));
+    }
+
+    private static bool BuildOwnsPower(Build? build, string? powerName)
+    {
+        return build?.OwnsPowerByFullName(powerName) == true;
+    }
+
+    private static int CountOwnedPowers(Build? build, string? powerNamePrefix)
+    {
+        return build?.CountOwnedPowersByFullNamePrefix(powerNamePrefix) ?? 0;
     }
 
     private static bool EvaluateCombatSetting(AdvancedConditionRow row)

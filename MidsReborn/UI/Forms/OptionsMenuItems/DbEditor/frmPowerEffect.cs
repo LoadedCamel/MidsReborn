@@ -139,13 +139,12 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void btnEditConditions_Click(object sender, EventArgs e)
         {
-            var editConditions = new frmEffectConditionals(MyFx.ActiveConditionals);
-            editConditions.AdvancedConditions = MyFx.AdvancedConditions?.Clone() ?? AdvancedConditionSet.FromLegacyActiveConditionals(MyFx.ActiveConditionals);
+            var editConditions = new frmEffectConditionals(MyFx.AdvancedConditions);
             var result = editConditions.ShowDialog(this);
             if (result == DialogResult.OK)
             {
-                MyFx.ActiveConditionals = editConditions.Conditionals;
                 MyFx.AdvancedConditions = editConditions.AdvancedConditions.Clone();
+                MyFx.NormalizeConditionState();
             }
             editConditions.Dispose();
             UpdateFxText();
@@ -299,28 +298,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void cbFXSpecialCase_SelectedIndexChanged(object sender, EventArgs e)
         {
-            if (_loading)
-            {
-                return;
-            }
-
-            if (MyFx.AdvancedConditions is { Rows.Count: > 0 } || MyFx.ActiveConditionals.Count > 0)
-            {
-                MessageBox.Show(@"You cannot use Special Cases when using Conditionals.", @"Error", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                MyFx.SpecialCase = Enums.eSpecialCase.None;
-            }
-            else switch (cbFXSpecialCase.SelectedIndex)
-            {
-                case > 0 when MyFx.AdvancedConditions is not { Rows.Count: > 0 } && MyFx.ActiveConditionals.Count == 0:
-                    MyFx.SpecialCase = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
-                    btnEditConditions.Enabled = false;
-                    break;
-                case 0 when MyFx.AdvancedConditions is not { Rows.Count: > 0 } && MyFx.ActiveConditionals.Count == 0:
-                    MyFx.SpecialCase = (Enums.eSpecialCase)cbFXSpecialCase.SelectedIndex;
-                    btnEditConditions.Enabled = true;
-                    break;
-            }
-
+            cbFXSpecialCase.SelectedIndex = 0;
             UpdateFxText();
         }
 
@@ -370,21 +348,11 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             chkRqToHitCheck.Checked = MyFx.RequiresToHitCheck;
             chkGrantBoosted.Checked = MyFx.GrantBoosted;
             IgnoreED.Checked = MyFx.IgnoreED;
-            cbFXSpecialCase.SelectedIndex = (int)MyFx.SpecialCase;
-            if (MyFx.SpecialCase != Enums.eSpecialCase.None)
-            {
-                btnEditConditions.Enabled = false;
-                if (MyFx.ActiveConditionals.Any())
-                {
-                    MyFx.ActiveConditionals.Clear();
-                }
-
-                MyFx.AdvancedConditions.Rows.Clear();
-            }
-            else
-            {
-                btnEditConditions.Enabled = true;
-            }
+            cbFXSpecialCase.SelectedIndex = 0;
+            cbFXSpecialCase.Enabled = false;
+            cbFXSpecialCase.Visible = false;
+            Label30.Visible = false;
+            btnEditConditions.Enabled = true;
 
             cbFXClass.SelectedIndex = (int)MyFx.EffectClass;
             chkVariable.Checked = MyFx.VariableModifiedOverride;
@@ -444,8 +412,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             cbFXClass.DataSource = Enum.GetValues(typeof(Enums.eEffectClass));
             //cbFXClass.Items.AddRange(Enum.GetNames(MyFx.EffectClass.GetType()));
-            cbFXSpecialCase.DataSource = Enum.GetValues(typeof(Enums.eSpecialCase));
-            //cbFXSpecialCase.Items.AddRange(Enum.GetNames(MyFx.SpecialCase.GetType()));
+            cbFXSpecialCase.Items.Add("Disabled");
+            cbFXSpecialCase.SelectedIndex = 0;
 
             cbPercentageOverride.Items.Add("Auto");
             cbPercentageOverride.Items.Add("Yes");

@@ -14,8 +14,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 {
     public class Character
     {
+        private const string FastSnipePlannerPowerFullName = "Inherent.Inherent.Fast_Snipe";
+        private const string ExperiencedMarksmanBonusPowerFullName = "Set_Bonus.Global_Bonus.Experienced_Marksman";
         private Archetype? _archetype;
         private bool? _completeCache;
+        private bool _experiencedMarksmanForcedFastSnipe;
         public event EventHandler<Enums.Alignment>? AlignmentChanged;
 
         internal Character()
@@ -299,13 +302,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public void Lock()
         {
             var powersPlaced = CurrentBuild.PowersPlaced;
-            var ps1 = Powersets[1] == null || Powersets[1].nID < 0
-                ? DatabaseAPI.Database.Powersets
-                    .First(ps =>
-                        ps.ATClass == MidsContext.Character.Archetype.ClassName &
-                        ps.SetType == Enums.ePowerSetType.Secondary)
-                : Powersets[1];
-            if ((powersPlaced == 1) & CurrentBuild.PowerUsed(ps1.Powers[0]))
+            var requiredSecondaryStarterPower = GetRequiredSecondaryStarterPower();
+            if ((powersPlaced == 1) && (requiredSecondaryStarterPower != null) &&
+                CurrentBuild.PowerUsed(requiredSecondaryStarterPower))
             {
                 Locked = false;
                 ResetLevel();
@@ -511,6 +510,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             PEnhancementsList = new List<string>();
             _activePlannerModes.Clear();
             _plannerStateStacks.Clear();
+            _experiencedMarksmanForcedFastSnipe = false;
         }
 
         public void ClearInvalidInherentSlots()
@@ -570,6 +570,49 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
         }
 
+        internal bool IsPlannerToggleLocked(IPower? power)
+        {
+            return power != null &&
+                   power.FullName.Equals(FastSnipePlannerPowerFullName, StringComparison.OrdinalIgnoreCase) &&
+                   HasForcedFastSnipe();
+        }
+
+        private bool HasForcedFastSnipe()
+        {
+            return CurrentBuild?.OwnsPowerByFullName(ExperiencedMarksmanBonusPowerFullName) == true;
+        }
+
+        private void ApplyForcedPlannerStateToggles()
+        {
+            if (CurrentBuild?.Powers == null)
+            {
+                return;
+            }
+
+            var fastSnipeEntry = CurrentBuild.Powers.FirstOrDefault(powerEntry =>
+                powerEntry?.Power != null &&
+                powerEntry.Power.FullName.Equals(FastSnipePlannerPowerFullName, StringComparison.OrdinalIgnoreCase));
+            if (fastSnipeEntry?.Power == null)
+            {
+                _experiencedMarksmanForcedFastSnipe = false;
+                return;
+            }
+
+            var hasForcedFastSnipe = HasForcedFastSnipe();
+            if (hasForcedFastSnipe)
+            {
+                fastSnipeEntry.StatInclude = true;
+                fastSnipeEntry.Power.Active = true;
+            }
+            else if (_experiencedMarksmanForcedFastSnipe)
+            {
+                fastSnipeEntry.StatInclude = false;
+                fastSnipeEntry.Power.Active = false;
+            }
+
+            _experiencedMarksmanForcedFastSnipe = hasForcedFastSnipe;
+        }
+
 
         /// <summary>
         /// Call this function when a power is enabled/disabled, added, or removed, including when the archetype is changed.
@@ -617,32 +660,23 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             PEnhancementsList = new List<string>();
             if (CurrentBuild?.Powers == null) return;
 
+            ApplyForcedPlannerStateToggles();
+
             foreach (var power in CurrentBuild.Powers)
             {
-                if (power?.Power == null) continue;
-                var powName = power.Power.PowerName;
-                if (power.HasProc())
+                if (power?.Power == null)
                 {
-                    power.Power.HasProcSlotted = true;
-                }
-                else if (!power.HasProc())
-                {
-                    power.Power.HasProcSlotted = false;
+                    continue;
                 }
 
-                switch (powName)
+                power.Power.HasProcSlotted = power.HasProc();
+                if (power.Chosen || !power.Chosen && CurrentBuild.PowerUsed(power.Power))
                 {
-                    default:
-                        if (power.Chosen || !power.Chosen && CurrentBuild.PowerUsed(power.Power))
-                        {
-                            power.Power.Taken = true;
-                        }
-
-                        power.Power.Active = power.StatInclude &&
-                                            CurrentBuild.MeetsRequirement(power.Power, CurrentBuild.GetMaxLevel());
-
-                        break;
+                    power.Power.Taken = true;
                 }
+
+                power.Power.Active = power.StatInclude &&
+                                    CurrentBuild.MeetsRequirement(power.Power, CurrentBuild.GetMaxLevel());
 
                 for (var slotIndex = 0; slotIndex < power.SlotCount; slotIndex++)
                 {
@@ -686,67 +720,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 {
                     ApplyPlannerMode(plannerMode, true);
                 }
-
-                /*switch (power.Power.PowerName.ToUpper())
-                {
-                    case "TIME_CRAWL":
-                        DelayedActive = true;
-                        break;
-                    case "TARGETING_DRONE":
-                        TargetDroneActive = true;
-                        break;
-                    case "TEMPORAL_SELECTION":
-                        AcceleratedActive = true;
-                        break;
-                    case "DISINTEGRATE":
-                        DisintegrateActive = true;
-                        break;
-                    case "SUPREMACY":
-                        Supremacy = true;
-                        break;
-                    case "TRAIN_BEASTS":
-                        PetTier2 = true;
-                        break;
-                    case "TAME_BEASTS":
-                        PetTier3 = true;
-                        break;
-                    case "ENCHANT_DEMON":
-                        PetTier2 = true;
-                        break;
-                    case "ABYSSAL_EMPOWERMENT":
-                        PetTier3 = true;
-                        break;
-                    case "EQUIP_MERCENARY":
-                        PetTier2 = true;
-                        break;
-                    case "TACTICAL_UPGRADE":
-                        PetTier3 = true;
-                        break;
-                    case "ENCHANT_UNDEAD":
-                        PetTier2 = true;
-                        break;
-                    case "DARK_EMPOWERMENT":
-                        PetTier3 = true;
-                        break;
-                    case "TRAIN_NINJAS":
-                        PetTier2 = true;
-                        break;
-                    case "KUJI_IN_ZEN":
-                        PetTier3 = true;
-                        break;
-                    case "EQUIP_ROBOT":
-                        PetTier2 = true;
-                        break;
-                    case "UPGRADE_ROBOT":
-                        PetTier3 = true;
-                        break;
-                    case "EQUIP_THUGS":
-                        PetTier2 = true;
-                        break;
-                    case "UPGRADE_EQUIPMENT":
-                        PetTier3 = true;
-                        break;
-                }*/
             }
 
             var impliedPlannerModes = CurrentBuild.Powers
@@ -793,30 +766,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     .ThenBy(x => x.Power.DisplayName, StringComparer.OrdinalIgnoreCase));
             }
 
-            if (CurrentBuild == null) return;
+            if (CurrentBuild == null)
             {
-                foreach (var power in CurrentBuild.Powers.Where(power => power?.Power != null))
-                {
-                    /*switch (power.Power.PowerName.ToUpper())
-                    {
-                        case "BOXING":
-                            BoxingBuff = true;
-                            NotBoxingBuff = false;
-                            break;
-                        case "KICK":
-                            KickBuff = true;
-                            NotKickBuff = false;
-                            break;
-                        case "CROSS_PUNCH":
-                            CrossPunchBuff = true;
-                            NotCrossPunchBuff = false;
-                            break;
-                    }*/
+                return;
+            }
 
-                    if (CurrentBuild != null && (power.Chosen || !CurrentBuild.PowerUsed(power.Power))) continue;
-                    var displayItem = InherentDisplayList.FirstOrDefault(x => x.Power.FullName == power.Power.FullName);
-                    power.Power.DisplayLocation = InherentDisplayList.IndexOf(displayItem);
+            foreach (var power in CurrentBuild.Powers.Where(power => power?.Power != null))
+            {
+                if (power.Chosen || !CurrentBuild.PowerUsed(power.Power))
+                {
+                    continue;
                 }
+
+                var displayItem = InherentDisplayList.FirstOrDefault(x => x.Power.FullName == power.Power.FullName);
+                power.Power.DisplayLocation = InherentDisplayList.IndexOf(displayItem);
             }
         }
 
@@ -878,6 +841,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             CheckAncillaryPowerSet();
             CurrentBuild?.Validate();
+            CurrentBuild?.GenerateSetBonusData();
             RefreshActiveSpecial();
         }
 
@@ -1569,7 +1533,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         private static bool ShouldKeepEffectVectorInline(string value)
         {
-            return value.Contains("DamageBuff (", StringComparison.Ordinal);
+            return value.Contains("DamageBuff (", StringComparison.Ordinal) ||
+                   value.Contains("Damage Buff (", StringComparison.Ordinal) ||
+                   value.Contains("Damage (", StringComparison.Ordinal);
         }
 
         private static bool ShouldSplitByBracket(string value)
@@ -1614,28 +1580,28 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var usedPieceCount = DatabaseAPI.CountDistinctVisibleSetPieces(sIdx, usedEnhancements);
             for (var index = 0; index < enhancementSet.Bonus.Length; index++)
             {
-                var effectString = enhancementSet.GetEffectString(index, false, true, true, true);
-                if (string.IsNullOrEmpty(effectString))
+                var pvMode = enhancementSet.GetEffectiveBonusPvMode(index, false);
+                var effectStrings = enhancementSet.GetPopupEffectStrings(index, false, true);
+                if (effectStrings.Count == 0)
                 {
                     continue;
                 }
 
-                if (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP)
-                {
-                    effectString += " [PvP]";
-                }
+                var popupColor = usedPieceCount >= enhancementSet.Bonus[index].Slotted & enhancementSet.BonusAppliesInContext(index, false, MidsContext.Config.Inc.DisablePvE)
+                    ? PopUp.Colors.Effect
+                    : power == null
+                        ? PopUp.Colors.Effect
+                        : PopUp.Colors.Disabled;
 
-                if (usedPieceCount >= enhancementSet.Bonus[index].Slotted & (enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE | enhancementSet.Bonus[index].PvMode == Enums.ePvX.Any))
+                foreach (var effectStringRaw in effectStrings)
                 {
-                    section1.Add($"({enhancementSet.Bonus[index].Slotted}) {effectString}", PopUp.Colors.Effect, 0.9f);
-                }
-                else if (power == null)
-                {
-                    section1.Add($"({enhancementSet.Bonus[index].Slotted}) {effectString}", PopUp.Colors.Effect, 0.9f);
-                }
-                else
-                {
-                    section1.Add($"({enhancementSet.Bonus[index].Slotted}) {effectString}", PopUp.Colors.Disabled, 0.9f);
+                    var effectString = effectStringRaw;
+                    if (pvMode == Enums.ePvX.PvP)
+                    {
+                        effectString += " (PVP)";
+                    }
+
+                    section1.Add($"({enhancementSet.Bonus[index].Slotted}) {effectString}", popupColor, 0.9f);
                 }
             }
 
@@ -1669,25 +1635,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     if (specialPowers[0].FullName.Contains("Skin") || specialPowers[0].FullName.Contains("Aegis")) checkStatus = true;
                 }
 
-                var effectString = enhancementSet.GetEffectString(rawMemberPosition, true, true, true, true, checkStatus);
-                if (string.IsNullOrEmpty(effectString))
+                var effectStrings = enhancementSet.GetPopupEffectStrings(rawMemberPosition, true, true, checkStatus);
+                if (effectStrings.Count == 0)
                 {
                     continue;
                 }
 
                 var flag = power != null && usedPieceIndexes.Contains(pieceIndex);
 
-                if (flag)
+                var popupColor = flag || power == null ? PopUp.Colors.Effect : PopUp.Colors.Disabled;
+                foreach (var effectString in effectStrings)
                 {
-                    section1.Add($"(Enh) {effectString}", PopUp.Colors.Effect, 0.9f);
-                }
-                else if (power == null)
-                {
-                    section1.Add($"(Enh) {effectString}", PopUp.Colors.Effect, 0.9f);
-                }
-                else
-                {
-                    section1.Add($"(Enh) {effectString}", PopUp.Colors.Disabled, 0.9f);
+                    section1.Add($"(Enh) {effectString}", popupColor, 0.9f);
                 }
             }
 
@@ -2018,7 +1977,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 return false;
             }
 
-            if (!((power.NIDPowerset == Powersets[1].nID) & (power.IDXPower == 0) & !allowSecondary))
+            if (!(IsRequiredSecondaryStarterPower(power.NIDPower) & !allowSecondary))
             {
                 return power.NIDPowerset >= 0;
             }
@@ -2031,6 +1990,37 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             message = "The first power from your secondary set is non-optional and can't be removed.";
 
             return false;
+        }
+
+        protected IPowerset? ResolveSelectedSecondaryPowersetOrDefault()
+        {
+            if (Powersets[1] != null && Powersets[1].nID >= 0)
+            {
+                return Powersets[1];
+            }
+
+            var availableSecondaries = DatabaseAPI.GetPowersetIndexes(Archetype, Enums.ePowerSetType.Secondary);
+            return availableSecondaries.FirstOrDefault(powerset => powerset != null);
+        }
+
+        protected IPower? GetRequiredSecondaryStarterPower(IPowerset? secondaryPowerset = null)
+        {
+            secondaryPowerset ??= ResolveSelectedSecondaryPowersetOrDefault();
+            if (secondaryPowerset == null || secondaryPowerset.nID < 0)
+            {
+                return null;
+            }
+
+            var starterPowerIds = DatabaseAPI.NidPowersAtLevelBranch(0, secondaryPowerset.nID);
+            return starterPowerIds.Length == 0
+                ? null
+                : DatabaseAPI.Database.Power[starterPowerIds[0]];
+        }
+
+        protected bool IsRequiredSecondaryStarterPower(int nIdPower, IPowerset? secondaryPowerset = null)
+        {
+            return nIdPower >= 0 &&
+                   GetRequiredSecondaryStarterPower(secondaryPowerset)?.PowerIndex == nIdPower;
         }
 
         public void SwitchSets(IPowerset? newPowerset, IPowerset? oldPowerset)

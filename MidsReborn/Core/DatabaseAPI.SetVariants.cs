@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Omni;
 using Newtonsoft.Json.Linq;
 
@@ -430,7 +431,8 @@ namespace Mids_Reborn.Core
             var enhancement = Database.Enhancements[enhancementId];
             var isSuperior = enhancement.Superior ||
                              (enhancement.UID?.StartsWith("Superior_", StringComparison.OrdinalIgnoreCase) ?? false);
-            var isAttuned = enhancement.GetPower()?.BoostUsePlayerLevel == true ||
+            var isAttuned = (enhancement.GetPower() as Power)?.UsesPlayerLevelForBoostMath == true ||
+                            enhancement.GetPower()?.BoostUsePlayerLevel == true ||
                             (enhancement.UID?.StartsWith("Attuned_", StringComparison.OrdinalIgnoreCase) ?? false) ||
                             (enhancement.UID?.StartsWith("Superior_Attuned_", StringComparison.OrdinalIgnoreCase) ?? false);
 

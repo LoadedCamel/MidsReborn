@@ -391,7 +391,6 @@ public static class PetActorPowerResolver
         foreach (var effect in power.Effects.Where(effect => effect.EffectType == Enums.eEffectType.GrantPower))
         {
             var targetEntityUid = TryParseTargetEntityUid(effect.AdvancedConditions?.Rows.Select(row => row.RawExpression).FirstOrDefault(value => !string.IsNullOrWhiteSpace(value))
-                                                         ?? effect.ActiveConditionals.FirstOrDefault().Key
                                                          ?? string.Empty);
             if (string.IsNullOrWhiteSpace(targetEntityUid) || string.IsNullOrWhiteSpace(effect.Summon))
             {

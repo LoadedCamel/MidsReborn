@@ -38,6 +38,6 @@ public class PowerListViewItem : MidsListViewItem
         if (powerSet is null) throw new ArgumentNullException(nameof(powerSet));
         IdxPower = idxPower;
         NIdPower = nIdPower;
-        NIdSet = powerSet.nIDTrunkSet;
+        NIdSet = powerSet.nID;
     }
 }

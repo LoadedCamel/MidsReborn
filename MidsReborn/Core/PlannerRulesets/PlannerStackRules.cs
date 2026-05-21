@@ -273,6 +273,50 @@ internal static class PlannerStackRules
         return string.Join(", ", values);
     }
 
+    public static string GetDisplayDescription(IEffect effect)
+    {
+        var policy = GetImportedPolicy(effect);
+        if (!policy.HasImportedMetadata)
+        {
+            return effect.Stacking == Enums.eStacking.No
+                ? "Effect does not stack from same caster"
+                : string.Empty;
+        }
+
+        if (policy.Mode == ImportedStackMode.Maximize)
+        {
+            return policy.CasterMode == ImportedCasterStackMode.Collective
+                ? "Only the strongest copy applies across all casters"
+                : "Only the strongest copy applies";
+        }
+
+        if (policy.Mode == ImportedStackMode.Suppress)
+        {
+            return policy.CasterMode == ImportedCasterStackMode.Collective
+                ? "Only the highest-priority copy applies across all casters"
+                : "Only the highest-priority copy applies";
+        }
+
+        if (IsSingleContributionForPlannerMath(effect))
+        {
+            return policy.CasterMode == ImportedCasterStackMode.Collective
+                ? "Effect does not stack across casters"
+                : "Effect does not stack from same caster";
+        }
+
+        if (policy.Mode is ImportedStackMode.StackThenIgnore or ImportedStackMode.RefreshToCount)
+        {
+            var limit = policy.StackLimit > 0 ? policy.StackLimit : 1;
+            var scope = policy.CasterMode == ImportedCasterStackMode.Collective
+                ? "across all casters"
+                : "from the same caster";
+            var copyText = limit == 1 ? "1 copy" : $"{limit} copies";
+            return $"Effect stacks up to {copyText} {scope}";
+        }
+
+        return string.Empty;
+    }
+
     public static string GetDiagnosticPolicyKey(IEffect effect)
     {
         var policy = GetImportedPolicy(effect);

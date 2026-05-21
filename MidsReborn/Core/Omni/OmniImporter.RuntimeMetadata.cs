@@ -108,6 +108,7 @@ public sealed partial class OmniImporter
         midsPower.OmniStackingLifetime = source.StackingLifetime;
         midsPower.OmniLifetimeMetadata = ImportedPowerPolicyDiagnostics.BuildLifetimeMetadata(source);
         midsPower.OmniBoostPolicy = ImportedPowerPolicyDiagnostics.BuildBoostPolicyMetadata(source);
+        midsPower.ApplyImportedBoostPolicyFlags();
         if (source.ActivationEffects == null || source.ActivationEffects.Count == 0)
         {
             midsPower.ActivationEffectsRuntime = [];
@@ -120,7 +121,7 @@ public sealed partial class OmniImporter
         foreach (var effect in activationEffects)
         {
             effect.PowerFullName = midsPower.FullName;
-            effect.ActiveConditionals = effect.AdvancedConditions.ToLegacyActiveConditionals();
+            effect.NormalizeConditionState();
             effect.SetPower(midsPower);
         }
 

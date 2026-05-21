@@ -610,7 +610,6 @@ public sealed class OmniImportReport
         builder.AppendLine($"- Mode catalog entries loaded: {ModeCatalogEntriesLoaded}");
         builder.AppendLine($"- Planner modes discovered: {WithSample(PlannerModeDiscoveredCount, PlannerModesDiscovered.Count)}");
         builder.AppendLine($"- Unknown Omni modes: {WithSample(UnknownModeCount, UnknownModes.Count)}");
-        builder.AppendLine($"- SpecialCase compatibility bridges: {WithSample(SpecialCaseCompatibilityBridgeCount, SpecialCaseCompatibilityBridges.Count)}");
         builder.AppendLine($"- GCM tags imported: {WithSample(GcmTagsImportedCount, GcmTags.Count)}");
         builder.AppendLine($"- GCM tags already in Mids: {WithSample(GcmTagsAlreadyKnownCount, GcmTagsAlreadyKnown.Count)}");
         builder.AppendLine($"- GCM tags that would be added: {WithSample(GcmTagsWouldAddCount, GcmTagsWouldAdd.Count)}");

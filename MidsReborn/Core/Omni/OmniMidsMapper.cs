@@ -175,7 +175,6 @@ public static class OmniMidsMapper
                     ToWho = MapToWho(power, template.Target),
                     Stacking = ImportedStackPolicyNormalizer.ToCompatibilityStacking(stackPolicy),
                     StackPolicy = stackPolicy,
-                    SpecialCase = MapSpecialCase(power, template, attrib, mappedType),
                     AttribType = MapAttribType(template.Type),
                     Aspect = MapAspect(template.Aspect),
                     PvMode = pvMode,
@@ -1027,17 +1026,6 @@ public static class OmniMidsMapper
     private static bool HasTemplateFlag(OmniEffectTemplate template, string flagName)
     {
         return template.Flags.Any(flag => Normalize(flag).Contains(Normalize(flagName), StringComparison.OrdinalIgnoreCase));
-    }
-
-    private static Enums.eSpecialCase MapSpecialCase(
-        OmniPowerDefinition power,
-        OmniEffectTemplate template,
-        string attrib,
-        Enums.eEffectType mappedType)
-    {
-        // New Omni imports use mode payloads/conditions for planner state. Keep
-        // SpecialCase as a legacy database compatibility path, not imported truth.
-        return Enums.eSpecialCase.None;
     }
 
     private static Enums.eDamage MapDamageType(string attrib, string table)

@@ -161,7 +161,7 @@ public static class EnhancementPolicyAxes
     public static void ApplyRangeEnhancement(IPower power, float delta)
     {
         var allowRange = power.IgnoreEnhancement(Enums.eEnhance.Range);
-        if (allowRange && Math.Abs(power.Range) > float.Epsilon)
+        if (allowRange)
         {
             power.Range += delta;
         }

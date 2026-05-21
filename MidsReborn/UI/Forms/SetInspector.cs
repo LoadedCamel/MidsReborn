@@ -618,7 +618,7 @@ namespace Mids_Reborn.UI.Forms
                 var bonus = _selectedSet.Bonus[index];
                 var effectString = _selectedSet.GetEffectString(index, false, true, true, true);
                 if (string.IsNullOrWhiteSpace(effectString)) continue;
-                if (bonus.PvMode is ePvX.PvP) effectString += " [PvP]";
+                if (_selectedSet.GetEffectiveBonusPvMode(index, false) is ePvX.PvP) effectString += " (PVP)";
                 setData.Bonuses.Add($"({bonus.Slotted}) {effectString}");
             }
             for (var index = 0; index < _selectedSet.SpecialBonus.Length; index++)
@@ -626,7 +626,7 @@ namespace Mids_Reborn.UI.Forms
                 var specialBonus = _selectedSet.SpecialBonus[index];
                 var effectString = _selectedSet.GetEffectString(index, true, true, true, true);
                 if (string.IsNullOrWhiteSpace(effectString)) continue;
-                if (specialBonus.PvMode is ePvX.PvP) effectString += " [PvP]";
+                if (specialBonus.PvMode is ePvX.PvP) effectString += " (PVP)";
                 setData.Bonuses.Add($"(Enh) {effectString}");
             }
 

@@ -41,7 +41,8 @@ public static class PowerEffects
         groups.Add(MakeGroup(
             "Heal / Endurance",
             Filter(items, id => id.EffectType is Enums.eEffectType.HitPoints or Enums.eEffectType.Heal
-                                  or Enums.eEffectType.Absorb or Enums.eEffectType.Endurance or Enums.eEffectType.EnduranceDiscount),
+                                  or Enums.eEffectType.Absorb or Enums.eEffectType.Endurance
+                                  or Enums.eEffectType.EnduranceDiscount or Enums.eEffectType.Recovery),
             pBase, pEnh, rankedEffects));
 
         groups.Add(MakeGroup(
@@ -52,7 +53,9 @@ public static class PowerEffects
         groups.Add(MakeGroup(
             "Buff / Debuff",
             Filter(items, id => id.EffectType is Enums.eEffectType.ToHit or Enums.eEffectType.DamageBuff
-                                  or Enums.eEffectType.RechargeTime or Enums.eEffectType.Enhancement
+                                  or Enums.eEffectType.RechargeTime or Enums.eEffectType.InterruptTime
+                                  or Enums.eEffectType.Accuracy or Enums.eEffectType.Range
+                                  or Enums.eEffectType.Enhancement
                                   or Enums.eEffectType.ResEffect),
             pBase, pEnh, rankedEffects));
 
@@ -94,7 +97,7 @@ public static class PowerEffects
             var gre = kv.Key;
             var item = kv.Value;
             var valueText = BuildBaseEnhancedText(item);
-            var targetChips = BuildTargetChips(gre, pEnh);
+            var contextChips = BuildContextChips(gre, pEnh);
 
             switch (gre.EffectType)
             {
@@ -112,7 +115,7 @@ public static class PowerEffects
                         affectedByEd: ed.Active,
                         band: ed.BandIndex,
                         tooltip: item.ToolTip,
-                        targetChips: targetChips));
+                        contextChips: contextChips));
                     break;
                 }
 
@@ -124,7 +127,7 @@ public static class PowerEffects
                         tag: TagForDescriptor(gre.EffectType),
                         description: item.Value,
                         tooltip: item.ToolTip,
-                        targetChips: targetChips));
+                        contextChips: contextChips));
                     break;
                 }
                 case Enums.eEffectType.GrantPower:
@@ -134,7 +137,7 @@ public static class PowerEffects
                         tag: TagForDescriptor(gre.EffectType),
                         description: item.Value,
                         tooltip: item.ToolTip,
-                        targetChips: targetChips));
+                        contextChips: contextChips));
                     break;
                 }
 
@@ -155,7 +158,7 @@ public static class PowerEffects
                         hideGainPercent: true,
                         band: ed.BandIndex,
                         tooltip: item.ToolTip,
-                        targetChips: targetChips));
+                        contextChips: contextChips));
                     break;
                 }
             }
@@ -164,9 +167,14 @@ public static class PowerEffects
         return new PowerEffectsGrid.Group(title, rows);
     }
 
-    private static string[] BuildTargetChips(GroupedFx gre, IPower owner)
+    private static string[] BuildContextChips(GroupedFx gre, IPower owner)
     {
         var chips = new List<string>();
+
+        if (IsDefianceEffectGroup(gre, owner))
+        {
+            chips.Add("Defiance");
+        }
 
         switch (gre.ToWho)
         {
@@ -198,6 +206,24 @@ public static class PowerEffects
             .Where(static c => !string.IsNullOrWhiteSpace(c))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray();
+    }
+
+    private static bool IsDefianceEffectGroup(GroupedFx gre, IPower owner)
+    {
+        if (gre.EffectType != Enums.eEffectType.DamageBuff)
+        {
+            return false;
+        }
+
+        if (gre.DefianceTagged)
+        {
+            return true;
+        }
+
+        return gre.IncludedEffectIds.Any(index =>
+            index >= 0 &&
+            index < owner.Effects.Length &&
+            DefiancePlanner.IsModernContributorEffect(owner.Effects[index]));
     }
 
     private static string BuildBaseEnhancedText(EffectListItem item)

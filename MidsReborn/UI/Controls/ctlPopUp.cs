@@ -14,6 +14,8 @@ namespace Mids_Reborn.UI.Controls
     [DesignerGenerated]
     public class ctlPopUp : UserControl
     {
+        private const float ColumnGap = 12f;
+
         private IContainer components;
 
         public int eIDX;
@@ -260,8 +262,11 @@ namespace Mids_Reborn.UI.Controls
                         unchecked
                         {
                             var layoutRectangle = new RectangleF(pInternalPadding + section.Content[j].Indent * Font.Size, num + pInternalPadding, Width - (checked(pInternalPadding * 2) + section.Content[j].Indent * Font.Size), myBX.Size.Height);
+                            float columnX = 0f;
                             if (section.Content[j].HasColumn)
                             {
+                                columnX = CalculateColumnStart(layoutRectangle.X, section.Content[j].Text, section.Content[j].TextColumn);
+                                layoutRectangle.Width = Math.Max(1f, columnX - layoutRectangle.X - ColumnGap);
                                 stringFormat.FormatFlags |= StringFormatFlags.NoWrap;
                             }
 
@@ -286,7 +291,7 @@ namespace Mids_Reborn.UI.Controls
 
                                 //var columnStringSize = TextRenderer.MeasureText(myBX.Graphics, pData.Sections[i].Content[j].TextColumn, pFont);
                                 //layoutRectangle.X = (maxPos/2 - columnStringSize.Width) + checked(Width - columnStringSize.Width * 2);
-                                layoutRectangle.X = pInternalPadding + checked(Width - pInternalPadding * 2) * pColumnPosition;
+                                layoutRectangle.X = columnX;
                                 layoutRectangle.Width = Width - (pInternalPadding + layoutRectangle.X);
                                 brush = new SolidBrush(section.Content[j].ColorColumn);
                                 myBX.Graphics.DrawString(section.Content[j].TextColumn, pFont, brush, layoutRectangle, stringFormat);
@@ -314,6 +319,16 @@ namespace Mids_Reborn.UI.Controls
                     myBX.Graphics.DrawString(enhUsedText, pFont, brush, new PointF(Width - pInternalPadding - enhUsedSize.Width, pInternalPadding), new StringFormat(StringFormatFlags.NoClip));
                 }
             }
+        }
+
+        private float CalculateColumnStart(float leftX, string text, string columnText)
+        {
+            var defaultColumnX = pInternalPadding + checked(Width - pInternalPadding * 2) * pColumnPosition;
+            var leftTextWidth = TextRenderer.MeasureText(myBX.Graphics, text ?? string.Empty, pFont).Width;
+            var columnTextWidth = TextRenderer.MeasureText(myBX.Graphics, columnText ?? string.Empty, pFont).Width;
+            var preferredColumnX = Math.Max(defaultColumnX, leftX + leftTextWidth + ColumnGap);
+            var maxColumnX = Math.Max(defaultColumnX, Width - pInternalPadding - columnTextWidth);
+            return Math.Min(preferredColumnX, maxColumnX);
         }
 
         private void DrawBorder()

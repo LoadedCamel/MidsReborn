@@ -1367,7 +1367,7 @@ public sealed partial class OmniImporter
             {
                 var redirectEffect = OmniMidsMapper.CreatePowerRedirectEffect(omniPower.FullName, redirect);
                 redirectEffect.UniqueID = nextUniqueId++;
-                redirectEffect.ActiveConditionals = redirectEffect.AdvancedConditions.ToLegacyActiveConditionals();
+                redirectEffect.NormalizeConditionState();
                 if (redirectEffect.AdvancedConditions.Rows.Any(row =>
                         row.Kind == AdvancedConditionKind.SourceMode &&
                         row.Subject.Equals("FastSnipe", StringComparison.OrdinalIgnoreCase) &&
@@ -1385,7 +1385,7 @@ public sealed partial class OmniImporter
             foreach (var effect in effects)
             {
                 effect.PowerFullName = midsPower.FullName;
-                effect.ActiveConditionals = effect.AdvancedConditions.ToLegacyActiveConditionals();
+                effect.NormalizeConditionState();
             }
 
             ApplyStrengthsDisallowedToEffects(effects, midsPower.IgnoreEnh, midsPower.TypedEnhancementRestrictions);
@@ -2198,6 +2198,7 @@ public sealed partial class OmniImporter
                 GroupName = GroupNamePart(setFullName),
                 SetName = SetNamePart(setFullName),
                 DisplayName = SetNamePart(setFullName).Replace("_", " ", StringComparison.Ordinal),
+                UIDTrunkSet = CompositePowersetRules.GetTrunkPowersetFullName(setFullName),
                 SetType = scope.GetPowersetType(setFullName),
                 IsNew = true,
                 IsModified = true
@@ -3087,7 +3088,7 @@ public sealed partial class OmniImporter
         {
             var redirectEffect = OmniMidsMapper.CreatePowerRedirectEffect(omniPower.FullName, redirect);
             redirectEffect.UniqueID = nextUniqueId++;
-            redirectEffect.ActiveConditionals = redirectEffect.AdvancedConditions.ToLegacyActiveConditionals();
+            redirectEffect.NormalizeConditionState();
             if (redirectEffect.AdvancedConditions.Rows.Any(row =>
                     row.Kind == AdvancedConditionKind.SourceMode &&
                     row.Subject.Equals("FastSnipe", StringComparison.OrdinalIgnoreCase) &&
@@ -3105,7 +3106,7 @@ public sealed partial class OmniImporter
         foreach (var effect in effects)
         {
             effect.PowerFullName = midsPower.FullName;
-            effect.ActiveConditionals = effect.AdvancedConditions.ToLegacyActiveConditionals();
+            effect.NormalizeConditionState();
         }
 
         ApplyStrengthsDisallowedToEffects(effects, midsPower.IgnoreEnh, midsPower.TypedEnhancementRestrictions);
@@ -4209,6 +4210,12 @@ public sealed partial class OmniImporter
             powerset.ATClass = string.Empty;
             powerset.UIDTrunkSet = string.Empty;
             powerset.UIDLinkSecondary = string.Empty;
+        }
+
+        var trunkSetFullName = CompositePowersetRules.GetTrunkPowersetFullName(source.FullName);
+        if (!string.IsNullOrWhiteSpace(trunkSetFullName))
+        {
+            powerset.UIDTrunkSet = trunkSetFullName;
         }
 
         if (archetypes.Length == 1)
@@ -5463,7 +5470,7 @@ public sealed partial class OmniImporter
         {
             var redirectEffect = OmniMidsMapper.CreatePowerRedirectEffect(omniPower.FullName, redirect);
             redirectEffect.UniqueID = nextUniqueId++;
-            redirectEffect.ActiveConditionals = redirectEffect.AdvancedConditions.ToLegacyActiveConditionals();
+            redirectEffect.NormalizeConditionState();
             effects.Add(redirectEffect);
             applyResult.RedirectEffectsAdded++;
         }
@@ -5471,7 +5478,7 @@ public sealed partial class OmniImporter
         foreach (var effect in effects)
         {
             effect.PowerFullName = midsPower.FullName;
-            effect.ActiveConditionals = effect.AdvancedConditions.ToLegacyActiveConditionals();
+            effect.NormalizeConditionState();
         }
 
         ApplyStrengthsDisallowedToEffects(effects, midsPower.IgnoreEnh, midsPower.TypedEnhancementRestrictions);
@@ -6335,22 +6342,7 @@ public sealed partial class OmniImporter
 
     private static bool ReferencesPlannerMode(IPower power, PlannerMode mode)
     {
-        if (HasCanonicalPlannerModeCoverage(power, mode))
-        {
-            return true;
-        }
-
-        foreach (var effect in power.Effects ?? [])
-        {
-            if (effect != null &&
-                TryMapSpecialCaseToPlannerMode(effect.SpecialCase, out var bridgedMode) &&
-                bridgedMode == mode)
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return HasCanonicalPlannerModeCoverage(power, mode);
     }
 
     private static HashSet<PlannerMode> DiscoverPlannerModes(IEnumerable<IPower?> powers, OmniApplyResult applyResult)
@@ -6374,18 +6366,6 @@ public sealed partial class OmniImporter
                     PlannerModeMapper.TryGetPlannerMode(effect.ModeName, out var effectMode))
                 {
                     AddDiscovered(effectMode, $"{power.FullName}: {effect.EffectType} {effect.ModeName}");
-                }
-
-                if (TryMapSpecialCaseToPlannerMode(effect.SpecialCase, out var bridgedMode))
-                {
-                    if (!HasCanonicalPlannerModeCoverage(power!, bridgedMode))
-                    {
-                        applyResult.SpecialCaseCompatibilityBridges++;
-                        applyResult.AddLimited(applyResult.SpecialCaseCompatibilityBridgeDetails,
-                            $"{power.FullName}: {effect.SpecialCase} -> {PlannerModeMapper.ToCanonicalName(bridgedMode)}");
-                    }
-
-                    AddDiscovered(bridgedMode, $"{power.FullName}: legacy SpecialCase {effect.SpecialCase}");
                 }
 
                 foreach (var row in effect.AdvancedConditions?.Rows ?? [])
@@ -6561,39 +6541,6 @@ public sealed partial class OmniImporter
             $"{power.FullName}: SetMode {modeName}, InherentType={power.InherentType}");
     }
 
-    private static bool TryMapSpecialCaseToPlannerMode(Enums.eSpecialCase specialCase, out PlannerMode mode)
-    {
-        mode = specialCase switch
-        {
-            Enums.eSpecialCase.Domination => PlannerMode.Domination,
-            Enums.eSpecialCase.Scourge => PlannerMode.Scourge,
-            Enums.eSpecialCase.CriticalHit => PlannerMode.CriticalHit,
-            Enums.eSpecialCase.Assassination => PlannerMode.Assassination,
-            Enums.eSpecialCase.Containment => PlannerMode.Containment,
-            Enums.eSpecialCase.Defiance => PlannerMode.Defiance,
-            Enums.eSpecialCase.ComboLevel1 => PlannerMode.ComboLevel1,
-            Enums.eSpecialCase.ComboLevel2 => PlannerMode.ComboLevel2,
-            Enums.eSpecialCase.ComboLevel3 => PlannerMode.ComboLevel3,
-            Enums.eSpecialCase.FastMode => PlannerMode.FastMode,
-            Enums.eSpecialCase.PerfectionOfBody1 => PlannerMode.PerfectionOfBody1,
-            Enums.eSpecialCase.PerfectionOfBody2 => PlannerMode.PerfectionOfBody2,
-            Enums.eSpecialCase.PerfectionOfBody3 => PlannerMode.PerfectionOfBody3,
-            Enums.eSpecialCase.PerfectionOfMind1 => PlannerMode.PerfectionOfMind1,
-            Enums.eSpecialCase.PerfectionOfMind2 => PlannerMode.PerfectionOfMind2,
-            Enums.eSpecialCase.PerfectionOfMind3 => PlannerMode.PerfectionOfMind3,
-            Enums.eSpecialCase.PerfectionOfSoul1 => PlannerMode.PerfectionOfSoul1,
-            Enums.eSpecialCase.PerfectionOfSoul2 => PlannerMode.PerfectionOfSoul2,
-            Enums.eSpecialCase.PerfectionOfSoul3 => PlannerMode.PerfectionOfSoul3,
-            Enums.eSpecialCase.DefensiveAdaptation => PlannerMode.DefensiveAdaptation,
-            Enums.eSpecialCase.EfficientAdaptation => PlannerMode.EfficientAdaptation,
-            Enums.eSpecialCase.OffensiveAdaptation => PlannerMode.OffensiveAdaptation,
-            Enums.eSpecialCase.PackMentality => PlannerMode.PackMentality,
-            Enums.eSpecialCase.FastSnipe => PlannerMode.FastSnipe,
-            _ => PlannerMode.None
-        };
-
-        return mode != PlannerMode.None;
-    }
 
     private static void BuildSupportPowerLinks(
         IEnumerable<OmniPowerDefinition> scopedPowers,

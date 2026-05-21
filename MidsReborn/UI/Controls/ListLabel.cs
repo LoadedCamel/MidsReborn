@@ -85,6 +85,7 @@ namespace Mids_Reborn.UI.Controls
         private int _scrollWidth;
         private Size _szNormal;
         private Rectangle _textArea;
+        private bool _decorateHeadings;
         private bool _textOutline;
         private int _visibleLineCount;
 
@@ -115,6 +116,7 @@ namespace Mids_Reborn.UI.Controls
             ];
             _bgColor = Color.Black;
             _hvrColor = Color.WhiteSmoke;
+            _decorateHeadings = true;
             _textOutline = true;
             _xPadding = 1;
             _yPadding = 1;
@@ -159,6 +161,17 @@ namespace Mids_Reborn.UI.Controls
             set
             {
                 _hvrColor = value;
+                Draw();
+            }
+        }
+
+        [DefaultValue(true)]
+        public bool DecorateHeadings
+        {
+            get => _decorateHeadings;
+            set
+            {
+                _decorateHeadings = value;
                 Draw();
             }
         }
@@ -478,7 +491,8 @@ namespace Mids_Reborn.UI.Controls
                 ? new Font(Font, (FontStyle)_items[index].FontFlags)
                 : new Font(Font.FontFamily, Font.Size, (FontStyle)_items[index].FontFlags, GraphicsUnit.Point);
 
-            var str = _items[index].ItemState == LlItemState.Heading ? "~  ~" : "";
+            var decorateHeading = _items[index].ItemState == LlItemState.Heading && DecorateHeadings;
+            var str = decorateHeading ? "~  ~" : "";
             var text = strWords[0];
             var layoutArea = new SizeF(1024f, Height);
 
@@ -495,7 +509,7 @@ namespace Mids_Reborn.UI.Controls
                     for (var i = 0; i < _items[index].Text.Length; i++)
                     {
                         var text2 = $"{text}{((i == 0) ? " " : "")}{_items[index].Text[i]}";
-                        var measure = _items[index].ItemState == LlItemState.Heading
+                        var measure = decorateHeading
                             ? $"~ {text2.TrimEnd()}... ~"
                             : $"{text2.TrimEnd()}...";
 
@@ -512,7 +526,7 @@ namespace Mids_Reborn.UI.Controls
                     if (!fullFit)
                         text = $"{text.TrimEnd()}...";
 
-                    _items[index].WrappedText = _items[index].ItemState == LlItemState.Heading
+                    _items[index].WrappedText = decorateHeading
                         ? $"~ {text} ~"
                         : text;
                 }
@@ -528,7 +542,7 @@ namespace Mids_Reborn.UI.Controls
                             var text2 = $"{text} {strWords[i]}{str}";
                             if (Math.Ceiling(g.MeasureString(text2, font, layoutArea, stringFormat).Width) > _textArea.Width)
                             {
-                                text = _items[index].ItemState == LlItemState.Heading
+                                text = decorateHeading
                                     ? $"{text} ~\r\n~ {strWords[i]}"
                                     : $"{text}\r\n {strWords[i]}";
                                 num++;
@@ -549,7 +563,7 @@ namespace Mids_Reborn.UI.Controls
                         {
                             var text2 = $"{text}{((k == 0) ? "" : " ")}{strWords[k]}";
                             var tw = (int)Math.Ceiling(g.MeasureString(
-                                _items[index].ItemState == LlItemState.Heading
+                                decorateHeading
                                     ? $"~ {text2}... ~"
                                     : text2, font, layoutArea, stringFormat).Width);
 
@@ -569,7 +583,7 @@ namespace Mids_Reborn.UI.Controls
                             {
                                 var text2 = $"{text}{((i == 0) ? " " : "")}{strWords[k][i]}";
                                 var tw = (int)Math.Ceiling(g.MeasureString(
-                                    _items[index].ItemState == LlItemState.Heading
+                                    decorateHeading
                                         ? $"~ {text2.TrimEnd()}... ~"
                                         : $"{text2.TrimEnd()}...", font, layoutArea, stringFormat).Width);
 
@@ -586,7 +600,7 @@ namespace Mids_Reborn.UI.Controls
                                 text = $"{text.TrimEnd()}...";
                         }
 
-                        if (_items[index].ItemState == LlItemState.Heading)
+                        if (decorateHeading)
                             text = $"~ {text} ~";
 
                         break;
@@ -596,7 +610,7 @@ namespace Mids_Reborn.UI.Controls
             }
 
             _items[index].WrappedText = _items[index].WrappedText.Replace("  ", " ");
-            if (_items[index].ItemState == LlItemState.Heading && !_items[index].WrappedText.StartsWith("~"))
+            if (decorateHeading && !_items[index].WrappedText.StartsWith("~"))
             {
                 _items[index].WrappedText = $"~ {_items[index].WrappedText} ~";
             }

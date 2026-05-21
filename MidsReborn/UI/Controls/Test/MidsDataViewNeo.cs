@@ -128,6 +128,7 @@ namespace Mids_Reborn.UI.Controls
         private bool _isLocked;
         private IPower? pBase;
         private IPower? pEnh;
+        private IPower? _effectsComparisonBase;
         private IPower? rootPowerBase;
         private IPower? rootPowerEnh;
         private ActorTotalsSnapshot? _actorTotalsSnapshot;
@@ -1146,6 +1147,9 @@ namespace Mids_Reborn.UI.Controls
 
             pBase = snapshot.BasePower == null ? null : new Power(snapshot.BasePower);
             pEnh = snapshot.EnhancedPower == null ? null : new Power(snapshot.EnhancedPower);
+            _effectsComparisonBase = snapshot.PowerCalculationSnapshot?.BasePower == null
+                ? (pBase == null ? null : new Power(pBase))
+                : new Power(snapshot.PowerCalculationSnapshot.BasePower);
             rootPowerBase = snapshot.RootPowerBase;
             rootPowerEnh = snapshot.RootPowerEnh;
             HistoryIDX = snapshot.HistoryIndex;
@@ -1170,7 +1174,17 @@ namespace Mids_Reborn.UI.Controls
 
             GroupedRankedEffects = GroupedFx.AssembleGroupedEffects(pEnh);
             GroupedRankedEffects = GroupedFx.AggregateGroupedEffectsPass2(pEnh, GroupedRankedEffects);
-            EffectsItemPairs = GroupedFx.GenerateListItems(GroupedRankedEffects, pBase, pEnh, pEnh.GetRankedEffects(true).ToList(), infoDataList.Font.Size);
+
+            // Compare effect rows against the raw base power, not the assembled display base.
+            // The assembled base already contains absorbed local enhancement effects, which
+            // makes host-power enhancement rows appear unchanged in the Neo effects grid.
+            var effectComparisonBase = snapshot.PowerCalculationSnapshot?.BasePower ?? pBase;
+            EffectsItemPairs = GroupedFx.GenerateListItems(
+                GroupedRankedEffects,
+                effectComparisonBase ?? pBase,
+                pEnh,
+                pEnh.GetRankedEffects(true).ToList(),
+                infoDataList.Font.Size);
 
             SetDamageTip();
             DisplayData(noLevel);
@@ -1180,6 +1194,7 @@ namespace Mids_Reborn.UI.Controls
         {
             pBase = null;
             pEnh = null;
+            _effectsComparisonBase = null;
             rootPowerBase = null;
             rootPowerEnh = null;
             _actorTotalsSnapshot = null;
@@ -2256,7 +2271,7 @@ namespace Mids_Reborn.UI.Controls
                 hasAny = true;
 
                 var enhancement = DatabaseAPI.Database.Enhancements[enhancementId];
-                if (enhancement.IsProc)
+                if (EnhancementProcRules.IsProcToggleEligible(enhancement))
                 {
                     hasProc = true;
                 }
@@ -2664,7 +2679,7 @@ namespace Mids_Reborn.UI.Controls
                     : $"{sharedRechargeSummary}\r\n{shortDescription}";
             }
 
-            var statRows = PowerCanonicalStats.BuildRows(pBase, enhancedPower, _displayContributions);
+            var statRows = PowerCanonicalStats.BuildRows(pBase, enhancedPower, _displayContributions, HistoryIDX);
             infoSDesc.Rtf = RTF.FormatMarkupDocument(shortDescription, infoSDesc.Font);
             infoLDesc.Rtf = RTF.FormatMarkupDocument(longInfo, infoLDesc.Font);
             powerStatsGrid.SetRows(statRows);
@@ -2701,11 +2716,12 @@ namespace Mids_Reborn.UI.Controls
             // --- Build UI-agnostic effect items (uses the same ranked effects pipeline) ---
             // GroupedRankedEffects is already set earlier in the flow when powers change 
             var enh = pEnh ?? pBase;
+            var effectBase = _effectsComparisonBase ?? pBase;
             var rankedSafe = GetRankedEffectsSafe(enh);
 
             // --- Build Effect groups for the PowerEffectsGrid ---
             // PowerEffects maps items into (Defense/Resistance, Heal/Endurance, Status, Buff/Debuff, Movement, Special, Descriptors)
-            var groups = PowerEffects.Build(pBase, enh, GroupedRankedEffects, rankedSafe);
+            var groups = PowerEffects.Build(effectBase, enh, GroupedRankedEffects, rankedSafe);
 
             // --- Push into the grid ---
             effectsGrid.SetGroups(groups);
@@ -3296,14 +3312,9 @@ namespace Mids_Reborn.UI.Controls
                 pEnh.Effects[shortFxEnh.Index[0]].ETModifies, pEnh.Effects[shortFxEnh.Index[0]].DamageType,
                 pEnh.Effects[shortFxEnh.Index[0]].MezType);
 
-            if (fx.ActiveConditionals.Count > 0)
+            if (fx.HasConditions)
             {
-                return FastItemBuilder.Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, fx.ActiveConditionals.Count > 0, tip);
-            }
-
-            if (fx.SpecialCase != Enums.eSpecialCase.None)
-            {
-                return FastItemBuilder.Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, fx.SpecialCase != Enums.eSpecialCase.None, tip);
+                return FastItemBuilder.Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, fx.HasConditions, tip);
             }
 
             return FastItemBuilder.Fi.FastItem(title, shortFxBase, shortFxEnh, suffix, true, false, fx.Probability < 1, false, tip);
@@ -3578,7 +3589,7 @@ namespace Mids_Reborn.UI.Controls
                     s2 = 0;
                 }
 
-                iList.AddItem(FastItemBuilder.Fi.FastItem(title, s1, s2, Suffix, false, false, pEnh.Effects[shortFxArray1[index].Index[0]].Probability < 1.0, pEnh.Effects[shortFxArray1[index].Index[0]].ActiveConditionals.Count > 0, Power.SplitFXGroupTip(ref shortFxArray1[index], ref pEnh, false)));
+                iList.AddItem(FastItemBuilder.Fi.FastItem(title, s1, s2, Suffix, false, false, pEnh.Effects[shortFxArray1[index].Index[0]].Probability < 1.0, pEnh.Effects[shortFxArray1[index].Index[0]].HasConditions, Power.SplitFXGroupTip(ref shortFxArray1[index], ref pEnh, false)));
                 if (pEnh.Effects[shortFxArray1[index].Index[0]].isEnhancementEffect)
                 {
                     iList.SetUnique();
@@ -4041,6 +4052,9 @@ namespace Mids_Reborn.UI.Controls
 
             pBase = snapshot.BasePower == null ? null : new Power(snapshot.BasePower);
             pEnh = snapshot.EnhancedPower == null ? null : new Power(snapshot.EnhancedPower);
+            _effectsComparisonBase = snapshot.PowerCalculationSnapshot?.BasePower == null
+                ? (pBase == null ? null : new Power(pBase))
+                : new Power(snapshot.PowerCalculationSnapshot.BasePower);
             rootPowerBase = snapshot.RootPowerBase;
             rootPowerEnh = snapshot.RootPowerEnh;
 
@@ -4060,7 +4074,7 @@ namespace Mids_Reborn.UI.Controls
 
             if (updateStatRows)
             {
-                var statRows = PowerCanonicalStats.BuildRows(pBase, pEnh, _displayContributions);
+                var statRows = PowerCanonicalStats.BuildRows(pBase, pEnh, _displayContributions, HistoryIDX);
                 powerStatsGrid.SetRows(statRows);
             }
             RefreshDamageCardPresentation(pBase, pEnh);

@@ -29,6 +29,10 @@ namespace Mids_Reborn.UI.Controls
             TextFormatFlags.Left |
             TextFormatFlags.NoClipping;
 
+        private const TextFormatFlags ColumnBaseFlags =
+            TextFormatFlags.Top |
+            TextFormatFlags.Left;
+
         private const TextFormatFlags MeasureTight =
             TextFormatFlags.Top | TextFormatFlags.Left | TextFormatFlags.NoClipping |
             TextFormatFlags.TextBoxControl;
@@ -435,6 +439,32 @@ namespace Mids_Reborn.UI.Controls
             return Math.Max(1, (int)Math.Round(logicalPixels * EffectiveScale));
         }
 
+        private int CalculateRightColumnStart(Graphics g, int totalWidth, int leftX, int innerRight, string? leftText, string? rightText)
+        {
+            int contentLeft = ContentInset + InternalPaddingPx;
+            int defaultColumnX = contentLeft +
+                                 (int)Math.Round((totalWidth - 2 * contentLeft) * Math.Clamp(_columnPosition, 0f, 1f));
+            int leftTextWidth = TextRenderer.MeasureText(g, string.IsNullOrWhiteSpace(leftText) ? " " : leftText, Font, Size.Empty, MeasureTight).Width;
+            int rightTextWidth = TextRenderer.MeasureText(g, string.IsNullOrWhiteSpace(rightText) ? " " : rightText, Font, Size.Empty, MeasureTight).Width;
+            int preferredColumnX = Math.Max(defaultColumnX, leftX + leftTextWidth + ColumnGapPx);
+            int maxColumnX = Math.Max(defaultColumnX, innerRight - rightTextWidth);
+            return Math.Min(preferredColumnX, maxColumnX);
+        }
+
+        private TextFormatFlags GetMainTextFlags(bool hasColumn)
+        {
+            return hasColumn
+                ? ColumnBaseFlags | TextFormatFlags.NoPrefix | TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis
+                : BaseFlags | TextFormatFlags.NoPrefix | TextFormatFlags.WordBreak;
+        }
+
+        private TextFormatFlags GetColumnTextFlags(bool singleLine)
+        {
+            var alignment = ColumnRight ? TextFormatFlags.Right : TextFormatFlags.Left;
+            return ColumnBaseFlags | TextFormatFlags.NoPrefix | alignment |
+                   (singleLine ? TextFormatFlags.SingleLine | TextFormatFlags.EndEllipsis : TextFormatFlags.WordBreak);
+        }
+
         private void CaptureBaseFont()
         {
             if (_applyingScaledFont)
@@ -522,9 +552,17 @@ namespace Mids_Reborn.UI.Controls
                     var layout = new Rectangle(x, yTop, w, h);
 
                     // ---- wrapping: default wrap; column lines are single-line ----
-                    var flags = BaseFlags | (line.HasColumn ? TextFormatFlags.SingleLine : TextFormatFlags.WordBreak);
+                    var flags = GetMainTextFlags(line.HasColumn);
 
                     string text = string.IsNullOrWhiteSpace(line.Text) ? "Null String" : line.Text;
+
+                    int innerRight = Width - p;
+                    if (line.HasColumn)
+                    {
+                        int dynamicColumnX = CalculateRightColumnStart(g, Width, x, innerRight, line.Text, line.TextColumn);
+                        w = Math.Max(1, dynamicColumnX - x - ColumnGapPx);
+                        layout.Width = w;
+                    }
 
                     // Measure bounded by width, with effectively unbounded height
                     var measured = TextRenderer.MeasureText(g, text, Font, new Size(layout.Width, int.MaxValue), flags);
@@ -537,14 +575,12 @@ namespace Mids_Reborn.UI.Controls
                     // Column text (same baseline rect; right/left aligned as requested)
                     if (line.HasColumn)
                     {
-                        int colX = p + (int)Math.Round((Width - 2 * p) * _columnPosition);
-                        int colW = Math.Max(0, Width - colX - p);
+                        int colX = CalculateRightColumnStart(g, Width, x, innerRight, line.Text, line.TextColumn);
+                        int colW = Math.Max(0, innerRight - colX);
                         var colRect = new Rectangle(colX, layout.Y, colW, Height);
 
                         var colSingleWidth = TextRenderer.MeasureText(g, line.TextColumn ?? string.Empty, Font, Size.Empty, MeasureTight).Width;
-                        var colFlags = (!_wrapColumnsThisLayout || colSingleWidth <= colW)
-                            ? (BaseFlags | TextFormatFlags.SingleLine)
-                            : (BaseFlags | TextFormatFlags.WordBreak);
+                        var colFlags = GetColumnTextFlags(!_wrapColumnsThisLayout || colSingleWidth <= colW);
 
                         var colMeasured = TextRenderer.MeasureText(g, line.TextColumn ?? string.Empty, Font, new Size(colW, int.MaxValue), colFlags);
                         lineHeight = Math.Max(lineHeight, colMeasured.Height);
@@ -558,13 +594,11 @@ namespace Mids_Reborn.UI.Controls
 
                     if (line.HasColumn)
                     {
-                        int colX = p + (int)Math.Round((Width - 2 * p) * _columnPosition);
-                        int colW = Math.Max(0, Width - colX - p);
+                        int colX = CalculateRightColumnStart(g, Width, x, innerRight, line.Text, line.TextColumn);
+                        int colW = Math.Max(0, innerRight - colX);
                         var colRect = new Rectangle(colX, layout.Y, colW, layout.Height);
                         var colSingleWidth = TextRenderer.MeasureText(g, line.TextColumn ?? string.Empty, Font, Size.Empty, MeasureTight).Width;
-                        var colFlags = (!_wrapColumnsThisLayout || colSingleWidth <= colW)
-                            ? (BaseFlags | TextFormatFlags.SingleLine)
-                            : (BaseFlags | TextFormatFlags.WordBreak);
+                        var colFlags = GetColumnTextFlags(!_wrapColumnsThisLayout || colSingleWidth <= colW);
 
                         TextRenderer.DrawText(g, line.TextColumn, Font, colRect, line.ColorColumn, colFlags);
                     }
@@ -711,8 +745,16 @@ namespace Mids_Reborn.UI.Controls
                     int usable = Math.Max(0, finalWidth - (2 * p + indentPx));
 
                     // main text
-                    var mainFlags = BaseFlags | (line.HasColumn ? TextFormatFlags.SingleLine : TextFormatFlags.WordBreak);
+                    var mainFlags = GetMainTextFlags(line.HasColumn);
                     string main = string.IsNullOrWhiteSpace(line.Text) ? "Null String" : line.Text;
+                    int innerRight = finalWidth - p;
+                    if (line.HasColumn)
+                    {
+                        int leftX = p + indentPx;
+                        int dynamicColumnX = CalculateRightColumnStart(g, finalWidth, leftX, innerRight, line.Text, line.TextColumn);
+                        usable = Math.Max(1, dynamicColumnX - leftX - ColumnGapPx);
+                    }
+
                     Size mainSz = TextRenderer.MeasureText(g, main, Font, new Size(usable, int.MaxValue), mainFlags);
 
                     // column text (only measured if present)
@@ -720,15 +762,14 @@ namespace Mids_Reborn.UI.Controls
                     if (line.HasColumn)
                     {
                         // column region width for finalWidth
-                        int colX = p + (int)Math.Round((finalWidth - 2 * p) * cp);
-                        int colW = Math.Max(0, finalWidth - colX - p);
+                        int leftX = p + indentPx;
+                        int colX = CalculateRightColumnStart(g, finalWidth, leftX, innerRight, line.Text, line.TextColumn);
+                        int colW = Math.Max(0, innerRight - colX);
 
                         var colSingleW = TextRenderer.MeasureText(g, line.TextColumn ?? string.Empty, Font, Size.Empty, MeasureTight).Width;
 
                         // If constrained and column does not fit single-line, wrap the column text.
-                        var colFlags = (!_wrapColumnsThisLayout || colSingleW <= colW)
-                            ? (BaseFlags | TextFormatFlags.SingleLine)
-                            : (BaseFlags | TextFormatFlags.WordBreak);
+                        var colFlags = GetColumnTextFlags(!_wrapColumnsThisLayout || colSingleW <= colW);
 
                         Size colSz = TextRenderer.MeasureText(g, line.TextColumn ?? string.Empty, Font, new Size(colW, int.MaxValue), colFlags);
                         lineHeight = Math.Max(lineHeight, colSz.Height);

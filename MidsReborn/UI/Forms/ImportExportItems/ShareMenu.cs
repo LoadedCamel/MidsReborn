@@ -640,11 +640,7 @@ namespace Mids_Reborn.UI.Forms.ImportExportItems
                         for (var j = 0; j < enhancementSet.Bonus.Length; j++)
                         {
                             if (!((setInfo[i].SlottedCount >= enhancementSet.Bonus[j].Slotted) &
-                                  ((enhancementSet.Bonus[j].PvMode == Enums.ePvX.Any) |
-                                   ((enhancementSet.Bonus[j].PvMode == Enums.ePvX.PvE) &
-                                    !MidsContext.Config.Inc.DisablePvE) |
-                                   ((enhancementSet.Bonus[j].PvMode == Enums.ePvX.PvP) &
-                                    MidsContext.Config.Inc.DisablePvE))))
+                                  enhancementSet.BonusAppliesInContext(j, false, MidsContext.Config.Inc.DisablePvE)))
                             {
                                 continue;
                             }

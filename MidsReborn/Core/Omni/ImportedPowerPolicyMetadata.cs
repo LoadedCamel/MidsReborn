@@ -32,6 +32,8 @@ internal sealed class ImportedPowerLifetimeMetadata
 internal sealed class ImportedBoostPolicyMetadata
 {
     public static readonly ImportedBoostPolicyMetadata Default = new(string.Empty, []);
+    private JObject? _parsedBoostInfo;
+    private bool _parsedBoostInfoInitialized;
 
     public ImportedBoostPolicyMetadata(string rawBoostInfoJson, IReadOnlyList<string>? allowedBoostSetCategories)
     {
@@ -44,6 +46,13 @@ internal sealed class ImportedBoostPolicyMetadata
 
     public string RawBoostInfoJson { get; }
     public IReadOnlyList<string> AllowedBoostSetCategories { get; }
+    public bool? Boostable => TryGetBoolean("boostable");
+    public bool? Attuned => TryGetBoolean("attuned");
+    public int? MinSlotLevel => TryGetInt32("min_slot_level");
+    public int? MaxSlotLevel => TryGetInt32("max_slot_level");
+    public int? MinimumUseLevel => TryGetInt32("minimum_use_level");
+    public int? MaximumUseLevel => TryGetInt32("maximum_use_level");
+    public int? MaxBoostLevel => TryGetInt32("max_boost_level");
 
     public bool HasValue =>
         !string.IsNullOrWhiteSpace(RawBoostInfoJson) ||
@@ -52,6 +61,66 @@ internal sealed class ImportedBoostPolicyMetadata
     public ImportedBoostPolicyMetadata Clone()
     {
         return new ImportedBoostPolicyMetadata(RawBoostInfoJson, AllowedBoostSetCategories);
+    }
+
+    public void ApplyTo(Power power)
+    {
+        if (power == null)
+        {
+            return;
+        }
+
+        if (Boostable.HasValue)
+        {
+            power.BoostBoostable = Boostable.Value;
+        }
+
+        if (Attuned.HasValue)
+        {
+            power.BoostUsePlayerLevel = Attuned.Value;
+        }
+    }
+
+    private bool? TryGetBoolean(string propertyName)
+    {
+        var token = GetParsedBoostInfo()?[propertyName];
+        return token?.Type == JTokenType.Boolean
+            ? token.Value<bool>()
+            : null;
+    }
+
+    private int? TryGetInt32(string propertyName)
+    {
+        var token = GetParsedBoostInfo()?[propertyName];
+        return token == null || token.Type == JTokenType.Null
+            ? null
+            : token.Value<int?>();
+    }
+
+    private JObject? GetParsedBoostInfo()
+    {
+        if (_parsedBoostInfoInitialized)
+        {
+            return _parsedBoostInfo;
+        }
+
+        _parsedBoostInfoInitialized = true;
+        if (string.IsNullOrWhiteSpace(RawBoostInfoJson))
+        {
+            _parsedBoostInfo = null;
+            return null;
+        }
+
+        try
+        {
+            _parsedBoostInfo = JObject.Parse(RawBoostInfoJson);
+        }
+        catch
+        {
+            _parsedBoostInfo = null;
+        }
+
+        return _parsedBoostInfo;
     }
 }
 

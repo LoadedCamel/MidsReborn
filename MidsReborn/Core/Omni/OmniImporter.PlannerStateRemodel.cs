@@ -67,12 +67,6 @@ public sealed partial class OmniImporter
                     continue;
                 }
 
-                if (effect.AdvancedConditions.Rows.Count == 0 &&
-                    effect.ActiveConditionals is { Count: > 0 })
-                {
-                    effect.AdvancedConditions = AdvancedConditionSet.FromLegacyActiveConditionals(effect.ActiveConditionals);
-                }
-
                 if (!StripTierOneRuntimeRows(effect.AdvancedConditions, power.FullName, out var rewrittenConditions, out var removedEffectRows))
                 {
                     rewrittenEffects.Add(effect);
@@ -91,7 +85,7 @@ public sealed partial class OmniImporter
                 }
 
                 effect.AdvancedConditions = rewrittenConditions;
-                effect.ActiveConditionals = rewrittenConditions.ToLegacyActiveConditionals();
+                effect.NormalizeConditionState();
                 rewrittenEffects.Add(effect);
             }
 
@@ -315,18 +309,12 @@ public sealed partial class OmniImporter
         rewrittenExpressions = 0;
         var changed = false;
 
-        if (effect.AdvancedConditions.Rows.Count == 0 &&
-            effect.ActiveConditionals is { Count: > 0 })
-        {
-            effect.AdvancedConditions = AdvancedConditionSet.FromLegacyActiveConditionals(effect.ActiveConditionals);
-        }
-
         effect.Expressions ??= new Expressions();
 
         if (RewritePlannerStateConditionSet(effect.AdvancedConditions, ownerPower, out var rewrittenConditions, out var rowChanges))
         {
             effect.AdvancedConditions = rewrittenConditions;
-            effect.ActiveConditionals = rewrittenConditions.ToLegacyActiveConditionals();
+            effect.NormalizeConditionState();
             rewrittenRows += rowChanges;
             changed = true;
         }
@@ -648,7 +636,7 @@ public sealed partial class OmniImporter
             if (hadPlayerTargetRows)
             {
                 effect.AdvancedConditions = new AdvancedConditionSet();
-                effect.ActiveConditionals = [];
+                effect.NormalizeConditionState();
                 changed = true;
             }
 

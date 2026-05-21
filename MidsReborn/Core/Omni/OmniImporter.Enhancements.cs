@@ -1867,7 +1867,7 @@ public sealed partial class OmniImporter
             var source = standardBonuses[index];
             items[index].Special = -1;
             items[index].AltString = source.DisplayName ?? string.Empty;
-            items[index].PvMode = Enums.ePvX.Any;
+            items[index].PvMode = source.PvMode;
             items[index].Slotted = source.MinimumBoosts;
 
             var powerNames = GetSetBonusPowerNames(source);
@@ -2350,7 +2350,7 @@ public sealed partial class OmniImporter
                     changed = true;
                 }
 
-                var isProc = enhancement.Effect.Any(effect => effect.Mode == Enums.eEffMode.FX);
+                var isProc = EnhancementProcRules.HasToggleableProcEffect(powerResolution.Power);
                 if (enhancement.IsProc != isProc)
                 {
                     enhancement.IsProc = isProc;
@@ -4467,6 +4467,13 @@ public sealed partial class OmniImporter
 
     private static (int LevelMin, int LevelMax) GetEnhancementLevelBand(OmniEnhancementDefinition source)
     {
+        if (source.MinLevel.HasValue || source.MaxLevel.HasValue)
+        {
+            var levelMinFromBounds = Math.Max(0, (source.MinLevel ?? source.MaxLevel ?? 1) - 1);
+            var levelMaxFromBounds = Math.Max(levelMinFromBounds, (source.MaxLevel ?? source.MinLevel ?? 1) - 1);
+            return (levelMinFromBounds, levelMaxFromBounds);
+        }
+
         if (source.LevelVariants.Count > 0)
         {
             var levelMin = Math.Max(0, source.LevelVariants.Min() - 1);

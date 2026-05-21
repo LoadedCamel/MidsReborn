@@ -13,6 +13,10 @@ namespace Mids_Reborn.Core
 
         float Probability { get; set; }
 
+        bool HasConditions { get; }
+
+        string ConditionIdentity { get; }
+
         float Mag { get; }
 
         float BuffedMag { get; }
@@ -77,8 +81,6 @@ namespace Mids_Reborn.Core
         bool Buffable { get; set; }
 
         bool Resistible { get; set; }
-
-        Enums.eSpecialCase SpecialCase { get; set; }
 
         string UIDClassName { get; set; }
 
@@ -154,7 +156,6 @@ namespace Mids_Reborn.Core
 
         float ProcsPerMinute { get; set; }
 
-        List<KeyValue<string, string>>? ActiveConditionals { get; set; }
         AdvancedConditionSet AdvancedConditions { get; set; }
         bool Validated { get; set; }
         bool IsFromProc { get; }
@@ -167,6 +168,8 @@ namespace Mids_Reborn.Core
         bool ValidateConditional(string powerName);
         bool ValidateConditional(string cType, string powerName);
         bool ValidateConditional(int index);
+
+        void NormalizeConditionState();
 
         string BuildEffectStringShort(bool NoMag = false, bool simple = false, bool useBaseProbability = false);
 

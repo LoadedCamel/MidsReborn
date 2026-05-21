@@ -46,6 +46,7 @@ namespace Mids_Reborn.UI.Controls
         private int _lineSpacing = -2;
         private int _designerItemCount = 10;
         private bool _designerHideHeadings;
+        private bool _decorateHeadings = true;
 
         // Rectangles for hit testing
         private Rectangle _textArea;
@@ -126,6 +127,19 @@ namespace Mids_Reborn.UI.Controls
 
         [Category("Appearance")]
         public WordwrapMode TextWrapMode { get; set; } = WordwrapMode.New;
+
+        [Category("Appearance")]
+        [DefaultValue(true)]
+        public bool DecorateHeadings
+        {
+            get => _decorateHeadings;
+            set
+            {
+                _decorateHeadings = value;
+                RecalculateLayout();
+                Invalidate();
+            }
+        }
 
         [Category("Layout")]
         public int PaddingX { get; set; } = 2;
@@ -611,9 +625,10 @@ namespace Mids_Reborn.UI.Controls
             if (string.IsNullOrEmpty(originalText) || maxWidth <= 0) return "";
 
             bool isHeading = state == MidsItemState.Heading;
+            bool decorateHeading = isHeading && DecorateHeadings;
 
             // For headings, the text is wrapped in tildes, which must be part of the calculation.
-            if (isHeading)
+            if (decorateHeading)
             {
                 originalText = $"~ {originalText.Trim()} ~";
             }

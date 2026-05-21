@@ -10,6 +10,22 @@ namespace Mids_Reborn.Core
     public class I9Slot : ICloneable
     {
         private const float SuperiorMult = 1.25f;
+        private readonly struct BoostAttribLookup
+        {
+            public BoostAttribLookup(
+                Enums.eEnhance[] enhancements,
+                Enums.eEffectType[] effectTypes,
+                string[] effectTags)
+            {
+                Enhancements = enhancements;
+                EffectTypes = effectTypes;
+                EffectTags = effectTags;
+            }
+
+            public Enums.eEnhance[] Enhancements { get; }
+            public Enums.eEffectType[] EffectTypes { get; }
+            public string[] EffectTags { get; }
+        }
 
         public int Enh;
         public Enums.eEnhGrade Grade;
@@ -82,24 +98,71 @@ namespace Mids_Reborn.Core
                 RelativeLevel = Enums.eEnhRelative.PlusFive;
             }
 
-            if (IOLevel <= 0)
-            {
-                IOLevel = 0;
-            }
-
-            if (IOLevel > DatabaseAPI.Database.MultIO.Length - 1)
-            {
-                IOLevel = DatabaseAPI.Database.MultIO.Length - 1;
-            }
+            var effectiveIoLevel = ResolveEffectiveIoLevel(iType);
 
             return DatabaseAPI.GetEnhancementMathPolicy()
                 .GetScheduleScale(
                     this,
                     iType,
                     Grade,
-                    IOLevel,
+                    effectiveIoLevel,
                     iSched,
                     Enh > -1 && DatabaseAPI.Database.Enhancements[Enh].Superior);
+        }
+
+        private int ResolveEffectiveIoLevel(Enums.eType enhancementType)
+        {
+            var resolvedIoLevel = Math.Clamp(IOLevel, 0, DatabaseAPI.Database.MultIO.Length - 1);
+            if (enhancementType is not (Enums.eType.InventO or Enums.eType.SetO) ||
+                Enh < 0 ||
+                Enh >= DatabaseAPI.Database.Enhancements.Length)
+            {
+                return resolvedIoLevel;
+            }
+
+            var enhancement = DatabaseAPI.Database.Enhancements[Enh];
+            var boostPower = enhancement.GetPower();
+            var runtimeBoostPower = boostPower as Power;
+            var usesPlayerLevel = runtimeBoostPower?.UsesPlayerLevelForBoostMath ?? boostPower?.BoostUsePlayerLevel == true;
+            if (!usesPlayerLevel)
+            {
+                var minimumLevel = enhancement.LevelMin;
+                var maximumLevel = enhancement.LevelMax;
+                if (runtimeBoostPower?.AllowsBoostersForBoostMath == true &&
+                    runtimeBoostPower.ImportedMaxBoostLevelZeroBased.HasValue)
+                {
+                    // Boostable IOs/set pieces should not consume their final boosted lookup step by default.
+                    // The user reaches that extra effectiveness only through explicit +/- boosting.
+                    var unboostedLookupCap = Math.Max(minimumLevel, runtimeBoostPower.ImportedMaxBoostLevelZeroBased.Value - 1);
+                    maximumLevel = Math.Min(maximumLevel, unboostedLookupCap);
+                }
+
+                maximumLevel = Math.Max(minimumLevel, maximumLevel);
+                var clampedIoLevel = Math.Clamp(
+                    resolvedIoLevel,
+                    Math.Max(0, minimumLevel),
+                    Math.Min(DatabaseAPI.Database.MultIO.Length - 1, maximumLevel));
+                return clampedIoLevel;
+            }
+
+            var configuredLevel = Math.Max(1, MidsContext.Config?.ForceLevel ?? Character.MaxLevel + 1) - 1;
+            var experienceLevel = MidsContext.Character?.Level ?? -1;
+            var resolvedPlayerLevel = Math.Max(Math.Max(0, configuredLevel), experienceLevel);
+            var effectiveMaximumLevel = enhancement.LevelMax;
+            if (boostPower is Power boostPolicyPower &&
+                boostPolicyPower.ImportedMaxBoostLevelZeroBased.HasValue)
+            {
+                effectiveMaximumLevel = boostPolicyPower.ImportedMaxBoostLevelZeroBased.Value;
+            }
+            else if (enhancement.TypeID == Enums.eType.SetO && enhancement.nIDSet > -1)
+            {
+                effectiveMaximumLevel = DatabaseAPI.Database.EnhancementSets[enhancement.nIDSet].LevelMax;
+            }
+
+            return Math.Clamp(
+                Math.Min(resolvedPlayerLevel, effectiveMaximumLevel),
+                0,
+                DatabaseAPI.Database.MultIO.Length - 1);
         }
 
         private float GetRelativeLevelMultiplier()
@@ -260,7 +323,7 @@ namespace Mids_Reborn.Core
                 .Select(effect => new
                 {
                     effect.Schedule,
-                    Value = GetScheduleValue(enhancement.TypeID, effect)
+                    Value = GetScheduleValue(enhancement.TypeID, effect, applyCurrentExemplarScaling: false)
                 })
                 .GroupBy(item => new
                 {
@@ -278,7 +341,10 @@ namespace Mids_Reborn.Core
             };
         }
 
-        private float GetScheduleValue(Enums.eType enhancementType, Enums.sEffect effect)
+        private float GetScheduleValue(
+            Enums.eType enhancementType,
+            Enums.sEffect effect,
+            bool applyCurrentExemplarScaling = true)
         {
             var scheduleMult = GetScheduleMult(enhancementType, effect.Schedule);
             if (Math.Abs(effect.Multiplier) > float.Epsilon)
@@ -286,7 +352,9 @@ namespace Mids_Reborn.Core
                 scheduleMult *= NormalizeClassicOrSpecialMultiplier(enhancementType, effect.Schedule, effect.Multiplier);
             }
 
-            return DatabaseAPI.GetEnhancementMathPolicy().ApplyCurrentExemplarScaling(scheduleMult);
+            return applyCurrentExemplarScaling
+                ? DatabaseAPI.GetEnhancementMathPolicy().ApplyCurrentExemplarScaling(scheduleMult)
+                : scheduleMult;
         }
 
         private float NormalizeClassicOrSpecialMultiplier(
@@ -340,13 +408,28 @@ namespace Mids_Reborn.Core
             }
 
             var enhancement = DatabaseAPI.Database.Enhancements[Enh];
-            foreach (var enhance in EnumerateBoostAttribCandidates(boostAttribName))
+            var lookup = GetBoostAttribLookup(boostAttribName);
+            if (TryGetScheduleBoostAttribScale(enhancement, lookup.Enhancements, out scale))
+            {
+                return true;
+            }
+
+            return TryGetBoostPowerEffectScale(enhancement, lookup, out scale);
+        }
+
+        private bool TryGetScheduleBoostAttribScale(
+            IEnhancement enhancement,
+            Enums.eEnhance[] candidates,
+            out float scale)
+        {
+            scale = 0f;
+            foreach (var enhance in candidates)
             {
                 var best = enhancement.Effect
                     .Where(effect => effect.Mode == Enums.eEffMode.Enhancement &&
                                      effect.Schedule != Enums.eSchedule.None &&
                                      (Enums.eEnhance)effect.Enhance.ID == enhance)
-                    .Select(effect => Math.Abs(GetScheduleValue(enhancement.TypeID, effect)))
+                    .Select(effect => Math.Abs(GetScheduleValue(enhancement.TypeID, effect, applyCurrentExemplarScaling: false)))
                     .DefaultIfEmpty(0f)
                     .Max();
 
@@ -360,38 +443,139 @@ namespace Mids_Reborn.Core
             return false;
         }
 
-        private static Enums.eEnhance[] EnumerateBoostAttribCandidates(string boostAttribName)
+        private bool TryGetBoostPowerEffectScale(
+            IEnhancement enhancement,
+            BoostAttribLookup lookup,
+            out float scale)
+        {
+            scale = 0f;
+            var boostPower = enhancement.GetPower();
+            if (boostPower == null)
+            {
+                return false;
+            }
+
+            var effectiveIoLevel = ResolveEffectiveIoLevel(enhancement.TypeID);
+            var best = boostPower.Effects
+                .Where(effect => MatchesBoostAttribEffect(effect, lookup))
+                .Select(effect => Math.Abs(effect.Scale * GetBoostPowerEffectModifier(effect, effectiveIoLevel)))
+                .DefaultIfEmpty(0f)
+                .Max();
+
+            if (best <= float.Epsilon)
+            {
+                return false;
+            }
+
+            scale = best;
+            return true;
+        }
+
+        private static bool MatchesBoostAttribEffect(IEffect effect, BoostAttribLookup lookup)
+        {
+            if (effect.EffectTags.Any(tag => lookup.EffectTags.Contains(tag, StringComparer.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+
+            if (lookup.EffectTypes.Contains(effect.EffectType))
+            {
+                return true;
+            }
+
+            var mappedEnhancement = EnhancementEffectMapper.MapEnhanceFromEffect(effect);
+            return mappedEnhancement != Enums.eEnhance.None &&
+                   lookup.Enhancements.Contains(mappedEnhancement);
+        }
+
+        private static float GetBoostPowerEffectModifier(IEffect effect, int zeroBasedLevel)
+        {
+            if (string.IsNullOrWhiteSpace(effect.ModifierTable))
+            {
+                return 1f;
+            }
+
+            var className = DatabaseAPI.ResolveModifierClassName(effect);
+            return DatabaseAPI.TryGetClassModifier(className, effect.ModifierTable, zeroBasedLevel, out var modifier)
+                ? modifier
+                : 1f;
+        }
+
+        private static BoostAttribLookup GetBoostAttribLookup(string boostAttribName)
         {
             return boostAttribName.ToLowerInvariant() switch
             {
-                "accuracy" => [Enums.eEnhance.Accuracy],
-                "damage" => [Enums.eEnhance.Damage, Enums.eEnhance.Resistance],
-                "defense" => [Enums.eEnhance.Defense],
-                "endurance" => [Enums.eEnhance.EnduranceDiscount, Enums.eEnhance.Endurance, Enums.eEnhance.Recovery],
-                "heal" => [Enums.eEnhance.Heal, Enums.eEnhance.Absorb, Enums.eEnhance.HitPoints, Enums.eEnhance.Regeneration],
-                "interrupt" => [Enums.eEnhance.Interrupt],
-                "jump" => [Enums.eEnhance.JumpHeight, Enums.eEnhance.SpeedJumping],
-                "movement" => [Enums.eEnhance.SpeedRunning, Enums.eEnhance.SpeedFlying, Enums.eEnhance.SpeedJumping, Enums.eEnhance.JumpHeight, Enums.eEnhance.Slow],
-                "mez" => [Enums.eEnhance.Mez],
-                "range" => [Enums.eEnhance.Range],
-                "rechargetime" => [Enums.eEnhance.RechargeTime, Enums.eEnhance.X_RechargeTime],
-                "resistance" => [Enums.eEnhance.Resistance],
-                "tohit" => [Enums.eEnhance.ToHit],
-                _ => []
+                "accuracy" => new BoostAttribLookup(
+                    [Enums.eEnhance.Accuracy],
+                    [Enums.eEffectType.Accuracy],
+                    ["accuracy"]),
+                "damage" => new BoostAttribLookup(
+                    [Enums.eEnhance.Damage, Enums.eEnhance.Resistance],
+                    [Enums.eEffectType.Damage, Enums.eEffectType.DamageBuff, Enums.eEffectType.Resistance],
+                    ["damage", "resistance"]),
+                "defense" => new BoostAttribLookup(
+                    [Enums.eEnhance.Defense],
+                    [Enums.eEffectType.Defense],
+                    ["defense"]),
+                "endurance" => new BoostAttribLookup(
+                    [Enums.eEnhance.EnduranceDiscount, Enums.eEnhance.Endurance, Enums.eEnhance.Recovery],
+                    [Enums.eEffectType.EnduranceDiscount, Enums.eEffectType.Endurance, Enums.eEffectType.Recovery],
+                    ["endurance", "endurancediscount", "recovery"]),
+                "heal" => new BoostAttribLookup(
+                    [Enums.eEnhance.Heal, Enums.eEnhance.Absorb, Enums.eEnhance.HitPoints, Enums.eEnhance.Regeneration],
+                    [Enums.eEffectType.Heal, Enums.eEffectType.Absorb, Enums.eEffectType.HitPoints, Enums.eEffectType.Regeneration],
+                    ["heal", "absorb", "hitpoints", "regen", "regeneration"]),
+                "interrupt" or "interrupttime" => new BoostAttribLookup(
+                    [Enums.eEnhance.Interrupt],
+                    [Enums.eEffectType.InterruptTime],
+                    ["interrupt", "interrupttime"]),
+                "jump" => new BoostAttribLookup(
+                    [Enums.eEnhance.JumpHeight, Enums.eEnhance.SpeedJumping],
+                    [Enums.eEffectType.JumpHeight, Enums.eEffectType.SpeedJumping, Enums.eEffectType.MaxJumpSpeed],
+                    ["jump", "jumpheight", "speedjumping"]),
+                "knock" => new BoostAttribLookup(
+                    [],
+                    [],
+                    ["knock", "knockback", "knockup"]),
+                "mez" => new BoostAttribLookup(
+                    [Enums.eEnhance.Mez],
+                    [Enums.eEffectType.Mez],
+                    ["mez", "hold", "immobilize", "immobilization", "sleep", "fear", "confuse", "taunt", "placate", "stun", "intangible"]),
+                "movement" => new BoostAttribLookup(
+                    [Enums.eEnhance.SpeedRunning, Enums.eEnhance.SpeedFlying, Enums.eEnhance.SpeedJumping, Enums.eEnhance.JumpHeight, Enums.eEnhance.Slow],
+                    [Enums.eEffectType.SpeedRunning, Enums.eEffectType.SpeedFlying, Enums.eEffectType.SpeedJumping, Enums.eEffectType.MaxRunSpeed, Enums.eEffectType.MaxFlySpeed, Enums.eEffectType.MaxJumpSpeed, Enums.eEffectType.JumpHeight, Enums.eEffectType.Slow, Enums.eEffectType.Fly],
+                    ["movement", "run", "speedrunning", "fly", "speedflying", "jump", "speedjumping", "slow"]),
+                "perception" => new BoostAttribLookup(
+                    [],
+                    [Enums.eEffectType.PerceptionRadius],
+                    ["perception", "perceptionradius"]),
+                "range" => new BoostAttribLookup(
+                    [Enums.eEnhance.Range],
+                    [Enums.eEffectType.Range],
+                    ["range"]),
+                "rechargetime" => new BoostAttribLookup(
+                    [Enums.eEnhance.RechargeTime, Enums.eEnhance.X_RechargeTime],
+                    [Enums.eEffectType.RechargeTime],
+                    ["rechargetime", "recharge", "x_rechargetime"]),
+                "regen" or "regeneration" => new BoostAttribLookup(
+                    [Enums.eEnhance.Regeneration],
+                    [Enums.eEffectType.Regeneration],
+                    ["regen", "regeneration"]),
+                "resistance" => new BoostAttribLookup(
+                    [Enums.eEnhance.Resistance],
+                    [Enums.eEffectType.Resistance],
+                    ["resistance"]),
+                "tohit" => new BoostAttribLookup(
+                    [Enums.eEnhance.ToHit],
+                    [Enums.eEffectType.ToHit],
+                    ["tohit"]),
+                _ => new BoostAttribLookup([], [], [])
             };
         }
 
         private static bool IsProcLikeBoostPower(IPower? enhBoostPower)
         {
-            if (enhBoostPower == null)
-            {
-                return false;
-            }
-
-            return enhBoostPower.Effects.Any(effect =>
-                effect is { Absorbed_Effect: false } &&
-                effect.EffectType != Enums.eEffectType.GrantPower &&
-                (effect.ProcsPerMinute > 0f || effect.Probability < 1f));
+            return EnhancementProcRules.HasToggleableProcEffect(enhBoostPower);
         }
 
         private bool TryBuildProcPowerEffectsString(IPower? enhBoostPower, out string effectList)
@@ -446,7 +630,7 @@ namespace Mids_Reborn.Core
                         break;
                     case Enums.eEffMode.Enhancement when sEffect.Schedule != Enums.eSchedule.None:
                         {
-                            var scheduleMult = GetScheduleValue(enhancement.TypeID, sEffect);
+                            var scheduleMult = GetScheduleValue(enhancement.TypeID, sEffect, applyCurrentExemplarScaling: false);
 
                             var id = (Enums.eEnhance)sEffect.Enhance.ID;
                             string str2;
@@ -492,7 +676,8 @@ namespace Mids_Reborn.Core
 
                             if (!string.IsNullOrEmpty(str2))
                             {
-                                var tooltipLine = $"{str2} enhancement (Sched. {Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule)}: {DisplayValueFormatter.FormatPercentFromScale(scheduleMult)}%{(Math.Abs(sEffect.Multiplier) > float.Epsilon & sEffect.Multiplier != 1 & sEffect.Multiplier != 0.625 & sEffect.Multiplier != 0.5 & sEffect.Multiplier != 0.4375 ? $" [x{DisplayValueFormatter.FormatNumber(sEffect.Multiplier, 4)}]" : "")})";
+                                var tooltipLine = GroupedFx.FormatPresentationText(
+                                    $"Increased {str2} (Sched. {Enum.GetName(sEffect.Schedule.GetType(), sEffect.Schedule)}: {DisplayValueFormatter.FormatPercentFromScale(scheduleMult)}%)");
                                 AppendTooltipLine(stringBuilder, seenLines, tooltipLine);
                             }
 
@@ -539,7 +724,7 @@ namespace Mids_Reborn.Core
                     }
 
                     stringBuilder.Append(groupedPopupEffects);
-                    str1 = stringBuilder.ToString().Replace("Slf", "Self").Replace("Tgt", "Target");
+                    str1 = GroupedFx.FormatPresentationText(stringBuilder.ToString());
                     return str1;
                 }
 
@@ -552,7 +737,7 @@ namespace Mids_Reborn.Core
                     }
 
                     stringBuilder.Append(groupedGrantEffects);
-                    str1 = stringBuilder.ToString().Replace("Slf", "Self").Replace("Tgt", "Target");
+                    str1 = GroupedFx.FormatPresentationText(stringBuilder.ToString());
                     return str1;
                 }
 
@@ -568,80 +753,32 @@ namespace Mids_Reborn.Core
                             stringBuilder.Append("\n");
                         }
 
-                        stringBuilder.Append(power.Effects[index1].BuildEffectString(true, "", false, false, false, true, false, false, true));
+                        stringBuilder.Append(GroupedFx.FormatPresentationText(
+                            power.Effects[index1].BuildEffectString(true, "", false, false, false, true, false, false, true)));
 
-                        var empty = string.Empty;
-
-                        var groupedEffectsArray = power.Effects.Where(x => x.EffectType.Equals(Enums.eEffectType.DamageBuff) || x.EffectType.Equals(Enums.eEffectType.Defense) || x.EffectType.Equals(Enums.eEffectType.Resistance) || x.EffectType.Equals(Enums.eEffectType.Elusivity) || x.EffectType.Equals(Enums.eEffectType.Mez)).ToArray();
-                        for (var effectId = 0; effectId < groupedEffectsArray.Length; effectId++)
+                        var absorbedEffectIds = power.Effects
+                            .Select((effect, effectId) => new { effect, effectId })
+                            .Where(item => item.effect.Absorbed_EffectID == index1)
+                            .Select(item => item.effectId)
+                            .ToArray();
+                        var absorbedText = GroupedFx.BuildPopupTooltipText(
+                            power,
+                            absorbedEffectIds,
+                            static (_, effect) => effect.EffectClass != Enums.eEffectClass.Ignored &&
+                                                  effect.EffectType != Enums.eEffectType.GrantPower);
+                        if (!string.IsNullOrWhiteSpace(absorbedText))
                         {
-                            if (power.Effects[index1] == groupedEffectsArray[effectId])
+                            foreach (var absorbedLine in absorbedText
+                                         .Replace("\r\n", "\n", StringComparison.Ordinal)
+                                         .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
                             {
-                                groupedEffectsArray[effectId].Buffable = true;
-                            }
-
-                            if (groupedEffectsArray[effectId].Absorbed_EffectID == index1)
-                            {
-                                power.GetEffectStringGrouped(effectId, ref empty, ref returnMask, false, false, false, true, true);
-                            }
-
-                            if (returnMask.Length <= 0)
-                            {
-                                continue;
-                            }
-
-                            if (stringBuilder.Length > 0)
-                            {
-                                stringBuilder.Append("\n");
-                            }
-
-                            stringBuilder.AppendFormat("  {0}", empty);
-                            break;
-                        }
-
-                        var empty2 = string.Empty;
-                        var groupedMezEffectsArray = power.Effects.Where(x => x.EffectType == Enums.eEffectType.MezResist).ToArray();
-                        if (groupedMezEffectsArray.Length > 0)
-                        {
-                            for (var effectId = 0; effectId < power.Effects.Length; effectId++)
-                            {
-                                var flag6 = returnMask.Any(m => m == effectId);
-
-                                if (power.Effects[effectId].Absorbed_EffectID != index1 || flag6)
-                                {
-                                    continue;
-                                }
                                 if (stringBuilder.Length > 0)
                                 {
                                     stringBuilder.Append("\n");
                                 }
 
-                                power.GetEffectStringGrouped(effectId, ref empty2, ref returnMask, false, false, false,
-                                    true, true);
-                                stringBuilder.AppendFormat("  {0}", empty2);
-                                break;
-                            }
-                        }
-                        else
-                        {
-
-                            for (var index2 = 0; index2 < power.Effects.Length; index2++)
-                            {
-                                var flag6 = returnMask.Any(m => m == index2);
-
-                                if (power.Effects[index2].Absorbed_EffectID != index1 || flag6)
-                                {
-                                    continue;
-                                }
-
-                                if (stringBuilder.Length > 0)
-                                {
-                                    stringBuilder.Append("\n");
-                                }
-
-                                var displayEffect = (IEffect)power.Effects[index2].Clone();
-                                displayEffect.Buffable = true;
-                                stringBuilder.AppendFormat("  {0}", displayEffect.BuildEffectString(true, "", false, false, false, true, false, false, true));
+                                stringBuilder.Append("  ");
+                                stringBuilder.Append(absorbedLine);
                             }
                         }
                     }
@@ -674,11 +811,11 @@ namespace Mids_Reborn.Core
                             }
                         }
 
-                        AppendTooltipLine(stringBuilder, seenLines, effectString);
+                        AppendTooltipLine(stringBuilder, seenLines, GroupedFx.FormatPresentationText(effectString));
                     }
                 }
 
-                str1 = stringBuilder.ToString().Replace("Slf", "Self").Replace("Tgt", "Target");
+                str1 = GroupedFx.FormatPresentationText(stringBuilder.ToString());
             }
 
             return str1;

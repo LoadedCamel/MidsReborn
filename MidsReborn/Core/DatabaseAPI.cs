@@ -3608,6 +3608,11 @@ namespace Mids_Reborn.Core
                 var powerset = Database.Powersets[index1];
                 powerset.nID = index1;
                 powerset.nArchetype = NidFromUidClass(powerset.ATClass);
+                if (string.IsNullOrWhiteSpace(powerset.UIDTrunkSet))
+                {
+                    powerset.UIDTrunkSet = CompositePowersetRules.GetTrunkPowersetFullName(powerset.FullName);
+                }
+
                 powerset.nIDTrunkSet = string.IsNullOrEmpty(powerset.UIDTrunkSet)
                     ? -1
                     : NidFromUidPowerset(powerset.UIDTrunkSet);
@@ -3645,6 +3650,13 @@ namespace Mids_Reborn.Core
                 }
 
                 power1.PowerIndex = index;
+                if (CompositePowersetRules.ShouldForceVisibleOnImport(power1.FullName))
+                {
+                    power1.HiddenPower = false;
+                    power1.IncludeFlag = false;
+                    power1.InherentType = Enums.eGridType.None;
+                }
+
                 power1.PowerSetID = NidFromUidPowerset(power1.FullSetName);
                 if (power1.PowerSetID <= -1)
                 {

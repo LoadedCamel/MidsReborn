@@ -92,8 +92,7 @@ namespace Mids_Reborn.Core.Import
             return IsValid && iEffect.EffectType == Data.EffectType && iEffect.DamageType == Data.DamageType &&
                    iEffect.MezType == Data.MezType && iEffect.ETModifies == Data.ETModifies &&
                    iEffect.PvMode == Data.PvMode && iEffect.ToWho == Data.ToWho &&
-                   iEffect.SpecialCase == Data.SpecialCase && 
-                   iEffect.ActiveConditionals == Data.ActiveConditionals && 
+                   string.Equals(iEffect.ConditionIdentity, Data.ConditionIdentity, StringComparison.OrdinalIgnoreCase) &&
                    iEffect.AttribType == Data.AttribType &&
                    iEffect.Aspect == Data.Aspect && iEffect.Reward == Data.Reward &&
                    iEffect.EffectId == Data.EffectId && iEffect.Summon == Data.Summon;
@@ -199,15 +198,9 @@ namespace Mids_Reborn.Core.Import
                     flag2 = true;
                 }
 
-                if (iEffect.SpecialCase != Data.SpecialCase)
+                if (!string.Equals(iEffect.ConditionIdentity, Data.ConditionIdentity, StringComparison.OrdinalIgnoreCase))
                 {
-                    message += $"SpecialCase: {iEffect.SpecialCase} => {Data.SpecialCase}";
-                    flag2 = true;
-                }
-
-                if (iEffect.ActiveConditionals != Data.ActiveConditionals)
-                {
-                    message += $"ActiveConditionals: {iEffect.ActiveConditionals} => {Data.ActiveConditionals}";
+                    message += $"AdvancedConditions: {iEffect.ConditionIdentity} => {Data.ConditionIdentity}";
                     flag2 = true;
                 }
 

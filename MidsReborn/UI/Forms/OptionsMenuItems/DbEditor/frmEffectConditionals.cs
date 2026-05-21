@@ -23,7 +23,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private bool _loadingModernRow;
         private Dictionary<string, string> _CSFieldsRev;
 
-        public frmEffectConditionals(List<KeyValue<string, string>>? conditions)
+        public frmEffectConditionals(AdvancedConditionSet? advancedConditions)
         {
             InitializeComponent();
             _conditionalTypes =
@@ -44,16 +44,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             _CSFieldsRev = ConfigData.CombatContext.EnumerateFields(MidsContext.Config.CombatContextSettings)
                 .ToDictionary(ConfigData.CombatContext.FormatSettingName, e => e);
 
-            if (conditions != null)
-            {
-                Conditionals = conditions.Clone();
-            }
-            else
-            {
-                Conditionals = [];
-            }
-
-            AdvancedConditions = AdvancedConditionSet.FromLegacyActiveConditionals(Conditionals);
+            Conditionals = [];
+            AdvancedConditions = advancedConditions?.Clone() ?? new AdvancedConditionSet();
 
             Text = @"Effect Conditions";
             Icon = Resources.MRB_Icon_Concept;
@@ -1436,7 +1428,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     item.SubItems.Add("");
                     item.SubItems.Add(value);
                     lvActiveConditionals.Items.Add(item);
-                    Conditionals.Add(new KeyValue<string, string>($"{linkPrefix}Active:{powerName}", value));
                     break;
                 
                 case "Power Taken":
@@ -1458,7 +1449,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     item.SubItems.Add("");
                     item.SubItems.Add(value);
                     lvActiveConditionals.Items.Add(item);
-                    Conditionals.Add(new KeyValue<string, string>($"{linkPrefix}Taken:{powerName}", value));
                     break;
                 
                 case "Stacks":
@@ -1492,7 +1482,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     item.SubItems.Add(cOp);
                     item.SubItems.Add(value);
                     lvActiveConditionals.Items.Add(item);
-                    Conditionals.Add(new KeyValue<string, string>($"{linkPrefix}Stacks:{powerName}", $"{cOp} {value}"));
                     break;
                 
                 case "Team Members":
@@ -1521,7 +1510,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     item.SubItems.Add(cOp);
                     item.SubItems.Add(value);
                     lvActiveConditionals.Items.Add(item);
-                    Conditionals.Add(new KeyValue<string, string>($"{linkPrefix}Team:{archetype}", $"{cOp} {value}"));
                     break;
 
                 case "Combat Setting":
@@ -1555,7 +1543,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     item.SubItems.Add(cOp);
                     item.SubItems.Add(value);
                     lvActiveConditionals.Items.Add(item);
-                    Conditionals.Add(new KeyValue<string, string>($"{linkPrefix}Config:{_CSFieldsRev[field]}", $"{cOp} {value}"));
 
                     break;
 
@@ -1683,14 +1670,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     break;
             }
 
-            foreach (var legacyRow in AdvancedConditionSet.FromLegacyActiveConditionals(Conditionals).Rows)
-            {
-                if (AdvancedConditions.Rows.All(row => row.Kind != legacyRow.Kind || row.Subject != legacyRow.Subject || row.Value != legacyRow.Value || row.Operator != legacyRow.Operator))
-                {
-                    AdvancedConditions.Rows.Add(legacyRow);
-                }
-            }
-
             SyncLegacyConditionalsFromAdvanced();
             RefreshConditionRows();
             panelLinkType.Visible = AdvancedConditions.Rows.Count > 0;
@@ -1704,12 +1683,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 return;
             }
 
-            foreach (var cVp in Conditionals.Where(kv => kv.Key.Contains(lvActiveConditionals.SelectedItems[0].Name))
-                         .ToList())
-            {
-                Conditionals.Remove(cVp);
-            }
-
             var selectedName = lvActiveConditionals.SelectedItems[0].Name;
             var selectedCondition = lvActiveConditionals.SelectedItems[0].SubItems.Count > 1
                 ? lvActiveConditionals.SelectedItems[0].SubItems[1].Text
@@ -1720,11 +1693,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 string.Equals(GetAdvancedConditionDisplay(row), selectedCondition, StringComparison.OrdinalIgnoreCase));
 
             lvActiveConditionals.SelectedItems[0].Remove();
-            if (Conditionals.Count == 1)
-            {
-                Conditionals[0] = new KeyValue<string, string>(Conditionals[0].Key.Replace("OR ", ""), Conditionals[0].Value);
-                lvActiveConditionals.Items[0].SubItems[0] = new ListViewItem.ListViewSubItem(lvActiveConditionals.Items[0], "");
-            }
 
             SyncLegacyConditionalsFromAdvanced();
             RefreshConditionRows();
@@ -1796,7 +1764,6 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private void SyncLegacyConditionalsFromAdvanced()
         {
             Conditionals.Clear();
-            Conditionals.AddRange(AdvancedConditions.ToLegacyActiveConditionals());
         }
 
         protected override void WndProc(ref Message m)

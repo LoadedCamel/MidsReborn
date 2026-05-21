@@ -260,7 +260,11 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 .ToList();
 
             var itemsConditionals = DatabaseAPI.Database.Power
-                .Where(e => e != null && e.Effects.Any(f => f.ActiveConditionals != null && f.ActiveConditionals.Any(g => g.Key.Contains(pwName))))
+                .Where(e => e != null && e.Effects.Any(f =>
+                    f.AdvancedConditions.Rows.Any(row =>
+                        row.Subject.Contains(pwName, StringComparison.OrdinalIgnoreCase) ||
+                        row.Value.Contains(pwName, StringComparison.OrdinalIgnoreCase) ||
+                        row.RawExpression.Contains(pwName, StringComparison.OrdinalIgnoreCase))))
                 .ToList();
 
             var itemsList = itemsOverride.Select(e => new[] { $"{e!.StaticIndex}", e.DisplayName, $"{e.FullName} (Override)"})

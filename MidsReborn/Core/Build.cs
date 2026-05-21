@@ -1115,6 +1115,43 @@ namespace Mids_Reborn.Core
             return FindInToonHistory(power.PowerIndex) > -1;
         }
 
+        public bool OwnsPowerByFullName(string? powerFullName)
+        {
+            if (string.IsNullOrWhiteSpace(powerFullName))
+            {
+                return false;
+            }
+
+            var resolvedPower = DatabaseAPI.GetPowerByFullName(powerFullName);
+            if (resolvedPower != null && PowerUsed(resolvedPower))
+            {
+                return true;
+            }
+
+            return SetBonusPowers.Any(power =>
+                string.Equals(power.FullName, powerFullName, StringComparison.OrdinalIgnoreCase));
+        }
+
+        public int CountOwnedPowersByFullNamePrefix(string? powerNamePrefix)
+        {
+            var prefix = (powerNamePrefix ?? string.Empty).Trim().Trim('.');
+            if (string.IsNullOrWhiteSpace(prefix))
+            {
+                return 0;
+            }
+
+            var ownedFullNames = Powers
+                .Where(entry => entry?.Power != null)
+                .Select(entry => entry!.Power!.FullName)
+                .Concat(SetBonusPowers.Select(power => power.FullName))
+                .Where(fullName => !string.IsNullOrWhiteSpace(fullName))
+                .Distinct(StringComparer.OrdinalIgnoreCase);
+
+            return ownedFullNames.Count(fullName =>
+                fullName.Equals(prefix, StringComparison.OrdinalIgnoreCase) ||
+                fullName.StartsWith(prefix + ".", StringComparison.OrdinalIgnoreCase));
+        }
+
         public bool PowerActive(IPower power)
         {
             for (var powerIdx = 0; powerIdx <= Powers.Count - 1; ++powerIdx)
@@ -1878,11 +1915,9 @@ namespace Mids_Reborn.Core
 
                     for (var j = 0; j < enhancementSet.Bonus.Length; j++)
                     {
-                        var pvMode = enhancementSet.Bonus[j].PvMode;
+                        var pvMode = enhancementSet.GetEffectiveBonusPvMode(j, false);
                         if (!((s.SetInfo[i].SlottedCount >= enhancementSet.Bonus[j].Slotted) &
-                              ((pvMode == Enums.ePvX.Any) |
-                               ((pvMode == Enums.ePvX.PvE) & !MidsContext.Config.Inc.DisablePvE) |
-                               ((pvMode == Enums.ePvX.PvP) & MidsContext.Config.Inc.DisablePvE))))
+                              enhancementSet.BonusAppliesInContext(j, false, MidsContext.Config.Inc.DisablePvE)))
                             continue;
 
                         var setEffectsData = enhancementSet.GetEffectDetailedData2(j, false);

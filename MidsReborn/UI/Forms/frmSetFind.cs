@@ -611,44 +611,12 @@ namespace Mids_Reborn.UI.Forms
 
         private string GetPowerString(int nIDPower)
         {
-            var str1 = "";
-            var returnString = "";
-            var returnMask = Array.Empty<int>();
-            DatabaseAPI.Database.Power[nIDPower]
-                .GetEffectStringGrouped(0, ref returnString, ref returnMask, true, true, true);
-            if (returnString != "")
-            {
-                return returnString;
-            }
-
-            for (var index1 = 0; index1 < DatabaseAPI.Database.Power[nIDPower].Effects.Length; index1++)
-            {
-                var flag = false;
-                foreach (var m in returnMask)
-                {
-                    if (index1 == m)
-                        flag = true;
-                }
-
-                if (flag)
-                    continue;
-                if (str1 != "")
-                    str1 += ", ";
-                var str3 = DatabaseAPI.Database.Power[nIDPower].Effects[index1].BuildEffectString(true, "", true).Trim();
-                if (str3.Contains("Res("))
-                    str3 = str3.Replace("Res(", "Resistance(");
-                if (str3.Contains("Def("))
-                    str3 = str3.Replace("Def(", "Defense(");
-                if (str3.Contains("EndRec"))
-                    str3 = str3.Replace("EndRec", "Recovery");
-                if (str3.Contains("Endurance"))
-                    str3 = str3.Replace("Endurance", "Max End");
-                else if (str3.Contains("End") & !str3.Contains("Max End"))
-                    str3 = str3.Replace("End", "Max End");
-                str1 += str3;
-            }
-
-            return str1;
+            return GroupedFx.BuildPresentationText(
+                DatabaseAPI.Database.Power[nIDPower],
+                new GroupedFx.GroupedFxPresentationRequest(
+                    SimpleText: true,
+                    IgnoreConditions: true,
+                    LineJoinMode: GroupedFx.GroupedFxLineJoinMode.SingleLine));
         }
 
         private void UpdateEffectSubAttribList(out bool hasSubs)

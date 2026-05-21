@@ -29,7 +29,8 @@ internal static class PlannerPowerAssembly
                 continue;
             }
 
-            if (currentPowerEntry.ProcInclude & enhancement.IsProc)
+            var isProcEnhancement = EnhancementProcRules.IsProcToggleEligible(enhancement);
+            if (currentPowerEntry.ProcInclude & isProcEnhancement)
             {
                 continue;
             }
@@ -42,6 +43,11 @@ internal static class PlannerPowerAssembly
 
             foreach (var enhancementEffect in enhancementPower.Effects)
             {
+                if (!enhancementEffect.AffectsPetsOnly() && IsLocalBoostEnhancementEffect(enhancementEffect))
+                {
+                    continue;
+                }
+
                 var shouldAddEffect = false;
                 if (enhancementEffect.AffectsPetsOnly() && power.IsSummonPower)
                 {
@@ -66,7 +72,7 @@ internal static class PlannerPowerAssembly
                                     continue;
                                 }
 
-                                AddClonedEffectToList(newEffects, enhancementEffect, enhancement.IsProc);
+                                AddClonedEffectToList(newEffects, enhancementEffect, isProcEnhancement, power);
                                 if (enhancementEffect.EffectType == Enums.eEffectType.GrantPower)
                                 {
                                     entityPower.HasGrantPowerEffect = true;
@@ -80,10 +86,12 @@ internal static class PlannerPowerAssembly
                     var enhancementIndex = DatabaseAPI.TryGetSetRawMemberPositionForEnhancement(slotEntry.Enhancement.Enh, out _, out var rawMemberPosition)
                         ? rawMemberPosition
                         : -1;
+                    var hasLinkedSpecialBonus = enhancementIndex >= 0 &&
+                                                enhancementSet.SpecialBonus[enhancementIndex].Index.Length > 0;
 
                     shouldAddEffect = enhancementIndex >= 0 &&
-                                      enhancementSet.SpecialBonus[enhancementIndex].Index.Length <= 0 &&
-                                      (enhancement.Effect.All(effect => effect.Mode != Enums.eEffMode.Enhancement) ||
+                                      (hasLinkedSpecialBonus ||
+                                       enhancement.Effect.All(effect => effect.Mode != Enums.eEffMode.Enhancement) ||
                                        !Regex.IsMatch(enhancementEffect.ModifierTable, @"^(Melee|Ranged)_Boosts_"));
                 }
 
@@ -92,7 +100,7 @@ internal static class PlannerPowerAssembly
                     continue;
                 }
 
-                AddClonedEffectToList(newEffects, enhancementEffect, enhancement.IsProc);
+                AddClonedEffectToList(newEffects, enhancementEffect, isProcEnhancement, power);
                 if (enhancementEffect.EffectType == Enums.eEffectType.GrantPower)
                 {
                     power.HasGrantPowerEffect = true;
@@ -104,6 +112,22 @@ internal static class PlannerPowerAssembly
         {
             power.Effects = power.Effects.Concat(newEffects).ToArray();
         }
+    }
+
+    private static bool IsLocalBoostEnhancementEffect(IEffect enhancementEffect)
+    {
+        if (enhancementEffect == null)
+        {
+            return false;
+        }
+
+        if (EnhancementEffectMapper.MapEnhanceFromEffect(enhancementEffect) == Enums.eEnhance.None)
+        {
+            return false;
+        }
+
+        return !string.IsNullOrWhiteSpace(enhancementEffect.ModifierTable) &&
+               enhancementEffect.ModifierTable.Contains("_Boosts_", StringComparison.OrdinalIgnoreCase);
     }
 
     public static bool AddSubPowerEffects(Build? build, ref IPower power, int historyIndex)
@@ -144,7 +168,7 @@ internal static class PlannerPowerAssembly
         return true;
     }
 
-    private static void AddClonedEffectToList(ICollection<IEffect> effectsList, IEffect enhancementEffect, bool isProc, bool isEnhancementEffect = true)
+    private static void AddClonedEffectToList(ICollection<IEffect> effectsList, IEffect enhancementEffect, bool isProc, IPower? ownerPower, bool isEnhancementEffect = true)
     {
         if (enhancementEffect.Clone() is not IEffect clonedEffect)
         {
@@ -158,6 +182,10 @@ internal static class PlannerPowerAssembly
         clonedEffect.Ticks = enhancementEffect.Ticks;
         clonedEffect.Buffable = false;
         clonedEffect.AddResolvedEffectKind(PlannerResolvedEffectKind.Base);
+        if (ownerPower != null)
+        {
+            clonedEffect.SetPower(ownerPower);
+        }
         effectsList.Add(clonedEffect);
     }
 }

@@ -334,6 +334,17 @@ public sealed class OmniPowerClassifier
             classification.Reasons.Add("restored visible normal build powerset pick");
         }
 
+        if (CompositePowersetRules.ShouldForceVisibleOnImport(power.FullName))
+        {
+            classification.HiddenPower = false;
+            classification.IncludeFlag = false;
+            classification.InherentType = Enums.eGridType.None;
+            classification.GrantedSupportPower = false;
+            classification.ExecutionOnly = false;
+            classification.NormalBuildPick = true;
+            classification.Reasons.Add("forced visible composite starter power");
+        }
+
         if (IsPowersetPlannerControl(power, group, name))
         {
             classification.HiddenPower = true;

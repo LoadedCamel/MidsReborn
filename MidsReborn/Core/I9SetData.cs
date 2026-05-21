@@ -90,12 +90,10 @@ namespace Mids_Reborn.Core
                          index2 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus.Length - 1;
                          ++index2)
                     {
+                        var enhancementSet = DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX];
                         if (!((DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].Slotted <=
                                SetInfo[index1].SlottedCount) &
-                              ((DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].PvMode ==
-                                pvMode) |
-                               (DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].PvMode ==
-                                Enums.ePvX.Any))))
+                              enhancementSet.BonusAppliesInContext(index2, false, pvMode == Enums.ePvX.PvP)))
                             continue;
                         for (var index3 = 0;
                              index3 <= DatabaseAPI.Database.EnhancementSets[SetInfo[index1].SetIDX].Bonus[index2].Index

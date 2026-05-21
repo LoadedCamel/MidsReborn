@@ -140,11 +140,12 @@ public static class PowerCanonicalStats
     internal static IEnumerable<PowerStatsGrid.Row> BuildRows(
         IPower? pBase,
         IPower? pEnh,
-        CalculationContributionSnapshot? contributions = null)
+        CalculationContributionSnapshot? contributions = null,
+        int historyIndex = -1)
     {
         if (pBase == null) yield break;
 
-        var pe = TryGetPowerEntry(pBase);
+        var pe = TryGetPowerEntry(pBase, pEnh, historyIndex);
         bool isInBuild = pe != null;
 
         // If pEnh is missing or unresolved, fall back to pBase.
@@ -356,11 +357,24 @@ public static class PowerCanonicalStats
         return impact;
     }
 
-    private static PowerEntry? TryGetPowerEntry(IPower p)
+    private static PowerEntry? TryGetPowerEntry(IPower pBase, IPower? pEnh, int historyIndex)
     {
         var build = MidsContext.Character?.CurrentBuild;
         if (build == null) return null;
-        return build.Powers.FirstOrDefault(x => x?.Power != null && x.Power.PowerIndex == p.PowerIndex);
+
+        if (historyIndex >= 0 && historyIndex < build.Powers.Count)
+        {
+            var historyEntry = build.Powers[historyIndex];
+            if (historyEntry?.Power != null)
+            {
+                return historyEntry;
+            }
+        }
+
+        return build.Powers.FirstOrDefault(x =>
+            x?.Power != null &&
+            (x.Power.PowerIndex == pBase.PowerIndex ||
+             (pEnh != null && x.Power.PowerIndex == pEnh.PowerIndex)));
     }
 
     private static string BuildTooltip(

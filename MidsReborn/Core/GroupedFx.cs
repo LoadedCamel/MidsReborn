@@ -59,6 +59,19 @@ namespace Mids_Reborn.Core
 
     #endregion
 
+    /// <summary>
+    /// Canonical presentation grouper for power and enhancement effects.
+    /// The public surface stays centered on <see cref="GroupedFx"/>, while
+    /// the internal pipeline is split across well-defined helper sections that:
+    /// 1. Select source effects for presentation.
+    /// 2. Group compatible effects into display rows.
+    /// 3. Compact vectors such as typed damage and mez into human-readable labels.
+    /// 4. Project grouped rows into popup text, paired-list items, and effect-grid items.
+    ///
+    /// Other classes should treat this type as the only authority for grouped
+    /// presentation output and should not apply extra regex or string cleanup
+    /// after it returns display text.
+    /// </summary>
     public class GroupedFx : ICloneable
     {
         private const float Tolerance = 1e-4f;
@@ -76,6 +89,339 @@ namespace Mids_Reborn.Core
             }
 
             return Math.Abs(left - right) < Tolerance;
+        }
+
+        private static Enums.eEffectType GetPresentationEffectType(IEffect effect)
+        {
+            return effect.EffectType == Enums.eEffectType.Resistance && effect.MezType != Enums.eMez.None
+                ? Enums.eEffectType.MezResist
+                : effect.EffectType;
+        }
+
+        // ===== Canonical presentation facade =====
+
+        /// <summary>
+        /// Controls how grouped presentation rows are joined when the caller
+        /// asks for rendered text instead of structured rows.
+        /// </summary>
+        internal enum GroupedFxLineJoinMode
+        {
+            MultiLine,
+            SingleLine
+        }
+
+        /// <summary>
+        /// Immutable request for grouped presentation output. Callers specify
+        /// the source power plus the subset/filter/joining rules they need,
+        /// and the canonical <see cref="GroupedFx"/> pipeline handles the rest.
+        /// </summary>
+        internal sealed record GroupedFxPresentationRequest(
+            IEnumerable<int>? IncludedEffectIds = null,
+            Func<GroupedFx, IEffect, bool>? GroupFilter = null,
+            bool IncludeDamage = true,
+            bool SimpleText = true,
+            bool IgnoreConditions = true,
+            GroupedFxLineJoinMode LineJoinMode = GroupedFxLineJoinMode.MultiLine);
+
+        /// <summary>
+        /// Neutral row model shared by popup text and effect-list projections.
+        /// It carries the already-grouped text plus any optional list metadata.
+        /// </summary>
+        internal sealed record GroupedFxPresentationRow(
+            FxId Identifier,
+            IReadOnlyList<int> IncludedEffectIds,
+            string Label,
+            string Text,
+            string? Value,
+            string? AltValue,
+            string? Tooltip,
+            bool IsSpecial,
+            bool IsConditional,
+            bool IsUnique,
+            bool IsEnhancementEffect);
+
+        /// <summary>
+        /// Canonical grouped presentation result. Rows stay structured for
+        /// callers that need metadata, while convenience helpers can render the
+        /// rows back into popup/list strings using one join rule.
+        /// </summary>
+        internal sealed class GroupedFxPresentationResult
+        {
+            private readonly GroupedFxLineJoinMode _defaultJoinMode;
+
+            internal GroupedFxPresentationResult(
+                IReadOnlyList<GroupedFxPresentationRow> rows,
+                GroupedFxLineJoinMode defaultJoinMode)
+            {
+                Rows = rows;
+                _defaultJoinMode = defaultJoinMode;
+            }
+
+            internal IReadOnlyList<GroupedFxPresentationRow> Rows { get; }
+
+            internal IReadOnlyList<string> ToLines(GroupedFxLineJoinMode? joinModeOverride = null)
+            {
+                if (Rows.Count == 0)
+                {
+                    return Array.Empty<string>();
+                }
+
+                var joinMode = joinModeOverride ?? _defaultJoinMode;
+                var seen = new HashSet<string>(StringComparer.Ordinal);
+                var parts = new List<string>();
+
+                foreach (var row in Rows)
+                {
+                    foreach (var line in SplitPresentationLines(row.Text))
+                    {
+                        if (seen.Add(line))
+                        {
+                            parts.Add(line);
+                        }
+                    }
+                }
+
+                if (parts.Count == 0)
+                {
+                    return Array.Empty<string>();
+                }
+
+                return joinMode == GroupedFxLineJoinMode.SingleLine
+                    ? new[] { string.Join(", ", parts) }
+                    : parts;
+            }
+
+            internal string ToText(
+                string separator = "\n",
+                GroupedFxLineJoinMode? joinModeOverride = null)
+            {
+                return string.Join(separator, ToLines(joinModeOverride));
+            }
+        }
+
+        private static readonly Dictionary<string, string> PresentationTokenOverrides = new(StringComparer.Ordinal)
+        {
+            ["DamageBuff"] = "Damage Buff",
+            ["MezResist"] = "Mez Resistance",
+            ["RechargeTime"] = "Recharge Speed",
+            ["HitPoints"] = "Hit Points",
+            ["ToHit"] = "To-Hit",
+            ["EndDiscount"] = "Endurance Discount",
+            ["EnduranceDiscount"] = "Endurance Discount",
+            ["ThreatLevel"] = "Threat Level",
+            ["SpeedRunning"] = "Run Speed",
+            ["SpeedJumping"] = "Jump Speed",
+            ["SpeedFlying"] = "Fly Speed",
+            ["JumpHeight"] = "Jump Height",
+            ["StealthRadius"] = "Stealth Radius",
+            ["StealthRadiusPlayer"] = "Player Stealth Radius",
+            ["PerceptionRadius"] = "Perception Radius",
+            ["MovementControl"] = "Movement Control",
+            ["MovementFriction"] = "Movement Friction",
+            ["MaxRunSpeed"] = "Max Run Speed",
+            ["MaxJumpSpeed"] = "Max Jump Speed",
+            ["MaxFlySpeed"] = "Max Fly Speed"
+        };
+
+        private static readonly Dictionary<string, string> PresentationPhraseOverrides = new(StringComparer.Ordinal)
+        {
+            ["Mez Resist"] = "Mez Resistance",
+            ["Recharge Time"] = "Recharge Speed",
+            ["Slf"] = "Self",
+            ["Tgt"] = "Target"
+        };
+
+        private static readonly Regex PresentationLabelTokenRegex =
+            new(@"\b[A-Z][a-z]+(?:[A-Z][a-z]+)+\b", RegexOptions.Compiled);
+
+        internal static string FormatPresentationText(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return value;
+            }
+
+            var normalized = value.Replace("\r\n", "\n", StringComparison.Ordinal);
+            var lines = normalized.Split('\n');
+            for (var i = 0; i < lines.Length; i++)
+            {
+                lines[i] = FormatPresentationLine(lines[i]);
+            }
+
+            return string.Join("\n", lines);
+        }
+
+        internal static IReadOnlyList<string> BuildPopupTooltipLines(
+            IPower? power,
+            IEnumerable<int>? includedEffects = null,
+            Func<GroupedFx, IEffect, bool>? groupFilter = null,
+            GroupedFxLineJoinMode lineJoinMode = GroupedFxLineJoinMode.MultiLine,
+            bool simpleText = true,
+            bool ignoreConditions = true)
+        {
+            var request = new GroupedFxPresentationRequest(
+                IncludedEffectIds: includedEffects,
+                GroupFilter: groupFilter,
+                SimpleText: simpleText,
+                IgnoreConditions: ignoreConditions,
+                LineJoinMode: lineJoinMode);
+
+            return BuildPopupPresentation(power, request).ToLines();
+        }
+
+        /// <summary>
+        /// Runs the canonical presentation pipeline and returns already-grouped,
+        /// already-normalized rows for callers that need metadata rather than a
+        /// flattened text block.
+        /// </summary>
+        internal static IReadOnlyList<GroupedFxPresentationRow> BuildPresentationRows(
+            IPower? power,
+            GroupedFxPresentationRequest request)
+        {
+            return BuildPopupPresentation(power, request).Rows;
+        }
+
+        /// <summary>
+        /// Convenience wrapper for callers that only need rendered text.
+        /// This still goes through the same row-building pipeline as every
+        /// other presentation surface.
+        /// </summary>
+        internal static string BuildPresentationText(IPower? power, GroupedFxPresentationRequest request)
+        {
+            return BuildPopupPresentation(power, request).ToText();
+        }
+
+        private static int GetPresentationOrder(GroupedFx groupedEffect)
+        {
+            return groupedEffect.EffectType switch
+            {
+                // Show typed resistance before companion mez/status resistance
+                // when both come from the same source bonus/effect bundle.
+                Enums.eEffectType.MezResist => 1,
+                _ => 0
+            };
+        }
+
+        /// <summary>
+        /// Canonical row builder used by tooltips, set-bonus popups, and any
+        /// other caller that needs grouped effect presentation. The steps are:
+        /// 1. Select grouped effects for the requested power/effect subset.
+        /// 2. Filter them for the caller's surface-specific needs.
+        /// 3. Project each group into a neutral, normalized presentation row.
+        /// </summary>
+        private static GroupedFxPresentationResult BuildPopupPresentation(
+            IPower? power,
+            GroupedFxPresentationRequest request)
+        {
+            if (power == null)
+            {
+                return new GroupedFxPresentationResult(Array.Empty<GroupedFxPresentationRow>(), request.LineJoinMode);
+            }
+
+            var groupedEffects = SelectPresentationGroups(power, request)
+                .OrderBy(GetPresentationOrder)
+                .ToArray();
+            if (groupedEffects.Length == 0)
+            {
+                return new GroupedFxPresentationResult(Array.Empty<GroupedFxPresentationRow>(), request.LineJoinMode);
+            }
+
+            var rows = new List<GroupedFxPresentationRow>(groupedEffects.Length);
+            foreach (var groupedEffect in groupedEffects)
+            {
+                var effect = groupedEffect.GetEffectAt(power);
+                if (request.GroupFilter != null && !request.GroupFilter(groupedEffect, effect))
+                {
+                    continue;
+                }
+
+                var rawText = groupedEffect
+                    .GetTooltip(power, simple: request.SimpleText, ignoreConditions: request.IgnoreConditions)
+                    .Trim();
+                if (string.IsNullOrWhiteSpace(rawText))
+                {
+                    continue;
+                }
+
+                rows.Add(new GroupedFxPresentationRow(
+                    groupedEffect.FxIdentifier,
+                    groupedEffect.IncludedEffects.ToArray(),
+                    FormatPresentationText(BuildLabel(groupedEffect, power)),
+                    FormatPresentationText(rawText),
+                    null,
+                    null,
+                    FormatPresentationText(rawText),
+                    groupedEffect.HasConditions,
+                    false,
+                    groupedEffect.EnhancementEffect,
+                    groupedEffect.EnhancementEffect));
+            }
+
+            return new GroupedFxPresentationResult(rows, request.LineJoinMode);
+        }
+
+        /// <summary>
+        /// Selects the grouped effects that participate in the presentation
+        /// request. Callers can either render the entire power or only a
+        /// specific subset of effect indices.
+        /// </summary>
+        private static IEnumerable<GroupedFx> SelectPresentationGroups(
+            IPower power,
+            GroupedFxPresentationRequest request)
+        {
+            if (request.IncludedEffectIds == null)
+            {
+                return AssembleGroupedEffects(power, includeDamage: request.IncludeDamage);
+            }
+
+            return AssembleGroupedEffects(power, request.IncludedEffectIds, includeDamage: request.IncludeDamage);
+        }
+
+        private static string FormatPresentationLine(string value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return value;
+            }
+
+            var formatted = value.Replace("EndRec", "Recovery", StringComparison.Ordinal);
+
+            formatted = PresentationLabelTokenRegex.Replace(formatted, match =>
+            {
+                if (PresentationTokenOverrides.TryGetValue(match.Value, out var replacement))
+                {
+                    return replacement;
+                }
+
+                return Regex.Replace(match.Value, "(?<=[a-z])(?=[A-Z])", " ");
+            });
+
+            foreach (var phraseOverride in PresentationPhraseOverrides)
+            {
+                formatted = Regex.Replace(
+                    formatted,
+                    $@"\b{Regex.Escape(phraseOverride.Key)}\b",
+                    phraseOverride.Value,
+                    RegexOptions.CultureInvariant);
+            }
+
+            formatted = Regex.Replace(formatted, @"\bRech\b", "Recharge");
+            formatted = Regex.Replace(formatted, @"(?<=[A-Za-z])\(", " (");
+            formatted = Regex.Replace(formatted, @",\s*", ", ");
+            formatted = Regex.Replace(formatted, @"\(([^()]+)\)", match =>
+            {
+                var inner = Regex.Replace(match.Groups[1].Value, @",\s*", ", ");
+                return $"({inner})";
+            });
+
+            return Regex.Replace(formatted, @"[ \t]{2,}", " ").Trim();
+        }
+
+        private static IEnumerable<string> SplitPresentationLines(string value)
+        {
+            return FormatPresentationText(value)
+                .Replace("\r\n", "\n", StringComparison.Ordinal)
+                .Split('\n', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries);
         }
 
         private struct EnhanceableFxId : IEquatable<EnhanceableFxId>
@@ -132,11 +478,12 @@ namespace Mids_Reborn.Core
         }
 
         private FxId FxIdentifier;
-        private Enums.eSpecialCase SpecialCase;
+        private string ConditionIdentity;
         private float Mag;
         private string Alias;
         private List<int> IncludedEffects;
         private bool IsEnhancement;
+        private bool IsDefianceGroup;
         private IEffect? SingleEffectSource;
         private bool IsAggregated;
         private bool HasMisc;
@@ -150,6 +497,9 @@ namespace Mids_Reborn.Core
         public Enums.ePvX PvMode => FxIdentifier.PvMode;
         public bool IgnoreScaling => FxIdentifier.IgnoreScaling;
         public bool EnhancementEffect => IsEnhancement;
+        public bool HasConditions => !string.IsNullOrWhiteSpace(ConditionIdentity);
+        internal IReadOnlyList<int> IncludedEffectIds => IncludedEffects;
+        internal bool DefianceTagged => IsDefianceGroup;
 
         public object Clone()
         {
@@ -157,14 +507,15 @@ namespace Mids_Reborn.Core
         }
 
         public GroupedFx(FxId fxIdentifier, float mag, string alias,
-            List<int> includedEffects, bool isEnhancement, Enums.eSpecialCase specialCase = Enums.eSpecialCase.None)
+            List<int> includedEffects, bool isEnhancement, string? conditionIdentity = null, bool isDefianceGroup = false)
         {
             FxIdentifier = fxIdentifier;
             Mag = mag;
             Alias = alias;
             IncludedEffects = includedEffects;
             IsEnhancement = isEnhancement;
-            SpecialCase = specialCase;
+            ConditionIdentity = conditionIdentity ?? string.Empty;
+            IsDefianceGroup = isDefianceGroup;
             SingleEffectSource = null;
             IsAggregated = false;
             HasMisc = false;
@@ -176,7 +527,8 @@ namespace Mids_Reborn.Core
             Mag = greList[0].Mag;
             Alias = greList[0].Alias;
             IsEnhancement = greList[0].IsEnhancement;
-            SpecialCase = greList[0].SpecialCase;
+            ConditionIdentity = greList[0].ConditionIdentity;
+            IsDefianceGroup = greList.Any(gre => gre.IsDefianceGroup);
             IsAggregated = true;
             SingleEffectSource = null;
             HasMisc = false;
@@ -212,7 +564,8 @@ namespace Mids_Reborn.Core
             Alias = "";
             IncludedEffects = [fxIndex];
             IsEnhancement = effect.isEnhancementEffect;
-            SpecialCase = effect.SpecialCase;
+            ConditionIdentity = effect.ConditionIdentity;
+            IsDefianceGroup = IsModernDefianceDisplayEffect(effect);
             IsAggregated = false;
             HasMisc = false;
         }
@@ -234,7 +587,8 @@ namespace Mids_Reborn.Core
             Alias = "";
             IncludedEffects = [];
             IsEnhancement = false;
-            SpecialCase = Enums.eSpecialCase.None;
+            ConditionIdentity = string.Empty;
+            IsDefianceGroup = false;
             IsAggregated = false;
             HasMisc = false;
 
@@ -242,7 +596,7 @@ namespace Mids_Reborn.Core
 
         public override string ToString()
         {
-            return $"<GroupedFx> {{{FxIdentifier}, effects: {IncludedEffects.Count}, Mag: {Mag}, EnhancementFx: {IsEnhancement}, Special case: {SpecialCase}, Aggregated: {IsAggregated}, HasMisc: {HasMisc}}}";
+            return $"<GroupedFx> {{{FxIdentifier}, effects: {IncludedEffects.Count}, Mag: {Mag}, EnhancementFx: {IsEnhancement}, Conditional: {HasConditions}, Defiance: {IsDefianceGroup}, Aggregated: {IsAggregated}, HasMisc: {HasMisc}}}";
         }
 
         public int GetRankedEffectIndex(IEnumerable<int> rankedEffects, int index)
@@ -257,199 +611,269 @@ namespace Mids_Reborn.Core
             return power.Effects[IncludedEffects[index]];
         }
 
-        private IEffect GetPowerEffectAt(IPower power, int index = 0)
-        {
-            return power.Effects[index];
-        }
-
         // ===== Vector universes =====
 
-        private static List<Enums.eDamage> GetAllDefensesEx()
+        private static readonly Enums.eDamage[] PositionalDefenseVectors =
+        [
+            Enums.eDamage.Melee,
+            Enums.eDamage.Ranged,
+            Enums.eDamage.AoE
+        ];
+
+        private static readonly Enums.eDamage[] TypedDefenseVectorsWithoutToxic =
+        [
+            Enums.eDamage.Smashing,
+            Enums.eDamage.Lethal,
+            Enums.eDamage.Fire,
+            Enums.eDamage.Cold,
+            Enums.eDamage.Energy,
+            Enums.eDamage.Negative,
+            Enums.eDamage.Psionic
+        ];
+
+        private static readonly Enums.eDamage[] TypedDefenseVectorsWithToxic =
+        [
+            Enums.eDamage.Smashing,
+            Enums.eDamage.Lethal,
+            Enums.eDamage.Fire,
+            Enums.eDamage.Cold,
+            Enums.eDamage.Energy,
+            Enums.eDamage.Negative,
+            Enums.eDamage.Psionic,
+            Enums.eDamage.Toxic
+        ];
+
+        private static readonly Enums.eDamage[] AllDefenseVectorsWithoutToxic =
+        [
+            Enums.eDamage.Smashing,
+            Enums.eDamage.Lethal,
+            Enums.eDamage.Fire,
+            Enums.eDamage.Cold,
+            Enums.eDamage.Energy,
+            Enums.eDamage.Negative,
+            Enums.eDamage.Psionic,
+            Enums.eDamage.Melee,
+            Enums.eDamage.Ranged,
+            Enums.eDamage.AoE
+        ];
+
+        private static readonly Enums.eDamage[] AllDefenseVectorsWithToxic =
+        [
+            Enums.eDamage.Smashing,
+            Enums.eDamage.Lethal,
+            Enums.eDamage.Fire,
+            Enums.eDamage.Cold,
+            Enums.eDamage.Energy,
+            Enums.eDamage.Negative,
+            Enums.eDamage.Psionic,
+            Enums.eDamage.Toxic,
+            Enums.eDamage.Melee,
+            Enums.eDamage.Ranged,
+            Enums.eDamage.AoE
+        ];
+
+        private static readonly Enums.eDamage[] AllDefenseVectorsExWithoutToxic =
+        [
+            Enums.eDamage.None,
+            Enums.eDamage.Smashing,
+            Enums.eDamage.Lethal,
+            Enums.eDamage.Fire,
+            Enums.eDamage.Cold,
+            Enums.eDamage.Energy,
+            Enums.eDamage.Negative,
+            Enums.eDamage.Psionic,
+            Enums.eDamage.Melee,
+            Enums.eDamage.Ranged,
+            Enums.eDamage.AoE
+        ];
+
+        private static readonly Enums.eDamage[] AllDefenseVectorsExWithToxic =
+        [
+            Enums.eDamage.None,
+            Enums.eDamage.Smashing,
+            Enums.eDamage.Lethal,
+            Enums.eDamage.Fire,
+            Enums.eDamage.Cold,
+            Enums.eDamage.Energy,
+            Enums.eDamage.Negative,
+            Enums.eDamage.Psionic,
+            Enums.eDamage.Toxic,
+            Enums.eDamage.Melee,
+            Enums.eDamage.Ranged,
+            Enums.eDamage.AoE
+        ];
+
+        private static readonly Enums.eDamage[] AllResistanceVectors =
+        [
+            Enums.eDamage.Smashing,
+            Enums.eDamage.Lethal,
+            Enums.eDamage.Fire,
+            Enums.eDamage.Cold,
+            Enums.eDamage.Energy,
+            Enums.eDamage.Negative,
+            Enums.eDamage.Psionic,
+            Enums.eDamage.Toxic
+        ];
+
+        private static readonly Enums.eMez[] AllMezVectors =
+        [
+            Enums.eMez.Immobilized,
+            Enums.eMez.Held,
+            Enums.eMez.Stunned,
+            Enums.eMez.Sleep,
+            Enums.eMez.Terrorized,
+            Enums.eMez.Confused
+        ];
+
+        private static readonly Enums.eEffectType[] AllMovementVectors =
+        [
+            Enums.eEffectType.SpeedFlying,
+            Enums.eEffectType.SpeedJumping,
+            Enums.eEffectType.SpeedRunning
+        ];
+
+        private static bool UsesToxicDefenseVectors() => DatabaseAPI.RealmUsesToxicDef();
+
+        private static IReadOnlyList<Enums.eDamage> GetAllDefensesEx()
         {
-            return DatabaseAPI.RealmUsesToxicDef()
-                ? new List<Enums.eDamage>
-                {
-                    Enums.eDamage.None,
-                    Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                    Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Toxic,
-                    Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
-                }
-                : new List<Enums.eDamage>
-                {
-                    Enums.eDamage.None,
-                    Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                    Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
-                    Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
-                };
+            return UsesToxicDefenseVectors() ? AllDefenseVectorsExWithToxic : AllDefenseVectorsExWithoutToxic;
         }
 
-        private static List<Enums.eDamage> GetAllDefenses()
+        private static IReadOnlyList<Enums.eDamage> GetAllDefenses()
         {
-            return DatabaseAPI.RealmUsesToxicDef()
-                ? new List<Enums.eDamage>
-                {
-                    Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                    Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Toxic,
-                    Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
-                }
-                : new List<Enums.eDamage>
-                {
-                    Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                    Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic,
-                    Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
-                };
+            return UsesToxicDefenseVectors() ? AllDefenseVectorsWithToxic : AllDefenseVectorsWithoutToxic;
         }
 
-        private static List<Enums.eDamage> GetPositionDefenses()
+        private static IReadOnlyList<Enums.eDamage> GetPositionDefenses()
         {
-            return new List<Enums.eDamage>
-            {
-                Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE
-            };
+            return PositionalDefenseVectors;
         }
 
-        private static List<Enums.eDamage> GetTypedDefenses()
+        private static IReadOnlyList<Enums.eDamage> GetTypedDefenses()
         {
-            var damageTypes = Enum.GetValues(typeof(Enums.eDamage)).Cast<Enums.eDamage>().ToList();
-            var returnedTypes = DatabaseAPI.RealmUsesToxicDefense switch
-            {
-                false => from type in damageTypes
-                         where type is not Enums.eDamage.None
-                             and not Enums.eDamage.Melee and not Enums.eDamage.Ranged and not Enums.eDamage.AoE
-                             and not Enums.eDamage.Special and not Enums.eDamage.Unique1 and not Enums.eDamage.Unique2
-                             and not Enums.eDamage.Unique3 and not Enums.eDamage.Toxic
-                         select type,
-                true => from type in damageTypes
-                        where type is not Enums.eDamage.None
-                            and not Enums.eDamage.Melee and not Enums.eDamage.Ranged and not Enums.eDamage.AoE
-                            and not Enums.eDamage.Special and not Enums.eDamage.Unique1 and not Enums.eDamage.Unique2
-                            and not Enums.eDamage.Unique3
-                        select type
-            };
-
-            return returnedTypes.ToList();
+            return UsesToxicDefenseVectors() ? TypedDefenseVectorsWithToxic : TypedDefenseVectorsWithoutToxic;
         }
 
-        private static List<Enums.eDamage> GetAllResistances()
+        private static IReadOnlyList<Enums.eDamage> GetAllResistances()
         {
-            return
-            [
-                Enums.eDamage.Smashing, Enums.eDamage.Lethal, Enums.eDamage.Fire, Enums.eDamage.Cold,
-                Enums.eDamage.Energy, Enums.eDamage.Negative, Enums.eDamage.Psionic, Enums.eDamage.Toxic
-            ];
+            return AllResistanceVectors;
         }
 
-        private static List<Enums.eMez> GetAllMez()
+        private static IReadOnlyList<Enums.eMez> GetAllMez()
         {
-            return
-            [
-                Enums.eMez.Immobilized, Enums.eMez.Held, Enums.eMez.Stunned, Enums.eMez.Sleep,
-                Enums.eMez.Terrorized, Enums.eMez.Confused
-            ];
+            return AllMezVectors;
         }
 
-        private static List<Enums.eEffectType> GetAllMovement()
+        private static IReadOnlyList<Enums.eEffectType> GetAllMovement()
         {
-            return
-            [
-                Enums.eEffectType.SpeedFlying, Enums.eEffectType.SpeedJumping, Enums.eEffectType.SpeedRunning
-            ];
+            return AllMovementVectors;
         }
 
         // ===== Stat naming (kept for tooltip transforms) =====
 
-        public string GetStatName(IPower power)
+        private IReadOnlyList<IEffect> GetIncludedEffects(IPower power)
         {
-            var fx = power.Effects
-                .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                .Where(e => IncludedEffects.Contains(e.Key))
-                .Select(e => e.Value)
-                .ToList();
-
-            if (fx.Count == 0) return "";
-
-            var allDefenses = GetAllDefenses();
-            var typedDefenses = GetTypedDefenses();
-            var allResistances = GetAllResistances();
-            var allMez = GetAllMez();
-            var allMovement = GetAllMovement();
-
-            var fxDamageTypes = fx.Select(e => e.DamageType).ToList();
-            var fxMezTypes = fx.Select(e => e.MezType).ToList();
-            var fxEffectTypes = fx.Select(e => e.ETModifies).ToList();
-            var fxMainEffectTypes = fx.Select(e => e.EffectType).ToList();
-
-            var groupedVector = FxIdentifier.EffectType switch
-            {
-                Enums.eEffectType.Defense or Enums.eEffectType.Elusivity =>
-                    fxDamageTypes.ContainsAll(allDefenses) ? "All"
-                    : fxDamageTypes.ContainsAll(typedDefenses) ? "All types"
-                    : fxDamageTypes.Count > 1 ? "" : $"{fxDamageTypes[0]}",
-
-                Enums.eEffectType.Resistance or Enums.eEffectType.DamageBuff =>
-                    fxDamageTypes.ContainsAll(allResistances) ? "All"
-                    : fxDamageTypes.Count > 1 ? "" : $"{fxDamageTypes[0]}",
-
-                Enums.eEffectType.MezResist =>
-                    fxMezTypes.ContainsAll(allMez) ? "All"
-                    : fxMezTypes.Count > 1 ? "" : $"{fxMezTypes[0]}",
-
-                // NEW: Mez vectors same as others
-                Enums.eEffectType.Mez =>
-                    fxMezTypes.ContainsAll(allMez) ? "All"
-                    : fxMezTypes.Count > 1 ? "" : $"{fxMezTypes[0]}",
-
-                Enums.eEffectType.Enhancement when FxIdentifier.ETModifies is Enums.eEffectType.Mez or Enums.eEffectType.MezResist =>
-                    fxMezTypes.ContainsAll(allMez) ? "All" : fxMezTypes.Count > 1 ? "" : $"{fxMezTypes[0]}",
-
-                Enums.eEffectType.Enhancement when FxIdentifier.ETModifies is Enums.eEffectType.Defense or Enums.eEffectType.Elusivity =>
-                    fxDamageTypes.ContainsAll(allDefenses) ? "All"
-                    : fxDamageTypes.ContainsAll(typedDefenses) ? "All types"
-                    : fxDamageTypes.Count > 1 ? "" : $"{fxDamageTypes[0]}",
-
-                Enums.eEffectType.Enhancement when FxIdentifier.ETModifies is Enums.eEffectType.Resistance =>
-                    fxDamageTypes.ContainsAll(allResistances) ? "All"
-                    : fxDamageTypes.Count > 1 ? "" : $"{fxDamageTypes[0]}",
-
-                Enums.eEffectType.ResEffect => fxEffectTypes.Count > 1 ? "" : $"{fxEffectTypes[0]}",
-
-                _ => ""
-            };
-
-            if (FxIdentifier.EffectType is not (Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning))
-            {
-                return groupedVector != "" ? $"{fx[0].EffectType} ({groupedVector})" : $"{fx[0].EffectType}";
-            }
-
-            if (fxMainEffectTypes.ContainsAll(allMovement))
-            {
-                return "Slow";
-            }
-
-            return groupedVector != "" ? $"{fx[0].EffectType} ({groupedVector})" : $"{fx[0].EffectType}";
+            return IncludedEffects
+                .Where(index => index >= 0 && index < power.Effects.Length)
+                .Select(index => power.Effects[index])
+                .ToArray();
         }
 
-        private string GetGroupedVector(string statName, bool ignoreMulti = true) => "";
-        private string GetGroupedVector(IPower power, bool ignoreMulti = true) => GetGroupedVector(GetStatName(power), ignoreMulti);
+        private string GetCanonicalGroupedVector(IPower power)
+        {
+            if (IncludedEffects.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            var primaryEffect = power.Effects[IncludedEffects[0]];
+            var presentationEffectType = GetPresentationEffectType(primaryEffect);
+
+            return presentationEffectType switch
+            {
+                Enums.eEffectType.Defense or Enums.eEffectType.Elusivity or Enums.eEffectType.Resistance or Enums.eEffectType.DamageBuff =>
+                    ComputeVectors(this, power, presentationEffectType),
+
+                Enums.eEffectType.Mez or Enums.eEffectType.MezResist =>
+                    ComputeVectors(this, power, Enums.eEffectType.Mez),
+
+                Enums.eEffectType.Enhancement when primaryEffect.ETModifies is Enums.eEffectType.Defense
+                    or Enums.eEffectType.Elusivity
+                    or Enums.eEffectType.Resistance =>
+                    ComputeVectors(this, power, primaryEffect.ETModifies),
+
+                Enums.eEffectType.Enhancement when primaryEffect.ETModifies is Enums.eEffectType.Mez
+                    or Enums.eEffectType.MezResist =>
+                    ComputeVectors(this, power, Enums.eEffectType.Mez),
+
+                _ => string.Empty
+            };
+        }
+
+        public string GetStatName(IPower power)
+        {
+            var effects = GetIncludedEffects(power);
+            if (effects.Count == 0)
+            {
+                return string.Empty;
+            }
+
+            var groupedVector = GetCanonicalGroupedVector(power);
+            if (FxIdentifier.EffectType == Enums.eEffectType.ResEffect)
+            {
+                var modifies = effects
+                    .Select(effect => effect.ETModifies)
+                    .Distinct()
+                    .ToArray();
+                groupedVector = modifies.Length == 1 ? $"{modifies[0]}" : string.Empty;
+            }
+
+            if (FxIdentifier.EffectType is Enums.eEffectType.SpeedFlying
+                or Enums.eEffectType.SpeedJumping
+                or Enums.eEffectType.SpeedRunning)
+            {
+                var effectTypes = effects
+                    .Select(effect => effect.EffectType)
+                    .Distinct()
+                    .ToList();
+
+                if (effectTypes.ContainsAll(GetAllMovement()))
+                {
+                    return "Slow";
+                }
+
+                var movementLabel = $"{effects[0].EffectType}";
+                return string.IsNullOrEmpty(groupedVector) ? movementLabel : $"{movementLabel} ({groupedVector})";
+            }
+
+            var label = $"{FxIdentifier.EffectType}";
+            return string.IsNullOrEmpty(groupedVector) ? label : $"{label} ({groupedVector})";
+        }
 
         // ===== Vector string builder used for labels =====
 
         private static string ComputeVectors(GroupedFx gre, IPower pEnh, Enums.eEffectType category, bool preferAll = true)
         {
-            // Gather types from included effects
             var fx = gre.IncludedEffects
                 .Where(i => i >= 0 && i < pEnh.Effects.Length)
                 .Select(i => pEnh.Effects[i])
                 .ToList();
 
-            if (fx.Count == 0) return string.Empty;
+            if (fx.Count == 0)
+            {
+                return string.Empty;
+            }
 
             if (category == Enums.eEffectType.Mez || category == Enums.eEffectType.MezResist)
             {
                 var set = fx.Select(e => e.MezType).Distinct().ToList();
                 var all = GetAllMez();
-                if (preferAll && set.ContainsAll(all)) return "All";
-                return string.Join(", ", set.Select(m => $"{m}"));
+                if (preferAll && set.ContainsAll(all))
+                {
+                    return "All";
+                }
+
+                return string.Join(", ", all.Where(set.Contains));
             }
 
             if (category == Enums.eEffectType.Defense || category == Enums.eEffectType.Elusivity)
@@ -459,22 +883,39 @@ namespace Mids_Reborn.Core
                 var typed = GetTypedDefenses();
                 var positions = GetPositionDefenses();
 
-                if (preferAll && set.ContainsAll(all)) return "All";
-                // If only positional, spell them out (no "All positions").
-                if (set.All(d => positions.Contains(d))) return string.Join(", ", new[] { Enums.eDamage.Melee, Enums.eDamage.Ranged, Enums.eDamage.AoE }.Where(set.Contains));
-                // Otherwise list whatever is present (typed and/or positions).
-                return string.Join(", ", set);
+                if (preferAll && set.ContainsAll(all))
+                {
+                    return "All";
+                }
+
+                if (set.ContainsAll(typed) && set.All(d => typed.Contains(d)))
+                {
+                    return "All types";
+                }
+
+                if (set.All(d => positions.Contains(d)))
+                {
+                    return string.Join(", ", positions.Where(set.Contains));
+                }
+
+                return string.Join(", ", all.Where(set.Contains));
             }
 
-            if (category == Enums.eEffectType.Resistance)
+            if (category == Enums.eEffectType.Resistance || category == Enums.eEffectType.DamageBuff)
             {
-                var set = fx.Select(e => e.DamageType).Distinct().Where(d => d is not Enums.eDamage.Melee and not Enums.eDamage.Ranged and not Enums.eDamage.AoE and not Enums.eDamage.None).ToList();
+                var set = fx.Select(e => e.DamageType)
+                    .Distinct()
+                    .Where(d => d is not Enums.eDamage.Melee and not Enums.eDamage.Ranged and not Enums.eDamage.AoE and not Enums.eDamage.None)
+                    .ToList();
                 var all = GetAllResistances();
-                if (preferAll && set.ContainsAll(all)) return "All";
-                return string.Join(", ", set);
+                if (preferAll && set.ContainsAll(all))
+                {
+                    return "All";
+                }
+
+                return string.Join(", ", all.Where(set.Contains));
             }
 
-            // For ETs that don�t use vectors (ToHit, RechargeTime, etc.)
             return string.Empty;
         }
 
@@ -665,7 +1106,7 @@ namespace Mids_Reborn.Core
 
         private static List<string> CompactVectorsList(IReadOnlyList<string> vectors)
         {
-            // (kept identical to your previous version except we don�t collapse to �All positions� anywhere)
+            // (kept identical to your previous version except we don't collapse to "All positions" anywhere)
             var allDefensesEx = GetAllDefensesEx().ToDictionary(e => $"{e} Defense", _ => -1);
             var allDefenses = GetAllDefenses().ToDictionary(e => $"{e} Defense", _ => -1);
             var typedDefenses = GetTypedDefenses().ToDictionary(e => $"{e} Defense", _ => -1);
@@ -740,62 +1181,51 @@ namespace Mids_Reborn.Core
             return value.StartsWith('-') ? value[1..] : $"-{value}";
         }
 
+        private static string ReplaceMezResistanceLabel(string baseEffectString, IEffect effect, string vectors)
+        {
+            if (effect.EffectType == Enums.eEffectType.Resistance && effect.MezType != Enums.eMez.None)
+            {
+                return Regex.Replace(
+                    baseEffectString,
+                    @"(?:Resistance|MezResist)\([^)]*\)|Mez Resistance \([^)]*\)",
+                    $"Mez Resistance ({vectors})");
+            }
+
+            return baseEffectString.Replace(
+                    $"{effect.EffectType}({effect.MezType})",
+                    $"{effect.EffectType}({vectors})")
+                .Replace(
+                    $"Mez Resistance ({effect.MezType})",
+                    $"Mez Resistance ({vectors})");
+        }
+
         // ===== Tooltip =====
 
+        /// <summary>
+        /// Renders grouped effect text for popup-style consumers.
+        /// Callers can optionally scope the output to a subset of effect
+        /// indices, but the grouping and normalization always stay owned by
+        /// the canonical presentation pipeline.
+        /// </summary>
         internal static string BuildPopupTooltipText(IPower? power, IEnumerable<int>? includedEffects = null, Func<GroupedFx, IEffect, bool>? groupFilter = null)
         {
-            if (power == null)
-            {
-                return string.Empty;
-            }
-
-            IPower renderPower = power;
-            if (includedEffects != null)
-            {
-                var selectedEffects = includedEffects
-                    .Where(index => index >= 0 && index < power.Effects.Length)
-                    .Distinct()
-                    .OrderBy(index => index)
-                    .ToArray();
-
-                if (selectedEffects.Length == 0)
-                {
-                    return string.Empty;
-                }
-
-                renderPower = power.Clone();
-                renderPower.Effects = renderPower.Effects
-                    .Where((_, index) => selectedEffects.Contains(index))
-                    .ToArray();
-            }
-
-            var seenLines = new HashSet<string>(StringComparer.Ordinal);
-            var popupLines = new List<string>();
-            foreach (var groupedEffect in AssembleGroupedEffects(renderPower, includeDamage: true))
-            {
-                var effect = groupedEffect.GetEffectAt(renderPower);
-                if (groupFilter != null && !groupFilter(groupedEffect, effect))
-                {
-                    continue;
-                }
-
-                var line = groupedEffect.GetTooltip(renderPower, simple: true, ignoreConditions: true).Trim();
-                if (string.IsNullOrWhiteSpace(line) || !seenLines.Add(line))
-                {
-                    continue;
-                }
-
-                popupLines.Add(line);
-            }
-
-            return string.Join("\n", popupLines);
+            return BuildPresentationText(
+                power,
+                new GroupedFxPresentationRequest(
+                    IncludedEffectIds: includedEffects,
+                    GroupFilter: groupFilter,
+                    SimpleText: true,
+                    IgnoreConditions: true,
+                    LineJoinMode: GroupedFxLineJoinMode.MultiLine));
         }
 
         public string GetTooltip(IPower power, bool simple = false, bool ignoreConditions = false)
         {
-            var vectors = "";
             var statName = GetStatName(power);
-            var groupedVector = GetGroupedVector(statName);
+            var groupedVector = GetCanonicalGroupedVector(power);
+            var primaryEffect = power.Effects[IncludedEffects[0]];
+            var primaryPresentationType = GetPresentationEffectType(primaryEffect);
+            var vectors = string.Empty;
 
             if (!string.IsNullOrEmpty(groupedVector))
             {
@@ -804,7 +1234,7 @@ namespace Mids_Reborn.Core
             else
             {
                 var uniqueVectors = new List<string>();
-                var vectorsChunks = power.Effects[IncludedEffects[0]].EffectType switch
+                var vectorsChunks = primaryPresentationType switch
                 {
                     Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning => IncludedEffects
                             .Select(e => $"{power.Effects[e].EffectType}")
@@ -850,7 +1280,7 @@ namespace Mids_Reborn.Core
                 };
 
                 uniqueVectors.AddRangeUnique(vectorsChunks);
-                uniqueVectors = CompactVectorsList(uniqueVectors, power.Effects[IncludedEffects[0]].EffectType, power.Effects[IncludedEffects[0]].ETModifies);
+                uniqueVectors = CompactVectorsList(uniqueVectors, primaryPresentationType, primaryEffect.ETModifies);
                 vectors = string.Join(", ", uniqueVectors);
             }
 
@@ -863,10 +1293,12 @@ namespace Mids_Reborn.Core
             var tip = "";
             for (var i = 0; i < maxRange; i++)
             {
-                var baseEffectString = power.Effects[IncludedEffects[i]]
+                var effect = power.Effects[IncludedEffects[i]];
+                var presentationEffectType = GetPresentationEffectType(effect);
+                var baseEffectString = effect
                     .BuildEffectString(simple, "", false, false, false, simple, false, true, ignoreConditions);
 
-                var fxTip = power.Effects[IncludedEffects[i]].EffectType switch
+                var fxTip = presentationEffectType switch
                 {
                     Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning =>
                         statName == "Slow"
@@ -875,36 +1307,32 @@ namespace Mids_Reborn.Core
                                 "Slow"))
                             : Regex.Replace(baseEffectString, @"(SpeedFlying|SpeedJumping|SpeedRunning)", vectors),
 
-                    Enums.eEffectType.Mez or Enums.eEffectType.MezResist => baseEffectString.Replace(
-                        $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].MezType})",
-                        $"{power.Effects[IncludedEffects[i]].EffectType}({vectors})")
-                        .Replace(
-                            $"Mez Resistance ({power.Effects[IncludedEffects[i]].MezType})",
-                            $"Mez Resistance ({vectors})"),
+                    Enums.eEffectType.Mez or Enums.eEffectType.MezResist =>
+                        ReplaceMezResistanceLabel(baseEffectString, effect, vectors),
 
-                    Enums.eEffectType.Enhancement when power.Effects[IncludedEffects[i]].ETModifies is Enums.eEffectType
+                    Enums.eEffectType.Enhancement when effect.ETModifies is Enums.eEffectType
                             .Mez
                         or Enums.eEffectType.MezResist => baseEffectString.Replace(
-                        $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].MezType})",
-                        $"{power.Effects[IncludedEffects[i]].EffectType}({(vectors == "All" && power.Effects[IncludedEffects[i]].ETModifies == Enums.eEffectType.Mez ? "Mez" : vectors)})"),
+                        $"{effect.EffectType}({effect.MezType})",
+                        $"{effect.EffectType}({(vectors == "All" && effect.ETModifies == Enums.eEffectType.Mez ? "Mez" : vectors)})"),
 
                     Enums.eEffectType.Enhancement when
-                        power.Effects[IncludedEffects[i]].ETModifies is Enums.eEffectType.Defense
+                        effect.ETModifies is Enums.eEffectType.Defense
                             or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity => baseEffectString.Replace(
-                            $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].DamageType} {power.Effects[IncludedEffects[i]].ETModifies})",
-                            $"{power.Effects[IncludedEffects[i]].EffectType}({vectors}{(power.Effects[IncludedEffects[^1]].ETModifies is Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity && vectors.Contains("All") ? $" {power.Effects[IncludedEffects[^1]].ETModifies}" : "")})"),
+                            $"{effect.EffectType}({effect.DamageType} {effect.ETModifies})",
+                            $"{effect.EffectType}({vectors}{(power.Effects[IncludedEffects[^1]].ETModifies is Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity && vectors.Contains("All") ? $" {power.Effects[IncludedEffects[^1]].ETModifies}" : "")})"),
 
                     Enums.eEffectType.Enhancement or Enums.eEffectType.ResEffect => baseEffectString.Replace(
-                        $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].ETModifies})",
-                        $"{power.Effects[IncludedEffects[i]].EffectType}({vectors})"),
+                        $"{effect.EffectType}({effect.ETModifies})",
+                        $"{effect.EffectType}({vectors})"),
 
                     Enums.eEffectType.DamageBuff => baseEffectString.Replace(
-                            $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].DamageType})",
-                            $"{power.Effects[IncludedEffects[i]].EffectType} ({vectors})"),
+                            $"{effect.EffectType}({effect.DamageType})",
+                            $"{effect.EffectType} ({vectors})"),
 
                     Enums.eEffectType.Resistance or Enums.eEffectType.Defense or Enums.eEffectType.Elusivity => baseEffectString.Replace(
-                            $"{power.Effects[IncludedEffects[i]].EffectType}({power.Effects[IncludedEffects[i]].DamageType})",
-                            $"{power.Effects[IncludedEffects[i]].EffectType}({vectors})"),
+                            $"{effect.EffectType}({effect.DamageType})",
+                            $"{effect.EffectType}({vectors})"),
 
                     Enums.eEffectType.SilentKill => baseEffectString.Replace("SilentKill", "Self-Destructs")
                         .Replace(" in ", " after ")
@@ -917,11 +1345,12 @@ namespace Mids_Reborn.Core
                 tip += $"{(string.IsNullOrEmpty(tip) ? "" : "\r\n")}{fxTip}";
             }
 
-            return Regex.Replace(tip, @"(?<stat>[0-9A-Za-z\-]+)\(\k<stat>", "$1")
+            tip = Regex.Replace(tip, @"(?<stat>[0-9A-Za-z\-]+)\(\k<stat>", "$1")
                 .Replace("((", "(")
                 .Replace("))", ")")
                 .Replace("None Defense", "Base Defense")
                 .Replace("None Elusivity", "Base Elusivity");
+            return FormatPresentationText(tip);
         }
 
         // ===== Label / Value =====
@@ -1009,12 +1438,6 @@ namespace Mids_Reborn.Core
             };
         }
 
-        private static string JoinDamageShort(IEnumerable<Enums.eDamage> types)
-            => string.Join(",", types.Select(Enums.GetDamageNameShort));
-
-        private static string JoinMezShort(IEnumerable<Enums.eMez> types)
-            => string.Join(",", types.Select(t => Enums.GetMezNameShort((Enums.eMezShort)t)));
-
         private static (string value, string? alt, string? tip, bool isSpecial, bool isConditional, bool isUnique) BuildValueAndDecorations(GroupedFx gre, IPower pBase, IPower pEnh, int effectIndex, bool powerInBuild)
         {
             string tip = string.Empty;
@@ -1059,7 +1482,7 @@ namespace Mids_Reborn.Core
             var tipTitle = BuildLabel(gre, pEnh);
             tip = $"{tipTitle}  Base: {fmt(baseMag)}  Enhanced: {fmt(enhMag)}";
 
-            var isSpecial = gre.SpecialCase != Enums.eSpecialCase.None;
+            var isSpecial = gre.HasConditions;
             var isConditional = false;
             var isUnique = gre.EnhancementEffect;
 
@@ -1123,9 +1546,9 @@ namespace Mids_Reborn.Core
                 {
                     var when = When(effects[i]);
                     if (count > 1)
-                        body.Append("� ").Append(Ordinal(i + 1)).Append(' ').Append(name).Append(' ').Append(when).AppendLine();
+                        body.Append("- ").Append(Ordinal(i + 1)).Append(' ').Append(name).Append(' ').Append(when).AppendLine();
                     else
-                        body.Append("� 1 ").Append(name).Append(' ').Append(when).AppendLine();
+                        body.Append("- 1 ").Append(name).Append(' ').Append(when).AppendLine();
                 }
             }
 
@@ -1224,120 +1647,108 @@ namespace Mids_Reborn.Core
                 : mags.Sum();
         }
 
-        // ===== Grouping / assembly (unchanged) =====
+        // ===== Grouping / assembly =====
+
+        private static IEnumerable<KeyValuePair<int, IEffect>> EnumerateIndexedEffects(IPower power)
+        {
+            return power.Effects.Select((effect, index) => new KeyValuePair<int, IEffect>(index, effect));
+        }
+
+        private static List<int> FindEffectIndices(IPower power, Func<IEffect, bool> predicate)
+        {
+            return EnumerateIndexedEffects(power)
+                .Where(entry => predicate(entry.Value))
+                .Select(entry => entry.Key)
+                .ToList();
+        }
 
         public static List<int> GetSimilarEffects(IPower power, FxId fxIdentifier, float mag,
-            Enums.eSpecialCase specialCase = Enums.eSpecialCase.None, bool enhancementEffect = false, int seedIndex = -1)
+            bool isDefianceGroup = false, bool enhancementEffect = false, int seedIndex = -1)
         {
             var candidates = fxIdentifier.EffectType switch
             {
-                Enums.eEffectType.EntCreate => power.Effects
-                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
-                                e.Value.nSummon == fxIdentifier.SummonId && e.Value.ToWho == fxIdentifier.ToWho &&
-                                (Math.Abs(e.Value.Duration - fxIdentifier.Duration) < Tolerance || fxIdentifier.Duration == 0) &&
-                                e.Value.isEnhancementEffect == enhancementEffect &&
-                                e.Value.PvMode == fxIdentifier.PvMode &&
-                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
-                    .Select(e => e.Key)
-                    .ToList(),
+                Enums.eEffectType.EntCreate => FindEffectIndices(power, effect =>
+                    GetPresentationEffectType(effect) == fxIdentifier.EffectType &&
+                    effect.nSummon == fxIdentifier.SummonId &&
+                    effect.ToWho == fxIdentifier.ToWho &&
+                    (Math.Abs(effect.Duration - fxIdentifier.Duration) < Tolerance || fxIdentifier.Duration == 0) &&
+                    effect.isEnhancementEffect == enhancementEffect &&
+                    effect.PvMode == fxIdentifier.PvMode &&
+                    effect.IgnoreScaling == fxIdentifier.IgnoreScaling),
 
-                Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
-                    or Enums.eEffectType.SpeedRunning => power.Effects
-                        .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                        .Where(e =>
-                            e.Value.EffectType is Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
-                                or Enums.eEffectType.SpeedRunning && e.Value.ToWho == fxIdentifier.ToWho &&
-                            MagnitudesMatch(e.Value.BuffedMag, mag) &&
-                            e.Value.isEnhancementEffect == enhancementEffect &&
-                            e.Value.PvMode == fxIdentifier.PvMode &&
-                            e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
-                        .Select(e => e.Key)
-                        .ToList(),
+                Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning => FindEffectIndices(power, effect =>
+                    effect.EffectType is Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning &&
+                    effect.ToWho == fxIdentifier.ToWho &&
+                    MagnitudesMatch(effect.BuffedMag, mag) &&
+                    effect.isEnhancementEffect == enhancementEffect &&
+                    effect.PvMode == fxIdentifier.PvMode &&
+                    effect.IgnoreScaling == fxIdentifier.IgnoreScaling),
 
                 Enums.eEffectType.Enhancement when fxIdentifier.ETModifies is Enums.eEffectType.Mez
-                    or Enums.eEffectType.MezResist => power.Effects
-                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
-                                e.Value.ETModifies == fxIdentifier.ETModifies && e.Value.ToWho == fxIdentifier.ToWho &&
-                                MagnitudesMatch(e.Value.BuffedMag, mag) &&
-                                e.Value.isEnhancementEffect == enhancementEffect &&
-                                e.Value.PvMode == fxIdentifier.PvMode &&
-                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
-                    .Select(e => e.Key)
-                    .ToList(),
+                    or Enums.eEffectType.MezResist => FindEffectIndices(power, effect =>
+                    GetPresentationEffectType(effect) == fxIdentifier.EffectType &&
+                    effect.ETModifies == fxIdentifier.ETModifies &&
+                    effect.ToWho == fxIdentifier.ToWho &&
+                    MagnitudesMatch(effect.BuffedMag, mag) &&
+                    effect.isEnhancementEffect == enhancementEffect &&
+                    effect.PvMode == fxIdentifier.PvMode &&
+                    effect.IgnoreScaling == fxIdentifier.IgnoreScaling),
 
                 Enums.eEffectType.Enhancement when fxIdentifier.ETModifies is Enums.eEffectType.Defense
                     or Enums.eEffectType.Resistance
-                    or Enums.eEffectType.Elusivity => power.Effects
-                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
-                                e.Value.ETModifies == fxIdentifier.ETModifies &&
-                                e.Value.ToWho == fxIdentifier.ToWho &&
-                                MagnitudesMatch(e.Value.BuffedMag, mag) &&
-                                e.Value.isEnhancementEffect == enhancementEffect &&
-                                e.Value.PvMode == fxIdentifier.PvMode &&
-                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
-                    .Select(e => e.Key)
-                    .ToList(),
+                    or Enums.eEffectType.Elusivity => FindEffectIndices(power, effect =>
+                    GetPresentationEffectType(effect) == fxIdentifier.EffectType &&
+                    effect.ETModifies == fxIdentifier.ETModifies &&
+                    effect.ToWho == fxIdentifier.ToWho &&
+                    MagnitudesMatch(effect.BuffedMag, mag) &&
+                    effect.isEnhancementEffect == enhancementEffect &&
+                    effect.PvMode == fxIdentifier.PvMode &&
+                    effect.IgnoreScaling == fxIdentifier.IgnoreScaling),
 
-                Enums.eEffectType.Enhancement => power.Effects
-                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
-                                e.Value.ETModifies == fxIdentifier.ETModifies &&
-                                e.Value.ToWho == fxIdentifier.ToWho &&
-                                MagnitudesMatch(e.Value.BuffedMag, mag) &&
-                                e.Value.isEnhancementEffect == enhancementEffect &&
-                                e.Value.PvMode == fxIdentifier.PvMode &&
-                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
-                    .Select(e => e.Key)
-                    .ToList(),
+                Enums.eEffectType.Enhancement => FindEffectIndices(power, effect =>
+                    GetPresentationEffectType(effect) == fxIdentifier.EffectType &&
+                    effect.ETModifies == fxIdentifier.ETModifies &&
+                    effect.ToWho == fxIdentifier.ToWho &&
+                    MagnitudesMatch(effect.BuffedMag, mag) &&
+                    effect.isEnhancementEffect == enhancementEffect &&
+                    effect.PvMode == fxIdentifier.PvMode &&
+                    effect.IgnoreScaling == fxIdentifier.IgnoreScaling),
 
                 Enums.eEffectType.MezResist or Enums.eEffectType.Defense or Enums.eEffectType.Resistance
-                    or Enums.eEffectType.Elusivity or Enums.eEffectType.ResEffect => power.Effects
-                        .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                        .Where(e => e.Value.EffectType == fxIdentifier.EffectType &&
-                                    e.Value.ToWho == fxIdentifier.ToWho &&
-                                    MagnitudesMatch(e.Value.BuffedMag, mag) &&
-                                    e.Value.isEnhancementEffect == enhancementEffect &&
-                                    e.Value.PvMode == fxIdentifier.PvMode &&
-                                    e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
-                        .Select(e => e.Key)
-                        .ToList(),
+                    or Enums.eEffectType.Elusivity or Enums.eEffectType.ResEffect => FindEffectIndices(power, effect =>
+                    GetPresentationEffectType(effect) == fxIdentifier.EffectType &&
+                    effect.ToWho == fxIdentifier.ToWho &&
+                    MagnitudesMatch(effect.BuffedMag, mag) &&
+                    effect.isEnhancementEffect == enhancementEffect &&
+                    effect.PvMode == fxIdentifier.PvMode &&
+                    effect.IgnoreScaling == fxIdentifier.IgnoreScaling),
 
-                Enums.eEffectType.DamageBuff when specialCase == Enums.eSpecialCase.Defiance => power.Effects
-                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho &&
-                                MagnitudesMatch(e.Value.BuffedMag, mag) &&
-                                IsModernDefianceDisplayEffect(e.Value) &&
-                                e.Value.isEnhancementEffect == enhancementEffect &&
-                                e.Value.PvMode == fxIdentifier.PvMode &&
-                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
-                    .Select(e => e.Key)
-                    .ToList(),
+                Enums.eEffectType.DamageBuff when isDefianceGroup => FindEffectIndices(power, effect =>
+                    effect.EffectType == fxIdentifier.EffectType &&
+                    effect.ToWho == fxIdentifier.ToWho &&
+                    MagnitudesMatch(effect.BuffedMag, mag) &&
+                    IsModernDefianceDisplayEffect(effect) &&
+                    effect.isEnhancementEffect == enhancementEffect &&
+                    effect.PvMode == fxIdentifier.PvMode &&
+                    effect.IgnoreScaling == fxIdentifier.IgnoreScaling),
 
-                Enums.eEffectType.DamageBuff => power.Effects
-                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho &&
-                                MagnitudesMatch(e.Value.BuffedMag, mag) &&
-                                !IsModernDefianceDisplayEffect(e.Value) &&
-                                e.Value.isEnhancementEffect == enhancementEffect &&
-                                e.Value.PvMode == fxIdentifier.PvMode &&
-                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
-                    .Select(e => e.Key)
-                    .ToList(),
+                Enums.eEffectType.DamageBuff => FindEffectIndices(power, effect =>
+                    GetPresentationEffectType(effect) == fxIdentifier.EffectType &&
+                    effect.ToWho == fxIdentifier.ToWho &&
+                    MagnitudesMatch(effect.BuffedMag, mag) &&
+                    !IsModernDefianceDisplayEffect(effect) &&
+                    effect.isEnhancementEffect == enhancementEffect &&
+                    effect.PvMode == fxIdentifier.PvMode &&
+                    effect.IgnoreScaling == fxIdentifier.IgnoreScaling),
 
-                Enums.eEffectType.Damage => power.Effects
-                    .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
-                    .Where(e => e.Value.EffectType == fxIdentifier.EffectType && e.Value.ToWho == fxIdentifier.ToWho &&
-                                MagnitudesMatch(e.Value.BuffedMag, mag) &&
-                                e.Value.DamageType == fxIdentifier.DamageType &&
-                                e.Value.SpecialCase == specialCase &&
-                                e.Value.isEnhancementEffect == enhancementEffect &&
-                                e.Value.PvMode == fxIdentifier.PvMode &&
-                                e.Value.IgnoreScaling == fxIdentifier.IgnoreScaling)
-                    .Select(e => e.Key)
-                    .ToList(),
+                Enums.eEffectType.Damage => FindEffectIndices(power, effect =>
+                    GetPresentationEffectType(effect) == fxIdentifier.EffectType &&
+                    effect.ToWho == fxIdentifier.ToWho &&
+                    MagnitudesMatch(effect.BuffedMag, mag) &&
+                    effect.DamageType == fxIdentifier.DamageType &&
+                    effect.isEnhancementEffect == enhancementEffect &&
+                    effect.PvMode == fxIdentifier.PvMode &&
+                    effect.IgnoreScaling == fxIdentifier.IgnoreScaling),
 
                 _ => []
             };
@@ -1395,28 +1806,17 @@ namespace Mids_Reborn.Core
 
         private static string GetConditionIdentity(IEffect effect)
         {
-            var set = effect.AdvancedConditions is { Rows.Count: > 0 }
-                ? effect.AdvancedConditions
-                : AdvancedConditionSet.FromLegacyActiveConditionals(effect.ActiveConditionals);
-
-            if (set.Rows.Count == 0)
-            {
-                return string.Empty;
-            }
-
-            return string.Join(";", set.Rows.Select(row => string.Join("|",
-                    row.Link,
-                    row.Kind,
-                    row.Subject,
-                    row.Operator,
-                    row.Value,
-                    row.Negated,
-                    row.EvaluationMode,
-                    row.Unsupported,
-                    row.TargetScope,
-                    AdvancedConditionCompiler.Compile(row)))
-                .OrderBy(value => value, StringComparer.OrdinalIgnoreCase));
+            return effect.ConditionIdentity ?? string.Empty;
         }
+
+        private sealed record GroupAssemblySeed(
+            FxId Identifier,
+            float Magnitude,
+            string Alias,
+            bool GroupEnhancementEffect,
+            bool SimilarityEnhancementEffect,
+            string ConditionIdentity,
+            bool IsDefianceGroup);
 
         public static List<GroupedFx> AssembleGroupedEffects(IPower? power, bool includeDamage = false)
         {
@@ -1426,350 +1826,287 @@ namespace Mids_Reborn.Core
             }
 
             var rankedEffects = power.GetRankedEffects(true);
-            var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
-            var ignoredEffects = new List<int>();
-            var groupedRankedEffects = new List<GroupedFx>();
+            var initialGroups = BuildInitialGroupedEffects(power, rankedEffects, includeDamage);
+            var normalizedGroups = NormalizeSingleEffectGroups(power, initialGroups);
+            return AggregateAndFinalizeGroupedEffects(power, normalizedGroups);
+        }
 
-            foreach (var re in rankedEffects)
+        private static List<GroupedFx> BuildInitialGroupedEffects(IPower power, IReadOnlyList<int> rankedEffects, bool includeDamage)
+        {
+            var ignoredEffects = new HashSet<int>();
+            var groupedEffects = new List<GroupedFx>();
+
+            foreach (var effectIndex in rankedEffects)
             {
-                if (re <= -1)
+                if (effectIndex < 0 || ignoredEffects.Contains(effectIndex))
                 {
                     continue;
                 }
 
-                if (ignoredEffects.Contains(re))
+                if (ShouldSkipEffectDuringAssembly(power, effectIndex, includeDamage))
                 {
                     continue;
                 }
 
-                if (!includeDamage && power.Effects[re].EffectType == Enums.eEffectType.Damage)
+                var seed = BuildGroupingSeed(power, effectIndex);
+                if (seed == null)
+                {
+                    groupedEffects.Add(new GroupedFx(power.Effects[effectIndex], effectIndex));
+                    continue;
+                }
+
+                var similarEffectIds = GetSimilarEffects(
+                    power,
+                    seed.Identifier,
+                    seed.Magnitude,
+                    seed.IsDefianceGroup,
+                    seed.SimilarityEnhancementEffect,
+                    effectIndex);
+                if (similarEffectIds.Count == 0)
                 {
                     continue;
                 }
 
-                if (power.Effects[re].EffectType is Enums.eEffectType.Meter or Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode
-                    or Enums.eEffectType.Null or Enums.eEffectType.NullBool or Enums.eEffectType.GlobalChanceMod
-                    or Enums.eEffectType.ExecutePower)
-                {
-                    continue;
-                }
-
-                if (ShouldHideStatefulMezFromGroupedViews(power.Effects[re]))
-                {
-                    continue;
-                }
-
-                if (power.Effects[re].EffectType == Enums.eEffectType.ResEffect &&
-                    power.Effects[re].ETModifies is Enums.eEffectType.Null or Enums.eEffectType.NullBool)
-                {
-                    continue;
-                }
-
-                var isDefianceDisplayEffect = IsModernDefianceDisplayEffect(power.Effects[re]);
-                if (!(power.Effects[re].Probability > 0 &&
-                      (MidsContext.Config?.Suppression & power.Effects[re].Suppression) ==
-                      Enums.eSuppress.None &
-                      (power.Effects[re].CanInclude() || isDefianceDisplayEffect)))
-                {
-                    continue;
-                }
-
-                if (power.Effects[re].EffectType == Enums.eEffectType.RevokePower &&
-                    power.Effects[re].nSummon <= -1 &&
-                    string.IsNullOrWhiteSpace(power.Effects[re].Summon))
-                {
-                    continue;
-                }
-
-                if (power.Effects[re].EffectType == Enums.eEffectType.GrantPower &&
-                    power.Effects[re].nSummon <= -1)
-                {
-                    continue;
-                }
-
-                if (power.Effects[re].PvMode == Enums.ePvX.PvP && !MidsContext.Config.Inc.DisablePvE |
-                    power.Effects[re].PvMode == Enums.ePvX.PvE && MidsContext.Config.Inc.DisablePvE)
-                {
-                    continue;
-                }
-
-                if (power.Effects[re].ActiveConditionals is { Count: > 0 } && !isDefianceDisplayEffect)
-                {
-                    if (!power.Effects[re].ValidateConditional())
-                    {
-                        continue;
-                    }
-                }
-
-                if (power.Effects[re].EffectType == Enums.eEffectType.Mez & power.Effects[re].MezType is not (Enums.eMez.Teleport or Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Repel or Enums.eMez.ToggleDrop))
-                {
-                    if (power.Effects[re].Duration <= 0)
-                    {
-                        continue;
-                    }
-                }
-
-                var similarFxIds = new List<int>();
-
-                switch (power.Effects[re].EffectType)
-                {
-                    case Enums.eEffectType.Damage:
-                        similarFxIds = GetSimilarEffects(power,
-                            new FxId
-                            {
-                                DamageType = power.Effects[re].DamageType,
-                                EffectType = Enums.eEffectType.Damage,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = power.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = power.Effects[re].Duration,
-                                PvMode = power.Effects[re].PvMode,
-                                IgnoreScaling = power.Effects[re].IgnoreScaling
-                            }, power.Effects[re].BuffedMag,
-                            power.Effects[re].SpecialCase,
-                            power.Effects[re].isEnhancementEffect, re);
-
-                        ignoredEffects.AddRangeUnique(similarFxIds);
-
-                        groupedRankedEffects.Add(
-                            new GroupedFx(new FxId
-                            {
-                                DamageType = power.Effects[re].DamageType,
-                                EffectType = Enums.eEffectType.Damage,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = power.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = power.Effects[re].Duration,
-                                PvMode = power.Effects[re].PvMode,
-                                IgnoreScaling = power.Effects[re].IgnoreScaling
-                            },
-                                power.Effects[re].BuffedMag,
-                                "Damage",
-                                similarFxIds,
-                                power.Effects[re].isEnhancementEffect));
-
-                        break;
-
-                    case Enums.eEffectType.EntCreate:
-                        similarFxIds = GetSimilarEffects(power,
-                            new FxId
-                            {
-                                DamageType = Enums.eDamage.None,
-                                EffectType = Enums.eEffectType.EntCreate,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = power.Effects[re].ToWho,
-                                SummonId = power.Effects[re].nSummon,
-                                Duration = 0, //power.Effects[re].Duration
-                                PvMode = power.Effects[re].PvMode,
-                                IgnoreScaling = power.Effects[re].IgnoreScaling
-                            }, power.Effects[re].BuffedMag,
-                            Enums.eSpecialCase.None,
-                            power.Effects[re].isEnhancementEffect, re);
-
-                        ignoredEffects.AddRangeUnique(similarFxIds);
-
-                        groupedRankedEffects.Add(
-                            new GroupedFx(new FxId
-                            {
-                                DamageType = Enums.eDamage.None,
-                                EffectType = Enums.eEffectType.EntCreate,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = power.Effects[re].ToWho,
-                                SummonId = power.Effects[re].nSummon,
-                                Duration = 0, //power.Effects[re].Duration
-                                PvMode = power.Effects[re].PvMode,
-                                IgnoreScaling = power.Effects[re].IgnoreScaling
-                            },
-                                power.Effects[re].BuffedMag,
-                                "Summon",
-                                similarFxIds,
-                                power.Effects[re].isEnhancementEffect));
-
-                        break;
-
-                    case Enums.eEffectType.SpeedFlying:
-                    case Enums.eEffectType.SpeedJumping:
-                    case Enums.eEffectType.SpeedRunning:
-                        similarFxIds = GetSimilarEffects(power,
-                            new FxId
-                            {
-                                DamageType = Enums.eDamage.None,
-                                EffectType = power.Effects[re].EffectType,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = power.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = 0,
-                                PvMode = power.Effects[re].PvMode,
-                                IgnoreScaling = power.Effects[re].IgnoreScaling
-                            }, power.Effects[re].BuffedMag,
-                            Enums.eSpecialCase.None,
-                            power.Effects[re].isEnhancementEffect, re);
-
-                        ignoredEffects.AddRangeUnique(similarFxIds);
-
-                        groupedRankedEffects.Add(
-                            new GroupedFx(new FxId
-                            {
-                                DamageType = Enums.eDamage.None,
-                                EffectType = power.Effects[re].EffectType,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = power.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = 0,
-                                PvMode = power.Effects[re].PvMode,
-                                IgnoreScaling = power.Effects[re].IgnoreScaling
-                            },
-                                power.Effects[re].BuffedMag,
-                                "Slow",
-                                similarFxIds,
-                                power.Effects[re].isEnhancementEffect));
-
-                        break;
-
-                    case Enums.eEffectType.DamageBuff:
-                        var isDefiance = IsModernDefianceDisplayEffect(power.Effects[re]);
-
-                        similarFxIds = GetSimilarEffects(power,
-                            new FxId
-                            {
-                                DamageType = Enums.eDamage.None,
-                                EffectType = Enums.eEffectType.DamageBuff,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = power.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = 0,
-                                PvMode = power.Effects[re].PvMode,
-                                IgnoreScaling = power.Effects[re].IgnoreScaling
-                            }, power.Effects[re].BuffedMag,
-                            isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None,
-                            power.Effects[re].isEnhancementEffect, re);
-
-                        ignoredEffects.AddRangeUnique(similarFxIds);
-
-                        groupedRankedEffects.Add(
-                            new GroupedFx(new FxId
-                            {
-                                DamageType = Enums.eDamage.None,
-                                EffectType = Enums.eEffectType.DamageBuff,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = power.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = 0,
-                                PvMode = power.Effects[re].PvMode,
-                                IgnoreScaling = power.Effects[re].IgnoreScaling
-                            },
-                                power.Effects[re].BuffedMag,
-                                isDefiance ? "Defiance" : $"{power.Effects[re].EffectType}",
-                                similarFxIds,
-                                !isDefiance && power.Effects[re].isEnhancementEffect,
-                                isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None));
-
-                        break;
-
-                    case Enums.eEffectType.Defense:
-                    case Enums.eEffectType.Resistance:
-                    case Enums.eEffectType.Elusivity:
-                    case Enums.eEffectType.MezResist:
-                    case Enums.eEffectType.ResEffect:
-                    case Enums.eEffectType.Enhancement:
-                        similarFxIds = GetSimilarEffects(power,
-                            new FxId
-                            {
-                                EffectType = power.Effects[re].EffectType,
-                                ETModifies = power.Effects[re].ETModifies,
-                                MezType = Enums.eMez.None,
-                                DamageType = Enums.eDamage.None,
-                                ToWho = power.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = 0,
-                                PvMode = power.Effects[re].PvMode,
-                                IgnoreScaling = power.Effects[re].IgnoreScaling
-                            },
-                            power.Effects[re].BuffedMag,
-                            Enums.eSpecialCase.None,
-                            power.Effects[re].isEnhancementEffect, re);
-
-                        ignoredEffects.AddRangeUnique(similarFxIds);
-
-                        groupedRankedEffects.Add(
-                            new GroupedFx(new FxId
-                            {
-                                EffectType = power.Effects[re].EffectType,
-                                ETModifies = power.Effects[re].ETModifies,
-                                MezType = Enums.eMez.None,
-                                DamageType = Enums.eDamage.None,
-                                ToWho = power.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = 0,
-                                PvMode = power.Effects[re].PvMode,
-                                IgnoreScaling = power.Effects[re].IgnoreScaling
-                            },
-                                power.Effects[re].BuffedMag,
-                                power.Effects[re].EffectType == Enums.eEffectType.Enhancement
-                                    ? $"{power.Effects[re].EffectType}({power.Effects[re].ETModifies})"
-                                    : $"{power.Effects[re].EffectType}",
-                                similarFxIds,
-                                power.Effects[re].isEnhancementEffect
-                            ));
-
-                        break;
-
-                    default:
-                        groupedRankedEffects.Add(new GroupedFx(power.Effects[re], re));
-                        break;
-                }
+                ignoredEffects.UnionWith(similarEffectIds);
+                groupedEffects.Add(new GroupedFx(
+                    seed.Identifier,
+                    seed.Magnitude,
+                    seed.Alias,
+                    similarEffectIds,
+                    seed.GroupEnhancementEffect,
+                    seed.ConditionIdentity,
+                    seed.IsDefianceGroup));
             }
 
-            var groupedRankedEffects2 = new List<GroupedFx>();
-            var ignoredGroups = new List<int>();
-            for (var i = 0; i < groupedRankedEffects.Count; i++)
+            return groupedEffects;
+        }
+
+        private static bool ShouldSkipEffectDuringAssembly(IPower power, int effectIndex, bool includeDamage)
+        {
+            if (effectIndex < 0 || effectIndex >= power.Effects.Length)
             {
-                if (ignoredGroups.Contains(i))
+                return true;
+            }
+
+            var effect = power.Effects[effectIndex];
+            if (!includeDamage && effect.EffectType == Enums.eEffectType.Damage)
+            {
+                return true;
+            }
+
+            if (effect.EffectType is Enums.eEffectType.Meter
+                or Enums.eEffectType.SetMode
+                or Enums.eEffectType.UnsetMode
+                or Enums.eEffectType.Null
+                or Enums.eEffectType.NullBool
+                or Enums.eEffectType.GlobalChanceMod
+                or Enums.eEffectType.ExecutePower)
+            {
+                return true;
+            }
+
+            if (ShouldHideStatefulMezFromGroupedViews(effect))
+            {
+                return true;
+            }
+
+            if (effect.EffectType == Enums.eEffectType.ResEffect &&
+                effect.ETModifies is Enums.eEffectType.Null or Enums.eEffectType.NullBool)
+            {
+                return true;
+            }
+
+            var isDefianceDisplayEffect = IsModernDefianceDisplayEffect(effect);
+            if (!(effect.Probability > 0 &&
+                  (MidsContext.Config?.Suppression & effect.Suppression) == Enums.eSuppress.None &&
+                  (effect.CanInclude() || isDefianceDisplayEffect)))
+            {
+                return true;
+            }
+
+            if (effect.EffectType == Enums.eEffectType.RevokePower &&
+                effect.nSummon <= -1 &&
+                string.IsNullOrWhiteSpace(effect.Summon))
+            {
+                return true;
+            }
+
+            if (effect.EffectType == Enums.eEffectType.GrantPower &&
+                effect.nSummon <= -1)
+            {
+                return true;
+            }
+
+            if ((effect.PvMode == Enums.ePvX.PvP && !MidsContext.Config.Inc.DisablePvE) ||
+                (effect.PvMode == Enums.ePvX.PvE && MidsContext.Config.Inc.DisablePvE))
+            {
+                return true;
+            }
+
+            if (effect.HasConditions &&
+                !isDefianceDisplayEffect &&
+                !effect.ValidateConditional())
+            {
+                return true;
+            }
+
+            if (effect.EffectType == Enums.eEffectType.Mez &&
+                effect.MezType is not (Enums.eMez.Teleport or Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Repel or Enums.eMez.ToggleDrop) &&
+                effect.Duration <= 0)
+            {
+                return true;
+            }
+
+            return false;
+        }
+
+        private static GroupAssemblySeed? BuildGroupingSeed(IPower power, int effectIndex)
+        {
+            var effect = power.Effects[effectIndex];
+            var presentationEffectType = GetPresentationEffectType(effect);
+
+            return presentationEffectType switch
+            {
+                Enums.eEffectType.Damage => new GroupAssemblySeed(
+                    CreateGroupedFxIdentifier(effect, Enums.eEffectType.Damage, damageType: effect.DamageType, duration: effect.Duration),
+                    effect.BuffedMag,
+                    "Damage",
+                    effect.isEnhancementEffect,
+                    effect.isEnhancementEffect,
+                    effect.ConditionIdentity,
+                    false),
+
+                Enums.eEffectType.EntCreate => new GroupAssemblySeed(
+                    CreateGroupedFxIdentifier(effect, Enums.eEffectType.EntCreate, summonId: effect.nSummon),
+                    effect.BuffedMag,
+                    "Summon",
+                    effect.isEnhancementEffect,
+                    effect.isEnhancementEffect,
+                    effect.ConditionIdentity,
+                    false),
+
+                Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning => new GroupAssemblySeed(
+                    CreateGroupedFxIdentifier(effect, effect.EffectType),
+                    effect.BuffedMag,
+                    "Slow",
+                    effect.isEnhancementEffect,
+                    effect.isEnhancementEffect,
+                    effect.ConditionIdentity,
+                    false),
+
+                Enums.eEffectType.DamageBuff => BuildDamageBuffGroupingSeed(effect),
+
+                Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity
+                    or Enums.eEffectType.MezResist or Enums.eEffectType.ResEffect or Enums.eEffectType.Enhancement => new GroupAssemblySeed(
+                    CreateGroupedFxIdentifier(effect, presentationEffectType, etModifies: effect.ETModifies),
+                    effect.BuffedMag,
+                    presentationEffectType == Enums.eEffectType.Enhancement
+                        ? $"{presentationEffectType}({effect.ETModifies})"
+                        : $"{presentationEffectType}",
+                    effect.isEnhancementEffect,
+                    effect.isEnhancementEffect,
+                    effect.ConditionIdentity,
+                    false),
+
+                _ => null
+            };
+        }
+
+        private static GroupAssemblySeed BuildDamageBuffGroupingSeed(IEffect effect)
+        {
+            var isDefiance = IsModernDefianceDisplayEffect(effect);
+
+            return new GroupAssemblySeed(
+                CreateGroupedFxIdentifier(effect, Enums.eEffectType.DamageBuff),
+                effect.BuffedMag,
+                isDefiance ? "Defiance" : $"{effect.EffectType}",
+                !isDefiance && effect.isEnhancementEffect,
+                effect.isEnhancementEffect,
+                effect.ConditionIdentity,
+                isDefiance);
+        }
+
+        private static FxId CreateGroupedFxIdentifier(
+            IEffect effect,
+            Enums.eEffectType effectType,
+            Enums.eEffectType etModifies = Enums.eEffectType.None,
+            Enums.eDamage damageType = Enums.eDamage.None,
+            Enums.eMez mezType = Enums.eMez.None,
+            int summonId = -1,
+            float duration = 0f)
+        {
+            return new FxId
+            {
+                DamageType = damageType,
+                EffectType = effectType,
+                ETModifies = etModifies,
+                MezType = mezType,
+                ToWho = effect.ToWho,
+                SummonId = summonId,
+                Duration = duration,
+                PvMode = effect.PvMode,
+                IgnoreScaling = effect.IgnoreScaling
+            };
+        }
+
+        private static List<GroupedFx> NormalizeSingleEffectGroups(IPower power, IReadOnlyList<GroupedFx> groupedEffects)
+        {
+            var normalizedGroups = new List<GroupedFx>(groupedEffects.Count);
+            var ignoredGroupIndexes = new HashSet<int>();
+
+            for (var index = 0; index < groupedEffects.Count; index++)
+            {
+                if (ignoredGroupIndexes.Contains(index))
                 {
                     continue;
                 }
 
-                if (groupedRankedEffects[i].NumEffects > 1)
+                var groupedEffect = groupedEffects[index];
+                if (groupedEffect.NumEffects > 1)
                 {
-                    groupedRankedEffects2.Add(groupedRankedEffects[i]);
+                    normalizedGroups.Add(groupedEffect);
                     continue;
                 }
 
-                var similarGreList = groupedRankedEffects
-                    .Select((e, id) => new KeyValuePair<int, GroupedFx>(id, e))
-                    .Where(e => e.Value.FxIdentifier.Equals(groupedRankedEffects[i].FxIdentifier) &&
-                                MagnitudesMatch(e.Value.Mag, groupedRankedEffects[i].Mag) &&
-                                e.Value.EnhancementEffect == groupedRankedEffects[i].EnhancementEffect &&
-                                e.Value.SpecialCase == groupedRankedEffects[i].SpecialCase &&
-                                HasSameGroupConditionIdentity(power, groupedRankedEffects[i], e.Value))
+                var similarGroups = groupedEffects
+                    .Select((group, groupIndex) => new KeyValuePair<int, GroupedFx>(groupIndex, group))
+                    .Where(entry => entry.Value.FxIdentifier.Equals(groupedEffect.FxIdentifier) &&
+                                    MagnitudesMatch(entry.Value.Mag, groupedEffect.Mag) &&
+                                    entry.Value.EnhancementEffect == groupedEffect.EnhancementEffect &&
+                                    entry.Value.DefianceTagged == groupedEffect.DefianceTagged &&
+                                    string.Equals(entry.Value.ConditionIdentity, groupedEffect.ConditionIdentity, StringComparison.OrdinalIgnoreCase) &&
+                                    HasSameGroupConditionIdentity(power, groupedEffect, entry.Value))
                     .ToList();
 
-                ignoredGroups.AddRangeUnique(similarGreList.Select(e => e.Key).ToList());
-
-                groupedRankedEffects2.Add(new GroupedFx(groupedRankedEffects[i].FxIdentifier, similarGreList.Select(e => e.Value).ToList()));
+                ignoredGroupIndexes.UnionWith(similarGroups.Select(entry => entry.Key));
+                normalizedGroups.Add(new GroupedFx(
+                    groupedEffect.FxIdentifier,
+                    similarGroups.Select(entry => entry.Value).ToList()));
             }
 
-            var greAggregated = Aggregate(groupedRankedEffects2);
-            foreach (var gre in greAggregated)
+            return normalizedGroups;
+        }
+
+        private static List<GroupedFx> AggregateAndFinalizeGroupedEffects(IPower power, List<GroupedFx> groupedEffects)
+        {
+            var aggregatedGroups = Aggregate(groupedEffects);
+            foreach (var groupedEffect in aggregatedGroups)
             {
-                if (!gre.IsAggregated)
+                if (!groupedEffect.IsAggregated)
                 {
                     continue;
                 }
 
-                gre.Mag = gre.GetMagSum(power, gre.FxIdentifier.EffectType is not (Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning or Enums.eEffectType.JumpHeight));
+                groupedEffect.Mag = groupedEffect.GetMagSum(
+                    power,
+                    groupedEffect.FxIdentifier.EffectType is not (Enums.eEffectType.SpeedFlying
+                        or Enums.eEffectType.SpeedJumping
+                        or Enums.eEffectType.SpeedRunning
+                        or Enums.eEffectType.JumpHeight));
             }
 
-            return greAggregated
-                .Where(e => Math.Abs(e.Mag) > Tolerance)
+            return aggregatedGroups
+                .Where(groupedEffect => Math.Abs(groupedEffect.Mag) > Tolerance)
                 .ToList();
         }
 
@@ -1789,354 +2126,51 @@ namespace Mids_Reborn.Core
                 return [];
             }
 
-            var pw = power.Clone();
-            pw.Effects = pw.Effects.Where((e, i) => includedEffects.Contains(i)).ToArray();
-
-            var rankedEffects = pw.GetRankedEffects(true);
-            var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
-            var ignoredEffects = new List<int>();
-            var groupedRankedEffects = new List<GroupedFx>();
-
-            foreach (var re in rankedEffects)
+            var effectIndexMap = NormalizeIncludedEffectIndices(power, includedEffects);
+            if (effectIndexMap.Count == 0)
             {
-                if (re <= -1)
-                {
-                    continue;
-                }
-
-                if (ignoredEffects.Contains(re))
-                {
-                    continue;
-                }
-
-                if (!includeDamage && pw.Effects[re].EffectType == Enums.eEffectType.Damage)
-                {
-                    continue;
-                }
-
-                if (pw.Effects[re].EffectType is Enums.eEffectType.Meter or Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode
-                    or Enums.eEffectType.Null or Enums.eEffectType.NullBool or Enums.eEffectType.GlobalChanceMod
-                    or Enums.eEffectType.ExecutePower)
-                {
-                    continue;
-                }
-
-                if (ShouldHideStatefulMezFromGroupedViews(pw.Effects[re]))
-                {
-                    continue;
-                }
-
-                if (pw.Effects[re].EffectType == Enums.eEffectType.ResEffect &&
-                    pw.Effects[re].ETModifies is Enums.eEffectType.Null or Enums.eEffectType.NullBool)
-                {
-                    continue;
-                }
-
-                var isDefianceDisplayEffect = IsModernDefianceDisplayEffect(pw.Effects[re]);
-                if (!(pw.Effects[re].Probability > 0 &&
-                      ((MidsContext.Config?.Suppression & pw.Effects[re].Suppression) == Enums.eSuppress.None) &
-                      (pw.Effects[re].CanInclude() || isDefianceDisplayEffect)))
-                {
-                    continue;
-                }
-
-                if (pw.Effects[re].EffectType == Enums.eEffectType.RevokePower &&
-                    pw.Effects[re].nSummon <= -1 &&
-                    string.IsNullOrWhiteSpace(pw.Effects[re].Summon))
-                {
-                    continue;
-                }
-
-                if (pw.Effects[re].EffectType == Enums.eEffectType.GrantPower &&
-                    pw.Effects[re].nSummon <= -1)
-                {
-                    continue;
-                }
-
-                if (pw.Effects[re].PvMode == Enums.ePvX.PvP && !MidsContext.Config.Inc.DisablePvE |
-                    (pw.Effects[re].PvMode == Enums.ePvX.PvE) && MidsContext.Config.Inc.DisablePvE)
-                {
-                    continue;
-                }
-
-                if (pw.Effects[re].ActiveConditionals is { Count: > 0 } && !isDefianceDisplayEffect)
-                {
-                    if (!pw.Effects[re].ValidateConditional())
-                    {
-                        continue;
-                    }
-                }
-
-                if ((pw.Effects[re].EffectType == Enums.eEffectType.Mez) & pw.Effects[re].MezType is not (Enums.eMez.Teleport or Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Repel or Enums.eMez.ToggleDrop))
-                {
-                    if (pw.Effects[re].Duration <= 0)
-                    {
-                        continue;
-                    }
-                }
-
-                var similarFxIds = new List<int>();
-
-                switch (pw.Effects[re].EffectType)
-                {
-                    case Enums.eEffectType.Damage:
-                        similarFxIds = GetSimilarEffects(pw,
-                            new FxId
-                            {
-                                DamageType = pw.Effects[re].DamageType,
-                                EffectType = Enums.eEffectType.Damage,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = pw.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = pw.Effects[re].Duration,
-                                PvMode = pw.Effects[re].PvMode,
-                                IgnoreScaling = pw.Effects[re].IgnoreScaling
-                            }, pw.Effects[re].BuffedMag,
-                            pw.Effects[re].SpecialCase,
-                            pw.Effects[re].isEnhancementEffect, re);
-
-                        ignoredEffects.AddRangeUnique(similarFxIds);
-
-                        groupedRankedEffects.Add(
-                            new GroupedFx(new FxId
-                            {
-                                DamageType = pw.Effects[re].DamageType,
-                                EffectType = Enums.eEffectType.Damage,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = pw.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = pw.Effects[re].Duration,
-                                PvMode = pw.Effects[re].PvMode,
-                                IgnoreScaling = pw.Effects[re].IgnoreScaling
-                            },
-                                pw.Effects[re].BuffedMag,
-                                "Damage",
-                                similarFxIds,
-                                pw.Effects[re].isEnhancementEffect));
-
-                        break;
-
-                    case Enums.eEffectType.EntCreate:
-                        similarFxIds = GetSimilarEffects(pw,
-                            new FxId
-                            {
-                                DamageType = Enums.eDamage.None,
-                                EffectType = Enums.eEffectType.EntCreate,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = pw.Effects[re].ToWho,
-                                SummonId = pw.Effects[re].nSummon,
-                                Duration = 0, //power.Effects[re].Duration
-                                PvMode = pw.Effects[re].PvMode,
-                                IgnoreScaling = pw.Effects[re].IgnoreScaling
-                            }, pw.Effects[re].BuffedMag,
-                            Enums.eSpecialCase.None,
-                            pw.Effects[re].isEnhancementEffect, re);
-
-                        ignoredEffects.AddRangeUnique(similarFxIds);
-
-                        groupedRankedEffects.Add(
-                            new GroupedFx(new FxId
-                            {
-                                DamageType = Enums.eDamage.None,
-                                EffectType = Enums.eEffectType.EntCreate,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = pw.Effects[re].ToWho,
-                                SummonId = pw.Effects[re].nSummon,
-                                Duration = 0, //power.Effects[re].Duration
-                                PvMode = pw.Effects[re].PvMode,
-                                IgnoreScaling = pw.Effects[re].IgnoreScaling
-                            },
-                                pw.Effects[re].BuffedMag,
-                                "Summon",
-                                similarFxIds,
-                                pw.Effects[re].isEnhancementEffect));
-
-                        break;
-
-                    case Enums.eEffectType.SpeedFlying:
-                    case Enums.eEffectType.SpeedJumping:
-                    case Enums.eEffectType.SpeedRunning:
-                        similarFxIds = GetSimilarEffects(pw,
-                            new FxId
-                            {
-                                DamageType = Enums.eDamage.None,
-                                EffectType = pw.Effects[re].EffectType,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = pw.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = 0,
-                                PvMode = pw.Effects[re].PvMode,
-                                IgnoreScaling = pw.Effects[re].IgnoreScaling
-                            }, pw.Effects[re].BuffedMag,
-                            Enums.eSpecialCase.None,
-                            pw.Effects[re].isEnhancementEffect, re);
-
-                        ignoredEffects.AddRangeUnique(similarFxIds);
-
-                        groupedRankedEffects.Add(
-                            new GroupedFx(new FxId
-                            {
-                                DamageType = Enums.eDamage.None,
-                                EffectType = pw.Effects[re].EffectType,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = pw.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = 0,
-                                PvMode = pw.Effects[re].PvMode,
-                                IgnoreScaling = pw.Effects[re].IgnoreScaling
-                            },
-                                pw.Effects[re].BuffedMag,
-                                "Slow",
-                                similarFxIds,
-                                pw.Effects[re].isEnhancementEffect));
-
-                        break;
-
-                    case Enums.eEffectType.DamageBuff:
-                        var isDefiance = IsModernDefianceDisplayEffect(pw.Effects[re]);
-
-                        similarFxIds = GetSimilarEffects(pw,
-                            new FxId
-                            {
-                                DamageType = Enums.eDamage.None,
-                                EffectType = Enums.eEffectType.DamageBuff,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = pw.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = 0,
-                                PvMode = pw.Effects[re].PvMode,
-                                IgnoreScaling = pw.Effects[re].IgnoreScaling
-                            }, pw.Effects[re].BuffedMag,
-                            isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None,
-                            pw.Effects[re].isEnhancementEffect, re);
-
-                        ignoredEffects.AddRangeUnique(similarFxIds);
-
-                        groupedRankedEffects.Add(
-                            new GroupedFx(new FxId
-                            {
-                                DamageType = Enums.eDamage.None,
-                                EffectType = Enums.eEffectType.DamageBuff,
-                                ETModifies = Enums.eEffectType.None,
-                                MezType = Enums.eMez.None,
-                                ToWho = pw.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = 0,
-                                PvMode = pw.Effects[re].PvMode,
-                                IgnoreScaling = pw.Effects[re].IgnoreScaling
-                            },
-                                pw.Effects[re].BuffedMag,
-                                isDefiance ? "Defiance" : $"{pw.Effects[re].EffectType}",
-                                similarFxIds,
-                                !isDefiance && pw.Effects[re].isEnhancementEffect,
-                                isDefiance ? Enums.eSpecialCase.Defiance : Enums.eSpecialCase.None));
-
-                        break;
-
-                    case Enums.eEffectType.Defense:
-                    case Enums.eEffectType.Resistance:
-                    case Enums.eEffectType.Elusivity:
-                    case Enums.eEffectType.MezResist:
-                    case Enums.eEffectType.ResEffect:
-                    case Enums.eEffectType.Enhancement:
-                        similarFxIds = GetSimilarEffects(pw,
-                            new FxId
-                            {
-                                EffectType = pw.Effects[re].EffectType,
-                                ETModifies = pw.Effects[re].ETModifies,
-                                MezType = Enums.eMez.None,
-                                DamageType = Enums.eDamage.None,
-                                ToWho = pw.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = 0,
-                                PvMode = pw.Effects[re].PvMode,
-                                IgnoreScaling = pw.Effects[re].IgnoreScaling
-                            },
-                            pw.Effects[re].BuffedMag,
-                            Enums.eSpecialCase.None,
-                            pw.Effects[re].isEnhancementEffect, re);
-
-                        ignoredEffects.AddRangeUnique(similarFxIds);
-
-                        groupedRankedEffects.Add(
-                            new GroupedFx(new FxId
-                            {
-                                EffectType = pw.Effects[re].EffectType,
-                                ETModifies = pw.Effects[re].ETModifies,
-                                MezType = Enums.eMez.None,
-                                DamageType = Enums.eDamage.None,
-                                ToWho = pw.Effects[re].ToWho,
-                                SummonId = -1,
-                                Duration = 0,
-                                PvMode = pw.Effects[re].PvMode,
-                                IgnoreScaling = pw.Effects[re].IgnoreScaling
-                            },
-                                pw.Effects[re].BuffedMag,
-                                pw.Effects[re].EffectType == Enums.eEffectType.Enhancement
-                                    ? $"{pw.Effects[re].EffectType}({pw.Effects[re].ETModifies})"
-                                    : $"{pw.Effects[re].EffectType}",
-                                similarFxIds,
-                                pw.Effects[re].isEnhancementEffect
-                            ));
-
-                        break;
-
-                    default:
-                        groupedRankedEffects.Add(new GroupedFx(pw.Effects[re], re));
-                        break;
-                }
+                return [];
             }
 
-            var groupedRankedEffects2 = new List<GroupedFx>();
-            var ignoredGroups = new List<int>();
-            for (var i = 0; i < groupedRankedEffects.Count; i++)
-            {
-                if (ignoredGroups.Contains(i))
-                {
-                    continue;
-                }
+            var subsetPower = BuildEffectSubsetPower(power, effectIndexMap);
+            var groupedEffects = AssembleGroupedEffects(subsetPower, includeDamage);
+            RemapGroupedEffectIndices(groupedEffects, effectIndexMap);
+            return groupedEffects;
+        }
 
-                if (groupedRankedEffects[i].NumEffects > 1)
-                {
-                    groupedRankedEffects2.Add(groupedRankedEffects[i]);
-                    continue;
-                }
-
-                var similarGreList = groupedRankedEffects
-                    .Select((e, id) => new KeyValuePair<int, GroupedFx>(id, e))
-                    .Where(e => e.Value.FxIdentifier.Equals(groupedRankedEffects[i].FxIdentifier) &&
-                                MagnitudesMatch(e.Value.Mag, groupedRankedEffects[i].Mag) &&
-                                e.Value.EnhancementEffect == groupedRankedEffects[i].EnhancementEffect &&
-                                e.Value.SpecialCase == groupedRankedEffects[i].SpecialCase &&
-                                HasSameGroupConditionIdentity(pw, groupedRankedEffects[i], e.Value))
-                    .ToList();
-
-                ignoredGroups.AddRangeUnique(similarGreList.Select(e => e.Key).ToList());
-
-                groupedRankedEffects2.Add(new GroupedFx(groupedRankedEffects[i].FxIdentifier, similarGreList.Select(e => e.Value).ToList()));
-            }
-
-            var greAggregated = Aggregate(groupedRankedEffects2);
-            foreach (var gre in greAggregated)
-            {
-                if (!gre.IsAggregated)
-                {
-                    continue;
-                }
-
-                gre.Mag = gre.GetMagSum(pw, gre.FxIdentifier.EffectType is not (Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning or Enums.eEffectType.JumpHeight));
-            }
-
-            return greAggregated
-                .Where(e => Math.Abs(e.Mag) > Tolerance)
+        private static List<int> NormalizeIncludedEffectIndices(IPower power, IEnumerable<int> includedEffects)
+        {
+            return includedEffects
+                .Where(index => index >= 0 && index < power.Effects.Length)
+                .Distinct()
+                .OrderBy(index => index)
                 .ToList();
+        }
+
+        private static IPower BuildEffectSubsetPower(IPower power, IReadOnlyList<int> effectIndexMap)
+        {
+            var subsetPower = new Power(power);
+            subsetPower.Effects = effectIndexMap
+                .Select(index => subsetPower.Effects[index])
+                .ToArray();
+
+            foreach (var effect in subsetPower.Effects)
+            {
+                effect.SetPower(subsetPower);
+            }
+
+            return subsetPower;
+        }
+
+        private static void RemapGroupedEffectIndices(IEnumerable<GroupedFx> groupedEffects, IReadOnlyList<int> effectIndexMap)
+        {
+            foreach (var groupedEffect in groupedEffects)
+            {
+                groupedEffect.IncludedEffects = groupedEffect.IncludedEffects
+                    .Where(index => index >= 0 && index < effectIndexMap.Count)
+                    .Select(index => effectIndexMap[index])
+                    .ToList();
+            }
         }
 
         public static List<GroupedFx> AggregateGroupedEffectsPass2(IPower? power, List<GroupedFx> gre)
@@ -2178,14 +2212,16 @@ namespace Mids_Reborn.Core
                     IncludedEffects = g.IncludedEffects.Clone(),
                     IsAggregated = true,
                     IsEnhancement = g.IsEnhancement,
+                    IsDefianceGroup = g.DefianceTagged,
                     Mag = 0,
                     SingleEffectSource = null,
-                    SpecialCase = Enums.eSpecialCase.None
+                    ConditionIdentity = string.Empty
                 });
 
                 if (!v)
                 {
                     ret[fxId].IncludedEffects = ret[fxId].IncludedEffects.Concat(g.IncludedEffects).Distinct().ToList();
+                    ret[fxId].IsDefianceGroup |= g.DefianceTagged;
                 }
             }
 
@@ -2249,7 +2285,7 @@ namespace Mids_Reborn.Core
                 var greIndex = gre.GetRankedEffectIndex(rankedEffects, 0);
                 if (greIndex < 0) continue;
 
-                var label = BuildLabel(gre, pEnh);
+                var label = FormatPresentationText(BuildLabel(gre, pEnh));
                 var (value, alt, tip, isSpecial, isConditional, isUnique) =
                     BuildValueAndDecorations(gre, pBase, pEnh, rankedEffects[greIndex], powerInBuild);
 
@@ -2257,7 +2293,7 @@ namespace Mids_Reborn.Core
                     label,
                     value,
                     alt,
-                    tip,
+                    string.IsNullOrWhiteSpace(tip) ? tip : FormatPresentationText(tip),
                     isSpecial,
                     isConditional,
                     isUnique,
@@ -2451,7 +2487,8 @@ namespace Mids_Reborn.Core
                     {
                         if (!greList[i].FxIdentifier.Equals(greList[j].FxIdentifier) |
                             greList[i].EnhancementEffect != greList[j].EnhancementEffect |
-                            greList[i].SpecialCase != greList[j].SpecialCase)
+                            greList[i].DefianceTagged != greList[j].DefianceTagged |
+                            !string.Equals(greList[i].ConditionIdentity, greList[j].ConditionIdentity, StringComparison.OrdinalIgnoreCase))
                         {
                             continue;
                         }
@@ -2461,7 +2498,8 @@ namespace Mids_Reborn.Core
                         if (!greList[i].FxIdentifier.Equals(greList[j].FxIdentifier) |
                             Math.Abs(greList[i].Mag - greList[j].Mag) > Tolerance |
                             greList[i].EnhancementEffect != greList[j].EnhancementEffect |
-                            greList[i].SpecialCase != greList[j].SpecialCase)
+                            greList[i].DefianceTagged != greList[j].DefianceTagged |
+                            !string.Equals(greList[i].ConditionIdentity, greList[j].ConditionIdentity, StringComparison.OrdinalIgnoreCase))
                         {
                             continue;
                         }
@@ -2500,12 +2538,18 @@ namespace Mids_Reborn.Core
                 }).ResolvedPower;
             }
 
-            var defiancePower = DatabaseAPI.GetPowerByFullName("Inherent.Inherent.Defiance");
             var effectSource = gre.GetEffectAt(pEnh);
             var effectType = gre.EffectType;
             var greTooltip = !gre.HasMisc
                 ? gre.GetTooltip(pEnh)
-                : string.Join("\r\n", AssembleGroupedEffects(pEnh, gre.IncludedEffects).Select(e => e.GetTooltip(pEnh)));
+                : BuildPresentationText(
+                    pEnh,
+                    new GroupedFxPresentationRequest(
+                        IncludedEffectIds: gre.IncludedEffects,
+                        IncludeDamage: true,
+                        SimpleText: false,
+                        IgnoreConditions: false,
+                        LineJoinMode: GroupedFxLineJoinMode.MultiLine));
 
             var magSum = effectType is Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
                     or Enums.eEffectType.SpeedRunning or Enums.eEffectType.JumpHeight
@@ -2840,6 +2884,14 @@ namespace Mids_Reborn.Core
 
                     break;
             }
+
+            rankedEffect.Name = FormatPresentationText(rankedEffect.Name);
+            rankedEffect.Value = string.IsNullOrWhiteSpace(rankedEffect.Value)
+                ? rankedEffect.Value
+                : FormatPresentationText(rankedEffect.Value);
+            rankedEffect.ToolTip = string.IsNullOrWhiteSpace(rankedEffect.ToolTip)
+                ? rankedEffect.ToolTip
+                : FormatPresentationText(rankedEffect.ToolTip);
         }
     }
 }

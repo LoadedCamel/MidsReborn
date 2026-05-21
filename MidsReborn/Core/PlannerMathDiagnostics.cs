@@ -1450,12 +1450,8 @@ public static class PlannerMathDiagnostics
 
     private static string GetEffectConditionIdentity(IEffect effect)
     {
-        var set = effect.AdvancedConditions is { Rows.Count: > 0 }
-            ? effect.AdvancedConditions
-            : AdvancedConditionSet.FromLegacyActiveConditionals(effect.ActiveConditionals);
-
         return string.Join(";",
-            set.Rows
+            effect.AdvancedConditions.Rows
                 .Select(row => $"{row.EvaluationMode}|{row.Kind}|{row.Link}|{row.Negated}|{AdvancedConditionCompiler.Compile(row)}")
                 .OrderBy(value => value, StringComparer.OrdinalIgnoreCase));
     }

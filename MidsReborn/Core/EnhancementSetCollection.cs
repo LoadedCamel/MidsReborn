@@ -27,18 +27,15 @@ namespace Mids_Reborn.Core
             str3 = $"{RTF.Color(RTF.ElementID.Invention)}{str3}{RTF.Color(RTF.ElementID.Text)}";
             for (var index = 0; index <= DatabaseAPI.Database.EnhancementSets[iSet].Bonus.Length - 1; ++index)
             {
+                var pvMode = DatabaseAPI.Database.EnhancementSets[iSet].GetEffectiveBonusPvMode(index, false);
                 var effectString = DatabaseAPI.Database.EnhancementSets[iSet].GetEffectString(index, false);
                 if (string.IsNullOrEmpty(effectString))
                     continue;
-                if (DatabaseAPI.Database.EnhancementSets[iSet].Bonus[index].PvMode == Enums.ePvX.PvP)
+                if (pvMode == Enums.ePvX.PvP)
                     effectString += " (PvP)";
 
                 var fxColor = ((enhCount >= DatabaseAPI.Database.EnhancementSets[iSet].Bonus[index].Slotted) &
-                    ((!MidsContext.Config.Inc.DisablePvE &
-                      (DatabaseAPI.Database.EnhancementSets[iSet].Bonus[index].PvMode == Enums.ePvX.PvE)) |
-                     (MidsContext.Config.Inc.DisablePvE &
-                      (DatabaseAPI.Database.EnhancementSets[iSet].Bonus[index].PvMode == Enums.ePvX.PvP)) |
-                     (DatabaseAPI.Database.EnhancementSets[iSet].Bonus[index].PvMode == Enums.ePvX.Any)))
+                    DatabaseAPI.Database.EnhancementSets[iSet].BonusAppliesInContext(index, false, MidsContext.Config.Inc.DisablePvE))
                      ? RTF.ElementID.Invention
                      : RTF.ElementID.Faded;
 

@@ -109,7 +109,7 @@ public static partial class DatabaseAPI
                 foreach (var effect in flattened)
                 {
                     effect.PowerFullName = dbPower.FullName;
-                    effect.ActiveConditionals = effect.AdvancedConditions.ToLegacyActiveConditionals();
+                    effect.NormalizeConditionState();
                     effect.SetPower(dbPower);
                 }
 

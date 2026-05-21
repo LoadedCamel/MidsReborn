@@ -175,12 +175,25 @@ namespace Mids_Reborn.Core
 
         public IPower? GetPower()
         {
-            return _power ??= DatabaseAPI.GetPowerByFullName($"Boosts.{UID}.{UID}");
+            if (_power == null)
+            {
+                _power = DatabaseAPI.GetPowerByFullName($"Boosts.{UID}.{UID}");
+            }
+            else if (_power is Power existingPower &&
+                     !existingPower.OmniBoostPolicy.HasValue &&
+                     DatabaseAPI.GetPowerByFullName($"Boosts.{UID}.{UID}") is Power canonicalBoostPower)
+            {
+                _power = canonicalBoostPower;
+            }
+
+            ApplyRuntimeLevelBand();
+            return _power;
         }
 
         void IEnhancement.SetPower(IPower? power)
         {
             _power = power;
+            ApplyRuntimeLevelBand();
         }
 
         //public IPower Power
@@ -373,12 +386,25 @@ namespace Mids_Reborn.Core
                     iMin = LevelMin;
                     break;
                 case Enums.eType.SetO:
-                    if (nIDSet > -1)
+                    if (nIDSet > -1 &&
+                        GetPower() is Power boostPower)
                     {
-                        iMax = DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMax;
-                        iMin = DatabaseAPI.Database.EnhancementSets[nIDSet].LevelMin;
+                        if (boostPower.UsesPlayerLevelForBoostMath)
+                        {
+                            iMax = boostPower.ImportedMaxBoostLevelZeroBased ?? LevelMax;
+                            iMin = LevelMin;
+                        }
+                        else
+                        {
+                            iMax = LevelMax;
+                            iMin = LevelMin;
+                        }
                     }
-
+                    else
+                    {
+                        iMax = LevelMax;
+                        iMin = LevelMin;
+                    }
                     break;
             }
 
@@ -421,6 +447,21 @@ namespace Mids_Reborn.Core
 
             var data = DatabaseAPI.GetEnhancementSetFromEnhUid(UIDSet);
             return data;
+        }
+
+        private void ApplyRuntimeLevelBand()
+        {
+            if (TypeID != Enums.eType.SetO ||
+                nIDSet < 0 ||
+                DatabaseAPI.Database?.EnhancementSets == null ||
+                nIDSet >= DatabaseAPI.Database.EnhancementSets.Count)
+            {
+                return;
+            }
+
+            var enhancementSet = DatabaseAPI.Database.EnhancementSets[nIDSet];
+            LevelMin = enhancementSet.LevelMin;
+            LevelMax = enhancementSet.LevelMax;
         }
 
         public static int GranularLevelZb(int iLevel, int iMin, int iMax, int iStep = 5)

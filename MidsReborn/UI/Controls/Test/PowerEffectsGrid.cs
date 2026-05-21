@@ -12,13 +12,13 @@ namespace Mids_Reborn.UI.Controls.Test
         {
             public string Label { get; }
             public string? Tooltip { get; }
-            public IReadOnlyList<string> TargetChips { get; }
+            public IReadOnlyList<string> ContextChips { get; }
 
-            protected Row(string? label, string? tooltip = null, IEnumerable<string>? targetChips = null)
+            protected Row(string? label, string? tooltip = null, IEnumerable<string>? contextChips = null)
             {
                 Label = label ?? string.Empty;
                 Tooltip = tooltip;
-                TargetChips = targetChips?
+                ContextChips = contextChips?
                     .Where(static c => !string.IsNullOrWhiteSpace(c))
                     .Select(static c => c.Trim())
                     .Distinct(StringComparer.OrdinalIgnoreCase)
@@ -42,8 +42,8 @@ namespace Mids_Reborn.UI.Controls.Test
                               string baseText, string enhancedText, string gainText, string gainPctText,
                               bool higherIsBetter = true, bool affectedByEd = false,
                               bool neutralWhenZero = true, bool hideGainPercent = false,
-                              int band = -1, string? tooltip = null, IEnumerable<string>? targetChips = null)
-                : base(label, tooltip, targetChips)
+                              int band = -1, string? tooltip = null, IEnumerable<string>? contextChips = null)
+                : base(label, tooltip, contextChips)
             {
                 BaseText = baseText;
                 EnhancedText = enhancedText;
@@ -89,8 +89,8 @@ namespace Mids_Reborn.UI.Controls.Test
                           int bandMagnitude = -1,
                           int bandDuration = -1,
                           string? tooltip = null,
-                          IEnumerable<string>? targetChips = null)
-                : base(label, tooltip, targetChips)
+                          IEnumerable<string>? contextChips = null)
+                : base(label, tooltip, contextChips)
             {
                 BaseMagnitude = baseMagnitude;
                 EnhancedMagnitude = enhancedMagnitude;
@@ -120,8 +120,8 @@ namespace Mids_Reborn.UI.Controls.Test
             public string Description { get; }
 
             public DescriptorRow(string label, string tag, string? description, string? tooltip = null,
-                IEnumerable<string>? targetChips = null)
-                : base(label, tooltip, targetChips)
+                IEnumerable<string>? contextChips = null)
+                : base(label, tooltip, contextChips)
             {
                 Tag = string.IsNullOrWhiteSpace(tag) ? "Descriptor" : tag;
                 Description = description ?? string.Empty;
@@ -617,7 +617,7 @@ namespace Mids_Reborn.UI.Controls.Test
                                 }
 
                                 DrawLabelWithChips(g, row.Label, row.AffectedByEd, cols.rcLabel, theme,
-                                    Color.FromArgb(200, theme.Accent), row.TargetChips);
+                                    Color.FromArgb(200, theme.Accent), row.ContextChips);
 
                                 // Compose Value cell = Enhanced + inline (Gain) + optional (%)
                                 bool noChange = row.GainText == "—" ||
@@ -669,7 +669,7 @@ namespace Mids_Reborn.UI.Controls.Test
                                 var label = row.Label + (anyEd ? "  ⓔ" : "");
                                 var cols = GetTwoColumns(rc);
 
-                                DrawLabelWithChips(g, label, false, cols.rcLabel, theme, theme.Text, row.TargetChips);
+                                DrawLabelWithChips(g, label, false, cols.rcLabel, theme, theme.Text, row.ContextChips);
                                 TextRenderer.DrawText(g, "—", Font, cols.rcValue, theme.GridNeutral, Color.Transparent,
                                                       CellFlags | TextFormatFlags.Right);
 
@@ -742,7 +742,7 @@ namespace Mids_Reborn.UI.Controls.Test
                                 }
 
                                 DrawLabelWithChips(g, row.Label, false, cols.rcLabel, theme, theme.Text,
-                                    row.TargetChips);
+                                    row.ContextChips);
 
                                 // Value uses description if available; else the tag
                                 var valueText = !string.IsNullOrWhiteSpace(row.Description)
@@ -815,7 +815,7 @@ namespace Mids_Reborn.UI.Controls.Test
         }
 
         private void DrawLabelWithChips(Graphics g, string label, bool affectedByEd, Rectangle bounds,
-            DataViewTheme theme, Color labelColor, IReadOnlyList<string>? targetChips = null)
+            DataViewTheme theme, Color labelColor, IReadOnlyList<string>? contextChips = null)
         {
             var (main, chips) = SplitLabelChips(label);
             if (affectedByEd)
@@ -825,13 +825,13 @@ namespace Mids_Reborn.UI.Controls.Test
 
             if (chips.Length == 0)
             {
-                DrawMainLabelWithTargetChips(g, main, targetChips, bounds, theme, labelColor,
+                DrawMainLabelWithContextChips(g, main, contextChips, bounds, theme, labelColor,
                     CellFlags | TextFormatFlags.Left);
                 return;
             }
 
             var mainRect = new Rectangle(bounds.X, bounds.Y + ScalePx(2), bounds.Width, Font.Height + ScalePx(2));
-            DrawMainLabelWithTargetChips(g, main, targetChips, mainRect, theme, labelColor,
+            DrawMainLabelWithContextChips(g, main, contextChips, mainRect, theme, labelColor,
                 TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding);
 
             var chipBounds = new Rectangle(bounds.X, mainRect.Bottom + ScalePx(1), bounds.Width,
@@ -839,10 +839,10 @@ namespace Mids_Reborn.UI.Controls.Test
             DrawChipRow(g, chips, chipBounds, theme);
         }
 
-        private void DrawMainLabelWithTargetChips(Graphics g, string main, IReadOnlyList<string>? targetChips,
+        private void DrawMainLabelWithContextChips(Graphics g, string main, IReadOnlyList<string>? contextChips,
             Rectangle bounds, DataViewTheme theme, Color labelColor, TextFormatFlags flags)
         {
-            if (targetChips is not { Count: > 0 })
+            if (contextChips is not { Count: > 0 })
             {
                 TextRenderer.DrawText(g, main, Font, bounds, labelColor, Color.Transparent, flags);
                 return;
@@ -851,7 +851,7 @@ namespace Mids_Reborn.UI.Controls.Test
             using var targetFont = new Font(Font.FontFamily, Math.Max(6f, Font.SizeInPoints - 1f),
                 FontStyle.Regular, GraphicsUnit.Point);
             int targetChipHeight = TargetChipHeight(targetFont);
-            var chipSizes = MeasureChips(g, targetChips, targetFont, TargetChipTextPaddingX);
+            var chipSizes = MeasureChips(g, contextChips, targetFont, TargetChipTextPaddingX);
 
             int chipsWidth = chipSizes.Sum(c => c.Width) + ChipGap * Math.Max(0, chipSizes.Length - 1);
             int reserve = Math.Min(bounds.Width / 2, chipsWidth + ScalePx(8));

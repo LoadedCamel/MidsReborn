@@ -57,8 +57,7 @@ internal static class DefiancePlanner
             return false;
         }
 
-        return effect.SpecialCase == Enums.eSpecialCase.Defiance ||
-               effect.ValidateConditional("Active", "Defiance") ||
+        return effect.ValidateConditional("Active", "Defiance") ||
                effect.EffectTags.Contains("Defiance", StringComparer.OrdinalIgnoreCase);
     }
 
