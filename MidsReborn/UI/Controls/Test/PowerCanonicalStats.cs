@@ -279,6 +279,51 @@ public static class PowerCanonicalStats
                 neutralWhenZero: true,
                 band: edBand);
         }
+
+        var durationEffectId = pBase.GetDurationEffectID();
+        if (durationEffectId > -1 &&
+            durationEffectId < pBase.Effects.Length &&
+            durationEffectId < pEnh.Effects.Length &&
+            pBase.Effects[durationEffectId].Duration <= 9999 &&
+            pEnh.Effects[durationEffectId].Duration <= 9999)
+        {
+            var baseDuration = pBase.Effects[durationEffectId].Duration;
+            var enhancedDuration = pEnh.Effects[durationEffectId].Duration;
+            if (baseDuration <= Eps && enhancedDuration > Eps)
+            {
+                baseDuration = enhancedDuration;
+            }
+
+            if (Math.Max(baseDuration, enhancedDuration) > Eps)
+            {
+                var durationTooltip = pEnh.Effects.Any(e => e.EffectType == Enums.eEffectType.Mez)
+                    ? string.Join("\r\n", pEnh.Effects
+                        .Where(e => e.EffectType == Enums.eEffectType.Mez &&
+                                    e.ToWho == pEnh.Effects[durationEffectId].ToWho &&
+                                    Math.Abs(e.Duration - enhancedDuration) <= 0.1 &&
+                                    ((e.PvMode == Enums.ePvX.Any) |
+                                     (e.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE) |
+                                     (e.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE)))
+                        .OrderBy(e => e.PvMode)
+                        .Select(e => e.BuildEffectString(false, "", false, false, false, true)))
+                    : string.Join("\r\n", pEnh.Effects
+                        .Where(e => e.ToWho == pEnh.Effects[durationEffectId].ToWho &&
+                                    Math.Abs(e.Duration - enhancedDuration) <= 0.1 &&
+                                    ((e.PvMode == Enums.ePvX.Any) |
+                                     (e.PvMode == Enums.ePvX.PvE & !MidsContext.Config.Inc.DisablePvE) |
+                                     (e.PvMode == Enums.ePvX.PvP & MidsContext.Config.Inc.DisablePvE)))
+                        .OrderBy(e => e.PvMode)
+                        .Select(e => e.BuildEffectString(false, "", false, false, false, true)));
+
+                yield return new PowerStatsGrid.Row(
+                    label: "Duration",
+                    baseValue: baseDuration,
+                    enhancedValue: enhancedDuration,
+                    unit: "s",
+                    higherIsBetter: true,
+                    tooltip: durationTooltip);
+            }
+        }
     }
 
     // ---------- shared helpers ----------
@@ -478,7 +523,8 @@ public static class PowerCanonicalStats
         }
         else if (label == "End Cost")
         {
-            // value = base * (1 − F). Merge BuffEndRdx & EnduranceDiscount.
+            // Endurance discount uses the live-game divisor model:
+            // value = base / (1 + F). Merge BuffEndRdx & EnduranceDiscount.
             var rdx = GetSummedContributions(contributions, ContributionBucket.Effect, (int)Enums.eStatType.BuffEndRdx);
             var endd = GetSummedContributions(contributions, ContributionBucket.Effect, (int)Enums.eEffectType.EnduranceDiscount);
             var items = SumBySource(rdx, endd);
@@ -486,9 +532,11 @@ public static class PowerCanonicalStats
             if (items.Count > 0)
             {
                 detail.Add("⤷ From Globals, Incarnates, and Powers");
+                var total = items.Sum(item => item.Total);
                 foreach (var (source, frac) in items)
                 {
-                    double delta = baseVal * frac; // absolute End saved
+                    var withoutSource = Math.Max(0.0, total - frac);
+                    double delta = baseVal / (1.0 + withoutSource) - baseVal / (1.0 + total);
                     detail.Add($"    • {source.Name}: {(higherIsBetter ? "+" : "−")}{F(delta)}{uValue}");
                 }
             }

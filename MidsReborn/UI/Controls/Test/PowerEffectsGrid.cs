@@ -520,7 +520,7 @@ namespace Mids_Reborn.UI.Controls.Test
                     {
                         case NumericRow:
                             {
-                                var (_, chips) = SplitLabelChips(row.Label);
+                                var chips = GetSecondaryChips(row.Label, row.ContextChips);
 
                                 int h = ScalePx(_rowHeight);
                                 if (chips.Length > 0)
@@ -534,7 +534,12 @@ namespace Mids_Reborn.UI.Controls.Test
 
                         case MezRow:
                             {
-                                var rLbl = new Rectangle(gp, y, innerWidth, ScalePx(_rowHeight));
+                                var chips = GetSecondaryChips(row.Label, row.ContextChips);
+                                int h = ScalePx(_mezLabelHeight);
+                                if (chips.Length > 0)
+                                    h += ChipHeight + ScalePx(3);
+
+                                var rLbl = new Rectangle(gp, y, innerWidth, h);
                                 _layout.Add(RenderEntry.MezLbl(gi, ri, rLbl, row));
                                 y += rLbl.Height;
                                 break;
@@ -670,7 +675,7 @@ namespace Mids_Reborn.UI.Controls.Test
                                 var cols = GetTwoColumns(rc);
 
                                 DrawLabelWithChips(g, label, false, cols.rcLabel, theme, theme.Text, row.ContextChips);
-                                TextRenderer.DrawText(g, "—", Font, cols.rcValue, theme.GridNeutral, Color.Transparent,
+                                TextRenderer.DrawText(g, BuildMezSummary(row), Font, cols.rcValue, theme.GridNeutral, Color.Transparent,
                                                       CellFlags | TextFormatFlags.Right);
 
                                 using var pen = new Pen(theme.GridRowLine);
@@ -814,10 +819,23 @@ namespace Mids_Reborn.UI.Controls.Test
             return (head, chips);
         }
 
+        private static string[] GetSecondaryChips(string label, IReadOnlyList<string>? contextChips)
+        {
+            var (_, labelChips) = SplitLabelChips(label);
+            var merged = labelChips
+                .Concat(contextChips ?? Array.Empty<string>())
+                .Where(static chip => !string.IsNullOrWhiteSpace(chip))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+            return merged;
+        }
+
         private void DrawLabelWithChips(Graphics g, string label, bool affectedByEd, Rectangle bounds,
             DataViewTheme theme, Color labelColor, IReadOnlyList<string>? contextChips = null)
         {
-            var (main, chips) = SplitLabelChips(label);
+            var (main, _) = SplitLabelChips(label);
+            var chips = GetSecondaryChips(label, contextChips);
             if (affectedByEd)
             {
                 main += "  ⓔ";
@@ -825,49 +843,18 @@ namespace Mids_Reborn.UI.Controls.Test
 
             if (chips.Length == 0)
             {
-                DrawMainLabelWithContextChips(g, main, contextChips, bounds, theme, labelColor,
+                TextRenderer.DrawText(g, main, Font, bounds, labelColor, Color.Transparent,
                     CellFlags | TextFormatFlags.Left);
                 return;
             }
 
             var mainRect = new Rectangle(bounds.X, bounds.Y + ScalePx(2), bounds.Width, Font.Height + ScalePx(2));
-            DrawMainLabelWithContextChips(g, main, contextChips, mainRect, theme, labelColor,
+            TextRenderer.DrawText(g, main, Font, mainRect, labelColor, Color.Transparent,
                 TextFormatFlags.Left | TextFormatFlags.Top | TextFormatFlags.EndEllipsis | TextFormatFlags.NoPadding);
 
             var chipBounds = new Rectangle(bounds.X, mainRect.Bottom + ScalePx(1), bounds.Width,
                 Math.Max(0, bounds.Bottom - mainRect.Bottom - ScalePx(1)));
             DrawChipRow(g, chips, chipBounds, theme);
-        }
-
-        private void DrawMainLabelWithContextChips(Graphics g, string main, IReadOnlyList<string>? contextChips,
-            Rectangle bounds, DataViewTheme theme, Color labelColor, TextFormatFlags flags)
-        {
-            if (contextChips is not { Count: > 0 })
-            {
-                TextRenderer.DrawText(g, main, Font, bounds, labelColor, Color.Transparent, flags);
-                return;
-            }
-
-            using var targetFont = new Font(Font.FontFamily, Math.Max(6f, Font.SizeInPoints - 1f),
-                FontStyle.Regular, GraphicsUnit.Point);
-            int targetChipHeight = TargetChipHeight(targetFont);
-            var chipSizes = MeasureChips(g, contextChips, targetFont, TargetChipTextPaddingX);
-
-            int chipsWidth = chipSizes.Sum(c => c.Width) + ChipGap * Math.Max(0, chipSizes.Length - 1);
-            int reserve = Math.Min(bounds.Width / 2, chipsWidth + ScalePx(8));
-            var textRect = new Rectangle(bounds.X, bounds.Y, Math.Max(0, bounds.Width - reserve), bounds.Height);
-
-            TextRenderer.DrawText(g, main, Font, textRect, labelColor, Color.Transparent, flags);
-
-            var mainSize = TextRenderer.MeasureText(g, main, Font, new Size(int.MaxValue, int.MaxValue),
-                TextFormatFlags.NoPadding);
-            int x = Math.Max(bounds.X, Math.Min(bounds.X + Math.Min(mainSize.Width, textRect.Width) + ScalePx(6),
-                bounds.Right - chipsWidth));
-            int y = bounds.Y + Math.Max(0, (bounds.Height - targetChipHeight) / 2);
-
-            DrawChipRow(g, chipSizes, new Rectangle(x, y, bounds.Right - x, targetChipHeight), theme,
-                targetFont, targetChipHeight, Color.FromArgb(42, theme.GridNeutral),
-                Color.FromArgb(120, theme.GridNeutral), theme.Muted, TargetChipTextPaddingX);
         }
 
         private readonly record struct ChipMeasure(string Text, int Width);
@@ -1030,6 +1017,29 @@ namespace Mids_Reborn.UI.Controls.Test
             }
 
             return (baseTxt, enhTxt, gainTxt, pctTxt, noChange, improved);
+        }
+
+        private static string BuildMezSummary(MezRow row)
+        {
+            var magnitude = row.EnhancedMagnitude ?? row.BaseMagnitude;
+            var duration = row.EnhancedDuration ?? row.BaseDuration;
+
+            if (magnitude.HasValue && duration.HasValue && duration.Value > Eps)
+            {
+                return $"Mag {FmtVal(magnitude.Value, string.Empty)} for {FmtVal(duration.Value, "s")}";
+            }
+
+            if (magnitude.HasValue)
+            {
+                return $"Mag {FmtVal(magnitude.Value, string.Empty)}";
+            }
+
+            if (duration.HasValue && duration.Value > Eps)
+            {
+                return FmtVal(duration.Value, "s");
+            }
+
+            return "—";
         }
 
         #endregion

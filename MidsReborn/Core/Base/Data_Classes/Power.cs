@@ -2348,7 +2348,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int GetDurationEffectID()
         {
-            return Effects.Any(e => e.EffectType == Enums.eEffectType.Mez)
+            var durationEffectId = Effects.Any(e => e.EffectType == Enums.eEffectType.Mez)
                 ? Effects
                     .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
                     .Where(e =>
@@ -2378,6 +2378,30 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     .DefaultIfEmpty(new KeyValuePair<int, IEffect>(-1, new Effect()))
                     .FirstOrDefault()
                     .Key;
+
+            if (durationEffectId > -1)
+            {
+                return durationEffectId;
+            }
+
+            if (!FullName.Equals(PlannerStateCatalog.DominationPowerFullName, StringComparison.OrdinalIgnoreCase))
+            {
+                return -1;
+            }
+
+            // Planner Domination strips some live-only support plumbing. If that leaves no
+            // conditionally-valid duration row, still surface the canonical active-buff
+            // timing from the remaining imported payload so the info panel shows 90s.
+            return Effects
+                .Select((e, i) => new KeyValuePair<int, IEffect>(i, e))
+                .Where(e =>
+                    e.Value.EffectClass != Enums.eEffectClass.Ignored &&
+                    e.Value.Duration > 0 &&
+                    !DefiancePlanner.IsModernContributorEffect(e.Value))
+                .OrderByDescending(e => e.Value, new EffectDurationComparer())
+                .DefaultIfEmpty(new KeyValuePair<int, IEffect>(-1, new Effect()))
+                .FirstOrDefault()
+                .Key;
         }
 
         public float[] GetDef(int buffDebuff = 0)

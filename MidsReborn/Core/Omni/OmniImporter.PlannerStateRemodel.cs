@@ -1,4 +1,5 @@
 using System.Text.RegularExpressions;
+using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 
@@ -7,6 +8,11 @@ namespace Mids_Reborn.Core.Omni;
 public sealed partial class OmniImporter
 {
     private const string VigilanceEndAdjustmentPowerFullName = "Inherent.Inherent.Vigilance_PerTeamEndAdjustment";
+    private const string ScourgeProbabilityExpression = "minmax((50 - cfg>target>hp) / 40, 0, 1)";
+    private const string DominationRagePowerFullName = "Inherent.Inherent.Domination_Rage";
+    private const string DominationSuppressionTag = "DominationSuppression";
+    private const string AssassinationFocusProbabilityExpression =
+        "minmax(Temporary_Powers.Temporary_Powers.Assassins_Focus>variableVal * 0.333, 0, 1)";
 
     private static void RemodelPlannerStateFamilies(IDatabase database, OmniApplyResult applyResult)
     {
@@ -341,7 +347,34 @@ public sealed partial class OmniImporter
             changed = true;
         }
 
+        if (ConfigureAssassinationCritProbability(effect))
+        {
+            rewrittenExpressions++;
+            changed = true;
+        }
+
         return changed;
+    }
+
+    private static bool ConfigureAssassinationCritProbability(IEffect effect)
+    {
+        if (effect == null ||
+            effect.EffectType != Enums.eEffectType.Damage ||
+            !effect.EffectTags.Contains(AssassinationPlanner.AssassinsStrikeChanceTag, StringComparer.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        effect.Expressions ??= new Expressions();
+        if (string.Equals(effect.Expressions.Probability, AssassinationFocusProbabilityExpression, StringComparison.OrdinalIgnoreCase) &&
+            Math.Abs(effect.BaseProbability) <= float.Epsilon)
+        {
+            return false;
+        }
+
+        effect.Expressions.Probability = AssassinationFocusProbabilityExpression;
+        effect.BaseProbability = 0f;
+        return true;
     }
 
     private static void EnsurePlannerStateControl(
@@ -435,10 +468,32 @@ public sealed partial class OmniImporter
             power.GroupName = "Inherent";
             power.SetName = "Inherent";
         }
-        power.PowerType = Enums.ePowerType.Auto_;
         var isPassiveComputedInherent = definition.FullName.Equals(PlannerStateCatalog.DefiancePowerFullName, StringComparison.OrdinalIgnoreCase);
-        power.AlwaysToggle = definition.IsVariableControl || isPassiveComputedInherent;
-        power.ShowStatToggle = definition.VisibleInInherentGrid && !definition.IsVariableControl && !isPassiveComputedInherent;
+        var isCombatSettingsDrivenInherent =
+            definition.FullName.Equals(PlannerStateCatalog.OpportunityPowerFullName, StringComparison.OrdinalIgnoreCase) ||
+            definition.FullName.Equals(PlannerStateCatalog.AssassinationPowerFullName, StringComparison.OrdinalIgnoreCase);
+        var isDominationActiveInherent = definition.FullName.Equals(PlannerStateCatalog.DominationPowerFullName, StringComparison.OrdinalIgnoreCase);
+        var isVisibleModePlannerToggle =
+            definition.VisibleInInherentGrid &&
+            definition.IsModeControl &&
+            !isDominationActiveInherent;
+        power.PowerType = isDominationActiveInherent
+            ? Enums.ePowerType.Click
+            : isVisibleModePlannerToggle
+                ? Enums.ePowerType.Toggle
+                : Enums.ePowerType.Auto_;
+        power.ClickBuff = isDominationActiveInherent || power.ClickBuff;
+        power.AlwaysToggle = power.PowerType == Enums.ePowerType.Auto_ &&
+                             (definition.IsVariableControl || isPassiveComputedInherent || isCombatSettingsDrivenInherent);
+        if (isDominationActiveInherent && power.ModesRequired.HasFlag(Enums.eModeFlags.Domination))
+        {
+            // In planner math, toggling Domination on already implies the meter was ready.
+            power.ModesRequired &= ~Enums.eModeFlags.Domination;
+        }
+        power.ShowStatToggle = definition.VisibleInInherentGrid &&
+                               !definition.IsVariableControl &&
+                               !isPassiveComputedInherent &&
+                               !isCombatSettingsDrivenInherent;
         if (definition.PresentationType != PlannerStatePresentationType.ReuseImportedPower)
         {
             power.DescShort = $"Planner state for {definition.DisplayName}.";
@@ -462,7 +517,7 @@ public sealed partial class OmniImporter
         }
         power.AdvancedRequirements = new AdvancedConditionSet();
         power.Requires = power.AdvancedRequirements.ToLegacyRequirement();
-        power.VariableEnabled = definition.IsVariableControl;
+        power.VariableEnabled = definition.IsVariableControl && !isCombatSettingsDrivenInherent;
         power.VariableMin = definition.VariableMin;
         power.VariableMax = definition.VariableMax;
         power.VariableStart = definition.VariableStart;
@@ -576,11 +631,12 @@ public sealed partial class OmniImporter
         return requirements;
     }
 
-    private static AdvancedConditionRow SourceModeRequirement(PlannerMode mode)
+    private static AdvancedConditionRow SourceModeRequirement(PlannerMode mode, bool negated = false)
     {
         return new AdvancedConditionRow
         {
             Link = AdvancedConditionLink.And,
+            Negated = negated,
             Kind = AdvancedConditionKind.SourceMode,
             Subject = PlannerModeMapper.ToCanonicalName(mode),
             Operator = AdvancedConditionOperator.Equals,
@@ -613,12 +669,62 @@ public sealed partial class OmniImporter
 
     private static bool TryConfigureComputedInherentSupportPower(IPower power)
     {
+        if (ConfigureDominationPlannerSupport(power))
+        {
+            return true;
+        }
+
         if (power.FullName.Equals(VigilanceEndAdjustmentPowerFullName, StringComparison.OrdinalIgnoreCase))
         {
             return ConfigureVigilanceEndAdjustmentPower(power);
         }
 
+        if (power.FullName.StartsWith("Corruptor_", StringComparison.OrdinalIgnoreCase) &&
+            ConfigureScourgeDamageRows(power))
+        {
+            return true;
+        }
+
+        if (IsDominatorDominationTaggedPower(power) &&
+            ConfigureDominationTaggedRows(power))
+        {
+            return true;
+        }
+
         return false;
+    }
+
+    private static bool ConfigureDominationPlannerSupport(IPower power)
+    {
+        if (power.FullName.Equals(PlannerStateCatalog.DominationPowerFullName, StringComparison.OrdinalIgnoreCase))
+        {
+            return StripDominationChancePlumbing(power);
+        }
+
+        if (power.FullName.Equals(DominationRagePowerFullName, StringComparison.OrdinalIgnoreCase))
+        {
+            return GateDominationSuppressionWhileActive(power);
+        }
+
+        return false;
+    }
+
+    private static bool IsDominatorDominationTaggedPower(IPower power)
+    {
+        if (power == null)
+        {
+            return false;
+        }
+
+        var fullName = power.FullName ?? string.Empty;
+        var groupName = power.GroupName ?? string.Empty;
+        var setName = power.SetName ?? string.Empty;
+
+        return fullName.StartsWith("Dominator_", StringComparison.OrdinalIgnoreCase) ||
+               groupName.StartsWith("Dominator_", StringComparison.OrdinalIgnoreCase) ||
+               setName.StartsWith("Dominator_", StringComparison.OrdinalIgnoreCase) ||
+               (fullName.StartsWith("Pets.", StringComparison.OrdinalIgnoreCase) &&
+                fullName.Contains("_Dominator", StringComparison.OrdinalIgnoreCase));
     }
 
     private static bool ConfigureVigilanceEndAdjustmentPower(IPower power)
@@ -657,5 +763,211 @@ public sealed partial class OmniImporter
         }
 
         return changed;
+    }
+
+    private static bool ConfigureScourgeDamageRows(IPower power)
+    {
+        var changed = false;
+        foreach (var effect in power.Effects ?? [])
+        {
+            if (effect == null || effect.EffectType != Enums.eEffectType.Damage)
+            {
+                continue;
+            }
+
+            var rows = effect.AdvancedConditions?.Rows;
+            if (rows is not { Count: > 0 })
+            {
+                continue;
+            }
+
+            var hasScourgeHpRoll = rows.Any(row =>
+                !string.IsNullOrWhiteSpace(row.RawExpression) &&
+                row.RawExpression.Contains("kHitPoints%", StringComparison.OrdinalIgnoreCase) &&
+                row.RawExpression.Contains("rand 100", StringComparison.OrdinalIgnoreCase));
+            if (!hasScourgeHpRoll)
+            {
+                continue;
+            }
+
+            var rewritten = new AdvancedConditionSet();
+            var removedRows = false;
+            var forcedPvMode = effect.PvMode;
+
+            foreach (var row in rows)
+            {
+                var raw = row.RawExpression ?? string.Empty;
+                if (TryResolveScourgePvMode(raw, out var rowPvMode))
+                {
+                    forcedPvMode = rowPvMode;
+                }
+
+                if (raw.Contains("kHitPoints%", StringComparison.OrdinalIgnoreCase) &&
+                    raw.Contains("rand 100", StringComparison.OrdinalIgnoreCase))
+                {
+                    removedRows = true;
+                    continue;
+                }
+
+                if (raw.Contains("target>enttype", StringComparison.OrdinalIgnoreCase) ||
+                    raw.Contains("enttype target>", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (raw.Contains("player", StringComparison.OrdinalIgnoreCase))
+                    {
+                        forcedPvMode = Enums.ePvX.PvP;
+                    }
+                    else if (raw.Contains("critter", StringComparison.OrdinalIgnoreCase))
+                    {
+                        forcedPvMode = Enums.ePvX.PvE;
+                    }
+
+                    removedRows = true;
+                    continue;
+                }
+
+                var clone = row.Clone();
+                clone.Link = rewritten.Rows.Count == 0 ? AdvancedConditionLink.And : row.Link;
+                rewritten.Rows.Add(clone);
+            }
+
+            if (!removedRows)
+            {
+                continue;
+            }
+
+            effect.AdvancedConditions = rewritten;
+            effect.NormalizeConditionState();
+            effect.Expressions ??= new Expressions();
+            effect.Expressions.Probability = ScourgeProbabilityExpression;
+            effect.PvMode = forcedPvMode;
+            changed = true;
+        }
+
+        return changed;
+    }
+
+    private static bool ConfigureDominationTaggedRows(IPower power)
+    {
+        var changed = false;
+        foreach (var effect in power.Effects ?? [])
+        {
+            if (effect == null ||
+                !effect.EffectTags.Contains("Domination", StringComparer.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            effect.AdvancedConditions ??= new AdvancedConditionSet();
+            if (!effect.AdvancedConditions.Rows.Any(row =>
+                    row.Kind == AdvancedConditionKind.SourceMode &&
+                    row.Operator == AdvancedConditionOperator.Equals &&
+                    row.Subject.Equals(PlannerModeMapper.ToCanonicalName(PlannerMode.DominationActive), StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(row.Value, "true", StringComparison.OrdinalIgnoreCase)))
+            {
+                effect.AdvancedConditions.Rows.Add(SourceModeRequirement(PlannerMode.DominationActive));
+                effect.NormalizeConditionState();
+                changed = true;
+            }
+
+            effect.Expressions ??= new Expressions();
+            if (!string.Equals(effect.Expressions.Probability, "1", StringComparison.OrdinalIgnoreCase) ||
+                Math.Abs(effect.BaseProbability - 1f) > float.Epsilon)
+            {
+                // Live servers gate these rows through Domination-tag chance suppression.
+                // For planner snapshots, model them directly as "active while Domination is on".
+                effect.Expressions.Probability = "1";
+                effect.BaseProbability = 1f;
+                changed = true;
+            }
+        }
+
+        return changed;
+    }
+
+    private static bool StripDominationChancePlumbing(IPower power)
+    {
+        if (power.Effects == null || power.Effects.Length == 0)
+        {
+            return false;
+        }
+
+        var filtered = new List<IEffect>(power.Effects.Length);
+        var changed = false;
+        foreach (var effect in power.Effects)
+        {
+            if (effect == null)
+            {
+                continue;
+            }
+
+            var isSuppressionChanceMod = effect.EffectType == Enums.eEffectType.GlobalChanceMod &&
+                                         (effect.EffectTags.Contains(DominationSuppressionTag, StringComparer.OrdinalIgnoreCase) ||
+                                          string.Equals(effect.Reward, DominationSuppressionTag, StringComparison.OrdinalIgnoreCase));
+            var isSuppressionCancel = effect.EffectType == Enums.eEffectType.Null &&
+                                      (effect.EffectTags.Contains("Cancel_Effects", StringComparer.OrdinalIgnoreCase) ||
+                                       string.Equals(effect.EffectId, "Cancel_Effects", StringComparison.OrdinalIgnoreCase));
+            if (isSuppressionChanceMod || isSuppressionCancel)
+            {
+                changed = true;
+                continue;
+            }
+
+            filtered.Add(effect);
+        }
+
+        if (changed)
+        {
+            power.Effects = filtered.ToArray();
+            power.HasGrantPowerEffect = power.Effects.Any(effect => effect?.EffectType == Enums.eEffectType.GrantPower);
+        }
+
+        return changed;
+    }
+
+    private static bool GateDominationSuppressionWhileActive(IPower power)
+    {
+        var changed = false;
+        foreach (var effect in power.Effects ?? [])
+        {
+            if (effect == null ||
+                effect.EffectType != Enums.eEffectType.GlobalChanceMod ||
+                !effect.EffectTags.Contains(DominationSuppressionTag, StringComparer.OrdinalIgnoreCase))
+            {
+                continue;
+            }
+
+            effect.AdvancedConditions ??= new AdvancedConditionSet();
+            if (!effect.AdvancedConditions.Rows.Any(row =>
+                    row.Kind == AdvancedConditionKind.SourceMode &&
+                    row.Operator == AdvancedConditionOperator.Equals &&
+                    row.Negated &&
+                    row.Subject.Equals(PlannerModeMapper.ToCanonicalName(PlannerMode.DominationActive), StringComparison.OrdinalIgnoreCase) &&
+                    string.Equals(row.Value, "true", StringComparison.OrdinalIgnoreCase)))
+            {
+                effect.AdvancedConditions.Rows.Add(SourceModeRequirement(PlannerMode.DominationActive, negated: true));
+                effect.NormalizeConditionState();
+                changed = true;
+            }
+        }
+
+        return changed;
+    }
+
+    private static bool TryResolveScourgePvMode(string rawExpression, out Enums.ePvX pvMode)
+    {
+        if (rawExpression.Contains("player", StringComparison.OrdinalIgnoreCase))
+        {
+            pvMode = Enums.ePvX.PvP;
+            return true;
+        }
+
+        if (rawExpression.Contains("critter", StringComparison.OrdinalIgnoreCase))
+        {
+            pvMode = Enums.ePvX.PvE;
+            return true;
+        }
+
+        pvMode = Enums.ePvX.Any;
+        return false;
     }
 }

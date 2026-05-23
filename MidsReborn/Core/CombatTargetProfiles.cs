@@ -28,6 +28,63 @@ public sealed record CombatTargetProfile(
 
 public static class CombatTargetProfiles
 {
+    private static readonly IReadOnlyDictionary<int, IReadOnlyCollection<string>> ClassAliases =
+        new Dictionary<int, IReadOnlyCollection<string>>
+        {
+            [(int)CombatTargetProfileId.Minion] = new[]
+            {
+                "Class_Minion_Grunt",
+                "Class_Minion_Small",
+                "Class_Minion_Pets",
+                "Class_Minion_Swarm",
+                "Class_Minion_ControllerPets"
+            },
+            [(int)CombatTargetProfileId.Lieutenant] = new[]
+            {
+                "Class_Lt_Grunt"
+            },
+            [(int)CombatTargetProfileId.Boss] = new[]
+            {
+                "Class_Boss_Grunt"
+            },
+            [(int)CombatTargetProfileId.EliteBoss] = new[]
+            {
+                "Class_Boss_Elite"
+            },
+            [(int)CombatTargetProfileId.Archvillain] = new[]
+            {
+                "Class_Boss_Archvillain"
+            },
+            [(int)CombatTargetProfileId.BossEndgame] = new[]
+            {
+                "Class_Boss_PraetorianGrunt"
+            },
+            [(int)CombatTargetProfileId.EliteBossEndgame] = new[]
+            {
+                "Class_Boss_PraetorianElite"
+            },
+            [(int)CombatTargetProfileId.ArchvillainEndgame] = new[]
+            {
+                "Class_Boss_PraetorianArchvillain"
+            },
+            [(int)CombatTargetProfileId.GiantMonster] = new[]
+            {
+                "Class_Boss_Monster"
+            },
+            [(int)CombatTargetProfileId.ChallengeBoss] = new[]
+            {
+                "Class_Boss_ChallengeArchvillain"
+            },
+            [(int)CombatTargetProfileId.Hamidon] = new[]
+            {
+                "Class_Boss_Hamidon"
+            },
+            [(int)CombatTargetProfileId.HamidonMito] = new[]
+            {
+                "Class_Boss_Mito"
+            }
+        };
+
     private static readonly ReadOnlyCollection<CombatTargetProfile> Profiles = new List<CombatTargetProfile>
     {
         Create(
@@ -139,6 +196,23 @@ public static class CombatTargetProfiles
     public static bool IsCritter(int id)
     {
         return HasTag(id, "Critter");
+    }
+
+    public static bool MatchesClass(int id, string className)
+    {
+        if (string.IsNullOrWhiteSpace(className))
+        {
+            return false;
+        }
+
+        var normalized = className.Trim().Trim('\'', '"');
+        if (ClassAliases.TryGetValue(id, out var aliases) &&
+            aliases.Any(alias => alias.Equals(normalized, StringComparison.OrdinalIgnoreCase)))
+        {
+            return true;
+        }
+
+        return GetClassName(id).Equals(normalized, StringComparison.OrdinalIgnoreCase);
     }
 
     private static CombatTargetProfile Create(

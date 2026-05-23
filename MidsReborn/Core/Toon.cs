@@ -349,8 +349,12 @@ namespace Mids_Reborn.Core
                 CurrentBuild.Powers[iPowerSlot].Slots[index].Flip();
         }
 
-        public void GenerateBuffedPowerArray(PlannerBuildRecipientContext? recipient = null)
+        public void GenerateBuffedPowerArray(
+            PlannerBuildRecipientContext? recipient = null,
+            IReadOnlyList<IPower>? recipientExternalPowers = null)
         {
+            AssassinationPlanner.Synchronize(CurrentBuild, MidsContext.Config?.CombatContextSettings.Assassination);
+            OpportunityPlanner.Synchronize(CurrentBuild, MidsContext.Config?.CombatContextSettings.Opportunity);
             CurrentBuild.GenerateSetBonusData();
             if (recipient == null)
             {
@@ -362,7 +366,7 @@ namespace Mids_Reborn.Core
                 ModifyEffects = new Dictionary<string, float>();
             }
 
-            var pipeline = new PlannerPowerPipeline(CurrentBuild, Archetype, recipient);
+            var pipeline = new PlannerPowerPipeline(CurrentBuild, Archetype, recipient, recipientExternalPowers);
             pipeline.ExecuteAssemblyPhase();
             ApplyPipelineResult(pipeline.Result);
             if (recipient == null)
@@ -521,15 +525,23 @@ namespace Mids_Reborn.Core
         /// <returns>KeyValuePair(keys=MathPower, values=BuffedPower</returns>
         public KeyValuePair<List<IPower>, List<IPower>>? GenerateBuffedPowers(List<IPower> powers, int basePowerHistoryIdx)
         {
-            return GenerateBuffedPowersInternal(powers, basePowerHistoryIdx, null);
+            return GenerateBuffedPowersInternal(powers, basePowerHistoryIdx, null, null);
         }
 
-        public KeyValuePair<List<IPower>, List<IPower>>? GenerateBuffedPowers(List<IPower> powers, int basePowerHistoryIdx, PlannerBuildRecipientContext recipient)
+        public KeyValuePair<List<IPower>, List<IPower>>? GenerateBuffedPowers(
+            List<IPower> powers,
+            int basePowerHistoryIdx,
+            PlannerBuildRecipientContext recipient,
+            IReadOnlyList<IPower>? recipientExternalPowers = null)
         {
-            return GenerateBuffedPowersInternal(powers, basePowerHistoryIdx, recipient);
+            return GenerateBuffedPowersInternal(powers, basePowerHistoryIdx, recipient, recipientExternalPowers);
         }
 
-        private KeyValuePair<List<IPower>, List<IPower>>? GenerateBuffedPowersInternal(List<IPower> powers, int basePowerHistoryIdx, PlannerBuildRecipientContext? recipient)
+        private KeyValuePair<List<IPower>, List<IPower>>? GenerateBuffedPowersInternal(
+            List<IPower> powers,
+            int basePowerHistoryIdx,
+            PlannerBuildRecipientContext? recipient,
+            IReadOnlyList<IPower>? recipientExternalPowers)
         {
             if (basePowerHistoryIdx < 0)
             {
@@ -577,7 +589,7 @@ namespace Mids_Reborn.Core
 
                     CurrentBuild.Powers[basePowerHistoryIdx].NIDPower =
                         DatabaseAPI.Database.Power.TryFindIndex(e => e?.StaticIndex == workingPower.StaticIndex);
-                    GenerateBuffedPowerArray(recipient);
+                    GenerateBuffedPowerArray(recipient, recipientExternalPowers);
 
                     if (i < workingPowers.Count - 1 &&
                         _mathPowers[basePowerHistoryIdx] != null &&
@@ -605,6 +617,7 @@ namespace Mids_Reborn.Core
         public KeyValuePair<List<IPower>, List<IPower>>? GenerateBuffedPetPowers(
             IReadOnlyList<ResolvedPetPower> powers,
             PlannerBuildRecipientContext recipient,
+            IReadOnlyList<IPower>? recipientExternalPowers = null,
             PetActorPreviewState? previewState = null)
         {
             if (powers.Count == 0)
@@ -622,7 +635,8 @@ namespace Mids_Reborn.Core
                 var generated = GenerateBuffedPowers(
                     group.Select(entry => entry.Power.Power).ToList(),
                     group.Key,
-                    recipient);
+                    recipient,
+                    recipientExternalPowers);
                 if (generated == null)
                 {
                     return null;
@@ -666,8 +680,21 @@ namespace Mids_Reborn.Core
             var recipient = PlannerBuildRecipientContext.CreateOwnedPetRecipient(new SummonedEntity(entity), item.SourceHistoryIndex);
             var (resolvedPowers, availableUpgrades, availableSelfClickBuffs, effectivePreviewState) =
                 PetActorPowerResolver.Resolve(CurrentBuild, new SummonedEntity(entity), item, previewState);
+            var ownerExternalSources = PetActorExternalPowerResolver.GetOwnerExternalSources(
+                this,
+                item,
+                recipient,
+                availableUpgrades,
+                effectivePreviewState);
+            var ownerExternalPowers = ownerExternalSources
+                .SelectMany(source => source.Powers)
+                .ToArray();
 
-            var generatedPowers = GenerateBuffedPetPowers(resolvedPowers, recipient, effectivePreviewState);
+            var generatedPowers = GenerateBuffedPetPowers(
+                resolvedPowers,
+                recipient,
+                ownerExternalPowers,
+                effectivePreviewState);
             if (generatedPowers == null)
             {
                 return null;
@@ -707,13 +734,17 @@ namespace Mids_Reborn.Core
             var supplementalEnhancementSourcePowers = includedSelfClickBuffIndexes
                 .Select(index => generatedPowers.Value.Value[index])
                 .ToArray();
-
             var setBonusPower = CurrentBuild.GetSetBonusVirtualPower(recipient);
+            var externalPowers = ownerExternalPowers.ToList();
+            if (setBonusPower != null)
+            {
+                externalPowers.Add(setBonusPower);
+            }
             var aggregation = PetActorMath.Finalize(
                 recipient.ClassName,
                 generatedPowers.Value.Key,
                 generatedPowers.Value.Value,
-                setBonusPower == null ? Array.Empty<IPower>() : new[] { setBonusPower },
+                externalPowers,
                 includedMathPowers,
                 includedBuffedPowers,
                 supplementalEnhancementSourcePowers,
@@ -2348,7 +2379,8 @@ namespace Mids_Reborn.Core
                     power2.AddSlot(power2.Level);
                 }
 
-                CurrentBuild.Powers[index].StatInclude = power1.PowerType is Enums.ePowerType.Toggle or Enums.ePowerType.Auto_ & power1.AlwaysToggle;
+                CurrentBuild.Powers[index].StatInclude = PowerEntry.ShouldForceAutoIncluded(power1) ||
+                                                         power1.PowerType == Enums.ePowerType.Toggle && power1.AlwaysToggle;
             }
 
             CurrentBuild.Powers[index].ValidateSlots();

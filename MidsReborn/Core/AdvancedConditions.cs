@@ -517,13 +517,6 @@ public static class AdvancedConditionEvaluator
 
         private static void DeriveCompatibilityModes(PlannerBuildStateSnapshot snapshot)
         {
-            if (snapshot.ActiveModes.Contains(PlannerMode.StalkerHidden) ||
-                snapshot.ActiveModes.Contains(PlannerMode.Assassination))
-            {
-                snapshot.ActiveModes.Add(PlannerMode.StalkerHidden);
-                snapshot.ActiveModes.Add(PlannerMode.Assassination);
-            }
-
             if (snapshot.ActiveModes.Contains(PlannerMode.DominationActive) ||
                 snapshot.ActiveModes.Contains(PlannerMode.Domination))
             {
@@ -1081,12 +1074,13 @@ public static class AdvancedConditionEvaluator
 
     private static bool EvaluateTargetArchetype(AdvancedConditionRow row)
     {
-        var normalized = ConfigData.NormalizeTeammateArchetype(row.Value);
-        var present = GetTeamMembers(normalized) > 0;
+        var profileId = MidsContext.Config?.CombatContextSettings.TargetSettings.ProfileId ??
+                        (int)CombatTargetProfileId.Boss;
+        var matches = CombatTargetProfiles.MatchesClass(profileId, row.Value);
         return row.Operator switch
         {
-            AdvancedConditionOperator.NotEquals => !present,
-            _ => present
+            AdvancedConditionOperator.NotEquals => !matches,
+            _ => matches
         };
     }
 

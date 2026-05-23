@@ -9,6 +9,19 @@ namespace Mids_Reborn.Core
 {
     public class PowerEntry : ICloneable
     {
+        public static bool IsVisiblePlannerModeControl(IPower? power)
+        {
+            return power != null &&
+                   PlannerStateCatalog.TryGetDefinition(power.FullName, out var definition) &&
+                   definition.IsModeControl &&
+                   definition.VisibleInInherentGrid;
+        }
+
+        public static bool ShouldForceAutoIncluded(IPower? power)
+        {
+            return power?.PowerType == Enums.ePowerType.Auto_ && !IsVisiblePlannerModeControl(power);
+        }
+
         public PowerEntry(IPower? power)
         {
             StatInclude = false;
@@ -76,7 +89,8 @@ namespace Mids_Reborn.Core
                     Slots = Array.Empty<SlotEntry>();
                 }
 
-                if (power.PowerType is Enums.ePowerType.Toggle or Enums.ePowerType.Auto_ & power.AlwaysToggle)
+                if (ShouldForceAutoIncluded(power) ||
+                    power.PowerType == Enums.ePowerType.Toggle && power.AlwaysToggle)
                 {
                     StatInclude = true;
                 }
@@ -264,9 +278,13 @@ namespace Mids_Reborn.Core
                 return false;
             }
 
+            if (IsVisiblePlannerModeControl(power))
+            {
+                return true;
+            }
+
             return power?.PowerType switch
             {
-                Enums.ePowerType.Auto_ => true,
                 Enums.ePowerType.Click when power.ClickBuff => true,
                 Enums.ePowerType.Toggle => true,
                 _ => false

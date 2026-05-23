@@ -175,14 +175,17 @@ public static class OmniMidsMapper
                     ToWho = MapToWho(power, template.Target),
                     Stacking = ImportedStackPolicyNormalizer.ToCompatibilityStacking(stackPolicy),
                     StackPolicy = stackPolicy,
-                    AttribType = MapAttribType(template.Type),
+                    AttribType = MapAttribType(attrib, template, mappedType),
                     Aspect = MapAspect(template.Aspect),
                     PvMode = pvMode,
                     Scale = template.Scale,
                     nMagnitude = template.Magnitude,
                     nDuration = template.Duration,
                     DelayedTime = source.Delay,
-                    BaseProbability = source.Chance <= 0 ? 1f : source.Chance,
+                    // Omni exports model effect-group chance and template tick chance separately.
+                    // Homecoming Sentinel Opportunity crit payloads rely on template tick chance
+                    // starting at 0 and then being raised by GlobalChanceMod on matching tags.
+                    BaseProbability = ResolveBaseProbability(source, template),
                     ProcsPerMinute = source.Ppm,
                     ModifierTable = modifierTable,
                     GrantBoosted = IsGrantBoostedTemplate(template.Type, attrib),
@@ -286,6 +289,13 @@ public static class OmniMidsMapper
         }
 
         return effects;
+    }
+
+    private static float ResolveBaseProbability(OmniEffectDefinition source, OmniEffectTemplate template)
+    {
+        var groupChance = source.Chance <= 0f ? 1f : source.Chance;
+        var tickChance = template.TickChance;
+        return Math.Clamp(groupChance * tickChance, 0f, 1f);
     }
 
     private static bool IsZeroValueTagCarrier(Effect effect)
@@ -1007,14 +1017,36 @@ public static class OmniMidsMapper
         };
     }
 
-    private static Enums.eAttribType MapAttribType(string type)
+    private static Enums.eAttribType MapAttribType(string attrib, OmniEffectTemplate template, Enums.eEffectType effectType)
     {
-        return Normalize(type) switch
+        var normalizedType = Normalize(template.Type);
+        if (normalizedType == "duration")
         {
-            "duration" => Enums.eAttribType.Duration,
-            "expression" => Enums.eAttribType.Expression,
-            _ => Enums.eAttribType.Magnitude
-        };
+            return Enums.eAttribType.Duration;
+        }
+
+        if (normalizedType == "expression")
+        {
+            return Enums.eAttribType.Expression;
+        }
+
+        // Omni exports represent most control mezzes as AttribMod rows where Scale carries
+        // the base duration and Magnitude carries the mez strength. Mids expects that shape
+        // as AttribType.Duration so Duration derives from Scale*table while Mag remains the
+        // raw mez magnitude. Without this, rows like Held/Sleep/Stun import as "0s, Mag 44.7"
+        // and planner states such as Domination cannot affect the actual control duration.
+        if (effectType == Enums.eEffectType.Mez &&
+            normalizedType == "attribmod" &&
+            (HasTemplateFlag(template, "CombatModDuration") || HasTemplateFlag(template, "ResistDuration")))
+        {
+            var mezType = MapMezType(attrib, template.Type);
+            if (mezType is not (Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Repel))
+            {
+                return Enums.eAttribType.Duration;
+            }
+        }
+
+        return Enums.eAttribType.Magnitude;
     }
 
     private static void ApplyCombatModFlags(Effect effect, OmniEffectTemplate template)

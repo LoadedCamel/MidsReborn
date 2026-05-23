@@ -110,6 +110,14 @@ internal static class CombatContextState
                         ActiveCount = item.ActiveCount
                     })
                     .ToList() ?? []
+            },
+            Opportunity = new ConfigData.CombatContext.OpportunitySettings
+            {
+                MeterPercent = source.Opportunity?.MeterPercent ?? 0
+            },
+            Assassination = new ConfigData.CombatContext.AssassinationSettings
+            {
+                FocusStacks = source.Assassination?.FocusStacks ?? 0
             }
         };
     }
@@ -140,6 +148,10 @@ internal static class CombatContextState
 
         state.CombatContextSettings = CloneCombatContext(state.CombatContextSettings);
         NormalizeDefianceSelections(state.CombatContextSettings.Defiance);
+        state.CombatContextSettings.Opportunity.MeterPercent = OpportunityPlanner.NormalizeMeterPercent(
+            state.CombatContextSettings.Opportunity.MeterPercent);
+        state.CombatContextSettings.Assassination.FocusStacks = AssassinationPlanner.NormalizeFocusStacks(
+            state.CombatContextSettings.Assassination.FocusStacks);
 
         state.TeamMembers = NormalizeTeamMembers(state.TeamMembers);
         state.TeamRoster = DeriveRosterFromCounts(state.TeamMembers, state.TeamRoster);

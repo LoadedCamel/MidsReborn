@@ -151,44 +151,14 @@ internal static class PetActorBonusAnalyzer
         IReadOnlyList<PetUpgradeOverlay> availableUpgrades,
         PetActorPreviewState previewState)
     {
-        var excludedUpgradePowerNames = new HashSet<string>(
-            availableUpgrades.Select(overlay => overlay.UpgradePowerFullName),
-            StringComparer.OrdinalIgnoreCase);
-
-        foreach (var entry in toon.CurrentBuild.Powers
-                     .Select((powerEntry, historyIndex) => new { powerEntry, historyIndex })
-                     .Where(pair => pair.powerEntry?.Power != null))
+        foreach (var source in PetActorExternalPowerResolver.GetOwnerExternalSources(
+                     toon,
+                     rosterItem,
+                     recipient,
+                     availableUpgrades,
+                     previewState))
         {
-            if (entry.historyIndex == rosterItem.SourceHistoryIndex)
-            {
-                continue;
-            }
-
-            var power = entry.powerEntry!.Power!;
-            if (excludedUpgradePowerNames.Contains(power.FullName))
-            {
-                continue;
-            }
-
-            if (!previewState.InRange &&
-                power.FullName.Equals("Inherent.Inherent.Supremacy", StringComparison.OrdinalIgnoreCase))
-            {
-                continue;
-            }
-
-            var routedPower = OmniPowerRouting.CreatePlannerPower(power, recipient);
-            if (routedPower == null || routedPower.Effects.Length == 0)
-            {
-                continue;
-            }
-
-            if (routedPower.Effects.All(effect =>
-                    effect.EffectType is Enums.eEffectType.EntCreate or Enums.eEffectType.GrantPower or Enums.eEffectType.ExecutePower))
-            {
-                continue;
-            }
-
-            yield return (power.DisplayName, power.FullName, new[] { routedPower });
+            yield return (source.SourceName, source.SourceFullName, source.Powers);
         }
     }
 

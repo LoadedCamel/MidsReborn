@@ -712,6 +712,8 @@ namespace Mids_Reborn.Core
                 { new Regex(@"GCMActive\(([a-zA-Z0-9_\-]+)\)"), e => CheckGCM(sourceFx, fxPower, e.Groups[1].Value) },
                 { new Regex(@"GCMScale\(([a-zA-Z0-9_\-]+)\)"), e => GCMScale(sourceFx, fxPower, e.Groups[1].Value) },
                 { new Regex(@"powerActive\(([a-zA-Z0-9_\-\.]+)\)"), e => IsPowerActive(e.Groups[1].Value) ? "1" : "0" },
+                { new Regex(@"source\.TeamSize>\s*(-?[0-9]+(?:\.[0-9]+)?)", RegexOptions.IgnoreCase), e => FormatNumeric((float)GetSourceTeamSize(ParseExpressionFloat(e.Groups[1].Value))) },
+                { new Regex(@"target\.TeamSize>\s*(-?[0-9]+(?:\.[0-9]+)?)", RegexOptions.IgnoreCase), e => FormatNumeric((float)GetTargetTeamSize(ParseExpressionFloat(e.Groups[1].Value))) },
                 { new Regex(@"target\.HasTag\?\(([A-Za-z0-9_\-]+)\)", RegexOptions.IgnoreCase), e => TargetHasTag(e.Groups[1].Value) },
                 { new Regex(@"target\.isFriend\?", RegexOptions.IgnoreCase), _ => "0" },
                 { new Regex(@"target\>enttype\s*(?:eq|==)\s*['""]?([A-Za-z0-9_]+)['""]?", RegexOptions.IgnoreCase), e => TargetEntityTypeEquals(e.Groups[1].Value) },
@@ -799,6 +801,8 @@ namespace Mids_Reborn.Core
                 { new Regex(@"GCMActive\(([a-zA-Z0-9_\-]+)\)"), _ => "1" },
                 { new Regex(@"GCMScale\(([a-zA-Z0-9_\-]+)\)"), _ => "1" },
                 { new Regex(@"powerActive\(([a-zA-Z0-9_\-\.]+)\)"), _ => "1" },
+                { new Regex(@"source\.TeamSize>\s*(-?[0-9]+(?:\.[0-9]+)?)", RegexOptions.IgnoreCase), _ => "3" },
+                { new Regex(@"target\.TeamSize>\s*(-?[0-9]+(?:\.[0-9]+)?)", RegexOptions.IgnoreCase), _ => "1" },
                 { new Regex(@"target\.HasTag\?\(([A-Za-z0-9_\-]+)\)", RegexOptions.IgnoreCase), _ => "1" },
                 { new Regex(@"target\.isFriend\?", RegexOptions.IgnoreCase), _ => "0" },
                 { new Regex(@"target\>enttype\s*(?:eq|==)\s*['""]?([A-Za-z0-9_]+)['""]?", RegexOptions.IgnoreCase), _ => "1" },
@@ -817,6 +821,7 @@ namespace Mids_Reborn.Core
                 return 0d;
             }
 
+            var perTeammateMissingHealthScale = GetVigilancePerTeammateMissingHealthScale();
             var total = 0d;
             foreach (var slot in roster)
             {
@@ -826,10 +831,53 @@ namespace Mids_Reborn.Core
                 }
 
                 var missingHealth = 100d - Math.Clamp(slot.HpPercent, 0, 100);
-                total += missingHealth / 100d * 0.75d;
+                total += missingHealth / 100d * perTeammateMissingHealthScale;
             }
 
             return total;
+        }
+
+        private static double GetVigilancePerTeammateMissingHealthScale()
+        {
+            return DatabaseAPI.GetServerRulesProfile().DataProviderId switch
+            {
+                OmniDataProviderId.OmniRebirth => 0.55d,
+                _ => 0.75d
+            };
+        }
+
+        private static double GetSourceTeamSize(double radius)
+        {
+            if (MidsContext.Config == null)
+            {
+                return 1d;
+            }
+
+            // Live game counts the source as part of TeamSize and applies the radius
+            // to nearby teammates. For planner use, we model that with explicit
+            // teammate assumptions and each slot's In Range flag.
+            if (radius > 0d)
+            {
+                var nearbyTeammates = MidsContext.Config.TeamRoster?
+                    .Count(slot => slot.InRange && !string.IsNullOrWhiteSpace(slot.Archetype)) ?? 0;
+                return 1d + nearbyTeammates;
+            }
+
+            return Math.Max(1d, MidsContext.Config.TeamSize);
+        }
+
+        private static double GetTargetTeamSize(double radius)
+        {
+            // We do not currently model target party size separately in Combat Context.
+            // Mirror the live fallback for lone/non-team targets.
+            return 1d;
+        }
+
+        private static double ParseExpressionFloat(string text)
+        {
+            return double.TryParse(text, NumberStyles.Float, CultureInfo.InvariantCulture, out var value)
+                ? value
+                : 0d;
         }
 
         private static string NormalizeExpressionSyntax(string expression)

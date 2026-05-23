@@ -892,9 +892,21 @@ namespace Mids_Reborn.Core
                 public List<DefianceContributorSelection> Contributors { get; set; } = [];
             }
 
+            public class OpportunitySettings
+            {
+                public int MeterPercent { get; set; }
+            }
+
+            public class AssassinationSettings
+            {
+                public int FocusStacks { get; set; }
+            }
+
             public Player PlayerSettings { get; set; } = new();
             public Target TargetSettings { get; set; } = new();
             public DefianceSettings Defiance { get; set; } = new();
+            public OpportunitySettings Opportunity { get; set; } = new();
+            public AssassinationSettings Assassination { get; set; } = new();
         }
 
         public class TeammateSlot

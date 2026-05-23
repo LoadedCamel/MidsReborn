@@ -284,15 +284,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     return 0f;
                 }
 
-                switch (AttribType)
+                if (!string.IsNullOrWhiteSpace(Expressions.Probability))
                 {
-                    case Enums.eAttribType.Expression when !string.IsNullOrWhiteSpace(Expressions.Probability):
-                        var retValue = Parse(this, ExpressionType.Probability, out var error);
-                        return error.Found ? 0 : Math.Max(0, Math.Min(1, retValue));
-
-                    default:
-                        return ActualProbability;
+                    var retValue = Parse(this, ExpressionType.Probability, out var error);
+                    return error.Found ? 0 : Math.Max(0, Math.Min(1, retValue));
                 }
+
+                return ActualProbability;
             }
 
             set => BaseProbability = value;
@@ -925,7 +923,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             // ----- Chance / PPM / Base-vs-current probability -----
-            if (AttribType == Enums.eAttribType.Expression && !string.IsNullOrWhiteSpace(Expressions.Probability))
+            if (!string.IsNullOrWhiteSpace(Expressions.Probability))
             {
                 var pct = (decimal)Math.Max(0, Math.Min(100, Parse(this, ExpressionType.Probability, out _) * 100));
                 var formattedChance = DisplayValueFormatter.FormatPercentValue((double)pct, 0);
@@ -1407,11 +1405,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private static string FormatAdvancedConditionSummary(AdvancedConditionSet conditions)
         {
             var parts = new List<string>();
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
             for (var i = 0; i < conditions.Rows.Count; i++)
             {
                 var row = conditions.Rows[i];
                 var rowText = FormatAdvancedConditionRow(row);
-                if (string.IsNullOrWhiteSpace(rowText))
+                if (string.IsNullOrWhiteSpace(rowText) || !seen.Add(rowText))
                 {
                     continue;
                 }

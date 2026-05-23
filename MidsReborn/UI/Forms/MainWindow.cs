@@ -2173,7 +2173,7 @@ namespace Mids_Reborn.UI.Forms
         {
             if (_frmCombatContext == null || _frmCombatContext.IsDisposed)
             {
-                _frmCombatContext = new FrmCombatContext(RefreshInfo);
+                _frmCombatContext = new FrmCombatContext(RefreshCombatContextDrivenState);
                 _frmCombatContext.VisibleChanged += CombatContextWindowOnVisibleChanged;
                 _frmCombatContext.Disposed += CombatContextWindowOnDisposed;
             }
@@ -4090,7 +4090,11 @@ namespace Mids_Reborn.UI.Forms
                     continue;
                 }
 
-                if (pe.Power.FullName.StartsWith("Temporary_Powers.Temporary_Powers."))
+                if (PowerEntry.ShouldForceAutoIncluded(pe.Power))
+                {
+                    pe.StatInclude = true;
+                }
+                else if (pe.Power.FullName.StartsWith("Temporary_Powers.Temporary_Powers."))
                 {
                     pe.StatInclude |= pe.Power.AlwaysToggle;
                 }
@@ -6275,6 +6279,13 @@ namespace Mids_Reborn.UI.Forms
         #endregion
 
         #region Public Methods
+
+        private void RefreshCombatContextDrivenState()
+        {
+            MainModule.MidsController.Toon?.GenerateBuffedPowerArray();
+            DoRedraw();
+            RefreshInfo();
+        }
 
         public void RefreshInfo()
         {

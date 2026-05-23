@@ -106,14 +106,15 @@ public static class PowerEffects
                 case Enums.eEffectType.Mez:
                 {
                     var ed = ComputeEdForFx(pEnh, gre, mezSubId: (int)gre.MezType);
-                    rows.Add(new PowerEffectsGrid.NumericRow(
+                    var (baseEffect, enhancedEffect) = ResolveActiveMezEffects(gre, pBase, pEnh);
+                    rows.Add(new PowerEffectsGrid.MezRow(
                         label: item.Label,
-                        baseText: item.AltValue ?? string.Empty,
-                        enhancedText: valueText,
-                        gainText: "—",
-                        gainPctText: "—",
-                        affectedByEd: ed.Active,
-                        band: ed.BandIndex,
+                        baseMagnitude: baseEffect?.BuffedMag,
+                        enhancedMagnitude: enhancedEffect?.BuffedMag,
+                        baseDuration: baseEffect?.Duration,
+                        enhancedDuration: enhancedEffect?.Duration,
+                        affectedByEdDuration: ed.Active,
+                        bandDuration: ed.BandIndex,
                         tooltip: item.ToolTip,
                         contextChips: contextChips));
                     break;
@@ -234,6 +235,61 @@ public static class PowerEffects
         }
 
         return $"{item.Value} ({item.AltValue})";
+    }
+
+    private static (IEffect? baseEffect, IEffect? enhancedEffect) ResolveActiveMezEffects(GroupedFx gre, IPower pBase, IPower pEnh)
+    {
+        var enhancedEffect = ResolvePreferredEffect(gre, pEnh);
+        if (enhancedEffect == null)
+        {
+            return (null, null);
+        }
+
+        var baseEffect = ResolveMatchingBaseEffect(gre, pBase, enhancedEffect) ?? ResolvePreferredEffect(gre, pBase);
+        return (baseEffect, enhancedEffect);
+    }
+
+    private static IEffect? ResolvePreferredEffect(GroupedFx gre, IPower power)
+    {
+        foreach (var index in gre.IncludedEffectIds)
+        {
+            if (index < 0 || index >= power.Effects.Length)
+            {
+                continue;
+            }
+
+            var effect = power.Effects[index];
+            if (effect.PvXInclude() && effect.CanInclude())
+            {
+                return effect;
+            }
+        }
+
+        var fallbackIndex = gre.IncludedEffectIds.FirstOrDefault(i => i >= 0 && i < power.Effects.Length, -1);
+        return fallbackIndex >= 0 ? power.Effects[fallbackIndex] : null;
+    }
+
+    private static IEffect? ResolveMatchingBaseEffect(GroupedFx gre, IPower pBase, IEffect enhancedEffect)
+    {
+        foreach (var index in gre.IncludedEffectIds)
+        {
+            if (index < 0 || index >= pBase.Effects.Length)
+            {
+                continue;
+            }
+
+            var effect = pBase.Effects[index];
+            if (effect.PvMode != enhancedEffect.PvMode ||
+                effect.MezType != enhancedEffect.MezType ||
+                effect.ToWho != enhancedEffect.ToWho)
+            {
+                continue;
+            }
+
+            return effect;
+        }
+
+        return null;
     }
 
 

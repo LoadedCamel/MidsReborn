@@ -54,9 +54,14 @@ internal static class ChanceModifierSupport
                 continue;
             }
 
+            if (!effect.PvXInclude() || !effect.CanInclude() || effect.BaseProbability <= float.Epsilon)
+            {
+                continue;
+            }
+
             if (string.IsNullOrWhiteSpace(effect.Reward) || MatchesChanceTag(effect.Reward, procEffect))
             {
-                probability += effect.Scale;
+                probability += effect.BuffedMag;
             }
         }
 
@@ -79,12 +84,15 @@ internal static class ChanceModifierSupport
             {
                 if (effect.EffectType != Enums.eEffectType.GlobalChanceMod ||
                     !IsPowerLocalChanceMod(effect) ||
+                    !effect.PvXInclude() ||
+                    !effect.CanInclude() ||
+                    effect.BaseProbability <= float.Epsilon ||
                     !string.Equals(effect.Reward, chanceTag, StringComparison.OrdinalIgnoreCase))
                 {
                     continue;
                 }
 
-                scale += effect.Scale;
+                scale += effect.BuffedMag;
                 found = true;
             }
         }

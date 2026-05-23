@@ -554,6 +554,12 @@ public sealed class OmniEffectTemplate
     [JsonIgnore]
     public float ApplicationPeriod => OmniScalar.AsFloat(ApplicationPeriodValue);
 
+    [JsonProperty("tick_chance")]
+    public JToken? TickChanceValue { get; set; }
+
+    [JsonIgnore]
+    public float TickChance => OmniScalar.AsFloat(TickChanceValue, 1f);
+
     [JsonProperty("stack")]
     public string Stack { get; set; } = string.Empty;
 

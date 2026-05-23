@@ -141,7 +141,7 @@ namespace Mids_Reborn.UI.Controls
         private List<KeyValuePair<GroupedFx, PairedListEx.Item>> EffectsItemPairs = [];
         private MidsDataViewNeoPresentationMode _presentationMode = MidsDataViewNeoPresentationMode.CharacterBuild;
         private Page? _bonusesView;
-        private PairedListEx? _bonusesDataList;
+        private PowerEffectsGrid? _bonusesGrid;
 
         public PetInfo PetInfo;
 
@@ -251,29 +251,19 @@ namespace Mids_Reborn.UI.Controls
                 Title = "Actor Bonuses"
             };
 
-            _bonusesDataList = new PairedListEx
+            _bonusesGrid = new PowerEffectsGrid
             {
-                AutoScroll = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
                 BackColor = Color.FromArgb(1, 7, 15),
                 Dock = DockStyle.Fill,
                 Font = new Font("Segoe UI", 9.25F, FontStyle.Regular, GraphicsUnit.Point, 0),
-                HighlightColor = Color.FromArgb(128, 128, 255),
-                HighlightTextColor = Color.Black,
-                ItemColor = Color.WhiteSmoke,
                 Margin = new Padding(0),
-                Name = "bonusDataList",
-                SampleRowsPerColumn = 5,
-                SetItemsBold = false,
-                ShowRuntimeSamples = true,
-                UseHighlighting = true,
-                ValueAlternateColor = Color.Chartreuse,
-                ValueColor = Color.WhiteSmoke,
-                ValueConditionColor = Color.Firebrick,
-                ValueSpecialColor = Color.SlateBlue
+                Name = "bonusesGrid",
+                GridPadding = Math.Max(6, ContentInset),
+                GroupHeaderHeight = 30,
+                DescriptorRowHeight = 34
             };
 
-            _bonusesView.Controls.Add(_bonusesDataList);
+            _bonusesView.Controls.Add(_bonusesGrid);
             dvPages.Controls.Add(_bonusesView);
             dvPages.Pages.Add(_bonusesView);
         }
@@ -461,10 +451,7 @@ namespace Mids_Reborn.UI.Controls
             ApplyPairedListTheme(infoDataList, theme);
             ApplyPairedListTheme(coreDataList, theme);
             ApplyPairedListTheme(enhDataList, theme);
-            if (_bonusesDataList != null)
-            {
-                ApplyPairedListTheme(_bonusesDataList, theme);
-            }
+            _bonusesGrid?.Invalidate();
             ApplyEnhanceSurfaceTheme(theme);
 
             sliderHost.BackColor = theme.Background;
@@ -526,9 +513,9 @@ namespace Mids_Reborn.UI.Controls
             effectsGrid.GridPadding = Math.Max(6, ContentInset);
             coreDataList.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
             enhDataList.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
-            if (_bonusesDataList != null)
+            if (_bonusesGrid != null)
             {
-                _bonusesDataList.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
+                _bonusesGrid.GridPadding = Math.Max(6, ContentInset);
             }
             UpdateInfoDescriptionLayout();
         }
@@ -1201,7 +1188,7 @@ namespace Mids_Reborn.UI.Controls
             _actorCalculationSnapshot = null;
             _actorPowerSourceDescription = null;
             _actorAppliedBonuses = [];
-            _bonusesDataList?.Clear(true);
+            _bonusesGrid?.Clear();
             HistoryIDX = -1;
             GroupedRankedEffects.Clear();
             EffectsItemPairs.Clear();
@@ -1557,12 +1544,12 @@ namespace Mids_Reborn.UI.Controls
 
         public void DisplayBonuses()
         {
-            if (_bonusesDataList == null)
+            if (_bonusesGrid == null)
             {
                 return;
             }
 
-            _bonusesDataList.Clear(true);
+            _bonusesGrid.Clear();
             if (_presentationMode != MidsDataViewNeoPresentationMode.ActorReadOnly)
             {
                 return;
@@ -1570,23 +1557,41 @@ namespace Mids_Reborn.UI.Controls
 
             if (_actorAppliedBonuses.Count == 0)
             {
-                _bonusesDataList.AddItem(new PairedListEx.Item("Applied Bonuses:", "No named actor bonuses are currently active.", false, false, false, string.Empty));
-                _bonusesDataList.Redraw();
+                _bonusesGrid.SetGroups(new[]
+                {
+                    new PowerEffectsGrid.Group(
+                        "Applied Bonuses",
+                        new PowerEffectsGrid.Row[]
+                        {
+                            new PowerEffectsGrid.DescriptorRow(
+                                "Status",
+                                "None",
+                                "No named actor bonuses are currently active.")
+                        })
+                });
                 return;
             }
 
-            foreach (var entry in _actorAppliedBonuses.OrderBy(item => item.SourceType).ThenBy(item => item.SourceName, StringComparer.OrdinalIgnoreCase))
+            var orderedBonuses = _actorAppliedBonuses
+                .OrderBy(item => item.SourceType)
+                .ThenBy(item => item.SourceName, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+            var groups = new List<PowerEffectsGrid.Group>(orderedBonuses.Length);
+            foreach (var entry in orderedBonuses)
             {
-                _bonusesDataList.AddItem(new PairedListEx.Item(
-                    $"{entry.SourceName}:",
-                    entry.Summary,
-                    false,
-                    false,
-                    false,
-                    entry.Tooltip));
+                var rows = entry.StatDeltas
+                    .Select(delta => new PowerEffectsGrid.DescriptorRow(
+                        delta.StatName,
+                        "Bonus",
+                        delta.Delta >= 0 ? $"+{delta.Delta:0.##}{delta.Suffix}" : $"{delta.Delta:0.##}{delta.Suffix}",
+                        entry.Tooltip))
+                    .Cast<PowerEffectsGrid.Row>()
+                    .ToArray();
+                groups.Add(new PowerEffectsGrid.Group(entry.SourceName, rows));
             }
 
-            _bonusesDataList.Redraw();
+            _bonusesGrid.SetGroups(groups);
         }
 
         public void FlipStage(int Index, int Enh1, int Enh2, float State, int PowerID, Enums.eEnhGrade Grade1, Enums.eEnhGrade Grade2)
@@ -2474,11 +2479,21 @@ namespace Mids_Reborn.UI.Controls
 
             // Optional: Duration when discoverable (e.g., mez duration as a canonical timing stat)
             var durId = pBase.GetDurationEffectID();
-            if (durId > -1 && pBase.Effects[durId].Duration <= 9999)
+            if (durId > -1 &&
+                pBase.Effects[durId].Duration <= 9999 &&
+                pEnh.Effects[durId].Duration <= 9999)
             {
                 var d1 = pBase.Effects[durId].Duration;
                 var d2 = pEnh.Effects[durId].Duration;
+                if (d1 <= float.Epsilon && d2 > float.Epsilon)
+                {
+                    d1 = d2;
+                }
+
+                if (Math.Max(d1, d2) > float.Epsilon)
+                {
                 rows.Add(new PowerStatsGrid.Row("Duration", d1, d2, "s", higherIsBetter: true));
+                }
             }
 
             return rows;
@@ -3188,6 +3203,21 @@ namespace Mids_Reborn.UI.Controls
                         tag2.Assign(shortFxBase);
                         suffix = "%";
                         break;
+                    case Enums.eEffectType.Mez when fx.Duration > float.Epsilon &&
+                                                     fx.MezType is not (Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Repel or Enums.eMez.Teleport):
+                    {
+                        var baseEffect = index[id] < pBase.Effects.Length ? pBase.Effects[index[id]] : fx;
+                        var enhancedEffect = index[id] < enhancedPower.Effects.Length ? enhancedPower.Effects[index[id]] : fx;
+                        var useAlternate = Math.Abs(baseEffect.Duration - enhancedEffect.Duration) > 0.01f ||
+                                           Math.Abs(baseEffect.BuffedMag - enhancedEffect.BuffedMag) > 0.01f;
+                        var mezTip = enhancedPower.BuildTooltipStringAllVectorsEffects(
+                            enhancedEffect.EffectType,
+                            enhancedEffect.ETModifies,
+                            enhancedEffect.DamageType,
+                            enhancedEffect.MezType);
+                        var mezValue = $"{DisplayValueFormatter.FormatSeconds(enhancedEffect.Duration, 2)}s (Mag {DisplayValueFormatter.FormatMagnitude(enhancedEffect.BuffedMag, 2)}){suffix}";
+                        return new PairedListEx.Item(title, mezValue, useAlternate, fx.Probability < 1, fx.HasConditions, mezTip);
+                    }
                     case Enums.eEffectType.Mez when fx.MezType is Enums.eMez.Taunt or Enums.eMez.Placate:
                         shortFxBase.Add(index[id], fx.Duration);
                         shortFxEnh.Add(index[id], enhancedPower.Effects[index[id]].Duration);

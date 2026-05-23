@@ -652,6 +652,11 @@ namespace Mids_Reborn.UI.Renderer
                 return false;
             }
 
+            if (PowerEntry.ShouldForceAutoIncluded(powerEntry.Power))
+            {
+                return true;
+            }
+
             if (PlannerStateCatalog.TryGetDefinition(powerEntry.Power.FullName, out var definition) &&
                 definition.IsModeControl)
             {

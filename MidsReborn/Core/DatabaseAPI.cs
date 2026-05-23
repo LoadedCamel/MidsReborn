@@ -7,6 +7,7 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 using System.Windows.Forms;
 using Mids_Reborn.Core.Base;
 using Mids_Reborn.Core.Base.Data_Classes;
@@ -1948,68 +1949,55 @@ namespace Mids_Reborn.Core
             EnsureCanonicalModifierTablesLoaded();
             CheckEhcBoosts();
             var path = AppDataPaths.SelectDataFileSave(AppDataPaths.FileDb, iPath);
-            FileStream fileStream;
-            BinaryWriter writer;
             try
             {
-                fileStream = new FileStream(path, FileMode.Create);
-                writer = new BinaryWriter(fileStream);
+                SaveBinaryDatabase(path, writer =>
+                {
+                    UpdateDbModified();
+                    writer.Write(AppDataPaths.Headers.Db.Start);
+                    writer.Write(Database.Version.ToString());
+                    writer.Write(-1);
+                    writer.Write(Database.Date.ToBinary());
+                    writer.Write(Database.Issue);
+                    writer.Write(Database.PageVol);
+                    writer.Write(Database.PageVolText);
+                    writer.Write(AppDataPaths.Headers.Db.Archetypes);
+                    writer.Write(Database.Classes.Length - 1);
+                    for (var index = 0; index <= Database.Classes.Length - 1; ++index)
+                    {
+                        Database.Classes[index].StoreTo(ref writer);
+                    }
+
+                    writer.Write(AppDataPaths.Headers.Db.Powersets);
+                    writer.Write(Database.Powersets.Length - 1);
+                    for (var index = 0; index <= Database.Powersets.Length - 1; ++index)
+                    {
+                        Database.Powersets[index].StoreTo(ref writer);
+                    }
+
+                    writer.Write(AppDataPaths.Headers.Db.Powers);
+                    writer.Write(Database.Power.Length - 1);
+                    for (var index = 0; index <= Database.Power.Length - 1; ++index)
+                    {
+                        try
+                        {
+                            Database.Power[index].StoreTo(ref writer);
+                        }
+                        catch (Exception ex)
+                        {
+                            Debug.WriteLine(ex.StackTrace);
+                        }
+                    }
+
+                    writer.Write(AppDataPaths.Headers.Db.Summons);
+                    Database.StoreEntities(writer);
+                    Database.StoreOmniMetadata(writer);
+                });
             }
             catch (Exception ex)
             {
                 MessageBox.Show(@"Main database save failed: " + ex.Message);
                 return;
-            }
-
-            try
-            {
-                UpdateDbModified();
-                writer.Write(AppDataPaths.Headers.Db.Start);
-                writer.Write(Database.Version.ToString());
-                writer.Write(-1);
-                writer.Write(Database.Date.ToBinary());
-                writer.Write(Database.Issue);
-                writer.Write(Database.PageVol);
-                writer.Write(Database.PageVolText);
-                writer.Write(AppDataPaths.Headers.Db.Archetypes);
-                writer.Write(Database.Classes.Length - 1);
-                for (var index = 0; index <= Database.Classes.Length - 1; ++index)
-                {
-                    Database.Classes[index].StoreTo(ref writer);
-                }
-
-                writer.Write(AppDataPaths.Headers.Db.Powersets);
-                writer.Write(Database.Powersets.Length - 1);
-                for (var index = 0; index <= Database.Powersets.Length - 1; ++index)
-                {
-                    Database.Powersets[index].StoreTo(ref writer);
-                }
-
-                writer.Write(AppDataPaths.Headers.Db.Powers);
-                writer.Write(Database.Power.Length - 1);
-                for (var index = 0; index <= Database.Power.Length - 1; ++index)
-                {
-                    try
-                    {
-                        Database.Power[index].StoreTo(ref writer);
-                    }
-                    catch (Exception ex)
-                    {
-                        Debug.WriteLine(ex.StackTrace);
-                    }
-                }
-
-                writer.Write(AppDataPaths.Headers.Db.Summons);
-                Database.StoreEntities(writer);
-                Database.StoreOmniMetadata(writer);
-                writer.Close();
-                fileStream.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                writer.Close();
-                fileStream.Close();
             }
         }
 
@@ -2410,34 +2398,21 @@ namespace Mids_Reborn.Core
         {
             var path = AppDataPaths.SelectDataFileSave(AppDataPaths.FileEffectIds, iPath);
 
-            FileStream fileStream;
-            BinaryWriter writer;
             try
             {
-                fileStream = new FileStream(path, FileMode.Create);
-                writer = new BinaryWriter(fileStream);
+                SaveBinaryDatabase(path, writer =>
+                {
+                    writer.Write(Database.EffectIds.Count);
+                    foreach (var effectId in Database.EffectIds)
+                    {
+                        writer.Write(effectId);
+                    }
+                });
             }
             catch (Exception ex)
             {
                 MessageBox.Show(@"Failed to save the EffectIds DB: " + ex.Message);
                 return;
-            }
-
-            try
-            {
-                writer.Write(Database.EffectIds.Count);
-                foreach (var effectId in Database.EffectIds)
-                {
-                    writer.Write(effectId);
-                }
-                writer.Close();
-                fileStream.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                writer.Close();
-                fileStream.Close();
             }
         }
 
@@ -2733,36 +2708,25 @@ namespace Mids_Reborn.Core
             var path = AppDataPaths.SelectDataFileSave(AppDataPaths.FileRecipe, iPath);
 
             //SaveRecipesRaw(serializer, path, RecipeName);
-            FileStream fileStream;
-            BinaryWriter writer;
             try
             {
-                fileStream = new FileStream(path, FileMode.Create);
-                writer = new BinaryWriter(fileStream);
+                SaveBinaryDatabase(path, writer =>
+                {
+                    writer.Write(AppDataPaths.Headers.Recipe.Start);
+                    writer.Write(Database.RecipeSource1);
+                    writer.Write(Database.RecipeSource2);
+                    writer.Write(Database.RecipeRevisionDate.ToBinary());
+                    writer.Write(Database.Recipes.Length - 1);
+                    for (var index = 0; index <= Database.Recipes.Length - 1; ++index)
+                    {
+                        Database.Recipes[index].StoreTo(writer);
+                    }
+                });
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
                 return;
-            }
-
-            try
-            {
-                writer.Write(AppDataPaths.Headers.Recipe.Start);
-                writer.Write(Database.RecipeSource1);
-                writer.Write(Database.RecipeSource2);
-                writer.Write(Database.RecipeRevisionDate.ToBinary());
-                writer.Write(Database.Recipes.Length - 1);
-                for (var index = 0; index <= Database.Recipes.Length - 1; ++index)
-                    Database.Recipes[index].StoreTo(writer);
-                writer.Close();
-                fileStream.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                writer.Close();
-                fileStream.Close();
             }
         }
 
@@ -2835,33 +2799,22 @@ namespace Mids_Reborn.Core
             var path = AppDataPaths.SelectDataFileSave(AppDataPaths.FileSalvage, iPath);
 
             //SaveSalvageRaw(serializer, path, SalvageName);
-            FileStream fileStream;
-            BinaryWriter writer;
             try
             {
-                fileStream = new FileStream(path, FileMode.Create);
-                writer = new BinaryWriter(fileStream);
+                SaveBinaryDatabase(path, writer =>
+                {
+                    writer.Write(AppDataPaths.Headers.Salvage.Start);
+                    writer.Write(Database.Salvage.Length - 1);
+                    for (var index = 0; index <= Database.Salvage.Length - 1; ++index)
+                    {
+                        Database.Salvage[index].StoreTo(writer);
+                    }
+                });
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
                 return;
-            }
-
-            try
-            {
-                writer.Write(AppDataPaths.Headers.Salvage.Start);
-                writer.Write(Database.Salvage.Length - 1);
-                for (var index = 0; index <= Database.Salvage.Length - 1; ++index)
-                    Database.Salvage[index].StoreTo(writer);
-                writer.Close();
-                fileStream.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
-                writer.Close();
-                fileStream.Close();
             }
         }
 
@@ -2915,30 +2868,100 @@ namespace Mids_Reborn.Core
             var path = AppDataPaths.SelectDataFileSave(AppDataPaths.FileEnhDb, iPath);
 
             //SaveEnhancementDbRaw(serializer, path, EnhancementDbName);
-            using var fileStream = new FileStream(path, FileMode.Create);
-            using var writer = new BinaryWriter(fileStream, Encoding.UTF8);
             try
             {
-                writer.Write(AppDataPaths.Headers.EnhDb.Start);
-                writer.Write(Database.VersionEnhDb);
-                writer.Write(Database.Enhancements.Length - 1);
+                SaveBinaryDatabase(path, writer =>
+                {
+                    writer.Write(AppDataPaths.Headers.EnhDb.Start);
+                    writer.Write(Database.VersionEnhDb);
+                    writer.Write(Database.Enhancements.Length - 1);
 
-                for (var index = 0; index <= Database.Enhancements.Length - 1; ++index)
-                    Database.Enhancements[index].StoreTo(writer);
+                    for (var index = 0; index <= Database.Enhancements.Length - 1; ++index)
+                    {
+                        Database.Enhancements[index].StoreTo(writer);
+                    }
 
-                writer.Write(Database.EnhancementSets.Count - 1);
-                for (var index = 0; index <= Database.EnhancementSets.Count - 1; ++index)
-                    Database.EnhancementSets[index].StoreTo(writer);
-
-                writer.Close();
-                fileStream.Close();
+                    writer.Write(Database.EnhancementSets.Count - 1);
+                    for (var index = 0; index <= Database.EnhancementSets.Count - 1; ++index)
+                    {
+                        Database.EnhancementSets[index].StoreTo(writer);
+                    }
+                });
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Message: {ex.Message}\r\n\nTrace: {ex.StackTrace}");
-                writer.Close();
-                fileStream.Close();
             }
+        }
+
+        private static void SaveBinaryDatabase(string path, Action<BinaryWriter> writeAction)
+        {
+            var rootDir = Path.GetDirectoryName(path);
+            if (!string.IsNullOrWhiteSpace(rootDir) && !Directory.Exists(rootDir))
+            {
+                Directory.CreateDirectory(rootDir);
+            }
+
+            var tempFile = Path.Combine(rootDir ?? ".", $"{Path.GetFileNameWithoutExtension(path)}_{Guid.NewGuid():N}.tmp");
+            var tempFileReady = false;
+
+            try
+            {
+                using (var fileStream = new FileStream(tempFile, FileMode.Create, FileAccess.Write, FileShare.None))
+                using (var writer = new BinaryWriter(fileStream, Encoding.UTF8))
+                {
+                    writeAction(writer);
+                    writer.Flush();
+                    fileStream.Flush(true);
+                }
+
+                tempFileReady = true;
+                ReplaceBinaryDatabase(path, tempFile);
+            }
+            catch when (!tempFileReady)
+            {
+                if (File.Exists(tempFile))
+                {
+                    File.Delete(tempFile);
+                }
+
+                throw;
+            }
+            catch (Exception ex)
+            {
+                throw new IOException(
+                    $"Unable to replace '{path}' after writing a temporary save. The temporary file was kept at '{tempFile}'.",
+                    ex);
+            }
+        }
+
+        private static void ReplaceBinaryDatabase(string targetFile, string tempFile)
+        {
+            IOException? lastError = null;
+
+            for (var attempt = 1; attempt <= 8; attempt++)
+            {
+                try
+                {
+                    if (File.Exists(targetFile))
+                    {
+                        File.Replace(tempFile, targetFile, destinationBackupFileName: null);
+                    }
+                    else
+                    {
+                        File.Move(tempFile, targetFile);
+                    }
+
+                    return;
+                }
+                catch (IOException ex) when (attempt < 8)
+                {
+                    lastError = ex;
+                    Thread.Sleep(125 * attempt);
+                }
+            }
+
+            throw lastError ?? new IOException($"Unable to replace '{targetFile}' with temporary save '{tempFile}'.");
         }
 
         public static void LoadEnhancementDb(string? iPath)

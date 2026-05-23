@@ -68,7 +68,8 @@ internal static class ActorTotalsCalculator
 
         totals.EndMax = request.SelfBuffs.MaxEnd;
         totals.BuffAcc = request.SelfEnhance.Effect[(int)Enums.eStatType.BuffAcc] + request.SelfBuffs.Effect[(int)Enums.eStatType.BuffAcc];
-        totals.BuffEndRdx = request.SelfEnhance.Effect[(int)Enums.eStatType.BuffEndRdx];
+        totals.BuffEndRdx = request.SelfEnhance.Effect[(int)Enums.eStatType.BuffEndRdx] +
+                            request.SelfBuffs.Effect[(int)Enums.eStatType.BuffEndRdx];
         totals.BuffHaste = request.SelfEnhance.Effect[(int)Enums.eStatType.Haste] + request.SelfBuffs.Effect[(int)Enums.eStatType.Haste];
         totals.BuffToHit = request.SelfBuffs.Effect[(int)Enums.eStatType.ToHit];
         totals.Perception = Statistics.BasePerception * (1 + request.SelfBuffs.Effect[(int)Enums.eStatType.Perception]);

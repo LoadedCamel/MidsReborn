@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Omni;
 using Newtonsoft.Json;
 using Newtonsoft.Json.Linq;
 
@@ -394,22 +395,45 @@ internal static class ChanceModifierCatalogBuilder
     {
         foreach (var power in powers.Where(power => power != null))
         {
+            if (!power!.Active)
+            {
+                continue;
+            }
+
             foreach (var effect in power!.Effects)
             {
                 if (effect.EffectType != Enums.eEffectType.GlobalChanceMod ||
                     string.IsNullOrWhiteSpace(effect.Reward) ||
-                    ChanceModifierSupport.IsPowerLocalChanceMod(effect))
+                    ChanceModifierSupport.IsPowerLocalChanceMod(effect) ||
+                    !effect.PvXInclude() ||
+                    !effect.CanInclude() ||
+                    effect.BaseProbability <= float.Epsilon)
+                {
+                    continue;
+                }
+
+                var magnitude = effect.BuffedMag;
+                var isAssassinsFocusChanceMod = power.FullName.Equals(
+                    PlannerStateCatalog.AssassinsFocusMarker,
+                    StringComparison.OrdinalIgnoreCase);
+                if (((!power.VariableEnabled && effect.VariableModified) || isAssassinsFocusChanceMod) &&
+                    !effect.IgnoreScaling)
+                {
+                    magnitude *= Math.Max(0, power.Stacks);
+                }
+
+                if (Math.Abs(magnitude) <= float.Epsilon)
                 {
                     continue;
                 }
 
                 if (target.TryGetValue(effect.Reward, out var existing))
                 {
-                    target[effect.Reward] = existing + effect.Scale;
+                    target[effect.Reward] = existing + magnitude;
                 }
                 else
                 {
-                    target[effect.Reward] = effect.Scale;
+                    target[effect.Reward] = magnitude;
                 }
             }
         }

@@ -1138,7 +1138,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 ? $"({myPower.EndCost / myPower.ActivatePeriod:##0.##}/s)"
                 : "";
 
-            chkAlwaysToggle.Enabled = myPower.PowerType is Enums.ePowerType.Toggle or Enums.ePowerType.Auto_;
+            chkAlwaysToggle.Enabled = myPower.PowerType == Enums.ePowerType.Toggle;
         }
 
         private bool CheckStaticIndex()
@@ -2943,7 +2943,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private void SetDynamics()
         {
             chkBuffCycle.Enabled = myPower.PowerType == Enums.ePowerType.Click;
-            chkAlwaysToggle.Enabled = myPower.PowerType is Enums.ePowerType.Toggle or Enums.ePowerType.Auto_;
+            chkAlwaysToggle.Enabled = myPower.PowerType == Enums.ePowerType.Toggle;
             if (myPower.ActivatePeriod > 0 & myPower.PowerType == Enums.ePowerType.Toggle)
             {
                 lblEndCost.Text = $@"{Convert.ToDecimal(myPower.EndCost / myPower.ActivatePeriod):##0.##}/s";

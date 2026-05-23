@@ -48,6 +48,10 @@ public sealed class OmniImportResult
 public sealed partial class OmniImporter
 {
     private const string DefaultRetainedEntityClass = "Class_Minion_Pets";
+    private const string DisabledAssassinsSlashPlacateRedirectSource =
+        "Stalker_Melee.Broad_Sword.Assassins_Slash";
+    private const string DisabledAssassinsSlashPlacateRedirectTarget =
+        "Villain_Pets.Broad_Sword_Assassins_Strike.Assassins_Slash_Placate";
     private OmniImportWorkPlan? _activeWorkPlan;
 
     private static readonly string[] PetImportRoots =
@@ -1176,6 +1180,7 @@ public sealed partial class OmniImporter
             $"{applyResult.SupportPowersRemoved:n0} support-heavy powers removed", markComplete: true);
         EnsureScopedPowersets(database, normalizedRoot, dryRunResult.Scope, applyResult, progressReporter, manifest);
         RemoveStaleRedirectScopedContent(database, scopedPowersets, scopedPowers, applyResult);
+        PurgeKnownDisabledProviderPowers(database, applyResult);
         PurgeStrictSetBonusScopedPowers(database, scopedPowers, applyResult);
         var scopedPowerLookup = BuildScopedPowerLookup(scopedPowers);
         var classifier = new OmniPowerClassifier();
@@ -1365,6 +1370,11 @@ public sealed partial class OmniImporter
             var nextUniqueId = effects.Count == 0 ? 1 : effects.Max(e => e.UniqueID) + 1;
             foreach (var redirect in omniPower.Redirects.Where(r => !string.IsNullOrWhiteSpace(r.Name)))
             {
+                if (ShouldSkipRedirectDefinition(omniPower, redirect))
+                {
+                    continue;
+                }
+
                 var redirectEffect = OmniMidsMapper.CreatePowerRedirectEffect(omniPower.FullName, redirect);
                 redirectEffect.UniqueID = nextUniqueId++;
                 redirectEffect.NormalizeConditionState();
@@ -3086,6 +3096,11 @@ public sealed partial class OmniImporter
         var nextUniqueId = effects.Count == 0 ? 1 : effects.Max(effect => effect.UniqueID) + 1;
         foreach (var redirect in omniPower.Redirects.Where(redirect => !string.IsNullOrWhiteSpace(redirect.Name)))
         {
+            if (ShouldSkipRedirectDefinition(omniPower, redirect))
+            {
+                continue;
+            }
+
             var redirectEffect = OmniMidsMapper.CreatePowerRedirectEffect(omniPower.FullName, redirect);
             redirectEffect.UniqueID = nextUniqueId++;
             redirectEffect.NormalizeConditionState();
@@ -4287,7 +4302,7 @@ public sealed partial class OmniImporter
         power.EffectArea = MapEffectArea(source.EffectArea);
         power.Radius = source.Radius;
         power.Arc = source.Arc;
-        power.MaxTargets = source.MaxTargetsHit;
+        power.MaxTargets = ResolveImportedMaxTargets(source);
         power.MaxBoosts = string.IsNullOrWhiteSpace(source.MaxBoosts) ? "0" : source.MaxBoosts;
         power.NumAllowed = source.NumberAllowed;
         power.NumCharges = ResolveNumberOfCharges(source);
@@ -4320,6 +4335,43 @@ public sealed partial class OmniImporter
         power.CastThroughHold = source.CastThrough.Any(IsHoldCastThroughToken);
         power.IgnoreStrength = source.IgnoreStrength;
         power.IsModified = true;
+    }
+
+    private static int ResolveImportedMaxTargets(OmniPowerDefinition source)
+    {
+        return TryResolveKnownDynamicMaxTargets(source.MaxTargetsExpression, out var resolved)
+            ? resolved
+            : source.MaxTargetsHit;
+    }
+
+    private static bool IsHandledDynamicMaxTargetsExpression(string? expression)
+    {
+        return TryResolveKnownDynamicMaxTargets(expression, out _);
+    }
+
+    private static bool TryResolveKnownDynamicMaxTargets(string? expression, out int maxTargets)
+    {
+        maxTargets = 0;
+        if (string.IsNullOrWhiteSpace(expression))
+        {
+            return false;
+        }
+
+        // Homecoming Tanker Gauntlet expressions are of the form:
+        //   16 - Source.Mode?(kDisable_GauntletTargetCap) * 6
+        // and occasionally append an unrelated ownPower conditional. Mids does not
+        // model the Gauntlet-disable mode, so assume the normal live state where
+        // the Gauntlet bonus target cap is active and import the base cap.
+        var match = Regex.Match(
+            expression,
+            @"^\s*(?<base>\d+)\s*-\s*source\.mode\?\(\s*kdisable_gauntlettargetcap\s*\)\s*\*\s*(?<delta>\d+)(?:\s*\+\s*source\.ownpower\?\([^)]+\)\s*\*\s*(?<bonus>\d+))?\s*$",
+            RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+        if (!match.Success)
+        {
+            return false;
+        }
+
+        return int.TryParse(match.Groups["base"].Value, out maxTargets);
     }
 
     private static void RebuildScopedPowerEnhancementLegality(
@@ -5468,6 +5520,11 @@ public sealed partial class OmniImporter
         var nextUniqueId = effects.Count == 0 ? 1 : effects.Max(effect => effect.UniqueID) + 1;
         foreach (var redirect in omniPower.Redirects.Where(redirect => !string.IsNullOrWhiteSpace(redirect.Name)))
         {
+            if (ShouldSkipRedirectDefinition(omniPower, redirect))
+            {
+                continue;
+            }
+
             var redirectEffect = OmniMidsMapper.CreatePowerRedirectEffect(omniPower.FullName, redirect);
             redirectEffect.UniqueID = nextUniqueId++;
             redirectEffect.NormalizeConditionState();
@@ -8250,7 +8307,52 @@ public sealed partial class OmniImporter
             return true;
         }
 
+        if (CanonicalizeOmniFullName(power.FullName).Equals(
+                DisabledAssassinsSlashPlacateRedirectTarget,
+                StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
         return false;
+    }
+
+    private static bool ShouldSkipRedirectDefinition(OmniPowerDefinition sourcePower, OmniRedirectDefinition redirect)
+    {
+        var sourceFullName = CanonicalizeOmniFullName(sourcePower.FullName);
+        var redirectTarget = CanonicalizeOmniFullName(redirect.Name);
+
+        return sourceFullName.Equals(DisabledAssassinsSlashPlacateRedirectSource, StringComparison.OrdinalIgnoreCase) &&
+               redirectTarget.Equals(DisabledAssassinsSlashPlacateRedirectTarget, StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static void PurgeKnownDisabledProviderPowers(IDatabase database, OmniApplyResult applyResult)
+    {
+        var powers = database.Power ?? [];
+        var removed = powers
+            .Where(power => power != null &&
+                            CanonicalizeOmniFullName(power.FullName).Equals(
+                                DisabledAssassinsSlashPlacateRedirectTarget,
+                                StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+        if (removed.Length == 0)
+        {
+            return;
+        }
+
+        database.Power = powers
+            .Where(power => power == null ||
+                            !CanonicalizeOmniFullName(power.FullName).Equals(
+                                DisabledAssassinsSlashPlacateRedirectTarget,
+                                StringComparison.OrdinalIgnoreCase))
+            .ToArray();
+
+        foreach (var power in removed)
+        {
+            applyResult.AddLimited(
+                applyResult.ExcludedContentRemovalDetails,
+                $"{power.FullName}: removed disabled legacy redirect payload from import scope.");
+        }
     }
 
     private static bool IsCostumeTemporaryPower(OmniPowerDefinition power)
@@ -9395,7 +9497,8 @@ public sealed partial class OmniImporter
 
         AddIgnoredField(power.FullName, "highlight_expression", power.HighlightExpression, result);
 
-        if (!string.IsNullOrWhiteSpace(power.MaxTargetsExpression))
+        if (!string.IsNullOrWhiteSpace(power.MaxTargetsExpression) &&
+            !IsHandledDynamicMaxTargetsExpression(power.MaxTargetsExpression))
         {
             result.Report.DynamicMaxTargetExpressions++;
             result.Report.AddLimited(result.Report.DynamicExpressionsNotEvaluated,

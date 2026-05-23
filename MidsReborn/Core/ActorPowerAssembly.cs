@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.PlannerRulesets;
@@ -15,7 +17,12 @@ internal sealed class ActorPowerAssemblyContext
     public IReadOnlyList<IPower> EnhancementExternalPowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyList<IPower> SelfBuffExternalPowers { get; init; } = Array.Empty<IPower>();
     public float ComputedDefianceMagnitude { get; init; }
+    public float ComputedVigilanceDamageMagnitude { get; init; }
+    public float ComputedVigilanceEndDiscountMagnitude { get; init; }
+    public CosmicBalanceComputedState CosmicBalanceState { get; init; } = new();
+    public CosmicBalanceComputedState DarkSustenanceState { get; init; } = new();
     public IPower? ChanceModifierSetBonusPower { get; init; }
+    public IReadOnlyDictionary<string, float>? SupplementalChanceModifierCatalog { get; init; }
     public bool BuildChanceModifierCatalog { get; init; } = true;
 }
 
@@ -85,6 +92,100 @@ internal static class ActorPowerAssembly
             }
         }
 
+        if (context.ComputedVigilanceDamageMagnitude > float.Epsilon)
+        {
+            foreach (var damageType in DefiancePlanner.ComputedBuffDamageTypes)
+            {
+                selfBuffs.Damage[(int)damageType] += context.ComputedVigilanceDamageMagnitude;
+            }
+        }
+
+        if (context.ComputedVigilanceEndDiscountMagnitude > float.Epsilon)
+        {
+            selfBuffs.Effect[(int)Enums.eStatType.BuffEndRdx] += context.ComputedVigilanceEndDiscountMagnitude;
+        }
+
+        if (context.CosmicBalanceState.DamageMagnitude > float.Epsilon)
+        {
+            foreach (var damageType in CosmicBalancePlanner.DamageTypes)
+            {
+                selfBuffs.Damage[(int)damageType] += context.CosmicBalanceState.DamageMagnitude;
+            }
+        }
+
+        if (context.CosmicBalanceState.ResistanceMagnitude > float.Epsilon)
+        {
+            foreach (var damageType in CosmicBalancePlanner.ResistanceTypes)
+            {
+                selfBuffs.Resistance[(int)damageType] += context.CosmicBalanceState.ResistanceMagnitude;
+            }
+        }
+
+        if (context.CosmicBalanceState.MezProtectionMagnitude > float.Epsilon)
+        {
+            foreach (var mezType in CosmicBalancePlanner.MezTypes)
+            {
+                selfBuffs.StatusProtection[(int)mezType] += context.CosmicBalanceState.MezProtectionMagnitude;
+            }
+        }
+
+        if (context.CosmicBalanceState.MezResistanceMagnitude > float.Epsilon)
+        {
+            foreach (var mezType in CosmicBalancePlanner.MezTypes)
+            {
+                selfBuffs.StatusResistance[(int)mezType] += context.CosmicBalanceState.MezResistanceMagnitude;
+            }
+        }
+
+        if (context.CosmicBalanceState.RechargeSlowResistanceMagnitude > float.Epsilon)
+        {
+            selfBuffs.DebuffResistance[(int)Enums.eEffectType.RechargeTime] +=
+                context.CosmicBalanceState.RechargeSlowResistanceMagnitude;
+        }
+
+        if (context.DarkSustenanceState.DamageMagnitude > float.Epsilon)
+        {
+            foreach (var damageType in DarkSustenancePlanner.DamageTypes)
+            {
+                selfBuffs.Damage[(int)damageType] += context.DarkSustenanceState.DamageMagnitude;
+            }
+        }
+
+        if (context.DarkSustenanceState.ResistanceMagnitude > float.Epsilon)
+        {
+            foreach (var damageType in DarkSustenancePlanner.ResistanceTypes)
+            {
+                selfBuffs.Resistance[(int)damageType] += context.DarkSustenanceState.ResistanceMagnitude;
+            }
+        }
+
+        if (context.DarkSustenanceState.MezProtectionMagnitude > float.Epsilon)
+        {
+            foreach (var mezType in DarkSustenancePlanner.MezTypes)
+            {
+                selfBuffs.StatusProtection[(int)mezType] += context.DarkSustenanceState.MezProtectionMagnitude;
+            }
+        }
+
+        if (context.DarkSustenanceState.MezResistanceMagnitude > float.Epsilon)
+        {
+            foreach (var mezType in DarkSustenancePlanner.MezTypes)
+            {
+                selfBuffs.StatusResistance[(int)mezType] += context.DarkSustenanceState.MezResistanceMagnitude;
+            }
+        }
+
+        if (context.DarkSustenanceState.RechargeSlowResistanceMagnitude > float.Epsilon)
+        {
+            selfBuffs.DebuffResistance[(int)Enums.eEffectType.RechargeTime] +=
+                context.DarkSustenanceState.RechargeSlowResistanceMagnitude;
+        }
+
+        var chanceModifierCatalog = context.BuildChanceModifierCatalog
+            ? ChanceModifierCatalogBuilder.Build(buffedPowers.Cast<IPower?>().ToArray(), context.ChanceModifierSetBonusPower)
+            : new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
+        MergeChanceModifierCatalog(chanceModifierCatalog, context.SupplementalChanceModifierCatalog);
+
         return new ActorPowerAssemblyResult
         {
             ClassName = context.ClassName,
@@ -98,9 +199,7 @@ internal static class ActorPowerAssembly
             SelfEnhanceBuckets = selfEnhance,
             SelfBuffBuckets = selfBuffs,
             Contributions = contributionCollector.ToSnapshot(),
-            ChanceModifierCatalog = context.BuildChanceModifierCatalog
-                ? ChanceModifierCatalogBuilder.Build(buffedPowers.Cast<IPower?>().ToArray(), context.ChanceModifierSetBonusPower)
-                : new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase)
+            ChanceModifierCatalog = chanceModifierCatalog
         };
     }
 
@@ -120,5 +219,32 @@ internal static class ActorPowerAssembly
     private static IReadOnlyList<IPower> Materialize(IEnumerable<IPower> powers)
     {
         return powers.ToArray();
+    }
+
+    private static void MergeChanceModifierCatalog(
+        IDictionary<string, float> target,
+        IReadOnlyDictionary<string, float>? supplemental)
+    {
+        if (supplemental == null)
+        {
+            return;
+        }
+
+        foreach (var (tag, magnitude) in supplemental)
+        {
+            if (string.IsNullOrWhiteSpace(tag) || Math.Abs(magnitude) <= float.Epsilon)
+            {
+                continue;
+            }
+
+            if (target.TryGetValue(tag, out var existing))
+            {
+                target[tag] = existing + magnitude;
+            }
+            else
+            {
+                target[tag] = magnitude;
+            }
+        }
     }
 }

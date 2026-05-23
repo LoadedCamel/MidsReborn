@@ -404,16 +404,9 @@ internal static class PlannerStateCatalog
             PresentationType = PlannerStatePresentationType.ReuseImportedPower,
             PayloadType = PlannerStatePayloadType.MarkerOnly,
             VisibilityRule = PlannerStateVisibilityRule.SpecificArchetype,
-            StackMode = PlannerStateStackMode.VariableCount,
-            VariableMin = 0,
-            VariableMax = 3,
-            VariableStart = 0,
-            VariableName = "Stacks",
-            VariableSemantic = PlannerVariableSemantic.Count,
+            StackMode = PlannerStateStackMode.None,
             ArchetypeTokens = ["stalker"],
-            VisibleGridType = Enums.eGridType.Class,
-            VariableSyncTargets = [AssassinsFocusMarker],
-            ApplyVariableScalingModel = false
+            VisibleGridType = Enums.eGridType.Class
         },
         new PlannerStateControlDefinition
         {
@@ -513,6 +506,7 @@ internal static class PlannerStateCatalog
             VariableSemantic = PlannerVariableSemantic.MeterPercent,
             IconName = "inherent_buffeffects.png",
             ArchetypeTokens = ["dominator"],
+            VisibleInInherentGrid = false,
             VisibleGridType = Enums.eGridType.Class,
             ApplyVariableScalingModel = false
         },
@@ -913,10 +907,10 @@ internal static class PlannerStateCatalog
                 isActive = isModeActive(PlannerMode.Exhausted);
                 return true;
             case AssassinationPowerFullName:
-                isActive = getStacks(AssassinsFocusMarker) > 0;
+                isActive = true;
                 return true;
             case FromHidePowerFullName:
-                isActive = isModeActive(PlannerMode.StalkerHidden) || isModeActive(PlannerMode.Assassination);
+                isActive = isModeActive(PlannerMode.StalkerHidden);
                 return true;
             case AssassinsFocusMarker:
                 isActive = getStacks(AssassinsFocusMarker) > 0;

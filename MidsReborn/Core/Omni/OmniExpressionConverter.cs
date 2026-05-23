@@ -227,6 +227,15 @@ public static partial class OmniExpressionConverter
             normalized = NormalizeOuter(normalized[1..]);
         }
 
+        if (TryResolveBooleanLiteral(normalized, negated, out var literalValue))
+        {
+            return AdvancedConditionRow.AdvancedExpression(
+                link,
+                expression,
+                unsupported: !literalValue,
+                evaluationMode: AdvancedConditionEvaluationMode.BuildEvaluated);
+        }
+
         if (ArchetypeInherentCatalog.TryRewriteTierOneCondition(
                 ownerFullName,
                 normalized,
@@ -950,6 +959,32 @@ public static partial class OmniExpressionConverter
             Negated = negated,
             RawExpression = expression
         };
+    }
+
+    private static bool TryResolveBooleanLiteral(string normalizedExpression, bool negated, out bool value)
+    {
+        value = false;
+        if (string.IsNullOrWhiteSpace(normalizedExpression))
+        {
+            return false;
+        }
+
+        var normalized = NormalizeOuter(normalizedExpression);
+        if (normalized.Equals("1", StringComparison.Ordinal) ||
+            normalized.Equals("true", StringComparison.OrdinalIgnoreCase))
+        {
+            value = !negated;
+            return true;
+        }
+
+        if (normalized.Equals("0", StringComparison.Ordinal) ||
+            normalized.Equals("false", StringComparison.OrdinalIgnoreCase))
+        {
+            value = negated;
+            return true;
+        }
+
+        return false;
     }
 
     private static bool IsPowerToken(string token)

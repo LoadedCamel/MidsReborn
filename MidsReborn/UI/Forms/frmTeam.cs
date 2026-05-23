@@ -1,6 +1,7 @@
 using System.Text.RegularExpressions;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Omni;
 using Mids_Reborn.UI.Controls;
 using Mids_Reborn.UI.Theming;
 
@@ -13,8 +14,12 @@ namespace Mids_Reborn.UI.Forms
             Context,
             Player,
             Target,
+            Assassination,
+            Opportunity,
             Defiance,
-            Team
+            Vigilance,
+            CosmicBalance,
+            DarkSustenance
         }
 
         private sealed record RelativeLevelOption(int Value)
@@ -75,14 +80,22 @@ namespace Mids_Reborn.UI.Forms
         private MidsVectorButton? _contextButton;
         private MidsVectorButton? _playerButton;
         private MidsVectorButton? _targetButton;
+        private MidsVectorButton? _assassinationButton;
+        private MidsVectorButton? _opportunityButton;
         private MidsVectorButton? _defianceButton;
-        private MidsVectorButton? _teamButton;
+        private MidsVectorButton? _vigilanceButton;
+        private MidsVectorButton? _cosmicBalanceButton;
+        private MidsVectorButton? _darkSustenanceButton;
 
         private Panel? _contextPage;
         private Panel? _playerPage;
         private Panel? _targetPage;
+        private Panel? _assassinationPage;
+        private Panel? _opportunityPage;
         private Panel? _defiancePage;
-        private Panel? _teamPage;
+        private Panel? _vigilancePage;
+        private Panel? _cosmicBalancePage;
+        private Panel? _darkSustenancePage;
 
         private Label? _selectedRelativeLevelValue;
         private MidsDropDownList? _enemyRelativeLevelCombo;
@@ -108,11 +121,26 @@ namespace Mids_Reborn.UI.Forms
         private CheckBox? _targetTerrorizedCheckBox;
         private CheckBox? _targetSleptRecentlyCheckBox;
 
+        private MidsTrackBar? _opportunityMeterTrackBar;
+        private Label? _opportunityMeterValueLabel;
+        private Label? _opportunityCurrentMeterValue;
+        private Label? _opportunityReadyValue;
+
+        private MidsTrackBar? _assassinationStacksTrackBar;
+        private Label? _assassinationStacksValueLabel;
+        private Label? _assassinationCurrentStacksValue;
+        private Label? _assassinationCritBonusValue;
+
         private Label? _defianceTotalBonusValue;
         private Label? _defianceActiveSourcesValue;
         private Panel? _defianceCard;
         private TableLayoutPanel? _defianceGrid;
 
+        private Panel? _sharedTeamCountsCard;
+        private Panel? _assassinationTeamCountsHost;
+        private Panel? _vigilanceTeamCountsHost;
+        private Panel? _cosmicBalanceTeamCountsHost;
+        private Panel? _darkSustenanceTeamCountsHost;
         private Label? _teamTotalMembersValue;
         private Label? _teamRemainingSlotsValue;
         private TableLayoutPanel? _teamMembersGrid;
@@ -246,9 +274,12 @@ namespace Mids_Reborn.UI.Forms
             _suppressUiEvents = true;
             try
             {
+                UpdateSharedTeamCountsPlacement();
                 UpdateContextControls();
                 UpdatePlayerControls();
                 UpdateTargetControls();
+                UpdateAssassinationControls();
+                UpdateOpportunityControls();
                 UpdateDefianceControls();
                 UpdateTeamControls();
                 UpdateSectionVisibility();
@@ -371,10 +402,24 @@ namespace Mids_Reborn.UI.Forms
             _contextButton = CreateSectionButton("Context", CombatSection.Context);
             _playerButton = CreateSectionButton("Player", CombatSection.Player);
             _targetButton = CreateSectionButton("Target", CombatSection.Target);
+            _assassinationButton = CreateSectionButton("Assassination", CombatSection.Assassination);
+            _opportunityButton = CreateSectionButton("Opportunity", CombatSection.Opportunity);
             _defianceButton = CreateSectionButton("Defiance", CombatSection.Defiance);
-            _teamButton = CreateSectionButton("Team", CombatSection.Team);
+            _vigilanceButton = CreateSectionButton("Vigilance", CombatSection.Vigilance);
+            _cosmicBalanceButton = CreateSectionButton("Cosmic Balance", CombatSection.CosmicBalance);
+            _darkSustenanceButton = CreateSectionButton("Dark Sustenance", CombatSection.DarkSustenance);
 
-            _navigationRail.Controls.AddRange([_contextButton, _playerButton, _targetButton, _defianceButton, _teamButton]);
+            _navigationRail.Controls.AddRange([
+                _contextButton,
+                _playerButton,
+                _targetButton,
+                _assassinationButton,
+                _opportunityButton,
+                _defianceButton,
+                _vigilanceButton,
+                _cosmicBalanceButton,
+                _darkSustenanceButton
+            ]);
             _navigationSurface.Controls.Add(_navigationRail);
 
             _contentHost = new Panel
@@ -387,14 +432,22 @@ namespace Mids_Reborn.UI.Forms
             _contextPage = CreateContextPage();
             _playerPage = CreatePlayerPage();
             _targetPage = CreateTargetPage();
+            _assassinationPage = CreateAssassinationPage();
+            _opportunityPage = CreateOpportunityPage();
             _defiancePage = CreateDefiancePage();
-            _teamPage = CreateTeamPage();
+            _vigilancePage = CreateVigilancePage();
+            _cosmicBalancePage = CreateCosmicBalancePage();
+            _darkSustenancePage = CreateDarkSustenancePage();
 
             _sectionPanels[CombatSection.Context] = _contextPage;
             _sectionPanels[CombatSection.Player] = _playerPage;
             _sectionPanels[CombatSection.Target] = _targetPage;
+            _sectionPanels[CombatSection.Assassination] = _assassinationPage;
+            _sectionPanels[CombatSection.Opportunity] = _opportunityPage;
             _sectionPanels[CombatSection.Defiance] = _defiancePage;
-            _sectionPanels[CombatSection.Team] = _teamPage;
+            _sectionPanels[CombatSection.Vigilance] = _vigilancePage;
+            _sectionPanels[CombatSection.CosmicBalance] = _cosmicBalancePage;
+            _sectionPanels[CombatSection.DarkSustenance] = _darkSustenancePage;
 
             foreach (var panel in _sectionPanels.Values)
             {
@@ -649,43 +702,18 @@ namespace Mids_Reborn.UI.Forms
             return page;
         }
 
-        private Panel CreateTeamPage()
+        private Panel CreateVigilancePage()
         {
             var page = CreatePageHost();
             var layout = CreatePageLayout();
             page.ContentPanel.Controls.Add(layout);
 
             layout.Controls.Add(CreatePageHeader(
-                "Team Context",
-                "Adjust explicit teammate archetype counts here. Team-based inherents read these counts, and Defender Vigilance expands them into per-teammate HP and range assumptions."));
+                "Vigilance",
+                "For Defenders, nearby teammate assumptions live here. Team counts feed Vigilance, and each teammate expands into its own HP and range snapshot row."));
 
-            var summaryLayout = CreateSummaryLayout(2);
-            summaryLayout.Controls.Add(CreateSummaryCard("Total Members", out _teamTotalMembersValue), 0, 0);
-            summaryLayout.Controls.Add(CreateSummaryCard("Remaining Slots", out _teamRemainingSlotsValue), 1, 0);
-            layout.Controls.Add(summaryLayout);
-
-            var teamCard = CreateAutoSizeCardPanel();
-            teamCard.Dock = DockStyle.Top;
-            teamCard.Padding = new Padding(18);
-            teamCard.Margin = new Padding(0, 0, 0, 14);
-
-            _teamMembersGrid = new TableLayoutPanel
-            {
-                Dock = DockStyle.Top,
-                AutoSize = true,
-                AutoSizeMode = AutoSizeMode.GrowAndShrink,
-                ColumnCount = 2,
-                Margin = Padding.Empty,
-                Padding = Padding.Empty,
-                BackColor = Color.Transparent
-            };
-            _teamMembersGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            _teamMembersGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-
-            BuildTeamRows();
-
-            teamCard.Controls.Add(_teamMembersGrid);
-            layout.Controls.Add(teamCard);
+            _vigilanceTeamCountsHost = CreateSharedCardHost();
+            layout.Controls.Add(_vigilanceTeamCountsHost);
 
             _vigilanceCard = CreateAutoSizeCardPanel();
             _vigilanceCard.Dock = DockStyle.Top;
@@ -714,6 +742,229 @@ namespace Mids_Reborn.UI.Forms
             layout.Controls.Add(_vigilanceCard);
 
             return page;
+        }
+
+        private Panel CreateCosmicBalancePage()
+        {
+            var page = CreatePageHost();
+            var layout = CreatePageLayout();
+            page.ContentPanel.Controls.Add(layout);
+
+            layout.Controls.Add(CreatePageHeader(
+                "Cosmic Balance",
+                "For Peacebringers, nearby teammate assumptions live here. The counts below feed Cosmic Balance based on who is close enough to contribute."));
+
+            _cosmicBalanceTeamCountsHost = CreateSharedCardHost();
+            layout.Controls.Add(_cosmicBalanceTeamCountsHost);
+
+            return page;
+        }
+
+        private Panel CreateDarkSustenancePage()
+        {
+            var page = CreatePageHost();
+            var layout = CreatePageLayout();
+            page.ContentPanel.Controls.Add(layout);
+
+            layout.Controls.Add(CreatePageHeader(
+                "Dark Sustenance",
+                "For Warshades, nearby teammate assumptions live here. The counts below feed Dark Sustenance based on who is close enough to contribute."));
+
+            _darkSustenanceTeamCountsHost = CreateSharedCardHost();
+            layout.Controls.Add(_darkSustenanceTeamCountsHost);
+
+            return page;
+        }
+
+        private Panel CreateOpportunityPage()
+        {
+            var page = CreatePageHost();
+            var layout = CreatePageLayout();
+            page.ContentPanel.Controls.Add(layout);
+
+            layout.Controls.Add(CreatePageHeader(
+                "Opportunity",
+                "For Homecoming Sentinels, set the assumed current Opportunity meter here. The imported Opportunity powers continue to handle the real meter-based math."));
+
+            var summaryLayout = CreateSummaryLayout(2);
+            summaryLayout.Controls.Add(CreateSummaryCard("Current Meter", out _opportunityCurrentMeterValue), 0, 0);
+            summaryLayout.Controls.Add(CreateSummaryCard("Ready (>= 50%)", out _opportunityReadyValue), 1, 0);
+            layout.Controls.Add(summaryLayout);
+
+            var meterCard = CreateAutoSizeCardPanel();
+            meterCard.Dock = DockStyle.Top;
+            meterCard.Padding = new Padding(18);
+            meterCard.Margin = new Padding(0, 0, 0, 14);
+
+            var meterLayout = CreateFieldGridLayout();
+            meterCard.Controls.Add(meterLayout);
+
+            meterLayout.Controls.Add(CreateFieldLabel("Opportunity Meter"), 0, 0);
+            meterLayout.Controls.Add(CreateSliderRow(out _opportunityMeterTrackBar, out _opportunityMeterValueLabel, OpportunityMeterTrackBarOnValueChanged), 1, 0);
+            SetToolTipSafe(_opportunityMeterTrackBar, "Set the current Opportunity meter percent for Homecoming Sentinel planner math.");
+
+            layout.Controls.Add(meterCard);
+
+            return page;
+        }
+
+        private Panel CreateAssassinationPage()
+        {
+            var page = CreatePageHost();
+            var layout = CreatePageLayout();
+            page.ContentPanel.Controls.Add(layout);
+
+            layout.Controls.Add(CreatePageHeader(
+                "Assassination",
+                "For Stalkers, set the assumed current Assassin's Focus stacks here. The visible Assassination inherent remains passive, From Hide still controls the hidden attack branch in the inherent grid, and nearby teammate assumptions drive ASTeamCrit on regular attacks."));
+
+            var summaryLayout = CreateSummaryLayout(2);
+            summaryLayout.Controls.Add(CreateSummaryCard("Current Focus", out _assassinationCurrentStacksValue), 0, 0);
+            summaryLayout.Controls.Add(CreateSummaryCard("Assassin's Strike Crit Bonus", out _assassinationCritBonusValue), 1, 0);
+            layout.Controls.Add(summaryLayout);
+
+            var focusCard = CreateAutoSizeCardPanel();
+            focusCard.Dock = DockStyle.Top;
+            focusCard.Padding = new Padding(18);
+            focusCard.Margin = new Padding(0, 0, 0, 14);
+
+            var focusLayout = CreateFieldGridLayout();
+            focusCard.Controls.Add(focusLayout);
+
+            focusLayout.Controls.Add(CreateFieldLabel("Assassin's Focus Stacks"), 0, 0);
+            focusLayout.Controls.Add(CreateSliderRow(out _assassinationStacksTrackBar, out _assassinationStacksValueLabel, AssassinationStacksTrackBarOnValueChanged), 1, 0);
+            if (_assassinationStacksTrackBar != null)
+            {
+                _assassinationStacksTrackBar.Minimum = 0;
+                _assassinationStacksTrackBar.Maximum = 3;
+                _assassinationStacksTrackBar.SmallChange = 1;
+                _assassinationStacksTrackBar.LargeChange = 1;
+                _assassinationStacksTrackBar.Value = 0;
+                SetToolTipSafe(_assassinationStacksTrackBar, "Set the assumed current Assassin's Focus stacks for non-hidden Assassin's Strike planner math.");
+            }
+
+            layout.Controls.Add(focusCard);
+
+            _assassinationTeamCountsHost = CreateSharedCardHost();
+            layout.Controls.Add(_assassinationTeamCountsHost);
+
+            return page;
+        }
+
+        private Panel CreateSharedCardHost()
+        {
+            return new Panel
+            {
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty,
+                BackColor = Color.Transparent
+            };
+        }
+
+        private void EnsureSharedTeamCountsCard()
+        {
+            if (_sharedTeamCountsCard != null)
+            {
+                return;
+            }
+
+            _sharedTeamCountsCard = CreateAutoSizeCardPanel();
+            _sharedTeamCountsCard.Dock = DockStyle.Top;
+            _sharedTeamCountsCard.Padding = new Padding(18);
+            _sharedTeamCountsCard.Margin = new Padding(0, 0, 0, 14);
+
+            var cardLayout = CreatePageLayout();
+            _sharedTeamCountsCard.Controls.Add(cardLayout);
+
+            cardLayout.Controls.Add(CreatePageHeader(
+                "Nearby Teammates",
+                "These shared team assumptions are used by inherents that care about nearby teammates, such as Stalker ASTeamCrit, Defender Vigilance, and Kheldian team-based bonuses."));
+
+            var summaryLayout = CreateSummaryLayout(2);
+            summaryLayout.Controls.Add(CreateSummaryCard("Total Members", out _teamTotalMembersValue), 0, 0);
+            summaryLayout.Controls.Add(CreateSummaryCard("Remaining Slots", out _teamRemainingSlotsValue), 1, 0);
+            cardLayout.Controls.Add(summaryLayout);
+
+            _teamMembersGrid = new TableLayoutPanel
+            {
+                Dock = DockStyle.Top,
+                AutoSize = true,
+                AutoSizeMode = AutoSizeMode.GrowAndShrink,
+                ColumnCount = 2,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty,
+                BackColor = Color.Transparent
+            };
+            _teamMembersGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            _teamMembersGrid.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+
+            BuildTeamRows();
+            cardLayout.Controls.Add(_teamMembersGrid);
+        }
+
+        private void UpdateSharedTeamCountsPlacement()
+        {
+            EnsureSharedTeamCountsCard();
+
+            if (_sharedTeamCountsCard == null)
+            {
+                return;
+            }
+
+            Panel? targetHost = null;
+            if (SupportsAssassinationCombatSection())
+            {
+                targetHost = _assassinationTeamCountsHost;
+            }
+            else if (SupportsVigilanceCombatSection())
+            {
+                targetHost = _vigilanceTeamCountsHost;
+            }
+            else if (SupportsCosmicBalanceCombatSection())
+            {
+                targetHost = _cosmicBalanceTeamCountsHost;
+            }
+            else if (SupportsDarkSustenanceCombatSection())
+            {
+                targetHost = _darkSustenanceTeamCountsHost;
+            }
+
+            ClearSharedCardHostIfInactive(_assassinationTeamCountsHost, targetHost);
+            ClearSharedCardHostIfInactive(_vigilanceTeamCountsHost, targetHost);
+            ClearSharedCardHostIfInactive(_cosmicBalanceTeamCountsHost, targetHost);
+            ClearSharedCardHostIfInactive(_darkSustenanceTeamCountsHost, targetHost);
+
+            if (targetHost == null)
+            {
+                _sharedTeamCountsCard.Parent?.Controls.Remove(_sharedTeamCountsCard);
+                return;
+            }
+
+            if (!targetHost.Controls.Contains(_sharedTeamCountsCard))
+            {
+                targetHost.SuspendLayout();
+                try
+                {
+                    _sharedTeamCountsCard.Parent?.Controls.Remove(_sharedTeamCountsCard);
+                    targetHost.Controls.Clear();
+                    targetHost.Controls.Add(_sharedTeamCountsCard);
+                }
+                finally
+                {
+                    targetHost.ResumeLayout(true);
+                }
+            }
+        }
+
+        private static void ClearSharedCardHostIfInactive(Panel? host, Panel? activeHost)
+        {
+            if (host != null && !ReferenceEquals(host, activeHost))
+            {
+                host.Controls.Clear();
+            }
         }
 
         private Panel CreateDefiancePage()
@@ -797,9 +1048,17 @@ namespace Mids_Reborn.UI.Forms
         private void UpdateTeamGridLayout()
         {
             _teamMembersGrid?.PerformLayout();
+            _sharedTeamCountsCard?.PerformLayout();
+            _assassinationTeamCountsHost?.PerformLayout();
+            _vigilanceTeamCountsHost?.PerformLayout();
+            _cosmicBalanceTeamCountsHost?.PerformLayout();
+            _darkSustenanceTeamCountsHost?.PerformLayout();
             _vigilanceGrid?.PerformLayout();
             _vigilanceCard?.PerformLayout();
-            _teamPage?.PerformLayout();
+            _assassinationPage?.PerformLayout();
+            _vigilancePage?.PerformLayout();
+            _cosmicBalancePage?.PerformLayout();
+            _darkSustenancePage?.PerformLayout();
         }
 
         private Panel CreateTeamCountRow(TeammateArchetypeOption definition)
@@ -1409,7 +1668,32 @@ namespace Mids_Reborn.UI.Forms
 
         private void SetSelectedSection(CombatSection section)
         {
+            if (section == CombatSection.Assassination && !SupportsAssassinationCombatSection())
+            {
+                section = CombatSection.Context;
+            }
+
+            if (section == CombatSection.Opportunity && !SupportsOpportunityCombatSection())
+            {
+                section = CombatSection.Context;
+            }
+
             if (section == CombatSection.Defiance && !IsBlasterArchetype())
+            {
+                section = CombatSection.Context;
+            }
+
+            if (section == CombatSection.Vigilance && !SupportsVigilanceCombatSection())
+            {
+                section = CombatSection.Context;
+            }
+
+            if (section == CombatSection.CosmicBalance && !SupportsCosmicBalanceCombatSection())
+            {
+                section = CombatSection.Context;
+            }
+
+            if (section == CombatSection.DarkSustenance && !SupportsDarkSustenanceCombatSection())
             {
                 section = CombatSection.Context;
             }
@@ -1428,9 +1712,18 @@ namespace Mids_Reborn.UI.Forms
                 panel.Visible = currentSection == section;
             }
 
-            if (section == CombatSection.Team)
+            if (section is CombatSection.Vigilance or CombatSection.CosmicBalance or CombatSection.DarkSustenance)
             {
                 UpdateTeamGridLayout();
+            }
+            else if (section == CombatSection.Assassination)
+            {
+                UpdateAssassinationControls();
+                UpdateTeamGridLayout();
+            }
+            else if (section == CombatSection.Opportunity)
+            {
+                UpdateOpportunityControls();
             }
             else if (section == CombatSection.Defiance)
             {
@@ -1452,8 +1745,12 @@ namespace Mids_Reborn.UI.Forms
                 CombatSection.Context => "Context",
                 CombatSection.Player => "Player",
                 CombatSection.Target => "Target",
+                CombatSection.Assassination => "Assassination",
+                CombatSection.Opportunity => "Opportunity",
                 CombatSection.Defiance => "Defiance",
-                CombatSection.Team => "Team",
+                CombatSection.Vigilance => "Vigilance",
+                CombatSection.CosmicBalance => "Cosmic Balance",
+                CombatSection.DarkSustenance => "Dark Sustenance",
                 _ => "Current"
             };
 
@@ -1572,6 +1869,54 @@ namespace Mids_Reborn.UI.Forms
             }
         }
 
+        private void UpdateOpportunityControls()
+        {
+            if (_opportunityMeterTrackBar == null || _opportunityMeterValueLabel == null ||
+                _opportunityCurrentMeterValue == null || _opportunityReadyValue == null ||
+                MidsContext.Config == null)
+            {
+                return;
+            }
+
+            var meterPercent = OpportunityPlanner.NormalizeMeterPercent(
+                MidsContext.Config.CombatContextSettings.Opportunity.MeterPercent);
+            MidsContext.Config.CombatContextSettings.Opportunity.MeterPercent = meterPercent;
+
+            if (_opportunityMeterTrackBar.Value != meterPercent)
+            {
+                _opportunityMeterTrackBar.Value = meterPercent;
+            }
+
+            var meterText = $"{meterPercent}%";
+            _opportunityMeterValueLabel.Text = meterText;
+            _opportunityCurrentMeterValue.Text = meterText;
+            _opportunityReadyValue.Text = OpportunityPlanner.IsReady(meterPercent) ? "Yes" : "No";
+        }
+
+        private void UpdateAssassinationControls()
+        {
+            if (_assassinationStacksTrackBar == null || _assassinationStacksValueLabel == null ||
+                _assassinationCurrentStacksValue == null || _assassinationCritBonusValue == null ||
+                MidsContext.Config == null)
+            {
+                return;
+            }
+
+            var focusStacks = AssassinationPlanner.NormalizeFocusStacks(
+                MidsContext.Config.CombatContextSettings.Assassination.FocusStacks);
+            MidsContext.Config.CombatContextSettings.Assassination.FocusStacks = focusStacks;
+
+            if (_assassinationStacksTrackBar.Value != focusStacks)
+            {
+                _assassinationStacksTrackBar.Value = focusStacks;
+            }
+
+            var bonusMagnitude = AssassinationPlanner.GetFocusChanceBonusMagnitude(focusStacks);
+            _assassinationStacksValueLabel.Text = focusStacks.ToString();
+            _assassinationCurrentStacksValue.Text = focusStacks.ToString();
+            _assassinationCritBonusValue.Text = $"+{DisplayValueFormatter.FormatPercentFromScale(bonusMagnitude, 1)}%";
+        }
+
         private void UpdateTeamControls()
         {
             if (_teamTotalMembersValue == null || _teamRemainingSlotsValue == null || MidsContext.Config == null)
@@ -1579,7 +1924,10 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            _teamPage?.SuspendLayout();
+            _assassinationPage?.SuspendLayout();
+            _vigilancePage?.SuspendLayout();
+            _cosmicBalancePage?.SuspendLayout();
+            _darkSustenancePage?.SuspendLayout();
             _teamMembersGrid?.SuspendLayout();
             _vigilanceCard?.SuspendLayout();
             _vigilanceGrid?.SuspendLayout();
@@ -1644,7 +1992,10 @@ namespace Mids_Reborn.UI.Forms
                 _vigilanceGrid?.ResumeLayout(true);
                 _vigilanceCard?.ResumeLayout(true);
                 _teamMembersGrid?.ResumeLayout(true);
-                _teamPage?.ResumeLayout(true);
+                _darkSustenancePage?.ResumeLayout(true);
+                _cosmicBalancePage?.ResumeLayout(true);
+                _vigilancePage?.ResumeLayout(true);
+                _assassinationPage?.ResumeLayout(true);
             }
         }
 
@@ -1694,13 +2045,95 @@ namespace Mids_Reborn.UI.Forms
 
         private void UpdateSectionVisibility()
         {
+            var showAssassination = SupportsAssassinationCombatSection();
+            if (_assassinationButton != null)
+            {
+                _assassinationButton.Visible = showAssassination;
+            }
+
+            var showOpportunity = SupportsOpportunityCombatSection();
+            if (_opportunityButton != null)
+            {
+                _opportunityButton.Visible = showOpportunity;
+            }
+
             var showDefiance = IsBlasterArchetype();
             if (_defianceButton != null)
             {
                 _defianceButton.Visible = showDefiance;
             }
 
+            var showVigilance = SupportsVigilanceCombatSection();
+            if (_vigilanceButton != null)
+            {
+                _vigilanceButton.Visible = showVigilance;
+            }
+
+            var showCosmicBalance = SupportsCosmicBalanceCombatSection();
+            if (_cosmicBalanceButton != null)
+            {
+                _cosmicBalanceButton.Visible = showCosmicBalance;
+            }
+
+            var showDarkSustenance = SupportsDarkSustenanceCombatSection();
+            if (_darkSustenanceButton != null)
+            {
+                _darkSustenanceButton.Visible = showDarkSustenance;
+            }
+
+            if (_assassinationTeamCountsHost != null)
+            {
+                _assassinationTeamCountsHost.Visible = showAssassination;
+            }
+
+            if (_vigilanceTeamCountsHost != null)
+            {
+                _vigilanceTeamCountsHost.Visible = showVigilance;
+            }
+
+            if (_cosmicBalanceTeamCountsHost != null)
+            {
+                _cosmicBalanceTeamCountsHost.Visible = showCosmicBalance;
+            }
+
+            if (_darkSustenanceTeamCountsHost != null)
+            {
+                _darkSustenanceTeamCountsHost.Visible = showDarkSustenance;
+            }
+
+            UpdateSharedTeamCountsPlacement();
+
+            if (!showAssassination && _selectedSection == CombatSection.Assassination)
+            {
+                SetSelectedSection(CombatSection.Context);
+                return;
+            }
+
+            if (!showOpportunity && _selectedSection == CombatSection.Opportunity)
+            {
+                SetSelectedSection(CombatSection.Context);
+                return;
+            }
+
             if (!showDefiance && _selectedSection == CombatSection.Defiance)
+            {
+                SetSelectedSection(CombatSection.Context);
+                return;
+            }
+
+            if (!showVigilance && _selectedSection == CombatSection.Vigilance)
+            {
+                SetSelectedSection(CombatSection.Context);
+                return;
+            }
+
+            if (!showCosmicBalance && _selectedSection == CombatSection.CosmicBalance)
+            {
+                SetSelectedSection(CombatSection.Context);
+                return;
+            }
+
+            if (!showDarkSustenance && _selectedSection == CombatSection.DarkSustenance)
             {
                 SetSelectedSection(CombatSection.Context);
                 return;
@@ -1917,6 +2350,34 @@ namespace Mids_Reborn.UI.Forms
             UpdateTargetStateToggle("cfg.target.sleptrecently", _targetSleptRecentlyCheckBox?.Checked == true, settings => settings.SleptRecently = _targetSleptRecentlyCheckBox?.Checked == true);
         }
 
+        private void OpportunityMeterTrackBarOnValueChanged(object? sender, EventArgs e)
+        {
+            if (_suppressUiEvents || MidsContext.Config == null || _opportunityMeterTrackBar == null)
+            {
+                return;
+            }
+
+            var meterPercent = OpportunityPlanner.NormalizeMeterPercent(_opportunityMeterTrackBar.Value);
+            MidsContext.Config.CombatContextSettings.Opportunity.MeterPercent = meterPercent;
+            OpportunityPlanner.Synchronize(MidsContext.Character?.CurrentBuild, MidsContext.Config.CombatContextSettings.Opportunity);
+            UpdateOpportunityControls();
+            _refreshInfo();
+        }
+
+        private void AssassinationStacksTrackBarOnValueChanged(object? sender, EventArgs e)
+        {
+            if (_suppressUiEvents || MidsContext.Config == null || _assassinationStacksTrackBar == null)
+            {
+                return;
+            }
+
+            var focusStacks = AssassinationPlanner.NormalizeFocusStacks(_assassinationStacksTrackBar.Value);
+            MidsContext.Config.CombatContextSettings.Assassination.FocusStacks = focusStacks;
+            AssassinationPlanner.Synchronize(MidsContext.Character?.CurrentBuild, MidsContext.Config.CombatContextSettings.Assassination);
+            UpdateAssassinationControls();
+            _refreshInfo();
+        }
+
         private void PlayerAliveButtonOnClick(object? sender, EventArgs e)
         {
             if (_suppressUiEvents || MidsContext.Config == null)
@@ -2060,10 +2521,19 @@ namespace Mids_Reborn.UI.Forms
                 case CombatSection.Target:
                     ResetTarget();
                     break;
+                case CombatSection.Assassination:
+                    ResetAssassination();
+                    ResetTeam();
+                    return;
+                case CombatSection.Opportunity:
+                    ResetOpportunity();
+                    break;
                 case CombatSection.Defiance:
                     ResetDefiance();
                     break;
-                case CombatSection.Team:
+                case CombatSection.Vigilance:
+                case CombatSection.CosmicBalance:
+                case CombatSection.DarkSustenance:
                     ResetTeam();
                     break;
             }
@@ -2074,6 +2544,8 @@ namespace Mids_Reborn.UI.Forms
             ResetContext();
             ResetPlayer();
             ResetTarget();
+            ResetAssassination();
+            ResetOpportunity();
             ResetDefiance();
             ResetTeam();
             RefreshFromConfig();
@@ -2249,6 +2721,32 @@ namespace Mids_Reborn.UI.Forms
             _refreshInfo();
         }
 
+        private void ResetAssassination()
+        {
+            if (MidsContext.Config == null)
+            {
+                return;
+            }
+
+            MidsContext.Config.CombatContextSettings.Assassination.FocusStacks = 0;
+            AssassinationPlanner.Synchronize(MidsContext.Character?.CurrentBuild, MidsContext.Config.CombatContextSettings.Assassination);
+            RefreshFromConfig();
+            _refreshInfo();
+        }
+
+        private void ResetOpportunity()
+        {
+            if (MidsContext.Config == null)
+            {
+                return;
+            }
+
+            MidsContext.Config.CombatContextSettings.Opportunity.MeterPercent = 0;
+            OpportunityPlanner.Synchronize(MidsContext.Character?.CurrentBuild, MidsContext.Config.CombatContextSettings.Opportunity);
+            RefreshFromConfig();
+            _refreshInfo();
+        }
+
         private void BuildUpdate(string settingName, int value)
         {
             if (MidsContext.Character?.CurrentBuild?.Powers == null)
@@ -2389,6 +2887,72 @@ namespace Mids_Reborn.UI.Forms
 
             return archetype.DisplayName.Equals("Blaster", StringComparison.OrdinalIgnoreCase) ||
                    archetype.ClassName.Equals("Class_Blaster", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private bool IsSentinelArchetype()
+        {
+            var archetype = MidsContext.Character?.Archetype ?? MidsContext.Archetype;
+            if (archetype == null)
+            {
+                return false;
+            }
+
+            return archetype.DisplayName.Equals("Sentinel", StringComparison.OrdinalIgnoreCase) ||
+                   archetype.ClassName.Equals("Class_Sentinel", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private bool IsStalkerArchetype()
+        {
+            var archetype = MidsContext.Character?.Archetype ?? MidsContext.Archetype;
+            if (archetype == null)
+            {
+                return false;
+            }
+
+            return archetype.DisplayName.Equals("Stalker", StringComparison.OrdinalIgnoreCase) ||
+                   archetype.ClassName.Equals("Class_Stalker", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private bool SupportsOpportunityCombatSection()
+        {
+            return DatabaseAPI.GetDataProviderId() == OmniDataProviderId.OmniHomecoming &&
+                   IsSentinelArchetype();
+        }
+
+        private bool SupportsAssassinationCombatSection()
+        {
+            return IsStalkerArchetype();
+        }
+
+        private bool SupportsVigilanceCombatSection()
+        {
+            return IsDefenderArchetype();
+        }
+
+        private bool SupportsCosmicBalanceCombatSection()
+        {
+            var archetype = MidsContext.Character?.Archetype ?? MidsContext.Archetype;
+            if (archetype == null)
+            {
+                return false;
+            }
+
+            return archetype.DisplayName.Equals("Peacebringer", StringComparison.OrdinalIgnoreCase) ||
+                   archetype.ClassName.Equals("Class_Peacebringer", StringComparison.OrdinalIgnoreCase) ||
+                   archetype.ClassName.Equals("Class_Kheldian", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private bool SupportsDarkSustenanceCombatSection()
+        {
+            var archetype = MidsContext.Character?.Archetype ?? MidsContext.Archetype;
+            if (archetype == null)
+            {
+                return false;
+            }
+
+            return archetype.DisplayName.Equals("Warshade", StringComparison.OrdinalIgnoreCase) ||
+                   archetype.ClassName.Equals("Class_Warshade", StringComparison.OrdinalIgnoreCase) ||
+                   archetype.ClassName.Equals("Class_Shade", StringComparison.OrdinalIgnoreCase);
         }
 
         private string GetTeammateDisplayName(string? archetype)

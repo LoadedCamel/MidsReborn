@@ -65,7 +65,7 @@ internal static class ArchetypeInherentCatalog
 {
     private static readonly ArchetypeInherentDefinition[] Definitions =
     [
-        CreateManualSlider("Homecoming.Stalker.Assassination", OmniDataProviderId.OmniHomecoming, "Class_Stalker", "Inherent.Inherent.Assassination"),
+        CreatePassiveInfo("Homecoming.Stalker.Assassination", OmniDataProviderId.OmniHomecoming, "Class_Stalker", "Inherent.Inherent.Assassination"),
         CreateManualToggle("Homecoming.Controller.Containment", OmniDataProviderId.OmniHomecoming, "Class_Controller", "Inherent.Inherent.Containment"),
         CreateComputedTeam("Homecoming.Peacebringer.CosmicBalance", OmniDataProviderId.OmniHomecoming, "Class_Kheldian", "Inherent.Inherent.Cosmic_Balance"),
         CreatePassiveInfo("Homecoming.Scrapper.CriticalHit", OmniDataProviderId.OmniHomecoming, "Class_Scrapper", "Inherent.Inherent.Critical_Hit"),
@@ -74,7 +74,6 @@ internal static class ArchetypeInherentCatalog
         CreatePassiveInfo("Homecoming.Blaster.DefianceBuff", OmniDataProviderId.OmniHomecoming, "Class_Blaster", "Inherent.Inherent.Defiance_Buff"),
         CreatePassiveInfo("Homecoming.Blaster.DefianceV2", OmniDataProviderId.OmniHomecoming, "Class_Blaster", "Inherent.Inherent.Defiance_v2"),
         CreateManualToggle("Homecoming.Dominator.Domination", OmniDataProviderId.OmniHomecoming, "Class_Dominator", "Inherent.Inherent.Domination"),
-        CreateManualSlider("Homecoming.Dominator.DominationMeter", OmniDataProviderId.OmniHomecoming, "Class_Dominator", "Inherent.Inherent.Domination_Meter"),
         CreateManualSlider("Homecoming.Brute.Fury", OmniDataProviderId.OmniHomecoming, "Class_Brute", "Inherent.Inherent.Rage"),
         CreatePassiveInfo("Homecoming.Brute.FuryBuff", OmniDataProviderId.OmniHomecoming, "Class_Brute", "Inherent.Inherent.Rage_Buff"),
         CreatePassiveInfo("Homecoming.Brute.FuryDampen", OmniDataProviderId.OmniHomecoming, "Class_Brute", "Inherent.Inherent.Rage_Dampen"),
@@ -86,7 +85,14 @@ internal static class ArchetypeInherentCatalog
         CreateComputedPet("Homecoming.Mastermind.Supremacy", OmniDataProviderId.OmniHomecoming, "Class_Mastermind", "Inherent.Inherent.Supremacy"),
         CreateComputedTeam("Homecoming.Defender.Vigilance", OmniDataProviderId.OmniHomecoming, "Class_Defender", "Inherent.Inherent.Vigilance"),
         CreatePassiveInfo("Homecoming.Widow.Conditioning", OmniDataProviderId.OmniHomecoming, "Class_Arachnos_Widow", "Inherent.Inherent.Widow_Conditioning"),
-        CreatePassiveInfo("Homecoming.Soldier.Conditioning", OmniDataProviderId.OmniHomecoming, "Class_Arachnos_Soldier", "Inherent.Inherent.Spider_Conditioning")
+        CreatePassiveInfo("Homecoming.Soldier.Conditioning", OmniDataProviderId.OmniHomecoming, "Class_Arachnos_Soldier", "Inherent.Inherent.Spider_Conditioning"),
+
+        CreatePassiveInfo("Rebirth.Stalker.Assassination", OmniDataProviderId.OmniRebirth, "Class_Stalker", "Inherent.Inherent.Assassination"),
+        CreatePassiveInfo("Rebirth.Tanker.Gauntlet", OmniDataProviderId.OmniRebirth, "Class_Tanker", "Inherent.Inherent.Gauntlet"),
+        CreateComputedTeam("Rebirth.Peacebringer.CosmicBalance", OmniDataProviderId.OmniRebirth, "Class_Peacebringer", "Inherent.Inherent.Cosmic_Balance"),
+        CreateComputedTeam("Rebirth.Warshade.DarkSustenance", OmniDataProviderId.OmniRebirth, "Class_Warshade", "Inherent.Inherent.Dark_Sustenance"),
+        CreateManualToggle("Rebirth.Dominator.Domination", OmniDataProviderId.OmniRebirth, "Class_Dominator", "Inherent.Inherent.Domination"),
+        CreateComputedTeam("Rebirth.Defender.Vigilance", OmniDataProviderId.OmniRebirth, "Class_Defender", "Inherent.Inherent.Vigilance")
     ];
 
     private static readonly Dictionary<string, ArchetypeInherentDefinition> DefinitionsByKey = Definitions

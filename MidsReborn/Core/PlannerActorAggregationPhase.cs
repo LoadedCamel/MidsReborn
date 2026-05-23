@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.PlannerRulesets;
@@ -15,10 +16,15 @@ internal sealed class PlannerActorAggregationContext
     public IReadOnlyList<IPower> EnhancementExternalPowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyList<IPower> SelfBuffExternalPowers { get; init; } = Array.Empty<IPower>();
     public float ComputedDefianceMagnitude { get; init; }
+    public float ComputedVigilanceDamageMagnitude { get; init; }
+    public float ComputedVigilanceEndDiscountMagnitude { get; init; }
+    public CosmicBalanceComputedState CosmicBalanceState { get; init; } = new();
+    public CosmicBalanceComputedState DarkSustenanceState { get; init; } = new();
     public IReadOnlyList<IPower> SupplementalEnhancementSourcePowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyList<IPower> SupplementalSelfBuffSourcePowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyCollection<int> SupplementalEnhancementExcludedIndexes { get; init; } = Array.Empty<int>();
     public IPower? ChanceModifierSetBonusPower { get; init; }
+    public IReadOnlyDictionary<string, float>? SupplementalChanceModifierCatalog { get; init; }
     public bool BuildChanceModifierCatalog { get; init; } = true;
     public bool ApplyPvpDiminishingReturns { get; init; }
 }
@@ -48,7 +54,12 @@ internal static class PlannerActorAggregationPhase
             EnhancementExternalPowers = context.EnhancementExternalPowers,
             SelfBuffExternalPowers = context.SelfBuffExternalPowers,
             ComputedDefianceMagnitude = context.ComputedDefianceMagnitude,
+            ComputedVigilanceDamageMagnitude = context.ComputedVigilanceDamageMagnitude,
+            ComputedVigilanceEndDiscountMagnitude = context.ComputedVigilanceEndDiscountMagnitude,
+            CosmicBalanceState = context.CosmicBalanceState,
+            DarkSustenanceState = context.DarkSustenanceState,
             ChanceModifierSetBonusPower = context.ChanceModifierSetBonusPower,
+            SupplementalChanceModifierCatalog = context.SupplementalChanceModifierCatalog,
             BuildChanceModifierCatalog = context.BuildChanceModifierCatalog
         });
 

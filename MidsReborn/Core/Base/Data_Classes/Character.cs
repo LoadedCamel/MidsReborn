@@ -661,12 +661,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             if (CurrentBuild?.Powers == null) return;
 
             ApplyForcedPlannerStateToggles();
+            AssassinationPlanner.Synchronize(CurrentBuild, MidsContext.Config?.CombatContextSettings.Assassination);
+            OpportunityPlanner.Synchronize(CurrentBuild, MidsContext.Config?.CombatContextSettings.Opportunity);
 
             foreach (var power in CurrentBuild.Powers)
             {
                 if (power?.Power == null)
                 {
                     continue;
+                }
+
+                if (PowerEntry.ShouldForceAutoIncluded(power.Power))
+                {
+                    power.StatInclude = true;
                 }
 
                 power.Power.HasProcSlotted = power.HasProc();
@@ -1350,26 +1357,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     CriticalHits = enabled;
                     break;
                 case PlannerMode.Assassination:
-                    if (enabled)
-                    {
-                        _activePlannerModes.Add(PlannerMode.StalkerHidden);
-                    }
-                    else
-                    {
-                        _activePlannerModes.Remove(PlannerMode.StalkerHidden);
-                    }
                     Assassination = enabled;
                     break;
                 case PlannerMode.StalkerHidden:
-                    if (enabled)
-                    {
-                        _activePlannerModes.Add(PlannerMode.Assassination);
-                    }
-                    else
-                    {
-                        _activePlannerModes.Remove(PlannerMode.Assassination);
-                    }
-                    Assassination = enabled;
                     break;
                 case PlannerMode.Defiance:
                     Defiance = enabled;
@@ -1467,8 +1457,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         private void SyncForcedPlannerStateValues()
         {
-            if (CurrentBuild?.Powers == null ||
-                !_activePlannerModes.Contains(PlannerMode.DominationActive))
+            if (CurrentBuild?.Powers == null)
             {
                 return;
             }
@@ -1477,6 +1466,21 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 entry?.Power?.FullName.Equals(PlannerStateCatalog.DominationMeterPowerFullName, StringComparison.OrdinalIgnoreCase) == true);
             if (meterEntry?.Power == null)
             {
+                return;
+            }
+
+            if (!_activePlannerModes.Contains(PlannerMode.DominationActive))
+            {
+                meterEntry.VariableValue = meterEntry.Power.VariableStart;
+                if (meterEntry.VariableValue > 0)
+                {
+                    _plannerStateStacks[meterEntry.Power.FullName] = meterEntry.VariableValue;
+                }
+                else
+                {
+                    _plannerStateStacks.Remove(meterEntry.Power.FullName);
+                }
+
                 return;
             }
 
@@ -1512,6 +1516,26 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 targetEntry.VariableValue = powerEntry.VariableValue;
                 targetEntry.StatInclude = powerEntry.VariableValue > 0 || targetEntry.Power.AlwaysToggle;
                 _plannerStateStacks[targetEntry.Power.FullName] = powerEntry.VariableValue;
+            }
+
+            if (powerEntry.Power.FullName.Equals(PlannerStateCatalog.AssassinationPowerFullName, StringComparison.OrdinalIgnoreCase) ||
+                powerEntry.Power.FullName.Equals(PlannerStateCatalog.AssassinsFocusMarker, StringComparison.OrdinalIgnoreCase))
+            {
+                var hasFocusStacks = powerEntry.VariableValue > 0;
+                if (hasFocusStacks)
+                {
+                    _activePlannerModes.Add(PlannerMode.Assassination);
+                    _plannerStateStacks[PlannerStateCatalog.AssassinationPowerFullName] = powerEntry.VariableValue;
+                    _plannerStateStacks[PlannerStateCatalog.AssassinsFocusMarker] = powerEntry.VariableValue;
+                }
+                else
+                {
+                    _activePlannerModes.Remove(PlannerMode.Assassination);
+                    _plannerStateStacks.Remove(PlannerStateCatalog.AssassinationPowerFullName);
+                    _plannerStateStacks.Remove(PlannerStateCatalog.AssassinsFocusMarker);
+                }
+
+                Assassination = hasFocusStacks;
             }
         }
 

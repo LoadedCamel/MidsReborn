@@ -169,19 +169,19 @@ public sealed class FrmPetActorDetails : Form
         _previewStatePanel = new TableLayoutPanel
         {
             Dock = DockStyle.Fill,
-            ColumnCount = 1,
-            RowCount = 2,
+            ColumnCount = 2,
+            RowCount = 1,
             Margin = new Padding(0, 0, 0, 8),
             BackColor = Color.Black
         };
-        _previewStatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-        _previewStatePanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
-        _previewStatePanel.RowStyles.Add(new RowStyle(SizeType.AutoSize));
+        _previewStatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+        _previewStatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+        _previewStatePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
 
         _upgradeFlow = CreatePreviewStateFlow();
         _proximityFlow = CreatePreviewStateFlow();
         _previewStatePanel.Controls.Add(CreatePreviewStateGroup("Applied Upgrades", _upgradeFlow), 0, 0);
-        _previewStatePanel.Controls.Add(CreatePreviewStateGroup("Pet Context", _proximityFlow), 0, 1);
+        _previewStatePanel.Controls.Add(CreatePreviewStateGroup("Pet Context", _proximityFlow), 1, 0);
 
         var ribbonHost = new TableLayoutPanel
         {

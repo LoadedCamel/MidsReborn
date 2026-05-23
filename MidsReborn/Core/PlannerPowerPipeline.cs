@@ -12,6 +12,7 @@ internal sealed class PlannerPowerPipeline
     private readonly Build _currentBuild;
     private readonly Archetype? _archetype;
     private readonly PlannerBuildRecipientContext? _recipient;
+    private readonly IReadOnlyList<IPower> _recipientExternalPowers;
     private IPower?[] _basePowers = Array.Empty<IPower?>();
     private IPower?[] _assembledBasePowers = Array.Empty<IPower?>();
     private IPower?[] _buffedPowers = Array.Empty<IPower?>();
@@ -30,11 +31,16 @@ internal sealed class PlannerPowerPipeline
         public Enums.eEffectType ETModifies;
     }
 
-    public PlannerPowerPipeline(Build currentBuild, Archetype? archetype, PlannerBuildRecipientContext? recipient = null)
+    public PlannerPowerPipeline(
+        Build currentBuild,
+        Archetype? archetype,
+        PlannerBuildRecipientContext? recipient = null,
+        IReadOnlyList<IPower>? recipientExternalPowers = null)
     {
         _currentBuild = currentBuild;
         _archetype = archetype;
         _recipient = recipient;
+        _recipientExternalPowers = recipientExternalPowers ?? Array.Empty<IPower>();
         Result = new PlannerPowerPipelineResult();
         SyncResult();
     }
@@ -1294,7 +1300,11 @@ internal sealed class PlannerPowerPipeline
             var endDiscount = selfBuffs.Effect[(int)Enums.eStatType.BuffEndRdx];
             if (Math.Abs(endDiscount) > float.Epsilon)
             {
-                powerBuffed.EndCost *= Math.Max(0f, 1f - endDiscount);
+                var divisor = 1f + endDiscount;
+                if (divisor > float.Epsilon)
+                {
+                    powerBuffed.EndCost /= divisor;
+                }
             }
         }
 
@@ -1335,12 +1345,18 @@ internal sealed class PlannerPowerPipeline
                 continue;
             }
 
-            if (_mathPowers[index] != null)
+            var sourcePower = powerEntry.Power ?? _buffedPowers[index] ?? _mathPowers[index];
+            var excludeManagedComputedPower = _recipient is null or { Kind: PlannerBuildRecipientKind.Player } &&
+                                             (VigilancePlanner.IsManagedComputedPower(sourcePower) ||
+                                              CosmicBalancePlanner.IsManagedComputedPower(sourcePower) ||
+                                              DarkSustenancePlanner.IsManagedComputedPower(sourcePower));
+
+            if (!excludeManagedComputedPower && _mathPowers[index] != null)
             {
                 includedMathPowers.Add(_mathPowers[index]!);
             }
 
-            if (_buffedPowers[index] != null)
+            if (!excludeManagedComputedPower && _buffedPowers[index] != null)
             {
                 includedBuffedPowers.Add(_buffedPowers[index]!);
             }
@@ -1353,10 +1369,21 @@ internal sealed class PlannerPowerPipeline
         var enhancementExternalPowers = new List<IPower>();
         var selfBuffExternalPowers = new List<IPower>();
         var computedDefianceMagnitude = 0f;
+        var computedVigilanceDamageMagnitude = 0f;
+        var computedVigilanceEndDiscountMagnitude = 0f;
+        var computedCosmicBalanceState = new CosmicBalanceComputedState();
+        var computedDarkSustenanceState = new CosmicBalanceComputedState();
+        IReadOnlyDictionary<string, float>? supplementalChanceModifierCatalog = null;
         if (setBonusPower != null)
         {
             enhancementExternalPowers.Add(setBonusPower);
             selfBuffExternalPowers.Add(setBonusPower);
+        }
+
+        if (_recipient != null && _recipientExternalPowers.Count > 0)
+        {
+            enhancementExternalPowers.AddRange(_recipientExternalPowers);
+            selfBuffExternalPowers.AddRange(_recipientExternalPowers);
         }
 
         if (plannerRuleset.IncludePvpResistanceBonusInBuckets(PlannerBucketPass.Enhancement) ||
@@ -1388,6 +1415,13 @@ internal sealed class PlannerPowerPipeline
             computedDefianceMagnitude = DefiancePlanner.Resolve(
                 _currentBuild,
                 MidsContext.Config?.CombatContextSettings.Defiance).TotalMagnitude;
+            computedVigilanceDamageMagnitude = VigilancePlanner.GetComputedDamageBuffMagnitude(MidsContext.Config);
+            computedVigilanceEndDiscountMagnitude = VigilancePlanner.GetComputedEnduranceDiscountMagnitude(MidsContext.Config);
+            computedCosmicBalanceState = CosmicBalancePlanner.GetComputedState(MidsContext.Config);
+            computedDarkSustenanceState = DarkSustenancePlanner.GetComputedState(MidsContext.Config);
+            supplementalChanceModifierCatalog = AssassinationPlanner.BuildSupplementalChanceModifierCatalog(
+                _currentBuild,
+                MidsContext.Config?.CombatContextSettings.Assassination);
         }
 
         return new PlannerActorAggregationContext
@@ -1401,7 +1435,12 @@ internal sealed class PlannerPowerPipeline
             EnhancementExternalPowers = enhancementExternalPowers,
             SelfBuffExternalPowers = selfBuffExternalPowers,
             ComputedDefianceMagnitude = computedDefianceMagnitude,
+            ComputedVigilanceDamageMagnitude = computedVigilanceDamageMagnitude,
+            ComputedVigilanceEndDiscountMagnitude = computedVigilanceEndDiscountMagnitude,
+            CosmicBalanceState = computedCosmicBalanceState,
+            DarkSustenanceState = computedDarkSustenanceState,
             ChanceModifierSetBonusPower = setBonusPower,
+            SupplementalChanceModifierCatalog = supplementalChanceModifierCatalog,
             BuildChanceModifierCatalog = buildChanceModifierCatalog,
             ApplyPvpDiminishingReturns = _recipient == null,
             SupplementalEnhancementSourcePowers = includeProcStateSupplemental

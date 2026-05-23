@@ -780,10 +780,17 @@ namespace Mids_Reborn.UI.Forms.Controls
             var s2 = 0f;
             var durationTip = "";
             var durationEffectId = pBase.GetDurationEffectID();
-            if (durationEffectId > -1 && pBase.Effects[durationEffectId].Duration <= 9999)
+            if (durationEffectId > -1 &&
+                pBase.Effects[durationEffectId].Duration <= 9999 &&
+                enhancedPower.Effects[durationEffectId].Duration <= 9999)
             {
                 s1 = pBase.Effects[durationEffectId].Duration;
                 s2 = enhancedPower.Effects[durationEffectId].Duration;
+                if (s1 <= float.Epsilon && s2 > float.Epsilon)
+                {
+                    s1 = s2;
+                }
+
                 durationTip = enhancedPower.Effects.Any(e => e.EffectType == Enums.eEffectType.Mez)
                     ? string.Join("\r\n", enhancedPower.Effects
                         .Where(e => e.EffectType == Enums.eEffectType.Mez &&
@@ -838,7 +845,10 @@ namespace Mids_Reborn.UI.Forms.Controls
                 if ((pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.Mez && validMez) | validMezProt |
                     (pBase.Effects[durationEffectId].EffectType != Enums.eEffectType.Mez))
                 {
-                    info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s", durationTip));
+                    if (Math.Max(s1, s2) > float.Epsilon)
+                    {
+                        info_DataList.AddItem(FastItemBuilder.Fi.FastItem(ShortStr("Duration", "Durtn"), s1, s2, "s", durationTip));
+                    }
                 }
             }
 
@@ -1858,6 +1868,28 @@ namespace Mids_Reborn.UI.Forms.Controls
                         tag2.Assign(shortFxBase);
                         suffix = "%";
                         break;
+                    case Enums.eEffectType.Mez when fx.Duration > float.Epsilon &&
+                                                     fx.MezType is not (Enums.eMez.Knockback or Enums.eMez.Knockup or Enums.eMez.Repel or Enums.eMez.Teleport):
+                    {
+                        var baseEffect = Index[ID] < pBase.Effects.Length ? pBase.Effects[Index[ID]] : fx;
+                        var enhancedEffect = Index[ID] < enhancedPower.Effects.Length ? enhancedPower.Effects[Index[ID]] : fx;
+                        var mezTip = enhancedPower.BuildTooltipStringAllVectorsEffects(
+                            enhancedEffect.EffectType,
+                            enhancedEffect.ETModifies,
+                            enhancedEffect.DamageType,
+                            enhancedEffect.MezType);
+
+                        return FastItemBuilder.Fi.FastItem(
+                            title,
+                            baseEffect.Duration,
+                            enhancedEffect.Duration,
+                            $"s (Mag {DisplayValueFormatter.FormatMagnitude(enhancedEffect.BuffedMag, 2)}){suffix}",
+                            true,
+                            false,
+                            fx.Probability < 1,
+                            fx.HasConditions,
+                            mezTip);
+                    }
                     case Enums.eEffectType.Mez when fx.MezType is Enums.eMez.Taunt or Enums.eMez.Placate:
                         shortFxBase.Add(Index[ID], fx.Duration);
                         shortFxEnh.Add(Index[ID], enhancedPower.Effects[Index[ID]].Duration);
