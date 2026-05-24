@@ -100,21 +100,21 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // SkPairedList1
             // 
             SkPairedList1.ActualLineHeight = 8;
-            SkPairedList1.API = OpenTK.Windowing.Common.ContextAPI.OpenGL;
-            SkPairedList1.APIVersion = new System.Version(3, 3, 0, 0);
+            //SkPairedList1.API = OpenTK.Windowing.Common.ContextAPI.OpenGL;
+            //SkPairedList1.APIVersion = new System.Version(3, 3, 0, 0);
             SkPairedList1.AutoColumns = false;
             SkPairedList1.Columns = 2;
             SkPairedList1.Dock = DockStyle.Fill;
-            SkPairedList1.Flags = OpenTK.Windowing.Common.ContextFlags.Default;
+            //SkPairedList1.Flags = OpenTK.Windowing.Common.ContextFlags.Default;
             SkPairedList1.HighVis = true;
             SkPairedList1.HoverColor = System.Drawing.Color.WhiteSmoke;
-            SkPairedList1.IsEventDriven = true;
+            //SkPairedList1.IsEventDriven = true;
             SkPairedList1.Location = new System.Drawing.Point(0, 0);
             SkPairedList1.MinColumnWidth = 180;
             SkPairedList1.Name = "SkPairedList1";
             SkPairedList1.PaddingX = 4;
             SkPairedList1.PaddingY = 1;
-            SkPairedList1.Profile = OpenTK.Windowing.Common.ContextProfile.Core;
+            //SkPairedList1.Profile = OpenTK.Windowing.Common.ContextProfile.Core;
             SkPairedList1.Scrollable = true;
             SkPairedList1.ScrollBarColor = System.Drawing.Color.FromArgb(128, 96, 192);
             SkPairedList1.ScrollBarWidth = 11;
@@ -137,7 +137,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             skListItem1.Underline = false;
             skListItem1.WrappedText = "";
             SkPairedList1.SelectedItem = skListItem1;
-            SkPairedList1.SharedContext = null;
+            //SkPairedList1.SharedContext = null;
             SkPairedList1.Size = new System.Drawing.Size(410, 136);
             SkPairedList1.SuspendRedraw = false;
             SkPairedList1.TabIndex = 0;

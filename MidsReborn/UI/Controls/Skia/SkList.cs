@@ -12,7 +12,7 @@ namespace Mids_Reborn.UI.Controls.Skia;
 
 [DesignerCategory("Code")]
 [ToolboxItem(true)]
-public class SkList : SKGLControl
+public class SkList : SKControl
 {
     public delegate void ItemClickEventHandler(SkListItem item, MouseButtons button);
     public delegate void ItemHoverEventHandler(SkListItem item);
@@ -97,20 +97,21 @@ public class SkList : SKGLControl
 
     public SkList()
     {
-        if (!IsInDesignMode)
+        if (IsInDesignMode)
         {
-            _sizeNormal = Size;
-
-            MouseMove += OnMouseMove;
-            MouseLeave += OnMouseLeave;
-            MouseDown += OnMouseDown;
-            MouseUp += OnMouseUp;
-            MouseWheel += OnMouseWheel;
-            Resize += OnResize;
-            FontChanged += OnFontChanged;
-            Load += OnLoad;
-            PaintSurface += OnPaintSurfaceGL;
+            return;
         }
+
+        _sizeNormal = Size;
+
+        MouseMove += OnMouseMove;
+        MouseLeave += OnMouseLeave;
+        MouseDown += OnMouseDown;
+        MouseUp += OnMouseUp;
+        MouseWheel += OnMouseWheel;
+        Resize += OnResize;
+        FontChanged += OnFontChanged;
+        PaintSurface += OnPaintSurface;
     }
 
     private bool IsInDesignMode =>
@@ -685,7 +686,7 @@ public class SkList : SKGLControl
         base.OnPaint(e); // Will crash the designer if this is called during design time
     }
 
-    private void OnPaintSurfaceGL(object? sender, SKPaintGLSurfaceEventArgs e)
+    private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
     {
         if (SuspendRedraw || !IsHandleCreated || Width <= 0 || Height <= 0)
         {
@@ -695,8 +696,8 @@ public class SkList : SKGLControl
         var canvas = e.Surface.Canvas;
         canvas.Clear(IsExpanded ? SKColors.Black : ToSkColor(BackColor));
 
-        var width = e.BackendRenderTarget.Width;
-        var height = e.BackendRenderTarget.Height;
+        var width = e.Info.Width;
+        var height = e.Info.Height;
 
         var y = PaddingY;
         foreach (var item in _items.Skip(_scrollOffset))
@@ -1022,8 +1023,15 @@ public class SkList : SKGLControl
         return itemIndex != -1 ? SkMouseTarget.Item : SkMouseTarget.None;
     }
 
-    private void OnLoad(object? sender, EventArgs e)
+    protected override void OnHandleCreated(EventArgs e)
     {
+        base.OnHandleCreated(e);
+
+        if (IsInDesignMode)
+        {
+            return;
+        }
+
         _sizeNormal = Size;
         SuspendRedraw = true;
         RecalculateLayout();
@@ -1298,8 +1306,7 @@ public class SkList : SKGLControl
             MouseWheel -= OnMouseWheel;
             Resize -= OnResize;
             FontChanged -= OnFontChanged;
-            Load -= OnLoad;
-            PaintSurface -= OnPaintSurfaceGL;
+            PaintSurface -= OnPaintSurface;
         }
 
         base.Dispose(disposing);

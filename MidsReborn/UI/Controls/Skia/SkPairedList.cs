@@ -10,18 +10,9 @@ using System.Windows.Forms;
 
 namespace Mids_Reborn.UI.Controls.Skia;
 
-/*
-Min items width: 
-Tests:
-Item click
-Item select/deselect
-Mouse move/mouse out
-Resize ?
-*/
-
 [DesignerCategory("Code")]
 [ToolboxItem(true)]
-public class SkPairedList : SKGLControl
+public class SkPairedList : SKControl
 {
     #region Events
     public delegate void ItemClickEventHandler(SkListItem item, MouseButtons button);
@@ -145,8 +136,21 @@ public class SkPairedList : SKGLControl
         MouseWheel += OnMouseWheel;
         Resize += OnResize;
         FontChanged += OnFontChanged;
-        Load += OnLoad;
-        PaintSurface += OnPaintSurfaceGL;
+        PaintSurface += OnPaintSurface;
+    }
+
+    protected override void OnHandleCreated(EventArgs e)
+    {
+        base.OnHandleCreated(e);
+
+        if (IsInDesignMode)
+        {
+            return;
+        }
+
+        SuspendRedraw = true;
+        RecalculateLayout();
+        SuspendRedraw = false;
     }
 
     private void OnLoad(object? sender, EventArgs e)
@@ -669,7 +673,7 @@ public class SkPairedList : SKGLControl
         base.OnPaint(e); // Will crash the designer if this is called
     }
 
-    private void OnPaintSurfaceGL(object? sender, SKPaintGLSurfaceEventArgs e)
+    private void OnPaintSurface(object? sender, SKPaintSurfaceEventArgs e)
     {
         if (SuspendRedraw || !IsHandleCreated || Width <= 0 || Height <= 0)
         {
@@ -681,7 +685,7 @@ public class SkPairedList : SKGLControl
 
         //var width = e.BackendRenderTarget.Width;
         var containerInfo = CalcItemContainerInfo();
-        var height = e.BackendRenderTarget.Height;
+        var height = e.Info.Height;
         var x = containerInfo.MinX;
         var y = PaddingY;
         var n = _scrollOffset * Columns;
@@ -1220,8 +1224,7 @@ public class SkPairedList : SKGLControl
             MouseWheel -= OnMouseWheel;
             Resize -= OnResize;
             FontChanged -= OnFontChanged;
-            Load -= OnLoad;
-            PaintSurface -= OnPaintSurfaceGL;
+            PaintSurface -= OnPaintSurface;
         }
 
         base.Dispose(disposing);
