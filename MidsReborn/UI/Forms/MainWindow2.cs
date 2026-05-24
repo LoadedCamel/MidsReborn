@@ -5789,7 +5789,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 _ => throw new ArgumentOutOfRangeException(nameof(MidsContext.Config.Mode))
             };
 
-            Text = $@"{str2} {userMode}v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
+            Text = MidsContext.Config.Mode == ConfigData.Modes.DbAdmin
+                    ? $@"{str2} {userMode}for {MidsContext.AssemblyVersion.Replace(".", "")} DX {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})"
+                    : $@"{str2} {userMode}v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
         }
 
         public void UpdateTitle()
