@@ -5,6 +5,7 @@ using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Omni;
 using Mids_Reborn.Core.Theming;
 using Mids_Reborn.Core.Utils;
+using Mids_Reborn.UI.Controls;
 using Mids_Reborn.UI.Theming;
 using System.ComponentModel;
 using System.Diagnostics;
@@ -39,6 +40,8 @@ namespace Mids_Reborn.UI.Renderer
         private int _calculatedCellWidth;
         private int _calculatedIconXOffset;
         private readonly Dictionary<Bitmap, Rectangle> _iconVisibleBoundsCache = new();
+        private readonly Dictionary<int, BuildPowerGeometry> _geometryCache = [];
+        private bool _geometryCacheDirty = true;
 
 
         public Size SzPower => new Size(ScaleLogical(_baseSzPower.Width), ScaleLogical(_baseSzPower.Height));
@@ -366,6 +369,7 @@ namespace Mids_Reborn.UI.Renderer
             return powerEntry.Power is { Slottable: true }
                    && powerEntry.State != ePowerState.Empty
                    && MidsContext.Character.CanPlaceSlot
+                   && MidsContext.Character.SlotCheck(powerEntry) >= 0
                    && powerEntry.Slots.Length < 6
                    && InterfaceMode != eInterfaceMode.PowerToggle;
         }
@@ -532,7 +536,23 @@ namespace Mids_Reborn.UI.Renderer
             return Math.Max(0, -iconWellRect.Top + Math.Max(1, ScaleLogical(1)));
         }
 
-        private BuildPowerGeometry CreatePowerGeometry(int powerIndex, PowerEntry powerEntry, bool includeNewSlot)
+        private void MarkGeometryCacheDirty()
+        {
+            _geometryCacheDirty = true;
+        }
+
+        private void ResetGeometryCacheIfNeeded()
+        {
+            if (!_geometryCacheDirty)
+            {
+                return;
+            }
+
+            _geometryCache.Clear();
+            _geometryCacheDirty = false;
+        }
+
+        private BuildPowerGeometry CreatePowerGeometry(int powerIndex, PowerEntry powerEntry)
         {
             Rectangle powerRect = GetPowerButtonRect(GetCellLocation(powerEntry));
             Rectangle iconWellRect = GetIconWellRect(powerRect);
@@ -541,8 +561,9 @@ namespace Mids_Reborn.UI.Renderer
             Rectangle powerAreaRect = powerRect;
             Rectangle slotHitRect = Rectangle.Empty;
             Rectangle newSlotRect = Rectangle.Empty;
+            bool canOfferNewSlot = CanOfferNewSlot(powerEntry);
 
-            if (powerEntry.Slots.Length > 0 || (includeNewSlot && CanOfferNewSlot(powerEntry)))
+            if (powerEntry.Slots.Length > 0 || canOfferNewSlot)
             {
                 int startX = GetEnhancementSlotStartX(powerRect, iconWellRect);
                 var (edge, spacing) = ComputeEnhancementSlotLayout(powerRect, startX);
@@ -561,7 +582,7 @@ namespace Mids_Reborn.UI.Renderer
                     }
                 }
 
-                if (includeNewSlot && CanOfferNewSlot(powerEntry))
+                if (canOfferNewSlot)
                 {
                     newSlotRect = new Rectangle(
                         startX + (edge + spacing) * powerEntry.Slots.Length,
@@ -607,9 +628,9 @@ namespace Mids_Reborn.UI.Renderer
             };
         }
 
-        private bool TryBuildPowerGeometry(int powerIndex, out BuildPowerGeometry? geometry, bool includeNewSlot = true)
+        private bool TryGetPowerEntry(int powerIndex, out PowerEntry? powerEntry)
         {
-            geometry = null;
+            powerEntry = null;
 
             var powers = MidsContext.Character?.CurrentBuild?.Powers;
             if (powers is null || powerIndex < 0 || powerIndex >= powers.Count)
@@ -617,7 +638,7 @@ namespace Mids_Reborn.UI.Renderer
                 return false;
             }
 
-            var powerEntry = powers[powerIndex];
+            powerEntry = powers[powerIndex];
             if (powerEntry == null)
             {
                 return false;
@@ -628,7 +649,26 @@ namespace Mids_Reborn.UI.Renderer
                 return false;
             }
 
-            geometry = CreatePowerGeometry(powerIndex, powerEntry, includeNewSlot);
+            return true;
+        }
+
+        private bool TryBuildPowerGeometry(int powerIndex, out BuildPowerGeometry? geometry)
+        {
+            geometry = null;
+            ResetGeometryCacheIfNeeded();
+
+            if (_geometryCache.TryGetValue(powerIndex, out geometry))
+            {
+                return true;
+            }
+
+            if (!TryGetPowerEntry(powerIndex, out var powerEntry))
+            {
+                return false;
+            }
+
+            geometry = CreatePowerGeometry(powerIndex, powerEntry!);
+            _geometryCache[powerIndex] = geometry;
             return true;
         }
 
@@ -679,18 +719,10 @@ namespace Mids_Reborn.UI.Renderer
             var point = new Point(x, y);
             for (int i = 0; i < powers.Count; i++)
             {
-                var powerEntry = powers[i];
-                if (powerEntry == null)
+                if (!TryBuildPowerGeometry(i, out var geometry))
                 {
                     continue;
                 }
-
-                if (ShouldSuppressHiddenSupportPower(powerEntry))
-                {
-                    continue;
-                }
-
-                var geometry = CreatePowerGeometry(i, powerEntry, includeNewSlot: true);
 
                 if (!geometry.StatToggleRect.IsEmpty && geometry.StatToggleRect.Contains(point))
                 {
@@ -760,6 +792,7 @@ namespace Mids_Reborn.UI.Renderer
                 GetPowersLayout();
             }
 
+            MarkGeometryCacheDirty();
             FullRedraw();
         }
 
@@ -856,29 +889,32 @@ namespace Mids_Reborn.UI.Renderer
                 if (ShouldSuppressHiddenSupportPower(power))
                     continue;
 
-                bool isHighlighted = Highlight == i;
-                bool isSelected = SelectedPowerIndex == i;
-                bool isEmphasized = isHighlighted || isSelected;
-
-                // Define what needs to be drawn. A power should be drawn if it's
-                // chosen, part of the Incarnate system, or currently highlighted.
-                bool shouldDraw = isEmphasized || power.Chosen ||
-                                  power.Power != null && (power.Power.GroupName == "Incarnate" || power.Power.IncludeFlag);
-
-                if (!shouldDraw)
+                if (!ShouldDrawPower(i, power))
                     continue;
 
-                // Create a reference to pass to the drawing method.
                 var slotToDraw = power;
-
-                // The 'isHighlighted' flag serves the role of the original 'singleDraw'.
-                DrawPowerSlot(ref slotToDraw, isEmphasized);
-
-                // A struct was passed by ref, so we ensure the main list is updated if needed.
+                DrawPowerSlot(ref slotToDraw, IsPowerEmphasized(i));
                 powers[i] = slotToDraw;
             }
 
             DrawSplit();
+        }
+
+        private bool IsPowerEmphasized(int powerIndex)
+        {
+            return Highlight == powerIndex || SelectedPowerIndex == powerIndex;
+        }
+
+        private static bool IsIncarnateOrIncluded(PowerEntry? powerEntry)
+        {
+            return powerEntry?.Power != null &&
+                   (powerEntry.Power.GroupName == "Incarnate" || powerEntry.Power.IncludeFlag);
+        }
+
+        private bool ShouldDrawPower(int powerIndex, PowerEntry? powerEntry)
+        {
+            return powerEntry != null &&
+                   (IsPowerEmphasized(powerIndex) || powerEntry.Chosen || IsIncarnateOrIncluded(powerEntry));
         }
 
         private float FontScale(float iSz)
@@ -1049,7 +1085,7 @@ namespace Mids_Reborn.UI.Renderer
 
                 // If it's highlighted ("singleDraw") and can have a slot,
                 // change its appearance to the "Open" button style.
-                if (singleDraw && isValidForOpen)
+                if (drawVars.IsHovered && isValidForOpen)
                 {
                     drawVars.PowerState = ePowerState.Open;
                     // The early 'return' that was here previously was the bug.
@@ -1102,7 +1138,8 @@ namespace Mids_Reborn.UI.Renderer
                 imageAttr = GreySlot(grey);
             }
 
-            drawVars.Geometry = CreatePowerGeometry(drawVars.PowerIndex, drawVars.PowerEntry, drawVars.DrawNewSlot);
+            TryBuildPowerGeometry(drawVars.PowerIndex, out var geometry);
+            drawVars.Geometry = geometry ?? CreatePowerGeometry(drawVars.PowerIndex, drawVars.PowerEntry);
             drawVars.PowerRect = drawVars.Geometry.PowerRect;
 
             DrawPowerImage(
@@ -1151,11 +1188,12 @@ namespace Mids_Reborn.UI.Renderer
                 SlotCheck = MidsContext.Character.SlotCheck(powerEntry),
                 PowerState = powerEntry!.State,
                 CanPlaceSlot = MidsContext.Character.CanPlaceSlot,
+                IsHovered = Highlight == MidsContext.Character.CurrentBuild.Powers.IndexOf(powerEntry),
                 DrawNewSlot = powerEntry.Power is not null
                               && powerEntry.State != ePowerState.Empty
                               && MidsContext.Character.CanPlaceSlot
                               && powerEntry.Slots.Length < 6
-                              && singleDraw
+                              && Highlight == MidsContext.Character.CurrentBuild.Powers.IndexOf(powerEntry)
                               && powerEntry.Power.Slottable
                               && InterfaceMode != eInterfaceMode.PowerToggle,
                 SingleDraw = singleDraw
@@ -2284,6 +2322,9 @@ namespace Mids_Reborn.UI.Renderer
                 BxBuffer.Graphics.Clear(_backColor);
             }
 
+            MarkGeometryCacheDirty();
+            ResetGeometryCacheIfNeeded();
+
             // Prep header variables
             InitHeadersVariables();
 
@@ -2510,6 +2551,101 @@ namespace Mids_Reborn.UI.Renderer
             return hit.Area == BuildHitArea.EnhancementSlot ? hit.EnhancementIndex : -1;
         }
 
+        private Rectangle GetPowerRenderBounds(int powerIndex)
+        {
+            if (!TryBuildPowerGeometry(powerIndex, out var geometry))
+            {
+                return Rectangle.Empty;
+            }
+
+            return GetPowerRenderBounds(geometry!);
+        }
+
+        private Rectangle GetPowerRenderBounds(BuildPowerGeometry geometry)
+        {
+            var bounds = geometry.PowerAreaRect;
+            if (!geometry.NewSlotRect.IsEmpty)
+            {
+                bounds = UnionNonEmpty(bounds, geometry.NewSlotRect);
+            }
+
+            int pad = Math.Max(2, ScaleLogical(2));
+            bounds.Inflate(pad, pad);
+
+            if (BxBuffer?.Bitmap != null)
+            {
+                bounds = Rectangle.Intersect(bounds, new Rectangle(Point.Empty, BxBuffer.Bitmap.Size));
+            }
+
+            return bounds;
+        }
+
+        private void ClearRenderBounds(Rectangle bounds)
+        {
+            if (bounds.IsEmpty || BxBuffer?.Graphics == null)
+            {
+                return;
+            }
+
+            using var backBrush = new SolidBrush(_backColor);
+            BxBuffer.Graphics.FillRectangle(backBrush, bounds);
+        }
+
+        private void RedrawPowerRegion(int powerIndex)
+        {
+            if (powerIndex < 0)
+            {
+                return;
+            }
+
+            if (!TryBuildPowerGeometry(powerIndex, out var geometry) || geometry == null)
+            {
+                return;
+            }
+
+            ClearRenderBounds(GetPowerRenderBounds(geometry));
+
+            if (!TryGetPowerEntry(powerIndex, out var powerEntry) || !ShouldDrawPower(powerIndex, powerEntry))
+            {
+                return;
+            }
+
+            var slotToDraw = powerEntry!;
+            DrawPowerSlot(ref slotToDraw, IsPowerEmphasized(powerIndex));
+            MidsContext.Character.CurrentBuild.Powers[powerIndex] = slotToDraw;
+        }
+
+        private void InvalidatePowerRegions(params int[] powerIndices)
+        {
+            if (_cTarget is MidsBufferedImagePanel bufferedPanel)
+            {
+                bufferedPanel.InvalidatePowerRegions(powerIndices);
+                return;
+            }
+
+            foreach (int powerIndex in powerIndices.Distinct())
+            {
+                if (powerIndex < 0)
+                {
+                    continue;
+                }
+
+                var bounds = GetPowerRenderBounds(powerIndex);
+                if (!bounds.IsEmpty)
+                {
+                    _cTarget?.Invalidate(bounds);
+                }
+            }
+        }
+
+        private bool HoverTransitionNeedsFullRedraw(int powerIndex)
+        {
+            return powerIndex >= 0 &&
+                   TryGetPowerEntry(powerIndex, out var powerEntry) &&
+                   powerEntry != null &&
+                   CanOfferNewSlot(powerEntry);
+        }
+
         public bool HighlightSlot(int idx, bool force = false)
         {
             if (MidsContext.Character.CurrentBuild.Powers.Count < 1)
@@ -2522,19 +2658,25 @@ namespace Mids_Reborn.UI.Renderer
                 return false;
             }
 
-            // 1. Update the state. This is the only variable that needs to change.
+            int oldHighlight = Highlight;
             Highlight = idx;
 
-            // 2. Redraw the entire scene to our off-screen buffer.
-            // The FullRedraw() method will now automatically:
-            //    - Draw the previously highlighted power in its normal state.
-            //    - Draw the newly highlighted power (if any) in its highlighted state.
-            FullRedraw();
+            if (BxBuffer?.Graphics == null || _geometryCacheDirty ||
+                HoverTransitionNeedsFullRedraw(oldHighlight) ||
+                HoverTransitionNeedsFullRedraw(idx))
+            {
+                FullRedraw();
+                _cTarget?.Invalidate();
+                return true;
+            }
 
-            // 3. Invalidate the control. This tells Windows that the control's appearance
-            //    has changed and it needs to trigger a Paint event. The Paint event
-            //    will then draw our updated BxBuffer to the screen.
-            _cTarget?.Invalidate();
+            RedrawPowerRegion(oldHighlight);
+            if (idx != oldHighlight)
+            {
+                RedrawPowerRegion(idx);
+            }
+
+            InvalidatePowerRegions(oldHighlight, idx);
 
             return true; // Return true to indicate a change occurred.
         }
@@ -2641,21 +2783,21 @@ namespace Mids_Reborn.UI.Renderer
 
         public Rectangle GetPowerButtonRect(int hIdx)
         {
-            return TryBuildPowerGeometry(hIdx, out var geometry, includeNewSlot: false)
+            return TryBuildPowerGeometry(hIdx, out var geometry)
                 ? geometry!.PowerRect
                 : Rectangle.Empty;
         }
 
         public Rectangle GetPowerAreaRect(int hIdx)
         {
-            return TryBuildPowerGeometry(hIdx, out var geometry, includeNewSlot: false)
+            return TryBuildPowerGeometry(hIdx, out var geometry)
                 ? geometry!.PowerAreaRect
                 : Rectangle.Empty;
         }
 
         public Rectangle GetEnhancementSlotRect(int hIdx, int slotIndex)
         {
-            if (!TryBuildPowerGeometry(hIdx, out var geometry, includeNewSlot: false))
+            if (!TryBuildPowerGeometry(hIdx, out var geometry))
                 return Rectangle.Empty;
 
             return slotIndex >= 0 && slotIndex < geometry!.EnhancementSlotRects.Length
@@ -2665,14 +2807,14 @@ namespace Mids_Reborn.UI.Renderer
 
         public IReadOnlyList<Rectangle> GetEnhancementSlotRects(int hIdx)
         {
-            return TryBuildPowerGeometry(hIdx, out var geometry, includeNewSlot: false)
+            return TryBuildPowerGeometry(hIdx, out var geometry)
                 ? geometry!.EnhancementSlotRects
                 : Array.Empty<Rectangle>();
         }
 
         public Rectangle GetNewSlotHoverRect(int hIdx)
         {
-            return TryBuildPowerGeometry(hIdx, out var geometry, includeNewSlot: true)
+            return TryBuildPowerGeometry(hIdx, out var geometry)
                 ? geometry!.NewSlotRect
                 : Rectangle.Empty;
         }
@@ -3399,6 +3541,7 @@ namespace Mids_Reborn.UI.Renderer
 
             // Calculate the total width available for each column's cell
             _calculatedCellWidth = panelWidth / _vcCols;
+            MarkGeometryCacheDirty();
         }
 
         public Size GetDrawingArea()
@@ -3497,6 +3640,7 @@ namespace Mids_Reborn.UI.Renderer
 
             _vcCols = cols;
             _vcRowsPowers = VcPowers / _vcCols;
+            MarkGeometryCacheDirty();
         }
 
         private class DrawVariables
@@ -3512,6 +3656,7 @@ namespace Mids_Reborn.UI.Renderer
             public int SlotCheck { get; set; }
             public ePowerState PowerState { get; set; }
             public bool CanPlaceSlot { get; set; }
+            public bool IsHovered { get; set; }
             public bool DrawNewSlot { get; set; }
             public Point Location { get; set; }
             public BuildPowerGeometry Geometry { get; set; }

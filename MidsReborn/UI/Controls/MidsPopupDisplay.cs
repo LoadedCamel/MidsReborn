@@ -235,7 +235,7 @@ namespace Mids_Reborn.UI.Controls
         {
             if (!HasContent)
             {
-                Visible = false;
+                HidePopup();
                 return false;
             }
             ShowAt(anchor, bias, margin);
@@ -244,8 +244,10 @@ namespace Mids_Reborn.UI.Controls
 
         public void HidePopup()
         {
+            var previousBounds = Visible ? Bounds : Rectangle.Empty;
             Visible = false;
             EIdx = HIdx = PIdx = PsIdx = -1;
+            InvalidateHostBounds(previousBounds, forceUpdate: true);
         }
 
         #endregion
@@ -254,6 +256,8 @@ namespace Mids_Reborn.UI.Controls
 
         private void ShowAt(Rectangle anchor, PlacementBias bias = PlacementBias.Auto, int margin = 8)
         {
+            var previousBounds = Visible ? Bounds : Rectangle.Empty;
+
             // 1) Initial natural measurement (no column wrapping)
             using (var g = CreateGraphics())
             {
@@ -265,7 +269,7 @@ namespace Mids_Reborn.UI.Controls
             var host = FindForm();
             if (host == null)
             {
-                Location = new Point(anchor.Right + margin, anchor.Top);
+                Bounds = new Rectangle(new Point(anchor.Right + margin, anchor.Top), Size);
                 Visible = true;
                 BringToFront();
                 return;
@@ -348,10 +352,63 @@ namespace Mids_Reborn.UI.Controls
             loc.X = ClampSafe(loc.X, client.Left + margin, client.Right - Width - margin);
             loc.Y = ClampSafe(loc.Y, client.Top + margin, client.Bottom - Height - margin);
 
-            Location = loc;
+            var targetBounds = new Rectangle(loc, Size);
+
+            SuspendLayout();
+            Bounds = targetBounds;
             Visible = true;
             BringToFront();
-            host.Invalidate();
+            ResumeLayout(false);
+
+            InvalidateHostBounds(previousBounds, forceUpdate: true);
+            Invalidate();
+            Update();
+        }
+
+        private void InvalidateHostBounds(Rectangle bounds, bool forceUpdate)
+        {
+            if (bounds.IsEmpty)
+            {
+                return;
+            }
+
+            var host = Parent ?? FindForm();
+            if (host == null)
+            {
+                return;
+            }
+
+            host.Invalidate(bounds, true);
+
+            foreach (Control child in host.Controls)
+            {
+                if (child == this || !child.Visible)
+                {
+                    continue;
+                }
+
+                var intersection = Rectangle.Intersect(bounds, child.Bounds);
+                if (intersection.IsEmpty)
+                {
+                    continue;
+                }
+
+                child.Invalidate(new Rectangle(
+                    intersection.X - child.Left,
+                    intersection.Y - child.Top,
+                    intersection.Width,
+                    intersection.Height));
+
+                if (forceUpdate)
+                {
+                    child.Update();
+                }
+            }
+
+            if (forceUpdate)
+            {
+                host.Update();
+            }
         }
 
         #endregion

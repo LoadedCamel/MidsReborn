@@ -144,6 +144,19 @@ public sealed class MidsBufferedImagePanel : Control
     /// <summary>Rectangle for the “+1 new slot” hover (if available) in panel client coords; empty if not applicable.</summary>
     public Rectangle GetNewSlotHoverRect(int hIdx) => Renderer?.GetNewSlotHoverRect(hIdx) ?? Rectangle.Empty;
 
+    /// <summary>Returns the full redraw region for a power, including any hover-only new-slot preview rect.</summary>
+    public Rectangle GetPowerRenderRect(int hIdx)
+    {
+        var bounds = GetPowerAreaRect(hIdx);
+        var newSlotBounds = GetNewSlotHoverRect(hIdx);
+        if (!newSlotBounds.IsEmpty)
+        {
+            bounds = bounds.IsEmpty ? newSlotBounds : Rectangle.Union(bounds, newSlotBounds);
+        }
+
+        return bounds;
+    }
+
     /// <summary>Convenience: power button rect in *screen* coordinates.</summary>
     public Rectangle GetPowerButtonRectOnScreen(int hIdx)
     {
@@ -232,6 +245,39 @@ public sealed class MidsBufferedImagePanel : Control
     /// Does the given client-space point lie within the given rectangle?
     /// </summary>
     public bool IsWithinBounds(Point clientPt, Rectangle bounds) => bounds.Contains(clientPt);
+
+    /// <summary>
+    /// Invalidates one or more power regions instead of the whole canvas.
+    /// </summary>
+    public void InvalidatePowerRegions(params int[] powerIndices)
+    {
+        if (powerIndices == null || powerIndices.Length == 0)
+        {
+            return;
+        }
+
+        var dirty = Rectangle.Empty;
+        foreach (int powerIndex in powerIndices.Distinct())
+        {
+            if (powerIndex < 0)
+            {
+                continue;
+            }
+
+            var bounds = GetPowerRenderRect(powerIndex);
+            if (bounds.IsEmpty)
+            {
+                continue;
+            }
+
+            dirty = dirty.IsEmpty ? bounds : Rectangle.Union(dirty, bounds);
+        }
+
+        if (!dirty.IsEmpty)
+        {
+            Invalidate(dirty);
+        }
+    }
 
     #endregion
 

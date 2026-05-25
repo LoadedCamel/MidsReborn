@@ -47,7 +47,6 @@ namespace Mids_Reborn.UI.Forms
 
         private bool _gfxDrawing;
         private bool _isAppClosing;
-        private long _popupLastOpenTime;
         private int _originalIndex = -1;
 
         private const int BaselineCanvasWidth = 610;
@@ -116,11 +115,57 @@ namespace Mids_Reborn.UI.Forms
         private bool dvLastNoLev;
         private int dvLastPower;
 
-        // Enhancement picker state
-        private int EnhancingPower;
-        private int EnhancingSlot;
-        private readonly bool EnhPickerActive;
-        private int PickerHID;
+        private enum PopupRequestKind
+        {
+            None,
+            PowersetInfo,
+            PowerInfo,
+            SlotInfo,
+            ListPowerInfo,
+            PickerEnhancementInfo,
+            PickerSetInfo
+        }
+
+        private readonly record struct PopupRequestKey(
+            PopupRequestKind Kind,
+            int HistoryIndex = -1,
+            int PowerIndex = -1,
+            int SlotIndex = -1,
+            int PowersetIndex = -1,
+            int ClassIndex = -1,
+            int SetIndex = -1)
+        {
+            public static PopupRequestKey None { get; } = new(PopupRequestKind.None);
+        }
+
+        private readonly record struct ListHoverState(
+            MidsListView? List,
+            PowerListViewItem? Item,
+            Rectangle Bounds,
+            Point Location)
+        {
+            public static ListHoverState None { get; } = new(null, null, Rectangle.Empty, Point.Empty);
+        }
+
+        private readonly record struct PickerSessionState(
+            int PowerIndex,
+            int SlotIndex,
+            int AnchorHistoryIndex,
+            long OpenedAtTicks)
+        {
+            public static PickerSessionState None { get; } = new(-1, -1, -1, 0);
+            public bool IsActive => PowerIndex >= 0 && SlotIndex >= 0;
+        }
+
+        private sealed class InteractionState
+        {
+            public BuildRenderer.BuildHitTestResult CanvasHover { get; set; } = BuildRenderer.BuildHitTestResult.None;
+            public ListHoverState ListHover { get; set; } = ListHoverState.None;
+            public PopupRequestKey ActivePopup { get; set; } = PopupRequestKey.None;
+            public PickerSessionState Picker { get; set; } = PickerSessionState.None;
+        }
+
+        private readonly InteractionState _interaction = new();
 
         // Top-level windows / forms
         private SetInspector? _setInspector;
@@ -164,10 +209,8 @@ namespace Mids_Reborn.UI.Forms
         private bool HasSentBack;
         private bool HasSentForwards;
         private bool LastClickPlacedSlot;
-        private int LastEnhIndex;
         private I9Slot? LastEnhPlaced;
         private string? LastFileName;
-        private int LastIndex;
 
         private sealed record PoolSectionBinding(
             string Key,
@@ -184,7 +227,6 @@ namespace Mids_Reborn.UI.Forms
         private bool NoResizeEvent;
         private bool NoUpdate;
         private Rectangle oldDragRect;
-        private bool PopUpVisible;
 
         // Z-order hints for tool windows
         private bool top_fData;
@@ -213,6 +255,30 @@ namespace Mids_Reborn.UI.Forms
 
         private FrmPetActorDetails? FrmPetActorDetailsWindow { get; set; }
         private ToolStripMenuItem? TsViewPetActors { get; set; }
+        private bool EnhPickerActive => _i9Picker?.Visible == true && _interaction.Picker.IsActive;
+        private int EnhancingPower
+        {
+            get => _interaction.Picker.PowerIndex;
+            set => _interaction.Picker = _interaction.Picker with { PowerIndex = value };
+        }
+
+        private int EnhancingSlot
+        {
+            get => _interaction.Picker.SlotIndex;
+            set => _interaction.Picker = _interaction.Picker with { SlotIndex = value };
+        }
+
+        private int PickerHID
+        {
+            get => _interaction.Picker.AnchorHistoryIndex;
+            set => _interaction.Picker = _interaction.Picker with { AnchorHistoryIndex = value };
+        }
+
+        private long PickerOpenedAtTicks
+        {
+            get => _interaction.Picker.OpenedAtTicks;
+            set => _interaction.Picker = _interaction.Picker with { OpenedAtTicks = value };
+        }
 
         private I9Picker I9Picker
         {
@@ -258,11 +324,8 @@ namespace Mids_Reborn.UI.Forms
 
             EnhancingSlot = -1;
             EnhancingPower = -1;
-            EnhPickerActive = false;
             PickerHID = -1;
             FileModified = false;
-            LastIndex = -1;
-            LastEnhIndex = -1;
             dvLastPower = -1;
             dvLastEnh = -1;
             dvLastHistoryIdx = -1;
@@ -1526,146 +1589,113 @@ namespace Mids_Reborn.UI.Forms
 
         private void MListView_ItemHovered(object? sender, MidsListViewItemHoverEventArgs e)
         {
-            LastIndex = -1;
-            LastEnhIndex = -1;
-            if (sender is MidsListView listView)
+            if (sender is not MidsListView listView)
             {
-                if (e.Item is PowerListViewItem item)
-                {
-                    var bounds = MapRectToThis(listView, e.ItemBounds);
-                    if (item.State == MidsItemState.Heading)
-                    {
-                        ShowPopup(item.NIdSet, -1, bounds, string.Empty);
-                    }
-                    else
-                    {
-                        var point = MapPointToThis(listView, e.Location);
-                        Info_Power(item.NIdPower);
-                        ShowPopup(-1, item.NIdPower, -1, point, bounds);
-                    }
-                }
-                else
-                {
-                    HidePopup();
-                }
+                return;
             }
+
+            if (e.Item is not PowerListViewItem item)
+            {
+                _interaction.ListHover = ListHoverState.None;
+                HidePopup();
+                return;
+            }
+
+            var bounds = MapRectToThis(listView, e.ItemBounds);
+            var point = MapPointToThis(listView, e.Location);
+            bool sameItem = ReferenceEquals(_interaction.ListHover.List, listView) &&
+                            ReferenceEquals(_interaction.ListHover.Item, item);
+
+            _interaction.ListHover = new ListHoverState(listView, item, bounds, point);
+            if (!sameItem && item.State != MidsItemState.Heading)
+            {
+                Info_Power(item.NIdPower);
+            }
+
+            ShowPopupForHover(_interaction.ListHover);
         }
 
         private void PrimaryList_ItemClicked(object? sender, MidsListViewItemClickEventArgs e)
         {
-            if (sender is not MidsListView listView) return;
-            if (e.Item is not PowerListViewItem item) return;
-            if (item.State is MidsItemState.Heading) return;
-            switch (e.Button)
+            if (sender is MidsListView listView && e.Item is PowerListViewItem item)
             {
-                case MouseButtons.Left:
-                    PowerPicked(item.NIdSet, item.NIdPower);
-                    RefreshItemStates(listView);
-                    break;
-                case MouseButtons.Right:
-                    Info_Power(item.NIdPower, -1, false, true);
-                    break;
+                HandlePowerListClick(listView, item, e.Button);
             }
-
         }
 
         private void SecondaryList_ItemClicked(object? sender, MidsListViewItemClickEventArgs e)
         {
-            if (sender is not MidsListView listView) return;
-            if (e.Item is not PowerListViewItem item) return;
-            if (item.State is MidsItemState.Heading) return;
-            switch (e.Button)
+            if (sender is MidsListView listView && e.Item is PowerListViewItem item)
             {
-                case MouseButtons.Left:
-                    PowerPicked(item.NIdSet, item.NIdPower);
-                    RefreshItemStates(listView);
-                    break;
-                case MouseButtons.Right:
-                    Info_Power(item.NIdPower, -1, false, true);
-                    break;
+                HandlePowerListClick(listView, item, e.Button);
             }
         }
 
         private void Pool0List_ItemClicked(object? sender, MidsListViewItemClickEventArgs e)
         {
-            if (sender is not MidsListView listView) return;
-            if (e.Item is not PowerListViewItem item) return;
-            if (item.State is MidsItemState.Heading) return;
-            switch (e.Button)
+            if (sender is MidsListView listView && e.Item is PowerListViewItem item)
             {
-                case MouseButtons.Left:
-                    PowerPicked(Enums.PowersetType.Pool0, item.NIdPower);
-                    RefreshItemStates(listView);
-                    break;
-                case MouseButtons.Right:
-                    Info_Power(item.NIdPower, -1, false, true);
-                    break;
+                HandlePowerListClick(listView, item, e.Button, (int)Enums.PowersetType.Pool0);
             }
         }
 
         private void Pool1List_ItemClicked(object? sender, MidsListViewItemClickEventArgs e)
         {
-            if (sender is not MidsListView listView) return;
-            if (e.Item is not PowerListViewItem item) return;
-            if (item.State is MidsItemState.Heading) return;
-            switch (e.Button)
+            if (sender is MidsListView listView && e.Item is PowerListViewItem item)
             {
-                case MouseButtons.Left:
-                    PowerPicked(Enums.PowersetType.Pool1, item.NIdPower);
-                    RefreshItemStates(listView);
-                    break;
-                case MouseButtons.Right:
-                    Info_Power(item.NIdPower, -1, false, true);
-                    break;
+                HandlePowerListClick(listView, item, e.Button, (int)Enums.PowersetType.Pool1);
             }
         }
 
         private void Pool2List_ItemClicked(object? sender, MidsListViewItemClickEventArgs e)
         {
-            if (sender is not MidsListView listView) return;
-            if (e.Item is not PowerListViewItem item) return;
-            if (item.State is MidsItemState.Heading) return;
-            switch (e.Button)
+            if (sender is MidsListView listView && e.Item is PowerListViewItem item)
             {
-                case MouseButtons.Left:
-                    PowerPicked(Enums.PowersetType.Pool2, item.NIdPower);
-                    RefreshItemStates(listView);
-                    break;
-                case MouseButtons.Right:
-                    Info_Power(item.NIdPower, -1, false, true);
-                    break;
+                HandlePowerListClick(listView, item, e.Button, (int)Enums.PowersetType.Pool2);
             }
         }
 
         private void Pool3List_ItemClicked(object? sender, MidsListViewItemClickEventArgs e)
         {
-            if (sender is not MidsListView listView) return;
-            if (e.Item is not PowerListViewItem item) return;
-            if (item.State is MidsItemState.Heading) return;
-            switch (e.Button)
+            if (sender is MidsListView listView && e.Item is PowerListViewItem item)
             {
-                case MouseButtons.Left:
-                    PowerPicked(Enums.PowersetType.Pool3, item.NIdPower);
-                    RefreshItemStates(listView);
-                    break;
-                case MouseButtons.Right:
-                    Info_Power(item.NIdPower, -1, false, true);
-                    break;
+                HandlePowerListClick(listView, item, e.Button, (int)Enums.PowersetType.Pool3);
             }
         }
 
         private void AncillaryList_ItemClicked(object? sender, MidsListViewItemClickEventArgs e)
         {
-            if (sender is not MidsListView listView) return;
-            if (e.Item is not PowerListViewItem item) return;
-            if (item.State is MidsItemState.Heading) return;
-            switch (e.Button)
+            if (sender is MidsListView listView && e.Item is PowerListViewItem item)
+            {
+                HandlePowerListClick(listView, item, e.Button);
+            }
+        }
+
+        private void HandlePowerListClick(MidsListView list, PowerListViewItem item, MouseButtons button, int? fixedPowersetId = null)
+        {
+            if (item.State == MidsItemState.Heading)
+            {
+                return;
+            }
+
+            switch (button)
             {
                 case MouseButtons.Left:
-                    PowerPicked(item.NIdSet, item.NIdPower);
-                    RefreshItemStates(listView);
-                    frmTotalsV2.SetTitle(fTotals2);
+                    if (fixedPowersetId.HasValue)
+                    {
+                        PowerPicked((Enums.PowersetType)fixedPowersetId.Value, item.NIdPower);
+                    }
+                    else
+                    {
+                        PowerPicked(item.NIdSet, item.NIdPower);
+                    }
+
+                    if (ReferenceEquals(list, ancillaryList))
+                    {
+                        frmTotalsV2.SetTitle(fTotals2);
+                    }
                     break;
+
                 case MouseButtons.Right:
                     Info_Power(item.NIdPower, -1, false, true);
                     break;
@@ -1674,26 +1704,21 @@ namespace Mids_Reborn.UI.Forms
 
         private void I9Picker_EnhancementSelectionCancelled()
         {
-            I9Picker.Visible = false;
-            HidePopup();
-            EnhancingSlot = -1;
-            EnhancingPower = -1;
+            CloseEnhancementPicker(hidePopup: true, refreshInfo: false);
         }
 
         private void I9Picker_EnhancementPicked(I9Slot? e)
         {
+            int enhancingPower = EnhancingPower;
+            int enhancingSlot = EnhancingSlot;
             if (e == null)
             {
-                I9Picker.Visible = false;
-                HidePopup();
-                EnhancingSlot = -1;
-                EnhancingPower = -1;
-
+                CloseEnhancementPicker(hidePopup: true, refreshInfo: false);
                 return;
             }
 
             e.RelativeLevel = I9Picker.View.RelLevel;
-            if (EnhancingSlot <= -1)
+            if (enhancingSlot <= -1 || enhancingPower <= -1)
             {
                 return;
             }
@@ -1705,11 +1730,11 @@ namespace Mids_Reborn.UI.Forms
             }
 
             var enhChanged = false;
-            if (MidsContext.Character != null && MidsContext.Character.CurrentBuild.EnhancementTest(EnhancingSlot, EnhancingPower, e.Enh) | e.Enh < 0)
+            if (MidsContext.Character != null && MidsContext.Character.CurrentBuild.EnhancementTest(enhancingSlot, enhancingPower, e.Enh) | e.Enh < 0)
             {
                 //Code below triggers after an enhancement is added
-                var power = MidsContext.Character.CurrentBuild.Powers[EnhancingPower];
-                if (power != null && e.Enh != power.Slots[EnhancingSlot].Enhancement.Enh)
+                var power = MidsContext.Character.CurrentBuild.Powers[enhancingPower];
+                if (power != null && e.Enh != power.Slots[enhancingSlot].Enhancement.Enh)
                 {
                     enhChanged = true;
                 }
@@ -1717,7 +1742,7 @@ namespace Mids_Reborn.UI.Forms
                 var hasProc = power != null && power.HasProc();
                 if (power != null)
                 {
-                    power.Slots[EnhancingSlot].Enhancement = (I9Slot)e.Clone();
+                    power.Slots[enhancingSlot].Enhancement = (I9Slot)e.Clone();
                     if (e.Enh > -1)
                     {
                         LastEnhPlaced = (I9Slot)e.Clone();
@@ -1759,16 +1784,16 @@ namespace Mids_Reborn.UI.Forms
                     }
                 }
 
-                I9Picker.Visible = false;
+                CloseEnhancementPicker(hidePopup: false, refreshInfo: false);
                 if (!_gfxDrawing)
                 {
-                    PowerModified(true);
+                    RefreshBuildSurfaceAfterMutation(markModified: true);
                 }
 
-                if (EnhancingPower > -1)
+                if (enhancingPower > -1)
                 {
-                    RefreshTabs(MidsContext.Character.CurrentBuild.Powers[EnhancingPower].NIDPower, e,
-                        buildHistoryIdx: EnhancingPower);
+                    RefreshTabs(MidsContext.Character.CurrentBuild.Powers[enhancingPower].NIDPower, e,
+                        buildHistoryIdx: enhancingPower);
                 }
 
                 // if (!_dvAnchored.PetInfo.HasEmptyBasePower)
@@ -1780,9 +1805,7 @@ namespace Mids_Reborn.UI.Forms
             }
             else
             {
-                I9Picker.Visible = false;
-                EnhancingSlot = -1;
-                EnhancingPower = -1;
+                CloseEnhancementPicker(hidePopup: true, refreshInfo: false);
             }
         }
 
@@ -1805,15 +1828,12 @@ namespace Mids_Reborn.UI.Forms
 
             // 10 000 ticks in a millisecond / 10 000 000 ticks in a second (1.10^7)
             // Ensure the picker doesn't close instantly.
-            if (!I9Picker.Visible | DateTime.Now.Ticks - _popupLastOpenTime < 1e6)
+            if (!I9Picker.Visible | DateTime.Now.Ticks - PickerOpenedAtTicks < 1e6)
             {
                 return;
             }
 
-            I9Picker.Visible = false;
-            HidePopup();
-            EnhancingSlot = -1;
-            RefreshInfo();
+            CloseEnhancementPicker(hidePopup: true, refreshInfo: true);
         }
 
         private void I9Picker_HoverEnhancement(int e, I9Picker.EnhUniqueStatus? enhUniqueStatus)
@@ -1826,12 +1846,21 @@ namespace Mids_Reborn.UI.Forms
                 RelativeLevel = I9Picker.View.RelLevel
             };
 
-            ShowPopup(PickerHID, -1, -1, new Point(), I9Picker.Bounds, i9Slot, -1, VerticalAlignment.Top, enhUniqueStatus);
+            ShowPopupForHover(
+                new PopupRequestKey(
+                    PopupRequestKind.PickerEnhancementInfo,
+                    HistoryIndex: PickerHID,
+                    PowerIndex: i9Slot.Enh,
+                    SlotIndex: (int)i9Slot.RelativeLevel,
+                    ClassIndex: (int)i9Slot.Grade),
+                () => ShowPopup(PickerHID, -1, -1, new Point(), I9Picker.Bounds, i9Slot, -1, VerticalAlignment.Top, enhUniqueStatus));
         }
 
         private void I9Picker_HoverSet(int e)
         {
-            ShowPopup(PickerHID, -1, -1, new Point(), I9Picker.Bounds, null, e);
+            ShowPopupForHover(
+                new PopupRequestKey(PopupRequestKind.PickerSetInfo, HistoryIndex: PickerHID, SetIndex: e),
+                () => ShowPopup(PickerHID, -1, -1, new Point(), I9Picker.Bounds, null, e));
         }
 
         private void I9Picker_MouseDown(object? sender, MouseEventArgs e)
@@ -1841,9 +1870,7 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            I9Picker.Visible = false;
-            EnhancingSlot = -1;
-            RefreshInfo();
+            CloseEnhancementPicker(hidePopup: false, refreshInfo: true);
         }
 
         private void I9Picker_KeyDown(object? sender, KeyEventArgs e)
@@ -1853,9 +1880,322 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            I9Picker.Visible = false;
+            CloseEnhancementPicker(hidePopup: true, refreshInfo: false);
+        }
+
+        private void CloseEnhancementPicker(bool hidePopup, bool refreshInfo)
+        {
+            if (_i9Picker != null)
+            {
+                I9Picker.Visible = false;
+            }
+
+            _interaction.Picker = PickerSessionState.None;
+            if (hidePopup)
+            {
+                HidePopup();
+            }
+
+            if (refreshInfo)
+            {
+                RefreshInfo();
+            }
+        }
+
+        private void OpenEnhancementPicker(int powerIndex, int slotIndex, Point canvasPoint)
+        {
+            if (powerIndex < 0 || slotIndex < 0 || MidsContext.Character?.CurrentBuild == null)
+            {
+                return;
+            }
+
+            var powerEntry = MidsContext.Character.CurrentBuild.Powers[powerIndex];
+            var enhancements = MainModule.MidsController.Toon?.GetEnhancements(powerIndex);
+            if (powerEntry == null || enhancements == null)
+            {
+                return;
+            }
+
+            _interaction.Picker = new PickerSessionState(powerIndex, slotIndex, powerIndex, DateTime.Now.Ticks);
             HidePopup();
-            EnhancingSlot = -1;
+
+            I9Picker.SetData(powerEntry.NIDPower, powerEntry.Slots[slotIndex].Enhancement, enhancements);
+            var point = new Point(
+                (int)Math.Round(canvasScrollPanel.Left - canvasScrollPanel.HorizontalScroll.Value + canvasPoint.X - I9Picker.Width / 2f),
+                (int)Math.Round(canvasScrollPanel.Top - canvasScrollPanel.VerticalScroll.Value + canvasPoint.Y - I9Picker.Height / 2f));
+
+            point.Y = Math.Max(MenuBar.Height, Math.Min(point.Y, ClientSize.Height - I9Picker.Height));
+            point.X = Math.Max(0, Math.Min(point.X, ClientSize.Width - I9Picker.Width));
+
+            I9Picker.Location = point;
+            I9Picker.BringToFront();
+            I9Picker.Visible = true;
+            I9Picker.Select();
+        }
+
+        private void RefreshAllPowerLists()
+        {
+            UpdatePowerLists();
+        }
+
+        private void RefreshBuildSurfaceAfterMutation(bool markModified, bool redraw = true)
+        {
+            PowerModified(markModified, redraw);
+            RefreshAllPowerLists();
+
+            _interaction.ListHover = ListHoverState.None;
+            _interaction.CanvasHover = BuildRenderer.BuildHitTestResult.None;
+            HidePopup();
+
+            if (EnhPickerActive && MidsContext.Character?.CurrentBuild != null)
+            {
+                bool pickerStillValid = EnhancingPower >= 0 &&
+                                        EnhancingPower < MidsContext.Character.CurrentBuild.Powers.Count &&
+                                        EnhancingSlot >= 0 &&
+                                        EnhancingSlot < MidsContext.Character.CurrentBuild.Powers[EnhancingPower].Slots.Length;
+                if (!pickerStillValid)
+                {
+                    CloseEnhancementPicker(hidePopup: true, refreshInfo: false);
+                }
+            }
+
+            var cursorOnCanvas = canvas.ClientRectangle.Contains(canvas.PointToClient(Cursor.Position));
+            if (!EnhPickerActive && cursorOnCanvas)
+            {
+                HandleCanvasHover(canvas.PointToClient(Cursor.Position));
+            }
+        }
+
+        private void SelectBuildTarget(int powerIndex)
+        {
+            if (drawing == null || MidsContext.Character?.CurrentBuild == null || powerIndex < 0 ||
+                powerIndex >= MidsContext.Character.CurrentBuild.Powers.Count)
+            {
+                return;
+            }
+
+            drawing.SelectedPowerIndex = powerIndex;
+            MainModule.MidsController.Toon.RequestedLevel = MidsContext.Character.CurrentBuild.Powers[powerIndex].Level;
+            RefreshAllPowerLists();
+            canvas.RequestFullRedraw();
+        }
+
+        private void HandleCanvasHover(Point location)
+        {
+            if (drawing == null || MidsContext.Character?.CurrentBuild == null)
+            {
+                return;
+            }
+
+            if (EnhPickerActive)
+            {
+                canvas.Cursor = Cursors.Default;
+                drawing.HighlightSlot(-1);
+                return;
+            }
+
+            var hit = canvas.HitTest(location);
+            var previousHit = _interaction.CanvasHover;
+            _interaction.CanvasHover = hit;
+
+            if (!hit.HasPower || hit.PowerIndex >= MidsContext.Character.CurrentBuild.Powers.Count)
+            {
+                canvas.Cursor = Cursors.Default;
+                HidePopup();
+                drawing.HighlightSlot(-1);
+                return;
+            }
+
+            if (drawing.InterfaceMode != Enums.eInterfaceMode.PowerToggle)
+            {
+                drawing.HighlightSlot(hit.PowerIndex);
+                canvas.Cursor = Cursors.Hand;
+            }
+            else
+            {
+                drawing.HighlightSlot(-1);
+                canvas.Cursor = Cursors.Default;
+            }
+
+            bool hoverTargetChanged = previousHit.PowerIndex != hit.PowerIndex ||
+                                      previousHit.EnhancementIndex != hit.EnhancementIndex;
+            if (hoverTargetChanged)
+            {
+                var powerEntry = MidsContext.Character.CurrentBuild.Powers[hit.PowerIndex];
+                if (hit.EnhancementIndex > -1 && hit.EnhancementIndex < powerEntry.Slots.Length)
+                {
+                    RefreshTabs(powerEntry.NIDPower, powerEntry.Slots[hit.EnhancementIndex].Enhancement,
+                        powerEntry.Slots[hit.EnhancementIndex].Level, hit.PowerIndex);
+                }
+                else
+                {
+                    RefreshTabs(powerEntry.NIDPower, new I9Slot(), buildHistoryIdx: hit.PowerIndex);
+                }
+            }
+
+            ShowPopupForHover(hit, location);
+        }
+
+        private void HandleCanvasClick(BuildRenderer.BuildHitTestResult hit, MouseButtons button, Keys modifiers, Point location)
+        {
+            if (drawing == null || MidsContext.Character?.CurrentBuild == null || !hit.HasPower ||
+                hit.PowerIndex < 0 || hit.PowerIndex >= MidsContext.Character.CurrentBuild.Powers.Count)
+            {
+                return;
+            }
+
+            var powerEntry = MidsContext.Character.CurrentBuild.Powers[hit.PowerIndex];
+            bool isPowerChosen = powerEntry.NIDPower > -1;
+            int slotId = hit.EnhancementIndex;
+
+            if (button == MouseButtons.Left)
+            {
+                if (MidsContext.EnhCheckMode)
+                {
+                    if (slotId > -1)
+                    {
+                        powerEntry.Slots[slotId].Enhancement.Obtained = !powerEntry.Slots[slotId].Enhancement.Obtained;
+                        fRecipe?.UpdateEnhObtained();
+                        _enhCheckMode?.UpdateEnhObtained();
+                        RedrawSinglePower(ref powerEntry, true);
+                        canvas.Invalidate(canvas.GetPowerAreaRect(hit.PowerIndex));
+                    }
+                    return;
+                }
+
+                if (drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle)
+                {
+                    if (isPowerChosen)
+                    {
+                        if (powerEntry.CanIncludeForStats())
+                        {
+                            powerEntry.StatInclude = !powerEntry.StatInclude;
+                        }
+                        else if (powerEntry.HasProc())
+                        {
+                            powerEntry.ProcInclude = !powerEntry.ProcInclude;
+                        }
+
+                        EnhancementModified();
+                    }
+                    return;
+                }
+
+                if (hit.ToggleType != Enums.eToggleType.None)
+                {
+                    switch (hit.ToggleType)
+                    {
+                        case Enums.eToggleType.Stat:
+                            if (powerEntry.StatInclude)
+                            {
+                                powerEntry.StatInclude = false;
+                                powerEntry.Power.Active = false;
+                            }
+                            else
+                            {
+                                var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hit.PowerIndex);
+                                if (eMutex == Enums.eMutex.NoConflict || eMutex == Enums.eMutex.NoGroup)
+                                {
+                                    powerEntry.StatInclude = true;
+                                    powerEntry.Power.Active = true;
+                                }
+                            }
+                            MidsContext.Character.Validate();
+                            EnhancementModified();
+                            canvas.Invalidate(canvas.GetPowerAreaRect(hit.PowerIndex));
+                            break;
+
+                        case Enums.eToggleType.Proc:
+                            powerEntry.ProcInclude = !powerEntry.ProcInclude;
+                            RedrawSinglePower(ref powerEntry, true, true);
+                            canvas.Invalidate(canvas.GetPowerAreaRect(hit.PowerIndex));
+                            break;
+                    }
+
+                    LastClickPlacedSlot = false;
+                    return;
+                }
+
+                if (modifiers == (Keys.Shift | Keys.Control))
+                {
+                    EditAccoladesOrTemps(hit.PowerIndex);
+                    return;
+                }
+
+                if (modifiers == Keys.Alt)
+                {
+                    MainModule.MidsController.Toon?.BuildPower(powerEntry.NIDPowerset, powerEntry.NIDPower);
+                    RefreshBuildSurfaceAfterMutation(markModified: true);
+                    LastClickPlacedSlot = false;
+                    return;
+                }
+
+                if (modifiers == Keys.Shift && slotId > -1)
+                {
+                    if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
+                    {
+                        MainModule.MidsController.Toon.RequestedLevel = powerEntry.Slots[slotId].Level;
+                        MidsContext.Character.ResetLevel();
+                    }
+                    MainModule.MidsController.Toon?.BuildSlot(hit.PowerIndex, slotId);
+                    RefreshBuildSurfaceAfterMutation(markModified: true);
+                    LastClickPlacedSlot = false;
+                    return;
+                }
+
+                if (EnhPickerActive || hit.Area == BuildRenderer.BuildHitArea.EnhancementSlot)
+                {
+                    return;
+                }
+
+                if (!isPowerChosen && powerEntry.Level > -1)
+                {
+                    SelectBuildTarget(hit.PowerIndex);
+                    return;
+                }
+
+                if (MainModule.MidsController.Toon.BuildSlot(hit.PowerIndex) > -1)
+                {
+                    RefreshBuildSurfaceAfterMutation(markModified: false);
+                    LastClickPlacedSlot = true;
+                }
+                else
+                {
+                    LastClickPlacedSlot = false;
+                }
+
+                return;
+            }
+
+            if (button == MouseButtons.Right)
+            {
+                if (modifiers == Keys.Shift)
+                {
+                    StartFlip(hit.PowerIndex);
+                }
+                else if (slotId > -1)
+                {
+                    OpenEnhancementPicker(hit.PowerIndex, slotId, location);
+                }
+                else if (isPowerChosen)
+                {
+                    Info_Power(powerEntry.NIDPower, -1, true, true);
+                }
+
+                LastClickPlacedSlot = false;
+                return;
+            }
+
+            if (button == MouseButtons.Middle && slotId > -1 && !MidsContext.Config.DisableRepeatOnMiddleClick)
+            {
+                EnhancingSlot = slotId;
+                EnhancingPower = hit.PowerIndex;
+                _gfxDrawing = true;
+                I9Picker_EnhancementPicked(GetRepeatEnhancement(hit.PowerIndex, slotId));
+                _gfxDrawing = false;
+                EnhancementModified();
+                canvas.Invalidate();
+            }
         }
 
         private void Canvas_DragDrop(object sender, DragEventArgs e)
@@ -2031,22 +2371,21 @@ namespace Mids_Reborn.UI.Forms
             canvas.AllowDrop = true;
             dragStartX = e.X;
             dragStartY = e.Y;
-            dragStartPower = canvas.WhichSlot(e.X, e.Y);
-            dragStartSlot = canvas.WhichEnh(e.X, e.Y);
+            var hit = canvas.HitTest(e.Location);
+            dragStartPower = hit.PowerIndex;
+            dragStartSlot = hit.EnhancementIndex;
         }
 
         private void Canvas_MouseLeave(object sender, EventArgs e)
         {
-            if (IsHoveringPopup()) return;
+            _interaction.CanvasHover = BuildRenderer.BuildHitTestResult.None;
             HidePopup();
             drawing?.HighlightSlot(-1);
+            canvas.Cursor = Cursors.Default;
         }
 
         private void Canvas_MouseMove(object sender, MouseEventArgs e)
         {
-            if (IsHoveringPopup())
-                return;
-
             if (e.Button == MouseButtons.Left & canvas.AllowDrop && Math.Abs(e.X - dragStartX) + Math.Abs(e.Y - dragStartY) > 7)
             {
                 if (dragStartSlot == 0)
@@ -2078,6 +2417,7 @@ namespace Mids_Reborn.UI.Forms
                     var dataObject = new DataObject();
                     dataObject.SetText("This is some filler power text right here");
                     HidePopup();
+                    _interaction.CanvasHover = BuildRenderer.BuildHitTestResult.None;
                     canvas.Cursor = Cursors.Default;
                     drawing?.HighlightSlot(-1);
                     Application.DoEvents();
@@ -2089,51 +2429,7 @@ namespace Mids_Reborn.UI.Forms
                 if (drawing == null)
                     return;
 
-                var index = canvas.WhichSlot(e.Location);
-                var sIDX = canvas.WhichEnh(e.Location);
-
-                if (index < 0 || index >= MidsContext.Character.CurrentBuild.Powers.Count)
-                {
-                    HidePopup();
-                }
-                else
-                {
-                    var powerRect = canvas.GetPowerButtonRect(index);
-                    var enhRect = canvas.GetEnhancementSlotRect(index, sIDX);
-                    var anchorRect = sIDX > -1 ? enhRect : powerRect;
-                    ShowPopup(index, -1, sIDX, e.Location, anchorRect);
-                    
-                    if (drawing.InterfaceMode != Enums.eInterfaceMode.PowerToggle)
-                    {
-                        drawing.HighlightSlot(index);
-                        canvas.Cursor = index > -1 ? Cursors.Hand : Cursors.Default;
-                    }
-                    else
-                    {
-                        canvas.Cursor = Cursors.Default;
-                        drawing.HighlightSlot(-1);
-                    }
-
-                    if (index <= -1 || !(index != LastIndex | LastEnhIndex != sIDX))
-                    {
-                        return;
-                    }
-
-                    LastIndex = index;
-                    LastEnhIndex = sIDX;
-                    if (sIDX > -1)
-                    {
-                        RefreshTabs(MidsContext.Character.CurrentBuild.Powers[index].NIDPower,
-                            MidsContext.Character.CurrentBuild.Powers[index].Slots[sIDX].Enhancement,
-                            MidsContext.Character.CurrentBuild.Powers[index].Slots[sIDX].Level,
-                            buildHistoryIdx: index);
-                    }
-                    else
-                    {
-                        RefreshTabs(MidsContext.Character.CurrentBuild.Powers[index].NIDPower, new I9Slot(),
-                            buildHistoryIdx: index);
-                    }
-                }
+                HandleCanvasHover(e.Location);
             }
         }
 
@@ -2147,191 +2443,8 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            int hIDPower = drawing.WhichSlot(e.X, e.Y);
-            if (hIDPower < 0 || hIDPower >= MidsContext.Character.CurrentBuild.Powers.Count)
-            {
-                return;
-            }
-
-            var powerEntry = MidsContext.Character.CurrentBuild.Powers[hIDPower];
-            int slotID = drawing.WhichEnh(e.X, e.Y);
-            bool isPowerChosen = powerEntry.NIDPower > -1;
-
-            // --- Left Mouse Button Logic ---
-            if (e.Button == MouseButtons.Left)
-            {
-                // Handle Enhancement Check Mode
-                if (MidsContext.EnhCheckMode)
-                {
-                    if (slotID > -1)
-                    {
-                        powerEntry.Slots[slotID].Enhancement.Obtained = !powerEntry.Slots[slotID].Enhancement.Obtained;
-                        fRecipe?.UpdateEnhObtained();
-                        _enhCheckMode?.UpdateEnhObtained();
-                        RedrawSinglePower(ref powerEntry, true);
-                        canvas.Invalidate(canvas.GetPowerAreaRect(hIDPower));
-                    }
-                    return;
-                }
-
-                // Handle Power Toggle Mode
-                if (drawing.InterfaceMode == Enums.eInterfaceMode.PowerToggle)
-                {
-                    if (isPowerChosen)
-                    {
-                        if (powerEntry.CanIncludeForStats())
-                        {
-                            powerEntry.StatInclude = !powerEntry.StatInclude;
-                        }
-                        else if (powerEntry.HasProc())
-                        {
-                            powerEntry.ProcInclude = !powerEntry.ProcInclude;
-                        }
-                        EnhancementModified();
-                    }
-                    return;
-                }
-
-                // Handle Toggle Clicks (Stat/Proc)
-                var clickedToggle = drawing.WhichToggle(hIDPower, e.X, e.Y);
-                if (clickedToggle != Enums.eToggleType.None)
-                {
-                    switch (clickedToggle)
-                    {
-                        case Enums.eToggleType.Stat:
-                            if (powerEntry.StatInclude)
-                            {
-                                powerEntry.StatInclude = false;
-                                powerEntry.Power.Active = false;
-                            }
-                            else
-                            {
-                                var eMutex = MainModule.MidsController.Toon.CurrentBuild.MutexV2(hIDPower);
-                                if (eMutex == Enums.eMutex.NoConflict || eMutex == Enums.eMutex.NoGroup)
-                                {
-                                    powerEntry.StatInclude = true;
-                                    powerEntry.Power.Active = true;
-                                }
-                            }
-                            MidsContext.Character.Validate();
-                            EnhancementModified();
-                            canvas.Invalidate(canvas.GetPowerAreaRect(hIDPower));
-                            break;
-
-                        case Enums.eToggleType.Proc:
-                            powerEntry.ProcInclude = !powerEntry.ProcInclude;
-                            RedrawSinglePower(ref powerEntry, true, true);
-                            canvas.Invalidate(canvas.GetPowerAreaRect(hIDPower));
-                            break;
-                    }
-                    LastClickPlacedSlot = false;
-                    return;
-                }
-
-                // Handle Modifier Key Shortcuts
-                if (ModifierKeys == (Keys.Shift | Keys.Control))
-                {
-                    EditAccoladesOrTemps(hIDPower);
-                    return;
-                }
-                if (ModifierKeys == Keys.Alt)
-                {
-                    MainModule.MidsController.Toon?.BuildPower(powerEntry.NIDPowerset, powerEntry.NIDPower);
-                    PowerModified(true);
-                    LastClickPlacedSlot = false;
-                    canvas.RequestFullRedraw();
-                    return;
-                }
-                if (ModifierKeys == Keys.Shift && slotID > -1)
-                {
-                    if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
-                    {
-                        MainModule.MidsController.Toon.RequestedLevel = powerEntry.Slots[slotID].Level;
-                        MidsContext.Character.ResetLevel();
-                    }
-                    MainModule.MidsController.Toon?.BuildSlot(hIDPower, slotID);
-                    PowerModified(true);
-                    LastClickPlacedSlot = false;
-                    canvas.RequestFullRedraw();
-                    //_dvAnchored.PetInfo.ExecuteUpdate();
-                    return;
-                }
-
-                // Standard Left Click (Add Slot or Select Power)
-                if (EnhPickerActive) return;
-
-                if (!isPowerChosen && powerEntry.Level > -1)
-                {
-                    drawing.SelectedPowerIndex = hIDPower;
-                    MainModule.MidsController.Toon.RequestedLevel = powerEntry.Level;
-                    UpdatePowerLists();
-                    canvas.RequestFullRedraw();
-                }
-                else if (MainModule.MidsController.Toon.BuildSlot(hIDPower) > -1)
-                {
-                    PowerModified(false); // Adding a slot doesn't modify the build file until an enh is placed
-                    LastClickPlacedSlot = true;
-                    canvas.RequestFullRedraw();
-                    //MidsContext.Config.Tips.Show(Tips.TipType.FirstSlot);
-                }
-                else
-                {
-                    LastClickPlacedSlot = false;
-                }
-                return;
-            }
-
-            // --- Right Mouse Button Logic ---
-            if (e.Button == MouseButtons.Right)
-            {
-                if (ModifierKeys == Keys.Shift)
-                {
-                    StartFlip(hIDPower);
-                }
-                else if (slotID > -1)
-                {
-                    // Open Enhancement Picker
-                    EnhancingSlot = slotID;
-                    EnhancingPower = hIDPower;
-                    PickerHID = hIDPower;
-                    var enhancements = MainModule.MidsController.Toon?.GetEnhancements(hIDPower);
-                    if (enhancements != null)
-                    {
-                        I9Picker.SetData(powerEntry.NIDPower, powerEntry.Slots[slotID].Enhancement, enhancements);
-                        var point = new Point(
-                            (int)Math.Round(canvasScrollPanel.Left - canvasScrollPanel.HorizontalScroll.Value + e.X - I9Picker.Width / 2f),
-                            (int)Math.Round(canvasScrollPanel.Top - canvasScrollPanel.VerticalScroll.Value + e.Y - I9Picker.Height / 2f));
-
-                        point.Y = Math.Max(MenuBar.Height, Math.Min(point.Y, ClientSize.Height - I9Picker.Height));
-                        point.X = Math.Max(0, Math.Min(point.X, ClientSize.Width - I9Picker.Width));
-
-                        _popupLastOpenTime = DateTime.Now.Ticks;
-                        I9Picker.Location = point;
-                        I9Picker.BringToFront();
-                        I9Picker.Visible = true;
-                        I9Picker.Select();
-                    }
-                }
-                else if (isPowerChosen)
-                {
-                    // Lock Data View on the clicked power
-                    Info_Power(powerEntry.NIDPower, -1, true, true);
-                }
-                LastClickPlacedSlot = false;
-                return;
-            }
-
-            // --- Middle Mouse Button Logic ---
-            if (e.Button == MouseButtons.Middle && slotID > -1 && !MidsContext.Config.DisableRepeatOnMiddleClick)
-            {
-                EnhancingSlot = slotID;
-                EnhancingPower = hIDPower;
-                _gfxDrawing = true;
-                I9Picker_EnhancementPicked(GetRepeatEnhancement(hIDPower, slotID));
-                _gfxDrawing = false;
-                EnhancementModified();
-                canvas.Invalidate();
-            }
+            var hit = canvas.HitTest(e.Location);
+            HandleCanvasClick(hit, e.Button, ModifierKeys, e.Location);
         }
 
         private void IncarnatesEx_OnClick(object? sender, EventArgs e)
@@ -4709,7 +4822,17 @@ namespace Mids_Reborn.UI.Forms
         private void EnhancementModified()
         {
             DoRedraw();
+            RefreshAllPowerLists();
             RefreshInfo();
+            _interaction.ListHover = ListHoverState.None;
+            _interaction.CanvasHover = BuildRenderer.BuildHitTestResult.None;
+            HidePopup();
+
+            var cursorOnCanvas = canvas.ClientRectangle.Contains(canvas.PointToClient(Cursor.Position));
+            if (!EnhPickerActive && cursorOnCanvas)
+            {
+                HandleCanvasHover(canvas.PointToClient(Cursor.Position));
+            }
         }
 
         private void DataView_SlotFlip(int powerIndex)
@@ -5626,21 +5749,13 @@ namespace Mids_Reborn.UI.Forms
         private void PowerPicked(Enums.PowersetType setId, int nIdPower)
         {
             MainModule.MidsController.Toon.BuildPower(MidsContext.Character.Powersets[(int)setId].nID, nIdPower, GetSelectedBuildTargetIndex());
-            PowerModified(true);
-            //MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
-            canvas.RequestFullRedraw();
-            //canvas.ResizeToContent();
-            //canvas.Invalidate();
+            RefreshBuildSurfaceAfterMutation(markModified: true);
         }
 
         private void PowerPicked(int nIdPowerset, int nIdPower)
         {
             MainModule.MidsController.Toon.BuildPower(nIdPowerset, nIdPower, GetSelectedBuildTargetIndex());
-            PowerModified(true);
-            //MidsContext.Config.Tips.Show(Tips.TipType.FirstPower);
-            canvas.RequestFullRedraw();
-            //canvas.ResizeToContent();
-            //canvas.Invalidate();
+            RefreshBuildSurfaceAfterMutation(markModified: true);
         }
 
         private void Info_Enhancement(I9Slot? iEnh, int iLevel = -1)
@@ -5762,6 +5877,97 @@ namespace Mids_Reborn.UI.Forms
             }
         }
 
+        private void ShowPopupForHover(ListHoverState hoverState)
+        {
+            if (hoverState.Item == null)
+            {
+                HidePopup();
+                return;
+            }
+
+            if (hoverState.Item.State == MidsItemState.Heading)
+            {
+                ShowPopupForHover(
+                    new PopupRequestKey(PopupRequestKind.PowersetInfo, PowersetIndex: hoverState.Item.NIdSet),
+                    () => ShowPopup(hoverState.Item.NIdSet, -1, hoverState.Bounds, string.Empty));
+                return;
+            }
+
+            ShowPopupForHover(
+                new PopupRequestKey(
+                    PopupRequestKind.ListPowerInfo,
+                    HistoryIndex: MidsContext.Character.CurrentBuild.FindInToonHistory(hoverState.Item.NIdPower),
+                    PowerIndex: hoverState.Item.NIdPower),
+                () => ShowPopup(-1, hoverState.Item.NIdPower, -1, hoverState.Location, hoverState.Bounds));
+        }
+
+        private void ShowPopupForHover(BuildRenderer.BuildHitTestResult hit, Point location)
+        {
+            if (!hit.HasPower || MidsContext.Character?.CurrentBuild == null ||
+                hit.PowerIndex < 0 || hit.PowerIndex >= MidsContext.Character.CurrentBuild.Powers.Count)
+            {
+                HidePopup();
+                return;
+            }
+
+            var powerEntry = MidsContext.Character.CurrentBuild.Powers[hit.PowerIndex];
+            switch (hit.Area)
+            {
+                case BuildRenderer.BuildHitArea.EnhancementSlot when hit.EnhancementIndex > -1 &&
+                                                                    hit.EnhancementIndex < powerEntry.Slots.Length:
+                    ShowPopupForHover(
+                        new PopupRequestKey(
+                            PopupRequestKind.SlotInfo,
+                            HistoryIndex: hit.PowerIndex,
+                            PowerIndex: powerEntry.NIDPower,
+                            SlotIndex: hit.EnhancementIndex),
+                        () => ShowPopup(hit.PowerIndex, -1, hit.EnhancementIndex, location, hit.AnchorRect));
+                    break;
+
+                case BuildRenderer.BuildHitArea.PowerBody:
+                case BuildRenderer.BuildHitArea.NewSlot:
+                case BuildRenderer.BuildHitArea.StatToggle:
+                case BuildRenderer.BuildHitArea.ProcToggle:
+                    if (powerEntry.NIDPower < 0)
+                    {
+                        HidePopup();
+                        return;
+                    }
+
+                    ShowPopupForHover(
+                        new PopupRequestKey(
+                            PopupRequestKind.PowerInfo,
+                            HistoryIndex: hit.PowerIndex,
+                            PowerIndex: powerEntry.NIDPower),
+                        () => ShowPopup(hit.PowerIndex, -1, -1, location, hit.AnchorRect));
+                    break;
+
+                default:
+                    HidePopup();
+                    break;
+            }
+        }
+
+        private void ShowPopupForHover(PopupRequestKey requestKey, Action showPopup)
+        {
+            if (MidsContext.Config.DisableShowPopup)
+            {
+                HidePopup();
+                return;
+            }
+
+            if (_interaction.ActivePopup == requestKey && _popupHost is { IsOpen: true })
+            {
+                return;
+            }
+
+            showPopup();
+            if (_popupHost is { IsOpen: true })
+            {
+                _interaction.ActivePopup = requestKey;
+            }
+        }
+
         private void ShowPopup(int nIdPowerset, int nIdClass, Rectangle rBounds, string extraString = "", VerticalAlignment vAlign = VerticalAlignment.Top)
         {
             if (MidsContext.Config.DisableShowPopup) { HidePopup(); return; }
@@ -5808,12 +6014,6 @@ namespace Mids_Reborn.UI.Forms
                 hIdx = MidsContext.Character.CurrentBuild.FindInToonHistory(pIdx);
 
             PowerEntry? powerEntry = (hIdx > -1) ? MidsContext.Character.CurrentBuild.Powers[hIdx] : null;
-
-            // Short-circuit if content scope unchanged
-            if (!(_popupHost.HIdx != hIdx || _popupHost.EIdx != sIdx || _popupHost.PIdx != pIdx || _popupHost.HIdx == -1 || _popupHost.EIdx == -1 || _popupHost.PIdx == -1))
-            {
-                return;
-            }
 
             // Choose data + anchor rectangle (in CANVAS client coords)
             Rectangle anchorRect = rBounds;
@@ -5888,6 +6088,7 @@ namespace Mids_Reborn.UI.Forms
         {
             if (_popupHost is { IsOpen: false }) return;
             _popupHost?.HidePopup();  // hides + resets HIdx/EIdx/PIdx/PsIdx
+            _interaction.ActivePopup = PopupRequestKey.None;
         }
 
         private Rectangle ToFormClientRect(Control from, Rectangle rectInFrom)
@@ -6849,13 +7050,6 @@ namespace Mids_Reborn.UI.Forms
         {
             var screen = origin.PointToScreen(localPoint);
             return PointToClient(screen);
-        }
-
-        private bool IsHoveringPopup()
-        {
-            return _popupHost != null
-                   && _popupHost.Visible
-                   && _popupHost.RectangleToScreen(_popupHost.ClientRectangle).Contains(Cursor.Position);
         }
 
         private void UpdateToon(Toon toon, Character? ch, int primaryIndex, int secondaryIndex, int pool0Index, int pool1Index, int pool2Index, int pool3Index, int ancillaryIndex, Func<Archetype, Enums.ePowerSetType, IPowerset[]> getPowerSets, Action lockSecondary)
