@@ -154,6 +154,7 @@ public static class ThemeManager
     private static ApplicationTheme NormalizeTheme(ApplicationTheme theme)
     {
         theme.PowerSlot = NormalizePowerSlotTheme(theme, theme.PowerSlot);
+        theme.SegmentedToggle = NormalizeSegmentedToggleTheme(theme, theme.SegmentedToggle);
         return theme;
     }
 
@@ -201,6 +202,53 @@ public static class ThemeManager
             EmptyFill = emptyFill,
             DisabledFill = disabledFill,
             ForeColor = foreColor
+        };
+    }
+
+    private static SegmentedToggleTheme NormalizeSegmentedToggleTheme(ApplicationTheme theme, SegmentedToggleTheme? segmentedToggleTheme)
+    {
+        var derived = CreateDerivedSegmentedToggleTheme(theme);
+        segmentedToggleTheme ??= new SegmentedToggleTheme();
+
+        segmentedToggleTheme.WellTop = ResolveThemeColor(segmentedToggleTheme.WellTop, derived.WellTop);
+        segmentedToggleTheme.WellBottom = ResolveThemeColor(segmentedToggleTheme.WellBottom, derived.WellBottom);
+        segmentedToggleTheme.Divider = ResolveThemeColor(segmentedToggleTheme.Divider, derived.Divider);
+        segmentedToggleTheme.SelectedTop = ResolveThemeColor(segmentedToggleTheme.SelectedTop, derived.SelectedTop);
+        segmentedToggleTheme.SelectedBottom = ResolveThemeColor(segmentedToggleTheme.SelectedBottom, derived.SelectedBottom);
+        segmentedToggleTheme.SelectedBorder = ResolveThemeColor(segmentedToggleTheme.SelectedBorder, derived.SelectedBorder);
+        segmentedToggleTheme.SelectedText = ResolveThemeColor(segmentedToggleTheme.SelectedText, derived.SelectedText);
+        segmentedToggleTheme.SelectedTextOutline = ResolveThemeColor(segmentedToggleTheme.SelectedTextOutline, derived.SelectedTextOutline);
+        segmentedToggleTheme.UnselectedText = ResolveThemeColor(segmentedToggleTheme.UnselectedText, derived.UnselectedText);
+        segmentedToggleTheme.UnselectedTextOutline = ResolveThemeColor(segmentedToggleTheme.UnselectedTextOutline, derived.UnselectedTextOutline);
+        return segmentedToggleTheme;
+    }
+
+    private static SegmentedToggleTheme CreateDerivedSegmentedToggleTheme(ApplicationTheme theme)
+    {
+        Color buttonTop = ResolveThemeColor(theme.Button.GradientTop, Color.FromArgb(70, 120, 180));
+        Color buttonBottom = ResolveThemeColor(theme.Button.GradientBottom, Blend(buttonTop, Color.Black, 0.45f));
+        Color toggledTop = ResolveThemeColor(theme.Button.ToggledGradientTop, buttonTop);
+        Color toggledBottom = ResolveThemeColor(theme.Button.ToggledGradientBottom, buttonBottom);
+        Color headerDark = ResolveThemeColor(theme.Header.HeaderDark, buttonBottom);
+        Color dataCard = ResolveThemeColor(theme.DataView.Card, headerDark);
+        Color wellTop = Blend(headerDark, dataCard, 0.14f);
+        Color wellBottom = Blend(headerDark, Color.Black, 0.10f);
+        Color divider = Blend(ResolveThemeColor(theme.Button.Border, buttonTop), wellBottom, 0.72f);
+        Color selectedTop = toggledTop;
+        Color selectedBottom = toggledBottom;
+
+        return new SegmentedToggleTheme
+        {
+            WellTop = wellTop,
+            WellBottom = wellBottom,
+            Divider = divider,
+            SelectedTop = selectedTop,
+            SelectedBottom = selectedBottom,
+            SelectedBorder = ResolveThemeColor(theme.Button.ToggledBorderColor, ResolveThemeColor(theme.MenuStrip.AccentColor, Color.Gold)),
+            SelectedText = ResolveThemeColor(theme.Button.ToggledTextColor, ResolveThemeColor(theme.Button.ForeColor, Color.WhiteSmoke)),
+            SelectedTextOutline = ResolveThemeColor(theme.Button.ToggledTextOutlineColor, ResolveThemeColor(theme.Button.TextOutlineColor, Color.Black)),
+            UnselectedText = ResolveThemeColor(theme.Button.ForeColor, Color.WhiteSmoke),
+            UnselectedTextOutline = ResolveThemeColor(theme.Button.TextOutlineColor, Color.Black)
         };
     }
 
@@ -933,6 +981,11 @@ public static class ThemeManager
         };
         themes.Add(vigilante.Name, vigilante);
         #endregion
+
+        foreach (var themeName in themes.Keys.ToArray())
+        {
+            themes[themeName] = NormalizeTheme(themes[themeName]);
+        }
 
         return themes;
     }

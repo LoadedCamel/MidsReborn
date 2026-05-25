@@ -36,10 +36,12 @@ namespace Mids_Reborn.UI.Forms
             components = new System.ComponentModel.Container();
             System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainWindow2));
             mainLayoutPanel = new TableLayoutPanel();
+            characterLayoutPanel = new TableLayoutPanel();
+            leftLayoutPanel = new MidsSmartLayoutPanel();
+            rightLayoutPanel = new TableLayoutPanel();
+            buttonsLayoutPanel = new TableLayoutPanel();
             canvasScrollPanel = new MidsVScrollPanel();
             canvas = new MidsBufferedImagePanel();
-            leftLayoutPanel = new MidsSmartLayoutPanel();
-            characterLayoutPanel = new TableLayoutPanel();
             dynMode = new MidsVectorButton();
             lblName = new Label();
             lblAT = new Label();
@@ -78,7 +80,6 @@ namespace Mids_Reborn.UI.Forms
             lblPrimary = new Label();
             primaryList = new MidsListView();
             primaryDropDown = new PowersetDropDownList();
-            buttonsLayoutPanel = new TableLayoutPanel();
             combatEx = new MidsVectorButton();
             tempPowersEx = new MidsVectorButton();
             ibPrestigePowersEx = new MidsVectorButton();
@@ -87,6 +88,12 @@ namespace Mids_Reborn.UI.Forms
             popupEx = new MidsVectorButton();
             pvXEx = new MidsVectorButton();
             recipeEx = new MidsVectorButton();
+            footerPanel = new Panel();
+            footerLayoutPanel = new TableLayoutPanel();
+            footerSummaryLabel = new Label();
+            footerRightPanel = new FlowLayoutPanel();
+            footerTotalSlotsLabel = new Label();
+            footerSlotsLeftLabel = new Label();
             MenuBar = new MidsMenuStrip();
             FileToolStripMenuItem = new ToolStripMenuItem();
             tsFileNew = new ToolStripMenuItem();
@@ -217,16 +224,20 @@ namespace Mids_Reborn.UI.Forms
             logoPanel = new MidsLogoPanel();
             titleLabel = new Label();
             mainLayoutPanel.SuspendLayout();
+            characterLayoutPanel.SuspendLayout();
+            leftLayoutPanel.SuspendLayout();
+            rightLayoutPanel.SuspendLayout();
+            buttonsLayoutPanel.SuspendLayout();
             canvasScrollPanel.ContentPanel.SuspendLayout();
             canvasScrollPanel.SuspendLayout();
-            leftLayoutPanel.SuspendLayout();
-            characterLayoutPanel.SuspendLayout();
             characterPanel.SuspendLayout();
             midsvScrollPanel1.ContentPanel.SuspendLayout();
             midsvScrollPanel1.SuspendLayout();
             rightInnerLayoutPanel.SuspendLayout();
             leftInnerLayoutPanel.SuspendLayout();
-            buttonsLayoutPanel.SuspendLayout();
+            footerPanel.SuspendLayout();
+            footerLayoutPanel.SuspendLayout();
+            footerRightPanel.SuspendLayout();
             MenuBar.SuspendLayout();
             titlePanel.SuspendLayout();
             SuspendLayout();
@@ -237,23 +248,112 @@ namespace Mids_Reborn.UI.Forms
             mainLayoutPanel.ColumnCount = 2;
             mainLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 625F));
             mainLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            mainLayoutPanel.Controls.Add(canvasScrollPanel, 1, 1);
-            mainLayoutPanel.Controls.Add(leftLayoutPanel, 0, 0);
-            mainLayoutPanel.Controls.Add(buttonsLayoutPanel, 1, 0);
+            mainLayoutPanel.Controls.Add(characterLayoutPanel, 0, 0);
+            mainLayoutPanel.Controls.Add(leftLayoutPanel, 0, 1);
+            mainLayoutPanel.Controls.Add(rightLayoutPanel, 1, 1);
             mainLayoutPanel.Dock = DockStyle.Fill;
             mainLayoutPanel.Location = new Point(10, 71);
             mainLayoutPanel.Name = "mainLayoutPanel";
             mainLayoutPanel.RowCount = 2;
-            mainLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 72F));
+            mainLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 46F));
             mainLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            mainLayoutPanel.Size = new Size(1260, 687);
+            mainLayoutPanel.Size = new Size(1260, 649);
             mainLayoutPanel.TabIndex = 0;
             // 
+            // characterLayoutPanel
+            // 
+            characterLayoutPanel.ColumnCount = 9;
+            mainLayoutPanel.SetColumnSpan(characterLayoutPanel, 2);
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 52F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 240F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 78F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 160F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 58F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            characterLayoutPanel.Controls.Add(lblName, 0, 0);
+            characterLayoutPanel.Controls.Add(txtName, 1, 0);
+            characterLayoutPanel.Controls.Add(lblAT, 2, 0);
+            characterLayoutPanel.Controls.Add(atDropDown, 3, 0);
+            characterLayoutPanel.Controls.Add(lblOrigin, 4, 0);
+            characterLayoutPanel.Controls.Add(originDropDown, 5, 0);
+            characterLayoutPanel.Controls.Add(modeEx, 6, 0);
+            characterLayoutPanel.Controls.Add(totalsEx, 7, 0);
+            characterLayoutPanel.Controls.Add(combatEx, 8, 0);
+            characterLayoutPanel.Dock = DockStyle.Fill;
+            characterLayoutPanel.Location = new Point(3, 3);
+            characterLayoutPanel.Name = "characterLayoutPanel";
+            characterLayoutPanel.RowCount = 1;
+            characterLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            characterLayoutPanel.Size = new Size(1254, 40);
+            characterLayoutPanel.TabIndex = 0;
+            // 
+            // leftLayoutPanel
+            // 
+            leftLayoutPanel.BackColor = Color.Transparent;
+            leftLayoutPanel.ColumnCount = 2;
+            leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 194F));
+            leftLayoutPanel.Controls.Add(midsvScrollPanel1, 1, 0);
+            leftLayoutPanel.Controls.Add(leftInnerLayoutPanel, 0, 0);
+            leftLayoutPanel.Dock = DockStyle.Fill;
+            leftLayoutPanel.FlexibleRow = 1;
+            leftLayoutPanel.ForeColor = Color.WhiteSmoke;
+            leftLayoutPanel.Location = new Point(3, 49);
+            leftLayoutPanel.Margin = new Padding(3, 3, 0, 0);
+            leftLayoutPanel.Name = "leftLayoutPanel";
+            leftLayoutPanel.PreferredGrowRow = 0;
+            leftLayoutPanel.RowCount = 2;
+            leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 160F));
+            leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            leftLayoutPanel.Size = new Size(619, 597);
+            leftLayoutPanel.TabIndex = 1;
+            // 
+            // rightLayoutPanel
+            // 
+            rightLayoutPanel.BackColor = Color.Transparent;
+            rightLayoutPanel.ColumnCount = 1;
+            rightLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            rightLayoutPanel.Controls.Add(buttonsLayoutPanel, 0, 0);
+            rightLayoutPanel.Controls.Add(canvasScrollPanel, 0, 1);
+            rightLayoutPanel.Dock = DockStyle.Fill;
+            rightLayoutPanel.Location = new Point(625, 49);
+            rightLayoutPanel.Margin = new Padding(0, 3, 0, 0);
+            rightLayoutPanel.Name = "rightLayoutPanel";
+            rightLayoutPanel.RowCount = 2;
+            rightLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 40F));
+            rightLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            rightLayoutPanel.Size = new Size(629, 597);
+            rightLayoutPanel.TabIndex = 2;
+            // 
+            // buttonsLayoutPanel
+            // 
+            buttonsLayoutPanel.BackColor = Color.Transparent;
+            buttonsLayoutPanel.ColumnCount = 6;
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            buttonsLayoutPanel.Controls.Add(dynMode, 0, 0);
+            buttonsLayoutPanel.Controls.Add(pvXEx, 1, 0);
+            buttonsLayoutPanel.Controls.Add(accoladesEx, 2, 0);
+            buttonsLayoutPanel.Controls.Add(incarnatesEx, 3, 0);
+            buttonsLayoutPanel.Controls.Add(ibPrestigePowersEx, 4, 0);
+            buttonsLayoutPanel.Controls.Add(tempPowersEx, 5, 0);
+            buttonsLayoutPanel.Dock = DockStyle.Fill;
+            buttonsLayoutPanel.ForeColor = Color.WhiteSmoke;
+            buttonsLayoutPanel.Location = new Point(3, 3);
+            buttonsLayoutPanel.Name = "buttonsLayoutPanel";
+            buttonsLayoutPanel.RowCount = 1;
+            buttonsLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            buttonsLayoutPanel.Size = new Size(623, 34);
+            buttonsLayoutPanel.TabIndex = 46;
+            // 
             // canvasScrollPanel
-            // 
-            canvasScrollPanel.BackColor = Color.Transparent;
-            // 
-            // canvasScrollPanel.ContentPanel
             // 
             canvasScrollPanel.ContentPanel.BackColor = Color.Transparent;
             canvasScrollPanel.ContentPanel.Controls.Add(canvas);
@@ -264,11 +364,11 @@ namespace Mids_Reborn.UI.Forms
             canvasScrollPanel.ContentPanel.TabIndex = 0;
             canvasScrollPanel.Dock = DockStyle.Fill;
             canvasScrollPanel.ForeColor = Color.WhiteSmoke;
-            canvasScrollPanel.Location = new Point(631, 75);
-            canvasScrollPanel.Margin = new Padding(6, 3, 3, 3);
+            canvasScrollPanel.Location = new Point(3, 43);
+            canvasScrollPanel.Margin = new Padding(3, 3, 0, 0);
             canvasScrollPanel.MinimumSize = new Size(64, 64);
             canvasScrollPanel.Name = "canvasScrollPanel";
-            canvasScrollPanel.Size = new Size(626, 609);
+            canvasScrollPanel.Size = new Size(626, 554);
             canvasScrollPanel.TabIndex = 114;
             canvasScrollPanel.TabStop = true;
             // 
@@ -290,67 +390,19 @@ namespace Mids_Reborn.UI.Forms
             canvas.MouseMove += Canvas_MouseMove;
             canvas.MouseUp += Canvas_MouseUp;
             // 
-            // leftLayoutPanel
-            // 
-            leftLayoutPanel.BackColor = Color.Transparent;
-            leftLayoutPanel.ColumnCount = 2;
-            leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 410F));
-            leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            leftLayoutPanel.Controls.Add(characterLayoutPanel, 0, 0);
-            leftLayoutPanel.Controls.Add(midsvScrollPanel1, 1, 1);
-            leftLayoutPanel.Controls.Add(leftInnerLayoutPanel, 0, 1);
-            leftLayoutPanel.Dock = DockStyle.Fill;
-            leftLayoutPanel.ForeColor = Color.WhiteSmoke;
-            leftLayoutPanel.Location = new Point(3, 3);
-            leftLayoutPanel.Name = "leftLayoutPanel";
-            leftLayoutPanel.RowCount = 3;
-            mainLayoutPanel.SetRowSpan(leftLayoutPanel, 2);
-            leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 110F));
-            leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 160F));
-            leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
-            leftLayoutPanel.Size = new Size(619, 681);
-            leftLayoutPanel.TabIndex = 1;
-            // 
-            // characterLayoutPanel
-            // 
-            characterLayoutPanel.ColumnCount = 4;
-            leftLayoutPanel.SetColumnSpan(characterLayoutPanel, 2);
-            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 90F));
-            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 200F));
-            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
-            characterLayoutPanel.Controls.Add(dynMode, 3, 0);
-            characterLayoutPanel.Controls.Add(lblName, 0, 0);
-            characterLayoutPanel.Controls.Add(lblAT, 0, 1);
-            characterLayoutPanel.Controls.Add(lblOrigin, 0, 2);
-            characterLayoutPanel.Controls.Add(characterPanel, 1, 0);
-            characterLayoutPanel.Controls.Add(modeEx, 2, 0);
-            characterLayoutPanel.Controls.Add(totalsEx, 3, 1);
-            characterLayoutPanel.Controls.Add(slotInfoEx, 3, 2);
-            characterLayoutPanel.Controls.Add(setsEx, 2, 1);
-            characterLayoutPanel.Controls.Add(slotLevelsEx, 2, 2);
-            characterLayoutPanel.Dock = DockStyle.Fill;
-            characterLayoutPanel.Location = new Point(3, 3);
-            characterLayoutPanel.Name = "characterLayoutPanel";
-            characterLayoutPanel.RowCount = 3;
-            characterLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            characterLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            characterLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-            characterLayoutPanel.Size = new Size(613, 104);
-            characterLayoutPanel.TabIndex = 0;
-            // 
             // dynMode
             // 
             dynMode.BackColor = Color.Transparent;
             dynMode.BackgroundImageLayout = ImageLayout.None;
             dynMode.ButtonType = MidsVectorButton.ButtonTypes.Toggle;
+            dynMode.CornerRadius = 6;
             dynMode.Dock = DockStyle.Fill;
             dynMode.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold);
             dynMode.ForeColor = Color.White;
-            dynMode.Location = new Point(454, 4);
+            dynMode.Location = new Point(3, 4);
             dynMode.Margin = new Padding(3, 4, 3, 4);
             dynMode.Name = "dynMode";
-            dynMode.Size = new Size(156, 26);
+            dynMode.Size = new Size(97, 26);
             dynMode.TabIndex = 161;
             dynMode.Text = "ibDynMode1";
             dynMode.ToggleText.Indeterminate = "Power / Slot";
@@ -365,7 +417,7 @@ namespace Mids_Reborn.UI.Forms
             lblName.ForeColor = Color.White;
             lblName.Location = new Point(3, 0);
             lblName.Name = "lblName";
-            lblName.Size = new Size(84, 34);
+            lblName.Size = new Size(46, 40);
             lblName.TabIndex = 147;
             lblName.Text = "Name:";
             lblName.TextAlign = ContentAlignment.MiddleRight;
@@ -374,9 +426,10 @@ namespace Mids_Reborn.UI.Forms
             // 
             lblAT.Dock = DockStyle.Fill;
             lblAT.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblAT.Location = new Point(3, 34);
+            lblAT.ForeColor = Color.White;
+            lblAT.Location = new Point(295, 0);
             lblAT.Name = "lblAT";
-            lblAT.Size = new Size(84, 34);
+            lblAT.Size = new Size(72, 40);
             lblAT.TabIndex = 148;
             lblAT.Text = "Archetype:";
             lblAT.TextAlign = ContentAlignment.MiddleRight;
@@ -385,37 +438,37 @@ namespace Mids_Reborn.UI.Forms
             // 
             lblOrigin.Dock = DockStyle.Fill;
             lblOrigin.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
-            lblOrigin.Location = new Point(3, 68);
+            lblOrigin.ForeColor = Color.White;
+            lblOrigin.Location = new Point(535, 0);
             lblOrigin.Name = "lblOrigin";
-            lblOrigin.Size = new Size(84, 36);
+            lblOrigin.Size = new Size(52, 40);
             lblOrigin.TabIndex = 149;
             lblOrigin.Text = "Origin:";
             lblOrigin.TextAlign = ContentAlignment.MiddleRight;
             // 
             // characterPanel
             // 
-            characterPanel.Controls.Add(originDropDown);
-            characterPanel.Controls.Add(atDropDown);
-            characterPanel.Controls.Add(txtName);
-            characterPanel.Dock = DockStyle.Fill;
-            characterPanel.Location = new Point(93, 3);
+            characterPanel.Location = new Point(0, 0);
             characterPanel.Name = "characterPanel";
-            characterLayoutPanel.SetRowSpan(characterPanel, 3);
-            characterPanel.Size = new Size(194, 98);
+            characterPanel.Size = new Size(0, 0);
             characterPanel.TabIndex = 150;
+            characterPanel.Visible = false;
             // 
             // originDropDown
             // 
             originDropDown.BackColor = Color.WhiteSmoke;
+            originDropDown.Dock = DockStyle.Fill;
             originDropDown.DrawMode = DrawMode.OwnerDrawFixed;
             originDropDown.DropDownStyle = ComboBoxStyle.DropDownList;
+            originDropDown.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold);
             originDropDown.ForeColor = Color.Black;
             originDropDown.IconProvider = null;
             originDropDown.ItemHeight = 17;
-            originDropDown.Location = new Point(5, 74);
+            originDropDown.Location = new Point(593, 7);
+            originDropDown.Margin = new Padding(3, 7, 3, 7);
             originDropDown.Name = "originDropDown";
             originDropDown.PlaceholderText = null;
-            originDropDown.Size = new Size(186, 23);
+            originDropDown.Size = new Size(134, 23);
             originDropDown.TabIndex = 146;
             originDropDown.SelectedIndexChanged += OriginDropDown_SelectedIndexChanged;
             // 
@@ -423,6 +476,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             atDropDown.BackColor = Color.WhiteSmoke;
             atDropDown.DisplayMember = "DisplayName";
+            atDropDown.Dock = DockStyle.Fill;
             atDropDown.DrawMode = DrawMode.OwnerDrawFixed;
             atDropDown.DropDownStyle = ComboBoxStyle.DropDownList;
             atDropDown.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
@@ -430,12 +484,13 @@ namespace Mids_Reborn.UI.Forms
             atDropDown.IconProvider = null;
             atDropDown.ItemHeight = 17;
             atDropDown.Items.AddRange(new object[] { "Peacebringer", "Arachnos Widow", "Arachnos Soldier" });
-            atDropDown.Location = new Point(3, 39);
+            atDropDown.Location = new Point(373, 7);
+            atDropDown.Margin = new Padding(3, 7, 3, 7);
             atDropDown.MaxDropDownItems = 15;
             atDropDown.Name = "atDropDown";
             atDropDown.PlaceholderText = null;
             atDropDown.SelectedItem = null;
-            atDropDown.Size = new Size(188, 23);
+            atDropDown.Size = new Size(154, 23);
             atDropDown.TabIndex = 145;
             atDropDown.ValueMember = "Idx";
             atDropDown.SelectedIndexChanged += AtDropDown_SelectedIndexChanged;
@@ -443,11 +498,14 @@ namespace Mids_Reborn.UI.Forms
             // txtName
             // 
             txtName.BackColor = Color.WhiteSmoke;
+            txtName.Dock = DockStyle.Fill;
             txtName.ForeColor = Color.Black;
-            txtName.Location = new Point(3, 6);
+            txtName.Location = new Point(55, 8);
+            txtName.Margin = new Padding(3, 8, 3, 8);
             txtName.Name = "txtName";
-            txtName.Size = new Size(188, 23);
+            txtName.Size = new Size(234, 23);
             txtName.TabIndex = 144;
+            txtName.TextChanged += txtName_TextChanged;
             // 
             // modeEx
             // 
@@ -458,10 +516,10 @@ namespace Mids_Reborn.UI.Forms
             modeEx.Dock = DockStyle.Fill;
             modeEx.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
             modeEx.ForeColor = Color.White;
-            modeEx.Location = new Point(293, 4);
-            modeEx.Margin = new Padding(3, 4, 3, 4);
+            modeEx.Location = new Point(731, 4);
+            modeEx.Margin = new Padding(4);
             modeEx.Name = "modeEx";
-            modeEx.Size = new Size(155, 26);
+            modeEx.Size = new Size(168, 32);
             modeEx.TabIndex = 154;
             modeEx.Text = "ibModeEx1";
             modeEx.ThreeState = true;
@@ -478,10 +536,10 @@ namespace Mids_Reborn.UI.Forms
             totalsEx.CornerRadius = 6;
             totalsEx.Dock = DockStyle.Fill;
             totalsEx.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold);
-            totalsEx.Location = new Point(454, 38);
-            totalsEx.Margin = new Padding(3, 4, 3, 4);
+            totalsEx.Location = new Point(907, 4);
+            totalsEx.Margin = new Padding(4);
             totalsEx.Name = "totalsEx";
-            totalsEx.Size = new Size(156, 26);
+            totalsEx.Size = new Size(168, 32);
             totalsEx.TabIndex = 157;
             totalsEx.Text = "Advanced Totals";
             totalsEx.ToggleText.Indeterminate = "Indeterminate State";
@@ -554,11 +612,12 @@ namespace Mids_Reborn.UI.Forms
             midsvScrollPanel1.ContentPanel.Size = new Size(187, 840);
             midsvScrollPanel1.ContentPanel.TabIndex = 0;
             midsvScrollPanel1.Dock = DockStyle.Fill;
-            midsvScrollPanel1.Location = new Point(413, 113);
+            midsvScrollPanel1.Location = new Point(429, 3);
+            midsvScrollPanel1.Margin = new Padding(1, 3, 0, 3);
             midsvScrollPanel1.MinimumSize = new Size(64, 64);
             midsvScrollPanel1.Name = "midsvScrollPanel1";
             leftLayoutPanel.SetRowSpan(midsvScrollPanel1, 2);
-            midsvScrollPanel1.Size = new Size(203, 565);
+            midsvScrollPanel1.Size = new Size(191, 588);
             midsvScrollPanel1.TabIndex = 4;
             midsvScrollPanel1.TabStop = true;
             // 
@@ -585,23 +644,24 @@ namespace Mids_Reborn.UI.Forms
             rightInnerLayoutPanel.Controls.Add(pool0List, 0, 2);
             rightInnerLayoutPanel.Location = new Point(0, 0);
             rightInnerLayoutPanel.Name = "rightInnerLayoutPanel";
+            rightInnerLayoutPanel.Padding = new Padding(0, 0, 4, 0);
             rightInnerLayoutPanel.RowCount = 15;
             rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 26F));
-            rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 114F));
             rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 26F));
-            rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 114F));
             rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 26F));
-            rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 114F));
             rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 26F));
-            rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
+            rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 114F));
             rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
             rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 26F));
-            rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 20F));
-            rightInnerLayoutPanel.Size = new Size(187, 830);
+            rightInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 114F));
+            rightInnerLayoutPanel.Size = new Size(195, 830);
             rightInnerLayoutPanel.TabIndex = 0;
             // 
             // ancillaryList
@@ -616,7 +676,7 @@ namespace Mids_Reborn.UI.Forms
             ancillaryList.Name = "ancillaryList";
             ancillaryList.PaddingX = 2;
             ancillaryList.PaddingY = 0;
-            ancillaryList.Scrollable = true;
+            ancillaryList.Scrollable = false;
             ancillaryList.ScrollBarWidth = 10;
             ancillaryList.Size = new Size(181, 114);
             ancillaryList.TabIndex = 165;
@@ -666,7 +726,7 @@ namespace Mids_Reborn.UI.Forms
             pool3List.Name = "pool3List";
             pool3List.PaddingX = 2;
             pool3List.PaddingY = 0;
-            pool3List.Scrollable = true;
+            pool3List.Scrollable = false;
             pool3List.ScrollBarWidth = 10;
             pool3List.Size = new Size(181, 114);
             pool3List.TabIndex = 162;
@@ -716,7 +776,7 @@ namespace Mids_Reborn.UI.Forms
             pool2List.Name = "pool2List";
             pool2List.PaddingX = 2;
             pool2List.PaddingY = 0;
-            pool2List.Scrollable = true;
+            pool2List.Scrollable = false;
             pool2List.ScrollBarWidth = 10;
             pool2List.Size = new Size(181, 114);
             pool2List.TabIndex = 159;
@@ -766,7 +826,7 @@ namespace Mids_Reborn.UI.Forms
             pool1List.Name = "pool1List";
             pool1List.PaddingX = 2;
             pool1List.PaddingY = 0;
-            pool1List.Scrollable = true;
+            pool1List.Scrollable = false;
             pool1List.ScrollBarWidth = 10;
             pool1List.Size = new Size(181, 114);
             pool1List.TabIndex = 156;
@@ -846,7 +906,7 @@ namespace Mids_Reborn.UI.Forms
             pool0List.Name = "pool0List";
             pool0List.PaddingX = 2;
             pool0List.PaddingY = 0;
-            pool0List.Scrollable = true;
+            pool0List.Scrollable = false;
             pool0List.ScrollBarWidth = 10;
             pool0List.Size = new Size(181, 114);
             pool0List.TabIndex = 152;
@@ -867,16 +927,16 @@ namespace Mids_Reborn.UI.Forms
             leftInnerLayoutPanel.Controls.Add(primaryList, 0, 2);
             leftInnerLayoutPanel.Controls.Add(primaryDropDown, 0, 1);
             leftInnerLayoutPanel.Dock = DockStyle.Fill;
-            leftInnerLayoutPanel.Location = new Point(3, 113);
+            leftInnerLayoutPanel.Location = new Point(3, 3);
+            leftInnerLayoutPanel.Margin = new Padding(3, 3, 1, 3);
             leftInnerLayoutPanel.Name = "leftInnerLayoutPanel";
-            leftInnerLayoutPanel.RowCount = 3;
+            leftInnerLayoutPanel.RowCount = 4;
             leftLayoutPanel.SetRowSpan(leftInnerLayoutPanel, 2);
-            leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 26F));
+            leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 18F));
+            leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 24F));
             leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
             leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 66.6666641F));
-            leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            leftInnerLayoutPanel.Size = new Size(404, 565);
+            leftInnerLayoutPanel.Size = new Size(422, 591);
             leftInnerLayoutPanel.TabIndex = 5;
             // 
             // dataView
@@ -890,7 +950,7 @@ namespace Mids_Reborn.UI.Forms
             dataView.Location = new Point(3, 222);
             dataView.Name = "dataView";
             dataView.Padding = new Padding(2, 0, 2, 2);
-            dataView.Size = new Size(398, 340);
+            dataView.Size = new Size(416, 366);
             dataView.TabIndex = 3;
             // 
             // secondaryList
@@ -906,7 +966,7 @@ namespace Mids_Reborn.UI.Forms
             secondaryList.PaddingY = 0;
             secondaryList.Scrollable = true;
             secondaryList.ScrollBarWidth = 10;
-            secondaryList.Size = new Size(196, 167);
+            secondaryList.Size = new Size(205, 167);
             secondaryList.TabIndex = 153;
             secondaryList.TextWrapMode = WordwrapMode.New;
             secondaryList.ItemClicked += SecondaryList_ItemClicked;
@@ -925,7 +985,7 @@ namespace Mids_Reborn.UI.Forms
             secondaryDropDown.Name = "secondaryDropDown";
             secondaryDropDown.PlaceholderText = null;
             secondaryDropDown.SelectedItem = null;
-            secondaryDropDown.Size = new Size(196, 26);
+            secondaryDropDown.Size = new Size(205, 26);
             secondaryDropDown.TabIndex = 152;
             secondaryDropDown.SelectedIndexChanged += SecondaryDropDown_SelectedIndexChanged;
             // 
@@ -937,7 +997,7 @@ namespace Mids_Reborn.UI.Forms
             label1.ForeColor = Color.White;
             label1.Location = new Point(205, 0);
             label1.Name = "label1";
-            label1.Size = new Size(196, 20);
+            label1.Size = new Size(205, 20);
             label1.TabIndex = 151;
             label1.Text = "Secondary Power Set";
             label1.TextAlign = ContentAlignment.MiddleCenter;
@@ -950,7 +1010,7 @@ namespace Mids_Reborn.UI.Forms
             lblPrimary.ForeColor = Color.White;
             lblPrimary.Location = new Point(3, 0);
             lblPrimary.Name = "lblPrimary";
-            lblPrimary.Size = new Size(196, 20);
+            lblPrimary.Size = new Size(205, 20);
             lblPrimary.TabIndex = 148;
             lblPrimary.Text = "Primary Power Set";
             lblPrimary.TextAlign = ContentAlignment.MiddleCenter;
@@ -995,28 +1055,26 @@ namespace Mids_Reborn.UI.Forms
             // buttonsLayoutPanel
             // 
             buttonsLayoutPanel.BackColor = Color.Transparent;
-            buttonsLayoutPanel.ColumnCount = 4;
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 25F));
-            buttonsLayoutPanel.Controls.Add(combatEx, 0, 0);
-            buttonsLayoutPanel.Controls.Add(tempPowersEx, 3, 1);
-            buttonsLayoutPanel.Controls.Add(ibPrestigePowersEx, 2, 1);
-            buttonsLayoutPanel.Controls.Add(incarnatesEx, 1, 1);
-            buttonsLayoutPanel.Controls.Add(accoladesEx, 0, 1);
-            buttonsLayoutPanel.Controls.Add(popupEx, 3, 0);
+            buttonsLayoutPanel.ColumnCount = 6;
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
+            buttonsLayoutPanel.Controls.Add(dynMode, 0, 0);
             buttonsLayoutPanel.Controls.Add(pvXEx, 1, 0);
-            buttonsLayoutPanel.Controls.Add(recipeEx, 2, 0);
+            buttonsLayoutPanel.Controls.Add(accoladesEx, 2, 0);
+            buttonsLayoutPanel.Controls.Add(incarnatesEx, 3, 0);
+            buttonsLayoutPanel.Controls.Add(ibPrestigePowersEx, 4, 0);
+            buttonsLayoutPanel.Controls.Add(tempPowersEx, 5, 0);
             buttonsLayoutPanel.Dock = DockStyle.Fill;
             buttonsLayoutPanel.ForeColor = Color.WhiteSmoke;
-            buttonsLayoutPanel.Location = new Point(628, 3);
+            buttonsLayoutPanel.Location = new Point(3, 3);
             buttonsLayoutPanel.Name = "buttonsLayoutPanel";
-            buttonsLayoutPanel.RowCount = 2;
-            buttonsLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            buttonsLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 50F));
-            buttonsLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
-            buttonsLayoutPanel.Size = new Size(629, 66);
+            buttonsLayoutPanel.RowCount = 1;
+            buttonsLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            buttonsLayoutPanel.Size = new Size(623, 34);
             buttonsLayoutPanel.TabIndex = 46;
             // 
             // combatEx
@@ -1026,10 +1084,10 @@ namespace Mids_Reborn.UI.Forms
             combatEx.CornerRadius = 6;
             combatEx.Dock = DockStyle.Fill;
             combatEx.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold);
-            combatEx.Location = new Point(3, 4);
-            combatEx.Margin = new Padding(3, 4, 3, 4);
+            combatEx.Location = new Point(1083, 4);
+            combatEx.Margin = new Padding(4);
             combatEx.Name = "combatEx";
-            combatEx.Size = new Size(151, 25);
+            combatEx.Size = new Size(167, 32);
             combatEx.TabIndex = 131;
             combatEx.Text = "Combat";
             combatEx.ToggleText.Indeterminate = "Combat";
@@ -1043,10 +1101,10 @@ namespace Mids_Reborn.UI.Forms
             tempPowersEx.CornerRadius = 6;
             tempPowersEx.Dock = DockStyle.Fill;
             tempPowersEx.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold);
-            tempPowersEx.Location = new Point(474, 37);
+            tempPowersEx.Location = new Point(523, 4);
             tempPowersEx.Margin = new Padding(3, 4, 3, 4);
             tempPowersEx.Name = "tempPowersEx";
-            tempPowersEx.Size = new Size(152, 25);
+            tempPowersEx.Size = new Size(97, 26);
             tempPowersEx.TabIndex = 130;
             tempPowersEx.Text = "Temps";
             tempPowersEx.ToggleText.Indeterminate = "Indeterminate State";
@@ -1061,10 +1119,10 @@ namespace Mids_Reborn.UI.Forms
             ibPrestigePowersEx.CornerRadius = 6;
             ibPrestigePowersEx.Dock = DockStyle.Fill;
             ibPrestigePowersEx.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold);
-            ibPrestigePowersEx.Location = new Point(317, 37);
+            ibPrestigePowersEx.Location = new Point(419, 4);
             ibPrestigePowersEx.Margin = new Padding(3, 4, 3, 4);
             ibPrestigePowersEx.Name = "ibPrestigePowersEx";
-            ibPrestigePowersEx.Size = new Size(151, 25);
+            ibPrestigePowersEx.Size = new Size(98, 26);
             ibPrestigePowersEx.TabIndex = 129;
             ibPrestigePowersEx.Text = "Prestige";
             ibPrestigePowersEx.ToggleText.Indeterminate = "Indeterminate State";
@@ -1079,10 +1137,10 @@ namespace Mids_Reborn.UI.Forms
             incarnatesEx.CornerRadius = 6;
             incarnatesEx.Dock = DockStyle.Fill;
             incarnatesEx.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold);
-            incarnatesEx.Location = new Point(160, 37);
+            incarnatesEx.Location = new Point(315, 4);
             incarnatesEx.Margin = new Padding(3, 4, 3, 4);
             incarnatesEx.Name = "incarnatesEx";
-            incarnatesEx.Size = new Size(151, 25);
+            incarnatesEx.Size = new Size(98, 26);
             incarnatesEx.TabIndex = 128;
             incarnatesEx.Text = "Incarnates";
             incarnatesEx.ToggleText.Indeterminate = "Indeterminate State";
@@ -1097,10 +1155,10 @@ namespace Mids_Reborn.UI.Forms
             accoladesEx.CornerRadius = 6;
             accoladesEx.Dock = DockStyle.Fill;
             accoladesEx.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold);
-            accoladesEx.Location = new Point(3, 37);
+            accoladesEx.Location = new Point(211, 4);
             accoladesEx.Margin = new Padding(3, 4, 3, 4);
             accoladesEx.Name = "accoladesEx";
-            accoladesEx.Size = new Size(151, 25);
+            accoladesEx.Size = new Size(98, 26);
             accoladesEx.TabIndex = 127;
             accoladesEx.Text = "Accolades";
             accoladesEx.ToggleText.Indeterminate = "Indeterminate State";
@@ -1126,6 +1184,7 @@ namespace Mids_Reborn.UI.Forms
             popupEx.ToggleText.ToggledOff = "Popup: Off";
             popupEx.ToggleText.ToggledOn = "Popup: On";
             tTip.SetToolTip(popupEx, "Display Info Popups");
+            popupEx.Visible = false;
             // 
             // pvXEx
             // 
@@ -1134,10 +1193,10 @@ namespace Mids_Reborn.UI.Forms
             pvXEx.CornerRadius = 6;
             pvXEx.Dock = DockStyle.Fill;
             pvXEx.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold);
-            pvXEx.Location = new Point(160, 4);
+            pvXEx.Location = new Point(107, 4);
             pvXEx.Margin = new Padding(3, 4, 3, 4);
             pvXEx.Name = "pvXEx";
-            pvXEx.Size = new Size(151, 25);
+            pvXEx.Size = new Size(98, 26);
             pvXEx.TabIndex = 124;
             pvXEx.Text = "ibPvXEx";
             pvXEx.ToggleText.Indeterminate = "Indeterminate State";
@@ -1163,6 +1222,85 @@ namespace Mids_Reborn.UI.Forms
             recipeEx.ToggleText.ToggledOff = "Recipes: Off";
             recipeEx.ToggleText.ToggledOn = "Recipes: On";
             tTip.SetToolTip(recipeEx, "Display Recipes");
+            recipeEx.Visible = false;
+            // 
+            // footerPanel
+            // 
+            footerPanel.BackColor = Color.FromArgb(6, 17, 35);
+            footerPanel.Controls.Add(footerLayoutPanel);
+            footerPanel.Dock = DockStyle.Bottom;
+            footerPanel.Location = new Point(10, 720);
+            footerPanel.Name = "footerPanel";
+            footerPanel.Padding = new Padding(8, 4, 8, 4);
+            footerPanel.Size = new Size(1260, 38);
+            footerPanel.TabIndex = 105;
+            // 
+            // footerLayoutPanel
+            // 
+            footerLayoutPanel.ColumnCount = 2;
+            footerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            footerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
+            footerLayoutPanel.Controls.Add(footerSummaryLabel, 0, 0);
+            footerLayoutPanel.Controls.Add(footerRightPanel, 1, 0);
+            footerLayoutPanel.Dock = DockStyle.Fill;
+            footerLayoutPanel.Location = new Point(8, 4);
+            footerLayoutPanel.Name = "footerLayoutPanel";
+            footerLayoutPanel.RowCount = 1;
+            footerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            footerLayoutPanel.Size = new Size(1244, 30);
+            footerLayoutPanel.TabIndex = 0;
+            // 
+            // footerSummaryLabel
+            // 
+            footerSummaryLabel.Dock = DockStyle.Fill;
+            footerSummaryLabel.Font = new Font("Noto Sans", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            footerSummaryLabel.ForeColor = Color.WhiteSmoke;
+            footerSummaryLabel.Location = new Point(0, 0);
+            footerSummaryLabel.Margin = new Padding(0);
+            footerSummaryLabel.Name = "footerSummaryLabel";
+            footerSummaryLabel.Size = new Size(622, 30);
+            footerSummaryLabel.TabIndex = 0;
+            footerSummaryLabel.Text = "Character Summary";
+            footerSummaryLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // footerRightPanel
+            // 
+            footerRightPanel.AutoSize = true;
+            footerRightPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            footerRightPanel.Controls.Add(footerTotalSlotsLabel);
+            footerRightPanel.Controls.Add(footerSlotsLeftLabel);
+            footerRightPanel.Dock = DockStyle.Fill;
+            footerRightPanel.FlowDirection = FlowDirection.RightToLeft;
+            footerRightPanel.Location = new Point(622, 0);
+            footerRightPanel.Margin = new Padding(0);
+            footerRightPanel.Name = "footerRightPanel";
+            footerRightPanel.Padding = new Padding(0, 3, 0, 0);
+            footerRightPanel.Size = new Size(622, 30);
+            footerRightPanel.TabIndex = 1;
+            footerRightPanel.WrapContents = false;
+            // 
+            // footerTotalSlotsLabel
+            // 
+            footerTotalSlotsLabel.AutoSize = true;
+            footerTotalSlotsLabel.Font = new Font("Noto Sans", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            footerTotalSlotsLabel.ForeColor = Color.WhiteSmoke;
+            footerTotalSlotsLabel.Margin = new Padding(16, 0, 0, 0);
+            footerTotalSlotsLabel.Name = "footerTotalSlotsLabel";
+            footerTotalSlotsLabel.Size = new Size(117, 18);
+            footerTotalSlotsLabel.TabIndex = 0;
+            footerTotalSlotsLabel.Text = "Total Slots: 311";
+            footerTotalSlotsLabel.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // footerSlotsLeftLabel
+            // 
+            footerSlotsLeftLabel.AutoSize = true;
+            footerSlotsLeftLabel.Font = new Font("Noto Sans", 9F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            footerSlotsLeftLabel.ForeColor = Color.FromArgb(115, 255, 110);
+            footerSlotsLeftLabel.Margin = new Padding(16, 0, 0, 0);
+            footerSlotsLeftLabel.Name = "footerSlotsLeftLabel";
+            footerSlotsLeftLabel.Size = new Size(86, 18);
+            footerSlotsLeftLabel.TabIndex = 1;
+            footerSlotsLeftLabel.Text = "Slots Left: 0";
             // 
             // MenuBar
             // 
@@ -2104,6 +2242,7 @@ namespace Mids_Reborn.UI.Forms
             BackColor = Color.FromArgb(23, 23, 25);
             ClientSize = new Size(1280, 768);
             Controls.Add(mainLayoutPanel);
+            Controls.Add(footerPanel);
             Controls.Add(MenuBar);
             Controls.Add(titlePanel);
             DoubleBuffered = true;
@@ -2115,10 +2254,13 @@ namespace Mids_Reborn.UI.Forms
             Padding = new Padding(10);
             Text = "Mids Reborn v4.0 (alpha)";
             mainLayoutPanel.ResumeLayout(false);
+            mainLayoutPanel.PerformLayout();
+            characterLayoutPanel.ResumeLayout(false);
+            characterLayoutPanel.PerformLayout();
+            leftLayoutPanel.ResumeLayout(false);
+            rightLayoutPanel.ResumeLayout(false);
             canvasScrollPanel.ContentPanel.ResumeLayout(false);
             canvasScrollPanel.ResumeLayout(false);
-            leftLayoutPanel.ResumeLayout(false);
-            characterLayoutPanel.ResumeLayout(false);
             characterPanel.ResumeLayout(false);
             characterPanel.PerformLayout();
             midsvScrollPanel1.ContentPanel.ResumeLayout(false);
@@ -2127,6 +2269,11 @@ namespace Mids_Reborn.UI.Forms
             rightInnerLayoutPanel.ResumeLayout(false);
             leftInnerLayoutPanel.ResumeLayout(false);
             buttonsLayoutPanel.ResumeLayout(false);
+            footerPanel.ResumeLayout(false);
+            footerLayoutPanel.ResumeLayout(false);
+            footerLayoutPanel.PerformLayout();
+            footerRightPanel.ResumeLayout(false);
+            footerRightPanel.PerformLayout();
             MenuBar.ResumeLayout(false);
             MenuBar.PerformLayout();
             titlePanel.ResumeLayout(false);
@@ -2139,6 +2286,7 @@ namespace Mids_Reborn.UI.Forms
         internal System.Windows.Forms.OpenFileDialog DlgOpen;
         internal System.Windows.Forms.SaveFileDialog DlgSave;
         private System.Windows.Forms.TableLayoutPanel mainLayoutPanel;
+        private TableLayoutPanel rightLayoutPanel;
         private MidsSmartLayoutPanel leftLayoutPanel;
         private System.Windows.Forms.TableLayoutPanel buttonsLayoutPanel;
         private MidsVectorButton pvXEx;
@@ -2240,6 +2388,12 @@ namespace Mids_Reborn.UI.Forms
         private FontAwesome.Sharp.IconButton btnMinimize;
         private Label titleLabel;
         private MidsLogoPanel logoPanel;
+        private Panel footerPanel;
+        private TableLayoutPanel footerLayoutPanel;
+        private Label footerSummaryLabel;
+        private FlowLayoutPanel footerRightPanel;
+        private Label footerTotalSlotsLabel;
+        private Label footerSlotsLeftLabel;
         private ToolStripMenuItem layoutMenuItem;
         private ToolStripMenuItem tsView2Col;
         private ToolStripMenuItem tsView3Col;

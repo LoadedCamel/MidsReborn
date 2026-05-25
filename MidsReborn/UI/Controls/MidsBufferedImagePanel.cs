@@ -113,10 +113,13 @@ public sealed class MidsBufferedImagePanel : Control
         var size = Renderer.GetRequiredDrawingArea();
         if (size.Height <= 0) return;
 
+        var visibleViewportHeight = (Parent as MidsVScrollPanel)?.ClientSize.Height ?? 0;
+        var desiredHeight = Math.Max(size.Height, visibleViewportHeight);
+
         try
         {
             _suspendAutoSize = true;
-            Height = size.Height;
+            Height = desiredHeight;
         }
         finally
         {

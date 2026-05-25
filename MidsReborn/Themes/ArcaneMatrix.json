@@ -85,6 +85,18 @@
     "AccentColor": "#D400FF",
     "AccentLightColor": "#00FFD8"
   },
+  "SegmentedToggle": {
+    "WellTop": "#180027",
+    "WellBottom": "#0B0012",
+    "Divider": "#4C2168",
+    "SelectedTop": "#4A007D",
+    "SelectedBottom": "#2F004A",
+    "SelectedBorder": "#00FFD8",
+    "SelectedText": "#FFFFFF",
+    "SelectedTextOutline": "#000000",
+    "UnselectedText": "#E0E0E0",
+    "UnselectedTextOutline": "#000000"
+  },
   "PowerSlot": {
     "Border": "#D400FF",
     "GradientTop": "#8F63FF",

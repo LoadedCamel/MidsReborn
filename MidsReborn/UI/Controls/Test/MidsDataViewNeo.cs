@@ -45,9 +45,10 @@ namespace Mids_Reborn.UI.Controls
         private const int ContentInset = 8;
         private const int InfoDescriptionDividerHeight = 2;
         private const int InfoShortDescriptionMaxLines = 2;
-        private const int InfoLongDescriptionMinLines = 4;
+        private const int InfoLongDescriptionMinLines = 1;
         private const int HeaderOuterInset = 6;
         private const int HeaderActionGap = 3;
+        private const int TotalsSectionGap = 10;
         private const int EM_SETMARGINS = 0xD3;
         private const int EM_SETRECT = 0xB3;
         private const int EC_LEFTMARGIN = 0x1;
@@ -142,6 +143,19 @@ namespace Mids_Reborn.UI.Controls
         private MidsDataViewNeoPresentationMode _presentationMode = MidsDataViewNeoPresentationMode.CharacterBuild;
         private Page? _bonusesView;
         private PowerEffectsGrid? _bonusesGrid;
+        private Panel? _totalsStackHost;
+        private MidsTotalsSectionPanel? _quickReadSection;
+        private MidsTotalsSectionPanel? _defenseSection;
+        private MidsTotalsSectionPanel? _resistanceSection;
+        private MidsTotalsSectionPanel? _coreMiscSection;
+        private MidsTotalsQuickStrip? _quickReadStrip;
+        private MidsTotalsBarList? _defenseBarListLeft;
+        private MidsTotalsBarList? _defenseBarListRight;
+        private MidsTotalsBarList? _resistanceBarListLeft;
+        private MidsTotalsBarList? _resistanceBarListRight;
+        private MidsTotalsValueGrid? _coreMiscGrid;
+        private MidsTotalsDualColumnHost? _defenseListsHost;
+        private MidsTotalsDualColumnHost? _resistanceListsHost;
 
         public PetInfo PetInfo;
 
@@ -202,6 +216,7 @@ namespace Mids_Reborn.UI.Controls
         {
             InitializeComponent();
             InitializeBonusesPage();
+            InitializeTotalsPage();
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
 
             // Ensure the header panel itself is double-buffered (prevents flicker)
@@ -231,6 +246,8 @@ namespace Mids_Reborn.UI.Controls
             pnlEnhActive.MouseMove += pnlEnhActive_MouseMove;
             pnlEnhInactive.MouseMove += pnlEnhInactive_MouseMove;
             LayoutEnhancementPage();
+            totalViewScrollPanel.AvailableClientWidthChanged += TotalViewScrollPanel_AvailableClientWidthChanged;
+            totalViewScrollPanel.ContentPanel.SizeChanged += TotalViewContentPanel_SizeChanged;
 
             PetInfo = new PetInfo();
             if (!DesignMode) ThemeManager.ThemeChanged += ThemeManagerOnThemeChanged;
@@ -268,6 +285,65 @@ namespace Mids_Reborn.UI.Controls
             dvPages.Pages.Add(_bonusesView);
         }
 
+        private void InitializeTotalsPage()
+        {
+            _totalsStackHost = new Panel
+            {
+                BackColor = Color.Transparent,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty,
+                Location = Point.Empty,
+                Size = totalViewScrollPanel.ContentPanel.ClientSize
+            };
+
+            _quickReadStrip = new MidsTotalsQuickStrip();
+            _defenseBarListLeft = new MidsTotalsBarList { Palette = MidsTotalsBarList.FillPalette.Defense };
+            _defenseBarListRight = new MidsTotalsBarList { Palette = MidsTotalsBarList.FillPalette.Defense };
+            _resistanceBarListLeft = new MidsTotalsBarList { Palette = MidsTotalsBarList.FillPalette.Resistance };
+            _resistanceBarListRight = new MidsTotalsBarList { Palette = MidsTotalsBarList.FillPalette.Resistance };
+            _coreMiscGrid = new MidsTotalsValueGrid();
+
+            _defenseListsHost = new MidsTotalsDualColumnHost(_defenseBarListLeft, _defenseBarListRight);
+            _resistanceListsHost = new MidsTotalsDualColumnHost(_resistanceBarListLeft, _resistanceBarListRight);
+
+            _quickReadSection = new MidsTotalsSectionPanel
+            {
+                Title = "Quick Read",
+                ContentControl = _quickReadStrip
+            };
+            _defenseSection = new MidsTotalsSectionPanel
+            {
+                Title = "Defense",
+                TitleIcon = MidsTotalsGlyph.SectionDefense,
+                TitleIconColor = Color.FromArgb(140, 190, 255),
+                MetaText = "softcap: 45%",
+                ContentControl = _defenseListsHost
+            };
+            _resistanceSection = new MidsTotalsSectionPanel
+            {
+                Title = "Resistance",
+                TitleIcon = MidsTotalsGlyph.SectionResistance,
+                TitleIconColor = Color.FromArgb(145, 235, 245),
+                ContentControl = _resistanceListsHost
+            };
+            _coreMiscSection = new MidsTotalsSectionPanel
+            {
+                Title = "Core / Misc",
+                TitleIcon = MidsTotalsGlyph.SectionCore,
+                TitleIconColor = Color.FromArgb(235, 210, 120),
+                ContentControl = _coreMiscGrid
+            };
+
+            ApplyTotalsSectionTheme(CurrentTheme);
+
+            totalViewScrollPanel.ContentPanel.Controls.Clear();
+            totalViewScrollPanel.ContentPanel.Controls.Add(_totalsStackHost);
+            _totalsStackHost.Controls.Add(_quickReadSection);
+            _totalsStackHost.Controls.Add(_defenseSection);
+            _totalsStackHost.Controls.Add(_resistanceSection);
+            _totalsStackHost.Controls.Add(_coreMiscSection);
+        }
+
         #endregion
 
         #region Theme
@@ -291,12 +367,10 @@ namespace Mids_Reborn.UI.Controls
             ScaleHeight(titlePanel, scale);
             ScaleHeight(sliderHost, scale);
             ScaleHeight(infoDamageDisplay, scale);
-            ScaleHeight(totalsDefenseLayoutPanel, scale);
-            ScaleHeight(totalsResistLayoutPanel, scale);
-            ScaleHeight(coreDataList, scale);
             ScaleHeight(pnlEnhActive, scale);
             ScaleHeight(pnlEnhInactive, scale);
             ScaleHeight(enhanceSubtitlePanel, scale);
+            ApplyTotalsUiScale(scale);
 
             var buttonSize = Math.Max(22, ScalePx(29));
             DockButton.Width = buttonSize;
@@ -305,6 +379,7 @@ namespace Mids_Reborn.UI.Controls
             LockButton.IconSize = Math.Max(18, ScalePx(24));
 
             UpdateInfoDescriptionLayout();
+            LayoutTotalsSections();
             LayoutEnhancementPage();
             ResumeLayout(performLayout: true);
             headerPanel.Invalidate();
@@ -317,6 +392,7 @@ namespace Mids_Reborn.UI.Controls
         {
             base.OnSizeChanged(e);
             UpdateInfoDescriptionLayout();
+            LayoutTotalsSections();
         }
 
         private void ScaleHeight(Control control, float scale)
@@ -452,7 +528,18 @@ namespace Mids_Reborn.UI.Controls
             ApplyPairedListTheme(coreDataList, theme);
             ApplyPairedListTheme(enhDataList, theme);
             _bonusesGrid?.Invalidate();
+            ApplyTotalsSectionTheme(theme);
             ApplyEnhanceSurfaceTheme(theme);
+            _quickReadSection?.Invalidate();
+            _defenseSection?.Invalidate();
+            _resistanceSection?.Invalidate();
+            _coreMiscSection?.Invalidate();
+            _quickReadStrip?.Invalidate();
+            _defenseBarListLeft?.Invalidate();
+            _defenseBarListRight?.Invalidate();
+            _resistanceBarListLeft?.Invalidate();
+            _resistanceBarListRight?.Invalidate();
+            _coreMiscGrid?.Invalidate();
 
             sliderHost.BackColor = theme.Background;
 
@@ -518,6 +605,58 @@ namespace Mids_Reborn.UI.Controls
                 _bonusesGrid.GridPadding = Math.Max(6, ContentInset);
             }
             UpdateInfoDescriptionLayout();
+            LayoutTotalsSections();
+        }
+
+        private void ApplyTotalsUiScale(float scale)
+        {
+            if (_quickReadSection == null || _defenseSection == null || _resistanceSection == null || _coreMiscSection == null)
+            {
+                return;
+            }
+
+            _quickReadSection.UiScale = scale;
+            _defenseSection.UiScale = scale;
+            _resistanceSection.UiScale = scale;
+            _coreMiscSection.UiScale = scale;
+            if (_quickReadStrip != null) _quickReadStrip.UiScale = scale;
+            if (_defenseListsHost != null) _defenseListsHost.UiScale = scale;
+            if (_resistanceListsHost != null) _resistanceListsHost.UiScale = scale;
+            if (_defenseBarListLeft != null) _defenseBarListLeft.UiScale = scale;
+            if (_defenseBarListRight != null) _defenseBarListRight.UiScale = scale;
+            if (_resistanceBarListLeft != null) _resistanceBarListLeft.UiScale = scale;
+            if (_resistanceBarListRight != null) _resistanceBarListRight.UiScale = scale;
+            if (_coreMiscGrid != null) _coreMiscGrid.UiScale = scale;
+        }
+
+        private void ApplyTotalsSectionTheme(DataViewTheme theme)
+        {
+            if (_quickReadSection != null)
+            {
+                _quickReadSection.TitleColor = Color.FromArgb(150, 215, 255);
+                _quickReadSection.MetaColor = Blend(theme.Muted, theme.GridNeutral, 0.30f);
+            }
+
+            var sectionTitle = Color.FromArgb(235, 220, 172);
+            var sectionMeta = Blend(theme.Muted, theme.GridNeutral, 0.30f);
+
+            if (_defenseSection != null)
+            {
+                _defenseSection.TitleColor = sectionTitle;
+                _defenseSection.MetaColor = sectionMeta;
+            }
+
+            if (_resistanceSection != null)
+            {
+                _resistanceSection.TitleColor = sectionTitle;
+                _resistanceSection.MetaColor = sectionMeta;
+            }
+
+            if (_coreMiscSection != null)
+            {
+                _coreMiscSection.TitleColor = sectionTitle;
+                _coreMiscSection.MetaColor = sectionMeta;
+            }
         }
 
         private void UpdateInfoDescriptionLayout()
@@ -529,10 +668,16 @@ namespace Mids_Reborn.UI.Controls
 
             var shortHeight = MeasureShortDescriptionHeight();
             var hasLongDescription = !string.IsNullOrWhiteSpace(infoLDesc.Text);
-            var dividerVisible = shortHeight > 0 && hasLongDescription;
-            var dividerHeight = dividerVisible ? Math.Max(4, ScalePx(6)) : 0;
+            var reservedDividerHeight = shortHeight > 0 && hasLongDescription ? Math.Max(4, ScalePx(6)) : 0;
             var targetDamageHeight = CalculateInfoDamageDisplayHeight();
-            var longHeight = CalculateLongDescriptionHeight(shortHeight, dividerHeight, targetDamageHeight);
+            var longHeight = CalculateLongDescriptionHeight(shortHeight, reservedDividerHeight, targetDamageHeight);
+            var dividerVisible = shortHeight > 0 && longHeight > 0;
+            var dividerHeight = dividerVisible ? reservedDividerHeight : 0;
+
+            if (!dividerVisible && reservedDividerHeight > 0)
+            {
+                longHeight = CalculateLongDescriptionHeight(shortHeight, 0, targetDamageHeight);
+            }
 
             if (infoSDesc.Height != shortHeight)
             {
@@ -585,7 +730,7 @@ namespace Mids_Reborn.UI.Controls
                 return 0;
             }
 
-            int minLongHeight = Math.Max(ScalePx(58), infoLDesc.Font.Height * InfoLongDescriptionMinLines + ScalePx(4));
+            int minLongHeight = Math.Max(ScalePx(22), infoLDesc.Font.Height * InfoLongDescriptionMinLines + ScalePx(6));
             int desiredLongHeight = Math.Max(minLongHeight, infoLDesc.ContentHeight + ScalePx(4));
             int sliderHeight = sliderHost.Visible ? sliderHost.Height : 0;
             int preferredStatsHeight = CalculatePowerStatsPreferredHeight();
@@ -597,8 +742,12 @@ namespace Mids_Reborn.UI.Controls
                                    - damageHeight
                                    - preferredStatsHeight;
 
-            int cappedLongHeight = Math.Max(minLongHeight, availableForLong);
-            return Math.Min(desiredLongHeight, cappedLongHeight);
+            if (availableForLong < minLongHeight)
+            {
+                return 0;
+            }
+
+            return Math.Min(desiredLongHeight, availableForLong);
         }
 
         private int CalculatePowerStatsPreferredHeight()
@@ -679,6 +828,43 @@ namespace Mids_Reborn.UI.Controls
             list.HighlightColor = theme.ChipActive;
             list.HighlightTextColor = theme.Text;
             list.Invalidate();
+        }
+
+        private void TotalViewScrollPanel_AvailableClientWidthChanged(object? sender, int availableWidth)
+        {
+            LayoutTotalsSections();
+        }
+
+        private void TotalViewContentPanel_SizeChanged(object? sender, EventArgs e)
+        {
+            LayoutTotalsSections();
+        }
+
+        private void LayoutTotalsSections()
+        {
+            if (_totalsStackHost == null || _quickReadSection == null || _defenseSection == null || _resistanceSection == null || _coreMiscSection == null)
+            {
+                return;
+            }
+
+            var outerInset = Math.Max(0, ScalePx(ContentInset));
+            var gap = ScalePx(TotalsSectionGap);
+            var width = Math.Max(1, totalViewScrollPanel.AvailableClientWidth - outerInset * 2);
+            var y = outerInset;
+
+            LayoutTotalsSection(_quickReadSection, width, outerInset, ref y, gap);
+            LayoutTotalsSection(_defenseSection, width, outerInset, ref y, gap);
+            LayoutTotalsSection(_resistanceSection, width, outerInset, ref y, gap);
+            LayoutTotalsSection(_coreMiscSection, width, outerInset, ref y, gap);
+
+            _totalsStackHost.Bounds = new Rectangle(0, 0, totalViewScrollPanel.ContentPanel.ClientSize.Width, y + outerInset);
+        }
+
+        private static void LayoutTotalsSection(MidsTotalsSectionPanel section, int width, int left, ref int y, int gap)
+        {
+            var preferred = section.GetPreferredSize(new Size(width, 0));
+            section.Bounds = new Rectangle(left, y, width, preferred.Height);
+            y = section.Bottom + gap;
         }
 
         #endregion
@@ -942,6 +1128,19 @@ namespace Mids_Reborn.UI.Controls
 
         private void RefreshSelectedTabHeader()
         {
+            if (titlePanel != null)
+            {
+                titlePanel.Visible = _selectedTabIndex != 2;
+            }
+
+            if (_selectedTabIndex == 2)
+            {
+                title.Text = string.Empty;
+                subTitle.Text = string.Empty;
+                DisplayTotals();
+                return;
+            }
+
             if (_selectedTabIndex == 3)
             {
                 DisplayEdFigures();
@@ -1391,20 +1590,29 @@ namespace Mids_Reborn.UI.Controls
         public void DisplayTotals()
         {
             var actorMode = _presentationMode == MidsDataViewNeoPresentationMode.ActorReadOnly && _actorTotalsSnapshot != null;
-            if (!actorMode && MidsContext.Character == null)
+            if ((!actorMode && MidsContext.Character == null) ||
+                _quickReadStrip == null ||
+                _defenseBarListLeft == null ||
+                _defenseBarListRight == null ||
+                _resistanceBarListLeft == null ||
+                _resistanceBarListRight == null ||
+                _coreMiscGrid == null ||
+                _defenseSection == null ||
+                _resistanceSection == null)
             {
                 return;
             }
 
-            var dmgNames = Enum.GetNames(typeof(Enums.eDamage));
             var actorDisplayStats = actorMode ? _actorTotalsSnapshot!.DisplayStats : null;
             var totals = actorMode ? _actorTotalsSnapshot!.Totals : MidsContext.Character.Totals;
             var totalsCapped = actorMode ? _actorTotalsSnapshot!.TotalsCapped : MidsContext.Character.TotalsCapped;
             string FormatPercentValue(float value, int maxDecimal = 2) => $"{DisplayValueFormatter.FormatPercentValue(value, maxDecimal)}%";
             string FormatPercentScale(float value, int maxDecimal = 2) => $"{DisplayValueFormatter.FormatPercentFromScale(value, maxDecimal)}%";
-            var resistanceCapLabel = actorMode
-                ? $"{FormatActorClassName(_actorTotalsSnapshot!.ClassName)} resistance cap: {FormatPercentScale(DatabaseAPI.GetClassResistanceCap(_actorTotalsSnapshot.ClassName))}"
-                : $"{MidsContext.Character.Archetype.DisplayName} resistance cap: {FormatPercentScale(DatabaseAPI.GetClassResistanceCap(MidsContext.Character.Archetype))}";
+            string FormatSignedPercentValue(float value, int maxDecimal = 0) =>
+                $"{(value > 0 ? "+" : string.Empty)}{DisplayValueFormatter.FormatPercentValue(value, maxDecimal)}%";
+            var resistanceCapValue = actorMode
+                ? DatabaseAPI.GetClassResistanceCap(_actorTotalsSnapshot!.ClassName)
+                : DatabaseAPI.GetClassResistanceCap(MidsContext.Character.Archetype);
             float GetDefense(int damageType) => actorMode ? actorDisplayStats!.Defense(damageType) : MidsContext.Character.DisplayStats.Defense(damageType);
             float GetResistance(int damageType, bool uncapped) => actorMode
                 ? actorDisplayStats!.DamageResistance(damageType, uncapped)
@@ -1428,86 +1636,6 @@ namespace Mids_Reborn.UI.Controls
             float GetBuffHaste() => actorMode ? actorDisplayStats!.BuffHaste(false) : MidsContext.Character.DisplayStats.BuffHaste(false);
             float GetRangePercent() => actorMode ? actorDisplayStats!.RangePercent : MidsContext.Character.DisplayStats.RangePercent;
             float GetThreatLevel() => actorMode ? actorDisplayStats!.ThreatLevel : MidsContext.Character.DisplayStats.ThreatLevel;
-            coreDataList.Clear(true);
-            defenseGraph1.Clear();
-            defenseGraph2.Clear();
-            var numArray1 = new[]
-            {
-                0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 1, 1, 1, 0, 0, 0
-            };
-
-            var unusedVectors = new List<Enums.eDamage>
-            {
-                Enums.eDamage.Special,
-                Enums.eDamage.Unique1,
-                Enums.eDamage.Unique2,
-                Enums.eDamage.Unique3
-            }.Cast<int>();
-            const int toxicVector = (int)Enums.eDamage.Toxic;
-
-            for (var dType = 1; dType < dmgNames.Length; dType++)
-            {
-                var iTip = $"{FormatPercentValue(GetDefense(dType))} {dmgNames[dType]} defense";
-                if (dType == toxicVector && !DatabaseAPI.RealmUsesToxicDef())
-                {
-                    continue;
-                }
-
-                if (unusedVectors.Contains(dType))
-                {
-                    continue;
-                }
-
-                var targetGraph = numArray1[dType] == 0 ? defenseGraph1 : defenseGraph2;
-                //var targetGraph = dType % 2 == 1 ? gDef1 : gDef2;
-                targetGraph.AddItem($"{dmgNames[dType]}:|{FormatPercentValue(GetDefense(dType), 1)}", Math.Max(0, GetDefense(dType)), 0, iTip);
-            }
-
-            var maxValue1 = Math.Max(defenseGraph1.GetMaxValue(), defenseGraph2.GetMaxValue());
-            defenseGraph1.Max = maxValue1;
-            defenseGraph2.Max = maxValue1;
-            defenseGraph1.Draw();
-            defenseGraph2.Draw();
-
-            resistGraph1.Clear();
-            resistGraph2.Clear();
-            var numArray2 = new[]
-            {
-                0, 0, 0, 1, 1, 0, 0, 1, 1, 0, 1, 1, 1
-            };
-
-            unusedVectors = new List<Enums.eDamage>
-            {
-                Enums.eDamage.Melee,
-                Enums.eDamage.Ranged,
-                Enums.eDamage.AoE,
-                Enums.eDamage.Special,
-                Enums.eDamage.Unique1,
-                Enums.eDamage.Unique2,
-                Enums.eDamage.Unique3
-            }.Cast<int>();
-
-            for (var dType = 1; dType < dmgNames.Length; dType++)
-            {
-                if (unusedVectors.Contains(dType))
-                {
-                    continue;
-                }
-
-                var iTip = totalsCapped.Res[dType] < totals.Res[dType]
-                    ? $"{FormatPercentValue(GetResistance(dType, true))} {dmgNames[dType]} resistance capped at {FormatPercentValue(GetResistance(dType, false))}"
-                    : $"{FormatPercentValue(GetResistance(dType, true))} {dmgNames[dType]} resistance. ({resistanceCapLabel})";
-
-                var targetGraph = numArray2[dType] == 0 ? resistGraph1 : resistGraph2;
-                targetGraph.AddItem($"{dmgNames[dType]}:|{FormatPercentValue(GetResistance(dType, false), 1)}", Math.Max(0, GetResistance(dType, false)), Math.Max(0, GetResistance(dType, true)), iTip);
-            }
-
-            var maxValue2 = Math.Max(resistGraph1.GetMaxValue(), resistGraph2.GetMaxValue());
-            resistGraph1.Max = maxValue2;
-            resistGraph2.Max = maxValue2;
-            resistGraph1.Draw();
-            resistGraph2.Draw();
-
             var iTip1 = string.Empty;
             var iTip2 = $"Time to go from 0-100% end: {DisplayValueFormatter.FormatSeconds(GetEndTimeToFull())}s.\r\nHover the mouse over the End Drain stats for more info.";
             switch (GetEndRecoveryNet())
@@ -1528,18 +1656,176 @@ namespace Mids_Reborn.UI.Controls
             }
 
             var iTip3 = $"Time to go from 0-100% health: {DisplayValueFormatter.FormatSeconds(GetHealthRegenTimeToFull())}s.\r\nHealth regenerated per second: {FormatPercentValue(GetHealthRegenHealthPerSec())}\r\nHitPoints regenerated per second at level 50: {DisplayValueFormatter.FormatRate(GetHealthRegenHpPerSec())} HP";
-            coreDataList.AddItem(new PairedListEx.Item("Recovery:", $"{FormatPercentValue(GetRecoveryPct())} ({DisplayValueFormatter.FormatRate(GetRecoveryNumeric(), 1)}/s)", false, false, false, iTip2));
-            coreDataList.AddItem(new PairedListEx.Item("Regen:", FormatPercentValue(GetHealthRegenPercent()), false, false, false, iTip3));
-            coreDataList.AddItem(new PairedListEx.Item("EndDrain:", $"{DisplayValueFormatter.FormatRate(GetEndUsage())}/s", false, false, false, iTip1));
-            coreDataList.AddItem(new PairedListEx.Item("+ToHit:", FormatPercentValue(GetBuffToHit()), false, false, false, "This effect is increasing the accuracy of all powers on this actor."));
-            coreDataList.AddItem(new PairedListEx.Item("+Accuracy:", FormatPercentValue(GetBuffAccuracy()), false, false, false, "This effect is increasing the accuracy scale of this actor's powers."));
-            coreDataList.AddItem(new PairedListEx.Item("+Damage:", FormatPercentValue(GetBuffDamage() - 100), false, false, false, "This effect is modifying the outgoing damage of this actor's attack powers."));
-            coreDataList.AddItem(new PairedListEx.Item("+EndRdx:", FormatPercentValue(GetBuffEndRdx()), false, false, false, "The end cost of all powers on this actor is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement."));
-            coreDataList.AddItem(new PairedListEx.Item("+Recharge:", FormatPercentValue(GetBuffHaste() - 100, 1), false, false, false, "The recharge time of this actor's powers is being altered by this effect.\r\nThe higher the value, the faster the recharge."));
-            coreDataList.AddItem(new PairedListEx.Item("+Range:", FormatPercentValue(GetRangePercent()), false, false, false, "This effect is modifying the range of this actor's powers."));
-            coreDataList.AddItem(new PairedListEx.Item("Threat:", FormatPercentValue(GetThreatLevel()), false, false, false, "This shows the actor's current threat modifier."));
-            //total_Misc.Rows = 3;
-            coreDataList.Redraw();
+            var damageNames = Enum.GetNames(typeof(Enums.eDamage));
+            var defenseLeft = BuildBarMetrics(
+                [
+                    Enums.eDamage.Smashing,
+                    Enums.eDamage.Lethal,
+                    Enums.eDamage.Energy,
+                    Enums.eDamage.Negative,
+                    Enums.eDamage.Toxic,
+                    Enums.eDamage.Psionic
+                ],
+                true,
+                damage =>
+                {
+                    var damageIndex = (int)damage;
+                    return (
+                        Math.Max(0, GetDefense(damageIndex)),
+                        45f,
+                        $"{FormatPercentValue(GetDefense(damageIndex))} {damageNames[damageIndex]} defense");
+                },
+                FormatPercentValue,
+                45f);
+
+            if (!DatabaseAPI.RealmUsesToxicDef())
+            {
+                defenseLeft = defenseLeft.Where(metric => metric.Label != nameof(Enums.eDamage.Toxic)).ToList();
+            }
+
+            var defenseRight = BuildBarMetrics(
+                [
+                    Enums.eDamage.Fire,
+                    Enums.eDamage.Cold,
+                    Enums.eDamage.Melee,
+                    Enums.eDamage.Ranged,
+                    Enums.eDamage.AoE
+                ],
+                true,
+                damage =>
+                {
+                    var damageIndex = (int)damage;
+                    return (
+                        Math.Max(0, GetDefense(damageIndex)),
+                        45f,
+                        $"{FormatPercentValue(GetDefense(damageIndex))} {damageNames[damageIndex]} defense");
+                },
+                FormatPercentValue,
+                45f);
+
+            var resistanceLeft = BuildBarMetrics(
+                [
+                    Enums.eDamage.Smashing,
+                    Enums.eDamage.Lethal,
+                    Enums.eDamage.Energy,
+                    Enums.eDamage.Negative
+                ],
+                false,
+                damage =>
+                {
+                    var damageIndex = (int)damage;
+                    var uncapped = Math.Max(0, GetResistance(damageIndex, true));
+                    var capped = Math.Max(0, GetResistance(damageIndex, false));
+                    var tooltip = totalsCapped.Res[damageIndex] < totals.Res[damageIndex]
+                        ? $"{FormatPercentValue(uncapped)} {damageNames[damageIndex]} resistance capped at {FormatPercentValue(capped)}"
+                        : $"{FormatPercentValue(uncapped)} {damageNames[damageIndex]} resistance. (cap: {FormatPercentScale(resistanceCapValue, 0)})";
+                    return (capped, resistanceCapValue * 100f, tooltip);
+                },
+                FormatPercentValue,
+                resistanceCapValue * 100f);
+
+            var resistanceRight = BuildBarMetrics(
+                [
+                    Enums.eDamage.Fire,
+                    Enums.eDamage.Cold,
+                    Enums.eDamage.Toxic,
+                    Enums.eDamage.Psionic
+                ],
+                false,
+                damage =>
+                {
+                    var damageIndex = (int)damage;
+                    var uncapped = Math.Max(0, GetResistance(damageIndex, true));
+                    var capped = Math.Max(0, GetResistance(damageIndex, false));
+                    var tooltip = totalsCapped.Res[damageIndex] < totals.Res[damageIndex]
+                        ? $"{FormatPercentValue(uncapped)} {damageNames[damageIndex]} resistance capped at {FormatPercentValue(capped)}"
+                        : $"{FormatPercentValue(uncapped)} {damageNames[damageIndex]} resistance. (cap: {FormatPercentScale(resistanceCapValue, 0)})";
+                    return (capped, resistanceCapValue * 100f, tooltip);
+                },
+                FormatPercentValue,
+                resistanceCapValue * 100f);
+
+            _defenseSection.MetaText = "softcap: 45%";
+            _resistanceSection.MetaText = $"cap: {FormatPercentScale(resistanceCapValue, 0)}";
+
+            _quickReadStrip.SetMetrics(
+            [
+                new TotalsQuickMetric("Recharge", FormatSignedPercentValue(GetBuffHaste() - 100, 0), null, "The recharge time of this actor's powers is being altered by this effect.\r\nThe higher the value, the faster the recharge.", MidsTotalsGlyph.QuickRecharge, Color.FromArgb(187, 111, 255)),
+                new TotalsQuickMetric("Recovery", FormatPercentValue(GetRecoveryPct(), 0), null, iTip2, MidsTotalsGlyph.QuickRecovery, Color.FromArgb(135, 200, 255)),
+                new TotalsQuickMetric("Regen", FormatPercentValue(GetHealthRegenPercent(), 0), null, iTip3, MidsTotalsGlyph.QuickRegen, Color.FromArgb(154, 222, 100)),
+                new TotalsQuickMetric("End Drain", $"{DisplayValueFormatter.FormatRate(GetEndUsage())}/s", null, iTip1, MidsTotalsGlyph.QuickEndDrain, Color.FromArgb(255, 185, 96))
+            ]);
+
+            _defenseBarListLeft.ScaleMax = 100f;
+            _defenseBarListRight.ScaleMax = 100f;
+            _resistanceBarListLeft.ScaleMax = 100f;
+            _resistanceBarListRight.ScaleMax = 100f;
+            _defenseBarListLeft.SetMetrics(defenseLeft);
+            _defenseBarListRight.SetMetrics(defenseRight);
+            _resistanceBarListLeft.SetMetrics(resistanceLeft);
+            _resistanceBarListRight.SetMetrics(resistanceRight);
+
+            _coreMiscGrid.SetMetrics(
+            [
+                new TotalsValueMetric("To Hit", FormatPercentValue(GetBuffToHit(), 0), "This effect is increasing the accuracy of all powers on this actor.", MidsTotalsGlyph.StatToHit, Color.FromArgb(210, 210, 210)),
+                new TotalsValueMetric("Accuracy", FormatSignedPercentValue(GetBuffAccuracy(), 0), "This effect is increasing the accuracy scale of this actor's powers.", MidsTotalsGlyph.StatAccuracy, Color.FromArgb(210, 210, 210)),
+                new TotalsValueMetric("Damage", FormatSignedPercentValue(GetBuffDamage() - 100, 0), "This effect is modifying the outgoing damage of this actor's attack powers.", MidsTotalsGlyph.StatDamage, Color.FromArgb(255, 190, 70)),
+                new TotalsValueMetric("EndRdx", FormatPercentValue(GetBuffEndRdx(), 0), "The end cost of all powers on this actor is being reduced by this effect.\r\nThis is applied like an end-reduction enhancement.", MidsTotalsGlyph.StatEndRdx, Color.FromArgb(125, 185, 255)),
+                new TotalsValueMetric("Range", FormatSignedPercentValue(GetRangePercent(), 0), "This effect is modifying the range of this actor's powers.", MidsTotalsGlyph.StatRange, Color.FromArgb(210, 210, 210)),
+                new TotalsValueMetric("Threat", FormatPercentValue(GetThreatLevel(), 0), "This shows the actor's current threat modifier.", MidsTotalsGlyph.StatThreat, Color.FromArgb(255, 120, 90))
+            ]);
+
+            LayoutTotalsSections();
+
+            List<TotalsBarMetric> BuildBarMetrics(
+                IReadOnlyList<Enums.eDamage> damages,
+                bool defense,
+                Func<Enums.eDamage, (float value, float marker, string tooltip)> getter,
+                Func<float, int, string> formatter,
+                float defaultMarker)
+            {
+                var list = new List<TotalsBarMetric>(damages.Count);
+                foreach (var damage in damages)
+                {
+                    var (value, marker, tooltip) = getter(damage);
+                    var (icon, color) = GetDamageIcon(damage, defense);
+                    list.Add(new TotalsBarMetric(
+                        GetDamageDisplayName(damage),
+                        formatter(value, 1),
+                        value,
+                        marker <= 0 ? defaultMarker : marker,
+                        tooltip,
+                        icon,
+                        color));
+                }
+
+                return list;
+            }
+        }
+
+        private static string GetDamageDisplayName(Enums.eDamage damage) => damage switch
+        {
+            Enums.eDamage.AoE => "AoE",
+            _ => damage.ToString()
+        };
+
+        private static (MidsTotalsGlyph icon, Color color) GetDamageIcon(Enums.eDamage damage, bool defense)
+        {
+            return damage switch
+            {
+                Enums.eDamage.Smashing => (MidsTotalsGlyph.DamageSmashing, Color.FromArgb(184, 154, 255)),
+                Enums.eDamage.Lethal => (MidsTotalsGlyph.DamageLethal, Color.FromArgb(234, 234, 234)),
+                Enums.eDamage.Fire => (MidsTotalsGlyph.DamageFire, Color.FromArgb(255, 118, 77)),
+                Enums.eDamage.Cold => (MidsTotalsGlyph.DamageCold, Color.FromArgb(170, 230, 255)),
+                Enums.eDamage.Energy => (MidsTotalsGlyph.DamageEnergy, Color.FromArgb(170, 205, 255)),
+                Enums.eDamage.Negative => (MidsTotalsGlyph.DamageNegative, Color.FromArgb(196, 136, 255)),
+                Enums.eDamage.Toxic => (MidsTotalsGlyph.DamageToxic, Color.FromArgb(170, 245, 112)),
+                Enums.eDamage.Psionic => (MidsTotalsGlyph.DamagePsionic, Color.FromArgb(176, 132, 255)),
+                Enums.eDamage.Melee => (MidsTotalsGlyph.DamageMelee, Color.FromArgb(225, 208, 190)),
+                Enums.eDamage.Ranged => (MidsTotalsGlyph.DamageRanged, Color.FromArgb(205, 175, 255)),
+                Enums.eDamage.AoE => (MidsTotalsGlyph.DamageAoE, Color.FromArgb(255, 160, 112)),
+                _ => (defense ? MidsTotalsGlyph.SectionDefense : MidsTotalsGlyph.SectionResistance, Color.FromArgb(190, 200, 255))
+            };
         }
 
         public void DisplayBonuses()

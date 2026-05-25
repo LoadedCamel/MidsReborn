@@ -52,8 +52,26 @@ namespace Mids_Reborn.UI.Forms
 
         private const int BaselineCanvasWidth = 610;
         private const int BaselineFormWidth = 1280;
-        private const float BaselineMainLeftColumnWidth = 625f;
+        private const float BaselineMainLeftColumnWidth = 620f;
         private const float BaselineLeftPowerColumnWidth = 410f;
+        private const float BaselinePoolRailWidth = 210f;
+        private const float PoolRailExtraWidthRatio = 0.20f;
+        private const float BaselineHeaderNameWidth = 164f;
+        private const float BaselineHeaderArchetypeLabelWidth = 118f;
+        private const float BaselineHeaderArchetypeWidth = 152f;
+        private const float BaselineHeaderOriginLabelWidth = 74f;
+        private const float BaselineHeaderOriginWidth = 128f;
+        private const float BaselineHeaderModeLabelWidth = 76f;
+        private const float BaselineHeaderModeWidth = 196f;
+        private const float BaselineHeaderTotalsWidth = 140f;
+        private const float BaselineHeaderCombatWidth = 114f;
+        private const float BaselineHeaderContentHeight = 40f;
+        private const float BaselinePowerSetHeaderRowHeight = 18f;
+        private const float BaselinePowerSetDropDownRowHeight = 24f;
+        private const float BaselinePoolRailRightInset = 4f;
+        private const float BaselinePvToggleWidth = 148f;
+        private const float BaselineUtilityButtonWidth = 114f;
+        private const float BaselineRightActionRowHeight = 40f;
         private float _lastMasterScale = 1f;
         private int _lastCanvasWidth = -1;
         private float _lastLeftUiScale = 1f;
@@ -62,6 +80,18 @@ namespace Mids_Reborn.UI.Forms
         private readonly Dictionary<Control, Rectangle> _leftUiBounds = new();
         private readonly Dictionary<MidsListView, (int ScrollBarWidth, int PaddingX, int PaddingY, int LineSpacing)> _leftListMetrics = new();
         private readonly Dictionary<MidsVectorButton, int> _leftButtonCornerRadii = new();
+        private PoolSectionBinding[] _poolSections = [];
+        private Label? _modeLabel;
+        private MidsSegmentedToggle? _plannerModeToggle;
+        private MidsSegmentedToggle? _pvModeToggle;
+        private Panel? _headerChromeHost;
+        private MidsWorkspaceShellPanel? _nameInputShell;
+        private MidsWorkspaceShellPanel? _leftDetailsShell;
+        private MidsWorkspaceShellPanel? _poolShell;
+        private MidsWorkspaceShellPanel? _rightBuildShell;
+        private TableLayoutPanel? _rightBuildShellLayout;
+        private bool _syncingPlannerModeToggle;
+        private bool _syncingPvModeToggle;
         private System.Drawing.Icon? _shellLargeIcon;
         private System.Drawing.Icon? _shellSmallIcon;
 
@@ -138,6 +168,17 @@ namespace Mids_Reborn.UI.Forms
         private I9Slot? LastEnhPlaced;
         private string? LastFileName;
         private int LastIndex;
+
+        private sealed record PoolSectionBinding(
+            string Key,
+            int PowersetIndex,
+            Label Label,
+            PowersetDropDownList DropDown,
+            MidsListView List,
+            int LabelRowIndex,
+            int DropDownRowIndex,
+            int ListRowIndex,
+            bool IsAncillary = false);
         private FormWindowState LastState;
         private bool _canvasLayoutSettleQueued;
         private bool NoResizeEvent;
@@ -202,6 +243,9 @@ namespace Mids_Reborn.UI.Forms
         {
             FormBorderStyle = FormBorderStyle.None;
             InitializeComponent();
+            InitializePoolSectionBindings();
+            EnsureWorkspaceShells();
+            InitializeNativeHeaderLayout();
             ConfigurePowerListHeadings();
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
             UpdateStyles();
@@ -210,6 +254,7 @@ namespace Mids_Reborn.UI.Forms
             Shown += MainWindow2_Shown;
             Closing += MainWindow2_Closing;
             ResizeEnd += OnResizeEnd;
+            midsvScrollPanel1.AvailableClientWidthChanged += MidsvScrollPanel1_AvailableClientWidthChanged;
 
             EnhancingSlot = -1;
             EnhancingPower = -1;
@@ -257,27 +302,521 @@ namespace Mids_Reborn.UI.Forms
             PetView.SliderUpdated += OnPetViewSliderUpdated;
             EnsurePetActorMenuItem();
             InitializeCombatContextEntryPoints();
+            UpdateFooterSummary();
         }
 
         private void ConfigurePowerListHeadings()
         {
-            foreach (var list in new[]
-                     {
-                         primaryList, secondaryList, pool0List, pool1List, pool2List, pool3List, ancillaryList
-                     })
+            foreach (var list in new[] { primaryList, secondaryList }.Concat(_poolSections.Select(section => section.List)))
             {
                 list.DecorateHeadings = false;
             }
         }
+
+        private void InitializeNativeHeaderLayout()
+        {
+            EnsureHeaderChromeHost();
+            EnsureHeaderNameShell();
+
+            ApplyHeaderLabelStyle(lblName);
+            ApplyHeaderLabelStyle(lblAT);
+            ApplyHeaderLabelStyle(lblOrigin);
+
+            _modeLabel = new Label
+            {
+                Dock = DockStyle.Fill,
+                Name = "lblModeNative",
+                Text = "Mode:",
+            };
+            ApplyHeaderLabelStyle(_modeLabel);
+
+            _plannerModeToggle = new MidsSegmentedToggle
+            {
+                Dock = DockStyle.Fill,
+                Font = new Font("Noto Sans SemiBold", 9.25F, FontStyle.Bold, GraphicsUnit.Point, 0),
+                Margin = new Padding(3, 4, 12, 4),
+                Name = "plannerModeToggle"
+            };
+            _plannerModeToggle.SetItems("Level-Up", "Respec");
+            _plannerModeToggle.SelectedIndexChanged += PlannerModeToggle_SelectedIndexChanged;
+            tTip.SetToolTip(_plannerModeToggle, "Build Mode");
+
+            _pvModeToggle = new MidsSegmentedToggle
+            {
+                Dock = DockStyle.Fill,
+                Font = new Font("Noto Sans SemiBold", 9.25F, FontStyle.Bold, GraphicsUnit.Point, 0),
+                Margin = new Padding(0, 4, 4, 4),
+                Name = "pvModeToggle"
+            };
+            _pvModeToggle.SetItems("PvE", "PvP");
+            _pvModeToggle.SelectedIndexChanged += PvModeToggle_SelectedIndexChanged;
+            tTip.SetToolTip(_pvModeToggle, "Mode");
+
+            characterLayoutPanel.SuspendLayout();
+            buttonsLayoutPanel.SuspendLayout();
+
+            modeEx.Visible = false;
+            pvXEx.Visible = false;
+            dynMode.Visible = false;
+
+            characterLayoutPanel.Controls.Remove(modeEx);
+            buttonsLayoutPanel.Controls.Remove(dynMode);
+            buttonsLayoutPanel.Controls.Remove(pvXEx);
+            buttonsLayoutPanel.Controls.Remove(combatEx);
+
+            ConfigureCharacterHeaderColumns();
+            ConfigureRightActionStripColumns();
+
+            characterLayoutPanel.Controls.Add(_modeLabel, 6, 0);
+            characterLayoutPanel.Controls.Add(_plannerModeToggle, 7, 0);
+            characterLayoutPanel.Controls.Add(combatEx, 9, 0);
+            characterLayoutPanel.SetColumn(lblName, 0);
+            if (_nameInputShell is not null)
+            {
+                characterLayoutPanel.Controls.Add(_nameInputShell, 1, 0);
+                characterLayoutPanel.SetColumn(_nameInputShell, 1);
+            }
+            characterLayoutPanel.SetColumn(lblAT, 2);
+            characterLayoutPanel.SetColumn(atDropDown, 3);
+            characterLayoutPanel.SetColumn(lblOrigin, 4);
+            characterLayoutPanel.SetColumn(originDropDown, 5);
+            characterLayoutPanel.SetColumn(_modeLabel, 6);
+            characterLayoutPanel.SetColumn(_plannerModeToggle, 7);
+            characterLayoutPanel.SetColumn(totalsEx, 8);
+            characterLayoutPanel.SetColumn(combatEx, 9);
+
+            buttonsLayoutPanel.Controls.Add(_pvModeToggle, 0, 0);
+            buttonsLayoutPanel.SetColumn(_pvModeToggle, 0);
+            buttonsLayoutPanel.SetColumn(accoladesEx, 2);
+            buttonsLayoutPanel.SetColumn(incarnatesEx, 3);
+            buttonsLayoutPanel.SetColumn(ibPrestigePowersEx, 4);
+            buttonsLayoutPanel.SetColumn(tempPowersEx, 5);
+
+            leftLayoutPanel.Margin = new Padding(3, 3, 0, 0);
+            rightLayoutPanel.Margin = new Padding(0, 3, 0, 0);
+            leftInnerLayoutPanel.Margin = Padding.Empty;
+            atDropDown.Margin = new Padding(3, 8, 3, 6);
+            originDropDown.Margin = new Padding(3, 8, 3, 6);
+            combatEx.Margin = new Padding(4, 4, 4, 4);
+            totalsEx.Margin = new Padding(8, 4, 4, 4);
+            buttonsLayoutPanel.Margin = Padding.Empty;
+            canvasScrollPanel.Margin = new Padding(0, 4, 0, 0);
+            midsvScrollPanel1.Margin = Padding.Empty;
+
+            characterLayoutPanel.ResumeLayout(performLayout: true);
+            buttonsLayoutPanel.ResumeLayout(performLayout: true);
+
+            ApplyHeaderNameInputStyle();
+            LayoutHeaderNameInput();
+            SyncPlannerModeToggle();
+            SyncPvModeToggle();
+        }
+
+        private void ConfigureCharacterHeaderColumns()
+        {
+            characterLayoutPanel.ColumnCount = 11;
+            characterLayoutPanel.ColumnStyles.Clear();
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 60F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderNameWidth));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderArchetypeLabelWidth));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderArchetypeWidth));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderOriginLabelWidth));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderOriginWidth));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderModeLabelWidth));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderModeWidth));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderTotalsWidth));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderCombatWidth));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        }
+
+        private void ConfigureRightActionStripColumns()
+        {
+            buttonsLayoutPanel.ColumnCount = 6;
+            buttonsLayoutPanel.ColumnStyles.Clear();
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselinePvToggleWidth));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineUtilityButtonWidth));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineUtilityButtonWidth));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineUtilityButtonWidth));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineUtilityButtonWidth));
+        }
+
+        private static void ApplyHeaderLabelStyle(Label label)
+        {
+            label.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            label.ForeColor = Color.White;
+            label.Margin = new Padding(0, 0, 6, 0);
+            label.Padding = Padding.Empty;
+            label.FlatStyle = FlatStyle.Flat;
+            label.TextAlign = System.Drawing.ContentAlignment.MiddleRight;
+        }
+
+        private void EnsureHeaderNameShell()
+        {
+            if (_nameInputShell is not null)
+            {
+                return;
+            }
+
+            _nameInputShell = CreateWorkspaceShell("headerNameShell", 1, Padding.Empty);
+            _nameInputShell.CornerRadius = 6;
+            _nameInputShell.Margin = new Padding(3, 6, 3, 6);
+            _nameInputShell.ShowInnerBorder = false;
+            _nameInputShell.Resize += (_, _) => LayoutHeaderNameInput();
+
+            characterLayoutPanel.SuspendLayout();
+            characterLayoutPanel.Controls.Remove(txtName);
+
+            txtName.Anchor = AnchorStyles.Left | AnchorStyles.Right | AnchorStyles.Top;
+            txtName.BorderStyle = BorderStyle.None;
+            txtName.Margin = Padding.Empty;
+            txtName.Font = new Font("Segoe UI Semibold", 9.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+
+            _nameInputShell.Controls.Add(txtName);
+            characterLayoutPanel.ResumeLayout(performLayout: false);
+        }
+
+        private void ApplyHeaderNameInputStyle()
+        {
+            var theme = ThemeManager.CurrentTheme?.DataView ?? ThemeManager.DesignTime.DataView;
+            txtName.BackColor = Blend(theme.Card, theme.Background, 0.35f);
+            txtName.ForeColor = theme.ValueText;
+            _nameInputShell?.Invalidate();
+        }
+
+        private void LayoutHeaderNameInput()
+        {
+            if (_nameInputShell is null)
+            {
+                return;
+            }
+
+            int horizontalInset = Math.Max(8, _nameInputShell.Padding.Left);
+            int availableWidth = Math.Max(1, _nameInputShell.ClientSize.Width - horizontalInset * 2);
+            int textHeight = Math.Max(txtName.PreferredHeight, TextRenderer.MeasureText("Ag", txtName.Font).Height);
+            int top = Math.Max(0, (_nameInputShell.ClientSize.Height - textHeight) / 2);
+
+            txtName.SetBounds(horizontalInset, top, availableWidth, textHeight);
+        }
+
+        private void EnsureHeaderChromeHost()
+        {
+            if (_headerChromeHost is null)
+            {
+                _headerChromeHost = new Panel
+                {
+                    BackColor = Color.Transparent,
+                    Dock = DockStyle.Fill,
+                    Margin = Padding.Empty,
+                    Name = "headerChromeHost",
+                    Padding = Padding.Empty
+                };
+
+                mainLayoutPanel.SuspendLayout();
+                mainLayoutPanel.Controls.Remove(characterLayoutPanel);
+                characterLayoutPanel.Dock = DockStyle.None;
+                characterLayoutPanel.Anchor = AnchorStyles.Top | AnchorStyles.Left;
+                characterLayoutPanel.Margin = Padding.Empty;
+                characterLayoutPanel.Location = Point.Empty;
+                _headerChromeHost.Controls.Add(characterLayoutPanel);
+                mainLayoutPanel.Controls.Add(_headerChromeHost, 0, 0);
+                mainLayoutPanel.SetColumnSpan(_headerChromeHost, 2);
+                mainLayoutPanel.ResumeLayout(performLayout: true);
+            }
+        }
+
+        private void EnsureWorkspaceShells()
+        {
+            EnsureLeftWorkspaceShells();
+            EnsureRightBuildShell();
+        }
+
+        private void EnsureLeftWorkspaceShells()
+        {
+            if (_leftDetailsShell is null)
+            {
+                _leftDetailsShell = CreateWorkspaceShell("leftDetailsShell", 1, new Padding(10, 8, 10, 8));
+
+                leftLayoutPanel.SuspendLayout();
+                leftLayoutPanel.Controls.Remove(leftInnerLayoutPanel);
+                leftInnerLayoutPanel.Dock = DockStyle.Fill;
+                leftInnerLayoutPanel.Margin = Padding.Empty;
+                _leftDetailsShell.Controls.Add(leftInnerLayoutPanel);
+                leftLayoutPanel.Controls.Add(_leftDetailsShell, 0, 0);
+                leftLayoutPanel.SetRowSpan(_leftDetailsShell, 2);
+                leftLayoutPanel.ResumeLayout(performLayout: true);
+            }
+
+            if (_poolShell is null)
+            {
+                _poolShell = CreateWorkspaceShell("poolShell", 1, new Padding(6, 10, 6, 10));
+
+                leftLayoutPanel.SuspendLayout();
+                leftLayoutPanel.Controls.Remove(midsvScrollPanel1);
+                midsvScrollPanel1.Dock = DockStyle.Fill;
+                midsvScrollPanel1.Margin = Padding.Empty;
+                _poolShell.Controls.Add(midsvScrollPanel1);
+                leftLayoutPanel.Controls.Add(_poolShell, 1, 0);
+                leftLayoutPanel.SetRowSpan(_poolShell, 2);
+                leftLayoutPanel.ResumeLayout(performLayout: true);
+            }
+        }
+
+        private void EnsureRightBuildShell()
+        {
+            if (_rightBuildShell is not null)
+            {
+                return;
+            }
+
+            _rightBuildShell = CreateWorkspaceShell("rightBuildShell", 2, new Padding(8, 8, 8, 8));
+            _rightBuildShellLayout = new TableLayoutPanel
+            {
+                BackColor = Color.Transparent,
+                ColumnCount = 1,
+                Dock = DockStyle.Fill,
+                Margin = Padding.Empty,
+                Padding = Padding.Empty,
+                RowCount = 2
+            };
+            _rightBuildShellLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            _rightBuildShellLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, BaselineRightActionRowHeight));
+            _rightBuildShellLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            rightLayoutPanel.SuspendLayout();
+            rightLayoutPanel.Controls.Remove(buttonsLayoutPanel);
+            rightLayoutPanel.Controls.Remove(canvasScrollPanel);
+            rightLayoutPanel.RowCount = 1;
+            rightLayoutPanel.RowStyles.Clear();
+            rightLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            buttonsLayoutPanel.Dock = DockStyle.Fill;
+            buttonsLayoutPanel.Margin = Padding.Empty;
+            canvasScrollPanel.Dock = DockStyle.Fill;
+            canvasScrollPanel.Margin = new Padding(0, 4, 0, 0);
+
+            _rightBuildShellLayout.Controls.Add(buttonsLayoutPanel, 0, 0);
+            _rightBuildShellLayout.Controls.Add(canvasScrollPanel, 0, 1);
+            _rightBuildShell.Controls.Add(_rightBuildShellLayout);
+
+            rightLayoutPanel.Controls.Add(_rightBuildShell, 0, 0);
+            rightLayoutPanel.ResumeLayout(performLayout: true);
+        }
+
+        private static MidsWorkspaceShellPanel CreateWorkspaceShell(string name, int borderThickness, Padding padding)
+            => new()
+            {
+                BackColor = Color.Transparent,
+                BorderThickness = borderThickness,
+                CornerRadius = 8,
+                Dock = DockStyle.Fill,
+                Margin = Padding.Empty,
+                Name = name,
+                Padding = padding,
+                ShowInnerBorder = true
+            };
+
+        private static Enums.dmModes NormalizePlannerBuildMode(Enums.dmModes buildMode)
+            => buildMode switch
+            {
+                Enums.dmModes.Normal => Enums.dmModes.Respec,
+                Enums.dmModes.None => Enums.dmModes.LevelUp,
+                _ => buildMode
+            };
+
+        private void SyncPlannerModeToggle()
+        {
+            if (_plannerModeToggle is null)
+            {
+                return;
+            }
+
+            var plannerMode = NormalizePlannerBuildMode(MidsContext.Config?.BuildMode ?? Enums.dmModes.LevelUp);
+            if (MidsContext.Config is not null && MidsContext.Config.BuildMode != plannerMode)
+            {
+                MidsContext.Config.BuildMode = plannerMode;
+            }
+
+            _syncingPlannerModeToggle = true;
+            _plannerModeToggle.SelectedIndex = plannerMode switch
+            {
+                Enums.dmModes.LevelUp => 0,
+                Enums.dmModes.Respec => 1,
+                _ => 0
+            };
+            _syncingPlannerModeToggle = false;
+        }
+
+        private void SyncPvModeToggle()
+        {
+            if (_pvModeToggle is null)
+            {
+                return;
+            }
+
+            _syncingPvModeToggle = true;
+            _pvModeToggle.SelectedIndex = MidsContext.Config?.Inc.DisablePvE == true ? 1 : 0;
+            _syncingPvModeToggle = false;
+        }
+
+        private void ApplyBuildMode(Enums.dmModes buildMode)
+        {
+            if (MainModule.MidsController.Toon == null)
+            {
+                return;
+            }
+
+            buildMode = NormalizePlannerBuildMode(buildMode);
+
+            MidsContext.Config.BuildMode = buildMode;
+            if (buildMode == Enums.dmModes.LevelUp && DatabaseAPI.ServerData.EnableInherentSlotting)
+            {
+                MainModule.MidsController.Toon.ClearInvalidInherentSlots();
+            }
+
+            if (!DatabaseAPI.LoadLevelsDatabase(MidsContext.Config.DataPath))
+            {
+                UpdateModeInfo();
+                return;
+            }
+
+            MidsContext.Character?.ResetLevel();
+            PowerModified(markModified: false);
+            UpdateDmBuffer();
+        }
+
+        private void ApplyPvXMode(bool disablePvE)
+        {
+            MidsContext.Config.Inc.DisablePvE = disablePvE;
+            pvXEx.ToggleState = disablePvE
+                ? MidsVectorButton.States.ToggledOn
+                : MidsVectorButton.States.ToggledOff;
+            SyncPvModeToggle();
+            RefreshInfo();
+        }
+
+        private void InitializePoolSectionBindings()
+        {
+            _poolSections =
+            [
+                new PoolSectionBinding("Pool 1", 3, pool0Label, pool0DropDown, pool0List, 0, 1, 2),
+                new PoolSectionBinding("Pool 2", 4, pool1Label, pool1DropDown, pool1List, 3, 4, 5),
+                new PoolSectionBinding("Pool 3", 5, pool2Label, pool2DropDown, pool2List, 6, 7, 8),
+                new PoolSectionBinding("Pool 4", 6, pool3Label, pool3DropDown, pool3List, 9, 10, 11),
+                new PoolSectionBinding("Ancillary / Epic", 7, ancillaryLabel, ancillaryDropDown, ancillaryList, 12, 13, 14, true)
+            ];
+
+            foreach (var section in _poolSections)
+            {
+                section.Label.Margin = new Padding(2, section.Label.Margin.Top, 2, section.Label.Margin.Bottom);
+                section.DropDown.Margin = new Padding(2, section.DropDown.Margin.Top, 2, section.DropDown.Margin.Bottom);
+                section.List.Margin = new Padding(2, section.List.Margin.Top, 2, section.List.Margin.Bottom);
+                section.List.Scrollable = false;
+                section.List.PaddingY = 1;
+                section.List.LineSpacing = -1;
+            }
+        }
+
+        private IEnumerable<PoolSectionBinding> StandardPoolSections()
+            => _poolSections.Where(section => !section.IsAncillary);
+
+        private PoolSectionBinding AncillaryPoolSection()
+            => _poolSections.First(section => section.IsAncillary);
 
         private void OnResizeEnd(object? sender, EventArgs e)
         {
             Debug.WriteLine(ClientSize.ToString());
         }
 
+        private void MidsvScrollPanel1_AvailableClientWidthChanged(object? sender, int availableWidth)
+        {
+            if (availableWidth <= 0 || IsDisposed || Disposing)
+            {
+                return;
+            }
+
+            ApplyPoolRailWidth(availableWidth);
+        }
+
         private void OnPetViewSliderUpdated()
         {
             FrmPetActorDetailsWindow?.UpdateData();
+        }
+
+        private void ApplyPoolRailWidth(int availableWidth)
+        {
+            if (availableWidth <= 0)
+            {
+                return;
+            }
+
+            rightInnerLayoutPanel.Width = availableWidth;
+            UpdatePoolRailSectionHeights();
+        }
+
+        private void UpdatePoolRailSectionHeights()
+        {
+            if (_poolSections.Length == 0 || rightInnerLayoutPanel.Width <= 0)
+            {
+                return;
+            }
+
+            rightInnerLayoutPanel.SuspendLayout();
+            foreach (var section in _poolSections)
+            {
+                var rowStyle = rightInnerLayoutPanel.RowStyles[section.ListRowIndex];
+                rowStyle.SizeType = SizeType.Absolute;
+                var proposedWidth = Math.Max(1,
+                    rightInnerLayoutPanel.ClientSize.Width
+                    - rightInnerLayoutPanel.Padding.Horizontal
+                    - section.List.Margin.Horizontal);
+                var preferredHeight = section.List.GetPreferredSize(new Size(proposedWidth, int.MaxValue)).Height;
+                rowStyle.Height = Math.Max(section.List.MinimumSize.Height, preferredHeight);
+            }
+            rightInnerLayoutPanel.ResumeLayout(performLayout: true);
+        }
+
+        private void RefreshPoolRailLayout()
+        {
+            rightInnerLayoutPanel.AutoSize = true;
+            rightInnerLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            ApplyPoolRailWidth(Math.Max(1, midsvScrollPanel1.AvailableClientWidth));
+            midsvScrollPanel1.RecalculateLayout();
+        }
+
+        private void UpdateFooterSummary()
+        {
+            if (footerSummaryLabel.IsDisposed || footerTotalSlotsLabel.IsDisposed || footerSlotsLeftLabel.IsDisposed)
+            {
+                return;
+            }
+
+            var character = MidsContext.Character;
+            if (character == null)
+            {
+                footerSummaryLabel.Text = "No active build";
+                footerTotalSlotsLabel.Text = "Total Slots: 0";
+                footerSlotsLeftLabel.Text = "Slots Left: 0";
+                footerSlotsLeftLabel.ForeColor = Color.WhiteSmoke;
+                return;
+            }
+
+            var name = string.IsNullOrWhiteSpace(character.Name) ? "Unnamed Build" : character.Name.Trim();
+            var archetype = character.Archetype?.DisplayName ?? "Unknown Archetype";
+            var originText = originDropDown.SelectedItem?.ToString() ?? originDropDown.Text;
+            originText = string.IsNullOrWhiteSpace(originText) ? "Unknown Origin" : originText;
+
+            footerSummaryLabel.Text = $"{name}  |  {archetype}  |  {originText}  |  Level {character.Level + 1}";
+
+            var slotsPlaced = character.CurrentBuild?.SlotsPlaced ?? 0;
+            var totalSlots = Build.TotalSlotsAvailable;
+            var slotsLeft = totalSlots - slotsPlaced;
+
+            footerTotalSlotsLabel.Text = $"Total Slots: {totalSlots}";
+            footerSlotsLeftLabel.Text = $"Slots Left: {slotsLeft}";
+            footerSlotsLeftLabel.ForeColor = slotsLeft < 0
+                ? Color.FromArgb(255, 120, 120)
+                : Color.FromArgb(115, 255, 110);
         }
 
         #endregion
@@ -357,37 +896,118 @@ namespace Mids_Reborn.UI.Forms
 
             SuspendLayout();
             mainLayoutPanel.SuspendLayout();
+            rightLayoutPanel.SuspendLayout();
             leftLayoutPanel.SuspendLayout();
             leftInnerLayoutPanel.SuspendLayout();
             rightInnerLayoutPanel.SuspendLayout();
             characterLayoutPanel.SuspendLayout();
             characterPanel.SuspendLayout();
 
-            var maximumLeftWidth = Math.Max(BaselineMainLeftColumnWidth, ClientSize.Width * 0.48f);
-            var leftWidth = Math.Clamp(BaselineMainLeftColumnWidth * scale, BaselineMainLeftColumnWidth, maximumLeftWidth);
+            var provisionalLeftWidth = BaselineMainLeftColumnWidth * scale;
+            var extraLeftWidth = Math.Max(0f, provisionalLeftWidth - BaselineMainLeftColumnWidth);
+            var poolRailWidth = Math.Clamp(
+                BaselinePoolRailWidth + extraLeftWidth * PoolRailExtraWidthRatio,
+                BaselinePoolRailWidth,
+                244f);
+            var minimumInnerWidth = ScaleLayoutValue(BaselineLeftPowerColumnWidth, scale);
+            var minimumLeftWidth = Math.Max(BaselineMainLeftColumnWidth, minimumInnerWidth + poolRailWidth + 4f);
+            var maximumLeftWidth = Math.Max(minimumLeftWidth, ClientSize.Width * 0.48f);
+            var leftWidth = Math.Clamp(provisionalLeftWidth, minimumLeftWidth, maximumLeftWidth);
 
             mainLayoutPanel.ColumnStyles[0].Width = leftWidth;
-            mainLayoutPanel.RowStyles[0].Height = ScaleLayoutValue(72f, scale);
+            mainLayoutPanel.RowStyles[0].Height = ScaleLayoutValue(46f, scale);
 
-            leftLayoutPanel.ColumnStyles[0].Width = ScaleLayoutValue(BaselineLeftPowerColumnWidth, scale);
-            leftLayoutPanel.RowStyles[0].Height = ScaleLayoutValue(110f, scale);
-            leftLayoutPanel.RowStyles[1].Height = ScaleLayoutValue(160f, scale);
+            leftLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
+            leftLayoutPanel.ColumnStyles[0].Width = 100f;
+            leftLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;
+            leftLayoutPanel.ColumnStyles[1].Width = poolRailWidth;
+            leftLayoutPanel.RowStyles[0].Height = ScaleLayoutValue(160f, scale);
 
-            characterLayoutPanel.ColumnStyles[0].Width = ScaleLayoutValue(90f, scale);
-            characterLayoutPanel.ColumnStyles[1].Width = ScaleLayoutValue(200f, scale);
+            if (_rightBuildShellLayout is not null)
+            {
+                _rightBuildShellLayout.RowStyles[0].Height = ScaleLayoutValue(BaselineRightActionRowHeight, scale);
+            }
 
-            leftInnerLayoutPanel.RowStyles[0].Height = ScaleLayoutValue(20f, scale);
-            leftInnerLayoutPanel.RowStyles[1].Height = ScaleLayoutValue(26f, scale);
+            if (characterLayoutPanel.ColumnStyles.Count >= 11)
+            {
+                characterLayoutPanel.ColumnStyles[0].Width = ScaleLayoutValue(60f, scale);
+                characterLayoutPanel.ColumnStyles[2].Width = ScaleLayoutValue(BaselineHeaderArchetypeLabelWidth, scale);
+                characterLayoutPanel.ColumnStyles[3].Width = ScaleLayoutValue(BaselineHeaderArchetypeWidth, scale);
+                characterLayoutPanel.ColumnStyles[4].Width = ScaleLayoutValue(BaselineHeaderOriginLabelWidth, scale);
+                characterLayoutPanel.ColumnStyles[5].Width = ScaleLayoutValue(BaselineHeaderOriginWidth, scale);
+                characterLayoutPanel.ColumnStyles[6].Width = ScaleLayoutValue(BaselineHeaderModeLabelWidth, scale);
+                characterLayoutPanel.ColumnStyles[7].Width = ScaleLayoutValue(BaselineHeaderModeWidth, scale);
+                characterLayoutPanel.ColumnStyles[8].Width = ScaleLayoutValue(BaselineHeaderTotalsWidth, scale);
+                characterLayoutPanel.ColumnStyles[9].Width = ScaleLayoutValue(BaselineHeaderCombatWidth, scale);
+
+                float fixedHeaderWidthExcludingName =
+                    characterLayoutPanel.ColumnStyles[0].Width +
+                    characterLayoutPanel.ColumnStyles[2].Width +
+                    characterLayoutPanel.ColumnStyles[3].Width +
+                    characterLayoutPanel.ColumnStyles[4].Width +
+                    characterLayoutPanel.ColumnStyles[5].Width +
+                    characterLayoutPanel.ColumnStyles[6].Width +
+                    characterLayoutPanel.ColumnStyles[7].Width +
+                    characterLayoutPanel.ColumnStyles[8].Width +
+                    characterLayoutPanel.ColumnStyles[9].Width;
+
+                float minimumNameWidth = ScaleLayoutValue(160f, scale);
+                float preferredNameWidth = ScaleLayoutValue(BaselineHeaderNameWidth, scale);
+                float maximumNameWidth = ScaleLayoutValue(198f, scale);
+                float desiredSpacerWidth = ScaleLayoutValue(12f, scale);
+                float availableNameWidth = Math.Max(
+                    minimumNameWidth,
+                    characterLayoutPanel.ClientSize.Width - fixedHeaderWidthExcludingName - desiredSpacerWidth);
+
+                characterLayoutPanel.ColumnStyles[1].Width = Math.Min(
+                    maximumNameWidth,
+                    Math.Max(preferredNameWidth, availableNameWidth));
+
+                float headerBandWidth =
+                    fixedHeaderWidthExcludingName +
+                    characterLayoutPanel.ColumnStyles[1].Width +
+                    ScaleLayoutValue(24f, scale);
+
+                int headerHostWidth = Math.Max(
+                    1,
+                    ((_headerChromeHost?.ClientSize.Width)
+                        ?? (characterLayoutPanel.Parent?.ClientSize.Width ?? characterLayoutPanel.Width)) - 1);
+                characterLayoutPanel.Width = (int)Math.Min(headerHostWidth, Math.Ceiling(headerBandWidth));
+                characterLayoutPanel.Height = Math.Max(1, (int)Math.Round(ScaleLayoutValue(BaselineHeaderContentHeight, scale)));
+                if (_headerChromeHost is not null)
+                {
+                    characterLayoutPanel.Top = Math.Max(0, (_headerChromeHost.ClientSize.Height - characterLayoutPanel.Height) / 2);
+                }
+            }
+
+            if (buttonsLayoutPanel.ColumnStyles.Count >= 6)
+            {
+                buttonsLayoutPanel.ColumnStyles[0].Width = ScaleLayoutValue(BaselinePvToggleWidth, scale);
+                for (int column = 2; column <= 5; column++)
+                {
+                    buttonsLayoutPanel.ColumnStyles[column].Width = ScaleLayoutValue(BaselineUtilityButtonWidth, scale);
+                }
+            }
+
+            ApplyWorkspaceShellScale(scale);
+
+            leftInnerLayoutPanel.RowStyles[0].Height = ScaleLayoutValue(BaselinePowerSetHeaderRowHeight, scale);
+            leftInnerLayoutPanel.RowStyles[1].Height = ScaleLayoutValue(BaselinePowerSetDropDownRowHeight, scale);
 
             for (var i = 0; i < rightInnerLayoutPanel.RowStyles.Count; i++)
             {
                 if (rightInnerLayoutPanel.RowStyles[i].SizeType != SizeType.Absolute) continue;
-                rightInnerLayoutPanel.RowStyles[i].Height = ScaleLayoutValue(i % 3 == 0 ? 20f : 26f, scale);
+                rightInnerLayoutPanel.RowStyles[i].Height = ScaleLayoutValue(i % 3 switch
+                {
+                    0 => 20f,
+                    1 => 26f,
+                    _ => 114f
+                }, scale);
             }
 
             ScaleLeftUiControlTree(leftLayoutPanel, scale);
             ScaleLeftUiControlTree(buttonsLayoutPanel, scale);
-            ScaleCharacterPanelBounds(scale);
+            ScaleLeftUiControlTree(characterLayoutPanel, scale);
             ApplyPoolStackLayout(scale);
             dataView.ApplyUiScale(scale);
             leftLayoutPanel.RefreshSmartLayout();
@@ -397,6 +1017,7 @@ namespace Mids_Reborn.UI.Forms
             rightInnerLayoutPanel.ResumeLayout(performLayout: true);
             leftInnerLayoutPanel.ResumeLayout(performLayout: true);
             leftLayoutPanel.ResumeLayout(performLayout: true);
+            rightLayoutPanel.ResumeLayout(performLayout: true);
             mainLayoutPanel.ResumeLayout(performLayout: true);
             ResumeLayout(performLayout: true);
         }
@@ -404,6 +1025,65 @@ namespace Mids_Reborn.UI.Forms
         private static float ScaleLayoutValue(float value, float scale) => Math.Max(1f, (float)Math.Round(value * scale));
 
         private int ScalePx(int value, float scale) => Math.Max(1, (int)Math.Round(value * scale));
+
+        private void ApplyWorkspaceShellScale(float scale)
+        {
+            atDropDown.Margin = ScalePadding(new Padding(3, 8, 3, 6), scale);
+            originDropDown.Margin = ScalePadding(new Padding(3, 8, 3, 6), scale);
+
+            if (_nameInputShell is not null)
+            {
+                _nameInputShell.CornerRadius = ScalePx(6, scale);
+                _nameInputShell.BorderThickness = Math.Max(1, (int)Math.Round(scale));
+                _nameInputShell.Padding = ScalePadding(new Padding(10, 0, 10, 0), scale);
+                _nameInputShell.Margin = ScalePadding(new Padding(3, 6, 3, 6), scale);
+                LayoutHeaderNameInput();
+            }
+
+            if (_leftDetailsShell is not null)
+            {
+                _leftDetailsShell.CornerRadius = ScalePx(8, scale);
+                _leftDetailsShell.BorderThickness = Math.Max(1, (int)Math.Round(scale));
+                _leftDetailsShell.Padding = ScalePadding(new Padding(10, 8, 10, 8), scale);
+                _leftDetailsShell.Margin = ScalePadding(new Padding(3, 3, 2, 3), scale);
+            }
+
+            if (_poolShell is not null)
+            {
+                _poolShell.CornerRadius = ScalePx(8, scale);
+                _poolShell.BorderThickness = Math.Max(1, (int)Math.Round(scale));
+                _poolShell.Padding = ScalePadding(new Padding(6, 10, 6, 10), scale);
+                _poolShell.Margin = ScalePadding(new Padding(2, 3, 0, 3), scale);
+            }
+
+            rightInnerLayoutPanel.Padding = new Padding(0, 0, ScalePx((int)BaselinePoolRailRightInset, scale), 0);
+
+            if (_rightBuildShell is not null)
+            {
+                _rightBuildShell.CornerRadius = ScalePx(8, scale);
+                _rightBuildShell.BorderThickness = Math.Max(1, (int)Math.Round(1.5f * scale));
+                _rightBuildShell.Padding = ScalePadding(new Padding(8), scale);
+                _rightBuildShell.Margin = ScalePadding(new Padding(3, 3, 0, 0), scale);
+            }
+        }
+
+        private Padding ScalePadding(Padding padding, float scale)
+            => new(
+                ScalePx(padding.Left, scale),
+                ScalePx(padding.Top, scale),
+                ScalePx(padding.Right, scale),
+                ScalePx(padding.Bottom, scale));
+
+        private static Color Blend(Color first, Color second, float amountSecond)
+        {
+            amountSecond = Math.Clamp(amountSecond, 0f, 1f);
+            float amountFirst = 1f - amountSecond;
+            return Color.FromArgb(
+                (int)Math.Round(first.A * amountFirst + second.A * amountSecond),
+                (int)Math.Round(first.R * amountFirst + second.R * amountSecond),
+                (int)Math.Round(first.G * amountFirst + second.G * amountSecond),
+                (int)Math.Round(first.B * amountFirst + second.B * amountSecond));
+        }
 
         private void ScaleLeftUiControlTree(Control root, float scale)
         {
@@ -480,20 +1160,20 @@ namespace Mids_Reborn.UI.Forms
 
         private void ApplyPoolStackLayout(float scale)
         {
-            midsvScrollPanel1.ScrollbarEnabled = false;
-            rightInnerLayoutPanel.AutoSize = false;
-            rightInnerLayoutPanel.AutoSizeMode = AutoSizeMode.GrowOnly;
-            rightInnerLayoutPanel.Width = Math.Max(0, midsvScrollPanel1.ClientSize.Width);
-            rightInnerLayoutPanel.Height = Math.Max(0, midsvScrollPanel1.ClientSize.Height);
+            midsvScrollPanel1.ScrollbarEnabled = true;
+            rightInnerLayoutPanel.AutoSize = true;
+            rightInnerLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
-            foreach (var rowIndex in new[] { 2, 5, 8, 11, 14 })
+            foreach (var section in _poolSections)
             {
-                if (rowIndex < 0 || rowIndex >= rightInnerLayoutPanel.RowStyles.Count) continue;
-                rightInnerLayoutPanel.RowStyles[rowIndex].SizeType = SizeType.Percent;
-                rightInnerLayoutPanel.RowStyles[rowIndex].Height = 20f;
+                rightInnerLayoutPanel.RowStyles[section.LabelRowIndex].SizeType = SizeType.Absolute;
+                rightInnerLayoutPanel.RowStyles[section.LabelRowIndex].Height = ScaleLayoutValue(20f, scale);
+                rightInnerLayoutPanel.RowStyles[section.DropDownRowIndex].SizeType = SizeType.Absolute;
+                rightInnerLayoutPanel.RowStyles[section.DropDownRowIndex].Height = ScaleLayoutValue(26f, scale);
+                section.List.Scrollable = false;
             }
 
-            midsvScrollPanel1.RecalculateLayout();
+            RefreshPoolRailLayout();
         }
 
         private static IEnumerable<Control> EnumerateScaleControls(Control root)
@@ -785,6 +1465,8 @@ namespace Mids_Reborn.UI.Forms
             {
                 _frmCombatContext.RefreshFromConfig();
             }
+
+            UpdateFooterSummary();
         }
 
         private void OriginDropDown_SelectedIndexChanged(object? sender, EventArgs e)
@@ -792,6 +1474,18 @@ namespace Mids_Reborn.UI.Forms
             if (_events.IsSuppressed) return;
             MidsContext.Character.Origin = originDropDown.SelectedIndex;
             AssetManager.SetOrigin(originDropDown.SelectedItem);
+            UpdateFooterSummary();
+        }
+
+        private void txtName_TextChanged(object? sender, EventArgs e)
+        {
+            if (_events.IsSuppressed || MidsContext.Character == null)
+            {
+                return;
+            }
+
+            MidsContext.Character.Name = txtName.Text;
+            UpdateFooterSummary();
         }
 
         private void PrimaryDropDown_SelectedIndexChanged(object? sender, EventArgs e)
@@ -800,6 +1494,7 @@ namespace Mids_Reborn.UI.Forms
             ChangeSets();
             UpdatePowerLists();
             ProcessLocks();
+            UpdateFooterSummary();
         }
 
         private void SecondaryDropDown_SelectedIndexChanged(object? sender, EventArgs e)
@@ -808,6 +1503,7 @@ namespace Mids_Reborn.UI.Forms
             ChangeSets();
             UpdatePowerLists();
             ProcessLocks();
+            UpdateFooterSummary();
         }
 
         private void PoolsDropDown_SelectedIndexChanged(object? sender, EventArgs e)
@@ -816,6 +1512,7 @@ namespace Mids_Reborn.UI.Forms
             ChangeSets();
             UpdatePowerLists();
             ProcessLocks();
+            UpdateFooterSummary();
         }
 
         private void AncillaryDropDown_SelectedIndexChanged(object? sender, EventArgs e)
@@ -824,6 +1521,7 @@ namespace Mids_Reborn.UI.Forms
             ChangeSets();
             UpdatePowerLists();
             ProcessLocks();
+            UpdateFooterSummary();
         }
 
         private void MListView_ItemHovered(object? sender, MidsListViewItemHoverEventArgs e)
@@ -1643,14 +2341,12 @@ namespace Mids_Reborn.UI.Forms
 
         private void PvXEx_OnClick(object? sender, EventArgs e)
         {
-            MidsContext.Config.Inc.DisablePvE = pvXEx.ToggleState switch
+            ApplyPvXMode(pvXEx.ToggleState switch
             {
                 MidsVectorButton.States.ToggledOff => false,
                 MidsVectorButton.States.ToggledOn => true,
                 _ => MidsContext.Config.Inc.DisablePvE
-            };
-
-            RefreshInfo();
+            });
         }
 
         private void TotalsEx_OnClick(object? sender, EventArgs e)
@@ -1677,6 +2373,31 @@ namespace Mids_Reborn.UI.Forms
             };
 
             UpdateDmBuffer();
+        }
+
+        private void PlannerModeToggle_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (_syncingPlannerModeToggle || _plannerModeToggle is null)
+            {
+                return;
+            }
+
+            ApplyBuildMode(_plannerModeToggle.SelectedIndex switch
+            {
+                0 => Enums.dmModes.LevelUp,
+                1 => Enums.dmModes.Respec,
+                _ => Enums.dmModes.LevelUp
+            });
+        }
+
+        private void PvModeToggle_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (_syncingPvModeToggle || _pvModeToggle is null)
+            {
+                return;
+            }
+
+            ApplyPvXMode(disablePvE: _pvModeToggle.SelectedIndex == 1);
         }
 
         private void TsFileOpen_Click(object? sender, EventArgs e)
@@ -2460,39 +3181,13 @@ namespace Mids_Reborn.UI.Forms
 
         private void ibModeEx_OnClick(object sender, EventArgs eventArgs)
         {
-            if (MainModule.MidsController.Toon == null)
+            ApplyBuildMode(modeEx.ToggleState switch
             {
-                return;
-            }
-
-            switch (modeEx.ToggleState)
-            {
-                case MidsVectorButton.States.ToggledOff:
-                    MidsContext.Config.BuildMode = Enums.dmModes.LevelUp;
-                    if (DatabaseAPI.ServerData.EnableInherentSlotting)
-                    {
-                        MainModule.MidsController.Toon.ClearInvalidInherentSlots();
-                    }
-
-                    break;
-                case MidsVectorButton.States.ToggledOn:
-                    MidsContext.Config.BuildMode = Enums.dmModes.Normal;
-                    break;
-                case MidsVectorButton.States.Indeterminate:
-                    MidsContext.Config.BuildMode = Enums.dmModes.Respec;
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
-            if (!DatabaseAPI.LoadLevelsDatabase(MidsContext.Config.DataPath))
-            {
-                return;
-            }
-
-            MidsContext.Character?.ResetLevel();
-            PowerModified(markModified: false);
-            UpdateDmBuffer();
+                MidsVectorButton.States.ToggledOff => Enums.dmModes.LevelUp,
+                MidsVectorButton.States.ToggledOn => Enums.dmModes.Respec,
+                MidsVectorButton.States.Indeterminate => Enums.dmModes.Respec,
+                _ => throw new ArgumentOutOfRangeException()
+            });
         }
 
         private void tsConfig_Click(object sender, EventArgs e)
@@ -2605,6 +3300,7 @@ namespace Mids_Reborn.UI.Forms
 
             MidsContext.Character?.Validate();
             ProcessLocks();
+            UpdateFooterSummary();
             if (redraw)
             {
                 canvas.RequestFullRedraw();
@@ -4046,34 +4742,31 @@ namespace Mids_Reborn.UI.Forms
 
         private void UpdateModeInfo()
         {
+            if (MidsContext.Config is not null)
+            {
+                MidsContext.Config.BuildMode = NormalizePlannerBuildMode(MidsContext.Config.BuildMode);
+            }
+
             switch (MidsContext.Config?.BuildMode)
             {
                 case Enums.dmModes.LevelUp:
-                    modeEx.ToggleText.ToggledOff = MainModule.MidsController.Toon is { Complete: false }
-                        ? $"Level-Up: {MidsContext.Character?.Level + 1}"
-                        : @"Level-Up";
-                    if (modeEx.Text != modeEx.ToggleText.ToggledOff)
-                    {
-                        modeEx.Text = MainModule.MidsController.Toon is { Complete: false }
-                            ? $"Level-Up: {MidsContext.Character?.Level + 1}"
-                            : @"Level-Up";
-                    }
-
+                    modeEx.ToggleText.ToggledOff = @"Level-Up";
+                    modeEx.Text = @"Level-Up";
                     modeEx.ToggleState = MidsVectorButton.States.ToggledOff;
                     break;
-                case Enums.dmModes.Normal:
-                    modeEx.ToggleText.ToggledOn = @"Normal";
-                    modeEx.ToggleState = MidsVectorButton.States.ToggledOn;
-                    break;
                 case Enums.dmModes.Respec:
-                    modeEx.ToggleText.Indeterminate = @"Respec";
-                    modeEx.ToggleState = MidsVectorButton.States.Indeterminate;
+                case Enums.dmModes.Normal:
+                    modeEx.ToggleText.ToggledOn = @"Respec";
+                    modeEx.Text = @"Respec";
+                    modeEx.ToggleState = MidsVectorButton.States.ToggledOn;
                     break;
                 case Enums.dmModes.None:
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
             }
+
+            SyncPlannerModeToggle();
         }
 
         private void FixStatIncludes()
@@ -4260,6 +4953,8 @@ namespace Mids_Reborn.UI.Forms
                 true => MidsVectorButton.States.ToggledOn,
                 false => MidsVectorButton.States.ToggledOff
             };
+            SyncPvModeToggle();
+            SyncPlannerModeToggle();
 
             slotInfoEx.ToggleState = MidsContext.Config.ShowSlotsLeft switch
             {
@@ -4289,26 +4984,27 @@ namespace Mids_Reborn.UI.Forms
                 SetSelectedIndexIfAvailable(secondaryDropDown, AssignSetIndex(Enums.PowersetType.Secondary, Enums.ePowerSetType.Secondary));
 
                 LoadPools();
-                SelectPoolDropDown(pool0DropDown, MidsContext.Character.Powersets[3]);
-                SelectPoolDropDown(pool1DropDown, MidsContext.Character.Powersets[4]);
-                SelectPoolDropDown(pool2DropDown, MidsContext.Character.Powersets[5]);
-                SelectPoolDropDown(pool3DropDown, MidsContext.Character.Powersets[6]);
-                AuditPoolDropDownSelection(pool0DropDown, MidsContext.Character.Powersets[3], 0);
-                AuditPoolDropDownSelection(pool1DropDown, MidsContext.Character.Powersets[4], 1);
-                AuditPoolDropDownSelection(pool2DropDown, MidsContext.Character.Powersets[5], 2);
-                AuditPoolDropDownSelection(pool3DropDown, MidsContext.Character.Powersets[6], 3);
+                var poolSelectionIndex = 0;
+                foreach (var poolSection in StandardPoolSections())
+                {
+                    var selectedPowerset = MidsContext.Character.Powersets[poolSection.PowersetIndex];
+                    SelectPoolDropDown(poolSection.DropDown, selectedPowerset);
+                    AuditPoolDropDownSelection(poolSection.DropDown, selectedPowerset, poolSelectionIndex++);
+                }
 
                 LoadAncillary();
                 var powersetIndexes = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, Enums.ePowerSetType.Ancillary);
-                if (MidsContext.Character.Powersets[7] != null)
-                    SetSelectedIndexIfAvailable(ancillaryDropDown, DatabaseAPI.ToDisplayIndex(MidsContext.Character.Powersets[7], powersetIndexes));
+                var ancillarySection = AncillaryPoolSection();
+                if (MidsContext.Character.Powersets[ancillarySection.PowersetIndex] != null)
+                    SetSelectedIndexIfAvailable(ancillarySection.DropDown, DatabaseAPI.ToDisplayIndex(MidsContext.Character.Powersets[ancillarySection.PowersetIndex], powersetIndexes));
                 else if (powersetIndexes.Length > 0)
-                    SetSelectedIndexIfAvailable(ancillaryDropDown, 0);
+                    SetSelectedIndexIfAvailable(ancillarySection.DropDown, 0);
                 else
-                    ancillaryDropDown.SelectedIndex = -1;
+                    ancillarySection.DropDown.SelectedIndex = -1;
 
                 UpdatePowerLists();
                 ProcessLocks();
+                UpdateFooterSummary();
 
                 if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp)
                 {
@@ -4411,18 +5107,19 @@ namespace Mids_Reborn.UI.Forms
             ApplyDropDownLock(atDropDown, primaryUsed || secondaryUsed);
             ApplyDropDownLock(primaryDropDown, primaryUsed);
             ApplyDropDownLock(secondaryDropDown, secondaryUsed || secondaryLinked);
-            ApplyDropDownLock(pool0DropDown, IsPowersetUsed(MidsContext.Character.Powersets[3]));
-            ApplyDropDownLock(pool1DropDown, IsPowersetUsed(MidsContext.Character.Powersets[4]));
-            ApplyDropDownLock(pool2DropDown, IsPowersetUsed(MidsContext.Character.Powersets[5]));
-            ApplyDropDownLock(pool3DropDown, IsPowersetUsed(MidsContext.Character.Powersets[6]));
-
-            if (ancillaryDropDown.Items.Count is 0)
+            foreach (var poolSection in StandardPoolSections())
             {
-                ancillaryDropDown.Lock("Not Available", true);
+                ApplyDropDownLock(poolSection.DropDown, IsPowersetUsed(MidsContext.Character.Powersets[poolSection.PowersetIndex]));
+            }
+
+            var ancillarySection = AncillaryPoolSection();
+            if (ancillarySection.DropDown.Items.Count is 0)
+            {
+                ancillarySection.DropDown.Lock("Not Available", true);
             }
             else
             {
-                ApplyDropDownLock(ancillaryDropDown, IsPowersetUsed(MidsContext.Character.Powersets[7]));
+                ApplyDropDownLock(ancillarySection.DropDown, IsPowersetUsed(MidsContext.Character.Powersets[ancillarySection.PowersetIndex]));
             }
         }
 
@@ -4443,15 +5140,18 @@ namespace Mids_Reborn.UI.Forms
                 RefreshItemStates(secondaryList);
             }
 
-            bool needAncillaryRebuild = ch?.Powersets[7] != null || NeedRebuild(ancillaryList, ch?.Powersets[7]) ||
+            var ancillarySection = AncillaryPoolSection();
+            bool needAncillaryRebuild = ch?.Powersets[ancillarySection.PowersetIndex] != null || NeedRebuild(ancillarySection.List, ch?.Powersets[ancillarySection.PowersetIndex]) ||
                                         needPrimaryPairRebuild;
 
-            UpdateOrAssemble(ancillaryList, ch?.Powersets[7], needAncillaryRebuild);
+            UpdateOrAssemble(ancillarySection.List, ch?.Powersets[ancillarySection.PowersetIndex], needAncillaryRebuild);
 
-            UpdateOrAssemble(pool0List, ch?.Powersets[3], forceRebuild: true);
-            UpdateOrAssemble(pool1List, ch?.Powersets[4], forceRebuild: true);
-            UpdateOrAssemble(pool2List, ch?.Powersets[5], forceRebuild: true);
-            UpdateOrAssemble(pool3List, ch?.Powersets[6], forceRebuild: true);
+            foreach (var poolSection in StandardPoolSections())
+            {
+                UpdateOrAssemble(poolSection.List, ch?.Powersets[poolSection.PowersetIndex], forceRebuild: true);
+            }
+
+            RefreshPoolRailLayout();
         }
 
         private void UpdateOrAssemble(MidsListView list, IPowerset? powerset, bool forceRebuild)
@@ -4708,16 +5408,12 @@ namespace Mids_Reborn.UI.Forms
 
         private void LoadPools()
         {
-            var pools = this.GetAllControlsOfType<PowersetDropDownList>().Where(p => p.Name.Contains("pool", StringComparison.OrdinalIgnoreCase)).ToList();
-            for (var poolIndex = 0; poolIndex < pools.Count; poolIndex++)
+            var poolSets = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, Enums.ePowerSetType.Pool).ToList();
+            foreach (var poolSection in StandardPoolSections())
             {
-                var poolDropDown = pools[poolIndex];
-                var poolSets = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, Enums.ePowerSetType.Pool).ToList();
-
-                poolDropDown.DisplayMember = "DisplayName";
-                poolDropDown.DataSource = poolSets;
-
-                poolDropDown.IconProvider = item =>
+                poolSection.DropDown.DisplayMember = "DisplayName";
+                poolSection.DropDown.DataSource = poolSets.ToList();
+                poolSection.DropDown.IconProvider = item =>
                 {
                     if (item is not IPowerset powerset)
                     {
@@ -4729,14 +5425,13 @@ namespace Mids_Reborn.UI.Forms
                     AssetManager.Powersets.TryGetValue(index, out var icon);
                     return icon?.Bitmap;
                 };
-                poolDropDown.RefreshIcons();
+                poolSection.DropDown.RefreshIcons();
             }
         }
 
         private void LoadAncillary()
         {
-            var ancillaryPool = this.GetAllControlsOfType<PowersetDropDownList>().FirstOrDefault(lv => lv.Name.Contains("ancillary", StringComparison.OrdinalIgnoreCase));
-            if (ancillaryPool == null) return;
+            var ancillaryPool = AncillaryPoolSection().DropDown;
 
             var ancillarySets = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, Enums.ePowerSetType.Ancillary).ToList();
             ancillaryPool.DisplayMember = "DisplayName";
@@ -6139,6 +6834,8 @@ namespace Mids_Reborn.UI.Forms
                     button.FlatAppearance.MouseDownBackColor = theme.WindowIconClosePressed;
                 }
             }
+
+            ApplyHeaderNameInputStyle();
             canvas?.RequestFullRedraw();
         }
 

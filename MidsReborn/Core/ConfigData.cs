@@ -493,7 +493,7 @@ namespace Mids_Reborn.Core
         public Enums.CompOverride[] CompOverride { get; set; }
         public bool ShowSlotsLeft { get; set; }
         public bool DisableDesaturateInherent { get; set; }
-        public Enums.dmModes BuildMode { get; set; } = Enums.dmModes.Normal;
+        public Enums.dmModes BuildMode { get; set; } = Enums.dmModes.LevelUp;
         public Enums.dmItem BuildOption { get; set; } = Enums.dmItem.Slot;
         public bool DisableShowPopup { get; set; }
         public bool DisableAlphaPopup { get; set; }
