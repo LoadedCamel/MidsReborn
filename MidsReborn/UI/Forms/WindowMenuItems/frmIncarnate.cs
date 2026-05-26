@@ -1,6 +1,5 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Drawing;
 using System.Globalization;
 using System.Linq;
@@ -37,6 +36,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private bool _locked;
         private IPower?[]? _myPowers;
         private IncarnateGroup _currentIncarnateGroup;
+        private Dictionary<IncarnateGroup, int?> _selectedPowers;
         private const ImageButtonEx.EnabledStates DisabledButtonStyle = ImageButtonEx.EnabledStates.DisabledGloss;
 
         public FrmIncarnate(ref MainWindow2 iParent)
@@ -47,6 +47,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             _currentIncarnateGroup = IncarnateGroup.Alpha;
             _myPowers = DatabaseAPI.Database.Power.Where(e => e != null && e.FullName.StartsWith("Incarnate.")).ToArray();
             InitializeComponent();
+            _selectedPowers = new Dictionary<IncarnateGroup, int?>();
             _buttons = new Dictionary<IncarnateGroup, ImageButtonEx>
             {
                 { IncarnateGroup.Alpha, BtnAlpha },
@@ -233,9 +234,16 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void frmIncarnate_FormClosing(object? sender, FormClosingEventArgs e)
         {
+            if (_myParent == null)
+            {
+                return;
+            }
+
             if (e.CloseReason == CloseReason.UserClosing)
             {
                 _myParent.ibIncarnatePowersEx.ToggleState = ImageButtonEx.States.ToggledOff;
+
+                return;
             }
 
             if (DialogResult == DialogResult.Cancel)
@@ -253,20 +261,18 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void FillLists(string setName)
         {
-            var subPowers =
-                _myPowers == null
-                    ? []
-                    : _myPowers
-                        .Where(e => e != null &&
-                                    !e.FullName.Contains("_silent", StringComparison.InvariantCultureIgnoreCase) &&
-                                    e.FullName.StartsWith($"Incarnate.{setName.Replace(' ', '_')}."))
-                        .ToArray();
+            var subPowers = GetSubGroupPowers(setName);
 
             SkPairedList1.SuspendRedraw = true;
             SkPairedList1.ClearItems();
 
             foreach (var p in subPowers)
             {
+                if (p == null)
+                {
+                    continue;
+                }
+
                 var state = MidsContext.Character?.CurrentBuild != null &&
                                    !MidsContext.Character.CurrentBuild.PowerUsed(p)
                     ? p.DisplayName != "Nothing"
@@ -297,6 +303,22 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             LblLock.Visible = false;
         }
 
+        private IPower?[] GetSubGroupPowers(string setName = "")
+        {
+            setName = string.IsNullOrEmpty(setName)
+                ? _currentIncarnateGroup.ToString()
+                : setName;
+
+            return _myPowers == null
+                ? []
+                : _myPowers
+                    .Where(e => e != null &&
+                                !e.FullName.Contains("_silent", StringComparison.InvariantCultureIgnoreCase) &&
+                                e.FullName.StartsWith(
+                                    $"Incarnate.{setName.Replace(' ', '_')}."))
+                    .ToArray();
+        }
+
         private void MiniPowerInfo(int pIdx)
         {
             if (_locked)
@@ -312,8 +334,17 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
                 return;
             }
+
+            var subPowers = GetSubGroupPowers();
+            if (pIdx >= subPowers.Length)
+            {
+                PopInfo.SetPopup(iPopup);
+                ChangedScrollFrameContents();
+
+                return;
+            }
             
-            var power = new Power(_myPowers[pIdx]);
+            var power = new Power(subPowers[pIdx]);
             power.AbsorbPetEffects();
             power.ApplyGrantPowerEffects();
             var index1 = iPopup.Add();
@@ -477,35 +508,50 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 return;
             }
 
-            var powerUsed = MidsContext.Character?.CurrentBuild?.PowerUsed(_myPowers[item.Index]) == true;
+            var subPowers = GetSubGroupPowers();
+            var powerUsedPrev = _selectedPowers.ContainsKey(_currentIncarnateGroup) &&
+                            _selectedPowers[_currentIncarnateGroup] != null &&
+                            MidsContext.Character?.CurrentBuild?.PowerUsed(subPowers[_selectedPowers[_currentIncarnateGroup]!.Value]) == true;
+            var currentGroupIndex = _selectedPowers.GetValueOrDefault(_currentIncarnateGroup);
             SkPairedList1.SuspendRedraw = true;
             for (var i = 0; i < SkPairedList1.Items.Length; i++)
             {
+                if (subPowers[i] == null)
+                {
+                    continue;
+                }
+
                 if (i != item.Index)
                 {
-                    SkPairedList1.Items[i].ItemState = _myPowers[i].DisplayName != "Nothing"
+                    SkPairedList1.Items[i].ItemState = subPowers[i]?.DisplayName != "Nothing"
                         ? EItemState.Enabled
                         : EItemState.Disabled;
 
                     continue;
                 }
 
-                SkPairedList1.Items[i].ItemState = powerUsed ? EItemState.Enabled : EItemState.Selected;
-                if (powerUsed)
-                {
-                    MidsContext.Character?.CurrentBuild?.RemovePower(_myPowers[i]);
-                }
-                else
-                {
-                    MidsContext.Character.CurrentBuild.AddPower(_myPowers[item.Index], 49).StatInclude = true;
-                }
+                SkPairedList1.Items[i].ItemState = i == currentGroupIndex
+                    ? EItemState.Enabled
+                    : EItemState.Selected;
             }
+
+            if (powerUsedPrev)
+            {
+                MidsContext.Character?.CurrentBuild?.RemovePower(subPowers[_selectedPowers[_currentIncarnateGroup]!.Value]);
+            }
+
+            if (item.Index != currentGroupIndex)
+            {
+                MidsContext.Character.CurrentBuild.AddPower(subPowers[item.Index], 49).StatInclude = true;
+            }
+
+            _selectedPowers[_currentIncarnateGroup] = item.Index == currentGroupIndex ? null : item.Index;
 
             SkPairedList1.SuspendRedraw = false;
             SkPairedList1.Invalidate();
 
-            _myParent.PowerModified(true);
-            _myParent.DoRefresh();
+            _myParent?.PowerModified(true);
+            _myParent?.DoRefresh();
         }
 
         private void SkPairedList1_ItemHover(SkListItem item)
