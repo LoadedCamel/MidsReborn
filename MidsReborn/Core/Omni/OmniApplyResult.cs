@@ -195,6 +195,10 @@ public sealed class OmniApplyResult
     public int EnhancementClassIdsUnresolved { get; set; }
     public int VectorDefenseTemplateOverrides { get; set; }
     public int VectorResistanceTemplateOverrides { get; set; }
+    public int BoostHelperCarriersResolvedFromLinkedBonus { get; set; }
+    public int BoostHelperCarriersResolvedLocally { get; set; }
+    public int BoostHelperCarriersUnresolved { get; set; }
+    public int Boosts20DamageMappingsRemaining { get; set; }
     public int EnhancementBoostPowerLinksResolved { get; set; }
     public int EnhancementBoostPowerLinksMissing { get; set; }
     public int EnhancementBoostPowerLinksAlias { get; set; }
@@ -395,6 +399,10 @@ public sealed class OmniApplyResult
     public List<string> EnhancementIconDetails { get; } = [];
     public List<string> EnhancementClassDerivationDetails { get; } = [];
     public List<string> VectorTemplateSemanticOverrideDetails { get; } = [];
+    public List<string> BoostHelperCarrierLinkedBonusDetails { get; } = [];
+    public List<string> BoostHelperCarrierLocalResolutionDetails { get; } = [];
+    public List<string> BoostHelperCarrierUnresolvedDetails { get; } = [];
+    public List<string> Boosts20DamageMappingDetails { get; } = [];
     public List<string> BoostSetBonusImportAuditDetails { get; } = [];
     public List<string> EnhancementReconciliationAuditDetails { get; } = [];
     public List<string> EnhancementReconciliationConflictDetails { get; } = [];
@@ -737,6 +745,8 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Structured boosts_allowed parsed: {StructuredBoostsAllowedParsedCount}");
         builder.AppendLine($"- Enhancement class derivation effects/fallback/category-only/mismatch/unresolved: {EnhancementClassIdsDerivedFromEffects}/{EnhancementClassIdsFallbackUsed}/{EnhancementClassIdsCategoryOnly}/{EnhancementClassIdWrapperMismatches}/{EnhancementClassIdsUnresolved}");
         builder.AppendLine($"- Vector defense/resistance template overrides: {VectorDefenseTemplateOverrides}/{VectorResistanceTemplateOverrides}");
+        builder.AppendLine($"- Helper carriers linked/local/unresolved: {BoostHelperCarriersResolvedFromLinkedBonus}/{BoostHelperCarriersResolvedLocally}/{BoostHelperCarriersUnresolved}");
+        builder.AppendLine($"- Residual Boosts_20 damage mappings: {Boosts20DamageMappingsRemaining}");
         builder.AppendLine($"- Scoped power legality rebuilt/changed/preserved/empty/unresolved/unknown-labels: {ScopedPowerEnhancementLegalityRebuilt}/{ScopedPowerEnhancementLegalityChanged}/{ScopedPowerEnhancementLegalityPreserved}/{ScopedPowerEnhancementLegalityEmptyAfterRebuild}/{ScopedPowerEnhancementLegalityUnresolvedAfterRebuild}/{ScopedPowerEnhancementLegalityUnresolvedLabelCount}");
         builder.AppendLine($"- Boost/Set_Bonus legality repair boosts inspected/rebuilt/preserved/unresolved: {BoostPowerLegalityRepairInspected}/{BoostPowerLegalityRepairRebuilt}/{BoostPowerLegalityRepairPreserved}/{BoostPowerLegalityRepairUnresolved}");
         builder.AppendLine($"- Boost/Set_Bonus legality repair set-bonus inspected/cleared/already-empty/changed: {SetBonusPowerLegalityRepairInspected}/{SetBonusPowerLegalityRepairCleared}/{SetBonusPowerLegalityRepairAlreadyEmpty}/{BoostSetBonusPowerLegalityRepairChanged}");
@@ -872,6 +882,10 @@ public sealed class OmniApplyResult
         AppendSection(builder, "Enhancement Icon Decisions", EnhancementIconDetails);
         AppendSection(builder, "Enhancement Class Derivation", EnhancementClassDerivationDetails);
         AppendSection(builder, "Vector Template Semantic Overrides", VectorTemplateSemanticOverrideDetails);
+        AppendSection(builder, "Helper Carriers Backfilled From Linked Bonuses", BoostHelperCarrierLinkedBonusDetails);
+        AppendSection(builder, "Helper Carriers Resolved Locally", BoostHelperCarrierLocalResolutionDetails);
+        AppendSection(builder, "Helper Carriers Left Unresolved", BoostHelperCarrierUnresolvedDetails);
+        AppendSection(builder, "Residual Boosts_20 Damage Mappings", Boosts20DamageMappingDetails);
         AppendSection(builder, "Scoped Power Enhancement Legality", ScopedPowerEnhancementLegalityDetails);
         AppendSection(builder, "Scoped Power Enhancement Legality Unknown Labels", ScopedPowerEnhancementLegalityUnknownLabelDetails);
         AppendSection(builder, "Boosts And Set Bonus Legality Repair", BoostSetBonusPowerLegalityRepairDetails);
@@ -917,6 +931,8 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Structured boosts_allowed parsed: {StructuredBoostsAllowedParsedCount:n0}");
         builder.AppendLine($"- Enhancement class derivation effects/fallback/category-only/mismatch/unresolved: {EnhancementClassIdsDerivedFromEffects:n0}/{EnhancementClassIdsFallbackUsed:n0}/{EnhancementClassIdsCategoryOnly:n0}/{EnhancementClassIdWrapperMismatches:n0}/{EnhancementClassIdsUnresolved:n0}");
         builder.AppendLine($"- Vector defense/resistance template overrides: {VectorDefenseTemplateOverrides:n0}/{VectorResistanceTemplateOverrides:n0}");
+        builder.AppendLine($"- Helper carriers linked/local/unresolved: {BoostHelperCarriersResolvedFromLinkedBonus:n0}/{BoostHelperCarriersResolvedLocally:n0}/{BoostHelperCarriersUnresolved:n0}");
+        builder.AppendLine($"- Residual Boosts_20 damage mappings: {Boosts20DamageMappingsRemaining:n0}");
         builder.AppendLine($"- Scoped power legality rebuilt/changed/preserved/empty/unresolved/unknown-labels: {ScopedPowerEnhancementLegalityRebuilt:n0}/{ScopedPowerEnhancementLegalityChanged:n0}/{ScopedPowerEnhancementLegalityPreserved:n0}/{ScopedPowerEnhancementLegalityEmptyAfterRebuild:n0}/{ScopedPowerEnhancementLegalityUnresolvedAfterRebuild:n0}/{ScopedPowerEnhancementLegalityUnresolvedLabelCount:n0}");
         builder.AppendLine($"- Boost/Set_Bonus legality repair boosts inspected/rebuilt/preserved/unresolved: {BoostPowerLegalityRepairInspected:n0}/{BoostPowerLegalityRepairRebuilt:n0}/{BoostPowerLegalityRepairPreserved:n0}/{BoostPowerLegalityRepairUnresolved:n0}");
         builder.AppendLine($"- Boost/Set_Bonus legality repair set-bonus inspected/cleared/already-empty/changed: {SetBonusPowerLegalityRepairInspected:n0}/{SetBonusPowerLegalityRepairCleared:n0}/{SetBonusPowerLegalityRepairAlreadyEmpty:n0}/{BoostSetBonusPowerLegalityRepairChanged:n0}");
@@ -947,6 +963,8 @@ public sealed class OmniApplyResult
             FormatWarning("Enhancement reconciliation conflicts", EnhancementAmbiguousMatches + EnhancementSetsAmbiguousMatches + RecipeAmbiguousMatches + SalvageAmbiguousMatches),
             FormatWarning("Missing boost powers after import", MissingBoostPowersAfterImport),
             FormatWarning("Missing set bonus powers after import", MissingSetBonusPowersAfterImport),
+            FormatWarning("Helper carriers unresolved", BoostHelperCarriersUnresolved),
+            FormatWarning("Residual Boosts_20 damage mappings", Boosts20DamageMappingsRemaining),
             FormatWarning("Enhancement class derivation unresolved", EnhancementClassIdsUnresolved),
             FormatWarning("Scoped power legality unresolved", ScopedPowerEnhancementLegalityUnresolvedAfterRebuild + ScopedPowerEnhancementLegalityEmptyAfterRebuild + ScopedPowerEnhancementLegalityUnresolvedLabelCount),
             FormatWarning("Boost/Set_Bonus legality repair unresolved", BoostPowerLegalityRepairUnresolved),
@@ -961,6 +979,10 @@ public sealed class OmniApplyResult
         AppendPreviewSection(builder, "Unresolved Enhancement Power Links", UnresolvedEnhancementPowerLinks, 8);
         AppendPreviewSection(builder, "Enhancement Class Derivation", EnhancementClassDerivationDetails, 8);
         AppendPreviewSection(builder, "Vector Template Semantic Overrides", VectorTemplateSemanticOverrideDetails, 8);
+        AppendPreviewSection(builder, "Helper Carriers Backfilled From Linked Bonuses", BoostHelperCarrierLinkedBonusDetails, 8);
+        AppendPreviewSection(builder, "Helper Carriers Resolved Locally", BoostHelperCarrierLocalResolutionDetails, 8);
+        AppendPreviewSection(builder, "Helper Carriers Left Unresolved", BoostHelperCarrierUnresolvedDetails, 8);
+        AppendPreviewSection(builder, "Residual Boosts_20 Damage Mappings", Boosts20DamageMappingDetails, 8);
         AppendPreviewSection(builder, "Scoped Power Enhancement Legality", ScopedPowerEnhancementLegalityDetails, 8);
         AppendPreviewSection(builder, "Boosts And Set Bonus Legality Repair", BoostSetBonusPowerLegalityRepairDetails, 8);
         AppendPreviewSection(builder, "Scoped Power Enhancement Legality Unknown Labels", ScopedPowerEnhancementLegalityUnknownLabelDetails, 8);

@@ -22,6 +22,7 @@ internal sealed class ActorPowerAssemblyContext
     public CosmicBalanceComputedState CosmicBalanceState { get; init; } = new();
     public CosmicBalanceComputedState DarkSustenanceState { get; init; } = new();
     public IPower? ChanceModifierSetBonusPower { get; init; }
+    public IReadOnlyList<IPower> SupplementalChanceModifierPowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyDictionary<string, float>? SupplementalChanceModifierCatalog { get; init; }
     public bool BuildChanceModifierCatalog { get; init; } = true;
 }
@@ -182,9 +183,22 @@ internal static class ActorPowerAssembly
         }
 
         var chanceModifierCatalog = context.BuildChanceModifierCatalog
-            ? ChanceModifierCatalogBuilder.Build(buffedPowers.Cast<IPower?>().ToArray(), context.ChanceModifierSetBonusPower)
+            ? ChanceModifierCatalogBuilder.Build(
+                buffedPowers.Cast<IPower?>().ToArray(),
+                context.ChanceModifierSetBonusPower,
+                context.SupplementalChanceModifierPowers)
             : new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
         MergeChanceModifierCatalog(chanceModifierCatalog, context.SupplementalChanceModifierCatalog);
+        CaptureChanceModifierContributions(buffedPowers, PlannerBucketPass.SelfBuff, contributionCollector);
+        if (context.ChanceModifierSetBonusPower != null)
+        {
+            CaptureChanceModifierContributions([context.ChanceModifierSetBonusPower], PlannerBucketPass.SelfBuff, contributionCollector);
+        }
+
+        CaptureChanceModifierContributions(
+            context.SupplementalChanceModifierPowers,
+            PlannerBucketPass.SelfBuff,
+            contributionCollector);
 
         return new ActorPowerAssemblyResult
         {
@@ -245,6 +259,17 @@ internal static class ActorPowerAssembly
             {
                 target[tag] = magnitude;
             }
+        }
+    }
+
+    private static void CaptureChanceModifierContributions(
+        IEnumerable<IPower> powers,
+        PlannerBucketPass pass,
+        PlannerContributionCollector collector)
+    {
+        foreach (var power in powers)
+        {
+            ContributionCapture.RecordChanceModifierContributions(power, pass, collector);
         }
     }
 }

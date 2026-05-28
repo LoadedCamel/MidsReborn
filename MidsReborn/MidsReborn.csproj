@@ -445,6 +445,7 @@
     <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.cs" />
     <Compile Remove="UI\Forms\OptionsMenuItems\frmAttribModImporter.Designer.cs" />
     <Compile Remove="GlobalSuppressions.cs" />
+    <Compile Remove="tools\CalcProbe\**\*.cs" />
     <Content Remove="Assets\unlocked.png" />
     <EmbeddedResource Remove="frmImport_Powerset.resx" />
   </ItemGroup>

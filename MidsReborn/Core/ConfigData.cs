@@ -870,7 +870,7 @@ namespace Mids_Reborn.Core
             {
                 public int HpPercent { get; set; } = 100;
                 public int EndPercent { get; set; } = 100;
-                public int ProfileId { get; set; } = (int)CombatTargetProfileId.Boss;
+                public int ProfileId { get; set; } = (int)CombatTargetProfileId.Minion;
                 public bool Held { get; set; }
                 public bool Immobilized { get; set; }
                 public bool Stunned { get; set; }

@@ -57,6 +57,9 @@ namespace Mids_Reborn.UI.Controls
 
         private readonly MidsToolTip _toolTip;
         private string? _lastTip;
+        private bool _tooltipVisible;
+        private Point _lastMouseLocation = new(int.MinValue, int.MinValue);
+        private Point _lastTooltipAnchor = new(int.MinValue, int.MinValue);
 
         private bool _useCompactCard;
         private bool _showGraph = true;
@@ -395,9 +398,13 @@ namespace Mids_Reborn.UI.Controls
                 }
 
                 _lastTip = tip;
-                if (IsHandleCreated)
+                if (string.IsNullOrWhiteSpace(tip))
                 {
-                    _toolTip.SetToolTip(this, tip);
+                    HideTooltip();
+                }
+                else if (_tooltipVisible)
+                {
+                    ShowTooltipAtPreferredAnchor(force: true);
                 }
             }
         }
@@ -441,10 +448,6 @@ namespace Mids_Reborn.UI.Controls
         protected override void OnHandleCreated(EventArgs e)
         {
             base.OnHandleCreated(e);
-            if (!string.IsNullOrEmpty(_lastTip))
-            {
-                _toolTip.SetToolTip(this, _lastTip);
-            }
         }
 
         protected override void OnFontChanged(EventArgs e)
@@ -471,6 +474,37 @@ namespace Mids_Reborn.UI.Controls
             _text = string.Empty;
             ToolTipText = string.Empty;
             Invalidate();
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+            _lastMouseLocation = e.Location;
+            if (_tooltipVisible)
+            {
+                ShowTooltipAtPreferredAnchor();
+            }
+        }
+
+        protected override void OnMouseHover(EventArgs e)
+        {
+            base.OnMouseHover(e);
+            ShowTooltipAtPreferredAnchor(force: true);
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            HideTooltip();
+        }
+
+        protected override void OnVisibleChanged(EventArgs e)
+        {
+            base.OnVisibleChanged(e);
+            if (!Visible)
+            {
+                HideTooltip();
+            }
         }
 
         #endregion
@@ -825,11 +859,46 @@ namespace Mids_Reborn.UI.Controls
             _toolTip.TextColor = theme.Text;
             _toolTip.ContentFont = Font;
             _toolTip.MaxWidth = 520;
-
-            if (IsHandleCreated)
+            if (_tooltipVisible)
             {
-                _toolTip.SetToolTip(this, _lastTip ?? string.Empty);
+                ShowTooltipAtPreferredAnchor(force: true);
             }
+        }
+
+        private void ShowTooltipAtPreferredAnchor(bool force = false)
+        {
+            if (string.IsNullOrWhiteSpace(_lastTip) || !Visible || !Enabled)
+            {
+                HideTooltip();
+                return;
+            }
+
+            var baseLocation = _lastMouseLocation.X == int.MinValue
+                ? new Point(Math.Max(0, Width / 2), Math.Max(0, Height / 2))
+                : _lastMouseLocation;
+
+            var preferredAnchor = new Point(
+                baseLocation.X + ScalePx(14),
+                baseLocation.Y + ScalePx(18));
+
+            if (!force &&
+                _tooltipVisible &&
+                Math.Abs(preferredAnchor.X - _lastTooltipAnchor.X) < ScalePx(6) &&
+                Math.Abs(preferredAnchor.Y - _lastTooltipAnchor.Y) < ScalePx(6))
+            {
+                return;
+            }
+
+            _toolTip.ShowClamped(this, _lastTip!, preferredAnchor, _toolTip.AutoPopDelay);
+            _tooltipVisible = true;
+            _lastTooltipAnchor = preferredAnchor;
+        }
+
+        private void HideTooltip()
+        {
+            _toolTip.Hide(this);
+            _tooltipVisible = false;
+            _lastTooltipAnchor = new Point(int.MinValue, int.MinValue);
         }
 
         private void SyncLegacyFieldsFromPresentation()

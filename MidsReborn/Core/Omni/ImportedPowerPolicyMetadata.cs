@@ -34,6 +34,8 @@ internal sealed class ImportedBoostPolicyMetadata
     public static readonly ImportedBoostPolicyMetadata Default = new(string.Empty, []);
     private JObject? _parsedBoostInfo;
     private bool _parsedBoostInfoInitialized;
+    private string[]? _linkedGlobalBonusPowerNames;
+    private bool _linkedGlobalBonusPowerNamesInitialized;
 
     public ImportedBoostPolicyMetadata(string rawBoostInfoJson, IReadOnlyList<string>? allowedBoostSetCategories)
     {
@@ -53,6 +55,7 @@ internal sealed class ImportedBoostPolicyMetadata
     public int? MinimumUseLevel => TryGetInt32("minimum_use_level");
     public int? MaximumUseLevel => TryGetInt32("maximum_use_level");
     public int? MaxBoostLevel => TryGetInt32("max_boost_level");
+    public IReadOnlyList<string> LinkedGlobalBonusPowerNames => GetLinkedGlobalBonusPowerNames();
 
     public bool HasValue =>
         !string.IsNullOrWhiteSpace(RawBoostInfoJson) ||
@@ -95,6 +98,46 @@ internal sealed class ImportedBoostPolicyMetadata
         return token == null || token.Type == JTokenType.Null
             ? null
             : token.Value<int?>();
+    }
+
+    private IReadOnlyList<string> GetLinkedGlobalBonusPowerNames()
+    {
+        if (_linkedGlobalBonusPowerNamesInitialized)
+        {
+            return _linkedGlobalBonusPowerNames ?? [];
+        }
+
+        _linkedGlobalBonusPowerNamesInitialized = true;
+        var parsed = GetParsedBoostInfo();
+        if (parsed?["global_bonuses"] is not JToken token || token.Type != JTokenType.Array)
+        {
+            _linkedGlobalBonusPowerNames = [];
+            return _linkedGlobalBonusPowerNames;
+        }
+
+        var names = new List<string>();
+        foreach (var entry in token.Children())
+        {
+            var powerName = entry.Type switch
+            {
+                JTokenType.Array => entry.Values<string>().FirstOrDefault(value => !string.IsNullOrWhiteSpace(value)),
+                JTokenType.String => entry.Value<string>(),
+                JTokenType.Object => entry.Value<string>("power") ??
+                                     entry.Value<string>("bonus_power") ??
+                                     entry.Value<string>("full_name") ??
+                                     entry.Value<string>("name"),
+                _ => null
+            };
+
+            if (!string.IsNullOrWhiteSpace(powerName) &&
+                !names.Contains(powerName, StringComparer.OrdinalIgnoreCase))
+            {
+                names.Add(powerName);
+            }
+        }
+
+        _linkedGlobalBonusPowerNames = names.ToArray();
+        return _linkedGlobalBonusPowerNames;
     }
 
     private JObject? GetParsedBoostInfo()

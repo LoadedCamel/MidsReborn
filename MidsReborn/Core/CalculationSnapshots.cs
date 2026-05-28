@@ -164,9 +164,36 @@ internal sealed class PlannerContributionCollector
             value,
             ContributionChannel.Buffs,
             ContributionCategory.CapAdjustment,
-            new ContributionSource("Final Caps", Enums.ePowerType.Auto_, true, false, false),
+            new ContributionSource("Final Caps", "FinalCaps", Enums.ePowerType.Auto_, true, false, false, false),
             metricName,
             null,
+            null,
+            null,
+            null,
+            null));
+    }
+
+    public void AddChanceModifierDelta(
+        string chanceTag,
+        double value,
+        IPower sourcePower,
+        PlannerBucketPass pass,
+        ContributionCategory category)
+    {
+        if (string.IsNullOrWhiteSpace(chanceTag) || Math.Abs(value) < 1e-12)
+        {
+            return;
+        }
+
+        var source = BuildSource(sourcePower);
+        _records.Add(new ContributionRecord(
+            null,
+            value,
+            pass == PlannerBucketPass.Enhancement ? ContributionChannel.Enhancements : ContributionChannel.Buffs,
+            category,
+            source,
+            $"ChanceModifier[{chanceTag}]",
+            Enums.eEffectType.GlobalChanceMod,
             null,
             null,
             null,
@@ -189,10 +216,12 @@ internal sealed class PlannerContributionCollector
         var isPvpResist = string.Equals(sourcePower.FullName, "Temporary_Powers.Temporary_Powers.PVP_Resist_Bonus", StringComparison.OrdinalIgnoreCase);
         return new ContributionSource(
             friendlyName,
+            sourcePower.FullName ?? string.Empty,
             sourcePower.PowerType,
             true,
             isSetBonusVirtual,
-            isPvpResist);
+            isPvpResist,
+            sourcePower.GetPowerSet()?.SetType is Enums.ePowerSetType.Incarnate);
     }
 }
 
@@ -452,6 +481,23 @@ internal static class ContributionCapture
         var before = CalculationSnapshotFactory.CloneBuckets(buckets);
         ruleset.AccumulateBuckets(power, ref buckets, pass);
         RecordDelta(before, buckets, power, pass, collector);
+    }
+
+    public static void RecordChanceModifierContributions(
+        IPower power,
+        PlannerBucketPass pass,
+        PlannerContributionCollector collector)
+    {
+        if (power == null)
+        {
+            return;
+        }
+
+        var category = ContributionCategoryResolver.Resolve(power, pass);
+        foreach (var (tag, magnitude) in ChanceModifierCatalogBuilder.EnumerateActiveChanceModifiers(power))
+        {
+            collector.AddChanceModifierDelta(tag, magnitude, power, pass, category);
+        }
     }
 
     public static CalculationContributionSnapshot CreateCapAdjustmentSnapshot(ActorTotalsSnapshot totals)

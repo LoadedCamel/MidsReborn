@@ -22,6 +22,7 @@ internal sealed class PlannerActorAggregationContext
     public CosmicBalanceComputedState DarkSustenanceState { get; init; } = new();
     public IReadOnlyList<IPower> SupplementalEnhancementSourcePowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyList<IPower> SupplementalSelfBuffSourcePowers { get; init; } = Array.Empty<IPower>();
+    public IReadOnlyList<IPower> SupplementalChanceModifierPowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyCollection<int> SupplementalEnhancementExcludedIndexes { get; init; } = Array.Empty<int>();
     public IPower? ChanceModifierSetBonusPower { get; init; }
     public IReadOnlyDictionary<string, float>? SupplementalChanceModifierCatalog { get; init; }
@@ -59,6 +60,7 @@ internal static class PlannerActorAggregationPhase
             CosmicBalanceState = context.CosmicBalanceState,
             DarkSustenanceState = context.DarkSustenanceState,
             ChanceModifierSetBonusPower = context.ChanceModifierSetBonusPower,
+            SupplementalChanceModifierPowers = context.SupplementalChanceModifierPowers,
             SupplementalChanceModifierCatalog = context.SupplementalChanceModifierCatalog,
             BuildChanceModifierCatalog = context.BuildChanceModifierCatalog
         });

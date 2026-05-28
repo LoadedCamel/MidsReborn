@@ -30,10 +30,12 @@ namespace Mids_Reborn.Core
 
     public sealed record ContributionSource(
         string Name,
+        string FullName,
         Enums.ePowerType PowerType,
         bool IsOn,
         bool IsSetBonusVirtual,
-        bool IsPvpResist);
+        bool IsPvpResist,
+        bool IsIncarnate);
 
     public sealed record Contribution(
         ContributionKey Key,
@@ -125,10 +127,12 @@ namespace Mids_Reborn.Core
             
             var src = new ContributionSource(
                 Name: friendly,
+                FullName: sourcePower.FullName ?? string.Empty,
                 PowerType: sourcePower.PowerType,
                 IsOn: sourceIsOn,
                 IsSetBonusVirtual: isSetBonusVirtual,
-                IsPvpResist: isPvpResist);
+                IsPvpResist: isPvpResist,
+                IsIncarnate: sourcePower.GetPowerSet()?.SetType is Enums.ePowerSetType.Incarnate);
 
             var c = new Contribution(
                 Key: key,

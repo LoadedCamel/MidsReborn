@@ -90,9 +90,11 @@ internal static class PlannerPowerAssembly
                                                 enhancementSet.SpecialBonus[enhancementIndex].Index.Length > 0;
 
                     shouldAddEffect = enhancementIndex >= 0 &&
-                                      (hasLinkedSpecialBonus ||
-                                       enhancement.Effect.All(effect => effect.Mode != Enums.eEffMode.Enhancement) ||
-                                       !Regex.IsMatch(enhancementEffect.ModifierTable, @"^(Melee|Ranged)_Boosts_"));
+                                      ShouldAbsorbEnhancementEffectIntoHostPower(
+                                          enhancement,
+                                          enhancementPower,
+                                          enhancementEffect,
+                                          hasLinkedSpecialBonus);
                 }
 
                 if (!shouldAddEffect)
@@ -128,6 +130,38 @@ internal static class PlannerPowerAssembly
 
         return !string.IsNullOrWhiteSpace(enhancementEffect.ModifierTable) &&
                enhancementEffect.ModifierTable.Contains("_Boosts_", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool ShouldAbsorbEnhancementEffectIntoHostPower(
+        IEnhancement enhancement,
+        IPower enhancementPower,
+        IEffect enhancementEffect,
+        bool hasLinkedSpecialBonus)
+    {
+        if (enhancementEffect == null)
+        {
+            return false;
+        }
+
+        // Unique/global helper pieces now surface their popup FX from linked special/global
+        // bonus ownership. Those rows must stay owned by set bonus plumbing instead of being
+        // cloned onto the host power as live math.
+        if (hasLinkedSpecialBonus || HasLinkedGlobalBonusOwnership(enhancementPower))
+        {
+            return false;
+        }
+
+        return enhancement.Effect.All(effect => effect.Mode != Enums.eEffMode.Enhancement) ||
+               !Regex.IsMatch(
+                   enhancementEffect.ModifierTable ?? string.Empty,
+                   @"^(Melee|Ranged)_Boosts_",
+                   RegexOptions.IgnoreCase);
+    }
+
+    private static bool HasLinkedGlobalBonusOwnership(IPower enhancementPower)
+    {
+        return enhancementPower is Power boostPower &&
+               boostPower.OmniBoostPolicy.LinkedGlobalBonusPowerNames.Count > 0;
     }
 
     public static bool AddSubPowerEffects(Build? build, ref IPower power, int historyIndex)

@@ -142,12 +142,15 @@ internal sealed class PlannerPowerPipeline
         }
 
         var aggregation = BuildActorAggregation(CreateActorAggregationContext(
-            buildChanceModifierCatalog: false,
+            buildChanceModifierCatalog: true,
             includeProcStateSupplemental: true),
             finalize: true);
         _actorAssembly = aggregation.ActorAssembly;
         _selfEnhance = aggregation.FinalSelfEnhanceBuckets;
         _selfBuffs = aggregation.FinalSelfBuffBuckets;
+        _chanceModifierCatalog = new Dictionary<string, float>(
+            aggregation.ActorAssembly.ChanceModifierCatalog,
+            StringComparer.OrdinalIgnoreCase);
         SyncResult();
 
         var powerSnapshots = CalculationSnapshotFactory.CreatePowerSnapshots(
@@ -191,7 +194,7 @@ internal sealed class PlannerPowerPipeline
         {
             var sourcePower = sourcePowers[index];
             var powerEntry = _currentBuild.Powers[index];
-            if (sourcePower == null || powerEntry == null || powerEntry.ProcInclude || powerEntry.StatInclude)
+            if (sourcePower == null || powerEntry == null || powerEntry.ProcInclude || !powerEntry.StatInclude)
             {
                 continue;
             }
@@ -208,6 +211,7 @@ internal sealed class PlannerPowerPipeline
             IPower clone = new Power(sourcePower);
             clone.Effects = procStateEffects;
             clone.PowerType = Enums.ePowerType.Auto_;
+            clone.Active = true;
             clone.HasGrantPowerEffect = false;
             activeProcStatePowers.Add(clone);
         }
@@ -1374,6 +1378,12 @@ internal sealed class PlannerPowerPipeline
         var computedCosmicBalanceState = new CosmicBalanceComputedState();
         var computedDarkSustenanceState = new CosmicBalanceComputedState();
         IReadOnlyDictionary<string, float>? supplementalChanceModifierCatalog = null;
+        var activeProcStateEnhancementPowers = includeProcStateSupplemental
+            ? CollectActiveProcStatePowers(_mathPowers)
+            : [];
+        var activeProcStateBuffPowers = includeProcStateSupplemental
+            ? CollectActiveProcStatePowers(_buffedPowers)
+            : [];
         if (setBonusPower != null)
         {
             enhancementExternalPowers.Add(setBonusPower);
@@ -1440,15 +1450,12 @@ internal sealed class PlannerPowerPipeline
             CosmicBalanceState = computedCosmicBalanceState,
             DarkSustenanceState = computedDarkSustenanceState,
             ChanceModifierSetBonusPower = setBonusPower,
+            SupplementalChanceModifierPowers = activeProcStateBuffPowers,
             SupplementalChanceModifierCatalog = supplementalChanceModifierCatalog,
             BuildChanceModifierCatalog = buildChanceModifierCatalog,
             ApplyPvpDiminishingReturns = _recipient == null,
-            SupplementalEnhancementSourcePowers = includeProcStateSupplemental
-                ? CollectActiveProcStatePowers(_mathPowers)
-                : Array.Empty<IPower>(),
-            SupplementalSelfBuffSourcePowers = includeProcStateSupplemental
-                ? CollectActiveProcStatePowers(_buffedPowers)
-                : Array.Empty<IPower>()
+            SupplementalEnhancementSourcePowers = activeProcStateEnhancementPowers,
+            SupplementalSelfBuffSourcePowers = activeProcStateBuffPowers
         };
     }
 

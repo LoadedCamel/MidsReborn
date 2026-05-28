@@ -596,6 +596,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                        plannerMode == mode);
         }
 
+        internal bool HasPlannerModeCondition(PlannerMode mode)
+        {
+            return HasSourceModeCondition(mode);
+        }
+
         public int nOverride
         {
             get
@@ -1540,6 +1545,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 cleaned.Equals("true", StringComparison.OrdinalIgnoreCase))
             {
                 return string.Empty;
+            }
+
+            if (AdvancedConditionEvaluator.TryDescribePreservedTargetExpression(cleaned, out var targetDescription))
+            {
+                return targetDescription;
             }
 
             cleaned = Regex.Replace(

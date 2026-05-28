@@ -11,8 +11,23 @@ public sealed partial class OmniImporter
     private const string ScourgeProbabilityExpression = "minmax((50 - cfg>target>hp) / 40, 0, 1)";
     private const string DominationRagePowerFullName = "Inherent.Inherent.Domination_Rage";
     private const string DominationSuppressionTag = "DominationSuppression";
+    private const string ScrapperArchetypeClassName = "Class_Scrapper";
+    private const string ScrapperCritGenericTag = "ScrapperCrit";
+    private const float StandardScrapperCritSmallChance = 0.05f;
+    private const float StandardScrapperCritLargeChance = 0.10f;
+    private const string MinionProfileClassName = "Class_Minion_Grunt";
     private const string AssassinationFocusProbabilityExpression =
         "minmax(Temporary_Powers.Temporary_Powers.Assassins_Focus>variableVal * 0.333, 0, 1)";
+
+    private enum ScrapperCritVariant
+    {
+        None,
+        Small,
+        Large,
+        Player,
+        GenericCritter,
+        GenericPlayer
+    }
 
     private static void RemodelPlannerStateFamilies(IDatabase database, OmniApplyResult applyResult)
     {
@@ -679,8 +694,12 @@ public sealed partial class OmniImporter
             return ConfigureVigilanceEndAdjustmentPower(power);
         }
 
-        if (power.FullName.StartsWith("Corruptor_", StringComparison.OrdinalIgnoreCase) &&
-            ConfigureScourgeDamageRows(power))
+        if (ConfigureScrapperCriticalHitRows(power))
+        {
+            return true;
+        }
+
+        if (ConfigureScourgeDamageRows(power))
         {
             return true;
         }
@@ -763,6 +782,377 @@ public sealed partial class OmniImporter
         }
 
         return changed;
+    }
+
+    private static bool ConfigureScrapperCriticalHitRows(IPower power)
+    {
+        if (power.Effects is not { Length: > 0 })
+        {
+            return false;
+        }
+
+        var changed = false;
+        var rewrittenEffects = new List<IEffect>(power.Effects.Length);
+        foreach (var sourceEffect in power.Effects)
+        {
+            if (sourceEffect is not Effect effect)
+            {
+                if (sourceEffect != null)
+                {
+                    rewrittenEffects.Add(sourceEffect);
+                }
+
+                continue;
+            }
+
+            var variant = ClassifyScrapperCritVariant(effect);
+            switch (variant)
+            {
+                case ScrapperCritVariant.None:
+                    rewrittenEffects.Add(effect);
+                    break;
+
+                case ScrapperCritVariant.Small:
+                    changed |= NormalizeScrapperCritEffect(effect, ScrapperCritVariant.Small);
+                    rewrittenEffects.Add(effect);
+                    break;
+
+                case ScrapperCritVariant.Large:
+                    changed |= NormalizeScrapperCritEffect(effect, ScrapperCritVariant.Large);
+                    rewrittenEffects.Add(effect);
+                    break;
+
+                case ScrapperCritVariant.Player:
+                    changed |= NormalizeScrapperCritEffect(effect, ScrapperCritVariant.Player);
+                    rewrittenEffects.Add(effect);
+                    break;
+
+                case ScrapperCritVariant.GenericPlayer:
+                    changed |= NormalizeScrapperCritEffect(effect, ScrapperCritVariant.Player);
+                    rewrittenEffects.Add(effect);
+                    break;
+
+                case ScrapperCritVariant.GenericCritter:
+                    rewrittenEffects.Add(effect);
+                    break;
+            }
+        }
+
+        if (!changed)
+        {
+            return false;
+        }
+
+        power.Effects = rewrittenEffects.ToArray();
+        power.HasGrantPowerEffect = power.Effects.Any(effect => effect?.EffectType == Enums.eEffectType.GrantPower);
+        power.IsModified = true;
+        return true;
+    }
+
+    private static ScrapperCritVariant ClassifyScrapperCritVariant(Effect effect)
+    {
+        if (!IsScrapperCriticalHitDamageEffect(effect))
+        {
+            return ScrapperCritVariant.None;
+        }
+
+        if (HasEffectTag(effect, "CritSmall"))
+        {
+            return ScrapperCritVariant.Small;
+        }
+
+        if (HasEffectTag(effect, "CritLarge"))
+        {
+            return ScrapperCritVariant.Large;
+        }
+
+        if (HasEffectTag(effect, "CritPlayer"))
+        {
+            return ScrapperCritVariant.Player;
+        }
+
+        if (!TryGetArchetypeCondition(effect, out var archetypeClass) ||
+            !archetypeClass.Equals(ScrapperArchetypeClassName, StringComparison.OrdinalIgnoreCase))
+        {
+            return ScrapperCritVariant.None;
+        }
+
+        if (TargetsPlayer(effect))
+        {
+            return ScrapperCritVariant.GenericPlayer;
+        }
+
+        return TargetsCritter(effect)
+            ? ScrapperCritVariant.GenericCritter
+            : ScrapperCritVariant.None;
+    }
+
+    private static bool IsScrapperCriticalHitDamageEffect(Effect effect)
+    {
+        if (effect == null || effect.EffectType != Enums.eEffectType.Damage)
+        {
+            return false;
+        }
+
+        var modifierTable = effect.ModifierTable ?? string.Empty;
+        if (!modifierTable.Contains("InherentDamage", StringComparison.OrdinalIgnoreCase) &&
+            !modifierTable.Contains("PvPDamage", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        return HasEffectTag(effect, "CritSmall") ||
+               HasEffectTag(effect, "CritLarge") ||
+               HasEffectTag(effect, "CritPlayer") ||
+               HasEffectTag(effect, "ScrapperCrit") ||
+               (TryGetArchetypeCondition(effect, out var archetypeClass) &&
+                archetypeClass.Equals(ScrapperArchetypeClassName, StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool NormalizeScrapperCritEffect(Effect effect, ScrapperCritVariant variant)
+    {
+        var changed = false;
+        if (effect.AdvancedConditions == null)
+        {
+            effect.AdvancedConditions = new AdvancedConditionSet();
+            changed = true;
+        }
+
+        var rewrittenConditions = CloneNonTargetConditions(effect.AdvancedConditions);
+        switch (variant)
+        {
+            case ScrapperCritVariant.Small:
+                changed |= AddTargetArchetypeRequirement(rewrittenConditions, MinionProfileClassName, AdvancedConditionOperator.Equals);
+                changed |= EnsurePvMode(effect, Enums.ePvX.PvE);
+                changed |= EnsureBaseProbability(effect, StandardScrapperCritSmallChance);
+                changed |= EnsureCritTags(effect, "CritSmall");
+                break;
+
+            case ScrapperCritVariant.Large:
+                changed |= AddTargetArchetypeRequirement(rewrittenConditions, MinionProfileClassName, AdvancedConditionOperator.NotEquals);
+                changed |= EnsurePvMode(effect, Enums.ePvX.PvE);
+                changed |= EnsureBaseProbability(effect, StandardScrapperCritLargeChance);
+                changed |= EnsureCritTags(effect, "CritLarge");
+                break;
+
+            case ScrapperCritVariant.Player:
+                changed |= AddTargetEntityRequirement(rewrittenConditions, AdvancedConditionTargetScope.Player);
+                changed |= EnsurePvMode(effect, Enums.ePvX.PvP);
+                changed |= EnsureBaseProbability(effect, StandardScrapperCritSmallChance);
+                changed |= EnsureCritTags(effect, "CritPlayer");
+                break;
+        }
+
+        if (!ConditionSetsEquivalent(effect.AdvancedConditions, rewrittenConditions))
+        {
+            effect.AdvancedConditions = rewrittenConditions;
+            effect.NormalizeConditionState();
+            changed = true;
+        }
+
+        return changed;
+    }
+
+    private static AdvancedConditionSet CloneNonTargetConditions(AdvancedConditionSet source)
+    {
+        var rewritten = new AdvancedConditionSet();
+        if (source?.Rows == null)
+        {
+            return rewritten;
+        }
+
+        foreach (var row in source.Rows)
+        {
+            if (IsTargetScopedCondition(row))
+            {
+                continue;
+            }
+
+            var clone = row.Clone();
+            clone.Link = rewritten.Rows.Count == 0 ? AdvancedConditionLink.And : row.Link;
+            rewritten.Rows.Add(clone);
+        }
+
+        return rewritten;
+    }
+
+    private static bool IsTargetScopedCondition(AdvancedConditionRow row)
+    {
+        if (row == null)
+        {
+            return false;
+        }
+
+        if (row.Kind is AdvancedConditionKind.TargetEntityType or
+            AdvancedConditionKind.TargetArchetype or
+            AdvancedConditionKind.TargetGroup or
+            AdvancedConditionKind.TargetMode)
+        {
+            return true;
+        }
+
+        return row.EvaluationMode is AdvancedConditionEvaluationMode.RuntimeTargetOnly or AdvancedConditionEvaluationMode.ReportOnly
+            && !string.IsNullOrWhiteSpace(row.RawExpression)
+            && row.RawExpression.Contains("target", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool AddTargetArchetypeRequirement(
+        AdvancedConditionSet conditions,
+        string className,
+        AdvancedConditionOperator op)
+    {
+        if (conditions.Rows.Any(row =>
+                row.Kind == AdvancedConditionKind.TargetArchetype &&
+                row.Operator == op &&
+                row.Value.Equals(className, StringComparison.OrdinalIgnoreCase) &&
+                !row.Negated))
+        {
+            return false;
+        }
+
+        conditions.Rows.Add(new AdvancedConditionRow
+        {
+            Link = conditions.Rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.And,
+            Kind = AdvancedConditionKind.TargetArchetype,
+            Subject = "arch",
+            Operator = op,
+            Value = className,
+            Negated = false,
+            RawExpression = op == AdvancedConditionOperator.NotEquals
+                ? $"target>arch ne '{className}'"
+                : $"target>arch eq '{className}'",
+            EvaluationMode = AdvancedConditionEvaluationMode.BuildEvaluated
+        });
+
+        return true;
+    }
+
+    private static bool AddTargetEntityRequirement(
+        AdvancedConditionSet conditions,
+        AdvancedConditionTargetScope scope)
+    {
+        if (conditions.Rows.Any(row =>
+                row.Kind == AdvancedConditionKind.TargetEntityType &&
+                row.TargetScope == scope &&
+                row.Operator == AdvancedConditionOperator.Equals &&
+                !row.Negated))
+        {
+            return false;
+        }
+
+        conditions.Rows.Add(new AdvancedConditionRow
+        {
+            Link = conditions.Rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.And,
+            Kind = AdvancedConditionKind.TargetEntityType,
+            Subject = scope == AdvancedConditionTargetScope.Player ? "player" : "critter",
+            Value = scope.ToString(),
+            TargetScope = scope,
+            Operator = AdvancedConditionOperator.Equals,
+            Negated = false,
+            RawExpression = scope == AdvancedConditionTargetScope.Player
+                ? "target>enttype eq 'player'"
+                : "target>enttype eq 'critter'",
+            Unsupported = true,
+            EvaluationMode = AdvancedConditionEvaluationMode.RuntimeTargetOnly
+        });
+
+        return true;
+    }
+
+    private static bool EnsurePvMode(Effect effect, Enums.ePvX pvMode)
+    {
+        if (effect.PvMode == pvMode)
+        {
+            return false;
+        }
+
+        effect.PvMode = pvMode;
+        return true;
+    }
+
+    private static bool EnsureBaseProbability(Effect effect, float probability)
+    {
+        if (Approximately(effect.BaseProbability, probability))
+        {
+            return false;
+        }
+
+        effect.BaseProbability = probability;
+        return true;
+    }
+
+    private static bool EnsureCritTags(Effect effect, string primaryTag)
+    {
+        var changed = false;
+        effect.EffectTags ??= [];
+        if (!effect.EffectTags.Contains(primaryTag, StringComparer.OrdinalIgnoreCase))
+        {
+            effect.EffectTags.Insert(0, primaryTag);
+            changed = true;
+        }
+
+        if (!effect.EffectTags.Contains(ScrapperCritGenericTag, StringComparer.OrdinalIgnoreCase) &&
+            !effect.EffectTags.Any(tag => tag.Contains("ScrapperCrit", StringComparison.OrdinalIgnoreCase)))
+        {
+            effect.EffectTags.Add(ScrapperCritGenericTag);
+            changed = true;
+        }
+
+        if (!string.Equals(effect.EffectId, primaryTag, StringComparison.OrdinalIgnoreCase))
+        {
+            effect.EffectId = primaryTag;
+            changed = true;
+        }
+
+        return changed;
+    }
+
+    private static bool TargetsPlayer(Effect effect)
+    {
+        return effect.AdvancedConditions?.Rows.Any(row =>
+                   row.Kind == AdvancedConditionKind.TargetEntityType &&
+                   row.TargetScope == AdvancedConditionTargetScope.Player &&
+                   row.Operator == AdvancedConditionOperator.Equals &&
+                   !row.Negated) == true;
+    }
+
+    private static bool TargetsCritter(Effect effect)
+    {
+        return effect.AdvancedConditions?.Rows.Any(row =>
+                   row.Kind == AdvancedConditionKind.TargetEntityType &&
+                   row.TargetScope == AdvancedConditionTargetScope.Foe &&
+                   row.Operator == AdvancedConditionOperator.Equals &&
+                   !row.Negated) == true;
+    }
+
+    private static bool TryGetArchetypeCondition(Effect effect, out string archetypeClass)
+    {
+        archetypeClass = effect.AdvancedConditions?.Rows
+            .FirstOrDefault(row =>
+                row.Kind == AdvancedConditionKind.CharacterArchetype &&
+                !row.Negated &&
+                row.Operator == AdvancedConditionOperator.Equals &&
+                !string.IsNullOrWhiteSpace(row.Value))
+            ?.Value ?? string.Empty;
+        return !string.IsNullOrWhiteSpace(archetypeClass);
+    }
+
+    private static bool HasEffectTag(Effect effect, string tag)
+    {
+        return effect.EffectTags?.Any(value => value.Equals(tag, StringComparison.OrdinalIgnoreCase)) == true;
+    }
+
+    private static bool ConditionSetsEquivalent(AdvancedConditionSet left, AdvancedConditionSet right)
+    {
+        return string.Equals(
+            AdvancedConditionCompiler.Compile(left),
+            AdvancedConditionCompiler.Compile(right),
+            StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool Approximately(float left, float right)
+    {
+        return Math.Abs(left - right) <= 0.0001f;
     }
 
     private static bool ConfigureScourgeDamageRows(IPower power)

@@ -14,10 +14,51 @@ public static class OmniMidsMapper
         VectorResistance
     }
 
+    private enum PowerSemanticSourceKind
+    {
+        StandardPower,
+        Boost,
+        SetBonus
+    }
+
+    private enum ModifierTableFamily
+    {
+        BuffDamage,
+        BuffDefense,
+        BuffResistance,
+        BoostSchedule,
+        Ones,
+        Other
+    }
+
+    private enum BoostEffectRole
+    {
+        None,
+        EnhancementSchedule,
+        HelperCarrier
+    }
+
     private enum ChanceModScope
     {
         Global,
         PowerLocal
+    }
+
+    private readonly record struct MappedEffectSemantic(
+        Enums.eEffectType EffectType,
+        Enums.eEffectType ETModifies,
+        Enums.eMez MezType,
+        PowerSemanticSourceKind SourceKind,
+        ModifierTableFamily TableFamily,
+        BoostEffectRole BoostRole)
+    {
+        public static readonly MappedEffectSemantic None = new(
+            Enums.eEffectType.None,
+            Enums.eEffectType.None,
+            Enums.eMez.None,
+            PowerSemanticSourceKind.StandardPower,
+            ModifierTableFamily.Other,
+            BoostEffectRole.None);
     }
 
     public static Effect CreatePowerRedirectEffect(string sourcePowerFullName, OmniRedirectDefinition redirect)
@@ -60,7 +101,8 @@ public static class OmniMidsMapper
                          applyResult,
                          [],
                          [],
-                         $"{sourcePrefix}[{effectIndex}]"))
+                         $"{sourcePrefix}[{effectIndex}]",
+                         inheritedIsPvp: null))
             {
                 yield return flattened;
             }
@@ -74,12 +116,14 @@ public static class OmniMidsMapper
         OmniApplyResult? applyResult,
         IReadOnlyCollection<string> inheritedTags,
         IReadOnlyCollection<string> inheritedRequiresExpressions,
-        string sourcePath)
+        string sourcePath,
+        string? inheritedIsPvp)
     {
         var effects = new List<Effect>();
         var effectTags = MergeTags(inheritedTags, source.Tags, source.Flags).ToArray();
         var requiresExpressions = MergeRequiresExpressions(inheritedRequiresExpressions, source.RequiresExpression).ToArray();
         var combinedSourceRequires = JoinRequiresExpressions(requiresExpressions);
+        var effectiveIsPvp = ResolveEffectiveIsPvp(inheritedIsPvp, source.IsPvp);
         if (effectTags.Length > 0)
         {
             applyResult?.AddLimited(applyResult.EffectGroupTagDetails,
@@ -125,7 +169,8 @@ public static class OmniMidsMapper
             {
                 var attrib = attribs[attribIndex];
                 var normalizedAttrib = Normalize(attrib);
-                var mappedType = MapEffectType(power, template.Type, attrib, template.Aspect, template.Target, template.Table, templateSemantic);
+                var mappedSemantic = MapEffectSemantic(power, source, template, attrib, effectTags, templateSemantic);
+                var mappedType = mappedSemantic.EffectType;
                 if (mappedType == Enums.eEffectType.None &&
                     IsKnownUnsupportedEffectAttrib(power, source, template, normalizedAttrib, template.Type, effectTags))
                 {
@@ -162,7 +207,7 @@ public static class OmniMidsMapper
                 var conditionExpressions = requiresExpressions
                     .Concat(string.IsNullOrWhiteSpace(template.JitRequires) ? [] : [template.JitRequires])
                     .ToArray();
-                var pvMode = MapPvMode(mappedType, combinedSourceRequires, template, out var pvModeSource);
+                var pvMode = MapPvMode(mappedType, combinedSourceRequires, effectiveIsPvp, template, out var pvModeSource);
                 var stackPolicy = ImportedStackPolicyNormalizer.FromTemplate(template);
                 var effect = new Effect
                 {
@@ -171,7 +216,10 @@ public static class OmniMidsMapper
                     EffectClass = Enums.eEffectClass.Primary,
                     EffectType = mappedType,
                     DamageType = MapDamageType(attrib, template.Table),
-                    MezType = MapMezType(attrib, template.Type),
+                    MezType = mappedSemantic.MezType != Enums.eMez.None
+                        ? mappedSemantic.MezType
+                        : MapMezType(attrib, template.Type),
+                    ETModifies = mappedSemantic.ETModifies,
                     ToWho = MapToWho(power, template.Target),
                     Stacking = ImportedStackPolicyNormalizer.ToCompatibilityStacking(stackPolicy),
                     StackPolicy = stackPolicy,
@@ -282,7 +330,8 @@ public static class OmniMidsMapper
                          applyResult,
                          effectTags,
                          requiresExpressions,
-                         $"{sourcePath}:child[{childIndex}]"))
+                         $"{sourcePath}:child[{childIndex}]",
+                         effectiveIsPvp))
             {
                 effects.Add(flattened);
             }
@@ -716,9 +765,25 @@ public static class OmniMidsMapper
     private static Enums.ePvX MapPvMode(
         Enums.eEffectType mappedType,
         string effectRequires,
+        string effectiveIsPvp,
         OmniEffectTemplate template,
         out string inferenceSource)
     {
+        switch (effectiveIsPvp)
+        {
+            case "pveonly":
+                inferenceSource = "effect group is_pvp";
+                return Enums.ePvX.PvE;
+
+            case "pvponly":
+                inferenceSource = "effect group is_pvp";
+                return Enums.ePvX.PvP;
+
+            case "either":
+                inferenceSource = "effect group is_pvp";
+                return Enums.ePvX.Any;
+        }
+
         var targetsPlayer = TargetsEntity(effectRequires, "player") || TargetsEntity(template.JitRequires, "player");
         var targetsCritter = TargetsEntity(effectRequires, "critter") || TargetsEntity(template.JitRequires, "critter");
         if (targetsPlayer && !targetsCritter)
@@ -758,6 +823,31 @@ public static class OmniMidsMapper
         return Enums.ePvX.Any;
     }
 
+    private static string ResolveEffectiveIsPvp(string? inheritedIsPvp, string? localIsPvp)
+    {
+        var inherited = Normalize(inheritedIsPvp);
+        var local = Normalize(localIsPvp);
+
+        if (string.IsNullOrWhiteSpace(inherited))
+        {
+            return local;
+        }
+
+        if (string.IsNullOrWhiteSpace(local) || local == "either")
+        {
+            return inherited;
+        }
+
+        if (inherited == "either" || inherited == local)
+        {
+            return local;
+        }
+
+        // Nested Omni effect groups combine through conjunction. When a parent already
+        // restricts PvX scope, preserve that restriction instead of widening child rows.
+        return inherited;
+    }
+
     private static bool TargetsEntity(string expression, string entity)
     {
         if (string.IsNullOrWhiteSpace(expression))
@@ -770,40 +860,33 @@ public static class OmniMidsMapper
                    expression,
                    $@"target\s*>\s*enttype\s*(?:eq|==)\s*['""]?{escaped}['""]?",
                    RegexOptions.IgnoreCase | RegexOptions.CultureInvariant) ||
-               Regex.IsMatch(
-                   expression,
-                   $@"['""]?{escaped}['""]?\s+target\s*>\s*enttype\s*(?:eq|==)",
-                   RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
+                Regex.IsMatch(
+                    expression,
+                    $@"enttype\s+target\s*>\s*['""]?{escaped}['""]?\s*(?:eq|==)",
+                    RegexOptions.IgnoreCase | RegexOptions.CultureInvariant);
     }
 
-    private static Enums.eEffectType MapEffectType(
+    private static MappedEffectSemantic MapEffectSemantic(
         OmniPowerDefinition power,
-        string type,
+        OmniEffectDefinition source,
+        OmniEffectTemplate template,
         string attrib,
-        string aspect,
-        string target,
-        string table,
+        IReadOnlyCollection<string> effectTags,
         TemplateSemantic templateSemantic)
     {
-        var normalizedType = Normalize(type);
+        var normalizedType = Normalize(template.Type);
         var normalizedAttrib = Normalize(attrib);
-        var normalizedAspect = Normalize(aspect);
-        var normalizedTable = Normalize(table);
-        var normalizedTemplateTarget = Normalize(target);
+        var normalizedAspect = Normalize(template.Aspect);
+        var normalizedTable = Normalize(template.Table);
+        var normalizedTemplateTarget = Normalize(template.Target);
+        var sourceKind = ClassifyPowerSemanticSourceKind(power);
+        var tableFamily = ClassifyModifierTableFamily(template.Table);
+        var boostRole = ClassifyBoostEffectRole(sourceKind, tableFamily);
         var isStrengthAspect = normalizedAspect is "str" or "strength";
         var isResistanceAspect = normalizedAspect is "res" or "resistance";
-        var isDamageModifierTable =
-            normalizedTable.Contains("buffdmg", StringComparison.OrdinalIgnoreCase) ||
-            normalizedTable.Contains("damage", StringComparison.OrdinalIgnoreCase) ||
-            normalizedTable.EndsWith("dmg", StringComparison.OrdinalIgnoreCase);
-        var isDefenseModifierTable =
-            normalizedTable.Contains("buffdef", StringComparison.OrdinalIgnoreCase) ||
-            normalizedTable.Contains("defense", StringComparison.OrdinalIgnoreCase) ||
-            normalizedTable.EndsWith("def", StringComparison.OrdinalIgnoreCase);
-        var isResistanceModifierTable =
-            normalizedTable.Contains("resdmg", StringComparison.OrdinalIgnoreCase) ||
-            normalizedTable.Contains("resistance", StringComparison.OrdinalIgnoreCase) ||
-            normalizedTable.EndsWith("res", StringComparison.OrdinalIgnoreCase);
+        var isDamageModifierTable = tableFamily == ModifierTableFamily.BuffDamage;
+        var isDefenseModifierTable = tableFamily == ModifierTableFamily.BuffDefense;
+        var isResistanceModifierTable = tableFamily == ModifierTableFamily.BuffResistance;
         var isActualDamageTemplate =
             normalizedAttrib.EndsWith("dmg", StringComparison.OrdinalIgnoreCase) ||
             normalizedAttrib.EndsWith("damage", StringComparison.OrdinalIgnoreCase) ||
@@ -814,121 +897,158 @@ public static class OmniMidsMapper
              !isStrengthAspect &&
              !isResistanceAspect);
 
+        MappedEffectSemantic Map(
+            Enums.eEffectType effectType,
+            Enums.eEffectType modifies = Enums.eEffectType.None,
+            Enums.eMez mezType = Enums.eMez.None)
+            => new(effectType, modifies, mezType, sourceKind, tableFamily, boostRole);
+
         if (normalizedType == "powerredirect")
         {
-            return Enums.eEffectType.PowerRedirect;
+            return Map(Enums.eEffectType.PowerRedirect);
         }
 
-        if (normalizedType == "grantpower")
+        if (normalizedType is "grantpower" or "grantboostedpower")
         {
-            return Enums.eEffectType.GrantPower;
-        }
-
-        if (normalizedType == "grantboostedpower")
-        {
-            return Enums.eEffectType.GrantPower;
+            return Map(Enums.eEffectType.GrantPower);
         }
 
         if (normalizedType == "entcreate")
         {
-            return Enums.eEffectType.EntCreate;
+            return Map(Enums.eEffectType.EntCreate);
         }
 
-        if (normalizedAttrib is "grantpower")
+        if (normalizedAttrib is "grantpower" or "grantboostedpower")
         {
-            return Enums.eEffectType.GrantPower;
-        }
-
-        if (normalizedAttrib is "grantboostedpower")
-        {
-            return Enums.eEffectType.GrantPower;
+            return Map(Enums.eEffectType.GrantPower);
         }
 
         if (normalizedAttrib is "executepower")
         {
-            return Enums.eEffectType.ExecutePower;
+            return Map(Enums.eEffectType.ExecutePower);
         }
 
         if (normalizedAttrib is "createentity")
         {
-            return Enums.eEffectType.EntCreate;
+            return Map(Enums.eEffectType.EntCreate);
         }
 
         if (normalizedAttrib is "revokepower")
         {
-            return Enums.eEffectType.RevokePower;
+            return Map(Enums.eEffectType.RevokePower);
         }
 
-        if (normalizedType is "globalchancemod" or "powerchancemod")
+        if (normalizedType is "globalchancemod" or "powerchancemod" ||
+            normalizedAttrib is "globalchancemod" or "powerchancemod")
         {
-            return Enums.eEffectType.GlobalChanceMod;
-        }
-
-        if (normalizedAttrib is "globalchancemod" or "powerchancemod")
-        {
-            return Enums.eEffectType.GlobalChanceMod;
+            return Map(Enums.eEffectType.GlobalChanceMod);
         }
 
         if (normalizedAttrib is "setmode")
         {
-            return Enums.eEffectType.SetMode;
+            return Map(Enums.eEffectType.SetMode);
         }
 
         if (normalizedAttrib is "unsetmode")
         {
-            return Enums.eEffectType.UnsetMode;
+            return Map(Enums.eEffectType.UnsetMode);
         }
 
         if (normalizedAttrib is "setcostume")
         {
-            return Enums.eEffectType.SetCostume;
-        }
-
-        if (normalizedAttrib is "null" or "canceleffects")
-        {
-            return Enums.eEffectType.Null;
+            return Map(Enums.eEffectType.SetCostume);
         }
 
         if (normalizedAttrib is "rechargepower")
         {
-            return Enums.eEffectType.RechargePower;
+            return Map(Enums.eEffectType.RechargePower);
         }
 
         if (normalizedAttrib is "healdmg" or "heal")
         {
-            return Enums.eEffectType.Heal;
+            return Map(Enums.eEffectType.Heal);
+        }
+
+        if (TryMapResistanceAspectSemantic(
+                power,
+                source,
+                template,
+                effectTags,
+                normalizedAttrib,
+                sourceKind,
+                tableFamily,
+                boostRole,
+                out var resistanceSemantic))
+        {
+            return resistanceSemantic;
         }
 
         if (templateSemantic == TemplateSemantic.VectorDefense &&
             IsVectorDefenseSemanticAttrib(normalizedAttrib))
         {
-            return Enums.eEffectType.Defense;
+            return Map(Enums.eEffectType.Defense);
         }
 
         if (templateSemantic == TemplateSemantic.VectorResistance &&
             IsVectorResistanceSemanticAttrib(normalizedAttrib))
         {
-            return Enums.eEffectType.Resistance;
+            return Map(Enums.eEffectType.Resistance);
+        }
+
+        if (normalizedAttrib is "null" or "canceleffects")
+        {
+            if (TryMapNullHelperCarrierSemantic(
+                    power,
+                    source,
+                    template,
+                    effectTags,
+                    normalizedAttrib,
+                    sourceKind,
+                    tableFamily,
+                    boostRole,
+                    out var helperSemantic))
+            {
+                return helperSemantic;
+            }
+
+            return Map(Enums.eEffectType.Null);
         }
 
         if (isDefenseModifierTable)
         {
-            return Enums.eEffectType.Defense;
+            return Map(Enums.eEffectType.Defense);
         }
 
-        if (isResistanceModifierTable || isResistanceAspect)
+        if (isResistanceModifierTable)
         {
-            return Enums.eEffectType.Resistance;
+            return Map(Enums.eEffectType.Resistance);
+        }
+
+        if (sourceKind == PowerSemanticSourceKind.Boost &&
+            boostRole == BoostEffectRole.EnhancementSchedule &&
+            isStrengthAspect &&
+            IsDamageVectorSelectorAttrib(normalizedAttrib))
+        {
+            if (IsResistanceBoostScheduleTable(normalizedTable))
+            {
+                return Map(Enums.eEffectType.Resistance);
+            }
+
+            if (IsDamageBoostScheduleTable(normalizedTable))
+            {
+                return Map(Enums.eEffectType.DamageBuff);
+            }
         }
 
         if (IsDamageCategory(normalizedAttrib))
         {
-            if (isStrengthAspect || isDamageModifierTable && normalizedTemplateTarget.Contains("self", StringComparison.OrdinalIgnoreCase))
+            if (isStrengthAspect ||
+                isDamageModifierTable && normalizedTemplateTarget.Contains("self", StringComparison.OrdinalIgnoreCase))
             {
-                return Enums.eEffectType.DamageBuff;
+                return Map(Enums.eEffectType.DamageBuff);
             }
 
-            return isActualDamageTemplate ? Enums.eEffectType.Damage : Enums.eEffectType.None;
+            return isActualDamageTemplate ? Map(Enums.eEffectType.Damage) : MappedEffectSemantic.None;
         }
 
         if (normalizedAttrib.EndsWith("dmg", StringComparison.OrdinalIgnoreCase) ||
@@ -936,85 +1056,345 @@ public static class OmniMidsMapper
         {
             if (isStrengthAspect)
             {
-                return Enums.eEffectType.DamageBuff;
+                return Map(Enums.eEffectType.DamageBuff);
             }
 
-            return Enums.eEffectType.Damage;
+            return Map(Enums.eEffectType.Damage);
         }
 
         if (normalizedAttrib.EndsWith("defense", StringComparison.OrdinalIgnoreCase))
         {
-            return Enums.eEffectType.Defense;
+            return Map(Enums.eEffectType.Defense);
         }
 
         if (normalizedAttrib.EndsWith("resistance", StringComparison.OrdinalIgnoreCase) ||
             normalizedAttrib.EndsWith("res", StringComparison.OrdinalIgnoreCase))
         {
-            return Enums.eEffectType.Resistance;
+            return Map(Enums.eEffectType.Resistance);
         }
 
         if (IsMezAttrib(normalizedAttrib) || normalizedType == "knock")
         {
-            return Enums.eEffectType.Mez;
+            return Map(Enums.eEffectType.Mez);
         }
 
         return normalizedAttrib switch
         {
-            "hitpoints" => Enums.eEffectType.HitPoints,
-            "absorb" => Enums.eEffectType.Absorb,
-            "viewattributes" => Enums.eEffectType.ViewAttrib,
-            "endurance" => Enums.eEffectType.Endurance,
-            "endurancecost" or "endurancediscount" => Enums.eEffectType.EnduranceDiscount,
-            "interrupttime" => Enums.eEffectType.InterruptTime,
-            "tohit" => Enums.eEffectType.ToHit,
+            "hitpoints" => Map(Enums.eEffectType.HitPoints),
+            "absorb" => Map(Enums.eEffectType.Absorb),
+            "viewattributes" => Map(Enums.eEffectType.ViewAttrib),
+            "endurance" => Map(Enums.eEffectType.Endurance),
+            "endurancecost" or "endurancediscount" => Map(Enums.eEffectType.EnduranceDiscount),
+            "interrupttime" => Map(Enums.eEffectType.InterruptTime),
+            "tohit" => Map(Enums.eEffectType.ToHit),
+            "accuracy" => Map(Enums.eEffectType.Accuracy),
+            "defense" => Map(Enums.eEffectType.Defense),
+            "damage" => Map(Enums.eEffectType.Damage),
+            "damagebuff" => Map(Enums.eEffectType.DamageBuff),
+            "elusivitybase" => Map(Enums.eEffectType.Elusivity),
+            "levelshift" => Map(Enums.eEffectType.LevelShift),
+            "rechargetime" => Map(Enums.eEffectType.RechargeTime),
+            "recovery" => Map(Enums.eEffectType.Recovery),
+            "regeneration" => Map(Enums.eEffectType.Regeneration),
+            "resistance" => Map(Enums.eEffectType.Resistance),
+            "range" => Map(Enums.eEffectType.Range),
+            "runningspeed" => Map(Enums.eEffectType.SpeedRunning),
+            "speedrunning" => Map(Enums.eEffectType.SpeedRunning),
+            "flyingspeed" => Map(Enums.eEffectType.SpeedFlying),
+            "speedflying" => Map(Enums.eEffectType.SpeedFlying),
+            "jumpingspeed" => Map(Enums.eEffectType.SpeedJumping),
+            "speedjumping" => Map(Enums.eEffectType.SpeedJumping),
+            "fly" => Map(Enums.eEffectType.Fly),
+            "jumpheight" => Map(Enums.eEffectType.JumpHeight),
+            "perceptionradius" => Map(Enums.eEffectType.PerceptionRadius),
+            "stealthradiuspve" => Map(Enums.eEffectType.StealthRadius),
+            "stealthradiuspvp" => Map(Enums.eEffectType.StealthRadiusPlayer),
+            "threatlevel" => Map(Enums.eEffectType.ThreatLevel),
+            "stealthradius" => Map(Enums.eEffectType.StealthRadius),
+            "stealthradiusplayer" => Map(Enums.eEffectType.StealthRadiusPlayer),
+            "slow" => Map(Enums.eEffectType.Slow),
+            "movementcontrol" => Map(Enums.eEffectType.MovementControl),
+            "movementfriction" => Map(Enums.eEffectType.MovementFriction),
+            "translucency" => Map(Enums.eEffectType.Translucency),
+            "rage" => Map(Enums.eEffectType.Rage),
+            "onlyaffectsself" => Map(Enums.eEffectType.Mez),
+            "untouchable" => Map(Enums.eEffectType.Mez),
+            "intangible" => Map(Enums.eEffectType.Mez),
+            "teleport" => Map(Enums.eEffectType.Mez),
+            "afraid" => Map(Enums.eEffectType.Mez),
+            "revoke" or "revokepower" => Map(Enums.eEffectType.RevokePower),
+            "reward" => Map(Enums.eEffectType.Reward),
+            "setmode" => Map(Enums.eEffectType.SetMode),
+            "unsetmode" => Map(Enums.eEffectType.UnsetMode),
+            "meter" => Map(Enums.eEffectType.Meter),
+            "debtprotection" => Map(Enums.eEffectType.XPDebtProtection),
+            "addtoken" => Map(Enums.eEffectType.TokenAdd),
+            _ => Enum.TryParse<Enums.eEffectType>(normalizedAttrib, true, out var parsedAttrib)
+                ? Map(parsedAttrib)
+                : Enum.TryParse<Enums.eEffectType>(template.Type, true, out var parsedType)
+                    ? Map(parsedType)
+                    : MappedEffectSemantic.None
+        };
+    }
+
+    private static bool TryMapResistanceAspectSemantic(
+        OmniPowerDefinition power,
+        OmniEffectDefinition source,
+        OmniEffectTemplate template,
+        IReadOnlyCollection<string> effectTags,
+        string normalizedAttrib,
+        PowerSemanticSourceKind sourceKind,
+        ModifierTableFamily tableFamily,
+        BoostEffectRole boostRole,
+        out MappedEffectSemantic semantic)
+    {
+        semantic = MappedEffectSemantic.None;
+        if (Normalize(template.Aspect) is not ("res" or "resistance"))
+        {
+            return false;
+        }
+
+        MappedEffectSemantic Map(
+            Enums.eEffectType effectType,
+            Enums.eEffectType modifies = Enums.eEffectType.None,
+            Enums.eMez mezType = Enums.eMez.None)
+            => new(effectType, modifies, mezType, sourceKind, tableFamily, boostRole);
+
+        if (IsVectorResistanceSemanticAttrib(normalizedAttrib))
+        {
+            semantic = Map(Enums.eEffectType.Resistance);
+            return true;
+        }
+
+        if (IsMezAttrib(normalizedAttrib))
+        {
+            var plannerText = GetPlannerSemanticText(power);
+            var mezType = MapMezType(normalizedAttrib, template.Type);
+            var explicitTags = CollectNormalizedTemplateTags(source, template, effectTags);
+            var preferProtection =
+                HasProtectionLanguage(plannerText) &&
+                !HasExplicitResistanceLanguage(plannerText, explicitTags);
+            semantic = preferProtection
+                ? Map(Enums.eEffectType.Mez, mezType: mezType)
+                : Map(Enums.eEffectType.MezResist, mezType: mezType);
+            return true;
+        }
+
+        if (TryMapResistanceModifiedEffectType(normalizedAttrib, out var modifiedEffectType))
+        {
+            semantic = Map(Enums.eEffectType.ResEffect, modifiedEffectType);
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool TryMapNullHelperCarrierSemantic(
+        OmniPowerDefinition power,
+        OmniEffectDefinition source,
+        OmniEffectTemplate template,
+        IReadOnlyCollection<string> effectTags,
+        string normalizedAttrib,
+        PowerSemanticSourceKind sourceKind,
+        ModifierTableFamily tableFamily,
+        BoostEffectRole boostRole,
+        out MappedEffectSemantic semantic)
+    {
+        semantic = MappedEffectSemantic.None;
+        if (normalizedAttrib is not ("null" or "canceleffects") ||
+            boostRole != BoostEffectRole.HelperCarrier && sourceKind != PowerSemanticSourceKind.SetBonus)
+        {
+            return false;
+        }
+
+        var normalizedTags = CollectNormalizedTemplateTags(source, template, effectTags);
+        var plannerText = GetPlannerSemanticText(power);
+
+        MappedEffectSemantic Map(
+            Enums.eEffectType effectType,
+            Enums.eEffectType modifies = Enums.eEffectType.None,
+            Enums.eMez mezType = Enums.eMez.None)
+            => new(effectType, modifies, mezType, sourceKind, tableFamily, boostRole);
+
+        if (normalizedTags.Contains("defense", StringComparer.OrdinalIgnoreCase) ||
+            plannerText.Contains("defense", StringComparison.OrdinalIgnoreCase) ||
+            plannerText.Contains("def(", StringComparison.OrdinalIgnoreCase))
+        {
+            semantic = Map(Enums.eEffectType.Defense);
+            return true;
+        }
+
+        if (normalizedTags.Contains("res", StringComparer.OrdinalIgnoreCase) ||
+            normalizedTags.Contains("resistance", StringComparer.OrdinalIgnoreCase) ||
+            (!HasProtectionLanguage(plannerText) &&
+             (plannerText.Contains("+res", StringComparison.OrdinalIgnoreCase) ||
+              plannerText.Contains("resistance", StringComparison.OrdinalIgnoreCase))))
+        {
+            semantic = Map(Enums.eEffectType.Resistance);
+            return true;
+        }
+
+        if (normalizedTags.Contains("knock", StringComparer.OrdinalIgnoreCase) ||
+            plannerText.Contains("knockback", StringComparison.OrdinalIgnoreCase) ||
+            plannerText.Contains("-kb", StringComparison.OrdinalIgnoreCase))
+        {
+            semantic = Map(Enums.eEffectType.Mez, mezType: Enums.eMez.Knockback);
+            return true;
+        }
+
+        if (normalizedTags.Contains("perception", StringComparer.OrdinalIgnoreCase) ||
+            plannerText.Contains("perception", StringComparison.OrdinalIgnoreCase))
+        {
+            semantic = Map(Enums.eEffectType.PerceptionRadius);
+            return true;
+        }
+
+        if (normalizedTags.Contains("rechargetime", StringComparer.OrdinalIgnoreCase) ||
+            plannerText.Contains("recharge", StringComparison.OrdinalIgnoreCase))
+        {
+            semantic = Map(Enums.eEffectType.RechargeTime);
+            return true;
+        }
+
+        if (plannerText.Contains("slow effect", StringComparison.OrdinalIgnoreCase) ||
+            plannerText.Contains("slow resistance", StringComparison.OrdinalIgnoreCase))
+        {
+            semantic = Map(Enums.eEffectType.ResEffect, Enums.eEffectType.SpeedRunning);
+            return true;
+        }
+
+        if (normalizedTags.Contains("movement", StringComparer.OrdinalIgnoreCase) ||
+            plannerText.Contains("run speed", StringComparison.OrdinalIgnoreCase) ||
+            plannerText.Contains("running speed", StringComparison.OrdinalIgnoreCase))
+        {
+            semantic = Map(Enums.eEffectType.SpeedRunning);
+            return true;
+        }
+
+        return false;
+    }
+
+    private static PowerSemanticSourceKind ClassifyPowerSemanticSourceKind(OmniPowerDefinition power)
+    {
+        var identity = !string.IsNullOrWhiteSpace(power.Powerset)
+            ? power.Powerset
+            : power.FullName;
+        var root = identity.Split('.', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? identity;
+        return Normalize(root) switch
+        {
+            "boosts" => PowerSemanticSourceKind.Boost,
+            "setbonus" => PowerSemanticSourceKind.SetBonus,
+            _ => PowerSemanticSourceKind.StandardPower
+        };
+    }
+
+    private static ModifierTableFamily ClassifyModifierTableFamily(string table)
+    {
+        var normalizedTable = Normalize(table);
+        if (string.IsNullOrWhiteSpace(normalizedTable))
+        {
+            return ModifierTableFamily.Other;
+        }
+
+        if (normalizedTable.Contains("buffdef", StringComparison.OrdinalIgnoreCase) ||
+            normalizedTable.Contains("defense", StringComparison.OrdinalIgnoreCase) ||
+            normalizedTable.EndsWith("def", StringComparison.OrdinalIgnoreCase))
+        {
+            return ModifierTableFamily.BuffDefense;
+        }
+
+        if (normalizedTable.Contains("resdmg", StringComparison.OrdinalIgnoreCase) ||
+            normalizedTable.Contains("resistance", StringComparison.OrdinalIgnoreCase) ||
+            normalizedTable.EndsWith("res", StringComparison.OrdinalIgnoreCase))
+        {
+            return ModifierTableFamily.BuffResistance;
+        }
+
+        if (normalizedTable.Contains("boosts", StringComparison.OrdinalIgnoreCase))
+        {
+            return ModifierTableFamily.BoostSchedule;
+        }
+
+        if (normalizedTable.Contains("buffdmg", StringComparison.OrdinalIgnoreCase) ||
+            normalizedTable.Contains("damage", StringComparison.OrdinalIgnoreCase) ||
+            normalizedTable.EndsWith("dmg", StringComparison.OrdinalIgnoreCase))
+        {
+            return ModifierTableFamily.BuffDamage;
+        }
+
+        if (normalizedTable.EndsWith("ones", StringComparison.OrdinalIgnoreCase))
+        {
+            return ModifierTableFamily.Ones;
+        }
+
+        return ModifierTableFamily.Other;
+    }
+
+    private static BoostEffectRole ClassifyBoostEffectRole(
+        PowerSemanticSourceKind sourceKind,
+        ModifierTableFamily tableFamily)
+    {
+        if (sourceKind == PowerSemanticSourceKind.Boost && tableFamily == ModifierTableFamily.BoostSchedule)
+        {
+            return BoostEffectRole.EnhancementSchedule;
+        }
+
+        if (sourceKind is PowerSemanticSourceKind.Boost or PowerSemanticSourceKind.SetBonus &&
+            tableFamily == ModifierTableFamily.Ones)
+        {
+            return BoostEffectRole.HelperCarrier;
+        }
+
+        return BoostEffectRole.None;
+    }
+
+    private static bool IsResistanceBoostScheduleTable(string normalizedTable)
+    {
+        return normalizedTable.Contains("boosts20", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsDamageBoostScheduleTable(string normalizedTable)
+    {
+        return normalizedTable.Contains("boosts33", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool TryMapResistanceModifiedEffectType(string normalizedAttrib, out Enums.eEffectType effectType)
+    {
+        effectType = normalizedAttrib switch
+        {
             "accuracy" => Enums.eEffectType.Accuracy,
-            "defense" => Enums.eEffectType.Defense,
-            "damage" => Enums.eEffectType.Damage,
-            "damagebuff" => Enums.eEffectType.DamageBuff,
-            "elusivitybase" => Enums.eEffectType.Elusivity,
-            "levelshift" => Enums.eEffectType.LevelShift,
-            "rechargetime" => Enums.eEffectType.RechargeTime,
+            "defense" or "basedefense" => Enums.eEffectType.Defense,
+            "endurance" => Enums.eEffectType.Endurance,
             "recovery" => Enums.eEffectType.Recovery,
             "regeneration" => Enums.eEffectType.Regeneration,
-            "resistance" => Enums.eEffectType.Resistance,
-            "range" => Enums.eEffectType.Range,
-            "runningspeed" => Enums.eEffectType.SpeedRunning,
-            "speedrunning" => Enums.eEffectType.SpeedRunning,
-            "flyingspeed" => Enums.eEffectType.SpeedFlying,
-            "speedflying" => Enums.eEffectType.SpeedFlying,
-            "jumpingspeed" => Enums.eEffectType.SpeedJumping,
-            "speedjumping" => Enums.eEffectType.SpeedJumping,
-            "fly" => Enums.eEffectType.Fly,
-            "jumpheight" => Enums.eEffectType.JumpHeight,
+            "rechargetime" or "xrechargetime" => Enums.eEffectType.RechargeTime,
+            "tohit" => Enums.eEffectType.ToHit,
             "perceptionradius" => Enums.eEffectType.PerceptionRadius,
-            "stealthradiuspve" => Enums.eEffectType.StealthRadius,
-            "stealthradiuspvp" => Enums.eEffectType.StealthRadiusPlayer,
-            "threatlevel" => Enums.eEffectType.ThreatLevel,
-            "stealthradius" => Enums.eEffectType.StealthRadius,
-            "stealthradiusplayer" => Enums.eEffectType.StealthRadiusPlayer,
-            "slow" => Enums.eEffectType.Slow,
-            "movementcontrol" => Enums.eEffectType.MovementControl,
-            "movementfriction" => Enums.eEffectType.MovementFriction,
-            "translucency" => Enums.eEffectType.Translucency,
-            "rage" => Enums.eEffectType.Rage,
-            "onlyaffectsself" => Enums.eEffectType.Mez,
-            "untouchable" => Enums.eEffectType.Mez,
-            "intangible" => Enums.eEffectType.Mez,
-            "teleport" => Enums.eEffectType.Mez,
-            "afraid" => Enums.eEffectType.Mez,
-            "revoke" or "revokepower" => Enums.eEffectType.RevokePower,
-            "reward" => Enums.eEffectType.Reward,
-            "setmode" => Enums.eEffectType.SetMode,
-            "unsetmode" => Enums.eEffectType.UnsetMode,
-            "meter" => Enums.eEffectType.Meter,
-            "debtprotection" => Enums.eEffectType.XPDebtProtection,
-            "addtoken" => Enums.eEffectType.TokenAdd,
-            _ => Enum.TryParse<Enums.eEffectType>(normalizedAttrib, true, out var parsedAttrib)
-                ? parsedAttrib
-                : Enum.TryParse<Enums.eEffectType>(type, true, out var parsedType)
-                    ? parsedType
-                    : Enums.eEffectType.None
+            "runningspeed" or "speedrunning" or "maxrunspeed" => Enums.eEffectType.SpeedRunning,
+            "flyingspeed" or "speedflying" or "maxflyspeed" => Enums.eEffectType.SpeedFlying,
+            "jumpingspeed" or "speedjumping" or "maxjumpspeed" => Enums.eEffectType.SpeedJumping,
+            "jumpheight" => Enums.eEffectType.JumpHeight,
+            _ => Enums.eEffectType.None
         };
+
+        return effectType != Enums.eEffectType.None;
+    }
+
+    private static bool HasProtectionLanguage(string plannerText)
+    {
+        return plannerText.Contains("protection", StringComparison.OrdinalIgnoreCase) ||
+               plannerText.Contains("protect", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool HasExplicitResistanceLanguage(string plannerText, IReadOnlyCollection<string> explicitTags)
+    {
+        return explicitTags.Contains("status", StringComparer.OrdinalIgnoreCase) ||
+               explicitTags.Contains("res", StringComparer.OrdinalIgnoreCase) ||
+               explicitTags.Contains("resistance", StringComparer.OrdinalIgnoreCase) ||
+               plannerText.Contains("resistance", StringComparison.OrdinalIgnoreCase) ||
+               plannerText.Contains("resist", StringComparison.OrdinalIgnoreCase) ||
+               plannerText.Contains("+res", StringComparison.OrdinalIgnoreCase) ||
+               plannerText.Contains("reduces", StringComparison.OrdinalIgnoreCase);
     }
 
     private static Enums.eAttribType MapAttribType(string attrib, OmniEffectTemplate template, Enums.eEffectType effectType)
@@ -1155,7 +1535,7 @@ public static class OmniMidsMapper
         }
 
         return IsHiddenStatefulVectorTemplate(power, source, template, effectTags) &&
-               (IsDamageCategory(normalizedAttrib) ||
+               (IsDamageVectorSelectorAttrib(normalizedAttrib) ||
                 IsVectorDefenseOrResistanceSelectorAttrib(normalizedAttrib));
     }
 
@@ -1181,11 +1561,18 @@ public static class OmniMidsMapper
         OmniEffectTemplate template,
         IReadOnlyCollection<string> effectTags)
     {
+        var sourceKind = ClassifyPowerSemanticSourceKind(power);
         var normalizedAttribs = (template.Attribs.Count == 0 ? [string.Empty] : template.Attribs)
             .Select(Normalize)
             .Where(static value => !string.IsNullOrWhiteSpace(value))
             .ToArray();
-        if (normalizedAttribs.Length == 0 || normalizedAttribs.Any(IsActualDamagePayloadAttrib))
+        if (normalizedAttribs.Length == 0)
+        {
+            return TemplateSemantic.None;
+        }
+
+        if (sourceKind == PowerSemanticSourceKind.StandardPower &&
+            normalizedAttribs.Any(IsActualDamagePayloadAttrib))
         {
             return TemplateSemantic.None;
         }
@@ -1291,7 +1678,7 @@ public static class OmniMidsMapper
         }
 
         if (CollectNormalizedTemplateTags(source, template, effectTags)
-            .Contains("resistance", StringComparer.OrdinalIgnoreCase))
+            .Any(tag => tag is "resistance" or "res"))
         {
             return true;
         }
@@ -1409,17 +1796,17 @@ public static class OmniMidsMapper
     private static bool IsVectorDefenseOrResistanceSelectorAttrib(string normalizedAttrib)
     {
         return normalizedAttrib is "basedefense" or "baseresistance" or "defense" or "resistance" ||
-               IsDamageCategory(normalizedAttrib);
+               IsDamageVectorSelectorAttrib(normalizedAttrib);
     }
 
     private static bool IsVectorDefenseSemanticAttrib(string normalizedAttrib)
     {
-        return normalizedAttrib is "basedefense" or "defense" || IsDamageCategory(normalizedAttrib);
+        return normalizedAttrib is "basedefense" or "defense" || IsDamageVectorSelectorAttrib(normalizedAttrib);
     }
 
     private static bool IsVectorResistanceSemanticAttrib(string normalizedAttrib)
     {
-        return normalizedAttrib is "baseresistance" or "resistance" || IsDamageCategory(normalizedAttrib);
+        return normalizedAttrib is "baseresistance" or "resistance" || IsDamageVectorSelectorAttrib(normalizedAttrib);
     }
 
     private static string DescribeTemplateSemantic(TemplateSemantic templateSemantic)
@@ -1467,6 +1854,28 @@ public static class OmniMidsMapper
             "ranged" or
             "area" or
             "aoe";
+    }
+
+    private static bool IsDamageVectorSelectorAttrib(string normalizedAttrib)
+    {
+        if (IsDamageCategory(normalizedAttrib))
+        {
+            return true;
+        }
+
+        if (normalizedAttrib.EndsWith("dmg", StringComparison.OrdinalIgnoreCase))
+        {
+            var root = normalizedAttrib[..^3];
+            return IsDamageCategory(root);
+        }
+
+        if (normalizedAttrib.EndsWith("damage", StringComparison.OrdinalIgnoreCase))
+        {
+            var root = normalizedAttrib[..^6];
+            return IsDamageCategory(root);
+        }
+
+        return false;
     }
 
     private static bool IsDamageAttrib(string attrib)
@@ -1521,25 +1930,72 @@ public static class OmniMidsMapper
             return Enums.eToWho.All;
         }
 
-        if (target.Contains("target", StringComparison.OrdinalIgnoreCase) ||
-            target.Contains("anyaffected", StringComparison.OrdinalIgnoreCase) ||
+        if (target.Contains("anyaffected", StringComparison.OrdinalIgnoreCase) ||
             target.Contains("affected", StringComparison.OrdinalIgnoreCase))
+        {
+            var affectsSelf = PowerAffectsSelf(power);
+            if (!affectsSelf)
+            {
+                return Enums.eToWho.Target;
+            }
+
+            return PowerAffectsOthers(power)
+                ? Enums.eToWho.All
+                : Enums.eToWho.Self;
+        }
+
+        if (target.Contains("target", StringComparison.OrdinalIgnoreCase))
         {
             return Enums.eToWho.Target;
         }
 
-        return PowerTargetsSelf(power) ? Enums.eToWho.Self : Enums.eToWho.Target;
+        return PowerAffectsSelf(power) ? Enums.eToWho.Self : Enums.eToWho.Target;
     }
 
-    private static bool PowerTargetsSelf(OmniPowerDefinition power)
+    private static bool PowerAffectsSelf(OmniPowerDefinition power)
     {
-        var target = Normalize(power.TargetType);
-        return target.Contains("self", StringComparison.OrdinalIgnoreCase) ||
-               target.Contains("caster", StringComparison.OrdinalIgnoreCase) ||
-               (power.TargetsAffected.Count > 0 &&
-                power.TargetsAffected.All(t =>
-                    Normalize(t).Contains("self", StringComparison.OrdinalIgnoreCase) ||
-                    Normalize(t).Contains("caster", StringComparison.OrdinalIgnoreCase)));
+        return IsSelfSpecifier(power.TargetType) ||
+               IsSelfSpecifier(power.TargetTypeSecondary) ||
+               power.TargetsAffected.Any(IsSelfSpecifier) ||
+               power.TargetsAutoHit.Any(IsSelfSpecifier);
+    }
+
+    private static bool PowerAffectsOthers(OmniPowerDefinition power)
+    {
+        return IsOtherSpecifier(power.TargetType) ||
+               IsOtherSpecifier(power.TargetTypeSecondary) ||
+               power.TargetsAffected.Any(IsOtherSpecifier) ||
+               power.TargetsAutoHit.Any(IsOtherSpecifier);
+    }
+
+    private static bool IsSelfSpecifier(string value)
+    {
+        var normalized = Normalize(value);
+        return normalized.Contains("self", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("caster", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsOtherSpecifier(string value)
+    {
+        var normalized = Normalize(value);
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            return false;
+        }
+
+        return !IsSelfSpecifier(normalized) &&
+               (normalized.Contains("ally", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains("friend", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains("teammate", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains("league", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains("target", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains("foe", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains("enemy", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains("villain", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains("critter", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains("player", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains("affected", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains("any", StringComparison.OrdinalIgnoreCase));
     }
 
     private static string Normalize(string value)

@@ -2675,7 +2675,7 @@ namespace Mids_Reborn.UI.Forms
 
             MidsContext.Config.CombatContextSettings.TargetSettings.HpPercent = 100;
             MidsContext.Config.CombatContextSettings.TargetSettings.EndPercent = 100;
-            MidsContext.Config.CombatContextSettings.TargetSettings.ProfileId = (int)CombatTargetProfileId.Boss;
+            MidsContext.Config.CombatContextSettings.TargetSettings.ProfileId = (int)CombatTargetProfileId.Minion;
             MidsContext.Config.CombatContextSettings.TargetSettings.Held = false;
             MidsContext.Config.CombatContextSettings.TargetSettings.Immobilized = false;
             MidsContext.Config.CombatContextSettings.TargetSettings.Stunned = false;

@@ -485,6 +485,9 @@ public sealed class OmniEffectDefinition
     [JsonIgnore]
     public float Delay => OmniScalar.AsFloat(DelayValue);
 
+    [JsonProperty("is_pvp")]
+    public string IsPvp { get; set; } = string.Empty;
+
     [JsonProperty("templates")]
     public List<OmniEffectTemplate> Templates { get; set; } = [];
 

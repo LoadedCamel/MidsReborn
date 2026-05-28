@@ -274,9 +274,10 @@ namespace Mids_Reborn.Core.BuildFile
             return outList;
         }
 
-        internal bool LoadBuild()
+        internal bool LoadBuild(BuildCombatContextState? loadFallbackCombatContext = null)
         {
             InherentPowers = new List<PowerEntry>();
+            var preservedCombatContext = ResolveCombatContextForLoad(CombatContext, loadFallbackCombatContext);
 
             var atNiD = DatabaseAPI.NidFromUidClass(Class);
             var atOrigin = DatabaseAPI.NidFromUidOrigin(Origin, atNiD);
@@ -284,9 +285,18 @@ namespace Mids_Reborn.Core.BuildFile
             MidsContext.Character.Alignment = Enum.Parse<Enums.Alignment>(Alignment);
             MidsContext.Character.Name = Name;
             MidsContext.Character.Comment = Comment ?? string.Empty;
+            var storedBuildLevel = ParseStoredBuildLevel(Level);
+            if (storedBuildLevel > -1)
+            {
+                MidsContext.Character.SetExplicitBuildLevel(storedBuildLevel);
+            }
+            else
+            {
+                MidsContext.Character.ClearExplicitBuildLevel();
+            }
             MidsContext.Character.LoadPowerSetsByName(PowerSets);
             MidsContext.Character.CurrentBuild!.LastPower = LastPower;
-            MidsContext.Character.CurrentBuild.CombatContextState = CombatContextState.Clone(CombatContext);
+            MidsContext.Character.CurrentBuild.CombatContextState = preservedCombatContext;
 
             try
             {
@@ -445,6 +455,47 @@ namespace Mids_Reborn.Core.BuildFile
             MidsContext.Character.Validate();
             MidsContext.Character.Lock();
             return true;
+        }
+
+        private static BuildCombatContextState ResolveCombatContextForLoad(
+            BuildCombatContextState? importedContext,
+            BuildCombatContextState? loadFallbackCombatContext)
+        {
+            if (importedContext != null)
+            {
+                return CombatContextState.Clone(importedContext);
+            }
+
+            if (loadFallbackCombatContext != null)
+            {
+                return CombatContextState.Clone(loadFallbackCombatContext);
+            }
+
+            var config = MidsContext.Config;
+            var fallback = new BuildCombatContextState
+            {
+                EnemyRelativeLevel = config?.EnemyRelativeLevel ?? int.MinValue,
+                TeamMembers = CombatContextState.CloneTeamMembers(config?.TeamMembers),
+                TeamRoster = CombatContextState.CloneTeamRoster(config?.TeamRoster),
+                CombatContextSettings = CombatContextState.CloneCombatContext(config?.CombatContextSettings)
+            };
+
+            return CombatContextState.Clone(fallback);
+        }
+
+        private static int ParseStoredBuildLevel(string? storedLevel)
+        {
+            if (!int.TryParse(storedLevel, out var parsedLevel))
+            {
+                return -1;
+            }
+
+            if (parsedLevel == Character.MaxLevel + 1)
+            {
+                parsedLevel = Character.MaxLevel;
+            }
+
+            return Math.Clamp(parsedLevel, 0, Character.MaxLevel);
         }
 
         private void LoadEnhancementData(ref I9Slot i9Enhancement, EnhancementData? enhData)

@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 using System.Linq;
+using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FastDeepCloner;
@@ -23,17 +24,32 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         };
     }
 
+    internal sealed record DamageSourceContribution(
+        string Label,
+        string Detail,
+        float DisplayedTotal,
+        Enums.eDamage DamageType,
+        bool IsProc,
+        int Occurrences)
+    {
+        public DamageSourceContribution Scale(float factor) => this with
+        {
+            DisplayedTotal = DisplayedTotal * factor
+        };
+    }
+
     internal sealed record DamageBreakdownSummary(
         float DisplayedTotal,
         float TotalExcludingProc,
         IReadOnlyList<DamageTypeContribution> ByType,
+        IReadOnlyList<DamageSourceContribution> BySource,
         bool HasDamageEffects,
         bool HasPercentDamage,
         float PercentOfTargetHpTotal,
         float DisplayMultiplier)
     {
         public static readonly DamageBreakdownSummary Empty =
-            new(0f, 0f, Array.Empty<DamageTypeContribution>(), false, false, 0f, 1f);
+            new(0f, 0f, Array.Empty<DamageTypeContribution>(), Array.Empty<DamageSourceContribution>(), false, false, 0f, 1f);
 
         public DamageBreakdownSummary ScaleToDisplayMultiplier(float displayMultiplier)
         {
@@ -55,6 +71,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 DisplayedTotal = DisplayedTotal * factor,
                 TotalExcludingProc = TotalExcludingProc * factor,
                 ByType = ByType.Select(contribution => contribution.Scale(factor)).ToArray(),
+                BySource = BySource.Select(contribution => contribution.Scale(factor)).ToArray(),
                 DisplayMultiplier = safeTarget
             };
         }
@@ -1804,6 +1821,399 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return effect.isEnhancementEffect && (effect.IgnoreScaling || effect.IsFromProc);
         }
 
+        private static string BuildDamageContributionLabel(IEffect effect)
+        {
+            if (effect.isEnhancementEffect)
+            {
+                var enhancementName = ResolveEnhancementContributionName(effect);
+                if (!string.IsNullOrWhiteSpace(enhancementName))
+                {
+                    return enhancementName;
+                }
+
+                return effect.IsFromProc || effect.IgnoreScaling ? "Enhancement Proc" : "Enhancement Damage";
+            }
+
+            if (TryBuildArchetypeDamageContributionLabel(effect, out var archetypeLabel))
+            {
+                return archetypeLabel;
+            }
+
+            if (TryBuildTaggedCriticalContributionLabel(effect, out var taggedCriticalLabel))
+            {
+                return taggedCriticalLabel;
+            }
+
+            if (effect is Effect concreteEffect)
+            {
+                if (concreteEffect.HasPlannerModeCondition(PlannerMode.CriticalHit))
+                {
+                    return "Critical Hit";
+                }
+
+                if (concreteEffect.HasPlannerModeCondition(PlannerMode.Assassination))
+                {
+                    return "Assassination";
+                }
+
+                if (concreteEffect.HasPlannerModeCondition(PlannerMode.StalkerHidden))
+                {
+                    return "Hidden Strike";
+                }
+
+                if (concreteEffect.HasPlannerModeCondition(PlannerMode.Containment))
+                {
+                    return "Containment";
+                }
+
+                if (concreteEffect.HasPlannerModeCondition(PlannerMode.Scourge))
+                {
+                    return "Scourge";
+                }
+
+                if (concreteEffect.HasPlannerModeCondition(PlannerMode.Domination))
+                {
+                    return "Domination";
+                }
+
+                if (concreteEffect.HasPlannerModeCondition(PlannerMode.PackMentality))
+                {
+                    return "Pack Mentality";
+                }
+            }
+
+            if (effect.PvMode == Enums.ePvX.PvP)
+            {
+                return effect.OmniSource.Contains(":child[", StringComparison.OrdinalIgnoreCase)
+                    ? "PvP Bonus Hit"
+                    : "PvP Hit";
+            }
+
+            return "Base Hit";
+        }
+
+        private static string ResolveEnhancementContributionName(IEffect effect)
+        {
+            var enhancementName = effect.Enhancement?.Name?.Trim();
+            if (IsUsableEnhancementContributionName(enhancementName))
+            {
+                return enhancementName;
+            }
+
+            var enhancementPowerName = effect.Enhancement?.GetPower()?.DisplayName?.Trim();
+            if (IsUsableEnhancementContributionName(enhancementPowerName))
+            {
+                return enhancementPowerName;
+            }
+
+            var omniPowerName = TryResolveOmniSourcePowerDisplayName(effect.OmniSource);
+            if (IsUsableEnhancementContributionName(omniPowerName))
+            {
+                return omniPowerName;
+            }
+
+            return string.Empty;
+        }
+
+        private static bool IsUsableEnhancementContributionName(string? candidate)
+        {
+            return !string.IsNullOrWhiteSpace(candidate) &&
+                   !candidate.Equals("New Enhancement", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static string TryResolveOmniSourcePowerDisplayName(string omniSource)
+        {
+            if (string.IsNullOrWhiteSpace(omniSource))
+            {
+                return string.Empty;
+            }
+
+            var separatorIndex = omniSource.IndexOf(':');
+            var fullName = separatorIndex >= 0
+                ? omniSource[..separatorIndex]
+                : omniSource;
+
+            return DatabaseAPI.GetPowerByFullName(fullName)?.DisplayName ?? string.Empty;
+        }
+
+        private static string BuildDamageContributionDetail(IEffect effect)
+        {
+            if (TryBuildArchetypeDamageContributionDetail(effect, out var archetypeDetail))
+            {
+                return archetypeDetail;
+            }
+
+            var parts = new List<string>();
+
+            var damageDescriptor = BuildDamageDescriptor(effect);
+            if (!string.IsNullOrWhiteSpace(damageDescriptor))
+            {
+                parts.Add(damageDescriptor);
+            }
+
+            var chanceDescriptor = BuildDamageChanceDescriptor(effect);
+            if (!string.IsNullOrWhiteSpace(chanceDescriptor))
+            {
+                parts.Add(chanceDescriptor);
+            }
+
+            var scopeDescriptor = BuildDamageScopeDescriptor(effect);
+            if (!string.IsNullOrWhiteSpace(scopeDescriptor) &&
+                (effect.isEnhancementEffect || effect.Probability < 1f || effect.PvMode == Enums.ePvX.Any))
+            {
+                parts.Add(scopeDescriptor);
+            }
+
+            var flagsDescriptor = BuildDamageFlagsDescriptor(effect);
+            if (!string.IsNullOrWhiteSpace(flagsDescriptor))
+            {
+                parts.Add(flagsDescriptor);
+            }
+
+            return string.Join(", ", parts.Where(part => !string.IsNullOrWhiteSpace(part)));
+        }
+
+        private static bool TryBuildArchetypeDamageContributionLabel(IEffect effect, out string label)
+        {
+            label = string.Empty;
+            if (effect is not Effect concreteEffect ||
+                !effect.ModifierTable.Contains("InherentDamage", StringComparison.OrdinalIgnoreCase) ||
+                !TryGetArchetypeCondition(concreteEffect, out var archetypeClass))
+            {
+                return false;
+            }
+
+            label = archetypeClass.Equals("Class_Scrapper", StringComparison.OrdinalIgnoreCase)
+                ? "Scrapper Crit"
+                : $"{FormatArchetypeClassName(archetypeClass)} Bonus";
+
+            return !string.IsNullOrWhiteSpace(label);
+        }
+
+        private static bool TryBuildTaggedCriticalContributionLabel(IEffect effect, out string label)
+        {
+            label = string.Empty;
+            var tags = effect.EffectTags ?? [];
+            if (tags.Count == 0)
+            {
+                return false;
+            }
+
+            var hasScrapperCritTag = tags.Any(tag => tag.Contains("ScrapperCrit", StringComparison.OrdinalIgnoreCase));
+            var hasGenericCritTag = hasScrapperCritTag ||
+                                    tags.Any(tag =>
+                                        tag.StartsWith("Crit", StringComparison.OrdinalIgnoreCase) ||
+                                        tag.Contains("Critical", StringComparison.OrdinalIgnoreCase));
+            if (!hasGenericCritTag)
+            {
+                return false;
+            }
+
+            label = hasScrapperCritTag ? "Scrapper Crit" : "Critical Hit";
+            return true;
+        }
+
+        private static bool TryBuildArchetypeDamageContributionDetail(IEffect effect, out string detail)
+        {
+            detail = string.Empty;
+            if (effect is not Effect concreteEffect ||
+                !effect.ModifierTable.Contains("InherentDamage", StringComparison.OrdinalIgnoreCase) ||
+                !TryGetArchetypeCondition(concreteEffect, out _))
+            {
+                return false;
+            }
+
+            var damageDescriptor = BuildDamageDescriptor(effect);
+            var chanceDescriptor = BuildDamageChanceDescriptor(effect);
+            var scopeDescriptor = BuildDamageScopeDescriptor(effect);
+            detail = string.Join(", ",
+                new[] { damageDescriptor, chanceDescriptor, scopeDescriptor }
+                    .Where(part => !string.IsNullOrWhiteSpace(part)));
+            return !string.IsNullOrWhiteSpace(detail);
+        }
+
+        private static bool TryGetArchetypeCondition(Effect effect, out string archetypeClass)
+        {
+            archetypeClass = effect.AdvancedConditions?.Rows
+                .FirstOrDefault(row =>
+                    row.Kind == AdvancedConditionKind.CharacterArchetype &&
+                    !row.Negated &&
+                    row.Operator == AdvancedConditionOperator.Equals &&
+                    !string.IsNullOrWhiteSpace(row.Value))
+                ?.Value ?? string.Empty;
+            return !string.IsNullOrWhiteSpace(archetypeClass);
+        }
+
+        private static string FormatArchetypeClassName(string archetypeClass)
+        {
+            var value = archetypeClass ?? string.Empty;
+            if (value.StartsWith("Class_", StringComparison.OrdinalIgnoreCase))
+            {
+                value = value["Class_".Length..];
+            }
+
+            return value.Replace('_', ' ').Trim();
+        }
+
+        private static string BuildDamageDescriptor(IEffect effect)
+        {
+            var damageType = effect.DamageType == Enums.eDamage.None
+                ? "Damage"
+                : $"{Enums.GetDamageName(effect.DamageType)} Damage";
+
+            if (effect.isEnhancementEffect && (effect.IsFromProc || effect.IgnoreScaling))
+            {
+                return $"{damageType} Proc";
+            }
+
+            return damageType;
+        }
+
+        private static string BuildDamageChanceDescriptor(IEffect effect)
+        {
+            if (effect.ProcsPerMinute > 0 && effect.Probability > 0 && effect.Probability < 1)
+            {
+                return $"{effect.ProcsPerMinute.ToString("0.##", CultureInfo.InvariantCulture)} PPM / {DisplayValueFormatter.FormatPercentFromScale(effect.Probability, 0)}% chance";
+            }
+
+            if (effect.Probability > 0 && effect.Probability < 1)
+            {
+                return $"{DisplayValueFormatter.FormatPercentFromScale(effect.Probability, 0)}% chance";
+            }
+
+            return string.Empty;
+        }
+
+        private static string BuildDamageScopeDescriptor(IEffect effect)
+        {
+            if (effect is Effect concreteEffect &&
+                concreteEffect.AdvancedConditions is { Rows.Count: > 0 })
+            {
+                var targetRow = concreteEffect.AdvancedConditions.Rows.FirstOrDefault(row =>
+                    row.Kind == AdvancedConditionKind.TargetEntityType &&
+                    !row.Negated &&
+                    row.Operator == AdvancedConditionOperator.Equals);
+
+                var targetScopeDescriptor = targetRow?.TargetScope switch
+                {
+                    AdvancedConditionTargetScope.Player => "vs players",
+                    AdvancedConditionTargetScope.Foe => "vs foes",
+                    AdvancedConditionTargetScope.Ally => "for allies",
+                    AdvancedConditionTargetScope.Self => "to self",
+                    AdvancedConditionTargetScope.Pet => "for pets",
+                    _ => string.Empty
+                };
+
+                if (!string.IsNullOrWhiteSpace(targetScopeDescriptor))
+                {
+                    return targetScopeDescriptor;
+                }
+
+                if (targetRow != null)
+                {
+                    var normalizedTargetValue = targetRow.Value.Trim('\'', '"');
+                    if (normalizedTargetValue.Equals("critter", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return "vs foes";
+                    }
+
+                    if (normalizedTargetValue.Equals("player", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return "vs players";
+                    }
+                }
+            }
+
+            return effect.PvMode switch
+            {
+                Enums.ePvX.PvP => "vs players",
+                Enums.ePvX.PvE => "vs foes",
+                _ => string.Empty
+            };
+        }
+
+        private static string BuildDamageFlagsDescriptor(IEffect effect)
+        {
+            if (effect.Buffable || effect.EffectType == Enums.eEffectType.DamageBuff)
+            {
+                return string.Empty;
+            }
+
+            return effect.IgnoreED
+                ? "[Ignores Enhancements, Buffs & ED]"
+                : "[Ignores Enhancements & Buffs]";
+        }
+
+        internal static string FormatDamageTooltip(
+            DamageBreakdownSummary summary,
+            IReadOnlyList<string>? compositionLines = null)
+        {
+            if (!summary.HasDamageEffects)
+            {
+                return string.Empty;
+            }
+
+            var builder = new StringBuilder();
+            builder.Append("Total: ");
+            builder.Append(DisplayValueFormatter.FormatNumber(summary.DisplayedTotal));
+
+            if (summary.ByType.Count > 0)
+            {
+                builder.Append("\r\nBy Type: ");
+                builder.Append(string.Join(", ",
+                    summary.ByType.Select(contribution =>
+                        $"{contribution.Label}: {DisplayValueFormatter.FormatNumber(contribution.DisplayedTotal)}")));
+            }
+
+            if (compositionLines is { Count: > 0 })
+            {
+                builder.Append("\r\n\r\nBreakdown:");
+                foreach (var line in compositionLines.Where(line => !string.IsNullOrWhiteSpace(line)))
+                {
+                    builder.Append("\r\n- ");
+                    builder.Append(line);
+                }
+            }
+
+            if (summary.BySource.Count > 0)
+            {
+                builder.Append("\r\n\r\nHit Components:");
+                foreach (var contribution in summary.BySource.Take(10))
+                {
+                    builder.Append("\r\n- ");
+                    builder.Append(contribution.Label);
+                    if (contribution.Occurrences > 1)
+                    {
+                        builder.Append(" x");
+                        builder.Append(contribution.Occurrences);
+                    }
+
+                    builder.Append(": ");
+                    builder.Append(DisplayValueFormatter.FormatNumber(contribution.DisplayedTotal));
+
+                    if (!string.IsNullOrWhiteSpace(contribution.Detail))
+                    {
+                        builder.Append(" (");
+                        builder.Append(contribution.Detail);
+                        builder.Append(')');
+                    }
+                }
+
+                if (summary.BySource.Count > 10)
+                {
+                    builder.Append("\r\n- ... ");
+                    builder.Append(summary.BySource.Count - 10);
+                    builder.Append(" more contribution");
+                    if (summary.BySource.Count - 10 != 1)
+                    {
+                        builder.Append("s");
+                    }
+                }
+            }
+
+            return builder.ToString();
+        }
+
         internal static DamageBreakdownSummary GetDamageBreakdown(IPower sourcePower, bool absorb = false)
         {
             var power = PrepareDamagePower(sourcePower, absorb);
@@ -1820,6 +2230,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var rawDisplayedTotal = 0f;
             var damageTotals = new Dictionary<Enums.eDamage, float>();
             var orderedDamageTypes = new List<Enums.eDamage>();
+            var sourceContributions = new List<DamageSourceContribution>();
 
             foreach (var effect in power.Effects)
             {
@@ -1850,6 +2261,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 damageTotals[effect.DamageType] += effectTotal;
+
+                sourceContributions.Add(new DamageSourceContribution(
+                    BuildDamageContributionLabel(effect),
+                    BuildDamageContributionDetail(effect),
+                    effectTotal,
+                    effect.DamageType,
+                    IsProcDamageEffect(effect),
+                    1));
             }
 
             if (hasPercentDamage)
@@ -1872,10 +2291,34 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 .Where(contribution => Math.Abs(contribution.DisplayedTotal) >= 0.0001f)
                 .ToArray();
 
+            var bySource = sourceContributions
+                .Select(contribution => hasPercentDamage
+                    ? contribution.Scale(displayMultiplier)
+                    : contribution)
+                .GroupBy(contribution => new
+                {
+                    contribution.Label,
+                    contribution.Detail,
+                    contribution.DamageType,
+                    contribution.IsProc
+                })
+                .Select(group => new DamageSourceContribution(
+                    group.Key.Label,
+                    group.Key.Detail,
+                    group.Sum(item => item.DisplayedTotal),
+                    group.Key.DamageType,
+                    group.Key.IsProc,
+                    group.Sum(item => item.Occurrences)))
+                .Where(contribution => Math.Abs(contribution.DisplayedTotal) >= 0.0001f)
+                .OrderByDescending(contribution => Math.Abs(contribution.DisplayedTotal))
+                .ThenBy(contribution => contribution.Label, StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
             return new DamageBreakdownSummary(
                 DisplayedTotal: displayedTotal,
                 TotalExcludingProc: totalExcludingProc,
                 ByType: byType,
+                BySource: bySource,
                 HasDamageEffects: hasDamageEffects,
                 HasPercentDamage: hasPercentDamage,
                 PercentOfTargetHpTotal: hasPercentDamage ? rawDisplayedTotal * 100f : 0f,
@@ -1957,88 +2400,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public string GetDamageTip()
         {
-            var tip = string.Empty;
-            var hasSpecialEnhFx = -1;
-            var includedFxForToggle = -1;
-            var hasPvePvpEffect = 0;
-            var damageTotals = new Dictionary<Enums.eDamage, float>();
-            var power = PrepareDamagePower(this, absorbRequested: false);
-
-            if (power.Effects.Length <= 0)
-            {
-                return "";
-            }
-
-            foreach (var effect in power.Effects)
-            {
-                if (effect.EffectType != Enums.eEffectType.Damage)
-                {
-                    continue;
-                }
-
-                if (ShouldIncludeDamageEffect(effect) & Math.Abs(effect.BuffedMag) >= 0.0001)
-                {
-                    if (tip != string.Empty)
-                    {
-                        tip += "\r\n";
-                    }
-
-                    var str = effect.BuildEffectString(false, "", false, false, false, false, false, true);
-                    if (effect.EffectType == Enums.eEffectType.Damage)
-                    {
-                        var fxDmg = GetDamageEffectTotal(effect, power, absolute: false, applyReturnScaling: false);
-                        if (effect.DamageType != Enums.eDamage.None & fxDmg > float.Epsilon)
-                        {
-                            if (damageTotals.ContainsKey(effect.DamageType))
-                            {
-                                damageTotals[effect.DamageType] += fxDmg;
-                            }
-                            else
-                            {
-                                damageTotals.Add(effect.DamageType, fxDmg);
-                            }
-                        }
-                    }
-
-                    if (effect.isEnhancementEffect & PowerType == Enums.ePowerType.Toggle)
-                    {
-                        hasSpecialEnhFx++;
-                        str += " (Special, only every 10s)";
-                    }
-                    else if (PowerType == Enums.ePowerType.Toggle)
-                    {
-                        includedFxForToggle++;
-                    }
-
-                    tip += str;
-                }
-                else
-                {
-                    hasPvePvpEffect++;
-                }
-            }
-
-            if (hasPvePvpEffect > 0)
-            {
-                if (tip != string.Empty)
-                {
-                    tip += "\r\n";
-                }
-
-                tip += "\r\nThis power deals different damage in PvP and PvE modes.";
-            }
-
-            if (!(PowerType == Enums.ePowerType.Toggle & hasSpecialEnhFx == -1 & includedFxForToggle == -1) && PowerType == Enums.ePowerType.Toggle & includedFxForToggle > -1 && !string.IsNullOrEmpty(tip))
-            {
-                tip = $"Applied every {ActivatePeriod} s:\r\n{tip}";
-            }
-
-            if (damageTotals.Count > 0)
-            {
-                tip += $"\r\n\r\nTotal: {damageTotals.Sum(e => e.Value):####0.##} ({string.Join(", ", damageTotals.Select(e => $"{e.Key}: {e.Value:####0.##}"))})";
-            }
-
-            return tip;
+            var summary = GetDamageBreakdown(this);
+            return FormatDamageTooltip(summary);
         }
 
         public string FXGetDamageString(bool absorb = false)

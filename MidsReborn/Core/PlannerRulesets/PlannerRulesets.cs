@@ -92,6 +92,26 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
         static bool IsDamageBuffOrEnhancement(IEffect fx) =>
             fx.EffectType == Enums.eEffectType.DamageBuff || fx.EffectType == Enums.eEffectType.Enhancement;
 
+        static bool IsSelfOrAllProcContribution(IEffect fx) =>
+            fx.isEnhancementEffect &&
+            fx.IsFromProc &&
+            (fx.ToWho == Enums.eToWho.Self || fx.ToWho == Enums.eToWho.All);
+
+        static float GetEnhancementPassDamageBuffMagnitude(IEffect fx)
+        {
+            var magnitudeFactor = Math.Abs(fx.Math_Mag) > float.Epsilon
+                ? fx.Math_Mag
+                : 1f;
+            var magnitude = fx.Mag * magnitudeFactor;
+            var tickCopies = PlannerStackRules.GetPlannerVisibleCopyCount(fx, fx.Ticks);
+            if (tickCopies > 1)
+            {
+                magnitude *= tickCopies;
+            }
+
+            return magnitude;
+        }
+
         static bool IsGlobalAccuracySource(IPower src) =>
             ReferenceEquals(src, MidsContext.Character.CurrentBuild.SetBonusVirtualPower) ||
             string.Equals(src.FullName, "Mids.SetBonus.Virtual", StringComparison.OrdinalIgnoreCase) ||
@@ -160,7 +180,16 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
                     continue;
                 }
 
+                if (IsSelfOrAllProcContribution(effect))
+                {
+                    continue;
+                }
+
                 var value = shortFx.Value[shortFxIndex];
+                if (enhancementPass && effectType == Enums.eEffectType.DamageBuff)
+                {
+                    value = GetEnhancementPassDamageBuffMagnitude(effect);
+                }
 
                 if (!enhancementPass && effect.EffectType == Enums.eEffectType.Enhancement &&
                     effect.ETModifies == Enums.eEffectType.Range)

@@ -587,6 +587,11 @@ public static class AdvancedConditionEvaluator
     {
         if (row.EvaluationMode is AdvancedConditionEvaluationMode.RuntimeTargetOnly or AdvancedConditionEvaluationMode.ReportOnly)
         {
+            if (TryEvaluatePreservedRuntimeRow(effect, row, out var preservedResult))
+            {
+                return row.Negated ? !preservedResult : preservedResult;
+            }
+
             return true;
         }
 
@@ -1059,12 +1064,162 @@ public static class AdvancedConditionEvaluator
         return CompareString(actual, row.Operator, value);
     }
 
+    private static bool TryEvaluatePreservedRuntimeRow(IEffect effect, AdvancedConditionRow row, out bool result)
+    {
+        result = false;
+
+        if (row.Kind == AdvancedConditionKind.TargetEntityType &&
+            CanResolvePlannerTargetScope(row.TargetScope, row.Value))
+        {
+            result = EvaluateTargetEntityType(row);
+            return true;
+        }
+
+        if (row.Kind != AdvancedConditionKind.AdvancedExpression)
+        {
+            return false;
+        }
+
+        if (!TryResolvePreservedTargetScope(row.RawExpression, out var scope) ||
+            !CanResolvePlannerTargetScope(scope, row.RawExpression))
+        {
+            return false;
+        }
+
+        result = MatchesCurrentPlannerTargetScope(scope);
+        return true;
+    }
+
+    internal static bool TryDescribePreservedTargetExpression(string? rawExpression, out string description)
+    {
+        description = string.Empty;
+        if (!TryResolvePreservedTargetScope(rawExpression, out var scope))
+        {
+            return false;
+        }
+
+        description = scope switch
+        {
+            AdvancedConditionTargetScope.Self => "Target is Self",
+            AdvancedConditionTargetScope.Pet => "Target is Pet",
+            AdvancedConditionTargetScope.Player => "Target is Player",
+            AdvancedConditionTargetScope.Ally => "Target is Ally",
+            AdvancedConditionTargetScope.Foe => "Target is Foe",
+            _ => string.Empty
+        };
+
+        return !string.IsNullOrWhiteSpace(description);
+    }
+
+    private static bool TryResolvePreservedTargetScope(string? rawExpression, out AdvancedConditionTargetScope scope)
+    {
+        scope = AdvancedConditionTargetScope.Unknown;
+        if (string.IsNullOrWhiteSpace(rawExpression))
+        {
+            return false;
+        }
+
+        var normalized = NormalizeRuntimeExpression(rawExpression);
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            return false;
+        }
+
+        if (normalized.Contains("target>entref eq source>entref", StringComparison.OrdinalIgnoreCase) ||
+            normalized.Contains("entref target> entref source> eq", StringComparison.OrdinalIgnoreCase))
+        {
+            scope = AdvancedConditionTargetScope.Self;
+            return true;
+        }
+
+        if (ContainsTargetEntityScope(normalized, "player", "pc"))
+        {
+            scope = AdvancedConditionTargetScope.Player;
+            return true;
+        }
+
+        if (ContainsTargetEntityScope(normalized, "critter", "npc", "foe", "enemy"))
+        {
+            scope = AdvancedConditionTargetScope.Foe;
+            return true;
+        }
+
+        if (ContainsTargetEntityScope(normalized, "pet", "pets", "henchman"))
+        {
+            scope = AdvancedConditionTargetScope.Pet;
+            return true;
+        }
+
+        if (normalized.Contains("target.isfriend? !", StringComparison.OrdinalIgnoreCase))
+        {
+            scope = AdvancedConditionTargetScope.Foe;
+            return true;
+        }
+
+        if (normalized.Contains("target.isfriend?", StringComparison.OrdinalIgnoreCase))
+        {
+            scope = AdvancedConditionTargetScope.Ally;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool CanResolvePlannerTargetScope(AdvancedConditionTargetScope scope, string? value)
+    {
+        return scope switch
+        {
+            AdvancedConditionTargetScope.Player => true,
+            AdvancedConditionTargetScope.Foe => true,
+            _ => scope == AdvancedConditionTargetScope.Unknown &&
+                 !string.IsNullOrWhiteSpace(value) &&
+                 (value.Contains("player", StringComparison.OrdinalIgnoreCase) ||
+                  value.Contains("pc", StringComparison.OrdinalIgnoreCase) ||
+                  value.Contains("critter", StringComparison.OrdinalIgnoreCase) ||
+                  value.Contains("npc", StringComparison.OrdinalIgnoreCase) ||
+                  value.Contains("foe", StringComparison.OrdinalIgnoreCase) ||
+                  value.Contains("enemy", StringComparison.OrdinalIgnoreCase))
+        };
+    }
+
+    private static bool MatchesCurrentPlannerTargetScope(AdvancedConditionTargetScope scope)
+    {
+        var actualScope = MidsContext.Config?.Inc.DisablePvE == true
+            ? AdvancedConditionTargetScope.Player
+            : AdvancedConditionTargetScope.Foe;
+
+        return actualScope == scope;
+    }
+
+    private static bool ContainsTargetEntityScope(string normalized, params string[] candidates)
+    {
+        foreach (var candidate in candidates)
+        {
+            if (normalized.Contains($"target>enttype eq '{candidate}'", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains($"target>enttype eq \"{candidate}\"", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains($"target>enttype == '{candidate}'", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains($"target>enttype == \"{candidate}\"", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains($"enttype target> {candidate} eq", StringComparison.OrdinalIgnoreCase) ||
+                normalized.Contains($"enttype target> {candidate} ==", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    private static string NormalizeRuntimeExpression(string expression)
+    {
+        return Regex.Replace(expression.Trim(), @"\s+", " ");
+    }
+
     private static bool EvaluateTargetGroup(AdvancedConditionRow row)
     {
         if (row.Subject.Equals("tag", StringComparison.OrdinalIgnoreCase))
         {
             var actual = CombatTargetProfiles.HasTag(
-                MidsContext.Config?.CombatContextSettings.TargetSettings.ProfileId ?? (int)CombatTargetProfileId.Boss,
+                MidsContext.Config?.CombatContextSettings.TargetSettings.ProfileId ?? (int)CombatTargetProfileId.Minion,
                 row.Value);
             return CompareBool(actual, row.Operator, true);
         }
@@ -1075,7 +1230,7 @@ public static class AdvancedConditionEvaluator
     private static bool EvaluateTargetArchetype(AdvancedConditionRow row)
     {
         var profileId = MidsContext.Config?.CombatContextSettings.TargetSettings.ProfileId ??
-                        (int)CombatTargetProfileId.Boss;
+                        (int)CombatTargetProfileId.Minion;
         var matches = CombatTargetProfiles.MatchesClass(profileId, row.Value);
         return row.Operator switch
         {

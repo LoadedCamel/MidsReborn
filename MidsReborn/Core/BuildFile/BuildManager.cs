@@ -28,7 +28,7 @@ namespace Mids_Reborn.Core.BuildFile
             _preferences = BuildPreferences.Load();
         }
         
-        public bool LoadFromFile(string? fileName)
+        public bool LoadFromFile(string? fileName, BuildCombatContextState? loadFallbackCombatContext = null)
         {
             if (string.IsNullOrWhiteSpace(fileName)) return false;
             var returnedVal = false;
@@ -134,12 +134,12 @@ namespace Mids_Reborn.Core.BuildFile
 
                     if (continueLoad)
                     {
-                        returnedVal = BuildData.LoadBuild();
+                        returnedVal = BuildData.LoadBuild(loadFallbackCombatContext);
                     }
                 }
                 else
                 {
-                    returnedVal = BuildData.LoadBuild();
+                    returnedVal = BuildData.LoadBuild(loadFallbackCombatContext);
                 }
             }
 

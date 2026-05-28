@@ -2343,7 +2343,14 @@ public sealed partial class OmniImporter
                         $"Enhancement {source.Name}: boost power '{canonicalSourceName}' linked through existing '{powerResolution.MatchedFullName}'.");
                 }
 
-                replacementEffects = BuildEnhancementEffects(powerResolution.Power, enhancement.TypeID);
+                var effectContext = BuildEnhancementEffectImportContext(
+                    source.Name,
+                    powerResolution.Power,
+                    enhancement.TypeID,
+                    reconciliationIndex,
+                    metadata,
+                    applyResult);
+                replacementEffects = BuildEnhancementEffects(effectContext);
                 if (!EnhancementEffectsEqual(enhancement.Effect, replacementEffects))
                 {
                     enhancement.Effect = replacementEffects;
@@ -2501,69 +2508,284 @@ public sealed partial class OmniImporter
             .ToArray();
     }
 
-    private static Enums.sEffect[] BuildEnhancementEffects(IPower power, Enums.eType enhancementType)
+    private readonly record struct EnhancementEffectImportContext(
+        IPower BoostPower,
+        Enums.eType EnhancementType,
+        IReadOnlyList<IPower> LinkedGlobalBonusPowers);
+
+    private static EnhancementEffectImportContext BuildEnhancementEffectImportContext(
+        string sourceName,
+        IPower boostPower,
+        Enums.eType enhancementType,
+        EnhancementImportReconciliationIndex reconciliationIndex,
+        EnhancementImportMetadata metadata,
+        OmniApplyResult applyResult)
     {
-        if (power?.Effects == null || power.Effects.Length == 0)
+        var linkedGlobalBonusPowers = ResolveLinkedGlobalBonusPowers(
+            sourceName,
+            boostPower,
+            reconciliationIndex,
+            metadata,
+            applyResult);
+        RecordEnhancementHelperCarrierDiagnostics(sourceName, boostPower, linkedGlobalBonusPowers, applyResult);
+        RecordBoosts20DamageMappingDiagnostics(sourceName, boostPower, applyResult);
+        return new EnhancementEffectImportContext(boostPower, enhancementType, linkedGlobalBonusPowers);
+    }
+
+    private static IReadOnlyList<IPower> ResolveLinkedGlobalBonusPowers(
+        string sourceName,
+        IPower boostPower,
+        EnhancementImportReconciliationIndex reconciliationIndex,
+        EnhancementImportMetadata metadata,
+        OmniApplyResult applyResult)
+    {
+        if (boostPower is not Power concreteBoostPower ||
+            concreteBoostPower.OmniBoostPolicy.LinkedGlobalBonusPowerNames.Count == 0)
+        {
+            return [];
+        }
+
+        var linkedPowers = new List<IPower>();
+        foreach (var linkedPowerName in concreteBoostPower.OmniBoostPolicy.LinkedGlobalBonusPowerNames
+                     .Where(value => !string.IsNullOrWhiteSpace(value))
+                     .Distinct(StringComparer.OrdinalIgnoreCase))
+        {
+            var resolution = reconciliationIndex.ResolvePower(linkedPowerName, setBonusPower: true);
+            var canonicalLinkedPowerName = CanonicalizeOmniFullName(linkedPowerName);
+            if (resolution.Found && resolution.Power != null)
+            {
+                linkedPowers.Add(resolution.Power);
+                if (!string.IsNullOrWhiteSpace(canonicalLinkedPowerName) &&
+                    !string.Equals(canonicalLinkedPowerName, resolution.MatchedFullName, StringComparison.OrdinalIgnoreCase))
+                {
+                    metadata.SetBonusPowerAliasCrosswalk[canonicalLinkedPowerName] = resolution.MatchedFullName;
+                }
+
+                var suffix = resolution.Kind switch
+                {
+                    EnhancementReconciliationMatchKind.Alias => " (alias)",
+                    EnhancementReconciliationMatchKind.Fallback => " (fallback)",
+                    _ => string.Empty
+                };
+                applyResult.AddLimited(
+                    applyResult.BoostHelperCarrierLinkedBonusDetails,
+                    $"{sourceName}: linked helper bonus '{canonicalLinkedPowerName}' resolved to '{resolution.Power.FullName}'{suffix}.");
+                continue;
+            }
+
+            if (resolution.IsAmbiguous)
+            {
+                applyResult.AddLimited(
+                    applyResult.BoostHelperCarrierUnresolvedDetails,
+                    $"{sourceName}: linked helper bonus '{canonicalLinkedPowerName}' matched multiple powers [{string.Join(", ", resolution.CandidateKeys)}].");
+                continue;
+            }
+
+            applyResult.AddLimited(
+                applyResult.BoostHelperCarrierUnresolvedDetails,
+                $"{sourceName}: linked helper bonus '{canonicalLinkedPowerName}' was not present after power import.");
+        }
+
+        return linkedPowers;
+    }
+
+    private static void RecordEnhancementHelperCarrierDiagnostics(
+        string sourceName,
+        IPower boostPower,
+        IReadOnlyCollection<IPower> linkedGlobalBonusPowers,
+        OmniApplyResult applyResult)
+    {
+        var rawNullHelperEffects = (boostPower?.Effects ?? Array.Empty<IEffect>())
+            .Where(effect => effect != null &&
+                             !IsBoostScheduleEffect(effect) &&
+                             IsRawNullOmniEffect(effect))
+            .ToArray();
+        if (rawNullHelperEffects.Length == 0)
+        {
+            return;
+        }
+
+        if (linkedGlobalBonusPowers.Count > 0)
+        {
+            applyResult.BoostHelperCarriersResolvedFromLinkedBonus += rawNullHelperEffects.Length;
+            applyResult.AddLimited(
+                applyResult.BoostHelperCarrierLinkedBonusDetails,
+                $"{sourceName}: replaced {rawNullHelperEffects.Length} raw helper carrier row(s) with linked global bonus FX from [{string.Join(", ", linkedGlobalBonusPowers.Select(power => power.FullName).Distinct(StringComparer.OrdinalIgnoreCase))}].");
+            return;
+        }
+
+        foreach (var effect in rawNullHelperEffects)
+        {
+            if (effect.EffectType is not (Enums.eEffectType.None or Enums.eEffectType.Null))
+            {
+                applyResult.BoostHelperCarriersResolvedLocally++;
+                applyResult.AddLimited(
+                    applyResult.BoostHelperCarrierLocalResolutionDetails,
+                    $"{sourceName}: locally rescued helper carrier {DescribeEnhancementEffect(effect)}.");
+            }
+            else
+            {
+                applyResult.BoostHelperCarriersUnresolved++;
+                applyResult.AddLimited(
+                    applyResult.BoostHelperCarrierUnresolvedDetails,
+                    $"{sourceName}: left helper carrier unresolved ({DescribeEnhancementEffect(effect)}).");
+            }
+        }
+    }
+
+    private static Enums.sEffect[] BuildEnhancementEffects(EnhancementEffectImportContext context)
+    {
+        var power = context.BoostPower;
+        var directEffects = power?.Effects?.Where(effect => effect != null).ToArray() ?? Array.Empty<IEffect>();
+        var linkedBonusEffects = context.LinkedGlobalBonusPowers
+            .Where(power => power?.Effects != null)
+            .SelectMany(power => power.Effects.Where(effect => effect != null))
+            .ToArray();
+        if (directEffects.Length == 0 && linkedBonusEffects.Length == 0)
         {
             return Array.Empty<Enums.sEffect>();
         }
 
         var results = new List<Enums.sEffect>();
         var seenEnhancementEffects = new HashSet<(int EnhanceId, int SubId, int BuffMode, int Schedule, float Multiplier)>();
-        foreach (var effect in power.Effects.Where(effect => effect != null))
+        var seenFxEffects = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        var hasLinkedGlobalBonusEffects = linkedBonusEffects.Length > 0;
+
+        foreach (var effect in directEffects)
         {
-            var mappedEnhance = MapEnhanceFromEffect(effect);
-            if (mappedEnhance == Enums.eEnhance.None)
+            if (hasLinkedGlobalBonusEffects && IsRawNullOmniEffect(effect))
             {
-                if (effect.EffectType != Enums.eEffectType.None)
+                continue;
+            }
+
+            if (IsBoostScheduleEffect(effect))
+            {
+                var mappedEnhance = MapEnhanceFromEffect(effect);
+                if (mappedEnhance != Enums.eEnhance.None)
                 {
-                    results.Add(new Enums.sEffect
+                    var schedule = Enhancement.GetSchedule(mappedEnhance, mappedEnhance == Enums.eEnhance.Mez ? (int)effect.MezType : -1);
+                    var subId = mappedEnhance == Enums.eEnhance.Mez ? (int)effect.MezType : -1;
+                    var buffMode = MapBuffMode(effect);
+                    var multiplier = NormalizeEnhancementMultiplier(
+                        context.EnhancementType,
+                        schedule,
+                        Math.Abs(effect.Scale) > 0.0001f ? effect.Scale : effect.nMagnitude);
+                    var dedupeKey = (
+                        EnhanceId: (int)mappedEnhance,
+                        SubId: subId,
+                        BuffMode: (int)buffMode,
+                        Schedule: (int)schedule,
+                        Multiplier: MathF.Round(multiplier, 5));
+                    if (seenEnhancementEffects.Add(dedupeKey))
                     {
-                        Mode = Enums.eEffMode.FX,
-                        BuffMode = Enums.eBuffDebuff.Any,
-                        Enhance = new Enums.sTwinID { ID = 0, SubID = -1 },
-                        Schedule = Enums.eSchedule.None,
-                        Multiplier = 0,
-                        FX = effect.Clone() as IEffect
-                    });
+                        results.Add(new Enums.sEffect
+                        {
+                            Mode = Enums.eEffMode.Enhancement,
+                            BuffMode = buffMode,
+                            Enhance = new Enums.sTwinID
+                            {
+                                ID = (int)mappedEnhance,
+                                SubID = subId
+                            },
+                            Schedule = schedule,
+                            Multiplier = multiplier
+                        });
+                    }
+
+                    continue;
                 }
-
-                continue;
             }
 
-            var schedule = Enhancement.GetSchedule(mappedEnhance, mappedEnhance == Enums.eEnhance.Mez ? (int)effect.MezType : -1);
-            var subId = mappedEnhance == Enums.eEnhance.Mez ? (int)effect.MezType : -1;
-            var buffMode = MapBuffMode(effect);
-            var multiplier = NormalizeEnhancementMultiplier(
-                enhancementType,
-                schedule,
-                Math.Abs(effect.Scale) > 0.0001f ? effect.Scale : effect.nMagnitude);
-            var dedupeKey = (
-                EnhanceId: (int)mappedEnhance,
-                SubId: subId,
-                BuffMode: (int)buffMode,
-                Schedule: (int)schedule,
-                Multiplier: MathF.Round(multiplier, 5));
-            if (!seenEnhancementEffects.Add(dedupeKey))
-            {
-                continue;
-            }
+            TryAddFxEffect(results, seenFxEffects, effect);
+        }
 
-            results.Add(new Enums.sEffect
-            {
-                Mode = Enums.eEffMode.Enhancement,
-                BuffMode = buffMode,
-                Enhance = new Enums.sTwinID
-                {
-                    ID = (int)mappedEnhance,
-                    SubID = subId
-                },
-                Schedule = schedule,
-                Multiplier = multiplier
-            });
+        foreach (var linkedEffect in linkedBonusEffects)
+        {
+            TryAddFxEffect(results, seenFxEffects, linkedEffect);
         }
 
         return results.ToArray();
+    }
+
+    private static void TryAddFxEffect(
+        ICollection<Enums.sEffect> results,
+        ISet<string> seenFxEffects,
+        IEffect effect)
+    {
+        if (effect == null || effect.EffectType == Enums.eEffectType.None)
+        {
+            return;
+        }
+
+        var dedupeKey = string.Join("|",
+            effect.EffectType,
+            effect.ETModifies,
+            effect.DamageType,
+            effect.MezType,
+            effect.ToWho,
+            effect.PvMode,
+            effect.ModifierTable,
+            MathF.Round(effect.Scale, 5),
+            MathF.Round(effect.nMagnitude, 5),
+            MathF.Round(effect.nDuration, 5),
+            MathF.Round(effect.BaseProbability, 5),
+            MathF.Round(effect.ProcsPerMinute, 5),
+            effect.Summon,
+            effect.Override);
+        if (!seenFxEffects.Add(dedupeKey))
+        {
+            return;
+        }
+
+        results.Add(new Enums.sEffect
+        {
+            Mode = Enums.eEffMode.FX,
+            BuffMode = Enums.eBuffDebuff.Any,
+            Enhance = new Enums.sTwinID { ID = 0, SubID = -1 },
+            Schedule = Enums.eSchedule.None,
+            Multiplier = 0,
+            FX = effect.Clone() as IEffect
+        });
+    }
+
+    private static bool IsBoostScheduleEffect(IEffect effect)
+    {
+        return effect != null &&
+               !string.IsNullOrWhiteSpace(effect.ModifierTable) &&
+               effect.ModifierTable.Contains("_Boosts_", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsRawNullOmniEffect(IEffect effect)
+    {
+        return effect != null &&
+               !string.IsNullOrWhiteSpace(effect.OmniSource) &&
+               effect.OmniSource.EndsWith("=Null", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static string DescribeEnhancementEffect(IEffect effect)
+    {
+        return $"type={effect.EffectType}, modifies={effect.ETModifies}, mez={effect.MezType}, table={effect.ModifierTable}, source={effect.OmniSource}";
+    }
+
+    private static void RecordBoosts20DamageMappingDiagnostics(
+        string sourceName,
+        IPower boostPower,
+        OmniApplyResult applyResult)
+    {
+        foreach (var effect in boostPower?.Effects?.Where(effect => effect != null) ?? Array.Empty<IEffect>())
+        {
+            if (string.IsNullOrWhiteSpace(effect.ModifierTable) ||
+                !effect.ModifierTable.Contains("_Boosts_20", StringComparison.OrdinalIgnoreCase) ||
+                effect.EffectType is not (Enums.eEffectType.Damage or Enums.eEffectType.DamageBuff))
+            {
+                continue;
+            }
+
+            applyResult.Boosts20DamageMappingsRemaining++;
+            applyResult.AddLimited(
+                applyResult.Boosts20DamageMappingDetails,
+                $"{sourceName}: residual Boosts_20 damage mapping {DescribeEnhancementEffect(effect)}.");
+        }
     }
 
     private static float NormalizeEnhancementMultiplier(

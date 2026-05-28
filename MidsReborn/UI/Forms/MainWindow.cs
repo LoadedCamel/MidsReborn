@@ -224,6 +224,8 @@ namespace Mids_Reborn.UI.Forms
             bool IsAncillary = false);
         private FormWindowState LastState;
         private bool _canvasLayoutSettleQueued;
+        private bool _deferredHoverRefreshRequested;
+        private bool _deferredInfoRefreshQueued;
         private bool NoResizeEvent;
         private bool NoUpdate;
         private Rectangle oldDragRect;
@@ -2057,7 +2059,7 @@ namespace Mids_Reborn.UI.Forms
                         powerEntry.Slots[slotId].Enhancement.Obtained = !powerEntry.Slots[slotId].Enhancement.Obtained;
                         fRecipe?.UpdateEnhObtained();
                         _enhCheckMode?.UpdateEnhObtained();
-                        RedrawSinglePower(ref powerEntry, true);
+                        RedrawSinglePower(hit.PowerIndex, ref powerEntry, true);
                         canvas.Invalidate(canvas.GetPowerAreaRect(hit.PowerIndex));
                     }
                     return;
@@ -2067,16 +2069,24 @@ namespace Mids_Reborn.UI.Forms
                 {
                     if (isPowerChosen)
                     {
+                        bool stateChanged = false;
                         if (powerEntry.CanIncludeForStats())
                         {
                             powerEntry.StatInclude = !powerEntry.StatInclude;
+                            stateChanged = true;
                         }
                         else if (powerEntry.HasProc())
                         {
                             powerEntry.ProcInclude = !powerEntry.ProcInclude;
+                            stateChanged = true;
                         }
 
-                        EnhancementModified();
+                        if (stateChanged)
+                        {
+                            ClearTransientInteractionState();
+                            RedrawSinglePower(hit.PowerIndex, ref powerEntry, true);
+                            QueueDeferredInfoRefresh();
+                        }
                     }
                     return;
                 }
@@ -2107,7 +2117,8 @@ namespace Mids_Reborn.UI.Forms
 
                         case Enums.eToggleType.Proc:
                             powerEntry.ProcInclude = !powerEntry.ProcInclude;
-                            RedrawSinglePower(ref powerEntry, true, true);
+                            ClearTransientInteractionState();
+                            RedrawSinglePower(hit.PowerIndex, ref powerEntry, true, true);
                             canvas.Invalidate(canvas.GetPowerAreaRect(hit.PowerIndex));
                             break;
                     }
@@ -3912,8 +3923,9 @@ namespace Mids_Reborn.UI.Forms
             }
 
             dataView.IsLocked = false;
+            var preservedCombatContext = CombatContextState.Clone(CombatContextState.TryGetActiveBuildState());
             NewToon(true, true);
-            if (_buildManager.LoadFromFile(fileName))
+            if (_buildManager.LoadFromFile(fileName, preservedCombatContext))
             {
                 MidsContext.Config.LastFileName = fileName;
                 LastFileName = fileName;
@@ -4822,17 +4834,50 @@ namespace Mids_Reborn.UI.Forms
         private void EnhancementModified()
         {
             DoRedraw();
-            RefreshAllPowerLists();
-            RefreshInfo();
+            ClearTransientInteractionState();
+            QueueDeferredInfoRefresh();
+        }
+
+        private void ClearTransientInteractionState()
+        {
             _interaction.ListHover = ListHoverState.None;
             _interaction.CanvasHover = BuildRenderer.BuildHitTestResult.None;
             HidePopup();
+        }
+
+        private void QueueDeferredInfoRefresh(bool refreshHover = true)
+        {
+            _deferredHoverRefreshRequested |= refreshHover;
+
+            if (_deferredInfoRefreshQueued || !IsHandleCreated || IsDisposed || Disposing)
+            {
+                return;
+            }
+
+            _deferredInfoRefreshQueued = true;
+            BeginInvoke((MethodInvoker)FlushDeferredInfoRefresh);
+        }
+
+        private void FlushDeferredInfoRefresh()
+        {
+            _deferredInfoRefreshQueued = false;
+            bool refreshHover = _deferredHoverRefreshRequested;
+            _deferredHoverRefreshRequested = false;
+
+            if (IsDisposed || Disposing)
+            {
+                return;
+            }
+
+            RefreshInfo();
 
             var cursorOnCanvas = canvas.ClientRectangle.Contains(canvas.PointToClient(Cursor.Position));
-            if (!EnhPickerActive && cursorOnCanvas)
+            if (!refreshHover || EnhPickerActive || !cursorOnCanvas)
             {
-                HandleCanvasHover(canvas.PointToClient(Cursor.Position));
+                return;
             }
+
+            HandleCanvasHover(canvas.PointToClient(Cursor.Position));
         }
 
         private void DataView_SlotFlip(int powerIndex)
@@ -4843,7 +4888,7 @@ namespace Mids_Reborn.UI.Forms
         private void DataView_SlotUpdate(IPower? power, int val)
         {
             DoRedraw();
-            RefreshInfo();
+            QueueDeferredInfoRefresh(refreshHover: false);
             if (_frmCombatContext?.Visible != true || power == null)
             {
                 return;
@@ -6962,13 +7007,21 @@ namespace Mids_Reborn.UI.Forms
             DoRedraw();
         }
 
-        private void RedrawSinglePower(ref PowerEntry? powerEntry, bool singleDraw = false, bool refreshInfo = false)
+        private void RedrawSinglePower(int powerIndex, ref PowerEntry? powerEntry, bool singleDraw = false, bool refreshInfo = false)
         {
             drawing.DrawPowerSlot(ref powerEntry, singleDraw);
-            canvas.Invalidate();
+            if (powerIndex > -1)
+            {
+                canvas.InvalidatePowerRegions(powerIndex);
+            }
+            else
+            {
+                canvas.Invalidate();
+            }
+
             if (refreshInfo)
             {
-                RefreshInfo();
+                QueueDeferredInfoRefresh();
             }
         }
 

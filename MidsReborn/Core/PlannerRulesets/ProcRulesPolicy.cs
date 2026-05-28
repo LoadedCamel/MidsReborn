@@ -383,57 +383,73 @@ internal static class ImportedProcPolicyNormalizer
 
 internal static class ChanceModifierCatalogBuilder
 {
-    public static Dictionary<string, float> Build(IReadOnlyList<IPower?> buffedPowers, IPower? setBonusVirtualPower)
+    public static Dictionary<string, float> Build(
+        IReadOnlyList<IPower?> buffedPowers,
+        IPower? setBonusVirtualPower,
+        IReadOnlyList<IPower>? supplementalPowers = null)
     {
         var catalog = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
         AddEffects(catalog, buffedPowers);
         AddEffects(catalog, setBonusVirtualPower == null ? [] : [setBonusVirtualPower]);
+        if (supplementalPowers is { Count: > 0 })
+        {
+            AddEffects(catalog, supplementalPowers.Cast<IPower?>());
+        }
+
         return catalog;
+    }
+
+    internal static IEnumerable<(string Tag, float Magnitude)> EnumerateActiveChanceModifiers(IPower power)
+    {
+        if (!power.Active)
+        {
+            yield break;
+        }
+
+        foreach (var effect in power.Effects)
+        {
+            if (effect.EffectType != Enums.eEffectType.GlobalChanceMod ||
+                string.IsNullOrWhiteSpace(effect.Reward) ||
+                ChanceModifierSupport.IsPowerLocalChanceMod(effect) ||
+                !effect.PvXInclude() ||
+                !effect.CanInclude() ||
+                effect.BaseProbability <= float.Epsilon)
+            {
+                continue;
+            }
+
+            var magnitude = effect.BuffedMag;
+            var isAssassinsFocusChanceMod = power.FullName.Equals(
+                PlannerStateCatalog.AssassinsFocusMarker,
+                StringComparison.OrdinalIgnoreCase);
+            if (((!power.VariableEnabled && effect.VariableModified) || isAssassinsFocusChanceMod) &&
+                !effect.IgnoreScaling)
+            {
+                magnitude *= Math.Max(0, power.Stacks);
+            }
+
+            if (Math.Abs(magnitude) <= float.Epsilon)
+            {
+                continue;
+            }
+
+            yield return (effect.Reward, magnitude);
+        }
     }
 
     private static void AddEffects(IDictionary<string, float> target, IEnumerable<IPower?> powers)
     {
         foreach (var power in powers.Where(power => power != null))
         {
-            if (!power!.Active)
+            foreach (var (tag, magnitude) in EnumerateActiveChanceModifiers(power!))
             {
-                continue;
-            }
-
-            foreach (var effect in power!.Effects)
-            {
-                if (effect.EffectType != Enums.eEffectType.GlobalChanceMod ||
-                    string.IsNullOrWhiteSpace(effect.Reward) ||
-                    ChanceModifierSupport.IsPowerLocalChanceMod(effect) ||
-                    !effect.PvXInclude() ||
-                    !effect.CanInclude() ||
-                    effect.BaseProbability <= float.Epsilon)
+                if (target.TryGetValue(tag, out var existing))
                 {
-                    continue;
-                }
-
-                var magnitude = effect.BuffedMag;
-                var isAssassinsFocusChanceMod = power.FullName.Equals(
-                    PlannerStateCatalog.AssassinsFocusMarker,
-                    StringComparison.OrdinalIgnoreCase);
-                if (((!power.VariableEnabled && effect.VariableModified) || isAssassinsFocusChanceMod) &&
-                    !effect.IgnoreScaling)
-                {
-                    magnitude *= Math.Max(0, power.Stacks);
-                }
-
-                if (Math.Abs(magnitude) <= float.Epsilon)
-                {
-                    continue;
-                }
-
-                if (target.TryGetValue(effect.Reward, out var existing))
-                {
-                    target[effect.Reward] = existing + magnitude;
+                    target[tag] = existing + magnitude;
                 }
                 else
                 {
-                    target[effect.Reward] = magnitude;
+                    target[tag] = magnitude;
                 }
             }
         }

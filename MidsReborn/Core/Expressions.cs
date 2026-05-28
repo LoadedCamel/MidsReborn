@@ -1426,7 +1426,7 @@ namespace Mids_Reborn.Core
         private static int GetTargetProfileId()
         {
             return MidsContext.Config?.CombatContextSettings.TargetSettings.ProfileId ??
-                   (int)CombatTargetProfileId.Boss;
+                   (int)CombatTargetProfileId.Minion;
         }
 
         private static string Negate(string booleanResult)

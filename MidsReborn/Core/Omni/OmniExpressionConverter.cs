@@ -103,6 +103,11 @@ public static partial class OmniExpressionConverter
             return rows;
         }
 
+        if (TryExtractMixedRows(expression.Trim(), fallbackMode, out var extractedRows))
+        {
+            return extractedRows;
+        }
+
         return
         [
             ToSingleRow(
@@ -555,17 +560,23 @@ public static partial class OmniExpressionConverter
         var sourceArch = SourceArchetypeRegex().Match(normalized);
         if (sourceArch.Success)
         {
-            return new AdvancedConditionRow
-            {
-                Link = link,
-                Kind = AdvancedConditionKind.CharacterArchetype,
-                Subject = "class",
-                Value = CleanArchetypeName(sourceArch.Groups[2].Value),
-                Operator = sourceArch.Groups[1].Value.Equals("!=", StringComparison.Ordinal) || negated
-                    ? AdvancedConditionOperator.NotEquals
-                    : AdvancedConditionOperator.Equals,
-                RawExpression = expression
-            };
+            return CreateSourceArchetypeRow(
+                link,
+                sourceArch.Groups[1].Value,
+                sourceArch.Groups[2].Value,
+                negated,
+                expression);
+        }
+
+        var reverseSourceArch = ReverseSourceArchetypeRegex().Match(normalized);
+        if (reverseSourceArch.Success)
+        {
+            return CreateSourceArchetypeRow(
+                link,
+                reverseSourceArch.Groups[2].Value,
+                reverseSourceArch.Groups[1].Value,
+                negated,
+                expression);
         }
 
         var archetypeRpn = ArchetypeRpnRegex().Match(normalized);
@@ -666,6 +677,97 @@ public static partial class OmniExpressionConverter
             Subject = mode,
             Negated = negated,
             RawExpression = expression
+        };
+    }
+
+    private static bool TryExtractMixedRows(
+        string expression,
+        AdvancedConditionEvaluationMode fallbackMode,
+        out List<AdvancedConditionRow> rows)
+    {
+        rows = [];
+        var normalized = NormalizeOuter(expression);
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            return false;
+        }
+
+        AddEmbeddedSourceArchetypeRows(normalized, rows);
+        if (rows.Count == 0)
+        {
+            return false;
+        }
+
+        if (fallbackMode is AdvancedConditionEvaluationMode.ReportOnly or AdvancedConditionEvaluationMode.RuntimeTargetOnly)
+        {
+            rows.Add(AdvancedConditionRow.AdvancedExpression(
+                rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.And,
+                expression,
+                unsupported: true,
+                evaluationMode: fallbackMode));
+        }
+
+        return true;
+    }
+
+    private static void AddEmbeddedSourceArchetypeRows(string expression, ICollection<AdvancedConditionRow> rows)
+    {
+        foreach (Match match in EmbeddedSourceArchetypeRegex().Matches(expression))
+        {
+            AddDistinctRow(
+                rows,
+                CreateSourceArchetypeRow(
+                    AdvancedConditionLink.And,
+                    match.Groups[1].Value,
+                    match.Groups[2].Value,
+                    negated: false,
+                    match.Value));
+        }
+
+        foreach (Match match in EmbeddedReverseSourceArchetypeRegex().Matches(expression))
+        {
+            AddDistinctRow(
+                rows,
+                CreateSourceArchetypeRow(
+                    AdvancedConditionLink.And,
+                    match.Groups[2].Value,
+                    match.Groups[1].Value,
+                    negated: false,
+                    match.Value));
+        }
+    }
+
+    private static void AddDistinctRow(ICollection<AdvancedConditionRow> rows, AdvancedConditionRow candidate)
+    {
+        if (rows.Any(existing =>
+                existing.Kind == candidate.Kind &&
+                existing.Operator == candidate.Operator &&
+                string.Equals(existing.Subject, candidate.Subject, StringComparison.OrdinalIgnoreCase) &&
+                string.Equals(existing.Value, candidate.Value, StringComparison.OrdinalIgnoreCase) &&
+                existing.Negated == candidate.Negated))
+        {
+            return;
+        }
+
+        candidate.Link = rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.And;
+        rows.Add(candidate);
+    }
+
+    private static AdvancedConditionRow CreateSourceArchetypeRow(
+        AdvancedConditionLink link,
+        string comparison,
+        string archetype,
+        bool negated,
+        string rawExpression)
+    {
+        return new AdvancedConditionRow
+        {
+            Link = link,
+            Kind = AdvancedConditionKind.CharacterArchetype,
+            Subject = "class",
+            Value = CleanArchetypeName(archetype),
+            Operator = ParseTextComparison(comparison, negated),
+            RawExpression = rawExpression
         };
     }
 
@@ -1342,8 +1444,17 @@ public static partial class OmniExpressionConverter
     [GeneratedRegex(@"^source>enttype\s+(eq|==|!=|ne)\s+(.+)$", RegexOptions.IgnoreCase)]
     private static partial Regex SourceEntityRegex();
 
-    [GeneratedRegex(@"^(?:source(?:\.owner)?>arch|source\.owner>arch|arch source>)\s+(eq|==|!=|ne)\s+['""]?@?(.+?)['""]?$", RegexOptions.IgnoreCase)]
+    [GeneratedRegex(@"^(?:source(?:\.owner)?>arch|source\.owner>arch)\s+(eq|==|!=|ne)\s+['""]?@?(.+?)['""]?$", RegexOptions.IgnoreCase)]
     private static partial Regex SourceArchetypeRegex();
+
+    [GeneratedRegex(@"^arch\s+source>\s+['""]?@?(.+?)['""]?\s+(eq|==|!=|ne)$", RegexOptions.IgnoreCase)]
+    private static partial Regex ReverseSourceArchetypeRegex();
+
+    [GeneratedRegex(@"(?:source(?:\.owner)?>arch|source\.owner>arch)\s+(eq|==|!=|ne)\s+['""]?@?([A-Za-z0-9_]+)['""]?", RegexOptions.IgnoreCase)]
+    private static partial Regex EmbeddedSourceArchetypeRegex();
+
+    [GeneratedRegex(@"arch\s+source>\s+['""]?@?([A-Za-z0-9_]+)['""]?\s+(eq|==|!=|ne)", RegexOptions.IgnoreCase)]
+    private static partial Regex EmbeddedReverseSourceArchetypeRegex();
 
     [GeneratedRegex(@"^\$?archetype\s+@?(Class_[A-Za-z0-9_]+)\s+(eq|==|!=|ne)$", RegexOptions.IgnoreCase)]
     private static partial Regex ArchetypeRpnRegex();

@@ -19,6 +19,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private Archetype? _archetype;
         private bool? _completeCache;
         private bool _experiencedMarksmanForcedFastSnipe;
+        private int _explicitBuildLevel = -1;
         public event EventHandler<Enums.Alignment>? AlignmentChanged;
 
         internal Character()
@@ -53,6 +54,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
                 {
                     num2 = CurrentBuild.GetMaxLevel();
+                    if (_explicitBuildLevel > -1)
+                    {
+                        num2 = Math.Max(num2, _explicitBuildLevel);
+                    }
+                    else if (Complete)
+                    {
+                        num2 = Math.Max(num2, MaxLevel);
+                    }
                 }
                 else
                 {
@@ -294,6 +303,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             LevelCache = -1;
         }
 
+        public void SetExplicitBuildLevel(int level)
+        {
+            _explicitBuildLevel = Math.Clamp(level, 0, MaxLevel);
+            ResetLevel();
+        }
+
+        public void ClearExplicitBuildLevel()
+        {
+            _explicitBuildLevel = -1;
+            ResetLevel();
+        }
+
         public void SetLevelTo(int Level)
         {
             LevelCache = Level;
@@ -324,10 +345,23 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int GetPowersByLevel(int Level)
         {
-            int[] powerPickedLevels =
-                {0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 34, 37, 40, 43, 46, 48};
+            var levels = DatabaseAPI.Database?.Levels;
+            if (levels == null || levels.Length == 0)
+            {
+                int[] fallbackPowerPickedLevels =
+                    {0, 1, 3, 5, 7, 9, 11, 13, 15, 17, 19, 21, 23, 25, 27, 29, 31, 34, 37, 40, 43, 46, 48};
 
-            return powerPickedLevels.Where(e => e <= Level).ToArray().Length;
+                return fallbackPowerPickedLevels.Count(e => e <= Level);
+            }
+
+            var clampedLevel = Math.Clamp(Level, 0, levels.Length - 1);
+            var powersAvailable = 0;
+            for (var level = 0; level <= clampedLevel; ++level)
+            {
+                powersAvailable += levels[level].Powers;
+            }
+
+            return powersAvailable;
         }
 
         public bool IsHero()
@@ -507,6 +541,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Totals.Init();
             TotalsCapped.Init();
             RequestedLevel = -1;
+            _explicitBuildLevel = -1;
             PEnhancementsList = new List<string>();
             _activePlannerModes.Clear();
             _plannerStateStacks.Clear();

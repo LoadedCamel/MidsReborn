@@ -191,23 +191,48 @@ public class MidsToolTip : ToolTip
             base.Show(text, window, x, y, duration);
         }
 
-        public new void Hide(IWin32Window window)
+    public new void Hide(IWin32Window window)
+    {
+        if (ReferenceEquals(window, _activeWindow))
         {
-            if (ReferenceEquals(window, _activeWindow))
-            {
-                _activeText = null;
+            _activeText = null;
                 _activeWindow = null;
             }
             base.Hide(window);
         }
 
-        /// <summary>Convenience for client-point shows.</summary>
-        public void ShowAt(Control relativeTo, string text, Point clientLocation, int durationMs = 4000)
-            => Show(text, relativeTo, clientLocation, durationMs);
+    /// <summary>Convenience for client-point shows.</summary>
+    public void ShowAt(Control relativeTo, string text, Point clientLocation, int durationMs = 4000)
+        => Show(text, relativeTo, clientLocation, durationMs);
 
-        #endregion
+    public void ShowClamped(Control relativeTo, string text, Point preferredClientLocation, int durationMs = 4000)
+    {
+        if (relativeTo == null)
+        {
+            return;
+        }
 
-        #region Popup (measure)
+        var tooltipSize = MeasureTooltip(relativeTo, text);
+        var preferredScreenPoint = relativeTo.PointToScreen(preferredClientLocation);
+        var workingArea = Screen.FromControl(relativeTo).WorkingArea;
+        var dpi = relativeTo.DeviceDpi / 96f;
+        var margin = Math.Max(8, (int)Math.Round(8 * dpi));
+
+        var clampedScreenX = Math.Max(
+            workingArea.Left + margin,
+            Math.Min(preferredScreenPoint.X, workingArea.Right - tooltipSize.Width - margin));
+
+        var clampedScreenY = Math.Max(
+            workingArea.Top + margin,
+            Math.Min(preferredScreenPoint.Y, workingArea.Bottom - tooltipSize.Height - margin));
+
+        var clampedClientPoint = relativeTo.PointToClient(new Point(clampedScreenX, clampedScreenY));
+        Show(text, relativeTo, clampedClientPoint.X, clampedClientPoint.Y, durationMs);
+    }
+
+    #endregion
+
+    #region Popup (measure)
 
         private void OnPopupMeasure(object? sender, PopupEventArgs e)
         {
@@ -216,59 +241,12 @@ public class MidsToolTip : ToolTip
 
             try
             {
-                // Prefer the dynamic Show(...) text we cached; if absent, fall back to SetToolTip text.
-                string body = !string.IsNullOrEmpty(_activeText)
-                    ? _activeText!
-                    : (GetToolTip(e.AssociatedControl) ?? string.Empty);
-
-                string? title = string.IsNullOrWhiteSpace(ToolTipTitle) ? null : ToolTipTitle;
-                using var titleFont = title is null ? null : (TitleFont ?? new Font(ContentFont, FontStyle.Bold));
-
-                // Use a real device context for DPI-correct measurement.
-                using var g = e.AssociatedControl.CreateGraphics();
-
-                float dpi = e.AssociatedControl.DeviceDpi / 96f;
-                int pad = (int)Math.Round(_padding * dpi);
-                int corner = (int)Math.Round(_cornerRadius * dpi);
-                int outline = Math.Max(1, (int)Math.Round(OutlineThickness * dpi));
-                int maxW = (int)Math.Round(_maxWidth * dpi);
-                int titleGapPx = (int)Math.Round(TitleGap * dpi);
-
-                var flags = TextFormatFlags.NoPadding
-                          | TextFormatFlags.NoPrefix
-                          | TextFormatFlags.TextBoxControl
-                          | TextFormatFlags.PreserveGraphicsClipping
-                          | TextFormatFlags.PreserveGraphicsTranslateTransform;
-
-                // Body (wrapped)
-                Size bodySize = TextRenderer.MeasureText(g, body, ContentFont, new Size(maxW, int.MaxValue),
-                    flags | TextFormatFlags.WordBreak);
-
-                // Title (single-line, elide)
-                Size titleSize = Size.Empty;
-                if (title is not null && titleFont is not null)
-                {
-                    titleSize = TextRenderer.MeasureText(g, title, titleFont, new Size(maxW, int.MaxValue),
-                                 (flags & ~TextFormatFlags.WordBreak) | TextFormatFlags.EndEllipsis);
-                }
-
-                int textBlockWidth = Math.Min(maxW, Math.Max(bodySize.Width, titleSize.Width));
-                int width = pad + textBlockWidth + pad + outline;
-                int height = pad
-                           + (titleSize.Height > 0 ? titleSize.Height + titleGapPx : 0)
-                           + bodySize.Height
-                           + pad + outline;
-
-                // Minimums for rounded envelope
-                width = Math.Max(width, corner * 2 + pad * 2);
-                height = Math.Max(height, corner * 2 + pad * 2);
-
-                e.ToolTipSize = new Size(width, height);
-            }
-            finally
-            {
-                _inPopup = false;
-            }
+            e.ToolTipSize = MeasureTooltip(e.AssociatedControl);
+        }
+        finally
+        {
+            _inPopup = false;
+        }
         }
 
         #endregion
@@ -331,10 +309,59 @@ public class MidsToolTip : ToolTip
 
         #endregion
 
-        #region Helpers
+    #region Helpers
 
-        private static GraphicsPath CreateRoundedRectPath(Rectangle bounds, int radius)
+    private Size MeasureTooltip(Control associatedControl, string? overrideBody = null)
+    {
+        string body = !string.IsNullOrEmpty(overrideBody)
+            ? overrideBody
+            : !string.IsNullOrEmpty(_activeText)
+                ? _activeText!
+                : (GetToolTip(associatedControl) ?? string.Empty);
+
+        string? title = string.IsNullOrWhiteSpace(ToolTipTitle) ? null : ToolTipTitle;
+        using var titleFont = title is null ? null : (TitleFont ?? new Font(ContentFont, FontStyle.Bold));
+        using var g = associatedControl.CreateGraphics();
+
+        float dpi = associatedControl.DeviceDpi / 96f;
+        int pad = (int)Math.Round(_padding * dpi);
+        int corner = (int)Math.Round(_cornerRadius * dpi);
+        int outline = Math.Max(1, (int)Math.Round(OutlineThickness * dpi));
+        int maxW = (int)Math.Round(_maxWidth * dpi);
+        int titleGapPx = (int)Math.Round(TitleGap * dpi);
+        int screenLimitedWidth = Math.Max(120, Screen.FromControl(associatedControl).WorkingArea.Width - pad * 4);
+        maxW = Math.Min(maxW, screenLimitedWidth);
+
+        var flags = TextFormatFlags.NoPadding
+                  | TextFormatFlags.NoPrefix
+                  | TextFormatFlags.TextBoxControl
+                  | TextFormatFlags.PreserveGraphicsClipping
+                  | TextFormatFlags.PreserveGraphicsTranslateTransform;
+
+        Size bodySize = TextRenderer.MeasureText(g, body, ContentFont, new Size(maxW, int.MaxValue),
+            flags | TextFormatFlags.WordBreak);
+
+        Size titleSize = Size.Empty;
+        if (title is not null && titleFont is not null)
         {
+            titleSize = TextRenderer.MeasureText(g, title, titleFont, new Size(maxW, int.MaxValue),
+                (flags & ~TextFormatFlags.WordBreak) | TextFormatFlags.EndEllipsis);
+        }
+
+        int textBlockWidth = Math.Min(maxW, Math.Max(bodySize.Width, titleSize.Width));
+        int width = pad + textBlockWidth + pad + outline;
+        int height = pad
+                   + (titleSize.Height > 0 ? titleSize.Height + titleGapPx : 0)
+                   + bodySize.Height
+                   + pad + outline;
+
+        width = Math.Max(width, corner * 2 + pad * 2);
+        height = Math.Max(height, corner * 2 + pad * 2);
+        return new Size(width, height);
+    }
+
+    private static GraphicsPath CreateRoundedRectPath(Rectangle bounds, int radius)
+    {
             int r = Math.Max(0, radius);
             var path = new GraphicsPath();
             if (r == 0)

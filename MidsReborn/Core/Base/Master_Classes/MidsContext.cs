@@ -6,12 +6,12 @@ namespace Mids_Reborn.Core.Base.Master_Classes
     public static class MidsContext
     {
         public const string AppName = "Mids Reborn";
-        private const int AppMajorVersion = 3;
-        private const int AppMinorVersion = 7;
-        private const int AppBuildVersion = 14;
-        private const int AppRevisionVersion = 3;
-        public const string AssemblyVersion = "3.7.14";
-        public const string AssemblyFileVersion = "3.7.14.3";
+        private const int AppMajorVersion = 4;
+        private const int AppMinorVersion = 0;
+        private const int AppBuildVersion = 3;
+        private const int AppRevisionVersion = 5;
+        public const string AssemblyVersion = "4.0.3";
+        public const string AssemblyFileVersion = "4.0.3.5";
       
         public static Version AppFileVersion { get; set; } = new(AppMajorVersion, AppMinorVersion, AppBuildVersion, AppRevisionVersion);
 

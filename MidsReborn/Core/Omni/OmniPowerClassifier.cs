@@ -102,21 +102,28 @@ public sealed class OmniPowerClassifier
     [
         "defense",
         "resistance",
+        "res",
         "damage",
+        "dmg",
         "tohit",
         "accuracy",
         "recharge",
         "recovery",
         "regeneration",
         "endurance",
+        "elusivity",
         "hit_points",
+        "hitpoints",
         "absorb",
         "movement",
         "jump",
         "fly",
         "speed",
         "perception",
-        "protection"
+        "protection",
+        "stealth",
+        "range",
+        "mez"
     ];
 
     public OmniPowerClassification Classify(
@@ -388,6 +395,12 @@ public sealed class OmniPowerClassifier
             classification.GrantedSupportPower = false;
             classification.ExecutionOnly = false;
             classification.NormalBuildPick = false;
+            if (ShouldForceVisibleIncarnateClickBuff(power, classification, set, offensive))
+            {
+                classification.ClickBuff = true;
+                classification.Reasons.Add("visible incarnate support click treated as click-buff");
+            }
+
             classification.Reasons.Add("visible incarnate build choice shown in incarnate grid");
         }
 
@@ -496,7 +509,7 @@ public sealed class OmniPowerClassifier
         IReadOnlyDictionary<string, OmniPowerDefinition> scopedPowersByFullName,
         bool offensive)
     {
-        if (offensive || !power.Type.Equals("Click", StringComparison.OrdinalIgnoreCase))
+        if (offensive || !IsClickLikePowerType(power.Type))
         {
             return false;
         }
@@ -604,11 +617,116 @@ public sealed class OmniPowerClassifier
             return false;
         }
 
-        return power.Effects.Any(effect => effect.Templates.Any(template =>
-            template.Duration > 0.25f &&
-            !IsFoe(template.Target) &&
-            (BuffAttribFragments.Any(f => template.Attribs.Any(a => NormalizeName(a).Contains(NormalizeName(f), StringComparison.OrdinalIgnoreCase))) ||
-             BuffAttribFragments.Any(f => NormalizeName(template.Table).Contains(NormalizeName(f), StringComparison.OrdinalIgnoreCase)))));
+        return power.Effects.Any(HasSustainedBuffSurface);
+    }
+
+    private static bool HasSustainedBuffSurface(OmniEffectDefinition effect)
+    {
+        return effect.Templates.Any(template => IsSustainedBuffTemplate(effect, template)) ||
+               effect.ChildEffects.Any(HasSustainedBuffSurface);
+    }
+
+    private static bool IsSustainedBuffTemplate(OmniEffectDefinition effect, OmniEffectTemplate template)
+    {
+        if (!HasSustainedDuration(template) ||
+            IsFoe(template.Target))
+        {
+            return false;
+        }
+
+        var normalizedType = NormalizeName(template.Type);
+        var hasExplicitBuffSemantic = HasExplicitBuffSemantic(effect, template);
+
+        // Omni overloads damage-vector selector names for self/ally buff rows, especially
+        // resistance and damage-buff templates. Let explicit buff semantics win before the
+        // generic offensive-vector heuristic can reject them as attacks.
+        if (hasExplicitBuffSemantic &&
+            normalizedType is not ("damage" or "knock" or "entcreate"))
+        {
+            return true;
+        }
+
+        if (IsOffensiveTemplate(template))
+        {
+            return false;
+        }
+
+        if (hasExplicitBuffSemantic)
+        {
+            return true;
+        }
+
+        var normalizedAttribs = template.Attribs
+            .Select(NormalizeName)
+            .Where(static value => !string.IsNullOrWhiteSpace(value))
+            .ToArray();
+        if (normalizedAttribs.Length == 0 ||
+            normalizedAttribs.All(static value => value is "null" or "canceleffects"))
+        {
+            return false;
+        }
+
+        // Allow sustained non-offensive self/ally attrib mods to participate in planner
+        // click-buff state, even when the raw Omni row uses atypical selectors/tables.
+        return normalizedType is "attribmod" or "expression";
+    }
+
+    private static bool HasSustainedDuration(OmniEffectTemplate template)
+    {
+        return template.Duration > 0.25f ||
+               !string.IsNullOrWhiteSpace(template.DurationExpression);
+    }
+
+    private static bool HasExplicitBuffSemantic(OmniEffectDefinition effect, OmniEffectTemplate template)
+    {
+        var normalizedType = NormalizeName(template.Type);
+        var normalizedAspect = NormalizeName(template.Aspect);
+        var normalizedTable = NormalizeName(template.Table);
+        var normalizedAttribs = template.Attribs
+            .Select(NormalizeName)
+            .Where(static value => !string.IsNullOrWhiteSpace(value))
+            .ToArray();
+        var normalizedTags = effect.Tags
+            .Concat(effect.Flags)
+            .Concat(template.Tags)
+            .Select(NormalizeName)
+            .Where(static value => !string.IsNullOrWhiteSpace(value))
+            .ToArray();
+
+        if (normalizedTags.Any(HasBuffFragment))
+        {
+            return true;
+        }
+
+        if (HasBuffFragment(normalizedTable))
+        {
+            return true;
+        }
+
+        if (normalizedAttribs.Any(HasBuffFragment))
+        {
+            return true;
+        }
+
+        if (normalizedAspect is "strength" or "str" or "current" or "cur" or "resistance" or "res")
+        {
+            return normalizedAttribs.Length > 0 &&
+                   !normalizedAttribs.All(static value => value is "null" or "canceleffects");
+        }
+
+        return normalizedType is "heal" or "grantpower";
+    }
+
+    private static bool HasBuffFragment(string value)
+    {
+        return BuffAttribFragments.Any(fragment =>
+            value.Contains(NormalizeName(fragment), StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsClickLikePowerType(string? type)
+    {
+        var normalized = NormalizeName(type ?? string.Empty);
+        return normalized is "click" or "clickbuff";
     }
 
     private static bool TargetsSelfOrAlly(OmniPowerDefinition power)
@@ -746,6 +864,31 @@ public sealed class OmniPowerClassifier
         }
 
         return power.ShowInManage || !power.DoNotSave;
+    }
+
+    private static bool ShouldForceVisibleIncarnateClickBuff(
+        OmniPowerDefinition power,
+        OmniPowerClassification classification,
+        string set,
+        bool offensive)
+    {
+        if (classification.PowerType != Enums.ePowerType.Click ||
+            classification.HiddenPower ||
+            classification.ExecutionOnly ||
+            offensive)
+        {
+            return false;
+        }
+
+        // Destiny powers are player-triggered incarnate support states in planner terms,
+        // even when their raw exported effect rows look more like delivery/heal/teleport
+        // payloads than classic sustained buff templates.
+        if (set.Equals("Destiny", StringComparison.OrdinalIgnoreCase))
+        {
+            return true;
+        }
+
+        return HasSustainedBuffSurface(power);
     }
 
     private static bool IsTemporarySilentSupportPower(string group, string set)

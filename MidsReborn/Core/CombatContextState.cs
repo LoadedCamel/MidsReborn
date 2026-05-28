@@ -90,7 +90,7 @@ internal static class CombatContextState
             {
                 HpPercent = source.TargetSettings?.HpPercent ?? 100,
                 EndPercent = source.TargetSettings?.EndPercent ?? 100,
-                ProfileId = source.TargetSettings?.ProfileId ?? (int)CombatTargetProfileId.Boss,
+                ProfileId = source.TargetSettings?.ProfileId ?? (int)CombatTargetProfileId.Minion,
                 Held = source.TargetSettings?.Held ?? false,
                 Immobilized = source.TargetSettings?.Immobilized ?? false,
                 Stunned = source.TargetSettings?.Stunned ?? false,

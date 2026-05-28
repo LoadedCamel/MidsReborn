@@ -2231,7 +2231,7 @@ namespace Mids_Reborn.UI.Forms
             titleLabel.Name = "titleLabel";
             titleLabel.Size = new Size(1164, 35);
             titleLabel.TabIndex = 5;
-            titleLabel.Text = "v4.0 Alpha (build 1.711)";
+            titleLabel.Text = "Issue 4: Resurgence";
             titleLabel.TextAlign = ContentAlignment.MiddleCenter;
             titleLabel.MouseDown += Title_MouseDown;
             // 

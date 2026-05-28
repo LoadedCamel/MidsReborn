@@ -163,14 +163,14 @@ public static class CombatTargetProfiles
     public static CombatTargetProfile Get(CombatTargetProfileId id)
     {
         return Profiles.FirstOrDefault(profile => profile.Id == id) ??
-               Profiles.First(profile => profile.Id == CombatTargetProfileId.Boss);
+               Profiles.First(profile => profile.Id == CombatTargetProfileId.Minion);
     }
 
     public static CombatTargetProfile Get(int id)
     {
         return Enum.IsDefined(typeof(CombatTargetProfileId), id)
             ? Get((CombatTargetProfileId)id)
-            : Get(CombatTargetProfileId.Boss);
+            : Get(CombatTargetProfileId.Minion);
     }
 
     public static string GetDisplayName(int id)
