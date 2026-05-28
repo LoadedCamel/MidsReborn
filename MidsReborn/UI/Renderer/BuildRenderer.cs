@@ -53,6 +53,9 @@ namespace Mids_Reborn.UI.Renderer
         private int EnhancementSlotStartGap => ScaleLogical(BaseEnhancementSlotStartGap);
         private int EnhancementSlotSpacing => Math.Max(0, ScaleLogical(BaseEnhancementSlotGap));
         private int EnhancementSlotRightPad => ScaleLogical(BaseEnhancementSlotRightPad);
+        private int SlotLevelBandHeight => MidsContext.Config.ShowSlotLevels
+            ? Math.Max(ScaleLogical(10), (int)Math.Ceiling(_currentFontSize) + ScaleLogical(2))
+            : 0;
         public int OffsetY => Math.Max(0, SzPower.Height - PowerSlotOverlap);
 
         private int PaddingX => ScaleLogical(BasePaddingX);
@@ -333,7 +336,7 @@ namespace Mids_Reborn.UI.Renderer
 
         private int GetCellHeight(bool isInherent = false)
         {
-            var height = SzPower.Height + OffsetY + SzSlot.Height;
+            var height = SzPower.Height + OffsetY + SzSlot.Height + SlotLevelBandHeight;
             if (isInherent) height += OffsetInherent;
             return height + PaddingY;
         }
@@ -606,6 +609,15 @@ namespace Mids_Reborn.UI.Renderer
                 }
 
                 slotBandRect = UnionNonEmpty(slotBandRect, newSlotRect);
+                if (MidsContext.Config.ShowSlotLevels && enhancementSlotRects.Length > 0)
+                {
+                    var slotLevelBandRect = new Rectangle(
+                        startX,
+                        y + edge,
+                        enhancementSlotRects.Length * edge + Math.Max(0, enhancementSlotRects.Length - 1) * spacing,
+                        SlotLevelBandHeight);
+                    slotBandRect = UnionNonEmpty(slotBandRect, slotLevelBandRect);
+                }
                 powerAreaRect = UnionNonEmpty(powerAreaRect, slotBandRect);
             }
 
@@ -1295,6 +1307,12 @@ namespace Mids_Reborn.UI.Renderer
         {
             if (powerEntry.Slots.Length == 0) return;
 
+            using var slotLevelFont = new Font(
+                font.FontFamily,
+                Math.Max(8f, font.Size - 1.5f),
+                font.Style,
+                GraphicsUnit.Pixel);
+
             for (var i = 0; i < powerEntry.Slots.Length; i++)
             {
                 var slot = powerEntry.Slots[i];
@@ -1307,9 +1325,13 @@ namespace Mids_Reborn.UI.Renderer
                 {
                     DrawEmptyEnhancementSlot(BxBuffer.Graphics, slotRect);
 
+                    var invalidByLevelPath = MidsContext.Config.BuildMode == Enums.dmModes.LevelUp &&
+                                             !powerEntry.AllowFrontLoading &&
+                                             slot.Source == SlotSourceKind.Bought &&
+                                             slot.Level < powerEntry.Level;
                     if (MidsContext.Config.CalcEnhLevel == 0 | slot.Level > MidsContext.Config.ForceLevel |
                         InterfaceMode == eInterfaceMode.PowerToggle & !powerEntry.StatInclude |
-                        !powerEntry.AllowFrontLoading & slot.Level < powerEntry.Level)
+                        invalidByLevelPath)
                     {
                         solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                         BxBuffer.Graphics.FillEllipse(solidBrush, slotRectF);
@@ -1325,9 +1347,13 @@ namespace Mids_Reborn.UI.Renderer
                     var clipRect3 = slotRect;
                     AssetManager.DrawEnhancementAt(BxBuffer.Graphics, clipRect3, enhancement.ImageIdx, slot.Enhancement.Enh, enhancement.TypeID, slot.Enhancement.Grade);
 
+                    var invalidByLevelPath = MidsContext.Config.BuildMode == Enums.dmModes.LevelUp &&
+                                             !powerEntry.AllowFrontLoading &&
+                                             slot.Source == SlotSourceKind.Bought &&
+                                             slot.Level < powerEntry.Level;
                     if (slot.Enhancement.RelativeLevel == 0 | slot.Level > MidsContext.Config.ForceLevel |
                         InterfaceMode == eInterfaceMode.PowerToggle & !powerEntry.StatInclude |
-                        !powerEntry.AllowFrontLoading & slot.Level < powerEntry.Level |
+                        invalidByLevelPath |
                         MidsContext.EnhCheckMode & !slot.Enhancement.Obtained)
                     {
                         solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
@@ -1342,19 +1368,20 @@ namespace Mids_Reborn.UI.Renderer
 
                 if (!MidsContext.Config.ShowSlotLevels) continue;
 
+                float slotLevelHeight = slotLevelFont.GetHeight(BxBuffer.Graphics);
                 var powerTextRect = new RectangleF(
                     slotRectF.X,
-                    slotRectF.Bottom + 2,
+                    slotRectF.Bottom + ScaleLogical(1),
                     slotRectF.Width,
-                    _defaultFont.GetHeight(BxBuffer.Graphics)
+                    slotLevelHeight
                 );
 
                 DrawOutlineText(
                     Convert.ToString(slot.Level + 1),
                     powerTextRect,
-                    Color.FromArgb(0, 255, 0),
-                    Color.FromArgb(192, 0, 0, 0),
-                    font,
+                    Color.White,
+                    Color.FromArgb(236, 0, 0, 0),
+                    slotLevelFont,
                     2f,
                     BxBuffer.Graphics);
             }
@@ -2832,7 +2859,7 @@ namespace Mids_Reborn.UI.Renderer
                 ? PowerPosition(hIdx)
                 : PowerPosition(GetVisualIdx(hIdx));
 
-            return new Rectangle(location.X, location.Y, SzPower.Width, OffsetY + SzSlot.Height);
+            return new Rectangle(location.X, location.Y, SzPower.Width, OffsetY + SzSlot.Height + SlotLevelBandHeight);
         }
 
         public bool WithinPowerBar(Rectangle pBounds, Point e)
@@ -3526,7 +3553,7 @@ namespace Mids_Reborn.UI.Renderer
             int x = col * _calculatedCellWidth;
 
             int y = ignorePadding ? 0 : GetPowerTopInset();
-            y += row * (SzPower.Height + ScaleLogical(2) + SzSlot.Height);
+            y += row * (SzPower.Height + ScaleLogical(2) + SzSlot.Height + SlotLevelBandHeight);
             if (row >= _vcRowsPowers)
                 y += OffsetInherent;
             if (_ColumnStackingMode != eColumnStacking.None)
@@ -3581,7 +3608,7 @@ namespace Mids_Reborn.UI.Renderer
                 _vcRowsPowers = (int)Math.Ceiling((double)VcPowers / _vcCols);
 
             // Core cell height used by both the main grid and the inherent row(s)
-            int cellCore = SzPower.Height + ScaleLogical(2) + SzSlot.Height;
+            int cellCore = SzPower.Height + ScaleLogical(2) + SzSlot.Height + SlotLevelBandHeight;
 
             // --- Main grid height (24 picks across _vcCols/_vcRowsPowers) ---
             int mainRows = Math.Max(1, _vcRowsPowers);

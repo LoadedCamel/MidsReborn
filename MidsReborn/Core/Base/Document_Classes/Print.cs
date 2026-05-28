@@ -617,11 +617,8 @@ namespace Mids_Reborn.Core.Base.Document_Classes
                     if (!string.IsNullOrEmpty(s3))
                         s3 += '\n';
                     string str1;
-                    if (index == 0)
-                        str1 = s3 + "(A) ";
-                    else
-                        levelVar = MidsContext.Character.CurrentBuild.Powers[pIndex].Slots[index].Level + 1;
-                    str1 = s3 + "(" + levelVar + ") ";
+                    var slotLabel = MidsContext.Character.CurrentBuild.Powers[pIndex].Slots[index].GetDisplayLevelLabel();
+                    str1 = s3 + "(" + slotLabel + ") ";
                     if (MidsContext.Character.CurrentBuild.Powers[pIndex].Slots[index].Enhancement.Enh > -1)
                     {
                         var enhancement = DatabaseAPI.Database.Enhancements[
@@ -861,7 +858,7 @@ namespace Mids_Reborn.Core.Base.Document_Classes
 
                         var str3 = str1 + "(";
                         str1 = (index2 != 0
-                            ? str3 + (MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Level + 1)
+                            ? str3 + MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].GetDisplayLevelLabel()
                             : str3 + "A") + ")";
                     }
 

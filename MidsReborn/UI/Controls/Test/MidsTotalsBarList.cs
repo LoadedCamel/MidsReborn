@@ -16,6 +16,7 @@ internal sealed class MidsTotalsBarList : Control
     private readonly ToolTip _toolTip = new();
     private float _uiScale = 1f;
     private float _scaleMax = 100f;
+    private int _sharedLabelWidth;
     private string? _activeTooltip;
 
     public enum FillPalette
@@ -50,6 +51,18 @@ internal sealed class MidsTotalsBarList : Control
 
     public FillPalette Palette { get; set; } = FillPalette.Defense;
 
+    public int SharedLabelWidth
+    {
+        get => _sharedLabelWidth;
+        set
+        {
+            var clamped = Math.Max(0, value);
+            if (_sharedLabelWidth == clamped) return;
+            _sharedLabelWidth = clamped;
+            Invalidate();
+        }
+    }
+
     private DataViewTheme CurrentTheme =>
         DesignMode
             ? ThemeManager.DesignTime.DataView
@@ -82,6 +95,12 @@ internal sealed class MidsTotalsBarList : Control
     {
         var width = proposedSize.Width > 0 ? proposedSize.Width : Math.Max(ScalePx(160), Width);
         return new Size(width, MeasureHeight());
+    }
+
+    public int MeasureDesiredLabelWidth()
+    {
+        using var labelFont = new Font(Font.FontFamily, Math.Max(6.45f, Font.Size - 1.8f), FontStyle.Bold, GraphicsUnit.Point);
+        return MeasureDesiredLabelWidth(labelFont);
     }
 
     protected override void OnMouseMove(MouseEventArgs e)
@@ -141,10 +160,8 @@ internal sealed class MidsTotalsBarList : Control
         var rowGap = ScalePx(RowGap);
         var iconSize = ScalePx(IconSize);
         var rowWidth = Math.Max(1, ClientSize.Width - inset * 2);
-        var labelWidth = MeasureLabelWidth(labelFont, rowWidth);
-        var valueWidth = Math.Min(ScalePx(48), Math.Max(ScalePx(38), rowWidth / 5));
         var barGap = ScalePx(2);
-        var barWidth = Math.Max(ScalePx(46), rowWidth - labelWidth - valueWidth - iconSize - barGap * 3);
+        CalculateColumnWidths(labelFont, rowWidth, iconSize, barGap, out var labelWidth, out var valueWidth, out var barWidth);
 
         for (var i = 0; i < _metrics.Count; i++)
         {
@@ -248,9 +265,29 @@ internal sealed class MidsTotalsBarList : Control
 
     private int ScalePx(int value) => Math.Max(1, (int)Math.Round(value * _uiScale));
 
-    private int MeasureLabelWidth(Font labelFont, int rowWidth)
+    private void CalculateColumnWidths(Font labelFont, int rowWidth, int iconSize, int barGap, out int labelWidth, out int valueWidth, out int barWidth)
     {
-        var max = ScalePx(38);
+        var available = Math.Max(1, rowWidth - iconSize - barGap * 3);
+        var preferredValueWidth = Math.Min(ScalePx(48), Math.Max(ScalePx(30), rowWidth / 5));
+        var minimumBarWidth = ScalePx(40);
+        var desiredLabelWidth = _sharedLabelWidth > 0 ? _sharedLabelWidth : MeasureDesiredLabelWidth(labelFont);
+
+        valueWidth = preferredValueWidth;
+        labelWidth = Math.Min(desiredLabelWidth, Math.Max(1, available - valueWidth - minimumBarWidth));
+        barWidth = Math.Max(1, available - labelWidth - valueWidth);
+
+        if (barWidth < minimumBarWidth)
+        {
+            var valueShortage = minimumBarWidth - barWidth;
+            valueWidth = Math.Max(ScalePx(24), valueWidth - valueShortage);
+            labelWidth = Math.Min(desiredLabelWidth, Math.Max(1, available - valueWidth - minimumBarWidth));
+            barWidth = Math.Max(1, available - labelWidth - valueWidth);
+        }
+    }
+
+    private int MeasureDesiredLabelWidth(Font labelFont)
+    {
+        var max = 0;
         foreach (var metric in _metrics)
         {
             var measured = TextRenderer.MeasureText(
@@ -261,7 +298,7 @@ internal sealed class MidsTotalsBarList : Control
             max = Math.Max(max, measured);
         }
 
-        return Math.Min(ScalePx(48), Math.Max(ScalePx(36), max + ScalePx(1)));
+        return Math.Max(ScalePx(36), max + ScalePx(1));
     }
 
     private static GraphicsPath RoundedRect(Rectangle bounds, int radius)

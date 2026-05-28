@@ -612,17 +612,16 @@ The default position/state will be used upon next launch.", @"Window State Warni
             {
                 case MidsVectorButton.States.ToggledOff:
                     MidsContext.Config.BuildMode = Enums.dmModes.LevelUp;
-                    if (DatabaseAPI.ServerData.EnableInherentSlotting)
-                    {
-                        MainModule.MidsController.Toon.ClearInvalidInherentSlots();
-                    }
+                    MainModule.MidsController.Toon.ClearInvalidInherentSlots();
 
                     break;
                 case MidsVectorButton.States.ToggledOn:
-                    MidsContext.Config.BuildMode = Enums.dmModes.Normal;
-                    break;
                 case MidsVectorButton.States.Indeterminate:
                     MidsContext.Config.BuildMode = Enums.dmModes.Respec;
+                    if (MidsContext.Character is not null && !MidsContext.Character.HasExplicitBuildLevel)
+                    {
+                        MidsContext.Character.SetExplicitBuildLevel(MidsContext.Character.InferStaticBuildLevelFromCurrentBuild());
+                    }
                     break;
                 default:
                     throw new ArgumentOutOfRangeException();
@@ -6645,10 +6644,18 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var slotLevels = GetSlotLevels();
             var flag1 = false;
             var index6 = 0;
+            var staticMode = MidsContext.Config.BuildMode is Enums.dmModes.Respec or Enums.dmModes.Normal;
             for (var index2 = 0; index2 < tp.Length; index2++)
             {
                 for (var index4 = 1; index4 < tp[numArray1[index2]].SlotCount; index4++)
                 {
+                    var slot = tp[numArray1[index2]].Slots[index4];
+                    if (slot.Source == SlotSourceKind.Granted)
+                    {
+                        tp[numArray1[index2]].Slots[index4].Level = Math.Max(tp[numArray1[index2]].Level, slot.Level);
+                        continue;
+                    }
+
                     if (index6 == slotLevels.Length)
                     {
                         flag1 = true;
@@ -6660,8 +6667,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         continue;
                     }
 
-                    if (tp[numArray1[index2]].NIDPower == -1 ||
-                        !DatabaseAPI.Database.Power[tp[numArray1[index2]].NIDPower].AllowFrontLoading)
+                    if (!staticMode &&
+                        (tp[numArray1[index2]].NIDPower == -1 ||
+                         !DatabaseAPI.Database.Power[tp[numArray1[index2]].NIDPower].AllowFrontLoading))
                     {
                         while (slotLevels[index6] <= tp[numArray1[index2]].Level)
                         {
@@ -7347,7 +7355,9 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 ++index;
             } while (index <= 19);
 
-            if ((MidsContext.Character.CurrentBuild.Powers[sourcePower].Slots[sourceSlot].Level <
+            var enforceChronology = MidsContext.Config.BuildMode == Enums.dmModes.LevelUp;
+            if (enforceChronology &&
+                (MidsContext.Character.CurrentBuild.Powers[sourcePower].Slots[sourceSlot].Level <
                  MidsContext.Character.CurrentBuild.Powers[destPower].Level) & !DatabaseAPI.Database
                 .Power[MidsContext.Character.CurrentBuild.Powers[destPower].NIDPower].AllowFrontLoading)
             {
@@ -7359,7 +7369,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 }
             }
 
-            if ((MidsContext.Character.CurrentBuild.Powers[destPower].Slots[destSlot].Level <
+            if (enforceChronology &&
+                (MidsContext.Character.CurrentBuild.Powers[destPower].Slots[destSlot].Level <
                  MidsContext.Character.CurrentBuild.Powers[sourcePower].Level) & !DatabaseAPI.Database
                 .Power[MidsContext.Character.CurrentBuild.Powers[sourcePower].NIDPower].AllowFrontLoading)
             {
@@ -8154,8 +8165,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             var toBlameSet = string.Empty;
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
-            MidsContext.Character.CurrentBuild.LastPower = 24;
-            //MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
+            var importedLevel = Math.Clamp(characterInfo.Level - 1, 0, Character.MaxLevel);
+            var progressionPolicy = DatabaseAPI.GetBuildProgressionPolicy(MidsContext.Config?.DataPath);
+            MidsContext.Character.SetExplicitBuildLevel(importedLevel);
+            MidsContext.Character.CurrentBuild.LastPower =
+                Math.Max(0, progressionPolicy.GetNormalPowerPickCountAtLevel(importedLevel) - 1);
 
             var powerEntryList = listPowers.OrderBy(x => x.Level).ToList();
             var pickedSlots = 0;
@@ -8231,10 +8245,17 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     {
                         if (i == 0)
                         {
+                            pe.Slots[i].Source = SlotSourceKind.AutoBase;
                             pe.Slots[i].Level = pe.Level;
+                        }
+                        else if (pe.Slots[i].Source == SlotSourceKind.Granted || pe.Slots[i].IsInherent)
+                        {
+                            pe.Slots[i].Source = SlotSourceKind.Granted;
+                            pe.Slots[i].Level = Math.Max(pe.Level, pe.Slots[i].Level);
                         }
                         else
                         {
+                            pe.Slots[i].Source = SlotSourceKind.Bought;
                             pe.Slots[i].Level = sl.PickSlot();
                             pickedSlots++;
                         }
@@ -8293,8 +8314,8 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
             else
             {
-                MidsContext.Character.RequestedLevel = Character.MaxLevel;
-                MidsContext.Character.SetLevelTo(Character.MaxLevel);
+                MidsContext.Character.RequestedLevel = importedLevel;
+                MidsContext.Character.SetLevelTo(importedLevel);
             }
 
             MidsContext.Archetype = MidsContext.Character.Archetype;

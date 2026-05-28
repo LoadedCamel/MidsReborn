@@ -61,7 +61,7 @@ namespace Mids_Reborn.UI.Forms
         private const float BaselineHeaderOriginLabelWidth = 74f;
         private const float BaselineHeaderOriginWidth = 128f;
         private const float BaselineHeaderModeLabelWidth = 76f;
-        private const float BaselineHeaderModeWidth = 196f;
+        private const float BaselineHeaderModeWidth = 282f;
         private const float BaselineHeaderTotalsWidth = 140f;
         private const float BaselineHeaderCombatWidth = 114f;
         private const float BaselineHeaderContentHeight = 40f;
@@ -82,6 +82,9 @@ namespace Mids_Reborn.UI.Forms
         private PoolSectionBinding[] _poolSections = [];
         private Label? _modeLabel;
         private MidsSegmentedToggle? _plannerModeToggle;
+        private TableLayoutPanel? _plannerModeHost;
+        private Label? _staticLevelLabel;
+        private NumericUpDown? _staticLevelInput;
         private MidsSegmentedToggle? _pvModeToggle;
         private Panel? _headerChromeHost;
         private MidsWorkspaceShellPanel? _nameInputShell;
@@ -90,6 +93,7 @@ namespace Mids_Reborn.UI.Forms
         private MidsWorkspaceShellPanel? _rightBuildShell;
         private TableLayoutPanel? _rightBuildShellLayout;
         private bool _syncingPlannerModeToggle;
+        private bool _syncingStaticLevelInput;
         private bool _syncingPvModeToggle;
         private System.Drawing.Icon? _shellLargeIcon;
         private System.Drawing.Icon? _shellSmallIcon;
@@ -399,12 +403,52 @@ namespace Mids_Reborn.UI.Forms
             {
                 Dock = DockStyle.Fill,
                 Font = new Font("Noto Sans SemiBold", 9.25F, FontStyle.Bold, GraphicsUnit.Point, 0),
-                Margin = new Padding(3, 4, 12, 4),
+                Margin = new Padding(0, 0, 8, 0),
                 Name = "plannerModeToggle"
             };
             _plannerModeToggle.SetItems("Level-Up", "Respec");
             _plannerModeToggle.SelectedIndexChanged += PlannerModeToggle_SelectedIndexChanged;
             tTip.SetToolTip(_plannerModeToggle, "Build Mode");
+
+            _staticLevelLabel = new Label
+            {
+                AutoSize = true,
+                Dock = DockStyle.Fill,
+                Margin = new Padding(0, 0, 4, 0),
+                Name = "lblStaticLevelNative",
+                Text = "Level"
+            };
+            ApplyHeaderLabelStyle(_staticLevelLabel);
+            _staticLevelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
+
+            _staticLevelInput = new NumericUpDown
+            {
+                Dock = DockStyle.Fill,
+                Margin = new Padding(0, 6, 0, 6),
+                Minimum = 1,
+                Maximum = Character.MaxLevel + 1,
+                Name = "nudStaticBuildLevel",
+                TextAlign = HorizontalAlignment.Center,
+                Width = 64
+            };
+            _staticLevelInput.ValueChanged += StaticLevelInput_ValueChanged;
+            tTip.SetToolTip(_staticLevelInput, "Static build level");
+
+            _plannerModeHost = new TableLayoutPanel
+            {
+                ColumnCount = 3,
+                Dock = DockStyle.Fill,
+                Margin = new Padding(3, 4, 12, 4),
+                Name = "plannerModeHost",
+                Padding = Padding.Empty,
+                RowCount = 1
+            };
+            _plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            _plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            _plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 60F));
+            _plannerModeHost.Controls.Add(_plannerModeToggle, 0, 0);
+            _plannerModeHost.Controls.Add(_staticLevelLabel, 1, 0);
+            _plannerModeHost.Controls.Add(_staticLevelInput, 2, 0);
 
             _pvModeToggle = new MidsSegmentedToggle
             {
@@ -433,7 +477,7 @@ namespace Mids_Reborn.UI.Forms
             ConfigureRightActionStripColumns();
 
             characterLayoutPanel.Controls.Add(_modeLabel, 6, 0);
-            characterLayoutPanel.Controls.Add(_plannerModeToggle, 7, 0);
+            characterLayoutPanel.Controls.Add(_plannerModeHost, 7, 0);
             characterLayoutPanel.Controls.Add(combatEx, 9, 0);
             characterLayoutPanel.SetColumn(lblName, 0);
             if (_nameInputShell is not null)
@@ -446,7 +490,7 @@ namespace Mids_Reborn.UI.Forms
             characterLayoutPanel.SetColumn(lblOrigin, 4);
             characterLayoutPanel.SetColumn(originDropDown, 5);
             characterLayoutPanel.SetColumn(_modeLabel, 6);
-            characterLayoutPanel.SetColumn(_plannerModeToggle, 7);
+            characterLayoutPanel.SetColumn(_plannerModeHost, 7);
             characterLayoutPanel.SetColumn(totalsEx, 8);
             characterLayoutPanel.SetColumn(combatEx, 9);
 
@@ -474,6 +518,7 @@ namespace Mids_Reborn.UI.Forms
             ApplyHeaderNameInputStyle();
             LayoutHeaderNameInput();
             SyncPlannerModeToggle();
+            SyncStaticLevelControl();
             SyncPvModeToggle();
         }
 
@@ -712,6 +757,27 @@ namespace Mids_Reborn.UI.Forms
             _syncingPlannerModeToggle = false;
         }
 
+        private void SyncStaticLevelControl()
+        {
+            if (_staticLevelLabel is null || _staticLevelInput is null || MidsContext.Character is null)
+            {
+                return;
+            }
+
+            var isStaticMode = NormalizePlannerBuildMode(MidsContext.Config?.BuildMode ?? Enums.dmModes.LevelUp) == Enums.dmModes.Respec;
+            _staticLevelLabel.Visible = isStaticMode;
+            _staticLevelInput.Visible = isStaticMode;
+            if (!isStaticMode)
+            {
+                return;
+            }
+
+            _syncingStaticLevelInput = true;
+            var level = MidsContext.Character.GetEffectiveStaticBuildLevel() + 1;
+            _staticLevelInput.Value = Math.Clamp(level, (int)_staticLevelInput.Minimum, (int)_staticLevelInput.Maximum);
+            _syncingStaticLevelInput = false;
+        }
+
         private void SyncPvModeToggle()
         {
             if (_pvModeToggle is null)
@@ -733,8 +799,13 @@ namespace Mids_Reborn.UI.Forms
 
             buildMode = NormalizePlannerBuildMode(buildMode);
 
+            if (buildMode == Enums.dmModes.Respec && MidsContext.Character is not null && !MidsContext.Character.HasExplicitBuildLevel)
+            {
+                MidsContext.Character.SetExplicitBuildLevel(MidsContext.Character.InferStaticBuildLevelFromCurrentBuild());
+            }
+
             MidsContext.Config.BuildMode = buildMode;
-            if (buildMode == Enums.dmModes.LevelUp && DatabaseAPI.ServerData.EnableInherentSlotting)
+            if (buildMode == Enums.dmModes.LevelUp)
             {
                 MainModule.MidsController.Toon.ClearInvalidInherentSlots();
             }
@@ -745,7 +816,21 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
+            SyncStaticLevelControl();
             MidsContext.Character?.ResetLevel();
+            PowerModified(markModified: false);
+            UpdateDmBuffer();
+        }
+
+        private void StaticLevelInput_ValueChanged(object? sender, EventArgs e)
+        {
+            if (_syncingStaticLevelInput || _staticLevelInput is null || MidsContext.Character is null)
+            {
+                return;
+            }
+
+            MidsContext.Character.SetExplicitBuildLevel((int)_staticLevelInput.Value - 1);
+            MidsContext.Character.Validate();
             PowerModified(markModified: false);
             UpdateDmBuffer();
         }
@@ -1389,7 +1474,6 @@ namespace Mids_Reborn.UI.Forms
                     return;
                 }
 
-                ApplyLeftUiScale(true);
                 UpdateUiLayout(true);
                 canvas.RequestFullRedraw();
                 canvas.ResizeToContent();
@@ -3424,6 +3508,7 @@ namespace Mids_Reborn.UI.Forms
 
             MidsContext.Character?.Validate();
             ProcessLocks();
+            SyncStaticLevelControl();
             UpdateFooterSummary();
             if (redraw)
             {
@@ -4137,8 +4222,11 @@ namespace Mids_Reborn.UI.Forms
 
             var toBlameSet = string.Empty;
             MidsContext.Character.LoadPowersetsByName2(listPowersets, ref toBlameSet);
-            MidsContext.Character.CurrentBuild.LastPower = 24;
-            //MidsContext.Character.GetPowersByLevel(characterInfo.Level - 1);
+            var importedLevel = Math.Clamp(characterInfo.Level - 1, 0, Character.MaxLevel);
+            var progressionPolicy = DatabaseAPI.GetBuildProgressionPolicy(MidsContext.Config?.DataPath);
+            MidsContext.Character.SetExplicitBuildLevel(importedLevel);
+            MidsContext.Character.CurrentBuild.LastPower =
+                Math.Max(0, progressionPolicy.GetNormalPowerPickCountAtLevel(importedLevel) - 1);
 
             var powerEntryList = listPowers.OrderBy(x => x.Level).ToList();
             var pickedSlots = 0;
@@ -4213,10 +4301,17 @@ namespace Mids_Reborn.UI.Forms
                     {
                         if (i == 0)
                         {
+                            pe.Slots[i].Source = SlotSourceKind.AutoBase;
                             pe.Slots[i].Level = pe.Level;
+                        }
+                        else if (pe.Slots[i].Source == SlotSourceKind.Granted || pe.Slots[i].IsInherent)
+                        {
+                            pe.Slots[i].Source = SlotSourceKind.Granted;
+                            pe.Slots[i].Level = Math.Max(pe.Level, pe.Slots[i].Level);
                         }
                         else
                         {
+                            pe.Slots[i].Source = SlotSourceKind.Bought;
                             pe.Slots[i].Level = sl.PickSlot();
                             pickedSlots++;
                         }
@@ -4275,8 +4370,8 @@ namespace Mids_Reborn.UI.Forms
             }
             else
             {
-                MidsContext.Character.RequestedLevel = Character.MaxLevel;
-                MidsContext.Character.SetLevelTo(Character.MaxLevel);
+                MidsContext.Character.RequestedLevel = importedLevel;
+                MidsContext.Character.SetLevelTo(importedLevel);
             }
 
             MidsContext.Archetype = MidsContext.Character.Archetype;
@@ -4935,6 +5030,7 @@ namespace Mids_Reborn.UI.Forms
             }
 
             SyncPlannerModeToggle();
+            SyncStaticLevelControl();
         }
 
         private void FixStatIncludes()
@@ -5123,6 +5219,7 @@ namespace Mids_Reborn.UI.Forms
             };
             SyncPvModeToggle();
             SyncPlannerModeToggle();
+            SyncStaticLevelControl();
 
             slotInfoEx.ToggleState = MidsContext.Config.ShowSlotsLeft switch
             {
@@ -5253,9 +5350,13 @@ namespace Mids_Reborn.UI.Forms
         {
             if (isLocked)
             {
-                dropDown.Lock(GetDropDownLockText(dropDown));
+                var lockText = GetDropDownLockText(dropDown);
+                if (!dropDown.IsLocked || !string.Equals(dropDown.LockedText, lockText, StringComparison.Ordinal))
+                {
+                    dropDown.Lock(lockText);
+                }
             }
-            else
+            else if (dropDown.IsLocked)
             {
                 dropDown.Unlock();
             }
@@ -6165,9 +6266,11 @@ namespace Mids_Reborn.UI.Forms
                 ++index;
             } while (index <= 19);
 
-            if ((MidsContext.Character.CurrentBuild.Powers[sourcePower].Slots[sourceSlot].Level <
+            var enforceChronology = MidsContext.Config.BuildMode == Enums.dmModes.LevelUp;
+            if (enforceChronology &&
+                (MidsContext.Character.CurrentBuild.Powers[sourcePower].Slots[sourceSlot].Level <
                  MidsContext.Character.CurrentBuild.Powers[destPower].Level) & !DatabaseAPI.Database
-                    .Power[MidsContext.Character.CurrentBuild.Powers[destPower].NIDPower].AllowFrontLoading)
+                .Power[MidsContext.Character.CurrentBuild.Powers[destPower].NIDPower].AllowFrontLoading)
             {
                 CheckInitDdsaValue(13, 0, "Slot being level-swapped is too low for the destination power",
                     "Allow swap anyway (mark as invalid)");
@@ -6177,9 +6280,10 @@ namespace Mids_Reborn.UI.Forms
                 }
             }
 
-            if ((MidsContext.Character.CurrentBuild.Powers[destPower].Slots[destSlot].Level <
+            if (enforceChronology &&
+                (MidsContext.Character.CurrentBuild.Powers[destPower].Slots[destSlot].Level <
                  MidsContext.Character.CurrentBuild.Powers[sourcePower].Level) & !DatabaseAPI.Database
-                    .Power[MidsContext.Character.CurrentBuild.Powers[sourcePower].NIDPower].AllowFrontLoading)
+                .Power[MidsContext.Character.CurrentBuild.Powers[sourcePower].NIDPower].AllowFrontLoading)
             {
                 CheckInitDdsaValue(14, 0, "Slot being level-swapped is too low for the source power",
                     "Allow swap anyway (mark as invalid)");
@@ -6912,10 +7016,18 @@ namespace Mids_Reborn.UI.Forms
             var slotLevels = GetSlotLevels();
             var flag1 = false;
             var index6 = 0;
+            var staticMode = NormalizePlannerBuildMode(MidsContext.Config.BuildMode) == Enums.dmModes.Respec;
             for (var index2 = 0; index2 < tp.Length; index2++)
             {
                 for (var index4 = 1; index4 < tp[numArray1[index2]].SlotCount; index4++)
                 {
+                    var slot = tp[numArray1[index2]].Slots[index4];
+                    if (slot.Source == SlotSourceKind.Granted)
+                    {
+                        tp[numArray1[index2]].Slots[index4].Level = Math.Max(tp[numArray1[index2]].Level, slot.Level);
+                        continue;
+                    }
+
                     if (index6 == slotLevels.Length)
                     {
                         flag1 = true;
@@ -6927,8 +7039,9 @@ namespace Mids_Reborn.UI.Forms
                         continue;
                     }
 
-                    if (tp[numArray1[index2]].NIDPower == -1 ||
-                        !DatabaseAPI.Database.Power[tp[numArray1[index2]].NIDPower].AllowFrontLoading)
+                    if (!staticMode &&
+                        (tp[numArray1[index2]].NIDPower == -1 ||
+                         !DatabaseAPI.Database.Power[tp[numArray1[index2]].NIDPower].AllowFrontLoading))
                     {
                         while (slotLevels[index6] <= tp[numArray1[index2]].Level)
                         {

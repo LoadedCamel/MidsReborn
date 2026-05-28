@@ -79,6 +79,11 @@ public class MidsDropDownList : ComboBox
         set { _placeholderText = value; Invalidate(); }
     }
 
+    [Category("Appearance")]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    [Browsable(false)]
+    public string? LockedText => _lockedText;
+
     [Category("Data")]
     [Description("Callback that returns a Bitmap for a given bound item. Used to auto-populate ItemIcons.")]
     public Func<object, Bitmap?>? IconProvider { get; set; }

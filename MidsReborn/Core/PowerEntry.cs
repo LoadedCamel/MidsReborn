@@ -82,7 +82,7 @@ namespace Mids_Reborn.Core
                     Slots[0].Enhancement = new I9Slot();
                     Slots[0].FlippedEnhancement = new I9Slot();
                     Slots[0].Level = iLevel;
-                    Slots[0].IsInherent = false;
+                    Slots[0].Source = SlotSourceKind.AutoBase;
                 }
                 else
                 {
@@ -190,7 +190,8 @@ namespace Mids_Reborn.Core
             for (var index = 0; index < SlotCount; index++)
             {
                 powerEntry.Slots[index].Level = Slots[index].Level;
-                powerEntry.Slots[index].IsInherent = Slots[index].IsInherent;
+                powerEntry.Slots[index].Source = Slots[index].Source;
+                powerEntry.Slots[index].GrantedRuleId = Slots[index].GrantedRuleId;
                 powerEntry.Slots[index].Enhancement = Slots[index].Enhancement.Clone() as I9Slot;
                 powerEntry.Slots[index].FlippedEnhancement = Slots[index].FlippedEnhancement.Clone() as I9Slot;
             }
@@ -357,6 +358,11 @@ namespace Mids_Reborn.Core
 
         public int AddSlot(int iLevel, bool isInherent = false)
         {
+            return AddSlot(iLevel, isInherent ? SlotSourceKind.Granted : SlotSourceKind.Bought);
+        }
+
+        public int AddSlot(int iLevel, SlotSourceKind source, string? grantedRuleId = null)
+        {
             int slotIdx;
             if ((Slots.Length > 5) | !DatabaseAPI.Database.Power[NIDPower].Slottable)
             {
@@ -394,10 +400,6 @@ namespace Mids_Reborn.Core
                             continue;
                         }
                         ++index3;
-                        if (index3 is > 0 and < 2 && isInherent)
-                        {
-                            Slots[index3].IsInherent = true;
-                        }
                         slotEntryArray[index2].Assign(Slots[index3]);
                     }
 
@@ -408,11 +410,6 @@ namespace Mids_Reborn.Core
                         {
                             continue;
                         }
-
-                        if (index2 is > 0 and < 2 && isInherent)
-                        {
-                            slotEntryArray[index2].IsInherent = true;
-                        }
                         Slots[index2].Assign(slotEntryArray[index2]);
                     }
                 }
@@ -420,11 +417,8 @@ namespace Mids_Reborn.Core
                 Slots[index1].Enhancement = new I9Slot();
                 Slots[index1].FlippedEnhancement = new I9Slot();
                 Slots[index1].Level = iLevel;
-                if (isInherent)
-                {
-                    Slots[index1].IsInherent = true;
-                    Slots[index1].Level = iLevel - 1;
-                }
+                Slots[index1].Source = source;
+                Slots[index1].GrantedRuleId = source == SlotSourceKind.Granted ? grantedRuleId : null;
                 slotIdx = index1;
             }
             return slotIdx;
@@ -444,6 +438,7 @@ namespace Mids_Reborn.Core
                     Slots[0].Enhancement = new I9Slot();
                     Slots[0].FlippedEnhancement = new I9Slot();
                     Slots[0].Level = lvl;
+                    Slots[0].Source = SlotSourceKind.AutoBase;
 
                     return 0;
                 }
@@ -453,7 +448,8 @@ namespace Mids_Reborn.Core
                 {
                     Enhancement = new I9Slot(),
                     FlippedEnhancement = new I9Slot(),
-                    Level = lvl
+                    Level = lvl,
+                    Source = SlotSourceKind.Bought
                 });
 
                 Slots = slotsList.ToArray();
@@ -476,41 +472,21 @@ namespace Mids_Reborn.Core
                 return false;
             }
 
-            if ((slotIdx > 0) & Slots[slotIdx].IsInherent && MidsContext.Config.BuildMode is Enums.dmModes.Normal && DatabaseAPI.ServerData.EnableInherentSlotting)
+            if (slotIdx > 0 && Slots[slotIdx].Source == SlotSourceKind.Granted)
             {
-                message = "This slot is an inherent slot and can only be removed/re-assigned in Respec mode which assumes you have 6 slotted the power in game prior to respec.";
-                return false;
-            }
-
-            if ((slotIdx > 0) & Slots[slotIdx].IsInherent && MidsContext.Config.BuildMode is Enums.dmModes.LevelUp && DatabaseAPI.ServerData.EnableInherentSlotting)
-            {
-                switch (Power.FullName)
+                var policy = DatabaseAPI.GetBuildProgressionPolicy(MidsContext.Config?.DataPath);
+                var canRemove = MidsContext.Config.BuildMode switch
                 {
-                    case "Inherent.Fitness.Health":
-                        if (Level < DatabaseAPI.ServerData.HealthSlot1Level)
-                        {
-                            return true;
-                        }
-                        else if (Level < DatabaseAPI.ServerData.HealthSlot2Level)
-                        {
-                            return true;
-                        }
-
-                        break;
-                    case "Inherent.Fitness.Stamina":
-                        if (Level < DatabaseAPI.ServerData.StaminaSlot1Level)
-                        {
-                            return true;
-                        }
-                        else if (Level < DatabaseAPI.ServerData.StaminaSlot2Level)
-                        {
-                            return true;
-                        }
-
-                        break;
+                    Enums.dmModes.LevelUp => false,
+                    Enums.dmModes.Normal or Enums.dmModes.Respec =>
+                        !policy.TryGetGrantedSlotRule(Slots[slotIdx].GrantedRuleId, out var rule) || rule.CanRemoveInRespec,
+                    _ => true
+                };
+                if (!canRemove)
+                {
+                    message = "This granted slot is restricted by the active server progression rules and cannot be removed in this build mode.";
+                    return false;
                 }
-                message = "This slot is an inherent slot and can only be removed/re-assigned in Respec mode which assumes you have 6 slotted the power in game prior to respec.";
-                return false;
             }
 
             if (slotIdx != 0 || Slots.Length <= 1)

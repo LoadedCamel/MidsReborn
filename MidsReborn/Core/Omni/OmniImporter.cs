@@ -7611,6 +7611,9 @@ public sealed partial class OmniImporter
         database.PlannerRulesetId = resolvedRulesetId;
         database.PlannerRulesetVersion = ServerRulesProfileResolver.ResolvePlannerRulesetVersion(resolvedRulesetId);
         database.HasCanonicalOmniPlannerMath = resolvedRulesetId != PlannerRulesetId.Legacy;
+        database.BuildProgressionMetadata = LoadBuildProgressionMetadata(result.ExportRoot, resolvedProviderId) ??
+                                            database.BuildProgressionMetadata ??
+                                            new BuildProgressionMetadata();
         if (applyResult != null)
         {
             applyResult.ClassAttributesStored = result.ClassAttributes.Count;

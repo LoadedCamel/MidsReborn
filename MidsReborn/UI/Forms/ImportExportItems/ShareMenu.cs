@@ -288,13 +288,13 @@ namespace Mids_Reborn.UI.Forms.ImportExportItems
                 //if (longFormat && pe.Slots.Length > 0)
                 if (pe.Slots.Length > 0)
                 {
-                    txt += tg.List();
-                    for (var i = 0; i < pe.Slots.Length; i++)
-                    {
-                        txt += tg.ListItem(tg.Color(activeTheme.Slots, pe.Slots[i].Enhancement.Enh < 0
-                            ? "(Empty)"
-                            : $"{tg.Color(activeTheme.Levels, pe.Slots[i].Level <= pe.Level ? "A" : $"{pe.Slots[i].Level + 1}")}: {tg.Color(activeTheme.Slots, DatabaseAPI.Database.Enhancements[pe.Slots[i].Enhancement.Enh].LongName)}"));
-                    }
+                        txt += tg.List();
+                        for (var i = 0; i < pe.Slots.Length; i++)
+                        {
+                            txt += tg.ListItem(tg.Color(activeTheme.Slots, pe.Slots[i].Enhancement.Enh < 0
+                                ? "(Empty)"
+                                : $"{tg.Color(activeTheme.Levels, pe.Slots[i].GetDisplayLevelLabel())}: {tg.Color(activeTheme.Slots, DatabaseAPI.Database.Enhancements[pe.Slots[i].Enhancement.Enh].LongName)}"));
+                        }
 
                     txt += tg.List(true);
                 }
@@ -339,7 +339,7 @@ namespace Mids_Reborn.UI.Forms.ImportExportItems
                     {
                         txt += tg.ListItem(tg.Color(activeTheme.Slots, pe.Slots[i].Enhancement.Enh < 0
                             ? "(Empty)"
-                            : $"{tg.Color(activeTheme.Levels, pe.Slots[i].Level <= pe.Level ? "A" : $"{pe.Slots[i].Level + 1}")}: {tg.Color(activeTheme.Slots, DatabaseAPI.Database.Enhancements[pe.Slots[i].Enhancement.Enh].LongName)}"));
+                            : $"{tg.Color(activeTheme.Levels, pe.Slots[i].GetDisplayLevelLabel())}: {tg.Color(activeTheme.Slots, DatabaseAPI.Database.Enhancements[pe.Slots[i].Enhancement.Enh].LongName)}"));
                     }
 
                     txt += tg.List(true);

@@ -46,6 +46,7 @@ internal sealed class MidsTotalsDualColumnHost : Panel
         var inset = ScalePx(1);
         var width = proposedSize.Width > 0 ? proposedSize.Width : Width;
         var columnWidth = Math.Max(1, (width - inset * 2 - gap) / 2);
+        SynchronizeLabelWidths();
         var leftSize = _left.GetPreferredSize(new Size(columnWidth, 0));
         var rightSize = _right.GetPreferredSize(new Size(columnWidth, 0));
         return new Size(width, inset * 2 + Math.Max(leftSize.Height, rightSize.Height));
@@ -58,6 +59,7 @@ internal sealed class MidsTotalsDualColumnHost : Panel
         var inset = ScalePx(1);
         var width = Math.Max(1, ClientSize.Width);
         var columnWidth = Math.Max(1, (width - inset * 2 - gap) / 2);
+        SynchronizeLabelWidths();
         var leftSize = _left.GetPreferredSize(new Size(columnWidth, 0));
         var rightSize = _right.GetPreferredSize(new Size(columnWidth, 0));
         var height = Math.Max(leftSize.Height, rightSize.Height);
@@ -70,4 +72,16 @@ internal sealed class MidsTotalsDualColumnHost : Panel
     }
 
     private int ScalePx(int value) => Math.Max(1, (int)Math.Round(value * _uiScale));
+
+    private void SynchronizeLabelWidths()
+    {
+        if (_left is not MidsTotalsBarList leftList || _right is not MidsTotalsBarList rightList)
+        {
+            return;
+        }
+
+        var sharedWidth = Math.Max(leftList.MeasureDesiredLabelWidth(), rightList.MeasureDesiredLabelWidth());
+        leftList.SharedLabelWidth = sharedWidth;
+        rightList.SharedLabelWidth = sharedWidth;
+    }
 }

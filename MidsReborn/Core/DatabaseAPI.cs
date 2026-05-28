@@ -192,6 +192,56 @@ namespace Mids_Reborn.Core
             return ServerRulesProfileResolver.Resolve(GetDataProviderId(), GetPlannerRulesetId());
         }
 
+        public static BuildProgressionMetadata GetBuildProgressionMetadata(string? dataPath = null)
+        {
+            Database.BuildProgressionMetadata ??= new BuildProgressionMetadata();
+            if (!Database.BuildProgressionMetadata.HasCharacterLevels)
+            {
+                var legacyLevels = LoadLegacyNormalLevels(dataPath);
+                Database.BuildProgressionMetadata = BuildProgressionMetadata.CreateLegacy(
+                    legacyLevels,
+                    ServerData,
+                    GetDataProviderId());
+            }
+            else if (Database.BuildProgressionMetadata.GrantedSlotRules.Count == 0 && ServerData.EnableInherentSlotting)
+            {
+                var legacyMetadata = BuildProgressionMetadata.CreateLegacy(
+                    new BuildProgressionPolicy(Database.BuildProgressionMetadata).CreateChronologyLevels(),
+                    ServerData,
+                    GetDataProviderId());
+                Database.BuildProgressionMetadata.GrantedSlotRules = legacyMetadata.GrantedSlotRules;
+            }
+
+            return Database.BuildProgressionMetadata;
+        }
+
+        public static BuildProgressionPolicy GetBuildProgressionPolicy(string? dataPath = null)
+        {
+            return new BuildProgressionPolicy(GetBuildProgressionMetadata(dataPath));
+        }
+
+        private static LevelMap[] LoadLegacyNormalLevels(string? dataPath)
+        {
+            var path = string.IsNullOrWhiteSpace(dataPath)
+                ? AppDataPaths.SelectDataFileLoad(AppDataPaths.FileNLevels)
+                : AppDataPaths.SelectDataFileLoad(AppDataPaths.FileNLevels, dataPath);
+
+            using var stream = new StreamReader(path);
+            var row = FileIO.IOGrab(stream);
+            while (row[0] != "Level")
+            {
+                row = FileIO.IOGrab(stream);
+            }
+
+            var levels = new LevelMap[50];
+            for (var index = 0; index < 50; ++index)
+            {
+                levels[index] = new LevelMap(FileIO.IOGrab(stream));
+            }
+
+            return levels;
+        }
+
         internal static EnhancementMathPolicy GetEnhancementMathPolicy()
         {
             return GetServerRulesProfile().GetEnhancementMathPolicy(Database?.EnhancementImportMetadata);
@@ -2418,59 +2468,18 @@ namespace Mids_Reborn.Core
 
         public static bool LoadLevelsDatabase(string? iPath)
         {
-            var path = string.Empty;
-            if (MidsContext.Config != null)
-            {
-                switch (MidsContext.Config.BuildMode)
-                {
-                    case Enums.dmModes.LevelUp or Enums.dmModes.Normal:
-                        path = string.IsNullOrWhiteSpace(iPath)
-                            ? AppDataPaths.SelectDataFileLoad(AppDataPaths.FileNLevels)
-                            : AppDataPaths.SelectDataFileLoad(AppDataPaths.FileNLevels, iPath);
-                        break;
-                    case Enums.dmModes.Respec:
-                        path = string.IsNullOrWhiteSpace(iPath)
-                            ? AppDataPaths.SelectDataFileLoad(AppDataPaths.FileRLevels)
-                            : AppDataPaths.SelectDataFileLoad(AppDataPaths.FileRLevels, iPath);
-                        break;
-                }
-            }
-
             Database.Levels = Array.Empty<LevelMap>();
-            StreamReader iStream;
             try
             {
-                iStream = new StreamReader(path);
+                var policy = GetBuildProgressionPolicy(iPath);
+                Database.Levels = policy.CreateChronologyLevels();
+                Database.Levels_MainPowers = policy.CreateMainPowerLevels(Database.Levels);
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", "Error!");
                 return false;
             }
-
-            var strArray = FileIO.IOGrab(iStream);
-            while (strArray[0] != "Level")
-            {
-                strArray = FileIO.IOGrab(iStream);
-            }
-
-            Database.Levels = new LevelMap[50];
-            for (var index = 0; index < 50; ++index)
-            {
-                Database.Levels[index] = new LevelMap(FileIO.IOGrab(iStream));
-            }
-
-            var intList = new List<int> {0};
-            for (var index = 0; index <= Database.Levels.Length - 1; ++index)
-            {
-                if (Database.Levels[index].Powers > 0)
-                {
-                    intList.Add(index);
-                }
-            }
-
-            Database.Levels_MainPowers = intList.ToArray();
-            iStream.Close();
             return true;
         }
 

@@ -49,10 +49,12 @@ public sealed class PowerStatsGrid : Control
     private const TextFormatFlags CellFlags =
         TextFormatFlags.VerticalCenter |
         TextFormatFlags.EndEllipsis |
+        TextFormatFlags.SingleLine |
         TextFormatFlags.NoPadding;
 
     private const TextFormatFlags HeaderFlags =
         TextFormatFlags.VerticalCenter |
+        TextFormatFlags.SingleLine |
         TextFormatFlags.EndEllipsis;
 
     #endregion
@@ -81,8 +83,8 @@ public sealed class PowerStatsGrid : Control
     private int _hoverItem = -1;
 
     // Column width ratio within a single Stat|Value pair.
-    private float _wLabel = 0.46f;
-    private float _wValue = 0.54f;
+    private float _wLabel = 0.50f;
+    private float _wValue = 0.50f;
 
     #endregion
 
@@ -252,8 +254,12 @@ public sealed class PowerStatsGrid : Control
     private (Rectangle label, Rectangle value) GetPairColumns(Rectangle pairBounds, int pairGap, int itemInset)
     {
         int pairInnerWidth = Math.Max(0, pairBounds.Width - pairGap);
+        int minValueWidth = MeasureDesiredValueWidth();
+        int desiredLabelWidth = MeasureDesiredLabelWidth();
         float totalWeight = Math.Max(0.01f, _wLabel + _wValue);
-        int wLabel = (int)Math.Floor(pairInnerWidth * (_wLabel / totalWeight));
+        int fallbackLabelWidth = (int)Math.Floor(pairInnerWidth * (_wLabel / totalWeight));
+        int maxLabelWidth = Math.Max(0, pairInnerWidth - minValueWidth);
+        int wLabel = Math.Min(Math.Max(desiredLabelWidth, fallbackLabelWidth), maxLabelWidth);
         int wValue = Math.Max(0, pairInnerWidth - wLabel);
 
         var label = new Rectangle(
@@ -347,12 +353,64 @@ public sealed class PowerStatsGrid : Control
             g.FillRectangle(hov, pairBounds);
         }
 
-        string statLabel = row.Label.TrimEnd(':') + ":";
-        var label = statLabel + (row.AffectedByEd ? "  ⓔ" : "");
-        TextRenderer.DrawText(g, label, Font, labelBounds, Color.FromArgb(200, theme.Accent), Color.Transparent, CellFlags | TextFormatFlags.Right);
+        string statLabel = GetDisplayLabel(row);
+        using var affectedLabelFont = row.AffectedByEd
+            ? new Font("Segoe UI Symbol", Font.Size, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont)
+            : null;
+        var labelFont = affectedLabelFont ?? Font;
+        TextRenderer.DrawText(g, statLabel, labelFont, labelBounds, Color.FromArgb(200, theme.Accent), Color.Transparent, CellFlags | TextFormatFlags.Right);
 
         var (valueText, valueColor) = BuildValueCell(row, theme);
         TextRenderer.DrawText(g, valueText, Font, valueBounds, valueColor, Color.Transparent, CellFlags | TextFormatFlags.Left);
+    }
+
+    private int MeasureDesiredLabelWidth()
+    {
+        var max = 0;
+        foreach (var row in _rows)
+        {
+            using var affectedLabelFont = row.AffectedByEd
+                ? new Font("Segoe UI Symbol", Font.Size, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont)
+                : null;
+            var labelFont = affectedLabelFont ?? Font;
+            var measured = TextRenderer.MeasureText(
+                GetDisplayLabel(row),
+                labelFont,
+                new Size(int.MaxValue, int.MaxValue),
+                TextFormatFlags.NoPadding | TextFormatFlags.SingleLine).Width;
+            max = Math.Max(max, measured);
+        }
+
+        // Reserve the drawable text width plus the same inset removed from the label rect.
+        return Math.Max(ScalePx(56), max + ScalePx(6));
+    }
+
+    private int MeasureDesiredValueWidth()
+    {
+        var theme = CurrentTheme;
+        var max = 0;
+        foreach (var row in _rows)
+        {
+            var (valueText, _) = BuildValueCell(row, theme);
+            var measured = TextRenderer.MeasureText(
+                valueText,
+                Font,
+                new Size(int.MaxValue, int.MaxValue),
+                TextFormatFlags.NoPadding | TextFormatFlags.SingleLine).Width;
+            max = Math.Max(max, measured);
+        }
+
+        return Math.Max(ScalePx(58), max + ScalePx(4));
+    }
+
+    private static string GetDisplayLabel(Row row)
+    {
+        var compactLabel = row.Label.StartsWith("Accuracy (per activation)", StringComparison.Ordinal)
+            ? row.Label.Replace("Accuracy (per activation)", "Accuracy", StringComparison.Ordinal)
+            : row.Label;
+
+        var statLabel = compactLabel.TrimEnd(':') + ":";
+        return row.AffectedByEd ? statLabel + "  ⓔ" : statLabel;
     }
 
     private static (string text, Color color) BuildValueCell(Row row, DataViewTheme theme)

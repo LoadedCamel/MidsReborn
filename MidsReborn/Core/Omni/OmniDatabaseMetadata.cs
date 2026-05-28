@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mids_Reborn.Core;
 using Mids_Reborn.Core.PlannerRulesets;
 using Newtonsoft.Json.Linq;
 
@@ -36,6 +37,7 @@ public sealed class OmniDatabaseMetadata
     public bool HasCanonicalOmniPlannerMath { get; set; }
     public bool HasPersistedOmniRuntimeMetadata { get; set; }
     public Dictionary<string, OmniClassAttributeTable> ClassAttributes { get; set; } = new(StringComparer.OrdinalIgnoreCase);
+    public BuildProgressionMetadata BuildProgression { get; set; } = new();
     public EnhancementImportMetadata EnhancementImport { get; set; } = new();
     public PowerImportMetadata PowerImport { get; set; } = new();
     public EntityImportMetadata EntityImport { get; set; } = new();

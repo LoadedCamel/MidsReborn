@@ -9,6 +9,12 @@ namespace Mids_Reborn.Core
         public readonly int Powers;
         public readonly int Slots;
 
+        public LevelMap(int powers, int slots)
+        {
+            Powers = Math.Max(0, powers);
+            Slots = Math.Max(0, slots);
+        }
+
         public LevelMap(IList<string> ioString)
         {
             try

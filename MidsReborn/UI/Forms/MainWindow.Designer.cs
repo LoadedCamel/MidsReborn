@@ -522,10 +522,10 @@ namespace Mids_Reborn.UI.Forms
             modeEx.Size = new Size(168, 32);
             modeEx.TabIndex = 154;
             modeEx.Text = "ibModeEx1";
-            modeEx.ThreeState = true;
+            modeEx.ThreeState = false;
             modeEx.ToggleText.Indeterminate = "Respec";
             modeEx.ToggleText.ToggledOff = "Level-Up";
-            modeEx.ToggleText.ToggledOn = "Normal";
+            modeEx.ToggleText.ToggledOn = "Respec";
             tTip.SetToolTip(modeEx, "Build Mode");
             modeEx.Click += ibModeEx_OnClick;
             // 

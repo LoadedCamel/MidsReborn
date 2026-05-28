@@ -636,10 +636,14 @@ namespace Mids_Reborn.Core
                         powerEntry1.Slots = new SlotEntry[r.ReadSByte() + 1];
                         for (var index3 = 0; index3 < powerEntry1.Slots.Length; index3++)
                         {
+                            var slotLevel = r.ReadSByte();
+                            var isGranted = formatUsed == Formats.Current && r.ReadBoolean();
                             powerEntry1.Slots[index3] = new SlotEntry
                             {
-                                Level = r.ReadSByte(),
-                                IsInherent = formatUsed == Formats.Current && r.ReadBoolean(),
+                                Level = slotLevel,
+                                Source = isGranted
+                                    ? SlotSourceKind.Granted
+                                    : index3 == 0 ? SlotSourceKind.AutoBase : SlotSourceKind.Bought,
                                 Enhancement = new I9Slot(),
                                 FlippedEnhancement = new I9Slot()
                             };

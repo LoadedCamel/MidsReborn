@@ -3,14 +3,43 @@ namespace Mids_Reborn.Core
     public struct SlotEntry
     {
         public int Level;
-        public bool IsInherent;
+        public SlotSourceKind Source;
+        public string? GrantedRuleId;
         public I9Slot Enhancement;
         public I9Slot FlippedEnhancement;
+
+        public bool IsInherent
+        {
+            readonly get => Source == SlotSourceKind.Granted;
+            set
+            {
+                if (value)
+                {
+                    Source = SlotSourceKind.Granted;
+                }
+                else if (Source == SlotSourceKind.Granted)
+                {
+                    Source = SlotSourceKind.Bought;
+                    GrantedRuleId = null;
+                }
+            }
+        }
+
+        public readonly string GetDisplayLevelLabel()
+        {
+            return Source switch
+            {
+                SlotSourceKind.AutoBase => "A",
+                SlotSourceKind.Granted => $"G{Level + 1}",
+                _ => $"{Level + 1}"
+            };
+        }
 
         public void Assign(SlotEntry slotEntry)
         {
             Level = slotEntry.Level;
-            IsInherent = slotEntry.IsInherent;
+            Source = slotEntry.Source;
+            GrantedRuleId = slotEntry.GrantedRuleId;
             Enhancement = slotEntry.Enhancement.Clone() as I9Slot;
             FlippedEnhancement = slotEntry.FlippedEnhancement.Clone() as I9Slot;
         }

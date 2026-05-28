@@ -62,6 +62,8 @@ namespace Mids_Reborn.Core
 
         Dictionary<string, OmniClassAttributeTable> ClassAttributes { get; set; }
 
+        BuildProgressionMetadata BuildProgressionMetadata { get; set; }
+
         EnhancementImportMetadata EnhancementImportMetadata { get; set; }
 
         PowerImportMetadata PowerImportMetadata { get; set; }

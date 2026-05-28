@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.IO;
+using Mids_Reborn.Core;
 using Mids_Reborn.Core.Omni;
 using Mids_Reborn.Core.Utils;
 using Newtonsoft.Json;
@@ -85,6 +86,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public Dictionary<string, OmniClassAttributeTable> ClassAttributes { get; set; } = new(StringComparer.OrdinalIgnoreCase);
 
+        public BuildProgressionMetadata BuildProgressionMetadata { get; set; } = new();
+
         public EnhancementImportMetadata EnhancementImportMetadata { get; set; } = new();
 
         public PowerImportMetadata PowerImportMetadata { get; set; } = new();
@@ -158,6 +161,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             HasCanonicalOmniPlannerMath = false;
             HasPersistedOmniRuntimeMetadata = false;
             ClassAttributes = new Dictionary<string, OmniClassAttributeTable>(StringComparer.OrdinalIgnoreCase);
+            BuildProgressionMetadata = new BuildProgressionMetadata();
             EnhancementImportMetadata = new EnhancementImportMetadata();
             PowerImportMetadata = new PowerImportMetadata();
             EntityImportMetadata = new EntityImportMetadata();
@@ -173,7 +177,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             var version = reader.ReadInt32();
-            if (version is not 1 and not 2 and not 3 and not 4 and not 5 and not 6)
+            if (version is not 1 and not 2 and not 3 and not 4 and not 5 and not 6 and not 7)
             {
                 return;
             }
@@ -212,12 +216,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     ClassAttributes = metadata.ClassAttributes == null
                         ? new Dictionary<string, OmniClassAttributeTable>(StringComparer.OrdinalIgnoreCase)
                         : new Dictionary<string, OmniClassAttributeTable>(metadata.ClassAttributes, StringComparer.OrdinalIgnoreCase);
+                    BuildProgressionMetadata = metadata.BuildProgression ?? new BuildProgressionMetadata();
                     break;
                 }
                 case 3:
                 case 4:
                 case 5:
                 case 6:
+                case 7:
                 {
                     var metadata = JsonConvert.DeserializeObject<OmniDatabaseMetadata>(json) ?? new OmniDatabaseMetadata();
                     OmniImportSource = metadata.ImportSource;
@@ -229,6 +235,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     ClassAttributes = metadata.ClassAttributes == null
                         ? new Dictionary<string, OmniClassAttributeTable>(StringComparer.OrdinalIgnoreCase)
                         : new Dictionary<string, OmniClassAttributeTable>(metadata.ClassAttributes, StringComparer.OrdinalIgnoreCase);
+                    BuildProgressionMetadata = metadata.BuildProgression ?? new BuildProgressionMetadata();
                     EnhancementImportMetadata = metadata.EnhancementImport ?? new EnhancementImportMetadata();
                     PowerImportMetadata = metadata.PowerImport ?? new PowerImportMetadata();
                     EntityImportMetadata = metadata.EntityImport ?? new EntityImportMetadata();
@@ -245,7 +252,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public void StoreOmniMetadata(BinaryWriter writer)
         {
             writer.Write("MRB_OMNI_METADATA");
-            writer.Write(6);
+            writer.Write(7);
             writer.Write(JsonConvert.SerializeObject(new OmniDatabaseMetadata
             {
                 ImportSource = OmniImportSource,
@@ -255,6 +262,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 HasCanonicalOmniPlannerMath = HasCanonicalOmniPlannerMath,
                 HasPersistedOmniRuntimeMetadata = HasPersistedOmniRuntimeMetadata,
                 ClassAttributes = new Dictionary<string, OmniClassAttributeTable>(ClassAttributes, StringComparer.OrdinalIgnoreCase),
+                BuildProgression = BuildProgressionMetadata,
                 EnhancementImport = EnhancementImportMetadata,
                 PowerImport = PowerImportMetadata,
                 EntityImport = EntityImportMetadata

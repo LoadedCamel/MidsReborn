@@ -53,15 +53,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 int num2;
                 if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
                 {
-                    num2 = CurrentBuild.GetMaxLevel();
-                    if (_explicitBuildLevel > -1)
-                    {
-                        num2 = Math.Max(num2, _explicitBuildLevel);
-                    }
-                    else if (Complete)
-                    {
-                        num2 = Math.Max(num2, MaxLevel);
-                    }
+                    num2 = GetEffectiveStaticBuildLevel();
                 }
                 else
                 {
@@ -131,8 +123,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                 if (CurrentBuild is not null)
                 {
-                    slotsLeft = Build.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
-                    powersLeft = CurrentBuild.LastPower + 1 - CurrentBuild.PowersPlaced;
+                    if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
+                    {
+                        var policy = DatabaseAPI.GetBuildProgressionPolicy(MidsContext.Config?.DataPath);
+                        var level = GetEffectiveStaticBuildLevel();
+                        slotsLeft = policy.GetTotalSlotsAvailableAtLevel(level) - CurrentBuild.SlotsPlaced;
+                        powersLeft = policy.GetNormalPowerPickCountAtLevel(level) - CurrentBuild.PowersPlaced;
+                    }
+                    else
+                    {
+                        slotsLeft = Build.TotalSlotsAvailable - CurrentBuild.SlotsPlaced;
+                        powersLeft = CurrentBuild.LastPower + 1 - CurrentBuild.PowersPlaced;
+                    }
                 }
 
                 _completeCache = slotsLeft < 1 && powersLeft < 1;
@@ -234,6 +236,63 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
         }
 
+        public bool HasExplicitBuildLevel => _explicitBuildLevel > -1;
+
+        public int GetEffectiveStaticBuildLevel()
+        {
+            if (_explicitBuildLevel < 0)
+            {
+                SetExplicitBuildLevel(InferLegacyStaticBuildLevel());
+            }
+
+            return _explicitBuildLevel;
+        }
+
+        public int InferStaticBuildLevelFromCurrentBuild()
+        {
+            if (CurrentBuild == null)
+            {
+                return MaxLevel;
+            }
+
+            var inferred = -1;
+            var hasPlacedContent = false;
+
+            foreach (var power in CurrentBuild.Powers.Where(power => power != null))
+            {
+                if (power == null)
+                {
+                    continue;
+                }
+
+                if (power.Chosen && power.Power != null)
+                {
+                    inferred = Math.Max(inferred, power.Level);
+                    hasPlacedContent = true;
+                }
+
+                if (power.Slots.Length <= 1)
+                {
+                    continue;
+                }
+
+                inferred = Math.Max(inferred, power.Slots.Skip(1).Max(slot => slot.Level));
+                hasPlacedContent = true;
+            }
+
+            if (!hasPlacedContent)
+            {
+                return MaxLevel;
+            }
+
+            if (inferred < 0)
+            {
+                inferred = MaxLevel;
+            }
+
+            return Math.Clamp(inferred, 0, MaxLevel);
+        }
+
         public static void ParseCase()
         {
             Console.WriteLine(nameof(BoxingBuff));
@@ -246,7 +305,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 // Normal/Respec: rely on totals (not the level schedule).
                 if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
                 {
-                    if (Build.TotalSlotsAvailable - CurrentBuild.SlotsPlaced > 0 &&
+                    var policy = DatabaseAPI.GetBuildProgressionPolicy(MidsContext.Config?.DataPath);
+                    var boughtSlotsRemaining = policy.GetBoughtSlotCountAtLevel(GetEffectiveStaticBuildLevel()) -
+                                               CurrentBuild.BoughtSlotsPlaced;
+                    if (boughtSlotsRemaining > 0 &&
                         MidsContext.Config.BuildOption != Enums.dmItem.Power)
                         return true;
                 }
@@ -260,14 +322,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             SlotsRemaining > 0)
                             return true;
 
-                        // B) inherent slotting (Health/Stamina), if enabled
-                        if (SlotsRemaining > 0 && DatabaseAPI.ServerData.EnableInherentSlotting)
-                        {
-                            if (Level == DatabaseAPI.ServerData.HealthSlot1Level) return true;
-                            if (Level == DatabaseAPI.ServerData.HealthSlot2Level) return true;
-                            if (Level == DatabaseAPI.ServerData.StaminaSlot1Level) return true;
-                            if (Level == DatabaseAPI.ServerData.StaminaSlot2Level) return true;
-                        }
                     }
                 }
 
@@ -306,6 +360,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public void SetExplicitBuildLevel(int level)
         {
             _explicitBuildLevel = Math.Clamp(level, 0, MaxLevel);
+            RequestedLevel = Math.Clamp(RequestedLevel, -1, _explicitBuildLevel);
             ResetLevel();
         }
 
@@ -317,7 +372,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public void SetLevelTo(int Level)
         {
+            if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
+            {
+                RequestedLevel = Math.Clamp(Level, -1, MaxLevel);
+                ResetLevel();
+                return;
+            }
+
             LevelCache = Level;
+        }
+
+        private int InferLegacyStaticBuildLevel()
+        {
+            return InferStaticBuildLevelFromCurrentBuild();
         }
 
         public void Lock()
@@ -552,6 +619,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             ResetLevel();
             if (CurrentBuild?.Powers == null) return;
+            var policy = DatabaseAPI.GetBuildProgressionPolicy(MidsContext.Config?.DataPath);
+            var currentLevel = MidsContext.Config.BuildMode == Enums.dmModes.LevelUp
+                ? Level
+                : GetEffectiveStaticBuildLevel();
 
             // Walk by index so we can call the synchronous RemoveSlotFromPower(...)
             for (int p = 0; p < CurrentBuild.Powers.Count; p++)
@@ -559,22 +630,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 var power = CurrentBuild.Powers[p];
                 if (power?.Power == null) continue;
 
-                int allowed = 0;
-                switch (power.Power.FullName)
-                {
-                    case "Inherent.Fitness.Health":
-                        if (Level >= DatabaseAPI.ServerData.HealthSlot1Level) allowed = 1;
-                        if (Level >= DatabaseAPI.ServerData.HealthSlot2Level) allowed = 2;
-                        break;
-
-                    case "Inherent.Fitness.Stamina":
-                        if (Level >= DatabaseAPI.ServerData.StaminaSlot1Level) allowed = 1;
-                        if (Level >= DatabaseAPI.ServerData.StaminaSlot2Level) allowed = 2;
-                        break;
-
-                    default:
-                        continue;
-                }
+                int allowed = policy.GetGrantedSlotCountForPower(power.Power.FullName, currentLevel);
 
                 // Trim down to the allowed count by removing highest-index inherent slots (>= 1)
                 while (power.InherentSlotsUsed > allowed)
@@ -602,6 +658,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     CurrentBuild.RemoveSlotFromPower(p, idxToRemove);
                     power.InherentSlotsUsed = Math.Max(0, power.InherentSlotsUsed - 1);
                 }
+
+                power.InherentSlotsUsed = power.Slots.Count(slot => slot.Source == SlotSourceKind.Granted);
             }
         }
 
@@ -1214,8 +1272,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 return -1;
             }
 
-            var iLevel = power.Level;
-            if (DatabaseAPI.Database.Power[power.NIDPower].AllowFrontLoading)
+            var iLevel = MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec
+                ? 0
+                : power.Level;
+            if (MidsContext.Config.BuildMode == Enums.dmModes.LevelUp &&
+                DatabaseAPI.Database.Power[power.NIDPower].AllowFrontLoading)
             {
                 iLevel = 0;
             }
@@ -1227,6 +1288,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int[] GetSlotCounts()
         {
+            if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
+            {
+                var policy = DatabaseAPI.GetBuildProgressionPolicy(MidsContext.Config?.DataPath);
+                var totalBoughtSlots = policy.GetBoughtSlotCountAtLevel(GetEffectiveStaticBuildLevel());
+                return
+                [
+                    totalBoughtSlots - CurrentBuild.BoughtSlotsPlaced,
+                    CurrentBuild.BoughtSlotsPlaced
+                ];
+            }
+
             var numArray = new int[2];
             for (var level = 0; level < DatabaseAPI.Database.Levels.Length; ++level)
             {
@@ -1242,6 +1314,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public int[] GetSlotCounts(int level)
         {
+            if (MidsContext.Config.BuildMode is Enums.dmModes.Normal or Enums.dmModes.Respec)
+            {
+                var policy = DatabaseAPI.GetBuildProgressionPolicy(MidsContext.Config?.DataPath);
+                var totalBoughtSlots = policy.GetBoughtSlotCountAtLevel(GetEffectiveStaticBuildLevel());
+                return
+                [
+                    totalBoughtSlots - CurrentBuild.BoughtSlotsPlaced,
+                    CurrentBuild.BoughtSlotsPlaced
+                ];
+            }
+
             var numArray = new int[2];
 
             var numTaken = SlotLevelQueue.GetNumSlotsBeforeLevel(level) + CurrentBuild.SlotsPlacedAtLevel(level);

@@ -99,13 +99,21 @@ namespace Mids_Reborn.Core
         {
             get
             {
-                return DatabaseAPI.ServerData.EnableInherentSlotting switch
-                {
-                    false => DatabaseAPI.ServerData.MaxSlots,
-                    true => DatabaseAPI.ServerData.MaxSlots + DatabaseAPI.ServerData.HealthSlots + DatabaseAPI.ServerData.StaminaSlots
-                };
+                var policy = DatabaseAPI.GetBuildProgressionPolicy(MidsContext.Config?.DataPath);
+                var plannerLevel = MidsContext.Config?.BuildMode == Enums.dmModes.LevelUp
+                    ? Character.MaxLevel
+                    : MidsContext.Character?.GetEffectiveStaticBuildLevel() ?? Character.MaxLevel;
+                return policy.GetTotalSlotsAvailableAtLevel(plannerLevel);
             }
         }
+
+        public int BoughtSlotsPlaced =>
+            Powers.Where(power => power != null)
+                .Sum(power => power!.Slots.Count(slot => slot.Source == SlotSourceKind.Bought));
+
+        public int GrantedSlotsPlaced =>
+            Powers.Where(power => power != null)
+                .Sum(power => power!.Slots.Count(slot => slot.Source == SlotSourceKind.Granted));
 
         public PowerEntry AddPower(IPower? power, int specialLevel = -1)
         {
@@ -464,7 +472,10 @@ namespace Mids_Reborn.Core
                             str = " [Empty]";
                         }
 
-                        historyMap.Text = $"Level {lvlIdx + 1}: Added Slot to {power.Power.DisplayName}{str}";
+                        var slotAction = power.Slots[slotIdx].Source == SlotSourceKind.Granted
+                            ? "Granted Slot to"
+                            : "Added Slot to";
+                        historyMap.Text = $"Level {lvlIdx + 1}: {slotAction} {power.Power.DisplayName}{str}";
                         historyMapList.Add(historyMap);
                     }
                 }
@@ -488,7 +499,8 @@ namespace Mids_Reborn.Core
                 if (powerIdx == null) continue;
                 for (var slotIdx = 0; slotIdx < powerIdx.Slots.Length; ++slotIdx)
                 {
-                    if (powerIdx.Slots[slotIdx].Level == level)
+                    if (powerIdx.Slots[slotIdx].Source == SlotSourceKind.Bought &&
+                        powerIdx.Slots[slotIdx].Level == level)
                     {
                         ++slotsPlacedAtLevel;
                     }
@@ -601,9 +613,13 @@ namespace Mids_Reborn.Core
                 }
                 else if (DatabaseAPI.Database.Levels[historyMap.Level].Slots > 0 & historyMap.Level <= iLevel && historyMap.SID > -1)
                 {
-                    var str = historyMap.SID != 0
-                        ? $"Level {historyMap.Level + 1}: Added Slot To "
-                        : $"Level {historyMap.Level + 1}: Received Slot - ";
+                    var slotSource = power.Slots[historyMap.SID].Source;
+                    var str = slotSource switch
+                    {
+                        SlotSourceKind.Granted => $"Level {historyMap.Level + 1}: Granted Slot To ",
+                        SlotSourceKind.AutoBase => $"Level {historyMap.Level + 1}: Received Slot - ",
+                        _ => $"Level {historyMap.Level + 1}: Added Slot To "
+                    };
                     var iText1 = power.Power == null
                         ? $"{str}[Empty]"
                         : $"{str}{power.Power.DisplayName}";
@@ -788,96 +804,65 @@ namespace Mids_Reborn.Core
                 Powers[index]?.CheckVariableBounds();
         }
 
-        private void CheckInherentSlotting()
+        private void SyncGrantedSlots()
         {
+            var policy = DatabaseAPI.GetBuildProgressionPolicy(MidsContext.Config?.DataPath);
+            var currentLevel = MidsContext.Config.BuildMode == Enums.dmModes.LevelUp
+                ? _character.Level
+                : _character.GetEffectiveStaticBuildLevel();
+
             foreach (var power in Powers.Where(power => power?.Power != null))
             {
-                switch (power?.Power?.FullName)
+                if (power?.Power == null)
                 {
-                    case "Inherent.Fitness.Health":
-                        switch (MidsContext.Config.BuildMode)
-                        {
-                            case Enums.dmModes.LevelUp:
-                                if (MidsContext.Character != null && MidsContext.Character.Level == DatabaseAPI.ServerData.HealthSlot1Level)
-                                {
-                                    if (power.InherentSlotsUsed < 1)
-                                    {
-                                        power.AddSlot(DatabaseAPI.ServerData.HealthSlot1Level, true);
-                                        power.InherentSlotsUsed += 1;
-                                    }
-                                }
-
-                                if (MidsContext.Character != null && MidsContext.Character.Level == DatabaseAPI.ServerData.HealthSlot2Level)
-                                {
-                                    if (power.InherentSlotsUsed is > 0 and < 2)
-                                    {
-                                        power.AddSlot(DatabaseAPI.ServerData.HealthSlot2Level, true);
-                                        power.InherentSlotsUsed += 1;
-                                    }
-                                }
-
-                                break;
-                            case Enums.dmModes.Normal:
-                                var chosenCount = Powers.Where(x => x is { Power: { }, Chosen: true }).ToList()
-                                    .Count;
-                                if (chosenCount > 0)
-                                {
-                                    if (power is { SlotCount: < 2, InherentSlotsUsed: < 2 })
-                                    {
-                                        power.AddSlot(DatabaseAPI.ServerData.HealthSlot1Level, true);
-                                        power.AddSlot(DatabaseAPI.ServerData.HealthSlot2Level, true);
-                                        power.InherentSlotsUsed = 2;
-                                    }
-                                }
-
-                                break;
-                        }
-
-                        break;
-                    case "Inherent.Fitness.Stamina":
-                        switch (MidsContext.Config.BuildMode)
-                        {
-                            case Enums.dmModes.LevelUp:
-                                if (MidsContext.Character != null && MidsContext.Character.Level ==
-                                    DatabaseAPI.ServerData.StaminaSlot1Level)
-                                {
-                                    if (power.InherentSlotsUsed < 1)
-                                    {
-                                        power.AddSlot(DatabaseAPI.ServerData.StaminaSlot1Level, true);
-                                        power.InherentSlotsUsed += 1;
-                                    }
-                                }
-
-                                if (MidsContext.Character != null && MidsContext.Character.Level ==
-                                    DatabaseAPI.ServerData.StaminaSlot2Level)
-                                {
-                                    if (power.InherentSlotsUsed is > 0 and < 2)
-                                    {
-                                        power.AddSlot(DatabaseAPI.ServerData.StaminaSlot2Level, true);
-                                        power.InherentSlotsUsed += 1;
-                                    }
-                                }
-
-                                break;
-                            case Enums.dmModes.Normal
-                                : // Need to check if a build is started if not then do not add slots
-                                var chosenCount = Powers.Where(x => x is { Power: { }, Chosen: true }).ToList().Count;
-                                if (chosenCount > 0)
-                                {
-                                    if (power is { SlotCount: < 2, InherentSlotsUsed: < 2 })
-                                    {
-                                        power.AddSlot(DatabaseAPI.ServerData.StaminaSlot1Level, true);
-                                        power.AddSlot(DatabaseAPI.ServerData.StaminaSlot2Level, true);
-                                        power.InherentSlotsUsed = 2;
-                                    }
-                                }
-
-                                break;
-                        }
-
-                        break;
-
+                    continue;
                 }
+
+                var activeGrants = policy.GetActiveGrantedSlotsForPower(power.Power.FullName, currentLevel)
+                    .Select(grant => new
+                    {
+                        grant.RuleId,
+                        Level = Math.Max(power.Level, grant.UnlockLevel - 1)
+                    })
+                    .OrderBy(grant => grant.Level)
+                    .ToList();
+
+                var powerIndex = Powers.IndexOf(power);
+                var grantedIndices = power.Slots
+                    .Select((slot, index) => new { slot, index })
+                    .Where(entry => entry.slot.Source == SlotSourceKind.Granted)
+                    .Select(entry => entry.index)
+                    .OrderBy(index => index)
+                    .ToList();
+
+                while (grantedIndices.Count > activeGrants.Count)
+                {
+                    RemoveSlotFromPower(powerIndex, grantedIndices[^1]);
+                    grantedIndices.RemoveAt(grantedIndices.Count - 1);
+                }
+
+                grantedIndices = power.Slots
+                    .Select((slot, index) => new { slot, index })
+                    .Where(entry => entry.slot.Source == SlotSourceKind.Granted)
+                    .Select(entry => entry.index)
+                    .OrderBy(index => index)
+                    .ToList();
+
+                for (var grantIndex = 0; grantIndex < grantedIndices.Count; grantIndex++)
+                {
+                    var slot = power.Slots[grantedIndices[grantIndex]];
+                    slot.Source = SlotSourceKind.Granted;
+                    slot.GrantedRuleId = activeGrants[grantIndex].RuleId;
+                    slot.Level = activeGrants[grantIndex].Level;
+                    power.Slots[grantedIndices[grantIndex]] = slot;
+                }
+
+                for (var grantIndex = grantedIndices.Count; grantIndex < activeGrants.Count; grantIndex++)
+                {
+                    power.AddSlot(activeGrants[grantIndex].Level, SlotSourceKind.Granted, activeGrants[grantIndex].RuleId);
+                }
+
+                power.InherentSlotsUsed = power.Slots.Count(slot => slot.Source == SlotSourceKind.Granted);
             }
         }
 
@@ -887,12 +872,9 @@ namespace Mids_Reborn.Core
             ScanAndCleanAutomaticallyGrantedPowers();
             AddAutomaticGrantedPowers();
             FillMissingSubPowers();
+            SyncGrantedSlots();
             CheckAndFixAllEnhancements();
             CheckAllVariableBounds();
-            if (DatabaseAPI.ServerData.EnableInherentSlotting)
-            {
-                CheckInherentSlotting();
-            }
         }
 
         public int GetMaxLevel()

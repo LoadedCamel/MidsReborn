@@ -140,7 +140,9 @@ namespace Mids_Reborn.Core.BuildFile
                             var slotData = new SlotData
                             {
                                 Level = slot.Level + 1,
-                                IsInherent = slot.IsInherent
+                                IsInherent = slot.IsInherent,
+                                SlotSource = slot.Source.ToString(),
+                                GrantedRuleId = slot.GrantedRuleId
                             };
                             WriteSlotData(ref slotData, slot.Enhancement);
                             WriteAltSlotData(ref slotData, slot.FlippedEnhancement);
@@ -384,7 +386,8 @@ namespace Mids_Reborn.Core.BuildFile
                         powerEntry.Slots[slotIndex] = new SlotEntry
                         {
                             Level = slotEntry.Level - 1,
-                            IsInherent = slotEntry.IsInherent,
+                            Source = ResolveSlotSource(slotEntry, slotIndex),
+                            GrantedRuleId = slotEntry.GrantedRuleId,
                             Enhancement = i9Enhancement,
                             FlippedEnhancement = i9Flipped
                         };
@@ -496,6 +499,22 @@ namespace Mids_Reborn.Core.BuildFile
             }
 
             return Math.Clamp(parsedLevel, 0, Character.MaxLevel);
+        }
+
+        private static SlotSourceKind ResolveSlotSource(SlotData slotEntry, int slotIndex)
+        {
+            if (!string.IsNullOrWhiteSpace(slotEntry.SlotSource) &&
+                Enum.TryParse<SlotSourceKind>(slotEntry.SlotSource, ignoreCase: true, out var parsed))
+            {
+                return parsed;
+            }
+
+            if (slotEntry.IsInherent)
+            {
+                return SlotSourceKind.Granted;
+            }
+
+            return slotIndex == 0 ? SlotSourceKind.AutoBase : SlotSourceKind.Bought;
         }
 
         private void LoadEnhancementData(ref I9Slot i9Enhancement, EnhancementData? enhData)
