@@ -84,7 +84,7 @@ namespace Mids_Reborn.UI.Forms
         private MidsSegmentedToggle? _plannerModeToggle;
         private TableLayoutPanel? _plannerModeHost;
         private Label? _staticLevelLabel;
-        private NumericUpDown? _staticLevelInput;
+        private MidsLevelStepper? _staticLevelInput;
         private MidsSegmentedToggle? _pvModeToggle;
         private Panel? _headerChromeHost;
         private MidsWorkspaceShellPanel? _nameInputShell;
@@ -421,15 +421,14 @@ namespace Mids_Reborn.UI.Forms
             ApplyHeaderLabelStyle(_staticLevelLabel);
             _staticLevelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
-            _staticLevelInput = new NumericUpDown
+            _staticLevelInput = new MidsLevelStepper
             {
                 Dock = DockStyle.Fill,
-                Margin = new Padding(0, 6, 0, 6),
+                Margin = new Padding(0, 4, 0, 4),
                 Minimum = 1,
                 Maximum = Character.MaxLevel + 1,
-                Name = "nudStaticBuildLevel",
-                TextAlign = HorizontalAlignment.Center,
-                Width = 64
+                Name = "stepStaticBuildLevel",
+                Width = 82
             };
             _staticLevelInput.ValueChanged += StaticLevelInput_ValueChanged;
             tTip.SetToolTip(_staticLevelInput, "Static build level");
@@ -438,14 +437,14 @@ namespace Mids_Reborn.UI.Forms
             {
                 ColumnCount = 3,
                 Dock = DockStyle.Fill,
-                Margin = new Padding(3, 4, 12, 4),
+                Margin = new Padding(3, 3, 8, 3),
                 Name = "plannerModeHost",
                 Padding = Padding.Empty,
                 RowCount = 1
             };
             _plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             _plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            _plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 60F));
+            _plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 82F));
             _plannerModeHost.Controls.Add(_plannerModeToggle, 0, 0);
             _plannerModeHost.Controls.Add(_staticLevelLabel, 1, 0);
             _plannerModeHost.Controls.Add(_staticLevelInput, 2, 0);
@@ -549,6 +548,56 @@ namespace Mids_Reborn.UI.Forms
             buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineUtilityButtonWidth));
             buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineUtilityButtonWidth));
             buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineUtilityButtonWidth));
+        }
+
+        private static void ReduceWidthsToFit(float[] widths, float[] minimums, float availableWidth)
+        {
+            if (widths.Length != minimums.Length)
+            {
+                throw new ArgumentException("Width arrays must match.");
+            }
+
+            float totalWidth = widths.Sum();
+            if (availableWidth <= 0f || totalWidth <= availableWidth)
+            {
+                return;
+            }
+
+            float remainingReduction = totalWidth - availableWidth;
+            while (remainingReduction > 0.5f)
+            {
+                float totalCapacity = 0f;
+                for (var i = 0; i < widths.Length; i++)
+                {
+                    totalCapacity += Math.Max(0f, widths[i] - minimums[i]);
+                }
+
+                if (totalCapacity <= 0.5f)
+                {
+                    break;
+                }
+
+                float reducedThisPass = 0f;
+                for (var i = 0; i < widths.Length; i++)
+                {
+                    float capacity = Math.Max(0f, widths[i] - minimums[i]);
+                    if (capacity <= 0f)
+                    {
+                        continue;
+                    }
+
+                    float reduction = Math.Min(capacity, remainingReduction * (capacity / totalCapacity));
+                    widths[i] -= reduction;
+                    reducedThisPass += reduction;
+                }
+
+                if (reducedThisPass <= 0.1f)
+                {
+                    break;
+                }
+
+                remainingReduction -= reducedThisPass;
+            }
         }
 
         private static void ApplyHeaderLabelStyle(Label label)
@@ -773,8 +822,10 @@ namespace Mids_Reborn.UI.Forms
             }
 
             _syncingStaticLevelInput = true;
-            var level = MidsContext.Character.GetEffectiveStaticBuildLevel() + 1;
-            _staticLevelInput.Value = Math.Clamp(level, (int)_staticLevelInput.Minimum, (int)_staticLevelInput.Maximum);
+            _staticLevelInput.Value = Math.Clamp(
+                MidsContext.Character.GetEffectiveStaticBuildLevel() + 1,
+                _staticLevelInput.Minimum,
+                _staticLevelInput.Maximum);
             _syncingStaticLevelInput = false;
         }
 
@@ -829,7 +880,7 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            MidsContext.Character.SetExplicitBuildLevel((int)_staticLevelInput.Value - 1);
+            MidsContext.Character.SetExplicitBuildLevel(_staticLevelInput.Value - 1);
             MidsContext.Character.Validate();
             PowerModified(markModified: false);
             UpdateDmBuffer();
@@ -1065,7 +1116,7 @@ namespace Mids_Reborn.UI.Forms
             var leftWidth = Math.Clamp(provisionalLeftWidth, minimumLeftWidth, maximumLeftWidth);
 
             mainLayoutPanel.ColumnStyles[0].Width = leftWidth;
-            mainLayoutPanel.RowStyles[0].Height = ScaleLayoutValue(46f, scale);
+            mainLayoutPanel.RowStyles[0].Height = Math.Max(46f, ScaleLayoutValue(46f, scale));
 
             leftLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
             leftLayoutPanel.ColumnStyles[0].Width = 100f;
@@ -1080,50 +1131,51 @@ namespace Mids_Reborn.UI.Forms
 
             if (characterLayoutPanel.ColumnStyles.Count >= 11)
             {
-                characterLayoutPanel.ColumnStyles[0].Width = ScaleLayoutValue(60f, scale);
-                characterLayoutPanel.ColumnStyles[2].Width = ScaleLayoutValue(BaselineHeaderArchetypeLabelWidth, scale);
-                characterLayoutPanel.ColumnStyles[3].Width = ScaleLayoutValue(BaselineHeaderArchetypeWidth, scale);
-                characterLayoutPanel.ColumnStyles[4].Width = ScaleLayoutValue(BaselineHeaderOriginLabelWidth, scale);
-                characterLayoutPanel.ColumnStyles[5].Width = ScaleLayoutValue(BaselineHeaderOriginWidth, scale);
-                characterLayoutPanel.ColumnStyles[6].Width = ScaleLayoutValue(BaselineHeaderModeLabelWidth, scale);
-                characterLayoutPanel.ColumnStyles[7].Width = ScaleLayoutValue(BaselineHeaderModeWidth, scale);
-                characterLayoutPanel.ColumnStyles[8].Width = ScaleLayoutValue(BaselineHeaderTotalsWidth, scale);
-                characterLayoutPanel.ColumnStyles[9].Width = ScaleLayoutValue(BaselineHeaderCombatWidth, scale);
-
-                float fixedHeaderWidthExcludingName =
-                    characterLayoutPanel.ColumnStyles[0].Width +
-                    characterLayoutPanel.ColumnStyles[2].Width +
-                    characterLayoutPanel.ColumnStyles[3].Width +
-                    characterLayoutPanel.ColumnStyles[4].Width +
-                    characterLayoutPanel.ColumnStyles[5].Width +
-                    characterLayoutPanel.ColumnStyles[6].Width +
-                    characterLayoutPanel.ColumnStyles[7].Width +
-                    characterLayoutPanel.ColumnStyles[8].Width +
-                    characterLayoutPanel.ColumnStyles[9].Width;
-
-                float minimumNameWidth = ScaleLayoutValue(160f, scale);
-                float preferredNameWidth = ScaleLayoutValue(BaselineHeaderNameWidth, scale);
-                float maximumNameWidth = ScaleLayoutValue(198f, scale);
-                float desiredSpacerWidth = ScaleLayoutValue(12f, scale);
-                float availableNameWidth = Math.Max(
-                    minimumNameWidth,
-                    characterLayoutPanel.ClientSize.Width - fixedHeaderWidthExcludingName - desiredSpacerWidth);
-
-                characterLayoutPanel.ColumnStyles[1].Width = Math.Min(
-                    maximumNameWidth,
-                    Math.Max(preferredNameWidth, availableNameWidth));
-
-                float headerBandWidth =
-                    fixedHeaderWidthExcludingName +
-                    characterLayoutPanel.ColumnStyles[1].Width +
-                    ScaleLayoutValue(24f, scale);
-
                 int headerHostWidth = Math.Max(
                     1,
                     ((_headerChromeHost?.ClientSize.Width)
                         ?? (characterLayoutPanel.Parent?.ClientSize.Width ?? characterLayoutPanel.Width)) - 1);
-                characterLayoutPanel.Width = (int)Math.Min(headerHostWidth, Math.Ceiling(headerBandWidth));
-                characterLayoutPanel.Height = Math.Max(1, (int)Math.Round(ScaleLayoutValue(BaselineHeaderContentHeight, scale)));
+
+                float[] preferredWidths =
+                [
+                    ScaleLayoutValue(60f, scale),
+                    ScaleLayoutValue(BaselineHeaderNameWidth, scale),
+                    ScaleLayoutValue(BaselineHeaderArchetypeLabelWidth, scale),
+                    ScaleLayoutValue(BaselineHeaderArchetypeWidth, scale),
+                    ScaleLayoutValue(BaselineHeaderOriginLabelWidth, scale),
+                    ScaleLayoutValue(BaselineHeaderOriginWidth, scale),
+                    ScaleLayoutValue(BaselineHeaderModeLabelWidth, scale),
+                    Math.Max(BaselineHeaderModeWidth, ScaleLayoutValue(BaselineHeaderModeWidth, scale)),
+                    ScaleLayoutValue(BaselineHeaderTotalsWidth, scale),
+                    ScaleLayoutValue(BaselineHeaderCombatWidth, scale)
+                ];
+
+                float[] minimumWidths =
+                [
+                    ScaleLayoutValue(52f, scale),
+                    ScaleLayoutValue(96f, scale),
+                    ScaleLayoutValue(72f, scale),
+                    ScaleLayoutValue(108f, scale),
+                    ScaleLayoutValue(48f, scale),
+                    ScaleLayoutValue(96f, scale),
+                    ScaleLayoutValue(52f, scale),
+                    BaselineHeaderModeWidth,
+                    ScaleLayoutValue(104f, scale),
+                    ScaleLayoutValue(88f, scale)
+                ];
+
+                float desiredSpacerWidth = ScaleLayoutValue(8f, scale);
+                ReduceWidthsToFit(preferredWidths, minimumWidths, Math.Max(1f, headerHostWidth - desiredSpacerWidth));
+
+                for (var column = 0; column <= 9; column++)
+                {
+                    characterLayoutPanel.ColumnStyles[column].Width = preferredWidths[column];
+                }
+
+                characterLayoutPanel.Width = headerHostWidth;
+                characterLayoutPanel.Height = Math.Max(
+                    (int)Math.Round(BaselineHeaderContentHeight),
+                    (int)Math.Round(ScaleLayoutValue(BaselineHeaderContentHeight, scale)));
                 if (_headerChromeHost is not null)
                 {
                     characterLayoutPanel.Top = Math.Max(0, (_headerChromeHost.ClientSize.Height - characterLayoutPanel.Height) / 2);
