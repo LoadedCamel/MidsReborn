@@ -479,7 +479,6 @@ public sealed class PowerStatsGrid : Control
             _hoverItem = itemIdx;
             Invalidate(); // hover band
 
-            _tooltip.Hide(this);
             if (itemIdx >= 0)
             {
                 var row = _rows[itemIdx];
@@ -492,11 +491,13 @@ public sealed class PowerStatsGrid : Control
                 else
                 {
                     _tooltip.ToolTipTitle = string.Empty;
+                    _tooltip.Hide(this);
                 }
             }
             else
             {
                 _tooltip.ToolTipTitle = string.Empty;
+                _tooltip.Hide(this);
             }
         }
     }

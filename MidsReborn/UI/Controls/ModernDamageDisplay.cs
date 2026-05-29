@@ -480,10 +480,6 @@ namespace Mids_Reborn.UI.Controls
         {
             base.OnMouseMove(e);
             _lastMouseLocation = e.Location;
-            if (_tooltipVisible)
-            {
-                ShowTooltipAtPreferredAnchor();
-            }
         }
 
         protected override void OnMouseHover(EventArgs e)

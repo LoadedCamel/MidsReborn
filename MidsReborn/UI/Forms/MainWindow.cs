@@ -70,6 +70,8 @@ namespace Mids_Reborn.UI.Forms
         private const float BaselineHeaderContentHeight = 40f;
         private const float BaselinePowerSetHeaderRowHeight = 18f;
         private const float BaselinePowerSetDropDownRowHeight = 24f;
+        private const int PowerSetChromeTopSpacing = 1;
+        private const int PowerSetChromeBottomSpacing = 0;
         private const float BaselinePoolRailRightInset = 4f;
         private const float BaselinePvToggleWidth = 148f;
         private const float BaselineUtilityButtonWidth = 114f;
@@ -407,6 +409,7 @@ namespace Mids_Reborn.UI.Forms
             ApplyWindowSurfaceTheme();
             _defaultWindowMinimumSize = MinimumSize;
             InitializePoolSectionBindings();
+            ApplyPowerSetChromeSpacing();
             EnsureWorkspaceShells();
             InitializeNativeHeaderLayout();
             ConfigurePowerListHeadings();
@@ -1538,7 +1541,7 @@ namespace Mids_Reborn.UI.Forms
                 : ScaleLayoutValue(BaselinePowerSetHeaderRowHeight, metricsScale);
             float dropDownRowHeight = sameModeLiveResize && _leftDetailsExactLayout is { } exactSnapshot2
                 ? exactSnapshot2.DropDownRowHeight
-                : ScaleLayoutValue(BaselinePowerSetDropDownRowHeight, metricsScale);
+                : GetRequiredDropDownRowHeight(BaselinePowerSetDropDownRowHeight, metricsScale, primaryDropDown, secondaryDropDown);
 
             if (isCompactTwoColumn)
             {
@@ -2203,12 +2206,27 @@ namespace Mids_Reborn.UI.Forms
             foreach (var section in _poolSections)
             {
                 section.Label.Margin = new Padding(2, section.Label.Margin.Top, 2, section.Label.Margin.Bottom);
-                section.DropDown.Margin = new Padding(2, section.DropDown.Margin.Top, 2, section.DropDown.Margin.Bottom);
-                section.List.Margin = new Padding(2, section.List.Margin.Top, 2, section.List.Margin.Bottom);
                 section.List.Scrollable = false;
                 section.List.PaddingY = 1;
                 section.List.LineSpacing = -1;
             }
+        }
+
+        private void ApplyPowerSetChromeSpacing()
+        {
+            ApplyPowerSetSectionChromeSpacing(primaryDropDown, primaryList, 3);
+            ApplyPowerSetSectionChromeSpacing(secondaryDropDown, secondaryList, 3);
+
+            foreach (var section in _poolSections)
+            {
+                ApplyPowerSetSectionChromeSpacing(section.DropDown, section.List, 2);
+            }
+        }
+
+        private static void ApplyPowerSetSectionChromeSpacing(MidsDropDownList dropDown, MidsListView list, int horizontalInset)
+        {
+            dropDown.Margin = new Padding(horizontalInset, PowerSetChromeTopSpacing, horizontalInset, PowerSetChromeBottomSpacing);
+            list.Margin = new Padding(horizontalInset, PowerSetChromeTopSpacing, horizontalInset, PowerSetChromeBottomSpacing);
         }
 
         private IEnumerable<PoolSectionBinding> StandardPoolSections()
@@ -2946,7 +2964,7 @@ namespace Mids_Reborn.UI.Forms
                 : ScaleLayoutValue(20f, metricsScale);
             float dropDownRowHeight = sameModeLiveResize && _poolStackExactLayout is { } exactSnapshot2
                 ? exactSnapshot2.DropDownRowHeight
-                : ScaleLayoutValue(26f, metricsScale);
+                : GetRequiredDropDownRowHeight(26f, metricsScale, _poolSections.Select(section => section.DropDown).ToArray());
 
             foreach (var section in _poolSections)
             {
@@ -2974,6 +2992,19 @@ namespace Mids_Reborn.UI.Forms
 
             CountStructureRebuild();
             _poolStackStructureInitialized = true;
+        }
+
+        private static float GetRequiredDropDownRowHeight(float baselineHeight, float scale, params MidsDropDownList[] dropDowns)
+        {
+            float rowHeight = ScaleLayoutValue(baselineHeight, scale);
+            foreach (var dropDown in dropDowns)
+            {
+                int preferredHeight = Math.Max(dropDown.Height, dropDown.PreferredHeight);
+                int requiredHeight = preferredHeight + dropDown.Margin.Top + dropDown.Margin.Bottom;
+                rowHeight = Math.Max(rowHeight, requiredHeight);
+            }
+
+            return rowHeight;
         }
 
         private static IEnumerable<Control> EnumerateScaleControls(Control root)

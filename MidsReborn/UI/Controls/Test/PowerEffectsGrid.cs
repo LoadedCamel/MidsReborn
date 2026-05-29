@@ -1216,7 +1216,6 @@ namespace Mids_Reborn.UI.Controls.Test
                 _hoverIndex = hit;
                 Invalidate(new Rectangle(0, 0, ContentViewportWidth, ClientSize.Height));
 
-                _tooltip.Hide(this);
                 if (hit >= 0)
                 {
                     var entry = _layout[hit];
@@ -1249,11 +1248,13 @@ namespace Mids_Reborn.UI.Controls.Test
                     else
                     {
                         _tooltip.ToolTipTitle = string.Empty;
+                        _tooltip.Hide(this);
                     }
                 }
                 else
                 {
                     _tooltip.ToolTipTitle = string.Empty;
+                    _tooltip.Hide(this);
                 }
             }
         }

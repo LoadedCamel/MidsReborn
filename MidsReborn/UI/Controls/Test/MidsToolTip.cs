@@ -125,6 +125,8 @@ public class MidsToolTip : ToolTip
     {
         OwnerDraw = true;
         IsBalloon = false;
+        UseAnimation = false;
+        UseFading = false;
 
         // good UX defaults
         AutomaticDelay = 200;
