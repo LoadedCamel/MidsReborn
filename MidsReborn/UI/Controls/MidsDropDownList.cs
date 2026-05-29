@@ -14,7 +14,7 @@ namespace Mids_Reborn.UI.Controls;
 [DefaultProperty(nameof(Items))]
 [DefaultEvent(nameof(SelectedIndexChanged))]
 [DesignerCategory("Code")]
-public class MidsDropDownList : ComboBox
+public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
 {
     #region Constants
 
@@ -34,6 +34,27 @@ public class MidsDropDownList : ComboBox
     private string? _placeholderText;
 
     private IBindingList? _boundList;
+    private bool _liveResizeMetricsFrozen;
+    private float? _pendingUiScale;
+    private bool _closedSurfaceLayoutValid;
+    private ClosedSurfaceLayoutKey _closedSurfaceLayoutKey;
+    private ClosedSurfaceLayout _closedSurfaceLayout;
+
+    private readonly record struct FontSignature(string FamilyName, float SizeInPoints, FontStyle Style, byte GdiCharSet);
+    private readonly record struct ClosedSurfaceLayoutKey(
+        int ClientHeight,
+        FontSignature Font,
+        int IconSize,
+        int ItemHeight,
+        int Dpi,
+        bool Locked,
+        bool Placeholder);
+    private readonly record struct ClosedSurfaceLayout(
+        int TextHeight,
+        int TextY,
+        int IconY,
+        int ArrowTop,
+        int PlaceholderLeft);
 
     #endregion
 
@@ -76,7 +97,11 @@ public class MidsDropDownList : ComboBox
     public string? PlaceholderText
     {
         get => _placeholderText;
-        set { _placeholderText = value; Invalidate(); }
+        set
+        {
+            _placeholderText = value;
+            Invalidate();
+        }
     }
 
     [Category("Appearance")]
@@ -146,19 +171,38 @@ public class MidsDropDownList : ComboBox
 
     public void ApplyUiScale(float scale)
     {
-        _baseIconSize ??= IconSize;
-        _baseItemHeight ??= ItemHeight;
+        if (_liveResizeMetricsFrozen)
+        {
+            _pendingUiScale = scale;
+            return;
+        }
 
-        int iconSize = Math.Clamp((int)Math.Round(_baseIconSize.Value * scale), 8, 64);
-        int itemHeight = Math.Max(12, (int)Math.Round(_baseItemHeight.Value * scale));
-        if (IconSize == iconSize && ItemHeight == itemHeight)
+        ApplyUiScaleCore(scale);
+    }
+
+    public void BeginLiveResizeMetrics()
+    {
+        _liveResizeMetricsFrozen = true;
+        _pendingUiScale = null;
+    }
+
+    public void EndLiveResizeMetrics()
+    {
+        if (!_liveResizeMetricsFrozen)
         {
             return;
         }
 
-        IconSize = iconSize;
-        ItemHeight = itemHeight;
-        Invalidate();
+        _liveResizeMetricsFrozen = false;
+        if (_pendingUiScale is float pendingScale)
+        {
+            _pendingUiScale = null;
+            ApplyUiScaleCore(pendingScale);
+        }
+        else
+        {
+            Invalidate();
+        }
     }
 
     #endregion
@@ -265,6 +309,8 @@ public class MidsDropDownList : ComboBox
         g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
 
         Rectangle rect = ClientRectangle;
+        bool hasPlaceholder = SelectedItem is null && !string.IsNullOrWhiteSpace(PlaceholderText);
+        var layout = GetClosedSurfaceLayout(g, Font, locked: false, hasPlaceholder);
 
         bool locked = _isLocked;
         bool hovering = _isHovering && !_isLocked && !IsInteracting;
@@ -288,6 +334,8 @@ public class MidsDropDownList : ComboBox
                 drawFont = lockedFont;
             }
 
+            var lockedLayout = GetClosedSurfaceLayout(g, drawFont, locked: true, hasPlaceholder: false);
+
             var selectedItem = SelectedIndex >= 0 && SelectedIndex < Items.Count
                 ? Items[SelectedIndex]
                 : SelectedItem;
@@ -296,10 +344,7 @@ public class MidsDropDownList : ComboBox
                           _itemIcons.TryGetValue(selectedItem, out selectedIcon) &&
                           selectedIcon != null;
 
-            Size textSize = TextRenderer.MeasureText(g, "Mg", drawFont, Size.Empty, TextFormatFlags.NoPadding);
             Size textMeasure = TextRenderer.MeasureText(g, _lockedText, drawFont, Size.Empty, TextFormatFlags.NoPadding);
-            int textY = rect.Top + (rect.Height - textSize.Height) / 2 - 1;
-
             var contentWidth = Math.Max(0, rect.Width - IconPadding * 2);
             var iconBlockWidth = hasIcon ? IconSize + IconPadding : 0;
             var availableTextWidth = Math.Max(0, contentWidth - iconBlockWidth);
@@ -312,7 +357,7 @@ public class MidsDropDownList : ComboBox
 
             if (hasIcon)
             {
-                var iconRect = new Rectangle(contentLeft, rect.Top + (rect.Height - IconSize) / 2, IconSize, IconSize);
+                var iconRect = new Rectangle(contentLeft, rect.Top + lockedLayout.IconY, IconSize, IconSize);
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 DrawIconIfValid(g, selectedIcon!, iconRect);
                 textLeft = iconRect.Right + IconPadding;
@@ -320,9 +365,9 @@ public class MidsDropDownList : ComboBox
 
             var textRect = new Rectangle(
                 textLeft,
-                textY,
+                lockedLayout.TextY,
                 Math.Max(0, rect.Right - IconPadding - textLeft),
-                textSize.Height);
+                lockedLayout.TextHeight);
 
             var color = Color.FromArgb(200, theme.ForeColor);
             var flags = hasIcon
@@ -341,12 +386,13 @@ public class MidsDropDownList : ComboBox
             var selectedItem = SelectedIndex >= 0 && SelectedIndex < Items.Count
                 ? Items[SelectedIndex]
                 : SelectedItem;
-            Rectangle iconRect = new Rectangle(rect.Left + IconPadding, rect.Top + (rect.Height - IconSize) / 2, IconSize, IconSize);
+            Rectangle iconRect = new Rectangle(rect.Left + IconPadding, rect.Top + layout.IconY, IconSize, IconSize);
 
-            Size textSize = TextRenderer.MeasureText(g, "Mg", Font, Size.Empty, TextFormatFlags.NoPadding);
-            int textY = rect.Top + (rect.Height - textSize.Height) / 2 - 1;
-
-            Rectangle textRect = new Rectangle(iconRect.Right + IconPadding, textY, rect.Right - iconRect.Right - IconPadding * 2,textSize.Height);
+            Rectangle textRect = new Rectangle(
+                iconRect.Right + IconPadding,
+                layout.TextY,
+                rect.Right - iconRect.Right - IconPadding * 2,
+                layout.TextHeight);
 
             if (selectedItem != null && _itemIcons.TryGetValue(selectedItem, out var icon) && icon != null)
             {
@@ -362,16 +408,13 @@ public class MidsDropDownList : ComboBox
                 theme.ForeColor,
                 TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
         }
-        else if (!string.IsNullOrWhiteSpace(PlaceholderText))
+        else if (hasPlaceholder)
         {
-            Size textSize = TextRenderer.MeasureText(g, "Mg", Font, Size.Empty, TextFormatFlags.NoPadding);
-            int textY = rect.Top + (rect.Height - textSize.Height) / 2 - 1;
-
             Rectangle textRect = new Rectangle(
-                rect.Left + IconPadding,
-                textY,
-                rect.Right - IconPadding * 2,
-                textSize.Height);
+                rect.Left + layout.PlaceholderLeft,
+                layout.TextY,
+                rect.Right - layout.PlaceholderLeft - IconPadding,
+                layout.TextHeight);
 
             // Outline color (black)
             Color outlineColor = Color.Black;
@@ -409,7 +452,7 @@ public class MidsDropDownList : ComboBox
 
         if (!locked)
         {
-            Rectangle arrowRect = new Rectangle(rect.Right - 18, rect.Top + rect.Height / 2 - 2, 10, 5);
+            Rectangle arrowRect = new Rectangle(rect.Right - 18, rect.Top + layout.ArrowTop, 10, 5);
             Point[] arrowPoints =
             [
                 new(arrowRect.Left, arrowRect.Top),
@@ -591,6 +634,54 @@ public class MidsDropDownList : ComboBox
             // Draw text-only instead of letting a stale icon crash the UI.
         }
     }
+
+    private void ApplyUiScaleCore(float scale)
+    {
+        _baseIconSize ??= IconSize;
+        _baseItemHeight ??= ItemHeight;
+
+        int iconSize = Math.Clamp((int)Math.Round(_baseIconSize.Value * scale), 8, 64);
+        int itemHeight = Math.Max(12, (int)Math.Round(_baseItemHeight.Value * scale));
+        if (IconSize == iconSize && ItemHeight == itemHeight)
+        {
+            return;
+        }
+
+        IconSize = iconSize;
+        ItemHeight = itemHeight;
+        Invalidate();
+    }
+
+    private ClosedSurfaceLayout GetClosedSurfaceLayout(Graphics graphics, Font drawFont, bool locked, bool hasPlaceholder)
+    {
+        var key = new ClosedSurfaceLayoutKey(
+            ClientSize.Height,
+            CreateFontSignature(drawFont),
+            IconSize,
+            ItemHeight,
+            DeviceDpi,
+            locked,
+            hasPlaceholder);
+
+        if (_closedSurfaceLayoutValid && _closedSurfaceLayoutKey == key)
+        {
+            return _closedSurfaceLayout;
+        }
+
+        Size textSize = TextRenderer.MeasureText(graphics, "Mg", drawFont, Size.Empty, TextFormatFlags.NoPadding);
+        _closedSurfaceLayout = new ClosedSurfaceLayout(
+            textSize.Height,
+            ClientRectangle.Top + (ClientRectangle.Height - textSize.Height) / 2 - 1,
+            ClientRectangle.Top + (ClientRectangle.Height - IconSize) / 2,
+            ClientRectangle.Top + ClientRectangle.Height / 2 - 2,
+            IconPadding);
+        _closedSurfaceLayoutKey = key;
+        _closedSurfaceLayoutValid = true;
+        return _closedSurfaceLayout;
+    }
+
+    private static FontSignature CreateFontSignature(Font font)
+        => new(font.FontFamily.Name, font.SizeInPoints, font.Style, font.GdiCharSet);
 
     #endregion
 }

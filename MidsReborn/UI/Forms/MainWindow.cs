@@ -108,6 +108,7 @@ namespace Mids_Reborn.UI.Forms
         private float _lastMasterScale = 1f;
         private int _lastCanvasWidth = -1;
         private float _lastLeftUiScale = 1f;
+        private float _liveResizeMetricsScale = 1f;
         private int _lastLeftUiScaleBucket = -1;
         private int _lastLeftUiDpi = -1;
         private readonly Dictionary<Control, float> _leftUiFontSizes = new();
@@ -134,6 +135,15 @@ namespace Mids_Reborn.UI.Forms
         private bool _syncingPlannerModeToggle;
         private bool _syncingStaticLevelInput;
         private bool _syncingPvModeToggle;
+        private ResizeLayoutMode? _headerStructureMode;
+        private ResizeLayoutMode? _leftDetailsStructureMode;
+        private ResizeLayoutMode? _workspaceStructureMode;
+        private bool _poolStackStructureInitialized;
+        private StandardHeaderLayoutSnapshot? _standardHeaderExactLayout;
+        private CompactHeaderLayoutSnapshot? _compactHeaderExactLayout;
+        private LeftDetailsLayoutSnapshot? _leftDetailsExactLayout;
+        private PoolStackLayoutSnapshot? _poolStackExactLayout;
+        private ActionStripLayoutSnapshot? _actionStripExactLayout;
         private System.Drawing.Icon? _shellLargeIcon;
         private System.Drawing.Icon? _shellSmallIcon;
 
@@ -265,6 +275,18 @@ namespace Mids_Reborn.UI.Forms
             int DropDownRowIndex,
             int ListRowIndex,
             bool IsAncillary = false);
+
+        private readonly record struct StandardHeaderLayoutSnapshot(float[] ColumnWidths, float HeaderHeight);
+        private readonly record struct CompactHeaderLayoutSnapshot(
+            float[] TopColumnWidths,
+            float[] BottomColumnWidths,
+            float TopHeight,
+            float BottomHeight,
+            float RowGap);
+        private readonly record struct LeftDetailsLayoutSnapshot(float HeaderRowHeight, float DropDownRowHeight);
+        private readonly record struct PoolStackLayoutSnapshot(float LabelRowHeight, float DropDownRowHeight);
+        private readonly record struct ActionStripLayoutSnapshot(float RowHeight, float PvToggleWidth);
+
         private FormWindowState LastState;
         private bool _canvasLayoutSettleQueued;
         private bool _deferredHoverRefreshRequested;
@@ -299,6 +321,8 @@ namespace Mids_Reborn.UI.Forms
         }
 
         private bool _isInLiveResize;
+        private bool _pendingEndLiveResizeMetrics;
+        private bool _pendingResumeSmartLayout;
         private bool _resizeFrameQueued;
         private bool _resizeFrameForceExactPending;
         private Size _pendingClientSize;
@@ -307,6 +331,10 @@ namespace Mids_Reborn.UI.Forms
 
 #if DEBUG
         private int _debugProcessedResizeFrames;
+        private int _debugSameModeLiveResizeFrames;
+        private int _debugStructureRebuilds;
+        private int _debugControlReparents;
+        private int _debugStyleCollectionResets;
 #endif
 
         #endregion
@@ -588,7 +616,9 @@ namespace Mids_Reborn.UI.Forms
         {
             characterLayoutPanel.ColumnCount = 11;
             characterLayoutPanel.RowCount = 1;
+            CountStyleCollectionReset();
             characterLayoutPanel.ColumnStyles.Clear();
+            CountStyleCollectionReset();
             characterLayoutPanel.RowStyles.Clear();
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 60F));
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderNameWidth));
@@ -663,6 +693,12 @@ namespace Mids_Reborn.UI.Forms
         {
             if (control.Parent != layout)
             {
+#if DEBUG
+                if (layout.FindForm() is MainWindow2 mainWindow)
+                {
+                    mainWindow._debugControlReparents++;
+                }
+#endif
                 control.Parent?.Controls.Remove(control);
                 layout.Controls.Add(control, column, row);
             }
@@ -683,6 +719,7 @@ namespace Mids_Reborn.UI.Forms
         private void ConfigureRightActionStripColumns()
         {
             buttonsLayoutPanel.ColumnCount = 6;
+            CountStyleCollectionReset();
             buttonsLayoutPanel.ColumnStyles.Clear();
             buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselinePvToggleWidth));
             buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -911,12 +948,407 @@ namespace Mids_Reborn.UI.Forms
                 ((_headerChromeHost?.ClientSize.Width)
                     ?? (characterLayoutPanel.Parent?.ClientSize.Width ?? characterLayoutPanel.Width)) - 1);
 
-        private float ApplyHeaderLayout(float scale, bool isCompactTwoColumn)
+        private float ApplyHeaderLayout(float scale, float metricsScale, bool isCompactTwoColumn, bool sameModeLiveResize, bool captureExactMetrics)
         {
             var headerHostWidth = ResolveHeaderHostWidth();
-            return isCompactTwoColumn
-                ? ApplyCompactHeaderLayout(scale, headerHostWidth)
-                : ApplyStandardHeaderLayout(scale, headerHostWidth);
+            if (isCompactTwoColumn)
+            {
+                EnsureCompactHeaderStructure();
+                return UpdateCompactHeaderMetrics(scale, metricsScale, headerHostWidth, sameModeLiveResize, captureExactMetrics);
+            }
+
+            EnsureStandardHeaderStructure();
+            return UpdateStandardHeaderMetrics(scale, metricsScale, headerHostWidth, sameModeLiveResize, captureExactMetrics);
+        }
+
+        private void EnsureStandardHeaderStructure()
+        {
+            if (_headerChromeHost is null || _modeLabel is null || _plannerModeHost is null)
+            {
+                return;
+            }
+
+            var needsRebuild =
+                _headerStructureMode != ResizeLayoutMode.Standard
+                || characterLayoutPanel.Parent != _headerChromeHost
+                || characterLayoutPanel.ColumnStyles.Count != 11
+                || characterLayoutPanel.RowStyles.Count != 1;
+
+            if (!needsRebuild)
+            {
+                return;
+            }
+
+            CountStructureRebuild();
+            _headerChromeHost.SuspendLayout();
+            characterLayoutPanel.SuspendLayout();
+
+            if (_compactHeaderHost is not null && _compactHeaderHost.Parent == _headerChromeHost)
+            {
+                _headerChromeHost.Controls.Remove(_compactHeaderHost);
+            }
+
+            if (characterLayoutPanel.Parent != _headerChromeHost)
+            {
+                characterLayoutPanel.Parent?.Controls.Remove(characterLayoutPanel);
+                _headerChromeHost.Controls.Add(characterLayoutPanel);
+            }
+
+            ConfigureCharacterHeaderColumns();
+            AttachHeaderControl(characterLayoutPanel, lblName, 0);
+            if (_nameInputShell is not null)
+            {
+                AttachHeaderControl(characterLayoutPanel, _nameInputShell, 1);
+            }
+            AttachHeaderControl(characterLayoutPanel, lblAT, 2);
+            AttachHeaderControl(characterLayoutPanel, atDropDown, 3);
+            AttachHeaderControl(characterLayoutPanel, lblOrigin, 4);
+            AttachHeaderControl(characterLayoutPanel, originDropDown, 5);
+            AttachHeaderControl(characterLayoutPanel, _modeLabel, 6);
+            AttachHeaderControl(characterLayoutPanel, _plannerModeHost, 7);
+            AttachHeaderControl(characterLayoutPanel, totalsEx, 8);
+            AttachHeaderControl(characterLayoutPanel, combatEx, 9);
+
+            characterLayoutPanel.ResumeLayout(performLayout: false);
+            _headerChromeHost.ResumeLayout(performLayout: false);
+            _headerStructureMode = ResizeLayoutMode.Standard;
+        }
+
+        private void EnsureCompactHeaderStructure()
+        {
+            if (_headerChromeHost is null || _modeLabel is null || _plannerModeHost is null)
+            {
+                return;
+            }
+
+            EnsureCompactHeaderLayouts();
+            if (_compactHeaderHost is null || _compactHeaderTopLayout is null || _compactHeaderBottomLayout is null)
+            {
+                return;
+            }
+
+            var needsRebuild =
+                _headerStructureMode != ResizeLayoutMode.CompactTwoColumn
+                || _compactHeaderHost.Parent != _headerChromeHost
+                || _compactHeaderTopLayout.ColumnStyles.Count != 6
+                || _compactHeaderBottomLayout.ColumnStyles.Count != 5
+                || _compactHeaderHost.RowStyles.Count != 2;
+
+            if (!needsRebuild)
+            {
+                return;
+            }
+
+            CountStructureRebuild();
+            _headerChromeHost.SuspendLayout();
+            _compactHeaderHost.SuspendLayout();
+            _compactHeaderTopLayout.SuspendLayout();
+            _compactHeaderBottomLayout.SuspendLayout();
+
+            if (characterLayoutPanel.Parent == _headerChromeHost)
+            {
+                _headerChromeHost.Controls.Remove(characterLayoutPanel);
+            }
+
+            if (_compactHeaderHost.Parent != _headerChromeHost)
+            {
+                _compactHeaderHost.Parent?.Controls.Remove(_compactHeaderHost);
+                _headerChromeHost.Controls.Add(_compactHeaderHost);
+            }
+
+            CountStyleCollectionReset();
+            _compactHeaderHost.RowStyles.Clear();
+            _compactHeaderHost.RowCount = 2;
+            _compactHeaderHost.RowStyles.Add(new RowStyle(SizeType.Absolute, CompactHeaderTopRowHeight));
+            _compactHeaderHost.RowStyles.Add(new RowStyle(SizeType.Absolute, CompactHeaderBottomRowHeight));
+
+            CountStyleCollectionReset();
+            _compactHeaderTopLayout.ColumnStyles.Clear();
+            _compactHeaderTopLayout.ColumnCount = 6;
+            for (var column = 0; column < 6; column++)
+            {
+                _compactHeaderTopLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 1F));
+            }
+
+            CountStyleCollectionReset();
+            _compactHeaderBottomLayout.ColumnStyles.Clear();
+            _compactHeaderBottomLayout.ColumnCount = 5;
+            for (var column = 0; column < 5; column++)
+            {
+                _compactHeaderBottomLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 1F));
+            }
+
+            AttachHeaderControl(_compactHeaderTopLayout, lblName, 0);
+            if (_nameInputShell is not null)
+            {
+                AttachHeaderControl(_compactHeaderTopLayout, _nameInputShell, 1);
+            }
+            AttachHeaderControl(_compactHeaderTopLayout, lblAT, 2);
+            AttachHeaderControl(_compactHeaderTopLayout, atDropDown, 3);
+            AttachHeaderControl(_compactHeaderTopLayout, lblOrigin, 4);
+            AttachHeaderControl(_compactHeaderTopLayout, originDropDown, 5);
+
+            AttachHeaderControl(_compactHeaderBottomLayout, _modeLabel, 0);
+            AttachHeaderControl(_compactHeaderBottomLayout, _plannerModeHost, 1);
+            AttachHeaderControl(_compactHeaderBottomLayout, totalsEx, 3);
+            AttachHeaderControl(_compactHeaderBottomLayout, combatEx, 4);
+
+            _compactHeaderBottomLayout.ResumeLayout(performLayout: false);
+            _compactHeaderTopLayout.ResumeLayout(performLayout: false);
+            _compactHeaderHost.ResumeLayout(performLayout: false);
+            _headerChromeHost.ResumeLayout(performLayout: false);
+            _headerStructureMode = ResizeLayoutMode.CompactTwoColumn;
+        }
+
+        private float[] CreateStandardHeaderPreferredWidths(float scale)
+            =>
+            [
+                ScaleLayoutValue(60f, scale),
+                ScaleLayoutValue(BaselineHeaderNameWidth, scale),
+                ScaleLayoutValue(BaselineHeaderArchetypeLabelWidth, scale),
+                ScaleLayoutValue(BaselineHeaderArchetypeWidth, scale),
+                ScaleLayoutValue(BaselineHeaderOriginLabelWidth, scale),
+                ScaleLayoutValue(BaselineHeaderOriginWidth, scale),
+                ScaleLayoutValue(BaselineHeaderModeLabelWidth, scale),
+                Math.Max(BaselineHeaderModeWidth, ScaleLayoutValue(BaselineHeaderModeWidth, scale)),
+                ScaleLayoutValue(BaselineHeaderTotalsWidth, scale),
+                ScaleLayoutValue(BaselineHeaderCombatWidth, scale)
+            ];
+
+        private float[] CreateStandardHeaderMinimumWidths(float scale)
+            =>
+            [
+                ScaleLayoutValue(52f, scale),
+                ScaleLayoutValue(96f, scale),
+                ScaleLayoutValue(72f, scale),
+                ScaleLayoutValue(108f, scale),
+                ScaleLayoutValue(48f, scale),
+                ScaleLayoutValue(96f, scale),
+                ScaleLayoutValue(52f, scale),
+                BaselineHeaderModeWidth,
+                ScaleLayoutValue(104f, scale),
+                ScaleLayoutValue(88f, scale)
+            ];
+
+        private float UpdateStandardHeaderMetrics(float scale, float metricsScale, int headerHostWidth, bool sameModeLiveResize, bool captureExactMetrics)
+        {
+            if (_headerChromeHost is null || _modeLabel is null || _plannerModeHost is null)
+            {
+                return Math.Max(BaselineHeaderContentHeight, ScaleLayoutValue(BaselineHeaderContentHeight, metricsScale));
+            }
+
+            var widths = sameModeLiveResize && _standardHeaderExactLayout is { } exactSnapshot
+                ? CloneWidths(exactSnapshot.ColumnWidths)
+                : CreateStandardHeaderPreferredWidths(scale);
+            var minimumWidths = CreateStandardHeaderMinimumWidths(metricsScale);
+            float desiredSpacerWidth = ScaleLayoutValue(8f, metricsScale);
+            float availableWidth = Math.Max(1f, headerHostWidth - desiredSpacerWidth);
+
+            if (sameModeLiveResize)
+            {
+                ReduceWidthsToFitByPriority(widths, minimumWidths, availableWidth, [1, 7, 3, 5, 8, 9, 0, 2, 4, 6], quantizeToTwoPx: true);
+            }
+            else
+            {
+                ReduceWidthsToFit(widths, minimumWidths, availableWidth);
+            }
+
+            for (var column = 0; column <= 9; column++)
+            {
+                characterLayoutPanel.ColumnStyles[column].SizeType = SizeType.Absolute;
+                characterLayoutPanel.ColumnStyles[column].Width = widths[column];
+            }
+
+            characterLayoutPanel.ColumnStyles[10].SizeType = SizeType.Absolute;
+            characterLayoutPanel.ColumnStyles[10].Width = Math.Max(desiredSpacerWidth, headerHostWidth - widths.Sum());
+
+            var headerHeight = Math.Max(BaselineHeaderContentHeight, ScaleLayoutValue(BaselineHeaderContentHeight, metricsScale));
+            characterLayoutPanel.Width = headerHostWidth;
+            characterLayoutPanel.Height = (int)Math.Round(headerHeight);
+            characterLayoutPanel.Location = new Point(0, 0);
+
+            if (captureExactMetrics)
+            {
+                _standardHeaderExactLayout = new StandardHeaderLayoutSnapshot(CloneWidths(widths), headerHeight);
+            }
+
+            return headerHeight;
+        }
+
+        private float[] CreateCompactHeaderTopMinimumWidths(float scale)
+        {
+            float widthScale = Math.Max(1f, scale);
+            return
+            [
+                ScaleLayoutValue(CompactHeaderNameLabelWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderNameMinimumWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderArchetypeLabelWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderArchetypeMinimumWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderOriginLabelWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderOriginMinimumWidth, widthScale)
+            ];
+        }
+
+        private float[] CreateCompactHeaderTopWidths(float scale, int headerHostWidth, bool sameModeLiveResize)
+        {
+            float widthScale = Math.Max(1f, scale);
+            if (sameModeLiveResize && _compactHeaderExactLayout is { } exactSnapshot)
+            {
+                var liveWidths = CloneWidths(exactSnapshot.TopColumnWidths);
+                float extraWidth = headerHostWidth - liveWidths.Sum();
+                if (extraWidth >= 0f)
+                {
+                    liveWidths[1] += extraWidth;
+                }
+                else
+                {
+                    ReduceWidthsToFitByPriority(liveWidths, CreateCompactHeaderTopMinimumWidths(widthScale), headerHostWidth, [1, 3, 5], quantizeToTwoPx: true);
+                }
+
+                return liveWidths;
+            }
+
+            float labelWidthTotal =
+                ScaleLayoutValue(CompactHeaderNameLabelWidth, widthScale) +
+                ScaleLayoutValue(CompactHeaderArchetypeLabelWidth, widthScale) +
+                ScaleLayoutValue(CompactHeaderOriginLabelWidth, widthScale);
+            float[] widths =
+            [
+                ScaleLayoutValue(CompactHeaderNameLabelWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderNameMinimumWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderArchetypeLabelWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderArchetypeMinimumWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderOriginLabelWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderOriginMinimumWidth, widthScale)
+            ];
+
+            float[] inputWidths =
+            [
+                widths[1],
+                widths[3],
+                widths[5]
+            ];
+            float[] weights =
+            [
+                0.40f,
+                0.34f,
+                0.26f
+            ];
+
+            DistributeRemainingWidth(inputWidths, Math.Max(0f, headerHostWidth - labelWidthTotal), weights);
+            widths[1] = inputWidths[0];
+            widths[3] = inputWidths[1];
+            widths[5] = inputWidths[2];
+            return widths;
+        }
+
+        private float[] CreateCompactHeaderBottomMinimumWidths(float scale)
+        {
+            float widthScale = Math.Max(1f, scale);
+            return
+            [
+                ScaleLayoutValue(CompactHeaderModeLabelWidth, widthScale),
+                ScaleLayoutValue(CompactPlannerModeMinimumWidth, widthScale),
+                0f,
+                ScaleLayoutValue(CompactHeaderTotalsWidth * 0.82f, widthScale),
+                ScaleLayoutValue(CompactHeaderCombatWidth * 0.82f, widthScale)
+            ];
+        }
+
+        private float[] CreateCompactHeaderBottomWidths(float scale, int headerHostWidth, bool sameModeLiveResize)
+        {
+            float widthScale = Math.Max(1f, scale);
+            if (sameModeLiveResize && _compactHeaderExactLayout is { } exactSnapshot)
+            {
+                var liveWidths = CloneWidths(exactSnapshot.BottomColumnWidths);
+                float extraWidth = headerHostWidth - liveWidths.Sum();
+                if (extraWidth >= 0f)
+                {
+                    liveWidths[2] += extraWidth;
+                }
+                else
+                {
+                    ReduceWidthsToFitByPriority(liveWidths, CreateCompactHeaderBottomMinimumWidths(widthScale), headerHostWidth, [2, 1, 3, 4, 0], quantizeToTwoPx: true);
+                }
+
+                return liveWidths;
+            }
+
+            float modeLabelWidth = ScaleLayoutValue(CompactHeaderModeLabelWidth, widthScale);
+            float totalsWidth = ScaleLayoutValue(CompactHeaderTotalsWidth, widthScale);
+            float combatWidth = ScaleLayoutValue(CompactHeaderCombatWidth, widthScale);
+            float minimumPlannerWidth = ScaleLayoutValue(CompactPlannerModeMinimumWidth, widthScale);
+            float spacerWidth = ScaleLayoutValue(12f, widthScale);
+            float plannerWidth = Math.Max(minimumPlannerWidth, headerHostWidth - modeLabelWidth - totalsWidth - combatWidth - spacerWidth);
+            var widths = new[] { modeLabelWidth, plannerWidth, spacerWidth, totalsWidth, combatWidth };
+
+            if (widths.Sum() > headerHostWidth)
+            {
+                ReduceWidthsToFitByPriority(widths, CreateCompactHeaderBottomMinimumWidths(widthScale), headerHostWidth, [2, 1, 3, 4, 0], quantizeToTwoPx: false);
+            }
+
+            widths[2] = Math.Max(0f, headerHostWidth - widths[0] - widths[1] - widths[3] - widths[4]);
+            return widths;
+        }
+
+        private float UpdateCompactHeaderMetrics(float scale, float metricsScale, int headerHostWidth, bool sameModeLiveResize, bool captureExactMetrics)
+        {
+            if (_headerChromeHost is null || _modeLabel is null || _plannerModeHost is null)
+            {
+                return CompactHeaderTopRowHeight + CompactHeaderBottomRowHeight + CompactHeaderRowGap;
+            }
+
+            EnsureCompactHeaderLayouts();
+            if (_compactHeaderHost is null || _compactHeaderTopLayout is null || _compactHeaderBottomLayout is null)
+            {
+                return CompactHeaderTopRowHeight + CompactHeaderBottomRowHeight + CompactHeaderRowGap;
+            }
+
+            var topWidths = CreateCompactHeaderTopWidths(scale, headerHostWidth, sameModeLiveResize);
+            var bottomWidths = CreateCompactHeaderBottomWidths(scale, headerHostWidth, sameModeLiveResize);
+            float topHeight = Math.Max(CompactHeaderTopRowHeight, ScaleLayoutValue(CompactHeaderTopRowHeight, metricsScale));
+            float bottomHeight = Math.Max(CompactHeaderBottomRowHeight, ScaleLayoutValue(CompactHeaderBottomRowHeight, metricsScale));
+            float rowGap = ScaleLayoutValue(CompactHeaderRowGap, metricsScale);
+
+            for (var column = 0; column < topWidths.Length; column++)
+            {
+                _compactHeaderTopLayout.ColumnStyles[column].SizeType = SizeType.Absolute;
+                _compactHeaderTopLayout.ColumnStyles[column].Width = topWidths[column];
+            }
+
+            for (var column = 0; column < bottomWidths.Length; column++)
+            {
+                _compactHeaderBottomLayout.ColumnStyles[column].SizeType = SizeType.Absolute;
+                _compactHeaderBottomLayout.ColumnStyles[column].Width = bottomWidths[column];
+            }
+
+            _compactHeaderHost.RowStyles[0].SizeType = SizeType.Absolute;
+            _compactHeaderHost.RowStyles[0].Height = topHeight;
+            _compactHeaderHost.RowStyles[1].SizeType = SizeType.Absolute;
+            _compactHeaderHost.RowStyles[1].Height = bottomHeight + rowGap;
+
+            _compactHeaderTopLayout.Width = headerHostWidth;
+            _compactHeaderTopLayout.Height = (int)Math.Round(topHeight);
+            _compactHeaderBottomLayout.Width = headerHostWidth;
+            _compactHeaderBottomLayout.Height = (int)Math.Round(bottomHeight);
+
+            _compactHeaderHost.Width = headerHostWidth;
+            _compactHeaderHost.Height = (int)Math.Round(topHeight + bottomHeight + rowGap);
+            _compactHeaderHost.Location = new Point(0, 0);
+
+            _compactHeaderBottomLayout.Margin = new Padding(0, (int)Math.Round(rowGap), 0, 0);
+
+            if (captureExactMetrics)
+            {
+                _compactHeaderExactLayout = new CompactHeaderLayoutSnapshot(
+                    CloneWidths(topWidths),
+                    CloneWidths(bottomWidths),
+                    topHeight,
+                    bottomHeight,
+                    rowGap);
+            }
+
+            return topHeight + bottomHeight + rowGap;
         }
 
         private void PositionHeaderContainer(Control? headerContainer, float headerRowHeight)
@@ -975,19 +1407,146 @@ namespace Mids_Reborn.UI.Forms
             return (int)Math.Round(Math.Clamp(desiredHeight, minimumHeight, maximumHeight));
         }
 
-        private void ApplyLeftDetailsLayout(bool isCompactTwoColumn, float scale)
+        private void ApplyLeftDetailsLayout(bool isCompactTwoColumn, float scale, float metricsScale, bool sameModeLiveResize, bool captureExactMetrics)
         {
             leftInnerLayoutPanel.SuspendLayout();
 
             if (isCompactTwoColumn)
             {
+                EnsureCompactLeftDetailsStructure();
+            }
+            else
+            {
+                EnsureStandardLeftDetailsStructure();
+            }
+
+            UpdateLeftDetailsMetrics(isCompactTwoColumn, scale, metricsScale, sameModeLiveResize, captureExactMetrics);
+            leftInnerLayoutPanel.ResumeLayout(performLayout: false);
+        }
+
+        private void ApplyLeftWorkspaceLayout(bool isCompactTwoColumn, float scale, float metricsScale, float poolRailWidth, bool sameModeLiveResize, bool captureExactMetrics)
+        {
+            if (_leftDetailsShell is null)
+            {
+                return;
+            }
+
+            leftLayoutPanel.SuspendLayout();
+
+            if (isCompactTwoColumn)
+            {
+                EnsureCompactWorkspaceStructure();
+            }
+            else
+            {
+                EnsureStandardWorkspaceStructure();
+            }
+
+            UpdateWorkspaceMetrics(isCompactTwoColumn, metricsScale, poolRailWidth, sameModeLiveResize, captureExactMetrics);
+            leftLayoutPanel.ResumeLayout(performLayout: false);
+        }
+
+        private void EnsureStandardLeftDetailsStructure()
+        {
+            var needsRebuild =
+                _leftDetailsStructureMode != ResizeLayoutMode.Standard
+                || leftInnerLayoutPanel.ColumnStyles.Count != 2
+                || leftInnerLayoutPanel.RowStyles.Count != 4;
+
+            if (!needsRebuild)
+            {
+                return;
+            }
+
+            CountStructureRebuild();
+            leftInnerLayoutPanel.SuspendLayout();
+            leftInnerLayoutPanel.ColumnCount = 2;
+            CountStyleCollectionReset();
+            leftInnerLayoutPanel.ColumnStyles.Clear();
+            leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+            leftInnerLayoutPanel.RowCount = 4;
+            CountStyleCollectionReset();
+            leftInnerLayoutPanel.RowStyles.Clear();
+            leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, BaselinePowerSetHeaderRowHeight));
+            leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, BaselinePowerSetDropDownRowHeight));
+            leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+            leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 66.6666641F));
+
+            AttachHeaderControl(leftInnerLayoutPanel, lblPrimary, 0, 0);
+            AttachHeaderControl(leftInnerLayoutPanel, label1, 1, 0);
+            AttachHeaderControl(leftInnerLayoutPanel, primaryDropDown, 0, 1);
+            AttachHeaderControl(leftInnerLayoutPanel, secondaryDropDown, 1, 1);
+            AttachHeaderControl(leftInnerLayoutPanel, primaryList, 0, 2);
+            AttachHeaderControl(leftInnerLayoutPanel, secondaryList, 1, 2);
+            AttachHeaderControl(leftInnerLayoutPanel, dataView, 0, 3, 2);
+            leftInnerLayoutPanel.SetColumnSpan(dataView, 2);
+
+            leftInnerLayoutPanel.ResumeLayout(performLayout: false);
+            _leftDetailsStructureMode = ResizeLayoutMode.Standard;
+        }
+
+        private void EnsureCompactLeftDetailsStructure()
+        {
+            var needsRebuild =
+                _leftDetailsStructureMode != ResizeLayoutMode.CompactTwoColumn
+                || leftInnerLayoutPanel.ColumnStyles.Count != 2
+                || leftInnerLayoutPanel.RowStyles.Count != 7;
+
+            if (!needsRebuild)
+            {
+                return;
+            }
+
+            CountStructureRebuild();
+            leftInnerLayoutPanel.SuspendLayout();
+            leftInnerLayoutPanel.ColumnCount = 2;
+            CountStyleCollectionReset();
+            leftInnerLayoutPanel.ColumnStyles.Clear();
+            leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 1f));
+            leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 1f));
+            leftInnerLayoutPanel.RowCount = 7;
+            CountStyleCollectionReset();
+            leftInnerLayoutPanel.RowStyles.Clear();
+            for (var row = 0; row < 7; row++)
+            {
+                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 1f));
+            }
+
+            AttachHeaderControl(leftInnerLayoutPanel, lblPrimary, 0, 0);
+            AttachHeaderControl(leftInnerLayoutPanel, primaryDropDown, 0, 1);
+            AttachHeaderControl(leftInnerLayoutPanel, primaryList, 0, 2);
+            AttachHeaderControl(leftInnerLayoutPanel, label1, 0, 3);
+            AttachHeaderControl(leftInnerLayoutPanel, secondaryDropDown, 0, 4);
+            AttachHeaderControl(leftInnerLayoutPanel, secondaryList, 0, 5);
+            if (_poolShell is not null)
+            {
+                AttachHeaderControl(leftInnerLayoutPanel, _poolShell, 1, 0);
+                leftInnerLayoutPanel.SetRowSpan(_poolShell, 6);
+            }
+            AttachHeaderControl(leftInnerLayoutPanel, dataView, 0, 6, 2);
+            leftInnerLayoutPanel.SetColumnSpan(dataView, 2);
+
+            leftInnerLayoutPanel.ResumeLayout(performLayout: false);
+            _leftDetailsStructureMode = ResizeLayoutMode.CompactTwoColumn;
+        }
+
+        private void UpdateLeftDetailsMetrics(bool isCompactTwoColumn, float scale, float metricsScale, bool sameModeLiveResize, bool captureExactMetrics)
+        {
+            float headerRowHeight = sameModeLiveResize && _leftDetailsExactLayout is { } exactSnapshot
+                ? exactSnapshot.HeaderRowHeight
+                : ScaleLayoutValue(BaselinePowerSetHeaderRowHeight, metricsScale);
+            float dropDownRowHeight = sameModeLiveResize && _leftDetailsExactLayout is { } exactSnapshot2
+                ? exactSnapshot2.DropDownRowHeight
+                : ScaleLayoutValue(BaselinePowerSetDropDownRowHeight, metricsScale);
+
+            if (isCompactTwoColumn)
+            {
                 int minimumListHeight = (int)Math.Round(ScaleLayoutValue(CompactPowerListMinHeight, scale));
-                int fixedChromeHeight =
-                    (int)Math.Round(ScaleLayoutValue(BaselinePowerSetHeaderRowHeight, scale)) * 2 +
-                    (int)Math.Round(ScaleLayoutValue(BaselinePowerSetDropDownRowHeight, scale)) * 2;
+                int fixedChromeHeight = (int)Math.Round(headerRowHeight) * 2 + (int)Math.Round(dropDownRowHeight) * 2;
                 int availableHeight = Math.Max(0, leftInnerLayoutPanel.ClientSize.Height);
                 int maximumDataViewHeight = Math.Max(
-                    (int)Math.Round(ScaleLayoutValue(CompactDataViewMinimumHeight, scale)),
+                    (int)Math.Round(ScaleLayoutValue(CompactDataViewMinimumHeight, metricsScale)),
                     availableHeight - fixedChromeHeight - (minimumListHeight * 2));
                 int dataViewHeight = Math.Min(ResolveCompactDataViewHeight(scale), maximumDataViewHeight);
                 int topVariableBudget = Math.Max(minimumListHeight * 2, availableHeight - fixedChromeHeight - dataViewHeight);
@@ -1003,122 +1562,157 @@ namespace Mids_Reborn.UI.Forms
                 {
                     poolColumnWidth = Math.Max(ScaleLayoutValue(198f, scale), availableWidth - minimumPowerColumnWidth);
                 }
+
                 float powerColumnWidth = Math.Max(1f, availableWidth - poolColumnWidth);
+                leftInnerLayoutPanel.ColumnStyles[0].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.ColumnStyles[0].Width = powerColumnWidth;
+                leftInnerLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.ColumnStyles[1].Width = poolColumnWidth;
 
-                leftInnerLayoutPanel.ColumnCount = 2;
-                leftInnerLayoutPanel.ColumnStyles.Clear();
-                leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, powerColumnWidth));
-                leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, poolColumnWidth));
-                leftInnerLayoutPanel.RowCount = 7;
-                leftInnerLayoutPanel.RowStyles.Clear();
-                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(BaselinePowerSetHeaderRowHeight, scale)));
-                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(BaselinePowerSetDropDownRowHeight, scale)));
-                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, primaryListHeight));
-                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(BaselinePowerSetHeaderRowHeight, scale)));
-                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(BaselinePowerSetDropDownRowHeight, scale)));
-                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, secondaryListHeight));
-                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, dataViewHeight));
-
-                AttachHeaderControl(leftInnerLayoutPanel, lblPrimary, 0, 0);
-                AttachHeaderControl(leftInnerLayoutPanel, primaryDropDown, 0, 1);
-                AttachHeaderControl(leftInnerLayoutPanel, primaryList, 0, 2);
-                AttachHeaderControl(leftInnerLayoutPanel, label1, 0, 3);
-                AttachHeaderControl(leftInnerLayoutPanel, secondaryDropDown, 0, 4);
-                AttachHeaderControl(leftInnerLayoutPanel, secondaryList, 0, 5);
-                if (_poolShell is not null)
-                {
-                    AttachHeaderControl(leftInnerLayoutPanel, _poolShell, 1, 0);
-                    leftInnerLayoutPanel.SetRowSpan(_poolShell, 6);
-                }
-                AttachHeaderControl(leftInnerLayoutPanel, dataView, 0, 6, 2);
-                leftInnerLayoutPanel.SetColumnSpan(dataView, 2);
+                leftInnerLayoutPanel.RowStyles[0].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.RowStyles[0].Height = headerRowHeight;
+                leftInnerLayoutPanel.RowStyles[1].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.RowStyles[1].Height = dropDownRowHeight;
+                leftInnerLayoutPanel.RowStyles[2].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.RowStyles[2].Height = primaryListHeight;
+                leftInnerLayoutPanel.RowStyles[3].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.RowStyles[3].Height = headerRowHeight;
+                leftInnerLayoutPanel.RowStyles[4].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.RowStyles[4].Height = dropDownRowHeight;
+                leftInnerLayoutPanel.RowStyles[5].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.RowStyles[5].Height = secondaryListHeight;
+                leftInnerLayoutPanel.RowStyles[6].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.RowStyles[6].Height = dataViewHeight;
             }
             else
             {
-                leftInnerLayoutPanel.ColumnCount = 2;
-                leftInnerLayoutPanel.ColumnStyles.Clear();
-                leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
-                leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
-                leftInnerLayoutPanel.RowCount = 4;
-                leftInnerLayoutPanel.RowStyles.Clear();
-                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(BaselinePowerSetHeaderRowHeight, scale)));
-                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(BaselinePowerSetDropDownRowHeight, scale)));
-                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
-                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 66.6666641F));
+                leftInnerLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
+                leftInnerLayoutPanel.ColumnStyles[0].Width = 50f;
+                leftInnerLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
+                leftInnerLayoutPanel.ColumnStyles[1].Width = 50f;
 
-                AttachHeaderControl(leftInnerLayoutPanel, lblPrimary, 0, 0);
-                AttachHeaderControl(leftInnerLayoutPanel, label1, 1, 0);
-                AttachHeaderControl(leftInnerLayoutPanel, primaryDropDown, 0, 1);
-                AttachHeaderControl(leftInnerLayoutPanel, secondaryDropDown, 1, 1);
-                AttachHeaderControl(leftInnerLayoutPanel, primaryList, 0, 2);
-                AttachHeaderControl(leftInnerLayoutPanel, secondaryList, 1, 2);
-                AttachHeaderControl(leftInnerLayoutPanel, dataView, 0, 3, 2);
-                leftInnerLayoutPanel.SetColumnSpan(dataView, 2);
+                leftInnerLayoutPanel.RowStyles[0].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.RowStyles[0].Height = headerRowHeight;
+                leftInnerLayoutPanel.RowStyles[1].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.RowStyles[1].Height = dropDownRowHeight;
+                leftInnerLayoutPanel.RowStyles[2].SizeType = SizeType.Percent;
+                leftInnerLayoutPanel.RowStyles[2].Height = 33.3333321F;
+                leftInnerLayoutPanel.RowStyles[3].SizeType = SizeType.Percent;
+                leftInnerLayoutPanel.RowStyles[3].Height = 66.6666641F;
             }
 
-            leftInnerLayoutPanel.ResumeLayout(performLayout: false);
+            if (captureExactMetrics)
+            {
+                _leftDetailsExactLayout = new LeftDetailsLayoutSnapshot(headerRowHeight, dropDownRowHeight);
+            }
         }
 
-        private void ApplyLeftWorkspaceLayout(bool isCompactTwoColumn, float scale, float poolRailWidth)
+        private void EnsureStandardWorkspaceStructure()
+        {
+            if (_leftDetailsShell is null || _poolShell is null)
+            {
+                return;
+            }
+
+            var needsRebuild =
+                _workspaceStructureMode != ResizeLayoutMode.Standard
+                || leftLayoutPanel.ColumnStyles.Count != 2
+                || leftLayoutPanel.RowStyles.Count != 2
+                || _leftDetailsShell.Parent != leftLayoutPanel
+                || _poolShell.Parent != leftLayoutPanel;
+
+            if (!needsRebuild)
+            {
+                return;
+            }
+
+            CountStructureRebuild();
+            leftLayoutPanel.SuspendLayout();
+            leftLayoutPanel.ColumnCount = 2;
+            CountStyleCollectionReset();
+            leftLayoutPanel.ColumnStyles.Clear();
+            leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+            leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselinePoolRailWidth));
+            leftLayoutPanel.RowCount = 2;
+            CountStyleCollectionReset();
+            leftLayoutPanel.RowStyles.Clear();
+            leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 160f));
+            leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+
+            AttachHeaderControl(leftLayoutPanel, _leftDetailsShell, 0, 0);
+            AttachHeaderControl(leftLayoutPanel, _poolShell, 1, 0);
+            leftLayoutPanel.SetColumnSpan(_leftDetailsShell, 1);
+            leftLayoutPanel.SetRowSpan(_leftDetailsShell, 2);
+            leftLayoutPanel.SetColumnSpan(_poolShell, 1);
+            leftLayoutPanel.SetRowSpan(_poolShell, 2);
+            leftLayoutPanel.PreferredGrowRow = 0;
+            leftLayoutPanel.FlexibleRow = 1;
+            leftLayoutPanel.ResumeLayout(performLayout: false);
+            _workspaceStructureMode = ResizeLayoutMode.Standard;
+        }
+
+        private void EnsureCompactWorkspaceStructure()
         {
             if (_leftDetailsShell is null)
             {
                 return;
             }
 
+            var needsRebuild =
+                _workspaceStructureMode != ResizeLayoutMode.CompactTwoColumn
+                || leftLayoutPanel.ColumnStyles.Count != 1
+                || leftLayoutPanel.RowStyles.Count != 1
+                || _leftDetailsShell.Parent != leftLayoutPanel;
+
+            if (!needsRebuild)
+            {
+                return;
+            }
+
+            CountStructureRebuild();
             leftLayoutPanel.SuspendLayout();
+            leftLayoutPanel.ColumnCount = 1;
+            CountStyleCollectionReset();
+            leftLayoutPanel.ColumnStyles.Clear();
+            leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+            leftLayoutPanel.RowCount = 1;
+            CountStyleCollectionReset();
+            leftLayoutPanel.RowStyles.Clear();
+            leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
 
-            if (isCompactTwoColumn)
-            {
-                leftLayoutPanel.ColumnCount = 1;
-                leftLayoutPanel.ColumnStyles.Clear();
-                leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-                leftLayoutPanel.RowCount = 1;
-                leftLayoutPanel.RowStyles.Clear();
-                leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-
-                AttachHeaderControl(leftLayoutPanel, _leftDetailsShell, 0, 0);
-
-                leftLayoutPanel.SetColumnSpan(_leftDetailsShell, 1);
-                leftLayoutPanel.SetRowSpan(_leftDetailsShell, 1);
-            }
-            else
-            {
-                if (_poolShell is null)
-                {
-                    leftLayoutPanel.ResumeLayout(performLayout: false);
-                    return;
-                }
-
-                leftLayoutPanel.ColumnCount = 2;
-                leftLayoutPanel.ColumnStyles.Clear();
-                leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-                leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, poolRailWidth));
-                leftLayoutPanel.RowCount = 2;
-                leftLayoutPanel.RowStyles.Clear();
-                leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(160f, scale)));
-                leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-
-                AttachHeaderControl(leftLayoutPanel, _leftDetailsShell, 0, 0);
-                AttachHeaderControl(leftLayoutPanel, _poolShell, 1, 0);
-
-                leftLayoutPanel.SetColumnSpan(_leftDetailsShell, 1);
-                leftLayoutPanel.SetRowSpan(_leftDetailsShell, 2);
-                leftLayoutPanel.SetColumnSpan(_poolShell, 1);
-                leftLayoutPanel.SetRowSpan(_poolShell, 2);
-
-                leftLayoutPanel.PreferredGrowRow = 0;
-                leftLayoutPanel.FlexibleRow = 1;
-            }
-
+            AttachHeaderControl(leftLayoutPanel, _leftDetailsShell, 0, 0);
+            leftLayoutPanel.SetColumnSpan(_leftDetailsShell, 1);
+            leftLayoutPanel.SetRowSpan(_leftDetailsShell, 1);
             leftLayoutPanel.ResumeLayout(performLayout: false);
+            _workspaceStructureMode = ResizeLayoutMode.CompactTwoColumn;
         }
 
-        private float ApplyStandardHeaderLayout(float scale, int headerHostWidth)
+        private void UpdateWorkspaceMetrics(bool isCompactTwoColumn, float metricsScale, float poolRailWidth, bool sameModeLiveResize, bool captureExactMetrics)
+        {
+            if (isCompactTwoColumn)
+            {
+                leftLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
+                leftLayoutPanel.ColumnStyles[0].Width = 100f;
+                leftLayoutPanel.RowStyles[0].SizeType = SizeType.Percent;
+                leftLayoutPanel.RowStyles[0].Height = 100f;
+                return;
+            }
+
+            leftLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
+            leftLayoutPanel.ColumnStyles[0].Width = 100f;
+            leftLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;
+            leftLayoutPanel.ColumnStyles[1].Width = poolRailWidth;
+            leftLayoutPanel.RowStyles[0].SizeType = SizeType.Absolute;
+            leftLayoutPanel.RowStyles[0].Height = ScaleLayoutValue(160f, metricsScale);
+            leftLayoutPanel.RowStyles[1].SizeType = SizeType.Percent;
+            leftLayoutPanel.RowStyles[1].Height = 100f;
+        }
+
+        private float ApplyStandardHeaderLayout(float scale, float metricsScale, int headerHostWidth)
         {
             if (_headerChromeHost is null || _modeLabel is null || _plannerModeHost is null)
             {
-                return Math.Max(BaselineHeaderContentHeight, ScaleLayoutValue(BaselineHeaderContentHeight, scale));
+                return Math.Max(BaselineHeaderContentHeight, ScaleLayoutValue(BaselineHeaderContentHeight, metricsScale));
             }
 
             _headerChromeHost.SuspendLayout();
@@ -1186,7 +1780,7 @@ namespace Mids_Reborn.UI.Forms
                 characterLayoutPanel.ColumnStyles[column].Width = preferredWidths[column];
             }
 
-            var headerHeight = Math.Max(BaselineHeaderContentHeight, ScaleLayoutValue(BaselineHeaderContentHeight, scale));
+            var headerHeight = Math.Max(BaselineHeaderContentHeight, ScaleLayoutValue(BaselineHeaderContentHeight, metricsScale));
             characterLayoutPanel.Width = headerHostWidth;
             characterLayoutPanel.Height = (int)Math.Round(headerHeight);
             characterLayoutPanel.Location = new Point(0, 0);
@@ -1196,7 +1790,7 @@ namespace Mids_Reborn.UI.Forms
             return headerHeight;
         }
 
-        private float ApplyCompactHeaderLayout(float scale, int headerHostWidth)
+        private float ApplyCompactHeaderLayout(float scale, float metricsScale, int headerHostWidth)
         {
             if (_headerChromeHost is null || _modeLabel is null || _plannerModeHost is null)
             {
@@ -1243,9 +1837,9 @@ namespace Mids_Reborn.UI.Forms
             ConfigureCompactHeaderTopColumns(scale, headerHostWidth);
             ConfigureCompactHeaderBottomColumns(scale, headerHostWidth);
 
-            float topHeight = Math.Max(CompactHeaderTopRowHeight, ScaleLayoutValue(CompactHeaderTopRowHeight, scale));
-            float bottomHeight = Math.Max(CompactHeaderBottomRowHeight, ScaleLayoutValue(CompactHeaderBottomRowHeight, scale));
-            float rowGap = ScaleLayoutValue(CompactHeaderRowGap, scale);
+            float topHeight = Math.Max(CompactHeaderTopRowHeight, ScaleLayoutValue(CompactHeaderTopRowHeight, metricsScale));
+            float bottomHeight = Math.Max(CompactHeaderBottomRowHeight, ScaleLayoutValue(CompactHeaderBottomRowHeight, metricsScale));
+            float rowGap = ScaleLayoutValue(CompactHeaderRowGap, metricsScale);
 
             _compactHeaderHost.RowStyles.Clear();
             _compactHeaderHost.RowStyles.Add(new RowStyle(SizeType.Absolute, topHeight));
@@ -1626,6 +2220,8 @@ namespace Mids_Reborn.UI.Forms
         private void OnResizeEnd(object? sender, EventArgs e)
         {
             _isInLiveResize = false;
+            _pendingEndLiveResizeMetrics = true;
+            _pendingResumeSmartLayout = true;
             QueueResizeFrame(forceExact: true);
         }
 
@@ -1636,7 +2232,7 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            ApplyPoolRailWidth(availableWidth);
+            ApplyPoolRailWidth(availableWidth, performFullLayout: !_isInLiveResize);
         }
 
         private void OnPetViewSliderUpdated()
@@ -1644,7 +2240,7 @@ namespace Mids_Reborn.UI.Forms
             FrmPetActorDetailsWindow?.UpdateData();
         }
 
-        private void ApplyPoolRailWidth(int availableWidth)
+        private void ApplyPoolRailWidth(int availableWidth, bool performFullLayout = true)
         {
             if (availableWidth <= 0)
             {
@@ -1652,10 +2248,10 @@ namespace Mids_Reborn.UI.Forms
             }
 
             rightInnerLayoutPanel.Width = availableWidth;
-            UpdatePoolRailSectionHeights();
+            UpdatePoolRailSectionHeights(performFullLayout);
         }
 
-        private void UpdatePoolRailSectionHeights()
+        private void UpdatePoolRailSectionHeights(bool performFullLayout)
         {
             if (_poolSections.Length == 0 || rightInnerLayoutPanel.Width <= 0)
             {
@@ -1674,15 +2270,18 @@ namespace Mids_Reborn.UI.Forms
                 var preferredHeight = section.List.GetPreferredSize(new Size(proposedWidth, int.MaxValue)).Height;
                 rowStyle.Height = Math.Max(section.List.MinimumSize.Height, preferredHeight);
             }
-            rightInnerLayoutPanel.ResumeLayout(performLayout: true);
+            rightInnerLayoutPanel.ResumeLayout(performLayout: performFullLayout);
         }
 
-        private void RefreshPoolRailLayout()
+        private void RefreshPoolRailLayout(bool performFullLayout = true)
         {
             rightInnerLayoutPanel.AutoSize = true;
             rightInnerLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
-            ApplyPoolRailWidth(Math.Max(1, midsvScrollPanel1.AvailableClientWidth));
-            midsvScrollPanel1.RecalculateLayout();
+            ApplyPoolRailWidth(Math.Max(1, midsvScrollPanel1.AvailableClientWidth), performFullLayout);
+            if (performFullLayout)
+            {
+                midsvScrollPanel1.RecalculateLayout();
+            }
         }
 
         private void UpdateFooterSummary()
@@ -1790,6 +2389,157 @@ namespace Mids_Reborn.UI.Forms
         private ResizeLayoutMode GetResizeLayoutMode()
             => ShouldUseCompactTwoColumnLayout() ? ResizeLayoutMode.CompactTwoColumn : ResizeLayoutMode.Standard;
 
+        private bool IsSameModeLiveResize(ResizeLayoutMode layoutMode, bool forceExact)
+            => _isInLiveResize && !forceExact && layoutMode == _lastLayoutMode;
+
+        private static float[] CloneWidths(float[] widths)
+        {
+            var clone = new float[widths.Length];
+            Array.Copy(widths, clone, widths.Length);
+            return clone;
+        }
+
+        private static float QuantizeToStep(float value, float step)
+        {
+            if (step <= 0f)
+            {
+                return value;
+            }
+
+            return Math.Max(1f, (float)Math.Round(value / step) * step);
+        }
+
+        private static void ReduceWidthsToFitByPriority(float[] widths, float[] minimums, float availableWidth, ReadOnlySpan<int> priority, bool quantizeToTwoPx)
+        {
+            if (widths.Length != minimums.Length)
+            {
+                throw new ArgumentException("Width arrays must match.");
+            }
+
+            float totalWidth = widths.Sum();
+            if (availableWidth <= 0f || totalWidth <= availableWidth)
+            {
+                return;
+            }
+
+            float remainingReduction = totalWidth - availableWidth;
+            foreach (var index in priority)
+            {
+                if (index < 0 || index >= widths.Length || remainingReduction <= 0.01f)
+                {
+                    continue;
+                }
+
+                float currentWidth = widths[index];
+                float minimumWidth = minimums[index];
+                float capacity = Math.Max(0f, currentWidth - minimumWidth);
+                if (capacity <= 0f)
+                {
+                    continue;
+                }
+
+                float reduction = Math.Min(capacity, remainingReduction);
+                if (quantizeToTwoPx)
+                {
+                    reduction = Math.Min(capacity, Math.Max(2f, QuantizeToStep(reduction, 2f)));
+                }
+
+                widths[index] = Math.Max(minimumWidth, currentWidth - reduction);
+                remainingReduction = Math.Max(0f, remainingReduction - (currentWidth - widths[index]));
+            }
+
+            if (remainingReduction > 0.01f)
+            {
+                ReduceWidthsToFit(widths, minimums, availableWidth);
+                if (quantizeToTwoPx)
+                {
+                    for (var i = 0; i < widths.Length; i++)
+                    {
+                        widths[i] = Math.Max(minimums[i], QuantizeToStep(widths[i], 2f));
+                    }
+
+                    while (widths.Sum() > availableWidth + 0.5f)
+                    {
+                        var reduced = false;
+                        foreach (var index in priority)
+                        {
+                            if (index < 0 || index >= widths.Length) continue;
+                            if (widths[index] - minimums[index] < 2f) continue;
+                            widths[index] -= 2f;
+                            reduced = true;
+                            if (widths.Sum() <= availableWidth + 0.5f)
+                            {
+                                break;
+                            }
+                        }
+
+                        if (!reduced)
+                        {
+                            break;
+                        }
+                    }
+                }
+            }
+        }
+
+        [Conditional("DEBUG")]
+        private void CountStructureRebuild()
+        {
+#if DEBUG
+            _debugStructureRebuilds++;
+#endif
+        }
+
+        [Conditional("DEBUG")]
+        private void CountStyleCollectionReset()
+        {
+#if DEBUG
+            _debugStyleCollectionResets++;
+#endif
+        }
+
+        private float GetLiveResizeMetricsScale(float scale, bool forceExact)
+            => forceExact || !_isInLiveResize ? scale : Math.Max(0.01f, _liveResizeMetricsScale);
+
+        private void BeginLiveResizeMetrics()
+        {
+            _liveResizeMetricsScale = _lastLeftUiScale > 0f ? _lastLeftUiScale : ComputeLeftUiScale();
+            foreach (var control in EnumerateLiveResizeAwareControls())
+            {
+                control.BeginLiveResizeMetrics();
+            }
+        }
+
+        private void EndLiveResizeMetrics()
+        {
+            foreach (var control in EnumerateLiveResizeAwareControls())
+            {
+                control.EndLiveResizeMetrics();
+            }
+        }
+
+        private IEnumerable<ILiveResizeMetricsAware> EnumerateLiveResizeAwareControls()
+        {
+            var seen = new HashSet<Control>();
+            foreach (var root in new Control?[] { leftLayoutPanel, buttonsLayoutPanel, _headerChromeHost })
+            {
+                if (root is null)
+                {
+                    continue;
+                }
+
+                foreach (var control in EnumerateScaleControls(root))
+                {
+                    if (control is not ILiveResizeMetricsAware liveResizeAware || !seen.Add(control))
+                    {
+                        continue;
+                    }
+
+                    yield return liveResizeAware;
+                }
+            }
+        }
+
         private void QueueResizeFrame(bool forceExact = false)
         {
             _pendingClientSize = ClientSize;
@@ -1840,6 +2590,22 @@ namespace Mids_Reborn.UI.Forms
                 scale = Math.Max(scale, 0.95f);
             }
 
+            if (forceExact && _pendingEndLiveResizeMetrics)
+            {
+                EndLiveResizeMetrics();
+                _pendingEndLiveResizeMetrics = false;
+            }
+
+            if (forceExact && _pendingResumeSmartLayout)
+            {
+                leftLayoutPanel.SuspendSmartLayoutScheduling = false;
+                leftLayoutPanel.RefreshSmartLayout();
+                _pendingResumeSmartLayout = false;
+            }
+
+            float metricsScale = GetLiveResizeMetricsScale(scale, forceExact);
+            bool sameModeLiveResize = IsSameModeLiveResize(layoutMode, forceExact);
+
             int scaleBucket = ComputeScaleBucket(scale);
             bool scaleArtifactsChanged = forceExact
                 || scaleBucket != _lastLeftUiScaleBucket
@@ -1854,11 +2620,11 @@ namespace Mids_Reborn.UI.Forms
             rightInnerLayoutPanel.SuspendLayout();
             characterPanel.SuspendLayout();
 
-            ApplyLeftUiGeometry(scale, layoutMode);
+            ApplyLeftUiGeometry(scale, metricsScale, layoutMode, sameModeLiveResize, forceExact || !_isInLiveResize);
 
             if (scaleArtifactsChanged)
             {
-                ApplyLeftUiScaleArtifacts(scale, layoutMode);
+                ApplyLeftUiScaleArtifacts(scale, metricsScale, layoutMode);
             }
 
             if (drawing != null)
@@ -1868,13 +2634,32 @@ namespace Mids_Reborn.UI.Forms
 
             dataView.RefreshResponsiveLayout();
 
-            characterPanel.ResumeLayout(performLayout: true);
-            rightInnerLayoutPanel.ResumeLayout(performLayout: true);
-            leftInnerLayoutPanel.ResumeLayout(performLayout: true);
-            leftLayoutPanel.ResumeLayout(performLayout: true);
-            rightLayoutPanel.ResumeLayout(performLayout: true);
-            mainLayoutPanel.ResumeLayout(performLayout: true);
-            ResumeLayout(performLayout: true);
+            var performFullLayout = !sameModeLiveResize;
+            characterPanel.ResumeLayout(performLayout: performFullLayout);
+            rightInnerLayoutPanel.ResumeLayout(performLayout: performFullLayout);
+            leftInnerLayoutPanel.ResumeLayout(performLayout: performFullLayout);
+            leftLayoutPanel.ResumeLayout(performLayout: performFullLayout);
+            rightLayoutPanel.ResumeLayout(performLayout: performFullLayout);
+            mainLayoutPanel.ResumeLayout(performLayout: performFullLayout);
+            ResumeLayout(performLayout: performFullLayout);
+
+            if (sameModeLiveResize)
+            {
+                _headerChromeHost?.PerformLayout();
+                characterLayoutPanel.PerformLayout();
+                _compactHeaderTopLayout?.PerformLayout();
+                _compactHeaderBottomLayout?.PerformLayout();
+                _compactHeaderHost?.PerformLayout();
+                leftInnerLayoutPanel.PerformLayout();
+                leftLayoutPanel.PerformLayout();
+                rightInnerLayoutPanel.PerformLayout();
+                buttonsLayoutPanel.PerformLayout();
+                rightLayoutPanel.PerformLayout();
+                mainLayoutPanel.PerformLayout();
+#if DEBUG
+                _debugSameModeLiveResizeFrames++;
+#endif
+            }
 
             _headerChromeHost?.Invalidate();
             _nameInputShell?.Invalidate();
@@ -1887,6 +2672,10 @@ namespace Mids_Reborn.UI.Forms
             _lastProcessedClientSize = pendingSize;
             _lastLayoutMode = layoutMode;
             _lastLeftUiScale = scale;
+            if (forceExact || !_isInLiveResize)
+            {
+                _liveResizeMetricsScale = scale;
+            }
             _lastLeftUiScaleBucket = scaleBucket;
             _lastLeftUiDpi = DeviceDpi;
 
@@ -1894,11 +2683,13 @@ namespace Mids_Reborn.UI.Forms
             _debugProcessedResizeFrames++;
             Debug.WriteLine(
                 $"[Resize] frame #{_debugProcessedResizeFrames} size={pendingSize.Width}x{pendingSize.Height} " +
-                $"scale={scale:F3} bucket={scaleBucket} mode={layoutMode} live={_isInLiveResize} exact={forceExact}");
+                $"scale={scale:F3} bucket={scaleBucket} mode={layoutMode} live={_isInLiveResize} exact={forceExact} " +
+                $"sameModeLive={sameModeLiveResize} structureRebuilds={_debugStructureRebuilds} " +
+                $"reparents={_debugControlReparents} styleClears={_debugStyleCollectionResets}");
 #endif
         }
 
-        private void ApplyLeftUiGeometry(float scale, ResizeLayoutMode layoutMode)
+        private void ApplyLeftUiGeometry(float scale, float metricsScale, ResizeLayoutMode layoutMode, bool sameModeLiveResize, bool captureExactMetrics)
         {
             bool isCompactTwoColumn = layoutMode == ResizeLayoutMode.CompactTwoColumn;
             UpdateWindowMinimumSize();
@@ -1925,25 +2716,45 @@ namespace Mids_Reborn.UI.Forms
             }
 
             mainLayoutPanel.ColumnStyles[0].Width = leftWidth;
-            ApplyLeftWorkspaceLayout(isCompactTwoColumn, scale, poolRailWidth);
-            ApplyLeftDetailsLayout(isCompactTwoColumn, scale);
+            ApplyLeftWorkspaceLayout(isCompactTwoColumn, scale, metricsScale, poolRailWidth, sameModeLiveResize, captureExactMetrics);
+            ApplyLeftDetailsLayout(isCompactTwoColumn, scale, metricsScale, sameModeLiveResize, captureExactMetrics);
 
             if (_rightBuildShellLayout is not null)
             {
-                _rightBuildShellLayout.RowStyles[0].Height = ScaleLayoutValue(BaselineRightActionRowHeight, scale);
+                var actionRowHeight = sameModeLiveResize && _actionStripExactLayout is { } actionStripSnapshot
+                    ? actionStripSnapshot.RowHeight
+                    : ScaleLayoutValue(BaselineRightActionRowHeight, metricsScale);
+                _rightBuildShellLayout.RowStyles[0].Height = actionRowHeight;
+                if (captureExactMetrics)
+                {
+                    _actionStripExactLayout = new ActionStripLayoutSnapshot(
+                        actionRowHeight,
+                        sameModeLiveResize && _actionStripExactLayout is { } liveSnapshot
+                            ? liveSnapshot.PvToggleWidth
+                            : ScaleLayoutValue(BaselinePvToggleWidth, metricsScale));
+                }
             }
 
-            var headerContentHeight = ApplyHeaderLayout(scale, isCompactTwoColumn);
-            var headerRowHeight = headerContentHeight + Math.Max(4f, ScaleLayoutValue(isCompactTwoColumn ? CompactHeaderVerticalInset : 6f, scale));
+            var headerContentHeight = ApplyHeaderLayout(scale, metricsScale, isCompactTwoColumn, sameModeLiveResize, captureExactMetrics);
+            var headerRowHeight = headerContentHeight + Math.Max(4f, ScaleLayoutValue(isCompactTwoColumn ? CompactHeaderVerticalInset : 6f, metricsScale));
             mainLayoutPanel.RowStyles[0].Height = headerRowHeight;
             PositionHeaderContainer(isCompactTwoColumn ? _compactHeaderHost : characterLayoutPanel, headerRowHeight);
 
             if (buttonsLayoutPanel.ColumnStyles.Count >= 6)
             {
-                buttonsLayoutPanel.ColumnStyles[0].Width = ScaleLayoutValue(BaselinePvToggleWidth, scale);
+                var pvToggleWidth = sameModeLiveResize && _actionStripExactLayout is { } actionStripSnapshot
+                    ? actionStripSnapshot.PvToggleWidth
+                    : ScaleLayoutValue(BaselinePvToggleWidth, metricsScale);
+                buttonsLayoutPanel.ColumnStyles[0].Width = pvToggleWidth;
                 for (int column = 2; column <= 5; column++)
                 {
                     buttonsLayoutPanel.ColumnStyles[column].Width = ScaleLayoutValue(BaselineUtilityButtonWidth, scale);
+                }
+
+                if (captureExactMetrics)
+                {
+                    var rowHeight = _rightBuildShellLayout?.RowStyles[0].Height ?? ScaleLayoutValue(BaselineRightActionRowHeight, metricsScale);
+                    _actionStripExactLayout = new ActionStripLayoutSnapshot(rowHeight, pvToggleWidth);
                 }
             }
 
@@ -1955,10 +2766,10 @@ namespace Mids_Reborn.UI.Forms
                     0 => 20f,
                     1 => 26f,
                     _ => 114f
-                }, scale);
+                }, metricsScale);
             }
 
-            ApplyPoolStackLayout(scale);
+            ApplyPoolStackLayout(scale, metricsScale, sameModeLiveResize, captureExactMetrics);
             if (!isCompactTwoColumn)
             {
                 if (_lastLayoutMode != layoutMode)
@@ -1968,15 +2779,15 @@ namespace Mids_Reborn.UI.Forms
             }
         }
 
-        private void ApplyLeftUiScaleArtifacts(float scale, ResizeLayoutMode layoutMode)
+        private void ApplyLeftUiScaleArtifacts(float scale, float metricsScale, ResizeLayoutMode layoutMode)
         {
             bool isCompactTwoColumn = layoutMode == ResizeLayoutMode.CompactTwoColumn;
-            ApplyWorkspaceShellScale(scale, isCompactTwoColumn);
-            ScaleLeftUiControlTree(leftLayoutPanel, scale);
-            ScaleLeftUiControlTree(buttonsLayoutPanel, scale);
+            ApplyWorkspaceShellScale(metricsScale, isCompactTwoColumn);
+            ScaleLeftUiControlTree(leftLayoutPanel, scale, metricsScale);
+            ScaleLeftUiControlTree(buttonsLayoutPanel, scale, metricsScale);
             if (_headerChromeHost is not null)
             {
-                ScaleLeftUiControlTree(_headerChromeHost, scale);
+                ScaleLeftUiControlTree(_headerChromeHost, scale, metricsScale);
             }
 
             dataView.ApplyUiScale(scale);
@@ -2049,11 +2860,12 @@ namespace Mids_Reborn.UI.Forms
                 (int)Math.Round(first.B * amountFirst + second.B * amountSecond));
         }
 
-        private void ScaleLeftUiControlTree(Control root, float scale)
+        private void ScaleLeftUiControlTree(Control root, float scale, float metricsScale)
         {
             foreach (var control in EnumerateScaleControls(root))
             {
-                ApplyScaledFont(control, scale);
+                var controlScale = _isInLiveResize && control is ILiveResizeMetricsAware ? metricsScale : scale;
+                ApplyScaledFont(control, controlScale);
 
                 switch (control)
                 {
@@ -2122,22 +2934,46 @@ namespace Mids_Reborn.UI.Forms
             }
         }
 
-        private void ApplyPoolStackLayout(float scale)
+        private void ApplyPoolStackLayout(float scale, float metricsScale, bool sameModeLiveResize, bool captureExactMetrics)
         {
+            EnsurePoolStackStructure();
             midsvScrollPanel1.ScrollbarEnabled = true;
             rightInnerLayoutPanel.AutoSize = true;
             rightInnerLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
 
+            float labelRowHeight = sameModeLiveResize && _poolStackExactLayout is { } exactSnapshot
+                ? exactSnapshot.LabelRowHeight
+                : ScaleLayoutValue(20f, metricsScale);
+            float dropDownRowHeight = sameModeLiveResize && _poolStackExactLayout is { } exactSnapshot2
+                ? exactSnapshot2.DropDownRowHeight
+                : ScaleLayoutValue(26f, metricsScale);
+
             foreach (var section in _poolSections)
             {
                 rightInnerLayoutPanel.RowStyles[section.LabelRowIndex].SizeType = SizeType.Absolute;
-                rightInnerLayoutPanel.RowStyles[section.LabelRowIndex].Height = ScaleLayoutValue(20f, scale);
+                rightInnerLayoutPanel.RowStyles[section.LabelRowIndex].Height = labelRowHeight;
                 rightInnerLayoutPanel.RowStyles[section.DropDownRowIndex].SizeType = SizeType.Absolute;
-                rightInnerLayoutPanel.RowStyles[section.DropDownRowIndex].Height = ScaleLayoutValue(26f, scale);
+                rightInnerLayoutPanel.RowStyles[section.DropDownRowIndex].Height = dropDownRowHeight;
                 section.List.Scrollable = false;
             }
 
-            RefreshPoolRailLayout();
+            if (captureExactMetrics)
+            {
+                _poolStackExactLayout = new PoolStackLayoutSnapshot(labelRowHeight, dropDownRowHeight);
+            }
+
+            RefreshPoolRailLayout(performFullLayout: !sameModeLiveResize);
+        }
+
+        private void EnsurePoolStackStructure()
+        {
+            if (_poolStackStructureInitialized)
+            {
+                return;
+            }
+
+            CountStructureRebuild();
+            _poolStackStructureInitialized = true;
         }
 
         private static IEnumerable<Control> EnumerateScaleControls(Control root)
@@ -8523,12 +9359,16 @@ namespace Mids_Reborn.UI.Forms
             if (m.Msg == WM_ENTERSIZEMOVE)
             {
                 _isInLiveResize = true;
+                leftLayoutPanel.SuspendSmartLayoutScheduling = true;
+                BeginLiveResizeMetrics();
                 return;
             }
 
             if (m.Msg == WM_EXITSIZEMOVE)
             {
                 _isInLiveResize = false;
+                _pendingEndLiveResizeMetrics = true;
+                _pendingResumeSmartLayout = true;
                 QueueResizeFrame(forceExact: true);
                 return;
             }

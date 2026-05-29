@@ -7,15 +7,41 @@ namespace Mids_Reborn.UI.Controls;
 
 [DefaultEvent("SelectedIndexChanged")]
 [DesignerCategory("Code")]
-public sealed class MidsSegmentedToggle : Control
+public sealed class MidsSegmentedToggle : Control, ILiveResizeMetricsAware
 {
     private static readonly Padding DefaultSegmentPadding = new(1, 1, 1, 1);
     private readonly List<string> _items = [];
+    private readonly Dictionary<SegmentTextPathKey, GraphicsPath> _segmentTextPathCache = [];
     private int _selectedIndex = -1;
     private int _hoveredIndex = -1;
     private int _pressedIndex = -1;
     private bool _themeHooked;
+    private bool _liveResizeMetricsFrozen;
+    private bool _segmentMetricsValid;
     private Action? _themeChangedHandler;
+    private SegmentMetricsKey _segmentMetricsKey;
+    private SegmentMetrics _segmentMetrics;
+
+    private readonly record struct FontSignature(string FamilyName, float SizeInPoints, FontStyle Style, byte GdiCharSet);
+    private readonly record struct SegmentMetricsKey(
+        int ClientHeight,
+        FontSignature Font,
+        int ItemCount,
+        int CornerRadius,
+        int Dpi);
+    private readonly record struct SegmentMetrics(
+        int Radius,
+        int DividerTop,
+        int DividerBottom,
+        int TextInflateX,
+        int TextInflateY,
+        int TopInset,
+        int BottomInset,
+        int FirstEdgeInset,
+        int LastEdgeInset,
+        int MiddleEdgeInset,
+        float EmSize);
+    private readonly record struct SegmentTextPathKey(string Text, Size Size, FontSignature Font, int Dpi);
 
     public event EventHandler? SelectedIndexChanged;
 
@@ -115,6 +141,11 @@ public sealed class MidsSegmentedToggle : Control
             _themeChangedHandler = null;
         }
 
+        if (disposing)
+        {
+            ClearTextPathCache();
+        }
+
         base.Dispose(disposing);
     }
 
@@ -132,7 +163,32 @@ public sealed class MidsSegmentedToggle : Control
         }
 
         _selectedIndex = NormalizeSelectedIndex(_selectedIndex);
+        ClearTextPathCache();
         Invalidate();
+    }
+
+    public void BeginLiveResizeMetrics()
+    {
+        _liveResizeMetricsFrozen = true;
+        Invalidate();
+    }
+
+    public void EndLiveResizeMetrics()
+    {
+        if (!_liveResizeMetricsFrozen)
+        {
+            return;
+        }
+
+        _liveResizeMetricsFrozen = false;
+        Invalidate();
+    }
+
+    protected override void OnFontChanged(EventArgs e)
+    {
+        base.OnFontChanged(e);
+        _segmentMetricsValid = false;
+        ClearTextPathCache();
     }
 
     protected override void OnMouseLeave(EventArgs e)
@@ -205,7 +261,8 @@ public sealed class MidsSegmentedToggle : Control
             return;
         }
 
-        int radius = Math.Min(CornerRadius, Math.Max(2, Height / 2));
+        var metrics = GetSegmentMetrics(e.Graphics);
+        int radius = metrics.Radius;
         using var outerPath = CreateRoundedRect(outerBounds, radius);
 
         Color wellTop = segmentedTheme.WellTop;
@@ -229,7 +286,7 @@ public sealed class MidsSegmentedToggle : Control
                 for (int index = 1; index < _items.Count; index++)
                 {
                     int x = GetSegmentBounds(index).Left;
-                    e.Graphics.DrawLine(dividerPen, x, 5, x, Height - 6);
+                    e.Graphics.DrawLine(dividerPen, x, metrics.DividerTop, x, metrics.DividerBottom);
                 }
             }
 
@@ -280,7 +337,7 @@ public sealed class MidsSegmentedToggle : Control
             DrawSegmentText(
                 e.Graphics,
                 _items[index],
-                Rectangle.Inflate(GetSegmentBounds(index), -4, -1),
+                Rectangle.Inflate(GetSegmentBounds(index), -metrics.TextInflateX, -metrics.TextInflateY),
                 isSelected ? segmentedTheme.SelectedText : segmentedTheme.UnselectedText,
                 isSelected ? segmentedTheme.SelectedTextOutline : segmentedTheme.UnselectedTextOutline,
                 theme.TextOutlineWidth);
@@ -317,18 +374,19 @@ public sealed class MidsSegmentedToggle : Control
 
     private Rectangle GetSegmentBounds(int index)
     {
-        int left = (Width * index) / _items.Count;
-        int right = (Width * (index + 1)) / _items.Count;
+        int left = GetSegmentBoundary(index);
+        int right = GetSegmentBoundary(index + 1);
         return new Rectangle(left, 0, Math.Max(1, right - left), Height);
     }
 
     private Rectangle GetSegmentPaintBounds(int index)
     {
         var bounds = GetSegmentBounds(index);
-        int topInset = SegmentPadding.Top + 1;
-        int bottomInset = SegmentPadding.Bottom + 2;
-        int leftInset = index == 0 ? SegmentPadding.Left + 1 : Math.Max(SegmentPadding.Left, 2);
-        int rightInset = index == _items.Count - 1 ? SegmentPadding.Right + 1 : Math.Max(SegmentPadding.Right, 2);
+        var metrics = GetSegmentMetrics();
+        int topInset = metrics.TopInset;
+        int bottomInset = metrics.BottomInset;
+        int leftInset = index == 0 ? metrics.FirstEdgeInset : metrics.MiddleEdgeInset;
+        int rightInset = index == _items.Count - 1 ? metrics.LastEdgeInset : metrics.MiddleEdgeInset;
         return Rectangle.FromLTRB(
             bounds.Left + leftInset,
             bounds.Top + topInset,
@@ -338,15 +396,10 @@ public sealed class MidsSegmentedToggle : Control
 
     private void DrawSegmentText(Graphics graphics, string text, Rectangle bounds, Color fillColor, Color outlineColor, float outlineWidth)
     {
-        using var path = new GraphicsPath();
-        using var format = new StringFormat
-        {
-            Alignment = StringAlignment.Center,
-            LineAlignment = StringAlignment.Center
-        };
-
-        float emSize = Font.SizeInPoints * graphics.DpiY / 72f;
-        path.AddString(text, Font.FontFamily, (int)Font.Style, emSize, bounds, format);
+        var normalizedBounds = new Rectangle(0, 0, Math.Max(1, bounds.Width), Math.Max(1, bounds.Height));
+        using var path = GetSegmentTextPath(text, normalizedBounds.Size, graphics);
+        var state = graphics.Save();
+        graphics.TranslateTransform(bounds.X, bounds.Y);
 
         using (var outlinePen = new Pen(outlineColor, outlineWidth) { LineJoin = LineJoin.Round })
         {
@@ -355,6 +408,113 @@ public sealed class MidsSegmentedToggle : Control
 
         using var textBrush = new SolidBrush(fillColor);
         graphics.FillPath(textBrush, path);
+        graphics.Restore(state);
+    }
+
+    private SegmentMetrics GetSegmentMetrics(Graphics? graphics = null)
+    {
+        var key = new SegmentMetricsKey(
+            ClientSize.Height,
+            CreateFontSignature(Font),
+            _items.Count,
+            CornerRadius,
+            graphics is not null ? (int)Math.Round(graphics.DpiY) : DeviceDpi);
+
+        if (_segmentMetricsValid && _segmentMetricsKey == key)
+        {
+            return _segmentMetrics;
+        }
+
+        int radius = Math.Min(CornerRadius, Math.Max(2, Height / 2));
+        int dividerBottom = Math.Max(5, Height - 6);
+        _segmentMetrics = new SegmentMetrics(
+            radius,
+            5,
+            dividerBottom,
+            4,
+            1,
+            SegmentPadding.Top + 1,
+            SegmentPadding.Bottom + 2,
+            SegmentPadding.Left + 1,
+            SegmentPadding.Right + 1,
+            Math.Max(SegmentPadding.Left, 2),
+            Font.SizeInPoints * key.Dpi / 72f);
+        _segmentMetricsKey = key;
+        _segmentMetricsValid = true;
+        return _segmentMetrics;
+    }
+
+    private GraphicsPath GetSegmentTextPath(string text, Size size, Graphics graphics)
+    {
+        var key = new SegmentTextPathKey(text, size, CreateFontSignature(Font), (int)Math.Round(graphics.DpiY));
+        if (_segmentTextPathCache.TryGetValue(key, out var cachedPath))
+        {
+            return (GraphicsPath)cachedPath.Clone();
+        }
+
+        if (_segmentTextPathCache.Count >= 32)
+        {
+            ClearTextPathCache();
+        }
+
+        using var format = new StringFormat
+        {
+            Alignment = StringAlignment.Center,
+            LineAlignment = StringAlignment.Center
+        };
+
+        var metrics = GetSegmentMetrics(graphics);
+        var path = new GraphicsPath();
+        path.AddString(text, Font.FontFamily, (int)Font.Style, metrics.EmSize, new Rectangle(Point.Empty, size), format);
+        _segmentTextPathCache[key] = (GraphicsPath)path.Clone();
+        return path;
+    }
+
+    private int GetSegmentBoundary(int boundaryIndex)
+    {
+        if (boundaryIndex <= 0)
+        {
+            return 0;
+        }
+
+        if (boundaryIndex >= _items.Count)
+        {
+            return Width;
+        }
+
+        int boundary = (int)Math.Round(Width * boundaryIndex / (double)_items.Count);
+        if (_liveResizeMetricsFrozen)
+        {
+            boundary = QuantizeBoundary(boundary);
+        }
+
+        return Math.Clamp(boundary, 0, Width);
+    }
+
+    private int QuantizeBoundary(int boundary)
+    {
+        if (_items.Count <= 1)
+        {
+            return boundary;
+        }
+
+        int quantized = (int)Math.Round(boundary / 2d) * 2;
+        int minBoundary = Math.Min(2, Width);
+        int maxBoundary = Math.Max(minBoundary, Width - 2);
+        return Math.Clamp(quantized, minBoundary, maxBoundary);
+    }
+
+    private static FontSignature CreateFontSignature(Font font)
+        => new(font.FontFamily.Name, font.SizeInPoints, font.Style, font.GdiCharSet);
+
+    private void ClearTextPathCache()
+    {
+        foreach (var path in _segmentTextPathCache.Values)
+        {
+            path.Dispose();
+        }
+
+        _segmentTextPathCache.Clear();
     }
 
     private static GraphicsPath CreateRoundedRect(Rectangle bounds, int radius)

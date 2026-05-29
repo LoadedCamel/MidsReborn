@@ -7,7 +7,7 @@ namespace Mids_Reborn.UI.Controls;
 
 [DefaultEvent(nameof(ValueChanged))]
 [DesignerCategory("Code")]
-public sealed class MidsLevelStepper : Control
+public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
 {
     private enum HotZone
     {
@@ -22,7 +22,25 @@ public sealed class MidsLevelStepper : Control
     private HotZone _hoveredZone;
     private HotZone _pressedZone;
     private bool _themeHooked;
+    private bool _liveResizeMetricsFrozen;
+    private bool _stepperLayoutValid;
     private Action? _themeChangedHandler;
+    private StepperLayoutKey _stepperLayoutKey;
+    private StepperLayout _stepperLayout;
+
+    private readonly record struct FontSignature(string FamilyName, float SizeInPoints, FontStyle Style, byte GdiCharSet);
+    private readonly record struct StepperLayoutKey(int ClientHeight, FontSignature Font, int Dpi);
+    private readonly record struct StepperLayout(
+        int Radius,
+        int DividerTop,
+        int DividerBottom,
+        int ShadowOffsetY,
+        int SymbolInflateX,
+        int SymbolInflateY,
+        int ValueInflateX,
+        int ValueInflateY,
+        int FocusInset,
+        int FocusRadiusDelta);
 
     public event EventHandler? ValueChanged;
 
@@ -138,6 +156,29 @@ public sealed class MidsLevelStepper : Control
         }
 
         base.Dispose(disposing);
+    }
+
+    public void BeginLiveResizeMetrics()
+    {
+        _liveResizeMetricsFrozen = true;
+        Invalidate();
+    }
+
+    public void EndLiveResizeMetrics()
+    {
+        if (!_liveResizeMetricsFrozen)
+        {
+            return;
+        }
+
+        _liveResizeMetricsFrozen = false;
+        Invalidate();
+    }
+
+    protected override void OnFontChanged(EventArgs e)
+    {
+        base.OnFontChanged(e);
+        _stepperLayoutValid = false;
     }
 
     protected override void OnMouseLeave(EventArgs e)
@@ -256,7 +297,8 @@ public sealed class MidsLevelStepper : Control
             return;
         }
 
-        int radius = Math.Min(7, Math.Max(2, bounds.Height / 2));
+        var layout = GetStepperLayout(e.Graphics);
+        int radius = layout.Radius;
         using var outerPath = CreateRoundedRect(bounds, radius);
         using (var fillBrush = new LinearGradientBrush(bounds, theme.GradientTop, theme.GradientBottom, 90f))
         {
@@ -275,19 +317,19 @@ public sealed class MidsLevelStepper : Control
         {
             e.Graphics.SetClip(clipRegion, CombineMode.Replace);
             using var dividerPen = new Pen(Color.FromArgb(120, theme.Border));
-            e.Graphics.DrawLine(dividerPen, DecrementBounds.Right, 4, DecrementBounds.Right, Height - 5);
-            e.Graphics.DrawLine(dividerPen, IncrementBounds.Left, 4, IncrementBounds.Left, Height - 5);
+            e.Graphics.DrawLine(dividerPen, DecrementBounds.Right, layout.DividerTop, DecrementBounds.Right, layout.DividerBottom);
+            e.Graphics.DrawLine(dividerPen, IncrementBounds.Left, layout.DividerTop, IncrementBounds.Left, layout.DividerBottom);
             e.Graphics.ResetClip();
         }
 
-        DrawSymbol(e.Graphics, DecrementBounds, "-", CanDecrement ? theme.ForeColor : Color.FromArgb(110, theme.ForeColor));
-        DrawSymbol(e.Graphics, IncrementBounds, "+", CanIncrement ? theme.ForeColor : Color.FromArgb(110, theme.ForeColor));
-        DrawValue(e.Graphics, ValueBounds, theme.ForeColor);
+        DrawSymbol(e.Graphics, DecrementBounds, layout, "-", CanDecrement ? theme.ForeColor : Color.FromArgb(110, theme.ForeColor));
+        DrawSymbol(e.Graphics, IncrementBounds, layout, "+", CanIncrement ? theme.ForeColor : Color.FromArgb(110, theme.ForeColor));
+        DrawValue(e.Graphics, ValueBounds, layout, theme.ForeColor);
 
         if (Focused)
         {
-            var focusRect = Rectangle.Inflate(bounds, -2, -2);
-            using var focusPath = CreateRoundedRect(focusRect, Math.Max(2, radius - 2));
+            var focusRect = Rectangle.Inflate(bounds, -layout.FocusInset, -layout.FocusInset);
+            using var focusPath = CreateRoundedRect(focusRect, Math.Max(2, radius - layout.FocusRadiusDelta));
             using var focusPen = new Pen(Color.FromArgb(170, theme.HoverBorder));
             e.Graphics.DrawPath(focusPen, focusPath);
         }
@@ -368,14 +410,14 @@ public sealed class MidsLevelStepper : Control
         graphics.FillPath(zoneBrush, zonePath);
     }
 
-    private void DrawSymbol(Graphics graphics, Rectangle bounds, string symbol, Color color)
+    private void DrawSymbol(Graphics graphics, Rectangle bounds, StepperLayout layout, string symbol, Color color)
     {
-        var textRect = Rectangle.Inflate(bounds, -1, -1);
+        var textRect = Rectangle.Inflate(bounds, -layout.SymbolInflateX, -layout.SymbolInflateY);
         TextRenderer.DrawText(
             graphics,
             symbol,
             Font,
-            new Rectangle(textRect.X, textRect.Y + 1, textRect.Width, textRect.Height),
+            new Rectangle(textRect.X, textRect.Y + layout.ShadowOffsetY, textRect.Width, textRect.Height),
             Color.FromArgb(150, Color.Black),
             TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
         TextRenderer.DrawText(
@@ -387,15 +429,15 @@ public sealed class MidsLevelStepper : Control
             TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
     }
 
-    private void DrawValue(Graphics graphics, Rectangle bounds, Color color)
+    private void DrawValue(Graphics graphics, Rectangle bounds, StepperLayout layout, Color color)
     {
         var text = _value.ToString();
-        var textRect = Rectangle.Inflate(bounds, -2, -1);
+        var textRect = Rectangle.Inflate(bounds, -layout.ValueInflateX, -layout.ValueInflateY);
         TextRenderer.DrawText(
             graphics,
             text,
             Font,
-            new Rectangle(textRect.X, textRect.Y + 1, textRect.Width, textRect.Height),
+            new Rectangle(textRect.X, textRect.Y + layout.ShadowOffsetY, textRect.Width, textRect.Height),
             Color.FromArgb(150, Color.Black),
             TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
         TextRenderer.DrawText(
@@ -406,6 +448,38 @@ public sealed class MidsLevelStepper : Control
             color,
             TextFormatFlags.HorizontalCenter | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding);
     }
+
+    private StepperLayout GetStepperLayout(Graphics? graphics = null)
+    {
+        var key = new StepperLayoutKey(
+            ClientSize.Height,
+            CreateFontSignature(Font),
+            graphics is not null ? (int)Math.Round(graphics.DpiY) : DeviceDpi);
+
+        if (_stepperLayoutValid && _stepperLayoutKey == key)
+        {
+            return _stepperLayout;
+        }
+
+        int radius = Math.Min(7, Math.Max(2, Math.Max(1, Height - 1) / 2));
+        _stepperLayout = new StepperLayout(
+            radius,
+            4,
+            Math.Max(4, Height - 5),
+            1,
+            1,
+            1,
+            2,
+            1,
+            2,
+            2);
+        _stepperLayoutKey = key;
+        _stepperLayoutValid = true;
+        return _stepperLayout;
+    }
+
+    private static FontSignature CreateFontSignature(Font font)
+        => new(font.FontFamily.Name, font.SizeInPoints, font.Style, font.GdiCharSet);
 
     private static GraphicsPath CreateRoundedRect(Rectangle bounds, int radius)
     {

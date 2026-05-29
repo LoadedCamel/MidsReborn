@@ -41,6 +41,10 @@ public sealed class MidsSmartLayoutPanel : TableLayoutPanel
         set { if (_flexibleRow != value) { _flexibleRow = value; ResetBaselines(); InvalidateSmartLayout(); } }
     }
 
+    [Browsable(false)]
+    [DesignerSerializationVisibility(DesignerSerializationVisibility.Hidden)]
+    internal bool SuspendSmartLayoutScheduling { get; set; }
+
     #endregion
 
     #region Overrides
@@ -83,6 +87,12 @@ public sealed class MidsSmartLayoutPanel : TableLayoutPanel
 
     private void ScheduleSmartLayout()
     {
+        if (SuspendSmartLayoutScheduling)
+        {
+            _layoutScheduled = false;
+            return;
+        }
+
         if (_layoutScheduled || !IsHandleCreated || DesignMode) return;
         _layoutScheduled = true;
         BeginInvoke(new MethodInvoker(ApplySmartLayout));
