@@ -139,7 +139,6 @@ internal sealed class MidsWorkspaceShellPanel : Panel
             g.TranslateTransform(-Left, -Top);
             using var pe = new PaintEventArgs(g, new Rectangle(Parent.Location, Parent.Size));
             InvokePaintBackground(Parent, pe);
-            InvokePaint(Parent, pe);
         }
         finally
         {

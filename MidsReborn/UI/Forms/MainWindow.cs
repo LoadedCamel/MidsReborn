@@ -38,6 +38,8 @@ namespace Mids_Reborn.UI.Forms
         private const int LButtonDown = 0xA1;
         private const int Caption = 0x2;
         private const string UriScheme = "mrb";
+        private static readonly Color OpaqueBodySurfaceColor = Color.Black;
+        private static readonly Color FooterSurfaceColor = Color.FromArgb(6, 17, 35);
 
         #endregion
 
@@ -102,10 +104,12 @@ namespace Mids_Reborn.UI.Forms
         private const float CompactHeaderCombatWidth = 104f;
         private const float CompactPlannerModeMinimumWidth = 260f;
         private const float CompactPlannerModeMaximumWidth = 420f;
+        private const float LeftUiScaleBucketGranularity = 100f;
         private float _lastMasterScale = 1f;
         private int _lastCanvasWidth = -1;
         private float _lastLeftUiScale = 1f;
-        private Size _lastLeftUiClientSize;
+        private int _lastLeftUiScaleBucket = -1;
+        private int _lastLeftUiDpi = -1;
         private readonly Dictionary<Control, float> _leftUiFontSizes = new();
         private readonly Dictionary<Control, Rectangle> _leftUiBounds = new();
         private readonly Dictionary<MidsListView, (int ScrollBarWidth, int PaddingX, int PaddingY, int LineSpacing)> _leftListMetrics = new();
@@ -286,6 +290,27 @@ namespace Mids_Reborn.UI.Forms
 
         #endregion
 
+        #region Resize State
+
+        private enum ResizeLayoutMode
+        {
+            Standard,
+            CompactTwoColumn
+        }
+
+        private bool _isInLiveResize;
+        private bool _resizeFrameQueued;
+        private bool _resizeFrameForceExactPending;
+        private Size _pendingClientSize;
+        private Size _lastProcessedClientSize;
+        private ResizeLayoutMode? _lastLayoutMode;
+
+#if DEBUG
+        private int _debugProcessedResizeFrames;
+#endif
+
+        #endregion
+
         #region Properties
 
         public bool DbChangeRequested { get; set; }
@@ -350,6 +375,8 @@ namespace Mids_Reborn.UI.Forms
         {
             FormBorderStyle = FormBorderStyle.None;
             InitializeComponent();
+            InitializeBufferedBodySurfaces();
+            ApplyWindowSurfaceTheme();
             _defaultWindowMinimumSize = MinimumSize;
             InitializePoolSectionBindings();
             EnsureWorkspaceShells();
@@ -586,7 +613,7 @@ namespace Mids_Reborn.UI.Forms
 
             _compactHeaderHost = new TableLayoutPanel
             {
-                BackColor = Color.Transparent,
+                BackColor = OpaqueBodySurfaceColor,
                 ColumnCount = 1,
                 Dock = DockStyle.None,
                 GrowStyle = TableLayoutPanelGrowStyle.FixedSize,
@@ -600,7 +627,7 @@ namespace Mids_Reborn.UI.Forms
 
             _compactHeaderTopLayout = new TableLayoutPanel
             {
-                BackColor = Color.Transparent,
+                BackColor = OpaqueBodySurfaceColor,
                 ColumnCount = 6,
                 Dock = DockStyle.Fill,
                 GrowStyle = TableLayoutPanelGrowStyle.FixedSize,
@@ -613,7 +640,7 @@ namespace Mids_Reborn.UI.Forms
 
             _compactHeaderBottomLayout = new TableLayoutPanel
             {
-                BackColor = Color.Transparent,
+                BackColor = OpaqueBodySurfaceColor,
                 ColumnCount = 4,
                 Dock = DockStyle.Fill,
                 GrowStyle = TableLayoutPanelGrowStyle.FixedSize,
@@ -626,6 +653,10 @@ namespace Mids_Reborn.UI.Forms
 
             _compactHeaderHost.Controls.Add(_compactHeaderTopLayout, 0, 0);
             _compactHeaderHost.Controls.Add(_compactHeaderBottomLayout, 0, 1);
+            WinFormsBuffering.Enable(_compactHeaderHost);
+            WinFormsBuffering.Enable(_compactHeaderTopLayout);
+            WinFormsBuffering.Enable(_compactHeaderBottomLayout);
+            ApplyWindowSurfaceTheme();
         }
 
         private static void AttachHeaderControl(TableLayoutPanel layout, Control control, int column, int row = 0, int columnSpan = 1)
@@ -852,12 +883,13 @@ namespace Mids_Reborn.UI.Forms
             {
                 _headerChromeHost = new Panel
                 {
-                    BackColor = Color.Transparent,
+                    BackColor = OpaqueBodySurfaceColor,
                     Dock = DockStyle.Fill,
                     Margin = Padding.Empty,
                     Name = "headerChromeHost",
                     Padding = Padding.Empty
                 };
+                WinFormsBuffering.Enable(_headerChromeHost);
 
                 mainLayoutPanel.SuspendLayout();
                 mainLayoutPanel.Controls.Remove(characterLayoutPanel);
@@ -869,6 +901,7 @@ namespace Mids_Reborn.UI.Forms
                 mainLayoutPanel.Controls.Add(_headerChromeHost, 0, 0);
                 mainLayoutPanel.SetColumnSpan(_headerChromeHost, 2);
                 mainLayoutPanel.ResumeLayout(performLayout: true);
+                ApplyWindowSurfaceTheme();
             }
         }
 
@@ -1395,7 +1428,7 @@ namespace Mids_Reborn.UI.Forms
             _rightBuildShell = CreateWorkspaceShell("rightBuildShell", 2, new Padding(8, 8, 8, 8));
             _rightBuildShellLayout = new TableLayoutPanel
             {
-                BackColor = Color.Transparent,
+                BackColor = ResolveShellContentSurfaceColor(),
                 ColumnCount = 1,
                 Dock = DockStyle.Fill,
                 Margin = Padding.Empty,
@@ -1405,6 +1438,7 @@ namespace Mids_Reborn.UI.Forms
             _rightBuildShellLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             _rightBuildShellLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, BaselineRightActionRowHeight));
             _rightBuildShellLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            WinFormsBuffering.Enable(_rightBuildShellLayout);
 
             rightLayoutPanel.SuspendLayout();
             rightLayoutPanel.Controls.Remove(buttonsLayoutPanel);
@@ -1424,6 +1458,7 @@ namespace Mids_Reborn.UI.Forms
 
             rightLayoutPanel.Controls.Add(_rightBuildShell, 0, 0);
             rightLayoutPanel.ResumeLayout(performLayout: true);
+            ApplyWindowSurfaceTheme();
         }
 
         private static MidsWorkspaceShellPanel CreateWorkspaceShell(string name, int borderThickness, Padding padding)
@@ -1590,7 +1625,8 @@ namespace Mids_Reborn.UI.Forms
 
         private void OnResizeEnd(object? sender, EventArgs e)
         {
-            Debug.WriteLine(ClientSize.ToString());
+            _isInLiveResize = false;
+            QueueResizeFrame(forceExact: true);
         }
 
         private void MidsvScrollPanel1_AvailableClientWidthChanged(object? sender, int availableWidth)
@@ -1720,6 +1756,7 @@ namespace Mids_Reborn.UI.Forms
         {
             base.OnHandleCreated(e);
             ApplyWindowEffects();
+            QueueResizeFrame(forceExact: true);
         }
 
         protected override void OnHandleDestroyed(EventArgs e)
@@ -1734,9 +1771,8 @@ namespace Mids_Reborn.UI.Forms
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
-            Invalidate(true);            // full form background
-            ApplyLeftUiScale();
-            UpdateUiLayout();
+            _pendingClientSize = ClientSize;
+            QueueResizeFrame();
         }
 
         private float ComputeLeftUiScale()
@@ -1748,22 +1784,67 @@ namespace Mids_Reborn.UI.Forms
             return Math.Clamp(scale, MinimumUiScale, 1.25f);
         }
 
-        private void ApplyLeftUiScale(bool force = false)
-        {
-            if (!IsHandleCreated && !force) return;
+        private static int ComputeScaleBucket(float scale)
+            => (int)Math.Round(scale * LeftUiScaleBucketGranularity);
 
-            var scale = ComputeLeftUiScale();
-            var isCompactTwoColumn = ShouldUseCompactTwoColumnLayout();
-            if (isCompactTwoColumn)
+        private ResizeLayoutMode GetResizeLayoutMode()
+            => ShouldUseCompactTwoColumnLayout() ? ResizeLayoutMode.CompactTwoColumn : ResizeLayoutMode.Standard;
+
+        private void QueueResizeFrame(bool forceExact = false)
+        {
+            _pendingClientSize = ClientSize;
+            _resizeFrameForceExactPending |= forceExact;
+
+            if (!IsHandleCreated)
+            {
+                return;
+            }
+
+            if (_resizeFrameQueued)
+            {
+                return;
+            }
+
+            _resizeFrameQueued = true;
+            BeginInvoke(new Action(() =>
+            {
+                _resizeFrameQueued = false;
+                var exact = _resizeFrameForceExactPending;
+                _resizeFrameForceExactPending = false;
+                ProcessResizeFrame(exact);
+            }));
+        }
+
+        private void ProcessResizeFrame(bool forceExact = false)
+        {
+            if (IsDisposed || Disposing)
+            {
+                return;
+            }
+
+            var pendingSize = _pendingClientSize.IsEmpty ? ClientSize : _pendingClientSize;
+            if (pendingSize.Width <= 0 || pendingSize.Height <= 0)
+            {
+                return;
+            }
+
+            var layoutMode = GetResizeLayoutMode();
+            if (!forceExact && pendingSize == _lastProcessedClientSize && layoutMode == _lastLayoutMode)
+            {
+                return;
+            }
+
+            float scale = ComputeLeftUiScale();
+            if (layoutMode == ResizeLayoutMode.CompactTwoColumn)
             {
                 scale = Math.Max(scale, 0.95f);
             }
 
-            var clientSize = ClientSize;
-            if (!force && Math.Abs(scale - _lastLeftUiScale) < 0.01f && clientSize == _lastLeftUiClientSize) return;
-
-            _lastLeftUiScale = scale;
-            _lastLeftUiClientSize = clientSize;
+            int scaleBucket = ComputeScaleBucket(scale);
+            bool scaleArtifactsChanged = forceExact
+                || scaleBucket != _lastLeftUiScaleBucket
+                || layoutMode != _lastLayoutMode
+                || DeviceDpi != _lastLeftUiDpi;
 
             SuspendLayout();
             mainLayoutPanel.SuspendLayout();
@@ -1773,6 +1854,53 @@ namespace Mids_Reborn.UI.Forms
             rightInnerLayoutPanel.SuspendLayout();
             characterPanel.SuspendLayout();
 
+            ApplyLeftUiGeometry(scale, layoutMode);
+
+            if (scaleArtifactsChanged)
+            {
+                ApplyLeftUiScaleArtifacts(scale, layoutMode);
+            }
+
+            if (drawing != null)
+            {
+                UpdateUiLayout(forceExact);
+            }
+
+            dataView.RefreshResponsiveLayout();
+
+            characterPanel.ResumeLayout(performLayout: true);
+            rightInnerLayoutPanel.ResumeLayout(performLayout: true);
+            leftInnerLayoutPanel.ResumeLayout(performLayout: true);
+            leftLayoutPanel.ResumeLayout(performLayout: true);
+            rightLayoutPanel.ResumeLayout(performLayout: true);
+            mainLayoutPanel.ResumeLayout(performLayout: true);
+            ResumeLayout(performLayout: true);
+
+            _headerChromeHost?.Invalidate();
+            _nameInputShell?.Invalidate();
+            _leftDetailsShell?.Invalidate();
+            _poolShell?.Invalidate();
+            _rightBuildShell?.Invalidate();
+            canvasScrollPanel.Invalidate();
+            canvas.Invalidate();
+
+            _lastProcessedClientSize = pendingSize;
+            _lastLayoutMode = layoutMode;
+            _lastLeftUiScale = scale;
+            _lastLeftUiScaleBucket = scaleBucket;
+            _lastLeftUiDpi = DeviceDpi;
+
+#if DEBUG
+            _debugProcessedResizeFrames++;
+            Debug.WriteLine(
+                $"[Resize] frame #{_debugProcessedResizeFrames} size={pendingSize.Width}x{pendingSize.Height} " +
+                $"scale={scale:F3} bucket={scaleBucket} mode={layoutMode} live={_isInLiveResize} exact={forceExact}");
+#endif
+        }
+
+        private void ApplyLeftUiGeometry(float scale, ResizeLayoutMode layoutMode)
+        {
+            bool isCompactTwoColumn = layoutMode == ResizeLayoutMode.CompactTwoColumn;
             UpdateWindowMinimumSize();
 
             float poolRailWidth;
@@ -1819,8 +1947,6 @@ namespace Mids_Reborn.UI.Forms
                 }
             }
 
-            ApplyWorkspaceShellScale(scale, isCompactTwoColumn);
-
             for (var i = 0; i < rightInnerLayoutPanel.RowStyles.Count; i++)
             {
                 if (rightInnerLayoutPanel.RowStyles[i].SizeType != SizeType.Absolute) continue;
@@ -1832,26 +1958,32 @@ namespace Mids_Reborn.UI.Forms
                 }, scale);
             }
 
+            ApplyPoolStackLayout(scale);
+            if (!isCompactTwoColumn)
+            {
+                if (_lastLayoutMode != layoutMode)
+                {
+                    leftLayoutPanel.RefreshSmartLayout();
+                }
+            }
+        }
+
+        private void ApplyLeftUiScaleArtifacts(float scale, ResizeLayoutMode layoutMode)
+        {
+            bool isCompactTwoColumn = layoutMode == ResizeLayoutMode.CompactTwoColumn;
+            ApplyWorkspaceShellScale(scale, isCompactTwoColumn);
             ScaleLeftUiControlTree(leftLayoutPanel, scale);
             ScaleLeftUiControlTree(buttonsLayoutPanel, scale);
             if (_headerChromeHost is not null)
             {
                 ScaleLeftUiControlTree(_headerChromeHost, scale);
             }
-            ApplyPoolStackLayout(scale);
+
             dataView.ApplyUiScale(scale);
             if (!isCompactTwoColumn)
             {
                 leftLayoutPanel.RefreshSmartLayout();
             }
-
-            characterPanel.ResumeLayout(performLayout: true);
-            rightInnerLayoutPanel.ResumeLayout(performLayout: true);
-            leftInnerLayoutPanel.ResumeLayout(performLayout: true);
-            leftLayoutPanel.ResumeLayout(performLayout: true);
-            rightLayoutPanel.ResumeLayout(performLayout: true);
-            mainLayoutPanel.ResumeLayout(performLayout: true);
-            ResumeLayout(performLayout: true);
         }
 
         private static float ScaleLayoutValue(float value, float scale) => Math.Max(1f, (float)Math.Round(value * scale));
@@ -1936,11 +2068,11 @@ namespace Mids_Reborn.UI.Forms
                             _leftListMetrics[listView] = metrics;
                         }
 
-                        listView.ScrollBarWidth = ScalePx(metrics.ScrollBarWidth, scale);
-                        listView.PaddingX = ScalePx(metrics.PaddingX, scale);
-                        listView.PaddingY = Math.Max(0, (int)Math.Round(metrics.PaddingY * scale));
-                        listView.LineSpacing = (int)Math.Round(metrics.LineSpacing * scale);
-                        listView.Invalidate();
+                        listView.ApplyUiMetrics(
+                            ScalePx(metrics.ScrollBarWidth, scale),
+                            ScalePx(metrics.PaddingX, scale),
+                            Math.Max(0, (int)Math.Round(metrics.PaddingY * scale)),
+                            (int)Math.Round(metrics.LineSpacing * scale));
                         break;
 
                     case MidsVectorButton button:
@@ -2156,9 +2288,7 @@ namespace Mids_Reborn.UI.Forms
                     return;
                 }
 
-                UpdateUiLayout(true);
-                canvas.RequestFullRedraw();
-                canvas.ResizeToContent();
+                QueueResizeFrame(forceExact: true);
             }));
         }
 
@@ -5858,16 +5988,12 @@ namespace Mids_Reborn.UI.Forms
             MidsContext.Config.Columns = columns;
             MidsContext.Config.ColumnStackingMode = stackingMode;
 
-            ApplyLeftUiScale(true);
-
             if (drawing != null)
             {
                 drawing.Columns = columns;
                 drawing.ColumnStackingMode = stackingMode;
                 drawing.GetPowersLayout();
-                UpdateUiLayout(true);
-                canvas.RequestFullRedraw();
-                canvas.ResizeToContent();
+                ProcessResizeFrame(forceExact: true);
 
                 /*// Calculate the minimum width for the entire form.
                 // This includes the drawing panel, the left-side panel, and the window borders.
@@ -6487,76 +6613,79 @@ namespace Mids_Reborn.UI.Forms
                 drawing = new BuildRenderer(canvas);
                 canvas.Renderer = drawing;           // <-- make the panel own the renderer immediately
                 canvas.ManageRendererOnSize = false;
-                ApplyLeftUiScale(true);
-                UpdateUiLayout(true); 
             }
-            else
+
+            drawing.Highlight = -1;
+            if (IsHandleCreated)
             {
-                ApplyLeftUiScale(true);
-                UpdateUiLayout(true);
+                ProcessResizeFrame(forceExact: true);
             }
 
             if (skipDraw) return;
 
-            drawing.Highlight = -1;
-            canvas.RequestFullRedraw();
-            canvas.ResizeToContent();
+            if (!IsHandleCreated)
+            {
+                canvas.RequestFullRedraw();
+                canvas.ResizeToContent();
+            }
+        }
+
+        private static float ComputeCanvasMasterScale(int width)
+        {
+            if (width <= 0)
+            {
+                return 1f;
+            }
+
+            float rawScale = (float)width / BaselineCanvasWidth;
+            const float scalingIntensity = 0.5f;
+
+            float master = 1f + (rawScale - 1f) * scalingIntensity;
+            return Math.Clamp(master, 0.90f, 1.30f);
         }
 
         private void UpdateUiLayout(bool force = false)
         {
-            if (IsDisposed || drawing is null) return;
-
-            // Use ONE width for scale + layout to avoid jitter when scrollbars appear
-            int widthForLayout = canvas.ClientSize.Width;
-            if (widthForLayout <= 0) return;
-
-            // Compute raw scale vs baseline
-            float rawScale = (float)widthForLayout / BaselineCanvasWidth;
-
-            // Tune how “eager” scaling feels: 0 = frozen, 1 = full raw scaling
-            const float scalingIntensity = 0.5f;    // 50% dampening is a good default
-
-            // Apply dampening and clamp to keep visuals readable
-            float master = 1f + (rawScale - 1f) * scalingIntensity;
-            master = Math.Clamp(master, 0.90f, 1.30f); // adjust if you want tighter/looser scaling
-
-            // Avoid thrashing on tiny size changes
-            if (!force &&
-                Math.Abs(master - _lastMasterScale) < 0.01f &&
-                widthForLayout == _lastCanvasWidth)
-                return;
-
-            _lastMasterScale = master;
-            _lastCanvasWidth = widthForLayout;
-            ApplyPopupScale(master);
-
-            // --- First pass with current width ---
-            drawing.MasterScale = master;
-            drawing.UpdateFontScale(master);
-            drawing.UpdateLayout(widthForLayout);
-            drawing.ReInit(canvas);       // also FullRedraw inside ReInit
-            canvas.ResizeToContent();     // may toggle vertical scrollbar -> width can change
-            canvas.Invalidate();
-
-            // --- If scrollbar visibility changed width, settle once more ---
-            int widthAfter = canvas.ClientSize.Width;
-            if (widthAfter != widthForLayout)
+            if (IsDisposed || drawing is null)
             {
-                _lastCanvasWidth = widthAfter;
-
-                rawScale = (float)widthAfter / BaselineCanvasWidth;
-                master = 1f + (rawScale - 1f) * scalingIntensity;
-                master = Math.Clamp(master, 0.90f, 1.30f);
-                _lastMasterScale = master;
-                ApplyPopupScale(master);
-
-                drawing.MasterScale = master;
-                drawing.UpdateFontScale(master);
-                drawing.UpdateLayout(widthAfter);
-                drawing.ReInit(canvas);
-                canvas.ResizeToContent();
+                return;
             }
+
+            int rawWidth = Math.Max(1, canvasScrollPanel.ClientSize.Width);
+            float provisionalMaster = ComputeCanvasMasterScale(rawWidth);
+
+            drawing.MasterScale = provisionalMaster;
+            drawing.UpdateFontScale(provisionalMaster);
+            drawing.UpdateLayout(rawWidth);
+
+            int provisionalHeight = drawing.GetRequiredDrawingArea().Height;
+            int finalWidth = Math.Max(1, canvasScrollPanel.GetAvailableWidthForContentHeight(provisionalHeight));
+            float finalMaster = finalWidth == rawWidth
+                ? provisionalMaster
+                : ComputeCanvasMasterScale(finalWidth);
+
+            if (!force &&
+                Math.Abs(finalMaster - _lastMasterScale) < 0.01f &&
+                finalWidth == _lastCanvasWidth)
+            {
+                return;
+            }
+
+            _lastMasterScale = finalMaster;
+            _lastCanvasWidth = finalWidth;
+            ApplyPopupScale(finalMaster);
+
+            if (canvasScrollPanel.ContentPanel.Width != finalWidth)
+            {
+                canvasScrollPanel.ContentPanel.Width = finalWidth;
+            }
+            if (canvas.Width != finalWidth)
+            {
+                canvas.Width = finalWidth;
+            }
+
+            drawing.ApplyLiveResize(canvas, finalWidth, finalMaster);
+            canvas.ResizeToContent();
         }
 
         private void ApplyPopupScale(float masterScale)
@@ -7866,6 +7995,7 @@ namespace Mids_Reborn.UI.Forms
         private void ApplyTheme()
         {
             var theme = CurrentTheme;
+            ApplyWindowSurfaceTheme();
             foreach (var button in Helpers.GetControlsOfType<IconButton>(this))
             {
                 if (Equals(button.Tag, "KeepColors"))
@@ -7888,6 +8018,75 @@ namespace Mids_Reborn.UI.Forms
 
             ApplyHeaderNameInputStyle();
             canvas?.RequestFullRedraw();
+        }
+
+        private void InitializeBufferedBodySurfaces()
+        {
+            WinFormsBuffering.Enable(mainLayoutPanel);
+            WinFormsBuffering.Enable(characterLayoutPanel);
+            WinFormsBuffering.Enable(leftLayoutPanel);
+            WinFormsBuffering.Enable(rightLayoutPanel);
+            WinFormsBuffering.Enable(buttonsLayoutPanel);
+            WinFormsBuffering.Enable(leftInnerLayoutPanel);
+            WinFormsBuffering.Enable(rightInnerLayoutPanel);
+            WinFormsBuffering.Enable(footerPanel);
+            WinFormsBuffering.Enable(footerLayoutPanel);
+            WinFormsBuffering.Enable(footerRightPanel);
+            WinFormsBuffering.Enable(canvasScrollPanel.ContentPanel);
+            WinFormsBuffering.Enable(midsvScrollPanel1.ContentPanel);
+        }
+
+        private void ApplyWindowSurfaceTheme()
+        {
+            var shellContentColor = ResolveShellContentSurfaceColor();
+
+            mainLayoutPanel.BackColor = OpaqueBodySurfaceColor;
+            characterLayoutPanel.BackColor = OpaqueBodySurfaceColor;
+            leftLayoutPanel.BackColor = OpaqueBodySurfaceColor;
+            rightLayoutPanel.BackColor = OpaqueBodySurfaceColor;
+            buttonsLayoutPanel.BackColor = shellContentColor;
+            leftInnerLayoutPanel.BackColor = shellContentColor;
+            rightInnerLayoutPanel.BackColor = shellContentColor;
+            footerPanel.BackColor = FooterSurfaceColor;
+            footerLayoutPanel.BackColor = FooterSurfaceColor;
+            footerRightPanel.BackColor = FooterSurfaceColor;
+            canvasScrollPanel.BackColor = shellContentColor;
+            canvasScrollPanel.ContentPanel.BackColor = shellContentColor;
+            midsvScrollPanel1.BackColor = shellContentColor;
+            midsvScrollPanel1.ContentPanel.BackColor = shellContentColor;
+            canvas.UseTransparentBackground = false;
+            canvas.BackColor = shellContentColor;
+
+            if (_headerChromeHost is not null)
+            {
+                _headerChromeHost.BackColor = OpaqueBodySurfaceColor;
+            }
+
+            if (_compactHeaderHost is not null)
+            {
+                _compactHeaderHost.BackColor = OpaqueBodySurfaceColor;
+            }
+
+            if (_compactHeaderTopLayout is not null)
+            {
+                _compactHeaderTopLayout.BackColor = OpaqueBodySurfaceColor;
+            }
+
+            if (_compactHeaderBottomLayout is not null)
+            {
+                _compactHeaderBottomLayout.BackColor = OpaqueBodySurfaceColor;
+            }
+
+            if (_rightBuildShellLayout is not null)
+            {
+                _rightBuildShellLayout.BackColor = shellContentColor;
+            }
+        }
+
+        private static Color ResolveShellContentSurfaceColor()
+        {
+            var theme = ThemeManager.CurrentTheme?.DataView ?? ThemeManager.DesignTime.DataView;
+            return Blend(theme.Card, theme.Background, 0.35f);
         }
 
         private Rectangle MapRectToThis(Control origin, Rectangle localRect)
@@ -8277,6 +8476,8 @@ namespace Mids_Reborn.UI.Forms
             const int WM_DWMCOMPOSITIONCHANGED = 0x031E;
             const int WM_DWMCOLORIZATIONCOLORCHANGED = 0x0320;
             const int WM_ERASEBKGND = 0x0014;
+            const int WM_ENTERSIZEMOVE = 0x0231;
+            const int WM_EXITSIZEMOVE = 0x0232;
             const int WM_NCCALCSIZE = 0x0083;
             const int WM_NCHITTEST = 0x0084;
 
@@ -8319,10 +8520,27 @@ namespace Mids_Reborn.UI.Forms
 
             base.WndProc(ref m);
 
+            if (m.Msg == WM_ENTERSIZEMOVE)
+            {
+                _isInLiveResize = true;
+                return;
+            }
+
+            if (m.Msg == WM_EXITSIZEMOVE)
+            {
+                _isInLiveResize = false;
+                QueueResizeFrame(forceExact: true);
+                return;
+            }
+
             if (m.Msg is WM_STYLECHANGED or WM_THEMECHANGED or WM_DPICHANGED
                 or WM_DWMCOMPOSITIONCHANGED or WM_DWMCOLORIZATIONCOLORCHANGED)
             {
                 ApplyWindowEffects(); // defensive re-apply
+                if (m.Msg == WM_DPICHANGED)
+                {
+                    QueueResizeFrame(forceExact: true);
+                }
             }
         }
 

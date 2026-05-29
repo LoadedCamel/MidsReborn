@@ -149,8 +149,15 @@ public class MidsDropDownList : ComboBox
         _baseIconSize ??= IconSize;
         _baseItemHeight ??= ItemHeight;
 
-        IconSize = Math.Clamp((int)Math.Round(_baseIconSize.Value * scale), 8, 64);
-        ItemHeight = Math.Max(12, (int)Math.Round(_baseItemHeight.Value * scale));
+        int iconSize = Math.Clamp((int)Math.Round(_baseIconSize.Value * scale), 8, 64);
+        int itemHeight = Math.Max(12, (int)Math.Round(_baseItemHeight.Value * scale));
+        if (IconSize == iconSize && ItemHeight == itemHeight)
+        {
+            return;
+        }
+
+        IconSize = iconSize;
+        ItemHeight = itemHeight;
         Invalidate();
     }
 

@@ -331,7 +331,6 @@ internal sealed class MidsTotalsSectionPanel : Panel
             g.TranslateTransform(-Left, -Top);
             using var pe = new PaintEventArgs(g, new Rectangle(Parent.Location, Parent.Size));
             InvokePaintBackground(Parent, pe);
-            InvokePaint(Parent, pe);
         }
         finally
         {

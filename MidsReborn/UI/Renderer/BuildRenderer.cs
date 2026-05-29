@@ -43,6 +43,11 @@ namespace Mids_Reborn.UI.Renderer
         private readonly Dictionary<int, BuildPowerGeometry> _geometryCache = [];
         private bool _geometryCacheDirty = true;
 
+#if DEBUG
+        private int _debugFullRedrawCount;
+        private int _debugBufferReallocationCount;
+#endif
+
 
         public Size SzPower => new Size(ScaleLogical(_baseSzPower.Width), ScaleLogical(_baseSzPower.Height));
 
@@ -794,11 +799,55 @@ namespace Mids_Reborn.UI.Renderer
 
             // Only (re)allocate if size actually changed
             if (BxBuffer == null || BxBuffer.Size != newSize)
+            {
                 BxBuffer = new ExtendedBitmap(newSize);
+#if DEBUG
+                _debugBufferReallocationCount++;
+                Debug.WriteLine($"[BuildRenderer] buffer realloc #{_debugBufferReallocationCount} -> {newSize.Width}x{newSize.Height}");
+#endif
+            }
 
             ConfigureGraphics(BxBuffer.Graphics);
 
             // Update layout (e.g., rows/columns per stacking)
+            if (_ColumnStackingMode != eColumnStacking.None)
+            {
+                GetPowersLayout();
+            }
+
+            MarkGeometryCacheDirty();
+            FullRedraw();
+        }
+
+        internal void ApplyLiveResize(Control target, int panelWidth, float masterScale)
+        {
+            if (target.IsDisposed || panelWidth <= 0)
+            {
+                return;
+            }
+
+            _cTarget = target;
+            _backColor = target.BackColor;
+
+            InitDpi();
+
+            MasterScale = masterScale;
+            UpdateFontScale(masterScale);
+            UpdateLayout(panelWidth);
+
+            var required = GetRequiredDrawingArea();
+            var newSize = new Size(panelWidth, required.Height);
+            if (BxBuffer == null || BxBuffer.Size != newSize)
+            {
+                BxBuffer = new ExtendedBitmap(newSize);
+#if DEBUG
+                _debugBufferReallocationCount++;
+                Debug.WriteLine($"[BuildRenderer] live buffer realloc #{_debugBufferReallocationCount} -> {newSize.Width}x{newSize.Height}");
+#endif
+            }
+
+            ConfigureGraphics(BxBuffer.Graphics);
+
             if (_ColumnStackingMode != eColumnStacking.None)
             {
                 GetPowersLayout();
@@ -2340,6 +2389,10 @@ namespace Mids_Reborn.UI.Renderer
             if (BxBuffer == null || BxBuffer.Size != desiredSize)
             {
                 BxBuffer = new ExtendedBitmap(desiredSize);
+#if DEBUG
+                _debugBufferReallocationCount++;
+                Debug.WriteLine($"[BuildRenderer] redraw buffer realloc #{_debugBufferReallocationCount} -> {desiredSize.Width}x{desiredSize.Height}");
+#endif
             }
 
             // Clear + set rendering quality
@@ -2365,6 +2418,11 @@ namespace Mids_Reborn.UI.Renderer
             // Draw headers if layout is stacked
             if (_ColumnStackingMode != eColumnStacking.None)
                 DrawHeaders();
+
+#if DEBUG
+            _debugFullRedrawCount++;
+            Debug.WriteLine($"[BuildRenderer] full redraw #{_debugFullRedrawCount} size={desiredSize.Width}x{desiredSize.Height}");
+#endif
         }
 
         public int GetMinimumRequiredWidth()

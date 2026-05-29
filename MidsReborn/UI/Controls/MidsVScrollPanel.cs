@@ -105,7 +105,7 @@ public sealed class MidsVScrollPanel : Panel
     #region Public Properties
 
     public int AvailableClientWidth
-        => ClientSize.Width - (NeedsScrollbar(_cachedContentHeight) ? ScrollBarWidth : 0);
+        => GetAvailableWidthForContentHeight(_cachedContentHeight);
 
     public event EventHandler<int>? AvailableClientWidthChanged;
 
@@ -211,6 +211,12 @@ public sealed class MidsVScrollPanel : Panel
         SetScrollOffset(0);
     }
 
+    internal int GetAvailableWidthForContentHeight(int contentHeight)
+    {
+        int reservedWidth = NeedsScrollbar(contentHeight) ? ScrollBarWidth : 0;
+        return Math.Max(0, ClientSize.Width - reservedWidth);
+    }
+
     #endregion
 
     #region Layout & Scroll Management
@@ -241,7 +247,7 @@ public sealed class MidsVScrollPanel : Panel
         _scrollOffset = Math.Max(0, Math.Min(_scrollOffset, maxScroll));
 
         // Reserve space for the scrollbar (if needed) BEFORE children measure based on width
-        int contentWidth = ClientSize.Width - (NeedsScrollbar(_cachedContentHeight) ? ScrollBarWidth : 0);
+        int contentWidth = GetAvailableWidthForContentHeight(_cachedContentHeight);
 
         // === NEW: detect width changes we expose to consumers ===
         int newAvailable = contentWidth;

@@ -131,7 +131,6 @@ internal sealed class MidsTotalsBarList : Control
                 pevent.Graphics.TranslateTransform(-Left, -Top);
                 using var parentArgs = new PaintEventArgs(pevent.Graphics, Parent.ClientRectangle);
                 InvokePaintBackground(Parent, parentArgs);
-                InvokePaint(Parent, parentArgs);
             }
             finally
             {

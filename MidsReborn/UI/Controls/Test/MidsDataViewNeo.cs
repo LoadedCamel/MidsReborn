@@ -8,10 +8,10 @@ using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.UI.Controls.Test;
 using Mids_Reborn.UI.Renderer;
 using Mids_Reborn.UI.Theming;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
 using System.Globalization;
-using System.Reflection;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
 
@@ -182,6 +182,10 @@ namespace Mids_Reborn.UI.Controls
 
         public PetInfo PetInfo;
 
+#if DEBUG
+        private int _debugApplyUiScaleCount;
+#endif
+
         #endregion
 
         #region Events
@@ -243,7 +247,7 @@ namespace Mids_Reborn.UI.Controls
             SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
 
             // Ensure the header panel itself is double-buffered (prevents flicker)
-            EnableDoubleBuffer(headerPanel);
+            WinFormsBuffering.Enable(headerPanel);
             ApplyShellLayout();
             ApplyShellTheme();
             infoSDesc.HandleCreated += (_, _) => ApplyShortDescriptionMargins();
@@ -377,6 +381,19 @@ namespace Mids_Reborn.UI.Controls
             Invalidate(true);
         }
 
+        public void RefreshResponsiveLayout()
+        {
+            UpdateInfoDescriptionLayout();
+            LayoutTotalsSections();
+            LayoutEnhancementPage();
+            headerPanel.Invalidate();
+            totalViewScrollPanel.Invalidate();
+            if (enhanceView.Visible)
+            {
+                enhanceView.Invalidate();
+            }
+        }
+
         public void ApplyUiScale(float scale)
         {
             scale = Math.Clamp(scale, 0.90f, 1.25f);
@@ -401,12 +418,15 @@ namespace Mids_Reborn.UI.Controls
             DockButton.IconSize = Math.Max(18, ScalePx(24));
             LockButton.IconSize = Math.Max(18, ScalePx(24));
 
-            UpdateInfoDescriptionLayout();
-            LayoutTotalsSections();
-            LayoutEnhancementPage();
+            RefreshResponsiveLayout();
             ResumeLayout(performLayout: true);
             headerPanel.Invalidate();
-            Invalidate(true);
+            Invalidate();
+
+#if DEBUG
+            _debugApplyUiScaleCount++;
+            Debug.WriteLine($"[MidsDataViewNeo] ApplyUiScale #{_debugApplyUiScaleCount} scale={scale:F3}");
+#endif
         }
 
         private int ScalePx(int value) => Math.Max(1, (int)Math.Round(value * _uiScale));
@@ -414,8 +434,7 @@ namespace Mids_Reborn.UI.Controls
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
-            UpdateInfoDescriptionLayout();
-            LayoutTotalsSections();
+            RefreshResponsiveLayout();
         }
 
         private void ScaleHeight(Control control, float scale)
@@ -2062,14 +2081,6 @@ namespace Mids_Reborn.UI.Controls
             return string.IsNullOrWhiteSpace(className)
                 ? "Actor"
                 : className.Replace('_', ' ').Trim();
-        }
-
-        private static void EnableDoubleBuffer(Control c)
-        {
-            // HeaderPanel is a Panel; DoubleBuffered is protected, so enable via reflection.
-            typeof(Control)
-                .GetProperty("DoubleBuffered", BindingFlags.Instance | BindingFlags.NonPublic)!
-                .SetValue(c, true, null);
         }
 
         private static PairedListEx.Item BuildEdItem(int index, float[] value, Enums.eSchedule[] schedule, string name, float[] afterEd)

@@ -1,6 +1,7 @@
 ﻿using System.ComponentModel;
 using System.Drawing.Drawing2D;
 using System.Drawing.Text;
+using System.Diagnostics;
 using Mids_Reborn.UI.Theming;
 
 namespace Mids_Reborn.UI.Controls
@@ -47,12 +48,23 @@ namespace Mids_Reborn.UI.Controls
         private int _designerItemCount = 10;
         private bool _designerHideHeadings;
         private bool _decorateHeadings = true;
+        private int _scrollBarWidth = 10;
+        private WordwrapMode _textWrapMode = WordwrapMode.New;
+        private int _paddingX = 2;
+        private int _paddingY;
+        private bool _scrollable = true;
+        private bool _layoutDirty = true;
+        private int _layoutCacheKey = int.MinValue;
 
         // Rectangles for hit testing
         private Rectangle _textArea;
         private Rectangle _scrollUpButtonRect;
         private Rectangle _scrollDownButtonRect;
         private Rectangle _scrollThumbRect;
+
+#if DEBUG
+        private int _debugRecalculateLayoutCount;
+#endif
 
         #endregion
 
@@ -73,6 +85,7 @@ namespace Mids_Reborn.UI.Controls
             set
             {
                 _items = value;
+                MarkLayoutDirty();
                 RecalculateLayout();
                 Invalidate();
             }
@@ -90,6 +103,7 @@ namespace Mids_Reborn.UI.Controls
                 if (DesignMode)
                 {
                     PopulateWithSampleData();
+                    MarkLayoutDirty();
                     RecalculateLayout();
                     Invalidate();
                 }
@@ -109,6 +123,7 @@ namespace Mids_Reborn.UI.Controls
                 if (DesignMode)
                 {
                     PopulateWithSampleData();
+                    MarkLayoutDirty();
                     RecalculateLayout();
                     Invalidate();
                 }
@@ -123,10 +138,33 @@ namespace Mids_Reborn.UI.Controls
         public Color HoverColor { get; set; } = Color.FromArgb(45, 85, 135);
 
         [Category("Appearance")]
-        public int ScrollBarWidth { get; set; } = 10;
+        public int ScrollBarWidth
+        {
+            get => _scrollBarWidth;
+            set
+            {
+                int normalized = Math.Max(0, value);
+                if (_scrollBarWidth == normalized) return;
+                _scrollBarWidth = normalized;
+                MarkLayoutDirty();
+                RecalculateLayout();
+                Invalidate();
+            }
+        }
 
         [Category("Appearance")]
-        public WordwrapMode TextWrapMode { get; set; } = WordwrapMode.New;
+        public WordwrapMode TextWrapMode
+        {
+            get => _textWrapMode;
+            set
+            {
+                if (_textWrapMode == value) return;
+                _textWrapMode = value;
+                MarkLayoutDirty();
+                RecalculateLayout();
+                Invalidate();
+            }
+        }
 
         [Category("Appearance")]
         [DefaultValue(true)]
@@ -136,19 +174,55 @@ namespace Mids_Reborn.UI.Controls
             set
             {
                 _decorateHeadings = value;
+                MarkLayoutDirty();
                 RecalculateLayout();
                 Invalidate();
             }
         }
 
         [Category("Layout")]
-        public int PaddingX { get; set; } = 2;
+        public int PaddingX
+        {
+            get => _paddingX;
+            set
+            {
+                int normalized = Math.Max(0, value);
+                if (_paddingX == normalized) return;
+                _paddingX = normalized;
+                MarkLayoutDirty();
+                RecalculateLayout();
+                Invalidate();
+            }
+        }
 
         [Category("Layout")]
-        public int PaddingY { get; set; }
+        public int PaddingY
+        {
+            get => _paddingY;
+            set
+            {
+                int normalized = Math.Max(0, value);
+                if (_paddingY == normalized) return;
+                _paddingY = normalized;
+                MarkLayoutDirty();
+                RecalculateLayout();
+                Invalidate();
+            }
+        }
 
         [Category("Behavior")]
-        public bool Scrollable { get; set; } = true;
+        public bool Scrollable
+        {
+            get => _scrollable;
+            set
+            {
+                if (_scrollable == value) return;
+                _scrollable = value;
+                MarkLayoutDirty();
+                RecalculateLayout();
+                Invalidate();
+            }
+        }
 
         [Category("Layout")]
         [Description("Adds or removes vertical pixels between items. Can be negative to tighten spacing.")]
@@ -158,6 +232,7 @@ namespace Mids_Reborn.UI.Controls
             set
             {
                 _lineSpacing = value;
+                MarkLayoutDirty();
                 RecalculateLayout();
                 Invalidate();
             }
@@ -239,6 +314,7 @@ namespace Mids_Reborn.UI.Controls
                 PopulateWithSampleData();
             }
 
+            MarkLayoutDirty();
             RecalculateLayout();
         }
 
@@ -251,6 +327,7 @@ namespace Mids_Reborn.UI.Controls
         public void AddItem(MidsListViewItem item)
         {
             _items.Add(item);
+            MarkLayoutDirty();
             RecalculateLayout();
             Invalidate();
         }
@@ -260,8 +337,37 @@ namespace Mids_Reborn.UI.Controls
             _items.Clear();
             _scrollOffset = 0;
             UpdateHoverTarget(-1, Point.Empty);
+            MarkLayoutDirty();
             RecalculateLayout();
             Invalidate();
+        }
+
+        internal void ApplyUiMetrics(int scrollBarWidth, int paddingX, int paddingY, int lineSpacing)
+        {
+            int normalizedScrollBarWidth = Math.Max(0, scrollBarWidth);
+            int normalizedPaddingX = Math.Max(0, paddingX);
+            int normalizedPaddingY = Math.Max(0, paddingY);
+
+            if (_scrollBarWidth == normalizedScrollBarWidth &&
+                _paddingX == normalizedPaddingX &&
+                _paddingY == normalizedPaddingY &&
+                _lineSpacing == lineSpacing)
+            {
+                return;
+            }
+
+            _scrollBarWidth = normalizedScrollBarWidth;
+            _paddingX = normalizedPaddingX;
+            _paddingY = normalizedPaddingY;
+            _lineSpacing = lineSpacing;
+            MarkLayoutDirty();
+            RecalculateLayout();
+            Invalidate();
+        }
+
+        private void MarkLayoutDirty()
+        {
+            _layoutDirty = true;
         }
 
         private int DpiScale(int value)
@@ -323,6 +429,7 @@ namespace Mids_Reborn.UI.Controls
         protected override void OnFontChanged(EventArgs e)
         {
             base.OnFontChanged(e);
+            MarkLayoutDirty();
             RecalculateLayout();
             Invalidate();
         }
@@ -330,6 +437,7 @@ namespace Mids_Reborn.UI.Controls
         protected override void OnResize(EventArgs e)
         {
             base.OnResize(e);
+            MarkLayoutDirty();
             RecalculateLayout();
             Invalidate();
         }
@@ -346,76 +454,149 @@ namespace Mids_Reborn.UI.Controls
             int fullTextWidth = Math.Max(0, Width - (padX * 2)); 
             int availableHeight = Math.Max(0, Height - padY - padY);
 
-            // ---------- PASS 1: Probe without reserving space for the scrollbar ----------
-            // // We measure how tall everything would be if there were no scrollbar.
-            // // IMPORTANT: we do NOT mutate item.WrappedText/CalculatedHeight in this pass
-            int totalHeightNoScroll = 0;
-            if (_items.Count > 0)
+            int layoutKey = ComputeLayoutKey(padX, padY, scaledBarWidth, scaledLineSpacing, fullTextWidth, availableHeight);
+            if (!_layoutDirty && layoutKey == _layoutCacheKey)
             {
-                foreach (var item in _items)
-                {
-                    using var font = new Font(Font, (FontStyle)item.FontStyle);
-                    int contentIndent = GetItemContentIndent(item);
-                    int textWidth = Math.Max(1, fullTextWidth - contentIndent);
-
-                    // Wrap into a temp string using the *probe* width
-                    // so measurement matches the draw behavior. We don't assign it yet.
-                    string tempWrapped = WrapText(item.Text, item.State, item.FontStyle, textWidth);
-
-                    // Measure height with word-wrap semantics (no padding to match DrawText usage)
-                    Size proposed = new Size(textWidth, int.MaxValue);
-                    TextFormatFlags flags = TextFormatFlags.WordBreak | TextFormatFlags.NoPadding;
-                    int measured = TextRenderer.MeasureText(tempWrapped, font, proposed, flags).Height;
-                    measured = Math.Max(measured, GetLeadingImageSize(item));
-
-                    totalHeightNoScroll += measured + (padY * 2);
-                }
-
-                totalHeightNoScroll = Math.Max(0, totalHeightNoScroll + scaledLineSpacing * (_items.Count - 1));
-            }
-
-            // Decide if a scrollbar will be visible based on PASS 1 result
-            bool needsScrollbar = Scrollable && totalHeightNoScroll > availableHeight;
-            ScrollVisible = needsScrollbar;
-
-            // ---------- Compute final _textArea with or without scrollbar space ----------
-            int finalTextWidth = Math.Max(0, fullTextWidth - (needsScrollbar ? scaledBarWidth : 0));
-            _textArea = new Rectangle(padX, padY, finalTextWidth, availableHeight);
-
-            // ---------- PASS 2: Commit with the final width (re-wrap and store heights) ----------
-            if (_items.Count == 0)
-            {
-                _actualLineHeight = DpiScale(Font.Height + PaddingY * 2);
                 return;
             }
 
-            int sumHeights = 0;
-            foreach (var item in _items)
+            _layoutDirty = false;
+            _layoutCacheKey = layoutKey;
+
+#if DEBUG
+            _debugRecalculateLayoutCount++;
+            Debug.WriteLine($"[MidsListView:{Name}] RecalculateLayout #{_debugRecalculateLayoutCount} width={Width} height={Height} items={_items.Count}");
+#endif
+
+            var fontCache = new Dictionary<FontStyle, Font>();
+            try
             {
-                int contentIndent = GetItemContentIndent(item);
-                int textWidth = Math.Max(1, _textArea.Width - contentIndent);
+                Font GetOrCreateFont(MidsItemFontStyles itemStyle)
+                {
+                    var style = (FontStyle)itemStyle;
+                    if (!fontCache.TryGetValue(style, out var font))
+                    {
+                        font = new Font(Font, style);
+                        fontCache[style] = font;
+                    }
 
-                // Wrap using the final width that *reserves* space for the scrollbar.
-                item.WrappedText = WrapText(item.Text, item.State, item.FontStyle, textWidth);
+                    return font;
+                }
 
-                using var font = new Font(Font, (FontStyle)item.FontStyle);
-                Size proposed = new Size(textWidth, int.MaxValue);
-                TextFormatFlags flags = TextFormatFlags.WordBreak | TextFormatFlags.NoPadding;
-                int measured = TextRenderer.MeasureText(item.WrappedText, font, proposed, flags).Height;
-                measured = Math.Max(measured, GetLeadingImageSize(item));
+                // ---------- PASS 1: Probe without reserving space for the scrollbar ----------
+                // We measure how tall everything would be if there were no scrollbar.
+                int totalHeightNoScroll = 0;
+                if (_items.Count > 0)
+                {
+                    foreach (var item in _items)
+                    {
+                        var font = GetOrCreateFont(item.FontStyle);
+                        int contentIndent = GetItemContentIndent(item);
+                        int textWidth = Math.Max(1, fullTextWidth - contentIndent);
 
-                // Store height (includes vertical padding)
-                item.CalculatedHeight = measured + (padY * 2);
-                sumHeights += item.CalculatedHeight;
+                        string tempWrapped = WrapText(item.Text, item.State, item.FontStyle, textWidth);
+
+                        Size proposed = new Size(textWidth, int.MaxValue);
+                        TextFormatFlags flags = TextFormatFlags.WordBreak | TextFormatFlags.NoPadding;
+                        int measured = TextRenderer.MeasureText(tempWrapped, font, proposed, flags).Height;
+                        measured = Math.Max(measured, GetLeadingImageSize(item));
+
+                        totalHeightNoScroll += measured + (padY * 2);
+                    }
+
+                    totalHeightNoScroll = Math.Max(0, totalHeightNoScroll + scaledLineSpacing * (_items.Count - 1));
+                }
+
+                bool needsScrollbar = Scrollable && totalHeightNoScroll > availableHeight;
+                ScrollVisible = needsScrollbar;
+
+                int finalTextWidth = Math.Max(0, fullTextWidth - (needsScrollbar ? scaledBarWidth : 0));
+                _textArea = new Rectangle(padX, padY, finalTextWidth, availableHeight);
+
+                if (_items.Count == 0)
+                {
+                    _actualLineHeight = DpiScale(Font.Height + PaddingY * 2);
+                    return;
+                }
+
+                int sumHeights = 0;
+                foreach (var item in _items)
+                {
+                    int contentIndent = GetItemContentIndent(item);
+                    int textWidth = Math.Max(1, _textArea.Width - contentIndent);
+
+                    item.WrappedText = WrapText(item.Text, item.State, item.FontStyle, textWidth);
+
+                    var font = GetOrCreateFont(item.FontStyle);
+                    Size proposed = new Size(textWidth, int.MaxValue);
+                    TextFormatFlags flags = TextFormatFlags.WordBreak | TextFormatFlags.NoPadding;
+                    int measured = TextRenderer.MeasureText(item.WrappedText, font, proposed, flags).Height;
+                    measured = Math.Max(measured, GetLeadingImageSize(item));
+
+                    item.CalculatedHeight = measured + (padY * 2);
+                    sumHeights += item.CalculatedHeight;
+                }
+
+                int maxScroll = Math.Max(0, TotalContentHeight - _textArea.Height);
+                _scrollOffset = Math.Clamp(_scrollOffset, 0, maxScroll);
+
+                _actualLineHeight = _items.Count > 0
+                    ? Math.Max(1, (sumHeights + scaledLineSpacing * (_items.Count - 1)) / _items.Count)
+                    : DpiScale(Font.Height + PaddingY * 2);
+            }
+            finally
+            {
+                foreach (var font in fontCache.Values)
+                {
+                    font.Dispose();
+                }
+            }
+        }
+
+        private int ComputeLayoutKey(int padX, int padY, int scaledBarWidth, int scaledLineSpacing, int fullTextWidth, int availableHeight)
+        {
+            var hash = new HashCode();
+            hash.Add(Width);
+            hash.Add(Height);
+            hash.Add(DeviceDpi);
+            hash.Add(padX);
+            hash.Add(padY);
+            hash.Add(scaledBarWidth);
+            hash.Add(scaledLineSpacing);
+            hash.Add(fullTextWidth);
+            hash.Add(availableHeight);
+            hash.Add(_decorateHeadings);
+            hash.Add(_textWrapMode);
+            hash.Add(_scrollable);
+            if (Font != null)
+            {
+                hash.Add(Font.FontFamily.Name);
+                hash.Add(Font.Size);
+                hash.Add((int)Font.Style);
             }
 
-            int maxScroll = Math.Max(0, TotalContentHeight - _textArea.Height);
-            _scrollOffset = Math.Clamp(_scrollOffset, 0, maxScroll);
+            hash.Add(ComputeItemsLayoutSignature());
+            return hash.ToHashCode();
+        }
 
-            // Keep an average line height for wheel scrolling granularity
-            _actualLineHeight = _items.Count > 0
-                ? Math.Max(1, (sumHeights + scaledLineSpacing * (_items.Count - 1)) / _items.Count)
-                : DpiScale(Font.Height + PaddingY * 2);
+        private int ComputeItemsLayoutSignature()
+        {
+            var hash = new HashCode();
+            hash.Add(_items.Count);
+            foreach (var item in _items)
+            {
+                hash.Add(item.Text);
+                hash.Add((int)item.State);
+                hash.Add((int)item.FontStyle);
+                hash.Add((int)item.Alignment);
+                if (item.LeadingImage != null)
+                {
+                    hash.Add(item.LeadingImage.Width);
+                    hash.Add(item.LeadingImage.Height);
+                }
+            }
+
+            return hash.ToHashCode();
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -451,52 +632,72 @@ namespace Mids_Reborn.UI.Controls
             if (_items.Count == 0) return;
 
             int currentY = -(_scrollOffset);
-
-            for (int i = 0; i < _items.Count; i++)
+            var fontCache = new Dictionary<FontStyle, Font>();
+            try
             {
-                var item = _items[i];
-                if (currentY > Height) break; // Optimization
-
-                var itemRect = new Rectangle(DpiScale(PaddingX), currentY, _textArea.Width, item.CalculatedHeight);
-
-                if (itemRect.Bottom > 0)
+                Font GetOrCreateFont(MidsItemFontStyles itemStyle)
                 {
-                    // Draw hover background
-                    if (i == _hoveredItemIndex)
+                    var style = (FontStyle)itemStyle;
+                    if (!fontCache.TryGetValue(style, out var font))
                     {
-                        using var hoverBrush = new SolidBrush(HoverColor);
-                        g.FillRectangle(hoverBrush, itemRect);
+                        font = new Font(Font, style);
+                        fontCache[style] = font;
                     }
 
-                    // Set alignment for this item
-                    TextFormatFlags itemFlags = TextFormatFlags.WordBreak | TextFormatFlags.NoPadding;
-                    switch (item.Alignment)
-                    {
-                        case MidsItemAlign.Center:
-                            itemFlags |= TextFormatFlags.HorizontalCenter;
-                            break;
-                        case MidsItemAlign.Right:
-                            itemFlags |= TextFormatFlags.Right;
-                            break;
-                        default:
-                            itemFlags |= TextFormatFlags.Left;
-                            break;
-                    }
-
-                    using var font = new Font(Font, (FontStyle)item.FontStyle);
-                    DrawLeadingImage(g, item, itemRect);
-                    var textRect = GetTextRect(itemRect, item);
-
-                    TextRenderer.DrawText(
-                        g,
-                        item.WrappedText,
-                        font,
-                        textRect,
-                        _stateColors[(int)item.State],
-                        itemFlags
-                    );
+                    return font;
                 }
-                currentY += item.CalculatedHeight + DpiScale(_lineSpacing);
+
+                for (int i = 0; i < _items.Count; i++)
+                {
+                    var item = _items[i];
+                    if (currentY > Height) break; // Optimization
+
+                    var itemRect = new Rectangle(DpiScale(PaddingX), currentY, _textArea.Width, item.CalculatedHeight);
+
+                    if (itemRect.Bottom > 0)
+                    {
+                        if (i == _hoveredItemIndex)
+                        {
+                            using var hoverBrush = new SolidBrush(HoverColor);
+                            g.FillRectangle(hoverBrush, itemRect);
+                        }
+
+                        TextFormatFlags itemFlags = TextFormatFlags.WordBreak | TextFormatFlags.NoPadding;
+                        switch (item.Alignment)
+                        {
+                            case MidsItemAlign.Center:
+                                itemFlags |= TextFormatFlags.HorizontalCenter;
+                                break;
+                            case MidsItemAlign.Right:
+                                itemFlags |= TextFormatFlags.Right;
+                                break;
+                            default:
+                                itemFlags |= TextFormatFlags.Left;
+                                break;
+                        }
+
+                        var font = GetOrCreateFont(item.FontStyle);
+                        DrawLeadingImage(g, item, itemRect);
+                        var textRect = GetTextRect(itemRect, item);
+
+                        TextRenderer.DrawText(
+                            g,
+                            item.WrappedText,
+                            font,
+                            textRect,
+                            _stateColors[(int)item.State],
+                            itemFlags
+                        );
+                    }
+                    currentY += item.CalculatedHeight + DpiScale(_lineSpacing);
+                }
+            }
+            finally
+            {
+                foreach (var font in fontCache.Values)
+                {
+                    font.Dispose();
+                }
             }
         }
 

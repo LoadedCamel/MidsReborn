@@ -244,7 +244,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // mainLayoutPanel
             // 
-            mainLayoutPanel.BackColor = Color.Transparent;
+            mainLayoutPanel.BackColor = Color.Black;
             mainLayoutPanel.ColumnCount = 2;
             mainLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 625F));
             mainLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -262,6 +262,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // characterLayoutPanel
             // 
+            characterLayoutPanel.BackColor = Color.Black;
             characterLayoutPanel.ColumnCount = 9;
             mainLayoutPanel.SetColumnSpan(characterLayoutPanel, 2);
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 52F));
@@ -292,7 +293,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // leftLayoutPanel
             // 
-            leftLayoutPanel.BackColor = Color.Transparent;
+            leftLayoutPanel.BackColor = Color.Black;
             leftLayoutPanel.ColumnCount = 2;
             leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 194F));
@@ -313,7 +314,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // rightLayoutPanel
             // 
-            rightLayoutPanel.BackColor = Color.Transparent;
+            rightLayoutPanel.BackColor = Color.Black;
             rightLayoutPanel.ColumnCount = 1;
             rightLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             rightLayoutPanel.Controls.Add(buttonsLayoutPanel, 0, 0);
@@ -330,7 +331,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // buttonsLayoutPanel
             // 
-            buttonsLayoutPanel.BackColor = Color.Transparent;
+            buttonsLayoutPanel.BackColor = Color.FromArgb(7, 15, 24);
             buttonsLayoutPanel.ColumnCount = 6;
             buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
             buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
@@ -355,7 +356,8 @@ namespace Mids_Reborn.UI.Forms
             // 
             // canvasScrollPanel
             // 
-            canvasScrollPanel.ContentPanel.BackColor = Color.Transparent;
+            canvasScrollPanel.BackColor = Color.FromArgb(7, 15, 24);
+            canvasScrollPanel.ContentPanel.BackColor = Color.FromArgb(7, 15, 24);
             canvasScrollPanel.ContentPanel.Controls.Add(canvas);
             canvasScrollPanel.ContentPanel.Location = new Point(0, 0);
             canvasScrollPanel.ContentPanel.Margin = new Padding(0);
@@ -374,7 +376,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // canvas
             // 
-            canvas.BackColor = Color.Transparent;
+            canvas.BackColor = Color.FromArgb(7, 15, 24);
             canvas.Dock = DockStyle.Top;
             canvas.Location = new Point(0, 0);
             canvas.Name = "canvas";
@@ -604,7 +606,8 @@ namespace Mids_Reborn.UI.Forms
             // 
             // midsvScrollPanel1.ContentPanel
             // 
-            midsvScrollPanel1.ContentPanel.BackColor = Color.Transparent;
+            midsvScrollPanel1.BackColor = Color.FromArgb(7, 15, 24);
+            midsvScrollPanel1.ContentPanel.BackColor = Color.FromArgb(7, 15, 24);
             midsvScrollPanel1.ContentPanel.Controls.Add(rightInnerLayoutPanel);
             midsvScrollPanel1.ContentPanel.Location = new Point(0, 0);
             midsvScrollPanel1.ContentPanel.Margin = new Padding(0);
@@ -623,6 +626,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // rightInnerLayoutPanel
             // 
+            rightInnerLayoutPanel.BackColor = Color.FromArgb(7, 15, 24);
             rightInnerLayoutPanel.AutoSize = true;
             rightInnerLayoutPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
             rightInnerLayoutPanel.ColumnCount = 1;
@@ -916,6 +920,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // leftInnerLayoutPanel
             // 
+            leftInnerLayoutPanel.BackColor = Color.FromArgb(7, 15, 24);
             leftInnerLayoutPanel.ColumnCount = 2;
             leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
@@ -1054,7 +1059,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // buttonsLayoutPanel
             // 
-            buttonsLayoutPanel.BackColor = Color.Transparent;
+            buttonsLayoutPanel.BackColor = Color.FromArgb(7, 15, 24);
             buttonsLayoutPanel.ColumnCount = 6;
             buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
             buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
@@ -1226,7 +1231,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // footerPanel
             // 
-            footerPanel.BackColor = Color.FromArgb(6, 17, 35);
+            footerPanel.BackColor = Color.Black;
             footerPanel.Controls.Add(footerLayoutPanel);
             footerPanel.Dock = DockStyle.Bottom;
             footerPanel.Location = new Point(10, 720);
@@ -1237,6 +1242,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // footerLayoutPanel
             // 
+            footerLayoutPanel.BackColor = Color.FromArgb(6, 17, 35);
             footerLayoutPanel.ColumnCount = 2;
             footerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
             footerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50F));
@@ -1267,6 +1273,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             footerRightPanel.AutoSize = true;
             footerRightPanel.AutoSizeMode = AutoSizeMode.GrowAndShrink;
+            footerRightPanel.BackColor = Color.FromArgb(6, 17, 35);
             footerRightPanel.Controls.Add(footerTotalSlotsLabel);
             footerRightPanel.Controls.Add(footerSlotsLeftLabel);
             footerRightPanel.Dock = DockStyle.Fill;
