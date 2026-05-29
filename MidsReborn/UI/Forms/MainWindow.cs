@@ -51,6 +51,7 @@ namespace Mids_Reborn.UI.Forms
 
         private const int BaselineCanvasWidth = 610;
         private const int BaselineFormWidth = 1280;
+        private const float MinimumUiScale = 0.90f;
         private const float BaselineMainLeftColumnWidth = 620f;
         private const float BaselineLeftPowerColumnWidth = 410f;
         private const float BaselinePoolRailWidth = 210f;
@@ -71,6 +72,36 @@ namespace Mids_Reborn.UI.Forms
         private const float BaselinePvToggleWidth = 148f;
         private const float BaselineUtilityButtonWidth = 114f;
         private const float BaselineRightActionRowHeight = 40f;
+        private const int CompactTwoColumnBreakpoint = 1180;
+        private const float CompactMainLeftColumnWidth = 456f;
+        private const float CompactLeftPowerColumnWidth = 292f;
+        private const float CompactPowerListMinHeight = 96f;
+        private const float CompactPowerListMaxHeight = 132f;
+        private const float CompactPowerListHeightRatio = 0.10f;
+        private const float CompactPoolsSectionMinHeight = 132f;
+        private const float CompactPoolsSectionMaxHeight = 176f;
+        private const float CompactPoolsSectionHeightRatio = 0.16f;
+        private const float CompactDataViewMinimumHeight = 352f;
+        private const float CompactDataViewMaximumHeight = 436f;
+        private const float CompactDataViewHeightRatio = 0.38f;
+        private const float CompactHeaderVerticalInset = 6f;
+        private const float CompactHeaderTopRowHeight = 40f;
+        private const float CompactHeaderBottomRowHeight = 40f;
+        private const float CompactHeaderRowGap = 2f;
+        private const float CompactHeaderNameLabelWidth = 56f;
+        private const float CompactHeaderNameMinimumWidth = 150f;
+        private const float CompactHeaderNameMaximumWidth = 420f;
+        private const float CompactHeaderArchetypeLabelWidth = 80f;
+        private const float CompactHeaderArchetypeMinimumWidth = 156f;
+        private const float CompactHeaderArchetypeMaximumWidth = 220f;
+        private const float CompactHeaderOriginLabelWidth = 56f;
+        private const float CompactHeaderOriginMinimumWidth = 140f;
+        private const float CompactHeaderOriginMaximumWidth = 180f;
+        private const float CompactHeaderModeLabelWidth = 60f;
+        private const float CompactHeaderTotalsWidth = 126f;
+        private const float CompactHeaderCombatWidth = 104f;
+        private const float CompactPlannerModeMinimumWidth = 260f;
+        private const float CompactPlannerModeMaximumWidth = 420f;
         private float _lastMasterScale = 1f;
         private int _lastCanvasWidth = -1;
         private float _lastLeftUiScale = 1f;
@@ -87,11 +118,15 @@ namespace Mids_Reborn.UI.Forms
         private MidsLevelStepper? _staticLevelInput;
         private MidsSegmentedToggle? _pvModeToggle;
         private Panel? _headerChromeHost;
+        private TableLayoutPanel? _compactHeaderHost;
+        private TableLayoutPanel? _compactHeaderTopLayout;
+        private TableLayoutPanel? _compactHeaderBottomLayout;
         private MidsWorkspaceShellPanel? _nameInputShell;
         private MidsWorkspaceShellPanel? _leftDetailsShell;
         private MidsWorkspaceShellPanel? _poolShell;
         private MidsWorkspaceShellPanel? _rightBuildShell;
         private TableLayoutPanel? _rightBuildShellLayout;
+        private readonly Size _defaultWindowMinimumSize;
         private bool _syncingPlannerModeToggle;
         private bool _syncingStaticLevelInput;
         private bool _syncingPvModeToggle;
@@ -315,6 +350,7 @@ namespace Mids_Reborn.UI.Forms
         {
             FormBorderStyle = FormBorderStyle.None;
             InitializeComponent();
+            _defaultWindowMinimumSize = MinimumSize;
             InitializePoolSectionBindings();
             EnsureWorkspaceShells();
             InitializeNativeHeaderLayout();
@@ -524,7 +560,9 @@ namespace Mids_Reborn.UI.Forms
         private void ConfigureCharacterHeaderColumns()
         {
             characterLayoutPanel.ColumnCount = 11;
+            characterLayoutPanel.RowCount = 1;
             characterLayoutPanel.ColumnStyles.Clear();
+            characterLayoutPanel.RowStyles.Clear();
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 60F));
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderNameWidth));
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderArchetypeLabelWidth));
@@ -536,7 +574,80 @@ namespace Mids_Reborn.UI.Forms
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderTotalsWidth));
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderCombatWidth));
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            characterLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
         }
+
+        private void EnsureCompactHeaderLayouts()
+        {
+            if (_compactHeaderHost is not null && _compactHeaderTopLayout is not null && _compactHeaderBottomLayout is not null)
+            {
+                return;
+            }
+
+            _compactHeaderHost = new TableLayoutPanel
+            {
+                BackColor = Color.Transparent,
+                ColumnCount = 1,
+                Dock = DockStyle.None,
+                GrowStyle = TableLayoutPanelGrowStyle.FixedSize,
+                Location = Point.Empty,
+                Margin = Padding.Empty,
+                Name = "compactHeaderHost",
+                Padding = Padding.Empty,
+                RowCount = 2
+            };
+            _compactHeaderHost.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+
+            _compactHeaderTopLayout = new TableLayoutPanel
+            {
+                BackColor = Color.Transparent,
+                ColumnCount = 6,
+                Dock = DockStyle.Fill,
+                GrowStyle = TableLayoutPanelGrowStyle.FixedSize,
+                Margin = Padding.Empty,
+                Name = "compactHeaderTopLayout",
+                Padding = Padding.Empty,
+                RowCount = 1
+            };
+            _compactHeaderTopLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            _compactHeaderBottomLayout = new TableLayoutPanel
+            {
+                BackColor = Color.Transparent,
+                ColumnCount = 4,
+                Dock = DockStyle.Fill,
+                GrowStyle = TableLayoutPanelGrowStyle.FixedSize,
+                Margin = Padding.Empty,
+                Name = "compactHeaderBottomLayout",
+                Padding = Padding.Empty,
+                RowCount = 1
+            };
+            _compactHeaderBottomLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
+            _compactHeaderHost.Controls.Add(_compactHeaderTopLayout, 0, 0);
+            _compactHeaderHost.Controls.Add(_compactHeaderBottomLayout, 0, 1);
+        }
+
+        private static void AttachHeaderControl(TableLayoutPanel layout, Control control, int column, int row = 0, int columnSpan = 1)
+        {
+            if (control.Parent != layout)
+            {
+                control.Parent?.Controls.Remove(control);
+                layout.Controls.Add(control, column, row);
+            }
+
+            layout.SetColumn(control, column);
+            layout.SetRow(control, row);
+            layout.SetColumnSpan(control, columnSpan);
+            layout.SetRowSpan(control, 1);
+        }
+
+        private bool IsTwoColumnLayoutMode()
+            => (MidsContext.Config?.Columns ?? 3) == 2
+               && (MidsContext.Config?.ColumnStackingMode ?? Enums.eColumnStacking.None) == Enums.eColumnStacking.None;
+
+        private bool ShouldUseCompactTwoColumnLayout()
+            => IsTwoColumnLayoutMode() && ClientSize.Width > 0 && ClientSize.Width <= CompactTwoColumnBreakpoint;
 
         private void ConfigureRightActionStripColumns()
         {
@@ -597,6 +708,83 @@ namespace Mids_Reborn.UI.Forms
                 }
 
                 remainingReduction -= reducedThisPass;
+            }
+        }
+
+        private static void ExpandWidthsToFill(float[] widths, float[] maximums, float availableWidth)
+        {
+            if (widths.Length != maximums.Length)
+            {
+                throw new ArgumentException("Width arrays must match.");
+            }
+
+            float totalWidth = widths.Sum();
+            if (availableWidth <= 0f || totalWidth >= availableWidth)
+            {
+                return;
+            }
+
+            float remainingExpansion = availableWidth - totalWidth;
+            while (remainingExpansion > 0.5f)
+            {
+                float totalCapacity = 0f;
+                for (var i = 0; i < widths.Length; i++)
+                {
+                    totalCapacity += Math.Max(0f, maximums[i] - widths[i]);
+                }
+
+                if (totalCapacity <= 0.5f)
+                {
+                    break;
+                }
+
+                float expandedThisPass = 0f;
+                for (var i = 0; i < widths.Length; i++)
+                {
+                    float capacity = Math.Max(0f, maximums[i] - widths[i]);
+                    if (capacity <= 0f)
+                    {
+                        continue;
+                    }
+
+                    float expansion = Math.Min(capacity, remainingExpansion * (capacity / totalCapacity));
+                    widths[i] += expansion;
+                    expandedThisPass += expansion;
+                }
+
+                if (expandedThisPass <= 0.1f)
+                {
+                    break;
+                }
+
+                remainingExpansion -= expandedThisPass;
+            }
+        }
+
+        private static void DistributeRemainingWidth(float[] widths, float availableWidth, float[] weights)
+        {
+            if (widths.Length == 0 || widths.Length != weights.Length)
+            {
+                return;
+            }
+
+            float totalWidth = widths.Sum();
+            if (availableWidth <= totalWidth)
+            {
+                return;
+            }
+
+            float totalWeight = weights.Sum(weight => Math.Max(0f, weight));
+            if (totalWeight <= 0.01f)
+            {
+                widths[0] += availableWidth - totalWidth;
+                return;
+            }
+
+            float extraWidth = availableWidth - totalWidth;
+            for (var i = 0; i < widths.Length; i++)
+            {
+                widths[i] += extraWidth * (Math.Max(0f, weights[i]) / totalWeight);
             }
         }
 
@@ -681,6 +869,482 @@ namespace Mids_Reborn.UI.Forms
                 mainLayoutPanel.Controls.Add(_headerChromeHost, 0, 0);
                 mainLayoutPanel.SetColumnSpan(_headerChromeHost, 2);
                 mainLayoutPanel.ResumeLayout(performLayout: true);
+            }
+        }
+
+        private int ResolveHeaderHostWidth()
+            => Math.Max(
+                1,
+                ((_headerChromeHost?.ClientSize.Width)
+                    ?? (characterLayoutPanel.Parent?.ClientSize.Width ?? characterLayoutPanel.Width)) - 1);
+
+        private float ApplyHeaderLayout(float scale, bool isCompactTwoColumn)
+        {
+            var headerHostWidth = ResolveHeaderHostWidth();
+            return isCompactTwoColumn
+                ? ApplyCompactHeaderLayout(scale, headerHostWidth)
+                : ApplyStandardHeaderLayout(scale, headerHostWidth);
+        }
+
+        private void PositionHeaderContainer(Control? headerContainer, float headerRowHeight)
+        {
+            if (_headerChromeHost is null || headerContainer is null)
+            {
+                return;
+            }
+
+            int top = Math.Max(0, (int)Math.Round((headerRowHeight - headerContainer.Height) / 2f));
+            headerContainer.Location = new Point(0, top);
+        }
+
+        private int ResolveCompactPowerListHeight(float scale)
+        {
+            float desiredHeight = ClientSize.Height * CompactPowerListHeightRatio;
+            float minimumHeight = ScaleLayoutValue(CompactPowerListMinHeight, scale);
+            float maximumHeight = ScaleLayoutValue(CompactPowerListMaxHeight, scale);
+            return (int)Math.Round(Math.Clamp(desiredHeight, minimumHeight, maximumHeight));
+        }
+
+        private int ResolveCompactPowerListHeight(MidsListView list, float scale)
+        {
+            int width = Math.Max(1, leftInnerLayoutPanel.ClientSize.Width - list.Margin.Horizontal);
+            int preferredHeight = list.GetPreferredSize(new Size(width, int.MaxValue)).Height;
+            int minimumHeight = (int)Math.Round(ScaleLayoutValue(CompactPowerListMinHeight, scale));
+            int maximumHeight = (int)Math.Round(ScaleLayoutValue(CompactPowerListMaxHeight, scale));
+            return Math.Clamp(preferredHeight, minimumHeight, maximumHeight);
+        }
+
+        private int ResolveCompactPoolsSectionHeight(float scale)
+        {
+            float desiredHeight = ClientSize.Height * CompactPoolsSectionHeightRatio;
+            float minimumHeight = ScaleLayoutValue(CompactPoolsSectionMinHeight, scale);
+            float maximumHeight = ScaleLayoutValue(CompactPoolsSectionMaxHeight, scale);
+            return (int)Math.Round(Math.Clamp(desiredHeight, minimumHeight, maximumHeight));
+        }
+
+        private static void ConsumeExcessHeight(ref int currentHeight, int minimumHeight, ref int excessHeight)
+        {
+            if (excessHeight <= 0)
+            {
+                return;
+            }
+
+            int reduction = Math.Min(Math.Max(0, currentHeight - minimumHeight), excessHeight);
+            currentHeight -= reduction;
+            excessHeight -= reduction;
+        }
+
+        private int ResolveCompactDataViewHeight(float scale)
+        {
+            float desiredHeight = ClientSize.Height * CompactDataViewHeightRatio;
+            float minimumHeight = ScaleLayoutValue(CompactDataViewMinimumHeight, scale);
+            float maximumHeight = ScaleLayoutValue(CompactDataViewMaximumHeight, scale);
+            return (int)Math.Round(Math.Clamp(desiredHeight, minimumHeight, maximumHeight));
+        }
+
+        private void ApplyLeftDetailsLayout(bool isCompactTwoColumn, float scale)
+        {
+            leftInnerLayoutPanel.SuspendLayout();
+
+            if (isCompactTwoColumn)
+            {
+                int minimumListHeight = (int)Math.Round(ScaleLayoutValue(CompactPowerListMinHeight, scale));
+                int fixedChromeHeight =
+                    (int)Math.Round(ScaleLayoutValue(BaselinePowerSetHeaderRowHeight, scale)) * 2 +
+                    (int)Math.Round(ScaleLayoutValue(BaselinePowerSetDropDownRowHeight, scale)) * 2;
+                int availableHeight = Math.Max(0, leftInnerLayoutPanel.ClientSize.Height);
+                int maximumDataViewHeight = Math.Max(
+                    (int)Math.Round(ScaleLayoutValue(CompactDataViewMinimumHeight, scale)),
+                    availableHeight - fixedChromeHeight - (minimumListHeight * 2));
+                int dataViewHeight = Math.Min(ResolveCompactDataViewHeight(scale), maximumDataViewHeight);
+                int topVariableBudget = Math.Max(minimumListHeight * 2, availableHeight - fixedChromeHeight - dataViewHeight);
+                int primaryListHeight = Math.Max(minimumListHeight, topVariableBudget / 2);
+                int secondaryListHeight = Math.Max(minimumListHeight, topVariableBudget - primaryListHeight);
+                float availableWidth = Math.Max(0f, leftInnerLayoutPanel.ClientSize.Width);
+                float minimumPowerColumnWidth = ScaleLayoutValue(CompactLeftPowerColumnWidth * 0.79f, scale);
+                float poolColumnWidth = Math.Clamp(
+                    availableWidth * 0.478f,
+                    ScaleLayoutValue(214f, scale),
+                    ScaleLayoutValue(258f, scale));
+                if (availableWidth - poolColumnWidth < minimumPowerColumnWidth)
+                {
+                    poolColumnWidth = Math.Max(ScaleLayoutValue(198f, scale), availableWidth - minimumPowerColumnWidth);
+                }
+                float powerColumnWidth = Math.Max(1f, availableWidth - poolColumnWidth);
+
+                leftInnerLayoutPanel.ColumnCount = 2;
+                leftInnerLayoutPanel.ColumnStyles.Clear();
+                leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, powerColumnWidth));
+                leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, poolColumnWidth));
+                leftInnerLayoutPanel.RowCount = 7;
+                leftInnerLayoutPanel.RowStyles.Clear();
+                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(BaselinePowerSetHeaderRowHeight, scale)));
+                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(BaselinePowerSetDropDownRowHeight, scale)));
+                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, primaryListHeight));
+                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(BaselinePowerSetHeaderRowHeight, scale)));
+                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(BaselinePowerSetDropDownRowHeight, scale)));
+                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, secondaryListHeight));
+                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, dataViewHeight));
+
+                AttachHeaderControl(leftInnerLayoutPanel, lblPrimary, 0, 0);
+                AttachHeaderControl(leftInnerLayoutPanel, primaryDropDown, 0, 1);
+                AttachHeaderControl(leftInnerLayoutPanel, primaryList, 0, 2);
+                AttachHeaderControl(leftInnerLayoutPanel, label1, 0, 3);
+                AttachHeaderControl(leftInnerLayoutPanel, secondaryDropDown, 0, 4);
+                AttachHeaderControl(leftInnerLayoutPanel, secondaryList, 0, 5);
+                if (_poolShell is not null)
+                {
+                    AttachHeaderControl(leftInnerLayoutPanel, _poolShell, 1, 0);
+                    leftInnerLayoutPanel.SetRowSpan(_poolShell, 6);
+                }
+                AttachHeaderControl(leftInnerLayoutPanel, dataView, 0, 6, 2);
+                leftInnerLayoutPanel.SetColumnSpan(dataView, 2);
+            }
+            else
+            {
+                leftInnerLayoutPanel.ColumnCount = 2;
+                leftInnerLayoutPanel.ColumnStyles.Clear();
+                leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+                leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
+                leftInnerLayoutPanel.RowCount = 4;
+                leftInnerLayoutPanel.RowStyles.Clear();
+                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(BaselinePowerSetHeaderRowHeight, scale)));
+                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(BaselinePowerSetDropDownRowHeight, scale)));
+                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 33.3333321F));
+                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 66.6666641F));
+
+                AttachHeaderControl(leftInnerLayoutPanel, lblPrimary, 0, 0);
+                AttachHeaderControl(leftInnerLayoutPanel, label1, 1, 0);
+                AttachHeaderControl(leftInnerLayoutPanel, primaryDropDown, 0, 1);
+                AttachHeaderControl(leftInnerLayoutPanel, secondaryDropDown, 1, 1);
+                AttachHeaderControl(leftInnerLayoutPanel, primaryList, 0, 2);
+                AttachHeaderControl(leftInnerLayoutPanel, secondaryList, 1, 2);
+                AttachHeaderControl(leftInnerLayoutPanel, dataView, 0, 3, 2);
+                leftInnerLayoutPanel.SetColumnSpan(dataView, 2);
+            }
+
+            leftInnerLayoutPanel.ResumeLayout(performLayout: false);
+        }
+
+        private void ApplyLeftWorkspaceLayout(bool isCompactTwoColumn, float scale, float poolRailWidth)
+        {
+            if (_leftDetailsShell is null)
+            {
+                return;
+            }
+
+            leftLayoutPanel.SuspendLayout();
+
+            if (isCompactTwoColumn)
+            {
+                leftLayoutPanel.ColumnCount = 1;
+                leftLayoutPanel.ColumnStyles.Clear();
+                leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+                leftLayoutPanel.RowCount = 1;
+                leftLayoutPanel.RowStyles.Clear();
+                leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+
+                AttachHeaderControl(leftLayoutPanel, _leftDetailsShell, 0, 0);
+
+                leftLayoutPanel.SetColumnSpan(_leftDetailsShell, 1);
+                leftLayoutPanel.SetRowSpan(_leftDetailsShell, 1);
+            }
+            else
+            {
+                if (_poolShell is null)
+                {
+                    leftLayoutPanel.ResumeLayout(performLayout: false);
+                    return;
+                }
+
+                leftLayoutPanel.ColumnCount = 2;
+                leftLayoutPanel.ColumnStyles.Clear();
+                leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+                leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, poolRailWidth));
+                leftLayoutPanel.RowCount = 2;
+                leftLayoutPanel.RowStyles.Clear();
+                leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, ScaleLayoutValue(160f, scale)));
+                leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+
+                AttachHeaderControl(leftLayoutPanel, _leftDetailsShell, 0, 0);
+                AttachHeaderControl(leftLayoutPanel, _poolShell, 1, 0);
+
+                leftLayoutPanel.SetColumnSpan(_leftDetailsShell, 1);
+                leftLayoutPanel.SetRowSpan(_leftDetailsShell, 2);
+                leftLayoutPanel.SetColumnSpan(_poolShell, 1);
+                leftLayoutPanel.SetRowSpan(_poolShell, 2);
+
+                leftLayoutPanel.PreferredGrowRow = 0;
+                leftLayoutPanel.FlexibleRow = 1;
+            }
+
+            leftLayoutPanel.ResumeLayout(performLayout: false);
+        }
+
+        private float ApplyStandardHeaderLayout(float scale, int headerHostWidth)
+        {
+            if (_headerChromeHost is null || _modeLabel is null || _plannerModeHost is null)
+            {
+                return Math.Max(BaselineHeaderContentHeight, ScaleLayoutValue(BaselineHeaderContentHeight, scale));
+            }
+
+            _headerChromeHost.SuspendLayout();
+            characterLayoutPanel.SuspendLayout();
+
+            if (_compactHeaderHost is not null && _compactHeaderHost.Parent == _headerChromeHost)
+            {
+                _headerChromeHost.Controls.Remove(_compactHeaderHost);
+            }
+
+            if (characterLayoutPanel.Parent != _headerChromeHost)
+            {
+                characterLayoutPanel.Parent?.Controls.Remove(characterLayoutPanel);
+                _headerChromeHost.Controls.Add(characterLayoutPanel);
+            }
+
+            ConfigureCharacterHeaderColumns();
+            AttachHeaderControl(characterLayoutPanel, lblName, 0);
+            if (_nameInputShell is not null)
+            {
+                AttachHeaderControl(characterLayoutPanel, _nameInputShell, 1);
+            }
+            AttachHeaderControl(characterLayoutPanel, lblAT, 2);
+            AttachHeaderControl(characterLayoutPanel, atDropDown, 3);
+            AttachHeaderControl(characterLayoutPanel, lblOrigin, 4);
+            AttachHeaderControl(characterLayoutPanel, originDropDown, 5);
+            AttachHeaderControl(characterLayoutPanel, _modeLabel, 6);
+            AttachHeaderControl(characterLayoutPanel, _plannerModeHost, 7);
+            AttachHeaderControl(characterLayoutPanel, totalsEx, 8);
+            AttachHeaderControl(characterLayoutPanel, combatEx, 9);
+
+            float[] preferredWidths =
+            [
+                ScaleLayoutValue(60f, scale),
+                ScaleLayoutValue(BaselineHeaderNameWidth, scale),
+                ScaleLayoutValue(BaselineHeaderArchetypeLabelWidth, scale),
+                ScaleLayoutValue(BaselineHeaderArchetypeWidth, scale),
+                ScaleLayoutValue(BaselineHeaderOriginLabelWidth, scale),
+                ScaleLayoutValue(BaselineHeaderOriginWidth, scale),
+                ScaleLayoutValue(BaselineHeaderModeLabelWidth, scale),
+                Math.Max(BaselineHeaderModeWidth, ScaleLayoutValue(BaselineHeaderModeWidth, scale)),
+                ScaleLayoutValue(BaselineHeaderTotalsWidth, scale),
+                ScaleLayoutValue(BaselineHeaderCombatWidth, scale)
+            ];
+
+            float[] minimumWidths =
+            [
+                ScaleLayoutValue(52f, scale),
+                ScaleLayoutValue(96f, scale),
+                ScaleLayoutValue(72f, scale),
+                ScaleLayoutValue(108f, scale),
+                ScaleLayoutValue(48f, scale),
+                ScaleLayoutValue(96f, scale),
+                ScaleLayoutValue(52f, scale),
+                BaselineHeaderModeWidth,
+                ScaleLayoutValue(104f, scale),
+                ScaleLayoutValue(88f, scale)
+            ];
+
+            float desiredSpacerWidth = ScaleLayoutValue(8f, scale);
+            ReduceWidthsToFit(preferredWidths, minimumWidths, Math.Max(1f, headerHostWidth - desiredSpacerWidth));
+
+            for (var column = 0; column <= 9; column++)
+            {
+                characterLayoutPanel.ColumnStyles[column].Width = preferredWidths[column];
+            }
+
+            var headerHeight = Math.Max(BaselineHeaderContentHeight, ScaleLayoutValue(BaselineHeaderContentHeight, scale));
+            characterLayoutPanel.Width = headerHostWidth;
+            characterLayoutPanel.Height = (int)Math.Round(headerHeight);
+            characterLayoutPanel.Location = new Point(0, 0);
+
+            characterLayoutPanel.ResumeLayout(performLayout: true);
+            _headerChromeHost.ResumeLayout(performLayout: true);
+            return headerHeight;
+        }
+
+        private float ApplyCompactHeaderLayout(float scale, int headerHostWidth)
+        {
+            if (_headerChromeHost is null || _modeLabel is null || _plannerModeHost is null)
+            {
+                return CompactHeaderTopRowHeight + CompactHeaderBottomRowHeight + CompactHeaderRowGap;
+            }
+
+            EnsureCompactHeaderLayouts();
+            if (_compactHeaderHost is null || _compactHeaderTopLayout is null || _compactHeaderBottomLayout is null)
+            {
+                return CompactHeaderTopRowHeight + CompactHeaderBottomRowHeight + CompactHeaderRowGap;
+            }
+
+            _headerChromeHost.SuspendLayout();
+            _compactHeaderHost.SuspendLayout();
+            _compactHeaderTopLayout.SuspendLayout();
+            _compactHeaderBottomLayout.SuspendLayout();
+
+            if (characterLayoutPanel.Parent == _headerChromeHost)
+            {
+                _headerChromeHost.Controls.Remove(characterLayoutPanel);
+            }
+
+            if (_compactHeaderHost.Parent != _headerChromeHost)
+            {
+                _compactHeaderHost.Parent?.Controls.Remove(_compactHeaderHost);
+                _headerChromeHost.Controls.Add(_compactHeaderHost);
+            }
+
+            AttachHeaderControl(_compactHeaderTopLayout, lblName, 0);
+            if (_nameInputShell is not null)
+            {
+                AttachHeaderControl(_compactHeaderTopLayout, _nameInputShell, 1);
+            }
+            AttachHeaderControl(_compactHeaderTopLayout, lblAT, 2);
+            AttachHeaderControl(_compactHeaderTopLayout, atDropDown, 3);
+            AttachHeaderControl(_compactHeaderTopLayout, lblOrigin, 4);
+            AttachHeaderControl(_compactHeaderTopLayout, originDropDown, 5);
+
+            AttachHeaderControl(_compactHeaderBottomLayout, _modeLabel, 0);
+            AttachHeaderControl(_compactHeaderBottomLayout, _plannerModeHost, 1);
+            AttachHeaderControl(_compactHeaderBottomLayout, totalsEx, 3);
+            AttachHeaderControl(_compactHeaderBottomLayout, combatEx, 4);
+
+            ConfigureCompactHeaderTopColumns(scale, headerHostWidth);
+            ConfigureCompactHeaderBottomColumns(scale, headerHostWidth);
+
+            float topHeight = Math.Max(CompactHeaderTopRowHeight, ScaleLayoutValue(CompactHeaderTopRowHeight, scale));
+            float bottomHeight = Math.Max(CompactHeaderBottomRowHeight, ScaleLayoutValue(CompactHeaderBottomRowHeight, scale));
+            float rowGap = ScaleLayoutValue(CompactHeaderRowGap, scale);
+
+            _compactHeaderHost.RowStyles.Clear();
+            _compactHeaderHost.RowStyles.Add(new RowStyle(SizeType.Absolute, topHeight));
+            _compactHeaderHost.RowStyles.Add(new RowStyle(SizeType.Absolute, bottomHeight + rowGap));
+
+            _compactHeaderTopLayout.Width = headerHostWidth;
+            _compactHeaderTopLayout.Height = (int)Math.Round(topHeight);
+            _compactHeaderBottomLayout.Width = headerHostWidth;
+            _compactHeaderBottomLayout.Height = (int)Math.Round(bottomHeight);
+
+            _compactHeaderHost.Width = headerHostWidth;
+            _compactHeaderHost.Height = (int)Math.Round(topHeight + bottomHeight + rowGap);
+            _compactHeaderHost.Location = new Point(0, 0);
+
+            _compactHeaderBottomLayout.Margin = new Padding(0, (int)Math.Round(rowGap), 0, 0);
+
+            _compactHeaderBottomLayout.ResumeLayout(performLayout: true);
+            _compactHeaderTopLayout.ResumeLayout(performLayout: true);
+            _compactHeaderHost.ResumeLayout(performLayout: true);
+            _headerChromeHost.ResumeLayout(performLayout: true);
+            return topHeight + bottomHeight + rowGap;
+        }
+
+        private void ConfigureCompactHeaderTopColumns(float scale, int headerHostWidth)
+        {
+            if (_compactHeaderTopLayout is null)
+            {
+                return;
+            }
+
+            _compactHeaderTopLayout.ColumnStyles.Clear();
+            _compactHeaderTopLayout.ColumnCount = 6;
+            float widthScale = Math.Max(1f, scale);
+            float labelWidthTotal =
+                ScaleLayoutValue(CompactHeaderNameLabelWidth, widthScale) +
+                ScaleLayoutValue(CompactHeaderArchetypeLabelWidth, widthScale) +
+                ScaleLayoutValue(CompactHeaderOriginLabelWidth, widthScale);
+            float[] widths =
+            [
+                ScaleLayoutValue(CompactHeaderNameMinimumWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderArchetypeMinimumWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderOriginMinimumWidth, widthScale)
+            ];
+            float[] weights =
+            [
+                0.40f,
+                0.34f,
+                0.26f
+            ];
+
+            DistributeRemainingWidth(widths, Math.Max(0f, headerHostWidth - labelWidthTotal), weights);
+
+            _compactHeaderTopLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, ScaleLayoutValue(CompactHeaderNameLabelWidth, widthScale)));
+            _compactHeaderTopLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, widths[0]));
+            _compactHeaderTopLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, ScaleLayoutValue(CompactHeaderArchetypeLabelWidth, widthScale)));
+            _compactHeaderTopLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, widths[1]));
+            _compactHeaderTopLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, ScaleLayoutValue(CompactHeaderOriginLabelWidth, widthScale)));
+            _compactHeaderTopLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, widths[2]));
+        }
+
+        private void ConfigureCompactHeaderBottomColumns(float scale, int headerHostWidth)
+        {
+            if (_compactHeaderBottomLayout is null)
+            {
+                return;
+            }
+
+            _compactHeaderBottomLayout.ColumnStyles.Clear();
+            _compactHeaderBottomLayout.ColumnCount = 5;
+            float widthScale = Math.Max(1f, scale);
+            float modeLabelWidth = ScaleLayoutValue(CompactHeaderModeLabelWidth, widthScale);
+            float totalsWidth = ScaleLayoutValue(CompactHeaderTotalsWidth, widthScale);
+            float combatWidth = ScaleLayoutValue(CompactHeaderCombatWidth, widthScale);
+            float minimumPlannerWidth = ScaleLayoutValue(CompactPlannerModeMinimumWidth, widthScale);
+            float spacerWidth = ScaleLayoutValue(12f, widthScale);
+            float plannerWidth = Math.Max(minimumPlannerWidth, headerHostWidth - modeLabelWidth - totalsWidth - combatWidth - spacerWidth);
+
+            _compactHeaderBottomLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, modeLabelWidth));
+            _compactHeaderBottomLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, plannerWidth));
+            _compactHeaderBottomLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            _compactHeaderBottomLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, totalsWidth));
+            _compactHeaderBottomLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, combatWidth));
+        }
+
+        private int ComputeCompactMinimumClientWidth()
+        {
+            int nameGroupWidth =
+                (int)Math.Round(CompactHeaderNameLabelWidth) +
+                (int)Math.Round(CompactHeaderNameMinimumWidth) +
+                (int)Math.Round(CompactHeaderArchetypeLabelWidth) +
+                (int)Math.Round(CompactHeaderArchetypeMinimumWidth) +
+                (int)Math.Round(CompactHeaderOriginLabelWidth) +
+                (int)Math.Round(CompactHeaderOriginMinimumWidth);
+
+            int compactBottomRowWidth =
+                (int)Math.Round(CompactHeaderModeLabelWidth) +
+                (int)Math.Round(CompactPlannerModeMinimumWidth) +
+                (int)Math.Round(CompactHeaderTotalsWidth) +
+                (int)Math.Round(CompactHeaderCombatWidth);
+
+            int compactHeaderMinimumWidth = Math.Max(nameGroupWidth, compactBottomRowWidth);
+
+            int leftMinimumWidth = (int)Math.Round(CompactMainLeftColumnWidth);
+            int actionStripMinimumWidth =
+                (int)Math.Round(ScaleLayoutValue(BaselinePvToggleWidth, MinimumUiScale)) +
+                4 * (int)Math.Round(ScaleLayoutValue(BaselineUtilityButtonWidth, MinimumUiScale));
+            int rendererMinimumWidth = drawing?.GetMinimumRequiredWidth()
+                ?? (int)Math.Round((2 * 184 + 50) * MinimumUiScale);
+            int rightShellPadding = (int)Math.Round(ScaleLayoutValue(16f, MinimumUiScale));
+            int rightMinimumWidth = Math.Max(actionStripMinimumWidth, rendererMinimumWidth) + rightShellPadding;
+
+            int mainAreaMinimumWidth = leftMinimumWidth + rightMinimumWidth;
+            return Math.Max(compactHeaderMinimumWidth, mainAreaMinimumWidth) + Padding.Horizontal;
+        }
+
+        private void UpdateWindowMinimumSize()
+        {
+            if (!IsHandleCreated)
+            {
+                return;
+            }
+
+            var minimumWidth = _defaultWindowMinimumSize.Width;
+            if (ShouldUseCompactTwoColumnLayout())
+            {
+                minimumWidth = ComputeCompactMinimumClientWidth() + Math.Max(0, Width - ClientSize.Width);
+            }
+
+            var desiredMinimum = new Size(minimumWidth, _defaultWindowMinimumSize.Height);
+            if (MinimumSize != desiredMinimum)
+            {
+                MinimumSize = desiredMinimum;
             }
         }
 
@@ -1081,7 +1745,7 @@ namespace Mids_Reborn.UI.Forms
 
             var rawScale = (float)ClientSize.Width / BaselineFormWidth;
             var scale = 1f + (rawScale - 1f) * 0.45f;
-            return Math.Clamp(scale, 0.90f, 1.25f);
+            return Math.Clamp(scale, MinimumUiScale, 1.25f);
         }
 
         private void ApplyLeftUiScale(bool force = false)
@@ -1089,6 +1753,12 @@ namespace Mids_Reborn.UI.Forms
             if (!IsHandleCreated && !force) return;
 
             var scale = ComputeLeftUiScale();
+            var isCompactTwoColumn = ShouldUseCompactTwoColumnLayout();
+            if (isCompactTwoColumn)
+            {
+                scale = Math.Max(scale, 0.95f);
+            }
+
             var clientSize = ClientSize;
             if (!force && Math.Abs(scale - _lastLeftUiScale) < 0.01f && clientSize == _lastLeftUiClientSize) return;
 
@@ -1101,86 +1771,44 @@ namespace Mids_Reborn.UI.Forms
             leftLayoutPanel.SuspendLayout();
             leftInnerLayoutPanel.SuspendLayout();
             rightInnerLayoutPanel.SuspendLayout();
-            characterLayoutPanel.SuspendLayout();
             characterPanel.SuspendLayout();
 
-            var provisionalLeftWidth = BaselineMainLeftColumnWidth * scale;
-            var extraLeftWidth = Math.Max(0f, provisionalLeftWidth - BaselineMainLeftColumnWidth);
-            var poolRailWidth = Math.Clamp(
-                BaselinePoolRailWidth + extraLeftWidth * PoolRailExtraWidthRatio,
-                BaselinePoolRailWidth,
-                244f);
-            var minimumInnerWidth = ScaleLayoutValue(BaselineLeftPowerColumnWidth, scale);
-            var minimumLeftWidth = Math.Max(BaselineMainLeftColumnWidth, minimumInnerWidth + poolRailWidth + 4f);
-            var maximumLeftWidth = Math.Max(minimumLeftWidth, ClientSize.Width * 0.48f);
-            var leftWidth = Math.Clamp(provisionalLeftWidth, minimumLeftWidth, maximumLeftWidth);
+            UpdateWindowMinimumSize();
+
+            float poolRailWidth;
+            float leftWidth;
+            if (isCompactTwoColumn)
+            {
+                poolRailWidth = 0f;
+                leftWidth = Math.Clamp(ClientSize.Width * 0.45f, CompactMainLeftColumnWidth, 520f);
+            }
+            else
+            {
+                var provisionalLeftWidth = BaselineMainLeftColumnWidth * scale;
+                var extraLeftWidth = Math.Max(0f, provisionalLeftWidth - BaselineMainLeftColumnWidth);
+                poolRailWidth = Math.Clamp(
+                    BaselinePoolRailWidth + extraLeftWidth * PoolRailExtraWidthRatio,
+                    BaselinePoolRailWidth,
+                    244f);
+                var minimumInnerWidth = ScaleLayoutValue(BaselineLeftPowerColumnWidth, scale);
+                var minimumLeftWidth = Math.Max(BaselineMainLeftColumnWidth, minimumInnerWidth + poolRailWidth + 4f);
+                var maximumLeftWidth = Math.Max(minimumLeftWidth, ClientSize.Width * 0.48f);
+                leftWidth = Math.Clamp(provisionalLeftWidth, minimumLeftWidth, maximumLeftWidth);
+            }
 
             mainLayoutPanel.ColumnStyles[0].Width = leftWidth;
-            mainLayoutPanel.RowStyles[0].Height = Math.Max(46f, ScaleLayoutValue(46f, scale));
-
-            leftLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
-            leftLayoutPanel.ColumnStyles[0].Width = 100f;
-            leftLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;
-            leftLayoutPanel.ColumnStyles[1].Width = poolRailWidth;
-            leftLayoutPanel.RowStyles[0].Height = ScaleLayoutValue(160f, scale);
+            ApplyLeftWorkspaceLayout(isCompactTwoColumn, scale, poolRailWidth);
+            ApplyLeftDetailsLayout(isCompactTwoColumn, scale);
 
             if (_rightBuildShellLayout is not null)
             {
                 _rightBuildShellLayout.RowStyles[0].Height = ScaleLayoutValue(BaselineRightActionRowHeight, scale);
             }
 
-            if (characterLayoutPanel.ColumnStyles.Count >= 11)
-            {
-                int headerHostWidth = Math.Max(
-                    1,
-                    ((_headerChromeHost?.ClientSize.Width)
-                        ?? (characterLayoutPanel.Parent?.ClientSize.Width ?? characterLayoutPanel.Width)) - 1);
-
-                float[] preferredWidths =
-                [
-                    ScaleLayoutValue(60f, scale),
-                    ScaleLayoutValue(BaselineHeaderNameWidth, scale),
-                    ScaleLayoutValue(BaselineHeaderArchetypeLabelWidth, scale),
-                    ScaleLayoutValue(BaselineHeaderArchetypeWidth, scale),
-                    ScaleLayoutValue(BaselineHeaderOriginLabelWidth, scale),
-                    ScaleLayoutValue(BaselineHeaderOriginWidth, scale),
-                    ScaleLayoutValue(BaselineHeaderModeLabelWidth, scale),
-                    Math.Max(BaselineHeaderModeWidth, ScaleLayoutValue(BaselineHeaderModeWidth, scale)),
-                    ScaleLayoutValue(BaselineHeaderTotalsWidth, scale),
-                    ScaleLayoutValue(BaselineHeaderCombatWidth, scale)
-                ];
-
-                float[] minimumWidths =
-                [
-                    ScaleLayoutValue(52f, scale),
-                    ScaleLayoutValue(96f, scale),
-                    ScaleLayoutValue(72f, scale),
-                    ScaleLayoutValue(108f, scale),
-                    ScaleLayoutValue(48f, scale),
-                    ScaleLayoutValue(96f, scale),
-                    ScaleLayoutValue(52f, scale),
-                    BaselineHeaderModeWidth,
-                    ScaleLayoutValue(104f, scale),
-                    ScaleLayoutValue(88f, scale)
-                ];
-
-                float desiredSpacerWidth = ScaleLayoutValue(8f, scale);
-                ReduceWidthsToFit(preferredWidths, minimumWidths, Math.Max(1f, headerHostWidth - desiredSpacerWidth));
-
-                for (var column = 0; column <= 9; column++)
-                {
-                    characterLayoutPanel.ColumnStyles[column].Width = preferredWidths[column];
-                }
-
-                characterLayoutPanel.Width = headerHostWidth;
-                characterLayoutPanel.Height = Math.Max(
-                    (int)Math.Round(BaselineHeaderContentHeight),
-                    (int)Math.Round(ScaleLayoutValue(BaselineHeaderContentHeight, scale)));
-                if (_headerChromeHost is not null)
-                {
-                    characterLayoutPanel.Top = Math.Max(0, (_headerChromeHost.ClientSize.Height - characterLayoutPanel.Height) / 2);
-                }
-            }
+            var headerContentHeight = ApplyHeaderLayout(scale, isCompactTwoColumn);
+            var headerRowHeight = headerContentHeight + Math.Max(4f, ScaleLayoutValue(isCompactTwoColumn ? CompactHeaderVerticalInset : 6f, scale));
+            mainLayoutPanel.RowStyles[0].Height = headerRowHeight;
+            PositionHeaderContainer(isCompactTwoColumn ? _compactHeaderHost : characterLayoutPanel, headerRowHeight);
 
             if (buttonsLayoutPanel.ColumnStyles.Count >= 6)
             {
@@ -1191,10 +1819,7 @@ namespace Mids_Reborn.UI.Forms
                 }
             }
 
-            ApplyWorkspaceShellScale(scale);
-
-            leftInnerLayoutPanel.RowStyles[0].Height = ScaleLayoutValue(BaselinePowerSetHeaderRowHeight, scale);
-            leftInnerLayoutPanel.RowStyles[1].Height = ScaleLayoutValue(BaselinePowerSetDropDownRowHeight, scale);
+            ApplyWorkspaceShellScale(scale, isCompactTwoColumn);
 
             for (var i = 0; i < rightInnerLayoutPanel.RowStyles.Count; i++)
             {
@@ -1209,13 +1834,18 @@ namespace Mids_Reborn.UI.Forms
 
             ScaleLeftUiControlTree(leftLayoutPanel, scale);
             ScaleLeftUiControlTree(buttonsLayoutPanel, scale);
-            ScaleLeftUiControlTree(characterLayoutPanel, scale);
+            if (_headerChromeHost is not null)
+            {
+                ScaleLeftUiControlTree(_headerChromeHost, scale);
+            }
             ApplyPoolStackLayout(scale);
             dataView.ApplyUiScale(scale);
-            leftLayoutPanel.RefreshSmartLayout();
+            if (!isCompactTwoColumn)
+            {
+                leftLayoutPanel.RefreshSmartLayout();
+            }
 
             characterPanel.ResumeLayout(performLayout: true);
-            characterLayoutPanel.ResumeLayout(performLayout: true);
             rightInnerLayoutPanel.ResumeLayout(performLayout: true);
             leftInnerLayoutPanel.ResumeLayout(performLayout: true);
             leftLayoutPanel.ResumeLayout(performLayout: true);
@@ -1228,7 +1858,7 @@ namespace Mids_Reborn.UI.Forms
 
         private int ScalePx(int value, float scale) => Math.Max(1, (int)Math.Round(value * scale));
 
-        private void ApplyWorkspaceShellScale(float scale)
+        private void ApplyWorkspaceShellScale(float scale, bool isCompactTwoColumn)
         {
             atDropDown.Margin = ScalePadding(new Padding(3, 8, 3, 6), scale);
             originDropDown.Margin = ScalePadding(new Padding(3, 8, 3, 6), scale);
@@ -1237,8 +1867,8 @@ namespace Mids_Reborn.UI.Forms
             {
                 _nameInputShell.CornerRadius = ScalePx(6, scale);
                 _nameInputShell.BorderThickness = Math.Max(1, (int)Math.Round(scale));
-                _nameInputShell.Padding = ScalePadding(new Padding(10, 0, 10, 0), scale);
-                _nameInputShell.Margin = ScalePadding(new Padding(3, 6, 3, 6), scale);
+                _nameInputShell.Padding = ScalePadding(isCompactTwoColumn ? new Padding(8, 0, 8, 0) : new Padding(10, 0, 10, 0), scale);
+                _nameInputShell.Margin = ScalePadding(isCompactTwoColumn ? new Padding(3, 5, 3, 5) : new Padding(3, 6, 3, 6), scale);
                 LayoutHeaderNameInput();
             }
 
@@ -1246,7 +1876,7 @@ namespace Mids_Reborn.UI.Forms
             {
                 _leftDetailsShell.CornerRadius = ScalePx(8, scale);
                 _leftDetailsShell.BorderThickness = Math.Max(1, (int)Math.Round(scale));
-                _leftDetailsShell.Padding = ScalePadding(new Padding(10, 8, 10, 8), scale);
+                _leftDetailsShell.Padding = ScalePadding(isCompactTwoColumn ? new Padding(8, 6, 8, 6) : new Padding(10, 8, 10, 8), scale);
                 _leftDetailsShell.Margin = ScalePadding(new Padding(3, 3, 2, 3), scale);
             }
 
@@ -1254,18 +1884,18 @@ namespace Mids_Reborn.UI.Forms
             {
                 _poolShell.CornerRadius = ScalePx(8, scale);
                 _poolShell.BorderThickness = Math.Max(1, (int)Math.Round(scale));
-                _poolShell.Padding = ScalePadding(new Padding(6, 10, 6, 10), scale);
-                _poolShell.Margin = ScalePadding(new Padding(2, 3, 0, 3), scale);
+                _poolShell.Padding = ScalePadding(isCompactTwoColumn ? new Padding(6, 8, 6, 8) : new Padding(6, 10, 6, 10), scale);
+                _poolShell.Margin = ScalePadding(isCompactTwoColumn ? new Padding(3, 3, 0, 3) : new Padding(2, 3, 0, 3), scale);
             }
 
-            rightInnerLayoutPanel.Padding = new Padding(0, 0, ScalePx((int)BaselinePoolRailRightInset, scale), 0);
+            rightInnerLayoutPanel.Padding = new Padding(0, 0, ScalePx((int)(isCompactTwoColumn ? 2f : BaselinePoolRailRightInset), scale), 0);
 
             if (_rightBuildShell is not null)
             {
                 _rightBuildShell.CornerRadius = ScalePx(8, scale);
                 _rightBuildShell.BorderThickness = Math.Max(1, (int)Math.Round(1.5f * scale));
-                _rightBuildShell.Padding = ScalePadding(new Padding(8), scale);
-                _rightBuildShell.Margin = ScalePadding(new Padding(3, 3, 0, 0), scale);
+                _rightBuildShell.Padding = ScalePadding(isCompactTwoColumn ? new Padding(6) : new Padding(8), scale);
+                _rightBuildShell.Margin = ScalePadding(isCompactTwoColumn ? new Padding(2, 3, 0, 0) : new Padding(3, 3, 0, 0), scale);
             }
         }
 
@@ -5227,6 +5857,8 @@ namespace Mids_Reborn.UI.Forms
 
             MidsContext.Config.Columns = columns;
             MidsContext.Config.ColumnStackingMode = stackingMode;
+
+            ApplyLeftUiScale(true);
 
             if (drawing != null)
             {
