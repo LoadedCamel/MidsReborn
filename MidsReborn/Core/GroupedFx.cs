@@ -1301,11 +1301,13 @@ namespace Mids_Reborn.Core
                 var fxTip = presentationEffectType switch
                 {
                     Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning =>
-                        statName == "Slow"
-                            ? InvertStringValue(Regex.Replace(baseEffectString,
-                                @"(SpeedFlying|SpeedJumping|SpeedRunning)",
-                                "Slow"))
-                            : Regex.Replace(baseEffectString, @"(SpeedFlying|SpeedJumping|SpeedRunning)", vectors),
+                        power.Effects[IncludedEffects[i]].BuffedMag < 0
+                            ? statName == "Slow"
+                                ? InvertStringValue(Regex.Replace(baseEffectString,
+                                    @"(SpeedFlying|SpeedJumping|SpeedRunning)",
+                                    "Slow"))
+                                : Regex.Replace(baseEffectString, @"(SpeedFlying|SpeedJumping|SpeedRunning)", vectors)
+                            : Regex.Replace(baseEffectString, @"(SpeedFlying|SpeedJumping|SpeedRunning)", "Movement Speed"),
 
                     Enums.eEffectType.Mez or Enums.eEffectType.MezResist =>
                         ReplaceMezResistanceLabel(baseEffectString, effect, vectors),
