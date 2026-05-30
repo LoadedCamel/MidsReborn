@@ -1186,11 +1186,13 @@ namespace Mids_Reborn.Core
                 var fxTip = power.Effects[IncludedEffects[index]].EffectType switch
                 {
                     Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping or Enums.eEffectType.SpeedRunning =>
-                        statName == "Slow"
+                        power.Effects[IncludedEffects[index]].BuffedMag < 0
+                        ? statName == "Slow"
                             ? InvertStringValue(Regex.Replace(baseEffectString,
                                 @"(SpeedFlying|SpeedJumping|SpeedRunning)",
                                 "Slow")) // Slow is positive when speeds are negative
-                            : Regex.Replace(baseEffectString, @"(SpeedFlying|SpeedJumping|SpeedRunning)", vectors),
+                            : Regex.Replace(baseEffectString, @"(SpeedFlying|SpeedJumping|SpeedRunning)", vectors)
+                        : Regex.Replace(baseEffectString, @"(SpeedFlying|SpeedJumping|SpeedRunning)", "Movement Speed"),
 
                     Enums.eEffectType.Mez or Enums.eEffectType.MezResist => baseEffectString.Replace(
                         $"{power.Effects[IncludedEffects[index]].EffectType}({power.Effects[IncludedEffects[index]].MezType})",
