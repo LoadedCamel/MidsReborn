@@ -1747,7 +1747,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
 
-            var projection = DatabaseAPI.GetEnhancementSetProjection(sIdx);
             var usedPieceIndexes = new HashSet<int>();
             foreach (var enhancementId in usedEnhancements)
             {
@@ -1757,36 +1756,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
             }
 
-            for (var pieceIndex = 0; pieceIndex < projection.VisiblePieces.Count; pieceIndex++)
+            foreach (var specialPopupRow in EnhancementSetSpecialBonusDisplay.BuildRows(enhancementSet, sIdx))
             {
-                var rawMemberPosition = DatabaseAPI.GetSpecialRawMemberPositionForSetPiece(sIdx, pieceIndex);
-                if (rawMemberPosition < 0)
-                {
-                    continue;
-                }
-
-                var checkStatus = false;
-                List<Power> specialPowers = null;
-                if (enhancementSet.SpecialBonus.Length > rawMemberPosition)
-                {
-                    specialPowers = enhancementSet.GetEnhancementSetLinkedPowers(rawMemberPosition, true);
-                }
-
-                if (specialPowers is { Count: 1 })
-                {
-                    if (specialPowers[0].FullName.Contains("Skin") || specialPowers[0].FullName.Contains("Aegis")) checkStatus = true;
-                }
-
-                var effectStrings = enhancementSet.GetPopupEffectStrings(rawMemberPosition, true, true, checkStatus);
-                if (effectStrings.Count == 0)
-                {
-                    continue;
-                }
-
-                var flag = power != null && usedPieceIndexes.Contains(pieceIndex);
-
+                var flag = power != null && specialPopupRow.PieceIndexes.Overlaps(usedPieceIndexes);
                 var popupColor = flag || power == null ? PopUp.Colors.Effect : PopUp.Colors.Disabled;
-                foreach (var effectString in effectStrings)
+                foreach (var effectString in specialPopupRow.EffectStrings)
                 {
                     section1.Add($"(Enh) {effectString}", popupColor, 0.9f);
                 }
