@@ -2301,9 +2301,10 @@ public sealed partial class OmniImporter
             }
             if (mappedType is Enums.eType.InventO or Enums.eType.SetO)
             {
-                if (!string.Equals(enhancement.RecipeName, source.RecipeKey, StringComparison.Ordinal))
+                var importedRecipeName = FirstNonEmpty(source.RecipeName, source.RecipeKey);
+                if (!string.Equals(enhancement.RecipeName, importedRecipeName, StringComparison.Ordinal))
                 {
-                    enhancement.RecipeName = source.RecipeKey;
+                    enhancement.RecipeName = importedRecipeName;
                     changed = true;
                 }
             }

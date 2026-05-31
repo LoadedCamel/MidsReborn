@@ -774,7 +774,7 @@ internal static class PlannerStateCatalog
 
     private static readonly (string Suffix, PlannerMode[] Modes)[] ImpliedPlannerModesByPowerSuffix =
     [
-        (".Street_Justice.Combat_Readiness", [PlannerMode.ComboLevel3])
+        (".Brawling.Combat_Readiness", [PlannerMode.ComboLevel3])
     ];
 
     private static readonly HashSet<string> SelfStateMarkers =

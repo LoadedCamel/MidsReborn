@@ -7526,7 +7526,7 @@ namespace Mids_Reborn.UI.Forms
             drawing.UpdateLayout(rawWidth);
 
             int provisionalHeight = drawing.GetRequiredDrawingArea().Height;
-            int finalWidth = Math.Max(1, canvasScrollPanel.GetAvailableWidthForContentHeight(provisionalHeight));
+            int finalWidth = Math.Max(1, canvasScrollPanel.GetAvailableWidthForChildHeight(provisionalHeight));
             float finalMaster = finalWidth == rawWidth
                 ? provisionalMaster
                 : ComputeCanvasMasterScale(finalWidth);

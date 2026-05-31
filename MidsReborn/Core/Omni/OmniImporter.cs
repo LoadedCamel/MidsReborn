@@ -112,7 +112,6 @@ public sealed partial class OmniImporter
             ["temporary_powers"] = "Temporary_Powers",
             ["villain_pets"] = "Villain_Pets",
             ["Blaster_Support.Time_Manipulation"] = "Blaster_Support.Temporal_Manipulation",
-            ["Brute_Melee.Brawling"] = "Brute_Melee.Street_Justice",
             ["Controller_Buff.Shock_Therapy"] = "Controller_Buff.Electrical_Affinity",
             ["Corruptor_Buff.Shock_Therapy"] = "Corruptor_Buff.Electrical_Affinity",
             ["Controller_Buff.Electrical_Affinity.Defibrilate"] = "Controller_Buff.Electrical_Affinity.Defibrillate",
@@ -159,10 +158,7 @@ public sealed partial class OmniImporter
             ["Epic.Psionic_Mastery_TankBrute"] = "Epic.Tank_Psionic_Mastery",
             ["Epic.Scrapper_Mace_Mastery"] = "Epic.Stalker_Mace_Mastery",
             ["Mastermind_Buff.Shock_Therapy"] = "Mastermind_Buff.Electrical_Affinity",
-            ["Mastermind_Buff.Electrical_Affinity.Defibrilate"] = "Mastermind_Buff.Electrical_Affinity.Defibrillate",
-            ["Scrapper_Melee.Brawling"] = "Scrapper_Melee.Street_Justice",
-            ["Stalker_Melee.Brawling"] = "Stalker_Melee.Street_Justice",
-            ["Tanker_Melee.Brawling"] = "Tanker_Melee.Street_Justice"
+            ["Mastermind_Buff.Electrical_Affinity.Defibrilate"] = "Mastermind_Buff.Electrical_Affinity.Defibrillate"
         };
 
     private static readonly HashSet<string> StaffMasteryFullNames = new(StringComparer.OrdinalIgnoreCase)
@@ -174,6 +170,9 @@ public sealed partial class OmniImporter
 
     private static readonly Regex TemporaryPowerReferenceRegex =
         new(@"\bTemporary_Powers\.[A-Za-z0-9_]+\.[A-Za-z0-9_]+\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+
+    private static readonly Regex PowerReferenceRegex =
+        new(@"\b[A-Za-z0-9_]+\.[A-Za-z0-9_]+\.[A-Za-z0-9_]+\b", RegexOptions.IgnoreCase | RegexOptions.Compiled);
 
     private static readonly HashSet<string> IgnoredPowerJsonFields = new(StringComparer.OrdinalIgnoreCase)
     {
@@ -715,6 +714,8 @@ public sealed partial class OmniImporter
 
             EnqueueReferencedEntities(power, result, pendingEntities, queuedEntities);
             EnqueueReferencedTemporaryPowers(file, pendingTemporaryPowers, queuedTemporaryPowers, cachedTemporaryPowerRefsByFile);
+            EnqueueReferencedGrantedPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
+            EnqueueReferencedExpressionPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
             EnqueueReferencedRedirectPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
         }
 
@@ -752,6 +753,8 @@ public sealed partial class OmniImporter
 
                 EnqueueReferencedEntities(power, result, pendingEntities, queuedEntities);
                 EnqueueReferencedTemporaryPowers(file, pendingTemporaryPowers, queuedTemporaryPowers, cachedTemporaryPowerRefsByFile);
+                EnqueueReferencedGrantedPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
+                EnqueueReferencedExpressionPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
                 EnqueueReferencedRedirectPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
                 ReportClosureProgress();
             }
@@ -782,6 +785,8 @@ public sealed partial class OmniImporter
 
                 EnqueueReferencedEntities(power, result, pendingEntities, queuedEntities);
                 EnqueueReferencedTemporaryPowers(file, pendingTemporaryPowers, queuedTemporaryPowers, cachedTemporaryPowerRefsByFile);
+                EnqueueReferencedGrantedPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
+                EnqueueReferencedExpressionPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
                 EnqueueReferencedRedirectPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
                 ReportClosureProgress();
             }
@@ -873,6 +878,8 @@ public sealed partial class OmniImporter
 
                     EnqueueReferencedEntities(power, result, pendingEntities, queuedEntities);
                     EnqueueReferencedTemporaryPowers(file, pendingTemporaryPowers, queuedTemporaryPowers, cachedTemporaryPowerRefsByFile);
+                    EnqueueReferencedGrantedPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
+                    EnqueueReferencedExpressionPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
                     EnqueueReferencedRedirectPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
                 }
 
@@ -931,6 +938,70 @@ public sealed partial class OmniImporter
         }
     }
 
+    private static void EnqueueReferencedGrantedPowers(
+        OmniPowerDefinition power,
+        Queue<string> pendingReferencedPowers,
+        Queue<string> pendingTemporaryPowers,
+        ISet<string> queuedReferencedPowers,
+        ISet<string> queuedTemporaryPowers)
+    {
+        foreach (var grantedPower in GetGrantedPowerRefs(power))
+        {
+            var targetFullName = CanonicalizeOmniFullName(grantedPower);
+            if (string.IsNullOrWhiteSpace(targetFullName))
+            {
+                continue;
+            }
+
+            if (IsTemporaryPowerFullName(targetFullName))
+            {
+                if (queuedTemporaryPowers.Add(targetFullName))
+                {
+                    pendingTemporaryPowers.Enqueue(targetFullName);
+                }
+
+                continue;
+            }
+
+            if (queuedReferencedPowers.Add(targetFullName))
+            {
+                pendingReferencedPowers.Enqueue(targetFullName);
+            }
+        }
+    }
+
+    private static void EnqueueReferencedExpressionPowers(
+        OmniPowerDefinition power,
+        Queue<string> pendingReferencedPowers,
+        Queue<string> pendingTemporaryPowers,
+        ISet<string> queuedReferencedPowers,
+        ISet<string> queuedTemporaryPowers)
+    {
+        foreach (var referencedPower in GetExpressionPowerRefs(power))
+        {
+            var targetFullName = CanonicalizeOmniFullName(referencedPower);
+            if (string.IsNullOrWhiteSpace(targetFullName))
+            {
+                continue;
+            }
+
+            if (IsTemporaryPowerFullName(targetFullName))
+            {
+                if (queuedTemporaryPowers.Add(targetFullName))
+                {
+                    pendingTemporaryPowers.Enqueue(targetFullName);
+                }
+
+                continue;
+            }
+
+            if (queuedReferencedPowers.Add(targetFullName))
+            {
+                pendingReferencedPowers.Enqueue(targetFullName);
+            }
+        }
+    }
+
     private static void EnqueueReferencedRedirectPowers(
         OmniPowerDefinition power,
         Queue<string> pendingReferencedPowers,
@@ -959,6 +1030,184 @@ public sealed partial class OmniImporter
             if (queuedReferencedPowers.Add(targetFullName))
             {
                 pendingReferencedPowers.Enqueue(targetFullName);
+            }
+        }
+    }
+
+    private static IEnumerable<string> GetGrantedPowerRefs(OmniPowerDefinition power)
+    {
+        foreach (var effect in power.Effects.Concat(power.ActivationEffects))
+        {
+            foreach (var powerRef in GetGrantedPowerRefs(effect))
+            {
+                yield return powerRef;
+            }
+        }
+    }
+
+    private static IEnumerable<string> GetExpressionPowerRefs(OmniPowerDefinition power)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var expression in GetPowerExpressions(power))
+        {
+            foreach (var powerRef in GetExpressionPowerRefs(expression))
+            {
+                if (seen.Add(powerRef))
+                {
+                    yield return powerRef;
+                }
+            }
+        }
+
+        foreach (var effect in power.Effects.Concat(power.ActivationEffects))
+        {
+            foreach (var powerRef in GetExpressionPowerRefs(effect))
+            {
+                if (seen.Add(powerRef))
+                {
+                    yield return powerRef;
+                }
+            }
+        }
+    }
+
+    private static IEnumerable<string> GetGrantedPowerRefs(OmniEffectDefinition effect)
+    {
+        foreach (var template in effect.Templates)
+        {
+            if (!IsGrantPowerTemplate(template))
+            {
+                continue;
+            }
+
+            foreach (var powerRef in GetTemplatePowerRefs(template.Params))
+            {
+                yield return powerRef;
+            }
+        }
+
+        foreach (var child in effect.ChildEffects)
+        {
+            foreach (var powerRef in GetGrantedPowerRefs(child))
+            {
+                yield return powerRef;
+            }
+        }
+    }
+
+    private static IEnumerable<string> GetExpressionPowerRefs(OmniEffectDefinition effect)
+    {
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var powerRef in GetExpressionPowerRefs(effect.RequiresExpression))
+        {
+            if (seen.Add(powerRef))
+            {
+                yield return powerRef;
+            }
+        }
+
+        foreach (var template in effect.Templates)
+        {
+            foreach (var powerRef in GetExpressionPowerRefs(template.JitRequires))
+            {
+                if (seen.Add(powerRef))
+                {
+                    yield return powerRef;
+                }
+            }
+        }
+
+        foreach (var child in effect.ChildEffects)
+        {
+            foreach (var powerRef in GetExpressionPowerRefs(child))
+            {
+                if (seen.Add(powerRef))
+                {
+                    yield return powerRef;
+                }
+            }
+        }
+    }
+
+    private static bool IsGrantPowerTemplate(OmniEffectTemplate template)
+    {
+        var paramType = NormalizeName(template.Params?.Value<string>("type") ?? string.Empty);
+        if (paramType is "grantpower" or "grantboostedpower")
+        {
+            return true;
+        }
+
+        if (paramType != "power")
+        {
+            return false;
+        }
+
+        return NormalizeName(template.Type) is "grantpower" or "grantboostedpower" ||
+               template.Attribs.Any(attrib => NormalizeName(attrib) is "grantpower" or "grantboostedpower");
+    }
+
+    private static IEnumerable<string> GetPowerExpressions(OmniPowerDefinition power)
+    {
+        foreach (var expression in new[]
+                 {
+                     power.Requires,
+                     power.TargetRequires,
+                     power.ActivateRequires,
+                     power.ServerTrayRequires,
+                     power.ConfirmRequires,
+                     power.HighlightExpression,
+                     power.MaxTargetsExpression,
+                     power.ChainEffectExpression,
+                     power.ChainTargetExpression
+                 })
+        {
+            if (!string.IsNullOrWhiteSpace(expression))
+            {
+                yield return expression;
+            }
+        }
+    }
+
+    private static IEnumerable<string> GetExpressionPowerRefs(string expression)
+    {
+        if (string.IsNullOrWhiteSpace(expression))
+        {
+            yield break;
+        }
+
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (Match match in PowerReferenceRegex.Matches(expression))
+        {
+            var fullName = CanonicalizeOmniFullName(match.Value);
+            if (!string.IsNullOrWhiteSpace(fullName) && seen.Add(fullName))
+            {
+                yield return fullName;
+            }
+        }
+    }
+
+    private static IEnumerable<string> GetTemplatePowerRefs(JObject? parameters)
+    {
+        if (parameters == null)
+        {
+            yield break;
+        }
+
+        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var powerName in parameters["power_names"]?.Values<string>() ?? Enumerable.Empty<string>())
+        {
+            if (!string.IsNullOrWhiteSpace(powerName) && seen.Add(powerName))
+            {
+                yield return powerName;
+            }
+        }
+
+        foreach (var key in new[] { "power", "power_name", "power_full_name" })
+        {
+            var powerName = parameters.Value<string>(key);
+            if (!string.IsNullOrWhiteSpace(powerName) && seen.Add(powerName))
+            {
+                yield return powerName;
             }
         }
     }
@@ -995,6 +1244,8 @@ public sealed partial class OmniImporter
 
             EnqueueReferencedEntities(power, result, pendingEntities, queuedEntities);
             EnqueueReferencedTemporaryPowers(file, pendingTemporaryPowers, queuedTemporaryPowers, cachedTemporaryPowerRefsByFile);
+            EnqueueReferencedGrantedPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
+            EnqueueReferencedExpressionPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
             EnqueueReferencedRedirectPowers(power, pendingReferencedPowers, pendingTemporaryPowers, queuedReferencedPowers, queuedTemporaryPowers);
         }
     }
@@ -1023,7 +1274,8 @@ public sealed partial class OmniImporter
     {
         var canonical = CanonicalizeOmniFullName(powerFullName);
         return scope.IsIncludedPowerRoot(canonical) ||
-               scope.IsRetainedPower(canonical);
+               scope.IsRetainedPower(canonical) ||
+               IsPetRoot(GroupNamePart(canonical));
     }
 
     private static IEnumerable<string> ReadReferencedTemporaryPowers(string file)
@@ -1738,7 +1990,7 @@ public sealed partial class OmniImporter
 
     private static IEnumerable<string> GetEntCreateEntityRefs(OmniPowerDefinition power)
     {
-        foreach (var effect in power.Effects)
+        foreach (var effect in power.Effects.Concat(power.ActivationEffects))
         {
             foreach (var entityRef in GetEntCreateEntityRefs(effect))
             {
@@ -8850,7 +9102,10 @@ public sealed partial class OmniImporter
     {
         var retainedByType = scope.GetPowersetType(rawFullName) == Enums.ePowerSetType.Pet ||
                              scope.GetPowersetType(canonicalFullName) == Enums.ePowerSetType.Pet;
-        if (!retainedByType)
+        var retainedByManifestOwnership =
+            OmniPowerClassifier.IsPetManifestOwnedPowerset(rawFullName) ||
+            OmniPowerClassifier.IsPetManifestOwnedPowerset(canonicalFullName);
+        if (!retainedByType && !retainedByManifestOwnership)
         {
             return false;
         }

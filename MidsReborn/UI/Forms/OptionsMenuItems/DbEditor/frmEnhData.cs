@@ -14,6 +14,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private const int EnhAcross = 5;
         private const int EnhPadding = DbEditorIconLayout.GridPadding;
         public readonly IEnhancement myEnh;
+        private readonly bool _isNewEnhancement;
+        private readonly int _sourceStaticIndex;
         private ExtendedBitmap bxClass;
         private ExtendedBitmap bxClassList;
         private bool Loading;
@@ -39,6 +41,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmEnhData);
             myEnh = new Enhancement(iEnh);
+            _isNewEnhancement = newStaticIndex > 0;
+            _sourceStaticIndex = iEnh.StaticIndex;
             if (newStaticIndex > 0)
                 myEnh.StaticIndex = newStaticIndex;
         }
@@ -289,6 +293,25 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private void btnOK_Click(object sender, EventArgs e)
         {
+            myEnh.UID = txtInternal.Text.Trim();
+            txtInternal.Text = myEnh.UID;
+            if (string.IsNullOrWhiteSpace(myEnh.UID))
+            {
+                MessageBox.Show("Enhancement internal name cannot be blank.", "Invalid Name",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
+            var duplicateUidExists = DatabaseAPI.Database.Enhancements.Any(enh =>
+                string.Equals(enh.UID, myEnh.UID, StringComparison.OrdinalIgnoreCase) &&
+                (_isNewEnhancement || enh.StaticIndex != _sourceStaticIndex));
+            if (duplicateUidExists)
+            {
+                MessageBox.Show($"{myEnh.UID} is not unique. Please enter a unique internal name.", "Invalid Name",
+                    MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             DialogResult = DialogResult.OK;
             Hide();
         }

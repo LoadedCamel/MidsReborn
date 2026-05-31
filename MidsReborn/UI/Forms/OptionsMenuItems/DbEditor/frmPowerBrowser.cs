@@ -58,7 +58,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             var dpi = DeviceDpi > 0 ? DeviceDpi : 96;
             var scale = dpi / 96f;
-            var logicalSize = Math.Max(16, (int)Math.Round(targetPixels / scale));
+            var logicalSize = Math.Max(DbEditorIconLayout.MinimumIconSize, (int)Math.Round(targetPixels / scale));
             return new Size(logicalSize, logicalSize);
         }
 
@@ -862,7 +862,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     case Enums.ePowerSetType.Secondary:
                         backgroundColor = Color.Red;
                         label = "2";
-                        labelBrush = blackLabelBrush;
+                        labelBrush = whiteLabelBrush;
                         break;
                     case Enums.ePowerSetType.Ancillary:
                         backgroundColor = Color.Green;
@@ -931,7 +931,16 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 {
                     using var badgeBrush = new SolidBrush(Color.FromArgb(224, backgroundColor));
                     canvasBitmap.Graphics.FillRectangle(badgeBrush, badgeBounds);
-                    canvasBitmap.Graphics.DrawString(label, font, labelBrush, badgeBounds, format);
+                    TextRenderer.DrawText(
+                        canvasBitmap.Graphics,
+                        label,
+                        font,
+                        badgeBounds,
+                        labelBrush.Color,
+                        TextFormatFlags.HorizontalCenter |
+                        TextFormatFlags.VerticalCenter |
+                        TextFormatFlags.NoPadding |
+                        TextFormatFlags.SingleLine);
                 }
 
                 ilPS.Images.Add(new Bitmap(canvasBitmap.Bitmap));

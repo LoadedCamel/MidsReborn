@@ -28,6 +28,7 @@ namespace Mids_Reborn.Core
         //public const string PatchRtf = "patch.rtf";
         private const string PowersReplTable = "PowersReplTable.mhd";
         private const string CrypticReplTable = "CrypticPowerNames.mhd";
+        private const string LegacyLoadMapFile = "LegacyLoadMap.mhd";
 
         public const string ParentDatabaseFolder = "Databases\\";
         public const string ParentAssetsFolder = "Assets\\";
@@ -40,6 +41,7 @@ namespace Mids_Reborn.Core
         private static string? AppDataPath => MidsContext.Config.DataPath;
         public static string DefaultBuildsPath => Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.MyDocuments), BuildsFolder);
         public static string CrypticPowersRepl => Path.Combine(AppDataPath, CrypticReplTable);
+        public static string LegacyLoadMap => Path.Combine(AppDataPath, LegacyLoadMapFile);
 
         public static string BaseDataPath => Path.Combine(AppContext.BaseDirectory, ParentDatabaseFolder);
         public static string BaseAssetsPath => Path.Combine(AppContext.BaseDirectory, ParentAssetsFolder);

@@ -14,5 +14,8 @@ namespace Mids_Reborn.Core.BuildFile.DataModels
         public string RelativeLevel { get; set; } = "Even";
 
         public bool Obtained { get; set; } = false;
+
+        [JsonIgnore]
+        public string LegacyDisplayName { get; set; } = "";
     }
 }

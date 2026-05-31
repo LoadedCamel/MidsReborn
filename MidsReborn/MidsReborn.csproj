@@ -348,6 +348,9 @@
 	<Content Include="Databases\Homecoming\CrypticPowerNames.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Databases\Homecoming\LegacyLoadMap.mhd">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Databases\Homecoming\TypeGrades.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>

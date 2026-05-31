@@ -5,6 +5,8 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Mids_Reborn.Core.BuildFile;
+using Mids_Reborn.Core.Compatibility;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
 
@@ -767,7 +769,7 @@ namespace Mids_Reborn.Core
             }
         }
 
-        public static eLoadReturnCode MxDExtractAndLoad(Stream? inputStream)
+        public static eLoadReturnCode MxDExtractAndLoad(Stream? inputStream, string? sourceName = null)
         {
             if (inputStream is null)
             {
@@ -787,6 +789,15 @@ namespace Mids_Reborn.Core
             {
                 MessageBox.Show($"Unable to read data - {ex.Message}", "ExtractAndLoad Failed");
                 return eLoadReturnCode.Failure;
+            }
+
+            var compatibilityAttempt = CompatibilityBuildLoader.TryLoadLegacyMxd(data, sourceName, new BuildNotifier());
+            switch (compatibilityAttempt)
+            {
+                case LegacyCompatibilityLoadStatus.Success:
+                    return eLoadReturnCode.Success;
+                case LegacyCompatibilityLoadStatus.Failure:
+                    return eLoadReturnCode.Failure;
             }
 
             var lines = data.Split('\n');

@@ -46,18 +46,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
             items[5] = $"{num1}";
 
-            var setContainsPvPfx = false;
-            for (var i = 0; i < enhancementSet.Bonus.Length; i++)
-            {
-                if (enhancementSet.Bonus[i].Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p.FullName.ToLowerInvariant().Contains("pvp")))
-                {
-                    setContainsPvPfx = true;
-                }
-
-                if (setContainsPvPfx) break;
-            }
-
-            items[6] = setContainsPvPfx ? "X" : "";
+            items[6] = SetContainsPvPfx(enhancementSet) ? "X" : "";
             lvSets.Items.Add(new ListViewItem(items, idx));
             lvSets.Items[^1].Selected = true;
             lvSets.Items[^1].EnsureVisible();
@@ -103,16 +92,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                 return;
             var iSet = new EnhancementSet(DatabaseAPI.Database.EnhancementSets[lvSets.SelectedIndices[0]]);
             iSet.DisplayName += " Copy";
-            var setContainsPvPfx = false;
-            for (var i = 0; i < iSet.Bonus.Length; i++)
-            {
-                if (iSet.Bonus[i].Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p.FullName.ToLowerInvariant().Contains("pvp")))
-                {
-                    setContainsPvPfx = true;
-                }
-
-                if (setContainsPvPfx) break;
-            }
+            var setContainsPvPfx = SetContainsPvPfx(iSet);
 
             if (setContainsPvPfx)
             {
@@ -195,16 +175,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             enhancementSets[selectedIndex2] = iSet;
 
 
-            var setContainsPvPfx = false;
-            for (var i = 0; i < iSet.Bonus.Length; i++)
-            {
-                if (iSet.Bonus[i].Index.Select(b => DatabaseAPI.Database.Power[b]).Any(p => p.FullName.ToLowerInvariant().Contains("pvp")))
-                {
-                    setContainsPvPfx = true;
-                }
-
-                if (setContainsPvPfx) break;
-            }
+            var setContainsPvPfx = SetContainsPvPfx(iSet);
 
             if (setContainsPvPfx)
             {
@@ -349,6 +320,37 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             ImageUpdate();
         }
 
+        private static bool SetContainsPvPfx(EnhancementSet enhancementSet)
+        {
+            foreach (var bonus in enhancementSet.Bonus)
+            {
+                foreach (var powerIndex in bonus.Index)
+                {
+                    if (!IsValidPowerIndex(powerIndex))
+                    {
+                        continue;
+                    }
+
+                    var fullName = DatabaseAPI.Database.Power[powerIndex]?.FullName;
+                    if (!string.IsNullOrEmpty(fullName) &&
+                        fullName.Contains("pvp", StringComparison.OrdinalIgnoreCase))
+                    {
+                        return true;
+                    }
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsValidPowerIndex(int powerIndex)
+        {
+            return DatabaseAPI.Database?.Power != null &&
+                   powerIndex >= 0 &&
+                   powerIndex < DatabaseAPI.Database.Power.Length &&
+                   DatabaseAPI.Database.Power[powerIndex] != null;
+        }
+
         private static void RenameIOSet(string uidOld, string uidNew)
         {
             var num = DatabaseAPI.Database.Enhancements.Length - 1;
@@ -373,22 +375,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     ++num1;
             strArray[5] = Convert.ToString(num1);
 
-            var setContainsPvPFX = false;
-            for (var i = 0; i < enhancementSet.Bonus.Length; i++)
-            {
-                foreach (var b in enhancementSet.Bonus[i].Index)
-                {
-                    var p = DatabaseAPI.Database.Power[b];
-                    if (!p.FullName.ToLowerInvariant().Contains("pvp")) continue;
-
-                    setContainsPvPFX = true;
-                    break;
-                }
-
-                if (setContainsPvPFX) break;
-            }
-
-            strArray[6] = setContainsPvPFX ? "X" : "";
+            strArray[6] = SetContainsPvPfx(enhancementSet) ? "X" : "";
             var num3 = strArray.Length - 1;
             for (var index = 0; index <= num3; ++index) lvSets.Items[Index].SubItems[index].Text = strArray[index];
             lvSets.Items[Index].ImageIndex = Index;

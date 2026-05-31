@@ -956,21 +956,33 @@ public sealed class OmniPowerClassifier
                set.Equals("Art_Test", StringComparison.OrdinalIgnoreCase);
     }
 
+    internal static bool IsPetManifestOwnedPowerset(string powersetFullName)
+    {
+        if (string.IsNullOrWhiteSpace(powersetFullName))
+        {
+            return false;
+        }
+
+        var group = GroupNamePart(powersetFullName);
+        if (!group.Equals("Incarnate", StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        var set = SetNamePart(powersetFullName);
+        return set.Equals("Destiny_Silent", StringComparison.OrdinalIgnoreCase) ||
+               set.Contains("Lore_Pet", StringComparison.OrdinalIgnoreCase) ||
+               set.Equals("Ion_Judgement", StringComparison.OrdinalIgnoreCase) ||
+               set.Equals("AntiMatterRayBurn", StringComparison.OrdinalIgnoreCase) ||
+               set.Equals("Barrier_Rez", StringComparison.OrdinalIgnoreCase);
+    }
+
     private static bool IsPetManifestOwnedScopedPower(
         OmniPowerDefinition power,
         string group,
         string set)
     {
-        if (group.Equals("Incarnate", StringComparison.OrdinalIgnoreCase))
-        {
-            return set.Equals("Destiny_Silent", StringComparison.OrdinalIgnoreCase) ||
-                   set.Contains("Lore_Pet", StringComparison.OrdinalIgnoreCase) ||
-                   set.Equals("Ion_Judgement", StringComparison.OrdinalIgnoreCase) ||
-                   set.Equals("AntiMatterRayBurn", StringComparison.OrdinalIgnoreCase) ||
-                   set.Equals("Barrier_Rez", StringComparison.OrdinalIgnoreCase);
-        }
-
-        return false;
+        return IsPetManifestOwnedPowerset($"{group}.{set}");
     }
 
     private static bool IsPetRootName(string group)

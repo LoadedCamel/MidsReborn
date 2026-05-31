@@ -5,6 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using Mids_Reborn.Core.Compatibility;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.ShareSystem.RestModels;
 using Mids_Reborn.Core.Utils;
@@ -134,12 +135,12 @@ namespace Mids_Reborn.Core.BuildFile
 
                     if (continueLoad)
                     {
-                        returnedVal = BuildData.LoadBuild(loadFallbackCombatContext);
+                        returnedVal = LoadPreparedBuildData(fileName, loadFallbackCombatContext);
                     }
                 }
                 else
                 {
-                    returnedVal = BuildData.LoadBuild(loadFallbackCombatContext);
+                    returnedVal = LoadPreparedBuildData(fileName, loadFallbackCombatContext);
                 }
             }
 
@@ -239,12 +240,12 @@ namespace Mids_Reborn.Core.BuildFile
 
                 if (continueLoad)
                 {
-                    returnedVal = BuildData.LoadBuild();
+                    returnedVal = LoadPreparedBuildData(id);
                 }
             }
             else
             {
-                returnedVal = BuildData.LoadBuild();
+                returnedVal = LoadPreparedBuildData(id);
             }
 
             return returnedVal;
@@ -307,6 +308,17 @@ namespace Mids_Reborn.Core.BuildFile
             switch (classificationResult.Type)
             {
                 case DataClassifier.DataType.Mxd:
+                    var compatibilityAttempt = CompatibilityBuildLoader.TryLoadLegacyMxd(classificationResult.Content, null, _notifier);
+                    if (compatibilityAttempt == LegacyCompatibilityLoadStatus.Success)
+                    {
+                        return true;
+                    }
+
+                    if (compatibilityAttempt == LegacyCompatibilityLoadStatus.Failure)
+                    {
+                        return false;
+                    }
+
                     // Process as HEX
                     if (!Regex.IsMatch(data, @"\A\b[0-9A-F]+\b\Z", RegexOptions.IgnoreCase))
                     {
@@ -390,6 +402,39 @@ namespace Mids_Reborn.Core.BuildFile
                 ImageData = InfoGraphic.GenerateImageData()
             };
             return dto;
+        }
+
+        private bool LoadPreparedBuildData(string? sourceName, BuildCombatContextState? loadFallbackCombatContext = null)
+        {
+            if (BuildData == null)
+            {
+                return false;
+            }
+
+            if (!CompatibilityBuildLoader.TryPrepareBuildDataForLoad(
+                    BuildData,
+                    sourceName,
+                    out var preparedBuild,
+                    out var summary,
+                    out var failure))
+            {
+                _notifier.ShowCompatibilityFailure(failure ?? new CompatibilityFailureReport
+                {
+                    Title = "Build Conversion Failed",
+                    SourceName = sourceName ?? string.Empty,
+                    Summary = "The build could not be converted to the current database."
+                });
+                return false;
+            }
+
+            BuildData = preparedBuild;
+            var loaded = preparedBuild.LoadBuild(loadFallbackCombatContext);
+            if (loaded && summary?.HasChanges == true)
+            {
+                _notifier.ShowCompatibilitySummary(summary);
+            }
+
+            return loaded;
         }
     }
 }

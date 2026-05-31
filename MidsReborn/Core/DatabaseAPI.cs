@@ -562,15 +562,15 @@ namespace Mids_Reborn.Core
 
         public static int NidFromUidPower(string name)
         {
-            return GetPowerByFullName(name)?.PowerIndex ?? -1;
+            return string.IsNullOrWhiteSpace(name)
+                ? -1
+                : Database.Power.TryFindIndex(
+                    power => string.Equals(power?.FullName, name, StringComparison.OrdinalIgnoreCase));
         }
 
         public static int PiDFromUidPower(string name)
         {
-            var powerDb = Database.Power.ToList();
-            var power = powerDb.FirstOrDefault(p => p?.FullName == name);
-            if (power == null) return -1;
-            return power.PowerIndex;
+            return NidFromUidPower(name);
         }
 
         public static int NidFromUidEntity(string uidEntity)
@@ -967,10 +967,11 @@ namespace Mids_Reborn.Core
         {
             if (string.IsNullOrEmpty(name))
                 return null;
-            var powersetByName = GetPowersetByName(name);
 
-            return powersetByName?.Powers.FirstOrDefault(power2 =>
-                string.Equals(power2.FullName, name, StringComparison.OrdinalIgnoreCase));
+            var index = NidFromUidPower(name);
+            return index >= 0 && index < Database.Power.Length
+                ? Database.Power[index]
+                : null;
         }
 
         public static string[] GetPowersetNames(int iAT, Enums.ePowerSetType iSet)
@@ -1683,6 +1684,13 @@ namespace Mids_Reborn.Core
                 return -1;
             }
 
+            var exactUidMatch = Database.Enhancements.TryFindIndex(enh =>
+                string.Equals(enh.UID, name, StringComparison.OrdinalIgnoreCase));
+            if (exactUidMatch >= 0)
+            {
+                return exactUidMatch;
+            }
+
             name = EnhancementUidTranslation(name);
             name = ResolveCanonicalImportedEnhancementUid(name);
 
@@ -1854,6 +1862,10 @@ namespace Mids_Reborn.Core
 
         public static int NidFromUidEnh(string uidEnh)
         {
+            for (var index = 0; index < Database.Enhancements.Length; ++index)
+                if (string.Equals(Database.Enhancements[index].UID, uidEnh, StringComparison.OrdinalIgnoreCase))
+                    return index;
+
             uidEnh = ResolveCanonicalImportedEnhancementUid(EnhancementUidTranslation(uidEnh));
             for (var index = 0; index < Database.Enhancements.Length; ++index)
                 if (string.Equals(Database.Enhancements[index].UID, uidEnh, StringComparison.OrdinalIgnoreCase))
@@ -3588,6 +3600,8 @@ namespace Mids_Reborn.Core
             MatchPowersetIDs();
             UpdateMessage(messenger, "Matching Power IDs...");
             MatchPowerIDs();
+            UpdateMessage(messenger, "Matching Set Bonus IDs...");
+            AssignSetBonusIndexes();
             UpdateMessage(messenger, "Propagating Group IDs...");
             SetPowersetsFromGroups();
             UpdateMessage(messenger, "Matching Enhancement IDs...");
@@ -3607,6 +3621,7 @@ namespace Mids_Reborn.Core
             MatchArchetypeIDs();
             MatchPowersetIDs();
             MatchPowerIDs();
+            AssignSetBonusIndexes();
             SetPowersetsFromGroups();
             MatchEnhancementIDs();
             MatchSummonIDs();

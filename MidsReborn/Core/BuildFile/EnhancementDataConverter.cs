@@ -40,7 +40,8 @@ namespace Mids_Reborn.Core.BuildFile
             }
             else if (jsonObject.TryGetValue("Enhancement", out var enhancementValue))
             {
-                enhancementData.Uid = DatabaseAPI.GetEnhancementUid(enhancementValue.ToObject<string>());
+                enhancementData.LegacyDisplayName = enhancementValue.ToObject<string>() ?? string.Empty;
+                enhancementData.Uid = DatabaseAPI.GetEnhancementUid(enhancementData.LegacyDisplayName);
             }
             if (jsonObject.TryGetValue("Grade", out var gradeValue))
             {

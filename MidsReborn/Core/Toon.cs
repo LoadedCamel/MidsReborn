@@ -1229,7 +1229,7 @@ namespace Mids_Reborn.Core
             }
 
             //Stream iStream1 = mStream != null ? mStream : (Stream) new FileStream(iFileName, FileMode.Open, FileAccess.Read, FileShare.ReadWrite | FileShare.Delete);
-            switch (MidsCharacterFileFormat.MxDExtractAndLoad(mStream))
+            switch (MidsCharacterFileFormat.MxDExtractAndLoad(mStream, iFileName))
             {
                 case MidsCharacterFileFormat.eLoadReturnCode.Failure:
                     mStream.Close();

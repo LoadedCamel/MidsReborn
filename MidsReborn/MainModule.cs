@@ -144,8 +144,6 @@ namespace Mids_Reborn
                 await LoadGraphics(path);
 
                 DatabaseAPI.MatchAllIDs(messenger);
-                messenger.SetMessage("Matching Set Bonus IDs...");
-                DatabaseAPI.AssignSetBonusIndexes();
                 messenger.SetMessage("Matching Recipe IDs...");
 
                 DatabaseAPI.AssignRecipeIDs();

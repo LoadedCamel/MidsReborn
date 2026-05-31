@@ -72,6 +72,7 @@ public sealed partial class OmniImporter
         public string Icon { get; set; } = string.Empty;
         public string SourceFile { get; set; } = string.Empty;
         public string RecipeKey { get; set; } = string.Empty;
+        public string RecipeName { get; set; } = string.Empty;
         public string RecipeCanonicalId { get; set; } = string.Empty;
         public string RecipeStorageKey { get; set; } = string.Empty;
         public string EnhancementSetName { get; set; } = string.Empty;
@@ -970,6 +971,7 @@ public sealed partial class OmniImporter
             Icon = definition.Icon,
             SourceFile = string.IsNullOrWhiteSpace(definition.SourceFile) ? filePath : definition.SourceFile,
             RecipeKey = ChooseSourceKey(definition.Recipe?.CanonicalId?.Value, definition.Recipe?.StorageKey, definition.Recipe?.Name),
+            RecipeName = definition.Recipe?.Name ?? string.Empty,
             RecipeCanonicalId = definition.Recipe?.CanonicalId?.Value ?? string.Empty,
             RecipeStorageKey = definition.Recipe?.StorageKey ?? string.Empty,
             EnhancementSetName = definition.EnhancementSet?.Name ?? string.Empty,

@@ -211,6 +211,12 @@ public sealed class MidsVScrollPanel : Panel
         SetScrollOffset(0);
     }
 
+    internal int GetAvailableWidthForChildHeight(int childHeight)
+    {
+        int projectedContentHeight = Math.Max(0, childHeight) + ContentBottomPadding;
+        return GetAvailableWidthForContentHeight(projectedContentHeight);
+    }
+
     internal int GetAvailableWidthForContentHeight(int contentHeight)
     {
         int reservedWidth = NeedsScrollbar(contentHeight) ? ScrollBarWidth : 0;
