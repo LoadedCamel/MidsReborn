@@ -266,6 +266,12 @@ namespace Mids_Reborn.UI.Forms
         private bool LastClickPlacedSlot;
         private I9Slot? LastEnhPlaced;
         private string? LastFileName;
+        private int[]? _cachedPlayableArchetypeIds;
+        private int _cachedOriginArchetypeId = -1;
+        private int _cachedPrimaryArchetypeId = -1;
+        private int _cachedSecondaryArchetypeId = -1;
+        private int _cachedPoolArchetypeId = -1;
+        private int _cachedAncillaryArchetypeId = -1;
 
         private sealed record PoolSectionBinding(
             string Key,
@@ -448,6 +454,7 @@ namespace Mids_Reborn.UI.Forms
             Icon = Resources.MRB_Icon_Concept;
 
             InitializeThemeMenu();
+            InitializeBuildMenuHandlers();
 
             if (!DesignMode)
             {
@@ -4287,17 +4294,99 @@ namespace Mids_Reborn.UI.Forms
             ApplyPvXMode(disablePvE: _pvModeToggle.SelectedIndex == 1);
         }
 
+        private void InitializeBuildMenuHandlers()
+        {
+            tsFileNew.Click += TsFileNew_Click;
+        }
+
+        private bool ConfirmDiscardCurrentBuild(string promptText)
+        {
+            if (MainModule.MidsController.Toon?.Locked != true || !FileModified)
+            {
+                return true;
+            }
+
+            FloatTop(false);
+            var msgBoxResult = MessageBox.Show(promptText, @"Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            FloatTop(true);
+            return msgBoxResult != DialogResult.No;
+        }
+
+        private void PrepareForBuildTransition()
+        {
+            dataView.IsLocked = false;
+            MidsContext.EnhCheckMode = false;
+            CloseEnhancementPicker(hidePopup: true, refreshInfo: false);
+            CloseSpecialPowerFlyout();
+            ClearTransientInteractionState();
+
+            if (fSalvageHud is { Visible: true })
+            {
+                FloatBuildSalvageHud(false);
+            }
+
+            if (drawing != null)
+            {
+                drawing.Highlight = -1;
+                drawing.SelectedPowerIndex = -1;
+                drawing.HighlightSlot(-1);
+            }
+
+            canvas.Cursor = Cursors.Default;
+            dvLastPower = -1;
+            dvLastEnh = -1;
+            dvLastHistoryIdx = -1;
+            dvLastNoLev = true;
+            _deferredHoverRefreshRequested = false;
+            dataView?.SetData(null, null, true);
+        }
+
+        private void ClearLoadedBuildFileState()
+        {
+            LastFileName = string.Empty;
+            MidsContext.Config.LastFileName = string.Empty;
+        }
+
+        private void FinalizeBuildTransition(bool skipResize, bool refreshToolWindows)
+        {
+            FileModified = false;
+            MidsContext.Character?.ResetLevel();
+            PowerModified(false, redraw: false);
+            SyncLoadedBuildUi(skipResize);
+            DoRedraw();
+            if (refreshToolWindows)
+            {
+                FloatUpdate(true);
+            }
+        }
+
+        private void StartNewBlankBuild(bool refreshToolWindows = true, bool assumePrepared = false)
+        {
+            if (!assumePrepared)
+            {
+                PrepareForBuildTransition();
+            }
+
+            ResetCharacterModel(reinit: true);
+            ClearLoadedBuildFileState();
+            FinalizeBuildTransition(skipResize: true, refreshToolWindows: refreshToolWindows);
+        }
+
+        private void TsFileNew_Click(object? sender, EventArgs e)
+        {
+            if (!ConfirmDiscardCurrentBuild(@"Current build data will be discarded, are you sure?"))
+            {
+                return;
+            }
+
+            StartNewBlankBuild();
+        }
+
         private void TsFileOpen_Click(object? sender, EventArgs e)
         {
-            if (MainModule.MidsController.Toon?.Locked == true & FileModified)
+            if (!ConfirmDiscardCurrentBuild(@"Current hero/villain data will be discarded, are you sure?"))
             {
-                FloatTop(false);
-                var msgBoxResult = MessageBox.Show(@"Current hero/villain data will be discarded, are you sure?", @"Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                FloatTop(true);
-                if (msgBoxResult == DialogResult.No)
-                {
-                    return;
-                }
+                return;
             }
 
             if (DlgOpen.ShowDialog() != DialogResult.OK)
@@ -4306,15 +4395,9 @@ namespace Mids_Reborn.UI.Forms
             }
 
             FloatTop(false);
-            MidsContext.EnhCheckMode = false;
             if (fRecipe is { Visible: true })
             {
                 fRecipe.UpdateData();
-            }
-
-            if (fSalvageHud is { Visible: true })
-            {
-                FloatBuildSalvageHud(false);
             }
 
             switch (DlgOpen.FileName)
@@ -4903,77 +4986,71 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            _buildManager.ValidateAndLoadSchemaData(vsb.FetchedData.Data, vsb.FetchedData.Id);
-            FileModified = false;
-            if (drawing != null)
+            if (!ConfirmDiscardCurrentBuild(@"Current build data will be discarded, are you sure?"))
             {
-                drawing.Highlight = -1;
+                return;
             }
 
-            //dataView?.Clear();
-            PowerModified(false);
-            SyncLoadedBuildUi();
+            PrepareForBuildTransition();
+            if (_buildManager.ValidateAndLoadSchemaData(vsb.FetchedData.Data, vsb.FetchedData.Id))
+            {
+                ClearLoadedBuildFileState();
+                FinalizeBuildTransition(skipResize: true, refreshToolWindows: true);
+                return;
+            }
+
+            StartNewBlankBuild(refreshToolWindows: true, assumePrepared: true);
         }
 
         private void tsImportChunk_Click(object? sender, EventArgs e)
         {
-            var loaded = false;
             using var importBuild = new ImportCode();
             var result = importBuild.ShowDialog(this);
-            if (result == DialogResult.OK)
-            {
-                dataView.IsLocked = false;
-                NewToon(true, true);
-                loaded = _buildManager.ValidateAndLoadImportData(importBuild.ImportClassificationResult);
-            }
-
-            if (!loaded)
+            if (result != DialogResult.OK)
             {
                 return;
             }
 
-            FileModified = false;
-            LastFileName = "";
-            //SetTitleBar();
-            SetLockedPoolsState();
-            if (drawing != null)
+            if (!ConfirmDiscardCurrentBuild(@"Current build data will be discarded, are you sure?"))
             {
-                drawing.Highlight = -1;
+                return;
             }
 
-            //dataView?.Clear();
-            PowerModified(false);
-            SyncLoadedBuildUi();
+            PrepareForBuildTransition();
+            if (_buildManager.ValidateAndLoadImportData(importBuild.ImportClassificationResult))
+            {
+                ClearLoadedBuildFileState();
+                FinalizeBuildTransition(skipResize: true, refreshToolWindows: true);
+                return;
+            }
+
+            StartNewBlankBuild(refreshToolWindows: true, assumePrepared: true);
         }
 
         private void tsImportLegacyForumPost_Click(object? sender, EventArgs e)
         {
-            if (MainModule.MidsController.Toon.Locked & FileModified)
-            {
-                FloatTop(false);
-                var msgBoxResult = MessageBox.Show(@"Current character data will be discarded, are you sure?", @"Question", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
-                FloatTop(true);
-                if (msgBoxResult == DialogResult.No)
-                {
-                    return;
-                }
-            }
-
-            FloatTop(false);
-            FileModified = false;
-            var loaded = false;
-            if (MessageBox.Show(@"Copy the build data on the forum to the clipboard. When that's done, click on OK.", @"Standing By", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) != DialogResult.OK)
+            if (!ConfirmDiscardCurrentBuild(@"Current character data will be discarded, are you sure?"))
             {
                 return;
             }
 
+            FloatTop(false);
+            var loaded = false;
+            if (MessageBox.Show(@"Copy the build data on the forum to the clipboard. When that's done, click on OK.", @"Standing By", MessageBoxButtons.OKCancel, MessageBoxIcon.Information) != DialogResult.OK)
+            {
+                FloatTop(true);
+                return;
+            }
+
             var str = Clipboard.GetDataObject()?.GetData("System.String", true).ToString();
-            NewToon();
+            PrepareForBuildTransition();
+            ResetCharacterModel(reinit: true);
             try
             {
                 if (str is { Length: < 1 })
                 {
                     MessageBox.Show(@"No data. Please check that you copied the build data from the forum correctly and that it's a valid format.", @"Forum Import", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                    StartNewBlankBuild(refreshToolWindows: true, assumePrepared: true);
                 }
                 else
                 {
@@ -4991,13 +5068,11 @@ namespace Mids_Reborn.UI.Forms
                     }
                     else if (str.Contains("Character Profile:") || str.Contains("build.txt"))
                     {
-                        GameImport(str);
-                        loaded = true;
+                        loaded = GameImport(str, finalizeTransition: false);
                     }
                     else if (str.Contains("Hero Profile:") || str.Contains("Villain Profile:"))
                     {
-                        ForumImport(str);
-                        loaded = true;
+                        loaded = ForumImport(str, finalizeTransition: false);
                     }
 
                     if (!loaded)
@@ -5007,34 +5082,22 @@ namespace Mids_Reborn.UI.Forms
 
                     if (loaded)
                     {
-                        drawing.Highlight = -1;
-                        NewDraw();
-                        //dataView.Clear();
-                        PowerModified(true);
-                        SyncLoadedBuildUi();
-                        //UpdateControls(true, true);
+                        ClearLoadedBuildFileState();
+                        FinalizeBuildTransition(skipResize: true, refreshToolWindows: true);
                     }
                     else
                     {
-                        NewToon();
-                        //dataView.Clear();
-                        PowerModified(true);
+                        StartNewBlankBuild(refreshToolWindows: true, assumePrepared: true);
                     }
-
-                    GetBestDamageValues();
-                    if (drawing != null)
-                    {
-                        DoRedraw();
-                    }
-
-                    //UpdateColors();
-                    FloatTop(true);
-                    //SetTitleBar(MidsContext.Character.IsHero(), true);
                 }
             }
             catch (Exception ex)
             {
                 MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}");
+                StartNewBlankBuild(refreshToolWindows: true, assumePrepared: true);
+            }
+            finally
+            {
                 FloatTop(true);
             }
         }
@@ -5640,45 +5703,35 @@ namespace Mids_Reborn.UI.Forms
         {
             if (!File.Exists(fName)) return;
 
-            dataView.IsLocked = false;
-            NewToon(true, true);
-            Stream? mStream = null;
+            PrepareForBuildTransition();
+            var loaded = false;
             if (fName.Trim(' ', '"').EndsWith(".txt"))
             {
-                GameImport(fName);
-            }
-            else if (MainModule.MidsController.Toon != null && !MainModule.MidsController.Toon.Load(fName, ref mStream))
-            {
-                NewToon();
-                LastFileName = "";
-                MidsContext.Config.LastFileName = "";
+                ResetCharacterModel(reinit: true);
+                loaded = GameImport(fName, finalizeTransition: false);
             }
             else
             {
-                LastFileName = fName;
-                if (!fName.EndsWith("mids_build.mxd"))
+                ResetCharacterModel(reinit: true);
+                Stream? mStream = null;
+                loaded = MainModule.MidsController.Toon != null && MainModule.MidsController.Toon.Load(fName, ref mStream);
+                if (loaded)
                 {
-                    MidsContext.Config.LastFileName = fName;
+                    LastFileName = fName;
+                    if (!fName.EndsWith("mids_build.mxd"))
+                    {
+                        MidsContext.Config.LastFileName = fName;
+                    }
                 }
             }
 
-            FileModified = false;
-            if (drawing != null)
+            if (!loaded)
             {
-                drawing.Highlight = -1;
+                StartNewBlankBuild(refreshToolWindows: true, assumePrepared: true);
+                return;
             }
 
-            //dataView?.Clear();
-            MidsContext.Character?.ResetLevel();
-            PowerModified(false);
-            SyncLoadedBuildUi();
-            //UpdateControls(true);
-            //SetTitleBar();
-            Application.DoEvents();
-            GetBestDamageValues();
-            //SetEnhCheckModePosition();
-            //UpdateColors();
-            FloatUpdate(true);
+            FinalizeBuildTransition(skipResize: true, refreshToolWindows: true);
         }
 
         private bool LoadCharacterFile(string? fileName)
@@ -5688,9 +5741,8 @@ namespace Mids_Reborn.UI.Forms
                 return false;
             }
 
-            dataView.IsLocked = false;
             var preservedCombatContext = CombatContextState.Clone(CombatContextState.TryGetActiveBuildState());
-            NewToon(true, true);
+            PrepareForBuildTransition();
             if (_buildManager.LoadFromFile(fileName, preservedCombatContext))
             {
                 MidsContext.Config.LastFileName = fileName;
@@ -5698,28 +5750,11 @@ namespace Mids_Reborn.UI.Forms
             }
             else
             {
-                MidsContext.Config.LastFileName = string.Empty;
-                LastFileName = string.Empty;
+                StartNewBlankBuild(refreshToolWindows: true, assumePrepared: true);
                 return false;
             }
 
-            FileModified = false;
-            if (drawing != null)
-            {
-                drawing.Highlight = -1;
-            }
-
-            //dataView?.Clear();
-            MidsContext.Character?.ResetLevel();
-            PowerModified(false);
-            SyncLoadedBuildUi();
-            //UpdateControls(true);
-            //SetTitleBar();
-            Application.DoEvents();
-            GetBestDamageValues();
-            //UpdateColors();
-            DoRedraw();
-            FloatUpdate(true);
+            FinalizeBuildTransition(skipResize: true, refreshToolWindows: true);
 
             return true;
         }
@@ -5814,7 +5849,7 @@ namespace Mids_Reborn.UI.Forms
             }
         }
 
-        private void GameImport(string? buildString)
+        private bool GameImport(string? buildString, bool finalizeTransition = true)
         {
             try
             {
@@ -5823,18 +5858,20 @@ namespace Mids_Reborn.UI.Forms
 
                 if (listPowers == null)
                 {
-                    return;
+                    return false;
                 }
 
-                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo());
+                return InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo(),
+                    finalizeTransition: finalizeTransition);
             }
             catch (Exception e)
             {
                 MessageBox.Show($"{e.Message}\r\n\r\n{e.StackTrace}");
+                return false;
             }
         }
 
-        private void ForumImport(string? buildString)
+        private bool ForumImport(string? buildString, bool finalizeTransition = true)
         {
             try
             {
@@ -5843,18 +5880,21 @@ namespace Mids_Reborn.UI.Forms
 
                 if (listPowers == null)
                 {
-                    return;
+                    return false;
                 }
 
-                InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo());
+                return InjectBuild(buildString, listPowers, importHandle.GetPowersets(), importHandle.GetCharacterInfo(),
+                    finalizeTransition: finalizeTransition);
             }
             catch (Exception e)
             {
                 MessageBox.Show($"{e.StackTrace}\r\n\r\n{e.Message}");
+                return false;
             }
         }
 
-        private void InjectBuild(string? buildFile, List<PowerEntry> listPowers, UniqueList<string> listPowersetsFull, RawCharacterInfo characterInfo, bool addToAutoOpen = false)
+        private bool InjectBuild(string? buildFile, List<PowerEntry> listPowers, UniqueList<string> listPowersetsFull,
+            RawCharacterInfo characterInfo, bool addToAutoOpen = false, bool finalizeTransition = true)
         {
             var buildMode = MidsContext.Config.BuildMode;
 
@@ -5940,6 +5980,7 @@ namespace Mids_Reborn.UI.Forms
             {
                 MidsContext.Config.BuildMode = buildMode;
                 MessageBox.Show($"{ex.Message}\r\n{ex.StackTrace}");
+                return false;
             }
 
             var sl = new SlotLevelQueue();
@@ -6003,6 +6044,7 @@ namespace Mids_Reborn.UI.Forms
             {
                 MidsContext.Config.BuildMode = buildMode;
                 MessageBox.Show($"{ex.Message}\r\n{ex.StackTrace}");
+                return false;
             }
 
             FixStatIncludes();
@@ -6065,11 +6107,13 @@ namespace Mids_Reborn.UI.Forms
             var powerEntryArray = DeepCopyPowerList();
             RearrangeAllSlotsInBuild(powerEntryArray, true);
             ShallowCopyPowerList(powerEntryArray);
-            PowerModified(false);
-            SyncLoadedBuildUi();
-            DoRedraw();
+            if (finalizeTransition)
+            {
+                FinalizeBuildTransition(skipResize: true, refreshToolWindows: true);
+            }
 
             MidsContext.Config.BuildMode = buildMode;
+            return true;
         }
 
         private bool RunSchemaCommands(string url)
@@ -6091,19 +6135,22 @@ namespace Mids_Reborn.UI.Forms
 
         private bool DoLoadFromSchema(SchemaData response)
         {
-            dataView.IsLocked = false;
-            NewToon(true, true);
+            PrepareForBuildTransition();
             var ret = response.Data != null && _buildManager.ValidateAndLoadSchemaData(response.Data);
-            FileModified = false;
-            if (drawing != null)
+            if (ret)
             {
-                drawing.Highlight = -1;
+                ClearLoadedBuildFileState();
+                FinalizeBuildTransition(skipResize: true, refreshToolWindows: true);
+                return true;
             }
 
-            //dataView?.Clear();
-            PowerModified(false);
-            SyncLoadedBuildUi();
-            return ret;
+            StartNewBlankBuild(refreshToolWindows: true, assumePrepared: true);
+            return false;
+        }
+
+        private static bool HasCachedIds(int[]? cachedIds, IReadOnlyList<int> ids)
+        {
+            return cachedIds is not null && cachedIds.Length == ids.Count && cachedIds.SequenceEqual(ids);
         }
 
         private void PowerPickedNoRedraw(int nIdPowerset, int nIdPower)
@@ -6947,7 +6994,7 @@ namespace Mids_Reborn.UI.Forms
                     ancillarySection.DropDown.SelectedIndex = -1;
 
                 txtName.Text = MidsContext.Character.Name ?? string.Empty;
-                UpdatePowerLists();
+                UpdatePowerLists(performLayout: !skipResize);
                 ProcessLocks();
                 UpdateFooterSummary();
 
@@ -7072,11 +7119,11 @@ namespace Mids_Reborn.UI.Forms
             }
         }
 
-        private void UpdatePowerLists()
+        private void UpdatePowerLists(bool performLayout = true)
         {
             var ch = MidsContext.Character;
             bool needPrimaryPairRebuild = NeedRebuild(primaryList, ch?.Powersets[0]) ||
-                                      NeedRebuild(secondaryList, ch?.Powersets[1]);
+                                          NeedRebuild(secondaryList, ch?.Powersets[1]);
 
             if (needPrimaryPairRebuild)
             {
@@ -7090,17 +7137,18 @@ namespace Mids_Reborn.UI.Forms
             }
 
             var ancillarySection = AncillaryPoolSection();
-            bool needAncillaryRebuild = ch?.Powersets[ancillarySection.PowersetIndex] != null || NeedRebuild(ancillarySection.List, ch?.Powersets[ancillarySection.PowersetIndex]) ||
+            bool needAncillaryRebuild = NeedRebuild(ancillarySection.List, ch?.Powersets[ancillarySection.PowersetIndex]) ||
                                         needPrimaryPairRebuild;
 
             UpdateOrAssemble(ancillarySection.List, ch?.Powersets[ancillarySection.PowersetIndex], needAncillaryRebuild);
 
             foreach (var poolSection in StandardPoolSections())
             {
-                UpdateOrAssemble(poolSection.List, ch?.Powersets[poolSection.PowersetIndex], forceRebuild: true);
+                bool needPoolRebuild = needPrimaryPairRebuild || NeedRebuild(poolSection.List, ch?.Powersets[poolSection.PowersetIndex]);
+                UpdateOrAssemble(poolSection.List, ch?.Powersets[poolSection.PowersetIndex], forceRebuild: needPoolRebuild);
             }
 
-            RefreshPoolRailLayout();
+            RefreshPoolRailLayout(performFullLayout: performLayout);
         }
 
         private void UpdateOrAssemble(MidsListView list, IPowerset? powerset, bool forceRebuild)
@@ -7273,10 +7321,14 @@ namespace Mids_Reborn.UI.Forms
         private void Load_AtDropDown()
         {
             var ats = DatabaseAPI.Database.Classes.Where(at => at is not null && at.Playable).ToList();
+            var archetypeIds = ats.Select(at => at.Idx).ToArray();
+
+            if (atDropDown.DataSource != null && HasCachedIds(_cachedPlayableArchetypeIds, archetypeIds))
+            {
+                return;
+            }
 
             atDropDown.DisplayMember = "DisplayName";
-            atDropDown.DataSource = ats;
-
             atDropDown.IconProvider = item =>
             {
                 if (item is not Archetype archetype)
@@ -7290,31 +7342,48 @@ namespace Mids_Reborn.UI.Forms
                 AssetManager.Archetypes.TryGetValue(index, out var icon);
                 return icon?.Bitmap;
             };
-            atDropDown.RefreshIcons();
+            atDropDown.DataSource = ats;
+            _cachedPlayableArchetypeIds = archetypeIds;
         }
 
         private void LoadOrigins(Archetype? selectedItem)
         {
-            originDropDown.DataSource = selectedItem?.Origin;
+            int archetypeId = selectedItem?.Idx ?? -1;
+            if (originDropDown.DataSource != null && _cachedOriginArchetypeId == archetypeId)
+            {
+                return;
+            }
+
             originDropDown.IconProvider = item =>
             {
+                if (selectedItem == null)
+                {
+                    return null;
+                }
+
                 int index = Array.IndexOf(selectedItem.Origin, item);
                 if (index < 0) return null;
 
                 AssetManager.Origins.TryGetValue(index, out var icon);
                 return icon?.Bitmap;
             };
-            originDropDown.RefreshIcons();
+            originDropDown.DataSource = selectedItem?.Origin ?? Array.Empty<string>();
+            _cachedOriginArchetypeId = archetypeId;
         }
 
         private void LoadPrimary(Archetype? selectedItem)
         {
+            int archetypeId = selectedItem?.Idx ?? -1;
+            if (primaryDropDown.DataSource != null && _cachedPrimaryArchetypeId == archetypeId)
+            {
+                return;
+            }
+
             var powerSets = selectedItem == null
                 ? []
                 : DatabaseAPI.GetPowersetIndexes(selectedItem, Enums.ePowerSetType.Primary).ToList();
 
             primaryDropDown.DisplayMember = "DisplayName";
-            primaryDropDown.DataSource = powerSets;
             primaryDropDown.IconProvider = item =>
             {
                 if (item is not IPowerset powerset)
@@ -7328,17 +7397,23 @@ namespace Mids_Reborn.UI.Forms
                 AssetManager.Powersets.TryGetValue(index, out var icon);
                 return icon?.Bitmap;
             };
-            primaryDropDown.RefreshIcons();
+            primaryDropDown.DataSource = powerSets;
+            _cachedPrimaryArchetypeId = archetypeId;
         }
 
         private void LoadSecondary(Archetype? selectedItem)
         {
+            int archetypeId = selectedItem?.Idx ?? -1;
+            if (secondaryDropDown.DataSource != null && _cachedSecondaryArchetypeId == archetypeId)
+            {
+                return;
+            }
+
             var powerSets = selectedItem == null
                 ? []
                 : DatabaseAPI.GetPowersetIndexes(selectedItem, Enums.ePowerSetType.Secondary).ToList();
 
             secondaryDropDown.DisplayMember = "DisplayName";
-            secondaryDropDown.DataSource = powerSets;
             secondaryDropDown.IconProvider = item =>
             {
                 if (item is not IPowerset powerset)
@@ -7352,16 +7427,22 @@ namespace Mids_Reborn.UI.Forms
                 AssetManager.Powersets.TryGetValue(index, out var icon);
                 return icon?.Bitmap;
             };
-            secondaryDropDown.RefreshIcons();
+            secondaryDropDown.DataSource = powerSets;
+            _cachedSecondaryArchetypeId = archetypeId;
         }
 
         private void LoadPools()
         {
+            int archetypeId = MidsContext.Character.Archetype.Idx;
+            if (_cachedPoolArchetypeId == archetypeId && StandardPoolSections().All(section => section.DropDown.DataSource != null))
+            {
+                return;
+            }
+
             var poolSets = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, Enums.ePowerSetType.Pool).ToList();
             foreach (var poolSection in StandardPoolSections())
             {
                 poolSection.DropDown.DisplayMember = "DisplayName";
-                poolSection.DropDown.DataSource = poolSets.ToList();
                 poolSection.DropDown.IconProvider = item =>
                 {
                     if (item is not IPowerset powerset)
@@ -7374,18 +7455,23 @@ namespace Mids_Reborn.UI.Forms
                     AssetManager.Powersets.TryGetValue(index, out var icon);
                     return icon?.Bitmap;
                 };
-                poolSection.DropDown.RefreshIcons();
+                poolSection.DropDown.DataSource = poolSets.ToList();
             }
+
+            _cachedPoolArchetypeId = archetypeId;
         }
 
         private void LoadAncillary()
         {
+            int archetypeId = MidsContext.Character.Archetype.Idx;
             var ancillaryPool = AncillaryPoolSection().DropDown;
+            if (_cachedAncillaryArchetypeId == archetypeId && ancillaryPool.DataSource != null)
+            {
+                return;
+            }
 
             var ancillarySets = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, Enums.ePowerSetType.Ancillary).ToList();
             ancillaryPool.DisplayMember = "DisplayName";
-            ancillaryPool.DataSource = ancillarySets;
-
             ancillaryPool.IconProvider = item =>
             {
                 if (item is not IPowerset powerset)
@@ -7398,7 +7484,8 @@ namespace Mids_Reborn.UI.Forms
                 AssetManager.Powersets.TryGetValue(index, out var icon);
                 return icon?.Bitmap;
             };
-            ancillaryPool.RefreshIcons();
+            ancillaryPool.DataSource = ancillarySets;
+            _cachedAncillaryArchetypeId = archetypeId;
         }
 
         private void ChangeSets()
@@ -7418,6 +7505,12 @@ namespace Mids_Reborn.UI.Forms
         }
 
         private void NewToon(bool reinit = true, bool skipDraw = false)
+        {
+            ResetCharacterModel(reinit);
+            ResetUiForCurrentCharacter(clearDataView: true, skipDraw: skipDraw);
+        }
+
+        private void ResetCharacterModel(bool reinit)
         {
             MainModule.MidsController.Toon ??= new Toon();
 
@@ -7466,14 +7559,20 @@ namespace Mids_Reborn.UI.Forms
             {
                 FrmPetActorDetailsWindow.Dispose();
             }
+        }
 
+        private void ResetUiForCurrentCharacter(bool clearDataView, bool skipDraw = false)
+        {
             NewDraw(skipDraw);
             UpdateUiControls(true);
 
             MidsContext.EnhCheckMode = false;
             Info_Totals();
             FileModified = false;
-            dataView?.SetData(null, null, true);
+            if (clearDataView)
+            {
+                dataView?.SetData(null, null, true);
+            }
         }
 
         private void NewDraw(bool skipDraw = false)
