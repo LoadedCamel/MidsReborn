@@ -715,6 +715,18 @@ namespace Mids_Reborn.Core
             }
             else
             {
+                if (TryBuildLinkedSpecialBonusPopupText(enhancement, enhBoostPower, out var linkedSpecialBonusText))
+                {
+                    if (stringBuilder.Length > 0)
+                    {
+                        stringBuilder.Append("\n");
+                    }
+
+                    stringBuilder.Append(linkedSpecialBonusText);
+                    str1 = GroupedFx.FormatPresentationText(stringBuilder.ToString());
+                    return str1;
+                }
+
                 var groupedPopupEffects = GetGroupedEffectsStringLong(enhBoostPower);
                 if (!string.IsNullOrWhiteSpace(groupedPopupEffects))
                 {
@@ -819,6 +831,41 @@ namespace Mids_Reborn.Core
             }
 
             return str1;
+        }
+
+        private bool TryBuildLinkedSpecialBonusPopupText(
+            IEnhancement enhancement,
+            IPower? enhBoostPower,
+            out string effectText)
+        {
+            effectText = string.Empty;
+
+            if (Enh < 0 ||
+                enhancement.nIDSet < 0 ||
+                enhBoostPower is not Power boostPower ||
+                boostPower.OmniBoostPolicy.LinkedGlobalBonusPowerNames.Count == 0)
+            {
+                return false;
+            }
+
+            if (!DatabaseAPI.TryGetSetRawMemberPositionForEnhancement(Enh, out var setId, out var rawMemberPosition) ||
+                setId < 0 ||
+                setId >= DatabaseAPI.Database.EnhancementSets.Count ||
+                rawMemberPosition < 0 ||
+                rawMemberPosition >= DatabaseAPI.Database.EnhancementSets[setId].SpecialBonus.Length)
+            {
+                return false;
+            }
+
+            var effectLines = DatabaseAPI.Database.EnhancementSets[setId]
+                .GetPopupEffectStrings(rawMemberPosition, true, true);
+            if (effectLines.Count == 0)
+            {
+                return false;
+            }
+
+            effectText = string.Join("\n", effectLines.Where(line => !string.IsNullOrWhiteSpace(line)));
+            return !string.IsNullOrWhiteSpace(effectText);
         }
 
         private string GetGroupedEffectsStringLong(IPower? enhBoostPower, bool absorbedGrantEffectsOnly = false)
