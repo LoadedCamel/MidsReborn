@@ -16,6 +16,16 @@ namespace Mids_Reborn.Core
     {
         private static int DisplayIndex { get; set; } = -1;
         private static List<PowerEntry> InherentPowers { get; set; } = new();
+        private static readonly string[] InherentPowerDisplayOrder =
+        {
+            "Brawl",
+            "Sprint",
+            "Rest",
+            "Swift",
+            "Hurdle",
+            "Health",
+            "Stamina"
+        };
 
         public enum eLoadReturnCode
         {
@@ -304,70 +314,42 @@ namespace Mids_Reborn.Core
 
         private static List<PowerEntry> SortGridPowers(List<PowerEntry> powerList, Enums.eGridType iType)
         {
-            var tList = powerList.FindAll(x => x.Power.InherentType == iType);
-            var tempList = new PowerEntry[tList.Count];
-            for (var eIndex = 0; eIndex < tList.Count; eIndex++)
+            var tList = powerList.FindAll(x => x.Power != null && x.Power.InherentType == iType);
+            if (tList.Count == 0)
             {
-                var power = tList[eIndex];
-                switch (power.Power.InherentType)
-                {
-                    case Enums.eGridType.Class:
-                        tempList[eIndex] = power;
-                        break;
-                    case Enums.eGridType.Inherent:
-                        switch (power.Power.PowerName)
-                        {
-                            case "Brawl":
-                                tempList[0] = power;
-                                break;
-                            case "Sprint":
-                                tempList[1] = power;
-                                break;
-                            case "Rest":
-                                tempList[2] = power;
-                                break;
-                            case "Swift":
-                                tempList[3] = power;
-                                break;
-                            case "Hurdle":
-                                tempList[4] = power;
-                                break;
-                            case "Health":
-                                tempList[5] = power;
-                                break;
-                            case "Stamina":
-                                tempList[6] = power;
-                                break;
-                        }
+                return [];
+            }
 
-                        break;
-                    case Enums.eGridType.Powerset:
-                        tempList[eIndex] = power;
-                        break;
-                    case Enums.eGridType.Power:
-                        tempList[eIndex] = power;
-                        break;
-                    case Enums.eGridType.Prestige:
-                        tempList[eIndex] = power;
-                        break;
-                    case Enums.eGridType.Incarnate:
-                        tempList[eIndex] = power;
-                        break;
-                    case Enums.eGridType.Accolade:
-                        power.Level = 49;
-                        tempList[eIndex] = power;
-                        break;
-                    case Enums.eGridType.Pet:
-                        tempList[eIndex] = power;
-                        break;
-                    case Enums.eGridType.Temp:
-                        tempList[eIndex] = power;
-                        break;
+            if (iType == Enums.eGridType.Accolade)
+            {
+                foreach (var power in tList)
+                {
+                    power.Level = 49;
                 }
             }
 
-            var outList = tempList.ToList();
-            return outList;
+            if (iType != Enums.eGridType.Inherent)
+            {
+                return tList;
+            }
+
+            var remaining = new List<PowerEntry>(tList);
+            var ordered = new List<PowerEntry>(tList.Count);
+            foreach (var powerName in InherentPowerDisplayOrder)
+            {
+                var match = remaining.FirstOrDefault(power =>
+                    string.Equals(power.Power?.PowerName, powerName, StringComparison.OrdinalIgnoreCase));
+                if (match == null)
+                {
+                    continue;
+                }
+
+                ordered.Add(match);
+                remaining.Remove(match);
+            }
+
+            ordered.AddRange(remaining);
+            return ordered;
         }
 
         internal static bool MxDReadSaveData(ref byte[] buffer, bool silent)
@@ -811,6 +793,12 @@ namespace Mids_Reborn.Core
                 return eLoadReturnCode.Failure;
             }
 
+            if (string.Equals(header, AppDataPaths.Headers.Save.LegacyCompressed, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(header, AppDataPaths.Headers.Save.LegacyUncompressed, StringComparison.OrdinalIgnoreCase))
+            {
+                return eLoadReturnCode.IsOldFormat;
+            }
+
             if (lines.Length <= dataIndex + 1)
             {
                 MessageBox.Show("Unable to locate data - Nothing beyond header!", "ExtractAndLoad Failed");
@@ -861,6 +849,10 @@ namespace Mids_Reborn.Core
                         startIndex = line.IndexOf(MagicCompressed, StringComparison.Ordinal);
                     if (startIndex < 0)
                         startIndex = line.IndexOf(AppDataPaths.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase);
+                    if (startIndex < 0)
+                        startIndex = line.IndexOf(AppDataPaths.Headers.Save.LegacyUncompressed, StringComparison.OrdinalIgnoreCase);
+                    if (startIndex < 0)
+                        startIndex = line.IndexOf(AppDataPaths.Headers.Save.LegacyCompressed, StringComparison.OrdinalIgnoreCase);
                     if (startIndex <= -1) continue;
                     headers = line[startIndex..].Split(';');
                     header = headers.Length > 0 ? headers[0] : string.Empty;

@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.BuildFile;
 using Mids_Reborn.Core.BuildFile.DataModels;
@@ -69,7 +70,7 @@ namespace Mids_Reborn.Core.Compatibility
                 return true;
             }
 
-            return TryNormalizeNamedBuild(
+            var normalized = TryNormalizeNamedBuild(
                 sourceBuild,
                 compatibilityMap,
                 sourceName,
@@ -77,6 +78,12 @@ namespace Mids_Reborn.Core.Compatibility
                 out normalizedBuild,
                 out summary,
                 out failure);
+            if (normalized && normalizedBuild != null && summary != null)
+            {
+                ApplyLegacyFitnessMigrationFromNamedSource(sourceBuild, normalizedBuild, summary);
+            }
+
+            return normalized;
         }
 
         public static LegacyCompatibilityLoadStatus TryLoadLegacyMxd(
@@ -88,6 +95,10 @@ namespace Mids_Reborn.Core.Compatibility
             {
                 return LegacyCompatibilityLoadStatus.NotApplicable;
             }
+
+            var hasLegacyInternalPayload =
+                text.Contains(AppDataPaths.Headers.Save.LegacyCompressed, StringComparison.OrdinalIgnoreCase) ||
+                text.Contains(AppDataPaths.Headers.Save.LegacyUncompressed, StringComparison.OrdinalIgnoreCase);
 
             if (!LegacyCompatibilityRegistry.TryGetCurrent(out var compatibilityMap, out var mapError))
             {
@@ -109,6 +120,15 @@ namespace Mids_Reborn.Core.Compatibility
 
             if (!LegacyMxdParser.TryParse(text, compatibilityMap, out var parsedBuild, out var parseError) || parsedBuild == null)
             {
+                if (hasLegacyInternalPayload)
+                {
+                    var fallbackStatus = TryLoadLegacyPlainTextBuild(text, sourceName, legacyTag, notifier);
+                    if (fallbackStatus != LegacyCompatibilityLoadStatus.NotApplicable)
+                    {
+                        return fallbackStatus;
+                    }
+                }
+
                 notifier.ShowCompatibilityFailure(
                     BuildParseFailureReport(
                         sourceName,
@@ -137,6 +157,7 @@ namespace Mids_Reborn.Core.Compatibility
                 return LegacyCompatibilityLoadStatus.Failure;
             }
 
+            ApplyDeclaredPowerSetLayoutFromText(text, normalizedBuild);
             if (!normalizedBuild.LoadBuild())
             {
                 return LegacyCompatibilityLoadStatus.Failure;
@@ -219,6 +240,7 @@ namespace Mids_Reborn.Core.Compatibility
             }
 
             normalizedBuild.Level = ComputeBuildLevel(powerEntries).ToString();
+            ApplyLegacyFitnessMigrationFromParsedBuild(parsedBuild, normalizedBuild, summary);
             failure = failure.HasItems ? failure : null;
             return true;
         }
@@ -801,6 +823,12 @@ namespace Mids_Reborn.Core.Compatibility
                     continue;
                 }
 
+                if (string.Equals(sourcePowerSet, "Pool.Fitness", StringComparison.OrdinalIgnoreCase))
+                {
+                    normalized.Add(string.Empty);
+                    continue;
+                }
+
                 var candidate = ApplyLegacyPowerSetAlias(sourcePowerSet);
                 var currentPowerset = DatabaseAPI.GetPowersetByName(candidate);
                 if (currentPowerset != null)
@@ -840,13 +868,204 @@ namespace Mids_Reborn.Core.Compatibility
             return normalized;
         }
 
+        private static void ApplyDeclaredPowerSetLayoutFromText(string text, CharacterBuildData normalizedBuild)
+        {
+            if (normalizedBuild == null)
+            {
+                return;
+            }
+
+            if (!Regex.IsMatch(text, @"(Primary|Secondary)\s+Power\s+Set\:|Power\s+Pool\:|Ancillary\s+Pool\:", RegexOptions.IgnoreCase))
+            {
+                return;
+            }
+
+            var slottedPowerSets = BuildLegacyPlannerPowerSetLayout(text, normalizedBuild);
+            if (slottedPowerSets.Count == 8)
+            {
+                normalizedBuild.PowerSets = slottedPowerSets;
+            }
+        }
+
+        private static List<string> BuildLegacyPlannerPowerSetLayout(string text, CharacterBuildData normalizedBuild)
+        {
+            var slotted = Enumerable.Repeat(string.Empty, 8).ToList();
+            slotted[0] = ResolveDeclaredPowerSetFullName(
+                TryExtractDeclaredPowerSet(text, "Primary"),
+                normalizedBuild,
+                Enums.ePowerSetType.Primary,
+                fallbackIndex: 0);
+            slotted[1] = ResolveDeclaredPowerSetFullName(
+                TryExtractDeclaredPowerSet(text, "Secondary"),
+                normalizedBuild,
+                Enums.ePowerSetType.Secondary,
+                fallbackIndex: 1);
+            slotted[2] = ResolveInherentPowerSetFullName(normalizedBuild);
+
+            var poolSlot = 3;
+            foreach (Match match in Regex.Matches(text, @"Power\s+Pool\:\s*([^\r\n]+)", RegexOptions.IgnoreCase))
+            {
+                if (poolSlot > 6)
+                {
+                    break;
+                }
+
+                var declaredPool = match.Groups[1].Value.Trim();
+                if (string.IsNullOrWhiteSpace(declaredPool) ||
+                    string.Equals(declaredPool, "Fitness", StringComparison.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                var resolvedPool = ResolveDeclaredPowerSetFullName(
+                    declaredPool,
+                    normalizedBuild,
+                    Enums.ePowerSetType.Pool);
+                if (string.IsNullOrWhiteSpace(resolvedPool) ||
+                    slotted.Skip(3).Take(poolSlot - 3).Contains(resolvedPool, StringComparer.OrdinalIgnoreCase))
+                {
+                    continue;
+                }
+
+                slotted[poolSlot++] = resolvedPool;
+            }
+
+            slotted[7] = ResolveDeclaredPowerSetFullName(
+                TryExtractDeclaredPowerSet(text, "Ancillary"),
+                normalizedBuild,
+                Enums.ePowerSetType.Ancillary,
+                fallbackIndex: 7);
+            return slotted;
+        }
+
+        private static string TryExtractDeclaredPowerSet(string text, string label)
+        {
+            var match = Regex.Match(text, $@"{label}\s+Power\s+Set\:\s*([^\r\n]+)", RegexOptions.IgnoreCase);
+            if (match.Success)
+            {
+                return match.Groups[1].Value.Trim();
+            }
+
+            match = Regex.Match(text, $@"{label}\s+Pool\:\s*([^\r\n]+)", RegexOptions.IgnoreCase);
+            return match.Success
+                ? match.Groups[1].Value.Trim()
+                : string.Empty;
+        }
+
+        private static string ResolveInherentPowerSetFullName(CharacterBuildData normalizedBuild)
+        {
+            var existing = normalizedBuild.PowerSets
+                .FirstOrDefault(powerSet => !string.IsNullOrWhiteSpace(powerSet) &&
+                                            powerSet.StartsWith("Inherent.", StringComparison.OrdinalIgnoreCase));
+            if (!string.IsNullOrWhiteSpace(existing))
+            {
+                return existing;
+            }
+
+            return DatabaseAPI.GetInherentPowerset()?.FullName ?? string.Empty;
+        }
+
+        private static string ResolveDeclaredPowerSetFullName(
+            string declaredPowerSetName,
+            CharacterBuildData normalizedBuild,
+            Enums.ePowerSetType setType,
+            int fallbackIndex = -1)
+        {
+            if (string.IsNullOrWhiteSpace(declaredPowerSetName))
+            {
+                return fallbackIndex >= 0 &&
+                       fallbackIndex < normalizedBuild.PowerSets.Count
+                    ? normalizedBuild.PowerSets[fallbackIndex]
+                    : string.Empty;
+            }
+
+            var archetypeName = ResolveArchetypeDisplayName(normalizedBuild.Class);
+            var powerset = DatabaseAPI.GetPowersetByName(declaredPowerSetName, archetypeName, true);
+            if (powerset?.SetType == setType)
+            {
+                return powerset.FullName;
+            }
+
+            var normalizedKey = NormalizePowerSetLookupKey(declaredPowerSetName);
+            foreach (var candidate in EnumerateCandidatePowerSets(normalizedBuild, setType))
+            {
+                if (string.Equals(NormalizePowerSetLookupKey(candidate.DisplayName), normalizedKey, StringComparison.Ordinal) ||
+                    string.Equals(NormalizePowerSetLookupKey(candidate.SetName), normalizedKey, StringComparison.Ordinal) ||
+                    string.Equals(NormalizePowerSetLookupKey(ExtractLeafName(candidate.FullName)), normalizedKey, StringComparison.Ordinal))
+                {
+                    return candidate.FullName;
+                }
+            }
+
+            return fallbackIndex >= 0 &&
+                   fallbackIndex < normalizedBuild.PowerSets.Count
+                ? normalizedBuild.PowerSets[fallbackIndex]
+                : string.Empty;
+        }
+
+        private static IEnumerable<IPowerset> EnumerateCandidatePowerSets(CharacterBuildData normalizedBuild, Enums.ePowerSetType setType)
+        {
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var powerSetName in normalizedBuild.PowerSets)
+            {
+                var powerSet = DatabaseAPI.GetPowersetByFullname(powerSetName);
+                if (powerSet == null || powerSet.SetType != setType || !seen.Add(powerSet.FullName))
+                {
+                    continue;
+                }
+
+                yield return powerSet;
+            }
+
+            foreach (var powerEntry in normalizedBuild.PowerEntries)
+            {
+                if (string.IsNullOrWhiteSpace(powerEntry?.PowerName))
+                {
+                    continue;
+                }
+
+                var powerId = DatabaseAPI.PiDFromUidPower(powerEntry.PowerName);
+                if (powerId < 0)
+                {
+                    continue;
+                }
+
+                var powerSet = DatabaseAPI.Database.Power[powerId].GetPowerSet();
+                if (powerSet == null || powerSet.SetType != setType || !seen.Add(powerSet.FullName))
+                {
+                    continue;
+                }
+
+                yield return powerSet;
+            }
+        }
+
+        private static string NormalizePowerSetLookupKey(string? value)
+        {
+            if (string.IsNullOrWhiteSpace(value))
+            {
+                return string.Empty;
+            }
+
+            return Regex.Replace(value, @"[^A-Za-z0-9]+", string.Empty)
+                .Trim()
+                .ToUpperInvariant();
+        }
+
+        private static string ResolveArchetypeDisplayName(string classUid)
+        {
+            var classIndex = DatabaseAPI.NidFromUidClass(classUid);
+            return classIndex >= 0 && classIndex < DatabaseAPI.Database.Classes.Length
+                ? DatabaseAPI.Database.Classes[classIndex]?.DisplayName ?? string.Empty
+                : string.Empty;
+        }
+
         private static string ApplyLegacyPowerSetAlias(string sourcePowerSet)
         {
             return sourcePowerSet switch
             {
                 "Pool.Leadership_beta" => "Pool.Leadership",
                 "Blaster_Support.Atomic_Manipulation" => "Blaster_Support.Radiation_Manipulation",
-                "Pool.Fitness" => "Pool.Invisibility",
                 _ => sourcePowerSet
             };
         }
@@ -921,6 +1140,495 @@ namespace Mids_Reborn.Core.Compatibility
                 : fullName;
         }
 
+        private static LegacyCompatibilityLoadStatus TryLoadLegacyPlainTextBuild(
+            string text,
+            string? sourceName,
+            string legacyTag,
+            IBuildNotifier notifier)
+        {
+            var parserInput = !string.IsNullOrWhiteSpace(sourceName) && global::System.IO.File.Exists(sourceName)
+                ? sourceName
+                : text;
+            var parser = new global::Mids_Reborn.PlainTextParser(parserInput);
+            var recoveredPowers = parser.Parse();
+            if (recoveredPowers == null)
+            {
+                notifier.ShowCompatibilityFailure(new CompatibilityFailureReport
+                {
+                    Title = "Legacy Build Conversion Failed",
+                    SourceName = sourceName ?? string.Empty,
+                    Lineage = LegacyLineage.Homecoming,
+                    LegacyTag = legacyTag,
+                    Summary = "The original Mids build could not be recovered from its plain-text section."
+                });
+                return LegacyCompatibilityLoadStatus.Failure;
+            }
+
+            if (!TryBuildRecoveredPlainTextBuild(
+                    parser.GetCharacterInfo(),
+                    parser.GetPowersets(),
+                    recoveredPowers,
+                    legacyTag,
+                    out var recoveredBuild,
+                    out var buildError))
+            {
+                notifier.ShowCompatibilityFailure(new CompatibilityFailureReport
+                {
+                    Title = "Legacy Build Conversion Failed",
+                    SourceName = sourceName ?? string.Empty,
+                    Lineage = LegacyLineage.Homecoming,
+                    LegacyTag = legacyTag,
+                    Summary = buildError
+                });
+                return LegacyCompatibilityLoadStatus.Failure;
+            }
+
+            if (!LegacyCompatibilityRegistry.TryGetCurrent(out var compatibilityMap, out var mapError))
+            {
+                notifier.ShowCompatibilityFailure(new CompatibilityFailureReport
+                {
+                    Title = "Legacy Build Conversion Failed",
+                    SourceName = sourceName ?? string.Empty,
+                    Lineage = LegacyLineage.Homecoming,
+                    LegacyTag = legacyTag,
+                    Summary = mapError
+                });
+                return LegacyCompatibilityLoadStatus.Failure;
+            }
+
+            if (compatibilityMap == null)
+            {
+                return LegacyCompatibilityLoadStatus.NotApplicable;
+            }
+
+            if (!TryNormalizeNamedBuild(
+                    recoveredBuild,
+                    compatibilityMap,
+                    sourceName,
+                    legacyTag,
+                    out var normalizedBuild,
+                    out var summary,
+                    out var failure))
+            {
+                notifier.ShowCompatibilityFailure(failure ?? new CompatibilityFailureReport
+                {
+                    Title = "Legacy Build Conversion Failed",
+                    SourceName = sourceName ?? string.Empty,
+                    Lineage = LegacyLineage.Homecoming,
+                    LegacyTag = legacyTag,
+                    Summary = "The recovered original Mids build could not be converted."
+                });
+                return LegacyCompatibilityLoadStatus.Failure;
+            }
+
+            if (summary != null)
+            {
+                ApplyLegacyFitnessMigrationFromFlag(
+                    HasLegacyFitnessPoolText(text),
+                    normalizedBuild,
+                    summary);
+            }
+
+            normalizedBuild.BuiltWith = new MetaData(
+                MidsContext.AppName,
+                MidsContext.AppFileVersion,
+                DatabaseAPI.DatabaseName,
+                DatabaseAPI.Database.Version);
+
+            ApplyDeclaredPowerSetLayoutFromText(text, normalizedBuild);
+            if (!normalizedBuild.LoadBuild())
+            {
+                return LegacyCompatibilityLoadStatus.Failure;
+            }
+
+            if (summary?.HasUserVisibleChanges == true)
+            {
+                notifier.ShowCompatibilitySummary(summary);
+            }
+
+            return LegacyCompatibilityLoadStatus.Success;
+        }
+
+        private static bool TryBuildRecoveredPlainTextBuild(
+            RawCharacterInfo characterInfo,
+            UniqueList<string> recoveredPowerSets,
+            IReadOnlyList<PowerEntry> recoveredPowers,
+            string legacyTag,
+            out CharacterBuildData recoveredBuild,
+            out string error)
+        {
+            recoveredBuild = new CharacterBuildData();
+            error = string.Empty;
+
+            var archetype = DatabaseAPI.GetArchetypeByName(characterInfo.Archetype);
+            if (archetype == null)
+            {
+                error = $"The archetype '{characterInfo.Archetype}' from the recovered original Mids build could not be resolved.";
+                return false;
+            }
+
+            var resolvedOriginIndex = DatabaseAPI.GetOriginByName(archetype, characterInfo.Origin);
+            if (resolvedOriginIndex < 0 || resolvedOriginIndex >= archetype.Origin.Length)
+            {
+                resolvedOriginIndex = 0;
+            }
+
+            var resolvedPowerSets = ResolveRecoveredPowerSets(recoveredPowerSets, characterInfo.Archetype, recoveredPowers);
+            var importedLevel = Math.Clamp(characterInfo.Level - 1, 0, Character.MaxLevel);
+            var progressionPolicy = DatabaseAPI.GetBuildProgressionPolicy(MidsContext.Config?.DataPath);
+            var lastPower = Math.Max(0, progressionPolicy.GetNormalPowerPickCountAtLevel(importedLevel) - 1);
+
+            recoveredBuild = new CharacterBuildData
+            {
+                BuiltWith = new MetaData(
+                    "Mids' Hero Designer",
+                    ParseLegacyVersionSafe(legacyTag),
+                    DatabaseAPI.DatabaseName,
+                    DatabaseAPI.Database.Version),
+                Level = characterInfo.Level.ToString(),
+                Class = archetype.ClassName,
+                Origin = archetype.Origin[resolvedOriginIndex],
+                Alignment = characterInfo.Alignment,
+                Name = characterInfo.Name ?? string.Empty,
+                Comment = string.Empty,
+                PowerSets = resolvedPowerSets,
+                LastPower = lastPower
+            };
+
+            var mainPowers = recoveredPowers
+                .Where(IsRecoveredMainPower)
+                .Select(CreatePowerDataFromRecoveredPower)
+                .ToList();
+            var inherentPowers = recoveredPowers
+                .Where(IsRecoveredInherentPower)
+                .Select(CreatePowerDataFromRecoveredPower)
+                .ToList();
+
+            for (var index = 0; index <= lastPower; index++)
+            {
+                recoveredBuild.PowerEntries.Add(index < mainPowers.Count
+                    ? mainPowers[index]
+                    : CreateEmptyPowerData());
+            }
+
+            foreach (var inherentPower in inherentPowers)
+            {
+                recoveredBuild.PowerEntries.Add(inherentPower);
+            }
+
+            return true;
+        }
+
+        private static List<string> ResolveRecoveredPowerSets(
+            IEnumerable<string> recoveredPowerSets,
+            string archetypeName,
+            IReadOnlyList<PowerEntry> recoveredPowers)
+        {
+            var psFullNames = recoveredPowerSets
+                .Where(entry => !string.IsNullOrWhiteSpace(entry) && !entry.StartsWith("Incarnate.Lore_Pet_", StringComparison.OrdinalIgnoreCase))
+                .Select(entry => entry.Contains('.')
+                    ? entry
+                    : DatabaseAPI.GetPowersetByName(entry, archetypeName)?.FullName)
+                .Where(entry => !string.IsNullOrWhiteSpace(entry))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToList();
+
+            var listPowersetsFull = new UniqueList<string>();
+            foreach (var powerset in psFullNames)
+            {
+                listPowersetsFull.Add(powerset);
+            }
+
+            var trunkPowersets = listPowersetsFull
+                .Select(entry => DatabaseAPI.GetPowersetByFullname(entry) ?? null)
+                .Where(entry => entry is { SetType: Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary, nIDTrunkSet: > -1 })
+                .Select(entry => DatabaseAPI.Database.Powersets[entry!.nIDTrunkSet].FullName)
+                .ToList();
+
+            var listPowersets = new UniqueList<string>();
+            foreach (var powerset in listPowersetsFull)
+            {
+                if (!trunkPowersets.Contains(powerset, StringComparer.OrdinalIgnoreCase))
+                {
+                    listPowersets.Add(powerset);
+                }
+            }
+
+            global::Mids_Reborn.ImportBase.FilterVEATPools(ref listPowersets);
+            global::Mids_Reborn.ImportBase.FixUndetectedPowersets(ref listPowersets);
+            global::Mids_Reborn.ImportBase.FinalizePowersetsList(ref listPowersets, recoveredPowers.ToList(), trunkPowersets);
+            global::Mids_Reborn.ImportBase.PadPowerPools(ref listPowersets);
+            global::Mids_Reborn.ImportBase.FilterTempPowersets(ref listPowersets);
+            global::Mids_Reborn.ImportBase.SortPowersets(ref listPowersets);
+            return listPowersets.ToList();
+        }
+
+        private static bool IsRecoveredMainPower(PowerEntry powerEntry)
+        {
+            var power = powerEntry.Power;
+            if (power == null)
+            {
+                return false;
+            }
+
+            if (power.FullName.StartsWith("Incarnate.", StringComparison.OrdinalIgnoreCase) ||
+                power.FullName.StartsWith("Temporary_Powers.", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            return power.InherentType == Enums.eGridType.None;
+        }
+
+        private static bool IsRecoveredInherentPower(PowerEntry powerEntry)
+        {
+            return powerEntry.Power is { InherentType: not Enums.eGridType.None };
+        }
+
+        private static PowerData CreatePowerDataFromRecoveredPower(PowerEntry powerEntry)
+        {
+            var powerData = new PowerData
+            {
+                PowerName = powerEntry.Power?.FullName ?? string.Empty,
+                Level = powerEntry.Level,
+                StatInclude = powerEntry.StatInclude,
+                ProcInclude = powerEntry.ProcInclude,
+                VariableValue = powerEntry.VariableValue,
+                InherentSlotsUsed = powerEntry.InherentSlotsUsed
+            };
+
+            foreach (var subPowerEntry in powerEntry.SubPowers)
+            {
+                var subPowerName = subPowerEntry.nIDPower > -1 &&
+                                   subPowerEntry.nIDPower < DatabaseAPI.Database.Power.Length
+                    ? DatabaseAPI.Database.Power[subPowerEntry.nIDPower].FullName
+                    : string.Empty;
+                powerData.SubPowerEntries.Add(new SubPowerData
+                {
+                    PowerName = subPowerName,
+                    StatInclude = subPowerEntry.StatInclude
+                });
+            }
+
+            foreach (var slot in powerEntry.Slots)
+            {
+                powerData.SlotEntries.Add(new SlotData
+                {
+                    Level = slot.Level,
+                    IsInherent = slot.IsInherent,
+                    SlotSource = slot.Source.ToString(),
+                    GrantedRuleId = slot.GrantedRuleId,
+                    Enhancement = CreateEnhancementDataFromRecoveredSlot(slot.Enhancement),
+                    FlippedEnhancement = CreateEnhancementDataFromRecoveredSlot(slot.FlippedEnhancement)
+                });
+            }
+
+            return powerData;
+        }
+
+        private static EnhancementData? CreateEnhancementDataFromRecoveredSlot(I9Slot slot)
+        {
+            if (slot == null || slot.Enh < 0 || slot.Enh >= DatabaseAPI.Database.Enhancements.Length)
+            {
+                return null;
+            }
+
+            var enhancement = DatabaseAPI.Database.Enhancements[slot.Enh];
+            return new EnhancementData
+            {
+                Uid = enhancement.UID,
+                Obtained = slot.Obtained,
+                RelativeLevel = slot.RelativeLevel.ToString(),
+                Grade = slot.Grade.ToString(),
+                IoLevel = slot.IOLevel
+            };
+        }
+
+        private static void ApplyLegacyFitnessMigrationFromParsedBuild(
+            LegacyMxdBuild parsedBuild,
+            CharacterBuildData normalizedBuild,
+            CompatibilityLoadSummary summary)
+        {
+            ApplyLegacyFitnessMigrationFromFlag(
+                parsedBuild.PowerSets.Any(powerSet => string.Equals(powerSet, "Pool.Fitness", StringComparison.OrdinalIgnoreCase)),
+                normalizedBuild,
+                summary);
+        }
+
+        private static void ApplyLegacyFitnessMigrationFromNamedSource(
+            CharacterBuildData sourceBuild,
+            CharacterBuildData normalizedBuild,
+            CompatibilityLoadSummary summary)
+        {
+            ApplyLegacyFitnessMigrationFromFlag(
+                sourceBuild.PowerSets.Any(powerSet => string.Equals(powerSet, "Pool.Fitness", StringComparison.OrdinalIgnoreCase)),
+                normalizedBuild,
+                summary);
+        }
+
+        private static void ApplyLegacyFitnessMigrationFromFlag(
+            bool hadLegacyFitnessPool,
+            CharacterBuildData normalizedBuild,
+            CompatibilityLoadSummary summary)
+        {
+            if (!hadLegacyFitnessPool)
+            {
+                return;
+            }
+
+            summary.RemovedLegacyFitnessPool = true;
+            for (var powersetIndex = 0; powersetIndex < normalizedBuild.PowerSets.Count; powersetIndex++)
+            {
+                if (string.Equals(normalizedBuild.PowerSets[powersetIndex], "Pool.Fitness", StringComparison.OrdinalIgnoreCase))
+                {
+                    normalizedBuild.PowerSets[powersetIndex] = string.Empty;
+                }
+            }
+
+            var mainEntryCount = Math.Min(
+                normalizedBuild.PowerEntries.Count,
+                Math.Max(0, normalizedBuild.LastPower + 1));
+            var migratedCount = 0;
+            for (var index = 0; index < mainEntryCount; index++)
+            {
+                var powerEntry = normalizedBuild.PowerEntries[index];
+                if (powerEntry == null || !IsFitnessPowerUid(powerEntry.PowerName))
+                {
+                    continue;
+                }
+
+                var migratedPower = ClonePowerData(powerEntry);
+                migratedPower.Level = ResolveInherentPowerLevel(migratedPower.PowerName, migratedPower.Level);
+                normalizedBuild.PowerEntries[index] = CreateEmptyPowerData();
+                AppendOrMergeMigratedInherentPower(normalizedBuild, migratedPower);
+                migratedCount++;
+            }
+
+            if (migratedCount == 0)
+            {
+                return;
+            }
+
+            summary.MigratedFitnessPowerCount += migratedCount;
+        }
+
+        private static void AppendOrMergeMigratedInherentPower(CharacterBuildData normalizedBuild, PowerData migratedPower)
+        {
+            var existingIndex = normalizedBuild.PowerEntries.FindIndex(entry =>
+                entry != null &&
+                string.Equals(entry.PowerName, migratedPower.PowerName, StringComparison.OrdinalIgnoreCase));
+            if (existingIndex < 0)
+            {
+                normalizedBuild.PowerEntries.Add(migratedPower);
+                return;
+            }
+
+            var existing = normalizedBuild.PowerEntries[existingIndex];
+            if (existing == null || string.IsNullOrWhiteSpace(existing.PowerName))
+            {
+                normalizedBuild.PowerEntries[existingIndex] = migratedPower;
+                return;
+            }
+
+            if (existing.SlotEntries.Count < migratedPower.SlotEntries.Count)
+            {
+                existing.SlotEntries = migratedPower.SlotEntries
+                    .Select(CloneSlotData)
+                    .ToList();
+            }
+
+            existing.Level = ResolveInherentPowerLevel(existing.PowerName, existing.Level > 0 ? existing.Level : migratedPower.Level);
+            existing.StatInclude |= migratedPower.StatInclude;
+            existing.ProcInclude |= migratedPower.ProcInclude;
+            existing.InherentSlotsUsed = Math.Max(existing.InherentSlotsUsed, migratedPower.InherentSlotsUsed);
+        }
+
+        private static bool HasLegacyFitnessPoolText(string text)
+        {
+            return Regex.IsMatch(
+                text,
+                @"Power\s+Pool\:\s*Fitness",
+                RegexOptions.IgnoreCase);
+        }
+
+        private static bool IsFitnessPowerUid(string? powerUid)
+        {
+            return !string.IsNullOrWhiteSpace(powerUid) &&
+                   powerUid.StartsWith("Inherent.Fitness.", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static int ResolveInherentPowerLevel(string powerUid, int fallbackLevel)
+        {
+            var powerId = DatabaseAPI.PiDFromUidPower(powerUid);
+            if (powerId < 0)
+            {
+                return Math.Max(1, fallbackLevel);
+            }
+
+            return Math.Max(1, DatabaseAPI.Database.Power[powerId].Level);
+        }
+
+        private static PowerData ClonePowerData(PowerData source)
+        {
+            return new PowerData
+            {
+                PowerName = source.PowerName,
+                Level = source.Level,
+                StatInclude = source.StatInclude,
+                ProcInclude = source.ProcInclude,
+                VariableValue = source.VariableValue,
+                InherentSlotsUsed = source.InherentSlotsUsed,
+                SubPowerEntries = source.SubPowerEntries
+                    .Select(subPower => new SubPowerData
+                    {
+                        PowerName = subPower.PowerName,
+                        StatInclude = subPower.StatInclude
+                    })
+                    .ToList(),
+                SlotEntries = source.SlotEntries
+                    .Select(CloneSlotData)
+                    .ToList()
+            };
+        }
+
+        private static SlotData CloneSlotData(SlotData source)
+        {
+            return new SlotData
+            {
+                Level = source.Level,
+                IsInherent = source.IsInherent,
+                SlotSource = source.SlotSource,
+                GrantedRuleId = source.GrantedRuleId,
+                Enhancement = CloneEnhancementData(source.Enhancement),
+                FlippedEnhancement = CloneEnhancementData(source.FlippedEnhancement)
+            };
+        }
+
+        private static EnhancementData? CloneEnhancementData(EnhancementData? source)
+        {
+            if (source == null)
+            {
+                return null;
+            }
+
+            return new EnhancementData
+            {
+                Uid = source.Uid,
+                Grade = source.Grade,
+                IoLevel = source.IoLevel,
+                RelativeLevel = source.RelativeLevel,
+                Obtained = source.Obtained,
+                LegacyDisplayName = source.LegacyDisplayName
+            };
+        }
+
+        private static Version ParseLegacyVersionSafe(string? versionText)
+        {
+            return Version.TryParse(versionText, out var version)
+                ? version
+                : new Version(1, 0);
+        }
+
         private static PowerData CreateEmptyPowerData()
         {
             return new PowerData
@@ -949,7 +1657,7 @@ namespace Mids_Reborn.Core.Compatibility
                 return false;
             }
 
-            if (legacyStaticIndex.Value == 11536)
+            if (ShouldIgnoreLegacyPowerStaticIndex(legacyStaticIndex.Value))
             {
                 return true;
             }
@@ -961,6 +1669,11 @@ namespace Mids_Reborn.Core.Compatibility
                        ShouldIgnoreLegacyPowerIdentifier(entry.LegacyName));
         }
 
+        private static bool ShouldIgnoreLegacyPowerStaticIndex(int legacyStaticIndex)
+        {
+            return legacyStaticIndex is 11536 or 3257 or 3258 or 3259;
+        }
+
         private static bool ShouldIgnoreLegacyPowerIdentifier(string? legacyFullName)
         {
             if (string.IsNullOrWhiteSpace(legacyFullName))
@@ -970,6 +1683,14 @@ namespace Mids_Reborn.Core.Compatibility
 
             var normalized = Regex.Replace(legacyFullName.Trim().ToUpperInvariant(), @"[^A-Z0-9]+", string.Empty);
             if (string.Equals(normalized, "INHERENTINHERENTSPECIALSETBONUSES", StringComparison.Ordinal))
+            {
+                return true;
+            }
+
+            if (normalized is
+                "INHERENTINHERENTMXDACCOLADESHERO" or
+                "INHERENTINHERENTMXDACCOLADESVILLAIN" or
+                "INHERENTINHERENTMXDTEMPS")
             {
                 return true;
             }

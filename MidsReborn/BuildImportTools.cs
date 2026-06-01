@@ -1179,7 +1179,9 @@ namespace Mids_Reborn
 
             try
             {
-                cnt = File.ReadAllText(BuildString);
+                cnt = File.Exists(BuildString)
+                    ? File.ReadAllText(BuildString)
+                    : BuildString;
             }
             catch (Exception ex)
             {

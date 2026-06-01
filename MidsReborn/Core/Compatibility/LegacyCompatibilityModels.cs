@@ -100,14 +100,39 @@ namespace Mids_Reborn.Core.Compatibility
         public string LegacyTag { get; set; } = string.Empty;
         public int RemappedPowerCount { get; set; }
         public int RemappedEnhancementCount { get; set; }
+        public int MigratedFitnessPowerCount { get; set; }
+        public bool RemovedLegacyFitnessPool { get; set; }
 
-        public bool HasUserVisibleChanges => false;
+        public bool HasUserVisibleChanges =>
+            MigratedFitnessPowerCount > 0 || RemovedLegacyFitnessPool;
 
-        public bool HasChanges => RemappedPowerCount > 0 || RemappedEnhancementCount > 0;
+        public bool HasChanges =>
+            RemappedPowerCount > 0 ||
+            RemappedEnhancementCount > 0 ||
+            MigratedFitnessPowerCount > 0 ||
+            RemovedLegacyFitnessPool;
 
         public string BuildDisplayMessage()
         {
-            return string.Empty;
+            if (!HasUserVisibleChanges)
+            {
+                return string.Empty;
+            }
+
+            var lines = new List<string>();
+            if (MigratedFitnessPowerCount > 0)
+            {
+                lines.Add(
+                    $"Legacy Fitness pool powers were moved to the current inherent Fitness set. {MigratedFitnessPowerCount} old power pick(s) were cleared from the main build grid and their slots/enhancements were kept on the inherent versions.");
+            }
+
+            if (RemovedLegacyFitnessPool)
+            {
+                lines.Add("The obsolete Fitness pool itself was removed from the build.");
+            }
+
+            lines.Add("You will likely want to revisit or respec this build to use the refunded power picks and correct any powers that are placed in a way not possible in-game.");
+            return string.Join(Environment.NewLine + Environment.NewLine, lines);
         }
     }
 }

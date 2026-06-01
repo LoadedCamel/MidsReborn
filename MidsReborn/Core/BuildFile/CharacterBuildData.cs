@@ -16,6 +16,16 @@ namespace Mids_Reborn.Core.BuildFile
         private readonly IBuildNotifier _notifier = new BuildNotifier();
         private static CharacterBuildData? _instance;
         private static readonly object InstanceLock = new();
+        private static readonly string[] InherentPowerDisplayOrder =
+        {
+            "Brawl",
+            "Sprint",
+            "Rest",
+            "Swift",
+            "Hurdle",
+            "Health",
+            "Stamina"
+        };
 
         [JsonIgnore]
         public static CharacterBuildData Instance
@@ -210,70 +220,41 @@ namespace Mids_Reborn.Core.BuildFile
         private static IEnumerable<PowerEntry> SortGridPowers(List<PowerEntry> powerList, Enums.eGridType iType)
         {
             var tList = powerList.FindAll(x => x.Power != null && x.Power.InherentType == iType);
-            var tempList = new PowerEntry[tList.Count];
-            for (var eIndex = 0; eIndex < tList.Count; eIndex++)
+            if (tList.Count == 0)
             {
-                var power = tList[eIndex];
-                if (power.Power != null)
-                    switch (power.Power.InherentType)
-                    {
-                        case Enums.eGridType.Class:
-                            tempList[eIndex] = power;
-                            break;
-                        case Enums.eGridType.Inherent:
-                            switch (power.Power.PowerName)
-                            {
-                                case "Brawl":
-                                    tempList[0] = power;
-                                    break;
-                                case "Sprint":
-                                    tempList[1] = power;
-                                    break;
-                                case "Rest":
-                                    tempList[2] = power;
-                                    break;
-                                case "Swift":
-                                    tempList[3] = power;
-                                    break;
-                                case "Hurdle":
-                                    tempList[4] = power;
-                                    break;
-                                case "Health":
-                                    tempList[5] = power;
-                                    break;
-                                case "Stamina":
-                                    tempList[6] = power;
-                                    break;
-                            }
-
-                            break;
-                        case Enums.eGridType.Powerset:
-                            tempList[eIndex] = power;
-                            break;
-                        case Enums.eGridType.Power:
-                            tempList[eIndex] = power;
-                            break;
-                        case Enums.eGridType.Prestige:
-                            tempList[eIndex] = power;
-                            break;
-                        case Enums.eGridType.Incarnate:
-                            tempList[eIndex] = power;
-                            break;
-                        case Enums.eGridType.Accolade:
-                            power.Level = 49;
-                            tempList[eIndex] = power;
-                            break;
-                        case Enums.eGridType.Pet:
-                            tempList[eIndex] = power;
-                            break;
-                        case Enums.eGridType.Temp:
-                            tempList[eIndex] = power;
-                            break;
-                    }
+                return [];
             }
 
-            var outList = tempList.ToList();
-            return outList;
+            if (iType == Enums.eGridType.Accolade)
+            {
+                foreach (var power in tList)
+                {
+                    power.Level = 49;
+                }
+            }
+
+            if (iType != Enums.eGridType.Inherent)
+            {
+                return tList;
+            }
+
+            var remaining = new List<PowerEntry>(tList);
+            var ordered = new List<PowerEntry>(tList.Count);
+            foreach (var powerName in InherentPowerDisplayOrder)
+            {
+                var match = remaining.FirstOrDefault(power =>
+                    string.Equals(power.Power?.PowerName, powerName, StringComparison.OrdinalIgnoreCase));
+                if (match == null)
+                {
+                    continue;
+                }
+
+                ordered.Add(match);
+                remaining.Remove(match);
+            }
+
+            ordered.AddRange(remaining);
+            return ordered;
         }
 
         internal bool LoadBuild(BuildCombatContextState? loadFallbackCombatContext = null)

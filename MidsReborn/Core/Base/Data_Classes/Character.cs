@@ -490,10 +490,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public void LoadPowerSetsByName(IEnumerable<string> sets)
         {
-            Powersets = sets
-                .Select(DatabaseAPI.GetPowersetByFullname)
-                .Select(powerSet => powerSet ?? new Powerset())
-                .ToArray();
+            var loadedSets = sets
+                .Take(8)
+                .Select(name => string.IsNullOrWhiteSpace(name)
+                    ? null
+                    : DatabaseAPI.GetPowersetByFullname(name))
+                .ToList();
+
+            while (loadedSets.Count < 8)
+            {
+                loadedSets.Add(null);
+            }
+
+            Powersets = loadedSets.ToArray();
         }
 
         public void Reset(Archetype? iArchetype = null, int iOrigin = 0)

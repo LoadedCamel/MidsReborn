@@ -33,7 +33,7 @@ namespace Mids_Reborn.Core.Utils
             }
         }
 
-        private static readonly Regex MxdPattern = new(@"^\|MxDz;[0-9]+;[0-9]+;[0-9]+;HEX;\|", RegexOptions.Compiled);
+        private static readonly Regex MxdPattern = new(@"^\|(MxD[zu]|MHDz|MRBz);[0-9]+;[0-9]+;[0-9]+(?:;HEX)?;\|", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         private static readonly Regex MbdPattern = new(@"^\|MBD;[0-9]+;[0-9]+;[0-9]+;BASE64;\|", RegexOptions.Compiled);
         private static readonly Regex UnkBase64Pattern = new(@"^[A-Za-z0-9+/]+={0,2}$", RegexOptions.Compiled);
 

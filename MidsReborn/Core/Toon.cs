@@ -2167,7 +2167,8 @@ namespace Mids_Reborn.Core
                 return ReadInternalDataUC(iStream);
             }
 
-            if (!string.Equals(a, AppDataPaths.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase) || !string.Equals(a, AppDataPaths.Headers.Save.LegacyCompressed, StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(a, AppDataPaths.Headers.Save.Compressed, StringComparison.OrdinalIgnoreCase) &&
+                !string.Equals(a, AppDataPaths.Headers.Save.LegacyCompressed, StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -2209,7 +2210,8 @@ namespace Mids_Reborn.Core
             do
             {
                 strArray1 = IoGrab2(iStream, "|");
-            } while (strArray1[0] != AppDataPaths.Headers.Save.Uncompressed || strArray1[0] != AppDataPaths.Headers.Save.LegacyUncompressed);
+            } while (strArray1[0] != AppDataPaths.Headers.Save.Uncompressed &&
+                     strArray1[0] != AppDataPaths.Headers.Save.LegacyUncompressed);
 
             strArray1[1] = strArray1[1].Replace(",", ".");
             var nVer = Convert.ToSingle(strArray1[1]);
@@ -2389,7 +2391,10 @@ namespace Mids_Reborn.Core
         public bool StringToInternalData(string iString)
         {
             bool flag1;
-            if ((iString?.IndexOf(AppDataPaths.Headers.Save.Compressed, StringComparison.Ordinal) == -1) & (iString?.IndexOf(AppDataPaths.Headers.Save.Uncompressed, StringComparison.Ordinal) == -1) || (iString?.IndexOf(AppDataPaths.Headers.Save.LegacyCompressed, StringComparison.Ordinal) == -1) & (iString?.IndexOf(AppDataPaths.Headers.Save.LegacyUncompressed, StringComparison.Ordinal) == -1))
+            if ((iString?.IndexOf(AppDataPaths.Headers.Save.Compressed, StringComparison.Ordinal) == -1) &
+                (iString?.IndexOf(AppDataPaths.Headers.Save.Uncompressed, StringComparison.Ordinal) == -1) &&
+                (iString?.IndexOf(AppDataPaths.Headers.Save.LegacyCompressed, StringComparison.Ordinal) == -1) &
+                (iString?.IndexOf(AppDataPaths.Headers.Save.LegacyUncompressed, StringComparison.Ordinal) == -1))
             {
                 if ((iString.IndexOf("Primary", StringComparison.Ordinal) > -1) &
                     (iString.IndexOf("Secondary", StringComparison.Ordinal) > -1))
@@ -2426,7 +2431,9 @@ namespace Mids_Reborn.Core
 
                 try
                 {
-                    if (iString != null && (iString.IndexOf(AppDataPaths.Headers.Save.Compressed, StringComparison.Ordinal) < 0 || iString.IndexOf(AppDataPaths.Headers.Save.LegacyCompressed, StringComparison.Ordinal) < 0))
+                    if (iString != null &&
+                        iString.IndexOf(AppDataPaths.Headers.Save.Compressed, StringComparison.Ordinal) < 0 &&
+                        iString.IndexOf(AppDataPaths.Headers.Save.LegacyCompressed, StringComparison.Ordinal) < 0)
                     {
                         iString = iString.Replace("+\r\n+", "");
                         iString = iString.Replace("+ \r\n+", "");

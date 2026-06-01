@@ -1198,6 +1198,10 @@ Power|1793|Boxing|Pool.Fighting.Boxing|Pool.Fighting.Boxing
 Power|1794|Kick|Pool.Fighting.Kick|Pool.Fighting.Kick
 Power|1795|Tough|Pool.Fighting.Tough|Pool.Fighting.Tough
 Power|1796|Weave|Pool.Fighting.Weave|Pool.Fighting.Weave
+Power|1797|Quick|Pool.Fitness.Quick|Inherent.Fitness.Swift
+Power|1798|Hurdle|Pool.Fitness.Hurdle|Inherent.Fitness.Hurdle
+Power|1799|Health|Pool.Fitness.Health|Inherent.Fitness.Health
+Power|1800|Stamina|Pool.Fitness.Stamina|Inherent.Fitness.Stamina
 Power|1801|Combat_Flight|Pool.Flight.Combat_Flight|Pool.Flight.Combat_Flight
 Power|1802|Air_Superiority|Pool.Flight.Air_Superiority|Pool.Flight.Air_Superiority
 Power|1803|Fly|Pool.Flight.Fly|Pool.Flight.Fly

@@ -6,6 +6,8 @@ using System.IO.Compression;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
+using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Core.Compatibility
 {
@@ -77,8 +79,12 @@ namespace Mids_Reborn.Core.Compatibility
         private const string MagicCompressed = "MxDz";
         private const string MagicUncompressed = "MxDu";
         private const string ModernCompressed = "MRBz";
+        private const string LegacyCompressed = AppDataPaths.Headers.Save.LegacyCompressed;
+        private const string LegacyUncompressed = AppDataPaths.Headers.Save.LegacyUncompressed;
         private const float PriorSaveVersion = 3.10f;
         private const float CurrentSaveVersion = 3.20f;
+        private const float LegacyInternalFormatChange1 = 1.29999995231628f;
+        private const float LegacyInternalFormatChange2 = 1.39999997615814f;
 
         private static readonly byte[] MagicNumber =
         {
@@ -116,6 +122,20 @@ namespace Mids_Reborn.Core.Compatibility
                 return false;
             }
 
+            if (TryGetLegacyInternalPayloadText(payloadBytes, out var legacyPayloadText))
+            {
+                try
+                {
+                    build = ParseLegacyInternalPayloadText(text, legacyPayloadText, legacyTag);
+                    return true;
+                }
+                catch (Exception ex)
+                {
+                    error = ex.Message;
+                    return false;
+                }
+            }
+
             try
             {
                 build = ParsePayloadBytes(payloadBytes, legacyTag, compatibilityMap);
@@ -136,13 +156,763 @@ namespace Mids_Reborn.Core.Compatibility
                 @"built using\s+Mids(?:'?\s+Reborn)?\s+(?<version>v?\d+(?:\.\d+)+)",
                 RegexOptions.IgnoreCase);
 
+            if (match.Success)
+            {
+                tag = match.Groups["version"].Value;
+                return !string.IsNullOrWhiteSpace(tag);
+            }
+
+            match = Regex.Match(
+                text,
+                @"(?:Hero|Villain|Rogue|Vigilante)\s+Plan\s+by\s+(?:Mids|Pine)(?:'?\s+(?:Hero|Villain))?\s+Designer(?:\s+(?<version>v?\d+(?:\.\d+)+))?",
+                RegexOptions.IgnoreCase);
+
             if (!match.Success)
             {
                 return false;
             }
 
-            tag = match.Groups["version"].Value;
-            return !string.IsNullOrWhiteSpace(tag);
+            tag = match.Groups["version"].Success && !string.IsNullOrWhiteSpace(match.Groups["version"].Value)
+                ? match.Groups["version"].Value
+                : "Original Mids";
+            return true;
+        }
+
+        private sealed record LegacyPlannerPowerListing(
+            int Level,
+            string DisplayName,
+            bool IsInherent,
+            bool IsEmpty);
+
+        private static bool TryGetLegacyInternalPayloadText(byte[] payloadBytes, out string payloadText)
+        {
+            payloadText = string.Empty;
+            if (payloadBytes == null || payloadBytes.Length == 0)
+            {
+                return false;
+            }
+
+            payloadText = Encoding.UTF8.GetString(payloadBytes)
+                .TrimStart('\uFEFF', '\0', ' ', '\t', '\r', '\n');
+            return payloadText.StartsWith(LegacyUncompressed, StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static LegacyMxdBuild ParseLegacyInternalPayloadText(string sourceText, string payloadText, string legacyTag)
+        {
+            var normalizedPayload = payloadText
+                .Replace("\r\n", "\n", StringComparison.Ordinal)
+                .Replace('\r', '\n');
+            using var reader = new StringReader(normalizedPayload);
+
+            var versionLine = ReadNextNonEmptyLine(reader);
+            if (string.IsNullOrWhiteSpace(versionLine))
+            {
+                throw new InvalidDataException("The legacy MHD payload did not contain a HeroDataVersion header.");
+            }
+
+            var versionParts = versionLine.Split(';');
+            if (versionParts.Length < 2 ||
+                !string.Equals(versionParts[0], LegacyUncompressed, StringComparison.OrdinalIgnoreCase))
+            {
+                throw new InvalidDataException("The legacy MHD payload did not start with a valid HeroDataVersion header.");
+            }
+
+            if (!float.TryParse(
+                    versionParts[1].Trim().Replace(",", ".", StringComparison.Ordinal),
+                    NumberStyles.Float,
+                    CultureInfo.InvariantCulture,
+                    out var saveFormatVersion))
+            {
+                throw new InvalidDataException($"The legacy HeroDataVersion '{versionParts[1]}' could not be parsed.");
+            }
+
+            var characterLine = ReadNextNonEmptyLine(reader);
+            var characterParts = SplitDelimited(characterLine);
+            if (characterParts.Length < 3)
+            {
+                throw new InvalidDataException("The legacy MHD payload did not contain the expected character identity line.");
+            }
+
+            var powerSetLine = ReadNextNonEmptyLine(reader);
+            var rawPowerSetNames = SplitDelimited(powerSetLine)
+                .Select(part => part.Trim())
+                .ToList();
+            if (rawPowerSetNames.Count == 0)
+            {
+                throw new InvalidDataException("The legacy MHD payload did not contain any powerset declarations.");
+            }
+
+            var powerDataLine = string.Concat(
+                reader.ReadToEnd()
+                    .Replace("\r\n", "\n", StringComparison.Ordinal)
+                    .Replace('\r', '\n')
+                    .Split('\n')
+                    .Where(line => !string.IsNullOrWhiteSpace(line)));
+            if (string.IsNullOrWhiteSpace(powerDataLine))
+            {
+                throw new InvalidDataException("The legacy MHD payload did not contain any packed power data.");
+            }
+
+            var archetype = DatabaseAPI.GetArchetypeByName(characterParts[2].Trim());
+            if (archetype == null)
+            {
+                throw new InvalidDataException($"The archetype '{characterParts[2]}' from the legacy MHD payload could not be resolved.");
+            }
+
+            var resolvedOriginIndex = DatabaseAPI.GetOriginByName(archetype, characterParts[1].Trim());
+            if (resolvedOriginIndex < 0 || resolvedOriginIndex >= archetype.Origin.Length)
+            {
+                resolvedOriginIndex = 0;
+            }
+
+            var resolvedPowerSets = ResolveLegacyInternalPowerSets(rawPowerSetNames, archetype.DisplayName);
+            var plannerListings = ExtractPlannerPowerListings(sourceText);
+            var powerTokens = powerDataLine.Split('|');
+            var powerEntries = ParseLegacyInternalPowerEntries(
+                powerTokens,
+                saveFormatVersion,
+                resolvedPowerSets,
+                rawPowerSetNames,
+                plannerListings,
+                archetype.DisplayName);
+
+            var highestMainLevel = plannerListings
+                .Where(listing => !listing.IsInherent)
+                .Select(listing => listing.Level)
+                .DefaultIfEmpty(powerEntries
+                    .Select(entry => entry.Level + 1)
+                    .DefaultIfEmpty(1)
+                    .Max())
+                .Max();
+            var importedLevel = Math.Clamp(highestMainLevel - 1, 0, Character.MaxLevel);
+            var progressionPolicy = DatabaseAPI.GetBuildProgressionPolicy(MidsContext.Config?.DataPath);
+            var lastPower = Math.Max(0, progressionPolicy.GetNormalPowerPickCountAtLevel(importedLevel) - 1);
+
+            return new LegacyMxdBuild
+            {
+                LegacyTag = legacyTag,
+                SaveFormatVersion = saveFormatVersion,
+                SaveFormat = saveFormatVersion < LegacyInternalFormatChange1
+                    ? LegacySaveBinaryFormat.Legacy
+                    : saveFormatVersion < LegacyInternalFormatChange2
+                        ? LegacySaveBinaryFormat.Prior
+                        : LegacySaveBinaryFormat.Current,
+                QualifiedNames = true,
+                HasSubPowers = saveFormatVersion >= LegacyInternalFormatChange2,
+                ClassUid = archetype.ClassName,
+                OriginUid = archetype.Origin[resolvedOriginIndex],
+                Alignment = archetype.Hero ? Enums.Alignment.Hero : Enums.Alignment.Villain,
+                CharacterName = characterParts[0].Trim(),
+                PowerSets = resolvedPowerSets,
+                LastPower = lastPower,
+                PowerEntries = powerEntries
+            };
+        }
+
+        private static List<LegacyMxdPowerEntry> ParseLegacyInternalPowerEntries(
+            IReadOnlyList<string> powerTokens,
+            float saveFormatVersion,
+            IReadOnlyList<string> resolvedPowerSets,
+            IReadOnlyList<string> rawPowerSetNames,
+            IReadOnlyList<LegacyPlannerPowerListing> plannerListings,
+            string archetypeName)
+        {
+            var hasSubPowers = saveFormatVersion >= LegacyInternalFormatChange2;
+            var entries = new List<LegacyMxdPowerEntry>();
+            var offset = 0;
+            var powerIndex = 0;
+            while (offset < powerTokens.Count)
+            {
+                if (RemainingTokensAreBlank(powerTokens, offset))
+                {
+                    break;
+                }
+
+                RequireRemainingTokenCount(powerTokens, offset, 6, "power identity");
+                var statInclude = ParseLegacyInt(powerTokens[offset]) != 0;
+                var isInherentPower = ParseLegacyInt(powerTokens[offset + 1]) != 0;
+                var level = ParseLegacyInt(powerTokens[offset + 2]);
+                var powerSetIndex = ParseLegacyInt(powerTokens[offset + 3]);
+                var localPowerIndex = ParseLegacyInt(powerTokens[offset + 4]);
+                var slotCount = Math.Max(ParseLegacyInt(powerTokens[offset + 5]) + 1, 0);
+                offset += 6;
+
+                if (isInherentPower && powerSetIndex < 0 && resolvedPowerSets.Count > 2)
+                {
+                    powerSetIndex = 2;
+                }
+
+                var slots = new List<LegacyMxdSlotEntry>(slotCount);
+                for (var slotIndex = 0; slotIndex < slotCount; slotIndex++)
+                {
+                    RequireRemainingTokenCount(powerTokens, offset, 2, $"slot {slotIndex + 1}");
+                    var slotToken = powerTokens[offset];
+                    var slotLevel = ParseLegacyInt(powerTokens[offset + 1]);
+                    offset += 2;
+
+                    ParseLegacyInternalSlot(slotToken, out var enhancement, out var flippedEnhancement);
+                    slots.Add(new LegacyMxdSlotEntry
+                    {
+                        SlotIndex = slotIndex,
+                        Level = slotLevel,
+                        IsGranted = false,
+                        Enhancement = enhancement,
+                        FlippedEnhancement = flippedEnhancement
+                    });
+                }
+
+                RequireRemainingTokenCount(powerTokens, offset, 1, "variable value");
+                var variableValue = ParseLegacyInt(powerTokens[offset]);
+                offset++;
+
+                var subPowers = new List<LegacyMxdSubPowerEntry>();
+                if (hasSubPowers)
+                {
+                    RequireRemainingTokenCount(powerTokens, offset, 1, "subpower count");
+                    var subPowerCount = Math.Max(ParseLegacyInt(powerTokens[offset]) + 1, 0);
+                    offset++;
+                    subPowers = new List<LegacyMxdSubPowerEntry>(subPowerCount);
+                    for (var subPowerIndex = 0; subPowerIndex < subPowerCount; subPowerIndex++)
+                    {
+                        RequireRemainingTokenCount(powerTokens, offset, 3, $"subpower {subPowerIndex + 1}");
+                        var localSubPowerIndex = ParseLegacyInt(powerTokens[offset]);
+                        var subPowerSetIndex = ParseLegacyInt(powerTokens[offset + 1]);
+                        var subStatInclude = ParseLegacyInt(powerTokens[offset + 2]) != 0;
+                        offset += 3;
+
+                        ResolveLegacyInternalPowerIdentity(
+                            entryOrdinal: -1,
+                            powerSetIndex: subPowerSetIndex,
+                            localPowerIndex: localSubPowerIndex,
+                            resolvedPowerSets,
+                            rawPowerSetNames,
+                            plannerListings,
+                            archetypeName,
+                            out var subPowerUid,
+                            out var subPowerStaticIndex);
+
+                        subPowers.Add(new LegacyMxdSubPowerEntry
+                        {
+                            SubPowerIndex = subPowerIndex,
+                            SavedStaticIndex = subPowerStaticIndex,
+                            SavedUid = subPowerUid,
+                            StatInclude = subStatInclude
+                        });
+                    }
+                }
+
+                ResolveLegacyInternalPowerIdentity(
+                    powerIndex,
+                    powerSetIndex,
+                    localPowerIndex,
+                    resolvedPowerSets,
+                    rawPowerSetNames,
+                    plannerListings,
+                    archetypeName,
+                    out var savedUid,
+                    out var savedStaticIndex);
+
+                entries.Add(new LegacyMxdPowerEntry
+                {
+                    PowerIndex = powerIndex,
+                    SavedStaticIndex = savedStaticIndex,
+                    SavedUid = savedUid,
+                    Level = level,
+                    StatInclude = statInclude,
+                    ProcInclude = false,
+                    VariableValue = variableValue,
+                    InherentSlotsUsed = 0,
+                    SubPowers = subPowers,
+                    Slots = slots
+                });
+                powerIndex++;
+            }
+
+            return entries;
+        }
+
+        private static void ResolveLegacyInternalPowerIdentity(
+            int entryOrdinal,
+            int powerSetIndex,
+            int localPowerIndex,
+            IReadOnlyList<string> resolvedPowerSets,
+            IReadOnlyList<string> rawPowerSetNames,
+            IReadOnlyList<LegacyPlannerPowerListing> plannerListings,
+            string archetypeName,
+            out string savedUid,
+            out int? savedStaticIndex)
+        {
+            savedUid = string.Empty;
+            savedStaticIndex = null;
+            if (powerSetIndex < 0 || localPowerIndex < 0 || powerSetIndex >= resolvedPowerSets.Count)
+            {
+                return;
+            }
+
+            var resolvedPowerSet = resolvedPowerSets[powerSetIndex];
+            var rawPowerSetName = powerSetIndex < rawPowerSetNames.Count
+                ? rawPowerSetNames[powerSetIndex]
+                : string.Empty;
+            var plannerListing = entryOrdinal >= 0 && entryOrdinal < plannerListings.Count
+                ? plannerListings[entryOrdinal]
+                : null;
+            var plannerDisplayName = plannerListing?.IsEmpty == true
+                ? string.Empty
+                : plannerListing?.DisplayName ?? string.Empty;
+
+            if (string.Equals(resolvedPowerSet, "Pool.Fitness", StringComparison.OrdinalIgnoreCase) &&
+                TryResolveLegacyFitnessPower(plannerDisplayName, localPowerIndex, out var fitnessUid, out var fitnessStaticIndex))
+            {
+                savedUid = fitnessUid;
+                savedStaticIndex = fitnessStaticIndex;
+                return;
+            }
+
+            if (IsLegacyInherentPowerSetReference(rawPowerSetName, powerSetIndex) &&
+                TryResolveInherentPowerUid(plannerDisplayName, out var inherentPowerUid))
+            {
+                savedUid = inherentPowerUid;
+                return;
+            }
+
+            if (TryResolvePowerUidFromPowerSet(resolvedPowerSet, plannerDisplayName, localPowerIndex, out var resolvedPowerUid))
+            {
+                savedUid = resolvedPowerUid;
+                return;
+            }
+
+            if (!string.IsNullOrWhiteSpace(plannerDisplayName))
+            {
+                var guessedLeafName = NormalizeLegacyPowerLeafName(plannerDisplayName);
+                if (!string.IsNullOrWhiteSpace(guessedLeafName))
+                {
+                    savedUid = !string.IsNullOrWhiteSpace(resolvedPowerSet)
+                        ? $"{resolvedPowerSet}.{guessedLeafName}"
+                        : guessedLeafName;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(savedUid) &&
+                TryResolveFallbackPowerSet(rawPowerSetName, powerSetIndex, archetypeName, out var fallbackPowerSet) &&
+                TryResolvePowerUidFromPowerSet(fallbackPowerSet, plannerDisplayName, localPowerIndex, out resolvedPowerUid))
+            {
+                savedUid = resolvedPowerUid;
+            }
+        }
+
+        private static List<string> ResolveLegacyInternalPowerSets(
+            IReadOnlyList<string> rawPowerSetNames,
+            string archetypeName)
+        {
+            var resolved = new List<string>(rawPowerSetNames.Count);
+            for (var index = 0; index < rawPowerSetNames.Count; index++)
+            {
+                var rawName = rawPowerSetNames[index]?.Trim() ?? string.Empty;
+                resolved.Add(ResolveLegacyInternalPowerSet(rawName, index, archetypeName));
+            }
+
+            return resolved;
+        }
+
+        private static string ResolveLegacyInternalPowerSet(string rawName, int slotIndex, string archetypeName)
+        {
+            if (string.IsNullOrWhiteSpace(rawName))
+            {
+                return string.Empty;
+            }
+
+            if (slotIndex == 2 || rawName.Contains("Inherent", StringComparison.OrdinalIgnoreCase))
+            {
+                return DatabaseAPI.GetInherentPowerset()?.FullName ?? "Inherent.Inherent";
+            }
+
+            if (string.Equals(rawName, "Fitness", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Pool.Fitness";
+            }
+
+            if (TryResolveFallbackPowerSet(rawName, slotIndex, archetypeName, out var resolvedPowerSet))
+            {
+                return resolvedPowerSet;
+            }
+
+            return slotIndex switch
+            {
+                0 => $"Primary.{NormalizeLegacyPowerLeafName(rawName)}",
+                1 => $"Secondary.{NormalizeLegacyPowerLeafName(rawName)}",
+                7 => $"Epic.{NormalizeLegacyPowerLeafName(rawName)}",
+                _ => $"Pool.{NormalizeLegacyPowerLeafName(rawName)}"
+            };
+        }
+
+        private static bool TryResolveFallbackPowerSet(string rawName, int slotIndex, string archetypeName, out string resolvedPowerSet)
+        {
+            resolvedPowerSet = string.Empty;
+            IPowerset? powerset = slotIndex switch
+            {
+                0 or 1 or 7 => DatabaseAPI.GetPowersetByName(rawName, archetypeName, true),
+                _ => null
+            };
+
+            powerset ??= slotIndex switch
+            {
+                0 => DatabaseAPI.GetPowersetByName(rawName, Enums.ePowerSetType.Primary),
+                1 => DatabaseAPI.GetPowersetByName(rawName, Enums.ePowerSetType.Secondary),
+                7 => FindPowerSet(rawName, archetypeName, Enums.ePowerSetType.Ancillary),
+                >= 3 and <= 6 => DatabaseAPI.GetPowersetByName(rawName, Enums.ePowerSetType.Pool) ?? FindPowerSet(rawName, archetypeName, Enums.ePowerSetType.Pool),
+                _ => null
+            };
+
+            if (powerset == null)
+            {
+                return false;
+            }
+
+            resolvedPowerSet = powerset.FullName;
+            return !string.IsNullOrWhiteSpace(resolvedPowerSet);
+        }
+
+        private static IPowerset? FindPowerSet(string rawName, string archetypeName, Enums.ePowerSetType setType)
+        {
+            var archetypeIndex = DatabaseAPI.GetArchetypeByName(archetypeName)?.Idx ?? -1;
+            return DatabaseAPI.Database.Powersets
+                .Where(powerSet => powerSet != null &&
+                                   powerSet.SetType == setType &&
+                                   string.Equals(powerSet.DisplayName, rawName, StringComparison.OrdinalIgnoreCase))
+                .FirstOrDefault(powerSet => setType != Enums.ePowerSetType.Ancillary ||
+                                            archetypeIndex < 0 ||
+                                            powerSet!.ClassOk(archetypeIndex));
+        }
+
+        private static bool TryResolvePowerUidFromPowerSet(
+            string resolvedPowerSet,
+            string displayName,
+            int localPowerIndex,
+            out string powerUid)
+        {
+            powerUid = string.Empty;
+            var powerSet = DatabaseAPI.GetPowersetByName(resolvedPowerSet) ??
+                           DatabaseAPI.GetPowersetByFullname(resolvedPowerSet);
+            if (powerSet == null)
+            {
+                return false;
+            }
+
+            if (!string.IsNullOrWhiteSpace(displayName))
+            {
+                var normalizedDisplayName = NormalizeLookupKey(displayName);
+                foreach (var powerId in powerSet.Power)
+                {
+                    if (powerId < 0 || powerId >= DatabaseAPI.Database.Power.Length)
+                    {
+                        continue;
+                    }
+
+                    var power = DatabaseAPI.Database.Power[powerId];
+                    if (power == null)
+                    {
+                        continue;
+                    }
+
+                    if (string.Equals(power.DisplayName, displayName, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(power.PowerName, displayName, StringComparison.OrdinalIgnoreCase) ||
+                        string.Equals(NormalizeLookupKey(power.DisplayName), normalizedDisplayName, StringComparison.Ordinal) ||
+                        string.Equals(NormalizeLookupKey(power.PowerName), normalizedDisplayName, StringComparison.Ordinal) ||
+                        string.Equals(NormalizeLookupKey(ExtractLeafName(power.FullName)), normalizedDisplayName, StringComparison.Ordinal))
+                    {
+                        powerUid = power.FullName;
+                        return !string.IsNullOrWhiteSpace(powerUid);
+                    }
+                }
+            }
+
+            if (localPowerIndex >= 0 && localPowerIndex < powerSet.Power.Length)
+            {
+                var fallbackPowerId = powerSet.Power[localPowerIndex];
+                if (fallbackPowerId >= 0 && fallbackPowerId < DatabaseAPI.Database.Power.Length)
+                {
+                    powerUid = DatabaseAPI.Database.Power[fallbackPowerId]?.FullName ?? string.Empty;
+                    return !string.IsNullOrWhiteSpace(powerUid);
+                }
+            }
+
+            return false;
+        }
+
+        private static bool IsLegacyInherentPowerSetReference(string rawPowerSetName, int powerSetIndex)
+        {
+            return powerSetIndex == 2 ||
+                   rawPowerSetName.Contains("Inherent", StringComparison.OrdinalIgnoreCase);
+        }
+
+        private static bool TryResolveInherentPowerUid(string displayName, out string powerUid)
+        {
+            powerUid = string.Empty;
+            if (string.IsNullOrWhiteSpace(displayName))
+            {
+                return false;
+            }
+
+            var normalizedDisplayName = NormalizeLookupKey(displayName);
+            var matches = DatabaseAPI.Database.Powersets
+                .Where(powerSet => powerSet is { SetType: Enums.ePowerSetType.Inherent })
+                .SelectMany(powerSet => powerSet!.Power
+                    .Where(powerId => powerId >= 0 && powerId < DatabaseAPI.Database.Power.Length)
+                    .Select(powerId => DatabaseAPI.Database.Power[powerId]))
+                .Where(power => power != null &&
+                               (string.Equals(power.DisplayName, displayName, StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(power.PowerName, displayName, StringComparison.OrdinalIgnoreCase) ||
+                                string.Equals(NormalizeLookupKey(power.DisplayName), normalizedDisplayName, StringComparison.Ordinal) ||
+                                string.Equals(NormalizeLookupKey(power.PowerName), normalizedDisplayName, StringComparison.Ordinal) ||
+                                string.Equals(NormalizeLookupKey(ExtractLeafName(power.FullName)), normalizedDisplayName, StringComparison.Ordinal)))
+                .Select(power => power!.FullName)
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .Take(2)
+                .ToArray();
+            if (matches.Length != 1)
+            {
+                return false;
+            }
+
+            powerUid = matches[0];
+            return true;
+        }
+
+        private static bool TryResolveLegacyFitnessPower(
+            string displayName,
+            int localPowerIndex,
+            out string powerUid,
+            out int staticIndex)
+        {
+            powerUid = string.Empty;
+            staticIndex = -1;
+
+            var normalizedDisplayName = NormalizeLookupKey(displayName);
+            if (string.Equals(normalizedDisplayName, "QUICK", StringComparison.Ordinal) ||
+                string.Equals(normalizedDisplayName, "SWIFT", StringComparison.Ordinal) ||
+                localPowerIndex == 0)
+            {
+                powerUid = "Pool.Fitness.Quick";
+                staticIndex = 1797;
+                return true;
+            }
+
+            if (string.Equals(normalizedDisplayName, "HURDLE", StringComparison.Ordinal) || localPowerIndex == 1)
+            {
+                powerUid = "Pool.Fitness.Hurdle";
+                staticIndex = 1798;
+                return true;
+            }
+
+            if (string.Equals(normalizedDisplayName, "HEALTH", StringComparison.Ordinal) || localPowerIndex == 2)
+            {
+                powerUid = "Pool.Fitness.Health";
+                staticIndex = 1799;
+                return true;
+            }
+
+            if (string.Equals(normalizedDisplayName, "STAMINA", StringComparison.Ordinal) || localPowerIndex == 3)
+            {
+                powerUid = "Pool.Fitness.Stamina";
+                staticIndex = 1800;
+                return true;
+            }
+
+            return false;
+        }
+
+        private static void ParseLegacyInternalSlot(
+            string slotToken,
+            out LegacyMxdEnhancementRef? enhancement,
+            out LegacyMxdEnhancementRef? flippedEnhancement)
+        {
+            enhancement = null;
+            flippedEnhancement = null;
+            if (string.IsNullOrWhiteSpace(slotToken))
+            {
+                return;
+            }
+
+            var slotParts = slotToken.Split('~');
+            if (slotParts.Length > 6)
+            {
+                enhancement = CreateLegacyInternalEnhancementRef(slotParts, 0);
+                if (slotParts.Length > 13)
+                {
+                    flippedEnhancement = CreateLegacyInternalEnhancementRef(slotParts, 7);
+                }
+
+                return;
+            }
+
+            if (slotParts.Length > 3)
+            {
+                var staticIndex = ParseLegacyInt(slotParts[0]);
+                if (staticIndex >= 0)
+                {
+                    enhancement = new LegacyMxdEnhancementRef
+                    {
+                        SavedStaticIndex = staticIndex,
+                        SavedUid = string.Empty,
+                        RelativeLevelRaw = ParseLegacyInt(slotParts[1]),
+                        GradeRaw = ParseLegacyInt(slotParts[2]),
+                        IoLevel = ClampIoLevel(ParseLegacyInt(slotParts[3]))
+                    };
+                }
+            }
+        }
+
+        private static LegacyMxdEnhancementRef? CreateLegacyInternalEnhancementRef(IReadOnlyList<string> slotParts, int offset)
+        {
+            if (slotParts.Count <= offset + 6)
+            {
+                return null;
+            }
+
+            var setName = slotParts[offset].Trim();
+            var enhancementName = slotParts[offset + 1].Trim();
+            var staticIndex = ParseLegacyInt(slotParts[offset + 3]);
+            if (staticIndex < 0 &&
+                string.IsNullOrWhiteSpace(setName) &&
+                (string.IsNullOrWhiteSpace(enhancementName) ||
+                 string.Equals(enhancementName, "Empty", StringComparison.OrdinalIgnoreCase)))
+            {
+                return null;
+            }
+
+            var savedUid = string.IsNullOrWhiteSpace(setName)
+                ? enhancementName
+                : $"{setName}.{enhancementName}";
+            return new LegacyMxdEnhancementRef
+            {
+                SavedStaticIndex = staticIndex >= 0 ? staticIndex : null,
+                SavedUid = savedUid,
+                RelativeLevelRaw = ParseLegacyInt(slotParts[offset + 4]),
+                GradeRaw = ParseLegacyInt(slotParts[offset + 5]),
+                IoLevel = ClampIoLevel(ParseLegacyInt(slotParts[offset + 6]))
+            };
+        }
+
+        private static List<LegacyPlannerPowerListing> ExtractPlannerPowerListings(string text)
+        {
+            var listings = new List<LegacyPlannerPowerListing>();
+            var normalizedText = text
+                .Replace("\r\n", "\n", StringComparison.Ordinal)
+                .Replace('\r', '\n');
+            var lines = normalizedText.Split('\n');
+            var section = 0;
+            foreach (var line in lines)
+            {
+                var trimmed = line.TrimEnd();
+                if (trimmed.StartsWith("|", StringComparison.Ordinal))
+                {
+                    break;
+                }
+
+                if (Regex.IsMatch(trimmed, @"^-{3,}$"))
+                {
+                    section++;
+                    continue;
+                }
+
+                if (section == 0)
+                {
+                    continue;
+                }
+
+                var match = Regex.Match(
+                    trimmed,
+                    @"^Level\s+(?<level>\d+)\s*:\s*(?<power>[^\t]+?)\s*(?:\t|$)",
+                    RegexOptions.IgnoreCase);
+                if (!match.Success)
+                {
+                    continue;
+                }
+
+                var powerName = match.Groups["power"].Value.Trim();
+                listings.Add(new LegacyPlannerPowerListing(
+                    int.Parse(match.Groups["level"].Value, CultureInfo.InvariantCulture),
+                    powerName,
+                    section > 1,
+                    string.Equals(powerName, "[Empty]", StringComparison.OrdinalIgnoreCase)));
+            }
+
+            return listings;
+        }
+
+        private static string ReadNextNonEmptyLine(StringReader reader)
+        {
+            string? line;
+            while ((line = reader.ReadLine()) != null)
+            {
+                if (!string.IsNullOrWhiteSpace(line))
+                {
+                    return line.Trim();
+                }
+            }
+
+            return string.Empty;
+        }
+
+        private static string[] SplitDelimited(string line)
+        {
+            return string.IsNullOrWhiteSpace(line)
+                ? []
+                : line.Split('|', StringSplitOptions.None);
+        }
+
+        private static int ParseLegacyInt(string token)
+        {
+            return int.TryParse(token?.Trim(), NumberStyles.Integer, CultureInfo.InvariantCulture, out var value)
+                ? value
+                : 0;
+        }
+
+        private static int? ClampIoLevel(int level)
+        {
+            if (level < 0)
+            {
+                return null;
+            }
+
+            return Math.Min(level, 49);
+        }
+
+        private static bool RemainingTokensAreBlank(IReadOnlyList<string> tokens, int offset)
+        {
+            for (var index = offset; index < tokens.Count; index++)
+            {
+                if (!string.IsNullOrWhiteSpace(tokens[index]))
+                {
+                    return false;
+                }
+            }
+
+            return true;
+        }
+
+        private static void RequireRemainingTokenCount(IReadOnlyList<string> tokens, int offset, int requiredCount, string context)
+        {
+            if (offset + requiredCount > tokens.Count)
+            {
+                throw new InvalidDataException($"The legacy MHD payload ended unexpectedly while reading {context}.");
+            }
+        }
+
+        private static string NormalizeLegacyPowerLeafName(string displayName)
+        {
+            return displayName
+                .Trim()
+                .Replace(" ", "_", StringComparison.Ordinal)
+                .Replace("-", "_", StringComparison.Ordinal)
+                .Replace("/", "_", StringComparison.Ordinal)
+                .Replace("\\", "_", StringComparison.Ordinal);
+        }
+
+        private static string NormalizeLookupKey(string value)
+        {
+            return Regex.Replace(value ?? string.Empty, @"[^A-Z0-9]+", string.Empty, RegexOptions.IgnoreCase)
+                .ToUpperInvariant();
         }
 
         private static LegacyMxdBuild ParsePayloadBytes(byte[] bytes, string legacyTag, LegacyHomecomingMap compatibilityMap)
@@ -463,6 +1233,16 @@ namespace Mids_Reborn.Core.Compatibility
 
                 if (startIndex < 0)
                 {
+                    startIndex = line.IndexOf(LegacyUncompressed, StringComparison.OrdinalIgnoreCase);
+                }
+
+                if (startIndex < 0)
+                {
+                    startIndex = line.IndexOf(LegacyCompressed, StringComparison.OrdinalIgnoreCase);
+                }
+
+                if (startIndex < 0)
+                {
                     continue;
                 }
 
@@ -479,7 +1259,17 @@ namespace Mids_Reborn.Core.Compatibility
 
             if (lines.Length <= dataIndex + 1)
             {
+                if (string.Equals(header, LegacyUncompressed, StringComparison.OrdinalIgnoreCase))
+                {
+                    return Encoding.UTF8.GetBytes(lines[dataIndex]);
+                }
+
                 throw new InvalidDataException("The legacy MxD payload body was empty.");
+            }
+
+            if (string.Equals(header, LegacyUncompressed, StringComparison.OrdinalIgnoreCase))
+            {
+                return Encoding.UTF8.GetBytes(string.Join("\n", lines[dataIndex..]));
             }
 
             var payload = string.Join("\n", lines[(dataIndex + 1)..]);
@@ -501,7 +1291,8 @@ namespace Mids_Reborn.Core.Compatibility
 
             var rawBytes = isHex ? HexDecodeBytes(encodedBytes) : UuDecodeBytes(encodedBytes);
             if (string.Equals(header, MagicCompressed, StringComparison.Ordinal) ||
-                string.Equals(header, ModernCompressed, StringComparison.OrdinalIgnoreCase))
+                string.Equals(header, ModernCompressed, StringComparison.OrdinalIgnoreCase) ||
+                string.Equals(header, LegacyCompressed, StringComparison.OrdinalIgnoreCase))
             {
                 var uncompressedSize = Convert.ToInt32(headers[1], CultureInfo.InvariantCulture);
                 rawBytes = DecompressChunk(rawBytes, uncompressedSize);

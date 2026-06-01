@@ -4981,7 +4981,9 @@ namespace Mids_Reborn.UI.Forms
                     {
                         loaded = false;
                     }
-                    else if (str.Contains("MxDz") || str.Contains("MxDu"))
+                    else if (str.Contains("MxDz") || str.Contains("MxDu") ||
+                             str.Contains(AppDataPaths.Headers.Save.LegacyCompressed, StringComparison.OrdinalIgnoreCase) ||
+                             str.Contains(AppDataPaths.Headers.Save.LegacyUncompressed, StringComparison.OrdinalIgnoreCase))
                     {
                         Debug.WriteLine("Loading because contains");
                         Stream? mStream = new MemoryStream(new ASCIIEncoding().GetBytes(str));
@@ -6944,6 +6946,7 @@ namespace Mids_Reborn.UI.Forms
                 else
                     ancillarySection.DropDown.SelectedIndex = -1;
 
+                txtName.Text = MidsContext.Character.Name ?? string.Empty;
                 UpdatePowerLists();
                 ProcessLocks();
                 UpdateFooterSummary();
@@ -6970,7 +6973,7 @@ namespace Mids_Reborn.UI.Forms
 
         private static void SelectPoolDropDown(ComboBox dropDown, IPowerset? selectedPowerset)
         {
-            if (dropDown.Items.Count == 0)
+            if (dropDown.Items.Count == 0 || selectedPowerset == null || selectedPowerset.nID < 0)
             {
                 dropDown.SelectedIndex = -1;
                 return;
@@ -6986,7 +6989,7 @@ namespace Mids_Reborn.UI.Forms
                 }
             }
 
-            dropDown.SelectedIndex = selectedIndex >= 0 ? selectedIndex : 0;
+            dropDown.SelectedIndex = selectedIndex;
         }
 
         private static void AuditPoolDropDownSelection(ComboBox dropDown, IPowerset? characterPowerset, int poolSlot)
