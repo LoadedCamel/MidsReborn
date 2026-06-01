@@ -246,7 +246,7 @@ namespace Mids_Reborn.UI.Forms
                 "Enhancement" or "ResEffect" => _effects
                     .Where(effect =>
                         effect.EffectType == (eEffectType)Enum.Parse(typeof(eEffectType), selectedEffectType))
-                    .Select(effect => effect.ETModifies is eEffectType.Mez or eEffectType.MezResist
+                    .Select(effect => effect.ETModifies is eEffectType.Mez or eEffectType.MezProtect or eEffectType.MezResist
                         ?
                         // Include the MezType along with "Mez" for display
                         $"{effect.ETModifies} ({effect.MezType})"
@@ -254,7 +254,7 @@ namespace Mids_Reborn.UI.Forms
                     .Distinct()
                     .OrderBy(effectType => effectType)
                     .ToList(),
-                "Mez" or "MezResist" => _effects
+                "Mez" or "MezProtect" or "MezResist" => _effects
                     .Where(effect =>
                         effect.EffectType == (eEffectType)Enum.Parse(typeof(eEffectType), selectedEffectType))
                     .Select(effect => effect.MezType.ToString())
@@ -290,7 +290,7 @@ namespace Mids_Reborn.UI.Forms
                                  {
                                      "Defense" or "Resistance" or "DamageBuff" => effect.DamageType.ToString() == selectedValue,
                                      "Enhancement" or "ResEffect" => selectedValue.Contains(effect.ETModifies.ToString()),
-                                     _ => selectedEffectType is not ("Mez" or "MezResist") || effect.MezType.ToString() == selectedValue
+                                     _ => selectedEffectType is not ("Mez" or "MezProtect" or "MezResist") || effect.MezType.ToString() == selectedValue
                                  })
                 .ToList();
 
@@ -374,7 +374,7 @@ namespace Mids_Reborn.UI.Forms
 
                             break;
                         }
-                    case eEffectType.Mez or eEffectType.MezResist:
+                    case eEffectType.Mez or eEffectType.MezProtect or eEffectType.MezResist:
                         {
                             if (cbEffectType.SelectedIndex > 0)
                             {
@@ -457,7 +457,7 @@ namespace Mids_Reborn.UI.Forms
 
                             break;
                         }
-                    case eEffectType.Mez or eEffectType.MezResist:
+                    case eEffectType.Mez or eEffectType.MezProtect or eEffectType.MezResist:
                         {
                             if (cbEffectType.SelectedIndex > 0)
                             {

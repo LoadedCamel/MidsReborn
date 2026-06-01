@@ -193,6 +193,7 @@ public static class TargetingExtensions
         Enums.eEffectType.HitPoints, Enums.eEffectType.Heal, Enums.eEffectType.Absorb,
         Enums.eEffectType.PerceptionRadius, Enums.eEffectType.StealthRadiusPlayer,
         Enums.eEffectType.SpeedRunning, Enums.eEffectType.SpeedFlying, Enums.eEffectType.SpeedJumping, Enums.eEffectType.JumpHeight,
+        Enums.eEffectType.MezProtect,
         Enums.eEffectType.MezResist,
         // CoH UI "Endurance Reduction" (discount %) — higher is better.
         Enums.eEffectType.EnduranceDiscount

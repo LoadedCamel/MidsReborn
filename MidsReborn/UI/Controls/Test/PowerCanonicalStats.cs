@@ -296,9 +296,10 @@ public static class PowerCanonicalStats
 
             if (Math.Max(baseDuration, enhancedDuration) > Eps)
             {
-                var durationTooltip = pEnh.Effects.Any(e => e.EffectType == Enums.eEffectType.Mez)
+                var durationEffectType = pEnh.Effects[durationEffectId].EffectType;
+                var durationTooltip = durationEffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezProtect
                     ? string.Join("\r\n", pEnh.Effects
-                        .Where(e => e.EffectType == Enums.eEffectType.Mez &&
+                        .Where(e => e.EffectType == durationEffectType &&
                                     e.ToWho == pEnh.Effects[durationEffectId].ToWho &&
                                     Math.Abs(e.Duration - enhancedDuration) <= 0.1 &&
                                     ((e.PvMode == Enums.ePvX.Any) |

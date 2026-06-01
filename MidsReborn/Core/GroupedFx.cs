@@ -202,7 +202,8 @@ namespace Mids_Reborn.Core
         private static readonly Dictionary<string, string> PresentationTokenOverrides = new(StringComparer.Ordinal)
         {
             ["DamageBuff"] = "Damage Buff",
-            ["MezResist"] = "Mez Resistance",
+            ["MezProtect"] = "Status Protection",
+            ["MezResist"] = "Status Resistance",
             ["RechargeTime"] = "Recharge Speed",
             ["HitPoints"] = "Hit Points",
             ["ToHit"] = "To-Hit",
@@ -225,7 +226,7 @@ namespace Mids_Reborn.Core
 
         private static readonly Dictionary<string, string> PresentationPhraseOverrides = new(StringComparer.Ordinal)
         {
-            ["Mez Resist"] = "Mez Resistance",
+            ["Mez Resist"] = "Status Resistance",
             ["Recharge Time"] = "Recharge Speed",
             ["Slf"] = "Self",
             ["Tgt"] = "Target"
@@ -297,6 +298,7 @@ namespace Mids_Reborn.Core
             {
                 // Show typed resistance before companion mez/status resistance
                 // when both come from the same source bonus/effect bundle.
+                Enums.eEffectType.MezProtect => 1,
                 Enums.eEffectType.MezResist => 1,
                 _ => 0
             };
@@ -794,7 +796,7 @@ namespace Mids_Reborn.Core
                 Enums.eEffectType.Defense or Enums.eEffectType.Elusivity or Enums.eEffectType.Resistance or Enums.eEffectType.DamageBuff =>
                     ComputeVectors(this, power, presentationEffectType),
 
-                Enums.eEffectType.Mez or Enums.eEffectType.MezResist =>
+                Enums.eEffectType.Mez or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist =>
                     ComputeVectors(this, power, Enums.eEffectType.Mez),
 
                 Enums.eEffectType.Enhancement when primaryEffect.ETModifies is Enums.eEffectType.Defense
@@ -864,7 +866,7 @@ namespace Mids_Reborn.Core
                 return string.Empty;
             }
 
-            if (category == Enums.eEffectType.Mez || category == Enums.eEffectType.MezResist)
+            if (category == Enums.eEffectType.Mez || category == Enums.eEffectType.MezProtect || category == Enums.eEffectType.MezResist)
             {
                 var set = fx.Select(e => e.MezType).Distinct().ToList();
                 var all = GetAllMez();
@@ -1089,6 +1091,7 @@ namespace Mids_Reborn.Core
                     break;
 
                 case Enums.eEffectType.Mez:
+                case Enums.eEffectType.MezProtect:
                 case Enums.eEffectType.Enhancement when etModifies == Enums.eEffectType.Mez:
                     if (allMez.All(e => e.Value >= 0))
                     {
@@ -1181,22 +1184,47 @@ namespace Mids_Reborn.Core
             return value.StartsWith('-') ? value[1..] : $"-{value}";
         }
 
-        private static string ReplaceMezResistanceLabel(string baseEffectString, IEffect effect, string vectors)
+        private static string GetGroupedMezLabel(Enums.eEffectType effectType, Enums.eMez mezType, string vectors)
+        {
+            var normalizedVectors = MezSemantics.NormalizeMezVectorLabels(vectors);
+            return effectType switch
+            {
+                Enums.eEffectType.MezProtect => string.IsNullOrWhiteSpace(normalizedVectors) ||
+                                                MezSemantics.MatchesSingleMezVector(mezType, normalizedVectors)
+                    ? MezSemantics.GetStatusProtectionLabel(mezType)
+                    : $"Status Protection ({normalizedVectors})",
+                Enums.eEffectType.MezResist => string.IsNullOrWhiteSpace(normalizedVectors) ||
+                                               MezSemantics.MatchesSingleMezVector(mezType, normalizedVectors)
+                    ? MezSemantics.GetStatusResistanceLabel(mezType)
+                    : $"Status Resistance ({normalizedVectors})",
+                _ => normalizedVectors
+            };
+        }
+
+        private static string ReplaceMezStatusLabel(string baseEffectString, IEffect effect, string vectors)
         {
             if (effect.EffectType == Enums.eEffectType.Resistance && effect.MezType != Enums.eMez.None)
             {
                 return Regex.Replace(
                     baseEffectString,
-                    @"(?:Resistance|MezResist)\([^)]*\)|Mez Resistance \([^)]*\)",
-                    $"Mez Resistance ({vectors})");
+                    @"(?:Resistance|MezResist)\([^)]*\)|Mez Resistance \([^)]*\)|Status Resistance \([^)]*\)",
+                    $"Status Resistance ({MezSemantics.NormalizeMezVectorLabels(vectors)})");
+            }
+
+            if (effect.EffectType is Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist)
+            {
+                var currentLabel = effect.EffectType == Enums.eEffectType.MezProtect
+                    ? MezSemantics.GetStatusProtectionLabel(effect.MezType)
+                    : MezSemantics.GetStatusResistanceLabel(effect.MezType);
+                return baseEffectString.Replace(currentLabel, GetGroupedMezLabel(effect.EffectType, effect.MezType, vectors));
             }
 
             return baseEffectString.Replace(
                     $"{effect.EffectType}({effect.MezType})",
-                    $"{effect.EffectType}({vectors})")
+                    $"{effect.EffectType}({MezSemantics.NormalizeMezVectorLabels(vectors)})")
                 .Replace(
                     $"Mez Resistance ({effect.MezType})",
-                    $"Mez Resistance ({vectors})");
+                    $"Status Resistance ({MezSemantics.NormalizeMezVectorLabels(vectors)})");
         }
 
         // ===== Tooltip =====
@@ -1240,7 +1268,7 @@ namespace Mids_Reborn.Core
                             .Select(e => $"{power.Effects[e].EffectType}")
                             .ToList(),
 
-                    Enums.eEffectType.Mez or Enums.eEffectType.MezResist => IncludedEffects
+                    Enums.eEffectType.Mez or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist => IncludedEffects
                         .Select(e => $"{power.Effects[e].MezType}")
                         .ToList(),
 
@@ -1309,8 +1337,8 @@ namespace Mids_Reborn.Core
                                 : Regex.Replace(baseEffectString, @"(SpeedFlying|SpeedJumping|SpeedRunning)", vectors)
                             : Regex.Replace(baseEffectString, @"(SpeedFlying|SpeedJumping|SpeedRunning)", "Movement Speed"),
 
-                    Enums.eEffectType.Mez or Enums.eEffectType.MezResist =>
-                        ReplaceMezResistanceLabel(baseEffectString, effect, vectors),
+                    Enums.eEffectType.Mez or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist =>
+                        ReplaceMezStatusLabel(baseEffectString, effect, vectors),
 
                     Enums.eEffectType.Enhancement when effect.ETModifies is Enums.eEffectType
                             .Mez
@@ -1396,7 +1424,7 @@ namespace Mids_Reborn.Core
                 {
                     Enums.eEffectType.Defense or Enums.eEffectType.Elusivity => ComputeVectors(gre, pEnh, cat),
                     Enums.eEffectType.Resistance => ComputeVectors(gre, pEnh, cat),
-                    Enums.eEffectType.Mez or Enums.eEffectType.MezResist => ComputeVectors(gre, pEnh, Enums.eEffectType.Mez),
+                    Enums.eEffectType.Mez or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist => ComputeVectors(gre, pEnh, Enums.eEffectType.Mez),
                     _ => ""
                 };
 
@@ -1411,10 +1439,16 @@ namespace Mids_Reborn.Core
                 return string.IsNullOrEmpty(vec) ? "Mez" : $"Mez ({vec})";
             }
 
+            if (gre.EffectType == Enums.eEffectType.MezProtect)
+            {
+                var vec = ComputeVectors(gre, pEnh, Enums.eEffectType.Mez);
+                return GetGroupedMezLabel(Enums.eEffectType.MezProtect, gre.MezType, vec);
+            }
+
             if (gre.EffectType == Enums.eEffectType.MezResist)
             {
-                var vec = ComputeVectors(gre, pEnh, Enums.eEffectType.MezResist);
-                return string.IsNullOrEmpty(vec) ? "Mez Resist" : $"Mez Resist ({vec})";
+                var vec = ComputeVectors(gre, pEnh, Enums.eEffectType.Mez);
+                return GetGroupedMezLabel(Enums.eEffectType.MezResist, gre.MezType, vec);
             }
 
             // Defense / Resistance / Elusivity labels enumerate vectors when not All
@@ -1469,7 +1503,7 @@ namespace Mids_Reborn.Core
             bool asPercent = gre.EffectType is Enums.eEffectType.Defense or Enums.eEffectType.Resistance
                                                   or Enums.eEffectType.DamageBuff or Enums.eEffectType.ToHit
                                                   or Enums.eEffectType.RechargeTime or Enums.eEffectType.Elusivity
-                                                  or Enums.eEffectType.Enhancement or Enums.eEffectType.MezResist;
+                                                  or Enums.eEffectType.Enhancement or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist;
             bool asMagnitude = gre.EffectType == Enums.eEffectType.Mez;
 
             string fmt(float v) => asMagnitude
@@ -1625,6 +1659,7 @@ namespace Mids_Reborn.Core
                     or Enums.eEffectType.DamageBuff
                     or Enums.eEffectType.Elusivity
                     or Enums.eEffectType.Mez
+                    or Enums.eEffectType.MezProtect
                     or Enums.eEffectType.MezResist
                     or Enums.eEffectType.ResEffect
                     or Enums.eEffectType.Enhancement)
@@ -1716,7 +1751,7 @@ namespace Mids_Reborn.Core
                     effect.PvMode == fxIdentifier.PvMode &&
                     effect.IgnoreScaling == fxIdentifier.IgnoreScaling),
 
-                Enums.eEffectType.MezResist or Enums.eEffectType.Defense or Enums.eEffectType.Resistance
+                Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist or Enums.eEffectType.Defense or Enums.eEffectType.Resistance
                     or Enums.eEffectType.Elusivity or Enums.eEffectType.ResEffect => FindEffectIndices(power, effect =>
                     GetPresentationEffectType(effect) == fxIdentifier.EffectType &&
                     effect.ToWho == fxIdentifier.ToWho &&
@@ -1999,7 +2034,7 @@ namespace Mids_Reborn.Core
                 Enums.eEffectType.DamageBuff => BuildDamageBuffGroupingSeed(effect),
 
                 Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.Elusivity
-                    or Enums.eEffectType.MezResist or Enums.eEffectType.ResEffect or Enums.eEffectType.Enhancement => new GroupAssemblySeed(
+                    or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist or Enums.eEffectType.ResEffect or Enums.eEffectType.Enhancement => new GroupAssemblySeed(
                     CreateGroupedFxIdentifier(effect, presentationEffectType, etModifies: effect.ETModifies),
                     effect.BuffedMag,
                     presentationEffectType == Enums.eEffectType.Enhancement
@@ -2378,7 +2413,7 @@ namespace Mids_Reborn.Core
             {
                 var fxIdentifier = effects[i].EffectType switch
                 {
-                    Enums.eEffectType.MezResist or Enums.eEffectType.Mez => new FxId
+                    Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist or Enums.eEffectType.Mez => new FxId
                     {
                         EffectType = effects[i].EffectType,
                         DamageType = Enums.eDamage.None,
@@ -2445,7 +2480,8 @@ namespace Mids_Reborn.Core
                 effectShorts.Add(effects[i].EffectType switch
                 {
                     Enums.eEffectType.ResEffect => $"{(effects[i].BuffedMag < 0 ? "-" : "")}{effects[i].EffectType} ({effects[i].ETModifies}){toWho}",
-                    Enums.eEffectType.MezResist => $"{effects[i].EffectType} ({effects[i].MezType}){toWho}",
+                    Enums.eEffectType.MezProtect => $"{MezSemantics.GetStatusProtectionLabel(effects[i].MezType)}{toWho}",
+                    Enums.eEffectType.MezResist => $"{MezSemantics.GetStatusResistanceLabel(effects[i].MezType)}{toWho}",
                     Enums.eEffectType.Mez => $"{effects[i].ToWho} {mezType}",
                     Enums.eEffectType.Enhancement => $"{effects[i].ToWho} {(effects[i].BuffedMag > 0 ? "+" : "-")}{effects[i].ETModifies}",
                     _ => $"{(effects[i].BuffedMag < 0 ? "-" : "")}{effects[i].EffectType}{toWho}"
@@ -2783,6 +2819,15 @@ namespace Mids_Reborn.Core
 
                     break;
 
+                case Enums.eEffectType.MezProtect:
+                case Enums.eEffectType.MezResist:
+                    rankedEffect.Name = effectType == Enums.eEffectType.MezProtect
+                        ? MezSemantics.GetStatusProtectionLabel(effectSource.MezType, shortForm: true)
+                        : MezSemantics.GetStatusResistanceLabel(effectSource.MezType, shortForm: true);
+                    rankedEffect.Value = FormatValueWithTarget(effectSource.BuffedMag, effectSource.DisplayPercentage);
+                    rankedEffect.ToolTip = greTooltip;
+                    break;
+
                 case Enums.eEffectType.Translucency:
                     rankedEffect.Name = "Trnslcncy";
                     rankedEffect.Value = FormatValueWithTarget(effectSource.BuffedMag, effectSource.DisplayPercentage);
@@ -2810,7 +2855,6 @@ namespace Mids_Reborn.Core
                 case Enums.eEffectType.Resistance:
                 case Enums.eEffectType.Defense:
                 case Enums.eEffectType.Elusivity:
-                case Enums.eEffectType.MezResist:
                 case Enums.eEffectType.Enhancement:
                 case Enums.eEffectType.ResEffect:
                     rankedEffect.Name = effectType == Enums.eEffectType.Enhancement

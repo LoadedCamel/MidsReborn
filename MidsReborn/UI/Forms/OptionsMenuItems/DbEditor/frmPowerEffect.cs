@@ -500,6 +500,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     switch (MyFx.EffectType)
                     {
                         case Enums.eEffectType.Mez:
+                        case Enums.eEffectType.MezProtect:
                         case Enums.eEffectType.MezResist:
                             SelectItemByName(lvSubAttribute, MyFx.MezType.ToString());
                             break;
@@ -612,6 +613,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     break;
 
                 case Enums.eEffectType.Mez:
+                case Enums.eEffectType.MezProtect:
                 case Enums.eEffectType.MezResist:
                     MyFx.MezType = (Enums.eMez)sIndex;
                     break;
@@ -1065,7 +1067,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     lvSubAttribute.Columns[0].Width = -2;
                     break;
                 
-                case Enums.eEffectType.Mez or Enums.eEffectType.MezResist:
+                case Enums.eEffectType.Mez or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist:
                     strArray = Enum.GetNames<Enums.eMez>();
                     index1 = (int)MyFx.MezType;
                     lvSubAttribute.Columns[0].Text = "Mez Type";

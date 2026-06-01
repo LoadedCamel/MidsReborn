@@ -117,6 +117,7 @@ namespace Mids_Reborn.UI.Forms
                 Enums.eEffectType.Elusivity,
                 Enums.eEffectType.Enhancement,
                 Enums.eEffectType.Mez,
+                Enums.eEffectType.MezProtect,
                 Enums.eEffectType.MezResist,
                 Enums.eEffectType.ResEffect,
                 Enums.eEffectType.Resistance
@@ -262,6 +263,7 @@ namespace Mids_Reborn.UI.Forms
                 case Enums.eEffectType.Resistance when fxKey.DamageType == Enums.eDamage.None:
                 case Enums.eEffectType.Elusivity when fxKey.DamageType == Enums.eDamage.None:
                 case Enums.eEffectType.Mez when fxKey.MezType == Enums.eMez.None:
+                case Enums.eEffectType.MezProtect when fxKey.MezType == Enums.eMez.None:
                 case Enums.eEffectType.MezResist when fxKey.MezType == Enums.eMez.None:
                 case Enums.eEffectType.ResEffect when fxKey.ETModifies == Enums.eEffectType.None:
                     return keysList.Any(e => e.EffectType == fxKey.EffectType);
@@ -381,6 +383,7 @@ namespace Mids_Reborn.UI.Forms
                             break;
 
                         case Enums.eEffectType.Mez:
+                        case Enums.eEffectType.MezProtect:
                         case Enums.eEffectType.MezResist:
                             ret = Enum.TryParse(selectedVector, out mezType);
                             if (!ret) mezType = Enums.eMez.None;
@@ -650,6 +653,7 @@ namespace Mids_Reborn.UI.Forms
                     break;
 
                 case Enums.eEffectType.Mez:
+                case Enums.eEffectType.MezProtect:
                 case Enums.eEffectType.MezResist:
                     vectorsList = Enum.GetNames(typeof(Enums.eMez)).ToList();
                     lvVector.Columns[0].Text = "Mez Type";

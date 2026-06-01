@@ -791,9 +791,10 @@ namespace Mids_Reborn.UI.Forms.Controls
                     s1 = s2;
                 }
 
-                durationTip = enhancedPower.Effects.Any(e => e.EffectType == Enums.eEffectType.Mez)
+                var durationEffectType = enhancedPower.Effects[durationEffectId].EffectType;
+                durationTip = durationEffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezProtect
                     ? string.Join("\r\n", enhancedPower.Effects
-                        .Where(e => e.EffectType == Enums.eEffectType.Mez &&
+                        .Where(e => e.EffectType == durationEffectType &&
                                     e.ToWho == enhancedPower.Effects[durationEffectId].ToWho &&
                                     Math.Abs(e.Duration - s2) <= 0.1 &&
                                     e.PvMode == Enums.ePvX.Any |
@@ -820,9 +821,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                              pBase.Effects[durationEffectId].Mag < 0);
 
             var validMezProt = durationEffectId > -1 &&
-                               pBase.Effects
-                                   .Where(e => e.EffectType == Enums.eEffectType.Mez)
-                                   .Any(e => e.Mag < 0);
+                               pBase.Effects[durationEffectId].EffectType == Enums.eEffectType.MezProtect;
 
             if (pBase.UsageTime > 0)
             {
@@ -912,6 +911,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                              or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x
                              or Enums.eEffectType.MovementControl or Enums.eEffectType.MovementFriction
                              or Enums.eEffectType.Rage or Enums.eEffectType.LevelShift) ||
+                         e is {EffectType: Enums.eEffectType.MezProtect} ||
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid))
                 : GroupedFx.FilterListItemsExt(EffectsItemPairs,
@@ -920,6 +920,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                              or Enums.eEffectType.DesignerStatus or Enums.eEffectType.EntCreate or Enums.eEffectType.EntCreate_x
                              or Enums.eEffectType.MovementControl or Enums.eEffectType.MovementFriction
                              or Enums.eEffectType.Rage or Enums.eEffectType.LevelShift) ||
+                         e is {EffectType: Enums.eEffectType.MezProtect} ||
                          (e is {EffectType: Enums.eEffectType.Mez, ToWho: Enums.eToWho.Self} or
                              {EffectType: Enums.eEffectType.Mez, MezType: Enums.eMez.Taunt or Enums.eMez.Teleport} && e.MezType is not Enums.eMez.Afraid));
 
@@ -1070,7 +1071,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                 new()
                 {
                     Label = "Status",
-                    Filter = e => e.EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezResist
+                    Filter = e => e.EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist
                         or Enums.eEffectType.Translucency,
                     ItemPairsEx = new List<KeyValuePair<GroupedFx, PairedListEx.Item>>()
                 },
@@ -1759,9 +1760,13 @@ namespace Mids_Reborn.UI.Forms.Controls
                 }
                 else
                 {
-                    title = fx.EffectType != Enums.eEffectType.Mez
-                        ? names[(int)fx.EffectType]
-                        : Enums.GetMezName((Enums.eMezShort)fx.MezType);
+                    title = fx.EffectType switch
+                    {
+                        Enums.eEffectType.Mez => Enums.GetMezName((Enums.eMezShort)fx.MezType),
+                        Enums.eEffectType.MezProtect => MezSemantics.GetStatusProtectionLabel(fx.MezType),
+                        Enums.eEffectType.MezResist => MezSemantics.GetStatusResistanceLabel(fx.MezType),
+                        _ => names[(int)fx.EffectType]
+                    };
                 }
 
                 var temp = string.Empty;
@@ -1904,6 +1909,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                     case Enums.eEffectType.Resistance:
                     case Enums.eEffectType.ResEffect:
                     case Enums.eEffectType.Enhancement:
+                    case Enums.eEffectType.MezProtect:
                     case Enums.eEffectType.MezResist:
                     case Enums.eEffectType.RechargeTime:
                     case Enums.eEffectType.SpeedFlying:

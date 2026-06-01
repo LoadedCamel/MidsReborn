@@ -345,7 +345,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         flag = false;
                         break;
                     default:
-                        if (EffectType == Enums.eEffectType.SilentKill)
+                        if (EffectType is Enums.eEffectType.SilentKill or Enums.eEffectType.Mez or Enums.eEffectType.MezProtect)
                         {
                             flag = false;
                             break;
@@ -360,7 +360,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                             case Enums.eAspect.Abs:
                                 return false;
                             case Enums.eAspect.Cur:
-                                if (EffectType is Enums.eEffectType.Mez or Enums.eEffectType.StealthRadius or Enums.eEffectType.StealthRadiusPlayer)
+                                if (EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezProtect or Enums.eEffectType.StealthRadius or Enums.eEffectType.StealthRadiusPlayer)
                                     return false;
                                 break;
                         }
@@ -788,11 +788,20 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         break;
                     }
 
+                case Enums.eEffectType.MezProtect:
+                    {
+                        if (Duration > 0.0 && (!simple || (MezType != Enums.eMez.None && MezType != Enums.eMez.Knockback && MezType != Enums.eMez.Knockup)))
+                            trailing = $"{DisplayValueFormatter.FormatSeconds(Duration)} second ";
+
+                        var magPart = $" (Mag {magText})";
+                        result = $"{trailing}{effectLabel}{magPart}{toWhoText}";
+                        break;
+                    }
+
                 case Enums.eEffectType.MezResist:
                     {
-                        var mezName = Enum.GetName(MezType.GetType(), MezType);
                         var magPart = noMag ? string.Empty : $" {magText}";
-                        result = $"{effectLabel}({mezName}){magPart}{toWhoText}{trailing}";
+                        result = $"{effectLabel}{magPart}{toWhoText}{trailing}";
                         break;
                     }
 
@@ -1029,7 +1038,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             // Duration / interval banner (same rules as before)
-            if (!simple || (Scale > 0 && EffectType is Enums.eEffectType.Mez or Enums.eEffectType.Endurance
+            if (!simple || (Scale > 0 && EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezProtect or Enums.eEffectType.Endurance
                                       && !(fromPopup && EffectType == Enums.eEffectType.Endurance &&
                                            Aspect == Enums.eAspect.Max)))
             {
@@ -1097,7 +1106,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
                 else
                 {
-                    sMag = MidsContext.Config.CoDEffectFormat & EffectType != Enums.eEffectType.Mez & !fromPopup
+                    sMag = MidsContext.Config.CoDEffectFormat & EffectType is not (Enums.eEffectType.Mez or Enums.eEffectType.MezProtect) & !fromPopup
                         ? $"({Scale * (AttribType == Enums.eAttribType.Magnitude ? nMagnitude : 1):####0.####} x {ModifierTable}){(DisplayPercentage ? "%" : "")}"
                         : $"{(EffectType == Enums.eEffectType.Enhancement & ETModifies != Enums.eEffectType.EnduranceDiscount ? BuffedMag > 0 ? "+" : "-" : "")}{DisplayValueFormatter.FormatNumber(BuffedMag * (DisplayPercentage ? 100 : 1))}{(DisplayPercentage ? "%" : "")}";
                 }
@@ -1200,11 +1209,24 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     break;
                 }
 
+                case Enums.eEffectType.MezProtect:
+                {
+                    sSubEffect = GetEffectLabelLong();
+                    if (Duration > 0 & (!simple | (MezType != Enums.eMez.None & MezType != Enums.eMez.Knockback &
+                                                   MezType != Enums.eMez.Knockup)))
+                        sDuration =
+                            $"{(MidsContext.Config.CoDEffectFormat & !fromPopup ? $"({Scale:####0.####} x {ModifierTable})" : DisplayValueFormatter.FormatSeconds(Duration))} second ";
+                    if (!noMag)
+                        sMag = $" (Mag {sMag})";
+
+                    sBuild = $"{sDuration}{sSubEffect}{sMag}{sTarget}";
+                    break;
+                }
+
                 case Enums.eEffectType.MezResist:
                 {
-                    sSubEffect = Enum.GetName(typeof(Enums.eMez), MezType);
+                    sSubEffect = GetEffectLabelLong();
                     if (!noMag) sMag = $" {sMag}";
-                    // Keep explicit mez parentheses for protection lines
                     sBuild = $"{sMag} {sEffect}{sTarget}{sDuration}";
                     break;
                 }
@@ -1605,6 +1627,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             if (EffectType is Enums.eEffectType.Enhancement) return EnhancementShort();
             if (EffectType is Enums.eEffectType.ResEffect) return ResEffectShort();
+            if (EffectType is Enums.eEffectType.MezProtect) return MezProtectShort();
             if (EffectType is Enums.eEffectType.MezResist) return MezResistShort();
             return Enums.GetEffectNameShort(EffectType);
         }
@@ -1613,6 +1636,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         {
             if (EffectType == Enums.eEffectType.Enhancement) return EnhancementLong();
             if (EffectType == Enums.eEffectType.ResEffect) return ResEffectLong();
+            if (EffectType is Enums.eEffectType.MezProtect) return MezProtectLong();
             if (EffectType is Enums.eEffectType.MezResist) return MezResistLong();
             return Enums.GetEffectName(EffectType);
         }
@@ -1663,9 +1687,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             };
         }
 
+        private string MezProtectShort()
+        {
+            return MezSemantics.GetStatusProtectionLabel(MezType, shortForm: true);
+        }
+
+        private string MezProtectLong()
+        {
+            return MezSemantics.GetStatusProtectionLabel(MezType);
+        }
+
         private string MezResistShort()
         {
-            return $"Mez Resist ({Enums.GetMezNameShort((Enums.eMezShort)MezType)})";
+            return MezSemantics.GetStatusResistanceLabel(MezType, shortForm: true);
         }
 
         private string EnhancementLong()
@@ -1716,7 +1750,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         private string MezResistLong()
         {
-            return $"Mez Resistance ({Enums.GetMezName(MezType)})";
+            return MezSemantics.GetStatusResistanceLabel(MezType);
         }
 
 
@@ -2315,7 +2349,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         return -1;
                     return nVariableFlag;
                 }
-                if (effect.EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezResist)
+                if (effect.EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist)
                 {
                     if (MezType > effect.MezType)
                         return 1;

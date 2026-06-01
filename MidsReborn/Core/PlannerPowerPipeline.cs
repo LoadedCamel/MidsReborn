@@ -907,12 +907,17 @@ internal sealed class PlannerPowerPipeline
                     }
 
                     var enhanceType = !specialAccuracy
-                        ? (Enums.eEnhance)Enums.StringToFlaggedEnum(
-                            Enum.GetName(typeof(Enums.eEffectType), effectType),
-                            Enums.eEnhance.None)
+                        ? effectType switch
+                        {
+                            Enums.eEffectType.MezProtect => Enums.eEnhance.Mez,
+                            Enums.eEffectType.MezResist => Enums.eEnhance.Mez,
+                            _ => (Enums.eEnhance)Enums.StringToFlaggedEnum(
+                                Enum.GetName(typeof(Enums.eEffectType), effectType),
+                                Enums.eEnhance.None)
+                        }
                         : Enums.eEnhance.Accuracy;
 
-                    var magnitude = effectType == Enums.eEffectType.Mez
+                    var magnitude = effectType is Enums.eEffectType.Mez or Enums.eEffectType.MezProtect
                         ? enhancement.GetEnhancementEffect(enhanceType, (int)powerMath.Effects[effectIndex].MezType, _buffedPowers[hIDX]!.Effects[effectIndex].Math_Mag)
                         : effectType == Enums.eEffectType.ResEffect && powerMath.Effects[effectIndex].ETModifies is Enums.eEffectType.Defense or Enums.eEffectType.Regeneration
                             ? powerMath.Effects[effectIndex].ETModifies switch
@@ -926,7 +931,7 @@ internal sealed class PlannerPowerPipeline
                     {
                         magnitude = 0;
                     }
-                    else if (effectType == Enums.eEffectType.Mez && powerMath.Effects[effectIndex].AttribType == Enums.eAttribType.Duration)
+                    else if (effectType is Enums.eEffectType.Mez or Enums.eEffectType.MezProtect && powerMath.Effects[effectIndex].AttribType == Enums.eAttribType.Duration)
                     {
                         duration = magnitude;
                         magnitude = 0;
@@ -999,7 +1004,12 @@ internal sealed class PlannerPowerPipeline
                 }
 
                 var scheduleEnhance = !specialAccuracy
-                    ? (Enums.eEnhance)Enums.StringToFlaggedEnum(Enum.GetName(effectType.GetType(), effectType), enhanceType)
+                    ? effectType switch
+                    {
+                        Enums.eEffectType.MezProtect => Enums.eEnhance.Mez,
+                        Enums.eEffectType.MezResist => Enums.eEnhance.Mez,
+                        _ => (Enums.eEnhance)Enums.StringToFlaggedEnum(Enum.GetName(effectType.GetType(), effectType), enhanceType)
+                    }
                     : Enums.eEnhance.Accuracy;
                 var diversificationMode = effect.buffMode switch
                 {
@@ -1008,7 +1018,7 @@ internal sealed class PlannerPowerPipeline
                     _ => Enums.eBuffDebuff.Any
                 };
 
-                if (effectType == Enums.eEffectType.Mez)
+                if (effectType is Enums.eEffectType.Mez or Enums.eEffectType.MezProtect)
                 {
                     effect.Math_Mag = Enhancement.ApplyED(scheduleEnhance, effect.Math_Mag, diversificationMode, (int)effect.MezType);
                     effect.Math_Duration = Enhancement.ApplyED(scheduleEnhance, effect.Math_Duration, diversificationMode, (int)effect.MezType);
@@ -1089,6 +1099,7 @@ internal sealed class PlannerPowerPipeline
 
                                 break;
                             case Enums.eEffectType.Mez:
+                            case Enums.eEffectType.MezProtect:
                                 if (powerMath.Effects[index].AttribType == Enums.eAttribType.Duration)
                                 {
                                     duration += _selfEnhance.Mez[(int)powerMath.Effects[index].MezType];

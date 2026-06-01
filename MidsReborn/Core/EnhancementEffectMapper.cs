@@ -30,7 +30,7 @@ public static class EnhancementEffectMapper
             Enums.eEffectType.InterruptTime => Enums.eEnhance.Interrupt,
             Enums.eEffectType.JumpHeight => Enums.eEnhance.JumpHeight,
             Enums.eEffectType.SpeedJumping or Enums.eEffectType.MaxJumpSpeed => Enums.eEnhance.SpeedJumping,
-            Enums.eEffectType.Mez => Enums.eEnhance.Mez,
+            Enums.eEffectType.Mez or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist => Enums.eEnhance.Mez,
             Enums.eEffectType.Range => Enums.eEnhance.Range,
             Enums.eEffectType.RechargeTime => Enums.eEnhance.RechargeTime,
             Enums.eEffectType.Recovery => Enums.eEnhance.Recovery,

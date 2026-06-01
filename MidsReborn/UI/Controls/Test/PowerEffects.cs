@@ -47,7 +47,7 @@ public static class PowerEffects
 
         groups.Add(MakeGroup(
             "Status",
-            Filter(items, id => id.EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezResist),
+            Filter(items, id => id.EffectType is Enums.eEffectType.Mez or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist),
             pBase, pEnh, rankedEffects));
 
         groups.Add(MakeGroup(
@@ -318,6 +318,7 @@ public static class PowerEffects
            or Enums.eEffectType.ToHit
            or Enums.eEffectType.RechargeTime
            or Enums.eEffectType.Elusivity
+           or Enums.eEffectType.MezProtect
            or Enums.eEffectType.MezResist
            or Enums.eEffectType.Enhancement;
 
@@ -392,7 +393,7 @@ public static class PowerEffects
         or Enums.eEffectType.HitPoints or Enums.eEffectType.Heal or Enums.eEffectType.Absorb
         or Enums.eEffectType.PerceptionRadius or Enums.eEffectType.StealthRadius or Enums.eEffectType.StealthRadiusPlayer
         or Enums.eEffectType.SpeedRunning or Enums.eEffectType.SpeedFlying or Enums.eEffectType.SpeedJumping
-        or Enums.eEffectType.JumpHeight or Enums.eEffectType.MezResist
+        or Enums.eEffectType.JumpHeight or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist
         or Enums.eEffectType.EnduranceDiscount;
 
     private static bool IsLowerIsBetter(Enums.eEffectType t) =>

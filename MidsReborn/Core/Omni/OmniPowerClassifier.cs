@@ -54,6 +54,11 @@ public sealed class OmniPowerClassifier
         "Stamina"
     };
 
+    private static readonly HashSet<string> DefaultOffVisibleInherentToggleNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Rest"
+    };
+
     private static readonly HashSet<string> BuildRelevantClassInherents = new(StringComparer.OrdinalIgnoreCase)
     {
         "Assassination",
@@ -150,6 +155,9 @@ public sealed class OmniPowerClassifier
         classification.RedirectKind = ClassifyRedirects(power, scopedPowersByFullName);
         classification.ExecutionOnly = classification.RedirectKind is OmniRedirectKind.ExecutionVariant or OmniRedirectKind.SummonDelivery;
         var visibleInherent = IsVisibleInherent(power, name, set);
+        var defaultOffVisibleInherentToggle = visibleInherent &&
+                                              MapPowerType(power.Type) == Enums.ePowerType.Toggle &&
+                                              DefaultOffVisibleInherentToggleNames.Contains(name);
         var normalBuildPick = IsNormalBuildPickCandidate(
             group,
             power,
@@ -219,7 +227,13 @@ public sealed class OmniPowerClassifier
         }
         else if (classification.PowerType == Enums.ePowerType.Toggle)
         {
-            classification.AlwaysToggle = !offensive && !classification.GrantedSupportPower;
+            classification.AlwaysToggle = !offensive &&
+                                          !classification.GrantedSupportPower &&
+                                          !defaultOffVisibleInherentToggle;
+            if (defaultOffVisibleInherentToggle)
+            {
+                classification.Reasons.Add("visible inherent toggle defaults off");
+            }
         }
 
         if (!power.ShowInManage && !isTemporaryPower && !normalBuildPick)

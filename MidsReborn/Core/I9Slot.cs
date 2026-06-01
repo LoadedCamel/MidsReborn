@@ -539,7 +539,7 @@ namespace Mids_Reborn.Core
                     ["knock", "knockback", "knockup"]),
                 "mez" => new BoostAttribLookup(
                     [Enums.eEnhance.Mez],
-                    [Enums.eEffectType.Mez],
+                    [Enums.eEffectType.Mez, Enums.eEffectType.MezProtect, Enums.eEffectType.MezResist],
                     ["mez", "hold", "immobilize", "immobilization", "sleep", "fear", "confuse", "taunt", "placate", "stun", "intangible"]),
                 "movement" => new BoostAttribLookup(
                     [Enums.eEnhance.SpeedRunning, Enums.eEnhance.SpeedFlying, Enums.eEnhance.SpeedJumping, Enums.eEnhance.JumpHeight, Enums.eEnhance.Slow],

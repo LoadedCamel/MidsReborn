@@ -1175,7 +1175,7 @@ public static class OmniMidsMapper
                 HasProtectionLanguage(plannerText) &&
                 !HasExplicitResistanceLanguage(plannerText, explicitTags);
             semantic = preferProtection
-                ? Map(Enums.eEffectType.Mez, mezType: mezType)
+                ? Map(Enums.eEffectType.MezProtect, mezType: mezType)
                 : Map(Enums.eEffectType.MezResist, mezType: mezType);
             return true;
         }
@@ -1238,7 +1238,7 @@ public static class OmniMidsMapper
             plannerText.Contains("knockback", StringComparison.OrdinalIgnoreCase) ||
             plannerText.Contains("-kb", StringComparison.OrdinalIgnoreCase))
         {
-            semantic = Map(Enums.eEffectType.Mez, mezType: Enums.eMez.Knockback);
+            semantic = Map(Enums.eEffectType.MezProtect, mezType: Enums.eMez.Knockback);
             return true;
         }
 
@@ -1415,7 +1415,7 @@ public static class OmniMidsMapper
         // as AttribType.Duration so Duration derives from Scale*table while Mag remains the
         // raw mez magnitude. Without this, rows like Held/Sleep/Stun import as "0s, Mag 44.7"
         // and planner states such as Domination cannot affect the actual control duration.
-        if (effectType == Enums.eEffectType.Mez &&
+        if (effectType is Enums.eEffectType.Mez or Enums.eEffectType.MezProtect &&
             normalizedType == "attribmod" &&
             (HasTemplateFlag(template, "CombatModDuration") || HasTemplateFlag(template, "ResistDuration")))
         {

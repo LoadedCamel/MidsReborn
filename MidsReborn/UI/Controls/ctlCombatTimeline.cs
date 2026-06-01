@@ -143,6 +143,7 @@ namespace Mids_Reborn.UI.Controls
                 new FxIdentifier(Enums.eEffectType.ToHit, Enums.eToWho.Self, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.DamageBuff, Enums.eToWho.Self, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.Mez, Enums.eToWho.Self, ValueSign.Negative),
+                new FxIdentifier(Enums.eEffectType.MezProtect, Enums.eToWho.Self, ValueSign.Positive),
                 new FxIdentifier(Enums.eEffectType.Enhancement, Enums.eToWho.Self, ValueSign.Positive)
             };
 
@@ -320,6 +321,7 @@ namespace Mids_Reborn.UI.Controls
                     new() {EffectType = Enums.eEffectType.JumpHeight},
                     new() {EffectType = Enums.eEffectType.SpeedJumping},
                     new() {EffectType = Enums.eEffectType.Mez},
+                    new() {EffectType = Enums.eEffectType.MezProtect},
                     new() {EffectType = Enums.eEffectType.MezResist},
                     new() {EffectType = Enums.eEffectType.PerceptionRadius},
                     new() {EffectType = Enums.eEffectType.Recovery},
@@ -370,6 +372,7 @@ namespace Mids_Reborn.UI.Controls
                         Enums.eEffectType.JumpHeight => Indigo4,
                         Enums.eEffectType.MaxFlySpeed or Enums.eEffectType.MaxJumpSpeed or Enums.eEffectType.MaxRunSpeed => LightPurple2,
                         Enums.eEffectType.Mez => Purple,
+                        Enums.eEffectType.MezProtect => LightPurple,
                         Enums.eEffectType.MezResist => Purple2,
                         Enums.eEffectType.PerceptionRadius => Gray5,
                         Enums.eEffectType.Recovery => Blue,

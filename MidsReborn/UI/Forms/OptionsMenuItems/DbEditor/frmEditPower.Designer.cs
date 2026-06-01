@@ -397,7 +397,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             chkAlwaysToggle.Name = "chkAlwaysToggle";
             chkAlwaysToggle.Size = new System.Drawing.Size(202, 24);
             chkAlwaysToggle.TabIndex = 1;
-            chkAlwaysToggle.Text = "Toggle Defaults to ON";
+            chkAlwaysToggle.Text = "Toggle/Auto Defaults to ON";
             chkAlwaysToggle.CheckedChanged += chkAlwaysToggle_CheckedChanged;
             // 
             // chkBuffCycle

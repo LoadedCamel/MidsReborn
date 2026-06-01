@@ -2588,6 +2588,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     Enums.eEffectType.SpeedFlying => 5,
                     Enums.eEffectType.SpeedJumping => 5,
                     Enums.eEffectType.JumpHeight => 3,
+                    Enums.eEffectType.MezProtect => 8,
                     Enums.eEffectType.MezResist => 8,
                     Enums.eEffectType.Mez when !fx.Buffable => -2,
                     Enums.eEffectType.Mez => (int)Math.Round(9f * fx.Probability),
@@ -2598,7 +2599,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             static int DirectionalNudge(IEffect fx)
             {
                 int w = 0;
-                if (fx.ToWho == Enums.eToWho.Self && (fx.BuffedMag > 0 || fx.EffectType == Enums.eEffectType.Mez)) w += 10;
+                if (fx.ToWho == Enums.eToWho.Self && (fx.BuffedMag > 0 || fx.EffectType == Enums.eEffectType.Mez || fx.EffectType == Enums.eEffectType.MezProtect)) w += 10;
                 if (fx.ToWho == Enums.eToWho.Target && fx.BuffedMag < 0) w += 10;
                 if (fx.Absorbed_Effect) w += 10; // baked-in via pet/absorbed often "feels" primary
                 return w;
@@ -4289,7 +4290,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         var fxLabel = effectType switch
                         {
                             Enums.eEffectType.Enhancement or Enums.eEffectType.ResEffect => $"{effectType}({etModifies})",
-                            Enums.eEffectType.Mez or Enums.eEffectType.MezResist => $"{effectType}({mezType})",
+                            Enums.eEffectType.Mez or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist => $"{effectType}({mezType})",
                             _ => $"{effectType} ({vectors})"
                         };
 

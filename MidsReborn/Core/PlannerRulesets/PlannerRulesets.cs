@@ -206,7 +206,7 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
                 {
                     switch (effect.EffectType)
                     {
-                        case Enums.eEffectType.Mez:
+                        case Enums.eEffectType.MezProtect:
                             buckets.StatusProtection[(int)effect.MezType] += value;
                             break;
                         case Enums.eEffectType.MezResist:

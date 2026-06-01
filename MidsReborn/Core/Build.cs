@@ -1737,7 +1737,7 @@ namespace Mids_Reborn.Core
         {
             return effect.EffectType switch
             {
-                Enums.eEffectType.Mez or Enums.eEffectType.MezResist when effect.MezType == testFx.MezType => true,
+                Enums.eEffectType.Mez or Enums.eEffectType.MezProtect or Enums.eEffectType.MezResist when effect.MezType == testFx.MezType => true,
                 Enums.eEffectType.Damage or Enums.eEffectType.Defense or Enums.eEffectType.Resistance or Enums.eEffectType.DamageBuff when effect.DamageType == testFx.DamageType => true,
                 Enums.eEffectType.Enhancement when effect.ETModifies == testFx.ETModifies && effect.DamageType == testFx.DamageType && effect.MezType == testFx.MezType => true,
                 Enums.eEffectType.ResEffect when effect.ETModifies == testFx.ETModifies => true,
@@ -1751,6 +1751,7 @@ namespace Mids_Reborn.Core
             return effect.EffectType == testFx.EffectType && !new[]
             {
                 Enums.eEffectType.Mez,
+                Enums.eEffectType.MezProtect,
                 Enums.eEffectType.MezResist,
                 Enums.eEffectType.Damage,
                 Enums.eEffectType.Defense,
@@ -2356,6 +2357,7 @@ namespace Mids_Reborn.Core
 
                                     break;
                                 case Enums.eEffectType.Mez:
+                                case Enums.eEffectType.MezProtect:
                                     if (effect.IgnoreED)
                                     {
                                         mezValuesAfterED[(int)effect.MezType] += effect.BuffedMag;
@@ -2565,6 +2567,7 @@ namespace Mids_Reborn.Core
                     }
 
                     if (EffectType == Enums.eEffectType.Mez |
+                        EffectType == Enums.eEffectType.MezProtect |
                         EffectType == Enums.eEffectType.MezResist |
                         EffectType == Enums.eEffectType.Slow |
                         EffectType == Enums.eEffectType.ResEffect |
@@ -2670,6 +2673,12 @@ namespace Mids_Reborn.Core
                     if (EffectType == Enums.eEffectType.Enhancement & TargetEffectType == Enums.eEffectType.Slow) // ???
                     {
                         return Enums.eFXSubGroup.SlowBuffs;
+                    }
+
+                    if (EffectType == Enums.eEffectType.MezProtect &
+                        (MezType == Enums.eMez.Knockback | MezType == Enums.eMez.Knockup))
+                    {
+                        return Enums.eFXSubGroup.KnockProtection;
                     }
 
                     if (EffectType == Enums.eEffectType.MezResist &

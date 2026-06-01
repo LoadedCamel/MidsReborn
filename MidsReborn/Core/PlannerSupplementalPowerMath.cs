@@ -184,6 +184,7 @@ internal static class PlannerSupplementalPowerMath
                                 break;
 
                             case Enums.eEffectType.Mez:
+                            case Enums.eEffectType.MezProtect:
                                 if (mathEffect.AttribType == Enums.eAttribType.Duration)
                                 {
                                     durationAdjustment = supplementalEnhance.Mez[(int)mathEffect.MezType];

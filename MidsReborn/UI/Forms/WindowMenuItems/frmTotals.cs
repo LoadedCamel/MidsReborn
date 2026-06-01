@@ -755,7 +755,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             var sResMax = 5;
             foreach (var e in eMezArray)
             {
-                var mezProtection = totals.Mez[(int)e] > 0 ? 0 : Math.Abs(totals.Mez[(int)e]);
+                var mezProtection = Math.Abs(totals.Mez[(int)e]);
                 var iTip11 = mezProtection < float.Epsilon
                     ? $"You have no protection from {names3[(int)e]} effects.\r\n{str9}"
                     : $"You have mag {DisplayValueFormatter.FormatMagnitude(mezProtection, 2)} protection from {names3[(int)e]} effects.\r\n{str9}";
@@ -784,7 +784,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
                 var iTip12 = Math.Abs(totals.MezRes[(int)e]) < float.Epsilon
                     ? $"You have no resistance to {names3[(int)e]} effects.\r\n{str10}"
-                    : $"You have {FormatPercentValue(totals.Mez[(int)e])} resistance to {names3[(int)e]} effects.{str11}";
+                    : $"You have {FormatPercentValue(totals.MezRes[(int)e])} resistance to {names3[(int)e]} effects.{str11}";
 
                 graphSRes.AddItem($"{names2[(int)e]}|{FormatPercentValue(totals.MezRes[(int)e])}", totals.MezRes[(int)e], 0, iTip12);
             }

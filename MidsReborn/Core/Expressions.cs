@@ -1842,7 +1842,7 @@ namespace Mids_Reborn.Core
             { Enums.eEffectType.HitPoints, nameof(TotalStatistics.HPMax) },
             { Enums.eEffectType.JumpHeight, nameof(TotalStatistics.JumpHeight) },
             { Enums.eEffectType.SpeedJumping, nameof(TotalStatistics.JumpSpd) },
-            { Enums.eEffectType.Mez, nameof(TotalStatistics.Mez) },
+            { Enums.eEffectType.MezProtect, nameof(TotalStatistics.Mez) },
             { Enums.eEffectType.MezResist, nameof(TotalStatistics.MezRes) },
             { Enums.eEffectType.PerceptionRadius, nameof(TotalStatistics.Perception) },
             { Enums.eEffectType.RechargeTime, nameof(TotalStatistics.BuffHaste) },

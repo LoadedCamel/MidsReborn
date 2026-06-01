@@ -505,10 +505,7 @@ public sealed partial class OmniImporter
             // In planner math, toggling Domination on already implies the meter was ready.
             power.ModesRequired &= ~Enums.eModeFlags.Domination;
         }
-        power.ShowStatToggle = definition.VisibleInInherentGrid &&
-                               !definition.IsVariableControl &&
-                               !isPassiveComputedInherent &&
-                               !isCombatSettingsDrivenInherent;
+        power.ShowStatToggle = definition.VisibleInInherentGrid;
         if (definition.PresentationType != PlannerStatePresentationType.ReuseImportedPower)
         {
             power.DescShort = $"Planner state for {definition.DisplayName}.";

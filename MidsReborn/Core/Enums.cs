@@ -493,7 +493,8 @@ namespace Mids_Reborn.Core
             Walk,
             XPDebt,
             ForceMove,
-            ExecutePower
+            ExecutePower,
+            MezProtect
         }
 
         public enum eEffectTypeShort
@@ -518,7 +519,7 @@ namespace Mids_Reborn.Core
             JumpSpd,        // SpeedJumping
             Meter,          // Meter
             Mez,            // Mez (status effects)
-            MezProt,        // MezResist (Status Protection)
+            MezRes,         // MezResist (Status Resistance)
             MoveCtrl,       // MovementControl
             MoveFric,       // MovementFriction
             Percep,         // PerceptionRadius
@@ -582,7 +583,8 @@ namespace Mids_Reborn.Core
             Walk,           // Walk
             XPDebt,         // XPDebt
             ForceMove,      // ForceMove
-            ExecPower       // ExecutePower
+            ExecPower,      // ExecutePower
+            MezProt         // MezProtect (Status Protection)
         }
 
         public enum eEffMode
@@ -1441,12 +1443,22 @@ namespace Mids_Reborn.Core
 
         public static string GetEffectName(eEffectType iID)
         {
-            return iID.ToString();
+            return iID switch
+            {
+                eEffectType.MezProtect => "Status Protection",
+                eEffectType.MezResist => "Status Resistance",
+                _ => iID.ToString()
+            };
         }
 
         public static string GetEffectNameShort(eEffectType effectType)
         {
-            return ((eEffectTypeShort)effectType).ToString();
+            return effectType switch
+            {
+                eEffectType.MezProtect => "StatProt",
+                eEffectType.MezResist => "StatRes",
+                _ => ((eEffectTypeShort)effectType).ToString()
+            };
         }
 
         public static string GetMezName(eMezShort iID)

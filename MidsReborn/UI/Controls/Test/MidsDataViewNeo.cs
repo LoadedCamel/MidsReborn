@@ -3839,9 +3839,13 @@ namespace Mids_Reborn.UI.Controls
                 }
                 else
                 {
-                    title = fx.EffectType != Enums.eEffectType.Mez
-                        ? names[(int)fx.EffectType]
-                        : Enums.GetMezName((Enums.eMezShort)fx.MezType);
+                    title = fx.EffectType switch
+                    {
+                        Enums.eEffectType.Mez => Enums.GetMezName((Enums.eMezShort)fx.MezType),
+                        Enums.eEffectType.MezProtect => MezSemantics.GetStatusProtectionLabel(fx.MezType),
+                        Enums.eEffectType.MezResist => MezSemantics.GetStatusResistanceLabel(fx.MezType),
+                        _ => names[(int)fx.EffectType]
+                    };
                 }
 
                 var temp = string.Empty;
@@ -3977,6 +3981,7 @@ namespace Mids_Reborn.UI.Controls
                     case Enums.eEffectType.Resistance:
                     case Enums.eEffectType.ResEffect:
                     case Enums.eEffectType.Enhancement:
+                    case Enums.eEffectType.MezProtect:
                     case Enums.eEffectType.MezResist:
                     case Enums.eEffectType.RechargeTime:
                     case Enums.eEffectType.SpeedFlying:

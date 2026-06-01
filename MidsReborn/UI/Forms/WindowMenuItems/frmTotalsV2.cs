@@ -866,7 +866,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             graphStatusProt.Clear();
             graphStatusRes.Clear();
             var mezProtections = MidsContext.Character.Totals.Mez
-                .Select(e => e > 0 ? 0 : Math.Abs(e))
+                .Select(Math.Abs)
                 .ToArray();
             foreach (var m in MezList)
             {
