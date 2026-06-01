@@ -1681,6 +1681,12 @@ namespace Mids_Reborn.Core.Compatibility
                 return false;
             }
 
+            if (legacyFullName.StartsWith("Mastermind_Summon.", StringComparison.OrdinalIgnoreCase) &&
+                ExtractLeafName(legacyFullName).EndsWith("_H", StringComparison.OrdinalIgnoreCase))
+            {
+                return true;
+            }
+
             var normalized = Regex.Replace(legacyFullName.Trim().ToUpperInvariant(), @"[^A-Z0-9]+", string.Empty);
             if (string.Equals(normalized, "INHERENTINHERENTSPECIALSETBONUSES", StringComparison.Ordinal))
             {
