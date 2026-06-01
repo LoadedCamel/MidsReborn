@@ -1561,25 +1561,41 @@ namespace Mids_Reborn.Core
                 return powerList;
             }
 
-            var nidPowers = DatabaseAPI.NidPowers("set_bonus");
-            var setCount = new int[nidPowers.Length];
+            var setBonusNids = DatabaseAPI.NidPowers("set_bonus");
+            if (setBonusNids == null || setBonusNids.Length == 0)
+            {
+                return powerList;
+            }
+
+            // SetInfo.Powers stores database power NIDs, not zero-based indexes into the set_bonus list.
+            var nidToIndex = BuildNidIndexMap(setBonusNids);
+            var setCount = new int[setBonusNids.Length];
 
             foreach (var setBonus in SetBonuses)
             {
+                if (setBonus?.SetInfo == null) continue;
+
                 foreach (var info in setBonus.SetInfo)
                 {
-                    foreach (var powerIndex in info.Powers)
+                    if (info.Powers.Length == 0) continue;
+
+                    foreach (var powerNid in info.Powers)
                     {
-                        if (powerIndex >= setCount.Length)
+                        if (powerNid < 0)
                         {
-                            throw new IndexOutOfRangeException("Power index exceeds setCount bounds.");
+                            continue;
+                        }
+
+                        if (!nidToIndex.TryGetValue(powerNid, out var powerIndex))
+                        {
+                            continue;
                         }
 
                         ++setCount[powerIndex];
 
                         if (setCount[powerIndex] >= 6) continue;
 
-                        var power = DatabaseAPI.Database.Power[powerIndex];
+                        var power = DatabaseAPI.Database.Power[powerNid];
                         if (power == null)
                         {
                             continue;

@@ -34,13 +34,17 @@ namespace Mids_Reborn.Core.BuildFile
             var jsonObject = JObject.Load(reader);
             var enhancementData = new EnhancementData();
 
+            if (jsonObject.TryGetValue("Enhancement", out var enhancementValue))
+            {
+                enhancementData.LegacyDisplayName = enhancementValue.ToObject<string>() ?? string.Empty;
+            }
+
             if (jsonObject.TryGetValue("Uid", out var uidValue))
             {
                 enhancementData.Uid = uidValue.ToObject<string>() ?? throw new InvalidOperationException();
             }
-            else if (jsonObject.TryGetValue("Enhancement", out var enhancementValue))
+            else if (!string.IsNullOrWhiteSpace(enhancementData.LegacyDisplayName))
             {
-                enhancementData.LegacyDisplayName = enhancementValue.ToObject<string>() ?? string.Empty;
                 enhancementData.Uid = DatabaseAPI.GetEnhancementUid(enhancementData.LegacyDisplayName);
             }
             if (jsonObject.TryGetValue("Grade", out var gradeValue))

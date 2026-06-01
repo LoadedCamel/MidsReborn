@@ -199,7 +199,7 @@ namespace Mids_Reborn.Core.Compatibility
 
             if (candidates.Count == 0 &&
                 !string.IsNullOrWhiteSpace(legacyDisplayName) &&
-                TryResolveEnhancementDisplayName(map, legacyDisplayName, out currentTarget))
+                TryResolveEnhancementDisplayName(map, legacyDisplayName, currentPowerUid, resolvedSetUids, out currentTarget))
             {
                 return true;
             }
@@ -213,7 +213,7 @@ namespace Mids_Reborn.Core.Compatibility
             {
                 error = staticIndex.HasValue
                     ? $"No Homecoming legacy enhancement mapping exists for static index {staticIndex.Value}."
-                    : $"No Homecoming legacy enhancement mapping exists for '{legacyFullName ?? legacyDisplayName}'.";
+                    : $"No Homecoming legacy enhancement mapping exists for '{DescribeLegacyEnhancementReference(legacyFullName, legacyDisplayName, staticIndex)}'.";
                 return false;
             }
 
@@ -222,7 +222,7 @@ namespace Mids_Reborn.Core.Compatibility
             {
                 error = staticIndex.HasValue
                     ? $"No valid current Homecoming enhancement target exists for static index {staticIndex.Value}."
-                    : $"No valid current Homecoming enhancement target exists for '{legacyFullName ?? legacyDisplayName}'.";
+                    : $"No valid current Homecoming enhancement target exists for '{DescribeLegacyEnhancementReference(legacyFullName, legacyDisplayName, staticIndex)}'.";
                 return false;
             }
 
@@ -235,7 +235,7 @@ namespace Mids_Reborn.Core.Compatibility
                 return true;
             }
 
-            error = $"Legacy enhancement reference '{legacyFullName ?? legacyDisplayName ?? $"static index {staticIndex}"}' is ambiguous. Candidates: {DescribeCandidates(filteredCandidates)}";
+            error = $"Legacy enhancement reference '{DescribeLegacyEnhancementReference(legacyFullName, legacyDisplayName, staticIndex)}' is ambiguous. Candidates: {DescribeCandidates(filteredCandidates)}";
             return false;
         }
 
@@ -299,7 +299,7 @@ namespace Mids_Reborn.Core.Compatibility
 
             if (candidates.Count == 0 &&
                 !string.IsNullOrWhiteSpace(legacyDisplayName) &&
-                TryResolveEnhancementDisplayName(map, legacyDisplayName, out currentTarget))
+                TryResolveEnhancementDisplayName(map, legacyDisplayName, currentPowerUid, resolvedSetUids, out currentTarget))
             {
                 return true;
             }
@@ -308,7 +308,7 @@ namespace Mids_Reborn.Core.Compatibility
             {
                 error = staticIndex.HasValue
                     ? $"No Homecoming legacy enhancement mapping exists for static index {staticIndex.Value}."
-                    : $"No Homecoming legacy enhancement mapping exists for '{legacyFullName ?? legacyDisplayName}'.";
+                    : $"No Homecoming legacy enhancement mapping exists for '{DescribeLegacyEnhancementReference(legacyFullName, legacyDisplayName, staticIndex)}'.";
                 return false;
             }
 
@@ -317,7 +317,7 @@ namespace Mids_Reborn.Core.Compatibility
             {
                 error = staticIndex.HasValue
                     ? $"No valid current Homecoming enhancement target exists for static index {staticIndex.Value}."
-                    : $"No valid current Homecoming enhancement target exists for '{legacyFullName ?? legacyDisplayName}'.";
+                    : $"No valid current Homecoming enhancement target exists for '{DescribeLegacyEnhancementReference(legacyFullName, legacyDisplayName, staticIndex)}'.";
                 return false;
             }
 
@@ -330,7 +330,7 @@ namespace Mids_Reborn.Core.Compatibility
                 return true;
             }
 
-            error = $"Legacy enhancement reference '{legacyFullName ?? legacyDisplayName ?? $"static index {staticIndex}"}' is ambiguous. Candidates: {DescribeCandidates(filteredCandidates)}";
+            error = $"Legacy enhancement reference '{DescribeLegacyEnhancementReference(legacyFullName, legacyDisplayName, staticIndex)}' is ambiguous. Candidates: {DescribeCandidates(filteredCandidates)}";
             return false;
         }
 
@@ -694,6 +694,8 @@ namespace Mids_Reborn.Core.Compatibility
         private static bool TryResolveEnhancementDisplayName(
             LegacyHomecomingMap map,
             string legacyDisplayName,
+            string currentPowerUid,
+            IReadOnlyCollection<string> resolvedSetUids,
             out string currentTarget)
         {
             currentTarget = string.Empty;
@@ -754,6 +756,19 @@ namespace Mids_Reborn.Core.Compatibility
                 }
             }
 
+            var mappedPieceCandidates = CanonicalizeEnhancementCandidates(
+                map.FindEnhancementEntries(legacyPieceName, legacyPieceName));
+            if (mappedPieceCandidates.Count > 0)
+            {
+                mappedPieceCandidates = FilterEnhancementCandidatesBySetUids(mappedPieceCandidates, candidateSetUids);
+                mappedPieceCandidates = FilterEnhancementCandidates(mappedPieceCandidates, currentPowerUid, resolvedSetUids);
+                if (mappedPieceCandidates.Count == 1)
+                {
+                    currentTarget = mappedPieceCandidates[0].CurrentTarget;
+                    return true;
+                }
+            }
+
             var pieceMatches = DatabaseAPI.Database.Enhancements
                 .Where(enhancement =>
                     enhancement != null &&
@@ -776,11 +791,56 @@ namespace Mids_Reborn.Core.Compatibility
             return false;
         }
 
+        private static List<LegacyMapEntry> FilterEnhancementCandidatesBySetUids(
+            List<LegacyMapEntry> candidates,
+            IReadOnlyCollection<string> candidateSetUids)
+        {
+            if (candidates.Count <= 1 || candidateSetUids.Count == 0)
+            {
+                return candidates;
+            }
+
+            var filtered = candidates
+                .Where(candidate =>
+                {
+                    var enhancementId = DatabaseAPI.NidFromUidEnh(candidate.CurrentTarget);
+                    if (enhancementId < 0)
+                    {
+                        return false;
+                    }
+
+                    var setUid = DatabaseAPI.Database.Enhancements[enhancementId].UIDSet;
+                    return !string.IsNullOrWhiteSpace(setUid) &&
+                           candidateSetUids.Contains(setUid, StringComparer.OrdinalIgnoreCase);
+                })
+                .ToList();
+
+            return filtered.Count > 0 ? filtered : candidates;
+        }
+
         private static string DescribeCandidates(IEnumerable<LegacyMapEntry> candidates)
         {
             return string.Join("; ",
                 candidates.Select(candidate =>
                     $"[{candidate.Kind} line {candidate.SourceLine}] {candidate.LegacyFullName} -> {candidate.CurrentTarget}"));
+        }
+
+        private static string DescribeLegacyEnhancementReference(
+            string? legacyFullName,
+            string? legacyDisplayName,
+            int? staticIndex)
+        {
+            if (!string.IsNullOrWhiteSpace(legacyFullName))
+            {
+                return legacyFullName;
+            }
+
+            if (!string.IsNullOrWhiteSpace(legacyDisplayName))
+            {
+                return legacyDisplayName;
+            }
+
+            return staticIndex.HasValue ? $"static index {staticIndex.Value}" : string.Empty;
         }
 
         private static List<LegacyMapEntry> CanonicalizePowerCandidates(IEnumerable<LegacyMapEntry> candidates)
