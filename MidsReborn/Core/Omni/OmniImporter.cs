@@ -1506,7 +1506,7 @@ public sealed partial class OmniImporter
             var staffTrace = IsStaffMasteryFullName(midsFullName);
             if (!forceRecreateStrictSetBonus &&
                 !midsPowers.TryGetValue(midsFullName, out var midsPower) &&
-                TryFindCompositePowerIdentityMatch(existingPowers, omniPower, midsFullName, scopedPowersetLookup, out midsPower))
+                TryFindCompositePowerIdentityMatch(existingPowers, omniPower, midsFullName, scopedPowersetLookup, applyResult, out midsPower))
             {
                 midsPowers[midsFullName] = midsPower;
                 applyResult.PowersMatched++;
@@ -2897,7 +2897,10 @@ public sealed partial class OmniImporter
                 applyResult.OrphanedScopedOmniPowers++;
                 applyResult.AddLimited(applyResult.OrphanedScopedOmniPowerDetails,
                     $"{scopedName}: exists in database.Power but is not attached to owning powerset {powerInfo.FullSetName} in final graph.");
+                continue;
             }
+
+            applyResult.ExactScopedOmniPowersRetained++;
         }
 
         foreach (var beforePowerset in before.Powersets)
@@ -2922,7 +2925,7 @@ public sealed partial class OmniImporter
         TrackStaffMasteryFinalState(database, applyResult);
 
         applyResult.AddLimited(applyResult.ImportIntegrityAuditDetails,
-            $"Orphans before={applyResult.OrphanPowersBeforeImport}, after={applyResult.OrphanPowersAfterImport}, new={applyResult.NewOrphanPowersIntroduced}, scoped orphaned/missing={applyResult.OrphanedScopedOmniPowers}, accepted replacements={applyResult.AcceptedCanonicalScopedPowerReplacements}, scoped excluded={applyResult.ExcludedScopedOmniPowers}, scoped manifest-owned={applyResult.ManifestOwnedScopedOmniPowers}");
+            $"Orphans before={applyResult.OrphanPowersBeforeImport}, after={applyResult.OrphanPowersAfterImport}, new={applyResult.NewOrphanPowersIntroduced}, scoped missing/detached={applyResult.OrphanedScopedOmniPowers}, scoped exact-retained={applyResult.ExactScopedOmniPowersRetained}, accepted replacements={applyResult.AcceptedCanonicalScopedPowerReplacements}, display fallback rejected={applyResult.ScopedDisplayFallbackRejected}, scoped excluded={applyResult.ExcludedScopedOmniPowers}, scoped manifest-owned={applyResult.ManifestOwnedScopedOmniPowers}");
     }
 
     private static Dictionary<string, HashSet<string>> BuildPowersetMembershipLookup(IDatabase database)
@@ -3016,7 +3019,7 @@ public sealed partial class OmniImporter
             }
 
             if (!midsPowers.TryGetValue(midsFullName, out var midsPower) &&
-                TryFindCompositePowerIdentityMatch(existingPowers, omniPower, midsFullName, scopedPowersetLookup, out var compositeMatch))
+                TryFindCompositePowerIdentityMatch(existingPowers, omniPower, midsFullName, scopedPowersetLookup, applyResult, out var compositeMatch))
             {
                 var priorFullName = compositeMatch.FullName;
                 ApplyCanonicalPowerName(compositeMatch, midsFullName);
@@ -4573,7 +4576,7 @@ public sealed partial class OmniImporter
         power.IgnoreBuffEnhancementAxes = ignoreBuffAxes;
         power.TypedEnhancementRestrictions = TypedEnhancementLegality.Normalize(
             typedIgnoreEnh.Concat(typedIgnoreBuff));
-        power.GroupMembership = source.ExclusionGroups
+        power.GroupMembership = source.ImportedGroupMembership
             .Where(group => !string.IsNullOrWhiteSpace(group))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray();
@@ -5705,6 +5708,7 @@ public sealed partial class OmniImporter
                             omniPower,
                             midsFullName,
                             localPowersetLookup,
+                            applyResult,
                             out midsPower))
                     {
                         midsPower = CreatePower(database, omniPower, nextStaticIndex++);
@@ -7583,6 +7587,7 @@ public sealed partial class OmniImporter
         OmniPowerDefinition omniPower,
         string midsFullName,
         IReadOnlyDictionary<string, OmniPowersetDefinition> scopedPowersets,
+        OmniApplyResult? applyResult,
         out IPower matchedPower)
     {
         matchedPower = null!;
@@ -7619,8 +7624,26 @@ public sealed partial class OmniImporter
             return true;
         }
 
-        if (internalCandidates.Count > 1 || strictScopedIdentity || !ShouldAllowDisplayNameCompositeFallback(omniPower))
+        var allowDisplayFallback = !strictScopedIdentity && ShouldAllowDisplayNameCompositeFallback(omniPower);
+        if (internalCandidates.Count > 1 || strictScopedIdentity || !allowDisplayFallback)
         {
+            if (!allowDisplayFallback &&
+                applyResult != null &&
+                IsDisplayNameCompositeFallbackDisabledFamily(midsFullName))
+            {
+                var rejectedDisplayCandidates = candidates
+                    .Where(power => PowerDisplayIdentityMatches(power, normalizedDisplay))
+                    .Take(3)
+                    .ToList();
+                if (rejectedDisplayCandidates.Count > 0)
+                {
+                    applyResult.ScopedDisplayFallbackRejected++;
+                    applyResult.AddLimited(
+                        applyResult.ScopedDisplayFallbackRejectedDetails,
+                        $"{midsFullName}: blocked display-name composite fallback in duplicate-prone temporary family; candidates={string.Join(", ", rejectedDisplayCandidates.Select(power => power.FullName))}");
+                }
+            }
+
             return false;
         }
 
@@ -7778,6 +7801,11 @@ public sealed partial class OmniImporter
             return false;
         }
 
+        if (IsDisplayNameCompositeFallbackDisabledFamily(omniPower.FullName))
+        {
+            return false;
+        }
+
         return !IsCompositeMatchSensitiveExecutionGroup(GroupNamePart(omniPower.FullName));
     }
 
@@ -7802,6 +7830,14 @@ public sealed partial class OmniImporter
             "Incarnate.Genesis_Silent" or
             "Incarnate.Hybrid_Silent" or
             "Incarnate.Interface_Silent";
+    }
+
+    private static bool IsDisplayNameCompositeFallbackDisabledFamily(string fullName)
+    {
+        return string.Equals(
+            FullSetName(CanonicalizeOmniFullName(fullName)),
+            "Temporary_Powers.Temporary_Powers",
+            StringComparison.OrdinalIgnoreCase);
     }
 
     private static string FullSetName(string fullName)
@@ -9529,9 +9565,13 @@ public sealed partial class OmniImporter
 
         TrackChargeFieldCoverage(power, report);
 
-        if (power.ExclusionGroups.Count > 0)
+        if (power.GroupMembership.Count > 0)
         {
-            AddMappedPowerField(report, $"{owner}: exclusion_groups -> GroupMembership = {FormatStringList(power.ExclusionGroups)}");
+            AddMappedPowerField(report, $"{owner}: group_membership -> GroupMembership = {FormatStringList(power.GroupMembership)}");
+        }
+        else if (power.ExclusionGroups.Count > 0)
+        {
+            AddMappedPowerField(report, $"{owner}: exclusion_groups (fallback) -> GroupMembership = {FormatStringList(power.ExclusionGroups)}");
         }
 
         if (HasJsonValue(power.RootTimeValue))
@@ -9591,9 +9631,13 @@ public sealed partial class OmniImporter
 
         TrackChargeFieldCoverage(power, result);
 
-        if (power.ExclusionGroups.Count > 0)
+        if (power.GroupMembership.Count > 0)
         {
-            AddMappedPowerField(result, $"{owner}: exclusion_groups -> GroupMembership = {FormatStringList(power.ExclusionGroups)}");
+            AddMappedPowerField(result, $"{owner}: group_membership -> GroupMembership = {FormatStringList(power.GroupMembership)}");
+        }
+        else if (power.ExclusionGroups.Count > 0)
+        {
+            AddMappedPowerField(result, $"{owner}: exclusion_groups (fallback) -> GroupMembership = {FormatStringList(power.ExclusionGroups)}");
         }
 
         if (HasJsonValue(power.RootTimeValue))

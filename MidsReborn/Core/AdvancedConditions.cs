@@ -243,7 +243,7 @@ public sealed class AdvancedConditionSet
         var position = reader.BaseStream.Position;
         try
         {
-            if (!string.Equals(reader.ReadString(), marker, StringComparison.Ordinal))
+            if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, marker))
             {
                 reader.BaseStream.Position = position;
                 return false;

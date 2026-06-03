@@ -239,8 +239,17 @@ public sealed class OmniPowerDefinition
     [JsonProperty("archetypes")]
     public List<string> Archetypes { get; set; } = [];
 
+    [JsonProperty("group_membership")]
+    public List<string> GroupMembership { get; set; } = [];
+
     [JsonProperty("exclusion_groups")]
     public List<string> ExclusionGroups { get; set; } = [];
+
+    [JsonIgnore]
+    public IReadOnlyList<string> ImportedGroupMembership =>
+        GroupMembership.Count > 0
+            ? GroupMembership
+            : ExclusionGroups;
 
     [JsonProperty("recharge_groups")]
     public List<string> RechargeGroups { get; set; } = [];

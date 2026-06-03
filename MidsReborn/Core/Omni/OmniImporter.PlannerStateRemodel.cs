@@ -166,7 +166,7 @@ public sealed partial class OmniImporter
             ConfigurePlannerStatePower(database, power, definition, applyResult);
             powerChanged = true;
         }
-        else if (TryConfigureImportedStaffFormPower(database, power))
+        else if (TryConfigureImportedStaffFormPower(power))
         {
             powerChanged = true;
         }
@@ -456,9 +456,21 @@ public sealed partial class OmniImporter
         power.ShowInSpecialPowerPicker = false;
         power.DisplayName = definition.DisplayName;
         power.IconName = !string.IsNullOrWhiteSpace(definition.IconName) ? definition.IconName : power.IconName;
-        power.MutexAuto = !string.IsNullOrWhiteSpace(definition.MutexGroup);
-        power.GroupMembership = string.IsNullOrWhiteSpace(definition.MutexGroup) ? [] : [definition.MutexGroup];
-        power.NGroupMembership = ResolveMutexGroupIds(database, power.GroupMembership);
+        if (definition.PresentationType == PlannerStatePresentationType.ReuseImportedPower)
+        {
+            if (!string.IsNullOrWhiteSpace(definition.MutexGroup))
+            {
+                power.MutexAuto = true;
+                power.GroupMembership = MergeMutexGroups(power.GroupMembership, definition.MutexGroup);
+                power.NGroupMembership = ResolveMutexGroupIds(database, power.GroupMembership);
+            }
+        }
+        else
+        {
+            power.MutexAuto = !string.IsNullOrWhiteSpace(definition.MutexGroup);
+            power.GroupMembership = string.IsNullOrWhiteSpace(definition.MutexGroup) ? [] : [definition.MutexGroup];
+            power.NGroupMembership = ResolveMutexGroupIds(database, power.GroupMembership);
+        }
 
         if (definition.IsHiddenPayload)
         {
@@ -551,7 +563,7 @@ public sealed partial class OmniImporter
         power.IsModified = true;
     }
 
-    private static bool TryConfigureImportedStaffFormPower(IDatabase database, IPower power)
+    private static bool TryConfigureImportedStaffFormPower(IPower power)
     {
         if (power.FullName.IndexOf(".Staff_Fighting.Form_of_the_", StringComparison.OrdinalIgnoreCase) < 0)
         {
@@ -562,10 +574,18 @@ public sealed partial class OmniImporter
         power.HiddenPower = false;
         power.ShowInSpecialPowerPicker = false;
         power.MutexAuto = true;
-        power.GroupMembership = [PlannerStateCatalog.StaffFormMutexGroup];
-        power.NGroupMembership = ResolveMutexGroupIds(database, power.GroupMembership);
         power.IsModified = true;
         return true;
+    }
+
+    private static string[] MergeMutexGroups(IEnumerable<string>? existingGroups, string plannerGroup)
+    {
+        return (existingGroups ?? [])
+            .Where(group => !string.IsNullOrWhiteSpace(group))
+            .Append(plannerGroup)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(group => group, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
     }
 
     private static int[] ResolveMutexGroupIds(IDatabase database, IEnumerable<string>? groupMembership)

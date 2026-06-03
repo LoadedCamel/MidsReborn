@@ -88,7 +88,9 @@ public sealed class OmniApplyResult
     public int OrphanPowersAfterImport { get; set; }
     public int NewOrphanPowersIntroduced { get; set; }
     public int OrphanedScopedOmniPowers { get; set; }
+    public int ExactScopedOmniPowersRetained { get; set; }
     public int AcceptedCanonicalScopedPowerReplacements { get; set; }
+    public int ScopedDisplayFallbackRejected { get; set; }
     public int ExcludedScopedOmniPowers { get; set; }
     public int ManifestOwnedScopedOmniPowers { get; set; }
     public int RetainedTemporaryPowersetsTracked { get; set; }
@@ -345,6 +347,7 @@ public sealed class OmniApplyResult
     public List<string> ImportIntegrityAuditDetails { get; } = [];
     public List<string> NewOrphanPowerDetails { get; } = [];
     public List<string> OrphanedScopedOmniPowerDetails { get; } = [];
+    public List<string> ScopedDisplayFallbackRejectedDetails { get; } = [];
     public List<string> AcceptedCanonicalScopedPowerReplacementDetails { get; } = [];
     public List<string> ExcludedScopedOmniPowerDetails { get; } = [];
     public List<string> ManifestOwnedScopedOmniPowerDetails { get; } = [];
@@ -439,7 +442,7 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Requirements updated/skipped unsupported: {RequirementsUpdated:n0}/{RequirementsSkippedUnsupported:n0}");
         builder.AppendLine($"- Retained temp powersets/powers/hidden/failures: {RetainedTemporaryPowersetsTracked:n0}/{RetainedTemporaryPowersTracked:n0}/{RetainedTemporaryHiddenPowers:n0}/{RetainedTemporaryIntegrityFailures:n0}");
         builder.AppendLine($"- Unknown effect/attribute mappings: {UnknownEffectMappings:n0}/{UnknownAttribMappings:n0}");
-        builder.AppendLine($"- Orphan powers/scoped powers after import: {OrphanPowersAfterImport:n0}/{OrphanedScopedOmniPowers:n0}");
+        builder.AppendLine($"- Orphan powers/scoped missing-detached after import: {OrphanPowersAfterImport:n0}/{OrphanedScopedOmniPowers:n0}");
         builder.AppendLine($"- Pet powers missing/source integrity failures: {PetPowersMissingAfterImport:n0}/{PetSourceIntegrityFailures:n0}");
         builder.AppendLine($"- Power fields mapped/fallback/conflicts/unknown: {PowerFieldsMapped:n0}/{PowerFieldsMappedWithFallback:n0}/{PowerFieldConflicts:n0}/{UnknownPowerFields:n0}");
         builder.AppendLine($"- Powerset icons preserved/assigned/missing: {PoolPowersetIconsPreserved:n0}/{PoolPowersetIconsAssigned:n0}/{PoolPowersetIconsMissingAssets:n0}");
@@ -454,7 +457,8 @@ public sealed class OmniApplyResult
         AppendSection(builder, "Unknown Modes Preserved", UnknownModeDetails);
         AppendSection(builder, "Import Integrity Audit", ImportIntegrityAuditDetails);
         AppendSection(builder, "New Orphan Powers Introduced", NewOrphanPowerDetails);
-        AppendSection(builder, "Orphaned Scoped Omni Powers", OrphanedScopedOmniPowerDetails);
+        AppendSection(builder, "Missing / Detached Scoped Omni Powers", OrphanedScopedOmniPowerDetails);
+        AppendSection(builder, "Scoped Display Fallback Rejected", ScopedDisplayFallbackRejectedDetails);
         AppendSection(builder, "Epic Powersets With Zero Linked Powers", EpicPowersetsWithZeroLinkedPowersDetails);
         AppendSection(builder, "Epic Powers Missing After Import", EpicPowersMissingAfterImportDetails);
         AppendSection(builder, "Pet Powers Missing After Import", PetPowersMissingAfterImportDetails);
@@ -542,6 +546,10 @@ public sealed class OmniApplyResult
         AppendSection(builder, "Malformed Power Name Collisions", MalformedPowerNameCollisionDetails);
         AppendSection(builder, "Powersets Reordered By Power Level", PowersetPowerOrderDetails);
         AppendSection(builder, "Excluded Content Removed", ExcludedContentRemovalDetails);
+        AppendSection(builder, "Import Integrity Audit", ImportIntegrityAuditDetails);
+        AppendSection(builder, "New Orphan Powers Introduced", NewOrphanPowerDetails);
+        AppendSection(builder, "Missing / Detached Scoped Omni Powers", OrphanedScopedOmniPowerDetails);
+        AppendSection(builder, "Scoped Display Fallback Rejected", ScopedDisplayFallbackRejectedDetails);
         AppendSection(builder, "Accepted Canonical Scoped Power Replacements", AcceptedCanonicalScopedPowerReplacementDetails);
         AppendSection(builder, "Excluded Scoped Omni Powers", ExcludedScopedOmniPowerDetails);
         AppendSection(builder, "Manifest-Owned Scoped Omni Powers", ManifestOwnedScopedOmniPowerDetails);
@@ -661,8 +669,10 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Orphan powers before import: {OrphanPowersBeforeImport}");
         builder.AppendLine($"- Orphan powers after import: {OrphanPowersAfterImport}");
         builder.AppendLine($"- New orphan powers introduced: {NewOrphanPowersIntroduced}");
-        builder.AppendLine($"- Orphaned scoped Omni powers: {OrphanedScopedOmniPowers}");
+        builder.AppendLine($"- Missing / detached scoped Omni powers: {OrphanedScopedOmniPowers}");
+        builder.AppendLine($"- Exact retained scoped Omni powers: {ExactScopedOmniPowersRetained}");
         builder.AppendLine($"- Accepted canonical scoped replacements: {AcceptedCanonicalScopedPowerReplacements}");
+        builder.AppendLine($"- Scoped display fallback rejected: {ScopedDisplayFallbackRejected}");
         builder.AppendLine($"- Excluded scoped Omni powers: {ExcludedScopedOmniPowers}");
         builder.AppendLine($"- Manifest-owned scoped Omni powers: {ManifestOwnedScopedOmniPowers}");
         builder.AppendLine($"- Powerset identity changes: {PowersetIdentityChanges}");
@@ -824,7 +834,8 @@ public sealed class OmniApplyResult
         AppendSection(builder, "Excluded Content Removed", ExcludedContentRemovalDetails);
         AppendSection(builder, "Import Integrity Audit", ImportIntegrityAuditDetails);
         AppendSection(builder, "New Orphan Powers Introduced", NewOrphanPowerDetails);
-        AppendSection(builder, "Orphaned Scoped Omni Powers", OrphanedScopedOmniPowerDetails);
+        AppendSection(builder, "Missing / Detached Scoped Omni Powers", OrphanedScopedOmniPowerDetails);
+        AppendSection(builder, "Scoped Display Fallback Rejected", ScopedDisplayFallbackRejectedDetails);
         AppendSection(builder, "Accepted Canonical Scoped Power Replacements", AcceptedCanonicalScopedPowerReplacementDetails);
         AppendSection(builder, "Excluded Scoped Omni Powers", ExcludedScopedOmniPowerDetails);
         AppendSection(builder, "Manifest-Owned Scoped Omni Powers", ManifestOwnedScopedOmniPowerDetails);
@@ -913,7 +924,8 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Requirements updated/skipped unsupported: {RequirementsUpdated:n0}/{RequirementsSkippedUnsupported:n0}");
         builder.AppendLine($"- Redirect effects added: {RedirectEffectsAdded:n0}");
         builder.AppendLine($"- Excluded archetypes/powersets/powers/entities removed: {ExcludedArchetypesRemoved:n0}/{ExcludedClassPowersetsRemoved:n0}/{ExcludedClassPowersRemoved:n0}/{ExcludedClassEntitiesRemoved:n0}");
-        builder.AppendLine($"- Scoped powers orphaned/accepted replacements/excluded/manifest-owned: {OrphanedScopedOmniPowers:n0}/{AcceptedCanonicalScopedPowerReplacements:n0}/{ExcludedScopedOmniPowers:n0}/{ManifestOwnedScopedOmniPowers:n0}");
+        builder.AppendLine($"- Scoped powers missing-detached/exact-retained/accepted replacements/display-fallback-rejected: {OrphanedScopedOmniPowers:n0}/{ExactScopedOmniPowersRetained:n0}/{AcceptedCanonicalScopedPowerReplacements:n0}/{ScopedDisplayFallbackRejected:n0}");
+        builder.AppendLine($"- Scoped powers excluded/manifest-owned: {ExcludedScopedOmniPowers:n0}/{ManifestOwnedScopedOmniPowers:n0}");
         builder.AppendLine($"- Powers missing from Mids: {PowersMissingFromMids:n0}");
         builder.AppendLine($"- Known hidden/stateful effect mappings: {KnownHiddenStatefulEffectMappings:n0}");
         builder.AppendLine($"- Known unsupported effect mappings: {KnownUnsupportedEffectMappings:n0}");
@@ -973,6 +985,7 @@ public sealed class OmniApplyResult
         });
 
         AppendPreviewSection(builder, "Import Integrity Audit", ImportIntegrityAuditDetails, 8);
+        AppendPreviewSection(builder, "Scoped Display Fallback Rejected", ScopedDisplayFallbackRejectedDetails, 8);
         AppendPreviewSection(builder, "Classic Enhancement Folding", ClassicEnhancementFoldingDetails, 8);
         AppendPreviewSection(builder, "Classic Enhancement Presentation", ClassicEnhancementPresentationDetails, 8);
         AppendPreviewSection(builder, "Enhancement Source Shape Validation", EnhancementSourceShapeDetails, 8);

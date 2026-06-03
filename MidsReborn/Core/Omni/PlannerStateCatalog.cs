@@ -135,12 +135,10 @@ internal static class PlannerStateCatalog
     internal const string PerfectionLevel2PowerFullName = "Inherent.Inherent.Perfection_Level_2";
     internal const string PerfectionLevel3PowerFullName = "Inherent.Inherent.Perfection_Level_3";
     private const string ComboMutexGroup = "Planner.ComboLevel";
-    internal const string StaffFormMutexGroup = "Planner.StaffForm";
     private const string StaffPerfectionMutexGroup = "Planner.StaffPerfectionLevel";
     private static readonly string[] PlannerMutexGroups =
     [
         ComboMutexGroup,
-        StaffFormMutexGroup,
         StaffPerfectionMutexGroup
     ];
 

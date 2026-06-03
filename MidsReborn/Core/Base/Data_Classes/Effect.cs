@@ -16,6 +16,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private const string CombatModFlagsMarker = "MRB_EFFECT_COMBAT_MOD_FLAGS";
         private const string GrantBoostedMarker = "MRB_EFFECT_GRANT_BOOSTED";
         private const string StackPolicyMarker = "MRB_EFFECT_STACK_POLICY";
+        private const string OptionalMetadataEnvelopeMarker = "MRB_EFFECT_OPTIONAL_METADATA_ENVELOPE";
+        private const int OptionalMetadataEnvelopeVersion = 1;
         private static readonly Regex UidClassRegex = new("arch source(.owner)?> (Class_[^ ]*)", RegexOptions.IgnoreCase);
         private static readonly PlannerMode[] InherentPlannerModes =
         [
@@ -146,21 +148,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             AdvancedConditions = new AdvancedConditionSet();
-            if (AdvancedConditionSet.TryReadMarked(reader, AdvancedConditionsMarker, out var advancedConditions))
+            if (!TryReadOptionalMetadataEnvelope(reader))
             {
-                AdvancedConditions = advancedConditions;
+                ReadOptionalMetadata(reader);
             }
 
-            TryReadModePayload(reader);
-            if (!TryReadEffectTags(reader) && !string.IsNullOrWhiteSpace(EffectId))
-            {
-                EffectTags = [EffectId];
-            }
-
-            TryReadOmniSource(reader);
-            TryReadCombatModFlags(reader);
-            TryReadGrantBoosted(reader);
-            TryReadStackPolicy(reader);
             NormalizeConditionState();
         }
 
@@ -1855,15 +1847,49 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(ProcsPerMinute);
 
             writer.Write(0);
+            StoreOptionalMetadataEnvelope(writer);
+        }
 
-            AdvancedConditionSet.StoreMarked(writer, AdvancedConditionsMarker,
-                AdvancedConditions);
+        private void StoreOptionalMetadataEnvelope(BinaryWriter writer)
+        {
+            BinaryMetadataEnvelope.Write(writer, OptionalMetadataEnvelopeMarker, OptionalMetadataEnvelopeVersion,
+                payloadWriter => WriteOptionalMetadataPayload(payloadWriter));
+        }
+
+        private void WriteOptionalMetadataPayload(BinaryWriter writer)
+        {
+            AdvancedConditionSet.StoreMarked(writer, AdvancedConditionsMarker, AdvancedConditions);
             StoreModePayload(writer);
             StoreEffectTags(writer);
             StoreOmniSource(writer);
             StoreCombatModFlags(writer);
             StoreGrantBoosted(writer);
             StoreStackPolicy(writer);
+        }
+
+        private bool TryReadOptionalMetadataEnvelope(BinaryReader reader)
+        {
+            return BinaryMetadataEnvelope.TryRead(reader, OptionalMetadataEnvelopeMarker, OptionalMetadataEnvelopeVersion,
+                (_, payloadReader) => ReadOptionalMetadata(payloadReader));
+        }
+
+        private void ReadOptionalMetadata(BinaryReader reader)
+        {
+            if (AdvancedConditionSet.TryReadMarked(reader, AdvancedConditionsMarker, out var advancedConditions))
+            {
+                AdvancedConditions = advancedConditions;
+            }
+
+            TryReadModePayload(reader);
+            if (!TryReadEffectTags(reader) && !string.IsNullOrWhiteSpace(EffectId))
+            {
+                EffectTags = [EffectId];
+            }
+
+            TryReadOmniSource(reader);
+            TryReadCombatModFlags(reader);
+            TryReadGrantBoosted(reader);
+            TryReadStackPolicy(reader);
         }
 
         private void StoreModePayload(BinaryWriter writer)
@@ -1886,7 +1912,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var position = reader.BaseStream.Position;
             try
             {
-                if (!string.Equals(reader.ReadString(), ModePayloadMarker, StringComparison.Ordinal))
+                if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, ModePayloadMarker))
                 {
                     reader.BaseStream.Position = position;
                     return;
@@ -1935,7 +1961,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var position = reader.BaseStream.Position;
             try
             {
-                if (!string.Equals(reader.ReadString(), EffectTagsMarker, StringComparison.Ordinal))
+                if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, EffectTagsMarker))
                 {
                     reader.BaseStream.Position = position;
                     return false;
@@ -1990,7 +2016,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var position = reader.BaseStream.Position;
             try
             {
-                if (!string.Equals(reader.ReadString(), OmniSourceMarker, StringComparison.Ordinal))
+                if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, OmniSourceMarker))
                 {
                     reader.BaseStream.Position = position;
                     return;
@@ -2057,7 +2083,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var position = reader.BaseStream.Position;
             try
             {
-                if (!string.Equals(reader.ReadString(), CombatModFlagsMarker, StringComparison.Ordinal))
+                if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, CombatModFlagsMarker))
                 {
                     reader.BaseStream.Position = position;
                     return;
@@ -2092,7 +2118,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var position = reader.BaseStream.Position;
             try
             {
-                if (!string.Equals(reader.ReadString(), GrantBoostedMarker, StringComparison.Ordinal))
+                if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, GrantBoostedMarker))
                 {
                     reader.BaseStream.Position = position;
                     return;
@@ -2126,7 +2152,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var position = reader.BaseStream.Position;
             try
             {
-                if (!string.Equals(reader.ReadString(), StackPolicyMarker, StringComparison.Ordinal))
+                if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, StackPolicyMarker))
                 {
                     reader.BaseStream.Position = position;
                     return;

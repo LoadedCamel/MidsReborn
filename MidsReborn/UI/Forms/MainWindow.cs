@@ -50,6 +50,8 @@ namespace Mids_Reborn.UI.Forms
         private bool _gfxDrawing;
         private bool _isAppClosing;
         private int _originalIndex = -1;
+        private bool _startupRevealQueued;
+        private bool _startupRevealCompleted;
 
         private const int BaselineCanvasWidth = 610;
         private const int BaselineFormWidth = 1280;
@@ -410,6 +412,7 @@ namespace Mids_Reborn.UI.Forms
         public MainWindow2(string[]? args)
         {
             FormBorderStyle = FormBorderStyle.None;
+            Opacity = 0d;
             InitializeComponent();
             InitializeBufferedBodySurfaces();
             ApplyWindowSurfaceTheme();
@@ -3082,6 +3085,7 @@ namespace Mids_Reborn.UI.Forms
             };
             SetColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns, MidsContext.Config.Columns == 3 ? MidsContext.Config.ColumnStackingMode : Enums.eColumnStacking.None);
             UpdateCombatContextSummary();
+            NewDraw();
 
         }
 
@@ -3089,6 +3093,7 @@ namespace Mids_Reborn.UI.Forms
         {
             NewDraw();
             QueueDeferredCanvasLayoutSettle();
+            QueueStartupReveal();
 
             var comLoad = false;
             var prevLastFileNameCfg = MidsContext.Config.LastFileName;
@@ -3143,6 +3148,41 @@ namespace Mids_Reborn.UI.Forms
                         break;
                 }
             }
+        }
+
+        private void QueueStartupReveal()
+        {
+            if (_startupRevealQueued || _startupRevealCompleted)
+            {
+                return;
+            }
+
+            _startupRevealQueued = true;
+            BeginInvoke(new Action(() =>
+            {
+                if (IsDisposed || !IsHandleCreated || _startupRevealCompleted)
+                {
+                    _startupRevealQueued = false;
+                    return;
+                }
+
+                // Run one turn after the deferred resize/layout callback so the first visible frame is the settled UI.
+                BeginInvoke(new Action(() =>
+                {
+                    _startupRevealQueued = false;
+
+                    if (IsDisposed || !IsHandleCreated || _startupRevealCompleted)
+                    {
+                        return;
+                    }
+
+                    _startupRevealCompleted = true;
+                    DoRedraw();
+                    Opacity = 1d;
+                    Invalidate(true);
+                    Update();
+                }));
+            }));
         }
 
         private void QueueDeferredCanvasLayoutSettle()

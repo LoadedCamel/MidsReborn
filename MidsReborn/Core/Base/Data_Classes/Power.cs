@@ -7,6 +7,7 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
 using FastDeepCloner;
+using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Omni;
 using Mids_Reborn.Core.PlannerRulesets;
@@ -99,6 +100,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private const string ShowInSpecialPowerPickerMarker = "MRB_POWER_SHOW_IN_SPECIAL_POWER_PICKER";
         private const string ShowStatToggleMarker = "MRB_POWER_SHOW_STAT_TOGGLE";
         private const string VariableDisplayMetadataMarker = "MRB_POWER_VARIABLE_DISPLAY";
+        private const string OptionalMetadataEnvelopeMarker = "MRB_POWER_OPTIONAL_METADATA_ENVELOPE";
+        private const int OptionalMetadataEnvelopeVersion = 1;
         private bool Contains;
         public bool AppliedPowersOverride { get; set; } = false;
         public bool AbsorbedPetEffects { get; set; } = false;
@@ -531,66 +534,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Taken = reader.ReadBoolean();
             Stacks = reader.ReadInt32();
             VariableStart = reader.ReadInt32();
-            if (AdvancedConditionSet.TryReadMarked(reader, AdvancedRequirementsMarker, out var advancedRequirements))
+            if (!TryReadOptionalMetadataEnvelope(reader))
             {
-                AdvancedRequirements = advancedRequirements;
-                Requires = AdvancedRequirements.ToLegacyRequirement();
+                ReadOptionalMetadata(reader);
             }
-
-            if (TryReadMarkedString(reader, OmniTargetRequiresMarker, out var omniTargetRequires))
-            {
-                OmniTargetRequiresRaw = omniTargetRequires;
-            }
-            if (TryReadMarkedString(reader, PowerIconNameMarker, out var iconName))
-            {
-                IconName = iconName;
-            }
-            TryReadTargetRoutingPolicy(reader);
-            if (TryReadMarkedSingle(reader, RootTimeMarker, out var rootTime))
-            {
-                RootTime = rootTime;
-            }
-            if (TryReadMarkedStringArray(reader, RechargeGroupsMarker, out var rechargeGroups))
-            {
-                RechargeGroups = rechargeGroups;
-            }
-            if (TryReadMarkedStringArray(reader, TypedEnhancementRestrictionsMarker, out var typedEnhancementRestrictions))
-            {
-                TypedEnhancementRestrictions = TypedEnhancementLegality.Deserialize(typedEnhancementRestrictions);
-            }
-            if (TryReadMarkedStringArray(reader, IgnoreEnhancementAxesMarker, out var ignoreEnhancementAxes))
-            {
-                IgnoreEnhancementAxes = EnhancementPolicyAxes.Deserialize(ignoreEnhancementAxes);
-            }
-            if (TryReadMarkedStringArray(reader, IgnoreBuffEnhancementAxesMarker, out var ignoreBuffEnhancementAxes))
-            {
-                IgnoreBuffEnhancementAxes = EnhancementPolicyAxes.Deserialize(ignoreBuffEnhancementAxes);
-            }
-            TryReadActivationEffectsRuntime(reader);
-            TryReadProcPolicy(reader);
-            TryReadStackingLifetime(reader);
-            TryReadLifetimeMetadata(reader);
-            TryReadBoostPolicyMetadata(reader);
-            ApplyImportedBoostPolicyFlags();
-            if (!TryReadMarkedBoolean(reader, ShowInSpecialPowerPickerMarker, out var showInSpecialPowerPicker))
-            {
-                ShowInSpecialPowerPicker = SpecialPowerCatalog.ShouldBackfillSpecialPowerPicker(this);
-            }
-            else
-            {
-                ShowInSpecialPowerPicker = showInSpecialPowerPicker;
-            }
-
-            if (!TryReadMarkedBoolean(reader, ShowStatToggleMarker, out var showStatToggle))
-            {
-                ShowStatToggle = true;
-            }
-            else
-            {
-                ShowStatToggle = showStatToggle;
-            }
-
-            TryReadVariableDisplayMetadata(reader);
         }
 
         public IPowerset? GetPowerSet()
@@ -1118,6 +1065,17 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(Taken);
             writer.Write(Stacks);
             writer.Write(VariableStart);
+            StoreOptionalMetadataEnvelope(writer);
+        }
+
+        private void StoreOptionalMetadataEnvelope(BinaryWriter writer)
+        {
+            BinaryMetadataEnvelope.Write(writer, OptionalMetadataEnvelopeMarker, OptionalMetadataEnvelopeVersion,
+                payloadWriter => WriteOptionalMetadataPayload(payloadWriter));
+        }
+
+        private void WriteOptionalMetadataPayload(BinaryWriter writer)
+        {
             AdvancedConditionSet.StoreMarked(writer, AdvancedRequirementsMarker,
                 AdvancedRequirements is { Rows.Count: > 0 }
                     ? AdvancedRequirements
@@ -1127,6 +1085,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 StoreMarkedString(writer, PowerIconNameMarker, IconName);
             }
+
             StoreTargetRoutingPolicy(writer);
             StoreMarkedSingle(writer, RootTimeMarker, RootTime);
             StoreMarkedStringArray(writer, RechargeGroupsMarker, RechargeGroups);
@@ -1141,6 +1100,83 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             StoreMarkedBoolean(writer, ShowInSpecialPowerPickerMarker, ShowInSpecialPowerPicker);
             StoreMarkedBoolean(writer, ShowStatToggleMarker, ShowStatToggle);
             StoreVariableDisplayMetadata(writer);
+        }
+
+        private bool TryReadOptionalMetadataEnvelope(BinaryReader reader)
+        {
+            return BinaryMetadataEnvelope.TryRead(reader, OptionalMetadataEnvelopeMarker, OptionalMetadataEnvelopeVersion,
+                (_, payloadReader) => ReadOptionalMetadata(payloadReader));
+        }
+
+        private void ReadOptionalMetadata(BinaryReader reader)
+        {
+            if (AdvancedConditionSet.TryReadMarked(reader, AdvancedRequirementsMarker, out var advancedRequirements))
+            {
+                AdvancedRequirements = advancedRequirements;
+                Requires = AdvancedRequirements.ToLegacyRequirement();
+            }
+
+            if (TryReadMarkedString(reader, OmniTargetRequiresMarker, out var omniTargetRequires))
+            {
+                OmniTargetRequiresRaw = omniTargetRequires;
+            }
+
+            if (TryReadMarkedString(reader, PowerIconNameMarker, out var iconName))
+            {
+                IconName = iconName;
+            }
+
+            TryReadTargetRoutingPolicy(reader);
+            if (TryReadMarkedSingle(reader, RootTimeMarker, out var rootTime))
+            {
+                RootTime = rootTime;
+            }
+
+            if (TryReadMarkedStringArray(reader, RechargeGroupsMarker, out var rechargeGroups))
+            {
+                RechargeGroups = rechargeGroups;
+            }
+
+            if (TryReadMarkedStringArray(reader, TypedEnhancementRestrictionsMarker, out var typedEnhancementRestrictions))
+            {
+                TypedEnhancementRestrictions = TypedEnhancementLegality.Deserialize(typedEnhancementRestrictions);
+            }
+
+            if (TryReadMarkedStringArray(reader, IgnoreEnhancementAxesMarker, out var ignoreEnhancementAxes))
+            {
+                IgnoreEnhancementAxes = EnhancementPolicyAxes.Deserialize(ignoreEnhancementAxes);
+            }
+
+            if (TryReadMarkedStringArray(reader, IgnoreBuffEnhancementAxesMarker, out var ignoreBuffEnhancementAxes))
+            {
+                IgnoreBuffEnhancementAxes = EnhancementPolicyAxes.Deserialize(ignoreBuffEnhancementAxes);
+            }
+
+            TryReadActivationEffectsRuntime(reader);
+            TryReadProcPolicy(reader);
+            TryReadStackingLifetime(reader);
+            TryReadLifetimeMetadata(reader);
+            TryReadBoostPolicyMetadata(reader);
+            ApplyImportedBoostPolicyFlags();
+            if (!TryReadMarkedBoolean(reader, ShowInSpecialPowerPickerMarker, out var showInSpecialPowerPicker))
+            {
+                ShowInSpecialPowerPicker = SpecialPowerCatalog.ShouldBackfillSpecialPowerPicker(this);
+            }
+            else
+            {
+                ShowInSpecialPowerPicker = showInSpecialPowerPicker;
+            }
+
+            if (!TryReadMarkedBoolean(reader, ShowStatToggleMarker, out var showStatToggle))
+            {
+                ShowStatToggle = true;
+            }
+            else
+            {
+                ShowStatToggle = showStatToggle;
+            }
+
+            TryReadVariableDisplayMetadata(reader);
         }
 
         private static void StoreMarkedString(BinaryWriter writer, string marker, string value)
@@ -1193,30 +1229,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         private static bool TryReadMarkedString(BinaryReader reader, string marker, out string value)
         {
-            value = string.Empty;
-            if (!reader.BaseStream.CanSeek)
-            {
-                return false;
-            }
-
-            var position = reader.BaseStream.Position;
-            try
-            {
-                if (!string.Equals(reader.ReadString(), marker, StringComparison.Ordinal))
-                {
-                    reader.BaseStream.Position = position;
-                    return false;
-                }
-
-                value = reader.ReadString();
-                return true;
-            }
-            catch
-            {
-                reader.BaseStream.Position = position;
-                value = string.Empty;
-                return false;
-            }
+            return BinaryMetadataEnvelope.TryReadMarkedString(reader, marker, out value);
         }
 
         private void TryReadVariableDisplayMetadata(BinaryReader reader)
@@ -1251,102 +1264,27 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         private static bool TryReadMarkedSingle(BinaryReader reader, string marker, out float value)
         {
-            value = 0f;
-            if (!reader.BaseStream.CanSeek)
-            {
-                return false;
-            }
-
-            var position = reader.BaseStream.Position;
-            try
-            {
-                if (!string.Equals(reader.ReadString(), marker, StringComparison.Ordinal))
-                {
-                    reader.BaseStream.Position = position;
-                    return false;
-                }
-
-                value = reader.ReadSingle();
-                return true;
-            }
-            catch
-            {
-                reader.BaseStream.Position = position;
-                value = 0f;
-                return false;
-            }
+            return BinaryMetadataEnvelope.TryReadMarkedSingle(reader, marker, out value);
         }
 
         private static bool TryReadMarkedBoolean(BinaryReader reader, string marker, out bool value)
         {
-            value = false;
-            if (!reader.BaseStream.CanSeek)
-            {
-                return false;
-            }
-
-            var position = reader.BaseStream.Position;
-            try
-            {
-                if (!string.Equals(reader.ReadString(), marker, StringComparison.Ordinal))
-                {
-                    reader.BaseStream.Position = position;
-                    return false;
-                }
-
-                value = reader.ReadBoolean();
-                return true;
-            }
-            catch
-            {
-                reader.BaseStream.Position = position;
-                value = false;
-                return false;
-            }
+            return BinaryMetadataEnvelope.TryReadMarkedBoolean(reader, marker, out value);
         }
 
         private static bool TryReadMarkedStringArray(BinaryReader reader, string marker, out string[] values)
         {
-            values = [];
-            if (!reader.BaseStream.CanSeek)
+            if (!BinaryMetadataEnvelope.TryReadMarkedStringArray(reader, marker, out values))
             {
-                return false;
-            }
-
-            var position = reader.BaseStream.Position;
-            try
-            {
-                if (!string.Equals(reader.ReadString(), marker, StringComparison.Ordinal))
-                {
-                    reader.BaseStream.Position = position;
-                    return false;
-                }
-
-                var count = reader.ReadInt32();
-                if (count <= 0)
-                {
-                    values = [];
-                    return true;
-                }
-
-                values = new string[count];
-                for (var index = 0; index < count; index++)
-                {
-                    values[index] = reader.ReadString();
-                }
-
-                values = values
-                    .Where(value => !string.IsNullOrWhiteSpace(value))
-                    .Distinct(StringComparer.OrdinalIgnoreCase)
-                    .ToArray();
-                return true;
-            }
-            catch
-            {
-                reader.BaseStream.Position = position;
                 values = [];
                 return false;
             }
+
+            values = values
+                .Where(value => !string.IsNullOrWhiteSpace(value))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+            return true;
         }
 
         private void StoreActivationEffectsRuntime(BinaryWriter writer)
@@ -1369,7 +1307,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var position = reader.BaseStream.Position;
             try
             {
-                if (!string.Equals(reader.ReadString(), ActivationEffectsRuntimeMarker, StringComparison.Ordinal))
+                if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, ActivationEffectsRuntimeMarker))
                 {
                     reader.BaseStream.Position = position;
                     return;
@@ -1424,7 +1362,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var position = reader.BaseStream.Position;
             try
             {
-                if (!string.Equals(reader.ReadString(), ProcPolicyMarker, StringComparison.Ordinal))
+                if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, ProcPolicyMarker))
                 {
                     reader.BaseStream.Position = position;
                     return;
@@ -1490,7 +1428,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var position = reader.BaseStream.Position;
             try
             {
-                if (!string.Equals(reader.ReadString(), TargetRoutingPolicyMarker, StringComparison.Ordinal))
+                if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, TargetRoutingPolicyMarker))
                 {
                     reader.BaseStream.Position = position;
                     TargetRoutingPolicy = PlannerTargetRoutingPolicy.Default;
@@ -1561,7 +1499,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var position = reader.BaseStream.Position;
             try
             {
-                if (!string.Equals(reader.ReadString(), StackingLifetimeMarker, StringComparison.Ordinal))
+                if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, StackingLifetimeMarker))
                 {
                     reader.BaseStream.Position = position;
                     return;
@@ -1610,7 +1548,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var position = reader.BaseStream.Position;
             try
             {
-                if (!string.Equals(reader.ReadString(), LifetimeMetadataMarker, StringComparison.Ordinal))
+                if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, LifetimeMetadataMarker))
                 {
                     reader.BaseStream.Position = position;
                     return;
@@ -1657,7 +1595,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             var position = reader.BaseStream.Position;
             try
             {
-                if (!string.Equals(reader.ReadString(), BoostPolicyMetadataMarker, StringComparison.Ordinal))
+                if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, BoostPolicyMetadataMarker))
                 {
                     reader.BaseStream.Position = position;
                     return;
