@@ -247,12 +247,69 @@ public static class OmniModeMapper
 
     public static bool IsKnownBuildSourceMode(string mode)
     {
-        return PlannerModeMapper.TryGetPlannerMode(Normalize(mode), out _);
+        var normalized = Normalize(mode);
+        return TryToFlag(normalized, out _) ||
+               TryFromModeName(normalized, out _, out _) ||
+               PlannerModeMapper.TryGetPlannerMode(normalized, out _);
     }
 
     public static bool TryGetPlannerMode(string mode, out PlannerMode plannerMode)
     {
         return PlannerModeMapper.TryGetPlannerMode(Normalize(mode), out plannerMode);
+    }
+
+    public static bool IsPlannerOnlyMode(string mode)
+    {
+        var normalized = Normalize(mode);
+        return PlannerModeMapper.TryGetPlannerMode(normalized, out _) &&
+               !TryToFlag(normalized, out _) &&
+               !TryFromModeName(normalized, out _, out _);
+    }
+
+    public static bool ModeMatches(string mode, IReadOnlyCollection<string> activeModes, Enums.eModeFlags activeFlags)
+    {
+        var normalized = Normalize(mode);
+        if (activeModes.Contains(normalized))
+        {
+            return true;
+        }
+
+        if (TryToFlag(normalized, out var flag) && flag != Enums.eModeFlags.None)
+        {
+            return (activeFlags & flag) == flag;
+        }
+
+        return false;
+    }
+
+    public static string PrimaryNameForFlag(Enums.eModeFlags flag)
+    {
+        if (flag == Enums.eModeFlags.None)
+        {
+            return string.Empty;
+        }
+
+        foreach (var (_, mapped) in ModeIds.OrderBy(pair => pair.Key))
+        {
+            if (mapped.Flag == flag && !string.IsNullOrWhiteSpace(mapped.Name))
+            {
+                return mapped.Name;
+            }
+        }
+
+        var alias = ModeFlags.FirstOrDefault(pair => pair.Value == flag);
+        return alias.Key ?? string.Empty;
+    }
+
+    public static string[] NormalizeModeList(IEnumerable<string>? modes)
+    {
+        return (modes ?? [])
+            .Where(mode => !string.IsNullOrWhiteSpace(mode))
+            .Select(Normalize)
+            .Where(mode => !string.IsNullOrWhiteSpace(mode))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(mode => mode, StringComparer.OrdinalIgnoreCase)
+            .ToArray();
     }
 
     private static Enums.eModeFlags ResolveFlag(string mode)

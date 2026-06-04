@@ -79,6 +79,8 @@ public static partial class DatabaseAPI
 
                 if (powerImport == null || !powerImport.TryGetValue(dbPower.FullName, out var semantics))
                 {
+                    dbPower.OmniRequiredModesRaw = [];
+                    dbPower.OmniDisallowedModesRaw = [];
                     if (!string.IsNullOrWhiteSpace(dbPower.OmniTargetRequiresRaw) &&
                         dbPower.TargetRoutingPolicy.IsDefault)
                     {
@@ -144,6 +146,16 @@ public static partial class DatabaseAPI
 
     internal static void ApplyImportedPowerRuntimeMetadata(Power dbPower, ImportedPowerSemantics semantics)
     {
+        dbPower.OmniRequiredModesRaw = semantics.RequiredModes
+            .Where(mode => !string.IsNullOrWhiteSpace(mode))
+            .Select(OmniModeMapper.Normalize)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
+        dbPower.OmniDisallowedModesRaw = semantics.DisallowedModes
+            .Where(mode => !string.IsNullOrWhiteSpace(mode))
+            .Select(OmniModeMapper.Normalize)
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .ToArray();
         dbPower.TargetRoutingPolicy = PlannerConditionRoutingAnalyzer.Analyze(
             dbPower.OmniTargetRequiresRaw,
             dbPower.FullName);

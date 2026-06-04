@@ -49,6 +49,8 @@ public sealed partial class OmniImporter
         string powerFullName,
         OmniPowerDefinition source)
     {
+        var requiredModes = NormalizeImportedModes(source.ModesRequired);
+        var disallowedModes = NormalizeImportedModes(source.ModesDisallowed);
         var procPolicy = ImportedProcPolicyNormalizer.Normalize(
             source.ProcAllowedValue,
             source.ProcsOnlyOnMainTarget,
@@ -66,6 +68,8 @@ public sealed partial class OmniImporter
             : null;
 
         if (string.IsNullOrWhiteSpace(source.TargetRequires) &&
+            requiredModes.Count == 0 &&
+            disallowedModes.Count == 0 &&
             (source.ActivationEffects == null || source.ActivationEffects.Count == 0) &&
             procPolicy.IsDefault &&
             source.StackingLifetime == null &&
@@ -79,6 +83,8 @@ public sealed partial class OmniImporter
         return new ImportedPowerSemantics
         {
             TargetRequires = source.TargetRequires ?? string.Empty,
+            RequiredModes = requiredModes,
+            DisallowedModes = disallowedModes,
             ActivationEffects = source.ActivationEffects?.Select(CloneEffectGroup).ToList() ?? [],
             ProcPolicy = procPolicy,
             StackingLifetime = source.StackingLifetime,
@@ -95,6 +101,8 @@ public sealed partial class OmniImporter
             return;
         }
 
+        midsPower.OmniRequiredModesRaw = NormalizeImportedModes(source.ModesRequired).ToArray();
+        midsPower.OmniDisallowedModesRaw = NormalizeImportedModes(source.ModesDisallowed).ToArray();
         midsPower.OmniTargetRequiresRaw = source.TargetRequires ?? string.Empty;
         midsPower.TargetRoutingPolicy = PlannerConditionRoutingAnalyzer.Analyze(
             midsPower.OmniTargetRequiresRaw,
@@ -126,6 +134,17 @@ public sealed partial class OmniImporter
         }
 
         midsPower.ActivationEffectsRuntime = activationEffects;
+    }
+
+    private static List<string> NormalizeImportedModes(IEnumerable<string>? modes)
+    {
+        return (modes ?? [])
+            .Where(mode => !string.IsNullOrWhiteSpace(mode))
+            .Select(OmniModeMapper.Normalize)
+            .Where(mode => !string.IsNullOrWhiteSpace(mode))
+            .Distinct(StringComparer.OrdinalIgnoreCase)
+            .OrderBy(mode => mode, StringComparer.OrdinalIgnoreCase)
+            .ToList();
     }
 
     private static OmniEffectDefinition CloneEffectGroup(OmniEffectDefinition source)

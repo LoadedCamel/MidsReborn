@@ -978,7 +978,11 @@ namespace Mids_Reborn.Core
 
             if (power.AdvancedRequirements is { Rows.Count: > 0 })
             {
-                return AdvancedConditionEvaluator.EvaluatePowerRequirements(power, nLevel, skipIdx, this);
+                return AdvancedConditionEvaluator.EvaluatePowerRequirements(
+                    power,
+                    nLevel,
+                    skipIdx,
+                    this);
             }
 
             var nIdSkip = -1;
@@ -1077,6 +1081,31 @@ namespace Mids_Reborn.Core
             }
 
             return true;
+        }
+
+        internal bool MeetsActivationRequirement(
+            IPower? power,
+            int nLevel,
+            BuildConditionSnapshot? snapshot = null,
+            int skipIdx = -1)
+        {
+            if (nLevel < 0 || power == null)
+            {
+                return false;
+            }
+
+            if (power.AdvancedRequirements is { Rows.Count: > 0 })
+            {
+                return AdvancedConditionEvaluator.EvaluatePowerRequirements(
+                    power,
+                    nLevel,
+                    skipIdx,
+                    this,
+                    snapshot,
+                    includeSourceModes: true);
+            }
+
+            return MeetsRequirement(power, nLevel, skipIdx);
         }
 
         public int FindInToonHistory(int nIDPower)

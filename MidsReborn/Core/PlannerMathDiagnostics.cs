@@ -343,6 +343,11 @@ public static class PlannerMathDiagnostics
         builder.AppendLine($"- Flags: Hidden={power.HiddenPower}, ClickBuff={power.ClickBuff}, AlwaysToggle={power.AlwaysToggle}, Include={power.IncludeFlag}, AbsorbSummonEffects={power.AbsorbSummonEffects}, AbsorbSummonAttributes={power.AbsorbSummonAttributes}");
         builder.AppendLine($"- Modes required: `{power.ModesRequired}`");
         builder.AppendLine($"- Modes disallowed: `{power.ModesDisallowed}`");
+        if (power is Power omniPower)
+        {
+            builder.AppendLine($"- Omni required modes: {FormatList(omniPower.OmniRequiredModesRaw)}");
+            builder.AppendLine($"- Omni disallowed modes: {FormatList(omniPower.OmniDisallowedModesRaw)}");
+        }
         builder.AppendLine($"- Forced class: `{power.ForcedClass}`");
         builder.AppendLine($"- Modifier tables: {FormatList(power.Effects.Select(e => e.ModifierTable).Where(s => !string.IsNullOrWhiteSpace(s)).Distinct(StringComparer.OrdinalIgnoreCase))}");
         builder.AppendLine($"- GCM rewards: {FormatList(power.Effects.Where(e => e.EffectType == Enums.eEffectType.GlobalChanceMod).Select(e => e.Reward).Where(s => !string.IsNullOrWhiteSpace(s)).Distinct(StringComparer.OrdinalIgnoreCase))}");
@@ -845,6 +850,9 @@ public static class PlannerMathDiagnostics
         builder.AppendLine($"- Toon base power: `{basePower?.FullName ?? "(none)"}` effects={basePower?.Effects.Length ?? 0}");
         builder.AppendLine($"- Toon enhanced power: `{enhancedPower?.FullName ?? "(none)"}` effects={enhancedPower?.Effects.Length ?? 0}");
         builder.AppendLine($"- Resolver power: `{resolverPower.FullName}` effects={resolverPower.Effects.Length}");
+        builder.AppendLine($"- Active source modes: {FormatList(MidsContext.Character.ActiveSourceModes)}");
+        builder.AppendLine($"- Active source mode flags: `{MidsContext.Character.ActiveSourceModeFlags}`");
+        builder.AppendLine($"- Source mode gate: {PlannerMathDiagnosticRunner.Escape(MidsContext.Character.GetSourceModeGateReason(rawPower))}");
         builder.AppendLine($"- Redirect mismatch: {(!string.Equals(basePower?.FullName, resolverPower.FullName, StringComparison.OrdinalIgnoreCase)).ToString(CultureInfo.InvariantCulture)}");
         builder.AppendLine($"- Effect count mismatch: {((basePower?.Effects.Length ?? -1) != resolverPower.Effects.Length).ToString(CultureInfo.InvariantCulture)}");
 

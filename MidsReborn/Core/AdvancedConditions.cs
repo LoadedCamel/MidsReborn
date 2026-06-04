@@ -434,130 +434,156 @@ public static class AdvancedConditionCompiler
     }
 }
 
-public static class AdvancedConditionEvaluator
+internal sealed class BuildConditionSnapshot
 {
-    private sealed class PlannerBuildStateSnapshot
+    public HashSet<PlannerMode> ActivePlannerModes { get; } = [];
+    public HashSet<string> ActiveSourceModes { get; } = new(StringComparer.OrdinalIgnoreCase);
+    public Enums.eModeFlags ActiveSourceModeFlags { get; private set; } = Enums.eModeFlags.None;
+    public Dictionary<string, int> StackCounts { get; } = new(StringComparer.OrdinalIgnoreCase);
+
+    public static BuildConditionSnapshot Create(
+        Build? build,
+        IEnumerable<string>? activeSourceModes = null,
+        Enums.eModeFlags activeSourceModeFlags = Enums.eModeFlags.None)
     {
-        public HashSet<PlannerMode> ActiveModes { get; } = [];
-        public Dictionary<string, int> StackCounts { get; } = new(StringComparer.OrdinalIgnoreCase);
-
-        public static PlannerBuildStateSnapshot Create(Build? build)
+        var snapshot = new BuildConditionSnapshot();
+        snapshot.SetSourceModes(activeSourceModes, activeSourceModeFlags);
+        if (build?.Powers == null)
         {
-            var snapshot = new PlannerBuildStateSnapshot();
-            if (build?.Powers == null)
-            {
-                return snapshot;
-            }
-
-            foreach (var entry in build.Powers.Where(entry => entry is { Power: not null, StatInclude: true }))
-            {
-                var power = entry!.Power;
-                if (PlannerStateCatalog.IsHiddenPayloadPower(power.FullName))
-                {
-                    continue;
-                }
-
-                if (power.VariableEnabled)
-                {
-                    snapshot.StackCounts[power.FullName] = Math.Max(0, entry.VariableValue);
-                }
-
-                foreach (var effect in power.Effects.Where(effect => effect?.EffectType == Enums.eEffectType.SetMode))
-                {
-                    if (PlannerModeMapper.TryGetPlannerMode(effect!.ModeName, out var effectMode))
-                    {
-                        snapshot.SetMode(effectMode);
-                    }
-                }
-
-                if (PlannerModeMapper.TryGetPlannerMode(power.PowerName, out var powerMode) ||
-                    PlannerModeMapper.TryGetPlannerMode(power.FullName?.Split('.').LastOrDefault(), out powerMode))
-                {
-                    snapshot.SetMode(powerMode);
-                }
-
-                if (PlannerStateCatalog.TryGetImpliedPlannerModes(power.FullName, out var impliedModes))
-                {
-                    foreach (var impliedMode in impliedModes)
-                    {
-                        snapshot.SetMode(impliedMode);
-                    }
-                }
-            }
-
-            DeriveCompatibilityModes(snapshot);
             return snapshot;
         }
 
-        public bool IsModeActive(PlannerMode mode)
+        foreach (var entry in build.Powers.Where(entry => entry is { Power: not null, StatInclude: true }))
         {
-            return ActiveModes.Contains(mode);
-        }
-
-        public int GetStacks(string powerFullName)
-        {
-            return StackCounts.TryGetValue(powerFullName, out var stacks) ? stacks : 0;
-        }
-
-        private void SetMode(PlannerMode mode)
-        {
-            if (PlannerStateCatalog.TryGetExclusiveModeFamily(mode, out var familyModes))
+            var power = entry!.Power;
+            if (PlannerStateCatalog.IsHiddenPayloadPower(power.FullName))
             {
-                foreach (var siblingMode in familyModes)
+                continue;
+            }
+
+            if (power.VariableEnabled)
+            {
+                snapshot.StackCounts[power.FullName] = Math.Max(0, entry.VariableValue);
+            }
+
+            foreach (var effect in power.Effects.Where(effect => effect?.EffectType == Enums.eEffectType.SetMode))
+            {
+                if (PlannerModeMapper.TryGetPlannerMode(effect!.ModeName, out var effectMode))
                 {
-                    if (siblingMode != mode)
-                    {
-                        ActiveModes.Remove(siblingMode);
-                    }
+                    snapshot.SetPlannerMode(effectMode);
                 }
             }
 
-            ActiveModes.Add(mode);
+            if (PlannerModeMapper.TryGetPlannerMode(power.PowerName, out var powerMode) ||
+                PlannerModeMapper.TryGetPlannerMode(power.FullName?.Split('.').LastOrDefault(), out powerMode))
+            {
+                snapshot.SetPlannerMode(powerMode);
+            }
+
+            if (PlannerStateCatalog.TryGetImpliedPlannerModes(power.FullName, out var impliedModes))
+            {
+                foreach (var impliedMode in impliedModes)
+                {
+                    snapshot.SetPlannerMode(impliedMode);
+                }
+            }
         }
 
-        private static void DeriveCompatibilityModes(PlannerBuildStateSnapshot snapshot)
+        DeriveCompatibilityModes(snapshot);
+        return snapshot;
+    }
+
+    public bool IsPlannerModeActive(PlannerMode mode)
+    {
+        return ActivePlannerModes.Contains(mode);
+    }
+
+    public bool IsSourceModeActive(string? mode)
+    {
+        return !string.IsNullOrWhiteSpace(mode) &&
+               OmniModeMapper.ModeMatches(mode, ActiveSourceModes, ActiveSourceModeFlags);
+    }
+
+    public int GetStacks(string powerFullName)
+    {
+        return StackCounts.TryGetValue(powerFullName, out var stacks) ? stacks : 0;
+    }
+
+    private void SetPlannerMode(PlannerMode mode)
+    {
+        if (PlannerStateCatalog.TryGetExclusiveModeFamily(mode, out var familyModes))
         {
-            if (snapshot.ActiveModes.Contains(PlannerMode.DominationActive) ||
-                snapshot.ActiveModes.Contains(PlannerMode.Domination))
+            foreach (var siblingMode in familyModes)
             {
-                snapshot.ActiveModes.Add(PlannerMode.DominationActive);
-                snapshot.ActiveModes.Add(PlannerMode.Domination);
-                snapshot.StackCounts[PlannerStateCatalog.DominationMeterPowerFullName] =
-                    Math.Max(100, snapshot.GetStacks(PlannerStateCatalog.DominationMeterPowerFullName));
+                if (siblingMode != mode)
+                {
+                    ActivePlannerModes.Remove(siblingMode);
+                }
             }
+        }
 
-            if (snapshot.GetStacks(PlannerStateCatalog.PackMentalityMarker) > 0)
+        ActivePlannerModes.Add(mode);
+    }
+
+    private void SetSourceModes(IEnumerable<string>? activeSourceModes, Enums.eModeFlags activeSourceModeFlags)
+    {
+        ActiveSourceModeFlags = activeSourceModeFlags;
+        foreach (var mode in OmniModeMapper.NormalizeModeList(activeSourceModes))
+        {
+            ActiveSourceModes.Add(mode);
+            if (OmniModeMapper.TryToFlag(mode, out var flag))
             {
-                snapshot.ActiveModes.Add(PlannerMode.PackMentality);
-            }
-
-            var hasBody = snapshot.ActiveModes.Contains(PlannerMode.PerfectionOfBody) || MidsContext.Character?.IsStalker == true;
-            var hasMind = snapshot.ActiveModes.Contains(PlannerMode.PerfectionOfMind);
-            var hasSoul = snapshot.ActiveModes.Contains(PlannerMode.PerfectionOfSoul);
-
-            if (hasBody)
-            {
-                snapshot.ActiveModes.Add(PlannerMode.PerfectionOfBody);
-                if (snapshot.ActiveModes.Contains(PlannerMode.PerfectionLevel1)) snapshot.ActiveModes.Add(PlannerMode.PerfectionOfBody1);
-                if (snapshot.ActiveModes.Contains(PlannerMode.PerfectionLevel2)) snapshot.ActiveModes.Add(PlannerMode.PerfectionOfBody2);
-                if (snapshot.ActiveModes.Contains(PlannerMode.PerfectionLevel3)) snapshot.ActiveModes.Add(PlannerMode.PerfectionOfBody3);
-            }
-
-            if (hasMind)
-            {
-                if (snapshot.ActiveModes.Contains(PlannerMode.PerfectionLevel1)) snapshot.ActiveModes.Add(PlannerMode.PerfectionOfMind1);
-                if (snapshot.ActiveModes.Contains(PlannerMode.PerfectionLevel2)) snapshot.ActiveModes.Add(PlannerMode.PerfectionOfMind2);
-                if (snapshot.ActiveModes.Contains(PlannerMode.PerfectionLevel3)) snapshot.ActiveModes.Add(PlannerMode.PerfectionOfMind3);
-            }
-
-            if (hasSoul)
-            {
-                if (snapshot.ActiveModes.Contains(PlannerMode.PerfectionLevel1)) snapshot.ActiveModes.Add(PlannerMode.PerfectionOfSoul1);
-                if (snapshot.ActiveModes.Contains(PlannerMode.PerfectionLevel2)) snapshot.ActiveModes.Add(PlannerMode.PerfectionOfSoul2);
-                if (snapshot.ActiveModes.Contains(PlannerMode.PerfectionLevel3)) snapshot.ActiveModes.Add(PlannerMode.PerfectionOfSoul3);
+                ActiveSourceModeFlags |= flag;
             }
         }
     }
+
+    private static void DeriveCompatibilityModes(BuildConditionSnapshot snapshot)
+    {
+        if (snapshot.ActivePlannerModes.Contains(PlannerMode.DominationActive) ||
+            snapshot.ActivePlannerModes.Contains(PlannerMode.Domination))
+        {
+            snapshot.ActivePlannerModes.Add(PlannerMode.DominationActive);
+            snapshot.ActivePlannerModes.Add(PlannerMode.Domination);
+            snapshot.StackCounts[PlannerStateCatalog.DominationMeterPowerFullName] =
+                Math.Max(100, snapshot.GetStacks(PlannerStateCatalog.DominationMeterPowerFullName));
+        }
+
+        if (snapshot.GetStacks(PlannerStateCatalog.PackMentalityMarker) > 0)
+        {
+            snapshot.ActivePlannerModes.Add(PlannerMode.PackMentality);
+        }
+
+        var hasBody = snapshot.ActivePlannerModes.Contains(PlannerMode.PerfectionOfBody) || MidsContext.Character?.IsStalker == true;
+        var hasMind = snapshot.ActivePlannerModes.Contains(PlannerMode.PerfectionOfMind);
+        var hasSoul = snapshot.ActivePlannerModes.Contains(PlannerMode.PerfectionOfSoul);
+
+        if (hasBody)
+        {
+            snapshot.ActivePlannerModes.Add(PlannerMode.PerfectionOfBody);
+            if (snapshot.ActivePlannerModes.Contains(PlannerMode.PerfectionLevel1)) snapshot.ActivePlannerModes.Add(PlannerMode.PerfectionOfBody1);
+            if (snapshot.ActivePlannerModes.Contains(PlannerMode.PerfectionLevel2)) snapshot.ActivePlannerModes.Add(PlannerMode.PerfectionOfBody2);
+            if (snapshot.ActivePlannerModes.Contains(PlannerMode.PerfectionLevel3)) snapshot.ActivePlannerModes.Add(PlannerMode.PerfectionOfBody3);
+        }
+
+        if (hasMind)
+        {
+            if (snapshot.ActivePlannerModes.Contains(PlannerMode.PerfectionLevel1)) snapshot.ActivePlannerModes.Add(PlannerMode.PerfectionOfMind1);
+            if (snapshot.ActivePlannerModes.Contains(PlannerMode.PerfectionLevel2)) snapshot.ActivePlannerModes.Add(PlannerMode.PerfectionOfMind2);
+            if (snapshot.ActivePlannerModes.Contains(PlannerMode.PerfectionLevel3)) snapshot.ActivePlannerModes.Add(PlannerMode.PerfectionOfMind3);
+        }
+
+        if (hasSoul)
+        {
+            if (snapshot.ActivePlannerModes.Contains(PlannerMode.PerfectionLevel1)) snapshot.ActivePlannerModes.Add(PlannerMode.PerfectionOfSoul1);
+            if (snapshot.ActivePlannerModes.Contains(PlannerMode.PerfectionLevel2)) snapshot.ActivePlannerModes.Add(PlannerMode.PerfectionOfSoul2);
+            if (snapshot.ActivePlannerModes.Contains(PlannerMode.PerfectionLevel3)) snapshot.ActivePlannerModes.Add(PlannerMode.PerfectionOfSoul3);
+        }
+    }
+}
+
+public static class AdvancedConditionEvaluator
+{
 
     public static bool Evaluate(IEffect effect)
     {
@@ -620,7 +646,28 @@ public static class AdvancedConditionEvaluator
         return row.Negated ? !result : result;
     }
 
-    public static bool EvaluatePowerRequirements(IPower? power, int nLevel, int skipIdx = -1, Build? build = null)
+    public static bool EvaluatePowerRequirements(
+        IPower? power,
+        int nLevel,
+        int skipIdx = -1,
+        Build? build = null)
+    {
+        return EvaluatePowerRequirements(
+            power,
+            nLevel,
+            skipIdx,
+            build,
+            null,
+            includeSourceModes: false);
+    }
+
+    internal static bool EvaluatePowerRequirements(
+        IPower? power,
+        int nLevel,
+        int skipIdx,
+        Build? build,
+        BuildConditionSnapshot? snapshot,
+        bool includeSourceModes)
     {
         if (power == null || nLevel < 0)
         {
@@ -642,7 +689,10 @@ public static class AdvancedConditionEvaluator
         }
 
         build ??= MidsContext.Character?.CurrentBuild;
-        var snapshot = PlannerBuildStateSnapshot.Create(build);
+        snapshot ??= BuildConditionSnapshot.Create(
+            build,
+            MidsContext.Character?.ActiveSourceModes,
+            MidsContext.Character?.ActiveSourceModeFlags ?? Enums.eModeFlags.None);
 
         var classIncludes = set.Rows
             .Where(r => r.Kind == AdvancedConditionKind.CharacterArchetype && !r.Negated)
@@ -681,7 +731,7 @@ public static class AdvancedConditionEvaluator
                      r.Kind != AdvancedConditionKind.CharacterArchetype &&
                      r.Kind != AdvancedConditionKind.PowerRequirementGroup))
         {
-            if (!EvaluateRowForPower(row, build, snapshot))
+            if (!EvaluateRowForPower(row, build, snapshot, includeSourceModes))
             {
                 return false;
             }
@@ -789,11 +839,19 @@ public static class AdvancedConditionEvaluator
     private static bool EvaluateRowForPower(
         AdvancedConditionRow row,
         Build? build,
-        PlannerBuildStateSnapshot snapshot)
+        BuildConditionSnapshot snapshot,
+        bool includeSourceModes)
     {
         if (row.EvaluationMode != AdvancedConditionEvaluationMode.BuildEvaluated)
         {
             return false;
+        }
+
+        if (row.Kind == AdvancedConditionKind.SourceMode &&
+            !includeSourceModes &&
+            !PlannerModeMapper.TryGetPlannerMode(OmniModeMapper.Normalize(row.Subject), out _))
+        {
+            return true;
         }
 
         var result = row.Kind switch
@@ -829,11 +887,11 @@ public static class AdvancedConditionEvaluator
         return CompareBool(actual, row.Operator, expected);
     }
 
-    private static bool EvaluateOwnPower(string powerName, Build? build, PlannerBuildStateSnapshot snapshot)
+    private static bool EvaluateOwnPower(string powerName, Build? build, BuildConditionSnapshot snapshot)
     {
         if (PlannerStateCatalog.TryEvaluateOwnPowerState(
                 powerName,
-                snapshot.IsModeActive,
+                snapshot.IsPlannerModeActive,
                 snapshot.GetStacks,
                 MidsContext.Character?.IsStalker == true,
                 out var plannerActive))
@@ -844,7 +902,7 @@ public static class AdvancedConditionEvaluator
         return BuildOwnsPower(build, powerName);
     }
 
-    private static bool EvaluatePowerStacks(AdvancedConditionRow row, Build? build, PlannerBuildStateSnapshot snapshot)
+    private static bool EvaluatePowerStacks(AdvancedConditionRow row, Build? build, BuildConditionSnapshot snapshot)
     {
         var power = DatabaseAPI.GetPowerByFullName(row.Subject);
         if (power == null)
@@ -866,11 +924,11 @@ public static class AdvancedConditionEvaluator
         return CompareNumber(stacks, row.Operator, ParseNumber(row.Value));
     }
 
-    private static bool EvaluateOwnedPowerCount(AdvancedConditionRow row, Build? build, PlannerBuildStateSnapshot snapshot)
+    private static bool EvaluateOwnedPowerCount(AdvancedConditionRow row, Build? build, BuildConditionSnapshot snapshot)
     {
         if (PlannerStateCatalog.TryEvaluatePlannerPowerCount(
                 row.Subject,
-                snapshot.IsModeActive,
+                snapshot.IsPlannerModeActive,
                 snapshot.GetStacks,
                 MidsContext.Character?.IsStalker == true,
                 out var plannerCount))
@@ -894,11 +952,15 @@ public static class AdvancedConditionEvaluator
         return CompareNumber(count, row.Operator, ParseNumber(row.Value));
     }
 
-    private static bool EvaluateSourceMode(AdvancedConditionRow row, PlannerBuildStateSnapshot snapshot)
+    private static bool EvaluateSourceMode(AdvancedConditionRow row, BuildConditionSnapshot snapshot)
     {
         var mode = OmniModeMapper.Normalize(row.Subject);
-        return PlannerModeMapper.TryGetPlannerMode(mode, out var plannerMode) &&
-               snapshot.IsModeActive(plannerMode);
+        if (PlannerModeMapper.TryGetPlannerMode(mode, out var plannerMode))
+        {
+            return snapshot.IsPlannerModeActive(plannerMode);
+        }
+
+        return snapshot.IsSourceModeActive(mode);
     }
 
     private static bool EvaluatePowerStacks(AdvancedConditionRow row)
@@ -1025,22 +1087,11 @@ public static class AdvancedConditionEvaluator
             };
         }
 
-        var result = mode switch
-        {
-            "DefensiveAdaptation" => MidsContext.Character?.DefensiveAdaptation == true,
-            "EfficientAdaptation" => MidsContext.Character?.EfficientAdaptation == true,
-            "OffensiveAdaptation" => MidsContext.Character?.OffensiveAdaptation == true,
-            "Domination" => MidsContext.Character?.Domination == true,
-            "Scourge" => MidsContext.Character?.Scourge == true,
-            "Containment" => MidsContext.Character?.Containment == true,
-            "CriticalHit" => MidsContext.Character?.CriticalHits == true,
-            "Assassination" => MidsContext.Character?.Assassination == true,
-            "FastSnipe" => MidsContext.Character?.FastSnipe == true,
-            "Insight" => MidsContext.Character?.Insight == true,
-            _ => false
-        };
-
-        return result;
+        return MidsContext.Character != null &&
+               OmniModeMapper.ModeMatches(
+                   mode,
+                   MidsContext.Character.ActiveSourceModes,
+                   MidsContext.Character.ActiveSourceModeFlags);
     }
 
     private static bool EvaluateTargetEntityType(AdvancedConditionRow row)

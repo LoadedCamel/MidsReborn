@@ -148,8 +148,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public int ActivePerfectionLevel { get; private set; }
 
         private readonly HashSet<PlannerMode> _activePlannerModes = [];
+        private readonly HashSet<string> _activeSourceModes = new(StringComparer.OrdinalIgnoreCase);
+        private Enums.eModeFlags _activeSourceModeFlags = Enums.eModeFlags.None;
         private readonly Dictionary<string, int> _plannerStateStacks = new(StringComparer.OrdinalIgnoreCase);
         public IReadOnlyCollection<PlannerMode> ActivePlannerModes => _activePlannerModes;
+        public IReadOnlyCollection<string> ActiveSourceModes => _activeSourceModes;
+        public Enums.eModeFlags ActiveSourceModeFlags => _activeSourceModeFlags;
         public IReadOnlyDictionary<string, int> PlannerStateStacks => _plannerStateStacks;
 
         public int PerfectionOfBodyLevel => IsStalker || PerfectionType == "body" ? ActivePerfectionLevel : 0;
@@ -757,6 +761,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             FastSnipe = false;
             NotFastSnipe = true;
             _activePlannerModes.Clear();
+            _activeSourceModes.Clear();
+            _activeSourceModeFlags = Enums.eModeFlags.None;
             _plannerStateStacks.Clear();
             InherentDisplayList = new List<InherentDisplayItem>();
             PEnhancementsList = new List<string>();
@@ -784,9 +790,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     power.Power.Taken = true;
                 }
 
-                power.Power.Active = power.StatInclude &&
-                                    CurrentBuild.MeetsRequirement(power.Power, CurrentBuild.GetMaxLevel());
-
                 for (var slotIndex = 0; slotIndex < power.SlotCount; slotIndex++)
                 {
                     var pSlotEnh = power.Slots[slotIndex].Enhancement.Enh;
@@ -798,6 +801,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     }
                 }
             }
+
+            RebuildActiveSourceModesAndPowerState();
 
             foreach (var power in CurrentBuild.Powers)
             {
@@ -889,6 +894,259 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                 var displayItem = InherentDisplayList.FirstOrDefault(x => x.Power.FullName == power.Power.FullName);
                 power.Power.DisplayLocation = InherentDisplayList.IndexOf(displayItem);
+            }
+        }
+
+        private void RebuildActiveSourceModesAndPowerState()
+        {
+            if (CurrentBuild?.Powers == null)
+            {
+                _activeSourceModes.Clear();
+                _activeSourceModeFlags = Enums.eModeFlags.None;
+                return;
+            }
+
+            const int maxPasses = 8;
+            var maxLevel = CurrentBuild.GetMaxLevel();
+            var sourceModes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            var sourceModeFlags = Enums.eModeFlags.None;
+
+            for (var pass = 0; pass < maxPasses; pass++)
+            {
+                var snapshot = BuildConditionSnapshot.Create(CurrentBuild, sourceModes, sourceModeFlags);
+                var nextActiveStates = new Dictionary<int, bool>();
+                foreach (var powerEntry in CurrentBuild.Powers.Where(powerEntry => powerEntry?.Power != null))
+                {
+                    var power = powerEntry!.Power;
+                    var isActive = powerEntry.StatInclude &&
+                                   CurrentBuild.MeetsActivationRequirement(power, maxLevel, snapshot) &&
+                                   SourceModesAllowPower(power, sourceModes, sourceModeFlags);
+                    nextActiveStates[power.StaticIndex] = isActive;
+                }
+
+                var nextSourceModes = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+                var nextSourceModeFlags = Enums.eModeFlags.None;
+                foreach (var powerEntry in CurrentBuild.Powers.Where(powerEntry => powerEntry?.Power != null))
+                {
+                    if (!nextActiveStates.TryGetValue(powerEntry!.Power.StaticIndex, out var isActive) || !isActive)
+                    {
+                        continue;
+                    }
+
+                    if (PlannerStateCatalog.IsAutoGrantedPlannerStatePower(powerEntry.Power.FullName))
+                    {
+                        continue;
+                    }
+
+                    foreach (var effect in powerEntry.Power.Effects ?? [])
+                    {
+                        ApplySourceModeEffect(effect, nextSourceModes, ref nextSourceModeFlags);
+                    }
+                }
+
+                var activeChanged = false;
+                foreach (var powerEntry in CurrentBuild.Powers.Where(powerEntry => powerEntry?.Power != null))
+                {
+                    var isActive = nextActiveStates.TryGetValue(powerEntry!.Power.StaticIndex, out var nextActive) && nextActive;
+                    if (powerEntry.Power.Active != isActive)
+                    {
+                        activeChanged = true;
+                    }
+
+                    powerEntry.Power.Active = isActive;
+                }
+
+                var sourceChanged = sourceModeFlags != nextSourceModeFlags ||
+                                    !sourceModes.SetEquals(nextSourceModes);
+                sourceModes = nextSourceModes;
+                sourceModeFlags = nextSourceModeFlags;
+
+                if (!activeChanged && !sourceChanged)
+                {
+                    break;
+                }
+            }
+
+            _activeSourceModes.Clear();
+            foreach (var mode in sourceModes.OrderBy(mode => mode, StringComparer.OrdinalIgnoreCase))
+            {
+                _activeSourceModes.Add(mode);
+            }
+
+            _activeSourceModeFlags = sourceModeFlags;
+        }
+
+        private static bool SourceModesAllowPower(
+            IPower power,
+            IReadOnlyCollection<string> activeSourceModes,
+            Enums.eModeFlags activeSourceModeFlags)
+        {
+            GetPowerModeRequirements(
+                power,
+                out var requiredModes,
+                out var disallowedModes,
+                out var requiredFlags,
+                out var disallowedFlags);
+
+            var allowed = requiredModes.Length == 0 && requiredFlags == Enums.eModeFlags.None;
+            if (!allowed)
+            {
+                allowed = requiredModes.Any(mode => OmniModeMapper.ModeMatches(mode, activeSourceModes, activeSourceModeFlags)) ||
+                          (requiredFlags != Enums.eModeFlags.None && (activeSourceModeFlags & requiredFlags) != Enums.eModeFlags.None);
+            }
+
+            if (!allowed)
+            {
+                return false;
+            }
+
+            var disallowedByMode = disallowedModes.Any(mode => OmniModeMapper.ModeMatches(mode, activeSourceModes, activeSourceModeFlags));
+            if (disallowedByMode)
+            {
+                return false;
+            }
+
+            return disallowedFlags == Enums.eModeFlags.None ||
+                   (activeSourceModeFlags & disallowedFlags) == Enums.eModeFlags.None;
+        }
+
+        internal string GetSourceModeGateReason(IPower? power)
+        {
+            if (power == null)
+            {
+                return string.Empty;
+            }
+
+            GetPowerModeRequirements(
+                power,
+                out var requiredModes,
+                out var disallowedModes,
+                out var requiredFlags,
+                out var disallowedFlags);
+
+            if ((requiredModes.Length > 0 || requiredFlags != Enums.eModeFlags.None) &&
+                !requiredModes.Any(mode => OmniModeMapper.ModeMatches(mode, _activeSourceModes, _activeSourceModeFlags)) &&
+                (requiredFlags == Enums.eModeFlags.None || (_activeSourceModeFlags & requiredFlags) == Enums.eModeFlags.None))
+            {
+                var requirementText = requiredModes.Length > 0
+                    ? string.Join(", ", requiredModes)
+                    : requiredFlags.ToString();
+                return $"Requires source mode: {requirementText}";
+            }
+
+            var blockedMode = disallowedModes.FirstOrDefault(mode => OmniModeMapper.ModeMatches(mode, _activeSourceModes, _activeSourceModeFlags));
+            if (!string.IsNullOrWhiteSpace(blockedMode))
+            {
+                return $"Blocked by source mode: {blockedMode}";
+            }
+
+            if (disallowedFlags != Enums.eModeFlags.None)
+            {
+                var matchedFlags = _activeSourceModeFlags & disallowedFlags;
+                if (matchedFlags != Enums.eModeFlags.None)
+                {
+                    return $"Blocked by source mode: {matchedFlags}";
+                }
+            }
+
+            return string.Empty;
+        }
+
+        private static void GetPowerModeRequirements(
+            IPower power,
+            out string[] requiredModes,
+            out string[] disallowedModes,
+            out Enums.eModeFlags requiredFlags,
+            out Enums.eModeFlags disallowedFlags)
+        {
+            requiredModes = power is Power concretePower && concretePower.OmniRequiredModesRaw.Length > 0
+                ? concretePower.OmniRequiredModesRaw
+                : [];
+            disallowedModes = power is Power disallowedPower && disallowedPower.OmniDisallowedModesRaw.Length > 0
+                ? disallowedPower.OmniDisallowedModesRaw
+                : [];
+            requiredFlags = power.ModesRequired;
+            disallowedFlags = power.ModesDisallowed;
+        }
+
+        private static void ApplySourceModeEffect(
+            IEffect? effect,
+            HashSet<string> activeSourceModes,
+            ref Enums.eModeFlags activeSourceModeFlags)
+        {
+            if (effect?.EffectType is not (Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode))
+            {
+                return;
+            }
+
+            if (!TryResolveSourceMode(effect, out var modeName, out var modeFlag))
+            {
+                return;
+            }
+
+            var enabled = effect.EffectType == Enums.eEffectType.SetMode;
+            ApplySourceMode(modeName, modeFlag, enabled, activeSourceModes, ref activeSourceModeFlags);
+        }
+
+        private static bool TryResolveSourceMode(IEffect effect, out string modeName, out Enums.eModeFlags modeFlag)
+        {
+            modeName = string.Empty;
+            modeFlag = effect.ModeFlag;
+
+            if (!string.IsNullOrWhiteSpace(effect.ModeName))
+            {
+                var normalized = OmniModeMapper.Normalize(effect.ModeName);
+                if (OmniModeMapper.IsPlannerOnlyMode(normalized))
+                {
+                    return false;
+                }
+
+                modeName = normalized;
+                if (OmniModeMapper.TryToFlag(normalized, out var resolvedFlag))
+                {
+                    modeFlag = resolvedFlag;
+                }
+            }
+
+            if (string.IsNullOrWhiteSpace(modeName) && modeFlag != Enums.eModeFlags.None)
+            {
+                modeName = OmniModeMapper.PrimaryNameForFlag(modeFlag);
+            }
+
+            return !string.IsNullOrWhiteSpace(modeName) || modeFlag != Enums.eModeFlags.None;
+        }
+
+        private static void ApplySourceMode(
+            string modeName,
+            Enums.eModeFlags modeFlag,
+            bool enabled,
+            HashSet<string> activeSourceModes,
+            ref Enums.eModeFlags activeSourceModeFlags)
+        {
+            if (!string.IsNullOrWhiteSpace(modeName))
+            {
+                if (enabled)
+                {
+                    activeSourceModes.Add(modeName);
+                }
+                else
+                {
+                    activeSourceModes.Remove(modeName);
+                }
+            }
+
+            if (modeFlag == Enums.eModeFlags.None)
+            {
+                return;
+            }
+
+            if (enabled)
+            {
+                activeSourceModeFlags |= modeFlag;
+            }
+            else
+            {
+                activeSourceModeFlags &= ~modeFlag;
             }
         }
 

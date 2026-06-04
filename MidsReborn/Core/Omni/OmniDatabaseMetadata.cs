@@ -51,6 +51,8 @@ public sealed class PowerImportMetadata
 public sealed class ImportedPowerSemantics
 {
     public string TargetRequires { get; set; } = string.Empty;
+    public List<string> RequiredModes { get; set; } = [];
+    public List<string> DisallowedModes { get; set; } = [];
     public List<OmniEffectDefinition> ActivationEffects { get; set; } = [];
     public string ProcEligibility { get; set; } = nameof(ImportedProcEligibilityMode.Default);
     public string ProcAllowance { get; set; } = nameof(ProcAllowanceMode.Default);

@@ -344,6 +344,18 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 effect.SetPower(this);
             }
+            OmniRequiredModesRaw = template is Power requiredModesPower
+                ? requiredModesPower.OmniRequiredModesRaw
+                    .Where(mode => !string.IsNullOrWhiteSpace(mode))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray()
+                : [];
+            OmniDisallowedModesRaw = template is Power disallowedModesPower
+                ? disallowedModesPower.OmniDisallowedModesRaw
+                    .Where(mode => !string.IsNullOrWhiteSpace(mode))
+                    .Distinct(StringComparer.OrdinalIgnoreCase)
+                    .ToArray()
+                : [];
             OmniTargetRequiresRaw = template is Power targetPower ? targetPower.OmniTargetRequiresRaw : string.Empty;
             TargetRoutingPolicy = template is Power routingPower
                 ? routingPower.TargetRoutingPolicy.Clone()
@@ -753,6 +765,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public IEffect[] Effects { get; set; }
 
         public IEffect[] ActivationEffectsRuntime { get; set; } = [];
+        internal string[] OmniRequiredModesRaw { get; set; } = [];
+        internal string[] OmniDisallowedModesRaw { get; set; } = [];
 
         public string OmniTargetRequiresRaw { get; set; } = string.Empty;
         internal PlannerTargetRoutingPolicy TargetRoutingPolicy { get; set; } = PlannerTargetRoutingPolicy.Default;
