@@ -602,7 +602,7 @@ namespace Mids_Reborn.Core
                         isOk = false;
                     if (powerset.Powers.Length > 0 && isOk && powerset.SetType != Enums.ePowerSetType.Inherent &&
                         powerset.SetType != Enums.ePowerSetType.Accolade && powerset.SetType != Enums.ePowerSetType.Temp &&
-                        !powerset.Powers[0].Requires.ClassOk(nIDClass))
+                        !powerset.Powers[0].AllowedForClass(nIDClass))
                         isOk = false;
                 }
 
@@ -631,7 +631,7 @@ namespace Mids_Reborn.Core
             }
 
             var powerset = Database.Powersets[nIDPowerset];
-            return powerset.Powers.FindIndexes(pow => pow.Requires.ClassOk(nIDClass)).Select(idx => powerset.Power[idx])
+            return powerset.Powers.FindIndexes(pow => pow.AllowedForClass(nIDClass)).Select(idx => powerset.Power[idx])
                 .ToArray();
         }
 
@@ -646,7 +646,7 @@ namespace Mids_Reborn.Core
                 return Database.Power
                     .Where(pow =>
                         string.Equals(pow.FullSetName, uidPowerset, StringComparison.OrdinalIgnoreCase) &&
-                        pow.Requires.ClassOk(uidClass)).Select(pow => pow.FullName).ToArray();
+                        pow.AdvancedRequirements.AllowsClass(uidClass)).Select(pow => pow.FullName).ToArray();
             var array = new string[Database.Power.Length];
             for (var index = 0; index < Database.Power.Length; ++index)
                 array[index] = Database.Power[index].FullName;
@@ -821,7 +821,7 @@ namespace Mids_Reborn.Core
                     return powerset1;
                 }
 
-                if (powerset1 != null && powerset1.Power.Length > 0 && powerset1.Powers[0].Requires.ClassOk((int)idx))
+                if (powerset1 != null && powerset1.Power.Length > 0 && powerset1.Powers[0].AllowedForClass((int)idx))
                 {
                     return powerset1;
                 }
@@ -854,7 +854,7 @@ namespace Mids_Reborn.Core
                     return powerset1;
                 }
 
-                if (powerset1.Power.Length > 0 && powerset1.Powers[0].Requires.ClassOk((int)idx))
+                if (powerset1.Power.Length > 0 && powerset1.Powers[0].AllowedForClass((int)idx))
                 {
                     return powerset1;
                 }
@@ -1787,7 +1787,7 @@ namespace Mids_Reborn.Core
             var array = Array.Empty<string>();
             foreach (var p in Database.Power)
             {
-                if (p.Requires.ReferencesPower(uidPower, uidNew))
+                if (p.AdvancedRequirements.RewritePowerReferences(uidPower, uidNew))
                 {
                     Array.Resize(ref array, array.Length + 1);
                     array[^1] = p.FullName + " (Requirement)";
@@ -3794,62 +3794,6 @@ namespace Mids_Reborn.Core
                     power.NIDSubPower[index] = NidFromUidPower(power.UIDSubPower[index]);
                 }
 
-                MatchRequirementId(power);
-            }
-        }
-
-        private static void MatchRequirementId(IPower? power)
-        {
-            if (power.Requires.ClassName.Length > 0)
-            {
-                power.Requires.NClassName = new int[power.Requires.ClassName.Length];
-                for (var index = 0; index < power.Requires.ClassName.Length; index++)
-                {
-                    power.Requires.NClassName[index] = NidFromUidClass(power.Requires.ClassName[index]);
-                }
-            }
-
-            if (power.Requires.ClassNameNot.Length > 0)
-            {
-                power.Requires.NClassNameNot = new int[power.Requires.ClassNameNot.Length];
-                for (var index = 0; index < power.Requires.ClassNameNot.Length; index++)
-                {
-                    power.Requires.NClassNameNot[index] = NidFromUidClass(power.Requires.ClassNameNot[index]);
-                }
-            }
-
-            if (power.Requires.PowerID.Length > 0)
-            {
-                power.Requires.NPowerID = new int[power.Requires.PowerID.Length][];
-                for (var index1 = 0; index1 < power.Requires.PowerID.Length; index1++)
-                {
-                    power.Requires.NPowerID[index1] = new int[power.Requires.PowerID[index1].Length];
-                    for (var index2 = 0; index2 < power.Requires.PowerID[index1].Length; index2++)
-                    {
-                        power.Requires.NPowerID[index1][index2] =
-                            !string.IsNullOrEmpty(power.Requires.PowerID[index1][index2])
-                                ? NidFromUidPower(power.Requires.PowerID[index1][index2])
-                                : -1;
-                    }
-                }
-            }
-
-            if (power.Requires.PowerIDNot.Length <= 0)
-            {
-                return;
-            }
-
-            power.Requires.NPowerIDNot = new int[power.Requires.PowerIDNot.Length][];
-            for (var index1 = 0; index1 < power.Requires.PowerIDNot.Length; index1++)
-            {
-                power.Requires.NPowerIDNot[index1] = new int[power.Requires.PowerIDNot[index1].Length];
-                for (var index2 = 0; index2 < power.Requires.PowerIDNot[index1].Length; index2++)
-                {
-                    power.Requires.NPowerIDNot[index1][index2] =
-                        !string.IsNullOrEmpty(power.Requires.PowerIDNot[index1][index2])
-                            ? NidFromUidPower(power.Requires.PowerIDNot[index1][index2])
-                            : -1;
-                }
             }
         }
 
@@ -3889,7 +3833,7 @@ namespace Mids_Reborn.Core
 
                     if (string.Equals(powerset.GroupName, archetype.EpicGroup, StringComparison.OrdinalIgnoreCase) &&
                         (powerset.nArchetype == index1 || powerset.Powers.Length > 0 &&
-                            powerset.Powers[0].Requires.ClassOk(archetype.ClassName)))
+                            powerset.Powers[0].AdvancedRequirements.AllowsClass(archetype.ClassName)))
                     {
                         intList3.Add(index2);
                     }

@@ -256,12 +256,8 @@ internal static class PowerModifierDisplayContextResolver
             }
         }
 
-        var requiredClasses = power.Requires?.ClassName
-            .Where(value => !string.IsNullOrWhiteSpace(value) &&
-                            !value.Equals("Empty", StringComparison.OrdinalIgnoreCase))
-            .Distinct(StringComparer.OrdinalIgnoreCase)
-            .ToArray() ?? Array.Empty<string>();
-        if (requiredClasses.Length == 1)
+        var requiredClasses = power.AdvancedRequirements.GetIncludedClassNames();
+        if (requiredClasses.Count == 1)
         {
             var candidate = CreateCandidate(requiredClasses[0], "Single class requirement", false, false, 0, allowMissingClassTable: false);
             if (candidate != null)

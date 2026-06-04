@@ -69,14 +69,12 @@ public sealed partial class OmniImporter
             if (StripTierOneRuntimeRows(power!.AdvancedRequirements, power.FullName, out var rewrittenRequirements, out var removedRequirementRows))
             {
                 power.AdvancedRequirements = rewrittenRequirements;
-                power.Requires = rewrittenRequirements.ToLegacyRequirement();
                 strippedRows += removedRequirementRows;
                 changed = true;
             }
 
             if (ArchetypeInherentCatalog.TryAppendTierOnePowerRequirements(power, power.AdvancedRequirements))
             {
-                power.Requires = power.AdvancedRequirements.ToLegacyRequirement();
                 changed = true;
             }
 
@@ -179,7 +177,6 @@ public sealed partial class OmniImporter
         if (RewritePlannerStateConditionSet(power.AdvancedRequirements, power, out var rewrittenRequirements, out var requirementRowChanges))
         {
             power.AdvancedRequirements = rewrittenRequirements;
-            power.Requires = rewrittenRequirements.ToLegacyRequirement();
             rewrittenRows += requirementRowChanges;
             powerChanged = true;
         }
@@ -481,7 +478,6 @@ public sealed partial class OmniImporter
             power.VariableEnabled = false;
             power.ShowStatToggle = false;
             power.AdvancedRequirements = BuildHiddenPayloadRequirements(definition);
-            power.Requires = power.AdvancedRequirements.ToLegacyRequirement();
             power.DescShort = $"Hidden planner payload for {definition.DisplayName}.";
             power.DescLong = $"Auto-managed hidden planner payload for {definition.DisplayName}.";
             power.IsModified = true;
@@ -540,7 +536,6 @@ public sealed partial class OmniImporter
             }
         }
         power.AdvancedRequirements = new AdvancedConditionSet();
-        power.Requires = power.AdvancedRequirements.ToLegacyRequirement();
         power.VariableEnabled = definition.IsVariableControl && !isCombatSettingsDrivenInherent;
         power.VariableMin = definition.VariableMin;
         power.VariableMax = definition.VariableMax;

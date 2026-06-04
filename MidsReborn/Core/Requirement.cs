@@ -6,7 +6,9 @@ using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Core
 {
-    public class Requirement
+    // Deprecated fixed-record payload kept only so the native power binary layout
+    // stays stable. Live requirement logic now uses AdvancedConditionSet exclusively.
+    internal sealed class Requirement
     {
         public string[] ClassName = new string[0];
         public string[] ClassNameNot = new string[0];

@@ -660,7 +660,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             // Valid Archetype, valid power requirements
             dbPowers = dbPowers
-                .Where(e => e.Requires.ClassOk(MidsContext.Character.Archetype.Idx) & e.Requires.RequiredPowersOk());
+                .Where(e => e.AllowedForClass(MidsContext.Character.Archetype.Idx) &&
+                            MidsContext.Character.CurrentBuild.MeetsRequirement(e, MidsContext.Character.CurrentBuild.GetMaxLevel()));
 
             // If temp/prestige/accolade, check if they are actually active in build
             dbPowers = dbPowers

@@ -155,15 +155,13 @@ namespace Mids_Reborn
                     {
                         if (MidsContext.Character.CurrentBuild.Powers[index1].NIDPower > -1 &&
                             DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[index1].NIDPower]
-                                .Requires.NPowerID.Length > 0 && DatabaseAPI.Database
-                                .Power[MidsContext.Character.CurrentBuild.Powers[index1].NIDPower].Requires
-                                .NPowerID[0][0] != -1)
+                                .IsEpic)
                             flag4 = true;
                     }
                     else if (MidsContext.Character.CurrentBuild.Powers[index1].NIDPower > -1)
                     {
                         if ((DatabaseAPI.Database.Power[MidsContext.Character.CurrentBuild.Powers[index1].NIDPower]
-                            .Requires.NPowerID.Length == 0) | !DatabaseAPI.Database
+                            .AdvancedRequirements.GetFirstPositiveReferencedPower() == null) | !DatabaseAPI.Database
                             .Power[MidsContext.Character.CurrentBuild.Powers[index1].NIDPower].Slottable)
                             flag4 = true;
                     }

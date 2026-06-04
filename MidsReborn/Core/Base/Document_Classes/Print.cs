@@ -780,7 +780,7 @@ namespace Mids_Reborn.Core.Base.Document_Classes
                 {
                     if (kheldian)
                         include = MidsContext.Character.CurrentBuild.Powers[index1].Power.IsEpic;
-                    else if (MidsContext.Character.CurrentBuild.Powers[index1].Power.Requires.NPowerID.Length == 0 ||
+                    else if (string.IsNullOrWhiteSpace(MidsContext.Character.CurrentBuild.Powers[index1].Power.AdvancedRequirements.GetFirstPositiveReferencedPower()) ||
                              !MidsContext.Character.CurrentBuild.Powers[index1].Power.Slottable)
                         include = true;
                 }

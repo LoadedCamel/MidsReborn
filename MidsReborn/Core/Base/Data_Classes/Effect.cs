@@ -1462,6 +1462,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 AdvancedConditionKind.CombatSetting => $"{ConfigData.CombatContext.FormatSettingName(row.Subject)} {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
                 AdvancedConditionKind.PowerCount => $"{CleanConditionValue(row.Subject)} count {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
                 AdvancedConditionKind.PowerRequirementGroup => FormatPowerRequirementGroup(row),
+                AdvancedConditionKind.BooleanLiteral => FormatBooleanLiteral(row),
                 AdvancedConditionKind.BoostsSlotted => $"Boosts slotted {CleanConditionValue(row.Subject)} {FormatOperatorPhrase(row.Operator)} {CleanConditionValue(row.Value)}",
                 AdvancedConditionKind.AdvancedExpression => FormatRawAdvancedExpression(row.RawExpression),
                 _ => FormatRawAdvancedExpression(row.RawExpression)
@@ -1682,6 +1683,19 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private string MezProtectShort()
         {
             return MezSemantics.GetStatusProtectionLabel(MezType, shortForm: true);
+        }
+
+        private static string FormatBooleanLiteral(AdvancedConditionRow row)
+        {
+            var literalValue = bool.TryParse(row.Value, out var boolValue)
+                ? boolValue
+                : row.Value == "1";
+            if (row.Negated)
+            {
+                literalValue = !literalValue;
+            }
+
+            return literalValue ? "Always true" : "Always false";
         }
 
         private string MezProtectLong()

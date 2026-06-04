@@ -1505,8 +1505,17 @@ public static class PlannerMathDiagnostics
             AdvancedConditionKind.SourceMode => $"{(row.Negated ? "Not " : string.Empty)}Mode {subject}",
             AdvancedConditionKind.SourceOwnPower => $"{(row.Negated ? "Does not have power " : "Has power ")}{subject}",
             AdvancedConditionKind.PowerTaken => $"{(row.Negated ? "Power not taken " : "Power taken ")}{subject}",
+            AdvancedConditionKind.BooleanLiteral => ParseConditionBooleanLiteral(row) ? "Always true" : "Always false",
             _ => AdvancedConditionCompiler.Compile(row)
         };
+    }
+
+    private static bool ParseConditionBooleanLiteral(AdvancedConditionRow row)
+    {
+        var literalValue = bool.TryParse(row.Value, out var boolValue)
+            ? boolValue
+            : row.Value == "1";
+        return row.Negated ? !literalValue : literalValue;
     }
 
     private static string EvaluateConditionForReport(IEffect? effect, AdvancedConditionRow row)

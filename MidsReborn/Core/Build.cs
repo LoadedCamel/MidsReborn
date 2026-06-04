@@ -904,7 +904,7 @@ namespace Mids_Reborn.Core
         private void ScanAndCleanAutomaticallyGrantedPowers()
         {
             var flag = false;
-            var maxLevel = GetMaxLevel();
+            var currentGrantLevel = GetCurrentAutomaticGrantLevel();
             foreach (var power in Powers)
             {
                 if (power?.Power == null)
@@ -923,9 +923,8 @@ namespace Mids_Reborn.Core
                     continue;
                 }
 
-                if (power.Power is { HiddenPower: true, IncludeFlag: false } ||
-                    power.Power.Level > maxLevel + 1 || !MeetsRequirement(power.Power, maxLevel) ||
-                    !power.Power.IncludeFlag ||
+                if (!IsAutomaticGrantedPowerCandidate(power.PowerSet, power.Power) ||
+                    power.Power.Level > currentGrantLevel + 1 || !MeetsRequirement(power.Power, currentGrantLevel) ||
                     !ShouldIncludeAutomaticGrantedPower(power.PowerSet, power.Power))
                 {
                     power.Tag = true;
@@ -966,121 +965,11 @@ namespace Mids_Reborn.Core
 
         public bool MeetsRequirement(IPower? power, int nLevel, int skipIdx = -1)
         {
-            if (nLevel < 0)
-            {
-                return false;
-            }
-
-            if (power == null)
-            {
-                return false;
-            }
-
-            if (power.AdvancedRequirements is { Rows.Count: > 0 })
-            {
-                return AdvancedConditionEvaluator.EvaluatePowerRequirements(
-                    power,
-                    nLevel,
-                    skipIdx,
-                    this);
-            }
-
-            var nIdSkip = -1;
-            if (skipIdx > -1 & skipIdx < Powers.Count)
-            {
-                nIdSkip = Powers[skipIdx].Power == null ? -1 : Powers[skipIdx].Power.PowerIndex;
-            }
-
-            if (nLevel + 1 < power.Level)
-            {
-                return false;
-            }
-
-            if (power.Requires.NClassName.Length == 0 & power.Requires.NClassNameNot.Length == 0 & power.Requires.NPowerID.Length == 0 & power.Requires.NPowerIDNot.Length == 0)
-            {
-                return true;
-            }
-
-            var valid = power.Requires.NClassName.Length == 0;
-
-            foreach (var clsNameIdx in power.Requires.NClassName)
-            {
-                if (MidsContext.Character.Archetype.Idx == clsNameIdx)
-                {
-                    valid = true;
-                }
-            }
-
-            if (power.Requires.NClassNameNot.Any(nClsNameNot => MidsContext.Character.Archetype.Idx == nClsNameNot))
-            {
-                return false;
-            }
-
-            if (!valid)
-            {
-                return false;
-            }
-
-            if (power.Requires.NPowerID.Length > 0)
-            {
-                valid = false;
-            }
-
-            foreach (var numArray in power.Requires.NPowerID)
-            {
-                var doubleValid = true;
-                var powerIndex = -1;
-                foreach (var nIdPower in numArray)
-                {
-                    if (nIdPower <= -1) continue;
-                    if (nIdPower != nIdSkip)
-                    {
-                        powerIndex = FindInToonHistory(nIdPower);
-                    }
-
-                    if (powerIndex < 0 || Powers[powerIndex]?.Level > nLevel)
-                    {
-                        doubleValid = false;
-                    }
-                }
-
-                if (!doubleValid)
-                {
-                    continue;
-                }
-
-                valid = true;
-                break;
-            }
-
-            if (!valid)
-            {
-                return false;
-            }
-
-            foreach (var numArray in power.Requires.NPowerIDNot)
-            {
-                foreach (var nIdPower in numArray)
-                {
-                    if (nIdPower <= -1)
-                    {
-                        continue;
-                    }
-
-                    var histIdx = -1;
-                    if (nIdPower != nIdSkip)
-                    {
-                        histIdx = FindInToonHistory(nIdPower);
-                    }
-
-                    if (histIdx > -1)
-                    {
-                        return false;
-                    }
-                }
-            }
-
-            return true;
+            return AdvancedConditionEvaluator.EvaluatePowerRequirements(
+                power,
+                nLevel,
+                skipIdx,
+                this);
         }
 
         internal bool MeetsActivationRequirement(
@@ -1094,18 +983,13 @@ namespace Mids_Reborn.Core
                 return false;
             }
 
-            if (power.AdvancedRequirements is { Rows.Count: > 0 })
-            {
-                return AdvancedConditionEvaluator.EvaluatePowerRequirements(
-                    power,
-                    nLevel,
-                    skipIdx,
-                    this,
-                    snapshot,
-                    includeSourceModes: true);
-            }
-
-            return MeetsRequirement(power, nLevel, skipIdx);
+            return AdvancedConditionEvaluator.EvaluatePowerRequirements(
+                power,
+                nLevel,
+                skipIdx,
+                this,
+                snapshot,
+                includeSourceModes: true);
         }
 
         public int FindInToonHistory(int nIDPower)
@@ -1177,7 +1061,7 @@ namespace Mids_Reborn.Core
 
         private void AddAutomaticGrantedPowers()
         {
-            var maxLevel = GetMaxLevel();
+            var currentGrantLevel = GetCurrentAutomaticGrantLevel();
             var powersetList = new List<IPowerset?>();
             powersetList.AddRange(_character.Powersets);
             foreach (var powerset in DatabaseAPI.Database.Powersets)
@@ -1201,20 +1085,26 @@ namespace Mids_Reborn.Core
                 foreach (var power in powerset.Powers)
                 {
                     var val2 = 0;
-                    if (!power.IncludeFlag || power.Level > maxLevel + 1 || PowerUsed(power) ||
+                    if (!IsAutomaticGrantedPowerCandidate(powerset, power) ||
+                        power.Level > currentGrantLevel + 1 || PowerUsed(power) ||
                         !ShouldIncludeAutomaticGrantedPower(powerset, power) ||
                         ShouldDelayHiddenSetGrantUntilPrimaryOrSecondaryPowerTaken(powerset, power) ||
-                        !MeetsRequirement(power, maxLevel + 1) || power.InherentType == Enums.eGridType.Prestige)
+                        !MeetsRequirement(power, currentGrantLevel) || power.InherentType == Enums.eGridType.Prestige)
                     {
                         continue;
                     }
 
-                    if (power.Requires.NPowerID.Length > 0)
+                    var anchorPowerName = power.AdvancedRequirements?.GetFirstPositiveReferencedPower();
+                    if (!string.IsNullOrWhiteSpace(anchorPowerName))
                     {
-                        var inToonHistory = FindInToonHistory(power.Requires.NPowerID[0][0]);
-                        if (inToonHistory > -1)
+                        var anchorPower = DatabaseAPI.GetPowerByFullName(anchorPowerName);
+                        if (anchorPower != null)
                         {
-                            val2 = Powers[inToonHistory].Level;
+                            var inToonHistory = FindInToonHistory(anchorPower.PowerIndex);
+                            if (inToonHistory > -1)
+                            {
+                                val2 = Powers[inToonHistory].Level;
+                            }
                         }
                     }
 
@@ -1223,8 +1113,28 @@ namespace Mids_Reborn.Core
             }
         }
 
+        private int GetCurrentAutomaticGrantLevel()
+        {
+            return MidsContext.Config.BuildMode == Enums.dmModes.LevelUp
+                ? _character.Level
+                : _character.GetEffectiveStaticBuildLevel();
+        }
+
         private bool ShouldDelayHiddenSetGrantUntilPrimaryOrSecondaryPowerTaken(IPowerset powerset, IPower power)
         {
+            if (power is Power importedPower && importedPower.OmniAutoIssue.HasValue)
+            {
+                if (importedPower.OmniAutoIssue != true ||
+                    powerset.SetType is not (Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary))
+                {
+                    return false;
+                }
+
+                return !Powers.Any(entry =>
+                    entry is { Chosen: true, Power: not null } &&
+                    entry.NIDPowerset == powerset.nID);
+            }
+
             if (!power.HiddenPower || !power.IncludeFlag ||
                 powerset.SetType is not (Enums.ePowerSetType.Primary or Enums.ePowerSetType.Secondary))
             {
@@ -1241,6 +1151,24 @@ namespace Mids_Reborn.Core
             return !Powers.Any(entry =>
                 entry is { Chosen: true, Power: not null } &&
                 (entry.NIDPowerset == primarySetId || entry.NIDPowerset == secondarySetId));
+        }
+
+        private static bool IsAutomaticGrantedPowerCandidate(IPowerset? powerset, IPower power)
+        {
+            if (PlannerStateCatalog.IsAutoGrantedPlannerStatePower(power.FullName) ||
+                IsPowersetGrantedStatePower(power))
+            {
+                return true;
+            }
+
+            if (power is Power importedPower && importedPower.OmniAutoIssue.HasValue)
+            {
+                return importedPower.OmniAutoIssue == true;
+            }
+
+            return powerset != null &&
+                   power.IncludeFlag &&
+                   (powerset.SetType == Enums.ePowerSetType.Inherent || power.HiddenPower);
         }
 
         private static bool HasPowersetGrantedStatePowers(IPowerset powerset)

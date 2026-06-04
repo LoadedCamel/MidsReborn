@@ -146,8 +146,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             IgnoreBuffEnhancementAxes = [];
             SubIsAltColor = false;
             BoostsAllowed = [];
-            Requires = new Requirement();
-            AdvancedRequirements = AdvancedConditionSet.FromLegacyRequirement(Requires);
+            AdvancedRequirements = new AdvancedConditionSet();
             var num = -2;
             foreach (var p in DatabaseAPI.Database.Power)
             {
@@ -180,8 +179,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             MutexAuto = true;
             TargetLoS = true;
             GroupMembership = [];
-            Requires = new Requirement();
-            AdvancedRequirements = AdvancedConditionSet.FromLegacyRequirement(Requires);
+            AdvancedRequirements = new AdvancedConditionSet();
             PowerName = string.Empty;
             IconName = string.Empty;
             SetName = string.Empty;
@@ -232,9 +230,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             IconName = template.IconName;
             DisplayName = template.DisplayName;
             Available = template.Available;
-            Requires = new Requirement(template.Requires);
-            AdvancedRequirements = template.AdvancedRequirements?.Clone() ??
-                                   AdvancedConditionSet.FromLegacyRequirement(Requires);
+            AdvancedRequirements = template.AdvancedRequirements?.Clone() ?? new AdvancedConditionSet();
             ModesRequired = template.ModesRequired;
             ModesDisallowed = template.ModesDisallowed;
             PowerType = template.PowerType;
@@ -356,6 +352,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     .Distinct(StringComparer.OrdinalIgnoreCase)
                     .ToArray()
                 : [];
+            OmniAutoIssue = template is Power autoIssuePower ? autoIssuePower.OmniAutoIssue : null;
+            OmniAutoIssueKeepsLevel = template is Power autoIssueKeepsLevelPower ? autoIssueKeepsLevelPower.OmniAutoIssueKeepsLevel : null;
             OmniTargetRequiresRaw = template is Power targetPower ? targetPower.OmniTargetRequiresRaw : string.Empty;
             TargetRoutingPolicy = template is Power routingPower
                 ? routingPower.TargetRoutingPolicy.Clone()
@@ -383,7 +381,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             MutexAuto = true;
             TargetLoS = true;
             GroupMembership = [];
-            Requires = new Requirement();
             NGroupMembership = [];
             StaticIndex = -1;
             PowerSetIndex = -1;
@@ -414,8 +411,10 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             DisplayName = reader.ReadString();
             IconName = string.Empty;
             Available = reader.ReadInt32();
-            Requires = new Requirement(reader);
-            AdvancedRequirements = AdvancedConditionSet.FromLegacyRequirement(Requires);
+            // Consume the deprecated fixed-record requirement payload. The
+            // authoritative requirement model now lives in AdvancedRequirements.
+            _ = new Requirement(reader);
+            AdvancedRequirements = new AdvancedConditionSet();
             ModesRequired = (Enums.eModeFlags)reader.ReadInt32();
             ModesDisallowed = (Enums.eModeFlags)reader.ReadInt32();
             PowerType = (Enums.ePowerType)reader.ReadInt32();
@@ -568,7 +567,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             => !((PowerType == Enums.ePowerType.Toggle) & (ActivatePeriod > 0.0)) ? EndCost : EndCost / ActivatePeriod;
 
         public bool IsEpic
-            => Requires.NPowerID.Length > 0 && Requires.NPowerID[0][0] != -1;
+            => AdvancedRequirements.GetFirstPositiveReferencedPower() is { Length: > 0 };
 
         public int LocationIndex { get; private set; }
 
@@ -601,8 +600,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public string DisplayName { get; set; }
 
         public int Available { get; set; }
-
-        public Requirement Requires { get; set; }
 
         public AdvancedConditionSet AdvancedRequirements { get; set; }
 
@@ -767,6 +764,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public IEffect[] ActivationEffectsRuntime { get; set; } = [];
         internal string[] OmniRequiredModesRaw { get; set; } = [];
         internal string[] OmniDisallowedModesRaw { get; set; } = [];
+        internal bool? OmniAutoIssue { get; set; }
+        internal bool? OmniAutoIssueKeepsLevel { get; set; }
 
         public string OmniTargetRequiresRaw { get; set; } = string.Empty;
         internal PlannerTargetRoutingPolicy TargetRoutingPolicy { get; set; } = PlannerTargetRoutingPolicy.Default;
@@ -964,10 +963,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(PowerName);
             writer.Write(DisplayName);
             writer.Write(Available);
-            var legacyRequirements = AdvancedRequirements is { Rows.Count: > 0 }
-                ? AdvancedRequirements.ToLegacyRequirement()
-                : Requires;
-            legacyRequirements.StoreTo(writer);
+            // Preserve the deprecated fixed-record slot as an inert placeholder.
+            // New requirement semantics round-trip through AdvancedRequirements.
+            new Requirement().StoreTo(writer);
             writer.Write((int)ModesRequired);
             writer.Write((int)ModesDisallowed);
             writer.Write((int)PowerType);
@@ -1091,9 +1089,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private void WriteOptionalMetadataPayload(BinaryWriter writer)
         {
             AdvancedConditionSet.StoreMarked(writer, AdvancedRequirementsMarker,
-                AdvancedRequirements is { Rows.Count: > 0 }
-                    ? AdvancedRequirements
-                    : AdvancedConditionSet.FromLegacyRequirement(Requires));
+                AdvancedRequirements is { Rows.Count: > 0 } ? AdvancedRequirements : new AdvancedConditionSet());
             StoreMarkedString(writer, OmniTargetRequiresMarker, OmniTargetRequiresRaw);
             if (!string.IsNullOrWhiteSpace(IconName))
             {
@@ -1127,7 +1123,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             if (AdvancedConditionSet.TryReadMarked(reader, AdvancedRequirementsMarker, out var advancedRequirements))
             {
                 AdvancedRequirements = advancedRequirements;
-                Requires = AdvancedRequirements.ToLegacyRequirement();
             }
 
             if (TryReadMarkedString(reader, OmniTargetRequiresMarker, out var omniTargetRequires))
@@ -3543,25 +3538,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool AllowedForClass(int classId)
         {
-            //If a power neither requires a class nor excludes one, just return true.
-            if (Requires.NClassName.Length == 0 && Requires.NClassNameNot.Length == 0)
-            {
-                return true;
-            }
-
-            //Check if the power has a class requirement.
-            if (Requires.NClassName.Length > 0)
-            {
-                return Requires.NClassName.Contains(classId);
-            }
-
-            //Check if the power has a class exclusion.
-            if (Requires.NClassNameNot.Length > 0)
-            {
-                return !Requires.NClassNameNot.Contains(classId);
-            }
-
-            return true;
+            return AdvancedRequirements.AllowsClass(classId);
         }
 
         private bool GreOverride(int iID1, int iID2)
@@ -3671,270 +3648,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             newValue = !((iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Defense) | (iPower.Effects[iSfx.Index[0]].EffectType == Enums.eEffectType.Elusivity)) ? Enums.GetGroupedDamage(iDamage, shortForm) : Enums.GetGroupedDefense(iDamage, shortForm);
             return str.Replace("%VALUE%", newValue);
         }*/
-
-        private Requirement ImportRequirementString(string iReq)
-        {
-            Requirement requirement1;
-            if (NeverAutoUpdateRequirements)
-            {
-                requirement1 = Requires;
-            }
-            else
-            {
-                var requirement2 = new Requirement();
-                if (iReq == null)
-                {
-                    requirement1 = requirement2;
-                }
-                else if (iReq.Length == 0)
-                {
-                    requirement1 = requirement2;
-                }
-                else
-                {
-                    requirement2.ClassNameNot = new string[0];
-                    requirement2.ClassName = new string[0];
-                    requirement2.PowerID = new string[0][];
-                    requirement2.PowerIDNot = new string[0][];
-                    iReq = iReq.ToUpper();
-                    for (var index1 = 0; index1 <= 1; ++index1)
-                    {
-                        var str = "$ARCHETYPE @";
-                        if (index1 == 1)
-                        {
-                            str = "$ARCHTYPE @";
-                        }
-
-                        Contains = iReq.Contains(str);
-                        for (var index2 = 0; index2 <= DatabaseAPI.Database.Classes.Length - 1; ++index2)
-                        {
-                            var oldValue1 = str + DatabaseAPI.Database.Classes[index2].ClassName.ToUpper() + " ==";
-                            var oldValue2 = oldValue1 + " !";
-                            if (iReq.Contains(oldValue2))
-                            {
-                                Array.Resize(ref requirement2.ClassNameNot, requirement2.ClassNameNot.Length + 1);
-                                requirement2.ClassNameNot[^1] =
-                                    DatabaseAPI.Database.Classes[index2].ClassName;
-                                iReq = iReq.Replace(oldValue2, "true");
-                            }
-                            else if (iReq.Contains(oldValue1))
-                            {
-                                Array.Resize(ref requirement2.ClassName, requirement2.ClassName.Length + 1);
-                                requirement2.ClassName[^1] =
-                                    DatabaseAPI.Database.Classes[index2].ClassName;
-                                iReq = iReq.Replace(oldValue1, "true");
-                            }
-                        }
-
-                        if (!Contains)
-                        {
-                            continue;
-                        }
-
-                        {
-                            var startIndex = iReq.IndexOf(str, StringComparison.Ordinal);
-                            for (var index2 = startIndex + str.Length; index2 <= iReq.Length - 1; ++index2)
-                            {
-                                if (iReq[index2] != ' ')
-                                {
-                                    continue;
-                                }
-
-                                iReq = iReq.Replace(iReq.Substring(startIndex, index2 - startIndex), "true");
-                                break;
-                            }
-
-                            iReq = iReq.Replace("true ==", "true");
-                            iReq = iReq.Replace("true !", "true");
-                        }
-                    }
-
-                    var strArray1 = new string[33];
-                    var index3 = 0;
-                    var strArray2 = iReq.Split(null);
-                    for (var index1 = 0; index1 <= strArray2.Length - 1; ++index1)
-                    {
-                        strArray2[index1] = strArray2[index1].ToLower();
-                        switch (strArray2[index1])
-                        {
-                            case "&&" when index3 > 1 &&
-                                           (strArray1[index3 - 1] == "true") & (strArray1[index3 - 2] == "true"):
-                                --index3;
-                                strArray1[index3] = string.Empty;
-                                strArray1[index3 - 1] = "true";
-                                break;
-                            case "&&" when index3 > 1 &&
-                                           (strArray1[index3 - 1] == "true") & (strArray1[index3 - 2] != "true"):
-                                requirement2.AddPowers(strArray1[index3 - 2], string.Empty);
-                                --index3;
-                                strArray1[index3] = string.Empty;
-                                strArray1[index3 - 1] = "true";
-                                break;
-                            case "&&" when index3 > 1 &&
-                                           (strArray1[index3 - 1] != "true") & (strArray1[index3 - 2] == "true"):
-                                requirement2.AddPowers(strArray1[index3 - 1], string.Empty);
-                                --index3;
-                                strArray1[index3] = string.Empty;
-                                break;
-                            case "&&":
-                                {
-                                    if (index3 > 1 && (strArray1[index3 - 1] != "true") & (strArray1[index3 - 2] != "true"))
-                                    {
-                                        requirement2.AddPowers(strArray1[index3 - 2], strArray1[index3 - 1]);
-                                        --index3;
-                                        strArray1[index3] = string.Empty;
-                                        strArray1[index3 - 1] = "true";
-                                    }
-
-                                    break;
-                                }
-                            case "!":
-                                strArray1[index3 - 1] = "!" + strArray1[index3 - 1];
-                                break;
-                            case "||":
-                                {
-                                    if (index3 > 1)
-                                    {
-                                        if ((strArray1[index3 - 1] == "true") & (strArray1[index3 - 2] == "true"))
-                                        {
-                                            --index3;
-                                            strArray1[index3] = string.Empty;
-                                            strArray1[index3 - 1] = "true";
-                                        }
-                                        else if ((strArray1[index3 - 1] != "true") & (strArray1[index3 - 2] == "true"))
-                                        {
-                                            requirement2.AddPowers(strArray1[index3 - 1], string.Empty);
-                                            --index3;
-                                            strArray1[index3] = string.Empty;
-                                        }
-                                        else if ((strArray1[index3 - 1] == "true") & (strArray1[index3 - 2] != "true"))
-                                        {
-                                            requirement2.AddPowers(strArray1[index3 - 2], string.Empty);
-                                            --index3;
-                                            strArray1[index3] = string.Empty;
-                                            strArray1[index3 - 1] = "true";
-                                        }
-                                        else
-                                        {
-                                            requirement2.AddPowers(strArray1[index3 - 2], string.Empty);
-                                            requirement2.AddPowers(strArray1[index3 - 1], string.Empty);
-                                            --index3;
-                                            strArray1[index3] = string.Empty;
-                                            strArray1[index3 - 1] = "true";
-                                        }
-                                    }
-
-                                    break;
-                                }
-                            case "owned?":
-                            case "auth>":
-                            case "productowned?":
-                            case "tokenowned?":
-                            case "char>":
-                                strArray1[index3 - 1] = "true";
-                                break;
-                            case ">=":
-                                --index3;
-                                strArray1[index3] = string.Empty;
-                                strArray1[index3 - 1] = "true";
-                                break;
-                            case ">":
-                                --index3;
-                                strArray1[index3] = string.Empty;
-                                strArray1[index3 - 1] = "true";
-                                break;
-                            case "source>":
-                                strArray1[index3 - 1] = "true";
-                                break;
-                            default:
-                                {
-                                    if (strArray2[index1] != "eq")
-                                    {
-                                        switch (strArray2[index1])
-                                        {
-                                            case "ispvpmap?":
-                                                {
-                                                    if (index1 < strArray2.GetUpperBound(0) && strArray2[index1 + 1] == "!")
-                                                    {
-                                                        strArray2[index1 + 1] = string.Empty;
-                                                    }
-
-                                                    strArray1[index3] = "true";
-                                                    ++index3;
-                                                    break;
-                                                }
-                                            case "isarchitectmap?":
-                                                {
-                                                    if (index1 < strArray2.GetUpperBound(0) && strArray2[index1 + 1] == "!")
-                                                    {
-                                                        strArray2[index1 + 1] = string.Empty;
-                                                    }
-
-                                                    strArray1[index3] = "true";
-                                                    ++index3;
-                                                    break;
-                                                }
-                                            default:
-                                                {
-                                                    if (!string.IsNullOrEmpty(strArray2[index1]))
-                                                    {
-                                                        strArray1[index3] = strArray2[index1];
-                                                        ++index3;
-                                                    }
-
-                                                    break;
-                                                }
-                                        }
-                                    }
-
-                                    break;
-                                }
-                        }
-                    }
-
-                    if (index3 == 1 && strArray1[0] != "true")
-                    {
-                        requirement2.AddPowers(strArray1[0], string.Empty);
-                        strArray1[0] = "true";
-                    }
-
-                    if (index3 != 0 && (index3 > 1) | (strArray1[0] != "true"))
-                    {
-                        var str = "Tokens remain in the stack (this can cause problems): \n";
-                        for (var index1 = 0; index1 <= index3; ++index1)
-                            str = str + strArray1[index1] + " ";
-                        var num = (int)MessageBox.Show(str + "\n\niReq: " + iReq +
-                                                        "\n\nSee clsPowerV2/ImportRequirementString to tweak.");
-                    }
-
-                    for (var index1 = 0; index1 <= requirement2.PowerID.Length - 1; ++index1)
-                        for (var index2 = 0; index2 <= requirement2.PowerID[index1].Length - 1; ++index2)
-                        {
-                            if (string.IsNullOrEmpty(requirement2.PowerID[index1][index2]))
-                            {
-                                continue;
-                            }
-
-                            for (var index4 = 0; index4 <= DatabaseAPI.Database.Power.Length - 1; ++index4)
-                            {
-                                if (!string.Equals(DatabaseAPI.Database.Power[index4].FullName,
-                                    requirement2.PowerID[index1][index2],
-                                    StringComparison.OrdinalIgnoreCase))
-                                {
-                                    continue;
-                                }
-
-                                requirement2.PowerID[index1][index2] = DatabaseAPI.Database.Power[index4].FullName;
-                                break;
-                            }
-                        }
-
-                    requirement1 = requirement2;
-                }
-            }
-
-            return requirement1;
-        }
 
         public void ProcessExecutes()
         {

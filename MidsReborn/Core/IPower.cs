@@ -54,8 +54,6 @@ namespace Mids_Reborn.Core
 
         int Available { get; set; }
 
-        Requirement Requires { get; set; }
-
         AdvancedConditionSet AdvancedRequirements { get; set; }
 
         Enums.eModeFlags ModesRequired { get; set; }

@@ -51,6 +51,8 @@ public sealed class PowerImportMetadata
 public sealed class ImportedPowerSemantics
 {
     public string TargetRequires { get; set; } = string.Empty;
+    public bool? AutoIssue { get; set; }
+    public bool? AutoIssueKeepsLevel { get; set; }
     public List<string> RequiredModes { get; set; } = [];
     public List<string> DisallowedModes { get; set; } = [];
     public List<OmniEffectDefinition> ActivationEffects { get; set; } = [];

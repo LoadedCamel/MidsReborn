@@ -81,6 +81,8 @@ public static partial class DatabaseAPI
                 {
                     dbPower.OmniRequiredModesRaw = [];
                     dbPower.OmniDisallowedModesRaw = [];
+                    dbPower.OmniAutoIssue = null;
+                    dbPower.OmniAutoIssueKeepsLevel = null;
                     if (!string.IsNullOrWhiteSpace(dbPower.OmniTargetRequiresRaw) &&
                         dbPower.TargetRoutingPolicy.IsDefault)
                     {
@@ -156,6 +158,8 @@ public static partial class DatabaseAPI
             .Select(OmniModeMapper.Normalize)
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray();
+        dbPower.OmniAutoIssue = semantics.AutoIssue;
+        dbPower.OmniAutoIssueKeepsLevel = semantics.AutoIssueKeepsLevel;
         dbPower.TargetRoutingPolicy = PlannerConditionRoutingAnalyzer.Analyze(
             dbPower.OmniTargetRequiresRaw,
             dbPower.FullName);

@@ -842,7 +842,7 @@ namespace Mids_Reborn.Core
             var atString = power.GetPowerSet().ATClass;
             if (string.IsNullOrWhiteSpace(atString))
             {
-                atString = power.Requires.ClassName[0];
+                atString = power.AdvancedRequirements.GetIncludedClassNames().FirstOrDefault() ?? string.Empty;
             }
 
             if (string.IsNullOrWhiteSpace(atString))

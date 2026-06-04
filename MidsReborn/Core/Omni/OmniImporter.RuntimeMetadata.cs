@@ -68,6 +68,8 @@ public sealed partial class OmniImporter
             : null;
 
         if (string.IsNullOrWhiteSpace(source.TargetRequires) &&
+            !source.AutoIssue &&
+            !source.AutoIssueKeepsLevel &&
             requiredModes.Count == 0 &&
             disallowedModes.Count == 0 &&
             (source.ActivationEffects == null || source.ActivationEffects.Count == 0) &&
@@ -83,6 +85,8 @@ public sealed partial class OmniImporter
         return new ImportedPowerSemantics
         {
             TargetRequires = source.TargetRequires ?? string.Empty,
+            AutoIssue = source.AutoIssue,
+            AutoIssueKeepsLevel = source.AutoIssueKeepsLevel,
             RequiredModes = requiredModes,
             DisallowedModes = disallowedModes,
             ActivationEffects = source.ActivationEffects?.Select(CloneEffectGroup).ToList() ?? [],
@@ -103,6 +107,8 @@ public sealed partial class OmniImporter
 
         midsPower.OmniRequiredModesRaw = NormalizeImportedModes(source.ModesRequired).ToArray();
         midsPower.OmniDisallowedModesRaw = NormalizeImportedModes(source.ModesDisallowed).ToArray();
+        midsPower.OmniAutoIssue = source.AutoIssue;
+        midsPower.OmniAutoIssueKeepsLevel = source.AutoIssueKeepsLevel;
         midsPower.OmniTargetRequiresRaw = source.TargetRequires ?? string.Empty;
         midsPower.TargetRoutingPolicy = PlannerConditionRoutingAnalyzer.Analyze(
             midsPower.OmniTargetRequiresRaw,
@@ -157,21 +163,9 @@ public sealed partial class OmniImporter
     {
         var classNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
-        foreach (var className in power.Requires.ClassName.Where(className => !string.IsNullOrWhiteSpace(className)))
+        foreach (var className in power.AdvancedRequirements.GetIncludedClassNames())
         {
             classNames.Add(OmniImportScope.NormalizeClassName(className));
-        }
-
-        if (database.Classes != null)
-        {
-            foreach (var classIndex in power.Requires.NClassName.Where(index => index >= 0 && index < database.Classes.Length))
-            {
-                var className = database.Classes[classIndex]?.ClassName;
-                if (!string.IsNullOrWhiteSpace(className))
-                {
-                    classNames.Add(OmniImportScope.NormalizeClassName(className));
-                }
-            }
         }
 
         if (!string.IsNullOrWhiteSpace(power.ForcedClass))

@@ -234,11 +234,7 @@ public static partial class OmniExpressionConverter
 
         if (TryResolveBooleanLiteral(normalized, negated, out var literalValue))
         {
-            return AdvancedConditionRow.AdvancedExpression(
-                link,
-                expression,
-                unsupported: !literalValue,
-                evaluationMode: AdvancedConditionEvaluationMode.BuildEvaluated);
+            return AdvancedConditionRow.BooleanLiteral(link, literalValue);
         }
 
         if (ArchetypeInherentCatalog.TryRewriteTierOneCondition(
@@ -996,12 +992,16 @@ public static partial class OmniExpressionConverter
 
             if (i + 1 < tokens.Length && tokens[i + 1].Equals("!", StringComparison.Ordinal))
             {
-                rows.Add(CreateRequirementGroupRow(
-                    tokens[i],
-                    string.Empty,
-                    AdvancedConditionLink.And,
-                    negated: true,
-                    expression));
+                rows.Add(new AdvancedConditionRow
+                {
+                    Link = AdvancedConditionLink.And,
+                    Kind = AdvancedConditionKind.PowerTaken,
+                    Subject = tokens[i],
+                    Operator = AdvancedConditionOperator.Equals,
+                    Value = "true",
+                    Negated = true,
+                    RawExpression = expression
+                });
                 consumedAny = true;
                 i += 2;
                 continue;
@@ -1033,12 +1033,15 @@ public static partial class OmniExpressionConverter
         var rows = new List<AdvancedConditionRow>();
         foreach (var power in powers)
         {
-            rows.Add(CreateRequirementGroupRow(
-                power,
-                string.Empty,
-                rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.Or,
-                negated: false,
-                expression));
+            rows.Add(new AdvancedConditionRow
+            {
+                Link = rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.Or,
+                Kind = AdvancedConditionKind.PowerTaken,
+                Subject = power,
+                Value = "true",
+                Operator = AdvancedConditionOperator.Equals,
+                RawExpression = expression
+            });
         }
 
         return rows;
@@ -1091,7 +1094,7 @@ public static partial class OmniExpressionConverter
 
     private static bool IsPowerToken(string token)
     {
-        return PowerTokenRegex().IsMatch(token);
+        return DirectPowerNameRegex().IsMatch(token);
     }
 
     private static void AddReportOnlyFragment(AdvancedConditionSet reportOnlyFragments, string expression)
@@ -1241,8 +1244,7 @@ public static partial class OmniExpressionConverter
     private static bool IsIgnorablePowerRequirementFragment(string expression)
     {
         var normalized = NormalizeOuter(expression);
-        return string.Equals(normalized, "0", StringComparison.OrdinalIgnoreCase) ||
-               AccessLevelRequirementRegex().IsMatch(normalized) ||
+        return AccessLevelRequirementRegex().IsMatch(normalized) ||
                ReverseAccessLevelRequirementRegex().IsMatch(normalized) ||
                OwnedRequirementRegex().IsMatch(normalized) ||
                normalized.Contains("auth>", StringComparison.OrdinalIgnoreCase) ||

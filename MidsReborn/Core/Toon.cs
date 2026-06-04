@@ -1331,7 +1331,7 @@ namespace Mids_Reborn.Core
                     }
                 }
 
-                if (!DatabaseAPI.Database.Power[pIDX].Requires.ClassOk(Archetype.Idx))
+                if (!DatabaseAPI.Database.Power[pIDX].AllowedForClass(Archetype.Idx))
                 {
                     index1 = popupData.Add();
                     popupData.Sections[index1].Add($"You cannot take this power because you are a {Archetype.DisplayName}.", PopUp.Colors.Alert, 1f, FontStyle.Bold, 1);
@@ -1437,7 +1437,7 @@ namespace Mids_Reborn.Core
 
             var index4 = popupData.Add();
             popupData.Sections[index4].Add(empty, PopUp.Colors.Alert);
-            if (DatabaseAPI.Database.Power[CurrentBuild.Powers[hIDX].NIDPower].Requires.ClassOk(Archetype.Idx))
+            if (DatabaseAPI.Database.Power[CurrentBuild.Powers[hIDX].NIDPower].AllowedForClass(Archetype.Idx))
             {
                 return popupData;
             }
@@ -1562,7 +1562,7 @@ namespace Mids_Reborn.Core
                 return popupData;
             }
 
-            if (!powerset.Powers[0].Requires.ClassOk(Archetype.Idx))
+            if (!powerset.Powers[0].AllowedForClass(Archetype.Idx))
             {
                 var index2 = popupData.Add();
                 popupData.Sections[index2].Add($"You cannot take powers from this pool because you are a {Archetype.DisplayName}.", PopUp.Colors.Alert, 1f, FontStyle.Bold, 1);

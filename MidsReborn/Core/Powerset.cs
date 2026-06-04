@@ -171,7 +171,7 @@ namespace Mids_Reborn.Core
 
         public bool ClassOk(int nIDClass)
         {
-            return Powers.Length > 0 && Powers[0].Requires.ClassOk(nIDClass);
+            return Powers.Length == 0 || Powers[0].AllowedForClass(nIDClass);
         }
 
         public List<string> GetArchetypes()
@@ -179,7 +179,7 @@ namespace Mids_Reborn.Core
             if (!string.IsNullOrEmpty(ATClass)) return new List<string> { ATClass };
             if (Powers.Length <= 0) return new List<string>();
 
-            return Powers[0].Requires.ClassName.ToList();
+            return Powers[0].AdvancedRequirements.GetIncludedClassNames().ToList();
         }
 
         public void StoreTo(ref BinaryWriter writer)

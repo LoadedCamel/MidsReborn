@@ -1664,13 +1664,11 @@ public sealed partial class OmniImporter
             else if (string.IsNullOrWhiteSpace(omniPower.Requires))
             {
                 midsPower.AdvancedRequirements = new AdvancedConditionSet();
-                midsPower.Requires = midsPower.AdvancedRequirements.ToLegacyRequirement();
                 applyResult.RequirementsUpdated++;
             }
             else if (OmniExpressionConverter.TryConvertPowerRequirement(CanonicalizeOmniFullName(omniPower.Requires), out var requirements))
             {
                 midsPower.AdvancedRequirements = requirements;
-                midsPower.Requires = requirements.ToLegacyRequirement();
                 applyResult.RequirementsUpdated++;
             }
             else
@@ -3394,13 +3392,11 @@ public sealed partial class OmniImporter
         else if (string.IsNullOrWhiteSpace(omniPower.Requires))
         {
             midsPower.AdvancedRequirements = new AdvancedConditionSet();
-            midsPower.Requires = midsPower.AdvancedRequirements.ToLegacyRequirement();
             applyResult.RequirementsUpdated++;
         }
         else if (OmniExpressionConverter.TryConvertPowerRequirement(CanonicalizeOmniFullName(omniPower.Requires), out var requirements))
         {
             midsPower.AdvancedRequirements = requirements;
-            midsPower.Requires = requirements.ToLegacyRequirement();
             applyResult.RequirementsUpdated++;
         }
         else
@@ -5803,13 +5799,11 @@ public sealed partial class OmniImporter
         if (string.IsNullOrWhiteSpace(omniPower.Requires))
         {
             midsPower.AdvancedRequirements = new AdvancedConditionSet();
-            midsPower.Requires = midsPower.AdvancedRequirements.ToLegacyRequirement();
             applyResult.RequirementsUpdated++;
         }
         else if (OmniExpressionConverter.TryConvertPowerRequirement(CanonicalizeOmniFullName(omniPower.Requires), out var requirements))
         {
             midsPower.AdvancedRequirements = requirements;
-            midsPower.Requires = requirements.ToLegacyRequirement();
             applyResult.RequirementsUpdated++;
         }
         else
@@ -6572,8 +6566,7 @@ public sealed partial class OmniImporter
         power.Available = 1;
         power.Level = 1;
         power.IconName = FastSnipePlannerIconName;
-        power.Requires = BuildFastSnipePlannerRequirement(database, sourcePowers);
-        power.AdvancedRequirements = AdvancedConditionSet.FromLegacyRequirement(power.Requires);
+        power.AdvancedRequirements = BuildFastSnipePlannerRequirements(database, sourcePowers);
         power.IsModified = true;
 
         AddPlannerModePayload(power, PlannerMode.FastSnipe, applyResult);
@@ -6598,21 +6591,40 @@ public sealed partial class OmniImporter
         }
     }
 
-    private static Requirement BuildFastSnipePlannerRequirement(
+    private static AdvancedConditionSet BuildFastSnipePlannerRequirements(
         IDatabase database,
         IReadOnlyList<IPower> sourcePowers)
     {
+        var requirements = new AdvancedConditionSet();
         var classes = database.Classes ?? [];
         var blasterClassIndex = classes.TryFindIndex(cls =>
             string.Equals(cls?.ClassName, FastSnipePlannerClassName, StringComparison.OrdinalIgnoreCase));
 
-        return new Requirement
+        if (blasterClassIndex >= 0)
         {
-            ClassName = blasterClassIndex >= 0 ? [FastSnipePlannerClassName] : [],
-            NClassName = blasterClassIndex >= 0 ? [blasterClassIndex] : [],
-            PowerID = sourcePowers.Select(power => new[] { power.FullName, string.Empty }).ToArray(),
-            NPowerID = sourcePowers.Select(power => new[] { power.PowerIndex, -1 }).ToArray()
-        };
+            requirements.Rows.Add(new AdvancedConditionRow
+            {
+                Link = AdvancedConditionLink.And,
+                Kind = AdvancedConditionKind.CharacterArchetype,
+                Subject = "class",
+                Value = FastSnipePlannerClassName,
+                Operator = AdvancedConditionOperator.Equals
+            });
+        }
+
+        foreach (var sourcePower in sourcePowers.Where(sourcePower => !string.IsNullOrWhiteSpace(sourcePower.FullName)))
+        {
+            requirements.Rows.Add(new AdvancedConditionRow
+            {
+                Link = requirements.Rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.Or,
+                Kind = AdvancedConditionKind.PowerTaken,
+                Subject = sourcePower.FullName,
+                Value = "true",
+                Operator = AdvancedConditionOperator.Equals
+            });
+        }
+
+        return requirements;
     }
 
     private static List<IPower> FindFastSnipeSourcePowers(IEnumerable<IPower?> powers)
@@ -8828,7 +8840,7 @@ public sealed partial class OmniImporter
         applyResult.AddLimited(applyResult.SorceryEnflamePickabilityTraceDetails,
             $"{power.FullName}: FullSetName={power.FullSetName}, PowerSetID={power.PowerSetID}, PowerSetIndex={power.PowerSetIndex}, owning={(owningPowerset?.FullName ?? "<missing>")}, inPowersetArray={inPowersetArray}, level={power.Level}, hidden={power.HiddenPower}, include={power.IncludeFlag}, allowedPlayableClasses={allowedClasses.Length}");
         applyResult.AddLimited(applyResult.SorceryEnflamePickabilityTraceDetails,
-            $"{power.FullName}: advanced requirements={FormatAdvancedRequirementRows(power.AdvancedRequirements)}, legacy groups={FormatLegacyRequirementGroups(power.Requires)}");
+            $"{power.FullName}: advanced requirements={FormatAdvancedRequirementRows(power.AdvancedRequirements)}");
 
         if (power.HiddenPower || power.Level <= 0 || !inPowersetArray || owningPowerset == null || allowedClasses.Length == 0)
         {
@@ -8847,20 +8859,6 @@ public sealed partial class OmniImporter
 
         return string.Join(" | ", set.Rows.Select(row =>
             $"{row.Link}:{row.Kind}:{row.Subject}{(string.IsNullOrWhiteSpace(row.Value) ? string.Empty : "+" + row.Value)}{(row.Negated ? "!" : string.Empty)}"));
-    }
-
-    private static string FormatLegacyRequirementGroups(Requirement? requirement)
-    {
-        if (requirement == null)
-        {
-            return "<none>";
-        }
-
-        var groups = requirement.PowerID
-            .Where(group => group.Any(value => !string.IsNullOrWhiteSpace(value)))
-            .Select(group => $"({string.Join(" + ", group.Where(value => !string.IsNullOrWhiteSpace(value)))})")
-            .ToArray();
-        return groups.Length == 0 ? "<none>" : string.Join(" OR ", groups);
     }
 
     private static IPowerset? GetOwningPowerset(IDatabase database, IPower power)

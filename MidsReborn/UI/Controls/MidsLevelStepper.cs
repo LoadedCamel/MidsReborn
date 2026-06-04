@@ -1,4 +1,5 @@
 using System.ComponentModel;
+using System.Globalization;
 using System.Drawing.Drawing2D;
 using Mids_Reborn.Core.Theming;
 using Mids_Reborn.UI.Theming;
@@ -21,12 +22,14 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
     private int _value = 50;
     private HotZone _hoveredZone;
     private HotZone _pressedZone;
+    private bool _suppressEditorLostFocusCommit;
     private bool _themeHooked;
     private bool _liveResizeMetricsFrozen;
     private bool _stepperLayoutValid;
     private Action? _themeChangedHandler;
     private StepperLayoutKey _stepperLayoutKey;
     private StepperLayout _stepperLayout;
+    private readonly TextBox _editor;
 
     private readonly record struct FontSignature(string FamilyName, float SizeInPoints, FontStyle Style, byte GdiCharSet);
     private readonly record struct StepperLayoutKey(int ClientHeight, FontSignature Font, int Dpi);
@@ -96,7 +99,17 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
             }
 
             _value = normalized;
+            if (!_editor.Focused)
+            {
+                _editor.Text = _value.ToString(CultureInfo.InvariantCulture);
+            }
+
             Invalidate();
+            if (IsHandleCreated && Visible)
+            {
+                Update();
+            }
+
             ValueChanged?.Invoke(this, EventArgs.Empty);
         }
     }
@@ -124,12 +137,31 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
             ControlStyles.UserPaint,
             true);
 
+        _editor = new TextBox
+        {
+            BorderStyle = BorderStyle.None,
+            HideSelection = false,
+            Margin = Padding.Empty,
+            Multiline = false,
+            TabStop = false,
+            TextAlign = HorizontalAlignment.Center,
+            Visible = false
+        };
+        _editor.KeyDown += Editor_KeyDown;
+        _editor.KeyPress += Editor_KeyPress;
+        _editor.LostFocus += Editor_LostFocus;
+        Controls.Add(_editor);
+
         BackColor = Color.Transparent;
         Cursor = Cursors.Hand;
         Font = new Font("Segoe UI Semibold", 9.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
         ForeColor = Color.White;
         Size = new Size(82, 28);
         TabStop = true;
+
+        UpdateEditorConstraints();
+        ApplyEditorTheme();
+        UpdateEditorBounds();
     }
 
     protected override void OnHandleCreated(EventArgs e)
@@ -141,7 +173,7 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
             return;
         }
 
-        _themeChangedHandler = Invalidate;
+        _themeChangedHandler = HandleThemeChanged;
         ThemeManager.ThemeChanged += _themeChangedHandler;
         _themeHooked = true;
     }
@@ -153,6 +185,13 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
             ThemeManager.ThemeChanged -= _themeChangedHandler;
             _themeHooked = false;
             _themeChangedHandler = null;
+        }
+
+        if (disposing)
+        {
+            _editor.KeyDown -= Editor_KeyDown;
+            _editor.KeyPress -= Editor_KeyPress;
+            _editor.LostFocus -= Editor_LostFocus;
         }
 
         base.Dispose(disposing);
@@ -179,6 +218,24 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
     {
         base.OnFontChanged(e);
         _stepperLayoutValid = false;
+        if (_editor is null)
+        {
+            return;
+        }
+
+        _editor.Font = Font;
+        UpdateEditorBounds();
+    }
+
+    protected override void OnSizeChanged(EventArgs e)
+    {
+        base.OnSizeChanged(e);
+        if (_editor is null)
+        {
+            return;
+        }
+
+        UpdateEditorBounds();
     }
 
     protected override void OnMouseLeave(EventArgs e)
@@ -186,6 +243,10 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
         base.OnMouseLeave(e);
         _hoveredZone = HotZone.None;
         _pressedZone = HotZone.None;
+        if (!_editor.Focused)
+        {
+            Cursor = Cursors.Hand;
+        }
         Invalidate();
     }
 
@@ -193,6 +254,9 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
     {
         base.OnMouseMove(e);
         var hovered = HitTest(e.Location);
+        Cursor = hovered == HotZone.None && ValueBounds.Contains(e.Location) && !_editor.Visible
+            ? Cursors.IBeam
+            : Cursors.Hand;
         if (_hoveredZone == hovered)
         {
             return;
@@ -211,7 +275,15 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
         }
 
         Focus();
-        _pressedZone = HitTest(e.Location);
+        var hit = HitTest(e.Location);
+        if (hit == HotZone.None && ValueBounds.Contains(e.Location))
+        {
+            BeginValueEdit(selectAll: true);
+            return;
+        }
+
+        CommitValueEdit(keepFocusOnStepper: false);
+        _pressedZone = hit;
         Invalidate();
     }
 
@@ -246,6 +318,11 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
     protected override void OnMouseWheel(MouseEventArgs e)
     {
         base.OnMouseWheel(e);
+        if (_editor.Visible)
+        {
+            return;
+        }
+
         if (e.Delta > 0)
         {
             StepValue(1);
@@ -270,6 +347,11 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
         base.OnKeyDown(e);
         switch (e.KeyCode)
         {
+            case Keys.Enter:
+            case Keys.F2:
+                BeginValueEdit(selectAll: true);
+                e.Handled = true;
+                break;
             case Keys.Left:
             case Keys.Down:
                 StepValue(-1);
@@ -280,6 +362,21 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
                 StepValue(1);
                 e.Handled = true;
                 break;
+        }
+    }
+
+    protected override void OnKeyPress(KeyPressEventArgs e)
+    {
+        base.OnKeyPress(e);
+        if (_editor.Visible)
+        {
+            return;
+        }
+
+        if (char.IsDigit(e.KeyChar))
+        {
+            BeginValueEdit(e.KeyChar.ToString(CultureInfo.InvariantCulture));
+            e.Handled = true;
         }
     }
 
@@ -324,9 +421,12 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
 
         DrawSymbol(e.Graphics, DecrementBounds, layout, "-", CanDecrement ? theme.ForeColor : Color.FromArgb(110, theme.ForeColor));
         DrawSymbol(e.Graphics, IncrementBounds, layout, "+", CanIncrement ? theme.ForeColor : Color.FromArgb(110, theme.ForeColor));
-        DrawValue(e.Graphics, ValueBounds, layout, theme.ForeColor);
+        if (!_editor.Visible)
+        {
+            DrawValue(e.Graphics, ValueBounds, layout, theme.ForeColor);
+        }
 
-        if (Focused)
+        if (Focused || _editor.Focused)
         {
             var focusRect = Rectangle.Inflate(bounds, -layout.FocusInset, -layout.FocusInset);
             using var focusPath = CreateRoundedRect(focusRect, Math.Max(2, radius - layout.FocusRadiusDelta));
@@ -361,12 +461,86 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
 
     private void StepValue(int delta)
     {
+        CommitValueEdit(keepFocusOnStepper: false);
         if (delta < 0 && !CanDecrement || delta > 0 && !CanIncrement)
         {
             return;
         }
 
         Value += delta;
+    }
+
+    private void BeginValueEdit(string? text = null, bool selectAll = false)
+    {
+        ApplyEditorTheme();
+        UpdateEditorConstraints();
+        UpdateEditorBounds();
+        _editor.Text = text ?? _value.ToString(CultureInfo.InvariantCulture);
+        _editor.Visible = true;
+        _editor.BringToFront();
+        _editor.Focus();
+        if (selectAll)
+        {
+            _editor.SelectAll();
+        }
+        else
+        {
+            _editor.SelectionStart = _editor.TextLength;
+        }
+
+        Cursor = Cursors.IBeam;
+        Invalidate();
+    }
+
+    private void CommitValueEdit(bool keepFocusOnStepper = true)
+    {
+        if (!_editor.Visible)
+        {
+            return;
+        }
+
+        var text = _editor.Text.Trim();
+        if (int.TryParse(text, NumberStyles.Integer, CultureInfo.InvariantCulture, out var parsed))
+        {
+            Value = parsed;
+        }
+        else
+        {
+            _editor.Text = _value.ToString(CultureInfo.InvariantCulture);
+        }
+
+        EndValueEdit(keepFocusOnStepper);
+    }
+
+    private void CancelValueEdit(bool keepFocusOnStepper = true)
+    {
+        if (!_editor.Visible)
+        {
+            return;
+        }
+
+        _editor.Text = _value.ToString(CultureInfo.InvariantCulture);
+        EndValueEdit(keepFocusOnStepper);
+    }
+
+    private void EndValueEdit(bool keepFocusOnStepper)
+    {
+        _suppressEditorLostFocusCommit = true;
+        try
+        {
+            _editor.Visible = false;
+            if (keepFocusOnStepper && IsHandleCreated && CanFocus)
+            {
+                Focus();
+            }
+        }
+        finally
+        {
+            _suppressEditorLostFocusCommit = false;
+        }
+
+        Cursor = Cursors.Hand;
+        Invalidate();
     }
 
     private HotZone HitTest(Point location)
@@ -431,7 +605,7 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
 
     private void DrawValue(Graphics graphics, Rectangle bounds, StepperLayout layout, Color color)
     {
-        var text = _value.ToString();
+        var text = _value.ToString(CultureInfo.InvariantCulture);
         var textRect = Rectangle.Inflate(bounds, -layout.ValueInflateX, -layout.ValueInflateY);
         TextRenderer.DrawText(
             graphics,
@@ -480,6 +654,96 @@ public sealed class MidsLevelStepper : Control, ILiveResizeMetricsAware
 
     private static FontSignature CreateFontSignature(Font font)
         => new(font.FontFamily.Name, font.SizeInPoints, font.Style, font.GdiCharSet);
+
+    private void HandleThemeChanged()
+    {
+        ApplyEditorTheme();
+        Invalidate();
+    }
+
+    private void ApplyEditorTheme()
+    {
+        if (_editor.IsDisposed)
+        {
+            return;
+        }
+
+        var theme = CurrentTheme;
+        _editor.BackColor = Blend(theme.GradientTop, theme.GradientBottom, 0.5f);
+        _editor.ForeColor = theme.ForeColor;
+        _editor.Font = Font;
+    }
+
+    private void UpdateEditorBounds()
+    {
+        if (_editor.IsDisposed)
+        {
+            return;
+        }
+
+        var valueBounds = Rectangle.Inflate(ValueBounds, -4, -4);
+        int editorHeight = Math.Min(valueBounds.Height, Math.Max(16, Font.Height + 4));
+        int editorY = valueBounds.Y + Math.Max(0, (valueBounds.Height - editorHeight) / 2);
+        _editor.Bounds = new Rectangle(
+            Math.Max(0, valueBounds.X),
+            Math.Max(0, editorY),
+            Math.Max(8, valueBounds.Width),
+            Math.Max(1, editorHeight));
+    }
+
+    private void UpdateEditorConstraints()
+    {
+        var digitLength = Math.Max(
+            _minimum.ToString(CultureInfo.InvariantCulture).Length,
+            _maximum.ToString(CultureInfo.InvariantCulture).Length);
+        _editor.MaxLength = Math.Max(1, digitLength);
+    }
+
+    private void Editor_KeyDown(object? sender, KeyEventArgs e)
+    {
+        switch (e.KeyCode)
+        {
+            case Keys.Enter:
+                CommitValueEdit();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                break;
+            case Keys.Escape:
+                CancelValueEdit();
+                e.Handled = true;
+                e.SuppressKeyPress = true;
+                break;
+        }
+    }
+
+    private void Editor_KeyPress(object? sender, KeyPressEventArgs e)
+    {
+        if (char.IsControl(e.KeyChar) || char.IsDigit(e.KeyChar))
+        {
+            return;
+        }
+
+        bool canInsertNegativeSign = e.KeyChar == '-'
+            && _minimum < 0
+            && _editor.SelectionStart == 0
+            && !_editor.Text.Contains('-', StringComparison.Ordinal);
+        if (canInsertNegativeSign)
+        {
+            return;
+        }
+
+        e.Handled = true;
+    }
+
+    private void Editor_LostFocus(object? sender, EventArgs e)
+    {
+        if (_suppressEditorLostFocusCommit || !_editor.Visible)
+        {
+            return;
+        }
+
+        CommitValueEdit(keepFocusOnStepper: false);
+    }
 
     private static GraphicsPath CreateRoundedRect(Rectangle bounds, int radius)
     {
