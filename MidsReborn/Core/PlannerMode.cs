@@ -3,6 +3,8 @@ namespace Mids_Reborn.Core;
 public enum PlannerMode
 {
     None,
+    Engaged,
+    OutOfCombat,
     FastSnipe,
     Containment,
     Domination,
@@ -43,6 +45,10 @@ public static class PlannerModeMapper
 {
     private static readonly Dictionary<string, PlannerMode> Modes = new(StringComparer.OrdinalIgnoreCase)
     {
+        ["Engaged"] = PlannerMode.Engaged,
+        ["Engagement"] = PlannerMode.Engaged,
+        ["OutOfCombat"] = PlannerMode.OutOfCombat,
+        ["Out_Of_Combat"] = PlannerMode.OutOfCombat,
         ["FastSnipe"] = PlannerMode.FastSnipe,
         ["Fast_Snipe"] = PlannerMode.FastSnipe,
         ["Containment"] = PlannerMode.Containment,
@@ -134,6 +140,8 @@ public static class PlannerModeMapper
     {
         return mode switch
         {
+            PlannerMode.Engaged => "Engaged",
+            PlannerMode.OutOfCombat => "OutOfCombat",
             PlannerMode.FastSnipe => "FastSnipe",
             PlannerMode.Containment => "Containment",
             PlannerMode.Domination => "Domination",
@@ -176,6 +184,8 @@ public static class PlannerModeMapper
     {
         return mode switch
         {
+            PlannerMode.Engaged => "Engagement",
+            PlannerMode.OutOfCombat => "Out_Of_Combat",
             PlannerMode.FastSnipe => "Fast_Snipe",
             PlannerMode.CriticalHit => "Critical_Hit",
             PlannerMode.DefensiveAdaptation => "Defensive_Adaptation",
@@ -213,6 +223,8 @@ public static class PlannerModeMapper
     {
         return mode switch
         {
+            PlannerMode.Engaged => "Engagement",
+            PlannerMode.OutOfCombat => "Out of Combat",
             PlannerMode.FastSnipe => "Fast Snipe",
             PlannerMode.CriticalHit => "Critical Hit",
             PlannerMode.DefensiveAdaptation => "Defensive Adaptation",

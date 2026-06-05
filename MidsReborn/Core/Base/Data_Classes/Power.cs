@@ -370,6 +370,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             ApplyImportedBoostPolicyFlags();
             HasAbsorbedEffects = template.HasAbsorbedEffects;
             HiddenPower = template.HiddenPower;
+            NormalizePlannerModeCompatibility();
         }
 
         public Power(BinaryReader reader)
@@ -547,6 +548,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 ReadOptionalMetadata(reader);
             }
+
+            NormalizePlannerModeCompatibility();
         }
 
         public IPowerset? GetPowerSet()
@@ -1235,6 +1238,54 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private static bool TryReadMarkedString(BinaryReader reader, string marker, out string value)
         {
             return BinaryMetadataEnvelope.TryReadMarkedString(reader, marker, out value);
+        }
+
+        private void NormalizePlannerModeCompatibility()
+        {
+            if (PlannerStateCatalog.TryGetDefinition(FullName, out var definition))
+            {
+                if (definition.IsHiddenPayload)
+                {
+                    HiddenPower = true;
+                    InherentType = Enums.eGridType.None;
+                    ShowStatToggle = false;
+                    PowerType = Enums.ePowerType.Auto_;
+                    AlwaysToggle = true;
+                    return;
+                }
+
+                HiddenPower = !definition.VisibleInInherentGrid;
+                InherentType = definition.VisibleInInherentGrid ? definition.VisibleGridType : Enums.eGridType.None;
+                ShowStatToggle = definition.VisibleInInherentGrid;
+
+                if (!definition.IsModeControl)
+                {
+                    return;
+                }
+
+                if (string.Equals(definition.FullName, PlannerStateCatalog.DominationPowerFullName, StringComparison.OrdinalIgnoreCase))
+                {
+                    PowerType = Enums.ePowerType.Click;
+                    AlwaysToggle = false;
+                    return;
+                }
+
+                PowerType = definition.VisibleInInherentGrid
+                    ? Enums.ePowerType.Toggle
+                    : Enums.ePowerType.Auto_;
+                AlwaysToggle = PowerType == Enums.ePowerType.Auto_;
+                return;
+            }
+
+            if (PlannerStateCatalog.IsDeprecatedCompatibilityPower(FullName))
+            {
+                HiddenPower = true;
+                IncludeFlag = false;
+                InherentType = Enums.eGridType.None;
+                ShowStatToggle = false;
+                PowerType = Enums.ePowerType.Auto_;
+                AlwaysToggle = false;
+            }
         }
 
         private void TryReadVariableDisplayMetadata(BinaryReader reader)

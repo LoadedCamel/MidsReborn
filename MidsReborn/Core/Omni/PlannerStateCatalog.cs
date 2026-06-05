@@ -1,10 +1,12 @@
 using System.Text.RegularExpressions;
+using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 
 namespace Mids_Reborn.Core.Omni;
 
 internal enum PlannerStateFamily
 {
+    CombatEngagement,
     StreetJusticeCombo,
     StaffPerfection,
     Assassination,
@@ -39,7 +41,8 @@ internal enum PlannerStateVisibilityRule
 {
     AnyPowerInOwningSet,
     SpecificPowerOwned,
-    SpecificArchetype
+    SpecificArchetype,
+    RequirementDriven
 }
 
 internal enum PlannerStateStackMode
@@ -111,6 +114,11 @@ internal static class PlannerStateCatalog
     internal const string PackMentalityMarker = "Temporary_Powers.Temporary_Powers.Pack_Mentality";
     internal const string InsightMarker = "Temporary_Powers.Temporary_Powers.Psionic_Melee_Insight";
     internal const string AssassinsFocusMarker = "Temporary_Powers.Temporary_Powers.Assassins_Focus";
+    internal const string EngagementPowerFullName = "Inherent.Inherent.Engagement";
+    internal const string EngagementPlannerDescriptionShort = "Planner combat-state toggle.";
+    internal const string EngagementPlannerDescriptionLong =
+        "Planner-only toggle. Turn this on to make Mids treat your character as engaged/in combat. " +
+        "Turn it off to use out-of-combat behavior. This affects sniper fast/slow behavior and other combat-state-gated planner effects.";
     internal const string AssassinationPowerFullName = "Inherent.Inherent.Assassination";
     internal const string FromHidePowerFullName = "Inherent.Inherent.Stalker_Hidden";
     internal const string OpportunityPowerFullName = "Inherent.Inherent.Opportunity";
@@ -131,6 +139,7 @@ internal static class PlannerStateCatalog
     internal const string InsightPowerFullName = "Inherent.Inherent.Insight";
 
     internal const string MomentumPowerFullName = "Inherent.Inherent.Fast_Mode";
+    internal const string LegacyFastSnipePowerFullName = "Inherent.Inherent.Fast_Snipe";
     internal const string PerfectionLevel1PowerFullName = "Inherent.Inherent.Perfection_Level_1";
     internal const string PerfectionLevel2PowerFullName = "Inherent.Inherent.Perfection_Level_2";
     internal const string PerfectionLevel3PowerFullName = "Inherent.Inherent.Perfection_Level_3";
@@ -393,6 +402,18 @@ internal static class PlannerStateCatalog
             OwningSetTokens = ["stafffighting"],
             RequiredPowerNames = ["staffmastery"],
             VisibleInInherentGrid = false
+        },
+        new PlannerStateControlDefinition
+        {
+            Family = PlannerStateFamily.CombatEngagement,
+            FullName = EngagementPowerFullName,
+            DisplayName = "Engagement",
+            PresentationType = PlannerStatePresentationType.ReuseImportedPower,
+            PayloadType = PlannerStatePayloadType.MarkerOnly,
+            VisibilityRule = PlannerStateVisibilityRule.RequirementDriven,
+            StackMode = PlannerStateStackMode.None,
+            Mode = PlannerMode.Engaged,
+            VisibleGridType = Enums.eGridType.Power
         },
         new PlannerStateControlDefinition
         {
@@ -728,6 +749,8 @@ internal static class PlannerStateCatalog
 
     private static readonly Dictionary<string, PlannerStateFamily> ModeFamilies = new(StringComparer.OrdinalIgnoreCase)
     {
+        [PlannerModeMapper.ToCanonicalName(PlannerMode.Engaged)] = PlannerStateFamily.CombatEngagement,
+        [PlannerModeMapper.ToCanonicalName(PlannerMode.OutOfCombat)] = PlannerStateFamily.CombatEngagement,
         [PlannerModeMapper.ToCanonicalName(PlannerMode.ComboLevel1)] = PlannerStateFamily.StreetJusticeCombo,
         [PlannerModeMapper.ToCanonicalName(PlannerMode.ComboLevel2)] = PlannerStateFamily.StreetJusticeCombo,
         [PlannerModeMapper.ToCanonicalName(PlannerMode.ComboLevel3)] = PlannerStateFamily.StreetJusticeCombo,
@@ -759,6 +782,8 @@ internal static class PlannerStateCatalog
 
     private static readonly Dictionary<PlannerMode, PlannerMode[]> ExclusiveModeFamilies = new()
     {
+        [PlannerMode.Engaged] = [PlannerMode.Engaged, PlannerMode.OutOfCombat],
+        [PlannerMode.OutOfCombat] = [PlannerMode.Engaged, PlannerMode.OutOfCombat],
         [PlannerMode.ComboLevel1] = [PlannerMode.ComboLevel1, PlannerMode.ComboLevel2, PlannerMode.ComboLevel3],
         [PlannerMode.ComboLevel2] = [PlannerMode.ComboLevel1, PlannerMode.ComboLevel2, PlannerMode.ComboLevel3],
         [PlannerMode.ComboLevel3] = [PlannerMode.ComboLevel1, PlannerMode.ComboLevel2, PlannerMode.ComboLevel3],
@@ -777,6 +802,7 @@ internal static class PlannerStateCatalog
 
     private static readonly HashSet<string> SelfStateMarkers =
     [
+        EngagementPowerFullName,
         ComboLevel1PowerFullName,
         ComboLevel2PowerFullName,
         ComboLevel3PowerFullName,
@@ -884,6 +910,9 @@ internal static class PlannerStateCatalog
 
         switch (powerFullName)
         {
+            case EngagementPowerFullName:
+                isActive = isModeActive(PlannerMode.Engaged);
+                return true;
             case ComboLevel1PowerFullName:
             case ComboLevel1Marker:
                 isActive = isModeActive(PlannerMode.ComboLevel1);
@@ -1116,6 +1145,8 @@ internal static class PlannerStateCatalog
             PlannerStateVisibilityRule.AnyPowerInOwningSet => HasChosenPowerInOwningSet(build, definition.OwningSetTokens),
             PlannerStateVisibilityRule.SpecificPowerOwned => HasChosenRequiredPower(build, definition.OwningSetTokens, definition.RequiredPowerNames),
             PlannerStateVisibilityRule.SpecificArchetype => MatchesCharacterArchetype(build, definition.ArchetypeTokens),
+            PlannerStateVisibilityRule.RequirementDriven => power.IncludeFlag &&
+                                                           power.AdvancedRequirements is { Rows.Count: > 0 },
             _ => false
         };
     }
@@ -1135,6 +1166,10 @@ internal static class PlannerStateCatalog
 
         switch (subject)
         {
+            case EngagementPowerFullName:
+                family = PlannerStateFamily.CombatEngagement;
+                rewrittenRows.Add(CloneAsSourceMode(row, PlannerMode.Engaged));
+                return true;
             case AssassinationPowerFullName:
                 family = PlannerStateFamily.Assassination;
                 rewrittenRows.Add(CloneAsPowerStacks(row, AssassinsFocusMarker));
@@ -1443,6 +1478,229 @@ internal static class PlannerStateCatalog
             DominationPowerFullName or DominationMeterPowerFullName or DominationModePowerFullName => DominationMeterPowerFullName,
             _ => powerFullName
         };
+    }
+
+    internal static bool IsDeprecatedCompatibilityPower(string? powerFullName)
+    {
+        return !string.IsNullOrWhiteSpace(powerFullName) &&
+               powerFullName.Equals(LegacyFastSnipePowerFullName, StringComparison.OrdinalIgnoreCase);
+    }
+
+    internal static bool ReferencesPlannerMode(IPower power, PlannerMode mode)
+    {
+        if (power == null || mode == PlannerMode.None)
+        {
+            return false;
+        }
+
+        if (PlannerModeMapper.TryGetPlannerMode(power.PowerName, out var powerNameMode) && powerNameMode == mode)
+        {
+            return true;
+        }
+
+        if (PlannerModeMapper.TryGetPlannerMode(power.FullName?.Split('.').LastOrDefault(), out var leafMode) && leafMode == mode)
+        {
+            return true;
+        }
+
+        foreach (var effect in power.Effects ?? [])
+        {
+            if (effect == null)
+            {
+                continue;
+            }
+
+            if (effect.EffectType is Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode &&
+                PlannerModeMapper.TryGetPlannerMode(effect.ModeName, out var effectMode) &&
+                effectMode == mode)
+            {
+                return true;
+            }
+
+            foreach (var row in effect.AdvancedConditions?.Rows ?? [])
+            {
+                if (row.Kind == AdvancedConditionKind.SourceMode &&
+                    row.EvaluationMode == AdvancedConditionEvaluationMode.BuildEvaluated &&
+                    OmniModeMapper.TryGetPlannerMode(row.Subject, out var conditionMode) &&
+                    conditionMode == mode)
+                {
+                    return true;
+                }
+            }
+        }
+
+        return false;
+    }
+
+    internal static List<IPower> FindEngagementSourcePowers(IEnumerable<IPower?> powers)
+    {
+        return powers
+            .Where(power => power != null &&
+                            !power.HiddenPower &&
+                            power.InherentType == Enums.eGridType.None &&
+                            !string.IsNullOrWhiteSpace(power.FullName) &&
+                            (ReferencesPlannerMode(power, PlannerMode.FastSnipe) ||
+                             ReferencesPlannerMode(power, PlannerMode.OutOfCombat)))
+            .Cast<IPower>()
+            .GroupBy(power => power.FullName, StringComparer.OrdinalIgnoreCase)
+            .Select(group => group.First())
+            .OrderBy(power => power.FullName, StringComparer.OrdinalIgnoreCase)
+            .ToList();
+    }
+
+    internal static AdvancedConditionSet BuildEngagementRequirements(IEnumerable<IPower> sourcePowers)
+    {
+        var requirements = new AdvancedConditionSet();
+        foreach (var sourcePower in sourcePowers.Where(sourcePower => !string.IsNullOrWhiteSpace(sourcePower.FullName)))
+        {
+            requirements.Rows.Add(new AdvancedConditionRow
+            {
+                Link = requirements.Rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.Or,
+                Kind = AdvancedConditionKind.PowerRequirementGroup,
+                Subject = sourcePower.FullName,
+                Value = string.Empty,
+                Operator = AdvancedConditionOperator.Equals
+            });
+        }
+
+        return requirements;
+    }
+
+    internal static bool EnsurePlannerModePayload(IPower power, PlannerMode mode)
+    {
+        var modeName = PlannerModeMapper.ToCanonicalName(mode);
+        if (string.IsNullOrWhiteSpace(modeName))
+        {
+            return false;
+        }
+
+        var effects = power.Effects ?? [];
+        if (effects.Any(effect =>
+                effect is { EffectType: Enums.eEffectType.SetMode } &&
+                PlannerModeMapper.TryGetPlannerMode(effect.ModeName, out var existingMode) &&
+                existingMode == mode))
+        {
+            return false;
+        }
+
+        var nextUniqueId = effects
+            .Where(effect => effect != null)
+            .Select(effect => effect.UniqueID)
+            .DefaultIfEmpty(0)
+            .Max() + 1;
+
+        var modeEffect = new Effect
+        {
+            PowerFullName = power.FullName,
+            UniqueID = nextUniqueId,
+            EffectClass = Enums.eEffectClass.Primary,
+            EffectType = Enums.eEffectType.SetMode,
+            ToWho = Enums.eToWho.Self,
+            BaseProbability = 1f,
+            nMagnitude = 1,
+            nDuration = 0,
+            ModeName = modeName,
+            ModeId = OmniModeMapper.TryFromModeName(modeName, out var modeId, out var modeFlag) ? modeId : -1,
+            ModeFlag = modeFlag,
+            AdvancedConditions = new AdvancedConditionSet()
+        };
+
+        Array.Resize(ref effects, effects.Length + 1);
+        effects[^1] = modeEffect;
+        power.Effects = effects;
+        power.IsModified = true;
+        return true;
+    }
+
+    internal static bool StripPlannerModeEffects(IPower power, params PlannerMode[] modes)
+    {
+        var modeSet = modes
+            .Where(mode => mode != PlannerMode.None)
+            .ToHashSet();
+        if (power?.Effects == null || power.Effects.Length == 0 || modeSet.Count == 0)
+        {
+            return false;
+        }
+
+        var rewrittenEffects = power.Effects
+            .Where(effect => effect == null || !IsPlannerModeEffect(effect, modeSet))
+            .ToArray();
+
+        if (rewrittenEffects.Length == power.Effects.Length)
+        {
+            return false;
+        }
+
+        power.Effects = rewrittenEffects;
+        power.IsModified = true;
+        return true;
+    }
+
+    internal static void ApplyCompatibilityDescriptions(IPower power)
+    {
+        if (power == null)
+        {
+            return;
+        }
+
+        if (power.FullName.Equals(EngagementPowerFullName, StringComparison.OrdinalIgnoreCase))
+        {
+            power.DescShort = EngagementPlannerDescriptionShort;
+            power.DescLong = EngagementPlannerDescriptionLong;
+        }
+    }
+
+    internal static void ApplyDatabaseCompatibility(IDatabase database)
+    {
+        var powers = database?.Power?.Where(power => power != null).Cast<IPower>().ToArray() ?? [];
+        if (powers.Length == 0)
+        {
+            return;
+        }
+
+        var sourcePowers = FindEngagementSourcePowers(powers);
+
+        var engagementPower = powers.FirstOrDefault(power =>
+            power.FullName.Equals(EngagementPowerFullName, StringComparison.OrdinalIgnoreCase));
+        if (engagementPower != null)
+        {
+            engagementPower.IncludeFlag = sourcePowers.Count > 0;
+            engagementPower.HiddenPower = false;
+            engagementPower.InherentType = Enums.eGridType.Power;
+            engagementPower.PowerType = Enums.ePowerType.Toggle;
+            engagementPower.AlwaysToggle = false;
+            engagementPower.ShowStatToggle = true;
+            engagementPower.ShowInSpecialPowerPicker = false;
+            engagementPower.Available = 1;
+            engagementPower.Level = Math.Max(engagementPower.Level, 1);
+            engagementPower.AdvancedRequirements = BuildEngagementRequirements(sourcePowers);
+            ApplyCompatibilityDescriptions(engagementPower);
+            StripPlannerModeEffects(engagementPower, PlannerMode.Engaged, PlannerMode.OutOfCombat);
+            EnsurePlannerModePayload(engagementPower, PlannerMode.Engaged);
+            engagementPower.IsModified = true;
+        }
+
+        var deprecatedFastSnipePower = powers.FirstOrDefault(power =>
+            power.FullName.Equals(LegacyFastSnipePowerFullName, StringComparison.OrdinalIgnoreCase));
+        if (deprecatedFastSnipePower != null)
+        {
+            deprecatedFastSnipePower.IncludeFlag = false;
+            deprecatedFastSnipePower.HiddenPower = true;
+            deprecatedFastSnipePower.InherentType = Enums.eGridType.None;
+            deprecatedFastSnipePower.PowerType = Enums.ePowerType.Auto_;
+            deprecatedFastSnipePower.AlwaysToggle = false;
+            deprecatedFastSnipePower.ShowStatToggle = false;
+            deprecatedFastSnipePower.AdvancedRequirements = new AdvancedConditionSet();
+            StripPlannerModeEffects(deprecatedFastSnipePower, PlannerMode.FastSnipe);
+            deprecatedFastSnipePower.IsModified = true;
+        }
+    }
+
+    private static bool IsPlannerModeEffect(IEffect effect, ISet<PlannerMode> modes)
+    {
+        return effect.EffectType is Enums.eEffectType.SetMode or Enums.eEffectType.UnsetMode &&
+               ((PlannerModeMapper.TryGetPlannerMode(effect.ModeName, out var effectMode) && modes.Contains(effectMode)) ||
+                (PlannerModeMapper.TryGetPlannerMode(effect.ModeFlag.ToString(), out effectMode) && modes.Contains(effectMode)));
     }
 
     internal static bool TryGetVariableSyncTargets(string? powerFullName, out string[] targets)

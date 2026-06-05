@@ -562,10 +562,11 @@ namespace Mids_Reborn.Core
 
         public static int NidFromUidPower(string name)
         {
-            return string.IsNullOrWhiteSpace(name)
+            var normalizedName = NormalizePowerLookupUid(name);
+            return string.IsNullOrWhiteSpace(normalizedName)
                 ? -1
                 : Database.Power.TryFindIndex(
-                    power => string.Equals(power?.FullName, name, StringComparison.OrdinalIgnoreCase));
+                    power => string.Equals(power?.FullName, normalizedName, StringComparison.OrdinalIgnoreCase));
         }
 
         public static int PiDFromUidPower(string name)
@@ -624,19 +625,22 @@ namespace Mids_Reborn.Core
             //Returns indexes from the POWER array, Not the index within the powerset
             if (nIDPowerset < 0 || nIDPowerset > Database.Powersets.Length - 1)
             {
-                var array = new int[Database.Power.Length];
-                for (var index = 0; index < Database.Power.Length; ++index)
-                    array[index] = index;
-                return array;
+                return Database.Power
+                    .Where(power => power != null && IsVisiblePowerListEntry(power))
+                    .Select(power => power!.PowerIndex)
+                    .ToArray();
             }
 
             var powerset = Database.Powersets[nIDPowerset];
             if (nIDClass < 0)
             {
-                return powerset.Power.ToArray();
+                return powerset.Powers
+                    .Where(IsVisiblePowerListEntry)
+                    .Select(power => power.PowerIndex)
+                    .ToArray();
             }
 
-            return powerset.Powers.FindIndexes(pow => pow.AllowedForClass(nIDClass))
+            return powerset.Powers.FindIndexes(pow => IsVisiblePowerListEntry(pow) && pow.AllowedForClass(nIDClass))
                 .Select(idx => powerset.Power[idx])
                 .ToArray();
         }
@@ -651,7 +655,8 @@ namespace Mids_Reborn.Core
             if (!string.IsNullOrEmpty(uidPowerset))
             {
                 var filtered = Database.Power
-                    .Where(pow => string.Equals(pow.FullSetName, uidPowerset, StringComparison.OrdinalIgnoreCase));
+                    .Where(pow => string.Equals(pow.FullSetName, uidPowerset, StringComparison.OrdinalIgnoreCase))
+                    .Where(IsVisiblePowerListEntry);
                 if (!string.IsNullOrWhiteSpace(uidClass))
                 {
                     filtered = filtered.Where(pow => pow.AdvancedRequirements.AllowsClass(uidClass));
@@ -3625,6 +3630,8 @@ namespace Mids_Reborn.Core
                 UpdateMessage(messenger, "Backfilling legacy Omni runtime metadata...");
                 HydrateOmniRuntimeMetadata();
             }
+            UpdateMessage(messenger, "Applying planner-state compatibility...");
+            PlannerStateCatalog.ApplyDatabaseCompatibility(Database);
         }
 
         public static void MatchIds()
@@ -3641,6 +3648,25 @@ namespace Mids_Reborn.Core
             {
                 HydrateOmniRuntimeMetadata();
             }
+            PlannerStateCatalog.ApplyDatabaseCompatibility(Database);
+        }
+
+        private static string NormalizePowerLookupUid(string? name)
+        {
+            if (string.IsNullOrWhiteSpace(name))
+            {
+                return string.Empty;
+            }
+
+            return name.Equals(PlannerStateCatalog.LegacyFastSnipePowerFullName, StringComparison.OrdinalIgnoreCase)
+                ? PlannerStateCatalog.EngagementPowerFullName
+                : name;
+        }
+
+        private static bool IsVisiblePowerListEntry(IPower? power)
+        {
+            return power != null &&
+                   !PlannerStateCatalog.IsDeprecatedCompatibilityPower(power.FullName);
         }
 
         private static void UpdateMessage(IMessenger? messenger, string iMessage)

@@ -14,11 +14,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 {
     public class Character
     {
-        private const string FastSnipePlannerPowerFullName = "Inherent.Inherent.Fast_Snipe";
         private const string ExperiencedMarksmanBonusPowerFullName = "Set_Bonus.Global_Bonus.Experienced_Marksman";
         private Archetype? _archetype;
         private bool? _completeCache;
-        private bool _experiencedMarksmanForcedFastSnipe;
         private int _explicitBuildLevel = -1;
         public event EventHandler<Enums.Alignment>? AlignmentChanged;
 
@@ -625,7 +623,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             PEnhancementsList = new List<string>();
             _activePlannerModes.Clear();
             _plannerStateStacks.Clear();
-            _experiencedMarksmanForcedFastSnipe = false;
+            SeedDefaultPlannerModes();
         }
 
         public void ClearInvalidInherentSlots()
@@ -678,9 +676,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         internal bool IsPlannerToggleLocked(IPower? power)
         {
-            return power != null &&
-                   power.FullName.Equals(FastSnipePlannerPowerFullName, StringComparison.OrdinalIgnoreCase) &&
-                   HasForcedFastSnipe();
+            return false;
         }
 
         private bool HasForcedFastSnipe()
@@ -688,35 +684,25 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return CurrentBuild?.OwnsPowerByFullName(ExperiencedMarksmanBonusPowerFullName) == true;
         }
 
-        private void ApplyForcedPlannerStateToggles()
+        private void SeedDefaultPlannerModes()
         {
-            if (CurrentBuild?.Powers == null)
-            {
-                return;
-            }
+            ApplyPlannerMode(PlannerMode.OutOfCombat, true);
+        }
 
-            var fastSnipeEntry = CurrentBuild.Powers.FirstOrDefault(powerEntry =>
-                powerEntry?.Power != null &&
-                powerEntry.Power.FullName.Equals(FastSnipePlannerPowerFullName, StringComparison.OrdinalIgnoreCase));
-            if (fastSnipeEntry?.Power == null)
+        private void ApplyDerivedPlannerModeCompatibility()
+        {
+            if (_activePlannerModes.Contains(PlannerMode.Engaged))
             {
-                _experiencedMarksmanForcedFastSnipe = false;
-                return;
+                ApplyPlannerMode(PlannerMode.FastSnipe, true);
             }
+        }
 
-            var hasForcedFastSnipe = HasForcedFastSnipe();
-            if (hasForcedFastSnipe)
+        private void ApplyForcedPlannerModeOverrides()
+        {
+            if (HasForcedFastSnipe())
             {
-                fastSnipeEntry.StatInclude = true;
-                fastSnipeEntry.Power.Active = true;
+                ApplyPlannerMode(PlannerMode.FastSnipe, true);
             }
-            else if (_experiencedMarksmanForcedFastSnipe)
-            {
-                fastSnipeEntry.StatInclude = false;
-                fastSnipeEntry.Power.Active = false;
-            }
-
-            _experiencedMarksmanForcedFastSnipe = hasForcedFastSnipe;
         }
 
 
@@ -764,11 +750,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             _activeSourceModes.Clear();
             _activeSourceModeFlags = Enums.eModeFlags.None;
             _plannerStateStacks.Clear();
+            SeedDefaultPlannerModes();
             InherentDisplayList = new List<InherentDisplayItem>();
             PEnhancementsList = new List<string>();
             if (CurrentBuild?.Powers == null) return;
 
-            ApplyForcedPlannerStateToggles();
             AssassinationPlanner.Synchronize(CurrentBuild, MidsContext.Config?.CombatContextSettings.Assassination);
             OpportunityPlanner.Synchronize(CurrentBuild, MidsContext.Config?.CombatContextSettings.Opportunity);
 
@@ -776,6 +762,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 if (power?.Power == null)
                 {
+                    continue;
+                }
+
+                if (PlannerStateCatalog.IsDeprecatedCompatibilityPower(power.Power.FullName))
+                {
+                    power.StatInclude = false;
+                    power.Power.Active = false;
                     continue;
                 }
 
@@ -806,7 +799,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             foreach (var power in CurrentBuild.Powers)
             {
-                if (power?.Power == null || !power.Power.Active) continue;
+                if (power?.Power == null ||
+                    PlannerStateCatalog.IsDeprecatedCompatibilityPower(power.Power.FullName) ||
+                    !power.Power.Active) continue;
 
                 if (power.Power.VariableEnabled)
                 {
@@ -850,6 +845,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 ApplyPlannerMode(impliedMode, true);
             }
 
+            ApplyDerivedPlannerModeCompatibility();
+            ApplyForcedPlannerModeOverrides();
             SyncForcedPlannerStateValues();
 
             var inherentPowersList = CurrentBuild?.Powers
@@ -1706,6 +1703,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
             switch (mode)
             {
+                case PlannerMode.Engaged:
+                case PlannerMode.OutOfCombat:
+                    break;
                 case PlannerMode.FastSnipe:
                     FastSnipe = enabled;
                     NotFastSnipe = !enabled;

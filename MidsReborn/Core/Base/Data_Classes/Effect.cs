@@ -1508,8 +1508,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             {
                 mode = "Engaged";
             }
+            else if (row.RawExpression.Contains("kOutOfCombat", StringComparison.OrdinalIgnoreCase))
+            {
+                mode = "OutOfCombat";
+            }
 
-            if (PlannerModeMapper.TryGetPlannerMode(mode, out var plannerMode))
+            if (OmniModeMapper.TryGetPlannerMode(mode, out var plannerMode) ||
+                PlannerModeMapper.TryGetPlannerMode(mode, out plannerMode))
             {
                 return PlannerModeMapper.ToDisplayName(plannerMode);
             }
@@ -1598,8 +1603,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         private static string FormatModeName(string mode)
         {
+            if (OmniModeMapper.TryGetPlannerMode(mode, out var plannerMode) ||
+                PlannerModeMapper.TryGetPlannerMode(mode, out plannerMode))
+            {
+                return PlannerModeMapper.ToDisplayName(plannerMode);
+            }
+
             return CleanConditionValue(mode)
                 .Replace("FastSnipe", "Fast Snipe", StringComparison.OrdinalIgnoreCase)
+                .Replace("OutOfCombat", "Out of Combat", StringComparison.OrdinalIgnoreCase)
                 .Replace("CriticalHit", "Critical Hit", StringComparison.OrdinalIgnoreCase)
                 .Replace("DefensiveAdaptation", "Defensive Adaptation", StringComparison.OrdinalIgnoreCase)
                 .Replace("EfficientAdaptation", "Efficient Adaptation", StringComparison.OrdinalIgnoreCase)
@@ -1612,6 +1624,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 .Trim()
                 .Trim('\'', '"')
                 .Replace("kEngaged", "Engaged", StringComparison.OrdinalIgnoreCase)
+                .Replace("kOutOfCombat", "OutOfCombat", StringComparison.OrdinalIgnoreCase)
                 .Replace("kFastSnipe", "Fast Snipe", StringComparison.OrdinalIgnoreCase)
                 .Replace('_', ' ');
         }

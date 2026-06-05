@@ -535,7 +535,11 @@ public sealed partial class OmniImporter
                     : $"Turn this on to make Mids assume {definition.DisplayName} is active.";
             }
         }
-        power.AdvancedRequirements = new AdvancedConditionSet();
+        PlannerStateCatalog.ApplyCompatibilityDescriptions(power);
+        if (definition.VisibilityRule != PlannerStateVisibilityRule.RequirementDriven)
+        {
+            power.AdvancedRequirements = new AdvancedConditionSet();
+        }
         power.VariableEnabled = definition.IsVariableControl && !isCombatSettingsDrivenInherent;
         power.VariableMin = definition.VariableMin;
         power.VariableMax = definition.VariableMax;
@@ -547,6 +551,11 @@ public sealed partial class OmniImporter
 
         if (definition.IsModeControl)
         {
+            if (definition.FullName.Equals(PlannerStateCatalog.EngagementPowerFullName, StringComparison.OrdinalIgnoreCase))
+            {
+                PlannerStateCatalog.StripPlannerModeEffects(power, PlannerMode.Engaged, PlannerMode.OutOfCombat);
+            }
+
             AddPlannerModePayload(power, definition.Mode, applyResult);
         }
 

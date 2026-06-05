@@ -699,6 +699,7 @@ internal sealed class BuildConditionSnapshot
     {
         var snapshot = new BuildConditionSnapshot();
         snapshot.SetSourceModes(activeSourceModes, activeSourceModeFlags);
+        snapshot.SetPlannerMode(PlannerMode.OutOfCombat);
         if (build?.Powers == null)
         {
             return snapshot;
@@ -707,7 +708,8 @@ internal sealed class BuildConditionSnapshot
         foreach (var entry in build.Powers.Where(entry => entry is { Power: not null, StatInclude: true }))
         {
             var power = entry!.Power;
-            if (PlannerStateCatalog.IsHiddenPayloadPower(power.FullName))
+            if (PlannerStateCatalog.IsHiddenPayloadPower(power.FullName) ||
+                PlannerStateCatalog.IsDeprecatedCompatibilityPower(power.FullName))
             {
                 continue;
             }
@@ -791,6 +793,12 @@ internal sealed class BuildConditionSnapshot
 
     private static void DeriveCompatibilityModes(BuildConditionSnapshot snapshot)
     {
+        if (snapshot.ActivePlannerModes.Contains(PlannerMode.Engaged))
+        {
+            snapshot.ActivePlannerModes.Add(PlannerMode.FastSnipe);
+            snapshot.ActivePlannerModes.Remove(PlannerMode.OutOfCombat);
+        }
+
         if (snapshot.ActivePlannerModes.Contains(PlannerMode.DominationActive) ||
             snapshot.ActivePlannerModes.Contains(PlannerMode.Domination))
         {
@@ -1321,6 +1329,8 @@ public static class AdvancedConditionEvaluator
 
             return plannerMode switch
             {
+                PlannerMode.Engaged => MidsContext.Character?.ActivePlannerModes.Contains(PlannerMode.Engaged) == true,
+                PlannerMode.OutOfCombat => MidsContext.Character?.ActivePlannerModes.Contains(PlannerMode.OutOfCombat) == true,
                 PlannerMode.DefensiveAdaptation => MidsContext.Character?.DefensiveAdaptation == true,
                 PlannerMode.EfficientAdaptation => MidsContext.Character?.EfficientAdaptation == true,
                 PlannerMode.OffensiveAdaptation => MidsContext.Character?.OffensiveAdaptation == true,

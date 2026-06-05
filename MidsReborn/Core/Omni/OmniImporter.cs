@@ -6461,10 +6461,6 @@ public sealed partial class OmniImporter
 
     private static readonly HashSet<PlannerMode> GlobalPlannerControlModes = [];
 
-    private const string FastSnipePlannerPowerFullName = "Inherent.Inherent.Fast_Snipe";
-    private const string FastSnipePlannerClassName = "Class_Blaster";
-    private const string FastSnipePlannerIconName = "fast_snipe.png";
-
     private static void EnsurePlannerModeBindings(IDatabase database, OmniApplyResult applyResult)
     {
         var powers = database.Power ?? [];
@@ -6524,150 +6520,53 @@ public sealed partial class OmniImporter
             AddPlannerModePayload(power, mode, applyResult);
         }
 
-        EnsureFastSnipePlannerBinding(
-            database,
-            ref powers,
-            powersByName,
-            ref nextStaticIndex,
-            applyResult);
+        EnsureEngagementPlannerBinding(database, powersByName, applyResult);
 
         database.Power = powers;
     }
 
-    private static void EnsureFastSnipePlannerBinding(
+    private static void EnsureEngagementPlannerBinding(
         IDatabase database,
-        ref IPower?[] powers,
         IDictionary<string, IPower?> powersByName,
-        ref int nextStaticIndex,
         OmniApplyResult applyResult)
     {
-        var sourcePowers = FindFastSnipeSourcePowers(powers);
-        var createdPower = false;
-        if (!powersByName.TryGetValue(FastSnipePlannerPowerFullName, out var power) || power == null)
+        var sourcePowers = PlannerStateCatalog.FindEngagementSourcePowers(database.Power ?? []);
+        if (!powersByName.TryGetValue(PlannerStateCatalog.EngagementPowerFullName, out var power) || power == null)
         {
-            if (sourcePowers.Count == 0)
-            {
-                return;
-            }
-
-            power = CreateSyntheticPlannerPower(PlannerMode.FastSnipe, nextStaticIndex++);
-            Array.Resize(ref powers, powers.Length + 1);
-            powers[^1] = power;
-            powersByName[power.FullName] = power;
-            applyResult.SyntheticPlannerInherentsCreated++;
-            createdPower = true;
+            return;
         }
 
-        power.HiddenPower = true;
+        power.HiddenPower = false;
         power.IncludeFlag = sourcePowers.Count > 0;
         power.InherentType = Enums.eGridType.Power;
-        power.PowerType = Enums.ePowerType.Auto_;
-        power.AlwaysToggle = sourcePowers.Count > 0;
+        power.PowerType = Enums.ePowerType.Toggle;
+        power.AlwaysToggle = false;
+        power.ShowStatToggle = true;
+        power.ShowInSpecialPowerPicker = false;
         power.Available = 1;
-        power.Level = 1;
-        power.IconName = FastSnipePlannerIconName;
-        power.AdvancedRequirements = BuildFastSnipePlannerRequirements(database, sourcePowers);
+        power.Level = Math.Max(power.Level, 1);
+        power.AdvancedRequirements = PlannerStateCatalog.BuildEngagementRequirements(sourcePowers);
+        PlannerStateCatalog.StripPlannerModeEffects(power, PlannerMode.Engaged, PlannerMode.OutOfCombat);
         power.IsModified = true;
 
-        AddPlannerModePayload(power, PlannerMode.FastSnipe, applyResult);
+        AddPlannerModePayload(power, PlannerMode.Engaged, applyResult);
 
         if (sourcePowers.Count == 0)
         {
             applyResult.AddLimited(
                 applyResult.PlannerModeDetails,
-                $"{power.FullName}: disabled FastSnipe auto-grant because no qualifying Blaster sniper powers were found.");
+                $"{power.FullName}: disabled Engagement auto-grant because no qualifying engagement-gated powers were found.");
             return;
         }
 
         applyResult.AddLimited(
             applyResult.PlannerModeDetails,
-            $"{power.FullName}: auto-granted FastSnipe for {FastSnipePlannerClassName} when any qualifying sniper power is chosen ({sourcePowers.Count} source(s)).");
-
-        if (createdPower)
-        {
-            applyResult.AddLimited(
-                applyResult.SyntheticPlannerInherentDetails,
-                $"{power.FullName}: hidden auto-granted planner state for Blaster sniper powers.");
-        }
-    }
-
-    private static AdvancedConditionSet BuildFastSnipePlannerRequirements(
-        IDatabase database,
-        IReadOnlyList<IPower> sourcePowers)
-    {
-        var requirements = new AdvancedConditionSet();
-        var classes = database.Classes ?? [];
-        var blasterClassIndex = classes.TryFindIndex(cls =>
-            string.Equals(cls?.ClassName, FastSnipePlannerClassName, StringComparison.OrdinalIgnoreCase));
-
-        if (blasterClassIndex >= 0)
-        {
-            requirements.Rows.Add(new AdvancedConditionRow
-            {
-                Link = AdvancedConditionLink.And,
-                Kind = AdvancedConditionKind.CharacterArchetype,
-                Subject = "class",
-                Value = FastSnipePlannerClassName,
-                Operator = AdvancedConditionOperator.Equals
-            });
-        }
-
-        foreach (var sourcePower in sourcePowers.Where(sourcePower => !string.IsNullOrWhiteSpace(sourcePower.FullName)))
-        {
-            requirements.Rows.Add(new AdvancedConditionRow
-            {
-                Link = requirements.Rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.Or,
-                Kind = AdvancedConditionKind.PowerRequirementGroup,
-                Subject = sourcePower.FullName,
-                Value = string.Empty,
-                Operator = AdvancedConditionOperator.Equals
-            });
-        }
-
-        return requirements;
-    }
-
-    private static List<IPower> FindFastSnipeSourcePowers(IEnumerable<IPower?> powers)
-    {
-        return powers
-            .Where(IsFastSnipeSourcePower)
-            .Cast<IPower>()
-            .GroupBy(power => power.FullName, StringComparer.OrdinalIgnoreCase)
-            .Select(group => group.First())
-            .OrderBy(power => power.FullName, StringComparer.OrdinalIgnoreCase)
-            .ToList();
-    }
-
-    private static bool IsFastSnipeSourcePower(IPower? power)
-    {
-        if (power == null ||
-            power.HiddenPower ||
-            power.InherentType != Enums.eGridType.None ||
-            string.IsNullOrWhiteSpace(power.FullName) ||
-            !OmniModeMapper.IsSnipePlannerContext(power.FullName))
-        {
-            return false;
-        }
-
-        return IsBlasterPlannerSourcePower(power) && ReferencesPlannerMode(power, PlannerMode.FastSnipe);
-    }
-
-    private static bool IsBlasterPlannerSourcePower(IPower power)
-    {
-        if (power.FullName.StartsWith("Blaster_", StringComparison.OrdinalIgnoreCase))
-        {
-            return true;
-        }
-
-        return string.Equals(
-            power.GetPowerSet()?.ATClass,
-            FastSnipePlannerClassName,
-            StringComparison.OrdinalIgnoreCase);
+            $"{power.FullName}: auto-granted Engagement when any qualifying engagement-gated power is chosen ({sourcePowers.Count} source(s)).");
     }
 
     private static bool ReferencesPlannerMode(IPower power, PlannerMode mode)
     {
-        return HasCanonicalPlannerModeCoverage(power, mode);
+        return PlannerStateCatalog.ReferencesPlannerMode(power, mode);
     }
 
     private static HashSet<PlannerMode> DiscoverPlannerModes(IEnumerable<IPower?> powers, OmniApplyResult applyResult)
@@ -6802,11 +6701,10 @@ public sealed partial class OmniImporter
             GroupName = "Inherent",
             SetName = "Inherent",
             PowerName = powerName,
-            IconName = mode == PlannerMode.FastSnipe ? FastSnipePlannerIconName : string.Empty,
             DisplayName = displayName,
             DescShort = $"Planner toggle for {displayName}.",
             DescLong = $"Enables Mids planner effects that depend on {displayName}.",
-            PowerType = Enums.ePowerType.Auto_,
+            PowerType = Enums.ePowerType.Toggle,
             IncludeFlag = true,
             HiddenPower = false,
             InherentType = GetPlannerModeInherentType(mode, null),
@@ -6821,49 +6719,13 @@ public sealed partial class OmniImporter
 
     private static void AddPlannerModePayload(IPower power, PlannerMode mode, OmniApplyResult applyResult)
     {
-        var modeName = PlannerModeMapper.ToCanonicalName(mode);
-        if (string.IsNullOrWhiteSpace(modeName))
+        if (!PlannerStateCatalog.EnsurePlannerModePayload(power, mode))
         {
             return;
         }
-
-        if ((power.Effects ?? []).Any(effect =>
-                effect is { EffectType: Enums.eEffectType.SetMode } &&
-                PlannerModeMapper.TryGetPlannerMode(effect.ModeName, out var existingMode) &&
-                existingMode == mode))
-        {
-            return;
-        }
-
-        var effects = power.Effects ?? [];
-        var nextUniqueId = effects
-            .Where(effect => effect != null)
-            .Select(effect => effect.UniqueID)
-            .DefaultIfEmpty(0)
-            .Max() + 1;
-        var modeEffect = new Effect
-        {
-            PowerFullName = power.FullName,
-            UniqueID = nextUniqueId,
-            EffectClass = Enums.eEffectClass.Primary,
-            EffectType = Enums.eEffectType.SetMode,
-            ToWho = Enums.eToWho.Self,
-            BaseProbability = 1f,
-            nMagnitude = 1,
-            nDuration = 0,
-            ModeName = modeName,
-            ModeId = OmniModeMapper.TryFromModeName(modeName, out var modeId, out var modeFlag) ? modeId : -1,
-            ModeFlag = modeFlag,
-            AdvancedConditions = new AdvancedConditionSet()
-        };
-
-        Array.Resize(ref effects, effects.Length + 1);
-        effects[^1] = modeEffect;
-        power.Effects = effects;
-        power.IsModified = true;
         applyResult.PlannerModePayloadsAdded++;
         applyResult.AddLimited(applyResult.PlannerModePayloadDetails,
-            $"{power.FullName}: SetMode {modeName}, InherentType={power.InherentType}");
+            $"{power.FullName}: SetMode {PlannerModeMapper.ToCanonicalName(mode)}, InherentType={power.InherentType}");
     }
 
 

@@ -70,7 +70,8 @@ public static class OmniModeMapper
         ["kAssassination"] = "Assassination",
         ["kDefiance"] = "Defiance",
         ["kFastSnipe"] = "FastSnipe",
-        ["kEngaged"] = "Engaged"
+        ["kEngaged"] = "Engaged",
+        ["kOutOfCombat"] = "OutOfCombat"
     };
 
     public static IReadOnlyList<string> KnownModeNames => ModeFlags.Keys
