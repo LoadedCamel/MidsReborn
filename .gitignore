@@ -251,3 +251,4 @@ safe/\.fake/
 /Tests/MidsReborn.PresentationTests/obj/
 
 [Mm]ids[Rr]eborn/[Dd]ocs/
+/Tests/MidsReborn.CompatibilityTests
