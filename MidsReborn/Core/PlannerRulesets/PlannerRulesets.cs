@@ -565,7 +565,8 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
 
         var areaFactor = (float)(power.AoEModifier * 0.75 + 0.25);
 
-        var globalRecharge = (MidsContext.Character.DisplayStats.BuffHaste(false) - 100) / 100;
+        var displayedBuffHaste = MidsContext.Character?.DisplayStats?.BuffHaste(false) ?? 100f;
+        var globalRecharge = (displayedBuffHaste - 100) / 100;
         var rechargeVal = Math.Abs(power.RechargeTime) < float.Epsilon
             ? 0
             : power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - globalRecharge);

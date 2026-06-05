@@ -87,11 +87,7 @@ namespace Mids_Reborn.Core
                 return;
             }
 
-            var effectStrings = enhancementSet.GetPopupEffectStrings(
-                rawMemberPosition,
-                true,
-                true,
-                ShouldCheckStatus(enhancementSet, rawMemberPosition));
+            var effectStrings = GetDisplayStrings(enhancementSet, rawMemberPosition);
             if (effectStrings.Count == 0)
             {
                 return;
@@ -113,6 +109,49 @@ namespace Mids_Reborn.Core
             }
 
             rows.ElementAt(rowIndex).PieceIndexes.Add(pieceIndex);
+        }
+
+        private static IReadOnlyList<string> GetDisplayStrings(EnhancementSet enhancementSet, int rawMemberPosition)
+        {
+            var effectStrings = enhancementSet.GetPopupEffectStrings(
+                rawMemberPosition,
+                true,
+                true,
+                ShouldCheckStatus(enhancementSet, rawMemberPosition));
+            if (effectStrings.Count > 0)
+            {
+                return effectStrings;
+            }
+
+            var fallbackLabels = enhancementSet.GetEnhancementSetLinkedPowers(rawMemberPosition, true)
+                .Select(power => NormalizeFallbackLabel(power?.DisplayName, enhancementSet.DisplayName))
+                .Where(label => !string.IsNullOrWhiteSpace(label))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+            return fallbackLabels.Length == 0
+                ? Array.Empty<string>()
+                : fallbackLabels;
+        }
+
+        private static string NormalizeFallbackLabel(string? label, string? setDisplayName)
+        {
+            if (string.IsNullOrWhiteSpace(label))
+            {
+                return string.Empty;
+            }
+
+            var normalized = label.Trim();
+            if (!string.IsNullOrWhiteSpace(setDisplayName))
+            {
+                var prefix = $"{setDisplayName.Trim()}:";
+                if (normalized.StartsWith(prefix, StringComparison.OrdinalIgnoreCase))
+                {
+                    normalized = normalized[prefix.Length..].Trim();
+                }
+            }
+
+            return GroupedFx.FormatPresentationText(normalized);
         }
 
         private static bool ShouldCheckStatus(EnhancementSet enhancementSet, int rawMemberPosition)
