@@ -81,6 +81,11 @@ public sealed class AdvancedConditionSet
     public bool AllowsClass(string? className)
     {
         var normalizedClassName = NormalizeClassName(className);
+        if (string.IsNullOrWhiteSpace(normalizedClassName))
+        {
+            return true;
+        }
+
         var includeRows = Rows
             .Where(row => row.Kind == AdvancedConditionKind.CharacterArchetype && !row.Negated)
             .ToList();
@@ -98,7 +103,7 @@ public sealed class AdvancedConditionSet
     {
         if (classId < 0)
         {
-            return AllowsClass(string.Empty);
+            return true;
         }
 
         database ??= DatabaseAPI.Database;
@@ -108,6 +113,94 @@ public sealed class AdvancedConditionSet
         }
 
         return AllowsClass(database.Classes[classId]?.ClassName ?? string.Empty);
+    }
+
+    internal static AdvancedConditionSet FromLegacyRequirement(Requirement? requirement)
+    {
+        var set = new AdvancedConditionSet();
+        if (requirement == null)
+        {
+            return set;
+        }
+
+        foreach (var className in requirement.ClassName.Where(IsMeaningfulValue))
+        {
+            set.Rows.Add(new AdvancedConditionRow
+            {
+                Link = AdvancedConditionLink.And,
+                Kind = AdvancedConditionKind.CharacterArchetype,
+                Subject = "class",
+                Value = className,
+                Operator = AdvancedConditionOperator.Equals
+            });
+        }
+
+        foreach (var className in requirement.ClassNameNot.Where(IsMeaningfulValue))
+        {
+            set.Rows.Add(new AdvancedConditionRow
+            {
+                Link = AdvancedConditionLink.And,
+                Kind = AdvancedConditionKind.CharacterArchetype,
+                Subject = "class",
+                Value = className,
+                Operator = AdvancedConditionOperator.Equals,
+                Negated = true
+            });
+        }
+
+        foreach (var powerGroup in requirement.PowerID.Where(IsMeaningfulPowerGroup))
+        {
+            set.Rows.Add(new AdvancedConditionRow
+            {
+                Link = AdvancedConditionLink.Or,
+                Kind = AdvancedConditionKind.PowerRequirementGroup,
+                Subject = NormalizePowerRequirement(powerGroup.ElementAtOrDefault(0)),
+                Value = NormalizePowerRequirement(powerGroup.ElementAtOrDefault(1)),
+                Operator = AdvancedConditionOperator.Equals
+            });
+        }
+
+        foreach (var powerGroup in requirement.PowerIDNot.Where(IsMeaningfulPowerGroup))
+        {
+            set.Rows.Add(new AdvancedConditionRow
+            {
+                Link = AdvancedConditionLink.And,
+                Kind = AdvancedConditionKind.PowerRequirementGroup,
+                Subject = NormalizePowerRequirement(powerGroup.ElementAtOrDefault(0)),
+                Value = NormalizePowerRequirement(powerGroup.ElementAtOrDefault(1)),
+                Operator = AdvancedConditionOperator.Equals,
+                Negated = true
+            });
+        }
+
+        return set;
+    }
+
+    internal Requirement ToLegacyRequirement()
+    {
+        return new Requirement
+        {
+            ClassName = Rows
+                .Where(IsLegacyCompatibleIncludedClassRow)
+                .Select(r => NormalizeClassName(r.Value))
+                .Where(IsMeaningfulValue)
+                .ToArray(),
+            ClassNameNot = Rows
+                .Where(IsLegacyCompatibleExcludedClassRow)
+                .Select(r => NormalizeClassName(r.Value))
+                .Where(IsMeaningfulValue)
+                .ToArray(),
+            PowerID = Rows
+                .Where(IsLegacyCompatibleIncludedPowerRequirementRow)
+                .Select(ToLegacyPowerGroup)
+                .Where(IsMeaningfulPowerGroup)
+                .ToArray(),
+            PowerIDNot = Rows
+                .Where(IsLegacyCompatibleExcludedPowerRequirementRow)
+                .Select(ToLegacyPowerGroup)
+                .Where(IsMeaningfulPowerGroup)
+                .ToArray()
+        };
     }
 
     public IReadOnlyList<string> GetIncludedClassNames()
@@ -267,6 +360,29 @@ public sealed class AdvancedConditionSet
         }
     }
 
+    private static string[] ToLegacyPowerGroup(AdvancedConditionRow row)
+    {
+        if (row.Kind == AdvancedConditionKind.PowerRequirementGroup)
+        {
+            return
+            [
+                NormalizePowerRequirement(row.Subject),
+                NormalizePowerRequirement(row.Value)
+            ];
+        }
+
+        return
+        [
+            NormalizePowerRequirement(row.Subject),
+            string.Empty
+        ];
+    }
+
+    private static bool IsMeaningfulPowerGroup(string[] powerGroup)
+    {
+        return powerGroup.Any(IsMeaningfulValue);
+    }
+
     private static bool IsMeaningfulValue(string? value)
     {
         return !string.IsNullOrWhiteSpace(value) &&
@@ -282,6 +398,52 @@ public sealed class AdvancedConditionSet
     private static string NormalizeClassName(string? value)
     {
         return value?.Trim() ?? string.Empty;
+    }
+
+    private static bool IsLegacyCompatibleIncludedClassRow(AdvancedConditionRow row)
+    {
+        return row.Kind == AdvancedConditionKind.CharacterArchetype &&
+               !row.Negated &&
+               row.Operator == AdvancedConditionOperator.Equals;
+    }
+
+    private static bool IsLegacyCompatibleExcludedClassRow(AdvancedConditionRow row)
+    {
+        return row.Kind == AdvancedConditionKind.CharacterArchetype &&
+               row.Negated &&
+               row.Operator == AdvancedConditionOperator.Equals;
+    }
+
+    private static bool IsLegacyCompatibleIncludedPowerRequirementRow(AdvancedConditionRow row)
+    {
+        return IsLegacyCompatiblePowerRequirementRow(row) && !row.Negated;
+    }
+
+    private static bool IsLegacyCompatibleExcludedPowerRequirementRow(AdvancedConditionRow row)
+    {
+        return IsLegacyCompatiblePowerRequirementRow(row) && row.Negated;
+    }
+
+    private static bool IsLegacyCompatiblePowerRequirementRow(AdvancedConditionRow row)
+    {
+        if (row.EvaluationMode != AdvancedConditionEvaluationMode.BuildEvaluated ||
+            row.Operator != AdvancedConditionOperator.Equals)
+        {
+            return false;
+        }
+
+        return row.Kind switch
+        {
+            AdvancedConditionKind.PowerRequirementGroup => IsMeaningfulValue(row.Subject) || IsMeaningfulValue(row.Value),
+            AdvancedConditionKind.PowerTaken => IsMeaningfulValue(row.Subject) && IsLegacyCompatibleSimplePowerRequirement(row),
+            _ => false
+        };
+    }
+
+    private static bool IsLegacyCompatibleSimplePowerRequirement(AdvancedConditionRow row)
+    {
+        return row.Kind == AdvancedConditionKind.PowerTaken &&
+               (bool.TryParse(row.Value, out var boolValue) ? boolValue : row.Value == "1");
     }
 
     private static bool MatchesClassRow(AdvancedConditionRow row, string className)
@@ -817,17 +979,28 @@ public static class AdvancedConditionEvaluator
             return false;
         }
 
-        foreach (var row in set.Rows.Where(r =>
-                     r.Kind != AdvancedConditionKind.CharacterArchetype &&
-                     r.Kind != AdvancedConditionKind.PowerRequirementGroup))
+        var tailRows = set.Rows.Where(r =>
+                r.Kind != AdvancedConditionKind.CharacterArchetype &&
+                r.Kind != AdvancedConditionKind.PowerRequirementGroup &&
+                r.EvaluationMode == AdvancedConditionEvaluationMode.BuildEvaluated)
+            .ToList();
+
+        if (tailRows.Count == 0)
         {
-            if (!EvaluateRowForPower(row, build, snapshot, includeSourceModes))
-            {
-                return false;
-            }
+            return true;
         }
 
-        return true;
+        var result = EvaluateRowForPower(tailRows[0], build, snapshot, includeSourceModes);
+        for (var index = 1; index < tailRows.Count; index++)
+        {
+            var row = tailRows[index];
+            var rowResult = EvaluateRowForPower(row, build, snapshot, includeSourceModes);
+            result = row.Link == AdvancedConditionLink.Or
+                ? result || rowResult
+                : result && rowResult;
+        }
+
+        return result;
     }
 
     public static void UpdateLegacyValidationFlags(IEffect effect)
@@ -906,6 +1079,7 @@ public static class AdvancedConditionEvaluator
         }
 
         return PowerIsTakenByLevel(row.Subject, nLevel, nIdSkip, build) ||
+               !string.IsNullOrWhiteSpace(row.Value) &&
                PowerIsTakenByLevel(row.Value, nLevel, nIdSkip, build);
     }
 

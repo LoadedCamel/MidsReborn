@@ -411,10 +411,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             DisplayName = reader.ReadString();
             IconName = string.Empty;
             Available = reader.ReadInt32();
-            // Consume the deprecated fixed-record requirement payload. The
-            // authoritative requirement model now lives in AdvancedRequirements.
-            _ = new Requirement(reader);
-            AdvancedRequirements = new AdvancedConditionSet();
+            var legacyRequirements = new Requirement(reader);
+            AdvancedRequirements = AdvancedConditionSet.FromLegacyRequirement(legacyRequirements);
             ModesRequired = (Enums.eModeFlags)reader.ReadInt32();
             ModesDisallowed = (Enums.eModeFlags)reader.ReadInt32();
             PowerType = (Enums.ePowerType)reader.ReadInt32();
@@ -963,9 +961,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(PowerName);
             writer.Write(DisplayName);
             writer.Write(Available);
-            // Preserve the deprecated fixed-record slot as an inert placeholder.
-            // New requirement semantics round-trip through AdvancedRequirements.
-            new Requirement().StoreTo(writer);
+            AdvancedRequirements.ToLegacyRequirement().StoreTo(writer);
             writer.Write((int)ModesRequired);
             writer.Write((int)ModesDisallowed);
             writer.Write((int)PowerType);

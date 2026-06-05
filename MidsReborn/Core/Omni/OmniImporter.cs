@@ -6617,9 +6617,9 @@ public sealed partial class OmniImporter
             requirements.Rows.Add(new AdvancedConditionRow
             {
                 Link = requirements.Rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.Or,
-                Kind = AdvancedConditionKind.PowerTaken,
+                Kind = AdvancedConditionKind.PowerRequirementGroup,
                 Subject = sourcePower.FullName,
-                Value = "true",
+                Value = string.Empty,
                 Operator = AdvancedConditionOperator.Equals
             });
         }

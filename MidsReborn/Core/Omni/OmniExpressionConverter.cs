@@ -859,6 +859,18 @@ public static partial class OmniExpressionConverter
             return [];
         }
 
+        if (row.Kind == AdvancedConditionKind.PowerTaken &&
+            row.Operator == AdvancedConditionOperator.Equals &&
+            string.Equals(row.Value, "true", StringComparison.OrdinalIgnoreCase))
+        {
+            row = CreateRequirementGroupRow(
+                row.Subject,
+                string.Empty,
+                row.Link,
+                row.Negated,
+                row.RawExpression);
+        }
+
         return [row];
     }
 
@@ -992,16 +1004,12 @@ public static partial class OmniExpressionConverter
 
             if (i + 1 < tokens.Length && tokens[i + 1].Equals("!", StringComparison.Ordinal))
             {
-                rows.Add(new AdvancedConditionRow
-                {
-                    Link = AdvancedConditionLink.And,
-                    Kind = AdvancedConditionKind.PowerTaken,
-                    Subject = tokens[i],
-                    Operator = AdvancedConditionOperator.Equals,
-                    Value = "true",
-                    Negated = true,
-                    RawExpression = expression
-                });
+                rows.Add(CreateRequirementGroupRow(
+                    tokens[i],
+                    string.Empty,
+                    AdvancedConditionLink.And,
+                    negated: true,
+                    expression));
                 consumedAny = true;
                 i += 2;
                 continue;
@@ -1033,15 +1041,12 @@ public static partial class OmniExpressionConverter
         var rows = new List<AdvancedConditionRow>();
         foreach (var power in powers)
         {
-            rows.Add(new AdvancedConditionRow
-            {
-                Link = rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.Or,
-                Kind = AdvancedConditionKind.PowerTaken,
-                Subject = power,
-                Value = "true",
-                Operator = AdvancedConditionOperator.Equals,
-                RawExpression = expression
-            });
+            rows.Add(CreateRequirementGroupRow(
+                power,
+                string.Empty,
+                rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.Or,
+                negated: false,
+                expression));
         }
 
         return rows;
@@ -1178,15 +1183,12 @@ public static partial class OmniExpressionConverter
         var powers = new[] { match.Groups[1].Value, match.Groups[2].Value };
         foreach (var power in powers)
         {
-            rows.Add(new AdvancedConditionRow
-            {
-                Link = rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.Or,
-                Kind = AdvancedConditionKind.PowerTaken,
-                Subject = power,
-                Value = "true",
-                Operator = AdvancedConditionOperator.Equals,
-                RawExpression = expression
-            });
+            rows.Add(CreateRequirementGroupRow(
+                power,
+                string.Empty,
+                rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.Or,
+                negated: false,
+                expression));
         }
 
         return true;
@@ -1214,16 +1216,12 @@ public static partial class OmniExpressionConverter
         {
             if (DirectPowerNameRegex().IsMatch(token))
             {
-                rows.Add(new AdvancedConditionRow
-                {
-                    Link = rows.Count == 0 ? AdvancedConditionLink.And : AdvancedConditionLink.And,
-                    Kind = AdvancedConditionKind.PowerTaken,
-                    Subject = token,
-                    Operator = AdvancedConditionOperator.Equals,
-                    Value = "true",
-                    Negated = true,
-                    RawExpression = expression
-                });
+                rows.Add(CreateRequirementGroupRow(
+                    token,
+                    string.Empty,
+                    AdvancedConditionLink.And,
+                    negated: true,
+                    expression));
                 continue;
             }
 

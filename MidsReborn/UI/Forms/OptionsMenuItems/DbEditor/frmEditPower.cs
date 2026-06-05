@@ -2942,6 +2942,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         private void CommitRequirementUi()
         {
             Store_Req_Classes();
+            NormalizeLegacyCompatibleRequirementRows();
             CommitAdvancedRequirementUi();
         }
 
@@ -3186,12 +3187,30 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
 
         private static void NormalizeRequirementRowShape(AdvancedConditionRow row)
         {
-            if (row.Kind == AdvancedConditionKind.PowerRequirementGroup &&
-                string.IsNullOrWhiteSpace(row.Value))
+            if (row.Kind == AdvancedConditionKind.PowerTaken && IsSimplePowerTakenRequirement(row))
             {
-                row.Kind = AdvancedConditionKind.PowerTaken;
                 row.Operator = AdvancedConditionOperator.Equals;
                 row.Value = "true";
+            }
+        }
+
+        private void NormalizeLegacyCompatibleRequirementRows()
+        {
+            if (myPower?.AdvancedRequirements == null)
+            {
+                return;
+            }
+
+            foreach (var row in myPower.AdvancedRequirements.Rows)
+            {
+                if (!IsSimplePowerTakenRequirement(row))
+                {
+                    continue;
+                }
+
+                row.Kind = AdvancedConditionKind.PowerRequirementGroup;
+                row.Operator = AdvancedConditionOperator.Equals;
+                row.Value = string.Empty;
             }
         }
 
@@ -3268,17 +3287,17 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
                     "Required Power" => new AdvancedConditionRow
                     {
                         Link = link,
-                        Kind = AdvancedConditionKind.PowerTaken,
+                        Kind = AdvancedConditionKind.PowerRequirementGroup,
                         Subject = selected.Name,
-                        Value = "true",
+                        Value = string.Empty,
                         Operator = AdvancedConditionOperator.Equals
                     },
                     "Excluded Power" => new AdvancedConditionRow
                     {
                         Link = link,
-                        Kind = AdvancedConditionKind.PowerTaken,
+                        Kind = AdvancedConditionKind.PowerRequirementGroup,
                         Subject = selected.Name,
-                        Value = "true",
+                        Value = string.Empty,
                         Operator = AdvancedConditionOperator.Equals,
                         Negated = true
                     },

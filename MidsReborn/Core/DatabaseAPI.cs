@@ -631,7 +631,13 @@ namespace Mids_Reborn.Core
             }
 
             var powerset = Database.Powersets[nIDPowerset];
-            return powerset.Powers.FindIndexes(pow => pow.AllowedForClass(nIDClass)).Select(idx => powerset.Power[idx])
+            if (nIDClass < 0)
+            {
+                return powerset.Power.ToArray();
+            }
+
+            return powerset.Powers.FindIndexes(pow => pow.AllowedForClass(nIDClass))
+                .Select(idx => powerset.Power[idx])
                 .ToArray();
         }
 
@@ -643,10 +649,16 @@ namespace Mids_Reborn.Core
         public static string[] UidPowers(string uidPowerset, string uidClass = "")
         {
             if (!string.IsNullOrEmpty(uidPowerset))
-                return Database.Power
-                    .Where(pow =>
-                        string.Equals(pow.FullSetName, uidPowerset, StringComparison.OrdinalIgnoreCase) &&
-                        pow.AdvancedRequirements.AllowsClass(uidClass)).Select(pow => pow.FullName).ToArray();
+            {
+                var filtered = Database.Power
+                    .Where(pow => string.Equals(pow.FullSetName, uidPowerset, StringComparison.OrdinalIgnoreCase));
+                if (!string.IsNullOrWhiteSpace(uidClass))
+                {
+                    filtered = filtered.Where(pow => pow.AdvancedRequirements.AllowsClass(uidClass));
+                }
+
+                return filtered.Select(pow => pow.FullName).ToArray();
+            }
             var array = new string[Database.Power.Length];
             for (var index = 0; index < Database.Power.Length; ++index)
                 array[index] = Database.Power[index].FullName;

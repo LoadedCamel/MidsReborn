@@ -507,7 +507,11 @@ public sealed class OmniPowerClassifier
         }
 
         var candidate = candidateRows[0];
-        if (candidate.Kind is not (AdvancedConditionKind.PowerTaken or AdvancedConditionKind.SourceOwnPower) ||
+        var supportsSingleGroupedRequirement =
+            candidate.Kind == AdvancedConditionKind.PowerRequirementGroup &&
+            string.IsNullOrWhiteSpace(candidate.Value);
+        if (candidate.Kind is not (AdvancedConditionKind.PowerTaken or AdvancedConditionKind.SourceOwnPower) &&
+            !supportsSingleGroupedRequirement ||
             string.IsNullOrWhiteSpace(candidate.Subject) ||
             candidate.Subject.Count(c => c == '.') != 2)
         {
