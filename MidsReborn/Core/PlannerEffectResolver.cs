@@ -248,7 +248,10 @@ public static class PlannerEffectResolver
             child.EffectType != Enums.eEffectType.GrantPower &&
             parent.EffectType == Enums.eEffectType.GrantPower)
         {
-            child.ToWho = parent.ToWho;
+            if (child.ToWho == Enums.eToWho.Unspecified)
+            {
+                child.ToWho = parent.ToWho;
+            }
         }
         else if (inheritToWho &&
                  child.EffectType != Enums.eEffectType.GrantPower &&

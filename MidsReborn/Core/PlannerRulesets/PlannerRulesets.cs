@@ -117,6 +117,14 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
             string.Equals(src.FullName, "Mids.SetBonus.Virtual", StringComparison.OrdinalIgnoreCase) ||
             src.PowerType == Enums.ePowerType.GlobalBoost;
 
+        static bool IsSemanticGlobalAccuracySource(IPower src, IEffect fx)
+        {
+            var semanticSource = GlobalBoostPlannerSemantics.ResolveSemanticSourcePower(src, fx);
+            return ReferenceEquals(semanticSource, MidsContext.Character.CurrentBuild.SetBonusVirtualPower) ||
+                   string.Equals(semanticSource.FullName, "Mids.SetBonus.Virtual", StringComparison.OrdinalIgnoreCase) ||
+                   semanticSource.PowerType == Enums.ePowerType.GlobalBoost;
+        }
+
         var supportedDefenseVectors = UsesToxicDefense
             ? SupportedDefenseVectorsWithToxic
             : SupportedDefenseVectors;
@@ -181,6 +189,11 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
                 }
 
                 if (IsSelfOrAllProcContribution(effect))
+                {
+                    continue;
+                }
+
+                if (GlobalBoostPlannerSemantics.IsPowerBoostTaggedEnhancementCarrierEffect(effect))
                 {
                     continue;
                 }
@@ -262,6 +275,22 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
                         default:
                             if (effectType == Enums.eEffectType.DamageBuff)
                             {
+                                var semanticSource = GlobalBoostPlannerSemantics.ResolveSemanticSourcePower(power, effect);
+                                var damageBuffFlavor = GlobalBoostPlannerSemantics.ClassifyDamageBuffFlavor(semanticSource, effect);
+                                if (damageBuffFlavor == GlobalBoostDamageFlavor.Resistance)
+                                {
+                                    if (effect.DamageType != Enums.eDamage.None)
+                                    {
+                                        buckets.Resistance[(int)effect.DamageType] += value;
+                                    }
+                                    else
+                                    {
+                                        buckets.Effect[(int)Enums.eEffectType.Resistance] += value;
+                                    }
+
+                                    continue;
+                                }
+
                                 if (DefiancePlanner.IsComputedCurrentBuffEffect(effect))
                                 {
                                     foreach (var damageType in DefiancePlanner.ComputedBuffDamageTypes)
@@ -287,6 +316,7 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
 
                             if (effect.ETModifies == Enums.eEffectType.Accuracy)
                             {
+                                buckets.Effect[(int)Enums.eEffectType.Accuracy] += value;
                                 continue;
                             }
 
@@ -335,6 +365,18 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
                     continue;
                 }
 
+                if (!enhancementPass && effectType == Enums.eEffectType.Accuracy)
+                {
+                    buckets.Effect[(int)Enums.eStatType.BuffAcc] += value;
+                    continue;
+                }
+
+                if (!enhancementPass && effectType == Enums.eEffectType.Mez && value > 0f)
+                {
+                    buckets.Mez[(int)effect.MezType] += value;
+                    continue;
+                }
+
                 if (!enhancementPass && effectType == Enums.eEffectType.Defense)
                 {
                     ApplyAcrossDefenseVectors(buckets.Defense, value);
@@ -362,7 +404,7 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
                 if (!enhancementPass && effect.EffectType != Enums.eEffectType.ResEffect &&
                     effect.ETModifies == Enums.eEffectType.Accuracy)
                 {
-                    if (IsGlobalAccuracySource(power))
+                    if (IsSemanticGlobalAccuracySource(power, effect) || IsGlobalAccuracySource(power))
                     {
                         buckets.Effect[(int)Enums.eStatType.BuffAcc] += value;
                     }

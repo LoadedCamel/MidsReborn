@@ -486,7 +486,8 @@ internal static class ContributionCapture
     public static void RecordChanceModifierContributions(
         IPower power,
         PlannerBucketPass pass,
-        PlannerContributionCollector collector)
+        PlannerContributionCollector collector,
+        bool requireActive = true)
     {
         if (power == null)
         {
@@ -494,7 +495,10 @@ internal static class ContributionCapture
         }
 
         var category = ContributionCategoryResolver.Resolve(power, pass);
-        foreach (var (tag, magnitude) in ChanceModifierCatalogBuilder.EnumerateActiveChanceModifiers(power))
+        var modifiers = requireActive
+            ? ChanceModifierCatalogBuilder.EnumerateActiveChanceModifiers(power)
+            : ChanceModifierCatalogBuilder.EnumerateIncludedChanceModifiers(power);
+        foreach (var (tag, magnitude) in modifiers)
         {
             collector.AddChanceModifierDelta(tag, magnitude, power, pass, category);
         }

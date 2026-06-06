@@ -1450,7 +1450,7 @@ namespace Mids_Reborn.Core
 
         internal static string BuildPopupDescription(IPower power, bool includePowerKindLabel)
         {
-            var description = power.DescShort?.Trim() ?? string.Empty;
+            var description = GetPreferredPopupDescription(power);
 
             if (!includePowerKindLabel)
             {
@@ -1471,6 +1471,74 @@ namespace Mids_Reborn.Core
             return string.IsNullOrWhiteSpace(description)
                 ? typeLabel
                 : $"{typeLabel}: {description}";
+        }
+
+        private static string GetPreferredPopupDescription(IPower power)
+        {
+            var shortDescription = NormalizePopupHelpText(power.DescShort);
+            var longSummary = BuildPopupLongHelpSummary(power.DescLong);
+
+            if (string.IsNullOrWhiteSpace(shortDescription))
+            {
+                return longSummary;
+            }
+
+            if (ShouldPreferExpandedIncarnatePopupDescription(power, shortDescription, longSummary))
+            {
+                return longSummary;
+            }
+
+            return shortDescription;
+        }
+
+        private static bool ShouldPreferExpandedIncarnatePopupDescription(
+            IPower power,
+            string shortDescription,
+            string longSummary)
+        {
+            if (string.IsNullOrWhiteSpace(longSummary))
+            {
+                return false;
+            }
+
+            if (!power.FullName.StartsWith("Incarnate.", StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            if (string.Equals(shortDescription, longSummary, StringComparison.OrdinalIgnoreCase))
+            {
+                return false;
+            }
+
+            return Regex.IsMatch(shortDescription, @"\bSpecial\b", RegexOptions.IgnoreCase) ||
+                   Regex.IsMatch(shortDescription, @"\+\s*\d+\s*(Magnitude|Mag)\b", RegexOptions.IgnoreCase);
+        }
+
+        private static string BuildPopupLongHelpSummary(string? longDescription)
+        {
+            if (string.IsNullOrWhiteSpace(longDescription))
+            {
+                return string.Empty;
+            }
+
+            var withoutNulls = longDescription.Replace("\0", string.Empty);
+            var firstParagraph = Regex.Split(withoutNulls, @"(?:<br\s*/?>\s*){2,}", RegexOptions.IgnoreCase)[0];
+            var withoutMarkup = Regex.Replace(firstParagraph, @"<[^>]+>", string.Empty, RegexOptions.IgnoreCase);
+            var decoded = System.Net.WebUtility.HtmlDecode(withoutMarkup);
+            return NormalizePopupHelpText(decoded);
+        }
+
+        private static string NormalizePopupHelpText(string? description)
+        {
+            if (string.IsNullOrWhiteSpace(description))
+            {
+                return string.Empty;
+            }
+
+            var withoutNulls = description.Replace("\0", string.Empty);
+            var singleLine = Regex.Replace(withoutNulls, @"\s+", " ");
+            return singleLine.Trim();
         }
 
         private static string GetPopupPowerKindLabel(IPower power)

@@ -76,10 +76,10 @@ internal static class PlannerSupplementalPowerMath
                 continue;
             }
 
-            var effectiveOldToHit = powerMath.IgnoreBuff(Enums.eEnhance.ToHit) ? 0f : oldToHit;
-            var effectiveNewToHit = powerMath.IgnoreBuff(Enums.eEnhance.ToHit) ? 0f : newToHit;
-            var effectiveOldAcc = powerMath.IgnoreBuff(Enums.eEnhance.Accuracy) ? 0f : oldBuffAcc;
-            var effectiveNewAcc = powerMath.IgnoreBuff(Enums.eEnhance.Accuracy) ? 0f : newBuffAcc;
+            var effectiveOldToHit = powerMath.IgnoreBuff(Enums.eEnhance.ToHit) ? oldToHit : 0f;
+            var effectiveNewToHit = powerMath.IgnoreBuff(Enums.eEnhance.ToHit) ? newToHit : 0f;
+            var effectiveOldAcc = powerMath.IgnoreBuff(Enums.eEnhance.Accuracy) ? oldBuffAcc : 0f;
+            var effectiveNewAcc = powerMath.IgnoreBuff(Enums.eEnhance.Accuracy) ? newBuffAcc : 0f;
 
             var oldAccuracyFactor = (1f + powerMath.Accuracy + effectiveOldAcc) * (toHitScale + effectiveOldToHit);
             var newAccuracyFactor = (1f + powerMath.Accuracy + effectiveNewAcc) * (toHitScale + effectiveNewToHit);

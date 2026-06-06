@@ -593,6 +593,9 @@ public sealed class OmniEffectTemplate
     [JsonProperty("flags")]
     public List<string> Flags { get; set; } = [];
 
+    [JsonProperty("boost_mod_allowed")]
+    public string BoostModAllowed { get; set; } = string.Empty;
+
     [JsonProperty("jit_requires")]
     public string JitRequires { get; set; } = string.Empty;
 

@@ -7,6 +7,10 @@ namespace Mids_Reborn.Core.Omni;
 
 public static class OmniMidsMapper
 {
+    private const string BoostModAllowedTagPrefix = "BoostModAllowed:";
+    private const string PowerBoostATag = "PowerBoostA";
+    private const string PowerBoostBTag = "PowerBoostB";
+
     private enum TemplateSemantic
     {
         None,
@@ -18,6 +22,7 @@ public static class OmniMidsMapper
     {
         StandardPower,
         Boost,
+        GlobalBoost,
         SetBonus
     }
 
@@ -102,7 +107,8 @@ public static class OmniMidsMapper
                          [],
                          [],
                          $"{sourcePrefix}[{effectIndex}]",
-                         inheritedIsPvp: null))
+                         inheritedIsPvp: null,
+                         inheritedGroupChance: 1f))
             {
                 yield return flattened;
             }
@@ -117,13 +123,15 @@ public static class OmniMidsMapper
         IReadOnlyCollection<string> inheritedTags,
         IReadOnlyCollection<string> inheritedRequiresExpressions,
         string sourcePath,
-        string? inheritedIsPvp)
+        string? inheritedIsPvp,
+        float inheritedGroupChance)
     {
         var effects = new List<Effect>();
         var effectTags = MergeTags(inheritedTags, source.Tags, source.Flags).ToArray();
         var requiresExpressions = MergeRequiresExpressions(inheritedRequiresExpressions, source.RequiresExpression).ToArray();
         var combinedSourceRequires = JoinRequiresExpressions(requiresExpressions);
         var effectiveIsPvp = ResolveEffectiveIsPvp(inheritedIsPvp, source.IsPvp);
+        var cumulativeGroupChance = Math.Clamp(inheritedGroupChance * source.Chance, 0f, 1f);
         if (effectTags.Length > 0)
         {
             applyResult?.AddLimited(applyResult.EffectGroupTagDetails,
@@ -220,7 +228,7 @@ public static class OmniMidsMapper
                         ? mappedSemantic.MezType
                         : MapMezType(attrib, template.Type),
                     ETModifies = mappedSemantic.ETModifies,
-                    ToWho = MapToWho(power, template.Target),
+                    ToWho = MapToWho(power, template.Target, conditionExpressions),
                     Stacking = ImportedStackPolicyNormalizer.ToCompatibilityStacking(stackPolicy),
                     StackPolicy = stackPolicy,
                     AttribType = MapAttribType(attrib, template, mappedType),
@@ -231,9 +239,9 @@ public static class OmniMidsMapper
                     nDuration = template.Duration,
                     DelayedTime = source.Delay,
                     // Omni exports model effect-group chance and template tick chance separately.
-                    // Homecoming Sentinel Opportunity crit payloads rely on template tick chance
-                    // starting at 0 and then being raised by GlobalChanceMod on matching tags.
-                    BaseProbability = ResolveBaseProbability(source, template),
+                    // Some proc carriers intentionally author a 0 base chance and rely on
+                    // GlobalChanceMod/PowerChanceMod to raise matching tagged payloads.
+                    BaseProbability = ResolveBaseProbability(cumulativeGroupChance, template),
                     ProcsPerMinute = source.Ppm,
                     ModifierTable = modifierTable,
                     GrantBoosted = IsGrantBoostedTemplate(template.Type, attrib),
@@ -245,6 +253,7 @@ public static class OmniMidsMapper
                         power.FullName,
                         conditionExpressions)
                 };
+                ApplyPlannerMetadataTags(effect, effectTags, template);
                 ApplyCombatModFlags(effect, template);
                 TrackPvTargetAudit(power, combinedSourceRequires, template, effect, pvModeSource, applyResult);
                 if (!DatabaseAPI.ModifierTableExists(effect.ModifierTable))
@@ -331,7 +340,8 @@ public static class OmniMidsMapper
                          effectTags,
                          requiresExpressions,
                          $"{sourcePath}:child[{childIndex}]",
-                         effectiveIsPvp))
+                         effectiveIsPvp,
+                         cumulativeGroupChance))
             {
                 effects.Add(flattened);
             }
@@ -340,11 +350,9 @@ public static class OmniMidsMapper
         return effects;
     }
 
-    private static float ResolveBaseProbability(OmniEffectDefinition source, OmniEffectTemplate template)
+    private static float ResolveBaseProbability(float cumulativeGroupChance, OmniEffectTemplate template)
     {
-        var groupChance = source.Chance <= 0f ? 1f : source.Chance;
-        var tickChance = template.TickChance;
-        return Math.Clamp(groupChance * tickChance, 0f, 1f);
+        return Math.Clamp(cumulativeGroupChance * template.TickChance, 0f, 1f);
     }
 
     private static bool IsZeroValueTagCarrier(Effect effect)
@@ -903,6 +911,23 @@ public static class OmniMidsMapper
             Enums.eMez mezType = Enums.eMez.None)
             => new(effectType, modifies, mezType, sourceKind, tableFamily, boostRole);
 
+        if (TryMapPowerBoostCarrierEnhancementSemantic(
+                power,
+                source,
+                template,
+                effectTags,
+                normalizedAttrib,
+                normalizedType,
+                normalizedTemplateTarget,
+                sourceKind,
+                tableFamily,
+                boostRole,
+                isStrengthAspect,
+                out var earlyPowerBoostSemantic))
+        {
+            return earlyPowerBoostSemantic;
+        }
+
         if (normalizedType == "powerredirect")
         {
             return Map(Enums.eEffectType.PowerRedirect);
@@ -983,6 +1008,24 @@ public static class OmniMidsMapper
             return resistanceSemantic;
         }
 
+        if (TryMapGlobalBoostEnhancementSemantic(
+                power,
+                source,
+                template,
+                effectTags,
+                templateSemantic,
+                normalizedAttrib,
+                normalizedType,
+                normalizedTemplateTarget,
+                sourceKind,
+                tableFamily,
+                boostRole,
+                isStrengthAspect,
+                out var enhancementSemantic))
+        {
+            return enhancementSemantic;
+        }
+
         if (templateSemantic == TemplateSemantic.VectorDefense &&
             IsVectorDefenseSemanticAttrib(normalizedAttrib))
         {
@@ -1024,7 +1067,7 @@ public static class OmniMidsMapper
             return Map(Enums.eEffectType.Resistance);
         }
 
-        if (sourceKind == PowerSemanticSourceKind.Boost &&
+        if (sourceKind is PowerSemanticSourceKind.Boost or PowerSemanticSourceKind.GlobalBoost &&
             boostRole == BoostEffectRole.EnhancementSchedule &&
             isStrengthAspect &&
             IsDamageVectorSelectorAttrib(normalizedAttrib))
@@ -1189,6 +1232,167 @@ public static class OmniMidsMapper
         return false;
     }
 
+    private static bool TryMapPowerBoostCarrierEnhancementSemantic(
+        OmniPowerDefinition power,
+        OmniEffectDefinition source,
+        OmniEffectTemplate template,
+        IReadOnlyCollection<string> effectTags,
+        string normalizedAttrib,
+        string normalizedType,
+        string normalizedTemplateTarget,
+        PowerSemanticSourceKind sourceKind,
+        ModifierTableFamily tableFamily,
+        BoostEffectRole boostRole,
+        bool isStrengthAspect,
+        out MappedEffectSemantic semantic)
+    {
+        semantic = MappedEffectSemantic.None;
+        if (!IsTaggedPowerBoostPayload(effectTags, template, normalizedTemplateTarget, isStrengthAspect))
+        {
+            return false;
+        }
+
+        MappedEffectSemantic MapEnhancement(
+            Enums.eEffectType modifies,
+            Enums.eMez mezType = Enums.eMez.None)
+            => new(
+                Enums.eEffectType.Enhancement,
+                modifies,
+                mezType,
+                sourceKind,
+                tableFamily,
+                boostRole);
+
+        MappedEffectSemantic MapDirect(Enums.eEffectType effectType)
+            => new(effectType, Enums.eEffectType.None, Enums.eMez.None, sourceKind, tableFamily, boostRole);
+
+        if (HasPowerBoostTag(effectTags, PowerBoostBTag))
+        {
+            if (IsDamageVectorSelectorAttrib(normalizedAttrib))
+            {
+                semantic = MapDirect(Enums.eEffectType.DamageBuff);
+                return true;
+            }
+
+            semantic = normalizedAttrib switch
+            {
+                "tohit" => MapEnhancement(Enums.eEffectType.ToHit),
+                "defense" or "basedefense" or "elusivitybase" => MapEnhancement(Enums.eEffectType.Defense),
+                _ => MappedEffectSemantic.None
+            };
+
+            return semantic != MappedEffectSemantic.None;
+        }
+
+        if (!HasPowerBoostTag(effectTags, PowerBoostATag))
+        {
+            return false;
+        }
+
+        if (IsMezAttrib(normalizedAttrib) || normalizedType == "knock")
+        {
+            semantic = MapEnhancement(Enums.eEffectType.Mez, MapMezType(normalizedAttrib, template.Type));
+            return true;
+        }
+
+        semantic = normalizedAttrib switch
+        {
+            "accuracy" => MapEnhancement(Enums.eEffectType.Accuracy),
+            "absorb" => MapEnhancement(Enums.eEffectType.Absorb),
+            "endurance" => MapEnhancement(Enums.eEffectType.Endurance),
+            "endurancecost" or "endurancediscount" => MapEnhancement(Enums.eEffectType.EnduranceDiscount),
+            "heal" or "healdmg" => MapEnhancement(Enums.eEffectType.Heal),
+            "hitpoints" => MapEnhancement(Enums.eEffectType.HitPoints),
+            "jumpheight" => MapEnhancement(Enums.eEffectType.JumpHeight),
+            "flyingspeed" or "speedflying" => MapEnhancement(Enums.eEffectType.SpeedFlying),
+            "jumpingspeed" or "speedjumping" => MapEnhancement(Enums.eEffectType.SpeedJumping),
+            "range" => MapEnhancement(Enums.eEffectType.Range),
+            "rechargetime" => MapEnhancement(Enums.eEffectType.RechargeTime),
+            "recovery" => MapEnhancement(Enums.eEffectType.Recovery),
+            "regeneration" => MapEnhancement(Enums.eEffectType.Regeneration),
+            "runningspeed" or "speedrunning" => MapEnhancement(Enums.eEffectType.SpeedRunning),
+            "slow" => MapEnhancement(Enums.eEffectType.Slow),
+            "tohit" => MapEnhancement(Enums.eEffectType.ToHit),
+            _ => MappedEffectSemantic.None
+        };
+
+        return semantic != MappedEffectSemantic.None;
+    }
+
+    private static bool TryMapGlobalBoostEnhancementSemantic(
+        OmniPowerDefinition power,
+        OmniEffectDefinition source,
+        OmniEffectTemplate template,
+        IReadOnlyCollection<string> effectTags,
+        TemplateSemantic templateSemantic,
+        string normalizedAttrib,
+        string normalizedType,
+        string normalizedTemplateTarget,
+        PowerSemanticSourceKind sourceKind,
+        ModifierTableFamily tableFamily,
+        BoostEffectRole boostRole,
+        bool isStrengthAspect,
+        out MappedEffectSemantic semantic)
+    {
+        semantic = MappedEffectSemantic.None;
+        if (sourceKind != PowerSemanticSourceKind.GlobalBoost ||
+            boostRole != BoostEffectRole.EnhancementSchedule ||
+            !isStrengthAspect ||
+            !normalizedTemplateTarget.Contains("self", StringComparison.OrdinalIgnoreCase) ||
+            !HasTemplateFlag(template, "Boost"))
+        {
+            return false;
+        }
+
+        MappedEffectSemantic MapEnhancement(
+            Enums.eEffectType modifies,
+            Enums.eMez mezType = Enums.eMez.None)
+            => new(
+                Enums.eEffectType.Enhancement,
+                modifies,
+                mezType,
+                sourceKind,
+                tableFamily,
+                boostRole);
+
+        if (templateSemantic == TemplateSemantic.VectorDefense &&
+            IsVectorDefenseSemanticAttrib(normalizedAttrib))
+        {
+            semantic = MapEnhancement(Enums.eEffectType.Defense);
+            return true;
+        }
+
+        if (IsMezAttrib(normalizedAttrib) || normalizedType == "knock")
+        {
+            semantic = MapEnhancement(Enums.eEffectType.Mez, MapMezType(normalizedAttrib, template.Type));
+            return true;
+        }
+
+        semantic = normalizedAttrib switch
+        {
+            "accuracy" => MapEnhancement(Enums.eEffectType.Accuracy),
+            "tohit" => MapEnhancement(Enums.eEffectType.ToHit),
+            "defense" or "basedefense" or "elusivitybase" => MapEnhancement(Enums.eEffectType.Defense),
+            "endurancecost" or "endurancediscount" => MapEnhancement(Enums.eEffectType.EnduranceDiscount),
+            "endurance" => MapEnhancement(Enums.eEffectType.Endurance),
+            "heal" or "healdmg" => MapEnhancement(Enums.eEffectType.Heal),
+            "hitpoints" => MapEnhancement(Enums.eEffectType.HitPoints),
+            "jumpheight" => MapEnhancement(Enums.eEffectType.JumpHeight),
+            "flyingspeed" or "speedflying" => MapEnhancement(Enums.eEffectType.SpeedFlying),
+            "jumpingspeed" or "speedjumping" => MapEnhancement(Enums.eEffectType.SpeedJumping),
+            "range" => MapEnhancement(Enums.eEffectType.Range),
+            "rechargetime" => MapEnhancement(Enums.eEffectType.RechargeTime),
+            "recovery" => MapEnhancement(Enums.eEffectType.Recovery),
+            "regeneration" => MapEnhancement(Enums.eEffectType.Regeneration),
+            "runningspeed" or "speedrunning" => MapEnhancement(Enums.eEffectType.SpeedRunning),
+            "slow" => MapEnhancement(Enums.eEffectType.Slow),
+            "absorb" => MapEnhancement(Enums.eEffectType.Absorb),
+            _ => MappedEffectSemantic.None
+        };
+
+        return semantic != MappedEffectSemantic.None;
+    }
+
     private static bool TryMapNullHelperCarrierSemantic(
         OmniPowerDefinition power,
         OmniEffectDefinition source,
@@ -1276,6 +1480,16 @@ public static class OmniMidsMapper
 
     private static PowerSemanticSourceKind ClassifyPowerSemanticSourceKind(OmniPowerDefinition power)
     {
+        return OmniPowerClassifier.MapPowerType(power.Type) switch
+        {
+            Enums.ePowerType.Boost => PowerSemanticSourceKind.Boost,
+            Enums.ePowerType.GlobalBoost => PowerSemanticSourceKind.GlobalBoost,
+            _ => ClassifyPowerSemanticSourceKindFromIdentity(power)
+        };
+    }
+
+    private static PowerSemanticSourceKind ClassifyPowerSemanticSourceKindFromIdentity(OmniPowerDefinition power)
+    {
         var identity = !string.IsNullOrWhiteSpace(power.Powerset)
             ? power.Powerset
             : power.FullName;
@@ -1334,7 +1548,13 @@ public static class OmniMidsMapper
         PowerSemanticSourceKind sourceKind,
         ModifierTableFamily tableFamily)
     {
-        if (sourceKind == PowerSemanticSourceKind.Boost && tableFamily == ModifierTableFamily.BoostSchedule)
+        if (sourceKind is PowerSemanticSourceKind.Boost or PowerSemanticSourceKind.GlobalBoost &&
+            tableFamily == ModifierTableFamily.BoostSchedule)
+        {
+            return BoostEffectRole.EnhancementSchedule;
+        }
+
+        if (sourceKind == PowerSemanticSourceKind.GlobalBoost && tableFamily == ModifierTableFamily.Ones)
         {
             return BoostEffectRole.EnhancementSchedule;
         }
@@ -1431,8 +1651,26 @@ public static class OmniMidsMapper
 
     private static void ApplyCombatModFlags(Effect effect, OmniEffectTemplate template)
     {
+        effect.IgnoreED = HasTemplateFlag(template, "BoostIgnoreDiminishing");
         effect.UseCombatModMagnitude = HasTemplateFlag(template, "CombatModMagnitude");
         effect.UseCombatModDuration = HasTemplateFlag(template, "CombatModDuration");
+    }
+
+    private static void ApplyPlannerMetadataTags(
+        Effect effect,
+        IReadOnlyCollection<string> effectTags,
+        OmniEffectTemplate template)
+    {
+        if (!HasPowerBoostCarrierTag(effectTags) || string.IsNullOrWhiteSpace(template.BoostModAllowed))
+        {
+            return;
+        }
+
+        var tag = $"{BoostModAllowedTagPrefix}{template.BoostModAllowed}";
+        if (!effect.EffectTags.Contains(tag, StringComparer.OrdinalIgnoreCase))
+        {
+            effect.EffectTags.Add(tag);
+        }
     }
 
     private static bool HasTemplateFlag(OmniEffectTemplate template, string flagName)
@@ -1571,7 +1809,7 @@ public static class OmniMidsMapper
             return TemplateSemantic.None;
         }
 
-        if (sourceKind == PowerSemanticSourceKind.StandardPower &&
+        if (sourceKind is PowerSemanticSourceKind.StandardPower or PowerSemanticSourceKind.GlobalBoost &&
             normalizedAttribs.Any(IsActualDamagePayloadAttrib))
         {
             return TemplateSemantic.None;
@@ -1706,6 +1944,35 @@ public static class OmniMidsMapper
             .Where(static tag => !string.IsNullOrWhiteSpace(tag))
             .Distinct(StringComparer.OrdinalIgnoreCase)
             .ToArray();
+    }
+
+    private static bool IsTaggedPowerBoostPayload(
+        IReadOnlyCollection<string> effectTags,
+        OmniEffectTemplate template,
+        string normalizedTemplateTarget,
+        bool isStrengthAspect)
+    {
+        if (!isStrengthAspect ||
+            string.IsNullOrWhiteSpace(template.BoostModAllowed) ||
+            !HasPowerBoostCarrierTag(effectTags))
+        {
+            return false;
+        }
+
+        return normalizedTemplateTarget.Contains("self", StringComparison.OrdinalIgnoreCase) ||
+               normalizedTemplateTarget.Contains("all", StringComparison.OrdinalIgnoreCase) ||
+               normalizedTemplateTarget.Contains("anyaffected", StringComparison.OrdinalIgnoreCase) ||
+               normalizedTemplateTarget.Contains("affected", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool HasPowerBoostCarrierTag(IReadOnlyCollection<string> effectTags)
+    {
+        return HasPowerBoostTag(effectTags, PowerBoostATag) || HasPowerBoostTag(effectTags, PowerBoostBTag);
+    }
+
+    private static bool HasPowerBoostTag(IReadOnlyCollection<string> effectTags, string tag)
+    {
+        return effectTags.Any(value => string.Equals(value, tag, StringComparison.OrdinalIgnoreCase));
     }
 
     private static string GetPlannerSemanticText(OmniPowerDefinition power)
@@ -1916,7 +2183,7 @@ public static class OmniMidsMapper
                power.Archetypes.Any(a => a.Equals("blaster", StringComparison.OrdinalIgnoreCase));
     }
 
-    private static Enums.eToWho MapToWho(OmniPowerDefinition power, string templateTarget)
+    private static Enums.eToWho MapToWho(OmniPowerDefinition power, string templateTarget, IReadOnlyCollection<string>? requiresExpressions = null)
     {
         var target = Normalize(templateTarget);
         if (target.Contains("caster", StringComparison.OrdinalIgnoreCase) ||
@@ -1933,15 +2200,7 @@ public static class OmniMidsMapper
         if (target.Contains("anyaffected", StringComparison.OrdinalIgnoreCase) ||
             target.Contains("affected", StringComparison.OrdinalIgnoreCase))
         {
-            var affectsSelf = PowerAffectsSelf(power);
-            if (!affectsSelf)
-            {
-                return Enums.eToWho.Target;
-            }
-
-            return PowerAffectsOthers(power)
-                ? Enums.eToWho.All
-                : Enums.eToWho.Self;
+            return MapAffectedToWho(power, requiresExpressions);
         }
 
         if (target.Contains("target", StringComparison.OrdinalIgnoreCase))
@@ -1952,12 +2211,60 @@ public static class OmniMidsMapper
         return PowerAffectsSelf(power) ? Enums.eToWho.Self : Enums.eToWho.Target;
     }
 
+    private static Enums.eToWho MapAffectedToWho(OmniPowerDefinition power, IReadOnlyCollection<string>? requiresExpressions)
+    {
+        var affectsSelf = PowerAffectsSelf(power);
+        var affectsFriendlies = PowerAffectsFriendlies(power);
+        var affectsHostiles = PowerAffectsHostiles(power);
+        var combinedRequires = requiresExpressions == null
+            ? string.Empty
+            : string.Join(" ", requiresExpressions.Where(expr => !string.IsNullOrWhiteSpace(expr)));
+
+        if (ContainsExplicitHostileTargeting(combinedRequires))
+        {
+            return Enums.eToWho.Target;
+        }
+
+        if (affectsSelf && affectsFriendlies && !affectsHostiles)
+        {
+            return Enums.eToWho.All;
+        }
+
+        if (affectsHostiles)
+        {
+            return Enums.eToWho.Target;
+        }
+
+        if (affectsSelf)
+        {
+            return Enums.eToWho.Self;
+        }
+
+        return Enums.eToWho.Target;
+    }
+
     private static bool PowerAffectsSelf(OmniPowerDefinition power)
     {
         return IsSelfSpecifier(power.TargetType) ||
                IsSelfSpecifier(power.TargetTypeSecondary) ||
                power.TargetsAffected.Any(IsSelfSpecifier) ||
                power.TargetsAutoHit.Any(IsSelfSpecifier);
+    }
+
+    private static bool PowerAffectsFriendlies(OmniPowerDefinition power)
+    {
+        return IsFriendlySpecifier(power.TargetType) ||
+               IsFriendlySpecifier(power.TargetTypeSecondary) ||
+               power.TargetsAffected.Any(IsFriendlySpecifier) ||
+               power.TargetsAutoHit.Any(IsFriendlySpecifier);
+    }
+
+    private static bool PowerAffectsHostiles(OmniPowerDefinition power)
+    {
+        return IsHostileSpecifier(power.TargetType) ||
+               IsHostileSpecifier(power.TargetTypeSecondary) ||
+               power.TargetsAffected.Any(IsHostileSpecifier) ||
+               power.TargetsAutoHit.Any(IsHostileSpecifier);
     }
 
     private static bool PowerAffectsOthers(OmniPowerDefinition power)
@@ -1996,6 +2303,48 @@ public static class OmniMidsMapper
                 normalized.Contains("player", StringComparison.OrdinalIgnoreCase) ||
                 normalized.Contains("affected", StringComparison.OrdinalIgnoreCase) ||
                 normalized.Contains("any", StringComparison.OrdinalIgnoreCase));
+    }
+
+    private static bool IsFriendlySpecifier(string value)
+    {
+        var normalized = Normalize(value);
+        if (string.IsNullOrWhiteSpace(normalized) || IsSelfSpecifier(normalized))
+        {
+            return false;
+        }
+
+        return normalized.Contains("ally", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("friend", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("teammate", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("league", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool IsHostileSpecifier(string value)
+    {
+        var normalized = Normalize(value);
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            return false;
+        }
+
+        return normalized.Contains("foe", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("enemy", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("villain", StringComparison.OrdinalIgnoreCase) ||
+               normalized.Contains("critter", StringComparison.OrdinalIgnoreCase);
+    }
+
+    private static bool ContainsExplicitHostileTargeting(string requiresExpression)
+    {
+        if (string.IsNullOrWhiteSpace(requiresExpression))
+        {
+            return false;
+        }
+
+        var normalized = Normalize(requiresExpression);
+        return normalized.Contains("targetisfriend") ||
+               normalized.Contains("enttypetargetplayereq") ||
+               normalized.Contains("targetentrefsourceentrefeq") ||
+               normalized.Contains("archtargetclass");
     }
 
     private static string Normalize(string value)

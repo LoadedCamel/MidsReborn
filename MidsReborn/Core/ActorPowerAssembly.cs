@@ -184,12 +184,17 @@ internal static class ActorPowerAssembly
 
         var chanceModifierCatalog = context.BuildChanceModifierCatalog
             ? ChanceModifierCatalogBuilder.Build(
-                buffedPowers.Cast<IPower?>().ToArray(),
+                includedBuffedPowers.Cast<IPower?>().ToArray(),
                 context.ChanceModifierSetBonusPower,
-                context.SupplementalChanceModifierPowers)
+                context.SupplementalChanceModifierPowers,
+                requireActive: false)
             : new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
         MergeChanceModifierCatalog(chanceModifierCatalog, context.SupplementalChanceModifierCatalog);
-        CaptureChanceModifierContributions(buffedPowers, PlannerBucketPass.SelfBuff, contributionCollector);
+        CaptureChanceModifierContributions(
+            includedBuffedPowers,
+            PlannerBucketPass.SelfBuff,
+            contributionCollector,
+            requireActive: false);
         if (context.ChanceModifierSetBonusPower != null)
         {
             CaptureChanceModifierContributions([context.ChanceModifierSetBonusPower], PlannerBucketPass.SelfBuff, contributionCollector);
@@ -265,11 +270,12 @@ internal static class ActorPowerAssembly
     private static void CaptureChanceModifierContributions(
         IEnumerable<IPower> powers,
         PlannerBucketPass pass,
-        PlannerContributionCollector collector)
+        PlannerContributionCollector collector,
+        bool requireActive = true)
     {
         foreach (var power in powers)
         {
-            ContributionCapture.RecordChanceModifierContributions(power, pass, collector);
+            ContributionCapture.RecordChanceModifierContributions(power, pass, collector, requireActive);
         }
     }
 }

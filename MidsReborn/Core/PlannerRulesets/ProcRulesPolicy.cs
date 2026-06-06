@@ -386,14 +386,15 @@ internal static class ChanceModifierCatalogBuilder
     public static Dictionary<string, float> Build(
         IReadOnlyList<IPower?> buffedPowers,
         IPower? setBonusVirtualPower,
-        IReadOnlyList<IPower>? supplementalPowers = null)
+        IReadOnlyList<IPower>? supplementalPowers = null,
+        bool requireActive = true)
     {
         var catalog = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
-        AddEffects(catalog, buffedPowers);
-        AddEffects(catalog, setBonusVirtualPower == null ? [] : [setBonusVirtualPower]);
+        AddEffects(catalog, buffedPowers, requireActive);
+        AddEffects(catalog, setBonusVirtualPower == null ? [] : [setBonusVirtualPower], requireActive);
         if (supplementalPowers is { Count: > 0 })
         {
-            AddEffects(catalog, supplementalPowers.Cast<IPower?>());
+            AddEffects(catalog, supplementalPowers.Cast<IPower?>(), requireActive);
         }
 
         return catalog;
@@ -401,7 +402,17 @@ internal static class ChanceModifierCatalogBuilder
 
     internal static IEnumerable<(string Tag, float Magnitude)> EnumerateActiveChanceModifiers(IPower power)
     {
-        if (!power.Active)
+        return EnumerateChanceModifiers(power, requireActive: true);
+    }
+
+    internal static IEnumerable<(string Tag, float Magnitude)> EnumerateIncludedChanceModifiers(IPower power)
+    {
+        return EnumerateChanceModifiers(power, requireActive: false);
+    }
+
+    private static IEnumerable<(string Tag, float Magnitude)> EnumerateChanceModifiers(IPower power, bool requireActive)
+    {
+        if (requireActive && !power.Active)
         {
             yield break;
         }
@@ -422,7 +433,7 @@ internal static class ChanceModifierCatalogBuilder
             var isAssassinsFocusChanceMod = power.FullName.Equals(
                 PlannerStateCatalog.AssassinsFocusMarker,
                 StringComparison.OrdinalIgnoreCase);
-            if (((!power.VariableEnabled && effect.VariableModified) || isAssassinsFocusChanceMod) &&
+            if (((power.VariableEnabled && effect.VariableModified) || isAssassinsFocusChanceMod) &&
                 !effect.IgnoreScaling)
             {
                 magnitude *= Math.Max(0, power.Stacks);
@@ -437,11 +448,11 @@ internal static class ChanceModifierCatalogBuilder
         }
     }
 
-    private static void AddEffects(IDictionary<string, float> target, IEnumerable<IPower?> powers)
+    private static void AddEffects(IDictionary<string, float> target, IEnumerable<IPower?> powers, bool requireActive)
     {
         foreach (var power in powers.Where(power => power != null))
         {
-            foreach (var (tag, magnitude) in EnumerateActiveChanceModifiers(power!))
+            foreach (var (tag, magnitude) in EnumerateChanceModifiers(power!, requireActive))
             {
                 if (target.TryGetValue(tag, out var existing))
                 {

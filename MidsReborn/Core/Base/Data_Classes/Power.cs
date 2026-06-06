@@ -554,7 +554,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public IPowerset? GetPowerSet()
         {
-            if (!((PowerSetID < 0) | (PowerSetID > DatabaseAPI.Database.Powersets.Length)))
+            if (!((PowerSetID < 0) | (PowerSetID >= DatabaseAPI.Database.Powersets.Length)))
             {
                 return DatabaseAPI.Database.Powersets[PowerSetID];
             }

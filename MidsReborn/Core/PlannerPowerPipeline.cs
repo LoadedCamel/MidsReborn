@@ -319,6 +319,11 @@ internal sealed class PlannerPowerPipeline
             _buffedPowers[hIDX]?.SetMathMag();
         }
 
+        if (!plannerRuleset.AllowLegacyCrossPowerIncarnatePasses && plannerRuleset.UsesCanonicalPlannerMath)
+        {
+            GBPA_ApplyCanonicalCrossPowerGlobalBoostEffects();
+        }
+
         return true;
     }
 
@@ -448,11 +453,11 @@ internal sealed class PlannerPowerPipeline
         }
     }
 
-    private static void HandleDefaultIncarnateEnh(ref IPower powerMath, IEffect effect, IEffect[] buffedPowerEffects)
+    private static void HandleDefaultIncarnateEnh(ref IPower powerMath, IPower sourcePower, IEffect effect, IEffect[] buffedPowerEffects)
     {
         foreach (var targetEffect in powerMath.Effects)
         {
-            if (!targetEffect.Buffable)
+            if (!GlobalBoostPlannerSemantics.MatchesTargetEffect(powerMath, targetEffect, sourcePower, effect))
             {
                 continue;
             }
@@ -569,7 +574,137 @@ internal sealed class PlannerPowerPipeline
         }
     }
 
-    private void GBPA_ApplyIncarnateEnhancements(ref IPower powerMath, int hIDX, IPower? power, bool ignoreED, ref Enums.eEffectType effectType)
+    private void GBPA_ApplyCanonicalCrossPowerGlobalBoostEffects()
+    {
+        var sourcePowers = _assembledBasePowers;
+        for (var targetIndex = 0; targetIndex < _currentBuild.Powers.Count; targetIndex++)
+        {
+            if (_currentBuild.Powers[targetIndex] == null ||
+                _currentBuild.Powers[targetIndex]!.NIDPower <= -1 ||
+                _mathPowers[targetIndex] == null ||
+                _buffedPowers[targetIndex] == null ||
+                !IsCanonicalCrossPowerGlobalBoostProcHostPower(_mathPowers[targetIndex]))
+            {
+                continue;
+            }
+
+            var originalMathCount = _mathPowers[targetIndex]!.Effects.Length;
+            var originalBuffedCount = _buffedPowers[targetIndex]!.Effects.Length;
+            for (var sourceIndex = 0; sourceIndex < _currentBuild.Powers.Count; sourceIndex++)
+            {
+                if (targetIndex == sourceIndex ||
+                    _currentBuild.Powers[sourceIndex] == null ||
+                    !_currentBuild.Powers[sourceIndex]!.StatInclude ||
+                    _currentBuild.Powers[sourceIndex]!.NIDPower <= -1 ||
+                    sourcePowers[sourceIndex] == null ||
+                    !SourceHasCanonicalCrossPowerGlobalBoostEffects(sourcePowers[sourceIndex]))
+                {
+                    continue;
+                }
+
+                var effectType = Enums.eEffectType.GrantPower;
+                GBPA_ApplyIncarnateEnhancements(ref _mathPowers[targetIndex], targetIndex, sourcePowers[sourceIndex], false, ref effectType);
+            }
+
+            if (_mathPowers[targetIndex]!.Effects.Length == originalMathCount &&
+                _buffedPowers[targetIndex]!.Effects.Length == originalBuffedCount)
+            {
+                continue;
+            }
+
+            _mathPowers[targetIndex]!.SetMathMag();
+            _buffedPowers[targetIndex]!.SetMathMag();
+        }
+    }
+
+    private void GBPA_ApplyCanonicalCrossPowerPowerBoostEnhancements(ref IPower powerMath, int hIDX, bool ignoreED)
+    {
+        var sourcePowers = _assembledBasePowers;
+        for (var sourceIndex = 0; sourceIndex < _currentBuild.Powers.Count; sourceIndex++)
+        {
+            if (sourceIndex == hIDX ||
+                _currentBuild.Powers[sourceIndex] == null ||
+                !_currentBuild.Powers[sourceIndex]!.StatInclude ||
+                _currentBuild.Powers[sourceIndex]!.NIDPower <= -1 ||
+                sourcePowers[sourceIndex] == null ||
+                !SourceHasTaggedCrossPowerEnhancementEffects(sourcePowers[sourceIndex], ignoreED))
+            {
+                continue;
+            }
+
+            var effectType = Enums.eEffectType.Enhancement;
+            GBPA_ApplyIncarnateEnhancements(
+                ref powerMath,
+                hIDX,
+                sourcePowers[sourceIndex],
+                ignoreED,
+                ref effectType,
+                allowTaggedStandardPowerCarrier: true);
+        }
+    }
+
+    private static bool SourceHasTaggedCrossPowerEnhancementEffects(IPower? power, bool ignoreED)
+    {
+        return power?.Effects.Any(effect =>
+            effect.EffectClass != Enums.eEffectClass.Ignored &&
+            effect.IgnoreED == ignoreED &&
+            effect.EffectType is Enums.eEffectType.Enhancement or Enums.eEffectType.DamageBuff &&
+            GlobalBoostPlannerSemantics.IsPowerBoostTaggedEnhancementCarrierEffect(effect)) == true;
+    }
+
+    private static bool SourceHasCanonicalCrossPowerGlobalBoostEffects(IPower? power)
+    {
+        if (power == null)
+        {
+            return false;
+        }
+
+        return power.Effects.Any(effect =>
+            effect.EffectClass != Enums.eEffectClass.Ignored &&
+            effect.IgnoreED == false &&
+            effect.EffectType is not (Enums.eEffectType.Enhancement or Enums.eEffectType.DamageBuff) &&
+            TryResolveSemanticGlobalBoostSourcePower(power, effect, out _));
+    }
+
+    private static bool TryResolveSemanticGlobalBoostSourcePower(IPower ownerPower, IEffect effect, out IPower? semanticSource)
+    {
+        semanticSource = null;
+        if (ownerPower == null || effect == null)
+        {
+            return false;
+        }
+
+        semanticSource = GlobalBoostPlannerSemantics.ResolveSemanticSourcePower(ownerPower, effect);
+        return semanticSource is { PowerType: Enums.ePowerType.GlobalBoost };
+    }
+
+    private static void StampSemanticGlobalBoostSource(IEffect effect, IPower semanticSource)
+    {
+        if (effect == null || semanticSource == null)
+        {
+            return;
+        }
+
+        effect.Absorbed_Effect = true;
+        effect.Absorbed_PowerType = semanticSource.PowerType;
+        if (semanticSource.PowerIndex > -1)
+        {
+            effect.Absorbed_Power_nID = semanticSource.PowerIndex;
+        }
+
+        if (effect.Absorbed_Class_nID < 0 && semanticSource.GetPowerSet() is { nArchetype: >= 0 } powerset)
+        {
+            effect.Absorbed_Class_nID = powerset.nArchetype;
+        }
+    }
+
+    private void GBPA_ApplyIncarnateEnhancements(
+        ref IPower powerMath,
+        int hIDX,
+        IPower? power,
+        bool ignoreED,
+        ref Enums.eEffectType effectType,
+        bool allowTaggedStandardPowerCarrier = false)
     {
         if (powerMath == null || power == null || power.Effects.Length == 0 || !powerMath.Slottable)
         {
@@ -579,6 +714,7 @@ internal sealed class PlannerPowerPipeline
         for (var effectIndex = 0; effectIndex < power.Effects.Length; effectIndex++)
         {
             var effect = power.Effects[effectIndex];
+            var hasSemanticGlobalBoostSource = TryResolveSemanticGlobalBoostSourcePower(power, effect, out var semanticSourcePower);
             var disqualified = false;
             if (effect.EffectClass == Enums.eEffectClass.Ignored)
             {
@@ -599,7 +735,10 @@ internal sealed class PlannerPowerPipeline
                         {
                             disqualified = true;
                         }
-                        else if (power.PowerType != Enums.ePowerType.GlobalBoost &&
+                        else if (!hasSemanticGlobalBoostSource &&
+                                 power.PowerType != Enums.ePowerType.GlobalBoost &&
+                                 (!allowTaggedStandardPowerCarrier ||
+                                  !GlobalBoostPlannerSemantics.IsPowerBoostTaggedEnhancementCarrierEffect(effect)) &&
                                  (!effect.Absorbed_Effect || effect.Absorbed_PowerType != Enums.ePowerType.GlobalBoost))
                         {
                             disqualified = true;
@@ -618,10 +757,12 @@ internal sealed class PlannerPowerPipeline
                 continue;
             }
 
-            var sourcePower = effect.Absorbed_Effect & effect.Absorbed_Power_nID > -1
-                ? DatabaseAPI.Database.Power[effect.Absorbed_Power_nID]
-                : power;
-            var isAllowed = powerMath.Enhancements.Intersect(sourcePower.Enhancements).Any();
+            var sourcePower = hasSemanticGlobalBoostSource
+                ? semanticSourcePower!
+                : effect.Absorbed_Effect & effect.Absorbed_Power_nID > -1
+                    ? DatabaseAPI.Database.Power[effect.Absorbed_Power_nID]
+                    : power;
+            var isAllowed = GlobalBoostPlannerSemantics.IsSourceEffectAllowedForPower(powerMath, sourcePower, effect);
             if (!isAllowed)
             {
                 continue;
@@ -658,7 +799,7 @@ internal sealed class PlannerPowerPipeline
                     default:
                         if (hIDX > -1 && hIDX < _buffedPowers.Length && _buffedPowers[hIDX] != null)
                         {
-                            HandleDefaultIncarnateEnh(ref powerMath, effect, _buffedPowers[hIDX]!.Effects);
+                            HandleDefaultIncarnateEnh(ref powerMath, sourcePower, effect, _buffedPowers[hIDX]!.Effects);
                         }
 
                         break;
@@ -670,7 +811,16 @@ internal sealed class PlannerPowerPipeline
             }
             else
             {
+                var powerMathLength = powerMath.Effects.Length;
                 powerMath.AbsorbEffects(power, effect.Duration, 0, _archetype, 1, true, effectIndex, effectIndex);
+                if (hasSemanticGlobalBoostSource)
+                {
+                    for (var index = powerMathLength; index < powerMath.Effects.Length; index++)
+                    {
+                        StampSemanticGlobalBoostSource(powerMath.Effects[index], semanticSourcePower!);
+                    }
+                }
+
                 if (hIDX <= -1 || hIDX >= _buffedPowers.Length || _buffedPowers[hIDX] == null)
                 {
                     continue;
@@ -683,8 +833,11 @@ internal sealed class PlannerPowerPipeline
                     _buffedPowers[hIDX]!.Effects[index].ToWho = effect.ToWho;
                     _buffedPowers[hIDX]!.Effects[index].Absorbed_Effect = true;
                     _buffedPowers[hIDX]!.Effects[index].isEnhancementEffect = effect.isEnhancementEffect;
-                    _buffedPowers[hIDX]!.Effects[index].BaseProbability *= effect.BaseProbability;
                     _buffedPowers[hIDX]!.Effects[index].Ticks = effect.Ticks;
+                    if (hasSemanticGlobalBoostSource)
+                    {
+                        StampSemanticGlobalBoostSource(_buffedPowers[hIDX]!.Effects[index], semanticSourcePower!);
+                    }
                 }
             }
         }
@@ -956,6 +1109,10 @@ internal sealed class PlannerPowerPipeline
                 GBPA_ApplyIncarnateEnhancements(ref powerMath, hIDX, _mathPowers[index], false, ref effectType);
             }
         }
+        else if (DatabaseAPI.GetPlannerRuleset().UsesCanonicalPlannerMath)
+        {
+            GBPA_ApplyCanonicalCrossPowerPowerBoostEnhancements(ref powerMath, hIDX, false);
+        }
 
         return false;
     }
@@ -1178,6 +1335,10 @@ internal sealed class PlannerPowerPipeline
                 GBPA_ApplyIncarnateEnhancements(ref powerMath, hIDX, _mathPowers[index], true, ref effectType);
             }
         }
+        else if (DatabaseAPI.GetPlannerRuleset().UsesCanonicalPlannerMath)
+        {
+            GBPA_ApplyCanonicalCrossPowerPowerBoostEnhancements(ref powerMath, hIDX, true);
+        }
 
         return true;
     }
@@ -1253,8 +1414,8 @@ internal sealed class PlannerPowerPipeline
         }
 
         var plannerRuleset = DatabaseAPI.GetPlannerRuleset();
-        var toHit = powerMath.IgnoreBuff(Enums.eEnhance.ToHit) ? 0 : _selfBuffs.Effect[(int)Enums.eStatType.ToHit];
-        var accuracy = powerMath.IgnoreBuff(Enums.eEnhance.Accuracy) ? 0 : _selfBuffs.Effect[(int)Enums.eStatType.BuffAcc];
+        var toHit = powerMath.IgnoreBuff(Enums.eEnhance.ToHit) ? _selfBuffs.Effect[(int)Enums.eStatType.ToHit] : 0;
+        var accuracy = powerMath.IgnoreBuff(Enums.eEnhance.Accuracy) ? _selfBuffs.Effect[(int)Enums.eStatType.BuffAcc] : 0;
         var combatToHitScale = plannerRuleset.GetCombatModToHitScale(_combatContext);
         var combatAccuracyScale = plannerRuleset.GetCombatModAccuracyScale(_combatContext);
         var combatMagnitudeScale = plannerRuleset.GetCombatModMagnitudeScale(_combatContext);
@@ -1307,6 +1468,37 @@ internal sealed class PlannerPowerPipeline
                 {
                     effect.Math_Mag *= 1f + damageBuff;
                 }
+            }
+        }
+
+        for (var effectIndex = 0; effectIndex < powerMath.Effects.Length && effectIndex < powerBuffed.Effects.Length; effectIndex++)
+        {
+            var mathEffect = powerMath.Effects[effectIndex];
+            var buffedEffect = powerBuffed.Effects[effectIndex];
+            if (mathEffect.EffectType is not (Enums.eEffectType.Mez or Enums.eEffectType.MezProtect))
+            {
+                continue;
+            }
+
+            var mezIndex = (int)mathEffect.MezType;
+            if (mezIndex < 0 || mezIndex >= selfBuffs.Mez.Length)
+            {
+                continue;
+            }
+
+            var mezBuff = selfBuffs.Mez[mezIndex];
+            if (Math.Abs(mezBuff) <= float.Epsilon)
+            {
+                continue;
+            }
+
+            if (mathEffect.AttribType == Enums.eAttribType.Duration)
+            {
+                buffedEffect.Math_Duration *= 1f + mezBuff;
+            }
+            else
+            {
+                buffedEffect.Math_Mag *= 1f + mezBuff;
             }
         }
 
@@ -1518,5 +1710,22 @@ internal sealed class PlannerPowerPipeline
                              Enums.eEntity.Any;
 
         return (power.EntitiesAffected & hostileTargets) != Enums.eEntity.None;
+    }
+
+    private static bool IsCanonicalCrossPowerGlobalBoostProcHostPower(IPower? power)
+    {
+        if (power == null || power.ClickBuff || !PowerUsesEnemyCombatContext(power))
+        {
+            return false;
+        }
+
+        if (power.AttackTypes != Enums.eVector.None)
+        {
+            return true;
+        }
+
+        return power.Effects.Any(effect =>
+            effect.EffectType == Enums.eEffectType.Damage &&
+            effect.ToWho is not (Enums.eToWho.Self or Enums.eToWho.All));
     }
 }

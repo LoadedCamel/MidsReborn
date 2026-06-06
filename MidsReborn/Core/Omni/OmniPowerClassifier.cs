@@ -462,7 +462,7 @@ public sealed class OmniPowerClassifier
             "toggle" => Enums.ePowerType.Toggle,
             "boost" => Enums.ePowerType.Boost,
             "inspiration" => Enums.ePowerType.Inspiration,
-            "globalboost" => Enums.ePowerType.GlobalBoost,
+            "globalboost" or "globalenhancement" => Enums.ePowerType.GlobalBoost,
             _ => Enums.ePowerType.Click
         };
     }

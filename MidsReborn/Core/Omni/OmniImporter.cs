@@ -4886,6 +4886,11 @@ public sealed partial class OmniImporter
             return false;
         }
 
+        if (MapPowerType(source.Type) == Enums.ePowerType.GlobalBoost)
+        {
+            return source.BoostsAllowed.Count > 0;
+        }
+
         if (IsBoostFullName(source.FullName) || IsSetBonusFullName(source.FullName))
         {
             return false;
