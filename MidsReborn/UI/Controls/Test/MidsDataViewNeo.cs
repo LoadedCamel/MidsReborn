@@ -34,11 +34,10 @@ namespace Mids_Reborn.UI.Controls
             float IncarnateBonuses,
             float OtherPowerBuffs,
             float OtherBonuses,
-            float ProcDrivenBonuses,
             IReadOnlyList<DamageSourceEstimate> TopSources)
         {
             public static DamageCompositionEstimate Empty { get; } =
-                new(0f, 0f, 0f, 0f, 0f, 0f, Array.Empty<DamageSourceEstimate>());
+                new(0f, 0f, 0f, 0f, 0f, Array.Empty<DamageSourceEstimate>());
 
             public bool HasAny =>
                 Math.Abs(LocalSlotting) > float.Epsilon ||
@@ -46,7 +45,6 @@ namespace Mids_Reborn.UI.Controls
                 Math.Abs(IncarnateBonuses) > float.Epsilon ||
                 Math.Abs(OtherPowerBuffs) > float.Epsilon ||
                 Math.Abs(OtherBonuses) > float.Epsilon ||
-                Math.Abs(ProcDrivenBonuses) > float.Epsilon ||
                 TopSources.Count > 0;
         }
 
@@ -3003,7 +3001,10 @@ namespace Mids_Reborn.UI.Controls
 
             if (slottingTotal > float.Epsilon || directProcTotal > float.Epsilon || compositionEstimate.HasAny)
             {
-                lines.Add($"From slotting in this power: +{DisplayValueFormatter.FormatNumber(slottingTotal)}");
+                if (slottingTotal > float.Epsilon)
+                {
+                    lines.Add($"From slotting in this power: +{DisplayValueFormatter.FormatNumber(slottingTotal)}");
+                }
 
                 if (compositionEstimate.SetBonuses > float.Epsilon)
                 {
@@ -3026,10 +3027,9 @@ namespace Mids_Reborn.UI.Controls
                     lines.Add($"From other bonuses: +{DisplayValueFormatter.FormatNumber(otherBonuses)}");
                 }
 
-                var procBonusTotal = Math.Max(0f, directProcTotal + compositionEstimate.ProcDrivenBonuses);
-                if (procBonusTotal > float.Epsilon)
+                if (directProcTotal > float.Epsilon)
                 {
-                    lines.Add($"From procs and proc-driven bonuses: +{DisplayValueFormatter.FormatNumber(procBonusTotal)}");
+                    lines.Add($"From direct procs: +{DisplayValueFormatter.FormatNumber(directProcTotal)}");
                 }
 
                 if (compositionEstimate.TopSources.Count > 0)
@@ -3069,7 +3069,6 @@ namespace Mids_Reborn.UI.Controls
                     0f,
                     0f,
                     0f,
-                    0f,
                     Array.Empty<DamageSourceEstimate>());
             }
 
@@ -3084,7 +3083,6 @@ namespace Mids_Reborn.UI.Controls
                     0f,
                     0f,
                     0f,
-                    0f,
                     Array.Empty<DamageSourceEstimate>());
             }
 
@@ -3092,10 +3090,9 @@ namespace Mids_Reborn.UI.Controls
             var incarnateBonuses = 0f;
             var otherPowerBuffs = 0f;
             var otherBonuses = 0f;
-            var procDrivenBonuses = 0f;
             var topSources = new Dictionary<string, float>(StringComparer.OrdinalIgnoreCase);
 
-            void AddSourceContribution(ContributionRecord record, float amount, bool fromChanceModifier)
+            void AddSourceContribution(ContributionRecord record, float amount)
             {
                 if (Math.Abs(amount) <= 0.0001f)
                 {
@@ -3112,10 +3109,6 @@ namespace Mids_Reborn.UI.Controls
                 {
                     incarnateBonuses += amount;
                 }
-                else if (fromChanceModifier || (record.Category == ContributionCategory.Proc && isDisplayedPowerSource))
-                {
-                    procDrivenBonuses += amount;
-                }
                 else if (IsOtherPowerBuffSource(record, displayedPower))
                 {
                     otherPowerBuffs += amount;
@@ -3126,7 +3119,7 @@ namespace Mids_Reborn.UI.Controls
                 }
                 else if (record.Category == ContributionCategory.Proc)
                 {
-                    procDrivenBonuses += amount;
+                    return;
                 }
                 else
                 {
@@ -3160,21 +3153,11 @@ namespace Mids_Reborn.UI.Controls
                     Enum.IsDefined(typeof(Enums.eDamage), damageKey.Index) &&
                     baseByType.TryGetValue((Enums.eDamage)damageKey.Index, out var baseDamage))
                 {
-                    AddSourceContribution(record, baseDamage * (float)record.Value, fromChanceModifier: false);
+                    AddSourceContribution(record, baseDamage * (float)record.Value);
                     continue;
                 }
 
-                if (!TryGetChanceModifierTag(record, out var chanceTag))
-                {
-                    continue;
-                }
-
-                var chanceContribution = EstimateChanceModifierDamageContribution(
-                    displayedPower,
-                    chanceTag,
-                    (float)record.Value,
-                    enhancedSummary.DisplayMultiplier);
-                AddSourceContribution(record, chanceContribution, fromChanceModifier: true);
+                continue;
             }
 
             var orderedTopSources = topSources
@@ -3188,12 +3171,10 @@ namespace Mids_Reborn.UI.Controls
             var positiveIncarnateBonuses = Math.Max(0f, incarnateBonuses);
             var positiveOtherPowerBuffs = Math.Max(0f, otherPowerBuffs);
             var positiveOtherBonuses = Math.Max(0f, otherBonuses);
-            var positiveProcDrivenBonuses = Math.Max(0f, procDrivenBonuses);
             var recognizedNonLocalTotal = positiveSetBonuses +
                                           positiveIncarnateBonuses +
                                           positiveOtherPowerBuffs +
-                                          positiveOtherBonuses +
-                                          positiveProcDrivenBonuses;
+                                          positiveOtherBonuses;
 
             if (nonBaseDelta <= float.Epsilon)
             {
@@ -3201,7 +3182,6 @@ namespace Mids_Reborn.UI.Controls
                 positiveIncarnateBonuses = 0f;
                 positiveOtherPowerBuffs = 0f;
                 positiveOtherBonuses = 0f;
-                positiveProcDrivenBonuses = 0f;
             }
             else if (recognizedNonLocalTotal > nonBaseDelta + 0.0001f)
             {
@@ -3210,7 +3190,6 @@ namespace Mids_Reborn.UI.Controls
                 positiveIncarnateBonuses *= normalization;
                 positiveOtherPowerBuffs *= normalization;
                 positiveOtherBonuses *= normalization;
-                positiveProcDrivenBonuses *= normalization;
             }
 
             var slottingContribution = Math.Max(
@@ -3219,8 +3198,7 @@ namespace Mids_Reborn.UI.Controls
                     positiveSetBonuses +
                     positiveIncarnateBonuses +
                     positiveOtherPowerBuffs +
-                    positiveOtherBonuses +
-                    positiveProcDrivenBonuses));
+                    positiveOtherBonuses));
 
             return new DamageCompositionEstimate(
                 slottingContribution,
@@ -3228,7 +3206,6 @@ namespace Mids_Reborn.UI.Controls
                 positiveIncarnateBonuses,
                 positiveOtherPowerBuffs,
                 positiveOtherBonuses,
-                positiveProcDrivenBonuses,
                 orderedTopSources);
         }
 

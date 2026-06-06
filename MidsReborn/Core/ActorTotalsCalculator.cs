@@ -1,3 +1,5 @@
+using System.Collections.Generic;
+using System.Linq;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 
@@ -101,41 +103,33 @@ internal static class ActorTotalsCalculator
             totals.FlySpd = 0;
         }
 
-        var maxDmgBuff = -1000f;
-        var minDmgBuff = -1000f;
-        var avgDmgBuff = 0f;
-        for (var index = 0; index < request.SelfBuffs.Damage.Length; index++)
+        var damageBuffSamples = new List<float>();
+        var damageSampleLimit = Math.Min(
+            (int)Enums.eDamage.Psionic + 1,
+            Math.Min(request.SelfEnhance.Damage.Length, request.SelfBuffs.Damage.Length));
+        for (var index = (int)Enums.eDamage.Smashing; index < damageSampleLimit; index++)
         {
-            if (index is <= 0 or >= 9)
-            {
-                continue;
-            }
-
-            if (request.SelfEnhance.Damage[index] > maxDmgBuff)
-            {
-                maxDmgBuff = request.SelfEnhance.Damage[index];
-            }
-
-            if (request.SelfEnhance.Damage[index] < minDmgBuff)
-            {
-                minDmgBuff = request.SelfEnhance.Damage[index];
-            }
-
-            avgDmgBuff += request.SelfEnhance.Damage[index];
+            damageBuffSamples.Add(request.SelfEnhance.Damage[index] + request.SelfBuffs.Damage[index]);
         }
 
-        avgDmgBuff /= request.SelfEnhance.Damage.Length;
-        if (maxDmgBuff - avgDmgBuff < avgDmgBuff - minDmgBuff)
+        if (damageBuffSamples.Count > 0)
         {
-            totals.BuffDam = maxDmgBuff;
-        }
-        else if (maxDmgBuff - avgDmgBuff > avgDmgBuff - minDmgBuff && minDmgBuff > 0)
-        {
-            totals.BuffDam = minDmgBuff;
-        }
-        else
-        {
-            totals.BuffDam = maxDmgBuff;
+            var maxDmgBuff = damageBuffSamples.Max();
+            var minDmgBuff = damageBuffSamples.Min();
+            var avgDmgBuff = damageBuffSamples.Average();
+
+            if (maxDmgBuff - avgDmgBuff < avgDmgBuff - minDmgBuff)
+            {
+                totals.BuffDam = maxDmgBuff;
+            }
+            else if (maxDmgBuff - avgDmgBuff > avgDmgBuff - minDmgBuff && minDmgBuff > 0)
+            {
+                totals.BuffDam = minDmgBuff;
+            }
+            else
+            {
+                totals.BuffDam = maxDmgBuff;
+            }
         }
 
         if (request.ApplyPvpDiminishingReturns)

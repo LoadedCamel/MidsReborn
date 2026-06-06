@@ -13,6 +13,7 @@ internal sealed class PlannerActorAggregationContext
     public IReadOnlyList<IPower> BuffedPowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyList<IPower>? IncludedMathPowers { get; init; }
     public IReadOnlyList<IPower>? IncludedBuffedPowers { get; init; }
+    public IReadOnlyList<IPower>? IncludedSelfBuffPowers { get; init; }
     public IReadOnlyList<IPower> EnhancementExternalPowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyList<IPower> SelfBuffExternalPowers { get; init; } = Array.Empty<IPower>();
     public float ComputedDefianceMagnitude { get; init; }
@@ -52,6 +53,7 @@ internal static class PlannerActorAggregationPhase
             BuffedPowers = context.BuffedPowers,
             IncludedMathPowers = context.IncludedMathPowers,
             IncludedBuffedPowers = context.IncludedBuffedPowers,
+            IncludedSelfBuffPowers = context.IncludedSelfBuffPowers,
             EnhancementExternalPowers = context.EnhancementExternalPowers,
             SelfBuffExternalPowers = context.SelfBuffExternalPowers,
             ComputedDefianceMagnitude = context.ComputedDefianceMagnitude,
@@ -74,6 +76,7 @@ internal static class PlannerActorAggregationPhase
             Aggregation = CalculationSnapshotFactory.CreateAggregationSnapshot(
                 actorAssembly.IncludedMathPowers,
                 actorAssembly.IncludedBuffedPowers,
+                actorAssembly.IncludedSelfBuffPowers,
                 actorAssembly.EnhancementExternalPowers,
                 actorAssembly.SelfBuffExternalPowers,
                 context.SupplementalEnhancementSourcePowers,

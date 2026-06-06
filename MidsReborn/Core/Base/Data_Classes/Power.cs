@@ -1690,9 +1690,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public static bool ShouldIncludeDamageEffect(IEffect effect)
         {
             return effect.EffectType == Enums.eEffectType.Damage &&
-                   (MidsContext.Config.DamageMath.Calculate != ConfigData.EDamageMath.Minimum ||
-                    Math.Abs(effect.Probability) > 0.999000012874603) &&
+                   GetDamageEffectModeProbability(effect) > 0f &&
                    effect.EffectClass != Enums.eEffectClass.Ignored &&
+                   !PlannerStrengthSemantics.IsStandaloneCarrierDamageEffect(effect) &&
                    effect is not { DamageType: Enums.eDamage.Special, ToWho: Enums.eToWho.Self } &&
                    effect.Probability > 0 &&
                    effect.CanInclude() &&
@@ -1702,11 +1702,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public static float GetDamageEffectBaseMagnitude(IEffect effect, IPower power, bool absolute, bool applyReturnScaling)
         {
             var effectMagnitude = absolute ? Math.Abs(effect.BuffedMag) : effect.BuffedMag;
-
-            if (MidsContext.Config.DamageMath.Calculate == ConfigData.EDamageMath.Average)
-            {
-                effectMagnitude *= effect.Probability;
-            }
+            effectMagnitude *= GetDamageEffectModeProbability(effect);
 
             var recurrence = effect.PseudoPetRecurrence;
             if (recurrence is not { IsValid: true } && power.PowerType == Enums.ePowerType.Toggle && effect.isEnhancementEffect)
@@ -1812,7 +1808,27 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         private static bool IsProcDamageEffect(IEffect effect)
         {
-            return effect.isEnhancementEffect && (effect.IgnoreScaling || effect.IsFromProc);
+            return PlannerProcSupport.IsDirectProcDamageEffect(effect);
+        }
+
+        private static float GetDamageEffectModeProbability(IEffect effect)
+        {
+            if (IsProcDamageEffect(effect))
+            {
+                return MidsContext.Config.DamageMath.Calculate switch
+                {
+                    ConfigData.EDamageMath.Minimum => 0f,
+                    ConfigData.EDamageMath.Average => Math.Max(0f, effect.Probability),
+                    _ => 1f
+                };
+            }
+
+            return MidsContext.Config.DamageMath.Calculate switch
+            {
+                ConfigData.EDamageMath.Minimum => Math.Abs(effect.Probability) > 0.999000012874603 ? 1f : 0f,
+                ConfigData.EDamageMath.Average => Math.Max(0f, effect.Probability),
+                _ => 1f
+            };
         }
 
         private static string BuildDamageContributionLabel(IEffect effect)

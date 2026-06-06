@@ -751,7 +751,9 @@ public static class PlannerMathDiagnostics
     {
         var isFocusedSample =
             ContainsDiagnosticName(rawPower, "Rain_Of_Arrows", "Rain of Arrows", "RainofArrows") ||
-            ContainsDiagnosticName(rawPower, "Enflame", "Pets.Enflame");
+            ContainsDiagnosticName(rawPower, "Enflame", "Pets.Enflame") ||
+            ContainsDiagnosticName(rawPower, "Psi_Blade", "Psi Blade") ||
+            ContainsDiagnosticName(rawPower, "Hybrid.Assault_Radial_Embodiment", "Assault_Radial_Embodiment", "Hybrid Assault");
 
         if (!isFocusedSample)
         {
@@ -774,13 +776,14 @@ public static class PlannerMathDiagnostics
             .Where(item => item.Effect.EffectType == Enums.eEffectType.Damage)
             .ToList();
 
-        builder.AppendLine("| # | Source | Damage | PvX | Target | Mag | Ticks | Recur | CanInclude | PvXInclude | DamageInclude | Conditions | Math Total |");
-        builder.AppendLine("|---:|---|---|---|---|---:|---:|---|---|---|---|---|---:|");
+        builder.AppendLine("| # | Source | Damage | PvX | Target | Mag | Ticks | Recur | CanInclude | PvXInclude | DamageInclude | FallbackTag | FallbackSuppressed | Owner | Conditions | Math Total |");
+        builder.AppendLine("|---:|---|---|---|---|---:|---:|---|---|---|---|---|---|---|---|---:|");
         foreach (var item in damageRows)
         {
             var effect = item.Effect;
+            var owner = effect.GetPower()?.FullName ?? "(none)";
             builder.AppendLine(
-                $"| {item.Index} | {FormatOmniSource(effect)} | `{effect.DamageType}` | `{effect.PvMode}` | `{effect.ToWho}` | {Format(effect.BuffedMag)} | {Format(Power.GetDamageEffectEffectiveTicks(effect))} | {FormatRecurrence(effect)} | {effect.CanInclude()} | {effect.PvXInclude()} | {Power.ShouldIncludeDamageEffect(effect)} | {EscapeTable(FormatConditionRows(effect))} | {Format(Power.GetDamageEffectTotal(effect, resolvedPower, absolute: false, applyReturnScaling: false))} |");
+                $"| {item.Index} | {FormatOmniSource(effect)} | `{effect.DamageType}` | `{effect.PvMode}` | `{effect.ToWho}` | {Format(effect.BuffedMag)} | {Format(Power.GetDamageEffectEffectiveTicks(effect))} | {FormatRecurrence(effect)} | {effect.CanInclude()} | {effect.PvXInclude()} | {Power.ShouldIncludeDamageEffect(effect)} | {PlannerEffectSourceSupport.HasFallbackTag(effect)} | {PlannerEffectSourceSupport.ShouldSuppressFallbackEffect(effect)} | `{EscapeTable(owner)}` | {EscapeTable(FormatConditionRows(effect))} | {Format(Power.GetDamageEffectTotal(effect, resolvedPower, absolute: false, applyReturnScaling: false))} |");
         }
 
         var mutuallyExclusiveGroups = damageRows
@@ -1395,8 +1398,11 @@ public static class PlannerMathDiagnostics
 
         foreach (var effect in includedDamageRows.Take(6))
         {
+            var procFlags = effect is Effect concreteEffect
+                ? concreteEffect.ProcContributionFlags.ToString()
+                : string.Empty;
             builder.AppendLine(
-                $"  - `{effect.DamageType}` mag={Format(effect.BuffedMag)} ticks={Format(Power.GetDamageEffectEffectiveTicks(effect))} pvx=`{effect.PvMode}` target=`{effect.ToWho}` source={FormatOmniSource(effect)} duplicateKey=`{EscapeTable(GetExactDuplicateKey(effect))}`");
+                $"  - `{effect.DamageType}` mag={Format(effect.BuffedMag)} ticks={Format(Power.GetDamageEffectEffectiveTicks(effect))} pvx=`{effect.PvMode}` target=`{effect.ToWho}` enh={effect.isEnhancementEffect} ppm={Format(effect.ProcsPerMinute)} ignoreStrength={effect.IgnoreStrength} ignoreScaling={effect.IgnoreScaling} procFlags=`{procFlags}` source={FormatOmniSource(effect)} duplicateKey=`{EscapeTable(GetExactDuplicateKey(effect))}`");
         }
     }
 

@@ -90,6 +90,8 @@ namespace Mids_Reborn.Core
 
         bool IgnoreScaling { get; set; }
 
+        bool IgnoreStrength { get; set; }
+
         bool isEnhancementEffect { get; set; }
 
         Enums.ePvX PvMode { get; set; }

@@ -142,8 +142,7 @@ internal sealed class PlannerPowerPipeline
         }
 
         var aggregation = BuildActorAggregation(CreateActorAggregationContext(
-            buildChanceModifierCatalog: true,
-            includeProcStateSupplemental: true),
+            buildChanceModifierCatalog: true),
             finalize: true);
         _actorAssembly = aggregation.ActorAssembly;
         _selfEnhance = aggregation.FinalSelfEnhanceBuckets;
@@ -185,53 +184,6 @@ internal sealed class PlannerPowerPipeline
     public IPower? AssemblePowerEntry(int nIDPower, int hIDX, int stackingOverride = -1)
     {
         return GBPA_SubPass0_AssemblePowerEntry(nIDPower, hIDX, stackingOverride);
-    }
-
-    private List<IPower> CollectActiveProcStatePowers(IReadOnlyList<IPower?> sourcePowers)
-    {
-        var activeProcStatePowers = new List<IPower>();
-        for (var index = 0; index < sourcePowers.Count && index < _currentBuild.Powers.Count; index++)
-        {
-            var sourcePower = sourcePowers[index];
-            var powerEntry = _currentBuild.Powers[index];
-            if (sourcePower == null || powerEntry == null || powerEntry.ProcInclude || !powerEntry.StatInclude)
-            {
-                continue;
-            }
-
-            var procStateEffects = sourcePower.Effects
-                .Where(IsActiveProcStateEffect)
-                .Select(effect => (IEffect)effect.Clone())
-                .ToArray();
-            if (procStateEffects.Length == 0)
-            {
-                continue;
-            }
-
-            IPower clone = new Power(sourcePower);
-            clone.Effects = procStateEffects;
-            clone.PowerType = Enums.ePowerType.Auto_;
-            clone.Active = true;
-            clone.HasGrantPowerEffect = false;
-            activeProcStatePowers.Add(clone);
-        }
-
-        return activeProcStatePowers;
-    }
-
-    private static bool IsActiveProcStateEffect(IEffect effect)
-    {
-        if (!effect.isEnhancementEffect || !effect.IsFromProc)
-        {
-            return false;
-        }
-
-        if (effect.EffectType == Enums.eEffectType.GrantPower || effect.ToWho == Enums.eToWho.Target)
-        {
-            return false;
-        }
-
-        return effect.ToWho == Enums.eToWho.Self || effect.ToWho == Enums.eToWho.All;
     }
 
     private void SyncResult()
@@ -296,7 +248,7 @@ internal sealed class PlannerPowerPipeline
 
                 for (var index2 = 0; index2 < _currentBuild.Powers.Count; index2++)
                 {
-                    if ((index1 != index2 & _currentBuild.Powers[index2]?.StatInclude & _currentBuild.Powers[index2]?.NIDPower > -1) == false)
+                    if (index1 == index2 || !IsStaticAggregationSourcePowerEntry(index2, allowGlobalBoost: true))
                     {
                         continue;
                     }
@@ -457,6 +409,11 @@ internal sealed class PlannerPowerPipeline
     {
         foreach (var targetEffect in powerMath.Effects)
         {
+            if (PlannerStrengthSemantics.IgnoresStrength(targetEffect))
+            {
+                continue;
+            }
+
             if (!GlobalBoostPlannerSemantics.MatchesTargetEffect(powerMath, targetEffect, sourcePower, effect))
             {
                 continue;
@@ -543,9 +500,12 @@ internal sealed class PlannerPowerPipeline
 
     private static void HandleGrantPowerIncarnate(ref IPower powerMath, IEffect effect, IReadOnlyList<IPower?> buffedPowers, int effectIndex, Archetype? archetype, int hIDX)
     {
+        var originalLength = powerMath.Effects.Length;
         powerMath.AbsorbEffects(DatabaseAPI.Database.Power[effect.nSummon], effect.Duration, 0, archetype, 1, true, effectIndex);
-        foreach (var fx in powerMath.Effects)
+        StampAbsorbedCrossPowerEffects(powerMath, originalLength);
+        for (var index = originalLength; index < powerMath.Effects.Length; index++)
         {
+            var fx = powerMath.Effects[index];
             fx.ToWho = Enums.eToWho.Target;
             fx.Absorbed_Effect = true;
             fx.isEnhancementEffect = effect.isEnhancementEffect;
@@ -564,6 +524,7 @@ internal sealed class PlannerPowerPipeline
 
         var length = buffedPowers[hIDX]!.Effects.Length;
         buffedPowers[hIDX]!.AbsorbEffects(DatabaseAPI.Database.Power[effect.nSummon], effect.Duration, 0, archetype, 1, true, effectIndex);
+        StampAbsorbedCrossPowerEffects(buffedPowers[hIDX]!, length);
         for (var index = length; index < buffedPowers[hIDX]!.Effects.Length; index++)
         {
             buffedPowers[hIDX]!.Effects[index].ToWho = effect.ToWho;
@@ -571,6 +532,21 @@ internal sealed class PlannerPowerPipeline
             buffedPowers[hIDX]!.Effects[index].isEnhancementEffect = effect.isEnhancementEffect;
             buffedPowers[hIDX]!.Effects[index].BaseProbability *= effect.BaseProbability;
             buffedPowers[hIDX]!.Effects[index].Ticks = effect.Ticks;
+        }
+    }
+
+    private static void StampAbsorbedCrossPowerEffects(IPower ownerPower, int startIndex)
+    {
+        if (ownerPower == null || startIndex < 0 || startIndex >= ownerPower.Effects.Length)
+        {
+            return;
+        }
+
+        for (var index = startIndex; index < ownerPower.Effects.Length; index++)
+        {
+            var effect = ownerPower.Effects[index];
+            effect.SetPower(ownerPower);
+            PlannerProcSupport.AppendProcEvaluationLineage(effect, ownerPower, forceActivationRoot: true);
         }
     }
 
@@ -593,9 +569,7 @@ internal sealed class PlannerPowerPipeline
             for (var sourceIndex = 0; sourceIndex < _currentBuild.Powers.Count; sourceIndex++)
             {
                 if (targetIndex == sourceIndex ||
-                    _currentBuild.Powers[sourceIndex] == null ||
-                    !_currentBuild.Powers[sourceIndex]!.StatInclude ||
-                    _currentBuild.Powers[sourceIndex]!.NIDPower <= -1 ||
+                    !IsStaticAggregationSourcePowerEntry(sourceIndex, allowGlobalBoost: true) ||
                     sourcePowers[sourceIndex] == null ||
                     !SourceHasCanonicalCrossPowerGlobalBoostEffects(sourcePowers[sourceIndex]))
                 {
@@ -623,9 +597,7 @@ internal sealed class PlannerPowerPipeline
         for (var sourceIndex = 0; sourceIndex < _currentBuild.Powers.Count; sourceIndex++)
         {
             if (sourceIndex == hIDX ||
-                _currentBuild.Powers[sourceIndex] == null ||
-                !_currentBuild.Powers[sourceIndex]!.StatInclude ||
-                _currentBuild.Powers[sourceIndex]!.NIDPower <= -1 ||
+                !IsStaticAggregationSourcePowerEntry(sourceIndex, allowGlobalBoost: true) ||
                 sourcePowers[sourceIndex] == null ||
                 !SourceHasTaggedCrossPowerEnhancementEffects(sourcePowers[sourceIndex], ignoreED))
             {
@@ -813,6 +785,7 @@ internal sealed class PlannerPowerPipeline
             {
                 var powerMathLength = powerMath.Effects.Length;
                 powerMath.AbsorbEffects(power, effect.Duration, 0, _archetype, 1, true, effectIndex, effectIndex);
+                StampAbsorbedCrossPowerEffects(powerMath, powerMathLength);
                 if (hasSemanticGlobalBoostSource)
                 {
                     for (var index = powerMathLength; index < powerMath.Effects.Length; index++)
@@ -828,6 +801,7 @@ internal sealed class PlannerPowerPipeline
 
                 var length = _buffedPowers[hIDX]!.Effects.Length;
                 _buffedPowers[hIDX]!.AbsorbEffects(power, effect.Duration, 0, _archetype, 1, true, effectIndex, effectIndex);
+                StampAbsorbedCrossPowerEffects(_buffedPowers[hIDX]!, length);
                 for (var index = length; index < _buffedPowers[hIDX]!.Effects.Length; index++)
                 {
                     _buffedPowers[hIDX]!.Effects[index].ToWho = effect.ToWho;
@@ -1015,7 +989,8 @@ internal sealed class PlannerPowerPipeline
 
             for (var effectIndex = 0; effectIndex < powerMath.Effects.Length; effectIndex++)
             {
-                if (!powerMath.Effects[effectIndex].Buffable)
+                if (!powerMath.Effects[effectIndex].Buffable ||
+                    PlannerStrengthSemantics.IgnoresStrength(powerMath.Effects[effectIndex]))
                 {
                     continue;
                 }
@@ -1100,7 +1075,7 @@ internal sealed class PlannerPowerPipeline
         {
             for (var index = 0; index < _currentBuild.Powers.Count; index++)
             {
-                if (_currentBuild.Powers[index] == null || !(_currentBuild.Powers[index].StatInclude & _currentBuild.Powers[index].NIDPower > -1))
+                if (!IsStaticAggregationSourcePowerEntry(index, allowGlobalBoost: true))
                 {
                     continue;
                 }
@@ -1232,7 +1207,9 @@ internal sealed class PlannerPowerPipeline
                 default:
                     for (var index = 0; index < powerMath.Effects.Length; index++)
                     {
-                        if (!powerMath.Effects[index].Buffable || powerMath.Effects[index].EffectType != effectType)
+                        if (!powerMath.Effects[index].Buffable ||
+                            powerMath.Effects[index].EffectType != effectType ||
+                            PlannerStrengthSemantics.IgnoresStrength(powerMath.Effects[index]))
                         {
                             continue;
                         }
@@ -1326,7 +1303,7 @@ internal sealed class PlannerPowerPipeline
         {
             for (var index = 0; index < _currentBuild.Powers.Count; index++)
             {
-                if (_currentBuild.Powers[index] == null || !(_currentBuild.Powers[index].StatInclude & _currentBuild.Powers[index].NIDPower > -1))
+                if (!IsStaticAggregationSourcePowerEntry(index, allowGlobalBoost: true))
                 {
                     continue;
                 }
@@ -1423,9 +1400,9 @@ internal sealed class PlannerPowerPipeline
 
         ApplyDisplayedSelfBuffScalars(powerMath, powerBuffed, _selfBuffs);
 
-        powerBuffed.Accuracy = powerBuffed.Accuracy * (1 + powerMath.Accuracy + accuracy) * combatAccuracyScale *
-                               (combatToHitScale + toHit);
-        powerBuffed.AccuracyMult = powerBuffed.Accuracy * (1 + powerMath.Accuracy + accuracy) * combatAccuracyScale;
+        var accuracyMultiplier = (1 + powerMath.Accuracy + accuracy) * combatAccuracyScale;
+        powerBuffed.Accuracy *= accuracyMultiplier * (combatToHitScale + toHit);
+        powerBuffed.AccuracyMult *= accuracyMultiplier;
 
         if (_combatContext.UsesFullCombatModTables && PowerUsesEnemyCombatContext(powerBuffed))
         {
@@ -1464,7 +1441,8 @@ internal sealed class PlannerPowerPipeline
                 }
 
                 var damageBuff = selfBuffs.Damage[damageIndex];
-                if (Math.Abs(damageBuff) > float.Epsilon)
+                if (Math.Abs(damageBuff) > float.Epsilon &&
+                    !PlannerStrengthSemantics.IgnoresStrength(effect))
                 {
                     effect.Math_Mag *= 1f + damageBuff;
                 }
@@ -1488,6 +1466,11 @@ internal sealed class PlannerPowerPipeline
 
             var mezBuff = selfBuffs.Mez[mezIndex];
             if (Math.Abs(mezBuff) <= float.Epsilon)
+            {
+                continue;
+            }
+
+            if (PlannerStrengthSemantics.IgnoresStrength(mathEffect))
             {
                 continue;
             }
@@ -1533,11 +1516,12 @@ internal sealed class PlannerPowerPipeline
             : PlannerActorAggregationPhase.Assemble(context);
     }
 
-    private PlannerActorAggregationContext CreateActorAggregationContext(bool buildChanceModifierCatalog, bool includeProcStateSupplemental = false)
+    private PlannerActorAggregationContext CreateActorAggregationContext(bool buildChanceModifierCatalog)
     {
         var plannerRuleset = DatabaseAPI.GetPlannerRuleset();
         var includedMathPowers = new List<IPower>();
         var includedBuffedPowers = new List<IPower>();
+        var includedSelfBuffPowers = new List<IPower>();
         for (var index = 0; index < _currentBuild.Powers.Count; index++)
         {
             var powerEntry = _currentBuild.Powers[index];
@@ -1546,8 +1530,7 @@ internal sealed class PlannerPowerPipeline
                 continue;
             }
 
-            if (!(powerEntry.StatInclude & powerEntry.NIDPower > -1) ||
-                DatabaseAPI.Database.Power[powerEntry.NIDPower].PowerType == Enums.ePowerType.GlobalBoost)
+            if (!IsStaticAggregationSourcePowerEntry(index))
             {
                 continue;
             }
@@ -1567,6 +1550,15 @@ internal sealed class PlannerPowerPipeline
             {
                 includedBuffedPowers.Add(_buffedPowers[index]!);
             }
+
+            if (!excludeManagedComputedPower)
+            {
+                var selfBuffSourcePower = _preBuffPowers[index] ?? _buffedPowers[index];
+                if (selfBuffSourcePower != null)
+                {
+                    includedSelfBuffPowers.Add(selfBuffSourcePower);
+                }
+            }
         }
 
         var setBonusPower = _recipient == null
@@ -1581,12 +1573,6 @@ internal sealed class PlannerPowerPipeline
         var computedCosmicBalanceState = new CosmicBalanceComputedState();
         var computedDarkSustenanceState = new CosmicBalanceComputedState();
         IReadOnlyDictionary<string, float>? supplementalChanceModifierCatalog = null;
-        var activeProcStateEnhancementPowers = includeProcStateSupplemental
-            ? CollectActiveProcStatePowers(_mathPowers)
-            : [];
-        var activeProcStateBuffPowers = includeProcStateSupplemental
-            ? CollectActiveProcStatePowers(_buffedPowers)
-            : [];
         if (setBonusPower != null)
         {
             enhancementExternalPowers.Add(setBonusPower);
@@ -1645,6 +1631,7 @@ internal sealed class PlannerPowerPipeline
             BuffedPowers = _buffedPowers.OfType<IPower>().ToArray(),
             IncludedMathPowers = includedMathPowers,
             IncludedBuffedPowers = includedBuffedPowers,
+            IncludedSelfBuffPowers = includedSelfBuffPowers,
             EnhancementExternalPowers = enhancementExternalPowers,
             SelfBuffExternalPowers = selfBuffExternalPowers,
             ComputedDefianceMagnitude = computedDefianceMagnitude,
@@ -1653,12 +1640,9 @@ internal sealed class PlannerPowerPipeline
             CosmicBalanceState = computedCosmicBalanceState,
             DarkSustenanceState = computedDarkSustenanceState,
             ChanceModifierSetBonusPower = setBonusPower,
-            SupplementalChanceModifierPowers = activeProcStateBuffPowers,
             SupplementalChanceModifierCatalog = supplementalChanceModifierCatalog,
             BuildChanceModifierCatalog = buildChanceModifierCatalog,
-            ApplyPvpDiminishingReturns = _recipient == null,
-            SupplementalEnhancementSourcePowers = activeProcStateEnhancementPowers,
-            SupplementalSelfBuffSourcePowers = activeProcStateBuffPowers
+            ApplyPvpDiminishingReturns = _recipient == null
         };
     }
 
@@ -1727,5 +1711,54 @@ internal sealed class PlannerPowerPipeline
         return power.Effects.Any(effect =>
             effect.EffectType == Enums.eEffectType.Damage &&
             effect.ToWho is not (Enums.eToWho.Self or Enums.eToWho.All));
+    }
+
+    private bool IsStaticAggregationSourcePowerEntry(int historyIndex, bool allowGlobalBoost = false)
+    {
+        if (historyIndex < 0 || historyIndex >= _currentBuild.Powers.Count)
+        {
+            return false;
+        }
+
+        var powerEntry = _currentBuild.Powers[historyIndex];
+        if (powerEntry == null || !powerEntry.StatInclude || powerEntry.NIDPower <= -1)
+        {
+            return false;
+        }
+
+        var power = powerEntry.Power ?? _assembledBasePowers[historyIndex] ?? _buffedPowers[historyIndex] ?? _mathPowers[historyIndex];
+        if (power == null)
+        {
+            return false;
+        }
+
+        if (!allowGlobalBoost && power.PowerType == Enums.ePowerType.GlobalBoost)
+        {
+            return false;
+        }
+
+        return IsStaticAggregationSourcePower(powerEntry, power);
+    }
+
+    private static bool IsStaticAggregationSourcePower(PowerEntry powerEntry, IPower power)
+    {
+        if (powerEntry == null || power == null)
+        {
+            return false;
+        }
+
+        if (PowerEntry.ShouldForceAutoIncluded(power) ||
+            PowerEntry.IsVisiblePlannerModeControl(power))
+        {
+            return true;
+        }
+
+        return power.PowerType switch
+        {
+            Enums.ePowerType.Auto_ => true,
+            Enums.ePowerType.Toggle => true,
+            Enums.ePowerType.Click when power.ClickBuff => true,
+            _ => false
+        };
     }
 }

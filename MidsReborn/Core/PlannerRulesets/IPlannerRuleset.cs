@@ -23,7 +23,7 @@ public interface IPlannerRuleset
     bool EffectMatchesCurrentMode(IEffect effect);
     float GetMinProcChance(float procsPerMinute);
     float GetMaxProcChance(float procsPerMinute);
-    float CalculateProcProbability(IPower power, float procsPerMinute, float baseProbability);
+    float CalculateProcProbability(IPower power, IEffect procEffect, float procsPerMinute, float baseProbability);
     bool SupportsPowerLocalChanceMods { get; }
     bool SupportsRelativeLevelCombatModMath { get; }
     PlannerCombatContext ResolveCombatContext(ConfigData? config);

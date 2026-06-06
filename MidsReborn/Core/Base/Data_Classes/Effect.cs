@@ -15,6 +15,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         private const string OmniSourceMarker = "MRB_EFFECT_OMNI_SOURCE";
         private const string CombatModFlagsMarker = "MRB_EFFECT_COMBAT_MOD_FLAGS";
         private const string GrantBoostedMarker = "MRB_EFFECT_GRANT_BOOSTED";
+        private const string IgnoreStrengthMarker = "MRB_EFFECT_IGNORE_STRENGTH";
         private const string StackPolicyMarker = "MRB_EFFECT_STACK_POLICY";
         private const string OptionalMetadataEnvelopeMarker = "MRB_EFFECT_OPTIONAL_METADATA_ENVELOPE";
         private const int OptionalMetadataEnvelopeVersion = 1;
@@ -178,6 +179,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             Resistible = template.Resistible;
             VariableModifiedOverride = template.VariableModifiedOverride;
             IgnoreScaling = template.IgnoreScaling;
+            IgnoreStrength = template.IgnoreStrength;
             isEnhancementEffect = template.isEnhancementEffect;
             PvMode = template.PvMode;
             ToWho = template.ToWho;
@@ -220,6 +222,9 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             ProcContributionFlags = template is Effect concreteEffect
                 ? concreteEffect.ProcContributionFlags
                 : ProcContributionFlags.None;
+            ProcEvaluationLineage = template is Effect procLineageEffect
+                ? procLineageEffect.ProcEvaluationLineage
+                : default;
             ResolvedEffectKind = template is Effect resolvedEffect
                 ? resolvedEffect.ResolvedEffectKind
                 : PlannerResolvedEffectKind.None;
@@ -249,6 +254,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public bool UseCombatModMagnitude { get; set; }
         public bool UseCombatModDuration { get; set; }
         internal ProcContributionFlags ProcContributionFlags { get; set; }
+        internal ProcEvaluationLineage ProcEvaluationLineage { get; set; }
         internal PlannerResolvedEffectKind ResolvedEffectKind { get; set; }
 
         public float ProcsPerMinute { get; set; }
@@ -437,6 +443,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             : string.Empty;
 
         public bool IgnoreScaling { get; set; }
+
+        public bool IgnoreStrength { get; set; }
 
         public float BaseProbability { get; set; }
 
@@ -1891,6 +1899,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             StoreOmniSource(writer);
             StoreCombatModFlags(writer);
             StoreGrantBoosted(writer);
+            StoreIgnoreStrength(writer);
             StoreStackPolicy(writer);
         }
 
@@ -1916,6 +1925,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             TryReadOmniSource(reader);
             TryReadCombatModFlags(reader);
             TryReadGrantBoosted(reader);
+            TryReadIgnoreStrength(reader);
             TryReadStackPolicy(reader);
         }
 
@@ -2082,6 +2092,13 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             writer.Write(GrantBoosted);
         }
 
+        private void StoreIgnoreStrength(BinaryWriter writer)
+        {
+            writer.Write(IgnoreStrengthMarker);
+            writer.Write(1);
+            writer.Write(IgnoreStrength);
+        }
+
         private void StoreStackPolicy(BinaryWriter writer)
         {
             writer.Write(StackPolicyMarker);
@@ -2158,6 +2175,40 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 }
 
                 GrantBoosted = reader.ReadBoolean();
+            }
+            catch (EndOfStreamException)
+            {
+                reader.BaseStream.Position = position;
+            }
+            catch (IOException)
+            {
+                reader.BaseStream.Position = position;
+            }
+        }
+
+        private void TryReadIgnoreStrength(BinaryReader reader)
+        {
+            if (!reader.BaseStream.CanSeek)
+            {
+                return;
+            }
+
+            var position = reader.BaseStream.Position;
+            try
+            {
+                if (!BinaryMetadataEnvelope.TryConsumeMarker(reader, IgnoreStrengthMarker))
+                {
+                    reader.BaseStream.Position = position;
+                    return;
+                }
+
+                var version = reader.ReadInt32();
+                if (version > 1)
+                {
+                    throw new InvalidDataException($"Unsupported effect ignore-strength version {version}.");
+                }
+
+                IgnoreStrength = reader.ReadBoolean();
             }
             catch (EndOfStreamException)
             {
@@ -2277,6 +2328,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool CanInclude()
         {
+            if (PlannerEffectSourceSupport.ShouldSuppressFallbackEffect(this))
+            {
+                return false;
+            }
+
             if (MidsContext.Character == null || !HasConditions)
             {
                 return true;
@@ -2287,6 +2343,11 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public bool CanGrantPower()
         {
+            if (PlannerEffectSourceSupport.ShouldSuppressFallbackEffect(this))
+            {
+                return false;
+            }
+
             if (MidsContext.Character == null || !HasConditions)
             {
                 return true;
@@ -2548,6 +2609,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 Suppression = Suppression,
                 ConditionIdentity = ConditionIdentity,
                 IgnoreScaling = IgnoreScaling,
+                IgnoreStrength = IgnoreStrength,
                 IgnoreED = IgnoreED,
                 Buffable = Buffable,
                 Probability = Probability,
@@ -2629,6 +2691,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         public Enums.eSuppress Suppression;
         public string ConditionIdentity;
         public bool IgnoreScaling;
+        public bool IgnoreStrength;
         public bool IgnoreED;
         public bool Buffable;
         public float Probability;
@@ -2657,6 +2720,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                    Suppression == target.Suppression &
                    string.Equals(ConditionIdentity, target.ConditionIdentity, StringComparison.OrdinalIgnoreCase) &
                    IgnoreScaling == target.IgnoreScaling &
+                   IgnoreStrength == target.IgnoreStrength &
                    IgnoreED == target.IgnoreED &
                    Buffable == target.Buffable &
                    Math.Abs(Probability - target.Probability) < float.Epsilon &

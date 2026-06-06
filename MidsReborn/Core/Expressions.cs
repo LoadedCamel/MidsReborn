@@ -637,12 +637,12 @@ namespace Mids_Reborn.Core
 
             return new Dictionary<string, string>
             {
-                { "power.base>activateperiod", $"{(fxPower == null ? "0" : fxPower.ActivatePeriod)}" },
-                { "power.base>activatetime", $"{(fxPower == null ? "0" : fxPower.CastTime)}" },
-                { "power.base>areafactor", $"{(fxPower == null ? "0" : fxPower.AoEModifier)}" },
-                { "power.base>rechargetime", $"{(fxPower == null ? "0" : fxPower.BaseRechargeTime)}" },
-                { "power.base>endcost", $"{(fxPower == null ? "0" : fxPower.EndCost)}" },
-                { "power.base>range", $"{(fxPower == null ? "0" : fxPower.Range)}" },
+                { "power.base>activateperiod", FormatNumeric(PlannerProcSupport.ResolvePowerBaseActivatePeriod(sourceFx)) },
+                { "power.base>activatetime", FormatNumeric(PlannerProcSupport.ResolvePowerBaseActivationTime(sourceFx)) },
+                { "power.base>areafactor", FormatNumeric(PlannerProcSupport.ResolvePowerBaseAreaFactor(sourceFx)) },
+                { "power.base>rechargetime", FormatNumeric(PlannerProcSupport.ResolvePowerBaseRechargeTime(sourceFx)) },
+                { "power.base>endcost", FormatNumeric(PlannerProcSupport.ResolvePowerBaseEndCost(sourceFx)) },
+                { "power.base>range", FormatNumeric(PlannerProcSupport.ResolvePowerBaseRange(sourceFx)) },
                 { "effect>scale", $"{sourceFx.Scale}" },
                 { "@StdResult", FormatNumeric(GetStandardResult(sourceFx)) },
                 { "@Scale", FormatNumeric(GetScale(sourceFx)) },

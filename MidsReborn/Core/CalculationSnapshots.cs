@@ -90,6 +90,7 @@ internal sealed class ActorAggregationSnapshot
 {
     public IReadOnlyList<IPower> IncludedMathPowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyList<IPower> IncludedBuffedPowers { get; init; } = Array.Empty<IPower>();
+    public IReadOnlyList<IPower> IncludedSelfBuffPowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyList<IPower> EnhancementExternalPowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyList<IPower> SelfBuffExternalPowers { get; init; } = Array.Empty<IPower>();
     public IReadOnlyList<IPower> SupplementalEnhancementSourcePowers { get; init; } = Array.Empty<IPower>();
@@ -362,6 +363,7 @@ internal static class CalculationSnapshotFactory
     public static ActorAggregationSnapshot CreateAggregationSnapshot(
         IReadOnlyList<IPower> includedMathPowers,
         IReadOnlyList<IPower> includedBuffedPowers,
+        IReadOnlyList<IPower> includedSelfBuffPowers,
         IReadOnlyList<IPower> enhancementExternalPowers,
         IReadOnlyList<IPower> selfBuffExternalPowers,
         IReadOnlyList<IPower> supplementalEnhancementSourcePowers,
@@ -371,6 +373,7 @@ internal static class CalculationSnapshotFactory
         {
             IncludedMathPowers = ClonePowers(includedMathPowers),
             IncludedBuffedPowers = ClonePowers(includedBuffedPowers),
+            IncludedSelfBuffPowers = ClonePowers(includedSelfBuffPowers),
             EnhancementExternalPowers = ClonePowers(enhancementExternalPowers),
             SelfBuffExternalPowers = ClonePowers(selfBuffExternalPowers),
             SupplementalEnhancementSourcePowers = ClonePowers(supplementalEnhancementSourcePowers),
@@ -401,6 +404,7 @@ internal static class CalculationSnapshotFactory
         return CreateAggregationSnapshot(
             snapshot.IncludedMathPowers,
             snapshot.IncludedBuffedPowers,
+            snapshot.IncludedSelfBuffPowers,
             snapshot.EnhancementExternalPowers,
             snapshot.SelfBuffExternalPowers,
             snapshot.SupplementalEnhancementSourcePowers,

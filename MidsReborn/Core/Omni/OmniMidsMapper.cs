@@ -1652,6 +1652,7 @@ public static class OmniMidsMapper
     private static void ApplyCombatModFlags(Effect effect, OmniEffectTemplate template)
     {
         effect.IgnoreED = HasTemplateFlag(template, "BoostIgnoreDiminishing");
+        effect.IgnoreStrength = HasTemplateFlag(template, "IgnoreStrength");
         effect.UseCombatModMagnitude = HasTemplateFlag(template, "CombatModMagnitude");
         effect.UseCombatModDuration = HasTemplateFlag(template, "CombatModDuration");
     }

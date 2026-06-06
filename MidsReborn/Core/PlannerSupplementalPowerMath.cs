@@ -1,5 +1,6 @@
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.PlannerRulesets;
 
 namespace Mids_Reborn.Core;
 
@@ -93,13 +94,13 @@ internal static class PlannerSupplementalPowerMath
 
             var oldAccuracyMultFactor = 1f + powerMath.Accuracy + effectiveOldAcc;
             var newAccuracyMultFactor = 1f + powerMath.Accuracy + effectiveNewAcc;
-            if (Math.Abs(oldAccuracyMultFactor) < float.Epsilon || Math.Abs(newAccuracyMultFactor) < float.Epsilon)
+            if (Math.Abs(oldAccuracyMultFactor) < float.Epsilon)
             {
-                powerBuffed.AccuracyMult *= ratio;
+                powerBuffed.AccuracyMult = 0f;
                 continue;
             }
 
-            powerBuffed.AccuracyMult *= ratio * (newAccuracyMultFactor / oldAccuracyMultFactor);
+            powerBuffed.AccuracyMult *= newAccuracyMultFactor / oldAccuracyMultFactor;
         }
     }
 
@@ -163,7 +164,9 @@ internal static class PlannerSupplementalPowerMath
                 default:
                     for (var powerEffectIndex = 0; powerEffectIndex < powerMath.Effects.Length && powerEffectIndex < powerBuffed.Effects.Length; powerEffectIndex++)
                     {
-                        if (!powerMath.Effects[powerEffectIndex].Buffable || powerMath.Effects[powerEffectIndex].EffectType != effectType)
+                        if (!powerMath.Effects[powerEffectIndex].Buffable ||
+                            powerMath.Effects[powerEffectIndex].EffectType != effectType ||
+                            PlannerStrengthSemantics.IgnoresStrength(powerMath.Effects[powerEffectIndex]))
                         {
                             continue;
                         }

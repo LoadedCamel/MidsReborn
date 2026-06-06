@@ -598,26 +598,52 @@ internal abstract class PlannerRulesetBase : IPlannerRuleset
         return 0.9f;
     }
 
-    public virtual float CalculateProcProbability(IPower power, float procsPerMinute, float baseProbability)
+    public virtual float CalculateProcProbability(IPower power, IEffect procEffect, float procsPerMinute, float baseProbability)
     {
         if (procsPerMinute <= 0 || power == null)
         {
             return baseProbability;
         }
 
-        var areaFactor = (float)(power.AoEModifier * 0.75 + 0.25);
+        var areaFactor = PlannerProcSupport.ResolveProcAreaFactor(power, procEffect);
+        var probability = procsPerMinute;
 
-        var displayedBuffHaste = MidsContext.Character?.DisplayStats?.BuffHaste(false) ?? 100f;
-        var globalRecharge = (displayedBuffHaste - 100) / 100;
-        var rechargeVal = Math.Abs(power.RechargeTime) < float.Epsilon
-            ? 0
-            : power.BaseRechargeTime / (power.BaseRechargeTime / power.RechargeTime - globalRecharge);
+        if (power.PowerType == Enums.ePowerType.Click)
+        {
+            probability *= ResolveProcRechargeDuration(power) + Math.Max(0f, power.CastTimeReal);
+        }
+        else
+        {
+            probability *= PlannerProcSupport.ResolveProcSourceActivatePeriod(power, procEffect);
+        }
 
-        var probability = power.PowerType == Enums.ePowerType.Click
-            ? procsPerMinute * (rechargeVal + power.CastTimeReal) / (60f * areaFactor)
-            : procsPerMinute * 10 / (60f * areaFactor);
+        probability /= 60f * areaFactor;
 
         return Math.Max(GetMinProcChance(procsPerMinute), Math.Min(GetMaxProcChance(procsPerMinute), probability));
+    }
+
+    private static float ResolveProcRechargeDuration(IPower power)
+    {
+        if (power.BaseRechargeTime <= float.Epsilon)
+        {
+            return 0f;
+        }
+
+        if (power.IgnoreStrength)
+        {
+            return Math.Max(0f, power.RechargeTime);
+        }
+
+        if (power.RechargeTime <= float.Epsilon)
+        {
+            return power.BaseRechargeTime;
+        }
+
+        var totalRechargeScale = power.BaseRechargeTime / power.RechargeTime;
+        var globalRecharge = MidsContext.Character?.Totals?.BuffHaste ?? 0f;
+        return totalRechargeScale > 1f + globalRecharge
+            ? power.BaseRechargeTime / (totalRechargeScale - globalRecharge)
+            : power.BaseRechargeTime;
     }
 
     public virtual float ApplyChanceModifiers(Character? character, IPower? ownerPower, IEffect procEffect, float probability)

@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using Mids_Reborn.Core.PlannerRulesets;
 
 namespace Mids_Reborn.Core;
 
@@ -79,6 +80,8 @@ internal static class GlobalBoostPlannerSemantics
             sourcePower == null ||
             sourceEffect == null ||
             !targetEffect.Buffable ||
+            (PlannerStrengthSemantics.IgnoresStrength(targetEffect) &&
+             sourceEffect.EffectType is Enums.eEffectType.DamageBuff or Enums.eEffectType.Enhancement) ||
             !IsSourceEffectAllowedForPower(targetPower, sourcePower, sourceEffect))
         {
             return false;

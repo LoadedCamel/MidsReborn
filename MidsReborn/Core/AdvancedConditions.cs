@@ -4,6 +4,7 @@ using System.Text.RegularExpressions;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Omni;
+using Mids_Reborn.Core.PlannerRulesets;
 
 namespace Mids_Reborn.Core;
 
@@ -843,6 +844,41 @@ internal sealed class BuildConditionSnapshot
 
 public static class AdvancedConditionEvaluator
 {
+    private enum PreservedValueKind
+    {
+        Boolean,
+        Number,
+        Text
+    }
+
+    private readonly record struct PreservedValue(
+        PreservedValueKind Kind,
+        bool BoolValue,
+        float NumberValue,
+        string TextValue)
+    {
+        public static PreservedValue FromBool(bool value) =>
+            new(PreservedValueKind.Boolean, value, value ? 1f : 0f, value ? "true" : "false");
+
+        public static PreservedValue FromNumber(float value) =>
+            new(PreservedValueKind.Number, Math.Abs(value) > float.Epsilon, value, value.ToString(CultureInfo.InvariantCulture));
+
+        public static PreservedValue FromText(string value) =>
+            new(PreservedValueKind.Text, !string.IsNullOrWhiteSpace(value), 0f, value ?? string.Empty);
+
+        public bool ToBoolean()
+        {
+            return Kind switch
+            {
+                PreservedValueKind.Boolean => BoolValue,
+                PreservedValueKind.Number => Math.Abs(NumberValue) > float.Epsilon,
+                _ => !string.IsNullOrWhiteSpace(TextValue) &&
+                     !TextValue.Equals("false", StringComparison.OrdinalIgnoreCase) &&
+                     !TextValue.Equals("0", StringComparison.OrdinalIgnoreCase)
+            };
+        }
+    }
+
 
     public static bool Evaluate(IEffect effect)
     {
@@ -1411,6 +1447,11 @@ public static class AdvancedConditionEvaluator
             return false;
         }
 
+        if (TryEvaluatePreservedPlannerExpression(effect, row.RawExpression, out result))
+        {
+            return true;
+        }
+
         if (!TryResolvePreservedTargetScope(row.RawExpression, out var scope) ||
             !CanResolvePlannerTargetScope(scope, row.RawExpression))
         {
@@ -1419,6 +1460,263 @@ public static class AdvancedConditionEvaluator
 
         result = MatchesCurrentPlannerTargetScope(scope);
         return true;
+    }
+
+    private static bool TryEvaluatePreservedPlannerExpression(IEffect effect, string? rawExpression, out bool result)
+    {
+        result = false;
+        var normalized = NormalizePreservedPlannerExpression(rawExpression);
+        if (string.IsNullOrWhiteSpace(normalized))
+        {
+            return false;
+        }
+
+        var stack = new Stack<PreservedValue>();
+        foreach (var token in normalized.Split(' ', StringSplitOptions.RemoveEmptyEntries))
+        {
+            switch (token)
+            {
+                case "!":
+                    if (stack.Count < 1)
+                    {
+                        return false;
+                    }
+
+                    stack.Push(PreservedValue.FromBool(!stack.Pop().ToBoolean()));
+                    continue;
+
+                case "&&":
+                case "||":
+                    if (stack.Count < 2)
+                    {
+                        return false;
+                    }
+
+                    var logicalRight = stack.Pop().ToBoolean();
+                    var logicalLeft = stack.Pop().ToBoolean();
+                    stack.Push(PreservedValue.FromBool(token == "&&"
+                        ? logicalLeft && logicalRight
+                        : logicalLeft || logicalRight));
+                    continue;
+
+                case "eq":
+                case "==":
+                case "ne":
+                case "!=":
+                case "gt":
+                case ">":
+                case "gte":
+                case ">=":
+                case "lt":
+                case "<":
+                case "lte":
+                case "<=":
+                    if (stack.Count < 2)
+                    {
+                        return false;
+                    }
+
+                    var comparisonRight = stack.Pop();
+                    var comparisonLeft = stack.Pop();
+                    if (!TryComparePreservedValues(comparisonLeft, comparisonRight, token, out var comparisonResult))
+                    {
+                        return false;
+                    }
+
+                    stack.Push(PreservedValue.FromBool(comparisonResult));
+                    continue;
+            }
+
+            if (!TryResolvePreservedValue(effect, token, out var value))
+            {
+                return false;
+            }
+
+            stack.Push(value);
+        }
+
+        if (stack.Count != 1)
+        {
+            return false;
+        }
+
+        result = stack.Pop().ToBoolean();
+        return true;
+    }
+
+    private static string NormalizePreservedPlannerExpression(string? rawExpression)
+    {
+        if (string.IsNullOrWhiteSpace(rawExpression))
+        {
+            return string.Empty;
+        }
+
+        var normalized = rawExpression.Trim();
+        normalized = Regex.Replace(normalized, @"(?<![A-Za-z0-9_\.])([A-Za-z_][A-Za-z0-9_\.%]*)\s+power\.base>", "power.base>$1", RegexOptions.IgnoreCase);
+        normalized = Regex.Replace(normalized, @"(?<![A-Za-z0-9_\.])([A-Za-z_][A-Za-z0-9_\.%]*)\s+source>", "source>$1", RegexOptions.IgnoreCase);
+        normalized = Regex.Replace(normalized, @"(?<![A-Za-z0-9_\.])([A-Za-z_][A-Za-z0-9_\.%]*)\s+target>", "target>$1", RegexOptions.IgnoreCase);
+        normalized = normalized.Replace("(", " ").Replace(")", " ");
+        normalized = Regex.Replace(normalized, @"\s+", " ").Trim();
+        return normalized;
+    }
+
+    private static bool TryResolvePreservedValue(IEffect effect, string token, out PreservedValue value)
+    {
+        value = default;
+        token = token.Trim();
+        if (string.IsNullOrWhiteSpace(token))
+        {
+            return false;
+        }
+
+        if (float.TryParse(token, NumberStyles.Float, CultureInfo.InvariantCulture, out var numericValue))
+        {
+            value = PreservedValue.FromNumber(numericValue);
+            return true;
+        }
+
+        var trimmedText = token.Trim('\'', '"');
+        if (trimmedText.Equals("true", StringComparison.OrdinalIgnoreCase))
+        {
+            value = PreservedValue.FromBool(true);
+            return true;
+        }
+
+        if (trimmedText.Equals("false", StringComparison.OrdinalIgnoreCase))
+        {
+            value = PreservedValue.FromBool(false);
+            return true;
+        }
+
+        switch (token.ToLowerInvariant())
+        {
+            case "target.isfriend?":
+                value = PreservedValue.FromBool(IsCurrentPlannerFriendlyTarget());
+                return true;
+
+            case "target>enttype":
+                value = PreservedValue.FromText(GetCurrentPlannerTargetEntityType());
+                return true;
+
+            case "source>enttype":
+                value = PreservedValue.FromText("player");
+                return true;
+
+            case "power.base>powersetname":
+                value = PreservedValue.FromText(PlannerProcSupport.ResolvePowerBaseSetFullName(effect));
+                return true;
+
+            case "power.base>activateperiod":
+                value = PreservedValue.FromNumber(PlannerProcSupport.ResolvePowerBaseActivatePeriod(effect));
+                return true;
+
+            case "power.base>rechargetime":
+                value = PreservedValue.FromNumber(PlannerProcSupport.ResolvePowerBaseRechargeTime(effect));
+                return true;
+
+            case "power.base>activatetime":
+                value = PreservedValue.FromNumber(PlannerProcSupport.ResolvePowerBaseActivationTime(effect));
+                return true;
+
+            case "power.base>areafactor":
+                value = PreservedValue.FromNumber(PlannerProcSupport.ResolvePowerBaseAreaFactor(effect));
+                return true;
+
+            case "power.base>endcost":
+                value = PreservedValue.FromNumber(PlannerProcSupport.ResolvePowerBaseEndCost(effect));
+                return true;
+
+            case "power.base>range":
+                value = PreservedValue.FromNumber(PlannerProcSupport.ResolvePowerBaseRange(effect));
+                return true;
+
+            default:
+                value = PreservedValue.FromText(trimmedText);
+                return !token.Contains('>') && !token.Contains('?');
+        }
+    }
+
+    private static bool TryComparePreservedValues(
+        PreservedValue left,
+        PreservedValue right,
+        string token,
+        out bool result)
+    {
+        result = false;
+        if (TryGetComparableNumbers(left, right, out var leftNumber, out var rightNumber))
+        {
+            result = token switch
+            {
+                "eq" or "==" => Math.Abs(leftNumber - rightNumber) < float.Epsilon,
+                "ne" or "!=" => Math.Abs(leftNumber - rightNumber) >= float.Epsilon,
+                "gt" or ">" => leftNumber > rightNumber,
+                "gte" or ">=" => leftNumber >= rightNumber,
+                "lt" or "<" => leftNumber < rightNumber,
+                "lte" or "<=" => leftNumber <= rightNumber,
+                _ => false
+            };
+            return true;
+        }
+
+        if (token is not ("eq" or "==" or "ne" or "!="))
+        {
+            return false;
+        }
+
+        var leftText = left.Kind == PreservedValueKind.Boolean
+            ? (left.BoolValue ? "true" : "false")
+            : left.TextValue;
+        var rightText = right.Kind == PreservedValueKind.Boolean
+            ? (right.BoolValue ? "true" : "false")
+            : right.TextValue;
+        var equals = string.Equals(leftText, rightText, StringComparison.OrdinalIgnoreCase);
+        result = token is "eq" or "==" ? equals : !equals;
+        return true;
+    }
+
+    private static bool TryGetComparableNumbers(
+        PreservedValue left,
+        PreservedValue right,
+        out float leftNumber,
+        out float rightNumber)
+    {
+        leftNumber = 0f;
+        rightNumber = 0f;
+
+        if (left.Kind == PreservedValueKind.Number && right.Kind == PreservedValueKind.Number)
+        {
+            leftNumber = left.NumberValue;
+            rightNumber = right.NumberValue;
+            return true;
+        }
+
+        if (left.Kind == PreservedValueKind.Boolean && right.Kind == PreservedValueKind.Boolean)
+        {
+            leftNumber = left.BoolValue ? 1f : 0f;
+            rightNumber = right.BoolValue ? 1f : 0f;
+            return true;
+        }
+
+        return false;
+    }
+
+    private static bool IsCurrentPlannerFriendlyTarget()
+    {
+        return GetCurrentPlannerTargetScope() is AdvancedConditionTargetScope.Ally or AdvancedConditionTargetScope.Self or AdvancedConditionTargetScope.Pet;
+    }
+
+    private static string GetCurrentPlannerTargetEntityType()
+    {
+        return GetCurrentPlannerTargetScope() == AdvancedConditionTargetScope.Player
+            ? "player"
+            : "critter";
+    }
+
+    private static AdvancedConditionTargetScope GetCurrentPlannerTargetScope()
+    {
+        return MidsContext.Config?.Inc.DisablePvE == true
+            ? AdvancedConditionTargetScope.Player
+            : AdvancedConditionTargetScope.Foe;
     }
 
     internal static bool TryDescribePreservedTargetExpression(string? rawExpression, out string description)
@@ -1515,11 +1813,7 @@ public static class AdvancedConditionEvaluator
 
     private static bool MatchesCurrentPlannerTargetScope(AdvancedConditionTargetScope scope)
     {
-        var actualScope = MidsContext.Config?.Inc.DisablePvE == true
-            ? AdvancedConditionTargetScope.Player
-            : AdvancedConditionTargetScope.Foe;
-
-        return actualScope == scope;
+        return GetCurrentPlannerTargetScope() == scope;
     }
 
     private static bool ContainsTargetEntityScope(string normalized, params string[] candidates)

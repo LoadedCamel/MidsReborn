@@ -220,12 +220,12 @@ public static class PlannerEffectResolver
         PlannerResolvedEffectSemantics.MarkBaseEffects(expanded);
         if (context.ExpandGrantPowers)
         {
-            expanded = ExpandGrantPowerEffects(power, expanded, context, trace, expansionEvents, 0);
+            expanded = ExpandGrantPowerEffects(power, power, expanded, context, trace, expansionEvents, 0);
         }
 
         if (context.ExpandExecutePowers && !power.AppliedExecutes)
         {
-            expanded = ExpandExecutePowerEffects(power, expanded, context, trace, expansionEvents, 0);
+            expanded = ExpandExecutePowerEffects(power, power, expanded, context, trace, expansionEvents, 0);
         }
 
         power.Effects = expanded.ToArray();
@@ -334,6 +334,7 @@ public static class PlannerEffectResolver
 
     private static List<IEffect> ExpandGrantPowerEffects(
         IPower owner,
+        IPower activationRoot,
         IReadOnlyList<IEffect> sourceEffects,
         PlannerEffectResolutionContext context,
         List<PlannerEffectTraceEntry>? trace,
@@ -385,12 +386,13 @@ public static class PlannerEffectResolver
                 continue;
             }
 
-            childEffects = ExpandGrantPowerEffects(grantedPower, childEffects, context, trace, expansionEvents, depth + 1);
-            childEffects = ExpandExecutePowerEffects(grantedPower, childEffects, context, trace, expansionEvents, depth + 1);
+            childEffects = ExpandGrantPowerEffects(grantedPower, activationRoot, childEffects, context, trace, expansionEvents, depth + 1);
+            childEffects = ExpandExecutePowerEffects(grantedPower, activationRoot, childEffects, context, trace, expansionEvents, depth + 1);
             foreach (var child in childEffects)
             {
                 InheritEffectMetadata(effect, child, owner: owner);
                 child.AddResolvedEffectKind(PlannerResolvedEffectKind.GrantChild);
+                PlannerProcSupport.AppendProcEvaluationLineage(child, activationRoot, grantedPower);
                 child.SetPower(owner);
                 expanded.Add(child);
             }
@@ -404,6 +406,7 @@ public static class PlannerEffectResolver
 
     private static List<IEffect> ExpandExecutePowerEffects(
         IPower owner,
+        IPower activationRoot,
         IReadOnlyList<IEffect> sourceEffects,
         PlannerEffectResolutionContext context,
         List<PlannerEffectTraceEntry>? trace,
@@ -447,12 +450,13 @@ public static class PlannerEffectResolver
                 continue;
             }
 
-            childEffects = ExpandGrantPowerEffects(executedPower, childEffects, context, trace, expansionEvents, depth + 1);
-            childEffects = ExpandExecutePowerEffects(executedPower, childEffects, context, trace, expansionEvents, depth + 1);
+            childEffects = ExpandGrantPowerEffects(executedPower, activationRoot, childEffects, context, trace, expansionEvents, depth + 1);
+            childEffects = ExpandExecutePowerEffects(executedPower, activationRoot, childEffects, context, trace, expansionEvents, depth + 1);
             foreach (var child in childEffects)
             {
                 InheritEffectMetadata(effect, child);
                 child.AddResolvedEffectKind(PlannerResolvedEffectKind.ExecuteChild);
+                PlannerProcSupport.AppendProcEvaluationLineage(child, activationRoot, executedPower);
                 child.SetPower(owner);
                 expanded.Add(child);
             }

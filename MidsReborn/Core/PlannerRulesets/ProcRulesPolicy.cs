@@ -110,7 +110,7 @@ internal sealed class ProcRulesPolicy
         var probability = baseProbability;
         if (procEffect.ProcsPerMinute > 0f && ownerPower != null)
         {
-            probability = _ruleset.CalculateProcProbability(ownerPower, procEffect.ProcsPerMinute, probability);
+            probability = _ruleset.CalculateProcProbability(ownerPower, procEffect, procEffect.ProcsPerMinute, probability);
         }
 
         probability = ChanceModifierSupport.ApplyChanceModifiers(
@@ -135,7 +135,7 @@ internal sealed class ProcRulesPolicy
 
     public bool ShouldIncludePlannerEffect(IPower? ownerPower, IEffect effect)
     {
-        if (!IsPlannerProcContributionEffect(effect))
+        if (!PlannerProcSupport.IsPlannerProcContributionEffect(effect))
         {
             return true;
         }
@@ -198,22 +198,6 @@ internal sealed class ProcRulesPolicy
             },
             _ => policy.Allowance == ProcAllowanceMode.Deny
         };
-    }
-
-    private static bool IsPlannerProcContributionEffect(IEffect effect)
-    {
-        if (!effect.isEnhancementEffect)
-        {
-            return false;
-        }
-
-        if (effect.IgnoreScaling || effect.IsFromProc)
-        {
-            return true;
-        }
-
-        return effect is Effect concreteEffect &&
-               concreteEffect.ProcContributionFlags.HasFlag(ProcContributionFlags.InheritedFromProcWrapper);
     }
 }
 
@@ -422,6 +406,7 @@ internal static class ChanceModifierCatalogBuilder
             if (effect.EffectType != Enums.eEffectType.GlobalChanceMod ||
                 string.IsNullOrWhiteSpace(effect.Reward) ||
                 ChanceModifierSupport.IsPowerLocalChanceMod(effect) ||
+                PlannerProcSupport.IsProcDerivedChanceModifier(effect) ||
                 !effect.PvXInclude() ||
                 !effect.CanInclude() ||
                 effect.BaseProbability <= float.Epsilon)

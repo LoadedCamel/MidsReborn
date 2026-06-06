@@ -54,7 +54,10 @@ internal static class ChanceModifierSupport
                 continue;
             }
 
-            if (!effect.PvXInclude() || !effect.CanInclude() || effect.BaseProbability <= float.Epsilon)
+            if (PlannerProcSupport.IsProcDerivedChanceModifier(effect) ||
+                !effect.PvXInclude() ||
+                !effect.CanInclude() ||
+                effect.BaseProbability <= float.Epsilon)
             {
                 continue;
             }
@@ -84,6 +87,7 @@ internal static class ChanceModifierSupport
             {
                 if (effect.EffectType != Enums.eEffectType.GlobalChanceMod ||
                     !IsPowerLocalChanceMod(effect) ||
+                    PlannerProcSupport.IsProcDerivedChanceModifier(effect) ||
                     !effect.PvXInclude() ||
                     !effect.CanInclude() ||
                     effect.BaseProbability <= float.Epsilon ||
