@@ -157,7 +157,8 @@ internal sealed class PlannerPowerPipeline
             _assembledBasePowers,
             _mathPowers,
             _preBuffPowers,
-            _buffedPowers);
+            _buffedPowers,
+            aggregation.Contributions);
         var totalsSnapshot = aggregation.Totals!;
         var actorSnapshot = CalculationSnapshotFactory.CreateActorSnapshot(
             CalculationActorKind.Player,

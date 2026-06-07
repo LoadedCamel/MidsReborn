@@ -11,6 +11,7 @@ internal enum ContributionCategory
     SelfBuff,
     SetBonus,
     Proc,
+    ComputedState,
     GrantChild,
     ExecuteChild,
     PseudoPetFlattened,
@@ -84,6 +85,7 @@ internal sealed class PowerCalculationSnapshot
     public IPower? MathPower { get; init; }
     public IPower? PreBuffPower { get; init; }
     public IPower? BuffedPower { get; init; }
+    public PowerOutcomeReceipt OutcomeReceipt { get; init; } = PowerOutcomeReceipt.Empty;
 }
 
 internal sealed class ActorAggregationSnapshot
@@ -174,6 +176,34 @@ internal sealed class PlannerContributionCollector
             null));
     }
 
+    public void AddSyntheticBucketDelta(
+        ContributionBucket bucket,
+        int index,
+        double value,
+        string sourceName,
+        string sourceFullName,
+        ContributionCategory category,
+        string metricName)
+    {
+        if (Math.Abs(value) < 1e-12)
+        {
+            return;
+        }
+
+        _records.Add(new ContributionRecord(
+            new ContributionKey(bucket, index),
+            value,
+            ContributionChannel.Buffs,
+            category,
+            new ContributionSource(sourceName, sourceFullName, Enums.ePowerType.Auto_, true, false, false, false),
+            metricName,
+            null,
+            null,
+            null,
+            null,
+            null));
+    }
+
     public void AddChanceModifierDelta(
         string chanceTag,
         double value,
@@ -213,6 +243,12 @@ internal sealed class PlannerContributionCollector
         var friendlyName = string.IsNullOrWhiteSpace(sourcePower.DisplayName)
             ? sourcePower.FullName
             : sourcePower.DisplayName;
+        if (sourcePower.GetPowerSet()?.SetType is Enums.ePowerSetType.Incarnate &&
+            !string.IsNullOrWhiteSpace(sourcePower.SetName))
+        {
+            friendlyName = $"({sourcePower.SetName}) {friendlyName}";
+        }
+
         var isSetBonusVirtual = string.Equals(sourcePower.FullName, "Mids.SetBonus.Virtual", StringComparison.OrdinalIgnoreCase);
         var isPvpResist = string.Equals(sourcePower.FullName, "Temporary_Powers.Temporary_Powers.PVP_Resist_Bonus", StringComparison.OrdinalIgnoreCase);
         return new ContributionSource(
@@ -328,20 +364,32 @@ internal static class CalculationSnapshotFactory
         IReadOnlyList<IPower?> assembledBasePowers,
         IReadOnlyList<IPower?> mathPowers,
         IReadOnlyList<IPower?> preBuffPowers,
-        IReadOnlyList<IPower?> buffedPowers)
+        IReadOnlyList<IPower?> buffedPowers,
+        CalculationContributionSnapshot? contributions = null)
     {
         var count = new[] { basePowers.Count, assembledBasePowers.Count, mathPowers.Count, preBuffPowers.Count, buffedPowers.Count }.Max();
         var snapshots = new List<PowerCalculationSnapshot>(count);
         for (var index = 0; index < count; index++)
         {
+            var basePower = ClonePower(basePowers, index);
+            var assembledBasePower = ClonePower(assembledBasePowers, index);
+            var mathPower = ClonePower(mathPowers, index);
+            var preBuffPower = ClonePower(preBuffPowers, index);
+            var buffedPower = ClonePower(buffedPowers, index);
             snapshots.Add(new PowerCalculationSnapshot
             {
                 HistoryIndex = index,
-                BasePower = ClonePower(basePowers, index),
-                AssembledBasePower = ClonePower(assembledBasePowers, index),
-                MathPower = ClonePower(mathPowers, index),
-                PreBuffPower = ClonePower(preBuffPowers, index),
-                BuffedPower = ClonePower(buffedPowers, index)
+                BasePower = basePower,
+                AssembledBasePower = assembledBasePower,
+                MathPower = mathPower,
+                PreBuffPower = preBuffPower,
+                BuffedPower = buffedPower,
+                OutcomeReceipt = PowerOutcomeReceiptBuilder.Build(
+                    basePower,
+                    assembledBasePower,
+                    preBuffPower,
+                    buffedPower,
+                    contributions)
             });
         }
 
@@ -390,7 +438,8 @@ internal static class CalculationSnapshotFactory
             AssembledBasePower = snapshot.AssembledBasePower == null ? null : new Power(snapshot.AssembledBasePower),
             MathPower = snapshot.MathPower == null ? null : new Power(snapshot.MathPower),
             PreBuffPower = snapshot.PreBuffPower == null ? null : new Power(snapshot.PreBuffPower),
-            BuffedPower = snapshot.BuffedPower == null ? null : new Power(snapshot.BuffedPower)
+            BuffedPower = snapshot.BuffedPower == null ? null : new Power(snapshot.BuffedPower),
+            OutcomeReceipt = snapshot.OutcomeReceipt
         }).ToArray();
     }
 

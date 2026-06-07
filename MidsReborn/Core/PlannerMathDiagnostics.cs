@@ -933,6 +933,7 @@ public static class PlannerMathDiagnostics
         builder.AppendLine($"- display snapshot enhanced resolved for display: {displaySnapshot.EnhancedWasResolvedForDisplay.ToString(CultureInfo.InvariantCulture)}");
         builder.AppendLine($"- display snapshot base padded/repaired: {displaySnapshot.BaseWasPaddedOrRepaired.ToString(CultureInfo.InvariantCulture)}");
         builder.AppendLine($"- display snapshot enhanced padded/repaired: {displaySnapshot.EnhancedWasPaddedOrRepaired.ToString(CultureInfo.InvariantCulture)}");
+        AppendOutcomeReceiptSummary(builder, toon.LastCalculationSnapshot?.PowerSnapshots, historyIndex);
 
         if (enhancedPower != null && resolvedEnhanced != null)
         {
@@ -943,6 +944,48 @@ public static class PlannerMathDiagnostics
         }
 
         builder.AppendLine();
+    }
+
+    private static void AppendOutcomeReceiptSummary(
+        StringBuilder builder,
+        IReadOnlyList<PowerCalculationSnapshot>? snapshots,
+        int historyIndex)
+    {
+        if (snapshots == null || historyIndex < 0 || historyIndex >= snapshots.Count)
+        {
+            return;
+        }
+
+        var receipt = snapshots[historyIndex].OutcomeReceipt;
+        if (receipt == null || receipt.Families.Count == 0)
+        {
+            builder.AppendLine("- outcome receipt: (none)");
+            return;
+        }
+
+        builder.AppendLine($"- outcome receipt families: {string.Join(", ", receipt.Families.Select(family => family.Family))}");
+        if (receipt.TryGetFamily(PowerOutcomeFamily.Damage, out var damageReceipt))
+        {
+            var basePowerTotal = damageReceipt.Rows
+                .Where(row => row.Lineage == PowerOutcomeLineage.BasePower)
+                .Sum(row => row.AssembledBaseValue);
+            var localEnhancementTotal = damageReceipt.Rows
+                .Where(row => row.Lineage is PowerOutcomeLineage.BasePower or PowerOutcomeLineage.ConditionalBonus)
+                .Sum(row => row.PreBuffValue - row.AssembledBaseValue);
+            var externalTotal = damageReceipt.SourceDeltas
+                .Where(delta => delta.SourceKind is not (PowerOutcomeSourceKind.Enhancement or PowerOutcomeSourceKind.ConditionalBonus or PowerOutcomeSourceKind.Proc))
+                .Sum(delta => delta.Value);
+            var conditionalBaseTotal = damageReceipt.Rows
+                .Where(row => row.Lineage == PowerOutcomeLineage.ConditionalBonus)
+                .Sum(row => row.AssembledBaseValue);
+            var procTotal = damageReceipt.Rows
+                .Where(row => row.Lineage is PowerOutcomeLineage.Proc or PowerOutcomeLineage.OtherBonusEffect)
+                .Sum(row => row.FinalValue);
+
+            builder.AppendLine($"  - damage receipt stages: assembled={Format(basePowerTotal + conditionalBaseTotal)} preBuff={Format(damageReceipt.PreBuffTotal)} final={Format(damageReceipt.FinalTotal)}");
+            builder.AppendLine($"  - damage receipt composition: base={Format(basePowerTotal)} enh={Format(localEnhancementTotal)} external={Format(externalTotal)} conditional={Format(conditionalBaseTotal)} procBonus={Format(procTotal)}");
+            builder.AppendLine($"  - damage receipt sources: {(damageReceipt.SourceDeltas.Count == 0 ? "(none)" : string.Join(", ", damageReceipt.SourceDeltas.OrderByDescending(delta => Math.Abs(delta.Value)).Select(delta => $"{delta.SourceName}={Format((float)delta.Value)}")))}");
+        }
     }
 
     private static void AppendMainUiDisplayPath(StringBuilder builder, IPower rawPower, bool include)
@@ -1684,6 +1727,11 @@ public static class PlannerMathDiagnostics
     }
 
     private static string Format(float value)
+    {
+        return value.ToString("0.####", CultureInfo.InvariantCulture);
+    }
+
+    private static string Format(double value)
     {
         return value.ToString("0.####", CultureInfo.InvariantCulture);
     }

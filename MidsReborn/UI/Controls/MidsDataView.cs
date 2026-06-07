@@ -2390,7 +2390,12 @@ namespace Mids_Reborn.UI.Controls
 
         private void SetDamageTip()
         {
-            var iTip = pEnh == null ? "" : pEnh.GetDamageTip();
+            var snapshot = MainModule.MidsController.Toon?.LastCalculationSnapshot?.PowerSnapshots is { } snapshots &&
+                           HistoryIDX >= 0 &&
+                           HistoryIDX < snapshots.Count
+                ? snapshots[HistoryIDX]
+                : null;
+            var iTip = pEnh == null ? "" : Power.BuildDamageTip(pEnh, snapshot?.OutcomeReceipt);
             infoDamageDisplay.SetTip(iTip);
         }
 

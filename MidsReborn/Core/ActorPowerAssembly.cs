@@ -90,11 +90,36 @@ internal static class ActorPowerAssembly
             ContributionCapture.AccumulateBuckets(ruleset, power, ref selfBuffs, PlannerBucketPass.SelfBuff, contributionCollector);
         }
 
+        void AddComputedBucketDelta(
+            ContributionBucket bucket,
+            int index,
+            double value,
+            string sourceName,
+            string sourceFullName,
+            string metricName)
+        {
+            contributionCollector.AddSyntheticBucketDelta(
+                bucket,
+                index,
+                value,
+                sourceName,
+                sourceFullName,
+                ContributionCategory.ComputedState,
+                metricName);
+        }
+
         if (context.ComputedDefianceMagnitude > float.Epsilon)
         {
             foreach (var damageType in DefiancePlanner.ComputedBuffDamageTypes)
             {
                 selfBuffs.Damage[(int)damageType] += context.ComputedDefianceMagnitude;
+                AddComputedBucketDelta(
+                    ContributionBucket.Damage,
+                    (int)damageType,
+                    context.ComputedDefianceMagnitude,
+                    "Defiance",
+                    "Planner.Computed.Defiance",
+                    $"Damage[{(int)damageType}]");
             }
         }
 
@@ -103,12 +128,26 @@ internal static class ActorPowerAssembly
             foreach (var damageType in DefiancePlanner.ComputedBuffDamageTypes)
             {
                 selfBuffs.Damage[(int)damageType] += context.ComputedVigilanceDamageMagnitude;
+                AddComputedBucketDelta(
+                    ContributionBucket.Damage,
+                    (int)damageType,
+                    context.ComputedVigilanceDamageMagnitude,
+                    "Vigilance",
+                    "Planner.Computed.Vigilance",
+                    $"Damage[{(int)damageType}]");
             }
         }
 
         if (context.ComputedVigilanceEndDiscountMagnitude > float.Epsilon)
         {
             selfBuffs.Effect[(int)Enums.eStatType.BuffEndRdx] += context.ComputedVigilanceEndDiscountMagnitude;
+            AddComputedBucketDelta(
+                ContributionBucket.Effect,
+                (int)Enums.eStatType.BuffEndRdx,
+                context.ComputedVigilanceEndDiscountMagnitude,
+                "Vigilance",
+                "Planner.Computed.Vigilance",
+                $"Effect[{(int)Enums.eStatType.BuffEndRdx}]");
         }
 
         if (context.CosmicBalanceState.DamageMagnitude > float.Epsilon)
@@ -116,6 +155,13 @@ internal static class ActorPowerAssembly
             foreach (var damageType in CosmicBalancePlanner.DamageTypes)
             {
                 selfBuffs.Damage[(int)damageType] += context.CosmicBalanceState.DamageMagnitude;
+                AddComputedBucketDelta(
+                    ContributionBucket.Damage,
+                    (int)damageType,
+                    context.CosmicBalanceState.DamageMagnitude,
+                    "Cosmic Balance",
+                    "Planner.Computed.CosmicBalance",
+                    $"Damage[{(int)damageType}]");
             }
         }
 
@@ -124,6 +170,13 @@ internal static class ActorPowerAssembly
             foreach (var damageType in CosmicBalancePlanner.ResistanceTypes)
             {
                 selfBuffs.Resistance[(int)damageType] += context.CosmicBalanceState.ResistanceMagnitude;
+                AddComputedBucketDelta(
+                    ContributionBucket.Resistance,
+                    (int)damageType,
+                    context.CosmicBalanceState.ResistanceMagnitude,
+                    "Cosmic Balance",
+                    "Planner.Computed.CosmicBalance",
+                    $"Resistance[{(int)damageType}]");
             }
         }
 
@@ -132,6 +185,13 @@ internal static class ActorPowerAssembly
             foreach (var mezType in CosmicBalancePlanner.MezTypes)
             {
                 selfBuffs.StatusProtection[(int)mezType] += context.CosmicBalanceState.MezProtectionMagnitude;
+                AddComputedBucketDelta(
+                    ContributionBucket.StatusProtection,
+                    (int)mezType,
+                    context.CosmicBalanceState.MezProtectionMagnitude,
+                    "Cosmic Balance",
+                    "Planner.Computed.CosmicBalance",
+                    $"StatusProtection[{(int)mezType}]");
             }
         }
 
@@ -140,6 +200,13 @@ internal static class ActorPowerAssembly
             foreach (var mezType in CosmicBalancePlanner.MezTypes)
             {
                 selfBuffs.StatusResistance[(int)mezType] += context.CosmicBalanceState.MezResistanceMagnitude;
+                AddComputedBucketDelta(
+                    ContributionBucket.StatusResistance,
+                    (int)mezType,
+                    context.CosmicBalanceState.MezResistanceMagnitude,
+                    "Cosmic Balance",
+                    "Planner.Computed.CosmicBalance",
+                    $"StatusResistance[{(int)mezType}]");
             }
         }
 
@@ -147,6 +214,13 @@ internal static class ActorPowerAssembly
         {
             selfBuffs.DebuffResistance[(int)Enums.eEffectType.RechargeTime] +=
                 context.CosmicBalanceState.RechargeSlowResistanceMagnitude;
+            AddComputedBucketDelta(
+                ContributionBucket.DebuffResistance,
+                (int)Enums.eEffectType.RechargeTime,
+                context.CosmicBalanceState.RechargeSlowResistanceMagnitude,
+                "Cosmic Balance",
+                "Planner.Computed.CosmicBalance",
+                $"DebuffResistance[{(int)Enums.eEffectType.RechargeTime}]");
         }
 
         if (context.DarkSustenanceState.DamageMagnitude > float.Epsilon)
@@ -154,6 +228,13 @@ internal static class ActorPowerAssembly
             foreach (var damageType in DarkSustenancePlanner.DamageTypes)
             {
                 selfBuffs.Damage[(int)damageType] += context.DarkSustenanceState.DamageMagnitude;
+                AddComputedBucketDelta(
+                    ContributionBucket.Damage,
+                    (int)damageType,
+                    context.DarkSustenanceState.DamageMagnitude,
+                    "Dark Sustenance",
+                    "Planner.Computed.DarkSustenance",
+                    $"Damage[{(int)damageType}]");
             }
         }
 
@@ -162,6 +243,13 @@ internal static class ActorPowerAssembly
             foreach (var damageType in DarkSustenancePlanner.ResistanceTypes)
             {
                 selfBuffs.Resistance[(int)damageType] += context.DarkSustenanceState.ResistanceMagnitude;
+                AddComputedBucketDelta(
+                    ContributionBucket.Resistance,
+                    (int)damageType,
+                    context.DarkSustenanceState.ResistanceMagnitude,
+                    "Dark Sustenance",
+                    "Planner.Computed.DarkSustenance",
+                    $"Resistance[{(int)damageType}]");
             }
         }
 
@@ -170,6 +258,13 @@ internal static class ActorPowerAssembly
             foreach (var mezType in DarkSustenancePlanner.MezTypes)
             {
                 selfBuffs.StatusProtection[(int)mezType] += context.DarkSustenanceState.MezProtectionMagnitude;
+                AddComputedBucketDelta(
+                    ContributionBucket.StatusProtection,
+                    (int)mezType,
+                    context.DarkSustenanceState.MezProtectionMagnitude,
+                    "Dark Sustenance",
+                    "Planner.Computed.DarkSustenance",
+                    $"StatusProtection[{(int)mezType}]");
             }
         }
 
@@ -178,6 +273,13 @@ internal static class ActorPowerAssembly
             foreach (var mezType in DarkSustenancePlanner.MezTypes)
             {
                 selfBuffs.StatusResistance[(int)mezType] += context.DarkSustenanceState.MezResistanceMagnitude;
+                AddComputedBucketDelta(
+                    ContributionBucket.StatusResistance,
+                    (int)mezType,
+                    context.DarkSustenanceState.MezResistanceMagnitude,
+                    "Dark Sustenance",
+                    "Planner.Computed.DarkSustenance",
+                    $"StatusResistance[{(int)mezType}]");
             }
         }
 
@@ -185,6 +287,13 @@ internal static class ActorPowerAssembly
         {
             selfBuffs.DebuffResistance[(int)Enums.eEffectType.RechargeTime] +=
                 context.DarkSustenanceState.RechargeSlowResistanceMagnitude;
+            AddComputedBucketDelta(
+                ContributionBucket.DebuffResistance,
+                (int)Enums.eEffectType.RechargeTime,
+                context.DarkSustenanceState.RechargeSlowResistanceMagnitude,
+                "Dark Sustenance",
+                "Planner.Computed.DarkSustenance",
+                $"DebuffResistance[{(int)Enums.eEffectType.RechargeTime}]");
         }
 
         var chanceModifierCatalog = context.BuildChanceModifierCatalog

@@ -39,6 +39,24 @@ namespace Mids_Reborn.Core.Base.Data_Classes
         };
     }
 
+    internal sealed record DamageReceiptShapeKey(
+        Enums.eDamage DamageType,
+        int DurationMs,
+        int TickCentis);
+
+    internal sealed record DamageReceiptLineKey(
+        string Label,
+        Enums.eDamage DamageType,
+        int DurationMs,
+        int TickCentis,
+        int ProbabilityBasisPoints,
+        int PpmCentis,
+        bool IgnoreBuffs,
+        bool IgnoreEd,
+        bool CancelOnMiss,
+        bool RequiresToHitCheck,
+        bool SuppressWhenMezzed);
+
     internal sealed record DamageBreakdownSummary(
         float DisplayedTotal,
         float TotalExcludingProc,
@@ -2154,15 +2172,32 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 : "[Ignores Enhancements & Buffs]";
         }
 
+        internal static string FormatDamageTooltip(DamageBreakdownSummary summary)
+        {
+            return FormatDamageTooltip(summary, null);
+        }
+
         internal static string FormatDamageTooltip(
             DamageBreakdownSummary summary,
-            IReadOnlyList<string>? compositionLines = null)
+            PowerOutcomeReceipt? outcomeReceipt)
         {
             if (!summary.HasDamageEffects)
             {
                 return string.Empty;
             }
 
+            if (outcomeReceipt != null &&
+                outcomeReceipt.TryGetFamily(PowerOutcomeFamily.Damage, out var damageReceipt) &&
+                damageReceipt.Rows.Count > 0)
+            {
+                return FormatDamageTooltipFromReceipt(summary, damageReceipt);
+            }
+
+            return FormatDamageTooltipFromSummary(summary);
+        }
+
+        private static string FormatDamageTooltipFromSummary(DamageBreakdownSummary summary)
+        {
             var builder = new StringBuilder();
             builder.Append("Total: ");
             builder.Append(DisplayValueFormatter.FormatNumber(summary.DisplayedTotal));
@@ -2175,22 +2210,12 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         $"{contribution.Label}: {DisplayValueFormatter.FormatNumber(contribution.DisplayedTotal)}")));
             }
 
-            if (compositionLines is { Count: > 0 })
-            {
-                builder.Append("\r\n\r\nBreakdown:");
-                foreach (var line in compositionLines.Where(line => !string.IsNullOrWhiteSpace(line)))
-                {
-                    builder.Append("\r\n- ");
-                    builder.Append(line);
-                }
-            }
-
             if (summary.BySource.Count > 0)
             {
-                builder.Append("\r\n\r\nHit Components:");
+                builder.Append("\r\n");
                 foreach (var contribution in summary.BySource.Take(10))
                 {
-                    builder.Append("\r\n- ");
+                    builder.Append("\r\n");
                     builder.Append(contribution.Label);
                     if (contribution.Occurrences > 1)
                     {
@@ -2211,7 +2236,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
                 if (summary.BySource.Count > 10)
                 {
-                    builder.Append("\r\n- ... ");
+                    builder.Append("\r\n... ");
                     builder.Append(summary.BySource.Count - 10);
                     builder.Append(" more contribution");
                     if (summary.BySource.Count - 10 != 1)
@@ -2222,6 +2247,404 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             return builder.ToString();
+        }
+
+        private static string FormatDamageTooltipFromReceipt(
+            DamageBreakdownSummary summary,
+            PowerOutcomeFamilyReceipt damageReceipt)
+        {
+            var builder = new StringBuilder();
+            foreach (var line in BuildLegacyDamageReceiptLines(damageReceipt))
+            {
+                builder.Append(line);
+                builder.Append("\r\n");
+            }
+
+            if (builder.Length > 0)
+            {
+                builder.Append("\r\n");
+            }
+
+            builder.Append("Total: ");
+            builder.Append(DisplayValueFormatter.FormatNumber(summary.DisplayedTotal));
+            if (summary.ByType.Count > 0)
+            {
+                builder.Append(" (");
+                builder.Append(string.Join(", ",
+                    summary.ByType.Select(contribution =>
+                        $"{contribution.Label}: {DisplayValueFormatter.FormatNumber(contribution.DisplayedTotal)}")));
+                builder.Append(')');
+            }
+
+            return builder.ToString();
+        }
+
+        private static IReadOnlyList<string> BuildLegacyDamageReceiptLines(PowerOutcomeFamilyReceipt damageReceipt)
+        {
+            var lines = new List<string>(16);
+            var baseRows = damageReceipt.Rows
+                .Where(row => row.Lineage == PowerOutcomeLineage.BasePower)
+                .ToArray();
+
+            lines.AddRange(BuildLegacyBaseDamageLines(baseRows));
+            lines.AddRange(BuildLegacyEnhancementDamageLines(damageReceipt.SourceDeltas));
+            lines.AddRange(BuildLegacySpecialDamageLines(
+                damageReceipt.Rows.Where(row => row.Lineage is PowerOutcomeLineage.ConditionalBonus or PowerOutcomeLineage.Proc or PowerOutcomeLineage.OtherBonusEffect)));
+            lines.AddRange(BuildLegacyExternalDamageLines(damageReceipt.SourceDeltas));
+
+            return lines;
+        }
+
+        private static IReadOnlyList<string> BuildLegacyEnhancementDamageLines(IReadOnlyList<PowerOutcomeSourceDelta> sourceDeltas)
+        {
+            var total = sourceDeltas
+                .Where(delta => delta.SourceKind == PowerOutcomeSourceKind.Enhancement)
+                .Sum(delta => delta.Value);
+            if (Math.Abs(total) <= 0.0001)
+            {
+                return Array.Empty<string>();
+            }
+
+            return
+            [
+                $"Enhancements in this power: {FormatSignedDamageReceiptValue(total)} damage"
+            ];
+        }
+
+        private static IReadOnlyList<string> BuildLegacyBaseDamageLines(IReadOnlyList<PowerOutcomeRow> rows)
+        {
+            return rows
+                .GroupBy(CreateDamageReceiptShapeKey)
+                .Select(group => new
+                {
+                    Key = group.Key,
+                    Value = group.Sum(row => row.AssembledBaseValue)
+                })
+                .Where(item => Math.Abs(item.Value) > 0.0001)
+                .OrderBy(item => item.Key.DurationMs > 0 ? 1 : 0)
+                .ThenByDescending(item => Math.Abs(item.Value))
+                .Select(item => FormatLegacyDamageLine(
+                    item.Value,
+                    item.Key.DamageType,
+                    item.Key.DurationMs / 1000f,
+                    item.Key.TickCentis / 100f,
+                    "to Target"))
+                .ToArray();
+        }
+
+        private static IReadOnlyList<string> BuildLegacyDeltaDamageLines(
+            IReadOnlyList<PowerOutcomeRow> rows,
+            Func<PowerOutcomeRow, double> deltaSelector,
+            string clause)
+        {
+            return rows
+                .GroupBy(CreateDamageReceiptShapeKey)
+                .Select(group => new
+                {
+                    Key = group.Key,
+                    Value = group.Sum(deltaSelector)
+                })
+                .Where(item => Math.Abs(item.Value) > 0.0001)
+                .OrderBy(item => item.Key.DurationMs > 0 ? 1 : 0)
+                .ThenByDescending(item => Math.Abs(item.Value))
+                .Select(item => FormatLegacyDamageLine(
+                    item.Value,
+                    item.Key.DamageType,
+                    item.Key.DurationMs / 1000f,
+                    item.Key.TickCentis / 100f,
+                    clause))
+                .ToArray();
+        }
+
+        private static IReadOnlyList<string> BuildLegacySpecialDamageLines(
+            IEnumerable<PowerOutcomeRow> rows)
+        {
+            return rows
+                .Where(row => Math.Abs(row.FinalValue) > 0.0001)
+                .GroupBy(row => CreateDamageReceiptLineKey(row, ResolveDamageReceiptLineLabel(row)))
+                .Select(group => new
+                {
+                    LineageOrder = GetDamageLineageDisplayOrder(group.First().Lineage),
+                    Key = group.Key,
+                    Value = group.Sum(row => row.FinalValue)
+                })
+                .Where(item => Math.Abs(item.Value) > 0.0001)
+                .OrderBy(item => item.LineageOrder)
+                .ThenBy(item => item.Key.DurationMs > 0 ? 1 : 0)
+                .ThenByDescending(item => Math.Abs(item.Value))
+                .ThenBy(item => item.Key.Label, StringComparer.OrdinalIgnoreCase)
+                .Select(item => FormatLegacyDamageLine(
+                    item.Value,
+                    item.Key.DamageType,
+                    item.Key.DurationMs / 1000f,
+                    item.Key.TickCentis / 100f,
+                    $"from {item.Key.Label}",
+                    BuildLegacyDetailSuffix(item.Key)))
+                .ToArray();
+        }
+
+        private static IReadOnlyList<string> BuildLegacyExternalDamageLines(IReadOnlyList<PowerOutcomeSourceDelta> sourceDeltas)
+        {
+            var lines = new List<string>(3);
+            AddLegacyExternalDamageLine(
+                lines,
+                "Set Bonuses",
+                sourceDeltas.Where(delta => delta.SourceKind == PowerOutcomeSourceKind.SetBonus).ToArray());
+            AddLegacyExternalDamageLine(
+                lines,
+                "Incarnate Bonuses",
+                sourceDeltas.Where(delta => delta.SourceKind == PowerOutcomeSourceKind.IncarnateBonus).ToArray());
+            AddLegacyExternalDamageLine(
+                lines,
+                "Other Power Buffs",
+                sourceDeltas.Where(delta => delta.SourceKind is PowerOutcomeSourceKind.OtherPowerBuff or PowerOutcomeSourceKind.ComputedState or PowerOutcomeSourceKind.MiscExternal).ToArray());
+            return lines;
+        }
+
+        private static DamageReceiptShapeKey CreateDamageReceiptShapeKey(PowerOutcomeRow row)
+        {
+            return new DamageReceiptShapeKey(
+                row.DamageType ?? Enums.eDamage.None,
+                (int)Math.Round(row.DurationSeconds * 1000f),
+                (int)Math.Round(row.EffectiveTicks * 100f));
+        }
+
+        private static DamageReceiptLineKey CreateDamageReceiptLineKey(PowerOutcomeRow row, string label)
+        {
+            var shapeKey = CreateDamageReceiptShapeKey(row);
+            return new DamageReceiptLineKey(
+                label,
+                shapeKey.DamageType,
+                shapeKey.DurationMs,
+                shapeKey.TickCentis,
+                (int)Math.Round(row.Probability * 10000f),
+                (int)Math.Round(row.ProcsPerMinute * 100f),
+                row.IgnoreBuffs,
+                row.IgnoreEd,
+                row.CancelOnMiss,
+                row.RequiresToHitCheck,
+                row.SuppressWhenMezzed);
+        }
+
+        private static string FormatLegacyDamageLine(
+            double value,
+            Enums.eDamage damageType,
+            float durationSeconds,
+            float effectiveTicks,
+            string clause,
+            string detailSuffix = "")
+        {
+            var builder = new StringBuilder();
+            builder.Append(DisplayValueFormatter.FormatNumber((float)value));
+            builder.Append(' ');
+            builder.Append(damageType == Enums.eDamage.None
+                ? "Damage"
+                : $"{Enums.GetDamageName(damageType)} Damage");
+
+            if (durationSeconds > 0.05f && effectiveTicks > 1.05f)
+            {
+                builder.Append(" over ");
+                builder.Append(DisplayValueFormatter.FormatSeconds(durationSeconds));
+            }
+
+            if (!string.IsNullOrWhiteSpace(clause))
+            {
+                builder.Append(' ');
+                builder.Append(clause);
+            }
+
+            if (!string.IsNullOrWhiteSpace(detailSuffix))
+            {
+                builder.Append(' ');
+                builder.Append(detailSuffix);
+            }
+
+            return builder.ToString();
+        }
+
+        private static int GetDamageLineageDisplayOrder(PowerOutcomeLineage lineage)
+        {
+            return lineage switch
+            {
+                PowerOutcomeLineage.ConditionalBonus => 0,
+                PowerOutcomeLineage.Proc => 1,
+                PowerOutcomeLineage.OtherBonusEffect => 2,
+                _ => 3
+            };
+        }
+
+        private static void AddLegacyExternalDamageLine(
+            List<string> lines,
+            string label,
+            IReadOnlyList<PowerOutcomeSourceDelta> sourceDeltas)
+        {
+            var total = sourceDeltas.Sum(delta => delta.Value);
+            if (Math.Abs(total) <= 0.0001)
+            {
+                return;
+            }
+
+            var builder = new StringBuilder();
+            builder.Append(label);
+            builder.Append(": ");
+            builder.Append(FormatSignedDamageReceiptValue(total));
+            var sourceList = BuildLegacyExternalSourceList(sourceDeltas);
+            if (!string.IsNullOrWhiteSpace(sourceList))
+            {
+                builder.Append(" from ");
+                builder.Append(sourceList);
+            }
+
+            lines.Add(builder.ToString());
+        }
+
+        private static string BuildLegacyExternalSourceList(IReadOnlyList<PowerOutcomeSourceDelta> sourceDeltas)
+        {
+            var names = sourceDeltas
+                .OrderByDescending(delta => Math.Abs(delta.Value))
+                .ThenBy(delta => delta.SourceName, StringComparer.OrdinalIgnoreCase)
+                .Select(ResolveLegacySourceName)
+                .Where(name => !string.IsNullOrWhiteSpace(name))
+                .Distinct(StringComparer.OrdinalIgnoreCase)
+                .ToArray();
+
+            return names.Length switch
+            {
+                0 => string.Empty,
+                1 => names[0],
+                2 => $"{names[0]} and {names[1]}",
+                3 => $"{names[0]}, {names[1]}, and {names[2]}",
+                _ => $"{names[0]}, {names[1]}, +{names.Length - 2} more"
+            };
+        }
+
+        private static string ResolveLegacySourceName(PowerOutcomeSourceDelta delta)
+        {
+            if (delta.SourceName.Equals("Other external effects", StringComparison.OrdinalIgnoreCase) ||
+                delta.SourceName.Equals("Unknown Source", StringComparison.OrdinalIgnoreCase) ||
+                delta.SourceName.Equals("Set Bonus Effects", StringComparison.OrdinalIgnoreCase) ||
+                delta.SourceName.Equals("Set Bonuses", StringComparison.OrdinalIgnoreCase))
+            {
+                return string.Empty;
+            }
+
+            var name = delta.SourceName.Trim();
+            if (name.StartsWith("(", StringComparison.OrdinalIgnoreCase))
+            {
+                var closeIndex = name.IndexOf(')');
+                if (closeIndex > -1 && closeIndex < name.Length - 1)
+                {
+                    name = name[(closeIndex + 1)..].Trim();
+                }
+            }
+
+            return name;
+        }
+
+        private static string BuildLegacyDetailSuffix(DamageReceiptLineKey key)
+        {
+            var details = new List<string>(4);
+            if (key.ProbabilityBasisPoints is > 0 and < 10000)
+            {
+                details.Add(key.PpmCentis > 0
+                    ? $"{DisplayValueFormatter.FormatPercentFromScale(key.ProbabilityBasisPoints / 10000f, 0)}% proc chance, {(key.PpmCentis / 100f).ToString("0.##", CultureInfo.InvariantCulture)} PPM"
+                    : $"{DisplayValueFormatter.FormatPercentFromScale(key.ProbabilityBasisPoints / 10000f, 0)}% chance");
+            }
+
+            if (key.CancelOnMiss)
+            {
+                details.Add("cancels on miss");
+            }
+
+            if (key.RequiresToHitCheck)
+            {
+                details.Add("requires a hit check");
+            }
+
+            if (key.SuppressWhenMezzed)
+            {
+                details.Add("suppressed while mezzed");
+            }
+
+            var builder = new StringBuilder();
+            if (details.Count > 0)
+            {
+                builder.Append('(');
+                builder.Append(string.Join(", ", details));
+                builder.Append(')');
+            }
+
+            if (key.IgnoreBuffs)
+            {
+                if (builder.Length > 0)
+                {
+                    builder.Append(' ');
+                }
+
+                builder.Append(key.IgnoreEd
+                    ? "[Ignores Enhancements, Buffs & ED]"
+                    : "[Ignores Enhancements & Buffs]");
+            }
+
+            return builder.ToString();
+        }
+
+        private static string ResolveDamageReceiptLineLabel(PowerOutcomeRow row)
+        {
+            return row.Lineage switch
+            {
+                PowerOutcomeLineage.BasePower => "Base Power",
+                PowerOutcomeLineage.ConditionalBonus => string.IsNullOrWhiteSpace(row.ConditionName)
+                    ? "Bonus Damage"
+                    : $"{row.ConditionName} Bonus",
+                PowerOutcomeLineage.Proc => EnsureProcLabel(row.SourceName),
+                PowerOutcomeLineage.OtherBonusEffect => ResolveOtherBonusEffectLabel(row),
+                _ => string.Empty
+            };
+        }
+
+        private static string ResolveOtherBonusEffectLabel(PowerOutcomeRow row)
+        {
+            if (row.OmniSource.Contains("Doublehit", StringComparison.OrdinalIgnoreCase))
+            {
+                return "Hybrid Doublehit Proc";
+            }
+
+            if (row.OmniSource.Contains("Interface", StringComparison.OrdinalIgnoreCase))
+            {
+                return !string.IsNullOrWhiteSpace(row.SourceName)
+                    ? EnsureProcLabel(row.SourceName)
+                    : "Interface Proc";
+            }
+
+            if (!string.IsNullOrWhiteSpace(row.SourceName))
+            {
+                return row.Probability < 0.999000012874603f
+                    ? EnsureProcLabel(row.SourceName)
+                    : row.SourceName;
+            }
+
+            return row.Probability < 0.999000012874603f
+                ? "Bonus Effect Proc"
+                : "Other Bonus Effect";
+        }
+
+        private static string EnsureProcLabel(string sourceName)
+        {
+            if (string.IsNullOrWhiteSpace(sourceName))
+            {
+                return "Proc";
+            }
+
+            return sourceName.Contains("Proc", StringComparison.OrdinalIgnoreCase)
+                ? sourceName
+                : $"{sourceName} Proc";
+        }
+
+        private static string FormatSignedDamageReceiptValue(double value)
+        {
+            var prefix = value >= 0d ? "+" : "-";
+            return $"{prefix}{DisplayValueFormatter.FormatNumber((float)Math.Abs(value))}";
         }
 
         internal static DamageBreakdownSummary GetDamageBreakdown(IPower sourcePower, bool absorb = false)
@@ -2408,10 +2831,15 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             return GetDamageBreakdown((IPower)this, absorb);
         }
 
+        internal static string BuildDamageTip(IPower sourcePower, PowerOutcomeReceipt? outcomeReceipt = null)
+        {
+            var summary = GetDamageBreakdown(sourcePower);
+            return FormatDamageTooltip(summary, outcomeReceipt);
+        }
+
         public string GetDamageTip()
         {
-            var summary = GetDamageBreakdown(this);
-            return FormatDamageTooltip(summary);
+            return BuildDamageTip(this);
         }
 
         public string FXGetDamageString(bool absorb = false)

@@ -1462,7 +1462,12 @@ namespace Mids_Reborn.UI.Forms.Controls
 
         private void SetDamageTip()
         {
-            var iTip = _enhancedPower?.GetDamageTip() ?? string.Empty;
+            var snapshot = MainModule.MidsController.Toon?.LastCalculationSnapshot?.PowerSnapshots is { } snapshots &&
+                           _entryIndex >= 0 &&
+                           _entryIndex < snapshots.Count
+                ? snapshots[_entryIndex]
+                : null;
+            var iTip = _enhancedPower == null ? string.Empty : Power.BuildDamageTip(_enhancedPower, snapshot?.OutcomeReceipt);
             info_Damage.SetTip(iTip);
         }
 
