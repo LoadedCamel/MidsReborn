@@ -17,6 +17,13 @@ using static Mids_Reborn.Core.Enums;
 
 namespace Mids_Reborn.UI.Renderer
 {
+    internal readonly record struct BuildRendererLayoutMetrics(
+        int Columns,
+        eColumnStacking StackingMode,
+        int MinimumWidth,
+        int PreferredWidth,
+        int UsefulMaximumWidth);
+
     public class BuildRenderer
     {
         public float MasterScale { get; set; } = 1.0f;
@@ -31,6 +38,9 @@ namespace Mids_Reborn.UI.Renderer
         private const int BaseEnhancementSlotGap = 0;
         private const int BaseEnhancementSlotRightPad = 2;
         private const int BaseOffsetInherent = 10;
+        private const int BaseMinimumCellGap = 12;
+        private const int BasePreferredCellGap = 20;
+        private const int BaseUsefulMaximumCellGap = 28;
         private const float IconWellContentFill = 0.92f;
         private const byte IconVisibleAlphaThreshold = 8;
 
@@ -38,6 +48,7 @@ namespace Mids_Reborn.UI.Renderer
         private readonly Size _baseSzSlot = new Size(32, 32);
 
         private int _calculatedCellWidth;
+        private int _contentLeftInset;
         private int _calculatedIconXOffset;
         private readonly Dictionary<Bitmap, Rectangle> _iconVisibleBoundsCache = new();
         private readonly Dictionary<int, BuildPowerGeometry> _geometryCache = [];
@@ -254,6 +265,31 @@ namespace Mids_Reborn.UI.Renderer
         {
             set => _ColumnStackingMode = value;
             get => _ColumnStackingMode;
+        }
+
+        private static int ScaleMetric(int value, float scale)
+            => Math.Max(1, (int)Math.Round(value * Math.Max(0.1f, scale)));
+
+        internal static BuildRendererLayoutMetrics MeasureLayoutMetrics(int columns, eColumnStacking stackingMode, float dpiScale = 1f, float masterScale = 1f)
+        {
+            columns = Math.Clamp(columns, 2, 6);
+            float effectiveScale = Math.Max(0.1f, dpiScale * masterScale);
+            int minimumCellWidth = ScaleMetric(184 + BaseMinimumCellGap, effectiveScale);
+            int preferredCellWidth = ScaleMetric(184 + BasePreferredCellGap, effectiveScale);
+            int usefulMaximumCellWidth = ScaleMetric(184 + BaseUsefulMaximumCellGap, effectiveScale);
+
+            return new BuildRendererLayoutMetrics(
+                columns,
+                stackingMode,
+                columns * minimumCellWidth,
+                columns * preferredCellWidth,
+                columns * usefulMaximumCellWidth);
+        }
+
+        internal BuildRendererLayoutMetrics GetLayoutMetrics(int columns, eColumnStacking stackingMode, float? masterScale = null)
+        {
+            InitDpi();
+            return MeasureLayoutMetrics(columns, stackingMode, _dpiScale, masterScale ?? MasterScale);
         }
 
         private int InitColumns
@@ -2426,16 +2462,7 @@ namespace Mids_Reborn.UI.Renderer
         }
 
         public int GetMinimumRequiredWidth()
-        {
-            // Define the smallest acceptable gap between power icons.
-            const int minimumPadding = 50;
-
-            // Calculate the total minimum width needed.
-            // This is the width of all power icons plus the minimum gap between each one.
-            int minimumWidth = _vcCols * SzPower.Width + (_vcCols - 1) * ScaleLogical(minimumPadding);
-
-            return minimumWidth;
-        }
+            => GetLayoutMetrics(Math.Max(2, _vcCols), _ColumnStackingMode).MinimumWidth;
 
         private void InitHeadersVariables()
         {
@@ -3608,7 +3635,7 @@ namespace Mids_Reborn.UI.Renderer
         private Point CRtoXy(int col, int row, bool ignorePadding = false)
         {
             // This now returns the top-left coordinate of the CELL.
-            int x = col * _calculatedCellWidth;
+            int x = _contentLeftInset + col * _calculatedCellWidth;
 
             int y = ignorePadding ? 0 : GetPowerTopInset();
             y += row * (SzPower.Height + ScaleLogical(2) + SzSlot.Height + SlotLevelBandHeight);
@@ -3624,8 +3651,8 @@ namespace Mids_Reborn.UI.Renderer
         {
             if (_vcCols <= 0) return;
 
-            // Calculate the total width available for each column's cell
-            _calculatedCellWidth = panelWidth / _vcCols;
+            _calculatedCellWidth = Math.Max(1, panelWidth / _vcCols);
+            _contentLeftInset = 0;
             MarkGeometryCacheDirty();
         }
 

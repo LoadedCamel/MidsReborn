@@ -53,9 +53,16 @@ namespace Mids_Reborn.UI.Forms
         private bool _startupRevealQueued;
         private bool _startupRevealCompleted;
 
-        private const int BaselineCanvasWidth = 610;
         private const int BaselineFormWidth = 1280;
+        private const int BaselineFormHeight = 768;
         private const float MinimumUiScale = 0.90f;
+        private const float MaximumUiScale = 1.25f;
+        private const float UiScaleIntensity = 0.35f;
+        private const float MinimumRendererMasterScale = 0.90f;
+        private const float StandardRendererMasterScale = 1.00f;
+        private const float WideRendererTargetScale = 1.15f;
+        private const float MaximumRendererMasterScale = 1.35f;
+        private const float RendererScaleIntensity = 0.50f;
         private const float BaselineMainLeftColumnWidth = 620f;
         private const float BaselineLeftPowerColumnWidth = 410f;
         private const float BaselinePoolRailWidth = 210f;
@@ -65,11 +72,15 @@ namespace Mids_Reborn.UI.Forms
         private const float BaselineHeaderArchetypeWidth = 152f;
         private const float BaselineHeaderOriginLabelWidth = 74f;
         private const float BaselineHeaderOriginWidth = 128f;
+        private const float BaselineHeaderAlignmentLabelWidth = 84f;
+        private const float BaselineHeaderAlignmentWidth = 128f;
+        private const float BaselineHeaderPlannerWidth = 282f;
         private const float BaselineHeaderModeLabelWidth = 76f;
         private const float BaselineHeaderModeWidth = 282f;
         private const float BaselineHeaderTotalsWidth = 140f;
         private const float BaselineHeaderCombatWidth = 114f;
         private const float BaselineHeaderContentHeight = 40f;
+        private const float BaselineHeaderInteractiveHeight = 32f;
         private const float BaselinePowerSetHeaderRowHeight = 18f;
         private const float BaselinePowerSetDropDownRowHeight = 24f;
         private const int PowerSetChromeTopSpacing = 1;
@@ -79,6 +90,7 @@ namespace Mids_Reborn.UI.Forms
         private const float BaselineUtilityButtonWidth = 114f;
         private const float BaselineRightActionRowHeight = 40f;
         private const int CompactTwoColumnBreakpoint = 1180;
+        private const int PortraitSupportedMaxWidth = 1080;
         private const float CompactMainLeftColumnWidth = 456f;
         private const float CompactLeftPowerColumnWidth = 292f;
         private const float CompactPowerListMinHeight = 96f;
@@ -103,11 +115,20 @@ namespace Mids_Reborn.UI.Forms
         private const float CompactHeaderOriginLabelWidth = 56f;
         private const float CompactHeaderOriginMinimumWidth = 140f;
         private const float CompactHeaderOriginMaximumWidth = 180f;
+        private const float CompactHeaderAlignmentLabelWidth = 84f;
+        private const float CompactHeaderAlignmentMinimumWidth = 124f;
+        private const float CompactHeaderAlignmentMaximumWidth = 164f;
         private const float CompactHeaderModeLabelWidth = 60f;
         private const float CompactHeaderTotalsWidth = 126f;
         private const float CompactHeaderCombatWidth = 104f;
         private const float CompactPlannerModeMinimumWidth = 260f;
         private const float CompactPlannerModeMaximumWidth = 420f;
+        private const float ResponsiveWideSlackWidth = 220f;
+        private const float ResponsiveMainShellGap = 6f;
+        private const float ResponsiveRightShellChromeWidth = 16f;
+        private const float PortraitTopPaneHeightRatio = 0.42f;
+        private const float PortraitTopPaneMinimumHeight = 320f;
+        private const float PortraitTopPaneMaximumHeight = 520f;
         private const float LeftUiScaleBucketGranularity = 100f;
         private float _lastMasterScale = 1f;
         private int _lastCanvasWidth = -1;
@@ -119,6 +140,15 @@ namespace Mids_Reborn.UI.Forms
         private readonly Dictionary<Control, Rectangle> _leftUiBounds = new();
         private readonly Dictionary<MidsListView, (int ScrollBarWidth, int PaddingX, int PaddingY, int LineSpacing)> _leftListMetrics = new();
         private readonly Dictionary<MidsVectorButton, int> _leftButtonCornerRadii = new();
+        private static readonly Enums.Alignment[] HeaderAlignmentOptions =
+        [
+            Enums.Alignment.Hero,
+            Enums.Alignment.Vigilante,
+            Enums.Alignment.Resistance,
+            Enums.Alignment.Villain,
+            Enums.Alignment.Rogue,
+            Enums.Alignment.Loyalist
+        ];
         private PoolSectionBinding[] _poolSections = [];
         private Label? _modeLabel;
         private MidsSegmentedToggle? _plannerModeToggle;
@@ -148,6 +178,9 @@ namespace Mids_Reborn.UI.Forms
         private LeftDetailsLayoutSnapshot? _leftDetailsExactLayout;
         private PoolStackLayoutSnapshot? _poolStackExactLayout;
         private ActionStripLayoutSnapshot? _actionStripExactLayout;
+        private MainWindowResponsiveProfile? _lastResponsiveProfile;
+        private RendererDisplayLayoutState? _lastRendererDisplayLayout;
+        private bool _portraitLayoutEnabled;
         private System.Drawing.Icon? _shellLargeIcon;
         private System.Drawing.Icon? _shellSmallIcon;
 
@@ -330,6 +363,29 @@ namespace Mids_Reborn.UI.Forms
             CompactTwoColumn
         }
 
+        private enum MainWindowResponsiveProfile
+        {
+            WideDesktop,
+            StandardDesktop,
+            LowResLaptop,
+            Portrait
+        }
+
+        private readonly record struct RendererLayoutCandidate(
+            int Columns,
+            Enums.eColumnStacking StackingMode,
+            BuildRendererLayoutMetrics BaseMetrics,
+            BuildRendererLayoutMetrics MinimumScaleMetrics,
+            bool IsFallback);
+
+        private readonly record struct RendererDisplayLayoutState(
+            int Columns,
+            Enums.eColumnStacking StackingMode,
+            float MasterScale,
+            BuildRendererLayoutMetrics BaseMetrics,
+            BuildRendererLayoutMetrics Metrics,
+            bool IsFallback);
+
         private bool _isInLiveResize;
         private bool _pendingEndLiveResizeMetrics;
         private bool _pendingResumeSmartLayout;
@@ -458,6 +514,7 @@ namespace Mids_Reborn.UI.Forms
 
             InitializeThemeMenu();
             InitializeBuildMenuHandlers();
+            UpdatePortraitLayoutMenuState();
 
             if (!DesignMode)
             {
@@ -494,75 +551,34 @@ namespace Mids_Reborn.UI.Forms
             ApplyHeaderLabelStyle(lblName);
             ApplyHeaderLabelStyle(lblAT);
             ApplyHeaderLabelStyle(lblOrigin);
+            ApplyHeaderLabelStyle(lblAlignment);
+            ApplyHeaderLabelStyle(plannerModeLabel);
+            ApplyHeaderLabelStyle(staticLevelLabel);
+            staticLevelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
 
-            _modeLabel = new Label
-            {
-                Dock = DockStyle.Fill,
-                Name = "lblModeNative",
-                Text = "Mode:",
-            };
-            ApplyHeaderLabelStyle(_modeLabel);
+            _modeLabel = plannerModeLabel;
+            _plannerModeToggle = plannerModeToggle;
+            _plannerModeHost = plannerModeHost;
+            _staticLevelLabel = staticLevelLabel;
+            _staticLevelInput = staticLevelInput;
+            _pvModeToggle = pvModeToggle;
 
-            _plannerModeToggle = new MidsSegmentedToggle
-            {
-                Dock = DockStyle.Fill,
-                Font = new Font("Noto Sans SemiBold", 9.25F, FontStyle.Bold, GraphicsUnit.Point, 0),
-                Margin = new Padding(0, 0, 8, 0),
-                Name = "plannerModeToggle"
-            };
-            _plannerModeToggle.SetItems("Level-Up", "Respec");
-            _plannerModeToggle.SelectedIndexChanged += PlannerModeToggle_SelectedIndexChanged;
-            tTip.SetToolTip(_plannerModeToggle, "Build Mode");
-
-            _staticLevelLabel = new Label
-            {
-                AutoSize = true,
-                Dock = DockStyle.Fill,
-                Margin = new Padding(0, 0, 4, 0),
-                Name = "lblStaticLevelNative",
-                Text = "Level"
-            };
-            ApplyHeaderLabelStyle(_staticLevelLabel);
-            _staticLevelLabel.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-
-            _staticLevelInput = new MidsLevelStepper
-            {
-                Dock = DockStyle.Fill,
-                Margin = new Padding(0, 4, 0, 4),
-                Minimum = 1,
-                Maximum = Character.MaxLevel + 1,
-                Name = "stepStaticBuildLevel",
-                Width = 82
-            };
-            _staticLevelInput.ValueChanged += StaticLevelInput_ValueChanged;
-            tTip.SetToolTip(_staticLevelInput, "Static build level");
-
-            _plannerModeHost = new TableLayoutPanel
-            {
-                ColumnCount = 3,
-                Dock = DockStyle.Fill,
-                Margin = new Padding(3, 3, 8, 3),
-                Name = "plannerModeHost",
-                Padding = Padding.Empty,
-                RowCount = 1
-            };
-            _plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
-            _plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            _plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 82F));
-            _plannerModeHost.Controls.Add(_plannerModeToggle, 0, 0);
-            _plannerModeHost.Controls.Add(_staticLevelLabel, 1, 0);
-            _plannerModeHost.Controls.Add(_staticLevelInput, 2, 0);
-
-            _pvModeToggle = new MidsSegmentedToggle
-            {
-                Dock = DockStyle.Fill,
-                Font = new Font("Noto Sans SemiBold", 9.25F, FontStyle.Bold, GraphicsUnit.Point, 0),
-                Margin = new Padding(0, 4, 4, 4),
-                Name = "pvModeToggle"
-            };
-            _pvModeToggle.SetItems("PvE", "PvP");
-            _pvModeToggle.SelectedIndexChanged += PvModeToggle_SelectedIndexChanged;
-            tTip.SetToolTip(_pvModeToggle, "Mode");
+            plannerModeLabel.Text = "Planner:";
+            plannerModeHost.ColumnCount = 4;
+            plannerModeHost.ColumnStyles.Clear();
+            plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 92F));
+            plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 82F));
+            plannerModeToggle.SetItems("Level-Up", "Respec");
+            staticLevelInput.Minimum = 1;
+            staticLevelInput.Maximum = Character.MaxLevel + 1;
+            pvModeToggle.SetItems("PvE", "PvP");
+            ConfigureAlignmentDropDownIcons();
+            tTip.SetToolTip(alignmentDropDown, "Character alignment");
+            tTip.SetToolTip(plannerModeToggle, "Build Mode");
+            tTip.SetToolTip(staticLevelInput, "Static build level");
+            tTip.SetToolTip(pvModeToggle, "Mode");
 
             characterLayoutPanel.SuspendLayout();
             buttonsLayoutPanel.SuspendLayout();
@@ -574,41 +590,20 @@ namespace Mids_Reborn.UI.Forms
             characterLayoutPanel.Controls.Remove(modeEx);
             buttonsLayoutPanel.Controls.Remove(dynMode);
             buttonsLayoutPanel.Controls.Remove(pvXEx);
-            buttonsLayoutPanel.Controls.Remove(combatEx);
 
             ConfigureCharacterHeaderColumns();
             ConfigureRightActionStripColumns();
-
-            characterLayoutPanel.Controls.Add(_modeLabel, 6, 0);
-            characterLayoutPanel.Controls.Add(_plannerModeHost, 7, 0);
-            characterLayoutPanel.Controls.Add(combatEx, 9, 0);
-            characterLayoutPanel.SetColumn(lblName, 0);
-            if (_nameInputShell is not null)
-            {
-                characterLayoutPanel.Controls.Add(_nameInputShell, 1, 0);
-                characterLayoutPanel.SetColumn(_nameInputShell, 1);
-            }
-            characterLayoutPanel.SetColumn(lblAT, 2);
-            characterLayoutPanel.SetColumn(atDropDown, 3);
-            characterLayoutPanel.SetColumn(lblOrigin, 4);
-            characterLayoutPanel.SetColumn(originDropDown, 5);
-            characterLayoutPanel.SetColumn(_modeLabel, 6);
-            characterLayoutPanel.SetColumn(_plannerModeHost, 7);
-            characterLayoutPanel.SetColumn(totalsEx, 8);
-            characterLayoutPanel.SetColumn(combatEx, 9);
-
-            buttonsLayoutPanel.Controls.Add(_pvModeToggle, 0, 0);
-            buttonsLayoutPanel.SetColumn(_pvModeToggle, 0);
-            buttonsLayoutPanel.SetColumn(accoladesEx, 2);
-            buttonsLayoutPanel.SetColumn(incarnatesEx, 3);
-            buttonsLayoutPanel.SetColumn(ibPrestigePowersEx, 4);
-            buttonsLayoutPanel.SetColumn(tempPowersEx, 5);
+            PopulateAlignmentDropDown();
+            ConfigureHeaderDropDownLayout(atDropDown);
+            ConfigureHeaderDropDownLayout(originDropDown);
+            ConfigureHeaderDropDownLayout(alignmentDropDown);
 
             leftLayoutPanel.Margin = new Padding(3, 3, 0, 0);
             rightLayoutPanel.Margin = new Padding(0, 3, 0, 0);
             leftInnerLayoutPanel.Margin = Padding.Empty;
-            atDropDown.Margin = new Padding(3, 8, 3, 6);
-            originDropDown.Margin = new Padding(3, 8, 3, 6);
+            ApplyHeaderDropDownMetrics(atDropDown, 1f);
+            ApplyHeaderDropDownMetrics(originDropDown, 1f);
+            ApplyHeaderDropDownMetrics(alignmentDropDown, 1f);
             combatEx.Margin = new Padding(4, 4, 4, 4);
             totalsEx.Margin = new Padding(8, 4, 4, 4);
             buttonsLayoutPanel.Margin = Padding.Empty;
@@ -623,11 +618,12 @@ namespace Mids_Reborn.UI.Forms
             SyncPlannerModeToggle();
             SyncStaticLevelControl();
             SyncPvModeToggle();
+            SyncAlignmentDropDown();
         }
 
         private void ConfigureCharacterHeaderColumns()
         {
-            characterLayoutPanel.ColumnCount = 11;
+            characterLayoutPanel.ColumnCount = 12;
             characterLayoutPanel.RowCount = 1;
             CountStyleCollectionReset();
             characterLayoutPanel.ColumnStyles.Clear();
@@ -639,8 +635,9 @@ namespace Mids_Reborn.UI.Forms
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderArchetypeWidth));
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderOriginLabelWidth));
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderOriginWidth));
-            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderModeLabelWidth));
-            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderModeWidth));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderAlignmentLabelWidth));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderAlignmentWidth));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderPlannerWidth));
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderTotalsWidth));
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineHeaderCombatWidth));
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
@@ -722,12 +719,230 @@ namespace Mids_Reborn.UI.Forms
             layout.SetRowSpan(control, 1);
         }
 
-        private bool IsTwoColumnLayoutMode()
-            => (MidsContext.Config?.Columns ?? 3) == 2
-               && (MidsContext.Config?.ColumnStackingMode ?? Enums.eColumnStacking.None) == Enums.eColumnStacking.None;
+        private static bool UsesCompactResponsiveLayout(MainWindowResponsiveProfile profile)
+            => profile is MainWindowResponsiveProfile.LowResLaptop or MainWindowResponsiveProfile.Portrait;
 
-        private bool ShouldUseCompactTwoColumnLayout()
-            => IsTwoColumnLayoutMode() && ClientSize.Width > 0 && ClientSize.Width <= CompactTwoColumnBreakpoint;
+        private static bool UsesPortraitMainLayout(MainWindowResponsiveProfile profile)
+            => profile == MainWindowResponsiveProfile.Portrait;
+
+        private static bool UsesWideDesktopLayout(MainWindowResponsiveProfile profile)
+            => profile == MainWindowResponsiveProfile.WideDesktop;
+
+        private (int Columns, Enums.eColumnStacking StackingMode) GetSelectedRendererLayout()
+        {
+            int columns = Math.Clamp(MidsContext.Config?.Columns ?? 3, 2, 6);
+            var stackingMode = columns == 3
+                ? MidsContext.Config?.ColumnStackingMode ?? Enums.eColumnStacking.None
+                : Enums.eColumnStacking.None;
+            return (columns, stackingMode);
+        }
+
+        private BuildRendererLayoutMetrics MeasureRendererLayoutMetrics(int columns, Enums.eColumnStacking stackingMode, float masterScale = 1f)
+            => drawing?.GetLayoutMetrics(columns, stackingMode, masterScale)
+               ?? BuildRenderer.MeasureLayoutMetrics(columns, stackingMode, DeviceDpi > 0 ? DeviceDpi / 96f : 1f, masterScale);
+
+        private static float ComputeCanvasMasterScale(int availableWidth, int preferredWidthAtOneX)
+        {
+            if (availableWidth <= 0 || preferredWidthAtOneX <= 0)
+            {
+                return 1f;
+            }
+
+            float rawScale = 1f + ((((float)availableWidth / preferredWidthAtOneX) - 1f) * RendererScaleIntensity);
+            return Math.Clamp(rawScale, MinimumRendererMasterScale, MaximumRendererMasterScale);
+        }
+
+        private RendererLayoutCandidate CreateRendererLayoutCandidate(int columns, Enums.eColumnStacking stackingMode, bool isFallback)
+        {
+            columns = Math.Clamp(columns, 2, 6);
+            return new RendererLayoutCandidate(
+                columns,
+                stackingMode,
+                MeasureRendererLayoutMetrics(columns, stackingMode, StandardRendererMasterScale),
+                MeasureRendererLayoutMetrics(columns, stackingMode, MinimumRendererMasterScale),
+                isFallback);
+        }
+
+        private RendererDisplayLayoutState CreateRendererDisplayLayoutState(RendererLayoutCandidate candidate, int availableWidth)
+        {
+            int fitWidth = Math.Max(1, availableWidth);
+            float masterScale = ComputeCanvasMasterScale(fitWidth, candidate.BaseMetrics.PreferredWidth);
+            var scaledMetrics = MeasureRendererLayoutMetrics(candidate.Columns, candidate.StackingMode, masterScale);
+            return new RendererDisplayLayoutState(
+                candidate.Columns,
+                candidate.StackingMode,
+                masterScale,
+                candidate.BaseMetrics,
+                scaledMetrics,
+                candidate.IsFallback);
+        }
+
+        private RendererLayoutCandidate GetDefaultRendererLayoutCandidate()
+            => CreateRendererLayoutCandidate(3, Enums.eColumnStacking.None, isFallback: false);
+
+        private RendererLayoutCandidate GetSelectedRendererLayoutCandidate()
+            => EnumerateRendererLayoutCandidates(allowFallback: false).FirstOrDefault(GetDefaultRendererLayoutCandidate());
+
+        private IEnumerable<RendererLayoutCandidate> EnumerateRendererLayoutCandidates(bool allowFallback)
+        {
+            var (selectedColumns, selectedStackingMode) = GetSelectedRendererLayout();
+            var seen = new HashSet<(int Columns, Enums.eColumnStacking StackingMode)>();
+
+            bool TryYield(int columns, Enums.eColumnStacking stackingMode, bool isFallback, out RendererLayoutCandidate candidate)
+            {
+                columns = Math.Clamp(columns, 2, 6);
+                if (!seen.Add((columns, stackingMode)))
+                {
+                    candidate = default;
+                    return false;
+                }
+
+                candidate = CreateRendererLayoutCandidate(columns, stackingMode, isFallback);
+                return true;
+            }
+
+            if (TryYield(selectedColumns, selectedStackingMode, isFallback: false, out var selected))
+            {
+                yield return selected;
+            }
+
+            if (!allowFallback)
+            {
+                yield break;
+            }
+
+            if (selectedStackingMode != Enums.eColumnStacking.None &&
+                TryYield(selectedColumns, Enums.eColumnStacking.None, isFallback: true, out var unstackedSelected))
+            {
+                yield return unstackedSelected;
+            }
+
+            for (int columns = selectedColumns - 1; columns >= 2; columns--)
+            {
+                if (TryYield(columns, Enums.eColumnStacking.None, isFallback: true, out var fallback))
+                {
+                    yield return fallback;
+                }
+            }
+        }
+
+        private RendererDisplayLayoutState ResolveRendererDisplayLayout(int availableWidth, bool allowFallback)
+        {
+            int fitWidth = Math.Max(1, availableWidth);
+            RendererLayoutCandidate? firstCandidate = null;
+            foreach (var candidate in EnumerateRendererLayoutCandidates(allowFallback))
+            {
+                firstCandidate ??= candidate;
+                if (candidate.MinimumScaleMetrics.MinimumWidth <= fitWidth)
+                {
+                    return CreateRendererDisplayLayoutState(candidate, fitWidth);
+                }
+            }
+
+            return CreateRendererDisplayLayoutState(firstCandidate ?? GetDefaultRendererLayoutCandidate(), fitWidth);
+        }
+
+        private int GetActionStripMinimumWidth()
+            => (int)Math.Round(BaselinePvToggleWidth + 4f * BaselineUtilityButtonWidth + ResponsiveRightShellChromeWidth);
+
+        private int GetStandardHeaderMinimumWidth()
+            => (int)Math.Ceiling(CreateStandardHeaderMinimumWidths(1f).Sum() + 8f);
+
+        private int GetStandardHeaderPreferredWidth()
+            => (int)Math.Ceiling(CreateStandardHeaderPreferredWidths(1f).Sum() + 8f);
+
+        private int GetCompactHeaderMinimumWidth()
+        {
+            int topRowWidth =
+                (int)Math.Round(CompactHeaderNameLabelWidth) +
+                (int)Math.Round(CompactHeaderNameMinimumWidth) +
+                (int)Math.Round(CompactHeaderArchetypeLabelWidth) +
+                (int)Math.Round(CompactHeaderArchetypeMinimumWidth) +
+                (int)Math.Round(CompactHeaderOriginLabelWidth) +
+                (int)Math.Round(CompactHeaderOriginMinimumWidth) +
+                (int)Math.Round(CompactHeaderAlignmentLabelWidth) +
+                (int)Math.Round(CompactHeaderAlignmentMinimumWidth);
+
+            int bottomRowWidth =
+                (int)Math.Round(CompactPlannerModeMinimumWidth) +
+                12 +
+                (int)Math.Round(CompactHeaderTotalsWidth) +
+                (int)Math.Round(CompactHeaderCombatWidth);
+
+            return Math.Max(topRowWidth, bottomRowWidth);
+        }
+
+        private int GetMainContentWidthBudget()
+            => Math.Max(1, ClientSize.Width - mainLayoutPanel.Padding.Horizontal);
+
+        private int ComputeResponsiveMinimumClientWidth(MainWindowResponsiveProfile profile)
+        {
+            bool compactProfile = UsesCompactResponsiveLayout(profile);
+            int rendererMinimumWidth = compactProfile
+                ? EnumerateRendererLayoutCandidates(allowFallback: true)
+                    .Select(candidate => candidate.MinimumScaleMetrics.MinimumWidth)
+                    .DefaultIfEmpty(GetDefaultRendererLayoutCandidate().MinimumScaleMetrics.MinimumWidth)
+                    .Min()
+                : GetSelectedRendererLayoutCandidate().MinimumScaleMetrics.MinimumWidth;
+            int headerMinimumWidth = compactProfile ? GetCompactHeaderMinimumWidth() : GetStandardHeaderMinimumWidth();
+
+            if (UsesPortraitMainLayout(profile))
+            {
+                int portraitWidth = Math.Max(
+                    headerMinimumWidth,
+                    Math.Max(GetActionStripMinimumWidth(), rendererMinimumWidth));
+                return portraitWidth + Padding.Horizontal;
+            }
+
+            int leftMinimumWidth = compactProfile
+                ? (int)Math.Round(CompactMainLeftColumnWidth)
+                : (int)Math.Round(BaselineMainLeftColumnWidth);
+            int rightMinimumWidth = Math.Max(GetActionStripMinimumWidth(), rendererMinimumWidth);
+            int mainAreaMinimumWidth = leftMinimumWidth + rightMinimumWidth + (int)Math.Round(ResponsiveMainShellGap);
+            return Math.Max(headerMinimumWidth, mainAreaMinimumWidth) + Padding.Horizontal;
+        }
+
+        private MainWindowResponsiveProfile GetResponsiveProfile()
+        {
+            if (_portraitLayoutEnabled)
+            {
+                return MainWindowResponsiveProfile.Portrait;
+            }
+
+            int mainContentWidth = GetMainContentWidthBudget();
+            int leftColumnWidth = (int)Math.Round(BaselineMainLeftColumnWidth);
+            int availableRightWidth = Math.Max(1, mainContentWidth - leftColumnWidth - (int)Math.Round(ResponsiveMainShellGap));
+            int actionStripMinimumWidth = GetActionStripMinimumWidth();
+            int standardHeaderMinimumWidth = GetStandardHeaderMinimumWidth();
+            int standardHeaderPreferredWidth = GetStandardHeaderPreferredWidth();
+            var selectedRenderer = GetSelectedRendererLayoutCandidate();
+            var selectedRendererState = CreateRendererDisplayLayoutState(selectedRenderer, availableRightWidth);
+            int standardRightMinimumWidth = Math.Max(actionStripMinimumWidth, selectedRenderer.MinimumScaleMetrics.MinimumWidth);
+            int wideRightPreferredWidth = Math.Max(
+                actionStripMinimumWidth,
+                MeasureRendererLayoutMetrics(selectedRenderer.Columns, selectedRenderer.StackingMode, WideRendererTargetScale).PreferredWidth);
+            int standardRequiredWidth = Math.Max(
+                standardHeaderMinimumWidth,
+                leftColumnWidth + standardRightMinimumWidth + (int)Math.Round(ResponsiveMainShellGap));
+            int standardComfortWidth = Math.Max(
+                standardRequiredWidth,
+                Math.Max(standardHeaderPreferredWidth - 40, standardHeaderMinimumWidth + 80));
+            if (mainContentWidth < standardComfortWidth || selectedRendererState.MasterScale < StandardRendererMasterScale - 0.01f)
+            {
+                return MainWindowResponsiveProfile.LowResLaptop;
+            }
+
+            int widePreferredWidth = Math.Max(
+                standardHeaderPreferredWidth,
+                leftColumnWidth + wideRightPreferredWidth + (int)Math.Round(ResponsiveWideSlackWidth));
+
+            if (mainContentWidth >= widePreferredWidth && selectedRendererState.MasterScale >= WideRendererTargetScale - 0.01f)
+            {
+                return MainWindowResponsiveProfile.WideDesktop;
+            }
+
+            return MainWindowResponsiveProfile.StandardDesktop;
+        }
 
         private void ConfigureRightActionStripColumns()
         {
@@ -927,6 +1142,41 @@ namespace Mids_Reborn.UI.Forms
             txtName.SetBounds(horizontalInset, top, availableWidth, textHeight);
         }
 
+        private int GetHeaderInteractiveHeight(float scale)
+        {
+            int baselineHeight = (int)Math.Round(BaselineHeaderInteractiveHeight);
+            return Math.Max(baselineHeight, ScalePx(baselineHeight, scale));
+        }
+
+        private Padding GetHeaderInteractiveMargin(float scale)
+        {
+            int headerRowHeight = Math.Max(
+                (int)Math.Round(BaselineHeaderContentHeight),
+                ScalePx((int)Math.Round(BaselineHeaderContentHeight), scale));
+            int interactiveHeight = GetHeaderInteractiveHeight(scale);
+            int verticalInset = Math.Max(4, (headerRowHeight - interactiveHeight) / 2);
+            return new Padding(3, verticalInset, 3, verticalInset);
+        }
+
+        private Padding GetHeaderDropDownMargin(float scale)
+        {
+            return new Padding(3, 6, 3, 0);
+        }
+
+        private void ApplyHeaderDropDownMetrics(MidsDropDownList dropDown, float scale)
+        {
+            dropDown.IntegralHeight = false;
+            dropDown.Margin = GetHeaderDropDownMargin(scale);
+            dropDown.Height = Math.Max(dropDown.PreferredHeight, GetHeaderInteractiveHeight(scale));
+        }
+
+        private static void ConfigureHeaderDropDownLayout(MidsDropDownList dropDown)
+        {
+            dropDown.Dock = DockStyle.None;
+            dropDown.Anchor = AnchorStyles.Left | AnchorStyles.Right;
+            dropDown.IntegralHeight = false;
+        }
+
         private void EnsureHeaderChromeHost()
         {
             if (_headerChromeHost is null)
@@ -976,7 +1226,7 @@ namespace Mids_Reborn.UI.Forms
 
         private void EnsureStandardHeaderStructure()
         {
-            if (_headerChromeHost is null || _modeLabel is null || _plannerModeHost is null)
+            if (_headerChromeHost is null || _plannerModeHost is null)
             {
                 return;
             }
@@ -984,7 +1234,7 @@ namespace Mids_Reborn.UI.Forms
             var needsRebuild =
                 _headerStructureMode != ResizeLayoutMode.Standard
                 || characterLayoutPanel.Parent != _headerChromeHost
-                || characterLayoutPanel.ColumnStyles.Count != 11
+                || characterLayoutPanel.ColumnStyles.Count != 12
                 || characterLayoutPanel.RowStyles.Count != 1;
 
             if (!needsRebuild)
@@ -1017,10 +1267,11 @@ namespace Mids_Reborn.UI.Forms
             AttachHeaderControl(characterLayoutPanel, atDropDown, 3);
             AttachHeaderControl(characterLayoutPanel, lblOrigin, 4);
             AttachHeaderControl(characterLayoutPanel, originDropDown, 5);
-            AttachHeaderControl(characterLayoutPanel, _modeLabel, 6);
-            AttachHeaderControl(characterLayoutPanel, _plannerModeHost, 7);
-            AttachHeaderControl(characterLayoutPanel, totalsEx, 8);
-            AttachHeaderControl(characterLayoutPanel, combatEx, 9);
+            AttachHeaderControl(characterLayoutPanel, lblAlignment, 6);
+            AttachHeaderControl(characterLayoutPanel, alignmentDropDown, 7);
+            AttachHeaderControl(characterLayoutPanel, _plannerModeHost, 8);
+            AttachHeaderControl(characterLayoutPanel, totalsEx, 9);
+            AttachHeaderControl(characterLayoutPanel, combatEx, 10);
 
             characterLayoutPanel.ResumeLayout(performLayout: false);
             _headerChromeHost.ResumeLayout(performLayout: false);
@@ -1029,7 +1280,7 @@ namespace Mids_Reborn.UI.Forms
 
         private void EnsureCompactHeaderStructure()
         {
-            if (_headerChromeHost is null || _modeLabel is null || _plannerModeHost is null)
+            if (_headerChromeHost is null || _plannerModeHost is null)
             {
                 return;
             }
@@ -1043,8 +1294,8 @@ namespace Mids_Reborn.UI.Forms
             var needsRebuild =
                 _headerStructureMode != ResizeLayoutMode.CompactTwoColumn
                 || _compactHeaderHost.Parent != _headerChromeHost
-                || _compactHeaderTopLayout.ColumnStyles.Count != 6
-                || _compactHeaderBottomLayout.ColumnStyles.Count != 5
+                || _compactHeaderTopLayout.ColumnStyles.Count != 8
+                || _compactHeaderBottomLayout.ColumnStyles.Count != 4
                 || _compactHeaderHost.RowStyles.Count != 2;
 
             if (!needsRebuild)
@@ -1077,16 +1328,16 @@ namespace Mids_Reborn.UI.Forms
 
             CountStyleCollectionReset();
             _compactHeaderTopLayout.ColumnStyles.Clear();
-            _compactHeaderTopLayout.ColumnCount = 6;
-            for (var column = 0; column < 6; column++)
+            _compactHeaderTopLayout.ColumnCount = 8;
+            for (var column = 0; column < 8; column++)
             {
                 _compactHeaderTopLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 1F));
             }
 
             CountStyleCollectionReset();
             _compactHeaderBottomLayout.ColumnStyles.Clear();
-            _compactHeaderBottomLayout.ColumnCount = 5;
-            for (var column = 0; column < 5; column++)
+            _compactHeaderBottomLayout.ColumnCount = 4;
+            for (var column = 0; column < 4; column++)
             {
                 _compactHeaderBottomLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 1F));
             }
@@ -1100,11 +1351,12 @@ namespace Mids_Reborn.UI.Forms
             AttachHeaderControl(_compactHeaderTopLayout, atDropDown, 3);
             AttachHeaderControl(_compactHeaderTopLayout, lblOrigin, 4);
             AttachHeaderControl(_compactHeaderTopLayout, originDropDown, 5);
+            AttachHeaderControl(_compactHeaderTopLayout, lblAlignment, 6);
+            AttachHeaderControl(_compactHeaderTopLayout, alignmentDropDown, 7);
 
-            AttachHeaderControl(_compactHeaderBottomLayout, _modeLabel, 0);
-            AttachHeaderControl(_compactHeaderBottomLayout, _plannerModeHost, 1);
-            AttachHeaderControl(_compactHeaderBottomLayout, totalsEx, 3);
-            AttachHeaderControl(_compactHeaderBottomLayout, combatEx, 4);
+            AttachHeaderControl(_compactHeaderBottomLayout, _plannerModeHost, 0);
+            AttachHeaderControl(_compactHeaderBottomLayout, totalsEx, 2);
+            AttachHeaderControl(_compactHeaderBottomLayout, combatEx, 3);
 
             _compactHeaderBottomLayout.ResumeLayout(performLayout: false);
             _compactHeaderTopLayout.ResumeLayout(performLayout: false);
@@ -1122,10 +1374,27 @@ namespace Mids_Reborn.UI.Forms
                 ScaleLayoutValue(BaselineHeaderArchetypeWidth, scale),
                 ScaleLayoutValue(BaselineHeaderOriginLabelWidth, scale),
                 ScaleLayoutValue(BaselineHeaderOriginWidth, scale),
-                ScaleLayoutValue(BaselineHeaderModeLabelWidth, scale),
-                Math.Max(BaselineHeaderModeWidth, ScaleLayoutValue(BaselineHeaderModeWidth, scale)),
+                ScaleLayoutValue(BaselineHeaderAlignmentLabelWidth, scale),
+                ScaleLayoutValue(BaselineHeaderAlignmentWidth, scale),
+                Math.Max(BaselineHeaderPlannerWidth, ScaleLayoutValue(BaselineHeaderPlannerWidth, scale)),
                 ScaleLayoutValue(BaselineHeaderTotalsWidth, scale),
                 ScaleLayoutValue(BaselineHeaderCombatWidth, scale)
+            ];
+
+        private float[] CreateStandardHeaderMaximumWidths(float scale)
+            =>
+            [
+                ScaleLayoutValue(60f, scale),
+                ScaleLayoutValue(320f, scale),
+                ScaleLayoutValue(BaselineHeaderArchetypeLabelWidth, scale),
+                ScaleLayoutValue(220f, scale),
+                ScaleLayoutValue(BaselineHeaderOriginLabelWidth, scale),
+                ScaleLayoutValue(176f, scale),
+                ScaleLayoutValue(BaselineHeaderAlignmentLabelWidth, scale),
+                ScaleLayoutValue(180f, scale),
+                ScaleLayoutValue(420f, scale),
+                ScaleLayoutValue(156f, scale),
+                ScaleLayoutValue(124f, scale)
             ];
 
         private float[] CreateStandardHeaderMinimumWidths(float scale)
@@ -1137,15 +1406,16 @@ namespace Mids_Reborn.UI.Forms
                 ScaleLayoutValue(108f, scale),
                 ScaleLayoutValue(48f, scale),
                 ScaleLayoutValue(96f, scale),
-                ScaleLayoutValue(52f, scale),
-                BaselineHeaderModeWidth,
+                ScaleLayoutValue(72f, scale),
+                ScaleLayoutValue(96f, scale),
+                ScaleLayoutValue(312f, scale),
                 ScaleLayoutValue(104f, scale),
                 ScaleLayoutValue(88f, scale)
             ];
 
         private float UpdateStandardHeaderMetrics(float scale, float metricsScale, int headerHostWidth, bool sameModeLiveResize, bool captureExactMetrics)
         {
-            if (_headerChromeHost is null || _modeLabel is null || _plannerModeHost is null)
+            if (_headerChromeHost is null || _plannerModeHost is null)
             {
                 return Math.Max(BaselineHeaderContentHeight, ScaleLayoutValue(BaselineHeaderContentHeight, metricsScale));
             }
@@ -1154,26 +1424,29 @@ namespace Mids_Reborn.UI.Forms
                 ? CloneWidths(exactSnapshot.ColumnWidths)
                 : CreateStandardHeaderPreferredWidths(scale);
             var minimumWidths = CreateStandardHeaderMinimumWidths(metricsScale);
+            var maximumWidths = CreateStandardHeaderMaximumWidths(scale);
             float desiredSpacerWidth = ScaleLayoutValue(8f, metricsScale);
             float availableWidth = Math.Max(1f, headerHostWidth - desiredSpacerWidth);
 
             if (sameModeLiveResize)
             {
-                ReduceWidthsToFitByPriority(widths, minimumWidths, availableWidth, [1, 7, 3, 5, 8, 9, 0, 2, 4, 6], quantizeToTwoPx: true);
+                ReduceWidthsToFitByPriority(widths, minimumWidths, availableWidth, [1, 8, 3, 5, 7, 9, 10, 0, 2, 4, 6], quantizeToTwoPx: true);
             }
             else
             {
                 ReduceWidthsToFit(widths, minimumWidths, availableWidth);
             }
 
-            for (var column = 0; column <= 9; column++)
+            ExpandWidthsToFill(widths, maximumWidths, availableWidth);
+
+            for (var column = 0; column <= 10; column++)
             {
                 characterLayoutPanel.ColumnStyles[column].SizeType = SizeType.Absolute;
                 characterLayoutPanel.ColumnStyles[column].Width = widths[column];
             }
 
-            characterLayoutPanel.ColumnStyles[10].SizeType = SizeType.Absolute;
-            characterLayoutPanel.ColumnStyles[10].Width = Math.Max(desiredSpacerWidth, headerHostWidth - widths.Sum());
+            characterLayoutPanel.ColumnStyles[11].SizeType = SizeType.Absolute;
+            characterLayoutPanel.ColumnStyles[11].Width = Math.Max(desiredSpacerWidth, headerHostWidth - widths.Sum());
 
             var headerHeight = Math.Max(BaselineHeaderContentHeight, ScaleLayoutValue(BaselineHeaderContentHeight, metricsScale));
             characterLayoutPanel.Width = headerHostWidth;
@@ -1198,7 +1471,9 @@ namespace Mids_Reborn.UI.Forms
                 ScaleLayoutValue(CompactHeaderArchetypeLabelWidth, widthScale),
                 ScaleLayoutValue(CompactHeaderArchetypeMinimumWidth, widthScale),
                 ScaleLayoutValue(CompactHeaderOriginLabelWidth, widthScale),
-                ScaleLayoutValue(CompactHeaderOriginMinimumWidth, widthScale)
+                ScaleLayoutValue(CompactHeaderOriginMinimumWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderAlignmentLabelWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderAlignmentMinimumWidth, widthScale)
             ];
         }
 
@@ -1215,7 +1490,7 @@ namespace Mids_Reborn.UI.Forms
                 }
                 else
                 {
-                    ReduceWidthsToFitByPriority(liveWidths, CreateCompactHeaderTopMinimumWidths(widthScale), headerHostWidth, [1, 3, 5], quantizeToTwoPx: true);
+                    ReduceWidthsToFitByPriority(liveWidths, CreateCompactHeaderTopMinimumWidths(widthScale), headerHostWidth, [1, 3, 5, 7], quantizeToTwoPx: true);
                 }
 
                 return liveWidths;
@@ -1224,7 +1499,8 @@ namespace Mids_Reborn.UI.Forms
             float labelWidthTotal =
                 ScaleLayoutValue(CompactHeaderNameLabelWidth, widthScale) +
                 ScaleLayoutValue(CompactHeaderArchetypeLabelWidth, widthScale) +
-                ScaleLayoutValue(CompactHeaderOriginLabelWidth, widthScale);
+                ScaleLayoutValue(CompactHeaderOriginLabelWidth, widthScale) +
+                ScaleLayoutValue(CompactHeaderAlignmentLabelWidth, widthScale);
             float[] widths =
             [
                 ScaleLayoutValue(CompactHeaderNameLabelWidth, widthScale),
@@ -1232,26 +1508,31 @@ namespace Mids_Reborn.UI.Forms
                 ScaleLayoutValue(CompactHeaderArchetypeLabelWidth, widthScale),
                 ScaleLayoutValue(CompactHeaderArchetypeMinimumWidth, widthScale),
                 ScaleLayoutValue(CompactHeaderOriginLabelWidth, widthScale),
-                ScaleLayoutValue(CompactHeaderOriginMinimumWidth, widthScale)
+                ScaleLayoutValue(CompactHeaderOriginMinimumWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderAlignmentLabelWidth, widthScale),
+                ScaleLayoutValue(CompactHeaderAlignmentMinimumWidth, widthScale)
             ];
 
             float[] inputWidths =
             [
                 widths[1],
                 widths[3],
-                widths[5]
+                widths[5],
+                widths[7]
             ];
             float[] weights =
             [
-                0.40f,
                 0.34f,
-                0.26f
+                0.28f,
+                0.20f,
+                0.18f
             ];
 
             DistributeRemainingWidth(inputWidths, Math.Max(0f, headerHostWidth - labelWidthTotal), weights);
             widths[1] = inputWidths[0];
             widths[3] = inputWidths[1];
             widths[5] = inputWidths[2];
+            widths[7] = inputWidths[3];
             return widths;
         }
 
@@ -1260,7 +1541,6 @@ namespace Mids_Reborn.UI.Forms
             float widthScale = Math.Max(1f, scale);
             return
             [
-                ScaleLayoutValue(CompactHeaderModeLabelWidth, widthScale),
                 ScaleLayoutValue(CompactPlannerModeMinimumWidth, widthScale),
                 0f,
                 ScaleLayoutValue(CompactHeaderTotalsWidth * 0.82f, widthScale),
@@ -1277,36 +1557,35 @@ namespace Mids_Reborn.UI.Forms
                 float extraWidth = headerHostWidth - liveWidths.Sum();
                 if (extraWidth >= 0f)
                 {
-                    liveWidths[2] += extraWidth;
+                    liveWidths[1] += extraWidth;
                 }
                 else
                 {
-                    ReduceWidthsToFitByPriority(liveWidths, CreateCompactHeaderBottomMinimumWidths(widthScale), headerHostWidth, [2, 1, 3, 4, 0], quantizeToTwoPx: true);
+                    ReduceWidthsToFitByPriority(liveWidths, CreateCompactHeaderBottomMinimumWidths(widthScale), headerHostWidth, [1, 0, 2, 3], quantizeToTwoPx: true);
                 }
 
                 return liveWidths;
             }
 
-            float modeLabelWidth = ScaleLayoutValue(CompactHeaderModeLabelWidth, widthScale);
             float totalsWidth = ScaleLayoutValue(CompactHeaderTotalsWidth, widthScale);
             float combatWidth = ScaleLayoutValue(CompactHeaderCombatWidth, widthScale);
             float minimumPlannerWidth = ScaleLayoutValue(CompactPlannerModeMinimumWidth, widthScale);
             float spacerWidth = ScaleLayoutValue(12f, widthScale);
-            float plannerWidth = Math.Max(minimumPlannerWidth, headerHostWidth - modeLabelWidth - totalsWidth - combatWidth - spacerWidth);
-            var widths = new[] { modeLabelWidth, plannerWidth, spacerWidth, totalsWidth, combatWidth };
+            float plannerWidth = Math.Max(minimumPlannerWidth, headerHostWidth - totalsWidth - combatWidth - spacerWidth);
+            var widths = new[] { plannerWidth, spacerWidth, totalsWidth, combatWidth };
 
             if (widths.Sum() > headerHostWidth)
             {
-                ReduceWidthsToFitByPriority(widths, CreateCompactHeaderBottomMinimumWidths(widthScale), headerHostWidth, [2, 1, 3, 4, 0], quantizeToTwoPx: false);
+                ReduceWidthsToFitByPriority(widths, CreateCompactHeaderBottomMinimumWidths(widthScale), headerHostWidth, [1, 0, 2, 3], quantizeToTwoPx: false);
             }
 
-            widths[2] = Math.Max(0f, headerHostWidth - widths[0] - widths[1] - widths[3] - widths[4]);
+            widths[1] = Math.Max(0f, headerHostWidth - widths[0] - widths[2] - widths[3]);
             return widths;
         }
 
         private float UpdateCompactHeaderMetrics(float scale, float metricsScale, int headerHostWidth, bool sameModeLiveResize, bool captureExactMetrics)
         {
-            if (_headerChromeHost is null || _modeLabel is null || _plannerModeHost is null)
+            if (_headerChromeHost is null || _plannerModeHost is null)
             {
                 return CompactHeaderTopRowHeight + CompactHeaderBottomRowHeight + CompactHeaderRowGap;
             }
@@ -1937,38 +2216,7 @@ namespace Mids_Reborn.UI.Forms
             _compactHeaderBottomLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, combatWidth));
         }
 
-        private int ComputeCompactMinimumClientWidth()
-        {
-            int nameGroupWidth =
-                (int)Math.Round(CompactHeaderNameLabelWidth) +
-                (int)Math.Round(CompactHeaderNameMinimumWidth) +
-                (int)Math.Round(CompactHeaderArchetypeLabelWidth) +
-                (int)Math.Round(CompactHeaderArchetypeMinimumWidth) +
-                (int)Math.Round(CompactHeaderOriginLabelWidth) +
-                (int)Math.Round(CompactHeaderOriginMinimumWidth);
-
-            int compactBottomRowWidth =
-                (int)Math.Round(CompactHeaderModeLabelWidth) +
-                (int)Math.Round(CompactPlannerModeMinimumWidth) +
-                (int)Math.Round(CompactHeaderTotalsWidth) +
-                (int)Math.Round(CompactHeaderCombatWidth);
-
-            int compactHeaderMinimumWidth = Math.Max(nameGroupWidth, compactBottomRowWidth);
-
-            int leftMinimumWidth = (int)Math.Round(CompactMainLeftColumnWidth);
-            int actionStripMinimumWidth =
-                (int)Math.Round(ScaleLayoutValue(BaselinePvToggleWidth, MinimumUiScale)) +
-                4 * (int)Math.Round(ScaleLayoutValue(BaselineUtilityButtonWidth, MinimumUiScale));
-            int rendererMinimumWidth = drawing?.GetMinimumRequiredWidth()
-                ?? (int)Math.Round((2 * 184 + 50) * MinimumUiScale);
-            int rightShellPadding = (int)Math.Round(ScaleLayoutValue(16f, MinimumUiScale));
-            int rightMinimumWidth = Math.Max(actionStripMinimumWidth, rendererMinimumWidth) + rightShellPadding;
-
-            int mainAreaMinimumWidth = leftMinimumWidth + rightMinimumWidth;
-            return Math.Max(compactHeaderMinimumWidth, mainAreaMinimumWidth) + Padding.Horizontal;
-        }
-
-        private void UpdateWindowMinimumSize()
+        private void UpdateWindowMinimumSize(MainWindowResponsiveProfile responsiveProfile)
         {
             if (!IsHandleCreated)
             {
@@ -1976,9 +2224,9 @@ namespace Mids_Reborn.UI.Forms
             }
 
             var minimumWidth = _defaultWindowMinimumSize.Width;
-            if (ShouldUseCompactTwoColumnLayout())
+            if (UsesCompactResponsiveLayout(responsiveProfile) || UsesPortraitMainLayout(responsiveProfile))
             {
-                minimumWidth = ComputeCompactMinimumClientWidth() + Math.Max(0, Width - ClientSize.Width);
+                minimumWidth = ComputeResponsiveMinimumClientWidth(responsiveProfile) + Math.Max(0, Width - ClientSize.Width);
             }
 
             var desiredMinimum = new Size(minimumWidth, _defaultWindowMinimumSize.Height);
@@ -2122,6 +2370,14 @@ namespace Mids_Reborn.UI.Forms
             var isStaticMode = NormalizePlannerBuildMode(MidsContext.Config?.BuildMode ?? Enums.dmModes.LevelUp) == Enums.dmModes.Respec;
             _staticLevelLabel.Visible = isStaticMode;
             _staticLevelInput.Visible = isStaticMode;
+            if (_plannerModeHost is not null && _plannerModeHost.ColumnStyles.Count >= 4)
+            {
+                _plannerModeHost.ColumnStyles[2].SizeType = isStaticMode ? SizeType.AutoSize : SizeType.Absolute;
+                _plannerModeHost.ColumnStyles[2].Width = isStaticMode ? _plannerModeHost.ColumnStyles[2].Width : 0f;
+                _plannerModeHost.ColumnStyles[3].SizeType = SizeType.Absolute;
+                _plannerModeHost.ColumnStyles[3].Width = isStaticMode ? 82f : 0f;
+            }
+
             if (!isStaticMode)
             {
                 return;
@@ -2145,6 +2401,127 @@ namespace Mids_Reborn.UI.Forms
             _syncingPvModeToggle = true;
             _pvModeToggle.SelectedIndex = MidsContext.Config?.Inc.DisablePvE == true ? 1 : 0;
             _syncingPvModeToggle = false;
+        }
+
+        private void PopulateAlignmentDropDown()
+        {
+            using (_events.Suppress(true))
+            {
+                alignmentDropDown.BeginUpdate();
+                alignmentDropDown.Items.Clear();
+                alignmentDropDown.Items.AddRange(HeaderAlignmentOptions.Cast<object>().ToArray());
+                alignmentDropDown.RefreshIcons();
+                alignmentDropDown.EndUpdate();
+            }
+        }
+
+        private void ConfigureAlignmentDropDownIcons()
+        {
+            alignmentDropDown.IconProvider = item =>
+            {
+                if (item is not Enums.Alignment alignment)
+                {
+                    return null;
+                }
+
+                var iconName = GetAlignmentIconName(alignment);
+                return iconName != null &&
+                       AssetManager.TryGetNamedAlignmentBitmap(iconName, out var icon)
+                    ? icon.Bitmap
+                    : null;
+            };
+        }
+
+        private static string? GetAlignmentIconName(Enums.Alignment alignment)
+            => alignment switch
+            {
+                Enums.Alignment.Hero => "hero_alignment.png",
+                Enums.Alignment.Vigilante => "vigilante_alignment.png",
+                Enums.Alignment.Resistance => "resistance_alignment.png",
+                Enums.Alignment.Villain => "villain_alignment.png",
+                Enums.Alignment.Rogue => "rogue_alignment.png",
+                Enums.Alignment.Loyalist => "loyalist_alignment.png",
+                _ => null
+            };
+
+        private static bool IsHeroSideAlignment(Enums.Alignment alignment)
+            => alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante or Enums.Alignment.Resistance;
+
+        private static bool IsVillainSideAlignment(Enums.Alignment alignment)
+            => alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+
+        private static bool IsSameAlignmentSide(Enums.Alignment left, Enums.Alignment right)
+            => (IsHeroSideAlignment(left) && IsHeroSideAlignment(right))
+               || (IsVillainSideAlignment(left) && IsVillainSideAlignment(right));
+
+        private void SyncAlignmentDropDown()
+        {
+            if (MidsContext.Character is null)
+            {
+                return;
+            }
+
+            if (!Equals(alignmentDropDown.SelectedItem, MidsContext.Character.Alignment))
+            {
+                alignmentDropDown.SelectedItem = MidsContext.Character.Alignment;
+            }
+        }
+
+        private int RemapFactionSpecificAccolades(Enums.Alignment previousAlignment, Enums.Alignment newAlignment)
+        {
+            if (MidsContext.Character?.CurrentBuild is null || IsSameAlignmentSide(previousAlignment, newAlignment))
+            {
+                return 0;
+            }
+
+            if (fAccolade is { IsDisposed: false })
+            {
+                fAccolade.Dispose();
+            }
+
+            var factionSpecificAccolades = frmAccolade.FactionSpecificAccolades();
+            var sourceNames = IsHeroSideAlignment(previousAlignment)
+                ? factionSpecificAccolades.Select(x => x.Hero).ToList()
+                : factionSpecificAccolades.Select(x => x.Villain).ToList();
+            var targetNames = IsHeroSideAlignment(newAlignment)
+                ? factionSpecificAccolades.Select(x => x.Hero).ToList()
+                : factionSpecificAccolades.Select(x => x.Villain).ToList();
+
+            var accoladeMap = sourceNames
+                .Zip(targetNames, KeyValuePair.Create)
+                .ToDictionary(x => x.Key, x => x.Value);
+
+            var selectedAccolades = MidsContext.Character.CurrentBuild.Powers
+                .Where(x => x is { Power.InherentType: Enums.eGridType.Accolade })
+                .Select(x => x?.Power)
+                .Where(x => x is not null)
+                .ToList();
+
+            var updatedCount = 0;
+            foreach (var accolade in selectedAccolades)
+            {
+                if (accolade is null || !accoladeMap.TryGetValue(accolade.DisplayName, out var targetDisplayName))
+                {
+                    continue;
+                }
+
+                var replacement = DatabaseAPI.Database.Power
+                    .DefaultIfEmpty(null)
+                    .FirstOrDefault(x => x is not null
+                                         && x.FullName.StartsWith("Temporary_Powers.Accolades.")
+                                         && x.DisplayName == targetDisplayName);
+
+                if (replacement is null)
+                {
+                    continue;
+                }
+
+                MidsContext.Character.CurrentBuild.RemovePower(accolade);
+                MidsContext.Character.CurrentBuild.AddPower(replacement, 49).StatInclude = true;
+                updatedCount++;
+            }
+
+            return updatedCount;
         }
 
         private void ApplyBuildMode(Enums.dmModes buildMode)
@@ -2195,9 +2572,6 @@ namespace Mids_Reborn.UI.Forms
         private void ApplyPvXMode(bool disablePvE)
         {
             MidsContext.Config.Inc.DisablePvE = disablePvE;
-            pvXEx.ToggleState = disablePvE
-                ? MidsVectorButton.States.ToggledOn
-                : MidsVectorButton.States.ToggledOff;
             SyncPvModeToggle();
             RefreshInfo();
         }
@@ -2404,21 +2778,27 @@ namespace Mids_Reborn.UI.Forms
 
         private float ComputeLeftUiScale()
         {
-            if (ClientSize.Width <= 0) return 1f;
+            float widthRatio = Math.Max(0.01f, (float)ClientSize.Width / BaselineFormWidth);
+            float heightRatio = Math.Max(0.01f, (float)ClientSize.Height / BaselineFormHeight);
+            float blendedRatio = widthRatio * 0.70f + heightRatio * 0.30f;
+            float rawScale = 1f + ((blendedRatio - 1f) * UiScaleIntensity);
 
-            var rawScale = (float)ClientSize.Width / BaselineFormWidth;
-            var scale = 1f + (rawScale - 1f) * 0.45f;
-            return Math.Clamp(scale, MinimumUiScale, 1.25f);
+            if (_portraitLayoutEnabled)
+            {
+                rawScale = Math.Min(rawScale, 1.15f);
+            }
+
+            return Math.Clamp(rawScale, MinimumUiScale, MaximumUiScale);
         }
 
         private static int ComputeScaleBucket(float scale)
             => (int)Math.Round(scale * LeftUiScaleBucketGranularity);
 
-        private ResizeLayoutMode GetResizeLayoutMode()
-            => ShouldUseCompactTwoColumnLayout() ? ResizeLayoutMode.CompactTwoColumn : ResizeLayoutMode.Standard;
+        private static ResizeLayoutMode GetResizeLayoutMode(MainWindowResponsiveProfile profile)
+            => UsesCompactResponsiveLayout(profile) ? ResizeLayoutMode.CompactTwoColumn : ResizeLayoutMode.Standard;
 
-        private bool IsSameModeLiveResize(ResizeLayoutMode layoutMode, bool forceExact)
-            => _isInLiveResize && !forceExact && layoutMode == _lastLayoutMode;
+        private bool IsSameProfileLiveResize(MainWindowResponsiveProfile profile, bool forceExact)
+            => _isInLiveResize && !forceExact && profile == _lastResponsiveProfile;
 
         private static float[] CloneWidths(float[] widths)
         {
@@ -2526,6 +2906,141 @@ namespace Mids_Reborn.UI.Forms
 #endif
         }
 
+        private float ResolveResponsiveLeftWidth(MainWindowResponsiveProfile profile)
+        {
+            int mainContentWidth = GetMainContentWidthBudget();
+            if (UsesPortraitMainLayout(profile))
+            {
+                return Math.Max(1f, mainContentWidth);
+            }
+
+            if (UsesCompactResponsiveLayout(profile))
+            {
+                return Math.Clamp(mainContentWidth * 0.42f, CompactMainLeftColumnWidth, 540f);
+            }
+
+            float maximumWidth = Math.Max(BaselineMainLeftColumnWidth, mainContentWidth * (UsesWideDesktopLayout(profile) ? 0.46f : 0.48f));
+            float desiredWidth = BaselineMainLeftColumnWidth;
+            if (UsesWideDesktopLayout(profile))
+            {
+                desiredWidth += Math.Max(0f, mainContentWidth - BaselineFormWidth) * 0.08f;
+            }
+
+            return Math.Clamp(desiredWidth, BaselineMainLeftColumnWidth, maximumWidth);
+        }
+
+        private float ResolveResponsivePoolRailWidth(MainWindowResponsiveProfile profile)
+        {
+            if (UsesCompactResponsiveLayout(profile))
+            {
+                return 0f;
+            }
+
+            return UsesWideDesktopLayout(profile)
+                ? Math.Clamp(BaselinePoolRailWidth + 20f, BaselinePoolRailWidth, 244f)
+                : BaselinePoolRailWidth;
+        }
+
+        private float ResolvePortraitTopPaneHeight(float headerRowHeight)
+        {
+            float availableHeight = Math.Max(0f, mainLayoutPanel.ClientSize.Height - headerRowHeight);
+            float maximumHeight = Math.Min(PortraitTopPaneMaximumHeight, Math.Max(PortraitTopPaneMinimumHeight, availableHeight));
+            float desiredHeight = availableHeight * PortraitTopPaneHeightRatio;
+            return Math.Clamp(desiredHeight, PortraitTopPaneMinimumHeight, maximumHeight);
+        }
+
+        private void EnsureMainLayoutStructure(MainWindowResponsiveProfile profile)
+        {
+            bool portrait = UsesPortraitMainLayout(profile);
+            bool needsRebuild = portrait
+                ? mainLayoutPanel.ColumnStyles.Count != 1 || mainLayoutPanel.RowStyles.Count != 3
+                : mainLayoutPanel.ColumnStyles.Count != 2 || mainLayoutPanel.RowStyles.Count != 2;
+
+            if (!needsRebuild)
+            {
+                return;
+            }
+
+            CountStructureRebuild();
+            mainLayoutPanel.SuspendLayout();
+            mainLayoutPanel.ColumnCount = portrait ? 1 : 2;
+            mainLayoutPanel.RowCount = portrait ? 3 : 2;
+            CountStyleCollectionReset();
+            mainLayoutPanel.ColumnStyles.Clear();
+            CountStyleCollectionReset();
+            mainLayoutPanel.RowStyles.Clear();
+
+            if (portrait)
+            {
+                mainLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+                mainLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, BaselineHeaderContentHeight));
+                mainLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, PortraitTopPaneMinimumHeight));
+                mainLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+            }
+            else
+            {
+                mainLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, BaselineMainLeftColumnWidth));
+                mainLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+                mainLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, BaselineHeaderContentHeight));
+                mainLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+            }
+
+            if (_headerChromeHost is not null)
+            {
+                mainLayoutPanel.SetColumn(_headerChromeHost, 0);
+                mainLayoutPanel.SetRow(_headerChromeHost, 0);
+                mainLayoutPanel.SetColumnSpan(_headerChromeHost, portrait ? 1 : 2);
+            }
+
+            mainLayoutPanel.SetColumn(leftLayoutPanel, 0);
+            mainLayoutPanel.SetRow(leftLayoutPanel, portrait ? 1 : 1);
+            mainLayoutPanel.SetColumnSpan(leftLayoutPanel, 1);
+
+            mainLayoutPanel.SetColumn(rightLayoutPanel, portrait ? 0 : 1);
+            mainLayoutPanel.SetRow(rightLayoutPanel, portrait ? 2 : 1);
+            mainLayoutPanel.SetColumnSpan(rightLayoutPanel, 1);
+            mainLayoutPanel.ResumeLayout(performLayout: false);
+        }
+
+        private void ApplyMainLayoutProfile(MainWindowResponsiveProfile profile, float headerRowHeight)
+        {
+            EnsureMainLayoutStructure(profile);
+
+            bool portrait = UsesPortraitMainLayout(profile);
+            float leftWidth = ResolveResponsiveLeftWidth(profile);
+            mainLayoutPanel.RowStyles[0].SizeType = SizeType.Absolute;
+            mainLayoutPanel.RowStyles[0].Height = headerRowHeight;
+
+            if (portrait)
+            {
+                float topPaneHeight = ResolvePortraitTopPaneHeight(headerRowHeight);
+                mainLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
+                mainLayoutPanel.ColumnStyles[0].Width = 100f;
+                mainLayoutPanel.RowStyles[1].SizeType = SizeType.Absolute;
+                mainLayoutPanel.RowStyles[1].Height = topPaneHeight;
+                mainLayoutPanel.RowStyles[2].SizeType = SizeType.Percent;
+                mainLayoutPanel.RowStyles[2].Height = 100f;
+                leftLayoutPanel.Margin = new Padding(3, 3, 0, 0);
+                rightLayoutPanel.Margin = new Padding(3, 3, 0, 0);
+            }
+            else
+            {
+                mainLayoutPanel.ColumnStyles[0].SizeType = SizeType.Absolute;
+                mainLayoutPanel.ColumnStyles[0].Width = leftWidth;
+                mainLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
+                mainLayoutPanel.ColumnStyles[1].Width = 100f;
+                mainLayoutPanel.RowStyles[1].SizeType = SizeType.Percent;
+                mainLayoutPanel.RowStyles[1].Height = 100f;
+                leftLayoutPanel.Margin = new Padding(3, 3, 0, 0);
+                rightLayoutPanel.Margin = new Padding(0, 3, 0, 0);
+            }
+
+            if (_headerChromeHost is not null)
+            {
+                mainLayoutPanel.SetColumnSpan(_headerChromeHost, portrait ? 1 : 2);
+            }
+        }
+
         private float GetLiveResizeMetricsScale(float scale, bool forceExact)
             => forceExact || !_isInLiveResize ? scale : Math.Max(0.01f, _liveResizeMetricsScale);
 
@@ -2606,17 +3121,14 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            var layoutMode = GetResizeLayoutMode();
-            if (!forceExact && pendingSize == _lastProcessedClientSize && layoutMode == _lastLayoutMode)
+            var responsiveProfile = GetResponsiveProfile();
+            var layoutMode = GetResizeLayoutMode(responsiveProfile);
+            if (!forceExact && pendingSize == _lastProcessedClientSize && responsiveProfile == _lastResponsiveProfile)
             {
                 return;
             }
 
             float scale = ComputeLeftUiScale();
-            if (layoutMode == ResizeLayoutMode.CompactTwoColumn)
-            {
-                scale = Math.Max(scale, 0.95f);
-            }
 
             if (forceExact && _pendingEndLiveResizeMetrics)
             {
@@ -2632,12 +3144,12 @@ namespace Mids_Reborn.UI.Forms
             }
 
             float metricsScale = GetLiveResizeMetricsScale(scale, forceExact);
-            bool sameModeLiveResize = IsSameModeLiveResize(layoutMode, forceExact);
+            bool sameModeLiveResize = IsSameProfileLiveResize(responsiveProfile, forceExact);
 
             int scaleBucket = ComputeScaleBucket(scale);
             bool scaleArtifactsChanged = forceExact
                 || scaleBucket != _lastLeftUiScaleBucket
-                || layoutMode != _lastLayoutMode
+                || responsiveProfile != _lastResponsiveProfile
                 || DeviceDpi != _lastLeftUiDpi;
 
             SuspendLayout();
@@ -2648,7 +3160,7 @@ namespace Mids_Reborn.UI.Forms
             rightInnerLayoutPanel.SuspendLayout();
             characterPanel.SuspendLayout();
 
-            ApplyLeftUiGeometry(scale, metricsScale, layoutMode, sameModeLiveResize, forceExact || !_isInLiveResize);
+            ApplyLeftUiGeometry(scale, metricsScale, responsiveProfile, sameModeLiveResize, forceExact || !_isInLiveResize);
 
             if (scaleArtifactsChanged)
             {
@@ -2699,6 +3211,7 @@ namespace Mids_Reborn.UI.Forms
 
             _lastProcessedClientSize = pendingSize;
             _lastLayoutMode = layoutMode;
+            _lastResponsiveProfile = responsiveProfile;
             _lastLeftUiScale = scale;
             if (forceExact || !_isInLiveResize)
             {
@@ -2711,41 +3224,16 @@ namespace Mids_Reborn.UI.Forms
             _debugProcessedResizeFrames++;
             Debug.WriteLine(
                 $"[Resize] frame #{_debugProcessedResizeFrames} size={pendingSize.Width}x{pendingSize.Height} " +
-                $"scale={scale:F3} bucket={scaleBucket} mode={layoutMode} live={_isInLiveResize} exact={forceExact} " +
+                $"scale={scale:F3} bucket={scaleBucket} mode={layoutMode} profile={responsiveProfile} live={_isInLiveResize} exact={forceExact} " +
                 $"sameModeLive={sameModeLiveResize} structureRebuilds={_debugStructureRebuilds} " +
                 $"reparents={_debugControlReparents} styleClears={_debugStyleCollectionResets}");
 #endif
         }
 
-        private void ApplyLeftUiGeometry(float scale, float metricsScale, ResizeLayoutMode layoutMode, bool sameModeLiveResize, bool captureExactMetrics)
+        private void ApplyLeftUiGeometry(float scale, float metricsScale, MainWindowResponsiveProfile responsiveProfile, bool sameModeLiveResize, bool captureExactMetrics)
         {
-            bool isCompactTwoColumn = layoutMode == ResizeLayoutMode.CompactTwoColumn;
-            UpdateWindowMinimumSize();
-
-            float poolRailWidth;
-            float leftWidth;
-            if (isCompactTwoColumn)
-            {
-                poolRailWidth = 0f;
-                leftWidth = Math.Clamp(ClientSize.Width * 0.45f, CompactMainLeftColumnWidth, 520f);
-            }
-            else
-            {
-                var provisionalLeftWidth = BaselineMainLeftColumnWidth * scale;
-                var extraLeftWidth = Math.Max(0f, provisionalLeftWidth - BaselineMainLeftColumnWidth);
-                poolRailWidth = Math.Clamp(
-                    BaselinePoolRailWidth + extraLeftWidth * PoolRailExtraWidthRatio,
-                    BaselinePoolRailWidth,
-                    244f);
-                var minimumInnerWidth = ScaleLayoutValue(BaselineLeftPowerColumnWidth, scale);
-                var minimumLeftWidth = Math.Max(BaselineMainLeftColumnWidth, minimumInnerWidth + poolRailWidth + 4f);
-                var maximumLeftWidth = Math.Max(minimumLeftWidth, ClientSize.Width * 0.48f);
-                leftWidth = Math.Clamp(provisionalLeftWidth, minimumLeftWidth, maximumLeftWidth);
-            }
-
-            mainLayoutPanel.ColumnStyles[0].Width = leftWidth;
-            ApplyLeftWorkspaceLayout(isCompactTwoColumn, scale, metricsScale, poolRailWidth, sameModeLiveResize, captureExactMetrics);
-            ApplyLeftDetailsLayout(isCompactTwoColumn, scale, metricsScale, sameModeLiveResize, captureExactMetrics);
+            bool isCompactTwoColumn = UsesCompactResponsiveLayout(responsiveProfile);
+            UpdateWindowMinimumSize(responsiveProfile);
 
             if (_rightBuildShellLayout is not null)
             {
@@ -2765,8 +3253,12 @@ namespace Mids_Reborn.UI.Forms
 
             var headerContentHeight = ApplyHeaderLayout(scale, metricsScale, isCompactTwoColumn, sameModeLiveResize, captureExactMetrics);
             var headerRowHeight = headerContentHeight + Math.Max(4f, ScaleLayoutValue(isCompactTwoColumn ? CompactHeaderVerticalInset : 6f, metricsScale));
-            mainLayoutPanel.RowStyles[0].Height = headerRowHeight;
+            ApplyMainLayoutProfile(responsiveProfile, headerRowHeight);
             PositionHeaderContainer(isCompactTwoColumn ? _compactHeaderHost : characterLayoutPanel, headerRowHeight);
+
+            float poolRailWidth = ResolveResponsivePoolRailWidth(responsiveProfile);
+            ApplyLeftWorkspaceLayout(isCompactTwoColumn, scale, metricsScale, poolRailWidth, sameModeLiveResize, captureExactMetrics);
+            ApplyLeftDetailsLayout(isCompactTwoColumn, scale, metricsScale, sameModeLiveResize, captureExactMetrics);
 
             if (buttonsLayoutPanel.ColumnStyles.Count >= 6)
             {
@@ -2800,7 +3292,7 @@ namespace Mids_Reborn.UI.Forms
             ApplyPoolStackLayout(scale, metricsScale, sameModeLiveResize, captureExactMetrics);
             if (!isCompactTwoColumn)
             {
-                if (_lastLayoutMode != layoutMode)
+                if (_lastResponsiveProfile != responsiveProfile)
                 {
                     leftLayoutPanel.RefreshSmartLayout();
                 }
@@ -2831,15 +3323,16 @@ namespace Mids_Reborn.UI.Forms
 
         private void ApplyWorkspaceShellScale(float scale, bool isCompactTwoColumn)
         {
-            atDropDown.Margin = ScalePadding(new Padding(3, 8, 3, 6), scale);
-            originDropDown.Margin = ScalePadding(new Padding(3, 8, 3, 6), scale);
+            ApplyHeaderDropDownMetrics(atDropDown, scale);
+            ApplyHeaderDropDownMetrics(originDropDown, scale);
+            ApplyHeaderDropDownMetrics(alignmentDropDown, scale);
 
             if (_nameInputShell is not null)
             {
                 _nameInputShell.CornerRadius = ScalePx(6, scale);
                 _nameInputShell.BorderThickness = Math.Max(1, (int)Math.Round(scale));
                 _nameInputShell.Padding = ScalePadding(isCompactTwoColumn ? new Padding(8, 0, 8, 0) : new Padding(10, 0, 10, 0), scale);
-                _nameInputShell.Margin = ScalePadding(isCompactTwoColumn ? new Padding(3, 5, 3, 5) : new Padding(3, 6, 3, 6), scale);
+                _nameInputShell.Margin = GetHeaderInteractiveMargin(scale);
                 LayoutHeaderNameInput();
             }
 
@@ -3334,7 +3827,8 @@ namespace Mids_Reborn.UI.Forms
         private void AtDropDown_SelectedIndexChanged(object? sender, EventArgs e)
         {
             if (_events.IsSuppressed) return;
-            NewToon(false);
+            var preservedAlignment = MidsContext.Character?.Alignment;
+            NewToon(false, preservedAlignment: preservedAlignment);
             GetBestDamageValues();
             if (_frmCombatContext?.Visible == true)
             {
@@ -3350,6 +3844,34 @@ namespace Mids_Reborn.UI.Forms
             MidsContext.Character.Origin = originDropDown.SelectedIndex;
             AssetManager.SetOrigin(originDropDown.SelectedItem);
             UpdateFooterSummary();
+        }
+
+        private void AlignmentDropDown_SelectedIndexChanged(object? sender, EventArgs e)
+        {
+            if (_events.IsSuppressed || MidsContext.Character is null || alignmentDropDown.SelectedItem is not Enums.Alignment selectedAlignment)
+            {
+                return;
+            }
+
+            var previousAlignment = MidsContext.Character.Alignment;
+            MidsContext.Character.Alignment = selectedAlignment;
+
+            int remappedAccolades = RemapFactionSpecificAccolades(previousAlignment, selectedAlignment);
+            if (remappedAccolades > 0)
+            {
+                PowerModified(markModified: true, redraw: false);
+            }
+            else
+            {
+                MidsContext.Character.Validate();
+                UpdateFooterSummary();
+            }
+
+            RefreshInfo();
+            fTotals?.UpdateData();
+            fTotals2?.UpdateData();
+            FrmPetActorDetailsWindow?.UpdateColorTheme(MidsContext.Character.Alignment);
+            DoRedraw();
         }
 
         private void txtName_TextChanged(object? sender, EventArgs e)
@@ -4728,28 +5250,41 @@ namespace Mids_Reborn.UI.Forms
             DoRedraw();
         }
 
+        private void UpdateColumnLayoutMenuState(int columns)
+        {
+            tsView2Col.Checked = columns == 2;
+            tsView3Col.Checked = columns == 3;
+            tsView4Col.Checked = columns == 4;
+        }
+
+        private void UpdatePortraitLayoutMenuState()
+        {
+            tsViewPortraitLayout.Checked = _portraitLayoutEnabled;
+        }
+
         private void tsView2Col_Click(object sender, EventArgs e)
         {
-            tsView3Col.Checked = false;
-            tsView4Col.Checked = false;
-            tsView2Col.Checked = true;
+            UpdateColumnLayoutMenuState(2);
             SetColumns(2);
         }
 
         private void tsView3Col_Click(object sender, EventArgs e)
         {
-            tsView2Col.Checked = false;
-            tsView4Col.Checked = false;
-            tsView3Col.Checked = true;
+            UpdateColumnLayoutMenuState(3);
             SetColumns(3);
         }
 
         private void tsView4Col_Click(object sender, EventArgs e)
         {
-            tsView2Col.Checked = false;
-            tsView3Col.Checked = false;
-            tsView4Col.Checked = true;
+            UpdateColumnLayoutMenuState(4);
             SetColumns(4);
+        }
+
+        private void tsViewPortraitLayout_Click(object? sender, EventArgs e)
+        {
+            _portraitLayoutEnabled = !_portraitLayoutEnabled;
+            UpdatePortraitLayoutMenuState();
+            ProcessResizeFrame(forceExact: true);
         }
 
         private void tsViewIOLevels_Click(object sender, EventArgs e)
@@ -6778,25 +7313,6 @@ namespace Mids_Reborn.UI.Forms
                 MidsContext.Config.BuildMode = NormalizePlannerBuildMode(MidsContext.Config.BuildMode);
             }
 
-            switch (MidsContext.Config?.BuildMode)
-            {
-                case Enums.dmModes.LevelUp:
-                    modeEx.ToggleText.ToggledOff = @"Level-Up";
-                    modeEx.Text = @"Level-Up";
-                    modeEx.ToggleState = MidsVectorButton.States.ToggledOff;
-                    break;
-                case Enums.dmModes.Respec:
-                case Enums.dmModes.Normal:
-                    modeEx.ToggleText.ToggledOn = @"Respec";
-                    modeEx.Text = @"Respec";
-                    modeEx.ToggleState = MidsVectorButton.States.ToggledOn;
-                    break;
-                case Enums.dmModes.None:
-                    break;
-                default:
-                    throw new ArgumentOutOfRangeException();
-            }
-
             SyncPlannerModeToggle();
             SyncStaticLevelControl();
         }
@@ -6834,6 +7350,9 @@ namespace Mids_Reborn.UI.Forms
 
         private void TsViewSelected()
         {
+            UpdateColumnLayoutMenuState(0);
+            UpdatePortraitLayoutMenuState();
+
             switch (MidsContext.Config.ColumnStackingMode)
             {
                 // case Enums.eColumnStacking.Horizontal:
@@ -6848,13 +7367,13 @@ namespace Mids_Reborn.UI.Forms
                     switch (MidsContext.Config.Columns)
                     {
                         case 2:
-                            tsView2Col.Checked = true;
+                            UpdateColumnLayoutMenuState(2);
                             break;
                         case 3:
-                            tsView3Col.Checked = true;
+                            UpdateColumnLayoutMenuState(3);
                             break;
                         case 4:
-                            tsView4Col.Checked = true;
+                            UpdateColumnLayoutMenuState(4);
                             break;
                     }
 
@@ -6943,6 +7462,8 @@ namespace Mids_Reborn.UI.Forms
 
             MidsContext.Config.Columns = columns;
             MidsContext.Config.ColumnStackingMode = stackingMode;
+            _lastRendererDisplayLayout = null;
+            UpdateColumnLayoutMenuState(columns);
 
             if (drawing != null)
             {
@@ -6950,39 +7471,15 @@ namespace Mids_Reborn.UI.Forms
                 drawing.ColumnStackingMode = stackingMode;
                 drawing.GetPowersLayout();
                 ProcessResizeFrame(forceExact: true);
-
-                /*// Calculate the minimum width for the entire form.
-                // This includes the drawing panel, the left-side panel, and the window borders.
-                int drawingMinWidth = drawing.GetMinimumRequiredWidth();
-                int nonDrawingWidth = leftLayoutPanel.Width + (Width - ClientSize.Width);
-                int formMinimumWidth = drawingMinWidth + nonDrawingWidth;
-
-                // Set the form's minimum size.
-                MinimumSize = MinimumSize with { Width = formMinimumWidth };
-
-                // If the form is currently smaller than the new minimum, resize it.
-                if (Width < formMinimumWidth)
-                {
-                    Width = formMinimumWidth;
-                }
-
-                // 1. Recalculate the visual layout based on the panel's current width.
-                drawing.UpdateLayout(canvas.ClientSize.Width);*/
-
             }
-            // // 3. Force the panel to repaint itself with the new layout.
-            // canvas.RequestFullRedraw();
-            // canvas.ResizeToContent();
-            // canvas.Invalidate();
+            else if (IsHandleCreated)
+            {
+                ProcessResizeFrame(forceExact: true);
+            }
         }
 
         private void UpdateUiControls(bool suppressDuringSetup = false, bool skipResize = false)
         {
-            pvXEx.ToggleState = MidsContext.Config.Inc.DisablePvE switch
-            {
-                true => MidsVectorButton.States.ToggledOn,
-                false => MidsVectorButton.States.ToggledOff
-            };
             SyncPvModeToggle();
             SyncPlannerModeToggle();
             SyncStaticLevelControl();
@@ -7007,6 +7504,8 @@ namespace Mids_Reborn.UI.Forms
                         originDropDown.SelectedIndex = 0;
                     AssetManager.SetOrigin(originDropDown.SelectedItem);
                 }
+
+                SyncAlignmentDropDown();
 
                 LoadPrimary(atDropDown.SelectedItem);
                 SetSelectedIndexIfAvailable(primaryDropDown, AssignSetIndex(Enums.PowersetType.Primary, Enums.ePowerSetType.Primary));
@@ -7544,13 +8043,13 @@ namespace Mids_Reborn.UI.Forms
                 () => secondaryDropDown.Unlock());
         }
 
-        private void NewToon(bool reinit = true, bool skipDraw = false)
+        private void NewToon(bool reinit = true, bool skipDraw = false, Enums.Alignment? preservedAlignment = null)
         {
-            ResetCharacterModel(reinit);
+            ResetCharacterModel(reinit, preservedAlignment);
             ResetUiForCurrentCharacter(clearDataView: true, skipDraw: skipDraw);
         }
 
-        private void ResetCharacterModel(bool reinit)
+        private void ResetCharacterModel(bool reinit, Enums.Alignment? preservedAlignment = null)
         {
             MainModule.MidsController.Toon ??= new Toon();
 
@@ -7573,6 +8072,11 @@ namespace Mids_Reborn.UI.Forms
                 }
 
                 MidsContext.Character.Name = str;
+            }
+
+            if (preservedAlignment.HasValue && MidsContext.Character is not null)
+            {
+                MidsContext.Character.Alignment = preservedAlignment.Value;
             }
 
             if (fAccolade is { IsDisposed: false })
@@ -7639,18 +8143,29 @@ namespace Mids_Reborn.UI.Forms
             }
         }
 
-        private static float ComputeCanvasMasterScale(int width)
+        private static bool RendererLayoutMatches(RendererDisplayLayoutState left, RendererDisplayLayoutState right)
+            => left.Columns == right.Columns
+               && left.StackingMode == right.StackingMode
+               && Math.Abs(left.MasterScale - right.MasterScale) < 0.01f;
+
+        private void ApplyRendererDisplayLayout(RendererDisplayLayoutState layoutState, bool trackState)
         {
-            if (width <= 0)
+            if (drawing is null)
             {
-                return 1f;
+                return;
             }
 
-            float rawScale = (float)width / BaselineCanvasWidth;
-            const float scalingIntensity = 0.5f;
+            drawing.Columns = layoutState.Columns;
+            drawing.ColumnStackingMode = layoutState.StackingMode;
+            if (layoutState.StackingMode != Enums.eColumnStacking.None)
+            {
+                drawing.GetPowersLayout();
+            }
 
-            float master = 1f + (rawScale - 1f) * scalingIntensity;
-            return Math.Clamp(master, 0.90f, 1.30f);
+            if (trackState)
+            {
+                _lastRendererDisplayLayout = layoutState;
+            }
         }
 
         private void UpdateUiLayout(bool force = false)
@@ -7660,40 +8175,64 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
+            var responsiveProfile = _lastResponsiveProfile ?? GetResponsiveProfile();
+            bool allowFallback = UsesCompactResponsiveLayout(responsiveProfile);
             int rawWidth = Math.Max(1, canvasScrollPanel.ClientSize.Width);
-            float provisionalMaster = ComputeCanvasMasterScale(rawWidth);
+            int layoutBudgetWidth = UsesPortraitMainLayout(responsiveProfile)
+                ? Math.Min(rawWidth, PortraitSupportedMaxWidth)
+                : rawWidth;
+            int resolvedWidth = rawWidth;
+            RendererDisplayLayoutState resolvedLayout = ResolveRendererDisplayLayout(layoutBudgetWidth, allowFallback);
 
-            drawing.MasterScale = provisionalMaster;
-            drawing.UpdateFontScale(provisionalMaster);
-            drawing.UpdateLayout(rawWidth);
+            for (var pass = 0; pass < 3; pass++)
+            {
+                ApplyRendererDisplayLayout(resolvedLayout, trackState: false);
+                drawing.MasterScale = resolvedLayout.MasterScale;
+                drawing.UpdateFontScale(resolvedLayout.MasterScale);
+                drawing.UpdateLayout(resolvedWidth);
 
-            int provisionalHeight = drawing.GetRequiredDrawingArea().Height;
-            int finalWidth = Math.Max(1, canvasScrollPanel.GetAvailableWidthForChildHeight(provisionalHeight));
-            float finalMaster = finalWidth == rawWidth
-                ? provisionalMaster
-                : ComputeCanvasMasterScale(finalWidth);
+                int measuredHeight = drawing.GetRequiredDrawingArea().Height;
+                int nextWidth = Math.Max(1, canvasScrollPanel.GetAvailableWidthForChildHeight(measuredHeight));
+                int nextLayoutBudgetWidth = UsesPortraitMainLayout(responsiveProfile)
+                    ? Math.Min(nextWidth, PortraitSupportedMaxWidth)
+                    : nextWidth;
+                var nextLayout = ResolveRendererDisplayLayout(nextLayoutBudgetWidth, allowFallback);
+
+                if (nextWidth == resolvedWidth && RendererLayoutMatches(nextLayout, resolvedLayout))
+                {
+                    break;
+                }
+
+                resolvedWidth = nextWidth;
+                resolvedLayout = nextLayout;
+            }
+
+            bool rendererLayoutChanged = _lastRendererDisplayLayout is not { } previousLayout
+                || !RendererLayoutMatches(previousLayout, resolvedLayout);
 
             if (!force &&
-                Math.Abs(finalMaster - _lastMasterScale) < 0.01f &&
-                finalWidth == _lastCanvasWidth)
+                Math.Abs(resolvedLayout.MasterScale - _lastMasterScale) < 0.01f &&
+                resolvedWidth == _lastCanvasWidth &&
+                !rendererLayoutChanged)
             {
                 return;
             }
 
-            _lastMasterScale = finalMaster;
-            _lastCanvasWidth = finalWidth;
-            ApplyPopupScale(finalMaster);
+            ApplyRendererDisplayLayout(resolvedLayout, trackState: true);
+            _lastMasterScale = resolvedLayout.MasterScale;
+            _lastCanvasWidth = resolvedWidth;
+            ApplyPopupScale(resolvedLayout.MasterScale);
 
-            if (canvasScrollPanel.ContentPanel.Width != finalWidth)
+            if (canvasScrollPanel.ContentPanel.Width != resolvedWidth)
             {
-                canvasScrollPanel.ContentPanel.Width = finalWidth;
+                canvasScrollPanel.ContentPanel.Width = resolvedWidth;
             }
-            if (canvas.Width != finalWidth)
+            if (canvas.Width != resolvedWidth)
             {
-                canvas.Width = finalWidth;
+                canvas.Width = resolvedWidth;
             }
 
-            drawing.ApplyLiveResize(canvas, finalWidth, finalMaster);
+            drawing.ApplyLiveResize(canvas, resolvedWidth, resolvedLayout.MasterScale);
             canvas.ResizeToContent();
         }
 

@@ -63,6 +63,7 @@ namespace Mids_Reborn.Core
         private static Dictionary<string, ExtendedBitmap> NamedPowerImages { get; } = new(StringComparer.OrdinalIgnoreCase);
         private static Dictionary<string, ExtendedBitmap> NamedEnhancementImages { get; } = new(StringComparer.OrdinalIgnoreCase);
         private static Dictionary<string, ExtendedBitmap> NamedOverlayImages { get; } = new(StringComparer.OrdinalIgnoreCase);
+        private static Dictionary<string, ExtendedBitmap> NamedAlignmentImages { get; } = new(StringComparer.OrdinalIgnoreCase);
         private static List<ExtendedBitmap> RetiredPowersets { get; } = [];
         public static ExtendedBitmap UnknownIcon { get; private set; }
         public static ExtendedBitmap EmptySlot { get; private set; }
@@ -209,6 +210,7 @@ namespace Mids_Reborn.Core
             allImages.AddRange(NamedPowerImages.Values);
             allImages.AddRange(NamedEnhancementImages.Values);
             allImages.AddRange(NamedOverlayImages.Values);
+            allImages.AddRange(NamedAlignmentImages.Values);
             allImages.AddRange(RetiredPowersets);
             allImages.Add(UnknownIcon);
             allImages.Add(RecipeIcon);
@@ -237,6 +239,7 @@ namespace Mids_Reborn.Core
             NamedPowerImages.Clear();
             NamedEnhancementImages.Clear();
             NamedOverlayImages.Clear();
+            NamedAlignmentImages.Clear();
             RetiredPowersets.Clear();
         }
 
@@ -572,9 +575,65 @@ namespace Mids_Reborn.Core
             return Path.Combine(AppDataPaths.BaseAssetsPath, "Enhancements");
         }
 
+        public static string GetAlignmentsPath()
+        {
+            return Path.Combine(AppDataPaths.BaseAssetsPath, "Alignments");
+        }
+
+        public static string GetDbAlignmentsPath()
+        {
+            return Path.Combine(MidsContext.Config.DataPath, "Assets", "Alignments");
+        }
+
         public static string GetDbEnhancementsPath()
         {
             return Path.Combine(MidsContext.Config.DataPath, "Assets", "Enhancements");
+        }
+
+        public static string? ResolveNamedAlignmentImagePath(string? imageName)
+        {
+            if (string.IsNullOrWhiteSpace(imageName))
+            {
+                return null;
+            }
+
+            var basePath = Path.Combine(GetAlignmentsPath(), imageName);
+            if (File.Exists(basePath))
+            {
+                return basePath;
+            }
+
+            var dbPath = Path.Combine(GetDbAlignmentsPath(), imageName);
+            return File.Exists(dbPath) ? dbPath : null;
+        }
+
+        public static bool TryGetNamedAlignmentBitmap(string? imageName, out ExtendedBitmap alignmentImage)
+        {
+            alignmentImage = null;
+            if (string.IsNullOrWhiteSpace(imageName))
+            {
+                return false;
+            }
+
+            var imagePath = ResolveNamedAlignmentImagePath(imageName);
+            if (string.IsNullOrWhiteSpace(imagePath))
+            {
+                return false;
+            }
+
+            if (NamedAlignmentImages.TryGetValue(imagePath, out alignmentImage) && alignmentImage?.Bitmap != null)
+            {
+                return true;
+            }
+
+            if (!File.Exists(imagePath))
+            {
+                return false;
+            }
+
+            alignmentImage = new ExtendedBitmap(imagePath);
+            NamedAlignmentImages[imagePath] = alignmentImage;
+            return alignmentImage.Bitmap != null;
         }
 
         public static bool TryGetNamedPowerBitmap(string? imageName, out ExtendedBitmap powerImage)

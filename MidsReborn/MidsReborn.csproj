@@ -439,6 +439,7 @@
     <PackageReference Include="zlib.net-mutliplatform" Version="1.0.8" />
   </ItemGroup>
   <ItemGroup>
+    <Folder Include="Assets\Alignments\" />
     <Folder Include="Databases\Homecoming\Assets\Classes\" />
     <Folder Include="Databases\Homecoming\Assets\Powers\" />
     <Folder Include="Properties\PublishProfiles\" />

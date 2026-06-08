@@ -30,6 +30,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
     private int _iconSize = 16;
     private int? _baseIconSize;
     private int? _baseItemHeight;
+    private int? _baseControlHeight;
     private readonly Dictionary<object, Bitmap?> _itemIcons = new();
     private string? _placeholderText;
 
@@ -139,6 +140,8 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
         SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
         DrawMode = DrawMode.OwnerDrawFixed;
         DropDownStyle = ComboBoxStyle.DropDownList;
+        IntegralHeight = false;
+        AutoSize = false;
 
         if (!DesignMode) ThemeManager.ThemeChanged += Invalidate;
     }
@@ -639,16 +642,23 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
     {
         _baseIconSize ??= IconSize;
         _baseItemHeight ??= ItemHeight;
+        _baseControlHeight ??= Height;
 
         int iconSize = Math.Clamp((int)Math.Round(_baseIconSize.Value * scale), 8, 64);
         int itemHeight = Math.Max(12, (int)Math.Round(_baseItemHeight.Value * scale));
-        if (IconSize == iconSize && ItemHeight == itemHeight)
+        int verticalPadding = Math.Max(8, (int)Math.Round(10f * scale));
+        int controlHeight = Math.Max(
+            (int)Math.Round(_baseControlHeight.Value * scale),
+            itemHeight + verticalPadding);
+
+        if (IconSize == iconSize && ItemHeight == itemHeight && Height == controlHeight)
         {
             return;
         }
 
         IconSize = iconSize;
         ItemHeight = itemHeight;
+        Height = controlHeight;
         Invalidate();
     }
 

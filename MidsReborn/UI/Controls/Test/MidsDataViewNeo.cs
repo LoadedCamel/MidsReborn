@@ -36,7 +36,7 @@ namespace Mids_Reborn.UI.Controls
             new("ENHANCE", 3),
             new("BONUSES", 4)
         ];
-        private const int TabPaddingX = 16;     // reserved for future text padding if needed
+        private const int TabPaddingX = 16;
         private const int TabHeight = 24;
         private const int TabSpacing = 4;
         private const int CornerRadius = 4;
@@ -932,13 +932,8 @@ namespace Mids_Reborn.UI.Controls
                 g.DrawLine(bottomPen, hr.Left, hr.Bottom - 1, hr.Right, hr.Bottom - 1);
             }
 
-            var tabSpacing = ScalePx(TabSpacing);
-            var outerInset = ScalePx(HeaderOuterInset);
             var visibleTabs = VisibleTabs;
-            var actionWidth = HeaderActionsVisible ? DockButton.Width + LockButton.Width + tabSpacing : 0;
-            var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - actionWidth - (outerInset * 2) - (tabSpacing * Math.Max(0, visibleTabs.Count - 1)));
-            var tabTop = Math.Max(ScalePx(2), (hr.Height - ScalePx(TabHeight)) / 2);
-            var tabRects = ComputeTabRects(availableWidth, visibleTabs.Count, new Point(outerInset, tabTop), ScalePx(TabHeight), tabSpacing);
+            var tabRects = GetVisibleTabRects(visibleTabs);
 
             if (HeaderActionsVisible)
             {
@@ -998,21 +993,92 @@ namespace Mids_Reborn.UI.Controls
             g.DrawPath(border, path);
         }
 
-        private static Rectangle[] ComputeTabRects(int totalWidth, int count, Point origin, int height, int spacing)
+        private Rectangle[] GetVisibleTabRects(IReadOnlyList<TabDescriptor> visibleTabs)
         {
-            // Divide width evenly and distribute any remainder to the left-most tabs
-            int baseWidth = count > 0 ? totalWidth / count : 0;
-            int remainder = count > 0 ? totalWidth % count : 0;
+            if (visibleTabs.Count == 0)
+            {
+                return Array.Empty<Rectangle>();
+            }
 
-            var rects = new Rectangle[count];
+            var tabSpacing = ScalePx(TabSpacing);
+            var outerInset = ScalePx(HeaderOuterInset);
+            var actionWidth = HeaderActionsVisible ? DockButton.Width + LockButton.Width + tabSpacing : 0;
+            var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - actionWidth - (outerInset * 2) - (tabSpacing * Math.Max(0, visibleTabs.Count - 1)));
+            var tabTop = Math.Max(ScalePx(2), (headerPanel.ClientSize.Height - ScalePx(TabHeight)) / 2);
+
+            using var font = new Font(Font.FontFamily, Font.Size, FontStyle.Bold);
+            return ComputeTabRects(availableWidth, visibleTabs, font, new Point(outerInset, tabTop), ScalePx(TabHeight), tabSpacing, ScalePx(TabPaddingX));
+        }
+
+        private static Rectangle[] ComputeTabRects(int totalWidth, IReadOnlyList<TabDescriptor> tabs, Font font, Point origin, int height, int spacing, int paddingX)
+        {
+            if (tabs.Count == 0)
+            {
+                return Array.Empty<Rectangle>();
+            }
+
+            var preferredWidths = new int[tabs.Count];
+            int preferredTotal = 0;
+
+            for (int i = 0; i < tabs.Count; i++)
+            {
+                int measuredWidth = TextRenderer.MeasureText(
+                    tabs[i].Title,
+                    font,
+                    new Size(int.MaxValue, height),
+                    TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix).Width;
+                preferredWidths[i] = Math.Max(height, measuredWidth + paddingX);
+                preferredTotal += preferredWidths[i];
+            }
+
+            var allocatedWidths = new int[tabs.Count];
+            if (preferredTotal <= totalWidth)
+            {
+                Array.Copy(preferredWidths, allocatedWidths, tabs.Count);
+
+                int extra = totalWidth - preferredTotal;
+                int extraPerTab = extra / tabs.Count;
+                int extraRemainder = extra % tabs.Count;
+                for (int i = 0; i < tabs.Count; i++)
+                {
+                    allocatedWidths[i] += extraPerTab + (i < extraRemainder ? 1 : 0);
+                }
+            }
+            else
+            {
+                double scale = preferredTotal > 0 ? (double)totalWidth / preferredTotal : 1d;
+                var fractional = new (int Index, double Fraction)[tabs.Count];
+                int allocatedTotal = 0;
+
+                for (int i = 0; i < tabs.Count; i++)
+                {
+                    double scaledWidth = preferredWidths[i] * scale;
+                    int width = Math.Max(height, (int)Math.Floor(scaledWidth));
+                    allocatedWidths[i] = width;
+                    allocatedTotal += width;
+                    fractional[i] = (i, scaledWidth - width);
+                }
+
+                int remainder = Math.Max(0, totalWidth - allocatedTotal);
+                foreach (var candidate in fractional.OrderByDescending(item => item.Fraction).ThenBy(item => item.Index))
+                {
+                    if (remainder <= 0)
+                    {
+                        break;
+                    }
+
+                    allocatedWidths[candidate.Index]++;
+                    remainder--;
+                }
+            }
+
+            var rects = new Rectangle[tabs.Count];
             int x = origin.X;
 
-            for (int i = 0; i < count; i++)
+            for (int i = 0; i < tabs.Count; i++)
             {
-                int w = baseWidth + (i < remainder ? 1 : 0);
-                // include spacing between tabs
-                rects[i] = new Rectangle(x, origin.Y, w, height);
-                x += w + spacing;
+                rects[i] = new Rectangle(x, origin.Y, allocatedWidths[i], height);
+                x += allocatedWidths[i] + spacing;
             }
 
             return rects;
@@ -1066,13 +1132,8 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            var tabSpacing = ScalePx(TabSpacing);
-            var outerInset = ScalePx(HeaderOuterInset);
             var visibleTabs = VisibleTabs;
-            var actionWidth = HeaderActionsVisible ? DockButton.Width + LockButton.Width + tabSpacing : 0;
-            var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - actionWidth - (outerInset * 2) - (tabSpacing * Math.Max(0, visibleTabs.Count - 1)));
-            var tabTop = Math.Max(ScalePx(2), (headerPanel.ClientSize.Height - ScalePx(TabHeight)) / 2);
-            var tabRects = ComputeTabRects(availableWidth, visibleTabs.Count, new Point(outerInset, tabTop), ScalePx(TabHeight), tabSpacing);
+            var tabRects = GetVisibleTabRects(visibleTabs);
 
             int newHovered = -1;
             for (int i = 0; i < tabRects.Length; i++)

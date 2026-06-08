@@ -46,10 +46,17 @@ namespace Mids_Reborn.UI.Forms
             lblName = new Label();
             lblAT = new Label();
             lblOrigin = new Label();
+            lblAlignment = new Label();
             characterPanel = new Panel();
             originDropDown = new OriginDropDownList();
             atDropDown = new ArchetypeDropDownList();
+            alignmentDropDown = new MidsDropDownList();
             txtName = new TextBox();
+            plannerModeHost = new TableLayoutPanel();
+            plannerModeLabel = new Label();
+            plannerModeToggle = new MidsSegmentedToggle();
+            staticLevelLabel = new Label();
+            staticLevelInput = new MidsLevelStepper();
             modeEx = new MidsVectorButton();
             totalsEx = new MidsVectorButton();
             slotInfoEx = new MidsVectorButton();
@@ -87,6 +94,7 @@ namespace Mids_Reborn.UI.Forms
             accoladesEx = new MidsVectorButton();
             popupEx = new MidsVectorButton();
             pvXEx = new MidsVectorButton();
+            pvModeToggle = new MidsSegmentedToggle();
             recipeEx = new MidsVectorButton();
             footerPanel = new Panel();
             footerLayoutPanel = new TableLayoutPanel();
@@ -156,6 +164,7 @@ namespace Mids_Reborn.UI.Forms
             tsView2Col = new ToolStripMenuItem();
             tsView3Col = new ToolStripMenuItem();
             tsView4Col = new ToolStripMenuItem();
+            tsViewPortraitLayout = new ToolStripMenuItem();
             themeMenuItem = new ToolStripMenuItem();
             toolStripSeparator15 = new ToolStripSeparator();
             ToolStripSeparator13 = new ToolStripSeparator();
@@ -224,6 +233,7 @@ namespace Mids_Reborn.UI.Forms
             logoPanel = new MidsLogoPanel();
             titleLabel = new Label();
             mainLayoutPanel.SuspendLayout();
+            plannerModeHost.SuspendLayout();
             characterLayoutPanel.SuspendLayout();
             leftLayoutPanel.SuspendLayout();
             rightLayoutPanel.SuspendLayout();
@@ -263,7 +273,7 @@ namespace Mids_Reborn.UI.Forms
             // characterLayoutPanel
             // 
             characterLayoutPanel.BackColor = Color.Black;
-            characterLayoutPanel.ColumnCount = 9;
+            characterLayoutPanel.ColumnCount = 12;
             mainLayoutPanel.SetColumnSpan(characterLayoutPanel, 2);
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 52F));
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 240F));
@@ -271,18 +281,23 @@ namespace Mids_Reborn.UI.Forms
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 160F));
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 58F));
             characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F));
-            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
-            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 33.3333321F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 84F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 128F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 280F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 140F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 114F));
+            characterLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             characterLayoutPanel.Controls.Add(lblName, 0, 0);
             characterLayoutPanel.Controls.Add(txtName, 1, 0);
             characterLayoutPanel.Controls.Add(lblAT, 2, 0);
             characterLayoutPanel.Controls.Add(atDropDown, 3, 0);
             characterLayoutPanel.Controls.Add(lblOrigin, 4, 0);
             characterLayoutPanel.Controls.Add(originDropDown, 5, 0);
-            characterLayoutPanel.Controls.Add(modeEx, 6, 0);
-            characterLayoutPanel.Controls.Add(totalsEx, 7, 0);
-            characterLayoutPanel.Controls.Add(combatEx, 8, 0);
+            characterLayoutPanel.Controls.Add(lblAlignment, 6, 0);
+            characterLayoutPanel.Controls.Add(alignmentDropDown, 7, 0);
+            characterLayoutPanel.Controls.Add(plannerModeHost, 8, 0);
+            characterLayoutPanel.Controls.Add(totalsEx, 9, 0);
+            characterLayoutPanel.Controls.Add(combatEx, 10, 0);
             characterLayoutPanel.Dock = DockStyle.Fill;
             characterLayoutPanel.Location = new Point(3, 3);
             characterLayoutPanel.Name = "characterLayoutPanel";
@@ -333,14 +348,13 @@ namespace Mids_Reborn.UI.Forms
             // 
             buttonsLayoutPanel.BackColor = Color.FromArgb(7, 15, 24);
             buttonsLayoutPanel.ColumnCount = 6;
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
-            buttonsLayoutPanel.Controls.Add(dynMode, 0, 0);
-            buttonsLayoutPanel.Controls.Add(pvXEx, 1, 0);
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 148F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 114F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 114F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 114F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 114F));
+            buttonsLayoutPanel.Controls.Add(pvModeToggle, 0, 0);
             buttonsLayoutPanel.Controls.Add(accoladesEx, 2, 0);
             buttonsLayoutPanel.Controls.Add(incarnatesEx, 3, 0);
             buttonsLayoutPanel.Controls.Add(ibPrestigePowersEx, 4, 0);
@@ -448,12 +462,24 @@ namespace Mids_Reborn.UI.Forms
             lblOrigin.Text = "Origin:";
             lblOrigin.TextAlign = ContentAlignment.MiddleRight;
             // 
+            // lblAlignment
+            // 
+            lblAlignment.Dock = DockStyle.Fill;
+            lblAlignment.Font = new Font("Segoe UI", 10F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            lblAlignment.ForeColor = Color.White;
+            lblAlignment.Location = new Point(730, 0);
+            lblAlignment.Name = "lblAlignment";
+            lblAlignment.Size = new Size(78, 40);
+            lblAlignment.TabIndex = 150;
+            lblAlignment.Text = "Alignment:";
+            lblAlignment.TextAlign = ContentAlignment.MiddleRight;
+            // 
             // characterPanel
             // 
             characterPanel.Location = new Point(0, 0);
             characterPanel.Name = "characterPanel";
             characterPanel.Size = new Size(0, 0);
-            characterPanel.TabIndex = 150;
+            characterPanel.TabIndex = 151;
             characterPanel.Visible = false;
             // 
             // originDropDown
@@ -466,11 +492,11 @@ namespace Mids_Reborn.UI.Forms
             originDropDown.ForeColor = Color.Black;
             originDropDown.IconProvider = null;
             originDropDown.ItemHeight = 17;
-            originDropDown.Location = new Point(593, 7);
-            originDropDown.Margin = new Padding(3, 7, 3, 7);
+            originDropDown.Location = new Point(593, 4);
+            originDropDown.Margin = new Padding(3, 4, 3, 4);
             originDropDown.Name = "originDropDown";
             originDropDown.PlaceholderText = null;
-            originDropDown.Size = new Size(134, 23);
+            originDropDown.Size = new Size(134, 32);
             originDropDown.TabIndex = 146;
             originDropDown.SelectedIndexChanged += OriginDropDown_SelectedIndexChanged;
             // 
@@ -486,16 +512,34 @@ namespace Mids_Reborn.UI.Forms
             atDropDown.IconProvider = null;
             atDropDown.ItemHeight = 17;
             atDropDown.Items.AddRange(new object[] { "Peacebringer", "Arachnos Widow", "Arachnos Soldier" });
-            atDropDown.Location = new Point(373, 7);
-            atDropDown.Margin = new Padding(3, 7, 3, 7);
+            atDropDown.Location = new Point(373, 4);
+            atDropDown.Margin = new Padding(3, 4, 3, 4);
             atDropDown.MaxDropDownItems = 15;
             atDropDown.Name = "atDropDown";
             atDropDown.PlaceholderText = null;
             atDropDown.SelectedItem = null;
-            atDropDown.Size = new Size(154, 23);
+            atDropDown.Size = new Size(154, 32);
             atDropDown.TabIndex = 145;
             atDropDown.ValueMember = "Idx";
             atDropDown.SelectedIndexChanged += AtDropDown_SelectedIndexChanged;
+            // 
+            // alignmentDropDown
+            // 
+            alignmentDropDown.BackColor = Color.WhiteSmoke;
+            alignmentDropDown.Dock = DockStyle.Fill;
+            alignmentDropDown.DrawMode = DrawMode.OwnerDrawFixed;
+            alignmentDropDown.DropDownStyle = ComboBoxStyle.DropDownList;
+            alignmentDropDown.Font = new Font("Noto Sans SemiBold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            alignmentDropDown.ForeColor = Color.Black;
+            alignmentDropDown.IconProvider = null;
+            alignmentDropDown.ItemHeight = 17;
+            alignmentDropDown.Location = new Point(814, 4);
+            alignmentDropDown.Margin = new Padding(3, 4, 3, 4);
+            alignmentDropDown.Name = "alignmentDropDown";
+            alignmentDropDown.PlaceholderText = null;
+            alignmentDropDown.Size = new Size(122, 32);
+            alignmentDropDown.TabIndex = 147;
+            alignmentDropDown.SelectedIndexChanged += AlignmentDropDown_SelectedIndexChanged;
             // 
             // txtName
             // 
@@ -508,6 +552,79 @@ namespace Mids_Reborn.UI.Forms
             txtName.Size = new Size(234, 23);
             txtName.TabIndex = 144;
             txtName.TextChanged += txtName_TextChanged;
+            // 
+            // plannerModeHost
+            // 
+            plannerModeHost.ColumnCount = 4;
+            plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 92F));
+            plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
+            plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 82F));
+            plannerModeHost.Controls.Add(plannerModeLabel, 0, 0);
+            plannerModeHost.Controls.Add(plannerModeToggle, 1, 0);
+            plannerModeHost.Controls.Add(staticLevelLabel, 2, 0);
+            plannerModeHost.Controls.Add(staticLevelInput, 3, 0);
+            plannerModeHost.Dock = DockStyle.Fill;
+            plannerModeHost.Location = new Point(942, 3);
+            plannerModeHost.Margin = new Padding(3, 3, 8, 3);
+            plannerModeHost.Name = "plannerModeHost";
+            plannerModeHost.RowCount = 1;
+            plannerModeHost.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+            plannerModeHost.Size = new Size(274, 34);
+            plannerModeHost.TabIndex = 152;
+            // 
+            // plannerModeLabel
+            // 
+            plannerModeLabel.Dock = DockStyle.Fill;
+            plannerModeLabel.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            plannerModeLabel.ForeColor = Color.White;
+            plannerModeLabel.Location = new Point(0, 0);
+            plannerModeLabel.Margin = new Padding(0, 0, 6, 0);
+            plannerModeLabel.Name = "plannerModeLabel";
+            plannerModeLabel.Size = new Size(86, 34);
+            plannerModeLabel.TabIndex = 0;
+            plannerModeLabel.Text = "Planner:";
+            plannerModeLabel.TextAlign = ContentAlignment.MiddleRight;
+            // 
+            // plannerModeToggle
+            // 
+            plannerModeToggle.Dock = DockStyle.Fill;
+            plannerModeToggle.Font = new Font("Noto Sans SemiBold", 9.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            plannerModeToggle.Location = new Point(92, 0);
+            plannerModeToggle.Margin = new Padding(0, 0, 8, 0);
+            plannerModeToggle.Name = "plannerModeToggle";
+            plannerModeToggle.SelectedIndex = 0;
+            plannerModeToggle.Size = new Size(92, 34);
+            plannerModeToggle.TabIndex = 1;
+            plannerModeToggle.SelectedIndexChanged += PlannerModeToggle_SelectedIndexChanged;
+            plannerModeToggle.SetItems("Level-Up", "Respec");
+            // 
+            // staticLevelLabel
+            // 
+            staticLevelLabel.AutoSize = true;
+            staticLevelLabel.Dock = DockStyle.Fill;
+            staticLevelLabel.Font = new Font("Segoe UI Semibold", 9.75F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            staticLevelLabel.ForeColor = Color.White;
+            staticLevelLabel.Location = new Point(192, 0);
+            staticLevelLabel.Margin = new Padding(0, 0, 4, 0);
+            staticLevelLabel.Name = "staticLevelLabel";
+            staticLevelLabel.Size = new Size(34, 34);
+            staticLevelLabel.TabIndex = 2;
+            staticLevelLabel.Text = "Level";
+            staticLevelLabel.TextAlign = ContentAlignment.MiddleLeft;
+            // 
+            // staticLevelInput
+            // 
+            staticLevelInput.Dock = DockStyle.Fill;
+            staticLevelInput.Location = new Point(230, 4);
+            staticLevelInput.Margin = new Padding(0, 4, 0, 4);
+            staticLevelInput.Maximum = 50;
+            staticLevelInput.Minimum = 1;
+            staticLevelInput.Name = "staticLevelInput";
+            staticLevelInput.Size = new Size(44, 26);
+            staticLevelInput.TabIndex = 3;
+            staticLevelInput.Value = 50;
+            staticLevelInput.ValueChanged += StaticLevelInput_ValueChanged;
             // 
             // modeEx
             // 
@@ -1061,14 +1178,13 @@ namespace Mids_Reborn.UI.Forms
             // 
             buttonsLayoutPanel.BackColor = Color.FromArgb(7, 15, 24);
             buttonsLayoutPanel.ColumnCount = 6;
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
-            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 16.666666F));
-            buttonsLayoutPanel.Controls.Add(dynMode, 0, 0);
-            buttonsLayoutPanel.Controls.Add(pvXEx, 1, 0);
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 148F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 114F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 114F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 114F));
+            buttonsLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 114F));
+            buttonsLayoutPanel.Controls.Add(pvModeToggle, 0, 0);
             buttonsLayoutPanel.Controls.Add(accoladesEx, 2, 0);
             buttonsLayoutPanel.Controls.Add(incarnatesEx, 3, 0);
             buttonsLayoutPanel.Controls.Add(ibPrestigePowersEx, 4, 0);
@@ -1209,6 +1325,19 @@ namespace Mids_Reborn.UI.Forms
             pvXEx.ToggleText.ToggledOn = "Mode: PvP";
             tTip.SetToolTip(pvXEx, "Mode");
             pvXEx.Click += PvXEx_OnClick;
+            // 
+            // pvModeToggle
+            // 
+            pvModeToggle.Dock = DockStyle.Fill;
+            pvModeToggle.Font = new Font("Noto Sans SemiBold", 9.25F, FontStyle.Bold, GraphicsUnit.Point, 0);
+            pvModeToggle.Location = new Point(0, 4);
+            pvModeToggle.Margin = new Padding(0, 4, 4, 4);
+            pvModeToggle.Name = "pvModeToggle";
+            pvModeToggle.SelectedIndex = 0;
+            pvModeToggle.Size = new Size(144, 26);
+            pvModeToggle.TabIndex = 162;
+            pvModeToggle.SelectedIndexChanged += PvModeToggle_SelectedIndexChanged;
+            pvModeToggle.SetItems("PvE", "PvP");
             // 
             // recipeEx
             // 
@@ -1714,7 +1843,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // layoutMenuItem
             // 
-            layoutMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tsView2Col, tsView3Col, tsView4Col });
+            layoutMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tsView2Col, tsView3Col, tsView4Col, tsViewPortraitLayout });
             layoutMenuItem.Name = "layoutMenuItem";
             layoutMenuItem.Size = new Size(276, 22);
             layoutMenuItem.Text = "Layout";
@@ -1739,6 +1868,13 @@ namespace Mids_Reborn.UI.Forms
             tsView4Col.Size = new Size(138, 22);
             tsView4Col.Text = "4 Columns";
             tsView4Col.Click += tsView4Col_Click;
+            // 
+            // tsViewPortraitLayout
+            // 
+            tsViewPortraitLayout.Name = "tsViewPortraitLayout";
+            tsViewPortraitLayout.Size = new Size(138, 22);
+            tsViewPortraitLayout.Text = "Portrait Layout";
+            tsViewPortraitLayout.Click += tsViewPortraitLayout_Click;
             // 
             // themeMenuItem
             // 
@@ -2262,6 +2398,8 @@ namespace Mids_Reborn.UI.Forms
             Text = "Mids Reborn v4.0 (alpha)";
             mainLayoutPanel.ResumeLayout(false);
             mainLayoutPanel.PerformLayout();
+            plannerModeHost.ResumeLayout(false);
+            plannerModeHost.PerformLayout();
             characterLayoutPanel.ResumeLayout(false);
             characterLayoutPanel.PerformLayout();
             leftLayoutPanel.ResumeLayout(false);
@@ -2372,10 +2510,17 @@ namespace Mids_Reborn.UI.Forms
         private Label lblName;
         private Label lblAT;
         private Label lblOrigin;
+        private Label lblAlignment;
         private Panel characterPanel;
         private TextBox txtName;
         private ArchetypeDropDownList atDropDown;
         private OriginDropDownList originDropDown;
+        private MidsDropDownList alignmentDropDown;
+        private TableLayoutPanel plannerModeHost;
+        private Label plannerModeLabel;
+        private MidsSegmentedToggle plannerModeToggle;
+        private Label staticLevelLabel;
+        private MidsLevelStepper staticLevelInput;
         private MidsVectorButton modeEx;
         private MidsVectorButton totalsEx;
         private Timer tmrGfx;
@@ -2405,6 +2550,7 @@ namespace Mids_Reborn.UI.Forms
         private ToolStripMenuItem tsView2Col;
         private ToolStripMenuItem tsView3Col;
         private ToolStripMenuItem tsView4Col;
+        private ToolStripMenuItem tsViewPortraitLayout;
         private ToolStripMenuItem toolStripMenuItem4;
         private ToolStripMenuItem tsViewIOLevels;
         private ToolStripMenuItem tsViewSOLevels;
@@ -2478,5 +2624,6 @@ namespace Mids_Reborn.UI.Forms
         private ToolStripMenuItem themeMenuItem;
         private ToolStripSeparator toolStripSeparator15;
         private MidsVectorButton combatEx;
+        private MidsSegmentedToggle pvModeToggle;
     }
 }
