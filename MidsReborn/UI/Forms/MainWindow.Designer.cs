@@ -2226,7 +2226,7 @@ namespace Mids_Reborn.UI.Forms
             logoPanel.Dock = DockStyle.Left;
             logoPanel.Location = new Point(0, 0);
             logoPanel.Name = "logoPanel";
-            logoPanel.Size = new Size(103, 35);
+            logoPanel.Size = new Size(350, 50);
             logoPanel.TabIndex = 6;
             logoPanel.MouseDown += Title_MouseDown;
             // 
