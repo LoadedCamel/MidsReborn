@@ -165,7 +165,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             var extendedBitmap = new ExtendedBitmap(destRect.Width, destRect.Height);
             extendedBitmap.Graphics.Clear(BackColor);
             extendedBitmap.Graphics.DrawImage(
-                MidsContext.Character.IsHero()
+                MidsContext.Character.IsHero
                     ? _myParent.Drawing.BxPower[2].Bitmap
                     : _myParent.Drawing.BxPower[4].Bitmap, destRect, 0, 0, rectangle.Width,
                 rectangle.Height, GraphicsUnit.Pixel, _myParent.Drawing.PImageAttributes);
@@ -209,14 +209,14 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             extendedBitmap.Graphics.Clear(BackColor);
             if (index == 3)
             {
-                extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero()
+                extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero
                         ? _myParent.Drawing.BxPower[3].Bitmap
                         : _myParent.Drawing.BxPower[5].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel);
             }
             else
             {
-                extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero()
+                extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero
                         ? _myParent.Drawing.BxPower[2].Bitmap
                         : _myParent.Drawing.BxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel, _myParent.Drawing.PImageAttributes);
@@ -436,14 +436,14 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             extendedBitmap.Graphics.Clear(BackColor);
             if (index == 3)
             {
-                extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero()
+                extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero
                         ? _myParent.Drawing.BxPower[3].Bitmap
                         : _myParent.Drawing.BxPower[5].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel);
             }
             else
             {
-                extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero()
+                extendedBitmap.Graphics.DrawImage(MidsContext.Character.IsHero
                         ? _myParent.Drawing.BxPower[2].Bitmap
                         : _myParent.Drawing.BxPower[4].Bitmap, destRect, 0, 0, rectangle.Width, rectangle.Height,
                     GraphicsUnit.Pixel, _myParent.Drawing.PImageAttributes);

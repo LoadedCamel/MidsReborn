@@ -80,8 +80,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             foreach (var button in buttonArray)
             {
                 button.IA = myParent.Drawing.PImageAttributes;
-                button.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.BxPower[2].Bitmap : myParent.Drawing.BxPower[4].Bitmap;
-                button.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.BxPower[3].Bitmap : myParent.Drawing.BxPower[5].Bitmap;
+                button.ImageOff = MidsContext.Character.IsHero ? myParent.Drawing.BxPower[2].Bitmap : myParent.Drawing.BxPower[4].Bitmap;
+                button.ImageOn = MidsContext.Character.IsHero ? myParent.Drawing.BxPower[3].Bitmap : myParent.Drawing.BxPower[5].Bitmap;
                 Debug.WriteLine(button.TextOn);
                 Debug.WriteLine(DatabaseAPI.ServerData.EnabledIncarnates[button.TextOn]);
                 button.Enabled = DatabaseAPI.ServerData.EnabledIncarnates[button.TextOn];
@@ -96,8 +96,8 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             UpdatePLColors(ref plRight);
             //LLRight = llRight;
             ibClose.IA = myParent.Drawing.PImageAttributes;
-            ibClose.ImageOff = MidsContext.Character.IsHero() ? myParent.Drawing.BxPower[2].Bitmap : myParent.Drawing.BxPower[4].Bitmap;
-            ibClose.ImageOn = MidsContext.Character.IsHero() ? myParent.Drawing.BxPower[3].Bitmap : myParent.Drawing.BxPower[5].Bitmap;
+            ibClose.ImageOff = MidsContext.Character.IsHero ? myParent.Drawing.BxPower[2].Bitmap : myParent.Drawing.BxPower[4].Bitmap;
+            ibClose.ImageOn = MidsContext.Character.IsHero ? myParent.Drawing.BxPower[3].Bitmap : myParent.Drawing.BxPower[5].Bitmap;
             var iPopup = new PopUp.PopupData();
             var index = iPopup.Add();
             iPopup.Sections[index].Add("Click powers to enable/disable them.", PopUp.Colors.Title);
@@ -377,21 +377,21 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             iList.UpdateTextColors(ctlPowerList.ItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
             iList.UpdateTextColors(ctlPowerList.ItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
             iList.UpdateTextColors(ctlPowerList.ItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
-            /*iList.ScrollBarColor = MidsContext.Character.IsHero()
+            /*iList.ScrollBarColor = MidsContext.Character.IsHero
                 ? MidsContext.Config.RtFont.ColorPowerTakenHero
                 : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-            iList.ScrollButtonColor = MidsContext.Character.IsHero()
+            iList.ScrollButtonColor = MidsContext.Character.IsHero
                 ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                 : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;*/
             iList.UpdateTextColors(ctlPowerList.ItemState.Selected,
-                MidsContext.Character.IsHero()
+                MidsContext.Character.IsHero
                     ? MidsContext.Config.RtFont.ColorPowerTakenHero
                     : MidsContext.Config.RtFont.ColorPowerTakenVillain);
             iList.UpdateTextColors(ctlPowerList.ItemState.SelectedDisabled,
-                MidsContext.Character.IsHero()
+                MidsContext.Character.IsHero
                     ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                     : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-            /*iList.HoverColor = MidsContext.Character.IsHero()
+            /*iList.HoverColor = MidsContext.Character.IsHero
                 ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;*/
             iList.Font = new Font("Segoe UI", 11.5f, FontStyle.Bold, GraphicsUnit.Pixel);

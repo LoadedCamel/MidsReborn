@@ -108,7 +108,7 @@ namespace Mids_Reborn
                 "Villain" => Enums.Alignment.Villain,
                 "Loyalist" => Enums.Alignment.Loyalist,
                 "Resistance" => Enums.Alignment.Resistance,
-                _ => MidsContext.Character.IsHero() ? Enums.Alignment.Hero : Enums.Alignment.Villain
+                _ => MidsContext.Character.IsHero ? Enums.Alignment.Hero : Enums.Alignment.Villain
             };
             */
 
@@ -116,7 +116,7 @@ namespace Mids_Reborn
             {
                 "Hero" or "Vigilante" or "Resistance" => Enums.Alignment.Hero,
                 "Villain" or "Rogue" or "Loyalist" => Enums.Alignment.Villain,
-                _ => MidsContext.Character.IsHero() ? Enums.Alignment.Hero : Enums.Alignment.Villain
+                _ => MidsContext.Character.IsHero ? Enums.Alignment.Hero : Enums.Alignment.Villain
             };
 
             MidsContext.Character.SetLevelTo(CharacterInfo.Level - 1);

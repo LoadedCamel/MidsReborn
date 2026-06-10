@@ -230,7 +230,7 @@ public sealed class PetActorPowerGrid : Control
         var textScaleFactor = SystemFonts.MessageBoxFont.SizeInPoints / 9f;
         var petGridFontSize = 12.5f * textScaleFactor;
         using var titleFont = new Font("Segoe UI", petGridFontSize, isBold ? FontStyle.Bold : FontStyle.Regular, GraphicsUnit.Pixel);
-        using var textBrush = !MidsContext.Character.IsHero() ? new SolidBrush(Color.White) : new SolidBrush(Color.Black);
+        using var textBrush = !MidsContext.Character.IsHero ? new SolidBrush(Color.White) : new SolidBrush(Color.Black);
 
         var textBounds = new RectangleF
         {

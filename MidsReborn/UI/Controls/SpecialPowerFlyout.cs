@@ -274,7 +274,8 @@ public sealed class SpecialPowerFlyout : UserControl
     {
         var theme = ThemeManager.CurrentTheme?.DataView ?? ThemeManager.DesignTime.DataView;
         var config = MidsContext.Config;
-        var isHero = MidsContext.Character?.IsHero() == true;
+        var alignment = MidsContext.Character?.Alignment ?? Enums.Alignment.Hero;
+        var isHero = AccoladeSideRules.IsHeroSideAlignment(alignment);
         var enabledColor = config?.RtFont.ColorPowerAvailable ?? theme.Text;
         var disabledColor = config?.RtFont.ColorPowerDisabled ?? theme.Muted;
         var selectedColor = isHero

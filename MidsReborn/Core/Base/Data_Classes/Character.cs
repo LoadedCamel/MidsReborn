@@ -336,9 +336,8 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             !string.IsNullOrEmpty(at.DisplayName) &&
             string.Equals(at.DisplayName, name, StringComparison.OrdinalIgnoreCase);
 
-        //public bool IsHero => Alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante;
+        public bool IsHero => Alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante;
         public bool IsVillain => Alignment is Enums.Alignment.Rogue or Enums.Alignment.Villain;
-        public bool IsPraetorian => Alignment is Enums.Alignment.Loyalist or Enums.Alignment.Resistance;
 
         public bool IsBlaster => AtNameEquals(Archetype, "Blaster");
         public bool IsController => AtNameEquals(Archetype, "Controller");
@@ -431,11 +430,6 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             }
 
             return powersAvailable;
-        }
-
-        public bool IsHero()
-        {
-            return Alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante;
         }
 
         public bool PoolTaken(int poolId)

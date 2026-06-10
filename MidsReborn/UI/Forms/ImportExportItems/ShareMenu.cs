@@ -258,7 +258,7 @@ namespace Mids_Reborn.UI.Forms.ImportExportItems
 
             if (MidsContext.Character.Powersets[7] != null)
             {
-                txt += tg.ListItem(tg.Bold(tg.Color(activeTheme.Headings, $"{(MidsContext.Character.Alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante or Enums.Alignment.Resistance ? "Epic" : "Ancillary")} powerset: ") + tg.Color(activeTheme.Title, MidsContext.Character.Powersets[7]?.DisplayName)));
+                txt += tg.ListItem(tg.Bold(tg.Color(activeTheme.Headings, $"{(MidsContext.Character.Alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante ? "Epic" : "Ancillary")} powerset: ") + tg.Color(activeTheme.Title, MidsContext.Character.Powersets[7]?.DisplayName)));
             }
 
             txt += tg.List(true);

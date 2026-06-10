@@ -247,7 +247,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             {
                 case Enums.Alignment.Hero:
                 case Enums.Alignment.Vigilante:
-                case Enums.Alignment.Resistance:
 
                     ctlTotalsTabStrip1.InactiveTabColor = _tabColors.HeroInactiveTabColor;
                     ctlTotalsTabStrip1.BackColor = _tabColors.HeroInactiveTabColor;
@@ -311,7 +310,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             {
                 case Enums.Alignment.Hero:
                 case Enums.Alignment.Vigilante:
-                case Enums.Alignment.Resistance:
 
                     ctlTotalsTabStrip1.InactiveTabColor = _tabColors.HeroInactiveTabColor;
                     ctlTotalsTabStrip1.BackColor = _tabColors.HeroInactiveTabColor;

@@ -304,7 +304,7 @@ namespace Mids_Reborn.UI.Design.Extensions
         /// This has been set through trial and error and result isn't a 100% match.</remarks>
         public static SKColorFilter HeroVillainColorMatrix(this SKCanvas canvas)
         {
-            return MidsContext.Character.IsHero()
+            return MidsContext.Character.IsHero
                 ? SKColorFilter.CreateColorMatrix(new[]
                 {
                     1f,     0,     0,      0,      0,

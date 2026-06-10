@@ -1202,7 +1202,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                 bxFlip.Graphics.DrawString("Active Slotting:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
                 rectangle1.Y += rectangle1.Height;
                 bxFlip.Graphics.DrawString("Alternate:", pnlEnhActive.Font, solidBrush1, rectangle1, format);
-                //ImageAttributes recolorIa = clsDrawX.GetRecolorIa(MidsContext.Character.IsHero());
+                //ImageAttributes recolorIa = clsDrawX.GetRecolorIa(MidsContext.Character.IsHero);
                 using var solidBrush2 = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
                 var power = MidsContext.Character.CurrentBuild.Powers[inToonHistory];
                 for (var index = 0; index < power.SlotCount; index++)
@@ -1608,7 +1608,7 @@ namespace Mids_Reborn.UI.Forms.Controls
                 return;
             }
 
-            ImageAttributes recolorIa = BuildRenderer.GetRecolorIa(MidsContext.Character.IsHero());
+            ImageAttributes recolorIa = BuildRenderer.GetRecolorIa(MidsContext.Character.IsHero);
             var rectangle1 = new Rectangle();
             ref var local1 = ref rectangle1;
             var size = bxFlip.Size;

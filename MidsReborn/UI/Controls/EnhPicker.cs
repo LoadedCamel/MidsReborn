@@ -75,7 +75,7 @@ namespace Mids_Reborn.UI.Forms.Controls
         {
             var client = ClientRectangle;
             using var pen = new Pen(Color.FromArgb(12, 56, 100), 2);
-            pen.Color = MidsContext.Character?.IsHero() switch
+            pen.Color = MidsContext.Character?.IsHero switch
             {
                 false => Color.FromArgb(100, 0, 0),
                 _ => pen.Color

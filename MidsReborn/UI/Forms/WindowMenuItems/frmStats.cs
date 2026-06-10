@@ -484,14 +484,14 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         public void UpdateColorTheme()
         {
-            chkOnTop.UseAlt = MidsContext.Character.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
-            btnClose.UseAlt = MidsContext.Character.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            chkOnTop.UseAlt = MidsContext.Character.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue;
+            btnClose.UseAlt = MidsContext.Character.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue;
         }
 
         public void UpdateColorTheme(Enums.Alignment alignment)
         {
-            chkOnTop.UseAlt = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
-            btnClose.UseAlt = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            chkOnTop.UseAlt = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue;
+            btnClose.UseAlt = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue;
         }
 
         private void frmStats_Move(object sender, EventArgs e)

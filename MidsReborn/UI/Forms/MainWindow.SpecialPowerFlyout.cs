@@ -127,7 +127,7 @@ namespace Mids_Reborn.UI.Forms
             Rectangle? anchorOverride)
         {
             var classId = MidsContext.Character?.Archetype?.Idx ?? -1;
-            var isHero = MainModule.MidsController.Toon?.IsHero() != false;
+            var alignment = MidsContext.Character?.Alignment ?? Enums.Alignment.Hero;
             var anchorBounds = anchorOverride ?? GetBoundsInFormClient(anchorControl);
 
             if (category == SpecialPowerCategory.Incarnate)
@@ -207,7 +207,7 @@ namespace Mids_Reborn.UI.Forms
                 category,
                 title ?? GetSpecialPowerFlyoutTitle(category),
                 anchorBounds,
-                SpecialPowerCatalog.GetPowers(category, classId, isHero, explicitPowers));
+                SpecialPowerCatalog.GetPowers(category, classId, alignment, explicitPowers));
         }
 
         private static string GetSpecialPowerFlyoutTitle(SpecialPowerCategory category)

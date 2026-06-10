@@ -176,7 +176,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         /// <param name="cAlignment">Character alignment</param>
         public void UpdateColorTheme(Enums.Alignment cAlignment)
         {
-            var charVillain = cAlignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            var charVillain = cAlignment is Enums.Alignment.Villain or Enums.Alignment.Rogue;
             petView1.UseAlt = charVillain;
             UpdateStyle();
         }
@@ -184,7 +184,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private void UpdateStyle()
         {
             bool useVillain;
-            if (MidsContext.Character != null && MidsContext.Character.IsHero())
+            if (MidsContext.Character != null && MidsContext.Character.IsHero)
             {
                 // if (MidsContext.Config != null && MidsContext.Config.DimWindowStyleColors)
                 // {

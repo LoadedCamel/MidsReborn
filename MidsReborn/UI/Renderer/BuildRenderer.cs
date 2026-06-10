@@ -952,7 +952,7 @@ namespace Mids_Reborn.UI.Renderer
                 BxBuffer.Graphics.DrawLine(pen, rightLineStart, y, BxBuffer.Size.Width, y);
             }
 
-            Color headerFill = MidsContext.Character.IsHero()
+            Color headerFill = MidsContext.Character.IsHero
                 ? Color.FromArgb(166, 224, 255)
                 : Color.FromArgb(255, 178, 178);
             DrawOutlineText(label, textBounds, headerFill, Color.FromArgb(228, 0, 0, 0), font,
@@ -2516,7 +2516,7 @@ namespace Mids_Reborn.UI.Renderer
                                 ? HasNullColumn
                                     ? "Unaffected Powers"
                                     : ""
-                                : $"{(powerSets[i].SetType == ePowerSetType.Pool ? $"Pool {k++}" : MidsContext.Character?.IsHero() == false ? "Ancillary" : "Epic")}: {powerSets[i].DisplayName}",
+                                : $"{(powerSets[i].SetType == ePowerSetType.Pool ? $"Pool {k++}" : MidsContext.Character?.IsHero == false ? "Ancillary" : "Epic")}: {powerSets[i].DisplayName}",
                             _ when HasNullColumn => "Unaffected Powers",
                             _ => ""
                         };
@@ -2552,7 +2552,7 @@ namespace Mids_Reborn.UI.Renderer
                     var texts = new[] {
                         "Primary",
                         "Secondary",
-                        MidsContext.Character?.IsHero() == false ? "Pools/Ancillary" : "Pools/Epic"
+                        MidsContext.Character?.IsHero == false ? "Pools/Ancillary" : "Pools/Epic"
                     };
 
                     for (var i = 0; i < 3; i++)
@@ -2802,7 +2802,7 @@ namespace Mids_Reborn.UI.Renderer
         {
             /*bool useHeroColors = true;
             if (MidsContext.Character != null)
-                useHeroColors = MidsContext.Character.IsHero();
+                useHeroColors = MidsContext.Character.IsHero;
             if (MidsContext.Config.DisableVillainColors)
                 useHeroColors = true;
             VillainColor = !useHeroColors;*/

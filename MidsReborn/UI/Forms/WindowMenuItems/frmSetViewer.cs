@@ -1052,7 +1052,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
         private void SetupImageButton(ImageButton ib)
         {
-            var imageOffIdx = MidsContext.Character.IsHero() ? 2 : 4;
+            var imageOffIdx = MidsContext.Character.IsHero ? 2 : 4;
             var imageOnIdx = imageOffIdx + 1;
 
             ib.IA = myParent.Drawing.PImageAttributes;
@@ -1080,7 +1080,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 rtxtInfo.BackColor = BackColor;
             }
 
-            var imageOffIdx = MidsContext.Character.IsHero() ? 2 : 4;
+            var imageOffIdx = MidsContext.Character.IsHero ? 2 : 4;
             var imageOnIdx = imageOffIdx + 1;
 
             SetupImageButton(btnClose);

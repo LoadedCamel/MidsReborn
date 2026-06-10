@@ -29,10 +29,10 @@ namespace Mids_Reborn.UI.Design.Extensions
 
             s.Canvas.Clear(backColor.ToSKColor());
             var bgBitmapIndex = active
-                ? MidsContext.Character?.IsHero() == true
+                ? MidsContext.Character?.IsHero == true
                     ? 3
                     : 5
-                : MidsContext.Character?.IsHero() == true
+                : MidsContext.Character?.IsHero == true
                     ? 2
                     : 4;
 

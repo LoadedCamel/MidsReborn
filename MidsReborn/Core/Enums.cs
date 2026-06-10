@@ -13,9 +13,7 @@ namespace Mids_Reborn.Core
             Hero,
             Rogue,
             Vigilante,
-            Villain,
-            Loyalist,
-            Resistance
+            Villain
         }
 
         public enum dmItem

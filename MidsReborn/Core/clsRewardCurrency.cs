@@ -119,7 +119,6 @@ namespace Mids_Reborn.Core
                 {
                     Enums.Alignment.Villain => $"Villain Merit{plural}",
                     Enums.Alignment.Rogue => $"Villain Merit{plural}",
-                    Enums.Alignment.Loyalist => $"Villain Merit{plural}",
                     _ => $"Hero Merit{plural}"
                 },
                 Enums.RewardCurrency.VanguardMerit => $"Vanguard Merit{plural}",

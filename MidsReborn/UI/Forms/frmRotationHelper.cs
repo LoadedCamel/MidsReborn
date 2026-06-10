@@ -466,7 +466,7 @@ namespace Mids_Reborn.UI.Forms
         {
             SuspendLayout();
 
-            var isVillain = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            var isVillain = alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue;
             borderPanel2.Border.Color = isVillain ? Color.DarkRed : Color.FromArgb(16, 76, 135);
             borderPanel2.Invalidate();
             imageButtonEx1.UseAlt = isVillain;
@@ -480,7 +480,7 @@ namespace Mids_Reborn.UI.Forms
         {
             SuspendLayout();
 
-            var isVillain = MidsContext.Character?.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            var isVillain = MidsContext.Character?.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue;
             borderPanel2.Border.Color = isVillain ? Color.DarkRed : Color.FromArgb(16, 76, 135);
             borderPanel2.Invalidate();
             imageButtonEx1.UseAlt = isVillain;

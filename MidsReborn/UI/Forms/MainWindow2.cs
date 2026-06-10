@@ -390,7 +390,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             ToolStripSeparator5.Visible = MidsContext.Config.MasterMode;
             AdvancedToolStripMenuItem1.Visible = MidsContext.Config.MasterMode;
-            SetTitleBar(MainModule.MidsController.Toon!.IsHero());
+            SetTitleBar(MainModule.MidsController.Toon!.IsHero);
         }
 
         private void MainWindow_MouseWheel(object? sender, MouseEventArgs e)
@@ -1065,7 +1065,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             FloatingDataForm.dvFloat.Init();
             FloatingDataForm.dvFloat.SetFontData();
             myDataView.BackColor = BackColor;
-            myDataView.DrawVillain = !MainModule.MidsController.Toon.IsHero();
+            myDataView.DrawVillain = !MainModule.MidsController.Toon.IsHero;
             _dvAnchored.Visible = false;
             pnlGFX.Select();
             FloatingDataForm.Show();
@@ -1364,7 +1364,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     var pSource = new List<string>();
                     var pTarget = new List<string>();
 
-                    if (MainModule.MidsController.Toon == null || MainModule.MidsController.Toon.IsHero())
+                    if (MainModule.MidsController.Toon == null || MainModule.MidsController.Toon.IsHero)
                     {
                         pSource = factionSpecificAccolades.Select(x => x.Villain).ToList();
                         pTarget = factionSpecificAccolades.Select(x => x.Hero).ToList();
@@ -1416,7 +1416,6 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     }
                 }
             }
-
             if (nbUpdated > 0)
             {
                 PowerModified(true, false);
@@ -2530,7 +2529,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void OnTitleUpdate(object? sender, EventArgs eventArgs)
         {
-            SetTitleBar(MidsContext.Character.IsHero());
+            SetTitleBar(MidsContext.Character.IsHero);
         }
 
         private void tsEnhToDO_Click(object sender, EventArgs e)
@@ -2916,7 +2915,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                     UpdateColors();
                     FloatTop(true);
-                    SetTitleBar(MidsContext.Character.IsHero(), true);
+                    SetTitleBar(MidsContext.Character.IsHero, true);
                 }
             }
             catch (Exception ex)
@@ -4109,7 +4108,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 str1 = $" (Placing {ch.Level + 1})";
             }
 
-            SetTitleBar(MainModule.MidsController.Toon.IsHero());
+            SetTitleBar(MainModule.MidsController.Toon.IsHero);
             var str3 = $"{ch.Name}: ";
             if ((MidsContext.Config.BuildMode == Enums.dmModes.LevelUp) & (str1 != ""))
             {
@@ -4154,7 +4153,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var Enh2 = -1;
             I9Slot? i9Slot1 = null;
             I9Slot? i9Slot2 = null;
-            var recolorIa = BuildRenderer.GetRecolorIa(MainModule.MidsController.Toon.IsHero());
+            var recolorIa = BuildRenderer.GetRecolorIa(MainModule.MidsController.Toon.IsHero);
             using var solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             var num1 = FlipSlotState.Length - 1;
             Rectangle rectangle1;
@@ -4591,7 +4590,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                 LastFileName = buildFile;
                 FileModified = false;
-                SetTitleBar(MidsContext.Character.IsHero());
+                SetTitleBar(MidsContext.Character.IsHero);
 
                 return true;
             }
@@ -5553,7 +5552,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
                 NewDraw(skipDraw);
                 UpdateControls(true);
-                SetTitleBar(MidsContext.Character != null && MidsContext.Character.IsHero());
+                SetTitleBar(MidsContext.Character != null && MidsContext.Character.IsHero);
                 UpdateColors();
                 MidsContext.EnhCheckMode = false;
                 UpdateEnhCheckModeToolStrip();
@@ -7088,7 +7087,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
         {
             if (MainModule.MidsController.Toon != null)
             {
-                hero = MainModule.MidsController.Toon.IsHero();
+                hero = MainModule.MidsController.Toon.IsHero;
             }
 
             var str1 = string.Empty;
@@ -7152,7 +7151,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             myDataView = _dvAnchored;
             myDataView.Init();
             myDataView.BackColor = BackColor;
-            myDataView.DrawVillain = !MainModule.MidsController.Toon.IsHero();
+            myDataView.DrawVillain = !MainModule.MidsController.Toon.IsHero;
             _dvAnchored.Visible = true;
             NoResizeEvent = true;
             OnResizeEnd(EventArgs.Empty);
@@ -7492,17 +7491,17 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void UpdateColors(bool skipDraw = false)
         {
-            myDataView.DrawVillain = !MidsContext.Character.IsHero();
+            myDataView.DrawVillain = !MidsContext.Character.IsHero;
             bool draw;
             draw = I9Picker.ForeColor.R != 96;
             BackColor = Color.FromArgb(0, 0, 0);
-            lblATLocked.BackColor = MidsContext.Character.IsHero()
+            lblATLocked.BackColor = MidsContext.Character.IsHero
                 ? MidsContext.Config.RtFont.ColorPowerTakenHero
                 : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-            I9Picker.ForeColor = MidsContext.Character.IsHero()
+            I9Picker.ForeColor = MidsContext.Character.IsHero
                 ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                 : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
-            // I9Picker.Selected = MidsContext.Character.IsHero()
+            // I9Picker.Selected = MidsContext.Character.IsHero
             //     ? MidsContext.Config.RtFont.ColorPowerHighlightHero
             //     : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
             I9Picker.BackColor = BackColor;
@@ -7538,21 +7537,21 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var llControls = Helpers.GetControlsOfType<ListLabel>(this);
             foreach (var llControl in llControls)
             {
-                llControl.ScrollBarColor = MidsContext.Character.IsHero()
+                llControl.ScrollBarColor = MidsContext.Character.IsHero
                     ? MidsContext.Config.RtFont.ColorPowerTakenHero
                     : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-                llControl.ScrollButtonColor = MidsContext.Character.IsHero()
+                llControl.ScrollButtonColor = MidsContext.Character.IsHero
                     ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                     : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
                 llControl.UpdateTextColors(ListLabel.LlItemState.Selected,
-                    MidsContext.Character.IsHero()
+                    MidsContext.Character.IsHero
                         ? MidsContext.Config.RtFont.ColorPowerTakenHero
                         : MidsContext.Config.RtFont.ColorPowerTakenVillain);
                 llControl.UpdateTextColors(ListLabel.LlItemState.SelectedDisabled,
-                    MidsContext.Character.IsHero()
+                    MidsContext.Character.IsHero
                         ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                         : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                llControl.HoverColor = MidsContext.Character.IsHero()
+                llControl.HoverColor = MidsContext.Character.IsHero
                     ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                     : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
             }
@@ -7743,7 +7742,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 }
             }*/
 
-            ibAlignmentEx.ToggleState = MidsContext.Character.IsHero() switch
+            ibAlignmentEx.ToggleState = MidsContext.Character.IsHero switch
             {
                 true => MidsVectorButton.States.ToggledOff,
                 false => MidsVectorButton.States.ToggledOn
@@ -7847,21 +7846,21 @@ The default position/state will be used upon next launch.", @"Window State Warni
             iList.UpdateTextColors(ListLabel.LlItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
             iList.UpdateTextColors(ListLabel.LlItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
             iList.UpdateTextColors(ListLabel.LlItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
-            iList.ScrollBarColor = MidsContext.Character.IsHero()
+            iList.ScrollBarColor = MidsContext.Character.IsHero
                 ? MidsContext.Config.RtFont.ColorPowerTakenHero
                 : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-            iList.ScrollButtonColor = MidsContext.Character.IsHero()
+            iList.ScrollButtonColor = MidsContext.Character.IsHero
                 ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                 : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
             iList.UpdateTextColors(ListLabel.LlItemState.Selected,
-                MidsContext.Character.IsHero()
+                MidsContext.Character.IsHero
                     ? MidsContext.Config.RtFont.ColorPowerTakenHero
                     : MidsContext.Config.RtFont.ColorPowerTakenVillain);
             iList.UpdateTextColors(ListLabel.LlItemState.SelectedDisabled,
-                MidsContext.Character.IsHero()
+                MidsContext.Character.IsHero
                     ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                     : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-            iList.HoverColor = MidsContext.Character.IsHero()
+            iList.HoverColor = MidsContext.Character.IsHero
                 ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
         }
@@ -7880,21 +7879,21 @@ The default position/state will be used upon next launch.", @"Window State Warni
                         MidsContext.Config.RtFont.ColorPowerDisabled);
                     llControl.UpdateTextColors(ListLabel.LlItemState.Invalid,
                         Color.FromArgb(byte.MaxValue, 0, 0));
-                    llControl.ScrollBarColor = MidsContext.Character.IsHero()
+                    llControl.ScrollBarColor = MidsContext.Character.IsHero
                         ? MidsContext.Config.RtFont.ColorPowerTakenHero
                         : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-                    llControl.ScrollButtonColor = MidsContext.Character.IsHero()
+                    llControl.ScrollButtonColor = MidsContext.Character.IsHero
                         ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                         : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
                     llControl.UpdateTextColors(ListLabel.LlItemState.Selected,
-                        MidsContext.Character.IsHero()
+                        MidsContext.Character.IsHero
                             ? MidsContext.Config.RtFont.ColorPowerTakenHero
                             : MidsContext.Config.RtFont.ColorPowerTakenVillain);
                     llControl.UpdateTextColors(ListLabel.LlItemState.SelectedDisabled,
-                        MidsContext.Character.IsHero()
+                        MidsContext.Character.IsHero
                             ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                             : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                    llControl.HoverColor = MidsContext.Character.IsHero()
+                    llControl.HoverColor = MidsContext.Character.IsHero
                         ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                         : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
                 }

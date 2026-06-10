@@ -38,7 +38,7 @@ namespace Mids_Reborn.UI.Forms
             var x = padding;
             var y = padding;
 
-            var isVillain = MidsContext.Character?.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            var isVillain = MidsContext.Character?.Alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue;
 
             SuspendLayout();
 

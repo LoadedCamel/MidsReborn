@@ -67,21 +67,21 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
                 llControl.UpdateTextColors(ListLabel.LlItemState.Disabled,
                     MidsContext.Config.RtFont.ColorPowerDisabled);
                 llControl.UpdateTextColors(ListLabel.LlItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
-                llControl.ScrollBarColor = MidsContext.Character.IsHero()
+                llControl.ScrollBarColor = MidsContext.Character.IsHero
                     ? MidsContext.Config.RtFont.ColorPowerTakenHero
                     : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-                llControl.ScrollButtonColor = MidsContext.Character.IsHero()
+                llControl.ScrollButtonColor = MidsContext.Character.IsHero
                     ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                     : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
                 llControl.UpdateTextColors(ListLabel.LlItemState.Selected,
-                    MidsContext.Character.IsHero()
+                    MidsContext.Character.IsHero
                         ? MidsContext.Config.RtFont.ColorPowerTakenHero
                         : MidsContext.Config.RtFont.ColorPowerTakenVillain);
                 llControl.UpdateTextColors(ListLabel.LlItemState.SelectedDisabled,
-                    MidsContext.Character.IsHero()
+                    MidsContext.Character.IsHero
                         ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                         : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-                llControl.HoverColor = MidsContext.Character.IsHero()
+                llControl.HoverColor = MidsContext.Character.IsHero
                     ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                     : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
                 var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;
@@ -150,10 +150,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             UpdateLlColours(ref llRight);
             this.llRight = llRight;
             ibClose.IA = _myParent.Drawing.PImageAttributes;
-            ibClose.ImageOff = MidsContext.Character.IsHero()
+            ibClose.ImageOff = MidsContext.Character.IsHero
                 ? _myParent.Drawing.BxPower[2].Bitmap
                 : _myParent.Drawing.BxPower[4].Bitmap;
-            ibClose.ImageOn = MidsContext.Character.IsHero()
+            ibClose.ImageOn = MidsContext.Character.IsHero
                 ? _myParent.Drawing.BxPower[3].Bitmap
                 : _myParent.Drawing.BxPower[5].Bitmap;
             var iPopup = new PopUp.PopupData();
@@ -437,21 +437,21 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             iList.UpdateTextColors(ListLabel.LlItemState.Enabled, MidsContext.Config.RtFont.ColorPowerAvailable);
             iList.UpdateTextColors(ListLabel.LlItemState.Disabled, MidsContext.Config.RtFont.ColorPowerDisabled);
             iList.UpdateTextColors(ListLabel.LlItemState.Invalid, Color.FromArgb(byte.MaxValue, 0, 0));
-            iList.ScrollBarColor = MidsContext.Character.IsHero()
+            iList.ScrollBarColor = MidsContext.Character.IsHero
                 ? MidsContext.Config.RtFont.ColorPowerTakenHero
                 : MidsContext.Config.RtFont.ColorPowerTakenVillain;
-            iList.ScrollButtonColor = MidsContext.Character.IsHero()
+            iList.ScrollButtonColor = MidsContext.Character.IsHero
                 ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                 : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain;
             iList.UpdateTextColors(ListLabel.LlItemState.Selected,
-                MidsContext.Character.IsHero()
+                MidsContext.Character.IsHero
                     ? MidsContext.Config.RtFont.ColorPowerTakenHero
                     : MidsContext.Config.RtFont.ColorPowerTakenVillain);
             iList.UpdateTextColors(ListLabel.LlItemState.SelectedDisabled,
-                MidsContext.Character.IsHero()
+                MidsContext.Character.IsHero
                     ? MidsContext.Config.RtFont.ColorPowerTakenDarkHero
                     : MidsContext.Config.RtFont.ColorPowerTakenDarkVillain);
-            iList.HoverColor = MidsContext.Character.IsHero()
+            iList.HoverColor = MidsContext.Character.IsHero
                 ? MidsContext.Config.RtFont.ColorPowerHighlightHero
                 : MidsContext.Config.RtFont.ColorPowerHighlightVillain;
             var style = !MidsContext.Config.RtFont.PowersSelectBold ? FontStyle.Regular : FontStyle.Bold;

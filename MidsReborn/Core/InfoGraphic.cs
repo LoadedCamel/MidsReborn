@@ -43,16 +43,16 @@ namespace Mids_Reborn.Core
             switch (useAltBg)
             {
                 case false:
-                    _graphics.DrawImage(MidsContext.Character!.IsHero() ? Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Assets", "InfoBackDropH.png")) : Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Assets", "InfoBackDropV.png")), new RectangleF(0, 0, tmp.Width, tmp.Height));
+                    _graphics.DrawImage(MidsContext.Character!.IsHero ? Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Assets", "InfoBackDropH.png")) : Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Assets", "InfoBackDropV.png")), new RectangleF(0, 0, tmp.Width, tmp.Height));
                     break;
                 case true:
-                    _graphics.DrawImage(MidsContext.Character!.IsHero() ? Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Assets", "InfoBackDropH2.png")) : Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Assets", "InfoBackDropV2.png")), new RectangleF(0, 0, tmp.Width, tmp.Height));
+                    _graphics.DrawImage(MidsContext.Character!.IsHero ? Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Assets", "InfoBackDropH2.png")) : Image.FromFile(Path.Combine(AppContext.BaseDirectory, "Assets", "InfoBackDropV2.png")), new RectangleF(0, 0, tmp.Width, tmp.Height));
                     break;
             }
             
 
             // Outline Brush and Disposable Pen
-            var outline = MidsContext.Character.IsHero() ? new SolidBrush(Color.DodgerBlue) : new SolidBrush(Color.DarkRed);
+            var outline = MidsContext.Character.IsHero ? new SolidBrush(Color.DodgerBlue) : new SolidBrush(Color.DarkRed);
             using var pen = new Pen(outline, 4);
 
             // Measure random text w/font for line height.

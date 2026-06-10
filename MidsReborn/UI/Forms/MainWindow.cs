@@ -144,10 +144,8 @@ namespace Mids_Reborn.UI.Forms
         [
             Enums.Alignment.Hero,
             Enums.Alignment.Vigilante,
-            Enums.Alignment.Resistance,
             Enums.Alignment.Villain,
             Enums.Alignment.Rogue,
-            Enums.Alignment.Loyalist
         ];
         private PoolSectionBinding[] _poolSections = [];
         private Label? _modeLabel;
@@ -2437,22 +2435,19 @@ namespace Mids_Reborn.UI.Forms
             {
                 Enums.Alignment.Hero => "hero_alignment.png",
                 Enums.Alignment.Vigilante => "vigilante_alignment.png",
-                Enums.Alignment.Resistance => "resistance_alignment.png",
                 Enums.Alignment.Villain => "villain_alignment.png",
                 Enums.Alignment.Rogue => "rogue_alignment.png",
-                Enums.Alignment.Loyalist => "loyalist_alignment.png",
                 _ => null
             };
 
         private static bool IsHeroSideAlignment(Enums.Alignment alignment)
-            => alignment is Enums.Alignment.Hero or Enums.Alignment.Vigilante or Enums.Alignment.Resistance;
+            => AccoladeSideRules.IsHeroSideAlignment(alignment);
 
         private static bool IsVillainSideAlignment(Enums.Alignment alignment)
-            => alignment is Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist;
+            => AccoladeSideRules.IsVillainSideAlignment(alignment);
 
         private static bool IsSameAlignmentSide(Enums.Alignment left, Enums.Alignment right)
-            => (IsHeroSideAlignment(left) && IsHeroSideAlignment(right))
-               || (IsVillainSideAlignment(left) && IsVillainSideAlignment(right));
+            => AccoladeSideRules.IsSameAlignmentSide(left, right);
 
         private void SyncAlignmentDropDown()
         {
@@ -3872,6 +3867,7 @@ namespace Mids_Reborn.UI.Forms
             fTotals2?.UpdateData();
             FrmPetActorDetailsWindow?.UpdateColorTheme(MidsContext.Character.Alignment);
             DoRedraw();
+            RefreshActiveSpecialPowerFlyout();
         }
 
         private void txtName_TextChanged(object? sender, EventArgs e)
@@ -6404,7 +6400,7 @@ namespace Mids_Reborn.UI.Forms
 
                 LastFileName = buildFile;
                 FileModified = false;
-                //SetTitleBar(MidsContext.Character.IsHero());
+                //SetTitleBar(MidsContext.Character.IsHero);
 
                 return true;
             }
@@ -7110,7 +7106,7 @@ namespace Mids_Reborn.UI.Forms
             var Enh2 = -1;
             I9Slot? i9Slot1 = null;
             I9Slot? i9Slot2 = null;
-            var recolorIa = BuildRenderer.GetRecolorIa(MainModule.MidsController.Toon.IsHero());
+            var recolorIa = BuildRenderer.GetRecolorIa(MainModule.MidsController.Toon.IsHero);
             using var solidBrush = new SolidBrush(Color.FromArgb(160, 0, 0, 0));
             var num1 = FlipSlotState.Length - 1;
             Rectangle rectangle1;

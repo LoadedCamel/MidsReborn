@@ -31,7 +31,6 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             {
                 case Enums.Alignment.Villain:
                 case Enums.Alignment.Rogue:
-                case Enums.Alignment.Loyalist:
                     btnCopy.UseAlt = true;
                     btnClose.UseAlt = true;
                     break;
@@ -65,7 +64,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             var bgImage = MidsContext.Character?.Alignment switch
             {
-                Enums.Alignment.Villain or Enums.Alignment.Rogue or Enums.Alignment.Loyalist => Resources.HeroesSilhouettesV,
+                Enums.Alignment.Villain or Enums.Alignment.Rogue => Resources.HeroesSilhouettesV,
                 _ => Resources.HeroesSilhouettesH
             };
 

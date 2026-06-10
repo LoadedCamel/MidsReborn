@@ -113,16 +113,24 @@ public static class SpecialPowerCatalog
         "Time Lord's Boon"
     };
 
+    private static readonly HashSet<string> AccoladePickerExclusionFullNames = new(StringComparer.OrdinalIgnoreCase)
+    {
+        "Temporary_Powers.Accolades.Challenge_VanguardDummy_Pet",
+        "Temporary_Powers.Accolades.Long_Range_Teleport",
+        "Temporary_Powers.Accolades.MarkRecall",
+        "Temporary_Powers.Accolades.Mark_and_Recall"
+    };
+
     public static IReadOnlyList<IPower> GetPowers(
         SpecialPowerCategory category,
         int classId,
-        bool isHero,
+        Enums.Alignment alignment,
         IEnumerable<IPower?>? explicitPowers = null,
         string? incarnateSetName = null)
     {
         return category switch
         {
-            SpecialPowerCategory.Accolade => GetAccoladePowers(classId, isHero),
+            SpecialPowerCategory.Accolade => GetAccoladePowers(classId, alignment),
             SpecialPowerCategory.Prestige => GetPrestigePowers(classId),
             SpecialPowerCategory.Temp => GetTempPowers(classId),
             SpecialPowerCategory.Incarnate => GetIncarnatePowers(incarnateSetName, classId),
@@ -158,7 +166,8 @@ public static class SpecialPowerCatalog
 
         return destinationKey switch
         {
-            AccoladeDestinationKey => IsLegacySelectableSpecialPower(power),
+            AccoladeDestinationKey => IsLegacySelectableSpecialPower(power) &&
+                                      !IsExcludedAccoladePickerPower(power),
             PrestigeDestinationKey => true,
             TempPowersChipKey => IsLegacySelectableSpecialPower(power) &&
                                  LegacyBackfillTempPowerDisplayWhitelist.Contains(power.DisplayName),
@@ -168,11 +177,14 @@ public static class SpecialPowerCatalog
         };
     }
 
-    public static IReadOnlyList<IPower> GetAccoladePowers(int classId, bool isHero)
+    public static IReadOnlyList<IPower> GetAccoladePowers(int classId, Enums.Alignment alignment)
     {
-        return FilterPickerPowers(
+        return AccoladeSideRules.FilterAccoladesForAlignment(
+                FilterPickerPowers(
                 DatabaseAPI.Database.Power.OfType<IPower>()
-                    .Where(power => MatchesSpecialPowerPicker(power, AccoladeDestinationKey)))
+                    .Where(power => MatchesSpecialPowerPicker(power, AccoladeDestinationKey) &&
+                                    !IsExcludedAccoladePickerPower(power))),
+                alignment)
             .OrderBy(power => power.DisplayName, StringComparer.OrdinalIgnoreCase)
             .ToList();
     }
@@ -327,6 +339,11 @@ public static class SpecialPowerCatalog
         return power.ClickBuff ||
                power.PowerType == Enums.ePowerType.Auto_ ||
                power.PowerType == Enums.ePowerType.Toggle;
+    }
+
+    private static bool IsExcludedAccoladePickerPower(IPower power)
+    {
+        return AccoladePickerExclusionFullNames.Contains(power.FullName);
     }
 
     private static bool IsTempPowerChipMatch(IPower power)

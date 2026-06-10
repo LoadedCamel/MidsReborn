@@ -2369,12 +2369,12 @@ namespace Mids_Reborn.UI.Forms
             // titleLabel
             // 
             titleLabel.Dock = DockStyle.Fill;
-            titleLabel.Font = new Font("Noto Sans", 9F, FontStyle.Regular, GraphicsUnit.Point, 0);
+            titleLabel.Font = new Font("Noto Sans Black", 10.25F, FontStyle.Regular, GraphicsUnit.Point, 0);
             titleLabel.Location = new Point(0, 0);
             titleLabel.Name = "titleLabel";
             titleLabel.Size = new Size(1164, 35);
             titleLabel.TabIndex = 5;
-            titleLabel.Text = "Issue 4: Resurgence";
+            titleLabel.Text = "Database: Homecoming · Issue 28 Page 2 · Updated: 06/03/2026";
             titleLabel.TextAlign = ContentAlignment.MiddleCenter;
             titleLabel.MouseDown += Title_MouseDown;
             // 
