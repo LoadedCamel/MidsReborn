@@ -46,7 +46,7 @@ namespace Mids_Reborn.UI.Controls
 
         private Font pFont;
 
-        private I9Picker.EnhUniqueStatus? _enhUniqueStatus;
+        private PickerControl.EnhUniqueStatus? _enhUniqueStatus;
 
         public ctlPopUp()
         {
@@ -206,7 +206,7 @@ namespace Mids_Reborn.UI.Controls
             myBX.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
         }
 
-        public void SetPopup(PopUp.PopupData iPopup, I9Picker.EnhUniqueStatus? enhUniqueStatus = null)
+        public void SetPopup(PopUp.PopupData iPopup, PickerControl.EnhUniqueStatus? enhUniqueStatus = null)
         {
             pData = iPopup;
             _enhUniqueStatus = enhUniqueStatus;

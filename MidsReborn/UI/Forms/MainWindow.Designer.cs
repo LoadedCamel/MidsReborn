@@ -2383,7 +2383,7 @@ namespace Mids_Reborn.UI.Forms
             AutoScaleDimensions = new SizeF(96F, 96F);
             AutoScaleMode = AutoScaleMode.Dpi;
             BackColor = Color.FromArgb(23, 23, 25);
-            ClientSize = new Size(1280, 768);
+            ClientSize = new Size(1366, 768);
             Controls.Add(mainLayoutPanel);
             Controls.Add(footerPanel);
             Controls.Add(MenuBar);
@@ -2392,7 +2392,7 @@ namespace Mids_Reborn.UI.Forms
             ForeColor = Color.WhiteSmoke;
             FormBorderStyle = FormBorderStyle.None;
             Icon = (Icon)resources.GetObject("$this.Icon");
-            MinimumSize = new Size(1280, 768);
+            MinimumSize = new Size(1366, 768);
             Name = "MainWindow2";
             Padding = new Padding(10);
             Text = "Mids Reborn v4.0 (alpha)";

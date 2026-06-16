@@ -31,6 +31,16 @@ namespace Mids_Reborn.UI.Forms
         private const int WmSettingChange = 0x001A;
 
         private const string UriScheme = "mrb";
+        private const int LegacyPickerBaselineFormWidth = 1280;
+        private const int LegacyPickerBaselineFormHeight = 768;
+        private const float LegacyPickerMaxVisualWidth = 350f;
+        private const float LegacyPickerMaxVisualHeight = 550f;
+        private const float LegacyPickerClientWidthRatio = 0.30f;
+        private const float LegacyPickerClientHeightRatio = 0.72f;
+        private const float LegacyPersistentPickerMaxVisualWidth = 1060f;
+        private const float LegacyPersistentPickerMaxVisualHeight = 740f;
+        private const float LegacyPersistentPickerClientWidthRatio = 0.58f;
+        private const float LegacyPersistentPickerClientHeightRatio = 0.80f;
         private frmBusy? _frmBusy;
         private FrmCombatContext? _frmCombatContext;
         private bool _loading;
@@ -41,7 +51,7 @@ namespace Mids_Reborn.UI.Forms
         public static MainWindow? MainInstance;
         private SetInspector? _setInspector;
         private DataView? _dvAnchored;
-        private I9Picker? _i9Picker;
+        private PickerControl? _i9Picker;
         private EnhCheckMode? _enhCheckMode;
         private Rectangle _formOrigin;
         private readonly BuildManager _buildManager;
@@ -54,7 +64,7 @@ namespace Mids_Reborn.UI.Forms
         private bool ProcessedFromCommand { get; set; }
         private FrmEntityDetails? FrmEntityDetails { get; set; }
 
-        private I9Picker I9Picker
+        private PickerControl I9Picker
         {
             get
             {
@@ -66,6 +76,141 @@ namespace Mids_Reborn.UI.Forms
                 return _i9Picker;
             }
             set => _i9Picker = value;
+        }
+
+        private bool UsesPersistentPickerOverlay => _i9Picker is Mids_Reborn.UI.Controls.Test.EnhSelector.EnhSelector;
+
+        private void ApplyPickerScaleForLegacyWindow()
+        {
+            if (_i9Picker is null)
+            {
+                return;
+            }
+
+            var baseSize = _i9Picker.BasePreferredSize;
+            if (baseSize.Width <= 0 || baseSize.Height <= 0)
+            {
+                _i9Picker.UiScale = 1f;
+                return;
+            }
+
+            if (UsesPersistentPickerOverlay)
+            {
+                bool allowLargeBand = CanUseLargePersistentPickerScaleForLegacyWindow();
+                float maxOverlayWidth = allowLargeBand ? 1180f : LegacyPersistentPickerMaxVisualWidth;
+                float maxOverlayHeight = allowLargeBand ? 900f : LegacyPersistentPickerMaxVisualHeight;
+                float overlayWidthRatio = allowLargeBand ? 0.70f : LegacyPersistentPickerClientWidthRatio;
+                float overlayHeightRatio = allowLargeBand ? 0.92f : LegacyPersistentPickerClientHeightRatio;
+                float overlayWidthBudget = Math.Min(maxOverlayWidth, Math.Max(720f, ClientSize.Width * overlayWidthRatio));
+                float overlayHeightBudget = Math.Min(maxOverlayHeight, Math.Max(520f, (ClientSize.Height - MenuBar.Height) * overlayHeightRatio));
+                overlayWidthBudget = Math.Min(overlayWidthBudget, Math.Max(640f, ClientSize.Width - 32f));
+                overlayHeightBudget = Math.Min(overlayHeightBudget, Math.Max(460f, ClientSize.Height - MenuBar.Height - 28f));
+
+                float targetScale = ResolvePersistentPickerTargetScaleForLegacyWindow(
+                    overlayWidthBudget,
+                    overlayHeightBudget,
+                    allowLargeBand);
+                var candidates = targetScale >= 1f
+                    ? new[] { 1f, 0.75f, 0.5f }
+                    : targetScale >= 0.75f
+                        ? new[] { 0.75f, 0.5f }
+                        : new[] { 0.5f };
+
+                foreach (var candidate in candidates)
+                {
+                    if (TryApplyPersistentPickerScaleForLegacyWindow(candidate, overlayWidthBudget, overlayHeightBudget))
+                    {
+                        return;
+                    }
+                }
+
+                _i9Picker.UiScale = 0.5f;
+                return;
+            }
+
+            float legacyWidthRatio = Math.Max(0.1f, (float)ClientSize.Width / LegacyPickerBaselineFormWidth);
+            float legacyHeightRatio = Math.Max(0.1f, (float)ClientSize.Height / LegacyPickerBaselineFormHeight);
+            float legacyScale = Math.Clamp(Math.Min(legacyWidthRatio, legacyHeightRatio), 0.5f, 1f);
+
+            float widthBudget = Math.Min(LegacyPickerMaxVisualWidth, Math.Max(160f, ClientSize.Width * LegacyPickerClientWidthRatio));
+            float heightBudget = Math.Min(LegacyPickerMaxVisualHeight, Math.Max(220f, (ClientSize.Height - MenuBar.Height) * LegacyPickerClientHeightRatio));
+
+            if (leftControlPanel?.Width > 0)
+            {
+                widthBudget = Math.Min(widthBudget, Math.Max(160f, leftControlPanel.Width - 12f));
+            }
+
+            float budgetScale = Math.Min(widthBudget / baseSize.Width, heightBudget / baseSize.Height);
+            _i9Picker.UiScale = Math.Clamp(Math.Min(legacyScale, budgetScale), 0.5f, 1f);
+        }
+
+        private bool TryApplyPersistentPickerScaleForLegacyWindow(float scale, float widthBudget, float heightBudget)
+        {
+            if (_i9Picker is null)
+            {
+                return false;
+            }
+
+            _i9Picker.UiScale = scale;
+            return _i9Picker.Width <= widthBudget && _i9Picker.Height <= heightBudget;
+        }
+
+        private bool CanUseLargePersistentPickerScaleForLegacyWindow()
+        {
+            if (WindowState == FormWindowState.Maximized)
+            {
+                return true;
+            }
+
+            var workingArea = Screen.FromControl(this).WorkingArea;
+            if (workingArea.Width <= 0 || workingArea.Height <= 0)
+            {
+                return false;
+            }
+
+            var widthRatio = (float)Width / workingArea.Width;
+            var heightRatio = (float)Height / workingArea.Height;
+            return widthRatio >= 0.98f && heightRatio >= 0.95f;
+        }
+
+        private static float ResolvePersistentPickerTargetScaleForLegacyWindow(float widthBudget, float heightBudget, bool allowLargeBand)
+        {
+            if (allowLargeBand && widthBudget >= 1000f && heightBudget >= 700f)
+                return 1f;
+
+            if (widthBudget >= 820f && heightBudget >= 560f)
+                return 0.75f;
+
+            return 0.5f;
+        }
+
+        private Point ClampPickerLocationForLegacyWindow(Point point)
+        {
+            point.Y = Math.Max(MenuBar.Height, Math.Min(point.Y, ClientSize.Height - I9Picker.Height));
+            point.X = Math.Max(0, Math.Min(point.X, ClientSize.Width - I9Picker.Width));
+            return point;
+        }
+
+        private Point GetCenteredPickerLocationForLegacyWindow()
+        {
+            var availableTop = MenuBar.Height;
+            var availableHeight = Math.Max(0, ClientSize.Height - availableTop);
+            var point = new Point(
+                Math.Max(0, (ClientSize.Width - I9Picker.Width) / 2),
+                availableTop + Math.Max(0, (availableHeight - I9Picker.Height) / 2));
+            return ClampPickerLocationForLegacyWindow(point);
+        }
+
+        private Point GetAnchoredPickerLocationForLegacyWindow(Control anchorHost, Rectangle anchorRect, Point fallbackAnchor)
+        {
+            var anchorCenter = anchorRect.IsEmpty
+                ? fallbackAnchor
+                : new Point(anchorRect.Left + anchorRect.Width / 2, anchorRect.Top + anchorRect.Height / 2);
+            var anchorOnForm = PointToClient(anchorHost.PointToScreen(anchorCenter));
+            var point = new Point(
+                (int)Math.Round(anchorOnForm.X - I9Picker.Width / 2f),
+                (int)Math.Round(anchorOnForm.Y - I9Picker.Height / 2f));
+            return ClampPickerLocationForLegacyWindow(point);
         }
 
         private Lazy<ComboBoxT<Archetype>> CbtAT => new(() => new ComboBoxT<Archetype>(cbAT));
@@ -1249,7 +1394,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void I9Picker_MouseLeave(object? sender, EventArgs e)
         {
-            if (!MidsContext.Config.CloseEnhSelectPopupByMove)
+            if (UsesPersistentPickerOverlay || !MidsContext.Config.CloseEnhSelectPopupByMove)
             {
                 return;
             }
@@ -1267,7 +1412,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             RefreshInfo();
         }
 
-        private void I9Picker_HoverEnhancement(int e, I9Picker.EnhUniqueStatus? enhUniqueStatus)
+        private void I9Picker_HoverEnhancement(int e, PickerControl.EnhUniqueStatus? enhUniqueStatus)
         {
             var i9Slot = new I9Slot
             {
@@ -2206,12 +2351,26 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void pnlGFX_MouseLeave(object sender, EventArgs e)
         {
+            if (UsesPersistentPickerOverlay && I9Picker.Visible)
+            {
+                drawing?.HighlightSlot(-1);
+                pnlGFX.Cursor = Cursors.Default;
+                return;
+            }
+
             HidePopup();
             drawing?.HighlightSlot(-1);
         }
 
         private void pnlGFX_MouseMove(object sender, MouseEventArgs e)
         {
+            if (UsesPersistentPickerOverlay && I9Picker.Visible)
+            {
+                pnlGFX.Cursor = Cursors.Default;
+                drawing?.HighlightSlot(-1);
+                return;
+            }
+
             if (e.Button == MouseButtons.Left & pnlGFX.AllowDrop && Math.Abs(e.X - dragStartX) + Math.Abs(e.Y - dragStartY) > 7)
             {
                 if (dragStartSlot == 0)
@@ -2454,13 +2613,11 @@ The default position/state will be used upon next launch.", @"Window State Warni
                     if (enhancements != null)
                     {
                         I9Picker.SetData(powerEntry.NIDPower, powerEntry.Slots[slotID].Enhancement, enhancements);
-                        var point = new Point(
-                            (int)Math.Round(pnlGFXFlow.Left - pnlGFXFlow.HorizontalScroll.Value + e.X - I9Picker.Width / 2f),
-                            (int)Math.Round(pnlGFXFlow.Top - pnlGFXFlow.VerticalScroll.Value + e.Y - I9Picker.Height / 2f));
-
-                        // Clamp picker to screen bounds
-                        point.Y = Math.Max(MenuBar.Height, Math.Min(point.Y, ClientSize.Height - I9Picker.Height));
-                        point.X = Math.Max(0, Math.Min(point.X, ClientSize.Width - I9Picker.Width));
+                        var anchorRect = drawing?.GetEnhancementSlotRect(hIDPower, slotID) ?? Rectangle.Empty;
+                        ApplyPickerScaleForLegacyWindow();
+                        var point = UsesPersistentPickerOverlay
+                            ? GetCenteredPickerLocationForLegacyWindow()
+                            : GetAnchoredPickerLocationForLegacyWindow(pnlGFX, anchorRect, new Point(e.X, e.Y));
 
                         I9Picker.Location = point;
                         I9Picker.BringToFront();
@@ -3608,7 +3765,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private void InitializePicker()
         {
-            _i9Picker = new I9Picker
+            _i9Picker = new PickerControl
             {
                 BackColor = Color.Black,
                 ForeColor = Color.Blue,
@@ -3634,6 +3791,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
             Controls.Add(_i9Picker);
             _i9Picker.BringToFront();
+            ApplyPickerScaleForLegacyWindow();
         }
 
         private void InitializeDataView()
@@ -7225,7 +7383,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
         }
 
-        private void ShowPopup(int hIdx, int pIdx, int sIdx, Point e, Rectangle rBounds, I9Slot? eSlot = null, int setIdx = -1, VerticalAlignment vAlign = VerticalAlignment.Top, I9Picker.EnhUniqueStatus? enhUniqueStatus = null)
+        private void ShowPopup(int hIdx, int pIdx, int sIdx, Point e, Rectangle rBounds, I9Slot? eSlot = null, int setIdx = -1, VerticalAlignment vAlign = VerticalAlignment.Top, PickerControl.EnhUniqueStatus? enhUniqueStatus = null)
         {
             if (MidsContext.Config.DisableShowPopup)
             {

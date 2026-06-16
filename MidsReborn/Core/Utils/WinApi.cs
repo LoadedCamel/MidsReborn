@@ -213,6 +213,16 @@ namespace Mids_Reborn.Core.Utils
         }
 
         [StructLayout(LayoutKind.Sequential)]
+        public struct MINMAXINFO
+        {
+            public POINT ptReserved;
+            public POINT ptMaxSize;
+            public POINT ptMaxPosition;
+            public POINT ptMinTrackSize;
+            public POINT ptMaxTrackSize;
+        }
+
+        [StructLayout(LayoutKind.Sequential)]
         public struct FlashWindowInfo
         {
             public uint cbSize;

@@ -49,6 +49,10 @@ namespace Mids_Reborn.UI.Controls
         private const int HeaderOuterInset = 6;
         private const int HeaderActionGap = 3;
         private const int TotalsSectionGap = 10;
+        private const int MinimumInfoStatVisualRows = 3;
+        private const int MinimumDamageDisplayHeight = 60;
+        private const int MinimumEnhancementSlotPanelHeight = 40;
+        private const int MinimumEnhancementListHeight = 60;
         private const int EM_SETMARGINS = 0xD3;
         private const int EM_SETRECT = 0xB3;
         private const int EC_LEFTMARGIN = 0x1;
@@ -185,6 +189,8 @@ namespace Mids_Reborn.UI.Controls
         #endregion
 
         #region Properties
+
+        public const float MinimumResponsiveUiScale = 0.82f;
 
         public bool IsLocked
         {
@@ -373,7 +379,7 @@ namespace Mids_Reborn.UI.Controls
 
         public void ApplyUiScale(float scale)
         {
-            scale = Math.Clamp(scale, 0.90f, 1.25f);
+            scale = ClampUiScale(scale);
             if (Math.Abs(scale - _uiScale) < 0.01f) return;
 
             _uiScale = scale;
@@ -381,6 +387,7 @@ namespace Mids_Reborn.UI.Controls
             SuspendLayout();
             ApplyShellLayout();
             ApplyFontScale(this, scale);
+            ApplyMetricScale(scale);
             ScaleHeight(titlePanel, scale);
             ScaleHeight(sliderHost, scale);
             ScaleHeight(infoDamageDisplay, scale);
@@ -406,12 +413,86 @@ namespace Mids_Reborn.UI.Controls
 #endif
         }
 
+        public int GetMinimumResponsiveHeight(float scale)
+        {
+            scale = ClampUiScale(scale);
+
+            int headerHeight = ScaleMetric(HeaderChromeHeight, scale, 24);
+            int titleHeight = MeasureScaledBaseHeight(titlePanel, scale, 32, 24);
+            int shortDescriptionHeight = ScaleMetric(20, scale, 16);
+            int sliderHeight = sliderHost.Visible ? MeasureScaledBaseHeight(sliderHost, scale, 31, 24) : 0;
+            int statsHeight = MeasureMinimumPowerStatsHeight(scale);
+            int damageHeight = MeasureScaledBaseHeight(infoDamageDisplay, scale, MinimumDamageDisplayHeight, 50);
+            int infoPageMinimumHeight = shortDescriptionHeight + sliderHeight + statsHeight + damageHeight + ScaleMetric(10, scale, 6);
+
+            int enhanceSubtitleHeight = MeasureScaledBaseHeight(enhanceSubtitlePanel, scale, 19, 15);
+            int slotPanelHeight = MeasureScaledBaseHeight(pnlEnhActive, scale, 50, MinimumEnhancementSlotPanelHeight);
+            int enhancementGap = ScaleMetric(6, scale, 4);
+            int enhancementListHeight = ScaleMetric(MinimumEnhancementListHeight, scale, 48);
+            int enhancePageMinimumHeight =
+                enhanceSubtitleHeight +
+                enhancementGap +
+                slotPanelHeight +
+                enhancementGap +
+                slotPanelHeight +
+                enhancementGap +
+                enhancementListHeight +
+                ScaleMetric(4, scale, 2);
+
+            return headerHeight + titleHeight + Math.Max(infoPageMinimumHeight, enhancePageMinimumHeight);
+        }
+
         private int ScalePx(int value) => Math.Max(1, (int)Math.Round(value * _uiScale));
 
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
             RefreshResponsiveLayout();
+        }
+
+        private static float ClampUiScale(float scale) => Math.Clamp(scale, MinimumResponsiveUiScale, 1.25f);
+
+        private static int ScaleMetric(int value, float scale, int minimum)
+            => Math.Max(minimum, (int)Math.Round(value * scale));
+
+        private void ApplyMetricScale(float scale)
+        {
+            powerStatsGrid.HeaderHeight = ScaleMetric(28, scale, 20);
+            powerStatsGrid.RowHeight = ScaleMetric(28, scale, 20);
+
+            effectsGrid.HeaderHeight = ScaleMetric(28, scale, 20);
+            effectsGrid.RowHeight = ScaleMetric(28, scale, 20);
+            effectsGrid.GroupHeaderHeight = ScaleMetric(32, scale, 22);
+            effectsGrid.MezLabelHeight = ScaleMetric(24, scale, 18);
+            effectsGrid.MezChildHeight = ScaleMetric(28, scale, 20);
+            effectsGrid.DescriptorRowHeight = ScaleMetric(56, scale, 36);
+
+            if (_bonusesGrid != null)
+            {
+                _bonusesGrid.HeaderHeight = ScaleMetric(28, scale, 20);
+                _bonusesGrid.RowHeight = ScaleMetric(28, scale, 20);
+                _bonusesGrid.GroupHeaderHeight = ScaleMetric(30, scale, 22);
+                _bonusesGrid.MezLabelHeight = ScaleMetric(24, scale, 18);
+                _bonusesGrid.MezChildHeight = ScaleMetric(28, scale, 20);
+                _bonusesGrid.DescriptorRowHeight = ScaleMetric(34, scale, 26);
+            }
+        }
+
+        private int MeasureMinimumPowerStatsHeight(float scale)
+        {
+            float dpiScale = DeviceDpi / 96f;
+            int gridPadding = Math.Max(6, (int)Math.Round(ScaleMetric(8, scale, 6) * dpiScale));
+            int headerHeight = Math.Max(20, (int)Math.Round(ScaleMetric(28, scale, 20) * dpiScale));
+            int rowHeight = Math.Max(20, (int)Math.Round(ScaleMetric(28, scale, 20) * dpiScale));
+            return gridPadding + headerHeight + (MinimumInfoStatVisualRows * rowHeight) + gridPadding;
+        }
+
+        private int MeasureScaledBaseHeight(Control control, float scale, int fallbackHeight, int minimumHeight)
+        {
+            int baseHeight = _baseHeights.TryGetValue(control, out var storedHeight)
+                ? storedHeight
+                : Math.Max(fallbackHeight, control.Height);
+            return Math.Max(minimumHeight, (int)Math.Round(baseHeight * scale));
         }
 
         private void ScaleHeight(Control control, float scale)
@@ -2971,12 +3052,7 @@ namespace Mids_Reborn.UI.Controls
                 _ => "Average"
             };
 
-            var returnLabel = MidsContext.Config.DamageMath.ReturnValue switch
-            {
-                ConfigData.EDamageReturn.DPS => "DPS",
-                ConfigData.EDamageReturn.DPA => "DPA",
-                _ => "Damage"
-            };
+            var returnLabel = Power.GetDamageReturnModeLabel(MidsContext.Config.DamageMath.ReturnValue);
 
             return $"{chanceLabel} {returnLabel}";
         }
@@ -4152,19 +4228,20 @@ namespace Mids_Reborn.UI.Controls
                 return;
             }
 
-            const int slotPanelHeight = 50;
-            const int gap = 6;
-
             var width = enhanceView.ClientSize.Width;
             var subtitleBottom = enhanceSubtitlePanel.Bottom;
-            var inactiveTop = Math.Max(subtitleBottom, enhanceView.ClientSize.Height - slotPanelHeight - 3);
-            var activeTop = Math.Max(subtitleBottom, inactiveTop - slotPanelHeight - gap);
+            int activeSlotHeight = Math.Max(ScalePx(MinimumEnhancementSlotPanelHeight), pnlEnhActive.Height);
+            int inactiveSlotHeight = Math.Max(ScalePx(MinimumEnhancementSlotPanelHeight), pnlEnhInactive.Height);
+            int gap = ScalePx(6);
+            int bottomInset = ScalePx(3);
+            var inactiveTop = Math.Max(subtitleBottom, enhanceView.ClientSize.Height - inactiveSlotHeight - bottomInset);
+            var activeTop = Math.Max(subtitleBottom, inactiveTop - activeSlotHeight - gap);
             var listTop = subtitleBottom + 1;
             var listHeight = Math.Max(0, activeTop - listTop - gap);
 
             enhDataList.SetBounds(0, listTop, width, listHeight);
-            pnlEnhActive.SetBounds(0, activeTop, width, slotPanelHeight);
-            pnlEnhInactive.SetBounds(0, inactiveTop, width, slotPanelHeight);
+            pnlEnhActive.SetBounds(0, activeTop, width, activeSlotHeight);
+            pnlEnhInactive.SetBounds(0, inactiveTop, width, inactiveSlotHeight);
         }
 
         private void Fx_ListItemClick(object? sender, PairedListEx.Item? item, MouseEventArgs e)

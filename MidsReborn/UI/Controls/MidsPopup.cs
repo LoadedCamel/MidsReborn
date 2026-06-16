@@ -42,7 +42,7 @@ namespace Mids_Reborn.UI.Controls
         private int _anchorGap;
 
         private PopUp.PopupData _data;
-        private I9Picker.EnhUniqueStatus? _enhUniqueStatus;
+        private PickerControl.EnhUniqueStatus? _enhUniqueStatus;
 
         private readonly Dictionary<(float mult, FontStyle style), Font> _fontCache = new();
         private float _currentSplitC = 0.5f; // 0..1
@@ -102,7 +102,7 @@ namespace Mids_Reborn.UI.Controls
         #endregion
 
         #region Public API (data + hide)
-        public void SetPopup(PopUp.PopupData popup, I9Picker.EnhUniqueStatus? enhUniqueStatus = null)
+        public void SetPopup(PopUp.PopupData popup, PickerControl.EnhUniqueStatus? enhUniqueStatus = null)
         {
             _data = popup;
             _enhUniqueStatus = enhUniqueStatus;
@@ -112,7 +112,7 @@ namespace Mids_Reborn.UI.Controls
         public void SetPopup(PopUp.PopupData popup, bool inMain, bool inAlternate)
         {
             _data = popup;
-            _enhUniqueStatus = new I9Picker.EnhUniqueStatus { InMain = inMain, InAlternate = inAlternate };
+            _enhUniqueStatus = new PickerControl.EnhUniqueStatus { InMain = inMain, InAlternate = inAlternate };
             Invalidate();
         }
 

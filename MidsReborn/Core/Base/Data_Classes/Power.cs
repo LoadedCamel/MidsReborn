@@ -1733,46 +1733,58 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                 return effectMagnitude;
             }
 
+            return ApplyDamageReturnScaling(effectMagnitude, effect, power);
+        }
+
+        private static float GetDamageReturnDivisor(IEffect effect, IPower power)
+        {
+            var recurrence = effect.PseudoPetRecurrence;
             switch (MidsContext.Config.DamageMath.ReturnValue)
             {
                 case ConfigData.EDamageReturn.DPS:
-                    if (recurrence is { IsValid: true })
+                    if (recurrence is { IsValid: true, SourceUsageTime: > 0f })
                     {
-                        return effectMagnitude / recurrence.SourceUsageTime;
+                        return recurrence.SourceUsageTime;
                     }
 
                     if (power is { PowerType: Enums.ePowerType.Toggle, ActivatePeriod: > 0 })
                     {
-                        return effectMagnitude / power.ActivatePeriod;
+                        return power.ActivatePeriod;
                     }
 
-                    if (power.RechargeTime + (double)power.CastTime + power.InterruptTime > 0)
+                    if (power.CastTime + power.RechargeTime > 0f)
                     {
-                        return effectMagnitude / (power.RechargeTime + power.CastTime + power.InterruptTime);
+                        return power.CastTime + power.RechargeTime;
                     }
 
                     break;
 
                 case ConfigData.EDamageReturn.DPA:
-                    if (recurrence is { IsValid: true })
+                    if (recurrence is { IsValid: true, SourceUsageTime: > 0f })
                     {
-                        return effectMagnitude / recurrence.SourceUsageTime;
+                        return recurrence.SourceUsageTime;
                     }
 
                     if (power is { PowerType: Enums.ePowerType.Toggle, ActivatePeriod: > 0 })
                     {
-                        return effectMagnitude / power.ActivatePeriod;
+                        return power.ActivatePeriod;
                     }
 
-                    if (power.CastTime > 0)
+                    if (power.CastTime > 0f)
                     {
-                        return effectMagnitude / power.CastTime;
+                        return power.CastTime;
                     }
 
                     break;
             }
 
-            return effectMagnitude;
+            return 1f;
+        }
+
+        private static float ApplyDamageReturnScaling(float value, IEffect effect, IPower power)
+        {
+            var divisor = GetDamageReturnDivisor(effect, power);
+            return divisor > 0f ? value / divisor : value;
         }
 
         public static float GetDamageEffectEffectiveTicks(IEffect effect)
@@ -1795,9 +1807,30 @@ namespace Mids_Reborn.Core.Base.Data_Classes
 
         public static float GetDamageEffectTotal(IEffect effect, IPower power, bool absolute, bool applyReturnScaling)
         {
-            var baseMagnitude = GetDamageEffectBaseMagnitude(effect, power, absolute, applyReturnScaling);
+            var baseMagnitude = GetDamageEffectBaseMagnitude(effect, power, absolute, applyReturnScaling: false);
             var ticks = GetDamageEffectEffectiveTicks(effect);
-            return ticks > 1 ? baseMagnitude * ticks : baseMagnitude;
+            var total = ticks > 1 ? baseMagnitude * ticks : baseMagnitude;
+            return applyReturnScaling ? ApplyDamageReturnScaling(total, effect, power) : total;
+        }
+
+        internal static string GetDamageReturnHeaderLabel(ConfigData.EDamageReturn returnValue)
+        {
+            return returnValue switch
+            {
+                ConfigData.EDamageReturn.DPS => "Damage Per Second",
+                ConfigData.EDamageReturn.DPA => "Damage Per Animation",
+                _ => "Damage Per Activation"
+            };
+        }
+
+        internal static string GetDamageReturnModeLabel(ConfigData.EDamageReturn returnValue)
+        {
+            return returnValue switch
+            {
+                ConfigData.EDamageReturn.DPS => "Second",
+                ConfigData.EDamageReturn.DPA => "Animation",
+                _ => "Activation"
+            };
         }
 
         public static IReadOnlyList<IEffect> GetIncludedDamageEffects(IPower power, bool absorb = false)
@@ -2874,15 +2907,24 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                     continue;
                 }
 
-                var effectMagnitude = GetDamageEffectBaseMagnitude(effect, power, absolute: true, applyReturnScaling: true);
-
-                // Skip negligible effects
-                if (Math.Abs(effectMagnitude) < 0.0001)
+                var rawEffectMagnitude = GetDamageEffectBaseMagnitude(effect, power, absolute: true, applyReturnScaling: false);
+                if (Math.Abs(rawEffectMagnitude) < 0.0001)
                 {
                     continue;
                 }
 
                 var tickCount = GetDamageEffectEffectiveTicks(effect);
+                var displayedEffectMagnitude = ApplyDamageReturnScaling(rawEffectMagnitude, effect, power);
+                var displayedEffectTotal = ApplyDamageReturnScaling(
+                    tickCount > 1 ? rawEffectMagnitude * tickCount : rawEffectMagnitude,
+                    effect,
+                    power);
+
+                if (Math.Abs(displayedEffectTotal) < 0.0001)
+                {
+                    continue;
+                }
+
                 if (tickCount > 1)
                 {
                     var index = 0;
@@ -2891,14 +2933,14 @@ namespace Mids_Reborn.Core.Base.Data_Classes
                         index = 1;
                     }
 
-                    tickDamageArray[(int)effect.DamageType, index] = effectMagnitude;
+                    tickDamageArray[(int)effect.DamageType, index] = displayedEffectMagnitude;
                     tickCountArray[(int)effect.DamageType, index] = tickCount;
-                    totalDamage += effectMagnitude * tickCount;
+                    totalDamage += displayedEffectTotal;
                 }
                 else
                 {
-                    totalDamage += effectMagnitude;
-                    totalDamageArray[(int)effect.DamageType] += effectMagnitude;
+                    totalDamage += displayedEffectTotal;
+                    totalDamageArray[(int)effect.DamageType] += displayedEffectTotal;
                 }
             }
 

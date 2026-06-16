@@ -48,7 +48,7 @@ namespace Mids_Reborn.UI.Controls
         private const float MaximumContentScale = 1.18f;
 
         private PopUp.PopupData _popupData;
-        private I9Picker.EnhUniqueStatus? _enhUniqueStatus;
+        private PickerControl.EnhUniqueStatus? _enhUniqueStatus;
 
         private bool _wrapColumnsThisLayout;
         private float _columnPosition = 0.5f; // 0..1; relative to content width
@@ -219,7 +219,7 @@ namespace Mids_Reborn.UI.Controls
 
         #region Public API
 
-        public void SetPopup(PopUp.PopupData data, I9Picker.EnhUniqueStatus? status = null)
+        public void SetPopup(PopUp.PopupData data, PickerControl.EnhUniqueStatus? status = null)
         {
             _popupData = data;
             _enhUniqueStatus = status;

@@ -19,6 +19,9 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
     #region Constants
 
     private const int IconPadding = 4;
+    private const int ClosedSurfaceArrowReservedWidth = 18;
+    private const int ClosedSurfaceTextSafetyPadding = 8;
+    private const int PopupTextSafetyPadding = 8;
 
     #endregion
 
@@ -40,6 +43,12 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
     private bool _closedSurfaceLayoutValid;
     private ClosedSurfaceLayoutKey _closedSurfaceLayoutKey;
     private ClosedSurfaceLayout _closedSurfaceLayout;
+    private readonly Action _themeChangedHandler;
+    private ToolStripDropDown? _customDropDownHost;
+    private ToolStripControlHost? _customDropDownControlHost;
+    private DropDownPopupList? _customDropDownList;
+    private bool _focusOwnerAfterCustomDropDownClose;
+    private bool _suppressNextCustomDropDownToggle;
 
     private readonly record struct FontSignature(string FamilyName, float SizeInPoints, FontStyle Style, byte GdiCharSet);
     private readonly record struct ClosedSurfaceLayoutKey(
@@ -118,7 +127,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
 
     #region Private Properties
 
-    private bool IsInteracting => Focused || DroppedDown || Capture;
+    private bool IsInteracting => Focused || IsCustomDropDownVisible || Capture;
     private DropDownListTheme CurrentTheme
     {
         get
@@ -130,6 +139,20 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
             return ThemeManager.CurrentTheme?.DropDownList ?? ThemeManager.DesignTime.DropDownList;
         }
     }
+    private ScrollPanelTheme CurrentScrollTheme
+    {
+        get
+        {
+            if (DesignMode)
+            {
+                return ThemeManager.DesignTime.ScrollPanel;
+            }
+
+            return ThemeManager.CurrentTheme?.ScrollPanel ?? ThemeManager.DesignTime.ScrollPanel;
+        }
+    }
+    private bool IsCustomDropDownOpen => _customDropDownHost is { Visible: true };
+    private bool IsCustomDropDownVisible => DroppedDown || IsCustomDropDownOpen;
 
     #endregion
 
@@ -137,13 +160,14 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
 
     public MidsDropDownList()
     {
+        _themeChangedHandler = HandleThemeChanged;
         SetStyle(ControlStyles.AllPaintingInWmPaint | ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
         DrawMode = DrawMode.OwnerDrawFixed;
         DropDownStyle = ComboBoxStyle.DropDownList;
         IntegralHeight = false;
         AutoSize = false;
 
-        if (!DesignMode) ThemeManager.ThemeChanged += Invalidate;
+        if (!DesignMode) ThemeManager.ThemeChanged += _themeChangedHandler;
     }
 
     #endregion
@@ -152,6 +176,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
 
     public void Lock(string? text = null, bool clear = false)
     {
+        HideCustomDropDown();
         _lockedText = text;
         IsLocked = true;
         if (clear)
@@ -170,6 +195,60 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
         IsLocked = false;
         _lockedText = null;
         Invalidate();
+    }
+
+    public int GetPreferredContentWidth(bool includeAllItems = false)
+    {
+        int widestText = 0;
+        bool hasIcon = false;
+        using var bitmap = new Bitmap(1, 1);
+        using Graphics graphics = Graphics.FromImage(bitmap);
+
+        if (includeAllItems)
+        {
+            foreach (object item in Items)
+            {
+                widestText = Math.Max(widestText, MeasureItemTextWidth(graphics, item, Font));
+                if (!hasIcon &&
+                    _itemIcons.TryGetValue(item, out var icon) &&
+                    icon != null)
+                {
+                    hasIcon = true;
+                }
+            }
+        }
+        else
+        {
+            object? selectedItem = SelectedIndex >= 0 && SelectedIndex < Items.Count
+                ? Items[SelectedIndex]
+                : SelectedItem;
+            if (selectedItem != null)
+            {
+                widestText = MeasureItemTextWidth(graphics, selectedItem, Font);
+                hasIcon = _itemIcons.TryGetValue(selectedItem, out var icon) && icon != null;
+            }
+        }
+
+        if (widestText <= 0)
+        {
+            string? fallbackText = !string.IsNullOrWhiteSpace(_lockedText)
+                ? _lockedText
+                : !string.IsNullOrWhiteSpace(Text)
+                    ? Text
+                    : PlaceholderText;
+            if (!string.IsNullOrWhiteSpace(fallbackText))
+            {
+                widestText = MeasureRawTextWidth(graphics, fallbackText, Font);
+            }
+        }
+
+        int horizontalChrome = IconPadding * 3 + ClosedSurfaceArrowReservedWidth + ClosedSurfaceTextSafetyPadding;
+        if (hasIcon)
+        {
+            horizontalChrome += IconSize + IconPadding;
+        }
+
+        return Math.Max(1, horizontalChrome + widestText);
     }
 
     public void ApplyUiScale(float scale)
@@ -215,6 +294,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
     protected override void OnDataSourceChanged(EventArgs e)
     {
         base.OnDataSourceChanged(e);
+        HideCustomDropDown();
         DetachListChanged();
         AttachListChanged();
         RefreshIcons();      // rebuild icons for new data
@@ -224,13 +304,21 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
     protected override void OnDisplayMemberChanged(EventArgs e)
     {
         base.OnDisplayMemberChanged(e);
+        HideCustomDropDown();
         Invalidate();
     }
 
     protected override void OnValueMemberChanged(EventArgs e)
     {
         base.OnValueMemberChanged(e);
+        HideCustomDropDown();
         Invalidate();
+    }
+
+    protected override void OnSelectedIndexChanged(EventArgs e)
+    {
+        base.OnSelectedIndexChanged(e);
+        _customDropDownList?.SyncCommittedSelection(SelectedIndex);
     }
 
     private void AttachListChanged()
@@ -294,6 +382,8 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
                 // swallow provider exceptions for robustness—control should still render
             }
         }
+
+        InvalidateCustomDropDownVisuals();
     }
 
     #endregion
@@ -347,20 +437,11 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
                           _itemIcons.TryGetValue(selectedItem, out selectedIcon) &&
                           selectedIcon != null;
 
-            Size textMeasure = TextRenderer.MeasureText(g, _lockedText, drawFont, Size.Empty, TextFormatFlags.NoPadding);
-            var contentWidth = Math.Max(0, rect.Width - IconPadding * 2);
-            var iconBlockWidth = hasIcon ? IconSize + IconPadding : 0;
-            var availableTextWidth = Math.Max(0, contentWidth - iconBlockWidth);
-            var desiredTextWidth = Math.Min(textMeasure.Width, availableTextWidth);
-            var totalWidth = hasIcon
-                ? Math.Min(contentWidth, iconBlockWidth + desiredTextWidth)
-                : Math.Min(contentWidth, desiredTextWidth);
-            var contentLeft = rect.Left + Math.Max(IconPadding, (rect.Width - totalWidth) / 2);
-            var textLeft = contentLeft;
+            var textLeft = rect.Left + IconPadding;
 
             if (hasIcon)
             {
-                var iconRect = new Rectangle(contentLeft, rect.Top + lockedLayout.IconY, IconSize, IconSize);
+                var iconRect = new Rectangle(rect.Left + IconPadding, rect.Top + lockedLayout.IconY, IconSize, IconSize);
                 g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                 DrawIconIfValid(g, selectedIcon!, iconRect);
                 textLeft = iconRect.Right + IconPadding;
@@ -373,9 +454,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
                 lockedLayout.TextHeight);
 
             var color = Color.FromArgb(200, theme.ForeColor);
-            var flags = hasIcon
-                ? TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis
-                : TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter | TextFormatFlags.EndEllipsis;
+            var flags = TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis;
             TextRenderer.DrawText(g, _lockedText, drawFont, textRect, color, flags);
             lockedFont?.Dispose();
 
@@ -542,13 +621,38 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
     protected override void WndProc(ref Message m)
     {
         const int leftButtonDown = 0x0201;
+        const int leftButtonUp = 0x0202;
         const int leftButtonDblClick = 0x0203;
         const int keyDown = 0x0100;
+        const int sysKeyDown = 0x0104;
 
         if (_isLocked)
         {
-            if (m.Msg is leftButtonDown or leftButtonDblClick or keyDown)
+            if (m.Msg is leftButtonDown or leftButtonUp or leftButtonDblClick or keyDown or sysKeyDown)
                 return; // Swallow input when locked
+        }
+
+        if (m.Msg is leftButtonDown or leftButtonDblClick)
+        {
+            Focus();
+            if (_suppressNextCustomDropDownToggle)
+            {
+                _suppressNextCustomDropDownToggle = false;
+                return;
+            }
+
+            ToggleCustomDropDown();
+            return;
+        }
+
+        if (m.Msg == leftButtonUp)
+        {
+            return;
+        }
+
+        if ((m.Msg is keyDown or sysKeyDown) && TryHandleCustomDropDownKey((Keys)(nint)m.WParam, isSystemKey: m.Msg == sysKeyDown))
+        {
+            return;
         }
 
         base.WndProc(ref m);
@@ -590,17 +694,54 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
     {
         if (_isLocked) return;
         base.OnDropDown(e);
+
+        if (IsCustomDropDownOpen)
+        {
+            return;
+        }
+
+        BeginInvoke((MethodInvoker)(() =>
+        {
+            if (IsDisposed || !IsHandleCreated)
+            {
+                return;
+            }
+
+            if (DroppedDown)
+            {
+                DroppedDown = false;
+            }
+
+            ShowCustomDropDown();
+        }));
     }
 
     protected override void Dispose(bool disposing)
     {
         if (disposing)
         {
+            HideCustomDropDown();
             DetachListChanged();
             DisposeItemIcons();
+            if (_customDropDownHost != null)
+            {
+                _customDropDownHost.Closed -= CustomDropDownHost_Closed;
+                _customDropDownHost.Dispose();
+                _customDropDownHost = null;
+            }
+
+            if (_customDropDownList != null)
+            {
+                _customDropDownList.CommitRequested -= CustomDropDownList_CommitRequested;
+                _customDropDownList.CancelRequested -= CustomDropDownList_CancelRequested;
+                _customDropDownList.Dispose();
+                _customDropDownList = null;
+            }
+
+            _customDropDownControlHost = null;
             if (!DesignMode)
             {
-                ThemeManager.ThemeChanged -= Invalidate;
+                ThemeManager.ThemeChanged -= _themeChangedHandler;
             }
         }
 
@@ -662,6 +803,191 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
         Invalidate();
     }
 
+    private void HandleThemeChanged()
+    {
+        Invalidate();
+        InvalidateCustomDropDownVisuals();
+    }
+
+    private void EnsureCustomDropDown()
+    {
+        if (_customDropDownHost != null && _customDropDownControlHost != null && _customDropDownList != null)
+        {
+            return;
+        }
+
+        _customDropDownList = new DropDownPopupList(this);
+        _customDropDownList.CommitRequested += CustomDropDownList_CommitRequested;
+        _customDropDownList.CancelRequested += CustomDropDownList_CancelRequested;
+
+        _customDropDownControlHost = new ToolStripControlHost(_customDropDownList)
+        {
+            AutoSize = false,
+            Margin = Padding.Empty,
+            Padding = Padding.Empty
+        };
+
+        _customDropDownHost = new ToolStripDropDown
+        {
+            AutoClose = true,
+            Margin = Padding.Empty,
+            Padding = Padding.Empty,
+            DropShadowEnabled = false
+        };
+        _customDropDownHost.Items.Add(_customDropDownControlHost);
+        _customDropDownHost.Closed += CustomDropDownHost_Closed;
+    }
+
+    private void ToggleCustomDropDown()
+    {
+        if (IsCustomDropDownOpen)
+        {
+            HideCustomDropDown(focusOwner: false);
+            return;
+        }
+
+        ShowCustomDropDown();
+    }
+
+    private void ShowCustomDropDown()
+    {
+        if (_isLocked || !IsHandleCreated || ItemHeight <= 0 || Items.Count == 0 || IsCustomDropDownOpen)
+        {
+            return;
+        }
+
+        EnsureCustomDropDown();
+        if (_customDropDownList == null || _customDropDownControlHost == null || _customDropDownHost == null)
+        {
+            return;
+        }
+
+        int preferredHeight = _customDropDownList.GetPreferredPopupHeight(MaxDropDownItems);
+        int minimumHeight = _customDropDownList.GetMinimumPopupHeight();
+        if (preferredHeight <= 0)
+        {
+            return;
+        }
+
+        Rectangle workingArea = Screen.FromControl(this).WorkingArea;
+        Point screenOrigin = PointToScreen(Point.Empty);
+        int belowSpace = Math.Max(0, workingArea.Bottom - (screenOrigin.Y + Height));
+        int aboveSpace = Math.Max(0, screenOrigin.Y - workingArea.Top);
+
+        bool showAbove = belowSpace < preferredHeight && aboveSpace > belowSpace;
+        int availableHeight = showAbove ? aboveSpace : belowSpace;
+        if (availableHeight < minimumHeight)
+        {
+            showAbove = aboveSpace > belowSpace;
+            availableHeight = Math.Max(aboveSpace, belowSpace);
+        }
+
+        int popupHeight = Math.Max(minimumHeight, Math.Min(preferredHeight, Math.Max(availableHeight, minimumHeight)));
+
+        int popupWidth = _customDropDownList.GetPreferredPopupWidth(Width, MaxDropDownItems, popupHeight);
+        popupWidth = Math.Min(popupWidth, workingArea.Width);
+        _customDropDownList.PrepareForOpen(SelectedIndex, popupWidth, MaxDropDownItems, popupHeight);
+        _customDropDownControlHost.Size = _customDropDownList.Size;
+
+        int popupScreenLeft = Math.Max(workingArea.Left, Math.Min(screenOrigin.X, workingArea.Right - _customDropDownList.Width));
+        int popupOffsetX = popupScreenLeft - screenOrigin.X;
+        Point location = new(popupOffsetX, showAbove ? -_customDropDownList.Height : Height);
+        _customDropDownHost.Show(this, location);
+
+        BeginInvoke((MethodInvoker)(() =>
+        {
+            if (_customDropDownList is { IsDisposed: false })
+            {
+                _customDropDownList.Focus();
+            }
+        }));
+        Invalidate();
+    }
+
+    private void HideCustomDropDown(bool focusOwner = false)
+    {
+        if (_customDropDownHost is not { Visible: true })
+        {
+            return;
+        }
+
+        _focusOwnerAfterCustomDropDownClose = focusOwner;
+        _customDropDownHost.Close();
+    }
+
+    private void InvalidateCustomDropDownVisuals()
+    {
+        if (_customDropDownList == null)
+        {
+            return;
+        }
+
+        _customDropDownList.RefreshFromOwner();
+        _customDropDownList.Invalidate();
+    }
+
+    private bool TryHandleCustomDropDownKey(Keys keyData, bool isSystemKey)
+    {
+        Keys key = keyData & Keys.KeyCode;
+        bool altPressed = isSystemKey || (ModifierKeys & Keys.Alt) == Keys.Alt;
+
+        if (key == Keys.F4 || (altPressed && key is Keys.Down or Keys.Up))
+        {
+            if (IsCustomDropDownOpen)
+            {
+                HideCustomDropDown(focusOwner: true);
+            }
+            else
+            {
+                ShowCustomDropDown();
+            }
+
+            return true;
+        }
+
+        return false;
+    }
+
+    private void CustomDropDownList_CommitRequested(object? sender, int selectedIndex)
+    {
+        HideCustomDropDown(focusOwner: true);
+        if (selectedIndex >= -1 && selectedIndex < Items.Count)
+        {
+            SelectedIndex = selectedIndex;
+        }
+    }
+
+    private void CustomDropDownList_CancelRequested(object? sender, EventArgs e)
+    {
+        HideCustomDropDown(focusOwner: true);
+    }
+
+    private void CustomDropDownHost_Closed(object? sender, ToolStripDropDownClosedEventArgs e)
+    {
+        _customDropDownList?.EndSession();
+
+        if (e.CloseReason == ToolStripDropDownCloseReason.AppClicked &&
+            RectangleToScreen(ClientRectangle).Contains(Cursor.Position))
+        {
+            _suppressNextCustomDropDownToggle = true;
+            BeginInvoke((MethodInvoker)(() => _suppressNextCustomDropDownToggle = false));
+        }
+
+        if (_focusOwnerAfterCustomDropDownClose && !IsDisposed && IsHandleCreated)
+        {
+            BeginInvoke((MethodInvoker)(() =>
+            {
+                if (!IsDisposed)
+                {
+                    Focus();
+                }
+            }));
+        }
+
+        _focusOwnerAfterCustomDropDownClose = false;
+        Invalidate();
+    }
+
     private ClosedSurfaceLayout GetClosedSurfaceLayout(Graphics graphics, Font drawFont, bool locked, bool hasPlaceholder)
     {
         var key = new ClosedSurfaceLayoutKey(
@@ -692,6 +1018,669 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
 
     private static FontSignature CreateFontSignature(Font font)
         => new(font.FontFamily.Name, font.SizeInPoints, font.Style, font.GdiCharSet);
+
+    private static int MeasureRawTextWidth(Graphics graphics, string text, Font font)
+        => TextRenderer.MeasureText(graphics, text, font, Size.Empty, TextFormatFlags.NoPadding).Width;
+
+    private int MeasureItemTextWidth(Graphics graphics, object item, Font font)
+        => MeasureRawTextWidth(graphics, GetItemText(item) ?? string.Empty, font);
+
+    #endregion
+
+    #region Custom Drop Down
+
+    private sealed class DropDownPopupList : Control
+    {
+        private const int BorderThickness = 1;
+        private const int LogicalScrollBarWidth = 10;
+        private const int LogicalTrackGap = 4;
+        private const int LogicalThumbMinHeight = 10;
+
+        private readonly MidsDropDownList _owner;
+
+        private int _topIndex;
+        private int _activeIndex = -1;
+        private int _committedIndex = -1;
+        private int _visibleItemCount;
+        private bool _needsScrollbar;
+
+        private Rectangle _contentBounds;
+        private Rectangle _scrollbarBounds;
+        private Rectangle _upArrowRect;
+        private Rectangle _downArrowRect;
+        private Rectangle _trackBounds;
+        private Rectangle _thumbRect;
+
+        private bool _hoveringThumb;
+        private bool _hoveringUpArrow;
+        private bool _hoveringDownArrow;
+        private bool _draggingThumb;
+        private int _dragStartY;
+
+        internal event EventHandler<int>? CommitRequested;
+        internal event EventHandler? CancelRequested;
+
+        private float DpiScale => DeviceDpi / 96f;
+        private int ScrollBarWidth => Math.Max(8, (int)Math.Round(LogicalScrollBarWidth * DpiScale));
+        private int TrackGap => Math.Max(1, (int)Math.Round(LogicalTrackGap * DpiScale));
+        private int ThumbMinHeight => Math.Max(6, (int)Math.Round(LogicalThumbMinHeight * DpiScale));
+        private int RowHeight => Math.Max(1, _owner.ItemHeight);
+        private int ItemCount => _owner.Items.Count;
+        private int MaxTopIndex => Math.Max(0, ItemCount - _visibleItemCount);
+
+        internal DropDownPopupList(MidsDropDownList owner)
+        {
+            _owner = owner;
+
+            SetStyle(
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.ResizeRedraw |
+                ControlStyles.UserPaint,
+                true);
+
+            TabStop = true;
+        }
+
+        internal int GetMinimumPopupHeight()
+            => BorderThickness * 2 + RowHeight;
+
+        internal int GetPreferredPopupHeight(int maxVisibleItems)
+        {
+            if (ItemCount <= 0)
+            {
+                return 0;
+            }
+
+            int visibleItems = Math.Max(1, Math.Min(ItemCount, Math.Max(1, maxVisibleItems)));
+            return BorderThickness * 2 + visibleItems * RowHeight;
+        }
+
+        internal int GetPreferredPopupWidth(int ownerWidth, int maxVisibleItems, int maxPopupHeight)
+        {
+            int width = Math.Max(1, ownerWidth);
+            if (ItemCount <= 0 || !_owner.IsHandleCreated)
+            {
+                return width;
+            }
+
+            int allowedRowsByHeight = Math.Max(1, (Math.Max(0, maxPopupHeight - BorderThickness * 2)) / RowHeight);
+            int visibleItems = Math.Max(1, Math.Min(ItemCount, Math.Min(Math.Max(1, maxVisibleItems), allowedRowsByHeight)));
+            bool needsScrollbar = ItemCount > visibleItems;
+
+            int widestText = 0;
+            using Graphics g = _owner.CreateGraphics();
+            foreach (object item in _owner.Items)
+            {
+                string text = _owner.GetItemText(item) ?? string.Empty;
+                Size size = TextRenderer.MeasureText(g, text, _owner.Font, Size.Empty, TextFormatFlags.NoPadding);
+                widestText = Math.Max(widestText, size.Width);
+            }
+
+            int horizontalChrome = BorderThickness * 2 + IconPadding * 3 + _owner.IconSize + PopupTextSafetyPadding;
+            if (needsScrollbar)
+            {
+                horizontalChrome += ScrollBarWidth;
+            }
+
+            return Math.Max(width, horizontalChrome + widestText);
+        }
+
+        internal void PrepareForOpen(int selectedIndex, int width, int maxVisibleItems, int maxPopupHeight)
+        {
+            if (ItemCount <= 0)
+            {
+                return;
+            }
+
+            int allowedRowsByHeight = Math.Max(1, (Math.Max(0, maxPopupHeight - BorderThickness * 2)) / RowHeight);
+            _visibleItemCount = Math.Max(1, Math.Min(ItemCount, Math.Min(Math.Max(1, maxVisibleItems), allowedRowsByHeight)));
+            _committedIndex = selectedIndex;
+            _activeIndex = selectedIndex >= 0 && selectedIndex < ItemCount ? selectedIndex : 0;
+
+            EnsureActiveIndexVisible();
+
+            Size = new Size(Math.Max(1, width), BorderThickness * 2 + _visibleItemCount * RowHeight);
+            RecalculateLayout();
+            Invalidate();
+        }
+
+        internal void RefreshFromOwner()
+        {
+            if (_visibleItemCount <= 0)
+            {
+                return;
+            }
+
+            if (ItemCount <= 0)
+            {
+                _topIndex = 0;
+                _activeIndex = -1;
+                _committedIndex = -1;
+                _visibleItemCount = 0;
+                RecalculateLayout();
+                return;
+            }
+
+            int visibleRows = Math.Max(1, (Math.Max(0, Height - BorderThickness * 2)) / RowHeight);
+            _visibleItemCount = Math.Max(1, Math.Min(ItemCount, visibleRows));
+            _committedIndex = Math.Min(_committedIndex, ItemCount - 1);
+            _activeIndex = _activeIndex < 0 ? 0 : Math.Min(_activeIndex, ItemCount - 1);
+            EnsureActiveIndexVisible();
+            RecalculateLayout();
+        }
+
+        internal void SyncCommittedSelection(int selectedIndex)
+        {
+            if (ItemCount <= 0)
+            {
+                _committedIndex = -1;
+                _activeIndex = -1;
+                _topIndex = 0;
+                Invalidate();
+                return;
+            }
+
+            _committedIndex = selectedIndex;
+            _activeIndex = selectedIndex >= 0 && selectedIndex < ItemCount ? selectedIndex : _activeIndex;
+            if (_activeIndex < 0)
+            {
+                _activeIndex = 0;
+            }
+
+            EnsureActiveIndexVisible();
+            Invalidate();
+        }
+
+        internal void EndSession()
+        {
+            _draggingThumb = false;
+            _hoveringThumb = false;
+            _hoveringUpArrow = false;
+            _hoveringDownArrow = false;
+            Capture = false;
+        }
+
+        protected override bool IsInputKey(Keys keyData)
+        {
+            Keys key = keyData & Keys.KeyCode;
+            return key is Keys.Up or Keys.Down or Keys.PageUp or Keys.PageDown or Keys.Home or Keys.End or Keys.Enter or Keys.Escape or Keys.Tab
+                || base.IsInputKey(keyData);
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            Graphics g = e.Graphics;
+            g.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+
+            var theme = _owner.CurrentTheme;
+            using (var backgroundBrush = new SolidBrush(theme.DropDownBackColor))
+            {
+                g.FillRectangle(backgroundBrush, ClientRectangle);
+            }
+
+            DrawItems(g, theme);
+
+            if (_needsScrollbar)
+            {
+                DrawScrollbar(g);
+            }
+
+            using var borderPen = new Pen(theme.Border);
+            g.DrawRectangle(borderPen, 0, 0, Math.Max(0, Width - 1), Math.Max(0, Height - 1));
+        }
+
+        protected override void OnMouseWheel(MouseEventArgs e)
+        {
+            base.OnMouseWheel(e);
+            if (!_needsScrollbar)
+            {
+                return;
+            }
+
+            int lines = SystemInformation.MouseWheelScrollLines;
+            if (lines <= 0)
+            {
+                lines = 3;
+            }
+
+            int direction = Math.Sign(-e.Delta);
+            if (direction != 0)
+            {
+                ScrollBy(direction * lines);
+            }
+        }
+
+        protected override void OnMouseDown(MouseEventArgs e)
+        {
+            base.OnMouseDown(e);
+            Focus();
+
+            if (_needsScrollbar && _thumbRect.Contains(e.Location))
+            {
+                _draggingThumb = true;
+                _dragStartY = e.Y - _thumbRect.Y;
+                Capture = true;
+                return;
+            }
+
+            if (_needsScrollbar && _upArrowRect.Contains(e.Location))
+            {
+                ScrollBy(-1);
+                return;
+            }
+
+            if (_needsScrollbar && _downArrowRect.Contains(e.Location))
+            {
+                ScrollBy(1);
+                return;
+            }
+
+            if (_needsScrollbar && _trackBounds.Contains(e.Location))
+            {
+                if (e.Y < _thumbRect.Top)
+                {
+                    ScrollBy(-_visibleItemCount);
+                }
+                else if (e.Y > _thumbRect.Bottom)
+                {
+                    ScrollBy(_visibleItemCount);
+                }
+
+                return;
+            }
+
+            int itemIndex = HitTestItemIndex(e.Location);
+            if (itemIndex >= 0)
+            {
+                SetActiveIndex(itemIndex);
+            }
+        }
+
+        protected override void OnMouseMove(MouseEventArgs e)
+        {
+            base.OnMouseMove(e);
+
+            bool oldHoverThumb = _hoveringThumb;
+            bool oldHoverUp = _hoveringUpArrow;
+            bool oldHoverDown = _hoveringDownArrow;
+
+            _hoveringThumb = _needsScrollbar && _thumbRect.Contains(e.Location);
+            _hoveringUpArrow = _needsScrollbar && _upArrowRect.Contains(e.Location);
+            _hoveringDownArrow = _needsScrollbar && _downArrowRect.Contains(e.Location);
+
+            if (_draggingThumb)
+            {
+                DragThumbTo(e.Y);
+                return;
+            }
+
+            int itemIndex = HitTestItemIndex(e.Location);
+            if (itemIndex >= 0 && itemIndex != _activeIndex)
+            {
+                SetActiveIndex(itemIndex);
+                return;
+            }
+
+            if (oldHoverThumb != _hoveringThumb || oldHoverUp != _hoveringUpArrow || oldHoverDown != _hoveringDownArrow)
+            {
+                Invalidate(_scrollbarBounds);
+            }
+        }
+
+        protected override void OnMouseUp(MouseEventArgs e)
+        {
+            base.OnMouseUp(e);
+
+            if (_draggingThumb)
+            {
+                _draggingThumb = false;
+                Capture = false;
+            }
+        }
+
+        protected override void OnMouseLeave(EventArgs e)
+        {
+            base.OnMouseLeave(e);
+            if (!_hoveringThumb && !_hoveringUpArrow && !_hoveringDownArrow)
+            {
+                return;
+            }
+
+            _hoveringThumb = false;
+            _hoveringUpArrow = false;
+            _hoveringDownArrow = false;
+            if (!_scrollbarBounds.IsEmpty)
+            {
+                Invalidate(_scrollbarBounds);
+            }
+        }
+
+        protected override void OnMouseClick(MouseEventArgs e)
+        {
+            base.OnMouseClick(e);
+            if (e.Button != MouseButtons.Left)
+            {
+                return;
+            }
+
+            int itemIndex = HitTestItemIndex(e.Location);
+            if (itemIndex >= 0)
+            {
+                CommitRequested?.Invoke(this, itemIndex);
+            }
+        }
+
+        protected override void OnKeyDown(KeyEventArgs e)
+        {
+            base.OnKeyDown(e);
+
+            switch (e.KeyCode)
+            {
+                case Keys.Up:
+                    MoveActiveIndex(-1);
+                    e.Handled = true;
+                    break;
+                case Keys.Down:
+                    MoveActiveIndex(1);
+                    e.Handled = true;
+                    break;
+                case Keys.PageUp:
+                    MoveActiveIndex(-Math.Max(1, _visibleItemCount));
+                    e.Handled = true;
+                    break;
+                case Keys.PageDown:
+                    MoveActiveIndex(Math.Max(1, _visibleItemCount));
+                    e.Handled = true;
+                    break;
+                case Keys.Home:
+                    SetActiveIndex(0);
+                    e.Handled = true;
+                    break;
+                case Keys.End:
+                    SetActiveIndex(Math.Max(0, ItemCount - 1));
+                    e.Handled = true;
+                    break;
+                case Keys.Enter:
+                    if (_activeIndex >= 0)
+                    {
+                        CommitRequested?.Invoke(this, _activeIndex);
+                    }
+
+                    e.Handled = true;
+                    break;
+                case Keys.Escape:
+                    CancelRequested?.Invoke(this, EventArgs.Empty);
+                    e.Handled = true;
+                    break;
+                case Keys.Tab:
+                    if (_activeIndex >= 0)
+                    {
+                        CommitRequested?.Invoke(this, _activeIndex);
+                    }
+                    else
+                    {
+                        CancelRequested?.Invoke(this, EventArgs.Empty);
+                    }
+
+                    e.Handled = true;
+                    break;
+            }
+        }
+
+        private void DrawItems(Graphics g, DropDownListTheme theme)
+        {
+            if (ItemCount <= 0 || _visibleItemCount <= 0)
+            {
+                return;
+            }
+
+            int lastVisibleIndex = Math.Min(ItemCount, _topIndex + _visibleItemCount);
+            for (int itemIndex = _topIndex; itemIndex < lastVisibleIndex; itemIndex++)
+            {
+                int slot = itemIndex - _topIndex;
+                Rectangle itemRect = new(
+                    _contentBounds.Left,
+                    _contentBounds.Top + slot * RowHeight,
+                    _contentBounds.Width,
+                    RowHeight);
+
+                bool isActive = itemIndex == _activeIndex;
+                Color backColor = isActive ? theme.DropDownSelectionBackColor : theme.DropDownBackColor;
+                Color textColor = isActive ? theme.DropDownSelectionForeColor : theme.ForeColor;
+
+                using (var itemBrush = new SolidBrush(backColor))
+                {
+                    g.FillRectangle(itemBrush, itemRect);
+                }
+
+                object item = _owner.Items[itemIndex];
+                Rectangle iconRect = new Rectangle(
+                    itemRect.Left + IconPadding,
+                    itemRect.Top + (itemRect.Height - _owner.IconSize) / 2,
+                    _owner.IconSize,
+                    _owner.IconSize);
+
+                Rectangle textRect = new Rectangle(
+                    iconRect.Right + IconPadding,
+                    itemRect.Top,
+                    Math.Max(0, itemRect.Right - iconRect.Right - IconPadding * 2),
+                    itemRect.Height);
+
+                if (_owner._itemIcons.TryGetValue(item, out var icon) && icon != null)
+                {
+                    g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                    g.SmoothingMode = SmoothingMode.HighQuality;
+                    DrawIconIfValid(g, icon, iconRect);
+                }
+
+                TextRenderer.DrawText(
+                    g,
+                    _owner.GetItemText(item) ?? string.Empty,
+                    _owner.Font,
+                    textRect,
+                    textColor,
+                    TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
+
+                if (isActive)
+                {
+                    using var focusPen = new Pen(theme.FocusBorder);
+                    var focusRect = itemRect;
+                    focusRect.Width = Math.Max(0, focusRect.Width - 1);
+                    focusRect.Height = Math.Max(0, focusRect.Height - 1);
+                    g.DrawRectangle(focusPen, focusRect);
+                }
+            }
+        }
+
+        private void DrawScrollbar(Graphics g)
+        {
+            if (_scrollbarBounds.IsEmpty)
+            {
+                return;
+            }
+
+            var theme = _owner.CurrentScrollTheme;
+            int centerX = _scrollbarBounds.Left + _scrollbarBounds.Width / 2;
+            float arrowMargin = _scrollbarBounds.Width * 0.08f;
+
+            using (var arrowBrush = new SolidBrush((_hoveringUpArrow || _hoveringDownArrow) ? theme.Hover : theme.Bar))
+            {
+                var upTriangle = new PointF[]
+                {
+                    new(_upArrowRect.Left + _upArrowRect.Width / 2f, _upArrowRect.Top + arrowMargin),
+                    new(_upArrowRect.Left + arrowMargin, _upArrowRect.Bottom - arrowMargin),
+                    new(_upArrowRect.Right - arrowMargin, _upArrowRect.Bottom - arrowMargin)
+                };
+                g.FillPolygon(arrowBrush, upTriangle);
+
+                var downTriangle = new PointF[]
+                {
+                    new(_downArrowRect.Left + _downArrowRect.Width / 2f, _downArrowRect.Bottom - arrowMargin),
+                    new(_downArrowRect.Left + arrowMargin, _downArrowRect.Top + arrowMargin),
+                    new(_downArrowRect.Right - arrowMargin, _downArrowRect.Top + arrowMargin)
+                };
+                g.FillPolygon(arrowBrush, downTriangle);
+            }
+
+            using (var trackPen = new Pen(theme.Track, Math.Max(1, (int)Math.Round(2 * DpiScale))))
+            {
+                trackPen.StartCap = LineCap.Round;
+                trackPen.EndCap = LineCap.Round;
+                g.DrawLine(trackPen, centerX, _trackBounds.Top, centerX, _trackBounds.Bottom);
+            }
+
+            using var thumbBrush = new SolidBrush(_hoveringThumb ? theme.Hover : theme.Bar);
+            g.FillRectangle(thumbBrush, _thumbRect);
+        }
+
+        private void RecalculateLayout()
+        {
+            _needsScrollbar = ItemCount > _visibleItemCount;
+            _contentBounds = new Rectangle(
+                BorderThickness,
+                BorderThickness,
+                Math.Max(0, Width - BorderThickness * 2 - (_needsScrollbar ? ScrollBarWidth : 0)),
+                Math.Max(0, Height - BorderThickness * 2));
+
+            if (!_needsScrollbar)
+            {
+                _scrollbarBounds = Rectangle.Empty;
+                _upArrowRect = Rectangle.Empty;
+                _downArrowRect = Rectangle.Empty;
+                _trackBounds = Rectangle.Empty;
+                _thumbRect = Rectangle.Empty;
+                return;
+            }
+
+            int scrollBarX = Width - BorderThickness - ScrollBarWidth;
+            _scrollbarBounds = new Rectangle(scrollBarX, BorderThickness, ScrollBarWidth, Math.Max(0, Height - BorderThickness * 2));
+            _upArrowRect = new Rectangle(scrollBarX, BorderThickness, ScrollBarWidth, ScrollBarWidth);
+            _downArrowRect = new Rectangle(scrollBarX, Height - BorderThickness - ScrollBarWidth, ScrollBarWidth, ScrollBarWidth);
+            _trackBounds = Rectangle.FromLTRB(
+                scrollBarX,
+                _upArrowRect.Bottom + TrackGap,
+                scrollBarX + ScrollBarWidth,
+                _downArrowRect.Top - TrackGap);
+
+            int trackHeight = Math.Max(0, _trackBounds.Height);
+            int thumbHeight = Math.Max(ThumbMinHeight, (int)Math.Round((double)_visibleItemCount / Math.Max(1, ItemCount) * trackHeight));
+            thumbHeight = Math.Min(trackHeight, thumbHeight);
+
+            int available = Math.Max(0, trackHeight - thumbHeight);
+            int thumbY = _trackBounds.Top;
+            if (available > 0 && MaxTopIndex > 0)
+            {
+                double ratio = (double)_topIndex / MaxTopIndex;
+                thumbY = _trackBounds.Top + (int)Math.Round(available * ratio);
+            }
+
+            _thumbRect = new Rectangle(scrollBarX, thumbY, ScrollBarWidth, thumbHeight);
+        }
+
+        private int HitTestItemIndex(Point location)
+        {
+            if (!_contentBounds.Contains(location) || _visibleItemCount <= 0)
+            {
+                return -1;
+            }
+
+            int row = (location.Y - _contentBounds.Top) / RowHeight;
+            if (row < 0 || row >= _visibleItemCount)
+            {
+                return -1;
+            }
+
+            int itemIndex = _topIndex + row;
+            return itemIndex >= 0 && itemIndex < ItemCount ? itemIndex : -1;
+        }
+
+        private void MoveActiveIndex(int delta)
+        {
+            if (ItemCount <= 0)
+            {
+                return;
+            }
+
+            int startIndex = _activeIndex >= 0 ? _activeIndex : 0;
+            SetActiveIndex(Math.Max(0, Math.Min(ItemCount - 1, startIndex + delta)));
+        }
+
+        private void SetActiveIndex(int index)
+        {
+            if (index < 0 || index >= ItemCount || index == _activeIndex)
+            {
+                return;
+            }
+
+            _activeIndex = index;
+            EnsureActiveIndexVisible();
+            Invalidate();
+        }
+
+        private void EnsureActiveIndexVisible()
+        {
+            if (_activeIndex < 0 || _visibleItemCount <= 0)
+            {
+                _topIndex = 0;
+                return;
+            }
+
+            if (_activeIndex < _topIndex)
+            {
+                _topIndex = _activeIndex;
+            }
+            else if (_activeIndex >= _topIndex + _visibleItemCount)
+            {
+                _topIndex = _activeIndex - _visibleItemCount + 1;
+            }
+
+            _topIndex = Math.Max(0, Math.Min(_topIndex, MaxTopIndex));
+            RecalculateLayout();
+        }
+
+        private void ScrollBy(int deltaRows)
+        {
+            if (!_needsScrollbar)
+            {
+                return;
+            }
+
+            int nextTopIndex = Math.Max(0, Math.Min(MaxTopIndex, _topIndex + deltaRows));
+            if (nextTopIndex == _topIndex)
+            {
+                return;
+            }
+
+            _topIndex = nextTopIndex;
+            RecalculateLayout();
+            Invalidate();
+        }
+
+        private void DragThumbTo(int mouseY)
+        {
+            if (_trackBounds.IsEmpty || _thumbRect.IsEmpty)
+            {
+                return;
+            }
+
+            int available = Math.Max(0, _trackBounds.Height - _thumbRect.Height);
+            if (available <= 0 || MaxTopIndex <= 0)
+            {
+                return;
+            }
+
+            int newThumbY = mouseY - _dragStartY;
+            newThumbY = Math.Max(_trackBounds.Top, Math.Min(newThumbY, _trackBounds.Top + available));
+            double ratio = (double)(newThumbY - _trackBounds.Top) / available;
+            _topIndex = (int)Math.Round(ratio * MaxTopIndex);
+            _topIndex = Math.Max(0, Math.Min(_topIndex, MaxTopIndex));
+            RecalculateLayout();
+            Invalidate();
+        }
+    }
 
     #endregion
 }

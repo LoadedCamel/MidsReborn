@@ -1545,12 +1545,7 @@ namespace Mids_Reborn.UI.Controls
 
             infoDataList.Redraw();
 
-            var str1 = "Damage" + MidsContext.Config.DamageMath.ReturnValue switch
-            {
-                ConfigData.EDamageReturn.DPS => " Per Second",
-                ConfigData.EDamageReturn.DPA => " Per Animation Second",
-                _ => ""
-            };
+            var str1 = Power.GetDamageReturnHeaderLabel(MidsContext.Config.DamageMath.ReturnValue);
 
             if (MidsContext.Config.DataDamageGraphPercentageOnly)
             {

@@ -33,7 +33,7 @@ namespace Mids_Reborn.UI.Controls
         private BufferedGraphicsContext? _bufferContext;
         private readonly IContainer? _components;
         private Font _font;
-        private I9Picker.EnhUniqueStatus? _enhUniqueStatus;
+        private PickerControl.EnhUniqueStatus? _enhUniqueStatus;
 
         private int _bxHeight;
         private float _columnPosition;
@@ -170,14 +170,14 @@ namespace Mids_Reborn.UI.Controls
 
         #region Public Methods
 
-        public void SetPopup(PopUp.PopupData data, I9Picker.EnhUniqueStatus? status = null)
+        public void SetPopup(PopUp.PopupData data, PickerControl.EnhUniqueStatus? status = null)
         {
             PopupData = data;
             _enhUniqueStatus = status;
             Redraw();
         }
 
-        public void ShowAt(Control anchor, PopUp.PopupData data, I9Picker.EnhUniqueStatus? status = null)
+        public void ShowAt(Control anchor, PopUp.PopupData data, PickerControl.EnhUniqueStatus? status = null)
         {
             SetPopup(data, status);
             var location = anchor.PointToScreen(Point.Empty);

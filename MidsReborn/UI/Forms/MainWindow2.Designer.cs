@@ -1739,21 +1739,21 @@ namespace Mids_Reborn.UI.Forms
             tsViewActualDamage_New.CheckState = CheckState.Checked;
             tsViewActualDamage_New.Name = "tsViewActualDamage_New";
             tsViewActualDamage_New.Size = new Size(338, 22);
-            tsViewActualDamage_New.Text = "Show Damage Per Activation (Level 50)";
+            tsViewActualDamage_New.Text = "Show Damage Per Activation";
             tsViewActualDamage_New.Click += tsViewActualDamage_New_Click;
             // 
             // tsViewDPS_New
             // 
             tsViewDPS_New.Name = "tsViewDPS_New";
             tsViewDPS_New.Size = new Size(338, 22);
-            tsViewDPS_New.Text = "Show Damage Per Second (Level 50)";
+            tsViewDPS_New.Text = "Show Damage Per Second";
             tsViewDPS_New.Click += tsViewDPS_New_Click;
             // 
             // tlsDPA
             // 
             tlsDPA.Name = "tlsDPA";
             tlsDPA.Size = new Size(338, 22);
-            tlsDPA.Text = "Show Damage Per Animation (Level 50)";
+            tlsDPA.Text = "Show Damage Per Animation";
             tlsDPA.Click += tlsDPA_Click;
             // 
             // WindowToolStripMenuItem

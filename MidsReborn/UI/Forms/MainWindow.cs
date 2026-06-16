@@ -23,6 +23,7 @@ using RestSharp;
 using System.Data;
 using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Text.RegularExpressions;
 using System.Windows.Forms.VisualStyles;
@@ -55,6 +56,18 @@ namespace Mids_Reborn.UI.Forms
 
         private const int BaselineFormWidth = 1280;
         private const int BaselineFormHeight = 768;
+        private const int LandscapeMinimumWindowWidth = 1366;
+        private const int LandscapeMinimumWindowHeight = 768;
+        private const int PortraitMinimumWindowWidth = 1080;
+        private const int PortraitMinimumWindowHeight = 1920;
+        private const float PickerMaxVisualWidth = 350f;
+        private const float PickerMaxVisualHeight = 550f;
+        private const float PickerClientWidthRatio = 0.30f;
+        private const float PickerClientHeightRatio = 0.72f;
+        private const float PersistentPickerMaxVisualWidth = 1060f;
+        private const float PersistentPickerMaxVisualHeight = 740f;
+        private const float PersistentPickerClientWidthRatio = 0.58f;
+        private const float PersistentPickerClientHeightRatio = 0.80f;
         private const float MinimumUiScale = 0.90f;
         private const float MaximumUiScale = 1.25f;
         private const float UiScaleIntensity = 0.35f;
@@ -93,13 +106,13 @@ namespace Mids_Reborn.UI.Forms
         private const int PortraitSupportedMaxWidth = 1080;
         private const float CompactMainLeftColumnWidth = 456f;
         private const float CompactLeftPowerColumnWidth = 292f;
+        private const float CompactPowerListHardMinimumHeight = 72f;
         private const float CompactPowerListMinHeight = 96f;
         private const float CompactPowerListMaxHeight = 132f;
         private const float CompactPowerListHeightRatio = 0.10f;
         private const float CompactPoolsSectionMinHeight = 132f;
         private const float CompactPoolsSectionMaxHeight = 176f;
         private const float CompactPoolsSectionHeightRatio = 0.16f;
-        private const float CompactDataViewMinimumHeight = 352f;
         private const float CompactDataViewMaximumHeight = 436f;
         private const float CompactDataViewHeightRatio = 0.38f;
         private const float CompactHeaderVerticalInset = 6f;
@@ -121,6 +134,9 @@ namespace Mids_Reborn.UI.Forms
         private const float CompactHeaderModeLabelWidth = 60f;
         private const float CompactHeaderTotalsWidth = 126f;
         private const float CompactHeaderCombatWidth = 104f;
+        private const float PlannerModeLabelColumnWidth = 92f;
+        private const float PlannerStaticLevelInputWidth = 82f;
+        private const float PlannerStaticModeMinimumWidth = 372f;
         private const float CompactPlannerModeMinimumWidth = 260f;
         private const float CompactPlannerModeMaximumWidth = 420f;
         private const float ResponsiveWideSlackWidth = 220f;
@@ -133,6 +149,7 @@ namespace Mids_Reborn.UI.Forms
         private float _lastMasterScale = 1f;
         private int _lastCanvasWidth = -1;
         private float _lastLeftUiScale = 1f;
+        private float _pendingDataViewScale = 1f;
         private float _liveResizeMetricsScale = 1f;
         private int _lastLeftUiScaleBucket = -1;
         private int _lastLeftUiDpi = -1;
@@ -163,7 +180,6 @@ namespace Mids_Reborn.UI.Forms
         private MidsWorkspaceShellPanel? _poolShell;
         private MidsWorkspaceShellPanel? _rightBuildShell;
         private TableLayoutPanel? _rightBuildShellLayout;
-        private readonly Size _defaultWindowMinimumSize;
         private bool _syncingPlannerModeToggle;
         private bool _syncingStaticLevelInput;
         private bool _syncingPvModeToggle;
@@ -257,7 +273,7 @@ namespace Mids_Reborn.UI.Forms
 
         // Top-level windows / forms
         private SetInspector? _setInspector;
-        private I9Picker? _i9Picker;
+        private PickerControl? _i9Picker;
         private EnhCheckMode? _enhCheckMode;
         private MidsPopupDisplay? _popupHost;
         private frmBusy? _frmBusy;
@@ -438,18 +454,13 @@ namespace Mids_Reborn.UI.Forms
             set => _interaction.Picker = _interaction.Picker with { OpenedAtTicks = value };
         }
 
-        private I9Picker I9Picker
+        private PickerControl I9Picker
         {
-            get
-            {
-                if (_i9Picker.Height <= 235)
-                {
-                    _i9Picker.Height = 315;
-                }
-                return _i9Picker;
-            }
+            get => _i9Picker;
             set => _i9Picker = value;
         }
+
+        private bool PickerUsesPersistentOverlay => _i9Picker is Mids_Reborn.UI.Controls.Test.EnhSelector.EnhSelector;
 
         private HeaderTheme CurrentTheme => DesignMode ? ThemeManager.DesignTime.Header : ThemeManager.CurrentTheme?.Header ?? ThemeManager.DesignTime.Header;
 
@@ -470,7 +481,6 @@ namespace Mids_Reborn.UI.Forms
             InitializeComponent();
             InitializeBufferedBodySurfaces();
             ApplyWindowSurfaceTheme();
-            _defaultWindowMinimumSize = MinimumSize;
             InitializePoolSectionBindings();
             ApplyPowerSetChromeSpacing();
             EnsureWorkspaceShells();
@@ -564,10 +574,10 @@ namespace Mids_Reborn.UI.Forms
             plannerModeLabel.Text = "Planner:";
             plannerModeHost.ColumnCount = 4;
             plannerModeHost.ColumnStyles.Clear();
-            plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 92F));
+            plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, PlannerModeLabelColumnWidth));
             plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
             plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.AutoSize));
-            plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 82F));
+            plannerModeHost.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, PlannerStaticLevelInputWidth));
             plannerModeToggle.SetItems("Level-Up", "Respec");
             staticLevelInput.Minimum = 1;
             staticLevelInput.Maximum = Character.MaxLevel + 1;
@@ -613,6 +623,7 @@ namespace Mids_Reborn.UI.Forms
 
             ApplyHeaderNameInputStyle();
             LayoutHeaderNameInput();
+            ApplyPlannerModeHostMetrics(1f);
             SyncPlannerModeToggle();
             SyncStaticLevelControl();
             SyncPvModeToggle();
@@ -715,6 +726,12 @@ namespace Mids_Reborn.UI.Forms
             layout.SetRow(control, row);
             layout.SetColumnSpan(control, columnSpan);
             layout.SetRowSpan(control, 1);
+        }
+
+        private float GetArchetypeHeaderRequiredWidth(float scale, float fallbackWidth)
+        {
+            float scaledFallback = ScaleLayoutValue(fallbackWidth, scale);
+            return Math.Max(scaledFallback, atDropDown.GetPreferredContentWidth(includeAllItems: true));
         }
 
         private static bool UsesCompactResponsiveLayout(MainWindowResponsiveProfile profile)
@@ -851,18 +868,10 @@ namespace Mids_Reborn.UI.Forms
 
         private int GetCompactHeaderMinimumWidth()
         {
-            int topRowWidth =
-                (int)Math.Round(CompactHeaderNameLabelWidth) +
-                (int)Math.Round(CompactHeaderNameMinimumWidth) +
-                (int)Math.Round(CompactHeaderArchetypeLabelWidth) +
-                (int)Math.Round(CompactHeaderArchetypeMinimumWidth) +
-                (int)Math.Round(CompactHeaderOriginLabelWidth) +
-                (int)Math.Round(CompactHeaderOriginMinimumWidth) +
-                (int)Math.Round(CompactHeaderAlignmentLabelWidth) +
-                (int)Math.Round(CompactHeaderAlignmentMinimumWidth);
+            int topRowWidth = (int)Math.Ceiling(CreateCompactHeaderTopMinimumWidths(1f).Sum());
 
             int bottomRowWidth =
-                (int)Math.Round(CompactPlannerModeMinimumWidth) +
+                (int)Math.Ceiling(GetPlannerModeHostMinimumWidth(1f)) +
                 12 +
                 (int)Math.Round(CompactHeaderTotalsWidth) +
                 (int)Math.Round(CompactHeaderCombatWidth);
@@ -872,33 +881,6 @@ namespace Mids_Reborn.UI.Forms
 
         private int GetMainContentWidthBudget()
             => Math.Max(1, ClientSize.Width - mainLayoutPanel.Padding.Horizontal);
-
-        private int ComputeResponsiveMinimumClientWidth(MainWindowResponsiveProfile profile)
-        {
-            bool compactProfile = UsesCompactResponsiveLayout(profile);
-            int rendererMinimumWidth = compactProfile
-                ? EnumerateRendererLayoutCandidates(allowFallback: true)
-                    .Select(candidate => candidate.MinimumScaleMetrics.MinimumWidth)
-                    .DefaultIfEmpty(GetDefaultRendererLayoutCandidate().MinimumScaleMetrics.MinimumWidth)
-                    .Min()
-                : GetSelectedRendererLayoutCandidate().MinimumScaleMetrics.MinimumWidth;
-            int headerMinimumWidth = compactProfile ? GetCompactHeaderMinimumWidth() : GetStandardHeaderMinimumWidth();
-
-            if (UsesPortraitMainLayout(profile))
-            {
-                int portraitWidth = Math.Max(
-                    headerMinimumWidth,
-                    Math.Max(GetActionStripMinimumWidth(), rendererMinimumWidth));
-                return portraitWidth + Padding.Horizontal;
-            }
-
-            int leftMinimumWidth = compactProfile
-                ? (int)Math.Round(CompactMainLeftColumnWidth)
-                : (int)Math.Round(BaselineMainLeftColumnWidth);
-            int rightMinimumWidth = Math.Max(GetActionStripMinimumWidth(), rendererMinimumWidth);
-            int mainAreaMinimumWidth = leftMinimumWidth + rightMinimumWidth + (int)Math.Round(ResponsiveMainShellGap);
-            return Math.Max(headerMinimumWidth, mainAreaMinimumWidth) + Padding.Horizontal;
-        }
 
         private MainWindowResponsiveProfile GetResponsiveProfile()
         {
@@ -1369,12 +1351,12 @@ namespace Mids_Reborn.UI.Forms
                 ScaleLayoutValue(60f, scale),
                 ScaleLayoutValue(BaselineHeaderNameWidth, scale),
                 ScaleLayoutValue(BaselineHeaderArchetypeLabelWidth, scale),
-                ScaleLayoutValue(BaselineHeaderArchetypeWidth, scale),
+                GetArchetypeHeaderRequiredWidth(scale, BaselineHeaderArchetypeWidth),
                 ScaleLayoutValue(BaselineHeaderOriginLabelWidth, scale),
                 ScaleLayoutValue(BaselineHeaderOriginWidth, scale),
                 ScaleLayoutValue(BaselineHeaderAlignmentLabelWidth, scale),
                 ScaleLayoutValue(BaselineHeaderAlignmentWidth, scale),
-                Math.Max(BaselineHeaderPlannerWidth, ScaleLayoutValue(BaselineHeaderPlannerWidth, scale)),
+                Math.Max(GetPlannerModeHostMinimumWidth(scale), ScaleLayoutValue(BaselineHeaderPlannerWidth, scale)),
                 ScaleLayoutValue(BaselineHeaderTotalsWidth, scale),
                 ScaleLayoutValue(BaselineHeaderCombatWidth, scale)
             ];
@@ -1385,12 +1367,12 @@ namespace Mids_Reborn.UI.Forms
                 ScaleLayoutValue(60f, scale),
                 ScaleLayoutValue(320f, scale),
                 ScaleLayoutValue(BaselineHeaderArchetypeLabelWidth, scale),
-                ScaleLayoutValue(220f, scale),
+                GetArchetypeHeaderRequiredWidth(scale, 220f),
                 ScaleLayoutValue(BaselineHeaderOriginLabelWidth, scale),
                 ScaleLayoutValue(176f, scale),
                 ScaleLayoutValue(BaselineHeaderAlignmentLabelWidth, scale),
                 ScaleLayoutValue(180f, scale),
-                ScaleLayoutValue(420f, scale),
+                Math.Max(GetPlannerModeHostMinimumWidth(scale), ScaleLayoutValue(420f, scale)),
                 ScaleLayoutValue(156f, scale),
                 ScaleLayoutValue(124f, scale)
             ];
@@ -1401,15 +1383,47 @@ namespace Mids_Reborn.UI.Forms
                 ScaleLayoutValue(52f, scale),
                 ScaleLayoutValue(96f, scale),
                 ScaleLayoutValue(72f, scale),
-                ScaleLayoutValue(108f, scale),
+                GetArchetypeHeaderRequiredWidth(scale, 108f),
                 ScaleLayoutValue(48f, scale),
                 ScaleLayoutValue(96f, scale),
                 ScaleLayoutValue(72f, scale),
                 ScaleLayoutValue(96f, scale),
-                ScaleLayoutValue(312f, scale),
+                Math.Max(GetPlannerModeHostMinimumWidth(scale), ScaleLayoutValue(312f, scale)),
                 ScaleLayoutValue(104f, scale),
                 ScaleLayoutValue(88f, scale)
             ];
+
+        private bool IsPlannerStaticMode()
+            => NormalizePlannerBuildMode(MidsContext.Config?.BuildMode ?? Enums.dmModes.LevelUp) == Enums.dmModes.Respec;
+
+        private float GetPlannerStaticLevelInputWidth(float scale)
+            => ScaleLayoutValue(PlannerStaticLevelInputWidth, Math.Max(1f, scale));
+
+        private float GetPlannerModeHostMinimumWidth(float scale)
+        {
+            float widthScale = Math.Max(1f, scale);
+            float minimumWidth = ScaleLayoutValue(CompactPlannerModeMinimumWidth, widthScale);
+            if (IsPlannerStaticMode())
+            {
+                minimumWidth = Math.Max(minimumWidth, ScaleLayoutValue(PlannerStaticModeMinimumWidth, widthScale));
+            }
+
+            return minimumWidth;
+        }
+
+        private void ApplyPlannerModeHostMetrics(float scale)
+        {
+            if (_plannerModeHost is null || _plannerModeHost.ColumnStyles.Count < 4)
+            {
+                return;
+            }
+
+            float widthScale = Math.Max(1f, scale);
+            _plannerModeHost.ColumnStyles[0].SizeType = SizeType.Absolute;
+            _plannerModeHost.ColumnStyles[0].Width = ScaleLayoutValue(PlannerModeLabelColumnWidth, widthScale);
+            _plannerModeHost.ColumnStyles[3].SizeType = SizeType.Absolute;
+            _plannerModeHost.ColumnStyles[3].Width = IsPlannerStaticMode() ? GetPlannerStaticLevelInputWidth(widthScale) : 0f;
+        }
 
         private float UpdateStandardHeaderMetrics(float scale, float metricsScale, int headerHostWidth, bool sameModeLiveResize, bool captureExactMetrics)
         {
@@ -1467,7 +1481,7 @@ namespace Mids_Reborn.UI.Forms
                 ScaleLayoutValue(CompactHeaderNameLabelWidth, widthScale),
                 ScaleLayoutValue(CompactHeaderNameMinimumWidth, widthScale),
                 ScaleLayoutValue(CompactHeaderArchetypeLabelWidth, widthScale),
-                ScaleLayoutValue(CompactHeaderArchetypeMinimumWidth, widthScale),
+                GetArchetypeHeaderRequiredWidth(widthScale, CompactHeaderArchetypeMinimumWidth),
                 ScaleLayoutValue(CompactHeaderOriginLabelWidth, widthScale),
                 ScaleLayoutValue(CompactHeaderOriginMinimumWidth, widthScale),
                 ScaleLayoutValue(CompactHeaderAlignmentLabelWidth, widthScale),
@@ -1504,7 +1518,7 @@ namespace Mids_Reborn.UI.Forms
                 ScaleLayoutValue(CompactHeaderNameLabelWidth, widthScale),
                 ScaleLayoutValue(CompactHeaderNameMinimumWidth, widthScale),
                 ScaleLayoutValue(CompactHeaderArchetypeLabelWidth, widthScale),
-                ScaleLayoutValue(CompactHeaderArchetypeMinimumWidth, widthScale),
+                GetArchetypeHeaderRequiredWidth(widthScale, CompactHeaderArchetypeMinimumWidth),
                 ScaleLayoutValue(CompactHeaderOriginLabelWidth, widthScale),
                 ScaleLayoutValue(CompactHeaderOriginMinimumWidth, widthScale),
                 ScaleLayoutValue(CompactHeaderAlignmentLabelWidth, widthScale),
@@ -1539,7 +1553,7 @@ namespace Mids_Reborn.UI.Forms
             float widthScale = Math.Max(1f, scale);
             return
             [
-                ScaleLayoutValue(CompactPlannerModeMinimumWidth, widthScale),
+                GetPlannerModeHostMinimumWidth(widthScale),
                 0f,
                 ScaleLayoutValue(CompactHeaderTotalsWidth * 0.82f, widthScale),
                 ScaleLayoutValue(CompactHeaderCombatWidth * 0.82f, widthScale)
@@ -1567,7 +1581,7 @@ namespace Mids_Reborn.UI.Forms
 
             float totalsWidth = ScaleLayoutValue(CompactHeaderTotalsWidth, widthScale);
             float combatWidth = ScaleLayoutValue(CompactHeaderCombatWidth, widthScale);
-            float minimumPlannerWidth = ScaleLayoutValue(CompactPlannerModeMinimumWidth, widthScale);
+            float minimumPlannerWidth = GetPlannerModeHostMinimumWidth(widthScale);
             float spacerWidth = ScaleLayoutValue(12f, widthScale);
             float plannerWidth = Math.Max(minimumPlannerWidth, headerHostWidth - totalsWidth - combatWidth - spacerWidth);
             var widths = new[] { plannerWidth, spacerWidth, totalsWidth, combatWidth };
@@ -1689,12 +1703,48 @@ namespace Mids_Reborn.UI.Forms
             excessHeight -= reduction;
         }
 
-        private int ResolveCompactDataViewHeight(float scale)
+        private int ResolveCompactDataViewHeight(float scale, int minimumHeight)
         {
             float desiredHeight = ClientSize.Height * CompactDataViewHeightRatio;
-            float minimumHeight = ScaleLayoutValue(CompactDataViewMinimumHeight, scale);
             float maximumHeight = ScaleLayoutValue(CompactDataViewMaximumHeight, scale);
-            return (int)Math.Round(Math.Clamp(desiredHeight, minimumHeight, maximumHeight));
+            return (int)Math.Round(Math.Clamp(desiredHeight, minimumHeight, Math.Max(minimumHeight, maximumHeight)));
+        }
+
+        private float ResolveCompactDataViewScale(float preferredScale, int availableHeight)
+        {
+            preferredScale = Math.Clamp(preferredScale, MidsDataViewNeo.MinimumResponsiveUiScale, MaximumUiScale);
+            if (availableHeight <= 0)
+            {
+                return MidsDataViewNeo.MinimumResponsiveUiScale;
+            }
+
+            if (dataView.GetMinimumResponsiveHeight(preferredScale) <= availableHeight)
+            {
+                return preferredScale;
+            }
+
+            float minimumScale = MidsDataViewNeo.MinimumResponsiveUiScale;
+            if (dataView.GetMinimumResponsiveHeight(minimumScale) >= availableHeight)
+            {
+                return minimumScale;
+            }
+
+            float low = minimumScale;
+            float high = preferredScale;
+            for (var i = 0; i < 8; i++)
+            {
+                float mid = (low + high) * 0.5f;
+                if (dataView.GetMinimumResponsiveHeight(mid) <= availableHeight)
+                {
+                    low = mid;
+                }
+                else
+                {
+                    high = mid;
+                }
+            }
+
+            return low;
         }
 
         private void ApplyLeftDetailsLayout(bool isCompactTwoColumn, float scale, float metricsScale, bool sameModeLiveResize, bool captureExactMetrics)
@@ -1832,16 +1882,24 @@ namespace Mids_Reborn.UI.Forms
 
             if (isCompactTwoColumn)
             {
-                int minimumListHeight = (int)Math.Round(ScaleLayoutValue(CompactPowerListMinHeight, scale));
+                int preferredMinimumListHeight = (int)Math.Round(ScaleLayoutValue(CompactPowerListMinHeight, scale));
+                int hardMinimumListHeight = (int)Math.Round(ScaleLayoutValue(CompactPowerListHardMinimumHeight, scale));
                 int fixedChromeHeight = (int)Math.Round(headerRowHeight) * 2 + (int)Math.Round(dropDownRowHeight) * 2;
                 int availableHeight = Math.Max(0, leftInnerLayoutPanel.ClientSize.Height);
-                int maximumDataViewHeight = Math.Max(
-                    (int)Math.Round(ScaleLayoutValue(CompactDataViewMinimumHeight, metricsScale)),
-                    availableHeight - fixedChromeHeight - (minimumListHeight * 2));
-                int dataViewHeight = Math.Min(ResolveCompactDataViewHeight(scale), maximumDataViewHeight);
-                int topVariableBudget = Math.Max(minimumListHeight * 2, availableHeight - fixedChromeHeight - dataViewHeight);
-                int primaryListHeight = Math.Max(minimumListHeight, topVariableBudget / 2);
-                int secondaryListHeight = Math.Max(minimumListHeight, topVariableBudget - primaryListHeight);
+                int maximumDataViewHeight = Math.Max(0, availableHeight - fixedChromeHeight - (preferredMinimumListHeight * 2));
+                float dataViewScale = ResolveCompactDataViewScale(scale, maximumDataViewHeight);
+                int minimumDataViewHeight = dataView.GetMinimumResponsiveHeight(dataViewScale);
+                int dataViewHeight = ResolveCompactDataViewHeight(dataViewScale, minimumDataViewHeight);
+                int remainingHeight = Math.Max(0, availableHeight - fixedChromeHeight - dataViewHeight);
+                int primaryListHeight = Math.Max(preferredMinimumListHeight, remainingHeight / 2);
+                int secondaryListHeight = Math.Max(preferredMinimumListHeight, remainingHeight - primaryListHeight);
+                int excessHeight = fixedChromeHeight + dataViewHeight + primaryListHeight + secondaryListHeight - availableHeight;
+
+                ConsumeExcessHeight(ref secondaryListHeight, hardMinimumListHeight, ref excessHeight);
+                ConsumeExcessHeight(ref primaryListHeight, hardMinimumListHeight, ref excessHeight);
+                ConsumeExcessHeight(ref dataViewHeight, minimumDataViewHeight, ref excessHeight);
+
+                _pendingDataViewScale = dataViewScale;
                 float availableWidth = Math.Max(0f, leftInnerLayoutPanel.ClientSize.Width);
                 float minimumPowerColumnWidth = ScaleLayoutValue(CompactLeftPowerColumnWidth * 0.79f, scale);
                 float poolColumnWidth = Math.Clamp(
@@ -1876,6 +1934,7 @@ namespace Mids_Reborn.UI.Forms
             }
             else
             {
+                _pendingDataViewScale = scale;
                 leftInnerLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
                 leftInnerLayoutPanel.ColumnStyles[0].Width = 50f;
                 leftInnerLayoutPanel.ColumnStyles[1].SizeType = SizeType.Percent;
@@ -2203,7 +2262,7 @@ namespace Mids_Reborn.UI.Forms
             float modeLabelWidth = ScaleLayoutValue(CompactHeaderModeLabelWidth, widthScale);
             float totalsWidth = ScaleLayoutValue(CompactHeaderTotalsWidth, widthScale);
             float combatWidth = ScaleLayoutValue(CompactHeaderCombatWidth, widthScale);
-            float minimumPlannerWidth = ScaleLayoutValue(CompactPlannerModeMinimumWidth, widthScale);
+            float minimumPlannerWidth = GetPlannerModeHostMinimumWidth(widthScale);
             float spacerWidth = ScaleLayoutValue(12f, widthScale);
             float plannerWidth = Math.Max(minimumPlannerWidth, headerHostWidth - modeLabelWidth - totalsWidth - combatWidth - spacerWidth);
 
@@ -2221,17 +2280,45 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            var minimumWidth = _defaultWindowMinimumSize.Width;
-            if (UsesCompactResponsiveLayout(responsiveProfile) || UsesPortraitMainLayout(responsiveProfile))
-            {
-                minimumWidth = ComputeResponsiveMinimumClientWidth(responsiveProfile) + Math.Max(0, Width - ClientSize.Width);
-            }
-
-            var desiredMinimum = new Size(minimumWidth, _defaultWindowMinimumSize.Height);
+            var desiredMinimum = GetRequiredMinimumWindowSize(responsiveProfile);
             if (MinimumSize != desiredMinimum)
             {
                 MinimumSize = desiredMinimum;
             }
+
+            EnforceWindowMinimumSize(desiredMinimum);
+        }
+
+        private static Size GetRequiredMinimumWindowSize(MainWindowResponsiveProfile responsiveProfile)
+            => UsesPortraitMainLayout(responsiveProfile)
+                ? new Size(PortraitMinimumWindowWidth, PortraitMinimumWindowHeight)
+                : new Size(LandscapeMinimumWindowWidth, LandscapeMinimumWindowHeight);
+
+        private void EnforceWindowMinimumSize(Size minimumWindowSize)
+        {
+            if (WindowState != FormWindowState.Normal)
+            {
+                return;
+            }
+
+            int targetWidth = Math.Max(Width, minimumWindowSize.Width);
+            int targetHeight = Math.Max(Height, minimumWindowSize.Height);
+            if (targetWidth == Width && targetHeight == Height)
+            {
+                return;
+            }
+
+            Size = new Size(targetWidth, targetHeight);
+        }
+
+        private void ApplyNativeMinimumTrackSize(ref Message message)
+        {
+            var minMaxInfo = Marshal.PtrToStructure<WinApi.MINMAXINFO>(message.LParam);
+            var minimumWindowSize = GetRequiredMinimumWindowSize(GetResponsiveProfile());
+            minMaxInfo.ptMinTrackSize.X = minimumWindowSize.Width;
+            minMaxInfo.ptMinTrackSize.Y = minimumWindowSize.Height;
+            Marshal.StructureToPtr(minMaxInfo, message.LParam, fDeleteOld: false);
+            message.Result = IntPtr.Zero;
         }
 
         private void EnsureWorkspaceShells()
@@ -2365,7 +2452,8 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
-            var isStaticMode = NormalizePlannerBuildMode(MidsContext.Config?.BuildMode ?? Enums.dmModes.LevelUp) == Enums.dmModes.Respec;
+            var isStaticMode = IsPlannerStaticMode();
+            bool visibilityChanged = _staticLevelLabel.Visible != isStaticMode || _staticLevelInput.Visible != isStaticMode;
             _staticLevelLabel.Visible = isStaticMode;
             _staticLevelInput.Visible = isStaticMode;
             if (_plannerModeHost is not null && _plannerModeHost.ColumnStyles.Count >= 4)
@@ -2373,11 +2461,20 @@ namespace Mids_Reborn.UI.Forms
                 _plannerModeHost.ColumnStyles[2].SizeType = isStaticMode ? SizeType.AutoSize : SizeType.Absolute;
                 _plannerModeHost.ColumnStyles[2].Width = isStaticMode ? _plannerModeHost.ColumnStyles[2].Width : 0f;
                 _plannerModeHost.ColumnStyles[3].SizeType = SizeType.Absolute;
-                _plannerModeHost.ColumnStyles[3].Width = isStaticMode ? 82f : 0f;
+                _plannerModeHost.ColumnStyles[3].Width = isStaticMode
+                    ? GetPlannerStaticLevelInputWidth(_lastLeftUiScale > 0f ? _lastLeftUiScale : 1f)
+                    : 0f;
             }
+
+            ApplyPlannerModeHostMetrics(_lastLeftUiScale > 0f ? _lastLeftUiScale : 1f);
 
             if (!isStaticMode)
             {
+                if (visibilityChanged && IsHandleCreated && !IsDisposed && !Disposing)
+                {
+                    QueueResizeFrame(forceExact: true);
+                }
+
                 return;
             }
 
@@ -2387,6 +2484,11 @@ namespace Mids_Reborn.UI.Forms
                 _staticLevelInput.Minimum,
                 _staticLevelInput.Maximum);
             _syncingStaticLevelInput = false;
+
+            if (visibilityChanged && IsHandleCreated && !IsDisposed && !Disposing)
+            {
+                QueueResizeFrame(forceExact: true);
+            }
         }
 
         private void SyncPvModeToggle()
@@ -3305,7 +3407,7 @@ namespace Mids_Reborn.UI.Forms
                 ScaleLeftUiControlTree(_headerChromeHost, scale, metricsScale);
             }
 
-            dataView.ApplyUiScale(scale);
+            dataView.ApplyUiScale(_pendingDataViewScale);
             if (!isCompactTwoColumn)
             {
                 leftLayoutPanel.RefreshSmartLayout();
@@ -3321,6 +3423,7 @@ namespace Mids_Reborn.UI.Forms
             ApplyHeaderDropDownMetrics(atDropDown, scale);
             ApplyHeaderDropDownMetrics(originDropDown, scale);
             ApplyHeaderDropDownMetrics(alignmentDropDown, scale);
+            ApplyPlannerModeHostMetrics(scale);
 
             if (_nameInputShell is not null)
             {
@@ -3792,7 +3895,7 @@ namespace Mids_Reborn.UI.Forms
 
         private void InitializePicker()
         {
-            _i9Picker = new I9Picker
+            _i9Picker = new PickerControl
             {
                 BackColor = Color.Black,
                 ForeColor = Color.Blue,
@@ -3813,6 +3916,7 @@ namespace Mids_Reborn.UI.Forms
 
             Controls.Add(_i9Picker);
             _i9Picker.BringToFront();
+            ApplyPickerScale();
         }
 
         #endregion
@@ -4151,7 +4255,7 @@ namespace Mids_Reborn.UI.Forms
 
         private void I9Picker_MouseLeave(object? sender, EventArgs e)
         {
-            if (!MidsContext.Config.CloseEnhSelectPopupByMove)
+            if (PickerUsesPersistentOverlay || !MidsContext.Config.CloseEnhSelectPopupByMove)
             {
                 return;
             }
@@ -4166,7 +4270,7 @@ namespace Mids_Reborn.UI.Forms
             CloseEnhancementPicker(hidePopup: true, refreshInfo: true);
         }
 
-        private void I9Picker_HoverEnhancement(int e, I9Picker.EnhUniqueStatus? enhUniqueStatus)
+        private void I9Picker_HoverEnhancement(int e, PickerControl.EnhUniqueStatus? enhUniqueStatus)
         {
             var i9Slot = new I9Slot
             {
@@ -4232,7 +4336,7 @@ namespace Mids_Reborn.UI.Forms
             }
         }
 
-        private void OpenEnhancementPicker(int powerIndex, int slotIndex, Point canvasPoint)
+        private void OpenEnhancementPicker(int powerIndex, int slotIndex, Rectangle anchorRect)
         {
             if (powerIndex < 0 || slotIndex < 0 || MidsContext.Character?.CurrentBuild == null)
             {
@@ -4250,12 +4354,10 @@ namespace Mids_Reborn.UI.Forms
             HidePopup();
 
             I9Picker.SetData(powerEntry.NIDPower, powerEntry.Slots[slotIndex].Enhancement, enhancements);
-            var point = new Point(
-                (int)Math.Round(canvasScrollPanel.Left - canvasScrollPanel.HorizontalScroll.Value + canvasPoint.X - I9Picker.Width / 2f),
-                (int)Math.Round(canvasScrollPanel.Top - canvasScrollPanel.VerticalScroll.Value + canvasPoint.Y - I9Picker.Height / 2f));
-
-            point.Y = Math.Max(MenuBar.Height, Math.Min(point.Y, ClientSize.Height - I9Picker.Height));
-            point.X = Math.Max(0, Math.Min(point.X, ClientSize.Width - I9Picker.Width));
+            ApplyPickerScale();
+            var point = PickerUsesPersistentOverlay
+                ? GetCenteredPickerLocation()
+                : GetAnchoredPickerLocation(canvas, anchorRect, Point.Empty);
 
             I9Picker.Location = point;
             I9Picker.BringToFront();
@@ -4366,7 +4468,7 @@ namespace Mids_Reborn.UI.Forms
             ShowPopupForHover(hit, location);
         }
 
-        private void HandleCanvasClick(BuildRenderer.BuildHitTestResult hit, MouseButtons button, Keys modifiers, Point location)
+        private void HandleCanvasClick(BuildRenderer.BuildHitTestResult hit, MouseButtons button, Keys modifiers)
         {
             if (drawing == null || MidsContext.Character?.CurrentBuild == null || !hit.HasPower ||
                 hit.PowerIndex < 0 || hit.PowerIndex >= MidsContext.Character.CurrentBuild.Powers.Count)
@@ -4514,7 +4616,7 @@ namespace Mids_Reborn.UI.Forms
                 }
                 else if (slotId > -1)
                 {
-                    OpenEnhancementPicker(hit.PowerIndex, slotId, location);
+                    OpenEnhancementPicker(hit.PowerIndex, slotId, hit.AnchorRect);
                 }
                 else if (isPowerChosen)
                 {
@@ -4783,7 +4885,7 @@ namespace Mids_Reborn.UI.Forms
             }
 
             var hit = canvas.HitTest(e.Location);
-            HandleCanvasClick(hit, e.Button, ModifierKeys, e.Location);
+            HandleCanvasClick(hit, e.Button, ModifierKeys);
         }
 
         private void IncarnatesEx_OnClick(object? sender, EventArgs e)
@@ -7640,7 +7742,7 @@ namespace Mids_Reborn.UI.Forms
             ApplyDropDownLock(secondaryDropDown, secondaryUsed || secondaryLinked);
             foreach (var poolSection in StandardPoolSections())
             {
-                ApplyDropDownLock(poolSection.DropDown, IsPowersetUsed(MidsContext.Character.Powersets[poolSection.PowersetIndex]));
+                ApplyDropDownLock(poolSection.DropDown, false);
             }
 
             var ancillarySection = AncillaryPoolSection();
@@ -7650,7 +7752,7 @@ namespace Mids_Reborn.UI.Forms
             }
             else
             {
-                ApplyDropDownLock(ancillarySection.DropDown, IsPowersetUsed(MidsContext.Character.Powersets[ancillarySection.PowersetIndex]));
+                ApplyDropDownLock(ancillarySection.DropDown, false);
             }
         }
 
@@ -8236,11 +8338,146 @@ namespace Mids_Reborn.UI.Forms
         {
             if (_popupHost is null)
             {
+                ApplyPickerScale();
                 return;
             }
 
             var popupScale = 1f + (masterScale - 1f) * 0.55f;
             _popupHost.ContentScale = Math.Clamp(popupScale, 0.95f, 1.18f);
+            ApplyPickerScale();
+        }
+
+        private void ApplyPickerScale()
+        {
+            if (_i9Picker is null)
+            {
+                return;
+            }
+
+            var baseSize = _i9Picker.BasePreferredSize;
+            if (baseSize.Width <= 0 || baseSize.Height <= 0)
+            {
+                _i9Picker.UiScale = 1f;
+                return;
+            }
+
+            if (PickerUsesPersistentOverlay)
+            {
+                bool allowLargeBand = CanUseLargePersistentPickerScale();
+                float maxOverlayWidth = allowLargeBand ? 1180f : PersistentPickerMaxVisualWidth;
+                float maxOverlayHeight = allowLargeBand ? 900f : PersistentPickerMaxVisualHeight;
+                float overlayWidthRatio = allowLargeBand ? 0.70f : PersistentPickerClientWidthRatio;
+                float overlayHeightRatio = allowLargeBand ? 0.92f : PersistentPickerClientHeightRatio;
+                float overlayWidthBudget = Math.Min(maxOverlayWidth, Math.Max(720f, ClientSize.Width * overlayWidthRatio));
+                float overlayHeightBudget = Math.Min(maxOverlayHeight, Math.Max(520f, (ClientSize.Height - MenuBar.Height) * overlayHeightRatio));
+                overlayWidthBudget = Math.Min(overlayWidthBudget, Math.Max(640f, ClientSize.Width - 32f));
+                overlayHeightBudget = Math.Min(overlayHeightBudget, Math.Max(460f, ClientSize.Height - MenuBar.Height - 28f));
+
+                float targetScale = ResolvePersistentPickerTargetScale(
+                    overlayWidthBudget,
+                    overlayHeightBudget,
+                    allowLargeBand);
+                var candidates = targetScale >= 1f
+                    ? new[] { 1f, 0.75f, 0.5f }
+                    : targetScale >= 0.75f
+                        ? new[] { 0.75f, 0.5f }
+                        : new[] { 0.5f };
+
+                foreach (var candidate in candidates)
+                {
+                    if (TryApplyPersistentPickerScale(candidate, overlayWidthBudget, overlayHeightBudget))
+                    {
+                        return;
+                    }
+                }
+
+                _i9Picker.UiScale = 0.5f;
+                return;
+            }
+
+            float legacyWidthRatio = Math.Max(0.1f, (float)ClientSize.Width / BaselineFormWidth);
+            float legacyHeightRatio = Math.Max(0.1f, (float)ClientSize.Height / BaselineFormHeight);
+            float legacyScale = Math.Clamp(Math.Min(legacyWidthRatio, legacyHeightRatio), 0.5f, 1f);
+
+            float widthBudget = Math.Min(PickerMaxVisualWidth, Math.Max(160f, ClientSize.Width * PickerClientWidthRatio));
+            float heightBudget = Math.Min(PickerMaxVisualHeight, Math.Max(220f, (ClientSize.Height - MenuBar.Height) * PickerClientHeightRatio));
+
+            if (leftLayoutPanel?.ClientSize.Width > 0)
+            {
+                widthBudget = Math.Min(widthBudget, Math.Max(160f, leftLayoutPanel.ClientSize.Width - 12f));
+            }
+
+            float budgetScale = Math.Min(widthBudget / baseSize.Width, heightBudget / baseSize.Height);
+            _i9Picker.UiScale = Math.Clamp(Math.Min(legacyScale, budgetScale), 0.5f, 1f);
+        }
+
+        private bool TryApplyPersistentPickerScale(float scale, float widthBudget, float heightBudget)
+        {
+            if (_i9Picker is null)
+            {
+                return false;
+            }
+
+            _i9Picker.UiScale = scale;
+            return _i9Picker.Width <= widthBudget && _i9Picker.Height <= heightBudget;
+        }
+
+        private bool CanUseLargePersistentPickerScale()
+        {
+            if (WindowState == FormWindowState.Maximized)
+            {
+                return true;
+            }
+
+            var workingArea = Screen.FromControl(this).WorkingArea;
+            if (workingArea.Width <= 0 || workingArea.Height <= 0)
+            {
+                return false;
+            }
+
+            var widthRatio = (float)Width / workingArea.Width;
+            var heightRatio = (float)Height / workingArea.Height;
+            return widthRatio >= 0.98f && heightRatio >= 0.95f;
+        }
+
+        private static float ResolvePersistentPickerTargetScale(float widthBudget, float heightBudget, bool allowLargeBand)
+        {
+            if (allowLargeBand && widthBudget >= 1000f && heightBudget >= 700f)
+                return 1f;
+
+            if (widthBudget >= 820f && heightBudget >= 560f)
+                return 0.75f;
+
+            return 0.5f;
+        }
+
+        private Point ClampPickerLocation(Point point)
+        {
+            point.Y = Math.Max(MenuBar.Height, Math.Min(point.Y, ClientSize.Height - I9Picker.Height));
+            point.X = Math.Max(0, Math.Min(point.X, ClientSize.Width - I9Picker.Width));
+            return point;
+        }
+
+        private Point GetCenteredPickerLocation()
+        {
+            var availableTop = MenuBar.Height;
+            var availableHeight = Math.Max(0, ClientSize.Height - availableTop);
+            var point = new Point(
+                Math.Max(0, (ClientSize.Width - I9Picker.Width) / 2),
+                availableTop + Math.Max(0, (availableHeight - I9Picker.Height) / 2));
+            return ClampPickerLocation(point);
+        }
+
+        private Point GetAnchoredPickerLocation(Control anchorHost, Rectangle anchorRect, Point fallbackAnchor)
+        {
+            var anchorCenter = anchorRect.IsEmpty
+                ? fallbackAnchor
+                : new Point(anchorRect.Left + anchorRect.Width / 2, anchorRect.Top + anchorRect.Height / 2);
+            var anchorOnForm = PointToClient(anchorHost.PointToScreen(anchorCenter));
+            var point = new Point(
+                (int)Math.Round(anchorOnForm.X - I9Picker.Width / 2f),
+                (int)Math.Round(anchorOnForm.Y - I9Picker.Height / 2f));
+            return ClampPickerLocation(point);
         }
 
         private void GetBestDamageValues()
@@ -8504,7 +8741,7 @@ namespace Mids_Reborn.UI.Forms
             _popupHost.PsIdx = (nIdPowerset < 0 ? nIdClass : nIdPowerset);
         }
 
-        private void ShowPopup(int hIdx, int pIdx, int sIdx, Point e, Rectangle rBounds, I9Slot? eSlot = null, int setIdx = -1, VerticalAlignment vAlign = VerticalAlignment.Bottom, I9Picker.EnhUniqueStatus? enhUniqueStatus = null, bool includePowerKindLabel = false)
+        private void ShowPopup(int hIdx, int pIdx, int sIdx, Point e, Rectangle rBounds, I9Slot? eSlot = null, int setIdx = -1, VerticalAlignment vAlign = VerticalAlignment.Bottom, PickerControl.EnhUniqueStatus? enhUniqueStatus = null, bool includePowerKindLabel = false)
         {
             if (MidsContext.Config.DisableShowPopup) { HidePopup(); return; }
 
@@ -10022,8 +10259,15 @@ namespace Mids_Reborn.UI.Forms
             const int WM_ERASEBKGND = 0x0014;
             const int WM_ENTERSIZEMOVE = 0x0231;
             const int WM_EXITSIZEMOVE = 0x0232;
+            const int WM_GETMINMAXINFO = 0x0024;
             const int WM_NCCALCSIZE = 0x0083;
             const int WM_NCHITTEST = 0x0084;
+
+            if (m.Msg == WM_GETMINMAXINFO)
+            {
+                ApplyNativeMinimumTrackSize(ref m);
+                return;
+            }
 
             // prevent flicker
             if (m.Msg == WM_ERASEBKGND)

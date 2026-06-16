@@ -465,16 +465,7 @@ namespace Mids_Reborn.UI.Forms.Controls
 
         private void SetDamageValues(IPower basePower, IPower? enhancedPower)
         {
-            var str1 = "Damage";
-            switch (MidsContext.Config.DamageMath.ReturnValue)
-            {
-                case ConfigData.EDamageReturn.DPS:
-                    str1 += " Per Second";
-                    break;
-                case ConfigData.EDamageReturn.DPA:
-                    str1 += " Per Animation Second";
-                    break;
-            }
+            var str1 = Power.GetDamageReturnHeaderLabel(MidsContext.Config.DamageMath.ReturnValue);
 
             if (MidsContext.Config.DataDamageGraphPercentageOnly)
                 str1 += " (% only)";
