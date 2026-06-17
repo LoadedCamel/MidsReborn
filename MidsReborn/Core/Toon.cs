@@ -570,6 +570,8 @@ namespace Mids_Reborn.Core
                 return null;
             }
 
+            var effectiveRecipient = CreateEffectiveGeneratedPowerRecipient(recipient, basePowerHistoryIdx);
+
             var workingPowers = powers
                 .Where(power => power != null)
                 .Select(power => power.Clone())
@@ -589,15 +591,24 @@ namespace Mids_Reborn.Core
 
                     CurrentBuild.Powers[basePowerHistoryIdx].NIDPower =
                         DatabaseAPI.Database.Power.TryFindIndex(e => e?.StaticIndex == workingPower.StaticIndex);
-                    GenerateBuffedPowerArray(recipient, recipientExternalPowers);
+                    GenerateBuffedPowerArray(effectiveRecipient, recipientExternalPowers);
 
-                    if (i < workingPowers.Count - 1 &&
-                        _mathPowers[basePowerHistoryIdx] != null &&
+                    if (i >= workingPowers.Count - 1)
+                    {
+                        continue;
+                    }
+
+                    if (_mathPowers[basePowerHistoryIdx] != null &&
                         _buffedPowers[basePowerHistoryIdx] != null)
                     {
                         mathPowers.Add(_mathPowers[basePowerHistoryIdx].Clone());
                         buffedPowers.Add(_buffedPowers[basePowerHistoryIdx].Clone());
+                        continue;
                     }
+
+                    var fallbackMathPower = CreateGeneratedPowerFallback(workingPower, effectiveRecipient);
+                    mathPowers.Add(fallbackMathPower);
+                    buffedPowers.Add(fallbackMathPower.Clone());
                 }
             }
             finally
@@ -645,8 +656,14 @@ namespace Mids_Reborn.Core
                 var groupEntries = group.ToArray();
                 for (var index = 0; index < groupEntries.Length; index++)
                 {
-                    mathPowers[groupEntries[index].Index] = generated.Value.Key[index];
-                    buffedPowers[groupEntries[index].Index] = generated.Value.Value[index];
+                    var mathPower = index < generated.Value.Key.Count
+                        ? generated.Value.Key[index]
+                        : CreateGeneratedPowerFallback(groupEntries[index].Power.Power, recipient);
+                    var buffedPower = index < generated.Value.Value.Count
+                        ? generated.Value.Value[index]
+                        : CreateGeneratedPowerFallback(groupEntries[index].Power.Power, recipient);
+                    mathPowers[groupEntries[index].Index] = mathPower;
+                    buffedPowers[groupEntries[index].Index] = buffedPower;
                 }
             }
 
@@ -656,6 +673,36 @@ namespace Mids_Reborn.Core
             return new KeyValuePair<List<IPower>, List<IPower>>(
                 generatedMathPowers,
                 generatedBuffedPowers);
+        }
+
+        private static PlannerBuildRecipientContext? CreateEffectiveGeneratedPowerRecipient(
+            PlannerBuildRecipientContext? recipient,
+            int basePowerHistoryIdx)
+        {
+            if (recipient == null || basePowerHistoryIdx < 0 || recipient.ActorSourceHistoryIndex == basePowerHistoryIdx)
+            {
+                return recipient;
+            }
+
+            return new PlannerBuildRecipientContext
+            {
+                Kind = recipient.Kind,
+                Entity = recipient.Entity,
+                Tags = recipient.Tags.ToArray(),
+                ActorSourceHistoryIndex = basePowerHistoryIdx
+            };
+        }
+
+        private static IPower CreateGeneratedPowerFallback(IPower sourcePower, PlannerBuildRecipientContext? recipient)
+        {
+            var fallback = sourcePower.Clone();
+            if (fallback is Power concretePower && recipient != null)
+            {
+                concretePower.OmniDisplayClassName = recipient.ClassName;
+            }
+
+            fallback.Effects = [];
+            return fallback;
         }
 
         public PetActorSnapshot? GeneratePetActorSnapshot(RealPetActorRosterItem item, PetActorPreviewState? previewState = null)
