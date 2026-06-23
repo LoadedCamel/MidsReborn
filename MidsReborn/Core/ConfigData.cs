@@ -579,6 +579,8 @@ namespace Mids_Reborn.Core
         public bool ShowSelfBuffsAny { get; set; }
         public ETotalsWindowTitleStyle TotalsWindowTitleStyle { get; set; }
         public Point? EntityDetailsLocation { get; set; }
+        public Point? PetActorDetailsLocation { get; set; }
+        public Size? PetActorDetailsSize { get; set; }
         public bool DisableTips { get; set; } = false;
 
         private bool TryGetBuildScopedCombatState(out BuildCombatContextState state)

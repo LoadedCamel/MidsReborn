@@ -13,7 +13,7 @@ internal sealed class MidsTotalsQuickStrip : Panel
         get => _uiScale;
         set
         {
-            var clamped = Math.Clamp(value, 0.90f, 1.25f);
+            var clamped = Math.Clamp(value, 0.82f, 1.25f);
             if (Math.Abs(_uiScale - clamped) < 0.01f) return;
             _uiScale = clamped;
             foreach (var chip in _chips)

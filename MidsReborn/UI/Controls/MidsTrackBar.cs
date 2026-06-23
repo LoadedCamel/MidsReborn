@@ -18,6 +18,8 @@ public class MidsTrackBar : Control
     private int _thumbDiameter = 14;
     private int _textGap = 6;
     private int _trackGap = 8;
+    private int _textAreaWidth;
+    private int _minimumTrackWidth = 48;
     private string _valueTextFormat = "{0}";
     private double _displayDivisor = 1d;
     private int _displayPrecision;
@@ -211,6 +213,30 @@ public class MidsTrackBar : Control
         set
         {
             _trackGap = Math.Max(0, value);
+            Invalidate();
+        }
+    }
+
+    [Category("Layout")]
+    [DefaultValue(0)]
+    public int TextAreaWidth
+    {
+        get => _textAreaWidth;
+        set
+        {
+            _textAreaWidth = Math.Max(0, value);
+            Invalidate();
+        }
+    }
+
+    [Category("Layout")]
+    [DefaultValue(48)]
+    public int MinimumTrackWidth
+    {
+        get => _minimumTrackWidth;
+        set
+        {
+            _minimumTrackWidth = Math.Max(1, value);
             Invalidate();
         }
     }
@@ -410,15 +436,8 @@ public class MidsTrackBar : Control
         var labelSize = GetLabelSizeForLayout();
         var valueSize = GetValueSizeForLayout();
 
-        var textBlockWidth = 0;
-        if (!labelSize.IsEmpty) textBlockWidth += labelSize.Width;
-        if (!valueSize.IsEmpty)
-        {
-            if (!labelSize.IsEmpty) textBlockWidth += ScalePx(_textGap);
-            textBlockWidth += valueSize.Width;
-        }
-
-        const int minPreferredTrack = 120;
+        var textBlockWidth = GetPreferredTextAreaWidth(labelSize, valueSize);
+        var minPreferredTrack = Math.Max(ScalePx(_minimumTrackWidth), 120);
         var width = Padding.Horizontal + textBlockWidth + (textBlockWidth > 0 ? ScalePx(_trackGap) : 0)
                     + ScalePx(_horizontalPadding) * 2 + minPreferredTrack;
 
@@ -441,40 +460,8 @@ public class MidsTrackBar : Control
         var valueText = ShowValue ? FormatValueText(_value) : string.Empty;
         var labelSize = GetLabelSizeForLayout();
         var valueSize = GetValueSizeForLayout();
-
-        var x = content.Left;
-        var labelRect = Rectangle.Empty;
-        var valueRect = Rectangle.Empty;
-
-        if (!labelSize.IsEmpty)
-        {
-            labelRect = new Rectangle(x, CenterY(content, labelSize.Height), labelSize.Width, labelSize.Height);
-            x += labelSize.Width;
-        }
-
-        if (!valueSize.IsEmpty)
-        {
-            if (!labelSize.IsEmpty) x += ScalePx(_textGap);
-            valueRect = new Rectangle(x, CenterY(content, valueSize.Height), valueSize.Width, valueSize.Height);
-            x += valueSize.Width;
-        }
-
-        if (!labelSize.IsEmpty || !valueSize.IsEmpty)
-        {
-            x += ScalePx(_trackGap);
-        }
-
-        var thickness = ScalePx(_trackThickness);
-        var pad = ScalePx(_horizontalPadding);
-        var trackOuterLeft = x;
-        var trackOuterWidth = Math.Max(0, content.Right - trackOuterLeft);
-        var trackInnerWidth = Math.Max(1, trackOuterWidth - pad * 2);
-
-        var track = new Rectangle(
-            trackOuterLeft + pad,
-            content.Top + (content.Height - thickness) / 2,
-            trackInnerWidth,
-            thickness);
+        var layout = GetLayout(content, labelSize, valueSize);
+        var track = layout.TrackRect;
 
         var thumb = GetThumbRect(track);
 
@@ -501,14 +488,14 @@ public class MidsTrackBar : Control
             g.DrawRectangle(focusPen, focus);
         }
 
-        if (!labelRect.IsEmpty && !string.IsNullOrEmpty(label))
+        if (!layout.LabelRect.IsEmpty && !string.IsNullOrEmpty(label))
         {
-            TextRenderer.DrawText(g, label, Font, labelRect, Enabled ? CurrentTheme.Text : SystemColors.GrayText, FormatFlags);
+            TextRenderer.DrawText(g, label, Font, layout.LabelRect, Enabled ? CurrentTheme.Text : SystemColors.GrayText, GetTextFormatFlags(TextAlign));
         }
 
-        if (!valueRect.IsEmpty && !string.IsNullOrEmpty(valueText))
+        if (!layout.ValueRect.IsEmpty && !string.IsNullOrEmpty(valueText))
         {
-            TextRenderer.DrawText(g, valueText, Font, valueRect, Enabled ? CurrentTheme.ValueText : SystemColors.GrayText, FormatFlags);
+            TextRenderer.DrawText(g, valueText, Font, layout.ValueRect, Enabled ? CurrentTheme.ValueText : SystemColors.GrayText, GetTextFormatFlags(ValueAlign));
         }
     }
 
@@ -532,6 +519,19 @@ public class MidsTrackBar : Control
             : TextRenderer.MeasureText(measure, Font, new Size(int.MaxValue, int.MaxValue), FormatFlags);
     }
 
+    private Size GetCurrentValueSizeForText()
+    {
+        if (!ShowValue)
+        {
+            return Size.Empty;
+        }
+
+        var measure = FormatValueText(_value);
+        return string.IsNullOrEmpty(measure)
+            ? Size.Empty
+            : TextRenderer.MeasureText(measure, Font, new Size(int.MaxValue, int.MaxValue), FormatFlags);
+    }
+
     private int GetValueMeasureSample()
     {
         var candidates = new[] { _minimum, _maximum, _value, 0, 50, 100, 1000 };
@@ -539,6 +539,25 @@ public class MidsTrackBar : Control
     }
 
     private int ScalePx(int value) => (int)Math.Round(value * DpiScale);
+
+    private int GetMeasuredTextAreaWidth(Size labelSize, Size valueSize)
+    {
+        var width = 0;
+        if (!labelSize.IsEmpty) width += labelSize.Width;
+        if (!valueSize.IsEmpty)
+        {
+            if (!labelSize.IsEmpty) width += ScalePx(_textGap);
+            width += valueSize.Width;
+        }
+
+        return width;
+    }
+
+    private int GetPreferredTextAreaWidth(Size labelSize, Size valueSize)
+    {
+        var measuredWidth = GetMeasuredTextAreaWidth(labelSize, valueSize);
+        return measuredWidth == 0 ? 0 : Math.Max(measuredWidth, ScalePx(_textAreaWidth));
+    }
 
     private Rectangle GetContentRect()
     {
@@ -553,33 +572,91 @@ public class MidsTrackBar : Control
     private Rectangle GetTrackRect()
     {
         var content = GetContentRect();
-        var labelSize = GetLabelSizeForLayout();
-        var valueSize = GetValueSizeForLayout();
+        return GetLayout(content, GetLabelSizeForLayout(), GetValueSizeForLayout()).TrackRect;
+    }
 
-        var x = content.Left;
-        if (!labelSize.IsEmpty) x += labelSize.Width;
-        if (!valueSize.IsEmpty)
-        {
-            if (!labelSize.IsEmpty) x += ScalePx(_textGap);
-            x += valueSize.Width;
-        }
-
-        if (!labelSize.IsEmpty || !valueSize.IsEmpty)
-        {
-            x += ScalePx(_trackGap);
-        }
-
-        var thickness = ScalePx(_trackThickness);
+    private LayoutMetrics GetLayout(Rectangle content, Size labelSize, Size valueSize)
+    {
+        var textAreaWidth = GetConstrainedTextAreaWidth(content, labelSize, valueSize);
+        var trackGap = textAreaWidth > 0 ? ScalePx(_trackGap) : 0;
         var pad = ScalePx(_horizontalPadding);
-        var trackOuterLeft = x;
+        var thickness = ScalePx(_trackThickness);
+        var trackOuterLeft = content.Left + textAreaWidth + trackGap;
         var trackOuterWidth = Math.Max(0, content.Right - trackOuterLeft);
         var trackInnerWidth = Math.Max(1, trackOuterWidth - pad * 2);
-
-        return new Rectangle(
+        var track = new Rectangle(
             trackOuterLeft + pad,
             content.Top + (content.Height - thickness) / 2,
             trackInnerWidth,
             thickness);
+
+        GetTextRects(content, labelSize, valueSize, textAreaWidth, out var labelRect, out var valueRect);
+        return new LayoutMetrics(track, labelRect, valueRect);
+    }
+
+    private int GetConstrainedTextAreaWidth(Rectangle content, Size labelSize, Size valueSize)
+    {
+        var requestedTextAreaWidth = GetPreferredTextAreaWidth(labelSize, valueSize);
+        if (requestedTextAreaWidth == 0)
+        {
+            return 0;
+        }
+
+        var pad = ScalePx(_horizontalPadding);
+        var minimumTrackOuterWidth = Math.Max(1, ScalePx(_minimumTrackWidth) + pad * 2);
+        var maxTextAreaWidth = content.Width - ScalePx(_trackGap) - minimumTrackOuterWidth;
+        return Math.Max(0, Math.Min(requestedTextAreaWidth, maxTextAreaWidth));
+    }
+
+    private void GetTextRects(
+        Rectangle content,
+        Size labelSize,
+        Size valueSize,
+        int textAreaWidth,
+        out Rectangle labelRect,
+        out Rectangle valueRect)
+    {
+        labelRect = Rectangle.Empty;
+        valueRect = Rectangle.Empty;
+
+        if (textAreaWidth <= 0)
+        {
+            return;
+        }
+
+        var currentValueSize = GetCurrentValueSizeForText();
+        if (!currentValueSize.IsEmpty)
+        {
+            valueSize = currentValueSize;
+        }
+
+        var hasLabel = !labelSize.IsEmpty;
+        var hasValue = !valueSize.IsEmpty;
+        if (!hasLabel && !hasValue)
+        {
+            return;
+        }
+
+        var textGap = hasLabel && hasValue ? ScalePx(_textGap) : 0;
+        var valueWidth = hasValue ? Math.Min(valueSize.Width, textAreaWidth) : 0;
+        var labelWidth = hasLabel ? Math.Max(0, Math.Min(labelSize.Width, textAreaWidth - valueWidth - textGap)) : 0;
+        if (hasLabel && hasValue && labelWidth == 0)
+        {
+            textGap = 0;
+        }
+
+        var groupWidth = labelWidth + textGap + valueWidth;
+        var textArea = new Rectangle(content.Left, content.Top, textAreaWidth, content.Height);
+        var groupLeft = GetAlignedX(textArea, groupWidth, TextAlign);
+        if (hasLabel && labelWidth > 0)
+        {
+            labelRect = new Rectangle(groupLeft, content.Top, labelWidth, content.Height);
+        }
+
+        if (hasValue && valueWidth > 0)
+        {
+            valueRect = new Rectangle(groupLeft + labelWidth + textGap, content.Top, valueWidth, content.Height);
+        }
     }
 
     private Rectangle GetThumbRect(Rectangle track)
@@ -596,8 +673,6 @@ public class MidsTrackBar : Control
         var y = track.Top + (track.Height - diameter) / 2;
         return new Rectangle(x, y, diameter, diameter);
     }
-
-    private static int CenterY(Rectangle rect, int height) => rect.Top + (rect.Height - height) / 2;
 
     private string FormatValueText(int value)
     {
@@ -681,4 +756,46 @@ public class MidsTrackBar : Control
         var newValue = _dragStartValue + (int)Math.Round((_maximum - _minimum) * fraction, MidpointRounding.AwayFromZero);
         Value = SnapToDisplayStep(newValue);
     }
+
+    private static int GetAlignedX(Rectangle bounds, int width, ContentAlignment alignment)
+    {
+        if (width >= bounds.Width)
+        {
+            return bounds.Left;
+        }
+
+        return alignment switch
+        {
+            ContentAlignment.TopCenter or ContentAlignment.MiddleCenter or ContentAlignment.BottomCenter
+                => bounds.Left + (bounds.Width - width) / 2,
+            ContentAlignment.TopRight or ContentAlignment.MiddleRight or ContentAlignment.BottomRight
+                => bounds.Right - width,
+            _ => bounds.Left
+        };
+    }
+
+    private static TextFormatFlags GetTextFormatFlags(ContentAlignment alignment)
+    {
+        var flags = FormatFlags | TextFormatFlags.EndEllipsis;
+        flags |= alignment switch
+        {
+            ContentAlignment.TopCenter or ContentAlignment.MiddleCenter or ContentAlignment.BottomCenter
+                => TextFormatFlags.HorizontalCenter,
+            ContentAlignment.TopRight or ContentAlignment.MiddleRight or ContentAlignment.BottomRight
+                => TextFormatFlags.Right,
+            _ => TextFormatFlags.Left
+        };
+        flags |= alignment switch
+        {
+            ContentAlignment.TopLeft or ContentAlignment.TopCenter or ContentAlignment.TopRight
+                => TextFormatFlags.Top,
+            ContentAlignment.BottomLeft or ContentAlignment.BottomCenter or ContentAlignment.BottomRight
+                => TextFormatFlags.Bottom,
+            _ => TextFormatFlags.VerticalCenter
+        };
+
+        return flags;
+    }
+
+    private readonly record struct LayoutMetrics(Rectangle TrackRect, Rectangle LabelRect, Rectangle ValueRect);
 }

@@ -18,7 +18,8 @@ public static class PetActorPowerResolver
         public required IReadOnlyList<PetUpgradeOverlay> OwnedUpgrades { get; init; }
     }
 
-    private static readonly Regex TargetVillainRegex = new(@"target\.VillainName>([A-Za-z0-9_]+)", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex TargetVillainRegex = new(@"target\.VillainName>\s*[""']?([A-Za-z0-9_]+)[""']?", RegexOptions.IgnoreCase | RegexOptions.Compiled);
+    private static readonly Regex TargetEntTypeRegex = new(@"enttype\s+target>\s*[""']?([A-Za-z0-9_]+)[""']?", RegexOptions.IgnoreCase | RegexOptions.Compiled);
     private static readonly object CatalogSync = new();
     private static string _cachedOverlayRoot = string.Empty;
     private static PetUpgradeOverlayCatalog? _cachedOverlayCatalog;
@@ -390,8 +391,7 @@ public static class PetActorPowerResolver
 
         foreach (var effect in power.Effects.Where(effect => effect.EffectType == Enums.eEffectType.GrantPower))
         {
-            var targetEntityUid = TryParseTargetEntityUid(effect.AdvancedConditions?.Rows.Select(row => row.RawExpression).FirstOrDefault(value => !string.IsNullOrWhiteSpace(value))
-                                                         ?? string.Empty);
+            var targetEntityUid = TryResolveTargetEntityUid(effect.AdvancedConditions?.Rows.Select(row => row.RawExpression));
             if (string.IsNullOrWhiteSpace(targetEntityUid) || string.IsNullOrWhiteSpace(effect.Summon))
             {
                 continue;
@@ -479,6 +479,20 @@ public static class PetActorPowerResolver
         }
     }
 
+    private static string TryResolveTargetEntityUid(IEnumerable<string?>? expressions)
+    {
+        foreach (var expression in expressions ?? [])
+        {
+            var parsed = TryParseTargetEntityUid(expression);
+            if (!string.IsNullOrWhiteSpace(parsed))
+            {
+                return parsed;
+            }
+        }
+
+        return string.Empty;
+    }
+
     private static string TryParseTargetEntityUid(string? expression)
     {
         if (string.IsNullOrWhiteSpace(expression))
@@ -487,7 +501,15 @@ public static class PetActorPowerResolver
         }
 
         var match = TargetVillainRegex.Match(expression);
-        return match.Success ? match.Groups[1].Value.Trim() : string.Empty;
+        if (match.Success)
+        {
+            return match.Groups[1].Value.Trim().Trim('"', '\'');
+        }
+
+        match = TargetEntTypeRegex.Match(expression);
+        return match.Success
+            ? match.Groups[1].Value.Trim().Trim('"', '\'')
+            : string.Empty;
     }
 
     private static string NormalizeSourceRoot(string? sourceRoot)

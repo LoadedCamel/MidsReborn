@@ -1,0 +1,1955 @@
+[
+  {
+    "UID": "IncarnatePets_Lore_Warworks_LT",
+    "DisplayName": "ACU Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_warworks_lt",
+    "DisplayKey": "acu_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Warworks_LT_Buff",
+    "DisplayName": "ACU Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_warworks_lt_buff",
+    "DisplayKey": "acu_essence"
+  },
+  {
+    "UID": "Pets_Warburg_Afterglow",
+    "DisplayName": "After Effects",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_warburg_afterglow",
+    "DisplayKey": "after_effects"
+  },
+  {
+    "UID": "MastermindPets_Howler_Wolf_Alpha",
+    "DisplayName": "Alpha Howler Wolf",
+    "ClassName": "Class_Henchman_Minion",
+    "FileKey": "mastermindpets_howler_wolf_alpha",
+    "DisplayKey": "alpha_howler_wolf"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Tsoo_LT",
+    "DisplayName": "Ancestor Spirit Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_tsoo_lt",
+    "DisplayKey": "ancestor_spirit_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Tsoo_LT_Buff",
+    "DisplayName": "Ancestor Spirit Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_tsoo_lt_buff",
+    "DisplayKey": "ancestor_spirit_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Tsoo_Boss",
+    "DisplayName": "Ancestral Guardian Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_tsoo_boss",
+    "DisplayKey": "ancestral_guardian_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Tsoo_Boss_Buff",
+    "DisplayName": "Ancestral Guardian Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_tsoo_boss_buff",
+    "DisplayKey": "ancestral_guardian_essence"
+  },
+  {
+    "UID": "Pets_Stone",
+    "DisplayName": "Animated Stone",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_stone",
+    "DisplayKey": "animated_stone"
+  },
+  {
+    "UID": "Pets_Stone_Controller",
+    "DisplayName": "Animated Stone",
+    "ClassName": "Class_Minion_ControllerPets",
+    "FileKey": "pets_stone_controller",
+    "DisplayKey": "animated_stone"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Arachnobot_Blaster",
+    "DisplayName": "Arachnobot Blaster",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_arachnobot_blaster",
+    "DisplayKey": "arachnobot_blaster"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Arachnobot_Disrupter",
+    "DisplayName": "Arachnobot Disruptor",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_arachnobot_disrupter",
+    "DisplayKey": "arachnobot_disruptor"
+  },
+  {
+    "UID": "Pets_Arachnos_Heavy_Pet",
+    "DisplayName": "Arachnos Mini Blaster",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_arachnos_heavy_pet",
+    "DisplayKey": "arachnos_mini_blaster"
+  },
+  {
+    "UID": "MastermindPets_Thug_Arsonist",
+    "DisplayName": "Arsonist",
+    "ClassName": "Class_Henchman_Minion",
+    "FileKey": "mastermindpets_thug_arsonist",
+    "DisplayKey": "arsonist"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Knives_Boss",
+    "DisplayName": "Assassin Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_knives_boss",
+    "DisplayKey": "assassin_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Knives_Boss_Buff",
+    "DisplayName": "Assassin Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_knives_boss_buff",
+    "DisplayKey": "assassin_essence"
+  },
+  {
+    "UID": "MastermindPets_Assault_Bot",
+    "DisplayName": "Assault Bot",
+    "ClassName": "Class_Henchman_Boss",
+    "FileKey": "mastermindpets_assault_bot",
+    "DisplayKey": "assault_bot"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Drones_Boss",
+    "DisplayName": "Assault Drone Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_drones_boss",
+    "DisplayKey": "assault_drone_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Drones_Boss",
+    "DisplayName": "Assault Drone Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_drones_boss",
+    "DisplayKey": "assault_drone_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Drones_Boss_Buff",
+    "DisplayName": "Assault Drone Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_drones_boss_buff",
+    "DisplayKey": "assault_drone_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Seers_Boss",
+    "DisplayName": "Augur Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_seers_boss",
+    "DisplayKey": "augur_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Seers_Boss_Buff",
+    "DisplayName": "Augur Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_seers_boss_buff",
+    "DisplayKey": "augur_essence"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Lights_LT",
+    "DisplayName": "Australis Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_lights_lt",
+    "DisplayKey": "australis_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Lights_LT",
+    "DisplayName": "Australis Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_lights_lt",
+    "DisplayKey": "australis_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Lights_LT_Buff",
+    "DisplayName": "Australis Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_lights_lt_buff",
+    "DisplayKey": "australis_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Arachnos_LT",
+    "DisplayName": "Bane Spider Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_arachnos_lt",
+    "DisplayKey": "bane_spider_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Arachnos_LT_Buff",
+    "DisplayName": "Bane Spider Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_arachnos_lt_buff",
+    "DisplayKey": "bane_spider_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Banished_LT",
+    "DisplayName": "Banespawn Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_banished_lt",
+    "DisplayKey": "banespawn_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Banished_LT_Buff",
+    "DisplayName": "Banespawn Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_banished_lt_buff",
+    "DisplayKey": "banespawn_essence"
+  },
+  {
+    "UID": "Pets_Wellspring",
+    "DisplayName": "Barrier Reef",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_wellspring",
+    "DisplayKey": "barrier_reef"
+  },
+  {
+    "UID": "Pets_Wellspring_Def",
+    "DisplayName": "Barrier Reef",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_wellspring_def",
+    "DisplayKey": "barrier_reef"
+  },
+  {
+    "UID": "MastermindPets_Droid",
+    "DisplayName": "Battle Drone",
+    "ClassName": "Class_Henchman_Minion",
+    "FileKey": "mastermindpets_droid",
+    "DisplayKey": "battle_drone"
+  },
+  {
+    "UID": "IncarnatePets_Fate_IDF_Support",
+    "DisplayName": "Battle Orb Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_idf_support",
+    "DisplayKey": "battle_orb_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_IDF_Support",
+    "DisplayName": "Battle Orb Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_idf_support",
+    "DisplayKey": "battle_orb_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_IDF_Support_Attacks",
+    "DisplayName": "Battle Orb Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_idf_support_attacks",
+    "DisplayKey": "battle_orb_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_IDF_Support_Protected",
+    "DisplayName": "Battle Orb Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_idf_support_protected",
+    "DisplayKey": "battle_orb_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Warworks_Support",
+    "DisplayName": "Battle Orb Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_warworks_support",
+    "DisplayKey": "battle_orb_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Warworks_Support_Attacks",
+    "DisplayName": "Battle Orb Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_warworks_support_attacks",
+    "DisplayKey": "battle_orb_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Warworks_Support_Protected",
+    "DisplayName": "Battle Orb Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_warworks_support_protected",
+    "DisplayKey": "battle_orb_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Demons_LT",
+    "DisplayName": "Behemoth Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_demons_lt",
+    "DisplayKey": "behemoth_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Demons_LT_Buff",
+    "DisplayName": "Behemoth Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_demons_lt_buff",
+    "DisplayKey": "behemoth_essence"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Blood_Widow",
+    "DisplayName": "Blood Widow",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_blood_widow",
+    "DisplayKey": "blood_widow"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Lights_Support",
+    "DisplayName": "Borealis Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_lights_support",
+    "DisplayKey": "borealis_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Lights_Support",
+    "DisplayName": "Borealis Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_lights_support",
+    "DisplayKey": "borealis_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Lights_Support_Attacks",
+    "DisplayName": "Borealis Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_lights_support_attacks",
+    "DisplayKey": "borealis_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Lights_Support_Protected",
+    "DisplayName": "Borealis Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_lights_support_protected",
+    "DisplayKey": "borealis_essence"
+  },
+  {
+    "UID": "MastermindPets_Thug_Boss",
+    "DisplayName": "Bruiser",
+    "ClassName": "Class_Henchman_Boss",
+    "FileKey": "mastermindpets_thug_boss",
+    "DisplayKey": "bruiser"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Clockwork_LT",
+    "DisplayName": "Builder Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_clockwork_lt",
+    "DisplayKey": "builder_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Clockwork_LT",
+    "DisplayName": "Builder Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_clockwork_lt",
+    "DisplayKey": "builder_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Clockwork_LT_Buff",
+    "DisplayName": "Builder Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_clockwork_lt_buff",
+    "DisplayKey": "builder_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rularuu_LT",
+    "DisplayName": "Bull Natterling Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rularuu_lt",
+    "DisplayKey": "bull_natterling_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rularuu_LT_Buff",
+    "DisplayName": "Bull Natterling Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rularuu_lt_buff",
+    "DisplayKey": "bull_natterling_essence"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Longbow_Boss_Buff",
+    "DisplayName": "Cataphract Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_longbow_boss_buff",
+    "DisplayKey": "cataphract_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Longbow_Boss",
+    "DisplayName": "Cataphract Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_longbow_boss",
+    "DisplayKey": "cataphract_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Longbow_Boss_Buff",
+    "DisplayName": "Cataphract Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_longbow_boss_buff",
+    "DisplayKey": "cataphract_essence"
+  },
+  {
+    "UID": "Pets_CatherineWheel",
+    "DisplayName": "Catherine Wheel",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_catherinewheel",
+    "DisplayKey": "catherine_wheel"
+  },
+  {
+    "UID": "Pets_CatherineWheel_Controller",
+    "DisplayName": "Catherine Wheel",
+    "ClassName": "Class_Minion_ControllerPets",
+    "FileKey": "pets_catherinewheel_controller",
+    "DisplayKey": "catherine_wheel"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Cimeroran_LT",
+    "DisplayName": "Centurion Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_cimeroran_lt",
+    "DisplayKey": "centurion_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Cimeroran_LT",
+    "DisplayName": "Centurion Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_cimeroran_lt",
+    "DisplayKey": "centurion_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Cimeroran_LT_Buff",
+    "DisplayName": "Centurion Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_cimeroran_lt_buff",
+    "DisplayKey": "centurion_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rikti_Boss",
+    "DisplayName": "Chief Mentalist Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rikti_boss",
+    "DisplayKey": "chief_mentalist_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rikti_Boss_Buff",
+    "DisplayName": "Chief Mentalist Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rikti_boss_buff",
+    "DisplayKey": "chief_mentalist_essence"
+  },
+  {
+    "UID": "MastermindPets_Cold_Demonling",
+    "DisplayName": "Cold Demonling",
+    "ClassName": "Class_Henchman_Minion",
+    "FileKey": "mastermindpets_cold_demonling",
+    "DisplayKey": "cold_demonling"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Nemesis_LT",
+    "DisplayName": "Colonel Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_nemesis_lt",
+    "DisplayKey": "colonel_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Nemesis_LT_Buff",
+    "DisplayName": "Colonel Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_nemesis_lt_buff",
+    "DisplayKey": "colonel_essence"
+  },
+  {
+    "UID": "IncarnatePets_Fate_IDF_Boss",
+    "DisplayName": "Commander Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_idf_boss",
+    "DisplayKey": "commander_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_IDF_Boss",
+    "DisplayName": "Commander Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_idf_boss",
+    "DisplayKey": "commander_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_IDF_Boss_Buff",
+    "DisplayName": "Commander Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_idf_boss_buff",
+    "DisplayKey": "commander_essence"
+  },
+  {
+    "UID": "MastermindPets_Commando",
+    "DisplayName": "Commando",
+    "ClassName": "Class_Henchman_Boss",
+    "FileKey": "mastermindpets_commando",
+    "DisplayKey": "commando"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Coral_Guardian_Sentinel",
+    "DisplayName": "Coral Sentinel",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_coral_guardian_sentinel",
+    "DisplayKey": "coral_sentinel"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Coral_Guardian_Warder",
+    "DisplayName": "Coral Warder",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_coral_guardian_warder",
+    "DisplayKey": "coral_warder"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Blue_Corolax",
+    "DisplayName": "Coralax Blue Hybrid",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_blue_corolax",
+    "DisplayKey": "coralax_blue_hybrid"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Red_Corolax",
+    "DisplayName": "Coralax Red Hybrid",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_red_corolax",
+    "DisplayKey": "coralax_red_hybrid"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Carnival_Boss",
+    "DisplayName": "Dark Ring Mistress Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_carnival_boss",
+    "DisplayKey": "dark_ring_mistress_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Carnival_Boss_Buff",
+    "DisplayName": "Dark Ring Mistress Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_carnival_boss_buff",
+    "DisplayKey": "dark_ring_mistress_essence"
+  },
+  {
+    "UID": "Pets_DarkServant",
+    "DisplayName": "Dark Servant",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_darkservant",
+    "DisplayKey": "dark_servant"
+  },
+  {
+    "UID": "Pets_V_DarkServant",
+    "DisplayName": "Dark Servant",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_v_darkservant",
+    "DisplayKey": "dark_servant"
+  },
+  {
+    "UID": "Pets_Decoy",
+    "DisplayName": "Decoy",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_decoy",
+    "DisplayKey": "decoy"
+  },
+  {
+    "UID": "Pets_Decoy_Dominator",
+    "DisplayName": "Decoy",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_decoy_dominator",
+    "DisplayKey": "decoy"
+  },
+  {
+    "UID": "Pets_DecoyPhantasm",
+    "DisplayName": "Decoy Phantasm",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_decoyphantasm",
+    "DisplayKey": "decoy_phantasm"
+  },
+  {
+    "UID": "Pets_DecoyPhantasm_Dominator",
+    "DisplayName": "Decoy Phantasm",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_decoyphantasm_dominator",
+    "DisplayKey": "decoy_phantasm"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Banished_Support",
+    "DisplayName": "Defiler Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_banished_support",
+    "DisplayKey": "defiler_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Banished_Support_Attacks",
+    "DisplayName": "Defiler Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_banished_support_attacks",
+    "DisplayKey": "defiler_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Banished_Support_Protected",
+    "DisplayName": "Defiler Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_banished_support_protected",
+    "DisplayKey": "defiler_essence"
+  },
+  {
+    "UID": "MastermindPets_Demon_Prince",
+    "DisplayName": "Demon Prince",
+    "ClassName": "Class_Henchman_Boss",
+    "FileKey": "mastermindpets_demon_prince",
+    "DisplayKey": "demon_prince"
+  },
+  {
+    "UID": "Pets_Turret",
+    "DisplayName": "Device",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_turret",
+    "DisplayKey": "device"
+  },
+  {
+    "UID": "MastermindPets_Dire_Wolf",
+    "DisplayName": "Dire Wolf",
+    "ClassName": "Class_Henchman_Boss",
+    "FileKey": "mastermindpets_dire_wolf",
+    "DisplayKey": "dire_wolf"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Clockwork_Boss",
+    "DisplayName": "Dismantler Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_clockwork_boss",
+    "DisplayKey": "dismantler_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Clockwork_Boss_Buff",
+    "DisplayName": "Dismantler Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_clockwork_boss_buff",
+    "DisplayKey": "dismantler_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Seers_LT",
+    "DisplayName": "Diviner Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_seers_lt",
+    "DisplayKey": "diviner_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Seers_LT_Buff",
+    "DisplayName": "Diviner Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_seers_lt_buff",
+    "DisplayKey": "diviner_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Talons_Boss",
+    "DisplayName": "Diviner Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_talons_boss",
+    "DisplayKey": "diviner_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Talons_Boss_Buff",
+    "DisplayName": "Diviner Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_talons_boss_buff",
+    "DisplayKey": "diviner_essence"
+  },
+  {
+    "UID": "Pets_Dust_Devil1",
+    "DisplayName": "Dust Devil",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_dust_devil1",
+    "DisplayKey": "dust_devil"
+  },
+  {
+    "UID": "IncarnatePets_Lore_IDF_LT",
+    "DisplayName": "Elite Ranger Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_idf_lt",
+    "DisplayKey": "elite_ranger_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_IDF_LT_Buff",
+    "DisplayName": "Elite Ranger Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_idf_lt_buff",
+    "DisplayKey": "elite_ranger_essence"
+  },
+  {
+    "UID": "MastermindPets_Ember_Demon",
+    "DisplayName": "Ember Demon",
+    "ClassName": "Class_Henchman_Lt",
+    "FileKey": "mastermindpets_ember_demon",
+    "DisplayKey": "ember_demon"
+  },
+  {
+    "UID": "Pets_Overpowering_Presence_Pet",
+    "DisplayName": "Energy Font",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_overpowering_presence_pet",
+    "DisplayKey": "energy_font"
+  },
+  {
+    "UID": "MastermindPets_Thug_Lt",
+    "DisplayName": "Enforcers",
+    "ClassName": "Class_Henchman_Lt",
+    "FileKey": "mastermindpets_thug_lt",
+    "DisplayKey": "enforcers"
+  },
+  {
+    "UID": "Pets_Warshade_Extraction",
+    "DisplayName": "Extracted Essence",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_warshade_extraction",
+    "DisplayKey": "extracted_essence"
+  },
+  {
+    "UID": "Pets_Fallout",
+    "DisplayName": "Fallout",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_fallout",
+    "DisplayKey": "fallout"
+  },
+  {
+    "UID": "MastermindPets_Fiery_Demonling",
+    "DisplayName": "Fiery Demonling",
+    "ClassName": "Class_Henchman_Minion",
+    "FileKey": "mastermindpets_fiery_demonling",
+    "DisplayKey": "fiery_demonling"
+  },
+  {
+    "UID": "Pets_Dominating_Grasp_Pet",
+    "DisplayName": "Fiery Orb",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_dominating_grasp_pet",
+    "DisplayKey": "fiery_orb"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Arachnos_Support_Protected",
+    "DisplayName": "Fortunata Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_arachnos_support_protected",
+    "DisplayKey": "fortunata_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Arachnos_Support",
+    "DisplayName": "Fortunata Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_arachnos_support",
+    "DisplayKey": "fortunata_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Arachnos_Support_Attacks",
+    "DisplayName": "Fortunata Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_arachnos_support_attacks",
+    "DisplayKey": "fortunata_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Arachnos_Support_Protected",
+    "DisplayName": "Fortunata Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_arachnos_support_protected",
+    "DisplayKey": "fortunata_essence"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Fortunata_Mistress",
+    "DisplayName": "Fortunata Mistress",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_fortunata_mistress",
+    "DisplayKey": "fortunata_mistress"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Fortunata_Seer",
+    "DisplayName": "Fortunata Seer",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_fortunata_seer",
+    "DisplayKey": "fortunata_seer"
+  },
+  {
+    "UID": "Pets_GalvanicSentinel",
+    "DisplayName": "Galvanic Sentinel",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_galvanicsentinel",
+    "DisplayKey": "galvanic_sentinel"
+  },
+  {
+    "UID": "MastermindPets_Genin",
+    "DisplayName": "Genin",
+    "ClassName": "Class_Henchman_Minion",
+    "FileKey": "mastermindpets_genin",
+    "DisplayKey": "genin"
+  },
+  {
+    "UID": "Pets_Fly_Trap_Controller",
+    "DisplayName": "Giant Fly Trap",
+    "ClassName": "Class_Minion_ControllerPets",
+    "FileKey": "pets_fly_trap_controller",
+    "DisplayKey": "giant_fly_trap"
+  },
+  {
+    "UID": "Miscellaneous_Labyrinth_Gladiator_Summon",
+    "DisplayName": "Gladiator In The Fog",
+    "ClassName": "Class_Boss_PraetorianElite",
+    "FileKey": "miscellaneous_labyrinth_gladiator_summon",
+    "DisplayKey": "gladiator_in_the_fog"
+  },
+  {
+    "UID": "MastermindPets_Skeletal_Warrior",
+    "DisplayName": "Grave Knight",
+    "ClassName": "Class_Henchman_Lt",
+    "FileKey": "mastermindpets_skeletal_warrior",
+    "DisplayKey": "grave_knight"
+  },
+  {
+    "UID": "Pets_Gremlin",
+    "DisplayName": "Gremlin",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_gremlin",
+    "DisplayKey": "gremlin"
+  },
+  {
+    "UID": "Pets_Gremlin_Controller",
+    "DisplayName": "Gremlin",
+    "ClassName": "Class_Minion_ControllerPets",
+    "FileKey": "pets_gremlin_controller",
+    "DisplayKey": "gremlin"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Knives_Support",
+    "DisplayName": "Guardian Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_knives_support",
+    "DisplayKey": "guardian_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Knives_Support_Attacks",
+    "DisplayName": "Guardian Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_knives_support_attacks",
+    "DisplayKey": "guardian_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Knives_Support_Protected",
+    "DisplayName": "Guardian Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_knives_support_protected",
+    "DisplayKey": "guardian_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rikti_Support",
+    "DisplayName": "Guardian Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rikti_support",
+    "DisplayKey": "guardian_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rikti_Support_Attacks",
+    "DisplayName": "Guardian Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rikti_support_attacks",
+    "DisplayKey": "guardian_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rikti_Support_Protected",
+    "DisplayName": "Guardian Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rikti_support_protected",
+    "DisplayKey": "guardian_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Talons_LT",
+    "DisplayName": "Harpy Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_talons_lt",
+    "DisplayKey": "harpy_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Talons_LT_Buff",
+    "DisplayName": "Harpy Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_talons_lt_buff",
+    "DisplayKey": "harpy_essence"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Rikti_LT",
+    "DisplayName": "Headman Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_rikti_lt",
+    "DisplayKey": "headman_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rikti_LT",
+    "DisplayName": "Headman Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rikti_lt",
+    "DisplayKey": "headman_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rikti_LT_Buff",
+    "DisplayName": "Headman Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rikti_lt_buff",
+    "DisplayKey": "headman_essence"
+  },
+  {
+    "UID": "MastermindPets_Hellfire_Demonling",
+    "DisplayName": "Hellfire Demonling",
+    "ClassName": "Class_Henchman_Minion",
+    "FileKey": "mastermindpets_hellfire_demonling",
+    "DisplayKey": "hellfire_demonling"
+  },
+  {
+    "UID": "MastermindPets_Hellfire_Gargoyle",
+    "DisplayName": "Hellfire Gargoyle",
+    "ClassName": "Class_Henchman_Lt",
+    "FileKey": "mastermindpets_hellfire_gargoyle",
+    "DisplayKey": "hellfire_gargoyle"
+  },
+  {
+    "UID": "MastermindPets_Howler_Wolf",
+    "DisplayName": "Howler Wolf",
+    "ClassName": "Class_Henchman_Minion",
+    "FileKey": "mastermindpets_howler_wolf",
+    "DisplayKey": "howler_wolf"
+  },
+  {
+    "UID": "Pets_IceElemental",
+    "DisplayName": "Ice Elemental",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_iceelemental",
+    "DisplayKey": "ice_elemental"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Cimeroran_Support",
+    "DisplayName": "Immunes Surgeon Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_cimeroran_support",
+    "DisplayKey": "immunes_surgeon_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Cimeroran_Support_Attacks",
+    "DisplayName": "Immunes Surgeon Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_cimeroran_support_attacks",
+    "DisplayKey": "immunes_surgeon_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Cimeroran_Support_Protected",
+    "DisplayName": "Immunes Surgeon Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_cimeroran_support_protected",
+    "DisplayKey": "immunes_surgeon_essence"
+  },
+  {
+    "UID": "Pets_FireImp",
+    "DisplayName": "Imp",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_fireimp",
+    "DisplayKey": "imp"
+  },
+  {
+    "UID": "Pets_FireImp_Controller",
+    "DisplayName": "Imp",
+    "ClassName": "Class_Minion_ControllerPets",
+    "FileKey": "pets_fireimp_controller",
+    "DisplayKey": "imp"
+  },
+  {
+    "UID": "Pets_FireImp_Small",
+    "DisplayName": "Imp",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_fireimp_small",
+    "DisplayKey": "imp"
+  },
+  {
+    "UID": "Pets_JackFrost",
+    "DisplayName": "Jack Frost",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_jackfrost",
+    "DisplayKey": "jack_frost"
+  },
+  {
+    "UID": "Pets_JackFrost_Controller",
+    "DisplayName": "Jack Frost",
+    "ClassName": "Class_Minion_ControllerPets",
+    "FileKey": "pets_jackfrost_controller",
+    "DisplayKey": "jack_frost"
+  },
+  {
+    "UID": "MastermindPets_Jonin",
+    "DisplayName": "Jounin",
+    "ClassName": "Class_Henchman_Lt",
+    "FileKey": "mastermindpets_jonin",
+    "DisplayKey": "jounin"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Nemesis_Support",
+    "DisplayName": "Lancer Surgeon Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_nemesis_support",
+    "DisplayKey": "lancer_surgeon_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Nemesis_Support_Attacks",
+    "DisplayName": "Lancer Surgeon Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_nemesis_support_attacks",
+    "DisplayKey": "lancer_surgeon_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Nemesis_Support_Protected",
+    "DisplayName": "Lancer Surgeon Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_nemesis_support_protected",
+    "DisplayKey": "lancer_surgeon_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Drones_LT",
+    "DisplayName": "Laser Drone Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_drones_lt",
+    "DisplayKey": "laser_drone_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Drones_LT_Buff",
+    "DisplayName": "Laser Drone Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_drones_lt_buff",
+    "DisplayKey": "laser_drone_essence"
+  },
+  {
+    "UID": "MastermindPets_Lich",
+    "DisplayName": "Lich",
+    "ClassName": "Class_Henchman_Boss",
+    "FileKey": "mastermindpets_lich",
+    "DisplayKey": "lich"
+  },
+  {
+    "UID": "MastermindPets_Lioness",
+    "DisplayName": "Lioness",
+    "ClassName": "Class_Henchman_Lt",
+    "FileKey": "mastermindpets_lioness",
+    "DisplayKey": "lioness"
+  },
+  {
+    "UID": "Pets_Living_Hellfire",
+    "DisplayName": "Living Hellfire",
+    "ClassName": "Class_Henchman_Minion_Small",
+    "FileKey": "pets_living_hellfire",
+    "DisplayKey": "living_hellfire"
+  },
+  {
+    "UID": "Pets_Longbow_Heavy_Pet",
+    "DisplayName": "Longbow Mech",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_longbow_heavy_pet",
+    "DisplayKey": "longbow_mech"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Vanguard_Support_Protected",
+    "DisplayName": "Magician Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_vanguard_support_protected",
+    "DisplayKey": "magician_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Vanguard_Support",
+    "DisplayName": "Magician Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_vanguard_support",
+    "DisplayKey": "magician_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Vanguard_Support_Attacks",
+    "DisplayName": "Magician Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_vanguard_support_attacks",
+    "DisplayKey": "magician_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Vanguard_Support_Protected",
+    "DisplayName": "Magician Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_vanguard_support_protected",
+    "DisplayKey": "magician_essence"
+  },
+  {
+    "UID": "MastermindPets_Maintenance_Bot",
+    "DisplayName": "Maintenance Drone",
+    "ClassName": "Class_Henchman_Boss",
+    "FileKey": "mastermindpets_maintenance_bot",
+    "DisplayKey": "maintenance_drone"
+  },
+  {
+    "UID": "MastermindPets_Medic",
+    "DisplayName": "Medic",
+    "ClassName": "Class_Henchman_Minion",
+    "FileKey": "mastermindpets_medic",
+    "DisplayKey": "medic"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Clockwork_Support_Attacks",
+    "DisplayName": "Mender Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_clockwork_support_attacks",
+    "DisplayKey": "mender_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Clockwork_Support",
+    "DisplayName": "Mender Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_clockwork_support",
+    "DisplayKey": "mender_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Clockwork_Support_Attacks",
+    "DisplayName": "Mender Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_clockwork_support_attacks",
+    "DisplayKey": "mender_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Clockwork_Support_Protected",
+    "DisplayName": "Mender Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_clockwork_support_protected",
+    "DisplayKey": "mender_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Warworks_Boss",
+    "DisplayName": "Mk-VI \u0027Victoria\u0027 Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_warworks_boss",
+    "DisplayKey": "mk_vi_victoria_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Warworks_Boss_Buff",
+    "DisplayName": "Mk-VI \u0027Victoria\u0027 Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_warworks_boss_buff",
+    "DisplayKey": "mk_vi_victoria_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Elementals_Support",
+    "DisplayName": "Monsoon Elemental Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_elementals_support",
+    "DisplayKey": "monsoon_elemental_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Elementals_Support_Attacks",
+    "DisplayName": "Monsoon Elemental Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_elementals_support_attacks",
+    "DisplayKey": "monsoon_elemental_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Elementals_Support_Protected",
+    "DisplayName": "Monsoon Elemental Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_elementals_support_protected",
+    "DisplayKey": "monsoon_elemental_essence"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Mu_Adept",
+    "DisplayName": "Mu Adept",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_mu_adept",
+    "DisplayKey": "mu_adept"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Mu_Guardian",
+    "DisplayName": "Mu Guardian",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_mu_guardian",
+    "DisplayKey": "mu_guardian"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Mu_Striker",
+    "DisplayName": "Mu Striker",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_mu_striker",
+    "DisplayKey": "mu_striker"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Demons_Support",
+    "DisplayName": "Nerva Spectral Demon Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_demons_support",
+    "DisplayKey": "nerva_spectral_demon_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Demons_Support_Attacks",
+    "DisplayName": "Nerva Spectral Demon Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_demons_support_attacks",
+    "DisplayKey": "nerva_spectral_demon_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Demons_Support_Protected",
+    "DisplayName": "Nerva Spectral Demon Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_demons_support_protected",
+    "DisplayKey": "nerva_spectral_demon_essence"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Night_Widow",
+    "DisplayName": "Night Widow",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_night_widow",
+    "DisplayKey": "night_widow"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rularuu_Support",
+    "DisplayName": "Noble Brute Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rularuu_support",
+    "DisplayKey": "noble_brute_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rularuu_Support_Attacks",
+    "DisplayName": "Noble Brute Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rularuu_support_attacks",
+    "DisplayKey": "noble_brute_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rularuu_Support_Protected",
+    "DisplayName": "Noble Brute Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rularuu_support_protected",
+    "DisplayKey": "noble_brute_essence"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Longbow_LT_Buff",
+    "DisplayName": "Nullifier Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_longbow_lt_buff",
+    "DisplayKey": "nullifier_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Longbow_LT",
+    "DisplayName": "Nullifier Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_longbow_lt",
+    "DisplayKey": "nullifier_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Longbow_LT_Buff",
+    "DisplayName": "Nullifier Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_longbow_lt_buff",
+    "DisplayKey": "nullifier_essence"
+  },
+  {
+    "UID": "MastermindPets_Oni",
+    "DisplayName": "Oni",
+    "ClassName": "Class_Henchman_Boss",
+    "FileKey": "mastermindpets_oni",
+    "DisplayKey": "oni"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rularuu_Boss",
+    "DisplayName": "Overseer Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rularuu_boss",
+    "DisplayKey": "overseer_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Rularuu_Boss_Buff",
+    "DisplayName": "Overseer Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_rularuu_boss_buff",
+    "DisplayKey": "overseer_essence"
+  },
+  {
+    "UID": "Pets_Phantasm",
+    "DisplayName": "Phantasm",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_phantasm",
+    "DisplayKey": "phantasm"
+  },
+  {
+    "UID": "Pets_Phantasm_Controller",
+    "DisplayName": "Phantasm",
+    "ClassName": "Class_Minion_ControllerPets",
+    "FileKey": "pets_phantasm_controller",
+    "DisplayKey": "phantasm"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Phantoms_LT",
+    "DisplayName": "Phantom Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_phantoms_lt",
+    "DisplayKey": "phantom_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Phantoms_LT_Buff",
+    "DisplayName": "Phantom Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_phantoms_lt_buff",
+    "DisplayKey": "phantom_essence"
+  },
+  {
+    "UID": "Pets_LightDrone1",
+    "DisplayName": "Photon Seeker",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_lightdrone1",
+    "DisplayKey": "photon_seeker"
+  },
+  {
+    "UID": "Pets_LightDrone2",
+    "DisplayName": "Photon Seeker",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_lightdrone2",
+    "DisplayKey": "photon_seeker"
+  },
+  {
+    "UID": "Pets_LightDrone3",
+    "DisplayName": "Photon Seeker",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_lightdrone3",
+    "DisplayKey": "photon_seeker"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Lights_Boss",
+    "DisplayName": "Polaris Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_lights_boss",
+    "DisplayKey": "polaris_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Lights_Boss_Buff",
+    "DisplayName": "Polaris Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_lights_boss_buff",
+    "DisplayKey": "polaris_essence"
+  },
+  {
+    "UID": "Pets_Thug_Pose_01",
+    "DisplayName": "Posse",
+    "ClassName": "Class_Henchman_Minion_Small",
+    "FileKey": "pets_thug_pose_01",
+    "DisplayKey": "posse"
+  },
+  {
+    "UID": "Pets_Thug_Pose_02",
+    "DisplayName": "Posse",
+    "ClassName": "Class_Henchman_Minion_Small",
+    "FileKey": "pets_thug_pose_02",
+    "DisplayKey": "posse"
+  },
+  {
+    "UID": "Pets_Thug_Pose_03",
+    "DisplayName": "Posse",
+    "ClassName": "Class_Henchman_Minion_Small",
+    "FileKey": "pets_thug_pose_03",
+    "DisplayKey": "posse"
+  },
+  {
+    "UID": "Pets_Thug_Pose_04",
+    "DisplayName": "Posse",
+    "ClassName": "Class_Henchman_Minion_Small",
+    "FileKey": "pets_thug_pose_04",
+    "DisplayKey": "posse"
+  },
+  {
+    "UID": "Pets_Thug_Pose_05",
+    "DisplayName": "Posse",
+    "ClassName": "Class_Henchman_Minion_Small",
+    "FileKey": "pets_thug_pose_05",
+    "DisplayKey": "posse"
+  },
+  {
+    "UID": "Pets_Thug_Pose_06",
+    "DisplayName": "Posse",
+    "ClassName": "Class_Henchman_Minion_Small",
+    "FileKey": "pets_thug_pose_06",
+    "DisplayKey": "posse"
+  },
+  {
+    "UID": "Pets_Thug_Pose_07",
+    "DisplayName": "Posse",
+    "ClassName": "Class_Henchman_Minion_Small",
+    "FileKey": "pets_thug_pose_07",
+    "DisplayKey": "posse"
+  },
+  {
+    "UID": "Pets_Thug_Pose_08",
+    "DisplayName": "Posse",
+    "ClassName": "Class_Henchman_Minion_Small",
+    "FileKey": "pets_thug_pose_08",
+    "DisplayKey": "posse"
+  },
+  {
+    "UID": "Pets_Thug_Pose_09",
+    "DisplayName": "Posse",
+    "ClassName": "Class_Henchman_Minion_Small",
+    "FileKey": "pets_thug_pose_09",
+    "DisplayKey": "posse"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Cimeroran_Boss",
+    "DisplayName": "Praefectus Castorum Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_cimeroran_boss",
+    "DisplayKey": "praefectus_castorum_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Cimeroran_Boss",
+    "DisplayName": "Praefectus Castorum Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_cimeroran_boss",
+    "DisplayKey": "praefectus_castorum_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Cimeroran_Boss_Buff",
+    "DisplayName": "Praefectus Castorum Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_cimeroran_boss_buff",
+    "DisplayKey": "praefectus_castorum_essence"
+  },
+  {
+    "UID": "MastermindPets_Protector_Bot",
+    "DisplayName": "Protector Bot",
+    "ClassName": "Class_Henchman_Lt",
+    "FileKey": "mastermindpets_protector_bot",
+    "DisplayKey": "protector_bot"
+  },
+  {
+    "UID": "Pets_Psionic_Nexus",
+    "DisplayName": "Psionic Nexus",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_psionic_nexus",
+    "DisplayKey": "psionic_nexus"
+  },
+  {
+    "UID": "Pets_PsychicAnomaly",
+    "DisplayName": "Psychic Anomaly",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_psychicanomaly",
+    "DisplayKey": "psychic_anomaly"
+  },
+  {
+    "UID": "Pets_PsychicAnomaly_Controller",
+    "DisplayName": "Psychic Anomaly",
+    "ClassName": "Class_Minion_ControllerPets",
+    "FileKey": "pets_psychicanomaly_controller",
+    "DisplayKey": "psychic_anomaly"
+  },
+  {
+    "UID": "MastermindPets_Thug",
+    "DisplayName": "Punk",
+    "ClassName": "Class_Henchman_Minion",
+    "FileKey": "mastermindpets_thug",
+    "DisplayKey": "punk"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Banished_Boss",
+    "DisplayName": "Ravager Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_banished_boss",
+    "DisplayKey": "ravager_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Banished_Boss_Buff",
+    "DisplayName": "Ravager Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_banished_boss_buff",
+    "DisplayKey": "ravager_essence"
+  },
+  {
+    "UID": "Pets_Reverberant",
+    "DisplayName": "Reverberant",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_reverberant",
+    "DisplayKey": "reverberant"
+  },
+  {
+    "UID": "Pets_Reverberant_Controller",
+    "DisplayName": "Reverberant",
+    "ClassName": "Class_Minion_ControllerPets",
+    "FileKey": "pets_reverberant_controller",
+    "DisplayKey": "reverberant"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Seers_Support",
+    "DisplayName": "Seeker Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_seers_support",
+    "DisplayKey": "seeker_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Seers_Support_Attacks",
+    "DisplayName": "Seeker Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_seers_support_attacks",
+    "DisplayKey": "seeker_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Seers_Support_Protected",
+    "DisplayName": "Seeker Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_seers_support_protected",
+    "DisplayKey": "seeker_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Carnival_Support",
+    "DisplayName": "Seneschal Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_carnival_support",
+    "DisplayKey": "seneschal_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Carnival_Support_Attacks",
+    "DisplayName": "Seneschal Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_carnival_support_attacks",
+    "DisplayKey": "seneschal_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Carnival_Support_Protected",
+    "DisplayName": "Seneschal Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_carnival_support_protected",
+    "DisplayKey": "seneschal_essence"
+  },
+  {
+    "UID": "Pets_VoltaicSentinel_Critter",
+    "DisplayName": "Sentinel of Lightning",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_voltaicsentinel_critter",
+    "DisplayKey": "sentinel_of_lightning"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Vanguard_LT",
+    "DisplayName": "Sergeant Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_vanguard_lt",
+    "DisplayKey": "sergeant_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Vanguard_LT",
+    "DisplayName": "Sergeant Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_vanguard_lt",
+    "DisplayKey": "sergeant_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Vanguard_LT_Buff",
+    "DisplayName": "Sergeant Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_vanguard_lt_buff",
+    "DisplayKey": "sergeant_essence"
+  },
+  {
+    "UID": "Pets_Shade",
+    "DisplayName": "Shade",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_shade",
+    "DisplayKey": "shade"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Drones_Support",
+    "DisplayName": "Shield Drone Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_drones_support",
+    "DisplayKey": "shield_drone_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Drones_Support_Attacks",
+    "DisplayName": "Shield Drone Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_drones_support_attacks",
+    "DisplayKey": "shield_drone_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Drones_Support_Protected",
+    "DisplayName": "Shield Drone Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_drones_support_protected",
+    "DisplayKey": "shield_drone_essence"
+  },
+  {
+    "UID": "Pets_Singularity",
+    "DisplayName": "Singularity",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_singularity",
+    "DisplayKey": "singularity"
+  },
+  {
+    "UID": "Pets_Singularity_Controller",
+    "DisplayName": "Singularity",
+    "ClassName": "Class_Minion_ControllerPets",
+    "FileKey": "pets_singularity_controller",
+    "DisplayKey": "singularity"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Talons_Support",
+    "DisplayName": "Siren Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_talons_support",
+    "DisplayKey": "siren_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Talons_Support_Attacks",
+    "DisplayName": "Siren Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_talons_support_attacks",
+    "DisplayKey": "siren_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Talons_Support_Protected",
+    "DisplayName": "Siren Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_talons_support_protected",
+    "DisplayKey": "siren_essence"
+  },
+  {
+    "UID": "MastermindPets_Soldier",
+    "DisplayName": "Soldier",
+    "ClassName": "Class_Henchman_Minion",
+    "FileKey": "mastermindpets_soldier",
+    "DisplayKey": "soldier"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Tsoo_Support",
+    "DisplayName": "Sorcerer Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_tsoo_support",
+    "DisplayKey": "sorcerer_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Tsoo_Support_Attacks",
+    "DisplayName": "Sorcerer Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_tsoo_support_attacks",
+    "DisplayKey": "sorcerer_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Tsoo_Support_Protected",
+    "DisplayName": "Sorcerer Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_tsoo_support_protected",
+    "DisplayKey": "sorcerer_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Vanguard_Boss",
+    "DisplayName": "Sorcerer Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_vanguard_boss",
+    "DisplayKey": "sorcerer_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Vanguard_Boss_Buff",
+    "DisplayName": "Sorcerer Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_vanguard_boss_buff",
+    "DisplayKey": "sorcerer_essence"
+  },
+  {
+    "UID": "MastermindPets_Spec_Ops",
+    "DisplayName": "Spec Ops",
+    "ClassName": "Class_Henchman_Lt",
+    "FileKey": "mastermindpets_spec_ops",
+    "DisplayKey": "spec_ops"
+  },
+  {
+    "UID": "Pets_Enslaved_Specter",
+    "DisplayName": "Specter",
+    "ClassName": "Class_Henchman_Minion_Small",
+    "FileKey": "pets_enslaved_specter",
+    "DisplayKey": "specter"
+  },
+  {
+    "UID": "Pets_Enslaved_Specter2",
+    "DisplayName": "Specter",
+    "ClassName": "Class_Henchman_Minion_Small",
+    "FileKey": "pets_enslaved_specter2",
+    "DisplayKey": "specter"
+  },
+  {
+    "UID": "Pets_Enslaved_Specter3",
+    "DisplayName": "Specter",
+    "ClassName": "Class_Henchman_Minion_Small",
+    "FileKey": "pets_enslaved_specter3",
+    "DisplayKey": "specter"
+  },
+  {
+    "UID": "Pets_Terror",
+    "DisplayName": "Spectral Terror",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_terror",
+    "DisplayKey": "spectral_terror"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Phantoms_Boss",
+    "DisplayName": "Spectre Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_phantoms_boss",
+    "DisplayKey": "spectre_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Phantoms_Boss_Buff",
+    "DisplayName": "Spectre Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_phantoms_boss_buff",
+    "DisplayKey": "spectre_essence"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Arachnobot_Spiderling",
+    "DisplayName": "Spiderling",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_arachnobot_spiderling",
+    "DisplayKey": "spiderling"
+  },
+  {
+    "UID": "MastermindPets_Ghost_Minion",
+    "DisplayName": "Spirit",
+    "ClassName": "Class_Henchman_Minion",
+    "FileKey": "mastermindpets_ghost_minion",
+    "DisplayKey": "spirit"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Phantoms_Support",
+    "DisplayName": "Spirit Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_phantoms_support",
+    "DisplayKey": "spirit_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Phantoms_Support_Attacks",
+    "DisplayName": "Spirit Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_phantoms_support_attacks",
+    "DisplayKey": "spirit_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Phantoms_Support_Protected",
+    "DisplayName": "Spirit Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_phantoms_support_protected",
+    "DisplayKey": "spirit_essence"
+  },
+  {
+    "UID": "Pets_Spirit_Tree",
+    "DisplayName": "Spirit Tree",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_spirit_tree",
+    "DisplayKey": "spirit_tree"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Elementals_LT",
+    "DisplayName": "Storm Elemental Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_elementals_lt",
+    "DisplayKey": "storm_elemental_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Elementals_LT_Buff",
+    "DisplayName": "Storm Elemental Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_elementals_lt_buff",
+    "DisplayKey": "storm_elemental_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Carnival_LT",
+    "DisplayName": "Strongman Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_carnival_lt",
+    "DisplayKey": "strongman_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Carnival_LT_Buff",
+    "DisplayName": "Strongman Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_carnival_lt_buff",
+    "DisplayKey": "strongman_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Demons_Boss",
+    "DisplayName": "Succubus Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_demons_boss",
+    "DisplayKey": "succubus_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Demons_Boss_Buff",
+    "DisplayName": "Succubus Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_demons_boss_buff",
+    "DisplayKey": "succubus_essence"
+  },
+  {
+    "UID": "IncarnatePets_Fate_Arachnos_Boss",
+    "DisplayName": "Tarantula Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_fate_arachnos_boss",
+    "DisplayKey": "tarantula_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Arachnos_Boss",
+    "DisplayName": "Tarantula Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_arachnos_boss",
+    "DisplayKey": "tarantula_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Arachnos_Boss_Buff",
+    "DisplayName": "Tarantula Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_arachnos_boss_buff",
+    "DisplayKey": "tarantula_essence"
+  },
+  {
+    "UID": "ParagonPolice_Heracles_TearGas",
+    "DisplayName": "Tear Gas Grenade",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "paragonpolice_heracles_teargas",
+    "DisplayKey": "tear_gas_grenade"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Elementals_Boss",
+    "DisplayName": "Tempest Elemental Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_elementals_boss",
+    "DisplayKey": "tempest_elemental_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Elementals_Boss_Buff",
+    "DisplayName": "Tempest Elemental Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_elementals_boss_buff",
+    "DisplayKey": "tempest_elemental_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Knives_LT",
+    "DisplayName": "Tempest Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_knives_lt",
+    "DisplayKey": "tempest_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Knives_LT_Buff",
+    "DisplayName": "Tempest Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_knives_lt_buff",
+    "DisplayKey": "tempest_essence"
+  },
+  {
+    "UID": "Pets_Tornado",
+    "DisplayName": "Tornado",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_tornado",
+    "DisplayKey": "tornado"
+  },
+  {
+    "UID": "MastermindPets_Ghost_Lt",
+    "DisplayName": "Tortured Soul",
+    "ClassName": "Class_Henchman_Lt",
+    "FileKey": "mastermindpets_ghost_lt",
+    "DisplayKey": "tortured_soul"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Toxic_Tarantula",
+    "DisplayName": "Toxic Tarantula",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_toxic_tarantula",
+    "DisplayKey": "toxic_tarantula"
+  },
+  {
+    "UID": "Pets_GunDrone_Tri",
+    "DisplayName": "Tri-Cannon",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_gundrone_tri",
+    "DisplayKey": "tri_cannon"
+  },
+  {
+    "UID": "Pets_GunDrone_Tri_Controller",
+    "DisplayName": "Tri-Cannon",
+    "ClassName": "Class_Minion_ControllerPets",
+    "FileKey": "pets_gundrone_tri_controller",
+    "DisplayKey": "tri_cannon"
+  },
+  {
+    "UID": "Pets_Umbra_Beast",
+    "DisplayName": "Umbra Beast",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_umbra_beast",
+    "DisplayKey": "umbra_beast"
+  },
+  {
+    "UID": "Pets_Umbra_Beast_Controller",
+    "DisplayName": "Umbra Beast",
+    "ClassName": "Class_Minion_ControllerPets",
+    "FileKey": "pets_umbra_beast_controller",
+    "DisplayKey": "umbra_beast"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Nemesis_Boss",
+    "DisplayName": "War Hulk Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_nemesis_boss",
+    "DisplayKey": "war_hulk_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Nemesis_Boss_Buff",
+    "DisplayName": "War Hulk Essence",
+    "ClassName": "Class_Boss_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_nemesis_boss_buff",
+    "DisplayKey": "war_hulk_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Longbow_Support",
+    "DisplayName": "Warden Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_longbow_support",
+    "DisplayKey": "warden_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Longbow_Support_Attacks",
+    "DisplayName": "Warden Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_longbow_support_attacks",
+    "DisplayKey": "warden_essence"
+  },
+  {
+    "UID": "IncarnatePets_Lore_Longbow_Support_Protected",
+    "DisplayName": "Warden Essence",
+    "ClassName": "Class_Lt_PraetorianGrunt_Pet",
+    "FileKey": "incarnatepets_lore_longbow_support_protected",
+    "DisplayKey": "warden_essence"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Water_Spout",
+    "DisplayName": "Water Spout",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_water_spout",
+    "DisplayKey": "water_spout"
+  },
+  {
+    "UID": "Pets_Patron_Powers_Water_Spout_Stalker",
+    "DisplayName": "Water Spout",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_patron_powers_water_spout_stalker",
+    "DisplayKey": "water_spout"
+  },
+  {
+    "UID": "MastermindPets_Ghost_Boss",
+    "DisplayName": "Wraith",
+    "ClassName": "Class_Henchman_Boss",
+    "FileKey": "mastermindpets_ghost_boss",
+    "DisplayKey": "wraith"
+  },
+  {
+    "UID": "MastermindPets_Zombie",
+    "DisplayName": "Zombie",
+    "ClassName": "Class_Henchman_Minion",
+    "FileKey": "mastermindpets_zombie",
+    "DisplayKey": "zombie"
+  },
+  {
+    "UID": "Pets_Zombie",
+    "DisplayName": "Zombie",
+    "ClassName": "Class_Minion_Pets",
+    "FileKey": "pets_zombie",
+    "DisplayKey": "zombie"
+  }
+]

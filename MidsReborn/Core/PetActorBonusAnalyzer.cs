@@ -25,14 +25,20 @@ internal static class PetActorBonusAnalyzer
             .Select(entry => entry.index)
             .ToArray();
 
+        var ownerExternalPowers = GetOwnerExternalSources(toon, rosterItem, recipient, availableUpgrades, previewState)
+            .SelectMany(source => source.Powers)
+            .ToArray();
         var setBonusPower = toon.CurrentBuild.GetSetBonusVirtualPower(recipient);
+        var calculationExternalPowers = setBonusPower == null
+            ? ownerExternalPowers
+            : ownerExternalPowers.Concat(new[] { setBonusPower }).ToArray();
 
         foreach (var overlay in availableUpgrades.Where(overlay => previewState.IsUpgradeApplied(overlay.UpgradePowerFullName)))
         {
             var previewWithoutOverlay = previewState.Clone();
             previewWithoutOverlay.Upgrades.AppliedUpgradePowerFullNames.Remove(overlay.UpgradePowerFullName);
-            var withoutOverlay = toon.GeneratePetActorSnapshotForAnalysis(rosterItem, previewWithoutOverlay)?.Totals
-                                 ?? CalculateSubsetTotals(recipient.ClassName, includedIndexes, allMathPowers, allBuffedPowers, setBonusPower);
+            var withoutOverlay = toon.GeneratePetActorTotalsForAnalysis(rosterItem, previewWithoutOverlay)
+                                 ?? CalculateSubsetTotals(recipient.ClassName, includedIndexes, resolvedPowers, allMathPowers, allBuffedPowers, calculationExternalPowers);
             var entry = CreateEntry(
                 $"Upgrade: {overlay.UpgradePowerDisplayName}",
                 overlay.UpgradePowerFullName,
@@ -72,11 +78,11 @@ internal static class PetActorBonusAnalyzer
             }
 
             var withoutPower = sourceType == PetAppliedBonusSourceType.PetClickBuff
-                ? toon.GeneratePetActorSnapshotForAnalysis(
+                ? toon.GeneratePetActorTotalsForAnalysis(
                     rosterItem,
-                    CreatePreviewStateWithoutClickBuff(previewState, pair.resolvedPower.Power.FullName))?.Totals
-                  ?? CalculateSubsetTotals(recipient.ClassName, includedIndexes.Where(index => index != pair.index), allMathPowers, allBuffedPowers, setBonusPower)
-                : CalculateSubsetTotals(recipient.ClassName, includedIndexes.Where(index => index != pair.index), allMathPowers, allBuffedPowers, setBonusPower);
+                    CreatePreviewStateWithoutClickBuff(previewState, pair.resolvedPower.Power.FullName))
+                  ?? CalculateSubsetTotals(recipient.ClassName, includedIndexes.Where(index => index != pair.index), resolvedPowers, allMathPowers, allBuffedPowers, calculationExternalPowers)
+                : CalculateSubsetTotals(recipient.ClassName, includedIndexes.Where(index => index != pair.index), resolvedPowers, allMathPowers, allBuffedPowers, calculationExternalPowers);
             var entry = CreateEntry(
                 $"{pair.resolvedPower.Power.DisplayName}",
                 pair.resolvedPower.Power.FullName,
@@ -134,14 +140,36 @@ internal static class PetActorBonusAnalyzer
     private static ActorTotalsSnapshot CalculateSubsetTotals(
         string className,
         IEnumerable<int> includedIndexes,
+        IReadOnlyList<ResolvedPetPower> resolvedPowers,
         IReadOnlyList<IPower> allMathPowers,
         IReadOnlyList<IPower> allBuffedPowers,
-        IPower setBonusPower)
+        IEnumerable<IPower> externalPowers)
     {
         var selectedIndexes = includedIndexes.ToArray();
-        var mathPowers = selectedIndexes.Select(index => allMathPowers[index]).ToArray();
-        var buffedPowers = selectedIndexes.Select(index => allBuffedPowers[index]).ToArray();
-        return PetActorMath.Calculate(className, mathPowers, buffedPowers, setBonusPower);
+        var includedMathPowers = selectedIndexes
+            .Select(index => resolvedPowers[index].IsSelfClickBuff
+                ? allBuffedPowers[index]
+                : allMathPowers[index])
+            .ToArray();
+        var includedBuffedPowers = selectedIndexes
+            .Select(index => allBuffedPowers[index])
+            .ToArray();
+        var includedSelfClickBuffIndexes = selectedIndexes
+            .Where(index => resolvedPowers[index].IsSelfClickBuff)
+            .ToArray();
+        var supplementalEnhancementSourcePowers = includedSelfClickBuffIndexes
+            .Select(index => allBuffedPowers[index])
+            .ToArray();
+
+        return PetActorMath.Finalize(
+            className,
+            allMathPowers,
+            allBuffedPowers,
+            externalPowers,
+            includedMathPowers,
+            includedBuffedPowers,
+            supplementalEnhancementSourcePowers,
+            includedSelfClickBuffIndexes).Totals!;
     }
 
     private static IEnumerable<(string SourceName, string SourceFullName, IReadOnlyList<IPower> Powers)> GetOwnerExternalSources(

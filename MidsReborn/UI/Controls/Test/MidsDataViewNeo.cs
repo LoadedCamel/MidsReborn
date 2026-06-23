@@ -27,32 +27,49 @@ namespace Mids_Reborn.UI.Controls
     {
         #region Constants
 
-        private readonly record struct TabDescriptor(string Title, int PageIndex);
+        private readonly record struct TabDescriptor(string Title, string CompactTitle, int PageIndex);
         private readonly TabDescriptor[] _allTabs =
         [
-            new("INFO", 0),
-            new("EFFECTS", 1),
-            new("TOTALS", 2),
-            new("ENHANCE", 3),
-            new("BONUSES", 4)
+            new("INFO", "INFO", 0),
+            new("EFFECTS", "FX", 1),
+            new("TOTALS", "TOT", 2),
+            new("ENHANCE", "ENH", 3),
+            new("BONUSES", "BON", 4)
         ];
         private const int TabPaddingX = 16;
+        private const int CompactTabPaddingX = 8;
         private const int TabHeight = 24;
+        private const int CompactTabHeight = 22;
         private const int TabSpacing = 4;
         private const int CornerRadius = 4;
         private const int FrameBorderWidth = 2;
         private const int HeaderChromeHeight = 34;
+        private const int CompactHeaderChromeHeight = 28;
         private const int ContentInset = 8;
+        private const int CompactContentInset = 5;
         private const int InfoDescriptionDividerHeight = 2;
         private const int InfoShortDescriptionMaxLines = 2;
         private const int InfoLongDescriptionMinLines = 1;
         private const int HeaderOuterInset = 6;
+        private const int CompactHeaderOuterInset = 3;
         private const int HeaderActionGap = 3;
         private const int TotalsSectionGap = 10;
         private const int MinimumInfoStatVisualRows = 3;
+        private const int CompactInfoStatVisualRows = 2;
         private const int MinimumDamageDisplayHeight = 60;
+        private const int CompactMinimumDamageDisplayHeight = 40;
         private const int MinimumEnhancementSlotPanelHeight = 40;
+        private const int CompactMinimumEnhancementSlotPanelHeight = 30;
         private const int MinimumEnhancementListHeight = 60;
+        private const int CompactMinimumEnhancementListHeight = 36;
+        private const int CompactVerticalLayoutHeight = 300;
+        private const int PowerScalerTextAreaWidth = 96;
+        private const int PowerScalerMinimumTrackWidth = 72;
+        private const int PowerScalerTextGap = 6;
+        private const int PowerScalerTrackGap = 8;
+        private const int PowerScalerHorizontalPadding = 8;
+        private const int PowerScalerTrackThickness = 6;
+        private const int PowerScalerThumbDiameter = 14;
         private const int EM_SETMARGINS = 0xD3;
         private const int EM_SETRECT = 0xB3;
         private const int EC_LEFTMARGIN = 0x1;
@@ -233,6 +250,7 @@ namespace Mids_Reborn.UI.Controls
             WinFormsBuffering.Enable(headerPanel);
             ApplyShellLayout();
             ApplyShellTheme();
+            ApplyPowerScalerMetrics(_uiScale);
             infoSDesc.HandleCreated += (_, _) => ApplyShortDescriptionMargins();
             infoSDesc.SizeChanged += (_, _) => ApplyShortDescriptionMargins();
 
@@ -383,18 +401,19 @@ namespace Mids_Reborn.UI.Controls
             if (Math.Abs(scale - _uiScale) < 0.01f) return;
 
             _uiScale = scale;
+            var contentScale = Math.Max(1f, scale);
 
             SuspendLayout();
             ApplyShellLayout();
-            ApplyFontScale(this, scale);
-            ApplyMetricScale(scale);
-            ScaleHeight(titlePanel, scale);
-            ScaleHeight(sliderHost, scale);
-            ScaleHeight(infoDamageDisplay, scale);
-            ScaleHeight(pnlEnhActive, scale);
-            ScaleHeight(pnlEnhInactive, scale);
-            ScaleHeight(enhanceSubtitlePanel, scale);
-            ApplyTotalsUiScale(scale);
+            ApplyFontScale(this, contentScale);
+            ApplyMetricScale(contentScale);
+            ScaleHeight(titlePanel, contentScale);
+            ScaleHeight(sliderHost, contentScale);
+            ScaleHeight(infoDamageDisplay, contentScale);
+            ScaleHeight(pnlEnhActive, contentScale);
+            ScaleHeight(pnlEnhInactive, contentScale);
+            ScaleHeight(enhanceSubtitlePanel, contentScale);
+            ApplyTotalsUiScale(contentScale);
 
             var buttonSize = Math.Max(22, ScalePx(29));
             DockButton.Width = buttonSize;
@@ -422,13 +441,13 @@ namespace Mids_Reborn.UI.Controls
             int shortDescriptionHeight = ScaleMetric(20, scale, 16);
             int sliderHeight = sliderHost.Visible ? MeasureScaledBaseHeight(sliderHost, scale, 31, 24) : 0;
             int statsHeight = MeasureMinimumPowerStatsHeight(scale);
-            int damageHeight = MeasureScaledBaseHeight(infoDamageDisplay, scale, MinimumDamageDisplayHeight, 50);
+            int damageHeight = ScaleMetric(MinimumDamageDisplayHeight, scale, 50);
             int infoPageMinimumHeight = shortDescriptionHeight + sliderHeight + statsHeight + damageHeight + ScaleMetric(10, scale, 6);
 
             int enhanceSubtitleHeight = MeasureScaledBaseHeight(enhanceSubtitlePanel, scale, 19, 15);
-            int slotPanelHeight = MeasureScaledBaseHeight(pnlEnhActive, scale, 50, MinimumEnhancementSlotPanelHeight);
+            int slotPanelHeight = ScaleMetric(CompactMinimumEnhancementSlotPanelHeight, scale, 28);
             int enhancementGap = ScaleMetric(6, scale, 4);
-            int enhancementListHeight = ScaleMetric(MinimumEnhancementListHeight, scale, 48);
+            int enhancementListHeight = ScaleMetric(CompactMinimumEnhancementListHeight, scale, 32);
             int enhancePageMinimumHeight =
                 enhanceSubtitleHeight +
                 enhancementGap +
@@ -457,6 +476,8 @@ namespace Mids_Reborn.UI.Controls
 
         private void ApplyMetricScale(float scale)
         {
+            ApplyPowerScalerMetrics(scale);
+
             powerStatsGrid.HeaderHeight = ScaleMetric(28, scale, 20);
             powerStatsGrid.RowHeight = ScaleMetric(28, scale, 20);
 
@@ -476,6 +497,17 @@ namespace Mids_Reborn.UI.Controls
                 _bonusesGrid.MezChildHeight = ScaleMetric(28, scale, 20);
                 _bonusesGrid.DescriptorRowHeight = ScaleMetric(34, scale, 26);
             }
+        }
+
+        private void ApplyPowerScalerMetrics(float scale)
+        {
+            midsTrackBar1.TextAreaWidth = ScaleMetric(PowerScalerTextAreaWidth, scale, 78);
+            midsTrackBar1.MinimumTrackWidth = ScaleMetric(PowerScalerMinimumTrackWidth, scale, 54);
+            midsTrackBar1.TextGap = ScaleMetric(PowerScalerTextGap, scale, 4);
+            midsTrackBar1.TrackGap = ScaleMetric(PowerScalerTrackGap, scale, 6);
+            midsTrackBar1.HorizontalPadding = ScaleMetric(PowerScalerHorizontalPadding, scale, 5);
+            midsTrackBar1.TrackThickness = ScaleMetric(PowerScalerTrackThickness, scale, 4);
+            midsTrackBar1.ThumbDiameter = ScaleMetric(PowerScalerThumbDiameter, scale, 10);
         }
 
         private int MeasureMinimumPowerStatsHeight(float scale)
@@ -863,7 +895,7 @@ namespace Mids_Reborn.UI.Controls
             int gp = ScaleGridPx(powerStatsGrid.GridPadding);
             int hh = ScaleGridPx(powerStatsGrid.HeaderHeight);
             int rh = ScaleGridPx(powerStatsGrid.RowHeight);
-            int visualRows = (powerStatsGrid.Rows.Count + 1) / 2;
+            int visualRows = Math.Min(MinimumInfoStatVisualRows, (powerStatsGrid.Rows.Count + 1) / 2);
 
             return gp + hh + (visualRows * rh) + gp;
         }
@@ -1014,7 +1046,7 @@ namespace Mids_Reborn.UI.Controls
             }
 
             var visibleTabs = VisibleTabs;
-            var tabRects = GetVisibleTabRects(visibleTabs);
+            var tabRects = GetVisibleTabRects(visibleTabs, out var useCompactTabTitles);
 
             if (HeaderActionsVisible)
             {
@@ -1054,7 +1086,7 @@ namespace Mids_Reborn.UI.Controls
                 g.DrawPath(tabBorder, path);
 
                 var textColor = tab.PageIndex == _selectedTabIndex ? theme.Text : Blend(theme.Muted, theme.Text, 0.24f);
-                DrawTextWithOutline(g, tab.Title, font, rect, textColor, Color.Black);
+                DrawTextWithOutline(g, GetTabDisplayTitle(tab, useCompactTabTitles), font, rect, textColor, Color.Black);
             }
         }
 
@@ -1074,8 +1106,9 @@ namespace Mids_Reborn.UI.Controls
             g.DrawPath(border, path);
         }
 
-        private Rectangle[] GetVisibleTabRects(IReadOnlyList<TabDescriptor> visibleTabs)
+        private Rectangle[] GetVisibleTabRects(IReadOnlyList<TabDescriptor> visibleTabs, out bool useCompactTabTitles)
         {
+            useCompactTabTitles = false;
             if (visibleTabs.Count == 0)
             {
                 return Array.Empty<Rectangle>();
@@ -1088,10 +1121,33 @@ namespace Mids_Reborn.UI.Controls
             var tabTop = Math.Max(ScalePx(2), (headerPanel.ClientSize.Height - ScalePx(TabHeight)) / 2);
 
             using var font = new Font(Font.FontFamily, Font.Size, FontStyle.Bold);
-            return ComputeTabRects(availableWidth, visibleTabs, font, new Point(outerInset, tabTop), ScalePx(TabHeight), tabSpacing, ScalePx(TabPaddingX));
+            var tabHeight = ScalePx(TabHeight);
+            var fullPadding = ScalePx(TabPaddingX);
+            useCompactTabTitles = MeasureTabPreferredWidth(visibleTabs, font, tabHeight, fullPadding, useCompactTitles: false) > availableWidth;
+            var padding = useCompactTabTitles ? ScalePx(CompactTabPaddingX) : fullPadding;
+            return ComputeTabRects(availableWidth, visibleTabs, font, new Point(outerInset, tabTop), tabHeight, tabSpacing, padding, useCompactTabTitles);
         }
 
-        private static Rectangle[] ComputeTabRects(int totalWidth, IReadOnlyList<TabDescriptor> tabs, Font font, Point origin, int height, int spacing, int paddingX)
+        private static int MeasureTabPreferredWidth(IReadOnlyList<TabDescriptor> tabs, Font font, int height, int paddingX, bool useCompactTitles)
+        {
+            var preferredTotal = 0;
+            for (int i = 0; i < tabs.Count; i++)
+            {
+                int measuredWidth = TextRenderer.MeasureText(
+                    GetTabDisplayTitle(tabs[i], useCompactTitles),
+                    font,
+                    new Size(int.MaxValue, height),
+                    TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix).Width;
+                preferredTotal += Math.Max(1, measuredWidth + paddingX);
+            }
+
+            return preferredTotal;
+        }
+
+        private static string GetTabDisplayTitle(TabDescriptor tab, bool useCompactTitle)
+            => useCompactTitle ? tab.CompactTitle : tab.Title;
+
+        private static Rectangle[] ComputeTabRects(int totalWidth, IReadOnlyList<TabDescriptor> tabs, Font font, Point origin, int height, int spacing, int paddingX, bool useCompactTitles)
         {
             if (tabs.Count == 0)
             {
@@ -1104,15 +1160,20 @@ namespace Mids_Reborn.UI.Controls
             for (int i = 0; i < tabs.Count; i++)
             {
                 int measuredWidth = TextRenderer.MeasureText(
-                    tabs[i].Title,
+                    GetTabDisplayTitle(tabs[i], useCompactTitles),
                     font,
                     new Size(int.MaxValue, height),
                     TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix).Width;
-                preferredWidths[i] = Math.Max(height, measuredWidth + paddingX);
+                preferredWidths[i] = Math.Max(1, measuredWidth + paddingX);
                 preferredTotal += preferredWidths[i];
             }
 
             var allocatedWidths = new int[tabs.Count];
+            if (totalWidth <= 0)
+            {
+                return tabs.Select((_, i) => new Rectangle(origin.X + i * spacing, origin.Y, 0, height)).ToArray();
+            }
+
             if (preferredTotal <= totalWidth)
             {
                 Array.Copy(preferredWidths, allocatedWidths, tabs.Count);
@@ -1134,13 +1195,13 @@ namespace Mids_Reborn.UI.Controls
                 for (int i = 0; i < tabs.Count; i++)
                 {
                     double scaledWidth = preferredWidths[i] * scale;
-                    int width = Math.Max(height, (int)Math.Floor(scaledWidth));
+                    int width = Math.Max(0, (int)Math.Floor(scaledWidth));
                     allocatedWidths[i] = width;
                     allocatedTotal += width;
                     fractional[i] = (i, scaledWidth - width);
                 }
 
-                int remainder = Math.Max(0, totalWidth - allocatedTotal);
+                int remainder = totalWidth - allocatedTotal;
                 foreach (var candidate in fractional.OrderByDescending(item => item.Fraction).ThenBy(item => item.Index))
                 {
                     if (remainder <= 0)
@@ -1150,6 +1211,13 @@ namespace Mids_Reborn.UI.Controls
 
                     allocatedWidths[candidate.Index]++;
                     remainder--;
+                }
+
+                for (int i = tabs.Count - 1; remainder < 0 && i >= 0; i--)
+                {
+                    int reduction = Math.Min(allocatedWidths[i], -remainder);
+                    allocatedWidths[i] -= reduction;
+                    remainder += reduction;
                 }
             }
 
@@ -1214,7 +1282,7 @@ namespace Mids_Reborn.UI.Controls
             }
 
             var visibleTabs = VisibleTabs;
-            var tabRects = GetVisibleTabRects(visibleTabs);
+            var tabRects = GetVisibleTabRects(visibleTabs, out _);
 
             int newHovered = -1;
             for (int i = 0; i < tabRects.Length; i++)
@@ -4232,12 +4300,45 @@ namespace Mids_Reborn.UI.Controls
             var subtitleBottom = enhanceSubtitlePanel.Bottom;
             int activeSlotHeight = Math.Max(ScalePx(MinimumEnhancementSlotPanelHeight), pnlEnhActive.Height);
             int inactiveSlotHeight = Math.Max(ScalePx(MinimumEnhancementSlotPanelHeight), pnlEnhInactive.Height);
+            int minimumSlotHeight = ScalePx(CompactMinimumEnhancementSlotPanelHeight);
+            int minimumListHeight = ScalePx(CompactMinimumEnhancementListHeight);
             int gap = ScalePx(6);
             int bottomInset = ScalePx(3);
-            var inactiveTop = Math.Max(subtitleBottom, enhanceView.ClientSize.Height - inactiveSlotHeight - bottomInset);
-            var activeTop = Math.Max(subtitleBottom, inactiveTop - activeSlotHeight - gap);
             var listTop = subtitleBottom + 1;
-            var listHeight = Math.Max(0, activeTop - listTop - gap);
+            var availableHeight = Math.Max(0, enhanceView.ClientSize.Height - listTop - bottomInset);
+            var requiredHeight = minimumListHeight + activeSlotHeight + inactiveSlotHeight + (gap * 2);
+            if (requiredHeight > availableHeight)
+            {
+                var deficit = requiredHeight - availableHeight;
+                var activeReduction = Math.Min(Math.Max(0, activeSlotHeight - minimumSlotHeight), (deficit + 1) / 2);
+                activeSlotHeight -= activeReduction;
+                deficit -= activeReduction;
+
+                var inactiveReduction = Math.Min(Math.Max(0, inactiveSlotHeight - minimumSlotHeight), deficit);
+                inactiveSlotHeight -= inactiveReduction;
+                deficit -= inactiveReduction;
+
+                if (deficit > 0)
+                {
+                    minimumListHeight = Math.Max(0, minimumListHeight - deficit);
+                }
+            }
+
+            var listHeight = Math.Max(0, availableHeight - activeSlotHeight - inactiveSlotHeight - (gap * 2));
+            if (listHeight < minimumListHeight)
+            {
+                var deficit = minimumListHeight - listHeight;
+                var activeReduction = Math.Min(Math.Max(0, activeSlotHeight - minimumSlotHeight), (deficit + 1) / 2);
+                activeSlotHeight -= activeReduction;
+                deficit -= activeReduction;
+
+                var inactiveReduction = Math.Min(Math.Max(0, inactiveSlotHeight - minimumSlotHeight), deficit);
+                inactiveSlotHeight -= inactiveReduction;
+                listHeight = Math.Max(0, availableHeight - activeSlotHeight - inactiveSlotHeight - (gap * 2));
+            }
+
+            var activeTop = listTop + listHeight + gap;
+            var inactiveTop = activeTop + activeSlotHeight + gap;
 
             enhDataList.SetBounds(0, listTop, width, listHeight);
             pnlEnhActive.SetBounds(0, activeTop, width, activeSlotHeight);

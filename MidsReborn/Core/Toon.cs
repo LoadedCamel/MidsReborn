@@ -707,15 +707,24 @@ namespace Mids_Reborn.Core
 
         public PetActorSnapshot? GeneratePetActorSnapshot(RealPetActorRosterItem item, PetActorPreviewState? previewState = null)
         {
-            return GeneratePetActorSnapshotCore(item, previewState, includeAppliedBonuses: true);
+            return GeneratePetActorSnapshotCore(item, previewState, includeAppliedBonuses: true, includeCalculationSnapshot: true);
         }
 
         internal PetActorSnapshot? GeneratePetActorSnapshotForAnalysis(RealPetActorRosterItem item, PetActorPreviewState? previewState = null)
         {
-            return GeneratePetActorSnapshotCore(item, previewState, includeAppliedBonuses: false);
+            return GeneratePetActorSnapshotCore(item, previewState, includeAppliedBonuses: false, includeCalculationSnapshot: false);
         }
 
-        private PetActorSnapshot? GeneratePetActorSnapshotCore(RealPetActorRosterItem item, PetActorPreviewState? previewState, bool includeAppliedBonuses)
+        internal ActorTotalsSnapshot? GeneratePetActorTotalsForAnalysis(RealPetActorRosterItem item, PetActorPreviewState? previewState = null)
+        {
+            return GeneratePetActorSnapshotCore(item, previewState, includeAppliedBonuses: false, includeCalculationSnapshot: false)?.Totals;
+        }
+
+        private PetActorSnapshot? GeneratePetActorSnapshotCore(
+            RealPetActorRosterItem item,
+            PetActorPreviewState? previewState,
+            bool includeAppliedBonuses,
+            bool includeCalculationSnapshot)
         {
             var entity = DatabaseAPI.Database.Entities
                 .FirstOrDefault(candidate => candidate?.UID.Equals(item.EntityUid, StringComparison.OrdinalIgnoreCase) == true);
@@ -810,12 +819,30 @@ namespace Mids_Reborn.Core
                     generatedPowers.Value.Key,
                     generatedPowers.Value.Value)
                 : Array.Empty<PetAppliedBonusEntry>();
-            var powerSnapshots = CalculationSnapshotFactory.CreatePowerSnapshots(
-                basePowers.Cast<IPower?>().ToArray(),
-                basePowers.Cast<IPower?>().ToArray(),
-                generatedPowers.Value.Key.Cast<IPower?>().ToArray(),
-                generatedPowers.Value.Key.Cast<IPower?>().ToArray(),
-                generatedPowers.Value.Value.Cast<IPower?>().ToArray());
+            ActorCalculationSnapshot? calculationSnapshot = null;
+            if (includeCalculationSnapshot)
+            {
+                var powerSnapshots = CalculationSnapshotFactory.CreatePowerSnapshots(
+                    basePowers.Cast<IPower?>().ToArray(),
+                    basePowers.Cast<IPower?>().ToArray(),
+                    generatedPowers.Value.Key.Cast<IPower?>().ToArray(),
+                    generatedPowers.Value.Key.Cast<IPower?>().ToArray(),
+                    generatedPowers.Value.Value.Cast<IPower?>().ToArray());
+
+                calculationSnapshot = CalculationSnapshotFactory.CreateActorSnapshot(
+                    CalculationActorKind.Pet,
+                    recipient.ClassName,
+                    DatabaseAPI.GetArchetypeByClassName(recipient.ClassName),
+                    generatedPowers.Value.Key,
+                    generatedPowers.Value.Value,
+                    aggregation.FinalSelfEnhanceBuckets,
+                    aggregation.FinalSelfBuffBuckets,
+                    totals,
+                    null,
+                    aggregation.Contributions,
+                    powerSnapshots,
+                    aggregation.Aggregation);
+            }
 
             return new PetActorSnapshot
             {
@@ -832,19 +859,7 @@ namespace Mids_Reborn.Core
                 BuffedPowers = generatedPowers.Value.Value,
                 Totals = totals,
                 AppliedBonusEntries = appliedBonuses,
-                CalculationSnapshot = CalculationSnapshotFactory.CreateActorSnapshot(
-                    CalculationActorKind.Pet,
-                    recipient.ClassName,
-                    DatabaseAPI.GetArchetypeByClassName(recipient.ClassName),
-                    generatedPowers.Value.Key,
-                    generatedPowers.Value.Value,
-                    aggregation.FinalSelfEnhanceBuckets,
-                    aggregation.FinalSelfBuffBuckets,
-                    totals,
-                    null,
-                    aggregation.Contributions,
-                    powerSnapshots,
-                    aggregation.Aggregation)
+                CalculationSnapshot = calculationSnapshot
             };
         }
 

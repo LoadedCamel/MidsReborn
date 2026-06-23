@@ -25,7 +25,7 @@ internal sealed class MidsTotalsQuickChip : Control
         get => _uiScale;
         set
         {
-            var clamped = Math.Clamp(value, 0.90f, 1.25f);
+            var clamped = Math.Clamp(value, 0.82f, 1.25f);
             if (Math.Abs(_uiScale - clamped) < 0.01f) return;
             _uiScale = clamped;
             Invalidate();

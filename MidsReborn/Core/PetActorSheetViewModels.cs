@@ -72,19 +72,26 @@ public static class PetActorSheetViewModelBuilder
                 Title = group.Key.Title,
                 Subtitle = group.Key.Subtitle,
                 Tiles = group
-                    .Select(entry => new PetActorPowerTileViewModel
+                    .Select(entry =>
                     {
-                        PowerIndex = entry.Index,
-                        DisplayName = entry.Power.Power.DisplayName,
-                        FullName = entry.Power.Power.FullName,
-                        PowerKindLabel = GetPowerKindLabel(entry.Power.Power),
-                        UpgradeRequiredDisplayName = entry.RequiredUpgrade,
-                        SourceDescription = PetActorPowerResolver.DescribePowerSource(entry.Power),
-                        IsAuto = entry.Power.Power.PowerType == Enums.ePowerType.Auto_,
-                        IsSelected = entry.Index == selectedPowerIndex,
-                        CanTogglePreview = entry.Power.VisibleInGrid && entry.Power.IsSelfClickBuff,
-                        IsPreviewIncluded = snapshot.PreviewState.IsPetClickBuffIncluded(entry.Power.Power.FullName),
-                        BasePower = entry.Power.Power
+                        var canTogglePreview = entry.Power.VisibleInGrid &&
+                                               entry.Power.Power.PowerType == Enums.ePowerType.Click &&
+                                               entry.Power.Power.ClickBuff;
+                        return new PetActorPowerTileViewModel
+                        {
+                            PowerIndex = entry.Index,
+                            DisplayName = entry.Power.Power.DisplayName,
+                            FullName = entry.Power.Power.FullName,
+                            PowerKindLabel = GetPowerKindLabel(entry.Power.Power),
+                            UpgradeRequiredDisplayName = entry.RequiredUpgrade,
+                            SourceDescription = PetActorPowerResolver.DescribePowerSource(entry.Power),
+                            IsAuto = entry.Power.Power.PowerType == Enums.ePowerType.Auto_,
+                            IsSelected = entry.Index == selectedPowerIndex,
+                            CanTogglePreview = canTogglePreview,
+                            IsPreviewIncluded = canTogglePreview &&
+                                                snapshot.PreviewState.IsPetClickBuffIncluded(entry.Power.Power.FullName),
+                            BasePower = entry.Power.Power
+                        };
                     })
                     .ToArray()
             })

@@ -1,5 +1,8 @@
 ﻿using System.ComponentModel;
 
+using System.Drawing.Drawing2D;
+using Mids_Reborn.UI.Theming;
+
 namespace Mids_Reborn.UI.Forms.Controls
 {
     public partial class AdvListView : ListView
@@ -7,6 +10,26 @@ namespace Mids_Reborn.UI.Forms.Controls
         public event EventHandler? DataSourceChanged;
 
         private object? _dataSource;
+        private bool _useAppTheme;
+
+        [Category("Appearance")]
+        [DefaultValue(false)]
+        public bool UseAppTheme
+        {
+            get => _useAppTheme;
+            set
+            {
+                if (_useAppTheme == value)
+                {
+                    return;
+                }
+
+                _useAppTheme = value;
+                OwnerDraw = value;
+                ApplyThemeColors();
+                Invalidate();
+            }
+        }
 
         [DefaultValue(null)]
         [RefreshProperties(RefreshProperties.Repaint)]
@@ -29,6 +52,10 @@ namespace Mids_Reborn.UI.Forms.Controls
         {
             InitializeComponent();
         }
+
+        private DataViewTheme CurrentTheme => DesignMode
+            ? ThemeManager.DesignTime.DataView
+            : ThemeManager.CurrentTheme?.DataView ?? ThemeManager.DesignTime.DataView;
 
         public void AddColumnMapping(int columnIndex, Func<object, object?> dataRetriever, Func<object?, object?>? transformer1 = null, Func<object?, object?>? dataRetriever2 = null, Func<object?, object>? transformer2 = null, Func<object?, object?>? tagFunction = null)
         {
@@ -140,6 +167,154 @@ namespace Mids_Reborn.UI.Forms.Controls
                 // Add the ListViewItem to the ListView
                 Items.Add(item);
             }
+        }
+
+        protected override void OnDrawColumnHeader(DrawListViewColumnHeaderEventArgs e)
+        {
+            if (!UseAppTheme)
+            {
+                e.DrawDefault = true;
+                base.OnDrawColumnHeader(e);
+                return;
+            }
+
+            var theme = CurrentTheme;
+            using (var brush = new LinearGradientBrush(
+                       e.Bounds,
+                       ResolveColor(theme.GridHeaderTop, theme.HeaderTop),
+                       ResolveColor(theme.GridHeaderBottom, theme.HeaderBottom),
+                       LinearGradientMode.Vertical))
+            {
+                e.Graphics.FillRectangle(brush, e.Bounds);
+            }
+
+            using (var pen = new Pen(ResolveColor(theme.GridHeaderBorder, theme.Border)))
+            {
+                e.Graphics.DrawLine(pen, e.Bounds.Left, e.Bounds.Bottom - 1, e.Bounds.Right, e.Bounds.Bottom - 1);
+                e.Graphics.DrawLine(pen, e.Bounds.Right - 1, e.Bounds.Top, e.Bounds.Right - 1, e.Bounds.Bottom);
+            }
+
+            var textBounds = Rectangle.Inflate(e.Bounds, -6, 0);
+            TextRenderer.DrawText(
+                e.Graphics,
+                e.Header.Text,
+                Font,
+                textBounds,
+                ResolveColor(theme.Text, ForeColor),
+                TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis);
+        }
+
+        protected override void OnDrawItem(DrawListViewItemEventArgs e)
+        {
+            if (!UseAppTheme || View != View.Details)
+            {
+                e.DrawDefault = true;
+                base.OnDrawItem(e);
+            }
+        }
+
+        protected override void OnDrawSubItem(DrawListViewSubItemEventArgs e)
+        {
+            if (!UseAppTheme)
+            {
+                e.DrawDefault = true;
+                base.OnDrawSubItem(e);
+                return;
+            }
+
+            var theme = CurrentTheme;
+            var itemIndex = Math.Max(0, e.Item.Index);
+            var selected = e.Item.Selected;
+            var rowBack = selected
+                ? Blend(ResolveColor(theme.TabActiveBottom, theme.Accent), ResolveColor(theme.Accent, Color.DodgerBlue), 0.22f)
+                : itemIndex % 2 == 0
+                    ? ResolveColor(theme.GridRowEven, theme.Card)
+                    : ResolveColor(theme.GridRowOdd, Blend(theme.Card, theme.Background, 0.25f));
+
+            using (var brush = new SolidBrush(rowBack))
+            {
+                e.Graphics.FillRectangle(brush, e.Bounds);
+            }
+
+            var textLeft = e.Bounds.Left + 6;
+            if (e.ColumnIndex == 0 &&
+                SmallImageList is { Images.Count: > 0 } &&
+                e.Item.ImageIndex >= 0 &&
+                e.Item.ImageIndex < SmallImageList.Images.Count)
+            {
+                var icon = SmallImageList.Images[e.Item.ImageIndex];
+                var iconSize = Math.Max(1, Math.Min(Math.Min(SmallImageList.ImageSize.Width, SmallImageList.ImageSize.Height), e.Bounds.Height - 4));
+                var iconBounds = new Rectangle(
+                    e.Bounds.Left + 4,
+                    e.Bounds.Top + Math.Max(0, (e.Bounds.Height - iconSize) / 2),
+                    iconSize,
+                    iconSize);
+
+                e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                e.Graphics.DrawImage(icon, iconBounds);
+                textLeft = iconBounds.Right + 6;
+            }
+
+            var textBounds = new Rectangle(
+                textLeft,
+                e.Bounds.Top,
+                Math.Max(0, e.Bounds.Right - textLeft - 6),
+                e.Bounds.Height);
+
+            var flags = TextFormatFlags.VerticalCenter | TextFormatFlags.EndEllipsis;
+            flags |= e.Header.TextAlign switch
+            {
+                HorizontalAlignment.Center => TextFormatFlags.HorizontalCenter,
+                HorizontalAlignment.Right => TextFormatFlags.Right,
+                _ => TextFormatFlags.Left
+            };
+
+            TextRenderer.DrawText(
+                e.Graphics,
+                e.SubItem.Text,
+                Font,
+                textBounds,
+                selected ? ResolveColor(theme.Text, Color.WhiteSmoke) : ResolveColor(theme.Muted, ResolveColor(theme.Text, Color.WhiteSmoke)),
+                flags);
+
+            using var rowLinePen = new Pen(ResolveColor(theme.GridRowLine, theme.Border));
+            e.Graphics.DrawLine(rowLinePen, e.Bounds.Left, e.Bounds.Bottom - 1, e.Bounds.Right, e.Bounds.Bottom - 1);
+        }
+
+        internal void RefreshTheme()
+        {
+            ApplyThemeColors();
+            Invalidate();
+        }
+
+        private void ApplyThemeColors()
+        {
+            if (!UseAppTheme)
+            {
+                return;
+            }
+
+            var theme = CurrentTheme;
+            BackColor = ResolveColor(theme.GridRowEven, theme.Card);
+            ForeColor = ResolveColor(theme.Text, Color.WhiteSmoke);
+            HideSelection = false;
+            BorderStyle = BorderStyle.FixedSingle;
+        }
+
+        private static Color ResolveColor(Color value, Color fallback)
+        {
+            return value.IsEmpty ? fallback : value;
+        }
+
+        private static Color Blend(Color first, Color second, float amountSecond)
+        {
+            amountSecond = Math.Clamp(amountSecond, 0f, 1f);
+            var amountFirst = 1f - amountSecond;
+            return Color.FromArgb(
+                (int)Math.Round(first.A * amountFirst + second.A * amountSecond),
+                (int)Math.Round(first.R * amountFirst + second.R * amountSecond),
+                (int)Math.Round(first.G * amountFirst + second.G * amountSecond),
+                (int)Math.Round(first.B * amountFirst + second.B * amountSecond));
         }
 
         internal class ColumnMapping

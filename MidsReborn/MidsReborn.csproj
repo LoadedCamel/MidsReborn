@@ -256,6 +256,12 @@
     <Content Include="Assets\*.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
+    <Content Include="Assets\*\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
+    <Content Include="Assets\*.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </Content>
     <Content Include="Databases\Homecoming\Assets\Types\Sets\D-Sync.png" />
     <Content Include="Databases\Homecoming\Assets\Types\Sets\dsync.png">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>

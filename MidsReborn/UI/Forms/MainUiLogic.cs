@@ -8,6 +8,64 @@ namespace Mids_Reborn.UI.Forms
     // avoid mutation and the service location pattern
     public static class MainUiLogic
     {
+        public static bool PowersetsAreMutuallyExclusive(IPowerset? first, IPowerset? second)
+        {
+            if (first is null || second is null || first.nID < 0 || second.nID < 0)
+            {
+                return false;
+            }
+
+            return HasMutexSet(first, second.nID) || HasMutexSet(second, first.nID);
+        }
+
+        public static IPowerset?[] GetCompatiblePowersetIndexes(
+            Archetype? archetype,
+            Enums.ePowerSetType setType,
+            IPowerset? selectedPrimary,
+            IPowerset? selectedSecondary)
+        {
+            if (archetype is null)
+            {
+                return Array.Empty<IPowerset?>();
+            }
+
+            var powersets = DatabaseAPI.GetPowersetIndexes(archetype, setType);
+            var counterpart = setType switch
+            {
+                Enums.ePowerSetType.Primary => selectedSecondary,
+                Enums.ePowerSetType.Secondary => selectedPrimary,
+                _ => null
+            };
+
+            return counterpart is null
+                ? powersets
+                : powersets.Where(powerset => !PowersetsAreMutuallyExclusive(powerset, counterpart)).ToArray();
+        }
+
+        public static IPowerset? ResolveCompatiblePowerset(
+            IPowerset? requested,
+            IEnumerable<IPowerset?> candidates,
+            IPowerset? counterpart,
+            IPowerset? current)
+        {
+            var candidateList = candidates.Where(powerset => powerset is not null).ToArray();
+            if (requested is not null &&
+                candidateList.Any(powerset => powerset?.nID == requested.nID) &&
+                !PowersetsAreMutuallyExclusive(requested, counterpart))
+            {
+                return requested;
+            }
+
+            if (current is not null &&
+                candidateList.Any(powerset => powerset?.nID == current.nID) &&
+                !PowersetsAreMutuallyExclusive(current, counterpart))
+            {
+                return current;
+            }
+
+            return candidateList.FirstOrDefault(powerset => !PowersetsAreMutuallyExclusive(powerset, counterpart));
+        }
+
         public static void ChangeSets(Toon toon, Character? ch, int primaryIndex, int secondaryIndex, int pool0Index, int pool1Index, int pool2Index, int pool3Index, int ancillaryIndex, Func<Archetype, Enums.ePowerSetType, IPowerset[]> getPowerSets, Action lockSecondary)
         {
             var at = ch.Archetype;
@@ -35,8 +93,15 @@ namespace Mids_Reborn.UI.Forms
                     lockSecondary();
                     var powerset2 = ch.Powersets[1];
                     IPowerset?[] secondaryPowersets = getPowerSets(at, Enums.ePowerSetType.Secondary);
-                    var newPowerset2 = secondaryPowersets[secondaryIndex];
-                    if (powerset2.nID != newPowerset2.nID)
+                    var requestedSecondary = secondaryIndex >= 0 && secondaryIndex < secondaryPowersets.Length
+                        ? secondaryPowersets[secondaryIndex]
+                        : powerset2;
+                    var newPowerset2 = ResolveCompatiblePowerset(
+                        requestedSecondary,
+                        secondaryPowersets,
+                        ch.Powersets[0],
+                        powerset2);
+                    if (newPowerset2 is not null && powerset2.nID != newPowerset2.nID)
                     {
                         toon.SwitchSets(newPowerset2, powerset2);
                     }
@@ -46,7 +111,14 @@ namespace Mids_Reborn.UI.Forms
             {
                 IPowerset?[] secondaryPowersets = getPowerSets(at, Enums.ePowerSetType.Secondary);
                 ch.Powersets[0] = newPrimaryPowerset;
-                ch.Powersets[1] = secondaryPowersets[secondaryIndex];
+                var requestedSecondary = secondaryIndex >= 0 && secondaryIndex < secondaryPowersets.Length
+                    ? secondaryPowersets[secondaryIndex]
+                    : ch.Powersets[1];
+                ch.Powersets[1] = ResolveCompatiblePowerset(
+                    requestedSecondary,
+                    secondaryPowersets,
+                    ch.Powersets[0],
+                    ch.Powersets[1]);
             }
 
             IPowerset?[] poolPowersets = getPowerSets(at, Enums.ePowerSetType.Pool);
@@ -128,17 +200,23 @@ namespace Mids_Reborn.UI.Forms
                 // Free secondary → unlock and use the user’s selection
                 setSecondaryLocked(false);
 
-                if (targetSecondary is not null)
+                var compatibleSecondary = ResolveCompatiblePowerset(
+                    targetSecondary,
+                    secondarySets,
+                    ch.Powersets[0],
+                    ch.Powersets[1]);
+
+                if (compatibleSecondary is not null)
                 {
                     if (toon is not null)
                     {
                         var currentSecondary = ch.Powersets[1];
-                        if (currentSecondary?.nID != targetSecondary.nID)
-                            toon.SwitchSets(targetSecondary, currentSecondary);
+                        if (currentSecondary?.nID != compatibleSecondary.nID)
+                            toon.SwitchSets(compatibleSecondary, currentSecondary);
                     }
                     else
                     {
-                        ch.Powersets[1] = targetSecondary;
+                        ch.Powersets[1] = compatibleSecondary;
                     }
                 }
             }
@@ -153,6 +231,11 @@ namespace Mids_Reborn.UI.Forms
             if (targetAncillary is not null) ch.Powersets[7] = targetAncillary;
 
             ch.Validate();
+        }
+
+        private static bool HasMutexSet(IPowerset powerset, int otherPowersetId)
+        {
+            return powerset.nIDMutexSets?.Any(id => id == otherPowersetId) == true;
         }
     }
 }

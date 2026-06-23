@@ -812,6 +812,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             ChangeSets();
+            SyncPrimarySecondaryCombos();
             UpdatePowerLists();
             if (!MidsContext.Config.UseOldTotalsWindow)
             {
@@ -932,7 +933,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             e.DrawBackground();
 
             using var solidBrush = new SolidBrush(Color.Black);
-            var powersetIndexes = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, setType);
+            var powersetIndexes = GetCompatibleComboPowersets(MidsContext.Character.Archetype, setType);
 
             if (e.Index > -1 && e.Index < powersetIndexes.Length)
             {
@@ -1109,7 +1110,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var extraString =
                 "This is your primary powerset. This powerset can be changed after a build has been started, and any placed powers will be swapped out for those in the new set.";
             ShowPopup(
-                DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, Enums.ePowerSetType.Primary)[
+                GetCompatibleComboPowersets(MidsContext.Character.Archetype, Enums.ePowerSetType.Primary)[
                     cbPrimary.SelectedIndex].nID,
                 MidsContext.Character.Archetype.Idx, cbPrimary.Bounds, extraString);
         }
@@ -1122,6 +1123,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
             }
 
             ChangeSets();
+            SyncPrimarySecondaryCombos();
             UpdatePowerLists();
             if (!MidsContext.Config.UseOldTotalsWindow)
             {
@@ -1151,7 +1153,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 ? "This is your secondary powerset. This powerset can be changed after a build has been started, and any placed powers will be swapped out for those in the new set."
                 : "This is your secondary powerset. This powerset is linked to your primary set and cannot be changed independantly. However, it can be changed by selecting a different primary powerset.";
             ShowPopup(
-                DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, Enums.ePowerSetType.Secondary)[
+                GetCompatibleComboPowersets(MidsContext.Character.Archetype, Enums.ePowerSetType.Secondary)[
                     cbSecondary.SelectedIndex].nID,
                 MidsContext.Character.Archetype.Idx, cbSecondary.Bounds, extraString);
         }
@@ -4091,7 +4093,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 cbPool2.SelectedIndex,
                 cbPool3.SelectedIndex,
                 cbAncillary.SelectedIndex,
-                DatabaseAPI.GetPowersetIndexes,
+                GetCompatibleComboPowersets,
                 () => cbSecondary.Enabled = true
             );
             DataViewLocked = false;
@@ -4184,7 +4186,10 @@ The default position/state will be used upon next launch.", @"Window State Warni
 
         private static void ComboCheckPS(ComboBoxT<string> iCb, Enums.PowersetType iSetId, Enums.ePowerSetType iSetType)
         {
-            var powersetNames = DatabaseAPI.GetPowersetNames(MidsContext.Character.Archetype.Idx, iSetType);
+            var powersetIndexes = GetCompatibleComboPowersets(MidsContext.Character.Archetype, iSetType);
+            var powersetNames = powersetIndexes.Length == 0
+                ? new[] { "No " + Enum.GetName(iSetType.GetType(), iSetType) }
+                : powersetIndexes.Select(powerset => powerset.DisplayName).ToArray();
             var needsComboUpdate = iCb.Items.Count != powersetNames.Length || !iCb.Items.SequenceEqual(powersetNames);
             if (needsComboUpdate)
             {
@@ -4194,9 +4199,31 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 iCb.EndUpdate();
             }
 
-            var powersetIndexes = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, iSetType);
             iCb.SelectedIndex =
                 DatabaseAPI.ToDisplayIndex(MidsContext.Character.Powersets[(int)iSetId], powersetIndexes);
+        }
+
+        private void SyncPrimarySecondaryCombos()
+        {
+            NoUpdate = true;
+            try
+            {
+                ComboCheckPS(CbtPrimary.Value, Enums.PowersetType.Primary, Enums.ePowerSetType.Primary);
+                ComboCheckPS(CbtSecondary.Value, Enums.PowersetType.Secondary, Enums.ePowerSetType.Secondary);
+            }
+            finally
+            {
+                NoUpdate = false;
+            }
+        }
+
+        private static IPowerset?[] GetCompatibleComboPowersets(Archetype? archetype, Enums.ePowerSetType setType)
+        {
+            return MainUiLogic.GetCompatiblePowersetIndexes(
+                archetype,
+                setType,
+                MidsContext.Character?.Powersets[0],
+                MidsContext.Character?.Powersets[1]);
         }
 
         private void command_New()

@@ -171,7 +171,7 @@ public sealed class PetActorSnapshot
     public IReadOnlyList<IPower> MathPowers { get; init; } = [];
     public IReadOnlyList<IPower> BuffedPowers { get; init; } = [];
     public ActorTotalsSnapshot Totals { get; init; } = null!;
-    public IReadOnlyList<PetAppliedBonusEntry> AppliedBonusEntries { get; init; } = [];
+    public IReadOnlyList<PetAppliedBonusEntry> AppliedBonusEntries { get; set; } = [];
     internal ActorCalculationSnapshot? CalculationSnapshot { get; init; }
 }
 

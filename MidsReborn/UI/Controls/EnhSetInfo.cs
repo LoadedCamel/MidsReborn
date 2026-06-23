@@ -2,6 +2,7 @@
 using System.Drawing.Imaging;
 using System.Drawing.Text;
 using Mids_Reborn.UI.Design.Extensions;
+using Mids_Reborn.UI.Theming;
 
 namespace Mids_Reborn.UI.Controls
 {
@@ -15,6 +16,7 @@ namespace Mids_Reborn.UI.Controls
         private string[]? _enhancements;
         private string[]? _setBonuses;
         private string? _selectedBonus;
+        private string[]? _selectedBonuses;
 
         private Bitmap? _textBitmap;
         private readonly VScrollBar _vScrollBar;
@@ -23,6 +25,10 @@ namespace Mids_Reborn.UI.Controls
         public override Color BackColor { get; set; } = Color.Black;
         private Color TitleColor { get; set; } = Color.WhiteSmoke;
         private Color BonusColor { get; set; } = Color.SpringGreen;
+        private Color BorderColor { get; set; } = Color.Azure;
+        private Color EnhancementColor { get; set; } = Color.Cyan;
+        private Color CountColor { get; set; } = Color.Gold;
+        private Color EmptyTextColor { get; set; } = Color.Gray;
 
         private readonly Dictionary<string, Color> _rarityColors = new()
         {
@@ -45,6 +51,21 @@ namespace Mids_Reborn.UI.Controls
             _vScrollBar.Scroll += VScrollBar_Scroll;
             Controls.Add(_vScrollBar);
             MouseWheel += OnMouseWheel;
+        }
+
+        public void ApplyTheme(DataViewTheme theme)
+        {
+            BackColor = ResolveColor(theme.Card, Color.Black);
+            ForeColor = ResolveColor(theme.Text, Color.WhiteSmoke);
+            TitleColor = ResolveColor(theme.Text, Color.WhiteSmoke);
+            BonusColor = ResolveColor(theme.ValueText, Color.SpringGreen);
+            BorderColor = Blend(ResolveColor(theme.Border, Color.Azure), ResolveColor(theme.Accent, Color.Azure), 0.28f);
+            EnhancementColor = Blend(ResolveColor(theme.Accent, Color.Cyan), Color.Cyan, 0.35f);
+            CountColor = ResolveColor(theme.Accent, Color.Gold);
+            EmptyTextColor = ResolveColor(theme.Muted, Color.Gray);
+            _textBitmap?.Dispose();
+            _textBitmap = null;
+            Invalidate();
         }
 
         private void OnMouseWheel(object? sender, MouseEventArgs e)
@@ -70,6 +91,7 @@ namespace Mids_Reborn.UI.Controls
         public void SetInfo(SetData data)
         {
             _textBitmap?.Dispose();
+            ResetScroll();
             _title = data.Set;
             _rarity = data.SetRarity;
             _setTypeName = data.SetType;
@@ -78,6 +100,7 @@ namespace Mids_Reborn.UI.Controls
             _enhancements = data.Enhancements.ToArray();
             _setBonuses = data.Bonuses.ToArray();
             _selectedBonus = data.Selected;
+            _selectedBonuses = data.SelectedBonuses.ToArray();
             _textBitmap = null;
             Invalidate();
         }
@@ -85,6 +108,7 @@ namespace Mids_Reborn.UI.Controls
         public void Clear()
         {
             _textBitmap?.Dispose();
+            ResetScroll();
             _title = null;
             _rarity = null;
             _setTypeName = null;
@@ -93,6 +117,7 @@ namespace Mids_Reborn.UI.Controls
             _enhancements = null;
             _setBonuses = null;
             _selectedBonus = null;
+            _selectedBonuses = null;
             _textBitmap = null;
             Invalidate();
         }
@@ -106,7 +131,7 @@ namespace Mids_Reborn.UI.Controls
         private int CalculateTotalHeight(IDeviceContext g, Font font)
         {
             var yOffset = 6;
-            var bitmapWidth = Width - _vScrollBar.Width; // Account for scrollbar width
+            var bitmapWidth = Math.Max(1, Width - _vScrollBar.Width); // Account for scrollbar width
             if (!string.IsNullOrWhiteSpace(_title))
             {
                 var size = TextRenderer.MeasureText(g, _title, font);
@@ -173,7 +198,7 @@ namespace Mids_Reborn.UI.Controls
                 totalHeight = CalculateTotalHeight(g, font);
             }
 
-            var bitmapWidth = Width - _vScrollBar.Width;
+            var bitmapWidth = Math.Max(1, Width - _vScrollBar.Width);
 
             // Create a Bitmap and Graphics object
             var bitmap = new Bitmap(bitmapWidth, totalHeight, PixelFormat.Format32bppArgb);
@@ -198,7 +223,7 @@ namespace Mids_Reborn.UI.Controls
                     yOffset += size.Height + 1;
 
                     // Draw Enhancements Subtitle
-                    TextRendererExt.DrawTextWithSubColor(g, $"Enhancements in Set: {_enhCount}", _enhCount, font, new Point(6, yOffset), TitleColor, Color.Gold);
+                    TextRendererExt.DrawTextWithSubColor(g, $"Enhancements in Set: {_enhCount}", _enhCount, font, new Point(6, yOffset), TitleColor, CountColor);
                     yOffset += size.Height + 5;
 
                     // Draw Enhancements
@@ -206,7 +231,7 @@ namespace Mids_Reborn.UI.Controls
                     {
                         foreach (var enhancement in _enhancements)
                         {
-                            TextRenderer.DrawText(g, $"\u00a4 {enhancement}", font, new Point(20, yOffset), Color.Cyan);
+                            TextRenderer.DrawText(g, $"\u00a4 {enhancement}", font, new Point(20, yOffset), EnhancementColor);
                             size = TextRenderer.MeasureText(g, $"\u00a4 {enhancement}", font);
                             yOffset += size.Height + 2;
                         }
@@ -223,7 +248,7 @@ namespace Mids_Reborn.UI.Controls
                     {
                         foreach (var bonus in _setBonuses)
                         {
-                            var bonusTextColor = !string.IsNullOrWhiteSpace(_selectedBonus) && bonus.Contains(_selectedBonus) ? Color.Gold : BonusColor;
+                            var bonusTextColor = IsSelectedBonus(bonus) ? CountColor : BonusColor;
                             size = TextRenderer.MeasureText(g, bonus, font);
 
                             if (size.Width > bitmapWidth - 12)
@@ -251,11 +276,41 @@ namespace Mids_Reborn.UI.Controls
                     var size = TextRenderer.MeasureText("Select Enhancement Set", font);
                     var x = (Width - size.Width) / 2;
                     var y = (Height - size.Height) / 2;
-                    TextRenderer.DrawText(g, "Select Enhancement Set", font, new Point(x, y), Color.Gray);
+                    TextRenderer.DrawText(g, "Select Enhancement Set", font, new Point(x, y), EmptyTextColor);
                 }
             }
 
             return bitmap;
+        }
+
+        private bool IsSelectedBonus(string bonus)
+        {
+            if (_selectedBonuses is { Length: > 0 } &&
+                _selectedBonuses.Any(selected => !string.IsNullOrWhiteSpace(selected) &&
+                                                bonus.Contains(selected, StringComparison.OrdinalIgnoreCase)))
+            {
+                return true;
+            }
+
+            return !string.IsNullOrWhiteSpace(_selectedBonus) &&
+                   bonus.Contains(_selectedBonus, StringComparison.OrdinalIgnoreCase);
+        }
+
+        protected override void OnSizeChanged(EventArgs e)
+        {
+            base.OnSizeChanged(e);
+            _textBitmap?.Dispose();
+            _textBitmap = null;
+            Invalidate();
+        }
+
+        private void ResetScroll()
+        {
+            _scrollOffset = 0;
+            if (_vScrollBar.Value != _vScrollBar.Minimum)
+            {
+                _vScrollBar.Value = _vScrollBar.Minimum;
+            }
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -265,7 +320,7 @@ namespace Mids_Reborn.UI.Controls
 
             // Draw border
             const int borderWidth = 2; // Set the border width
-            using var borderPen = new Pen(Color.Azure, borderWidth); // Create a pen to draw the border
+            using var borderPen = new Pen(BorderColor, borderWidth); // Create a pen to draw the border
             g.DrawRectangle(borderPen, 0, 0, Width - 1, Height - 1); // Draw the border
 
             if (_textBitmap == null)
@@ -292,6 +347,22 @@ namespace Mids_Reborn.UI.Controls
             g.DrawImage(_textBitmap, destRect, sourceRect, GraphicsUnit.Pixel);
         }
 
+        private static Color ResolveColor(Color value, Color fallback)
+        {
+            return value.IsEmpty ? fallback : value;
+        }
+
+        private static Color Blend(Color first, Color second, float amountSecond)
+        {
+            amountSecond = Math.Clamp(amountSecond, 0f, 1f);
+            var amountFirst = 1f - amountSecond;
+            return Color.FromArgb(
+                (int)Math.Round(first.A * amountFirst + second.A * amountSecond),
+                (int)Math.Round(first.R * amountFirst + second.R * amountSecond),
+                (int)Math.Round(first.G * amountFirst + second.G * amountSecond),
+                (int)Math.Round(first.B * amountFirst + second.B * amountSecond));
+        }
+
         public class SetData
         {
             public string Set { get; init; } = string.Empty;
@@ -302,6 +373,7 @@ namespace Mids_Reborn.UI.Controls
             public List<string> Enhancements { get; set; } = new();
             public List<string> Bonuses { get; set; } = new();
             public string Selected { get; set; } = string.Empty;
+            public List<string> SelectedBonuses { get; set; } = new();
         }
     }
 }

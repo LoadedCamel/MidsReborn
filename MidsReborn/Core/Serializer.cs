@@ -119,6 +119,8 @@ namespace Mids_Reborn.Core
                 "DisableDesaturateInherent",
                 "RotationHelperLocation",
                 "EntityDetailsLocation",
+                "PetActorDetailsLocation",
+                "PetActorDetailsSize",
                 "DvState",
                 "Suppression",
                 "UseArcanaTime",

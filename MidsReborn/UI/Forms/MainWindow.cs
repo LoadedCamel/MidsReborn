@@ -142,9 +142,15 @@ namespace Mids_Reborn.UI.Forms
         private const float ResponsiveWideSlackWidth = 220f;
         private const float ResponsiveMainShellGap = 6f;
         private const float ResponsiveRightShellChromeWidth = 16f;
-        private const float PortraitTopPaneHeightRatio = 0.42f;
-        private const float PortraitTopPaneMinimumHeight = 320f;
-        private const float PortraitTopPaneMaximumHeight = 520f;
+        private const float PortraitTopPaneHeightRatio = 0.32f;
+        private const float PortraitTopPaneMinimumHeight = 460f;
+        private const float PortraitTopPaneMaximumHeight = 540f;
+        private const float PortraitPowerListHeightRatio = 0.18f;
+        private const float PortraitPowerListMinimumHeight = 72f;
+        private const float PortraitPowerListHardMinimumHeight = 56f;
+        private const float PortraitPowerListMaximumHeight = 104f;
+        private const float PortraitPoolRailMinimumWidth = 218f;
+        private const float PortraitPoolRailMaximumWidth = 286f;
         private const float LeftUiScaleBucketGranularity = 100f;
         private float _lastMasterScale = 1f;
         private int _lastCanvasWidth = -1;
@@ -318,7 +324,9 @@ namespace Mids_Reborn.UI.Forms
         private int[]? _cachedPlayableArchetypeIds;
         private int _cachedOriginArchetypeId = -1;
         private int _cachedPrimaryArchetypeId = -1;
+        private int _cachedPrimarySecondaryPowersetId = -1;
         private int _cachedSecondaryArchetypeId = -1;
+        private int _cachedSecondaryPrimaryPowersetId = -1;
         private int _cachedPoolArchetypeId = -1;
         private int _cachedAncillaryArchetypeId = -1;
 
@@ -374,7 +382,8 @@ namespace Mids_Reborn.UI.Forms
         private enum ResizeLayoutMode
         {
             Standard,
-            CompactTwoColumn
+            CompactTwoColumn,
+            Portrait
         }
 
         private enum MainWindowResponsiveProfile
@@ -485,6 +494,7 @@ namespace Mids_Reborn.UI.Forms
             ApplyPowerSetChromeSpacing();
             EnsureWorkspaceShells();
             InitializeNativeHeaderLayout();
+            ConfigurePowersetDropDownAvailability();
             ConfigurePowerListHeadings();
             SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.ResizeRedraw | ControlStyles.UserPaint, true);
             UpdateStyles();
@@ -1747,24 +1757,28 @@ namespace Mids_Reborn.UI.Forms
             return low;
         }
 
-        private void ApplyLeftDetailsLayout(bool isCompactTwoColumn, float scale, float metricsScale, bool sameModeLiveResize, bool captureExactMetrics)
+        private void ApplyLeftDetailsLayout(ResizeLayoutMode layoutMode, float scale, float metricsScale, bool sameModeLiveResize, bool captureExactMetrics)
         {
             leftInnerLayoutPanel.SuspendLayout();
 
-            if (isCompactTwoColumn)
+            switch (layoutMode)
             {
-                EnsureCompactLeftDetailsStructure();
-            }
-            else
-            {
-                EnsureStandardLeftDetailsStructure();
+                case ResizeLayoutMode.CompactTwoColumn:
+                    EnsureCompactLeftDetailsStructure();
+                    break;
+                case ResizeLayoutMode.Portrait:
+                    EnsurePortraitLeftDetailsStructure();
+                    break;
+                default:
+                    EnsureStandardLeftDetailsStructure();
+                    break;
             }
 
-            UpdateLeftDetailsMetrics(isCompactTwoColumn, scale, metricsScale, sameModeLiveResize, captureExactMetrics);
+            UpdateLeftDetailsMetrics(layoutMode, scale, metricsScale, sameModeLiveResize, captureExactMetrics);
             leftInnerLayoutPanel.ResumeLayout(performLayout: false);
         }
 
-        private void ApplyLeftWorkspaceLayout(bool isCompactTwoColumn, float scale, float metricsScale, float poolRailWidth, bool sameModeLiveResize, bool captureExactMetrics)
+        private void ApplyLeftWorkspaceLayout(ResizeLayoutMode layoutMode, float scale, float metricsScale, float poolRailWidth, bool sameModeLiveResize, bool captureExactMetrics)
         {
             if (_leftDetailsShell is null)
             {
@@ -1773,16 +1787,20 @@ namespace Mids_Reborn.UI.Forms
 
             leftLayoutPanel.SuspendLayout();
 
-            if (isCompactTwoColumn)
+            switch (layoutMode)
             {
-                EnsureCompactWorkspaceStructure();
-            }
-            else
-            {
-                EnsureStandardWorkspaceStructure();
+                case ResizeLayoutMode.CompactTwoColumn:
+                    EnsureCompactWorkspaceStructure();
+                    break;
+                case ResizeLayoutMode.Portrait:
+                    EnsurePortraitWorkspaceStructure();
+                    break;
+                default:
+                    EnsureStandardWorkspaceStructure();
+                    break;
             }
 
-            UpdateWorkspaceMetrics(isCompactTwoColumn, metricsScale, poolRailWidth, sameModeLiveResize, captureExactMetrics);
+            UpdateWorkspaceMetrics(layoutMode, metricsScale, poolRailWidth, sameModeLiveResize, captureExactMetrics);
             leftLayoutPanel.ResumeLayout(performLayout: false);
         }
 
@@ -1871,7 +1889,56 @@ namespace Mids_Reborn.UI.Forms
             _leftDetailsStructureMode = ResizeLayoutMode.CompactTwoColumn;
         }
 
-        private void UpdateLeftDetailsMetrics(bool isCompactTwoColumn, float scale, float metricsScale, bool sameModeLiveResize, bool captureExactMetrics)
+        private void EnsurePortraitLeftDetailsStructure()
+        {
+            var needsRebuild =
+                _leftDetailsStructureMode != ResizeLayoutMode.Portrait
+                || leftInnerLayoutPanel.ColumnStyles.Count != 3
+                || leftInnerLayoutPanel.RowStyles.Count != 4;
+
+            if (!needsRebuild)
+            {
+                return;
+            }
+
+            CountStructureRebuild();
+            leftInnerLayoutPanel.SuspendLayout();
+            leftInnerLayoutPanel.ColumnCount = 3;
+            CountStyleCollectionReset();
+            leftInnerLayoutPanel.ColumnStyles.Clear();
+            for (var column = 0; column < 3; column++)
+            {
+                leftInnerLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Absolute, 1f));
+            }
+
+            leftInnerLayoutPanel.RowCount = 4;
+            CountStyleCollectionReset();
+            leftInnerLayoutPanel.RowStyles.Clear();
+            for (var row = 0; row < 4; row++)
+            {
+                leftInnerLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 1f));
+            }
+
+            AttachHeaderControl(leftInnerLayoutPanel, lblPrimary, 0, 0);
+            AttachHeaderControl(leftInnerLayoutPanel, label1, 1, 0);
+            AttachHeaderControl(leftInnerLayoutPanel, primaryDropDown, 0, 1);
+            AttachHeaderControl(leftInnerLayoutPanel, secondaryDropDown, 1, 1);
+            AttachHeaderControl(leftInnerLayoutPanel, primaryList, 0, 2);
+            AttachHeaderControl(leftInnerLayoutPanel, secondaryList, 1, 2);
+            if (_poolShell is not null)
+            {
+                AttachHeaderControl(leftInnerLayoutPanel, _poolShell, 2, 0);
+                leftInnerLayoutPanel.SetRowSpan(_poolShell, 3);
+            }
+
+            AttachHeaderControl(leftInnerLayoutPanel, dataView, 0, 3, 3);
+            leftInnerLayoutPanel.SetColumnSpan(dataView, 3);
+
+            leftInnerLayoutPanel.ResumeLayout(performLayout: false);
+            _leftDetailsStructureMode = ResizeLayoutMode.Portrait;
+        }
+
+        private void UpdateLeftDetailsMetrics(ResizeLayoutMode layoutMode, float scale, float metricsScale, bool sameModeLiveResize, bool captureExactMetrics)
         {
             float headerRowHeight = sameModeLiveResize && _leftDetailsExactLayout is { } exactSnapshot
                 ? exactSnapshot.HeaderRowHeight
@@ -1880,7 +1947,7 @@ namespace Mids_Reborn.UI.Forms
                 ? exactSnapshot2.DropDownRowHeight
                 : GetRequiredDropDownRowHeight(BaselinePowerSetDropDownRowHeight, metricsScale, primaryDropDown, secondaryDropDown);
 
-            if (isCompactTwoColumn)
+            if (layoutMode == ResizeLayoutMode.CompactTwoColumn)
             {
                 int preferredMinimumListHeight = (int)Math.Round(ScaleLayoutValue(CompactPowerListMinHeight, scale));
                 int hardMinimumListHeight = (int)Math.Round(ScaleLayoutValue(CompactPowerListHardMinimumHeight, scale));
@@ -1931,6 +1998,61 @@ namespace Mids_Reborn.UI.Forms
                 leftInnerLayoutPanel.RowStyles[5].Height = secondaryListHeight;
                 leftInnerLayoutPanel.RowStyles[6].SizeType = SizeType.Absolute;
                 leftInnerLayoutPanel.RowStyles[6].Height = dataViewHeight;
+            }
+            else if (layoutMode == ResizeLayoutMode.Portrait)
+            {
+                int preferredListHeight = (int)Math.Round(ScaleLayoutValue(PortraitPowerListMinimumHeight, scale));
+                int hardMinimumListHeight = (int)Math.Round(ScaleLayoutValue(PortraitPowerListHardMinimumHeight, scale));
+                int maximumListHeight = (int)Math.Round(ScaleLayoutValue(PortraitPowerListMaximumHeight, scale));
+                int fixedChromeHeight = (int)Math.Round(headerRowHeight + dropDownRowHeight);
+                int availableHeight = Math.Max(0, leftInnerLayoutPanel.ClientSize.Height);
+                int listHeight = Math.Clamp(
+                    (int)Math.Round(availableHeight * PortraitPowerListHeightRatio),
+                    preferredListHeight,
+                    maximumListHeight);
+                int maximumDataViewHeight = Math.Max(0, availableHeight - fixedChromeHeight - listHeight);
+                float dataViewScale = ResolveCompactDataViewScale(scale, maximumDataViewHeight);
+                int minimumDataViewHeight = dataView.GetMinimumResponsiveHeight(dataViewScale);
+                int dataViewHeight = Math.Min(
+                    maximumDataViewHeight,
+                    ResolveCompactDataViewHeight(dataViewScale, minimumDataViewHeight));
+                int excessHeight = fixedChromeHeight + listHeight + dataViewHeight - availableHeight;
+
+                ConsumeExcessHeight(ref listHeight, hardMinimumListHeight, ref excessHeight);
+                ConsumeExcessHeight(ref dataViewHeight, minimumDataViewHeight, ref excessHeight);
+
+                _pendingDataViewScale = dataViewScale;
+                float availableWidth = Math.Max(0f, leftInnerLayoutPanel.ClientSize.Width);
+                float poolColumnWidth = Math.Clamp(
+                    availableWidth * 0.24f,
+                    ScaleLayoutValue(PortraitPoolRailMinimumWidth, scale),
+                    ScaleLayoutValue(PortraitPoolRailMaximumWidth, scale));
+                float minimumPowerColumnWidth = ScaleLayoutValue(260f, scale);
+                if ((availableWidth - poolColumnWidth) / 2f < minimumPowerColumnWidth)
+                {
+                    poolColumnWidth = Math.Max(
+                        ScaleLayoutValue(198f, scale),
+                        availableWidth - (minimumPowerColumnWidth * 2f));
+                }
+
+                poolColumnWidth = Math.Clamp(poolColumnWidth, 1f, Math.Max(1f, availableWidth - 2f));
+                float powerColumnWidth = Math.Max(1f, (availableWidth - poolColumnWidth) / 2f);
+
+                leftInnerLayoutPanel.ColumnStyles[0].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.ColumnStyles[0].Width = powerColumnWidth;
+                leftInnerLayoutPanel.ColumnStyles[1].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.ColumnStyles[1].Width = powerColumnWidth;
+                leftInnerLayoutPanel.ColumnStyles[2].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.ColumnStyles[2].Width = poolColumnWidth;
+
+                leftInnerLayoutPanel.RowStyles[0].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.RowStyles[0].Height = headerRowHeight;
+                leftInnerLayoutPanel.RowStyles[1].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.RowStyles[1].Height = dropDownRowHeight;
+                leftInnerLayoutPanel.RowStyles[2].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.RowStyles[2].Height = listHeight;
+                leftInnerLayoutPanel.RowStyles[3].SizeType = SizeType.Absolute;
+                leftInnerLayoutPanel.RowStyles[3].Height = dataViewHeight;
             }
             else
             {
@@ -2036,9 +2158,45 @@ namespace Mids_Reborn.UI.Forms
             _workspaceStructureMode = ResizeLayoutMode.CompactTwoColumn;
         }
 
-        private void UpdateWorkspaceMetrics(bool isCompactTwoColumn, float metricsScale, float poolRailWidth, bool sameModeLiveResize, bool captureExactMetrics)
+        private void EnsurePortraitWorkspaceStructure()
         {
-            if (isCompactTwoColumn)
+            if (_leftDetailsShell is null)
+            {
+                return;
+            }
+
+            var needsRebuild =
+                _workspaceStructureMode != ResizeLayoutMode.Portrait
+                || leftLayoutPanel.ColumnStyles.Count != 1
+                || leftLayoutPanel.RowStyles.Count != 1
+                || _leftDetailsShell.Parent != leftLayoutPanel;
+
+            if (!needsRebuild)
+            {
+                return;
+            }
+
+            CountStructureRebuild();
+            leftLayoutPanel.SuspendLayout();
+            leftLayoutPanel.ColumnCount = 1;
+            CountStyleCollectionReset();
+            leftLayoutPanel.ColumnStyles.Clear();
+            leftLayoutPanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
+            leftLayoutPanel.RowCount = 1;
+            CountStyleCollectionReset();
+            leftLayoutPanel.RowStyles.Clear();
+            leftLayoutPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
+
+            AttachHeaderControl(leftLayoutPanel, _leftDetailsShell, 0, 0);
+            leftLayoutPanel.SetColumnSpan(_leftDetailsShell, 1);
+            leftLayoutPanel.SetRowSpan(_leftDetailsShell, 1);
+            leftLayoutPanel.ResumeLayout(performLayout: false);
+            _workspaceStructureMode = ResizeLayoutMode.Portrait;
+        }
+
+        private void UpdateWorkspaceMetrics(ResizeLayoutMode layoutMode, float metricsScale, float poolRailWidth, bool sameModeLiveResize, bool captureExactMetrics)
+        {
+            if (layoutMode is ResizeLayoutMode.CompactTwoColumn or ResizeLayoutMode.Portrait)
             {
                 leftLayoutPanel.ColumnStyles[0].SizeType = SizeType.Percent;
                 leftLayoutPanel.ColumnStyles[0].Width = 100f;
@@ -2289,10 +2447,27 @@ namespace Mids_Reborn.UI.Forms
             EnforceWindowMinimumSize(desiredMinimum);
         }
 
-        private static Size GetRequiredMinimumWindowSize(MainWindowResponsiveProfile responsiveProfile)
-            => UsesPortraitMainLayout(responsiveProfile)
+        private Size GetRequiredMinimumWindowSize(MainWindowResponsiveProfile responsiveProfile)
+        {
+            var desiredMinimum = UsesPortraitMainLayout(responsiveProfile)
                 ? new Size(PortraitMinimumWindowWidth, PortraitMinimumWindowHeight)
                 : new Size(LandscapeMinimumWindowWidth, LandscapeMinimumWindowHeight);
+
+            if (!UsesPortraitMainLayout(responsiveProfile))
+            {
+                return desiredMinimum;
+            }
+
+            var workingArea = (IsHandleCreated ? Screen.FromControl(this) : Screen.PrimaryScreen)?.WorkingArea.Size;
+            if (workingArea is not { Width: > 0, Height: > 0 })
+            {
+                return desiredMinimum;
+            }
+
+            return new Size(
+                Math.Min(desiredMinimum.Width, workingArea.Value.Width),
+                Math.Min(desiredMinimum.Height, workingArea.Value.Height));
+        }
 
         private void EnforceWindowMinimumSize(Size minimumWindowSize)
         {
@@ -2892,7 +3067,12 @@ namespace Mids_Reborn.UI.Forms
             => (int)Math.Round(scale * LeftUiScaleBucketGranularity);
 
         private static ResizeLayoutMode GetResizeLayoutMode(MainWindowResponsiveProfile profile)
-            => UsesCompactResponsiveLayout(profile) ? ResizeLayoutMode.CompactTwoColumn : ResizeLayoutMode.Standard;
+            => profile switch
+            {
+                MainWindowResponsiveProfile.Portrait => ResizeLayoutMode.Portrait,
+                MainWindowResponsiveProfile.LowResLaptop => ResizeLayoutMode.CompactTwoColumn,
+                _ => ResizeLayoutMode.Standard
+            };
 
         private bool IsSameProfileLiveResize(MainWindowResponsiveProfile profile, bool forceExact)
             => _isInLiveResize && !forceExact && profile == _lastResponsiveProfile;
@@ -3329,7 +3509,8 @@ namespace Mids_Reborn.UI.Forms
 
         private void ApplyLeftUiGeometry(float scale, float metricsScale, MainWindowResponsiveProfile responsiveProfile, bool sameModeLiveResize, bool captureExactMetrics)
         {
-            bool isCompactTwoColumn = UsesCompactResponsiveLayout(responsiveProfile);
+            var layoutMode = GetResizeLayoutMode(responsiveProfile);
+            bool useCompactHeader = UsesCompactResponsiveLayout(responsiveProfile);
             UpdateWindowMinimumSize(responsiveProfile);
 
             if (_rightBuildShellLayout is not null)
@@ -3348,14 +3529,14 @@ namespace Mids_Reborn.UI.Forms
                 }
             }
 
-            var headerContentHeight = ApplyHeaderLayout(scale, metricsScale, isCompactTwoColumn, sameModeLiveResize, captureExactMetrics);
-            var headerRowHeight = headerContentHeight + Math.Max(4f, ScaleLayoutValue(isCompactTwoColumn ? CompactHeaderVerticalInset : 6f, metricsScale));
+            var headerContentHeight = ApplyHeaderLayout(scale, metricsScale, useCompactHeader, sameModeLiveResize, captureExactMetrics);
+            var headerRowHeight = headerContentHeight + Math.Max(4f, ScaleLayoutValue(useCompactHeader ? CompactHeaderVerticalInset : 6f, metricsScale));
             ApplyMainLayoutProfile(responsiveProfile, headerRowHeight);
-            PositionHeaderContainer(isCompactTwoColumn ? _compactHeaderHost : characterLayoutPanel, headerRowHeight);
+            PositionHeaderContainer(useCompactHeader ? _compactHeaderHost : characterLayoutPanel, headerRowHeight);
 
             float poolRailWidth = ResolveResponsivePoolRailWidth(responsiveProfile);
-            ApplyLeftWorkspaceLayout(isCompactTwoColumn, scale, metricsScale, poolRailWidth, sameModeLiveResize, captureExactMetrics);
-            ApplyLeftDetailsLayout(isCompactTwoColumn, scale, metricsScale, sameModeLiveResize, captureExactMetrics);
+            ApplyLeftWorkspaceLayout(layoutMode, scale, metricsScale, poolRailWidth, sameModeLiveResize, captureExactMetrics);
+            ApplyLeftDetailsLayout(layoutMode, scale, metricsScale, sameModeLiveResize, captureExactMetrics);
 
             if (buttonsLayoutPanel.ColumnStyles.Count >= 6)
             {
@@ -3387,7 +3568,7 @@ namespace Mids_Reborn.UI.Forms
             }
 
             ApplyPoolStackLayout(scale, metricsScale, sameModeLiveResize, captureExactMetrics);
-            if (!isCompactTwoColumn)
+            if (layoutMode != ResizeLayoutMode.CompactTwoColumn)
             {
                 if (_lastResponsiveProfile != responsiveProfile)
                 {
@@ -3398,8 +3579,8 @@ namespace Mids_Reborn.UI.Forms
 
         private void ApplyLeftUiScaleArtifacts(float scale, float metricsScale, ResizeLayoutMode layoutMode)
         {
-            bool isCompactTwoColumn = layoutMode == ResizeLayoutMode.CompactTwoColumn;
-            ApplyWorkspaceShellScale(metricsScale, isCompactTwoColumn);
+            bool useCompactSpacing = layoutMode != ResizeLayoutMode.Standard;
+            ApplyWorkspaceShellScale(metricsScale, useCompactSpacing);
             ScaleLeftUiControlTree(leftLayoutPanel, scale, metricsScale);
             ScaleLeftUiControlTree(buttonsLayoutPanel, scale, metricsScale);
             if (_headerChromeHost is not null)
@@ -3408,7 +3589,7 @@ namespace Mids_Reborn.UI.Forms
             }
 
             dataView.ApplyUiScale(_pendingDataViewScale);
-            if (!isCompactTwoColumn)
+            if (layoutMode != ResizeLayoutMode.CompactTwoColumn)
             {
                 leftLayoutPanel.RefreshSmartLayout();
             }
@@ -3418,7 +3599,7 @@ namespace Mids_Reborn.UI.Forms
 
         private int ScalePx(int value, float scale) => Math.Max(1, (int)Math.Round(value * scale));
 
-        private void ApplyWorkspaceShellScale(float scale, bool isCompactTwoColumn)
+        private void ApplyWorkspaceShellScale(float scale, bool useCompactSpacing)
         {
             ApplyHeaderDropDownMetrics(atDropDown, scale);
             ApplyHeaderDropDownMetrics(originDropDown, scale);
@@ -3429,7 +3610,7 @@ namespace Mids_Reborn.UI.Forms
             {
                 _nameInputShell.CornerRadius = ScalePx(6, scale);
                 _nameInputShell.BorderThickness = Math.Max(1, (int)Math.Round(scale));
-                _nameInputShell.Padding = ScalePadding(isCompactTwoColumn ? new Padding(8, 0, 8, 0) : new Padding(10, 0, 10, 0), scale);
+                _nameInputShell.Padding = ScalePadding(useCompactSpacing ? new Padding(8, 0, 8, 0) : new Padding(10, 0, 10, 0), scale);
                 _nameInputShell.Margin = GetHeaderInteractiveMargin(scale);
                 LayoutHeaderNameInput();
             }
@@ -3438,7 +3619,7 @@ namespace Mids_Reborn.UI.Forms
             {
                 _leftDetailsShell.CornerRadius = ScalePx(8, scale);
                 _leftDetailsShell.BorderThickness = Math.Max(1, (int)Math.Round(scale));
-                _leftDetailsShell.Padding = ScalePadding(isCompactTwoColumn ? new Padding(8, 6, 8, 6) : new Padding(10, 8, 10, 8), scale);
+                _leftDetailsShell.Padding = ScalePadding(useCompactSpacing ? new Padding(8, 6, 8, 6) : new Padding(10, 8, 10, 8), scale);
                 _leftDetailsShell.Margin = ScalePadding(new Padding(3, 3, 2, 3), scale);
             }
 
@@ -3446,18 +3627,18 @@ namespace Mids_Reborn.UI.Forms
             {
                 _poolShell.CornerRadius = ScalePx(8, scale);
                 _poolShell.BorderThickness = Math.Max(1, (int)Math.Round(scale));
-                _poolShell.Padding = ScalePadding(isCompactTwoColumn ? new Padding(6, 8, 6, 8) : new Padding(6, 10, 6, 10), scale);
-                _poolShell.Margin = ScalePadding(isCompactTwoColumn ? new Padding(3, 3, 0, 3) : new Padding(2, 3, 0, 3), scale);
+                _poolShell.Padding = ScalePadding(useCompactSpacing ? new Padding(6, 8, 6, 8) : new Padding(6, 10, 6, 10), scale);
+                _poolShell.Margin = ScalePadding(useCompactSpacing ? new Padding(3, 3, 0, 3) : new Padding(2, 3, 0, 3), scale);
             }
 
-            rightInnerLayoutPanel.Padding = new Padding(0, 0, ScalePx((int)(isCompactTwoColumn ? 2f : BaselinePoolRailRightInset), scale), 0);
+            rightInnerLayoutPanel.Padding = new Padding(0, 0, ScalePx((int)(useCompactSpacing ? 2f : BaselinePoolRailRightInset), scale), 0);
 
             if (_rightBuildShell is not null)
             {
                 _rightBuildShell.CornerRadius = ScalePx(8, scale);
                 _rightBuildShell.BorderThickness = Math.Max(1, (int)Math.Round(1.5f * scale));
-                _rightBuildShell.Padding = ScalePadding(isCompactTwoColumn ? new Padding(6) : new Padding(8), scale);
-                _rightBuildShell.Margin = ScalePadding(isCompactTwoColumn ? new Padding(2, 3, 0, 0) : new Padding(3, 3, 0, 0), scale);
+                _rightBuildShell.Padding = ScalePadding(useCompactSpacing ? new Padding(6) : new Padding(8), scale);
+                _rightBuildShell.Margin = ScalePadding(useCompactSpacing ? new Padding(2, 3, 0, 0) : new Padding(3, 3, 0, 0), scale);
             }
         }
 
@@ -3989,6 +4170,7 @@ namespace Mids_Reborn.UI.Forms
         {
             if (_events.IsSuppressed) return;
             ChangeSets();
+            SyncPrimarySecondaryDropDowns();
             UpdatePowerLists();
             ProcessLocks();
             UpdateFooterSummary();
@@ -3998,6 +4180,7 @@ namespace Mids_Reborn.UI.Forms
         {
             if (_events.IsSuppressed) return;
             ChangeSets();
+            SyncPrimarySecondaryDropDowns();
             UpdatePowerLists();
             ProcessLocks();
             UpdateFooterSummary();
@@ -7925,8 +8108,20 @@ namespace Mids_Reborn.UI.Forms
 
         private int AssignSetIndex(Enums.PowersetType setId, Enums.ePowerSetType setType)
         {
-            var powersetIndexes = DatabaseAPI.GetPowersetIndexes(MidsContext.Character.Archetype, setType);
+            var powersetIndexes = GetHeaderPowersets(setType);
             return DatabaseAPI.ToDisplayIndex(MidsContext.Character.Powersets[(int)setId], powersetIndexes);
+        }
+
+        private IPowerset?[] GetHeaderPowersets(Enums.ePowerSetType setType)
+        {
+            return GetHeaderPowersets(MidsContext.Character?.Archetype, setType);
+        }
+
+        private static IPowerset?[] GetHeaderPowersets(Archetype? archetype, Enums.ePowerSetType setType)
+        {
+            return archetype is null
+                ? Array.Empty<IPowerset?>()
+                : DatabaseAPI.GetPowersetIndexes(archetype, setType);
         }
 
         private static int ResolveArchetypeIconIndex(Archetype archetype)
@@ -8011,14 +8206,15 @@ namespace Mids_Reborn.UI.Forms
         private void LoadPrimary(Archetype? selectedItem)
         {
             int archetypeId = selectedItem?.Idx ?? -1;
-            if (primaryDropDown.DataSource != null && _cachedPrimaryArchetypeId == archetypeId)
+            int secondaryId = MidsContext.Character?.Powersets[1]?.nID ?? -1;
+            if (primaryDropDown.DataSource != null &&
+                _cachedPrimaryArchetypeId == archetypeId &&
+                _cachedPrimarySecondaryPowersetId == secondaryId)
             {
                 return;
             }
 
-            var powerSets = selectedItem == null
-                ? []
-                : DatabaseAPI.GetPowersetIndexes(selectedItem, Enums.ePowerSetType.Primary).ToList();
+            var powerSets = GetHeaderPowersets(selectedItem, Enums.ePowerSetType.Primary).ToList();
 
             primaryDropDown.DisplayMember = "DisplayName";
             primaryDropDown.IconProvider = item =>
@@ -8036,19 +8232,23 @@ namespace Mids_Reborn.UI.Forms
             };
             primaryDropDown.DataSource = powerSets;
             _cachedPrimaryArchetypeId = archetypeId;
+            _cachedPrimarySecondaryPowersetId = secondaryId;
+            primaryDropDown.RefreshItemAvailability();
         }
 
         private void LoadSecondary(Archetype? selectedItem)
         {
             int archetypeId = selectedItem?.Idx ?? -1;
-            if (secondaryDropDown.DataSource != null && _cachedSecondaryArchetypeId == archetypeId)
+            var selectedPrimary = primaryDropDown.SelectedItem as IPowerset ?? MidsContext.Character?.Powersets[0];
+            int primaryId = selectedPrimary?.nID ?? -1;
+            if (secondaryDropDown.DataSource != null &&
+                _cachedSecondaryArchetypeId == archetypeId &&
+                _cachedSecondaryPrimaryPowersetId == primaryId)
             {
                 return;
             }
 
-            var powerSets = selectedItem == null
-                ? []
-                : DatabaseAPI.GetPowersetIndexes(selectedItem, Enums.ePowerSetType.Secondary).ToList();
+            var powerSets = GetHeaderPowersets(selectedItem, Enums.ePowerSetType.Secondary).ToList();
 
             secondaryDropDown.DisplayMember = "DisplayName";
             secondaryDropDown.IconProvider = item =>
@@ -8066,6 +8266,74 @@ namespace Mids_Reborn.UI.Forms
             };
             secondaryDropDown.DataSource = powerSets;
             _cachedSecondaryArchetypeId = archetypeId;
+            _cachedSecondaryPrimaryPowersetId = primaryId;
+            secondaryDropDown.RefreshItemAvailability();
+        }
+
+        private void SyncPrimarySecondaryDropDowns()
+        {
+            if (MidsContext.Character?.Archetype is null)
+            {
+                return;
+            }
+
+            using (_events.Suppress(true))
+            {
+                _cachedPrimaryArchetypeId = -1;
+                _cachedPrimarySecondaryPowersetId = -1;
+                _cachedSecondaryArchetypeId = -1;
+                _cachedSecondaryPrimaryPowersetId = -1;
+
+                LoadPrimary(atDropDown.SelectedItem);
+                SetSelectedIndexIfAvailable(primaryDropDown,
+                    AssignSetIndex(Enums.PowersetType.Primary, Enums.ePowerSetType.Primary));
+
+                LoadSecondary(atDropDown.SelectedItem);
+                SetSelectedIndexIfAvailable(secondaryDropDown,
+                    AssignSetIndex(Enums.PowersetType.Secondary, Enums.ePowerSetType.Secondary));
+
+                RefreshPowersetDropDownAvailability();
+            }
+        }
+
+        private void ConfigurePowersetDropDownAvailability()
+        {
+            primaryDropDown.ItemDisabledReasonProvider = item =>
+                GetPowersetDropDownDisabledReason(Enums.ePowerSetType.Primary, item as IPowerset);
+            secondaryDropDown.ItemDisabledReasonProvider = item =>
+                GetPowersetDropDownDisabledReason(Enums.ePowerSetType.Secondary, item as IPowerset);
+        }
+
+        private string? GetPowersetDropDownDisabledReason(Enums.ePowerSetType setType, IPowerset? powerset)
+        {
+            if (powerset is null || MidsContext.Character is null)
+            {
+                return null;
+            }
+
+            var counterpart = setType switch
+            {
+                Enums.ePowerSetType.Primary => secondaryDropDown.SelectedItem as IPowerset ?? MidsContext.Character.Powersets[1],
+                Enums.ePowerSetType.Secondary => primaryDropDown.SelectedItem as IPowerset ?? MidsContext.Character.Powersets[0],
+                _ => null
+            };
+
+            if (!MainUiLogic.PowersetsAreMutuallyExclusive(powerset, counterpart))
+            {
+                return null;
+            }
+
+            var counterpartName = !string.IsNullOrWhiteSpace(counterpart?.DisplayName)
+                ? counterpart.DisplayName
+                : "the selected powerset";
+            var counterpartKind = setType == Enums.ePowerSetType.Primary ? "secondary" : "primary";
+            return $"{powerset.DisplayName} cannot be paired with {counterpartName}. Choose a different {counterpartKind} powerset first.";
+        }
+
+        private void RefreshPowersetDropDownAvailability()
+        {
+            primaryDropDown.RefreshItemAvailability();
+            secondaryDropDown.RefreshItemAvailability();
         }
 
         private void LoadPools()
@@ -8137,7 +8405,7 @@ namespace Mids_Reborn.UI.Forms
                 pool2DropDown.SelectedIndex, 
                 pool3DropDown.SelectedIndex, 
                 ancillaryDropDown.SelectedIndex, 
-                DatabaseAPI.GetPowersetIndexes,
+                GetHeaderPowersets,
                 () => secondaryDropDown.Unlock());
         }
 
@@ -9884,7 +10152,11 @@ namespace Mids_Reborn.UI.Forms
 
         private void UpdateToon(Toon toon, Character? ch, int primaryIndex, int secondaryIndex, int pool0Index, int pool1Index, int pool2Index, int pool3Index, int ancillaryIndex, Func<Archetype, Enums.ePowerSetType, IPowerset[]> getPowerSets, Action lockSecondary)
         {
-            var at = ch.Archetype;
+            if (ch?.Archetype is not { } at)
+            {
+                return;
+            }
+
             var primaryPowersets = getPowerSets(at, Enums.ePowerSetType.Primary);
             var newPrimaryPowerset = GetSelectedPowerset(primaryPowersets, primaryIndex, ch.Powersets[0]);
             if (newPrimaryPowerset == null)
@@ -9915,7 +10187,12 @@ namespace Mids_Reborn.UI.Forms
                     lockSecondary();
                     var powerset2 = ch.Powersets[1];
                     IPowerset?[] secondaryPowersets = getPowerSets(at, Enums.ePowerSetType.Secondary);
-                    var newPowerset2 = GetSelectedPowerset(secondaryPowersets, secondaryIndex, powerset2);
+                    var requestedSecondary = GetSelectedPowerset(secondaryPowersets, secondaryIndex, powerset2);
+                    var newPowerset2 = MainUiLogic.ResolveCompatiblePowerset(
+                        requestedSecondary,
+                        secondaryPowersets,
+                        ch.Powersets[0],
+                        powerset2);
                     if (newPowerset2 == null)
                     {
                         return;
@@ -9931,7 +10208,12 @@ namespace Mids_Reborn.UI.Forms
             {
                 IPowerset?[] secondaryPowersets = getPowerSets(at, Enums.ePowerSetType.Secondary);
                 ch.Powersets[0] = newPrimaryPowerset;
-                var newSecondaryPowerset = GetSelectedPowerset(secondaryPowersets, secondaryIndex, ch.Powersets[1]);
+                var requestedSecondary = GetSelectedPowerset(secondaryPowersets, secondaryIndex, ch.Powersets[1]);
+                var newSecondaryPowerset = MainUiLogic.ResolveCompatiblePowerset(
+                    requestedSecondary,
+                    secondaryPowersets,
+                    ch.Powersets[0],
+                    ch.Powersets[1]);
                 if (newSecondaryPowerset == null)
                 {
                     return;

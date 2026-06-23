@@ -1,60 +1,119 @@
+using System.ComponentModel;
+using System.Diagnostics;
 using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Master_Classes;
+using Mids_Reborn.Core.Utils;
 using Mids_Reborn.UI.Controls;
 using Mids_Reborn.UI.Controls.Test;
 using Mids_Reborn.UI.Theming;
-using MRBResourceLib;
 
 namespace Mids_Reborn.UI.Forms.WindowMenuItems;
 
-public sealed class FrmPetActorDetails : Form
+public sealed partial class FrmPetActorDetails : Form
 {
+    private const float MinimumResponsiveUiScale = 0.90f;
+    private const float MaximumResponsiveUiScale = 1.25f;
+    private const int BaselineFormWidth = 1280;
+    private const int BaselineFormHeight = 800;
+    private const float UiScaleIntensity = 0.35f;
+
     private readonly Toon _toon;
-    private readonly PetActorRibbon _actorRibbon;
-    private readonly MidsVScrollPanel _powerGridScrollPanel;
-    private readonly PetActorPowerGrid _powerGrid;
-    private readonly MidsDataViewNeo _detailView;
-    private readonly Panel _headerPanel;
-    private readonly TableLayoutPanel _summaryMetrics;
-    private readonly TableLayoutPanel _previewStatePanel;
-    private readonly FlowLayoutPanel _upgradeFlow;
-    private readonly FlowLayoutPanel _proximityFlow;
-    private readonly SplitContainer _bodySplit;
-    private readonly SplitContainer _detailTotalsSplit;
-    private readonly Panel _emptyStatePanel;
-    private readonly Label _nameLabel;
-    private readonly Label _subTitleLabel;
-    private readonly Label _classLabel;
-    private readonly Label _countLabel;
-    private readonly Label _tagsLabel;
-    private readonly Label _emptyLabel;
-    private readonly Panel _totalsScrollPanel;
-    private readonly TableLayoutPanel _totalsStack;
-    private readonly PowerStatsGrid _coreGrid;
-    private readonly PowerStatsGrid _combatGrid;
-    private readonly PowerStatsGrid _movementGrid;
-    private readonly PowerStatsGrid _defenseGrid;
-    private readonly PowerStatsGrid _statusGrid;
-    private readonly Label _coreLabel;
-    private readonly Label _combatLabel;
-    private readonly Label _movementLabel;
-    private readonly Label _defenseLabel;
-    private readonly Label _statusLabel;
+    private PetActorRibbon _actorRibbon = null!;
+    private MidsVScrollPanel _powerGridScrollPanel = null!;
+    private PetActorPowerGrid _powerGrid = null!;
+    private PetActorDetailView _detailView = null!;
+    private Panel _headerPanel = null!;
+    private PetActorIconView _headerIcon = null!;
+    private TableLayoutPanel _summaryMetrics = null!;
+    private TableLayoutPanel _previewStatePanel = null!;
+    private FlowLayoutPanel _upgradeFlow = null!;
+    private FlowLayoutPanel _proximityFlow = null!;
+    private SplitContainer _bodySplit = null!;
+    private SplitContainer _detailTotalsSplit = null!;
+    private Panel _emptyStatePanel = null!;
+    private TableLayoutPanel _rootLayout = null!;
+    private TableLayoutPanel _headerLayout = null!;
+    private TableLayoutPanel _ribbonHost = null!;
+    private TableLayoutPanel _powerPanel = null!;
+    private Panel _contentHost = null!;
+    private TableLayoutPanel _totalsHost = null!;
+    private Label _nameLabel = null!;
+    private Label _subTitleLabel = null!;
+    private Label _classLabel = null!;
+    private Label _countLabel = null!;
+    private Label _tagsLabel = null!;
+    private Label _emptyLabel = null!;
+    private Panel _totalsScrollPanel = null!;
+    private TableLayoutPanel _totalsStack = null!;
+    private PowerStatsGrid _coreGrid = null!;
+    private PowerStatsGrid _combatGrid = null!;
+    private PowerStatsGrid _movementGrid = null!;
+    private PowerStatsGrid _defenseGrid = null!;
+    private PowerStatsGrid _statusGrid = null!;
+    private Label _coreLabel = null!;
+    private Label _combatLabel = null!;
+    private Label _movementLabel = null!;
+    private Label _defenseLabel = null!;
+    private Label _statusLabel = null!;
     private readonly Dictionary<string, (Label Title, Label Value)> _metricLabels = new(StringComparer.OrdinalIgnoreCase);
     private readonly List<RealPetActorRosterItem> _roster = [];
     private readonly Dictionary<string, PetActorPreviewState> _previewStatesByActor = new(StringComparer.OrdinalIgnoreCase);
+    private readonly Dictionary<Control, float> _baseFontSizes = new();
 
     private PetActorSnapshot? _currentSnapshot;
     private string? _selectedEntityUid;
     private int _selectedSourceHistoryIndex = -1;
     private int _selectedPowerIndex = -1;
+    private int _snapshotLoadVersion;
+    private int _bonusLoadQueuedVersion = -1;
+    private bool _startupRevealQueued;
+    private bool _startupRevealCompleted;
+    private bool _bonusEntriesPending;
+    private bool _snapshotRefreshQueued;
     private bool _suppressPreviewStateEvents;
+    private bool _forceDesignPreview;
+    private bool _designTimeSampleApplied;
+    private float _uiScale = 1f;
+
+    private sealed record ShellPanelMetadata(Color AccentColor);
+    private sealed record ShellBadgeSpec(MidsTotalsGlyph Glyph, Color AccentColor, Color GlowColor);
+
+    private bool InDesigner => IsInDesigner();
 
     private DataViewTheme CurrentTheme => DesignMode
         ? ThemeManager.DesignTime.DataView
         : ThemeManager.CurrentTheme?.DataView ?? ThemeManager.DesignTime.DataView;
+
+    private static bool IsInDesignerProcess()
+    {
+        static bool containsDesignHostName(string? value)
+            => !string.IsNullOrWhiteSpace(value) &&
+               (value.Contains("devenv", StringComparison.OrdinalIgnoreCase) ||
+                value.Contains("designtoolsserver", StringComparison.OrdinalIgnoreCase) ||
+                value.Contains("xdesproc", StringComparison.OrdinalIgnoreCase));
+
+        return containsDesignHostName(AppDomain.CurrentDomain.FriendlyName) ||
+               containsDesignHostName(Process.GetCurrentProcess().ProcessName);
+    }
+
+    private bool IsInDesigner()
+    {
+        return _forceDesignPreview ||
+               DesignMode ||
+               LicenseManager.UsageMode == LicenseUsageMode.Designtime ||
+               Site?.DesignMode == true ||
+               IsInDesignerProcess();
+    }
+
+    public FrmPetActorDetails()
+        : this(new Toon(), null, -1)
+    {
+        _forceDesignPreview = true;
+        ApplyDesignTimeSampleIfNeeded();
+    }
 
     public FrmPetActorDetails(Toon toon, string? initialEntityUid = null, int initialSourceHistoryIndex = -1)
     {
@@ -64,284 +123,207 @@ public sealed class FrmPetActorDetails : Form
 
         SetStyle(ControlStyles.OptimizedDoubleBuffer | ControlStyles.AllPaintingInWmPaint | ControlStyles.ResizeRedraw, true);
         DoubleBuffered = true;
-        AutoScaleMode = AutoScaleMode.Dpi;
-        BackColor = Color.Black;
-        ForeColor = Color.WhiteSmoke;
-        FormBorderStyle = FormBorderStyle.SizableToolWindow;
-        MinimumSize = new Size(1200, 780);
-        Size = new Size(1500, 920);
-        StartPosition = FormStartPosition.Manual;
-        Text = "Pet Actor Sheet";
-        Icon = Resources.MRB_Icon_Concept;
+        InitializeComponent();
+        InitializeShellContent();
+        ApplyDesignTimeSampleIfNeeded();
+    }
 
-        var rootLayout = new TableLayoutPanel
-        {
-            Dock = DockStyle.Fill,
-            ColumnCount = 1,
-            RowCount = 5,
-            BackColor = Color.Black,
-            Padding = new Padding(8)
-        };
-        rootLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 102f));
-        rootLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 84f));
-        rootLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 82f));
-        rootLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 86f));
-        rootLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-
-        _headerPanel = new Panel
-        {
-            Dock = DockStyle.Fill,
-            Margin = new Padding(0, 0, 0, 8),
-            Padding = new Padding(16, 12, 16, 12)
-        };
-        _headerPanel.Paint += HeaderPanelOnPaint;
-
-        var headerLayout = new TableLayoutPanel
-        {
-            Dock = DockStyle.Fill,
-            ColumnCount = 2,
-            RowCount = 3,
-            BackColor = Color.Transparent
-        };
-        headerLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 74f));
-        headerLayout.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 26f));
-        headerLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 34f));
-        headerLayout.RowStyles.Add(new RowStyle(SizeType.Absolute, 24f));
-        headerLayout.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-
-        _nameLabel = new Label
-        {
-            Dock = DockStyle.Fill,
-            Font = new Font("Segoe UI", 16f, FontStyle.Bold),
-            TextAlign = ContentAlignment.MiddleLeft
-        };
-        _subTitleLabel = new Label
-        {
-            Dock = DockStyle.Fill,
-            Font = new Font("Segoe UI", 9.5f, FontStyle.Regular),
-            TextAlign = ContentAlignment.MiddleLeft
-        };
-        _tagsLabel = new Label
-        {
-            Dock = DockStyle.Fill,
-            Font = new Font("Segoe UI", 9f, FontStyle.Regular),
-            TextAlign = ContentAlignment.MiddleLeft
-        };
-        _classLabel = new Label
-        {
-            Dock = DockStyle.Fill,
-            Font = new Font("Segoe UI", 10f, FontStyle.Bold),
-            TextAlign = ContentAlignment.MiddleRight
-        };
-        _countLabel = new Label
-        {
-            Dock = DockStyle.Fill,
-            Font = new Font("Segoe UI", 12f, FontStyle.Bold),
-            TextAlign = ContentAlignment.MiddleRight
-        };
-
-        headerLayout.Controls.Add(_nameLabel, 0, 0);
-        headerLayout.Controls.Add(_countLabel, 1, 0);
-        headerLayout.Controls.Add(_subTitleLabel, 0, 1);
-        headerLayout.Controls.Add(_classLabel, 1, 1);
-        headerLayout.Controls.Add(_tagsLabel, 0, 2);
-        _headerPanel.Controls.Add(headerLayout);
-
-        _summaryMetrics = new TableLayoutPanel
-        {
-            Dock = DockStyle.Fill,
-            ColumnCount = 5,
-            RowCount = 1,
-            Margin = new Padding(0, 0, 0, 8),
-            BackColor = Color.Black
-        };
-        for (var index = 0; index < 5; index++)
-        {
-            _summaryMetrics.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 20f));
-        }
-
+    private void InitializeShellContent()
+    {
+        _detailView.BonusesTabActivated += DetailViewOnBonusesTabActivated;
+        _summaryMetrics.Controls.Clear();
         AddMetric("hp", "Hit Points");
         AddMetric("regen", "Regen");
         AddMetric("recovery", "Recovery");
         AddMetric("defense", "Peak Def");
         AddMetric("resistance", "Peak Res");
 
-        _previewStatePanel = new TableLayoutPanel
-        {
-            Dock = DockStyle.Fill,
-            ColumnCount = 2,
-            RowCount = 1,
-            Margin = new Padding(0, 0, 0, 8),
-            BackColor = Color.Black
-        };
-        _previewStatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
-        _previewStatePanel.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 50f));
-        _previewStatePanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-
-        _upgradeFlow = CreatePreviewStateFlow();
-        _proximityFlow = CreatePreviewStateFlow();
+        ConfigurePreviewStateFlow(_upgradeFlow);
+        ConfigurePreviewStateFlow(_proximityFlow);
+        _previewStatePanel.Controls.Clear();
         _previewStatePanel.Controls.Add(CreatePreviewStateGroup("Applied Upgrades", _upgradeFlow), 0, 0);
         _previewStatePanel.Controls.Add(CreatePreviewStateGroup("Pet Context", _proximityFlow), 1, 0);
 
-        var ribbonHost = new TableLayoutPanel
-        {
-            Dock = DockStyle.Fill,
-            ColumnCount = 1,
-            RowCount = 2,
-            Margin = new Padding(0, 0, 0, 8),
-            BackColor = Color.Black
-        };
-        ribbonHost.RowStyles.Add(new RowStyle(SizeType.Absolute, 24f));
-        ribbonHost.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-        ribbonHost.Controls.Add(CreateSectionLabel("Active Real Pet Actors"), 0, 0);
+        ConfigureSectionLabel(_coreLabel, "Core and Sustain");
+        ConfigureSectionLabel(_combatLabel, "Combat and Utility");
+        ConfigureSectionLabel(_movementLabel, "Movement");
+        ConfigureSectionLabel(_defenseLabel, "Defense and Resistance");
+        ConfigureSectionLabel(_statusLabel, "Status and Debuff Resistances");
 
-        _actorRibbon = new PetActorRibbon
-        {
-            Dock = DockStyle.Fill,
-            Margin = new Padding(0),
-            Height = 58
-        };
-        _actorRibbon.ItemSelected += ActorRibbonOnItemSelected;
-        ribbonHost.Controls.Add(_actorRibbon, 0, 1);
+        ConfigureTotalsGrid(_coreGrid);
+        ConfigureTotalsGrid(_combatGrid);
+        ConfigureTotalsGrid(_movementGrid);
+        ConfigureTotalsGrid(_defenseGrid);
+        ConfigureTotalsGrid(_statusGrid);
 
-        _bodySplit = new SplitContainer
-        {
-            Dock = DockStyle.Fill,
-            BackColor = Color.Black
-        };
-
-        _detailView = new MidsDataViewNeo
-        {
-            Dock = DockStyle.Fill,
-            Margin = new Padding(0, 0, 8, 0)
-        };
-        _detailView.SetGraphType(Enums.MDmgGraphType.Layered, Enums.MDmgDisplayStyle.TextUnderGraph);
-        _detailView.SetPresentationMode(MidsDataViewNeoPresentationMode.ActorReadOnly);
-        _detailView.EntityDetails += DetailViewOnEntityDetails;
-        _bodySplit.Panel1.Controls.Add(_detailView);
-
-        var powerPanel = new TableLayoutPanel
-        {
-            Dock = DockStyle.Fill,
-            ColumnCount = 1,
-            RowCount = 2,
-            BackColor = Color.Black,
-            Padding = new Padding(8, 0, 0, 0)
-        };
-        powerPanel.RowStyles.Add(new RowStyle(SizeType.Absolute, 28f));
-        powerPanel.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-        powerPanel.Controls.Add(CreateSectionLabel("Powers"), 0, 0);
-
-        _powerGridScrollPanel = new MidsVScrollPanel
-        {
-            Dock = DockStyle.Fill,
-            Margin = new Padding(0),
-            BackColor = Color.Black
-        };
-        _powerGrid = new PetActorPowerGrid
-        {
-            Dock = DockStyle.Top,
-            Margin = new Padding(0)
-        };
-        _powerGrid.PowerSelected += PowerGridOnPowerSelected;
-        _powerGrid.PreviewToggleClicked += PowerGridOnPreviewToggleClicked;
-        _powerGridScrollPanel.ContentPanel.Controls.Add(_powerGrid);
-        powerPanel.Controls.Add(_powerGridScrollPanel, 0, 1);
-        _bodySplit.Panel2.Controls.Add(powerPanel);
-
-        _detailTotalsSplit = new SplitContainer
-        {
-            Dock = DockStyle.Fill,
-            Orientation = Orientation.Horizontal,
-            BackColor = Color.Black,
-            FixedPanel = FixedPanel.Panel2
-        };
-
-        var totalsHost = new TableLayoutPanel
-        {
-            Dock = DockStyle.Fill,
-            ColumnCount = 1,
-            RowCount = 2,
-            BackColor = Color.Black,
-            Padding = new Padding(0, 8, 0, 0)
-        };
-        totalsHost.RowStyles.Add(new RowStyle(SizeType.Absolute, 28f));
-        totalsHost.RowStyles.Add(new RowStyle(SizeType.Percent, 100f));
-        totalsHost.Controls.Add(CreateSectionLabel("Actor Totals"), 0, 0);
-
-        _totalsScrollPanel = new Panel
-        {
-            Dock = DockStyle.Fill,
-            AutoScroll = true,
-            BackColor = Color.Black,
-            Padding = new Padding(0)
-        };
-        _totalsStack = new TableLayoutPanel
-        {
-            AutoSize = true,
-            AutoSizeMode = AutoSizeMode.GrowAndShrink,
-            Dock = DockStyle.Top,
-            ColumnCount = 1,
-            RowCount = 10,
-            BackColor = Color.Black
-        };
-        _totalsStack.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100f));
-
-        _coreLabel = CreateSectionLabel("Core and Sustain");
-        _combatLabel = CreateSectionLabel("Combat and Utility");
-        _movementLabel = CreateSectionLabel("Movement");
-        _defenseLabel = CreateSectionLabel("Defense and Resistance");
-        _statusLabel = CreateSectionLabel("Status and Debuff Resistances");
-
-        _coreGrid = CreateTotalsGrid();
-        _combatGrid = CreateTotalsGrid();
-        _movementGrid = CreateTotalsGrid();
-        _defenseGrid = CreateTotalsGrid();
-        _statusGrid = CreateTotalsGrid();
-
+        _totalsStack.Controls.Clear();
         AddTotalsSection(_coreLabel, _coreGrid);
         AddTotalsSection(_combatLabel, _combatGrid);
         AddTotalsSection(_movementLabel, _movementGrid);
         AddTotalsSection(_defenseLabel, _defenseGrid);
         AddTotalsSection(_statusLabel, _statusGrid);
 
-        _totalsScrollPanel.Controls.Add(_totalsStack);
-        totalsHost.Controls.Add(_totalsScrollPanel, 0, 1);
-        _detailTotalsSplit.Panel2.Controls.Add(totalsHost);
+        _bodySplit.Panel1.Paint -= BodyPaneOnPaint;
+        _bodySplit.Panel1.Paint += BodyPaneOnPaint;
+        _bodySplit.Panel2.Paint -= BodyPaneOnPaint;
+        _bodySplit.Panel2.Paint += BodyPaneOnPaint;
+    }
 
-        _emptyStatePanel = new Panel
+    private void PopulateDesignTimeSample()
+    {
+        var alphaWolf = new RealPetActorRosterItem
         {
-            Dock = DockStyle.Fill,
-            BackColor = Color.Black,
-            Visible = false
+            EntityUid = "Alpha_Howler_Wolf",
+            EntityDisplayName = "Alpha Howler Wolf",
+            EntityClassName = "Class Henchman Minion",
+            SourceHistoryIndex = 0,
+            SourcePowerFullName = "Beast_Mastery.Summon_Wolves.Summon_Wolves",
+            SourcePowerDisplayName = "Summon Wolves",
+            Count = 1
         };
-        _emptyLabel = new Label
+        var howlerWolf = new RealPetActorRosterItem
         {
-            Dock = DockStyle.Fill,
-            Text = "No real pet actors are active in this build.\r\nOnce a build summons a persistent pet actor, its powers and totals will appear here.",
-            TextAlign = ContentAlignment.MiddleCenter,
-            Font = new Font("Segoe UI", 12f, FontStyle.Bold)
+            EntityUid = "Howler_Wolf",
+            EntityDisplayName = "Howler Wolf",
+            EntityClassName = "Class Henchman Minion",
+            SourceHistoryIndex = 1,
+            SourcePowerFullName = "Beast_Mastery.Summon_Wolves.Summon_Wolves",
+            SourcePowerDisplayName = "Summon Wolves",
+            Count = 2
         };
-        _emptyStatePanel.Controls.Add(_emptyLabel);
 
-        var contentHost = new Panel
+        _headerIcon.IconImage = PetActorIconCatalog.GetIcon(alphaWolf);
+        _headerIcon.FallbackText = alphaWolf.EntityDisplayName;
+        _nameLabel.Text = alphaWolf.EntityDisplayName;
+        _subTitleLabel.Text = $"Summoned from {alphaWolf.SourcePowerDisplayName}";
+        _classLabel.Text = $"Actor Class: {alphaWolf.EntityClassName}";
+        _countLabel.Text = "1 Active";
+        _tagsLabel.Text = "Actor Tags: Beast | Detonator | FullHenchman | SetBonusShare";
+
+        SetMetric("hp", "578");
+        SetMetric("regen", "4.82 HP/s");
+        SetMetric("recovery", "1.67 End/s");
+        SetMetric("defense", "0% Smashing");
+        SetMetric("resistance", "28.68% Smashing");
+
+        _upgradeFlow.Controls.Clear();
+        _upgradeFlow.Controls.Add(CreatePreviewToggle("Train Beasts", true, "Sample.TrainBeasts", UpgradeToggleOnCheckedChanged));
+        _proximityFlow.Controls.Clear();
+        _proximityFlow.Controls.Add(CreatePreviewToggle("In Range of Owner", true, "__pet_in_range__", PetInRangeToggleOnCheckedChanged));
+
+        _actorRibbon.SetItems(
+        [
+            new PetActorRibbonItem
+            {
+                Actor = alphaWolf,
+                Title = alphaWolf.EntityDisplayName,
+                Subtitle = alphaWolf.SourcePowerDisplayName,
+                IconImage = PetActorIconCatalog.GetIcon(alphaWolf),
+                IsSelected = true
+            },
+            new PetActorRibbonItem
+            {
+                Actor = howlerWolf,
+                Title = howlerWolf.EntityDisplayName,
+                Subtitle = howlerWolf.SourcePowerDisplayName,
+                IconImage = PetActorIconCatalog.GetIcon(howlerWolf),
+                IsSelected = false
+            }
+        ]);
+
+        _detailView.SetDesignTimeSample();
+        _powerGrid.SetViewModel(BuildDesignTimePowerGridViewModel());
+        _actorRibbon.Enabled = true;
+        _powerGrid.Enabled = true;
+        _detailView.Enabled = true;
+        _summaryMetrics.Enabled = true;
+        ShowContentState();
+    }
+
+    private static PetActorPowerGridViewModel BuildDesignTimePowerGridViewModel()
+    {
+        return new PetActorPowerGridViewModel
         {
-            Dock = DockStyle.Fill,
-            BackColor = Color.Black
+            SelectedPowerIndex = 2,
+            Sections =
+            [
+                new PetActorPowerSectionViewModel
+                {
+                    Title = "Beast Alpha Wolf",
+                    Tiles =
+                    [
+                        new PetActorPowerTileViewModel
+                        {
+                            PowerIndex = 0,
+                            DisplayName = "Resistance",
+                            FullName = "Sample.Resistance",
+                            PowerKindLabel = "Auto",
+                            IsAuto = true,
+                            IsSelected = false,
+                            BasePower = null!
+                        },
+                        new PetActorPowerTileViewModel
+                        {
+                            PowerIndex = 1,
+                            DisplayName = "Super Leap",
+                            FullName = "Sample.SuperLeap",
+                            PowerKindLabel = "Toggle",
+                            IsAuto = false,
+                            IsSelected = false,
+                            BasePower = null!
+                        },
+                        new PetActorPowerTileViewModel
+                        {
+                            PowerIndex = 2,
+                            DisplayName = "Vicious Bite",
+                            FullName = "Sample.ViciousBite",
+                            PowerKindLabel = string.Empty,
+                            IsAuto = false,
+                            IsSelected = true,
+                            BasePower = null!
+                        },
+                        new PetActorPowerTileViewModel
+                        {
+                            PowerIndex = 3,
+                            DisplayName = "Wild Charge",
+                            FullName = "Sample.WildCharge",
+                            PowerKindLabel = string.Empty,
+                            IsAuto = false,
+                            IsSelected = false,
+                            BasePower = null!
+                        }
+                    ]
+                },
+                new PetActorPowerSectionViewModel
+                {
+                    Title = "Beast Alpha Wolf 2",
+                    Subtitle = "Unlocked by Train Beasts",
+                    Tiles =
+                    [
+                        new PetActorPowerTileViewModel
+                        {
+                            PowerIndex = 4,
+                            DisplayName = "Howl",
+                            FullName = "Sample.Howl",
+                            PowerKindLabel = string.Empty,
+                            IsAuto = false,
+                            IsSelected = false,
+                            BasePower = null!
+                        },
+                        new PetActorPowerTileViewModel
+                        {
+                            PowerIndex = 5,
+                            DisplayName = "Maiming Bite",
+                            FullName = "Sample.MaimingBite",
+                            PowerKindLabel = string.Empty,
+                            IsAuto = false,
+                            IsSelected = false,
+                            BasePower = null!
+                        }
+                    ]
+                }
+            ]
         };
-        contentHost.Controls.Add(_emptyStatePanel);
-        contentHost.Controls.Add(_bodySplit);
-
-        rootLayout.Controls.Add(_headerPanel, 0, 0);
-        rootLayout.Controls.Add(_summaryMetrics, 0, 1);
-        rootLayout.Controls.Add(_previewStatePanel, 0, 2);
-        rootLayout.Controls.Add(ribbonHost, 0, 3);
-        rootLayout.Controls.Add(contentHost, 0, 4);
-        Controls.Add(rootLayout);
-
-        Load += OnLoad;
-        SizeChanged += OnFormSizeChanged;
-        FormClosed += OnFormClosed;
     }
 
     public void UpdateData(bool refresh = false)
@@ -351,6 +333,12 @@ public sealed class FrmPetActorDetails : Form
 
     public void UpdateData(string? entityUid, int sourceHistoryIndex = -1)
     {
+        if (InDesigner)
+        {
+            ApplyDesignTimeSampleIfNeeded();
+            return;
+        }
+
         _selectedEntityUid = entityUid;
         _selectedSourceHistoryIndex = sourceHistoryIndex;
 
@@ -392,41 +380,96 @@ public sealed class FrmPetActorDetails : Form
         _totalsStack.BackColor = theme.Background;
         _emptyStatePanel.BackColor = theme.Background;
         _emptyLabel.ForeColor = theme.Text;
+        _nameLabel.ForeColor = theme.ValueText;
+        _countLabel.ForeColor = theme.ValueText;
+        _subTitleLabel.ForeColor = Color.FromArgb(232, theme.Text);
+        _classLabel.ForeColor = Color.FromArgb(245, 239, 225);
+        _tagsLabel.ForeColor = theme.Muted;
 
         foreach (var panel in _summaryMetrics.Controls.OfType<Panel>())
         {
             panel.BackColor = theme.Card;
+            ApplyShellLabelColors(panel, theme);
             panel.Invalidate();
         }
 
         foreach (var panel in _previewStatePanel.Controls.OfType<Panel>())
         {
             panel.BackColor = theme.Card;
+            ApplyShellLabelColors(panel, theme);
             panel.Invalidate();
         }
 
-        foreach (var checkBox in _previewStatePanel.Controls.OfType<Panel>().SelectMany(panel => panel.Controls.OfType<FlowLayoutPanel>()).SelectMany(flow => flow.Controls.OfType<CheckBox>()))
+        foreach (var flow in EnumerateControls(_previewStatePanel, new HashSet<Control>()).OfType<FlowLayoutPanel>())
+        {
+            flow.BackColor = Color.Transparent;
+            flow.Invalidate();
+        }
+
+        foreach (var checkBox in EnumerateControls(_previewStatePanel, new HashSet<Control>()).OfType<CheckBox>())
         {
             checkBox.ForeColor = theme.Text;
-            checkBox.BackColor = theme.Card;
+            checkBox.BackColor = checkBox is PreviewStateToggle ? Color.Transparent : theme.Card;
+            checkBox.Invalidate();
+        }
+
+        foreach (var label in EnumerateControls(_previewStatePanel, new HashSet<Control>()).OfType<Label>())
+        {
+            label.BackColor = Color.Transparent;
+        }
+
+        foreach (var label in _ribbonHost.Controls.OfType<Label>())
+        {
+            label.ForeColor = theme.Accent;
+        }
+
+        foreach (var label in _powerPanel.Controls.OfType<Label>())
+        {
+            label.ForeColor = theme.Accent;
+        }
+
+        foreach (var label in _totalsHost.Controls.OfType<Label>())
+        {
+            label.ForeColor = theme.Accent;
         }
 
         _actorRibbon.Invalidate();
         _powerGrid.Invalidate();
         _detailView.Invalidate(true);
+        _headerIcon.Invalidate();
+        _bodySplit.Panel1.Invalidate();
+        _bodySplit.Panel2.Invalidate();
+        ApplyWindowChrome();
         Invalidate(true);
+    }
+
+    protected override void OnHandleCreated(EventArgs e)
+    {
+        base.OnHandleCreated(e);
+        if (InDesigner)
+        {
+            return;
+        }
+
+        ApplyWindowChrome();
+    }
+
+    protected override void OnCreateControl()
+    {
+        base.OnCreateControl();
+        ApplyDesignTimeSampleIfNeeded();
     }
 
     private void OnLoad(object? sender, EventArgs e)
     {
-        if (MidsContext.Config?.EntityDetailsLocation != null)
+        if (InDesigner)
         {
-            Location = (Point)MidsContext.Config.EntityDetailsLocation;
+            ApplyDesignTimeSampleIfNeeded();
+            return;
         }
-        else if (Owner != null)
-        {
-            Location = new Point(Owner.Left + 32, Owner.Top + 32);
-        }
+
+        RestoreWindowBounds();
+        ConstrainToWorkingArea();
 
         if (MidsContext.Character != null)
         {
@@ -435,20 +478,31 @@ public sealed class FrmPetActorDetails : Form
 
         ThemeManager.ThemeChanged += OnThemeChanged;
         UpdateColorTheme(MidsContext.Character?.Alignment ?? Enums.Alignment.Hero);
-        BeginInvoke(new Action(ApplySplitLayout));
-        UpdateData(_selectedEntityUid, _selectedSourceHistoryIndex);
+        ApplySplitLayout();
+        ApplyResponsiveScale();
+        Opacity = 0d;
+        BeginInvoke(new Action(() =>
+        {
+            ApplySplitLayout();
+            ApplyResponsiveScale();
+            UpdateData(_selectedEntityUid, _selectedSourceHistoryIndex);
+            QueueStartupReveal();
+        }));
     }
 
     private void OnFormSizeChanged(object? sender, EventArgs e)
     {
         ApplySplitLayout();
+        ApplyResponsiveScale();
     }
 
     private void OnFormClosed(object? sender, EventArgs e)
     {
         if (MidsContext.Config != null)
         {
-            MidsContext.Config.EntityDetailsLocation = Location;
+            var boundsToPersist = WindowState == FormWindowState.Normal ? Bounds : RestoreBounds;
+            MidsContext.Config.PetActorDetailsLocation = boundsToPersist.Location;
+            MidsContext.Config.PetActorDetailsSize = boundsToPersist.Size;
         }
 
         if (MidsContext.Character != null)
@@ -457,6 +511,32 @@ public sealed class FrmPetActorDetails : Form
         }
 
         ThemeManager.ThemeChanged -= OnThemeChanged;
+    }
+
+    private void QueueStartupReveal()
+    {
+        if (_startupRevealQueued || _startupRevealCompleted)
+        {
+            return;
+        }
+
+        _startupRevealQueued = true;
+        BeginInvoke(new Action(() =>
+        {
+            if (IsDisposed || !IsHandleCreated || _startupRevealCompleted)
+            {
+                _startupRevealQueued = false;
+                return;
+            }
+
+            _startupRevealQueued = false;
+            _startupRevealCompleted = true;
+            ApplySplitLayout();
+            ApplyResponsiveScale();
+            Invalidate(true);
+            Update();
+            Opacity = 1d;
+        }));
     }
 
     private void OnThemeChanged()
@@ -469,6 +549,99 @@ public sealed class FrmPetActorDetails : Form
         UpdateColorTheme(alignment);
     }
 
+    private void ApplyDesignTimeSampleIfNeeded()
+    {
+        if (!InDesigner || _designTimeSampleApplied || IsDisposed)
+        {
+            return;
+        }
+
+        _designTimeSampleApplied = true;
+        UpdateColorTheme(Enums.Alignment.Hero);
+        PopulateDesignTimeSample();
+        ApplyResponsiveScale();
+        ApplySplitLayout();
+    }
+
+    private void RestoreWindowBounds()
+    {
+        var screen = Owner != null ? Screen.FromControl(Owner) : Screen.FromPoint(Location);
+        var workingArea = screen.WorkingArea;
+        var config = MidsContext.Config;
+
+        Size = config?.PetActorDetailsSize is { } savedSize
+            ? savedSize
+            : GetPreferredInitialSize(workingArea);
+
+        if (config?.PetActorDetailsLocation is { } savedLocation)
+        {
+            Location = savedLocation;
+            return;
+        }
+
+        if (Owner != null)
+        {
+            var ownerBounds = Owner.WindowState == FormWindowState.Normal
+                ? Owner.Bounds
+                : workingArea;
+            Location = new Point(
+                ownerBounds.Left + Math.Max(24, (ownerBounds.Width - Width) / 2),
+                ownerBounds.Top + Math.Max(24, (ownerBounds.Height - Height) / 2));
+            return;
+        }
+
+        Location = new Point(
+            workingArea.Left + Math.Max(24, (workingArea.Width - Width) / 2),
+            workingArea.Top + Math.Max(24, (workingArea.Height - Height) / 2));
+    }
+
+    private Size GetPreferredInitialSize(Rectangle workingArea)
+    {
+        var referenceBounds = Owner switch
+        {
+            { WindowState: FormWindowState.Normal } owner => owner.Bounds,
+            { } => workingArea,
+            null => workingArea
+        };
+
+        var preferredWidth = Math.Max(BaselineFormWidth, (int)Math.Round(referenceBounds.Width * 0.82f));
+        var preferredHeight = Math.Max(BaselineFormHeight, (int)Math.Round(referenceBounds.Height * 0.84f));
+        var maxWidth = Math.Max(MinimumSize.Width, workingArea.Width - 24);
+        var maxHeight = Math.Max(MinimumSize.Height, workingArea.Height - 24);
+
+        return new Size(
+            Math.Clamp(preferredWidth, MinimumSize.Width, maxWidth),
+            Math.Clamp(preferredHeight, MinimumSize.Height, maxHeight));
+    }
+
+    private void ConstrainToWorkingArea()
+    {
+        var screen = Owner != null ? Screen.FromControl(Owner) : Screen.FromPoint(Location);
+        var workingArea = screen.WorkingArea;
+        var width = Math.Min(Math.Max(MinimumSize.Width, Width), workingArea.Width);
+        var height = Math.Min(Math.Max(MinimumSize.Height, Height), workingArea.Height);
+        var x = Math.Max(workingArea.Left, Math.Min(Left, workingArea.Right - width));
+        var y = Math.Max(workingArea.Top, Math.Min(Top, workingArea.Bottom - height));
+        Bounds = new Rectangle(x, y, width, height);
+    }
+
+    private void ApplyWindowChrome()
+    {
+        if (!IsHandleCreated)
+        {
+            return;
+        }
+
+        var theme = CurrentTheme;
+        WinApi.SetDarkMode(Handle, true);
+        WinApi.SetWindowCornerPreference(Handle, WinApi.CornerPreference.Round);
+        WinApi.StylizeWindow(
+            Handle,
+            borderColor: theme.Border,
+            captionColor: Color.FromArgb(12, 26, 44),
+            textColor: Color.WhiteSmoke);
+    }
+
     private void HeaderPanelOnPaint(object? sender, PaintEventArgs e)
     {
         var g = e.Graphics;
@@ -479,22 +652,81 @@ public sealed class FrmPetActorDetails : Form
             return;
         }
 
-        using var brush = new LinearGradientBrush(bounds, theme.HeaderTop, theme.HeaderBottom, LinearGradientMode.Vertical);
-        using var borderPen = new Pen(theme.Border);
-        using var innerPen = new Pen(Color.FromArgb(110, theme.GridHeaderBorder));
-        g.FillRectangle(brush, bounds);
-        g.DrawRectangle(borderPen, bounds.X, bounds.Y, bounds.Width - 1, bounds.Height - 1);
+        g.SmoothingMode = SmoothingMode.AntiAlias;
+        var outer = Rectangle.Inflate(bounds, -1, -1);
+        DrawShellSurface(
+            g,
+            outer,
+            Blend(theme.HeaderTop, Color.Black, 0.18f),
+            Blend(theme.HeaderBottom, Color.Black, 0.20f),
+            Blend(theme.Border, theme.Accent, 0.26f),
+            Blend(theme.GridHeaderBorder, Color.White, 0.12f),
+            ScalePx(12));
 
-        var inner = Rectangle.Inflate(bounds, -6, -6);
-        if (inner.Width > 0 && inner.Height > 0)
+        var glossBounds = Rectangle.Inflate(outer, -1, -1);
+        glossBounds.Height = Math.Max(8, glossBounds.Height / 3);
+        using (var glossBrush = new LinearGradientBrush(
+                   glossBounds,
+                   Color.FromArgb(58, 255, 255, 255),
+                   Color.FromArgb(0, 255, 255, 255),
+                   LinearGradientMode.Vertical))
+        using (var glossPath = CreateRoundedRect(glossBounds, ScalePx(10)))
         {
-            g.DrawRectangle(innerPen, inner.X, inner.Y, inner.Width - 1, inner.Height - 1);
+            g.FillPath(glossBrush, glossPath);
         }
+
+        var dividerX = _headerIcon.Right + ScalePx(12);
+        if (dividerX > outer.Left + ScalePx(40) && dividerX < outer.Right - ScalePx(40))
+        {
+            using var dividerPen = new Pen(Color.FromArgb(120, Blend(theme.Accent, Color.White, 0.24f)));
+            g.DrawLine(dividerPen, dividerX, outer.Top + ScalePx(14), dividerX, outer.Bottom - ScalePx(14));
+        }
+    }
+
+    private void BodyPaneOnPaint(object? sender, PaintEventArgs e)
+    {
+        if (sender is not Control pane)
+        {
+            return;
+        }
+
+        var theme = CurrentTheme;
+        var bounds = Rectangle.Inflate(pane.ClientRectangle, -1, -1);
+        if (bounds.Width <= 1 || bounds.Height <= 1)
+        {
+            return;
+        }
+
+        e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        DrawShellSurface(
+            e.Graphics,
+            bounds,
+            Blend(theme.Card, theme.HeaderTop, 0.10f),
+            Blend(theme.Card, Color.Black, 0.14f),
+            Color.FromArgb(170, Blend(theme.Border, theme.Accent, 0.22f)),
+            Color.FromArgb(84, Blend(theme.Accent, Color.White, 0.18f)),
+            ScalePx(12));
     }
 
     private void ApplySplitLayout()
     {
-        ApplySplitLayout(_bodySplit, preferredDistance: 620, panel1Min: 500, panel2Min: 420);
+        if (_bodySplit.IsDisposed)
+        {
+            return;
+        }
+
+        var available = _bodySplit.ClientSize.Width - _bodySplit.SplitterWidth;
+        var panel1Min = ScaleMetric(500, 440);
+        var panel2Min = ScaleMetric(520, 460);
+        var preferredRightRatio = available <= ScaleMetric(1220, 1080)
+            ? 0.50f
+            : available <= ScaleMetric(1380, 1220)
+                ? 0.48f
+                : 0.46f;
+        var preferredRightWidth = Math.Clamp((int)Math.Round(available * preferredRightRatio), panel2Min, ScaleMetric(820, 680));
+        var preferredDistance = Math.Max(panel1Min, available - preferredRightWidth);
+        ApplySplitLayout(_bodySplit, preferredDistance, panel1Min, panel2Min);
+        _detailView.RefreshResponsiveLayout();
     }
 
     private static void ApplySplitLayout(SplitContainer split, int preferredDistance, int panel1Min, int panel2Min)
@@ -542,29 +774,56 @@ public sealed class FrmPetActorDetails : Form
             return;
         }
 
-        using var brush = new SolidBrush(theme.Card);
-        using var borderPen = new Pen(theme.Border);
-        using var accentPen = new Pen(Color.FromArgb(130, theme.GridHeaderBorder));
-        e.Graphics.FillRectangle(brush, bounds);
-        e.Graphics.DrawRectangle(borderPen, bounds.X, bounds.Y, bounds.Width - 1, bounds.Height - 1);
-        e.Graphics.DrawLine(accentPen, bounds.X + 1, 24, bounds.Right - 2, 24);
+        var metadata = panel.Tag as ShellPanelMetadata;
+        var accent = metadata?.AccentColor ?? theme.Accent;
+        e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+        DrawShellSurface(
+            e.Graphics,
+            Rectangle.Inflate(bounds, -1, -1),
+            Blend(theme.Card, theme.HeaderTop, 0.12f),
+            Blend(theme.Card, Color.Black, 0.18f),
+            Color.FromArgb(170, Blend(theme.Border, accent, 0.20f)),
+            Color.FromArgb(82, Blend(accent, Color.White, 0.24f)),
+            ScalePx(10),
+            drawGloss: false);
     }
 
     private void AddMetric(string key, string title)
     {
+        var theme = CurrentTheme;
+        var badgeSpec = GetMetricBadgeSpec(key);
         var panel = new Panel
         {
             Dock = DockStyle.Fill,
             Margin = new Padding(0, 0, 8, 0),
-            Padding = new Padding(10, 6, 10, 6)
+            Padding = new Padding(0),
+            Tag = new ShellPanelMetadata(badgeSpec.AccentColor)
         };
         panel.Paint += SummaryMetricPanelOnPaint;
 
+        var badge = CreateShellBadge(badgeSpec, 52);
+        badge.Dock = DockStyle.Left;
+        badge.Margin = Padding.Empty;
+
+        var textHost = new TableLayoutPanel
+        {
+            Dock = DockStyle.Fill,
+            BackColor = Color.Transparent,
+            ColumnCount = 1,
+            RowCount = 2,
+            Margin = Padding.Empty,
+            Padding = new Padding(0, 8, 10, 8)
+        };
+        textHost.ColumnStyles.Add(new ColumnStyle(SizeType.Percent, 100F));
+        textHost.RowStyles.Add(new RowStyle(SizeType.Absolute, 20F));
+        textHost.RowStyles.Add(new RowStyle(SizeType.Percent, 100F));
+
         var titleLabel = new Label
         {
-            Dock = DockStyle.Top,
-            Height = 18,
+            Dock = DockStyle.Fill,
             Font = new Font("Segoe UI", 8.5f, FontStyle.Bold),
+            ForeColor = Color.FromArgb(232, theme.Text),
+            Tag = "metric-title",
             Text = title,
             TextAlign = ContentAlignment.MiddleLeft
         };
@@ -572,12 +831,16 @@ public sealed class FrmPetActorDetails : Form
         {
             Dock = DockStyle.Fill,
             Font = new Font("Segoe UI", 12.5f, FontStyle.Bold),
+            ForeColor = Color.FromArgb(248, 244, 236),
+            Tag = "metric-value",
             Text = "--",
             TextAlign = ContentAlignment.MiddleLeft
         };
 
-        panel.Controls.Add(valueLabel);
-        panel.Controls.Add(titleLabel);
+        textHost.Controls.Add(titleLabel, 0, 0);
+        textHost.Controls.Add(valueLabel, 0, 1);
+        panel.Controls.Add(textHost);
+        panel.Controls.Add(badge);
         _summaryMetrics.Controls.Add(panel);
         _metricLabels[key] = (titleLabel, valueLabel);
     }
@@ -594,37 +857,315 @@ public sealed class FrmPetActorDetails : Form
         };
     }
 
+    private static void ConfigureSectionLabel(Label label, string text)
+    {
+        label.Dock = DockStyle.Fill;
+        label.Font = new Font("Segoe UI", 10f, FontStyle.Bold);
+        label.Padding = new Padding(2, 0, 0, 0);
+        label.Text = text;
+        label.TextAlign = ContentAlignment.MiddleLeft;
+    }
+
+    private void ApplyResponsiveScale()
+    {
+        var scale = ResolveUiScale();
+        if (Math.Abs(scale - _uiScale) < 0.01f)
+        {
+            _detailView.RefreshResponsiveLayout();
+            return;
+        }
+
+        _uiScale = scale;
+
+        SuspendLayout();
+
+        _rootLayout.Padding = new Padding(ScalePx(8));
+        _rootLayout.RowStyles[0].Height = ScaleMetric(112, 90);
+        _rootLayout.RowStyles[1].Height = ScaleMetric(82, 66);
+        _rootLayout.RowStyles[2].Height = ScaleMetric(80, 64);
+        _rootLayout.RowStyles[3].Height = ScaleMetric(88, 72);
+
+        _headerPanel.Margin = new Padding(0, 0, 0, ScalePx(8));
+        _headerPanel.Padding = new Padding(ScalePx(16), ScalePx(12), ScalePx(16), ScalePx(12));
+        _headerLayout.ColumnStyles[0].Width = ScaleMetric(136, 100);
+        _headerLayout.ColumnStyles[2].Width = ScaleMetric(320, 220);
+        _headerLayout.RowStyles[0].Height = ScaleMetric(34, 24);
+        _headerLayout.RowStyles[1].Height = ScaleMetric(24, 18);
+        _headerIcon.Margin = new Padding(0, 0, ScalePx(14), 0);
+
+        _summaryMetrics.Margin = new Padding(0, 0, 0, ScalePx(8));
+        _previewStatePanel.Margin = new Padding(0, 0, 0, ScalePx(8));
+        _ribbonHost.Margin = new Padding(0, 0, 0, ScalePx(8));
+        _ribbonHost.RowStyles[0].Height = ScaleMetric(24, 18);
+        _bodySplit.SplitterWidth = ScaleMetric(12, 8);
+        _bodySplit.Panel1.Padding = new Padding(ScalePx(3), ScalePx(2), ScalePx(5), ScalePx(3));
+        _bodySplit.Panel2.Padding = new Padding(ScalePx(5), ScalePx(2), ScalePx(3), ScalePx(3));
+        _powerPanel.RowStyles[0].Height = ScaleMetric(28, 20);
+        _powerPanel.Padding = new Padding(ScalePx(10), ScalePx(6), ScalePx(10), ScalePx(10));
+
+        foreach (var panel in _summaryMetrics.Controls.OfType<Panel>())
+        {
+            panel.Margin = new Padding(0, 0, ScalePx(8), 0);
+            foreach (var badge in panel.Controls.OfType<ShellGlyphBadge>())
+            {
+                badge.Width = ScaleMetric(52, 40);
+            }
+        }
+
+        foreach (var panel in _previewStatePanel.Controls.OfType<Panel>())
+        {
+            panel.Margin = new Padding(0, 0, ScalePx(8), 0);
+            foreach (var badge in panel.Controls.OfType<ShellGlyphBadge>())
+            {
+                badge.Width = ScaleMetric(48, 38);
+            }
+        }
+
+        ApplyFontScale(this, scale, _detailView, _actorRibbon, _powerGrid);
+
+        _actorRibbon.UiScale = scale;
+        _powerGrid.UiScale = scale;
+        _detailView.UiScale = scale;
+        _detailView.Margin = Padding.Empty;
+
+        ResumeLayout(performLayout: true);
+        Invalidate(true);
+    }
+
+    private float ResolveUiScale()
+    {
+        var widthRatio = Math.Max(0.01f, ClientSize.Width / (float)BaselineFormWidth);
+        var heightRatio = Math.Max(0.01f, ClientSize.Height / (float)BaselineFormHeight);
+        var blendedRatio = widthRatio * 0.70f + heightRatio * 0.30f;
+        var rawScale = 1f + ((blendedRatio - 1f) * UiScaleIntensity);
+        return Math.Clamp(rawScale, MinimumResponsiveUiScale, MaximumResponsiveUiScale);
+    }
+
+    private void ApplyFontScale(Control root, float scale, params Control[] skippedRoots)
+    {
+        var skipped = new HashSet<Control>(skippedRoots);
+        foreach (var control in EnumerateControls(root, skipped))
+        {
+            if (control.Font is null)
+            {
+                continue;
+            }
+
+            if (!_baseFontSizes.TryGetValue(control, out var baseSize))
+            {
+                baseSize = control.Font.Size;
+                _baseFontSizes[control] = baseSize;
+            }
+
+            var scaledSize = Math.Max(6f, baseSize * scale);
+            if (Math.Abs(control.Font.Size - scaledSize) < 0.05f)
+            {
+                continue;
+            }
+
+            control.Font = new Font(
+                control.Font.FontFamily,
+                scaledSize,
+                control.Font.Style,
+                control.Font.Unit,
+                control.Font.GdiCharSet,
+                control.Font.GdiVerticalFont);
+        }
+    }
+
+    private static IEnumerable<Control> EnumerateControls(Control root, ISet<Control> skipped)
+    {
+        yield return root;
+        foreach (Control child in root.Controls)
+        {
+            if (skipped.Contains(child))
+            {
+                continue;
+            }
+
+            foreach (var descendant in EnumerateControls(child, skipped))
+            {
+                yield return descendant;
+            }
+        }
+    }
+
+    private int ScalePx(int value)
+        => Math.Max(1, (int)Math.Round(value * _uiScale));
+
+    private int ScaleMetric(int baseValue, int minimum)
+        => Math.Max(minimum, (int)Math.Round(baseValue * _uiScale));
+
+    private static ShellBadgeSpec GetMetricBadgeSpec(string key)
+    {
+        return key.ToLowerInvariant() switch
+        {
+            "hp" => new ShellBadgeSpec(MidsTotalsGlyph.SectionDefense, Color.FromArgb(74, 174, 255), Color.FromArgb(26, 82, 178)),
+            "regen" => new ShellBadgeSpec(MidsTotalsGlyph.QuickRegen, Color.FromArgb(66, 242, 126), Color.FromArgb(16, 110, 62)),
+            "recovery" => new ShellBadgeSpec(MidsTotalsGlyph.QuickRecharge, Color.FromArgb(255, 206, 72), Color.FromArgb(142, 88, 20)),
+            "defense" => new ShellBadgeSpec(MidsTotalsGlyph.SectionDefense, Color.FromArgb(82, 204, 255), Color.FromArgb(22, 86, 168)),
+            "resistance" => new ShellBadgeSpec(MidsTotalsGlyph.SectionResistance, Color.FromArgb(198, 112, 255), Color.FromArgb(86, 36, 126)),
+            _ => new ShellBadgeSpec(MidsTotalsGlyph.SectionCore, Color.FromArgb(180, 198, 228), Color.FromArgb(48, 66, 98))
+        };
+    }
+
+    private static ShellBadgeSpec GetPreviewBadgeSpec(string title)
+    {
+        return title.Equals("Pet Context", StringComparison.OrdinalIgnoreCase)
+            ? new ShellBadgeSpec(MidsTotalsGlyph.StatToHit, Color.FromArgb(212, 220, 232), Color.FromArgb(44, 66, 94))
+            : new ShellBadgeSpec(MidsTotalsGlyph.StatDamage, Color.FromArgb(206, 214, 224), Color.FromArgb(60, 66, 82));
+    }
+
+    private ShellGlyphBadge CreateShellBadge(ShellBadgeSpec spec, int baseSize)
+    {
+        return new ShellGlyphBadge
+        {
+            BadgeGlyph = spec.Glyph,
+            AccentColor = spec.AccentColor,
+            GlowColor = spec.GlowColor,
+            BackColor = Color.Transparent,
+            Width = baseSize,
+            Margin = Padding.Empty
+        };
+    }
+
+    private void ApplyShellLabelColors(Control root, DataViewTheme theme)
+    {
+        foreach (var label in EnumerateControls(root, new HashSet<Control>()).OfType<Label>())
+        {
+            switch (label.Tag as string)
+            {
+                case "metric-title":
+                    label.ForeColor = Color.FromArgb(232, theme.Text);
+                    break;
+                case "metric-value":
+                    label.ForeColor = Color.FromArgb(248, 244, 236);
+                    break;
+                case "group-title":
+                    label.ForeColor = Color.FromArgb(236, theme.Text);
+                    break;
+            }
+        }
+    }
+
+    private void DrawShellSurface(Graphics g, Rectangle bounds, Color topColor, Color bottomColor, Color borderColor, Color innerHighlight, int radius, bool drawGloss = true)
+    {
+        if (bounds.Width <= 1 || bounds.Height <= 1)
+        {
+            return;
+        }
+
+        using var outerPath = CreateRoundedRect(bounds, radius);
+        using var fillBrush = new LinearGradientBrush(bounds, topColor, bottomColor, LinearGradientMode.Vertical);
+        using var borderPen = new Pen(borderColor);
+        g.FillPath(fillBrush, outerPath);
+        g.DrawPath(borderPen, outerPath);
+
+        var innerBounds = Rectangle.Inflate(bounds, -2, -2);
+        if (innerBounds.Width > 2 && innerBounds.Height > 2)
+        {
+            using var innerPath = CreateRoundedRect(innerBounds, Math.Max(4, radius - 2));
+            using var innerPen = new Pen(innerHighlight);
+            g.DrawPath(innerPen, innerPath);
+
+            if (drawGloss)
+            {
+                var glossBounds = new Rectangle(innerBounds.X, innerBounds.Y, innerBounds.Width, Math.Max(8, innerBounds.Height / 2));
+                using var glossPath = CreateRoundedRect(glossBounds, Math.Max(4, radius - 2));
+                using var glossBrush = new LinearGradientBrush(
+                    glossBounds,
+                    Color.FromArgb(44, 255, 255, 255),
+                    Color.FromArgb(0, 255, 255, 255),
+                    LinearGradientMode.Vertical);
+                g.FillPath(glossBrush, glossPath);
+            }
+        }
+    }
+
+    private static GraphicsPath CreateRoundedRect(Rectangle bounds, int radius)
+    {
+        var path = new GraphicsPath();
+        var diameter = Math.Max(2, radius * 2);
+        path.AddArc(bounds.X, bounds.Y, diameter, diameter, 180, 90);
+        path.AddArc(bounds.Right - diameter, bounds.Y, diameter, diameter, 270, 90);
+        path.AddArc(bounds.Right - diameter, bounds.Bottom - diameter, diameter, diameter, 0, 90);
+        path.AddArc(bounds.X, bounds.Bottom - diameter, diameter, diameter, 90, 90);
+        path.CloseFigure();
+        return path;
+    }
+
+    private static Color Blend(Color first, Color second, float amountSecond)
+    {
+        amountSecond = Math.Clamp(amountSecond, 0f, 1f);
+        var amountFirst = 1f - amountSecond;
+        return Color.FromArgb(
+            (int)Math.Round(first.A * amountFirst + second.A * amountSecond),
+            (int)Math.Round(first.R * amountFirst + second.R * amountSecond),
+            (int)Math.Round(first.G * amountFirst + second.G * amountSecond),
+            (int)Math.Round(first.B * amountFirst + second.B * amountSecond));
+    }
+
     private Panel CreatePreviewStateGroup(string title, FlowLayoutPanel flow)
     {
+        var theme = CurrentTheme;
+        var badgeSpec = GetPreviewBadgeSpec(title);
         var host = new Panel
         {
             Dock = DockStyle.Fill,
             Margin = new Padding(0, 0, 8, 0),
-            Padding = new Padding(10, 6, 10, 8)
+            Padding = Padding.Empty,
+            Tag = new ShellPanelMetadata(badgeSpec.AccentColor)
         };
         host.Paint += SummaryMetricPanelOnPaint;
+
+        var badge = CreateShellBadge(badgeSpec, 48);
+        badge.Dock = DockStyle.Left;
+        badge.Margin = Padding.Empty;
+
+        var contentHost = new Panel
+        {
+            Dock = DockStyle.Fill,
+            BackColor = Color.Transparent,
+            Margin = Padding.Empty,
+            Padding = new Padding(0, 7, 10, 8)
+        };
 
         var label = CreateSectionLabel(title);
         label.Dock = DockStyle.Top;
         label.Height = 18;
         label.Font = new Font("Segoe UI", 8.75f, FontStyle.Bold);
+        label.ForeColor = Color.FromArgb(236, theme.Text);
+        label.Tag = "group-title";
 
         flow.Dock = DockStyle.Fill;
-        host.Controls.Add(flow);
-        host.Controls.Add(label);
+        contentHost.Controls.Add(flow);
+        contentHost.Controls.Add(label);
+        host.Controls.Add(contentHost);
+        host.Controls.Add(badge);
         return host;
     }
 
     private static FlowLayoutPanel CreatePreviewStateFlow()
     {
-        return new FlowLayoutPanel
+        return new ShellFlowLayoutPanel
         {
             AutoScroll = true,
             FlowDirection = FlowDirection.LeftToRight,
             WrapContents = true,
             Margin = new Padding(0),
-            Padding = new Padding(0, 4, 0, 0)
+            Padding = new Padding(0, 4, 0, 0),
+            BackColor = Color.Transparent
         };
+    }
+
+    private static void ConfigurePreviewStateFlow(FlowLayoutPanel flow)
+    {
+        flow.AutoScroll = true;
+        flow.FlowDirection = FlowDirection.LeftToRight;
+        flow.WrapContents = true;
+        flow.Margin = new Padding(0);
+        flow.Padding = new Padding(0, 4, 0, 0);
+        flow.BackColor = Color.Transparent;
     }
 
     private static PowerStatsGrid CreateTotalsGrid()
@@ -635,6 +1176,13 @@ public sealed class FrmPetActorDetails : Form
             Margin = new Padding(0, 0, 0, 10),
             BackColor = Color.Black
         };
+    }
+
+    private static void ConfigureTotalsGrid(PowerStatsGrid grid)
+    {
+        grid.Dock = DockStyle.Top;
+        grid.Margin = new Padding(0, 0, 0, 10);
+        grid.BackColor = Color.Black;
     }
 
     private void AddTotalsSection(Label label, PowerStatsGrid grid)
@@ -657,23 +1205,6 @@ public sealed class FrmPetActorDetails : Form
         RefreshPowerSurface();
     }
 
-    private void DetailViewOnEntityDetails(string entityUid, HashSet<string> powers, int basePowerHistoryIdx, PetInfo petInfo)
-    {
-        var rosterMatch = _roster.FirstOrDefault(actor =>
-            actor.EntityUid.Equals(entityUid, StringComparison.OrdinalIgnoreCase)
-            && (basePowerHistoryIdx < 0 || actor.SourceHistoryIndex == basePowerHistoryIdx));
-
-        if (rosterMatch != null)
-        {
-            SetSelectedActor(rosterMatch);
-            LoadActorSnapshot(rosterMatch);
-            return;
-        }
-
-        using var details = new FrmEntityDetails(entityUid, powers, petInfo);
-        details.ShowDialog(this);
-    }
-
     private void RebuildRibbon()
     {
         var items = _roster
@@ -684,6 +1215,7 @@ public sealed class FrmPetActorDetails : Form
                 Actor = actor,
                 Title = actor.EntityDisplayName,
                 Subtitle = actor.SourcePowerDisplayName,
+                IconImage = PetActorIconCatalog.GetIcon(actor),
                 IsSelected = IsSelectedActor(actor)
             })
             .ToArray();
@@ -730,7 +1262,10 @@ public sealed class FrmPetActorDetails : Form
 
     private void LoadActorSnapshot(RealPetActorRosterItem actor, string? preserveSelectedPowerFullName = null)
     {
-        _currentSnapshot = _toon.GeneratePetActorSnapshot(actor, GetPreviewState(actor));
+        var loadVersion = ++_snapshotLoadVersion;
+        _bonusEntriesPending = true;
+        _bonusLoadQueuedVersion = -1;
+        _currentSnapshot = _toon.GeneratePetActorSnapshotForAnalysis(actor, GetPreviewState(actor));
         if (_currentSnapshot == null)
         {
             ShowEmptyState();
@@ -743,8 +1278,77 @@ public sealed class FrmPetActorDetails : Form
         PopulateHeader();
         PopulateSummary();
         PopulatePreviewControls();
-        PopulateTotals();
         RefreshPowerSurface();
+        if (_detailView.IsBonusesTabActive)
+        {
+            QueueAppliedBonusLoad(loadVersion, actor);
+        }
+    }
+
+    private void QueueAppliedBonusLoad(int loadVersion, RealPetActorRosterItem actor)
+    {
+        if (IsDisposed || !IsHandleCreated || _currentSnapshot == null || !_bonusEntriesPending)
+        {
+            return;
+        }
+
+        if (_bonusLoadQueuedVersion == loadVersion)
+        {
+            return;
+        }
+
+        _bonusLoadQueuedVersion = loadVersion;
+        BeginInvoke(new Action(() =>
+        {
+            if (_bonusLoadQueuedVersion == loadVersion)
+            {
+                _bonusLoadQueuedVersion = -1;
+            }
+
+            if (IsDisposed || loadVersion != _snapshotLoadVersion || _currentSnapshot == null)
+            {
+                return;
+            }
+
+            if (!_currentSnapshot.RosterItem.EntityUid.Equals(actor.EntityUid, StringComparison.OrdinalIgnoreCase) ||
+                _currentSnapshot.RosterItem.SourceHistoryIndex != actor.SourceHistoryIndex)
+            {
+                return;
+            }
+
+            Invalidate(true);
+            Update();
+
+            var entries = PetActorBonusAnalyzer.Build(
+                _toon,
+                _currentSnapshot.RosterItem,
+                _currentSnapshot.Recipient,
+                _currentSnapshot.Totals,
+                _currentSnapshot.ResolvedPowers,
+                _currentSnapshot.AvailableUpgrades,
+                _currentSnapshot.PreviewState,
+                _currentSnapshot.MathPowers,
+                _currentSnapshot.BuffedPowers);
+
+            if (IsDisposed || loadVersion != _snapshotLoadVersion || _currentSnapshot == null)
+            {
+                return;
+            }
+
+            _currentSnapshot.AppliedBonusEntries = entries;
+            _detailView.SetBonusEntries(entries);
+            _bonusEntriesPending = false;
+        }));
+    }
+
+    private void DetailViewOnBonusesTabActivated(object? sender, EventArgs e)
+    {
+        if (_currentSnapshot == null || !_bonusEntriesPending)
+        {
+            return;
+        }
+
+        QueueAppliedBonusLoad(_snapshotLoadVersion, _currentSnapshot.RosterItem);
     }
 
     private static int ResolveDefaultPowerIndex(PetActorSnapshot snapshot)
@@ -812,18 +1416,7 @@ public sealed class FrmPetActorDetails : Form
             return;
         }
 
-        var sourceDescription = PetActorPowerResolver.DescribePowerSource(_currentSnapshot.ResolvedPowers[_selectedPowerIndex]);
-        _detailView.SetActorDataInternal(
-            _currentSnapshot.BasePowers[_selectedPowerIndex],
-            _currentSnapshot.BuffedPowers[_selectedPowerIndex],
-            _currentSnapshot.Recipient.ClassName,
-            _currentSnapshot.Totals,
-            _currentSnapshot.ResolvedPowers[_selectedPowerIndex].SourceHistoryIndex,
-            sourceDescription,
-            _currentSnapshot.AppliedBonusEntries,
-            _currentSnapshot.CalculationSnapshot);
-        _detailView.DisplayTotals();
-        _detailView.DisplayBonuses();
+        _detailView.SetSnapshot(_currentSnapshot, _selectedPowerIndex);
     }
 
     private void PopulatePreviewControls()
@@ -872,16 +1465,13 @@ public sealed class FrmPetActorDetails : Form
     private CheckBox CreatePreviewToggle(string text, bool isChecked, string fullName, EventHandler handler)
     {
         var theme = CurrentTheme;
-        var checkBox = new CheckBox
+        var checkBox = new PreviewStateToggle
         {
-            AutoSize = true,
-            Appearance = Appearance.Normal,
             Checked = isChecked,
-            FlatStyle = FlatStyle.Standard,
             Font = new Font("Segoe UI", 9f, FontStyle.Bold),
             ForeColor = theme.Text,
-            BackColor = theme.Card,
-            Margin = new Padding(0, 0, 14, 4),
+            BackColor = Color.Transparent,
+            Margin = new Padding(0, 0, 18, 4),
             Tag = fullName,
             Text = text,
             UseVisualStyleBackColor = false
@@ -895,6 +1485,7 @@ public sealed class FrmPetActorDetails : Form
         return new Label
         {
             AutoSize = true,
+            BackColor = Color.Transparent,
             Font = new Font("Segoe UI", 8.5f, FontStyle.Italic),
             ForeColor = Color.Silver,
             Margin = new Padding(0, 2, 0, 0),
@@ -919,7 +1510,7 @@ public sealed class FrmPetActorDetails : Form
             state.Upgrades.AppliedUpgradePowerFullNames.Remove(fullName);
         }
 
-        RefreshCurrentActorSnapshot();
+        QueueRefreshCurrentActorSnapshot();
     }
 
     private void PetInRangeToggleOnCheckedChanged(object? sender, EventArgs e)
@@ -931,7 +1522,8 @@ public sealed class FrmPetActorDetails : Form
 
         var state = GetMutablePreviewState(_currentSnapshot.RosterItem);
         state.InRange = checkBox.Checked;
-        RefreshCurrentActorSnapshot();
+        _currentSnapshot.PreviewState.InRange = checkBox.Checked;
+        QueueRefreshCurrentActorSnapshot();
     }
 
     private void RefreshCurrentActorSnapshot()
@@ -945,6 +1537,38 @@ public sealed class FrmPetActorDetails : Form
             ? _currentSnapshot.ResolvedPowers[_selectedPowerIndex].Power.FullName
             : null;
         LoadActorSnapshot(_currentSnapshot.RosterItem, selectedPowerFullName);
+    }
+
+    private void QueueRefreshCurrentActorSnapshot(bool refreshPowerSurfaceFirst = false)
+    {
+        if (_currentSnapshot == null || IsDisposed || !IsHandleCreated)
+        {
+            return;
+        }
+
+        if (refreshPowerSurfaceFirst)
+        {
+            RefreshPowerSurface();
+            Invalidate(true);
+            Update();
+        }
+
+        if (_snapshotRefreshQueued)
+        {
+            return;
+        }
+
+        _snapshotRefreshQueued = true;
+        BeginInvoke(new Action(() =>
+        {
+            _snapshotRefreshQueued = false;
+            if (IsDisposed || !IsHandleCreated || _currentSnapshot == null)
+            {
+                return;
+            }
+
+            RefreshCurrentActorSnapshot();
+        }));
     }
 
     private void PowerGridOnPreviewToggleClicked(object? sender, PetActorPowerTileViewModel tile)
@@ -964,7 +1588,16 @@ public sealed class FrmPetActorDetails : Form
             state.ClickBuffs.IncludedPetSelfClickFullNames.Add(tile.FullName);
         }
 
-        RefreshCurrentActorSnapshot();
+        if (_currentSnapshot.PreviewState.IsPetClickBuffIncluded(tile.FullName))
+        {
+            _currentSnapshot.PreviewState.ClickBuffs.IncludedPetSelfClickFullNames.Remove(tile.FullName);
+        }
+        else
+        {
+            _currentSnapshot.PreviewState.ClickBuffs.IncludedPetSelfClickFullNames.Add(tile.FullName);
+        }
+
+        QueueRefreshCurrentActorSnapshot(refreshPowerSurfaceFirst: true);
     }
 
     private PetActorPreviewState GetPreviewState(RealPetActorRosterItem actor)
@@ -999,6 +1632,8 @@ public sealed class FrmPetActorDetails : Form
         }
 
         var roster = _currentSnapshot.RosterItem;
+        _headerIcon.IconImage = PetActorIconCatalog.GetIcon(roster);
+        _headerIcon.FallbackText = roster.EntityDisplayName;
         _nameLabel.Text = roster.EntityDisplayName;
         _subTitleLabel.Text = $"Summoned from {roster.SourcePowerDisplayName}";
         _classLabel.Text = $"Actor Class: {FormatTokenizedName(roster.EntityClassName)}";
@@ -1096,8 +1731,16 @@ public sealed class FrmPetActorDetails : Form
 
     private void ShowEmptyState()
     {
+        if (InDesigner && _designTimeSampleApplied)
+        {
+            ShowContentState();
+            return;
+        }
+
         _currentSnapshot = null;
         _selectedPowerIndex = -1;
+        _bonusEntriesPending = false;
+        _bonusLoadQueuedVersion = -1;
         _emptyStatePanel.Visible = true;
         _bodySplit.Visible = false;
         _nameLabel.Text = "No real pet actors";
@@ -1105,6 +1748,8 @@ public sealed class FrmPetActorDetails : Form
         _classLabel.Text = string.Empty;
         _countLabel.Text = string.Empty;
         _tagsLabel.Text = string.Empty;
+        _headerIcon.IconImage = null;
+        _headerIcon.FallbackText = "Pet";
         _actorRibbon.SetItems(Array.Empty<PetActorRibbonItem>());
         _upgradeFlow.Controls.Clear();
         _powerGrid.SetViewModel(null);
@@ -1242,5 +1887,202 @@ public sealed class FrmPetActorDetails : Form
         }
 
         return (bestLabel, bestValue == float.MinValue ? 0f : bestValue);
+    }
+
+    private sealed class ShellGlyphBadge : Control
+    {
+        public MidsTotalsGlyph BadgeGlyph { get; init; }
+        public Color AccentColor { get; init; } = Color.WhiteSmoke;
+        public Color GlowColor { get; init; } = Color.FromArgb(36, 52, 78);
+
+        public ShellGlyphBadge()
+        {
+            SetStyle(
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.ResizeRedraw |
+                ControlStyles.UserPaint |
+                ControlStyles.SupportsTransparentBackColor,
+                true);
+
+            BackColor = Color.Transparent;
+            Dock = DockStyle.Left;
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            base.OnPaint(e);
+
+            var outerInset = Math.Max(6, (int)Math.Round(Math.Min(ClientRectangle.Width, ClientRectangle.Height) * 0.12f));
+            var paddedBounds = Rectangle.Inflate(ClientRectangle, -outerInset, -outerInset);
+            var badgeSize = Math.Min(paddedBounds.Width, paddedBounds.Height);
+            if (badgeSize <= 2)
+            {
+                return;
+            }
+
+            var bounds = new Rectangle(
+                paddedBounds.X + (paddedBounds.Width - badgeSize) / 2,
+                paddedBounds.Y + (paddedBounds.Height - badgeSize) / 2,
+                badgeSize,
+                badgeSize);
+
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            e.Graphics.InterpolationMode = InterpolationMode.HighQualityBicubic;
+            e.Graphics.PixelOffsetMode = PixelOffsetMode.HighQuality;
+            using var outerPath = new GraphicsPath();
+            outerPath.AddEllipse(bounds);
+
+            using var ringBrush = new LinearGradientBrush(bounds, Blend(GlowColor, Color.White, 0.10f), Blend(GlowColor, Color.Black, 0.28f), LinearGradientMode.Vertical);
+            using var ringPen = new Pen(Color.FromArgb(180, Blend(AccentColor, Color.White, 0.10f)));
+            e.Graphics.FillPath(ringBrush, outerPath);
+            e.Graphics.DrawPath(ringPen, outerPath);
+
+            var innerBounds = Rectangle.Inflate(bounds, -3, -3);
+            using var innerPath = new GraphicsPath();
+            innerPath.AddEllipse(innerBounds);
+            using var innerBrush = new LinearGradientBrush(innerBounds, Blend(AccentColor, Color.White, 0.18f), GlowColor, LinearGradientMode.Vertical);
+            using var innerPen = new Pen(Color.FromArgb(150, Blend(AccentColor, Color.Black, 0.18f)));
+            e.Graphics.FillPath(innerBrush, innerPath);
+            e.Graphics.DrawPath(innerPen, innerPath);
+
+            var glyphPadding = Math.Max(2, innerBounds.Width / 9);
+            var glyphBounds = Rectangle.Inflate(innerBounds, -glyphPadding, -glyphPadding);
+            MidsTotalsIconCache.Draw(e.Graphics, glyphBounds, BadgeGlyph, Color.FromArgb(248, 248, 244));
+        }
+    }
+
+    private sealed class ShellFlowLayoutPanel : FlowLayoutPanel
+    {
+        public ShellFlowLayoutPanel()
+        {
+            SetStyle(
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.ResizeRedraw |
+                ControlStyles.SupportsTransparentBackColor,
+                true);
+
+            BackColor = Color.Transparent;
+        }
+
+        protected override void OnPaintBackground(PaintEventArgs e)
+        {
+            PaintParentBackground(e.Graphics);
+        }
+
+        private void PaintParentBackground(Graphics g)
+        {
+            if (Parent == null)
+            {
+                g.Clear(Color.Transparent);
+                return;
+            }
+
+            var state = g.Save();
+            try
+            {
+                g.TranslateTransform(-Left, -Top);
+                using var paintArgs = new PaintEventArgs(g, new Rectangle(Parent.Location, Parent.Size));
+                InvokePaintBackground(Parent, paintArgs);
+                InvokePaint(Parent, paintArgs);
+            }
+            finally
+            {
+                g.Restore(state);
+            }
+        }
+    }
+
+    private sealed class PreviewStateToggle : CheckBox
+    {
+        public PreviewStateToggle()
+        {
+            AutoSize = true;
+            BackColor = Color.Transparent;
+            FlatStyle = FlatStyle.Flat;
+            SetStyle(
+                ControlStyles.AllPaintingInWmPaint |
+                ControlStyles.OptimizedDoubleBuffer |
+                ControlStyles.ResizeRedraw |
+                ControlStyles.UserPaint |
+                ControlStyles.SupportsTransparentBackColor,
+                true);
+        }
+
+        public override Size GetPreferredSize(Size proposedSize)
+        {
+            var textSize = TextRenderer.MeasureText(Text ?? string.Empty, Font, new Size(int.MaxValue, int.MaxValue), TextFormatFlags.NoPadding);
+            return new Size(textSize.Width + 34, Math.Max(22, textSize.Height + 4));
+        }
+
+        protected override void OnPaint(PaintEventArgs e)
+        {
+            PaintParentBackground(e.Graphics);
+            e.Graphics.SmoothingMode = SmoothingMode.AntiAlias;
+            e.Graphics.TextRenderingHint = TextRenderingHint.ClearTypeGridFit;
+
+            var indicatorSize = Math.Max(14, Height - 6);
+            var indicatorBounds = new Rectangle(1, (Height - indicatorSize) / 2, indicatorSize, indicatorSize);
+            using var outerBrush = new LinearGradientBrush(indicatorBounds, Color.FromArgb(18, 34, 54), Color.FromArgb(6, 12, 20), LinearGradientMode.Vertical);
+            using var outerPen = new Pen(Color.FromArgb(148, 48, 72, 98));
+            e.Graphics.FillEllipse(outerBrush, indicatorBounds);
+            e.Graphics.DrawEllipse(outerPen, indicatorBounds);
+
+            var fillBounds = Rectangle.Inflate(indicatorBounds, -2, -2);
+            var onColor = Color.FromArgb(54, 214, 92);
+            var offColor = Color.FromArgb(72, 78, 88);
+            using var fillBrush = new LinearGradientBrush(
+                fillBounds,
+                Checked ? Blend(onColor, Color.White, 0.14f) : Blend(offColor, Color.White, 0.08f),
+                Checked ? Blend(onColor, Color.Black, 0.16f) : Blend(offColor, Color.Black, 0.18f),
+                LinearGradientMode.Vertical);
+            e.Graphics.FillEllipse(fillBrush, fillBounds);
+
+            if (Checked)
+            {
+                using var checkPen = new Pen(Color.FromArgb(248, 250, 244), Math.Max(1.6f, indicatorSize / 6f))
+                {
+                    StartCap = LineCap.Round,
+                    EndCap = LineCap.Round,
+                    LineJoin = LineJoin.Round
+                };
+                var a = new PointF(fillBounds.Left + fillBounds.Width * 0.22f, fillBounds.Top + fillBounds.Height * 0.56f);
+                var b = new PointF(fillBounds.Left + fillBounds.Width * 0.44f, fillBounds.Top + fillBounds.Height * 0.76f);
+                var c = new PointF(fillBounds.Left + fillBounds.Width * 0.78f, fillBounds.Top + fillBounds.Height * 0.28f);
+                e.Graphics.DrawLines(checkPen, [a, b, c]);
+            }
+
+            var textBounds = new Rectangle(indicatorBounds.Right + 8, 0, Width - indicatorBounds.Right - 8, Height);
+            TextRenderer.DrawText(
+                e.Graphics,
+                Text ?? string.Empty,
+                Font,
+                textBounds,
+                Enabled ? ForeColor : Color.Gray,
+                TextFormatFlags.Left | TextFormatFlags.VerticalCenter | TextFormatFlags.NoPadding | TextFormatFlags.EndEllipsis);
+        }
+
+        private void PaintParentBackground(Graphics g)
+        {
+            if (Parent == null)
+            {
+                g.Clear(Color.Transparent);
+                return;
+            }
+
+            var state = g.Save();
+            try
+            {
+                g.TranslateTransform(-Left, -Top);
+                using var paintArgs = new PaintEventArgs(g, new Rectangle(Parent.Location, Parent.Size));
+                InvokePaintBackground(Parent, paintArgs);
+                InvokePaint(Parent, paintArgs);
+            }
+            finally
+            {
+                g.Restore(state);
+            }
+        }
     }
 }

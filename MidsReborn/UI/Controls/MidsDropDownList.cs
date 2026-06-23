@@ -4,6 +4,7 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Drawing;
 using System.Drawing.Drawing2D;
+using System.Drawing.Imaging;
 using System.Drawing.Text;
 using System.Linq;
 using System.Windows.Forms;
@@ -38,6 +39,8 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
     private string? _placeholderText;
 
     private IBindingList? _boundList;
+    private Func<object, bool>? _itemEnabledProvider;
+    private Func<object, string?>? _itemDisabledReasonProvider;
     private bool _liveResizeMetricsFrozen;
     private float? _pendingUiScale;
     private bool _closedSurfaceLayoutValid;
@@ -122,6 +125,32 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
     [Category("Data")]
     [Description("Callback that returns a Bitmap for a given bound item. Used to auto-populate ItemIcons.")]
     public Func<object, Bitmap?>? IconProvider { get; set; }
+
+    [Category("Behavior")]
+    [Description("Callback that returns whether a given bound item can be selected.")]
+    public Func<object, bool>? ItemEnabledProvider
+    {
+        get => _itemEnabledProvider;
+        set
+        {
+            _itemEnabledProvider = value;
+            Invalidate();
+            InvalidateCustomDropDownVisuals();
+        }
+    }
+
+    [Category("Behavior")]
+    [Description("Callback that returns a disabled reason for a given bound item. Non-empty reasons disable the item.")]
+    public Func<object, string?>? ItemDisabledReasonProvider
+    {
+        get => _itemDisabledReasonProvider;
+        set
+        {
+            _itemDisabledReasonProvider = value;
+            Invalidate();
+            InvalidateCustomDropDownVisuals();
+        }
+    }
 
     #endregion
 
@@ -260,6 +289,12 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
         }
 
         ApplyUiScaleCore(scale);
+    }
+
+    public void RefreshItemAvailability()
+    {
+        Invalidate();
+        InvalidateCustomDropDownVisuals();
     }
 
     public void BeginLiveResizeMetrics()
@@ -468,19 +503,25 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
             var selectedItem = SelectedIndex >= 0 && SelectedIndex < Items.Count
                 ? Items[SelectedIndex]
                 : SelectedItem;
-            Rectangle iconRect = new Rectangle(rect.Left + IconPadding, rect.Top + layout.IconY, IconSize, IconSize);
+            Bitmap? selectedIcon = null;
+            var hasIcon = selectedItem != null &&
+                          _itemIcons.TryGetValue(selectedItem, out selectedIcon) &&
+                          selectedIcon != null;
+            var textLeft = rect.Left + IconPadding;
+
+            if (hasIcon)
+            {
+                Rectangle iconRect = new Rectangle(rect.Left + IconPadding, rect.Top + layout.IconY, IconSize, IconSize);
+                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
+                DrawIconIfValid(g, selectedIcon!, iconRect);
+                textLeft = iconRect.Right + IconPadding;
+            }
 
             Rectangle textRect = new Rectangle(
-                iconRect.Right + IconPadding,
+                textLeft,
                 layout.TextY,
-                rect.Right - iconRect.Right - IconPadding * 2,
+                Math.Max(0, rect.Right - ClosedSurfaceArrowReservedWidth - IconPadding - textLeft),
                 layout.TextHeight);
-
-            if (selectedItem != null && _itemIcons.TryGetValue(selectedItem, out var icon) && icon != null)
-            {
-                g.InterpolationMode = InterpolationMode.HighQualityBicubic;
-                DrawIconIfValid(g, icon, iconRect);
-            }
 
             TextRenderer.DrawText(
                 g,
@@ -569,31 +610,36 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
         using (var backBrush = new SolidBrush(backColor))
             g.FillRectangle(backBrush, bounds);
 
-        // Icon layout
-        Rectangle iconRect = new Rectangle(
-            bounds.Left + IconPadding,
-            bounds.Top + (bounds.Height - IconSize) / 2,
-            IconSize,
-            IconSize);
+        Bitmap? itemIcon = null;
+        var hasIcon = item != null &&
+                      _itemIcons.TryGetValue(item, out itemIcon) &&
+                      itemIcon != null;
 
         Size textSize = TextRenderer.MeasureText(g, "Mg", Font, Size.Empty, TextFormatFlags.NoPadding);
         int textY = bounds.Top + (bounds.Height - textSize.Height) / 2 - 1;
+        var textLeft = bounds.Left + IconPadding;
 
-        Rectangle textRect = new Rectangle(
-            iconRect.Right + IconPadding,
-            textY,
-            bounds.Right - iconRect.Right - IconPadding * 2,
-            textSize.Height);
-
-        // Icon draw
-        if (item != null && _itemIcons.TryGetValue(item, out var icon) && icon != null)
+        if (hasIcon)
         {
+            Rectangle iconRect = new Rectangle(
+                bounds.Left + IconPadding,
+                bounds.Top + (bounds.Height - IconSize) / 2,
+                IconSize,
+                IconSize);
+
             g.InterpolationMode = InterpolationMode.HighQualityBicubic;
             g.SmoothingMode = SmoothingMode.HighQuality;
             g.CompositingQuality = CompositingQuality.HighQuality;
             g.PixelOffsetMode = PixelOffsetMode.HighQuality;
-            DrawIconIfValid(g, icon, iconRect);
+            DrawIconIfValid(g, itemIcon!, iconRect);
+            textLeft = iconRect.Right + IconPadding;
         }
+
+        Rectangle textRect = new Rectangle(
+            textLeft,
+            textY,
+            Math.Max(0, bounds.Right - textLeft - IconPadding),
+            textSize.Height);
 
         // Text draw
         TextRenderer.DrawText(
@@ -950,6 +996,11 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
 
     private void CustomDropDownList_CommitRequested(object? sender, int selectedIndex)
     {
+        if (selectedIndex >= 0 && selectedIndex < Items.Count && !IsItemEnabledAt(selectedIndex))
+        {
+            return;
+        }
+
         HideCustomDropDown(focusOwner: true);
         if (selectedIndex >= -1 && selectedIndex < Items.Count)
         {
@@ -1025,6 +1076,57 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
     private int MeasureItemTextWidth(Graphics graphics, object item, Font font)
         => MeasureRawTextWidth(graphics, GetItemText(item) ?? string.Empty, font);
 
+    internal bool IsItemEnabledAt(int index)
+    {
+        return index < 0 || index >= Items.Count || IsItemEnabled(Items[index]);
+    }
+
+    internal string? GetItemDisabledReasonAt(int index)
+    {
+        return index >= 0 && index < Items.Count
+            ? GetItemDisabledReason(Items[index])
+            : null;
+    }
+
+    private bool IsItemEnabled(object? item)
+    {
+        if (item is null)
+        {
+            return true;
+        }
+
+        try
+        {
+            if (ItemEnabledProvider?.Invoke(item) == false)
+            {
+                return false;
+            }
+        }
+        catch
+        {
+            return true;
+        }
+
+        return string.IsNullOrWhiteSpace(GetItemDisabledReason(item));
+    }
+
+    private string? GetItemDisabledReason(object? item)
+    {
+        if (item is null || ItemDisabledReasonProvider is null)
+        {
+            return null;
+        }
+
+        try
+        {
+            return ItemDisabledReasonProvider(item);
+        }
+        catch
+        {
+            return null;
+        }
+    }
+
     #endregion
 
     #region Custom Drop Down
@@ -1056,6 +1158,8 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
         private bool _hoveringDownArrow;
         private bool _draggingThumb;
         private int _dragStartY;
+        private readonly ToolTip _itemToolTip = new();
+        private int _toolTipIndex = -1;
 
         internal event EventHandler<int>? CommitRequested;
         internal event EventHandler? CancelRequested;
@@ -1198,6 +1302,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
             _hoveringThumb = false;
             _hoveringUpArrow = false;
             _hoveringDownArrow = false;
+            HideItemToolTip();
             Capture = false;
         }
 
@@ -1206,6 +1311,16 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
             Keys key = keyData & Keys.KeyCode;
             return key is Keys.Up or Keys.Down or Keys.PageUp or Keys.PageDown or Keys.Home or Keys.End or Keys.Enter or Keys.Escape or Keys.Tab
                 || base.IsInputKey(keyData);
+        }
+
+        protected override void Dispose(bool disposing)
+        {
+            if (disposing)
+            {
+                _itemToolTip.Dispose();
+            }
+
+            base.Dispose(disposing);
         }
 
         protected override void OnPaint(PaintEventArgs e)
@@ -1296,6 +1411,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
             if (itemIndex >= 0)
             {
                 SetActiveIndex(itemIndex);
+                UpdateItemToolTip(itemIndex);
             }
         }
 
@@ -1321,7 +1437,17 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
             if (itemIndex >= 0 && itemIndex != _activeIndex)
             {
                 SetActiveIndex(itemIndex);
+                UpdateItemToolTip(itemIndex);
                 return;
+            }
+
+            if (itemIndex >= 0)
+            {
+                UpdateItemToolTip(itemIndex);
+            }
+            else
+            {
+                HideItemToolTip();
             }
 
             if (oldHoverThumb != _hoveringThumb || oldHoverUp != _hoveringUpArrow || oldHoverDown != _hoveringDownArrow)
@@ -1344,6 +1470,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
         protected override void OnMouseLeave(EventArgs e)
         {
             base.OnMouseLeave(e);
+            HideItemToolTip();
             if (!_hoveringThumb && !_hoveringUpArrow && !_hoveringDownArrow)
             {
                 return;
@@ -1369,7 +1496,15 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
             int itemIndex = HitTestItemIndex(e.Location);
             if (itemIndex >= 0)
             {
-                CommitRequested?.Invoke(this, itemIndex);
+                SetActiveIndex(itemIndex);
+                if (_owner.IsItemEnabledAt(itemIndex))
+                {
+                    CommitRequested?.Invoke(this, itemIndex);
+                }
+                else
+                {
+                    UpdateItemToolTip(itemIndex, force: true);
+                }
             }
         }
 
@@ -1404,9 +1539,13 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
                     e.Handled = true;
                     break;
                 case Keys.Enter:
-                    if (_activeIndex >= 0)
+                    if (_activeIndex >= 0 && _owner.IsItemEnabledAt(_activeIndex))
                     {
                         CommitRequested?.Invoke(this, _activeIndex);
+                    }
+                    else
+                    {
+                        UpdateItemToolTip(_activeIndex, force: true);
                     }
 
                     e.Handled = true;
@@ -1416,7 +1555,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
                     e.Handled = true;
                     break;
                 case Keys.Tab:
-                    if (_activeIndex >= 0)
+                    if (_activeIndex >= 0 && _owner.IsItemEnabledAt(_activeIndex))
                     {
                         CommitRequested?.Invoke(this, _activeIndex);
                     }
@@ -1448,8 +1587,17 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
                     RowHeight);
 
                 bool isActive = itemIndex == _activeIndex;
-                Color backColor = isActive ? theme.DropDownSelectionBackColor : theme.DropDownBackColor;
-                Color textColor = isActive ? theme.DropDownSelectionForeColor : theme.ForeColor;
+                bool isEnabled = _owner.IsItemEnabledAt(itemIndex);
+                Color backColor = isActive && isEnabled
+                    ? theme.DropDownSelectionBackColor
+                    : isActive
+                        ? BlendColor(theme.DropDownBackColor, theme.DropDownSelectionBackColor, 0.22f)
+                        : theme.DropDownBackColor;
+                Color textColor = !isEnabled
+                    ? SystemColors.GrayText
+                    : isActive
+                        ? theme.DropDownSelectionForeColor
+                        : theme.ForeColor;
 
                 using (var itemBrush = new SolidBrush(backColor))
                 {
@@ -1457,24 +1605,35 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
                 }
 
                 object item = _owner.Items[itemIndex];
-                Rectangle iconRect = new Rectangle(
-                    itemRect.Left + IconPadding,
-                    itemRect.Top + (itemRect.Height - _owner.IconSize) / 2,
-                    _owner.IconSize,
-                    _owner.IconSize);
-
-                Rectangle textRect = new Rectangle(
-                    iconRect.Right + IconPadding,
-                    itemRect.Top,
-                    Math.Max(0, itemRect.Right - iconRect.Right - IconPadding * 2),
-                    itemRect.Height);
+                var textLeft = itemRect.Left + IconPadding;
 
                 if (_owner._itemIcons.TryGetValue(item, out var icon) && icon != null)
                 {
+                    Rectangle iconRect = new Rectangle(
+                        itemRect.Left + IconPadding,
+                        itemRect.Top + (itemRect.Height - _owner.IconSize) / 2,
+                        _owner.IconSize,
+                        _owner.IconSize);
+
                     g.InterpolationMode = InterpolationMode.HighQualityBicubic;
                     g.SmoothingMode = SmoothingMode.HighQuality;
-                    DrawIconIfValid(g, icon, iconRect);
+                    if (isEnabled)
+                    {
+                        DrawIconIfValid(g, icon, iconRect);
+                    }
+                    else
+                    {
+                        DrawDisabledIconIfValid(g, icon, iconRect);
+                    }
+
+                    textLeft = iconRect.Right + IconPadding;
                 }
+
+                Rectangle textRect = new Rectangle(
+                    textLeft,
+                    itemRect.Top,
+                    Math.Max(0, itemRect.Right - textLeft - IconPadding),
+                    itemRect.Height);
 
                 TextRenderer.DrawText(
                     g,
@@ -1486,7 +1645,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
 
                 if (isActive)
                 {
-                    using var focusPen = new Pen(theme.FocusBorder);
+                    using var focusPen = new Pen(isEnabled ? theme.FocusBorder : SystemColors.GrayText);
                     var focusRect = itemRect;
                     focusRect.Width = Math.Max(0, focusRect.Width - 1);
                     focusRect.Height = Math.Max(0, focusRect.Height - 1);
@@ -1620,6 +1779,55 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
             Invalidate();
         }
 
+        private void UpdateItemToolTip(int index, bool force = false)
+        {
+            if (index < 0 || index >= ItemCount)
+            {
+                HideItemToolTip();
+                return;
+            }
+
+            var reason = _owner.GetItemDisabledReasonAt(index);
+            if (string.IsNullOrWhiteSpace(reason))
+            {
+                HideItemToolTip();
+                return;
+            }
+
+            if (!force && _toolTipIndex == index)
+            {
+                return;
+            }
+
+            _toolTipIndex = index;
+            var itemRect = GetItemRect(index);
+            var location = new Point(
+                Math.Min(Width - 1, itemRect.Right + 8),
+                Math.Max(0, itemRect.Top + itemRect.Height / 2));
+            _itemToolTip.Show(reason, this, location, 6000);
+        }
+
+        private void HideItemToolTip()
+        {
+            if (_toolTipIndex < 0)
+            {
+                return;
+            }
+
+            _toolTipIndex = -1;
+            _itemToolTip.Hide(this);
+        }
+
+        private Rectangle GetItemRect(int itemIndex)
+        {
+            int slot = itemIndex - _topIndex;
+            return new Rectangle(
+                _contentBounds.Left,
+                _contentBounds.Top + slot * RowHeight,
+                _contentBounds.Width,
+                RowHeight);
+        }
+
         private void EnsureActiveIndexVisible()
         {
             if (_activeIndex < 0 || _visibleItemCount <= 0)
@@ -1679,6 +1887,54 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
             _topIndex = Math.Max(0, Math.Min(_topIndex, MaxTopIndex));
             RecalculateLayout();
             Invalidate();
+        }
+
+        private static Color BlendColor(Color first, Color second, float amount)
+        {
+            amount = Math.Clamp(amount, 0f, 1f);
+            var inverse = 1f - amount;
+            return Color.FromArgb(
+                (int)Math.Round(first.A * inverse + second.A * amount),
+                (int)Math.Round(first.R * inverse + second.R * amount),
+                (int)Math.Round(first.G * inverse + second.G * amount),
+                (int)Math.Round(first.B * inverse + second.B * amount));
+        }
+
+        private static void DrawDisabledIconIfValid(Graphics graphics, Image icon, Rectangle bounds)
+        {
+            try
+            {
+                if (icon.Width <= 0 || icon.Height <= 0)
+                {
+                    return;
+                }
+
+                using var attributes = new ImageAttributes();
+                var matrix = new ColorMatrix(new[]
+                {
+                    new[] { 0.32f, 0.32f, 0.32f, 0f, 0f },
+                    new[] { 0.32f, 0.32f, 0.32f, 0f, 0f },
+                    new[] { 0.32f, 0.32f, 0.32f, 0f, 0f },
+                    new[] { 0f, 0f, 0f, 0.45f, 0f },
+                    new[] { 0f, 0f, 0f, 0f, 1f }
+                });
+                attributes.SetColorMatrix(matrix);
+                graphics.DrawImage(
+                    icon,
+                    bounds,
+                    0,
+                    0,
+                    icon.Width,
+                    icon.Height,
+                    GraphicsUnit.Pixel,
+                    attributes);
+            }
+            catch (ArgumentException)
+            {
+            }
+            catch (ObjectDisposedException)
+            {
+            }
         }
     }
 

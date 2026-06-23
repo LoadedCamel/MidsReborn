@@ -57,6 +57,13 @@ public sealed class PowerStatsGrid : Control
         TextFormatFlags.SingleLine |
         TextFormatFlags.EndEllipsis;
 
+    private const int LogicalScrollBarWidth = 16;
+    private const int LogicalArrowHeight = 16;
+    private const int LogicalThumbMinHeight = 20;
+    private const int LogicalWheelStepPx = 32;
+    private const int LogicalArrowStepPx = 30;
+    private const int LogicalPageStepMarginPx = 8;
+
     #endregion
 
     #region Private fields
@@ -81,6 +88,20 @@ public sealed class PowerStatsGrid : Control
     private int _gridPadding = 8;
     private int _colGap = 12;
     private int _hoverItem = -1;
+
+    private int _contentHeight;
+    private int _scrollOffset;
+    private bool _scrollbarVisible;
+    private Rectangle _scrollbarBounds;
+    private Rectangle _trackBounds;
+    private Rectangle _upArrowRect;
+    private Rectangle _downArrowRect;
+    private Rectangle _thumbRect;
+    private bool _draggingThumb;
+    private int _dragStartY;
+    private bool _hoveringThumb;
+    private bool _hoveringUpArrow;
+    private bool _hoveringDownArrow;
 
     // Column width ratio within a single Stat|Value pair.
     private float _wLabel = 0.50f;
@@ -137,7 +158,17 @@ public sealed class PowerStatsGrid : Control
         }
     }
 
+    private ScrollPanelTheme CurrentScrollTheme =>
+        DesignMode ? ThemeManager.DesignTime.ScrollPanel : ThemeManager.CurrentTheme?.ScrollPanel ?? ThemeManager.DesignTime.ScrollPanel;
+
     private double DpiScale => DeviceDpi / 96.0;
+    private int ScrollBarWidth => ScalePx(LogicalScrollBarWidth);
+    private int ArrowHeight => ScalePx(LogicalArrowHeight);
+    private int ThumbMinHeight => ScalePx(LogicalThumbMinHeight);
+    private int WheelStepPx => ScalePx(LogicalWheelStepPx);
+    private int ArrowStepPx => ScalePx(LogicalArrowStepPx);
+    private int PageStepMarginPx => ScalePx(LogicalPageStepMarginPx);
+    private int ContentViewportWidth => Math.Max(0, ClientSize.Width - (_scrollbarVisible ? ScrollBarWidth : 0));
 
     #endregion
 
@@ -148,8 +179,11 @@ public sealed class PowerStatsGrid : Control
         SetStyle(ControlStyles.AllPaintingInWmPaint |
                  ControlStyles.OptimizedDoubleBuffer |
                  ControlStyles.UserPaint |
-                 ControlStyles.ResizeRedraw | ControlStyles.SupportsTransparentBackColor, true);
-        TabStop = false;
+                 ControlStyles.ResizeRedraw |
+                 ControlStyles.Selectable |
+                 ControlStyles.SupportsTransparentBackColor, true);
+        TabStop = true;
+        Font = new Font("Segoe UI", 9.5f, FontStyle.Regular, GraphicsUnit.Point);
         if (!DesignMode) ThemeManager.ThemeChanged += ThemeManagerOnThemeChanged;
     }
 
@@ -189,6 +223,7 @@ public sealed class PowerStatsGrid : Control
         _hoverItem = -1;
         _tooltip.Hide(this);
         AutoSizeHeight();
+        RelayoutAndScrollbar();
         Invalidate();
     }
 
@@ -198,7 +233,15 @@ public sealed class PowerStatsGrid : Control
         _hoverItem = -1;
         _tooltip.Hide(this);
         AutoSizeHeight();
+        _scrollOffset = 0;
+        RelayoutAndScrollbar();
         Invalidate();
+    }
+
+    public override Size GetPreferredSize(Size proposedSize)
+    {
+        var width = proposedSize.Width > 0 ? proposedSize.Width : Math.Max(ScalePx(220), Width);
+        return new Size(width, MeasureContentHeight());
     }
 
     #endregion
@@ -211,10 +254,17 @@ public sealed class PowerStatsGrid : Control
 
     #region Overrides
 
+    protected override void OnSizeChanged(EventArgs e)
+    {
+        base.OnSizeChanged(e);
+        RelayoutAndScrollbar();
+    }
+
     protected override void OnDpiChangedAfterParent(EventArgs e)
     {
         base.OnDpiChangedAfterParent(e);
         AutoSizeHeight(); // recompute to reflect scaled row/header
+        RelayoutAndScrollbar();
         Invalidate();
     }
 
@@ -224,26 +274,90 @@ public sealed class PowerStatsGrid : Control
 
     private void AutoSizeHeight()
     {
+        var preferredHeight = MeasureContentHeight();
+        if (Dock != DockStyle.Fill && Height != preferredHeight)
+        {
+            Height = preferredHeight;
+        }
+    }
+
+    private int MeasureContentHeight()
+    {
         int gp = ScalePx(_gridPadding);
         int hh = ScalePx(_headerHeight);
         int rh = ScalePx(_rowHeight);
         int visualRows = (_rows.Count + 1) / 2;
-        int h = gp + hh + (visualRows * rh) + gp;
-        Height = h;
+        return gp + hh + (visualRows * rh) + gp;
+    }
+
+    private void RelayoutAndScrollbar()
+    {
+        _contentHeight = MeasureContentHeight();
+        _scrollbarVisible = _contentHeight > ClientSize.Height && ClientSize.Height > 0;
+        ClampScrollOffset();
+        ComputeScrollbarBounds();
+    }
+
+    private void ClampScrollOffset()
+    {
+        int max = Math.Max(0, _contentHeight - ClientSize.Height);
+        _scrollOffset = Math.Clamp(_scrollOffset, 0, max);
+    }
+
+    private void SetScrollOffset(int value)
+    {
+        int max = Math.Max(0, _contentHeight - ClientSize.Height);
+        int clamped = Math.Clamp(value, 0, max);
+        if (clamped == _scrollOffset)
+        {
+            return;
+        }
+
+        var oldThumb = _thumbRect;
+        _scrollOffset = clamped;
+        if (_scrollbarVisible)
+        {
+            ComputeScrollbarBounds();
+        }
+
+        Invalidate(new Rectangle(0, 0, ContentViewportWidth, ClientSize.Height));
+        if (_scrollbarVisible)
+        {
+            Invalidate(_scrollbarBounds);
+            if (!oldThumb.IsEmpty) Invalidate(oldThumb);
+            if (!_thumbRect.IsEmpty) Invalidate(_thumbRect);
+        }
+    }
+
+    private void ScrollBy(int deltaPx) => SetScrollOffset(_scrollOffset + deltaPx);
+
+    private void ScrollPage(int direction)
+    {
+        int page = Math.Max(0, ClientSize.Height - PageStepMarginPx);
+        ScrollBy(direction * page);
     }
 
     private (Rectangle leftPair, Rectangle leftLabel, Rectangle leftValue, Rectangle rightPair, Rectangle rightLabel, Rectangle rightValue) GetColumns(Rectangle bounds)
     {
         int pairGap = ScalePx(_colGap);
-        int centerGap = ScalePx(_colGap + 6);
-        int itemInset = ScalePx(4);
+        int desiredCenterGap = ScalePx(_colGap + 16);
+        int itemInset = ScalePx(6);
+        int desiredLabelWidth = MeasureDesiredLabelWidth();
+        int desiredValueWidth = MeasureDesiredValueWidth();
+        int availableForPairs = Math.Max(2, bounds.Width - desiredCenterGap);
+        int pairWidth = Math.Max(
+            1,
+            Math.Min(
+                availableForPairs / 2,
+                Math.Max(ScalePx(190), desiredLabelWidth + desiredValueWidth + pairGap + (itemInset * 2))));
 
-        int wAvail = Math.Max(0, bounds.Width - centerGap);
-        int leftPairWidth = wAvail / 2;
-        int rightPairWidth = wAvail - leftPairWidth;
+        int centerGap = Math.Min(desiredCenterGap, Math.Max(ScalePx(6), bounds.Width - (pairWidth * 2)));
 
-        var leftPair = new Rectangle(bounds.X, bounds.Y, leftPairWidth, bounds.Height);
-        var rightPair = new Rectangle(leftPair.Right + centerGap, bounds.Y, rightPairWidth, bounds.Height);
+        int contentWidth = Math.Min(bounds.Width, pairWidth * 2 + centerGap);
+        int startX = bounds.X + Math.Max(0, (bounds.Width - contentWidth) / 2);
+
+        var leftPair = new Rectangle(startX, bounds.Y, pairWidth, bounds.Height);
+        var rightPair = new Rectangle(leftPair.Right + centerGap, bounds.Y, pairWidth, bounds.Height);
 
         var left = GetPairColumns(leftPair, pairGap, itemInset);
         var right = GetPairColumns(rightPair, pairGap, itemInset);
@@ -282,7 +396,7 @@ public sealed class PowerStatsGrid : Control
         int gp = ScalePx(_gridPadding);
         int hh = ScalePx(_headerHeight);
         int rh = ScalePx(_rowHeight);
-        return new Rectangle(gp, gp + hh + index * rh, Width - gp * 2, rh);
+        return new Rectangle(gp, gp + hh + index * rh, Math.Max(1, ContentViewportWidth - gp * 2), rh);
     }
 
     private Rectangle GetItemBounds(int index)
@@ -295,7 +409,9 @@ public sealed class PowerStatsGrid : Control
         int visualRow = index / 2;
         bool isRight = (index % 2) == 1;
         var layout = GetColumns(GetVisualRowBounds(visualRow));
-        return isRight ? layout.rightPair : layout.leftPair;
+        var bounds = isRight ? layout.rightPair : layout.leftPair;
+        bounds.Offset(0, -_scrollOffset);
+        return bounds;
     }
 
     #endregion
@@ -305,6 +421,8 @@ public sealed class PowerStatsGrid : Control
     protected override void OnPaint(PaintEventArgs e)
     {
         base.OnPaint(e);
+        RelayoutAndScrollbar();
+
         var g = e.Graphics;
         g.Clear(BackColor);
 
@@ -314,34 +432,55 @@ public sealed class PowerStatsGrid : Control
 
         var t = CurrentTheme;
 
-        // Header
-        var rcHeader = new Rectangle(gp, gp, Width - gp * 2, hh);
-        using (var headerBrush = new LinearGradientBrush(rcHeader, t.HeaderTop, t.HeaderBottom, 90f))
-            g.FillRectangle(headerBrush, rcHeader);
-
-        var cols = GetColumns(rcHeader);
-        // Rows
-        int visualRows = (_rows.Count + 1) / 2;
-        for (int i = 0; i < visualRows; i++)
+        var contentClip = new Rectangle(0, 0, ContentViewportWidth, ClientSize.Height);
+        var state = g.Save();
+        try
         {
-            int leftIndex = i * 2;
-            int rightIndex = leftIndex + 1;
-            var rc = GetVisualRowBounds(i);
-            var rcc = GetColumns(rc);
+            g.SetClip(contentClip);
 
-            if (leftIndex < _rows.Count)
+            var rcHeader = new Rectangle(gp, gp - _scrollOffset, Math.Max(1, ContentViewportWidth - gp * 2), hh);
+            if (rcHeader.Width > 0 && rcHeader.Height > 0 && rcHeader.Bottom >= 0)
             {
-                DrawRowItem(g, _rows[leftIndex], leftIndex, rcc.leftPair, rcc.leftLabel, rcc.leftValue, t);
+                using var headerBrush = new LinearGradientBrush(rcHeader, t.HeaderTop, t.HeaderBottom, 90f);
+                g.FillRectangle(headerBrush, rcHeader);
             }
 
-            if (rightIndex < _rows.Count)
+            int visualRows = (_rows.Count + 1) / 2;
+            for (int i = 0; i < visualRows; i++)
             {
-                DrawRowItem(g, _rows[rightIndex], rightIndex, rcc.rightPair, rcc.rightLabel, rcc.rightValue, t);
-            }
+                int leftIndex = i * 2;
+                int rightIndex = leftIndex + 1;
+                var rc = GetVisualRowBounds(i);
+                rc.Offset(0, -_scrollOffset);
+                if (rc.Bottom < 0 || rc.Top > ClientSize.Height)
+                {
+                    continue;
+                }
 
-            // Row separator
-            using var pen = new Pen(t.GridRowLine);
-            g.DrawLine(pen, rc.Left, rc.Bottom, rc.Right, rc.Bottom);
+                var rcc = GetColumns(rc);
+
+                if (leftIndex < _rows.Count)
+                {
+                    DrawRowItem(g, _rows[leftIndex], leftIndex, rcc.leftPair, rcc.leftLabel, rcc.leftValue, t);
+                }
+
+                if (rightIndex < _rows.Count)
+                {
+                    DrawRowItem(g, _rows[rightIndex], rightIndex, rcc.rightPair, rcc.rightLabel, rcc.rightValue, t);
+                }
+
+                using var pen = new Pen(t.GridRowLine);
+                g.DrawLine(pen, rc.Left, rc.Bottom, rc.Right, rc.Bottom);
+            }
+        }
+        finally
+        {
+            g.Restore(state);
+        }
+
+        if (_scrollbarVisible)
+        {
+            DrawScrollbar(g);
         }
     }
 
@@ -362,6 +501,41 @@ public sealed class PowerStatsGrid : Control
 
         var (valueText, valueColor) = BuildValueCell(row, theme);
         TextRenderer.DrawText(g, valueText, Font, valueBounds, valueColor, Color.Transparent, CellFlags | TextFormatFlags.Left);
+    }
+
+    private void DrawScrollbar(Graphics g)
+    {
+        var theme = CurrentScrollTheme;
+
+        using (var trackPen = new Pen(theme.Track, Math.Max(1, ScalePx(2))))
+        {
+            int cx = _scrollbarBounds.Left + _scrollbarBounds.Width / 2;
+            g.DrawLine(trackPen, cx, _trackBounds.Top, cx, _trackBounds.Bottom);
+        }
+
+        using (var arrowBrush = new SolidBrush(_hoveringUpArrow || _hoveringDownArrow ? theme.Hover : theme.Bar))
+        {
+            var up = _upArrowRect;
+            Point[] upArrow =
+            [
+                new(up.Left + up.Width / 2, up.Top + up.Height / 4),
+                new(up.Left + ScalePx(3), up.Bottom - ScalePx(4)),
+                new(up.Right - ScalePx(3), up.Bottom - ScalePx(4))
+            ];
+            g.FillPolygon(arrowBrush, upArrow);
+
+            var down = _downArrowRect;
+            Point[] downArrow =
+            [
+                new(down.Left + down.Width / 2, down.Bottom - down.Height / 4),
+                new(down.Left + ScalePx(3), down.Top + ScalePx(4)),
+                new(down.Right - ScalePx(3), down.Top + ScalePx(4))
+            ];
+            g.FillPolygon(arrowBrush, downArrow);
+        }
+
+        using var thumbBrush = new SolidBrush(_hoveringThumb ? theme.Hover : theme.Bar);
+        g.FillRectangle(thumbBrush, _thumbRect);
     }
 
     private int MeasureDesiredLabelWidth()
@@ -467,17 +641,223 @@ public sealed class PowerStatsGrid : Control
 
     #endregion
 
+    #region Scrollbar geometry
+
+    private void ComputeScrollbarBounds()
+    {
+        if (!_scrollbarVisible)
+        {
+            _scrollbarBounds = Rectangle.Empty;
+            _trackBounds = Rectangle.Empty;
+            _upArrowRect = Rectangle.Empty;
+            _downArrowRect = Rectangle.Empty;
+            _thumbRect = Rectangle.Empty;
+            return;
+        }
+
+        _scrollbarBounds = new Rectangle(
+            Math.Max(0, ClientSize.Width - ScrollBarWidth),
+            0,
+            ScrollBarWidth,
+            ClientSize.Height);
+
+        _upArrowRect = new Rectangle(_scrollbarBounds.X, _scrollbarBounds.Y, _scrollbarBounds.Width, ArrowHeight);
+        _downArrowRect = new Rectangle(_scrollbarBounds.X, _scrollbarBounds.Bottom - ArrowHeight, _scrollbarBounds.Width, ArrowHeight);
+        _trackBounds = Rectangle.FromLTRB(
+            _scrollbarBounds.Left,
+            _upArrowRect.Bottom,
+            _scrollbarBounds.Right,
+            _downArrowRect.Top);
+
+        int scrollMax = Math.Max(1, _contentHeight - ClientSize.Height);
+        int trackHeight = Math.Max(0, _trackBounds.Height);
+        int thumbHeight = Math.Max(ThumbMinHeight, (int)Math.Round((double)ClientSize.Height / Math.Max(1, _contentHeight) * trackHeight));
+        thumbHeight = Math.Min(thumbHeight, trackHeight);
+
+        int available = Math.Max(0, trackHeight - thumbHeight);
+        int thumbY = _trackBounds.Top;
+        if (available > 0)
+        {
+            double ratio = (double)_scrollOffset / scrollMax;
+            thumbY = _trackBounds.Top + (int)Math.Round(available * ratio);
+        }
+
+        int inset = Math.Max(1, (int)Math.Round(_scrollbarBounds.Width * 0.25));
+        _thumbRect = new Rectangle(
+            _scrollbarBounds.Left + inset,
+            thumbY,
+            Math.Max(1, _scrollbarBounds.Width - (inset * 2)),
+            thumbHeight);
+    }
+
+    #endregion
+
     #region Interaction (hover tooltips)
+
+    protected override void OnMouseWheel(MouseEventArgs e)
+    {
+        base.OnMouseWheel(e);
+
+        if (!_scrollbarVisible)
+        {
+            return;
+        }
+
+        int lines = SystemInformation.MouseWheelScrollLines;
+        if (lines <= 0)
+        {
+            lines = 3;
+        }
+
+        int steps = e.Delta / 120 * lines;
+        if (steps != 0)
+        {
+            ScrollBy(-steps * WheelStepPx);
+        }
+    }
+
+    protected override bool IsInputKey(Keys keyData)
+    {
+        return keyData is Keys.Up or Keys.Down or Keys.PageUp or Keys.PageDown or Keys.Home or Keys.End
+               || base.IsInputKey(keyData);
+    }
+
+    protected override void OnKeyDown(KeyEventArgs e)
+    {
+        base.OnKeyDown(e);
+        if (!_scrollbarVisible)
+        {
+            return;
+        }
+
+        switch (e.KeyCode)
+        {
+            case Keys.Up:
+                ScrollBy(-ArrowStepPx);
+                e.Handled = true;
+                break;
+            case Keys.Down:
+                ScrollBy(ArrowStepPx);
+                e.Handled = true;
+                break;
+            case Keys.PageUp:
+                ScrollPage(-1);
+                e.Handled = true;
+                break;
+            case Keys.PageDown:
+                ScrollPage(1);
+                e.Handled = true;
+                break;
+            case Keys.Home:
+                SetScrollOffset(0);
+                e.Handled = true;
+                break;
+            case Keys.End:
+                SetScrollOffset(int.MaxValue);
+                e.Handled = true;
+                break;
+        }
+    }
+
+    protected override void OnMouseDown(MouseEventArgs e)
+    {
+        base.OnMouseDown(e);
+
+        if (!Focused)
+        {
+            Focus();
+        }
+
+        if (!_scrollbarVisible || !_scrollbarBounds.Contains(e.Location))
+        {
+            UpdateHoverAndTooltip(e.Location);
+            return;
+        }
+
+        if (_thumbRect.Contains(e.Location))
+        {
+            _draggingThumb = true;
+            _dragStartY = e.Y - _thumbRect.Y;
+            Capture = true;
+            return;
+        }
+
+        if (_upArrowRect.Contains(e.Location))
+        {
+            ScrollBy(-ArrowStepPx);
+            return;
+        }
+
+        if (_downArrowRect.Contains(e.Location))
+        {
+            ScrollBy(ArrowStepPx);
+            return;
+        }
+
+        if (_trackBounds.Contains(e.Location))
+        {
+            ScrollPage(e.Y < _thumbRect.Top ? -1 : 1);
+        }
+    }
 
     protected override void OnMouseMove(MouseEventArgs e)
     {
         base.OnMouseMove(e);
 
-        int itemIdx = HitTestItem(e.Location);
+        if (_scrollbarVisible)
+        {
+            bool oldHoverThumb = _hoveringThumb;
+            bool oldHoverUp = _hoveringUpArrow;
+            bool oldHoverDown = _hoveringDownArrow;
+
+            _hoveringThumb = _thumbRect.Contains(e.Location);
+            _hoveringUpArrow = _upArrowRect.Contains(e.Location);
+            _hoveringDownArrow = _downArrowRect.Contains(e.Location);
+
+            if (_draggingThumb)
+            {
+                int trackTop = _trackBounds.Top;
+                int trackHeight = Math.Max(0, _trackBounds.Height);
+                int thumbHeight = _thumbRect.Height;
+                int available = Math.Max(0, trackHeight - thumbHeight);
+                if (available > 0 && _contentHeight > ClientSize.Height)
+                {
+                    int newThumbY = Math.Clamp(e.Y - _dragStartY, trackTop, trackTop + available);
+                    double ratio = (double)(newThumbY - trackTop) / available;
+                    int newScroll = (int)Math.Round(ratio * (_contentHeight - ClientSize.Height));
+                    SetScrollOffset(newScroll);
+                }
+            }
+            else if (oldHoverThumb != _hoveringThumb || oldHoverUp != _hoveringUpArrow || oldHoverDown != _hoveringDownArrow)
+            {
+                Invalidate(_scrollbarBounds);
+            }
+        }
+
+        if (!_scrollbarVisible || !_scrollbarBounds.Contains(e.Location))
+        {
+            UpdateHoverAndTooltip(e.Location);
+        }
+    }
+
+    protected override void OnMouseUp(MouseEventArgs e)
+    {
+        base.OnMouseUp(e);
+
+        if (_draggingThumb)
+        {
+            _draggingThumb = false;
+            Capture = false;
+        }
+    }
+
+    private void UpdateHoverAndTooltip(Point location)
+    {
+        int itemIdx = HitTestItem(location);
         if (itemIdx != _hoverItem)
         {
             _hoverItem = itemIdx;
-            Invalidate(); // hover band
+            Invalidate(new Rectangle(0, 0, ContentViewportWidth, ClientSize.Height));
 
             if (itemIdx >= 0)
             {
@@ -505,6 +885,14 @@ public sealed class PowerStatsGrid : Control
     protected override void OnMouseLeave(EventArgs e)
     {
         base.OnMouseLeave(e);
+        if (_hoveringThumb || _hoveringUpArrow || _hoveringDownArrow)
+        {
+            _hoveringThumb = false;
+            _hoveringUpArrow = false;
+            _hoveringDownArrow = false;
+            Invalidate(_scrollbarBounds);
+        }
+
         _hoverItem = -1;
         _tooltip.ToolTipTitle = string.Empty;
         _tooltip.Hide(this);
@@ -513,6 +901,12 @@ public sealed class PowerStatsGrid : Control
 
     private int HitTestItem(Point p)
     {
+        if (_scrollbarVisible && p.X >= ContentViewportWidth)
+        {
+            return -1;
+        }
+
+        var contentPoint = new Point(p.X, p.Y + _scrollOffset);
         int visualRows = (_rows.Count + 1) / 2;
         for (int i = 0; i < visualRows; i++)
         {
@@ -520,12 +914,12 @@ public sealed class PowerStatsGrid : Control
             int rightIndex = leftIndex + 1;
             var layout = GetColumns(GetVisualRowBounds(i));
 
-            if (leftIndex < _rows.Count && layout.leftPair.Contains(p))
+            if (leftIndex < _rows.Count && layout.leftPair.Contains(contentPoint))
             {
                 return leftIndex;
             }
 
-            if (rightIndex < _rows.Count && layout.rightPair.Contains(p))
+            if (rightIndex < _rows.Count && layout.rightPair.Contains(contentPoint))
             {
                 return rightIndex;
             }
