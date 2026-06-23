@@ -398,9 +398,12 @@ namespace Mids_Reborn.UI.Controls
             if (!string.IsNullOrEmpty(textToDraw))
             {
                 using var textPath = new GraphicsPath();
-                using var stringFormat = new StringFormat();
-                stringFormat.Alignment = StringAlignment.Center;
-                stringFormat.LineAlignment = StringAlignment.Center;
+                using var stringFormat = new StringFormat
+                {
+                    Alignment = StringAlignment.Center,
+                    LineAlignment = StringAlignment.Center,
+                    FormatFlags = StringFormatFlags.NoWrap
+                };
 
                 float emSize = Font.SizeInPoints * e.Graphics.DpiY / 72f;
                 textPath.AddString(textToDraw, Font.FontFamily, (int)Font.Style, emSize, textBounds, stringFormat);

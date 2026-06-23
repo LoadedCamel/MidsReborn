@@ -63,6 +63,31 @@ public sealed class PowerStatsGrid : Control
     private const int LogicalWheelStepPx = 32;
     private const int LogicalArrowStepPx = 30;
     private const int LogicalPageStepMarginPx = 8;
+    private const int MaximumResponsiveColumns = 3;
+    private const int MinimumResponsiveHeaderHeight = 10;
+    private const int MinimumResponsivePadding = 2;
+    private const int MinimumResponsiveRowHeight = 16;
+    private const float MinimumResponsiveFontSize = 7.5f;
+    private const float MaximumResponsiveFontGrowth = 0.75f;
+    private const float ResponsiveFontStep = 0.25f;
+
+    #endregion
+
+    #region Layout types
+
+    private readonly record struct GridLayout(
+        int ColumnCount,
+        int VisualRows,
+        int Padding,
+        int HeaderHeight,
+        int RowHeight,
+        int PairGap,
+        int ColumnGap,
+        int ItemInset,
+        int ContentHeight,
+        float FontSize);
+
+    private readonly record struct CellLayout(Rectangle Pair, Rectangle Label, Rectangle Value);
 
     #endregion
 
@@ -97,6 +122,7 @@ public sealed class PowerStatsGrid : Control
     private Rectangle _upArrowRect;
     private Rectangle _downArrowRect;
     private Rectangle _thumbRect;
+    private GridLayout _resolvedLayout;
     private bool _draggingThumb;
     private int _dragStartY;
     private bool _hoveringThumb;
@@ -118,28 +144,28 @@ public sealed class PowerStatsGrid : Control
     public int HeaderHeight
     {
         get => _headerHeight;
-        set { _headerHeight = Math.Max(16, value); Invalidate(); }
+        set { _headerHeight = Math.Max(10, value); InvalidateAndRelayout(); }
     }
 
     [DefaultValue(28)]
     public int RowHeight
     {
         get => _rowHeight;
-        set { _rowHeight = Math.Max(18, value); Invalidate(); }
+        set { _rowHeight = Math.Max(18, value); InvalidateAndRelayout(); }
     }
 
     [DefaultValue(8)]
     public int GridPadding
     {
         get => _gridPadding;
-        set { _gridPadding = Math.Max(0, value); Invalidate(); }
+        set { _gridPadding = Math.Max(0, value); InvalidateAndRelayout(); }
     }
 
     [DefaultValue(12)]
     public int ColumnGap
     {
         get => _colGap;
-        set { _colGap = Math.Max(0, value); Invalidate(); }
+        set { _colGap = Math.Max(0, value); InvalidateAndRelayout(); }
     }
 
     #endregion
@@ -241,7 +267,19 @@ public sealed class PowerStatsGrid : Control
     public override Size GetPreferredSize(Size proposedSize)
     {
         var width = proposedSize.Width > 0 ? proposedSize.Width : Math.Max(ScalePx(220), Width);
-        return new Size(width, MeasureContentHeight());
+        return new Size(width, MeasureNaturalContentHeight(width));
+    }
+
+    internal int GetFullyVisiblePreferredHeight(int proposedWidth)
+    {
+        if (_rows.Count == 0)
+        {
+            return 0;
+        }
+
+        var width = proposedWidth > 0 ? proposedWidth : Math.Max(ScalePx(220), Width);
+        var layout = ResolveMinimumVisibleLayout(width);
+        return layout.ContentHeight;
     }
 
     #endregion
@@ -249,6 +287,13 @@ public sealed class PowerStatsGrid : Control
     #region Private Methods
 
     private int ScalePx(int px) => (int)Math.Round(px * DpiScale);
+
+    private void InvalidateAndRelayout()
+    {
+        AutoSizeHeight();
+        RelayoutAndScrollbar();
+        Invalidate();
+    }
 
     #endregion
 
@@ -274,29 +319,312 @@ public sealed class PowerStatsGrid : Control
 
     private void AutoSizeHeight()
     {
-        var preferredHeight = MeasureContentHeight();
+        var preferredHeight = MeasureNaturalContentHeight(Math.Max(ScalePx(220), Width));
         if (Dock != DockStyle.Fill && Height != preferredHeight)
         {
             Height = preferredHeight;
         }
     }
 
-    private int MeasureContentHeight()
-    {
-        int gp = ScalePx(_gridPadding);
-        int hh = ScalePx(_headerHeight);
-        int rh = ScalePx(_rowHeight);
-        int visualRows = (_rows.Count + 1) / 2;
-        return gp + hh + (visualRows * rh) + gp;
-    }
-
     private void RelayoutAndScrollbar()
     {
-        _contentHeight = MeasureContentHeight();
+        var viewportWidth = Math.Max(1, ClientSize.Width);
+        var viewportHeight = Math.Max(0, ClientSize.Height);
+
+        _resolvedLayout = ResolveResponsiveLayout(viewportWidth, viewportHeight, fitToHeight: true);
+        _contentHeight = _resolvedLayout.ContentHeight;
         _scrollbarVisible = _contentHeight > ClientSize.Height && ClientSize.Height > 0;
+
+        if (_scrollbarVisible)
+        {
+            var scrolledViewportWidth = Math.Max(1, viewportWidth - ScrollBarWidth);
+            _resolvedLayout = ResolveResponsiveLayout(scrolledViewportWidth, viewportHeight, fitToHeight: true);
+            _contentHeight = _resolvedLayout.ContentHeight;
+            _scrollbarVisible = _contentHeight > ClientSize.Height && ClientSize.Height > 0;
+        }
+
         ClampScrollOffset();
         ComputeScrollbarBounds();
     }
+
+    private int MeasureNaturalContentHeight(int proposedWidth)
+        => ResolveResponsiveLayout(Math.Max(1, proposedWidth), 0, fitToHeight: false).ContentHeight;
+
+    private GridLayout ResolveResponsiveLayout(int viewportWidth, int viewportHeight, bool fitToHeight)
+    {
+        var baseFontSize = GetBaseFontSize();
+        var naturalColumnCount = ResolveNaturalColumnCount(viewportWidth, baseFontSize);
+        var natural = BuildLayout(viewportWidth, viewportHeight, naturalColumnCount, baseFontSize, allowVerticalFit: false);
+
+        if (!fitToHeight || viewportHeight <= 0)
+        {
+            return natural;
+        }
+
+        if (natural.ContentHeight <= viewportHeight)
+        {
+            return ResolveRoomyLayout(viewportWidth, viewportHeight, natural);
+        }
+
+        return ResolveCompactContentLayout(viewportWidth, viewportHeight);
+    }
+
+    private GridLayout ResolveRoomyLayout(int viewportWidth, int viewportHeight, GridLayout fallback)
+    {
+        var baseFontSize = GetBaseFontSize();
+        var maxFontSize = Math.Min(11.0f, baseFontSize + MaximumResponsiveFontGrowth);
+        if (maxFontSize <= baseFontSize + 0.05f)
+        {
+            return fallback;
+        }
+
+        for (float fontSize = maxFontSize; fontSize > baseFontSize + 0.05f; fontSize -= ResponsiveFontStep)
+        {
+            var candidate = BuildLayout(viewportWidth, viewportHeight, fallback.ColumnCount, fontSize, allowVerticalFit: false);
+            if (candidate.ContentHeight > viewportHeight)
+            {
+                continue;
+            }
+
+            using var font = CreateSizedFont(fontSize);
+            if (IsWidthLegible(viewportWidth, candidate, font, strict: false))
+            {
+                return candidate;
+            }
+        }
+
+        return fallback;
+    }
+
+    private GridLayout ResolveCompactContentLayout(int viewportWidth, int viewportHeight)
+    {
+        var baseFontSize = GetBaseFontSize();
+        var minFontSize = Math.Min(baseFontSize, MinimumResponsiveFontSize);
+        GridLayout? bestFit = null;
+        GridLayout? bestFallback = null;
+        var hasHeightLimit = viewportHeight > 0;
+
+        foreach (var columnCount in GetCompactColumnCandidates(viewportWidth, baseFontSize))
+        {
+            for (float fontSize = baseFontSize; fontSize >= minFontSize - 0.05f; fontSize -= ResponsiveFontStep)
+            {
+                var candidate = BuildLayout(viewportWidth, viewportHeight, columnCount, fontSize, allowVerticalFit: hasHeightLimit);
+                using var font = CreateSizedFont(fontSize);
+                if (!IsWidthLegible(viewportWidth, candidate, font, strict: false))
+                {
+                    continue;
+                }
+
+                var fits = !hasHeightLimit || candidate.ContentHeight <= viewportHeight;
+                if (fits)
+                {
+                    if (bestFit is null || IsBetterCompactFit(candidate, bestFit.Value))
+                    {
+                        bestFit = candidate;
+                    }
+                }
+                else if (bestFallback is null || IsBetterCompactFallback(candidate, bestFallback.Value, viewportHeight))
+                {
+                    bestFallback = candidate;
+                }
+            }
+        }
+
+        return bestFit ?? bestFallback ?? BuildLayout(viewportWidth, viewportHeight, 1, minFontSize, allowVerticalFit: hasHeightLimit);
+    }
+
+    private GridLayout ResolveMinimumVisibleLayout(int viewportWidth)
+    {
+        var baseFontSize = GetBaseFontSize();
+        var minFontSize = Math.Min(baseFontSize, MinimumResponsiveFontSize);
+        GridLayout? best = null;
+
+        foreach (var columnCount in GetCompactColumnCandidates(viewportWidth, baseFontSize))
+        {
+            for (float fontSize = baseFontSize; fontSize >= minFontSize - 0.05f; fontSize -= ResponsiveFontStep)
+            {
+                var candidate = BuildLayout(viewportWidth, 0, columnCount, fontSize, allowVerticalFit: false);
+                using var font = CreateSizedFont(fontSize);
+                if (!IsWidthLegible(viewportWidth, candidate, font, strict: false))
+                {
+                    continue;
+                }
+
+                if (best is null ||
+                    candidate.ContentHeight < best.Value.ContentHeight ||
+                    candidate.ContentHeight == best.Value.ContentHeight && candidate.FontSize > best.Value.FontSize + 0.05f)
+                {
+                    best = candidate;
+                }
+            }
+        }
+
+        return best ?? BuildLayout(viewportWidth, 0, 1, minFontSize, allowVerticalFit: false);
+    }
+
+    private bool IsBetterCompactFit(GridLayout candidate, GridLayout current)
+    {
+        if (candidate.FontSize > current.FontSize + 0.05f)
+        {
+            return true;
+        }
+
+        if (Math.Abs(candidate.FontSize - current.FontSize) <= 0.05f && candidate.ContentHeight < current.ContentHeight)
+        {
+            return true;
+        }
+
+        return Math.Abs(candidate.FontSize - current.FontSize) <= 0.05f
+               && candidate.ContentHeight == current.ContentHeight
+               && Math.Abs(candidate.ColumnCount - 2) < Math.Abs(current.ColumnCount - 2);
+    }
+
+    private static bool IsBetterCompactFallback(GridLayout candidate, GridLayout current, int viewportHeight)
+    {
+        var candidateOverflow = Math.Max(0, candidate.ContentHeight - viewportHeight);
+        var currentOverflow = Math.Max(0, current.ContentHeight - viewportHeight);
+        if (candidateOverflow != currentOverflow)
+        {
+            return candidateOverflow < currentOverflow;
+        }
+
+        return candidate.FontSize > current.FontSize + 0.05f;
+    }
+
+    private GridLayout BuildLayout(int viewportWidth, int viewportHeight, int columnCount, float fontSize, bool allowVerticalFit)
+    {
+        columnCount = Math.Clamp(columnCount, 1, Math.Max(1, Math.Min(MaximumResponsiveColumns, _rows.Count)));
+        using var font = CreateSizedFont(fontSize);
+
+        var baseFontSize = GetBaseFontSize();
+        var fontScale = fontSize / Math.Max(1f, baseFontSize);
+        var chromeScale = Math.Clamp(fontScale, 0.55f, 1.15f);
+
+        int basePadding = ScalePx(_gridPadding);
+        int minPadding = ScalePx(MinimumResponsivePadding);
+        int padding = Math.Clamp((int)Math.Round(basePadding * chromeScale), minPadding, Math.Max(minPadding, basePadding + ScalePx(1)));
+
+        int baseHeader = ScalePx(_headerHeight);
+        int minHeader = ScalePx(MinimumResponsiveHeaderHeight);
+        int headerHeight = Math.Clamp((int)Math.Round(baseHeader * Math.Clamp(fontScale, 0.70f, 1.10f)), minHeader, Math.Max(minHeader, baseHeader + ScalePx(2)));
+
+        int textHeight = MeasureSingleLineHeight(font);
+        int minRowHeight = Math.Max(ScalePx(MinimumResponsiveRowHeight), textHeight + ScalePx(2));
+        int baseRowHeight = ScalePx(_rowHeight);
+        int rowHeight = Math.Max(minRowHeight, (int)Math.Round(baseRowHeight * chromeScale));
+
+        int visualRows = _rows.Count == 0 ? 0 : (_rows.Count + columnCount - 1) / columnCount;
+        if (allowVerticalFit && viewportHeight > 0 && visualRows > 0)
+        {
+            var compactPadding = padding;
+            var compactHeader = headerHeight;
+            var availableRowsHeight = viewportHeight - (compactPadding * 2) - compactHeader;
+            if (availableRowsHeight < visualRows * minRowHeight)
+            {
+                compactPadding = minPadding;
+                compactHeader = minHeader;
+                availableRowsHeight = viewportHeight - (compactPadding * 2) - compactHeader;
+            }
+
+            padding = compactPadding;
+            headerHeight = compactHeader;
+            if (availableRowsHeight > 0)
+            {
+                rowHeight = Math.Clamp(availableRowsHeight / visualRows, minRowHeight, rowHeight);
+            }
+        }
+
+        int pairGap = Math.Max(ScalePx(4), (int)Math.Round(ScalePx(_colGap) * Math.Clamp(fontScale, 0.55f, 1.0f)));
+        int columnGap = Math.Max(ScalePx(6), (int)Math.Round(ScalePx(_colGap + 8) * Math.Clamp(fontScale, 0.45f, 1.0f)));
+        int itemInset = Math.Max(ScalePx(2), (int)Math.Round(ScalePx(6) * Math.Clamp(fontScale, 0.50f, 1.0f)));
+        int contentHeight = padding + headerHeight + (visualRows * rowHeight) + padding;
+
+        return new GridLayout(
+            columnCount,
+            visualRows,
+            padding,
+            headerHeight,
+            rowHeight,
+            pairGap,
+            columnGap,
+            itemInset,
+            contentHeight,
+            fontSize);
+    }
+
+    private int ResolveNaturalColumnCount(int viewportWidth, float fontSize)
+    {
+        if (_rows.Count <= 1)
+        {
+            return 1;
+        }
+
+        var candidate = BuildLayout(viewportWidth, 0, 2, fontSize, allowVerticalFit: false);
+        using var font = CreateSizedFont(fontSize);
+        return IsWidthLegible(viewportWidth, candidate, font, strict: false) ? 2 : 1;
+    }
+
+    private IEnumerable<int> GetCompactColumnCandidates(int viewportWidth, float baseFontSize)
+    {
+        int maxColumns = Math.Max(1, Math.Min(MaximumResponsiveColumns, _rows.Count));
+        var minFontSize = Math.Min(baseFontSize, MinimumResponsiveFontSize);
+        for (int columnCount = maxColumns; columnCount >= 1; columnCount--)
+        {
+            var candidate = BuildLayout(viewportWidth, 0, columnCount, minFontSize, allowVerticalFit: false);
+            using var font = CreateSizedFont(minFontSize);
+            if (columnCount == 1 || IsWidthLegible(viewportWidth, candidate, font, strict: false))
+            {
+                yield return columnCount;
+            }
+        }
+    }
+
+    private bool IsWidthLegible(int viewportWidth, GridLayout layout, Font font, bool strict)
+    {
+        int pairWidth = GetPairWidth(viewportWidth, layout);
+        if (pairWidth <= 0)
+        {
+            return false;
+        }
+
+        int desiredWidth = MeasureDesiredLabelWidth(font) + MeasureDesiredValueWidth(font) + layout.PairGap + layout.ItemInset;
+        if (strict)
+        {
+            return pairWidth >= desiredWidth;
+        }
+
+        int minimumReadableWidth = Math.Max(
+            ScalePx(86),
+            MeasureTextWidth("Accuracy:", font) + MeasureTextWidth("00.0 %", font) + layout.PairGap + layout.ItemInset);
+
+        return pairWidth >= Math.Min(desiredWidth, minimumReadableWidth);
+    }
+
+    private int GetPairWidth(int viewportWidth, GridLayout layout)
+    {
+        int innerWidth = Math.Max(0, viewportWidth - (layout.Padding * 2));
+        int totalGap = Math.Max(0, layout.ColumnCount - 1) * layout.ColumnGap;
+        return Math.Max(1, (innerWidth - totalGap) / Math.Max(1, layout.ColumnCount));
+    }
+
+    private float GetBaseFontSize() => Math.Max(1f, Font.SizeInPoints);
+
+    private Font CreateSizedFont(float sizeInPoints)
+        => new(Font.FontFamily, sizeInPoints, Font.Style, GraphicsUnit.Point);
+
+    private static int MeasureSingleLineHeight(Font font)
+        => TextRenderer.MeasureText(
+            "Hg",
+            font,
+            new Size(int.MaxValue, int.MaxValue),
+            TextFormatFlags.NoPadding | TextFormatFlags.SingleLine).Height;
+
+    private static int MeasureTextWidth(string text, Font font)
+        => TextRenderer.MeasureText(
+            text,
+            font,
+            new Size(int.MaxValue, int.MaxValue),
+            TextFormatFlags.NoPadding | TextFormatFlags.SingleLine).Width;
 
     private void ClampScrollOffset()
     {
@@ -337,39 +665,30 @@ public sealed class PowerStatsGrid : Control
         ScrollBy(direction * page);
     }
 
-    private (Rectangle leftPair, Rectangle leftLabel, Rectangle leftValue, Rectangle rightPair, Rectangle rightLabel, Rectangle rightValue) GetColumns(Rectangle bounds)
+    private CellLayout[] GetCells(Rectangle bounds, GridLayout layout, Font font)
     {
-        int pairGap = ScalePx(_colGap);
-        int desiredCenterGap = ScalePx(_colGap + 16);
-        int itemInset = ScalePx(6);
-        int desiredLabelWidth = MeasureDesiredLabelWidth();
-        int desiredValueWidth = MeasureDesiredValueWidth();
-        int availableForPairs = Math.Max(2, bounds.Width - desiredCenterGap);
-        int pairWidth = Math.Max(
-            1,
-            Math.Min(
-                availableForPairs / 2,
-                Math.Max(ScalePx(190), desiredLabelWidth + desiredValueWidth + pairGap + (itemInset * 2))));
-
-        int centerGap = Math.Min(desiredCenterGap, Math.Max(ScalePx(6), bounds.Width - (pairWidth * 2)));
-
-        int contentWidth = Math.Min(bounds.Width, pairWidth * 2 + centerGap);
+        int columnCount = Math.Max(1, layout.ColumnCount);
+        int totalGap = (columnCount - 1) * layout.ColumnGap;
+        int pairWidth = Math.Max(1, (bounds.Width - totalGap) / columnCount);
+        int contentWidth = Math.Min(bounds.Width, (pairWidth * columnCount) + totalGap);
         int startX = bounds.X + Math.Max(0, (bounds.Width - contentWidth) / 2);
+        var cells = new CellLayout[columnCount];
 
-        var leftPair = new Rectangle(startX, bounds.Y, pairWidth, bounds.Height);
-        var rightPair = new Rectangle(leftPair.Right + centerGap, bounds.Y, pairWidth, bounds.Height);
+        for (int i = 0; i < columnCount; i++)
+        {
+            var pairBounds = new Rectangle(startX + (i * (pairWidth + layout.ColumnGap)), bounds.Y, pairWidth, bounds.Height);
+            var (label, value) = GetPairColumns(pairBounds, layout.PairGap, layout.ItemInset, font);
+            cells[i] = new CellLayout(pairBounds, label, value);
+        }
 
-        var left = GetPairColumns(leftPair, pairGap, itemInset);
-        var right = GetPairColumns(rightPair, pairGap, itemInset);
-
-        return (leftPair, left.label, left.value, rightPair, right.label, right.value);
+        return cells;
     }
 
-    private (Rectangle label, Rectangle value) GetPairColumns(Rectangle pairBounds, int pairGap, int itemInset)
+    private (Rectangle label, Rectangle value) GetPairColumns(Rectangle pairBounds, int pairGap, int itemInset, Font font)
     {
         int pairInnerWidth = Math.Max(0, pairBounds.Width - pairGap);
-        int minValueWidth = MeasureDesiredValueWidth();
-        int desiredLabelWidth = MeasureDesiredLabelWidth();
+        int minValueWidth = MeasureDesiredValueWidth(font);
+        int desiredLabelWidth = MeasureDesiredLabelWidth(font);
         float totalWeight = Math.Max(0.01f, _wLabel + _wValue);
         int fallbackLabelWidth = (int)Math.Floor(pairInnerWidth * (_wLabel / totalWeight));
         int maxLabelWidth = Math.Max(0, pairInnerWidth - minValueWidth);
@@ -391,12 +710,13 @@ public sealed class PowerStatsGrid : Control
         return (label, value);
     }
 
-    private Rectangle GetVisualRowBounds(int index)
+    private Rectangle GetVisualRowBounds(int index, GridLayout layout)
     {
-        int gp = ScalePx(_gridPadding);
-        int hh = ScalePx(_headerHeight);
-        int rh = ScalePx(_rowHeight);
-        return new Rectangle(gp, gp + hh + index * rh, Math.Max(1, ContentViewportWidth - gp * 2), rh);
+        return new Rectangle(
+            layout.Padding,
+            layout.Padding + layout.HeaderHeight + (index * layout.RowHeight),
+            Math.Max(1, ContentViewportWidth - (layout.Padding * 2)),
+            layout.RowHeight);
     }
 
     private Rectangle GetItemBounds(int index)
@@ -406,10 +726,14 @@ public sealed class PowerStatsGrid : Control
             return Rectangle.Empty;
         }
 
-        int visualRow = index / 2;
-        bool isRight = (index % 2) == 1;
-        var layout = GetColumns(GetVisualRowBounds(visualRow));
-        var bounds = isRight ? layout.rightPair : layout.leftPair;
+        RelayoutAndScrollbar();
+        var layout = _resolvedLayout;
+        int columnCount = Math.Max(1, layout.ColumnCount);
+        int visualRow = index / columnCount;
+        int column = index % columnCount;
+        using var font = CreateSizedFont(layout.FontSize);
+        var cells = GetCells(GetVisualRowBounds(visualRow, layout), layout, font);
+        var bounds = column < cells.Length ? cells[column].Pair : Rectangle.Empty;
         bounds.Offset(0, -_scrollOffset);
         return bounds;
     }
@@ -426,47 +750,48 @@ public sealed class PowerStatsGrid : Control
         var g = e.Graphics;
         g.Clear(BackColor);
 
-        int gp = ScalePx(_gridPadding);
-        int hh = ScalePx(_headerHeight);
-        int rh = ScalePx(_rowHeight);
+        var layout = _resolvedLayout;
 
         var t = CurrentTheme;
 
         var contentClip = new Rectangle(0, 0, ContentViewportWidth, ClientSize.Height);
+        using var rowFont = CreateSizedFont(layout.FontSize);
         var state = g.Save();
         try
         {
             g.SetClip(contentClip);
 
-            var rcHeader = new Rectangle(gp, gp - _scrollOffset, Math.Max(1, ContentViewportWidth - gp * 2), hh);
+            var rcHeader = new Rectangle(
+                layout.Padding,
+                layout.Padding - _scrollOffset,
+                Math.Max(1, ContentViewportWidth - (layout.Padding * 2)),
+                layout.HeaderHeight);
             if (rcHeader.Width > 0 && rcHeader.Height > 0 && rcHeader.Bottom >= 0)
             {
                 using var headerBrush = new LinearGradientBrush(rcHeader, t.HeaderTop, t.HeaderBottom, 90f);
                 g.FillRectangle(headerBrush, rcHeader);
             }
 
-            int visualRows = (_rows.Count + 1) / 2;
-            for (int i = 0; i < visualRows; i++)
+            for (int i = 0; i < layout.VisualRows; i++)
             {
-                int leftIndex = i * 2;
-                int rightIndex = leftIndex + 1;
-                var rc = GetVisualRowBounds(i);
+                var rc = GetVisualRowBounds(i, layout);
                 rc.Offset(0, -_scrollOffset);
                 if (rc.Bottom < 0 || rc.Top > ClientSize.Height)
                 {
                     continue;
                 }
 
-                var rcc = GetColumns(rc);
-
-                if (leftIndex < _rows.Count)
+                var cells = GetCells(rc, layout, rowFont);
+                for (int column = 0; column < cells.Length; column++)
                 {
-                    DrawRowItem(g, _rows[leftIndex], leftIndex, rcc.leftPair, rcc.leftLabel, rcc.leftValue, t);
-                }
+                    int itemIndex = (i * layout.ColumnCount) + column;
+                    if (itemIndex >= _rows.Count)
+                    {
+                        continue;
+                    }
 
-                if (rightIndex < _rows.Count)
-                {
-                    DrawRowItem(g, _rows[rightIndex], rightIndex, rcc.rightPair, rcc.rightLabel, rcc.rightValue, t);
+                    var cell = cells[column];
+                    DrawRowItem(g, _rows[itemIndex], itemIndex, cell.Pair, cell.Label, cell.Value, rowFont, t);
                 }
 
                 using var pen = new Pen(t.GridRowLine);
@@ -484,7 +809,7 @@ public sealed class PowerStatsGrid : Control
         }
     }
 
-    private void DrawRowItem(Graphics g, Row row, int itemIndex, Rectangle pairBounds, Rectangle labelBounds, Rectangle valueBounds, DataViewTheme theme)
+    private void DrawRowItem(Graphics g, Row row, int itemIndex, Rectangle pairBounds, Rectangle labelBounds, Rectangle valueBounds, Font font, DataViewTheme theme)
     {
         if (itemIndex == _hoverItem)
         {
@@ -494,13 +819,13 @@ public sealed class PowerStatsGrid : Control
 
         string statLabel = GetDisplayLabel(row);
         using var affectedLabelFont = row.AffectedByEd
-            ? new Font("Segoe UI Symbol", Font.Size, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont)
+            ? new Font("Segoe UI Symbol", font.SizeInPoints, font.Style, GraphicsUnit.Point)
             : null;
-        var labelFont = affectedLabelFont ?? Font;
+        var labelFont = affectedLabelFont ?? font;
         TextRenderer.DrawText(g, statLabel, labelFont, labelBounds, Color.FromArgb(200, theme.Accent), Color.Transparent, CellFlags | TextFormatFlags.Right);
 
         var (valueText, valueColor) = BuildValueCell(row, theme);
-        TextRenderer.DrawText(g, valueText, Font, valueBounds, valueColor, Color.Transparent, CellFlags | TextFormatFlags.Left);
+        TextRenderer.DrawText(g, valueText, font, valueBounds, valueColor, Color.Transparent, CellFlags | TextFormatFlags.Left);
     }
 
     private void DrawScrollbar(Graphics g)
@@ -538,15 +863,15 @@ public sealed class PowerStatsGrid : Control
         g.FillRectangle(thumbBrush, _thumbRect);
     }
 
-    private int MeasureDesiredLabelWidth()
+    private int MeasureDesiredLabelWidth(Font font)
     {
         var max = 0;
         foreach (var row in _rows)
         {
             using var affectedLabelFont = row.AffectedByEd
-                ? new Font("Segoe UI Symbol", Font.Size, Font.Style, Font.Unit, Font.GdiCharSet, Font.GdiVerticalFont)
+                ? new Font("Segoe UI Symbol", font.SizeInPoints, font.Style, GraphicsUnit.Point)
                 : null;
-            var labelFont = affectedLabelFont ?? Font;
+            var labelFont = affectedLabelFont ?? font;
             var measured = TextRenderer.MeasureText(
                 GetDisplayLabel(row),
                 labelFont,
@@ -559,7 +884,7 @@ public sealed class PowerStatsGrid : Control
         return Math.Max(ScalePx(56), max + ScalePx(6));
     }
 
-    private int MeasureDesiredValueWidth()
+    private int MeasureDesiredValueWidth(Font font)
     {
         var theme = CurrentTheme;
         var max = 0;
@@ -568,7 +893,7 @@ public sealed class PowerStatsGrid : Control
             var (valueText, _) = BuildValueCell(row, theme);
             var measured = TextRenderer.MeasureText(
                 valueText,
-                Font,
+                font,
                 new Size(int.MaxValue, int.MaxValue),
                 TextFormatFlags.NoPadding | TextFormatFlags.SingleLine).Width;
             max = Math.Max(max, measured);
@@ -901,27 +1226,29 @@ public sealed class PowerStatsGrid : Control
 
     private int HitTestItem(Point p)
     {
+        if (_resolvedLayout.ColumnCount <= 0)
+        {
+            RelayoutAndScrollbar();
+        }
+
         if (_scrollbarVisible && p.X >= ContentViewportWidth)
         {
             return -1;
         }
 
         var contentPoint = new Point(p.X, p.Y + _scrollOffset);
-        int visualRows = (_rows.Count + 1) / 2;
-        for (int i = 0; i < visualRows; i++)
+        var layout = _resolvedLayout;
+        using var font = CreateSizedFont(layout.FontSize);
+        for (int i = 0; i < layout.VisualRows; i++)
         {
-            int leftIndex = i * 2;
-            int rightIndex = leftIndex + 1;
-            var layout = GetColumns(GetVisualRowBounds(i));
-
-            if (leftIndex < _rows.Count && layout.leftPair.Contains(contentPoint))
+            var cells = GetCells(GetVisualRowBounds(i, layout), layout, font);
+            for (int column = 0; column < cells.Length; column++)
             {
-                return leftIndex;
-            }
-
-            if (rightIndex < _rows.Count && layout.rightPair.Contains(contentPoint))
-            {
-                return rightIndex;
+                int itemIndex = (i * layout.ColumnCount) + column;
+                if (itemIndex < _rows.Count && cells[column].Pair.Contains(contentPoint))
+                {
+                    return itemIndex;
+                }
             }
         }
 

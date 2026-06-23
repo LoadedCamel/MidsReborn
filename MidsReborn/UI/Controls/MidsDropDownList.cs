@@ -20,8 +20,8 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
     #region Constants
 
     private const int IconPadding = 4;
-    private const int ClosedSurfaceArrowReservedWidth = 18;
-    private const int ClosedSurfaceTextSafetyPadding = 8;
+    private const int ClosedSurfaceArrowReservedWidth = 28;
+    private const int ClosedSurfaceTextSafetyPadding = 10;
     private const int PopupTextSafetyPadding = 8;
 
     #endregion
@@ -271,7 +271,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
             }
         }
 
-        int horizontalChrome = IconPadding * 3 + ClosedSurfaceArrowReservedWidth + ClosedSurfaceTextSafetyPadding;
+        int horizontalChrome = IconPadding * 2 + GetClosedSurfaceArrowReservedWidth() + ClosedSurfaceTextSafetyPadding;
         if (hasIcon)
         {
             horizontalChrome += IconSize + IconPadding;
@@ -482,14 +482,10 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
                 textLeft = iconRect.Right + IconPadding;
             }
 
-            var textRect = new Rectangle(
-                textLeft,
-                lockedLayout.TextY,
-                Math.Max(0, rect.Right - IconPadding - textLeft),
-                lockedLayout.TextHeight);
+            var textRect = CreateClosedSurfaceTextRect(rect, textLeft, lockedLayout.TextY, lockedLayout.TextHeight, reserveArrow: false);
 
             var color = Color.FromArgb(200, theme.ForeColor);
-            var flags = TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis;
+            var flags = TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis;
             TextRenderer.DrawText(g, _lockedText, drawFont, textRect, color, flags);
             lockedFont?.Dispose();
 
@@ -517,11 +513,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
                 textLeft = iconRect.Right + IconPadding;
             }
 
-            Rectangle textRect = new Rectangle(
-                textLeft,
-                layout.TextY,
-                Math.Max(0, rect.Right - ClosedSurfaceArrowReservedWidth - IconPadding - textLeft),
-                layout.TextHeight);
+            Rectangle textRect = CreateClosedSurfaceTextRect(rect, textLeft, layout.TextY, layout.TextHeight, reserveArrow: true);
 
             TextRenderer.DrawText(
                 g,
@@ -529,15 +521,11 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
                 Font,
                 textRect,
                 theme.ForeColor,
-                TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
+                TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis);
         }
         else if (hasPlaceholder)
         {
-            Rectangle textRect = new Rectangle(
-                rect.Left + layout.PlaceholderLeft,
-                layout.TextY,
-                rect.Right - layout.PlaceholderLeft - IconPadding,
-                layout.TextHeight);
+            Rectangle textRect = CreateClosedSurfaceTextRect(rect, rect.Left + layout.PlaceholderLeft, layout.TextY, layout.TextHeight, reserveArrow: true);
 
             // Outline color (black)
             Color outlineColor = Color.Black;
@@ -545,7 +533,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
             // Fill color (semi-transparent theme foreground)
             Color fillColor = Color.FromArgb(160, theme.ForeColor);
 
-            TextFormatFlags flags = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter | TextFormatFlags.EndEllipsis;
+            TextFormatFlags flags = TextFormatFlags.VerticalCenter | TextFormatFlags.HorizontalCenter | TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis;
 
             // Draw 1px outline using surrounding offset copies
             var offsets = new[]
@@ -575,7 +563,14 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
 
         if (!locked)
         {
-            Rectangle arrowRect = new Rectangle(rect.Right - 18, rect.Top + layout.ArrowTop, 10, 5);
+            int arrowReservedWidth = GetClosedSurfaceArrowReservedWidth();
+            int arrowWidth = Math.Clamp(arrowReservedWidth - ClosedSurfaceTextSafetyPadding - IconPadding, 10, 14);
+            int arrowHeight = Math.Clamp(ClientSize.Height / 5, 5, 8);
+            Rectangle arrowRect = new Rectangle(
+                rect.Right - arrowReservedWidth + (arrowReservedWidth - arrowWidth) / 2,
+                rect.Top + (rect.Height - arrowHeight) / 2,
+                arrowWidth,
+                arrowHeight);
             Point[] arrowPoints =
             [
                 new(arrowRect.Left, arrowRect.Top),
@@ -648,7 +643,7 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
             Font,
             textRect,
             textColor,
-            TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.EndEllipsis);
+            TextFormatFlags.VerticalCenter | TextFormatFlags.Left | TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix | TextFormatFlags.EndEllipsis);
 
         if (isFocused)
         {
@@ -1069,6 +1064,21 @@ public class MidsDropDownList : ComboBox, ILiveResizeMetricsAware
 
     private static FontSignature CreateFontSignature(Font font)
         => new(font.FontFamily.Name, font.SizeInPoints, font.Style, font.GdiCharSet);
+
+    private int GetClosedSurfaceArrowReservedWidth()
+    {
+        float dpiScale = DeviceDpi > 0 ? DeviceDpi / 96f : 1f;
+        return Math.Max(ClosedSurfaceArrowReservedWidth, (int)Math.Round(ClosedSurfaceArrowReservedWidth * dpiScale));
+    }
+
+    private Rectangle CreateClosedSurfaceTextRect(Rectangle surfaceBounds, int textLeft, int textY, int textHeight, bool reserveArrow)
+    {
+        int rightPadding = reserveArrow
+            ? GetClosedSurfaceArrowReservedWidth() + ClosedSurfaceTextSafetyPadding
+            : IconPadding + ClosedSurfaceTextSafetyPadding;
+        int right = Math.Max(textLeft, surfaceBounds.Right - rightPadding);
+        return new Rectangle(textLeft, textY, Math.Max(0, right - textLeft), textHeight);
+    }
 
     private static int MeasureRawTextWidth(Graphics graphics, string text, Font font)
         => TextRenderer.MeasureText(graphics, text, font, Size.Empty, TextFormatFlags.NoPadding).Width;

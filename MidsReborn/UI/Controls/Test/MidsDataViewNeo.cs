@@ -47,7 +47,8 @@ namespace Mids_Reborn.UI.Controls
         private const int CompactHeaderChromeHeight = 28;
         private const int ContentInset = 8;
         private const int CompactContentInset = 5;
-        private const int InfoDescriptionDividerHeight = 2;
+        private const int InfoDescriptionDividerHeight = 3;
+        private const int MinimumInfoDescriptionDividerHeight = 2;
         private const int InfoShortDescriptionMaxLines = 2;
         private const int InfoLongDescriptionMinLines = 1;
         private const int HeaderOuterInset = 6;
@@ -56,6 +57,8 @@ namespace Mids_Reborn.UI.Controls
         private const int TotalsSectionGap = 10;
         private const int MinimumInfoStatVisualRows = 3;
         private const int CompactInfoStatVisualRows = 2;
+        private const int InfoStatHeaderHeight = 14;
+        private const int MinimumInfoStatHeaderHeight = 10;
         private const int MinimumDamageDisplayHeight = 60;
         private const int CompactMinimumDamageDisplayHeight = 40;
         private const int MinimumEnhancementSlotPanelHeight = 40;
@@ -214,6 +217,8 @@ namespace Mids_Reborn.UI.Controls
             get => _isLocked;
             set => SetLock(value, true);
         }
+
+        public bool IsDocked => _isDocked;
 
         public MidsDataViewNeoPresentationMode PresentationMode => _presentationMode;
 
@@ -439,10 +444,14 @@ namespace Mids_Reborn.UI.Controls
             int headerHeight = ScaleMetric(HeaderChromeHeight, scale, 24);
             int titleHeight = MeasureScaledBaseHeight(titlePanel, scale, 32, 24);
             int shortDescriptionHeight = ScaleMetric(20, scale, 16);
+            int longDescriptionHeight = string.IsNullOrWhiteSpace(infoLDesc.Text)
+                ? 0
+                : MeasureMinimumInfoLongDescriptionHeight(scale);
+            int dividerHeight = longDescriptionHeight > 0 ? GetInfoDescriptionDividerHeight(scale) : 0;
             int sliderHeight = sliderHost.Visible ? MeasureScaledBaseHeight(sliderHost, scale, 31, 24) : 0;
             int statsHeight = MeasureMinimumPowerStatsHeight(scale);
             int damageHeight = ScaleMetric(MinimumDamageDisplayHeight, scale, 50);
-            int infoPageMinimumHeight = shortDescriptionHeight + sliderHeight + statsHeight + damageHeight + ScaleMetric(10, scale, 6);
+            int infoPageMinimumHeight = shortDescriptionHeight + dividerHeight + longDescriptionHeight + sliderHeight + statsHeight + damageHeight + ScaleMetric(8, scale, 4);
 
             int enhanceSubtitleHeight = MeasureScaledBaseHeight(enhanceSubtitlePanel, scale, 19, 15);
             int slotPanelHeight = ScaleMetric(CompactMinimumEnhancementSlotPanelHeight, scale, 28);
@@ -463,6 +472,11 @@ namespace Mids_Reborn.UI.Controls
 
         private int ScalePx(int value) => Math.Max(1, (int)Math.Round(value * _uiScale));
 
+        private int GetInfoDescriptionDividerHeight() => GetInfoDescriptionDividerHeight(_uiScale);
+
+        private static int GetInfoDescriptionDividerHeight(float scale)
+            => ScaleMetric(InfoDescriptionDividerHeight, ClampUiScale(scale), MinimumInfoDescriptionDividerHeight);
+
         protected override void OnSizeChanged(EventArgs e)
         {
             base.OnSizeChanged(e);
@@ -478,7 +492,7 @@ namespace Mids_Reborn.UI.Controls
         {
             ApplyPowerScalerMetrics(scale);
 
-            powerStatsGrid.HeaderHeight = ScaleMetric(28, scale, 20);
+            powerStatsGrid.HeaderHeight = ScaleMetric(InfoStatHeaderHeight, scale, MinimumInfoStatHeaderHeight);
             powerStatsGrid.RowHeight = ScaleMetric(28, scale, 20);
 
             effectsGrid.HeaderHeight = ScaleMetric(28, scale, 20);
@@ -514,9 +528,19 @@ namespace Mids_Reborn.UI.Controls
         {
             float dpiScale = DeviceDpi / 96f;
             int gridPadding = Math.Max(6, (int)Math.Round(ScaleMetric(8, scale, 6) * dpiScale));
-            int headerHeight = Math.Max(20, (int)Math.Round(ScaleMetric(28, scale, 20) * dpiScale));
+            int headerHeight = Math.Max(
+                (int)Math.Round(MinimumInfoStatHeaderHeight * dpiScale),
+                (int)Math.Round(ScaleMetric(InfoStatHeaderHeight, scale, MinimumInfoStatHeaderHeight) * dpiScale));
             int rowHeight = Math.Max(20, (int)Math.Round(ScaleMetric(28, scale, 20) * dpiScale));
-            return gridPadding + headerHeight + (MinimumInfoStatVisualRows * rowHeight) + gridPadding;
+            return gridPadding + headerHeight + (CompactInfoStatVisualRows * rowHeight) + gridPadding;
+        }
+
+        private int MeasureMinimumInfoLongDescriptionHeight(float scale)
+        {
+            var fontHeight = infoLDesc?.Font?.Height ?? Font.Height;
+            return Math.Max(
+                ScaleMetric(22, scale, 18),
+                fontHeight * InfoLongDescriptionMinLines + ScaleMetric(6, scale, 4));
         }
 
         private int MeasureScaledBaseHeight(Control control, float scale, int fallbackHeight, int minimumHeight)
@@ -725,7 +749,7 @@ namespace Mids_Reborn.UI.Controls
             title.Padding = new Padding(horizontalInset + ScalePx(2), 0, 0, 0);
             infoSDesc.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
             infoLDesc.Padding = new Padding(horizontalInset, 0, horizontalInset, 0);
-            infoDescDivider.Height = Math.Max(4, ScalePx(6));
+            infoDescDivider.Height = GetInfoDescriptionDividerHeight();
             ApplyShortDescriptionMargins();
 
             powerStatsGrid.GridPadding = Math.Max(6, ContentInset);
@@ -800,7 +824,7 @@ namespace Mids_Reborn.UI.Controls
 
             var shortHeight = MeasureShortDescriptionHeight();
             var hasLongDescription = !string.IsNullOrWhiteSpace(infoLDesc.Text);
-            var reservedDividerHeight = shortHeight > 0 && hasLongDescription ? Math.Max(4, ScalePx(6)) : 0;
+            var reservedDividerHeight = shortHeight > 0 && hasLongDescription ? GetInfoDescriptionDividerHeight() : 0;
             var targetDamageHeight = CalculateInfoDamageDisplayHeight();
             var longHeight = CalculateLongDescriptionHeight(shortHeight, reservedDividerHeight, targetDamageHeight);
             var dividerVisible = shortHeight > 0 && longHeight > 0;
@@ -862,7 +886,7 @@ namespace Mids_Reborn.UI.Controls
                 return 0;
             }
 
-            int minLongHeight = Math.Max(ScalePx(22), infoLDesc.Font.Height * InfoLongDescriptionMinLines + ScalePx(6));
+            int minLongHeight = MeasureMinimumInfoLongDescriptionHeight(_uiScale);
             int desiredLongHeight = Math.Max(minLongHeight, infoLDesc.ContentHeight + ScalePx(4));
             int sliderHeight = sliderHost.Visible ? sliderHost.Height : 0;
             int preferredStatsHeight = CalculatePowerStatsPreferredHeight();
@@ -889,15 +913,10 @@ namespace Mids_Reborn.UI.Controls
                 return 0;
             }
 
-            double dpiScale = DeviceDpi / 96.0;
-            int ScaleGridPx(int value) => Math.Max(1, (int)Math.Round(value * dpiScale));
-
-            int gp = ScaleGridPx(powerStatsGrid.GridPadding);
-            int hh = ScaleGridPx(powerStatsGrid.HeaderHeight);
-            int rh = ScaleGridPx(powerStatsGrid.RowHeight);
-            int visualRows = Math.Min(MinimumInfoStatVisualRows, (powerStatsGrid.Rows.Count + 1) / 2);
-
-            return gp + hh + (visualRows * rh) + gp;
+            var availableWidth = powerStatsGrid.ClientSize.Width > 0
+                ? powerStatsGrid.ClientSize.Width
+                : Math.Max(1, infoView.ClientSize.Width - (ScalePx(ContentInset) * 2));
+            return powerStatsGrid.GetFullyVisiblePreferredHeight(availableWidth);
         }
 
         private void ApplyShortDescriptionMargins()
@@ -1046,7 +1065,7 @@ namespace Mids_Reborn.UI.Controls
             }
 
             var visibleTabs = VisibleTabs;
-            var tabRects = GetVisibleTabRects(visibleTabs, out var useCompactTabTitles);
+            var tabRects = GetVisibleTabRects(visibleTabs, out var tabFontSize);
 
             if (HeaderActionsVisible)
             {
@@ -1086,7 +1105,7 @@ namespace Mids_Reborn.UI.Controls
                 g.DrawPath(tabBorder, path);
 
                 var textColor = tab.PageIndex == _selectedTabIndex ? theme.Text : Blend(theme.Muted, theme.Text, 0.24f);
-                DrawTextWithOutline(g, GetTabDisplayTitle(tab, useCompactTabTitles), font, rect, textColor, Color.Black);
+                DrawTextWithOutline(g, tab.Title, font, rect, textColor, Color.Black);
             }
         }
 
@@ -1106,9 +1125,9 @@ namespace Mids_Reborn.UI.Controls
             g.DrawPath(border, path);
         }
 
-        private Rectangle[] GetVisibleTabRects(IReadOnlyList<TabDescriptor> visibleTabs, out bool useCompactTabTitles)
+        private Rectangle[] GetVisibleTabRects(IReadOnlyList<TabDescriptor> visibleTabs, out float tabFontSize)
         {
-            useCompactTabTitles = false;
+            tabFontSize = Font.Size;
             if (visibleTabs.Count == 0)
             {
                 return Array.Empty<Rectangle>();
@@ -1120,21 +1139,55 @@ namespace Mids_Reborn.UI.Controls
             var availableWidth = Math.Max(0, headerPanel.ClientSize.Width - actionWidth - (outerInset * 2) - (tabSpacing * Math.Max(0, visibleTabs.Count - 1)));
             var tabTop = Math.Max(ScalePx(2), (headerPanel.ClientSize.Height - ScalePx(TabHeight)) / 2);
 
-            using var font = new Font(Font.FontFamily, Font.Size, FontStyle.Bold);
             var tabHeight = ScalePx(TabHeight);
-            var fullPadding = ScalePx(TabPaddingX);
-            useCompactTabTitles = MeasureTabPreferredWidth(visibleTabs, font, tabHeight, fullPadding, useCompactTitles: false) > availableWidth;
-            var padding = useCompactTabTitles ? ScalePx(CompactTabPaddingX) : fullPadding;
-            return ComputeTabRects(availableWidth, visibleTabs, font, new Point(outerInset, tabTop), tabHeight, tabSpacing, padding, useCompactTabTitles);
+            var padding = ResolveTabPaddingAndFont(visibleTabs, availableWidth, tabHeight, out tabFontSize);
+            using var font = new Font(Font.FontFamily, tabFontSize, FontStyle.Bold);
+            return ComputeTabRects(availableWidth, visibleTabs, font, new Point(outerInset, tabTop), tabHeight, tabSpacing, padding);
         }
 
-        private static int MeasureTabPreferredWidth(IReadOnlyList<TabDescriptor> tabs, Font font, int height, int paddingX, bool useCompactTitles)
+        private int ResolveTabPaddingAndFont(IReadOnlyList<TabDescriptor> tabs, int availableWidth, int tabHeight, out float tabFontSize)
+        {
+            tabFontSize = Font.Size;
+            int fullPadding = ScalePx(TabPaddingX);
+            using (var fullFont = new Font(Font.FontFamily, tabFontSize, FontStyle.Bold))
+            {
+                if (MeasureTabPreferredWidth(tabs, fullFont, tabHeight, fullPadding) <= availableWidth)
+                {
+                    return fullPadding;
+                }
+            }
+
+            int compactPadding = ScalePx(CompactTabPaddingX);
+            using (var compactFont = new Font(Font.FontFamily, tabFontSize, FontStyle.Bold))
+            {
+                if (MeasureTabPreferredWidth(tabs, compactFont, tabHeight, compactPadding) <= availableWidth)
+                {
+                    return compactPadding;
+                }
+            }
+
+            float minimumFontSize = Math.Max(7.5f, Font.Size - 1.35f);
+            for (float candidate = Font.Size - 0.25f; candidate >= minimumFontSize; candidate -= 0.25f)
+            {
+                using var smallerFont = new Font(Font.FontFamily, candidate, FontStyle.Bold);
+                if (MeasureTabPreferredWidth(tabs, smallerFont, tabHeight, compactPadding) <= availableWidth)
+                {
+                    tabFontSize = candidate;
+                    return compactPadding;
+                }
+            }
+
+            tabFontSize = minimumFontSize;
+            return Math.Max(ScalePx(4), compactPadding / 2);
+        }
+
+        private static int MeasureTabPreferredWidth(IReadOnlyList<TabDescriptor> tabs, Font font, int height, int paddingX)
         {
             var preferredTotal = 0;
             for (int i = 0; i < tabs.Count; i++)
             {
                 int measuredWidth = TextRenderer.MeasureText(
-                    GetTabDisplayTitle(tabs[i], useCompactTitles),
+                    tabs[i].Title,
                     font,
                     new Size(int.MaxValue, height),
                     TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix).Width;
@@ -1144,10 +1197,7 @@ namespace Mids_Reborn.UI.Controls
             return preferredTotal;
         }
 
-        private static string GetTabDisplayTitle(TabDescriptor tab, bool useCompactTitle)
-            => useCompactTitle ? tab.CompactTitle : tab.Title;
-
-        private static Rectangle[] ComputeTabRects(int totalWidth, IReadOnlyList<TabDescriptor> tabs, Font font, Point origin, int height, int spacing, int paddingX, bool useCompactTitles)
+        private static Rectangle[] ComputeTabRects(int totalWidth, IReadOnlyList<TabDescriptor> tabs, Font font, Point origin, int height, int spacing, int paddingX)
         {
             if (tabs.Count == 0)
             {
@@ -1160,7 +1210,7 @@ namespace Mids_Reborn.UI.Controls
             for (int i = 0; i < tabs.Count; i++)
             {
                 int measuredWidth = TextRenderer.MeasureText(
-                    GetTabDisplayTitle(tabs[i], useCompactTitles),
+                    tabs[i].Title,
                     font,
                     new Size(int.MaxValue, height),
                     TextFormatFlags.SingleLine | TextFormatFlags.NoPrefix).Width;
@@ -4193,6 +4243,7 @@ namespace Mids_Reborn.UI.Controls
 
             _floatingHostForm.Show();
             _isDocked = false;
+            FloatChange?.Invoke();
         }
 
         private void FloatingHostForm_FormClosing(object? sender, FormClosingEventArgs e)
@@ -4239,6 +4290,7 @@ namespace Mids_Reborn.UI.Controls
             DockButton.IconColor = Color.Silver;
 
             _isDocked = true;
+            FloatChange?.Invoke();
         }
 
         #endregion
