@@ -47,7 +47,9 @@ public static class PatchManifestBuilder
         var updatedEntry = new ManifestEntry(type, name, version, file);
 
         var index = response.Updates.FindIndex(e =>
-            e.Type == updatedEntry.Type && e.Name != null && e.Name.Equals(updatedEntry.Name));
+            e.Type == updatedEntry.Type &&
+            e.Name != null &&
+            e.Name.Equals(updatedEntry.Name, StringComparison.OrdinalIgnoreCase));
 
         if (index >= 0)
         {

@@ -2032,7 +2032,8 @@ namespace Mids_Reborn.Core
             {
                 SaveBinaryDatabase(path, writer =>
                 {
-                    UpdateDbModified();
+                    StampDatabasePackageVersion();
+
                     writer.Write(AppDataPaths.Headers.Db.Start);
                     writer.Write(Database.Version.ToString());
                     writer.Write(-1);
@@ -2080,12 +2081,8 @@ namespace Mids_Reborn.Core
             }
         }
 
-        private static void UpdateDbModified()
-        {
-            var revision = Database.Version.Build + 1;
-            Database.Date = DateTime.Now;
-            Database.Version = Version.Parse($"{Database.Date.Year}.{Database.Date.Month:00}.{revision}");
-        }
+        public static Version StampDatabasePackageVersion(DateTime? timestamp = null) =>
+            DatabasePackageVersioner.Stamp(Database, timestamp);
 
         private static void saveEnts()
         {

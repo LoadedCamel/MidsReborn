@@ -199,7 +199,8 @@ namespace Mids_Reborn.Core.Compatibility
                     MidsContext.AppName,
                     MidsContext.AppFileVersion,
                     DatabaseAPI.DatabaseName,
-                    DatabaseAPI.Database.Version),
+                    DatabaseAPI.Database.Version,
+                    DatabaseAPI.GetDataProviderId().ToString()),
                 Class = parsedBuild.ClassUid,
                 Origin = parsedBuild.OriginUid,
                 Alignment = parsedBuild.Alignment.ToString(),
@@ -1233,7 +1234,8 @@ namespace Mids_Reborn.Core.Compatibility
                 MidsContext.AppName,
                 MidsContext.AppFileVersion,
                 DatabaseAPI.DatabaseName,
-                DatabaseAPI.Database.Version);
+                DatabaseAPI.Database.Version,
+                DatabaseAPI.GetDataProviderId().ToString());
 
             ApplyDeclaredPowerSetLayoutFromText(text, normalizedBuild);
             if (!normalizedBuild.LoadBuild())
@@ -1284,7 +1286,8 @@ namespace Mids_Reborn.Core.Compatibility
                     "Mids' Hero Designer",
                     ParseLegacyVersionSafe(legacyTag),
                     DatabaseAPI.DatabaseName,
-                    DatabaseAPI.Database.Version),
+                    DatabaseAPI.Database.Version,
+                    DatabaseAPI.GetDataProviderId().ToString()),
                 Level = characterInfo.Level.ToString(),
                 Class = archetype.ClassName,
                 Origin = archetype.Origin[resolvedOriginIndex],

@@ -93,7 +93,7 @@ namespace Mids_Reborn.Core.BuildFile
                 if (characterData.Archetype == null) throw new NullReferenceException(nameof(characterData.Archetype));
                 if (characterData.CurrentBuild == null) throw new ArgumentException(nameof(characterData.CurrentBuild));
                 BuiltWith = new MetaData(MidsContext.AppName, MidsContext.AppFileVersion,
-                    DatabaseAPI.DatabaseName, DatabaseAPI.Database.Version);
+                    DatabaseAPI.DatabaseName, DatabaseAPI.Database.Version, DatabaseAPI.GetDataProviderId().ToString());
                 Class = characterData.Archetype.ClassName;
                 Origin = characterData.Archetype.Origin[characterData.Origin];
                 Alignment = characterData.Alignment.ToString();

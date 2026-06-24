@@ -1,0 +1,19 @@
+<Project>
+  <PropertyGroup>
+    <!-- Edit version.txt for the public app version. Release builds may pass /p:BuildRevision=N. -->
+    <VersionPrefix>$([System.IO.File]::ReadAllText('$(MSBuildThisFileDirectory)version.txt').Trim())</VersionPrefix>
+    <BuildRevision Condition="'$(BuildRevision)' == ''">0</BuildRevision>
+    <Version>$(VersionPrefix)</Version>
+    <VersionPrefixMajor>$([System.Version]::Parse('$(VersionPrefix)').Major)</VersionPrefixMajor>
+    <VersionPrefixMinor>$([System.Version]::Parse('$(VersionPrefix)').Minor)</VersionPrefixMinor>
+    <AssemblyVersion Condition="'$(AssemblyVersion)' == ''">$(VersionPrefixMajor).$(VersionPrefixMinor).0.0</AssemblyVersion>
+    <FileVersion Condition="'$(FileVersion)' == ''">$(VersionPrefix).$(BuildRevision)</FileVersion>
+    <InformationalVersion Condition="'$(InformationalVersion)' == ''">$(VersionPrefix)</InformationalVersion>
+    <IncludeSourceRevisionInInformationalVersion>false</IncludeSourceRevisionInInformationalVersion>
+    <Company>LoadedCamel</Company>
+    <Product>Mids Reborn</Product>
+    <AssemblyTitle>Mids Reborn</AssemblyTitle>
+    <Description>Character build planner for City of Heroes</Description>
+    <Copyright>Copyright (c) 2019-2025 Midsreborn.com</Copyright>
+  </PropertyGroup>
+</Project>

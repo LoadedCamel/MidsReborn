@@ -7309,7 +7309,7 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 _ => throw new ArgumentOutOfRangeException(nameof(MidsContext.Config.Mode))
             };
 
-            Text = $@"{str2} {userMode}v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DBVersion: {DatabaseAPI.Database.Version})";
+            Text = $@"{str2} {userMode}v{MidsContext.AssemblyVersion} {MidsContext.AppVersionStatus} ({DatabaseAPI.DatabaseName} Issue: {DatabaseAPI.Database.Issue}, {DatabaseAPI.Database.PageVolText}: {DatabaseAPI.Database.PageVol} - DB Package: {DatabaseAPI.Database.Version})";
         }
 
         public void UpdateTitle()

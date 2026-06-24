@@ -294,6 +294,7 @@ public sealed class OmniImportReport
     public List<string> EnhancementImportScanDetails { get; } = [];
     public List<string> ClassicEnhancementFoldingDetails { get; } = [];
     public List<string> EnhancementSourceShapeValidation { get; } = [];
+    public List<string> EnhancementMalformedRecordDetails { get; } = [];
     public List<string> EnhancementMissingPolicyFiles { get; } = [];
     public List<string> EnhancementPowerLinkAudit { get; } = [];
     public List<string> EnhancementReconciliationAudit { get; } = [];
@@ -420,6 +421,7 @@ public sealed class OmniImportReport
         EnhancementImportScanDetails.Clear();
         ClassicEnhancementFoldingDetails.Clear();
         EnhancementSourceShapeValidation.Clear();
+        EnhancementMalformedRecordDetails.Clear();
         EnhancementMissingPolicyFiles.Clear();
         EnhancementPowerLinkAudit.Clear();
         ScopedBoostSetBonusCoverage.Clear();
@@ -524,6 +526,7 @@ public sealed class OmniImportReport
         AppendSection(builder, "Mapped With Fallback", PowerFieldsMappedWithFallback);
         AppendSection(builder, "Enhancement Import Scan", EnhancementImportScanDetails);
         AppendSection(builder, "Classic Enhancement Folding", ClassicEnhancementFoldingDetails);
+        AppendSection(builder, "Malformed Enhancement Source Records", EnhancementMalformedRecordDetails);
         AppendSection(builder, "Enhancement Source Shape Validation", EnhancementSourceShapeValidation);
         AppendSection(builder, "Boosts And Set Bonus Scope Coverage", ScopedBoostSetBonusCoverage);
         AppendSection(builder, "Enhancement Power Link Audit", EnhancementPowerLinkAudit);
@@ -731,6 +734,7 @@ public sealed class OmniImportReport
         AppendSection(builder, "Chance Mod Mappings", ChanceModMappings);
         AppendSection(builder, "Enhancement Import Scan", EnhancementImportScanDetails);
         AppendSection(builder, "Classic Enhancement Folding", ClassicEnhancementFoldingDetails);
+        AppendSection(builder, "Malformed Enhancement Source Records", EnhancementMalformedRecordDetails);
         AppendSection(builder, "Enhancement Source Shape Validation", EnhancementSourceShapeValidation);
         AppendSection(builder, "Enhancement Missing Policy Files", EnhancementMissingPolicyFiles);
         AppendSection(builder, "Boosts And Set Bonus Scope Coverage", ScopedBoostSetBonusCoverage);
@@ -768,7 +772,7 @@ public sealed class OmniImportReport
         builder.AppendLine($"- Recipes excluded by policy: {RecipeRecordsExcludedByPolicy:n0}");
         builder.AppendLine($"- Salvage definitions discovered: {SalvageDefinitionsDiscovered:n0}");
         builder.AppendLine($"- Structured boosts_allowed parsed: {StructuredBoostsAllowedParsedCount:n0}");
-        builder.AppendLine($"- Shape fallbacks / malformed skips: {EnhancementShapeCompatibilityFallbacks:n0}/{EnhancementMalformedRecordsSkipped:n0}");
+        builder.AppendLine($"- Shape compatibility fallbacks / malformed record skips: {EnhancementShapeCompatibilityFallbacks:n0}/{EnhancementMalformedRecordsSkipped:n0}");
         builder.AppendLine($"- Enhancement boost links resolved/missing: {EnhancementBoostPowerLinksResolvedDryRun:n0}/{EnhancementBoostPowerLinksMissingDryRun:n0}");
         builder.AppendLine($"- Set bonus links resolved/missing: {EnhancementSetBonusLinksResolvedDryRun:n0}/{EnhancementSetBonusLinksMissingDryRun:n0}");
         builder.AppendLine($"- Recipe reward links resolved/missing: {RecipeRewardLinksResolvedDryRun:n0}/{RecipeRewardLinksMissingDryRun:n0}");
@@ -795,11 +799,13 @@ public sealed class OmniImportReport
             FormatWarning("Unknown expression tokens", UnknownExpressionTokenCount),
             FormatWarning("Enhancement power links missing", EnhancementBoostPowerLinksMissingDryRun + EnhancementSetBonusLinksMissingDryRun),
             FormatWarning("Enhancement reconciliation conflicts", EnhancementAmbiguousMatchesDryRun + EnhancementSetAmbiguousMatchesDryRun + RecipeAmbiguousMatchesDryRun + SalvageAmbiguousMatchesDryRun),
+            FormatWarning("Malformed enhancement source records", EnhancementMalformedRecordDetails.Count),
             FormatWarning("Enhancement policy files missing", EnhancementPolicyFilesMissing)
         });
 
         AppendPreviewSection(builder, "Enhancement Link Audit", EnhancementPowerLinkAudit, 8);
         AppendPreviewSection(builder, "Classic Enhancement Folding", ClassicEnhancementFoldingDetails, 8);
+        AppendPreviewSection(builder, "Malformed Enhancement Source Records", EnhancementMalformedRecordDetails, 8);
         AppendPreviewSection(builder, "Enhancement Source Shape Validation", EnhancementSourceShapeValidation, 8);
         AppendPreviewSection(builder, "Enhancement Reconciliation Audit", EnhancementReconciliationAudit, 8);
         AppendPreviewSection(builder, "Enhancement Reconciliation Conflicts", EnhancementReconciliationConflicts, 8);

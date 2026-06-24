@@ -78,7 +78,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             DbInfo =
             [
                 $"Current: {DatabaseAPI.DatabaseName}",
-                $"Rev. {DatabaseAPI.Database.Version.ToString()} for I{DatabaseAPI.Database.Issue} {DatabaseAPI.Database.PageVolText} {DatabaseAPI.Database.PageVol}",
+                $"Package {DatabaseAPI.Database.Version.ToString()} for I{DatabaseAPI.Database.Issue} {DatabaseAPI.Database.PageVolText} {DatabaseAPI.Database.PageVol}",
                 $"Powersets: {DatabaseAPI.Database.Powersets.Length}",
                 $"Powers: {DatabaseAPI.Database.Power.Length}"
             ];

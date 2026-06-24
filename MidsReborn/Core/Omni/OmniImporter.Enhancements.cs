@@ -66,6 +66,11 @@ public sealed partial class OmniImporter
             normalizedData.EnhancementSetMalformedRecordsSkipped +
             normalizedData.RecipeMalformedRecordsSkipped +
             normalizedData.SalvageMalformedRecordsSkipped;
+        foreach (var detail in normalizedData.MalformedRecordDetails)
+        {
+            applyResult.AddLimited(applyResult.EnhancementMalformedRecordDetails, detail);
+        }
+
         applyResult.AddLimited(applyResult.EnhancementSourceShapeDetails,
             $"Recipe source directory used: {normalizedData.RecipeSourceDirectoryName}.");
         applyResult.AddLimited(applyResult.EnhancementSourceShapeDetails,

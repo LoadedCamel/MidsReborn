@@ -481,6 +481,7 @@ namespace Mids_Reborn.UI.Forms
         #region Events
 
         public event EventHandler? TitleUpdated;
+        public static MainWindow2? MainInstance { get; private set; }
 
         #endregion
 
@@ -506,8 +507,10 @@ namespace Mids_Reborn.UI.Forms
             Shown += MainWindow2_Shown;
             Closing += MainWindow2_Closing;
             ResizeEnd += OnResizeEnd;
+            TitleUpdated += OnTitleUpdated;
             midsvScrollPanel1.AvailableClientWidthChanged += MidsvScrollPanel1_AvailableClientWidthChanged;
 
+            MainInstance = this;
             EnhancingSlot = -1;
             EnhancingPower = -1;
             PickerHID = -1;
@@ -3261,6 +3264,32 @@ namespace Mids_Reborn.UI.Forms
                 : Color.FromArgb(115, 255, 110);
         }
 
+        private void OnTitleUpdated(object? sender, EventArgs e)
+        {
+            UpdateTitleLabel();
+        }
+
+        public void UpdateTitle()
+        {
+            TitleUpdated?.Invoke(this, EventArgs.Empty);
+        }
+
+        private void UpdateTitleLabel()
+        {
+            if (titleLabel.IsDisposed)
+            {
+                return;
+            }
+
+            var database = DatabaseAPI.Database;
+            var issueText = database.PageVol > 0
+                ? $"Issue {database.Issue} {database.PageVolText} {database.PageVol}"
+                : $"Issue {database.Issue}";
+
+            titleLabel.Text = $"Database: {DatabaseAPI.DatabaseName} · {issueText} · Package: {database.Version} · Updated: {database.Date:MM/dd/yyyy}";
+            Text = $"{MidsContext.AppName} v{MidsContext.AssemblyVersion} - {DatabaseAPI.DatabaseName} {issueText}";
+        }
+
         #endregion
 
         #region Overrides
@@ -4136,6 +4165,7 @@ namespace Mids_Reborn.UI.Forms
             SetColumns(MidsContext.Config.Columns < 1 ? 3 : MidsContext.Config.Columns, MidsContext.Config.Columns == 3 ? MidsContext.Config.ColumnStackingMode : Enums.eColumnStacking.None);
             UpdateCombatContextSummary();
             NewDraw();
+            UpdateTitleLabel();
 
         }
 

@@ -206,6 +206,7 @@ namespace Mids_Reborn.Core.Utils
 
         public async Task<bool> CreatePatchFile()
         {
+            SaveDatabaseBeforePackaging();
             CleanPrevious();
             var completionSource = new TaskCompletionSource<bool>();
             var hashedFiles = CompileList();
@@ -230,6 +231,17 @@ namespace Mids_Reborn.Core.Utils
             }
 
             return await completionSource.Task;
+        }
+
+        private void SaveDatabaseBeforePackaging()
+        {
+            if (PatchType != PatchType.Database)
+            {
+                return;
+            }
+
+            ProgressChanged?.Invoke(this, new ProgressEventArgs("Saving database package", 0, 1));
+            DatabaseAPI.SaveMainDatabase(Serializer.GetSerializer(), MidsContext.Config?.DataPath);
         }
 
         private async Task<byte[]?> CompressedFileData(List<FileData> hashedFiles)

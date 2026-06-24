@@ -47,6 +47,7 @@ public sealed partial class OmniImporter
         public int IoSetFamiliesAttunedSuperiorSuperiorAttuned { get; set; }
         public int IoSetFamiliesAllFourVariants { get; set; }
         public List<string> ShapeValidationDetails { get; } = [];
+        public List<string> MalformedRecordDetails { get; } = [];
         public List<string> ClassicEnhancementFoldDetails { get; } = [];
         public List<string> InventionVariantAuditDetails { get; } = [];
         public List<NormalizedEnhancementSource> Enhancements { get; } = [];
@@ -233,15 +234,15 @@ public sealed partial class OmniImporter
                     .ToArray();
             var loadedEnhancements = LoadJsonRecordsParallel(
                 enhancementFiles,
-                file => ReadJson<OmniEnhancementDefinition>(file));
+                file => ReadJsonWithError<OmniEnhancementDefinition>(file));
 
-            foreach (var (file, definition) in loadedEnhancements)
+            foreach (var (file, definition, error) in loadedEnhancements)
             {
                 data.EnhancementSourceRecordsDiscovered++;
                 if (definition == null || string.IsNullOrWhiteSpace(definition.Name))
                 {
                     data.EnhancementMalformedRecordsSkipped++;
-                    data.ShapeValidationDetails.Add($"Enhancement record skipped: {Path.GetFileName(file)} could not be parsed.");
+                    AddMalformedRecordDetail(data, exportRoot, "Enhancement", file, FormatParseFailure(error));
                     continue;
                 }
 
@@ -257,7 +258,11 @@ public sealed partial class OmniImporter
                 if (normalized == null)
                 {
                     data.EnhancementMalformedRecordsSkipped++;
-                    data.ShapeValidationDetails.Add($"Enhancement record skipped: {Path.GetFileName(file)} was missing required identity or power data.");
+                    AddMalformedRecordDetail(data, exportRoot, "Enhancement", file,
+                        FormatMissingRequiredFields(
+                            "missing required identity or power data",
+                            ("name", definition.Name),
+                            ("power_full_name", definition.PowerFullName)));
                     continue;
                 }
 
@@ -272,13 +277,13 @@ public sealed partial class OmniImporter
                 manifest?.EnhancementSetFiles?.Count > 0
                     ? manifest.EnhancementSetFiles
                     : EnumerateJsonRecordFiles(enhancementSetsRoot, recursive: false),
-                file => ReadJson<OmniEnhancementSetDefinition>(file));
-            foreach (var (file, definition) in loadedSets)
+                file => ReadJsonWithError<OmniEnhancementSetDefinition>(file));
+            foreach (var (file, definition, error) in loadedSets)
             {
                 if (definition == null || string.IsNullOrWhiteSpace(definition.Name))
                 {
                     data.EnhancementSetMalformedRecordsSkipped++;
-                    data.ShapeValidationDetails.Add($"Enhancement set record skipped: {Path.GetFileName(file)} could not be parsed.");
+                    AddMalformedRecordDetail(data, exportRoot, "Enhancement set", file, FormatParseFailure(error));
                     continue;
                 }
 
@@ -315,13 +320,13 @@ public sealed partial class OmniImporter
                 recipeFiles?.Count > 0
                     ? recipeFiles
                     : EnumerateJsonRecordFiles(recipesRoot, recursive: true),
-                file => ReadJson<OmniRecipeDefinition>(file));
-            foreach (var (file, definition) in loadedRecipes)
+                file => ReadJsonWithError<OmniRecipeDefinition>(file));
+            foreach (var (file, definition, error) in loadedRecipes)
             {
                 if (definition == null || string.IsNullOrWhiteSpace(definition.Name))
                 {
                     data.RecipeMalformedRecordsSkipped++;
-                    data.ShapeValidationDetails.Add($"Recipe record skipped: {Path.GetFileName(file)} could not be parsed.");
+                    AddMalformedRecordDetail(data, exportRoot, "Recipe", file, FormatParseFailure(error));
                     continue;
                 }
 
@@ -336,7 +341,11 @@ public sealed partial class OmniImporter
                 if (normalized == null)
                 {
                     data.RecipeMalformedRecordsSkipped++;
-                    data.ShapeValidationDetails.Add($"Recipe record skipped: {Path.GetFileName(file)} was missing required recipe identity or reward data.");
+                    AddMalformedRecordDetail(data, exportRoot, "Recipe", file,
+                        FormatMissingRequiredFields(
+                            "missing required recipe identity or reward data",
+                            ("name", definition.Name),
+                            ("enhancement_reward", definition.EnhancementReward)));
                     continue;
                 }
 
@@ -351,13 +360,13 @@ public sealed partial class OmniImporter
                 manifest?.SalvageFiles?.Count > 0
                     ? manifest.SalvageFiles
                     : EnumerateJsonRecordFiles(salvageRoot, recursive: false),
-                file => ReadJson<OmniSalvageDefinition>(file));
-            foreach (var (file, definition) in loadedSalvage)
+                file => ReadJsonWithError<OmniSalvageDefinition>(file));
+            foreach (var (file, definition, error) in loadedSalvage)
             {
                 if (definition == null || string.IsNullOrWhiteSpace(definition.Name))
                 {
                     data.SalvageMalformedRecordsSkipped++;
-                    data.ShapeValidationDetails.Add($"Salvage record skipped: {Path.GetFileName(file)} could not be parsed.");
+                    AddMalformedRecordDetail(data, exportRoot, "Salvage", file, FormatParseFailure(error));
                     continue;
                 }
 
@@ -406,18 +415,61 @@ public sealed partial class OmniImporter
         return data;
     }
 
-    private List<(string File, T? Value)> LoadJsonRecordsParallel<T>(
+    private List<(string File, T? Value, string? Error)> LoadJsonRecordsParallel<T>(
         IEnumerable<string> files,
-        Func<string, T?> loader) where T : class
+        Func<string, (T? Value, string? Error)> loader) where T : class
     {
-        var loaded = new ConcurrentBag<(string File, T? Value)>();
+        var loaded = new ConcurrentBag<(string File, T? Value, string? Error)>();
         Parallel.ForEach(
             files,
             new ParallelOptions { MaxDegreeOfParallelism = GetAdaptiveParallelDegree(3) },
-            file => loaded.Add((file, loader(file))));
+            file =>
+            {
+                var (value, error) = loader(file);
+                loaded.Add((file, value, error));
+            });
         return loaded
             .OrderBy(entry => entry.File, StringComparer.OrdinalIgnoreCase)
             .ToList();
+    }
+
+    private static void AddMalformedRecordDetail(
+        NormalizedEnhancementImportData data,
+        string exportRoot,
+        string recordKind,
+        string filePath,
+        string reason)
+    {
+        var detail = $"{recordKind} record skipped: {FormatSourceRecordPath(exportRoot, filePath)} - {reason}.";
+        data.MalformedRecordDetails.Add(detail);
+        data.ShapeValidationDetails.Add(detail);
+    }
+
+    private static string FormatParseFailure(string? error)
+    {
+        return string.IsNullOrWhiteSpace(error)
+            ? "could not be parsed; deserializer returned null"
+            : $"could not be parsed: {error}";
+    }
+
+    private static string FormatMissingRequiredFields(
+        string reason,
+        params (string Name, string? Value)[] fields)
+    {
+        var values = string.Join(", ", fields.Select(field =>
+        {
+            var value = string.IsNullOrWhiteSpace(field.Value) ? "<blank>" : field.Value.Trim();
+            return $"{field.Name}='{value}'";
+        }));
+        return $"{reason} ({values})";
+    }
+
+    private static string FormatSourceRecordPath(string exportRoot, string filePath)
+    {
+        var relativePath = Path.GetRelativePath(exportRoot, filePath);
+        return relativePath.StartsWith("..", StringComparison.Ordinal) || Path.IsPathRooted(relativePath)
+            ? filePath
+            : relativePath;
     }
 
     private static void FoldClassicEnhancementVariants(NormalizedEnhancementImportData data)

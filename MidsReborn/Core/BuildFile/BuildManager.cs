@@ -20,13 +20,11 @@ namespace Mids_Reborn.Core.BuildFile
 
         internal CharacterBuildData? BuildData;
         private readonly IBuildNotifier _notifier;
-        private readonly BuildPreferences _preferences;
 
         private BuildManager()
         {
             BuildData = CharacterBuildData.Instance;
             _notifier = new BuildNotifier();
-            _preferences = BuildPreferences.Load();
         }
         
         public bool LoadFromFile(string? fileName, BuildCombatContextState? loadFallbackCombatContext = null)
@@ -61,11 +59,9 @@ namespace Mids_Reborn.Core.BuildFile
             }
 
             var fileInfo = new FileInfo(fileName);
-            if (DatabaseAPI.DatabaseName != metaData.Database)
+            if (!IsActiveDatabase(metaData.Database))
             {
-                var databases = Directory.EnumerateDirectories(Path.Combine(AppContext.BaseDirectory, AppDataPaths.ParentDatabaseFolder)).ToList();
-                var selected = databases.FirstOrDefault(d => d.Contains(metaData.Database));
-                if (selected is null)
+                if (!TryGetInstalledDatabasePath(metaData.Database, out var selected))
                 {
                     _notifier.ShowError($"This build requires the {metaData.Database} be installed prior to loading it.\r\nPlease install the database and try again.");
                     return false;
@@ -80,68 +76,7 @@ namespace Mids_Reborn.Core.BuildFile
             }
             else
             {
-                // Compare Database Version if Enabled
-                if (MidsContext.Config.WarnOnOldDbMbd)
-                {
-                    var outDatedDb = Helpers.IsVersionNewer(DatabaseAPI.Database.Version, metaData.DatabaseVersion);
-                    var newerDb = Helpers.IsVersionNewer(metaData.DatabaseVersion, DatabaseAPI.Database.Version);
-                    var continueLoad = false;
-
-                    if (outDatedDb)
-                    {
-                        if (_preferences.ShouldSkipWarning(fileName))
-                        {
-                            continueLoad = true;
-                        }
-                        else
-                        {
-                            var result = _notifier.ShowWarningDialog($"This build was created in an older version of the {metaData.Database} database.\r\nSome powers and/or enhancements may have changed, you may need to rebuild some of it.", @"Warning", true);
-                            switch (result)
-                            {
-                                case DialogResult.Ignore:
-                                    _preferences.AddIgnoredBuild(fileName);
-                                    continueLoad = true;
-                                    break;
-                                case DialogResult.OK:
-                                    continueLoad = true;
-                                    break;
-                            }
-                        }
-                    }
-
-                    if (newerDb)
-                    {
-                        if (_preferences.ShouldSkipWarning(fileName))
-                        {
-                            continueLoad = true;
-                        }
-                        else
-                        {
-                            var result = _notifier.ShowWarningDialog($"This build was created in an newer version of the {metaData.Database} database.\r\nIt is recommended that you update the database.", @"Warning", true);
-                            switch (result)
-                            {
-                                case DialogResult.Ignore:
-                                    _preferences.AddIgnoredBuild(fileName);
-                                    continueLoad = true;
-                                    break;
-                                case DialogResult.OK:
-                                    continueLoad = true;
-                                    break;
-                            }
-                        }
-                    }
-
-                    if (!outDatedDb && !newerDb) continueLoad = true;
-
-                    if (continueLoad)
-                    {
-                        returnedVal = LoadPreparedBuildData(fileName, loadFallbackCombatContext);
-                    }
-                }
-                else
-                {
-                    returnedVal = LoadPreparedBuildData(fileName, loadFallbackCombatContext);
-                }
+                returnedVal = LoadPreparedBuildData(fileName, loadFallbackCombatContext);
             }
 
             return returnedVal;
@@ -204,51 +139,44 @@ namespace Mids_Reborn.Core.BuildFile
                 return false;
             }
 
-            if (DatabaseAPI.DatabaseName != metaData.Database)
+            if (!IsActiveDatabase(metaData.Database))
             {
-                var databases = Directory.EnumerateDirectories(Path.Combine(AppContext.BaseDirectory, AppDataPaths.ParentDatabaseFolder)).ToList();
-                var selected = databases.FirstOrDefault(d => d.Contains(metaData.Database));
-                if (selected is null)
+                if (!TryGetInstalledDatabasePath(metaData.Database, out _))
                 {
                     _notifier.ShowError($"This build requires the {metaData.Database} be installed prior to loading it.\r\nPlease install the database and try again.");
+                    return false;
                 }
 
                 _notifier.ShowWarning($"This build requires the {metaData.Database}, however you are currently using the {DatabaseAPI.DatabaseName} database. Please load the correct database and try again.");
                 return false;
             }
 
-            // Compare Database Version if Enabled
-            if (MidsContext.Config.WarnOnOldDbMbd)
-            {
-                var outDatedDb = Helpers.IsVersionNewer(DatabaseAPI.Database.Version, metaData.DatabaseVersion);
-                var newerDb = Helpers.IsVersionNewer(metaData.DatabaseVersion, DatabaseAPI.Database.Version);
-                var continueLoad = false;
-
-                if (outDatedDb)
-                {
-                    var result = _notifier.ShowWarningDialog($"This build was created in an older version of the {metaData.Database} database.\r\nSome powers and/or enhancements may have changed, you may need to rebuild some of it.", @"Warning");
-                    continueLoad = result == DialogResult.OK;
-                }
-
-                if (newerDb)
-                {
-                    var result = _notifier.ShowWarningDialog($"This build was created in an newer version of the {metaData.Database} database.\r\nIt is recommended that you update the database.", @"Warning");
-                    continueLoad = result == DialogResult.OK;
-                }
-
-                if (!outDatedDb && !newerDb) continueLoad = true;
-
-                if (continueLoad)
-                {
-                    returnedVal = LoadPreparedBuildData(id);
-                }
-            }
-            else
-            {
-                returnedVal = LoadPreparedBuildData(id);
-            }
+            returnedVal = LoadPreparedBuildData(id);
 
             return returnedVal;
+        }
+
+        private static bool IsActiveDatabase(string databaseName) =>
+            string.Equals(DatabaseAPI.DatabaseName, databaseName, StringComparison.OrdinalIgnoreCase);
+
+        private static bool TryGetInstalledDatabasePath(string databaseName, out string path)
+        {
+            path = string.Empty;
+            if (string.IsNullOrWhiteSpace(databaseName))
+            {
+                return false;
+            }
+
+            var match = DatabaseAPI.GetInstalledDatabases()
+                .FirstOrDefault(x => x.Key.Equals(databaseName, StringComparison.OrdinalIgnoreCase));
+
+            if (string.IsNullOrWhiteSpace(match.Value))
+            {
+                return false;
+            }
+
+            path = match.Value;
+            return true;
         }
 
         public bool ValidateAndLoadImportData(DataClassifier.ClassificationResult classificationResult)

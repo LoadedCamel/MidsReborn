@@ -184,6 +184,11 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             Initialized = true;
         }
 
+        private static void RefreshMainWindowTitle()
+        {
+            MainWindow2.MainInstance?.UpdateTitle();
+        }
+
         private void frmDBEdit_Load(object? sender, EventArgs e)
         {
             Text = $@"{DatabaseAPI.DatabaseName} Database Menu";
@@ -195,24 +200,28 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             if (!MainModule.MidsController.IsAppInitialized) return;
             DatabaseAPI.Database.Issue = Convert.ToInt32(UdIssue.Value);
+            RefreshMainWindowTitle();
         }
 
         private void udIssue_ValueChanged(object sender, EventArgs e)
         {
             if (!MainModule.MidsController.IsAppInitialized || !Initialized) return;
             DatabaseAPI.Database.Issue = Convert.ToInt32(UdIssue.Value);
+            RefreshMainWindowTitle();
         }
 
         private void udPageVol_KeyPress(object sender, KeyPressEventArgs e)
         {
             if (!MainModule.MidsController.IsAppInitialized) return;
             DatabaseAPI.Database.PageVol = Convert.ToInt32(UdPageVol.Value);
+            RefreshMainWindowTitle();
         }
 
         private void udPageVol_ValueChanged(object sender, EventArgs e)
         {
             if (!MainModule.MidsController.IsAppInitialized || !Initialized) return;
             DatabaseAPI.Database.PageVol = Convert.ToInt32(UdPageVol.Value);
+            RefreshMainWindowTitle();
         }
 
         private void btnExportJSON_Click(object sender, EventArgs e)
@@ -235,6 +244,8 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
         {
             using var importForm = new frmOmniImport();
             importForm.ShowDialog(this);
+            DisplayInfo();
+            RefreshMainWindowTitle();
         }
 
         private void btnAttribModEdit_Click(object sender, EventArgs e)
@@ -279,6 +290,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             }
 
             DatabaseAPI.Database.PageVolText = txtPageVol.Text;
+            RefreshMainWindowTitle();
         }
 
         private void txtPageVol_MouseLeave(object sender, EventArgs e)

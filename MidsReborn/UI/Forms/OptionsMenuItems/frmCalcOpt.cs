@@ -351,7 +351,9 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
             cbCurrency.SelectedIndex = (int)config.PreferredCurrency;
             chkShowSelfBuffsAny.Checked = config.ShowSelfBuffsAny;
             lblSaveFolder.Text = config.BuildsPath;
-            chkWarnOldDbVersion.Checked = config.WarnOnOldDbMbd;
+            chkWarnOldDbVersion.Checked = false;
+            chkWarnOldDbVersion.Visible = false;
+            label12.Visible = false;
             chkDimWindowBorders.Checked = config.DimWindowStyleColors;
             rbEnhPopupCloseStyle1.Checked = config.CloseEnhSelectPopupByMove;
             rbEnhPopupCloseStyle2.Checked = !config.CloseEnhSelectPopupByMove;
@@ -594,7 +596,7 @@ Please move these items manually.", @"Move Completed With Exceptions", MessageBo
                 ++index;
             } while (index <= 19);
             config.PreferredCurrency = (Enums.RewardCurrency)cbCurrency.SelectedIndex;
-            config.WarnOnOldDbMbd = chkWarnOldDbVersion.Checked;
+            config.WarnOnOldDbMbd = false;
             config.DimWindowStyleColors = chkDimWindowBorders.Checked;
             config.CloseEnhSelectPopupByMove = rbEnhPopupCloseStyle1.Checked;
         }

@@ -10488,6 +10488,11 @@ public sealed partial class OmniImporter
             normalizedData.EnhancementSetMalformedRecordsSkipped +
             normalizedData.RecipeMalformedRecordsSkipped +
             normalizedData.SalvageMalformedRecordsSkipped;
+        foreach (var detail in normalizedData.MalformedRecordDetails)
+        {
+            report.AddLimited(report.EnhancementMalformedRecordDetails, detail);
+        }
+
         foreach (var detail in normalizedData.ShapeValidationDetails)
         {
             report.AddLimited(report.EnhancementSourceShapeValidation, detail);
@@ -10584,6 +10589,25 @@ public sealed partial class OmniImporter
         }
 
         return ReadJson<T>(path);
+    }
+
+    private (T? Value, string? Error) ReadJsonWithError<T>(string path) where T : class
+    {
+        try
+        {
+            using var stream = File.OpenRead(path);
+            using var streamReader = new StreamReader(stream);
+            using var jsonReader = new JsonTextReader(streamReader);
+            var serializer = JsonSerializer.Create(_settings);
+            var value = serializer.Deserialize<T>(jsonReader);
+            return value == null
+                ? (null, "deserializer returned null")
+                : (value, null);
+        }
+        catch (Exception ex)
+        {
+            return (null, FormatJsonReadError(ex));
+        }
     }
 
     private static string FormatLevelBand(OmniEnhancementDefinition definition)
@@ -10705,18 +10729,26 @@ public sealed partial class OmniImporter
 
     private T? ReadJson<T>(string path) where T : class
     {
-        try
+        return ReadJsonWithError<T>(path).Value;
+    }
+
+    private static string FormatJsonReadError(Exception exception)
+    {
+        static string SingleLine(string value)
         {
-            using var stream = File.OpenRead(path);
-            using var streamReader = new StreamReader(stream);
-            using var jsonReader = new JsonTextReader(streamReader);
-            var serializer = JsonSerializer.Create(_settings);
-            return serializer.Deserialize<T>(jsonReader);
+            return value.Replace('\r', ' ').Replace('\n', ' ').Trim();
         }
-        catch
+
+        var message = SingleLine(exception.Message);
+        if (exception.InnerException == null)
         {
-            return null;
+            return message;
         }
+
+        var innerMessage = SingleLine(exception.InnerException.Message);
+        return string.IsNullOrWhiteSpace(innerMessage) || string.Equals(message, innerMessage, StringComparison.Ordinal)
+            ? message
+            : $"{message} Inner exception: {innerMessage}";
     }
 
     private static void TrackPowerRequirement(string owner, string expression, OmniImportResult result)

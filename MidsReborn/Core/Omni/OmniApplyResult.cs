@@ -398,6 +398,7 @@ public sealed class OmniApplyResult
     public List<string> EnhancementImportDetails { get; } = [];
     public List<string> ClassicEnhancementFoldingDetails { get; } = [];
     public List<string> EnhancementSourceShapeDetails { get; } = [];
+    public List<string> EnhancementMalformedRecordDetails { get; } = [];
     public List<string> UnresolvedEnhancementPowerLinks { get; } = [];
     public List<string> EnhancementIconDetails { get; } = [];
     public List<string> EnhancementClassDerivationDetails { get; } = [];
@@ -579,6 +580,7 @@ public sealed class OmniApplyResult
         AppendSection(builder, "Pseudo-Pet Absorption Flags", PseudoPetAbsorptionFlagDetails);
         AppendSection(builder, "Enhancement Import", EnhancementImportDetails);
         AppendSection(builder, "Classic Enhancement Folding", ClassicEnhancementFoldingDetails);
+        AppendSection(builder, "Malformed Enhancement Source Records", EnhancementMalformedRecordDetails);
         AppendSection(builder, "Enhancement Source Shape Validation", EnhancementSourceShapeDetails);
         AppendSection(builder, "Enhancement Icon Decisions", EnhancementIconDetails);
         AppendSection(builder, "Boosts And Set Bonus Import Audit", BoostSetBonusImportAuditDetails);
@@ -760,7 +762,7 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Scoped power legality rebuilt/changed/preserved/empty/unresolved/unknown-labels: {ScopedPowerEnhancementLegalityRebuilt}/{ScopedPowerEnhancementLegalityChanged}/{ScopedPowerEnhancementLegalityPreserved}/{ScopedPowerEnhancementLegalityEmptyAfterRebuild}/{ScopedPowerEnhancementLegalityUnresolvedAfterRebuild}/{ScopedPowerEnhancementLegalityUnresolvedLabelCount}");
         builder.AppendLine($"- Boost/Set_Bonus legality repair boosts inspected/rebuilt/preserved/unresolved: {BoostPowerLegalityRepairInspected}/{BoostPowerLegalityRepairRebuilt}/{BoostPowerLegalityRepairPreserved}/{BoostPowerLegalityRepairUnresolved}");
         builder.AppendLine($"- Boost/Set_Bonus legality repair set-bonus inspected/cleared/already-empty/changed: {SetBonusPowerLegalityRepairInspected}/{SetBonusPowerLegalityRepairCleared}/{SetBonusPowerLegalityRepairAlreadyEmpty}/{BoostSetBonusPowerLegalityRepairChanged}");
-        builder.AppendLine($"- Shape fallbacks / malformed skips: {EnhancementShapeCompatibilityFallbacks}/{EnhancementMalformedRecordsSkipped}");
+        builder.AppendLine($"- Shape compatibility fallbacks / malformed record skips: {EnhancementShapeCompatibilityFallbacks}/{EnhancementMalformedRecordsSkipped}");
         builder.AppendLine($"- Enhancement boost links resolved/missing: {EnhancementBoostPowerLinksResolved}/{EnhancementBoostPowerLinksMissing}");
         builder.AppendLine($"- Enhancement boost links via alias/fallback: {EnhancementBoostPowerLinksAlias}/{EnhancementBoostPowerLinksFallback}");
         builder.AppendLine($"- Set bonus links resolved/missing: {EnhancementSetBonusLinksResolved}/{EnhancementSetBonusLinksMissing}");
@@ -888,6 +890,7 @@ public sealed class OmniApplyResult
         AppendSection(builder, "Enhancement Import", EnhancementImportDetails);
         AppendSection(builder, "Classic Enhancement Folding", ClassicEnhancementFoldingDetails);
         AppendSection(builder, "Classic Enhancement Presentation", ClassicEnhancementPresentationDetails);
+        AppendSection(builder, "Malformed Enhancement Source Records", EnhancementMalformedRecordDetails);
         AppendSection(builder, "Enhancement Source Shape Validation", EnhancementSourceShapeDetails);
         AppendSection(builder, "Unresolved Enhancement Power Links", UnresolvedEnhancementPowerLinks);
         AppendSection(builder, "Enhancement Icon Decisions", EnhancementIconDetails);
@@ -948,7 +951,7 @@ public sealed class OmniApplyResult
         builder.AppendLine($"- Scoped power legality rebuilt/changed/preserved/empty/unresolved/unknown-labels: {ScopedPowerEnhancementLegalityRebuilt:n0}/{ScopedPowerEnhancementLegalityChanged:n0}/{ScopedPowerEnhancementLegalityPreserved:n0}/{ScopedPowerEnhancementLegalityEmptyAfterRebuild:n0}/{ScopedPowerEnhancementLegalityUnresolvedAfterRebuild:n0}/{ScopedPowerEnhancementLegalityUnresolvedLabelCount:n0}");
         builder.AppendLine($"- Boost/Set_Bonus legality repair boosts inspected/rebuilt/preserved/unresolved: {BoostPowerLegalityRepairInspected:n0}/{BoostPowerLegalityRepairRebuilt:n0}/{BoostPowerLegalityRepairPreserved:n0}/{BoostPowerLegalityRepairUnresolved:n0}");
         builder.AppendLine($"- Boost/Set_Bonus legality repair set-bonus inspected/cleared/already-empty/changed: {SetBonusPowerLegalityRepairInspected:n0}/{SetBonusPowerLegalityRepairCleared:n0}/{SetBonusPowerLegalityRepairAlreadyEmpty:n0}/{BoostSetBonusPowerLegalityRepairChanged:n0}");
-        builder.AppendLine($"- Shape fallbacks / malformed skips: {EnhancementShapeCompatibilityFallbacks:n0}/{EnhancementMalformedRecordsSkipped:n0}");
+        builder.AppendLine($"- Shape compatibility fallbacks / malformed record skips: {EnhancementShapeCompatibilityFallbacks:n0}/{EnhancementMalformedRecordsSkipped:n0}");
         builder.AppendLine($"- Enhancement boost links resolved/missing: {EnhancementBoostPowerLinksResolved:n0}/{EnhancementBoostPowerLinksMissing:n0}");
         builder.AppendLine($"- Set bonus links resolved/missing: {EnhancementSetBonusLinksResolved:n0}/{EnhancementSetBonusLinksMissing:n0}");
         builder.AppendLine($"- Recipe reward links resolved/missing: {RecipeRewardLinksResolved:n0}/{RecipeRewardLinksMissing:n0}");
@@ -980,6 +983,7 @@ public sealed class OmniApplyResult
             FormatWarning("Enhancement class derivation unresolved", EnhancementClassIdsUnresolved),
             FormatWarning("Scoped power legality unresolved", ScopedPowerEnhancementLegalityUnresolvedAfterRebuild + ScopedPowerEnhancementLegalityEmptyAfterRebuild + ScopedPowerEnhancementLegalityUnresolvedLabelCount),
             FormatWarning("Boost/Set_Bonus legality repair unresolved", BoostPowerLegalityRepairUnresolved),
+            FormatWarning("Malformed enhancement source records", EnhancementMalformedRecordDetails.Count),
             FormatWarning("Classic enhancement metadata warnings", ClassicEnhancementMetadataWarnings),
             FormatWarning("Import integrity audit entries", ImportIntegrityAuditDetails.Count)
         });
@@ -988,6 +992,7 @@ public sealed class OmniApplyResult
         AppendPreviewSection(builder, "Scoped Display Fallback Rejected", ScopedDisplayFallbackRejectedDetails, 8);
         AppendPreviewSection(builder, "Classic Enhancement Folding", ClassicEnhancementFoldingDetails, 8);
         AppendPreviewSection(builder, "Classic Enhancement Presentation", ClassicEnhancementPresentationDetails, 8);
+        AppendPreviewSection(builder, "Malformed Enhancement Source Records", EnhancementMalformedRecordDetails, 8);
         AppendPreviewSection(builder, "Enhancement Source Shape Validation", EnhancementSourceShapeDetails, 8);
         AppendPreviewSection(builder, "Unresolved Enhancement Power Links", UnresolvedEnhancementPowerLinks, 8);
         AppendPreviewSection(builder, "Enhancement Class Derivation", EnhancementClassDerivationDetails, 8);

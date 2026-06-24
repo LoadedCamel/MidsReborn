@@ -212,7 +212,7 @@ namespace Mids_Reborn.UI.Forms.OptionsMenuItems.DbEditor
             DatabaseAPI.MatchAllIDs();
             Task.Delay(1000).Wait();
             DatabaseAPI.SaveMainDatabase(serializer, MidsContext.Config.DataPath);
-            MainWindow.MainInstance?.UpdateTitle();
+            MainWindow2.MainInstance?.UpdateTitle();
             BusyHide();
             DialogResult = DialogResult.OK;
             Hide();

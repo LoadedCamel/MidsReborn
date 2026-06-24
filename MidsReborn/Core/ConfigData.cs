@@ -113,7 +113,7 @@ namespace Mids_Reborn.Core
             TeamMembers = new Dictionary<string, int>();
             TeamRoster = [];
             ShowSelfBuffsAny = false;
-            WarnOnOldDbMbd = true;
+            WarnOnOldDbMbd = false;
             DimWindowStyleColors = true;
             CloseEnhSelectPopupByMove = true;
             PowerListsWordwrapMode = Enums.WordwrapMode.Legacy;

@@ -156,7 +156,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             var appStr = $"{MidsContext.AppName} {GetAppVersionString()}";
             appStr += $"\r\n\r\nDatabase: {GetDatabaseName()}";
             appStr += $"\r\nDatabase Issue: {GetDatabaseIssuePageVol()}";
-            appStr += $"\r\nDatabase Version: {GetDatabaseVersionString()}";
+            appStr += $"\r\nDatabase Package: {GetDatabaseVersionString()}";
             appStr += $"\r\n\r\nRunning under {Assembly.GetEntryAssembly()?.GetCustomAttribute<TargetFrameworkAttribute>()?.FrameworkName} / {RuntimeInformation.FrameworkDescription}";
 
             Clipboard.ContainsText();
