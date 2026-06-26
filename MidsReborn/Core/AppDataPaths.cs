@@ -7,8 +7,6 @@ namespace Mids_Reborn.Core
     public static class AppDataPaths
     {
         public const string FileDb = "I12.mhd";
-        public const string FileNLevels = "NLevels.mhd";
-        public const string FileRLevels = "RLevels.mhd";
         public const string FileMaths = "Maths.mhd";
         public const string FileEClasses = "EClasses.mhd";
         public const string FileOrigins = "Origins.mhd";

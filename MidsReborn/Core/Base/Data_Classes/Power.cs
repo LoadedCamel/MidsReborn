@@ -166,7 +166,7 @@ namespace Mids_Reborn.Core.Base.Data_Classes
             BoostsAllowed = [];
             AdvancedRequirements = new AdvancedConditionSet();
             var num = -2;
-            foreach (var p in DatabaseAPI.Database.Power)
+            foreach (var p in DatabaseAPI.Database.Power ?? [])
             {
                 if (p is { StaticIndex: > -1 } && p.StaticIndex > num)
                 {

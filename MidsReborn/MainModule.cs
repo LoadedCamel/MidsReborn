@@ -92,15 +92,16 @@ namespace Mids_Reborn
                 BuildPreferences.Load();
                 DatabaseAPI.LoadTypeGrades(path);
                 messenger.SetMessage("Loading Main Data...");
-                if (!DatabaseAPI.LoadLevelsDatabase(path))
-                {
-                    MessageBox.Show(@"Unable to proceed, failed to load leveling data! We suggest you re-download the application from https://github.com/LoadedCamel/MidsReborn/releases.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    Application.Exit();
-                }
-
                 if (!DatabaseAPI.LoadMainDatabase(path))
                 {
                     MessageBox.Show(@"There was an error reading the database. Aborting!", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    Application.Exit();
+                }
+
+                messenger.SetMessage("Loading Progression Data...");
+                if (!DatabaseAPI.LoadLevelsDatabase(path))
+                {
+                    MessageBox.Show(@"Unable to proceed, failed to load progression data. Re-import or regenerate the selected database.", @"Error!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     Application.Exit();
                 }
                 

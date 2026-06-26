@@ -27,6 +27,12 @@ public sealed class CharacterLevelProgressionEntry
     public int EpicUnlockDelta { get; set; }
 }
 
+public sealed class PowerOwnedLevelProgressionEntry
+{
+    public int Level { get; set; }
+    public int FreeEnhancementSlotCount { get; set; }
+}
+
 public sealed class GrantedSlotRule
 {
     public string RuleId { get; set; } = string.Empty;
@@ -42,9 +48,10 @@ public sealed class BuildProgressionMetadata
 {
     public int MaxCharacterLevel { get; set; } = 49;
     public List<CharacterLevelProgressionEntry> CharacterLevels { get; set; } = [];
+    public List<PowerOwnedLevelProgressionEntry> PowerOwnedLevels { get; set; } = [];
     public List<GrantedSlotRule> GrantedSlotRules { get; set; } = [];
 
-    public bool HasCharacterLevels => CharacterLevels.Count > 0;
+    public bool HasCharacterLevels => CharacterLevels?.Count > 0;
 
     public static BuildProgressionMetadata CreateLegacy(
         IList<LevelMap> levels,
@@ -53,7 +60,15 @@ public sealed class BuildProgressionMetadata
     {
         var metadata = new BuildProgressionMetadata
         {
-            MaxCharacterLevel = Math.Max(0, levels.Count - 1)
+            MaxCharacterLevel = Math.Max(0, levels.Count - 1),
+            PowerOwnedLevels =
+            [
+                new PowerOwnedLevelProgressionEntry
+                {
+                    Level = 1,
+                    FreeEnhancementSlotCount = 1
+                }
+            ]
         };
 
         for (var index = 0; index < levels.Count; index++)
@@ -122,17 +137,31 @@ public sealed class BuildProgressionMetadata
 
 public sealed class BuildProgressionPolicy
 {
+    private static readonly IReadOnlyList<PowerOwnedLevelProgressionEntry> DefaultPowerOwnedRows =
+    [
+        new PowerOwnedLevelProgressionEntry
+        {
+            Level = 1,
+            FreeEnhancementSlotCount = 1
+        }
+    ];
+
     private readonly Dictionary<string, GrantedSlotRule> _rulesById;
+    private readonly List<PowerOwnedLevelProgressionEntry> _powerOwnedRows;
     private readonly List<CharacterLevelProgressionEntry> _rows;
 
     public BuildProgressionPolicy(BuildProgressionMetadata metadata)
     {
         Metadata = metadata ?? new BuildProgressionMetadata();
-        _rows = Metadata.CharacterLevels
+        _rows = (Metadata.CharacterLevels ?? new List<CharacterLevelProgressionEntry>())
             .Where(row => row.Level > 0)
             .OrderBy(row => row.Level)
             .ToList();
-        _rulesById = Metadata.GrantedSlotRules
+        _powerOwnedRows = (Metadata.PowerOwnedLevels ?? new List<PowerOwnedLevelProgressionEntry>())
+            .Where(row => row is { Level: > 0, FreeEnhancementSlotCount: > 0 })
+            .OrderBy(row => row.Level)
+            .ToList();
+        _rulesById = (Metadata.GrantedSlotRules ?? new List<GrantedSlotRule>())
             .Where(rule => !string.IsNullOrWhiteSpace(rule.RuleId))
             .GroupBy(rule => rule.RuleId, StringComparer.OrdinalIgnoreCase)
             .ToDictionary(group => group.Key, group => group.Last(), StringComparer.OrdinalIgnoreCase);
@@ -141,6 +170,7 @@ public sealed class BuildProgressionPolicy
     public BuildProgressionMetadata Metadata { get; }
     public int MaxCharacterLevel => Math.Clamp(Metadata.MaxCharacterLevel, 0, 49);
     public IReadOnlyList<CharacterLevelProgressionEntry> CharacterLevels => _rows;
+    public IReadOnlyList<PowerOwnedLevelProgressionEntry> PowerOwnedLevels => _powerOwnedRows;
     public IReadOnlyCollection<GrantedSlotRule> GrantedSlotRules => _rulesById.Values;
 
     public readonly record struct GrantedSlotGrant(string RuleId, string TargetPowerFullName, int UnlockLevel);
@@ -200,6 +230,32 @@ public sealed class BuildProgressionPolicy
     public int GetEpicUnlockCountAtLevel(int zeroBasedLevel)
     {
         return SumAtLevel(zeroBasedLevel, row => row.EpicUnlockDelta);
+    }
+
+    public int GetInitialFreeEnhancementSlotCount()
+    {
+        return GetFreeEnhancementSlotCountForOwnedLevel(1);
+    }
+
+    public int GetFreeEnhancementSlotCountForOwnedLevel(int oneBasedOwnedLevel)
+    {
+        var ownedLevel = Math.Max(1, oneBasedOwnedLevel);
+        IEnumerable<PowerOwnedLevelProgressionEntry> rows = _powerOwnedRows.Count > 0
+            ? _powerOwnedRows
+            : DefaultPowerOwnedRows;
+
+        return rows
+            .Where(row => row.Level <= ownedLevel)
+            .Sum(row => Math.Max(0, row.FreeEnhancementSlotCount));
+    }
+
+    public int GetFreeEnhancementSlotCountForPowerLevel(int zeroBasedCharacterLevel, int zeroBasedPowerLevel)
+    {
+        var currentLevel = NormalizeCharacterLevel(zeroBasedCharacterLevel) + 1;
+        var powerLevel = Math.Max(0, zeroBasedPowerLevel) + 1;
+        return currentLevel < powerLevel
+            ? 0
+            : GetFreeEnhancementSlotCountForOwnedLevel(currentLevel - powerLevel + 1);
     }
 
     public int GetGrantedSlotCountAtLevel(int zeroBasedLevel)

@@ -67,6 +67,8 @@ namespace Mids_Reborn.Core
         private const string RecipeName = "Mids Reborn Recipe Database";
         private const string SalvageName = "Mids Reborn Salvage Database";
         private const string EnhancementDbName = "Mids Reborn Enhancement Database";
+        private const string MissingBuildProgressionMetadataMessage =
+            "The selected database does not contain progression schedule metadata. Re-import or regenerate the database from Omni data before loading it.";
 
         private static readonly IDictionary<string, int> Classes = new Dictionary<string, int>();
 
@@ -197,13 +199,11 @@ namespace Mids_Reborn.Core
             Database.BuildProgressionMetadata ??= new BuildProgressionMetadata();
             if (!Database.BuildProgressionMetadata.HasCharacterLevels)
             {
-                var legacyLevels = LoadLegacyNormalLevels(dataPath);
-                Database.BuildProgressionMetadata = BuildProgressionMetadata.CreateLegacy(
-                    legacyLevels,
-                    ServerData,
-                    GetDataProviderId());
+                throw new InvalidDataException(MissingBuildProgressionMetadataMessage);
             }
-            else if (Database.BuildProgressionMetadata.GrantedSlotRules.Count == 0 && ServerData.EnableInherentSlotting)
+
+            Database.BuildProgressionMetadata.GrantedSlotRules ??= [];
+            if (Database.BuildProgressionMetadata.GrantedSlotRules.Count == 0 && ServerData.EnableInherentSlotting)
             {
                 var legacyMetadata = BuildProgressionMetadata.CreateLegacy(
                     new BuildProgressionPolicy(Database.BuildProgressionMetadata).CreateChronologyLevels(),
@@ -218,28 +218,6 @@ namespace Mids_Reborn.Core
         public static BuildProgressionPolicy GetBuildProgressionPolicy(string? dataPath = null)
         {
             return new BuildProgressionPolicy(GetBuildProgressionMetadata(dataPath));
-        }
-
-        private static LevelMap[] LoadLegacyNormalLevels(string? dataPath)
-        {
-            var path = string.IsNullOrWhiteSpace(dataPath)
-                ? AppDataPaths.SelectDataFileLoad(AppDataPaths.FileNLevels)
-                : AppDataPaths.SelectDataFileLoad(AppDataPaths.FileNLevels, dataPath);
-
-            using var stream = new StreamReader(path);
-            var row = FileIO.IOGrab(stream);
-            while (row[0] != "Level")
-            {
-                row = FileIO.IOGrab(stream);
-            }
-
-            var levels = new LevelMap[50];
-            for (var index = 0; index < 50; ++index)
-            {
-                levels[index] = new LevelMap(FileIO.IOGrab(stream));
-            }
-
-            return levels;
         }
 
         internal static EnhancementMathPolicy GetEnhancementMathPolicy()
@@ -2503,7 +2481,7 @@ namespace Mids_Reborn.Core
             }
             catch (Exception ex)
             {
-                MessageBox.Show($"Message: {ex.Message}\r\nTrace: {ex.StackTrace}", "Error!");
+                MessageBox.Show(ex.Message, "Unable to Load Progression Data", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 return false;
             }
             return true;

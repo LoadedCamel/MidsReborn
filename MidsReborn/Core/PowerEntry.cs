@@ -22,6 +22,18 @@ namespace Mids_Reborn.Core
             return power?.PowerType == Enums.ePowerType.Auto_ && !IsVisiblePlannerModeControl(power);
         }
 
+        private static int GetInitialFreeSlotCount(IPower power)
+        {
+            if (!power.Slottable ||
+                string.Equals(power.GetPowerSet()?.GroupName, "Incarnate", StringComparison.OrdinalIgnoreCase))
+            {
+                return 0;
+            }
+
+            var policy = DatabaseAPI.GetBuildProgressionPolicy(MidsContext.Config?.DataPath);
+            return Math.Clamp(policy.GetInitialFreeEnhancementSlotCount(), 0, 6);
+        }
+
         public PowerEntry(IPower? power)
         {
             StatInclude = false;
@@ -76,13 +88,17 @@ namespace Mids_Reborn.Core
                     SubPowers = Array.Empty<PowerSubEntry>();
                 }
 
-                if (power.Slottable & (power.GetPowerSet()?.GroupName != "Incarnate"))
+                var initialFreeSlotCount = GetInitialFreeSlotCount(power);
+                if (initialFreeSlotCount > 0)
                 {
-                    Slots = new SlotEntry[1];
-                    Slots[0].Enhancement = new I9Slot();
-                    Slots[0].FlippedEnhancement = new I9Slot();
-                    Slots[0].Level = iLevel;
-                    Slots[0].Source = SlotSourceKind.AutoBase;
+                    Slots = new SlotEntry[initialFreeSlotCount];
+                    for (var slotIndex = 0; slotIndex < Slots.Length; slotIndex++)
+                    {
+                        Slots[slotIndex].Enhancement = new I9Slot();
+                        Slots[slotIndex].FlippedEnhancement = new I9Slot();
+                        Slots[slotIndex].Level = iLevel;
+                        Slots[slotIndex].Source = SlotSourceKind.AutoBase;
+                    }
                 }
                 else
                 {

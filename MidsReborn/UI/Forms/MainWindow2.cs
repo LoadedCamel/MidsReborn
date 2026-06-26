@@ -6129,6 +6129,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
                 return;
             }
 
+            if (!BuildPowerPlacementRules.TryValidateStarterPowerSlots(powerEntryArray, MidsContext.Character?.Powersets, out var message))
+            {
+                MessageBox.Show(this, message, @"Invalid Power Placement", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             ShallowCopyPowerList(powerEntryArray);
             PowerModified(true);
             DoRedraw();
@@ -6537,6 +6543,12 @@ The default position/state will be used upon next launch.", @"Window State Warni
             var tp = DeepCopyPowerList();
             if (PowerSwap(0, ref tp, start, finish) != -1)
             {
+                return;
+            }
+
+            if (!BuildPowerPlacementRules.TryValidateStarterPowerSlots(tp, MidsContext.Character?.Powersets, out var message))
+            {
+                MessageBox.Show(this, message, @"Invalid Power Placement", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 

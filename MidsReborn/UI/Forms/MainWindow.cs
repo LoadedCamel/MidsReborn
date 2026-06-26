@@ -3286,7 +3286,7 @@ namespace Mids_Reborn.UI.Forms
                 ? $"Issue {database.Issue} {database.PageVolText} {database.PageVol}"
                 : $"Issue {database.Issue}";
 
-            titleLabel.Text = $"Database: {DatabaseAPI.DatabaseName} · {issueText} · Package: {database.Version} · Updated: {database.Date:MM/dd/yyyy}";
+            titleLabel.Text = $"Database: {DatabaseAPI.DatabaseName} · {issueText} · Updated: {database.Date:MM/dd/yyyy}";
             Text = $"{MidsContext.AppName} v{MidsContext.AssemblyVersion} - {DatabaseAPI.DatabaseName} {issueText}";
         }
 
@@ -9751,6 +9751,12 @@ namespace Mids_Reborn.UI.Forms
                 return;
             }
 
+            if (!BuildPowerPlacementRules.TryValidateStarterPowerSlots(powerEntryArray, MidsContext.Character?.Powersets, out var message))
+            {
+                MessageBox.Show(this, message, @"Invalid Power Placement", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return;
+            }
+
             ShallowCopyPowerList(powerEntryArray);
             PowerModified(true);
             DoRedraw();
@@ -10282,6 +10288,12 @@ namespace Mids_Reborn.UI.Forms
             var tp = DeepCopyPowerList();
             if (PowerSwap(0, ref tp, start, finish) != -1)
             {
+                return;
+            }
+
+            if (!BuildPowerPlacementRules.TryValidateStarterPowerSlots(tp, MidsContext.Character?.Powersets, out var message))
+            {
+                MessageBox.Show(this, message, @"Invalid Power Placement", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 return;
             }
 

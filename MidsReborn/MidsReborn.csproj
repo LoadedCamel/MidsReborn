@@ -341,12 +341,6 @@
     <Content Include="Databases\Homecoming\GlobalMods.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </Content>
-    <Content Include="Databases\Homecoming\NLevels.mhd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
-    <Content Include="Databases\Homecoming\RLevels.mhd">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </Content>
     <Content Include="MRB_Icon_Concept.ico" />
     <Content Include="Databases\Homecoming\PowersReplTable.mhd">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
