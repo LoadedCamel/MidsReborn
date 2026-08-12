@@ -1,5 +1,6 @@
 ﻿using System.Diagnostics;
 using System.Text.Json;
+using FastDeepCloner;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.UI.Controls.Test;
 
@@ -40,6 +41,29 @@ public static class ThemeManager
     public static event Action? ThemeChanged;
 
     public static ApplicationTheme? CurrentTheme { get; private set; }
+    private static ApplicationTheme? BackupTheme;
+
+    public static void SaveTheme()
+    {
+        BackupTheme = CurrentTheme.Clone();
+    }
+
+    public static void RestoreTheme()
+    {
+        if (BackupTheme == null)
+        {
+            return;
+        }
+
+        CurrentTheme = BackupTheme.Clone();
+        ThemeChanged?.Invoke();
+    }
+
+    public static void ApplyThemeDirect(ApplicationTheme theme)
+    {
+        CurrentTheme = theme;
+        ThemeChanged?.Invoke();
+    }
 
     public static void Initialize()
     {
@@ -86,7 +110,7 @@ public static class ThemeManager
             var cfg = MidsContext.Config;
             if (cfg != null)
                 cfg.SelectedTheme = themeName;
-            
+
             ThemeChanged?.Invoke();
         }
     }
@@ -309,7 +333,7 @@ public static class ThemeManager
                 TabInactiveBottom = Color.FromArgb(20, 20, 28),
                 TabBorder = Color.FromArgb(10, 10, 14),
                 Text = Color.FromArgb(248, 241, 212),
-                ValueText = Color.FromArgb(106,240,22),
+                ValueText = Color.FromArgb(106, 240, 22),
                 Muted = Color.FromArgb(225, 217, 192),
 
                 // Controls
@@ -355,7 +379,7 @@ public static class ThemeManager
                 HeaderMid = Color.FromArgb(9, 39, 70),
                 HeaderDark = Color.FromArgb(6, 33, 57),
                 WindowIcon = Color.WhiteSmoke,
-                WindowIconHover = Color.FromArgb(64, 100, 150, 210), 
+                WindowIconHover = Color.FromArgb(64, 100, 150, 210),
                 WindowIconPressed = Color.FromArgb(96, 45, 85, 135),
                 WindowIconCloseHover = Color.FromArgb(220, 20, 60),
                 WindowIconClosePressed = Color.FromArgb(139, 0, 0),
@@ -723,7 +747,7 @@ public static class ThemeManager
             MenuStrip = new MenuStripTheme
             {
                 ItemSelectedColor = Color.FromArgb(40, 140, 140),
-                AccentColor = Color.FromArgb(255, 128, 0), 
+                AccentColor = Color.FromArgb(255, 128, 0),
                 AccentLightColor = Color.WhiteSmoke
             },
             PowerSlot = new PowerSlotTheme
@@ -989,4 +1013,7 @@ public static class ThemeManager
 
         return themes;
     }
+
+    // Names must match those in CreateBuiltInThemes().
+    public static string[] BuiltInThemeNames => ["Hero", "Villain", "Loyalist", "Resistance", "Rogue", "Vigilante"];
 }

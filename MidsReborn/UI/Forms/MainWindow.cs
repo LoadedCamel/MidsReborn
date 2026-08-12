@@ -303,6 +303,7 @@ namespace Mids_Reborn.UI.Forms
         private frmTotalsV2? fTotals2;
         private frmTotals? fTotals;
         private frmBuildSalvageHud? fSalvageHud;
+        private frmThemeDesigner? fThemeDesigner;
 
         // Theme fields
         private ToolStripMenuItem? _themeMenu;
@@ -5793,10 +5794,10 @@ namespace Mids_Reborn.UI.Forms
                     "Are you sure?", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 for (var index1 = 0; index1 <= MidsContext.Character.CurrentBuild.Powers.Count - 1; ++index1)
-                for (var index2 = 0;
-                     index2 <= MidsContext.Character.CurrentBuild.Powers[index1].Slots.Length - 1;
-                     ++index2)
-                    MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh = -1;
+                    for (var index2 = 0;
+                         index2 <= MidsContext.Character.CurrentBuild.Powers[index1].Slots.Length - 1;
+                         ++index2)
+                        MidsContext.Character.CurrentBuild.Powers[index1].Slots[index2].Enhancement.Enh = -1;
 
                 DoRedraw();
                 RefreshInfo();
@@ -6113,6 +6114,23 @@ namespace Mids_Reborn.UI.Forms
             using var frmDbEdit = new frmDBEdit();
             frmDbEdit.ShowDialog(this);
             FloatTop(true);
+        }
+
+        private void tsThemeDesigner_Click(object? sender, EventArgs e)
+        {
+            if (fThemeDesigner == null || fThemeDesigner.IsDisposed || !fThemeDesigner.Visible)
+            {
+                fThemeDesigner = new frmThemeDesigner(this);
+                fThemeDesigner.Show();
+                fThemeDesigner.BringToFront();
+                fThemeDesigner.Activate();
+            }
+            else
+            {
+                fThemeDesigner.Hide();
+                fThemeDesigner.Dispose();
+                fThemeDesigner = null;
+            }
         }
 
         private async void tsUpdateCheck_Click(object? sender, EventArgs e)
@@ -6780,7 +6798,7 @@ namespace Mids_Reborn.UI.Forms
             };
         }
 
-        private void PopulateThemeMenuItems()
+        public void PopulateThemeMenuItems()
         {
             if (_themeMenu is null) return;
 
@@ -6824,7 +6842,7 @@ namespace Mids_Reborn.UI.Forms
             _themeMenu.DropDownItems.Add(reload);
         }
 
-        private void UpdateCheckedTheme()
+        public void UpdateCheckedTheme()
         {
             if (_themeMenu is null) return;
             var active = ThemeManager.CurrentTheme?.Name;
@@ -8704,15 +8722,15 @@ namespace Mids_Reborn.UI.Forms
         private void ChangeSets()
         {
             UpdateToon(
-                MainModule.MidsController.Toon, 
-                MidsContext.Character, 
-                primaryDropDown.SelectedIndex, 
-                secondaryDropDown.SelectedIndex, 
-                pool0DropDown.SelectedIndex, 
-                pool1DropDown.SelectedIndex, 
-                pool2DropDown.SelectedIndex, 
-                pool3DropDown.SelectedIndex, 
-                ancillaryDropDown.SelectedIndex, 
+                MainModule.MidsController.Toon,
+                MidsContext.Character,
+                primaryDropDown.SelectedIndex,
+                secondaryDropDown.SelectedIndex,
+                pool0DropDown.SelectedIndex,
+                pool1DropDown.SelectedIndex,
+                pool2DropDown.SelectedIndex,
+                pool3DropDown.SelectedIndex,
+                ancillaryDropDown.SelectedIndex,
                 GetHeaderPowersets,
                 () => secondaryDropDown.Unlock());
         }

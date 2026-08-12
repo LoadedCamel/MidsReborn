@@ -208,6 +208,7 @@ namespace Mids_Reborn.UI.Forms
             tsChangeDb = new ToolStripMenuItem();
             tsConfig = new ToolStripMenuItem();
             tsAdvDBEdit = new ToolStripMenuItem();
+            tsThemeDesigner = new ToolStripMenuItem();
             HelpToolStripMenuItem = new ToolStripMenuItem();
             toolStripMenuItem7 = new ToolStripMenuItem();
             toolStripMenuItem8 = new ToolStripMenuItem();
@@ -2049,7 +2050,7 @@ namespace Mids_Reborn.UI.Forms
             // 
             // WindowToolStripMenuItem
             // 
-            WindowToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tsViewSets, tsViewGraphs, tsViewSetCompare, tsViewData, tsSetFind, ToolStripSeparator18, tsRecipeViewer, tsRotationHelper, ToolStripSeparator19, InGameRespecHelperToolStripMenuItem, toolStripSeparator5, tsChangeDb, tsConfig, tsAdvDBEdit });
+            WindowToolStripMenuItem.DropDownItems.AddRange(new ToolStripItem[] { tsViewSets, tsViewGraphs, tsViewSetCompare, tsViewData, tsSetFind, ToolStripSeparator18, tsRecipeViewer, tsRotationHelper, ToolStripSeparator19, InGameRespecHelperToolStripMenuItem, toolStripSeparator5, tsChangeDb, tsConfig, tsAdvDBEdit, tsThemeDesigner });
             WindowToolStripMenuItem.ForeColor = SystemColors.ControlText;
             WindowToolStripMenuItem.Name = "WindowToolStripMenuItem";
             WindowToolStripMenuItem.Size = new Size(49, 22);
@@ -2172,6 +2173,13 @@ namespace Mids_Reborn.UI.Forms
             tsAdvDBEdit.Size = new Size(214, 22);
             tsAdvDBEdit.Text = "&Database Editor Suite";
             tsAdvDBEdit.Click += tsAdvDBEdit_Click;
+            //
+            // tsThemeDesigner
+            //
+            tsThemeDesigner.Name = "tsThemeDesigner";
+            tsThemeDesigner.Size = new Size(214, 22);
+            tsThemeDesigner.Text = "Theme Designer";
+            tsThemeDesigner.Click += tsThemeDesigner_Click;
             // 
             // HelpToolStripMenuItem
             // 
@@ -2578,6 +2586,7 @@ namespace Mids_Reborn.UI.Forms
         private ToolStripMenuItem tsChangeDb;
         private ToolStripMenuItem tsConfig;
         private ToolStripMenuItem tsAdvDBEdit;
+        private ToolStripMenuItem tsThemeDesigner;
         private ToolStripMenuItem toolStripMenuItem7;
         private ToolStripMenuItem toolStripMenuItem8;
         private ToolStripSeparator toolStripSeparator12;
