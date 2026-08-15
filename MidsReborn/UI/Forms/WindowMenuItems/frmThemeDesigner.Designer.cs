@@ -58,13 +58,14 @@
             tbThemeName.Name = "tbThemeName";
             tbThemeName.Size = new Size(187, 23);
             tbThemeName.TabIndex = 1;
+            tbThemeName.TextChanged += tbThemeName_TextChanged;
             // 
             // lblThemeName
             // 
             lblThemeName.AutoSize = true;
             lblThemeName.Location = new Point(33, 28);
             lblThemeName.Name = "lblThemeName";
-            lblThemeName.Size = new Size(47, 15);
+            lblThemeName.Size = new Size(46, 15);
             lblThemeName.TabIndex = 0;
             lblThemeName.Text = "Theme:";
             // 
@@ -129,7 +130,7 @@
             MaximizeBox = false;
             MinimizeBox = false;
             Name = "frmThemeDesigner";
-            Text = "frmThemeDesigner";
+            Text = "Theme Designer";
             FormClosed += frmThemeDesigner_FormClosed;
             Load += frmThemeDesigner_Load;
             panel1.ResumeLayout(false);

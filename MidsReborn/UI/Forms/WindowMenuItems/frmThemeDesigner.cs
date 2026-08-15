@@ -105,7 +105,7 @@ public partial class frmThemeDesigner : Form
                     new() { Field = "GradientBottom", DisplayName = "Gradient Bottom" },
                     new() { Field = "HoverGradientTop", DisplayName = "Hover: Gradient Top" },
                     new() { Field = "HoverGradientBottom", DisplayName = "Hover: Gradient Bottom" },
-                    new() { Field = "PressedGradientTop", DisplayName = "Pressed: Gradient Bottom" },
+                    new() { Field = "PressedGradientTop", DisplayName = "Pressed: Gradient Top" },
                     new() { Field = "PressedGradientBottom", DisplayName = "Pressed: Gradient Bottom" },
                     new() { Field = "ToggledGradientTop", DisplayName = "Toggled: Gradient Top" },
                     new() { Field = "ToggledGradientBottom", DisplayName = "Toggled: Gradient Bottom" },
@@ -338,7 +338,7 @@ public partial class frmThemeDesigner : Form
                 iconButton2.IconColor = Color.MediumSeaGreen;
                 iconButton2.IconFont = IconFont.Auto;
                 iconButton2.IconSize = 28;
-                iconButton2.Location = new Point(panel1.Width - 38 - ScrollbarGutter, y);
+                iconButton2.Location = new Point(panel1.Width - 38 - ScrollbarGutter, y); // Bug: position of these is scrambled if initialized with visible = false
                 iconButton2.Name = $"btnRev-{idKey}";
                 iconButton2.Size = new Size(30, 30);
                 iconButton2.Tag = $"btnRev-{idKey}";
@@ -613,7 +613,7 @@ public partial class frmThemeDesigner : Form
             return;
         }
 
-        var jsonContent = JsonSerializer.Serialize(WorkingTheme);
+        var jsonContent = JsonSerializer.Serialize(WorkingTheme, new JsonSerializerOptions { WriteIndented = true});
         File.WriteAllText(saveDlg.FileName, jsonContent);
 
         // Reload user themes
@@ -635,5 +635,17 @@ public partial class frmThemeDesigner : Form
 
         ThemeManager.SetTheme(WorkingTheme.Name);
         ParentWindow.UpdateCheckedTheme();
+    }
+
+    private void tbThemeName_TextChanged(object sender, EventArgs e)
+    {
+        var themeName = tbThemeName.Text.Trim();
+
+        if (string.IsNullOrWhiteSpace(themeName))
+        {
+            return;
+        }
+
+        WorkingTheme.Name = themeName;
     }
 }
