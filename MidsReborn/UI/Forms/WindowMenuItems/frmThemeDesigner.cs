@@ -31,6 +31,7 @@ public partial class frmThemeDesigner : Form
     private bool AutoApplyTheme = true;
     private frmColorSelector FrmColorSelector;
     private MainWindow2 ParentWindow;
+    private readonly JsonSerializerOptions SerializerOptions;
 
     public frmThemeDesigner(MainWindow2 parent)
     {
@@ -45,6 +46,7 @@ public partial class frmThemeDesigner : Form
         FrmColorSelector.Visible = false;
         FrmColorSelector.VisibleChanged += FrmColorSelector_VisibleChanged;
         ParentWindow = parent;
+        SerializerOptions = new JsonSerializerOptions { WriteIndented = true };
     }
 
     // Simulate form shown by .ShowDialog()
@@ -613,7 +615,7 @@ public partial class frmThemeDesigner : Form
             return;
         }
 
-        var jsonContent = JsonSerializer.Serialize(WorkingTheme, new JsonSerializerOptions { WriteIndented = true});
+        var jsonContent = JsonSerializer.Serialize(WorkingTheme, SerializerOptions);
         File.WriteAllText(saveDlg.FileName, jsonContent);
 
         // Reload user themes

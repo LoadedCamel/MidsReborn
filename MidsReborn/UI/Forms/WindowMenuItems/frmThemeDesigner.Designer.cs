@@ -1,4 +1,6 @@
-﻿namespace Mids_Reborn.UI.Forms.WindowMenuItems
+﻿using Mids_Reborn.UI.Forms.Controls;
+
+namespace Mids_Reborn.UI.Forms.WindowMenuItems
 {
     partial class frmThemeDesigner
     {
@@ -28,7 +30,7 @@
         /// </summary>
         private void InitializeComponent()
         {
-            panel1 = new Panel();
+            panel1 = new ScrollToControlPanel();
             tbThemeName = new TextBox();
             lblThemeName = new Label();
             btnSave = new Button();
@@ -141,7 +143,7 @@
 
         #endregion
 
-        private Panel panel1;
+        private ScrollToControlPanel panel1;
         private TextBox tbThemeName;
         private Label lblThemeName;
         private Button btnSave;

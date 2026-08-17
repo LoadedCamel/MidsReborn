@@ -7,9 +7,13 @@
             InitializeComponent();
         }
         
+        // Prevent scroll position reset when losing focus
         protected override Point ScrollToControl(Control activeControl)
         {
-            return DisplayRectangle.Location;
+            var loc = DisplayRectangle.Location;
+            loc.Offset(new Point(-1 * Padding.Left, -1 * Padding.Bottom));
+
+            return loc;
         }
     }
 }
