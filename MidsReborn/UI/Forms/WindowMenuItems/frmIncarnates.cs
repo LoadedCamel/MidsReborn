@@ -1,13 +1,13 @@
-﻿using System.ComponentModel;
-using System.Diagnostics;
-using System.Globalization;
-using System.Runtime.CompilerServices;
-using Mids_Reborn.Core;
+﻿using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.UI.Controls;
+using Mids_Reborn.UI.Theming;
 using MRBResourceLib;
+using System.ComponentModel;
+using System.Diagnostics;
+using System.Runtime.CompilerServices;
 
 namespace Mids_Reborn.UI.Forms.WindowMenuItems
 {
@@ -51,7 +51,15 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             Parent = myParent;
             myPowers = DatabaseAPI.GetPowersetByName("Alpha", Enums.ePowerSetType.Incarnate).Powers;
             FormClosing += FrmIncarnate_FormClosing;
+            ThemeManager.ThemeChanged += OnThemeChanged;
         }
+
+        private void OnThemeChanged()
+        {
+            PLLeft.SetColors();
+            PLRight.SetColors();
+        }
+
         private void FrmIncarnate_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (e.CloseReason == CloseReason.UserClosing)
@@ -89,12 +97,13 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
 
             BackColor = myParent.BackColor;
             PopInfo.ForeColor = BackColor;
-            var plLeft = PLLeft;
+            /*var plLeft = PLLeft;
             UpdatePLColors(ref plLeft);
-            //LLLeft = llLeft;
+            LLLeft = llLeft;
             var plRight = PLRight;
             UpdatePLColors(ref plRight);
-            //LLRight = llRight;
+            LLRight = llRight;*/
+            OnThemeChanged();
             ibClose.IA = myParent.Drawing.PImageAttributes;
             ibClose.ImageOff = MidsContext.Character.IsHero ? myParent.Drawing.BxPower[2].Bitmap : myParent.Drawing.BxPower[4].Bitmap;
             ibClose.ImageOn = MidsContext.Character.IsHero ? myParent.Drawing.BxPower[3].Bitmap : myParent.Drawing.BxPower[5].Bitmap;

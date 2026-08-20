@@ -247,7 +247,7 @@ public static class ThemeManager
         return segmentedToggleTheme;
     }
 
-    private static SegmentedToggleTheme CreateDerivedSegmentedToggleTheme(ApplicationTheme theme)
+    public static SegmentedToggleTheme CreateDerivedSegmentedToggleTheme(ApplicationTheme theme)
     {
         Color buttonTop = ResolveThemeColor(theme.Button.GradientTop, Color.FromArgb(70, 120, 180));
         Color buttonBottom = ResolveThemeColor(theme.Button.GradientBottom, Blend(buttonTop, Color.Black, 0.45f));
@@ -275,6 +275,8 @@ public static class ThemeManager
             UnselectedTextOutline = ResolveThemeColor(theme.Button.TextOutlineColor, Color.Black)
         };
     }
+
+    public static FooterTheme CreateDefaultFooterTheme() => new FooterTheme { Background = Color.FromArgb(6, 17, 35), SummaryText = Color.WhiteSmoke, TotalSlotsText = Color.WhiteSmoke, SlotsLeftText = Color.FromArgb(115, 255, 110) };
 
     private static Color ResolveThemeColor(Color candidate, Color fallback)
     {

@@ -4,6 +4,7 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.UI.Controls;
+using Mids_Reborn.UI.Theming;
 using MRBResourceLib;
 
 namespace Mids_Reborn.UI.Forms.WindowMenuItems
@@ -42,6 +43,27 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
            // _myParent = iParent;
             _myPowers = iPowers;
             FormClosing += FrmPrestige_FormClosing;
+            ThemeManager.ThemeChanged += OnThemeChanged;
+        }
+
+        private void OnThemeChanged()
+        {
+            llLeft.SetColors([
+                ThemeManager.CurrentTheme?.ListView.Enabled ?? Color.LightBlue,
+                ThemeManager.CurrentTheme?.ListView.Selected ?? Color.LightGreen,
+                ThemeManager.CurrentTheme?.ListView.Disabled ?? Color.LightGray,
+                ThemeManager.CurrentTheme?.ListView.SelectedDisabled ?? Color.DarkGreen,
+                ThemeManager.CurrentTheme?.ListView.Invalid ?? Color.Red,
+                ThemeManager.CurrentTheme?.ListView.Heading ?? Color.Orange
+            ]);
+            llRight.SetColors([
+                ThemeManager.CurrentTheme?.ListView.Enabled ?? Color.LightBlue,
+                ThemeManager.CurrentTheme?.ListView.Selected ?? Color.LightGreen,
+                ThemeManager.CurrentTheme?.ListView.Disabled ?? Color.LightGray,
+                ThemeManager.CurrentTheme?.ListView.SelectedDisabled ?? Color.DarkGreen,
+                ThemeManager.CurrentTheme?.ListView.Invalid ?? Color.Red,
+                ThemeManager.CurrentTheme?.ListView.Heading ?? Color.Orange
+            ]);
         }
 
         public frmPrestige(MainWindow2 iParent, List<IPower?> iPowers)

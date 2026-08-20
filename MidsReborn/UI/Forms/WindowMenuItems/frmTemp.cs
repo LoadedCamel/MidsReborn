@@ -5,6 +5,7 @@ using Mids_Reborn.Core.Base.Data_Classes;
 using Mids_Reborn.Core.Base.Display;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.UI.Controls;
+using Mids_Reborn.UI.Theming;
 using MRBResourceLib;
 
 namespace Mids_Reborn.UI.Forms.WindowMenuItems
@@ -35,12 +36,33 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             CenterToParent();
             Location = new Point(Location.X, Location.Y - 100);
             Load += frmTemp_Load;
+            ThemeManager.ThemeChanged += OnThemeChanged;
             _locked = false;
             InitializeComponent();
             Icon = Resources.MRB_Icon_Concept;
             Name = nameof(frmTemp);
             //_myParent = iParent;
             _myPowers = iPowers;
+        }
+
+        private void OnThemeChanged()
+        {
+            llLeft.SetColors([
+                ThemeManager.CurrentTheme?.ListView.Enabled ?? Color.LightBlue,
+                ThemeManager.CurrentTheme?.ListView.Selected ?? Color.LightGreen,
+                ThemeManager.CurrentTheme?.ListView.Disabled ?? Color.LightGray,
+                ThemeManager.CurrentTheme?.ListView.SelectedDisabled ?? Color.DarkGreen,
+                ThemeManager.CurrentTheme?.ListView.Invalid ?? Color.Red,
+                ThemeManager.CurrentTheme?.ListView.Heading ?? Color.Orange
+            ]);
+            llRight.SetColors([
+                ThemeManager.CurrentTheme?.ListView.Enabled ?? Color.LightBlue,
+                ThemeManager.CurrentTheme?.ListView.Selected ?? Color.LightGreen,
+                ThemeManager.CurrentTheme?.ListView.Disabled ?? Color.LightGray,
+                ThemeManager.CurrentTheme?.ListView.SelectedDisabled ?? Color.DarkGreen,
+                ThemeManager.CurrentTheme?.ListView.Invalid ?? Color.Red,
+                ThemeManager.CurrentTheme?.ListView.Heading ?? Color.Orange
+            ]);
         }
 
         public frmTemp(MainWindow2 iParent, List<IPower?> iPowers)
@@ -143,12 +165,16 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         {
             BackColor = _myParent.BackColor;
             PopInfo.ForeColor = BackColor;
+            /*
             var llLeft = this.llLeft;
             UpdateLlColours(ref llLeft);
             this.llLeft = llLeft;
             var llRight = this.llRight;
             UpdateLlColours(ref llRight);
             this.llRight = llRight;
+            */
+            // Update ListLabel colors
+            OnThemeChanged();
             ibClose.IA = _myParent.Drawing.PImageAttributes;
             ibClose.ImageOff = MidsContext.Character.IsHero
                 ? _myParent.Drawing.BxPower[2].Bitmap

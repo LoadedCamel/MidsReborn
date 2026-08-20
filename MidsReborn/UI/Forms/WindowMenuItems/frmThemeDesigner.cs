@@ -32,6 +32,7 @@ public partial class frmThemeDesigner : Form
     private frmColorSelector FrmColorSelector;
     private MainWindow2 ParentWindow;
     private readonly JsonSerializerOptions SerializerOptions;
+    private const string ThemeVersion = "1.1";
 
     public frmThemeDesigner(MainWindow2 parent)
     {
@@ -88,6 +89,12 @@ public partial class frmThemeDesigner : Form
         ThemeManager.SaveTheme();
         WorkingTheme = ThemeManager.CurrentTheme.Clone();
         OriginalTheme = ThemeManager.CurrentTheme.Clone();
+        WorkingTheme.Version ??= ThemeVersion;
+
+        // Lock theme change during edit
+        // Bug: no muted color for menustrip disabled items
+        ParentWindow.AllowThemeChange(false);
+
         InitUI();
     }
 
@@ -192,7 +199,14 @@ public partial class frmThemeDesigner : Form
                 new List<ThemeField>
                 {
                     new() { Field = "ScrollBar", DisplayName = "Scroll Bar" },
-                    new() { Field = "ScrollButton", DisplayName = "Scroll Button" }
+                    new() { Field = "ScrollButton", DisplayName = "Scroll Button" },
+
+                    new() { Field = "Enabled", DisplayName = "State: Enabled" },
+                    new() { Field = "Selected", DisplayName = "State: Selected" },
+                    new() { Field = "Disabled", DisplayName = "State: Disabled" },
+                    new() { Field = "SelectedDisabled", DisplayName = "State: Selected/Disabled" },
+                    new() { Field = "Invalid", DisplayName = "State: Invalid" },
+                    new() { Field = "Heading", DisplayName = "State: Headings" }
                 }
             },
             {
@@ -241,7 +255,38 @@ public partial class frmThemeDesigner : Form
                     new() { Field = "Bar", DisplayName = "Bar" },
                     new() { Field = "Hover", DisplayName = "Hover" },
                 }
+            },
+            {
+                new ThemeFieldsGroup { Name = "Footer", DisplayName = "Footer" },
+                new List<ThemeField>
+                {
+                    new() { Field = "Background", DisplayName = "Background" },
+                    new() { Field = "SummaryText", DisplayName = "Summary Text" },
+                    new() { Field = "TotalSlotsText", DisplayName = "Total Slots Text" },
+                    new() { Field = "SlotsLeftText", DisplayName = "Slots Left Text" }
+                }
             }
+        };
+    }
+
+    // Enhancement: possible to get initial values directly from class?
+    // Ref.: Mids_Reborn\UI\Theming\FooterTheme.cs
+    private Color GetDefaultColor(string group, string field)
+    {
+        return group switch
+        {
+            // Got to look for default values because group
+            // is nullable in theme and may be missing.
+            // We want the default colors that match what is seen.            
+            "Footer" => field switch
+            {
+                "Background" => Color.FromArgb(6, 17, 35),
+                "SummaryText" => Color.WhiteSmoke,
+                "TotalSlotsText" => Color.WhiteSmoke,
+                "SlotsLeftText" => Color.FromArgb(115, 255, 110),
+                _ => Color.Black
+            },
+            _ => Color.Black
         };
     }
 
@@ -281,7 +326,7 @@ public partial class frmThemeDesigner : Form
 
             foreach (var item in g.Value)
             {
-                var color = GetThemeValue(WorkingTheme, g.Key.Name, item.Field, Color.Black);
+                var color = GetThemeValue(WorkingTheme, g.Key.Name, item.Field, GetDefaultColor(g.Key.Name, item.Field));
                 var idKey = $"{g.Key.Name}-{item.Field}";
 
                 var colorBox = new BorderPanel();
@@ -329,7 +374,7 @@ public partial class frmThemeDesigner : Form
                 iconButton1.Size = new Size(30, 30);
                 iconButton1.Tag = $"btnMod-{idKey}";
                 iconButton1.UseVisualStyleBackColor = false;
-                iconButton1.Visible = false;
+                iconButton1.Visible = true;
 
                 // Revert to original button
                 var iconButton2 = new IconButton();
@@ -345,7 +390,7 @@ public partial class frmThemeDesigner : Form
                 iconButton2.Size = new Size(30, 30);
                 iconButton2.Tag = $"btnRev-{idKey}";
                 iconButton2.UseVisualStyleBackColor = false;
-                iconButton2.Visible = false;
+                iconButton2.Visible = true;
                 iconButton2.Click += IbRevert_Click;
 
                 panel1.Controls.Add(colorBox);
@@ -354,7 +399,7 @@ public partial class frmThemeDesigner : Form
                 panel1.Controls.Add(iconButton1);
                 panel1.Controls.Add(iconButton2);
 
-                // Populate index for quick access
+                // Populate indices for quick access
                 ColorBoxList.Add($"bp-{idKey}", colorBox);
                 TextBoxList.Add($"tb-{idKey}", textBox);
                 ModButtonList.Add($"btnMod-{idKey}", iconButton1);
@@ -363,6 +408,21 @@ public partial class frmThemeDesigner : Form
                 y += 32;
                 i++;
             }
+        }
+
+        panel1.ResumeLayout();
+
+        // Hack: attempt to fix buttons' position bug when initialized with Visible = false.
+        // Instead, create visible then hide everything
+        panel1.SuspendLayout();
+        foreach (var btn in ModButtonList)
+        {
+            btn.Value.Visible = false;
+        }
+
+        foreach (var btn in RevButtonList)
+        {
+            btn.Value.Visible = false;
         }
 
         panel1.ResumeLayout();
@@ -532,7 +592,7 @@ public partial class frmThemeDesigner : Form
             return defaultValue;
         }
 
-        var obj = objGroup?.GetValue(WorkingTheme)?.GetType().GetProperty(field);
+        var obj = objGroup?.GetValue(theme)?.GetType().GetProperty(field);
         if (obj == null)
         {
             Debug.WriteLine($"Warning: Field {field} in {group} is null in theme");
@@ -543,26 +603,75 @@ public partial class frmThemeDesigner : Form
         return (T?)obj?.GetValue(objGroup?.GetValue(theme));
     }
 
+    private bool ThemeGroupExists(ApplicationTheme theme, string group)
+    {
+        var objGroup = theme.GetType().GetProperty(group);
+
+        return objGroup != null;
+    }
+
+    private bool ThemeFieldExists(ApplicationTheme theme, string group, string field)
+    {
+        var objGroup = theme.GetType().GetProperty(group);
+        if (objGroup == null)
+        {
+            return false;
+        }
+
+        var obj = objGroup?.GetValue(theme)?.GetType().GetProperty(field);
+
+        return obj != null;
+    }
+
     // Indirect object access from group + field name (setter)
     private void SetThemeValue<T>(string group, string field, T value)
     {
         var objGroup = WorkingTheme.GetType().GetProperty(group);
         var obj = objGroup?.GetValue(WorkingTheme)?.GetType().GetProperty(field);
-        if (objGroup == null || obj == null)
-        {
-            Debug.WriteLine($"Warning: group {group} or field in group {field} is null");
 
+        // Actually needed? Testing on nulls seem unreliable
+        var objGroupExists = ThemeGroupExists(WorkingTheme, group);
+        var objExists = ThemeFieldExists(WorkingTheme, group, field);
+
+        // Non-existent object group alone will never trigger (bug?)
+        // Always non-null group + null field (despite being non-nullable)
+        // Compensate for missing groups/fields in theme by creating defaults in group
+        // before to input custom value
+        if (!objGroupExists || !objExists)
+        {
+            switch (group)
+            {
+                case "SegmentedToggle":
+                    WorkingTheme.SegmentedToggle = ThemeManager.CreateDerivedSegmentedToggleTheme(WorkingTheme);
+                    break;
+
+                case "Footer":
+                    WorkingTheme.Footer = ThemeManager.CreateDefaultFooterTheme();
+                    break;
+            }
+
+            objGroup = WorkingTheme.GetType().GetProperty(group);
+            obj = objGroup?.GetValue(WorkingTheme)?.GetType().GetProperty(field);
+            objGroupExists = ThemeGroupExists(WorkingTheme, group);
+            objExists = ThemeFieldExists(WorkingTheme, group, field);
+        }
+
+        if (!objGroupExists || !objExists)
+        {
+            Debug.WriteLine($"Warning: Group {group} is null or {field} in {group} is null");
             return;
         }
 
         obj.SetValue(objGroup.GetValue(WorkingTheme), value);
     }
 
-    // Discard all modifications.
-    // If saved, user will have to go to View > Theme > Reload user theme
+    // Discard all modifications
     private void frmThemeDesigner_FormClosed(object sender, FormClosedEventArgs e)
     {
+        // Enh: saved theme should not be restored to its previous version
         ThemeManager.RestoreTheme();
+        ParentWindow.AllowThemeChange(true);
+        ParentWindow.SetTopMost(false);
     }
 
     private void btnClose_Click(object sender, EventArgs e)
@@ -649,5 +758,15 @@ public partial class frmThemeDesigner : Form
         }
 
         WorkingTheme.Name = themeName;
+    }
+
+    private void chkTopMostSelf_CheckedChanged(object sender, EventArgs e)
+    {
+        TopMost = chkTopMostSelf.Checked;
+    }
+
+    private void chkTopMostParent_CheckedChanged(object sender, EventArgs e)
+    {
+        ParentWindow.SetTopMost(chkTopMostParent.Checked);
     }
 }

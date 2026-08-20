@@ -1,9 +1,10 @@
-﻿using System.ComponentModel;
-using System.Drawing.Drawing2D;
-using System.Drawing.Text;
-using Mids_Reborn.Core;
+﻿using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Master_Classes;
 using Mids_Reborn.Core.Utils;
+using Mids_Reborn.UI.Theming;
+using System.ComponentModel;
+using System.Drawing.Drawing2D;
+using System.Drawing.Text;
 
 namespace Mids_Reborn.UI.Controls
 {
@@ -99,10 +100,20 @@ namespace Mids_Reborn.UI.Controls
         public ListLabel()
         {
             _items = [];
-            _colors =
-            [
-                Color.LightBlue, Color.LightGreen, Color.LightGray, Color.DarkGreen, Color.Red, Color.Orange
-            ];
+            _colors = IsDesignMode ?
+                [
+                    Color.LightBlue, Color.LightGreen, Color.LightGray, Color.DarkGreen, Color.Red, Color.Orange
+                ]
+                :
+                [
+                    ThemeManager.CurrentTheme?.ListView.Enabled ?? Color.LightBlue,
+                    ThemeManager.CurrentTheme?.ListView.Selected ?? Color.LightGreen,
+                    ThemeManager.CurrentTheme?.ListView.Disabled ?? Color.LightGray,
+                    ThemeManager.CurrentTheme?.ListView.SelectedDisabled ?? Color.DarkGreen,
+                    ThemeManager.CurrentTheme?.ListView.Invalid ?? Color.Red,
+                    ThemeManager.CurrentTheme?.ListView.Heading ?? Color.Orange
+                ];
+
             _cursors =
             [
                 Cursors.Hand, Cursors.Hand,
@@ -110,10 +121,12 @@ namespace Mids_Reborn.UI.Controls
                 Cursors.Hand, Cursors.Hand,
                 Cursors.Default
             ];
+
             _highlightOn =
             [
                 true, true, true, true, true, true, false
             ];
+
             _bgColor = Color.Black;
             _hvrColor = Color.WhiteSmoke;
             _decorateHeadings = true;
@@ -139,6 +152,17 @@ namespace Mids_Reborn.UI.Controls
             _lastMouseMoveTarget = EMouseTarget.None;
             _visibleLineCount = 0;
             InitializeComponent();
+        }
+
+        public void SetColors(Color[] colors)
+        {
+            if (colors.Length != 6)
+            {
+                return;
+            }
+
+            _colors = colors;
+            Refresh();
         }
 
         public ListLabelItem[] Items => _items.ToArray();

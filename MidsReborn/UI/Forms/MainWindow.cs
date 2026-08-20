@@ -3243,7 +3243,8 @@ namespace Mids_Reborn.UI.Forms
                 footerSummaryLabel.Text = "No active build";
                 footerTotalSlotsLabel.Text = "Total Slots: 0";
                 footerSlotsLeftLabel.Text = "Slots Left: 0";
-                footerSlotsLeftLabel.ForeColor = Color.WhiteSmoke;
+                footerSlotsLeftLabel.ForeColor = ThemeManager.CurrentTheme?.Footer?.TotalSlotsText ?? Color.WhiteSmoke;
+                
                 return;
             }
 
@@ -3260,9 +3261,11 @@ namespace Mids_Reborn.UI.Forms
 
             footerTotalSlotsLabel.Text = $"Total Slots: {totalSlots}";
             footerSlotsLeftLabel.Text = $"Slots Left: {slotsLeft}";
-            footerSlotsLeftLabel.ForeColor = slotsLeft < 0
-                ? Color.FromArgb(255, 120, 120)
-                : Color.FromArgb(115, 255, 110);
+            
+            // Bug: dual color not accounted in theme (v1.1)
+            footerSlotsLeftLabel.ForeColor = slotsLeft <= 0
+                ? ThemeManager.CurrentTheme?.Footer?.TotalSlotsText ?? Color.WhiteSmoke // Color.FromArgb(255, 120, 120)
+                : ThemeManager.CurrentTheme?.Footer?.SlotsLeftText ?? Color.FromArgb(115, 255, 110);
         }
 
         private void OnTitleUpdated(object? sender, EventArgs e)
@@ -4306,6 +4309,16 @@ namespace Mids_Reborn.UI.Forms
             FrmPetActorDetailsWindow?.UpdateColorTheme(MidsContext.Character?.Alignment ?? Enums.Alignment.Hero);
             // Force the form to redraw its background and non-client areas
             Invalidate(true);
+        }
+
+        public void AllowThemeChange(bool state = true)
+        {
+            themeMenuItem.Enabled = state;
+        }
+
+        public void SetTopMost(bool state)
+        {
+            TopMost = state;
         }
 
         private void Title_MouseDown(object? sender, MouseEventArgs e)
@@ -10383,6 +10396,7 @@ namespace Mids_Reborn.UI.Forms
         {
             var theme = CurrentTheme;
             ApplyWindowSurfaceTheme();
+            ApplyPowerListsTheme();
             foreach (var button in Helpers.GetControlsOfType<IconButton>(this))
             {
                 if (Equals(button.Tag, "KeepColors"))
@@ -10404,7 +10418,39 @@ namespace Mids_Reborn.UI.Forms
             }
 
             ApplyHeaderNameInputStyle();
+            ApplyFooterTheme();
             canvas?.RequestFullRedraw();
+        }
+
+        private void ApplyPowerListsTheme()
+        {
+            foreach (var pList in Helpers.GetControlsOfType<MidsListView>(this))
+            {
+                // Color.LightBlue, Color.LightGreen, Color.LightGray, Color.DarkGreen, Color.Red, Color.Orange
+                // Enabled, Selected, Disabled, SelectedDisabled, Invalid, Heading
+                pList.SuspendLayout();
+                pList.SetStateColor(MidsItemState.Enabled, ThemeManager.CurrentTheme?.ListView.Enabled ?? Color.LightBlue);
+                pList.SetStateColor(MidsItemState.Selected, ThemeManager.CurrentTheme?.ListView.Selected ?? Color.LightGreen);
+                pList.SetStateColor(MidsItemState.Disabled, ThemeManager.CurrentTheme?.ListView.Disabled ?? Color.LightGray);
+                pList.SetStateColor(MidsItemState.SelectedDisabled, ThemeManager.CurrentTheme?.ListView.SelectedDisabled ?? Color.DarkGreen);
+                pList.SetStateColor(MidsItemState.Invalid, ThemeManager.CurrentTheme?.ListView.Invalid ?? Color.Red);
+                pList.SetStateColor(MidsItemState.Heading, ThemeManager.CurrentTheme?.ListView.Heading ?? Color.Orange);
+                pList.ResumeLayout(true);
+            }
+        }
+
+        private void ApplyFooterTheme()
+        {
+            footerPanel.BackColor = ThemeManager.CurrentTheme?.Footer?.Background ?? Color.FromArgb(6, 17, 35);
+
+            footerSummaryLabel.SuspendLayout();
+            footerSummaryLabel.BackColor = ThemeManager.CurrentTheme?.Footer?.Background ?? Color.FromArgb(6, 17, 35);
+            footerSummaryLabel.ForeColor = ThemeManager.CurrentTheme?.Footer?.SummaryText ?? Color.WhiteSmoke;
+            footerSummaryLabel.ResumeLayout(true);
+
+            footerRightPanel.BackColor = ThemeManager.CurrentTheme?.Footer?.Background ?? Color.FromArgb(6, 17, 35);
+            footerTotalSlotsLabel.ForeColor = ThemeManager.CurrentTheme?.Footer?.TotalSlotsText ?? Color.WhiteSmoke;
+            footerSlotsLeftLabel.ForeColor = ThemeManager.CurrentTheme?.Footer?.SlotsLeftText ?? Color.FromArgb(115, 255, 110);
         }
 
         private void InitializeBufferedBodySurfaces()
@@ -10434,9 +10480,9 @@ namespace Mids_Reborn.UI.Forms
             buttonsLayoutPanel.BackColor = shellContentColor;
             leftInnerLayoutPanel.BackColor = shellContentColor;
             rightInnerLayoutPanel.BackColor = shellContentColor;
-            footerPanel.BackColor = FooterSurfaceColor;
-            footerLayoutPanel.BackColor = FooterSurfaceColor;
-            footerRightPanel.BackColor = FooterSurfaceColor;
+            footerPanel.BackColor = ThemeManager.CurrentTheme?.Footer?.Background ?? Color.FromArgb(6, 17, 35);
+            footerLayoutPanel.BackColor = ThemeManager.CurrentTheme?.Footer?.Background ?? Color.FromArgb(6, 17, 35);
+            footerRightPanel.BackColor = ThemeManager.CurrentTheme?.Footer?.Background ?? Color.FromArgb(6, 17, 35);
             canvasScrollPanel.BackColor = shellContentColor;
             canvasScrollPanel.ContentPanel.BackColor = shellContentColor;
             midsvScrollPanel1.BackColor = shellContentColor;

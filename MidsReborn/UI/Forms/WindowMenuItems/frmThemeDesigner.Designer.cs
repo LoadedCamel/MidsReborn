@@ -37,6 +37,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             btnClose = new Button();
             chkAutoApply = new CheckBox();
             btnApply = new Button();
+            chkTopMostSelf = new CheckBox();
+            label1 = new Label();
+            chkTopMostParent = new CheckBox();
+            label2 = new Label();
             panel1.SuspendLayout();
             SuspendLayout();
             // 
@@ -96,7 +100,7 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             chkAutoApply.AutoSize = true;
             chkAutoApply.Checked = true;
             chkAutoApply.CheckState = CheckState.Checked;
-            chkAutoApply.Location = new Point(386, 415);
+            chkAutoApply.Location = new Point(420, 415);
             chkAutoApply.Name = "chkAutoApply";
             chkAutoApply.Size = new Size(86, 19);
             chkAutoApply.TabIndex = 3;
@@ -106,14 +110,54 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             // 
             // btnApply
             // 
-            btnApply.Location = new Point(479, 412);
+            btnApply.Location = new Point(513, 412);
             btnApply.Name = "btnApply";
-            btnApply.Size = new Size(88, 23);
+            btnApply.Size = new Size(65, 23);
             btnApply.TabIndex = 4;
             btnApply.Text = "Apply";
             btnApply.UseVisualStyleBackColor = true;
             btnApply.Visible = false;
             btnApply.Click += btnApply_Click;
+            // 
+            // chkTopMostSelf
+            // 
+            chkTopMostSelf.AutoSize = true;
+            chkTopMostSelf.Location = new Point(298, 403);
+            chkTopMostSelf.Name = "chkTopMostSelf";
+            chkTopMostSelf.Size = new Size(92, 19);
+            chkTopMostSelf.TabIndex = 5;
+            chkTopMostSelf.Text = "This window";
+            chkTopMostSelf.UseVisualStyleBackColor = true;
+            chkTopMostSelf.CheckedChanged += chkTopMostSelf_CheckedChanged;
+            // 
+            // label1
+            // 
+            label1.AutoSize = true;
+            label1.Location = new Point(404, 416);
+            label1.Name = "label1";
+            label1.Size = new Size(10, 15);
+            label1.TabIndex = 6;
+            label1.Text = "|";
+            // 
+            // chkTopMostParent
+            // 
+            chkTopMostParent.AutoSize = true;
+            chkTopMostParent.Location = new Point(298, 426);
+            chkTopMostParent.Name = "chkTopMostParent";
+            chkTopMostParent.Size = new Size(53, 19);
+            chkTopMostParent.TabIndex = 7;
+            chkTopMostParent.Text = "Main";
+            chkTopMostParent.UseVisualStyleBackColor = true;
+            chkTopMostParent.CheckedChanged += chkTopMostParent_CheckedChanged;
+            // 
+            // label2
+            // 
+            label2.AutoSize = true;
+            label2.Location = new Point(225, 416);
+            label2.Name = "label2";
+            label2.Size = new Size(59, 15);
+            label2.TabIndex = 8;
+            label2.Text = "Top Most:";
             // 
             // frmThemeDesigner
             // 
@@ -121,6 +165,10 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
             AutoScaleMode = AutoScaleMode.Font;
             BackColor = Color.Black;
             ClientSize = new Size(589, 450);
+            Controls.Add(label2);
+            Controls.Add(chkTopMostParent);
+            Controls.Add(label1);
+            Controls.Add(chkTopMostSelf);
             Controls.Add(btnApply);
             Controls.Add(chkAutoApply);
             Controls.Add(btnClose);
@@ -150,5 +198,9 @@ namespace Mids_Reborn.UI.Forms.WindowMenuItems
         private Button btnClose;
         private CheckBox chkAutoApply;
         private Button btnApply;
+        private CheckBox chkTopMostSelf;
+        private Label label1;
+        private CheckBox chkTopMostParent;
+        private Label label2;
     }
 }

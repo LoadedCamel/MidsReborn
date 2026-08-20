@@ -1,6 +1,7 @@
 ﻿using System.Runtime.InteropServices;
 using Mids_Reborn.Core;
 using Mids_Reborn.Core.Base.Data_Classes;
+using Mids_Reborn.UI.Theming;
 using static Mids_Reborn.UI.Controls.ctlPowerList;
 
 namespace Mids_Reborn.UI.Controls
@@ -32,7 +33,29 @@ namespace Mids_Reborn.UI.Controls
             InitializeComponent();
         }
 
-        
+        public void SetColors()
+        {
+            // Heading unused
+            Colors =
+            [
+                ThemeManager.CurrentTheme?.ListView.Enabled ?? Color.Gold, //              v4: Color.LightBlue
+                ThemeManager.CurrentTheme?.ListView.Selected ?? Color.DodgerBlue, //       v4: Color.LightGreen
+                ThemeManager.CurrentTheme?.ListView.Disabled ?? Color.LightGray,  //       v4: (Match)
+                ThemeManager.CurrentTheme?.ListView.SelectedDisabled ?? Color.DarkBlue, // v4: Color.DarkGreen 
+                ThemeManager.CurrentTheme?.ListView.Invalid ?? Color.Red //                v4: (Match)
+            ];
+        }
+
+        public void SetColors(Color[] colors)
+        {
+            if (colors.Length != 5 && colors.Length != 6)
+            {
+                return;
+            }
+
+            Colors = colors[0..4].ToList();
+            Refresh();
+        }
 
         [DllImport("uxtheme", ExactSpelling = true)]
         private static extern int DrawThemeParentBackground(
